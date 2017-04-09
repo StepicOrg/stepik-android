@@ -9,23 +9,17 @@
 
         <activity
             android:name="org.stepic.droid.ui.activities.LoginActivity">
-
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
 
-                <link
-                    android:host="stepic.org"
-                    android:pathPattern="/oauth"
-                    android:scheme="stepic"/>
+                <data android:host="@string/host_name"/>
+                <data android:host="@string/secondary_host_name"/>
+                <data android:pathPattern="/oauth"/>
+                <data android:scheme="stepic"/>
 
-
-                <link
-                    android:host="stepik.org"
-                    android:pathPattern="/oauth"
-                    android:scheme="stepic"/>
             </intent-filter>
         </activity>
 
