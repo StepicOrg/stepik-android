@@ -9,16 +9,14 @@ import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.concurrency.DownloadPoster
 import org.stepic.droid.core.CommentManager
 import org.stepic.droid.core.MyPhoneStateListener
-import org.stepic.droid.di.mainscreen.MainScreenComponent
-import org.stepic.droid.core.components.NotificationComponent
-import org.stepic.droid.di.mainscreen.MainScreenModule
-import org.stepic.droid.core.modules.NotificationModule
 import org.stepic.droid.di.certificates.CertificateComponent
 import org.stepic.droid.di.course.CourseComponent
 import org.stepic.droid.di.course_list.CourseListComponent
 import org.stepic.droid.di.filters.FilterComponent
 import org.stepic.droid.di.lesson.LessonComponent
 import org.stepic.droid.di.login.LoginComponent
+import org.stepic.droid.di.mainscreen.MainScreenComponent
+import org.stepic.droid.di.notifications.NotificationsComponent
 import org.stepic.droid.di.profile.ProfileComponent
 import org.stepic.droid.di.section.SectionComponent
 import org.stepic.droid.di.step.StepComponent
@@ -76,7 +74,9 @@ interface AppCoreComponent {
 
     fun mainScreenComponentBuilder(): MainScreenComponent.Builder
 
-    fun plus(module: NotificationModule): NotificationComponent
+    fun notificationsComponentBuilder(): NotificationsComponent.Builder
+
+
 
     fun inject(someActivity: FragmentActivityBase)
 
