@@ -223,7 +223,7 @@ public class MainFeedActivity extends BackToExitActivityBase
             threadPoolExecutor.execute(new Runnable() {
                 @Override
                 public void run() {
-                    StepicInstanceIdService.Companion.updateAnywhere(shell.getApi(), sharedPreferenceHelper, analytic); //FCM!
+                    StepicInstanceIdService.Companion.updateAnywhere(api, sharedPreferenceHelper, analytic); //FCM!
                 }
             });
         }

@@ -177,7 +177,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
             Toast.makeText(getContext(), R.string.you_not_enrolled, Toast.LENGTH_SHORT).show();
             return;
         }
-        Call<Void> drop = shell.getApi().dropCourse(course.getCourseId());
+        Call<Void> drop = api.dropCourse(course.getCourseId());
         if (drop != null) {
             drop.enqueue(new Callback<Void>() {
                 Course localRef = course;

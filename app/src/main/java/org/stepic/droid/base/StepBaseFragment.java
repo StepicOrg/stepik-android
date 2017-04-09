@@ -239,7 +239,7 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
         if (step != null && event.getTargetId() == step.getId()) {
             long[] arr = new long[]{step.getId()};
 
-            shell.getApi().getSteps(arr).enqueue(new Callback<StepResponse>() {
+            api.getSteps(arr).enqueue(new Callback<StepResponse>() {
 
                 @Override
                 public void onResponse(Call<StepResponse> call, Response<StepResponse> response) {

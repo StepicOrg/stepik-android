@@ -38,6 +38,7 @@ import org.stepic.droid.ui.fragments.MyCoursesFragment;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.resolvers.CoursePropertyResolver;
 import org.stepic.droid.util.resolvers.text.TextResolver;
+import org.stepic.droid.web.Api;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -91,6 +92,9 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
 
     @Inject
     protected Shell shell;
+
+    @Inject
+    protected Api api;
 
     @Inject
     protected ScreenManager screenManager;

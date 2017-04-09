@@ -551,7 +551,7 @@ public class SectionsFragment
             if (permissionExternalStorage.equals(Manifest.permission.WRITE_EXTERNAL_STORAGE) &&
                     grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                int position = shell.getSharedPreferenceHelper().getTempPosition();
+                int position = sharedPreferenceHelper.getTempPosition();
                 if (adapter != null) {
                     adapter.requestClickLoad(position);
                 }
@@ -837,7 +837,7 @@ public class SectionsFragment
                     for (Notification notificationItem : notifications) {
                         if (notificationItem != null && notificationItem.getId() != null) {
                             try {
-                                shell.getApi().setReadStatusForNotification(notificationItem.getId(), true).execute();
+                                api.setReadStatusForNotification(notificationItem.getId(), true).execute();
                             } catch (Exception e) {
                                 analytic.reportError(Analytic.Error.NOTIFICATION_NOT_POSTED_ON_CLICK, e);
                             }

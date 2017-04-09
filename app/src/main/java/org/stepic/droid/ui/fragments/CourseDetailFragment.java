@@ -429,7 +429,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     private void fetchInstructors() {
         if (course != null && course.getInstructors() != null && course.getInstructors().length != 0) {
             bus.post(new StartLoadingInstructorsEvent(course));
-            shell.getApi().getUsers(course.getInstructors()).enqueue(new Callback<UserStepicResponse>() {
+            api.getUsers(course.getInstructors()).enqueue(new Callback<UserStepicResponse>() {
                 @Override
                 public void onResponse(Call<UserStepicResponse> call, Response<UserStepicResponse> response) {
                     if (response.isSuccessful()) {

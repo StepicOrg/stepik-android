@@ -14,10 +14,10 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.core.AudioFocusHelper;
-import org.stepic.droid.core.ScreenManager;
-import org.stepic.droid.core.Shell;
 import org.stepic.droid.core.LocalProgressManager;
+import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.ShareHelper;
+import org.stepic.droid.core.Shell;
 import org.stepic.droid.fonts.FontsProvider;
 import org.stepic.droid.notifications.LocalReminder;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
@@ -27,6 +27,7 @@ import org.stepic.droid.storage.IDownloadManager;
 import org.stepic.droid.storage.operations.DatabaseFacade;
 import org.stepic.droid.util.resolvers.CoursePropertyResolver;
 import org.stepic.droid.util.resolvers.text.TextResolver;
+import org.stepic.droid.web.Api;
 
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -69,6 +70,9 @@ public class FragmentBase extends Fragment {
 
     @Inject
     public Config config;
+
+    @Inject
+    public Api api;
 
     @Inject
     public Shell shell;

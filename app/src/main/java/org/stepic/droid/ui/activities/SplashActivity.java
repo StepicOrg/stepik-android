@@ -45,7 +45,7 @@ public class SplashActivity extends BackToExitActivityBase {
                     @Override
                     public void run() {
                         try {
-                            shell.getApi().getUserProfile().execute(); // make this "ping" request for updating refresh tokens and log out user, if it is revoked.
+                            api.getUserProfile().execute(); // make this "ping" request for updating refresh tokens and log out user, if it is revoked.
                         } catch (IOException e) {
                             //ignore
                         }
@@ -60,7 +60,7 @@ public class SplashActivity extends BackToExitActivityBase {
             threadPoolExecutor.execute(new Runnable() {
                 @Override
                 public void run() {
-                    StepicInstanceIdService.Companion.updateAnywhere(shell.getApi(), sharedPreferenceHelper, analytic); //FCM!
+                    StepicInstanceIdService.Companion.updateAnywhere(api, sharedPreferenceHelper, analytic); //FCM!
                 }
             });
         }

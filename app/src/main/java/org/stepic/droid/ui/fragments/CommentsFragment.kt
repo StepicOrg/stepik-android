@@ -346,7 +346,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
         }
         voteId?.let {
             val voteObject = Vote(voteId, voteValue)
-            shell.api.makeVote(it, voteValue).enqueue(object : Callback<VoteResponse> {
+            api.makeVote(it, voteValue).enqueue(object : Callback<VoteResponse> {
                 override fun onResponse(call: Call<VoteResponse>?, response: Response<VoteResponse>?) {
                     //todo event for update
                     if (response?.isSuccessful ?: false) {
@@ -420,7 +420,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun loadDiscussionProxyById(id: String = discussionId) {
-        shell.api.getDiscussionProxies(id).enqueue(object : Callback<DiscussionProxyResponse> {
+        api.getDiscussionProxies(id).enqueue(object : Callback<DiscussionProxyResponse> {
             override fun onResponse(call: Call<DiscussionProxyResponse>?, response: Response<DiscussionProxyResponse>?) {
                 if (response != null && response.isSuccessful) {
                     val discussionProxy = response.body().discussionProxies.firstOrNull()

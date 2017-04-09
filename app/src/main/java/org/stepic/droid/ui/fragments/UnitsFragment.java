@@ -207,7 +207,7 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
             if (permissionExternalStorage.equals(Manifest.permission.WRITE_EXTERNAL_STORAGE) &&
                     grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                int position = shell.getSharedPreferenceHelper().getTempPosition();
+                int position =  sharedPreferenceHelper.getTempPosition();
                 if (adapter != null) {
                     adapter.requestClickLoad(position);
                 }

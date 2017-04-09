@@ -177,7 +177,7 @@ class RegisterActivity : FragmentActivityBase(), LoginView {
             hideError(emailViewWrapper)
             hideError(passwordWrapper)
             onLoadingWhileLogin()
-            shell.api.signUp(firstName, lastName, email, password).enqueue(object : Callback<RegistrationResponse> {
+            api.signUp(firstName, lastName, email, password).enqueue(object : Callback<RegistrationResponse> {
                 override fun onResponse(call: Call<RegistrationResponse>, response: Response<RegistrationResponse>) {
                     if (response.isSuccessful) {
                         analytic.reportEvent(FirebaseAnalytics.Event.SIGN_UP)
