@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'com.neenbedankt.android-apt' //needed for source code generation
 
 int minSdk = hasProperty('devMinSdk') ? devMinSdk.toInteger() : 15
 
@@ -124,13 +124,14 @@ dependencies {
 
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
-    //<DI>
-    apt 'com.google.dagger:dagger-compiler:2.10'
-    kapt 'com.google.dagger:dagger-compiler:2.10'
     compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    //<DI>
     compile 'com.google.dagger:dagger:2.10'
-    provided 'javax.annotation:jsr250-api:1.0'
+    kapt 'com.google.dagger:dagger-compiler:2.10'
+    provided 'org.glassfish:javax.annotation:10.0-b28'
     //needed to resolve compilation errors, thanks to tutplus.org for finding the dependency
+
     compile 'com.jakewharton:butterknife:8.5.1'
     kapt 'com.jakewharton:butterknife-compiler:8.5.1'
     //</DI>

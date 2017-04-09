@@ -14,8 +14,8 @@ interface StorageComponent {
         fun build(): StorageComponent
 
         @BindsInstance
-        fun context(context: Context) : Builder
+        fun context(context: Context): Builder
     }
 
-    fun databaseFacade(): DatabaseFacade
+    val databaseFacade: DatabaseFacade
 }

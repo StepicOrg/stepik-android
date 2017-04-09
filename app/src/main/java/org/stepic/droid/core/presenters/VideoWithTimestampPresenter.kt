@@ -2,13 +2,18 @@ package org.stepic.droid.core.presenters
 
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.VideoWithTimestampView
+import org.stepic.droid.di.video.VideoScope
 import org.stepic.droid.model.VideoTimestamp
 import org.stepic.droid.storage.operations.DatabaseFacade
 import java.util.concurrent.ThreadPoolExecutor
+import javax.inject.Inject
 
-class VideoWithTimestampPresenter(val databaseFacade: DatabaseFacade,
-                                  val mainHandler: MainHandler,
-                                  val threadPoolExecutor: ThreadPoolExecutor) : PresenterBase<VideoWithTimestampView>() {
+@VideoScope
+class VideoWithTimestampPresenter
+@Inject constructor(
+        private val databaseFacade: DatabaseFacade,
+        private val mainHandler: MainHandler,
+        private val threadPoolExecutor: ThreadPoolExecutor) : PresenterBase<VideoWithTimestampView>() {
 
     var cachedTimestamp: Long? = null
         private set
