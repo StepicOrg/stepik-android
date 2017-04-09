@@ -13,9 +13,8 @@ import android.view.ViewGroup;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
-import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.base.App;
-import org.stepic.droid.core.modules.NotificationModule;
+import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.core.presenters.NotificationListPresenter;
 import org.stepic.droid.core.presenters.contracts.NotificationListView;
 import org.stepic.droid.notifications.model.Notification;
@@ -46,9 +45,6 @@ public class NotificationListFragment extends FragmentBase implements Notificati
         fragment.setArguments(args);
         return fragment;
     }
-
-//    @Inject
-//    RecyclerView.RecycledViewPool sharedRecyclerViewPool;
 
     @Inject
     NotificationListPresenter notificationListPresenter;
@@ -86,7 +82,8 @@ public class NotificationListFragment extends FragmentBase implements Notificati
     protected void injectComponent() {
         App
                 .component()
-                .plus(new NotificationModule())
+                .notificationsComponentBuilder()
+                .build()
                 .inject(this);
     }
 

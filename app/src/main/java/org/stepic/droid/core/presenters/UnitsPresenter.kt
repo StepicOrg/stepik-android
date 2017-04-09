@@ -3,13 +3,14 @@ package org.stepic.droid.core.presenters
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.UnitsView
+import org.stepic.droid.di.section.SectionScope
 import org.stepic.droid.exceptions.UnitStoredButLessonNotException
 import org.stepic.droid.model.Lesson
 import org.stepic.droid.model.Progress
 import org.stepic.droid.model.Section
 import org.stepic.droid.model.Unit
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import org.stepic.droid.store.operations.DatabaseFacade
+import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.ProgressUtil
 import org.stepic.droid.util.StepikLogicHelper
@@ -17,8 +18,11 @@ import org.stepic.droid.web.Api
 import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.atomic.AtomicBoolean
+import javax.inject.Inject
 
-class UnitsPresenter(
+@SectionScope
+class UnitsPresenter
+@Inject constructor(
         private val analytic: Analytic,
         private val threadPoolExecutor: ThreadPoolExecutor,
         private val mainHandler: MainHandler,

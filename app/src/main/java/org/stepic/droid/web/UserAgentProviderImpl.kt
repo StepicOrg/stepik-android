@@ -1,8 +1,10 @@
 package org.stepic.droid.web
 
 import android.content.Context
+import javax.inject.Inject
 
-class UserAgentProviderImpl(private val context: Context) : UserAgentProvider {
+class UserAgentProviderImpl
+@Inject constructor(private val context: Context) : UserAgentProvider {
 
     val userAgent by lazy {
         val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)

@@ -22,15 +22,15 @@ import com.bumptech.glide.Glide;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
-import org.stepic.droid.core.Shell;
 import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.LessonLoadingState;
 import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Unit;
-import org.stepic.droid.store.LessonDownloader;
-import org.stepic.droid.store.operations.DatabaseFacade;
+import org.stepic.droid.preferences.SharedPreferenceHelper;
+import org.stepic.droid.storage.LessonDownloader;
+import org.stepic.droid.storage.operations.DatabaseFacade;
 import org.stepic.droid.transformers.ProgressTransformerKt;
 import org.stepic.droid.ui.custom.progressbutton.ProgressWheel;
 import org.stepic.droid.ui.dialogs.DeleteItemDialogFragment;
@@ -63,7 +63,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
     DatabaseFacade databaseFacade;
 
     @Inject
-    Shell shell;
+    SharedPreferenceHelper sharedPreferenceHelper;
 
     @Inject
     Analytic analytic;
@@ -205,7 +205,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
                     Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
             if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-                shell.getSharedPreferenceHelper().storeTempPosition(position);
+                sharedPreferenceHelper.storeTempPosition(position);
                 if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
 
@@ -257,7 +257,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
 
                     notifyItemChanged(position);
                 } else {
-                    if (shell.getSharedPreferenceHelper().isNeedToShowVideoQualityExplanation()) {
+                    if (sharedPreferenceHelper.isNeedToShowVideoQualityExplanation()) {
                         VideoQualityDetailedDialog dialogFragment = VideoQualityDetailedDialog.Companion.newInstance(position);
                         dialogFragment.setOnLoadPositionListener(this);
                         if (!dialogFragment.isAdded()) {

@@ -4,19 +4,25 @@ import android.app.DownloadManager
 import android.database.Cursor
 import android.support.annotation.MainThread
 import org.stepic.droid.concurrency.MainHandler
+import org.stepic.droid.di.course.CourseAndSectionsScope
 import org.stepic.droid.model.DownloadEntity
 import org.stepic.droid.model.Unit
-import org.stepic.droid.store.CancelSniffer
-import org.stepic.droid.store.operations.DatabaseFacade
+import org.stepic.droid.storage.CancelSniffer
+import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants
 import java.util.*
+import javax.inject.Inject
 import kotlin.collections.HashMap
 
-//fixme: refactor it, merge with DownloadingProgressUnitPublisher
-class DownloadingProgressSectionPublisher(private val databaseFacade: DatabaseFacade,
-                                          private val systemDownloadManager: DownloadManager,
-                                          private val cancelSniffer: CancelSniffer,
-                                          private val mainHandler: MainHandler) {
+//fixme: refactor it, merge with DownloadingProgressUnitsPublisher
+@CourseAndSectionsScope
+class DownloadingProgressSectionPublisher
+@Inject constructor(
+        private val databaseFacade: DatabaseFacade,
+        private val systemDownloadManager: DownloadManager,
+        private val cancelSniffer: CancelSniffer,
+        private val mainHandler: MainHandler) {
+
     interface DownloadingProgressCallback {
         fun onProgressChanged(sectionId: Long, newPortion: Float)
     }

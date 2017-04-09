@@ -14,8 +14,8 @@ import android.widget.EditText
 import android.widget.Toast
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.base.App
+import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent
 import org.stepic.droid.ui.dialogs.DiscardTextDialogFragment
 import org.stepic.droid.ui.dialogs.LoadingProgressDialog
@@ -26,7 +26,6 @@ import org.stepic.droid.web.CommentsResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
 
 class NewCommentFragment : FragmentBase(), OnBackClickListener {
 
@@ -166,7 +165,7 @@ class NewCommentFragment : FragmentBase(), OnBackClickListener {
                     enableMenuItem(true)
                 }
 
-                shell.api.postComment(text, target!!, parent).enqueue(object : Callback<CommentsResponse> {
+                api.postComment(text, target!!, parent).enqueue(object : Callback<CommentsResponse> {
 
                     override fun onResponse(call: Call<CommentsResponse>?, response: Response<CommentsResponse>?) {
                         if (response?.isSuccessful ?: false && response?.body()?.comments != null) {

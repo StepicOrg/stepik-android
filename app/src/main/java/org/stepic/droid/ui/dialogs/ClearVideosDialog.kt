@@ -14,9 +14,9 @@ import org.stepic.droid.events.loading.FinishLoadEvent
 import org.stepic.droid.events.loading.StartLoadEvent
 import org.stepic.droid.events.steps.ClearAllDownloadWithoutAnimationEvent
 import org.stepic.droid.preferences.UserPreferences
-import org.stepic.droid.store.CleanManager
-import org.stepic.droid.store.CleanManagerImpl
-import org.stepic.droid.store.operations.DatabaseFacade
+import org.stepic.droid.storage.CleanManager
+import org.stepic.droid.storage.CleanManagerImpl
+import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.DbParseHelper
 import org.stepic.droid.util.FileUtil
 import java.util.concurrent.ThreadPoolExecutor

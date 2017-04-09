@@ -5,16 +5,20 @@ import android.support.annotation.WorkerThread
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.VideoStepView
+import org.stepic.droid.di.step.StepScope
 import org.stepic.droid.model.Step
 import org.stepic.droid.model.Video
-import org.stepic.droid.store.operations.DatabaseFacade
+import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.resolvers.VideoResolver
 import org.stepic.droid.web.Api
 import java.util.concurrent.Semaphore
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.atomic.AtomicBoolean
+import javax.inject.Inject
 
-class VideoStepPresenter(
+@StepScope
+class VideoStepPresenter
+@Inject constructor(
         private val threadPoolExecutor: ThreadPoolExecutor,
         private val mainHandler: MainHandler,
         private val api: Api,

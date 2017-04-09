@@ -7,14 +7,12 @@ import android.text.Spanned
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.util.HtmlHelper
 import org.stepic.droid.util.resolvers.CoursePropertyResolver
+import javax.inject.Inject
 
-class TextResolverImpl(config: Config) : TextResolver {
+class TextResolverImpl
+@Inject constructor(config: Config) : TextResolver {
 
-    private val baseUrl: String
-
-    init {
-        baseUrl = config.baseUrl
-    }
+    private val baseUrl: String = config.baseUrl
 
     companion object {
         val tagHandler = OlLiTagHandler()

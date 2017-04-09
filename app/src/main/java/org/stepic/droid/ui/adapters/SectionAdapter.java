@@ -23,13 +23,13 @@ import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.core.ScreenManager;
-import org.stepic.droid.core.Shell;
 import org.stepic.droid.core.presenters.CalendarPresenter;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.SectionLoadingState;
-import org.stepic.droid.store.SectionDownloader;
-import org.stepic.droid.store.operations.DatabaseFacade;
+import org.stepic.droid.preferences.SharedPreferenceHelper;
+import org.stepic.droid.storage.SectionDownloader;
+import org.stepic.droid.storage.operations.DatabaseFacade;
 import org.stepic.droid.ui.custom.progressbutton.ProgressWheel;
 import org.stepic.droid.ui.dialogs.DeleteItemDialogFragment;
 import org.stepic.droid.ui.dialogs.ExplainExternalStoragePermissionDialog;
@@ -71,9 +71,6 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     DatabaseFacade databaseFacade;
 
     @Inject
-    Shell shell;
-
-    @Inject
     Analytic analytic;
 
     @Inject
@@ -81,6 +78,9 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
 
     @Inject
     SectionDownloader sectionDownloader;
+
+    @Inject
+    SharedPreferenceHelper sharedPreferenceHelper;
 
 
     private List<Section> sections;
@@ -171,7 +171,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                     Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
             if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-                shell.getSharedPreferenceHelper().storeTempPosition(adapterPosition);
+                sharedPreferenceHelper.storeTempPosition(adapterPosition);
                 if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
 
@@ -220,7 +220,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
 
                     notifyItemChanged(adapterPosition);
                 } else {
-                    if (shell.getSharedPreferenceHelper().isNeedToShowVideoQualityExplanation()) {
+                    if (sharedPreferenceHelper.isNeedToShowVideoQualityExplanation()) {
                         VideoQualityDetailedDialog dialogFragment = VideoQualityDetailedDialog.Companion.newInstance(adapterPosition);
                         dialogFragment.setOnLoadPositionListener(this);
                         if (!dialogFragment.isAdded()) {

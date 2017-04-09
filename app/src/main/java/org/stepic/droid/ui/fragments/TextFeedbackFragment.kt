@@ -130,7 +130,7 @@ class TextFeedbackFragment : FragmentBase() {
         }
 
         ProgressHelper.activate(progressDialog)
-        shell.api.sendFeedback(email, description).enqueue(object : Callback<Void> {
+        api.sendFeedback(email, description).enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>?, response: Response<Void>?) {
                 ProgressHelper.dismiss(progressDialog)
                 if (response?.isSuccessful ?: false) {
@@ -151,7 +151,7 @@ class TextFeedbackFragment : FragmentBase() {
     @Subscribe
     fun onFeedbackSent(event: FeedbackSentEvent) {
         Toast.makeText(context, R.string.feedback_sent, Toast.LENGTH_SHORT).show()
-        shell.screenProvider.showMainFeed(activity)
+        screenManager.showMainFeed(activity)
     }
 
     @Subscribe

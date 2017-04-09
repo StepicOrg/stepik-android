@@ -80,18 +80,18 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
 
         findCoursesButton.setOnClickListener {
             analytic.reportEvent(Analytic.Interaction.CLICK_FIND_COURSE_LAUNCH)
-            shell.screenProvider.showFindCourses(this@LaunchActivity)
+            screenManager.showFindCourses(this@LaunchActivity)
             this@LaunchActivity.finish()
         }
 
         launchSignUpButton.setOnClickListener {
             analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_UP)
-            shell.screenProvider.showRegistration(this@LaunchActivity, courseFromExtra)
+            screenManager.showRegistration(this@LaunchActivity, courseFromExtra)
         }
 
         signInWithEmail.setOnClickListener {
             analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_IN)
-            shell.screenProvider.showLogin(this@LaunchActivity, courseFromExtra)
+            screenManager.showLogin(this@LaunchActivity, courseFromExtra)
         }
 
 
@@ -327,7 +327,7 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
         val index = intent?.extras?.getInt(MainFeedActivity.KEY_CURRENT_INDEX) ?: MainFeedActivity.DEFAULT_START_INDEX
 
         if (fromMainFeed) {
-            shell.screenProvider.showMainFeed(this, index)
+            screenManager.showMainFeed(this, index)
         } else {
             super.onBackPressed()
         }
@@ -372,7 +372,7 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
     }
 
     private fun openMainFeed() {
-        shell.screenProvider.showMainFeed(this, courseFromExtra)
+        screenManager.showMainFeed(this, courseFromExtra)
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {

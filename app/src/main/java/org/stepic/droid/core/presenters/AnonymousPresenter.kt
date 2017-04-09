@@ -2,12 +2,17 @@ package org.stepic.droid.core.presenters
 
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.AnonymousView
+import org.stepic.droid.di.step.StepScope
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import java.util.concurrent.ThreadPoolExecutor
+import javax.inject.Inject
 
-class AnonymousPresenter(private val sharedPreferenceHelper: SharedPreferenceHelper,
-                         private val threadPoolExecutor: ThreadPoolExecutor,
-                         private val mainHandler: MainHandler) : PresenterBase<AnonymousView>() {
+@StepScope
+class AnonymousPresenter
+@Inject constructor(
+        private val sharedPreferenceHelper: SharedPreferenceHelper,
+        private val threadPoolExecutor: ThreadPoolExecutor,
+        private val mainHandler: MainHandler) : PresenterBase<AnonymousView>() {
 
     fun checkForAnonymous() {
         threadPoolExecutor.execute {

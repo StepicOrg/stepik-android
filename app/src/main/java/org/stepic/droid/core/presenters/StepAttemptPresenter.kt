@@ -15,13 +15,16 @@ import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
-class StepAttemptPresenter(val mainHandler: MainHandler,
-                           val threadPoolExecutor: ThreadPoolExecutor,
-                           val lessonManager: LessonSessionManager,
-                           val api: Api,
-                           val analytic: Analytic,
-                           val sharedPreferenceHelper: SharedPreferenceHelper) : PresenterBase<StepAttemptView>() {
+class StepAttemptPresenter
+@Inject constructor(
+        private val mainHandler: MainHandler,
+        private val threadPoolExecutor: ThreadPoolExecutor,
+        private val lessonManager: LessonSessionManager,
+        private val api: Api,
+        private val analytic: Analytic,
+        private val sharedPreferenceHelper: SharedPreferenceHelper) : PresenterBase<StepAttemptView>() {
 
     companion object {
         private val FIRST_DELAY = 1000L
@@ -134,7 +137,7 @@ class StepAttemptPresenter(val mainHandler: MainHandler,
                                     return@Runnable
                                 }
 
-                                if (!step.is_custom_passed &&  (submission?.status == Submission.Status.CORRECT)){
+                                if (!step.is_custom_passed && (submission?.status == Submission.Status.CORRECT)) {
                                     sharedPreferenceHelper.trackWhenUserSolved()
                                 }
 

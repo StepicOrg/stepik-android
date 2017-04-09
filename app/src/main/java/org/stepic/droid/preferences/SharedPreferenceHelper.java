@@ -14,12 +14,13 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.core.DefaultFilter;
+import org.stepic.droid.di.AppSingleton;
 import org.stepic.droid.model.EmailAddress;
 import org.stepic.droid.model.Profile;
 import org.stepic.droid.model.StepikFilter;
 import org.stepic.droid.model.comments.DiscussionOrder;
 import org.stepic.droid.notifications.model.NotificationType;
-import org.stepic.droid.store.operations.Table;
+import org.stepic.droid.storage.operations.Table;
 import org.stepic.droid.ui.util.TimeIntervalUtil;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.RWLocks;
@@ -29,9 +30,8 @@ import java.util.EnumSet;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
-@Singleton
+@AppSingleton
 public class SharedPreferenceHelper {
     private static final String NOTIFICATION_SOUND_DISABLED = "notification_sound";
     private static final String TEMP_UPDATE_LINK = "temp_update_link";
@@ -90,6 +90,16 @@ public class SharedPreferenceHelper {
     private Context context;
     private Analytic analytic;
     private DefaultFilter defaultFilter;
+
+    @Inject
+    public SharedPreferenceHelper(Analytic analytic, DefaultFilter defaultFilter, Context context) {
+        this.analytic = analytic;
+        this.defaultFilter = defaultFilter;
+        this.context = context;
+
+        resetFilters(Table.enrolled); //reset on app recreating and on destroy course's Fragments
+        resetFilters(Table.featured);
+    }
 
     public boolean isInvitationWasDeclined() {
         return getBoolean(PreferenceType.DEVICE_SPECIFIC, INVITATION_WAS_DECLINED_DEVICE_SPECIFIC, false);
@@ -229,15 +239,6 @@ public class SharedPreferenceHelper {
         put(PreferenceType.DEVICE_SPECIFIC, day.getInternalNotificationKey(), true);
     }
 
-    @Inject
-    public SharedPreferenceHelper(Analytic analytic, DefaultFilter defaultFilter, Context context) {
-        this.analytic = analytic;
-        this.defaultFilter = defaultFilter;
-        this.context = context;
-
-        resetFilters(Table.enrolled); //reset on app recreating and on destroy course's Fragments
-        resetFilters(Table.featured);
-    }
 
     public void onTryDiscardFilters(Table type) {
         resetFilters(type);

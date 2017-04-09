@@ -10,7 +10,7 @@ import org.stepic.droid.base.SingleFragmentActivity
 import org.stepic.droid.model.Lesson
 import org.stepic.droid.model.Section
 import org.stepic.droid.model.Unit
-import org.stepic.droid.ui.fragments.StepsFragment
+import org.stepic.droid.ui.fragments.LessonFragment
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.HtmlHelper
 
@@ -64,10 +64,10 @@ class StepsActivity : SingleFragmentActivity() {
             val simpleStepPosition: Long = getStepPosition(dataUri)
             val simpleUnitId: Long = getUnitSimpleId(dataUri)
             val discussionSampleId = getDiscussionSampleId(dataUri)
-            return StepsFragment.newInstance(simpleUnitId, simpleLessonId, simpleStepPosition, discussionSampleId)
+            return LessonFragment.newInstance(simpleUnitId, simpleLessonId, simpleStepPosition, discussionSampleId)
 
         } else {
-            return StepsFragment.newInstance(unit, lesson, fromPrevious, section)
+            return LessonFragment.newInstance(unit, lesson, fromPrevious, section)
         }
     }
 

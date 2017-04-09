@@ -6,6 +6,7 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.LoginFailType
 import org.stepic.droid.core.presenters.contracts.LoginView
+import org.stepic.droid.di.login.LoginScope
 import org.stepic.droid.model.AuthData
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.social.SocialManager
@@ -13,12 +14,16 @@ import org.stepic.droid.web.Api
 import org.stepic.droid.web.AuthenticationStepicResponse
 import retrofit2.Call
 import java.util.concurrent.ThreadPoolExecutor
+import javax.inject.Inject
 
-class LoginPresenter(private val api: Api,
-                     private val analytic: Analytic,
-                     private val sharedPreferenceHelper: SharedPreferenceHelper,
-                     private val threadPoolExecutor: ThreadPoolExecutor,
-                     private val mainHandler: MainHandler) : PresenterBase<LoginView>() {
+@LoginScope
+class LoginPresenter
+@Inject constructor(
+        private val api: Api,
+        private val analytic: Analytic,
+        private val sharedPreferenceHelper: SharedPreferenceHelper,
+        private val threadPoolExecutor: ThreadPoolExecutor,
+        private val mainHandler: MainHandler) : PresenterBase<LoginView>() {
 
     fun login(rawLogin: String, rawPassword: String, credential: Credential? = null) {
         val login = rawLogin.trim()
