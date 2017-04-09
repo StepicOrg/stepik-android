@@ -18,7 +18,6 @@ import com.squareup.otto.Subscribe;
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.core.modules.CourseListModule;
 import org.stepic.droid.core.presenters.PersistentCourseListPresenter;
 import org.stepic.droid.core.presenters.contracts.FilterForCoursesView;
 import org.stepic.droid.events.courses.FailDropCourseEvent;
@@ -63,16 +62,20 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     }
 
     @Override
+    protected void injectComponent() {
+        App.component()
+                .courseListComponentBuilder()
+                .build()
+                .inject(this);
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         setRetainInstance(true);
 
         isScreenCreated = true;
-
-        App.component()
-                .plus(new CourseListModule())
-                .inject(this);
     }
 
     @Override

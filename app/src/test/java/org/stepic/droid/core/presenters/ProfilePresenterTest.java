@@ -15,7 +15,7 @@ import org.stepic.droid.model.User;
 import org.stepic.droid.model.UserViewModel;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.test_utils.ConcurrencyUtilForTest;
-import org.stepic.droid.test_utils.FakeProfileGenerator;
+import org.stepic.droid.test_utils.generators.FakeProfileGenerator;
 import org.stepic.droid.util.ProfileExtensionKt;
 import org.stepic.droid.util.UserExtensionKt;
 import org.stepic.droid.web.Api;

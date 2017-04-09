@@ -19,9 +19,8 @@ import com.squareup.otto.Subscribe;
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.base.App;
-import org.stepic.droid.core.modules.CourseListModule;
+import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.core.presenters.ContinueCoursePresenter;
 import org.stepic.droid.core.presenters.contracts.ContinueCourseView;
 import org.stepic.droid.core.presenters.contracts.CoursesView;
@@ -90,12 +89,18 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
     ContinueCoursePresenter continueCoursePresenter;
 
     @Override
+    protected void injectComponent() {
+        App
+                .component()
+                .courseListComponentBuilder()
+                .build()
+                .inject(this);
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        App.component()
-                .plus(new CourseListModule())
-                .inject(this);
     }
 
     @Nullable

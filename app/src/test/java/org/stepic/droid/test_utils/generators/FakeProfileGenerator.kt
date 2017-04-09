@@ -1,4 +1,4 @@
-package org.stepic.droid.test_utils
+package org.stepic.droid.test_utils.generators
 
 import org.stepic.droid.model.Profile
 import org.stepic.droid.model.User
