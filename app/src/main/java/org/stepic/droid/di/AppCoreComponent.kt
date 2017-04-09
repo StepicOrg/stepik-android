@@ -9,10 +9,8 @@ import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.concurrency.DownloadPoster
 import org.stepic.droid.core.CommentManager
 import org.stepic.droid.core.MyPhoneStateListener
-import org.stepic.droid.core.components.LoginComponent
 import org.stepic.droid.core.components.MainFeedComponent
 import org.stepic.droid.core.components.NotificationComponent
-import org.stepic.droid.core.modules.LoginModule
 import org.stepic.droid.core.modules.MainFeedModule
 import org.stepic.droid.core.modules.NotificationModule
 import org.stepic.droid.di.certificates.CertificateComponent
@@ -20,6 +18,7 @@ import org.stepic.droid.di.course.CourseComponent
 import org.stepic.droid.di.course_list.CourseListComponent
 import org.stepic.droid.di.filters.FilterComponent
 import org.stepic.droid.di.lesson.LessonComponent
+import org.stepic.droid.di.login.LoginComponent
 import org.stepic.droid.di.profile.ProfileComponent
 import org.stepic.droid.di.section.SectionComponent
 import org.stepic.droid.di.step.StepComponent
@@ -55,7 +54,7 @@ interface AppCoreComponent {
         fun context(context: Context): Builder
     }
 
-    operator fun plus(loginModule: LoginModule): LoginComponent
+    fun loginComponentBuilder(): LoginComponent.Builder
 
     fun profileComponentBuilder(): ProfileComponent.Builder
 

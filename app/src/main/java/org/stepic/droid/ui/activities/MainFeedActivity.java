@@ -182,7 +182,8 @@ public class MainFeedActivity extends BackToExitActivityBase
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        App.getComponentManager().mainFeedComponent()
+        App.getComponentManager()
+                .mainFeedComponent()
                 .inject(this);
         setContentView(R.layout.activity_main_feed);
         unbinder = ButterKnife.bind(this);

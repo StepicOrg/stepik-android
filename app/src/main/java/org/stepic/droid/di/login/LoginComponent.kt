@@ -1,15 +1,19 @@
-package org.stepic.droid.core.components
+package org.stepic.droid.di.login
 
 import dagger.Subcomponent
-import org.stepic.droid.core.PerFragment
-import org.stepic.droid.core.modules.LoginModule
 import org.stepic.droid.ui.activities.LaunchActivity
 import org.stepic.droid.ui.activities.LoginActivity
 import org.stepic.droid.ui.activities.RegisterActivity
 
-@PerFragment
-@Subcomponent(modules = arrayOf(LoginModule::class))
+@LoginScope
+@Subcomponent
 interface LoginComponent {
+
+    @Subcomponent.Builder
+    interface Builder {
+        fun build(): LoginComponent
+    }
+
     fun inject(launchActivity: LaunchActivity)
 
     fun inject(registerActivity: RegisterActivity)

@@ -1,10 +1,9 @@
 package org.stepic.droid.core
 
-import org.stepic.droid.di.AppCoreComponent
-import org.stepic.droid.core.components.LoginComponent
 import org.stepic.droid.core.components.MainFeedComponent
-import org.stepic.droid.core.modules.LoginModule
 import org.stepic.droid.core.modules.MainFeedModule
+import org.stepic.droid.di.AppCoreComponent
+import org.stepic.droid.di.login.LoginComponent
 
 class ComponentManagerImpl(private val appCoreComponent: AppCoreComponent) : ComponentManager {
 
@@ -16,7 +15,9 @@ class ComponentManagerImpl(private val appCoreComponent: AppCoreComponent) : Com
 
     override fun loginComponent(tag: String) =
             loginComponentMap.getOrPut(tag) {
-                appCoreComponent.plus(LoginModule())
+                appCoreComponent
+                        .loginComponentBuilder()
+                        .build()
             }
 
     private var mainFeedComponentProp: MainFeedComponent? = null
