@@ -83,7 +83,7 @@ public class CertificateFragment extends FragmentBase implements CertificateView
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_certificates, null);
+        return inflater.inflate(R.layout.fragment_certificates, container, false);
     }
 
     @Override

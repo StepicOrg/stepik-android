@@ -231,11 +231,11 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         //VIEW:
         coursePropertyList = new ArrayList<>();
         joinCourseSpinner = new LoadingProgressDialog(getActivity());
-        footer = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.fragment_course_detailed_footer, null, false);
+        footer = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.fragment_course_detailed_footer, coursePropertyListView, false);
         coursePropertyListView.addFooterView(footer);
         instructorsCarousel = ButterKnife.findById(footer, R.id.instructors_carousel);
 
-        header = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.fragment_course_detailed_header, null, false);
+        header = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.fragment_course_detailed_header, coursePropertyListView, false);
         coursePropertyListView.addHeaderView(header);
 
         courseIcon = ButterKnife.findById(header, R.id.courseIcon);

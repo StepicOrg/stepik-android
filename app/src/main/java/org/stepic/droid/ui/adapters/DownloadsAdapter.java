@@ -108,13 +108,13 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
     @Override
     public GenericViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE_DOWNLOADED_VIDEO) {
-            View v = LayoutInflater.from(sourceActivity).inflate(R.layout.cached_video_item, null);
+            View v = LayoutInflater.from(sourceActivity).inflate(R.layout.cached_video_item, parent, false);
             return new DownloadsViewHolder(v, this, this);
         } else if (viewType == TYPE_DOWNLOADING_VIDEO) {
-            View v = LayoutInflater.from(sourceActivity).inflate(R.layout.downloading_video_item, null);
+            View v = LayoutInflater.from(sourceActivity).inflate(R.layout.downloading_video_item, parent, false);
             return new DownloadingViewHolder(v, this);
         } else if (viewType == TYPE_TITLE) {
-            View v = LayoutInflater.from(sourceActivity).inflate(R.layout.header_download_item, null);
+            View v = LayoutInflater.from(sourceActivity).inflate(R.layout.header_download_item, parent, false);
             return new TitleViewHolder(v);
         } else {
             return null;

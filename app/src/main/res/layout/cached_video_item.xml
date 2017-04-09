@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout android:id="@+id/cv"
+             xmlns:android="http://schemas.android.com/apk/res/android"
              xmlns:app="http://schemas.android.com/apk/res-auto"
              xmlns:tools="http://schemas.android.com/tools"
-             android:id="@+id/cv"
              android:layout_width="match_parent"
-             android:layout_height="match_parent"
+             android:layout_height="wrap_content"
              android:background="@color/white"
              android:clickable="true"
              android:descendantFocusability="blocksDescendants"
@@ -12,12 +12,11 @@
              android:focusableInTouchMode="false"
              android:foreground="@drawable/non_radius_foreground"
              android:longClickable="true"
-             android:orientation="vertical"
              app:cardCornerRadius="@dimen/guideline_tile_corner">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <LinearLayout
@@ -33,10 +32,10 @@
                 android:layout_width="128dp"
                 android:layout_height="84dp"
                 android:layout_gravity="start"
-                android:scaleType="centerCrop"
                 android:layout_marginEnd="4dp"
                 android:layout_marginRight="4dp"
-                android:src="@drawable/video_placeholder" />
+                android:scaleType="centerCrop"
+                android:src="@drawable/video_placeholder"/>
 
             <RelativeLayout
                 android:id="@+id/course_info_layout"
@@ -47,7 +46,6 @@
 
 
                 <TextView
-                    android:paddingRight="8dp"
                     android:id="@+id/video_header"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -55,9 +53,10 @@
                     android:layout_marginBottom="2dp"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    tools:text="Long and long header of video, really long"
+                    android:paddingRight="8dp"
                     android:textColor="@color/stepic_regular_text"
-                    android:textSize="@dimen/text_header" />
+                    android:textSize="@dimen/text_header"
+                    tools:text="Long and long header of video, really long"/>
 
 
                 <TextView
@@ -69,9 +68,9 @@
                     android:layout_alignParentStart="true"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    tools:text="size"
                     android:textColor="@color/stepic_weak_text"
-                    android:textSize="@dimen/text_height" />
+                    android:textSize="@dimen/text_height"
+                    tools:text="size"/>
 
                 <TextView
                     android:id="@+id/current_quality"
@@ -82,19 +81,19 @@
                     android:layout_alignParentRight="true"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    tools:text="270dp"
                     android:textColor="@color/stepic_weak_text"
-                    android:textSize="@dimen/text_height" />
+                    android:textSize="@dimen/text_height"
+                    tools:text="270dp"/>
 
             </RelativeLayout>
 
-            <include layout="@layout/load_imageview" />
+            <include layout="@layout/load_imageview"/>
         </LinearLayout>
 
         <View
             android:id="@+id/grey_bar"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/silver" />
+            android:background="@color/silver"/>
     </LinearLayout>
 </FrameLayout>

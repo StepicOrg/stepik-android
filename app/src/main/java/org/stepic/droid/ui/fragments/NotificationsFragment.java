@@ -79,7 +79,7 @@ public class NotificationsFragment extends FragmentBase {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_notifications, null);
+        return inflater.inflate(R.layout.fragment_notifications, container, false);
     }
 
     @Override

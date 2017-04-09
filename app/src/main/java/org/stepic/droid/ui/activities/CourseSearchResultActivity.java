@@ -48,9 +48,6 @@ public class CourseSearchResultActivity extends FragmentActivityBase {
 
         query = getIntent().getStringExtra(SearchManager.QUERY);
         initOrTryRestoreFragment();
-        if (searchView != null) {
-            invalidateOptionsMenu();
-        }
     }
 
     private void initOrTryRestoreFragment() {
@@ -75,9 +72,6 @@ public class CourseSearchResultActivity extends FragmentActivityBase {
         fm.beginTransaction()
                 .replace(R.id.frame, fragment)
                 .commit();
-        if (searchView != null) {
-            invalidateOptionsMenu();
-        }
     }
 
     Fragment createFragment() {

@@ -64,7 +64,7 @@ public class InstructorAdapter extends RecyclerView.Adapter<InstructorAdapter.In
 
     @Override
     public InstructorViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(activity).inflate(R.layout.instructor_item, null);
+        View v = LayoutInflater.from(activity).inflate(R.layout.instructor_item, parent, false);
         return new InstructorViewHolder(v);
     }
 
