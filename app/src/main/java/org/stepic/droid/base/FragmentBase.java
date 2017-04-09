@@ -61,47 +61,47 @@ public class FragmentBase extends Fragment {
     protected FontsProvider fontsProvider;
 
     /**
-     * Do not use bus, try to use presenters, after deleting most part of bus related code project will use RxJava
+     * Do not use bus, prefer to use presenters, after deleting most part of bus related code project will use RxJava
      */
     @Deprecated
     @Inject
-    public Bus bus;
+    protected Bus bus;
 
     @Inject
-    public Config config;
+    protected Config config;
 
     @Inject
-    public Api api;
+    protected Api api;
 
     @Inject
-    public ScreenManager screenManager;
+    protected ScreenManager screenManager;
 
     @Inject
-    public LocalProgressManager localProgressManager;
+    protected LocalProgressManager localProgressManager;
 
     @Inject
-    public IDownloadManager downloadManager;
+    protected IDownloadManager downloadManager;
 
     @Inject
-    public SharedPreferenceHelper sharedPreferenceHelper;
+    protected SharedPreferenceHelper sharedPreferenceHelper;
 
     @Inject
-    public UserPreferences userPreferences;
+    protected UserPreferences userPreferences;
 
     @Inject
-    public CoursePropertyResolver coursePropertyResolver;
+    protected CoursePropertyResolver coursePropertyResolver;
 
     @Inject
-    public MainHandler mainHandler;
+    protected MainHandler mainHandler;
 
     @Inject
-    public AudioFocusHelper audioFocusHelper;
+    protected AudioFocusHelper audioFocusHelper;
 
     @Inject
-    public DownloadManager systemDownloadManager;
+    protected DownloadManager systemDownloadManager;
 
     @Inject
-    public CancelSniffer cancelSniffer;
+    protected CancelSniffer cancelSniffer;
 
     public FragmentBase() {
         injectComponent();
