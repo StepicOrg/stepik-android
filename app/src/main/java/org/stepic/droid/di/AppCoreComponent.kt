@@ -9,9 +9,9 @@ import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.concurrency.DownloadPoster
 import org.stepic.droid.core.CommentManager
 import org.stepic.droid.core.MyPhoneStateListener
-import org.stepic.droid.core.components.MainFeedComponent
+import org.stepic.droid.di.mainscreen.MainScreenComponent
 import org.stepic.droid.core.components.NotificationComponent
-import org.stepic.droid.core.modules.MainFeedModule
+import org.stepic.droid.di.mainscreen.MainScreenModule
 import org.stepic.droid.core.modules.NotificationModule
 import org.stepic.droid.di.certificates.CertificateComponent
 import org.stepic.droid.di.course.CourseComponent
@@ -74,8 +74,7 @@ interface AppCoreComponent {
 
     fun videoComponentBuilder(): VideoComponent.Builder
 
-
-    fun plus(module: MainFeedModule): MainFeedComponent
+    fun mainScreenComponentBuilder(): MainScreenComponent.Builder
 
     fun plus(module: NotificationModule): NotificationComponent
 

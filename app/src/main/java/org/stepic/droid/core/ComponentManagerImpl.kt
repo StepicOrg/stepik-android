@@ -1,9 +1,8 @@
 package org.stepic.droid.core
 
-import org.stepic.droid.core.components.MainFeedComponent
-import org.stepic.droid.core.modules.MainFeedModule
 import org.stepic.droid.di.AppCoreComponent
 import org.stepic.droid.di.login.LoginComponent
+import org.stepic.droid.di.mainscreen.MainScreenComponent
 
 class ComponentManagerImpl(private val appCoreComponent: AppCoreComponent) : ComponentManager {
 
@@ -20,20 +19,22 @@ class ComponentManagerImpl(private val appCoreComponent: AppCoreComponent) : Com
                         .build()
             }
 
-    private var mainFeedComponentProp: MainFeedComponent? = null
+    private var mainScreenComponentProp: MainScreenComponent? = null
 
-    override fun mainFeedComponent(): MainFeedComponent {
+    override fun mainFeedComponent(): MainScreenComponent {
         synchronized(this) {
-            if (mainFeedComponentProp == null) {
-                mainFeedComponentProp = appCoreComponent.plus(MainFeedModule())
+            if (mainScreenComponentProp == null) {
+                mainScreenComponentProp = appCoreComponent
+                        .mainScreenComponentBuilder()
+                        .build()
             }
-            return mainFeedComponentProp!!
+            return mainScreenComponentProp!!
         }
     }
 
     override fun releaseMainFeedComponent() {
         synchronized(this) {
-            mainFeedComponentProp = null
+            mainScreenComponentProp = null
         }
     }
 }

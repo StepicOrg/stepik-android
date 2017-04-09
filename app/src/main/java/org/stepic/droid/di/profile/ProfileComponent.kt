@@ -6,7 +6,7 @@ import org.stepic.droid.ui.fragments.ProfileFragment
 
 
 @ProfileScope
-@Subcomponent(modules = arrayOf(StreakModule::class))
+@Subcomponent(modules = arrayOf(StreakModule::class, ProfileModule::class))
 interface ProfileComponent {
     @Subcomponent.Builder
     interface Builder {

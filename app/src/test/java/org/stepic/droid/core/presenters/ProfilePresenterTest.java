@@ -75,7 +75,7 @@ public class ProfilePresenterTest {
         generateLocalModels();//generate some data for using in different tests
         generateInstructorApiModels();
 
-        profilePresenter = new ProfilePresenter(
+        profilePresenter = new ProfilePresenterImpl(
                 threadPoolExecutor,
                 analytic,
                 mainHandler,
