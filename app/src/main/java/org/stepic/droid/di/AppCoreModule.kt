@@ -54,10 +54,6 @@ abstract class AppCoreModule {
 
     @Binds
     @AppSingleton
-    internal abstract fun provideIShell(shell: ShellImpl): Shell
-
-    @Binds
-    @AppSingleton
     internal abstract fun provideIConfig(configRelease: ConfigReleaseImpl): Config
 
     @Binds

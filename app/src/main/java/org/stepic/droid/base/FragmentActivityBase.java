@@ -27,7 +27,6 @@ import org.stepic.droid.configuration.Config;
 import org.stepic.droid.core.DefaultFilter;
 import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.ShareHelper;
-import org.stepic.droid.core.Shell;
 import org.stepic.droid.fonts.FontsProvider;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.notifications.NotificationManager;
@@ -88,10 +87,7 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
     protected DatabaseFacade databaseFacade;
 
     @Inject
-    public MainHandler mainHandler;
-
-    @Inject
-    protected Shell shell;
+    protected MainHandler mainHandler;
 
     @Inject
     protected Api api;
