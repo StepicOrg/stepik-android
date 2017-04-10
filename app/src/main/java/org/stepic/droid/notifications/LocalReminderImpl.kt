@@ -27,7 +27,8 @@ class LocalReminderImpl
         private val databaseFacade: DatabaseFacade,
         private val context: Context,
         private val alarmManager: AlarmManager,
-        private val analytic: Analytic) : LocalReminder {
+        private val analytic: Analytic,
+        private val blockNotificationIntervalProvider: BlockNotificationIntervalProvider) : LocalReminder {
 
     val isHandling = AtomicBoolean(false)
 
@@ -154,9 +155,33 @@ class LocalReminderImpl
         remindAboutApp(null)
     }
 
+
+    /**
+     * reschedule this notification to (blockNotificationIntervalProvider.end .. blockNotificationIntervalProvider.end +30min)
+     * if nowHour >= blockNotificationProvider.end -> schedule to next day,
+     * otherwise show today but after   blockNotificationProvider.end
+     */
     @WorkerThread
     override fun rescheduleNotification(stepikNotification: Notification) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val now = DateTime.now()
+
+        val nowHour = now.hourOfDay().get()
+        var nextNotification =
+                now
+                        .withHourOfDay(blockNotificationIntervalProvider.end)
+                        .withMinuteOfHour(0)
+                        .withSecondOfMinute(15)
+
+        if (nowHour >= blockNotificationIntervalProvider.end) {
+            //schedule to next day
+            nextNotification = nextNotification
+                    .plusDays(1)
+        }
+
+        TODO("FIND SERVICE")
+        val intent = Intent(context, StreakAlarmService::class.java)
+        val pendingIntent = PendingIntent.getService(context, StreakAlarmService.requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        scheduleCompat(nextNotification.millis, AlarmManager.INTERVAL_HALF_HOUR, pendingIntent)
     }
 
     private fun scheduleCompat(scheduleMillis: Long, interval: Long, pendingIntent: PendingIntent) {
