@@ -486,6 +486,7 @@ class StepikNotificationManagerImpl
                 localReminder.rescheduleNotification(stepikNotification)
             } else {
                 analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, stepikNotification.id?.toString() ?: "", stepikNotification.type?.name)
+                //do not remove notification related to course here, because we delete all notification about course in another place
                 notificationManager.notify(courseId.toInt(), notification.build())
             }
         }
@@ -524,6 +525,7 @@ class StepikNotificationManagerImpl
                     false
                 } else {
                     notificationManager.notify(id.toInt(), notification.build())
+                    databaseFacade.removeNotification(stepikNotification?.id)
                     true
                 }
 
