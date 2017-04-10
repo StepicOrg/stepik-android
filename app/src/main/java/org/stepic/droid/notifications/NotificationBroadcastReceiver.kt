@@ -35,7 +35,7 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
             val courseId = intent.extras?.getLong(AppConstants.COURSE_ID_KEY)
             courseId?.let {
                 threadPool.execute {
-                    notificationManager.discardAllNotifications(it)
+                    notificationManager.discardAllShownNotificationsRelatedToCourse(it)
                 }
             }
         } else if (action == AppConstants.NOTIFICATION_CANCELED_REMINDER) {

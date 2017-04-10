@@ -9,7 +9,7 @@ interface NotificationManager {
      */
     fun showNotification(notification: Notification);
 
-    fun discardAllNotifications(courseId: Long)
+    fun discardAllShownNotificationsRelatedToCourse(courseId: Long)
 
     fun tryOpenNotificationInstantly(notification: Notification)
 

@@ -833,7 +833,7 @@ public class SectionsFragment
                 @Override
                 protected Void doInBackground(Void... params) {
                     List<Notification> notifications = databaseFacade.getAllNotificationsOfCourse(courseId);
-                    notificationManager.discardAllNotifications(courseId);
+                    notificationManager.discardAllShownNotificationsRelatedToCourse(courseId);
                     for (Notification notificationItem : notifications) {
                         if (notificationItem != null && notificationItem.getId() != null) {
                             try {

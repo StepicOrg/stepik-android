@@ -156,8 +156,8 @@ class NotificationManagerImpl
         }
     }
 
-    override fun discardAllNotifications(courseId: Long) {
-        databaseFacade.removeAllNotificationsByCourseId(courseId)
+    override fun discardAllShownNotificationsRelatedToCourse(courseId: Long) {
+        databaseFacade.removeAllNotificationsWithCourseId(courseId)
     }
 
     override fun tryOpenNotificationInstantly(notification: Notification) {
