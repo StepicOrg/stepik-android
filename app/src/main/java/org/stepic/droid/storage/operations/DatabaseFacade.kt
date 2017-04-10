@@ -404,4 +404,8 @@ class DatabaseFacade
     fun updateCourseLastInteraction(courseId: Long, timestamp: Long)
             = lastInteractions.insertOrUpdate(CourseLastInteraction(courseId = courseId, timestamp = timestamp))
 
+    fun getAllNotifications(): List<Notification?> {
+        return notificationDao.getAll()
+    }
+
 }

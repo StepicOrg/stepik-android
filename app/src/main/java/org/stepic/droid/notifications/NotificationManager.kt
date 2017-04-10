@@ -1,12 +1,11 @@
 package org.stepic.droid.notifications
 
+import android.support.annotation.MainThread
 import android.support.annotation.WorkerThread
 import org.stepic.droid.notifications.model.Notification
 
 interface NotificationManager {
-    /**
-     * worker thread
-     */
+    @WorkerThread
     fun showNotification(notification: Notification);
 
     fun discardAllShownNotificationsRelatedToCourse(courseId: Long)
@@ -18,4 +17,7 @@ interface NotificationManager {
 
     @WorkerThread
     fun showStreakRemind()
+
+    @MainThread
+    fun showAllRescheduledNotifications()
 }

@@ -176,6 +176,17 @@ class NotificationManagerImpl
 
     }
 
+    override fun showAllRescheduledNotifications() {
+        threadPoolExecutor.execute {
+            val notificationList = databaseFacade.getAllNotifications()
+            notificationList
+                    .filterNotNull()
+                    .forEach {
+                        showNotification(it)
+                    }
+        }
+    }
+
     private fun streakNotificationNumberIsOverflow() {
         sharedPreferenceHelper.isStreakNotificationEnabled = false
         val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
