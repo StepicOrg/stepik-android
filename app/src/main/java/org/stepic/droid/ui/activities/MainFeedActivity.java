@@ -174,7 +174,7 @@ public class MainFeedActivity extends BackToExitActivityBase
 
             //after tracking check on null user
             if (sharedPreferenceHelper.getAuthResponseFromStore() == null) {
-                shell.getScreenProvider().openSplash(this);
+                screenManager.openSplash(this);
             }
         }
     }
@@ -182,7 +182,8 @@ public class MainFeedActivity extends BackToExitActivityBase
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        App.getComponentManager().mainFeedComponent()
+        App.getComponentManager()
+                .mainFeedComponent()
                 .inject(this);
         setContentView(R.layout.activity_main_feed);
         unbinder = ButterKnife.bind(this);
@@ -222,7 +223,7 @@ public class MainFeedActivity extends BackToExitActivityBase
             threadPoolExecutor.execute(new Runnable() {
                 @Override
                 public void run() {
-                    StepicInstanceIdService.Companion.updateAnywhere(shell.getApi(), sharedPreferenceHelper, analytic); //FCM!
+                    StepicInstanceIdService.Companion.updateAnywhere(api, sharedPreferenceHelper, analytic); //FCM!
                 }
             });
         }
@@ -234,7 +235,7 @@ public class MainFeedActivity extends BackToExitActivityBase
         Course course = getCourseFromExtra();
         if (course != null) {
             getIntent().removeExtra(AppConstants.KEY_COURSE_BUNDLE);
-            shell.getScreenProvider().showCourseDescription(this, course, true);
+            screenManager.showCourseDescription(this, course, true);
         }
     }
 
@@ -354,11 +355,11 @@ public class MainFeedActivity extends BackToExitActivityBase
                         drawerLayout.closeDrawers();
                     }
                 }, 0);
-                shell.getScreenProvider().showSettings(this);
+                screenManager.showSettings(this);
                 return true;
             case R.id.profile:
                 // do not close drawer for profile
-                shell.getScreenProvider().openProfile(this);
+                screenManager.openProfile(this);
                 return true;
             case R.id.feedback:
                 new Handler().postDelayed(new Runnable() {
@@ -367,7 +368,7 @@ public class MainFeedActivity extends BackToExitActivityBase
                         drawerLayout.closeDrawers();
                     }
                 }, 0);
-                shell.getScreenProvider().openFeedbackActivity(this);
+                screenManager.openFeedbackActivity(this);
                 return true;
             case R.id.information:
                 new Handler().postDelayed(new Runnable() {
@@ -376,7 +377,7 @@ public class MainFeedActivity extends BackToExitActivityBase
                         drawerLayout.closeDrawers();
                     }
                 }, 0);
-                shell.getScreenProvider().openAboutActivity(this);
+                screenManager.openAboutActivity(this);
                 return true;
             default:
                 showCurrentFragment(menuItem);
@@ -622,7 +623,7 @@ public class MainFeedActivity extends BackToExitActivityBase
             @Override
             public void onClick(View v) {
                 analytic.reportEvent(Analytic.Anonymous.AUTH_DRAWER);
-                shell.getScreenProvider().showLaunchScreen(MainFeedActivity.this);
+                screenManager.showLaunchScreen(MainFeedActivity.this);
             }
         };
         profileImage.setOnClickListener(onClickListener);
@@ -656,7 +657,7 @@ public class MainFeedActivity extends BackToExitActivityBase
             @Override
             public void onClick(View v) {
                 analytic.reportEvent(Analytic.Profile.CLICK_OPEN_MY_PROFILE_IMAGE);
-                shell.getScreenProvider().openProfile(MainFeedActivity.this);
+                screenManager.openProfile(MainFeedActivity.this);
             }
         });
         userNameTextView.setOnClickListener(new View.OnClickListener() {
@@ -689,7 +690,7 @@ public class MainFeedActivity extends BackToExitActivityBase
         if (googleApiClient != null && googleApiClient.isConnected()) {
             Auth.GoogleSignInApi.signOut(googleApiClient);
         }
-        shell.getScreenProvider().showLaunchScreen(this);
+        screenManager.showLaunchScreen(this);
     }
 
     @Override

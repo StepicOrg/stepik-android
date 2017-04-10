@@ -25,18 +25,19 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.core.DefaultFilter;
+import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.ShareHelper;
-import org.stepic.droid.core.Shell;
 import org.stepic.droid.fonts.FontsProvider;
 import org.stepic.droid.model.Course;
-import org.stepic.droid.notifications.INotificationManager;
+import org.stepic.droid.notifications.NotificationManager;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
-import org.stepic.droid.store.operations.DatabaseFacade;
+import org.stepic.droid.storage.operations.DatabaseFacade;
 import org.stepic.droid.ui.fragments.MyCoursesFragment;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.resolvers.CoursePropertyResolver;
 import org.stepic.droid.util.resolvers.text.TextResolver;
+import org.stepic.droid.web.Api;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -74,7 +75,7 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
     protected Analytic analytic;
 
     @Inject
-    protected INotificationManager notificationManager;
+    protected NotificationManager notificationManager;
 
     @Inject
     protected SharedPreferenceHelper sharedPreferenceHelper;
@@ -86,10 +87,13 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
     protected DatabaseFacade databaseFacade;
 
     @Inject
-    public MainHandler mainHandler;
+    protected MainHandler mainHandler;
 
     @Inject
-    protected Shell shell;
+    protected Api api;
+
+    @Inject
+    protected ScreenManager screenManager;
 
     @Inject
     protected Bus bus;
@@ -109,7 +113,7 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        App.component(this).inject(this);
+        App.component().inject(this);
     }
 
     @Override

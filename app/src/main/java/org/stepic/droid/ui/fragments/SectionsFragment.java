@@ -51,7 +51,6 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.core.ShareHelper;
-import org.stepic.droid.core.modules.SectionModule;
 import org.stepic.droid.core.presenters.CalendarPresenter;
 import org.stepic.droid.core.presenters.CourseFinderPresenter;
 import org.stepic.droid.core.presenters.CourseJoinerPresenter;
@@ -79,7 +78,7 @@ import org.stepic.droid.model.CalendarItem;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.SectionLoadingState;
-import org.stepic.droid.notifications.INotificationManager;
+import org.stepic.droid.notifications.NotificationManager;
 import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.ui.adapters.SectionAdapter;
 import org.stepic.droid.ui.dialogs.ChooseCalendarDialog;
@@ -194,7 +193,7 @@ public class SectionsFragment
     SectionsPresenter sectionsPresenter;
 
     @Inject
-    INotificationManager notificationManager;
+    NotificationManager notificationManager;
 
     @Inject
     InvitationPresenter invitationPresenter;
@@ -215,7 +214,11 @@ public class SectionsFragment
 
     @Override
     protected void injectComponent() {
-        App.component().plus(new SectionModule()).inject(this);
+        App
+                .component()
+                .courseComponentBuilder()
+                .build()
+                .inject(this);
     }
 
     @Override
@@ -341,7 +344,7 @@ public class SectionsFragment
         switch (item.getItemId()) {
             case R.id.action_info:
                 if (course != null) {
-                    shell.getScreenProvider().showCourseDescription(this, course);
+                    screenManager.showCourseDescription(this, course);
                 }
                 return true;
 
@@ -402,7 +405,7 @@ public class SectionsFragment
 
                 boolean userHasAccess = SectionUtilKt.hasUserAccess(section, course);
                 if (userHasAccess) {
-                    shell.getScreenProvider().showUnitsForSection(SectionsFragment.this.getActivity(), sections.get(modulePosition - 1));
+                    screenManager.showUnitsForSection(SectionsFragment.this.getActivity(), sections.get(modulePosition - 1));
                 } else {
                     adapter.setDefaultHighlightPosition(modulePosition - 1);
                     int scrollTo = modulePosition + SectionAdapter.PRE_SECTION_LIST_DELTA - 1;
@@ -548,7 +551,7 @@ public class SectionsFragment
             if (permissionExternalStorage.equals(Manifest.permission.WRITE_EXTERNAL_STORAGE) &&
                     grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                int position = shell.getSharedPreferenceHelper().getTempPosition();
+                int position = sharedPreferenceHelper.getTempPosition();
                 if (adapter != null) {
                     adapter.requestClickLoad(position);
                 }
@@ -589,7 +592,7 @@ public class SectionsFragment
                 @Override
                 public void onClick(View v) {
                     if (sharedPreferenceHelper.getAuthResponseFromStore() != null) {
-                        shell.getScreenProvider().showFindCourses(getActivity());
+                        screenManager.showFindCourses(getActivity());
                         getActivity().finish();
                     } else {
                         unauthorizedDialog = UnauthorizedDialogFragment.newInstance(course);
@@ -834,7 +837,7 @@ public class SectionsFragment
                     for (Notification notificationItem : notifications) {
                         if (notificationItem != null && notificationItem.getId() != null) {
                             try {
-                                shell.getApi().setReadStatusForNotification(notificationItem.getId(), true).execute();
+                                api.setReadStatusForNotification(notificationItem.getId(), true).execute();
                             } catch (Exception e) {
                                 analytic.reportError(Analytic.Error.NOTIFICATION_NOT_POSTED_ON_CLICK, e);
                             }

@@ -2,10 +2,14 @@ package org.stepic.droid.core.presenters
 
 import org.stepic.droid.core.DownloadingProgressSectionPublisher
 import org.stepic.droid.core.presenters.contracts.DownloadingProgressSectionsView
+import org.stepic.droid.di.course.CourseAndSectionsScope
 import org.stepic.droid.model.Section
 import org.stepic.droid.model.SectionLoadingState
+import javax.inject.Inject
 
-class DownloadingProgressSectionsPresenter(
+@CourseAndSectionsScope
+class DownloadingProgressSectionsPresenter
+@Inject constructor(
         private val downloadingProgressSectionPublisher: DownloadingProgressSectionPublisher) : PresenterBase<DownloadingProgressSectionsView>() {
 
     private val downloadCallback = object : DownloadingProgressSectionPublisher.DownloadingProgressCallback {

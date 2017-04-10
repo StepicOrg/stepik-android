@@ -24,12 +24,12 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.base.App;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.StepikLogoutManager;
 import org.stepic.droid.deserializers.DatasetDeserializer;
 import org.stepic.droid.deserializers.ReplyDeserializer;
+import org.stepic.droid.di.AppSingleton;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.DatasetWrapper;
 import org.stepic.droid.model.EnrollmentWrapper;
@@ -61,7 +61,6 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
@@ -78,61 +77,58 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import timber.log.Timber;
 
-@Singleton
+@AppSingleton
 public class ApiImpl implements Api {
     private final int TIMEOUT_IN_SECONDS = 10;
     private final StethoInterceptor stethoInterceptor = new StethoInterceptor();
     private final String userAgentName = "User-Agent";
 
-    @Inject
-    Context context;
-
-    @Inject
-    SharedPreferenceHelper sharedPreference;
-
-    @Inject
-    Config config;
-
-    @Inject
-    UserPreferences userPreferences;
-
-    @Inject
-    Analytic analytic;
-
-    @Inject
-    StepikLogoutManager stepikLogoutManager;
-
-    @Inject
-    ScreenManager screenManager;
-
-    @Inject
-    UserAgentProvider userAgentProvider;
+    private final Context context;
+    private final SharedPreferenceHelper sharedPreference;
+    private final Config config;
+    private final UserPreferences userPreferences;
+    private final Analytic analytic;
+    private final StepikLogoutManager stepikLogoutManager;
+    private final ScreenManager screenManager;
+    private final UserAgentProvider userAgentProvider;
 
     private StepicRestLoggedService loggedService;
     private StepicRestOAuthService oAuthService;
     private StepicEmptyAuthService stepikEmptyAuthService;
 
 
-    public ApiImpl() {
-        App.component().inject(this);
+    @Inject
+    public ApiImpl(Context context, SharedPreferenceHelper sharedPreference,
+                   Config config, UserPreferences userPreferences,
+                   Analytic analytic, StepikLogoutManager stepikLogoutManager,
+                   ScreenManager screenManager,
+                   UserAgentProvider userAgentProvider) {
+        this.context = context;
+        this.sharedPreference = sharedPreference;
+        this.config = config;
+        this.userPreferences = userPreferences;
+        this.analytic = analytic;
+        this.stepikLogoutManager = stepikLogoutManager;
+        this.screenManager = screenManager;
+        this.userAgentProvider = userAgentProvider;
 
-        makeOauthServiceWithNewAuthHeader(sharedPreference.isLastTokenSocial() ? TokenType.social : TokenType.loginPassword);
+        makeOauthServiceWithNewAuthHeader(this.sharedPreference.isLastTokenSocial() ? TokenType.social : TokenType.loginPassword);
         makeLoggedService();
 
         OkHttpClient.Builder okHttpClient = new OkHttpClient.Builder();
         setTimeout(okHttpClient, TIMEOUT_IN_SECONDS);
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(config.getBaseUrl())
+                .baseUrl(this.config.getBaseUrl())
                 .addConverterFactory(generateGsonFactory())
                 .client(okHttpClient.build())
                 .build();
         stepikEmptyAuthService = retrofit.create(StepicEmptyAuthService.class);
         try {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-                CookieSyncManager.createInstance(context);
+                CookieSyncManager.createInstance(this.context);
             }
         } catch (Exception ex) {
-            analytic.reportError(Analytic.Error.COOKIE_MANAGER_ERROR, ex);
+            this.analytic.reportError(Analytic.Error.COOKIE_MANAGER_ERROR, ex);
         }
     }
 

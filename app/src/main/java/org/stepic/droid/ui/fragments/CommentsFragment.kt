@@ -133,7 +133,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
         floatingActionButton = v.findViewById(R.id.add_new_comment_button) as FloatingActionButton
         floatingActionButton!!.setOnClickListener {
             if (stepId != null) {
-                shell.screenProvider.openNewCommentForm(activity, stepId, null)
+                screenManager.openNewCommentForm(activity, stepId, null)
             }
         }
     }
@@ -271,13 +271,13 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
             val userId = commentManager.getUserById(comment.user)?.id
             if (userId != null) {
                 analytic.reportEvent(Analytic.Profile.CLICK_USER_IN_COMMENT)
-                shell.screenProvider.openProfile(activity, userId.toLong())
+                screenManager.openProfile(activity, userId.toLong())
             }
         }
     }
 
     private fun clickLinkInComment(link: String) {
-        shell.screenProvider.openInWeb(activity, link)
+        screenManager.openInWeb(activity, link)
     }
 
     private fun copyTextToClipBoard(position: Int) {
@@ -315,7 +315,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     private fun replyToComment(position: Int) {
         val comment: Comment? = commentManager.getItemWithNeedUpdatingInfoByPosition(position).comment
         comment?.let {
-            shell.screenProvider.openNewCommentForm(activity, stepId, it.parent ?: it.id)
+            screenManager.openNewCommentForm(activity, stepId, it.parent ?: it.id)
         }
     }
 
@@ -346,7 +346,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
         }
         voteId?.let {
             val voteObject = Vote(voteId, voteValue)
-            shell.api.makeVote(it, voteValue).enqueue(object : Callback<VoteResponse> {
+            api.makeVote(it, voteValue).enqueue(object : Callback<VoteResponse> {
                 override fun onResponse(call: Call<VoteResponse>?, response: Response<VoteResponse>?) {
                     //todo event for update
                     if (response?.isSuccessful ?: false) {
@@ -420,7 +420,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun loadDiscussionProxyById(id: String = discussionId) {
-        shell.api.getDiscussionProxies(id).enqueue(object : Callback<DiscussionProxyResponse> {
+        api.getDiscussionProxies(id).enqueue(object : Callback<DiscussionProxyResponse> {
             override fun onResponse(call: Call<DiscussionProxyResponse>?, response: Response<DiscussionProxyResponse>?) {
                 if (response != null && response.isSuccessful) {
                     val discussionProxy = response.body().discussionProxies.firstOrNull()

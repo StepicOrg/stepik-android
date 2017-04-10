@@ -8,11 +8,13 @@ import com.mixpanel.android.mpmetrics.MixpanelAPI
 import com.yandex.metrica.YandexMetrica
 import org.json.JSONObject
 import org.stepic.droid.configuration.Config
+import org.stepic.droid.di.AppSingleton
 import java.util.*
-import javax.inject.Singleton
+import javax.inject.Inject
 
-@Singleton
-class AnalyticImpl(context: Context, config: Config) : Analytic {
+@AppSingleton
+class AnalyticImpl
+@Inject constructor(context: Context, config: Config) : Analytic {
     override fun reportEventValue(eventName: String, value: Long) {
         val bundle = Bundle()
         bundle.putLong(FirebaseAnalytics.Param.VALUE, value)

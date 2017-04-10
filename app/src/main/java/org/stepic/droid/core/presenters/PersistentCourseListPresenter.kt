@@ -6,11 +6,12 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.FilterApplicator
 import org.stepic.droid.core.presenters.contracts.CoursesView
+import org.stepic.droid.di.course_list.CourseListScope
 import org.stepic.droid.model.Course
 import org.stepic.droid.model.StepikFilter
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import org.stepic.droid.store.operations.DatabaseFacade
-import org.stepic.droid.store.operations.Table
+import org.stepic.droid.storage.operations.DatabaseFacade
+import org.stepic.droid.storage.operations.Table
 import org.stepic.droid.util.RWLocks
 import org.stepic.droid.web.Api
 import org.stepic.droid.web.CoursesStepicResponse
@@ -19,15 +20,18 @@ import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
+import javax.inject.Inject
 
-class PersistentCourseListPresenter(
-        val analytic: Analytic,
-        val databaseFacade: DatabaseFacade,
-        val threadPoolExecutor: ThreadPoolExecutor,
-        val mainHandler: MainHandler,
-        val api: Api,
-        val filterApplicator: FilterApplicator,
-        val sharedPreferenceHelper: SharedPreferenceHelper
+@CourseListScope
+class PersistentCourseListPresenter
+@Inject constructor(
+        private val analytic: Analytic,
+        private val databaseFacade: DatabaseFacade,
+        private val threadPoolExecutor: ThreadPoolExecutor,
+        private val mainHandler: MainHandler,
+        private val api: Api,
+        private val filterApplicator: FilterApplicator,
+        private val sharedPreferenceHelper: SharedPreferenceHelper
 ) : PresenterBase<CoursesView>() {
 
     val currentPage = AtomicInteger(1);

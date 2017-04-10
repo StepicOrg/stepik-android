@@ -20,7 +20,7 @@ import org.stepic.droid.events.video.FailToMoveFilesEvent;
 import org.stepic.droid.events.video.VideosMovedEvent;
 import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.preferences.UserPreferences;
-import org.stepic.droid.store.operations.DatabaseFacade;
+import org.stepic.droid.storage.operations.DatabaseFacade;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.StorageUtil;
 

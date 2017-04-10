@@ -79,7 +79,7 @@ public class NotificationsFragment extends FragmentBase {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_notifications, null);
+        return inflater.inflate(R.layout.fragment_notifications, container, false);
     }
 
     @Override
@@ -89,7 +89,7 @@ public class NotificationsFragment extends FragmentBase {
             authUserButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    shell.getScreenProvider().showLaunchScreen(getActivity());
+                    screenManager.showLaunchScreen(getActivity());
                 }
             });
             toolbar.setVisibility(View.GONE);
@@ -132,7 +132,7 @@ public class NotificationsFragment extends FragmentBase {
                     switch (item.getItemId()) {
                         case R.id.action_settings:
                             analytic.reportEvent(Analytic.Interaction.CLICK_SETTINGS_FROM_NOTIFICATION);
-                            shell.getScreenProvider().showSettings(getActivity());
+                            screenManager.showSettings(getActivity());
                             return true;
                     }
                     return false;

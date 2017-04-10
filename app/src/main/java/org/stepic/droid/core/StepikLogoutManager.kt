@@ -6,17 +6,19 @@ import android.webkit.CookieManager
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.preferences.UserPreferences
-import org.stepic.droid.store.operations.DatabaseFacade
+import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.FileUtil
 import org.stepic.droid.util.RWLocks
 import java.util.concurrent.ThreadPoolExecutor
+import javax.inject.Inject
 
-class StepikLogoutManager(private val threadPoolExecutor: ThreadPoolExecutor,
-                          private val mainHandler: MainHandler,
-                          private val userPreferences: UserPreferences,
-                          private val systemDownloadManager: DownloadManager,
-                          private val sharedPreferenceHelper: SharedPreferenceHelper,
-                          private val databaseFacade: DatabaseFacade) {
+class StepikLogoutManager
+@Inject constructor(private val threadPoolExecutor: ThreadPoolExecutor,
+                    private val mainHandler: MainHandler,
+                    private val userPreferences: UserPreferences,
+                    private val systemDownloadManager: DownloadManager,
+                    private val sharedPreferenceHelper: SharedPreferenceHelper,
+                    private val databaseFacade: DatabaseFacade) {
 
     fun logout(afterClearData: () -> Unit) {
         threadPoolExecutor.execute {

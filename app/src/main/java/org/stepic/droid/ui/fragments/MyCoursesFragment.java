@@ -6,7 +6,7 @@ import org.stepic.droid.base.CoursesDatabaseFragmentBase;
 import org.stepic.droid.events.courses.FailDropCourseEvent;
 import org.stepic.droid.events.courses.SuccessDropCourseEvent;
 import org.stepic.droid.events.joining_course.SuccessJoinEvent;
-import org.stepic.droid.store.operations.Table;
+import org.stepic.droid.storage.operations.Table;
 
 public class MyCoursesFragment extends CoursesDatabaseFragmentBase {
 

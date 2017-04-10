@@ -23,6 +23,7 @@ import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.configuration.Config;
+import org.stepic.droid.di.AppSingleton;
 import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Lesson;
@@ -32,7 +33,7 @@ import org.stepic.droid.model.Unit;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.services.ViewPusher;
-import org.stepic.droid.store.operations.Table;
+import org.stepic.droid.storage.operations.Table;
 import org.stepic.droid.ui.activities.AboutAppActivity;
 import org.stepic.droid.ui.activities.CommentsActivity;
 import org.stepic.droid.ui.activities.CourseDetailActivity;
@@ -64,9 +65,8 @@ import java.net.URLEncoder;
 import java.util.Locale;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
-@Singleton
+@AppSingleton
 public class ScreenManagerImpl implements ScreenManager {
     private final SharedPreferenceHelper sharedPreferences;
     private final Config config;

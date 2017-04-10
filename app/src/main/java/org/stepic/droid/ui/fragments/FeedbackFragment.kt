@@ -30,8 +30,8 @@ class FeedbackFragment : FragmentBase() {
     }
 
     private fun initButtons() {
-        feedbackGoodButton.setOnClickListener { shell.screenProvider.showStoreWithApp(activity) }
-        feedbackBadButton.setOnClickListener { shell.screenProvider.showTextFeedback(activity) }
+        feedbackGoodButton.setOnClickListener { screenManager.showStoreWithApp(activity) }
+        feedbackBadButton.setOnClickListener { screenManager.showTextFeedback(activity) }
     }
 
     private fun destroyButtons() {

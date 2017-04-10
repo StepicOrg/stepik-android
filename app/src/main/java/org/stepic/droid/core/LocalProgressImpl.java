@@ -10,7 +10,7 @@ import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
-import org.stepic.droid.store.operations.DatabaseFacade;
+import org.stepic.droid.storage.operations.DatabaseFacade;
 import org.stepic.droid.util.StringUtil;
 import org.stepic.droid.web.Api;
 

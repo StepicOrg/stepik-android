@@ -5,12 +5,13 @@ import com.squareup.otto.Bus
 import org.joda.time.DateTime
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.core.presenters.contracts.CourseJoinView
+import org.stepic.droid.di.course.CourseAndSectionsScope
 import org.stepic.droid.events.joining_course.FailJoinEvent
 import org.stepic.droid.events.joining_course.SuccessJoinEvent
 import org.stepic.droid.model.Course
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import org.stepic.droid.store.operations.DatabaseFacade
-import org.stepic.droid.store.operations.Table
+import org.stepic.droid.storage.operations.DatabaseFacade
+import org.stepic.droid.storage.operations.Table
 import org.stepic.droid.web.Api
 import retrofit2.Call
 import retrofit2.Callback
@@ -19,6 +20,7 @@ import java.net.HttpURLConnection
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
 
+@CourseAndSectionsScope
 class CourseJoinerPresenter
 @Inject constructor(
         private val sharedPreferenceHelper: SharedPreferenceHelper,

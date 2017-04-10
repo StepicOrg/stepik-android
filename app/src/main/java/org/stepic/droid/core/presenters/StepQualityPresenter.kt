@@ -3,17 +3,22 @@ package org.stepic.droid.core.presenters
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.StepQualityView
+import org.stepic.droid.di.step.StepScope
 import org.stepic.droid.model.Step
 import org.stepic.droid.model.Video
 import org.stepic.droid.preferences.UserPreferences
-import org.stepic.droid.store.operations.DatabaseFacade
+import org.stepic.droid.storage.operations.DatabaseFacade
 import java.util.concurrent.ThreadPoolExecutor
+import javax.inject.Inject
 
-class StepQualityPresenter(val threadPoolExecutor: ThreadPoolExecutor,
-                           val mainHandler: MainHandler,
-                           val databaseFacade: DatabaseFacade,
-                           val userPreferences: UserPreferences,
-                           val analytic: Analytic) : PresenterBase<StepQualityView>() {
+@StepScope
+class StepQualityPresenter
+@Inject constructor(
+        private val threadPoolExecutor: ThreadPoolExecutor,
+        private val mainHandler: MainHandler,
+        private val databaseFacade: DatabaseFacade,
+        private val userPreferences: UserPreferences,
+        private val analytic: Analytic) : PresenterBase<StepQualityView>() {
 
     fun determineQuality(stepVideo: Video?) {
         if (stepVideo == null) {

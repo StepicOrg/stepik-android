@@ -2,10 +2,10 @@ package org.stepic.droid.ui.custom;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.support.v7.widget.AppCompatTextView;
 import android.text.SpannableStringBuilder;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.TextView;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.App;
@@ -13,7 +13,7 @@ import org.stepic.droid.util.resolvers.text.TextResolver;
 
 import javax.inject.Inject;
 
-public class ExpandableTextView extends TextView {
+public class ExpandableTextView extends AppCompatTextView {
     private static final int DEFAULT_TRIM_LENGTH = 200;
     private final String ELLIPSIS;
     private CharSequence originalText;

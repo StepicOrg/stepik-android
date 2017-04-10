@@ -14,15 +14,12 @@ import org.stepic.droid.BuildConfig;
 import org.stepic.droid.R;
 import org.stepic.droid.core.ComponentManager;
 import org.stepic.droid.core.ComponentManagerImpl;
-import org.stepic.droid.core.components.AppCoreComponent;
-import org.stepic.droid.core.components.DaggerAppCoreComponent;
-import org.stepic.droid.core.components.DaggerStorageComponent;
-import org.stepic.droid.core.components.StorageComponent;
-import org.stepic.droid.core.modules.AppCoreModule;
-import org.stepic.droid.core.modules.StorageModule;
+import org.stepic.droid.di.AppCoreComponent;
+import org.stepic.droid.di.DaggerAppCoreComponent;
+import org.stepic.droid.di.storage.DaggerStorageComponent;
 import org.stepic.droid.fonts.FontType;
 import org.stepic.droid.fonts.FontsProvider;
-import org.stepic.droid.store.InitialDownloadUpdater;
+import org.stepic.droid.storage.InitialDownloadUpdater;
 
 import javax.inject.Inject;
 
@@ -33,7 +30,6 @@ public class App extends MultiDexApplication {
 
     protected static App application;
     private AppCoreComponent component;
-    private StorageComponent storageComponent;
     private ComponentManager componentManager;
 
     //    private RefWatcher refWatcher;
@@ -64,13 +60,12 @@ public class App extends MultiDexApplication {
         AppEventsLogger.activateApp(this);
         VKSdk.initialize(this);
 
-        StorageModule storageModule = new StorageModule(this);
-        storageComponent = DaggerStorageComponent.builder().
-                storageModule(storageModule).build();
-
         component = DaggerAppCoreComponent.builder()
-                .appCoreModule(new AppCoreModule(application))
-                .storageModule(storageModule)
+                .context(application)
+                .setStorageComponent(DaggerStorageComponent
+                        .builder()
+                        .context(application)
+                        .build())
                 .build();
 
         component.inject(this);
@@ -95,16 +90,8 @@ public class App extends MultiDexApplication {
 //        return application.refWatcher;
 //    }
 
-    public static AppCoreComponent component(Context context) {
-        return ((App) context.getApplicationContext()).component;
-    }
-
     public static AppCoreComponent component() {
         return application.component;
-    }
-
-    public static StorageComponent storageComponent() {
-        return application.storageComponent;
     }
 
     @Override

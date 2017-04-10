@@ -114,7 +114,7 @@ class CommentManager @Inject constructor() {
                     }
                 }
         sumOfCachedParent = cachedCommentsSetMap.filter { it.value.parent == null }.size
-        if (sumOfCachedParent > discussionOrderList.size ?: 0) {
+        if (sumOfCachedParent > discussionOrderList.size) {
             sumOfCachedParent = discussionOrderList.size
         }
         cachedCommentsList.clear()

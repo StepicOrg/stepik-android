@@ -19,16 +19,15 @@ import com.squareup.otto.Subscribe;
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.base.App;
-import org.stepic.droid.core.modules.CourseListModule;
+import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.core.presenters.ContinueCoursePresenter;
 import org.stepic.droid.core.presenters.contracts.ContinueCourseView;
 import org.stepic.droid.core.presenters.contracts.CoursesView;
 import org.stepic.droid.events.joining_course.SuccessJoinEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
-import org.stepic.droid.store.operations.Table;
+import org.stepic.droid.storage.operations.Table;
 import org.stepic.droid.ui.activities.MainFeedActivity;
 import org.stepic.droid.ui.adapters.CoursesAdapter;
 import org.stepic.droid.ui.custom.TouchDispatchableFrameLayout;
@@ -90,12 +89,18 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
     ContinueCoursePresenter continueCoursePresenter;
 
     @Override
+    protected void injectComponent() {
+        App
+                .component()
+                .courseListComponentBuilder()
+                .build()
+                .inject(this);
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        App.component()
-                .plus(new CourseListModule())
-                .inject(this);
     }
 
     @Nullable
@@ -147,7 +152,7 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
             @Override
             public void onClick(View v) {
                 analytic.reportEvent(Analytic.Anonymous.AUTH_CENTER);
-                shell.getScreenProvider().showLaunchScreen(getActivity());
+                screenManager.showLaunchScreen(getActivity());
             }
         });
 
@@ -276,13 +281,13 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
     @Override
     public void onOpenStep(long courseId, @NotNull Section section, long lessonId, long unitId, int stepPosition) {
         ProgressHelper.dismiss(getFragmentManager(), continueLoadingTag);
-        shell.getScreenProvider().continueCourse(getActivity(), courseId, section, lessonId, unitId, stepPosition);
+        screenManager.continueCourse(getActivity(), courseId, section, lessonId, unitId, stepPosition);
     }
 
     @Override
     public void onAnyProblemWhileContinue(@NotNull Course course) {
         ProgressHelper.dismiss(getFragmentManager(), continueLoadingTag);
-        shell.getScreenProvider().showSections(getActivity(), course);
+        screenManager.showSections(getActivity(), course);
     }
 
     @Override

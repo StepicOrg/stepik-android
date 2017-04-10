@@ -44,7 +44,6 @@ import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.base.FragmentBase;
-import org.stepic.droid.core.modules.CourseDetailModule;
 import org.stepic.droid.core.presenters.CourseDetailAnalyticPresenter;
 import org.stepic.droid.core.presenters.CourseFinderPresenter;
 import org.stepic.droid.core.presenters.CourseJoinerPresenter;
@@ -204,7 +203,11 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
     @Override
     protected void injectComponent() {
-        App.component().plus(new CourseDetailModule()).inject(this);
+        App
+                .component()
+                .courseComponentBuilder()
+                .build()
+                .inject(this);
     }
 
     @Override
@@ -228,11 +231,11 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         //VIEW:
         coursePropertyList = new ArrayList<>();
         joinCourseSpinner = new LoadingProgressDialog(getActivity());
-        footer = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.fragment_course_detailed_footer, null, false);
+        footer = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.fragment_course_detailed_footer, coursePropertyListView, false);
         coursePropertyListView.addFooterView(footer);
         instructorsCarousel = ButterKnife.findById(footer, R.id.instructors_carousel);
 
-        header = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.fragment_course_detailed_header, null, false);
+        header = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.fragment_course_detailed_header, coursePropertyListView, false);
         coursePropertyListView.addHeaderView(header);
 
         courseIcon = ButterKnife.findById(header, R.id.courseIcon);
@@ -252,7 +255,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
             @Override
             public void onClick(View v) {
                 if (sharedPreferenceHelper.getAuthResponseFromStore() != null) {
-                    shell.getScreenProvider().showFindCourses(getContext());
+                    screenManager.showFindCourses(getContext());
                     finish();
                 } else {
                     unauthorizedDialog = UnauthorizedDialogFragment.newInstance(course);
@@ -397,7 +400,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
             continueCourseView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    shell.getScreenProvider().showSections(getActivity(), course);
+                    screenManager.showSections(getActivity(), course);
                 }
             });
         } else {
@@ -426,7 +429,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     private void fetchInstructors() {
         if (course != null && course.getInstructors() != null && course.getInstructors().length != 0) {
             bus.post(new StartLoadingInstructorsEvent(course));
-            shell.getApi().getUsers(course.getInstructors()).enqueue(new Callback<UserStepicResponse>() {
+            api.getUsers(course.getInstructors()).enqueue(new Callback<UserStepicResponse>() {
                 @Override
                 public void onResponse(Call<UserStepicResponse> call, Response<UserStepicResponse> response) {
                     if (response.isSuccessful()) {
@@ -476,7 +479,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
             player.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    shell.getScreenProvider().showVideo(getActivity(), urlToVideo, videoId);
+                    screenManager.showVideo(getActivity(), urlToVideo, videoId);
                 }
             });
         }
@@ -642,7 +645,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     public void onSuccessJoin(SuccessJoinEvent e) {
         if (course != null && e.getCourse() != null && e.getCourse().getCourseId() == course.getCourseId()) {
             e.getCourse().setEnrollment((int) e.getCourse().getCourseId());
-            shell.getScreenProvider().showSections(getActivity(), course, true);
+            screenManager.showSections(getActivity(), course, true);
             finish();
         }
         ProgressHelper.dismiss(joinCourseSpinner);
