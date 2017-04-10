@@ -414,4 +414,8 @@ class DatabaseFacade
         }
     }
 
+    fun getNotificationById(notificationId: Long): Notification? {
+        return notificationDao.get(DbStructureNotification.Column.ID, notificationId.toString())
+    }
+
 }

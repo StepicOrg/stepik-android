@@ -77,7 +77,6 @@ interface AppCoreComponent {
     fun notificationsComponentBuilder(): NotificationsComponent.Builder
 
 
-
     fun inject(someActivity: FragmentActivityBase)
 
     fun inject(adapter: CoursesAdapter)
@@ -123,6 +122,8 @@ interface AppCoreComponent {
     fun inject(service: CancelLoadingService)
 
     fun inject(downloadClickReceiver: DownloadClickReceiver)
+
+    fun inject(rescheduleService: RescheduleService)
 
     fun inject(receiver: MyPhoneStateListener)
 

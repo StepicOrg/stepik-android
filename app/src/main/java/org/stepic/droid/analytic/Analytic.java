@@ -247,6 +247,7 @@ public interface Analytic {
         String REMINDER_SWIPE_TO_CANCEL = "remind_swipe_to_cancel";
         String STREAK_SWIPE_TO_CANCEL = "streak_swipe_to_cancel";
         String RESCHEDULE_TO_MORNING = "notification_reschedule_to_morning";
+        String NEED_RESCHEDULE_BUT_ALREADY_RESCHEDULED = "notification_need_reschedule_but_already_scheduled";
     }
 
     interface Feedback {
