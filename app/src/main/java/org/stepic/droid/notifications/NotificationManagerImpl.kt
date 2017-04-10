@@ -142,6 +142,40 @@ class NotificationManagerImpl
         }
     }
 
+    override fun showNotification(notification: Notification) {
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            throw RuntimeException("Can't create notification on main thread")
+        }
+
+        if (!userPreferences.isNotificationEnabled(notification.type)) {
+            analytic.reportEventWithName(Analytic.Notification.DISABLED_BY_USER, notification.type?.name)
+        } else if (!sharedPreferenceHelper.isGcmTokenOk) {
+            analytic.reportEvent(Analytic.Notification.GCM_TOKEN_NOT_OK)
+        } else {
+            resolveAndSendNotification(notification)
+        }
+    }
+
+    override fun discardAllNotifications(courseId: Long) {
+        databaseFacade.removeAllNotificationsByCourseId(courseId)
+    }
+
+    override fun tryOpenNotificationInstantly(notification: Notification) {
+        val isShown = when (notification.type) {
+            NotificationType.learn -> openLearnNotification(notification)
+            NotificationType.comments -> openCommentNotification(notification)
+            NotificationType.review -> openReviewNotification(notification)
+            NotificationType.teach -> openTeach(notification)
+            NotificationType.other -> openDefault(notification)
+            null -> false
+        }
+
+        if (!isShown) {
+            analytic.reportEvent(Analytic.Notification.NOTIFICATION_NOT_OPENABLE, notification.action ?: "")
+        }
+
+    }
+
     private fun streakNotificationNumberIsOverflow() {
         sharedPreferenceHelper.isStreakNotificationEnabled = false
         val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
@@ -197,21 +231,6 @@ class NotificationManagerImpl
     private fun afterLocalNotificationShown(day: SharedPreferenceHelper.NotificationDay) {
         analytic.reportEvent(Analytic.Notification.REMIND_SHOWN, day.name)
         sharedPreferenceHelper.setNotificationShown(day)
-    }
-
-
-    override fun showNotification(notification: Notification) {
-        if (Looper.myLooper() == Looper.getMainLooper()) {
-            throw RuntimeException("Can't create notification on main thread")
-        }
-
-        if (!userPreferences.isNotificationEnabled(notification.type)) {
-            analytic.reportEventWithName(Analytic.Notification.DISABLED_BY_USER, notification.type?.name)
-        } else if (!sharedPreferenceHelper.isGcmTokenOk) {
-            analytic.reportEvent(Analytic.Notification.GCM_TOKEN_NOT_OK)
-        } else {
-            resolveAndSendNotification(notification)
-        }
     }
 
     private fun resolveAndSendNotification(notification: Notification) {
@@ -513,26 +532,6 @@ class NotificationManagerImpl
                     + context.packageName + "/" + R.raw.default_sound)
             builder.setSound(stepicSound)
         }
-    }
-
-    override fun discardAllNotifications(courseId: Long) {
-        databaseFacade.removeAllNotificationsByCourseId(courseId)
-    }
-
-    override fun tryOpenNotificationInstantly(notification: Notification) {
-        val isShown = when (notification.type) {
-            NotificationType.learn -> openLearnNotification(notification)
-            NotificationType.comments -> openCommentNotification(notification)
-            NotificationType.review -> openReviewNotification(notification)
-            NotificationType.teach -> openTeach(notification)
-            NotificationType.other -> openDefault(notification)
-            null -> false
-        }
-
-        if (!isShown) {
-            analytic.reportEvent(Analytic.Notification.NOTIFICATION_NOT_OPENABLE, notification.action ?: "")
-        }
-
     }
 
     private fun openTeach(notification: Notification): Boolean {
