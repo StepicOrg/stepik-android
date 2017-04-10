@@ -59,11 +59,18 @@ public class RescheduleCheckerImplTest {
     }
 
     @Test
-    public void isRescheduleNeed_equalIntervalAndValueInThatHout_false() {
+    public void isRescheduleNeed_equalIntervalAndValueInThatHour_false() {
         rescheduleChecker = new RescheduleCheckerImpl(1, 1);
         long millis = DateTime.now().withHourOfDay(1).withMinuteOfHour(15).getMillis();
         boolean result = rescheduleChecker.isRescheduleNeed(millis);
         assertFalse(result);
+    }
+
+    @Test
+    public void isRescheduleNeed_beforeEnd_true() {
+        long millis = DateTime.now().withHourOfDay(defaultEndHour - 1).withMinuteOfHour(15).getMillis();
+        boolean result = rescheduleChecker.isRescheduleNeed(millis);
+        assertTrue(result);
     }
 
 

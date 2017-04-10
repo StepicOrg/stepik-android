@@ -1,5 +1,6 @@
 package org.stepic.droid.notifications
 
+import org.joda.time.DateTime
 import javax.inject.Inject
 
 class RescheduleCheckerImpl
@@ -11,6 +12,14 @@ class RescheduleCheckerImpl
     private val invertAnswer: Boolean
 
     init {
+        if (endHour < 0 || startHour < 0) {
+            throw IllegalArgumentException("interval bounds cannot be negative")
+        }
+        if (endHour > 23 || startHour > 23) {
+            throw IllegalArgumentException("interval bounds cannot be greater than 23")
+        }
+
+
         if (endHour >= startHour) {
             invertAnswer = false
         } else {
@@ -22,6 +31,9 @@ class RescheduleCheckerImpl
     }
 
     override fun isRescheduleNeed(nowMillis: Long): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val now = DateTime(nowMillis)
+        val nowHourInt = now.hourOfDay().get()
+        val result: Boolean = nowHourInt in startHour..(endHour - 1)
+        return result.xor(invertAnswer)
     }
 }
