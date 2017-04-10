@@ -2,6 +2,7 @@ package org.stepic.droid.di
 
 import android.app.AlarmManager
 import android.app.DownloadManager
+import android.app.NotificationManager
 import android.content.Context
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
@@ -22,10 +23,7 @@ import org.stepic.droid.configuration.ConfigReleaseImpl
 import org.stepic.droid.core.*
 import org.stepic.droid.fonts.FontsProvider
 import org.stepic.droid.fonts.FontsProviderImpl
-import org.stepic.droid.notifications.LocalReminder
-import org.stepic.droid.notifications.LocalReminderImpl
-import org.stepic.droid.notifications.StepikNotificationManager
-import org.stepic.droid.notifications.StepikNotificationManagerImpl
+import org.stepic.droid.notifications.*
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.social.SocialManager
@@ -47,6 +45,9 @@ import java.util.concurrent.ThreadPoolExecutor
 
 @Module
 abstract class AppCoreModule {
+
+    @Binds
+    internal abstract fun provideRescheduleChecker(rescheduleChecker: RescheduleCheckerImpl): RescheduleChecker
 
     @Binds
     @AppSingleton
@@ -254,6 +255,13 @@ abstract class AppCoreModule {
             firebaseRemoteConfig.setDefaults(R.xml.remote_config_defaults)
             return firebaseRemoteConfig
         }
+
+
+        @Binds
+        @JvmStatic
+        internal fun provideSystemNotificationManager(context: Context) =
+                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
     }
 
 }

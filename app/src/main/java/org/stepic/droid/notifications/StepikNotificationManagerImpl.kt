@@ -52,7 +52,9 @@ class StepikNotificationManagerImpl
                     private val screenManager: ScreenManager,
                     private val threadPoolExecutor: ThreadPoolExecutor,
                     private val context: Context,
-                    private val localReminder: LocalReminder) : StepikNotificationManager {
+                    private val localReminder: LocalReminder,
+                    private val notificationManager: NotificationManager,
+                    private val rescheduleChecker: RescheduleChecker) : StepikNotificationManager {
     val notificationStreakId: Long = 3214L
 
     @WorkerThread
@@ -463,8 +465,9 @@ class StepikNotificationManagerImpl
                         .setNumber(numberOfNotification)
             }
 
+
+
             analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, stepikNotification.id?.toString() ?: "", stepikNotification.type?.name)
-            val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.notify(courseId.toInt(), notification.build())
         }
     }
@@ -488,7 +491,6 @@ class StepikNotificationManagerImpl
         notification.setStyle(NotificationCompat.BigTextStyle()
                 .bigText(justText))
                 .setContentText(justText)
-        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(id.toInt(), notification.build())
     }
 
