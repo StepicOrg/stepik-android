@@ -7,7 +7,7 @@ import android.content.Intent;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.notifications.LocalReminder;
-import org.stepic.droid.notifications.NotificationManager;
+import org.stepic.droid.notifications.StepikNotificationManager;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 
 import javax.inject.Inject;
@@ -24,7 +24,7 @@ public class BootCompletedReceiver extends BroadcastReceiver {
     Analytic analytic;
 
     @Inject
-    NotificationManager notificationManager;
+    StepikNotificationManager stepikNotificationManager;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -36,6 +36,6 @@ public class BootCompletedReceiver extends BroadcastReceiver {
         }
         localReminder.userChangeStateOfNotification();
 
-        notificationManager.showAllRescheduledNotifications();
+        stepikNotificationManager.showAllRescheduledNotifications();
     }
 }

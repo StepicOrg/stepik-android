@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 class NotificationBroadcastReceiver : BroadcastReceiver() {
     @Inject
-    lateinit var notificationManager: NotificationManager
+    lateinit var stepikNotificationManager: StepikNotificationManager
 
     @Inject
     lateinit var threadPool: ThreadPoolExecutor
@@ -35,7 +35,7 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
             val courseId = intent.extras?.getLong(AppConstants.COURSE_ID_KEY)
             courseId?.let {
                 threadPool.execute {
-                    notificationManager.discardAllShownNotificationsRelatedToCourse(it)
+                    stepikNotificationManager.discardAllShownNotificationsRelatedToCourse(it)
                 }
             }
         } else if (action == AppConstants.NOTIFICATION_CANCELED_REMINDER) {

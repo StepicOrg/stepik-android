@@ -408,4 +408,10 @@ class DatabaseFacade
         return notificationDao.getAll()
     }
 
+    fun removeNotification(id: Long?) {
+        id?.let {
+            notificationDao.delete(DbStructureNotification.Column.ID, it.toString())
+        }
+    }
+
 }

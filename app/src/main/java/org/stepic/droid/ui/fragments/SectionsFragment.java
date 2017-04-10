@@ -78,7 +78,7 @@ import org.stepic.droid.model.CalendarItem;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.SectionLoadingState;
-import org.stepic.droid.notifications.NotificationManager;
+import org.stepic.droid.notifications.StepikNotificationManager;
 import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.ui.adapters.SectionAdapter;
 import org.stepic.droid.ui.dialogs.ChooseCalendarDialog;
@@ -193,7 +193,7 @@ public class SectionsFragment
     SectionsPresenter sectionsPresenter;
 
     @Inject
-    NotificationManager notificationManager;
+    StepikNotificationManager stepikNotificationManager;
 
     @Inject
     InvitationPresenter invitationPresenter;
@@ -833,7 +833,7 @@ public class SectionsFragment
                 @Override
                 protected Void doInBackground(Void... params) {
                     List<Notification> notifications = databaseFacade.getAllNotificationsOfCourse(courseId);
-                    notificationManager.discardAllShownNotificationsRelatedToCourse(courseId);
+                    stepikNotificationManager.discardAllShownNotificationsRelatedToCourse(courseId);
                     for (Notification notificationItem : notifications) {
                         if (notificationItem != null && notificationItem.getId() != null) {
                             try {

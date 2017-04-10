@@ -41,7 +41,7 @@ import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
 
 
-class NotificationManagerImpl
+class StepikNotificationManagerImpl
 @Inject constructor(private val sharedPreferenceHelper: SharedPreferenceHelper,
                     private val api: Api,
                     private val configs: Config,
@@ -52,7 +52,7 @@ class NotificationManagerImpl
                     private val screenManager: ScreenManager,
                     private val threadPoolExecutor: ThreadPoolExecutor,
                     private val context: Context,
-                    private val localReminder: LocalReminder) : org.stepic.droid.notifications.NotificationManager {
+                    private val localReminder: LocalReminder) : StepikNotificationManager {
     val notificationStreakId: Long = 3214L
 
     @WorkerThread
@@ -149,6 +149,7 @@ class NotificationManagerImpl
 
         if (!userPreferences.isNotificationEnabled(notification.type)) {
             analytic.reportEventWithName(Analytic.Notification.DISABLED_BY_USER, notification.type?.name)
+            databaseFacade.removeNotification(notification.id) //remove notification if it is disabled
         } else if (!sharedPreferenceHelper.isGcmTokenOk) {
             analytic.reportEvent(Analytic.Notification.GCM_TOKEN_NOT_OK)
         } else {

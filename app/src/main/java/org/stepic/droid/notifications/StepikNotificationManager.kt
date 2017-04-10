@@ -4,7 +4,7 @@ import android.support.annotation.MainThread
 import android.support.annotation.WorkerThread
 import org.stepic.droid.notifications.model.Notification
 
-interface NotificationManager {
+interface StepikNotificationManager {
     @WorkerThread
     fun showNotification(notification: Notification);
 

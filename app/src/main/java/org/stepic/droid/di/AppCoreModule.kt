@@ -24,8 +24,8 @@ import org.stepic.droid.fonts.FontsProvider
 import org.stepic.droid.fonts.FontsProviderImpl
 import org.stepic.droid.notifications.LocalReminder
 import org.stepic.droid.notifications.LocalReminderImpl
-import org.stepic.droid.notifications.NotificationManager
-import org.stepic.droid.notifications.NotificationManagerImpl
+import org.stepic.droid.notifications.StepikNotificationManager
+import org.stepic.droid.notifications.StepikNotificationManagerImpl
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.social.SocialManager
@@ -98,7 +98,7 @@ abstract class AppCoreModule {
 
     @AppSingleton
     @Binds
-    internal abstract fun provideNotificationManager(notificationManager: NotificationManagerImpl): NotificationManager
+    internal abstract fun provideNotificationManager(notificationManager: StepikNotificationManagerImpl): StepikNotificationManager
 
     @Binds
     @AppSingleton
