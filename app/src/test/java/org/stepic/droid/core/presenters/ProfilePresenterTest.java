@@ -15,6 +15,7 @@ import org.stepic.droid.model.User;
 import org.stepic.droid.model.UserViewModel;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.test_utils.ConcurrencyUtilForTest;
+import org.stepic.droid.test_utils.ResponseGeneratorKt;
 import org.stepic.droid.test_utils.generators.FakeProfileGenerator;
 import org.stepic.droid.util.ProfileExtensionKt;
 import org.stepic.droid.util.UserExtensionKt;
@@ -32,8 +33,6 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import retrofit2.Call;
-import retrofit2.Response;
 
 
 public class ProfilePresenterTest {
@@ -41,7 +40,7 @@ public class ProfilePresenterTest {
     private ProfilePresenter profilePresenter; //we test logic of this object
 
     @Mock
-    private ThreadPoolExecutor threadPoolExecutor;
+    ThreadPoolExecutor threadPoolExecutor;
 
     @Mock
     Analytic analytic;
@@ -150,8 +149,8 @@ public class ProfilePresenterTest {
 
         profilePresenter.initProfile();
 
-        verify(sharedPreferenceHelper, times(1)).getProfile();
-        verify(api, times(1)).getUsers(any(long[].class));
+        verify(sharedPreferenceHelper).getProfile();
+        verify(api).getUsers(any(long[].class));
 
         InOrder inOrder = inOrder(profileView);
         inOrder.verify(profileView).showLoadingAll();
@@ -174,7 +173,7 @@ public class ProfilePresenterTest {
             profilePresenter.initProfile();
         }
 
-        verify(sharedPreferenceHelper, times(1)).getProfile();
+        verify(sharedPreferenceHelper).getProfile();
 
         //verify calls of view methods
         InOrder inOrder = inOrder(profileView);
@@ -186,14 +185,10 @@ public class ProfilePresenterTest {
     public void initProfile_notMy_success() throws IOException {
         profilePresenter.attachView(profileView);
 
-        Call<UserStepicResponse> userStepicResponseCall = (Call<UserStepicResponse>) mock(Call.class);
-        Response<UserStepicResponse> userResponse = (Response<UserStepicResponse>) mock(Response.class);
         UserStepicResponse responseMock = mock(UserStepicResponse.class);
         List<User> userListMock = (List<User>) mock(List.class);
 
-        when(api.getUsers(any(long[].class))).thenReturn(userStepicResponseCall);
-        when(userStepicResponseCall.execute()).thenReturn(userResponse);
-        when(userResponse.body()).thenReturn(responseMock);
+        ResponseGeneratorKt.useMockInsteadCall(when(api.getUsers(any(long[].class))), responseMock);
         when(responseMock.getUsers()).thenReturn(userListMock);
         when(userListMock.get(0)).thenReturn(fakeUserFromApi);
 
@@ -203,7 +198,7 @@ public class ProfilePresenterTest {
         profilePresenter.initProfile(fromApiUserViewModel.getId());
         profilePresenter.detachView(profileView);
 
-        verify(api, times(1)).getUsers(any(long[].class));
+        verify(api).getUsers(any(long[].class));
 
         InOrder inOrder = inOrder(profileView);
         inOrder.verify(profileView).showLoadingAll();

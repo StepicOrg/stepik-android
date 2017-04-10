@@ -198,6 +198,8 @@ public interface Analytic {
         String UNITS_LOADING_FAIL = "units_loading_fail";
         String UNPREDICTABLE_LOGIN_RESULT = "login_successful_was_not_correct";
         String LESSON_ACCESS_DENIED = "lesson_access_denied";
+        String SEARCH_COURSE_NO_INTERNET = "search_course_no_internet";
+        String SEARCH_COURSE_UNSUCCESSFUL = "search_course_unsuccessful";
     }
 
     interface Web {

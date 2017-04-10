@@ -1,5 +1,6 @@
 package org.stepic.droid.core.presenters
 
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.di.course_list.CourseListScope
@@ -18,13 +19,14 @@ class SearchCoursesPresenter
         private val api: Api,
         private val threadPoolExecutor: ThreadPoolExecutor,
         private val mainHandler: MainHandler,
-        private val searchResolver: SearchResolver)
+        private val searchResolver: SearchResolver,
+        private val analytic: Analytic)
     : PresenterBase<CoursesView>() {
 
     private var isLoading = AtomicBoolean(false)
     private var currentPage = AtomicInteger(1)
     private var hasNextPage = AtomicBoolean(true)
-    var isEmptyCourses = AtomicBoolean(false)
+    private var isEmptyCourses = AtomicBoolean(false)
 
     fun restoreState() {
         if (isEmptyCourses.get() && !hasNextPage.get()) {
@@ -39,9 +41,12 @@ class SearchCoursesPresenter
             view?.showLoading()
             threadPoolExecutor.execute {
                 try {
-                    api.getSearchResultsCourses(currentPage.get(), searchQuery).execute()
+                    val response = api.getSearchResultsCourses(currentPage.get(), searchQuery).execute()
+                    if (!response.isSuccessful) {
+                        analytic.reportEvent(Analytic.Error.SEARCH_COURSE_UNSUCCESSFUL, "${response.code()}  ${response.errorBody().string()}")
+                    }
 
-                    val searchResultResponseBody = api.getSearchResultsCourses(currentPage.get(), searchQuery).execute().body()
+                    val searchResultResponseBody = response.body()
                     val searchResultList = searchResultResponseBody.searchResultList
                     val courseIdsForSearch = searchResolver.getCourseIdsFromSearchResults(searchResultList)
                     hasNextPage.set(searchResultResponseBody.meta.has_next)
@@ -80,6 +85,7 @@ class SearchCoursesPresenter
 
 
                 } catch (exception: Exception) {
+                    analytic.reportError(Analytic.Error.SEARCH_COURSE_NO_INTERNET, exception)
                     mainHandler.post {
                         view?.showConnectionProblem()
                     }
