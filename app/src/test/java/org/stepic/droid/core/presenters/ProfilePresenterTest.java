@@ -149,8 +149,8 @@ public class ProfilePresenterTest {
 
         profilePresenter.initProfile();
 
-        verify(sharedPreferenceHelper, times(1)).getProfile();
-        verify(api, times(1)).getUsers(any(long[].class));
+        verify(sharedPreferenceHelper).getProfile();
+        verify(api).getUsers(any(long[].class));
 
         InOrder inOrder = inOrder(profileView);
         inOrder.verify(profileView).showLoadingAll();
@@ -173,7 +173,7 @@ public class ProfilePresenterTest {
             profilePresenter.initProfile();
         }
 
-        verify(sharedPreferenceHelper, times(1)).getProfile();
+        verify(sharedPreferenceHelper).getProfile();
 
         //verify calls of view methods
         InOrder inOrder = inOrder(profileView);
@@ -198,7 +198,7 @@ public class ProfilePresenterTest {
         profilePresenter.initProfile(fromApiUserViewModel.getId());
         profilePresenter.detachView(profileView);
 
-        verify(api, times(1)).getUsers(any(long[].class));
+        verify(api).getUsers(any(long[].class));
 
         InOrder inOrder = inOrder(profileView);
         inOrder.verify(profileView).showLoadingAll();
