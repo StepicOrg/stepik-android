@@ -47,9 +47,6 @@ import java.util.concurrent.ThreadPoolExecutor
 abstract class AppCoreModule {
 
     @Binds
-    internal abstract fun provideRescheduleChecker(rescheduleChecker: RescheduleCheckerImpl): RescheduleChecker
-
-    @Binds
     @AppSingleton
     internal abstract fun provideScreenManager(screenManager: ScreenManagerImpl): ScreenManager
 
@@ -257,10 +254,14 @@ abstract class AppCoreModule {
         }
 
 
-        @Binds
+        @Provides
         @JvmStatic
         internal fun provideSystemNotificationManager(context: Context) =
                 context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        @Provides
+        @JvmStatic
+        internal fun provideRescheduleChecker() = RescheduleCheckerImpl(BlockNotificationIntervalProvider.start, BlockNotificationIntervalProvider.end)
 
     }
 
