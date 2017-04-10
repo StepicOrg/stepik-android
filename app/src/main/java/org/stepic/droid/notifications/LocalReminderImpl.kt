@@ -6,9 +6,11 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.support.annotation.MainThread
+import android.support.annotation.WorkerThread
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.services.NewUserAlarmService
 import org.stepic.droid.services.StreakAlarmService
@@ -150,6 +152,11 @@ class LocalReminderImpl
     @MainThread
     override fun remindAboutApp() {
         remindAboutApp(null)
+    }
+
+    @WorkerThread
+    override fun rescheduleNotification(stepikNotification: Notification) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     private fun scheduleCompat(scheduleMillis: Long, interval: Long, pendingIntent: PendingIntent) {

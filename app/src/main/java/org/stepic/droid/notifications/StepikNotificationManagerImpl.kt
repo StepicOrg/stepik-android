@@ -14,6 +14,7 @@ import android.support.annotation.WorkerThread
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.TaskStackBuilder
 import com.bumptech.glide.Glide
+import org.joda.time.DateTime
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.configuration.Config
@@ -89,11 +90,11 @@ class StepikNotificationManagerImpl
                         .addNextIntent(intent)
         val title = context.resources.getString(R.string.stepik_free_courses_title)
         val remindMessage = context.resources.getString(R.string.local_remind_message)
-        showSimpleNotification(id = 4,
+        showSimpleNotification(stepikNotification = null,
                 justText = remindMessage,
                 taskBuilder = taskBuilder,
                 title = title,
-                deleteIntent = deletePendingIntent)
+                deleteIntent = deletePendingIntent, id = 4)
 
         if (!sharedPreferenceHelper.isNotificationWasShown(SharedPreferenceHelper.NotificationDay.DAY_ONE)) {
             afterLocalNotificationShown(SharedPreferenceHelper.NotificationDay.DAY_ONE)
@@ -197,10 +198,10 @@ class StepikNotificationManagerImpl
         taskBuilder.addParentStack(ProfileActivity::class.java)
         taskBuilder.addNextIntent(profileIntent)
         val message = context.getString(R.string.streak_notification_not_working)
-        showSimpleNotification(id = notificationStreakId,
+        showSimpleNotification(stepikNotification = null,
                 justText = message,
                 taskBuilder = taskBuilder,
-                title = context.getString(R.string.time_to_learn_notification_title))
+                title = context.getString(R.string.time_to_learn_notification_title), id = notificationStreakId)
     }
 
     private fun getDeleteIntentForStreaks(): PendingIntent {
@@ -227,11 +228,11 @@ class StepikNotificationManagerImpl
 
     private fun showNotificationStreakBase(message: String) {
         val taskBuilder: TaskStackBuilder = getStreakNotificationTaskBuilder()
-        showSimpleNotification(id = notificationStreakId,
+        showSimpleNotification(stepikNotification = null,
                 justText = message,
                 taskBuilder = taskBuilder,
                 title = context.getString(R.string.time_to_learn_notification_title),
-                deleteIntent = getDeleteIntentForStreaks())
+                deleteIntent = getDeleteIntentForStreaks(), id = notificationStreakId)
     }
 
     private fun getStreakNotificationTaskBuilder(): TaskStackBuilder {
@@ -287,8 +288,10 @@ class StepikNotificationManagerImpl
         taskBuilder.addParentStack(SectionActivity::class.java)
         taskBuilder.addNextIntent(intent)
 
-        analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, id.toString(), stepikNotification.type?.name)
-        showSimpleNotification(id, justText, taskBuilder, title)
+        val wasShown = showSimpleNotification(stepikNotification, justText, taskBuilder, title, id = id)
+        if (wasShown) {
+            analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, id.toString(), stepikNotification.type?.name)
+        }
     }
 
     private fun sendDefaultNotification(stepikNotification: Notification, htmlText: String, id: Long) {
@@ -308,8 +311,10 @@ class StepikNotificationManagerImpl
             taskBuilder.addParentStack(SectionActivity::class.java)
             taskBuilder.addNextIntent(intent)
 
-            analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, id.toString(), stepikNotification.type?.name)
-            showSimpleNotification(id, justText, taskBuilder, title)
+            val wasShown = showSimpleNotification(stepikNotification, justText, taskBuilder, title, id = id)
+            if (wasShown) {
+                analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, id.toString(), stepikNotification.type?.name)
+            }
         } else {
             analytic.reportEvent(Analytic.Notification.CANT_PARSE_NOTIFICATION, id.toString())
         }
@@ -334,8 +339,10 @@ class StepikNotificationManagerImpl
             taskBuilder.addParentStack(StepsActivity::class.java)
             taskBuilder.addNextIntent(intent)
 
-            analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, id.toString(), stepikNotification.type?.name)
-            showSimpleNotification(id, justText, taskBuilder, title)
+            val wasShown = showSimpleNotification(stepikNotification, justText, taskBuilder, title, id = id)
+            if (wasShown) {
+                analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, id.toString(), stepikNotification.type?.name)
+            }
         } else {
             analytic.reportEvent(Analytic.Notification.CANT_PARSE_NOTIFICATION, id.toString())
         }
@@ -358,8 +365,10 @@ class StepikNotificationManagerImpl
             taskBuilder.addParentStack(StepsActivity::class.java)
             taskBuilder.addNextIntent(intent)
 
-            analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, id.toString(), stepikNotification.type?.name)
-            showSimpleNotification(id, justText, taskBuilder, title)
+            val wasShown = showSimpleNotification(stepikNotification, justText, taskBuilder, title, id = id)
+            if (wasShown) {
+                analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, id.toString(), stepikNotification.type?.name)
+            }
         } else {
             analytic.reportEvent(Analytic.Notification.CANT_PARSE_NOTIFICATION, id.toString())
         }
@@ -378,8 +387,11 @@ class StepikNotificationManagerImpl
             taskBuilder.addParentStack(StepsActivity::class.java)
             taskBuilder.addNextIntent(intent)
 
-            analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, id.toString(), stepikNotification.type?.name)
-            showSimpleNotification(id, justText, taskBuilder, title)
+
+            val wasShown = showSimpleNotification(stepikNotification, justText, taskBuilder, title, id = id)
+            if (wasShown) {
+                analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, id.toString(), stepikNotification.type?.name)
+            }
         } else if (action == NotificationHelper.ISSUED_LICENSE) {
             val title = context.getString(R.string.get_license_message)
             val justText: String = textResolver.fromHtml(rawMessageHtml).toString()
@@ -389,8 +401,10 @@ class StepikNotificationManagerImpl
             val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
             taskBuilder.addNextIntent(intent)
 
-            analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, id.toString(), stepikNotification.type?.name)
-            showSimpleNotification(id, justText, taskBuilder, title)
+            val wasShown = showSimpleNotification(stepikNotification, justText, taskBuilder, title, id = id)
+            if (wasShown) {
+                analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, id.toString(), stepikNotification.type?.name)
+            }
         } else {
 
 
@@ -466,13 +480,21 @@ class StepikNotificationManagerImpl
             }
 
 
-
-            analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, stepikNotification.id?.toString() ?: "", stepikNotification.type?.name)
-            notificationManager.notify(courseId.toInt(), notification.build())
+            val now = DateTime.now()
+            if (rescheduleChecker.isRescheduleNeed(now.millis)) {
+                analytic.reportEvent(Analytic.Notification.RESCHEDULE_TO_MORNING)
+                localReminder.rescheduleNotification(stepikNotification)
+            } else {
+                analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, stepikNotification.id?.toString() ?: "", stepikNotification.type?.name)
+                notificationManager.notify(courseId.toInt(), notification.build())
+            }
         }
     }
 
-    private fun showSimpleNotification(id: Long, justText: String, taskBuilder: TaskStackBuilder, title: String?, deleteIntent: PendingIntent = getDeleteIntent()) {
+    /**
+     * @return true if notification was shown, false, when it was rescheduled (to morning)
+     */
+    private fun showSimpleNotification(stepikNotification: Notification?, justText: String, taskBuilder: TaskStackBuilder, title: String?, deleteIntent: PendingIntent = getDeleteIntent(), id: Long): Boolean {
         val pendingIntent = taskBuilder.getPendingIntent(id.toInt(), PendingIntent.FLAG_ONE_SHOT) //fixme if it will overlay courses id -> bug
 
         val colorArgb = ColorUtil.getColorArgb(R.color.stepic_brand_primary)
@@ -491,7 +513,21 @@ class StepikNotificationManagerImpl
         notification.setStyle(NotificationCompat.BigTextStyle()
                 .bigText(justText))
                 .setContentText(justText)
-        notificationManager.notify(id.toInt(), notification.build())
+
+
+        val now = DateTime.now()
+        //if notification is null (for example for streaks) -> show it always
+        val isShown =
+                if (stepikNotification != null && rescheduleChecker.isRescheduleNeed(now.millis)) {
+                    analytic.reportEvent(Analytic.Notification.RESCHEDULE_TO_MORNING)
+                    localReminder.rescheduleNotification(stepikNotification)
+                    false
+                } else {
+                    notificationManager.notify(id.toInt(), notification.build())
+                    true
+                }
+
+        return isShown
     }
 
     private fun getDeleteIntent(courseId: Long = -1): PendingIntent {
