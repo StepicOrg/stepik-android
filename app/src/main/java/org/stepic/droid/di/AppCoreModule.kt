@@ -261,8 +261,9 @@ abstract class AppCoreModule {
 
         @Provides
         @JvmStatic
-        internal fun provideRescheduleChecker(blockNotificationIntervalProvider: BlockNotificationIntervalProvider)
-                = RescheduleCheckerImpl(blockNotificationIntervalProvider.start, blockNotificationIntervalProvider.end)
+        internal fun provideRescheduleChecker(blockNotificationIntervalProvider: BlockNotificationIntervalProvider): RescheduleChecker {
+            return RescheduleCheckerImpl(blockNotificationIntervalProvider.start, blockNotificationIntervalProvider.end)
+        }
 
 
         @Provides
