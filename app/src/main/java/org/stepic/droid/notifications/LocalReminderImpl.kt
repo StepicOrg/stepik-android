@@ -6,14 +6,11 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.support.annotation.MainThread
-import android.support.annotation.WorkerThread
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.services.NewUserAlarmService
-import org.stepic.droid.services.RescheduleService
 import org.stepic.droid.services.StreakAlarmService
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.storage.operations.Table
@@ -154,36 +151,6 @@ class LocalReminderImpl
     @MainThread
     override fun remindAboutApp() {
         remindAboutApp(null)
-    }
-
-
-    /**
-     * reschedule this notification to (blockNotificationIntervalProvider.end .. blockNotificationIntervalProvider.end +30min)
-     * if nowHour >= blockNotificationProvider.end -> schedule to next day,
-     * otherwise show today but after   blockNotificationProvider.end
-     */
-    @WorkerThread
-    override fun rescheduleNotification(stepikNotification: Notification) {
-        val now = DateTime.now()
-
-        val nowHour = now.hourOfDay().get()
-        var nextNotification =
-                now
-                        .withHourOfDay(blockNotificationIntervalProvider.end)
-                        .withMinuteOfHour(0)
-                        .withSecondOfMinute(15)
-
-        if (nowHour >= blockNotificationIntervalProvider.end) {
-            //schedule to next day
-            nextNotification = nextNotification
-                    .plusDays(1)
-        }
-        databaseFacade.addNotification(stepikNotification)
-
-        val intent = Intent(context, RescheduleService::class.java)
-        intent.putExtra(RescheduleService.notificationIdKey, stepikNotification.id)
-        val pendingIntent = PendingIntent.getService(context, RescheduleService.requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-        scheduleCompat(nextNotification.millis, AlarmManager.INTERVAL_HALF_HOUR, pendingIntent)
     }
 
     private fun scheduleCompat(scheduleMillis: Long, interval: Long, pendingIntent: PendingIntent) {

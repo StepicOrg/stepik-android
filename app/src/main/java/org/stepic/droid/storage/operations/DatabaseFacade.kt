@@ -404,18 +404,4 @@ class DatabaseFacade
     fun updateCourseLastInteraction(courseId: Long, timestamp: Long)
             = lastInteractions.insertOrUpdate(CourseLastInteraction(courseId = courseId, timestamp = timestamp))
 
-    fun getAllNotifications(): List<Notification?> {
-        return notificationDao.getAll()
-    }
-
-    fun removeNotification(id: Long?) {
-        id?.let {
-            notificationDao.delete(DbStructureNotification.Column.ID, it.toString())
-        }
-    }
-
-    fun getNotificationById(notificationId: Long): Notification? {
-        return notificationDao.get(DbStructureNotification.Column.ID, notificationId.toString())
-    }
-
 }

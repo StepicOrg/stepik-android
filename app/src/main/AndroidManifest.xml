@@ -238,8 +238,6 @@
         <service
             android:name="org.stepic.droid.services.NewUserAlarmService"/>
         <service
-            android:name="org.stepic.droid.services.RescheduleService"/>
-        <service
             android:name="org.stepic.droid.services.StreakAlarmService"/>
         <service
             android:name="org.stepic.droid.services.LoadService"/>

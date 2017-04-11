@@ -3,11 +3,11 @@ package org.stepic.droid.notifications
 import org.joda.time.DateTime
 import javax.inject.Inject
 
-class RescheduleCheckerImpl
+class NotificationTimeCheckerImpl
 @Inject constructor(
         private var startHour: Int,
         private var endHour: Int)
-    : RescheduleChecker {
+    : NotificationTimeChecker {
 
     private val invertAnswer: Boolean
 
@@ -30,7 +30,7 @@ class RescheduleCheckerImpl
         }
     }
 
-    override fun isRescheduleNeed(nowMillis: Long): Boolean {
+    override fun isNight(nowMillis: Long): Boolean {
         val now = DateTime(nowMillis)
         val nowHourInt = now.hourOfDay().get()
         val result: Boolean = nowHourInt in startHour..(endHour - 1)

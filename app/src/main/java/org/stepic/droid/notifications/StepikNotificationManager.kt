@@ -1,6 +1,5 @@
 package org.stepic.droid.notifications
 
-import android.support.annotation.MainThread
 import android.support.annotation.WorkerThread
 import org.stepic.droid.notifications.model.Notification
 
@@ -18,6 +17,4 @@ interface StepikNotificationManager {
     @WorkerThread
     fun showStreakRemind()
 
-    @MainThread
-    fun showAllRescheduledNotifications()
 }
