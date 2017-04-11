@@ -201,6 +201,7 @@ public class HtmlHelper {
             "<script type=\"text/x-mathjax-config\">\n" +
                     "  MathJax.Hub.Config({" +
                     "messageStyle: \"none\", " +
+                    "TeX: {extensions: [ \"color.js\"]}, " +
                     "tex2jax: {preview: \"none\", inlineMath: [['$','$'], ['\\\\(','\\\\)']]}});\n" +
                     "displayMath: [ ['$$','$$'], ['\\[','\\]'] ]" +
                     "</script>\n" +
