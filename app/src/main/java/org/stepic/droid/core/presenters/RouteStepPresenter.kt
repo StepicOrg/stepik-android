@@ -7,6 +7,7 @@ import org.stepic.droid.di.step.StepScope
 import org.stepic.droid.model.Lesson
 import org.stepic.droid.model.Unit
 import org.stepic.droid.storage.operations.DatabaseFacade
+import org.stepic.droid.web.Api
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
 
@@ -16,7 +17,8 @@ class RouteStepPresenter
         private val threadPoolExecutor: ThreadPoolExecutor,
         private val mainHandler: MainHandler,
         private val databaseFacade: DatabaseFacade,
-        private val analytic: Analytic) : PresenterBase<RouteStepView>() {
+        private val analytic: Analytic,
+        private val api: Api) : PresenterBase<RouteStepView>() {
 
     /**
      * Last step in lesson can be shown differently
@@ -39,14 +41,14 @@ class RouteStepPresenter
 
     private fun checkStepBase(stepId: Long, lesson: Lesson, unit: Unit, indexCalculation: (LongArray) -> Int, resultForView: () -> kotlin.Unit) {
         val stepIds = lesson.steps
-        if (stepIds != null && stepIds.size != 0) {
+        if (stepIds != null && stepIds.isNotEmpty()) {
             val firstStepId = stepIds[indexCalculation.invoke(stepIds)]
             if (firstStepId == stepId) {
                 //YEAH, it is candidate for showing -> check in db
                 threadPoolExecutor.execute {
                     val section = databaseFacade.getSectionById(unit.section)
                     val units: LongArray? = section?.units
-                    if (units != null && units.size > 0) {
+                    if (units != null && units.isNotEmpty()) {
                         val firstUnitId = units[indexCalculation.invoke(units)]
                         if (firstUnitId != unit.id) {
                             mainHandler.post {
@@ -86,7 +88,7 @@ class RouteStepPresenter
                                 onOpen: (Unit, Lesson) -> kotlin.Unit,
                                 onCantGoAnalytic: (Unit) -> kotlin.Unit,
                                 onCantGoEvent: () -> kotlin.Unit) {
-        view?.showLoadDialog()
+        view?.showLoading()
         threadPoolExecutor.execute {
             val section = databaseFacade.getSectionById(unit.section)
             var nextUnitId: Long? = null

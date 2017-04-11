@@ -295,7 +295,7 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
     }
 
     @Override
-    public void showLoadDialog() {
+    public void showLoading() {
         DialogFragment dialogFragment = LoadingProgressDialogFragment.Companion.newInstance();
         if (!dialogFragment.isAdded()) {
             dialogFragment.show(getFragmentManager(), LOAD_DIALOG_TAG);

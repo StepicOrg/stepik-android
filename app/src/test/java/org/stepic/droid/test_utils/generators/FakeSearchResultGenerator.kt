@@ -4,7 +4,7 @@ import org.stepic.droid.model.SearchResult
 
 object FakeSearchResultGenerator {
     @JvmOverloads
-    fun generateFakeSearchResult(courseId: Long = 0): SearchResult {
+    fun generate(courseId: Long = 0): SearchResult {
         return SearchResult(course = courseId,
                 comment_text = "",
                 course_cover = "",

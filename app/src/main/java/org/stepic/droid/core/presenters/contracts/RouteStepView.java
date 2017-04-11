@@ -8,7 +8,7 @@ public interface RouteStepView {
 
     void openNextLesson(Unit nextUnit, Lesson nextLesson);
 
-    void showLoadDialog();
+    void showLoading();
 
     void showCantGoNext();
 

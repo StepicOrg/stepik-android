@@ -39,9 +39,9 @@ public class SearchResolverImplTest {
     @Test
     public void getCourseIdsFromSearchResults_nonZeroCourseIds_success() {
         List<SearchResult> input = new ArrayList<>();
-        input.add(FakeSearchResultGenerator.INSTANCE.generateFakeSearchResult(2000));
-        input.add(FakeSearchResultGenerator.INSTANCE.generateFakeSearchResult(3684));
-        input.add(FakeSearchResultGenerator.INSTANCE.generateFakeSearchResult(41));
+        input.add(FakeSearchResultGenerator.INSTANCE.generate(2000));
+        input.add(FakeSearchResultGenerator.INSTANCE.generate(3684));
+        input.add(FakeSearchResultGenerator.INSTANCE.generate(41));
 
         long[] actual = searchResolver.getCourseIdsFromSearchResults(input);
         assertEquals("expected number is wrong", 3, actual.length);
@@ -53,9 +53,9 @@ public class SearchResolverImplTest {
     @Test
     public void getCourseIdsFromSearchResults_zeroCourseIds_empty() {
         List<SearchResult> input = new ArrayList<>();
-        input.add(FakeSearchResultGenerator.INSTANCE.generateFakeSearchResult(0));
-        input.add(FakeSearchResultGenerator.INSTANCE.generateFakeSearchResult(0));
-        input.add(FakeSearchResultGenerator.INSTANCE.generateFakeSearchResult(0));
+        input.add(FakeSearchResultGenerator.INSTANCE.generate(0));
+        input.add(FakeSearchResultGenerator.INSTANCE.generate(0));
+        input.add(FakeSearchResultGenerator.INSTANCE.generate(0));
 
         long[] actual = searchResolver.getCourseIdsFromSearchResults(input);
         assertTrue("result was not empty on search results with zero course ids", actual.length == 0);
@@ -64,11 +64,11 @@ public class SearchResolverImplTest {
     @Test
     public void getCourseIdsFromSearchResults_zeroAndNonCourseIds_onlyNonZero() {
         List<SearchResult> input = new ArrayList<>();
-        input.add(FakeSearchResultGenerator.INSTANCE.generateFakeSearchResult(0));
-        input.add(FakeSearchResultGenerator.INSTANCE.generateFakeSearchResult(1));
-        input.add(FakeSearchResultGenerator.INSTANCE.generateFakeSearchResult(3215));
-        input.add(FakeSearchResultGenerator.INSTANCE.generateFakeSearchResult(0));
-        input.add(FakeSearchResultGenerator.INSTANCE.generateFakeSearchResult(666));
+        input.add(FakeSearchResultGenerator.INSTANCE.generate(0));
+        input.add(FakeSearchResultGenerator.INSTANCE.generate(1));
+        input.add(FakeSearchResultGenerator.INSTANCE.generate(3215));
+        input.add(FakeSearchResultGenerator.INSTANCE.generate(0));
+        input.add(FakeSearchResultGenerator.INSTANCE.generate(666));
 
         long[] actual = searchResolver.getCourseIdsFromSearchResults(input);
 
