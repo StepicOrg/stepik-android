@@ -5,9 +5,11 @@ import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.RouteStepView
 import org.stepic.droid.di.step.StepScope
 import org.stepic.droid.model.Lesson
+import org.stepic.droid.model.Section
 import org.stepic.droid.model.Unit
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.web.Api
+import timber.log.Timber
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
 
@@ -24,7 +26,9 @@ class RouteStepPresenter
      * Last step in lesson can be shown differently
      */
     fun checkStepForLast(stepId: Long, lesson: Lesson, unit: Unit) {
-        checkStepBase(stepId,
+        checkStepBase(
+                Direction.next,
+                stepId,
                 lesson,
                 unit,
                 indexCalculation = { something -> something.size - 1 },
@@ -32,19 +36,47 @@ class RouteStepPresenter
     }
 
     fun checkStepForFirst(stepId: Long, lesson: Lesson, unit: Unit) {
-        checkStepBase(stepId,
+        checkStepBase(
+                Direction.previous,
+                stepId,
                 lesson,
                 unit,
                 indexCalculation = { _ -> 0 },
                 resultForView = { view?.showPreviousLessonView() }) //need only the first element
     }
 
-    private fun checkStepBase(stepId: Long, lesson: Lesson, unit: Unit, indexCalculation: (LongArray) -> Int, resultForView: () -> kotlin.Unit) {
+    private fun checkStepBase(direction: Direction, stepId: Long, lesson: Lesson, unit: Unit, indexCalculation: (LongArray) -> Int, resultForView: () -> kotlin.Unit) {
         val stepIds = lesson.steps
         if (stepIds != null && stepIds.isNotEmpty()) {
             val firstStepId = stepIds[indexCalculation.invoke(stepIds)]
             if (firstStepId == stepId) {
                 //YEAH, it is candidate for showing -> check in db
+                if (direction == Direction.previous) {
+                    if (unit.position > 0) {
+                        mainHandler.post {
+                            resultForView.invoke()
+                        }
+                    } else {
+                        //unit.position is 0. We should check is previos section available or not
+                        threadPoolExecutor.execute {
+                            var section: Section? = databaseFacade.getSectionById(unit.section) //null, when section is not cached
+                            if (section == null) {
+                                try {
+                                    section = api.getSections(longArrayOf(unit.section)).execute().body()?.sections?.first()
+                                } catch (exception: Exception) {
+                                    Timber.e("Internet is diabled or we do not have access", exception)
+                                    return@execute
+                                }
+                            }
+
+
+
+                        }
+                    }
+                } else if (direction == Direction.next) {
+
+                }
+
                 threadPoolExecutor.execute {
                     val section = databaseFacade.getSectionById(unit.section)
                     val units: LongArray? = section?.units
@@ -125,7 +157,9 @@ class RouteStepPresenter
         }
     }
 
-    inner class IllegalStateRouteLessonException : IllegalStateException {
-        constructor(unitId: Long) : super("Next or previous lesson is shouldn't be shown, lessonId = " + unitId.toString())
+    inner class IllegalStateRouteLessonException(unitId: Long) : IllegalStateException("Next or previous lesson is shouldn't be shown, lessonId = $unitId")
+
+    enum class Direction {
+        previous, next
     }
 }
