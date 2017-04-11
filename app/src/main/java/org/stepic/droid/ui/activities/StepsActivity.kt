@@ -36,11 +36,8 @@ class StepsActivity : SingleFragmentActivity() {
     override fun createFragment(): Fragment {
         val extras = intent.extras
 
-        val action = intent.action
-        if (action != null && action == AppConstants.OPEN_NOTIFICATION) {
-            analytic.reportEvent(Analytic.Notification.OPEN_NOTIFICATION)
-        }
-        if (intent?.action == AppConstants.OPEN_NOTIFICATION) {
+        val action = intent?.action
+        if (action == AppConstants.OPEN_NOTIFICATION) {
             analytic.reportEvent(Analytic.Notification.OPEN_NOTIFICATION)
         }
 
