@@ -25,7 +25,7 @@ class StepicFcmListenerService : FirebaseMessagingService() {
             }
             val stepicNotification = Gson().fromJson(notificationRawString, Notification::class.java)
             stepicNotification?.let {
-                hacker.notificationManager.showNotification(it)
+                hacker.stepikNotificationManager.showNotification(it)
             }
         } catch(e: Exception) {
             hacker.analytic.reportError(Analytic.Error.NOTIFICATION_ERROR_PARSE, e);
@@ -36,7 +36,7 @@ class StepicFcmListenerService : FirebaseMessagingService() {
 
 class HackFcmListener() {
     @Inject
-    lateinit var notificationManager: NotificationManager
+    lateinit var stepikNotificationManager: StepikNotificationManager
 
     @Inject
     lateinit var sharedPreferenceHelper: SharedPreferenceHelper

@@ -1,7 +1,6 @@
 package org.stepic.droid.storage.operations
 
 import android.content.ContentValues
-import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.di.storage.StorageSingleton
 import org.stepic.droid.model.*
 import org.stepic.droid.model.Unit
@@ -257,27 +256,11 @@ class DatabaseFacade
 
     fun getAllInQueue() = viewAssignmentDao.getAll()
 
-    fun getAllNotification(): List<Notification?> = notificationDao.getAll()
-
     fun addNotification(notification: Notification) {
         notificationDao.insertOrUpdate(notification)
     }
 
-    fun removeNotification(id: Long) {
-        notificationDao.delete(DbStructureNotification.Column.ID, id.toString())
-    }
-
-    fun removeAllNotifications() {
-        val notifications = getAllNotification()
-
-        for (notificationItem in notifications) {
-            notificationItem?.id?.let {
-                removeNotification(it)
-            }
-        }
-    }
-
-    fun removeAllNotificationsByCourseId(courseId: Long) {
+    fun removeAllNotificationsWithCourseId(courseId: Long) {
         notificationDao.delete(DbStructureNotification.Column.COURSE_ID, courseId.toString())
     }
 

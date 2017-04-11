@@ -3,13 +3,11 @@ package org.stepic.droid.notifications
 import android.support.annotation.WorkerThread
 import org.stepic.droid.notifications.model.Notification
 
-interface NotificationManager {
-    /**
-     * worker thread
-     */
+interface StepikNotificationManager {
+    @WorkerThread
     fun showNotification(notification: Notification);
 
-    fun discardAllNotifications(courseId: Long)
+    fun discardAllShownNotificationsRelatedToCourse(courseId: Long)
 
     fun tryOpenNotificationInstantly(notification: Notification)
 
@@ -18,4 +16,5 @@ interface NotificationManager {
 
     @WorkerThread
     fun showStreakRemind()
+
 }

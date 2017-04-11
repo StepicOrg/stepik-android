@@ -25,7 +25,8 @@ class LocalReminderImpl
         private val databaseFacade: DatabaseFacade,
         private val context: Context,
         private val alarmManager: AlarmManager,
-        private val analytic: Analytic) : LocalReminder {
+        private val analytic: Analytic,
+        private val blockNotificationIntervalProvider: BlockNotificationIntervalProvider) : LocalReminder {
 
     val isHandling = AtomicBoolean(false)
 

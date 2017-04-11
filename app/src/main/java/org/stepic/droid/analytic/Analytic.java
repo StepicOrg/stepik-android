@@ -246,6 +246,7 @@ public interface Analytic {
         String REMIND_ENROLL = "remind_success_user_enroll";
         String REMINDER_SWIPE_TO_CANCEL = "remind_swipe_to_cancel";
         String STREAK_SWIPE_TO_CANCEL = "streak_swipe_to_cancel";
+        String NIGHT_WITHOUT_SOUND_AND_VIBRATE = "notification_night_without_sound_and_vibrate";
     }
 
     interface Feedback {

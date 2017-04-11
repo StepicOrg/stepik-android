@@ -2,6 +2,7 @@ package org.stepic.droid.di
 
 import android.app.AlarmManager
 import android.app.DownloadManager
+import android.app.NotificationManager
 import android.content.Context
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
@@ -22,10 +23,7 @@ import org.stepic.droid.configuration.ConfigReleaseImpl
 import org.stepic.droid.core.*
 import org.stepic.droid.fonts.FontsProvider
 import org.stepic.droid.fonts.FontsProviderImpl
-import org.stepic.droid.notifications.LocalReminder
-import org.stepic.droid.notifications.LocalReminderImpl
-import org.stepic.droid.notifications.NotificationManager
-import org.stepic.droid.notifications.NotificationManagerImpl
+import org.stepic.droid.notifications.*
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.social.SocialManager
@@ -98,7 +96,7 @@ abstract class AppCoreModule {
 
     @AppSingleton
     @Binds
-    internal abstract fun provideNotificationManager(notificationManager: NotificationManagerImpl): NotificationManager
+    internal abstract fun provideNotificationManager(notificationManager: StepikNotificationManagerImpl): StepikNotificationManager
 
     @Binds
     @AppSingleton
@@ -254,6 +252,24 @@ abstract class AppCoreModule {
             firebaseRemoteConfig.setDefaults(R.xml.remote_config_defaults)
             return firebaseRemoteConfig
         }
+
+
+        @Provides
+        @JvmStatic
+        internal fun provideSystemNotificationManager(context: Context) =
+                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        @Provides
+        @JvmStatic
+        internal fun provideRescheduleChecker(blockNotificationIntervalProvider: BlockNotificationIntervalProvider): NotificationTimeChecker {
+            return NotificationTimeCheckerImpl(blockNotificationIntervalProvider.start, blockNotificationIntervalProvider.end)
+        }
+
+
+        @Provides
+        @AppSingleton
+        @JvmStatic
+        internal fun provideBlockNotificationIntervalProvider() = BlockNotificationIntervalProvider()
     }
 
 }
