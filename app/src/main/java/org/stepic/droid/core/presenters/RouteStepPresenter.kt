@@ -93,10 +93,12 @@ class RouteStepPresenter
 
             val unitIds = section?.units
             val numberOfUnits = unitIds?.size ?: 0
-            unitIds?.forEachIndexed { index, unitId ->
-                if (unit.id == unitId && nextIndex.invoke(index) < numberOfUnits && nextIndex.invoke(index) >= 0) {
-                    nextUnitId = unitIds[nextIndex.invoke(index)]
-                    return@forEachIndexed
+            let {
+                unitIds?.forEachIndexed { index, unitId ->
+                    if (unit.id == unitId && nextIndex.invoke(index) < numberOfUnits && nextIndex.invoke(index) >= 0) {
+                        nextUnitId = unitIds[nextIndex.invoke(index)]
+                        return@let  //alias for break
+                    }
                 }
             }
             if (nextUnitId != null) {
