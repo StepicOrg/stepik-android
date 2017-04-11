@@ -123,8 +123,6 @@ interface AppCoreComponent {
 
     fun inject(downloadClickReceiver: DownloadClickReceiver)
 
-    fun inject(rescheduleService: RescheduleService)
-
     fun inject(receiver: MyPhoneStateListener)
 
     fun inject(service: HackFcmListener)
