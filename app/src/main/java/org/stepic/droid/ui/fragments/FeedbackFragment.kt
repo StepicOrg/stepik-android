@@ -30,7 +30,13 @@ class FeedbackFragment : FragmentBase() {
     }
 
     private fun initButtons() {
-        feedbackGoodButton.setOnClickListener { screenManager.showStoreWithApp(activity) }
+        feedbackGoodButton.setOnClickListener {
+            if (config.isAppInStore) {
+                screenManager.showStoreWithApp(activity)
+            } else {
+                screenManager.showTextFeedback(activity)
+            }
+        }
         feedbackBadButton.setOnClickListener { screenManager.showTextFeedback(activity) }
     }
 
