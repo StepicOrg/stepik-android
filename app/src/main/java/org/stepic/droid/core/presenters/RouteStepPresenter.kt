@@ -1,5 +1,6 @@
 package org.stepic.droid.core.presenters
 
+import android.support.annotation.MainThread
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.RouteStepView
@@ -26,6 +27,7 @@ class RouteStepPresenter
     /**
      * Last step in lesson can be shown differently
      */
+    @MainThread
     fun checkStepForLast(stepId: Long, lesson: Lesson, unit: Unit) {
         checkStepBase(
                 Direction.next,
@@ -36,6 +38,7 @@ class RouteStepPresenter
                 resultForView = { view?.showNextLessonView() }) //need only last
     }
 
+    @MainThread
     fun checkStepForFirst(stepId: Long, lesson: Lesson, unit: Unit) {
         checkStepBase(
                 Direction.previous,
@@ -46,27 +49,26 @@ class RouteStepPresenter
                 resultForView = { view?.showPreviousLessonView() }) //need only the first element
     }
 
+    @MainThread
     private fun checkStepBase(direction: Direction, stepId: Long, lesson: Lesson, unit: Unit, indexCalculation: (LongArray) -> Int, resultForView: () -> kotlin.Unit) {
-//        val stepIds = lesson.steps
-//        if (stepIds != null && stepIds.isNotEmpty()) {
-//            val firstStepId = stepIds[indexCalculation.invoke(stepIds)]
-//            if (firstStepId == stepId) {
-//                //YEAH, it is candidate for showing -> check in db
-//                if (direction == Direction.previous) {
-//                    if (unit.position > 0) {
-//                        mainHandler.post {
-//                            resultForView.invoke()
-//                        }
-//                    } else {
-//                        //unit.position is 0. We should check is previos section available or not
-//                        threadPoolExecutor.execute {
-//                            var section: Section? = sectionRepository.getObject(unit.section)
-//                        }
-//                    }
-//                } else if (direction == Direction.next) {
-//
-//                }
-//
+        val stepIds = lesson.steps
+        if (stepIds != null && stepIds.isNotEmpty()) {
+            val conditionalStepId = stepIds[indexCalculation.invoke(stepIds)]
+            if (conditionalStepId == stepId) {
+                //YEAH, step is candidate for showing
+                if (direction == Direction.previous) {
+                    if (unit.position > 0) {
+                        resultForView.invoke()
+                    } else {
+                        //unit.position is 0. We should check for previous section is available or not
+                        threadPoolExecutor.execute {
+                            var section: Section? = sectionRepository.getObject(unit.section)
+                        }
+                    }
+                } else if (direction == Direction.next) {
+
+                }
+
 //                threadPoolExecutor.execute {
 //                    val section = databaseFacade.getSectionById(unit.section)
 //                    val units: LongArray? = section?.units
@@ -80,8 +82,8 @@ class RouteStepPresenter
 //                        }
 //                    }
 //                }
-//            }
-//        }
+            }
+        }
     }
 
     fun clickNextLesson(unit: Unit) {

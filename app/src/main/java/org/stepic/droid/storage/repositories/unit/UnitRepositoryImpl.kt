@@ -12,6 +12,20 @@ class UnitRepositoryImpl
         private val api: Api)
     : Repository<Unit, Long> {
 
+    override fun getObjects(keys: Array<Long>): Iterable<Unit> {
+        var units = databaseFacade.getUnitsByIds(keys.toLongArray())
+        if (units.size != keys.size) {
+            units =
+                    try {
+                        api.getUnits(keys.toLongArray()).execute()?.body()?.units ?: ArrayList<Unit>()
+                    } catch (exception: Exception) {
+                        ArrayList<Unit>()
+                    }
+        }
+        units = units.sortedBy { it.position }
+        return units
+    }
+
     override fun getObject(key: Long): Unit? {
         var unit = databaseFacade.getUnitById(key)
         if (unit == null) {

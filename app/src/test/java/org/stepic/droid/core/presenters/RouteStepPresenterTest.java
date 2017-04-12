@@ -94,6 +94,40 @@ public class RouteStepPresenterTest {
 
 
     @Test
+    public void checkStepForFirst_firstStepInSection_beforeSectionsIsClosed_notShowAny() {
+        long stepId = 31;
+        long sectionId = 12;
+        long unitId = 48;
+        long courseId = 67;
+
+        long stepIds[] = ArrayHelper.INSTANCE.arrayOf(stepId);
+        long unitIds[] = ArrayHelper.INSTANCE.arrayOf(unitId);
+        long sectionIds[] = ArrayHelper.INSTANCE.arrayOf(sectionId - 1, sectionId);
+        Lesson lesson = FakeLessonGenerator.INSTANCE.generate(stepIds);
+        Unit unit = FakeUnitGenerator.INSTANCE.generate(unitId, sectionId);
+        Section section = FakeSectionGenerator.INSTANCE.generate(sectionId, unitIds, 1);
+        Course course = FakeCourseGenerator.INSTANCE.generate(courseId, sectionIds);
+
+        when(sectionRepository.getObject(sectionId)).thenReturn(section); //return section with position 1 (it is enough)
+        when(courseRepository.getObject(courseId)).thenReturn(course);
+
+        routeStepPresenter.attachView(routeStepView);
+        routeStepPresenter.checkStepForFirst(stepId, lesson, unit);
+        routeStepPresenter.detachView(routeStepView);
+
+        verify(courseRepository, never()).getObject(any(Long.class));
+        verify(unitRepository, never()).getObject(any(Long.class));
+
+        verify(routeStepView, never()).showLoading();
+        verify(routeStepView, never()).openNextLesson(any(Unit.class), any(Lesson.class));
+        verify(routeStepView, never()).showCantGoNext();
+        verify(routeStepView, never()).openPreviousLesson(any(Unit.class), any(Lesson.class));
+        verify(routeStepView, never()).showNextLessonView();
+        verify(routeStepView, never()).showPreviousLessonView();
+        verify(routeStepView, never()).showCantGoPrevious();
+    }
+
+    @Test
     public void checkStepForFirst_firstStepInCourse_noInternet_notShowAny() {
         long stepId = 31;
         long sectionId = 12;

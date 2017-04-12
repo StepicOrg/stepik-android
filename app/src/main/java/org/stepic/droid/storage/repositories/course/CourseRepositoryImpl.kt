@@ -29,4 +29,8 @@ class CourseRepositoryImpl
         return course
     }
 
+    override fun getObjects(keys: Array<Long>): Iterable<Course> {
+        TODO()
+    }
+
 }

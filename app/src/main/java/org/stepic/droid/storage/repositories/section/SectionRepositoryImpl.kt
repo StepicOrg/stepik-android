@@ -11,6 +11,19 @@ class SectionRepositoryImpl
         private val databaseFacade: DatabaseFacade,
         private val api: Api)
     : Repository<Section, Long> {
+    override fun getObjects(keys: Array<Long>): Iterable<Section> {
+        var sections = databaseFacade.getSectionsByIds(keys.toLongArray())
+        if (sections.size != keys.size) {
+            sections =
+                    try {
+                        api.getSections(keys.toLongArray()).execute()?.body()?.sections ?: ArrayList<Section>()
+                    } catch (exception: Exception) {
+                        ArrayList<Section>()
+                    }
+        }
+        sections = sections.sortedBy { it.position }
+        return sections
+    }
 
 
     override fun getObject(key: Long): Section? {
