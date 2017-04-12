@@ -39,7 +39,7 @@ import org.stepic.droid.ui.dialogs.*
 import org.stepic.droid.ui.fragments.CommentsFragment
 
 @AppSingleton
-@Component(dependencies = arrayOf(StorageComponent::class), modules = arrayOf(AppCoreModule::class))
+@Component(dependencies = arrayOf(StorageComponent::class), modules = arrayOf(AppCoreModule::class, RepositoryModule::class))
 interface AppCoreComponent {
 
     @Component.Builder
