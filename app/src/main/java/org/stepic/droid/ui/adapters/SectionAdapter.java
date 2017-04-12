@@ -95,7 +95,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     private Map<String, ProgressViewModel> progressMap;
     private Map<Long, SectionLoadingState> sectionIdToLoadingStateMap;
     private Fragment fragment;
-    private DownloadingInteractionPresenter downloadingInteractionPresenter;
+    private final DownloadingInteractionPresenter downloadingInteractionPresenter;
     private final int durationMillis = 3000;
 
     public void setDefaultHighlightPosition(int defaultHighlightPosition) {

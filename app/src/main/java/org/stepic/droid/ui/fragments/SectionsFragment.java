@@ -467,6 +467,7 @@ public class SectionsFragment
     public void onStart() {
         super.onStart();
         reportIndexToGoogle();
+        Timber.d("downloading interaction presenter instance: %s", downloadingInteractionPresenter);
         downloadingInteractionPresenter.attachView(this);
         downloadingProgressSectionsPresenter.attachView(this);
         downloadingProgressSectionsPresenter.subscribeToProgressUpdates(sectionList);

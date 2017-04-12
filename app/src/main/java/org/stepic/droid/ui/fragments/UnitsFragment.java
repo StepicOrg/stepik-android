@@ -28,8 +28,10 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.core.LessonSessionManager;
+import org.stepic.droid.core.presenters.DownloadingInteractionPresenter;
 import org.stepic.droid.core.presenters.DownloadingProgressUnitsPresenter;
 import org.stepic.droid.core.presenters.UnitsPresenter;
+import org.stepic.droid.core.presenters.contracts.DownloadingInteractionView;
 import org.stepic.droid.core.presenters.contracts.DownloadingProgressUnitsView;
 import org.stepic.droid.core.presenters.contracts.UnitsView;
 import org.stepic.droid.events.units.LessonCachedEvent;
@@ -45,6 +47,7 @@ import org.stepic.droid.ui.adapters.UnitAdapter;
 import org.stepic.droid.ui.dialogs.DeleteItemDialogFragment;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
+import org.stepic.droid.util.SnackbarShower;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,8 +58,9 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
+import timber.log.Timber;
 
-public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.OnRefreshListener, UnitsView, DownloadingProgressUnitsView {
+public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.OnRefreshListener, UnitsView, DownloadingProgressUnitsView, DownloadingInteractionView {
 
     private static final int ANIMATION_DURATION = 0;
     public static final int DELETE_POSITION_REQUEST_CODE = 165;
@@ -90,6 +94,9 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
     @BindView(R.id.report_empty)
     protected View reportEmpty;
 
+    @BindView(R.id.rootViewUnits)
+    protected View rootView;
+
     private Section section;
 
     @Inject
@@ -100,6 +107,9 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
 
     @Inject
     DownloadingProgressUnitsPresenter downloadingProgressUnitsPresenter;
+
+    @Inject
+    DownloadingInteractionPresenter downloadingInteractionPresenter;
 
     UnitAdapter adapter;
 
@@ -152,7 +162,7 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
         unitList = new ArrayList<>();
         lessonList = new ArrayList<>();
         progressMap = new HashMap<>();
-        adapter = new UnitAdapter(section, unitList, lessonList, progressMap, (AppCompatActivity) getActivity(), lessonIdToLoadingStateMap, this);
+        adapter = new UnitAdapter(section, unitList, lessonList, progressMap, (AppCompatActivity) getActivity(), lessonIdToLoadingStateMap, this, downloadingInteractionPresenter);
         unitsRecyclerView.setAdapter(adapter);
         unitsRecyclerView.setItemAnimator(new SlideInRightAnimator());
         unitsRecyclerView.getItemAnimator().setRemoveDuration(ANIMATION_DURATION);
@@ -180,12 +190,15 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
     @Override
     public void onStart() {
         super.onStart();
+        Timber.d("downloading interaction presenter instance: %s", downloadingInteractionPresenter);
+        downloadingInteractionPresenter.attachView(this);
         downloadingProgressUnitsPresenter.attachView(this);
         downloadingProgressUnitsPresenter.subscribeToProgressUpdates(lessonList);
     }
 
     @Override
     public void onStop() {
+        downloadingInteractionPresenter.detachView(this);
         downloadingProgressUnitsPresenter.detachView(this);
         super.onStop();
         ProgressHelper.dismiss(swipeRefreshLayout);
@@ -207,7 +220,7 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
             if (permissionExternalStorage.equals(Manifest.permission.WRITE_EXTERNAL_STORAGE) &&
                     grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                int position =  sharedPreferenceHelper.getTempPosition();
+                int position = sharedPreferenceHelper.getTempPosition();
                 if (adapter != null) {
                     adapter.requestClickLoad(position);
                 }
@@ -388,5 +401,36 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
             int position = data.getIntExtra(DeleteItemDialogFragment.deletePositionKey, -1);
             adapter.requestClickDeleteSilence(position);
         }
+    }
+
+    @Override
+    public void onLoadingAccepted(int position) {
+        adapter.loadAfterDetermineNetworkState(position);
+    }
+
+    @Override
+    public void onShowPreferenceSuggestion() {
+        SnackbarShower.INSTANCE.showTurnOnDownloadingInSettings(rootView, getContext(), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    screenManager.showSettings(getActivity());
+                } catch (NullPointerException nullPointerException) {
+                    Timber.e(nullPointerException);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onShowInternetIsNotAvailableRetry(final int position) {
+        SnackbarShower.INSTANCE.showInternetRetrySnackbar(rootView, getContext(), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (adapter != null) {
+                    adapter.requestClickLoad(position);
+                }
+            }
+        });
     }
 }

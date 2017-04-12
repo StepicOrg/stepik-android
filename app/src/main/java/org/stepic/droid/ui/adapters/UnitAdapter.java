@@ -23,6 +23,7 @@ import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.core.ScreenManager;
+import org.stepic.droid.core.presenters.DownloadingInteractionPresenter;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.LessonLoadingState;
 import org.stepic.droid.model.Progress;
@@ -84,8 +85,9 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
     private final Map<Long, Progress> unitProgressMap;
     private final Map<Long, LessonLoadingState> lessonIdToUnitLoadingStateMap;
     private Fragment fragment;
+    private final DownloadingInteractionPresenter downloadingInteractionPresenter;
 
-    public UnitAdapter(Section parentSection, List<Unit> unitList, List<Lesson> lessonList, Map<Long, Progress> unitProgressMap, AppCompatActivity activity, Map<Long, LessonLoadingState> lessonIdToUnitLoadingStateMap, Fragment fragment) {
+    public UnitAdapter(Section parentSection, List<Unit> unitList, List<Lesson> lessonList, Map<Long, Progress> unitProgressMap, AppCompatActivity activity, Map<Long, LessonLoadingState> lessonIdToUnitLoadingStateMap, Fragment fragment, DownloadingInteractionPresenter downloadingInteractionPresenter) {
         this.activity = activity;
         this.parentSection = parentSection;
         this.unitList = unitList;
@@ -93,6 +95,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
         this.unitProgressMap = unitProgressMap;
         this.lessonIdToUnitLoadingStateMap = lessonIdToUnitLoadingStateMap;
         this.fragment = fragment;
+        this.downloadingInteractionPresenter = downloadingInteractionPresenter;
         App.component().inject(this);
     }
 
@@ -275,6 +278,13 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
 
     private void load(int position) {
         if (position >= 0 && position < unitList.size()) {
+            downloadingInteractionPresenter.checkOnLoading(position);
+        }
+    }
+
+    public void loadAfterDetermineNetworkState(int position) {
+        if (position >= 0 && position < unitList.size()) {
+
             final Unit unit = unitList.get(position);
             final Lesson lesson = lessonList.get(position);
             analytic.reportEvent(Analytic.Interaction.CLICK_CACHE_LESSON, unit.getId() + "");
