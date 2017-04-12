@@ -10,3 +10,6 @@ fun Snackbar.setTextColor(@ColorInt textColor: Int): Snackbar {
     tv.setTextColor(textColor)
     return this
 }
+
+
+val duration5Sec = 5000

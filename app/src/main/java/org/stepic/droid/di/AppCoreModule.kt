@@ -4,6 +4,7 @@ import android.app.AlarmManager
 import android.app.DownloadManager
 import android.app.NotificationManager
 import android.content.Context
+import android.net.ConnectivityManager
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.squareup.otto.Bus
@@ -29,6 +30,8 @@ import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.social.SocialManager
 import org.stepic.droid.storage.*
 import org.stepic.droid.storage.operations.DatabaseFacade
+import org.stepic.droid.util.connectivity.NetworkTypeDeterminer
+import org.stepic.droid.util.connectivity.NetworkTypeDeterminerImpl
 import org.stepic.droid.util.resolvers.VideoResolver
 import org.stepic.droid.util.resolvers.VideoResolverImpl
 import org.stepic.droid.util.resolvers.text.TextResolver
@@ -137,6 +140,9 @@ abstract class AppCoreModule {
     @Binds
     @AppSingleton
     internal abstract fun provideFontProvider(fontsProvider: FontsProviderImpl): FontsProvider
+
+    @Binds
+    abstract fun provideNetworkTypeDeterminer(networkTypeDeterminer: NetworkTypeDeterminerImpl): NetworkTypeDeterminer
 
     @Module
     companion object {
@@ -270,6 +276,14 @@ abstract class AppCoreModule {
         @AppSingleton
         @JvmStatic
         internal fun provideBlockNotificationIntervalProvider() = BlockNotificationIntervalProvider()
+
+
+        @Provides
+        @JvmStatic
+        internal fun provideConnectivityManager(context: Context): ConnectivityManager {
+            return context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        }
+
     }
 
 }

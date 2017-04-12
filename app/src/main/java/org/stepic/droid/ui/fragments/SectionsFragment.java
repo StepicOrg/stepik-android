@@ -54,11 +54,13 @@ import org.stepic.droid.core.ShareHelper;
 import org.stepic.droid.core.presenters.CalendarPresenter;
 import org.stepic.droid.core.presenters.CourseFinderPresenter;
 import org.stepic.droid.core.presenters.CourseJoinerPresenter;
+import org.stepic.droid.core.presenters.DownloadingInteractionPresenter;
 import org.stepic.droid.core.presenters.DownloadingProgressSectionsPresenter;
 import org.stepic.droid.core.presenters.InvitationPresenter;
 import org.stepic.droid.core.presenters.SectionsPresenter;
 import org.stepic.droid.core.presenters.contracts.CalendarExportableView;
 import org.stepic.droid.core.presenters.contracts.CourseJoinView;
+import org.stepic.droid.core.presenters.contracts.DownloadingInteractionView;
 import org.stepic.droid.core.presenters.contracts.DownloadingProgressSectionsView;
 import org.stepic.droid.core.presenters.contracts.InvitationView;
 import org.stepic.droid.core.presenters.contracts.LoadCourseView;
@@ -92,6 +94,7 @@ import org.stepic.droid.util.HtmlHelper;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.SectionUtilKt;
 import org.stepic.droid.util.SnackbarExtensionKt;
+import org.stepic.droid.util.SnackbarShower;
 import org.stepic.droid.util.StepikLogicHelper;
 import org.stepic.droid.util.StringUtil;
 
@@ -116,7 +119,9 @@ public class SectionsFragment
         LoadCourseView, CourseJoinView,
         CalendarExportableView,
         SectionsView,
-        InvitationView, DownloadingProgressSectionsView {
+        InvitationView,
+        DownloadingProgressSectionsView,
+        DownloadingInteractionView {
 
     public static String joinFlag = "joinFlag";
     private static int INVITE_REQUEST_CODE = 324;
@@ -201,6 +206,9 @@ public class SectionsFragment
     @Inject
     DownloadingProgressSectionsPresenter downloadingProgressSectionsPresenter;
 
+    @Inject
+    DownloadingInteractionPresenter downloadingInteractionPresenter;
+
     private boolean wasIndexed;
     private Uri urlInWeb;
     private String title;
@@ -251,7 +259,7 @@ public class SectionsFragment
         linearLayoutManager = new LinearLayoutManager(getActivity());
         sectionsRecyclerView.setLayoutManager(linearLayoutManager);
         sectionList = new ArrayList<>();
-        adapter = new SectionAdapter(sectionList, ((AppCompatActivity) getActivity()), calendarPresenter, sectionsPresenter.getProgressMap(), sectionIdToLoadingStateMap, this);
+        adapter = new SectionAdapter(sectionList, ((AppCompatActivity) getActivity()), calendarPresenter, sectionsPresenter.getProgressMap(), sectionIdToLoadingStateMap, this, downloadingInteractionPresenter);
         sectionsRecyclerView.setAdapter(adapter);
 
         sectionsRecyclerView.setItemAnimator(new SlideInRightAnimator());
@@ -459,12 +467,15 @@ public class SectionsFragment
     public void onStart() {
         super.onStart();
         reportIndexToGoogle();
+        Timber.d("downloading interaction presenter instance: %s", downloadingInteractionPresenter);
+        downloadingInteractionPresenter.attachView(this);
         downloadingProgressSectionsPresenter.attachView(this);
         downloadingProgressSectionsPresenter.subscribeToProgressUpdates(sectionList);
     }
 
     @Override
     public void onStop() {
+        downloadingInteractionPresenter.detachView(this);
         downloadingProgressSectionsPresenter.detachView(this);
         super.onStop();
         if (wasIndexed) {
@@ -933,5 +944,40 @@ public class SectionsFragment
             int position = data.getIntExtra(DeleteItemDialogFragment.deletePositionKey, -1);
             adapter.requestClickDeleteSilence(position);
         }
+    }
+
+    @Override
+    public void onLoadingAccepted(int position) {
+        adapter.loadAfterDetermineNetworkState(position);
+    }
+
+    @Override
+    public void onShowPreferenceSuggestion() {
+        analytic.reportEvent(Analytic.Downloading.SHOW_SNACK_PREFS_SECTIONS);
+        SnackbarShower.INSTANCE.showTurnOnDownloadingInSettings(rootView, getContext(), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    analytic.reportEvent(Analytic.Downloading.CLICK_SETTINGS_SECTIONS);
+                    screenManager.showSettings(getActivity());
+                } catch (NullPointerException nullPointerException) {
+                    Timber.e(nullPointerException);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onShowInternetIsNotAvailableRetry(final int position) {
+        analytic.reportEvent(Analytic.Downloading.SHOW_SNACK_INTERNET_SECTIONS);
+        SnackbarShower.INSTANCE.showInternetRetrySnackbar(rootView, getContext(), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                analytic.reportEvent(Analytic.Downloading.CLICK_RETRY_SECTIONS);
+                if (adapter != null) {
+                    adapter.requestClickLoad(position);
+                }
+            }
+        });
     }
 }
