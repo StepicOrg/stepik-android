@@ -41,6 +41,8 @@ import org.stepic.droid.ui.listeners.StepicOnClickItemListener;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ColorUtil;
 import org.stepic.droid.util.SectionUtilKt;
+import org.stepic.droid.util.connectivity.NetworkType;
+import org.stepic.droid.util.connectivity.NetworkTypeDeterminer;
 import org.stepic.droid.viewmodel.ProgressViewModel;
 
 import java.util.List;
@@ -81,6 +83,9 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
 
     @Inject
     SharedPreferenceHelper sharedPreferenceHelper;
+
+    @Inject
+    NetworkTypeDeterminer networkTypeDeterminer;
 
 
     private List<Section> sections;
@@ -239,6 +244,8 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     private void loadSection(int adapterPosition) {
         int sectionPosition = adapterPosition - PRE_SECTION_LIST_DELTA;
         if (sectionPosition >= 0 && sectionPosition < sections.size()) {
+            NetworkType networkType = networkTypeDeterminer.determineNetworkType();
+
             final Section section = sections.get(sectionPosition);
             analytic.reportEvent(Analytic.Interaction.CLICK_CACHE_SECTION, section.getId() + "");
             section.set_cached(false);
