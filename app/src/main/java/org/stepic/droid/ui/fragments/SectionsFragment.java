@@ -953,10 +953,12 @@ public class SectionsFragment
 
     @Override
     public void onShowPreferenceSuggestion() {
+        analytic.reportEvent(Analytic.Downloading.SHOW_SNACK_PREFS_SECTIONS);
         SnackbarShower.INSTANCE.showTurnOnDownloadingInSettings(rootView, getContext(), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
+                    analytic.reportEvent(Analytic.Downloading.CLICK_SETTINGS_SECTIONS);
                     screenManager.showSettings(getActivity());
                 } catch (NullPointerException nullPointerException) {
                     Timber.e(nullPointerException);
@@ -967,9 +969,11 @@ public class SectionsFragment
 
     @Override
     public void onShowInternetIsNotAvailableRetry(final int position) {
+        analytic.reportEvent(Analytic.Downloading.SHOW_SNACK_INTERNET_SECTIONS);
         SnackbarShower.INSTANCE.showInternetRetrySnackbar(rootView, getContext(), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                analytic.reportEvent(Analytic.Downloading.CLICK_RETRY_SECTIONS);
                 if (adapter != null) {
                     adapter.requestClickLoad(position);
                 }

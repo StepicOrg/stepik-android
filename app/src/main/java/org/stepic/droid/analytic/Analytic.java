@@ -363,8 +363,19 @@ public interface Analytic {
         String SUCCESS_LOGIN_AND_ENROLL = "success_login_insta_enroll";
     }
 
-    interface DownloadManager {
+    interface Downloading {
         String DOWNLOAD_MANAGER_IS_NOT_ENABLED = "download_manager_is_not_enabled";
+
+        String SHOW_SNACK_PREFS_SECTIONS = "downloading_show_snack_prefs_sections";
+        String SHOW_SNACK_INTERNET_SECTIONS = "downloading_show_snack_internet_sections";
+        String CLICK_SETTINGS_SECTIONS = "downloading_click_settings_sections";
+        String CLICK_RETRY_SECTIONS = "downloading_click_retry_sections";
+
+        String SHOW_SNACK_PREFS_UNITS = "downloading_show_snack_prefs_units";
+        String SHOW_SNACK_INTERNET_UNITS = "downloading_show_snack_internet_units";
+        String CLICK_SETTINGS_UNITS = "downloading_click_settings_units";
+        String CLICK_RETRY_UNITS = "downloading_click_retry_units";
+
     }
 
     interface SmartLock {

@@ -410,10 +410,12 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
 
     @Override
     public void onShowPreferenceSuggestion() {
+        analytic.reportEvent(Analytic.Downloading.SHOW_SNACK_PREFS_UNITS);
         SnackbarShower.INSTANCE.showTurnOnDownloadingInSettings(rootView, getContext(), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
+                    analytic.reportEvent(Analytic.Downloading.CLICK_SETTINGS_UNITS);
                     screenManager.showSettings(getActivity());
                 } catch (NullPointerException nullPointerException) {
                     Timber.e(nullPointerException);
@@ -424,9 +426,11 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
 
     @Override
     public void onShowInternetIsNotAvailableRetry(final int position) {
+        analytic.reportEvent(Analytic.Downloading.SHOW_SNACK_INTERNET_UNITS);
         SnackbarShower.INSTANCE.showInternetRetrySnackbar(rootView, getContext(), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                analytic.reportEvent(Analytic.Downloading.CLICK_RETRY_UNITS);
                 if (adapter != null) {
                     adapter.requestClickLoad(position);
                 }
