@@ -61,10 +61,11 @@
     <string name="deny">Deny</string>
     <string name="no">No</string>
     <string name="open_web_to_solve">Open web version to solve</string>
-    <string name="allow_mobile_download_title">Allow mobile download</string>
+    <string name="allow_mobile_download_title">Allow mobile downloading</string>
     <string name="allow_mobile_message">Allow your device to download videos over your mobile
         connection when Wi-Fi is not available?
     </string>
+    <string name="allow_mobile_snack">Mobile loading is disabled. Turn on in settings</string>
     <string name="drop_course">Drop course</string>
     <string name="about_course">About course</string>
     <string name="you_dropped">"You dropped"</string>
@@ -142,6 +143,7 @@
     <string name="feedback_sent">Feedback is sent</string>
     <string name="feedback_fail">Sorry, service is not available. Try later</string>
     <string name="internet_problem">Sorry, internet is not available. Try again later</string>
+    <string name="internet_problem_short">Sorry, internet is not available</string>
     <string name="feedback_fill_fields">Fill empty fields</string>
     <string name="video_time_delimiter" translatable="false">/</string>
     <string name="x0_5" translatable="false">x0.5</string>
@@ -421,6 +423,7 @@
     <string name="anonymous_write_comment">To join this discussion you have to Sign in</string>
     <string name="anonymous_like_mark_comment">To rate the comments you have to Sign in</string>
     <string name="retry">Retry</string>
+    <string name="retry_internet">@string/retry</string>
     <string name="accessibility_drag_and_drop">drag and drop</string>
     <string name="fill_blanks_select_value"><![CDATA[<Select value>]]></string>
     <string name="fill_blanks_type_text">Type text</string>

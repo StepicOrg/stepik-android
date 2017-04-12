@@ -24,6 +24,7 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.presenters.CalendarPresenter;
+import org.stepic.droid.core.presenters.DownloadingInteractionPresenter;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.SectionLoadingState;
@@ -41,8 +42,6 @@ import org.stepic.droid.ui.listeners.StepicOnClickItemListener;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ColorUtil;
 import org.stepic.droid.util.SectionUtilKt;
-import org.stepic.droid.util.connectivity.NetworkType;
-import org.stepic.droid.util.connectivity.NetworkTypeDeterminer;
 import org.stepic.droid.viewmodel.ProgressViewModel;
 
 import java.util.List;
@@ -84,9 +83,6 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     @Inject
     SharedPreferenceHelper sharedPreferenceHelper;
 
-    @Inject
-    NetworkTypeDeterminer networkTypeDeterminer;
-
 
     private List<Section> sections;
     private AppCompatActivity activity;
@@ -99,6 +95,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     private Map<String, ProgressViewModel> progressMap;
     private Map<Long, SectionLoadingState> sectionIdToLoadingStateMap;
     private Fragment fragment;
+    private DownloadingInteractionPresenter downloadingInteractionPresenter;
     private final int durationMillis = 3000;
 
     public void setDefaultHighlightPosition(int defaultHighlightPosition) {
@@ -110,7 +107,8 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                           CalendarPresenter calendarPresenter,
                           Map<String, ProgressViewModel> progressMap,
                           Map<Long, SectionLoadingState> sectionIdToLoadingStateMap,
-                          Fragment fragment) {
+                          Fragment fragment,
+                          DownloadingInteractionPresenter downloadingInteractionPresenter) {
         this.sections = sections;
         this.activity = activity;
         this.calendarPresenter = calendarPresenter;
@@ -119,6 +117,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         this.progressMap = progressMap;
         this.sectionIdToLoadingStateMap = sectionIdToLoadingStateMap;
         this.fragment = fragment;
+        this.downloadingInteractionPresenter = downloadingInteractionPresenter;
         App.component().inject(this);
     }
 
@@ -244,8 +243,13 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     private void loadSection(int adapterPosition) {
         int sectionPosition = adapterPosition - PRE_SECTION_LIST_DELTA;
         if (sectionPosition >= 0 && sectionPosition < sections.size()) {
-            NetworkType networkType = networkTypeDeterminer.determineNetworkType();
+            downloadingInteractionPresenter.checkOnLoading(adapterPosition);
+        }
+    }
 
+    public void loadAfterDetermineNetworkState(int adapterPosition) {
+        int sectionPosition = adapterPosition - PRE_SECTION_LIST_DELTA;
+        if (sectionPosition >= 0 && sectionPosition < sections.size()) {
             final Section section = sections.get(sectionPosition);
             analytic.reportEvent(Analytic.Interaction.CLICK_CACHE_SECTION, section.getId() + "");
             section.set_cached(false);
