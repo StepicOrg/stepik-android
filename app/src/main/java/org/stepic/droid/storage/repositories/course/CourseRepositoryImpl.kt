@@ -3,7 +3,7 @@ package org.stepic.droid.storage.repositories.course
 import org.stepic.droid.model.Course
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.storage.operations.Table
-import org.stepic.droid.storage.repositories.IRepository
+import org.stepic.droid.storage.repositories.Repository
 import org.stepic.droid.web.Api
 import javax.inject.Inject
 
@@ -11,7 +11,7 @@ class CourseRepositoryImpl
 @Inject constructor(
         private val databaseFacade: DatabaseFacade,
         private val api: Api)
-    : IRepository<Course, Long> {
+    : Repository<Course, Long> {
 
     override fun getObject(key: Long): Course? {
         var course = databaseFacade.getCourseById(key, Table.enrolled)

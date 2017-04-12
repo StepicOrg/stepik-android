@@ -6,11 +6,13 @@ object FakeSectionGenerator {
     @JvmOverloads
     fun generate(sectionId: Long = 0,
                  unitIds: LongArray? = null,
-                 position: Int = 1): Section {
+                 position: Int = 1,
+                 courseId: Long = 123): Section {
         val section = Section()
         section.id = sectionId
         section.position = position
         section.units = unitIds
+        section.course = courseId
         return section
     }
 }

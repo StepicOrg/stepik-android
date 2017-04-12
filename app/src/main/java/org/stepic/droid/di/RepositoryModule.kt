@@ -5,7 +5,7 @@ import dagger.Module
 import org.stepic.droid.model.Course
 import org.stepic.droid.model.Section
 import org.stepic.droid.model.Unit
-import org.stepic.droid.storage.repositories.IRepository
+import org.stepic.droid.storage.repositories.Repository
 import org.stepic.droid.storage.repositories.course.CourseRepositoryImpl
 import org.stepic.droid.storage.repositories.section.SectionRepositoryImpl
 import org.stepic.droid.storage.repositories.unit.UnitRepositoryImpl
@@ -14,12 +14,12 @@ import org.stepic.droid.storage.repositories.unit.UnitRepositoryImpl
 interface RepositoryModule {
 
     @Binds
-    fun bindCourseRepository(courseRepositoryImpl: CourseRepositoryImpl): IRepository<Course, Long>
+    fun bindCourseRepository(courseRepositoryImpl: CourseRepositoryImpl): Repository<Course, Long>
 
     @Binds
-    fun bindSectionRepository(sectionRepositoryImpl: SectionRepositoryImpl): IRepository<Section, Long>
+    fun bindSectionRepository(sectionRepositoryImpl: SectionRepositoryImpl): Repository<Section, Long>
 
     @Binds
-    fun bindUnitRepository(unitRepositoryImpl: UnitRepositoryImpl): IRepository<Unit, Long>
+    fun bindUnitRepository(unitRepositoryImpl: UnitRepositoryImpl): Repository<Unit, Long>
 
 }

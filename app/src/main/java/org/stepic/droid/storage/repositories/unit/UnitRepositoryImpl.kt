@@ -2,7 +2,7 @@ package org.stepic.droid.storage.repositories.unit
 
 import org.stepic.droid.model.Unit
 import org.stepic.droid.storage.operations.DatabaseFacade
-import org.stepic.droid.storage.repositories.IRepository
+import org.stepic.droid.storage.repositories.Repository
 import org.stepic.droid.web.Api
 import javax.inject.Inject
 
@@ -10,7 +10,7 @@ class UnitRepositoryImpl
 @Inject constructor(
         private val databaseFacade: DatabaseFacade,
         private val api: Api)
-    : IRepository<Unit, Long> {
+    : Repository<Unit, Long> {
 
     override fun getObject(key: Long): Unit? {
         var unit = databaseFacade.getUnitById(key)

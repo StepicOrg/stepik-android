@@ -6,7 +6,7 @@ import android.support.annotation.WorkerThread
  * T – type,
  * K – type of Key
  */
-interface IRepository<T, K> {
+interface Repository<T, K> {
 
     @WorkerThread
     fun getObject(key: K): T?
