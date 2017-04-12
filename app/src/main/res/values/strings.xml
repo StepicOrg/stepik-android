@@ -82,7 +82,7 @@
     </string>
     <string name="allow_question">Allow?</string>
     <string name="video_quality">Video quality</string>
-    <string name="sync_problem">There was a problem syncing the link, please try again later
+    <string name="sync_problem">There was a problem syncing the data, please try again later
     </string>
     <string name="empty_courses">Looks like you haven\'t enrolled in any courses yet</string>
     <string name="empty_courses_anonymous">Browse courses without authorization or sign in for
