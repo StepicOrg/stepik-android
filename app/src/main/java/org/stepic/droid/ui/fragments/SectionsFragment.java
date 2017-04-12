@@ -94,6 +94,7 @@ import org.stepic.droid.util.HtmlHelper;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.SectionUtilKt;
 import org.stepic.droid.util.SnackbarExtensionKt;
+import org.stepic.droid.util.SnackbarShower;
 import org.stepic.droid.util.StepikLogicHelper;
 import org.stepic.droid.util.StringUtil;
 
@@ -951,41 +952,27 @@ public class SectionsFragment
 
     @Override
     public void onShowPreferenceSuggestion() {
-        SnackbarExtensionKt
-                .setTextColor(
-                        Snackbar.make(rootView, R.string.allow_mobile_snack, SnackbarExtensionKt.getDuration5Sec())
-                                .setAction(R.string.settings_title, new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        try {
-                                            screenManager.showSettings(getActivity());
-                                        } catch (NullPointerException nullPointerException) {
-                                            Timber.e(nullPointerException);
-                                        }
-                                    }
-                                })
-                                .setActionTextColor(ColorUtil.INSTANCE.getColorArgb(R.color.snack_action_color, getContext())),
-                        ColorUtil.INSTANCE.getColorArgb(R.color.white,
-                                getContext()))
-                .show();
+        SnackbarShower.INSTANCE.showTurnOnDownloadingInSettings(rootView, getContext(), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    screenManager.showSettings(getActivity());
+                } catch (NullPointerException nullPointerException) {
+                    Timber.e(nullPointerException);
+                }
+            }
+        });
     }
 
     @Override
     public void onShowInternetIsNotAvailableRetry(final int position) {
-        SnackbarExtensionKt
-                .setTextColor(
-                        Snackbar.make(rootView, R.string.internet_problem_short, SnackbarExtensionKt.getDuration5Sec())
-                                .setAction(R.string.retry_internet, new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        if (adapter != null) {
-                                            adapter.requestClickLoad(position);
-                                        }
-                                    }
-                                })
-                                .setActionTextColor(ColorUtil.INSTANCE.getColorArgb(R.color.snack_action_color, getContext())),
-                        ColorUtil.INSTANCE.getColorArgb(R.color.white,
-                                getContext()))
-                .show();
+        SnackbarShower.INSTANCE.showInternetRetrySnackbar(rootView, getContext(), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (adapter != null) {
+                    adapter.requestClickLoad(position);
+                }
+            }
+        });
     }
 }
