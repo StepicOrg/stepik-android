@@ -7,6 +7,7 @@ import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.presenters.contracts.CertificateView
+import org.stepic.droid.di.certificates.CertificateScope
 import org.stepic.droid.model.Certificate
 import org.stepic.droid.model.CertificateViewItem
 import org.stepic.droid.preferences.SharedPreferenceHelper
@@ -21,6 +22,7 @@ import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
 
+@CertificateScope
 class CertificatePresenter
 @Inject constructor(
         private val api: Api,

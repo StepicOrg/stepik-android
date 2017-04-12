@@ -24,6 +24,7 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.presenters.CalendarPresenter;
+import org.stepic.droid.core.presenters.DownloadingInteractionPresenter;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.SectionLoadingState;
@@ -94,6 +95,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     private Map<String, ProgressViewModel> progressMap;
     private Map<Long, SectionLoadingState> sectionIdToLoadingStateMap;
     private Fragment fragment;
+    private final DownloadingInteractionPresenter downloadingInteractionPresenter;
     private final int durationMillis = 3000;
 
     public void setDefaultHighlightPosition(int defaultHighlightPosition) {
@@ -105,7 +107,8 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                           CalendarPresenter calendarPresenter,
                           Map<String, ProgressViewModel> progressMap,
                           Map<Long, SectionLoadingState> sectionIdToLoadingStateMap,
-                          Fragment fragment) {
+                          Fragment fragment,
+                          DownloadingInteractionPresenter downloadingInteractionPresenter) {
         this.sections = sections;
         this.activity = activity;
         this.calendarPresenter = calendarPresenter;
@@ -114,6 +117,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         this.progressMap = progressMap;
         this.sectionIdToLoadingStateMap = sectionIdToLoadingStateMap;
         this.fragment = fragment;
+        this.downloadingInteractionPresenter = downloadingInteractionPresenter;
         App.component().inject(this);
     }
 
@@ -237,6 +241,13 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     }
 
     private void loadSection(int adapterPosition) {
+        int sectionPosition = adapterPosition - PRE_SECTION_LIST_DELTA;
+        if (sectionPosition >= 0 && sectionPosition < sections.size()) {
+            downloadingInteractionPresenter.checkOnLoading(adapterPosition);
+        }
+    }
+
+    public void loadAfterDetermineNetworkState(int adapterPosition) {
         int sectionPosition = adapterPosition - PRE_SECTION_LIST_DELTA;
         if (sectionPosition >= 0 && sectionPosition < sections.size()) {
             final Section section = sections.get(sectionPosition);
