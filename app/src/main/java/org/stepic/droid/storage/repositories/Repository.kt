@@ -6,11 +6,11 @@ import android.support.annotation.WorkerThread
  * T – type,
  * K – type of Key
  */
-interface Repository<T, K> {
+interface Repository<T> {
 
     @WorkerThread
-    fun getObject(key: K): T?
+    fun getObject(key: Long): T?
 
     @WorkerThread
-    fun getObjects(keys: Array<K>): Iterable<T>
+    fun getObjects(keys: LongArray): Iterable<T>
 }

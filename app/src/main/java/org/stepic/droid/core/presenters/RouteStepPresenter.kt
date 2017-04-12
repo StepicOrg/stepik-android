@@ -10,6 +10,7 @@ import org.stepic.droid.model.Lesson
 import org.stepic.droid.model.Section
 import org.stepic.droid.model.Unit
 import org.stepic.droid.storage.repositories.Repository
+import org.stepic.droid.util.hasUserAccess
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
 
@@ -19,9 +20,9 @@ class RouteStepPresenter
         private val threadPoolExecutor: ThreadPoolExecutor,
         private val mainHandler: MainHandler,
         private val analytic: Analytic,
-        private val courseRepository: Repository<Course, Long>,
-        private val sectionRepository: Repository<Section, Long>,
-        private val unitRepository: Repository<Unit, Long>)
+        private val courseRepository: Repository<Course>,
+        private val sectionRepository: Repository<Section>,
+        private val unitRepository: Repository<Unit>)
     : PresenterBase<RouteStepView>() {
 
     /**
@@ -52,37 +53,52 @@ class RouteStepPresenter
     @MainThread
     private fun checkStepBase(direction: Direction, stepId: Long, lesson: Lesson, unit: Unit, indexCalculation: (LongArray) -> Int, resultForView: () -> kotlin.Unit) {
         val stepIds = lesson.steps
-        if (stepIds != null && stepIds.isNotEmpty()) {
-            val conditionalStepId = stepIds[indexCalculation.invoke(stepIds)]
-            if (conditionalStepId == stepId) {
-                //YEAH, step is candidate for showing
-                if (direction == Direction.previous) {
-                    if (unit.position > 0) {
-                        resultForView.invoke()
-                    } else {
-                        //unit.position is 0. We should check for previous section is available or not
-                        threadPoolExecutor.execute {
-                            var section: Section? = sectionRepository.getObject(unit.section)
-                        }
+        if (stepIds == null || stepIds.isEmpty()) {
+            return
+        }
+
+        val conditionalStepId = stepIds[indexCalculation.invoke(stepIds)]
+        if (conditionalStepId != stepId) {
+            return
+        }
+
+        //yes, step is candidate for showing
+        if (direction == Direction.previous) {
+            if (unit.position > 1) { //not first
+                resultForView.invoke()
+            } else {
+                //unit.position is 1 (it is first). We should check for previous section is available or not
+                threadPoolExecutor.execute {
+                    val section: Section = sectionRepository.getObject(unit.section) ?: return@execute
+                    if (section.position <= 1) {
+                        //it is fist section in course
+                        return@execute
                     }
-                } else if (direction == Direction.next) {
 
+                    //only if it is not 1st module we have a chance
+                    val course: Course? = courseRepository.getObject(section.course)
+                    course
+                            ?.sections
+                            ?.slice(0..section.position - 2)
+                            ?.toLongArray()
+                            ?.let { sectionIds ->
+                                val sections = sectionRepository.getObjects(sectionIds)
+                                //this section are previous our
+                                sections
+                                        .reversed()
+                                        .forEach {
+                                            if (it.hasUserAccess(course)) {
+                                                mainHandler.post {
+                                                    resultForView.invoke()
+                                                }
+                                                return@execute
+                                            }
+                                        }
+                            }
                 }
-
-//                threadPoolExecutor.execute {
-//                    val section = databaseFacade.getSectionById(unit.section)
-//                    val units: LongArray? = section?.units
-//                    if (units != null && units.isNotEmpty()) {
-//                        val firstUnitId = units[indexCalculation.invoke(units)]
-//                        if (firstUnitId != unit.id) {
-//                            mainHandler.post {
-//                                //if not last lesson in section -> show button
-//                                resultForView.invoke()
-//                            }
-//                        }
-//                    }
-//                }
             }
+        } else if (direction == Direction.next) {
+            TODO()
         }
     }
 

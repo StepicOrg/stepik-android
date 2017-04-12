@@ -11,7 +11,7 @@ class CourseRepositoryImpl
 @Inject constructor(
         private val databaseFacade: DatabaseFacade,
         private val api: Api)
-    : Repository<Course, Long> {
+    : Repository<Course> {
 
     override fun getObject(key: Long): Course? {
         var course = databaseFacade.getCourseById(key, Table.enrolled)
@@ -29,7 +29,7 @@ class CourseRepositoryImpl
         return course
     }
 
-    override fun getObjects(keys: Array<Long>): Iterable<Course> {
+    override fun getObjects(keys: LongArray): Iterable<Course> {
         TODO()
     }
 

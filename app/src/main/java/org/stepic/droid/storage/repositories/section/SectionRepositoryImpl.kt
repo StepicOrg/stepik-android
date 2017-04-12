@@ -10,13 +10,14 @@ class SectionRepositoryImpl
 @Inject constructor(
         private val databaseFacade: DatabaseFacade,
         private val api: Api)
-    : Repository<Section, Long> {
-    override fun getObjects(keys: Array<Long>): Iterable<Section> {
-        var sections = databaseFacade.getSectionsByIds(keys.toLongArray())
+    : Repository<Section> {
+
+    override fun getObjects(keys: LongArray): Iterable<Section> {
+        var sections = databaseFacade.getSectionsByIds(keys)
         if (sections.size != keys.size) {
             sections =
                     try {
-                        api.getSections(keys.toLongArray()).execute()?.body()?.sections ?: ArrayList<Section>()
+                        api.getSections(keys).execute()?.body()?.sections ?: ArrayList<Section>()
                     } catch (exception: Exception) {
                         ArrayList<Section>()
                     }

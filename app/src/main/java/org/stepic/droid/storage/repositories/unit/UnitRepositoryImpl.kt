@@ -10,14 +10,14 @@ class UnitRepositoryImpl
 @Inject constructor(
         private val databaseFacade: DatabaseFacade,
         private val api: Api)
-    : Repository<Unit, Long> {
+    : Repository<Unit> {
 
-    override fun getObjects(keys: Array<Long>): Iterable<Unit> {
-        var units = databaseFacade.getUnitsByIds(keys.toLongArray())
+    override fun getObjects(keys: LongArray): Iterable<Unit> {
+        var units = databaseFacade.getUnitsByIds(keys)
         if (units.size != keys.size) {
             units =
                     try {
-                        api.getUnits(keys.toLongArray()).execute()?.body()?.units ?: ArrayList<Unit>()
+                        api.getUnits(keys).execute()?.body()?.units ?: ArrayList<Unit>()
                     } catch (exception: Exception) {
                         ArrayList<Unit>()
                     }

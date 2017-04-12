@@ -18,7 +18,9 @@ import org.stepic.droid.test_utils.generators.FakeCourseGenerator;
 import org.stepic.droid.test_utils.generators.FakeLessonGenerator;
 import org.stepic.droid.test_utils.generators.FakeSectionGenerator;
 import org.stepic.droid.test_utils.generators.FakeUnitGenerator;
+import org.stepic.droid.test_utils.generators.ListHelper;
 
+import java.util.List;
 import java.util.concurrent.ThreadPoolExecutor;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -43,13 +45,13 @@ public class RouteStepPresenterTest {
     private Analytic analytic;
 
     @Mock
-    private Repository<Course, Long> courseRepository;
+    private Repository<Course> courseRepository;
 
     @Mock
-    private Repository<Section, Long> sectionRepository;
+    private Repository<Section> sectionRepository;
 
     @Mock
-    private Repository<Unit, Long> unitRepository;
+    private Repository<Unit> unitRepository;
 
 
     @Before
@@ -59,7 +61,13 @@ public class RouteStepPresenterTest {
         ConcurrencyUtilForTest.transformToBlockingMock(threadPoolExecutor);
         ConcurrencyUtilForTest.transformToBlockingMock(mainHandler);
 
-        routeStepPresenter = new RouteStepPresenter(threadPoolExecutor, mainHandler, analytic, courseRepository, sectionRepository, unitRepository);
+        routeStepPresenter = new RouteStepPresenter(
+                threadPoolExecutor,
+                mainHandler,
+                analytic,
+                courseRepository,
+                sectionRepository,
+                unitRepository);
     }
 
     @Test
@@ -102,20 +110,27 @@ public class RouteStepPresenterTest {
 
         long stepIds[] = ArrayHelper.INSTANCE.arrayOf(stepId);
         long unitIds[] = ArrayHelper.INSTANCE.arrayOf(unitId);
+        long unitIdsSecond[] = ArrayHelper.INSTANCE.arrayOf(unitId - 20);
         long sectionIds[] = ArrayHelper.INSTANCE.arrayOf(sectionId - 1, sectionId);
         Lesson lesson = FakeLessonGenerator.INSTANCE.generate(stepIds);
-        Unit unit = FakeUnitGenerator.INSTANCE.generate(unitId, sectionId);
-        Section section = FakeSectionGenerator.INSTANCE.generate(sectionId, unitIds, 1);
-        Course course = FakeCourseGenerator.INSTANCE.generate(courseId, sectionIds);
 
-        when(sectionRepository.getObject(sectionId)).thenReturn(section); //return section with position 1 (it is enough)
+        Unit unit = FakeUnitGenerator.INSTANCE.generate(unitId, sectionId, 1); //the 1st unit in section
+        Section section = FakeSectionGenerator.INSTANCE.generate(sectionId, unitIds, 2, courseId); //the 2nd section
+        Section closedSection = FakeSectionGenerator.INSTANCE.generate(sectionId - 1, unitIdsSecond, 1, courseId, false);
+        Course course = FakeCourseGenerator.INSTANCE.generate(courseId, sectionIds);
+        List<Section> sections = ListHelper.INSTANCE.listOf(closedSection, section);
+
+        when(sectionRepository.getObject(sectionId)).thenReturn(section);
         when(courseRepository.getObject(courseId)).thenReturn(course);
+        when(sectionRepository.getObjects(sectionIds)).thenReturn(sections);
 
         routeStepPresenter.attachView(routeStepView);
         routeStepPresenter.checkStepForFirst(stepId, lesson, unit);
         routeStepPresenter.detachView(routeStepView);
 
-        verify(courseRepository, never()).getObject(any(Long.class));
+        verify(courseRepository).getObject(courseId);
+        verify(sectionRepository).getObject(sectionId);
+        verify(sectionRepository).getObjects(sectionIds);
         verify(unitRepository, never()).getObject(any(Long.class));
 
         verify(routeStepView, never()).showLoading();

@@ -14,12 +14,12 @@ import org.stepic.droid.storage.repositories.unit.UnitRepositoryImpl
 interface RepositoryModule {
 
     @Binds
-    fun bindCourseRepository(courseRepositoryImpl: CourseRepositoryImpl): Repository<Course, Long>
+    fun bindCourseRepository(courseRepositoryImpl: CourseRepositoryImpl): Repository<Course>
 
     @Binds
-    fun bindSectionRepository(sectionRepositoryImpl: SectionRepositoryImpl): Repository<Section, Long>
+    fun bindSectionRepository(sectionRepositoryImpl: SectionRepositoryImpl): Repository<Section>
 
     @Binds
-    fun bindUnitRepository(unitRepositoryImpl: UnitRepositoryImpl): Repository<Unit, Long>
+    fun bindUnitRepository(unitRepositoryImpl: UnitRepositoryImpl): Repository<Unit>
 
 }
