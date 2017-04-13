@@ -111,18 +111,18 @@ public class RouteStepPresenterTest {
         long stepIds[] = ArrayHelper.INSTANCE.arrayOf(stepId);
         long unitIds[] = ArrayHelper.INSTANCE.arrayOf(unitId);
         long unitIdsSecond[] = ArrayHelper.INSTANCE.arrayOf(unitId - 20);
-        long sectionIds[] = ArrayHelper.INSTANCE.arrayOf(sectionId - 1, sectionId);
+        long expectedSectionIds[] = ArrayHelper.INSTANCE.arrayOf(sectionId - 1);
         Lesson lesson = FakeLessonGenerator.INSTANCE.generate(stepIds);
 
         Unit unit = FakeUnitGenerator.INSTANCE.generate(unitId, sectionId, 1); //the 1st unit in section
         Section section = FakeSectionGenerator.INSTANCE.generate(sectionId, unitIds, 2, courseId); //the 2nd section
         Section closedSection = FakeSectionGenerator.INSTANCE.generate(sectionId - 1, unitIdsSecond, 1, courseId, false);
-        Course course = FakeCourseGenerator.INSTANCE.generate(courseId, sectionIds);
+        Course course = FakeCourseGenerator.INSTANCE.generate(courseId, expectedSectionIds);
         List<Section> sections = ListHelper.INSTANCE.listOf(closedSection, section);
 
         when(sectionRepository.getObject(sectionId)).thenReturn(section);
         when(courseRepository.getObject(courseId)).thenReturn(course);
-        when(sectionRepository.getObjects(sectionIds)).thenReturn(sections);
+        when(sectionRepository.getObjects(expectedSectionIds)).thenReturn(sections);
 
         routeStepPresenter.attachView(routeStepView);
         routeStepPresenter.checkStepForFirst(stepId, lesson, unit);
@@ -130,7 +130,7 @@ public class RouteStepPresenterTest {
 
         verify(courseRepository).getObject(courseId);
         verify(sectionRepository).getObject(sectionId);
-        verify(sectionRepository).getObjects(sectionIds);
+        verify(sectionRepository).getObjects(expectedSectionIds); // we should do optimization and do not request section, which is already requested
         verify(unitRepository, never()).getObject(any(Long.class));
 
         verify(routeStepView, never()).showLoading();
@@ -221,11 +221,11 @@ public class RouteStepPresenterTest {
         when(courseRepository.getObject(courseId)).thenReturn(course);
 
         routeStepPresenter.attachView(routeStepView);
-        routeStepPresenter.checkStepForFirst(stepId, lesson, unit); // resolve by unitIds in section and sectionIds in course
+        routeStepPresenter.checkStepForLast(stepId, lesson, unit); // resolve by unitIds in section and sectionIds in course
         routeStepPresenter.detachView(routeStepView);
 
         verify(sectionRepository).getObject(sectionId);
-        verify(courseRepository, never()).getObject(any(Long.class));
+        verify(courseRepository).getObject(courseId); // we can't know that it is last section, while we do not get course and sectionIds
         verify(unitRepository, never()).getObject(any(Long.class));
 
         verify(routeStepView, never()).showLoading();
@@ -251,7 +251,7 @@ public class RouteStepPresenterTest {
         Unit unit = FakeUnitGenerator.INSTANCE.generate(unitId, sectionId, unitPosition);
 
         routeStepPresenter.attachView(routeStepView);
-        routeStepPresenter.checkStepForFirst(stepId, lesson, unit); // resolve by unitIds in section
+        routeStepPresenter.checkStepForLast(stepId, lesson, unit); // resolve by unitIds in section
         routeStepPresenter.detachView(routeStepView);
 
         verify(sectionRepository, never()).getObject(any(Long.class));
@@ -284,7 +284,7 @@ public class RouteStepPresenterTest {
         when(sectionRepository.getObject(sectionId)).thenReturn(section);
 
         routeStepPresenter.attachView(routeStepView);
-        routeStepPresenter.checkStepForFirst(stepId, lesson, unit); // resolve by unitIds in section
+        routeStepPresenter.checkStepForLast(stepId, lesson, unit); // resolve by unitIds in section
         routeStepPresenter.detachView(routeStepView);
 
         verify(sectionRepository).getObject(sectionId);

@@ -35,7 +35,6 @@ class RouteStepPresenter
                 stepId,
                 lesson,
                 unit,
-                indexCalculation = { something -> something.size - 1 },
                 resultForView = { view?.showNextLessonView() }) //need only last
     }
 
@@ -46,19 +45,23 @@ class RouteStepPresenter
                 stepId,
                 lesson,
                 unit,
-                indexCalculation = { _ -> 0 },
                 resultForView = { view?.showPreviousLessonView() }) //need only the first element
     }
 
     @MainThread
-    private fun checkStepBase(direction: Direction, stepId: Long, lesson: Lesson, unit: Unit, indexCalculation: (LongArray) -> Int, resultForView: () -> kotlin.Unit) {
+    private fun checkStepBase(direction: Direction, stepId: Long, lesson: Lesson, unit: Unit, resultForView: () -> kotlin.Unit) {
         val stepIds = lesson.steps
         if (stepIds == null || stepIds.isEmpty()) {
             return
         }
 
-        val conditionalStepId = stepIds[indexCalculation.invoke(stepIds)]
-        if (conditionalStepId != stepId) {
+        val indexForChecking =
+                when (direction) {
+                    RouteStepPresenter.Direction.previous -> 0
+                    RouteStepPresenter.Direction.next -> stepIds.size - 1
+                }
+        if (stepIds[indexForChecking] != stepId) {
+            // it is not the last or the fist in the lesson
             return
         }
 
@@ -98,7 +101,36 @@ class RouteStepPresenter
                 }
             }
         } else if (direction == Direction.next) {
-            TODO()
+            threadPoolExecutor.execute {
+                val section = sectionRepository.getObject(unit.section) ?: return@execute
+                val unitIds = section.units ?: return@execute
+                if (unitIds[unitIds.size - 1] == unit.id) {
+                    //we should check next sections with access
+                    val course = courseRepository.getObject(section.course)
+                    val sectionIds = course?.sections
+
+                    sectionIds
+                            ?.slice(section.position..sectionIds.size)
+                            ?.toLongArray()
+                            ?.let {
+                                val sections = sectionRepository.getObjects(it)
+                                sections
+                                        .forEach {
+                                            if (it.hasUserAccess(course)) {
+                                                mainHandler.post {
+                                                    resultForView.invoke()
+                                                }
+                                                return@execute
+                                            }
+                                        }
+                            }
+
+                } else {
+                    mainHandler.post {
+                        resultForView.invoke()
+                    }
+                }
+            }
         }
     }
 
