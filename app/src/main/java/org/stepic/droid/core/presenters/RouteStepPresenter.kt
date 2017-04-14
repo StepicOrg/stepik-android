@@ -11,7 +11,7 @@ import org.stepic.droid.model.Lesson
 import org.stepic.droid.model.Section
 import org.stepic.droid.model.Unit
 import org.stepic.droid.storage.repositories.Repository
-import org.stepic.droid.util.hasUserAccess
+import org.stepic.droid.util.hasUserAccessAndNotEmpty
 import timber.log.Timber
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
@@ -92,7 +92,7 @@ class RouteStepPresenter
                                 sections
                                         .reversed()
                                         .forEach {
-                                            if (hasUserAccessAndNotEmpty(course, it)) {
+                                            if (it.hasUserAccessAndNotEmpty(course)) {
                                                 mainHandler.post {
                                                     resultForView.invoke()
                                                 }
@@ -115,7 +115,7 @@ class RouteStepPresenter
                         val sections = sectionRepository.getObjects(it)
                         sections
                                 .forEach {
-                                    if (hasUserAccessAndNotEmpty(course, it)) {
+                                    if (it.hasUserAccessAndNotEmpty(course)) {
                                         mainHandler.post {
                                             resultForView.invoke()
                                         }
@@ -219,7 +219,7 @@ class RouteStepPresenter
                                 sections
                                         .reversed()
                                         .forEach {
-                                            if (hasUserAccessAndNotEmpty(course, it)) {
+                                            if (it.hasUserAccessAndNotEmpty(course)) {
                                                 it.units?.last()?.let { previousUnitId ->
                                                     val previousUnit = unitRepository.getObject(previousUnitId)
                                                     if (previousUnit != null) {
@@ -240,7 +240,7 @@ class RouteStepPresenter
                             RouteStepPresenter.Direction.next -> {
                                 sections
                                         .forEach { nextSection ->
-                                            if (hasUserAccessAndNotEmpty(course, nextSection)) {
+                                            if (nextSection.hasUserAccessAndNotEmpty(course)) {
                                                 nextSection.units?.first()?.let { nextUnitId ->
                                                     val nextUnit = unitRepository.getObject(nextUnitId)
                                                     nextUnit?.lesson?.let { lessonId ->
@@ -268,15 +268,13 @@ class RouteStepPresenter
             }
 
             //when Internet is not available AND when course structure is changing in real time
-            //if someone is null -> show error
+            //if something is null -> show error
             onCantGoAnalytic.invoke(unit)
             mainHandler.post {
                 onCantGoEvent.invoke()
             }
         }
     }
-
-    private fun hasUserAccessAndNotEmpty(course: Course?, it: Section) = it.hasUserAccess(course) && it.units?.isNotEmpty() ?: false
 
     @WorkerThread
     private fun notifyAboutChangingSection(previousSection: Section, newSection: Section) {
