@@ -4,8 +4,6 @@ import com.squareup.otto.Bus;
 
 import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.events.UpdateSectionProgressEvent;
-import org.stepic.droid.events.units.UnitProgressUpdateEvent;
-import org.stepic.droid.events.units.UnitScoreUpdateEvent;
 import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
@@ -14,7 +12,9 @@ import org.stepic.droid.storage.operations.DatabaseFacade;
 import org.stepic.droid.util.StringUtil;
 import org.stepic.droid.web.Api;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -26,6 +26,8 @@ public class LocalProgressImpl implements LocalProgressManager {
     private Bus bus;
     private Api api;
     private MainHandler mainHandler;
+
+    private final Set<UnitProgressListener> unitProgressListeners = new HashSet<>();
 
     @Inject
     public LocalProgressImpl(DatabaseFacade databaseFacade, Bus bus, Api api, MainHandler mainHandler) {
@@ -59,7 +61,9 @@ public class LocalProgressImpl implements LocalProgressManager {
         mainHandler.post(new Function0<kotlin.Unit>() {
             @Override
             public kotlin.Unit invoke() {
-                bus.post(new UnitProgressUpdateEvent(unitId));
+                for (UnitProgressListener unitProgressListener : unitProgressListeners) {
+                    unitProgressListener.onUnitPassed(unitId);
+                }
                 return kotlin.Unit.INSTANCE;
             }
         });
@@ -88,7 +92,9 @@ public class LocalProgressImpl implements LocalProgressManager {
         mainHandler.post(new Function0<kotlin.Unit>() {
             @Override
             public kotlin.Unit invoke() {
-                bus.post(new UnitScoreUpdateEvent(unitId, finalScoreInUnit));
+                for (UnitProgressListener unitProgressListener : unitProgressListeners) {
+                    unitProgressListener.onScoreUpdated(unitId, finalScoreInUnit);
+                }
                 return kotlin.Unit.INSTANCE;
             }
         });
@@ -118,6 +124,16 @@ public class LocalProgressImpl implements LocalProgressManager {
         } catch (Exception exception) {
             Timber.e(exception);
         }
+    }
+
+    @Override
+    public synchronized void subscribe(UnitProgressListener unitProgressListener) {
+        unitProgressListeners.add(unitProgressListener);
+    }
+
+    @Override
+    public synchronized void unsubscribe(UnitProgressListener unitProgressListener) {
+        unitProgressListeners.remove(unitProgressListener);
     }
 
     private Double getScoreOfProgress(Progress progress) {
