@@ -28,6 +28,7 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.core.LessonSessionManager;
+import org.stepic.droid.core.RoutingManager;
 import org.stepic.droid.core.presenters.DownloadingInteractionPresenter;
 import org.stepic.droid.core.presenters.DownloadingProgressUnitsPresenter;
 import org.stepic.droid.core.presenters.UnitsLearningProgressPresenter;
@@ -60,7 +61,7 @@ import butterknife.BindView;
 import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
 import timber.log.Timber;
 
-public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.OnRefreshListener, UnitsView, DownloadingProgressUnitsView, DownloadingInteractionView, UnitsLearningProgressView {
+public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.OnRefreshListener, UnitsView, DownloadingProgressUnitsView, DownloadingInteractionView, UnitsLearningProgressView, RoutingManager.Listener {
 
     private static final int ANIMATION_DURATION = 0;
     public static final int DELETE_POSITION_REQUEST_CODE = 165;
@@ -114,6 +115,9 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
     @Inject
     DownloadingInteractionPresenter downloadingInteractionPresenter;
 
+    @Inject
+    RoutingManager routingManager;
+
     UnitAdapter adapter;
 
     private List<Unit> unitList;
@@ -122,18 +126,27 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
     private Map<Long, LessonLoadingState> lessonIdToLoadingStateMap;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void injectComponent() {
         App
-                .component()
+                .getComponentManager()
+                .routingComponent()
                 .sectionComponentBuilder()
                 .build()
                 .inject(this);
+    }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setRetainInstance(true);
         setHasOptionsMenu(true);
         section = getArguments().getParcelable(SECTION_KEY);
         lessonIdToLoadingStateMap = new HashMap<>();
+    }
+
+    @Override
+    protected void onReleaseComponent() {
+        App.getComponentManager().releaseRoutingComponent();
     }
 
     @Nullable
@@ -179,11 +192,14 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
         unitsPresenter.attachView(this);
         unitsLearningProgressPresenter.attachView(this);
         localProgressManager.subscribe(unitsLearningProgressPresenter);
+        routingManager.subscribe(this);
         unitsPresenter.showUnits(section, false);
+
     }
 
     @Override
     public void onDestroyView() {
+        routingManager.unsubscribe(this);
         localProgressManager.unsubscribe(unitsLearningProgressPresenter);
         unitsLearningProgressPresenter.detachView(this);
         unitsPresenter.detachView(this);
@@ -439,5 +455,12 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
 
         unit.set_viewed_custom(true);
         adapter.notifyItemChanged(position);
+    }
+
+    @Override
+    public void onSectionChanged(@NotNull Section oldSection, @NotNull Section newSection) {
+        if (section != null && oldSection.getId() == section.getId()) {
+            unitsPresenter.showUnits(newSection, true);
+        }
     }
 }
