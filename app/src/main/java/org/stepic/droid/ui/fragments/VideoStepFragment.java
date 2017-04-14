@@ -74,7 +74,8 @@ public class VideoStepFragment extends StepBaseFragment implements StepQualityVi
     @Override
     protected void injectComponent() {
         App
-                .component()
+                .getComponentManager()
+                .routingComponent()
                 .stepComponentBuilder()
                 .build()
                 .inject(this);

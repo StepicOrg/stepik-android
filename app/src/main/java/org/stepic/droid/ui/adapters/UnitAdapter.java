@@ -56,7 +56,6 @@ import butterknife.ButterKnife;
 
 public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder> implements StepicOnClickItemListener, OnClickLoadListener, OnLoadPositionListener {
 
-
     @Inject
     ScreenManager screenManager;
 
@@ -78,7 +77,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
 
     private final static String DELIMITER = ".";
 
-    private final Section parentSection;
+    private Section parentSection;
     private final List<Lesson> lessonList;
     private AppCompatActivity activity;
     private final List<Unit> unitList;
@@ -97,6 +96,10 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
         this.fragment = fragment;
         this.downloadingInteractionPresenter = downloadingInteractionPresenter;
         App.component().inject(this);
+    }
+
+    public void setSection(Section section) {
+        this.parentSection = section;
     }
 
 

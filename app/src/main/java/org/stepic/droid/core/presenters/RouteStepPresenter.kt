@@ -4,7 +4,7 @@ import android.support.annotation.MainThread
 import android.support.annotation.WorkerThread
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
-import org.stepic.droid.core.RoutingManager
+import org.stepic.droid.core.RoutingPoster
 import org.stepic.droid.core.presenters.contracts.RouteStepView
 import org.stepic.droid.di.step.StepScope
 import org.stepic.droid.model.Course
@@ -27,7 +27,7 @@ class RouteStepPresenter
         private val sectionRepository: Repository<Section>,
         private val unitRepository: Repository<Unit>,
         private val lessonRepository: Repository<Lesson>,
-        private val routingManager: RoutingManager
+        private val routingPoster: RoutingPoster
 )
     : PresenterBase<RouteStepView>() {
 
@@ -281,7 +281,7 @@ class RouteStepPresenter
     @WorkerThread
     private fun notifyAboutChangingSection(oldSection: Section, newSection: Section) {
         //show on unitsFragment, which has oldSection, newSection.
-        routingManager.onSectionChanged(oldSection, newSection)
+        routingPoster.onSectionChanged(oldSection, newSection)
         Timber.d("changing ${oldSection.title} to ${newSection.title}")
     }
 

@@ -28,7 +28,7 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.core.LessonSessionManager;
-import org.stepic.droid.core.RoutingManager;
+import org.stepic.droid.core.RoutingConsumer;
 import org.stepic.droid.core.presenters.DownloadingInteractionPresenter;
 import org.stepic.droid.core.presenters.DownloadingProgressUnitsPresenter;
 import org.stepic.droid.core.presenters.UnitsLearningProgressPresenter;
@@ -61,7 +61,7 @@ import butterknife.BindView;
 import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
 import timber.log.Timber;
 
-public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.OnRefreshListener, UnitsView, DownloadingProgressUnitsView, DownloadingInteractionView, UnitsLearningProgressView, RoutingManager.Listener {
+public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.OnRefreshListener, UnitsView, DownloadingProgressUnitsView, DownloadingInteractionView, UnitsLearningProgressView, RoutingConsumer.Listener {
 
     private static final int ANIMATION_DURATION = 0;
     public static final int DELETE_POSITION_REQUEST_CODE = 165;
@@ -116,7 +116,7 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
     DownloadingInteractionPresenter downloadingInteractionPresenter;
 
     @Inject
-    RoutingManager routingManager;
+    RoutingConsumer routingConsumer;
 
     UnitAdapter adapter;
 
@@ -178,7 +178,15 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
         unitList = new ArrayList<>();
         lessonList = new ArrayList<>();
         progressMap = new HashMap<>();
-        adapter = new UnitAdapter(section, unitList, lessonList, progressMap, (AppCompatActivity) getActivity(), lessonIdToLoadingStateMap, this, downloadingInteractionPresenter);
+        adapter = new UnitAdapter(section,
+                unitList,
+                lessonList,
+                progressMap,
+                (AppCompatActivity) getActivity(),
+                lessonIdToLoadingStateMap,
+                this,
+                downloadingInteractionPresenter);
+
         unitsRecyclerView.setAdapter(adapter);
         unitsRecyclerView.setItemAnimator(new SlideInRightAnimator());
         unitsRecyclerView.getItemAnimator().setRemoveDuration(ANIMATION_DURATION);
@@ -192,14 +200,14 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
         unitsPresenter.attachView(this);
         unitsLearningProgressPresenter.attachView(this);
         localProgressManager.subscribe(unitsLearningProgressPresenter);
-        routingManager.subscribe(this);
+        routingConsumer.subscribe(this);
         unitsPresenter.showUnits(section, false);
 
     }
 
     @Override
     public void onDestroyView() {
-        routingManager.unsubscribe(this);
+        routingConsumer.unsubscribe(this);
         localProgressManager.unsubscribe(unitsLearningProgressPresenter);
         unitsLearningProgressPresenter.detachView(this);
         unitsPresenter.detachView(this);
@@ -460,6 +468,8 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
     @Override
     public void onSectionChanged(@NotNull Section oldSection, @NotNull Section newSection) {
         if (section != null && oldSection.getId() == section.getId()) {
+            section = newSection;
+            adapter.setSection(section);
             unitsPresenter.showUnits(newSection, true);
         }
     }
