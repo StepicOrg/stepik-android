@@ -53,6 +53,8 @@ public class RouteStepPresenterTest {
     @Mock
     private Repository<Unit> unitRepository;
 
+    @Mock
+    private Repository<Lesson> lessonRepository;
 
     @Before
     public void beforeEachTest() {
@@ -67,7 +69,8 @@ public class RouteStepPresenterTest {
                 analytic,
                 courseRepository,
                 sectionRepository,
-                unitRepository);
+                unitRepository,
+                lessonRepository);
     }
 
     @Test
