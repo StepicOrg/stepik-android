@@ -138,12 +138,14 @@ public class VideoStepFragment extends StepBaseFragment implements StepQualityVi
                     .listener(new RequestListener<Uri, GlideDrawable>() {
                         @Override
                         public boolean onException(Exception e, Uri model, Target<GlideDrawable> target, boolean isFirstResource) {
+                            //at this callback view can be dead!
                             showTime(timeString);
                             return false;
                         }
 
                         @Override
                         public boolean onResourceReady(GlideDrawable resource, Uri model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                            //at this callback view can be dead!
                             showTime(timeString);
                             return false;
                         }
@@ -154,7 +156,8 @@ public class VideoStepFragment extends StepBaseFragment implements StepQualityVi
     }
 
     private void showTime(@Nullable String timeString) {
-        if (timeString != null) {
+        //at this callback view can be dead!
+        if (timeString != null && videoLengthTextView != null) {
             videoLengthTextView.setVisibility(View.VISIBLE);
             videoLengthTextView.setText(timeString);
         }
