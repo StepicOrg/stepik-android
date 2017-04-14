@@ -3,6 +3,7 @@ package org.stepic.droid.core
 import org.stepic.droid.di.AppCoreComponent
 import org.stepic.droid.di.login.LoginComponent
 import org.stepic.droid.di.mainscreen.MainScreenComponent
+import org.stepic.droid.di.routing.RoutingComponent
 
 class ComponentManagerImpl(private val appCoreComponent: AppCoreComponent) : ComponentManager {
 
@@ -35,6 +36,31 @@ class ComponentManagerImpl(private val appCoreComponent: AppCoreComponent) : Com
     override fun releaseMainFeedComponent() {
         synchronized(this) {
             mainScreenComponentProp = null
+        }
+    }
+
+
+    private var routingRefCount = 0
+    private var routingComponent: RoutingComponent? = null
+
+    override fun routingComponent(): RoutingComponent {
+        if (routingComponent == null) {
+            routingComponent = appCoreComponent
+                    .routingComponentBuilder()
+                    .build()
+        }
+
+        routingRefCount++
+        return routingComponent!!
+    }
+
+    override fun releaseRoutingComponent() {
+        routingRefCount--
+        if (routingRefCount == 0) {
+            routingComponent = null
+        }
+        if (routingRefCount < 0) {
+            throw IllegalStateException("released routing component greater than got")
         }
     }
 }

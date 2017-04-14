@@ -17,6 +17,7 @@ import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.test_utils.ConcurrencyUtilForTest;
 import org.stepic.droid.test_utils.ResponseGeneratorKt;
 import org.stepic.droid.test_utils.generators.FakeProfileGenerator;
+import org.stepic.droid.test_utils.generators.FakeUserGenerator;
 import org.stepic.droid.util.ProfileExtensionKt;
 import org.stepic.droid.util.UserExtensionKt;
 import org.stepic.droid.web.Api;
@@ -96,7 +97,7 @@ public class ProfilePresenterTest {
         String shortBio = "My short bio";
         String details = " DetailedInfo";
 
-        fakeUserFromApi = FakeProfileGenerator.INSTANCE.generateFakeUser(profileId, name, lastName, imageLink, shortBio, details);
+        fakeUserFromApi = FakeUserGenerator.INSTANCE.generate(profileId, name, lastName, imageLink, shortBio, details);
         fromApiUserViewModel = new UserViewModel(UserExtensionKt.getFirstAndLastName(fakeUserFromApi), shortBio, details, imageLink, isMyProfile, profileId);
     }
 
@@ -109,7 +110,7 @@ public class ProfilePresenterTest {
         String shortBio = "it is short bio";
         String details = " details";
 
-        preferencesProfileModel = FakeProfileGenerator.INSTANCE.generateFakeProfile(profileId, name, lastName, imageLink, shortBio, details);
+        preferencesProfileModel = FakeProfileGenerator.INSTANCE.generate(profileId, name, lastName, imageLink, shortBio, details);
         fromPreferencesUserViewModel = new UserViewModel(ProfileExtensionKt.getFirstAndLastName(preferencesProfileModel), shortBio, details, imageLink, isMyProfile, profileId);
     }
 

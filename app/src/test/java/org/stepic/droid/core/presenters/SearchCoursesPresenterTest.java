@@ -75,14 +75,14 @@ public class SearchCoursesPresenterTest {
 
         searchCoursesPresenter.attachView(coursesView);
         String searchQuery = "One course in answer pls";
-        Meta onePageMeta = FakeMetaGenerator.INSTANCE.generateFakeMeta();
+        Meta onePageMeta = FakeMetaGenerator.INSTANCE.generate();
 
 
         //mock calling api for getting search results
         SearchResultResponse responseMock = mock(SearchResultResponse.class);
         List<SearchResult> searchResults = new ArrayList<>();
         int expectedCourseId = 67;
-        SearchResult expectedSingleSearchResult = FakeSearchResultGenerator.INSTANCE.generateFakeSearchResult(expectedCourseId);
+        SearchResult expectedSingleSearchResult = FakeSearchResultGenerator.INSTANCE.generate(expectedCourseId);
         searchResults.add(expectedSingleSearchResult);
         when(responseMock.getSearchResultList()).thenReturn(searchResults);
         when(responseMock.getMeta()).thenReturn(onePageMeta);
@@ -95,7 +95,7 @@ public class SearchCoursesPresenterTest {
         CoursesStepicResponse coursesStepicResponse = mock(CoursesStepicResponse.class);
         when(coursesStepicResponse.getMeta()).thenReturn(onePageMeta);
         List<Course> expectedCourses = new ArrayList<>();
-        Course expectedCourse = FakeCourseGenerator.INSTANCE.generateFakeCourse(expectedCourseId);
+        Course expectedCourse = FakeCourseGenerator.INSTANCE.generate(expectedCourseId);
         expectedCourses.add(expectedCourse);
         when(coursesStepicResponse.getCourses()).thenReturn(expectedCourses);
         ResponseGeneratorKt.useMockInsteadCall(when(api.getCourses(1, courseIds)), coursesStepicResponse);

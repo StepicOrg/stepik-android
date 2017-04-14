@@ -404,4 +404,20 @@ class DatabaseFacade
     fun updateCourseLastInteraction(courseId: Long, timestamp: Long)
             = lastInteractions.insertOrUpdate(CourseLastInteraction(courseId = courseId, timestamp = timestamp))
 
+    fun getUnitsByIds(keys: LongArray): List<Unit> {
+        DbParseHelper.parseLongArrayToString(keys, AppConstants.COMMA)?.let {
+            return unitDao.getAllInRange(DbStructureUnit.Column.UNIT_ID, it)
+        }
+
+        return ArrayList<Unit>()
+    }
+
+    fun getSectionsByIds(keys: LongArray): List<Section> {
+        DbParseHelper.parseLongArrayToString(keys, AppConstants.COMMA)?.let {
+            return sectionDao.getAllInRange(DbStructureSections.Column.SECTION_ID, it)
+        }
+
+        return ArrayList<Section>()
+    }
+
 }

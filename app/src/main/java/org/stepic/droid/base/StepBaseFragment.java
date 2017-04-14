@@ -99,10 +99,16 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
     @Override
     protected void injectComponent() {
         App
-                .component()
+                .getComponentManager()
+                .routingComponent()
                 .stepComponentBuilder()
                 .build()
                 .inject(this);
+    }
+
+    @Override
+    protected void onReleaseComponent() {
+        App.getComponentManager().releaseRoutingComponent();
     }
 
     @Override
@@ -188,7 +194,7 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
                 analytic.reportEvent(Analytic.Comments.OPEN_FROM_STEP_UI);
                 screenManager.openComments(getContext(), step.getDiscussion_proxy(), step.getId());
                 if (discussionCount == 0) {
-                   screenManager.openNewCommentForm(getActivity(), step.getId(), null); //show new form, but in back stack comment oldList is exist.
+                    screenManager.openNewCommentForm(getActivity(), step.getId(), null); //show new form, but in back stack comment oldList is exist.
                 }
             }
         });
@@ -295,7 +301,7 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
     }
 
     @Override
-    public void showLoadDialog() {
+    public void showLoading() {
         DialogFragment dialogFragment = LoadingProgressDialogFragment.Companion.newInstance();
         if (!dialogFragment.isAdded()) {
             dialogFragment.show(getFragmentManager(), LOAD_DIALOG_TAG);

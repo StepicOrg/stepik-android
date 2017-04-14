@@ -131,7 +131,8 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
     @Override
     protected void injectComponent() {
         App
-                .component()
+                .getComponentManager()
+                .routingComponent()
                 .stepComponentBuilder()
                 .build()
                 .inject(this);

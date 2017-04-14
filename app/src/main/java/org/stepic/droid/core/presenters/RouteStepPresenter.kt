@@ -1,12 +1,19 @@
 package org.stepic.droid.core.presenters
 
+import android.support.annotation.MainThread
+import android.support.annotation.WorkerThread
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
+import org.stepic.droid.core.RoutingPoster
 import org.stepic.droid.core.presenters.contracts.RouteStepView
 import org.stepic.droid.di.step.StepScope
+import org.stepic.droid.model.Course
 import org.stepic.droid.model.Lesson
+import org.stepic.droid.model.Section
 import org.stepic.droid.model.Unit
-import org.stepic.droid.storage.operations.DatabaseFacade
+import org.stepic.droid.storage.repositories.Repository
+import org.stepic.droid.util.hasUserAccessAndNotEmpty
+import timber.log.Timber
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
 
@@ -15,54 +22,140 @@ class RouteStepPresenter
 @Inject constructor(
         private val threadPoolExecutor: ThreadPoolExecutor,
         private val mainHandler: MainHandler,
-        private val databaseFacade: DatabaseFacade,
-        private val analytic: Analytic) : PresenterBase<RouteStepView>() {
+        private val analytic: Analytic,
+        private val courseRepository: Repository<Course>,
+        private val sectionRepository: Repository<Section>,
+        private val unitRepository: Repository<Unit>,
+        private val lessonRepository: Repository<Lesson>,
+        private val routingPoster: RoutingPoster
+)
+    : PresenterBase<RouteStepView>() {
 
     /**
      * Last step in lesson can be shown differently
      */
+    @MainThread
     fun checkStepForLast(stepId: Long, lesson: Lesson, unit: Unit) {
-        checkStepBase(stepId,
+        checkStepBase(
+                Direction.next,
+                stepId,
                 lesson,
                 unit,
-                indexCalculation = { something -> something.size - 1 },
                 resultForView = { view?.showNextLessonView() }) //need only last
     }
 
+    @MainThread
     fun checkStepForFirst(stepId: Long, lesson: Lesson, unit: Unit) {
-        checkStepBase(stepId,
+        checkStepBase(
+                Direction.previous,
+                stepId,
                 lesson,
                 unit,
-                indexCalculation = { _ -> 0 },
                 resultForView = { view?.showPreviousLessonView() }) //need only the first element
     }
 
-    private fun checkStepBase(stepId: Long, lesson: Lesson, unit: Unit, indexCalculation: (LongArray) -> Int, resultForView: () -> kotlin.Unit) {
+    @MainThread
+    private fun checkStepBase(direction: Direction, stepId: Long, lesson: Lesson, unit: Unit, resultForView: () -> kotlin.Unit) {
         val stepIds = lesson.steps
-        if (stepIds != null && stepIds.size != 0) {
-            val firstStepId = stepIds[indexCalculation.invoke(stepIds)]
-            if (firstStepId == stepId) {
-                //YEAH, it is candidate for showing -> check in db
+        if (stepIds == null || stepIds.isEmpty()) {
+            return
+        }
+
+        val indexForChecking =
+                when (direction) {
+                    RouteStepPresenter.Direction.previous -> 0
+                    RouteStepPresenter.Direction.next -> stepIds.size - 1
+                }
+        if (stepIds[indexForChecking] != stepId) {
+            // it is not the last or the fist in the lesson
+            return
+        }
+
+        //yes, step is candidate for showing
+        if (direction == Direction.previous) {
+            if (unit.position > 1) { //not first
+                resultForView.invoke()
+            } else {
+                //unit.position is 1 (it is first). We should check for previous section is available or not
                 threadPoolExecutor.execute {
-                    val section = databaseFacade.getSectionById(unit.section)
-                    val units: LongArray? = section?.units
-                    if (units != null && units.size > 0) {
-                        val firstUnitId = units[indexCalculation.invoke(units)]
-                        if (firstUnitId != unit.id) {
-                            mainHandler.post {
-                                //if not last lesson in section -> show button
-                                resultForView.invoke()
+                    val section: Section = sectionRepository.getObject(unit.section) ?: return@execute
+                    if (section.position <= 1) {
+                        //it is fist section in course
+                        return@execute
+                    }
+
+                    //only if it is not 1st module we have a chance
+                    val course = courseRepository.getObject(section.course)
+                    val slicedSectionIds = getSlicedSectionIds(direction, section, course)
+                    slicedSectionIds
+                            ?.let {
+                                val sections = sectionRepository.getObjects(slicedSectionIds)
+                                //this section are previous our
+                                sections
+                                        .reversed()
+                                        .forEach {
+                                            if (it.hasUserAccessAndNotEmpty(course)) {
+                                                mainHandler.post {
+                                                    resultForView.invoke()
+                                                }
+                                                return@execute
+                                            }
+                                        }
                             }
-                        }
+                }
+            }
+        } else if (direction == Direction.next) {
+            threadPoolExecutor.execute {
+                val section = sectionRepository.getObject(unit.section) ?: return@execute
+                val unitIds = section.units ?: return@execute
+                if (unitIds[unitIds.size - 1] == unit.id) {
+                    //we should check next sections with access
+
+                    val course = courseRepository.getObject(section.course)
+                    val sectionIds = getSlicedSectionIds(direction, section, course)
+                    sectionIds?.let {
+                        val sections = sectionRepository.getObjects(it)
+                        sections
+                                .forEach {
+                                    if (it.hasUserAccessAndNotEmpty(course)) {
+                                        mainHandler.post {
+                                            resultForView.invoke()
+                                        }
+                                        return@execute
+                                    }
+                                }
+                    }
+
+                } else {
+                    mainHandler.post {
+                        resultForView.invoke()
                     }
                 }
             }
         }
     }
 
+    private fun getSlicedSectionIds(direction: Direction, currentSection: Section, course: Course?): LongArray? {
+        val sectionIds = course?.sections
+
+        return when (direction) {
+            RouteStepPresenter.Direction.previous -> {
+                sectionIds?.slice(0..currentSection.position - 2)
+                        ?.toLongArray()
+            }
+            RouteStepPresenter.Direction.next -> {
+                sectionIds
+                        ?.slice(currentSection.position..sectionIds.size)
+                        ?.toLongArray()
+            }
+        }
+    }
+
     fun clickNextLesson(unit: Unit) {
         analytic.reportEvent(Analytic.Interaction.CLICK_NEXT_LESSON_IN_STEPS)
-        clickLessonBase(unit,
+        clickLessonBase(
+                direction = Direction.next,
+                unit = unit,
                 nextIndex = { index -> index + 1 },
                 onOpen = { nextUnit, nextLesson -> view?.openNextLesson(nextUnit, nextLesson) },
                 onCantGoAnalytic = { unit -> analytic.reportError(Analytic.Error.ILLEGAL_STATE_NEXT_LESSON, IllegalStateRouteLessonException(unit.id)) },
@@ -73,7 +166,8 @@ class RouteStepPresenter
 
     fun clickPreviousLesson(unit: Unit) {
         analytic.reportEvent(Analytic.Interaction.CLICK_PREVIOUS_LESSON_IN_STEPS)
-        clickLessonBase(unit,
+        clickLessonBase(direction = Direction.previous,
+                unit = unit,
                 nextIndex = { index -> index - 1 },
                 onOpen = { previousUnit, previousLesson -> view?.openPreviousLesson(previousUnit, previousLesson) },
                 onCantGoAnalytic = { unit -> analytic.reportError(Analytic.Error.ILLEGAL_STATE_PREVIOUS_LESSON, IllegalStateRouteLessonException(unit.id)) },
@@ -81,28 +175,33 @@ class RouteStepPresenter
         )
     }
 
-    private fun clickLessonBase(unit: Unit,
-                                nextIndex: (Int) -> Int,
-                                onOpen: (Unit, Lesson) -> kotlin.Unit,
-                                onCantGoAnalytic: (Unit) -> kotlin.Unit,
-                                onCantGoEvent: () -> kotlin.Unit) {
-        view?.showLoadDialog()
+    private fun clickLessonBase(
+            direction: Direction,
+            unit: Unit,
+            nextIndex: (Int) -> Int,
+            onOpen: (Unit, Lesson) -> kotlin.Unit,
+            onCantGoAnalytic: (Unit) -> kotlin.Unit,
+            onCantGoEvent: () -> kotlin.Unit) {
+        view?.showLoading()
         threadPoolExecutor.execute {
-            val section = databaseFacade.getSectionById(unit.section)
-            var nextUnitId: Long? = null
+            val section = sectionRepository.getObject(unit.section)
 
+            var nextUnitId: Long? = null
             val unitIds = section?.units
             val numberOfUnits = unitIds?.size ?: 0
-            unitIds?.forEachIndexed { index, unitId ->
-                if (unit.id == unitId && nextIndex.invoke(index) < numberOfUnits && nextIndex.invoke(index) >= 0) {
-                    nextUnitId = unitIds[nextIndex.invoke(index)]
-                    return@forEachIndexed
+            let {
+                unitIds?.forEachIndexed { index, unitId ->
+                    if (unit.id == unitId && nextIndex(index) < numberOfUnits && nextIndex(index) >= 0) {
+                        nextUnitId = unitIds[nextIndex(index)]
+                        return@let  //alias for break
+                    }
                 }
             }
+
             if (nextUnitId != null) {
-                val nextUnit = databaseFacade.getUnitById(nextUnitId!!)
+                val nextUnit = unitRepository.getObject(nextUnitId!!)
                 if (nextUnit != null) {
-                    val nextLesson = databaseFacade.getLessonById(nextUnit.lesson)
+                    val nextLesson = lessonRepository.getObject(nextUnit.lesson)
                     if (nextLesson != null) {
                         mainHandler.post {
                             onOpen.invoke(nextUnit, nextLesson)
@@ -110,18 +209,85 @@ class RouteStepPresenter
                         return@execute
                     }
                 }
+            } else {
+                if (section != null) {
+                    //unit in previous or next section
+                    val course = courseRepository.getObject(section.course)
+                    val slicedSectionIds = getSlicedSectionIds(direction, section, course)
+                    slicedSectionIds?.let {
+                        val sections = sectionRepository.getObjects(slicedSectionIds)
+                        when (direction) {
+                            RouteStepPresenter.Direction.previous -> {
+                                sections
+                                        .reversed()
+                                        .forEach {
+                                            if (it.hasUserAccessAndNotEmpty(course)) {
+                                                it.units?.last()?.let { previousUnitId ->
+                                                    val previousUnit = unitRepository.getObject(previousUnitId)
+                                                    if (previousUnit != null) {
+                                                        val previousLesson = lessonRepository.getObject(previousUnit.lesson)
+                                                        if (previousLesson != null) {
+                                                            notifyAboutChangingSection(section, it)
+                                                            mainHandler.post {
+                                                                onOpen(previousUnit, previousLesson)
+                                                            }
+                                                            return@execute
+                                                        }
+                                                    }
+                                                }
+                                                return@let
+                                            }
+                                        }
+                            }
+                            RouteStepPresenter.Direction.next -> {
+                                sections
+                                        .forEach { nextSection ->
+                                            if (nextSection.hasUserAccessAndNotEmpty(course)) {
+                                                nextSection.units?.first()?.let { nextUnitId ->
+                                                    val nextUnit = unitRepository.getObject(nextUnitId)
+                                                    nextUnit?.lesson?.let { lessonId ->
+                                                        val nextLesson = lessonRepository.getObject(lessonId)
+                                                        if (nextLesson != null) {
+                                                            notifyAboutChangingSection(section, nextSection)
+                                                            mainHandler.post {
+                                                                onOpen(nextUnit, nextLesson)
+                                                            }
+                                                            return@execute
+                                                        }
+                                                    }
+
+                                                }
+                                                mainHandler.post {
+                                                }
+
+                                                return@let
+                                            }
+                                        }
+                            }
+                        }
+                    }
+                }
             }
 
-            //if someone is null -> show error
+            //when Internet is not available AND when course structure is changing in real time
+            //if something is null -> show error
             onCantGoAnalytic.invoke(unit)
             mainHandler.post {
                 onCantGoEvent.invoke()
             }
-
         }
     }
 
-    inner class IllegalStateRouteLessonException : IllegalStateException {
-        constructor(unitId: Long) : super("Next or previous lesson is shouldn't be shown, lessonId = " + unitId.toString())
+    @WorkerThread
+    private fun notifyAboutChangingSection(oldSection: Section, newSection: Section) {
+        //show on unitsFragment, which has oldSection, newSection.
+        routingPoster.onSectionChanged(oldSection, newSection)
+        Timber.d("changing ${oldSection.title} to ${newSection.title}")
+    }
+
+    inner class IllegalStateRouteLessonException(unitId: Long) : IllegalStateException("Next or previous lesson is shouldn't be shown, lessonId = $unitId")
+
+    enum class Direction {
+        previous, next
     }
 }

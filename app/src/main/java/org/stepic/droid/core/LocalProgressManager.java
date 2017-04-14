@@ -1,5 +1,6 @@
 package org.stepic.droid.core;
 
+import android.support.annotation.MainThread;
 import android.support.annotation.WorkerThread;
 
 public interface LocalProgressManager {
@@ -13,4 +14,18 @@ public interface LocalProgressManager {
 
     @WorkerThread
     void updateUnitProgress(long unitId);
+
+    @MainThread
+    void subscribe(UnitProgressListener unitProgressListener);
+
+    @MainThread
+    void unsubscribe(UnitProgressListener unitProgressListener);
+
+    interface UnitProgressListener {
+
+        void onScoreUpdated(long unitId, double newScore);
+
+        void onUnitPassed (long unitId);
+    }
+
 }

@@ -18,8 +18,8 @@ import org.stepic.droid.di.login.LoginComponent
 import org.stepic.droid.di.mainscreen.MainScreenComponent
 import org.stepic.droid.di.notifications.NotificationsComponent
 import org.stepic.droid.di.profile.ProfileComponent
+import org.stepic.droid.di.routing.RoutingComponent
 import org.stepic.droid.di.section.SectionComponent
-import org.stepic.droid.di.step.StepComponent
 import org.stepic.droid.di.storage.StorageComponent
 import org.stepic.droid.di.video.VideoComponent
 import org.stepic.droid.model.Course
@@ -39,7 +39,7 @@ import org.stepic.droid.ui.dialogs.*
 import org.stepic.droid.ui.fragments.CommentsFragment
 
 @AppSingleton
-@Component(dependencies = arrayOf(StorageComponent::class), modules = arrayOf(AppCoreModule::class))
+@Component(dependencies = arrayOf(StorageComponent::class), modules = arrayOf(AppCoreModule::class, RepositoryModule::class))
 interface AppCoreComponent {
 
     @Component.Builder
@@ -60,10 +60,6 @@ interface AppCoreComponent {
 
     fun courseComponentBuilder(): CourseComponent.Builder
 
-    fun sectionComponentBuilder(): SectionComponent.Builder
-
-    fun stepComponentBuilder(): StepComponent.Builder
-
     fun lessonComponentBuilder(): LessonComponent.Builder
 
     fun courseListComponentBuilder(): CourseListComponent.Builder
@@ -75,6 +71,8 @@ interface AppCoreComponent {
     fun mainScreenComponentBuilder(): MainScreenComponent.Builder
 
     fun notificationsComponentBuilder(): NotificationsComponent.Builder
+
+    fun routingComponentBuilder(): RoutingComponent.Builder
 
 
     fun inject(someActivity: FragmentActivityBase)
