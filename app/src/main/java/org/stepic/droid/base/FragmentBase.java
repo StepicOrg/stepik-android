@@ -104,11 +104,18 @@ public class FragmentBase extends Fragment {
     protected CancelSniffer cancelSniffer;
 
     public FragmentBase() {
-        injectComponent();
+
     }
 
     protected void injectComponent() {
         App.component().inject(this);
+    }
+
+    /**
+     * optional method for releasing components
+     * mirror of {@code injectComponent()}
+     */
+    protected void onReleaseComponent() {
     }
 
     protected void hideSoftKeypad() {
@@ -129,6 +136,8 @@ public class FragmentBase extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+        injectComponent();
     }
 
     @Override
@@ -143,26 +152,6 @@ public class FragmentBase extends Fragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-
-    @Override
     public void onDestroyView() {
         super.onDestroyView();
         if (unbinder != null) {
@@ -174,6 +163,7 @@ public class FragmentBase extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        onReleaseComponent();
 //        RefWatcher refWatcher = App.getRefWatcher(getActivity());
 //        refWatcher.watch(this);
     }
