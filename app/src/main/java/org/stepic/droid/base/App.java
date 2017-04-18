@@ -86,8 +86,7 @@ public class App extends MultiDexApplication {
         YandexMetrica.enableActivityAutoTracking(this);
     }
 //    public static RefWatcher getRefWatcher(Context context) {
-//        App application = (App) context.getApplicationContext();
-//        return application.refWatcher;
+//        return App.application.refWatcher;
 //    }
 
     public static AppCoreComponent component() {
