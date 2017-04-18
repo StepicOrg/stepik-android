@@ -6,6 +6,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.concurrency.MainHandler;
+import org.stepic.droid.core.RoutingPoster;
 import org.stepic.droid.core.presenters.contracts.RouteStepView;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Lesson;
@@ -56,6 +57,9 @@ public class RouteStepPresenterTest {
     @Mock
     private Repository<Lesson> lessonRepository;
 
+    @Mock
+    private RoutingPoster routingPoster;
+
     @Before
     public void beforeEachTest() {
         MockitoAnnotations.initMocks(this);
@@ -70,7 +74,8 @@ public class RouteStepPresenterTest {
                 courseRepository,
                 sectionRepository,
                 unitRepository,
-                lessonRepository);
+                lessonRepository,
+                routingPoster);
     }
 
     @Test
