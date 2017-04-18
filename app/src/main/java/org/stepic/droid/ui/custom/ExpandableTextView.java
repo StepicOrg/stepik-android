@@ -32,7 +32,7 @@ public class ExpandableTextView extends AppCompatTextView {
     public ExpandableTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        App.component().inject(this);
+        App.Companion.component().inject(this);
 
         if (isInEditMode()) {
             ELLIPSIS = "<font color=" + "#CCCCCC" + ">"

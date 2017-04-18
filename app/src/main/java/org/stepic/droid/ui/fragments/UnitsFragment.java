@@ -127,7 +127,7 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
 
     @Override
     protected void injectComponent() {
-        App
+        App.Companion
                 .getComponentManager()
                 .routingComponent()
                 .sectionComponentBuilder()
@@ -146,7 +146,8 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
 
     @Override
     protected void onReleaseComponent() {
-        App.getComponentManager().releaseRoutingComponent();
+        App.Companion
+                .getComponentManager().releaseRoutingComponent();
     }
 
     @Nullable

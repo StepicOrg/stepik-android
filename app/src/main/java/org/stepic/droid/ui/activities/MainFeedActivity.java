@@ -182,7 +182,7 @@ public class MainFeedActivity extends BackToExitActivityBase
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        App.getComponentManager()
+        App.Companion.getComponentManager()
                 .mainFeedComponent()
                 .inject(this);
         setContentView(R.layout.activity_main_feed);
@@ -515,7 +515,7 @@ public class MainFeedActivity extends BackToExitActivityBase
         bus.unregister(this);
         drawerLayout.removeDrawerListener(actionBarDrawerToggle);
         if (isFinishing()) {
-            App.getComponentManager().releaseMainFeedComponent();
+            App.Companion.getComponentManager().releaseMainFeedComponent();
         }
         super.onDestroy();
     }

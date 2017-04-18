@@ -32,7 +32,7 @@ public class CourseSearchFragment extends CourseListFragmentBase {
 
     @Override
     protected void injectComponent() {
-        App
+        App.Companion
                 .component()
                 .courseListComponentBuilder()
                 .build()

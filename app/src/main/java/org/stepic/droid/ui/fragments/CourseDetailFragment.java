@@ -203,7 +203,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
     @Override
     protected void injectComponent() {
-        App
+        App.Companion
                 .component()
                 .courseComponentBuilder()
                 .build()

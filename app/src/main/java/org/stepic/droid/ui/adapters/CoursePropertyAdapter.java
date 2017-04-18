@@ -31,7 +31,7 @@ public class CoursePropertyAdapter extends ArrayAdapter<CourseProperty> {
 
     public CoursePropertyAdapter(Context context, List<CourseProperty> coursePropertyList) {
         super(context, 0, coursePropertyList);
-        App.component().inject(this);
+        App.Companion.component().inject(this);
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 

@@ -165,7 +165,7 @@ public class ProfileFragment extends FragmentBase implements ProfileView, Notifi
 
     @Override
     protected void injectComponent() {
-        App
+        App.Companion
                 .component()
                 .profileComponentBuilder()
                 .build()

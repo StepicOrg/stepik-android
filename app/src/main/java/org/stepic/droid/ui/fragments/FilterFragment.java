@@ -76,7 +76,7 @@ public class FilterFragment extends FragmentBase implements FilterView {
 
     @Override
     protected void injectComponent() {
-        App
+        App.Companion
                 .component()
                 .filterComponentBuilder()
                 .build()

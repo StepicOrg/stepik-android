@@ -53,7 +53,7 @@ public class StepShareDialog extends BottomSheetDialog {
         this.step = step;
         this.lesson = lesson;
         this.unit = unit;
-        App.component().inject(this);
+        App.Companion.component().inject(this);
     }
 
     @Override

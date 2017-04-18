@@ -80,7 +80,7 @@ public class NotificationListFragment extends FragmentBase implements Notificati
 
     @Override
     protected void injectComponent() {
-        App
+        App.Companion
                 .component()
                 .notificationsComponentBuilder()
                 .build()

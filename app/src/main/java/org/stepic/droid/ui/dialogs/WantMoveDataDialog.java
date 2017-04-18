@@ -59,7 +59,7 @@ public class WantMoveDataDialog extends DialogFragment {
     @NotNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        App.component().inject(this);
+        App.Companion.component().inject(this);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.title_confirmation)

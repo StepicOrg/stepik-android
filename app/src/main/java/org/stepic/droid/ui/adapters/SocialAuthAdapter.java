@@ -52,7 +52,7 @@ public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.So
 
     public SocialAuthAdapter(FragmentActivity activity, @Nullable GoogleApiClient client) {
         this.client = client;
-        App.component().inject(this);
+        App.Companion.component().inject(this);
         this.activity = activity;
         socialList = socialManager.getAllSocial();
     }

@@ -130,7 +130,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
 
     @Override
     protected void injectComponent() {
-        App
+        App.Companion
                 .getComponentManager()
                 .routingComponent()
                 .stepComponentBuilder()

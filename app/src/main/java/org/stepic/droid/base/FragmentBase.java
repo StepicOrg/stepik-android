@@ -108,7 +108,7 @@ public class FragmentBase extends Fragment {
     }
 
     protected void injectComponent() {
-        App.component().inject(this);
+        App.Companion.component().inject(this);
     }
 
     /**

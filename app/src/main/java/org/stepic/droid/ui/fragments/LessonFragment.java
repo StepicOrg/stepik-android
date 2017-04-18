@@ -147,7 +147,7 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
         fromPreviousLesson = getArguments().getBoolean(FROM_PREVIOUS_KEY);
         discussionId = getArguments().getLong(SIMPLE_DISCUSSION_ID_KEY);
 
-        App
+        App.Companion
                 .component()
                 .lessonComponentBuilder()
                 .build()

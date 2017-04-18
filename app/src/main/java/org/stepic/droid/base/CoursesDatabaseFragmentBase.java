@@ -63,7 +63,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
     @Override
     protected void injectComponent() {
-        App.component()
+        App.Companion.component()
                 .courseListComponentBuilder()
                 .build()
                 .inject(this);

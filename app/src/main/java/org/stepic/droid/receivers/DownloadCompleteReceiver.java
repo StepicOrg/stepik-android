@@ -56,7 +56,7 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
 
     public DownloadCompleteReceiver() {
         Timber.d("create DownloadCompleteReceiver");
-        App.component().inject(this);
+        App.Companion.component().inject(this);
     }
 
     @Override

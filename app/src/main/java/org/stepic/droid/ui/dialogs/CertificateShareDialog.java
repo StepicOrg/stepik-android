@@ -41,7 +41,7 @@ public class CertificateShareDialog extends BottomSheetDialog {
     public CertificateShareDialog(@NonNull Context context, @NotNull CertificateViewItem certificateViewItem) {
         super(context);
         this.certificateViewItem = certificateViewItem;
-        App.component().inject(this);
+        App.Companion.component().inject(this);
     }
 
     @Override

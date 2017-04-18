@@ -118,7 +118,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         this.sectionIdToLoadingStateMap = sectionIdToLoadingStateMap;
         this.fragment = fragment;
         this.downloadingInteractionPresenter = downloadingInteractionPresenter;
-        App.component().inject(this);
+        App.Companion.component().inject(this);
     }
 
 

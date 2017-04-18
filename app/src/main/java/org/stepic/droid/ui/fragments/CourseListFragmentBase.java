@@ -90,7 +90,7 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
 
     @Override
     protected void injectComponent() {
-        App
+        App.Companion
                 .component()
                 .courseListComponentBuilder()
                 .build()

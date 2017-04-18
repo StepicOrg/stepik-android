@@ -95,7 +95,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
         this.lessonIdToUnitLoadingStateMap = lessonIdToUnitLoadingStateMap;
         this.fragment = fragment;
         this.downloadingInteractionPresenter = downloadingInteractionPresenter;
-        App.component().inject(this);
+        App.Companion.component().inject(this);
     }
 
     public void setSection(Section section) {

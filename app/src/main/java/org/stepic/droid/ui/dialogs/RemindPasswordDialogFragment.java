@@ -54,7 +54,7 @@ public class RemindPasswordDialogFragment extends DialogFragment {
     @NotNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        App.component().inject(this);
+        App.Companion.component().inject(this);
 
         @SuppressLint("InflateParams") //it is dialog and it shoud not have any parent
         View v = ((LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_remind_password, null, false);

@@ -60,7 +60,7 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
 
 
     public InternetConnectionEnabledReceiver() {
-        App.component().inject(this);
+        App.Companion.component().inject(this);
     }
 
     @Override

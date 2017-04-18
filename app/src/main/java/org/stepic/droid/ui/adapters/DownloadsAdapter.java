@@ -96,7 +96,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
     public DownloadsAdapter(List<CachedVideo> cachedVideos, Map<Long, Lesson> videoIdToStepMap, Activity context, DownloadsFragment downloadsFragment, List<DownloadingVideoItem> downloadingList, Set<Long> cachedStepsSet) {
         this.downloadsFragment = downloadsFragment;
-        App.component().inject(this);
+        App.Companion.component().inject(this);
         cachedVideoList = cachedVideos;
         sourceActivity = context;
         stepIdToLessonMap = videoIdToStepMap;
@@ -510,7 +510,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
         Bus bus;
 
         public CancelVideoDialog() {
-            App.component().inject(this);
+            App.Companion.component().inject(this);
         }
 
         @NonNull

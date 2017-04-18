@@ -24,7 +24,7 @@ public class BootCompletedReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        App.component().inject(this);
+        App.Companion.component().inject(this);
         analytic.reportEvent(Analytic.System.BOOT_COMPLETED);
         long timestamp = sharedPreferences.getNewUserRemindTimestamp();
         if (timestamp > 0L) {

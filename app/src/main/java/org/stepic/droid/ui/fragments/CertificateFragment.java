@@ -67,7 +67,7 @@ public class CertificateFragment extends FragmentBase implements CertificateView
 
     @Override
     protected void injectComponent() {
-        App
+        App.Companion
                 .component()
                 .certificateComponentBuilder()
                 .build()

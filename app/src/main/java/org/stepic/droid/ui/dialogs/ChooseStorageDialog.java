@@ -32,7 +32,7 @@ public class ChooseStorageDialog extends DialogFragment {
     @NotNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        App.component().inject(this);
+        App.Companion.component().inject(this);
 
         //fixme get From User Prefs
         final List<StorageOption> storageOptions = userPreferences.getStorageOptionList();

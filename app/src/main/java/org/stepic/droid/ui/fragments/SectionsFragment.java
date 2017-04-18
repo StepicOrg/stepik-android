@@ -222,7 +222,7 @@ public class SectionsFragment
 
     @Override
     protected void injectComponent() {
-        App
+        App.Companion
                 .component()
                 .courseComponentBuilder()
                 .build()
