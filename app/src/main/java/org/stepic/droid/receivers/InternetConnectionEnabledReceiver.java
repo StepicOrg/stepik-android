@@ -65,7 +65,7 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (!isOnline(App.getAppContext()) || inWork.get()) return;
+        if (!isOnline(App.Companion.getAppContext()) || inWork.get()) return;
         inWork.set(true);
         mainHandler.post(new Function0<Unit>() {
             @Override

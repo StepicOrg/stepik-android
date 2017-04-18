@@ -38,8 +38,8 @@ public class ExpandableTextView extends AppCompatTextView {
             ELLIPSIS = "<font color=" + "#CCCCCC" + ">"
                     + "more..." + "</font>";
         } else {
-            ELLIPSIS = "<font color=" + App.getAppContext().getResources().getColor(R.color.default_color_of_link) + ">"
-                    + App.getAppContext().getString(R.string.tap_to_see_more) + "</font>";
+            ELLIPSIS = "<font color=" + App.Companion.getAppContext().getResources().getColor(R.color.default_color_of_link) + ">"
+                    + App.Companion.getAppContext().getString(R.string.tap_to_see_more) + "</font>";
         }
 
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.ExpandableTextView);

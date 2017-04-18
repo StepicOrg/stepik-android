@@ -87,7 +87,7 @@ public class StepShareDialog extends BottomSheetDialog {
             public void onClick(View view) {
                 dismiss();
                 analytic.reportEvent(Analytic.Steps.COPY_LINK);
-                ClipData clipData = ClipData.newPlainText(App.getAppContext().getString(R.string.copy_link_title), StringUtil.getUriForStep(config.getBaseUrl(), lesson, unit, step));
+                ClipData clipData = ClipData.newPlainText(App.Companion.getAppContext().getString(R.string.copy_link_title), StringUtil.getUriForStep(config.getBaseUrl(), lesson, unit, step));
                 ClipboardManager clipboardManager = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
                 clipboardManager.setPrimaryClip(clipData);
                 Toast.makeText(getContext(), R.string.link_copied_title, Toast.LENGTH_SHORT).show();

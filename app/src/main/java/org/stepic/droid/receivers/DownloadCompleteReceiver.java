@@ -121,7 +121,7 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                     databaseFacade.updateOnlyCachedLoadingStep(step);
                     storeStateManager.updateUnitLessonState(step.getLesson());
                     final Lesson lesson = databaseFacade.getLessonById(step.getLesson());
-                    Handler mainHandler = new Handler(App.getAppContext().getMainLooper());
+                    Handler mainHandler = new Handler(App.Companion.getAppContext().getMainLooper());
                     //Say to ui that ui is cached now
                     Runnable myRunnable = new Runnable() {
                         @Override

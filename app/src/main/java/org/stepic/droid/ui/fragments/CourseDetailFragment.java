@@ -356,7 +356,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         introView.getLayoutParams().height = (9 * width) / 16;
         setUpIntroVideo();
 
-        Glide.with(App.getAppContext())
+        Glide.with(App.Companion.getAppContext())
                 .load(StepikLogicHelper.getPathForCourseOrEmpty(course, config))
                 .placeholder(coursePlaceholder)
                 .into(courseTargetFigSupported);

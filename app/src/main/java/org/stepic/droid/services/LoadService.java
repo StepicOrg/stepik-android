@@ -133,7 +133,7 @@ public class LoadService extends IntentService {
             DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
             request.setDestinationUri(target);
             request.setVisibleInDownloadsUi(false);
-            request.setTitle(title + "-" + fileId).setDescription(App.getAppContext().getString(R.string.description_download));
+            request.setTitle(title + "-" + fileId).setDescription(App.Companion.getAppContext().getString(R.string.description_download));
 
             if (userPrefs.isNetworkMobileAllowed()) {
                 request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
@@ -377,13 +377,13 @@ public class LoadService extends IntentService {
     }
 
     public boolean isDownloadManagerEnabled() {
-        if (App.getAppContext() == null) {
+        if (App.Companion.getAppContext() == null) {
             analytic.reportEvent(Analytic.Downloading.DOWNLOAD_MANAGER_IS_NOT_ENABLED);
             return false;
         }
         int state;
         try {
-            state = App.getAppContext().getPackageManager()
+            state = App.Companion.getAppContext().getPackageManager()
                     .getApplicationEnabledSetting("com.android.providers.downloads");
         } catch (Exception ex) {
             analytic.reportError(Analytic.Downloading.DOWNLOAD_MANAGER_IS_NOT_ENABLED, ex);

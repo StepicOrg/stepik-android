@@ -37,8 +37,8 @@ public class SortingStepDraggableAdapter extends RecyclerView.Adapter<SortingSte
         this.data = data;
         setHasStableIds(true);
 
-        sortingImageViewHeight = (int) App.getAppContext().getResources().getDimension(R.dimen.sort_image_view_height);
-        sortingControllerPadding = (int) App.getAppContext().getResources().getDimension(R.dimen.padding_sort_controller);
+        sortingImageViewHeight = (int) App.Companion.getAppContext().getResources().getDimension(R.dimen.sort_image_view_height);
+        sortingControllerPadding = (int) App.Companion.getAppContext().getResources().getDimension(R.dimen.padding_sort_controller);
         minEnhancedTextHeight = sortingImageViewHeight + 2 * sortingControllerPadding;
     }
 

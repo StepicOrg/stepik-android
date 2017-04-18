@@ -44,7 +44,7 @@ public class StorageUtil {
     }
 
     public static File[] getRawAppDirs() {
-        return ContextCompat.getExternalFilesDirs(App.getAppContext(), null);
+        return ContextCompat.getExternalFilesDirs(App.Companion.getAppContext(), null);
     }
 
     public static long getAvailableMemorySize(File path) {

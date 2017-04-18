@@ -82,7 +82,7 @@ public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.So
         if (type == SocialManager.SocialType.google) {
             if (client == null) {
                 analytic.reportEvent(Analytic.Interaction.GOOGLE_SOCIAL_IS_NOT_ENABLED);
-                Toast.makeText(App.getAppContext(), R.string.google_services_late, Toast.LENGTH_SHORT).show();
+                Toast.makeText(App.Companion.getAppContext(), R.string.google_services_late, Toast.LENGTH_SHORT).show();
             } else {
                 Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(client);
                 activity.startActivityForResult(signInIntent, AppConstants.REQUEST_CODE_GOOGLE_SIGN_IN);

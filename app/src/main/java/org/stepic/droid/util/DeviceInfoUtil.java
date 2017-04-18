@@ -174,6 +174,6 @@ public class DeviceInfoUtil {
 
 
     public static String getPackageName() {
-        return App.getAppContext().getPackageName();
+        return App.Companion.getAppContext().getPackageName();
     }
 }

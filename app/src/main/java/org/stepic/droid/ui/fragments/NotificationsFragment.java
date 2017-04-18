@@ -179,7 +179,7 @@ public class NotificationsFragment extends FragmentBase {
         public CharSequence getPageTitle(int position) {
             Timber.d("getPageTitle %d", position);
             int resString = NotificationCategory.values()[position].getTitle();
-            return App.getAppContext().getString(resString);
+            return App.Companion.getAppContext().getString(resString);
         }
     }
 

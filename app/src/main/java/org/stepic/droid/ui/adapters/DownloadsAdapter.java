@@ -102,7 +102,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
         stepIdToLessonMap = videoIdToStepMap;
         downloadingVideoList = downloadingList;
         this.cachedStepsSet = cachedStepsSet;
-        placeholder = ContextCompat.getDrawable(App.getAppContext(), R.drawable.video_placeholder);
+        placeholder = ContextCompat.getDrawable(App.Companion.getAppContext(), R.drawable.video_placeholder);
     }
 
     @Override
@@ -152,7 +152,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
             if (video.getUrl() != null && file.exists()) {
                 screenManager.showVideo(sourceActivity, video.getUrl(), video.getVideoId());
             } else {
-                Toast.makeText(App.getAppContext(), R.string.sorry_moved, Toast.LENGTH_SHORT).show();
+                Toast.makeText(App.Companion.getAppContext(), R.string.sorry_moved, Toast.LENGTH_SHORT).show();
                 threadPoolExecutor.execute(new Runnable() {
                     @Override
                     public void run() {
@@ -274,12 +274,12 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
             String thumbnail = downloadingVideoItem.getDownloadEntity().getThumbnail();
             if (thumbnail != null) {
                 Uri uriForThumbnail = ThumbnailParser.getUriForThumbnail(thumbnail);
-                Glide.with(App.getAppContext())
+                Glide.with(App.Companion.getAppContext())
                         .load(uriForThumbnail)
                         .placeholder(placeholder)
                         .into(mVideoIcon);
             } else {
-                Glide.with(App.getAppContext())
+                Glide.with(App.Companion.getAppContext())
                         .load("")
                         .placeholder(placeholder)
                         .into(mVideoIcon);
@@ -399,12 +399,12 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
             String thumbnail = cachedVideo.getThumbnail();
             if (thumbnail != null) {
                 Uri uriForThumbnail = ThumbnailParser.getUriForThumbnail(thumbnail);
-                Glide.with(App.getAppContext())
+                Glide.with(App.Companion.getAppContext())
                         .load(uriForThumbnail)
                         .placeholder(placeholder)
                         .into(videoIcon);
             } else {
-                Glide.with(App.getAppContext())
+                Glide.with(App.Companion.getAppContext())
                         .load("")
                         .placeholder(placeholder)
                         .into(videoIcon);
@@ -454,10 +454,10 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
         public TitleViewHolder(View itemView) {
             super(itemView);
-            titleDownloading = App.getAppContext().getString(R.string.downloading_title);
-            titleForDownloadingButton = App.getAppContext().getString(R.string.downloading_cancel_all);
-            titleCached = App.getAppContext().getString(R.string.cached_title);
-            titleForCachedButton = App.getAppContext().getString(R.string.remove_all);
+            titleDownloading = App.Companion.getAppContext().getString(R.string.downloading_title);
+            titleForDownloadingButton = App.Companion.getAppContext().getString(R.string.downloading_cancel_all);
+            titleCached = App.Companion.getAppContext().getString(R.string.cached_title);
+            titleForCachedButton = App.Companion.getAppContext().getString(R.string.remove_all);
             headerButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

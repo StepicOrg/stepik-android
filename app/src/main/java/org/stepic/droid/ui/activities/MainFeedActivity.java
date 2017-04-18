@@ -250,7 +250,7 @@ public class MainFeedActivity extends BackToExitActivityBase
                 .enableAutoManage(this /* FragmentActivity */, new GoogleApiClient.OnConnectionFailedListener() {
                     @Override
                     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-                        Toast.makeText(App.getAppContext(), R.string.connectionProblems, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(App.Companion.getAppContext(), R.string.connectionProblems, Toast.LENGTH_SHORT).show();
                     }
                 } /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)

@@ -171,7 +171,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         if (sectionPosition >= 0 && sectionPosition < sections.size()) {
             final Section section = sections.get(sectionPosition);
 
-            int permissionCheck = ContextCompat.checkSelfPermission(App.getAppContext(),
+            int permissionCheck = ContextCompat.checkSelfPermission(App.Companion.getAppContext(),
                     Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
             if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
@@ -438,7 +438,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
 
             if (SectionUtilKt.hasUserAccess(section, course)) {
 
-                int strong_text_color = ColorUtil.INSTANCE.getColorArgb(R.color.stepic_regular_text, App.getAppContext());
+                int strong_text_color = ColorUtil.INSTANCE.getColorArgb(R.color.stepic_regular_text, App.Companion.getAppContext());
 
                 sectionTitle.setTextColor(strong_text_color);
                 cv.setFocusable(false);
@@ -483,7 +483,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                 whenLoad.setVisibility(View.INVISIBLE);
                 afterLoad.setVisibility(View.GONE);
 
-                int weak_text_color = ColorUtil.INSTANCE.getColorArgb(R.color.stepic_weak_text, App.getAppContext());
+                int weak_text_color = ColorUtil.INSTANCE.getColorArgb(R.color.stepic_weak_text, App.Companion.getAppContext());
                 sectionTitle.setTextColor(weak_text_color);
                 cv.setFocusable(false);
                 cv.setClickable(false);

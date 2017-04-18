@@ -163,7 +163,7 @@ public class FileUtils {
         path = Uri.decode(Strings.removeFileProtocol(path));
         //Delete from Android Medialib, for consistency with device MTP storing and other apps listing content:// media
         if (AndroidUtil.isHoneycombOrLater()){
-            ContentResolver cr = App.getAppContext().getContentResolver();
+            ContentResolver cr = App.Companion.getAppContext().getContentResolver();
             String[] selectionArgs = { path };
             deleted = cr.delete(MediaStore.Files.getContentUri("external"),
                     MediaStore.Files.FileColumns.DATA + "=?", selectionArgs) > 0;

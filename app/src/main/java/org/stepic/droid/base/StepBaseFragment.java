@@ -201,9 +201,9 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
 
         int discussionCount = step.getDiscussions_count();
         if (discussionCount > 0) {
-            textForComment.setText(App.getAppContext().getResources().getQuantityString(R.plurals.open_comments, discussionCount, discussionCount));
+            textForComment.setText(App.Companion.getAppContext().getResources().getQuantityString(R.plurals.open_comments, discussionCount, discussionCount));
         } else {
-            textForComment.setText(App.getAppContext().getResources().getString(R.string.open_comments_zero));
+            textForComment.setText(App.Companion.getAppContext().getResources().getString(R.string.open_comments_zero));
         }
     }
 

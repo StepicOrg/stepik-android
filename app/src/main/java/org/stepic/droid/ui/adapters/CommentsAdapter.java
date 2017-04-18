@@ -62,7 +62,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
         this.context = context;
         zone = DateTimeZone.getDefault();
         locale = Locale.getDefault();
-        placeholderUserIcon = ContextCompat.getDrawable(App.getAppContext(), R.drawable.general_placeholder);
+        placeholderUserIcon = ContextCompat.getDrawable(App.Companion.getAppContext(), R.drawable.general_placeholder);
     }
 
     @Override
@@ -359,7 +359,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
                         .load(uri)
                         .into(userIcon);
             } else {
-                Glide.with(App.getAppContext())
+                Glide.with(App.Companion.getAppContext())
                         .load(userAvatar)
                         .asBitmap()
                         .placeholder(placeholderUserIcon)

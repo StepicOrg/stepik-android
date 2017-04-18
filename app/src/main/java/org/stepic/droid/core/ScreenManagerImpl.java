@@ -221,7 +221,7 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public Intent getCertificateIntent() {
-        Context context = App.getAppContext();
+        Context context = App.Companion.getAppContext();
         int index = MainFeedActivity.getCertificateFragmentIndex();
         Intent intent = new Intent(context, MainFeedActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -233,14 +233,14 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void showCertificates() {
-        Context context = App.getAppContext();
+        Context context = App.Companion.getAppContext();
         int index = MainFeedActivity.getCertificateFragmentIndex();
         context.startActivity(getFromMainActivityIntent(context, index));
     }
 
     @Override
     public void showDownload() {
-        Context context = App.getAppContext();
+        Context context = App.Companion.getAppContext();
         showDownload(context);
     }
 
@@ -280,13 +280,13 @@ public class ScreenManagerImpl implements ScreenManager {
             analytic.reportEvent(Analytic.Video.OPEN_NATIVE);
         }
 
-        boolean isCompatible = VLCUtil.hasCompatibleCPU(App.getAppContext());
+        boolean isCompatible = VLCUtil.hasCompatibleCPU(App.Companion.getAppContext());
         if (!isCompatible) {
             analytic.reportEvent(Analytic.Video.NOT_COMPATIBLE);
         }
 
         if (isCompatible && !isOpenExternal) {
-            Intent intent = new Intent(App.getAppContext(), VideoActivity.class);
+            Intent intent = new Intent(App.Companion.getAppContext(), VideoActivity.class);
             intent.putExtra(VideoActivity.Companion.getVideoPathKey(), videoPath);
             intent.putExtra(VideoActivity.Companion.getVideoIdKey(), videoId);
             sourceActivity.startActivity(intent);
@@ -446,7 +446,7 @@ public class ScreenManagerImpl implements ScreenManager {
         final Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setData(Uri.parse(sb.toString()));
-        App.getAppContext().startActivity(intent);
+        App.Companion.getAppContext().startActivity(intent);
     }
 
     @Override
@@ -597,11 +597,11 @@ public class ScreenManagerImpl implements ScreenManager {
     @Override
     public void pushToViewedQueue(ViewAssignment viewAssignmentWrapper) {
 
-        Intent loadIntent = new Intent(App.getAppContext(), ViewPusher.class);
+        Intent loadIntent = new Intent(App.Companion.getAppContext(), ViewPusher.class);
 
         loadIntent.putExtra(AppConstants.KEY_STEP_BUNDLE, viewAssignmentWrapper.getStep());
         loadIntent.putExtra(AppConstants.KEY_ASSIGNMENT_BUNDLE, viewAssignmentWrapper.getAssignment());
-        App.getAppContext().startService(loadIntent);
+        App.Companion.getAppContext().startService(loadIntent);
     }
 
 }

@@ -24,33 +24,33 @@ public class DownloadManagerImpl implements IDownloadManager {
 
     @Override
     public void addSection(Section section) {
-        Intent loadIntent = new Intent(App.getAppContext(), LoadService.class);
+        Intent loadIntent = new Intent(App.Companion.getAppContext(), LoadService.class);
 
         loadIntent.putExtra(AppConstants.KEY_LOAD_TYPE, LoadService.LoadTypeKey.Section);
         loadIntent.putExtra(AppConstants.KEY_SECTION_BUNDLE, (Serializable) section);
 
-        App.getAppContext().startService(loadIntent);
+        App.Companion.getAppContext().startService(loadIntent);
     }
 
     @Override
     public void addLesson(final Lesson lesson) {
-        Intent loadIntent = new Intent(App.getAppContext(), LoadService.class);
+        Intent loadIntent = new Intent(App.Companion.getAppContext(), LoadService.class);
 
         loadIntent.putExtra(AppConstants.KEY_LOAD_TYPE, LoadService.LoadTypeKey.Lesson);
         loadIntent.putExtra(AppConstants.KEY_LESSON_BUNDLE, (Parcelable) lesson);
 
-        App.getAppContext().startService(loadIntent);
+        App.Companion.getAppContext().startService(loadIntent);
 
     }
 
     @Override
     public void cancelStep(long stepId) {
-        Intent loadIntent = new Intent(App.getAppContext(), CancelLoadingService.class);
+        Intent loadIntent = new Intent(App.Companion.getAppContext(), CancelLoadingService.class);
 
         loadIntent.putExtra(AppConstants.KEY_LOAD_TYPE, LoadService.LoadTypeKey.Step);
         loadIntent.putExtra(AppConstants.KEY_STEP_BUNDLE, stepId);
 
-        App.getAppContext().startService(loadIntent);
+        App.Companion.getAppContext().startService(loadIntent);
 
     }
 

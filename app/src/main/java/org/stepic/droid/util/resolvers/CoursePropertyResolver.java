@@ -61,7 +61,7 @@ public class CoursePropertyResolver {
     private void addIfNotEmpty(ArrayList<CourseProperty> result, String propertyValue, Type type) {
         if (propertyValue != null && !propertyValue.equals("")) {
             int titleRes = type.getTitleRes();
-            String title = App.getAppContext().getResources().getString(titleRes);
+            String title = App.Companion.getAppContext().getResources().getString(titleRes);
             CourseProperty aboutCourseProperty = new CourseProperty(title, propertyValue, type);
             result.add(aboutCourseProperty);
         }

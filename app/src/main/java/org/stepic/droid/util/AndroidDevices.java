@@ -57,8 +57,8 @@ public class AndroidDevices {
         devicesWithoutNavBar.add("HTC One XL");
         hasNavBar = AndroidUtil.isICSOrLater()
                 && !devicesWithoutNavBar.contains(android.os.Build.MODEL);
-        hasTsp = App.getAppContext().getPackageManager().hasSystemFeature("android.hardware.touchscreen");
-        isTv = App.getAppContext().getPackageManager().hasSystemFeature("android.software.leanback");
+        hasTsp = App.Companion.getAppContext().getPackageManager().hasSystemFeature("android.hardware.touchscreen");
+        isTv = App.Companion.getAppContext().getPackageManager().hasSystemFeature("android.software.leanback");
     }
 
     public static boolean hasExternalStorage() {
@@ -79,7 +79,7 @@ public class AndroidDevices {
     }
 
     public static boolean isPhone() {
-        TelephonyManager manager = (TelephonyManager) App.getAppContext().getSystemService(Context.TELEPHONY_SERVICE);
+        TelephonyManager manager = (TelephonyManager) App.Companion.getAppContext().getSystemService(Context.TELEPHONY_SERVICE);
         return manager.getPhoneType() != TelephonyManager.PHONE_TYPE_NONE;
     }
 

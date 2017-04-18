@@ -205,7 +205,7 @@ public class RemindPasswordDialogFragment extends DialogFragment {
 
     private void safetyHideKeypad(TextView view) {
         if (view != null) {
-            InputMethodManager imm = (InputMethodManager) App.getAppContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) App.Companion.getAppContext().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }

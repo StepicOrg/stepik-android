@@ -131,7 +131,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
 
         holder.unitTitle.setText(titleBuilder.toString());
 
-        Glide.with(App.getAppContext())
+        Glide.with(App.Companion.getAppContext())
                 .load(lesson.getCover_url())
                 .placeholder(holder.lessonPlaceholderDrawable)
                 .into(holder.lessonIcon);
@@ -207,7 +207,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
             final Unit unit = unitList.get(position);
             final Lesson lesson = lessonList.get(position);
 
-            int permissionCheck = ContextCompat.checkSelfPermission(App.getAppContext(),
+            int permissionCheck = ContextCompat.checkSelfPermission(App.Companion.getAppContext(),
                     Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
             if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
