@@ -48,7 +48,7 @@ public class InstructorAdapter extends RecyclerView.Adapter<InstructorAdapter.In
     public ScreenManager screenManager;
 
     public InstructorAdapter(List<User> instructors, Activity activity) {
-        App.component().inject(this);
+        App.Companion.component().inject(this);
         this.instructors = instructors;
         this.activity = activity;
         placeholder = ContextCompat.getDrawable(activity, R.drawable.placeholder_icon_trnsp);
@@ -64,7 +64,7 @@ public class InstructorAdapter extends RecyclerView.Adapter<InstructorAdapter.In
 
     @Override
     public InstructorViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(activity).inflate(R.layout.instructor_item, null);
+        View v = LayoutInflater.from(activity).inflate(R.layout.instructor_item, parent, false);
         return new InstructorViewHolder(v);
     }
 

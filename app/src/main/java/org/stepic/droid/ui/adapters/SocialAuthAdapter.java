@@ -52,7 +52,7 @@ public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.So
 
     public SocialAuthAdapter(FragmentActivity activity, @Nullable GoogleApiClient client) {
         this.client = client;
-        App.component().inject(this);
+        App.Companion.component().inject(this);
         this.activity = activity;
         socialList = socialManager.getAllSocial();
     }
@@ -60,7 +60,7 @@ public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.So
 
     @Override
     public SocialViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(activity).inflate(R.layout.social_item, null);
+        View v = LayoutInflater.from(activity).inflate(R.layout.social_item, parent, false);
         return new SocialViewHolder(v, this);
     }
 
@@ -82,7 +82,7 @@ public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.So
         if (type == SocialManager.SocialType.google) {
             if (client == null) {
                 analytic.reportEvent(Analytic.Interaction.GOOGLE_SOCIAL_IS_NOT_ENABLED);
-                Toast.makeText(App.getAppContext(), R.string.google_services_late, Toast.LENGTH_SHORT).show();
+                Toast.makeText(App.Companion.getAppContext(), R.string.google_services_late, Toast.LENGTH_SHORT).show();
             } else {
                 Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(client);
                 activity.startActivityForResult(signInIntent, AppConstants.REQUEST_CODE_GOOGLE_SIGN_IN);

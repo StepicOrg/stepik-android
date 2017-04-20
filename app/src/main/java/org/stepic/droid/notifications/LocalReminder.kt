@@ -8,7 +8,7 @@ interface LocalReminder {
     fun remindAboutApp()
 
     @MainThread
-    fun remindAboutApp(millis : Long? = null)
+    fun remindAboutApp(millis: Long? = null)
 
     @MainThread
     fun userChangeStateOfNotification()

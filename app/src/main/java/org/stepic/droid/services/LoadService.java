@@ -20,9 +20,9 @@ import org.stepic.droid.model.Unit;
 import org.stepic.droid.model.Video;
 import org.stepic.droid.model.VideoUrl;
 import org.stepic.droid.preferences.UserPreferences;
-import org.stepic.droid.store.CancelSniffer;
-import org.stepic.droid.store.StoreStateManager;
-import org.stepic.droid.store.operations.DatabaseFacade;
+import org.stepic.droid.storage.CancelSniffer;
+import org.stepic.droid.storage.StoreStateManager;
+import org.stepic.droid.storage.operations.DatabaseFacade;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.FileUtil;
 import org.stepic.droid.util.ProgressUtil;
@@ -79,7 +79,7 @@ public class LoadService extends IntentService {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        App.component().inject(this);
+        App.Companion.component().inject(this);
         super.onStartCommand(intent, flags, startId);
         return START_REDELIVER_INTENT;
     }
@@ -133,7 +133,7 @@ public class LoadService extends IntentService {
             DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
             request.setDestinationUri(target);
             request.setVisibleInDownloadsUi(false);
-            request.setTitle(title + "-" + fileId).setDescription(App.getAppContext().getString(R.string.description_download));
+            request.setTitle(title + "-" + fileId).setDescription(App.Companion.getAppContext().getString(R.string.description_download));
 
             if (userPrefs.isNetworkMobileAllowed()) {
                 request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
@@ -377,23 +377,23 @@ public class LoadService extends IntentService {
     }
 
     public boolean isDownloadManagerEnabled() {
-        if (App.getAppContext() == null) {
-            analytic.reportEvent(Analytic.DownloadManager.DOWNLOAD_MANAGER_IS_NOT_ENABLED);
+        if (App.Companion.getAppContext() == null) {
+            analytic.reportEvent(Analytic.Downloading.DOWNLOAD_MANAGER_IS_NOT_ENABLED);
             return false;
         }
         int state;
         try {
-            state = App.getAppContext().getPackageManager()
+            state = App.Companion.getAppContext().getPackageManager()
                     .getApplicationEnabledSetting("com.android.providers.downloads");
         } catch (Exception ex) {
-            analytic.reportError(Analytic.DownloadManager.DOWNLOAD_MANAGER_IS_NOT_ENABLED, ex);
+            analytic.reportError(Analytic.Downloading.DOWNLOAD_MANAGER_IS_NOT_ENABLED, ex);
             return false;
         }
 
         if (state == PackageManager.COMPONENT_ENABLED_STATE_DISABLED ||
                 state == PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER
                 || state == PackageManager.COMPONENT_ENABLED_STATE_DISABLED_UNTIL_USED) {
-            analytic.reportEvent(Analytic.DownloadManager.DOWNLOAD_MANAGER_IS_NOT_ENABLED);
+            analytic.reportEvent(Analytic.Downloading.DOWNLOAD_MANAGER_IS_NOT_ENABLED);
             return false;
         }
         return true;

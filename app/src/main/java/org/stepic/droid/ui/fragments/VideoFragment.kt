@@ -18,11 +18,10 @@ import android.widget.*
 import com.squareup.otto.Subscribe
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.base.App
+import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.core.MyPhoneStateListener
-import org.stepic.droid.core.modules.VideoModule
-import org.stepic.droid.core.presenters.VideoWIthTimestampPresenter
+import org.stepic.droid.core.presenters.VideoWithTimestampPresenter
 import org.stepic.droid.core.presenters.contracts.VideoWithTimestampView
 import org.stepic.droid.events.IncomingCallEvent
 import org.stepic.droid.events.audio.AudioFocusLossEvent
@@ -112,12 +111,19 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback, VideoWithTimestampView 
     private val receiver: BroadcastReceiver = MyBroadcastReceiver(this)
 
     @Inject
-    lateinit var videoTimestampPresenter: VideoWIthTimestampPresenter
+    lateinit var videoTimestampPresenter: VideoWithTimestampPresenter
+
+    override fun injectComponent() {
+        App
+                .component()
+                .videoComponentBuilder()
+                .build()
+                .inject(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
-        App.component().plus(VideoModule()).inject(this)
         filePath = arguments.getString(VIDEO_PATH_KEY)
         videoId = arguments.getLong(VIDEO_ID_KEY)
         if (videoId != null && videoId!! <= 0L) { // if equal zero -> it is default, it is not our video

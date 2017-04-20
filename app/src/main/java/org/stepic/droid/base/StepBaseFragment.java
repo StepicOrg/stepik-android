@@ -21,7 +21,6 @@ import com.squareup.otto.Subscribe;
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.core.modules.StepModule;
 import org.stepic.droid.core.presenters.AnonymousPresenter;
 import org.stepic.droid.core.presenters.RouteStepPresenter;
 import org.stepic.droid.core.presenters.contracts.AnonymousView;
@@ -99,7 +98,18 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
 
     @Override
     protected void injectComponent() {
-        App.component().plus(new StepModule()).inject(this);
+        App.Companion
+                .getComponentManager()
+                .routingComponent()
+                .stepComponentBuilder()
+                .build()
+                .inject(this);
+    }
+
+    @Override
+    protected void onReleaseComponent() {
+        App.Companion
+                .getComponentManager().releaseRoutingComponent();
     }
 
     @Override
@@ -163,7 +173,7 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
         authLineText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                shell.getScreenProvider().showLaunchScreen(getActivity());
+                screenManager.showLaunchScreen(getActivity());
             }
         });
     }
@@ -183,18 +193,18 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
             public void onClick(View v) {
                 int discussionCount = step.getDiscussions_count();
                 analytic.reportEvent(Analytic.Comments.OPEN_FROM_STEP_UI);
-                shell.getScreenProvider().openComments(getContext(), step.getDiscussion_proxy(), step.getId());
+                screenManager.openComments(getContext(), step.getDiscussion_proxy(), step.getId());
                 if (discussionCount == 0) {
-                    shell.getScreenProvider().openNewCommentForm(getActivity(), step.getId(), null); //show new form, but in back stack comment oldList is exist.
+                    screenManager.openNewCommentForm(getActivity(), step.getId(), null); //show new form, but in back stack comment oldList is exist.
                 }
             }
         });
 
         int discussionCount = step.getDiscussions_count();
         if (discussionCount > 0) {
-            textForComment.setText(App.getAppContext().getResources().getQuantityString(R.plurals.open_comments, discussionCount, discussionCount));
+            textForComment.setText(App.Companion.getAppContext().getResources().getQuantityString(R.plurals.open_comments, discussionCount, discussionCount));
         } else {
-            textForComment.setText(App.getAppContext().getResources().getString(R.string.open_comments_zero));
+            textForComment.setText(App.Companion.getAppContext().getResources().getString(R.string.open_comments_zero));
         }
     }
 
@@ -236,7 +246,7 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
         if (step != null && event.getTargetId() == step.getId()) {
             long[] arr = new long[]{step.getId()};
 
-            shell.getApi().getSteps(arr).enqueue(new Callback<StepResponse>() {
+            api.getSteps(arr).enqueue(new Callback<StepResponse>() {
 
                 @Override
                 public void onResponse(Call<StepResponse> call, Response<StepResponse> response) {
@@ -287,12 +297,12 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
     @Override
     public final void openNextLesson(Unit nextUnit, Lesson nextLesson) {
         ProgressHelper.dismiss(getFragmentManager(), LOAD_DIALOG_TAG);
-        shell.getScreenProvider().showSteps(getActivity(), nextUnit, nextLesson, section);
+        screenManager.showSteps(getActivity(), nextUnit, nextLesson, section);
         getActivity().finish();
     }
 
     @Override
-    public void showLoadDialog() {
+    public void showLoading() {
         DialogFragment dialogFragment = LoadingProgressDialogFragment.Companion.newInstance();
         if (!dialogFragment.isAdded()) {
             dialogFragment.show(getFragmentManager(), LOAD_DIALOG_TAG);
@@ -314,7 +324,7 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
     @Override
     public void openPreviousLesson(Unit previousUnit, Lesson previousLesson) {
         ProgressHelper.dismiss(getFragmentManager(), LOAD_DIALOG_TAG);
-        shell.getScreenProvider().showSteps(getActivity(), previousUnit, previousLesson, true, section);
+        screenManager.showSteps(getActivity(), previousUnit, previousLesson, true, section);
         getActivity().finish();
     }
 

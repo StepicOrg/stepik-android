@@ -6,15 +6,15 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import org.stepic.droid.di.AppSingleton;
 import org.stepic.droid.web.Api;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
-@Singleton
+@AppSingleton
 public class ConfigReleaseImpl implements Config {
 
     private JsonObject properties;
@@ -27,8 +27,6 @@ public class ConfigReleaseImpl implements Config {
     private static final String OAUTH_CLIENT_SECRET_SOCIAL = "OAUTH_CLIENT_SECRET_SOCIAL";
     private static final String GRANT_TYPE_SOCIAL = "GRANT_TYPE_SOCIAL";
     private static final String REFRESH_GRANT_TYPE = "REFRESH_GRANT_TYPE";
-    private static final String DATE_PATTERN_FOR_VIEW = "DATE_PATTERN_FOR_VIEW";
-    private static final String ARRAY_IDS_PARAM = "ARRAY_IDS_PARAM";
     private static final String REDIRECT_URI = "REDIRECT_URI";
     private static final String ZENDESK_HOST = "ZENDESK_HOST";
     private static final String COURSE_CLOSEABLE = "COURSE_CLOSEABLE";
@@ -41,6 +39,7 @@ public class ConfigReleaseImpl implements Config {
     private static final String MIXPANEL_TOKEN = "MIXPANEL_TOKEN";
     private static final String CSRF_COOKIE_NAME = "CSRF_COOKIE_NAME";
     private static final String SESSION_COOKIE_NAME = "SESSION_COOKIE_NAME";
+    private static final String IS_APP_IN_STORE = "IS_APP_IN_STORE";
 
 
     @Inject
@@ -102,16 +101,6 @@ public class ConfigReleaseImpl implements Config {
     }
 
     @Override
-    public String getDatePatternForView() {
-        return getString(DATE_PATTERN_FOR_VIEW);
-    }
-
-    @Override
-    public String getIDSParam() {
-        return getString(ARRAY_IDS_PARAM);
-    }
-
-    @Override
     public String getRedirectUri() {
         return getString(REDIRECT_URI);
     }
@@ -169,6 +158,11 @@ public class ConfigReleaseImpl implements Config {
     @Override
     public String getSessionCookieName() {
         return getString(SESSION_COOKIE_NAME, null);
+    }
+
+    @Override
+    public boolean isAppInStore() {
+        return getBoolean(IS_APP_IN_STORE, false);
     }
 
     private String getString(String key) {

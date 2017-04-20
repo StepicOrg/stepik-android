@@ -60,7 +60,7 @@ public class Video implements Parcelable, Serializable {
         this.id = in.readLong();
         this.thumbnail = in.readString();
         this.urls = new ArrayList<>();
-        in.readList(this.urls, App.getAppContext().getClassLoader());
+        in.readList(this.urls, App.Companion.getAppContext().getClassLoader());
         this.status = in.readString();
         this.upload_date = in.readString();
     }

@@ -56,7 +56,7 @@ public class StringUtil {
         stringBuilder.append(firebaseDomain);
         stringBuilder.append("?amv=650");
         stringBuilder.append("&apn=");
-        String packageName = App.getAppContext().getPackageName();
+        String packageName = App.Companion.getAppContext().getPackageName();
         if (packageName == null) {
             return getUriForCourse(config.getBaseUrl(), slug);
         }

@@ -206,7 +206,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
         NotificationViewHolder(View itemView) {
             super(itemView);
-            App.component().inject(this);
+            App.Companion.component().inject(this);
             notificationBody.setMovementMethod(LinkMovementMethod.getInstance());
 
             //for checking notification

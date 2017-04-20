@@ -15,8 +15,8 @@ import org.stepic.droid.core.LocalProgressManager;
 import org.stepic.droid.events.InternetIsEnabledEvent;
 import org.stepic.droid.events.steps.UpdateStepEvent;
 import org.stepic.droid.model.Step;
-import org.stepic.droid.store.StoreStateManager;
-import org.stepic.droid.store.operations.DatabaseFacade;
+import org.stepic.droid.storage.StoreStateManager;
+import org.stepic.droid.storage.operations.DatabaseFacade;
 import org.stepic.droid.util.resolvers.StepHelper;
 import org.stepic.droid.web.Api;
 import org.stepic.droid.web.ViewAssignment;
@@ -60,12 +60,12 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
 
 
     public InternetConnectionEnabledReceiver() {
-        App.component().inject(this);
+        App.Companion.component().inject(this);
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (!isOnline(App.getAppContext()) || inWork.get()) return;
+        if (!isOnline(App.Companion.getAppContext()) || inWork.get()) return;
         inWork.set(true);
         mainHandler.post(new Function0<Unit>() {
             @Override

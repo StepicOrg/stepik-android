@@ -8,10 +8,11 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.core.presenters.contracts.NotificationListView
+import org.stepic.droid.di.notifications.NotificationsScope
 import org.stepic.droid.events.InternetIsEnabledEvent
 import org.stepic.droid.events.notify_ui.NotificationCheckedSuccessfullyEvent
 import org.stepic.droid.events.notify_ui.NotificationMarkCategoryAsReadEvent
-import org.stepic.droid.notifications.INotificationManager
+import org.stepic.droid.notifications.StepikNotificationManager
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.notifications.model.NotificationType
 import org.stepic.droid.ui.NotificationCategory
@@ -22,15 +23,18 @@ import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
+import javax.inject.Inject
 
-class NotificationListPresenter(
-        val threadPoolExecutor: ThreadPoolExecutor,
-        val mainHandler: MainHandler,
-        val api: Api,
-        val config: Config,
-        val bus: Bus,
-        val analytic: Analytic,
-        val notificationManager: INotificationManager
+@NotificationsScope
+class NotificationListPresenter
+@Inject constructor(
+        private val threadPoolExecutor: ThreadPoolExecutor,
+        private val mainHandler: MainHandler,
+        private val api: Api,
+        private val config: Config,
+        private val bus: Bus,
+        private val analytic: Analytic,
+        private val stepikNotificationManager: StepikNotificationManager
 ) : PresenterBase<NotificationListView>() {
 
     private var notificationCategory: NotificationCategory? = null
@@ -301,7 +305,7 @@ class NotificationListPresenter(
 
     fun tryToOpenNotification(notification: Notification) {
         analytic.reportEvent(Analytic.Notification.NOTIFICATION_CENTER_OPENED)
-        notificationManager.tryOpenNotificationInstantly(notification)
+        stepikNotificationManager.tryOpenNotificationInstantly(notification)
     }
 
     fun trackClickOnNotification(notification: Notification) {

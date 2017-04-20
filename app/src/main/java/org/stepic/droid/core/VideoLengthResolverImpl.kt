@@ -3,8 +3,9 @@ package org.stepic.droid.core
 import android.media.MediaMetadataRetriever
 import android.support.annotation.WorkerThread
 import java.util.*
+import javax.inject.Inject
 
-class VideoLengthResolverImpl() : VideoLengthResolver {
+class VideoLengthResolverImpl @Inject constructor() : VideoLengthResolver {
 
     @WorkerThread
     override fun determineLengthInMillis(path: String?): Long? {

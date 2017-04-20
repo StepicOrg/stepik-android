@@ -23,12 +23,12 @@ import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
-import org.stepic.droid.config.RemoteConfig;
+import org.stepic.droid.configuration.RemoteConfig;
 import org.stepic.droid.configuration.Config;
-import org.stepic.droid.core.Shell;
+import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.presenters.ContinueCoursePresenter;
 import org.stepic.droid.model.Course;
-import org.stepic.droid.store.operations.Table;
+import org.stepic.droid.storage.operations.Table;
 import org.stepic.droid.util.StepikLogicHelper;
 import org.stepic.droid.util.resolvers.text.TextResolver;
 
@@ -49,7 +49,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
     TextResolver textResolver;
 
     @Inject
-    Shell shell;
+    ScreenManager screenManager;
 
     @Inject
     Analytic analytic;
@@ -76,7 +76,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
         this.courses = courses;
         this.continueCoursePresenter = continueCoursePresenter;
         inflater = (LayoutInflater) contextActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        App.component().inject(this);
+        App.Companion.component().inject(this);
         coursePlaceholder = ContextCompat.getDrawable(fragment.getContext(), R.drawable.general_placeholder);
         isContinueExperimentEnabled = firebaseRemoteConfig.getBoolean(RemoteConfig.INSTANCE.getContinueCourseExperimentEnabledKey());
         if (isContinueExperimentEnabled) {
@@ -134,9 +134,9 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
         Course course = courses.get(position);
         if (course.getEnrollment() != 0) {
             analytic.reportEvent(isContinueExperimentEnabled ? Analytic.ContinueExperiment.COURSE_NEW : Analytic.ContinueExperiment.COURSE_OLD);
-            shell.getScreenProvider().showSections(contextActivity, course);
+            screenManager.showSections(contextActivity, course);
         } else {
-            shell.getScreenProvider().showCourseDescription(contextActivity, course);
+            screenManager.showCourseDescription(contextActivity, course);
         }
     }
 

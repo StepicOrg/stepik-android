@@ -23,13 +23,14 @@ import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.core.ScreenManager;
-import org.stepic.droid.core.Shell;
 import org.stepic.droid.core.presenters.CalendarPresenter;
+import org.stepic.droid.core.presenters.DownloadingInteractionPresenter;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.SectionLoadingState;
-import org.stepic.droid.store.SectionDownloader;
-import org.stepic.droid.store.operations.DatabaseFacade;
+import org.stepic.droid.preferences.SharedPreferenceHelper;
+import org.stepic.droid.storage.SectionDownloader;
+import org.stepic.droid.storage.operations.DatabaseFacade;
 import org.stepic.droid.ui.custom.progressbutton.ProgressWheel;
 import org.stepic.droid.ui.dialogs.DeleteItemDialogFragment;
 import org.stepic.droid.ui.dialogs.ExplainExternalStoragePermissionDialog;
@@ -71,9 +72,6 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     DatabaseFacade databaseFacade;
 
     @Inject
-    Shell shell;
-
-    @Inject
     Analytic analytic;
 
     @Inject
@@ -81,6 +79,9 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
 
     @Inject
     SectionDownloader sectionDownloader;
+
+    @Inject
+    SharedPreferenceHelper sharedPreferenceHelper;
 
 
     private List<Section> sections;
@@ -94,6 +95,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     private Map<String, ProgressViewModel> progressMap;
     private Map<Long, SectionLoadingState> sectionIdToLoadingStateMap;
     private Fragment fragment;
+    private final DownloadingInteractionPresenter downloadingInteractionPresenter;
     private final int durationMillis = 3000;
 
     public void setDefaultHighlightPosition(int defaultHighlightPosition) {
@@ -105,7 +107,8 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                           CalendarPresenter calendarPresenter,
                           Map<String, ProgressViewModel> progressMap,
                           Map<Long, SectionLoadingState> sectionIdToLoadingStateMap,
-                          Fragment fragment) {
+                          Fragment fragment,
+                          DownloadingInteractionPresenter downloadingInteractionPresenter) {
         this.sections = sections;
         this.activity = activity;
         this.calendarPresenter = calendarPresenter;
@@ -114,7 +117,8 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         this.progressMap = progressMap;
         this.sectionIdToLoadingStateMap = sectionIdToLoadingStateMap;
         this.fragment = fragment;
-        App.component().inject(this);
+        this.downloadingInteractionPresenter = downloadingInteractionPresenter;
+        App.Companion.component().inject(this);
     }
 
 
@@ -167,11 +171,11 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         if (sectionPosition >= 0 && sectionPosition < sections.size()) {
             final Section section = sections.get(sectionPosition);
 
-            int permissionCheck = ContextCompat.checkSelfPermission(App.getAppContext(),
+            int permissionCheck = ContextCompat.checkSelfPermission(App.Companion.getAppContext(),
                     Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
             if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-                shell.getSharedPreferenceHelper().storeTempPosition(adapterPosition);
+                sharedPreferenceHelper.storeTempPosition(adapterPosition);
                 if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
 
@@ -220,7 +224,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
 
                     notifyItemChanged(adapterPosition);
                 } else {
-                    if (shell.getSharedPreferenceHelper().isNeedToShowVideoQualityExplanation()) {
+                    if (sharedPreferenceHelper.isNeedToShowVideoQualityExplanation()) {
                         VideoQualityDetailedDialog dialogFragment = VideoQualityDetailedDialog.Companion.newInstance(adapterPosition);
                         dialogFragment.setOnLoadPositionListener(this);
                         if (!dialogFragment.isAdded()) {
@@ -237,6 +241,13 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     }
 
     private void loadSection(int adapterPosition) {
+        int sectionPosition = adapterPosition - PRE_SECTION_LIST_DELTA;
+        if (sectionPosition >= 0 && sectionPosition < sections.size()) {
+            downloadingInteractionPresenter.checkOnLoading(adapterPosition);
+        }
+    }
+
+    public void loadAfterDetermineNetworkState(int adapterPosition) {
         int sectionPosition = adapterPosition - PRE_SECTION_LIST_DELTA;
         if (sectionPosition >= 0 && sectionPosition < sections.size()) {
             final Section section = sections.get(sectionPosition);
@@ -427,7 +438,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
 
             if (SectionUtilKt.hasUserAccess(section, course)) {
 
-                int strong_text_color = ColorUtil.INSTANCE.getColorArgb(R.color.stepic_regular_text, App.getAppContext());
+                int strong_text_color = ColorUtil.INSTANCE.getColorArgb(R.color.stepic_regular_text, App.Companion.getAppContext());
 
                 sectionTitle.setTextColor(strong_text_color);
                 cv.setFocusable(false);
@@ -472,7 +483,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                 whenLoad.setVisibility(View.INVISIBLE);
                 afterLoad.setVisibility(View.GONE);
 
-                int weak_text_color = ColorUtil.INSTANCE.getColorArgb(R.color.stepic_weak_text, App.getAppContext());
+                int weak_text_color = ColorUtil.INSTANCE.getColorArgb(R.color.stepic_weak_text, App.Companion.getAppContext());
                 sectionTitle.setTextColor(weak_text_color);
                 cv.setFocusable(false);
                 cv.setClickable(false);

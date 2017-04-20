@@ -24,7 +24,6 @@ import com.squareup.otto.Subscribe;
 import org.stepic.droid.R;
 import org.stepic.droid.base.App;
 import org.stepic.droid.base.StepBaseFragment;
-import org.stepic.droid.core.modules.StepModule;
 import org.stepic.droid.core.presenters.StepQualityPresenter;
 import org.stepic.droid.core.presenters.VideoLengthPresenter;
 import org.stepic.droid.core.presenters.VideoStepPresenter;
@@ -74,7 +73,12 @@ public class VideoStepFragment extends StepBaseFragment implements StepQualityVi
 
     @Override
     protected void injectComponent() {
-        App.component().plus(new StepModule()).inject(this);
+        App.Companion
+                .getComponentManager()
+                .routingComponent()
+                .stepComponentBuilder()
+                .build()
+                .inject(this);
     }
 
     @Nullable
@@ -89,11 +93,11 @@ public class VideoStepFragment extends StepBaseFragment implements StepQualityVi
         headerWvEnhanced.setVisibility(View.GONE);
 
         stepQualityPresenter.attachView(this);
-
         videoStepPresenter.attachView(this);
+        videoLengthPresenter.attachView(this);
+
         videoStepPresenter.initVideo(step);
 
-        videoLengthPresenter.attachView(this);
 
         player.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,12 +138,14 @@ public class VideoStepFragment extends StepBaseFragment implements StepQualityVi
                     .listener(new RequestListener<Uri, GlideDrawable>() {
                         @Override
                         public boolean onException(Exception e, Uri model, Target<GlideDrawable> target, boolean isFirstResource) {
+                            //at this callback view can be dead!
                             showTime(timeString);
                             return false;
                         }
 
                         @Override
                         public boolean onResourceReady(GlideDrawable resource, Uri model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                            //at this callback view can be dead!
                             showTime(timeString);
                             return false;
                         }
@@ -150,7 +156,8 @@ public class VideoStepFragment extends StepBaseFragment implements StepQualityVi
     }
 
     private void showTime(@Nullable String timeString) {
-        if (timeString != null) {
+        //at this callback view can be dead!
+        if (timeString != null && videoLengthTextView != null) {
             videoLengthTextView.setVisibility(View.VISIBLE);
             videoLengthTextView.setText(timeString);
         }
@@ -169,7 +176,7 @@ public class VideoStepFragment extends StepBaseFragment implements StepQualityVi
     @Override
     public void onNeedOpenVideo(@NonNull String pathToVideo, long videoId) {
         player.setClickable(true);
-        shell.getScreenProvider().showVideo(getActivity(), pathToVideo, videoId);
+        screenManager.showVideo(getActivity(), pathToVideo, videoId);
     }
 
     @Override

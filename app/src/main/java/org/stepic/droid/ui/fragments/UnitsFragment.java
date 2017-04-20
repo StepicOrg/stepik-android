@@ -28,15 +28,17 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.core.LessonSessionManager;
-import org.stepic.droid.core.modules.UnitsModule;
+import org.stepic.droid.core.RoutingConsumer;
+import org.stepic.droid.core.presenters.DownloadingInteractionPresenter;
 import org.stepic.droid.core.presenters.DownloadingProgressUnitsPresenter;
+import org.stepic.droid.core.presenters.UnitsLearningProgressPresenter;
 import org.stepic.droid.core.presenters.UnitsPresenter;
+import org.stepic.droid.core.presenters.contracts.DownloadingInteractionView;
 import org.stepic.droid.core.presenters.contracts.DownloadingProgressUnitsView;
+import org.stepic.droid.core.presenters.contracts.UnitsLearningProgressView;
 import org.stepic.droid.core.presenters.contracts.UnitsView;
 import org.stepic.droid.events.units.LessonCachedEvent;
 import org.stepic.droid.events.units.NotCachedLessonEvent;
-import org.stepic.droid.events.units.UnitProgressUpdateEvent;
-import org.stepic.droid.events.units.UnitScoreUpdateEvent;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.LessonLoadingState;
 import org.stepic.droid.model.Progress;
@@ -46,6 +48,7 @@ import org.stepic.droid.ui.adapters.UnitAdapter;
 import org.stepic.droid.ui.dialogs.DeleteItemDialogFragment;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
+import org.stepic.droid.util.SnackbarShower;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,8 +59,9 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
+import timber.log.Timber;
 
-public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.OnRefreshListener, UnitsView, DownloadingProgressUnitsView {
+public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.OnRefreshListener, UnitsView, DownloadingProgressUnitsView, DownloadingInteractionView, UnitsLearningProgressView, RoutingConsumer.Listener {
 
     private static final int ANIMATION_DURATION = 0;
     public static final int DELETE_POSITION_REQUEST_CODE = 165;
@@ -91,16 +95,28 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
     @BindView(R.id.report_empty)
     protected View reportEmpty;
 
+    @BindView(R.id.rootViewUnits)
+    protected View rootView;
+
     private Section section;
 
     @Inject
     UnitsPresenter unitsPresenter;
 
     @Inject
+    UnitsLearningProgressPresenter unitsLearningProgressPresenter;
+
+    @Inject
     LessonSessionManager lessonManager;
 
     @Inject
     DownloadingProgressUnitsPresenter downloadingProgressUnitsPresenter;
+
+    @Inject
+    DownloadingInteractionPresenter downloadingInteractionPresenter;
+
+    @Inject
+    RoutingConsumer routingConsumer;
 
     UnitAdapter adapter;
 
@@ -110,17 +126,28 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
     private Map<Long, LessonLoadingState> lessonIdToLoadingStateMap;
 
     @Override
+    protected void injectComponent() {
+        App.Companion
+                .getComponentManager()
+                .routingComponent()
+                .sectionComponentBuilder()
+                .build()
+                .inject(this);
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        App
-                .component()
-                .plus(new UnitsModule())
-                .inject(this);
-
         setRetainInstance(true);
         setHasOptionsMenu(true);
         section = getArguments().getParcelable(SECTION_KEY);
         lessonIdToLoadingStateMap = new HashMap<>();
+    }
+
+    @Override
+    protected void onReleaseComponent() {
+        App.Companion
+                .getComponentManager().releaseRoutingComponent();
     }
 
     @Nullable
@@ -152,7 +179,15 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
         unitList = new ArrayList<>();
         lessonList = new ArrayList<>();
         progressMap = new HashMap<>();
-        adapter = new UnitAdapter(section, unitList, lessonList, progressMap, (AppCompatActivity) getActivity(), lessonIdToLoadingStateMap, this);
+        adapter = new UnitAdapter(section,
+                unitList,
+                lessonList,
+                progressMap,
+                (AppCompatActivity) getActivity(),
+                lessonIdToLoadingStateMap,
+                this,
+                downloadingInteractionPresenter);
+
         unitsRecyclerView.setAdapter(adapter);
         unitsRecyclerView.setItemAnimator(new SlideInRightAnimator());
         unitsRecyclerView.getItemAnimator().setRemoveDuration(ANIMATION_DURATION);
@@ -164,11 +199,18 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
 
         bus.register(this);
         unitsPresenter.attachView(this);
+        unitsLearningProgressPresenter.attachView(this);
+        localProgressManager.subscribe(unitsLearningProgressPresenter);
+        routingConsumer.subscribe(this);
         unitsPresenter.showUnits(section, false);
+
     }
 
     @Override
     public void onDestroyView() {
+        routingConsumer.unsubscribe(this);
+        localProgressManager.unsubscribe(unitsLearningProgressPresenter);
+        unitsLearningProgressPresenter.detachView(this);
         unitsPresenter.detachView(this);
         bus.unregister(this);
 
@@ -180,12 +222,15 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
     @Override
     public void onStart() {
         super.onStart();
+        Timber.d("downloading interaction presenter instance: %s", downloadingInteractionPresenter);
+        downloadingInteractionPresenter.attachView(this);
         downloadingProgressUnitsPresenter.attachView(this);
         downloadingProgressUnitsPresenter.subscribeToProgressUpdates(lessonList);
     }
 
     @Override
     public void onStop() {
+        downloadingInteractionPresenter.detachView(this);
         downloadingProgressUnitsPresenter.detachView(this);
         super.onStop();
         ProgressHelper.dismiss(swipeRefreshLayout);
@@ -207,7 +252,7 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
             if (permissionExternalStorage.equals(Manifest.permission.WRITE_EXTERNAL_STORAGE) &&
                     grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                int position = shell.getSharedPreferenceHelper().getTempPosition();
+                int position = sharedPreferenceHelper.getTempPosition();
                 if (adapter != null) {
                     adapter.requestClickLoad(position);
                 }
@@ -254,38 +299,8 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
     }
 
     @Subscribe
-    public void onUnitScoreChanged(UnitScoreUpdateEvent event) {
-        long unitId = event.getUnitId();
-
-        Pair<Unit, Integer> unitPairPosition = getUnitOnScreenAndPositionById(unitId);
-        if (unitPairPosition == null) return;
-
-        int position = unitPairPosition.second;
-
-        Progress progress = progressMap.get(unitId);
-        if (progress != null) {
-            progress.setScore(event.getNewScore() + "");
-        }
-
-        adapter.notifyItemChanged(position);
-    }
-
-    @Subscribe
     public void onLessonCachedEvent(LessonCachedEvent e) {
         updateState(e.getLessonId(), true, false);
-    }
-
-    @Subscribe
-    public void onUnitProgressStateChanged(UnitProgressUpdateEvent event) {
-        long unitId = event.getUnitId();
-
-        Pair<Unit, Integer> unitPairPosition = getUnitOnScreenAndPositionById(unitId);
-        if (unitPairPosition == null) return;
-        Unit unit = unitPairPosition.first;
-        int position = unitPairPosition.second;
-
-        unit.set_viewed_custom(true);
-        adapter.notifyItemChanged(position);
     }
 
     private void shareSection() {
@@ -387,6 +402,76 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
             analytic.reportEvent(Analytic.Interaction.ACCEPT_DELETING_UNIT);
             int position = data.getIntExtra(DeleteItemDialogFragment.deletePositionKey, -1);
             adapter.requestClickDeleteSilence(position);
+        }
+    }
+
+    @Override
+    public void onLoadingAccepted(int position) {
+        adapter.loadAfterDetermineNetworkState(position);
+    }
+
+    @Override
+    public void onShowPreferenceSuggestion() {
+        analytic.reportEvent(Analytic.Downloading.SHOW_SNACK_PREFS_UNITS);
+        SnackbarShower.INSTANCE.showTurnOnDownloadingInSettings(rootView, getContext(), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    analytic.reportEvent(Analytic.Downloading.CLICK_SETTINGS_UNITS);
+                    screenManager.showSettings(getActivity());
+                } catch (NullPointerException nullPointerException) {
+                    Timber.e(nullPointerException);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onShowInternetIsNotAvailableRetry(final int position) {
+        analytic.reportEvent(Analytic.Downloading.SHOW_SNACK_INTERNET_UNITS);
+        SnackbarShower.INSTANCE.showInternetRetrySnackbar(rootView, getContext(), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                analytic.reportEvent(Analytic.Downloading.CLICK_RETRY_UNITS);
+                if (adapter != null) {
+                    adapter.requestClickLoad(position);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void setNewScore(long unitId, double newScore) {
+        Pair<Unit, Integer> unitPairPosition = getUnitOnScreenAndPositionById(unitId);
+        if (unitPairPosition == null) return;
+
+        int position = unitPairPosition.second;
+
+        Progress progress = progressMap.get(unitId);
+        if (progress != null) {
+            progress.setScore(newScore + "");
+        }
+
+        adapter.notifyItemChanged(position);
+    }
+
+    @Override
+    public void setUnitPassed(long unitId) {
+        Pair<Unit, Integer> unitPairPosition = getUnitOnScreenAndPositionById(unitId);
+        if (unitPairPosition == null) return;
+        Unit unit = unitPairPosition.first;
+        int position = unitPairPosition.second;
+
+        unit.set_viewed_custom(true);
+        adapter.notifyItemChanged(position);
+    }
+
+    @Override
+    public void onSectionChanged(@NotNull Section oldSection, @NotNull Section newSection) {
+        if (section != null && oldSection.getId() == section.getId()) {
+            section = newSection;
+            adapter.setSection(section);
+            unitsPresenter.showUnits(newSection, true);
         }
     }
 }

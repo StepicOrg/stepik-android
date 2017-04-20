@@ -13,10 +13,6 @@ public interface Config {
 
     String getRefreshGrantType();
 
-    String getDatePatternForView();
-
-    String getIDSParam();
-
     String getRedirectUri();
 
     String getZendeskHost();
@@ -40,4 +36,6 @@ public interface Config {
     String getCsrfTokenCookieName();
 
     String getSessionCookieName();
+
+    boolean isAppInStore();
 }

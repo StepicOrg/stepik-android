@@ -45,7 +45,7 @@ public class Util {
         InputStream is = null;
         BufferedReader r = null;
         try {
-            is = App.getAppContext().getResources().getAssets().open(assetName);
+            is = App.Companion.getAppContext().getResources().getAssets().open(assetName);
             r = new BufferedReader(new InputStreamReader(is, "UTF8"));
             StringBuilder sb = new StringBuilder();
             String line = r.readLine();
@@ -86,7 +86,7 @@ public class Util {
     }
 
     public static boolean isCallable(Intent intent) {
-        List<ResolveInfo> list = App.getAppContext().getPackageManager().queryIntentActivities(intent,
+        List<ResolveInfo> list = App.Companion.getAppContext().getPackageManager().queryIntentActivities(intent,
                 PackageManager.MATCH_DEFAULT_ONLY);
         return list.size() > 0;
     }
@@ -94,7 +94,7 @@ public class Util {
 
     @Nullable
     public static String getVersionName() {
-        Context mainAppContext = App.getAppContext();
+        Context mainAppContext = App.Companion.getAppContext();
         String versionName = null;
         try {
             versionName = mainAppContext.getPackageManager().getPackageInfo(mainAppContext.getPackageName(), 0).versionName;

@@ -32,10 +32,10 @@ import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.DownloadingVideoItem;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Step;
-import org.stepic.droid.store.CancelSniffer;
-import org.stepic.droid.store.CleanManager;
-import org.stepic.droid.store.IDownloadManager;
-import org.stepic.droid.store.operations.DatabaseFacade;
+import org.stepic.droid.storage.CancelSniffer;
+import org.stepic.droid.storage.CleanManager;
+import org.stepic.droid.storage.IDownloadManager;
+import org.stepic.droid.storage.operations.DatabaseFacade;
 import org.stepic.droid.ui.custom.progressbutton.ProgressWheel;
 import org.stepic.droid.ui.dialogs.ClearVideosDialog;
 import org.stepic.droid.ui.fragments.DownloadsFragment;
@@ -96,25 +96,25 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
     public DownloadsAdapter(List<CachedVideo> cachedVideos, Map<Long, Lesson> videoIdToStepMap, Activity context, DownloadsFragment downloadsFragment, List<DownloadingVideoItem> downloadingList, Set<Long> cachedStepsSet) {
         this.downloadsFragment = downloadsFragment;
-        App.component().inject(this);
+        App.Companion.component().inject(this);
         cachedVideoList = cachedVideos;
         sourceActivity = context;
         stepIdToLessonMap = videoIdToStepMap;
         downloadingVideoList = downloadingList;
         this.cachedStepsSet = cachedStepsSet;
-        placeholder = ContextCompat.getDrawable(App.getAppContext(), R.drawable.video_placeholder);
+        placeholder = ContextCompat.getDrawable(App.Companion.getAppContext(), R.drawable.video_placeholder);
     }
 
     @Override
     public GenericViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE_DOWNLOADED_VIDEO) {
-            View v = LayoutInflater.from(sourceActivity).inflate(R.layout.cached_video_item, null);
+            View v = LayoutInflater.from(sourceActivity).inflate(R.layout.cached_video_item, parent, false);
             return new DownloadsViewHolder(v, this, this);
         } else if (viewType == TYPE_DOWNLOADING_VIDEO) {
-            View v = LayoutInflater.from(sourceActivity).inflate(R.layout.downloading_video_item, null);
+            View v = LayoutInflater.from(sourceActivity).inflate(R.layout.downloading_video_item, parent, false);
             return new DownloadingViewHolder(v, this);
         } else if (viewType == TYPE_TITLE) {
-            View v = LayoutInflater.from(sourceActivity).inflate(R.layout.header_download_item, null);
+            View v = LayoutInflater.from(sourceActivity).inflate(R.layout.header_download_item, parent, false);
             return new TitleViewHolder(v);
         } else {
             return null;
@@ -152,7 +152,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
             if (video.getUrl() != null && file.exists()) {
                 screenManager.showVideo(sourceActivity, video.getUrl(), video.getVideoId());
             } else {
-                Toast.makeText(App.getAppContext(), R.string.sorry_moved, Toast.LENGTH_SHORT).show();
+                Toast.makeText(App.Companion.getAppContext(), R.string.sorry_moved, Toast.LENGTH_SHORT).show();
                 threadPoolExecutor.execute(new Runnable() {
                     @Override
                     public void run() {
@@ -274,12 +274,12 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
             String thumbnail = downloadingVideoItem.getDownloadEntity().getThumbnail();
             if (thumbnail != null) {
                 Uri uriForThumbnail = ThumbnailParser.getUriForThumbnail(thumbnail);
-                Glide.with(App.getAppContext())
+                Glide.with(App.Companion.getAppContext())
                         .load(uriForThumbnail)
                         .placeholder(placeholder)
                         .into(mVideoIcon);
             } else {
-                Glide.with(App.getAppContext())
+                Glide.with(App.Companion.getAppContext())
                         .load("")
                         .placeholder(placeholder)
                         .into(mVideoIcon);
@@ -399,12 +399,12 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
             String thumbnail = cachedVideo.getThumbnail();
             if (thumbnail != null) {
                 Uri uriForThumbnail = ThumbnailParser.getUriForThumbnail(thumbnail);
-                Glide.with(App.getAppContext())
+                Glide.with(App.Companion.getAppContext())
                         .load(uriForThumbnail)
                         .placeholder(placeholder)
                         .into(videoIcon);
             } else {
-                Glide.with(App.getAppContext())
+                Glide.with(App.Companion.getAppContext())
                         .load("")
                         .placeholder(placeholder)
                         .into(videoIcon);
@@ -454,10 +454,10 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
         public TitleViewHolder(View itemView) {
             super(itemView);
-            titleDownloading = App.getAppContext().getString(R.string.downloading_title);
-            titleForDownloadingButton = App.getAppContext().getString(R.string.downloading_cancel_all);
-            titleCached = App.getAppContext().getString(R.string.cached_title);
-            titleForCachedButton = App.getAppContext().getString(R.string.remove_all);
+            titleDownloading = App.Companion.getAppContext().getString(R.string.downloading_title);
+            titleForDownloadingButton = App.Companion.getAppContext().getString(R.string.downloading_cancel_all);
+            titleCached = App.Companion.getAppContext().getString(R.string.cached_title);
+            titleForCachedButton = App.Companion.getAppContext().getString(R.string.remove_all);
             headerButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -510,7 +510,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
         Bus bus;
 
         public CancelVideoDialog() {
-            App.component().inject(this);
+            App.Companion.component().inject(this);
         }
 
         @NonNull

@@ -35,12 +35,12 @@ public class CertificateAdapter extends RecyclerView.Adapter<CertificateAdapter.
     public CertificateAdapter(@NotNull CertificatePresenter certificatePresenter, @NotNull Activity activity) {
         this.certificatePresenter = certificatePresenter;
         this.activity = activity;
-        certificatePlaceholder = ContextCompat.getDrawable(App.getAppContext(), R.drawable.general_placeholder);
+        certificatePlaceholder = ContextCompat.getDrawable(App.Companion.getAppContext(), R.drawable.general_placeholder);
     }
 
     @Override
     public CertificateViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(activity).inflate(R.layout.certificate_item, null);
+        View v = LayoutInflater.from(activity).inflate(R.layout.certificate_item, parent, false);
         return new CertificateViewHolder(v);
     }
 
@@ -132,7 +132,7 @@ public class CertificateAdapter extends RecyclerView.Adapter<CertificateAdapter.
 
             @NotNull
             final String coverFullPath = certificate.getCoverFullPath() == null ? "" : certificate.getCoverFullPath();
-            Glide.with(App.getAppContext())
+            Glide.with(App.Companion.getAppContext())
                     .load(coverFullPath)
                     .placeholder(certificatePlaceholder)
                     .into(imageViewTarget);

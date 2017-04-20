@@ -12,7 +12,8 @@ import android.support.v7.app.AlertDialog
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
-import org.stepic.droid.core.Shell
+import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.services.UpdateWithApkService
 import org.stepic.droid.util.AppConstants
 import javax.inject.Inject
@@ -36,7 +37,10 @@ class NeedUpdatingDialog : DialogFragment() {
     }
 
     @Inject
-    lateinit var shell: Shell
+    lateinit var screenManager: ScreenManager
+
+    @Inject
+    lateinit var sharedPreferenceHelper : SharedPreferenceHelper
 
     @Inject
     lateinit var analytic : Analytic
@@ -52,13 +56,13 @@ class NeedUpdatingDialog : DialogFragment() {
         builder.setTitle(R.string.update_available_title).setPositiveButton(R.string.update_now) { _, _ ->
             analytic.reportEvent(Analytic.Interaction.UPDATING_MESSAGE_IS_APPROVED)
             if (isInGP) {
-                shell.screenProvider.showStoreWithApp(activity)
+                screenManager.showStoreWithApp(activity)
             } else {
 
                 val permissionCheck = ContextCompat.checkSelfPermission(App.getAppContext(),
                         Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-                    shell.sharedPreferenceHelper.storeTempLink(link)
+                    sharedPreferenceHelper.storeTempLink(link)
 
                     if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
                             Manifest.permission.WRITE_EXTERNAL_STORAGE)) {

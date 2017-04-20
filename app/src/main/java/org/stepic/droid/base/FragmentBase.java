@@ -14,18 +14,19 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.core.AudioFocusHelper;
-import org.stepic.droid.core.Shell;
 import org.stepic.droid.core.LocalProgressManager;
+import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.ShareHelper;
 import org.stepic.droid.fonts.FontsProvider;
 import org.stepic.droid.notifications.LocalReminder;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
-import org.stepic.droid.store.CancelSniffer;
-import org.stepic.droid.store.IDownloadManager;
-import org.stepic.droid.store.operations.DatabaseFacade;
+import org.stepic.droid.storage.CancelSniffer;
+import org.stepic.droid.storage.IDownloadManager;
+import org.stepic.droid.storage.operations.DatabaseFacade;
 import org.stepic.droid.util.resolvers.CoursePropertyResolver;
 import org.stepic.droid.util.resolvers.text.TextResolver;
+import org.stepic.droid.web.Api;
 
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -60,51 +61,61 @@ public class FragmentBase extends Fragment {
     protected FontsProvider fontsProvider;
 
     /**
-     * Do not use bus, try to use presenters, after deleting most part of bus related code project will use RxJava
+     * Do not use bus, prefer to use presenters, after deleting most part of bus related code project will use RxJava
      */
     @Deprecated
     @Inject
-    public Bus bus;
+    protected Bus bus;
 
     @Inject
-    public Config config;
+    protected Config config;
 
     @Inject
-    public Shell shell;
+    protected Api api;
 
     @Inject
-    public LocalProgressManager localProgressManager;
+    protected ScreenManager screenManager;
 
     @Inject
-    public IDownloadManager downloadManager;
+    protected LocalProgressManager localProgressManager;
 
     @Inject
-    public SharedPreferenceHelper sharedPreferenceHelper;
+    protected IDownloadManager downloadManager;
 
     @Inject
-    public UserPreferences userPreferences;
+    protected SharedPreferenceHelper sharedPreferenceHelper;
 
     @Inject
-    public CoursePropertyResolver coursePropertyResolver;
+    protected UserPreferences userPreferences;
 
     @Inject
-    public MainHandler mainHandler;
+    protected CoursePropertyResolver coursePropertyResolver;
 
     @Inject
-    public AudioFocusHelper audioFocusHelper;
+    protected MainHandler mainHandler;
 
     @Inject
-    public DownloadManager systemDownloadManager;
+    protected AudioFocusHelper audioFocusHelper;
 
     @Inject
-    public CancelSniffer cancelSniffer;
+    protected DownloadManager systemDownloadManager;
+
+    @Inject
+    protected CancelSniffer cancelSniffer;
 
     public FragmentBase() {
-        injectComponent();
+
     }
 
     protected void injectComponent() {
-        App.component(App.getAppContext()).inject(this);
+        App.Companion.component().inject(this);
+    }
+
+    /**
+     * optional method for releasing components
+     * mirror of {@code injectComponent()}
+     */
+    protected void onReleaseComponent() {
     }
 
     protected void hideSoftKeypad() {
@@ -125,6 +136,8 @@ public class FragmentBase extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+        injectComponent();
     }
 
     @Override
@@ -139,26 +152,6 @@ public class FragmentBase extends Fragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-
-    @Override
     public void onDestroyView() {
         super.onDestroyView();
         if (unbinder != null) {
@@ -170,6 +163,7 @@ public class FragmentBase extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        onReleaseComponent();
 //        RefWatcher refWatcher = App.getRefWatcher(getActivity());
 //        refWatcher.watch(this);
     }

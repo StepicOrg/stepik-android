@@ -1,15 +1,19 @@
 package org.stepic.droid.core.presenters
 
-import org.stepic.droid.core.DownloadingProgressUnitPublisher
+import org.stepic.droid.core.DownloadingProgressUnitsPublisher
 import org.stepic.droid.core.presenters.contracts.DownloadingProgressUnitsView
+import org.stepic.droid.di.section.SectionScope
 import org.stepic.droid.model.Lesson
 import org.stepic.droid.model.LessonLoadingState
 import java.util.*
+import javax.inject.Inject
 
-class DownloadingProgressUnitsPresenter(
-        private val downloadingProgressUnitPublisher: DownloadingProgressUnitPublisher) : PresenterBase<DownloadingProgressUnitsView>() {
+@SectionScope
+class DownloadingProgressUnitsPresenter
+@Inject constructor(
+        private val downloadingProgressUnitPublisher: DownloadingProgressUnitsPublisher) : PresenterBase<DownloadingProgressUnitsView>() {
 
-    private val downloadCallback = object : DownloadingProgressUnitPublisher.DownloadingProgressCallback {
+    private val downloadCallback = object : DownloadingProgressUnitsPublisher.DownloadingProgressCallback {
         override fun onProgressChanged(lessonId: Long, newPortion: Float) {
             view?.onNewProgressValue(LessonLoadingState(lessonId, newPortion))
         }

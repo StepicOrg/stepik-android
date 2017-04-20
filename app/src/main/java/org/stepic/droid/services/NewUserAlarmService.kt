@@ -4,7 +4,7 @@ import android.app.IntentService
 import android.app.Service
 import android.content.Intent
 import org.stepic.droid.base.App
-import org.stepic.droid.notifications.INotificationManager
+import org.stepic.droid.notifications.StepikNotificationManager
 import javax.inject.Inject
 
 class NewUserAlarmService : IntentService("NewUserAlarm") {
@@ -14,7 +14,7 @@ class NewUserAlarmService : IntentService("NewUserAlarm") {
     }
 
     @Inject
-    lateinit var notificationManager: INotificationManager
+    lateinit var stepikNotificationManager: StepikNotificationManager
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         App.component().inject(this)
@@ -23,6 +23,6 @@ class NewUserAlarmService : IntentService("NewUserAlarm") {
     }
 
     override fun onHandleIntent(intent: Intent?) {
-        notificationManager.showLocalNotificationRemind()
+        stepikNotificationManager.showLocalNotificationRemind()
     }
 }

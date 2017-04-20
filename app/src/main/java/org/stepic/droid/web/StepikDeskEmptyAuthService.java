@@ -12,5 +12,5 @@ public interface StepikDeskEmptyAuthService {
     Call<Void> sendFeedback(@Part(value = "helpdesk_ticket[subject]") String requestSubject,
                             @Part(value = "helpdesk_ticket[email]") String email,
                             @Part(value = "meta[user_agent]") String systemInfo,
-                            @Part(value = "helpdesk_ticket[ticket_body_attributes][description]") String description);
+                            @Part(value = "helpdesk_ticket[ticket_body_attributes][description_html]") String description);
 }

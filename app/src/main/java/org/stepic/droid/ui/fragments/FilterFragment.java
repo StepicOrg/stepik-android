@@ -16,13 +16,12 @@ import android.widget.Checkable;
 
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.base.App;
-import org.stepic.droid.core.modules.FilterModule;
+import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.core.presenters.FilterPresenter;
 import org.stepic.droid.core.presenters.contracts.FilterView;
 import org.stepic.droid.model.StepikFilter;
-import org.stepic.droid.store.operations.Table;
+import org.stepic.droid.storage.operations.Table;
 import org.stepic.droid.util.AppConstants;
 
 import java.util.EnumSet;
@@ -73,7 +72,16 @@ public class FilterFragment extends FragmentBase implements FilterView {
     @Inject
     FilterPresenter filterPresenter;
 
-    Table courseType;
+    private Table courseType;
+
+    @Override
+    protected void injectComponent() {
+        App.Companion
+                .component()
+                .filterComponentBuilder()
+                .build()
+                .inject(this);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -87,11 +95,6 @@ public class FilterFragment extends FragmentBase implements FilterView {
         } else if (filterCode == AppConstants.FEATURED_FILTER) {
             courseType = Table.featured;
         }
-
-        App
-                .component()
-                .plus(new FilterModule())
-                .inject(this);
     }
 
     @Nullable

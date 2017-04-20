@@ -7,28 +7,32 @@ import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.presenters.contracts.CertificateView
+import org.stepic.droid.di.certificates.CertificateScope
 import org.stepic.droid.model.Certificate
 import org.stepic.droid.model.CertificateViewItem
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import org.stepic.droid.store.operations.DatabaseFacade
+import org.stepic.droid.storage.operations.DatabaseFacade
+import org.stepic.droid.web.Api
 import org.stepic.droid.web.CertificateResponse
 import org.stepic.droid.web.CoursesStepicResponse
-import org.stepic.droid.web.Api
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
 import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
+import javax.inject.Inject
 
-class CertificatePresenter(val api: Api,
-                           val config: Config,
-                           val screenManager: ScreenManager,
-                           val database: DatabaseFacade,
-                           val threadPoolExecutor: ThreadPoolExecutor,
-                           val mainHandler: MainHandler,
-                           val sharedPreferenceHelper: SharedPreferenceHelper,
-                           val analytic: Analytic) : PresenterBase<CertificateView>() {
+@CertificateScope
+class CertificatePresenter
+@Inject constructor(
+        private val api: Api,
+        private val config: Config,
+        private val screenManager: ScreenManager,
+        private val database: DatabaseFacade,
+        private val threadPoolExecutor: ThreadPoolExecutor,
+        private val mainHandler: MainHandler,
+        private val sharedPreferenceHelper: SharedPreferenceHelper,
+        private val analytic: Analytic) : PresenterBase<CertificateView>() {
 
     private var certificateViewItemList: ArrayList<CertificateViewItem>? = null
     private var certificatesCall: Call<CertificateResponse>? = null

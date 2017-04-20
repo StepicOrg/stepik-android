@@ -33,11 +33,10 @@ import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.DateTimeFormatterBuilder;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.base.App;
+import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.core.ProfilePresenter;
-import org.stepic.droid.core.modules.ProfileModule;
-import org.stepic.droid.core.presenters.NotificationTimePresenter;
+import org.stepic.droid.core.presenters.StreakPresenter;
 import org.stepic.droid.core.presenters.contracts.NotificationTimeView;
 import org.stepic.droid.core.presenters.contracts.ProfileView;
 import org.stepic.droid.model.UserViewModel;
@@ -126,7 +125,7 @@ public class ProfileFragment extends FragmentBase implements ProfileView, Notifi
     ProfilePresenter profilePresenter;
 
     @Inject
-    NotificationTimePresenter notificationTimePresenter;
+    StreakPresenter streakPresenter;
 
     @BindView(R.id.empty_users)
     View emptyUsers;
@@ -166,9 +165,11 @@ public class ProfileFragment extends FragmentBase implements ProfileView, Notifi
 
     @Override
     protected void injectComponent() {
-        App
+        App.Companion
                 .component()
-                .plus(new ProfileModule()).inject(this);
+                .profileComponentBuilder()
+                .build()
+                .inject(this);
     }
 
     @Nullable
@@ -184,7 +185,7 @@ public class ProfileFragment extends FragmentBase implements ProfileView, Notifi
         initTimezone();
 
         profilePresenter.attachView(this);
-        notificationTimePresenter.attachView(this);
+        streakPresenter.attachView(this);
         profilePresenter.initProfile(userId);
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -240,7 +241,7 @@ public class ProfileFragment extends FragmentBase implements ProfileView, Notifi
         maxStreakValue.setOnClickListener(null);
         profileImage.setOnClickListener(null);
         notificationIntervalValue.setOnClickListener(null);
-        notificationTimePresenter.detachView(this);
+        streakPresenter.detachView(this);
         profilePresenter.detachView(this);
         super.onDestroyView();
     }
@@ -300,7 +301,7 @@ public class ProfileFragment extends FragmentBase implements ProfileView, Notifi
 
         if (userViewModel.isMyProfile()) {
             shortBioTitle.setText(aboutMeTitle);
-            notificationTimePresenter.tryShowNotificationSetting();
+            streakPresenter.tryShowNotificationSetting();
         } else {
             shortBioTitle.setText(shortBioTitleString);
         }
@@ -375,7 +376,7 @@ public class ProfileFragment extends FragmentBase implements ProfileView, Notifi
         notificationStreakSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                notificationTimePresenter.switchNotificationStreak(isChecked);
+                streakPresenter.switchNotificationStreak(isChecked);
                 hideNotificationTime(!isChecked);
             }
         });
@@ -401,7 +402,7 @@ public class ProfileFragment extends FragmentBase implements ProfileView, Notifi
         if (requestCode == NOTIFICATION_INTERVAL_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 int intervalCode = data.getIntExtra(TimeIntervalPickerDialogFragment.Companion.getResultIntervalCodeKey(), TimeIntervalUtil.INSTANCE.getDefaultTimeCode());
-                notificationTimePresenter.setStreakTime(intervalCode);
+                streakPresenter.setStreakTime(intervalCode);
                 analytic.reportEvent(Analytic.Streak.CHOOSE_INTERVAL_PROFILE, intervalCode + "");
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 analytic.reportEvent(Analytic.Streak.CHOOSE_INTERVAL_CANCELED_PROFILE);

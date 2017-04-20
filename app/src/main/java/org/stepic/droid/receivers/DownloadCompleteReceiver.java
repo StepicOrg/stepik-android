@@ -18,9 +18,9 @@ import org.stepic.droid.model.DownloadEntity;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.preferences.UserPreferences;
-import org.stepic.droid.store.CancelSniffer;
-import org.stepic.droid.store.StoreStateManager;
-import org.stepic.droid.store.operations.DatabaseFacade;
+import org.stepic.droid.storage.CancelSniffer;
+import org.stepic.droid.storage.StoreStateManager;
+import org.stepic.droid.storage.operations.DatabaseFacade;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.RWLocks;
 import org.stepic.droid.util.StorageUtil;
@@ -56,7 +56,7 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
 
     public DownloadCompleteReceiver() {
         Timber.d("create DownloadCompleteReceiver");
-        App.component().inject(this);
+        App.Companion.component().inject(this);
     }
 
     @Override
@@ -121,7 +121,7 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                     databaseFacade.updateOnlyCachedLoadingStep(step);
                     storeStateManager.updateUnitLessonState(step.getLesson());
                     final Lesson lesson = databaseFacade.getLessonById(step.getLesson());
-                    Handler mainHandler = new Handler(App.getAppContext().getMainLooper());
+                    Handler mainHandler = new Handler(App.Companion.getAppContext().getMainLooper());
                     //Say to ui that ui is cached now
                     Runnable myRunnable = new Runnable() {
                         @Override

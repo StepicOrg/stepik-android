@@ -55,6 +55,7 @@
     <string name="allow_mobile_message">Разрешить телефону загружать видео по мобильному интернету,
         когда Wi-Fi недоступен?
     </string>
+    <string name="allow_mobile_snack">Загрузка через мобильный интернет недоступна</string>
     <string name="drop_course">Покинуть курс</string>
     <string name="about_course">О курсе</string>
     <string name="you_dropped">Вы покинули</string>
@@ -137,6 +138,7 @@
     <string name="feedback_sent">Сообщение отправлено</string>
     <string name="feedback_fail">Упс… что-то пошло не так. Попробуйте позже</string>
     <string name="internet_problem">Интернет недоступен. Попробуйте позже</string>
+    <string name="internet_problem_short">Интернет недоступен</string>
     <string name="feedback_fill_fields">Заполните пустые поля</string>
     <string name="cant_drop">Вы не можете покинуть курс</string>
     <string name="open_in_external_player">Открывать в системном плеере</string>
@@ -437,6 +439,7 @@
     </string>
     <string name="anonymous_like_mark_comment">Чтобы оценивать комментарии Вам нужно Войти</string>
     <string name="retry">Повторить попытку</string>
+    <string name="retry_internet">Повторить</string>
     <string name="accessibility_drag_and_drop">Нажать и перетащить</string>
     <string name="fill_blanks_select_value"><![CDATA[<Выберите значение>]]></string>
     <string name="fill_blanks_type_text">Введите текст</string>
@@ -444,4 +447,5 @@
     <string name="logout_user_error">Доступ был отозван. Залогиньтесь снова</string>
     <string name="accessibility_video_cover">Обложка видео</string>
     <string name="close_screen">Закрыть экран</string>
+    <string name="google_services_late">Обновите Google Play Services для входа с помощью Google</string>
 </resources>

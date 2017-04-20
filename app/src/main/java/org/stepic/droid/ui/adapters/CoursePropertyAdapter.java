@@ -31,7 +31,7 @@ public class CoursePropertyAdapter extends ArrayAdapter<CourseProperty> {
 
     public CoursePropertyAdapter(Context context, List<CourseProperty> coursePropertyList) {
         super(context, 0, coursePropertyList);
-        App.component().inject(this);
+        App.Companion.component().inject(this);
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -43,7 +43,7 @@ public class CoursePropertyAdapter extends ArrayAdapter<CourseProperty> {
         View view = convertView;
         ViewHolderItem viewHolderItem;
         if (view == null) {
-            view = inflater.inflate(R.layout.course_property_item, null);
+            view = inflater.inflate(R.layout.course_property_item, parent, false);
             viewHolderItem = new ViewHolderItem(view);
             view.setTag(viewHolderItem);
         } else {

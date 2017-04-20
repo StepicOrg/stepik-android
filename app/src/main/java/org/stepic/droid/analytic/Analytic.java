@@ -198,6 +198,8 @@ public interface Analytic {
         String UNITS_LOADING_FAIL = "units_loading_fail";
         String UNPREDICTABLE_LOGIN_RESULT = "login_successful_was_not_correct";
         String LESSON_ACCESS_DENIED = "lesson_access_denied";
+        String SEARCH_COURSE_NO_INTERNET = "search_course_no_internet";
+        String SEARCH_COURSE_UNSUCCESSFUL = "search_course_unsuccessful";
     }
 
     interface Web {
@@ -244,6 +246,7 @@ public interface Analytic {
         String REMIND_ENROLL = "remind_success_user_enroll";
         String REMINDER_SWIPE_TO_CANCEL = "remind_swipe_to_cancel";
         String STREAK_SWIPE_TO_CANCEL = "streak_swipe_to_cancel";
+        String NIGHT_WITHOUT_SOUND_AND_VIBRATE = "notification_night_without_sound_and_vibrate";
     }
 
     interface Feedback {
@@ -360,8 +363,19 @@ public interface Analytic {
         String SUCCESS_LOGIN_AND_ENROLL = "success_login_insta_enroll";
     }
 
-    interface DownloadManager {
+    interface Downloading {
         String DOWNLOAD_MANAGER_IS_NOT_ENABLED = "download_manager_is_not_enabled";
+
+        String SHOW_SNACK_PREFS_SECTIONS = "downloading_show_snack_prefs_sections";
+        String SHOW_SNACK_INTERNET_SECTIONS = "downloading_show_snack_internet_sections";
+        String CLICK_SETTINGS_SECTIONS = "downloading_click_settings_sections";
+        String CLICK_RETRY_SECTIONS = "downloading_click_retry_sections";
+
+        String SHOW_SNACK_PREFS_UNITS = "downloading_show_snack_prefs_units";
+        String SHOW_SNACK_INTERNET_UNITS = "downloading_show_snack_internet_units";
+        String CLICK_SETTINGS_UNITS = "downloading_click_settings_units";
+        String CLICK_RETRY_UNITS = "downloading_click_retry_units";
+
     }
 
     interface SmartLock {

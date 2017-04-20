@@ -12,8 +12,8 @@ import org.stepic.droid.core.LocalProgressManager;
 import org.stepic.droid.events.steps.UpdateStepEvent;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.preferences.UserPreferences;
-import org.stepic.droid.store.StoreStateManager;
-import org.stepic.droid.store.operations.DatabaseFacade;
+import org.stepic.droid.storage.StoreStateManager;
+import org.stepic.droid.storage.operations.DatabaseFacade;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.resolvers.VideoResolver;
 import org.stepic.droid.util.resolvers.StepHelper;
@@ -63,7 +63,7 @@ public class ViewPusher extends IntentService {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        App.component().inject(this);
+        App.Companion.component().inject(this);
         super.onStartCommand(intent, flags, startId);
         return START_REDELIVER_INTENT;
     }

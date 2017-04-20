@@ -75,43 +75,43 @@ public class DeviceInfoUtil {
         }
     }
 
-    public static String getInfosAboutDevice(Context a) {
+    public static String getInfosAboutDevice(Context a, String lineSeparator) {
         String s = "";
         try {
             PackageInfo pInfo = a.getPackageManager().getPackageInfo(
                     a.getPackageName(), PackageManager.GET_META_DATA);
-            s += "\n APP Package Name: " + a.getPackageName();
-            s += "\n APP Version Name: " + pInfo.versionName;
-            s += "\n APP Version Code: " + pInfo.versionCode;
-            s += "\n";
+            s += lineSeparator + " APP Package Name: " + a.getPackageName();
+            s += lineSeparator + " APP Version Name: " + pInfo.versionName;
+            s += lineSeparator + " APP Version Code: " + pInfo.versionCode;
+            s += lineSeparator;
         } catch (NameNotFoundException e) {
         }
-        s += "\n OS Version: " + System.getProperty("os.version") + " ("
+        s += lineSeparator + " OS Version: " + System.getProperty("os.version") + " ("
                 + android.os.Build.VERSION.INCREMENTAL + ")";
-        s += "\n OS API Level: " + android.os.Build.VERSION.SDK;
-        s += "\n Device: " + android.os.Build.DEVICE;
-        s += "\n Model (and Product): " + android.os.Build.MODEL + " ("
+        s += lineSeparator + " OS API Level: " + android.os.Build.VERSION.SDK;
+        s += lineSeparator + " Device: " + android.os.Build.DEVICE;
+        s += lineSeparator + " Model (and Product): " + android.os.Build.MODEL + " ("
                 + android.os.Build.PRODUCT + ")";
         // TODO add application version!
 
         // more from
         // http://developer.android.com/reference/android/os/Build.html :
-        s += "\n Manufacturer: " + android.os.Build.MANUFACTURER;
-        s += "\n Other TAGS: " + android.os.Build.TAGS;
+        s += lineSeparator + " Manufacturer: " + android.os.Build.MANUFACTURER;
+        s += lineSeparator + " Other TAGS: " + android.os.Build.TAGS;
 
 
-        s += "\n Keyboard available: "
+        s += lineSeparator + " Keyboard available: "
                 + (a.getResources().getConfiguration().keyboard != Configuration.KEYBOARD_NOKEYS);
 
-        s += "\n Trackball available: "
+        s += lineSeparator + " Trackball available: "
                 + (a.getResources().getConfiguration().navigation == Configuration.NAVIGATION_TRACKBALL);
-        s += "\n SD Card state: " + Environment.getExternalStorageState();
+        s += lineSeparator + " SD Card state: " + Environment.getExternalStorageState();
         Properties p = System.getProperties();
         Enumeration keys = p.keys();
         String key = "";
         while (keys.hasMoreElements()) {
             key = (String) keys.nextElement();
-            s += "\n > " + key + " = " + (String) p.get(key);
+            s += lineSeparator + " > " + key + " = " + (String) p.get(key);
         }
         return s;
     }
@@ -173,7 +173,7 @@ public class DeviceInfoUtil {
     }
 
 
-    public static String getPackageName () {
-        return App.getAppContext().getPackageName();
+    public static String getPackageName() {
+        return App.Companion.getAppContext().getPackageName();
     }
 }

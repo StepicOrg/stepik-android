@@ -22,7 +22,7 @@ public class DpPixelsHelper {
     }
 
     public static float convertDpToPixel(float dp) {
-        return convertDpToPixel(dp, App.getAppContext());
+        return convertDpToPixel(dp, App.Companion.getAppContext());
     }
 
 

@@ -43,13 +43,7 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
     }
 
     private void init() {
-        App.component().inject(this);
-        setOnLongClickListener(new OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                return true;
-            }
-        });
+        App.Companion.component().inject(this);
         setBackgroundColor(Color.TRANSPARENT);
 
         setOnClickListener(this);

@@ -33,8 +33,7 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.base.StepBaseFragment;
 import org.stepic.droid.core.LessonSessionManager;
-import org.stepic.droid.core.modules.StepModule;
-import org.stepic.droid.core.presenters.NotificationTimePresenter;
+import org.stepic.droid.core.presenters.StreakPresenter;
 import org.stepic.droid.core.presenters.StepAttemptPresenter;
 import org.stepic.droid.core.presenters.contracts.StepAttemptView;
 import org.stepic.droid.events.InternetIsEnabledEvent;
@@ -127,11 +126,16 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
     LessonSessionManager lessonManager;
 
     @Inject
-    NotificationTimePresenter notificationTimePresenter;
+    StreakPresenter streakPresenter;
 
     @Override
     protected void injectComponent() {
-        App.component().plus(new StepModule()).inject(this);
+        App.Companion
+                .getComponentManager()
+                .routingComponent()
+                .stepComponentBuilder()
+                .build()
+                .inject(this);
     }
 
     @Nullable
@@ -529,7 +533,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
         peerReviewIndicator.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                shell.getScreenProvider().openStepInWeb(getContext(), step);
+                screenManager.openStepInWeb(getContext(), step);
             }
         });
     }
@@ -552,7 +556,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
             if (resultCode == Activity.RESULT_OK) {
                 int intervalCode = data.getIntExtra(TimeIntervalPickerDialogFragment.Companion.getResultIntervalCodeKey(), TimeIntervalUtil.INSTANCE.getDefaultTimeCode());
                 sharedPreferenceHelper.setStreakNotificationEnabled(true);
-                notificationTimePresenter.setStreakTime(intervalCode); // we do not need attach this view, because we need only set in model
+                streakPresenter.setStreakTime(intervalCode); // we do not need attach this view, because we need only set in model
                 analytic.reportEvent(Analytic.Streak.CHOOSE_INTERVAL, intervalCode + "");
                 SnackbarExtensionKt
                         .setTextColor(

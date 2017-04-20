@@ -36,7 +36,7 @@ public class AboutAppFragment extends FragmentBase {
             @Override
             public void onClick(View v) {
                 analytic.reportEvent(Analytic.Interaction.CLICK_PRIVACY_POLICY);
-                shell.getScreenProvider().openPrivacyPolicyWeb(getActivity());
+                screenManager.openPrivacyPolicyWeb(getActivity());
             }
         });
 
@@ -44,7 +44,7 @@ public class AboutAppFragment extends FragmentBase {
             @Override
             public void onClick(View v) {
                 analytic.reportEvent(Analytic.Interaction.CLICK_TERMS_OF_SERVICE);
-                shell.getScreenProvider().openTermsOfServiceWeb(getActivity());
+                screenManager.openTermsOfServiceWeb(getActivity());
             }
         });
     }
