@@ -448,4 +448,5 @@
     <string name="accessibility_video_cover">Обложка видео</string>
     <string name="close_screen">Закрыть экран</string>
     <string name="google_services_late">Обновите Google Play Services для входа с помощью Google</string>
+    <string name="next">Дальше</string>
 </resources>

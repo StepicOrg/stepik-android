@@ -102,13 +102,15 @@
                 tools:text="@string/submit"/>
 
             <Button
-                android:id="@+id/try_again_button_on_correct"
-                android:background="?android:attr/selectableItemBackground"
+                android:id="@+id/tryAgainOnCorrectButton"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/min_ux_touchable_size"
                 android:layout_margin="5dp"
+                android:background="?android:attr/selectableItemBackground"
                 android:text="@string/try_again"
-                android:textColor="@color/launchTextColor"/>
+                android:textColor="@color/launchTextColor"
+                android:visibility="gone"
+                tools:visibility="visible"/>
 
         </LinearLayout>
 
