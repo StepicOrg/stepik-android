@@ -36,6 +36,7 @@ import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.ui.adapters.StepFragmentAdapter;
+import org.stepic.droid.ui.listeners.NextMoveable;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.resolvers.StepHelper;
@@ -47,7 +48,7 @@ import javax.inject.Inject;
 import butterknife.BindString;
 import butterknife.BindView;
 
-public class LessonFragment extends FragmentBase implements LessonView, LessonTrackingView {
+public class LessonFragment extends FragmentBase implements LessonView, LessonTrackingView, NextMoveable {
     private static final String FROM_PREVIOUS_KEY = "fromPrevKey";
     private static final String SIMPLE_UNIT_ID_KEY = "simpleUnitId";
     private static final String SIMPLE_LESSON_ID_KEY = "simpleLessonId";
@@ -494,5 +495,23 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
 
     private void trackStepOpening(@NonNull Step step) {
         stepTrackingPresenter.trackStepType(step);
+    }
+
+    @Override
+    public boolean moveNext() {
+        if (viewPager == null || viewPager.getAdapter() == null) {
+            return false;
+        }
+
+        int currentItem = viewPager.getCurrentItem();
+        int lastIndex = viewPager.getAdapter().getCount() - 1;
+        if (currentItem < lastIndex) {
+            viewPager.setCurrentItem(currentItem + 1, true);
+            return true;
+        } else if (currentItem == lastIndex) {
+            return false;
+        }
+
+        return false;
     }
 }

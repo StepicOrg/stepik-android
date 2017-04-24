@@ -49,6 +49,7 @@ import org.stepic.droid.model.Submission;
 import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout;
 import org.stepic.droid.ui.dialogs.DiscountingPolicyDialogFragment;
 import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment;
+import org.stepic.droid.ui.listeners.NextMoveable;
 import org.stepic.droid.ui.util.TimeIntervalUtil;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ColorUtil;
@@ -194,7 +195,16 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
         onNextListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "go to next step", Toast.LENGTH_SHORT).show();
+                v.setOnClickListener(null);
+                boolean handled = ((NextMoveable) getParentFragment()).moveNext();
+                if (!handled) {
+                    if (unit != null) {
+                        routeStepPresenter.clickNextLesson(unit);
+                    } else {
+                        Toast.makeText(getContext(), R.string.cant_show_next_step, Toast.LENGTH_SHORT).show();
+                    }
+                }
+                v.setOnClickListener(this);
             }
         };
 
