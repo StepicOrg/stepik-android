@@ -128,7 +128,10 @@ public class ChoiceStepFragment extends StepAttemptFragment {
 
         for (int i = 0; i < choiceContainer.getChildCount(); i++) {
             StepikOptionView view = (StepikOptionView) choiceContainer.getChildAt(i);
-            view.setChecked(choices.get(i));
+            if (choices.size() > i) {
+                //// sometimes choices can be empty
+                view.setChecked(choices.get(i));
+            }
         }
     }
 
