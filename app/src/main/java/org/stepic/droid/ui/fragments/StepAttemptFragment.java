@@ -195,7 +195,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
         onNextListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                v.setOnClickListener(null);
+                v.setEnabled(false);
                 boolean handled = ((NextMoveable) getParentFragment()).moveNext();
                 if (!handled) {
                     if (unit != null) {
@@ -204,7 +204,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
                         Toast.makeText(getContext(), R.string.cant_show_next_step, Toast.LENGTH_SHORT).show();
                     }
                 }
-                v.setOnClickListener(this);
+                v.setEnabled(true);
             }
         };
 
