@@ -85,7 +85,7 @@
         <activity
             android:name="org.stepic.droid.ui.activities.MainFeedActivity"
             android:label="@string/my_courses_title"
-            android:launchMode="singleInstance">
+            android:launchMode="singleTask">
             <meta-data
                 android:name="android.app.default_searchable"
                 android:value=".ui.activities.CourseSearchResultActivity"/>

@@ -20,7 +20,7 @@ class ProfileMainFeedPresenter
         private val api: Api,
         private val threadPoolExecutor: ThreadPoolExecutor,
         private val analytic: Analytic,
-        private val stepikLogoutManager: StepikLogoutManager) : PresenterBase<ProfileMainFeedView>() {
+        private val stepikLogoutManager: StepikLogoutManager) : PresenterWithPotentialLeak<ProfileMainFeedView>() {
 
     val isProfileFetching = AtomicBoolean(false)
     var profile: Profile? = null
