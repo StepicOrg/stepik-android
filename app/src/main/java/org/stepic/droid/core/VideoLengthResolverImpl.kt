@@ -22,8 +22,12 @@ class VideoLengthResolverImpl @Inject constructor() : VideoLengthResolver {
             }
         }
 
-        val time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
-        val timeInMillis = java.lang.Long.parseLong(time)
+        val time: String? = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
+        val timeInMillis = try {
+            time?.toLong()
+        } catch (numberFormatException: NumberFormatException) {
+            null
+        }
         return timeInMillis
     }
 
