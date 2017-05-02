@@ -359,7 +359,12 @@ public class MainFeedActivity extends BackToExitActivityBase
                 return true;
             case R.id.profile:
                 // do not close drawer for profile
-                screenManager.openProfile(this);
+                // TODO: 02.05.17 make it async or show "sign in" in profile
+                if (sharedPreferenceHelper.getAuthResponseFromStore() == null) {
+                    screenManager.showLaunchScreen(MainFeedActivity.this);
+                } else {
+                    screenManager.openProfile(this);
+                }
                 return true;
             case R.id.feedback:
                 new Handler().postDelayed(new Runnable() {
@@ -690,7 +695,7 @@ public class MainFeedActivity extends BackToExitActivityBase
         if (googleApiClient != null && googleApiClient.isConnected()) {
             Auth.GoogleSignInApi.signOut(googleApiClient);
         }
-        screenManager.showLaunchScreen(this);
+        screenManager.showLaunchScreenAfterLogout(this);
     }
 
     @Override

@@ -1,9 +1,10 @@
 package org.stepic.droid.core
 
-import org.stepic.droid.core.presenters.PresenterBase
+import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.core.presenters.PresenterWithPotentialLeak
 import org.stepic.droid.core.presenters.contracts.ProfileView
 
-abstract class ProfilePresenter : PresenterBase<ProfileView>() {
+abstract class ProfilePresenter (analytic: Analytic) : PresenterWithPotentialLeak<ProfileView>(analytic) {
 
     abstract fun initProfile()
 

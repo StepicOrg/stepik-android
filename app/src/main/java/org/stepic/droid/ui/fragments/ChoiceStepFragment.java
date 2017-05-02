@@ -9,6 +9,7 @@ import android.view.View;
 import com.squareup.otto.Subscribe;
 
 import org.stepic.droid.R;
+import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.events.InternetIsEnabledEvent;
 import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent;
 import org.stepic.droid.events.steps.StepWasUpdatedEvent;
@@ -128,7 +129,12 @@ public class ChoiceStepFragment extends StepAttemptFragment {
 
         for (int i = 0; i < choiceContainer.getChildCount(); i++) {
             StepikOptionView view = (StepikOptionView) choiceContainer.getChildAt(i);
-            view.setChecked(choices.get(i));
+            if (choices.size() > i) {
+                //// sometimes choices can be empty
+                view.setChecked(choices.get(i));
+            } else {
+                analytic.reportEventWithName(Analytic.Error.CHOICES_ARE_SMALLER, submission.getId() + "");
+            }
         }
     }
 
