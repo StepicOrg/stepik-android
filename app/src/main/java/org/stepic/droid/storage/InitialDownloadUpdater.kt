@@ -1,13 +1,13 @@
 package org.stepic.droid.storage
 
 import android.app.DownloadManager
+import android.database.Cursor
 import android.support.annotation.WorkerThread
 import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.model.DownloadEntity
 import org.stepic.droid.storage.operations.DatabaseFacade
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
-import javax.inject.Singleton
 
 @AppSingleton
 class InitialDownloadUpdater
@@ -43,8 +43,8 @@ class InitialDownloadUpdater
 
         val query = DownloadManager.Query()
         query.setFilterById(*currentDownloadingEntitiesMap.keys.toLongArray())
-        val cursor = systemDownloadManager.query(query)
-        cursor.use { cursor ->
+        val cursor : Cursor? = systemDownloadManager.query(query)
+        cursor?.use { cursor ->
             cursor.moveToFirst()
             while (!cursor.isAfterLast) {
                 val columnStatus = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))
