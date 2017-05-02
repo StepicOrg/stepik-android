@@ -202,6 +202,8 @@ public interface Analytic {
         String SEARCH_COURSE_NO_INTERNET = "search_course_no_internet";
         String SEARCH_COURSE_UNSUCCESSFUL = "search_course_unsuccessful";
         String CHOICES_ARE_SMALLER = "choices_are_smaller";
+        String PREVIOUS_VIEW_NOT_DETACHED = "previous_view_not_detached";
+        String UNEXPECTED_VIEW = "unexpected_view";
     }
 
     interface Web {
