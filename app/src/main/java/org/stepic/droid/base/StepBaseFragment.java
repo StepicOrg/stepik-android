@@ -90,7 +90,7 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
 
 
     @Inject
-    RouteStepPresenter routeStepPresenter;
+    protected RouteStepPresenter routeStepPresenter;
 
     @Inject
     AnonymousPresenter anonymousPresenter;
