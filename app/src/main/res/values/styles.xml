@@ -183,6 +183,10 @@
         <item name="android:textSize">@dimen/launch_button_text_size</item>
     </style>
 
+    <style name="TryAgainButton" parent="Base.Widget.AppCompat.Button.Borderless">
+        <item name="android:textColor">@color/launchTextColor</item>
+    </style>
+
     <style name="PrivacyPolicyTextStyle">
         <item name="android:textSize">@dimen/launch_not_button_text_size</item>
         <item name="android:textColorLink">@color/stepic_brand_primary</item>

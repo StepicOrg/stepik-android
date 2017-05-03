@@ -147,10 +147,11 @@ public class FillBlanksAdapter extends RecyclerView.Adapter<FillBlanksAdapter.Fi
             spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    if (position > 0) {
-                        FillBlankComponent fillBlankComponent = componentList.get(getAdapterPosition());
+                    int adapterPosition = getAdapterPosition();
+                    if (position > 0 && adapterPosition >= 0 && adapterPosition < componentList.size()) {
+                        FillBlankComponent fillBlankComponent = componentList.get(adapterPosition);
                         String answer = fillBlankComponent.getOptions().get(position - 1);
-                        changeAnswerAtPosition(getAdapterPosition(), answer);
+                        changeAnswerAtPosition(adapterPosition, answer);
                     }
                 }
 

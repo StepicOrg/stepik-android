@@ -33,8 +33,8 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.base.StepBaseFragment;
 import org.stepic.droid.core.LessonSessionManager;
-import org.stepic.droid.core.presenters.StreakPresenter;
 import org.stepic.droid.core.presenters.StepAttemptPresenter;
+import org.stepic.droid.core.presenters.StreakPresenter;
 import org.stepic.droid.core.presenters.contracts.StepAttemptView;
 import org.stepic.droid.events.InternetIsEnabledEvent;
 import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent;
@@ -49,6 +49,7 @@ import org.stepic.droid.model.Submission;
 import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout;
 import org.stepic.droid.ui.dialogs.DiscountingPolicyDialogFragment;
 import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment;
+import org.stepic.droid.ui.listeners.NextMoveable;
 import org.stepic.droid.ui.util.TimeIntervalUtil;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ColorUtil;
@@ -100,11 +101,19 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
     @BindString(R.string.try_again)
     protected String tryAgainText;
 
+    @BindString(R.string.next)
+    String next;
+
     @BindView(R.id.discounting_policy_textview)
     TextView discountingPolicyTextView;
 
     @BindView(R.id.submission_restriction_textview)
     TextView submissionRestrictionTextView;
+
+    @BindView(R.id.tryAgainOnCorrectButton)
+    View tryAgainOnCorrectButton;
+
+    private View.OnClickListener onNextListener;
 
     protected Attempt attempt = null;
     protected Submission submission = null;
@@ -127,6 +136,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
 
     @Inject
     StreakPresenter streakPresenter;
+    private View.OnClickListener actionButtonGeneralListener;
 
     @Override
     protected void injectComponent() {
@@ -147,7 +157,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
     @Override
     public final void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        setListenerToActionButton(new View.OnClickListener() {
+        actionButtonGeneralListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (submission == null || submission.getStatus() == Submission.Status.LOCAL) {
@@ -170,7 +180,33 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
                     tryAgain();
                 }
             }
-        });
+        };
+        setListenerToActionButton(actionButtonGeneralListener);
+
+        View.OnClickListener onTryAgainCorrectListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                analytic.reportEvent(Analytic.Interaction.CLICK_TRY_STEP_AGAIN_AFTER_CORRECT);
+                tryAgain();
+            }
+        };
+        tryAgainOnCorrectButton.setOnClickListener(onTryAgainCorrectListener);
+
+        onNextListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                v.setEnabled(false);
+                boolean handled = ((NextMoveable) getParentFragment()).moveNext();
+                if (!handled) {
+                    if (unit != null) {
+                        routeStepPresenter.clickNextLesson(unit);
+                    } else {
+                        Toast.makeText(getContext(), R.string.cant_show_next_step, Toast.LENGTH_SHORT).show();
+                    }
+                }
+                v.setEnabled(true);
+            }
+        };
 
         connectionProblem.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -232,18 +268,20 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
             case CORRECT:
                 discountingPolicyTextView.setVisibility(View.GONE); // remove if user was correct
                 submissionRestrictionTextView.setVisibility(View.GONE);
+                tryAgainOnCorrectButton.setVisibility(View.VISIBLE);
+                actionButton.setVisibility(View.VISIBLE);
                 if (step.getHasSubmissionRestriction()) {
-                    actionButton.setVisibility(View.GONE);
+                    tryAgainOnCorrectButton.setVisibility(View.GONE);
                 }
+                setListenerToActionButton(onNextListener);
                 onCorrectSubmission();
-                setTextToActionButton(tryAgainText);
+                setTextToActionButton(next);
                 blockUIBeforeSubmit(true);
-
-                //// FIXME: 22.11.16 transfer to after Submit not passed step
-//                showStreakDialog(3);
                 break;
             case WRONG:
                 onWrongSubmission();
+                setListenerToActionButton(actionButtonGeneralListener);
+                tryAgainOnCorrectButton.setVisibility(View.GONE);
                 setTextToActionButton(tryAgainText);
                 actionButton.setEnabled(true); // "try again" always
                 blockUIBeforeSubmit(true);
@@ -312,6 +350,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
     protected final void showOnlyInternetProblem(boolean isNeedShow) {
         showActionButtonLoadState(!isNeedShow);
         if (isNeedShow) {
+            tryAgainOnCorrectButton.setVisibility(View.GONE);
             actionButton.setVisibility(View.GONE);
         } else {
             actionButton.setVisibility(View.VISIBLE);
@@ -354,6 +393,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
     protected final void tryAgain() {
         showActionButtonLoadState(true);
         blockUIBeforeSubmit(false);
+        setListenerToActionButton(actionButtonGeneralListener);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             attemptContainer.setBackground(rootView.getBackground());
@@ -363,15 +403,16 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
 
         hintTextView.setVisibility(View.GONE);
         statusTextView.setVisibility(View.GONE);
-        actionButton.setText(submitText);
+        tryAgainOnCorrectButton.setVisibility(View.GONE);
+        setTextToActionButton(submitText);
 
         stepAttemptPresenter.tryAgain(step.getId());
         submission = null;
 
     }
 
-    private void setListenerToActionButton(View.OnClickListener l) {
-        actionButton.setOnClickListener(l);
+    private void setListenerToActionButton(View.OnClickListener listener) {
+        actionButton.setOnClickListener(listener);
     }
 
     protected final void markLocalProgressAsViewed() {
@@ -410,6 +451,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
 
     protected void showActionButtonLoadState(boolean isLoading) {
         if (isLoading) {
+            tryAgainOnCorrectButton.setVisibility(View.GONE);
             actionButton.setVisibility(View.GONE);
             ProgressHelper.activate(progressBar);
         } else {
@@ -594,6 +636,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
                 warningText = getString(R.string.restriction_submission_enough);
                 blockUIBeforeSubmit(true);
                 actionButton.setVisibility(View.GONE); //we cant send more
+                tryAgainOnCorrectButton.setVisibility(View.GONE);
             }
             submissionRestrictionTextView.setText(warningText);
             submissionRestrictionTextView.setVisibility(View.VISIBLE);

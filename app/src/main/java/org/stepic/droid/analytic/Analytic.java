@@ -77,6 +77,7 @@ public interface Analytic {
         String CLICK_AUTH_FROM_STEPS = "click_auth_from_steps";
         String SHARE_STEP_CLICK = "share_step_click";
         String CLICK_TRY_STEP_AGAIN = "step_try_again";
+        String CLICK_TRY_STEP_AGAIN_AFTER_CORRECT = "step_try_again_after_correct";
         String NO_DISCOUNTING_DIALOG = "discounting_dialog_no";
         String YES_DISCOUNTING_DIALOG = "discounting_dialog_yes";
         String CLICK_SETTINGS_FROM_NOTIFICATION = "click_settings_from_notification";
@@ -200,6 +201,9 @@ public interface Analytic {
         String LESSON_ACCESS_DENIED = "lesson_access_denied";
         String SEARCH_COURSE_NO_INTERNET = "search_course_no_internet";
         String SEARCH_COURSE_UNSUCCESSFUL = "search_course_unsuccessful";
+        String CHOICES_ARE_SMALLER = "choices_are_smaller";
+        String PREVIOUS_VIEW_NOT_DETACHED = "previous_view_not_detached";
+        String UNEXPECTED_VIEW = "unexpected_view";
     }
 
     interface Web {

@@ -89,6 +89,7 @@ public class StepTypeResolverImpl implements StepTypeResolver {
         mapFromTypeToDrawable.put(AppConstants.TYPE_CODE, hardQuizDrawable);
         mapFromTypeToDrawable.put(AppConstants.TYPE_ADMIN, hardQuizDrawable);
         mapFromTypeToDrawable.put(AppConstants.TYPE_SQL, simpleQuestionDrawable);
+        mapFromTypeToDrawable.put(AppConstants.TYPE_LINUX_CODE, simpleQuestionDrawable);
 
 
         mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_TEXT, theoryDrawableNotViewed);
@@ -110,6 +111,7 @@ public class StepTypeResolverImpl implements StepTypeResolver {
         mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_CODE, hardQuizDrawableNotViewed);
         mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_ADMIN, hardQuizDrawableNotViewed);
         mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_SQL, simpleQuestionDrawableNotViewed);
+        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_LINUX_CODE, simpleQuestionDrawableNotViewed);
 
     }
 
