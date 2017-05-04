@@ -138,6 +138,9 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
         super.onCreateContextMenu(menu, v, menuInfo);
 
         ContextMenuRecyclerView.RecyclerViewContextMenuInfo info = (ContextMenuRecyclerView.RecyclerViewContextMenuInfo) menuInfo;
+        if (info == null) {
+            return;
+        }
         int position = info.position;
         if (position >= courses.size() && position < 0) {
             return; // the context will not be displayed
