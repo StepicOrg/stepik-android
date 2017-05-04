@@ -133,7 +133,11 @@ public class ChoiceStepFragment extends StepAttemptFragment {
                 //// sometimes choices can be empty
                 view.setChecked(choices.get(i));
             } else {
-                analytic.reportEventWithName(Analytic.Error.CHOICES_ARE_SMALLER, submission.getId() + "");
+                String submissionIdAnalytic = "empty";
+                if (submission != null && submission.getId() != null) {
+                    submissionIdAnalytic = submission.getId() + "";
+                }
+                analytic.reportEventWithName(Analytic.Error.CHOICES_ARE_SMALLER, submissionIdAnalytic);
             }
         }
     }
