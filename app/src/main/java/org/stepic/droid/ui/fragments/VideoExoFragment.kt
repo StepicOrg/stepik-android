@@ -15,7 +15,7 @@ import com.google.android.exoplayer2.trackselection.TrackSelectionArray
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
-import kotlinx.android.synthetic.main.fragment_video.*
+import kotlinx.android.synthetic.main.fragment_exo_video.*
 import org.stepic.droid.R
 import org.stepic.droid.base.FragmentBase
 
@@ -116,14 +116,16 @@ class VideoExoFragment : FragmentBase(), ExoPlayer.EventListener, SimpleExoPlaye
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater?.inflate(R.layout.fragment_video, container, false) as ViewGroup
+        return inflater?.inflate(R.layout.fragment_exo_video, container, false) as ViewGroup
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        player?.setVideoSurfaceView(videoSurfaceView)
+        playerView?.player = player
+        player?.videoScalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT
         player?.prepare(mediaSource)
+        playerView?.showController()
     }
 
     override fun onPause() {
