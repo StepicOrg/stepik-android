@@ -20,16 +20,13 @@
 
 package org.stepic.droid.util;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.base.App;
-import org.videolan.libvlc.util.AndroidUtil;
 
 import java.io.BufferedReader;
 import java.io.Closeable;
@@ -65,14 +62,6 @@ public class Util {
             close(is);
             close(r);
         }
-    }
-
-    @TargetApi(android.os.Build.VERSION_CODES.GINGERBREAD)
-    public static void commitPreferences(SharedPreferences.Editor editor) {
-        if (AndroidUtil.isGingerbreadOrLater())
-            editor.apply();
-        else
-            editor.commit();
     }
 
     public static boolean close(Closeable closeable) {

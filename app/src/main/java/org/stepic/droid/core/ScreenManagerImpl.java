@@ -59,7 +59,6 @@ import org.stepic.droid.ui.fragments.SectionsFragment;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.StringUtil;
 import org.stepic.droid.web.ViewAssignment;
-import org.videolan.libvlc.util.VLCUtil;
 
 import java.net.URLEncoder;
 import java.util.Locale;
@@ -280,7 +279,7 @@ public class ScreenManagerImpl implements ScreenManager {
             analytic.reportEvent(Analytic.Video.OPEN_NATIVE);
         }
 
-        boolean isCompatible = VLCUtil.hasCompatibleCPU(App.Companion.getAppContext());
+        boolean isCompatible = true;//..VLCUtil.hasCompatibleCPU(App.Companion.getAppContext());
         if (!isCompatible) {
             analytic.reportEvent(Analytic.Video.NOT_COMPATIBLE);
         }
