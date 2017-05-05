@@ -156,8 +156,8 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback, VideoWithTimestampView 
         progressBar = fragmentContainer?.findViewById(R.id.load_progressbar) as ProgressBar
         progressBar?.visibility = View.VISIBLE
 
-        surfaceFrame = fragmentContainer?.findViewById(R.id.player_surface_frame) as FrameLayout
-        videoView = fragmentContainer?.findViewById(R.id.texture_video_view) as SurfaceView
+//        surfaceFrame = fragmentContainer?.findViewById(R.id.player_surface_frame) as FrameLayout
+        videoView = fragmentContainer?.findViewById(R.id.videoSurfaceView) as SurfaceView
         fragmentContainer?.setOnTouchListener { _, _ ->
             if (true || !isLoading) {
                 showController(!isControllerVisible)

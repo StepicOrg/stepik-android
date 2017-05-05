@@ -2,7 +2,7 @@ package org.stepic.droid.ui.activities
 
 import android.support.v4.app.Fragment
 import org.stepic.droid.base.SingleFragmentActivity
-import org.stepic.droid.ui.fragments.VideoFragment
+import org.stepic.droid.ui.fragments.VideoExoFragment
 import timber.log.Timber
 
 class VideoActivity : SingleFragmentActivity() {
@@ -15,7 +15,7 @@ class VideoActivity : SingleFragmentActivity() {
         val path: String? = intent.extras.getString(videoPathKey)
         val videoId: Long = intent.extras.getLong(videoIdKey)
         if (path != null) {
-            return VideoFragment.newInstance(path, videoId)
+            return VideoExoFragment.newInstance(path, videoId)
         } else {
             return null
         }
