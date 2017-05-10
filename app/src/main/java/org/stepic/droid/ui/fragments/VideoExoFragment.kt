@@ -131,6 +131,8 @@ class VideoExoFragment : FragmentBase(), ExoPlayer.EventListener, SimpleExoPlaye
             }
         }
         videoPlayerView?.controllerShowTimeoutMs = VideoPlayerConstants.TIMEOUT_BEFORE_HIDE
+        videoPlayerView?.setFastForwardIncrementMs(VideoPlayerConstants.JUMP_TIME_MILLIS)
+        videoPlayerView?.setRewindIncrementMs(VideoPlayerConstants.JUMP_TIME_MILLIS)
 
         videoPlayerView?.player = player
         player?.videoScalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT
