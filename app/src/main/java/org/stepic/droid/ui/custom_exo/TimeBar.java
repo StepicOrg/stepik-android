@@ -24,97 +24,97 @@ import android.view.View;
  */
 public interface TimeBar {
 
-  /**
-   * @see View#isEnabled()
-   */
-  void setEnabled(boolean enabled);
-
-  /**
-   * Sets the listener for the scrubbing events.
-   *
-   * @param listener The listener for scrubbing events.
-   */
-  void setListener(OnScrubListener listener);
-
-  /**
-   * Sets the position increment for key presses and accessibility actions, in milliseconds.
-   * <p>
-   * Clears any increment specified in a preceding call to {@link #setKeyCountIncrement(int)}.
-   *
-   * @param time The time increment, in milliseconds.
-   */
-  void setKeyTimeIncrement(long time);
-
-  /**
-   * Sets the position increment for key presses and accessibility actions, as a number of
-   * increments that divide the duration of the media. For example, passing 20 will cause key
-   * presses to increment/decrement the position by 1/20th of the duration (if known).
-   * <p>
-   * Clears any increment specified in a preceding call to {@link #setKeyTimeIncrement(long)}.
-   *
-   * @param count The number of increments that divide the duration of the media.
-   */
-  void setKeyCountIncrement(int count);
-
-  /**
-   * Sets the current position.
-   *
-   * @param position The current position to show, in milliseconds.
-   */
-  void setPosition(long position);
-
-  /**
-   * Sets the buffered position.
-   *
-   * @param bufferedPosition The current buffered position to show, in milliseconds.
-   */
-  void setBufferedPosition(long bufferedPosition);
-
-  /**
-   * Sets the duration.
-   *
-   * @param duration The duration to show, in milliseconds.
-   */
-  void setDuration(long duration);
-
-  /**
-   * Sets the times of ad breaks.
-   *
-   * @param adBreakTimesMs An array where the first {@code adBreakCount} elements are the times of
-   *     ad breaks in milliseconds. May be {@code null} if there are no ad breaks.
-   * @param adBreakCount The number of ad breaks.
-   */
-  void setAdBreakTimesMs(@Nullable long[] adBreakTimesMs, int adBreakCount);
-
-  /**
-   * Listener for scrubbing events.
-   */
-  interface OnScrubListener {
+    /**
+     * @see View#isEnabled()
+     */
+    void setEnabled(boolean enabled);
 
     /**
-     * Called when the user starts moving the scrubber.
+     * Sets the listener for the scrubbing events.
      *
-     * @param timeBar The time bar.
+     * @param listener The listener for scrubbing events.
      */
-    void onScrubStart(TimeBar timeBar);
+    void setListener(OnScrubListener listener);
 
     /**
-     * Called when the user moves the scrubber.
+     * Sets the position increment for key presses and accessibility actions, in milliseconds.
+     * <p>
+     * Clears any increment specified in a preceding call to {@link #setKeyCountIncrement(int)}.
      *
-     * @param timeBar The time bar.
-     * @param position The position of the scrubber, in milliseconds.
+     * @param time The time increment, in milliseconds.
      */
-    void onScrubMove(TimeBar timeBar, long position);
+    void setKeyTimeIncrement(long time);
 
     /**
-     * Called when the user stops moving the scrubber.
+     * Sets the position increment for key presses and accessibility actions, as a number of
+     * increments that divide the duration of the media. For example, passing 20 will cause key
+     * presses to increment/decrement the position by 1/20th of the duration (if known).
+     * <p>
+     * Clears any increment specified in a preceding call to {@link #setKeyTimeIncrement(long)}.
      *
-     * @param timeBar The time bar.
-     * @param position The position of the scrubber, in milliseconds.
-     * @param canceled Whether scrubbing was canceled.
+     * @param count The number of increments that divide the duration of the media.
      */
-    void onScrubStop(TimeBar timeBar, long position, boolean canceled);
+    void setKeyCountIncrement(int count);
 
-  }
+    /**
+     * Sets the current position.
+     *
+     * @param position The current position to show, in milliseconds.
+     */
+    void setPosition(long position);
+
+    /**
+     * Sets the buffered position.
+     *
+     * @param bufferedPosition The current buffered position to show, in milliseconds.
+     */
+    void setBufferedPosition(long bufferedPosition);
+
+    /**
+     * Sets the duration.
+     *
+     * @param duration The duration to show, in milliseconds.
+     */
+    void setDuration(long duration);
+
+    /**
+     * Sets the times of ad breaks.
+     *
+     * @param adBreakTimesMs An array where the first {@code adBreakCount} elements are the times of
+     *                       ad breaks in milliseconds. May be {@code null} if there are no ad breaks.
+     * @param adBreakCount   The number of ad breaks.
+     */
+    void setAdBreakTimesMs(@Nullable long[] adBreakTimesMs, int adBreakCount);
+
+    /**
+     * Listener for scrubbing events.
+     */
+    interface OnScrubListener {
+
+        /**
+         * Called when the user starts moving the scrubber.
+         *
+         * @param timeBar The time bar.
+         */
+        void onScrubStart(TimeBar timeBar);
+
+        /**
+         * Called when the user moves the scrubber.
+         *
+         * @param timeBar  The time bar.
+         * @param position The position of the scrubber, in milliseconds.
+         */
+        void onScrubMove(TimeBar timeBar, long position);
+
+        /**
+         * Called when the user stops moving the scrubber.
+         *
+         * @param timeBar  The time bar.
+         * @param position The position of the scrubber, in milliseconds.
+         * @param canceled Whether scrubbing was canceled.
+         */
+        void onScrubStop(TimeBar timeBar, long position, boolean canceled);
+
+    }
 
 }

@@ -180,7 +180,6 @@ dependencies {
     compile 'com.facebook.stetho:stetho-okhttp3:1.4.2'
 
     //add echo player for video (change playback speed supported)
-    compile 'com.google.android.exoplayer:exoplayer:r2.4.0'
     compile 'com.google.android.exoplayer:exoplayer-core:r2.4.0'
     compile 'com.google.android.exoplayer:exoplayer-dash:r2.4.0'
 

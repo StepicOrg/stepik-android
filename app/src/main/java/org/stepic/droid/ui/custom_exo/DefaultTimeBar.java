@@ -34,17 +34,20 @@ import android.view.ViewParent;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.view.accessibility.AccessibilityNodeInfo.AccessibilityAction;
+
 import com.google.android.exoplayer2.C;
-import com.google.android.exoplayer2.ui.*;
 import com.google.android.exoplayer2.util.Assertions;
 import com.google.android.exoplayer2.util.Util;
+
+import org.stepic.droid.R;
+
 import java.util.Formatter;
 import java.util.Locale;
 
 /**
  * A time bar that shows a current position, buffered position, duration and ad markers.
  */
-public class DefaultTimeBar extends View implements com.google.android.exoplayer2.ui.TimeBar {
+public class DefaultTimeBar extends View implements TimeBar {
 
   /**
    * The threshold in dps above the bar at which touch events trigger fine scrub mode.
@@ -92,7 +95,7 @@ public class DefaultTimeBar extends View implements com.google.android.exoplayer
   private final Runnable stopScrubbingRunnable;
 
   private int scrubberSize;
-  private OnScrubListener listener;
+  private TimeBar.OnScrubListener listener;
   private int keyCountIncrement;
   private long keyTimeIncrement;
   private int lastCoarseScrubXPosition;
@@ -193,7 +196,7 @@ public class DefaultTimeBar extends View implements com.google.android.exoplayer
   }
 
   @Override
-  public void setListener(OnScrubListener listener) {
+  public void setListener(TimeBar.OnScrubListener listener) {
     this.listener = listener;
   }
 

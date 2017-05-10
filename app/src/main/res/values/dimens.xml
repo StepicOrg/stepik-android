@@ -78,4 +78,9 @@
     <dimen name="progress_bar_size">3dp</dimen>
     <dimen name="progress_square_size">7dp</dimen>
     <dimen name="progress_clickable_size">56dp</dimen>
+
+
+    <dimen name="exo_media_button_width">71dp</dimen>
+    <dimen name="exo_media_button_height">52dp</dimen>
+
 </resources>
