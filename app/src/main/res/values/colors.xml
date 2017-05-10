@@ -40,7 +40,10 @@
     <color name="feedback_bad_color">#D64338</color>
     <color name="feedback_good_color">#66CC66
     </color><!-- it is just green correct color, not the stepic primary -->
+
     <color name="transparent_black_30">#4D000000</color>
+    <color name="shadow_on_video_content">#25000000</color>
+
     <color name="overscroll_color">#19A5A5A5</color>
     <color name="default_option_color">#F9FAFB</color>
     <color name="material_grey">#ff757575</color>

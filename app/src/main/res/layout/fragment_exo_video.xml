@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <org.stepic.droid.ui.custom_exo.SimpleExoPlayerView
-        android:id="@+id/playerView"
+        android:id="@+id/videoPlayerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

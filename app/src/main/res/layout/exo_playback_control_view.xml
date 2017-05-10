@@ -8,16 +8,16 @@
     android:animateLayoutChanges="true"
     android:fitsSystemWindows="true">
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom_controller_panel"
+        android:background="#25000000"/>
+
     <RelativeLayout
         android:id="@+id/center_controller_panel"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#25000000">
-        </View>
 
         <View
             android:id="@+id/centered_anchor"
@@ -136,6 +136,7 @@
             tools:src="@drawable/ic_playbackrate_0_5_light"/>
 
     </RelativeLayout>
+
 
 </RelativeLayout>
 

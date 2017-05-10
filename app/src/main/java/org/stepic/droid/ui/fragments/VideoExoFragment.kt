@@ -18,6 +18,7 @@ import com.google.android.exoplayer2.util.Util
 import kotlinx.android.synthetic.main.fragment_exo_video.*
 import org.stepic.droid.R
 import org.stepic.droid.base.FragmentBase
+import org.stepic.droid.ui.custom_exo.NavigationBarUtil
 
 
 class VideoExoFragment : FragmentBase(), ExoPlayer.EventListener, SimpleExoPlayer.VideoListener {
@@ -121,25 +122,28 @@ class VideoExoFragment : FragmentBase(), ExoPlayer.EventListener, SimpleExoPlaye
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        videoPlayerView?.setControllerVisibilityListener { visivility ->
+            if (visivility == View.VISIBLE) {
+                NavigationBarUtil.hideNavigationBar(false, activity)
+            } else if (visivility == View.GONE) {
+                NavigationBarUtil.hideNavigationBar(true, activity)
+            }
+        }
 
-        playerView?.player = player
+        videoPlayerView?.player = player
         player?.videoScalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT
         player?.prepare(mediaSource)
-        playerView?.showController()
+        videoPlayerView?.showController()
     }
 
     override fun onPause() {
         super.onPause()
-        if (Util.SDK_INT <= 23) {
-            releasePlayer()
-        }
+        releasePlayer()
     }
 
-    override fun onStop() {
-        super.onStop()
-        if (Util.SDK_INT > 23) {
-            releasePlayer()
-        }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        videoPlayerView?.setControllerVisibilityListener(null)
     }
 
     private fun releasePlayer() {
