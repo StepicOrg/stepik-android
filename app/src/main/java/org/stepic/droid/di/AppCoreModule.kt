@@ -202,13 +202,6 @@ abstract class AppCoreModule {
             return Executors.newCachedThreadPool() as ThreadPoolExecutor
         }
 
-        @AppSingleton
-        @JvmStatic
-        @Provides
-        internal fun provideAudioFocusHelper(context: Context, mainHandler: MainHandler, bus: Bus): AudioFocusHelper {
-            return AudioFocusHelper(context, bus, mainHandler)
-        }
-
         @Provides
         @JvmStatic
         internal fun provideCommentsManager(): CommentManager {

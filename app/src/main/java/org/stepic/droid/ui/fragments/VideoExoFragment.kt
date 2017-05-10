@@ -1,11 +1,13 @@
 package org.stepic.droid.ui.fragments
 
+import android.media.AudioManager
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.ExoPlayer.STATE_READY
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
 import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.source.TrackGroupArray
@@ -22,7 +24,7 @@ import org.stepic.droid.ui.custom_exo.NavigationBarUtil
 import org.stepic.droid.ui.util.VideoPlayerConstants
 
 
-class VideoExoFragment : FragmentBase(), ExoPlayer.EventListener, SimpleExoPlayer.VideoListener {
+class VideoExoFragment : FragmentBase(), ExoPlayer.EventListener, SimpleExoPlayer.VideoListener, AudioManager.OnAudioFocusChangeListener {
     override fun onVideoSizeChanged(width: Int, height: Int, unappliedRotationDegrees: Int, pixelWidthHeightRatio: Float) {
 //        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -44,6 +46,17 @@ class VideoExoFragment : FragmentBase(), ExoPlayer.EventListener, SimpleExoPlaye
     }
 
     override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
+        when (playbackState) {
+            STATE_READY ->
+                if (playWhenReady) {
+                    //now we click "play"
+                    audioFocusHelper.requestAudioFocus(this)
+                } else {
+                    //pause clicked
+                    audioFocusHelper.releaseAudioFocus(this)
+                }
+        }
+        val i = "wrs"
 //        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
@@ -113,6 +126,7 @@ class VideoExoFragment : FragmentBase(), ExoPlayer.EventListener, SimpleExoPlaye
         mediaSource = ExtractorMediaSource(Uri.parse(filePath), dataSourceFactory, extractorsFactory, null, null)
 
         player?.playWhenReady = true
+        player?.stop()
 //        player?.blockingSendMessages()
 
     }
@@ -134,6 +148,7 @@ class VideoExoFragment : FragmentBase(), ExoPlayer.EventListener, SimpleExoPlaye
         videoPlayerView?.setFastForwardIncrementMs(VideoPlayerConstants.JUMP_TIME_MILLIS)
         videoPlayerView?.setRewindIncrementMs(VideoPlayerConstants.JUMP_TIME_MILLIS)
 
+        audioFocusHelper.requestAudioFocus(this)
         videoPlayerView?.player = player
         player?.videoScalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT
         player?.prepare(mediaSource)
@@ -151,8 +166,20 @@ class VideoExoFragment : FragmentBase(), ExoPlayer.EventListener, SimpleExoPlaye
     }
 
     private fun releasePlayer() {
+        audioFocusHelper.releaseAudioFocus(this)
         player?.release()
         player = null
+    }
+
+    override fun onAudioFocusChange(focusChange: Int) {
+        when (focusChange) {
+//            AudioManager.AUDIOFOCUS_GAIN ->  //do nothing?
+            AudioManager.AUDIOFOCUS_LOSS -> onAudioFocusLoss()
+        }
+    }
+
+    private fun onAudioFocusLoss() {
+        player?.stop()
     }
 
 }
