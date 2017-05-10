@@ -1,8 +1,11 @@
 package org.stepic.droid.ui.fragments
 
+import android.content.Context.TELEPHONY_SERVICE
 import android.media.AudioManager
 import android.net.Uri
 import android.os.Bundle
+import android.telephony.PhoneStateListener
+import android.telephony.TelephonyManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,11 +23,13 @@ import com.google.android.exoplayer2.util.Util
 import kotlinx.android.synthetic.main.fragment_exo_video.*
 import org.stepic.droid.R
 import org.stepic.droid.base.FragmentBase
+import org.stepic.droid.core.MyExoPhoneStateListener
 import org.stepic.droid.ui.custom_exo.NavigationBarUtil
 import org.stepic.droid.ui.util.VideoPlayerConstants
 
 
-class VideoExoFragment : FragmentBase(), ExoPlayer.EventListener, SimpleExoPlayer.VideoListener, AudioManager.OnAudioFocusChangeListener {
+class VideoExoFragment : FragmentBase(), ExoPlayer.EventListener, SimpleExoPlayer.VideoListener, AudioManager.OnAudioFocusChangeListener, MyExoPhoneStateListener.Callback {
+
     override fun onVideoSizeChanged(width: Int, height: Int, unappliedRotationDegrees: Int, pixelWidthHeightRatio: Float) {
 //        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -56,7 +61,6 @@ class VideoExoFragment : FragmentBase(), ExoPlayer.EventListener, SimpleExoPlaye
                     audioFocusHelper.releaseAudioFocus(this)
                 }
         }
-        val i = "wrs"
 //        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
@@ -126,7 +130,6 @@ class VideoExoFragment : FragmentBase(), ExoPlayer.EventListener, SimpleExoPlaye
         mediaSource = ExtractorMediaSource(Uri.parse(filePath), dataSourceFactory, extractorsFactory, null, null)
 
         player?.playWhenReady = true
-        player?.stop()
 //        player?.blockingSendMessages()
 
     }
@@ -155,8 +158,22 @@ class VideoExoFragment : FragmentBase(), ExoPlayer.EventListener, SimpleExoPlaye
         videoPlayerView?.showController()
     }
 
+
+    override fun onResume() {
+        super.onResume()
+        exoPhoneListener.subscribe(this)
+
+        val telephonyManager = context.getSystemService(TELEPHONY_SERVICE) as TelephonyManager
+        telephonyManager.listen(exoPhoneListener, PhoneStateListener.LISTEN_CALL_STATE)
+    }
+
     override fun onPause() {
         super.onPause()
+
+        val telephonyManager = context.getSystemService(TELEPHONY_SERVICE) as TelephonyManager
+        telephonyManager.listen(exoPhoneListener, PhoneStateListener.LISTEN_NONE)
+        exoPhoneListener.unsubscribe()
+
         releasePlayer()
     }
 
@@ -179,7 +196,15 @@ class VideoExoFragment : FragmentBase(), ExoPlayer.EventListener, SimpleExoPlaye
     }
 
     private fun onAudioFocusLoss() {
-        player?.stop()
+        pausePlayer()
     }
 
+    override fun onIncomingCall() {
+        pausePlayer()
+    }
+
+
+    private fun pausePlayer() {
+        player?.playWhenReady = false // pause player
+    }
 }
