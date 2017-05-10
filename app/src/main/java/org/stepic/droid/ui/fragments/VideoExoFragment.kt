@@ -19,6 +19,7 @@ import kotlinx.android.synthetic.main.fragment_exo_video.*
 import org.stepic.droid.R
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.ui.custom_exo.NavigationBarUtil
+import org.stepic.droid.ui.util.VideoPlayerConstants
 
 
 class VideoExoFragment : FragmentBase(), ExoPlayer.EventListener, SimpleExoPlayer.VideoListener {
@@ -129,6 +130,7 @@ class VideoExoFragment : FragmentBase(), ExoPlayer.EventListener, SimpleExoPlaye
                 NavigationBarUtil.hideNavigationBar(true, activity)
             }
         }
+        videoPlayerView?.controllerShowTimeoutMs = VideoPlayerConstants.TIMEOUT_BEFORE_HIDE
 
         videoPlayerView?.player = player
         player?.videoScalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT
