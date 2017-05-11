@@ -29,8 +29,12 @@ import org.stepic.droid.core.presenters.VideoWithTimestampPresenter
 import org.stepic.droid.core.presenters.contracts.VideoWithTimestampView
 import org.stepic.droid.ui.custom_exo.NavigationBarUtil
 import org.stepic.droid.ui.util.VideoPlayerConstants
+import javax.inject.Inject
 
-
+/**
+ * we use onStart/onStop for starting playing and releasing player (instead of onResume/onPause) for supporting Api23+ Multi-Window mode.
+ * We can't split it by api version, because Samsung's Tablets Api21+ can support Multi Window feature
+ */
 class VideoExoFragment : FragmentBase(),
         ExoPlayer.EventListener,
         SimpleExoPlayer.VideoListener,
@@ -39,23 +43,18 @@ class VideoExoFragment : FragmentBase(),
         MyExoPhoneStateListener.Callback {
 
     override fun onVideoSizeChanged(width: Int, height: Int, unappliedRotationDegrees: Int, pixelWidthHeightRatio: Float) {
-//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun onRenderedFirstFrame() {
-//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun onPlaybackParametersChanged(playbackParameters: PlaybackParameters?) {
-//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun onTracksChanged(trackGroups: TrackGroupArray?, trackSelections: TrackSelectionArray?) {
-//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun onPlayerError(error: ExoPlaybackException?) {
-//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
@@ -72,15 +71,12 @@ class VideoExoFragment : FragmentBase(),
     }
 
     override fun onLoadingChanged(isLoading: Boolean) {
-//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun onPositionDiscontinuity() {
-//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun onTimelineChanged(timeline: Timeline?, manifest: Any?) {
-//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     companion object {
@@ -97,11 +93,13 @@ class VideoExoFragment : FragmentBase(),
         }
     }
 
-    private lateinit var filePath: String
-    private var videoId: Long? = null
     private var player: SimpleExoPlayer? = null
-    private lateinit var videoWithTimestampPresenter: VideoWithTimestampPresenter
-    private lateinit var mediaSource: ExtractorMediaSource
+
+    @Inject
+    lateinit var videoWithTimestampPresenter: VideoWithTimestampPresenter
+    private var isAfterOnCreate: Boolean = false
+    private var videoId: Long? = null
+    private var mediaSource: ExtractorMediaSource? = null
 
     override fun injectComponent() {
         App
@@ -114,33 +112,7 @@ class VideoExoFragment : FragmentBase(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
-        filePath = arguments.getString(VIDEO_PATH_KEY)
-        videoId = arguments.getLong(VIDEO_ID_KEY)
-        if (videoId != null && videoId!! <= 0L) { // if equal zero -> it is default, it is not our video
-            videoId = null
-        }
-        val bandwidthMeter = DefaultBandwidthMeter()
-        val adaptiveTrackSelectionFactory = AdaptiveTrackSelection.Factory(bandwidthMeter)
-        val trackSelector = DefaultTrackSelector(adaptiveTrackSelectionFactory)
-        val dataSourceFactory = DefaultDataSourceFactory(context, Util.getUserAgent(context, "Stepik"), bandwidthMeter)
-        val extractorsFactory = DefaultExtractorsFactory()
-
-        player = ExoPlayerFactory.newSimpleInstance(context, trackSelector)
-        player?.addListener(this)
-
-        val eventLogger = EventLogger(trackSelector)
-        player?.addListener(eventLogger)
-        player?.setAudioDebugListener(eventLogger)
-        player?.setVideoDebugListener(eventLogger)
-        player?.setMetadataOutput(eventLogger)
-
-        player?.setVideoListener(this)
-
-        mediaSource = ExtractorMediaSource(Uri.parse(filePath), dataSourceFactory, extractorsFactory, null, null)
-
-        player?.playWhenReady = true
-//        player?.blockingSendMessages()
-
+        isAfterOnCreate = true
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -159,25 +131,25 @@ class VideoExoFragment : FragmentBase(),
         videoPlayerView?.controllerShowTimeoutMs = VideoPlayerConstants.TIMEOUT_BEFORE_HIDE
         videoPlayerView?.setFastForwardIncrementMs(VideoPlayerConstants.JUMP_TIME_MILLIS)
         videoPlayerView?.setRewindIncrementMs(VideoPlayerConstants.JUMP_TIME_MILLIS)
+        videoPlayerView?.requestFocus()
 
-        audioFocusHelper.requestAudioFocus(this)
-        videoPlayerView?.player = player
-        player?.videoScalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT
-        player?.prepare(mediaSource)
-        videoPlayerView?.showController()
         videoWithTimestampPresenter.attachView(this)
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onStart() {
+        super.onStart()
+        // if it is not in locked screen
+        videoId = createPlayer()
+        videoWithTimestampPresenter.showVideoWithPredefinedTimestamp(videoId)
+
         exoPhoneListener.subscribe(this)
 
         val telephonyManager = context.getSystemService(TELEPHONY_SERVICE) as TelephonyManager
         telephonyManager.listen(exoPhoneListener, PhoneStateListener.LISTEN_CALL_STATE)
     }
 
-    override fun onPause() {
-        super.onPause()
+    override fun onStop() {
+        super.onStop()
 
         val telephonyManager = context.getSystemService(TELEPHONY_SERVICE) as TelephonyManager
         telephonyManager.listen(exoPhoneListener, PhoneStateListener.LISTEN_NONE)
@@ -192,8 +164,37 @@ class VideoExoFragment : FragmentBase(),
         videoPlayerView?.setControllerVisibilityListener(null)
     }
 
+    private fun createPlayer(): Long? {
+        val filePath = arguments.getString(VIDEO_PATH_KEY)
+        var videoId: Long? = arguments.getLong(VIDEO_ID_KEY)
+        if (videoId != null && videoId <= 0L) { // if equal zero -> it is default, it is not our video
+            videoId = null
+        }
+        val bandwidthMeter = DefaultBandwidthMeter()
+
+        //make source
+        val dataSourceFactory = DefaultDataSourceFactory(context, Util.getUserAgent(context, "Stepik"), bandwidthMeter)
+        val extractorsFactory = DefaultExtractorsFactory()
+        mediaSource = ExtractorMediaSource(Uri.parse(filePath), dataSourceFactory, extractorsFactory, null, null)
+
+        val adaptiveTrackSelectionFactory = AdaptiveTrackSelection.Factory(bandwidthMeter)
+        val trackSelector = DefaultTrackSelector(adaptiveTrackSelectionFactory)
+        player = ExoPlayerFactory.newSimpleInstance(context, trackSelector)
+        player?.addListener(this)
+        player?.setVideoListener(this)
+
+        audioFocusHelper.requestAudioFocus(this)
+        player?.videoScalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT
+
+        return videoId
+    }
+
     private fun releasePlayer() {
+        videoPlayerView?.player = null
+        videoWithTimestampPresenter.saveMillis(player?.currentPosition ?: 0, videoId)
         audioFocusHelper.releaseAudioFocus(this)
+        player?.removeListener(this)
+        player?.setVideoListener(null)
         player?.release()
         player = null
     }
@@ -213,12 +214,21 @@ class VideoExoFragment : FragmentBase(),
         pausePlayer()
     }
 
-
     private fun pausePlayer() {
         player?.playWhenReady = false // pause player
     }
 
     override fun onNeedShowVideoWithTimestamp(timestamp: Long) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        player?.seekTo(timestamp)
+
+        if (isAfterOnCreate) {
+            player?.playWhenReady = true
+            isAfterOnCreate = false
+        } else {
+            player?.playWhenReady = false
+        }
+        videoPlayerView?.player = player
+        videoPlayerView?.showController()
+        player?.prepare(mediaSource)
     }
 }

@@ -15,8 +15,7 @@ class VideoWithTimestampPresenter
         private val mainHandler: MainHandler,
         private val threadPoolExecutor: ThreadPoolExecutor) : PresenterBase<VideoWithTimestampView>() {
 
-    var cachedTimestamp: Long? = null
-        private set
+    private var cachedTimestamp: Long? = null
 
     fun showVideoWithPredefinedTimestamp(videoId: Long?) {
         if (videoId == null) {
