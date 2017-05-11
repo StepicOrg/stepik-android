@@ -240,6 +240,7 @@ public class PlaybackControlView extends FrameLayout {
     private final Formatter formatter;
     private final Timeline.Period period;
     private final Timeline.Window window;
+    private final View bottomControlPanel;
 
     private ExoPlayer player;
     private ControlDispatcher controlDispatcher;
@@ -312,6 +313,8 @@ public class PlaybackControlView extends FrameLayout {
         durationView = (TextView) findViewById(R.id.exo_duration);
         positionView = (TextView) findViewById(R.id.exo_position);
         timeBar = (TimeBar) findViewById(R.id.exo_progress);
+        bottomControlPanel = findViewById(R.id.bottom_controller_panel);
+        bottomControlPanel.setVisibility(GONE); //VISIBLE after setting position on seekbar
         if (timeBar != null) {
             timeBar.setListener(componentListener);
         }
@@ -627,10 +630,13 @@ public class PlaybackControlView extends FrameLayout {
         if (positionView != null && !scrubbing) {
             positionView.setText(Util.getStringForTime(formatBuilder, formatter, position));
         }
-        if (timeBar != null) {
+        if (timeBar != null && duration != C.TIME_UNSET) {
             timeBar.setPosition(position);
             timeBar.setBufferedPosition(bufferedPosition);
             timeBar.setDuration(duration);
+            if (bottomControlPanel != null && bottomControlPanel.getVisibility() == GONE) {
+                bottomControlPanel.setVisibility(VISIBLE);
+            }
         }
 
         // Cancel any pending updates and schedule a new one if necessary.

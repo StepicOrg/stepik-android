@@ -121,10 +121,10 @@ class VideoExoFragment : FragmentBase(),
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        videoPlayerView?.setControllerVisibilityListener { visivility ->
-            if (visivility == View.VISIBLE) {
+        videoPlayerView?.setControllerVisibilityListener { visibility ->
+            if (visibility == View.VISIBLE) {
                 NavigationBarUtil.hideNavigationBar(false, activity)
-            } else if (visivility == View.GONE) {
+            } else if (visibility == View.GONE) {
                 NavigationBarUtil.hideNavigationBar(true, activity)
             }
         }
@@ -165,6 +165,8 @@ class VideoExoFragment : FragmentBase(),
     }
 
     private fun createPlayer(): Long? {
+        videoPlayerView?.hideController()
+
         val filePath = arguments.getString(VIDEO_PATH_KEY)
         var videoId: Long? = arguments.getLong(VIDEO_ID_KEY)
         if (videoId != null && videoId <= 0L) { // if equal zero -> it is default, it is not our video
@@ -190,7 +192,6 @@ class VideoExoFragment : FragmentBase(),
     }
 
     private fun releasePlayer() {
-        videoPlayerView?.player = null
         videoWithTimestampPresenter.saveMillis(player?.currentPosition ?: 0, videoId)
         audioFocusHelper.releaseAudioFocus(this)
         player?.removeListener(this)
@@ -220,7 +221,6 @@ class VideoExoFragment : FragmentBase(),
 
     override fun onNeedShowVideoWithTimestamp(timestamp: Long) {
         player?.seekTo(timestamp)
-
         if (isAfterOnCreate) {
             player?.playWhenReady = true
             isAfterOnCreate = false
@@ -229,6 +229,6 @@ class VideoExoFragment : FragmentBase(),
         }
         videoPlayerView?.player = player
         videoPlayerView?.showController()
-        player?.prepare(mediaSource)
+        player?.prepare(mediaSource, false, false)
     }
 }
