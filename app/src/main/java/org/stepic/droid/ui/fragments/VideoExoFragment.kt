@@ -22,13 +22,21 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
 import kotlinx.android.synthetic.main.fragment_exo_video.*
 import org.stepic.droid.R
+import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.core.MyExoPhoneStateListener
+import org.stepic.droid.core.presenters.VideoWithTimestampPresenter
+import org.stepic.droid.core.presenters.contracts.VideoWithTimestampView
 import org.stepic.droid.ui.custom_exo.NavigationBarUtil
 import org.stepic.droid.ui.util.VideoPlayerConstants
 
 
-class VideoExoFragment : FragmentBase(), ExoPlayer.EventListener, SimpleExoPlayer.VideoListener, AudioManager.OnAudioFocusChangeListener, MyExoPhoneStateListener.Callback {
+class VideoExoFragment : FragmentBase(),
+        ExoPlayer.EventListener,
+        SimpleExoPlayer.VideoListener,
+        AudioManager.OnAudioFocusChangeListener,
+        VideoWithTimestampView,
+        MyExoPhoneStateListener.Callback {
 
     override fun onVideoSizeChanged(width: Int, height: Int, unappliedRotationDegrees: Int, pixelWidthHeightRatio: Float) {
 //        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -61,7 +69,6 @@ class VideoExoFragment : FragmentBase(), ExoPlayer.EventListener, SimpleExoPlaye
                     audioFocusHelper.releaseAudioFocus(this)
                 }
         }
-//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun onLoadingChanged(isLoading: Boolean) {
@@ -77,14 +84,8 @@ class VideoExoFragment : FragmentBase(), ExoPlayer.EventListener, SimpleExoPlaye
     }
 
     companion object {
-        private val TIMEOUT_BEFORE_HIDE = 4500L
-        private val INDEX_PLAY_IMAGE = 0
-        private val INDEX_PAUSE_IMAGE = 1
-        private val JUMP_TIME_MILLIS = 10000L
-        private val JUMP_MAX_DELTA = 3000L
         private val VIDEO_PATH_KEY = "video_path_key"
         private val VIDEO_ID_KEY = "video_id_key"
-        private val DELTA_TIME = 0L
 
         fun newInstance(videoUri: String, videoId: Long): VideoExoFragment {
             val args = Bundle()
@@ -99,8 +100,16 @@ class VideoExoFragment : FragmentBase(), ExoPlayer.EventListener, SimpleExoPlaye
     private lateinit var filePath: String
     private var videoId: Long? = null
     private var player: SimpleExoPlayer? = null
-
+    private lateinit var videoWithTimestampPresenter: VideoWithTimestampPresenter
     private lateinit var mediaSource: ExtractorMediaSource
+
+    override fun injectComponent() {
+        App
+                .component()
+                .videoComponentBuilder()
+                .build()
+                .inject(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -156,8 +165,8 @@ class VideoExoFragment : FragmentBase(), ExoPlayer.EventListener, SimpleExoPlaye
         player?.videoScalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT
         player?.prepare(mediaSource)
         videoPlayerView?.showController()
+        videoWithTimestampPresenter.attachView(this)
     }
-
 
     override fun onResume() {
         super.onResume()
@@ -179,6 +188,7 @@ class VideoExoFragment : FragmentBase(), ExoPlayer.EventListener, SimpleExoPlaye
 
     override fun onDestroyView() {
         super.onDestroyView()
+        videoWithTimestampPresenter.detachView(this)
         videoPlayerView?.setControllerVisibilityListener(null)
     }
 
@@ -206,5 +216,9 @@ class VideoExoFragment : FragmentBase(), ExoPlayer.EventListener, SimpleExoPlaye
 
     private fun pausePlayer() {
         player?.playWhenReady = false // pause player
+    }
+
+    override fun onNeedShowVideoWithTimestamp(timestamp: Long) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

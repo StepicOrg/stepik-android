@@ -26,8 +26,8 @@ class VideoWithTimestampPresenter
 
         if (cachedTimestamp != null) {
             view?.onNeedShowVideoWithTimestamp(cachedTimestamp ?: 0L)
+            return
         }
-
 
         threadPoolExecutor.execute {
             val timestamp: Long? = databaseFacade.getVideoTimestamp(videoId)?.timestamp
@@ -40,6 +40,7 @@ class VideoWithTimestampPresenter
 
     fun saveMillis(currentTimeInMillis: Long, videoId: Long?) {
         if (videoId == null || currentTimeInMillis <= 0) return
+        cachedTimestamp = currentTimeInMillis
         threadPoolExecutor.execute {
             databaseFacade.addTimestamp(VideoTimestamp(videoId, currentTimeInMillis))
         }
