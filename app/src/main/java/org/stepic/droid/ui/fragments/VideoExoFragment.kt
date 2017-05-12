@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.ExoPlayer.STATE_ENDED
 import com.google.android.exoplayer2.ExoPlayer.STATE_READY
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
 import com.google.android.exoplayer2.source.ExtractorMediaSource
@@ -67,6 +68,10 @@ class VideoExoFragment : FragmentBase(),
                     //pause clicked
                     audioFocusHelper.releaseAudioFocus(this)
                 }
+            STATE_ENDED -> {
+                videoWithTimestampPresenter.saveMillis(0L, videoId)
+                activity?.finish()
+            }
         }
     }
 
@@ -82,6 +87,8 @@ class VideoExoFragment : FragmentBase(),
     companion object {
         private val VIDEO_PATH_KEY = "video_path_key"
         private val VIDEO_ID_KEY = "video_id_key"
+
+        private val saveEpsilon = 1000L
 
         fun newInstance(videoUri: String, videoId: Long): VideoExoFragment {
             val args = Bundle()
@@ -196,14 +203,13 @@ class VideoExoFragment : FragmentBase(),
         val duration = player?.duration
         if (currentPosition != null && duration != null) {
             //save only when info of time is exist
-            if (duration > 0 && currentPosition >= duration) {
+            if (duration > 0 && currentPosition + saveEpsilon >= duration) {
                 //end of the video
                 videoWithTimestampPresenter.saveMillis(0, videoId)
             } else {
                 videoWithTimestampPresenter.saveMillis(currentPosition, videoId)
             }
         }
-        videoWithTimestampPresenter.saveMillis(currentPosition ?: 0, videoId)
         audioFocusHelper.releaseAudioFocus(this)
         player?.removeListener(this)
         player?.setVideoListener(null)

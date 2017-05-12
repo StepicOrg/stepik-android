@@ -45,9 +45,11 @@ class VideoWithTimestampPresenter
 
     fun saveMillis(currentTimeInMillis: Long, videoId: Long?) {
         if (currentTimeInMillis < 0) return
+        val oldCachedTimeStamp = cachedTimestamp
         cachedTimestamp = currentTimeInMillis
-        if (videoId == null) {
+        if (videoId == null || oldCachedTimeStamp == currentTimeInMillis) {
             //videoId null is saved only locally
+            //if we already cache timestamp -> not cache it again
             return
         }
         threadPoolExecutor.execute {
