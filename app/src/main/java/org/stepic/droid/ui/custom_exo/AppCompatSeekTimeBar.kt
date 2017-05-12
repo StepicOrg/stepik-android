@@ -3,11 +3,16 @@ package org.stepic.droid.ui.custom_exo
 import android.content.Context
 import android.support.v7.widget.AppCompatSeekBar
 import android.util.AttributeSet
+import android.view.MotionEvent
+import android.view.View
 import android.widget.SeekBar
 import timber.log.Timber
 
 class AppCompatSeekTimeBar : AppCompatSeekBar, TimeBar, SeekBar.OnSeekBarChangeListener {
     private var listener: TimeBar.OnScrubListener? = null
+    private val notTouchableOnTouchListener: (View?, MotionEvent?) -> Boolean by lazy {
+        { _: View?, _: MotionEvent? -> true }
+    }
 
     constructor(context: Context) : this(context, null) {}
 
@@ -62,6 +67,15 @@ class AppCompatSeekTimeBar : AppCompatSeekBar, TimeBar, SeekBar.OnSeekBarChangeL
 
     override fun onStopTrackingTouch(seekBar: SeekBar?) {
         listener?.onScrubStop(this, this.progress.toLong(), false)
+    }
+
+    override fun setEnabled(enabled: Boolean) {
+        //we do it, because setEnabled add some extra effects, we should make it just not seekable
+        if (!enabled) {
+            setOnTouchListener(notTouchableOnTouchListener)
+        } else {
+            setOnTouchListener(null)
+        }
     }
 
 

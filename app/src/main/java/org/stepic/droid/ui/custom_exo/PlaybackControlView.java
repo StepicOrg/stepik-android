@@ -631,9 +631,9 @@ public class PlaybackControlView extends FrameLayout {
             positionView.setText(Util.getStringForTime(formatBuilder, formatter, position));
         }
         if (timeBar != null && duration != C.TIME_UNSET) {
+            timeBar.setDuration(duration);
             timeBar.setPosition(position);
             timeBar.setBufferedPosition(bufferedPosition);
-            timeBar.setDuration(duration);
             if (bottomControlPanel != null && bottomControlPanel.getVisibility() == GONE) {
                 bottomControlPanel.setVisibility(VISIBLE);
             }
