@@ -12,7 +12,38 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/bottom_controller_panel"
+        android:layout_below="@+id/topControllerPanel"
         android:background="#25000000"/>
+
+    <RelativeLayout
+        android:id="@+id/topControllerPanel"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@color/transparent_black_30">
+
+        <FrameLayout
+            android:id="@+id/closeButton"
+            android:layout_width="@dimen/min_ux_touchable_size"
+            android:layout_height="@dimen/min_ux_touchable_size"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/guideline_standard_padding"
+            android:layout_marginStart="@dimen/guideline_standard_padding"
+            android:layout_marginTop="@dimen/guideline_standard_padding"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:contentDescription="@string/close_screen">
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:clickable="false"
+                android:src="@drawable/ic_close_white_24dp"/>
+        </FrameLayout>
+
+
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/center_controller_panel"
