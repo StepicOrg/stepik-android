@@ -192,7 +192,18 @@ class VideoExoFragment : FragmentBase(),
     }
 
     private fun releasePlayer() {
-        videoWithTimestampPresenter.saveMillis(player?.currentPosition ?: 0, videoId)
+        val currentPosition = player?.currentPosition
+        val duration = player?.duration
+        if (currentPosition != null && duration != null) {
+            //save only when info of time is exist
+            if (duration > 0 && currentPosition >= duration) {
+                //end of the video
+                videoWithTimestampPresenter.saveMillis(0, videoId)
+            } else {
+                videoWithTimestampPresenter.saveMillis(currentPosition, videoId)
+            }
+        }
+        videoWithTimestampPresenter.saveMillis(currentPosition ?: 0, videoId)
         audioFocusHelper.releaseAudioFocus(this)
         player?.removeListener(this)
         player?.setVideoListener(null)

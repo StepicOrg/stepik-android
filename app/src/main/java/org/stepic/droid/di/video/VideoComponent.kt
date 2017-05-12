@@ -5,7 +5,7 @@ import org.stepic.droid.ui.fragments.VideoExoFragment
 import org.stepic.droid.ui.fragments.VideoFragment
 
 @VideoScope
-@Subcomponent
+@Subcomponent(modules = arrayOf(VideoModule::class))
 interface VideoComponent {
 
     @Subcomponent.Builder
