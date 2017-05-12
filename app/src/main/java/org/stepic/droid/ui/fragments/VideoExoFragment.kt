@@ -1,6 +1,7 @@
 package org.stepic.droid.ui.fragments
 
 import android.content.Context.TELEPHONY_SERVICE
+import android.content.pm.ActivityInfo
 import android.media.AudioManager
 import android.net.Uri
 import android.os.Bundle
@@ -150,6 +151,12 @@ class VideoExoFragment : FragmentBase(),
         }
 
         videoWithTimestampPresenter.attachView(this)
+    }
+
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
     }
 
     override fun onStart() {
