@@ -24,11 +24,13 @@ import com.google.android.exoplayer2.util.Util
 import kotlinx.android.synthetic.main.exo_playback_control_view.*
 import kotlinx.android.synthetic.main.fragment_exo_video.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.core.MyExoPhoneStateListener
 import org.stepic.droid.core.presenters.VideoWithTimestampPresenter
 import org.stepic.droid.core.presenters.contracts.VideoWithTimestampView
+import org.stepic.droid.preferences.VideoPlaybackRate
 import org.stepic.droid.ui.custom_exo.NavigationBarUtil
 import org.stepic.droid.ui.util.VideoPlayerConstants
 import javax.inject.Inject
@@ -143,6 +145,9 @@ class VideoExoFragment : FragmentBase(),
         closeButton.setOnClickListener {
             activity?.finish()
         }
+        videoRateChooser.setOnClickListener {
+            showChooseRateMenu(it)
+        }
 
         videoWithTimestampPresenter.attachView(this)
     }
@@ -199,7 +204,15 @@ class VideoExoFragment : FragmentBase(),
         audioFocusHelper.requestAudioFocus(this)
         player?.videoScalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT
 
+        val videoPlaybackRate = userPreferences.videoPlaybackRate //this call from SharedPreferences, todo: make it from background thread
+        setVideoRate(videoPlaybackRate)
+
         return videoId
+    }
+
+    private fun setVideoRate(videoPlaybackRate: VideoPlaybackRate) {
+        player?.playbackParameters = PlaybackParameters(videoPlaybackRate.rateFloat, videoPlaybackRate.rateFloat)
+        videoRateChooser?.setImageDrawable(videoPlaybackRate.icon)
     }
 
     private fun releasePlayer() {
@@ -252,4 +265,19 @@ class VideoExoFragment : FragmentBase(),
         videoPlayerView?.showController()
         player?.prepare(mediaSource, false, false)
     }
+
+
+    private fun showChooseRateMenu(view: View) {
+        analytic.reportEvent(Analytic.Video.SHOW_CHOOSE_RATE)
+        val popupMenu = android.widget.PopupMenu(App.getAppContext(), view)
+        popupMenu.inflate(R.menu.video_rate_menu)
+        popupMenu.setOnMenuItemClickListener {
+            val rate = VideoPlaybackRate.getValueById(it.itemId)
+            setVideoRate(rate)
+            userPreferences.videoPlaybackRate = rate
+            true
+        }
+        popupMenu.show()
+    }
+
 }

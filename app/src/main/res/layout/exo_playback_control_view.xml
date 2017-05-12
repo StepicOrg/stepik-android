@@ -157,7 +157,7 @@
 
 
         <ImageView
-            android:id="@+id/rate_chooser"
+            android:id="@+id/videoRateChooser"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_alignLeft="@id/exo_progress"

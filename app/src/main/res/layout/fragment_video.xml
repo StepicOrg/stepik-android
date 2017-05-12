@@ -146,7 +146,7 @@
 
 
                     <ImageView
-                        android:id="@+id/rate_chooser"
+                        android:id="@+id/video_rate"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_centerInParent="true"
