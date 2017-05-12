@@ -21,6 +21,7 @@ import com.google.android.exoplayer2.trackselection.TrackSelectionArray
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
+import kotlinx.android.synthetic.main.exo_playback_control_view.*
 import kotlinx.android.synthetic.main.fragment_exo_video.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
@@ -128,17 +129,20 @@ class VideoExoFragment : FragmentBase(),
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        videoPlayerView?.setControllerVisibilityListener { visibility ->
+        videoPlayerView.setControllerVisibilityListener { visibility ->
             if (visibility == View.VISIBLE) {
                 NavigationBarUtil.hideNavigationBar(false, activity)
             } else if (visibility == View.GONE) {
                 NavigationBarUtil.hideNavigationBar(true, activity)
             }
         }
-        videoPlayerView?.controllerShowTimeoutMs = VideoPlayerConstants.TIMEOUT_BEFORE_HIDE
-        videoPlayerView?.setFastForwardIncrementMs(VideoPlayerConstants.JUMP_TIME_MILLIS)
-        videoPlayerView?.setRewindIncrementMs(VideoPlayerConstants.JUMP_TIME_MILLIS)
-        videoPlayerView?.requestFocus()
+        videoPlayerView.controllerShowTimeoutMs = VideoPlayerConstants.TIMEOUT_BEFORE_HIDE
+        videoPlayerView.setFastForwardIncrementMs(VideoPlayerConstants.JUMP_TIME_MILLIS)
+        videoPlayerView.setRewindIncrementMs(VideoPlayerConstants.JUMP_TIME_MILLIS)
+        videoPlayerView.requestFocus()
+        closeButton.setOnClickListener {
+            activity?.finish()
+        }
 
         videoWithTimestampPresenter.attachView(this)
     }
