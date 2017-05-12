@@ -300,4 +300,14 @@ public class UserPreferences {
     public void setNotificationEnabled(NotificationType type, boolean isEnabled) {
         sharedPreferenceHelper.setNotificationDisabled(type, !isEnabled);
     }
+
+    boolean isScreenLocked = false;
+
+    public void setScreenLocked(boolean screenLocked) {
+        isScreenLocked = screenLocked;
+    }
+
+    public boolean isScreenLocked() {
+        return isScreenLocked;
+    }
 }

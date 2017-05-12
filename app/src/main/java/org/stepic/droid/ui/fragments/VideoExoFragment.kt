@@ -150,13 +150,22 @@ class VideoExoFragment : FragmentBase(),
             showChooseRateMenu(it)
         }
 
+        screenLockImageView.setOnClickListener {
+            switchLockingState()
+        }
+
         videoWithTimestampPresenter.attachView(this)
+    }
+
+    private fun switchLockingState() {
+        val isLocked = userPreferences.isScreenLocked
+        userPreferences.isScreenLocked = !isLocked
+        setScreenLock(!isLocked)
     }
 
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
     }
 
     override fun onStart() {
@@ -214,7 +223,19 @@ class VideoExoFragment : FragmentBase(),
         val videoPlaybackRate = userPreferences.videoPlaybackRate //this call from SharedPreferences, todo: make it from background thread
         setVideoRate(videoPlaybackRate)
 
+        setScreenLock(!userPreferences.isScreenLocked)//todo:make userPrefs call async
+
         return videoId
+    }
+
+    private fun setScreenLock(isLocked: Boolean) {
+        if (isLocked) {
+            screenLockImageView.setImageResource(R.drawable.ic_lock_outline_white_48dp)
+            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+        } else {
+            screenLockImageView.setImageResource(R.drawable.ic_lock_open_white_48dp)
+            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
+        }
     }
 
     private fun setVideoRate(videoPlaybackRate: VideoPlaybackRate) {
