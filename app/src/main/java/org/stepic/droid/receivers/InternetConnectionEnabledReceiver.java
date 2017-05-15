@@ -64,6 +64,8 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
 
     private AtomicBoolean inWork = new AtomicBoolean(false);
 
+    private static Boolean isLastStateWasOffline = null;
+
 
     public InternetConnectionEnabledReceiver() {
         App.Companion.component().inject(this);
@@ -71,7 +73,7 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, final Intent intent) {
-        if (!isOnline(App.Companion.getAppContext()) || inWork.get()) return;
+        if (!isDeviceChangeStateToOnline(App.Companion.getAppContext()) || inWork.get()) return;
         inWork.set(true);
         mainHandler.post(new Function0<Unit>() {
             @Override
@@ -126,12 +128,18 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
         });
     }
 
-    private boolean isOnline(Context context) {
+    private boolean isDeviceChangeStateToOnline(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         //should check null because in air plan mode it will be null
-        return (netInfo != null && netInfo.isConnected());
-
+        boolean isOnlineNow = netInfo != null && netInfo.isConnected();
+        if (isOnlineNow && (isLastStateWasOffline == null || isLastStateWasOffline)) {
+            isLastStateWasOffline = false;
+            return true;
+        } else {
+            isLastStateWasOffline = true;
+            return false;
+        }
     }
 
 }

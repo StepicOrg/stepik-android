@@ -13,8 +13,7 @@ import android.view.ViewGroup
 import android.widget.PopupMenu
 import android.widget.Toast
 import com.google.android.exoplayer2.*
-import com.google.android.exoplayer2.ExoPlayer.STATE_ENDED
-import com.google.android.exoplayer2.ExoPlayer.STATE_READY
+import com.google.android.exoplayer2.ExoPlayer.*
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
 import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.source.TrackGroupArray
@@ -38,6 +37,7 @@ import org.stepic.droid.core.presenters.contracts.VideoWithTimestampView
 import org.stepic.droid.preferences.VideoPlaybackRate
 import org.stepic.droid.ui.custom_exo.NavigationBarUtil
 import org.stepic.droid.ui.util.VideoPlayerConstants
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -343,6 +343,29 @@ class VideoExoFragment : FragmentBase(),
 
     override fun onInternetEnabled() {
         Toast.makeText(context, "Internet On", Toast.LENGTH_SHORT).show()
+        val state = player?.playbackState
+//        when * /
+//        val STATE_IDLE = 1
+//        /**
+//         * The player not able to immediately play from the current position. The cause is
+//         * [Renderer] specific, but this state typically occurs when more data needs to be
+//         * loaded to be ready to play, or more data needs to be buffered for playback to resume.
+//         */
+//        val STATE_BUFFERING = 2
+//        /**
+//         * The player is able to immediately play from the current position. The player will be playing if
+//         * [.getPlayWhenReady] returns true, and paused otherwise.
+//         */
+//        val STATE_READY = 3
+//        /**
+//         * The player has finished playing the media.
+//         */
+//        val STATE_ENDED = 4
+        Timber.d("state ${player?.playbackState}, playWhenready = ${player?.playWhenReady}")
+        if (player != null && player?.playbackState == STATE_IDLE && player?.playWhenReady == true) {
+            releasePlayer()
+            createPlayer()
+        }
     }
 
 }
