@@ -301,13 +301,11 @@ public class UserPreferences {
         sharedPreferenceHelper.setNotificationDisabled(type, !isEnabled);
     }
 
-    boolean isRotateVideo = true;
-
     public boolean isRotateVideo() {
-        return isRotateVideo;
+        return sharedPreferenceHelper.needRotate();
     }
 
     public void setRotateVideo(boolean rotateVideo) {
-        isRotateVideo = rotateVideo;
+        sharedPreferenceHelper.setRotateAlways(rotateVideo);
     }
 }
