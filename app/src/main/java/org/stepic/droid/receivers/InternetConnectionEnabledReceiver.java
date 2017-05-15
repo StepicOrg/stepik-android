@@ -36,8 +36,10 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
 
     @Inject
     Api api;
+
     @Inject
     DatabaseFacade databaseFacade;
+
     @Inject
     StoreStateManager storeStateManager;
 
