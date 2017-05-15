@@ -4,7 +4,7 @@ import android.app.Activity
 import android.view.View
 import android.view.WindowManager
 import org.stepic.droid.util.AndroidDevices
-import org.stepic.droid.util.hasCominationBar
+import org.stepic.droid.util.hasCombinationBar
 import org.stepic.droid.util.isJellyBeanOrLater
 import org.stepic.droid.util.isKitKatOrLater
 
@@ -26,7 +26,7 @@ object NavigationBarUtil {
             activity.window?.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
             @Suppress("DEPRECATION")
             navigationBar = navigationBar or View.SYSTEM_UI_FLAG_LOW_PROFILE
-            if (!hasCominationBar(activity.applicationContext)) {
+            if (!hasCombinationBar(activity.applicationContext)) {
                 navigationBar = navigationBar or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 if (isKitKatOrLater()) {
                     visibility = visibility or View.SYSTEM_UI_FLAG_IMMERSIVE
