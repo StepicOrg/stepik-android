@@ -42,6 +42,29 @@
                 android:src="@drawable/ic_close_white_24dp"/>
         </FrameLayout>
 
+        <ImageView
+            android:id="@+id/videoRateChooser"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="2dp"
+            android:layout_marginRight="2dp"
+            android:layout_toLeftOf="@+id/moreItemsView"
+            android:layout_toStartOf="@+id/moreItemsView"
+            android:padding="4dp"
+            tools:src="@drawable/ic_playbackrate_0_5_light"/>
+
+        <ImageView
+            android:id="@+id/moreItemsView"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:padding="@dimen/half_padding"
+            android:src="@drawable/ic_more_vert_white_48_include_padding"
+        />
+
 
     </RelativeLayout>
 
@@ -155,39 +178,6 @@
             android:layout_alignParentRight="true"
             tools:text="03:35"/>
 
-
-        <View
-            android:id="@+id/centerInParentAnchor"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_centerInParent="true"
-            android:visibility="invisible"
-        />
-
-        <ImageView
-            android:id="@+id/videoRateChooser"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_below="@id/exo_progress"
-            android:layout_marginEnd="@dimen/guideline_standard_padding"
-            android:layout_marginRight="@dimen/guideline_standard_padding"
-            android:layout_marginTop="@dimen/guideline_standard_padding"
-            android:layout_toLeftOf="@id/centerInParentAnchor"
-            android:padding="4dp"
-            tools:src="@drawable/ic_playbackrate_0_5_light"/>
-
-        <ImageView
-            android:id="@+id/screenLockImageView"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_below="@id/exo_progress"
-            android:layout_marginLeft="@dimen/guideline_standard_padding"
-            android:layout_marginTop="@dimen/guideline_standard_padding"
-            android:layout_toEndOf="@id/centerInParentAnchor"
-            android:layout_toRightOf="@id/centerInParentAnchor"
-            android:padding="4dp"
-            tools:src="@drawable/ic_lock_open_white_48dp"
-        />
     </RelativeLayout>
 
 

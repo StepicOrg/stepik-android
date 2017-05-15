@@ -150,9 +150,9 @@ class VideoExoFragment : FragmentBase(),
             showChooseRateMenu(it)
         }
 
-        screenLockImageView.setOnClickListener {
-            switchLockingState()
-        }
+//        screenLockImageView.setOnClickListener {
+//            switchLockingState()
+//        }
 
         videoWithTimestampPresenter.attachView(this)
     }
@@ -230,10 +230,10 @@ class VideoExoFragment : FragmentBase(),
 
     private fun setScreenLock(isLocked: Boolean) {
         if (isLocked) {
-            screenLockImageView.setImageResource(R.drawable.ic_lock_outline_white_48dp)
+//            screenLockImageView.setImageResource(R.drawable.ic_lock_outline_white_48dp)
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         } else {
-            screenLockImageView.setImageResource(R.drawable.ic_lock_open_white_48dp)
+//            screenLockImageView.setImageResource(R.drawable.ic_lock_open_white_48dp)
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
         }
     }
