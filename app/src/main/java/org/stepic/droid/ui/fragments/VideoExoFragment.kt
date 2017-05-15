@@ -10,6 +10,7 @@ import android.telephony.TelephonyManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.ExoPlayer.STATE_ENDED
 import com.google.android.exoplayer2.ExoPlayer.STATE_READY
@@ -150,22 +151,11 @@ class VideoExoFragment : FragmentBase(),
             showChooseRateMenu(it)
         }
 
-//        screenLockImageView.setOnClickListener {
-//            switchLockingState()
-//        }
+        moreItemsView.setOnClickListener {
+            showMoreItemsPopup(it)
+        }
 
         videoWithTimestampPresenter.attachView(this)
-    }
-
-    private fun switchLockingState() {
-        val isLocked = userPreferences.isScreenLocked
-        userPreferences.isScreenLocked = !isLocked
-        setScreenLock(!isLocked)
-    }
-
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
     }
 
     override fun onStart() {
@@ -223,18 +213,19 @@ class VideoExoFragment : FragmentBase(),
         val videoPlaybackRate = userPreferences.videoPlaybackRate //this call from SharedPreferences, todo: make it from background thread
         setVideoRate(videoPlaybackRate)
 
-        setScreenLock(!userPreferences.isScreenLocked)//todo:make userPrefs call async
+        val alwaysRotate = userPreferences.isRotateVideo
+        setOrientationPreference(alwaysRotate) // todo: make userPrefs call async
+
+        analytic.reportEventWithName(Analytic.Video.PLAYER_CREATED, alwaysRotate.toString())//item_name=true/false – rotate flag indication
 
         return videoId
     }
 
-    private fun setScreenLock(isLocked: Boolean) {
-        if (isLocked) {
-//            screenLockImageView.setImageResource(R.drawable.ic_lock_outline_white_48dp)
-            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
-        } else {
-//            screenLockImageView.setImageResource(R.drawable.ic_lock_open_white_48dp)
+    private fun setOrientationPreference(alwaysRotate: Boolean) {
+        if (alwaysRotate) {
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
+        } else {
+            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         }
     }
 
@@ -297,7 +288,7 @@ class VideoExoFragment : FragmentBase(),
 
     private fun showChooseRateMenu(view: View) {
         analytic.reportEvent(Analytic.Video.SHOW_CHOOSE_RATE)
-        val popupMenu = android.widget.PopupMenu(App.getAppContext(), view)
+        val popupMenu = PopupMenu(App.getAppContext(), view)
         popupMenu.inflate(R.menu.video_rate_menu)
         popupMenu.setOnMenuItemClickListener {
             val rate = VideoPlaybackRate.getValueById(it.itemId)
@@ -306,6 +297,41 @@ class VideoExoFragment : FragmentBase(),
             true
         }
         popupMenu.show()
+    }
+
+    private fun showMoreItemsPopup(view: View) {
+        if (activity == null) {
+            return
+        }
+
+        analytic.reportEvent(Analytic.Video.SHOW_MORE_ITEMS)
+
+        val morePopupMenu = PopupMenu(activity, view)
+        morePopupMenu.inflate(R.menu.video_more_menu)
+
+        val shouldRotate = userPreferences.isRotateVideo
+        val menuItem = morePopupMenu.menu.findItem(R.id.orientation_flag)
+        menuItem.isChecked = shouldRotate
+
+        morePopupMenu.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.orientation_flag -> {
+                    analytic.reportEvent(Analytic.Video.ROTATE_CLICKED)
+
+                    val oldValue = it.isChecked
+                    val newValue = !oldValue
+                    it.isChecked = newValue
+                    userPreferences.isRotateVideo = newValue
+
+                    setOrientationPreference(newValue)
+                    true
+                }
+                else -> false
+
+            }
+        }
+
+        morePopupMenu.show()
     }
 
 }

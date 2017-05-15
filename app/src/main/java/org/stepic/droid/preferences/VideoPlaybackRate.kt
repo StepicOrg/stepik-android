@@ -20,19 +20,15 @@ enum class VideoPlaybackRate(val index: Int, val rateFloat: Float, val icon: Dra
                 R.id.x0_5 -> {
                     VideoPlaybackRate.x0_5
                 }
-
                 R.id.x0_75 -> {
                     VideoPlaybackRate.x0_75
                 }
-
                 R.id.x1 -> {
                     VideoPlaybackRate.x1_0
                 }
-
                 R.id.x1_25 -> {
                     VideoPlaybackRate.x1_25
                 }
-
                 R.id.x1_5 -> {
                     VideoPlaybackRate.x1_5
                 }

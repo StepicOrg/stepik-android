@@ -301,13 +301,13 @@ public class UserPreferences {
         sharedPreferenceHelper.setNotificationDisabled(type, !isEnabled);
     }
 
-    boolean isScreenLocked = false;
+    boolean isRotateVideo = true;
 
-    public void setScreenLocked(boolean screenLocked) {
-        isScreenLocked = screenLocked;
+    public boolean isRotateVideo() {
+        return isRotateVideo;
     }
 
-    public boolean isScreenLocked() {
-        return isScreenLocked;
+    public void setRotateVideo(boolean rotateVideo) {
+        isRotateVideo = rotateVideo;
     }
 }

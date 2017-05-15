@@ -151,6 +151,9 @@ public interface Analytic {
         String START_LOADING = "video player: startLoading";
         String STOP_LOADING = "video player: stopLoading";
         String QUALITY_NOT_DETERMINATED = "video_quality_failed";
+        String SHOW_MORE_ITEMS = "video_player_show_more";
+        String ROTATE_CLICKED = "video_player_rotate_clicked";
+        String PLAYER_CREATED = "video_player_created";
     }
 
     interface AppIndexing {
