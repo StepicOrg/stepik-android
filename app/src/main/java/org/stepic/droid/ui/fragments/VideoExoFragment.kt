@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
+import android.widget.Toast
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.ExoPlayer.*
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
@@ -64,6 +65,9 @@ class VideoExoFragment : FragmentBase(),
     }
 
     override fun onPlayerError(error: ExoPlaybackException?) {
+        if (activity != null) {
+            Toast.makeText(activity, R.string.no_connection, Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
