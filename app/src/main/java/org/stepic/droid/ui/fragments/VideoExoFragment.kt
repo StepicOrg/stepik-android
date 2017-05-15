@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
+import android.widget.Toast
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.ExoPlayer.STATE_ENDED
 import com.google.android.exoplayer2.ExoPlayer.STATE_READY
@@ -28,8 +29,10 @@ import kotlinx.android.synthetic.main.fragment_exo_video.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
+import org.stepic.droid.base.Client
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.core.MyExoPhoneStateListener
+import org.stepic.droid.core.internet_state.contract.InternetEnabledListener
 import org.stepic.droid.core.presenters.VideoWithTimestampPresenter
 import org.stepic.droid.core.presenters.contracts.VideoWithTimestampView
 import org.stepic.droid.preferences.VideoPlaybackRate
@@ -46,7 +49,7 @@ class VideoExoFragment : FragmentBase(),
         SimpleExoPlayer.VideoListener,
         AudioManager.OnAudioFocusChangeListener,
         VideoWithTimestampView,
-        MyExoPhoneStateListener.Callback {
+        MyExoPhoneStateListener.Callback, InternetEnabledListener {
 
     override fun onVideoSizeChanged(width: Int, height: Int, unappliedRotationDegrees: Int, pixelWidthHeightRatio: Float) {
     }
@@ -113,6 +116,9 @@ class VideoExoFragment : FragmentBase(),
     private var videoId: Long? = null
     private var mediaSource: ExtractorMediaSource? = null
 
+    @Inject
+    lateinit var internetEnabledClient: Client<InternetEnabledListener>
+
     override fun injectComponent() {
         App
                 .component()
@@ -164,6 +170,7 @@ class VideoExoFragment : FragmentBase(),
         videoId = createPlayer()
         videoWithTimestampPresenter.showVideoWithPredefinedTimestamp(videoId)
 
+        internetEnabledClient.subscribe(this)
         exoPhoneListener.subscribe(this)
 
         val telephonyManager = context.getSystemService(TELEPHONY_SERVICE) as TelephonyManager
@@ -176,7 +183,7 @@ class VideoExoFragment : FragmentBase(),
         val telephonyManager = context.getSystemService(TELEPHONY_SERVICE) as TelephonyManager
         telephonyManager.listen(exoPhoneListener, PhoneStateListener.LISTEN_NONE)
         exoPhoneListener.unsubscribe()
-
+        internetEnabledClient.unsubscribe(this)
         releasePlayer()
     }
 
@@ -332,6 +339,10 @@ class VideoExoFragment : FragmentBase(),
         }
 
         morePopupMenu.show()
+    }
+
+    override fun onInternetEnabled() {
+        Toast.makeText(context, "Internet On", Toast.LENGTH_SHORT).show()
     }
 
 }

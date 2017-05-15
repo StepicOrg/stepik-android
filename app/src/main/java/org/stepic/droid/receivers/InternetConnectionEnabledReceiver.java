@@ -12,6 +12,7 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.core.LocalProgressManager;
+import org.stepic.droid.core.internet_state.contract.InternetEnabledPoster;
 import org.stepic.droid.events.InternetIsEnabledEvent;
 import org.stepic.droid.events.steps.UpdateStepEvent;
 import org.stepic.droid.model.Step;
@@ -58,6 +59,9 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
     @Inject
     MainHandler mainHandler;
 
+    @Inject
+    InternetEnabledPoster internetEnabledPoster;
+
     private AtomicBoolean inWork = new AtomicBoolean(false);
 
 
@@ -66,13 +70,14 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
     }
 
     @Override
-    public void onReceive(Context context, Intent intent) {
+    public void onReceive(Context context, final Intent intent) {
         if (!isOnline(App.Companion.getAppContext()) || inWork.get()) return;
         inWork.set(true);
         mainHandler.post(new Function0<Unit>() {
             @Override
             public Unit invoke() {
-                bus.post(new InternetIsEnabledEvent());
+                internetEnabledPoster.internetEnabled();
+                bus.post(new InternetIsEnabledEvent()); // TODO: 15.05.17 remove bus
                 return Unit.INSTANCE;
             }
         });
