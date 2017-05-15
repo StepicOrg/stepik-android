@@ -21,26 +21,20 @@
         android:layout_height="56dp"
         android:background="@color/transparent_black_30">
 
-        <FrameLayout
+        <ImageView
             android:id="@+id/closeButton"
-            android:layout_width="@dimen/min_ux_touchable_size"
-            android:layout_height="@dimen/min_ux_touchable_size"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/guideline_standard_padding"
-            android:layout_marginStart="@dimen/guideline_standard_padding"
-            android:layout_marginTop="@dimen/guideline_standard_padding"
+            android:layout_marginLeft="4dp"
+            android:layout_marginStart="4dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
-            android:contentDescription="@string/close_screen">
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_gravity="center"
-                android:clickable="false"
-                android:src="@drawable/ic_close_white_24dp"/>
-        </FrameLayout>
+            android:padding="@dimen/half_padding"
+            android:src="@drawable/ic_close_white_with_padding"
+        />
 
         <ImageView
             android:id="@+id/videoRateChooser"
@@ -51,6 +45,8 @@
             android:layout_marginRight="2dp"
             android:layout_toLeftOf="@+id/moreItemsView"
             android:layout_toStartOf="@+id/moreItemsView"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
             android:padding="4dp"
             tools:src="@drawable/ic_playbackrate_0_5_light"/>
 
@@ -61,6 +57,8 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
             android:padding="@dimen/half_padding"
             android:src="@drawable/ic_more_vert_white_48_include_padding"
         />
