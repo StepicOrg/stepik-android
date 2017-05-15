@@ -1,6 +1,7 @@
 package org.stepic.droid.ui.fragments
 
 import android.content.Context.TELEPHONY_SERVICE
+import android.content.IntentFilter
 import android.content.pm.ActivityInfo
 import android.media.AudioManager
 import android.net.Uri
@@ -34,6 +35,7 @@ import org.stepic.droid.core.internet_state.contract.InternetEnabledListener
 import org.stepic.droid.core.presenters.VideoWithTimestampPresenter
 import org.stepic.droid.core.presenters.contracts.VideoWithTimestampView
 import org.stepic.droid.preferences.VideoPlaybackRate
+import org.stepic.droid.receivers.HeadPhoneReceiver
 import org.stepic.droid.ui.custom_exo.NavigationBarUtil
 import org.stepic.droid.ui.util.VideoPlayerConstants
 import javax.inject.Inject
@@ -47,7 +49,7 @@ class VideoExoFragment : FragmentBase(),
         SimpleExoPlayer.VideoListener,
         AudioManager.OnAudioFocusChangeListener,
         VideoWithTimestampView,
-        MyExoPhoneStateListener.Callback, InternetEnabledListener {
+        MyExoPhoneStateListener.Callback, InternetEnabledListener, HeadPhoneReceiver.HeadPhoneListener {
 
     override fun onVideoSizeChanged(width: Int, height: Int, unappliedRotationDegrees: Int, pixelWidthHeightRatio: Float) {
     }
@@ -113,6 +115,7 @@ class VideoExoFragment : FragmentBase(),
     private var autoPlay: Boolean = false
     private var videoId: Long? = null
     private var mediaSource: ExtractorMediaSource? = null
+    private val headPhoneReceiver: HeadPhoneReceiver = HeadPhoneReceiver()
 
     @Inject
     lateinit var internetEnabledClient: Client<InternetEnabledListener>
@@ -162,6 +165,14 @@ class VideoExoFragment : FragmentBase(),
         videoWithTimestampPresenter.attachView(this)
     }
 
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        val intentFilter = IntentFilter()
+        intentFilter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY)
+        activity.registerReceiver(headPhoneReceiver, intentFilter)
+        headPhoneReceiver.listener = this
+    }
+
     override fun onStart() {
         super.onStart()
         // if it is not in locked screen
@@ -187,6 +198,8 @@ class VideoExoFragment : FragmentBase(),
 
     override fun onDestroyView() {
         super.onDestroyView()
+        headPhoneReceiver.listener = null
+        activity?.unregisterReceiver(headPhoneReceiver)
         videoWithTimestampPresenter.detachView(this)
         videoPlayerView?.setControllerVisibilityListener(null)
     }
@@ -348,5 +361,10 @@ class VideoExoFragment : FragmentBase(),
             videoWithTimestampPresenter.showVideoWithPredefinedTimestamp(videoId)
         }
     }
+
+    override fun onUnplugHeadphones() {
+        pausePlayer()
+    }
+
 
 }
