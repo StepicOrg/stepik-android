@@ -15,6 +15,7 @@ import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.core.AudioFocusHelper;
 import org.stepic.droid.core.LocalProgressManager;
+import org.stepic.droid.core.MyExoPhoneStateListener;
 import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.ShareHelper;
 import org.stepic.droid.fonts.FontsProvider;
@@ -102,6 +103,9 @@ public class FragmentBase extends Fragment {
 
     @Inject
     protected CancelSniffer cancelSniffer;
+
+    @Inject
+    protected MyExoPhoneStateListener exoPhoneListener;
 
     public FragmentBase() {
 

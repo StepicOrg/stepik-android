@@ -38,6 +38,7 @@ public class SharedPreferenceHelper {
     private static final java.lang.String NEED_DROP_116 = "need_drop_116";
     private static final java.lang.String DISCOUNTING_POLICY_DIALOG = "discounting_pol_dialog";
     private static final java.lang.String KEEP_SCREEN_ON_STEPS = "keep_screen_on_steps";
+    private static final String ROTATE_PREF = "rotate_pref";
 
 
     private final String ACCESS_TOKEN_TIMESTAMP = "access_token_timestamp";
@@ -294,6 +295,14 @@ public class SharedPreferenceHelper {
                 return NOTIFICATION_REVIEW_DISABLED;
         }
         return null;
+    }
+
+    public void setRotateAlways(boolean needRotate) {
+        put(PreferenceType.DEVICE_SPECIFIC, ROTATE_PREF, needRotate);
+    }
+
+    public boolean needRotate() {
+        return getBoolean(PreferenceType.DEVICE_SPECIFIC, ROTATE_PREF, true);
     }
 
     public void setNotificationDisabled(NotificationType type, boolean isNotificationDisabled) {

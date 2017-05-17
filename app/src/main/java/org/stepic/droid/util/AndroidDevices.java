@@ -30,7 +30,6 @@ import android.view.InputDevice;
 import android.view.MotionEvent;
 
 import org.stepic.droid.base.App;
-import org.videolan.libvlc.util.AndroidUtil;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -55,8 +54,7 @@ public class AndroidDevices {
         devicesWithoutNavBar.add("HTC One S");
         devicesWithoutNavBar.add("HTC One X");
         devicesWithoutNavBar.add("HTC One XL");
-        hasNavBar = AndroidUtil.isICSOrLater()
-                && !devicesWithoutNavBar.contains(android.os.Build.MODEL);
+        hasNavBar =  !devicesWithoutNavBar.contains(android.os.Build.MODEL);
         hasTsp = App.Companion.getAppContext().getPackageManager().hasSystemFeature("android.hardware.touchscreen");
         isTv = App.Companion.getAppContext().getPackageManager().hasSystemFeature("android.software.leanback");
     }

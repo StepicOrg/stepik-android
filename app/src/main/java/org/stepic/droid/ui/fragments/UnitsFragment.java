@@ -27,8 +27,8 @@ import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.base.FragmentBase;
+import org.stepic.droid.base.Client;
 import org.stepic.droid.core.LessonSessionManager;
-import org.stepic.droid.core.RoutingConsumer;
 import org.stepic.droid.core.presenters.DownloadingInteractionPresenter;
 import org.stepic.droid.core.presenters.DownloadingProgressUnitsPresenter;
 import org.stepic.droid.core.presenters.UnitsLearningProgressPresenter;
@@ -37,6 +37,7 @@ import org.stepic.droid.core.presenters.contracts.DownloadingInteractionView;
 import org.stepic.droid.core.presenters.contracts.DownloadingProgressUnitsView;
 import org.stepic.droid.core.presenters.contracts.UnitsLearningProgressView;
 import org.stepic.droid.core.presenters.contracts.UnitsView;
+import org.stepic.droid.core.routing.contract.RoutingListener;
 import org.stepic.droid.events.units.LessonCachedEvent;
 import org.stepic.droid.events.units.NotCachedLessonEvent;
 import org.stepic.droid.model.Lesson;
@@ -61,7 +62,7 @@ import butterknife.BindView;
 import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
 import timber.log.Timber;
 
-public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.OnRefreshListener, UnitsView, DownloadingProgressUnitsView, DownloadingInteractionView, UnitsLearningProgressView, RoutingConsumer.Listener {
+public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.OnRefreshListener, UnitsView, DownloadingProgressUnitsView, DownloadingInteractionView, UnitsLearningProgressView, RoutingListener {
 
     private static final int ANIMATION_DURATION = 0;
     public static final int DELETE_POSITION_REQUEST_CODE = 165;
@@ -116,7 +117,7 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
     DownloadingInteractionPresenter downloadingInteractionPresenter;
 
     @Inject
-    RoutingConsumer routingConsumer;
+    Client<RoutingListener> routingClient;
 
     UnitAdapter adapter;
 
@@ -201,14 +202,14 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
         unitsPresenter.attachView(this);
         unitsLearningProgressPresenter.attachView(this);
         localProgressManager.subscribe(unitsLearningProgressPresenter);
-        routingConsumer.subscribe(this);
+        routingClient.subscribe(this);
         unitsPresenter.showUnits(section, false);
 
     }
 
     @Override
     public void onDestroyView() {
-        routingConsumer.unsubscribe(this);
+        routingClient.unsubscribe(this);
         localProgressManager.unsubscribe(unitsLearningProgressPresenter);
         unitsLearningProgressPresenter.detachView(this);
         unitsPresenter.detachView(this);
