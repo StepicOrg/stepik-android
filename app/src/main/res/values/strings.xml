@@ -5,7 +5,7 @@
     \"include\": \"https://stepik.org/.well-known/assetlinks.json\"
     }]
     </string>
-    <string name="local_remind_message">We noticed that you still have not selected any course of
+    <string name="local_remind_message">We noticed that you still have not selected any courses to
         study. Don\'t delay, enroll for a free course right now!
     </string>
     <string name="app_name" translatable="false">Stepik</string>
@@ -16,8 +16,8 @@
     <string name="yet_have_not_account">"Sign up with e-mail"</string>
     <string name="or_sign_up_with_email">or sign up with e-mail</string>
     <string name="sign_up">Sign up</string>
-    <string name="create_my_account">Create account</string>
-    <string name="by_creating_you_agree">By creating Stepik.org account, you agree to the</string>
+    <string name="create_my_account">Create an account</string>
+    <string name="by_creating_you_agree">By creating a Stepik.org account, you agree to the</string>
     <string name="terms">Terms</string>
     <string name="email" translatable="false">E-mail</string>
     <string name="remind_password">Forgot password?</string>
@@ -41,7 +41,7 @@
     <string name="description">Description</string>
     <string name="requirements">Requirements</string>
     <string name="join_course">Join course</string>
-    <string name="join_course_impossible">You can\'t join this course now.</string>
+    <string name="join_course_impossible">You can\'t join this course right now.</string>
     <string name="join_course_exception">Check your internet connection.</string>
     <string name="loading">Loading</string>
     <string name="begin_date_section">Start date:</string>
@@ -60,37 +60,37 @@
     <string name="allow">Allow</string>
     <string name="deny">Deny</string>
     <string name="no">No</string>
-    <string name="open_web_to_solve">Open web version to solve</string>
+    <string name="open_web_to_solve">Open the web version to solve</string>
     <string name="allow_mobile_download_title">Allow mobile downloading</string>
     <string name="allow_mobile_message">Allow your device to download videos over your mobile
         connection when Wi-Fi is not available?
     </string>
-    <string name="allow_mobile_snack">Mobile loading is disabled. Turn on in settings</string>
-    <string name="drop_course">Drop course</string>
-    <string name="about_course">About course</string>
+    <string name="allow_mobile_snack">Mobile downloading is disabled. Turn on in settings</string>
+    <string name="drop_course">Drop the course</string>
+    <string name="about_course">About the course</string>
     <string name="you_dropped">"You dropped"</string>
-    <string name="try_in_web_drop">Try drop course in web version</string>
+    <string name="try_in_web_drop">Try dropping this course in the web version</string>
     <string name="you_not_enrolled">You are not enrolled</string>
     <string name="cancel">Cancel</string>
     <string name="failLogin">Login/password was incorrect</string>
     <string name="connectionProblems">Internet connection was lost</string>
     <string name="are_you_sure">Are you sure?</string>
-    <string name="explain_permission">For cache course and watch video offline Stepik.org needs
-        permission to storage of phone.
+    <string name="explain_permission">For caching the course and playing the video offline Stepik.org needs
+        permission to access the storage of the phone.
     </string>
-    <string name="explain_calendar_permission">For add deadlines to calendar the app needs
-        permission to calendar. The app doesn\'t change and read your events.
+    <string name="explain_calendar_permission">To add deadlines the app needs
+        permission to the calendar. The app doesn\'t change and read your events.
     </string>
     <string name="allow_question">Allow?</string>
     <string name="video_quality">Video quality</string>
     <string name="sync_problem">There was a problem syncing the data, please try again later
     </string>
     <string name="empty_courses">Looks like you haven\'t enrolled in any courses yet</string>
-    <string name="empty_courses_anonymous">Browse courses without authorization or sign in for
+    <string name="empty_courses_anonymous">Browse the courses without authorization or sign in to
         enroll
     </string>
     <string name="cache_cleared">Cache is cleared successfully!</string>
-    <string name="join_course_web_exception">Try to join course in web</string>
+    <string name="join_course_web_exception">Try to join the course in web</string>
     <string name="downloads">Downloads</string>
     <string name="or_sign_in_social">Or sign in with</string>
     <string name="loading_message">Please wait…</string>
@@ -99,7 +99,7 @@
     <string name="gb">GB</string>
     <string name="empty">Empty</string>
     <string name="clear">Clear</string>
-    <string name="clear_videos">Are you sure that want to delete all cached videos?</string>
+    <string name="clear_videos">Are you sure you want to delete all cached videos?</string>
     <string name="empty_downloading">No downloaded videos</string>
     <string name="workload">Workload</string>
     <string name="course_format">Course format</string>
@@ -113,37 +113,36 @@
     <string name="correct">Correct!</string>
     <string name="wrong">Wrong. Please, try again.</string>
     <string name="try_again">Try again</string>
-    <string name="step_only_online">Steps are available only online. Turn on the Internet and start
-        solving tasks.
+    <string name="step_only_online">Steps are available only online. Connect to the Internet and start
+        completing the assignments.
     </string>
     <string name="correct_free_response">Your answer was saved.</string>
     <string name="hint_for_type_answer">Type your answer here…</string>
     <string name="py_message">
         <![CDATA[Please open this problem in your <a href="https://www.jetbrains.com/pycharm-educational/">PyCharm Educational Edition</a>]]></string>
-    <string name="review_warning">This task with review. Tap to open in web for points.</string>
+    <string name="review_warning">This is a peer-review assignment. Tap to open in web and receive the points.</string>
     <string name="password_too_short">Password must be a minimum of 6 characters.</string>
     <string name="reset_password">Reset password</string>
     <string name="send">Send</string>
     <string name="email_sent">We have sent you an e-mail.</string>
     <string name="email_wrong">The e-mail address is not assigned to any user account.</string>
-    <string name="are_you_sure_logout">All saved link for offline will be removed. Are you sure?
+    <string name="are_you_sure_logout">All saved data will be removed. Are you sure?
     </string>
-    <string name="feedback_good_description">The app is pleasure to use.</string>
+    <string name="feedback_good_description">The app is a pleasure to use.</string>
     <string name="feedback_good">excellent</string>
     <string name="feedback_bad">terrible</string>
-    <string name="feedback_bad_description">The app is inconvenient, loading is slow, video is not
-        playing.
+    <string name="feedback_bad_description">The app is inconvenient, loading is slow, there are video playback issues.
     </string>
     <string name="feedback_title">Give feedback</string>
     <string name="feedback_hint">Give feedback…</string>
     <string name="feedback_description">Send us your suggestions, comments or idea</string>
     <string name="feedback_contacts_description">Contacts for feedback:</string>
     <string name="email_incorrect">E-mail is incorrect</string>
-    <string name="feedback_subject">Feedback about the Android app of Stepik.org</string>
+    <string name="feedback_subject">Feedback for the stepik.org Android app</string>
     <string name="feedback_sent">Feedback is sent</string>
     <string name="feedback_fail">Sorry, service is not available. Try later</string>
-    <string name="internet_problem">Sorry, internet is not available. Try again later</string>
-    <string name="internet_problem_short">Sorry, internet is not available</string>
+    <string name="internet_problem">Sorry, the connection is not available. Try again later</string>
+    <string name="internet_problem_short">Sorry, there is no connection</string>
     <string name="feedback_fill_fields">Fill empty fields</string>
     <string name="video_time_delimiter" translatable="false">/</string>
     <string name="x0_5" translatable="false">x0.5</string>
@@ -153,13 +152,13 @@
     <string name="x1_5" translatable="false">x1.5</string>
     <string name="x1_75" translatable="false">x1.75</string>
     <string name="x2_0" translatable="false">x2.0</string>
-    <string name="cant_drop">You can not drop course</string>
-    <string name="open_in_external_player">Open in external player</string>
+    <string name="cant_drop">You can not drop this course</string>
+    <string name="open_in_external_player">Open in an external player</string>
     <string name="code_warning">This step is not optimized for mobile</string>
     <string name="notification_title">Notifications</string>
     <string name="notification_learn_list">Deadlines, new modules, certificates</string>
     <string name="vibration_title">Vibration</string>
-    <string name="empty_try_later">Now here is empty, try again later.</string>
+    <string name="empty_try_later">For now it's empty, try again later.</string>
     <string name="sound_title">Sound</string>
     <string name="update_available_title">New version is available</string>
     <string name="update_now">Update</string>
@@ -172,17 +171,15 @@
     <string name="percent_symbol" translatable="false">%d%%</string>
     <string name="cached_title">Cached</string>
     <string name="remove_all">Remove all</string>
-    <string name="hint_for_idea">Type your suggestions, comments or idea</string>
+    <string name="hint_for_idea">Type your suggestions, comments or ideas</string>
     <string name="feedback_from">From</string>
-    <string name="cancel_videos_explanation">Cancel of uploading videos is time-consuming. Are you
-        sure?
-    </string>
+    <string name="cancel_videos_explanation">Cancelling the uploading will take a while. Are yousure?</string>
     <string name="comments_title">Comments</string>
     <string name="load_more">more</string>
     <string name="load_more_reply">Load more</string>
     <string name="hint_for_new_comment">Add your comment</string>
     <string name="new_comment_title">New comment</string>
-    <string name="leave_first_comment">No discussions. Feel free to start one.</string>
+    <string name="leave_first_comment">No discussions yet. Feel free to start one.</string>
     <plurals name="notification_plural">
         <item quantity="one">%d new notification</item>
         <item quantity="other">%d new notifications</item>
@@ -201,34 +198,33 @@
     <string name="comment_is_deleted">This comment was deleted</string>
     <string name="space_management_title">Space management</string>
     <string name="clear_cache_explanation">The App supports viewing videos online, but to view the
-        lessons without Internet connection is necessary to keep them. Most of the space is taken by
+        lessons without Internet connection it is necessary to download them. Most of the space is taken by
         the video tutorials. Deleting all downloaded videos can take a few minutes.
     </string>
     <string name="storage">Storage</string>
     <string name="notMountExplanation">The SD card is not plugged in the device. To save the videos
         to the SD card, plug it in the phone and restart the App.
     </string>
-    <string name="mountExplanation">You can save lessons on SD-card or internal device memory.
-        Please note that when saving on SD-card, lessons when removing the SD-card will no longer be
-        available offline.
+    <string name="mountExplanation">You can save lessons on the SD-card or internal memory of your device.
+        Please note that when saving on SD-card, lessons will not be available, once you remove the card.
     </string>
     <string name="choose_storage_title">Choose storage</string>
     <string name="default_storage">Default</string>
     <string name="secondary_storage">Secondary</string>
     <string name="free_title">free</string>
     <string name="move_data_explanation">All previously downloaded videos will be transferred and
-        new videos will be loaded in new location. The operation may take a few minutes. Are you
+        new videos will be downloaded in the new location. The operation may take a few minutes. Are you
         sure?
     </string>
     <string name="sorry_moved">Sorry, this file was moved or deleted</string>
-    <string name="fail_move">Sorry, error has occurred, when files were moving</string>
+    <string name="fail_move">Sorry, an error has occurred, when files were being moved</string>
     <string name="like_label">Like</string>
     <string name="unlike_label">Unlike</string>
     <string name="report_label">Report</string>
     <string name="done">Done</string>
     <string name="moving">Moving</string>
     <string name="go_to_learn">Continue</string>
-    <string name="fail_to_parse">Sorry, course is not found. Tap to find other courses!</string>
+    <string name="fail_to_parse">Sorry, the course can not be found. Tap to find other courses!</string>
     <string name="authorization">Authorization</string>
     <string name="unauthorization_detail">To continue, you should be authorized. Do you want to do
         this now?
@@ -250,14 +246,14 @@
     <string name="copy_text_label">Copy text</string>
     <string name="calendar_title">Calendar</string>
     <string name="calendar_detail">Modules in this course have deadlines. To complete this course
-        and get certificate, add deadlines to your calendar and be reminded 2 days before due date.
+        and get a certificate, add deadlines to your calendar and get a reminder 2 days before the due date.
         To manage the appearance of this message go to the app settings.
     </string>
     <string name="add_to_the_calendar">Add to the calendar</string>
-    <string name="calendar_setting_description">Show calendar widget</string>
-    <string name="choose_calendar_title">Choose calendar</string>
-    <string name="calendar_added_message">Deadlines were added to calendar successfully</string>
-    <string name="user_not_have_calendar">Calendars are empty. Try to create account in calendar
+    <string name="calendar_setting_description">Show the calendar widget</string>
+    <string name="choose_calendar_title">Choose a calendar</string>
+    <string name="calendar_added_message">Deadlines were added to the calendar successfully</string>
+    <string name="user_not_have_calendar">Calendars are empty. Try to create an account in calendar
         app
     </string>
     <string name="certificates_title">Certificates</string>
@@ -272,7 +268,7 @@
     <string name="add_to_linkedin">Add to LinkedIn</string>
     <string name="empty_certificates">You don\'t have any certificates yet</string>
     <string name="are_you_sure_remove_comment_text">If you go back, your post will be lost</string>
-    <string name="email_already_used">The e-mail is used in another account</string>
+    <string name="email_already_used">The e-mail is used for another account</string>
     <string name="go_to_the_next_lesson">Next lesson</string>
     <string name="cant_show_next_step">Sorry, the next lesson is not available</string>
     <string name="cant_show_previous_step">Sorry, the previous lesson is not available</string>
@@ -280,7 +276,7 @@
     <string name="filter_title">Filters</string>
     <string name="language_ru_filter">Russian</string>
     <string name="language_en_filter">English</string>
-    <string name="course_language_title">Language of course</string>
+    <string name="course_language_title">Language of the course</string>
     <string name="timing_title">Timing</string>
     <string name="timing_upcoming_title">Upcoming</string>
     <string name="timing_active_title">Active</string>
@@ -290,16 +286,16 @@
     <string name="lesson_not_found_or_not_access">The lesson does not exist or you don\'t have the
         permission
     </string>
-    <string name="not_auth_message">Sign in for continue</string>
+    <string name="not_auth_message">Sign in to continue</string>
     <string name="auth_action_title">Sign in</string>
-    <string name="empty_steps_title">This lesson doesn\'t have steps</string>
+    <string name="empty_steps_title">This lesson doesn\'t have any steps</string>
     <string name="open_in_browser">Open in Browser</string>
     <string name="low_quality">Low</string>
     <string name="medium_quality">Medium</string>
     <string name="high_quality">High</string>
     <string name="very_high_quality">Very high</string>
-    <string name="video_quality_explanation">High quality video takes more space and can be loaded
-        slowly
+    <string name="video_quality_explanation">High quality video takes more space and can take a while 
+        to load
     </string>
     <string name="do_not_ask_me_again">Do not ask me again</string>
     <string name="discount_policy_inverse_title">After every wrong submission your maximum points
@@ -309,33 +305,33 @@
         <item quantity="one">You have %d attempt, for which you will get points</item>
         <item quantity="other">You have %d attempts, for which you will get points</item>
     </plurals>
-    <string name="discount_policy_no_way">You will not get score for the next attempts</string>
+    <string name="discount_policy_no_way">You will not get points for the next attempts</string>
     <string name="other_title">Other</string>
     <string name="discounting_policy_title_settings">Warn about the lessons with penalties for wrong
         answers
     </string>
-    <string name="discounting_policy_message">If you send the wrong submission of this task, in the
-        future, you can not get the points. Are you sure?
+    <string name="discounting_policy_message">If you send the wrong submission for this task, you will not be able
+        to receive any points for this task. Are you sure?
     </string>
-    <string name="keep_screen_on_title_settings">Keep screen on, when solve steps</string>
+    <string name="keep_screen_on_title_settings">Keep the screen on, while solving steps</string>
     <string name="all_title">All</string>
     <string name="learning_title">Learning</string>
     <string name="reviews_title">Reviews</string>
     <string name="teaching_title">Teaching</string>
-    <string name="accessibility_switch_viewed_state">Switch viewed state</string>
+    <string name="accessibility_switch_viewed_state">Change the viewed state</string>
     <string name="mark_all_as_read">Mark all as read</string>
-    <string name="empty_notification_title">Yet notifications are empty</string>
+    <string name="empty_notification_title">You don't have any notifications yet</string>
     <string name="not_now">Not now</string>
-    <string name="after_hide_calendar_message">You can add deadlines in top menu</string>
+    <string name="after_hide_calendar_message">You can add deadlines in the top menu</string>
     <string name="received_review_title">Received review</string>
     <string name="new_message_title">New message</string>
     <string name="get_certifcate_title">New certificate</string>
     <string name="get_license_message">New license</string>
     <string name="added_to_group_title">Adding to group</string>
     <string name="notification_comment_list">Comments and replies</string>
-    <string name="exam_module_title">It is exam module, you can solve it in web</string>
+    <string name="exam_module_title">It is an exam module, you can only solve it in the web version</string>
     <string name="start_exam_action_title">Open</string>
-    <string name="restriction_submission_enough">The step cannot be submitted, because the number of
+    <string name="restriction_submission_enough">The step cannot be submitted, because the number of possible
         attempts has been exceeded
     </string>
     <string name="too_many_attempts">Too many attempts. Please try later</string>
@@ -358,38 +354,38 @@
         <item quantity="other">days</item>
     </plurals>
     <plurals name="streak_description">
-        <item quantity="one">It is your %d day when you are solving without break. Solve every day
-            in order to save progress. We suggest you turn on the reminders.
+        <item quantity="one">It is the %d day you are active without a break. Solve assignments every day
+            in order to improve your record. We suggest you turn on the reminders.
         </item>
-        <item quantity="other">It is your %d days when you are solving without break. Solve every
-            day in order to save progress. We suggest you turn on the reminders.
+        <item quantity="other">It is the %d days you are active without a break. Solve every
+            day in order to improve your record. We suggest you turn on the reminders.
         </item>
     </plurals>
     <string name="choose_notification_time_interval">Choose notification interval</string>
     <string name="notification_time">Notification time</string>
     <string name="notification_about_learning">Notifications about learning</string>
     <string name="time_to_learn_notification_title">Time to learn!</string>
-    <string name="streak_description_not_positive">Correct! Solve every day in order to save
-        progress. We suggest you turn on the reminders.
+    <string name="streak_description_not_positive">Correct! Solve assignments every day in order to improve
+       your record. You can also turn on the reminders!
     </string>
     <plurals name="streak_notification_message_call_to_action">
-        <item quantity="one">Well done! You solve %d day without a break. Do not stop, solve the
-            task right now!
+        <item quantity="one">Well done! You solve %d day without a break. Do not stop, solve another
+            assignment now!
         </item>
-        <item quantity="other">Well done! You solve %d days without a break. Do not stop, solve the
-            task right now!
+        <item quantity="other">Well done! You solve %d day without a break. Do not stop, solve another
+            assignment now!
         </item>
     </plurals>
     <string name="streak_notification_message_improvement">Good job! Current streak was increased to
         %d. Keep it up!
     </string>
-    <string name="streak_notification_empty_number">Learning requires daily practice. Solve the task
+    <string name="streak_notification_empty_number">Learning requires daily practice. Solve another assignment 
         right now!
     </string>
     <string name="streak_notification_enabled_successfully">Notifications are enabled. You can
         change your choice in Profile
     </string>
-    <string name="streak_notification_canceled">Notifications are not enabled. You can change your
+    <string name="streak_notification_canceled">Notifications are disabled. You can change your
         choice in Profile
     </string>
     <string name="streak_notification_not_working">It seems that notifications are not working. We
@@ -407,11 +403,11 @@
     <string name="privacy_policy_title">Privacy Policy</string>
     <string name="invite">Invite friends</string>
     <string name="dont_want">Not now</string>
-    <string name="share_course_in_menu">You always can share a link to the course in the top menu
+    <string name="share_course_in_menu">You can always share a link to the course in the top menu
     </string>
-    <string name="take_course_with_fiends">Take course together with friends!</string>
-    <string name="invite_friends_description">People who take the course together with friends is
-        most often complete it. Invite your friends now by sending them a link to the course!
+    <string name="take_course_with_fiends">Take a course together with friends!</string>
+    <string name="invite_friends_description">People who take a course together with friends are
+        more likely to complete it. Invite your friends now by sending them a link to the course!
     </string>
     <string name="sign_in_with_password">Sign in with e-mail</string>
     <string name="or_continue_social">Or continue with</string>
