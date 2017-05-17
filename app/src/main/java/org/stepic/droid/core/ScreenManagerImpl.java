@@ -56,10 +56,10 @@ import org.stepic.droid.ui.activities.UnitsActivity;
 import org.stepic.droid.ui.activities.VideoActivity;
 import org.stepic.droid.ui.dialogs.RemindPasswordDialogFragment;
 import org.stepic.droid.ui.fragments.SectionsFragment;
+import org.stepic.droid.util.AndroidVersionKt;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.StringUtil;
 import org.stepic.droid.web.ViewAssignment;
-import org.videolan.libvlc.util.VLCUtil;
 
 import java.net.URLEncoder;
 import java.util.Locale;
@@ -280,7 +280,7 @@ public class ScreenManagerImpl implements ScreenManager {
             analytic.reportEvent(Analytic.Video.OPEN_NATIVE);
         }
 
-        boolean isCompatible = VLCUtil.hasCompatibleCPU(App.Companion.getAppContext());
+        boolean isCompatible = AndroidVersionKt.isJellyBeanOrLater();
         if (!isCompatible) {
             analytic.reportEvent(Analytic.Video.NOT_COMPATIBLE);
         }

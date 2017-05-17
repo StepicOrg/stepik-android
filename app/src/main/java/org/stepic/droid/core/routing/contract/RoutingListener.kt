@@ -1,7 +1,7 @@
-package org.stepic.droid.core
+package org.stepic.droid.core.routing.contract
 
 import org.stepic.droid.model.Section
 
-interface RoutingPoster {
+interface RoutingListener {
     fun onSectionChanged(oldSection: Section, newSection: Section)
 }

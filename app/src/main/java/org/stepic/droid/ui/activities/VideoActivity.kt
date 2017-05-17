@@ -1,8 +1,10 @@
 package org.stepic.droid.ui.activities
 
 import android.support.v4.app.Fragment
+import android.view.KeyEvent
 import org.stepic.droid.base.SingleFragmentActivity
-import org.stepic.droid.ui.fragments.VideoFragment
+import org.stepic.droid.ui.fragments.VideoExoFragment
+import org.stepic.droid.ui.listeners.KeyDispatchableFragment
 import timber.log.Timber
 
 class VideoActivity : SingleFragmentActivity() {
@@ -15,7 +17,7 @@ class VideoActivity : SingleFragmentActivity() {
         val path: String? = intent.extras.getString(videoPathKey)
         val videoId: Long = intent.extras.getLong(videoIdKey)
         if (path != null) {
-            return VideoFragment.newInstance(path, videoId)
+            return VideoExoFragment.newInstance(path, videoId)
         } else {
             return null
         }
@@ -31,4 +33,10 @@ class VideoActivity : SingleFragmentActivity() {
         Timber.d("onBackPressed")
         this.finish()
     }
+
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        // If the event was not handled then see if the player view can handle it as a media key event.
+        return super.dispatchKeyEvent(event) || (fragment as KeyDispatchableFragment).dispatchKeyEventInFragment(event)
+    }
+
 }

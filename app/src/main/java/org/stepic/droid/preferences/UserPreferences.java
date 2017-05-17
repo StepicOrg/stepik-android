@@ -300,4 +300,12 @@ public class UserPreferences {
     public void setNotificationEnabled(NotificationType type, boolean isEnabled) {
         sharedPreferenceHelper.setNotificationDisabled(type, !isEnabled);
     }
+
+    public boolean isRotateVideo() {
+        return sharedPreferenceHelper.needRotate();
+    }
+
+    public void setRotateVideo(boolean rotateVideo) {
+        sharedPreferenceHelper.setRotateAlways(rotateVideo);
+    }
 }

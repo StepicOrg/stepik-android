@@ -1,10 +1,10 @@
 package org.stepic.droid.di.video
 
 import dagger.Subcomponent
-import org.stepic.droid.ui.fragments.VideoFragment
+import org.stepic.droid.ui.fragments.VideoExoFragment
 
 @VideoScope
-@Subcomponent
+@Subcomponent(modules = arrayOf(VideoModule::class))
 interface VideoComponent {
 
     @Subcomponent.Builder
@@ -12,5 +12,5 @@ interface VideoComponent {
         fun build(): VideoComponent
     }
 
-    fun inject(videoFragment: VideoFragment)
+    fun inject(videoFragment: VideoExoFragment)
 }

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/orientation_flag"
+        android:checkable="true"
+        android:title="@string/device_orientation_title"/>
+</menu>
