@@ -181,7 +181,6 @@ dependencies {
 
     //add echo player for video (change playback speed supported)
     compile 'com.google.android.exoplayer:exoplayer-core:r2.4.0'
-    compile 'com.google.android.exoplayer:exoplayer-dash:r2.4.0'
 
     // Required -- JUnit 4 framework
     testCompile 'junit:junit:4.12'
