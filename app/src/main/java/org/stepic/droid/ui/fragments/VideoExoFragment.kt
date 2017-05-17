@@ -23,6 +23,7 @@ import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
+import com.google.android.exoplayer2.upstream.HttpDataSource
 import com.google.android.exoplayer2.util.Util
 import kotlinx.android.synthetic.main.exo_playback_control_view.*
 import kotlinx.android.synthetic.main.fragment_exo_video.*
@@ -65,8 +66,12 @@ class VideoExoFragment : FragmentBase(),
     }
 
     override fun onPlayerError(error: ExoPlaybackException?) {
-        if (activity != null) {
-            Toast.makeText(activity, R.string.no_connection, Toast.LENGTH_SHORT).show()
+        if (error?.type == ExoPlaybackException.TYPE_SOURCE && error.cause is HttpDataSource.HttpDataSourceException) {
+            if (activity != null) {
+                Toast.makeText(activity, R.string.no_connection, Toast.LENGTH_SHORT).show()
+            }
+        } else if (error != null) {
+            analytic.reportError(Analytic.Video.ERROR, error)
         }
     }
 
