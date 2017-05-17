@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.telephony.PhoneStateListener
 import android.telephony.TelephonyManager
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -39,6 +40,7 @@ import org.stepic.droid.core.presenters.contracts.VideoWithTimestampView
 import org.stepic.droid.preferences.VideoPlaybackRate
 import org.stepic.droid.receivers.HeadPhoneReceiver
 import org.stepic.droid.ui.custom_exo.NavigationBarUtil
+import org.stepic.droid.ui.listeners.KeyDispatchableFragment
 import org.stepic.droid.ui.util.VideoPlayerConstants
 import javax.inject.Inject
 
@@ -51,7 +53,15 @@ class VideoExoFragment : FragmentBase(),
         SimpleExoPlayer.VideoListener,
         AudioManager.OnAudioFocusChangeListener,
         VideoWithTimestampView,
-        MyExoPhoneStateListener.Callback, InternetEnabledListener, HeadPhoneReceiver.HeadPhoneListener {
+        MyExoPhoneStateListener.Callback,
+        InternetEnabledListener,
+        HeadPhoneReceiver.HeadPhoneListener,
+        KeyDispatchableFragment {
+
+    override fun dispatchKeyEventInFragment(keyEvent: KeyEvent?): Boolean {
+        videoPlayerView?.showController()
+        return videoPlayerView?.dispatchMediaKeyEvent(keyEvent) ?: false;
+    }
 
     override fun onVideoSizeChanged(width: Int, height: Int, unappliedRotationDegrees: Int, pixelWidthHeightRatio: Float) {
     }

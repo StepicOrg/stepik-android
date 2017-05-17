@@ -837,6 +837,7 @@ public class PlaybackControlView extends FrameLayout {
                 case KeyEvent.KEYCODE_MEDIA_REWIND:
                     rewind();
                     break;
+                case KeyEvent.KEYCODE_SPACE:
                 case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
                     boolean newState = !player.getPlayWhenReady();
                     reportClickPlayPauseEvent(newState);
@@ -872,7 +873,8 @@ public class PlaybackControlView extends FrameLayout {
                 || keyCode == KeyEvent.KEYCODE_MEDIA_PLAY
                 || keyCode == KeyEvent.KEYCODE_MEDIA_PAUSE
                 || keyCode == KeyEvent.KEYCODE_MEDIA_NEXT
-                || keyCode == KeyEvent.KEYCODE_MEDIA_PREVIOUS;
+                || keyCode == KeyEvent.KEYCODE_MEDIA_PREVIOUS
+                || keyCode == KeyEvent.KEYCODE_SPACE;
     }
 
     /**
