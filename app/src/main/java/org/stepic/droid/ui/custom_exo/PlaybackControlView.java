@@ -38,10 +38,14 @@ import com.google.android.exoplayer2.util.Assertions;
 import com.google.android.exoplayer2.util.Util;
 
 import org.stepic.droid.R;
+import org.stepic.droid.analytic.Analytic;
+import org.stepic.droid.base.App;
 
 import java.util.Arrays;
 import java.util.Formatter;
 import java.util.Locale;
+
+import javax.inject.Inject;
 
 /**
  * A view for controlling {@link ExoPlayer} instances.
@@ -256,6 +260,9 @@ public class PlaybackControlView extends FrameLayout {
     private long hideAtMs;
     private long[] adBreakTimesMs;
 
+    @Inject
+    Analytic analytic;
+
     private final Runnable updateProgressAction = new Runnable() {
         @Override
         public void run() {
@@ -280,6 +287,8 @@ public class PlaybackControlView extends FrameLayout {
 
     public PlaybackControlView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+
+        App.Companion.component().inject(this);
 
         int controllerLayoutId = R.layout.exo_playback_control_view;
         rewindMs = DEFAULT_REWIND_MS;
@@ -715,6 +724,7 @@ public class PlaybackControlView extends FrameLayout {
         if (rewindMs <= 0) {
             return;
         }
+        analytic.reportEvent(Analytic.Video.JUMP_BACKWARD);
         seekTo(Math.max(player.getCurrentPosition() - rewindMs, 0));
     }
 
@@ -722,6 +732,7 @@ public class PlaybackControlView extends FrameLayout {
         if (fastForwardMs <= 0) {
             return;
         }
+        analytic.reportEvent(Analytic.Video.JUMP_FORWARD);
         seekTo(Math.min(player.getCurrentPosition() + fastForwardMs, player.getDuration()));
     }
 
@@ -827,12 +838,16 @@ public class PlaybackControlView extends FrameLayout {
                     rewind();
                     break;
                 case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
-                    controlDispatcher.dispatchSetPlayWhenReady(player, !player.getPlayWhenReady());
+                    boolean newState = !player.getPlayWhenReady();
+                    reportClickPlayPauseEvent(newState);
+                    controlDispatcher.dispatchSetPlayWhenReady(player, newState);
                     break;
                 case KeyEvent.KEYCODE_MEDIA_PLAY:
+                    reportClickPlayPauseEvent(true);
                     controlDispatcher.dispatchSetPlayWhenReady(player, true);
                     break;
                 case KeyEvent.KEYCODE_MEDIA_PAUSE:
+                    reportClickPlayPauseEvent(false);
                     controlDispatcher.dispatchSetPlayWhenReady(player, false);
                     break;
                 case KeyEvent.KEYCODE_MEDIA_NEXT:
@@ -957,14 +972,24 @@ public class PlaybackControlView extends FrameLayout {
                 } else if (rewindButton == view) {
                     rewind();
                 } else if (playButton == view) {
+                    reportClickPlayPauseEvent(true);
                     controlDispatcher.dispatchSetPlayWhenReady(player, true);
                 } else if (pauseButton == view) {
+                    reportClickPlayPauseEvent(false);
                     controlDispatcher.dispatchSetPlayWhenReady(player, false);
                 }
             }
             hideAfterTimeout();
         }
 
+    }
+
+    private void reportClickPlayPauseEvent(boolean isPlay) {
+        if (isPlay) {
+            analytic.reportEvent(Analytic.Video.PLAY);
+        } else {
+            analytic.reportEvent(Analytic.Video.PAUSE);
+        }
     }
 
 }

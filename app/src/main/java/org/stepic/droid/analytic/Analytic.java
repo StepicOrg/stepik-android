@@ -140,20 +140,19 @@ public interface Analytic {
     }
 
     interface Video {
-        String OPEN_EXTERNAL = "video open external";
-        String OPEN_NATIVE = "video open native";
-        String NOT_COMPATIBLE = "video is not compatible";
-        String VLC_HARDWARE_ERROR = "video player: vlc error hardware";
-        String INVALID_SURFACE_SIZE = "video player: Invalid surface size";
-        String SHOW_CHOOSE_RATE = "video player: showChooseRateMenu";
-        String JUMP_FORWARD = "video player: onJumpForward";
-        String JUMP_BACKWARD = "video player: onJumpBackward";
-        String START_LOADING = "video player: startLoading";
-        String STOP_LOADING = "video player: stopLoading";
+        String OPEN_EXTERNAL = "video_open_external";
+        String OPEN_NATIVE = "video_open_native";
+        String NOT_COMPATIBLE = "video_is_not_compatible";
+        String SHOW_CHOOSE_RATE = "video_player_show_choose_rate_menu";
+        String JUMP_FORWARD = "video_player_jump_forward";
+        String JUMP_BACKWARD = "video_player_jump_backward";
         String QUALITY_NOT_DETERMINATED = "video_quality_failed";
         String SHOW_MORE_ITEMS = "video_player_show_more";
         String ROTATE_CLICKED = "video_player_rotate_clicked";
         String PLAYER_CREATED = "video_player_created";
+        String PLAY = "video_player_play";
+        String PAUSE = "video_player_pause";
+        String ERROR = "video_player_error";
     }
 
     interface AppIndexing {

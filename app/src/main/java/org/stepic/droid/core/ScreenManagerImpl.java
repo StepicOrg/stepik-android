@@ -280,7 +280,7 @@ public class ScreenManagerImpl implements ScreenManager {
             analytic.reportEvent(Analytic.Video.OPEN_NATIVE);
         }
 
-        boolean isCompatible = AndroidVersionKt.isJellyBeanOrLater();//..VLCUtil.hasCompatibleCPU(App.Companion.getAppContext());
+        boolean isCompatible = AndroidVersionKt.isJellyBeanOrLater();
         if (!isCompatible) {
             analytic.reportEvent(Analytic.Video.NOT_COMPATIBLE);
         }

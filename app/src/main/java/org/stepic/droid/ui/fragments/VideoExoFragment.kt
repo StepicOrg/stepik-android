@@ -243,6 +243,21 @@ class VideoExoFragment : FragmentBase(),
         return videoId
     }
 
+
+    override fun onNeedShowVideoWithTimestamp(timestamp: Long) {
+        player?.seekTo(timestamp)
+        if (autoPlay) {
+            player?.playWhenReady = true
+            autoPlay = false
+        } else {
+            player?.playWhenReady = false
+        }
+        videoPlayerView?.player = player
+        videoPlayerView?.showController()
+        player?.prepare(mediaSource, false, false)
+    }
+
+
     private fun setOrientationPreference(alwaysRotate: Boolean) {
         if (alwaysRotate) {
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
@@ -293,20 +308,6 @@ class VideoExoFragment : FragmentBase(),
     private fun pausePlayer() {
         player?.playWhenReady = false // pause player
     }
-
-    override fun onNeedShowVideoWithTimestamp(timestamp: Long) {
-        player?.seekTo(timestamp)
-        if (autoPlay) {
-            player?.playWhenReady = true
-            autoPlay = false
-        } else {
-            player?.playWhenReady = false
-        }
-        videoPlayerView?.player = player
-        videoPlayerView?.showController()
-        player?.prepare(mediaSource, false, false)
-    }
-
 
     private fun showChooseRateMenu(view: View) {
         analytic.reportEvent(Analytic.Video.SHOW_CHOOSE_RATE)

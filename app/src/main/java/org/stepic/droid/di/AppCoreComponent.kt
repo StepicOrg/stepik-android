@@ -35,6 +35,7 @@ import org.stepic.droid.ui.adapters.*
 import org.stepic.droid.ui.custom.ExpandableTextView
 import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout
 import org.stepic.droid.ui.custom.LatexSupportableWebView
+import org.stepic.droid.ui.custom_exo.PlaybackControlView
 import org.stepic.droid.ui.dialogs.*
 import org.stepic.droid.ui.fragments.CommentsFragment
 
@@ -176,4 +177,6 @@ interface AppCoreComponent {
     fun inject(timeIntervalPickerDialogFragment: TimeIntervalPickerDialogFragment)
 
     fun inject(streakAlarmService: StreakAlarmService)
+
+    fun inject(playbackControlView: PlaybackControlView)
 }
