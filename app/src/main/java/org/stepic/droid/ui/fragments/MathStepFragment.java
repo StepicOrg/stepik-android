@@ -2,7 +2,6 @@ package org.stepic.droid.ui.fragments;
 
 import com.squareup.otto.Subscribe;
 
-import org.stepic.droid.events.InternetIsEnabledEvent;
 import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent;
 import org.stepic.droid.events.steps.StepWasUpdatedEvent;
 import org.stepic.droid.model.Reply;
@@ -23,12 +22,6 @@ public class MathStepFragment extends SingleLineSendStepFragment {
 
         String text = reply.getFormula();
         answerField.setText(text);
-    }
-
-    @Subscribe
-    @Override
-    public void onInternetEnabled(InternetIsEnabledEvent enabledEvent) {
-        super.onInternetEnabled(enabledEvent);
     }
 
     @Subscribe

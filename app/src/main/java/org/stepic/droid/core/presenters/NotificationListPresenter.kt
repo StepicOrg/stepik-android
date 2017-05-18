@@ -2,13 +2,13 @@ package org.stepic.droid.core.presenters
 
 import android.support.annotation.MainThread
 import android.support.annotation.WorkerThread
-import com.squareup.otto.Subscribe
 import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.base.Client
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.configuration.Config
+import org.stepic.droid.core.internet_state.contract.InternetEnabledListener
 import org.stepic.droid.core.presenters.contracts.NotificationListView
 import org.stepic.droid.di.notifications.NotificationsScope
-import org.stepic.droid.events.InternetIsEnabledEvent
 import org.stepic.droid.notifications.StepikNotificationManager
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.notifications.model.NotificationType
@@ -30,9 +30,9 @@ class NotificationListPresenter
         private val api: Api,
         private val config: Config,
         private val analytic: Analytic,
-        private val stepikNotificationManager: StepikNotificationManager
-) : PresenterBase<NotificationListView>() {
-
+        private val stepikNotificationManager: StepikNotificationManager,
+        private val internetEnabledListenerClient : Client<InternetEnabledListener>
+) : PresenterBase<NotificationListView>(), InternetEnabledListener {
     private var notificationCategory: NotificationCategory? = null
     val isLoading = AtomicBoolean(false)
     val wasShown = AtomicBoolean(false)
@@ -272,13 +272,20 @@ class NotificationListPresenter
                 }
             }
         }
-
-
     }
 
-    @Subscribe
-    @MainThread
-    fun onInternetEnabled(event: InternetIsEnabledEvent) {
+    override fun attachView(view: NotificationListView) {
+        super.attachView(view)
+        internetEnabledListenerClient.subscribe(this)
+    }
+
+    override fun detachView(view: NotificationListView) {
+        super.detachView(view)
+        internetEnabledListenerClient.unsubscribe(this)
+    }
+
+
+    override fun onInternetEnabled() {
         val category = notificationCategory
         if (notificationList.isEmpty() && category != null) {
             init(category);
