@@ -94,8 +94,6 @@ interface AppCoreComponent {
 
     fun inject(loadService: DeleteService)
 
-    fun inject(updateAppService: UpdateAppService)
-
     fun inject(downloadCompleteReceiver: DownloadCompleteReceiver)
 
     fun inject(viewPusher: ViewPusher)

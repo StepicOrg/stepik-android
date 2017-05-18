@@ -96,9 +96,6 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
     protected ScreenManager screenManager;
 
     @Inject
-    protected Bus bus;
-
-    @Inject
     protected UserPreferences userPreferences;
 
     @Inject
