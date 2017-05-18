@@ -743,7 +743,8 @@ public class SectionsFragment
 
     @Override
     public void onNeedToChooseCalendar(@NotNull ArrayList<CalendarItem> primariesCalendars) {
-        DialogFragment chooseCalendarDialog = ChooseCalendarDialog.Companion.newInstance(primariesCalendars);
+        ChooseCalendarDialog chooseCalendarDialog = ChooseCalendarDialog.Companion.newInstance(primariesCalendars);
+        chooseCalendarDialog.setTargetFragment(this, 0); //alternative to onActivityResult
         if (!chooseCalendarDialog.isAdded()) {
             chooseCalendarDialog.show(getFragmentManager(), null);
         }

@@ -8,11 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 
-import com.squareup.otto.Subscribe;
-
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentBase;
-import org.stepic.droid.events.wifi_settings.WifiLoadIsChangedEvent;
 import org.stepic.droid.notifications.model.NotificationType;
 import org.stepic.droid.ui.custom.BetterSwitch;
 import org.stepic.droid.ui.dialogs.AllowMobileDataDialogFragment;
@@ -21,7 +18,7 @@ import org.stepic.droid.ui.dialogs.VideoQualityDialog;
 import butterknife.BindString;
 import butterknife.BindView;
 
-public class SettingsFragment extends FragmentBase {
+public class SettingsFragment extends FragmentBase implements AllowMobileDataDialogFragment.Callback {
 
     public static SettingsFragment newInstance() {
         return new SettingsFragment();
@@ -142,12 +139,15 @@ public class SettingsFragment extends FragmentBase {
                 if (wifiLoadSwitch.isUserTriggered()) {
                     if (newCheckedState) {
                         //wifi only
-                        bus.post(new WifiLoadIsChangedEvent(false));
+                        onMobileDataStateChanged(false);
                     } else {
                         //wifi and mobile internet
                         wifiLoadSwitch.setChecked(true);
-                        AllowMobileDataDialogFragment dialogFragment = new AllowMobileDataDialogFragment();
-                        dialogFragment.show(getFragmentManager(), null);
+                        AllowMobileDataDialogFragment dialogFragment = AllowMobileDataDialogFragment.Companion.newInstance();
+                        dialogFragment.setTargetFragment(SettingsFragment.this, 0);
+                        if (!dialogFragment.isAdded()) {
+                            dialogFragment.show(getFragmentManager(), null);
+                        }
                     }
 
                 }
@@ -195,18 +195,6 @@ public class SettingsFragment extends FragmentBase {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        bus.register(this);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        bus.unregister(this);
-    }
-
-    @Override
     public void onDestroyView() {
         keepScreenOnSwitch.setOnCheckedChangeListener(null);
         discountingPolicySwitch.setOnCheckedChangeListener(null);
@@ -222,12 +210,6 @@ public class SettingsFragment extends FragmentBase {
         notificationSound.setOnCheckedChangeListener(null);
         storageManagementButton.setOnClickListener(null);
         super.onDestroyView();
-    }
-
-    @Subscribe
-    public void onWifiChanged(WifiLoadIsChangedEvent e) {
-        wifiLoadSwitch.setChecked(!e.isNewStateMobileAllowed());
-        storeMobileState(e.isNewStateMobileAllowed());
     }
 
     private void storeMobileState(boolean isMobileAllowed) {
@@ -275,5 +257,11 @@ public class SettingsFragment extends FragmentBase {
             }
         });
 
+    }
+
+    @Override
+    public void onMobileDataStateChanged(boolean isMobileAllowed) {
+        wifiLoadSwitch.setChecked(!isMobileAllowed);
+        storeMobileState(isMobileAllowed);
     }
 }

@@ -90,8 +90,6 @@ interface AppCoreComponent {
 
     fun inject(dialogFragment: VideoQualityDialog)
 
-    fun inject(allowMobileDataDialogFragment: AllowMobileDataDialogFragment)
-
     fun inject(loadService: LoadService)
 
     fun inject(loadService: DeleteService)
