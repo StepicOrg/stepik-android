@@ -19,7 +19,6 @@ import org.stepic.droid.di.mainscreen.MainScreenComponent
 import org.stepic.droid.di.notifications.NotificationsComponent
 import org.stepic.droid.di.profile.ProfileComponent
 import org.stepic.droid.di.routing.RoutingComponent
-import org.stepic.droid.di.section.SectionComponent
 import org.stepic.droid.di.storage.StorageComponent
 import org.stepic.droid.di.video.VideoComponent
 import org.stepic.droid.model.Course
@@ -91,8 +90,6 @@ interface AppCoreComponent {
     fun inject(dialogFragment: LogoutAreYouSureDialog)
 
     fun inject(dialogFragment: VideoQualityDialog)
-
-    fun inject(calendarDialog: ChooseCalendarDialog)
 
     fun inject(allowMobileDataDialogFragment: AllowMobileDataDialogFragment)
 

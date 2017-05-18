@@ -65,7 +65,6 @@ import org.stepic.droid.core.presenters.contracts.DownloadingProgressSectionsVie
 import org.stepic.droid.core.presenters.contracts.InvitationView;
 import org.stepic.droid.core.presenters.contracts.LoadCourseView;
 import org.stepic.droid.core.presenters.contracts.SectionsView;
-import org.stepic.droid.events.CalendarChosenEvent;
 import org.stepic.droid.events.UpdateSectionProgressEvent;
 import org.stepic.droid.events.courses.CourseCantLoadEvent;
 import org.stepic.droid.events.courses.CourseFoundEvent;
@@ -121,7 +120,8 @@ public class SectionsFragment
         SectionsView,
         InvitationView,
         DownloadingProgressSectionsView,
-        DownloadingInteractionView {
+        DownloadingInteractionView,
+        ChooseCalendarDialog.CallbackContract {
 
     public static String joinFlag = "joinFlag";
     private static int INVITE_REQUEST_CODE = 324;
@@ -749,12 +749,6 @@ public class SectionsFragment
         }
     }
 
-    @Subscribe
-    public void onCalendarChosen(CalendarChosenEvent event) {
-        CalendarItem calendarItem = event.getCalendarItem();
-        calendarPresenter.addDeadlinesToCalendar(sectionList, calendarItem);
-    }
-
     @Override
     public void onUserDoesntHaveCalendar() {
         userPreferences.setNeedToShowCalendarWidget(false);
@@ -979,5 +973,10 @@ public class SectionsFragment
                 }
             }
         });
+    }
+
+    @Override
+    public void onCalendarChosen(@NotNull CalendarItem calendarItem) {
+        calendarPresenter.addDeadlinesToCalendar(sectionList, calendarItem);
     }
 }
