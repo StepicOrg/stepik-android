@@ -8,7 +8,6 @@ import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.concurrency.DownloadPoster
 import org.stepic.droid.core.CommentManager
-import org.stepic.droid.core.MyPhoneStateListener
 import org.stepic.droid.di.certificates.CertificateComponent
 import org.stepic.droid.di.course.CourseComponent
 import org.stepic.droid.di.course_list.CourseListComponent
@@ -118,8 +117,6 @@ interface AppCoreComponent {
     fun inject(service: CancelLoadingService)
 
     fun inject(downloadClickReceiver: DownloadClickReceiver)
-
-    fun inject(receiver: MyPhoneStateListener)
 
     fun inject(service: HackFcmListener)
 
