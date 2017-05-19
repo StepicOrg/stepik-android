@@ -23,7 +23,6 @@ import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.concurrency.DownloadPoster;
-import org.stepic.droid.events.CancelAllVideosEvent;
 import org.stepic.droid.events.DownloadingIsLoadedSuccessfullyEvent;
 import org.stepic.droid.events.steps.StepRemovedEvent;
 import org.stepic.droid.events.video.DownloadReportEvent;
@@ -38,6 +37,7 @@ import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.VideosAndMapToLesson;
 import org.stepic.droid.ui.adapters.DownloadsAdapter;
+import org.stepic.droid.ui.dialogs.CancelVideosDialog;
 import org.stepic.droid.ui.dialogs.ClearVideosDialog;
 import org.stepic.droid.ui.dialogs.LoadingProgressDialog;
 import org.stepic.droid.ui.listeners.OnClickCancelListener;
@@ -61,7 +61,8 @@ import kotlin.jvm.functions.Function0;
 //// TODO: 26.12.16 rewrite this class to MVP
 public class DownloadsFragment extends FragmentBase implements
         OnClickCancelListener,
-        ClearVideosDialog.Callback{
+        ClearVideosDialog.Callback,
+        CancelVideosDialog.Callback {
 
     private static final int ANIMATION_DURATION = 10; //reset to 10 after debug
     private static final int UPDATE_DELAY = 300;
@@ -484,8 +485,8 @@ public class DownloadsFragment extends FragmentBase implements
         }
     }
 
-    @Subscribe
-    public void cancelAll(CancelAllVideosEvent event) {
+    @Override
+    public void onCancelAllVideos() {
         AsyncTask task = new AsyncTask() {
             @Override
             protected void onPreExecute() {
@@ -551,8 +552,11 @@ public class DownloadsFragment extends FragmentBase implements
         if (position == 0 && !downloadingWithProgressList.isEmpty()) {
             //downloading
 
-            DialogFragment dialogFragment = new DownloadsAdapter.CancelVideoDialog();
-            dialogFragment.show(getFragmentManager(), null);
+            DialogFragment dialogFragment = CancelVideosDialog.Companion.newInstance();
+            dialogFragment.setTargetFragment(this, 0);
+            if (!dialogFragment.isAdded()) {
+                dialogFragment.show(getFragmentManager(), null);
+            }
         } else {
             //cached
             ClearVideosDialog dialogFragment = ClearVideosDialog.Companion.newInstance();

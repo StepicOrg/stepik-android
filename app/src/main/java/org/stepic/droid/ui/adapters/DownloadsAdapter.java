@@ -1,16 +1,10 @@
 package org.stepic.droid.ui.adapters;
 
 import android.app.Activity;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,13 +15,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.squareup.otto.Bus;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.base.App;
 import org.stepic.droid.core.ScreenManager;
-import org.stepic.droid.events.CancelAllVideosEvent;
 import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.DownloadingVideoItem;
 import org.stepic.droid.model.Lesson;
@@ -481,31 +473,6 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
                 headerTextView.setText(titleCached);
                 headerButton.setText(titleForCachedButton);
             }
-        }
-    }
-
-    public static class CancelVideoDialog extends DialogFragment {
-        @Inject
-        Bus bus;
-
-        public CancelVideoDialog() {
-            App.Companion.component().inject(this);
-        }
-
-        @NonNull
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setTitle(R.string.title_confirmation)
-                    .setMessage(R.string.are_you_sure)
-                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            bus.post(new CancelAllVideosEvent());
-                        }
-                    })
-                    .setNegativeButton(R.string.no, null);
-            return builder.create();
         }
     }
 

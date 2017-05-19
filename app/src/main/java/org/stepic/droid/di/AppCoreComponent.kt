@@ -126,8 +126,6 @@ interface AppCoreComponent {
 
     fun inject(downloadPoster: DownloadPoster)
 
-    fun inject(cancelVideoDialog: DownloadsAdapter.CancelVideoDialog)
-
     fun inject(commentManager: CommentManager)
 
     fun inject(commentsFragment: CommentsFragment)
