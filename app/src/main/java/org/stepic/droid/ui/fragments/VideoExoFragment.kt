@@ -282,7 +282,7 @@ class VideoExoFragment : FragmentBase(),
     }
 
     private fun setVideoRate(videoPlaybackRate: VideoPlaybackRate) {
-        player?.playbackParameters = PlaybackParameters(videoPlaybackRate.rateFloat, videoPlaybackRate.rateFloat)
+        player?.playbackParameters = PlaybackParameters(videoPlaybackRate.rateFloat, 1f)
         videoRateChooser?.setImageDrawable(videoPlaybackRate.icon)
     }
 
