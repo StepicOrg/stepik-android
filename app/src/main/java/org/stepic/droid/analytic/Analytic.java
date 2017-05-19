@@ -258,6 +258,7 @@ public interface Analytic {
     interface Feedback {
         String FAILED_ON_SERVER = "Feedback is failed due to server";
         String INTERNET_FAIL = "Feedback internet fail";
+        String FEEDBACK_SENT = "feedback_sent";
     }
 
     interface Comments {

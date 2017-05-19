@@ -11,6 +11,7 @@ import org.stepic.droid.core.CommentManager
 import org.stepic.droid.di.certificates.CertificateComponent
 import org.stepic.droid.di.course.CourseComponent
 import org.stepic.droid.di.course_list.CourseListComponent
+import org.stepic.droid.di.feedback.FeedbackComponent
 import org.stepic.droid.di.filters.FilterComponent
 import org.stepic.droid.di.lesson.LessonComponent
 import org.stepic.droid.di.login.LoginComponent
@@ -50,6 +51,8 @@ interface AppCoreComponent {
         @BindsInstance
         fun context(context: Context): Builder
     }
+
+    fun feedbackComponentBuilder(): FeedbackComponent.Builder
 
     fun loginComponentBuilder(): LoginComponent.Builder
 
