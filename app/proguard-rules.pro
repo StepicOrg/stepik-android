@@ -41,11 +41,21 @@
 -keep class org.joda.time.** { *; }
 -keep interface org.joda.time.** { *; }
 
-##Retrofit
--dontwarn retrofit.**
--keep class retrofit.** { *; }
+##---------------Begin: proguard configuration for Retrofit 2  ----------
+# Platform calls Class.forName on types which do not exist on Android to determine platform.
+-dontnote retrofit2.Platform
+# Platform used when running on Java 8 VMs. Will not be used at runtime.
+-dontwarn retrofit2.Platform$Java8
+# Retain generic type information for use by reflection by converters and adapters.
 -keepattributes Signature
+# Retain declared checked exceptions for use by a Proxy instance.
 -keepattributes Exceptions
+
+-keepclasseswithmembers class * {
+    @retrofit2.http.* <methods>;
+}
+##---------------End: proguard configuration for Retrofit 2  ----------
+
 
 ##OTTO
 -keepattributes *Annotation*
@@ -57,11 +67,14 @@
 # Picaso
 -dontwarn com.squareup.okhttp.**
 
-#Model classes
--keep class org.stepic.droid.model.* { *; }
--dontwarn org.stepic.droid.model.*
 #Yandex metrica
 -keep class com.yandex.metrica.impl.* { *; }
 -dontwarn com.yandex.metrica.impl.*
 -keep class com.yandex.metrica.* { *; }
 -dontwarn com.yandex.metrica.*
+
+#Keep POJO
+-keep class org.stepic.droid.model.* { *; }
+-dontwarn org.stepic.droid.model.*
+-keep class org.stepic.droid.web.* { *; }
+-dontwarn org.stepic.droid.web.*

@@ -34,8 +34,6 @@ android {
         versionCode 157
         versionName "1.34.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        // Enabling multidex support.
-        multiDexEnabled true
     }
 
 
@@ -45,9 +43,6 @@ android {
         }
         classic {
             applicationId "org.stepic.droid"
-        }
-        releasedev {
-            applicationId "org.stepic.droid.release"
         }
     }
     sourceSets {
@@ -91,11 +86,15 @@ android {
     buildTypes {
         release {
             signingConfig signingConfigs.release
-            minifyEnabled false
+            minifyEnabled true
+            useProguard true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'),
                     'proguard-rules.pro'
         }
         debug {
+            minifyEnabled true
+            useProguard false
             signingConfig signingConfigs.debug
             versionNameSuffix "DEV"
         }
@@ -122,7 +121,6 @@ dependencies {
     kapt 'com.jakewharton:butterknife-compiler:8.5.1'
     //</DI>
 
-    compile 'com.android.support:multidex:1.0.1'
     compile 'com.google.code.gson:gson:2.7'
 
     compile 'de.hdodenhof:circleimageview:1.3.0'
