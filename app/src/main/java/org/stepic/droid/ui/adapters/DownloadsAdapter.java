@@ -37,12 +37,10 @@ import org.stepic.droid.storage.CleanManager;
 import org.stepic.droid.storage.IDownloadManager;
 import org.stepic.droid.storage.operations.DatabaseFacade;
 import org.stepic.droid.ui.custom.progressbutton.ProgressWheel;
-import org.stepic.droid.ui.dialogs.ClearVideosDialog;
 import org.stepic.droid.ui.fragments.DownloadsFragment;
 import org.stepic.droid.ui.listeners.OnClickCancelListener;
 import org.stepic.droid.ui.listeners.OnClickLoadListener;
 import org.stepic.droid.ui.listeners.StepicOnClickItemListener;
-import org.stepic.droid.util.DbParseHelper;
 import org.stepic.droid.util.FileUtil;
 import org.stepic.droid.util.ThumbnailParser;
 
@@ -92,10 +90,18 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
     private Drawable placeholder;
 
     private DownloadsFragment downloadsFragment;
+    private final OnClickCancelListener onClickCancelListener;
     private Set<Long> cachedStepsSet;
 
-    public DownloadsAdapter(List<CachedVideo> cachedVideos, Map<Long, Lesson> videoIdToStepMap, Activity context, DownloadsFragment downloadsFragment, List<DownloadingVideoItem> downloadingList, Set<Long> cachedStepsSet) {
+    public DownloadsAdapter(List<CachedVideo> cachedVideos,
+                            Map<Long, Lesson> videoIdToStepMap,
+                            Activity context,
+                            DownloadsFragment downloadsFragment,
+                            List<DownloadingVideoItem> downloadingList,
+                            Set<Long> cachedStepsSet,
+                            OnClickCancelListener onClickCancelListener) {
         this.downloadsFragment = downloadsFragment;
+        this.onClickCancelListener = onClickCancelListener;
         App.Companion.component().inject(this);
         cachedVideoList = cachedVideos;
         sourceActivity = context;
@@ -115,7 +121,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
             return new DownloadingViewHolder(v, this);
         } else if (viewType == TYPE_TITLE) {
             View v = LayoutInflater.from(sourceActivity).inflate(R.layout.header_download_item, parent, false);
-            return new TitleViewHolder(v);
+            return new TitleViewHolder(v, onClickCancelListener);
         } else {
             return null;
         }
@@ -439,7 +445,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
     }
 
-    public class TitleViewHolder extends GenericViewHolder implements OnClickCancelListener {
+    public class TitleViewHolder extends GenericViewHolder {
 
         @BindView(R.id.button_header_download_item)
         Button headerButton;
@@ -452,7 +458,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
         String titleCached;
         String titleForCachedButton;
 
-        public TitleViewHolder(View itemView) {
+        public TitleViewHolder(View itemView, final OnClickCancelListener onClickCancelListener) {
             super(itemView);
             titleDownloading = App.Companion.getAppContext().getString(R.string.downloading_title);
             titleForDownloadingButton = App.Companion.getAppContext().getString(R.string.downloading_cancel_all);
@@ -461,7 +467,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
             headerButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    TitleViewHolder.this.onClickCancel(getAdapterPosition());
+                    onClickCancelListener.onClickCancel(getAdapterPosition());
                 }
             });
         }
@@ -474,33 +480,6 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
             } else {
                 headerTextView.setText(titleCached);
                 headerButton.setText(titleForCachedButton);
-            }
-
-        }
-
-
-        @Override
-        public void onClickCancel(int position) {
-            if (position == 0 && !downloadingVideoList.isEmpty()) {
-                //downloading
-
-                DialogFragment dialogFragment = new CancelVideoDialog();
-                dialogFragment.show(downloadsFragment.getFragmentManager(), null);
-            } else {
-                //cached
-                ClearVideosDialog dialogFragment = new ClearVideosDialog();
-
-                Bundle bundle = new Bundle();
-                long[] stepIds = new long[cachedVideoList.size()];
-                int i = 0;
-                for (CachedVideo videoItem : cachedVideoList) {
-                    stepIds[i++] = videoItem.getStepId();
-                }
-                String stringWithIds = DbParseHelper.parseLongArrayToString(stepIds);
-                bundle.putString(ClearVideosDialog.Companion.getKEY_STRING_IDS(), stringWithIds);
-                dialogFragment.setArguments(bundle);
-
-                dialogFragment.show(downloadsFragment.getFragmentManager(), null);
             }
         }
     }

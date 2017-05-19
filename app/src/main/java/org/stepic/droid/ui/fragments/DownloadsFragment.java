@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,9 +25,6 @@ import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.concurrency.DownloadPoster;
 import org.stepic.droid.events.CancelAllVideosEvent;
 import org.stepic.droid.events.DownloadingIsLoadedSuccessfullyEvent;
-import org.stepic.droid.events.loading.FinishLoadEvent;
-import org.stepic.droid.events.loading.StartLoadEvent;
-import org.stepic.droid.events.steps.ClearAllDownloadWithoutAnimationEvent;
 import org.stepic.droid.events.steps.StepRemovedEvent;
 import org.stepic.droid.events.video.DownloadReportEvent;
 import org.stepic.droid.events.video.FinishDownloadCachedVideosEvent;
@@ -40,7 +38,10 @@ import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.VideosAndMapToLesson;
 import org.stepic.droid.ui.adapters.DownloadsAdapter;
+import org.stepic.droid.ui.dialogs.ClearVideosDialog;
 import org.stepic.droid.ui.dialogs.LoadingProgressDialog;
+import org.stepic.droid.ui.listeners.OnClickCancelListener;
+import org.stepic.droid.util.DbParseHelper;
 import org.stepic.droid.util.KotlinUtil;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.RWLocks;
@@ -58,7 +59,9 @@ import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
 import kotlin.jvm.functions.Function0;
 
 //// TODO: 26.12.16 rewrite this class to MVP
-public class DownloadsFragment extends FragmentBase {
+public class DownloadsFragment extends FragmentBase implements
+        OnClickCancelListener,
+        ClearVideosDialog.Callback{
 
     private static final int ANIMATION_DURATION = 10; //reset to 10 after debug
     private static final int UPDATE_DELAY = 300;
@@ -122,7 +125,7 @@ public class DownloadsFragment extends FragmentBase {
                 screenManager.showLaunchScreen(getActivity());
             }
         });
-        downloadAdapter = new DownloadsAdapter(cachedVideoList, stepIdToLesson, getActivity(), this, downloadingWithProgressList, cachedStepsSet);
+        downloadAdapter = new DownloadsAdapter(cachedVideoList, stepIdToLesson, getActivity(), this, downloadingWithProgressList, cachedStepsSet, this);
         downloadsView.setAdapter(downloadAdapter);
 
         downloadsView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -413,23 +416,6 @@ public class DownloadsFragment extends FragmentBase {
         }
     }
 
-
-    @Subscribe
-    public void onClearAll(ClearAllDownloadWithoutAnimationEvent e) {
-        long[] stepIds = e.getStepIds();
-        if (stepIds == null) {
-            cachedStepsSet.clear();
-            cachedVideoList.clear();
-        } else {
-            for (long stepId : stepIds) {
-                removeByStepId(stepId);
-            }
-        }
-        checkForEmpty();
-        downloadAdapter.notifyDataSetChanged();
-    }
-
-
     @Subscribe
     public void onStepRemoved(StepRemovedEvent e) {
         long stepId = e.getStepId();
@@ -499,16 +485,6 @@ public class DownloadsFragment extends FragmentBase {
     }
 
     @Subscribe
-    public void onShouldStartLoad(StartLoadEvent event) {
-        ProgressHelper.activate(loadingProgressDialog);
-    }
-
-    @Subscribe
-    public void onShouldStopLoad(FinishLoadEvent event) {
-        ProgressHelper.dismiss(loadingProgressDialog);
-    }
-
-    @Subscribe
     public void cancelAll(CancelAllVideosEvent event) {
         AsyncTask task = new AsyncTask() {
             @Override
@@ -568,5 +544,57 @@ public class DownloadsFragment extends FragmentBase {
     @Subscribe
     public void onVideoMoved(VideosMovedEvent event) {
         updateCachedAsync();
+    }
+
+    @Override
+    public void onClickCancel(int position) {
+        if (position == 0 && !downloadingWithProgressList.isEmpty()) {
+            //downloading
+
+            DialogFragment dialogFragment = new DownloadsAdapter.CancelVideoDialog();
+            dialogFragment.show(getFragmentManager(), null);
+        } else {
+            //cached
+            ClearVideosDialog dialogFragment = ClearVideosDialog.Companion.newInstance();
+            dialogFragment.setTargetFragment(this, 0);
+
+            Bundle bundle = new Bundle();
+            long[] stepIds = new long[cachedVideoList.size()];
+            int i = 0;
+            for (CachedVideo videoItem : cachedVideoList) {
+                stepIds[i++] = videoItem.getStepId();
+            }
+            String stringWithIds = DbParseHelper.parseLongArrayToString(stepIds);
+            bundle.putString(ClearVideosDialog.Companion.getKEY_STRING_IDS(), stringWithIds);
+            dialogFragment.setArguments(bundle);
+
+            if (!dialogFragment.isAdded()) {
+                dialogFragment.show(getFragmentManager(), null);
+            }
+        }
+    }
+
+    @Override
+    public void onStartLoading() {
+        ProgressHelper.activate(loadingProgressDialog);
+    }
+
+    @Override
+    public void onFinishLoading() {
+        ProgressHelper.dismiss(loadingProgressDialog);
+    }
+
+    @Override
+    public void onClearAllWithoutAnimation(@Nullable long[] stepIds) {
+        if (stepIds == null) {
+            cachedStepsSet.clear();
+            cachedVideoList.clear();
+        } else {
+            for (long stepId : stepIds) {
+                removeByStepId(stepId);
+            }
+        }
+        checkForEmpty();
+        downloadAdapter.notifyDataSetChanged();
     }
 }

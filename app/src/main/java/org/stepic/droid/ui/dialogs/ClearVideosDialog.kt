@@ -1,21 +1,15 @@
 package org.stepic.droid.ui.dialogs
 
 import android.app.Dialog
-import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v7.app.AlertDialog
-import com.squareup.otto.Bus
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.concurrency.MainHandler
-import org.stepic.droid.events.loading.FinishLoadEvent
-import org.stepic.droid.events.loading.StartLoadEvent
-import org.stepic.droid.events.steps.ClearAllDownloadWithoutAnimationEvent
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.storage.CleanManager
-import org.stepic.droid.storage.CleanManagerImpl
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.DbParseHelper
 import org.stepic.droid.util.FileUtil
@@ -27,19 +21,20 @@ class ClearVideosDialog : DialogFragment() {
     companion object {
         val KEY_STRING_IDS = "step_ids"
 
-        fun newInstance(): DialogFragment {
+        fun newInstance(): ClearVideosDialog {
             return ClearVideosDialog()
         }
     }
 
     @Inject
     lateinit var databaseFacade: DatabaseFacade
+
     @Inject
     lateinit var cleanManager: CleanManager
-    @Inject
-    lateinit var bus: Bus
+
     @Inject
     lateinit var threadPoolExecutor: ThreadPoolExecutor
+
     @Inject
     lateinit var mainHandler: MainHandler
 
@@ -59,43 +54,43 @@ class ClearVideosDialog : DialogFragment() {
         builder.setTitle(R.string.title_confirmation).setMessage(R.string.clear_videos).setPositiveButton(R.string.yes) { _, _ ->
             analytic.reportEvent(Analytic.Interaction.YES_CLEAR_VIDEOS)
 
-            val task = object : AsyncTask<Void, Void, Void>() {
-                override fun onPreExecute() {
-                    super.onPreExecute()
-                    bus.post(StartLoadEvent())
-                }
-
-                override fun doInBackground(params: Array<Void>): Void? {
+            (targetFragment as? Callback)?.onStartLoading()
+            threadPoolExecutor.execute {
+                try {
                     val stepIds: LongArray?
                     if (stringIds != null) {
-
                         stepIds = DbParseHelper.parseStringToLongArray(stringIds)
-                        if (stepIds == null) return null
-                        for (stepId in stepIds) {
-                            val step = databaseFacade.getStepById(stepId)
-                            cleanManager.removeStep(step)
-                        }
+                        stepIds
+                                ?.map { databaseFacade.getStepById(it) }
+                                ?.forEach { cleanManager.removeStep(it) }
                     } else {
                         stepIds = null
                         FileUtil.cleanDirectory(userPreferences.userDownloadFolder);
                         FileUtil.cleanDirectory(userPreferences.sdCardDownloadFolder)
                         databaseFacade.dropDatabase();
                     }
-
                     mainHandler.post {
-                        bus.post(ClearAllDownloadWithoutAnimationEvent(stepIds))
+                        (targetFragment as? Callback)?.onClearAllWithoutAnimation(stepIds)
                     }
-                    return null
-                }
-
-                override fun onPostExecute(o: Void?) {
-                    bus.post(FinishLoadEvent())
+                } finally {
+                    mainHandler.post { (targetFragment as? Callback)?.onFinishLoading() }
                 }
             }
-            task.executeOnExecutor(threadPoolExecutor)
         }.setNegativeButton(R.string.no, null)
 
         return builder.create()
+    }
+
+    /**
+     * set as target fragment, which implements this Callback for getting notifications
+     */
+    interface Callback {
+
+        fun onStartLoading()
+
+        fun onFinishLoading()
+
+        fun onClearAllWithoutAnimation(stepIds: LongArray?)
     }
 
 }
