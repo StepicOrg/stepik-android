@@ -45,7 +45,8 @@ public class ChooseStorageDialog extends DialogFragment {
             }
         }
         final int finalIndexChosen = indexChosen;
-        final DialogFragment youWantMoveDataDialog = WantMoveDataDialog.newInstance(); //// FIXME: 08.06.16 make new Dialog with are you sure
+        final DialogFragment youWantMoveDataDialog = WantMoveDataDialog.Companion.newInstance();
+        youWantMoveDataDialog.setTargetFragment(getTargetFragment(), 0);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.choose_storage_title)
@@ -74,6 +75,11 @@ public class ChooseStorageDialog extends DialogFragment {
                         });
 
         return builder.create();
+    }
+
+    public static ChooseStorageDialog newInstance() {
+        ChooseStorageDialog fragment = new ChooseStorageDialog();
+        return fragment;
     }
 
 }

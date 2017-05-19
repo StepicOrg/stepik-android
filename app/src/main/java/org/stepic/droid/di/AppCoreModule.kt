@@ -29,6 +29,9 @@ import org.stepic.droid.core.*
 import org.stepic.droid.core.internet_state.InternetEnabledPosterImpl
 import org.stepic.droid.core.internet_state.contract.InternetEnabledListener
 import org.stepic.droid.core.internet_state.contract.InternetEnabledPoster
+import org.stepic.droid.core.video_moves.VideosMovedPosterImpl
+import org.stepic.droid.core.video_moves.contract.VideosMovedListener
+import org.stepic.droid.core.video_moves.contract.VideosMovedPoster
 import org.stepic.droid.fonts.FontsProvider
 import org.stepic.droid.fonts.FontsProviderImpl
 import org.stepic.droid.notifications.*
@@ -67,6 +70,19 @@ abstract class AppCoreModule {
     @Binds
     @AppSingleton
     abstract fun provideInternetEnabledClient(container: ClientImpl<InternetEnabledListener>): Client<InternetEnabledListener>
+
+
+    @Binds
+    @AppSingleton
+    abstract fun provideVideoMovedPoster(videosMovedPoster: VideosMovedPosterImpl): VideosMovedPoster
+
+    @Binds
+    @AppSingleton
+    abstract fun provideVideoMovedListenerContainer(container: ListenerContainerImpl<VideosMovedListener>): ListenerContainer<VideosMovedListener>
+
+    @Binds
+    @AppSingleton
+    abstract fun provideVideoMovedClient(container: ClientImpl<VideosMovedListener>): Client<VideosMovedListener>
 
     @Binds
     @AppSingleton

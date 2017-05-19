@@ -21,8 +21,11 @@ import com.squareup.otto.Subscribe;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
+import org.stepic.droid.base.App;
+import org.stepic.droid.base.Client;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.concurrency.DownloadPoster;
+import org.stepic.droid.core.video_moves.contract.VideosMovedListener;
 import org.stepic.droid.events.DownloadingIsLoadedSuccessfullyEvent;
 import org.stepic.droid.events.steps.StepRemovedEvent;
 import org.stepic.droid.events.video.DownloadReportEvent;
@@ -54,6 +57,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
 import kotlin.jvm.functions.Function0;
@@ -62,7 +67,7 @@ import kotlin.jvm.functions.Function0;
 public class DownloadsFragment extends FragmentBase implements
         OnClickCancelListener,
         ClearVideosDialog.Callback,
-        CancelVideosDialog.Callback {
+        CancelVideosDialog.Callback, VideosMovedListener {
 
     private static final int ANIMATION_DURATION = 10; //reset to 10 after debug
     private static final int UPDATE_DELAY = 300;
@@ -96,6 +101,17 @@ public class DownloadsFragment extends FragmentBase implements
     private Set<Long> cachedStepsSet;
     private ProgressDialog loadingProgressDialog;
     private boolean isLoaded;
+
+    @Inject
+    Client<VideosMovedListener> videMovedListenerClient;
+
+    @Override
+    protected void injectComponent() {
+        App
+                .Companion
+                .component()
+                .inject(this);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -144,6 +160,7 @@ public class DownloadsFragment extends FragmentBase implements
 
         loadingProgressDialog = new LoadingProgressDialog(getContext());
         bus.register(this);
+        videMovedListenerClient.subscribe(this);
     }
 
     private void startLoadingStatusUpdater() {
@@ -338,6 +355,7 @@ public class DownloadsFragment extends FragmentBase implements
     @Override
     public void onDestroyView() {
         bus.unregister(this);
+        videMovedListenerClient.unsubscribe(this);
         authUserButton.setOnClickListener(null);
         downloadsView.setAdapter(null);
         downloadAdapter = null;
@@ -542,11 +560,6 @@ public class DownloadsFragment extends FragmentBase implements
         task.executeOnExecutor(threadPoolExecutor);
     }
 
-    @Subscribe
-    public void onVideoMoved(VideosMovedEvent event) {
-        updateCachedAsync();
-    }
-
     @Override
     public void onClickCancel(int position) {
         if (position == 0 && !downloadingWithProgressList.isEmpty()) {
@@ -600,5 +613,10 @@ public class DownloadsFragment extends FragmentBase implements
         }
         checkForEmpty();
         downloadAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onVideosMoved() {
+        updateCachedAsync();
     }
 }

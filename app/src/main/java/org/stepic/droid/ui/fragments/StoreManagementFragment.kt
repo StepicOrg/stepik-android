@@ -8,23 +8,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
-import com.squareup.otto.Subscribe
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.FragmentBase
-import org.stepic.droid.events.loading.FinishLoadEvent
-import org.stepic.droid.events.loading.StartLoadEvent
-import org.stepic.droid.events.video.FailToMoveFilesEvent
-import org.stepic.droid.ui.dialogs.ChooseStorageDialog
-import org.stepic.droid.ui.dialogs.ClearVideosDialog
-import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
-import org.stepic.droid.ui.dialogs.MovingProgressDialogFragment
+import org.stepic.droid.ui.dialogs.*
 import org.stepic.droid.util.FileUtil
 import org.stepic.droid.util.KotlinUtil
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.StorageUtil
 
-class StoreManagementFragment : FragmentBase() {
+class StoreManagementFragment : FragmentBase(), WantMoveDataDialog.Callback {
     companion object {
         fun newInstance(): Fragment {
             val fragment = StoreManagementFragment()
@@ -58,7 +51,6 @@ class StoreManagementFragment : FragmentBase() {
             initClearCacheFeature(it)
             initAccordingToStoreState(it)
         }
-        bus.register(this)
     }
 
     private fun initAccordingToStoreState(view: View) {
@@ -81,7 +73,8 @@ class StoreManagementFragment : FragmentBase() {
                 notMountExplanation.visibility = View.GONE
                 mountExplanation.visibility = View.VISIBLE
                 chooseStorageButton.visibility = View.VISIBLE
-                val chooseStorageDialog = ChooseStorageDialog()
+                val chooseStorageDialog = ChooseStorageDialog.newInstance()
+                chooseStorageDialog.setTargetFragment(this, 0)
                 chooseStorageButton.setOnClickListener {
                     if (!chooseStorageDialog.isAdded) {
                         chooseStorageDialog.show(fragmentManager, null)
@@ -100,16 +93,7 @@ class StoreManagementFragment : FragmentBase() {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-    }
-
-    override fun onStop() {
-        super.onStop()
-    }
-
     override fun onDestroyView() {
-        bus.unregister(this)
         clearCacheButton.setOnClickListener(null)
         chooseStorageButton.setOnClickListener(null)
         super.onDestroyView()
@@ -127,22 +111,6 @@ class StoreManagementFragment : FragmentBase() {
         clearCacheLabel = v.findViewById(R.id.clear_cache_label) as TextView
         mClearCacheDialogFragment = ClearVideosDialog.newInstance()
         setUpClearCacheButton()
-    }
-
-    @Subscribe
-    fun onStartLoading(event: StartLoadEvent) {
-        if (event.isMove) {
-            loadingProgressDialogFragment = MovingProgressDialogFragment.newInstance()
-        } else {
-            loadingProgressDialogFragment = LoadingProgressDialogFragment.newInstance()
-        }
-        ProgressHelper.activate(loadingProgressDialogFragment, fragmentManager, loadingTag)
-    }
-
-    @Subscribe
-    fun onFinishLoading(event: FinishLoadEvent) {
-        setUpClearCacheButton()
-        ProgressHelper.dismiss(fragmentManager, loadingTag)
     }
 
     private fun setUpClearCacheButton() {
@@ -184,10 +152,21 @@ class StoreManagementFragment : FragmentBase() {
 
     }
 
+    override fun onStartLoading(isMove: Boolean) {
+        if (isMove) {
+            loadingProgressDialogFragment = MovingProgressDialogFragment.newInstance()
+        } else {
+            loadingProgressDialogFragment = LoadingProgressDialogFragment.newInstance()
+        }
+        ProgressHelper.activate(loadingProgressDialogFragment, fragmentManager, loadingTag)
+    }
 
-    @Subscribe
-    fun onStorageMovedFail(event: FailToMoveFilesEvent) {
+    override fun onFinishLoading() {
+        setUpClearCacheButton()
         ProgressHelper.dismiss(fragmentManager, loadingTag)
+    }
+
+    override fun onFailToMove() {
         context?.let {
             Toast.makeText(context, R.string.fail_move, Toast.LENGTH_SHORT).show()
         }
