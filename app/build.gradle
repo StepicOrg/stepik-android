@@ -3,8 +3,6 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 
-int minSdk = hasProperty('devMinSdk') ? devMinSdk.toInteger() : 15
-
 def globalConf = rootProject.ext
 android {
 
@@ -29,20 +27,39 @@ android {
 
     defaultConfig {
         applicationId "org.stepic.droid"
-        minSdkVersion minSdk
+        minSdkVersion 15
         targetSdkVersion 25
         versionCode 157
         versionName "1.34.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
+    flavorDimensions "type", "instance"
 
     productFlavors {
         sb {
             applicationId "org.stepic.droid.sb"
+            dimension "instance"
         }
         classic {
             applicationId "org.stepic.droid"
+            dimension "instance"
+        }
+
+        development {
+            //auto detecting in Android Studio is not working, because of declarations
+            //of multidex + shrinking resource, it is not compiling with -PdevBuild trick
+            //tested on Android Studio 2.3.2
+            minSdkVersion 21
+            //get Error:Execution failed for task ':app:transformClassesWithDexForDevelopmentDebug'.
+            //> com.android.build.api.transform.TransformException: com.android.ide.common.process.ProcessException: java.util.concurrent.ExecutionException: com.android.dex.DexIndexOverflowException: method ID not in [0, 0xffff]: 65536
+            //without it.
+            multiDexEnabled true
+            dimension "type"
+        }
+
+        prod {
+            dimension "type"
         }
     }
     sourceSets {
@@ -87,13 +104,12 @@ android {
         release {
             signingConfig signingConfigs.release
             minifyEnabled true
-            useProguard true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'),
                     'proguard-rules.pro'
         }
         debug {
-            minifyEnabled true
+            minifyEnabled false
             useProguard false
             signingConfig signingConfigs.debug
             proguardFiles getDefaultProguardFile('proguard-android.txt'),
