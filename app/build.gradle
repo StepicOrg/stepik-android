@@ -96,6 +96,8 @@ android {
             minifyEnabled true
             useProguard false
             signingConfig signingConfigs.debug
+            proguardFiles getDefaultProguardFile('proguard-android.txt'),
+                    'proguard-rules.pro'
             versionNameSuffix "DEV"
         }
     }

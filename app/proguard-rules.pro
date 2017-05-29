@@ -74,7 +74,13 @@
 -dontwarn com.yandex.metrica.*
 
 #Keep POJO
--keep class org.stepic.droid.model.* { *; }
--dontwarn org.stepic.droid.model.*
--keep class org.stepic.droid.web.* { *; }
--dontwarn org.stepic.droid.web.*
+-keep class org.stepic.droid.model.** { *; }
+-keep interface org.stepic.droid.model.** { *; }
+
+-keep class org.stepic.droid.web.** { *; }
+-keep interface org.stepic.droid.web.** { *; }
+-dontwarn org.stepic.droid.web.**
+-dontwarn org.stepic.droid.model.**
+
+#for saving search view https://stackoverflow.com/questions/18407171/searchview-getactionview-returning-null
+-keep class android.support.v7.widget.SearchView { *; }
