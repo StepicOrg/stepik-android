@@ -1,4 +1,4 @@
-apply plugin: 'com.android.application'
+apply plugin: "com.android.feature"
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
@@ -8,6 +8,8 @@ android {
 
     compileSdkVersion rootProject.androidCompileSdkVersion
     buildToolsVersion rootProject.androidBuildToolsVersion
+
+    baseFeature true
 
     signingConfigs {
         debug {
@@ -29,7 +31,7 @@ android {
         applicationId "org.stepic.droid"
         minSdkVersion rootProject.androidMinSdkVersion
         targetSdkVersion rootProject.androidTargetSdkVersion
-        versionCode 157
+        versionCode 1570
         versionName "1.34.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -64,27 +66,6 @@ android {
     }
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
-    }
-
-    android.applicationVariants.all { variant ->
-        // assign different version code for each output
-        variant.outputs.each { output ->
-            output.versionCodeOverride = android.defaultConfig.versionCode * 10
-        }
-    }
-
-    // delete unaligned files
-    android.applicationVariants.all { variant ->
-        variant.assemble.doLast {
-            variant.outputs.each { output ->
-                File unaligned = output.packageApplication.outputFile;
-                File aligned = output.outputFile
-                if (!unaligned.getName().equalsIgnoreCase(aligned.getName())) {
-                    println "deleting " + unaligned.getName()
-                    unaligned.delete()
-                }
-            }
-        }
     }
 
     packagingOptions {
