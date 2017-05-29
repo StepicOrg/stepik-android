@@ -1,0 +1,34 @@
+apply plugin: 'com.android.instantapp'
+
+android {
+    compileSdkVersion rootProject.compileSdk
+    buildToolsVersion rootProject.buildTools
+
+    defaultConfig {
+        minSdkVersion rootProject.minSdk
+        targetSdkVersion rootProject.compileSdk
+        versionCode rootProject.versionCode
+        versionName rootProject.versionName
+    }
+    buildTypes {
+        release {}
+        debug {}
+    }
+
+    flavorDimensions "pricing"
+
+    productFlavors {
+        free {
+            dimension "pricing"
+        }
+        paid {
+            dimension "pricing"
+        }
+    }
+}
+
+dependencies {
+    implementation project(':features:hello')
+    implementation project(':features:bye')
+    implementation project(':features:base')
+}
