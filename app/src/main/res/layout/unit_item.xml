@@ -33,8 +33,7 @@
             android:layout_width="@dimen/guideline_list_item_height"
             android:layout_height="@dimen/guideline_list_item_height"
             android:layout_centerVertical="true"
-            android:scaleType="centerCrop"
-            tools:src="@drawable/background_header"/>
+            android:scaleType="centerCrop"/>
 
 
         <TextView
