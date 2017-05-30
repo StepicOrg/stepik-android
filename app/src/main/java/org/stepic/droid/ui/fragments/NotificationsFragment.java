@@ -22,7 +22,7 @@ import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.base.FragmentBase;
-import org.stepic.droid.ui.NotificationCategory;
+import org.stepic.droid.model.NotificationCategory;
 import org.stepic.droid.ui.activities.HasDrawer;
 
 import butterknife.BindView;

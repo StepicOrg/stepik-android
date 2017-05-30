@@ -1,4 +1,4 @@
-package org.stepic.droid.ui
+package org.stepic.droid.model
 
 import android.support.annotation.StringRes
 import org.stepic.droid.R

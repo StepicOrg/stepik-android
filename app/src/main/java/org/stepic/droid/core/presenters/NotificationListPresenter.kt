@@ -12,7 +12,7 @@ import org.stepic.droid.di.notifications.NotificationsScope
 import org.stepic.droid.notifications.StepikNotificationManager
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.notifications.model.NotificationType
-import org.stepic.droid.ui.NotificationCategory
+import org.stepic.droid.model.NotificationCategory
 import org.stepic.droid.util.not
 import org.stepic.droid.web.Api
 import timber.log.Timber
