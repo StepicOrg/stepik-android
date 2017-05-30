@@ -17,7 +17,7 @@
     <string name="or_sign_up_with_email">or sign up with e-mail</string>
     <string name="sign_up">Sign up</string>
     <string name="create_my_account">Create an account</string>
-    <string name="by_creating_you_agree">By creating a Stepik.org account, you agree to the</string>
+    <string name="by_creating_you_agree">By creating a Stepik account, you agree to the</string>
     <string name="terms">Terms</string>
     <string name="email" translatable="false">E-mail</string>
     <string name="remind_password">Forgot password?</string>
@@ -75,7 +75,7 @@
     <string name="failLogin">Login/password was incorrect</string>
     <string name="connectionProblems">Internet connection was lost</string>
     <string name="are_you_sure">Are you sure?</string>
-    <string name="explain_permission">For caching the course and playing the video offline Stepik.org needs
+    <string name="explain_permission">For caching the course and playing the video offline Stepik needs
         permission to access the storage of the phone.
     </string>
     <string name="explain_calendar_permission">To add deadlines the app needs
@@ -126,7 +126,7 @@
     <string name="send">Send</string>
     <string name="email_sent">We have sent you an e-mail.</string>
     <string name="email_wrong">The e-mail address is not assigned to any user account.</string>
-    <string name="are_you_sure_logout">All saved data will be removed. Are you sure?
+    <string name="are_you_sure_logout">All saved videos will be removed. Are you sure?
     </string>
     <string name="feedback_good_description">The app is a pleasure to use.</string>
     <string name="feedback_good">excellent</string>
@@ -138,7 +138,7 @@
     <string name="feedback_description">Send us your suggestions, comments or idea</string>
     <string name="feedback_contacts_description">Contacts for feedback:</string>
     <string name="email_incorrect">E-mail is incorrect</string>
-    <string name="feedback_subject">Feedback for the stepik.org Android app</string>
+    <string name="feedback_subject">Feedback for the Stepik Android app</string>
     <string name="feedback_sent">Feedback is sent</string>
     <string name="feedback_fail">Sorry, service is not available. Try later</string>
     <string name="internet_problem">Sorry, the connection is not available. Try again later</string>
@@ -158,7 +158,7 @@
     <string name="notification_title">Notifications</string>
     <string name="notification_learn_list">Deadlines, new modules, certificates</string>
     <string name="vibration_title">Vibration</string>
-    <string name="empty_try_later">For now it's empty, try again later.</string>
+    <string name="empty_try_later">For now it\'s empty, try again later.</string>
     <string name="sound_title">Sound</string>
     <string name="update_available_title">New version is available</string>
     <string name="update_now">Update</string>
@@ -173,7 +173,7 @@
     <string name="remove_all">Remove all</string>
     <string name="hint_for_idea">Type your suggestions, comments or ideas</string>
     <string name="feedback_from">From</string>
-    <string name="cancel_videos_explanation">Cancelling the uploading will take a while. Are yousure?</string>
+    <string name="cancel_videos_explanation">Cancelling the uploading will take a while. Are you sure?</string>
     <string name="comments_title">Comments</string>
     <string name="load_more">more</string>
     <string name="load_more_reply">Load more</string>
@@ -320,7 +320,7 @@
     <string name="teaching_title">Teaching</string>
     <string name="accessibility_switch_viewed_state">Change the viewed state</string>
     <string name="mark_all_as_read">Mark all as read</string>
-    <string name="empty_notification_title">You don't have any notifications yet</string>
+    <string name="empty_notification_title">You don\'t have any notifications yet</string>
     <string name="not_now">Not now</string>
     <string name="after_hide_calendar_message">You can add deadlines in the top menu</string>
     <string name="received_review_title">Received review</string>
