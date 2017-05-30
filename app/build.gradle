@@ -7,7 +7,7 @@ def globalConf = rootProject.ext
 android {
 
     compileSdkVersion 25
-    buildToolsVersion rootProject.androidBuildToolsVersion
+    buildToolsVersion "25.0.1"
 
     signingConfigs {
         debug {
