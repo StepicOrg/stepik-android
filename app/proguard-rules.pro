@@ -82,5 +82,10 @@
 -dontwarn org.stepic.droid.web.**
 -dontwarn org.stepic.droid.model.**
 
+#Keep all enums
+-keep public enum org.stepic.droid.**{
+    *;
+}
+
 #for saving search view https://stackoverflow.com/questions/18407171/searchview-getactionview-returning-null
 -keep class android.support.v7.widget.SearchView { *; }
