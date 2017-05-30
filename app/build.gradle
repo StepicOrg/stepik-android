@@ -6,7 +6,7 @@ apply plugin: 'kotlin-android-extensions'
 def globalConf = rootProject.ext
 android {
 
-    compileSdkVersion rootProject.androidCompileSdkVersion
+    compileSdkVersion 25
     buildToolsVersion rootProject.androidBuildToolsVersion
 
     signingConfigs {
