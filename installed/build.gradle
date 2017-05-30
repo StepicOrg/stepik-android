@@ -1,0 +1,50 @@
+apply plugin: 'com.android.application'
+
+
+android {
+    compileSdkVersion rootProject.androidCompileSdkVersion
+    buildToolsVersion rootProject.androidBuildToolsVersion
+
+
+    defaultConfig {
+        minSdkVersion rootProject.androidMinSdkVersion
+        targetSdkVersion rootProject.androidTargetSdkVersion
+        versionCode rootProject.versionCode
+        versionName rootProject.versionName
+
+    }
+    buildTypes {
+        debug {}
+        release {}
+    }
+}
+flavorDimensions "type", "instance"
+
+productFlavors {
+    sb {
+        dimension "instance"
+        applicationIdSuffix = '.sb'
+    }
+    classic {
+        dimension "instance"
+    }
+
+    development {
+        //auto detecting in Android Studio is not working, because of declarations
+        //of multidex + shrinking resource, it is not compiling with -PdevBuild trick
+        //tested on Android Studio 2.3.2
+        minSdkVersion 21
+        //get Error:Execution failed for task ':app:transformClassesWithDexForDevelopmentDebug'.
+        //> com.android.build.api.transform.TransformException: com.android.ide.common.process.ProcessException: java.util.concurrent.ExecutionException: com.android.dex.DexIndexOverflowException: method ID not in [0, 0xffff]: 65536
+        //without it.
+        multiDexEnabled true
+        dimension "type"
+    }
+
+    prod {
+        dimension "type"
+    }
+}
+dependencies {
+    implementation project(":app")
+}

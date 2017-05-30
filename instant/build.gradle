@@ -15,20 +15,26 @@ android {
         debug {}
     }
 
-    flavorDimensions "pricing"
+    flavorDimensions "type", "instance"
 
     productFlavors {
-        free {
-            dimension "pricing"
+        sb {
+            dimension "instance"
         }
-        paid {
-            dimension "pricing"
+        classic {
+            dimension "instance"
+        }
+
+        development {
+            dimension "type"
+        }
+
+        prod {
+            dimension "type"
         }
     }
 }
 
 dependencies {
-    implementation project(':features:hello')
-    implementation project(':features:bye')
-    implementation project(':features:base')
+    implementation project(':app')
 }

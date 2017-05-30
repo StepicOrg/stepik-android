@@ -26,6 +26,8 @@ ext {
     androidMinSdkVersion = 16
     androidTargetSdkVersion = 25
     androidCompileSdkVersion = 25
+    versionCode = 1580
+    versionName = '1.35'
 }
 
 task clean(type: Delete) {

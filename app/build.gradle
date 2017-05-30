@@ -1,7 +1,8 @@
 apply plugin: "com.android.feature"
-apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+
 
 def globalConf = rootProject.ext
 android {
@@ -31,8 +32,8 @@ android {
         applicationId "org.stepic.droid"
         minSdkVersion rootProject.androidMinSdkVersion
         targetSdkVersion rootProject.androidTargetSdkVersion
-        versionCode 1570
-        versionName "1.34.2"
+        versionCode rootProject.versionCode
+        versionName rootProject.versionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -40,11 +41,9 @@ android {
 
     productFlavors {
         sb {
-            applicationId "org.stepic.droid.sb"
             dimension "instance"
         }
         classic {
-            applicationId "org.stepic.droid"
             dimension "instance"
         }
 
@@ -63,9 +62,6 @@ android {
         prod {
             dimension "type"
         }
-    }
-    sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
     }
 
     packagingOptions {
