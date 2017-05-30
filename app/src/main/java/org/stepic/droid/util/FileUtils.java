@@ -32,7 +32,6 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 
 import org.stepic.droid.base.App;
-import org.videolan.libvlc.util.AndroidUtil;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -50,24 +49,24 @@ public class FileUtils {
         void onResult(boolean success);
     }
 
-    public static String getFileNameFromPath(String path){
+    public static String getFileNameFromPath(String path) {
         if (path == null)
             return "";
         int index = path.lastIndexOf('/');
-        if (index> -1)
-            return path.substring(index+1);
+        if (index > -1)
+            return path.substring(index + 1);
         else
             return path;
     }
 
-    public static String getParent(String path){
+    public static String getParent(String path) {
         if (TextUtils.equals("/", path))
             return path;
         String parentPath = path;
         if (parentPath.endsWith("/"))
-            parentPath = parentPath.substring(0, parentPath.length()-1);
+            parentPath = parentPath.substring(0, parentPath.length() - 1);
         int index = parentPath.lastIndexOf('/');
-        if (index > 0){
+        if (index > 0) {
             parentPath = parentPath.substring(0, index);
         } else if (index == 0)
             parentPath = "/";
@@ -108,7 +107,7 @@ public class FileUtils {
             copyFile(in, out);
             out.flush();
             return true;
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         } finally {
@@ -120,12 +119,12 @@ public class FileUtils {
     public static void copyFile(InputStream in, OutputStream out) throws IOException {
         byte[] buffer = new byte[1024];
         int read;
-        while((read = in.read(buffer)) != -1){
+        while ((read = in.read(buffer)) != -1) {
             out.write(buffer, 0, read);
         }
     }
 
-    public static boolean copyFile(File src, File dst){
+    public static boolean copyFile(File src, File dst) {
         boolean ret = true;
         if (src.isDirectory()) {
             File[] filesList = src.listFiles();
@@ -158,16 +157,14 @@ public class FileUtils {
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public static boolean deleteFile (String path){
+    public static boolean deleteFile(String path) {
         boolean deleted = false;
         path = Uri.decode(Strings.removeFileProtocol(path));
         //Delete from Android Medialib, for consistency with device MTP storing and other apps listing content:// media
-        if (AndroidUtil.isHoneycombOrLater()){
-            ContentResolver cr = App.Companion.getAppContext().getContentResolver();
-            String[] selectionArgs = { path };
-            deleted = cr.delete(MediaStore.Files.getContentUri("external"),
-                    MediaStore.Files.FileColumns.DATA + "=?", selectionArgs) > 0;
-        }
+        ContentResolver cr = App.Companion.getAppContext().getContentResolver();
+        String[] selectionArgs = {path};
+        deleted = cr.delete(MediaStore.Files.getContentUri("external"),
+                MediaStore.Files.FileColumns.DATA + "=?", selectionArgs) > 0;
         File file = new File(path);
         if (file.exists())
             deleted |= file.delete();
@@ -175,7 +172,7 @@ public class FileUtils {
     }
 
 
-    public static boolean canWrite(String path){
+    public static boolean canWrite(String path) {
         if (path == null)
             return false;
         if (path.startsWith("file://"))
@@ -184,7 +181,7 @@ public class FileUtils {
             return false;
         if (path.startsWith(AndroidDevices.EXTERNAL_PUBLIC_DIRECTORY))
             return true;
-        if (AndroidUtil.isKitKatOrLater())
+        if (com.google.android.exoplayer2.util.Util.SDK_INT >= 19)
             return false;
         File file = new File(path);
         return (file.exists() && file.canWrite());

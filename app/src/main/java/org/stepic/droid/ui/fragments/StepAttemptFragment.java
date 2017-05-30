@@ -31,12 +31,13 @@ import com.squareup.otto.Subscribe;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
+import org.stepic.droid.base.Client;
 import org.stepic.droid.base.StepBaseFragment;
 import org.stepic.droid.core.LessonSessionManager;
+import org.stepic.droid.core.internet_state.contract.InternetEnabledListener;
 import org.stepic.droid.core.presenters.StepAttemptPresenter;
 import org.stepic.droid.core.presenters.StreakPresenter;
 import org.stepic.droid.core.presenters.contracts.StepAttemptView;
-import org.stepic.droid.events.InternetIsEnabledEvent;
 import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent;
 import org.stepic.droid.events.steps.StepWasUpdatedEvent;
 import org.stepic.droid.events.steps.UpdateStepEvent;
@@ -64,7 +65,7 @@ import butterknife.BindView;
 import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan;
 import uk.co.chrisjenx.calligraphy.TypefaceUtils;
 
-public abstract class StepAttemptFragment extends StepBaseFragment implements StepAttemptView {
+public abstract class StepAttemptFragment extends StepBaseFragment implements StepAttemptView, InternetEnabledListener {
     private final int DISCOUNTING_POLICY_REQUEST_CODE = 131;
     private final int NOTIFICATION_TIME_REQUEST_CODE = 11;
 
@@ -133,6 +134,9 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
 
     @Inject
     LessonSessionManager lessonManager;
+
+    @Inject
+    Client<InternetEnabledListener> internetEnabledListenerClient;
 
     @Inject
     StreakPresenter streakPresenter;
@@ -215,6 +219,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
             }
         });
         stepAttemptPresenter.attachView(this);
+        internetEnabledListenerClient.subscribe(this);
         stepAttemptPresenter.startLoadAttempt(step);
     }
 
@@ -246,6 +251,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
     @Override
     public void onDestroyView() {
         saveSession(true);
+        internetEnabledListenerClient.unsubscribe(this);
         stepAttemptPresenter.detachView(this);
         super.onDestroyView();
     }
@@ -476,13 +482,6 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
         }
     }
 
-    @Subscribe
-    public void onInternetEnabled(InternetIsEnabledEvent enabledEvent) {
-        if (connectionProblem.getVisibility() == View.VISIBLE) {
-            stepAttemptPresenter.startLoadAttempt(step);
-        }
-    }
-
     protected abstract void showAttempt(Attempt attempt);
 
     protected abstract Reply generateReply();
@@ -649,5 +648,12 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
     public void onNeedShowStreakDialog(int numberOfStreakDayIncludeToday) {
         // this submission is correct and user posted it 1st time
         showStreakDialog(numberOfStreakDayIncludeToday);
+    }
+
+    @Override
+    public void onInternetEnabled() {
+        if (connectionProblem.getVisibility() == View.VISIBLE) {
+            stepAttemptPresenter.startLoadAttempt(step);
+        }
     }
 }

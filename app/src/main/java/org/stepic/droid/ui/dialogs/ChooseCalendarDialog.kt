@@ -4,21 +4,13 @@ import android.app.Dialog
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v7.app.AlertDialog
-import com.squareup.otto.Bus
 import org.stepic.droid.R
-import org.stepic.droid.base.App
-import org.stepic.droid.events.CalendarChosenEvent
 import org.stepic.droid.model.CalendarItem
 import java.util.*
-import javax.inject.Inject
 
 class ChooseCalendarDialog : DialogFragment() {
 
-    @Inject
-    lateinit var bus: Bus
-
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        App.component().inject(this)
         val calendarItems = arguments.getParcelableArrayList<CalendarItem>(parcelableArrayListKey)
         val ownerTitles: Array<CharSequence> = calendarItems.map { it.owner }.toTypedArray()
 
@@ -28,7 +20,8 @@ class ChooseCalendarDialog : DialogFragment() {
                 .setPositiveButton(R.string.ok, { _, _ ->
                     dialog.dismiss()
                     val selectedPosition = (dialog as AlertDialog).listView.checkedItemPosition
-                    bus.post(CalendarChosenEvent(calendarItems[selectedPosition]))
+                    val chosenCalendarItem = calendarItems[selectedPosition]
+                    (targetFragment as CallbackContract).onCalendarChosen(chosenCalendarItem)
                 })
                 .setSingleChoiceItems(ownerTitles, 0, null)
         return builder.create()
@@ -45,5 +38,12 @@ class ChooseCalendarDialog : DialogFragment() {
             fragment.arguments = args
             return fragment
         }
+    }
+
+    /**
+     * The callback should be implemented by caller fragment
+     */
+    interface CallbackContract {
+        fun onCalendarChosen(calendarItem: CalendarItem)
     }
 }

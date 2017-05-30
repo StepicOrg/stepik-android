@@ -10,7 +10,6 @@ import android.widget.EditText;
 import com.squareup.otto.Subscribe;
 
 import org.stepic.droid.R;
-import org.stepic.droid.events.InternetIsEnabledEvent;
 import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent;
 import org.stepic.droid.events.steps.StepWasUpdatedEvent;
 import org.stepic.droid.model.Attachment;
@@ -80,15 +79,8 @@ public class FreeResponseStepFragment extends StepAttemptFragment {
     }
 
     @Subscribe
-    @Override
-    public void onInternetEnabled(InternetIsEnabledEvent enabledEvent) {
-        super.onInternetEnabled(enabledEvent);
-    }
-
-    @Subscribe
     public void onNewCommentWasAdded(NewCommentWasAddedOrUpdateEvent event) {
         super.onNewCommentWasAdded(event);
-
     }
 
     @Subscribe

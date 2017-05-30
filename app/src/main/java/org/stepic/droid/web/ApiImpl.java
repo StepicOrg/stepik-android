@@ -294,10 +294,10 @@ public class ApiImpl implements Api {
 
     private Converter.Factory generateGsonFactory() {
         Gson gson = new GsonBuilder()
+//                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .registerTypeAdapter(DatasetWrapper.class, new DatasetDeserializer())
                 .registerTypeAdapter(ReplyWrapper.class, new ReplyDeserializer())
                 .registerTypeAdapter(ReplyWrapper.class, new ReplySerializer())
-                .serializeNulls()
                 .create();
         return GsonConverterFactory.create(gson);
     }

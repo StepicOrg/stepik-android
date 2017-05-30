@@ -9,29 +9,36 @@ import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.appbar_only_toolbar.*
 import kotlinx.android.synthetic.main.fragment_text_feedback.*
 import org.stepic.droid.R
-import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentBase
-import org.stepic.droid.events.feedback.FeedbackFailedEvent
-import org.stepic.droid.events.feedback.FeedbackInternetProblemsEvent
-import org.stepic.droid.events.feedback.FeedbackSentEvent
+import org.stepic.droid.core.presenters.TextFeedbackPresenter
+import org.stepic.droid.core.presenters.contracts.TextFeedbackView
 import org.stepic.droid.ui.dialogs.LoadingProgressDialog
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.ValidatorUtil
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import javax.inject.Inject
 
-class TextFeedbackFragment : FragmentBase() {
-
+class TextFeedbackFragment : FragmentBase(), TextFeedbackView {
     companion object {
         fun newInstance(): TextFeedbackFragment = TextFeedbackFragment()
     }
 
     var progressDialog: ProgressDialog? = null
+
+    @Inject
+    lateinit var textFeedbackPresenter: TextFeedbackPresenter
+
+    override fun injectComponent() {
+        App
+                .Companion
+                .component()
+                .feedbackComponentBuilder()
+                .build()
+                .inject(this)
+    }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?)
             = inflater?.inflate(R.layout.fragment_text_feedback, container, false)
@@ -56,11 +63,11 @@ class TextFeedbackFragment : FragmentBase() {
 
     override fun onStart() {
         super.onStart()
-        bus.register(this)
+        textFeedbackPresenter.attachView(this)
     }
 
     override fun onStop() {
-        bus.unregister(this)
+        textFeedbackPresenter.detachView(this)
         super.onStop()
     }
 
@@ -130,40 +137,20 @@ class TextFeedbackFragment : FragmentBase() {
         }
 
         ProgressHelper.activate(progressDialog)
-        api.sendFeedback(email, description).enqueue(object : Callback<Void> {
-            override fun onResponse(call: Call<Void>?, response: Response<Void>?) {
-                ProgressHelper.dismiss(progressDialog)
-                if (response?.isSuccessful ?: false) {
-                    bus.post(FeedbackSentEvent())
-
-                } else {
-                    bus.post(FeedbackFailedEvent())
-                }
-            }
-
-            override fun onFailure(call: Call<Void>?, t: Throwable?) {
-                ProgressHelper.dismiss(progressDialog)
-                bus.post(FeedbackInternetProblemsEvent())
-            }
-        })
+        textFeedbackPresenter.sendFeedback(email, description)
     }
 
-    @Subscribe
-    fun onFeedbackSent(event: FeedbackSentEvent) {
+    override fun onServerFail() {
+        Toast.makeText(context, R.string.feedback_fail, Toast.LENGTH_LONG).show()
+    }
+
+    override fun onInternetProblems() {
+        Toast.makeText(context, R.string.internet_problem, Toast.LENGTH_LONG).show()
+    }
+
+    override fun onFeedbackSent() {
         Toast.makeText(context, R.string.feedback_sent, Toast.LENGTH_SHORT).show()
         screenManager.showMainFeed(activity)
-    }
-
-    @Subscribe
-    fun onServerFail(event: FeedbackFailedEvent) {
-        Toast.makeText(context, R.string.feedback_fail, Toast.LENGTH_LONG).show()
-        analytic.reportEvent(Analytic.Feedback.FAILED_ON_SERVER)
-    }
-
-    @Subscribe
-    fun onInternetProblems(event: FeedbackInternetProblemsEvent) {
-        Toast.makeText(context, R.string.internet_problem, Toast.LENGTH_LONG).show()
-        analytic.reportEvent(Analytic.Feedback.INTERNET_FAIL)
     }
 
     override fun onDestroyView() {

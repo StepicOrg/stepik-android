@@ -6,25 +6,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <FrameLayout
+    <SurfaceView
+        android:id="@+id/videoSurfaceView"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <FrameLayout
-            android:id="@+id/player_surface_frame"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:foregroundGravity="clip_horizontal|clip_vertical">
-
-            <SurfaceView
-                android:id="@+id/texture_video_view"
-                android:layout_width="1dp"
-                android:layout_height="1dp">
-
-            </SurfaceView>
-        </FrameLayout>
-    </FrameLayout>
+    </SurfaceView>
 
     <FrameLayout
         android:id="@+id/wrapper_video_controller"
@@ -48,7 +34,7 @@
                 android:background="@color/transparent_black_30"
                 android:orientation="vertical"
                 android:padding="8dp"
-                >
+            >
 
                 <RelativeLayout
                     android:id="@+id/playback_container"
@@ -113,7 +99,7 @@
                     android:id="@+id/controls_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    >
+                >
 
                     <ImageView
                         android:id="@+id/jump_back_button"
@@ -160,7 +146,7 @@
 
 
                     <ImageView
-                        android:id="@+id/rate_chooser"
+                        android:id="@+id/video_rate"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_centerInParent="true"

@@ -16,12 +16,22 @@ import org.stepic.droid.BuildConfig
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.AnalyticImpl
+import org.stepic.droid.base.Client
+import org.stepic.droid.base.ClientImpl
+import org.stepic.droid.base.ListenerContainer
+import org.stepic.droid.base.ListenerContainerImpl
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.concurrency.MainHandlerImpl
 import org.stepic.droid.concurrency.SingleThreadExecutor
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.configuration.ConfigReleaseImpl
 import org.stepic.droid.core.*
+import org.stepic.droid.core.internet_state.InternetEnabledPosterImpl
+import org.stepic.droid.core.internet_state.contract.InternetEnabledListener
+import org.stepic.droid.core.internet_state.contract.InternetEnabledPoster
+import org.stepic.droid.core.video_moves.VideosMovedPosterImpl
+import org.stepic.droid.core.video_moves.contract.VideosMovedListener
+import org.stepic.droid.core.video_moves.contract.VideosMovedPoster
 import org.stepic.droid.fonts.FontsProvider
 import org.stepic.droid.fonts.FontsProviderImpl
 import org.stepic.droid.notifications.*
@@ -48,6 +58,31 @@ import java.util.concurrent.ThreadPoolExecutor
 
 @Module
 abstract class AppCoreModule {
+
+    @Binds
+    @AppSingleton
+    abstract fun provideInternetEnabledPoster(internetEnabledPoster: InternetEnabledPosterImpl): InternetEnabledPoster
+
+    @Binds
+    @AppSingleton
+    abstract fun provideInternetEnabledListenerContainer(container: ListenerContainerImpl<InternetEnabledListener>): ListenerContainer<InternetEnabledListener>
+
+    @Binds
+    @AppSingleton
+    abstract fun provideInternetEnabledClient(container: ClientImpl<InternetEnabledListener>): Client<InternetEnabledListener>
+
+
+    @Binds
+    @AppSingleton
+    abstract fun provideVideoMovedPoster(videosMovedPoster: VideosMovedPosterImpl): VideosMovedPoster
+
+    @Binds
+    @AppSingleton
+    abstract fun provideVideoMovedListenerContainer(container: ListenerContainerImpl<VideosMovedListener>): ListenerContainer<VideosMovedListener>
+
+    @Binds
+    @AppSingleton
+    abstract fun provideVideoMovedClient(container: ClientImpl<VideosMovedListener>): Client<VideosMovedListener>
 
     @Binds
     @AppSingleton
@@ -200,13 +235,6 @@ abstract class AppCoreModule {
         @JvmStatic
         internal fun provideThreadPool(): ThreadPoolExecutor {
             return Executors.newCachedThreadPool() as ThreadPoolExecutor
-        }
-
-        @AppSingleton
-        @JvmStatic
-        @Provides
-        internal fun provideAudioFocusHelper(context: Context, mainHandler: MainHandler, bus: Bus): AudioFocusHelper {
-            return AudioFocusHelper(context, bus, mainHandler)
         }
 
         @Provides
