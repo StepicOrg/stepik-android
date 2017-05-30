@@ -52,7 +52,6 @@ class LoginActivity : FragmentActivityBase(), LoginView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        window.setBackgroundDrawable(null)
         setContentView(R.layout.activity_login)
         overridePendingTransition(R.anim.slide_in_from_bottom, R.anim.no_transition)
         hideSoftKeypad()

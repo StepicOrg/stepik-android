@@ -72,7 +72,6 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_launch)
-        window.setBackgroundDrawable(null)
         App.getComponentManager().loginComponent(TAG).inject(this)
         overridePendingTransition(R.anim.no_transition, R.anim.slide_out_to_bottom)
 
