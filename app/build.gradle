@@ -29,8 +29,8 @@ android {
         applicationId "org.stepic.droid"
         minSdkVersion rootProject.androidMinSdkVersion
         targetSdkVersion rootProject.androidTargetSdkVersion
-        versionCode 157
-        versionName "1.34.2"
+        versionCode 158
+        versionName "1.35"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
