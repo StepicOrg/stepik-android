@@ -8,10 +8,10 @@ import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.concurrency.DownloadPoster
 import org.stepic.droid.core.CommentManager
-import org.stepic.droid.core.MyPhoneStateListener
 import org.stepic.droid.di.certificates.CertificateComponent
 import org.stepic.droid.di.course.CourseComponent
 import org.stepic.droid.di.course_list.CourseListComponent
+import org.stepic.droid.di.feedback.FeedbackComponent
 import org.stepic.droid.di.filters.FilterComponent
 import org.stepic.droid.di.lesson.LessonComponent
 import org.stepic.droid.di.login.LoginComponent
@@ -19,7 +19,6 @@ import org.stepic.droid.di.mainscreen.MainScreenComponent
 import org.stepic.droid.di.notifications.NotificationsComponent
 import org.stepic.droid.di.profile.ProfileComponent
 import org.stepic.droid.di.routing.RoutingComponent
-import org.stepic.droid.di.section.SectionComponent
 import org.stepic.droid.di.storage.StorageComponent
 import org.stepic.droid.di.video.VideoComponent
 import org.stepic.droid.model.Course
@@ -38,6 +37,7 @@ import org.stepic.droid.ui.custom.LatexSupportableWebView
 import org.stepic.droid.ui.custom_exo.PlaybackControlView
 import org.stepic.droid.ui.dialogs.*
 import org.stepic.droid.ui.fragments.CommentsFragment
+import org.stepic.droid.ui.fragments.DownloadsFragment
 
 @AppSingleton
 @Component(dependencies = arrayOf(StorageComponent::class), modules = arrayOf(AppCoreModule::class, RepositoryModule::class))
@@ -52,6 +52,8 @@ interface AppCoreComponent {
         @BindsInstance
         fun context(context: Context): Builder
     }
+
+    fun feedbackComponentBuilder(): FeedbackComponent.Builder
 
     fun loginComponentBuilder(): LoginComponent.Builder
 
@@ -84,6 +86,8 @@ interface AppCoreComponent {
 
     fun inject(baseFragment: FragmentBase)
 
+    fun inject(baseFragment: DownloadsFragment)
+
     fun inject(dialogFragment: DiscountingPolicyDialogFragment)
 
     fun inject(adapter: UnitAdapter)
@@ -92,15 +96,9 @@ interface AppCoreComponent {
 
     fun inject(dialogFragment: VideoQualityDialog)
 
-    fun inject(calendarDialog: ChooseCalendarDialog)
-
-    fun inject(allowMobileDataDialogFragment: AllowMobileDataDialogFragment)
-
     fun inject(loadService: LoadService)
 
     fun inject(loadService: DeleteService)
-
-    fun inject(updateAppService: UpdateAppService)
 
     fun inject(downloadCompleteReceiver: DownloadCompleteReceiver)
 
@@ -122,8 +120,6 @@ interface AppCoreComponent {
 
     fun inject(downloadClickReceiver: DownloadClickReceiver)
 
-    fun inject(receiver: MyPhoneStateListener)
-
     fun inject(service: HackFcmListener)
 
     fun inject(instanceIdService: HackerFcmInstanceId)
@@ -135,8 +131,6 @@ interface AppCoreComponent {
     fun inject(service: UpdateWithApkService)
 
     fun inject(downloadPoster: DownloadPoster)
-
-    fun inject(cancelVideoDialog: DownloadsAdapter.CancelVideoDialog)
 
     fun inject(commentManager: CommentManager)
 

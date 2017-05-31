@@ -13,7 +13,6 @@ import org.stepic.droid.base.App;
 import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.core.LocalProgressManager;
 import org.stepic.droid.core.internet_state.contract.InternetEnabledPoster;
-import org.stepic.droid.events.InternetIsEnabledEvent;
 import org.stepic.droid.events.steps.UpdateStepEvent;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.storage.StoreStateManager;
@@ -79,7 +78,6 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
             @Override
             public Unit invoke() {
                 internetEnabledPoster.internetEnabled();
-                bus.post(new InternetIsEnabledEvent()); // TODO: 15.05.17 remove bus
                 return Unit.INSTANCE;
             }
         });

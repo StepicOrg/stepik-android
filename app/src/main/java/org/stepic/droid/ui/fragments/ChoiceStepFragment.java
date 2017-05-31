@@ -10,7 +10,6 @@ import com.squareup.otto.Subscribe;
 
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.events.InternetIsEnabledEvent;
 import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent;
 import org.stepic.droid.events.steps.StepWasUpdatedEvent;
 import org.stepic.droid.model.Attempt;
@@ -145,12 +144,6 @@ public class ChoiceStepFragment extends StepAttemptFragment {
     private void buildChoiceItem(StepikOptionView item, String rawText) {
         item.setText(rawText);
         choiceContainer.addView(item);
-    }
-
-    @Subscribe
-    @Override
-    public void onInternetEnabled(InternetIsEnabledEvent enabledEvent) {
-        super.onInternetEnabled(enabledEvent);
     }
 
     @Subscribe

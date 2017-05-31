@@ -249,8 +249,6 @@
         <service
             android:name="org.stepic.droid.services.CancelLoadingService"/>
         <service
-            android:name="org.stepic.droid.services.UpdateAppService"/>
-        <service
             android:name="org.stepic.droid.services.UpdateWithApkService"/>
 
         <activity

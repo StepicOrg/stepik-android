@@ -2,20 +2,17 @@ package org.stepic.droid.core.presenters
 
 import android.support.annotation.MainThread
 import android.support.annotation.WorkerThread
-import com.squareup.otto.Bus
-import com.squareup.otto.Subscribe
 import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.base.Client
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.configuration.Config
+import org.stepic.droid.core.internet_state.contract.InternetEnabledListener
 import org.stepic.droid.core.presenters.contracts.NotificationListView
 import org.stepic.droid.di.notifications.NotificationsScope
-import org.stepic.droid.events.InternetIsEnabledEvent
-import org.stepic.droid.events.notify_ui.NotificationCheckedSuccessfullyEvent
-import org.stepic.droid.events.notify_ui.NotificationMarkCategoryAsReadEvent
 import org.stepic.droid.notifications.StepikNotificationManager
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.notifications.model.NotificationType
-import org.stepic.droid.ui.NotificationCategory
+import org.stepic.droid.model.NotificationCategory
 import org.stepic.droid.util.not
 import org.stepic.droid.web.Api
 import timber.log.Timber
@@ -32,11 +29,10 @@ class NotificationListPresenter
         private val mainHandler: MainHandler,
         private val api: Api,
         private val config: Config,
-        private val bus: Bus,
         private val analytic: Analytic,
-        private val stepikNotificationManager: StepikNotificationManager
-) : PresenterBase<NotificationListView>() {
-
+        private val stepikNotificationManager: StepikNotificationManager,
+        private val internetEnabledListenerClient : Client<InternetEnabledListener>
+) : PresenterBase<NotificationListView>(), InternetEnabledListener {
     private var notificationCategory: NotificationCategory? = null
     val isLoading = AtomicBoolean(false)
     val wasShown = AtomicBoolean(false)
@@ -44,16 +40,6 @@ class NotificationListPresenter
     private val page = AtomicInteger(1)
     val notificationList: MutableList<Notification> = ArrayList<Notification>()
     val notificationMapIdToPosition: MutableMap<Long, Int> = HashMap()
-
-    override fun attachView(view: NotificationListView) {
-        super.attachView(view)
-        bus.register(this)
-    }
-
-    override fun detachView(view: NotificationListView) {
-        bus.unregister(this)
-        super.detachView(view)
-    }
 
     /**
      * return false if were cancelled
@@ -168,7 +154,7 @@ class NotificationListPresenter
                 val isSuccess = api.setReadStatusForNotification(id, true).execute().isSuccessful
                 if (isSuccess) {
                     mainHandler.post {
-                        bus.post(NotificationCheckedSuccessfullyEvent(id))
+                        onNotificationShouldBeRead(id)
                     }
                 } else {
                     val pos = notificationMapIdToPosition[id]
@@ -194,14 +180,12 @@ class NotificationListPresenter
         analytic.reportEvent(Analytic.Notification.ID_WAS_NULL)
     }
 
-    @Subscribe
-    fun onNotificationShouldBeRead(event: NotificationCheckedSuccessfullyEvent) {
-        val id = event.notificationId
-        val position: Int = notificationMapIdToPosition[id] ?: return
+    fun onNotificationShouldBeRead(notificationId: Long) {
+        val position: Int = notificationMapIdToPosition[notificationId] ?: return
         if (position >= 0 && position < notificationList.size) {
             val notificationInList = notificationList[position]
             if (notificationInList.is_unread ?: false) {
-                view?.markNotificationAsRead(position, id)
+                view?.markNotificationAsRead(position, notificationId)
             }
         }
 
@@ -223,7 +207,7 @@ class NotificationListPresenter
                             it.is_unread = false
                         }
                         mainHandler.post {
-                            bus.post(NotificationMarkCategoryAsReadEvent(notificationCategoryLocal))
+                            onMarkCategoryRead(notificationCategoryLocal)
                             view?.markAsReadSuccessfully()
                         }
                     }
@@ -241,20 +225,18 @@ class NotificationListPresenter
 
     }
 
-    @Subscribe
     @MainThread
-    fun onMarkCategoryRead(event: NotificationMarkCategoryAsReadEvent) {
-        if (event.category == notificationCategory) {
+    fun onMarkCategoryRead(category: NotificationCategory) {
+        if (category == notificationCategory) {
             //already mark
             return
         }
 
-        if (notificationCategory == null || (notificationCategory != NotificationCategory.all && event.category != NotificationCategory.all)) {
+        if (notificationCategory == null || (notificationCategory != NotificationCategory.all && category != NotificationCategory.all)) {
             //if we update in not all and it is not all -> do not need extra check
             return
         }
 
-        val category = event.category
         threadPoolExecutor.execute {
             val listForNotificationForUI = notificationList
                     .filter {
@@ -290,13 +272,20 @@ class NotificationListPresenter
                 }
             }
         }
-
-
     }
 
-    @Subscribe
-    @MainThread
-    fun onInternetEnabled(event: InternetIsEnabledEvent) {
+    override fun attachView(view: NotificationListView) {
+        super.attachView(view)
+        internetEnabledListenerClient.subscribe(this)
+    }
+
+    override fun detachView(view: NotificationListView) {
+        super.detachView(view)
+        internetEnabledListenerClient.unsubscribe(this)
+    }
+
+
+    override fun onInternetEnabled() {
         val category = notificationCategory
         if (notificationList.isEmpty() && category != null) {
             init(category);

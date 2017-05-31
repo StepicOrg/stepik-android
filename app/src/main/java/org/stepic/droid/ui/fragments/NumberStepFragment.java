@@ -7,7 +7,6 @@ import android.view.View;
 
 import com.squareup.otto.Subscribe;
 
-import org.stepic.droid.events.InternetIsEnabledEvent;
 import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent;
 import org.stepic.droid.events.steps.StepWasUpdatedEvent;
 import org.stepic.droid.model.Reply;
@@ -34,12 +33,6 @@ public class NumberStepFragment extends SingleLineSendStepFragment {
 
         String text = reply.getNumber();
         answerField.setText(text);
-    }
-
-    @Subscribe
-    @Override
-    public void onInternetEnabled(InternetIsEnabledEvent enabledEvent) {
-        super.onInternetEnabled(enabledEvent);
     }
 
     @Subscribe

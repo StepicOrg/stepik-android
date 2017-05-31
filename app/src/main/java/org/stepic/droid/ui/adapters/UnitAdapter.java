@@ -368,7 +368,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
         @BindView(R.id.lesson_icon)
         ImageView lessonIcon;
 
-        @BindDrawable(R.drawable.ic_lesson_cover)
+        @BindDrawable(R.drawable.general_placeholder)
         Drawable lessonPlaceholderDrawable;
 
         long oldLessonId = -1;
