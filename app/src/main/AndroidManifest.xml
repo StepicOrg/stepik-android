@@ -42,7 +42,8 @@
 
         <activity
             android:name="org.stepic.droid.ui.activities.SplashActivity"
-            android:theme="@style/AppTheme.BrandedLaunch">
+            android:theme="@style/AppTheme.BrandedLaunch"
+            android:noHistory="true">
         </activity>
 
         <activity-alias
