@@ -82,6 +82,13 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
+    public void showLaunchFromSplash(Activity activity) {
+        analytic.reportEvent(Analytic.Screens.SHOW_LAUNCH);
+        Intent launchIntent = new Intent(activity, LaunchActivity.class);
+        activity.startActivity(launchIntent);
+    }
+
+    @Override
     public void showLaunchScreen(Context context) {
         showLaunchScreen(context, false, MainFeedActivity.DEFAULT_START_INDEX);
     }
@@ -158,6 +165,14 @@ public class ScreenManagerImpl implements ScreenManager {
             intent.putExtra(AppConstants.KEY_COURSE_BUNDLE, (Parcelable) course);
         }
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        sourceActivity.startActivity(intent);
+    }
+
+    @Override
+    public void showMainFeedFromSplash(Activity sourceActivity) {
+        analytic.reportEvent(Analytic.Screens.SHOW_MAIN_FEED);
+
+        Intent intent = new Intent(sourceActivity, MainFeedActivity.class);
         sourceActivity.startActivity(intent);
     }
 

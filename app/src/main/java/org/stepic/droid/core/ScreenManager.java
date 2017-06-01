@@ -20,6 +20,8 @@ import org.stepic.droid.web.ViewAssignment;
 
 public interface ScreenManager {
 
+    void showLaunchFromSplash(Activity activity);
+
     void showLaunchScreen(Context context);
 
     void showLaunchScreenAfterLogout(Context context);
@@ -33,6 +35,8 @@ public interface ScreenManager {
     void showMainFeed(Context sourceActivity, @Nullable Course course);
 
     void showMainFeed(Context sourceActivity);
+
+    void showMainFeedFromSplash(Activity sourceActivity);
 
     void showMainFeed(Context sourceActivity, int indexOfMenu);
 
