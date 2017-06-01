@@ -82,6 +82,13 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
+    public void showLaunchFromSplash(Activity activity) {
+        analytic.reportEvent(Analytic.Screens.SHOW_LAUNCH);
+        Intent launchIntent = new Intent(activity, LaunchActivity.class);
+        activity.startActivity(launchIntent);
+    }
+
+    @Override
     public void showLaunchScreen(Context context) {
         showLaunchScreen(context, false, MainFeedActivity.DEFAULT_START_INDEX);
     }

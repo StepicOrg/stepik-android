@@ -20,6 +20,8 @@ import org.stepic.droid.web.ViewAssignment;
 
 public interface ScreenManager {
 
+    void showLaunchFromSplash(Activity activity);
+
     void showLaunchScreen(Context context);
 
     void showLaunchScreenAfterLogout(Context context);
