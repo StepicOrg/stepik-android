@@ -12,6 +12,7 @@ import org.stepic.droid.model.VideoUrl;
 import org.stepic.droid.storage.structure.DBStructureCourses;
 import org.stepic.droid.storage.structure.DbStructureCachedVideo;
 import org.stepic.droid.util.DbParseHelper;
+import org.stepic.droid.util.VideoCourseHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -189,30 +190,22 @@ public class CourseDaoImpl extends DaoBase<Course> {
         super.insertOrUpdate(course);
         if (course != null && course.getIntro_video() != null) {
             Video video = course.getIntro_video();
-            CachedVideo storedVideo = new CachedVideo();//it is cached, but not stored video.
-            storedVideo.setVideoId(video.getId());
-            storedVideo.setStepId(-1);
-            storedVideo.setThumbnail(video.getThumbnail());
-            if (video.getUrls() != null && !video.getUrls().isEmpty()) {
-                VideoUrl videoUrl = video.getUrls().get(0);
-                storedVideo.setQuality(videoUrl.getQuality());
-                storedVideo.setUrl(videoUrl.getUrl());
-            }
-            cachedVideoDao.insertOrUpdate(storedVideo);
+            CachedVideo cachedVideo = VideoCourseHelper.INSTANCE.transformToCachedVideo(video); //it is cached, but not stored video.
+            cachedVideoDao.insertOrUpdate(cachedVideo);
         }
     }
 
     //// FIXME: 17.02.16 refactor this hack
     @Nullable
-    private Video transformCachedVideoToRealVideo(CachedVideo video) {
+    private Video transformCachedVideoToRealVideo(CachedVideo cachedVideo) {
         Video realVideo = null;
-        if (video != null) {
+        if (cachedVideo != null) {
             realVideo = new Video();
-            realVideo.setId(video.getVideoId());
-            realVideo.setThumbnail(video.getThumbnail());
+            realVideo.setId(cachedVideo.getVideoId());
+            realVideo.setThumbnail(cachedVideo.getThumbnail());
             VideoUrl videoUrl = new VideoUrl();
-            videoUrl.setQuality(video.getQuality());
-            videoUrl.setUrl(video.getUrl());
+            videoUrl.setQuality(cachedVideo.getQuality());
+            videoUrl.setUrl(cachedVideo.getUrl());
 
             List<VideoUrl> list = new ArrayList<>();
             list.add(videoUrl);

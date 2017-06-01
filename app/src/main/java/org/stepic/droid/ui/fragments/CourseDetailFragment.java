@@ -458,7 +458,13 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
         Video newTypeVideo = course.getIntro_video();
         if (newTypeVideo != null && newTypeVideo.getUrls() != null && !newTypeVideo.getUrls().isEmpty()) {
-            urlToVideo = newTypeVideo.getUrls().get(0).getUrl();
+            int videoIndex = 0;
+            if (newTypeVideo.getUrls().size() > 1) {
+                //if here 2 or more qualities, take the 2nd, with lower quality (workaround for https://github.com/google/ExoPlayer/issues/2777)
+                videoIndex = 1; //usually in 720p
+                //it is working for courses from search
+            }
+            urlToVideo = newTypeVideo.getUrls().get(videoIndex).getUrl();
             long videoId = newTypeVideo.getId();
             showNewStyleVideo(urlToVideo, newTypeVideo.getThumbnail(), videoId);
         } else {
