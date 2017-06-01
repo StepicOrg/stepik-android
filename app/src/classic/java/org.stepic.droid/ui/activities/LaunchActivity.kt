@@ -271,7 +271,7 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
                 onCredentialRetrieved(credential)
             } else {
                 analytic.reportEvent(Analytic.SmartLock.LAUNCH_CREDENTIAL_CANCELED_PROMPT)
-                Timber.d("Credential Read: NOT OK")
+                Timber.d("Credential Read not ok: canceled or no internet")
             }
         }
 
@@ -354,13 +354,14 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
     }
 
     private fun deleteCredential(credential: Credential) {
-        Auth.CredentialsApi.delete(googleApiClient,
-                credential).setResultCallback { status ->
-            if (status.isSuccess) {
-                analytic.reportEvent(Analytic.SmartLock.CREDENTIAL_DELETED_SUCCESSFUL)
-                //do not show some message because E-mail is not correct was already shown
-            } else {
-                analytic.reportEventWithName(Analytic.SmartLock.CREDENTIAL_DELETED_FAIL, status.statusMessage)
+        if (googleApiClient?.isConnected ?: false) {
+            Auth.CredentialsApi.delete(googleApiClient, credential).setResultCallback { status ->
+                if (status.isSuccess) {
+                    analytic.reportEvent(Analytic.SmartLock.CREDENTIAL_DELETED_SUCCESSFUL)
+                    //do not show some message because E-mail is not correct was already shown
+                } else {
+                    analytic.reportEventWithName(Analytic.SmartLock.CREDENTIAL_DELETED_FAIL, status.statusMessage)
+                }
             }
         }
     }
