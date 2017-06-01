@@ -169,6 +169,14 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
+    public void showMainFeedFromSplash(Activity sourceActivity) {
+        analytic.reportEvent(Analytic.Screens.SHOW_MAIN_FEED);
+
+        Intent intent = new Intent(sourceActivity, MainFeedActivity.class);
+        sourceActivity.startActivity(intent);
+    }
+
+    @Override
     public void showMainFeed(Context sourceActivity, int indexOfMenu) {
         analytic.reportEvent(Analytic.Screens.SHOW_MAIN_FEED);
         Intent intent = new Intent(sourceActivity, MainFeedActivity.class);

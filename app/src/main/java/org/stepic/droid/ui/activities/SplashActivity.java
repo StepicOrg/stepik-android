@@ -175,7 +175,7 @@ public class SplashActivity extends BackToExitActivityBase {
     private void showNextScreen() {
         if (!isFinishing()) {
             if (sharedPreferenceHelper.getAuthResponseFromStore() != null) {
-                screenManager.showMainFeed(SplashActivity.this);
+                screenManager.showMainFeedFromSplash(SplashActivity.this);
             } else {
                 screenManager.showLaunchFromSplash(this);
             }
