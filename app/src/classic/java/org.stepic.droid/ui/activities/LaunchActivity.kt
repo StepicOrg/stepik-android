@@ -271,7 +271,7 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
                 onCredentialRetrieved(credential)
             } else {
                 analytic.reportEvent(Analytic.SmartLock.LAUNCH_CREDENTIAL_CANCELED_PROMPT)
-                Timber.d("Credential Read: NOT OK")
+                Timber.d("Credential Read not ok: canceled or no internet")
             }
         }
 
