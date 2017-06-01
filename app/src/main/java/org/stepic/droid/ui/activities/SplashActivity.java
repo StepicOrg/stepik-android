@@ -179,7 +179,6 @@ public class SplashActivity extends BackToExitActivityBase {
             } else {
                 screenManager.showLaunchFromSplash(this);
             }
-            finish();
         }
     }
 }
