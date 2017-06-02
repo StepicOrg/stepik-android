@@ -436,4 +436,7 @@
     <string name="video_step_play_content_description">Play video</string>
     <string name="video_step_video_image_content_description">Video</string>
 
+    <!--Video player screen-->
+    <string name="video_player_quality">Video quality</string>
+
 </resources>
