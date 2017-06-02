@@ -420,9 +420,18 @@ class DatabaseFacade
         return ArrayList<Section>()
     }
 
-
-    fun insertOrUpdateVideoList(videoId: Long, videoUrlList: List<VideoUrl>) {
+    fun insertOrUpdateExternalVideoList(videoId: Long, videoUrlList: List<DbVideoUrl>) {
+        //remove all related with this video and write new
+        externalVideoUrlDao.remove(DbStructureVideoUrl.Column.videoId, videoId.toString())
+        videoUrlList.forEach {
+            externalVideoUrlDao.insertOrUpdate(it)
+        }
     }
 
+    fun getExternalVideoUrls(videoId: Long): List<DbVideoUrl> {
+        return externalVideoUrlDao
+                .getAll(DbStructureVideoUrl.Column.videoId, videoId.toString())
+                .filterNotNull()
+    }
 
 }
