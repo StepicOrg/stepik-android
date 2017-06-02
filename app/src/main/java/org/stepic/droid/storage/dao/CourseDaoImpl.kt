@@ -55,7 +55,7 @@ constructor(
         course.certificate = cursor.getString(indexCertificate)
         course.workload = cursor.getString(indexWorkload)
         course.courseFormat = cursor.getString(indexCourseFormat)
-        course.target_audience = cursor.getString(indexTargetAudience)
+        course.targetAudience = cursor.getString(indexTargetAudience)
 
         course.setId(cursor.getLong(indexId))
         course.summary = cursor.getString(indexSummary)
