@@ -9,7 +9,7 @@ import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Video;
 import org.stepic.droid.model.VideoUrl;
-import org.stepic.droid.storage.structure.DBStructureCourses;
+import org.stepic.droid.storage.structure.DbStructureEnrolledAndFeaturedCourses;
 import org.stepic.droid.storage.structure.DbStructureCachedVideo;
 import org.stepic.droid.util.DbParseHelper;
 import org.stepic.droid.util.VideoCourseHelper;
@@ -38,31 +38,31 @@ public class CourseDaoImpl extends DaoBase<Course> {
     public Course parsePersistentObject(Cursor cursor) {
         Course course = new Course();
 
-        int indexId = cursor.getColumnIndex(DBStructureCourses.Column.COURSE_ID);
-        int indexSummary = cursor.getColumnIndex(DBStructureCourses.Column.SUMMARY);
-        int indexCover = cursor.getColumnIndex(DBStructureCourses.Column.COVER_LINK);
-        int indexIntro = cursor.getColumnIndex(DBStructureCourses.Column.INTRO_LINK_VIMEO);
-        int indexTitle = cursor.getColumnIndex(DBStructureCourses.Column.TITLE);
-        int indexLanguage = cursor.getColumnIndex(DBStructureCourses.Column.LANGUAGE);
-        int indexBeginDateSource = cursor.getColumnIndex(DBStructureCourses.Column.BEGIN_DATE_SOURCE);
-        int indexBeginDate = cursor.getColumnIndex(DBStructureCourses.Column.BEGIN_DATE);
-        int indexEndDate = cursor.getColumnIndex(DBStructureCourses.Column.END_DATE);
-        int indexLastDeadline = cursor.getColumnIndex(DBStructureCourses.Column.LAST_DEADLINE);
-        int indexDescription = cursor.getColumnIndex(DBStructureCourses.Column.DESCRIPTION);
-        int indexInstructors = cursor.getColumnIndex(DBStructureCourses.Column.INSTRUCTORS);
-        int indexRequirements = cursor.getColumnIndex(DBStructureCourses.Column.REQUIREMENTS);
-        int indexEnrollment = cursor.getColumnIndex(DBStructureCourses.Column.ENROLLMENT);
-        int indexSection = cursor.getColumnIndex(DBStructureCourses.Column.SECTIONS);
-        int indexWorkload = cursor.getColumnIndex(DBStructureCourses.Column.WORKLOAD);
-        int indexCourseFormat = cursor.getColumnIndex(DBStructureCourses.Column.COURSE_FORMAT);
-        int indexTargetAudience = cursor.getColumnIndex(DBStructureCourses.Column.TARGET_AUDIENCE);
-        int indexCertificate = cursor.getColumnIndex(DBStructureCourses.Column.CERTIFICATE);
-        int indexIntroVideoId = cursor.getColumnIndex(DBStructureCourses.Column.INTRO_VIDEO_ID);
-        int indexSlug = cursor.getColumnIndex(DBStructureCourses.Column.SLUG);
-        int indexScheduleLink = cursor.getColumnIndex(DBStructureCourses.Column.SCHEDULE_LINK);
-        int indexScheduleLongLink = cursor.getColumnIndex(DBStructureCourses.Column.SCHEDULE_LONG_LINK);
-        int indexLastStepId = cursor.getColumnIndex(DBStructureCourses.Column.LAST_STEP_ID);
-        int indexIsActive = cursor.getColumnIndex(DBStructureCourses.Column.IS_ACTIVE);
+        int indexId = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.COURSE_ID);
+        int indexSummary = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.SUMMARY);
+        int indexCover = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.COVER_LINK);
+        int indexIntro = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.INTRO_LINK_VIMEO);
+        int indexTitle = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.TITLE);
+        int indexLanguage = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.LANGUAGE);
+        int indexBeginDateSource = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.BEGIN_DATE_SOURCE);
+        int indexBeginDate = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.BEGIN_DATE);
+        int indexEndDate = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.END_DATE);
+        int indexLastDeadline = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.LAST_DEADLINE);
+        int indexDescription = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.DESCRIPTION);
+        int indexInstructors = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.INSTRUCTORS);
+        int indexRequirements = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.REQUIREMENTS);
+        int indexEnrollment = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.ENROLLMENT);
+        int indexSection = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.SECTIONS);
+        int indexWorkload = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.WORKLOAD);
+        int indexCourseFormat = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.COURSE_FORMAT);
+        int indexTargetAudience = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.TARGET_AUDIENCE);
+        int indexCertificate = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.CERTIFICATE);
+        int indexIntroVideoId = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.INTRO_VIDEO_ID);
+        int indexSlug = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.SLUG);
+        int indexScheduleLink = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.SCHEDULE_LINK);
+        int indexScheduleLongLink = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.SCHEDULE_LONG_LINK);
+        int indexLastStepId = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.LAST_STEP_ID);
+        int indexIsActive = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.IS_ACTIVE);
 
         course.setLastStepId(cursor.getString(indexLastStepId));
         course.setCertificate(cursor.getString(indexCertificate));
@@ -105,42 +105,42 @@ public class CourseDaoImpl extends DaoBase<Course> {
     public ContentValues getContentValues(Course course) {
         ContentValues values = new ContentValues();
 
-        values.put(DBStructureCourses.Column.LAST_STEP_ID, course.getLastStepId());
-        values.put(DBStructureCourses.Column.COURSE_ID, course.getCourseId());
-        values.put(DBStructureCourses.Column.SUMMARY, course.getSummary());
-        values.put(DBStructureCourses.Column.COVER_LINK, course.getCover());
-        values.put(DBStructureCourses.Column.INTRO_LINK_VIMEO, course.getIntro());
-        values.put(DBStructureCourses.Column.TITLE, course.getTitle());
-        values.put(DBStructureCourses.Column.LANGUAGE, course.getLanguage());
-        values.put(DBStructureCourses.Column.BEGIN_DATE_SOURCE, course.getBegin_date_source());
-        values.put(DBStructureCourses.Column.LAST_DEADLINE, course.getLast_deadline());
-        values.put(DBStructureCourses.Column.DESCRIPTION, course.getDescription());
+        values.put(DbStructureEnrolledAndFeaturedCourses.Column.LAST_STEP_ID, course.getLastStepId());
+        values.put(DbStructureEnrolledAndFeaturedCourses.Column.COURSE_ID, course.getCourseId());
+        values.put(DbStructureEnrolledAndFeaturedCourses.Column.SUMMARY, course.getSummary());
+        values.put(DbStructureEnrolledAndFeaturedCourses.Column.COVER_LINK, course.getCover());
+        values.put(DbStructureEnrolledAndFeaturedCourses.Column.INTRO_LINK_VIMEO, course.getIntro());
+        values.put(DbStructureEnrolledAndFeaturedCourses.Column.TITLE, course.getTitle());
+        values.put(DbStructureEnrolledAndFeaturedCourses.Column.LANGUAGE, course.getLanguage());
+        values.put(DbStructureEnrolledAndFeaturedCourses.Column.BEGIN_DATE_SOURCE, course.getBegin_date_source());
+        values.put(DbStructureEnrolledAndFeaturedCourses.Column.LAST_DEADLINE, course.getLast_deadline());
+        values.put(DbStructureEnrolledAndFeaturedCourses.Column.DESCRIPTION, course.getDescription());
 
         String instructorsParsed = DbParseHelper.parseLongArrayToString(course.getInstructors());
-        values.put(DBStructureCourses.Column.INSTRUCTORS, instructorsParsed);
+        values.put(DbStructureEnrolledAndFeaturedCourses.Column.INSTRUCTORS, instructorsParsed);
 
-        values.put(DBStructureCourses.Column.REQUIREMENTS, course.getRequirements());
-        values.put(DBStructureCourses.Column.ENROLLMENT, course.getEnrollment());
+        values.put(DbStructureEnrolledAndFeaturedCourses.Column.REQUIREMENTS, course.getRequirements());
+        values.put(DbStructureEnrolledAndFeaturedCourses.Column.ENROLLMENT, course.getEnrollment());
 
         String sectionsParsed = DbParseHelper.parseLongArrayToString(course.getSections());
-        values.put(DBStructureCourses.Column.SECTIONS, sectionsParsed);
+        values.put(DbStructureEnrolledAndFeaturedCourses.Column.SECTIONS, sectionsParsed);
 
-        values.put(DBStructureCourses.Column.WORKLOAD, course.getWorkload());
-        values.put(DBStructureCourses.Column.COURSE_FORMAT, course.getCourse_format());
-        values.put(DBStructureCourses.Column.TARGET_AUDIENCE, course.getTarget_audience());
-        values.put(DBStructureCourses.Column.CERTIFICATE, course.getCertificate());
-        values.put(DBStructureCourses.Column.SLUG, course.getSlug());
+        values.put(DbStructureEnrolledAndFeaturedCourses.Column.WORKLOAD, course.getWorkload());
+        values.put(DbStructureEnrolledAndFeaturedCourses.Column.COURSE_FORMAT, course.getCourse_format());
+        values.put(DbStructureEnrolledAndFeaturedCourses.Column.TARGET_AUDIENCE, course.getTarget_audience());
+        values.put(DbStructureEnrolledAndFeaturedCourses.Column.CERTIFICATE, course.getCertificate());
+        values.put(DbStructureEnrolledAndFeaturedCourses.Column.SLUG, course.getSlug());
 
-        values.put(DBStructureCourses.Column.SCHEDULE_LINK, course.getSchedule_link());
-        values.put(DBStructureCourses.Column.SCHEDULE_LONG_LINK, course.getSchedule_long_link());
+        values.put(DbStructureEnrolledAndFeaturedCourses.Column.SCHEDULE_LINK, course.getSchedule_link());
+        values.put(DbStructureEnrolledAndFeaturedCourses.Column.SCHEDULE_LONG_LINK, course.getSchedule_long_link());
 
-        values.put(DBStructureCourses.Column.BEGIN_DATE, course.getBegin_date());
-        values.put(DBStructureCourses.Column.END_DATE, course.getEnd_date());
-        values.put(DBStructureCourses.Column.IS_ACTIVE, course.is_active());
+        values.put(DbStructureEnrolledAndFeaturedCourses.Column.BEGIN_DATE, course.getBegin_date());
+        values.put(DbStructureEnrolledAndFeaturedCourses.Column.END_DATE, course.getEnd_date());
+        values.put(DbStructureEnrolledAndFeaturedCourses.Column.IS_ACTIVE, course.is_active());
 
         Video video = course.getIntro_video();
         if (video != null) {
-            values.put(DBStructureCourses.Column.INTRO_VIDEO_ID, video.getId());
+            values.put(DbStructureEnrolledAndFeaturedCourses.Column.INTRO_VIDEO_ID, video.getId());
         }
         return values;
     }
@@ -152,7 +152,7 @@ public class CourseDaoImpl extends DaoBase<Course> {
 
     @Override
     public String getDefaultPrimaryColumn() {
-        return DBStructureCourses.Column.COURSE_ID;
+        return DbStructureEnrolledAndFeaturedCourses.Column.COURSE_ID;
     }
 
     @Override

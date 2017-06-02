@@ -111,7 +111,7 @@ class DatabaseFacade
 
     fun getSectionById(sectionId: Long) = sectionDao.get(DbStructureSections.Column.SECTION_ID, sectionId.toString())
 
-    fun getCourseById(courseId: Long, type: Table) = getCourseDao(type).get(DBStructureCourses.Column.COURSE_ID, courseId.toString())
+    fun getCourseById(courseId: Long, type: Table) = getCourseDao(type).get(DbStructureEnrolledAndFeaturedCourses.Column.COURSE_ID, courseId.toString())
 
     fun getProgressById(progressId: String) = progressDao.get(DbStructureProgress.Column.ID, progressId)
 
@@ -170,7 +170,7 @@ class DatabaseFacade
     fun addCourse(course: Course, type: Table) = getCourseDao(type).insertOrUpdate(course)
 
     fun deleteCourse(course: Course, type: Table) {
-        getCourseDao(type).delete(DBStructureCourses.Column.COURSE_ID, course.courseId.toString())
+        getCourseDao(type).delete(DbStructureEnrolledAndFeaturedCourses.Column.COURSE_ID, course.courseId.toString())
     }
 
     fun addSection(section: Section) = sectionDao.insertOrUpdate(section)

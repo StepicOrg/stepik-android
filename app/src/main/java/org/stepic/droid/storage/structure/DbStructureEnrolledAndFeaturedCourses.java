@@ -1,9 +1,6 @@
 package org.stepic.droid.storage.structure;
 
-public final class DBStructureCourses extends DBStructureBase {
-
-    private static String[] usedColumns = null;
-
+public final class DbStructureEnrolledAndFeaturedCourses {
     public static final String ENROLLED_COURSES = "courses";
     public static final String FEATURED_COURSES = "featured_courses";
 
@@ -42,39 +39,5 @@ public final class DBStructureCourses extends DBStructureBase {
         public static final String END_DATE = "end_date";
         public static final String LAST_STEP_ID = "last_step";
         public static final String IS_ACTIVE = "is_active";
-    }
-
-    public static String[] getUsedColumns() {
-        if (usedColumns == null) {
-            usedColumns = new String[]{
-                    Column.ID,
-                    Column.COURSE_ID,
-                    Column.SUMMARY,
-                    Column.COVER_LINK,
-                    Column.INTRO_LINK_VIMEO,
-                    Column.TITLE,
-                    Column.LANGUAGE,
-                    Column.BEGIN_DATE_SOURCE,
-                    Column.LAST_DEADLINE,
-                    Column.DESCRIPTION,
-                    Column.INSTRUCTORS,
-                    Column.REQUIREMENTS,
-                    Column.ENROLLMENT,
-                    Column.SECTIONS,
-                    Column.IS_CACHED,
-                    Column.IS_LOADING,
-                    Column.WORKLOAD,
-                    Column.COURSE_FORMAT,
-                    Column.TARGET_AUDIENCE,
-                    Column.CERTIFICATE,
-                    Column.INTRO_VIDEO_ID,
-                    Column.SLUG,
-                    Column.BEGIN_DATE,
-                    Column.END_DATE,
-                    Column.LAST_STEP_ID,
-                    Column.IS_ACTIVE
-            };
-        }
-        return usedColumns;
     }
 }
