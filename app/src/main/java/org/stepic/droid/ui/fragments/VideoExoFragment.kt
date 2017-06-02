@@ -45,7 +45,7 @@ import org.stepic.droid.ui.util.VideoPlayerConstants
 import javax.inject.Inject
 
 /**
- * we use onStart/onStop for starting playing and releasing player (instead of onResume/onPause) for supporting Api23+ Multi-Window mode.
+ * we use onStart/onStop for starting playing and releasing playerLayout (instead of onResume/onPause) for supporting Api23+ Multi-Window mode.
  * We can't split it by api version, because Samsung's Tablets Api21+ can support Multi Window feature
  */
 class VideoExoFragment : FragmentBase(),
@@ -321,7 +321,7 @@ class VideoExoFragment : FragmentBase(),
     }
 
     private fun pausePlayer() {
-        player?.playWhenReady = false // pause player
+        player?.playWhenReady = false // pause playerLayout
     }
 
     private fun showChooseRateMenu(view: View) {

@@ -153,7 +153,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     @BindView(R.id.list_of_course_property)
     ListView coursePropertyListView;
 
-    @BindDrawable(R.drawable.video_placeholder_color)
+    @BindDrawable(R.drawable.videoPlaceholderDrawable)
     Drawable videoPlaceholder;
 
     @BindView(R.id.report_problem)
@@ -242,8 +242,8 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         joinCourseView = ButterKnife.findById(header, R.id.join_course_layout);
         continueCourseView = ButterKnife.findById(header, R.id.go_to_learn);
         introView = ButterKnife.findById(header, R.id.intro_video);
-        thumbnail = ButterKnife.findById(header, R.id.player_thumbnail);
-        player = ButterKnife.findById(header, R.id.player_layout);
+        thumbnail = ButterKnife.findById(header, R.id.playerThumbnail);
+        player = ButterKnife.findById(header, R.id.playerLayout);
         courseTargetFigSupported = new GlideDrawableImageViewTarget(courseIcon);
         player.setVisibility(View.GONE);
         courseNameView = ButterKnife.findById(header, R.id.course_name);

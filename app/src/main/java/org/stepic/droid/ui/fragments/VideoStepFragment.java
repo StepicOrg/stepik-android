@@ -41,14 +41,15 @@ import butterknife.BindDrawable;
 import butterknife.BindView;
 
 public class VideoStepFragment extends StepBaseFragment implements StepQualityView, VideoStepView, VideoLengthView {
-    @BindView(R.id.player_thumbnail)
-    ImageView thumbnailImageView;
 
-    @BindDrawable(R.drawable.video_placeholder_color)
-    Drawable videoPlaceholder;
+    @BindView(R.id.playerThumbnail)
+    ImageView playerThumbnail;
 
-    @BindView(R.id.player_layout)
-    View player;
+    @BindDrawable(R.drawable.videoPlaceholderDrawable)
+    Drawable videoPlaceholderDrawable;
+
+    @BindView(R.id.playerLayout)
+    View playerLayout;
 
     @BindView(R.id.videoLengthTextView)
     TextView videoLengthTextView;
@@ -99,10 +100,10 @@ public class VideoStepFragment extends StepBaseFragment implements StepQualityVi
         videoStepPresenter.initVideo(step);
 
 
-        player.setOnClickListener(new View.OnClickListener() {
+        playerLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                player.setClickable(false);
+                playerLayout.setClickable(false);
                 videoStepPresenter.playVideo(step);
             }
         });
@@ -126,7 +127,7 @@ public class VideoStepFragment extends StepBaseFragment implements StepQualityVi
         videoLengthPresenter.detachView(this);
         videoStepPresenter.detachView(this);
         stepQualityPresenter.detachView(this);
-        player.setOnClickListener(null);
+        playerLayout.setOnClickListener(null);
         super.onDestroyView();
     }
 
@@ -150,8 +151,8 @@ public class VideoStepFragment extends StepBaseFragment implements StepQualityVi
                             return false;
                         }
                     })
-                    .placeholder(videoPlaceholder)
-                    .into(this.thumbnailImageView);
+                    .placeholder(videoPlaceholderDrawable)
+                    .into(this.playerThumbnail);
         }
     }
 
@@ -175,7 +176,7 @@ public class VideoStepFragment extends StepBaseFragment implements StepQualityVi
 
     @Override
     public void onNeedOpenVideo(@NonNull String pathToVideo, long videoId) {
-        player.setClickable(true);
+        playerLayout.setClickable(true);
         screenManager.showVideo(getActivity(), pathToVideo, videoId);
     }
 
@@ -198,7 +199,7 @@ public class VideoStepFragment extends StepBaseFragment implements StepQualityVi
 
     @Override
     public void onInternetProblem() {
-        player.setClickable(true);
+        playerLayout.setClickable(true);
         Toast.makeText(getContext(), R.string.sync_problem, Toast.LENGTH_SHORT).show();
     }
 

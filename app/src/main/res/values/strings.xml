@@ -431,4 +431,9 @@
     <string name="next">Next</string>
     <string name="device_orientation_title">Rotate video</string>
     <string name="no_connection">No connection</string>
+
+    <!--Video step screen-->
+    <string name="video_step_play_content_description">Play video</string>
+    <string name="video_step_video_image_content_description">Video</string>
+
 </resources>

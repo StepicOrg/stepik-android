@@ -451,4 +451,8 @@
     <string name="next">Дальше</string>
     <string name="device_orientation_title">Поворот видео</string>
     <string name="no_connection">Нет подключения</string>
+
+    <!--Video step screen-->
+    <string name="video_step_play_content_description">Воспроизвести видео</string>
+    <string name="video_step_video_image_content_description">Видео</string>
 </resources>

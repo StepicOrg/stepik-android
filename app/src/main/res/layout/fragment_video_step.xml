@@ -19,7 +19,7 @@
         <include layout="@layout/step_text_header"/>
 
         <include
-            android:id="@+id/player_layout"
+            android:id="@+id/playerLayout"
             layout="@layout/player_placeholder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
