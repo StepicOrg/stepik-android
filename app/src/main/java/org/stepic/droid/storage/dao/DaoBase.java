@@ -128,7 +128,7 @@ public abstract class DaoBase<T> implements IDao<T> {
     }
 
     @Override
-    public void delete(String whereColumn, String whereValue) {
+    public void remove(String whereColumn, String whereValue) {
         String whereClause = whereColumn + " =?";
         executeDelete(getDbName(), whereClause, new String[]{whereValue});
     }

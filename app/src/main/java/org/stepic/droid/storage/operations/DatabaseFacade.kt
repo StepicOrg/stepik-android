@@ -170,7 +170,7 @@ class DatabaseFacade
     fun addCourse(course: Course, type: Table) = getCourseDao(type).insertOrUpdate(course)
 
     fun deleteCourse(course: Course, type: Table) {
-        getCourseDao(type).delete(DbStructureEnrolledAndFeaturedCourses.Column.COURSE_ID, course.courseId.toString())
+        getCourseDao(type).remove(DbStructureEnrolledAndFeaturedCourses.Column.COURSE_ID, course.courseId.toString())
     }
 
     fun addSection(section: Section) = sectionDao.insertOrUpdate(section)
@@ -195,7 +195,7 @@ class DatabaseFacade
     fun addVideo(cachedVideo: CachedVideo?) = cachedVideo?.let { cachedVideoDao.insertOrUpdate(cachedVideo) }
 
     fun deleteDownloadEntityByDownloadId(downloadId: Long) =
-            downloadEntityDao.delete(DbStructureSharedDownloads.Column.DOWNLOAD_ID, downloadId.toString())
+            downloadEntityDao.remove(DbStructureSharedDownloads.Column.DOWNLOAD_ID, downloadId.toString())
 
     fun isExistDownloadEntityByVideoId(videoId: Long) =
             downloadEntityDao.isInDb(DbStructureSharedDownloads.Column.VIDEO_ID, videoId.toString())
@@ -204,16 +204,16 @@ class DatabaseFacade
             deleteVideo(video.id)
 
     fun deleteVideo(videoId: Long) =
-            cachedVideoDao.delete(DbStructureCachedVideo.Column.VIDEO_ID, videoId.toString())
+            cachedVideoDao.remove(DbStructureCachedVideo.Column.VIDEO_ID, videoId.toString())
 
-    fun deleteVideoByUrl(path: String?) = path?.let { cachedVideoDao.delete(DbStructureCachedVideo.Column.URL, path) }
+    fun deleteVideoByUrl(path: String?) = path?.let { cachedVideoDao.remove(DbStructureCachedVideo.Column.URL, path) }
 
     fun deleteStep(step: Step?) {
         val stepId = step?.id ?: return
         deleteStepById(stepId)
     }
 
-    fun deleteStepById(stepId: Long) = stepDao.delete(DbStructureStep.Column.STEP_ID, stepId.toString())
+    fun deleteStepById(stepId: Long) = stepDao.remove(DbStructureStep.Column.STEP_ID, stepId.toString())
 
     fun getCachedVideoById(videoId: Long) = cachedVideoDao.get(DbStructureCachedVideo.Column.VIDEO_ID, videoId.toString())
 
@@ -261,12 +261,12 @@ class DatabaseFacade
     }
 
     fun removeAllNotificationsWithCourseId(courseId: Long) {
-        notificationDao.delete(DbStructureNotification.Column.COURSE_ID, courseId.toString())
+        notificationDao.remove(DbStructureNotification.Column.COURSE_ID, courseId.toString())
     }
 
     fun removeFromQueue(viewAssignmentWrapper: ViewAssignment?) {
         val assignmentId = viewAssignmentWrapper?.assignment ?: return
-        viewAssignmentDao.delete(DbStructureViewQueue.Column.ASSIGNMENT_ID, assignmentId.toString())
+        viewAssignmentDao.remove(DbStructureViewQueue.Column.ASSIGNMENT_ID, assignmentId.toString())
     }
 
     fun markProgressAsPassed(assignmentId: Long) {
@@ -381,7 +381,7 @@ class DatabaseFacade
     }
 
     fun removeSectionsOfCourse(courseId: Long) {
-        sectionDao.delete(DbStructureSections.Column.COURSE, courseId.toString());
+        sectionDao.remove(DbStructureSections.Column.COURSE, courseId.toString());
     }
 
     fun addTimestamp(videoTimestamp: VideoTimestamp) {
@@ -419,5 +419,10 @@ class DatabaseFacade
 
         return ArrayList<Section>()
     }
+
+
+    fun insertOrUpdateVideoList(videoId: Long, videoUrlList: List<VideoUrl>) {
+    }
+
 
 }
