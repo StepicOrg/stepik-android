@@ -12,7 +12,9 @@ class Block : Parcelable, Serializable {
 
     var name: String? = null
     var text: String? = null
-    var video: Video? = null
+    var video: Video? = null //always external video
+
+    var cachedLocalVideo : Video? = null
 
     override fun describeContents(): Int {
         return 0
@@ -22,6 +24,7 @@ class Block : Parcelable, Serializable {
         dest.writeString(this.name)
         dest.writeString(this.text)
         dest.writeParcelable(this.video, flags)
+        dest.writeParcelable(this.cachedLocalVideo, flags)
     }
 
     constructor() {
@@ -31,6 +34,7 @@ class Block : Parcelable, Serializable {
         this.name = input.readString()
         this.text = input.readString()
         this.video = input.readParcelable<Video>(App.getAppContext().classLoader)
+        this.cachedLocalVideo = input.readParcelable<Video>(App.getAppContext().classLoader)
     }
 
     companion object {
