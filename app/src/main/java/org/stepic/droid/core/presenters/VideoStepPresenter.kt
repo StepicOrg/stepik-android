@@ -8,7 +8,6 @@ import org.stepic.droid.core.presenters.contracts.VideoStepView
 import org.stepic.droid.di.step.StepScope
 import org.stepic.droid.model.Step
 import org.stepic.droid.model.Video
-import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.resolvers.VideoResolver
 import org.stepic.droid.web.Api
 import java.util.concurrent.Semaphore
@@ -22,12 +21,11 @@ class VideoStepPresenter
         private val threadPoolExecutor: ThreadPoolExecutor,
         private val mainHandler: MainHandler,
         private val api: Api,
-        private val databaseFacade: DatabaseFacade,
         private val videoResolver: VideoResolver,
         private val analytic: Analytic) : PresenterBase<VideoStepView>() {
 
-    var video: Video? = null
-    val videoInitiated = AtomicBoolean(false)
+    private var video: Video? = null
+    private val videoInitiated = AtomicBoolean(false)
 
     @MainThread
     fun initVideo(step: Step) {
@@ -40,7 +38,6 @@ class VideoStepPresenter
         }
 
         if (videoInitiated.compareAndSet(false, true)) {
-
             threadPoolExecutor.execute {
                 try {
                     val videoFromInternet: Video? = getVideoFromWeb(step.id)
