@@ -1,6 +1,6 @@
 package org.stepic.droid.storage.structure;
 
-public class DbStructureLastStep extends DatabaseInfo {
+public final class DbStructureLastStep {
     public static final String LAST_STEPS = "last_steps";
 
     public static final class Column {
