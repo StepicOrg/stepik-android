@@ -1,8 +1,10 @@
 package org.stepic.droid.storage.operations
 
 import android.content.ContentValues
-import org.stepic.droid.di.qualifiers.ExternalVideoUrl
-import org.stepic.droid.di.qualifiers.SavedVideoUrl
+import org.stepic.droid.di.qualifiers.EnrolledCoursesDaoQualifier
+import org.stepic.droid.di.qualifiers.ExternalVideoUrlDaoQualifier
+import org.stepic.droid.di.qualifiers.FeaturedCoursesDaoQualifier
+import org.stepic.droid.di.qualifiers.SavedVideoUrlDaoQualifier
 import org.stepic.droid.di.storage.StorageSingleton
 import org.stepic.droid.model.*
 import org.stepic.droid.model.Unit
@@ -27,7 +29,9 @@ class DatabaseFacade
         private val downloadEntityDao: IDao<DownloadEntity>,
         private val cachedVideoDao: IDao<CachedVideo>,
         private val stepDao: IDao<Step>,
+        @EnrolledCoursesDaoQualifier
         private val coursesEnrolledDao: IDao<Course>,
+        @FeaturedCoursesDaoQualifier
         private val coursesFeaturedDao: IDao<Course>,
         private val notificationDao: IDao<Notification>,
         private val calendarSectionDao: IDao<CalendarSection>,
@@ -35,15 +39,10 @@ class DatabaseFacade
         private val videoTimestampDao: IDao<VideoTimestamp>,
         private val lastStepDao: IDao<PersistentLastStep>,
         private val lastInteractions: IDao<CourseLastInteraction>,
-        @ExternalVideoUrl
+        @ExternalVideoUrlDaoQualifier
         private val externalVideoUrlDao: IDao<DbVideoUrl>,
-        @SavedVideoUrl
+        @SavedVideoUrlDaoQualifier
         private val savedVideoUrlDao: IDao<DbVideoUrl>) {
-
-    init {
-        coursesEnrolledDao.setTableName(Table.enrolled.storeName)
-        coursesFeaturedDao.setTableName(Table.featured.storeName)
-    }
 
     fun dropDatabase() {
         sectionDao.removeAll()

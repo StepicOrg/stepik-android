@@ -24,13 +24,9 @@ public class CourseDaoImpl extends DaoBase<Course> {
     private String tableName;
 
     @Inject
-    public CourseDaoImpl(SQLiteDatabase openHelper, IDao<CachedVideo> cachedVideoDao) {
+    public CourseDaoImpl(SQLiteDatabase openHelper, IDao<CachedVideo> cachedVideoDao, String tableName) {
         super(openHelper);
         this.cachedVideoDao = cachedVideoDao;
-    }
-
-    @Override
-    public void setTableName(String tableName) {
         this.tableName = tableName;
     }
 

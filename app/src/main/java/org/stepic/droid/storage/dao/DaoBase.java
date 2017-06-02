@@ -185,11 +185,6 @@ public abstract class DaoBase<T> implements IDao<T> {
         return isInDb(getDefaultPrimaryColumn(), getDefaultPrimaryValue(persistentObject));
     }
 
-    @Override
-    public void setTableName(String name) {
-        //do nothing
-    }
-
     abstract String getDbName();
 
     abstract String getDefaultPrimaryColumn();
