@@ -16,10 +16,12 @@ fun DbVideoUrl.toVideoUrl() =
                 this.quality
         )
 
-fun List<DbVideoUrl>.toVideoUrls(): List<VideoUrl> {
+fun MutableList<DbVideoUrl?>.toVideoUrls(): List<VideoUrl> {
     val result = ArrayList<VideoUrl>()
     this.forEach {
-        result.add(it.toVideoUrl())
+        if (it != null) {
+            result.add(it.toVideoUrl())
+        }
     }
     return result
 }

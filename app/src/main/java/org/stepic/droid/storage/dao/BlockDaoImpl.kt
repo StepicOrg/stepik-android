@@ -80,7 +80,7 @@ constructor(
         return blockWrapper
     }
 
-    override fun getAllWithQuery(query: String, whereArgs: Array<String>): List<BlockPersistentWrapper> {
+    override fun getAllWithQuery(query: String, whereArgs: Array<String>?): List<BlockPersistentWrapper> {
         val blockWrapperList = super.getAllWithQuery(query, whereArgs)
         for (blockWrapperItem in blockWrapperList) {
             addCachedVideoToBlockWrapper(blockWrapperItem)
@@ -102,7 +102,7 @@ constructor(
         }
         val externalVideoId = blockWrapper.block.video?.id.toString() ?: return
 
-        val externalVideoUrls: List<DbVideoUrl> = videoUrlIDao.getAll(DbStructureVideoUrl.Column.videoId, externalVideoId).filterNotNull()
+        val externalVideoUrls: MutableList<DbVideoUrl?> = videoUrlIDao.getAll(DbStructureVideoUrl.Column.videoId, externalVideoId)
 
         blockWrapper.block.video?.urls = externalVideoUrls.toVideoUrls()
     }

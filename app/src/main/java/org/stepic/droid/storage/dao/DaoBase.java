@@ -140,7 +140,7 @@ public abstract class DaoBase<T> implements IDao<T> {
         return getAllWithQuery(query, null);
     }
 
-    protected List<T> getAllWithQuery(String query, String[] whereArgs) {
+    protected List<T> getAllWithQuery(String query, @Nullable String[] whereArgs) {
         return executeQuery(query, whereArgs, new ResultHandler<List<T>>() {
             @Override
             public List<T> handle(Cursor cursor) throws SQLException {

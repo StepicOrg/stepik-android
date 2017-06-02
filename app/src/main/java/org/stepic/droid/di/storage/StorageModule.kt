@@ -101,16 +101,16 @@ abstract class StorageModule {
         @Provides
         @JvmStatic
         @EnrolledCoursesDaoQualifier
-        internal fun provideEnrolledCoursesDao(writeableDatabase: SQLiteDatabase, cachedVideo: IDao<CachedVideo>): IDao<Course> {
-            return CourseDaoImpl(writeableDatabase, cachedVideo, DbStructureEnrolledAndFeaturedCourses.ENROLLED_COURSES)
+        internal fun provideEnrolledCoursesDao(writeableDatabase: SQLiteDatabase, cachedVideo: IDao<CachedVideo>, externalVideos: IDao<DbVideoUrl>): IDao<Course> {
+            return CourseDaoImpl(writeableDatabase, cachedVideo, externalVideos, DbStructureEnrolledAndFeaturedCourses.ENROLLED_COURSES)
         }
 
         @StorageSingleton
         @Provides
         @JvmStatic
         @FeaturedCoursesDaoQualifier
-        internal fun provideFeaturedCoursesDao(writeableDatabase: SQLiteDatabase, cachedVideo: IDao<CachedVideo>): IDao<Course> {
-            return CourseDaoImpl(writeableDatabase, cachedVideo, DbStructureEnrolledAndFeaturedCourses.FEATURED_COURSES)
+        internal fun provideFeaturedCoursesDao(writeableDatabase: SQLiteDatabase, cachedVideo: IDao<CachedVideo>, externalVideos: IDao<DbVideoUrl>): IDao<Course> {
+            return CourseDaoImpl(writeableDatabase, cachedVideo, externalVideos, DbStructureEnrolledAndFeaturedCourses.FEATURED_COURSES)
         }
     }
 }
