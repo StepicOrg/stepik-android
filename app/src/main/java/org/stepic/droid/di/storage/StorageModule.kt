@@ -6,16 +6,13 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import org.stepic.droid.di.qualifiers.EnrolledCoursesDaoQualifier
-import org.stepic.droid.di.qualifiers.ExternalVideoUrlDaoQualifier
 import org.stepic.droid.di.qualifiers.FeaturedCoursesDaoQualifier
-import org.stepic.droid.di.qualifiers.SavedVideoUrlDaoQualifier
 import org.stepic.droid.model.*
 import org.stepic.droid.model.Unit
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.storage.DatabaseHelper
 import org.stepic.droid.storage.dao.*
 import org.stepic.droid.storage.structure.DbStructureEnrolledAndFeaturedCourses
-import org.stepic.droid.storage.structure.DbStructureVideoUrl
 import org.stepic.droid.web.ViewAssignment
 
 @Module
@@ -86,9 +83,12 @@ abstract class StorageModule {
     @StorageSingleton
     internal abstract fun provideCourseInteractionDao(courseLastInteractionDao: CourseLastInteractionDaoImpl): IDao<CourseLastInteraction>
 
+    @Binds
+    @StorageSingleton
+    internal abstract fun provideExternalVideoUrlDao(videoUrlDao: VideoUrlDaoImpl): IDao<DbVideoUrl>
+
     @Module
     companion object {
-
 
         @StorageSingleton
         @Provides
@@ -111,22 +111,6 @@ abstract class StorageModule {
         @FeaturedCoursesDaoQualifier
         internal fun provideFeaturedCoursesDao(writeableDatabase: SQLiteDatabase, cachedVideo: IDao<CachedVideo>): IDao<Course> {
             return CourseDaoImpl(writeableDatabase, cachedVideo, DbStructureEnrolledAndFeaturedCourses.FEATURED_COURSES)
-        }
-
-        @StorageSingleton
-        @Provides
-        @JvmStatic
-        @SavedVideoUrlDaoQualifier
-        internal fun provideSavedVideoUrlDao(writeableDatabase: SQLiteDatabase): IDao<DbVideoUrl> {
-            return VideoUrlDao(writeableDatabase, DbStructureVideoUrl.savedVideosName)
-        }
-
-        @StorageSingleton
-        @Provides
-        @JvmStatic
-        @ExternalVideoUrlDaoQualifier
-        internal fun provideExternalVideoUrlDao(writeableDatabase: SQLiteDatabase): IDao<DbVideoUrl> {
-            return VideoUrlDao(writeableDatabase, DbStructureVideoUrl.externalVideosName)
         }
     }
 }

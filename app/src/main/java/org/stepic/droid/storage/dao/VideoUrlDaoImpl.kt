@@ -7,9 +7,9 @@ import org.stepic.droid.model.DbVideoUrl
 import org.stepic.droid.storage.structure.DbStructureVideoUrl
 import javax.inject.Inject
 
-class VideoUrlDao @Inject constructor(writeableDatabase: SQLiteDatabase, private val tableName: String) : DaoBase<DbVideoUrl>(writeableDatabase) {
+class VideoUrlDaoImpl @Inject constructor(writeableDatabase: SQLiteDatabase) : DaoBase<DbVideoUrl>(writeableDatabase) {
 
-    override fun getDbName() = tableName
+    override fun getDbName() = DbStructureVideoUrl.externalVideosName
 
     override fun getDefaultPrimaryColumn() = DbStructureVideoUrl.Column.videoId
 

@@ -80,7 +80,6 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     private void upgradeFrom21To22(SQLiteDatabase db) {
-        createVideoUrlTable(db, DbStructureVideoUrl.INSTANCE.getSavedVideosName());
         createVideoUrlTable(db, DbStructureVideoUrl.INSTANCE.getExternalVideosName());
     }
 

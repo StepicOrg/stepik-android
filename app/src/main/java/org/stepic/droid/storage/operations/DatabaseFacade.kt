@@ -2,9 +2,7 @@ package org.stepic.droid.storage.operations
 
 import android.content.ContentValues
 import org.stepic.droid.di.qualifiers.EnrolledCoursesDaoQualifier
-import org.stepic.droid.di.qualifiers.ExternalVideoUrlDaoQualifier
 import org.stepic.droid.di.qualifiers.FeaturedCoursesDaoQualifier
-import org.stepic.droid.di.qualifiers.SavedVideoUrlDaoQualifier
 import org.stepic.droid.di.storage.StorageSingleton
 import org.stepic.droid.model.*
 import org.stepic.droid.model.Unit
@@ -39,10 +37,7 @@ class DatabaseFacade
         private val videoTimestampDao: IDao<VideoTimestamp>,
         private val lastStepDao: IDao<PersistentLastStep>,
         private val lastInteractions: IDao<CourseLastInteraction>,
-        @ExternalVideoUrlDaoQualifier
-        private val externalVideoUrlDao: IDao<DbVideoUrl>,
-        @SavedVideoUrlDaoQualifier
-        private val savedVideoUrlDao: IDao<DbVideoUrl>) {
+        private val externalVideoUrlDao: IDao<DbVideoUrl>) {
 
     fun dropDatabase() {
         sectionDao.removeAll()
