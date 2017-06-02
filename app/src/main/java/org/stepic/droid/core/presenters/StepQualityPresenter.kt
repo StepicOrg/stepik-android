@@ -63,10 +63,4 @@ class StepQualityPresenter
         }
 
     }
-
-    fun determineQuality(step: Step?) {
-        step?.block?.let { block ->
-            determineQuality(block.video)
-        }
-    }
 }

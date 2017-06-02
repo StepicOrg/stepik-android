@@ -206,6 +206,9 @@ public interface Analytic {
         String CHOICES_ARE_SMALLER = "choices_are_smaller";
         String PREVIOUS_VIEW_NOT_DETACHED = "previous_view_not_detached";
         String UNEXPECTED_VIEW = "unexpected_view";
+        String ILLEGAL_STATE_VIDEO_STEP = "illegal_state_video_step";
+        String ILLEGAL_STATE_VIDEO_STEP_PLAY = "illegal_state_video_step_play";
+        String NO_VIDEO_ON_STEP_SHOWING = "illegal_state_video_no_video";
     }
 
     interface Web {

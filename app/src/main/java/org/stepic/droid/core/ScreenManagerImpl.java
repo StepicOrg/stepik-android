@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.TaskStackBuilder;
@@ -286,7 +287,7 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void showVideo(Activity sourceActivity, String videoPath, long videoId) {
+    public void showVideo(Activity sourceActivity, @NonNull String videoPath, long videoId) {
         analytic.reportEvent(Analytic.Screens.TRY_OPEN_VIDEO);
         boolean isOpenExternal = userPreferences.isOpenInExternal();
         if (isOpenExternal) {

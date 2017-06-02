@@ -2,7 +2,9 @@ package org.stepic.droid.ui.fragments
 
 import android.net.Uri
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.GlideDrawable
@@ -13,12 +15,11 @@ import kotlinx.android.synthetic.main.fragment_video_step.*
 import kotlinx.android.synthetic.main.player_placeholder.*
 import kotlinx.android.synthetic.main.view_length_video_thumbnail.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.StepBaseFragment
-import org.stepic.droid.core.presenters.StepQualityPresenter
 import org.stepic.droid.core.presenters.VideoLengthPresenter
 import org.stepic.droid.core.presenters.VideoStepPresenter
-import org.stepic.droid.core.presenters.contracts.StepQualityView
 import org.stepic.droid.core.presenters.contracts.VideoLengthView
 import org.stepic.droid.core.presenters.contracts.VideoStepView
 import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent
@@ -28,25 +29,14 @@ import org.stepic.droid.util.ThumbnailParser
 import javax.inject.Inject
 
 class VideoStepFragment : StepBaseFragment(),
-        StepQualityView,
         VideoStepView,
         VideoLengthView {
-
-    private var tempVideoQuality: String? = null
 
     @Inject
     lateinit var videoStepPresenter: VideoStepPresenter
 
     @Inject
-    lateinit var stepQualityPresenter: StepQualityPresenter
-
-    @Inject
     lateinit var videoLengthPresenter: VideoLengthPresenter
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
 
     override fun injectComponent() {
         App
@@ -65,7 +55,6 @@ class VideoStepFragment : StepBaseFragment(),
         super.onViewCreated(view, savedInstanceState)
         headerWvEnhanced.visibility = View.GONE
 
-        stepQualityPresenter.attachView(this)
         videoStepPresenter.attachView(this)
         videoLengthPresenter.attachView(this)
 
@@ -77,22 +66,9 @@ class VideoStepFragment : StepBaseFragment(),
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.video_step_menu, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-        val qualityItemMenu = menu.findItem(R.id.action_quality)
-        if (tempVideoQuality != null) {
-            qualityItemMenu.isVisible = true
-            qualityItemMenu.title = tempVideoQuality
-        } else {
-            qualityItemMenu.isVisible = false
-        }
-    }
-
     override fun onDestroyView() {
         videoLengthPresenter.detachView(this)
         videoStepPresenter.detachView(this)
-        stepQualityPresenter.detachView(this)
         playerLayout.setOnClickListener(null)
         super.onDestroyView()
     }
@@ -131,24 +107,20 @@ class VideoStepFragment : StepBaseFragment(),
         }
     }
 
-    override fun showQuality(qualityForView: String) {
-        updateQualityMenu(qualityForView)
-    }
-
-    private fun updateQualityMenu(quality: String) {
-        tempVideoQuality = quality
-        activity.supportInvalidateOptionsMenu()
-    }
-
-    override fun onNeedOpenVideo(pathToVideo: String, videoId: Long) {
+    override fun onNeedOpenVideo(videoId: Long, cachedVideo: Video?, externalVideo: Video?) {
         playerLayout.isClickable = true
+        val pathToVideo = ((cachedVideo?.urls?.get(0) ?: externalVideo?.urls?.get(0))?.url)!! //todo: pass both to player and resolve in player.
         screenManager.showVideo(activity, pathToVideo, videoId)
     }
 
-    override fun onVideoLoaded(thumbnailPath: String?, video: Video) {
+    override fun onVideoLoaded(thumbnailPath: String?, cachedVideo: Video?, externalVideo: Video?) {
         //show thumbnail and show length should be synchronized event, because we do not show thumbnail now, only after fetching length
-        stepQualityPresenter.determineQuality(video)
-        videoLengthPresenter.fetchLength(video, step, thumbnailPath)
+        val video = cachedVideo ?: externalVideo
+        if (video != null) {
+            videoLengthPresenter.fetchLength(video, step, thumbnailPath)
+        } else {
+            analytic.reportEvent(Analytic.Error.NO_VIDEO_ON_STEP_SHOWING)
+        }
     }
 
     @Subscribe
