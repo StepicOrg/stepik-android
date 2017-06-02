@@ -11,7 +11,7 @@
         android:layout_height="@dimen/video_height"
         android:layout_gravity="center"
         android:contentDescription="@string/video_step_video_image_content_description"
-        android:src="@drawable/videoPlaceholderDrawable"/>
+        android:src="@drawable/video_placeholder_drawable"/>
 
 
     <ImageView

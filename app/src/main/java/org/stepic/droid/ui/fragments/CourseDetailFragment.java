@@ -153,7 +153,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     @BindView(R.id.list_of_course_property)
     ListView coursePropertyListView;
 
-    @BindDrawable(R.drawable.videoPlaceholderDrawable)
+    @BindDrawable(R.drawable.video_placeholder_drawable)
     Drawable videoPlaceholder;
 
     @BindView(R.id.report_problem)

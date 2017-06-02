@@ -12,7 +12,7 @@
         android:layout_height="@dimen/video_height"
         android:contentDescription="@string/video_step_video_image_content_description"
         android:scaleType="centerCrop"
-        android:src="@drawable/videoPlaceholderDrawable"/>
+        android:src="@drawable/video_placeholder_drawable"/>
 
     <ImageView
         android:id="@+id/playerPlayButton"

@@ -119,7 +119,7 @@ class VideoStepFragment : StepBaseFragment(),
                         return false
                     }
                 })
-                .placeholder(R.drawable.videoPlaceholderDrawable)
+                .placeholder(R.drawable.video_placeholder_drawable)
                 .into(this.playerThumbnail)
     }
 
