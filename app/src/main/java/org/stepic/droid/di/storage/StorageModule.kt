@@ -5,11 +5,14 @@ import android.database.sqlite.SQLiteOpenHelper
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import org.stepic.droid.di.qualifiers.ExternalVideoUrl
+import org.stepic.droid.di.qualifiers.SavedVideoUrl
 import org.stepic.droid.model.*
 import org.stepic.droid.model.Unit
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.storage.DatabaseHelper
 import org.stepic.droid.storage.dao.*
+import org.stepic.droid.storage.structure.DbStructureVideoUrl
 import org.stepic.droid.web.ViewAssignment
 
 @Module
@@ -90,6 +93,22 @@ abstract class StorageModule {
         @JvmStatic
         internal fun provideWritableDatabase(helper: SQLiteOpenHelper): SQLiteDatabase {
             return helper.writableDatabase
+        }
+
+        @StorageSingleton
+        @Provides
+        @JvmStatic
+        @SavedVideoUrl
+        internal fun provideSavedVideoUrlDao(writeableDatabase: SQLiteDatabase): IDao<DbVideoUrl> {
+            return VideoUrlDao(writeableDatabase, DbStructureVideoUrl.savedVideosName)
+        }
+
+        @StorageSingleton
+        @Provides
+        @JvmStatic
+        @ExternalVideoUrl
+        internal fun provideExternalVideoUrlDao(writeableDatabase: SQLiteDatabase): IDao<DbVideoUrl> {
+            return VideoUrlDao(writeableDatabase, DbStructureVideoUrl.externalVideosName)
         }
     }
 }

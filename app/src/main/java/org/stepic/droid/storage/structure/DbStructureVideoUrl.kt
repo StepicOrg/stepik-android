@@ -1,11 +1,12 @@
 package org.stepic.droid.storage.structure
 
 object DbStructureVideoUrl {
-    val tableName = "videoUrl"
+    val savedVideosName = "savedVideoUrls"
+    val externalVideosName = "externalVideoUrls"
 
     object Column {
         val videoId = "videoId"
-        val url = "url";
         val quality = "quality"
+        val url = "url";
     }
 }

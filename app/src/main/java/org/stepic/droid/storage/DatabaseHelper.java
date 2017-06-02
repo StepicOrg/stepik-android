@@ -21,6 +21,7 @@ import org.stepic.droid.storage.structure.DbStructureSharedDownloads;
 import org.stepic.droid.storage.structure.DbStructureStep;
 import org.stepic.droid.storage.structure.DbStructureUnit;
 import org.stepic.droid.storage.structure.DbStructureVideoTimestamp;
+import org.stepic.droid.storage.structure.DbStructureVideoUrl;
 import org.stepic.droid.storage.structure.DbStructureViewQueue;
 
 import javax.inject.Inject;
@@ -75,6 +76,12 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         upgradeFrom18To19(db);
         upgradeFrom19To20();
         upgradeFrom20To21(db);
+        upgradeFrom21To22(db);
+    }
+
+    private void upgradeFrom21To22(SQLiteDatabase db) {
+        createVideoUrlTable(db, DbStructureVideoUrl.INSTANCE.getSavedVideosName());
+        createVideoUrlTable(db, DbStructureVideoUrl.INSTANCE.getExternalVideosName());
     }
 
     private void upgradeFrom20To21(SQLiteDatabase db) {
@@ -274,8 +281,12 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
             upgradeFrom19To20();
         }
 
-        if (oldVersion < 20) {
+        if (oldVersion < 21) {
             upgradeFrom20To21(db);
+        }
+
+        if (oldVersion < 22) {
+            upgradeFrom21To22(db);
         }
     }
 
@@ -579,6 +590,17 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
                 + " ("
                 + DbStructureCourseLastInteraction.Column.COURSE_ID + WHITESPACE + LONG_TYPE + ", "
                 + DbStructureCourseLastInteraction.Column.TIMESTAMP + WHITESPACE + LONG_TYPE
+                + ")";
+        db.execSQL(sql);
+    }
+
+
+    private void createVideoUrlTable(SQLiteDatabase db, String name) {
+        String sql = "CREATE TABLE " + name
+                + " ("
+                + DbStructureVideoUrl.Column.INSTANCE.getVideoId() + WHITESPACE + LONG_TYPE + ", "
+                + DbStructureVideoUrl.Column.INSTANCE.getQuality() + WHITESPACE + TEXT_TYPE + ", "
+                + DbStructureVideoUrl.Column.INSTANCE.getUrl() + WHITESPACE + TEXT_TYPE
                 + ")";
         db.execSQL(sql);
     }

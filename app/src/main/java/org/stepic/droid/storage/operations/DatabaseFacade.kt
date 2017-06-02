@@ -1,6 +1,8 @@
 package org.stepic.droid.storage.operations
 
 import android.content.ContentValues
+import org.stepic.droid.di.qualifiers.ExternalVideoUrl
+import org.stepic.droid.di.qualifiers.SavedVideoUrl
 import org.stepic.droid.di.storage.StorageSingleton
 import org.stepic.droid.model.*
 import org.stepic.droid.model.Unit
@@ -32,7 +34,11 @@ class DatabaseFacade
         private val certificateViewItemDao: IDao<CertificateViewItem>,
         private val videoTimestampDao: IDao<VideoTimestamp>,
         private val lastStepDao: IDao<PersistentLastStep>,
-        private val lastInteractions: IDao<CourseLastInteraction>) {
+        private val lastInteractions: IDao<CourseLastInteraction>,
+        @ExternalVideoUrl
+        private val externalVideoUrlDao: IDao<DbVideoUrl>,
+        @SavedVideoUrl
+        private val savedVideoUrlDao: IDao<DbVideoUrl>) {
 
     init {
         coursesEnrolledDao.setTableName(Table.enrolled.storeName)
