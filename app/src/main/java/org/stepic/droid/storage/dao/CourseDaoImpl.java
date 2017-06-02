@@ -158,8 +158,8 @@ public class CourseDaoImpl extends DaoBase<Course> {
 
     @Nullable
     @Override
-    public Course get(String whereColumn, String whereValue) {
-        Course course = super.get(whereColumn, whereValue);
+    public Course get(String whereColumnName, String whereValue) {
+        Course course = super.get(whereColumnName, whereValue);
         addInnerObjects(course);
         return course;
     }

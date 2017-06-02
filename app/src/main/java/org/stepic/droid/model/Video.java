@@ -15,10 +15,6 @@ public class Video implements Parcelable, Serializable {
 
     private List<VideoUrl> urls;
 
-    private String status;
-    private String upload_date;
-
-
     @Override
     public int describeContents() {
         return 0;
@@ -29,8 +25,6 @@ public class Video implements Parcelable, Serializable {
         dest.writeLong(this.id);
         dest.writeString(this.thumbnail);
         dest.writeList(this.urls);
-        dest.writeString(this.status);
-        dest.writeString(this.upload_date);
     }
 
     public Video() {
@@ -48,21 +42,11 @@ public class Video implements Parcelable, Serializable {
         this.urls = urls;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public void setUpload_date(String upload_date) {
-        this.upload_date = upload_date;
-    }
-
     protected Video(Parcel in) {
         this.id = in.readLong();
         this.thumbnail = in.readString();
         this.urls = new ArrayList<>();
         in.readList(this.urls, App.Companion.getAppContext().getClassLoader());
-        this.status = in.readString();
-        this.upload_date = in.readString();
     }
 
     public static final Creator<Video> CREATOR = new Creator<Video>() {

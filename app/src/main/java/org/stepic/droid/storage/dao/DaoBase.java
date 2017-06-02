@@ -106,8 +106,8 @@ public abstract class DaoBase<T> implements IDao<T> {
 
     @Override
     @Nullable
-    public T get(String whereColumn, String whereValue) {
-        String query = "Select * from " + getDbName() + " where " + whereColumn + " = ?";
+    public T get(String whereColumnName, String whereValue) {
+        String query = "Select * from " + getDbName() + " where " + whereColumnName + " = ?";
         return executeQuery(query, new String[]{whereValue}, new ResultHandler<T>() {
             @Override
             public T handle(Cursor cursor) throws SQLException {
