@@ -456,7 +456,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     private void setUpIntroVideo() {
         String urlToVideo;
 
-        Video newTypeVideo = course.getIntro_video();
+        Video newTypeVideo = course.getIntroVideo();
         if (newTypeVideo != null && newTypeVideo.getUrls() != null && !newTypeVideo.getUrls().isEmpty()) {
             int videoIndex = 0;
             if (newTypeVideo.getUrls().size() > 1) {

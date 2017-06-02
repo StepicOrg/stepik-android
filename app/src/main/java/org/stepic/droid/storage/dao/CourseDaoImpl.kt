@@ -54,7 +54,7 @@ constructor(
         course.lastStepId = cursor.getString(indexLastStepId)
         course.certificate = cursor.getString(indexCertificate)
         course.workload = cursor.getString(indexWorkload)
-        course.course_format = cursor.getString(indexCourseFormat)
+        course.courseFormat = cursor.getString(indexCourseFormat)
         course.target_audience = cursor.getString(indexTargetAudience)
 
         course.setId(cursor.getLong(indexId))
@@ -63,19 +63,19 @@ constructor(
         course.intro = cursor.getString(indexIntro)
         course.title = cursor.getString(indexTitle)
         course.language = cursor.getString(indexLanguage)
-        course.begin_date_source = cursor.getString(indexBeginDateSource)
-        course.last_deadline = cursor.getString(indexLastDeadline)
+        course.beginDateSource = cursor.getString(indexBeginDateSource)
+        course.lastDeadline = cursor.getString(indexLastDeadline)
         course.description = cursor.getString(indexDescription)
         course.instructors = DbParseHelper.parseStringToLongArray(cursor.getString(indexInstructors))
         course.requirements = cursor.getString(indexRequirements)
         course.enrollment = cursor.getInt(indexEnrollment)
         course.sections = DbParseHelper.parseStringToLongArray(cursor.getString(indexSection))
-        course.intro_video_id = cursor.getLong(indexIntroVideoId)
+        course.introVideoId = cursor.getLong(indexIntroVideoId)
         course.slug = cursor.getString(indexSlug)
-        course.schedule_link = cursor.getString(indexScheduleLink)
-        course.schedule_long_link = cursor.getString(indexScheduleLongLink)
-        course.begin_date = cursor.getString(indexBeginDate)
-        course.end_date = cursor.getString(indexEndDate)
+        course.scheduleLink = cursor.getString(indexScheduleLink)
+        course.scheduleLongLink = cursor.getString(indexScheduleLongLink)
+        course.beginDate = cursor.getString(indexBeginDate)
+        course.endDate = cursor.getString(indexEndDate)
 
         var isActive = true
         try {
@@ -84,7 +84,7 @@ constructor(
             //it can be null before migration --> default active
         }
 
-        course.setIs_active(isActive)
+        course.setActive(isActive)
 
         return course
     }
@@ -99,8 +99,8 @@ constructor(
         values.put(DbStructureEnrolledAndFeaturedCourses.Column.INTRO_LINK_VIMEO, course.intro)
         values.put(DbStructureEnrolledAndFeaturedCourses.Column.TITLE, course.title)
         values.put(DbStructureEnrolledAndFeaturedCourses.Column.LANGUAGE, course.language)
-        values.put(DbStructureEnrolledAndFeaturedCourses.Column.BEGIN_DATE_SOURCE, course.begin_date_source)
-        values.put(DbStructureEnrolledAndFeaturedCourses.Column.LAST_DEADLINE, course.last_deadline)
+        values.put(DbStructureEnrolledAndFeaturedCourses.Column.BEGIN_DATE_SOURCE, course.beginDateSource)
+        values.put(DbStructureEnrolledAndFeaturedCourses.Column.LAST_DEADLINE, course.lastDeadline)
         values.put(DbStructureEnrolledAndFeaturedCourses.Column.DESCRIPTION, course.description)
 
         val instructorsParsed = DbParseHelper.parseLongArrayToString(course.instructors)
@@ -113,19 +113,19 @@ constructor(
         values.put(DbStructureEnrolledAndFeaturedCourses.Column.SECTIONS, sectionsParsed)
 
         values.put(DbStructureEnrolledAndFeaturedCourses.Column.WORKLOAD, course.workload)
-        values.put(DbStructureEnrolledAndFeaturedCourses.Column.COURSE_FORMAT, course.course_format)
-        values.put(DbStructureEnrolledAndFeaturedCourses.Column.TARGET_AUDIENCE, course.target_audience)
+        values.put(DbStructureEnrolledAndFeaturedCourses.Column.COURSE_FORMAT, course.courseFormat)
+        values.put(DbStructureEnrolledAndFeaturedCourses.Column.TARGET_AUDIENCE, course.targetAudience)
         values.put(DbStructureEnrolledAndFeaturedCourses.Column.CERTIFICATE, course.certificate)
         values.put(DbStructureEnrolledAndFeaturedCourses.Column.SLUG, course.slug)
 
-        values.put(DbStructureEnrolledAndFeaturedCourses.Column.SCHEDULE_LINK, course.schedule_link)
-        values.put(DbStructureEnrolledAndFeaturedCourses.Column.SCHEDULE_LONG_LINK, course.schedule_long_link)
+        values.put(DbStructureEnrolledAndFeaturedCourses.Column.SCHEDULE_LINK, course.scheduleLink)
+        values.put(DbStructureEnrolledAndFeaturedCourses.Column.SCHEDULE_LONG_LINK, course.scheduleLongLink)
 
-        values.put(DbStructureEnrolledAndFeaturedCourses.Column.BEGIN_DATE, course.begin_date)
-        values.put(DbStructureEnrolledAndFeaturedCourses.Column.END_DATE, course.end_date)
-        values.put(DbStructureEnrolledAndFeaturedCourses.Column.IS_ACTIVE, course.is_active)
+        values.put(DbStructureEnrolledAndFeaturedCourses.Column.BEGIN_DATE, course.beginDate)
+        values.put(DbStructureEnrolledAndFeaturedCourses.Column.END_DATE, course.endDate)
+        values.put(DbStructureEnrolledAndFeaturedCourses.Column.IS_ACTIVE, course.isActive)
 
-        val video = course.intro_video
+        val video = course.introVideo
         if (video != null) {
             values.put(DbStructureEnrolledAndFeaturedCourses.Column.INTRO_VIDEO_ID, video.id)
         }
@@ -154,19 +154,19 @@ constructor(
 
     private fun addInnerObjects(course: Course?) {
         if (course == null) return
-        val video = cachedVideoDao.get(DbStructureCachedVideo.Column.VIDEO_ID, course.intro_video_id.toString())
+        val video = cachedVideoDao.get(DbStructureCachedVideo.Column.VIDEO_ID, course.introVideoId.toString())
         if (video != null) {
             val dbVideoUrls = externalVideoUrlIDao
-                    .getAll(DbStructureVideoUrl.Column.videoId, course.intro_video_id.toString())
+                    .getAll(DbStructureVideoUrl.Column.videoId, course.introVideoId.toString())
             val videoUrls = dbVideoUrls.toVideoUrls()
-            course.intro_video = transformCachedVideoToRealVideo(video, videoUrls)
+            course.introVideo = transformCachedVideoToRealVideo(video, videoUrls)
         }
     }
 
     override fun insertOrUpdate(persistentObject: Course?) {
         super.insertOrUpdate(persistentObject)
-        if (persistentObject != null && persistentObject.intro_video != null) {
-            val video = persistentObject.intro_video
+        if (persistentObject != null && persistentObject.introVideo != null) {
+            val video = persistentObject.introVideo
             val cachedVideo = video.transformToCachedVideo() //it is cached, but not stored video.
             cachedVideoDao.insertOrUpdate(cachedVideo)
 

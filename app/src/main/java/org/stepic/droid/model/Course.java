@@ -15,35 +15,54 @@ public class Course implements Serializable, Parcelable {
     private String workload;
     private String cover;
     private String intro;
-    private String course_format;
-    private String target_audience;
-    private String certificate_footer;
-    private String certificate_cover_org;
+    @SerializedName("course_format")
+    private String courseFormat;
+    @SerializedName("target_audience")
+    private String targetAudience;
+    @SerializedName("certificate_footer")
+    private String certificateFooter;
+    @SerializedName("certificate_cover_org")
+    private String certificateCoverOrg;
     private long[] instructors;
     private long[] sections;
     private String certificate;
     private String requirements;
     private String description;
-    private int total_units;
+    @SerializedName("total_units")
+    private int totalUnits;
     private int enrollment;
     private long owner;
-    private boolean is_contest;
-    private boolean is_featured;
-    private boolean is_spoc;
-    private boolean is_active;
-    private String certificate_link;
+    @SerializedName("is_contest")
+    private boolean isContest;
+    @SerializedName("is_featured")
+    private boolean isFeatured;
+    @SerializedName("is_spoc")
+    private boolean isSpoc;
+    @SerializedName("is_active")
+    private boolean isActive;
+    @SerializedName("certificate_link")
+    private String certificateLink;
     private String title;
-    private String begin_date_source;
-    private String last_deadline;
-    private String begin_date;
-    private String end_date;
+    @SerializedName("begin_date_source")
+    private String beginDateSource;
+    @SerializedName("last_deadline")
+    private String lastDeadline;
+    @SerializedName("begin_date")
+    private String beginDate;
+    @SerializedName("end_date")
+    private String endDate;
     private String language;
-    private boolean is_public;
+    @SerializedName("is_public")
+    private boolean isPublic;
     private String slug; //link to ../course/#slug#
-    private Video intro_video;
-    private long intro_video_id;
-    private String schedule_link;
-    private String schedule_long_link;
+    @SerializedName("intro_video")
+    private Video introVideo;
+    @SerializedName("intro_video_id")
+    private long introVideoId;
+    @SerializedName("schedule_link")
+    private String scheduleLink;
+    @SerializedName("schedule_long_link")
+    private String scheduleLongLink;
     @SerializedName("last_step")
     private String lastStepId;
 
@@ -51,16 +70,16 @@ public class Course implements Serializable, Parcelable {
 
     }
 
-    public String getEnd_date() {
-        return end_date;
+    public String getEndDate() {
+        return endDate;
     }
 
-    public void setEnd_date(String end_date) {
-        this.end_date = end_date;
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
     }
 
-    public String getBegin_date() {
-        return begin_date;
+    public String getBeginDate() {
+        return beginDate;
     }
 
     @Nullable
@@ -72,28 +91,28 @@ public class Course implements Serializable, Parcelable {
         this.lastStepId = lastStepId;
     }
 
-    public void setBegin_date(String begin_date) {
-        this.begin_date = begin_date;
+    public void setBeginDate(String beginDate) {
+        this.beginDate = beginDate;
     }
 
-    public String getSchedule_link() {
-        return schedule_link;
+    public String getScheduleLink() {
+        return scheduleLink;
     }
 
-    public void setSchedule_link(String schedule_link) {
-        this.schedule_link = schedule_link;
+    public void setScheduleLink(String scheduleLink) {
+        this.scheduleLink = scheduleLink;
     }
 
-    public String getSchedule_long_link() {
-        return schedule_long_link;
+    public String getScheduleLongLink() {
+        return scheduleLongLink;
     }
 
-    public void setSchedule_long_link(String schedule_long_link) {
-        this.schedule_long_link = schedule_long_link;
+    public void setScheduleLongLink(String scheduleLongLink) {
+        this.scheduleLongLink = scheduleLongLink;
     }
 
-    public void setIntro_video(Video intro_video) {
-        this.intro_video = intro_video;
+    public void setIntroVideo(Video introVideo) {
+        this.introVideo = introVideo;
     }
 
     public long getCourseId() {
@@ -116,12 +135,12 @@ public class Course implements Serializable, Parcelable {
         return intro;
     }
 
-    public String getCourse_format() {
-        return course_format;
+    public String getCourseFormat() {
+        return courseFormat;
     }
 
-    public String getTarget_audience() {
-        return target_audience;
+    public String getTargetAudience() {
+        return targetAudience;
     }
 
     public long[] getInstructors() {
@@ -180,12 +199,12 @@ public class Course implements Serializable, Parcelable {
         this.intro = intro;
     }
 
-    public void setCourse_format(String course_format) {
-        this.course_format = course_format;
+    public void setCourseFormat(String courseFormat) {
+        this.courseFormat = courseFormat;
     }
 
-    public void setTarget_audience(String target_audience) {
-        this.target_audience = target_audience;
+    public void setTargetAudience(String targetAudience) {
+        this.targetAudience = targetAudience;
     }
 
     public void setInstructors(long[] instructors) {
@@ -216,12 +235,12 @@ public class Course implements Serializable, Parcelable {
         this.title = title;
     }
 
-    public void setBegin_date_source(String begin_date_source) {
-        this.begin_date_source = begin_date_source;
+    public void setBeginDateSource(String beginDateSource) {
+        this.beginDateSource = beginDateSource;
     }
 
-    public void setLast_deadline(String last_deadline) {
-        this.last_deadline = last_deadline;
+    public void setLastDeadline(String lastDeadline) {
+        this.lastDeadline = lastDeadline;
     }
 
     public void setLanguage(String language) {
@@ -232,20 +251,20 @@ public class Course implements Serializable, Parcelable {
         this.slug = slug;
     }
 
-    public String getBegin_date_source() {
-        return begin_date_source;
+    public String getBeginDateSource() {
+        return beginDateSource;
     }
 
-    public String getLast_deadline() {
-        return last_deadline;
+    public String getLastDeadline() {
+        return lastDeadline;
     }
 
-    public long getIntro_video_id() {
-        return intro_video_id;
+    public long getIntroVideoId() {
+        return introVideoId;
     }
 
-    public void setIntro_video_id(long intro_video_id) {
-        this.intro_video_id = intro_video_id;
+    public void setIntroVideoId(long introVideoId) {
+        this.introVideoId = introVideoId;
     }
 
     public long[] getSections() {
@@ -256,16 +275,16 @@ public class Course implements Serializable, Parcelable {
         this.sections = sections;
     }
 
-    public Video getIntro_video() {
-        return intro_video;
+    public Video getIntroVideo() {
+        return introVideo;
     }
 
-    public boolean is_active() {
-        return is_active;
+    public boolean isActive() {
+        return isActive;
     }
 
-    public void setIs_active(boolean is_active) {
-        this.is_active = is_active;
+    public void setActive(boolean active) {
+        this.isActive = active;
     }
 
     @Override
@@ -280,35 +299,35 @@ public class Course implements Serializable, Parcelable {
         dest.writeString(this.workload);
         dest.writeString(this.cover);
         dest.writeString(this.intro);
-        dest.writeString(this.course_format);
-        dest.writeString(this.target_audience);
-        dest.writeString(this.certificate_footer);
-        dest.writeString(this.certificate_cover_org);
+        dest.writeString(this.courseFormat);
+        dest.writeString(this.targetAudience);
+        dest.writeString(this.certificateFooter);
+        dest.writeString(this.certificateCoverOrg);
         dest.writeLongArray(this.instructors);
         dest.writeLongArray(this.sections);
         dest.writeString(this.certificate);
         dest.writeString(this.requirements);
         dest.writeString(this.description);
-        dest.writeInt(this.total_units);
+        dest.writeInt(this.totalUnits);
         dest.writeInt(this.enrollment);
         dest.writeLong(this.owner);
-        dest.writeByte(is_contest ? (byte) 1 : (byte) 0);
-        dest.writeByte(is_featured ? (byte) 1 : (byte) 0);
-        dest.writeByte(is_spoc ? (byte) 1 : (byte) 0);
-        dest.writeByte(is_active ? (byte) 1 : (byte) 0);
-        dest.writeString(this.certificate_link);
+        dest.writeByte(isContest ? (byte) 1 : (byte) 0);
+        dest.writeByte(isFeatured ? (byte) 1 : (byte) 0);
+        dest.writeByte(isSpoc ? (byte) 1 : (byte) 0);
+        dest.writeByte(isActive ? (byte) 1 : (byte) 0);
+        dest.writeString(this.certificateLink);
         dest.writeString(this.title);
-        dest.writeString(this.begin_date_source);
-        dest.writeString(this.last_deadline);
+        dest.writeString(this.beginDateSource);
+        dest.writeString(this.lastDeadline);
         dest.writeString(this.language);
-        dest.writeByte(is_public ? (byte) 1 : (byte) 0);
+        dest.writeByte(isPublic ? (byte) 1 : (byte) 0);
         dest.writeString(this.slug);
-        dest.writeParcelable(this.intro_video, 0);
-        dest.writeLong(this.intro_video_id);
-        dest.writeString(schedule_link);
-        dest.writeString(schedule_long_link);
-        dest.writeString(begin_date);
-        dest.writeString(end_date);
+        dest.writeParcelable(this.introVideo, 0);
+        dest.writeLong(this.introVideoId);
+        dest.writeString(scheduleLink);
+        dest.writeString(scheduleLongLink);
+        dest.writeString(beginDate);
+        dest.writeString(endDate);
         dest.writeString(lastStepId);
     }
 
@@ -318,35 +337,35 @@ public class Course implements Serializable, Parcelable {
         this.workload = in.readString();
         this.cover = in.readString();
         this.intro = in.readString();
-        this.course_format = in.readString();
-        this.target_audience = in.readString();
-        this.certificate_footer = in.readString();
-        this.certificate_cover_org = in.readString();
+        this.courseFormat = in.readString();
+        this.targetAudience = in.readString();
+        this.certificateFooter = in.readString();
+        this.certificateCoverOrg = in.readString();
         this.instructors = in.createLongArray();
         this.sections = in.createLongArray();
         this.certificate = in.readString();
         this.requirements = in.readString();
         this.description = in.readString();
-        this.total_units = in.readInt();
+        this.totalUnits = in.readInt();
         this.enrollment = in.readInt();
         this.owner = in.readLong();
-        this.is_contest = in.readByte() != 0;
-        this.is_featured = in.readByte() != 0;
-        this.is_spoc = in.readByte() != 0;
-        this.is_active = in.readByte() != 0;
-        this.certificate_link = in.readString();
+        this.isContest = in.readByte() != 0;
+        this.isFeatured = in.readByte() != 0;
+        this.isSpoc = in.readByte() != 0;
+        this.isActive = in.readByte() != 0;
+        this.certificateLink = in.readString();
         this.title = in.readString();
-        this.begin_date_source = in.readString();
-        this.last_deadline = in.readString();
+        this.beginDateSource = in.readString();
+        this.lastDeadline = in.readString();
         this.language = in.readString();
-        this.is_public = in.readByte() != 0;
+        this.isPublic = in.readByte() != 0;
         this.slug = in.readString();
-        this.intro_video = in.readParcelable(Video.class.getClassLoader());
-        this.intro_video_id = in.readLong();
-        schedule_link = in.readString();
-        schedule_long_link = in.readString();
-        begin_date = in.readString();
-        end_date = in.readString();
+        this.introVideo = in.readParcelable(Video.class.getClassLoader());
+        this.introVideoId = in.readLong();
+        scheduleLink = in.readString();
+        scheduleLongLink = in.readString();
+        beginDate = in.readString();
+        endDate = in.readString();
         lastStepId = in.readString();
     }
 

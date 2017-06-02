@@ -50,8 +50,8 @@ public class CoursePropertyResolver {
         addIfNotEmpty(result, course.getSummary(), Type.summary);
         addIfNotEmpty(result, course.getWorkload(), Type.workload);
         addIfNotEmpty(result, course.getCertificate(), Type.certificate);
-        addIfNotEmpty(result, course.getCourse_format(), Type.courseFormat);
-        addIfNotEmpty(result, course.getTarget_audience(), Type.targetAudience);
+        addIfNotEmpty(result, course.getCourseFormat(), Type.courseFormat);
+        addIfNotEmpty(result, course.getTargetAudience(), Type.targetAudience);
         addIfNotEmpty(result, course.getRequirements(), Type.requirements);
         addIfNotEmpty(result, course.getDescription(), Type.description);
 
