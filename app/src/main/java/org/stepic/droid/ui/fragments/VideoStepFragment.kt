@@ -109,8 +109,7 @@ class VideoStepFragment : StepBaseFragment(),
 
     override fun onNeedOpenVideo(videoId: Long, cachedVideo: Video?, externalVideo: Video?) {
         playerLayout.isClickable = true
-        val pathToVideo = ((cachedVideo?.urls?.get(0) ?: externalVideo?.urls?.get(0))?.url)!! //todo: pass both to player and resolve in player.
-        screenManager.showVideo(activity, pathToVideo, videoId)
+        screenManager.showVideo(activity, cachedVideo, externalVideo)
     }
 
     override fun onVideoLoaded(thumbnailPath: String?, cachedVideo: Video?, externalVideo: Video?) {

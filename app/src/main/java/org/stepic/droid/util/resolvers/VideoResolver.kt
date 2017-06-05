@@ -1,10 +1,10 @@
 package org.stepic.droid.util.resolvers
 
-import android.support.annotation.WorkerThread
+import android.support.annotation.AnyThread
 import org.stepic.droid.model.Video
 
 interface VideoResolver {
 
-    @WorkerThread
+    @AnyThread
     fun resolveVideoUrl(video : Video?): String?
 }

@@ -31,6 +31,7 @@ import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
+import org.stepic.droid.model.Video;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.services.ViewPusher;
@@ -307,6 +308,51 @@ public class ScreenManagerImpl implements ScreenManager {
             intent.putExtra(VideoActivity.Companion.getVideoIdKey(), videoId);
             sourceActivity.startActivity(intent);
         } else {
+            Uri videoUri = Uri.parse(videoPath);
+            String scheme = videoUri.getScheme();
+            if (scheme == null) {
+                videoUri = Uri.parse(AppConstants.FILE_SCHEME_PREFIX + videoPath);
+            }
+            Intent intent = new Intent(Intent.ACTION_VIEW, videoUri);
+            intent.setDataAndType(videoUri, "video/*");
+            try {
+                sourceActivity.startActivity(intent);
+            } catch (Exception ex) {
+                analytic.reportError(Analytic.Error.NOT_PLAYER, ex);
+                Toast.makeText(sourceActivity, R.string.not_video_player_error, Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    @Override
+    public void showVideo(Activity sourceActivity, @Nullable Video cachedVideo, @Nullable Video externalVideo) {
+        analytic.reportEvent(Analytic.Screens.TRY_OPEN_VIDEO);
+        boolean isOpenExternal = userPreferences.isOpenInExternal();
+        if (isOpenExternal) {
+            analytic.reportEvent(Analytic.Video.OPEN_EXTERNAL);
+        } else {
+            analytic.reportEvent(Analytic.Video.OPEN_NATIVE);
+        }
+
+        boolean isCompatible = AndroidVersionKt.isJellyBeanOrLater();
+        if (!isCompatible) {
+            analytic.reportEvent(Analytic.Video.NOT_COMPATIBLE);
+        }
+
+        if (isCompatible && !isOpenExternal) {
+            Intent intent = new Intent(App.Companion.getAppContext(), VideoActivity.class);
+            Bundle extras = new Bundle();
+            extras.putParcelable(VideoActivity.Companion.getCachedVideoKey(), cachedVideo);
+            extras.putParcelable(VideoActivity.Companion.getExternalVideoKey(), externalVideo);
+            intent.putExtras(extras);
+            sourceActivity.startActivity(intent);
+        } else {
+            String videoPath = null;
+            if (cachedVideo != null && cachedVideo.getUrls() != null && !cachedVideo.getUrls().isEmpty()) {
+                videoPath = cachedVideo.getUrls().get(0).getUrl();
+            } else if (externalVideo != null && externalVideo.getUrls() != null && !externalVideo.getUrls().isEmpty()) {
+                videoPath = externalVideo.getUrls().get(0).getUrl();
+            }
             Uri videoUri = Uri.parse(videoPath);
             String scheme = videoUri.getScheme();
             if (scheme == null) {

@@ -37,11 +37,13 @@ import org.stepic.droid.core.MyExoPhoneStateListener
 import org.stepic.droid.core.internet_state.contract.InternetEnabledListener
 import org.stepic.droid.core.presenters.VideoWithTimestampPresenter
 import org.stepic.droid.core.presenters.contracts.VideoWithTimestampView
+import org.stepic.droid.model.Video
 import org.stepic.droid.preferences.VideoPlaybackRate
 import org.stepic.droid.receivers.HeadPhoneReceiver
 import org.stepic.droid.ui.custom_exo.NavigationBarUtil
 import org.stepic.droid.ui.listeners.KeyDispatchableFragment
 import org.stepic.droid.ui.util.VideoPlayerConstants
+import org.stepic.droid.util.resolvers.VideoResolver
 import javax.inject.Inject
 
 /**
@@ -111,9 +113,15 @@ class VideoExoFragment : FragmentBase(),
     override fun onTimelineChanged(timeline: Timeline?, manifest: Any?) {
     }
 
+    var cachedVideo: Video? = null
+    var externalVideo: Video? = null
+
     companion object {
         private val VIDEO_PATH_KEY = "video_path_key"
         private val VIDEO_ID_KEY = "video_id_key"
+
+        private val CACHED_VIDEO_KEY = "cached_video_key"
+        private val EXTERNAL_VIDEO_KEY = "external_video_key"
 
         private val saveEpsilon = 1000L
 
@@ -125,12 +133,25 @@ class VideoExoFragment : FragmentBase(),
             fragment.arguments = args
             return fragment
         }
+
+        fun newInstance(cachedVideo: Video?, externalVideo: Video): VideoExoFragment {
+            val args = Bundle()
+            args.putParcelable(CACHED_VIDEO_KEY, cachedVideo)
+            args.putParcelable(EXTERNAL_VIDEO_KEY, externalVideo)
+            args.putLong(VIDEO_ID_KEY, cachedVideo?.id ?: externalVideo.id)
+            val fragment = VideoExoFragment()
+            fragment.arguments = args
+            return fragment
+        }
     }
 
     private var player: SimpleExoPlayer? = null
 
     @Inject
     lateinit var videoWithTimestampPresenter: VideoWithTimestampPresenter
+    @Inject
+    lateinit var videoResolver: VideoResolver
+
     private var autoPlay: Boolean = false
     private var videoId: Long? = null
     private var mediaSource: ExtractorMediaSource? = null
@@ -226,10 +247,21 @@ class VideoExoFragment : FragmentBase(),
     private fun createPlayer(): Long? {
         videoPlayerView?.hideController()
 
-        val filePath = arguments.getString(VIDEO_PATH_KEY)
-        var videoId: Long? = arguments.getLong(VIDEO_ID_KEY)
-        if (videoId != null && videoId <= 0L) { // if equal zero -> it is default, it is not our video
-            videoId = null
+
+        cachedVideo = arguments.getParcelable<Video>(CACHED_VIDEO_KEY)
+        externalVideo = arguments.getParcelable<Video>(EXTERNAL_VIDEO_KEY)
+
+        val video = cachedVideo ?: externalVideo
+
+        var videoId: Long? = video?.id
+        var filePath: String? = videoResolver.resolveVideoUrl(video)
+
+        if (videoId == null || filePath == null) {
+            filePath = arguments.getString(VIDEO_PATH_KEY)
+            videoId = arguments.getLong(VIDEO_ID_KEY)
+            if (videoId <= 0L) { // if equal zero -> it is default, it is not our video
+                videoId = null
+            }
         }
         val bandwidthMeter = DefaultBandwidthMeter()
 

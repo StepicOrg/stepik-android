@@ -1,6 +1,6 @@
 package org.stepic.droid.util.resolvers
 
-import android.support.annotation.WorkerThread
+import android.support.annotation.AnyThread
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.model.Video
 import org.stepic.droid.model.VideoUrl
@@ -14,7 +14,7 @@ class VideoResolverImpl
     : VideoResolver {
 
 
-    @WorkerThread
+    @AnyThread
     override fun resolveVideoUrl(video: Video?): String? {
         if (video == null || video.urls?.isEmpty() ?: true) {
             return null
