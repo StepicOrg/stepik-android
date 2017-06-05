@@ -117,7 +117,7 @@ class VideoStepFragment : StepBaseFragment(),
         //show thumbnail and show length should be synchronized event, because we do not show thumbnail now, only after fetching length
         val video = cachedVideo ?: externalVideo
         if (video != null) {
-            videoLengthPresenter.fetchLength(video, step, thumbnailPath)
+            videoLengthPresenter.fetchLength(video, thumbnailPath)
         } else {
             analytic.reportEvent(Analytic.Error.NO_VIDEO_ON_STEP_SHOWING)
         }
