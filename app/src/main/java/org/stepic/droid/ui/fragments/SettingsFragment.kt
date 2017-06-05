@@ -73,8 +73,15 @@ class SettingsFragment : FragmentBase(), AllowMobileDataDialogFragment.Callback 
         }
 
 
-        val videoDialog = VideoQualityDialog()
         videoQualityView.setOnClickListener {
+            val videoDialog = VideoQualityDialog.newInstance(forPlaying = false)
+            if (!videoDialog.isAdded) {
+                videoDialog.show(fragmentManager, null)
+            }
+        }
+
+        videoPlayingQualityView.setOnClickListener {
+            val videoDialog = VideoQualityDialog.newInstance(forPlaying = true)
             if (!videoDialog.isAdded) {
                 videoDialog.show(fragmentManager, null)
             }

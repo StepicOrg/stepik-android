@@ -71,7 +71,8 @@
         должен иметь права записи файлов в память телефона.
     </string>
     <string name="connectionProblems">Отсутствует подключение к Интернету</string>
-    <string name="video_quality">Качество видео</string>
+    <string name="video_quality">Качество видео для загрузки</string>
+    <string name="video_quality_playing">Качество видео для просмотра</string>
     <string name="sync_problem">Возникли проблемы с синхронизацией данных, пожалуйста, повторите
         попытку позже
     </string>

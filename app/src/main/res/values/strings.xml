@@ -82,7 +82,8 @@
         permission to the calendar. The app doesn\'t change and read your events.
     </string>
     <string name="allow_question">Allow?</string>
-    <string name="video_quality">Video quality</string>
+    <string name="video_quality">Video quality of downloading</string>
+    <string name="video_quality_playing">Video quality of playing</string>
     <string name="sync_problem">There was a problem syncing the data, please try again later
     </string>
     <string name="empty_courses">Looks like you haven\'t enrolled in any courses yet</string>
