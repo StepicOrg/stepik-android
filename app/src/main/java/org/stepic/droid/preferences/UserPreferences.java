@@ -138,6 +138,16 @@ public class UserPreferences {
         return sharedPreferenceHelper.isMobileInternetAlsoAllowed();
     }
 
+
+    public void saveVideoQualityForPlaying(String videoQuality) {
+        sharedPreferenceHelper.saveVideoQualityForPlaying(videoQuality);
+    }
+
+
+    public String getQualityVideoForPlaying () {
+        return sharedPreferenceHelper.getVideoQualityForPlaying();
+    }
+
     public String getQualityVideo() {
         return sharedPreferenceHelper.getVideoQuality();
     }

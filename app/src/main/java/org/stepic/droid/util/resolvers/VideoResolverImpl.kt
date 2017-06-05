@@ -15,7 +15,7 @@ class VideoResolverImpl
 
 
     @AnyThread
-    override fun resolveVideoUrl(video: Video?): String? {
+    override fun resolveVideoUrl(video: Video?, isForPlaying: Boolean): String? {
         if (video == null || video.urls?.isEmpty() ?: true) {
             return null
         }
@@ -24,14 +24,20 @@ class VideoResolverImpl
             return video.urls[0].url
         }
 
-        return resolveFromWeb(video.urls)
+        return resolveFromWeb(video.urls, isForPlaying)
     }
 
-    private fun resolveFromWeb(urlList: List<VideoUrl>): String? {
+    private fun resolveFromWeb(urlList: List<VideoUrl>, isForPlaying: Boolean): String? {
         var resolvedURL: String? = null
 
         try {
-            val weWant = Integer.parseInt(userPreferences.qualityVideo)
+            val weWant = Integer.parseInt(
+                    if (isForPlaying) {
+                        userPreferences.qualityVideoForPlaying
+                    } else {
+                        userPreferences.qualityVideo
+                    }
+            )
             var bestDelta = Integer.MAX_VALUE
             urlList.forEach {
                 val currentQuality = Integer.parseInt(it.quality)

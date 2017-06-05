@@ -199,7 +199,7 @@ public class LoadService extends IntentService {
     private void addStep(Step step, Lesson lesson, long sectionId) {
         if (step.getBlock().getVideo() != null) {
             Video video = step.getBlock().getVideo();
-            String uri = resolver.resolveVideoUrl(video);
+            String uri = resolver.resolveVideoUrl(video, false);
             long fileId = video.getId();
             addDownload(uri, fileId, lesson.getTitle(), step, sectionId);
         } else {
