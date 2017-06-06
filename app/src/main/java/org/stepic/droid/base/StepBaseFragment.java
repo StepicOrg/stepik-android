@@ -10,15 +10,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.appindexing.Action;
-import com.google.firebase.appindexing.FirebaseAppIndex;
-import com.google.firebase.appindexing.FirebaseUserActions;
-import com.google.firebase.appindexing.Indexable;
-import com.google.firebase.appindexing.builders.Actions;
-import com.google.firebase.appindexing.builders.Indexables;
 import com.squareup.otto.Subscribe;
 
-import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.core.presenters.AnonymousPresenter;
@@ -36,7 +29,6 @@ import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment;
 import org.stepic.droid.ui.dialogs.StepShareDialogFragment;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
-import org.stepic.droid.util.StringUtil;
 import org.stepic.droid.web.StepResponse;
 
 import javax.inject.Inject;
@@ -94,7 +86,6 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
 
     @Inject
     AnonymousPresenter anonymousPresenter;
-    private boolean wasIndexed;
 
     @Override
     protected void injectComponent() {
@@ -350,47 +341,6 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
     @Override
     public void onResume() {
         super.onResume();
-        reportIndexToGoogle();
         hideSoftKeypad();
     }
-
-    private void reportIndexToGoogle() {
-        if (step != null && !wasIndexed) {
-            wasIndexed = true;
-            FirebaseAppIndex.getInstance().update(getIndexable());
-            FirebaseUserActions.getInstance().start(getAction());
-        }
-    }
-
-    private Indexable getIndexable() {
-        String urlInWeb = getUrlInWeb();
-        String title = getTitle();
-        analytic.reportEventWithIdName(Analytic.AppIndexing.STEP, urlInWeb, title);
-        return Indexables.newSimple(title, urlInWeb);
-    }
-
-    @NotNull
-    private String getTitle() {
-        return StringUtil.getTitleForStep(getContext(), lesson, step.getPosition());
-    }
-
-    @NotNull
-    private String getUrlInWeb() {
-        return StringUtil.getUriForStep(config.getBaseUrl(), lesson, unit, step);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (wasIndexed) {
-            FirebaseUserActions.getInstance().end(getAction());
-        }
-        wasIndexed = false;
-    }
-
-    public Action getAction() {
-        return Actions.newView(getTitle(), getUrlInWeb());
-    }
-
-
 }

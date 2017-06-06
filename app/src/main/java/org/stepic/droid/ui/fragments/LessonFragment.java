@@ -18,8 +18,15 @@ import android.view.ViewTreeObserver;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.firebase.appindexing.Action;
+import com.google.firebase.appindexing.FirebaseAppIndex;
+import com.google.firebase.appindexing.FirebaseUserActions;
+import com.google.firebase.appindexing.Indexable;
+import com.google.firebase.appindexing.builders.Actions;
+import com.google.firebase.appindexing.builders.Indexables;
 import com.squareup.otto.Subscribe;
 
+import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
@@ -39,6 +46,7 @@ import org.stepic.droid.ui.adapters.StepFragmentAdapter;
 import org.stepic.droid.ui.listeners.NextMoveable;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
+import org.stepic.droid.util.StringUtil;
 import org.stepic.droid.util.resolvers.StepHelper;
 import org.stepic.droid.util.resolvers.StepTypeResolver;
 import org.stepic.droid.web.ViewAssignment;
@@ -47,6 +55,7 @@ import javax.inject.Inject;
 
 import butterknife.BindString;
 import butterknife.BindView;
+import timber.log.Timber;
 
 public class LessonFragment extends FragmentBase implements LessonView, LessonTrackingView, NextMoveable {
     private static final String FROM_PREVIOUS_KEY = "fromPrevKey";
@@ -242,6 +251,7 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
     }
 
     private void pushState(int position) {
+        reportSelectedPageToGoogle(position);
         boolean isTryToPushFirstStep = position == 0;
         if (isTryToPushFirstStep && fromPreviousLesson && stepsPresenter.getStepList().size() != 1) {
             //if from previous lesson --> not mark as viewed
@@ -514,4 +524,82 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
 
         return false;
     }
+
+
+    /*
+     * App indexing stuff begin
+     */
+
+
+    private int previousGoogleIndexedPosition = -1;
+
+    private void reportSelectedPageToGoogle(int position) {
+        int stepListSize = stepsPresenter.getStepList().size();
+        if (previousGoogleIndexedPosition >= 0 && previousGoogleIndexedPosition < stepListSize) {
+            stopIndexStep(stepsPresenter.getStepList().get(previousGoogleIndexedPosition));
+        }
+        if (position >= 0 && position < stepListSize) {
+            indexStep(stepsPresenter.getStepList().get(position));
+        }
+        previousGoogleIndexedPosition = position;
+    }
+
+    private void indexStep(@NotNull Step step) {
+        Timber.d("start %s", getTitle(step));
+        FirebaseAppIndex.getInstance().update(getIndexable(step));
+        FirebaseUserActions.getInstance().start(getAction(step));
+    }
+
+    private void stopIndexStep(@NotNull Step step) {
+        Timber.d("stop %s", getTitle(step));
+        FirebaseUserActions.getInstance().end(getAction(step));
+    }
+
+    private Indexable getIndexable(Step step) {
+        String urlInWeb = getUrlInWeb(step);
+        String title = getTitle(step);
+        analytic.reportEventWithIdName(Analytic.AppIndexing.STEP, urlInWeb, title);
+        return Indexables.newSimple(title, urlInWeb);
+    }
+
+    public Action getAction(@NotNull Step step) {
+        return Actions.newView(getTitle(step), getUrlInWeb(step));
+    }
+
+    @NotNull
+    private String getTitle(Step step) {
+        return StringUtil.getTitleForStep(getContext(), lesson, step.getPosition());
+    }
+
+    @NotNull
+    private String getUrlInWeb(Step step) {
+        return StringUtil.getUriForStep(config.getBaseUrl(), lesson, unit, step);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (viewPager != null) {
+            //when user press back from comments
+            int selectedPosition = viewPager.getCurrentItem();
+            if (selectedPosition >= 0 && selectedPosition < stepsPresenter.getStepList().size()) {
+                indexStep(stepsPresenter.getStepList().get(selectedPosition));
+            }
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (viewPager != null) {
+            int selectedPosition = viewPager.getCurrentItem();
+            if (selectedPosition >= 0 && selectedPosition < stepsPresenter.getStepList().size()) {
+                stopIndexStep(stepsPresenter.getStepList().get(selectedPosition));
+            }
+        }
+    }
+
+    /*
+     * App indexing stuff end
+     */
 }
