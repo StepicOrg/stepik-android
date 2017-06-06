@@ -411,7 +411,7 @@ class VideoExoFragment : FragmentBase(),
                             dialog.show(fragmentManager, null)
                         }
                     } else {
-                        //todo: log it
+                        analytic.reportEvent(Analytic.Video.NOW_PLAYING_WAS_NULL)
                     }
 
                     true
