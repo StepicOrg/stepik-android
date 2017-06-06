@@ -1,9 +1,6 @@
 package org.stepic.droid.storage.structure;
 
-public final class DbStructureStep extends DBStructureBase {
-
-    private static String[] usedColumns = null;
-
+public final class DbStructureStep {
     public static final String STEPS = "steps";
 
     public static final class Column {
@@ -25,30 +22,5 @@ public final class DbStructureStep extends DBStructureBase {
         public static final String HAS_SUBMISSION_RESTRICTION = "has_submission_restriction";
         public static final String MAX_SUBMISSION_COUNT = "max_submission_count";
 
-    }
-
-    public static String[] getUsedColumns() {
-        if (usedColumns == null) {
-            usedColumns = new String[]{
-                    Column.STEP_ID,
-                    Column.LESSON_ID,
-                    Column.STATUS,
-                    Column.PROGRESS,
-                    Column.SUBSCRIPTIONS,
-                    Column.VIEWED_BY,
-                    Column.PASSED_BY,
-                    Column.CREATE_DATE,
-                    Column.UPDATE_DATE,
-                    Column.POSITION,
-                    Column.IS_CACHED,
-                    Column.IS_LOADING,
-                    Column.DISCUSSION_COUNT,
-                    Column.DISCUSSION_ID,
-                    Column.PEER_REVIEW,
-                    Column.HAS_SUBMISSION_RESTRICTION,
-                    Column.MAX_SUBMISSION_COUNT
-            };
-        }
-        return usedColumns;
     }
 }

@@ -35,6 +35,7 @@ import org.stepic.droid.ui.listeners.OnClickLoadListener;
 import org.stepic.droid.ui.listeners.StepicOnClickItemListener;
 import org.stepic.droid.util.FileUtil;
 import org.stepic.droid.util.ThumbnailParser;
+import org.stepic.droid.util.VideoStepHelperKt;
 
 import java.io.File;
 import java.util.Collection;
@@ -148,7 +149,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
             final CachedVideo video = cachedVideoList.get(position);
             File file = new File(video.getUrl());
             if (video.getUrl() != null && file.exists()) {
-                screenManager.showVideo(sourceActivity, video.getUrl(), video.getVideoId());
+                screenManager.showVideo(sourceActivity, VideoStepHelperKt.transformToVideo(video), null);
             } else {
                 Toast.makeText(App.Companion.getAppContext(), R.string.sorry_moved, Toast.LENGTH_SHORT).show();
                 threadPoolExecutor.execute(new Runnable() {

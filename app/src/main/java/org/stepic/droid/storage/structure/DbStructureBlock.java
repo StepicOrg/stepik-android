@@ -1,24 +1,14 @@
 package org.stepic.droid.storage.structure;
 
-public final class DbStructureBlock extends DBStructureBase {
-    private static String[] usedColumns = null;
-
+public final class DbStructureBlock {
     public static final String BLOCKS = "blocks";
 
     public static final class Column {
         public static final String STEP_ID = "step_id";
         public static final String NAME = "name";
         public static final String TEXT = "block_text";
-    }
 
-    public static String[] getUsedColumns() {
-        if (usedColumns == null) {
-            usedColumns = new String[]{
-                    Column.STEP_ID,
-                    Column.NAME,
-                    Column.TEXT
-            };
-        }
-        return usedColumns;
+        public static final String EXTERNAL_THUMBNAIL = "optional_thumbnail";
+        public static final String EXTERNAL_VIDEO_ID = "optional_video_id";
     }
 }

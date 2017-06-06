@@ -30,6 +30,7 @@ import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
+import org.stepic.droid.model.Video;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.services.ViewPusher;
@@ -286,7 +287,7 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void showVideo(Activity sourceActivity, String videoPath, long videoId) {
+    public void showVideo(Activity sourceActivity, @Nullable Video cachedVideo, @Nullable Video externalVideo) {
         analytic.reportEvent(Analytic.Screens.TRY_OPEN_VIDEO);
         boolean isOpenExternal = userPreferences.isOpenInExternal();
         if (isOpenExternal) {
@@ -302,10 +303,18 @@ public class ScreenManagerImpl implements ScreenManager {
 
         if (isCompatible && !isOpenExternal) {
             Intent intent = new Intent(App.Companion.getAppContext(), VideoActivity.class);
-            intent.putExtra(VideoActivity.Companion.getVideoPathKey(), videoPath);
-            intent.putExtra(VideoActivity.Companion.getVideoIdKey(), videoId);
+            Bundle extras = new Bundle();
+            extras.putParcelable(VideoActivity.Companion.getCachedVideoKey(), cachedVideo);
+            extras.putParcelable(VideoActivity.Companion.getExternalVideoKey(), externalVideo);
+            intent.putExtras(extras);
             sourceActivity.startActivity(intent);
         } else {
+            String videoPath = null;
+            if (cachedVideo != null && cachedVideo.getUrls() != null && !cachedVideo.getUrls().isEmpty()) {
+                videoPath = cachedVideo.getUrls().get(0).getUrl();
+            } else if (externalVideo != null && externalVideo.getUrls() != null && !externalVideo.getUrls().isEmpty()) {
+                videoPath = externalVideo.getUrls().get(0).getUrl();
+            }
             Uri videoUri = Uri.parse(videoPath);
             String scheme = videoUri.getScheme();
             if (scheme == null) {

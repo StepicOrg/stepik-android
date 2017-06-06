@@ -4,6 +4,5 @@
         <item>@string/low_quality</item>
         <item>@string/medium_quality</item>
         <item>@string/high_quality</item>
-        <item>@string/very_high_quality</item>
     </string-array>
 </resources>

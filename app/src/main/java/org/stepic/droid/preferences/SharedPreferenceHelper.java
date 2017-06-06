@@ -49,6 +49,7 @@ public class SharedPreferenceHelper {
     private final String WIFI_KEY = "wifi_key";
     private final String IS_SOCIAL = "is_social_key";
     private final String VIDEO_QUALITY_KEY = "video_quality_key";
+    private final String VIDEO_QUALITY_KEY_FOR_PLAYING = "video_quality_key_for_playing";
     private final String TEMP_POSITION_KEY = "temp_position_key";
     private final String VIDEO_RATE_PREF_KEY = "video_rate_pref_key";
     private final String VIDEO_EXTERNAL_PREF_KEY = "video_external_pref_key";
@@ -555,6 +556,10 @@ public class SharedPreferenceHelper {
 
     }
 
+    public void saveVideoQualityForPlaying(String videoQuality) {
+        put(PreferenceType.VIDEO_QUALITY, VIDEO_QUALITY_KEY_FOR_PLAYING, videoQuality);
+    }
+
     public void storeVideoQuality(String videoQuality) {
         put(PreferenceType.VIDEO_QUALITY, VIDEO_QUALITY_KEY, videoQuality);
     }
@@ -581,6 +586,19 @@ public class SharedPreferenceHelper {
         String str = getString(PreferenceType.VIDEO_QUALITY, VIDEO_QUALITY_KEY);
         if (str == null) {
             return AppConstants.DEFAULT_QUALITY;
+        } else if (str.equals("1080")) {
+            //it is hack for removing 1080 quality from dialogs
+            return AppConstants.MAX_QUALITY;
+        } else {
+            return str;
+        }
+    }
+
+    public String getVideoQualityForPlaying() {
+        String str = getString(PreferenceType.VIDEO_QUALITY, VIDEO_QUALITY_KEY_FOR_PLAYING);
+        if (str == null) {
+            //by default get for downloading
+            return getVideoQuality();
         } else {
             return str;
         }

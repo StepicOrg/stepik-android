@@ -207,7 +207,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
                     .into(imageViewTarget);
 
 
-            if (course.getEnrollment() != 0 && course.is_active() && course.getLastStepId() != null) {
+            if (course.getEnrollment() != 0 && course.isActive() && course.getLastStepId() != null) {
                 continueButton.setVisibility(View.VISIBLE);
             } else {
                 continueButton.setVisibility(View.GONE);

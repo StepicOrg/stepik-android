@@ -12,7 +12,7 @@ enum class VideoPlaybackRate(val index: Int, val rateFloat: Float, val icon: Dra
     x1_25(3, 1.25f, ContextCompat.getDrawable(App.getAppContext(), R.drawable.ic_playbackrate_1_25_light)),
     x1_5(4, 1.5f, ContextCompat.getDrawable(App.getAppContext(), R.drawable.ic_playbackrate_1_5_light)),
     x1_75(5, 1.75f, ContextCompat.getDrawable(App.getAppContext(), R.drawable.ic_playbackrate_1_75_light)),
-    x2(6, 2f, ContextCompat.getDrawable(App.getAppContext(), R.drawable.ic_playbackrate_2_0_light));
+    x2(6, 2f, ContextCompat.getDrawable(App.getAppContext(), R.drawable.ic_playbackrate_2_0_light)); //1.82f should be for 1080p quality for preventing freezes https://github.com/google/ExoPlayer/issues/2777
 
     companion object {
         fun getValueById(itemId: Int): VideoPlaybackRate {

@@ -106,8 +106,8 @@ public abstract class DaoBase<T> implements IDao<T> {
 
     @Override
     @Nullable
-    public T get(String whereColumn, String whereValue) {
-        String query = "Select * from " + getDbName() + " where " + whereColumn + " = ?";
+    public T get(String whereColumnName, String whereValue) {
+        String query = "Select * from " + getDbName() + " where " + whereColumnName + " = ?";
         return executeQuery(query, new String[]{whereValue}, new ResultHandler<T>() {
             @Override
             public T handle(Cursor cursor) throws SQLException {
@@ -128,7 +128,7 @@ public abstract class DaoBase<T> implements IDao<T> {
     }
 
     @Override
-    public void delete(String whereColumn, String whereValue) {
+    public void remove(String whereColumn, String whereValue) {
         String whereClause = whereColumn + " =?";
         executeDelete(getDbName(), whereClause, new String[]{whereValue});
     }
@@ -140,7 +140,7 @@ public abstract class DaoBase<T> implements IDao<T> {
         return getAllWithQuery(query, null);
     }
 
-    protected List<T> getAllWithQuery(String query, String[] whereArgs) {
+    protected List<T> getAllWithQuery(String query, @Nullable String[] whereArgs) {
         return executeQuery(query, whereArgs, new ResultHandler<List<T>>() {
             @Override
             public List<T> handle(Cursor cursor) throws SQLException {
@@ -183,11 +183,6 @@ public abstract class DaoBase<T> implements IDao<T> {
     @Override
     public final boolean isInDb(T persistentObject) {
         return isInDb(getDefaultPrimaryColumn(), getDefaultPrimaryValue(persistentObject));
-    }
-
-    @Override
-    public void setTableName(String name) {
-        //do nothing
     }
 
     abstract String getDbName();

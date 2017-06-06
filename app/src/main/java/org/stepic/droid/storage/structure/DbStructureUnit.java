@@ -1,9 +1,6 @@
 package org.stepic.droid.storage.structure;
 
-public final class DbStructureUnit extends DBStructureBase {
-
-    private static String[] usedColumns = null;
-
+public final class DbStructureUnit {
     public static final String UNITS = "units";
 
     public static final class Column {
@@ -28,34 +25,6 @@ public final class DbStructureUnit extends DBStructureBase {
         public static final String IS_ACTIVE = "is_active";
         public static final String CREATE_DATE = "create_date";
         public static final String UPDATE_DATE = "update_date";
-    }
-
-    public static String[] getUsedColumns() {
-        if (usedColumns == null) {
-            usedColumns = new String[]{
-                    Column.ID,
-                    Column.UNIT_ID,
-                    Column.LESSON,
-                    Column.ASSIGNMENTS,
-                    Column.POSITION,
-                    Column.PROGRESS,
-                    Column.BEGIN_DATE,
-                    Column.END_DATE,
-                    Column.SOFT_DEADLINE,
-                    Column.HARD_DEADLINE,
-                    Column.GRADING_POLICY,
-                    Column.BEGIN_DATE_SOURCE,
-                    Column.END_DATE_SOURCE,
-                    Column.SOFT_DEADLINE_SOURCE,
-                    Column.HARD_DEADLINE_SOURCE,
-                    Column.GRADING_POLICY_SOURCE,
-                    Column.IS_ACTIVE,
-                    Column.CREATE_DATE,
-                    Column.UPDATE_DATE,
-                    Column.SECTION,
-            };
-        }
-        return usedColumns;
     }
 
 }

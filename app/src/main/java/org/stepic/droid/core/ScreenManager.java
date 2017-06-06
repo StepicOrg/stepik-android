@@ -15,6 +15,7 @@ import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
+import org.stepic.droid.model.Video;
 import org.stepic.droid.storage.operations.Table;
 import org.stepic.droid.web.ViewAssignment;
 
@@ -80,7 +81,7 @@ public interface ScreenManager {
 
     Intent getShowFindCoursesIntent(Context context);
 
-    void showVideo(Activity sourceActivity, String source, long videoId);
+    void showVideo(Activity sourceActivity, @Nullable Video cachedVideo, @Nullable Video externalVideo);
 
     void showSettings(Activity sourceActivity);
 
