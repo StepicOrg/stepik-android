@@ -3,7 +3,6 @@ package org.stepic.droid.core;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
@@ -81,8 +80,6 @@ public interface ScreenManager {
     void showFindCourses(Context context);
 
     Intent getShowFindCoursesIntent(Context context);
-
-    void showVideo(Activity sourceActivity, @NonNull String source, long videoId);
 
     void showVideo(Activity sourceActivity, @Nullable Video cachedVideo, @Nullable Video externalVideo);
 

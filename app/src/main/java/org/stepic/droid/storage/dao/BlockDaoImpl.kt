@@ -9,6 +9,7 @@ import org.stepic.droid.model.*
 import org.stepic.droid.storage.structure.DbStructureBlock
 import org.stepic.droid.storage.structure.DbStructureCachedVideo
 import org.stepic.droid.storage.structure.DbStructureVideoUrl
+import org.stepic.droid.util.transformToVideo
 import javax.inject.Inject
 
 class BlockDaoImpl @Inject
@@ -91,8 +92,8 @@ constructor(
 
     private fun addCachedVideoToBlockWrapper(blockWrapper: BlockPersistentWrapper?) {
         if (blockWrapper != null && blockWrapper.block != null) {
-            val video = videoDao.get(DbStructureCachedVideo.Column.STEP_ID, blockWrapper.stepId.toString() + "")
-            blockWrapper.block.cachedLocalVideo = transformCachedVideoToRealVideo(video) // not local video is saved only with stepId = -1
+            val cachedVideo = videoDao.get(DbStructureCachedVideo.Column.STEP_ID, blockWrapper.stepId.toString() + "")
+            blockWrapper.block.cachedLocalVideo = cachedVideo?.transformToVideo() // not local video is saved only with stepId = -1
         }
     }
 
@@ -105,24 +106,6 @@ constructor(
         val externalVideoUrls: MutableList<DbVideoUrl?> = videoUrlIDao.getAll(DbStructureVideoUrl.Column.videoId, externalVideoId)
 
         blockWrapper.block.video?.urls = externalVideoUrls.toVideoUrls()
-    }
-
-    //// FIXME: 17.02.16 refactor this hack
-    private fun transformCachedVideoToRealVideo(video: CachedVideo?): Video? {
-        var realVideo: Video? = null
-        if (video != null) {
-            realVideo = Video()
-            realVideo.id = video.videoId
-            realVideo.thumbnail = video.thumbnail
-            val videoUrl = VideoUrl()
-            videoUrl.quality = video.quality
-            videoUrl.url = video.url
-
-            val list = ArrayList<VideoUrl>()
-            list.add(videoUrl)
-            realVideo.urls = list
-        }
-        return realVideo
     }
 
     override fun insertOrUpdate(persistentObject: BlockPersistentWrapper?) {

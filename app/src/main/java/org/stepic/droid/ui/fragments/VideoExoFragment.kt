@@ -113,28 +113,15 @@ class VideoExoFragment : FragmentBase(),
     var videoUrl: String? = null
 
     companion object {
-        private val VIDEO_PATH_KEY = "video_path_key"
-        private val VIDEO_ID_KEY = "video_id_key"
-
         private val CACHED_VIDEO_KEY = "cached_video_key"
         private val EXTERNAL_VIDEO_KEY = "external_video_key"
 
         private val saveEpsilon = 1000L
 
-        fun newInstance(videoUri: String, videoId: Long): VideoExoFragment {
-            val args = Bundle()
-            args.putString(VIDEO_PATH_KEY, videoUri)
-            args.putLong(VIDEO_ID_KEY, videoId)
-            val fragment = VideoExoFragment()
-            fragment.arguments = args
-            return fragment
-        }
-
-        fun newInstance(cachedVideo: Video?, externalVideo: Video): VideoExoFragment {
+        fun newInstance(cachedVideo: Video?, externalVideo: Video?): VideoExoFragment {
             val args = Bundle()
             args.putParcelable(CACHED_VIDEO_KEY, cachedVideo)
             args.putParcelable(EXTERNAL_VIDEO_KEY, externalVideo)
-            args.putLong(VIDEO_ID_KEY, cachedVideo?.id ?: externalVideo.id)
             val fragment = VideoExoFragment()
             fragment.arguments = args
             return fragment
@@ -243,21 +230,14 @@ class VideoExoFragment : FragmentBase(),
     private fun createPlayer(): Long? {
         videoPlayerView?.hideController()
 
-        val cachedVideo = arguments.getParcelable<Video>(CACHED_VIDEO_KEY)
-        val externalVideo = arguments.getParcelable<Video>(EXTERNAL_VIDEO_KEY)
+        val cachedVideo: Video? = arguments.getParcelable<Video>(CACHED_VIDEO_KEY)
+        val externalVideo: Video? = arguments.getParcelable<Video>(EXTERNAL_VIDEO_KEY)
 
         val video = cachedVideo ?: externalVideo
 
-        var videoId: Long? = video?.id
-        var filePath: String? = videoUrl ?: videoResolver.resolveVideoUrl(video)
+        val videoId: Long = video?.id ?: 0
+        val filePath: String? = videoUrl ?: videoResolver.resolveVideoUrl(video)
 
-        if (videoId == null || filePath == null) {
-            filePath = arguments.getString(VIDEO_PATH_KEY)
-            videoId = arguments.getLong(VIDEO_ID_KEY)
-            if (videoId <= 0L) { // if equal zero -> it is default, it is not our video
-                videoId = null
-            }
-        }
         videoUrl = filePath
         val bandwidthMeter = DefaultBandwidthMeter()
 
@@ -394,8 +374,8 @@ class VideoExoFragment : FragmentBase(),
                 }
                 R.id.video_quality -> {
                     analytic.reportEvent(Analytic.Video.QUALITY_MENU)
-                    val cachedVideo = arguments.getParcelable<Video>(CACHED_VIDEO_KEY)
-                    val externalVideo = arguments.getParcelable<Video>(EXTERNAL_VIDEO_KEY)
+                    val cachedVideo: Video? = arguments.getParcelable<Video>(CACHED_VIDEO_KEY)
+                    val externalVideo: Video? = arguments.getParcelable<Video>(EXTERNAL_VIDEO_KEY)
                     val nowPlaying = videoUrl
 
                     if (nowPlaying != null) {
@@ -432,8 +412,8 @@ class VideoExoFragment : FragmentBase(),
         pausePlayer()
     }
 
-    override fun onQualityChanged(newUrlQuality: VideoUrl) {
-        videoUrl = newUrlQuality.url
+    override fun onQualityChanged(newUrlQuality: VideoUrl?) {
+        videoUrl = newUrlQuality?.url
         releasePlayer()
         autoPlay = true
         videoId = createPlayer()

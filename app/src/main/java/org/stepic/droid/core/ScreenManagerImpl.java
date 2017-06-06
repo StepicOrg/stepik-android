@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.TaskStackBuilder;
@@ -285,43 +284,6 @@ public class ScreenManagerImpl implements ScreenManager {
         bundle.putInt(MainFeedActivity.KEY_CURRENT_INDEX, index);
         intent.putExtras(bundle);
         return intent;
-    }
-
-    @Override
-    public void showVideo(Activity sourceActivity, @NonNull String videoPath, long videoId) {
-        analytic.reportEvent(Analytic.Screens.TRY_OPEN_VIDEO);
-        boolean isOpenExternal = userPreferences.isOpenInExternal();
-        if (isOpenExternal) {
-            analytic.reportEvent(Analytic.Video.OPEN_EXTERNAL);
-        } else {
-            analytic.reportEvent(Analytic.Video.OPEN_NATIVE);
-        }
-
-        boolean isCompatible = AndroidVersionKt.isJellyBeanOrLater();
-        if (!isCompatible) {
-            analytic.reportEvent(Analytic.Video.NOT_COMPATIBLE);
-        }
-
-        if (isCompatible && !isOpenExternal) {
-            Intent intent = new Intent(App.Companion.getAppContext(), VideoActivity.class);
-            intent.putExtra(VideoActivity.Companion.getVideoPathKey(), videoPath);
-            intent.putExtra(VideoActivity.Companion.getVideoIdKey(), videoId);
-            sourceActivity.startActivity(intent);
-        } else {
-            Uri videoUri = Uri.parse(videoPath);
-            String scheme = videoUri.getScheme();
-            if (scheme == null) {
-                videoUri = Uri.parse(AppConstants.FILE_SCHEME_PREFIX + videoPath);
-            }
-            Intent intent = new Intent(Intent.ACTION_VIEW, videoUri);
-            intent.setDataAndType(videoUri, "video/*");
-            try {
-                sourceActivity.startActivity(intent);
-            } catch (Exception ex) {
-                analytic.reportError(Analytic.Error.NOT_PLAYER, ex);
-                Toast.makeText(sourceActivity, R.string.not_video_player_error, Toast.LENGTH_LONG).show();
-            }
-        }
     }
 
     @Override

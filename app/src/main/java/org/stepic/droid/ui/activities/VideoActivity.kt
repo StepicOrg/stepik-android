@@ -21,13 +21,12 @@ class VideoActivity : SingleFragmentActivity() {
         val videoId: Long = intent.extras.getLong(videoIdKey)
         val cachedVideo = intent.extras.getParcelable<Video>(cachedVideoKey)
         val externalVideo = intent.extras.getParcelable<Video>(externalVideoKey)
-        if (externalVideo != null) {
+
+        if (externalVideo != null || cachedVideo != null) {
             return VideoExoFragment.newInstance(
                     cachedVideo = cachedVideo,
                     externalVideo = externalVideo
             )
-        } else if (path != null) {
-            return VideoExoFragment.newInstance(path, videoId)
         } else {
             return null
         }
