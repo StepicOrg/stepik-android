@@ -53,9 +53,13 @@ class VideoQualityDialogInPlayer : VideoQualityDialogBase() {
         val nowPlayingUrl = arguments.getString(nowPlayingKey)
 
         var position = 0
-        externalVideo.urls.forEach {
-            if (it.url != nowPlayingUrl) {
-                position++
+        let {
+            externalVideo.urls.forEach {
+                if (it.url != nowPlayingUrl) {
+                    position++
+                } else {
+                    return@let
+                }
             }
         }
         // if it is not external, than position will be after all external qualities
