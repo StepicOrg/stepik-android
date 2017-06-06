@@ -40,6 +40,7 @@ import com.google.firebase.appindexing.builders.Actions;
 import com.google.firebase.appindexing.builders.Indexables;
 import com.squareup.otto.Subscribe;
 
+import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
@@ -458,15 +459,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
         Video newTypeVideo = course.getIntroVideo();
         if (newTypeVideo != null && newTypeVideo.getUrls() != null && !newTypeVideo.getUrls().isEmpty()) {
-            int videoIndex = 0;
-            if (newTypeVideo.getUrls().size() > 1) {
-                //if here 2 or more qualities, take the 2nd, with lower quality (workaround for https://github.com/google/ExoPlayer/issues/2777)
-                videoIndex = 1; //usually in 720p
-                //it is working for courses from search
-            }
-            urlToVideo = newTypeVideo.getUrls().get(videoIndex).getUrl();
-            long videoId = newTypeVideo.getId();
-            showNewStyleVideo(urlToVideo, newTypeVideo.getThumbnail(), videoId);
+            showNewStyleVideo(newTypeVideo);
         } else {
             urlToVideo = course.getIntro();
             showOldStyleVideo(urlToVideo);
@@ -474,18 +467,18 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
     }
 
-    private void showNewStyleVideo(final String urlToVideo, String pathThumbnail, final long videoId) {
+    private void showNewStyleVideo(@NotNull final Video video) {
         introView.setVisibility(View.GONE);
-        if (urlToVideo == null || urlToVideo.equals("") || pathThumbnail == null || pathThumbnail.equals("")) {
+        if (video.getThumbnail() == null || video.getThumbnail().equals("")) {
             introView.setVisibility(View.GONE);
             player.setVisibility(View.GONE);
         } else {
-            setThumbnail(pathThumbnail);
+            setThumbnail(video.getThumbnail());
             player.setVisibility(View.VISIBLE);
             player.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    screenManager.showVideo(getActivity(), urlToVideo, videoId);
+                    screenManager.showVideo(getActivity(), null, video);
                 }
             });
         }
