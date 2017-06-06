@@ -60,6 +60,11 @@ class VideoQualityDialogInPlayer : VideoQualityDialogBase() {
         var position = 0
         let {
             externalVideo.urls.forEach {
+                val currentQualityInt: Int = Integer.parseInt(it.quality)
+                if (currentQualityInt > AppConstants.MAX_QUALITY_INT) {
+                    return@forEach // continue
+                }
+
                 if (it.url != nowPlayingUrl) {
                     position++
                 } else {
