@@ -54,7 +54,6 @@ import javax.inject.Inject
  */
 class VideoExoFragment : FragmentBase(),
         ExoPlayer.EventListener,
-        SimpleExoPlayer.VideoListener,
         AudioManager.OnAudioFocusChangeListener,
         VideoWithTimestampView,
         MyExoPhoneStateListener.Callback,
@@ -62,21 +61,26 @@ class VideoExoFragment : FragmentBase(),
         HeadPhoneReceiver.HeadPhoneListener,
         KeyDispatchableFragment,
         VideoQualityDialogInPlayer.Callback {
+
+
+    override fun onPlaybackParametersChanged(p0: PlaybackParameters?) {
+    }
+
+    override fun onTracksChanged(p0: TrackGroupArray?, p1: TrackSelectionArray?) {
+    }
+
+    override fun onLoadingChanged(p0: Boolean) {
+    }
+
+    override fun onPositionDiscontinuity() {
+    }
+
+    override fun onTimelineChanged(p0: Timeline?, p1: Any?) {
+    }
+
     override fun dispatchKeyEventInFragment(keyEvent: KeyEvent?): Boolean {
         videoPlayerView?.showController()
-        return videoPlayerView?.dispatchMediaKeyEvent(keyEvent) ?: false;
-    }
-
-    override fun onVideoSizeChanged(width: Int, height: Int, unappliedRotationDegrees: Int, pixelWidthHeightRatio: Float) {
-    }
-
-    override fun onRenderedFirstFrame() {
-    }
-
-    override fun onPlaybackParametersChanged(playbackParameters: PlaybackParameters?) {
-    }
-
-    override fun onTracksChanged(trackGroups: TrackGroupArray?, trackSelections: TrackSelectionArray?) {
+        return videoPlayerView?.dispatchMediaKeyEvent(keyEvent) ?: false
     }
 
     override fun onPlayerError(error: ExoPlaybackException?) {
@@ -104,15 +108,6 @@ class VideoExoFragment : FragmentBase(),
                 activity?.finish()
             }
         }
-    }
-
-    override fun onLoadingChanged(isLoading: Boolean) {
-    }
-
-    override fun onPositionDiscontinuity() {
-    }
-
-    override fun onTimelineChanged(timeline: Timeline?, manifest: Any?) {
     }
 
     var videoUrl: String? = null
@@ -275,7 +270,6 @@ class VideoExoFragment : FragmentBase(),
         val trackSelector = DefaultTrackSelector(adaptiveTrackSelectionFactory)
         player = ExoPlayerFactory.newSimpleInstance(context, trackSelector)
         player?.addListener(this)
-        player?.setVideoListener(this)
 
         audioFocusHelper.requestAudioFocus(this)
         player?.videoScalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT
