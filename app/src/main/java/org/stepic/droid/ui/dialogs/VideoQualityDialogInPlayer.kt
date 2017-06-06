@@ -51,6 +51,17 @@ class VideoQualityDialogInPlayer : VideoQualityDialogBase() {
 
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        fun greaterThanMaxQuality(quality: String): Boolean {
+            try {
+                val qualityInt = Integer.parseInt(quality)
+                return qualityInt > AppConstants.MAX_QUALITY_INT
+            } catch (exception: Exception) {
+                analytic.reportError(Analytic.Error.CANT_PARSE_QUALITY, exception)
+                return true
+            }
+        }
+
+
         init()
 
         val externalVideo = arguments.getParcelable<Video>(externalVideoKey)
@@ -60,8 +71,7 @@ class VideoQualityDialogInPlayer : VideoQualityDialogBase() {
         var position = 0
         let {
             externalVideo.urls.forEach {
-                val currentQualityInt: Int = Integer.parseInt(it.quality)
-                if (currentQualityInt > AppConstants.MAX_QUALITY_INT) {
+                if (greaterThanMaxQuality(it.quality)) {
                     return@forEach // continue
                 }
 
@@ -78,8 +88,7 @@ class VideoQualityDialogInPlayer : VideoQualityDialogBase() {
                         .urls
                         .map { it.quality }
                         .filter {
-                            val qualityInt = Integer.parseInt(it)
-                            qualityInt <= AppConstants.MAX_QUALITY_INT
+                            !greaterThanMaxQuality(it)
                         }
                         .toMutableList()
 
