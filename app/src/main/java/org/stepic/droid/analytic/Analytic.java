@@ -156,6 +156,7 @@ public interface Analytic {
         String QUALITY_MENU = "video_player_quality";
         String CANCEL_VIDEO_QUALITY = "video_player_quality_cancel";
         String NOW_PLAYING_WAS_NULL = "video_player_now_playing_null";
+        String OLD_STYLE = "video_old_style";
     }
 
     interface AppIndexing {

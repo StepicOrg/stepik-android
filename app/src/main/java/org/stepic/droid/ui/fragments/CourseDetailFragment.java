@@ -490,6 +490,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
             introView.setVisibility(View.GONE);
             player.setVisibility(View.GONE);
         } else {
+            analytic.reportEvent(Analytic.Video.OLD_STYLE); // if it is not reported to analytic system -> remove old style code (metric was introduced approximately 15/06/2017)
             WebSettings webSettings = introView.getSettings();
             webSettings.setJavaScriptEnabled(true);
             webSettings.setAppCacheEnabled(true);
