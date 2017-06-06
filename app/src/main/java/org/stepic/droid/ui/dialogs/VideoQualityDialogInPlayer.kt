@@ -9,6 +9,7 @@ import org.stepic.droid.base.App
 import org.stepic.droid.model.Video
 import org.stepic.droid.model.VideoUrl
 import org.stepic.droid.preferences.UserPreferences
+import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
 
 class VideoQualityDialogInPlayer : VideoQualityDialogBase() {
@@ -43,6 +44,9 @@ class VideoQualityDialogInPlayer : VideoQualityDialogBase() {
 
     @Inject
     lateinit var analytic: Analytic
+
+    @Inject
+    lateinit var threadPoolExecutor: ThreadPoolExecutor
 
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -79,7 +83,6 @@ class VideoQualityDialogInPlayer : VideoQualityDialogBase() {
                 .setSingleChoiceItems(listOfUrls.toTypedArray(),
                         position,
                         { dialog, which ->
-                            val qualityForPlaying = listOfUrls[which] //todo: save it in settings
                             val urlQuality =
                                     if (which in 0..externalVideo.urls.size - 1) {
                                         externalVideo.urls[which]
@@ -88,10 +91,40 @@ class VideoQualityDialogInPlayer : VideoQualityDialogBase() {
                                     }
                             (targetFragment as Callback).onQualityChanged(newUrlQuality = urlQuality)
                             dialog.dismiss()
+
+                            val qualityForPlaying = listOfUrls[which]
+                            threadPoolExecutor.execute {
+                                val toSave = findNearest(qualityForPlaying, qualityToPositionMap.keys)
+                                userPreferences.saveVideoQualityForPlaying(toSave)
+                            }
                         })
 
         return builder.create()
     }
 
+    private fun findNearest(qualityForPlaying: String, availableQualities: Iterable<String>): String? {
+        try {
+            val weWant = Integer.parseInt(qualityForPlaying)
+            var result: String? = null
+            var bestDelta: Int = Int.MAX_VALUE
+            availableQualities.forEach {
+                val current = Integer.parseInt(it)
+                val currentDelta = Math.abs(current - weWant)
+                if (currentDelta < bestDelta) {
+                    result = it
+                    bestDelta = currentDelta
+                }
+                if (currentDelta == 0) {
+                    return result
+                }
+            }
+            return result
+        } catch (exception: Exception) {
+            //when it can happen?
+            analytic.reportError(Analytic.Error.CANT_PARSE_QUALITY, exception)
+            return null
+        }
+
+    }
 
 }
