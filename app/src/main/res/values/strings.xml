@@ -307,7 +307,6 @@
     <string name="low_quality">Low</string>
     <string name="medium_quality">Medium</string>
     <string name="high_quality">High</string>
-    <string name="very_high_quality">Very high</string>
     <string name="video_quality_explanation">High quality video takes more space and can take a
         while
         to load
