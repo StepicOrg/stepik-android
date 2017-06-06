@@ -468,11 +468,12 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
 
     @Subscribe
     fun onDiscussionProxyLoadedSuccessfully(successfullyEvent: DiscussionProxyLoadedSuccessfullyEvent) {
-        commentManager.setDiscussionProxy(successfullyEvent.discussionProxy)
-        activity.invalidateOptionsMenu()
-        commentManager.loadComments()
+        activity?.let {
+            commentManager.setDiscussionProxy(successfullyEvent.discussionProxy)
+            activity.invalidateOptionsMenu()
+            commentManager.loadComments()
+        }
     }
-
 
     @Subscribe
     fun onCommentsLoadedSuccessfully(successfullyEvent: CommentsLoadedSuccessfullyEvent) {
