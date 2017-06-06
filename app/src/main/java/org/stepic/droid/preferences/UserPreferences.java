@@ -143,7 +143,6 @@ public class UserPreferences {
         sharedPreferenceHelper.saveVideoQualityForPlaying(videoQuality);
     }
 
-
     public String getQualityVideoForPlaying () {
         return sharedPreferenceHelper.getVideoQualityForPlaying();
     }

@@ -586,6 +586,9 @@ public class SharedPreferenceHelper {
         String str = getString(PreferenceType.VIDEO_QUALITY, VIDEO_QUALITY_KEY);
         if (str == null) {
             return AppConstants.DEFAULT_QUALITY;
+        } else if (str.equals("1080")) {
+            //it is hack for removing 1080 quality from dialogs
+            return AppConstants.MAX_QUALITY;
         } else {
             return str;
         }

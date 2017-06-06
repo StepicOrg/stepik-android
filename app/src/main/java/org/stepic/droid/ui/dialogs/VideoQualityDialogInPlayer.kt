@@ -9,6 +9,7 @@ import org.stepic.droid.base.App
 import org.stepic.droid.model.Video
 import org.stepic.droid.model.VideoUrl
 import org.stepic.droid.preferences.UserPreferences
+import org.stepic.droid.util.AppConstants
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
 
@@ -67,7 +68,15 @@ class VideoQualityDialogInPlayer : VideoQualityDialogBase() {
             }
         }
         // if it is not external, than position will be after all external qualities
-        val listOfUrls: MutableList<String> = externalVideo.urls.map { it.quality }.toMutableList()
+        val listOfUrls: MutableList<String> =
+                externalVideo
+                        .urls
+                        .map { it.quality }
+                        .filter {
+                            val qualityInt = Integer.parseInt(it)
+                            qualityInt <= AppConstants.MAX_QUALITY_INT
+                        }
+                        .toMutableList()
 
         cachedVideo?.urls?.firstOrNull()?.quality?.let {
             listOfUrls.add(getString(R.string.video_player_downloaded_quality, it))
