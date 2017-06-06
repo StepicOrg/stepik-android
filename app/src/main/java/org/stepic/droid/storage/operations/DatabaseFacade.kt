@@ -37,7 +37,8 @@ class DatabaseFacade
         private val videoTimestampDao: IDao<VideoTimestamp>,
         private val lastStepDao: IDao<PersistentLastStep>,
         private val lastInteractions: IDao<CourseLastInteraction>,
-        private val externalVideoUrlDao: IDao<DbVideoUrl>) {
+        private val externalVideoUrlDao: IDao<DbVideoUrl>,
+        private val blockDao : IDao<BlockPersistentWrapper>) {
 
     fun dropDatabase() {
         sectionDao.removeAll()
@@ -54,6 +55,10 @@ class DatabaseFacade
         certificateViewItemDao.removeAll()
         lastStepDao.removeAll()
         lastInteractions.removeAll()
+        blockDao.removeAll()
+        videoTimestampDao.removeAll()
+        externalVideoUrlDao.removeAll()
+        assignmentDao.removeAll()
     }
 
     fun getCourseDao(table: Table) =
