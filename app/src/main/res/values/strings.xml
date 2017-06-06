@@ -1,9 +1,9 @@
 <resources>
     <string name="stepik_free_courses_title">Stepik.org: free courses</string>
     <string name="asset_statements" translatable="false">
-    [{
-    \"include\": \"https://stepik.org/.well-known/assetlinks.json\"
-    }]
+        [{
+        \"include\": \"https://stepik.org/.well-known/assetlinks.json\"
+        }]
     </string>
     <string name="local_remind_message">We noticed that you still have not selected any courses to
         study. Don\'t delay, enroll for a free course right now!
@@ -75,7 +75,8 @@
     <string name="failLogin">Login/password was incorrect</string>
     <string name="connectionProblems">Internet connection was lost</string>
     <string name="are_you_sure">Are you sure?</string>
-    <string name="explain_permission">For caching the course and playing the video offline Stepik needs
+    <string name="explain_permission">For caching the course and playing the video offline Stepik
+        needs
         permission to access the storage of the phone.
     </string>
     <string name="explain_calendar_permission">To add deadlines the app needs
@@ -114,14 +115,17 @@
     <string name="correct">Correct!</string>
     <string name="wrong">Wrong. Please, try again.</string>
     <string name="try_again">Try again</string>
-    <string name="step_only_online">Steps are available only online. Connect to the Internet and start
+    <string name="step_only_online">Steps are available only online. Connect to the Internet and
+        start
         completing the assignments.
     </string>
     <string name="correct_free_response">Your answer was saved.</string>
     <string name="hint_for_type_answer">Type your answer here…</string>
     <string name="py_message">
         <![CDATA[Please open this problem in your <a href="https://www.jetbrains.com/pycharm-educational/">PyCharm Educational Edition</a>]]></string>
-    <string name="review_warning">This is a peer-review assignment. Tap to open in web and receive the points.</string>
+    <string name="review_warning">This is a peer-review assignment. Tap to open in web and receive
+        the points.
+    </string>
     <string name="password_too_short">Password must be a minimum of 6 characters.</string>
     <string name="reset_password">Reset password</string>
     <string name="send">Send</string>
@@ -132,7 +136,8 @@
     <string name="feedback_good_description">The app is a pleasure to use.</string>
     <string name="feedback_good">excellent</string>
     <string name="feedback_bad">terrible</string>
-    <string name="feedback_bad_description">The app is inconvenient, loading is slow, there are video playback issues.
+    <string name="feedback_bad_description">The app is inconvenient, loading is slow, there are
+        video playback issues.
     </string>
     <string name="feedback_title">Give feedback</string>
     <string name="feedback_hint">Give feedback…</string>
@@ -174,7 +179,9 @@
     <string name="remove_all">Remove all</string>
     <string name="hint_for_idea">Type your suggestions, comments or ideas</string>
     <string name="feedback_from">From</string>
-    <string name="cancel_videos_explanation">Cancelling the uploading will take a while. Are you sure?</string>
+    <string name="cancel_videos_explanation">Cancelling the uploading will take a while. Are you
+        sure?
+    </string>
     <string name="comments_title">Comments</string>
     <string name="load_more">more</string>
     <string name="load_more_reply">Load more</string>
@@ -199,22 +206,26 @@
     <string name="comment_is_deleted">This comment was deleted</string>
     <string name="space_management_title">Space management</string>
     <string name="clear_cache_explanation">The App supports viewing videos online, but to view the
-        lessons without Internet connection it is necessary to download them. Most of the space is taken by
+        lessons without Internet connection it is necessary to download them. Most of the space is
+        taken by
         the video tutorials. Deleting all downloaded videos can take a few minutes.
     </string>
     <string name="storage">Storage</string>
     <string name="notMountExplanation">The SD card is not plugged in the device. To save the videos
         to the SD card, plug it in the phone and restart the App.
     </string>
-    <string name="mountExplanation">You can save lessons on the SD-card or internal memory of your device.
-        Please note that when saving on SD-card, lessons will not be available, once you remove the card.
+    <string name="mountExplanation">You can save lessons on the SD-card or internal memory of your
+        device.
+        Please note that when saving on SD-card, lessons will not be available, once you remove the
+        card.
     </string>
     <string name="choose_storage_title">Choose storage</string>
     <string name="default_storage">Default</string>
     <string name="secondary_storage">Secondary</string>
     <string name="free_title">free</string>
     <string name="move_data_explanation">All previously downloaded videos will be transferred and
-        new videos will be downloaded in the new location. The operation may take a few minutes. Are you
+        new videos will be downloaded in the new location. The operation may take a few minutes. Are
+        you
         sure?
     </string>
     <string name="sorry_moved">Sorry, this file was moved or deleted</string>
@@ -225,7 +236,8 @@
     <string name="done">Done</string>
     <string name="moving">Moving</string>
     <string name="go_to_learn">Continue</string>
-    <string name="fail_to_parse">Sorry, the course can not be found. Tap to find other courses!</string>
+    <string name="fail_to_parse">Sorry, the course can not be found. Tap to find other courses!
+    </string>
     <string name="authorization">Authorization</string>
     <string name="unauthorization_detail">To continue, you should be authorized. Do you want to do
         this now?
@@ -247,7 +259,8 @@
     <string name="copy_text_label">Copy text</string>
     <string name="calendar_title">Calendar</string>
     <string name="calendar_detail">Modules in this course have deadlines. To complete this course
-        and get a certificate, add deadlines to your calendar and get a reminder 2 days before the due date.
+        and get a certificate, add deadlines to your calendar and get a reminder 2 days before the
+        due date.
         To manage the appearance of this message go to the app settings.
     </string>
     <string name="add_to_the_calendar">Add to the calendar</string>
@@ -295,7 +308,8 @@
     <string name="medium_quality">Medium</string>
     <string name="high_quality">High</string>
     <string name="very_high_quality">Very high</string>
-    <string name="video_quality_explanation">High quality video takes more space and can take a while 
+    <string name="video_quality_explanation">High quality video takes more space and can take a
+        while
         to load
     </string>
     <string name="do_not_ask_me_again">Do not ask me again</string>
@@ -311,7 +325,8 @@
     <string name="discounting_policy_title_settings">Warn about the lessons with penalties for wrong
         answers
     </string>
-    <string name="discounting_policy_message">If you send the wrong submission for this task, you will not be able
+    <string name="discounting_policy_message">If you send the wrong submission for this task, you
+        will not be able
         to receive any points for this task. Are you sure?
     </string>
     <string name="keep_screen_on_title_settings">Keep the screen on, while solving steps</string>
@@ -330,9 +345,12 @@
     <string name="get_license_message">New license</string>
     <string name="added_to_group_title">Adding to group</string>
     <string name="notification_comment_list">Comments and replies</string>
-    <string name="exam_module_title">It is an exam module, you can only solve it in the web version</string>
+    <string name="exam_module_title">It is an exam module, you can only solve it in the web
+        version
+    </string>
     <string name="start_exam_action_title">Open</string>
-    <string name="restriction_submission_enough">The step cannot be submitted, because the number of possible
+    <string name="restriction_submission_enough">The step cannot be submitted, because the number of
+        possible
         attempts has been exceeded
     </string>
     <string name="too_many_attempts">Too many attempts. Please try later</string>
@@ -355,7 +373,8 @@
         <item quantity="other">days</item>
     </plurals>
     <plurals name="streak_description">
-        <item quantity="one">It is the %d day you are active without a break. Solve assignments every day
+        <item quantity="one">It is the %d day you are active without a break. Solve assignments
+            every day
             in order to improve your record. We suggest you turn on the reminders.
         </item>
         <item quantity="other">It is the %d days you are active without a break. Solve every
@@ -366,21 +385,24 @@
     <string name="notification_time">Notification time</string>
     <string name="notification_about_learning">Notifications about learning</string>
     <string name="time_to_learn_notification_title">Time to learn!</string>
-    <string name="streak_description_not_positive">Correct! Solve assignments every day in order to improve
-       your record. You can also turn on the reminders!
+    <string name="streak_description_not_positive">Correct! Solve assignments every day in order to
+        improve
+        your record. You can also turn on the reminders!
     </string>
     <plurals name="streak_notification_message_call_to_action">
         <item quantity="one">Well done! You solve %d day without a break. Do not stop, solve another
             assignment now!
         </item>
-        <item quantity="other">Well done! You solve %d day without a break. Do not stop, solve another
+        <item quantity="other">Well done! You solve %d day without a break. Do not stop, solve
+            another
             assignment now!
         </item>
     </plurals>
     <string name="streak_notification_message_improvement">Good job! Current streak was increased to
         %d. Keep it up!
     </string>
-    <string name="streak_notification_empty_number">Learning requires daily practice. Solve another assignment 
+    <string name="streak_notification_empty_number">Learning requires daily practice. Solve another
+        assignment
         right now!
     </string>
     <string name="streak_notification_enabled_successfully">Notifications are enabled. You can
@@ -439,5 +461,6 @@
     <!--Video player screen-->
     <string name="video_player_quality">Video quality</string>
     <string name="video_player_device_orientation_title">Rotate video</string>
+    <string name="video_player_downloaded_quality">Downloaded (%s)</string>
 
 </resources>

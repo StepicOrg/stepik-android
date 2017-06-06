@@ -38,9 +38,11 @@ import org.stepic.droid.core.internet_state.contract.InternetEnabledListener
 import org.stepic.droid.core.presenters.VideoWithTimestampPresenter
 import org.stepic.droid.core.presenters.contracts.VideoWithTimestampView
 import org.stepic.droid.model.Video
+import org.stepic.droid.model.VideoUrl
 import org.stepic.droid.preferences.VideoPlaybackRate
 import org.stepic.droid.receivers.HeadPhoneReceiver
 import org.stepic.droid.ui.custom_exo.NavigationBarUtil
+import org.stepic.droid.ui.dialogs.VideoQualityDialogInPlayer
 import org.stepic.droid.ui.listeners.KeyDispatchableFragment
 import org.stepic.droid.ui.util.VideoPlayerConstants
 import org.stepic.droid.util.resolvers.VideoResolver
@@ -58,8 +60,8 @@ class VideoExoFragment : FragmentBase(),
         MyExoPhoneStateListener.Callback,
         InternetEnabledListener,
         HeadPhoneReceiver.HeadPhoneListener,
-        KeyDispatchableFragment {
-
+        KeyDispatchableFragment,
+        VideoQualityDialogInPlayer.Callback {
     override fun dispatchKeyEventInFragment(keyEvent: KeyEvent?): Boolean {
         videoPlayerView?.showController()
         return videoPlayerView?.dispatchMediaKeyEvent(keyEvent) ?: false;
@@ -113,8 +115,7 @@ class VideoExoFragment : FragmentBase(),
     override fun onTimelineChanged(timeline: Timeline?, manifest: Any?) {
     }
 
-    var cachedVideo: Video? = null
-    var externalVideo: Video? = null
+    var videoUrl: String? = null
 
     companion object {
         private val VIDEO_PATH_KEY = "video_path_key"
@@ -247,14 +248,13 @@ class VideoExoFragment : FragmentBase(),
     private fun createPlayer(): Long? {
         videoPlayerView?.hideController()
 
-
-        cachedVideo = arguments.getParcelable<Video>(CACHED_VIDEO_KEY)
-        externalVideo = arguments.getParcelable<Video>(EXTERNAL_VIDEO_KEY)
+        val cachedVideo = arguments.getParcelable<Video>(CACHED_VIDEO_KEY)
+        val externalVideo = arguments.getParcelable<Video>(EXTERNAL_VIDEO_KEY)
 
         val video = cachedVideo ?: externalVideo
 
         var videoId: Long? = video?.id
-        var filePath: String? = videoResolver.resolveVideoUrl(video)
+        var filePath: String? = videoUrl ?: videoResolver.resolveVideoUrl(video)
 
         if (videoId == null || filePath == null) {
             filePath = arguments.getString(VIDEO_PATH_KEY)
@@ -263,6 +263,7 @@ class VideoExoFragment : FragmentBase(),
                 videoId = null
             }
         }
+        videoUrl = filePath
         val bandwidthMeter = DefaultBandwidthMeter()
 
         //make source
@@ -298,6 +299,7 @@ class VideoExoFragment : FragmentBase(),
             autoPlay = false
         } else {
             player?.playWhenReady = false
+
         }
         videoPlayerView?.player = player
         videoPlayerView?.showController()
@@ -396,6 +398,24 @@ class VideoExoFragment : FragmentBase(),
                     setOrientationPreference(newValue)
                     true
                 }
+                R.id.video_quality -> {
+                    analytic.reportEvent(Analytic.Video.QUALITY_MENU)
+                    val cachedVideo = arguments.getParcelable<Video>(CACHED_VIDEO_KEY)
+                    val externalVideo = arguments.getParcelable<Video>(EXTERNAL_VIDEO_KEY)
+                    val nowPlaying = videoUrl
+
+                    if (nowPlaying != null) {
+                        val dialog = VideoQualityDialogInPlayer.newInstance(externalVideo, cachedVideo, nowPlaying)
+                        dialog.setTargetFragment(this, 0)
+                        if (!dialog.isAdded) {
+                            dialog.show(fragmentManager, null)
+                        }
+                    } else {
+                        //todo: log it
+                    }
+
+                    true
+                }
                 else -> false
 
             }
@@ -418,5 +438,11 @@ class VideoExoFragment : FragmentBase(),
         pausePlayer()
     }
 
-
+    override fun onQualityChanged(newUrlQuality: VideoUrl) {
+        videoUrl = newUrlQuality.url
+        releasePlayer()
+        autoPlay = true
+        videoId = createPlayer()
+        videoWithTimestampPresenter.showVideoWithPredefinedTimestamp(videoId)
+    }
 }

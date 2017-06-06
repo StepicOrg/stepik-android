@@ -173,4 +173,6 @@ interface AppCoreComponent {
     fun inject(streakAlarmService: StreakAlarmService)
 
     fun inject(playbackControlView: PlaybackControlView)
+
+    fun inject(videoQualityDialogInPlayer: VideoQualityDialogInPlayer)
 }

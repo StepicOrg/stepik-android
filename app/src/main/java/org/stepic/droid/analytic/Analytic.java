@@ -153,6 +153,8 @@ public interface Analytic {
         String PLAY = "video_player_play";
         String PAUSE = "video_player_pause";
         String ERROR = "video_player_error";
+        String QUALITY_MENU = "video_player_quality";
+        String CANCEL_VIDEO_QUALITY = "video_player_quality_cancel";
     }
 
     interface AppIndexing {

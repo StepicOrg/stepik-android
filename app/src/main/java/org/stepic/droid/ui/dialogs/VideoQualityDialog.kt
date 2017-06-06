@@ -37,7 +37,7 @@ class VideoQualityDialog : VideoQualityDialogBase() {
         init()
 
         val forPlaying = arguments.getBoolean(forPlayingFlagKey)
-        val qualityTitle = if (forPlaying) {
+        val qualityValue = if (forPlaying) {
             userPreferences.qualityVideoForPlaying
         } else {
             userPreferences.qualityVideo
@@ -45,12 +45,19 @@ class VideoQualityDialog : VideoQualityDialogBase() {
 
         val builder = AlertDialog.Builder(activity)
         builder
-                .setTitle(R.string.video_quality)
+                .setTitle(
+                if (forPlaying) {
+                    R.string.video_quality_playing
+                }
+                else {
+                    R.string.video_quality
+                }
+                )
                 .setNegativeButton(R.string.cancel) { _, _ ->
                     analytic.reportEvent(Analytic.Interaction.CANCEL_VIDEO_QUALITY)
                 }
                 .setSingleChoiceItems(R.array.video_quality,
-                        qualityToPositionMap[qualityTitle]!!,
+                        qualityToPositionMap[qualityValue]!!,
                         { dialog, which ->
                             val qualityString = positionToQualityMap[which]
                             analytic.reportEventWithIdName(Analytic.Preferences.VIDEO_QUALITY, which.toString(), qualityString)
