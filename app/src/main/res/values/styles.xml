@@ -67,7 +67,7 @@
     <style name="AppTheme.VideoPlayer" parent="AppTheme.VideoPlayer.7"/>
 
     <style name="AppTheme.VideoPlayer.7" parent="Theme.AppCompat">
-        <item name="colorAccent">@color/stepic_blue_ribbon</item>
+        <item name="colorAccent">@color/white</item>
         <item name="colorPrimary">@color/stepic_brand_primary</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
