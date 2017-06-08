@@ -87,5 +87,9 @@
     *;
 }
 
+-keep class org.stepic.droid.notifications.** { *; }
+-keep interface org.stepic.droid.notifications.** { *; }
+-dontwarn org.stepic.droid.notifications.**
+
 #for saving search view https://stackoverflow.com/questions/18407171/searchview-getactionview-returning-null
 -keep class android.support.v7.widget.SearchView { *; }
