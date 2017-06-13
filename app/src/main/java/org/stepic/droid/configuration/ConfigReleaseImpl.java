@@ -36,7 +36,6 @@ public class ConfigReleaseImpl implements Config {
     private static final String GOOGLE_SERVER_CLIENT_ID = "GOOGLE_SERVER_CLIENT_ID";
     private static final String TERMS_OF_SERVICE = "TERMS_OF_SERVICE";
     private static final String PRIVACY_POLICY = "PRIVACY_POLICY";
-    private static final String MIXPANEL_TOKEN = "MIXPANEL_TOKEN";
     private static final String CSRF_COOKIE_NAME = "CSRF_COOKIE_NAME";
     private static final String SESSION_COOKIE_NAME = "SESSION_COOKIE_NAME";
     private static final String IS_APP_IN_STORE = "IS_APP_IN_STORE";
@@ -143,11 +142,6 @@ public class ConfigReleaseImpl implements Config {
     @Override
     public String getTermsOfServiceUrl() {
         return getString(TERMS_OF_SERVICE, getBaseUrl());
-    }
-
-    @Override
-    public String getMixpanelToken() {
-        return getString(MIXPANEL_TOKEN, null);
     }
 
     @Override

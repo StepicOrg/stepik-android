@@ -31,8 +31,6 @@ public interface Config {
 
     String getTermsOfServiceUrl();
 
-    String getMixpanelToken();
-
     String getCsrfTokenCookieName();
 
     String getSessionCookieName();

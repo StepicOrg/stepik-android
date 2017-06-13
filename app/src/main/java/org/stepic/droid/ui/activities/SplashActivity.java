@@ -10,7 +10,6 @@ import android.support.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
@@ -149,8 +148,6 @@ public class SplashActivity extends BackToExitActivityBase {
 
     private void checkRemoteConfigs() {
         if (!isFinishing()) {
-            MixpanelAPI mixpanelAPI = MixpanelAPI.getInstance(getApplicationContext(), config.getMixpanelToken());
-            mixpanelAPI.track("app_opened");
             if (checkPlayServices()) {
                 firebaseRemoteConfig.fetch().addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
