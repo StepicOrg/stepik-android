@@ -1,4 +1,4 @@
-package org.stepic.droid.events.steps;
+package org.stepic.droid.events.video;
 
 public class StepRemovedEvent {
     final long stepId;

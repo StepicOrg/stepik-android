@@ -27,7 +27,7 @@ import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.concurrency.DownloadPoster;
 import org.stepic.droid.core.video_moves.contract.VideosMovedListener;
 import org.stepic.droid.events.DownloadingIsLoadedSuccessfullyEvent;
-import org.stepic.droid.events.steps.StepRemovedEvent;
+import org.stepic.droid.events.video.StepRemovedEvent;
 import org.stepic.droid.events.video.DownloadReportEvent;
 import org.stepic.droid.events.video.FinishDownloadCachedVideosEvent;
 import org.stepic.droid.events.video.VideoCachedOnDiskEvent;

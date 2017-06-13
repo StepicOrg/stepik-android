@@ -23,7 +23,6 @@ import org.stepic.droid.core.presenters.VideoStepPresenter
 import org.stepic.droid.core.presenters.contracts.VideoLengthView
 import org.stepic.droid.core.presenters.contracts.VideoStepView
 import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent
-import org.stepic.droid.events.steps.StepWasUpdatedEvent
 import org.stepic.droid.model.Video
 import org.stepic.droid.util.ThumbnailParser
 import javax.inject.Inject
@@ -125,11 +124,6 @@ class VideoStepFragment : StepBaseFragment(),
     @Subscribe
     override fun onNewCommentWasAdded(event: NewCommentWasAddedOrUpdateEvent) {
         super.onNewCommentWasAdded(event)
-    }
-
-    @Subscribe
-    override fun onStepWasUpdated(event: StepWasUpdatedEvent) {
-        super.onStepWasUpdated(event)
     }
 
     override fun onInternetProblem() {

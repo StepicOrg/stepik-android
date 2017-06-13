@@ -8,7 +8,7 @@ import android.os.Handler
 import com.squareup.otto.Bus
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
-import org.stepic.droid.events.steps.StepRemovedEvent
+import org.stepic.droid.events.video.StepRemovedEvent
 import org.stepic.droid.model.Lesson
 import org.stepic.droid.model.Step
 import org.stepic.droid.storage.StoreStateManager

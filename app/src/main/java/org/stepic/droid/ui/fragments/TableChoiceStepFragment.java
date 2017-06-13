@@ -12,7 +12,6 @@ import com.squareup.otto.Subscribe;
 
 import org.stepic.droid.R;
 import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent;
-import org.stepic.droid.events.steps.StepWasUpdatedEvent;
 import org.stepic.droid.model.Attempt;
 import org.stepic.droid.model.Dataset;
 import org.stepic.droid.model.Reply;
@@ -116,8 +115,4 @@ public class TableChoiceStepFragment extends StepAttemptFragment {
         super.onNewCommentWasAdded(event);
     }
 
-    @Subscribe
-    public void onStepWasUpdated(StepWasUpdatedEvent event) {
-        super.onStepWasUpdated(event);
-    }
 }

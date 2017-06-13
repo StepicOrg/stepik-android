@@ -40,7 +40,6 @@ import org.stepic.droid.core.presenters.StreakPresenter;
 import org.stepic.droid.core.presenters.contracts.StepAttemptView;
 import org.stepic.droid.core.updating_step.contract.UpdatingStepPoster;
 import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent;
-import org.stepic.droid.events.steps.StepWasUpdatedEvent;
 import org.stepic.droid.fonts.FontType;
 import org.stepic.droid.model.Attempt;
 import org.stepic.droid.model.DiscountingPolicyType;
@@ -503,11 +502,6 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
     @Subscribe
     public void onNewCommentWasAdded(NewCommentWasAddedOrUpdateEvent event) {
         super.onNewCommentWasAdded(event);
-    }
-
-    @Subscribe
-    public void onStepWasUpdated(StepWasUpdatedEvent event) {
-        super.onStepWasUpdated(event);
     }
 
     @Override

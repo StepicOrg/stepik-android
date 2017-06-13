@@ -8,7 +8,6 @@ import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropM
 import com.squareup.otto.Subscribe;
 
 import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent;
-import org.stepic.droid.events.steps.StepWasUpdatedEvent;
 import org.stepic.droid.model.Attempt;
 import org.stepic.droid.model.Option;
 import org.stepic.droid.model.Pair;
@@ -105,11 +104,6 @@ public class MatchingStepFragment extends DraggableStepFragment {
     @Subscribe
     public void onNewCommentWasAdded(NewCommentWasAddedOrUpdateEvent event) {
         super.onNewCommentWasAdded(event);
-    }
-
-    @Subscribe
-    public void onStepWasUpdated(StepWasUpdatedEvent event) {
-        super.onStepWasUpdated(event);
     }
 
 }

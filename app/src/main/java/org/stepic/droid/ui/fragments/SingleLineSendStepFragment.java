@@ -14,7 +14,6 @@ import com.squareup.otto.Subscribe;
 
 import org.stepic.droid.R;
 import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent;
-import org.stepic.droid.events.steps.StepWasUpdatedEvent;
 import org.stepic.droid.model.Attempt;
 
 public abstract class SingleLineSendStepFragment extends StepAttemptFragment {
@@ -55,8 +54,4 @@ public abstract class SingleLineSendStepFragment extends StepAttemptFragment {
 
     }
 
-    @Subscribe
-    public void onStepWasUpdated(StepWasUpdatedEvent event) {
-        super.onStepWasUpdated(event);
-    }
 }

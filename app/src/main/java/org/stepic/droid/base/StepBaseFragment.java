@@ -19,17 +19,20 @@ import org.stepic.droid.core.presenters.RouteStepPresenter;
 import org.stepic.droid.core.presenters.contracts.AnonymousView;
 import org.stepic.droid.core.presenters.contracts.RouteStepView;
 import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent;
-import org.stepic.droid.events.steps.StepWasUpdatedEvent;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
+import org.stepic.droid.storage.operations.DatabaseFacade;
 import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout;
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment;
 import org.stepic.droid.ui.dialogs.StepShareDialogFragment;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.web.StepResponse;
+
+import java.lang.ref.WeakReference;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import javax.inject.Inject;
 
@@ -236,45 +239,15 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
     public void onNewCommentWasAdded(NewCommentWasAddedOrUpdateEvent event) {
         if (step != null && event.getTargetId() == step.getId()) {
             long[] arr = new long[]{step.getId()};
-
-            api.getSteps(arr).enqueue(new Callback<StepResponse>() {
-
-                @Override
-                public void onResponse(Call<StepResponse> call, Response<StepResponse> response) {
-                    if (response.isSuccessful()) {
-                        StepResponse stepResponse = response.body();
-                        if (stepResponse != null && stepResponse.getSteps() != null && !stepResponse.getSteps().isEmpty()) {
-                            final Step stepFromInternet = stepResponse.getSteps().get(0);
-                            if (stepFromInternet != null) {
-                                threadPoolExecutor.execute(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        databaseFacade.addStep(stepFromInternet); //fixme: fragment in closure -> leak
-                                    }
-                                });
-
-                                //fixme: it is so bad, we should be updated from model, not here =(
-                                bus.post(new StepWasUpdatedEvent(stepFromInternet));
-                            }
-                        }
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<StepResponse> call, Throwable t) {
-
-                }
-            });
+            api.getSteps(arr).enqueue(new StepResponseCallback(threadPoolExecutor, databaseFacade, this));
         }
 
     }
 
-    @Subscribe
-    public void onStepWasUpdated(StepWasUpdatedEvent event) {
-        Step eventStep = event.getStep();
-        if (eventStep.getId() == step.getId()) {
-            step.setDiscussion_proxy(eventStep.getDiscussion_proxy()); //fixme do it in immutable way
-            step.setDiscussions_count(eventStep.getDiscussions_count());
+    public void onDiscussionWasUpdatedFromInternet(Step updatedStep) {
+        if (updatedStep.getId() == step.getId()) {
+            step.setDiscussion_proxy(updatedStep.getDiscussion_proxy()); //fixme do it in immutable way
+            step.setDiscussions_count(updatedStep.getDiscussions_count());
             updateCommentState();
         }
     }
@@ -342,5 +315,50 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
     public void onResume() {
         super.onResume();
         hideSoftKeypad();
+    }
+
+
+    //// TODO: 13.06.17 rework it in MVP style
+    static class StepResponseCallback implements Callback<StepResponse> {
+
+        private final ThreadPoolExecutor threadPoolExecutor;
+        private final DatabaseFacade databaseFacade;
+        private final WeakReference<StepBaseFragment> stepBaseFragmentWeakReference;
+
+
+        public StepResponseCallback(ThreadPoolExecutor threadPoolExecutor, DatabaseFacade databaseFacade, StepBaseFragment stepBaseFragment) {
+            this.threadPoolExecutor = threadPoolExecutor;
+            this.databaseFacade = databaseFacade;
+            stepBaseFragmentWeakReference = new WeakReference<>(stepBaseFragment);
+        }
+
+        @Override
+        public void onResponse(Call<StepResponse> call, Response<StepResponse> response) {
+            if (response.isSuccessful()) {
+                StepResponse stepResponse = response.body();
+                if (stepResponse != null && stepResponse.getSteps() != null && !stepResponse.getSteps().isEmpty()) {
+                    final Step stepFromInternet = stepResponse.getSteps().get(0);
+                    if (stepFromInternet != null) {
+                        threadPoolExecutor.execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                databaseFacade.addStep(stepFromInternet); //fixme: fragment in closure -> leak
+                            }
+                        });
+
+
+                        StepBaseFragment stepBaseFragment = stepBaseFragmentWeakReference.get();
+                        if (stepBaseFragment != null) {
+                            stepBaseFragment.onDiscussionWasUpdatedFromInternet(stepFromInternet);
+                        }
+                    }
+                }
+            }
+        }
+
+        @Override
+        public void onFailure(Call<StepResponse> call, Throwable t) {
+
+        }
     }
 }
