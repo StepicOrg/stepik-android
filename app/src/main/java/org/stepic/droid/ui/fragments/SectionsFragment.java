@@ -42,7 +42,6 @@ import com.google.firebase.appindexing.FirebaseUserActions;
 import com.google.firebase.appindexing.Indexable;
 import com.google.firebase.appindexing.builders.Actions;
 import com.google.firebase.appindexing.builders.Indexables;
-import com.squareup.otto.Subscribe;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -51,6 +50,7 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.base.Client;
 import org.stepic.droid.base.FragmentBase;
+import org.stepic.droid.core.LocalProgressManager;
 import org.stepic.droid.core.ShareHelper;
 import org.stepic.droid.core.dropping.contract.DroppingListener;
 import org.stepic.droid.core.presenters.CalendarPresenter;
@@ -67,10 +67,10 @@ import org.stepic.droid.core.presenters.contracts.DownloadingProgressSectionsVie
 import org.stepic.droid.core.presenters.contracts.InvitationView;
 import org.stepic.droid.core.presenters.contracts.LoadCourseView;
 import org.stepic.droid.core.presenters.contracts.SectionsView;
-import org.stepic.droid.events.UpdateSectionProgressEvent;
 import org.stepic.droid.fonts.FontType;
 import org.stepic.droid.model.CalendarItem;
 import org.stepic.droid.model.Course;
+import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.SectionLoadingState;
 import org.stepic.droid.notifications.StepikNotificationManager;
@@ -116,7 +116,10 @@ public class SectionsFragment
         InvitationView,
         DownloadingProgressSectionsView,
         DownloadingInteractionView,
-        ChooseCalendarDialog.CallbackContract, DroppingListener, StoreStateManager.SectionCallback {
+        LocalProgressManager.SectionProgressListener,
+        ChooseCalendarDialog.CallbackContract,
+        DroppingListener,
+        StoreStateManager.SectionCallback {
 
     public static String joinFlag = "joinFlag";
     private static int INVITE_REQUEST_CODE = 324;
@@ -210,6 +213,9 @@ public class SectionsFragment
     @Inject
     StoreStateManager storeStateManager;
 
+    @Inject
+    LocalProgressManager localProgressManager;
+
     private boolean wasIndexed;
     private Uri urlInWeb;
     private String title;
@@ -282,7 +288,7 @@ public class SectionsFragment
         joinCourseProgressDialog = new LoadingProgressDialog(getContext());
         ProgressHelper.activate(loadOnCenterProgressBar);
         storeStateManager.addSectionCallback(this);
-        bus.register(this);
+        localProgressManager.subscribe(this);
         droppingListenerClient.subscribe(this);
         calendarPresenter.attachView(this);
         courseFinderPresenter.attachView(this);
@@ -509,17 +515,9 @@ public class SectionsFragment
         sectionsPresenter.detachView(this);
         invitationPresenter.detachView(this);
         storeStateManager.removeSectionCallback(this);
-        bus.unregister(this);
         droppingListenerClient.unsubscribe(this);
         courseNotParsedView.setOnClickListener(null);
         super.onDestroyView();
-    }
-
-    @Subscribe
-    public void onSectionProgressChanged(UpdateSectionProgressEvent event) {
-        if (course != null && course.getCourseId() == event.getCourseId()) {
-            sectionsPresenter.updateSectionProgress(event.getProgress());
-        }
     }
 
     private void updateState(long sectionId, boolean isCached, boolean isLoading) {
@@ -996,5 +994,12 @@ public class SectionsFragment
     @Override
     public void onSectionNotCached(long sectionId) {
         updateState(sectionId, false, false);
+    }
+
+    @Override
+    public void onProgressUpdated(@NotNull Progress newProgress, long courseId) {
+        if (course != null && course.getCourseId() == courseId) {
+            sectionsPresenter.updateSectionProgress(newProgress);
+        }
     }
 }

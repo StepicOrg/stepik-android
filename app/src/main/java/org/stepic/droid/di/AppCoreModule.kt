@@ -61,6 +61,14 @@ abstract class AppCoreModule {
 
     @Binds
     @AppSingleton
+    abstract fun provideLocalProgressManagerSectionProgressListenerContainer(container: ListenerContainerImpl<LocalProgressManager.SectionProgressListener>): ListenerContainer<LocalProgressManager.SectionProgressListener>
+
+    @Binds
+    @AppSingleton
+    abstract fun provideLocalProgressManagerUnitProgressListenerContainer(container: ListenerContainerImpl<LocalProgressManager.UnitProgressListener>): ListenerContainer<LocalProgressManager.UnitProgressListener>
+
+    @Binds
+    @AppSingleton
     abstract fun provideStoreStateManagerLessonCallbackContainer(container: ListenerContainerImpl<StoreStateManager.LessonCallback>): ListenerContainer<StoreStateManager.LessonCallback>
 
     @Binds
