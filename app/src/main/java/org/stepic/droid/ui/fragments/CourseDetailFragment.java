@@ -56,8 +56,6 @@ import org.stepic.droid.core.presenters.contracts.LoadCourseView;
 import org.stepic.droid.events.instructors.FailureLoadInstructorsEvent;
 import org.stepic.droid.events.instructors.OnResponseLoadingInstructorsEvent;
 import org.stepic.droid.events.instructors.StartLoadingInstructorsEvent;
-import org.stepic.droid.events.joining_course.FailJoinEvent;
-import org.stepic.droid.events.joining_course.SuccessJoinEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.CourseProperty;
 import org.stepic.droid.model.User;
@@ -642,9 +640,10 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         }
     }
 
-    public void onSuccessJoin(SuccessJoinEvent e) {
-        if (course != null && e.getCourse() != null && e.getCourse().getCourseId() == course.getCourseId()) {
-            e.getCourse().setEnrollment((int) e.getCourse().getCourseId());
+    @Override
+    public void onSuccessJoin(@NotNull Course joinedCourse) {
+        if (course != null && joinedCourse.getCourseId() == course.getCourseId()) {
+            joinedCourse.setEnrollment((int) joinedCourse.getCourseId());
             screenManager.showSections(getActivity(), course, true);
             finish();
         }
@@ -661,12 +660,12 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         joinCourseView.setEnabled(isEnabled);
     }
 
-    @Subscribe
-    public void onFailJoin(FailJoinEvent e) {
+    @Override
+    public void onFailJoin(int code) {
         if (course != null) {
-            if (e.getCode() == HttpURLConnection.HTTP_FORBIDDEN) {
+            if (code == HttpURLConnection.HTTP_FORBIDDEN) {
                 Toast.makeText(getActivity(), joinCourseWebException, Toast.LENGTH_LONG).show();
-            } else if (e.getCode() == HttpURLConnection.HTTP_UNAUTHORIZED) {
+            } else if (code == HttpURLConnection.HTTP_UNAUTHORIZED) {
                 //UNAUTHORIZED
                 //it is just for safety, we should detect no account before send request
                 unauthorizedDialog = UnauthorizedDialogFragment.newInstance(course);

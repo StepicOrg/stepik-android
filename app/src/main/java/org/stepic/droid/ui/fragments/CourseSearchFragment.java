@@ -5,11 +5,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
-import com.squareup.otto.Subscribe;
-
 import org.stepic.droid.base.App;
 import org.stepic.droid.core.presenters.SearchCoursesPresenter;
-import org.stepic.droid.events.joining_course.SuccessJoinEvent;
 import org.stepic.droid.storage.operations.Table;
 
 import javax.inject.Inject;
@@ -59,7 +56,6 @@ public class CourseSearchFragment extends CourseListFragmentBase {
         super.onViewCreated(view, savedInstanceState);
         emptySearch.setClickable(false);
         emptySearch.setFocusable(false);
-        bus.register(this);
         searchCoursesPresenter.attachView(this);
         searchCoursesPresenter.restoreState();
         swipeRefreshLayout.post(new Runnable() {
@@ -73,7 +69,6 @@ public class CourseSearchFragment extends CourseListFragmentBase {
 
     @Override
     public void onDestroyView() {
-        bus.unregister(this);
         searchCoursesPresenter.detachView(this);
         super.onDestroyView();
     }
@@ -93,12 +88,6 @@ public class CourseSearchFragment extends CourseListFragmentBase {
             swipeRefreshLayout.setVisibility(View.VISIBLE);
 
         }
-    }
-
-    @Subscribe
-    @Override
-    public void onSuccessJoin(SuccessJoinEvent e) {
-        super.onSuccessJoin(e);
     }
 
     @Override

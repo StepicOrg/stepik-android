@@ -1,13 +1,11 @@
 package org.stepic.droid.core.presenters
 
 import android.support.annotation.MainThread
-import com.squareup.otto.Bus
 import org.joda.time.DateTime
 import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.core.joining.contract.JoiningPoster
 import org.stepic.droid.core.presenters.contracts.CourseJoinView
 import org.stepic.droid.di.course.CourseAndSectionsScope
-import org.stepic.droid.events.joining_course.FailJoinEvent
-import org.stepic.droid.events.joining_course.SuccessJoinEvent
 import org.stepic.droid.model.Course
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
@@ -26,7 +24,7 @@ class CourseJoinerPresenter
         private val sharedPreferenceHelper: SharedPreferenceHelper,
         private val api: Api,
         private val threadPoolExecutor: ThreadPoolExecutor,
-        private val bus: Bus,
+        private val joiningPoster: JoiningPoster,
         private val database: DatabaseFacade,
         private val analytic: Analytic) : PresenterBase<CourseJoinView>() {
 
@@ -62,20 +60,20 @@ class CourseJoinerPresenter
                             }
                         }
 
-                        bus.post(SuccessJoinEvent(localCourseCopy)) //todo remake without bus
-                        view?.onSuccessJoin(SuccessJoinEvent(localCourseCopy))
+                        joiningPoster.joinCourse(localCourseCopy)
+                        view?.onSuccessJoin(localCourseCopy)
                     } else {
-                        view?.onFailJoin(FailJoinEvent(response?.code() ?: 0))
+                        view?.onFailJoin(response?.code() ?: 0)
                     }
                 }
 
                 override fun onFailure(call: Call<Void>?, t: Throwable?) {
-                    view?.onFailJoin(FailJoinEvent())
+                    view?.onFailJoin(0)
                 }
             })
         } else {
             analytic.reportEvent(Analytic.Anonymous.JOIN_COURSE)
-            view?.onFailJoin(FailJoinEvent(HttpURLConnection.HTTP_UNAUTHORIZED))
+            view?.onFailJoin(HttpURLConnection.HTTP_UNAUTHORIZED)
         }
     }
 

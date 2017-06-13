@@ -13,8 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.squareup.otto.Subscribe;
-
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
@@ -22,7 +20,6 @@ import org.stepic.droid.core.dropping.contract.DroppingListener;
 import org.stepic.droid.core.dropping.contract.DroppingPoster;
 import org.stepic.droid.core.presenters.PersistentCourseListPresenter;
 import org.stepic.droid.core.presenters.contracts.FilterForCoursesView;
-import org.stepic.droid.events.joining_course.SuccessJoinEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.storage.operations.Table;
 import org.stepic.droid.ui.fragments.CourseListFragmentBase;
@@ -110,18 +107,9 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     }
 
     @Override
-    @Subscribe
-    public void onSuccessJoin(SuccessJoinEvent e) {
-        //We do not upgrade database, because when
-        //Only for find courses event.
-        super.onSuccessJoin(e);
-    }
-
-    @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         droppingClient.subscribe(this);
-        bus.register(this);
         courseListPresenter.attachView(this);
         courseListPresenter.restoreState();
     }
@@ -144,7 +132,6 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
     @Override
     public void onDestroyView() {
-        bus.unregister(this);
         droppingClient.unsubscribe(this);
         courseListPresenter.detachView(this);
         super.onDestroyView();

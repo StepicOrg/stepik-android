@@ -14,17 +14,16 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.squareup.otto.Subscribe;
-
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
+import org.stepic.droid.base.Client;
 import org.stepic.droid.base.FragmentBase;
+import org.stepic.droid.core.joining.contract.JoiningListener;
 import org.stepic.droid.core.presenters.ContinueCoursePresenter;
 import org.stepic.droid.core.presenters.contracts.ContinueCourseView;
 import org.stepic.droid.core.presenters.contracts.CoursesView;
-import org.stepic.droid.events.joining_course.SuccessJoinEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.storage.operations.Table;
@@ -45,7 +44,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import timber.log.Timber;
 
-public abstract class CourseListFragmentBase extends FragmentBase implements SwipeRefreshLayout.OnRefreshListener, CoursesView, ContinueCourseView {
+public abstract class CourseListFragmentBase extends FragmentBase implements SwipeRefreshLayout.OnRefreshListener, CoursesView, ContinueCourseView, JoiningListener {
 
     private static final String continueLoadingTag = "continueLoadingTag";
 
@@ -87,6 +86,9 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
 
     @Inject
     ContinueCoursePresenter continueCoursePresenter;
+
+    @Inject
+    Client<JoiningListener> joiningListenerClient;
 
     @Override
     protected void injectComponent() {
@@ -177,11 +179,13 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
                 ((MainFeedActivity) parent).showFindLesson();
             }
         });
+        joiningListenerClient.subscribe(this);
         continueCoursePresenter.attachView(this);
     }
 
     @Override
     public void onDestroyView() {
+        joiningListenerClient.unsubscribe(this);
         continueCoursePresenter.detachView(this);
         if (listOfCoursesView != null) {
             listOfCoursesView.setAdapter(null);
@@ -212,11 +216,6 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
             coursesAdapter.notifyItemChanged(position);
         }
 
-    }
-
-    @Subscribe
-    public void onSuccessJoin(SuccessJoinEvent e) {
-        updateEnrollment(e.getCourse(), e.getCourse().getEnrollment());
     }
 
     @Override
@@ -303,5 +302,10 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
     public void onPause() {
         super.onPause();
         ProgressHelper.dismiss(getFragmentManager(), continueLoadingTag);
+    }
+
+    @Override
+    public void onSuccessJoin(@Nullable Course joinedCourse) {
+        updateEnrollment(joinedCourse, joinedCourse.getEnrollment());
     }
 }

@@ -13,11 +13,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.squareup.otto.Subscribe;
-
 import org.stepic.droid.R;
 import org.stepic.droid.base.CoursesDatabaseFragmentBase;
-import org.stepic.droid.events.joining_course.SuccessJoinEvent;
 import org.stepic.droid.storage.operations.Table;
 import org.stepic.droid.ui.listeners.OnRootTouchedListener;
 
@@ -75,12 +72,6 @@ public class FindCoursesFragment extends CoursesDatabaseFragmentBase {
     @Override
     protected Table getCourseType() {
         return Table.featured;
-    }
-
-    @Subscribe
-    @Override
-    public void onSuccessJoin(SuccessJoinEvent e) {
-        super.onSuccessJoin(e);
     }
 
     @Override

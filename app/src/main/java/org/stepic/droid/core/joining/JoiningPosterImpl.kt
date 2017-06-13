@@ -1,0 +1,20 @@
+package org.stepic.droid.core.joining
+
+import org.stepic.droid.base.ListenerContainer
+import org.stepic.droid.core.joining.contract.JoiningListener
+import org.stepic.droid.core.joining.contract.JoiningPoster
+import org.stepic.droid.model.Course
+import javax.inject.Inject
+
+class JoiningPosterImpl
+@Inject constructor
+(private val listenerContainer: ListenerContainer<JoiningListener>)
+    : JoiningPoster {
+
+    override fun joinCourse(joiningCourse: Course) {
+        listenerContainer.iterator().forEach {
+            it.onSuccessJoin(joiningCourse)
+        }
+    }
+}
+
