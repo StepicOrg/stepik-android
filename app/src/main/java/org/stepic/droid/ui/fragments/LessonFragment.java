@@ -30,8 +30,8 @@ import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.base.App;
+import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.core.presenters.LessonPresenter;
 import org.stepic.droid.core.presenters.StepsTrackingPresenter;
 import org.stepic.droid.core.presenters.contracts.LessonTrackingView;
@@ -51,11 +51,13 @@ import org.stepic.droid.util.resolvers.StepHelper;
 import org.stepic.droid.util.resolvers.StepTypeResolver;
 import org.stepic.droid.web.ViewAssignment;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.inject.Inject;
 
 import butterknife.BindString;
 import butterknife.BindView;
-import timber.log.Timber;
 
 public class LessonFragment extends FragmentBase implements LessonView, LessonTrackingView, NextMoveable {
     private static final String FROM_PREVIOUS_KEY = "fromPrevKey";
@@ -68,6 +70,7 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
     private Lesson lesson;
     private Unit unit;
     private Section section;
+    private Map<Long, String> stepToTitleMap = new HashMap<>();
 
     private final ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
         @Override
@@ -545,13 +548,11 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
     }
 
     private void indexStep(@NotNull Step step) {
-        Timber.d("start %s", getTitle(step));
         FirebaseAppIndex.getInstance().update(getIndexable(step));
         FirebaseUserActions.getInstance().start(getAction(step));
     }
 
     private void stopIndexStep(@NotNull Step step) {
-        Timber.d("stop %s", getTitle(step));
         FirebaseUserActions.getInstance().end(getAction(step));
     }
 
@@ -568,7 +569,12 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
 
     @NotNull
     private String getTitle(Step step) {
-        return StringUtil.getTitleForStep(getContext(), lesson, step.getPosition());
+        String stepTitle = stepToTitleMap.get(step.getId());
+        if (stepTitle == null) {
+            stepTitle = StringUtil.getTitleForStep(getContext(), lesson, step.getPosition());
+            stepToTitleMap.put(step.getId(), stepTitle);
+        }
+        return stepTitle;
     }
 
     @NotNull
@@ -597,6 +603,7 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
                 stopIndexStep(stepsPresenter.getStepList().get(selectedPosition));
             }
         }
+        stepToTitleMap.clear();
     }
 
     /*
