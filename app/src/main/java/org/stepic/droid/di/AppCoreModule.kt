@@ -24,7 +24,7 @@ import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.concurrency.MainHandlerImpl
 import org.stepic.droid.concurrency.SingleThreadExecutor
 import org.stepic.droid.configuration.Config
-import org.stepic.droid.configuration.ConfigReleaseImpl
+import org.stepic.droid.configuration.ConfigImpl
 import org.stepic.droid.core.*
 import org.stepic.droid.core.internet_state.InternetEnabledPosterImpl
 import org.stepic.droid.core.internet_state.contract.InternetEnabledListener
@@ -87,10 +87,6 @@ abstract class AppCoreModule {
     @Binds
     @AppSingleton
     internal abstract fun provideScreenManager(screenManager: ScreenManagerImpl): ScreenManager
-
-    @Binds
-    @AppSingleton
-    internal abstract fun provideIConfig(configRelease: ConfigReleaseImpl): Config
 
     @Binds
     @AppSingleton
@@ -312,6 +308,13 @@ abstract class AppCoreModule {
             return context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         }
 
+
+        @Provides
+        @AppSingleton
+        @JvmStatic
+        internal fun provideConfig(configFactory: ConfigImpl.ConfigFactory): Config {
+            return configFactory.create()
+        }
     }
 
 }

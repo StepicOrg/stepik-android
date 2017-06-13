@@ -1,9 +1,11 @@
 package org.stepic.droid.configuration;
 
+import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.web.Api;
 
 public interface Config {
-    String getOAuthClientId(Api.TokenType type);
+
+    String getOAuthClientId(@NotNull Api.TokenType type);
 
     String getBaseUrl();
 
