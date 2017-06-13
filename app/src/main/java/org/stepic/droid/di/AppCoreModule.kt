@@ -61,6 +61,10 @@ abstract class AppCoreModule {
 
     @Binds
     @AppSingleton
+    abstract fun provideStoreStateManagerLessonCallbackContainer(container: ListenerContainerImpl<StoreStateManager.LessonCallback>): ListenerContainer<StoreStateManager.LessonCallback>
+
+    @Binds
+    @AppSingleton
     abstract fun provideInternetEnabledPoster(internetEnabledPoster: InternetEnabledPosterImpl): InternetEnabledPoster
 
     @Binds
