@@ -39,7 +39,7 @@ import org.stepic.droid.ui.fragments.CommentsFragment
 import org.stepic.droid.ui.fragments.DownloadsFragment
 
 @AppSingleton
-@Component(dependencies = arrayOf(StorageComponent::class), modules = arrayOf(AppCoreModule::class, RepositoryModule::class))
+@Component(dependencies = arrayOf(StorageComponent::class), modules = arrayOf(AppCoreModule::class, RepositoryModule::class, AppStepModule::class))
 interface AppCoreComponent {
 
     @Component.Builder

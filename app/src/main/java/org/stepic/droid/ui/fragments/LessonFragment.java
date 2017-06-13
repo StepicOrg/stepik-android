@@ -24,19 +24,19 @@ import com.google.firebase.appindexing.FirebaseUserActions;
 import com.google.firebase.appindexing.Indexable;
 import com.google.firebase.appindexing.builders.Actions;
 import com.google.firebase.appindexing.builders.Indexables;
-import com.squareup.otto.Subscribe;
 
 import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
+import org.stepic.droid.base.Client;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.core.presenters.LessonPresenter;
 import org.stepic.droid.core.presenters.StepsTrackingPresenter;
 import org.stepic.droid.core.presenters.contracts.LessonTrackingView;
 import org.stepic.droid.core.presenters.contracts.LessonView;
-import org.stepic.droid.events.steps.UpdateStepEvent;
+import org.stepic.droid.core.updating_step.contract.UpdatingStepListener;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.PersistentLastStep;
 import org.stepic.droid.model.Section;
@@ -59,7 +59,7 @@ import javax.inject.Inject;
 import butterknife.BindString;
 import butterknife.BindView;
 
-public class LessonFragment extends FragmentBase implements LessonView, LessonTrackingView, NextMoveable {
+public class LessonFragment extends FragmentBase implements LessonView, LessonTrackingView, NextMoveable, UpdatingStepListener {
     private static final String FROM_PREVIOUS_KEY = "fromPrevKey";
     private static final String SIMPLE_UNIT_ID_KEY = "simpleUnitId";
     private static final String SIMPLE_LESSON_ID_KEY = "simpleLessonId";
@@ -154,6 +154,9 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
     @Inject
     StepsTrackingPresenter stepTrackingPresenter;
 
+    @Inject
+    Client<UpdatingStepListener> updatingStepListenerClient;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -206,7 +209,7 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
             onLessonUnitPrepared(lesson, unit, section);
             showSteps(fromPreviousLesson, -1);
         }
-        bus.register(this);
+        updatingStepListenerClient.subscribe(this);
     }
 
 
@@ -244,7 +247,7 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
 
     @Override
     public void onDestroyView() {
-        bus.unregister(this);
+        updatingStepListenerClient.unsubscribe(this);
         stepsPresenter.detachView(this);
         stepTrackingPresenter.detachView(this);
         if (pageChangeListener != null) {
@@ -302,32 +305,6 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
                 }
             };
             task.executeOnExecutor(threadPoolExecutor);
-        }
-    }
-
-    @Subscribe
-    public void onUpdateOneStep(UpdateStepEvent e) {
-        long stepId = e.getStepId();
-        Step step = null;
-        int position = -1;
-        for (int i = 0; i < stepsPresenter.getStepList().size(); i++) {
-            Step stepInList = stepsPresenter.getStepList().get(i);
-            if (stepInList.getId() == stepId) {
-                position = i;
-                step = stepInList;
-                break;
-            }
-        }
-
-        if (step != null && !step.is_custom_passed() && (StepHelper.isViewedStatePost(step) || e.isSuccessAttempt())) {
-            // if not passed yet
-            step.set_custom_passed(true);
-            if (position >= 0 && position < tabLayout.getTabCount()) {
-                TabLayout.Tab tab = tabLayout.getTabAt(position);
-                if (tab != null) {
-                    tab.setIcon(stepAdapter.getTabDrawable(position));
-                }
-            }
         }
     }
 
@@ -616,4 +593,31 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
     /*
      * App indexing stuff end
      */
+
+
+    @Override
+    public void onNeedUpdate(long stepId, boolean isSuccessAttempt) {
+        Step step = null;
+        int position = -1;
+        for (int i = 0; i < stepsPresenter.getStepList().size(); i++) {
+            Step stepInList = stepsPresenter.getStepList().get(i);
+            if (stepInList.getId() == stepId) {
+                position = i;
+                step = stepInList;
+                break;
+            }
+        }
+
+        if (step != null && !step.is_custom_passed() && (StepHelper.isViewedStatePost(step) || isSuccessAttempt)) {
+            // if not passed yet
+            step.set_custom_passed(true);
+            if (position >= 0 && position < tabLayout.getTabCount()) {
+                TabLayout.Tab tab = tabLayout.getTabAt(position);
+                if (tab != null) {
+                    tab.setIcon(stepAdapter.getTabDrawable(position));
+                }
+            }
+        }
+    }
+
 }
