@@ -72,7 +72,7 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_launch)
-        App.getComponentManager().loginComponent(TAG).inject(this)
+        App.componentManager().loginComponent(TAG).inject(this)
         overridePendingTransition(R.anim.no_transition, R.anim.slide_out_to_bottom)
 
         resolvingWasShown = savedInstanceState?.getBoolean(resolvingAccountKey) ?: false
@@ -201,7 +201,7 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
         launchSignUpButton.setOnClickListener(null)
         findCoursesButton.setOnClickListener(null)
         if (isFinishing) {
-            App.getComponentManager().releaseLoginComponent(TAG)
+            App.componentManager().releaseLoginComponent(TAG)
         }
         super.onDestroy()
     }

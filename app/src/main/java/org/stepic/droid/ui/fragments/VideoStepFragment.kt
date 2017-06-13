@@ -40,7 +40,7 @@ class VideoStepFragment : StepBaseFragment(),
 
     override fun injectComponent() {
         App
-                .getComponentManager()
+                .componentManager()
                 .routingComponent()
                 .stepComponentBuilder()
                 .build()

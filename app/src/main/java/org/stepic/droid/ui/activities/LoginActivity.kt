@@ -55,7 +55,7 @@ class LoginActivity : FragmentActivityBase(), LoginView {
         setContentView(R.layout.activity_login)
         overridePendingTransition(R.anim.slide_in_from_bottom, R.anim.no_transition)
         hideSoftKeypad()
-        App.getComponentManager().loginComponent(TAG).inject(this)
+        App.componentManager().loginComponent(TAG).inject(this)
 
         progressLogin = LoadingProgressDialog(this)
         progressHandler = object : ProgressHandler {
@@ -175,7 +175,7 @@ class LoginActivity : FragmentActivityBase(), LoginView {
         actionbarCloseButtonLayout.setOnClickListener(null)
         loginButton.setOnClickListener(null)
         if (isFinishing) {
-            App.getComponentManager().releaseLoginComponent(TAG)
+            App.componentManager().releaseLoginComponent(TAG)
         }
         super.onDestroy()
     }

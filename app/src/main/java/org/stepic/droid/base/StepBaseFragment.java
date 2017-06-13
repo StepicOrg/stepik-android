@@ -90,7 +90,7 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
     @Override
     protected void injectComponent() {
         App.Companion
-                .getComponentManager()
+                .componentManager()
                 .routingComponent()
                 .stepComponentBuilder()
                 .build()
@@ -100,7 +100,7 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
     @Override
     protected void onReleaseComponent() {
         App.Companion
-                .getComponentManager().releaseRoutingComponent();
+                .componentManager().releaseRoutingComponent();
     }
 
     @Override

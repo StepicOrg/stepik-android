@@ -1,11 +1,14 @@
 package org.stepic.droid.core
 
 import org.stepic.droid.di.AppCoreComponent
+import org.stepic.droid.di.course_general.CourseGeneralComponent
 import org.stepic.droid.di.login.LoginComponent
 import org.stepic.droid.di.mainscreen.MainScreenComponent
 import org.stepic.droid.di.routing.RoutingComponent
 
 class ComponentManagerImpl(private val appCoreComponent: AppCoreComponent) : ComponentManager {
+
+//    Login
 
     private val loginComponentMap = HashMap<String, LoginComponent>()
 
@@ -19,6 +22,8 @@ class ComponentManagerImpl(private val appCoreComponent: AppCoreComponent) : Com
                         .loginComponentBuilder()
                         .build()
             }
+
+//    Main Screen
 
     private var mainScreenComponentProp: MainScreenComponent? = null
 
@@ -39,28 +44,63 @@ class ComponentManagerImpl(private val appCoreComponent: AppCoreComponent) : Com
         }
     }
 
+//    Routing
 
-    private var routingRefCount = 0
-    private var routingComponent: RoutingComponent? = null
+    private val routingComponentHolder = ComponentHolder<RoutingComponent>()
 
     override fun routingComponent(): RoutingComponent {
-        if (routingComponent == null) {
-            routingComponent = appCoreComponent
+        return routingComponentHolder.get {
+            appCoreComponent
                     .routingComponentBuilder()
                     .build()
         }
-
-        routingRefCount++
-        return routingComponent!!
     }
+
 
     override fun releaseRoutingComponent() {
-        routingRefCount--
-        if (routingRefCount == 0) {
-            routingComponent = null
-        }
-        if (routingRefCount < 0) {
-            throw IllegalStateException("released routing component greater than got")
+        routingComponentHolder.release()
+    }
+
+
+//    Course general
+
+    private val courseGeneralComponentHolder = ComponentHolder<CourseGeneralComponent>()
+
+    override fun courseGeneralComponent(): CourseGeneralComponent {
+        return courseGeneralComponentHolder.get {
+            appCoreComponent
+                    .courseGeneralComponentBuilder()
+                    .build()
         }
     }
+
+    override fun releaseCourseGeneralComponent() {
+        courseGeneralComponentHolder.release()
+    }
+
+}
+
+class ComponentHolder<T> {
+    private var refCount = 0
+    private var component: T? = null
+
+    fun get(creationBlock: () -> T): T {
+        if (component == null) {
+            component = creationBlock.invoke()
+        }
+
+        refCount++
+        return component!!
+    }
+
+    fun release() {
+        refCount--
+        if (refCount == 0) {
+            component = null
+        }
+        if (refCount < 0) {
+            throw IllegalStateException("released component greater than got")
+        }
+    }
+
 }
