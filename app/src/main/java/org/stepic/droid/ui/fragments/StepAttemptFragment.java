@@ -422,21 +422,23 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
     }
 
     protected final void markLocalProgressAsViewed() {
-        bus.post(new UpdateStepEvent(step.getId(), true));
-        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
-            long stepId = step.getId();
+        if (!step.is_custom_passed()) {
+            bus.post(new UpdateStepEvent(step.getId(), true));
+            AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+                long stepId = step.getId();
 
-            protected Void doInBackground(Void... params) {
-                long assignmentId = databaseFacade.getAssignmentIdByStepId(stepId);
-                databaseFacade.markProgressAsPassed(assignmentId);
-                localProgressManager.checkUnitAsPassed(stepId);
-                if (unit != null) {
-                    localProgressManager.updateUnitProgress(unit.getId()); //// FIXME: 05.09.16 update lesson progress
+                protected Void doInBackground(Void... params) {
+                    long assignmentId = databaseFacade.getAssignmentIdByStepId(stepId);
+                    databaseFacade.markProgressAsPassed(assignmentId);
+                    localProgressManager.checkUnitAsPassed(stepId);
+                    if (unit != null) {
+                        localProgressManager.updateUnitProgress(unit.getId()); //// FIXME: 05.09.16 update lesson progress
+                    }
+                    return null;
                 }
-                return null;
-            }
-        };
-        task.execute();
+            };
+            task.executeOnExecutor(threadPoolExecutor);
+        }
     }
 
     protected final void enableInternetMessage(boolean needShow) {

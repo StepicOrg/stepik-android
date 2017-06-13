@@ -608,6 +608,7 @@ public class SharedPreferenceHelper {
         Gson gson = new Gson();
         String json = gson.toJson(response);
         put(PreferenceType.LOGIN, AUTH_RESPONSE_JSON, json);
+        cachedAuthStepikResponse = response;
 
         DateTime now = DateTime.now(DateTimeZone.UTC);
         long millisNow = now.getMillis();
@@ -650,16 +651,23 @@ public class SharedPreferenceHelper {
         }
     }
 
+
+    AuthenticationStepicResponse cachedAuthStepikResponse = null;
+
     @Nullable
     public AuthenticationStepicResponse getAuthResponseFromStore() {
+        if (cachedAuthStepikResponse != null) {
+            return cachedAuthStepikResponse;
+        }
+
         String json = getString(PreferenceType.LOGIN, AUTH_RESPONSE_JSON);
         if (json == null) {
             return null;
         }
 
         Gson gson = new GsonBuilder().create();
-        AuthenticationStepicResponse result = gson.fromJson(json, AuthenticationStepicResponse.class);
-        return result;
+        cachedAuthStepikResponse = gson.fromJson(json, AuthenticationStepicResponse.class);
+        return cachedAuthStepikResponse;
     }
 
     public long getAccessTokenTimestamp() {

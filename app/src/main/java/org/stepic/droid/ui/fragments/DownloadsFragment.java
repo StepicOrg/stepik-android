@@ -31,7 +31,6 @@ import org.stepic.droid.events.steps.StepRemovedEvent;
 import org.stepic.droid.events.video.DownloadReportEvent;
 import org.stepic.droid.events.video.FinishDownloadCachedVideosEvent;
 import org.stepic.droid.events.video.VideoCachedOnDiskEvent;
-import org.stepic.droid.events.video.VideosMovedEvent;
 import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.DownloadEntity;
 import org.stepic.droid.model.DownloadReportItem;
