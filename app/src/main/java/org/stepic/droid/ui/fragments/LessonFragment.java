@@ -70,7 +70,8 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
     private Lesson lesson;
     private Unit unit;
     private Section section;
-    private Map<Long, String> stepToTitleMap = new HashMap<>();
+    private Map<Long, String> stepToTitleMap = new HashMap<>(32);
+    private Map<Long, String> stepToUrlMap = new HashMap<>(32);
 
     private final ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
         @Override
@@ -579,7 +580,12 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
 
     @NotNull
     private String getUrlInWeb(Step step) {
-        return StringUtil.getUriForStep(config.getBaseUrl(), lesson, unit, step);
+        String stepUrl = stepToUrlMap.get(step.getId());
+        if (stepUrl == null) {
+            stepUrl = StringUtil.getUriForStep(config.getBaseUrl(), lesson, unit, step);
+            stepToUrlMap.put(step.getId(), stepUrl);
+        }
+        return stepUrl;
     }
 
     @Override
@@ -604,6 +610,7 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
             }
         }
         stepToTitleMap.clear();
+        stepToUrlMap.clear();
     }
 
     /*
