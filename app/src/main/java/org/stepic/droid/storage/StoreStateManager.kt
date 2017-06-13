@@ -2,6 +2,7 @@ package org.stepic.droid.storage
 
 import org.stepic.droid.model.Step
 
+//todo: do interface segregation: for units and for sections
 interface StoreStateManager {
 
     fun updateUnitLessonState(lessonId: Long)
@@ -24,5 +25,16 @@ interface StoreStateManager {
     fun addLessonCallback(callback: LessonCallback)
 
     fun removeLessonCallback(callback: LessonCallback)
+
+
+    interface SectionCallback {
+        fun onSectionCached(sectionId: Long)
+
+        fun onSectionNotCached(sectionId: Long)
+    }
+
+    fun addSectionCallback(callback: SectionCallback)
+
+    fun removeSectionCallback(callback: SectionCallback)
 
 }

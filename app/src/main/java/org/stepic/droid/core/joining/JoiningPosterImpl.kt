@@ -12,7 +12,7 @@ class JoiningPosterImpl
     : JoiningPoster {
 
     override fun joinCourse(joiningCourse: Course) {
-        listenerContainer.iterator().forEach {
+        listenerContainer.asIterable().forEach {
             it.onSuccessJoin(joiningCourse)
         }
     }

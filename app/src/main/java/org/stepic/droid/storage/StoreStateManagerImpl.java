@@ -1,22 +1,17 @@
 package org.stepic.droid.storage;
 
-import com.squareup.otto.Bus;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.ListenerContainer;
 import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.di.AppSingleton;
-import org.stepic.droid.events.sections.NotCachedSectionEvent;
-import org.stepic.droid.events.sections.SectionCachedEvent;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.storage.operations.DatabaseFacade;
 
-import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -27,19 +22,22 @@ import kotlin.jvm.functions.Function0;
 public class StoreStateManagerImpl implements StoreStateManager {
 
     private DatabaseFacade databaseFacade;
-    private Bus bus;
     private Analytic analytic;
     private MainHandler mainHandler;
-
     private ListenerContainer<StoreStateManager.LessonCallback> lessonCallbackContainer;
+    private ListenerContainer<StoreStateManager.SectionCallback> sectionCallbackContainer;
 
     @Inject
-    public StoreStateManagerImpl(DatabaseFacade databaseFacade, Bus bus, Analytic analytic, MainHandler mainHandler, ListenerContainer<LessonCallback> lessonCallbackContainer) {
+    public StoreStateManagerImpl(DatabaseFacade databaseFacade,
+                                 Analytic analytic,
+                                 MainHandler mainHandler,
+                                 ListenerContainer<LessonCallback> lessonCallbackContainer,
+                                 ListenerContainer<SectionCallback> sectionCallbackContainer) {
         this.databaseFacade = databaseFacade;
-        this.bus = bus;
         this.analytic = analytic;
         this.mainHandler = mainHandler;
         this.lessonCallbackContainer = lessonCallbackContainer;
+        this.sectionCallbackContainer = sectionCallbackContainer;
     }
 
     @Override
@@ -61,9 +59,7 @@ public class StoreStateManagerImpl implements StoreStateManager {
         mainHandler.post(new Function0<kotlin.Unit>() {
             @Override
             public kotlin.Unit invoke() {
-                Iterator<StoreStateManager.LessonCallback> lessonCallbackIterator = lessonCallbackContainer.iterator();
-                while (lessonCallbackIterator.hasNext()) {
-                    StoreStateManager.LessonCallback callback = lessonCallbackIterator.next();
+                for (LessonCallback callback : lessonCallbackContainer.asIterable()) {
                     callback.onLessonCached(lesson.getId());
                 }
                 return kotlin.Unit.INSTANCE;
@@ -92,9 +88,7 @@ public class StoreStateManagerImpl implements StoreStateManager {
             mainHandler.post(new Function0<kotlin.Unit>() {
                 @Override
                 public kotlin.Unit invoke() {
-                    Iterator<StoreStateManager.LessonCallback> lessonCallbackIterator = lessonCallbackContainer.iterator();
-                    while (lessonCallbackIterator.hasNext()) {
-                        StoreStateManager.LessonCallback callback = lessonCallbackIterator.next();
+                    for (LessonCallback callback : lessonCallbackContainer.asIterable()) {
                         callback.onLessonNotCached(lesson.getId());
                     }
                     return kotlin.Unit.INSTANCE;
@@ -130,7 +124,9 @@ public class StoreStateManagerImpl implements StoreStateManager {
                     new Function0<kotlin.Unit>() {
                         @Override
                         public kotlin.Unit invoke() {
-                            bus.post(new NotCachedSectionEvent(section.getId()));
+                            for (SectionCallback callback : sectionCallbackContainer.asIterable()) {
+                                callback.onSectionNotCached(section.getId());
+                            }
                             return kotlin.Unit.INSTANCE;
                         }
                     }
@@ -165,7 +161,9 @@ public class StoreStateManagerImpl implements StoreStateManager {
             mainHandler.post(new Function0<kotlin.Unit>() {
                 @Override
                 public kotlin.Unit invoke() {
-                    bus.post(new SectionCachedEvent(section.getId()));
+                    for (SectionCallback callback : sectionCallbackContainer.asIterable()) {
+                        callback.onSectionCached(section.getId());
+                    }
                     return kotlin.Unit.INSTANCE;
                 }
             });
@@ -180,5 +178,15 @@ public class StoreStateManagerImpl implements StoreStateManager {
     @Override
     public void removeLessonCallback(@NotNull LessonCallback callback) {
         lessonCallbackContainer.remove(callback);
+    }
+
+    @Override
+    public void addSectionCallback(@NotNull SectionCallback callback) {
+        sectionCallbackContainer.add(callback);
+    }
+
+    @Override
+    public void removeSectionCallback(@NotNull SectionCallback callback) {
+        sectionCallbackContainer.remove(callback);
     }
 }

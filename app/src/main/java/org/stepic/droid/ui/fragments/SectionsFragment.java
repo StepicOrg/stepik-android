@@ -68,8 +68,6 @@ import org.stepic.droid.core.presenters.contracts.InvitationView;
 import org.stepic.droid.core.presenters.contracts.LoadCourseView;
 import org.stepic.droid.core.presenters.contracts.SectionsView;
 import org.stepic.droid.events.UpdateSectionProgressEvent;
-import org.stepic.droid.events.sections.NotCachedSectionEvent;
-import org.stepic.droid.events.sections.SectionCachedEvent;
 import org.stepic.droid.fonts.FontType;
 import org.stepic.droid.model.CalendarItem;
 import org.stepic.droid.model.Course;
@@ -77,6 +75,7 @@ import org.stepic.droid.model.Section;
 import org.stepic.droid.model.SectionLoadingState;
 import org.stepic.droid.notifications.StepikNotificationManager;
 import org.stepic.droid.notifications.model.Notification;
+import org.stepic.droid.storage.StoreStateManager;
 import org.stepic.droid.ui.adapters.SectionAdapter;
 import org.stepic.droid.ui.dialogs.ChooseCalendarDialog;
 import org.stepic.droid.ui.dialogs.DeleteItemDialogFragment;
@@ -117,7 +116,7 @@ public class SectionsFragment
         InvitationView,
         DownloadingProgressSectionsView,
         DownloadingInteractionView,
-        ChooseCalendarDialog.CallbackContract, DroppingListener {
+        ChooseCalendarDialog.CallbackContract, DroppingListener, StoreStateManager.SectionCallback {
 
     public static String joinFlag = "joinFlag";
     private static int INVITE_REQUEST_CODE = 324;
@@ -208,6 +207,9 @@ public class SectionsFragment
     @Inject
     Client<DroppingListener> droppingListenerClient;
 
+    @Inject
+    StoreStateManager storeStateManager;
+
     private boolean wasIndexed;
     private Uri urlInWeb;
     private String title;
@@ -279,6 +281,7 @@ public class SectionsFragment
 
         joinCourseProgressDialog = new LoadingProgressDialog(getContext());
         ProgressHelper.activate(loadOnCenterProgressBar);
+        storeStateManager.addSectionCallback(this);
         bus.register(this);
         droppingListenerClient.subscribe(this);
         calendarPresenter.attachView(this);
@@ -505,22 +508,11 @@ public class SectionsFragment
         courseFinderPresenter.detachView(this);
         sectionsPresenter.detachView(this);
         invitationPresenter.detachView(this);
+        storeStateManager.removeSectionCallback(this);
         bus.unregister(this);
         droppingListenerClient.unsubscribe(this);
         courseNotParsedView.setOnClickListener(null);
         super.onDestroyView();
-    }
-
-    @Subscribe
-    public void onSectionCached(SectionCachedEvent e) {
-        long sectionId = e.getSectionId();
-        updateState(sectionId, true, false);
-    }
-
-    @Subscribe
-    public void onNotCachedSection(NotCachedSectionEvent e) {
-        long sectionId = e.getSectionId();
-        updateState(sectionId, false, false);
     }
 
     @Subscribe
@@ -994,5 +986,15 @@ public class SectionsFragment
     @Override
     public void onFailDropCourse(@NotNull Course course) {
         //do nothing
+    }
+
+    @Override
+    public void onSectionCached(long sectionId) {
+        updateState(sectionId, true, false);
+    }
+
+    @Override
+    public void onSectionNotCached(long sectionId) {
+        updateState(sectionId, false, false);
     }
 }

@@ -13,13 +13,13 @@ class DroppingPosterImpl
 
 
     override fun failDropCourse(course: Course) {
-        listenerContainer.iterator().forEach {
+        listenerContainer.asIterable().forEach {
             it.onFailDropCourse(course)
         }
     }
 
     override fun successDropCourse(course: Course) {
-        listenerContainer.iterator().forEach {
+        listenerContainer.asIterable().forEach {
             it.onSuccessDropCourse(course)
         }
     }
