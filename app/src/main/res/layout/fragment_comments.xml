@@ -1,48 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/comments_coordinator_layout"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<android.support.design.widget.CoordinatorLayout
+    android:id="@+id/coordinatorLayoutComments"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
     <include
         android:id="@+id/appBarLayout"
         layout="@layout/appbar_only_toolbar"/>
     <FrameLayout
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <include layout="@layout/progress_bar_on_empty_screen"/>
-            <include layout="@layout/empty_comments"/>
-            <include layout="@layout/report_problem_layout" />
+        <include
+            layout="@layout/progress_bar_on_empty_screen"/>
+        <include
+            layout="@layout/empty_comments"/>
+        <include
+            layout="@layout/report_problem_layout"/>
 
 
-            <android.support.v4.widget.SwipeRefreshLayout
-                android:id="@+id/swipe_refresh_layout_comments"
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefreshLayoutComments"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <org.stepic.droid.ui.util.ContextMenuRecyclerView
+                android:id="@+id/recyclerViewComments"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <org.stepic.droid.ui.util.ContextMenuRecyclerView
-                    android:id="@+id/recycler_view_comments"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:clipToPadding="false"
-                    android:divider="@color/transparent"
-                    android:scrollbarStyle="outsideOverlay"
-                    android:scrollbars="vertical"
-                    android:overScrollMode="never"/>
-            </android.support.v4.widget.SwipeRefreshLayout>
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:divider="@color/transparent"
+                android:overScrollMode="never"
+                android:scrollbarStyle="outsideOverlay"
+                android:scrollbars="vertical"/>
+        </android.support.v4.widget.SwipeRefreshLayout>
     </FrameLayout>
 
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/add_new_comment_button"
-        android:contentDescription="@string/new_comment_title"
+        android:id="@+id/addNewCommentButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:layout_margin="16dp"
+        android:layout_gravity="bottom|end|right"
+        android:layout_margin="@dimen/guideline_standard_padding"
         android:clickable="true"
+        android:contentDescription="@string/new_comment_title"
         android:src="@drawable/ic_create_white_24dp"
         app:layout_anchorGravity="bottom|right|end"
         app:layout_behavior="org.stepic.droid.ui.util.ScrollAwareFABBehavior"/>

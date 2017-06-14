@@ -137,13 +137,13 @@ public class SectionsFragment
     @BindView(R.id.sections_recycler_view)
     RecyclerView sectionsRecyclerView;
 
-    @BindView(R.id.load_progressbar)
+    @BindView(R.id.loadProgressbar)
     ProgressBar loadOnCenterProgressBar;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
-    @BindView(R.id.report_problem)
+    @BindView(R.id.reportProblem)
     protected View reportConnectionProblem;
 
     @BindView(R.id.course_not_found)

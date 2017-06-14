@@ -54,7 +54,7 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
     @BindView(R.id.list_of_courses)
     protected RecyclerView listOfCoursesView;
 
-    @BindView(R.id.report_problem)
+    @BindView(R.id.reportProblem)
     protected View reportConnectionProblem;
 
     @BindView(R.id.empty_courses)
@@ -72,7 +72,7 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
     @BindView(R.id.root_fragment_view)
     protected TouchDispatchableFrameLayout rootView;
 
-    @BindView(R.id.load_progressbar)
+    @BindView(R.id.loadProgressbar)
     protected ProgressBar progressBarOnEmptyScreen;
 
     @BindView(R.id.empty_search)

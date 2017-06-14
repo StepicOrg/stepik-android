@@ -81,13 +81,13 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
     @BindView(R.id.units_recycler_view)
     RecyclerView unitsRecyclerView;
 
-    @BindView(R.id.load_progressbar)
+    @BindView(R.id.loadProgressbar)
     ProgressBar progressBar;
 
     @BindView(R.id.toolbar)
     android.support.v7.widget.Toolbar toolbar;
 
-    @BindView(R.id.report_problem)
+    @BindView(R.id.reportProblem)
     protected View reportConnectionProblem;
 
     @BindView(R.id.report_empty)

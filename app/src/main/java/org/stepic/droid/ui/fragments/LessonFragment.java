@@ -122,10 +122,10 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
     @BindView(R.id.tabs)
     TabLayout tabLayout;
 
-    @BindView(R.id.load_progressbar)
+    @BindView(R.id.loadProgressbar)
     ProgressBar progressBar;
 
-    @BindView(R.id.report_problem)
+    @BindView(R.id.reportProblem)
     View reportProblem;
 
     @BindView(R.id.corrupted_lesson)

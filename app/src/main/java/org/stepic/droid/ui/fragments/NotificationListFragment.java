@@ -54,10 +54,10 @@ public class NotificationListFragment extends FragmentBase implements Notificati
     @BindView(R.id.notification_recycler_view)
     RecyclerView notificationRecyclerView;
 
-    @BindView(R.id.load_progressbar)
+    @BindView(R.id.loadProgressbar)
     View progressBarOnEmptyScreen;
 
-    @BindView(R.id.report_problem)
+    @BindView(R.id.reportProblem)
     View connectionProblemLayout;
 
     @BindView(R.id.empty_notifications)

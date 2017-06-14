@@ -77,7 +77,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
     @BindView(R.id.progress_bar)
     ProgressBar progressBar;
 
-    @BindView(R.id.report_problem)
+    @BindView(R.id.reportProblem)
     View connectionProblem;
 
     @BindView(R.id.attempt_container)

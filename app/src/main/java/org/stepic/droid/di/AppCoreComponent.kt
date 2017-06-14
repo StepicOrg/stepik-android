@@ -9,6 +9,7 @@ import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.concurrency.DownloadPoster
 import org.stepic.droid.core.CommentManager
 import org.stepic.droid.di.certificates.CertificateComponent
+import org.stepic.droid.di.comment.CommentsComponent
 import org.stepic.droid.di.course_general.CourseGeneralComponent
 import org.stepic.droid.di.feedback.FeedbackComponent
 import org.stepic.droid.di.filters.FilterComponent
@@ -74,6 +75,8 @@ interface AppCoreComponent {
 
     fun routingComponentBuilder(): RoutingComponent.Builder
 
+    fun commentsComponentBuilder(): CommentsComponent.Builder
+
 
     fun inject(someActivity: FragmentActivityBase)
 
@@ -130,8 +133,6 @@ interface AppCoreComponent {
     fun inject(downloadPoster: DownloadPoster)
 
     fun inject(commentManager: CommentManager)
-
-    fun inject(commentsFragment: CommentsFragment)
 
     fun inject(chooseStorageDialog: ChooseStorageDialog)
 

@@ -5,20 +5,21 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
-import android.support.design.widget.CoordinatorLayout
-import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.*
-import android.widget.ProgressBar
 import android.widget.Toast
 import com.squareup.otto.Subscribe
+import kotlinx.android.synthetic.main.appbar_only_toolbar.*
+import kotlinx.android.synthetic.main.empty_comments.*
+import kotlinx.android.synthetic.main.fragment_comments.*
+import kotlinx.android.synthetic.main.internet_fail_clickable.*
+import kotlinx.android.synthetic.main.progress_bar_on_empty_screen.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
@@ -83,23 +84,23 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     lateinit var discussionId: String
     var stepId: Long? = null
 
-    lateinit var toolbar: Toolbar
-    lateinit var loadProgressBarOnCenter: ProgressBar
-    lateinit var swipeRefreshLayout: SwipeRefreshLayout
-    lateinit var recyclerView: RecyclerView
-    lateinit var commentCoordinatorLayout: CoordinatorLayout
-    var floatingActionButton: FloatingActionButton? = null
-    lateinit var emptyStateView: View
-    lateinit var errorView: View
     var needInsertOtUpdateLate: Comment? = null
     val links = ArrayList<String>()
 
+
+    override fun injectComponent() {
+        App
+                .component()
+                .commentsComponentBuilder()
+                .build()
+                .inject(this)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        retainInstance = true
-        App.component().inject(this)
         commentAdapter = CommentsAdapter(commentManager, context)
     }
+
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?)
             = inflater?.inflate(R.layout.fragment_comments, container, false)
@@ -109,42 +110,26 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
         discussionId = arguments.getString(discussionIdKey)
         stepId = arguments.getLong(stepIdKey)
         setHasOptionsMenu(true)
-        v?.let {
-            initToolbar(v)
-            initEmptyProgressOnCenter(v)
-            initSwipeRefreshLayout(v)
-            initRecyclerView(v)
-            initAddCommentButton(v)
-            initEmptyState(v)
-            initConnectionError(v)
-            commentCoordinatorLayout = v.findViewById(R.id.comments_coordinator_layout) as CoordinatorLayout
-        }
+        initToolbar()
+        initSwipeRefreshLayout()
+        initRecyclerView()
+        initAddCommentButton()
     }
 
-    private fun initConnectionError(v: View) {
-        errorView = v.findViewById(R.id.report_problem)
-    }
-
-    private fun initEmptyState(v: View) {
-        emptyStateView = v.findViewById(R.id.empty_comments)
-    }
-
-    private fun initAddCommentButton(v: View) {
-        floatingActionButton = v.findViewById(R.id.add_new_comment_button) as FloatingActionButton
-        floatingActionButton!!.setOnClickListener {
-            if (stepId != null) {
-                screenManager.openNewCommentForm(activity, stepId, null)
+    private fun initAddCommentButton() {
+        addNewCommentButton.setOnClickListener {
+            stepId?.let {
+                screenManager.openNewCommentForm(activity, it, null)
             }
         }
     }
 
-    private fun initRecyclerView(v: View) {
-        recyclerView = v.findViewById(R.id.recycler_view_comments) as RecyclerView
-        recyclerView.adapter = commentAdapter
+    private fun initRecyclerView() {
+        recyclerViewComments.adapter = commentAdapter
         val linearLayoutManager = LinearLayoutManager(context)
         linearLayoutManager.isSmoothScrollbarEnabled = false
-        recyclerView.layoutManager = linearLayoutManager
-        registerForContextMenu(recyclerView)
+        recyclerViewComments.layoutManager = linearLayoutManager
+        registerForContextMenu(recyclerViewComments)
     }
 
     override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
@@ -200,7 +185,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
         if (userId > 0) {
             if (comment.actions?.delete ?: false) {
                 val deleteText = getString(R.string.delete_label)
-                val spannableString = SpannableString(deleteText);
+                val spannableString = SpannableString(deleteText)
                 spannableString.setSpan(ForegroundColorSpan(ColorUtil.getColorArgb(R.color.feedback_bad_color)), 0, spannableString.length, 0)
                 val deleteMenuItem = menu?.add(Menu.NONE, deleteMenuId, Menu.NONE, spannableString)
                 deleteMenuItem?.titleCondensed = deleteText
@@ -214,8 +199,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
 
     override fun onContextItemSelected(item: MenuItem?): Boolean {
         val info = item?.menuInfo as ContextMenuRecyclerView.RecyclerViewContextMenuInfo
-        val position = info.position
-        when (item?.itemId) {
+        when (item.itemId) {
             replyMenuId -> {
                 replyToComment(info.position)
                 return true
@@ -252,10 +236,8 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
             }
 
             in linksStartIndexId..linksStartIndexId + firstLinkShift - 1 -> {
-                val index = item?.itemId
-                if (index != null) {
-                    clickLinkInComment(links[index - linksStartIndexId])
-                }
+                val index = item.itemId
+                clickLinkInComment(links[index - linksStartIndexId])
                 return true
             }
 
@@ -289,7 +271,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
             val clipData = if (Build.VERSION.SDK_INT > 16) {
                 ClipData.newHtmlText(label, plainText, it)
             } else {
-                ClipData.newPlainText(label, plainText);
+                ClipData.newPlainText(label, plainText)
             }
 
             val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
@@ -340,10 +322,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
 
         val comment = commentManager.getItemWithNeedUpdatingInfoByPosition(position).comment
         val voteId = comment.vote
-        val commentId = comment.id
-        if (commentId == null) {
-            return
-        }
+        val commentId = comment.id ?: return
         voteId?.let {
             val voteObject = Vote(voteId, voteValue)
             api.makeVote(it, voteValue).enqueue(object : Callback<VoteResponse> {
@@ -400,22 +379,16 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
         }
     }
 
-    private fun initSwipeRefreshLayout(v: View) {
-        swipeRefreshLayout = v.findViewById(R.id.swipe_refresh_layout_comments) as SwipeRefreshLayout
-        swipeRefreshLayout.setOnRefreshListener(this)
-        swipeRefreshLayout.setColorSchemeResources(
+    private fun initSwipeRefreshLayout() {
+        swipeRefreshLayoutComments.setOnRefreshListener(this)
+        swipeRefreshLayoutComments.setColorSchemeResources(
                 R.color.stepic_brand_primary,
                 R.color.stepic_orange_carrot,
                 R.color.stepic_blue_ribbon)
     }
 
-    private fun initEmptyProgressOnCenter(v: View) {
-        loadProgressBarOnCenter = v.findViewById(R.id.load_progressbar) as ProgressBar
-    }
-
-    fun initToolbar(v: View) {
-        toolbar = v.findViewById(R.id.toolbar) as Toolbar
-        (activity as AppCompatActivity).setSupportActionBar(toolbar)
+    fun initToolbar() {
+        (activity as AppCompatActivity).setSupportActionBar(toolbar as Toolbar)
         (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
@@ -458,7 +431,9 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     @Subscribe
     fun onEmptyComments(event: EmptyCommentsInDiscussionProxyEvent) {
         cancelSwipeRefresh()
-        if (event.discussionProxyId != discussionId) return;
+        if (event.discussionProxyId != discussionId) {
+            return
+        }
         if (!commentManager.isEmpty()) {
             commentManager.resetAll(event.discussionProxy)
             commentAdapter.notifyDataSetChanged()
@@ -521,9 +496,9 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     override fun onDestroyView() {
         super.onDestroyView()
         bus.unregister(this)
-        swipeRefreshLayout.setOnRefreshListener(null)
-        floatingActionButton?.setOnClickListener(null)
-        unregisterForContextMenu(recyclerView)
+        swipeRefreshLayoutComments.setOnRefreshListener(null)
+        addNewCommentButton.setOnClickListener(null)
+        unregisterForContextMenu(recyclerViewComments)
     }
 
     override fun onRefresh() {
@@ -533,36 +508,36 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
 
     private fun showEmptyProgressOnCenter(needShow: Boolean = true) {
         if (needShow) {
-            ProgressHelper.activate(loadProgressBarOnCenter)
+            ProgressHelper.activate(loadProgressbar)
             showEmptyState(false)
             showInternetConnectionProblem(false)
         } else {
-            ProgressHelper.dismiss(loadProgressBarOnCenter)
+            ProgressHelper.dismiss(loadProgressbar)
         }
     }
 
     private fun showEmptyState(isNeedShow: Boolean = true) {
         if (isNeedShow) {
-            emptyStateView.visibility = View.VISIBLE
+            emptyComments.visibility = View.VISIBLE
             showEmptyProgressOnCenter(false)
             showInternetConnectionProblem(false)
         } else {
-            emptyStateView.visibility = View.GONE
+            emptyComments.visibility = View.GONE
         }
     }
 
     private fun showInternetConnectionProblem(needShow: Boolean = true) {
         if (needShow) {
-            errorView.visibility = View.VISIBLE
+            reportProblem.visibility = View.VISIBLE
             showEmptyState(false)
             showEmptyProgressOnCenter(false)
         } else {
-            errorView.visibility = View.GONE
+            reportProblem.visibility = View.GONE
         }
     }
 
     private fun cancelSwipeRefresh() {
-        ProgressHelper.dismiss(swipeRefreshLayout)
+        ProgressHelper.dismiss(swipeRefreshLayoutComments)
     }
 
     @Subscribe
@@ -580,11 +555,10 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-
         DiscussionOrder.values().forEach {
-            if (it.menuId.equals(item?.itemId)) {
+            if (it.menuId == item?.itemId) {
                 sharedPreferenceHelper.discussionOrder = it
-                item?.isChecked = true
+                item.isChecked = true
 
                 commentManager.resetAll()
                 commentAdapter.notifyDataSetChanged()
@@ -593,7 +567,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
                 showEmptyProgressOnCenter()
                 commentManager.loadComments()
                 //todo reload comments, set to comment manager, and resolve above by id from preferences.
-                return true;
+                return true
             }
         }
         return super.onOptionsItemSelected(item)

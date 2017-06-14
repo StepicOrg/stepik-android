@@ -37,7 +37,7 @@ public class ProgressLatexView extends FrameLayout {
     private void init(Context context) {
         LayoutInflater.from(context).inflate(R.layout.progressable_latex_supportable_frame_layout, this, true);
         optionText = (LatexSupportableEnhancedFrameLayout) findViewById(R.id.latex_text);
-        progressBar = (ProgressBar) findViewById(R.id.load_progressbar);
+        progressBar = (ProgressBar) findViewById(R.id.loadProgressbar);
 
         setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
