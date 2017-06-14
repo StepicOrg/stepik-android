@@ -10,6 +10,6 @@ class VideosMovedPosterImpl
         private val listenerContainer: ListenerContainer<VideosMovedListener>)
     : VideosMovedPoster {
     override fun videosMoved() {
-        listenerContainer.iterator().forEach(VideosMovedListener::onVideosMoved)
+        listenerContainer.asIterable().forEach(VideosMovedListener::onVideosMoved)
     }
 }

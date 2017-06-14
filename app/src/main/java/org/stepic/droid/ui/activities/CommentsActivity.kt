@@ -11,12 +11,14 @@ class CommentsActivity : SingleFragmentActivity() {
     companion object {
         val keyDiscussionProxyId = "KEY_DISCUSSION_PROXY_ID"
         val keyStepId = "KEY_step_id"
+        val keyNeedInstaOpenForm = "key_need_insta_open"
     }
 
     override fun createFragment(): Fragment {
         val discussionId: String = intent.extras.getString(keyDiscussionProxyId)
         val stepId: Long = intent.extras.getLong(keyStepId)
-        return CommentsFragment.newInstance(discussionId,stepId )
+        val needInstaOpen: Boolean = intent.extras.getBoolean(keyNeedInstaOpenForm)
+        return CommentsFragment.newInstance(discussionId, stepId, needInstaOpen)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,4 +40,5 @@ class CommentsActivity : SingleFragmentActivity() {
         super.finish()
         overridePendingTransition(org.stepic.droid.R.anim.no_transition, org.stepic.droid.R.anim.push_down)
     }
+
 }

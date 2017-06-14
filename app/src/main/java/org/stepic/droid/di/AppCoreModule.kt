@@ -61,6 +61,22 @@ abstract class AppCoreModule {
 
     @Binds
     @AppSingleton
+    abstract fun provideLocalProgressManagerSectionProgressListenerContainer(container: ListenerContainerImpl<LocalProgressManager.SectionProgressListener>): ListenerContainer<LocalProgressManager.SectionProgressListener>
+
+    @Binds
+    @AppSingleton
+    abstract fun provideLocalProgressManagerUnitProgressListenerContainer(container: ListenerContainerImpl<LocalProgressManager.UnitProgressListener>): ListenerContainer<LocalProgressManager.UnitProgressListener>
+
+    @Binds
+    @AppSingleton
+    abstract fun provideStoreStateManagerLessonCallbackContainer(container: ListenerContainerImpl<StoreStateManager.LessonCallback>): ListenerContainer<StoreStateManager.LessonCallback>
+
+    @Binds
+    @AppSingleton
+    abstract fun provideStoreStateManagerSectionCallbackContainer(container: ListenerContainerImpl<StoreStateManager.SectionCallback>): ListenerContainer<StoreStateManager.SectionCallback>
+
+    @Binds
+    @AppSingleton
     abstract fun provideInternetEnabledPoster(internetEnabledPoster: InternetEnabledPosterImpl): InternetEnabledPoster
 
     @Binds
@@ -231,12 +247,6 @@ abstract class AppCoreModule {
         @JvmStatic
         internal fun provideThreadPool(): ThreadPoolExecutor {
             return Executors.newCachedThreadPool() as ThreadPoolExecutor
-        }
-
-        @Provides
-        @JvmStatic
-        internal fun provideCommentsManager(): CommentManager {
-            return CommentManager()
         }
 
         /**

@@ -26,7 +26,6 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.squareup.otto.Subscribe;
 
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
@@ -38,9 +37,7 @@ import org.stepic.droid.core.internet_state.contract.InternetEnabledListener;
 import org.stepic.droid.core.presenters.StepAttemptPresenter;
 import org.stepic.droid.core.presenters.StreakPresenter;
 import org.stepic.droid.core.presenters.contracts.StepAttemptView;
-import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent;
-import org.stepic.droid.events.steps.StepWasUpdatedEvent;
-import org.stepic.droid.events.steps.UpdateStepEvent;
+import org.stepic.droid.core.updating_step.contract.UpdatingStepPoster;
 import org.stepic.droid.fonts.FontType;
 import org.stepic.droid.model.Attempt;
 import org.stepic.droid.model.DiscountingPolicyType;
@@ -78,7 +75,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
     @BindView(R.id.progress_bar)
     ProgressBar progressBar;
 
-    @BindView(R.id.report_problem)
+    @BindView(R.id.reportProblem)
     View connectionProblem;
 
     @BindView(R.id.attempt_container)
@@ -140,15 +137,17 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
 
     @Inject
     StreakPresenter streakPresenter;
+
+    @Inject
+    UpdatingStepPoster updatingStepPoster;
+
     private View.OnClickListener actionButtonGeneralListener;
 
     @Override
     protected void injectComponent() {
         App.Companion
-                .getComponentManager()
-                .routingComponent()
-                .stepComponentBuilder()
-                .build()
+                .componentManager()
+                .stepComponent(step.getId())
                 .inject(this);
     }
 
@@ -423,7 +422,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
 
     protected final void markLocalProgressAsViewed() {
         if (!step.is_custom_passed()) {
-            bus.post(new UpdateStepEvent(step.getId(), true));
+            updatingStepPoster.updateStep(step.getId(), true);
             AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
                 long stepId = step.getId();
 
@@ -494,16 +493,6 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
 
     protected String getCorrectString() {
         return correctString;
-    }
-
-    @Subscribe
-    public void onNewCommentWasAdded(NewCommentWasAddedOrUpdateEvent event) {
-        super.onNewCommentWasAdded(event);
-    }
-
-    @Subscribe
-    public void onStepWasUpdated(StepWasUpdatedEvent event) {
-        super.onStepWasUpdated(event);
     }
 
     @Override

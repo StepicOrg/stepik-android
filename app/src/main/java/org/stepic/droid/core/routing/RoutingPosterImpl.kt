@@ -12,7 +12,7 @@ class RoutingPosterImpl
     : RoutingPoster {
 
     override fun sectionChanged(oldSection: Section, newSection: Section) {
-        routingListenerContainer.iterator().forEach {
+        routingListenerContainer.asIterable().forEach {
             it.onSectionChanged(oldSection, newSection)
         }
     }

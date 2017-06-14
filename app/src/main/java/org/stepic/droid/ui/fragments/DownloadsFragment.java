@@ -26,10 +26,9 @@ import org.stepic.droid.base.Client;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.concurrency.DownloadPoster;
 import org.stepic.droid.core.video_moves.contract.VideosMovedListener;
-import org.stepic.droid.events.DownloadingIsLoadedSuccessfullyEvent;
-import org.stepic.droid.events.steps.StepRemovedEvent;
 import org.stepic.droid.events.video.DownloadReportEvent;
 import org.stepic.droid.events.video.FinishDownloadCachedVideosEvent;
+import org.stepic.droid.events.video.StepRemovedEvent;
 import org.stepic.droid.events.video.VideoCachedOnDiskEvent;
 import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.DownloadEntity;
@@ -49,6 +48,7 @@ import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.RWLocks;
 import org.stepic.droid.util.StepikLogicHelper;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -165,6 +165,8 @@ public class DownloadsFragment extends FragmentBase implements
     private void startLoadingStatusUpdater() {
         if (loadingUpdater != null) return;
         loadingUpdater = new Runnable() {
+            WeakReference<DownloadsFragment> downloadsFragmentWeakReference = new WeakReference<>(DownloadsFragment.this);
+
             //Query the download manager about downloads that have been requested.
             @Nullable
             private Pair<Cursor, List<DownloadEntity>> getCursorAndEntitiesForAllDownloads() {
@@ -233,7 +235,10 @@ public class DownloadsFragment extends FragmentBase implements
                                 mainHandler.post(new Function0<kotlin.Unit>() {
                                     @Override
                                     public kotlin.Unit invoke() {
-                                        bus.post(new DownloadingIsLoadedSuccessfullyEvent(downloadId));
+                                        DownloadsFragment downloadsFragment = downloadsFragmentWeakReference.get();
+                                        if (downloadsFragment != null) {
+                                            downloadsFragment.onDownloadingSuccessfully(downloadId);
+                                        }
                                         return kotlin.Unit.INSTANCE;
                                     }
                                 });
@@ -275,9 +280,7 @@ public class DownloadsFragment extends FragmentBase implements
         thread.start();
     }
 
-    @Subscribe
-    public void onDownloadingSuccessfully(DownloadingIsLoadedSuccessfullyEvent event) {
-        long downloadId = event.getDownloadId();
+    public void onDownloadingSuccessfully(long downloadId) {
         int pos = -1;
         for (int i = 0; i < downloadingWithProgressList.size(); i++) {
             DownloadingVideoItem item = downloadingWithProgressList.get(i);

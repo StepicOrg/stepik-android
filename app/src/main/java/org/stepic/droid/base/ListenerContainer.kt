@@ -6,5 +6,5 @@ interface ListenerContainer<T>{
 
     fun remove(listener: T)
 
-    fun iterator(): MutableIterator<T>
+    fun asIterable(): Iterable<T>
 }

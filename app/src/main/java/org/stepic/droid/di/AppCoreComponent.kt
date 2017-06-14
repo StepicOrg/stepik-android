@@ -7,10 +7,8 @@ import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.concurrency.DownloadPoster
-import org.stepic.droid.core.CommentManager
 import org.stepic.droid.di.certificates.CertificateComponent
-import org.stepic.droid.di.course.CourseComponent
-import org.stepic.droid.di.course_list.CourseListComponent
+import org.stepic.droid.di.course_general.CourseGeneralComponent
 import org.stepic.droid.di.feedback.FeedbackComponent
 import org.stepic.droid.di.filters.FilterComponent
 import org.stepic.droid.di.lesson.LessonComponent
@@ -36,11 +34,10 @@ import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout
 import org.stepic.droid.ui.custom.LatexSupportableWebView
 import org.stepic.droid.ui.custom_exo.PlaybackControlView
 import org.stepic.droid.ui.dialogs.*
-import org.stepic.droid.ui.fragments.CommentsFragment
 import org.stepic.droid.ui.fragments.DownloadsFragment
 
 @AppSingleton
-@Component(dependencies = arrayOf(StorageComponent::class), modules = arrayOf(AppCoreModule::class, RepositoryModule::class))
+@Component(dependencies = arrayOf(StorageComponent::class), modules = arrayOf(AppCoreModule::class, RepositoryModule::class, AppStepModule::class))
 interface AppCoreComponent {
 
     @Component.Builder
@@ -61,11 +58,9 @@ interface AppCoreComponent {
 
     fun certificateComponentBuilder(): CertificateComponent.Builder
 
-    fun courseComponentBuilder(): CourseComponent.Builder
+    fun courseGeneralComponentBuilder(): CourseGeneralComponent.Builder
 
     fun lessonComponentBuilder(): LessonComponent.Builder
-
-    fun courseListComponentBuilder(): CourseListComponent.Builder
 
     fun filterComponentBuilder(): FilterComponent.Builder
 
@@ -76,7 +71,6 @@ interface AppCoreComponent {
     fun notificationsComponentBuilder(): NotificationsComponent.Builder
 
     fun routingComponentBuilder(): RoutingComponent.Builder
-
 
     fun inject(someActivity: FragmentActivityBase)
 
@@ -131,10 +125,6 @@ interface AppCoreComponent {
     fun inject(service: UpdateWithApkService)
 
     fun inject(downloadPoster: DownloadPoster)
-
-    fun inject(commentManager: CommentManager)
-
-    fun inject(commentsFragment: CommentsFragment)
 
     fun inject(chooseStorageDialog: ChooseStorageDialog)
 
