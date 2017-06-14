@@ -1,9 +1,7 @@
 package org.stepic.droid.core
 
-import com.squareup.otto.Bus
+import org.stepic.droid.core.comments.contract.CommentsPoster
 import org.stepic.droid.di.comment.CommentsScope
-import org.stepic.droid.events.comments.CommentsLoadedSuccessfullyEvent
-import org.stepic.droid.events.comments.InternetConnectionProblemInCommentsEvent
 import org.stepic.droid.model.CommentAdapterItem
 import org.stepic.droid.model.User
 import org.stepic.droid.model.comments.Comment
@@ -21,8 +19,7 @@ import javax.inject.Inject
 @CommentsScope
 class CommentManager @Inject constructor(
         private val api: Api,
-        @Deprecated("use rxJava or listener pattern instead")
-        private val bus: Bus,
+        private val commentsPoster: CommentsPoster,
         private val sharedPrefs: SharedPreferenceHelper
 ) {
 
@@ -49,7 +46,7 @@ class CommentManager @Inject constructor(
             val sizeNeedLoad = Math.min((sumOfCachedParent + maxOfParentInQuery), orderOfComments.size)
             if (sizeNeedLoad == sumOfCachedParent || sizeNeedLoad == 0) {
                 // we don't need to load comments
-                bus.post(CommentsLoadedSuccessfullyEvent()) // notify UI
+                commentsPoster.commentsLoaded()
                 return
             }
 
@@ -66,7 +63,7 @@ class CommentManager @Inject constructor(
 
             val sizeNeedLoad = Math.min(parentComment.replies.size, countOfCachedReplies + maxOfRepliesInQuery)
             if (sizeNeedLoad == countOfCachedReplies || sizeNeedLoad == 0) {
-                bus.post(CommentsLoadedSuccessfullyEvent()) // notify UI
+                commentsPoster.commentsLoaded()
                 return
             }
 
@@ -93,7 +90,7 @@ class CommentManager @Inject constructor(
         } else {
             commentIdIsLoading.clear()
         }
-        bus.post(CommentsLoadedSuccessfullyEvent()) // notify UI
+        commentsPoster.commentsLoaded()
     }
 
     fun updateOnlyCommentsIfCachedSilent(comments: List<Comment>?) {
@@ -161,15 +158,15 @@ class CommentManager @Inject constructor(
                     if (stepicResponse != null) {
                         addComments(stepicResponse, fromReply)
                     } else {
-                        bus.post(InternetConnectionProblemInCommentsEvent(discussionProxyId))
+                        commentsPoster.connectionProblem()
                     }
                 } else {
-                    bus.post(InternetConnectionProblemInCommentsEvent(discussionProxyId))
+                    commentsPoster.connectionProblem()
                 }
             }
 
             override fun onFailure(call: Call<CommentsResponse>?, t: Throwable?) {
-                bus.post(InternetConnectionProblemInCommentsEvent(discussionProxyId))
+                commentsPoster.connectionProblem()
             }
         })
     }

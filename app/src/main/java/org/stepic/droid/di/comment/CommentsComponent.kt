@@ -4,7 +4,7 @@ import dagger.Subcomponent
 import org.stepic.droid.ui.fragments.CommentsFragment
 
 @CommentsScope
-@Subcomponent
+@Subcomponent(modules = arrayOf(CommentsModule::class))
 interface CommentsComponent {
 
     @Subcomponent.Builder

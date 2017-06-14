@@ -23,8 +23,10 @@ import kotlinx.android.synthetic.main.progress_bar_on_empty_screen.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
+import org.stepic.droid.base.Client
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.core.CommentManager
+import org.stepic.droid.core.comments.contract.CommentsListener
 import org.stepic.droid.core.presenters.DiscussionPresenter
 import org.stepic.droid.core.presenters.contracts.DiscussionView
 import org.stepic.droid.events.comments.*
@@ -47,7 +49,8 @@ import javax.inject.Inject
 
 class CommentsFragment : FragmentBase(),
         SwipeRefreshLayout.OnRefreshListener,
-        DiscussionView {
+        DiscussionView,
+        CommentsListener {
 
     companion object {
         private val discussionIdKey = "dis_id_key"
@@ -83,11 +86,14 @@ class CommentsFragment : FragmentBase(),
     lateinit var discussionId: String
     var stepId: Long? = null
 
-    var needInsertOtUpdateLate: Comment? = null
+    var needInsertOrUpdateLate: Comment? = null
     val links = ArrayList<String>()
 
     @Inject
     lateinit var discussionPresenter: DiscussionPresenter
+
+    @Inject
+    lateinit var commentsClient: Client<CommentsListener>
 
 
     override fun injectComponent() {
@@ -117,8 +123,10 @@ class CommentsFragment : FragmentBase(),
         initRecyclerView()
         initAddCommentButton()
 
+        commentsClient.subscribe(this)
         discussionPresenter.attachView(this)
         bus.register(this)
+
         showEmptyProgressOnCenter()
         if (commentManager.isEmpty()) {
             loadDiscussionProxyById()
@@ -399,41 +407,15 @@ class CommentsFragment : FragmentBase(),
 
 
     @Subscribe
-    fun onCommentsLoadedSuccessfully(successfullyEvent: CommentsLoadedSuccessfullyEvent) {
-        cancelSwipeRefresh()
-        showEmptyProgressOnCenter(false)
-        showInternetConnectionProblem(false)
-        if (!commentManager.isEmpty()) {
-            showEmptyState(false)
-        }
-        val needInsertLocal: Comment? = needInsertOtUpdateLate
-        if (needInsertLocal != null && (!commentManager.isCommentCached(needInsertLocal.id) || (needInsertLocal.parent != null && !commentManager.isCommentCached(needInsertLocal.parent)))) {
-            val longArr = listOf(needInsertLocal.id, needInsertLocal.parent).filterNotNull().toLongArray()
-            commentManager.loadCommentsByIds(longArr)
-        } else {
-            //we have only our comment.
-            if (needInsertLocal != null) {
-                commentManager.updateOnlyCommentsIfCachedSilent(listOf(needInsertLocal))
-            }
-            needInsertOtUpdateLate = null
-            commentAdapter.notifyDataSetChanged()
-        }
-    }
-
-    @Subscribe
     fun onNeedUpdate(needUpdateEvent: NewCommentWasAddedOrUpdateEvent) {
         if (needUpdateEvent.targetId == stepId) {
             if (needUpdateEvent.newCommentInsertOrUpdate != null) {
                 //share for updating:
-                needInsertOtUpdateLate = needUpdateEvent.newCommentInsertOrUpdate
+                needInsertOrUpdateLate = needUpdateEvent.newCommentInsertOrUpdate
             }
             //without animation.
             onRefresh() // it can be dangerous, when 10 or more comments was submit by another users.
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
     }
 
     override fun onStop() {
@@ -443,6 +425,7 @@ class CommentsFragment : FragmentBase(),
 
     override fun onDestroyView() {
         super.onDestroyView()
+        commentsClient.unsubscribe(this)
         bus.unregister(this)
         discussionPresenter.detachView(this)
 
@@ -524,9 +507,7 @@ class CommentsFragment : FragmentBase(),
     }
 
 
-    //Comments View:
-
-    override fun onInternetProblemInComments() {
+    private fun onConnectionProblemBase() {
         cancelSwipeRefresh()
         if (commentManager.isEmpty()) {
             showInternetConnectionProblem()
@@ -535,6 +516,12 @@ class CommentsFragment : FragmentBase(),
             commentManager.clearAllLoadings()
             commentAdapter.notifyDataSetChanged()
         }
+    }
+
+    //DiscussionView View:
+
+    override fun onInternetProblemInComments() {
+        onConnectionProblemBase()
     }
 
     override fun onEmptyComments(discussionProxy: DiscussionProxy) {
@@ -550,6 +537,35 @@ class CommentsFragment : FragmentBase(),
         commentManager.setDiscussionProxy(discussionProxy)
         activity?.invalidateOptionsMenu()
         commentManager.loadComments()
+    }
+
+
+    //CommentsListener
+
+    override fun onCommentsLoaded() {
+        cancelSwipeRefresh()
+        showEmptyProgressOnCenter(false)
+        showInternetConnectionProblem(false)
+        if (!commentManager.isEmpty()) {
+            showEmptyState(false)
+        }
+        val needInsertLocal: Comment? = needInsertOrUpdateLate
+        if (needInsertLocal != null &&
+                (!commentManager.isCommentCached(needInsertLocal.id) || (needInsertLocal.parent != null && !commentManager.isCommentCached(needInsertLocal.parent)))) {
+            val longArr = listOf(needInsertLocal.id, needInsertLocal.parent).filterNotNull().toLongArray()
+            commentManager.loadCommentsByIds(longArr)
+        } else {
+            //we have only our comment.
+            if (needInsertLocal != null) {
+                commentManager.updateOnlyCommentsIfCachedSilent(listOf(needInsertLocal))
+            }
+            needInsertOrUpdateLate = null
+            commentAdapter.notifyDataSetChanged()
+        }
+    }
+
+    override fun onCommentsConnectionProblem() {
+        onConnectionProblemBase()
     }
 
 
