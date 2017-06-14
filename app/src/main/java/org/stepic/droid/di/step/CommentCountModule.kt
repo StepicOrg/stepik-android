@@ -14,13 +14,15 @@ import org.stepic.droid.core.comment_count.contract.CommentCountPoster
 interface CommentCountModule {
 
     @Binds
+    @StepScope
     fun bindsClient(clientImpl: ClientImpl<CommentCountListener>): Client<CommentCountListener>
 
     @Binds
+    @StepScope
     fun bindContainer(listenerContainer: ListenerContainerImpl<CommentCountListener>): ListenerContainer<CommentCountListener>
 
     @Binds
-
+    @StepScope
     fun bindsPoster(posterImpl: CommentCountPosterImpl): CommentCountPoster
 
 }

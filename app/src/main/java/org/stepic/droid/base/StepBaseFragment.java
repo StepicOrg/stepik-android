@@ -41,7 +41,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public abstract class StepBaseFragment extends FragmentBase implements RouteStepView, AnonymousView, CommentCountListener {
+public abstract class StepBaseFragment extends FragmentBase
+        implements RouteStepView,
+        AnonymousView,
+        CommentCountListener {
 
     @BindView(R.id.text_header_enhanced)
     protected LatexSupportableEnhancedFrameLayout headerWvEnhanced;
