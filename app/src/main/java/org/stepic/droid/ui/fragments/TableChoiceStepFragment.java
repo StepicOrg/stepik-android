@@ -8,10 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import com.squareup.otto.Subscribe;
-
 import org.stepic.droid.R;
-import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent;
 import org.stepic.droid.model.Attempt;
 import org.stepic.droid.model.Dataset;
 import org.stepic.droid.model.Reply;
@@ -108,11 +105,6 @@ public class TableChoiceStepFragment extends StepAttemptFragment {
         answerList.addAll(choices);
 
         adapter.notifyDataSetChanged();
-    }
-
-    @Subscribe
-    public void onNewCommentWasAdded(NewCommentWasAddedOrUpdateEvent event) {
-        super.onNewCommentWasAdded(event);
     }
 
 }

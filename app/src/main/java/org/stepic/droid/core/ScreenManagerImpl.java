@@ -56,6 +56,7 @@ import org.stepic.droid.ui.activities.TextFeedbackActivity;
 import org.stepic.droid.ui.activities.UnitsActivity;
 import org.stepic.droid.ui.activities.VideoActivity;
 import org.stepic.droid.ui.dialogs.RemindPasswordDialogFragment;
+import org.stepic.droid.ui.fragments.CommentsFragment;
 import org.stepic.droid.ui.fragments.SectionsFragment;
 import org.stepic.droid.util.AndroidVersionKt;
 import org.stepic.droid.util.AppConstants;
@@ -511,19 +512,19 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void openNewCommentForm(Activity sourceActivity, Long target, @Nullable Long parent) {
+    public void openNewCommentForm(CommentsFragment commentsFragment, Long target, @Nullable Long parent) {
         if (sharedPreferences.getAuthResponseFromStore() != null) {
             analytic.reportEvent(Analytic.Screens.OPEN_WRITE_COMMENT);
-            Intent intent = new Intent(sourceActivity, NewCommentActivity.class);
+            Intent intent = new Intent(commentsFragment.getActivity(), NewCommentActivity.class);
             Bundle bundle = new Bundle();
             if (parent != null) {
                 bundle.putLong(NewCommentActivity.Companion.getKeyParent(), parent);
             }
             bundle.putLong(NewCommentActivity.Companion.getKeyTarget(), target);
             intent.putExtras(bundle);
-            sourceActivity.startActivity(intent);
+            commentsFragment.startActivityForResult(intent, NewCommentActivity.Companion.getRequestCode());
         } else {
-            Toast.makeText(sourceActivity, R.string.anonymous_write_comment, Toast.LENGTH_SHORT).show();
+            Toast.makeText(commentsFragment.getContext(), R.string.anonymous_write_comment, Toast.LENGTH_SHORT).show();
         }
     }
 

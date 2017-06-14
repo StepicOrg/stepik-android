@@ -7,10 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
-import com.squareup.otto.Subscribe;
-
 import org.stepic.droid.R;
-import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent;
 import org.stepic.droid.model.Attachment;
 import org.stepic.droid.model.Attempt;
 import org.stepic.droid.model.Reply;
@@ -75,11 +72,6 @@ public class FreeResponseStepFragment extends StepAttemptFragment {
     @Override
     protected String getCorrectString() {
         return correctString;
-    }
-
-    @Subscribe
-    public void onNewCommentWasAdded(NewCommentWasAddedOrUpdateEvent event) {
-        super.onNewCommentWasAdded(event);
     }
 
     @Override

@@ -5,10 +5,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.h6ah4i.android.widget.advrecyclerview.decoration.SimpleListDividerDecorator;
-import com.squareup.otto.Subscribe;
 
 import org.stepic.droid.R;
-import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent;
 import org.stepic.droid.model.Attempt;
 import org.stepic.droid.model.Option;
 import org.stepic.droid.model.Reply;
@@ -79,11 +77,6 @@ public class SortingStepFragment extends DraggableStepFragment {
         }
 
         wrappedAdapter.notifyDataSetChanged();
-    }
-
-    @Subscribe
-    public void onNewCommentWasAdded(NewCommentWasAddedOrUpdateEvent event) {
-        super.onNewCommentWasAdded(event);
     }
 
 }

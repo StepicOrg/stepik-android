@@ -10,19 +10,19 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.squareup.otto.Subscribe;
-
+import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
+import org.stepic.droid.core.comment_count.contract.CommentCountListener;
 import org.stepic.droid.core.presenters.AnonymousPresenter;
 import org.stepic.droid.core.presenters.RouteStepPresenter;
 import org.stepic.droid.core.presenters.contracts.AnonymousView;
 import org.stepic.droid.core.presenters.contracts.RouteStepView;
-import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
+import org.stepic.droid.model.comments.Comment;
 import org.stepic.droid.storage.operations.DatabaseFacade;
 import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout;
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment;
@@ -41,7 +41,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public abstract class StepBaseFragment extends FragmentBase implements RouteStepView, AnonymousView {
+public abstract class StepBaseFragment extends FragmentBase implements RouteStepView, AnonymousView, CommentCountListener {
 
     @BindView(R.id.text_header_enhanced)
     protected LatexSupportableEnhancedFrameLayout headerWvEnhanced;
@@ -90,27 +90,30 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
     @Inject
     AnonymousPresenter anonymousPresenter;
 
+    @Inject
+    Client<CommentCountListener> commentCountListenerClient;
+
     @Override
     protected void injectComponent() {
+        step = getArguments().getParcelable(AppConstants.KEY_STEP_BUNDLE);
         App.Companion
                 .componentManager()
-                .routingComponent()
-                .stepComponentBuilder()
-                .build()
+                .stepComponent(step.getId())
                 .inject(this);
     }
 
     @Override
-    protected void onReleaseComponent() {
-        App.Companion
-                .componentManager().releaseRoutingComponent();
+    protected final void onReleaseComponent() {
+        App
+                .Companion
+                .componentManager()
+                .releaseStepComponent(step.getId());
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        step = getArguments().getParcelable(AppConstants.KEY_STEP_BUNDLE);
         lesson = getArguments().getParcelable(AppConstants.KEY_LESSON_BUNDLE);
         unit = getArguments().getParcelable(AppConstants.KEY_UNIT_BUNDLE);
         section = getArguments().getParcelable(AppConstants.KEY_SECTION_BUNDLE);
@@ -136,6 +139,7 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
 
         updateCommentState();
 
+        commentCountListenerClient.subscribe(this);
         routeStepPresenter.attachView(this);
         anonymousPresenter.attachView(this);
         anonymousPresenter.checkForAnonymous();
@@ -158,7 +162,6 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
             routeStepPresenter.checkStepForLast(step.getId(), lesson, unit);
         }
 
-        bus.register(this);
     }
 
     @Override
@@ -189,7 +192,8 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
                 analytic.reportEvent(Analytic.Comments.OPEN_FROM_STEP_UI);
                 screenManager.openComments(getContext(), step.getDiscussion_proxy(), step.getId());
                 if (discussionCount == 0) {
-                    screenManager.openNewCommentForm(getActivity(), step.getId(), null); //show new form, but in back stack comment oldList is exist.
+                    //// TODO: 14.06.17 add flag to openComments 
+//                    screenManager.openNewCommentForm(getActivity(), step.getId(), null); //show new form, but in back stack comment oldList is exist.
                 }
             }
         });
@@ -225,23 +229,14 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
 
     @Override
     public void onDestroyView() {
-        bus.unregister(this);
         authLineText.setOnClickListener(null);
         textForComment.setOnClickListener(null);
         routeStepPresenter.detachView(this);
+        commentCountListenerClient.unsubscribe(this);
         anonymousPresenter.detachView(this);
         nextLessonView.setOnClickListener(null);
         previousLessonView.setOnClickListener(null);
         super.onDestroyView();
-    }
-
-    @Subscribe
-    public void onNewCommentWasAdded(NewCommentWasAddedOrUpdateEvent event) {
-        if (step != null && event.getTargetId() == step.getId()) {
-            long[] arr = new long[]{step.getId()};
-            api.getSteps(arr).enqueue(new StepResponseCallback(threadPoolExecutor, databaseFacade, this));
-        }
-
     }
 
     public void onDiscussionWasUpdatedFromInternet(Step updatedStep) {
@@ -315,6 +310,12 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
     public void onResume() {
         super.onResume();
         hideSoftKeypad();
+    }
+
+    @Override
+    public void onCommentCountUpdated(long target, @NotNull Comment comment) {
+        long[] arr = new long[]{step.getId()};
+        api.getSteps(arr).enqueue(new StepResponseCallback(threadPoolExecutor, databaseFacade, this));
     }
 
 

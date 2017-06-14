@@ -38,4 +38,5 @@ class CommentsActivity : SingleFragmentActivity() {
         super.finish()
         overridePendingTransition(org.stepic.droid.R.anim.no_transition, org.stepic.droid.R.anim.push_down)
     }
+
 }

@@ -10,7 +10,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.GlideDrawable
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
-import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.fragment_video_step.*
 import kotlinx.android.synthetic.main.player_placeholder.*
 import kotlinx.android.synthetic.main.view_length_video_thumbnail.*
@@ -22,7 +21,6 @@ import org.stepic.droid.core.presenters.VideoLengthPresenter
 import org.stepic.droid.core.presenters.VideoStepPresenter
 import org.stepic.droid.core.presenters.contracts.VideoLengthView
 import org.stepic.droid.core.presenters.contracts.VideoStepView
-import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent
 import org.stepic.droid.model.Video
 import org.stepic.droid.util.ThumbnailParser
 import javax.inject.Inject
@@ -40,9 +38,7 @@ class VideoStepFragment : StepBaseFragment(),
     override fun injectComponent() {
         App
                 .componentManager()
-                .routingComponent()
-                .stepComponentBuilder()
-                .build()
+                .stepComponent(step.id)
                 .inject(this)
     }
 
@@ -119,11 +115,6 @@ class VideoStepFragment : StepBaseFragment(),
         } else {
             analytic.reportEvent(Analytic.Error.NO_VIDEO_ON_STEP_SHOWING)
         }
-    }
-
-    @Subscribe
-    override fun onNewCommentWasAdded(event: NewCommentWasAddedOrUpdateEvent) {
-        super.onNewCommentWasAdded(event)
     }
 
     override fun onInternetProblem() {

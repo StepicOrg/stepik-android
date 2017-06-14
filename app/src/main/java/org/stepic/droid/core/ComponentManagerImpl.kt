@@ -5,8 +5,25 @@ import org.stepic.droid.di.course_general.CourseGeneralComponent
 import org.stepic.droid.di.login.LoginComponent
 import org.stepic.droid.di.mainscreen.MainScreenComponent
 import org.stepic.droid.di.routing.RoutingComponent
+import org.stepic.droid.di.step.StepComponent
 
 class ComponentManagerImpl(private val appCoreComponent: AppCoreComponent) : ComponentManager {
+
+//    Step
+
+    private val stepComponentMap = HashMap<Long, StepComponent>()
+
+    override fun stepComponent(stepId: Long) = stepComponentMap.getOrPut(stepId) {
+        routingComponent()
+                .stepComponentBuilder()
+                .build()
+    }
+
+    override fun releaseStepComponent(stepId: Long) {
+        releaseRoutingComponent()
+        stepComponentMap.remove(stepId)
+    }
+
 
 //    Login
 

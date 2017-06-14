@@ -17,6 +17,7 @@ import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.model.Video;
 import org.stepic.droid.storage.operations.Table;
+import org.stepic.droid.ui.fragments.CommentsFragment;
 import org.stepic.droid.web.ViewAssignment;
 
 public interface ScreenManager {
@@ -47,7 +48,7 @@ public interface ScreenManager {
 
     void openComments(Context context, String discussionProxyId, long stepId);
 
-    void openNewCommentForm(Activity sourceActivity, Long target, @Nullable Long parent);
+    void openNewCommentForm(CommentsFragment commentsFragment, Long target, @Nullable Long parent);
 
     void showSections(Activity sourceActivity, @NotNull Course course);
 

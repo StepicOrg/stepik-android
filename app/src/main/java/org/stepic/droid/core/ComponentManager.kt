@@ -5,6 +5,7 @@ import org.stepic.droid.di.course_general.CourseGeneralComponent
 import org.stepic.droid.di.login.LoginComponent
 import org.stepic.droid.di.mainscreen.MainScreenComponent
 import org.stepic.droid.di.routing.RoutingComponent
+import org.stepic.droid.di.step.StepComponent
 
 // TODO: 16.03.17 make more generic solution, for every component handling
 interface ComponentManager {
@@ -28,4 +29,10 @@ interface ComponentManager {
 
     @MainThread
     fun releaseCourseGeneralComponent()
+
+    @MainThread
+    fun stepComponent(stepId: Long): StepComponent
+
+    @MainThread
+    fun releaseStepComponent(stepId: Long)
 }

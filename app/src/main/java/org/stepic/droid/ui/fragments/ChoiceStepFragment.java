@@ -6,11 +6,8 @@ import android.support.annotation.IdRes;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import com.squareup.otto.Subscribe;
-
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent;
 import org.stepic.droid.model.Attempt;
 import org.stepic.droid.model.Dataset;
 import org.stepic.droid.model.Reply;
@@ -144,11 +141,4 @@ public class ChoiceStepFragment extends StepAttemptFragment {
         item.setText(rawText);
         choiceContainer.addView(item);
     }
-
-    @Subscribe
-    public void onNewCommentWasAdded(NewCommentWasAddedOrUpdateEvent event) {
-        super.onNewCommentWasAdded(event);
-
-    }
-
 }

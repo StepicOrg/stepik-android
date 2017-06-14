@@ -7,10 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
-import com.squareup.otto.Subscribe;
-
 import org.stepic.droid.R;
-import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent;
 import org.stepic.droid.model.Attempt;
 import org.stepic.droid.model.Reply;
 
@@ -49,11 +46,6 @@ public class StringStepFragment extends StepAttemptFragment {
 
         String text = reply.getText();
         answerField.setText(text);
-    }
-
-    @Subscribe
-    public void onNewCommentWasAdded(NewCommentWasAddedOrUpdateEvent event) {
-        super.onNewCommentWasAdded(event);
     }
 
     @Override

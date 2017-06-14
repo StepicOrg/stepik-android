@@ -26,7 +26,6 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.squareup.otto.Subscribe;
 
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
@@ -39,7 +38,6 @@ import org.stepic.droid.core.presenters.StepAttemptPresenter;
 import org.stepic.droid.core.presenters.StreakPresenter;
 import org.stepic.droid.core.presenters.contracts.StepAttemptView;
 import org.stepic.droid.core.updating_step.contract.UpdatingStepPoster;
-import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent;
 import org.stepic.droid.fonts.FontType;
 import org.stepic.droid.model.Attempt;
 import org.stepic.droid.model.DiscountingPolicyType;
@@ -149,9 +147,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
     protected void injectComponent() {
         App.Companion
                 .componentManager()
-                .routingComponent()
-                .stepComponentBuilder()
-                .build()
+                .stepComponent(step.getId())
                 .inject(this);
     }
 
@@ -497,11 +493,6 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
 
     protected String getCorrectString() {
         return correctString;
-    }
-
-    @Subscribe
-    public void onNewCommentWasAdded(NewCommentWasAddedOrUpdateEvent event) {
-        super.onNewCommentWasAdded(event);
     }
 
     @Override

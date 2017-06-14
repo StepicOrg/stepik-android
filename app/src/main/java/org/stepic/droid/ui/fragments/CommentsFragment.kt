@@ -1,8 +1,10 @@
 package org.stepic.droid.ui.fragments
 
+import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -14,7 +16,6 @@ import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.*
 import android.widget.Toast
-import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.appbar_only_toolbar.*
 import kotlinx.android.synthetic.main.empty_comments.*
 import kotlinx.android.synthetic.main.fragment_comments.*
@@ -26,12 +27,15 @@ import org.stepic.droid.base.App
 import org.stepic.droid.base.Client
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.core.CommentManager
+import org.stepic.droid.core.comment_count.contract.CommentCountPoster
 import org.stepic.droid.core.comments.contract.CommentsListener
 import org.stepic.droid.core.presenters.DiscussionPresenter
+import org.stepic.droid.core.presenters.VotePresenter
 import org.stepic.droid.core.presenters.contracts.DiscussionView
-import org.stepic.droid.events.comments.*
+import org.stepic.droid.core.presenters.contracts.VoteView
 import org.stepic.droid.model.User
 import org.stepic.droid.model.comments.*
+import org.stepic.droid.ui.activities.NewCommentActivity
 import org.stepic.droid.ui.adapters.CommentsAdapter
 import org.stepic.droid.ui.dialogs.DeleteCommentDialogFragment
 import org.stepic.droid.ui.util.ContextMenuRecyclerView
@@ -39,10 +43,6 @@ import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.StringUtil
 import org.stepic.droid.util.getFirstAndLastName
-import org.stepic.droid.web.VoteResponse
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.util.*
 import javax.inject.Inject
 
@@ -50,8 +50,9 @@ import javax.inject.Inject
 class CommentsFragment : FragmentBase(),
         SwipeRefreshLayout.OnRefreshListener,
         DiscussionView,
-        CommentsListener {
-
+        CommentsListener,
+        DeleteCommentDialogFragment.DialogCallback,
+        VoteView {
     companion object {
         private val discussionIdKey = "dis_id_key"
         private val stepIdKey = "stepId"
@@ -95,10 +96,18 @@ class CommentsFragment : FragmentBase(),
     @Inject
     lateinit var commentsClient: Client<CommentsListener>
 
+    @Inject
+    lateinit var votePresenter: VotePresenter
+
+    @Inject
+    lateinit var commentCountPoster: CommentCountPoster
+
 
     override fun injectComponent() {
+        stepId = arguments.getLong(stepIdKey)
         App
-                .component()
+                .componentManager()
+                .stepComponent(stepId!!)
                 .commentsComponentBuilder()
                 .build()
                 .inject(this)
@@ -116,7 +125,6 @@ class CommentsFragment : FragmentBase(),
     override fun onViewCreated(v: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         discussionId = arguments.getString(discussionIdKey)
-        stepId = arguments.getLong(stepIdKey)
         setHasOptionsMenu(true)
         initToolbar()
         initSwipeRefreshLayout()
@@ -125,7 +133,7 @@ class CommentsFragment : FragmentBase(),
 
         commentsClient.subscribe(this)
         discussionPresenter.attachView(this)
-        bus.register(this)
+        votePresenter.attachView(this)
 
         showEmptyProgressOnCenter()
         if (commentManager.isEmpty()) {
@@ -151,7 +159,7 @@ class CommentsFragment : FragmentBase(),
     private fun initAddCommentButton() {
         addNewCommentButton.setOnClickListener {
             stepId?.let {
-                screenManager.openNewCommentForm(activity, it, null)
+                screenManager.openNewCommentForm(this, it, null)
             }
         }
     }
@@ -319,6 +327,7 @@ class CommentsFragment : FragmentBase(),
         val commentId = comment?.id
         commentId?.let {
             val dialog = DeleteCommentDialogFragment.Companion.newInstance(it)
+            dialog.setTargetFragment(this, 0)
             if (!dialog.isAdded) {
                 dialog.show(fragmentManager, null)
             }
@@ -329,7 +338,7 @@ class CommentsFragment : FragmentBase(),
     private fun replyToComment(position: Int) {
         val comment: Comment? = commentManager.getItemWithNeedUpdatingInfoByPosition(position).comment
         comment?.let {
-            screenManager.openNewCommentForm(activity, stepId, it.parent ?: it.id)
+            screenManager.openNewCommentForm(this, stepId, it.parent ?: it.id)
         }
     }
 
@@ -357,65 +366,14 @@ class CommentsFragment : FragmentBase(),
         val commentId = comment.id ?: return
         voteId?.let {
             val voteObject = Vote(voteId, voteValue)
-            api.makeVote(it, voteValue).enqueue(object : Callback<VoteResponse> {
-                override fun onResponse(call: Call<VoteResponse>?, response: Response<VoteResponse>?) {
-                    //todo event for update
-                    if (response?.isSuccessful ?: false) {
-                        bus.post(LikeCommentSuccessEvent(commentId, voteObject))
-                    } else {
-                        bus.post(LikeCommentFailEvent())
-                    }
-                }
-
-                override fun onFailure(call: Call<VoteResponse>?, t: Throwable?) {
-                    //todo event for fail
-                    bus.post(LikeCommentFailEvent())
-                }
-            })
+            votePresenter.doVote(voteObject, commentId)
         }
 
     }
 
-    @Subscribe
-    fun onLikeCommentFail(event: LikeCommentFailEvent) {
-        Toast.makeText(context, R.string.internet_problem, Toast.LENGTH_SHORT).show()
-    }
-
-    @Subscribe
-    fun onLikeCommentSuccess(event: LikeCommentSuccessEvent) {
-        commentManager.loadCommentsByIds(longArrayOf(event.commentId))
-        Toast.makeText(context, R.string.done, Toast.LENGTH_SHORT).show()
-    }
 
     private fun loadDiscussionProxyById(id: String = discussionId) {
         discussionPresenter.loadDiscussion(id)
-    }
-
-    @Subscribe
-    fun onInternetConnectionProblem(event: InternetConnectionProblemInCommentsEvent) {
-        if (event.discussionProxyId.isNullOrBlank() || event.discussionProxyId == discussionId) {
-            cancelSwipeRefresh()
-            if (commentManager.isEmpty()) {
-                showInternetConnectionProblem()
-            } else {
-                Toast.makeText(context, R.string.connectionProblems, Toast.LENGTH_SHORT).show()
-                commentManager.clearAllLoadings()
-                commentAdapter.notifyDataSetChanged()
-            }
-        }
-    }
-
-
-    @Subscribe
-    fun onNeedUpdate(needUpdateEvent: NewCommentWasAddedOrUpdateEvent) {
-        if (needUpdateEvent.targetId == stepId) {
-            if (needUpdateEvent.newCommentInsertOrUpdate != null) {
-                //share for updating:
-                needInsertOrUpdateLate = needUpdateEvent.newCommentInsertOrUpdate
-            }
-            //without animation.
-            onRefresh() // it can be dangerous, when 10 or more comments was submit by another users.
-        }
     }
 
     override fun onStop() {
@@ -426,8 +384,8 @@ class CommentsFragment : FragmentBase(),
     override fun onDestroyView() {
         super.onDestroyView()
         commentsClient.unsubscribe(this)
-        bus.unregister(this)
         discussionPresenter.detachView(this)
+        votePresenter.detachView(this)
 
         swipeRefreshLayoutComments.setOnRefreshListener(null)
         addNewCommentButton.setOnClickListener(null)
@@ -471,11 +429,6 @@ class CommentsFragment : FragmentBase(),
 
     private fun cancelSwipeRefresh() {
         ProgressHelper.dismiss(swipeRefreshLayoutComments)
-    }
-
-    @Subscribe
-    fun onFailDeleteComment(event: FailDeleteCommentEvent) {
-        Toast.makeText(context, R.string.fail_delete_comment, Toast.LENGTH_SHORT).show()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -568,5 +521,53 @@ class CommentsFragment : FragmentBase(),
         onConnectionProblemBase()
     }
 
+    //VoteView
+    override fun onVoteSuccess(commentId: Long) {
+        commentManager.loadCommentsByIds(longArrayOf(commentId))
+        Toast.makeText(context, R.string.done, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onVoteFail() {
+        Toast.makeText(context, R.string.internet_problem, Toast.LENGTH_SHORT).show()
+    }
+
+    // begin  DeleteCommentDialogFragment.DialogCallback
+
+    override fun onFailDeleteComment() {
+        Toast.makeText(context, R.string.fail_delete_comment, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onDeleteConnectionProblem() {
+        onConnectionProblemBase()
+    }
+
+    override fun onCommentWasDeleted(target: Long, comment: Comment) {
+        handleCommentCountWasUpdated(target, comment)
+    }
+
+    //     end DeleteCommentDialogFragment.DialogCallback
+
+    private fun handleCommentCountWasUpdated(target: Long, comment: Comment) {
+        needInsertOrUpdateLate = comment
+        //without animation.
+        onRefresh() // it can be dangerous, when 10 or more comments was submit by another users.
+
+        commentCountPoster.updateCommentCount(target, comment)//say to step, that count is updated
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == NewCommentActivity.requestCode) {
+                data?.let {
+                    val newComment = data.getParcelableExtra<Comment>(NewCommentActivity.keyComment)
+                    val target = data.getLongExtra(NewCommentActivity.keyTarget, 0)
+
+                    handleCommentCountWasUpdated(target, newComment)
+                }
+            }
+        }
+    }
 
 }
