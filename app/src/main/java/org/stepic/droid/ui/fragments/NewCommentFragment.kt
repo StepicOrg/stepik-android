@@ -175,7 +175,6 @@ class NewCommentFragment : FragmentBase(), OnBackClickListener {
                                 val data = Intent()
                                 //set id, target, parent
                                 data.putExtra(NewCommentActivity.keyComment, newComment)
-                                data.putExtra(NewCommentActivity.keyTarget, target ?: 0)
                                 activity?.setResult(Activity.RESULT_OK, data)
                             }
                             Toast.makeText(App.getAppContext(), R.string.comment_sent, Toast.LENGTH_SHORT).show()

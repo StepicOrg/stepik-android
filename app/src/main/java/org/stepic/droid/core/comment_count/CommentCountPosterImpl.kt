@@ -10,10 +10,10 @@ class CommentCountPosterImpl
 @Inject constructor(
         private val listenerContainer: ListenerContainer<CommentCountListener>)
     : CommentCountPoster {
-    override fun updateCommentCount(target: Long, comment: Comment) {
+    override fun updateCommentCount() {
         listenerContainer
                 .asIterable()
-                .forEach { it.onCommentCountUpdated(target, comment) }
+                .forEach { it.onCommentCountUpdated() }
     }
 
 }

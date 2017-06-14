@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.core.comment_count.contract.CommentCountListener;
@@ -22,7 +21,6 @@ import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
-import org.stepic.droid.model.comments.Comment;
 import org.stepic.droid.storage.operations.DatabaseFacade;
 import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout;
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment;
@@ -316,7 +314,7 @@ public abstract class StepBaseFragment extends FragmentBase
     }
 
     @Override
-    public void onCommentCountUpdated(long target, @NotNull Comment comment) {
+    public void onCommentCountUpdated() {
         long[] arr = new long[]{step.getId()};
         api.getSteps(arr).enqueue(new StepResponseCallback(threadPoolExecutor, databaseFacade, this));
     }

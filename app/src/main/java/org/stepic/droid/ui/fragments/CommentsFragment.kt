@@ -557,12 +557,12 @@ class CommentsFragment : FragmentBase(),
 
     //     end DeleteCommentDialogFragment.DialogCallback
 
-    private fun handleCommentCountWasUpdated(target: Long, comment: Comment) {
+    private fun handleCommentCountWasUpdated(comment: Comment) {
         needInsertOrUpdateLate = comment
         //without animation.
         onRefresh() // it can be dangerous, when 10 or more comments was submit by another users.
 
-        commentCountPoster.updateCommentCount(target, comment)//say to step, that count is updated
+        commentCountPoster.updateCommentCount()//say to listeners, that count is updated
     }
 
 
@@ -572,9 +572,8 @@ class CommentsFragment : FragmentBase(),
             if (requestCode == NewCommentActivity.requestCode) {
                 data?.let {
                     val newComment = data.getParcelableExtra<Comment>(NewCommentActivity.keyComment)
-                    val target = data.getLongExtra(NewCommentActivity.keyTarget, 0)
 
-                    handleCommentCountWasUpdated(target, newComment)
+                    handleCommentCountWasUpdated(newComment)
                 }
             }
         }
