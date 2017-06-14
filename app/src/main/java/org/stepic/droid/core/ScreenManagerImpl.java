@@ -495,7 +495,11 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void openComments(Context context, @Nullable String discussionProxyId, long stepId) {
+        openComments(context, discussionProxyId, stepId, false);
+    }
 
+    @Override
+    public void openComments(Context context, String discussionProxyId, long stepId, boolean needOpenForm) {
         if (discussionProxyId == null) {
             analytic.reportEvent(Analytic.Screens.OPEN_COMMENT_NOT_AVAILABLE);
             Toast.makeText(context, R.string.comment_denied, Toast.LENGTH_SHORT).show();
@@ -506,10 +510,12 @@ public class ScreenManagerImpl implements ScreenManager {
             Bundle bundle = new Bundle();
             bundle.putString(CommentsActivity.Companion.getKeyDiscussionProxyId(), discussionProxyId);
             bundle.putLong(CommentsActivity.Companion.getKeyStepId(), stepId);
+            bundle.putBoolean(CommentsActivity.Companion.getKeyNeedInstaOpenForm(), needOpenForm);
             intent.putExtras(bundle);
             context.startActivity(intent);
         }
     }
+
 
     @Override
     public void openNewCommentForm(CommentsFragment commentsFragment, Long target, @Nullable Long parent) {

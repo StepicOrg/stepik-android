@@ -56,6 +56,7 @@ class CommentsFragment : FragmentBase(),
     companion object {
         private val discussionIdKey = "dis_id_key"
         private val stepIdKey = "stepId"
+        private val needInstaOpenKey = "needInstaOpenKey"
 
         private val replyMenuId = 100
         private val likeMenuId = 101
@@ -69,10 +70,11 @@ class CommentsFragment : FragmentBase(),
         var firstLinkShift = 0
 
 
-        fun newInstance(discussionId: String, stepId: Long): Fragment {
+        fun newInstance(discussionId: String, stepId: Long, needInstaOpen: Boolean): Fragment {
             val args = Bundle()
             args.putString(discussionIdKey, discussionId)
             args.putLong(stepIdKey, stepId)
+            args.putBoolean(needInstaOpenKey, needInstaOpen)
             val fragment = CommentsFragment()
             fragment.arguments = args
             return fragment
@@ -134,6 +136,14 @@ class CommentsFragment : FragmentBase(),
         commentsClient.subscribe(this)
         discussionPresenter.attachView(this)
         votePresenter.attachView(this)
+
+
+        //open form requested from caller
+        val needInstaOpenForm = arguments.getBoolean(needInstaOpenKey)
+        if (needInstaOpenForm) {
+            screenManager.openNewCommentForm(this, stepId, null)
+            arguments.putBoolean(needInstaOpenKey, false)
+        }
 
         showEmptyProgressOnCenter()
         if (commentManager.isEmpty()) {

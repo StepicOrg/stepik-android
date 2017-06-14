@@ -98,7 +98,6 @@ public abstract class StepBaseFragment extends FragmentBase
 
     @Override
     protected void injectComponent() {
-        step = getArguments().getParcelable(AppConstants.KEY_STEP_BUNDLE);
         App.Companion
                 .componentManager()
                 .stepComponent(step.getId())
@@ -115,11 +114,11 @@ public abstract class StepBaseFragment extends FragmentBase
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setRetainInstance(true);
+        step = getArguments().getParcelable(AppConstants.KEY_STEP_BUNDLE);
         lesson = getArguments().getParcelable(AppConstants.KEY_LESSON_BUNDLE);
         unit = getArguments().getParcelable(AppConstants.KEY_UNIT_BUNDLE);
         section = getArguments().getParcelable(AppConstants.KEY_SECTION_BUNDLE);
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -193,10 +192,11 @@ public abstract class StepBaseFragment extends FragmentBase
             public void onClick(View v) {
                 int discussionCount = step.getDiscussions_count();
                 analytic.reportEvent(Analytic.Comments.OPEN_FROM_STEP_UI);
-                screenManager.openComments(getContext(), step.getDiscussion_proxy(), step.getId());
+
                 if (discussionCount == 0) {
-                    //// TODO: 14.06.17 add flag to openComments 
-//                    screenManager.openNewCommentForm(getActivity(), step.getId(), null); //show new form, but in back stack comment oldList is exist.
+                    screenManager.openComments(getContext(), step.getDiscussion_proxy(), step.getId(), true); //show new form, but in back stack comment oldList is exist.
+                } else {
+                    screenManager.openComments(getContext(), step.getDiscussion_proxy(), step.getId());
                 }
             }
         });

@@ -48,6 +48,8 @@ public interface ScreenManager {
 
     void openComments(Context context, String discussionProxyId, long stepId);
 
+    void openComments(Context context, String discussionProxyId, long stepId, boolean needOpenForm);
+
     void openNewCommentForm(CommentsFragment commentsFragment, Long target, @Nullable Long parent);
 
     void showSections(Activity sourceActivity, @NotNull Course course);
