@@ -1,7 +1,7 @@
 package org.stepic.droid.core
 
 import com.squareup.otto.Bus
-import org.stepic.droid.base.App
+import org.stepic.droid.di.comment.CommentsScope
 import org.stepic.droid.events.comments.CommentsLoadedSuccessfullyEvent
 import org.stepic.droid.events.comments.InternetConnectionProblemInCommentsEvent
 import org.stepic.droid.model.CommentAdapterItem
@@ -18,16 +18,13 @@ import retrofit2.Response
 import java.util.*
 import javax.inject.Inject
 
-class CommentManager @Inject constructor() {
-
-    @Inject
-    lateinit var bus: Bus
-
-    @Inject
-    lateinit var api: Api
-
-    @Inject
-    lateinit var sharedPrefs: SharedPreferenceHelper
+@CommentsScope
+class CommentManager @Inject constructor(
+        private val api: Api,
+        @Deprecated("use rxJava or listener pattern instead")
+        private val bus: Bus,
+        private val sharedPrefs: SharedPreferenceHelper
+) {
 
     private var discussionProxy: DiscussionProxy? = null
     private val discussionOrderList: MutableList<Long> = ArrayList()
@@ -129,8 +126,8 @@ class CommentManager @Inject constructor() {
             i++
             if (parentComment.replies != null && !parentComment.replies.isEmpty()) {
                 var childIndex = 0
-                if (parentCommentToSumOfCachedReplies[parentComment.id] ?: 0 > parentComment.reply_count ?: 0) {
-                    parentCommentToSumOfCachedReplies.put(parentComment.id!!, parentComment.reply_count!!) //if we remove some reply
+                if (parentCommentToSumOfCachedReplies[parentComment.id] ?: 0 > parentComment.replyCount ?: 0) {
+                    parentCommentToSumOfCachedReplies.put(parentComment.id!!, parentComment.replyCount!!) //if we remove some reply
                 }
                 val cachedRepliesNumber = parentCommentToSumOfCachedReplies.get(parentComment.id) ?: 0
 
@@ -199,7 +196,7 @@ class CommentManager @Inject constructor() {
             //comment is reply
             val pos: Int = replyToPositionInParentMap[comment.id]!!
             val numberOfCached = parentCommentToSumOfCachedReplies[parentComment.id]
-            if ((pos + 1) == numberOfCached && parentComment.reply_count ?: 0 > numberOfCached) {
+            if ((pos + 1) == numberOfCached && parentComment.replyCount ?: 0 > numberOfCached) {
                 needUpdate = true
             }
         }
@@ -264,14 +261,6 @@ class CommentManager @Inject constructor() {
         return voteMap[voteId]
     }
 
-    fun insertOrUpdateVote(vote: Vote) {
-        voteMap[vote.id] = vote
-    }
-
-    fun getPositionOfComment(commentId: Long): Int {
-        return cachedCommentsList.indexOfFirst { it.id == commentId }
-    }
-
     fun resetAll(dP: DiscussionProxy? = null) {
         parentIdToPositionInDiscussionMap.clear()
         if (dP != null) {
@@ -290,19 +279,11 @@ class CommentManager @Inject constructor() {
         voteMap.clear()
     }
 
-    fun getCommentById(commentId: Long?): Comment? {
-        return cachedCommentsSetMap[commentId]
-    }
-
     fun clearAllLoadings() {
         commentIdIsLoading.clear()
         repliesIdIsLoading.clear()
     }
 
     fun isDiscussionProxyNull() = (discussionProxyId == null)
-
-    init {
-        App.component().inject(this)
-    }
 
 }

@@ -132,8 +132,6 @@ interface AppCoreComponent {
 
     fun inject(downloadPoster: DownloadPoster)
 
-    fun inject(commentManager: CommentManager)
-
     fun inject(chooseStorageDialog: ChooseStorageDialog)
 
     fun inject(wantMoveDataDialog: WantMoveDataDialog)

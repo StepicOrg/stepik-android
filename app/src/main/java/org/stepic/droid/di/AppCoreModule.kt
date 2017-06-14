@@ -249,12 +249,6 @@ abstract class AppCoreModule {
             return Executors.newCachedThreadPool() as ThreadPoolExecutor
         }
 
-        @Provides
-        @JvmStatic
-        internal fun provideCommentsManager(): CommentManager {
-            return CommentManager()
-        }
-
         /**
          * this retrofit is only for parsing error body
          */

@@ -25,12 +25,11 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.core.CommentManager
+import org.stepic.droid.core.presenters.DiscussionPresenter
+import org.stepic.droid.core.presenters.contracts.DiscussionView
 import org.stepic.droid.events.comments.*
 import org.stepic.droid.model.User
-import org.stepic.droid.model.comments.Comment
-import org.stepic.droid.model.comments.DiscussionOrder
-import org.stepic.droid.model.comments.Vote
-import org.stepic.droid.model.comments.VoteValue
+import org.stepic.droid.model.comments.*
 import org.stepic.droid.ui.adapters.CommentsAdapter
 import org.stepic.droid.ui.dialogs.DeleteCommentDialogFragment
 import org.stepic.droid.ui.util.ContextMenuRecyclerView
@@ -38,7 +37,6 @@ import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.StringUtil
 import org.stepic.droid.util.getFirstAndLastName
-import org.stepic.droid.web.DiscussionProxyResponse
 import org.stepic.droid.web.VoteResponse
 import retrofit2.Call
 import retrofit2.Callback
@@ -47,12 +45,13 @@ import java.util.*
 import javax.inject.Inject
 
 
-class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
+class CommentsFragment : FragmentBase(),
+        SwipeRefreshLayout.OnRefreshListener,
+        DiscussionView {
 
     companion object {
         private val discussionIdKey = "dis_id_key"
         private val stepIdKey = "stepId"
-
 
         private val replyMenuId = 100
         private val likeMenuId = 101
@@ -87,6 +86,9 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     var needInsertOtUpdateLate: Comment? = null
     val links = ArrayList<String>()
 
+    @Inject
+    lateinit var discussionPresenter: DiscussionPresenter
+
 
     override fun injectComponent() {
         App
@@ -114,6 +116,28 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
         initSwipeRefreshLayout()
         initRecyclerView()
         initAddCommentButton()
+
+        discussionPresenter.attachView(this)
+        bus.register(this)
+        showEmptyProgressOnCenter()
+        if (commentManager.isEmpty()) {
+            loadDiscussionProxyById()
+        } else {
+            showEmptyProgressOnCenter(false)
+        }
+    }
+
+    private fun initToolbar() {
+        (activity as AppCompatActivity).setSupportActionBar(toolbar as Toolbar)
+        (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    private fun initSwipeRefreshLayout() {
+        swipeRefreshLayoutComments.setOnRefreshListener(this)
+        swipeRefreshLayoutComments.setColorSchemeResources(
+                R.color.stepic_brand_primary,
+                R.color.stepic_orange_carrot,
+                R.color.stepic_blue_ribbon)
     }
 
     private fun initAddCommentButton() {
@@ -351,67 +375,12 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
 
     @Subscribe
     fun onLikeCommentSuccess(event: LikeCommentSuccessEvent) {
-//        commentManager.insertOrUpdateVote(event.vote)
-//        val position : Int = commentManager.getPositionOfComment(event.commentId)
-//        if (position >= 0 && position< commentManager.getSize()){
-//            commentAdapter.notifyItemChanged(position)
-//        }
-        //SO, comment count is not updated
-
         commentManager.loadCommentsByIds(longArrayOf(event.commentId))
         Toast.makeText(context, R.string.done, Toast.LENGTH_SHORT).show()
-//        floatingActionButton?.let {
-//            Snackbar.make(it, "Success!", Snackbar.LENGTH_SHORT)
-//                    .setTextColor(ColorUtil.getColorArgb(R.color.white))
-//                    .show()
-//        }
-    }
-
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        bus.register(this)
-        showEmptyProgressOnCenter()
-        if (commentManager.isEmpty()) {
-            loadDiscussionProxyById()
-        } else {
-            showEmptyProgressOnCenter(false)
-        }
-    }
-
-    private fun initSwipeRefreshLayout() {
-        swipeRefreshLayoutComments.setOnRefreshListener(this)
-        swipeRefreshLayoutComments.setColorSchemeResources(
-                R.color.stepic_brand_primary,
-                R.color.stepic_orange_carrot,
-                R.color.stepic_blue_ribbon)
-    }
-
-    fun initToolbar() {
-        (activity as AppCompatActivity).setSupportActionBar(toolbar as Toolbar)
-        (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     private fun loadDiscussionProxyById(id: String = discussionId) {
-        api.getDiscussionProxies(id).enqueue(object : Callback<DiscussionProxyResponse> {
-            override fun onResponse(call: Call<DiscussionProxyResponse>?, response: Response<DiscussionProxyResponse>?) {
-                if (response != null && response.isSuccessful) {
-                    val discussionProxy = response.body().discussionProxies.firstOrNull()
-                    if (discussionProxy != null && discussionProxy.discussions.isNotEmpty()) {
-                        bus.post(DiscussionProxyLoadedSuccessfullyEvent(discussionProxy))
-                    } else {
-                        bus.post(EmptyCommentsInDiscussionProxyEvent(id, discussionProxy))
-                    }
-                } else {
-                    bus.post(InternetConnectionProblemInCommentsEvent(discussionId))
-                }
-            }
-
-            override fun onFailure(call: Call<DiscussionProxyResponse>?, t: Throwable?) {
-                bus.post(InternetConnectionProblemInCommentsEvent(discussionId))
-            }
-
-        })
+        discussionPresenter.loadDiscussion(id)
     }
 
     @Subscribe
@@ -428,27 +397,6 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
         }
     }
 
-    @Subscribe
-    fun onEmptyComments(event: EmptyCommentsInDiscussionProxyEvent) {
-        cancelSwipeRefresh()
-        if (event.discussionProxyId != discussionId) {
-            return
-        }
-        if (!commentManager.isEmpty()) {
-            commentManager.resetAll(event.discussionProxy)
-            commentAdapter.notifyDataSetChanged()
-        }
-        showEmptyState()
-    }
-
-    @Subscribe
-    fun onDiscussionProxyLoadedSuccessfully(successfullyEvent: DiscussionProxyLoadedSuccessfullyEvent) {
-        activity?.let {
-            commentManager.setDiscussionProxy(successfullyEvent.discussionProxy)
-            activity.invalidateOptionsMenu()
-            commentManager.loadComments()
-        }
-    }
 
     @Subscribe
     fun onCommentsLoadedSuccessfully(successfullyEvent: CommentsLoadedSuccessfullyEvent) {
@@ -496,6 +444,8 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     override fun onDestroyView() {
         super.onDestroyView()
         bus.unregister(this)
+        discussionPresenter.detachView(this)
+
         swipeRefreshLayoutComments.setOnRefreshListener(null)
         addNewCommentButton.setOnClickListener(null)
         unregisterForContextMenu(recyclerViewComments)
@@ -571,6 +521,35 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+
+    //Comments View:
+
+    override fun onInternetProblemInComments() {
+        cancelSwipeRefresh()
+        if (commentManager.isEmpty()) {
+            showInternetConnectionProblem()
+        } else {
+            Toast.makeText(context, R.string.connectionProblems, Toast.LENGTH_SHORT).show()
+            commentManager.clearAllLoadings()
+            commentAdapter.notifyDataSetChanged()
+        }
+    }
+
+    override fun onEmptyComments(discussionProxy: DiscussionProxy) {
+        cancelSwipeRefresh()
+        if (!commentManager.isEmpty()) {
+            commentManager.resetAll(discussionProxy)
+            commentAdapter.notifyDataSetChanged()
+        }
+        showEmptyState()
+    }
+
+    override fun onLoaded(discussionProxy: DiscussionProxy) {
+        commentManager.setDiscussionProxy(discussionProxy)
+        activity?.invalidateOptionsMenu()
+        commentManager.loadComments()
     }
 
 
