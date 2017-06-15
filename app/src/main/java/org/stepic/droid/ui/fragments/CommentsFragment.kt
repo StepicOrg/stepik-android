@@ -551,8 +551,8 @@ class CommentsFragment : FragmentBase(),
         onConnectionProblemBase()
     }
 
-    override fun onCommentWasDeleted(target: Long, comment: Comment) {
-        handleCommentCountWasUpdated(target, comment)
+    override fun onCommentWasDeleted(comment: Comment) {
+        handleCommentCountWasUpdated(comment)
     }
 
     //     end DeleteCommentDialogFragment.DialogCallback
