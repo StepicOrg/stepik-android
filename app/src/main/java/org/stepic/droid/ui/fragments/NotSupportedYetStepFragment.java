@@ -7,12 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.squareup.otto.Subscribe;
-
 import org.stepic.droid.R;
 import org.stepic.droid.base.StepBaseFragment;
-import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent;
-import org.stepic.droid.events.steps.StepWasUpdatedEvent;
 
 import butterknife.BindView;
 
@@ -38,14 +34,4 @@ public class NotSupportedYetStepFragment extends StepBaseFragment {
         });
     }
 
-    @Subscribe
-    public void onNewCommentWasAdded(NewCommentWasAddedOrUpdateEvent event) {
-        super.onNewCommentWasAdded(event);
-
-    }
-
-    @Subscribe
-    public void onStepWasUpdated(StepWasUpdatedEvent event) {
-        super.onStepWasUpdated(event);
-    }
 }

@@ -98,8 +98,8 @@ public class UnitDaoImpl extends DaoBase<Unit> {
 
     @Nullable
     @Override
-    public Unit get(String whereColumn, String whereValue) {
-        Unit unit = super.get(whereColumn, whereValue);
+    public Unit get(String whereColumnName, String whereValue) {
+        Unit unit = super.get(whereColumnName, whereValue);
         return determinePassed(unit);
     }
 

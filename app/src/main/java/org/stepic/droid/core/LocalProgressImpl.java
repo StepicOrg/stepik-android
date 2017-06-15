@@ -2,8 +2,9 @@ package org.stepic.droid.core;
 
 import com.squareup.otto.Bus;
 
+import org.jetbrains.annotations.NotNull;
+import org.stepic.droid.base.ListenerContainer;
 import org.stepic.droid.concurrency.MainHandler;
-import org.stepic.droid.events.UpdateSectionProgressEvent;
 import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
@@ -12,9 +13,7 @@ import org.stepic.droid.storage.operations.DatabaseFacade;
 import org.stepic.droid.util.StringUtil;
 import org.stepic.droid.web.Api;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -23,18 +22,23 @@ import timber.log.Timber;
 
 public class LocalProgressImpl implements LocalProgressManager {
     private DatabaseFacade databaseFacade;
-    private Bus bus;
     private Api api;
     private MainHandler mainHandler;
+    private final ListenerContainer<UnitProgressListener> listenerContainer;
+    private final ListenerContainer<SectionProgressListener> sectionProgressListenerListenerContainer;
 
-    private final Set<UnitProgressListener> unitProgressListeners = new HashSet<>();
 
     @Inject
-    public LocalProgressImpl(DatabaseFacade databaseFacade, Bus bus, Api api, MainHandler mainHandler) {
+    public LocalProgressImpl(DatabaseFacade databaseFacade,
+                             Api api,
+                             MainHandler mainHandler,
+                             ListenerContainer<UnitProgressListener> listenerContainer,
+                             ListenerContainer<SectionProgressListener> sectionProgressListenerListenerContainer) {
         this.databaseFacade = databaseFacade;
-        this.bus = bus;
         this.api = api;
         this.mainHandler = mainHandler;
+        this.listenerContainer = listenerContainer;
+        this.sectionProgressListenerListenerContainer = sectionProgressListenerListenerContainer;
     }
 
 
@@ -61,7 +65,7 @@ public class LocalProgressImpl implements LocalProgressManager {
         mainHandler.post(new Function0<kotlin.Unit>() {
             @Override
             public kotlin.Unit invoke() {
-                for (UnitProgressListener unitProgressListener : unitProgressListeners) {
+                for (UnitProgressListener unitProgressListener : listenerContainer.asIterable()) {
                     unitProgressListener.onUnitPassed(unitId);
                 }
                 return kotlin.Unit.INSTANCE;
@@ -92,7 +96,7 @@ public class LocalProgressImpl implements LocalProgressManager {
         mainHandler.post(new Function0<kotlin.Unit>() {
             @Override
             public kotlin.Unit invoke() {
-                for (UnitProgressListener unitProgressListener : unitProgressListeners) {
+                for (UnitProgressListener unitProgressListener : listenerContainer.asIterable()) {
                     unitProgressListener.onScoreUpdated(unitId, finalScoreInUnit);
                 }
                 return kotlin.Unit.INSTANCE;
@@ -117,7 +121,9 @@ public class LocalProgressImpl implements LocalProgressManager {
             mainHandler.post(new Function0<kotlin.Unit>() {
                 @Override
                 public kotlin.Unit invoke() {
-                    bus.post(new UpdateSectionProgressEvent(progress, persistentSection.getCourse()));
+                    for (SectionProgressListener sectionProgressListener : sectionProgressListenerListenerContainer.asIterable()) {
+                        sectionProgressListener.onProgressUpdated(progress, persistentSection.getCourse());
+                    }
                     return kotlin.Unit.INSTANCE;
                 }
             });
@@ -128,17 +134,27 @@ public class LocalProgressImpl implements LocalProgressManager {
 
     @Override
     public synchronized void subscribe(UnitProgressListener unitProgressListener) {
-        unitProgressListeners.add(unitProgressListener);
+        listenerContainer.add(unitProgressListener);
     }
 
     @Override
     public synchronized void unsubscribe(UnitProgressListener unitProgressListener) {
-        unitProgressListeners.remove(unitProgressListener);
+        listenerContainer.remove(unitProgressListener);
     }
 
     private Double getScoreOfProgress(Progress progress) {
         if (progress == null) return null;
         String oldScore = progress.getScore();
         return StringUtil.safetyParseString(oldScore);
+    }
+
+    @Override
+    public void subscribe(@NotNull SectionProgressListener sectionProgressListener) {
+        sectionProgressListenerListenerContainer.add(sectionProgressListener);
+    }
+
+    @Override
+    public void unsubscribe(@NotNull SectionProgressListener sectionProgressListener) {
+        sectionProgressListenerListenerContainer.remove(sectionProgressListener);
     }
 }

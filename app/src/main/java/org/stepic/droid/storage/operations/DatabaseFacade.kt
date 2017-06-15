@@ -1,6 +1,8 @@
 package org.stepic.droid.storage.operations
 
 import android.content.ContentValues
+import org.stepic.droid.di.qualifiers.EnrolledCoursesDaoQualifier
+import org.stepic.droid.di.qualifiers.FeaturedCoursesDaoQualifier
 import org.stepic.droid.di.storage.StorageSingleton
 import org.stepic.droid.model.*
 import org.stepic.droid.model.Unit
@@ -25,19 +27,18 @@ class DatabaseFacade
         private val downloadEntityDao: IDao<DownloadEntity>,
         private val cachedVideoDao: IDao<CachedVideo>,
         private val stepDao: IDao<Step>,
+        @EnrolledCoursesDaoQualifier
         private val coursesEnrolledDao: IDao<Course>,
+        @FeaturedCoursesDaoQualifier
         private val coursesFeaturedDao: IDao<Course>,
         private val notificationDao: IDao<Notification>,
         private val calendarSectionDao: IDao<CalendarSection>,
         private val certificateViewItemDao: IDao<CertificateViewItem>,
         private val videoTimestampDao: IDao<VideoTimestamp>,
         private val lastStepDao: IDao<PersistentLastStep>,
-        private val lastInteractions: IDao<CourseLastInteraction>) {
-
-    init {
-        coursesEnrolledDao.setTableName(Table.enrolled.storeName)
-        coursesFeaturedDao.setTableName(Table.featured.storeName)
-    }
+        private val lastInteractions: IDao<CourseLastInteraction>,
+        private val externalVideoUrlDao: IDao<DbVideoUrl>,
+        private val blockDao : IDao<BlockPersistentWrapper>) {
 
     fun dropDatabase() {
         sectionDao.removeAll()
@@ -54,6 +55,10 @@ class DatabaseFacade
         certificateViewItemDao.removeAll()
         lastStepDao.removeAll()
         lastInteractions.removeAll()
+        blockDao.removeAll()
+        videoTimestampDao.removeAll()
+        externalVideoUrlDao.removeAll()
+        assignmentDao.removeAll()
     }
 
     fun getCourseDao(table: Table) =
@@ -111,7 +116,7 @@ class DatabaseFacade
 
     fun getSectionById(sectionId: Long) = sectionDao.get(DbStructureSections.Column.SECTION_ID, sectionId.toString())
 
-    fun getCourseById(courseId: Long, type: Table) = getCourseDao(type).get(DBStructureCourses.Column.COURSE_ID, courseId.toString())
+    fun getCourseById(courseId: Long, type: Table) = getCourseDao(type).get(DbStructureEnrolledAndFeaturedCourses.Column.COURSE_ID, courseId.toString())
 
     fun getProgressById(progressId: String) = progressDao.get(DbStructureProgress.Column.ID, progressId)
 
@@ -170,7 +175,7 @@ class DatabaseFacade
     fun addCourse(course: Course, type: Table) = getCourseDao(type).insertOrUpdate(course)
 
     fun deleteCourse(course: Course, type: Table) {
-        getCourseDao(type).delete(DBStructureCourses.Column.COURSE_ID, course.courseId.toString())
+        getCourseDao(type).remove(DbStructureEnrolledAndFeaturedCourses.Column.COURSE_ID, course.courseId.toString())
     }
 
     fun addSection(section: Section) = sectionDao.insertOrUpdate(section)
@@ -195,7 +200,7 @@ class DatabaseFacade
     fun addVideo(cachedVideo: CachedVideo?) = cachedVideo?.let { cachedVideoDao.insertOrUpdate(cachedVideo) }
 
     fun deleteDownloadEntityByDownloadId(downloadId: Long) =
-            downloadEntityDao.delete(DbStructureSharedDownloads.Column.DOWNLOAD_ID, downloadId.toString())
+            downloadEntityDao.remove(DbStructureSharedDownloads.Column.DOWNLOAD_ID, downloadId.toString())
 
     fun isExistDownloadEntityByVideoId(videoId: Long) =
             downloadEntityDao.isInDb(DbStructureSharedDownloads.Column.VIDEO_ID, videoId.toString())
@@ -204,16 +209,16 @@ class DatabaseFacade
             deleteVideo(video.id)
 
     fun deleteVideo(videoId: Long) =
-            cachedVideoDao.delete(DbStructureCachedVideo.Column.VIDEO_ID, videoId.toString())
+            cachedVideoDao.remove(DbStructureCachedVideo.Column.VIDEO_ID, videoId.toString())
 
-    fun deleteVideoByUrl(path: String?) = path?.let { cachedVideoDao.delete(DbStructureCachedVideo.Column.URL, path) }
+    fun deleteVideoByUrl(path: String?) = path?.let { cachedVideoDao.remove(DbStructureCachedVideo.Column.URL, path) }
 
     fun deleteStep(step: Step?) {
         val stepId = step?.id ?: return
         deleteStepById(stepId)
     }
 
-    fun deleteStepById(stepId: Long) = stepDao.delete(DbStructureStep.Column.STEP_ID, stepId.toString())
+    fun deleteStepById(stepId: Long) = stepDao.remove(DbStructureStep.Column.STEP_ID, stepId.toString())
 
     fun getCachedVideoById(videoId: Long) = cachedVideoDao.get(DbStructureCachedVideo.Column.VIDEO_ID, videoId.toString())
 
@@ -261,12 +266,12 @@ class DatabaseFacade
     }
 
     fun removeAllNotificationsWithCourseId(courseId: Long) {
-        notificationDao.delete(DbStructureNotification.Column.COURSE_ID, courseId.toString())
+        notificationDao.remove(DbStructureNotification.Column.COURSE_ID, courseId.toString())
     }
 
     fun removeFromQueue(viewAssignmentWrapper: ViewAssignment?) {
         val assignmentId = viewAssignmentWrapper?.assignment ?: return
-        viewAssignmentDao.delete(DbStructureViewQueue.Column.ASSIGNMENT_ID, assignmentId.toString())
+        viewAssignmentDao.remove(DbStructureViewQueue.Column.ASSIGNMENT_ID, assignmentId.toString())
     }
 
     fun markProgressAsPassed(assignmentId: Long) {
@@ -381,7 +386,7 @@ class DatabaseFacade
     }
 
     fun removeSectionsOfCourse(courseId: Long) {
-        sectionDao.delete(DbStructureSections.Column.COURSE, courseId.toString());
+        sectionDao.remove(DbStructureSections.Column.COURSE, courseId.toString());
     }
 
     fun addTimestamp(videoTimestamp: VideoTimestamp) {
@@ -418,6 +423,20 @@ class DatabaseFacade
         }
 
         return ArrayList<Section>()
+    }
+
+    fun insertOrUpdateExternalVideoList(videoId: Long, videoUrlList: List<DbVideoUrl>) {
+        //remove all related with this video and write new
+        externalVideoUrlDao.remove(DbStructureVideoUrl.Column.videoId, videoId.toString())
+        videoUrlList.forEach {
+            externalVideoUrlDao.insertOrUpdate(it)
+        }
+    }
+
+    fun getExternalVideoUrls(videoId: Long): List<DbVideoUrl> {
+        return externalVideoUrlDao
+                .getAll(DbStructureVideoUrl.Column.videoId, videoId.toString())
+                .filterNotNull()
     }
 
 }

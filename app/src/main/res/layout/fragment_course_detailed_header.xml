@@ -15,7 +15,7 @@
 
 
     <include
-        android:id="@+id/player_layout"
+        android:id="@+id/playerLayout"
         layout="@layout/player_placeholder"/>
 
     <include layout="@layout/join_course_view"/>

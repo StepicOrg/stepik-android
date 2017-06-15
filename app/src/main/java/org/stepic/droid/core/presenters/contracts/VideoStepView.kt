@@ -4,9 +4,9 @@ import org.stepic.droid.model.Video
 
 interface VideoStepView {
 
-    fun onNeedOpenVideo(pathToVideo: String, videoId: Long)
+    fun onNeedOpenVideo(videoId: Long, cachedVideo: Video?, externalVideo: Video?)
 
-    fun onVideoLoaded (thumbnailPath : String?, video : Video)
+    fun onVideoLoaded(thumbnailPath: String?, cachedVideo: Video?, externalVideo: Video?)
 
     fun onInternetProblem()
 }

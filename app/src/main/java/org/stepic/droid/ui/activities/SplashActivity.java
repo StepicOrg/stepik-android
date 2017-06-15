@@ -6,12 +6,10 @@ import android.content.pm.ShortcutInfo;
 import android.content.pm.ShortcutManager;
 import android.graphics.drawable.Icon;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
@@ -26,9 +24,6 @@ import kotlin.jvm.functions.Function0;
 
 
 public class SplashActivity extends BackToExitActivityBase {
-
-    // Splash screen wait time
-    private static final int SPLASH_TIME_OUT = 500;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,12 +110,7 @@ public class SplashActivity extends BackToExitActivityBase {
             });
 
         } else {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    checkRemoteConfigs();
-                }
-            }, SPLASH_TIME_OUT);
+            checkRemoteConfigs();
         }
 
     }
@@ -158,8 +148,6 @@ public class SplashActivity extends BackToExitActivityBase {
 
     private void checkRemoteConfigs() {
         if (!isFinishing()) {
-            MixpanelAPI mixpanelAPI = MixpanelAPI.getInstance(getApplicationContext(), config.getMixpanelToken());
-            mixpanelAPI.track("app_opened");
             if (checkPlayServices()) {
                 firebaseRemoteConfig.fetch().addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
@@ -184,11 +172,10 @@ public class SplashActivity extends BackToExitActivityBase {
     private void showNextScreen() {
         if (!isFinishing()) {
             if (sharedPreferenceHelper.getAuthResponseFromStore() != null) {
-                screenManager.showMainFeed(SplashActivity.this);
+                screenManager.showMainFeedFromSplash(SplashActivity.this);
             } else {
-                screenManager.showLaunchScreen(this);
+                screenManager.showLaunchFromSplash(this);
             }
-            finish();
         }
     }
 }

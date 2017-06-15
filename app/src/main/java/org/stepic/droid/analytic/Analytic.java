@@ -153,6 +153,10 @@ public interface Analytic {
         String PLAY = "video_player_play";
         String PAUSE = "video_player_pause";
         String ERROR = "video_player_error";
+        String QUALITY_MENU = "video_player_quality";
+        String CANCEL_VIDEO_QUALITY = "video_player_quality_cancel";
+        String NOW_PLAYING_WAS_NULL = "video_player_now_playing_null";
+        String OLD_STYLE = "video_old_style";
     }
 
     interface AppIndexing {
@@ -206,6 +210,10 @@ public interface Analytic {
         String CHOICES_ARE_SMALLER = "choices_are_smaller";
         String PREVIOUS_VIEW_NOT_DETACHED = "previous_view_not_detached";
         String UNEXPECTED_VIEW = "unexpected_view";
+        String ILLEGAL_STATE_VIDEO_STEP = "illegal_state_video_step";
+        String ILLEGAL_STATE_VIDEO_STEP_PLAY = "illegal_state_video_step_play";
+        String NO_VIDEO_ON_STEP_SHOWING = "illegal_state_video_no_video";
+        String CANT_PARSE_QUALITY = "cant_parse_quality";
     }
 
     interface Web {

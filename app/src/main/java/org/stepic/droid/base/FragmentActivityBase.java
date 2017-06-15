@@ -201,12 +201,12 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        detectScreenShotService();
+//        detectScreenShotService();
     }
 
     @Override
     protected void onStop() {
-        stopDetectingOfScreenshots();
+//        stopDetectingOfScreenshots();
         super.onStop();
     }
 

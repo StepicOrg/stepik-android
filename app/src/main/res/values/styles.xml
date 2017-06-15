@@ -6,8 +6,13 @@
         <item name="colorPrimary">@color/stepic_brand_primary</item>
         <item name="colorPrimaryDark">@color/black</item>
         <item name="colorAccent">@color/stepic_blue_ribbon</item>
+
+        <!--this change the background of main window (activity)-->
         <item name="android:windowBackground">@color/stepic_cover</item>
+
+        <!--this change the background of main window (activity and) AND all the components (dialogs) -->
         <item name="android:colorBackground">@color/stepic_cover</item>
+
         <item name="android:textColor">@color/stepic_regular_text</item>
         <item name="android:textViewStyle">@style/AppTheme.Widget.TextView</item>
         <item name="android:actionBarStyle">@style/StepicActionBar</item>
@@ -55,12 +60,14 @@
 
     <style name="AppTheme.LoginLaunchRegistration">
         <item name="colorPrimaryDark">@color/transparent_black_30</item>
+        <item name="android:windowBackground">@color/login_launch_registration_background</item>
+        <item name="android:colorBackground">@color/login_launch_registration_background</item>
     </style>
 
     <style name="AppTheme.VideoPlayer" parent="AppTheme.VideoPlayer.7"/>
 
     <style name="AppTheme.VideoPlayer.7" parent="Theme.AppCompat">
-        <item name="colorAccent">@color/stepic_blue_ribbon</item>
+        <item name="colorAccent">@color/white</item>
         <item name="colorPrimary">@color/stepic_brand_primary</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

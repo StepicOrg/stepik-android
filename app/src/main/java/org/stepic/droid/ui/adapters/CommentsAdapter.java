@@ -44,18 +44,18 @@ import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.GenericViewHolder> {
+public final class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.GenericViewHolder> {
 
-    public static final int TYPE_PARENT_COMMENT = 1;
-    public static final int TYPE_REPLY = 2;
+    private final int TYPE_PARENT_COMMENT = 1;
+    private final int TYPE_REPLY = 2;
 
-    private CommentManager commentManager;
-    private Context context;
+    private final CommentManager commentManager;
+    private final Context context;
 
-    public DateTimeZone zone;
-    public Locale locale;
+    private final DateTimeZone zone;
+    private final Locale locale;
 
-    Drawable placeholderUserIcon;
+    private final Drawable placeholderUserIcon;
 
     public CommentsAdapter(CommentManager commentManager, Context context) {
         this.commentManager = commentManager;
@@ -115,7 +115,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
             if (needUpdateAndComment.isParentLoading()) {
                 loadMoreParentProgressState();
             } else {
-                if (comment.getReply_count() == 0 && needUpdate) {
+                if (comment.getReplyCount() == 0 && needUpdate) {
                     loadMoreSuggestLoadingState();
                 } else {
                     loadMoreHide();
@@ -188,7 +188,6 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
     }
 
     abstract class GenericViewHolder extends RecyclerView.ViewHolder {
-
         @BindView(R.id.enhanced_text_view)
         LatexSupportableEnhancedFrameLayout commentTextEnhanced;
 
@@ -295,7 +294,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
             if (comment.is_deleted() != null && comment.is_deleted()) {
                 commentClickableRoot.setBackgroundColor(ColorUtil.INSTANCE.getColorArgb(R.color.wrong_answer_background, context));
 
-                if (comment.getText() != null && !comment.getText().isEmpty()) {
+                if (!comment.getText().isEmpty()) {
                     int weakColorInt = ColorUtil.INSTANCE.getColorArgb(R.color.stepic_weak_text, context);
                     String hexColor = String.format("#%06X", (0xFFFFFF & weakColorInt));
                     String deletedCommentWithText = commentIsDeletedMessage + "<br>" + "<font color='" + hexColor + "'>" + comment.getText() + "</font>";
@@ -373,14 +372,14 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
                 userName.setVisibility(View.GONE);
             }
 
-            if (comment.is_pinned() != null && comment.is_pinned()) {
+            if (comment.isPinned()) {
                 pinnedIndicator.setVisibility(View.VISIBLE);
             } else {
                 pinnedIndicator.setVisibility(View.GONE);
             }
 
-            if (comment.getUser_role() != null && comment.getUser_role().getResource() != null) {
-                userRole.setText(context.getString(comment.getUser_role().getResource()));
+            if (comment.getUserRole() != null && comment.getUserRole().getResource() != null) {
+                userRole.setText(context.getString(comment.getUserRole().getResource()));
                 userRole.setVisibility(View.VISIBLE);
             } else {
                 userRole.setVisibility(View.GONE);
@@ -408,7 +407,6 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
             progressLoadMoreComments.setVisibility(View.VISIBLE);
             loadMoreTextView.setVisibility(View.GONE);
         }
-
 
         protected final void loadMoreSuggestLoadingState() {
             loadMoreView.setVisibility(View.VISIBLE);

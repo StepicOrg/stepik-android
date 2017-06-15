@@ -13,7 +13,7 @@ import org.stepic.droid.base.App;
 import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.core.LocalProgressManager;
 import org.stepic.droid.core.internet_state.contract.InternetEnabledPoster;
-import org.stepic.droid.events.steps.UpdateStepEvent;
+import org.stepic.droid.core.updating_step.contract.UpdatingStepPoster;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.storage.StoreStateManager;
 import org.stepic.droid.storage.operations.DatabaseFacade;
@@ -60,6 +60,9 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
 
     @Inject
     InternetEnabledPoster internetEnabledPoster;
+
+    @Inject
+    UpdatingStepPoster updatingStepPoster;
 
     private AtomicBoolean inWork = new AtomicBoolean(false);
 
@@ -110,7 +113,7 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
                                 mainHandler.post(new Function0<Unit>() {
                                                      @Override
                                                      public Unit invoke() {
-                                                         bus.post(new UpdateStepEvent(stepId, false));
+                                                         updatingStepPoster.updateStep(stepId, false);
                                                          return Unit.INSTANCE;
                                                      }
                                                  }

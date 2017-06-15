@@ -17,6 +17,8 @@ public class AppConstants {
     public static final String KEY_LESSON_BUNDLE = "lesson";
     public static final String KEY_STEP_BUNDLE = "step";
     public static final String DEFAULT_QUALITY = "360";
+    public static final String MAX_QUALITY = "720";
+    public static final int MAX_QUALITY_INT = 720;
     public static final String KEY_LOAD_TYPE = "KEY_LOAD_TYPE";
     public static final String KEY_TABLE_TYPE = "table_type";
     public static final String COMMENT_DATE_TIME_PATTERN = "dd.MM.yyyy HH:mm";

@@ -19,7 +19,7 @@ import org.stepic.droid.core.presenters.NotificationListPresenter;
 import org.stepic.droid.fonts.FontType;
 import org.stepic.droid.fonts.FontsProvider;
 import org.stepic.droid.notifications.model.Notification;
-import org.stepic.droid.ui.NotificationCategory;
+import org.stepic.droid.model.NotificationCategory;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DateTimeHelper;
 import org.stepic.droid.util.resolvers.text.TextResolver;

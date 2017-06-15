@@ -46,7 +46,7 @@ import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.serializers.ReplySerializer;
 import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.social.SocialManager;
-import org.stepic.droid.ui.NotificationCategory;
+import org.stepic.droid.model.NotificationCategory;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DeviceInfoUtil;
 import org.stepic.droid.util.RWLocks;

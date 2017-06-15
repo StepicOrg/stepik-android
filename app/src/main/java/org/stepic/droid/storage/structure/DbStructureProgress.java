@@ -1,9 +1,8 @@
 package org.stepic.droid.storage.structure;
 
-public final class DbStructureProgress extends DBStructureBase{
-    private static String[] usedColumns = null;
-
+public final class DbStructureProgress {
     public static final String PROGRESS = "progress";
+    private static String[] usedColumns;
 
     public static final class Column {
         public static final String ID = "progress_id";
