@@ -68,22 +68,18 @@ class VideoQualityDialogInPlayer : VideoQualityDialogBase() {
         val cachedVideo: Video? = arguments.getParcelable<Video>(cachedVideoKey)
         val nowPlayingUrl = arguments.getString(nowPlayingKey)
 
-        var position = 0
-        let {
-            externalVideo?.urls?.forEach {
-                if (greaterThanMaxQuality(it.quality)) {
-                    return@forEach // continue
-                }
+        val listOfVideoUrl: MutableList<VideoUrl> =
+                externalVideo
+                        ?.urls
+                        ?.filter {
+                            !greaterThanMaxQuality(it.quality)
+                        }
+                        ?.toMutableList()
+                        ?: ArrayList()
 
-                if (it.url != nowPlayingUrl) {
-                    position++
-                } else {
-                    return@let
-                }
-            }
-        }
+
         // if it is not external, than position will be after all external qualities
-        val listOfUrls: MutableList<String> =
+        val listOfPresentedQuality: MutableList<String> =
                 externalVideo
                         ?.urls
                         ?.map { it.quality }
@@ -93,10 +89,15 @@ class VideoQualityDialogInPlayer : VideoQualityDialogBase() {
                         ?.toMutableList()
                         ?: ArrayList()
 
-        cachedVideo?.urls?.firstOrNull()?.quality?.let {
-            listOfUrls.add(getString(R.string.video_player_downloaded_quality, it))
+        cachedVideo?.urls?.firstOrNull()?.let {
+            listOfPresentedQuality.add(getString(R.string.video_player_downloaded_quality, it.quality))
+            listOfVideoUrl.add(it)
         }
 
+
+        val position: Int = listOfVideoUrl
+                .map { it.url }
+                .indexOf(nowPlayingUrl)
 
         val builder = AlertDialog.Builder(activity)
         builder
@@ -104,19 +105,14 @@ class VideoQualityDialogInPlayer : VideoQualityDialogBase() {
                 .setNegativeButton(R.string.cancel) { _, _ ->
                     analytic.reportEvent(Analytic.Video.CANCEL_VIDEO_QUALITY)
                 }
-                .setSingleChoiceItems(listOfUrls.toTypedArray(),
+                .setSingleChoiceItems(listOfPresentedQuality.toTypedArray(),
                         position,
                         { dialog, which ->
-                            val urlQuality =
-                                    if (externalVideo != null && which in 0..externalVideo.urls.size - 1) {
-                                        externalVideo.urls[which]
-                                    } else {
-                                        cachedVideo?.urls?.first()
-                                    }
+                            val urlQuality = listOfVideoUrl[which]
                             (targetFragment as Callback).onQualityChanged(newUrlQuality = urlQuality)
                             dialog.dismiss()
 
-                            val qualityForPlaying = listOfUrls[which]
+                            val qualityForPlaying = listOfPresentedQuality[which]
                             threadPoolExecutor.execute {
                                 val toSave = findNearest(qualityForPlaying, qualityToPositionMap.keys)
                                 userPreferences.saveVideoQualityForPlaying(toSave)
