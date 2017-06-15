@@ -23,11 +23,11 @@ class DeleteCommentDialogFragment : DialogFragment() {
 
         fun onDeleteConnectionProblem()
 
-        fun onCommentWasDeleted(target: Long, comment: Comment)
+        fun onCommentWasDeleted(comment: Comment)
     }
 
     @Inject
-    lateinit var api: Api;
+    lateinit var api: Api
 
     @Inject
     lateinit var analytic: Analytic
@@ -62,8 +62,7 @@ class DeleteCommentDialogFragment : DialogFragment() {
                             if (response?.isSuccessful ?: false) {
                                 val comment = response?.body()?.comments?.firstOrNull()
                                 comment?.let {
-//                                    bus.post(NewCommentWasAddedOrUpdateEvent(it.target!!, it))
-                                    (targetFragment as DialogCallback).onCommentWasDeleted(it.target, it)
+                                    (targetFragment as DialogCallback).onCommentWasDeleted(it)
                                 }
                             } else {
                                 (targetFragment as DialogCallback).onFailDeleteComment()
