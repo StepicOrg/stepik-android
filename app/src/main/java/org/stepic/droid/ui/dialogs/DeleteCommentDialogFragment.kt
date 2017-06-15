@@ -27,7 +27,7 @@ class DeleteCommentDialogFragment : DialogFragment() {
     }
 
     @Inject
-    lateinit var api: Api;
+    lateinit var api: Api
 
     @Inject
     lateinit var analytic: Analytic
