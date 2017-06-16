@@ -643,6 +643,7 @@ public class SharedPreferenceHelper {
                 userId += profile.getId();
             }
             analytic.setUserId(userId);
+            cachedAuthStepikResponse = null;
             clear(PreferenceType.LOGIN);
             clear(PreferenceType.FEATURED_FILTER);
             clear(PreferenceType.ENROLLED_FILTER);
