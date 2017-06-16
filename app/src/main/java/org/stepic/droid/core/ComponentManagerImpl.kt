@@ -6,22 +6,34 @@ import org.stepic.droid.di.login.LoginComponent
 import org.stepic.droid.di.mainscreen.MainScreenComponent
 import org.stepic.droid.di.routing.RoutingComponent
 import org.stepic.droid.di.step.StepComponent
+import timber.log.Timber
 
 class ComponentManagerImpl(private val appCoreComponent: AppCoreComponent) : ComponentManager {
 
 //    Step
 
     private val stepComponentMap = HashMap<Long, StepComponent>()
+    private val stepComponentCountMap = HashMap<Long, Int>()
 
-    override fun stepComponent(stepId: Long) = stepComponentMap.getOrPut(stepId) {
-        routingComponent()
-                .stepComponentBuilder()
-                .build()
+    override fun stepComponent(stepId: Long): StepComponent {
+        val count = stepComponentCountMap[stepId] ?: 0
+        stepComponentCountMap[stepId] = count + 1
+        val routingComponent = routingComponent() //increment routing component by invoking method
+        return stepComponentMap.getOrPut(stepId) {
+            routingComponent
+                    .stepComponentBuilder()
+                    .build()
+        }
     }
 
     override fun releaseStepComponent(stepId: Long) {
         releaseRoutingComponent()
-        stepComponentMap.remove(stepId)
+        val count = stepComponentCountMap.get(stepId) ?: throw IllegalStateException("release step component, which is not allocated")
+        if (count == 1) {
+            //it is last
+            stepComponentMap.remove(stepId)
+        }
+        stepComponentCountMap[stepId] = count - 1
     }
 
 
@@ -107,6 +119,7 @@ class ComponentHolder<T> {
         }
 
         refCount++
+        Timber.d("$component allocated with refCount = $refCount")
         return component!!
     }
 
@@ -115,6 +128,9 @@ class ComponentHolder<T> {
         if (refCount == 0) {
             component = null
         }
+
+        Timber.d("$component released with new refCount = $refCount")
+
         if (refCount < 0) {
             throw IllegalStateException("released component greater than got")
         }
