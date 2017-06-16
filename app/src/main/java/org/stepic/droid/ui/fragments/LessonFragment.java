@@ -359,7 +359,7 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
 
                 Step step = stepsPresenter.getStepList().get(position);
                 analytic.reportEvent(Analytic.Comments.OPEN_FROM_OPTION_MENU);
-                screenManager.openComments(getContext(), step.getDiscussion_proxy(), step.getId());
+                screenManager.openComments(getActivity(), step.getDiscussion_proxy(), step.getId());
                 break;
             default:
                 return super.onOptionsItemSelected(item);
@@ -436,7 +436,7 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
 
         if (discussionId > 0 && position >= 0 && position < stepsPresenter.getStepList().size()) {
             Step step = stepsPresenter.getStepList().get(position);
-            screenManager.openComments(getContext(), step.getDiscussion_proxy(), step.getId());
+            screenManager.openComments(getActivity(), step.getDiscussion_proxy(), step.getId());
             discussionId = -1;
         }
     }
