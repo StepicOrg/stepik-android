@@ -37,42 +37,50 @@ import org.stepic.droid.core.MyExoPhoneStateListener
 import org.stepic.droid.core.internet_state.contract.InternetEnabledListener
 import org.stepic.droid.core.presenters.VideoWithTimestampPresenter
 import org.stepic.droid.core.presenters.contracts.VideoWithTimestampView
+import org.stepic.droid.model.Video
+import org.stepic.droid.model.VideoUrl
 import org.stepic.droid.preferences.VideoPlaybackRate
 import org.stepic.droid.receivers.HeadPhoneReceiver
 import org.stepic.droid.ui.custom_exo.NavigationBarUtil
+import org.stepic.droid.ui.dialogs.VideoQualityDialogInPlayer
 import org.stepic.droid.ui.listeners.KeyDispatchableFragment
 import org.stepic.droid.ui.util.VideoPlayerConstants
+import org.stepic.droid.util.resolvers.VideoResolver
 import javax.inject.Inject
 
 /**
- * we use onStart/onStop for starting playing and releasing player (instead of onResume/onPause) for supporting Api23+ Multi-Window mode.
+ * we use onStart/onStop for starting playing and releasing playerLayout (instead of onResume/onPause) for supporting Api23+ Multi-Window mode.
  * We can't split it by api version, because Samsung's Tablets Api21+ can support Multi Window feature
  */
 class VideoExoFragment : FragmentBase(),
         ExoPlayer.EventListener,
-        SimpleExoPlayer.VideoListener,
         AudioManager.OnAudioFocusChangeListener,
         VideoWithTimestampView,
         MyExoPhoneStateListener.Callback,
         InternetEnabledListener,
         HeadPhoneReceiver.HeadPhoneListener,
-        KeyDispatchableFragment {
+        KeyDispatchableFragment,
+        VideoQualityDialogInPlayer.Callback {
+
+
+    override fun onPlaybackParametersChanged(p0: PlaybackParameters?) {
+    }
+
+    override fun onTracksChanged(p0: TrackGroupArray?, p1: TrackSelectionArray?) {
+    }
+
+    override fun onLoadingChanged(p0: Boolean) {
+    }
+
+    override fun onPositionDiscontinuity() {
+    }
+
+    override fun onTimelineChanged(p0: Timeline?, p1: Any?) {
+    }
 
     override fun dispatchKeyEventInFragment(keyEvent: KeyEvent?): Boolean {
         videoPlayerView?.showController()
-        return videoPlayerView?.dispatchMediaKeyEvent(keyEvent) ?: false;
-    }
-
-    override fun onVideoSizeChanged(width: Int, height: Int, unappliedRotationDegrees: Int, pixelWidthHeightRatio: Float) {
-    }
-
-    override fun onRenderedFirstFrame() {
-    }
-
-    override fun onPlaybackParametersChanged(playbackParameters: PlaybackParameters?) {
-    }
-
-    override fun onTracksChanged(trackGroups: TrackGroupArray?, trackSelections: TrackSelectionArray?) {
+        return videoPlayerView?.dispatchMediaKeyEvent(keyEvent) ?: false
     }
 
     override fun onPlayerError(error: ExoPlaybackException?) {
@@ -102,25 +110,18 @@ class VideoExoFragment : FragmentBase(),
         }
     }
 
-    override fun onLoadingChanged(isLoading: Boolean) {
-    }
-
-    override fun onPositionDiscontinuity() {
-    }
-
-    override fun onTimelineChanged(timeline: Timeline?, manifest: Any?) {
-    }
+    var videoUrl: String? = null
 
     companion object {
-        private val VIDEO_PATH_KEY = "video_path_key"
-        private val VIDEO_ID_KEY = "video_id_key"
+        private val CACHED_VIDEO_KEY = "cached_video_key"
+        private val EXTERNAL_VIDEO_KEY = "external_video_key"
 
         private val saveEpsilon = 1000L
 
-        fun newInstance(videoUri: String, videoId: Long): VideoExoFragment {
+        fun newInstance(cachedVideo: Video?, externalVideo: Video?): VideoExoFragment {
             val args = Bundle()
-            args.putString(VIDEO_PATH_KEY, videoUri)
-            args.putLong(VIDEO_ID_KEY, videoId)
+            args.putParcelable(CACHED_VIDEO_KEY, cachedVideo)
+            args.putParcelable(EXTERNAL_VIDEO_KEY, externalVideo)
             val fragment = VideoExoFragment()
             fragment.arguments = args
             return fragment
@@ -131,6 +132,9 @@ class VideoExoFragment : FragmentBase(),
 
     @Inject
     lateinit var videoWithTimestampPresenter: VideoWithTimestampPresenter
+    @Inject
+    lateinit var videoResolver: VideoResolver
+
     private var autoPlay: Boolean = false
     private var videoId: Long? = null
     private var mediaSource: ExtractorMediaSource? = null
@@ -226,11 +230,20 @@ class VideoExoFragment : FragmentBase(),
     private fun createPlayer(): Long? {
         videoPlayerView?.hideController()
 
-        val filePath = arguments.getString(VIDEO_PATH_KEY)
-        var videoId: Long? = arguments.getLong(VIDEO_ID_KEY)
-        if (videoId != null && videoId <= 0L) { // if equal zero -> it is default, it is not our video
-            videoId = null
+        val cachedVideo: Video? = arguments.getParcelable<Video>(CACHED_VIDEO_KEY)
+        val externalVideo: Video? = arguments.getParcelable<Video>(EXTERNAL_VIDEO_KEY)
+
+        val video = cachedVideo ?: externalVideo
+
+        val videoId: Long = video?.id ?: 0
+        val filePath: String? = videoUrl ?: videoResolver.resolveVideoUrl(video)
+        if (filePath == null) {
+            Toast.makeText(context, R.string.video_url_incorrect, Toast.LENGTH_SHORT).show()
+            activity?.finish()
+            return 0
         }
+
+        videoUrl = filePath
         val bandwidthMeter = DefaultBandwidthMeter()
 
         //make source
@@ -242,7 +255,6 @@ class VideoExoFragment : FragmentBase(),
         val trackSelector = DefaultTrackSelector(adaptiveTrackSelectionFactory)
         player = ExoPlayerFactory.newSimpleInstance(context, trackSelector)
         player?.addListener(this)
-        player?.setVideoListener(this)
 
         audioFocusHelper.requestAudioFocus(this)
         player?.videoScalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT
@@ -266,6 +278,7 @@ class VideoExoFragment : FragmentBase(),
             autoPlay = false
         } else {
             player?.playWhenReady = false
+
         }
         videoPlayerView?.player = player
         videoPlayerView?.showController()
@@ -321,7 +334,7 @@ class VideoExoFragment : FragmentBase(),
     }
 
     private fun pausePlayer() {
-        player?.playWhenReady = false // pause player
+        player?.playWhenReady = false // pause playerLayout
     }
 
     private fun showChooseRateMenu(view: View) {
@@ -364,6 +377,24 @@ class VideoExoFragment : FragmentBase(),
                     setOrientationPreference(newValue)
                     true
                 }
+                R.id.video_quality -> {
+                    analytic.reportEvent(Analytic.Video.QUALITY_MENU)
+                    val cachedVideo: Video? = arguments.getParcelable<Video>(CACHED_VIDEO_KEY)
+                    val externalVideo: Video? = arguments.getParcelable<Video>(EXTERNAL_VIDEO_KEY)
+                    val nowPlaying = videoUrl
+
+                    if (nowPlaying != null) {
+                        val dialog = VideoQualityDialogInPlayer.newInstance(externalVideo, cachedVideo, nowPlaying)
+                        dialog.setTargetFragment(this, 0)
+                        if (!dialog.isAdded) {
+                            dialog.show(fragmentManager, null)
+                        }
+                    } else {
+                        analytic.reportEvent(Analytic.Video.NOW_PLAYING_WAS_NULL)
+                    }
+
+                    true
+                }
                 else -> false
 
             }
@@ -386,5 +417,11 @@ class VideoExoFragment : FragmentBase(),
         pausePlayer()
     }
 
-
+    override fun onQualityChanged(newUrlQuality: VideoUrl?) {
+        videoUrl = newUrlQuality?.url
+        releasePlayer()
+        autoPlay = true
+        videoId = createPlayer()
+        videoWithTimestampPresenter.showVideoWithPredefinedTimestamp(videoId)
+    }
 }

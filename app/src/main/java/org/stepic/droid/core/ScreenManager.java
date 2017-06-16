@@ -15,10 +15,14 @@ import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
+import org.stepic.droid.model.Video;
 import org.stepic.droid.storage.operations.Table;
+import org.stepic.droid.ui.fragments.CommentsFragment;
 import org.stepic.droid.web.ViewAssignment;
 
 public interface ScreenManager {
+
+    void showLaunchFromSplash(Activity activity);
 
     void showLaunchScreen(Context context);
 
@@ -34,15 +38,19 @@ public interface ScreenManager {
 
     void showMainFeed(Context sourceActivity);
 
+    void showMainFeedFromSplash(Activity sourceActivity);
+
     void showMainFeed(Context sourceActivity, int indexOfMenu);
 
     void showCourseDescription(Fragment sourceActivity, @NotNull Course course);
 
     void showPdfInBrowserByGoogleDocs(Activity activity, String fullPath);
 
-    void openComments(Context context, String discussionProxyId, long stepId);
+    void openComments(Activity context, String discussionProxyId, long stepId);
 
-    void openNewCommentForm(Activity sourceActivity, Long target, @Nullable Long parent);
+    void openComments(Activity context, String discussionProxyId, long stepId, boolean needOpenForm);
+
+    void openNewCommentForm(CommentsFragment commentsFragment, Long target, @Nullable Long parent);
 
     void showSections(Activity sourceActivity, @NotNull Course course);
 
@@ -76,7 +84,7 @@ public interface ScreenManager {
 
     Intent getShowFindCoursesIntent(Context context);
 
-    void showVideo(Activity sourceActivity, String source, long videoId);
+    void showVideo(Activity sourceActivity, @Nullable Video cachedVideo, @Nullable Video externalVideo);
 
     void showSettings(Activity sourceActivity);
 

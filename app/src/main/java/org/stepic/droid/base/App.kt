@@ -34,7 +34,7 @@ class App : Application() {
             return application.applicationContext
         }
 
-        fun getComponentManager(): ComponentManager {
+        fun componentManager(): ComponentManager {
             return application.componentManager
         }
     }

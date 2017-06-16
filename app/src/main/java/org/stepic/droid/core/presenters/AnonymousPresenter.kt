@@ -2,12 +2,10 @@ package org.stepic.droid.core.presenters
 
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.AnonymousView
-import org.stepic.droid.di.step.StepScope
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
 
-@StepScope
 class AnonymousPresenter
 @Inject constructor(
         private val sharedPreferenceHelper: SharedPreferenceHelper,

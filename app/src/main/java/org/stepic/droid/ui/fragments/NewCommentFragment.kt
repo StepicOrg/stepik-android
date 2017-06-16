@@ -16,7 +16,7 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentBase
-import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent
+import org.stepic.droid.ui.activities.NewCommentActivity
 import org.stepic.droid.ui.dialogs.DiscardTextDialogFragment
 import org.stepic.droid.ui.dialogs.LoadingProgressDialog
 import org.stepic.droid.ui.util.BackButtonHandler
@@ -170,8 +170,13 @@ class NewCommentFragment : FragmentBase(), OnBackClickListener {
                     override fun onResponse(call: Call<CommentsResponse>?, response: Response<CommentsResponse>?) {
                         if (response?.isSuccessful ?: false && response?.body()?.comments != null) {
                             analytic.reportEvent(Analytic.Comments.COMMENTS_SENT_SUCCESSFULLY)
-                            val newComment = response?.body()?.comments?.firstOrNull()
-                            bus.post(NewCommentWasAddedOrUpdateEvent(targetId = target!!, newCommentInsertOrUpdate = newComment))
+                            val newComment = response.body()?.comments?.firstOrNull()
+                            if (newComment != null) {
+                                val data = Intent()
+                                //set id, target, parent
+                                data.putExtra(NewCommentActivity.keyComment, newComment)
+                                activity?.setResult(Activity.RESULT_OK, data)
+                            }
                             Toast.makeText(App.getAppContext(), R.string.comment_sent, Toast.LENGTH_SHORT).show()
                             onFinishTryingSending()
                             activity?.finish()

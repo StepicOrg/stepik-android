@@ -1,8 +1,6 @@
 package org.stepic.droid.storage.structure;
 
-public class DbStructureVideoTimestamp extends DBStructureBase {
-    private static String[] usedColumns = null;
-
+public final class DbStructureVideoTimestamp {
     public static final String VIDEO_TIMESTAMP = "video_timestamps";
 
     public static final class Column {
@@ -10,13 +8,4 @@ public class DbStructureVideoTimestamp extends DBStructureBase {
         public static final String TIMESTAMP = "timestamp";
     }
 
-    public static String[] getUsedColumns() {
-        if (usedColumns == null) {
-            usedColumns = new String[]{
-                    Column.VIDEO_ID,
-                    Column.TIMESTAMP
-            };
-        }
-        return usedColumns;
-    }
 }

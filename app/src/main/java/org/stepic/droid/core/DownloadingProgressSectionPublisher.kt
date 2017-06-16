@@ -30,6 +30,7 @@ class DownloadingProgressSectionPublisher
     private val UPDATE_DELAY = 300
 
     private var thread: Thread? = null
+    @Volatile
     private var downloadingProgressCallback: DownloadingProgressCallback? = null
     private var loadingUpdater: Runnable? = null
 
@@ -69,7 +70,7 @@ class DownloadingProgressSectionPublisher
             }
 
             override fun run() {
-                while (!Thread.currentThread().isInterrupted) lqoop@ {
+                while (!Thread.currentThread().isInterrupted && downloadingProgressCallback != null) {
                     try {
                         if (!isSectionToUnitOk) {
                             for (sectionId in sectionIdListLocal) {

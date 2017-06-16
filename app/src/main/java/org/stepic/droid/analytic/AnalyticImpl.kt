@@ -4,17 +4,14 @@ import android.content.Context
 import android.os.Bundle
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crash.FirebaseCrash
-import com.mixpanel.android.mpmetrics.MixpanelAPI
 import com.yandex.metrica.YandexMetrica
-import org.json.JSONObject
-import org.stepic.droid.configuration.Config
 import org.stepic.droid.di.AppSingleton
 import java.util.*
 import javax.inject.Inject
 
 @AppSingleton
 class AnalyticImpl
-@Inject constructor(context: Context, config: Config) : Analytic {
+@Inject constructor(context: Context) : Analytic {
     override fun reportEventValue(eventName: String, value: Long) {
         val bundle = Bundle()
         bundle.putLong(FirebaseAnalytics.Param.VALUE, value)
@@ -26,7 +23,6 @@ class AnalyticImpl
     }
 
     private val firebaseAnalytics: FirebaseAnalytics = FirebaseAnalytics.getInstance(context)
-    private val mixPanelAnalytics: MixpanelAPI = MixpanelAPI.getInstance(context, config.mixpanelToken);
 
     override fun reportEvent(eventName: String, bundle: Bundle?) {
         val map: HashMap<String, String> = HashMap()
@@ -35,11 +31,8 @@ class AnalyticImpl
         }
         if (map.isEmpty()) {
             YandexMetrica.reportEvent(eventName)
-            mixPanelAnalytics.track(eventName)
         } else {
             YandexMetrica.reportEvent(eventName, map as Map<String, Any>?)
-            val jsonObject = JSONObject(map)
-            mixPanelAnalytics.track(eventName, jsonObject)
         }
 
         val eventNameLocal = castStringToFirebaseEvent(eventName)
@@ -53,7 +46,6 @@ class AnalyticImpl
     override fun reportError(message: String, throwable: Throwable) {
         FirebaseCrash.report(throwable)
         YandexMetrica.reportError(message, throwable)
-        mixPanelAnalytics.track(message)
     }
 
     override fun reportEvent(eventName: String, id: String) {

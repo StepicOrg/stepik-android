@@ -30,6 +30,7 @@ import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
+import org.stepic.droid.model.Video;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.services.ViewPusher;
@@ -55,6 +56,7 @@ import org.stepic.droid.ui.activities.TextFeedbackActivity;
 import org.stepic.droid.ui.activities.UnitsActivity;
 import org.stepic.droid.ui.activities.VideoActivity;
 import org.stepic.droid.ui.dialogs.RemindPasswordDialogFragment;
+import org.stepic.droid.ui.fragments.CommentsFragment;
 import org.stepic.droid.ui.fragments.SectionsFragment;
 import org.stepic.droid.util.AndroidVersionKt;
 import org.stepic.droid.util.AppConstants;
@@ -79,6 +81,13 @@ public class ScreenManagerImpl implements ScreenManager {
         this.userPreferences = userPreferences;
         this.analytic = analytic;
         this.sharedPreferences = sharedPreferences;
+    }
+
+    @Override
+    public void showLaunchFromSplash(Activity activity) {
+        analytic.reportEvent(Analytic.Screens.SHOW_LAUNCH);
+        Intent launchIntent = new Intent(activity, LaunchActivity.class);
+        activity.startActivity(launchIntent);
     }
 
     @Override
@@ -158,6 +167,14 @@ public class ScreenManagerImpl implements ScreenManager {
             intent.putExtra(AppConstants.KEY_COURSE_BUNDLE, (Parcelable) course);
         }
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        sourceActivity.startActivity(intent);
+    }
+
+    @Override
+    public void showMainFeedFromSplash(Activity sourceActivity) {
+        analytic.reportEvent(Analytic.Screens.SHOW_MAIN_FEED);
+
+        Intent intent = new Intent(sourceActivity, MainFeedActivity.class);
         sourceActivity.startActivity(intent);
     }
 
@@ -271,7 +288,7 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void showVideo(Activity sourceActivity, String videoPath, long videoId) {
+    public void showVideo(Activity sourceActivity, @Nullable Video cachedVideo, @Nullable Video externalVideo) {
         analytic.reportEvent(Analytic.Screens.TRY_OPEN_VIDEO);
         boolean isOpenExternal = userPreferences.isOpenInExternal();
         if (isOpenExternal) {
@@ -287,10 +304,18 @@ public class ScreenManagerImpl implements ScreenManager {
 
         if (isCompatible && !isOpenExternal) {
             Intent intent = new Intent(App.Companion.getAppContext(), VideoActivity.class);
-            intent.putExtra(VideoActivity.Companion.getVideoPathKey(), videoPath);
-            intent.putExtra(VideoActivity.Companion.getVideoIdKey(), videoId);
+            Bundle extras = new Bundle();
+            extras.putParcelable(VideoActivity.Companion.getCachedVideoKey(), cachedVideo);
+            extras.putParcelable(VideoActivity.Companion.getExternalVideoKey(), externalVideo);
+            intent.putExtras(extras);
             sourceActivity.startActivity(intent);
         } else {
+            String videoPath = null;
+            if (cachedVideo != null && cachedVideo.getUrls() != null && !cachedVideo.getUrls().isEmpty()) {
+                videoPath = cachedVideo.getUrls().get(0).getUrl();
+            } else if (externalVideo != null && externalVideo.getUrls() != null && !externalVideo.getUrls().isEmpty()) {
+                videoPath = externalVideo.getUrls().get(0).getUrl();
+            }
             Uri videoUri = Uri.parse(videoPath);
             String scheme = videoUri.getScheme();
             if (scheme == null) {
@@ -469,37 +494,42 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void openComments(Context context, @Nullable String discussionProxyId, long stepId) {
+    public void openComments(Activity context, @Nullable String discussionProxyId, long stepId) {
+        openComments(context, discussionProxyId, stepId, false);
+    }
 
+    @Override
+    public void openComments(Activity context, String discussionProxyId, long stepId, boolean needOpenForm) {
         if (discussionProxyId == null) {
             analytic.reportEvent(Analytic.Screens.OPEN_COMMENT_NOT_AVAILABLE);
             Toast.makeText(context, R.string.comment_denied, Toast.LENGTH_SHORT).show();
         } else {
             analytic.reportEvent(Analytic.Screens.OPEN_COMMENT);
             Intent intent = new Intent(context, CommentsActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             Bundle bundle = new Bundle();
             bundle.putString(CommentsActivity.Companion.getKeyDiscussionProxyId(), discussionProxyId);
             bundle.putLong(CommentsActivity.Companion.getKeyStepId(), stepId);
+            bundle.putBoolean(CommentsActivity.Companion.getKeyNeedInstaOpenForm(), needOpenForm);
             intent.putExtras(bundle);
             context.startActivity(intent);
         }
     }
 
+
     @Override
-    public void openNewCommentForm(Activity sourceActivity, Long target, @Nullable Long parent) {
+    public void openNewCommentForm(CommentsFragment commentsFragment, Long target, @Nullable Long parent) {
         if (sharedPreferences.getAuthResponseFromStore() != null) {
             analytic.reportEvent(Analytic.Screens.OPEN_WRITE_COMMENT);
-            Intent intent = new Intent(sourceActivity, NewCommentActivity.class);
+            Intent intent = new Intent(commentsFragment.getActivity(), NewCommentActivity.class);
             Bundle bundle = new Bundle();
             if (parent != null) {
                 bundle.putLong(NewCommentActivity.Companion.getKeyParent(), parent);
             }
             bundle.putLong(NewCommentActivity.Companion.getKeyTarget(), target);
             intent.putExtras(bundle);
-            sourceActivity.startActivity(intent);
+            commentsFragment.startActivityForResult(intent, NewCommentActivity.Companion.getRequestCode());
         } else {
-            Toast.makeText(sourceActivity, R.string.anonymous_write_comment, Toast.LENGTH_SHORT).show();
+            Toast.makeText(commentsFragment.getContext(), R.string.anonymous_write_comment, Toast.LENGTH_SHORT).show();
         }
     }
 

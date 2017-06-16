@@ -4,9 +4,8 @@ import android.support.annotation.MainThread
 import android.support.annotation.WorkerThread
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
-import org.stepic.droid.core.routing.contract.RoutingPoster
 import org.stepic.droid.core.presenters.contracts.RouteStepView
-import org.stepic.droid.di.step.StepScope
+import org.stepic.droid.core.routing.contract.RoutingPoster
 import org.stepic.droid.model.Course
 import org.stepic.droid.model.Lesson
 import org.stepic.droid.model.Section
@@ -17,7 +16,6 @@ import timber.log.Timber
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
 
-@StepScope
 class RouteStepPresenter
 @Inject constructor(
         private val threadPoolExecutor: ThreadPoolExecutor,

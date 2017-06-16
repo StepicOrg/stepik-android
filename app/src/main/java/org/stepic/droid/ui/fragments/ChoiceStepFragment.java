@@ -6,12 +6,8 @@ import android.support.annotation.IdRes;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import com.squareup.otto.Subscribe;
-
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent;
-import org.stepic.droid.events.steps.StepWasUpdatedEvent;
 import org.stepic.droid.model.Attempt;
 import org.stepic.droid.model.Dataset;
 import org.stepic.droid.model.Reply;
@@ -144,16 +140,5 @@ public class ChoiceStepFragment extends StepAttemptFragment {
     private void buildChoiceItem(StepikOptionView item, String rawText) {
         item.setText(rawText);
         choiceContainer.addView(item);
-    }
-
-    @Subscribe
-    public void onNewCommentWasAdded(NewCommentWasAddedOrUpdateEvent event) {
-        super.onNewCommentWasAdded(event);
-
-    }
-
-    @Subscribe
-    public void onStepWasUpdated(StepWasUpdatedEvent event) {
-        super.onStepWasUpdated(event);
     }
 }

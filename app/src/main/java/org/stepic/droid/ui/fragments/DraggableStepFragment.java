@@ -11,11 +11,8 @@ import android.view.View;
 import com.h6ah4i.android.widget.advrecyclerview.animator.DraggableItemAnimator;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropManager;
 import com.h6ah4i.android.widget.advrecyclerview.utils.WrapperAdapterUtils;
-import com.squareup.otto.Subscribe;
 
 import org.stepic.droid.R;
-import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent;
-import org.stepic.droid.events.steps.StepWasUpdatedEvent;
 import org.stepic.droid.model.Attempt;
 import org.stepic.droid.model.Option;
 import org.stepic.droid.util.DpPixelsHelper;
@@ -129,15 +126,5 @@ public abstract class DraggableStepFragment extends StepAttemptFragment {
             }
         });
         recyclerView.setAdapter(wrappedAdapter);
-    }
-
-    @Subscribe
-    public void onNewCommentWasAdded(NewCommentWasAddedOrUpdateEvent event) {
-        super.onNewCommentWasAdded(event);
-    }
-
-    @Subscribe
-    public void onStepWasUpdated(StepWasUpdatedEvent event) {
-        super.onStepWasUpdated(event);
     }
 }

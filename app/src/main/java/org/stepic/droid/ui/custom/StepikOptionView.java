@@ -53,7 +53,7 @@ public abstract class StepikOptionView extends FrameLayout implements Checkable 
         LayoutInflater.from(context).inflate(R.layout.stepic_compound_button, this, true);
         optionIcon = (ImageView) findViewById(R.id.image_compound_button);
         optionText = (LatexSupportableEnhancedFrameLayout) findViewById(R.id.text_compound_button);
-        progressBar = (ProgressBar) findViewById(R.id.load_progressbar);
+        progressBar = (ProgressBar) findViewById(R.id.loadProgressbar);
         rippleEffectFrameLayout = (FrameLayout) findViewById(R.id.rippleFrameLayoutInOption);
 
         init();

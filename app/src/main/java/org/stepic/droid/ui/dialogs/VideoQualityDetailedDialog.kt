@@ -68,7 +68,7 @@ class VideoQualityDetailedDialog : VideoQualityDialogBase() {
                         { _, which -> chosenOptionPosition = which })
                 .setPositiveButton(R.string.ok, { _, which ->
                     val qualityString = positionToQualityMap[chosenOptionPosition]
-                    analytic.reportEventWithIdName(Analytic.Preferences.VIDEO_QUALITY, which.toString(), qualityString)
+                    analytic.reportEventWithIdName(Analytic.Preferences.VIDEO_QUALITY, chosenOptionPosition.toString(), qualityString)
 
                     threadPoolExecutor.execute {
                         userPreferences.storeQualityVideo(qualityString)

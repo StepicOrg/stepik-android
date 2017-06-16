@@ -39,7 +39,7 @@ import java.text.NumberFormat;
 import java.util.Locale;
 
 /**
- * Logs player events using {@link Log}.
+ * Logs playerLayout events using {@link Log}.
  */
 /* package */ final class EventLogger implements ExoPlayer.EventListener,
         AudioRendererEventListener, VideoRendererEventListener, AdaptiveMediaSourceEventListener,

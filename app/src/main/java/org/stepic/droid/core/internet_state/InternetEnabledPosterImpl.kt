@@ -11,7 +11,7 @@ class InternetEnabledPosterImpl
     : InternetEnabledPoster {
 
     override fun internetEnabled() {
-        listenerContainer.iterator().forEach(InternetEnabledListener::onInternetEnabled)
+        listenerContainer.asIterable().forEach(InternetEnabledListener::onInternetEnabled)
     }
 
 }

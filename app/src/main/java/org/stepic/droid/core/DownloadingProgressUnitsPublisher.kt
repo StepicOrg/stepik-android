@@ -28,6 +28,7 @@ class DownloadingProgressUnitsPublisher
     private val UPDATE_DELAY = 300
 
     private var thread: Thread? = null
+    @Volatile
     private var downloadingProgressCallback: DownloadingProgressCallback? = null
     private var loadingUpdater: Runnable? = null
 
@@ -63,7 +64,7 @@ class DownloadingProgressUnitsPublisher
             }
 
             override fun run() {
-                while (!Thread.currentThread().isInterrupted) {
+                while (!Thread.currentThread().isInterrupted && downloadingProgressCallback != null) {
                     try {
                         for (lessonId in lessonIdToStepIdsLocal.keys) {
                             val stepIds = lessonIdToStepIdsLocal[lessonId]

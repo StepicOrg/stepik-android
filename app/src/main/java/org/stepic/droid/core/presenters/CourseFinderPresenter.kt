@@ -3,16 +3,9 @@ package org.stepic.droid.core.presenters
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.LoadCourseView
 import org.stepic.droid.di.course.CourseAndSectionsScope
-import org.stepic.droid.events.courses.CourseCantLoadEvent
-import org.stepic.droid.events.courses.CourseFoundEvent
-import org.stepic.droid.events.courses.CourseUnavailableForUserEvent
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.storage.operations.Table
 import org.stepic.droid.web.Api
-import org.stepic.droid.web.CoursesStepicResponse
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
 
@@ -34,24 +27,25 @@ class CourseFinderPresenter
             val finalCourse = course
             if (finalCourse != null) {
                 mainHandler.post {
-                    view?.onCourseFound(CourseFoundEvent(finalCourse))
+                    view?.onCourseFound(finalCourse)
                 }
             } else {
-                api.getCourse(courseId).enqueue(object : Callback<CoursesStepicResponse> {
-
-                    override fun onResponse(call: Call<CoursesStepicResponse>?, response: Response<CoursesStepicResponse>?) {
-                        if (response != null && response.isSuccessful && !response.body().courses.isEmpty()) {
-                            view?.onCourseFound(CourseFoundEvent(response.body().courses[0]))
-                        } else {
-                            view?.onCourseUnavailable(CourseUnavailableForUserEvent(courseId))
-
+                try {
+                    val response = api.getCourse(courseId).execute()
+                    if (response != null && response.isSuccessful && response.body().courses.isNotEmpty()) {
+                        mainHandler.post {
+                            view?.onCourseFound(response.body().courses.first())
+                        }
+                    } else {
+                        mainHandler.post {
+                            view?.onCourseUnavailable(courseId)
                         }
                     }
-
-                    override fun onFailure(call: Call<CoursesStepicResponse>?, t: Throwable?) {
-                        view!!.onInternetFailWhenCourseIsTriedToLoad(CourseCantLoadEvent())
+                } catch (exception: Exception) {
+                    mainHandler.post {
+                        view?.onInternetFailWhenCourseIsTriedToLoad()
                     }
-                })
+                }
             }
         }
     }

@@ -93,3 +93,8 @@
 
 #for saving search view https://stackoverflow.com/questions/18407171/searchview-getactionview-returning-null
 -keep class android.support.v7.widget.SearchView { *; }
+
+#keep configs names
+-keep class org.stepic.droid.configuration.** { *; }
+-keep interface org.stepic.droid.configuration.** { *; }
+-dontwarn org.stepic.droid.configuration.**

@@ -4,19 +4,17 @@ import android.app.DownloadManager;
 import android.app.IntentService;
 import android.content.Intent;
 
-import com.squareup.otto.Bus;
-
 import org.stepic.droid.base.App;
 import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.core.LocalProgressManager;
-import org.stepic.droid.events.steps.UpdateStepEvent;
+import org.stepic.droid.core.updating_step.contract.UpdatingStepPoster;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.storage.StoreStateManager;
 import org.stepic.droid.storage.operations.DatabaseFacade;
 import org.stepic.droid.util.AppConstants;
-import org.stepic.droid.util.resolvers.VideoResolver;
 import org.stepic.droid.util.resolvers.StepHelper;
+import org.stepic.droid.util.resolvers.VideoResolver;
 import org.stepic.droid.web.Api;
 import org.stepic.droid.web.ViewAssignment;
 
@@ -35,8 +33,6 @@ public class ViewPusher extends IntentService {
     @Inject
     UserPreferences userPrefs;
     @Inject
-    Bus bus;
-    @Inject
     VideoResolver resolver;
     @Inject
     Api api;
@@ -50,6 +46,9 @@ public class ViewPusher extends IntentService {
 
     @Inject
     MainHandler mainHandler;
+
+    @Inject
+    UpdatingStepPoster updatingStepPoster;
 
 
     /**
@@ -106,7 +105,7 @@ public class ViewPusher extends IntentService {
         mainHandler.post(new Function0<Unit>() {
             @Override
             public Unit invoke() {
-                bus.post(new UpdateStepEvent(stepId, false));
+                updatingStepPoster.updateStep(stepId, false);
                 return Unit.INSTANCE;
             }
         });

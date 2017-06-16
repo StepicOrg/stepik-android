@@ -40,25 +40,22 @@ import com.google.firebase.appindexing.builders.Actions;
 import com.google.firebase.appindexing.builders.Indexables;
 import com.squareup.otto.Subscribe;
 
+import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
+import org.stepic.droid.base.Client;
 import org.stepic.droid.base.FragmentBase;
+import org.stepic.droid.core.dropping.contract.DroppingListener;
 import org.stepic.droid.core.presenters.CourseDetailAnalyticPresenter;
 import org.stepic.droid.core.presenters.CourseFinderPresenter;
 import org.stepic.droid.core.presenters.CourseJoinerPresenter;
 import org.stepic.droid.core.presenters.contracts.CourseDetailAnalyticView;
 import org.stepic.droid.core.presenters.contracts.CourseJoinView;
 import org.stepic.droid.core.presenters.contracts.LoadCourseView;
-import org.stepic.droid.events.courses.CourseCantLoadEvent;
-import org.stepic.droid.events.courses.CourseFoundEvent;
-import org.stepic.droid.events.courses.CourseUnavailableForUserEvent;
-import org.stepic.droid.events.courses.SuccessDropCourseEvent;
 import org.stepic.droid.events.instructors.FailureLoadInstructorsEvent;
 import org.stepic.droid.events.instructors.OnResponseLoadingInstructorsEvent;
 import org.stepic.droid.events.instructors.StartLoadingInstructorsEvent;
-import org.stepic.droid.events.joining_course.FailJoinEvent;
-import org.stepic.droid.events.joining_course.SuccessJoinEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.CourseProperty;
 import org.stepic.droid.model.User;
@@ -88,7 +85,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CourseDetailFragment extends FragmentBase implements LoadCourseView, CourseJoinView, CourseDetailAnalyticView {
+public class CourseDetailFragment extends FragmentBase implements LoadCourseView, CourseJoinView, CourseDetailAnalyticView, DroppingListener {
 
     private static String instaEnrollKey = "instaEnrollKey";
     private View.OnClickListener onClickReportListener;
@@ -153,10 +150,10 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     @BindView(R.id.list_of_course_property)
     ListView coursePropertyListView;
 
-    @BindDrawable(R.drawable.video_placeholder_color)
+    @BindDrawable(R.drawable.video_placeholder_drawable)
     Drawable videoPlaceholder;
 
-    @BindView(R.id.report_problem)
+    @BindView(R.id.reportProblem)
     View reportInternetProblem;
 
     ImageView courseIcon;
@@ -179,17 +176,6 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
     public Action getAction() {
         return Actions.newView(titleString, urlInWeb.toString());
-//        Thing object = new Thing.Builder()
-//                .setId(urlInWeb.toString())
-//                .setName(titleString)
-//                .setDescription(descriptionString)
-//                .setUrl(urlInApp)
-//                .build();
-//
-//        return new Action.Builder(Action.TYPE_VIEW)
-//                .setObject(object)
-//                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
-//                .build();
     }
 
     @Inject
@@ -201,13 +187,24 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     @Inject
     CourseDetailAnalyticPresenter courseDetailAnalyticPresenter;
 
+    @Inject
+    Client<DroppingListener> courseDroppingListener;
+
     @Override
     protected void injectComponent() {
         App.Companion
-                .component()
+                .componentManager()
+                .courseGeneralComponent()
                 .courseComponentBuilder()
                 .build()
                 .inject(this);
+    }
+
+    @Override
+    protected void onReleaseComponent() {
+        App.Companion
+                .componentManager()
+                .releaseCourseGeneralComponent();
     }
 
     @Override
@@ -242,8 +239,8 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         joinCourseView = ButterKnife.findById(header, R.id.join_course_layout);
         continueCourseView = ButterKnife.findById(header, R.id.go_to_learn);
         introView = ButterKnife.findById(header, R.id.intro_video);
-        thumbnail = ButterKnife.findById(header, R.id.player_thumbnail);
-        player = ButterKnife.findById(header, R.id.player_layout);
+        thumbnail = ButterKnife.findById(header, R.id.playerThumbnail);
+        player = ButterKnife.findById(header, R.id.playerLayout);
         courseTargetFigSupported = new GlideDrawableImageViewTarget(courseIcon);
         player.setVisibility(View.GONE);
         courseNameView = ButterKnife.findById(header, R.id.course_name);
@@ -288,6 +285,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         courseJoinerPresenter.attachView(this);
         courseDetailAnalyticPresenter.attachView(this);
         bus.register(this);
+        courseDroppingListener.subscribe(this);
         //COURSE RELATED IN ON START
     }
 
@@ -299,7 +297,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
             //it is not from our activity
             long courseId = getArguments().getLong(AppConstants.KEY_COURSE_LONG_ID);
             if (courseId < 0) {
-                onCourseUnavailable(new CourseUnavailableForUserEvent());
+                onCourseUnavailable(-1);
             } else {
                 //todo SHOW LOADING.
                 courseFinderPresenter.findCourseById(courseId);
@@ -311,9 +309,9 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     }
 
     @Override
-    public void onCourseFound(CourseFoundEvent event) {
+    public void onCourseFound(@NotNull Course foundCourse) {
         if (course == null) {
-            course = event.getCourse();
+            course = foundCourse;
             Bundle args = getArguments();
             args.putSerializable(AppConstants.KEY_COURSE_BUNDLE, course);
             initScreenByCourse();
@@ -456,11 +454,9 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     private void setUpIntroVideo() {
         String urlToVideo;
 
-        Video newTypeVideo = course.getIntro_video();
+        Video newTypeVideo = course.getIntroVideo();
         if (newTypeVideo != null && newTypeVideo.getUrls() != null && !newTypeVideo.getUrls().isEmpty()) {
-            urlToVideo = newTypeVideo.getUrls().get(0).getUrl();
-            long videoId = newTypeVideo.getId();
-            showNewStyleVideo(urlToVideo, newTypeVideo.getThumbnail(), videoId);
+            showNewStyleVideo(newTypeVideo);
         } else {
             urlToVideo = course.getIntro();
             showOldStyleVideo(urlToVideo);
@@ -468,18 +464,18 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
     }
 
-    private void showNewStyleVideo(final String urlToVideo, String pathThumbnail, final long videoId) {
+    private void showNewStyleVideo(@NotNull final Video video) {
         introView.setVisibility(View.GONE);
-        if (urlToVideo == null || urlToVideo.equals("") || pathThumbnail == null || pathThumbnail.equals("")) {
+        if (video.getThumbnail() == null || video.getThumbnail().equals("")) {
             introView.setVisibility(View.GONE);
             player.setVisibility(View.GONE);
         } else {
-            setThumbnail(pathThumbnail);
+            setThumbnail(video.getThumbnail());
             player.setVisibility(View.VISIBLE);
             player.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    screenManager.showVideo(getActivity(), urlToVideo, videoId);
+                    screenManager.showVideo(getActivity(), null, video);
                 }
             });
         }
@@ -491,6 +487,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
             introView.setVisibility(View.GONE);
             player.setVisibility(View.GONE);
         } else {
+            analytic.reportEvent(Analytic.Video.OLD_STYLE); // if it is not reported to analytic system -> remove old style code (metric was introduced approximately 15/06/2017)
             WebSettings webSettings = introView.getSettings();
             webSettings.setJavaScriptEnabled(true);
             webSettings.setAppCacheEnabled(true);
@@ -508,16 +505,16 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     }
 
     @Override
-    public void onCourseUnavailable(CourseUnavailableForUserEvent event) {
+    public void onCourseUnavailable(long courseId) {
         if (course == null) {
-            analytic.reportEvent(Analytic.Interaction.COURSE_USER_TRY_FAIL, event.getCourseId() + "");
+            analytic.reportEvent(Analytic.Interaction.COURSE_USER_TRY_FAIL, courseId + "");
             reportInternetProblem.setVisibility(View.GONE);
             courseNotFoundView.setVisibility(View.VISIBLE);
         }
     }
 
     @Override
-    public void onInternetFailWhenCourseIsTriedToLoad(CourseCantLoadEvent event) {
+    public void onInternetFailWhenCourseIsTriedToLoad() {
         if (course == null) {
             courseNotFoundView.setVisibility(View.GONE);
             reportInternetProblem.setVisibility(View.VISIBLE);
@@ -608,6 +605,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
     @Override
     public void onDestroyView() {
+        courseDroppingListener.unsubscribe(this);
         bus.unregister(this);
         courseJoinerPresenter.detachView(this);
         courseFinderPresenter.detachView(this);
@@ -642,9 +640,10 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         }
     }
 
-    public void onSuccessJoin(SuccessJoinEvent e) {
-        if (course != null && e.getCourse() != null && e.getCourse().getCourseId() == course.getCourseId()) {
-            e.getCourse().setEnrollment((int) e.getCourse().getCourseId());
+    @Override
+    public void onSuccessJoin(@NotNull Course joinedCourse) {
+        if (course != null && joinedCourse.getCourseId() == course.getCourseId()) {
+            joinedCourse.setEnrollment((int) joinedCourse.getCourseId());
             screenManager.showSections(getActivity(), course, true);
             finish();
         }
@@ -661,12 +660,12 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         joinCourseView.setEnabled(isEnabled);
     }
 
-    @Subscribe
-    public void onFailJoin(FailJoinEvent e) {
+    @Override
+    public void onFailJoin(int code) {
         if (course != null) {
-            if (e.getCode() == HttpURLConnection.HTTP_FORBIDDEN) {
+            if (code == HttpURLConnection.HTTP_FORBIDDEN) {
                 Toast.makeText(getActivity(), joinCourseWebException, Toast.LENGTH_LONG).show();
-            } else if (e.getCode() == HttpURLConnection.HTTP_UNAUTHORIZED) {
+            } else if (code == HttpURLConnection.HTTP_UNAUTHORIZED) {
                 //UNAUTHORIZED
                 //it is just for safety, we should detect no account before send request
                 unauthorizedDialog = UnauthorizedDialogFragment.newInstance(course);
@@ -690,15 +689,6 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
                 .placeholder(videoPlaceholder)
                 .error(videoPlaceholder)
                 .into(this.thumbnail);
-    }
-
-
-    @Subscribe
-    public void onSuccessDrop(final SuccessDropCourseEvent e) {
-        if (course != null && e.getCourse().getCourseId() == course.getCourseId()) {
-            course.setEnrollment(0);
-            resolveJoinView();
-        }
     }
 
     @Override
@@ -728,5 +718,18 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         if (course == null) return;
 
         shareIntentWithChooser = shareHelper.getIntentForCourseSharing(course);
+    }
+
+    @Override
+    public void onSuccessDropCourse(@NotNull Course droppedCourse) {
+        if (course != null && droppedCourse.getCourseId() == course.getCourseId()) {
+            course.setEnrollment(0);
+            resolveJoinView();
+        }
+    }
+
+    @Override
+    public void onFailDropCourse(@NotNull Course course) {
+        //do nothing
     }
 }

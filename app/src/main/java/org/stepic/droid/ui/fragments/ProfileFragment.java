@@ -130,10 +130,10 @@ public class ProfileFragment extends FragmentBase implements ProfileView, Notifi
     @BindView(R.id.empty_users)
     View emptyUsers;
 
-    @BindView(R.id.load_progressbar)
+    @BindView(R.id.loadProgressbar)
     View loadingView;
 
-    @BindView(R.id.report_problem)
+    @BindView(R.id.reportProblem)
     View reportProblemRoot;
 
     @BindView(R.id.content_root)
