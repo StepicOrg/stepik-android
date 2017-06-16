@@ -10,6 +10,7 @@ import org.stepic.droid.model.Video
 import org.stepic.droid.model.VideoUrl
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.util.AppConstants
+import org.stepic.droid.util.greaterThanMaxQuality
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
 
@@ -51,17 +52,6 @@ class VideoQualityDialogInPlayer : VideoQualityDialogBase() {
 
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        fun greaterThanMaxQuality(quality: String): Boolean {
-            try {
-                val qualityInt = Integer.parseInt(quality)
-                return qualityInt > AppConstants.MAX_QUALITY_INT
-            } catch (exception: Exception) {
-                analytic.reportError(Analytic.Error.CANT_PARSE_QUALITY, exception)
-                return true
-            }
-        }
-
-
         init()
 
         val externalVideo: Video? = arguments.getParcelable<Video>(externalVideoKey)
@@ -72,7 +62,7 @@ class VideoQualityDialogInPlayer : VideoQualityDialogBase() {
                 externalVideo
                         ?.urls
                         ?.filter {
-                            !greaterThanMaxQuality(it.quality)
+                            !it.greaterThanMaxQuality()
                         }
                         ?.toMutableList()
                         ?: ArrayList()
@@ -82,10 +72,10 @@ class VideoQualityDialogInPlayer : VideoQualityDialogBase() {
         val listOfPresentedQuality: MutableList<String> =
                 externalVideo
                         ?.urls
-                        ?.map { it.quality }
                         ?.filter {
-                            !greaterThanMaxQuality(it)
+                            !it.greaterThanMaxQuality()
                         }
+                        ?.map { it.quality }
                         ?.toMutableList()
                         ?: ArrayList()
 
