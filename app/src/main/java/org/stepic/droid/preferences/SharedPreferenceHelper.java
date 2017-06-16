@@ -597,8 +597,8 @@ public class SharedPreferenceHelper {
     public String getVideoQualityForPlaying() {
         String str = getString(PreferenceType.VIDEO_QUALITY, VIDEO_QUALITY_KEY_FOR_PLAYING);
         if (str == null) {
-            //by default get for downloading
-            return getVideoQuality();
+            //by default high
+            return AppConstants.MAX_QUALITY;
         } else {
             return str;
         }
