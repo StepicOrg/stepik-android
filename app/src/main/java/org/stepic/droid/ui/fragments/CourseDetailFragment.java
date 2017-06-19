@@ -163,10 +163,8 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     View player;
 
     //App indexing:
-    private Uri urlInApp;
     private Uri urlInWeb;
     private String titleString;
-    private String descriptionString;
 
 
     private List<CourseProperty> coursePropertyList;
@@ -330,10 +328,8 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         }
 
         titleString = course.getTitle();
-        descriptionString = course.getSummary();
         if (course.getSlug() != null && !wasIndexed) {
             urlInWeb = Uri.parse(StringUtil.getUriForCourse(config.getBaseUrl(), course.getSlug()));
-            urlInApp = StringUtil.getAppUriForCourse(config.getBaseUrl(), course.getSlug());
             reportIndexToGoogle();
         }
 
@@ -572,7 +568,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
             instructorsCarousel.getViewTreeObserver().removeOnPreDrawListener(listener);
         }
         if (widthOfScreen > widthOfAllItems) {
-            int padding = (int) (widthOfScreen - widthOfAllItems) / 2;
+            int padding = (widthOfScreen - widthOfAllItems) / 2;
             instructorsCarousel.setPadding(padding, 0, padding, 0);
         } else {
             instructorsCarousel.setPadding(0, 0, 0, 0);
