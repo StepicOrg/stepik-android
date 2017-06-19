@@ -62,6 +62,7 @@ import org.stepic.droid.services.UpdateWithApkService;
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment;
 import org.stepic.droid.ui.dialogs.LogoutAreYouSureDialog;
 import org.stepic.droid.ui.dialogs.NeedUpdatingDialog;
+import org.stepic.droid.ui.dialogs.RateAppDialogFragment;
 import org.stepic.droid.ui.fragments.CertificateFragment;
 import org.stepic.droid.ui.fragments.DownloadsFragment;
 import org.stepic.droid.ui.fragments.FindCoursesFragment;
@@ -751,6 +752,15 @@ public class MainFeedActivity extends BackToExitActivityBase
         DialogFragment dialog = NeedUpdatingDialog.Companion.newInstance(linkForUpdate, isAppInGp);
         if (!dialog.isAdded()) {
             dialog.show(getSupportFragmentManager(), null);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        DialogFragment dialogFragment = RateAppDialogFragment.Companion.newInstance();
+        if (!dialogFragment.isAdded()) {
+            dialogFragment.show(getSupportFragmentManager(), "rate");
         }
     }
 }
