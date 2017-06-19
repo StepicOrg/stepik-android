@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:padding="@dimen/guideline_standard_padding"
-        android:text="Как бы Вы оценили Stepik?"
+        android:text="@string/rate_dialog_title"
         android:textColor="@color/drawer_text_color_checked"
         android:textSize="20sp"/>
 
@@ -20,7 +20,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/rateDialogTitle"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:stepSize="1"/>
 
 
     <View
