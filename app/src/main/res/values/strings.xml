@@ -468,4 +468,7 @@
     <string name="rate_dialog_google_play">Google Play</string>
     <string name="rate_dialog_support">Support</string>
     <string name="rate_dialog_later">Later</string>
+    <string name="rate_dialog_hint_positive">Please, leave your feedback in the Google Play</string>
+    <string name="rate_dialog_hint_negative">Please, write your feedback</string>
+    <string name="rate_dialog_thanks">Thanks!</string>
 </resources>

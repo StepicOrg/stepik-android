@@ -61,11 +61,17 @@ class RateAppDialogFragment : DialogFragment() {
 
             Timber.d("rating $rating")
             if (rating == 0f) {
+                rateDialogTitle.setText(R.string.rate_dialog_title)
                 rateDialogButtonsContainer.visibility = View.GONE
+                rateDialogHint.visibility = View.GONE
             } else {
+                rateDialogHint.visibility = View.VISIBLE
+                rateDialogTitle.setText(R.string.rate_dialog_thanks)
                 if (rating > 0f && rating <= 4f) {
+                    rateDialogHint.setText(R.string.rate_dialog_hint_negative)
                     rateDialogPositive.setTextAndColor(R.string.rate_dialog_support, R.color.rate_dialog_support)
                 } else if (rating > 4f) {
+                    rateDialogHint.setText(R.string.rate_dialog_hint_positive)
                     rateDialogPositive.setTextAndColor(R.string.rate_dialog_google_play, R.color.rate_dialog_store)
                 }
 

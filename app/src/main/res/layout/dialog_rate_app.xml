@@ -23,19 +23,26 @@
         android:layout_centerHorizontal="true"
         android:stepSize="1"/>
 
+    <TextView
+        android:id="@+id/rateDialogHint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rateDialogRatingBar"
+        android:gravity="center"
+        android:padding="@dimen/half_padding"
+        android:textColor="@color/drawer_text_color_checked"
+        android:textSize="@dimen/rate_dialog_button_text_size"
+        android:visibility="gone"
+        tools:text="ПожалуйстаПожалуйстаПожалуйста, оставьте отзыв в Google Play"
+        tools:visibility="visible"
+    />
 
-    <View
-        android:id="@+id/rateDialogCenterAnchor"
-        android:layout_width="1dp"
-        android:layout_height="1dp"
-        android:layout_below="@+id/rateDialogRatingBar"
-        android:layout_centerHorizontal="true"
-        android:visibility="invisible"/>
+
     <LinearLayout
         android:id="@+id/rateDialogButtonsContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/rateDialogRatingBar"
+        android:layout_below="@id/rateDialogHint"
         android:orientation="horizontal"
         android:visibility="gone"
         tools:visibility="visible">
