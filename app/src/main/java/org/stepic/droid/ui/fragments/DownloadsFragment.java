@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
+import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import org.jetbrains.annotations.NotNull;
@@ -103,6 +104,11 @@ public class DownloadsFragment extends FragmentBase implements
 
     @Inject
     Client<VideosMovedListener> videMovedListenerClient;
+
+    @Inject
+    //use RxJava + MVP instead
+    @Deprecated
+    Bus bus;
 
     @Override
     protected void injectComponent() {

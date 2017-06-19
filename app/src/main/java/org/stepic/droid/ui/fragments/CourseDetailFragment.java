@@ -38,7 +38,6 @@ import com.google.firebase.appindexing.FirebaseUserActions;
 import com.google.firebase.appindexing.Indexable;
 import com.google.firebase.appindexing.builders.Actions;
 import com.google.firebase.appindexing.builders.Indexables;
-import com.squareup.otto.Subscribe;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
@@ -50,12 +49,11 @@ import org.stepic.droid.core.dropping.contract.DroppingListener;
 import org.stepic.droid.core.presenters.CourseDetailAnalyticPresenter;
 import org.stepic.droid.core.presenters.CourseFinderPresenter;
 import org.stepic.droid.core.presenters.CourseJoinerPresenter;
+import org.stepic.droid.core.presenters.InstructorsPresenter;
 import org.stepic.droid.core.presenters.contracts.CourseDetailAnalyticView;
 import org.stepic.droid.core.presenters.contracts.CourseJoinView;
+import org.stepic.droid.core.presenters.contracts.InstructorsView;
 import org.stepic.droid.core.presenters.contracts.LoadCourseView;
-import org.stepic.droid.events.instructors.FailureLoadInstructorsEvent;
-import org.stepic.droid.events.instructors.OnResponseLoadingInstructorsEvent;
-import org.stepic.droid.events.instructors.StartLoadingInstructorsEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.CourseProperty;
 import org.stepic.droid.model.User;
@@ -69,7 +67,6 @@ import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.StepikLogicHelper;
 import org.stepic.droid.util.StringUtil;
 import org.stepic.droid.util.ThumbnailParser;
-import org.stepic.droid.web.UserStepicResponse;
 
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
@@ -81,11 +78,13 @@ import butterknife.BindDrawable;
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
-public class CourseDetailFragment extends FragmentBase implements LoadCourseView, CourseJoinView, CourseDetailAnalyticView, DroppingListener {
+public class CourseDetailFragment extends FragmentBase implements
+        LoadCourseView,
+        CourseJoinView,
+        CourseDetailAnalyticView,
+        DroppingListener,
+        InstructorsView {
 
     private static String instaEnrollKey = "instaEnrollKey";
     private View.OnClickListener onClickReportListener;
@@ -188,6 +187,9 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     @Inject
     Client<DroppingListener> courseDroppingListener;
 
+    @Inject
+    InstructorsPresenter instructorsPresenter;
+
     @Override
     protected void injectComponent() {
         App.Companion
@@ -282,7 +284,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         courseFinderPresenter.attachView(this);
         courseJoinerPresenter.attachView(this);
         courseDetailAnalyticPresenter.attachView(this);
-        bus.register(this);
+        instructorsPresenter.attachView(this);
         courseDroppingListener.subscribe(this);
         //COURSE RELATED IN ON START
     }
@@ -421,30 +423,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     }
 
     private void fetchInstructors() {
-        if (course != null && course.getInstructors() != null && course.getInstructors().length != 0) {
-            bus.post(new StartLoadingInstructorsEvent(course));
-            api.getUsers(course.getInstructors()).enqueue(new Callback<UserStepicResponse>() {
-                @Override
-                public void onResponse(Call<UserStepicResponse> call, Response<UserStepicResponse> response) {
-                    if (response.isSuccessful()) {
-                        if (response.body() == null) {
-                            bus.post(new FailureLoadInstructorsEvent(course, null));
-                        } else {
-                            bus.post(new OnResponseLoadingInstructorsEvent(course, response));
-                        }
-                    } else {
-                        bus.post(new FailureLoadInstructorsEvent(course, null));
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<UserStepicResponse> call, Throwable t) {
-                    bus.post(new FailureLoadInstructorsEvent(course, t));
-                }
-            });
-        } else {
-            instructorsCarousel.setVisibility(View.GONE);
-        }
+        instructorsPresenter.fetchInstructors(course);
     }
 
     private void setUpIntroVideo() {
@@ -518,31 +497,6 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         }
     }
 
-    @Subscribe
-    public void onStartLoadingInstructors(StartLoadingInstructorsEvent e) {
-        if (e.getCourse() != null && course != null && e.getCourse().getCourseId() == course.getCourseId()) {
-//            ProgressHelper.activate(mInstructorsProgressBar);
-            //not react
-        }
-    }
-
-    @Subscribe
-    public void onResponseLoadingInstructors(OnResponseLoadingInstructorsEvent e) {
-        if (e.getCourse() != null && course != null && e.getCourse().getCourseId() == course.getCourseId()) {
-
-            List<User> users = e.getResponse().body().getUsers();
-            if (users != null && !users.isEmpty()) {
-                instructorsList.clear();
-                instructorsList.addAll(users);
-
-                showCurrentInstructors();
-            } else {
-                footer.setVisibility(View.GONE);
-            }
-//            ProgressHelper.dismiss(mInstructorsProgressBar);
-        }
-    }
-
     private void showCurrentInstructors() {
         footer.setVisibility(View.VISIBLE);
         instructorAdapter.notifyDataSetChanged();
@@ -575,12 +529,6 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         }
     }
 
-    @Subscribe
-    public void onFinishLoading(FailureLoadInstructorsEvent e) {
-        if (e.getCourse() != null && course != null && e.getCourse().getCourseId() == course.getCourseId()) {
-            footer.setVisibility(View.GONE);
-        }
-    }
 
     @Override
     public void onPause() {
@@ -602,7 +550,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     @Override
     public void onDestroyView() {
         courseDroppingListener.unsubscribe(this);
-        bus.unregister(this);
+        instructorsPresenter.detachView(this);
         courseJoinerPresenter.detachView(this);
         courseFinderPresenter.detachView(this);
         courseDetailAnalyticPresenter.detachView(this);
@@ -727,5 +675,28 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     @Override
     public void onFailDropCourse(@NotNull Course course) {
         //do nothing
+    }
+
+    @Override
+    public void onLoadingInstructors() {
+        //not react now
+    }
+
+    @Override
+    public void onFailLoadInstructors() {
+        footer.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onInstructorsLoaded(@NotNull List<User> users) {
+        instructorsList.clear();
+        instructorsList.addAll(users);
+
+        showCurrentInstructors();
+    }
+
+    @Override
+    public void onHideInstructors() {
+        footer.setVisibility(View.GONE);
     }
 }

@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import com.squareup.otto.Bus;
-
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.concurrency.MainHandler;
@@ -42,9 +40,6 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
 
     @Inject
     StoreStateManager storeStateManager;
-
-    @Inject
-    Bus bus;
 
     @Inject
     Analytic analytic;
