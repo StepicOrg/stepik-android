@@ -214,6 +214,7 @@ public interface Analytic {
         String ILLEGAL_STATE_VIDEO_STEP_PLAY = "illegal_state_video_step_play";
         String NO_VIDEO_ON_STEP_SHOWING = "illegal_state_video_no_video";
         String CANT_PARSE_QUALITY = "cant_parse_quality";
+        String JOIN_FAILED = "error_join_failed"; //#Apps-580
     }
 
     interface Web {

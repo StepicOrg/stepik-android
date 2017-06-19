@@ -8,8 +8,6 @@ import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
-import com.squareup.otto.Bus;
-
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.configuration.Config;
@@ -60,13 +58,6 @@ public class FragmentBase extends Fragment {
 
     @Inject
     protected FontsProvider fontsProvider;
-
-    /**
-     * Do not use bus, prefer to use presenters, after deleting most part of bus related code project will use RxJava
-     */
-    @Deprecated
-    @Inject
-    protected Bus bus;
 
     @Inject
     protected Config config;

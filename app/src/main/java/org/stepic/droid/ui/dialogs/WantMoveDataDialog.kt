@@ -4,7 +4,6 @@ import android.app.Dialog
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v7.app.AlertDialog
-import com.squareup.otto.Bus
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
@@ -34,9 +33,6 @@ class WantMoveDataDialog : DialogFragment() {
 
     @Inject
     lateinit var analytic: Analytic
-
-    @Inject
-    lateinit var bus: Bus
 
     @Inject
     lateinit var videosMovedPoster: VideosMovedPoster
