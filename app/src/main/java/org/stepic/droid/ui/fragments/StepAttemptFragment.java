@@ -255,7 +255,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
         super.onDestroyView();
     }
 
-    protected final void fillSubmission(@org.jetbrains.annotations.Nullable Submission submission) {
+    protected final void fillSubmission(@Nullable Submission submission) {
         stepAttemptPresenter.handleDiscountingPolicy(numberOfSubmissions, section, step);
         stepAttemptPresenter.handleStepRestriction(step, numberOfSubmissions);
         if (submission == null || submission.getStatus() == null) {
@@ -528,8 +528,10 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
     }
 
     @Override
-    public void onNeedShowAttempt(@org.jetbrains.annotations.Nullable Attempt attempt, boolean isCreated, int numberOfSubmissionsForStep) {
-        this.numberOfSubmissions = numberOfSubmissionsForStep;
+    public void onNeedShowAttempt(@Nullable Attempt attempt, boolean isCreated, @Nullable Integer numberOfSubmissionsForStep) {
+        if (numberOfSubmissionsForStep != null) {
+            this.numberOfSubmissions = numberOfSubmissionsForStep;
+        }
         this.attempt = attempt;
         showAttemptAbstractWrapMethod(this.attempt, isCreated);
     }
@@ -540,7 +542,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
     }
 
     @Override
-    public void onNeedFillSubmission(Submission submission, int numberOfSubmissions) {
+    public void onNeedFillSubmission(@Nullable Submission submission, int numberOfSubmissions) {
         enableInternetMessage(false);
         showActionButtonLoadState(false);
         showAnswerField(true);

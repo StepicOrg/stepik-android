@@ -125,7 +125,15 @@ class StepAttemptPresenter
             worker?.schedule(
                     Runnable {
                         try {
-                            val submissionsResponse = api.getSubmissions(attemptId).execute()
+                            var submissionsResponse = api.getSubmissionForStep(step.id).execute()
+                            val numberOfSubmissions = submissionsResponse.body().submissions.size
+                            if (submissionsResponse.isSuccessful
+                                    && submissionsResponse.body().submissions.isNotEmpty()
+                                    && submissionsResponse.body().submissions.firstOrNull()?.attempt != attemptId) {
+                                submissionsResponse = api.getSubmissions(attemptId).execute() // if we have another attempt id on server
+                            }
+
+
                             if (submissionsResponse.isSuccessful) {
                                 val submission = submissionsResponse.body().submissions.firstOrNull()
                                 // if null ->  we do not have submissions for THIS ATTEMPT
@@ -141,7 +149,7 @@ class StepAttemptPresenter
                                     sharedPreferenceHelper.trackWhenUserSolved()
                                 }
 
-                                val numberOfSubmissions = api.getSubmissionForStep(step.id).execute().body().submissions.size
+
                                 val needShowStreakDialog =
                                         fromPosting
                                                 && (submission?.status == Submission.Status.CORRECT)
@@ -213,24 +221,12 @@ class StepAttemptPresenter
     private fun getExistingAttempts(stepId: Long) {
         try {
             val existingAttemptsResponse = api.getExistingAttempts(stepId).execute()
-            if (existingAttemptsResponse.isSuccessful) {
-                val body = existingAttemptsResponse.body()
-                if (body == null) {
-                    createNewAttempt(stepId)
-                    return
+            val firstAttempt = existingAttemptsResponse?.body()?.attempts?.firstOrNull()
+            if (existingAttemptsResponse.isSuccessful && firstAttempt?.status == "active") {
+                mainHandler.post {
+                    // we do not need number of submissions, because it will be calculated in getSubmissions
+                    view?.onNeedShowAttempt(firstAttempt, false, null)
                 }
-
-                val attemptList = body.attempts
-                if (attemptList == null || attemptList.isEmpty() || attemptList[0].status != "active") {
-                    createNewAttempt(stepId)
-                } else {
-                    val attempt = attemptList[0]
-                    val numberOfSubmissionsForStep = api.getSubmissionForStep(stepId).execute().body().submissions.size //merge with outer request with RxJava
-                    mainHandler.post {
-                        view?.onNeedShowAttempt(attempt, false, numberOfSubmissionsForStep)
-                    }
-                }
-
             } else {
                 createNewAttempt(stepId)
             }

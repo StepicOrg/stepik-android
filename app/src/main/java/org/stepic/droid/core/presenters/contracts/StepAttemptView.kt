@@ -9,7 +9,7 @@ interface StepAttemptView {
 
     fun onStartLoadingAttempt()
 
-    fun onNeedShowAttempt(attempt: Attempt?, isCreated: Boolean, numberOfSubmissionsForStep: Int)
+    fun onNeedShowAttempt(attempt: Attempt?, isCreated: Boolean, numberOfSubmissionsForStep: Int?)
 
     fun onConnectionFailWhenLoadAttempt()
 
