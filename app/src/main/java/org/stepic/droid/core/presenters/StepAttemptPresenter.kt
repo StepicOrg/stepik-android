@@ -34,7 +34,7 @@ class StepAttemptPresenter
         private val FIRST_DELAY = 1000L
     }
 
-    private val minNumberOfSolvedStepsForRate = 1
+    private val minNumberOfSolvedStepsForRate = 5
 
     private var worker: ScheduledExecutorService? = null
 
