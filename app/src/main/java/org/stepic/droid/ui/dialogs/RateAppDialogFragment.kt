@@ -15,7 +15,6 @@ import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.fonts.FontType
 import org.stepic.droid.fonts.FontsProvider
-import timber.log.Timber
 import uk.co.chrisjenx.calligraphy.CalligraphyUtils
 import uk.co.chrisjenx.calligraphy.TypefaceUtils
 import javax.inject.Inject
@@ -26,6 +25,17 @@ class RateAppDialogFragment : DialogFragment() {
     companion object {
         fun newInstance(): RateAppDialogFragment {
             return RateAppDialogFragment()
+        }
+
+        /**
+         * This callback should be implemented by targeted fragment
+         */
+        interface Callback {
+            fun onClickLater(starNumber: Int)
+
+            fun onClickGooglePlay(starNumber: Int)
+
+            fun onClickSupport(starNumber: Int)
         }
     }
 
@@ -42,7 +52,9 @@ class RateAppDialogFragment : DialogFragment() {
         boldTypeface = TypefaceUtils.load(context.assets, fontsProvider.provideFontPath(FontType.bold))
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater,
+                              container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.dialog_rate_app, container, false)
         return v
     }
@@ -51,15 +63,30 @@ class RateAppDialogFragment : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         isCancelable = false
-
         CalligraphyUtils.applyFontToTextView(rateDialogPositive, boldTypeface)
+
+        val callback = targetFragment as Callback
+
+        rateDialogLater.setOnClickListener {
+            dialog.dismiss()
+            callback.onClickLater(rateDialogRatingBar.rating.toInt())
+        }
+
+        rateDialogPositive.setOnClickListener {
+            dialog.dismiss()
+            val rating = rateDialogRatingBar.rating
+            if (isExcellent(rating)) {
+                callback.onClickGooglePlay(rating.toInt())
+            } else {
+                callback.onClickSupport(rating.toInt())
+            }
+        }
 
         rateDialogRatingBar.setOnRatingBarChangeListener { ratingBar, rating, fromUser ->
             if (!fromUser) {
                 return@setOnRatingBarChangeListener
             }
 
-            Timber.d("rating $rating")
             if (rating == 0f) {
                 rateDialogTitle.setText(R.string.rate_dialog_title)
                 rateDialogButtonsContainer.visibility = View.GONE
@@ -70,7 +97,7 @@ class RateAppDialogFragment : DialogFragment() {
                 if (rating > 0f && rating <= 4f) {
                     rateDialogHint.setText(R.string.rate_dialog_hint_negative)
                     rateDialogPositive.setTextAndColor(R.string.rate_dialog_support, R.color.rate_dialog_support)
-                } else if (rating > 4f) {
+                } else if (isExcellent(rating)) {
                     rateDialogHint.setText(R.string.rate_dialog_hint_positive)
                     rateDialogPositive.setTextAndColor(R.string.rate_dialog_google_play, R.color.rate_dialog_store)
                 }
@@ -81,11 +108,12 @@ class RateAppDialogFragment : DialogFragment() {
         }
     }
 
+    private fun isExcellent(rating: Float) = rating > 4f
+
     private fun TextView.setTextAndColor(@StringRes stringRes: Int,
                                          @ColorRes textColorRes: Int) {
         this.setText(stringRes)
         this.setTextColor(org.stepic.droid.util.ColorUtil.getColorArgb(textColorRes, context))
     }
-
 
 }

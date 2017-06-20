@@ -754,13 +754,4 @@ public class MainFeedActivity extends BackToExitActivityBase
             dialog.show(getSupportFragmentManager(), null);
         }
     }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        DialogFragment dialogFragment = RateAppDialogFragment.Companion.newInstance();
-        if (!dialogFragment.isAdded()) {
-            dialogFragment.show(getSupportFragmentManager(), "rate");
-        }
-    }
 }
