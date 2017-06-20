@@ -188,6 +188,10 @@ class StepAttemptPresenter
                                         && isUserSolveEnough()
                                         && isRateGreaterDelay()
 
+                                if (!needShowStreakDialog && needShowRateAppDialog) {
+                                    sharedPreferenceHelper.rateShown(DateTime.now().millis)
+                                }
+
                                 mainHandler.post {
                                     if (needShowStreakDialog) {
                                         view?.onNeedShowStreakDialog(streakDayNumber) // it can be -1, if we fail to get streaks

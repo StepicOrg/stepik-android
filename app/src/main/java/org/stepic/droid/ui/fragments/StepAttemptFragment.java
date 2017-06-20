@@ -674,11 +674,13 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
 
     @Override
     public void onClickGooglePlay(int starNumber) {
+        sharedPreferenceHelper.afterRateWasHandled();
         Timber.d("gp %d", starNumber);
     }
 
     @Override
     public void onClickSupport(int starNumber) {
+        sharedPreferenceHelper.afterRateWasHandled();
         Timber.d("support %d", starNumber);
     }
 }
