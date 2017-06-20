@@ -34,6 +34,8 @@ class StepAttemptPresenter
         private val FIRST_DELAY = 1000L
     }
 
+    private val minNumberOfSolvedStepsForRate = 5
+
     private var worker: ScheduledExecutorService? = null
 
     override fun attachView(view: StepAttemptView) {
@@ -149,15 +151,16 @@ class StepAttemptPresenter
                                     return@Runnable
                                 }
 
-                                if (!step.is_custom_passed && (submission?.status == Submission.Status.CORRECT)) {
+                                val isCorrectSolution: Boolean = !step.is_custom_passed && submission?.status == Submission.Status.CORRECT
+                                if (isCorrectSolution) {
                                     sharedPreferenceHelper.trackWhenUserSolved()
+                                    sharedPreferenceHelper.incrementUserSolved()
                                 }
 
 
                                 val needShowStreakDialog =
                                         fromPosting
-                                                && (submission?.status == Submission.Status.CORRECT)
-                                                && !step.is_custom_passed
+                                                && isCorrectSolution
                                                 && (sharedPreferenceHelper.isStreakNotificationEnabledNullable == null) // default value, user not change in profile
                                                 && sharedPreferenceHelper.canShowStreakDialog()
                                                 && (sharedPreferenceHelper.authResponseFromStore != null)
@@ -180,11 +183,10 @@ class StepAttemptPresenter
 
                                 val needShowRateAppDialog = !needShowStreakDialog
                                         && fromPosting
-                                        && (submission?.status == Submission.Status.CORRECT)
-                                        && !step.is_custom_passed
+                                        && isCorrectSolution
                                         && !sharedPreferenceHelper.wasRateHandled()
+                                        && isUserSolveEnough()
                                         && isRateGreaterDelay()
-                                //todo: add checking for last showing timestamp in prefs, checking number of solved tasks, checking of previous answer
 
                                 mainHandler.post {
                                     if (needShowStreakDialog) {
@@ -220,6 +222,12 @@ class StepAttemptPresenter
 
         val delay = firebaseRemoteConfig.getLong(RemoteConfig.minDelayRateDialogSec).toInt()
         return !DateTime(wasShownMillis).plusSeconds(delay).isAfterNow
+    }
+
+    @WorkerThread
+    private fun isUserSolveEnough(): Boolean {
+        val numberOfSolved = sharedPreferenceHelper.numberOfSolved()
+        return numberOfSolved >= minNumberOfSolvedStepsForRate
     }
 
 

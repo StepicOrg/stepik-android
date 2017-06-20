@@ -69,6 +69,7 @@ public class SharedPreferenceHelper {
     private final static String ONE_DAY_NOTIFICATION = "one_day_notification";
     private final static String SEVEN_DAY_NOTIFICATION = "seven_day_notification";
     private final String ANY_STEP_SOLVED = "any_step_solved";
+    private final String NUMBER_OF_STEPS_SOLVED = "number_of_steps_solved";
     private final String NEW_USER_ALARM_TIMESTAMP = "new_user_alarm_timestamp";
     private final String NUMBER_OF_SHOWN_STREAK_DIALOG = "number_of_shown_streak_dialog";
     private final String STREAK_DIALOG_SHOWN_TIMESTAMP = "streak_dialog_shown_timestamp";
@@ -163,6 +164,15 @@ public class SharedPreferenceHelper {
 
     public void trackWhenUserSolved() {
         put(PreferenceType.LOGIN, ANY_STEP_SOLVED, true);
+    }
+
+    public void incrementUserSolved() {
+        long userSolved = getLong(PreferenceType.LOGIN, NUMBER_OF_STEPS_SOLVED, 0);
+        put(PreferenceType.LOGIN, NUMBER_OF_STEPS_SOLVED, userSolved + 1);
+    }
+
+    public long numberOfSolved() {
+        return getLong(PreferenceType.LOGIN, NUMBER_OF_STEPS_SOLVED, 0);
     }
 
     public void saveNewUserRemindTimestamp(long scheduleMillis) {
