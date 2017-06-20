@@ -682,11 +682,18 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
     public void onClickGooglePlay(int starNumber) {
         sharedPreferenceHelper.afterRateWasHandled();
         RatingUtilKt.reportRateEvent(analytic, starNumber, Analytic.Rating.POSITIVE_APPSTORE);
+
+        if (config.isAppInStore()) {
+            screenManager.showStoreWithApp(getActivity());
+        } else {
+            screenManager.showTextFeedback(getActivity());
+        }
     }
 
     @Override
     public void onClickSupport(int starNumber) {
         sharedPreferenceHelper.afterRateWasHandled();
         RatingUtilKt.reportRateEvent(analytic, starNumber, Analytic.Rating.NEGATIVE_EMAIL);
+        screenManager.showTextFeedback(getActivity());
     }
 }
