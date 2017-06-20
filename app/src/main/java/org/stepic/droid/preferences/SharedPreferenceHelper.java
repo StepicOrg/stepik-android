@@ -39,8 +39,6 @@ public class SharedPreferenceHelper {
     private static final java.lang.String DISCOUNTING_POLICY_DIALOG = "discounting_pol_dialog";
     private static final java.lang.String KEEP_SCREEN_ON_STEPS = "keep_screen_on_steps";
     private static final String ROTATE_PREF = "rotate_pref";
-
-
     private final String ACCESS_TOKEN_TIMESTAMP = "access_token_timestamp";
     private final String UPDATING_TIMESTAMP = "updating_timestamp";
     private final String AUTH_RESPONSE_JSON = "auth_response_json";
@@ -89,6 +87,11 @@ public class SharedPreferenceHelper {
 
     private final String INVITATION_WAS_DECLINED_DEVICE_SPECIFIC = "invitation_wast_declined";
 
+    private final String RATE_LAST_TIMESTAMP = "rate_last_timestamp";
+    private final String RATE_TIMES_SHOWN = "rate_times_shown";
+    private final String RATE_WAS_HANDLED = "rate_was_handled";
+
+
     private Context context;
     private Analytic analytic;
     private DefaultFilter defaultFilter;
@@ -102,6 +105,35 @@ public class SharedPreferenceHelper {
         resetFilters(Table.enrolled); //reset on app recreating and on destroy course's Fragments
         resetFilters(Table.featured);
     }
+
+    /**
+     * call when user click Google Play or Support at rate Dialog
+     */
+    public void afterRateWasHandled() {
+        put(PreferenceType.DEVICE_SPECIFIC, RATE_WAS_HANDLED, true);
+    }
+
+    public boolean wasRateHandled() {
+        return getBoolean(PreferenceType.DEVICE_SPECIFIC, RATE_WAS_HANDLED);
+    }
+
+    public void rateShown(long timeMillis) {
+        put(PreferenceType.DEVICE_SPECIFIC, RATE_LAST_TIMESTAMP, timeMillis);
+        long times = getLong(PreferenceType.DEVICE_SPECIFIC, RATE_TIMES_SHOWN, 0);
+        put(PreferenceType.DEVICE_SPECIFIC, RATE_TIMES_SHOWN, times + 1);
+    }
+
+    /**
+     * @return last timestamp, when it was shown, -1 when it has never been shown
+     */
+    public long whenRateWasShown() {
+        return getLong(PreferenceType.DEVICE_SPECIFIC, RATE_LAST_TIMESTAMP, -1);
+    }
+
+    public long howManyRateWasShownBefore() {
+        return getLong(PreferenceType.DEVICE_SPECIFIC, RATE_TIMES_SHOWN, 0);
+    }
+
 
     public boolean isInvitationWasDeclined() {
         return getBoolean(PreferenceType.DEVICE_SPECIFIC, INVITATION_WAS_DECLINED_DEVICE_SPECIFIC, false);
