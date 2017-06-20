@@ -2,8 +2,11 @@ package org.stepic.droid.core.presenters
 
 import android.support.annotation.MainThread
 import android.support.annotation.WorkerThread
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import org.joda.time.DateTime
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
+import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.core.LessonSessionManager
 import org.stepic.droid.core.presenters.contracts.StepAttemptView
 import org.stepic.droid.model.*
@@ -23,6 +26,7 @@ class StepAttemptPresenter
         private val threadPoolExecutor: ThreadPoolExecutor,
         private val lessonManager: LessonSessionManager,
         private val api: Api,
+        private var firebaseRemoteConfig: FirebaseRemoteConfig,
         private val analytic: Analytic,
         private val sharedPreferenceHelper: SharedPreferenceHelper) : PresenterBase<StepAttemptView>() {
 
@@ -173,11 +177,14 @@ class StepAttemptPresenter
                                             -1
                                         }
 
+
                                 val needShowRateAppDialog = !needShowStreakDialog
                                         && fromPosting
                                         && (submission?.status == Submission.Status.CORRECT)
                                         && !step.is_custom_passed
-                                        && true //todo: add checking for last showing timestamp in prefs, checking number of solved tasks, checking of previous answer
+                                        && !sharedPreferenceHelper.wasRateHandled()
+                                        && isRateGreaterDelay()
+                                //todo: add checking for last showing timestamp in prefs, checking number of solved tasks, checking of previous answer
 
                                 mainHandler.post {
                                     if (needShowStreakDialog) {
@@ -202,6 +209,17 @@ class StepAttemptPresenter
         }
 
         getStatusOfSubmission(0)
+    }
+
+    @WorkerThread
+    private fun isRateGreaterDelay(): Boolean {
+        val wasShownMillis = sharedPreferenceHelper.whenRateWasShown()
+        if (wasShownMillis < 0) {
+            return true
+        }
+
+        val delay = firebaseRemoteConfig.getLong(RemoteConfig.minDelayRateDialogSec).toInt()
+        return !DateTime(wasShownMillis).plusSeconds(delay).isAfterNow
     }
 
 
