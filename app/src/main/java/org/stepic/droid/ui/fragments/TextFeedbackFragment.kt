@@ -1,5 +1,6 @@
 package org.stepic.droid.ui.fragments
 
+import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Context
 import android.os.Bundle
@@ -16,7 +17,6 @@ import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.core.presenters.TextFeedbackPresenter
 import org.stepic.droid.core.presenters.contracts.TextFeedbackView
-import org.stepic.droid.ui.activities.StepsActivity
 import org.stepic.droid.ui.dialogs.LoadingProgressDialog
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.ValidatorUtil
@@ -151,13 +151,8 @@ class TextFeedbackFragment : FragmentBase(), TextFeedbackView {
 
     override fun onFeedbackSent() {
         Toast.makeText(context, R.string.feedback_sent, Toast.LENGTH_SHORT).show()
-        if (activity != null
-                && activity.callingActivity::class.java.simpleName == StepsActivity::class.java.simpleName) {
-            //it is workaround for showing the form in steps activity. todo:rewrite it more general
-            activity?.finish()
-        } else {
-            screenManager.showMainFeed(activity)
-        }
+        activity.setResult(Activity.RESULT_OK)
+        activity?.finish()
     }
 
     override fun onDestroyView() {
