@@ -21,7 +21,10 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/rateDialogTitle"
         android:layout_centerHorizontal="true"
-        android:stepSize="1"/>
+        android:numStars="5"
+        android:progressDrawable="@drawable/rating_star"
+        android:stepSize="1"
+        tools:rating="3"/>
 
     <TextView
         android:id="@+id/rateDialogHint"
