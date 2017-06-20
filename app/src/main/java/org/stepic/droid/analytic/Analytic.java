@@ -7,6 +7,17 @@ import org.jetbrains.annotations.Nullable;
 
 public interface Analytic {
 
+    interface Rating {
+        String SHOWN = "app_rate_shown"; //on shown dialog
+        String APP_RATE = "app_rate"; //number of stars, that user chosen, may multiple by session
+
+        String POSITIVE_LATER = "app_rate_positive_later";
+        String POSITIVE_APPSTORE = "app_rate_positive_appstore";
+
+        String NEGATIVE_LATER = "app_rate_negative_later";
+        String NEGATIVE_EMAIL = "app_rate_negative_email";
+    }
+
     interface Registration {
         String ERROR = "registration_error";
         String TAP_ON_FIELDS = "tap_on_fields_registration";

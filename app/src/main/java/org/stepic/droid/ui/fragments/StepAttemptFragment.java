@@ -53,6 +53,8 @@ import org.stepic.droid.ui.util.TimeIntervalUtil;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ColorUtil;
 import org.stepic.droid.util.ProgressHelper;
+import org.stepic.droid.util.RatingUtil;
+import org.stepic.droid.util.RatingUtilKt;
 import org.stepic.droid.util.SnackbarExtensionKt;
 
 import javax.inject.Inject;
@@ -60,7 +62,6 @@ import javax.inject.Inject;
 import butterknife.BindDrawable;
 import butterknife.BindString;
 import butterknife.BindView;
-import timber.log.Timber;
 import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan;
 import uk.co.chrisjenx.calligraphy.TypefaceUtils;
 
@@ -661,26 +662,31 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
         RateAppDialogFragment rateAppDialogFragment = RateAppDialogFragment.Companion.newInstance();
         rateAppDialogFragment.setTargetFragment(this, 0);
         if (!rateAppDialogFragment.isAdded()) {
+            analytic.reportEvent(Analytic.Rating.SHOWN);
             rateAppDialogFragment.show(getFragmentManager(), null);
         }
     }
 
-    //Rate dialog callback:∂∂
+    //Rate dialog callback:
 
     @Override
     public void onClickLater(int starNumber) {
-        Timber.d("later %d", starNumber);
+        if (RatingUtil.INSTANCE.isExcellent(starNumber)) {
+            RatingUtilKt.reportRateEvent(analytic, starNumber, Analytic.Rating.POSITIVE_LATER);
+        } else {
+            RatingUtilKt.reportRateEvent(analytic, starNumber, Analytic.Rating.NEGATIVE_LATER);
+        }
     }
 
     @Override
     public void onClickGooglePlay(int starNumber) {
         sharedPreferenceHelper.afterRateWasHandled();
-        Timber.d("gp %d", starNumber);
+        RatingUtilKt.reportRateEvent(analytic, starNumber, Analytic.Rating.POSITIVE_APPSTORE);
     }
 
     @Override
     public void onClickSupport(int starNumber) {
         sharedPreferenceHelper.afterRateWasHandled();
-        Timber.d("support %d", starNumber);
+        RatingUtilKt.reportRateEvent(analytic, starNumber, Analytic.Rating.NEGATIVE_EMAIL);
     }
 }

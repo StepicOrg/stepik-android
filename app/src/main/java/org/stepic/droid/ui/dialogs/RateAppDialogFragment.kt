@@ -12,9 +12,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import kotlinx.android.synthetic.main.dialog_rate_app.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.fonts.FontType
 import org.stepic.droid.fonts.FontsProvider
+import org.stepic.droid.util.RatingUtil
+import org.stepic.droid.util.reportRateEvent
 import uk.co.chrisjenx.calligraphy.CalligraphyUtils
 import uk.co.chrisjenx.calligraphy.TypefaceUtils
 import javax.inject.Inject
@@ -43,6 +46,8 @@ class RateAppDialogFragment : DialogFragment() {
 
     @Inject
     lateinit var fontsProvider: FontsProvider
+    @Inject
+    lateinit var analytic: Analytic
     lateinit var boldTypeface: Typeface
 
     init {
@@ -77,7 +82,7 @@ class RateAppDialogFragment : DialogFragment() {
         rateDialogPositive.setOnClickListener {
             dialog.dismiss()
             val rating = rateDialogRatingBar.rating
-            if (isExcellent(rating.toInt())) {
+            if (RatingUtil.isExcellent(rating.toInt())) {
                 callback.onClickGooglePlay(rating.toInt())
             } else {
                 callback.onClickSupport(rating.toInt())
@@ -89,7 +94,9 @@ class RateAppDialogFragment : DialogFragment() {
                 return@setOnRatingBarChangeListener
             }
 
-            applyRating(rating = rating.toInt())
+            val starNumber = rating.toInt()
+            analytic.reportRateEvent(starNumber, Analytic.Rating.APP_RATE)
+            applyRating(rating = starNumber)
         }
 
         savedInstanceState?.let {
@@ -109,7 +116,7 @@ class RateAppDialogFragment : DialogFragment() {
             if (rating > 0 && rating <= 4) {
                 rateDialogHint.setText(R.string.rate_dialog_hint_negative)
                 rateDialogPositive.setTextAndColor(R.string.rate_dialog_support, R.color.rate_dialog_support)
-            } else if (isExcellent(rating)) {
+            } else if (RatingUtil.isExcellent(rating)) {
                 rateDialogHint.setText(R.string.rate_dialog_hint_positive)
                 rateDialogPositive.setTextAndColor(R.string.rate_dialog_google_play, R.color.rate_dialog_store)
             }
@@ -123,8 +130,6 @@ class RateAppDialogFragment : DialogFragment() {
         super.onSaveInstanceState(outState)
         outState?.putInt(ratingKey, rateDialogRatingBar.rating.toInt())
     }
-
-    private fun isExcellent(rating: Int) = rating > 4
 
     private fun TextView.setTextAndColor(@StringRes stringRes: Int,
                                          @ColorRes textColorRes: Int) {
