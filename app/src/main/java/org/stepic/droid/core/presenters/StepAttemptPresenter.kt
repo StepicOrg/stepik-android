@@ -173,9 +173,17 @@ class StepAttemptPresenter
                                             -1
                                         }
 
+                                val needShowRateAppDialog = !needShowStreakDialog
+                                        && fromPosting
+                                        && (submission?.status == Submission.Status.CORRECT)
+                                        && !step.is_custom_passed
+                                        && true //todo: add checking for last showing timestamp in prefs, checking number of solved tasks, checking of previous answer
+
                                 mainHandler.post {
                                     if (needShowStreakDialog) {
                                         view?.onNeedShowStreakDialog(streakDayNumber) // it can be -1, if we fail to get streaks
+                                    } else if (needShowRateAppDialog) {
+                                        view?.onNeedShowRateDialog()
                                     }
                                     view?.onNeedFillSubmission(submission, numberOfSubmissions)
                                 }

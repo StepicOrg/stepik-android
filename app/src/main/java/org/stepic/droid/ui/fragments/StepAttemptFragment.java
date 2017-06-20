@@ -46,6 +46,7 @@ import org.stepic.droid.model.Reply;
 import org.stepic.droid.model.Submission;
 import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout;
 import org.stepic.droid.ui.dialogs.DiscountingPolicyDialogFragment;
+import org.stepic.droid.ui.dialogs.RateAppDialogFragment;
 import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment;
 import org.stepic.droid.ui.listeners.NextMoveable;
 import org.stepic.droid.ui.util.TimeIntervalUtil;
@@ -59,10 +60,15 @@ import javax.inject.Inject;
 import butterknife.BindDrawable;
 import butterknife.BindString;
 import butterknife.BindView;
+import timber.log.Timber;
 import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan;
 import uk.co.chrisjenx.calligraphy.TypefaceUtils;
 
-public abstract class StepAttemptFragment extends StepBaseFragment implements StepAttemptView, InternetEnabledListener {
+public abstract class StepAttemptFragment extends StepBaseFragment implements
+        StepAttemptView,
+        InternetEnabledListener,
+        RateAppDialogFragment.Companion.Callback {
+
     private final int DISCOUNTING_POLICY_REQUEST_CODE = 131;
     private final int NOTIFICATION_TIME_REQUEST_CODE = 11;
 
@@ -648,5 +654,31 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
         if (connectionProblem.getVisibility() == View.VISIBLE) {
             stepAttemptPresenter.startLoadAttempt(step);
         }
+    }
+
+    @Override
+    public void onNeedShowRateDialog() {
+        RateAppDialogFragment rateAppDialogFragment = RateAppDialogFragment.Companion.newInstance();
+        rateAppDialogFragment.setTargetFragment(this, 0);
+        if (!rateAppDialogFragment.isAdded()) {
+            rateAppDialogFragment.show(getFragmentManager(), null);
+        }
+    }
+
+    //Rate dialog callback:∂∂
+
+    @Override
+    public void onClickLater(int starNumber) {
+        Timber.d("later %d", starNumber);
+    }
+
+    @Override
+    public void onClickGooglePlay(int starNumber) {
+        Timber.d("gp %d", starNumber);
+    }
+
+    @Override
+    public void onClickSupport(int starNumber) {
+        Timber.d("support %d", starNumber);
     }
 }

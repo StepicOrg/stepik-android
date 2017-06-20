@@ -23,6 +23,8 @@ import javax.inject.Inject
 class RateAppDialogFragment : DialogFragment() {
 
     companion object {
+        private val ratingKey = "ratingKey"
+
         fun newInstance(): RateAppDialogFragment {
             return RateAppDialogFragment()
         }
@@ -75,7 +77,7 @@ class RateAppDialogFragment : DialogFragment() {
         rateDialogPositive.setOnClickListener {
             dialog.dismiss()
             val rating = rateDialogRatingBar.rating
-            if (isExcellent(rating)) {
+            if (isExcellent(rating.toInt())) {
                 callback.onClickGooglePlay(rating.toInt())
             } else {
                 callback.onClickSupport(rating.toInt())
@@ -87,28 +89,42 @@ class RateAppDialogFragment : DialogFragment() {
                 return@setOnRatingBarChangeListener
             }
 
-            if (rating == 0f) {
-                rateDialogTitle.setText(R.string.rate_dialog_title)
-                rateDialogButtonsContainer.visibility = View.GONE
-                rateDialogHint.visibility = View.GONE
-            } else {
-                rateDialogHint.visibility = View.VISIBLE
-                rateDialogTitle.setText(R.string.rate_dialog_thanks)
-                if (rating > 0f && rating <= 4f) {
-                    rateDialogHint.setText(R.string.rate_dialog_hint_negative)
-                    rateDialogPositive.setTextAndColor(R.string.rate_dialog_support, R.color.rate_dialog_support)
-                } else if (isExcellent(rating)) {
-                    rateDialogHint.setText(R.string.rate_dialog_hint_positive)
-                    rateDialogPositive.setTextAndColor(R.string.rate_dialog_google_play, R.color.rate_dialog_store)
-                }
+            applyRating(rating = rating.toInt())
+        }
 
-                rateDialogLater.setTextAndColor(R.string.rate_dialog_later, R.color.stepic_weak_text)
-                rateDialogButtonsContainer.visibility = View.VISIBLE
-            }
+        savedInstanceState?.let {
+            val rating = it.getInt(ratingKey)
+            applyRating(rating)
         }
     }
 
-    private fun isExcellent(rating: Float) = rating > 4f
+    private fun applyRating(rating: Int) {
+        if (rating == 0) {
+            rateDialogTitle.setText(R.string.rate_dialog_title)
+            rateDialogButtonsContainer.visibility = View.GONE
+            rateDialogHint.visibility = View.GONE
+        } else {
+            rateDialogHint.visibility = View.VISIBLE
+            rateDialogTitle.setText(R.string.rate_dialog_thanks)
+            if (rating > 0 && rating <= 4) {
+                rateDialogHint.setText(R.string.rate_dialog_hint_negative)
+                rateDialogPositive.setTextAndColor(R.string.rate_dialog_support, R.color.rate_dialog_support)
+            } else if (isExcellent(rating)) {
+                rateDialogHint.setText(R.string.rate_dialog_hint_positive)
+                rateDialogPositive.setTextAndColor(R.string.rate_dialog_google_play, R.color.rate_dialog_store)
+            }
+
+            rateDialogLater.setTextAndColor(R.string.rate_dialog_later, R.color.stepic_weak_text)
+            rateDialogButtonsContainer.visibility = View.VISIBLE
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        outState?.putInt(ratingKey, rateDialogRatingBar.rating.toInt())
+    }
+
+    private fun isExcellent(rating: Int) = rating > 4
 
     private fun TextView.setTextAndColor(@StringRes stringRes: Int,
                                          @ColorRes textColorRes: Int) {
