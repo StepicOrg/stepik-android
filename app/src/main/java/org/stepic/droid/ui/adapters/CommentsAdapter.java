@@ -294,7 +294,7 @@ public final class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.
             if (comment.is_deleted() != null && comment.is_deleted()) {
                 commentClickableRoot.setBackgroundColor(ColorUtil.INSTANCE.getColorArgb(R.color.wrong_answer_background, context));
 
-                if (!comment.getText().isEmpty()) {
+                if (comment.getText() != null && !comment.getText().isEmpty()) {
                     int weakColorInt = ColorUtil.INSTANCE.getColorArgb(R.color.stepic_weak_text, context);
                     String hexColor = String.format("#%06X", (0xFFFFFF & weakColorInt));
                     String deletedCommentWithText = commentIsDeletedMessage + "<br>" + "<font color='" + hexColor + "'>" + comment.getText() + "</font>";
