@@ -239,6 +239,8 @@
     </style>
 
     <style name="RateItemTextView">
+        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:clickable">true</item>
         <item name="android:padding">@dimen/guideline_standard_padding</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_weight">1</item>

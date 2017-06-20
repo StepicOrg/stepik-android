@@ -468,6 +468,6 @@
     <string name="rate_dialog_support">Поддержка</string>
     <string name="rate_dialog_later">Позже</string>
     <string name="rate_dialog_hint_positive">Пожалуйста, оставьте отзыв в Google Play</string>
-    <string name="rate_dialog_hint_negative">Пожалуйста, напишите Поддержку</string>
+    <string name="rate_dialog_hint_negative">Пожалуйста, напишите в Поддержку</string>
     <string name="rate_dialog_thanks">Спасибо!</string>
 </resources>
