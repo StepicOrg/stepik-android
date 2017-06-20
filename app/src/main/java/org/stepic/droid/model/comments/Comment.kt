@@ -14,7 +14,7 @@ data class Comment(
         @SerializedName("user_role")
         val userRole: UserRole? = null,
         val time: String? = null,
-        var text: String = "",
+        var text: String? = "",
         @SerializedName("reply_count")
         val replyCount: Int? = null,
         var is_deleted: Boolean? = null,
@@ -54,7 +54,7 @@ data class Comment(
             source.readValue(Int::class.java.classLoader) as Int?,
             source.readValue(Int::class.java.classLoader)?.let { UserRole.values()[it as Int] },
             source.readString(),
-            source.readString(),
+            source.readString()?:"",
             source.readValue(Int::class.java.classLoader) as Int?,
             source.readValue(Boolean::class.java.classLoader) as Boolean?,
             source.readString(),
