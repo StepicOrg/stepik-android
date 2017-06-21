@@ -461,5 +461,14 @@
     <string name="video_player_quality">Video quality</string>
     <string name="video_player_device_orientation_title">Rotate video</string>
     <string name="video_player_downloaded_quality">Downloaded (%s)</string>
+    <string name="video_url_incorrect">Sorry, video is not found</string>
 
+    <!--Rate dialog-->
+    <string name="rate_dialog_title">Do you like Stepik?</string>
+    <string name="rate_dialog_google_play">Google Play</string>
+    <string name="rate_dialog_support">Support</string>
+    <string name="rate_dialog_later">Later</string>
+    <string name="rate_dialog_hint_positive">Please, leave your feedback in the Google Play</string>
+    <string name="rate_dialog_hint_negative">Please, write your feedback to Support</string>
+    <string name="rate_dialog_thanks">Thanks!</string>
 </resources>

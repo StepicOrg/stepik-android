@@ -192,9 +192,9 @@ public abstract class StepBaseFragment extends FragmentBase
                 analytic.reportEvent(Analytic.Comments.OPEN_FROM_STEP_UI);
 
                 if (discussionCount == 0) {
-                    screenManager.openComments(getContext(), step.getDiscussion_proxy(), step.getId(), true); //show new form, but in back stack comment oldList is exist.
+                    screenManager.openComments(getActivity(), step.getDiscussion_proxy(), step.getId(), true); //show new form, but in back stack comment oldList is exist.
                 } else {
-                    screenManager.openComments(getContext(), step.getDiscussion_proxy(), step.getId());
+                    screenManager.openComments(getActivity(), step.getDiscussion_proxy(), step.getId());
                 }
             }
         });

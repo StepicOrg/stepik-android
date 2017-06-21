@@ -9,7 +9,7 @@ interface StepAttemptView {
 
     fun onStartLoadingAttempt()
 
-    fun onNeedShowAttempt(attempt: Attempt?, isCreated: Boolean, numberOfSubmissionsForStep: Int)
+    fun onNeedShowAttempt(attempt: Attempt?, isCreated: Boolean, numberOfSubmissionsForStep: Int?)
 
     fun onConnectionFailWhenLoadAttempt()
 
@@ -23,6 +23,8 @@ interface StepAttemptView {
 
     fun onResultHandlingSubmissionRestriction(needShow: Boolean, numberForShow: Int)
 
-    fun onNeedShowStreakDialog(streakDays : Int)
+    fun onNeedShowStreakDialog(streakDays: Int)
+
+    fun onNeedShowRateDialog()
 
 }

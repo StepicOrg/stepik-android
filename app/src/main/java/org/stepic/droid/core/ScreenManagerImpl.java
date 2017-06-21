@@ -221,7 +221,8 @@ public class ScreenManagerImpl implements ScreenManager {
     public void showTextFeedback(Activity sourceActivity) {
         analytic.reportEvent(Analytic.Screens.SHOW_TEXT_FEEDBACK);
         Intent launchIntent = new Intent(sourceActivity, TextFeedbackActivity.class);
-        sourceActivity.startActivity(launchIntent);
+        sourceActivity.startActivityForResult(launchIntent, TextFeedbackActivity.Companion.getRequestCode());
+        sourceActivity.overridePendingTransition(org.stepic.droid.R.anim.no_transition, org.stepic.droid.R.anim.push_down);
     }
 
     @Override
@@ -494,19 +495,18 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void openComments(Context context, @Nullable String discussionProxyId, long stepId) {
+    public void openComments(Activity context, @Nullable String discussionProxyId, long stepId) {
         openComments(context, discussionProxyId, stepId, false);
     }
 
     @Override
-    public void openComments(Context context, String discussionProxyId, long stepId, boolean needOpenForm) {
+    public void openComments(Activity context, String discussionProxyId, long stepId, boolean needOpenForm) {
         if (discussionProxyId == null) {
             analytic.reportEvent(Analytic.Screens.OPEN_COMMENT_NOT_AVAILABLE);
             Toast.makeText(context, R.string.comment_denied, Toast.LENGTH_SHORT).show();
         } else {
             analytic.reportEvent(Analytic.Screens.OPEN_COMMENT);
             Intent intent = new Intent(context, CommentsActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             Bundle bundle = new Bundle();
             bundle.putString(CommentsActivity.Companion.getKeyDiscussionProxyId(), discussionProxyId);
             bundle.putLong(CommentsActivity.Companion.getKeyStepId(), stepId);

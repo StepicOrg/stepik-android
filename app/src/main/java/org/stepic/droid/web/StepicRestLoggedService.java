@@ -120,7 +120,7 @@ public interface StepicRestLoggedService {
     @GET("api/steps")
     Call<StepResponse> geStepsByLessonId(@Query("lesson") long lessonId);
 
-    @GET("api/submissions")
+    @GET("api/submissions?order=desc")
     Call<SubmissionResponse> getExistingSubmissionsForStep(@Query("step") long stepId);
 
     @GET("api/notifications")

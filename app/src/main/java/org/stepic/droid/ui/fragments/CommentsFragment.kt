@@ -115,6 +115,13 @@ class CommentsFragment : FragmentBase(),
                 .inject(this)
     }
 
+    override fun onReleaseComponent() {
+        super.onReleaseComponent()
+        App
+                .componentManager()
+                .releaseStepComponent(stepId!!)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         commentAdapter = CommentsAdapter(commentManager, context)

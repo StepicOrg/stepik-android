@@ -1,5 +1,7 @@
 package org.stepic.droid.ui.activities
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
@@ -48,5 +50,12 @@ class FeedbackActivity : SingleFragmentActivity() {
     override fun finish() {
         super.finish()
         overridePendingTransition(org.stepic.droid.R.anim.no_transition, org.stepic.droid.R.anim.push_down)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == TextFeedbackActivity.requestCode && resultCode == Activity.RESULT_OK) {
+            finish()
+        }
     }
 }

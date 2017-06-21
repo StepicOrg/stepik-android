@@ -3,12 +3,10 @@ package org.stepic.droid.core.presenters
 import android.support.annotation.MainThread
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.core.presenters.contracts.VideoStepView
-import org.stepic.droid.di.step.StepScope
 import org.stepic.droid.model.Step
 import timber.log.Timber
 import javax.inject.Inject
 
-@StepScope
 class VideoStepPresenter
 @Inject constructor(
         private val analytic: Analytic) : PresenterBase<VideoStepView>() {

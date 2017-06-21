@@ -10,6 +10,7 @@ import org.stepic.droid.model.Video
 import org.stepic.droid.model.VideoUrl
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.util.AppConstants
+import org.stepic.droid.util.greaterThanMaxQuality
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
 
@@ -51,52 +52,42 @@ class VideoQualityDialogInPlayer : VideoQualityDialogBase() {
 
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        fun greaterThanMaxQuality(quality: String): Boolean {
-            try {
-                val qualityInt = Integer.parseInt(quality)
-                return qualityInt > AppConstants.MAX_QUALITY_INT
-            } catch (exception: Exception) {
-                analytic.reportError(Analytic.Error.CANT_PARSE_QUALITY, exception)
-                return true
-            }
-        }
-
-
         init()
 
         val externalVideo: Video? = arguments.getParcelable<Video>(externalVideoKey)
         val cachedVideo: Video? = arguments.getParcelable<Video>(cachedVideoKey)
         val nowPlayingUrl = arguments.getString(nowPlayingKey)
 
-        var position = 0
-        let {
-            externalVideo?.urls?.forEach {
-                if (greaterThanMaxQuality(it.quality)) {
-                    return@forEach // continue
-                }
-
-                if (it.url != nowPlayingUrl) {
-                    position++
-                } else {
-                    return@let
-                }
-            }
-        }
-        // if it is not external, than position will be after all external qualities
-        val listOfUrls: MutableList<String> =
+        val listOfVideoUrl: MutableList<VideoUrl> =
                 externalVideo
                         ?.urls
-                        ?.map { it.quality }
                         ?.filter {
-                            !greaterThanMaxQuality(it)
+                            !it.greaterThanMaxQuality()
                         }
                         ?.toMutableList()
                         ?: ArrayList()
 
-        cachedVideo?.urls?.firstOrNull()?.quality?.let {
-            listOfUrls.add(getString(R.string.video_player_downloaded_quality, it))
+
+        // if it is not external, than position will be after all external qualities
+        val listOfPresentedQuality: MutableList<String> =
+                externalVideo
+                        ?.urls
+                        ?.filter {
+                            !it.greaterThanMaxQuality()
+                        }
+                        ?.map { it.quality }
+                        ?.toMutableList()
+                        ?: ArrayList()
+
+        cachedVideo?.urls?.firstOrNull()?.let {
+            listOfPresentedQuality.add(getString(R.string.video_player_downloaded_quality, it.quality))
+            listOfVideoUrl.add(it)
         }
 
+
+        val position: Int = listOfVideoUrl
+                .map { it.url }
+                .indexOf(nowPlayingUrl)
 
         val builder = AlertDialog.Builder(activity)
         builder
@@ -104,19 +95,14 @@ class VideoQualityDialogInPlayer : VideoQualityDialogBase() {
                 .setNegativeButton(R.string.cancel) { _, _ ->
                     analytic.reportEvent(Analytic.Video.CANCEL_VIDEO_QUALITY)
                 }
-                .setSingleChoiceItems(listOfUrls.toTypedArray(),
+                .setSingleChoiceItems(listOfPresentedQuality.toTypedArray(),
                         position,
                         { dialog, which ->
-                            val urlQuality =
-                                    if (externalVideo != null && which in 0..externalVideo.urls.size - 1) {
-                                        externalVideo.urls[which]
-                                    } else {
-                                        cachedVideo?.urls?.first()
-                                    }
+                            val urlQuality = listOfVideoUrl[which]
                             (targetFragment as Callback).onQualityChanged(newUrlQuality = urlQuality)
                             dialog.dismiss()
 
-                            val qualityForPlaying = listOfUrls[which]
+                            val qualityForPlaying = listOfPresentedQuality[which]
                             threadPoolExecutor.execute {
                                 val toSave = findNearest(qualityForPlaying, qualityToPositionMap.keys)
                                 userPreferences.saveVideoQualityForPlaying(toSave)

@@ -46,9 +46,9 @@ public interface ScreenManager {
 
     void showPdfInBrowserByGoogleDocs(Activity activity, String fullPath);
 
-    void openComments(Context context, String discussionProxyId, long stepId);
+    void openComments(Activity context, String discussionProxyId, long stepId);
 
-    void openComments(Context context, String discussionProxyId, long stepId, boolean needOpenForm);
+    void openComments(Activity context, String discussionProxyId, long stepId, boolean needOpenForm);
 
     void openNewCommentForm(CommentsFragment commentsFragment, Long target, @Nullable Long parent);
 

@@ -3,14 +3,12 @@ package org.stepic.droid.core.presenters
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.VideoLengthResolver
 import org.stepic.droid.core.presenters.contracts.VideoLengthView
-import org.stepic.droid.di.step.StepScope
 import org.stepic.droid.model.Video
 import org.stepic.droid.util.TimeUtil
 import org.stepic.droid.util.resolvers.VideoResolver
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
 
-@StepScope
 class VideoLengthPresenter
 @Inject constructor(
         private val threadPoolExecutor: ThreadPoolExecutor,

@@ -148,7 +148,8 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
     @Override
     protected void onReleaseComponent() {
         App.Companion
-                .componentManager().releaseRoutingComponent();
+                .componentManager()
+                .releaseRoutingComponent();
     }
 
     @Nullable

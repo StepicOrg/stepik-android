@@ -297,7 +297,7 @@ public class SectionsFragment
         invitationPresenter.attachView(this);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        onNewIntent(((AppCompatActivity) getActivity()).getIntent());
+        onNewIntent(getActivity().getIntent());
     }
 
     private void setUpToolbarWithCourse() {

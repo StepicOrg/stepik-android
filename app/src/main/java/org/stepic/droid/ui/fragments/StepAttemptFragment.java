@@ -46,12 +46,15 @@ import org.stepic.droid.model.Reply;
 import org.stepic.droid.model.Submission;
 import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout;
 import org.stepic.droid.ui.dialogs.DiscountingPolicyDialogFragment;
+import org.stepic.droid.ui.dialogs.RateAppDialogFragment;
 import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment;
 import org.stepic.droid.ui.listeners.NextMoveable;
 import org.stepic.droid.ui.util.TimeIntervalUtil;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ColorUtil;
 import org.stepic.droid.util.ProgressHelper;
+import org.stepic.droid.util.RatingUtil;
+import org.stepic.droid.util.RatingUtilKt;
 import org.stepic.droid.util.SnackbarExtensionKt;
 
 import javax.inject.Inject;
@@ -62,7 +65,11 @@ import butterknife.BindView;
 import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan;
 import uk.co.chrisjenx.calligraphy.TypefaceUtils;
 
-public abstract class StepAttemptFragment extends StepBaseFragment implements StepAttemptView, InternetEnabledListener {
+public abstract class StepAttemptFragment extends StepBaseFragment implements
+        StepAttemptView,
+        InternetEnabledListener,
+        RateAppDialogFragment.Companion.Callback {
+
     private final int DISCOUNTING_POLICY_REQUEST_CODE = 131;
     private final int NOTIFICATION_TIME_REQUEST_CODE = 11;
 
@@ -255,7 +262,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
         super.onDestroyView();
     }
 
-    protected final void fillSubmission(@org.jetbrains.annotations.Nullable Submission submission) {
+    protected final void fillSubmission(@Nullable Submission submission) {
         stepAttemptPresenter.handleDiscountingPolicy(numberOfSubmissions, section, step);
         stepAttemptPresenter.handleStepRestriction(step, numberOfSubmissions);
         if (submission == null || submission.getStatus() == null) {
@@ -528,8 +535,10 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
     }
 
     @Override
-    public void onNeedShowAttempt(@org.jetbrains.annotations.Nullable Attempt attempt, boolean isCreated, int numberOfSubmissionsForStep) {
-        this.numberOfSubmissions = numberOfSubmissionsForStep;
+    public void onNeedShowAttempt(@Nullable Attempt attempt, boolean isCreated, @Nullable Integer numberOfSubmissionsForStep) {
+        if (numberOfSubmissionsForStep != null) {
+            this.numberOfSubmissions = numberOfSubmissionsForStep;
+        }
         this.attempt = attempt;
         showAttemptAbstractWrapMethod(this.attempt, isCreated);
     }
@@ -540,7 +549,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
     }
 
     @Override
-    public void onNeedFillSubmission(Submission submission, int numberOfSubmissions) {
+    public void onNeedFillSubmission(@Nullable Submission submission, int numberOfSubmissions) {
         enableInternetMessage(false);
         showActionButtonLoadState(false);
         showAnswerField(true);
@@ -646,5 +655,45 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
         if (connectionProblem.getVisibility() == View.VISIBLE) {
             stepAttemptPresenter.startLoadAttempt(step);
         }
+    }
+
+    @Override
+    public void onNeedShowRateDialog() {
+        RateAppDialogFragment rateAppDialogFragment = RateAppDialogFragment.Companion.newInstance();
+        rateAppDialogFragment.setTargetFragment(this, 0);
+        if (!rateAppDialogFragment.isAdded()) {
+            analytic.reportEvent(Analytic.Rating.SHOWN);
+            rateAppDialogFragment.show(getFragmentManager(), null);
+        }
+    }
+
+    //Rate dialog callback:
+
+    @Override
+    public void onClickLater(int starNumber) {
+        if (RatingUtil.INSTANCE.isExcellent(starNumber)) {
+            RatingUtilKt.reportRateEvent(analytic, starNumber, Analytic.Rating.POSITIVE_LATER);
+        } else {
+            RatingUtilKt.reportRateEvent(analytic, starNumber, Analytic.Rating.NEGATIVE_LATER);
+        }
+    }
+
+    @Override
+    public void onClickGooglePlay(int starNumber) {
+        sharedPreferenceHelper.afterRateWasHandled();
+        RatingUtilKt.reportRateEvent(analytic, starNumber, Analytic.Rating.POSITIVE_APPSTORE);
+
+        if (config.isAppInStore()) {
+            screenManager.showStoreWithApp(getActivity());
+        } else {
+            screenManager.showTextFeedback(getActivity());
+        }
+    }
+
+    @Override
+    public void onClickSupport(int starNumber) {
+        sharedPreferenceHelper.afterRateWasHandled();
+        RatingUtilKt.reportRateEvent(analytic, starNumber, Analytic.Rating.NEGATIVE_EMAIL);
+        screenManager.showTextFeedback(getActivity());
     }
 }

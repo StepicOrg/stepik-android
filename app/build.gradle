@@ -32,9 +32,11 @@ android {
         applicationId "org.stepic.droid"
         minSdkVersion rootProject.androidMinSdkVersion
         targetSdkVersion rootProject.androidTargetSdkVersion
-
         versionCode rootProject.versionCode
         versionName rootProject.versionName
+
+        versionCode 163
+        versionName "1.36.2"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }

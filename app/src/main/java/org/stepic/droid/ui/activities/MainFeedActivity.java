@@ -62,6 +62,7 @@ import org.stepic.droid.services.UpdateWithApkService;
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment;
 import org.stepic.droid.ui.dialogs.LogoutAreYouSureDialog;
 import org.stepic.droid.ui.dialogs.NeedUpdatingDialog;
+import org.stepic.droid.ui.dialogs.RateAppDialogFragment;
 import org.stepic.droid.ui.fragments.CertificateFragment;
 import org.stepic.droid.ui.fragments.DownloadsFragment;
 import org.stepic.droid.ui.fragments.FindCoursesFragment;

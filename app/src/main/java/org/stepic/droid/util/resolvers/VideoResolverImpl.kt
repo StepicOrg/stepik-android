@@ -5,6 +5,7 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.model.Video
 import org.stepic.droid.model.VideoUrl
 import org.stepic.droid.preferences.UserPreferences
+import org.stepic.droid.util.greaterThanMaxQuality
 import javax.inject.Inject
 
 class VideoResolverImpl
@@ -39,14 +40,16 @@ class VideoResolverImpl
                     }
             )
             var bestDelta = Integer.MAX_VALUE
-            urlList.forEach {
-                val currentQuality = Integer.parseInt(it.quality)
-                val qualityDelta = Math.abs(currentQuality - weWant)
-                if (qualityDelta < bestDelta) {
-                    bestDelta = qualityDelta
-                    resolvedURL = it.url
-                }
-            }
+            urlList
+                    .filter { !it.greaterThanMaxQuality() }
+                    .forEach {
+                        val currentQuality = Integer.parseInt(it.quality)
+                        val qualityDelta = Math.abs(currentQuality - weWant)
+                        if (qualityDelta < bestDelta) {
+                            bestDelta = qualityDelta
+                            resolvedURL = it.url
+                        }
+                    }
         } catch (e: NumberFormatException) {
             //this is approach in BAD case
             analytic.reportError(Analytic.Error.VIDEO_RESOLVER_FAILED, e)

@@ -165,4 +165,6 @@ interface AppCoreComponent {
     fun inject(playbackControlView: PlaybackControlView)
 
     fun inject(videoQualityDialogInPlayer: VideoQualityDialogInPlayer)
+
+    fun inject(rateAppDialogFragment: RateAppDialogFragment)
 }

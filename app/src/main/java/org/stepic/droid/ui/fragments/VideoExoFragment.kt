@@ -237,6 +237,11 @@ class VideoExoFragment : FragmentBase(),
 
         val videoId: Long = video?.id ?: 0
         val filePath: String? = videoUrl ?: videoResolver.resolveVideoUrl(video)
+        if (filePath == null) {
+            Toast.makeText(context, R.string.video_url_incorrect, Toast.LENGTH_SHORT).show()
+            activity?.finish()
+            return 0
+        }
 
         videoUrl = filePath
         val bandwidthMeter = DefaultBandwidthMeter()
