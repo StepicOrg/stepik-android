@@ -9,6 +9,7 @@ import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.concurrency.DownloadPoster
 import org.stepic.droid.di.certificates.CertificateComponent
 import org.stepic.droid.di.course_general.CourseGeneralComponent
+import org.stepic.droid.di.downloads.DownloadsComponent
 import org.stepic.droid.di.feedback.FeedbackComponent
 import org.stepic.droid.di.filters.FilterComponent
 import org.stepic.droid.di.lesson.LessonComponent
@@ -51,6 +52,8 @@ interface AppCoreComponent {
     }
 
     fun feedbackComponentBuilder(): FeedbackComponent.Builder
+
+    fun downloadsComponentBuilder(): DownloadsComponent.Builder
 
     fun loginComponentBuilder(): LoginComponent.Builder
 
