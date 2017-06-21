@@ -1,6 +1,6 @@
 package org.stepic.droid.model;
 
-public class CachedVideo {
+public final class CachedVideo {
     private long stepId;
     private long videoId;
     private String url;

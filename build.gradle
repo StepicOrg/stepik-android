@@ -2,10 +2,11 @@
 apply from: 'buildsystem/secret.gradle'
 
 buildscript {
-    ext.kotlin_version = '1.1.2-3'
+    ext.kotlin_version = '1.1.2-5'
     repositories {
         jcenter()
         maven { url 'https://maven.google.com' }
+        maven { url "https://jitpack.io" }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.3'

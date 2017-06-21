@@ -16,21 +16,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
-import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
 import org.stepic.droid.base.App;
 import org.stepic.droid.base.Client;
 import org.stepic.droid.base.FragmentBase;
-import org.stepic.droid.concurrency.DownloadPoster;
+import org.stepic.droid.core.downloads.contract.DownloadsListener;
+import org.stepic.droid.core.downloads.contract.DownloadsPoster;
 import org.stepic.droid.core.video_moves.contract.VideosMovedListener;
-import org.stepic.droid.events.video.DownloadReportEvent;
-import org.stepic.droid.events.video.FinishDownloadCachedVideosEvent;
-import org.stepic.droid.events.video.StepRemovedEvent;
-import org.stepic.droid.events.video.VideoCachedOnDiskEvent;
 import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.DownloadEntity;
 import org.stepic.droid.model.DownloadReportItem;
@@ -61,13 +55,16 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
+import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
 
 //// TODO: 26.12.16 rewrite this class to MVP
 public class DownloadsFragment extends FragmentBase implements
         OnClickCancelListener,
         ClearVideosDialog.Callback,
-        CancelVideosDialog.Callback, VideosMovedListener {
+        CancelVideosDialog.Callback,
+        VideosMovedListener,
+        DownloadsListener {
 
     private static final int ANIMATION_DURATION = 10; //reset to 10 after debug
     private static final int UPDATE_DELAY = 300;
@@ -103,18 +100,20 @@ public class DownloadsFragment extends FragmentBase implements
     private boolean isLoaded;
 
     @Inject
-    Client<VideosMovedListener> videMovedListenerClient;
+    Client<VideosMovedListener> videoMovedListenerClient;
 
     @Inject
-    //use RxJava + MVP instead
-    @Deprecated
-    Bus bus;
+    Client<DownloadsListener> downloadsListenerClient;
+
+    @Inject
+    DownloadsPoster downloadsPoster;
 
     @Override
     protected void injectComponent() {
         App
                 .Companion
-                .component()
+                .componentManager()
+                .downloadsComponent()
                 .inject(this);
     }
 
@@ -164,8 +163,8 @@ public class DownloadsFragment extends FragmentBase implements
         }
 
         loadingProgressDialog = new LoadingProgressDialog(getContext());
-        bus.register(this);
-        videMovedListenerClient.subscribe(this);
+        downloadsListenerClient.subscribe(this);
+        videoMovedListenerClient.subscribe(this);
     }
 
     private void startLoadingStatusUpdater() {
@@ -263,7 +262,13 @@ public class DownloadsFragment extends FragmentBase implements
 
                             if (relatedDownloadEntity != null && !cancelSniffer.isStepIdCanceled(relatedDownloadEntity.getStepId()) && isInDownloadManager(relatedDownloadEntity.getDownloadId())) {
                                 final DownloadingVideoItem downloadingVideoItem = new DownloadingVideoItem(downloadReportItem, relatedDownloadEntity);
-                                mainHandler.post(new DownloadPoster(downloadingVideoItem));
+                                mainHandler.post(new Function0<Unit>() {
+                                    @Override
+                                    public Unit invoke() {
+                                        downloadsPoster.downloadUpdate(downloadingVideoItem);
+                                        return Unit.INSTANCE;
+                                    }
+                                });
                             }
                             cursor.moveToNext();
                         }
@@ -312,48 +317,6 @@ public class DownloadsFragment extends FragmentBase implements
         }
     }
 
-    @Subscribe
-    public void onLoadingUpdate(DownloadReportEvent event) {
-        DownloadingVideoItem item = event.getDownloadingVideoItem();
-        int position = -1;
-        for (int i = 0; i < downloadingWithProgressList.size(); i++) {
-            if (item.getDownloadEntity().getDownloadId() == downloadingWithProgressList.get(i).getDownloadEntity().getDownloadId()) {
-                position = i;
-                break;
-            }
-        }
-        final long stepId = item.getDownloadEntity().getStepId();
-        if (!stepIdToLesson.containsKey(stepId)) {
-            threadPoolExecutor.execute(new Runnable() {
-                @Override
-                public void run() {
-                    Step step = databaseFacade.getStepById(stepId);
-                    if (step != null) {
-
-                        Lesson lesson = databaseFacade.getLessonById(step.getLesson());
-                        if (lesson != null) {
-                            stepIdToLesson.put(stepId, lesson);
-                        }
-                    }
-                }
-            });
-            return; // if we do not know about lesson name -> not show this video.
-        }
-
-        if (cachedStepsSet.contains(stepId)) {
-            return; //if already cached do not show
-        }
-
-        if (position >= 0) {
-            downloadingWithProgressList.get(position).setDownloadReportItem(item.getDownloadReportItem());
-            downloadAdapter.notifyDownloadingVideoChanged(position, stepId);
-        } else {
-            downloadingWithProgressList.add(item);
-            checkForEmpty();
-            downloadAdapter.notifyDownloadingItemInserted(downloadingWithProgressList.size() - 1);
-        }
-    }
-
     @Override
     public void onStop() {
         super.onStop();
@@ -362,8 +325,8 @@ public class DownloadsFragment extends FragmentBase implements
 
     @Override
     public void onDestroyView() {
-        bus.unregister(this);
-        videMovedListenerClient.unsubscribe(this);
+        downloadsListenerClient.unsubscribe(this);
+        videoMovedListenerClient.unsubscribe(this);
         authUserButton.setOnClickListener(null);
         downloadsView.setAdapter(null);
         downloadAdapter = null;
@@ -401,15 +364,10 @@ public class DownloadsFragment extends FragmentBase implements
             @Override
             protected void onPostExecute(VideosAndMapToLesson videoAndMap) {
                 super.onPostExecute(videoAndMap);
-                bus.post(new FinishDownloadCachedVideosEvent(videoAndMap.getCachedVideoList(), videoAndMap.getStepIdToLesson()));
+                downloadsPoster.finishDownloadVideo(videoAndMap.getCachedVideoList(), videoAndMap.getStepIdToLesson());
             }
         };
         task.executeOnExecutor(threadPoolExecutor);
-    }
-
-    @Subscribe
-    public void onFinishLoadCachedVideos(FinishDownloadCachedVideosEvent event) {
-        showCachedVideos(event.getCachedVideos(), event.getMap());
     }
 
     private void showCachedVideos(List<CachedVideo> videosForShowing, Map<Long, Lesson> map) {
@@ -443,22 +401,6 @@ public class DownloadsFragment extends FragmentBase implements
         }
     }
 
-    @Subscribe
-    public void onStepRemoved(StepRemovedEvent e) {
-        long stepId = e.getStepId();
-        if (!cachedStepsSet.contains(stepId)) return;
-        int position = removeByStepId(stepId);
-
-        if (position >= 0) {
-            checkForEmpty();
-            downloadAdapter.notifyCachedVideoRemoved(position);
-        }
-    }
-
-    @Subscribe
-    public void onStepCached(VideoCachedOnDiskEvent event) {
-        addStepToList(event.getStepId(), event.getLesson(), event.getVideo());
-    }
 
     private void addStepToList(long stepId, Lesson lesson, CachedVideo video) {
         if (stepIdToLesson == null || cachedVideoList == null) return;
@@ -488,9 +430,6 @@ public class DownloadsFragment extends FragmentBase implements
         cachedVideoList.remove(videoForDeleteFromList);
         stepIdToLesson.remove(videoForDeleteFromList.getStepId());
         cachedStepsSet.remove(videoForDeleteFromList.getStepId());
-        if (cachedVideoList.size() == 0) {
-
-        }
         return position;
     }
 
@@ -513,20 +452,20 @@ public class DownloadsFragment extends FragmentBase implements
 
     @Override
     public void onCancelAllVideos() {
-        AsyncTask task = new AsyncTask() {
+        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             @Override
             protected void onPreExecute() {
                 ProgressHelper.activate(loadingProgressDialog);
             }
 
             @Override
-            protected Object doInBackground(Object[] params) {
+            protected Void doInBackground(Void[] params) {
                 try {
                     RWLocks.CancelLock.writeLock().lock();
 
                     long[] lessonIds = databaseFacade.getAllDownloadingLessons();
-                    for (int i = 0; i < lessonIds.length; i++) {
-                        Lesson lesson = databaseFacade.getLessonById(lessonIds[i]);
+                    for (long lessonId : lessonIds) {
+                        Lesson lesson = databaseFacade.getLessonById(lessonId);
                         if (lesson != null) {
                             List<Step> steps = databaseFacade.getStepsOfLesson(lesson.getId());
                             if (!steps.isEmpty()) {
@@ -543,8 +482,7 @@ public class DownloadsFragment extends FragmentBase implements
                         stepIds[i] = downloadEntities.get(i).getStepId();
                     }
 
-                    for (int i = 0; i < stepIds.length; i++) {
-                        long stepId = stepIds[i];
+                    for (long stepId : stepIds) {
                         cancelSniffer.addStepIdCancel(stepId);
                         downloadManager.cancelStep(stepId);
                     }
@@ -556,7 +494,7 @@ public class DownloadsFragment extends FragmentBase implements
             }
 
             @Override
-            protected void onPostExecute(Object o) {
+            protected void onPostExecute(Void o) {
                 if (downloadingWithProgressList != null && downloadAdapter != null) {
                     downloadingWithProgressList.clear();
                     downloadAdapter.notifyDataSetChanged();
@@ -626,5 +564,67 @@ public class DownloadsFragment extends FragmentBase implements
     @Override
     public void onVideosMoved() {
         updateCachedAsync();
+    }
+
+    @Override
+    public void onDownloadComplete(long stepId, @NotNull Lesson lesson, @NotNull CachedVideo video) {
+        addStepToList(stepId, lesson, video);
+    }
+
+    @Override
+    public void onDownloadUpdate(@NotNull DownloadingVideoItem item) {
+        int position = -1;
+        for (int i = 0; i < downloadingWithProgressList.size(); i++) {
+            if (item.getDownloadEntity().getDownloadId() == downloadingWithProgressList.get(i).getDownloadEntity().getDownloadId()) {
+                position = i;
+                break;
+            }
+        }
+        final long stepId = item.getDownloadEntity().getStepId();
+        if (!stepIdToLesson.containsKey(stepId)) {
+            threadPoolExecutor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    Step step = databaseFacade.getStepById(stepId);
+                    if (step != null) {
+
+                        Lesson lesson = databaseFacade.getLessonById(step.getLesson());
+                        if (lesson != null) {
+                            stepIdToLesson.put(stepId, lesson);
+                        }
+                    }
+                }
+            });
+            return; // if we do not know about lesson name -> not show this video.
+        }
+
+        if (cachedStepsSet.contains(stepId)) {
+            return; //if already cached do not show
+        }
+
+        if (position >= 0) {
+            downloadingWithProgressList.get(position).setDownloadReportItem(item.getDownloadReportItem());
+            downloadAdapter.notifyDownloadingVideoChanged(position, stepId);
+        } else {
+            downloadingWithProgressList.add(item);
+            checkForEmpty();
+            downloadAdapter.notifyDownloadingItemInserted(downloadingWithProgressList.size() - 1);
+        }
+    }
+
+    @Override
+    public void onFinishDownloadVideo(@NotNull List<CachedVideo> list, @NotNull Map<Long, Lesson> map) {
+        showCachedVideos(list, map);
+    }
+
+    @Override
+    public void onStepRemoved(long stepId) {
+        if (!cachedStepsSet.contains(stepId)) return;
+        int position = removeByStepId(stepId);
+
+        if (position >= 0) {
+            checkForEmpty();
+            downloadAdapter.notifyCachedVideoRemoved(position);
+        }
     }
 }

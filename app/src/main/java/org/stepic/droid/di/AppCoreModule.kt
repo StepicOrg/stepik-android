@@ -7,7 +7,6 @@ import android.content.Context
 import android.net.ConnectivityManager
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
-import com.squareup.otto.Bus
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -199,13 +198,6 @@ abstract class AppCoreModule {
         @AppSingleton
         internal fun provideSharedPreferencesHelper(analytic: Analytic, defaultFilter: DefaultFilter, context: Context): SharedPreferenceHelper {
             return SharedPreferenceHelper(analytic, defaultFilter, context)
-        }
-
-        @Provides
-        @AppSingleton
-        @JvmStatic
-        internal fun provideBus(): Bus {
-            return Bus()
         }
 
         @Provides

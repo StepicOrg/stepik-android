@@ -2,6 +2,7 @@ package org.stepic.droid.core
 
 import org.stepic.droid.di.AppCoreComponent
 import org.stepic.droid.di.course_general.CourseGeneralComponent
+import org.stepic.droid.di.downloads.DownloadsComponent
 import org.stepic.droid.di.login.LoginComponent
 import org.stepic.droid.di.mainscreen.MainScreenComponent
 import org.stepic.droid.di.routing.RoutingComponent
@@ -9,6 +10,19 @@ import org.stepic.droid.di.step.StepComponent
 import timber.log.Timber
 
 class ComponentManagerImpl(private val appCoreComponent: AppCoreComponent) : ComponentManager {
+
+    //Downloads
+
+    private val downloadsComponent
+            by lazy {
+                appCoreComponent
+                        .downloadsComponentBuilder()
+                        .build()
+            }
+
+    override fun downloadsComponent(): DownloadsComponent {
+        return downloadsComponent
+    }
 
 //    Step
 
