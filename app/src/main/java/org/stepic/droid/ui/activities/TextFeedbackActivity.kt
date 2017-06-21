@@ -15,7 +15,6 @@ class TextFeedbackActivity : SingleFragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.setBackgroundDrawable(null)
-        overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -31,6 +30,10 @@ class TextFeedbackActivity : SingleFragmentActivity() {
 
     override fun finish() {
         super.finish()
-        overridePendingTransition(R.anim.slide_in_from_start, R.anim.slide_out_to_end)
+        overridePendingTransition(org.stepic.droid.R.anim.no_transition, org.stepic.droid.R.anim.push_down)
+    }
+
+    companion object {
+        val requestCode = 17
     }
 }

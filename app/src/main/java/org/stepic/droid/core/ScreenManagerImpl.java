@@ -221,7 +221,8 @@ public class ScreenManagerImpl implements ScreenManager {
     public void showTextFeedback(Activity sourceActivity) {
         analytic.reportEvent(Analytic.Screens.SHOW_TEXT_FEEDBACK);
         Intent launchIntent = new Intent(sourceActivity, TextFeedbackActivity.class);
-        sourceActivity.startActivity(launchIntent);
+        sourceActivity.startActivityForResult(launchIntent, TextFeedbackActivity.Companion.getRequestCode());
+        sourceActivity.overridePendingTransition(org.stepic.droid.R.anim.no_transition, org.stepic.droid.R.anim.push_down);
     }
 
     @Override

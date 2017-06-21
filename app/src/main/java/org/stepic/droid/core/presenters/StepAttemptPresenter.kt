@@ -2,8 +2,11 @@ package org.stepic.droid.core.presenters
 
 import android.support.annotation.MainThread
 import android.support.annotation.WorkerThread
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import org.joda.time.DateTime
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
+import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.core.LessonSessionManager
 import org.stepic.droid.core.presenters.contracts.StepAttemptView
 import org.stepic.droid.model.*
@@ -23,12 +26,15 @@ class StepAttemptPresenter
         private val threadPoolExecutor: ThreadPoolExecutor,
         private val lessonManager: LessonSessionManager,
         private val api: Api,
+        private var firebaseRemoteConfig: FirebaseRemoteConfig,
         private val analytic: Analytic,
         private val sharedPreferenceHelper: SharedPreferenceHelper) : PresenterBase<StepAttemptView>() {
 
     companion object {
         private val FIRST_DELAY = 1000L
     }
+
+    private val minNumberOfSolvedStepsForRate = 5
 
     private var worker: ScheduledExecutorService? = null
 
@@ -145,15 +151,16 @@ class StepAttemptPresenter
                                     return@Runnable
                                 }
 
-                                if (!step.is_custom_passed && (submission?.status == Submission.Status.CORRECT)) {
+                                val isCorrectSolution: Boolean = !step.is_custom_passed && submission?.status == Submission.Status.CORRECT
+                                if (isCorrectSolution) {
                                     sharedPreferenceHelper.trackWhenUserSolved()
+                                    sharedPreferenceHelper.incrementUserSolved()
                                 }
 
 
                                 val needShowStreakDialog =
                                         fromPosting
-                                                && (submission?.status == Submission.Status.CORRECT)
-                                                && !step.is_custom_passed
+                                                && isCorrectSolution
                                                 && (sharedPreferenceHelper.isStreakNotificationEnabledNullable == null) // default value, user not change in profile
                                                 && sharedPreferenceHelper.canShowStreakDialog()
                                                 && (sharedPreferenceHelper.authResponseFromStore != null)
@@ -173,9 +180,23 @@ class StepAttemptPresenter
                                             -1
                                         }
 
+
+                                val needShowRateAppDialog = !needShowStreakDialog
+                                        && fromPosting
+                                        && isCorrectSolution
+                                        && !sharedPreferenceHelper.wasRateHandled()
+                                        && isUserSolveEnough()
+                                        && isRateGreaterDelay()
+
+                                if (!needShowStreakDialog && needShowRateAppDialog) {
+                                    sharedPreferenceHelper.rateShown(DateTime.now().millis)
+                                }
+
                                 mainHandler.post {
                                     if (needShowStreakDialog) {
                                         view?.onNeedShowStreakDialog(streakDayNumber) // it can be -1, if we fail to get streaks
+                                    } else if (needShowRateAppDialog) {
+                                        view?.onNeedShowRateDialog()
                                     }
                                     view?.onNeedFillSubmission(submission, numberOfSubmissions)
                                 }
@@ -194,6 +215,23 @@ class StepAttemptPresenter
         }
 
         getStatusOfSubmission(0)
+    }
+
+    @WorkerThread
+    private fun isRateGreaterDelay(): Boolean {
+        val wasShownMillis = sharedPreferenceHelper.whenRateWasShown()
+        if (wasShownMillis < 0) {
+            return true
+        }
+
+        val delay = firebaseRemoteConfig.getLong(RemoteConfig.minDelayRateDialogSec).toInt()
+        return !DateTime(wasShownMillis).plusSeconds(delay).isAfterNow
+    }
+
+    @WorkerThread
+    private fun isUserSolveEnough(): Boolean {
+        val numberOfSolved = sharedPreferenceHelper.numberOfSolved()
+        return numberOfSolved >= minNumberOfSolvedStepsForRate
     }
 
 
