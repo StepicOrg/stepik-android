@@ -1,6 +1,6 @@
 package org.stepic.droid.core;
 
-import com.squareup.otto.Bus;
+import android.support.annotation.NonNull;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.base.ListenerContainer;
@@ -133,12 +133,12 @@ public class LocalProgressImpl implements LocalProgressManager {
     }
 
     @Override
-    public synchronized void subscribe(UnitProgressListener unitProgressListener) {
+    public synchronized void subscribe(@NonNull UnitProgressListener unitProgressListener) {
         listenerContainer.add(unitProgressListener);
     }
 
     @Override
-    public synchronized void unsubscribe(UnitProgressListener unitProgressListener) {
+    public synchronized void unsubscribe(@NonNull UnitProgressListener unitProgressListener) {
         listenerContainer.remove(unitProgressListener);
     }
 

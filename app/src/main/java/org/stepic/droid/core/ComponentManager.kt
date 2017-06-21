@@ -2,6 +2,7 @@ package org.stepic.droid.core
 
 import android.support.annotation.MainThread
 import org.stepic.droid.di.course_general.CourseGeneralComponent
+import org.stepic.droid.di.downloads.DownloadsComponent
 import org.stepic.droid.di.login.LoginComponent
 import org.stepic.droid.di.mainscreen.MainScreenComponent
 import org.stepic.droid.di.routing.RoutingComponent
@@ -29,6 +30,9 @@ interface ComponentManager {
 
     @MainThread
     fun releaseCourseGeneralComponent()
+
+    @MainThread
+    fun downloadsComponent(): DownloadsComponent
 
     @MainThread
     fun stepComponent(stepId: Long): StepComponent

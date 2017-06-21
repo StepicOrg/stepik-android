@@ -7,12 +7,10 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
 
-import com.squareup.otto.Bus;
-
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.concurrency.SingleThreadExecutor;
-import org.stepic.droid.events.video.VideoCachedOnDiskEvent;
+import org.stepic.droid.core.downloads.contract.DownloadsPoster;
 import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.DownloadEntity;
 import org.stepic.droid.model.Lesson;
@@ -35,12 +33,12 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
 
     @Inject
     UserPreferences userPreferences;
+
     @Inject
     DatabaseFacade databaseFacade;
+
     @Inject
     StoreStateManager storeStateManager;
-    @Inject
-    Bus bus;
 
     @Inject
     CancelSniffer cancelSniffer;
@@ -54,9 +52,15 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
     @Inject
     Analytic analytic;
 
+    @Inject
+    DownloadsPoster downloadsPoster;
+
     public DownloadCompleteReceiver() {
         Timber.d("create DownloadCompleteReceiver");
-        App.Companion.component().inject(this);
+        App.Companion
+                .componentManager()
+                .downloadsComponent()
+                .inject(this);
     }
 
     @Override
@@ -126,8 +130,9 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                     Runnable myRunnable = new Runnable() {
                         @Override
                         public void run() {
-                            if (lesson != null)
-                                bus.post(new VideoCachedOnDiskEvent(step_id, lesson, cachedVideo));
+                            if (lesson != null) {
+                                downloadsPoster.downloadComplete(step_id, lesson, cachedVideo);
+                            }
                         }
                     };
                     mainHandler.post(myRunnable);
