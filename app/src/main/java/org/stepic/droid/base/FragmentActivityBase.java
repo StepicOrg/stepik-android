@@ -17,7 +17,6 @@ import android.view.inputmethod.InputMethodManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
-import com.squareup.otto.Bus;
 
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
@@ -94,9 +93,6 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
 
     @Inject
     protected ScreenManager screenManager;
-
-    @Inject
-    protected Bus bus;
 
     @Inject
     protected UserPreferences userPreferences;
@@ -205,12 +201,12 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        detectScreenShotService();
+//        detectScreenShotService();
     }
 
     @Override
     protected void onStop() {
-        stopDetectingOfScreenshots();
+//        stopDetectingOfScreenshots();
         super.onStop();
     }
 

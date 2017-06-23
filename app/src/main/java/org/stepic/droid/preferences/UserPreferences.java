@@ -138,6 +138,15 @@ public class UserPreferences {
         return sharedPreferenceHelper.isMobileInternetAlsoAllowed();
     }
 
+
+    public void saveVideoQualityForPlaying(String videoQuality) {
+        sharedPreferenceHelper.saveVideoQualityForPlaying(videoQuality);
+    }
+
+    public String getQualityVideoForPlaying () {
+        return sharedPreferenceHelper.getVideoQualityForPlaying();
+    }
+
     public String getQualityVideo() {
         return sharedPreferenceHelper.getVideoQuality();
     }
@@ -299,5 +308,13 @@ public class UserPreferences {
 
     public void setNotificationEnabled(NotificationType type, boolean isEnabled) {
         sharedPreferenceHelper.setNotificationDisabled(type, !isEnabled);
+    }
+
+    public boolean isRotateVideo() {
+        return sharedPreferenceHelper.needRotate();
+    }
+
+    public void setRotateVideo(boolean rotateVideo) {
+        sharedPreferenceHelper.setRotateAlways(rotateVideo);
     }
 }

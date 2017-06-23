@@ -44,7 +44,6 @@ public class CourseSearchResultActivity extends FragmentActivityBase {
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        bus.register(this);
 
         query = getIntent().getStringExtra(SearchManager.QUERY);
         initOrTryRestoreFragment();
@@ -76,13 +75,6 @@ public class CourseSearchResultActivity extends FragmentActivityBase {
 
     Fragment createFragment() {
         return CourseSearchFragment.newInstance(query);
-    }
-
-
-    @Override
-    protected void onDestroy() {
-        bus.unregister(this);
-        super.onDestroy();
     }
 
     @Override

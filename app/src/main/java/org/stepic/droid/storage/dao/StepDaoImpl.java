@@ -131,8 +131,8 @@ public class StepDaoImpl extends DaoBase<Step> {
 
     @Nullable
     @Override
-    public Step get(String whereColumn, String whereValue) {
-        Step step = super.get(whereColumn, whereValue);
+    public Step get(String whereColumnName, String whereValue) {
+        Step step = super.get(whereColumnName, whereValue);
         addInnerObjects(step);
         return step;
     }

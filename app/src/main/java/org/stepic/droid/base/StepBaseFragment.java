@@ -10,34 +10,27 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.appindexing.Action;
-import com.google.firebase.appindexing.FirebaseAppIndex;
-import com.google.firebase.appindexing.FirebaseUserActions;
-import com.google.firebase.appindexing.Indexable;
-import com.google.firebase.appindexing.builders.Actions;
-import com.google.firebase.appindexing.builders.Indexables;
-import com.squareup.otto.Subscribe;
-
-import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
+import org.stepic.droid.core.comment_count.contract.CommentCountListener;
 import org.stepic.droid.core.presenters.AnonymousPresenter;
 import org.stepic.droid.core.presenters.RouteStepPresenter;
 import org.stepic.droid.core.presenters.contracts.AnonymousView;
 import org.stepic.droid.core.presenters.contracts.RouteStepView;
-import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent;
-import org.stepic.droid.events.steps.StepWasUpdatedEvent;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
+import org.stepic.droid.storage.operations.DatabaseFacade;
 import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout;
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment;
 import org.stepic.droid.ui.dialogs.StepShareDialogFragment;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
-import org.stepic.droid.util.StringUtil;
 import org.stepic.droid.web.StepResponse;
+
+import java.lang.ref.WeakReference;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import javax.inject.Inject;
 
@@ -46,7 +39,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public abstract class StepBaseFragment extends FragmentBase implements RouteStepView, AnonymousView {
+public abstract class StepBaseFragment extends FragmentBase
+        implements RouteStepView,
+        AnonymousView,
+        CommentCountListener {
 
     @BindView(R.id.text_header_enhanced)
     protected LatexSupportableEnhancedFrameLayout headerWvEnhanced;
@@ -90,36 +86,37 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
 
 
     @Inject
-    RouteStepPresenter routeStepPresenter;
+    protected RouteStepPresenter routeStepPresenter;
 
     @Inject
     AnonymousPresenter anonymousPresenter;
-    private boolean wasIndexed;
+
+    @Inject
+    Client<CommentCountListener> commentCountListenerClient;
 
     @Override
     protected void injectComponent() {
         App.Companion
-                .getComponentManager()
-                .routingComponent()
-                .stepComponentBuilder()
-                .build()
+                .componentManager()
+                .stepComponent(step.getId())
                 .inject(this);
     }
 
     @Override
-    protected void onReleaseComponent() {
-        App.Companion
-                .getComponentManager().releaseRoutingComponent();
+    protected final void onReleaseComponent() {
+        App
+                .Companion
+                .componentManager()
+                .releaseStepComponent(step.getId());
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setRetainInstance(true);
         step = getArguments().getParcelable(AppConstants.KEY_STEP_BUNDLE);
         lesson = getArguments().getParcelable(AppConstants.KEY_LESSON_BUNDLE);
         unit = getArguments().getParcelable(AppConstants.KEY_UNIT_BUNDLE);
         section = getArguments().getParcelable(AppConstants.KEY_SECTION_BUNDLE);
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -142,6 +139,7 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
 
         updateCommentState();
 
+        commentCountListenerClient.subscribe(this);
         routeStepPresenter.attachView(this);
         anonymousPresenter.attachView(this);
         anonymousPresenter.checkForAnonymous();
@@ -164,7 +162,6 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
             routeStepPresenter.checkStepForLast(step.getId(), lesson, unit);
         }
 
-        bus.register(this);
     }
 
     @Override
@@ -193,9 +190,11 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
             public void onClick(View v) {
                 int discussionCount = step.getDiscussions_count();
                 analytic.reportEvent(Analytic.Comments.OPEN_FROM_STEP_UI);
-                screenManager.openComments(getContext(), step.getDiscussion_proxy(), step.getId());
+
                 if (discussionCount == 0) {
-                    screenManager.openNewCommentForm(getActivity(), step.getId(), null); //show new form, but in back stack comment oldList is exist.
+                    screenManager.openComments(getActivity(), step.getDiscussion_proxy(), step.getId(), true); //show new form, but in back stack comment oldList is exist.
+                } else {
+                    screenManager.openComments(getActivity(), step.getDiscussion_proxy(), step.getId());
                 }
             }
         });
@@ -231,59 +230,20 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
 
     @Override
     public void onDestroyView() {
-        bus.unregister(this);
         authLineText.setOnClickListener(null);
         textForComment.setOnClickListener(null);
         routeStepPresenter.detachView(this);
+        commentCountListenerClient.unsubscribe(this);
         anonymousPresenter.detachView(this);
         nextLessonView.setOnClickListener(null);
         previousLessonView.setOnClickListener(null);
         super.onDestroyView();
     }
 
-    @Subscribe
-    public void onNewCommentWasAdded(NewCommentWasAddedOrUpdateEvent event) {
-        if (step != null && event.getTargetId() == step.getId()) {
-            long[] arr = new long[]{step.getId()};
-
-            api.getSteps(arr).enqueue(new Callback<StepResponse>() {
-
-                @Override
-                public void onResponse(Call<StepResponse> call, Response<StepResponse> response) {
-                    if (response.isSuccessful()) {
-                        StepResponse stepResponse = response.body();
-                        if (stepResponse != null && stepResponse.getSteps() != null && !stepResponse.getSteps().isEmpty()) {
-                            final Step stepFromInternet = stepResponse.getSteps().get(0);
-                            if (stepFromInternet != null) {
-                                threadPoolExecutor.execute(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        databaseFacade.addStep(stepFromInternet); //fixme: fragment in closure -> leak
-                                    }
-                                });
-
-                                //fixme: it is so bad, we should be updated from model, not here =(
-                                bus.post(new StepWasUpdatedEvent(stepFromInternet));
-                            }
-                        }
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<StepResponse> call, Throwable t) {
-
-                }
-            });
-        }
-
-    }
-
-    @Subscribe
-    public void onStepWasUpdated(StepWasUpdatedEvent event) {
-        Step eventStep = event.getStep();
-        if (eventStep.getId() == step.getId()) {
-            step.setDiscussion_proxy(eventStep.getDiscussion_proxy()); //fixme do it in immutable way
-            step.setDiscussions_count(eventStep.getDiscussions_count());
+    public void onDiscussionWasUpdatedFromInternet(Step updatedStep) {
+        if (updatedStep.getId() == step.getId()) {
+            step.setDiscussion_proxy(updatedStep.getDiscussion_proxy()); //fixme do it in immutable way
+            step.setDiscussions_count(updatedStep.getDiscussions_count());
             updateCommentState();
         }
     }
@@ -350,47 +310,57 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
     @Override
     public void onResume() {
         super.onResume();
-        reportIndexToGoogle();
         hideSoftKeypad();
     }
 
-    private void reportIndexToGoogle() {
-        if (step != null && !wasIndexed) {
-            wasIndexed = true;
-            FirebaseAppIndex.getInstance().update(getIndexable());
-            FirebaseUserActions.getInstance().start(getAction());
-        }
-    }
-
-    private Indexable getIndexable() {
-        String urlInWeb = getUrlInWeb();
-        String title = getTitle();
-        analytic.reportEventWithIdName(Analytic.AppIndexing.STEP, urlInWeb, title);
-        return Indexables.newSimple(title, urlInWeb);
-    }
-
-    @NotNull
-    private String getTitle() {
-        return StringUtil.getTitleForStep(getContext(), lesson, step.getPosition());
-    }
-
-    @NotNull
-    private String getUrlInWeb() {
-        return StringUtil.getUriForStep(config.getBaseUrl(), lesson, unit, step);
-    }
-
     @Override
-    public void onPause() {
-        super.onPause();
-        if (wasIndexed) {
-            FirebaseUserActions.getInstance().end(getAction());
+    public void onCommentCountUpdated() {
+        long[] arr = new long[]{step.getId()};
+        api.getSteps(arr).enqueue(new StepResponseCallback(threadPoolExecutor, databaseFacade, this));
+    }
+
+
+    //// TODO: 13.06.17 rework it in MVP style
+    static class StepResponseCallback implements Callback<StepResponse> {
+
+        private final ThreadPoolExecutor threadPoolExecutor;
+        private final DatabaseFacade databaseFacade;
+        private final WeakReference<StepBaseFragment> stepBaseFragmentWeakReference;
+
+
+        public StepResponseCallback(ThreadPoolExecutor threadPoolExecutor, DatabaseFacade databaseFacade, StepBaseFragment stepBaseFragment) {
+            this.threadPoolExecutor = threadPoolExecutor;
+            this.databaseFacade = databaseFacade;
+            stepBaseFragmentWeakReference = new WeakReference<>(stepBaseFragment);
         }
-        wasIndexed = false;
+
+        @Override
+        public void onResponse(Call<StepResponse> call, Response<StepResponse> response) {
+            if (response.isSuccessful()) {
+                StepResponse stepResponse = response.body();
+                if (stepResponse != null && stepResponse.getSteps() != null && !stepResponse.getSteps().isEmpty()) {
+                    final Step stepFromInternet = stepResponse.getSteps().get(0);
+                    if (stepFromInternet != null) {
+                        threadPoolExecutor.execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                databaseFacade.addStep(stepFromInternet); //fixme: fragment in closure -> leak
+                            }
+                        });
+
+
+                        StepBaseFragment stepBaseFragment = stepBaseFragmentWeakReference.get();
+                        if (stepBaseFragment != null) {
+                            stepBaseFragment.onDiscussionWasUpdatedFromInternet(stepFromInternet);
+                        }
+                    }
+                }
+            }
+        }
+
+        @Override
+        public void onFailure(Call<StepResponse> call, Throwable t) {
+
+        }
     }
-
-    public Action getAction() {
-        return Actions.newView(getTitle(), getUrlInWeb());
-    }
-
-
 }

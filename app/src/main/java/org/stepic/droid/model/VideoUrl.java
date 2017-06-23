@@ -39,6 +39,11 @@ public class VideoUrl implements Parcelable, Serializable {
     public VideoUrl() {
     }
 
+    public VideoUrl(String url, String quality) {
+        this.url = url;
+        this.quality = quality;
+    }
+
     protected VideoUrl(Parcel in) {
         this.url = in.readString();
         this.quality = in.readString();

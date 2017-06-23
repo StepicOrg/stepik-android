@@ -47,10 +47,10 @@ public class CertificateFragment extends FragmentBase implements CertificateView
     @BindView(R.id.certificates_recycler_view)
     RecyclerView certificateRecyclerView;
 
-    @BindView(R.id.load_progressbar)
+    @BindView(R.id.loadProgressbar)
     ProgressBar progressBarOnCenter;
 
-    @BindView(R.id.report_problem)
+    @BindView(R.id.reportProblem)
     View reportInternetProblem;
 
     @BindView(R.id.report_empty)

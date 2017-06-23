@@ -6,12 +6,8 @@ import android.support.annotation.IdRes;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import com.squareup.otto.Subscribe;
-
 import org.stepic.droid.R;
-import org.stepic.droid.events.InternetIsEnabledEvent;
-import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent;
-import org.stepic.droid.events.steps.StepWasUpdatedEvent;
+import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.model.Attempt;
 import org.stepic.droid.model.Dataset;
 import org.stepic.droid.model.Reply;
@@ -128,29 +124,21 @@ public class ChoiceStepFragment extends StepAttemptFragment {
 
         for (int i = 0; i < choiceContainer.getChildCount(); i++) {
             StepikOptionView view = (StepikOptionView) choiceContainer.getChildAt(i);
-            view.setChecked(choices.get(i));
+            if (choices.size() > i) {
+                //// sometimes choices can be empty
+                view.setChecked(choices.get(i));
+            } else {
+                String submissionIdAnalytic = "empty";
+                if (submission != null && submission.getId() != null) {
+                    submissionIdAnalytic = submission.getId() + "";
+                }
+                analytic.reportEventWithName(Analytic.Error.CHOICES_ARE_SMALLER, submissionIdAnalytic);
+            }
         }
     }
 
     private void buildChoiceItem(StepikOptionView item, String rawText) {
         item.setText(rawText);
         choiceContainer.addView(item);
-    }
-
-    @Subscribe
-    @Override
-    public void onInternetEnabled(InternetIsEnabledEvent enabledEvent) {
-        super.onInternetEnabled(enabledEvent);
-    }
-
-    @Subscribe
-    public void onNewCommentWasAdded(NewCommentWasAddedOrUpdateEvent event) {
-        super.onNewCommentWasAdded(event);
-
-    }
-
-    @Subscribe
-    public void onStepWasUpdated(StepWasUpdatedEvent event) {
-        super.onStepWasUpdated(event);
     }
 }

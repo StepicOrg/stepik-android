@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/rateDialogTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:padding="@dimen/guideline_standard_padding"
+        android:text="@string/rate_dialog_title"
+        android:textColor="@color/drawer_text_color_checked"
+        android:textSize="20sp"/>
+
+    <RatingBar
+        android:id="@+id/rateDialogRatingBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rateDialogTitle"
+        android:layout_centerHorizontal="true"
+        android:numStars="5"
+        android:progressDrawable="@drawable/rating_star"
+        android:stepSize="1"
+        tools:rating="3"/>
+
+    <TextView
+        android:id="@+id/rateDialogHint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rateDialogRatingBar"
+        android:gravity="center"
+        android:padding="@dimen/half_padding"
+        android:textColor="@color/drawer_text_color_checked"
+        android:textSize="@dimen/rate_dialog_button_text_size"
+        android:visibility="gone"
+        tools:text="ПожалуйстаПожалуйстаПожалуйста, оставьте отзыв в Google Play"
+        tools:visibility="visible"
+    />
+
+
+    <LinearLayout
+        android:id="@+id/rateDialogButtonsContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rateDialogHint"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        tools:visibility="visible">
+        <TextView
+            android:id="@+id/rateDialogLater"
+            style="@style/RateItemTextView"
+            tools:text="Later"/>
+        <View
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:background="@color/silver"/>
+        <TextView
+            android:id="@+id/rateDialogPositive"
+            style="@style/RateItemTextView"
+            tools:text="Google Play"/>
+    </LinearLayout>
+
+</RelativeLayout>

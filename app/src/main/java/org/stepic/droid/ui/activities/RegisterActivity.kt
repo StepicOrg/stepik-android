@@ -60,11 +60,10 @@ class RegisterActivity : FragmentActivityBase(), LoginView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        window.setBackgroundDrawable(null)
         setContentView(org.stepic.droid.R.layout.activity_register)
         overridePendingTransition(org.stepic.droid.R.anim.slide_in_from_bottom, org.stepic.droid.R.anim.no_transition)
         hideSoftKeypad()
-        App.getComponentManager().loginComponent(TAG).inject(this)
+        App.componentManager().loginComponent(TAG).inject(this)
 
         termsPrivacyRegisterTextView.movementMethod = LinkMovementMethod.getInstance()
         termsPrivacyRegisterTextView.text = textResolver.fromHtml(termsMessageHtml)
@@ -211,7 +210,7 @@ class RegisterActivity : FragmentActivityBase(), LoginView {
         passwordTextView.removeTextChangedListener(passwordWatcher)
         passwordTextView.setOnEditorActionListener(null)
         if (isFinishing) {
-            App.getComponentManager().releaseLoginComponent(TAG)
+            App.componentManager().releaseLoginComponent(TAG)
         }
         super.onDestroy()
     }

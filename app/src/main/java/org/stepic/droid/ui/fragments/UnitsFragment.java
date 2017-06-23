@@ -20,15 +20,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
-import com.squareup.otto.Subscribe;
-
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
+import org.stepic.droid.base.Client;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.core.LessonSessionManager;
-import org.stepic.droid.core.RoutingConsumer;
 import org.stepic.droid.core.presenters.DownloadingInteractionPresenter;
 import org.stepic.droid.core.presenters.DownloadingProgressUnitsPresenter;
 import org.stepic.droid.core.presenters.UnitsLearningProgressPresenter;
@@ -37,13 +35,13 @@ import org.stepic.droid.core.presenters.contracts.DownloadingInteractionView;
 import org.stepic.droid.core.presenters.contracts.DownloadingProgressUnitsView;
 import org.stepic.droid.core.presenters.contracts.UnitsLearningProgressView;
 import org.stepic.droid.core.presenters.contracts.UnitsView;
-import org.stepic.droid.events.units.LessonCachedEvent;
-import org.stepic.droid.events.units.NotCachedLessonEvent;
+import org.stepic.droid.core.routing.contract.RoutingListener;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.LessonLoadingState;
 import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Unit;
+import org.stepic.droid.storage.StoreStateManager;
 import org.stepic.droid.ui.adapters.UnitAdapter;
 import org.stepic.droid.ui.dialogs.DeleteItemDialogFragment;
 import org.stepic.droid.util.AppConstants;
@@ -61,7 +59,7 @@ import butterknife.BindView;
 import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
 import timber.log.Timber;
 
-public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.OnRefreshListener, UnitsView, DownloadingProgressUnitsView, DownloadingInteractionView, UnitsLearningProgressView, RoutingConsumer.Listener {
+public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.OnRefreshListener, UnitsView, DownloadingProgressUnitsView, DownloadingInteractionView, UnitsLearningProgressView, RoutingListener, StoreStateManager.LessonCallback {
 
     private static final int ANIMATION_DURATION = 0;
     public static final int DELETE_POSITION_REQUEST_CODE = 165;
@@ -83,13 +81,13 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
     @BindView(R.id.units_recycler_view)
     RecyclerView unitsRecyclerView;
 
-    @BindView(R.id.load_progressbar)
+    @BindView(R.id.loadProgressbar)
     ProgressBar progressBar;
 
     @BindView(R.id.toolbar)
     android.support.v7.widget.Toolbar toolbar;
 
-    @BindView(R.id.report_problem)
+    @BindView(R.id.reportProblem)
     protected View reportConnectionProblem;
 
     @BindView(R.id.report_empty)
@@ -116,7 +114,10 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
     DownloadingInteractionPresenter downloadingInteractionPresenter;
 
     @Inject
-    RoutingConsumer routingConsumer;
+    Client<RoutingListener> routingClient;
+
+    @Inject
+    StoreStateManager storeStateManager;
 
     UnitAdapter adapter;
 
@@ -128,7 +129,7 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
     @Override
     protected void injectComponent() {
         App.Companion
-                .getComponentManager()
+                .componentManager()
                 .routingComponent()
                 .sectionComponentBuilder()
                 .build()
@@ -147,7 +148,8 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
     @Override
     protected void onReleaseComponent() {
         App.Companion
-                .getComponentManager().releaseRoutingComponent();
+                .componentManager()
+                .releaseRoutingComponent();
     }
 
     @Nullable
@@ -197,22 +199,22 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
 
         ProgressHelper.activate(progressBar);
 
-        bus.register(this);
+        storeStateManager.addLessonCallback(this);
         unitsPresenter.attachView(this);
         unitsLearningProgressPresenter.attachView(this);
         localProgressManager.subscribe(unitsLearningProgressPresenter);
-        routingConsumer.subscribe(this);
+        routingClient.subscribe(this);
         unitsPresenter.showUnits(section, false);
 
     }
 
     @Override
     public void onDestroyView() {
-        routingConsumer.unsubscribe(this);
+        routingClient.unsubscribe(this);
         localProgressManager.unsubscribe(unitsLearningProgressPresenter);
         unitsLearningProgressPresenter.detachView(this);
         unitsPresenter.detachView(this);
-        bus.unregister(this);
+        storeStateManager.removeLessonCallback(this);
 
         lessonManager.reset();
 
@@ -277,12 +279,6 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
         adapter.notifyItemChanged(position);
     }
 
-    @Subscribe
-    public void onNotCachedSection(NotCachedLessonEvent e) {
-        long unitId = e.getLessonId();
-        updateState(unitId, false, false);
-    }
-
     @org.jetbrains.annotations.Nullable
     private Pair<Unit, Integer> getUnitOnScreenAndPositionById(long unitId) {
         int position = -1;
@@ -296,11 +292,6 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
         }
         if (unit == null || position == -1 || position >= unitList.size()) return null;
         return new Pair<>(unit, position);
-    }
-
-    @Subscribe
-    public void onLessonCachedEvent(LessonCachedEvent e) {
-        updateState(e.getLessonId(), true, false);
     }
 
     private void shareSection() {
@@ -473,5 +464,15 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
             adapter.setSection(section);
             unitsPresenter.showUnits(newSection, true);
         }
+    }
+
+    @Override
+    public void onLessonCached(long lessonId) {
+        updateState(lessonId, true, false);
+    }
+
+    @Override
+    public void onLessonNotCached(long lessonId) {
+        updateState(lessonId, false, false);
     }
 }

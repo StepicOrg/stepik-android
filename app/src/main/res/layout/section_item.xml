@@ -32,7 +32,6 @@
                 android:layout_marginLeft="@dimen/guideline_left_right_padding_list_item"
                 android:layout_toLeftOf="@+id/load_button"
                 android:ellipsize="end"
-                android:maxLines="1"
                 android:paddingBottom="2dp"
                 android:paddingRight="@dimen/guideline_standard_padding"
                 android:paddingTop="@dimen/guideline_standard_padding"

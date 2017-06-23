@@ -7,7 +7,6 @@ import android.content.Context
 import android.net.ConnectivityManager
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
-import com.squareup.otto.Bus
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -16,12 +15,22 @@ import org.stepic.droid.BuildConfig
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.AnalyticImpl
+import org.stepic.droid.base.Client
+import org.stepic.droid.base.ClientImpl
+import org.stepic.droid.base.ListenerContainer
+import org.stepic.droid.base.ListenerContainerImpl
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.concurrency.MainHandlerImpl
 import org.stepic.droid.concurrency.SingleThreadExecutor
 import org.stepic.droid.configuration.Config
-import org.stepic.droid.configuration.ConfigReleaseImpl
+import org.stepic.droid.configuration.ConfigImpl
 import org.stepic.droid.core.*
+import org.stepic.droid.core.internet_state.InternetEnabledPosterImpl
+import org.stepic.droid.core.internet_state.contract.InternetEnabledListener
+import org.stepic.droid.core.internet_state.contract.InternetEnabledPoster
+import org.stepic.droid.core.video_moves.VideosMovedPosterImpl
+import org.stepic.droid.core.video_moves.contract.VideosMovedListener
+import org.stepic.droid.core.video_moves.contract.VideosMovedPoster
 import org.stepic.droid.fonts.FontsProvider
 import org.stepic.droid.fonts.FontsProviderImpl
 import org.stepic.droid.notifications.*
@@ -51,11 +60,48 @@ abstract class AppCoreModule {
 
     @Binds
     @AppSingleton
-    internal abstract fun provideScreenManager(screenManager: ScreenManagerImpl): ScreenManager
+    abstract fun provideLocalProgressManagerSectionProgressListenerContainer(container: ListenerContainerImpl<LocalProgressManager.SectionProgressListener>): ListenerContainer<LocalProgressManager.SectionProgressListener>
 
     @Binds
     @AppSingleton
-    internal abstract fun provideIConfig(configRelease: ConfigReleaseImpl): Config
+    abstract fun provideLocalProgressManagerUnitProgressListenerContainer(container: ListenerContainerImpl<LocalProgressManager.UnitProgressListener>): ListenerContainer<LocalProgressManager.UnitProgressListener>
+
+    @Binds
+    @AppSingleton
+    abstract fun provideStoreStateManagerLessonCallbackContainer(container: ListenerContainerImpl<StoreStateManager.LessonCallback>): ListenerContainer<StoreStateManager.LessonCallback>
+
+    @Binds
+    @AppSingleton
+    abstract fun provideStoreStateManagerSectionCallbackContainer(container: ListenerContainerImpl<StoreStateManager.SectionCallback>): ListenerContainer<StoreStateManager.SectionCallback>
+
+    @Binds
+    @AppSingleton
+    abstract fun provideInternetEnabledPoster(internetEnabledPoster: InternetEnabledPosterImpl): InternetEnabledPoster
+
+    @Binds
+    @AppSingleton
+    abstract fun provideInternetEnabledListenerContainer(container: ListenerContainerImpl<InternetEnabledListener>): ListenerContainer<InternetEnabledListener>
+
+    @Binds
+    @AppSingleton
+    abstract fun provideInternetEnabledClient(container: ClientImpl<InternetEnabledListener>): Client<InternetEnabledListener>
+
+
+    @Binds
+    @AppSingleton
+    abstract fun provideVideoMovedPoster(videosMovedPoster: VideosMovedPosterImpl): VideosMovedPoster
+
+    @Binds
+    @AppSingleton
+    abstract fun provideVideoMovedListenerContainer(container: ListenerContainerImpl<VideosMovedListener>): ListenerContainer<VideosMovedListener>
+
+    @Binds
+    @AppSingleton
+    abstract fun provideVideoMovedClient(container: ClientImpl<VideosMovedListener>): Client<VideosMovedListener>
+
+    @Binds
+    @AppSingleton
+    internal abstract fun provideScreenManager(screenManager: ScreenManagerImpl): ScreenManager
 
     @Binds
     @AppSingleton
@@ -157,13 +203,6 @@ abstract class AppCoreModule {
         @Provides
         @AppSingleton
         @JvmStatic
-        internal fun provideBus(): Bus {
-            return Bus()
-        }
-
-        @Provides
-        @AppSingleton
-        @JvmStatic
         internal fun provideUserPrefs(context: Context, helper: SharedPreferenceHelper, analytic: Analytic): UserPreferences {
             return UserPreferences(context, helper, analytic)
         }
@@ -200,19 +239,6 @@ abstract class AppCoreModule {
         @JvmStatic
         internal fun provideThreadPool(): ThreadPoolExecutor {
             return Executors.newCachedThreadPool() as ThreadPoolExecutor
-        }
-
-        @AppSingleton
-        @JvmStatic
-        @Provides
-        internal fun provideAudioFocusHelper(context: Context, mainHandler: MainHandler, bus: Bus): AudioFocusHelper {
-            return AudioFocusHelper(context, bus, mainHandler)
-        }
-
-        @Provides
-        @JvmStatic
-        internal fun provideCommentsManager(): CommentManager {
-            return CommentManager()
         }
 
         /**
@@ -284,6 +310,13 @@ abstract class AppCoreModule {
             return context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         }
 
+
+        @Provides
+        @AppSingleton
+        @JvmStatic
+        internal fun provideConfig(configFactory: ConfigImpl.ConfigFactory): Config {
+            return configFactory.create()
+        }
     }
 
 }

@@ -38,8 +38,7 @@ public class SharedPreferenceHelper {
     private static final java.lang.String NEED_DROP_116 = "need_drop_116";
     private static final java.lang.String DISCOUNTING_POLICY_DIALOG = "discounting_pol_dialog";
     private static final java.lang.String KEEP_SCREEN_ON_STEPS = "keep_screen_on_steps";
-
-
+    private static final String ROTATE_PREF = "rotate_pref";
     private final String ACCESS_TOKEN_TIMESTAMP = "access_token_timestamp";
     private final String UPDATING_TIMESTAMP = "updating_timestamp";
     private final String AUTH_RESPONSE_JSON = "auth_response_json";
@@ -48,6 +47,7 @@ public class SharedPreferenceHelper {
     private final String WIFI_KEY = "wifi_key";
     private final String IS_SOCIAL = "is_social_key";
     private final String VIDEO_QUALITY_KEY = "video_quality_key";
+    private final String VIDEO_QUALITY_KEY_FOR_PLAYING = "video_quality_key_for_playing";
     private final String TEMP_POSITION_KEY = "temp_position_key";
     private final String VIDEO_RATE_PREF_KEY = "video_rate_pref_key";
     private final String VIDEO_EXTERNAL_PREF_KEY = "video_external_pref_key";
@@ -69,6 +69,7 @@ public class SharedPreferenceHelper {
     private final static String ONE_DAY_NOTIFICATION = "one_day_notification";
     private final static String SEVEN_DAY_NOTIFICATION = "seven_day_notification";
     private final String ANY_STEP_SOLVED = "any_step_solved";
+    private final String NUMBER_OF_STEPS_SOLVED = "number_of_steps_solved";
     private final String NEW_USER_ALARM_TIMESTAMP = "new_user_alarm_timestamp";
     private final String NUMBER_OF_SHOWN_STREAK_DIALOG = "number_of_shown_streak_dialog";
     private final String STREAK_DIALOG_SHOWN_TIMESTAMP = "streak_dialog_shown_timestamp";
@@ -87,6 +88,11 @@ public class SharedPreferenceHelper {
 
     private final String INVITATION_WAS_DECLINED_DEVICE_SPECIFIC = "invitation_wast_declined";
 
+    private final String RATE_LAST_TIMESTAMP = "rate_last_timestamp";
+    private final String RATE_TIMES_SHOWN = "rate_times_shown";
+    private final String RATE_WAS_HANDLED = "rate_was_handled";
+
+
     private Context context;
     private Analytic analytic;
     private DefaultFilter defaultFilter;
@@ -100,6 +106,35 @@ public class SharedPreferenceHelper {
         resetFilters(Table.enrolled); //reset on app recreating and on destroy course's Fragments
         resetFilters(Table.featured);
     }
+
+    /**
+     * call when user click Google Play or Support at rate Dialog
+     */
+    public void afterRateWasHandled() {
+        put(PreferenceType.DEVICE_SPECIFIC, RATE_WAS_HANDLED, true);
+    }
+
+    public boolean wasRateHandled() {
+        return getBoolean(PreferenceType.DEVICE_SPECIFIC, RATE_WAS_HANDLED);
+    }
+
+    public void rateShown(long timeMillis) {
+        put(PreferenceType.DEVICE_SPECIFIC, RATE_LAST_TIMESTAMP, timeMillis);
+        long times = getLong(PreferenceType.DEVICE_SPECIFIC, RATE_TIMES_SHOWN, 0);
+        put(PreferenceType.DEVICE_SPECIFIC, RATE_TIMES_SHOWN, times + 1);
+    }
+
+    /**
+     * @return last timestamp, when it was shown, -1 when it has never been shown
+     */
+    public long whenRateWasShown() {
+        return getLong(PreferenceType.DEVICE_SPECIFIC, RATE_LAST_TIMESTAMP, -1);
+    }
+
+    public long howManyRateWasShownBefore() {
+        return getLong(PreferenceType.DEVICE_SPECIFIC, RATE_TIMES_SHOWN, 0);
+    }
+
 
     public boolean isInvitationWasDeclined() {
         return getBoolean(PreferenceType.DEVICE_SPECIFIC, INVITATION_WAS_DECLINED_DEVICE_SPECIFIC, false);
@@ -129,6 +164,15 @@ public class SharedPreferenceHelper {
 
     public void trackWhenUserSolved() {
         put(PreferenceType.LOGIN, ANY_STEP_SOLVED, true);
+    }
+
+    public void incrementUserSolved() {
+        long userSolved = getLong(PreferenceType.LOGIN, NUMBER_OF_STEPS_SOLVED, 0);
+        put(PreferenceType.LOGIN, NUMBER_OF_STEPS_SOLVED, userSolved + 1);
+    }
+
+    public long numberOfSolved() {
+        return getLong(PreferenceType.LOGIN, NUMBER_OF_STEPS_SOLVED, 0);
     }
 
     public void saveNewUserRemindTimestamp(long scheduleMillis) {
@@ -294,6 +338,14 @@ public class SharedPreferenceHelper {
                 return NOTIFICATION_REVIEW_DISABLED;
         }
         return null;
+    }
+
+    public void setRotateAlways(boolean needRotate) {
+        put(PreferenceType.DEVICE_SPECIFIC, ROTATE_PREF, needRotate);
+    }
+
+    public boolean needRotate() {
+        return getBoolean(PreferenceType.DEVICE_SPECIFIC, ROTATE_PREF, true);
     }
 
     public void setNotificationDisabled(NotificationType type, boolean isNotificationDisabled) {
@@ -546,6 +598,10 @@ public class SharedPreferenceHelper {
 
     }
 
+    public void saveVideoQualityForPlaying(String videoQuality) {
+        put(PreferenceType.VIDEO_QUALITY, VIDEO_QUALITY_KEY_FOR_PLAYING, videoQuality);
+    }
+
     public void storeVideoQuality(String videoQuality) {
         put(PreferenceType.VIDEO_QUALITY, VIDEO_QUALITY_KEY, videoQuality);
     }
@@ -572,6 +628,19 @@ public class SharedPreferenceHelper {
         String str = getString(PreferenceType.VIDEO_QUALITY, VIDEO_QUALITY_KEY);
         if (str == null) {
             return AppConstants.DEFAULT_QUALITY;
+        } else if (str.equals("1080")) {
+            //it is hack for removing 1080 quality from dialogs
+            return AppConstants.MAX_QUALITY;
+        } else {
+            return str;
+        }
+    }
+
+    public String getVideoQualityForPlaying() {
+        String str = getString(PreferenceType.VIDEO_QUALITY, VIDEO_QUALITY_KEY_FOR_PLAYING);
+        if (str == null) {
+            //by default high
+            return AppConstants.MAX_QUALITY;
         } else {
             return str;
         }
@@ -581,6 +650,7 @@ public class SharedPreferenceHelper {
         Gson gson = new Gson();
         String json = gson.toJson(response);
         put(PreferenceType.LOGIN, AUTH_RESPONSE_JSON, json);
+        cachedAuthStepikResponse = response;
 
         DateTime now = DateTime.now(DateTimeZone.UTC);
         long millisNow = now.getMillis();
@@ -615,6 +685,7 @@ public class SharedPreferenceHelper {
                 userId += profile.getId();
             }
             analytic.setUserId(userId);
+            cachedAuthStepikResponse = null;
             clear(PreferenceType.LOGIN);
             clear(PreferenceType.FEATURED_FILTER);
             clear(PreferenceType.ENROLLED_FILTER);
@@ -623,16 +694,23 @@ public class SharedPreferenceHelper {
         }
     }
 
+
+    AuthenticationStepicResponse cachedAuthStepikResponse = null;
+
     @Nullable
     public AuthenticationStepicResponse getAuthResponseFromStore() {
+        if (cachedAuthStepikResponse != null) {
+            return cachedAuthStepikResponse;
+        }
+
         String json = getString(PreferenceType.LOGIN, AUTH_RESPONSE_JSON);
         if (json == null) {
             return null;
         }
 
         Gson gson = new GsonBuilder().create();
-        AuthenticationStepicResponse result = gson.fromJson(json, AuthenticationStepicResponse.class);
-        return result;
+        cachedAuthStepikResponse = gson.fromJson(json, AuthenticationStepicResponse.class);
+        return cachedAuthStepikResponse;
     }
 
     public long getAccessTokenTimestamp() {

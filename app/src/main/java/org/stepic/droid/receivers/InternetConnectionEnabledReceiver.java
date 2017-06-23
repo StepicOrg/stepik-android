@@ -6,14 +6,12 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import com.squareup.otto.Bus;
-
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.core.LocalProgressManager;
-import org.stepic.droid.events.InternetIsEnabledEvent;
-import org.stepic.droid.events.steps.UpdateStepEvent;
+import org.stepic.droid.core.internet_state.contract.InternetEnabledPoster;
+import org.stepic.droid.core.updating_step.contract.UpdatingStepPoster;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.storage.StoreStateManager;
 import org.stepic.droid.storage.operations.DatabaseFacade;
@@ -36,13 +34,12 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
 
     @Inject
     Api api;
-    @Inject
-    DatabaseFacade databaseFacade;
-    @Inject
-    StoreStateManager storeStateManager;
 
     @Inject
-    Bus bus;
+    DatabaseFacade databaseFacade;
+
+    @Inject
+    StoreStateManager storeStateManager;
 
     @Inject
     Analytic analytic;
@@ -56,7 +53,15 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
     @Inject
     MainHandler mainHandler;
 
+    @Inject
+    InternetEnabledPoster internetEnabledPoster;
+
+    @Inject
+    UpdatingStepPoster updatingStepPoster;
+
     private AtomicBoolean inWork = new AtomicBoolean(false);
+
+    private static Boolean isLastStateWasOffline = null;
 
 
     public InternetConnectionEnabledReceiver() {
@@ -64,13 +69,13 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
     }
 
     @Override
-    public void onReceive(Context context, Intent intent) {
-        if (!isOnline(App.Companion.getAppContext()) || inWork.get()) return;
+    public void onReceive(Context context, final Intent intent) {
+        if (!isDeviceChangeStateToOnline(App.Companion.getAppContext()) || inWork.get()) return;
         inWork.set(true);
         mainHandler.post(new Function0<Unit>() {
             @Override
             public Unit invoke() {
-                bus.post(new InternetIsEnabledEvent());
+                internetEnabledPoster.internetEnabled();
                 return Unit.INSTANCE;
             }
         });
@@ -103,7 +108,7 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
                                 mainHandler.post(new Function0<Unit>() {
                                                      @Override
                                                      public Unit invoke() {
-                                                         bus.post(new UpdateStepEvent(stepId, false));
+                                                         updatingStepPoster.updateStep(stepId, false);
                                                          return Unit.INSTANCE;
                                                      }
                                                  }
@@ -119,12 +124,18 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
         });
     }
 
-    private boolean isOnline(Context context) {
+    private boolean isDeviceChangeStateToOnline(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         //should check null because in air plan mode it will be null
-        return (netInfo != null && netInfo.isConnected());
-
+        boolean isOnlineNow = netInfo != null && netInfo.isConnected();
+        if (isOnlineNow && (isLastStateWasOffline == null || isLastStateWasOffline)) {
+            isLastStateWasOffline = false;
+            return true;
+        } else {
+            isLastStateWasOffline = true;
+            return false;
+        }
     }
 
 }

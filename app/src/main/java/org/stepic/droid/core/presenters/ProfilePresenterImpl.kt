@@ -16,10 +16,10 @@ import javax.inject.Inject
 class ProfilePresenterImpl
 @Inject constructor(
         private val threadPoolExecutor: ThreadPoolExecutor,
-        private val analytic: Analytic,
+        analytic: Analytic,
         private val mainHandler: MainHandler,
         private val api: Api,
-        private val sharedPreferences: SharedPreferenceHelper) : ProfilePresenter() {
+        private val sharedPreferences: SharedPreferenceHelper) : ProfilePresenter(analytic) {
 
     private var isLoading: Boolean = false //main thread only
     private var userViewModel: UserViewModel? = null //both threads, but access only when isLoading = false, write isLoading = true.

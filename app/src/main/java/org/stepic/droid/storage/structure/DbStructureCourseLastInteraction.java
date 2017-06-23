@@ -1,6 +1,6 @@
 package org.stepic.droid.storage.structure;
 
-public class DbStructureCourseLastInteraction {
+public final class DbStructureCourseLastInteraction {
     public static final String COURSE_LAST_INTERACTION = "course_last_interaction";
 
     public static final class Column {

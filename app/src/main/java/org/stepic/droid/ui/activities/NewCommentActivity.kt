@@ -1,5 +1,6 @@
 package org.stepic.droid.ui.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.MenuItem
@@ -23,6 +24,8 @@ class NewCommentActivity : SingleFragmentActivity(), BackButtonHandler {
     companion object {
         val keyTarget = "KEY_target_id"
         val keyParent = "KEY_Parent_id"
+        val keyComment = "keyComment"
+        val requestCode = 171
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

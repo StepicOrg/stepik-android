@@ -39,7 +39,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
-import com.squareup.otto.Subscribe;
 import com.vk.sdk.VKSdk;
 
 import org.jetbrains.annotations.NotNull;
@@ -50,19 +49,20 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.core.ProfilePresenter;
 import org.stepic.droid.core.presenters.ProfileMainFeedPresenter;
+import org.stepic.droid.core.presenters.UpdateAppPresenter;
 import org.stepic.droid.core.presenters.contracts.ProfileMainFeedView;
 import org.stepic.droid.core.presenters.contracts.ProfileView;
-import org.stepic.droid.events.updating.NeedUpdateEvent;
+import org.stepic.droid.core.presenters.contracts.UpdateAppView;
 import org.stepic.droid.fonts.FontType;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Profile;
 import org.stepic.droid.model.UserViewModel;
 import org.stepic.droid.notifications.StepicInstanceIdService;
-import org.stepic.droid.services.UpdateAppService;
 import org.stepic.droid.services.UpdateWithApkService;
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment;
 import org.stepic.droid.ui.dialogs.LogoutAreYouSureDialog;
 import org.stepic.droid.ui.dialogs.NeedUpdatingDialog;
+import org.stepic.droid.ui.dialogs.RateAppDialogFragment;
 import org.stepic.droid.ui.fragments.CertificateFragment;
 import org.stepic.droid.ui.fragments.DownloadsFragment;
 import org.stepic.droid.ui.fragments.FindCoursesFragment;
@@ -93,7 +93,13 @@ import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan;
 import uk.co.chrisjenx.calligraphy.TypefaceUtils;
 
 public class MainFeedActivity extends BackToExitActivityBase
-        implements NavigationView.OnNavigationItemSelectedListener, BackButtonHandler, HasDrawer, ProfileMainFeedView, LogoutAreYouSureDialog.Companion.OnLogoutSuccessListener, ProfileView {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        BackButtonHandler,
+        HasDrawer,
+        ProfileMainFeedView,
+        LogoutAreYouSureDialog.Companion.OnLogoutSuccessListener,
+        ProfileView,
+        UpdateAppView {
     public static final String KEY_CURRENT_INDEX = "Current_index";
     public static final String REMINDER_KEY = "reminder_key";
     private final String PROGRESS_LOGOUT_TAG = "progress_logout";
@@ -130,6 +136,9 @@ public class MainFeedActivity extends BackToExitActivityBase
 
     @Inject
     ProfileMainFeedPresenter profileMainFeedPresenter;
+
+    @Inject
+    UpdateAppPresenter updateAppPresenter;
 
     @Inject
     ProfilePresenter profilePresenter;
@@ -182,7 +191,7 @@ public class MainFeedActivity extends BackToExitActivityBase
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        App.Companion.getComponentManager()
+        App.Companion.componentManager()
                 .mainFeedComponent()
                 .inject(this);
         setContentView(R.layout.activity_main_feed);
@@ -205,8 +214,6 @@ public class MainFeedActivity extends BackToExitActivityBase
             }
         }
 
-        bus.register(this);
-
         profileMainFeedPresenter.attachView(this);
         profilePresenter.attachView(this);
         profileImage.setOnClickListener(new View.OnClickListener() {
@@ -228,8 +235,8 @@ public class MainFeedActivity extends BackToExitActivityBase
             });
         }
 
-        Intent updateIntent = new Intent(this, UpdateAppService.class);
-        startService(updateIntent);
+        updateAppPresenter.attachView(this);
+        updateAppPresenter.checkForUpdate();
 
 
         Course course = getCourseFromExtra();
@@ -359,7 +366,12 @@ public class MainFeedActivity extends BackToExitActivityBase
                 return true;
             case R.id.profile:
                 // do not close drawer for profile
-                screenManager.openProfile(this);
+                // TODO: 02.05.17 make it async or show "sign in" in profile
+                if (sharedPreferenceHelper.getAuthResponseFromStore() == null) {
+                    screenManager.showLaunchScreen(MainFeedActivity.this);
+                } else {
+                    screenManager.openProfile(this);
+                }
                 return true;
             case R.id.feedback:
                 new Handler().postDelayed(new Runnable() {
@@ -512,10 +524,10 @@ public class MainFeedActivity extends BackToExitActivityBase
         profileImage.setOnClickListener(null);
         profileMainFeedPresenter.detachView(this);
         profilePresenter.detachView(this);
-        bus.unregister(this);
+        updateAppPresenter.detachView(this);
         drawerLayout.removeDrawerListener(actionBarDrawerToggle);
         if (isFinishing()) {
-            App.Companion.getComponentManager().releaseMainFeedComponent();
+            App.Companion.componentManager().releaseMainFeedComponent();
         }
         super.onDestroy();
     }
@@ -523,23 +535,6 @@ public class MainFeedActivity extends BackToExitActivityBase
     public void showFindLesson() {
         currentIndex = 2;
         showCurrentFragment(currentIndex);
-    }
-
-
-    @Subscribe
-    public void needUpdateCallback(NeedUpdateEvent event) {
-
-        if (!event.isAppInGp() && event.getLinkForUpdate() == null) {
-            return;
-        }
-        long storedTimestamp = sharedPreferenceHelper.getLastShownUpdatingMessageTimestamp();
-        boolean needUpdate = DateTimeHelper.INSTANCE.isNeededUpdate(storedTimestamp, AppConstants.MILLIS_IN_24HOURS);
-        if (!needUpdate) return;
-
-        sharedPreferenceHelper.storeLastShownUpdatingMessage();
-        analytic.reportEvent(Analytic.Interaction.UPDATING_MESSAGE_IS_SHOWN);
-        DialogFragment dialog = NeedUpdatingDialog.Companion.newInstance(event.getLinkForUpdate(), event.isAppInGp());
-        dialog.show(getSupportFragmentManager(), null);
     }
 
     @Override
@@ -690,7 +685,7 @@ public class MainFeedActivity extends BackToExitActivityBase
         if (googleApiClient != null && googleApiClient.isConnected()) {
             Auth.GoogleSignInApi.signOut(googleApiClient);
         }
-        screenManager.showLaunchScreen(this);
+        screenManager.showLaunchScreenAfterLogout(this);
     }
 
     @Override
@@ -741,5 +736,22 @@ public class MainFeedActivity extends BackToExitActivityBase
         super.onStart();
         //// TODO: 16.03.17 rewrite from pull way to push
         profilePresenter.showStreakForStoredUser();
+    }
+
+    @Override
+    public void onNeedUpdate(@Nullable String linkForUpdate, boolean isAppInGp) {
+        if (isAppInGp && linkForUpdate == null) {
+            return;
+        }
+        long storedTimestamp = sharedPreferenceHelper.getLastShownUpdatingMessageTimestamp();
+        boolean needUpdate = DateTimeHelper.INSTANCE.isNeededUpdate(storedTimestamp, AppConstants.MILLIS_IN_24HOURS);
+        if (!needUpdate) return;
+
+        sharedPreferenceHelper.storeLastShownUpdatingMessage();
+        analytic.reportEvent(Analytic.Interaction.UPDATING_MESSAGE_IS_SHOWN);
+        DialogFragment dialog = NeedUpdatingDialog.Companion.newInstance(linkForUpdate, isAppInGp);
+        if (!dialog.isAdded()) {
+            dialog.show(getSupportFragmentManager(), null);
+        }
     }
 }

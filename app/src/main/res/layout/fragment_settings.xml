@@ -30,7 +30,7 @@
                     android:text="@string/video_title"/>
 
                 <org.stepic.droid.ui.custom.BetterSwitch
-                    android:id="@+id/fragment_settings_external_player_switch"
+                    android:id="@+id/fragmentSettingsExternalPlayerSwitch"
                     style="@style/SettingSwitch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -38,7 +38,7 @@
                     android:text="@string/open_in_external_player"/>
 
                 <org.stepic.droid.ui.custom.BetterSwitch
-                    android:id="@+id/fragment_settings_wifi_enable_switch"
+                    android:id="@+id/fragmentSettingsWifiEnableSwitch"
                     style="@style/SettingSwitch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -46,7 +46,7 @@
                     android:text="@string/wi_fi_setting"/>
 
                 <FrameLayout
-                    android:id="@+id/video_quality_view"
+                    android:id="@+id/videoQualityView"
                     style="@style/SettingSwitch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -58,6 +58,22 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/video_quality"
+                        android:textSize="16sp"/>
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/videoPlayingQualityView"
+                    style="@style/SettingSwitch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="@drawable/non_radius_foreground">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/video_quality_playing"
                         android:textSize="16sp"/>
                 </FrameLayout>
 
@@ -83,7 +99,7 @@
                     android:text="@string/notification_title"/>
 
                 <org.stepic.droid.ui.custom.BetterSwitch
-                    android:id="@+id/fragment_settings_notification_sound_switch"
+                    android:id="@+id/fragmentSettingsNotificationSoundSwitch"
                     style="@style/SettingSwitch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -92,7 +108,7 @@
 
 
                 <org.stepic.droid.ui.custom.BetterSwitch
-                    android:id="@+id/fragment_settings_notification_vibration_switch"
+                    android:id="@+id/fragmentSettingsSotificationVibrationSwitch"
                     style="@style/SettingSwitch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -100,7 +116,7 @@
                     android:text="@string/vibration_title"/>
 
                 <org.stepic.droid.ui.custom.BetterSwitch
-                    android:id="@+id/fragment_settings_notification_learn_switch"
+                    android:id="@+id/fragmentSettingsNotificationLearnSwitch"
                     style="@style/SettingSwitch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -108,7 +124,7 @@
                     android:text="@string/notification_learn_list"/>
 
                 <org.stepic.droid.ui.custom.BetterSwitch
-                    android:id="@+id/fragment_settings_notification_comment_switch"
+                    android:id="@+id/fragmentSettingsNotificationCommentSwitch"
                     style="@style/SettingSwitch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -117,7 +133,7 @@
                     />
 
                 <org.stepic.droid.ui.custom.BetterSwitch
-                    android:id="@+id/fragment_settings_notification_review_switch"
+                    android:id="@+id/fragmentSettingsNotificationReviewSwitch"
                     style="@style/SettingSwitch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -125,7 +141,7 @@
                     android:text="@string/reviews_title"/>
 
                 <org.stepic.droid.ui.custom.BetterSwitch
-                    android:id="@+id/fragment_settings_notification_teaching_switch"
+                    android:id="@+id/fragmentSettingsNotificationTeachingSwitch"
                     style="@style/SettingSwitch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -134,7 +150,7 @@
 
 
                 <org.stepic.droid.ui.custom.BetterSwitch
-                    android:id="@+id/fragment_settings_notification_other_switch"
+                    android:id="@+id/fragmentSettingsNotificationOtherSwitch"
                     style="@style/SettingSwitch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -163,7 +179,7 @@
                     android:text="@string/calendar_title"/>
 
                 <org.stepic.droid.ui.custom.BetterSwitch
-                    android:id="@+id/fragment_settings_calendar_widget_switch"
+                    android:id="@+id/fragmentSettingsCalendarWidgetSwitch"
                     style="@style/SettingSwitch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -191,7 +207,7 @@
                     android:text="@string/storage"/>
 
                 <FrameLayout
-                    android:id="@+id/storage_management_button"
+                    android:id="@+id/storageManagementButton"
                     style="@style/SettingSwitch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -226,7 +242,7 @@
                     android:text="@string/other_title"/>
 
                 <org.stepic.droid.ui.custom.BetterSwitch
-                    android:id="@+id/fragment_settings_discounting_policy_switch"
+                    android:id="@+id/fragmentSettingsDiscountingPolicySwitch"
                     style="@style/SettingSwitch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -234,7 +250,7 @@
                     android:text="@string/discounting_policy_title_settings"/>
 
                 <org.stepic.droid.ui.custom.BetterSwitch
-                    android:id="@+id/fragment_settings_keep_screen_on_switch"
+                    android:id="@+id/fragmentSettingsKeepScreenOnSwitch"
                     style="@style/SettingSwitch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

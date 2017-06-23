@@ -5,10 +5,9 @@ import android.app.IntentService
 import android.app.Service
 import android.content.Intent
 import android.os.Handler
-import com.squareup.otto.Bus
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
-import org.stepic.droid.events.steps.StepRemovedEvent
+import org.stepic.droid.core.downloads.contract.DownloadsPoster
 import org.stepic.droid.model.Lesson
 import org.stepic.droid.model.Step
 import org.stepic.droid.storage.StoreStateManager
@@ -22,17 +21,21 @@ class DeleteService : IntentService("delete_service") {
     @Inject
     lateinit var systemDownloadManager: DownloadManager
     @Inject
-    lateinit var bus: Bus
-    @Inject
     lateinit var databaseFacade: DatabaseFacade
     @Inject
     lateinit var storeStateManager: StoreStateManager
     @Inject
     lateinit var analytic: Analytic
 
+    @Inject
+    lateinit var downloadsPoster: DownloadsPoster
+
     override fun onCreate() {
         super.onCreate()
-        App.component().inject(this)
+        App
+                .componentManager()
+                .downloadsComponent()
+                .inject(this)
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
@@ -90,7 +93,9 @@ class DeleteService : IntentService("delete_service") {
 //            database.deleteStep(step) // remove steps FIXME: MAYBE NOT DELETE STEP?
             storeStateManager.updateStepAfterDeleting(step)
             val mainHandler = Handler(App.getAppContext().mainLooper)
-            mainHandler.post { bus.post(StepRemovedEvent(step.id)) }
+            mainHandler.post {
+                downloadsPoster.stepRemoved(step.id)
+            }
         }
     }
 

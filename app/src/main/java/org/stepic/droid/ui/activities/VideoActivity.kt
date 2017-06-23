@@ -1,34 +1,49 @@
 package org.stepic.droid.ui.activities
 
 import android.support.v4.app.Fragment
+import android.view.KeyEvent
 import org.stepic.droid.base.SingleFragmentActivity
-import org.stepic.droid.ui.fragments.VideoFragment
-import timber.log.Timber
+import org.stepic.droid.model.Video
+import org.stepic.droid.ui.fragments.VideoExoFragment
+import org.stepic.droid.ui.listeners.KeyDispatchableFragment
 
 class VideoActivity : SingleFragmentActivity() {
     companion object {
         val videoPathKey = "VIDEO_URI_KEY"
         val videoIdKey = "VIDEO_ID_KEY"
+
+        val cachedVideoKey = "cached_video_key"
+        val externalVideoKey = "external_video_key"
     }
 
     override fun createFragment(): Fragment? {
         val path: String? = intent.extras.getString(videoPathKey)
         val videoId: Long = intent.extras.getLong(videoIdKey)
-        if (path != null) {
-            return VideoFragment.newInstance(path, videoId)
+        val cachedVideo = intent.extras.getParcelable<Video>(cachedVideoKey)
+        val externalVideo = intent.extras.getParcelable<Video>(externalVideoKey)
+
+        if (externalVideo != null || cachedVideo != null) {
+            return VideoExoFragment.newInstance(
+                    cachedVideo = cachedVideo,
+                    externalVideo = externalVideo
+            )
         } else {
             return null
         }
     }
 
     override fun finish() {
-        Timber.d("finish")
         super.finish()
         overridePendingTransition(org.stepic.droid.R.anim.no_transition, org.stepic.droid.R.anim.push_down)
     }
 
     override fun onBackPressed() {
-        Timber.d("onBackPressed")
         this.finish()
     }
+
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        // If the event was not handled then see if the player view can handle it as a media key event.
+        return super.dispatchKeyEvent(event) || (fragment as KeyDispatchableFragment).dispatchKeyEventInFragment(event)
+    }
+
 }

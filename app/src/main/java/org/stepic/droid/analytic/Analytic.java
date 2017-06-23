@@ -7,6 +7,17 @@ import org.jetbrains.annotations.Nullable;
 
 public interface Analytic {
 
+    interface Rating {
+        String SHOWN = "app_rate_shown"; //on shown dialog
+        String APP_RATE = "app_rate"; //number of stars, that user chosen, may multiple by session
+
+        String POSITIVE_LATER = "app_rate_positive_later";
+        String POSITIVE_APPSTORE = "app_rate_positive_appstore";
+
+        String NEGATIVE_LATER = "app_rate_negative_later";
+        String NEGATIVE_EMAIL = "app_rate_negative_email";
+    }
+
     interface Registration {
         String ERROR = "registration_error";
         String TAP_ON_FIELDS = "tap_on_fields_registration";
@@ -77,6 +88,7 @@ public interface Analytic {
         String CLICK_AUTH_FROM_STEPS = "click_auth_from_steps";
         String SHARE_STEP_CLICK = "share_step_click";
         String CLICK_TRY_STEP_AGAIN = "step_try_again";
+        String CLICK_TRY_STEP_AGAIN_AFTER_CORRECT = "step_try_again_after_correct";
         String NO_DISCOUNTING_DIALOG = "discounting_dialog_no";
         String YES_DISCOUNTING_DIALOG = "discounting_dialog_yes";
         String CLICK_SETTINGS_FROM_NOTIFICATION = "click_settings_from_notification";
@@ -139,17 +151,23 @@ public interface Analytic {
     }
 
     interface Video {
-        String OPEN_EXTERNAL = "video open external";
-        String OPEN_NATIVE = "video open native";
-        String NOT_COMPATIBLE = "video is not compatible";
-        String VLC_HARDWARE_ERROR = "video player: vlc error hardware";
-        String INVALID_SURFACE_SIZE = "video player: Invalid surface size";
-        String SHOW_CHOOSE_RATE = "video player: showChooseRateMenu";
-        String JUMP_FORWARD = "video player: onJumpForward";
-        String JUMP_BACKWARD = "video player: onJumpBackward";
-        String START_LOADING = "video player: startLoading";
-        String STOP_LOADING = "video player: stopLoading";
+        String OPEN_EXTERNAL = "video_open_external";
+        String OPEN_NATIVE = "video_open_native";
+        String NOT_COMPATIBLE = "video_is_not_compatible";
+        String SHOW_CHOOSE_RATE = "video_player_show_choose_rate_menu";
+        String JUMP_FORWARD = "video_player_jump_forward";
+        String JUMP_BACKWARD = "video_player_jump_backward";
         String QUALITY_NOT_DETERMINATED = "video_quality_failed";
+        String SHOW_MORE_ITEMS = "video_player_show_more";
+        String ROTATE_CLICKED = "video_player_rotate_clicked";
+        String PLAYER_CREATED = "video_player_created";
+        String PLAY = "video_player_play";
+        String PAUSE = "video_player_pause";
+        String ERROR = "video_player_error";
+        String QUALITY_MENU = "video_player_quality";
+        String CANCEL_VIDEO_QUALITY = "video_player_quality_cancel";
+        String NOW_PLAYING_WAS_NULL = "video_player_now_playing_null";
+        String OLD_STYLE = "video_old_style";
     }
 
     interface AppIndexing {
@@ -200,6 +218,14 @@ public interface Analytic {
         String LESSON_ACCESS_DENIED = "lesson_access_denied";
         String SEARCH_COURSE_NO_INTERNET = "search_course_no_internet";
         String SEARCH_COURSE_UNSUCCESSFUL = "search_course_unsuccessful";
+        String CHOICES_ARE_SMALLER = "choices_are_smaller";
+        String PREVIOUS_VIEW_NOT_DETACHED = "previous_view_not_detached";
+        String UNEXPECTED_VIEW = "unexpected_view";
+        String ILLEGAL_STATE_VIDEO_STEP = "illegal_state_video_step";
+        String ILLEGAL_STATE_VIDEO_STEP_PLAY = "illegal_state_video_step_play";
+        String NO_VIDEO_ON_STEP_SHOWING = "illegal_state_video_no_video";
+        String CANT_PARSE_QUALITY = "cant_parse_quality";
+        String JOIN_FAILED = "error_join_failed"; //#Apps-580
     }
 
     interface Web {
@@ -252,6 +278,7 @@ public interface Analytic {
     interface Feedback {
         String FAILED_ON_SERVER = "Feedback is failed due to server";
         String INTERNET_FAIL = "Feedback internet fail";
+        String FEEDBACK_SENT = "feedback_sent";
     }
 
     interface Comments {

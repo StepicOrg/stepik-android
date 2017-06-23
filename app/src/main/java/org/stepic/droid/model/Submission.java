@@ -54,7 +54,7 @@ public class Submission {
         this.status = status;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 

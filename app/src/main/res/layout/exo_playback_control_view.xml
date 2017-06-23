@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:fitsSystemWindows="true">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom_controller_panel"
+        android:layout_below="@+id/topControllerPanel"
+        android:background="#25000000"/>
+
+    <RelativeLayout
+        android:id="@+id/topControllerPanel"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@color/transparent_black_30">
+
+        <ImageView
+            android:id="@+id/closeButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="4dp"
+            android:layout_marginStart="4dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:padding="@dimen/half_padding"
+            android:src="@drawable/ic_close_white_with_padding"
+        />
+
+        <ImageView
+            android:id="@+id/videoRateChooser"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="2dp"
+            android:layout_marginRight="2dp"
+            android:layout_toLeftOf="@+id/moreItemsView"
+            android:layout_toStartOf="@+id/moreItemsView"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:padding="4dp"
+            tools:src="@drawable/ic_playbackrate_0_5_light"/>
+
+        <ImageView
+            android:id="@+id/moreItemsView"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:padding="@dimen/half_padding"
+            android:src="@drawable/ic_more_vert_white_48_include_padding"
+        />
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/center_controller_panel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <View
+            android:id="@+id/centered_anchor"
+            android:layout_width="@dimen/play_pause_button_size"
+            android:layout_height="@dimen/play_pause_button_size"
+            android:layout_centerInParent="true"
+            android:visibility="invisible"/>
+
+        <ImageView
+            android:id="@id/exo_rew"
+            android:layout_width="@dimen/rewind_size"
+            android:layout_height="@dimen/rewind_size"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/margin_rewind"
+            android:layout_marginRight="@dimen/margin_rewind"
+            android:layout_toLeftOf="@+id/centered_anchor"
+            android:layout_toStartOf="@+id/centered_anchor"
+            android:padding="4dp"
+            android:src="@drawable/ic_replay_10_white_48dp"/>
+
+
+        <ImageView
+            android:id="@id/exo_play"
+            android:layout_width="@dimen/play_pause_button_size"
+            android:layout_height="@dimen/play_pause_button_size"
+            android:layout_centerInParent="true"
+            android:src="@drawable/ic_play_circle_outline_white_72"/>
+
+        <ImageView
+            android:id="@id/exo_pause"
+            android:layout_width="@dimen/play_pause_button_size"
+            android:layout_height="@dimen/play_pause_button_size"
+            android:layout_centerInParent="true"
+            android:src="@drawable/ic_pause_circle_outline_white_72"/>
+
+
+        <ImageView
+            android:id="@id/exo_ffwd"
+            android:layout_width="@dimen/rewind_size"
+            android:layout_height="@dimen/rewind_size"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/margin_rewind"
+            android:layout_marginStart="@dimen/margin_rewind"
+            android:layout_toEndOf="@+id/centered_anchor"
+            android:layout_toRightOf="@+id/centered_anchor"
+            android:padding="4dp"
+            android:src="@drawable/ic_forward_10_white_48dp"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/bottom_controller_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/transparent_black_30"
+        android:padding="8dp">
+        <org.stepic.droid.ui.custom_exo.AppCompatSeekTimeBar
+            android:id="@id/exo_progress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/seekbar_video_margin"
+            android:layout_marginLeft="@dimen/seekbar_video_margin"
+            android:layout_marginRight="@dimen/seekbar_video_margin"
+            android:layout_marginStart="@dimen/seekbar_video_margin"
+            android:layout_toLeftOf="@id/exo_position"
+            android:layout_toStartOf="@id/exo_position"
+            android:background="@drawable/ic_seek_background"
+            android:max="100"
+            android:maxHeight="1000dp"
+            android:paddingEnd="0dp"
+            android:paddingLeft="0dp"
+            android:paddingRight="0dp"
+            android:paddingStart="0dp"
+            android:progressDrawable="@drawable/video_progressbar_layers"
+            android:thumb="@drawable/video_seekbar_thumb"
+            android:thumbOffset="0dp"
+            tools:progress="20"
+            tools:secondaryProgress="60"
+            tools:targetApi="17"/>
+
+
+        <TextView
+            android:id="@id/exo_position"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/slash_video_time"
+            android:layout_toStartOf="@+id/slash_video_time"
+            tools:text="01:15"/>
+
+        <TextView
+            android:id="@+id/slash_video_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/exo_duration"
+            android:layout_toStartOf="@+id/exo_duration"
+            android:text="@string/video_time_delimiter"
+            android:visibility="visible"/>
+
+        <TextView
+            android:id="@id/exo_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            tools:text="03:35"/>
+
+    </RelativeLayout>
+
+
+</RelativeLayout>
+

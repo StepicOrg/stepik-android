@@ -1,5 +1,7 @@
 <resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="exo_media_button_height">52dp</dimen>
+    <dimen name="play_pause_button_size">72dp</dimen>
     <dimen name="custom_peek_height">500dp</dimen>
     <dimen name="margin_registration">10dp</dimen>
     <dimen name="card_corner_radius_guideline">2dp</dimen>
@@ -78,4 +80,11 @@
     <dimen name="progress_bar_size">3dp</dimen>
     <dimen name="progress_square_size">7dp</dimen>
     <dimen name="progress_clickable_size">56dp</dimen>
+
+
+    <dimen name="exo_media_button_width">71dp</dimen>
+    <dimen name="rewind_size">48dp</dimen>
+    <dimen name="margin_rewind">56dp</dimen>
+
+    <dimen name="rate_dialog_button_text_size">16sp</dimen>
 </resources>

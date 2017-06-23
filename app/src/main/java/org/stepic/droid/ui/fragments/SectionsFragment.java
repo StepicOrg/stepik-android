@@ -42,15 +42,17 @@ import com.google.firebase.appindexing.FirebaseUserActions;
 import com.google.firebase.appindexing.Indexable;
 import com.google.firebase.appindexing.builders.Actions;
 import com.google.firebase.appindexing.builders.Indexables;
-import com.squareup.otto.Subscribe;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
+import org.stepic.droid.base.Client;
 import org.stepic.droid.base.FragmentBase;
+import org.stepic.droid.core.LocalProgressManager;
 import org.stepic.droid.core.ShareHelper;
+import org.stepic.droid.core.dropping.contract.DroppingListener;
 import org.stepic.droid.core.presenters.CalendarPresenter;
 import org.stepic.droid.core.presenters.CourseFinderPresenter;
 import org.stepic.droid.core.presenters.CourseJoinerPresenter;
@@ -65,23 +67,15 @@ import org.stepic.droid.core.presenters.contracts.DownloadingProgressSectionsVie
 import org.stepic.droid.core.presenters.contracts.InvitationView;
 import org.stepic.droid.core.presenters.contracts.LoadCourseView;
 import org.stepic.droid.core.presenters.contracts.SectionsView;
-import org.stepic.droid.events.CalendarChosenEvent;
-import org.stepic.droid.events.UpdateSectionProgressEvent;
-import org.stepic.droid.events.courses.CourseCantLoadEvent;
-import org.stepic.droid.events.courses.CourseFoundEvent;
-import org.stepic.droid.events.courses.CourseUnavailableForUserEvent;
-import org.stepic.droid.events.courses.SuccessDropCourseEvent;
-import org.stepic.droid.events.joining_course.FailJoinEvent;
-import org.stepic.droid.events.joining_course.SuccessJoinEvent;
-import org.stepic.droid.events.sections.NotCachedSectionEvent;
-import org.stepic.droid.events.sections.SectionCachedEvent;
 import org.stepic.droid.fonts.FontType;
 import org.stepic.droid.model.CalendarItem;
 import org.stepic.droid.model.Course;
+import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.SectionLoadingState;
 import org.stepic.droid.notifications.StepikNotificationManager;
 import org.stepic.droid.notifications.model.Notification;
+import org.stepic.droid.storage.StoreStateManager;
 import org.stepic.droid.ui.adapters.SectionAdapter;
 import org.stepic.droid.ui.dialogs.ChooseCalendarDialog;
 import org.stepic.droid.ui.dialogs.DeleteItemDialogFragment;
@@ -121,7 +115,11 @@ public class SectionsFragment
         SectionsView,
         InvitationView,
         DownloadingProgressSectionsView,
-        DownloadingInteractionView {
+        DownloadingInteractionView,
+        LocalProgressManager.SectionProgressListener,
+        ChooseCalendarDialog.CallbackContract,
+        DroppingListener,
+        StoreStateManager.SectionCallback {
 
     public static String joinFlag = "joinFlag";
     private static int INVITE_REQUEST_CODE = 324;
@@ -139,13 +137,13 @@ public class SectionsFragment
     @BindView(R.id.sections_recycler_view)
     RecyclerView sectionsRecyclerView;
 
-    @BindView(R.id.load_progressbar)
+    @BindView(R.id.loadProgressbar)
     ProgressBar loadOnCenterProgressBar;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
-    @BindView(R.id.report_problem)
+    @BindView(R.id.reportProblem)
     protected View reportConnectionProblem;
 
     @BindView(R.id.course_not_found)
@@ -209,6 +207,15 @@ public class SectionsFragment
     @Inject
     DownloadingInteractionPresenter downloadingInteractionPresenter;
 
+    @Inject
+    Client<DroppingListener> droppingListenerClient;
+
+    @Inject
+    StoreStateManager storeStateManager;
+
+    @Inject
+    LocalProgressManager localProgressManager;
+
     private boolean wasIndexed;
     private Uri urlInWeb;
     private String title;
@@ -223,10 +230,19 @@ public class SectionsFragment
     @Override
     protected void injectComponent() {
         App.Companion
-                .component()
+                .componentManager()
+                .courseGeneralComponent()
                 .courseComponentBuilder()
                 .build()
                 .inject(this);
+    }
+
+    @Override
+    protected void onReleaseComponent() {
+        App
+                .Companion
+                .componentManager()
+                .releaseCourseGeneralComponent();
     }
 
     @Override
@@ -271,7 +287,9 @@ public class SectionsFragment
 
         joinCourseProgressDialog = new LoadingProgressDialog(getContext());
         ProgressHelper.activate(loadOnCenterProgressBar);
-        bus.register(this);
+        storeStateManager.addSectionCallback(this);
+        localProgressManager.subscribe(this);
+        droppingListenerClient.subscribe(this);
         calendarPresenter.attachView(this);
         courseFinderPresenter.attachView(this);
         courseJoinerPresenter.attachView(this);
@@ -279,7 +297,7 @@ public class SectionsFragment
         invitationPresenter.attachView(this);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        onNewIntent(((AppCompatActivity) getActivity()).getIntent());
+        onNewIntent(getActivity().getIntent());
     }
 
     private void setUpToolbarWithCourse() {
@@ -496,28 +514,10 @@ public class SectionsFragment
         courseFinderPresenter.detachView(this);
         sectionsPresenter.detachView(this);
         invitationPresenter.detachView(this);
-        bus.unregister(this);
+        storeStateManager.removeSectionCallback(this);
+        droppingListenerClient.unsubscribe(this);
         courseNotParsedView.setOnClickListener(null);
         super.onDestroyView();
-    }
-
-    @Subscribe
-    public void onSectionCached(SectionCachedEvent e) {
-        long sectionId = e.getSectionId();
-        updateState(sectionId, true, false);
-    }
-
-    @Subscribe
-    public void onNotCachedSection(NotCachedSectionEvent e) {
-        long sectionId = e.getSectionId();
-        updateState(sectionId, false, false);
-    }
-
-    @Subscribe
-    public void onSectionProgressChanged(UpdateSectionProgressEvent event) {
-        if (course != null && course.getCourseId() == event.getCourseId()) {
-            sectionsPresenter.updateSectionProgress(event.getProgress());
-        }
     }
 
     private void updateState(long sectionId, boolean isCached, boolean isLoading) {
@@ -581,9 +581,9 @@ public class SectionsFragment
     }
 
     @Override
-    public void onCourseFound(CourseFoundEvent event) {
+    public void onCourseFound(@NonNull Course foundCourse) {
         if (course == null) {
-            course = event.getCourse();
+            course = foundCourse;
             Bundle args = getActivity().getIntent().getExtras();
             if (args == null) {
                 args = new Bundle();
@@ -595,7 +595,7 @@ public class SectionsFragment
     }
 
     @Override
-    public void onCourseUnavailable(CourseUnavailableForUserEvent event) {
+    public void onCourseUnavailable(long courseId) {
         if (course == null) {
             ProgressHelper.dismiss(swipeRefreshLayout);
             ProgressHelper.dismiss(loadOnCenterProgressBar);
@@ -619,7 +619,7 @@ public class SectionsFragment
     }
 
     @Override
-    public void onInternetFailWhenCourseIsTriedToLoad(CourseCantLoadEvent event) {
+    public void onInternetFailWhenCourseIsTriedToLoad() {
         if (course == null) {
             ProgressHelper.dismiss(swipeRefreshLayout);
             ProgressHelper.dismiss(loadOnCenterProgressBar);
@@ -639,11 +639,11 @@ public class SectionsFragment
     }
 
     @Override
-    public void onFailJoin(FailJoinEvent e) {
+    public void onFailJoin(int code) {
         if (course != null) {
-            if (e.getCode() == HttpURLConnection.HTTP_FORBIDDEN) {
+            if (code == HttpURLConnection.HTTP_FORBIDDEN) {
                 Toast.makeText(getContext(), getString(R.string.join_course_web_exception), Toast.LENGTH_LONG).show();
-            } else if (e.getCode() == HttpURLConnection.HTTP_UNAUTHORIZED) {
+            } else if (code == HttpURLConnection.HTTP_UNAUTHORIZED) {
                 //UNAUTHORIZED
                 //it is just for safety, we should detect no account before send request
                 unauthorizedDialog = UnauthorizedDialogFragment.newInstance(course);
@@ -660,9 +660,9 @@ public class SectionsFragment
     }
 
     @Override
-    public void onSuccessJoin(SuccessJoinEvent e) {
-        if (course != null && e.getCourse() != null && e.getCourse().getCourseId() == course.getCourseId() && adapter != null) {
-            course = e.getCourse();
+    public void onSuccessJoin(@NotNull Course joinedCourse) {
+        if (course != null && joinedCourse.getCourseId() == course.getCourseId() && adapter != null) {
+            course = joinedCourse;
             resolveJoinCourseView();
             adapter.notifyDataSetChanged();
         }
@@ -693,14 +693,6 @@ public class SectionsFragment
                 .show();
     }
 
-
-    @Subscribe
-    public void onSuccessDrop(final SuccessDropCourseEvent e) {
-        if (course != null && e.getCourse().getCourseId() == course.getCourseId()) {
-            course.setEnrollment(0);
-            resolveJoinCourseView();
-        }
-    }
 
     @Override
     public void permissionNotGranted() {
@@ -743,16 +735,11 @@ public class SectionsFragment
 
     @Override
     public void onNeedToChooseCalendar(@NotNull ArrayList<CalendarItem> primariesCalendars) {
-        DialogFragment chooseCalendarDialog = ChooseCalendarDialog.Companion.newInstance(primariesCalendars);
+        ChooseCalendarDialog chooseCalendarDialog = ChooseCalendarDialog.Companion.newInstance(primariesCalendars);
+        chooseCalendarDialog.setTargetFragment(this, 0); //alternative to onActivityResult
         if (!chooseCalendarDialog.isAdded()) {
             chooseCalendarDialog.show(getFragmentManager(), null);
         }
-    }
-
-    @Subscribe
-    public void onCalendarChosen(CalendarChosenEvent event) {
-        CalendarItem calendarItem = event.getCalendarItem();
-        calendarPresenter.addDeadlinesToCalendar(sectionList, calendarItem);
     }
 
     @Override
@@ -824,13 +811,13 @@ public class SectionsFragment
                 }
 
                 if (simpleCourseId < 0) {
-                    onCourseUnavailable(new CourseUnavailableForUserEvent());
+                    onCourseUnavailable(-1);
                 } else {
                     courseFinderPresenter.findCourseById(simpleCourseId);
                     postNotificationAsReadIfNeed(intent, simpleCourseId);
                 }
             } else {
-                onCourseUnavailable(new CourseUnavailableForUserEvent());
+                onCourseUnavailable(-1);
             }
         }
 
@@ -979,5 +966,40 @@ public class SectionsFragment
                 }
             }
         });
+    }
+
+    @Override
+    public void onCalendarChosen(@NotNull CalendarItem calendarItem) {
+        calendarPresenter.addDeadlinesToCalendar(sectionList, calendarItem);
+    }
+
+    @Override
+    public void onSuccessDropCourse(@NotNull Course droppedCourse) {
+        if (course != null && droppedCourse.getCourseId() == course.getCourseId()) {
+            course.setEnrollment(0);
+            resolveJoinCourseView();
+        }
+    }
+
+    @Override
+    public void onFailDropCourse(@NotNull Course course) {
+        //do nothing
+    }
+
+    @Override
+    public void onSectionCached(long sectionId) {
+        updateState(sectionId, true, false);
+    }
+
+    @Override
+    public void onSectionNotCached(long sectionId) {
+        updateState(sectionId, false, false);
+    }
+
+    @Override
+    public void onProgressUpdated(@NotNull Progress newProgress, long courseId) {
+        if (course != null && course.getCourseId() == courseId) {
+            sectionsPresenter.updateSectionProgress(newProgress);
+        }
     }
 }

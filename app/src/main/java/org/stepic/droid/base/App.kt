@@ -1,8 +1,7 @@
 package org.stepic.droid.base
 
+import android.app.Application
 import android.content.Context
-import android.support.multidex.MultiDex
-import android.support.multidex.MultiDexApplication
 import com.facebook.FacebookSdk
 import com.facebook.appevents.AppEventsLogger
 import com.facebook.stetho.Stetho
@@ -22,7 +21,7 @@ import timber.log.Timber
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig
 import javax.inject.Inject
 
-class App : MultiDexApplication() {
+class App : Application() {
 
     companion object {
         lateinit var application: App
@@ -35,7 +34,7 @@ class App : MultiDexApplication() {
             return application.applicationContext
         }
 
-        fun getComponentManager(): ComponentManager {
+        fun componentManager(): ComponentManager {
             return application.componentManager
         }
     }
@@ -94,6 +93,5 @@ class App : MultiDexApplication() {
 
     override fun attachBaseContext(base: Context) {
         super.attachBaseContext(base)
-        MultiDex.install(this)
     }
 }

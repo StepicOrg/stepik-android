@@ -26,20 +26,18 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.squareup.otto.Subscribe;
 
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
+import org.stepic.droid.base.Client;
 import org.stepic.droid.base.StepBaseFragment;
 import org.stepic.droid.core.LessonSessionManager;
-import org.stepic.droid.core.presenters.StreakPresenter;
+import org.stepic.droid.core.internet_state.contract.InternetEnabledListener;
 import org.stepic.droid.core.presenters.StepAttemptPresenter;
+import org.stepic.droid.core.presenters.StreakPresenter;
 import org.stepic.droid.core.presenters.contracts.StepAttemptView;
-import org.stepic.droid.events.InternetIsEnabledEvent;
-import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent;
-import org.stepic.droid.events.steps.StepWasUpdatedEvent;
-import org.stepic.droid.events.steps.UpdateStepEvent;
+import org.stepic.droid.core.updating_step.contract.UpdatingStepPoster;
 import org.stepic.droid.fonts.FontType;
 import org.stepic.droid.model.Attempt;
 import org.stepic.droid.model.DiscountingPolicyType;
@@ -48,11 +46,15 @@ import org.stepic.droid.model.Reply;
 import org.stepic.droid.model.Submission;
 import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout;
 import org.stepic.droid.ui.dialogs.DiscountingPolicyDialogFragment;
+import org.stepic.droid.ui.dialogs.RateAppDialogFragment;
 import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment;
+import org.stepic.droid.ui.listeners.NextMoveable;
 import org.stepic.droid.ui.util.TimeIntervalUtil;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ColorUtil;
 import org.stepic.droid.util.ProgressHelper;
+import org.stepic.droid.util.RatingUtil;
+import org.stepic.droid.util.RatingUtilKt;
 import org.stepic.droid.util.SnackbarExtensionKt;
 
 import javax.inject.Inject;
@@ -63,7 +65,11 @@ import butterknife.BindView;
 import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan;
 import uk.co.chrisjenx.calligraphy.TypefaceUtils;
 
-public abstract class StepAttemptFragment extends StepBaseFragment implements StepAttemptView {
+public abstract class StepAttemptFragment extends StepBaseFragment implements
+        StepAttemptView,
+        InternetEnabledListener,
+        RateAppDialogFragment.Companion.Callback {
+
     private final int DISCOUNTING_POLICY_REQUEST_CODE = 131;
     private final int NOTIFICATION_TIME_REQUEST_CODE = 11;
 
@@ -76,7 +82,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
     @BindView(R.id.progress_bar)
     ProgressBar progressBar;
 
-    @BindView(R.id.report_problem)
+    @BindView(R.id.reportProblem)
     View connectionProblem;
 
     @BindView(R.id.attempt_container)
@@ -100,11 +106,19 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
     @BindString(R.string.try_again)
     protected String tryAgainText;
 
+    @BindString(R.string.next)
+    String next;
+
     @BindView(R.id.discounting_policy_textview)
     TextView discountingPolicyTextView;
 
     @BindView(R.id.submission_restriction_textview)
     TextView submissionRestrictionTextView;
+
+    @BindView(R.id.tryAgainOnCorrectButton)
+    View tryAgainOnCorrectButton;
+
+    private View.OnClickListener onNextListener;
 
     protected Attempt attempt = null;
     protected Submission submission = null;
@@ -126,15 +140,21 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
     LessonSessionManager lessonManager;
 
     @Inject
+    Client<InternetEnabledListener> internetEnabledListenerClient;
+
+    @Inject
     StreakPresenter streakPresenter;
+
+    @Inject
+    UpdatingStepPoster updatingStepPoster;
+
+    private View.OnClickListener actionButtonGeneralListener;
 
     @Override
     protected void injectComponent() {
         App.Companion
-                .getComponentManager()
-                .routingComponent()
-                .stepComponentBuilder()
-                .build()
+                .componentManager()
+                .stepComponent(step.getId())
                 .inject(this);
     }
 
@@ -147,7 +167,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
     @Override
     public final void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        setListenerToActionButton(new View.OnClickListener() {
+        actionButtonGeneralListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (submission == null || submission.getStatus() == Submission.Status.LOCAL) {
@@ -170,7 +190,33 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
                     tryAgain();
                 }
             }
-        });
+        };
+        setListenerToActionButton(actionButtonGeneralListener);
+
+        View.OnClickListener onTryAgainCorrectListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                analytic.reportEvent(Analytic.Interaction.CLICK_TRY_STEP_AGAIN_AFTER_CORRECT);
+                tryAgain();
+            }
+        };
+        tryAgainOnCorrectButton.setOnClickListener(onTryAgainCorrectListener);
+
+        onNextListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                v.setEnabled(false);
+                boolean handled = ((NextMoveable) getParentFragment()).moveNext();
+                if (!handled) {
+                    if (unit != null) {
+                        routeStepPresenter.clickNextLesson(unit);
+                    } else {
+                        Toast.makeText(getContext(), R.string.cant_show_next_step, Toast.LENGTH_SHORT).show();
+                    }
+                }
+                v.setEnabled(true);
+            }
+        };
 
         connectionProblem.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -179,6 +225,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
             }
         });
         stepAttemptPresenter.attachView(this);
+        internetEnabledListenerClient.subscribe(this);
         stepAttemptPresenter.startLoadAttempt(step);
     }
 
@@ -210,11 +257,12 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
     @Override
     public void onDestroyView() {
         saveSession(true);
+        internetEnabledListenerClient.unsubscribe(this);
         stepAttemptPresenter.detachView(this);
         super.onDestroyView();
     }
 
-    protected final void fillSubmission(@org.jetbrains.annotations.Nullable Submission submission) {
+    protected final void fillSubmission(@Nullable Submission submission) {
         stepAttemptPresenter.handleDiscountingPolicy(numberOfSubmissions, section, step);
         stepAttemptPresenter.handleStepRestriction(step, numberOfSubmissions);
         if (submission == null || submission.getStatus() == null) {
@@ -232,18 +280,20 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
             case CORRECT:
                 discountingPolicyTextView.setVisibility(View.GONE); // remove if user was correct
                 submissionRestrictionTextView.setVisibility(View.GONE);
+                tryAgainOnCorrectButton.setVisibility(View.VISIBLE);
+                actionButton.setVisibility(View.VISIBLE);
                 if (step.getHasSubmissionRestriction()) {
-                    actionButton.setVisibility(View.GONE);
+                    tryAgainOnCorrectButton.setVisibility(View.GONE);
                 }
+                setListenerToActionButton(onNextListener);
                 onCorrectSubmission();
-                setTextToActionButton(tryAgainText);
+                setTextToActionButton(next);
                 blockUIBeforeSubmit(true);
-
-                //// FIXME: 22.11.16 transfer to after Submit not passed step
-//                showStreakDialog(3);
                 break;
             case WRONG:
                 onWrongSubmission();
+                setListenerToActionButton(actionButtonGeneralListener);
+                tryAgainOnCorrectButton.setVisibility(View.GONE);
                 setTextToActionButton(tryAgainText);
                 actionButton.setEnabled(true); // "try again" always
                 blockUIBeforeSubmit(true);
@@ -312,6 +362,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
     protected final void showOnlyInternetProblem(boolean isNeedShow) {
         showActionButtonLoadState(!isNeedShow);
         if (isNeedShow) {
+            tryAgainOnCorrectButton.setVisibility(View.GONE);
             actionButton.setVisibility(View.GONE);
         } else {
             actionButton.setVisibility(View.VISIBLE);
@@ -354,6 +405,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
     protected final void tryAgain() {
         showActionButtonLoadState(true);
         blockUIBeforeSubmit(false);
+        setListenerToActionButton(actionButtonGeneralListener);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             attemptContainer.setBackground(rootView.getBackground());
@@ -363,33 +415,36 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
 
         hintTextView.setVisibility(View.GONE);
         statusTextView.setVisibility(View.GONE);
-        actionButton.setText(submitText);
+        tryAgainOnCorrectButton.setVisibility(View.GONE);
+        setTextToActionButton(submitText);
 
         stepAttemptPresenter.tryAgain(step.getId());
         submission = null;
 
     }
 
-    private void setListenerToActionButton(View.OnClickListener l) {
-        actionButton.setOnClickListener(l);
+    private void setListenerToActionButton(View.OnClickListener listener) {
+        actionButton.setOnClickListener(listener);
     }
 
     protected final void markLocalProgressAsViewed() {
-        bus.post(new UpdateStepEvent(step.getId(), true));
-        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
-            long stepId = step.getId();
+        if (!step.is_custom_passed()) {
+            updatingStepPoster.updateStep(step.getId(), true);
+            AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+                long stepId = step.getId();
 
-            protected Void doInBackground(Void... params) {
-                long assignmentId = databaseFacade.getAssignmentIdByStepId(stepId);
-                databaseFacade.markProgressAsPassed(assignmentId);
-                localProgressManager.checkUnitAsPassed(stepId);
-                if (unit != null) {
-                    localProgressManager.updateUnitProgress(unit.getId()); //// FIXME: 05.09.16 update lesson progress
+                protected Void doInBackground(Void... params) {
+                    long assignmentId = databaseFacade.getAssignmentIdByStepId(stepId);
+                    databaseFacade.markProgressAsPassed(assignmentId);
+                    localProgressManager.checkUnitAsPassed(stepId);
+                    if (unit != null) {
+                        localProgressManager.updateUnitProgress(unit.getId()); //// FIXME: 05.09.16 update lesson progress
+                    }
+                    return null;
                 }
-                return null;
-            }
-        };
-        task.execute();
+            };
+            task.executeOnExecutor(threadPoolExecutor);
+        }
     }
 
     protected final void enableInternetMessage(boolean needShow) {
@@ -410,6 +465,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
 
     protected void showActionButtonLoadState(boolean isLoading) {
         if (isLoading) {
+            tryAgainOnCorrectButton.setVisibility(View.GONE);
             actionButton.setVisibility(View.GONE);
             ProgressHelper.activate(progressBar);
         } else {
@@ -434,13 +490,6 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
         }
     }
 
-    @Subscribe
-    public void onInternetEnabled(InternetIsEnabledEvent enabledEvent) {
-        if (connectionProblem.getVisibility() == View.VISIBLE) {
-            stepAttemptPresenter.startLoadAttempt(step);
-        }
-    }
-
     protected abstract void showAttempt(Attempt attempt);
 
     protected abstract Reply generateReply();
@@ -451,16 +500,6 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
 
     protected String getCorrectString() {
         return correctString;
-    }
-
-    @Subscribe
-    public void onNewCommentWasAdded(NewCommentWasAddedOrUpdateEvent event) {
-        super.onNewCommentWasAdded(event);
-    }
-
-    @Subscribe
-    public void onStepWasUpdated(StepWasUpdatedEvent event) {
-        super.onStepWasUpdated(event);
     }
 
     @Override
@@ -496,8 +535,10 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
     }
 
     @Override
-    public void onNeedShowAttempt(@org.jetbrains.annotations.Nullable Attempt attempt, boolean isCreated, int numberOfSubmissionsForStep) {
-        this.numberOfSubmissions = numberOfSubmissionsForStep;
+    public void onNeedShowAttempt(@Nullable Attempt attempt, boolean isCreated, @Nullable Integer numberOfSubmissionsForStep) {
+        if (numberOfSubmissionsForStep != null) {
+            this.numberOfSubmissions = numberOfSubmissionsForStep;
+        }
         this.attempt = attempt;
         showAttemptAbstractWrapMethod(this.attempt, isCreated);
     }
@@ -508,7 +549,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
     }
 
     @Override
-    public void onNeedFillSubmission(Submission submission, int numberOfSubmissions) {
+    public void onNeedFillSubmission(@Nullable Submission submission, int numberOfSubmissions) {
         enableInternetMessage(false);
         showActionButtonLoadState(false);
         showAnswerField(true);
@@ -594,6 +635,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
                 warningText = getString(R.string.restriction_submission_enough);
                 blockUIBeforeSubmit(true);
                 actionButton.setVisibility(View.GONE); //we cant send more
+                tryAgainOnCorrectButton.setVisibility(View.GONE);
             }
             submissionRestrictionTextView.setText(warningText);
             submissionRestrictionTextView.setVisibility(View.VISIBLE);
@@ -606,5 +648,52 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
     public void onNeedShowStreakDialog(int numberOfStreakDayIncludeToday) {
         // this submission is correct and user posted it 1st time
         showStreakDialog(numberOfStreakDayIncludeToday);
+    }
+
+    @Override
+    public void onInternetEnabled() {
+        if (connectionProblem.getVisibility() == View.VISIBLE) {
+            stepAttemptPresenter.startLoadAttempt(step);
+        }
+    }
+
+    @Override
+    public void onNeedShowRateDialog() {
+        RateAppDialogFragment rateAppDialogFragment = RateAppDialogFragment.Companion.newInstance();
+        rateAppDialogFragment.setTargetFragment(this, 0);
+        if (!rateAppDialogFragment.isAdded()) {
+            analytic.reportEvent(Analytic.Rating.SHOWN);
+            rateAppDialogFragment.show(getFragmentManager(), null);
+        }
+    }
+
+    //Rate dialog callback:
+
+    @Override
+    public void onClickLater(int starNumber) {
+        if (RatingUtil.INSTANCE.isExcellent(starNumber)) {
+            RatingUtilKt.reportRateEvent(analytic, starNumber, Analytic.Rating.POSITIVE_LATER);
+        } else {
+            RatingUtilKt.reportRateEvent(analytic, starNumber, Analytic.Rating.NEGATIVE_LATER);
+        }
+    }
+
+    @Override
+    public void onClickGooglePlay(int starNumber) {
+        sharedPreferenceHelper.afterRateWasHandled();
+        RatingUtilKt.reportRateEvent(analytic, starNumber, Analytic.Rating.POSITIVE_APPSTORE);
+
+        if (config.isAppInStore()) {
+            screenManager.showStoreWithApp(getActivity());
+        } else {
+            screenManager.showTextFeedback(getActivity());
+        }
+    }
+
+    @Override
+    public void onClickSupport(int starNumber) {
+        sharedPreferenceHelper.afterRateWasHandled();
+        RatingUtilKt.reportRateEvent(analytic, starNumber, Analytic.Rating.NEGATIVE_EMAIL);
+        screenManager.showTextFeedback(getActivity());
     }
 }

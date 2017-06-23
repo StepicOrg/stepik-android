@@ -18,7 +18,7 @@ import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.core.presenters.NotificationListPresenter;
 import org.stepic.droid.core.presenters.contracts.NotificationListView;
 import org.stepic.droid.notifications.model.Notification;
-import org.stepic.droid.ui.NotificationCategory;
+import org.stepic.droid.model.NotificationCategory;
 import org.stepic.droid.ui.adapters.NotificationAdapter;
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment;
 import org.stepic.droid.util.ColorUtil;
@@ -54,10 +54,10 @@ public class NotificationListFragment extends FragmentBase implements Notificati
     @BindView(R.id.notification_recycler_view)
     RecyclerView notificationRecyclerView;
 
-    @BindView(R.id.load_progressbar)
+    @BindView(R.id.loadProgressbar)
     View progressBarOnEmptyScreen;
 
-    @BindView(R.id.report_problem)
+    @BindView(R.id.reportProblem)
     View connectionProblemLayout;
 
     @BindView(R.id.empty_notifications)

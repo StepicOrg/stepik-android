@@ -60,8 +60,6 @@ public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
 
         textView.setBackgroundColor(backgroundColor);
         webView.setBackgroundColor(backgroundColor);
-
-        textView.setTextIsSelectable(true);
     }
 
     private void init(Context context) {

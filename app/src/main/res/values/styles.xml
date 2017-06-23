@@ -6,8 +6,13 @@
         <item name="colorPrimary">@color/stepic_brand_primary</item>
         <item name="colorPrimaryDark">@color/black</item>
         <item name="colorAccent">@color/stepic_blue_ribbon</item>
+
+        <!--this change the background of main window (activity)-->
         <item name="android:windowBackground">@color/stepic_cover</item>
+
+        <!--this change the background of main window (activity and) AND all the components (dialogs) -->
         <item name="android:colorBackground">@color/stepic_cover</item>
+
         <item name="android:textColor">@color/stepic_regular_text</item>
         <item name="android:textViewStyle">@style/AppTheme.Widget.TextView</item>
         <item name="android:actionBarStyle">@style/StepicActionBar</item>
@@ -55,12 +60,14 @@
 
     <style name="AppTheme.LoginLaunchRegistration">
         <item name="colorPrimaryDark">@color/transparent_black_30</item>
+        <item name="android:windowBackground">@color/login_launch_registration_background</item>
+        <item name="android:colorBackground">@color/login_launch_registration_background</item>
     </style>
 
     <style name="AppTheme.VideoPlayer" parent="AppTheme.VideoPlayer.7"/>
 
     <style name="AppTheme.VideoPlayer.7" parent="Theme.AppCompat">
-        <item name="colorAccent">@color/stepic_blue_ribbon</item>
+        <item name="colorAccent">@color/white</item>
         <item name="colorPrimary">@color/stepic_brand_primary</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
@@ -183,6 +190,10 @@
         <item name="android:textSize">@dimen/launch_button_text_size</item>
     </style>
 
+    <style name="TryAgainButton" parent="Base.Widget.AppCompat.Button.Borderless">
+        <item name="android:textColor">@color/launchTextColor</item>
+    </style>
+
     <style name="PrivacyPolicyTextStyle">
         <item name="android:textSize">@dimen/launch_not_button_text_size</item>
         <item name="android:textColorLink">@color/stepic_brand_primary</item>
@@ -219,4 +230,24 @@
         <item name="android:gravity">center_vertical</item>
         <item name="android:layout_gravity">center_vertical</item>
     </style>
+
+
+    <style name="ExoMediaButton">
+        <item name="android:background">@null</item>
+        <item name="android:layout_width">@dimen/exo_media_button_width</item>
+        <item name="android:layout_height">@dimen/exo_media_button_height</item>
+    </style>
+
+    <style name="RateItemTextView">
+        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:clickable">true</item>
+        <item name="android:padding">@dimen/guideline_standard_padding</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textSize">@dimen/rate_dialog_button_text_size</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+    </style>
+
+
 </resources>

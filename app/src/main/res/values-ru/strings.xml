@@ -71,7 +71,8 @@
         должен иметь права записи файлов в память телефона.
     </string>
     <string name="connectionProblems">Отсутствует подключение к Интернету</string>
-    <string name="video_quality">Качество видео</string>
+    <string name="video_quality">Качество видео для загрузки</string>
+    <string name="video_quality_playing">Качество видео для просмотра</string>
     <string name="sync_problem">Возникли проблемы с синхронизацией данных, пожалуйста, повторите
         попытку позже
     </string>
@@ -288,7 +289,6 @@
     <string name="auth_action_title">Войти</string>
     <string name="empty_steps_title">В данном уроке еще нет шагов</string>
     <string name="open_in_browser">Открыть в Браузере</string>
-    <string name="very_high_quality">Очень высокое</string>
     <string name="low_quality">Низкое</string>
     <string name="medium_quality">Среднее</string>
     <string name="high_quality">Высокое</string>
@@ -446,6 +446,28 @@
     <string name="table_quiz_beta">Табличная задача β</string>
     <string name="logout_user_error">Доступ был отозван. Залогиньтесь снова</string>
     <string name="accessibility_video_cover">Обложка видео</string>
-    <string name="close_screen">Закрыть экран</string>
-    <string name="google_services_late">Обновите Google Play Services для входа с помощью Google</string>
+    <string name="close_screen">Закрыть</string>
+    <string name="google_services_late">Обновите Google Play Services для входа с помощью Google
+    </string>
+    <string name="next">Дальше</string>
+    <string name="no_connection">Нет подключения</string>
+
+    <!--Video step screen-->
+    <string name="video_step_play_content_description">Воспроизвести видео</string>
+    <string name="video_step_video_image_content_description">Видео</string>
+
+    <!--Video player screen-->
+    <string name="video_player_quality">Качество видео</string>
+    <string name="video_player_device_orientation_title">Поворот видео</string>
+    <string name="video_player_downloaded_quality">Загруженное (%s)</string>
+    <string name="video_url_incorrect">Извините, видео не найдено</string>
+
+    <!--Rate dialog-->
+    <string name="rate_dialog_title">Как бы Вы оценили Stepik?</string>
+    <string name="rate_dialog_google_play">Google Play</string>
+    <string name="rate_dialog_support">Поддержка</string>
+    <string name="rate_dialog_later">Позже</string>
+    <string name="rate_dialog_hint_positive">Пожалуйста, оставьте отзыв в Google Play</string>
+    <string name="rate_dialog_hint_negative">Пожалуйста, напишите в Поддержку</string>
+    <string name="rate_dialog_thanks">Спасибо!</string>
 </resources>

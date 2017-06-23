@@ -32,17 +32,17 @@ class FilterApplicatorImpl
         //local helper functions:
         fun resolveFilters(course: Course, now: Long, applyFilters: (Course, endDate: Long?, isAfterBeginOrNotStartable: Boolean, isBeginDateInFuture: Boolean, isEndDateInFuture: Boolean, isEnded: Boolean, filterSet: Set<StepikFilter>) -> Boolean, filterSet: Set<StepikFilter>): Boolean {
             var beginDate: Long? = null
-            course.begin_date?.let {
+            course.beginDate?.let {
                 beginDate = DateTime(it).millis
             }
 
             var endDate: Long? = null
-            course.end_date?.let {
+            course.endDate?.let {
                 endDate = DateTime(it).millis
             }
 
             var isEnded: Boolean = false
-            course.last_deadline?.let {
+            course.lastDeadline?.let {
                 val lastDeadlineMillis = DateTime(it).millis
                 if (now > lastDeadlineMillis) {
                     isEnded = true

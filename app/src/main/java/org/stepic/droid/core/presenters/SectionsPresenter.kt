@@ -26,8 +26,9 @@ class SectionsPresenter
         private val api: Api,
         private val databaseFacade: DatabaseFacade) : PresenterBase<SectionsView>() {
 
-    val sectionList: MutableList<Section> = ArrayList()
-    val isLoading: AtomicBoolean = AtomicBoolean(false)
+    private val sectionList: MutableList<Section> = ArrayList()
+    private val isLoading: AtomicBoolean = AtomicBoolean(false)
+    private var cachedCourseId = 0L
     val progressMap: HashMap<String, ProgressViewModel> = HashMap()
 
     fun showSections(course: Course?, isRefreshing: Boolean) {
@@ -36,7 +37,7 @@ class SectionsPresenter
             return
         }
 
-        if (sectionList.isNotEmpty() && !isRefreshing) {
+        if (sectionList.isNotEmpty() && !isRefreshing && cachedCourseId == course.courseId) {
             view?.onNeedShowSections(sectionList)
             return
         }
@@ -70,6 +71,7 @@ class SectionsPresenter
                             progressMap.putAll(progressMapLocal)
                             sectionList.clear()
                             sectionList.addAll(sectionsFromCache)
+                            cachedCourseId = course.courseId
                             view?.onNeedShowSections(sectionList)
                         }
                     }
@@ -108,6 +110,7 @@ class SectionsPresenter
                                 progressMap.putAll(progressMapOnBackground)
                                 sectionList.clear()
                                 sectionList.addAll(sections)
+                                cachedCourseId = course.courseId
                                 if (sectionList.isEmpty()) {
                                     view?.onEmptySections()
                                 } else {

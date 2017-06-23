@@ -13,16 +13,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.squareup.otto.Subscribe;
-
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
+import org.stepic.droid.core.dropping.contract.DroppingListener;
+import org.stepic.droid.core.dropping.contract.DroppingPoster;
 import org.stepic.droid.core.presenters.PersistentCourseListPresenter;
 import org.stepic.droid.core.presenters.contracts.FilterForCoursesView;
-import org.stepic.droid.events.courses.FailDropCourseEvent;
-import org.stepic.droid.events.courses.SuccessDropCourseEvent;
-import org.stepic.droid.events.joining_course.SuccessJoinEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.storage.operations.Table;
 import org.stepic.droid.ui.fragments.CourseListFragmentBase;
@@ -39,13 +36,19 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase implements FilterForCoursesView, OnBackClickListener {
+public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase implements FilterForCoursesView, OnBackClickListener, DroppingListener {
     private static final int FILTER_REQUEST_CODE = 776;
 
     private boolean needFilter = false;
 
     @Inject
     PersistentCourseListPresenter courseListPresenter;
+
+    @Inject
+    DroppingPoster droppingPoster;
+
+    @Inject
+    Client<DroppingListener> droppingClient;
 
     BackButtonHandler backButtonHandler = null;
     private boolean isScreenCreated;
@@ -63,10 +66,19 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
     @Override
     protected void injectComponent() {
-        App.Companion.component()
+        App.Companion
+                .componentManager()
+                .courseGeneralComponent()
                 .courseListComponentBuilder()
                 .build()
                 .inject(this);
+    }
+
+    @Override
+    protected void onReleaseComponent() {
+        App.Companion
+                .componentManager()
+                .releaseCourseGeneralComponent();
     }
 
     @Override
@@ -95,17 +107,9 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     }
 
     @Override
-    @Subscribe
-    public void onSuccessJoin(SuccessJoinEvent e) {
-        //We do not upgrade database, because when
-        //Only for find courses event.
-        super.onSuccessJoin(e);
-    }
-
-    @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        bus.register(this);
+        droppingClient.subscribe(this);
         courseListPresenter.attachView(this);
         courseListPresenter.restoreState();
     }
@@ -128,7 +132,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
     @Override
     public void onDestroyView() {
-        bus.unregister(this);
+        droppingClient.unsubscribe(this);
         courseListPresenter.detachView(this);
         super.onDestroyView();
     }
@@ -138,6 +142,9 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
         super.onCreateContextMenu(menu, v, menuInfo);
 
         ContextMenuRecyclerView.RecyclerViewContextMenuInfo info = (ContextMenuRecyclerView.RecyclerViewContextMenuInfo) menuInfo;
+        if (info == null) {
+            return;
+        }
         int position = info.position;
         if (position >= courses.size() && position < 0) {
             return; // the context will not be displayed
@@ -197,59 +204,17 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
                         }
                     });
 
-                    bus.post(new SuccessDropCourseEvent(getCourseType(), localRef));
+                    droppingPoster.successDropCourse(localRef);
                 }
 
                 @Override
                 public void onFailure(Call<Void> call, Throwable t) {
-                    bus.post(new FailDropCourseEvent(getCourseType(), localRef));
+                    droppingPoster.failDropCourse(localRef);
                 }
             });
         } else {
             Toast.makeText(getContext(), R.string.cant_drop, Toast.LENGTH_SHORT).show();
         }
-    }
-
-    @Subscribe
-    public void onSuccessDrop(final SuccessDropCourseEvent e) {
-        long courseId = -1L;
-        if (e.getCourse() != null) {
-            courseId = e.getCourse().getCourseId();
-        }
-        analytic.reportEvent(Analytic.Web.DROP_COURSE_SUCCESSFUL, courseId + "");
-        Toast.makeText(getContext(), getContext().getString(R.string.you_dropped) + " " + e.getCourse().getTitle(), Toast.LENGTH_LONG).show();
-        if (getCourseType() == Table.enrolled) { //why here was e.getCourseType?
-            courses.remove(e.getCourse());
-            coursesAdapter.notifyDataSetChanged();
-        } else if (getCourseType() == Table.featured) {
-            int position = -1;
-            for (int i = 0; i < courses.size(); i++) {
-                Course courseItem = courses.get(i);
-                if (courseItem.getCourseId() == e.getCourse().getCourseId()) {
-                    courseItem.setEnrollment(0);
-                    position = i;
-                    break;
-                }
-            }
-            if (position >= 0 && position < courses.size()) {
-                coursesAdapter.notifyItemChanged(position);
-            }
-        }
-
-
-        if (courses.size() == 0) {
-            showEmptyScreen(true);
-        }
-    }
-
-    @Subscribe
-    public void onFailDrop(FailDropCourseEvent e) {
-        long courseId = -1L;
-        if (e.getCourse() != null) {
-            courseId = e.getCourse().getCourseId();
-        }
-        analytic.reportEvent(Analytic.Web.DROP_COURSE_FAIL, courseId + "");
-        Toast.makeText(getContext(), R.string.internet_problem, Toast.LENGTH_LONG).show();
     }
 
     private void showInfo(int position) {
@@ -356,5 +321,43 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
             backButtonHandler = null;
         }
         super.onDetach();
+    }
+
+    @Override
+    public void onFailDropCourse(@NotNull Course droppedCourse) {
+        long courseId = -1L;
+        courseId = droppedCourse.getCourseId();
+        analytic.reportEvent(Analytic.Web.DROP_COURSE_FAIL, courseId + "");
+        Toast.makeText(getContext(), R.string.internet_problem, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onSuccessDropCourse(@NotNull Course droppedCourse) {
+        long courseId = -1L;
+        courseId = droppedCourse.getCourseId();
+        analytic.reportEvent(Analytic.Web.DROP_COURSE_SUCCESSFUL, courseId + "");
+        Toast.makeText(getContext(), getContext().getString(R.string.you_dropped) + " " + droppedCourse.getTitle(), Toast.LENGTH_LONG).show();
+        if (getCourseType() == Table.enrolled) { //why here was e.getCourseType?
+            courses.remove(droppedCourse);
+            coursesAdapter.notifyDataSetChanged();
+        } else if (getCourseType() == Table.featured) {
+            int position = -1;
+            for (int i = 0; i < courses.size(); i++) {
+                Course courseItem = courses.get(i);
+                if (courseItem.getCourseId() == droppedCourse.getCourseId()) {
+                    courseItem.setEnrollment(0);
+                    position = i;
+                    break;
+                }
+            }
+            if (position >= 0 && position < courses.size()) {
+                coursesAdapter.notifyItemChanged(position);
+            }
+        }
+
+
+        if (courses.size() == 0) {
+            showEmptyScreen(true);
+        }
     }
 }
