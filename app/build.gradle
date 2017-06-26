@@ -68,6 +68,14 @@ android {
         prod {
             dimension "type"
         }
+
+        oldProd {
+            //the apk of this type is signed by old prod keys
+            //it makes apk testable (sign in, smart lock, etc are worked).
+            //now new sign configs are used for providing to Google Play
+            //assemble with oldProd on release/* branches
+            dimension "type"
+        }
     }
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -111,6 +119,7 @@ android {
         release {
             productFlavors.classic.signingConfig signingConfigs.release
             productFlavors.sb.signingConfig signingConfigs.oldRelease
+            productFlavors.oldProd.signingConfig signingConfigs.oldRelease
 
             minifyEnabled true
             shrinkResources true
