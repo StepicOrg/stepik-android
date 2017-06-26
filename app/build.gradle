@@ -36,8 +36,8 @@ android {
         applicationId "org.stepic.droid"
         minSdkVersion rootProject.androidMinSdkVersion
         targetSdkVersion rootProject.androidTargetSdkVersion
-        versionCode 163
-        versionName "1.36.2"
+        versionCode 164
+        versionName "1.37"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -66,6 +66,14 @@ android {
         }
 
         prod {
+            dimension "type"
+        }
+
+        oldProd {
+            //the apk of this type is signed by old prod keys
+            //it makes apk testable (sign in, smart lock, etc are worked).
+            //now new sign configs are used for providing to Google Play
+            //assemble with oldProd on release/* branches
             dimension "type"
         }
     }
@@ -111,6 +119,7 @@ android {
         release {
             productFlavors.classic.signingConfig signingConfigs.release
             productFlavors.sb.signingConfig signingConfigs.oldRelease
+            productFlavors.oldProd.signingConfig signingConfigs.oldRelease
 
             minifyEnabled true
             shrinkResources true
