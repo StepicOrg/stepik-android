@@ -117,9 +117,9 @@ android {
 
     buildTypes {
         release {
-            productFlavors.classic.signingConfig signingConfigs.release
+            productFlavors.prodClassic.signingConfig signingConfigs.release
             productFlavors.sb.signingConfig signingConfigs.oldRelease
-            productFlavors.oldProd.signingConfig signingConfigs.oldRelease
+            productFlavors.oldProdClassic.signingConfig signingConfigs.oldRelease
 
             minifyEnabled true
             shrinkResources true
