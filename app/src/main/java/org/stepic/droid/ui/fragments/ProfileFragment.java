@@ -91,20 +91,20 @@ public class ProfileFragment extends FragmentBase implements ProfileView, Notifi
     @BindView(R.id.currentStreakValue)
     TextView currentStreakValue;
 
-    @BindView(R.id.currentStreakSuffix)
-    TextView currentStreakSuffix;
+//    @BindView(R.id.currentStreakSuffix)
+//    TextView currentStreakSuffix;
 
-    @BindView(R.id.currentStreakPrefix)
-    TextView currentStreakPrefix;
+//    @BindView(R.id.currentStreakPrefix)
+//    TextView currentStreakPrefix;
 
-    @BindView(R.id.maxStreakPrefix)
-    TextView maxStreakPrefix;
+//    @BindView(R.id.maxStreakPrefix)
+//    TextView maxStreakPrefix;
 
     @BindView(R.id.maxStreakValue)
     TextView maxStreakValue;
 
-    @BindView(R.id.maxStreakSuffix)
-    TextView maxStreakSuffix;
+//    @BindView(R.id.maxStreakSuffix)
+//    TextView maxStreakSuffix;
 
     @BindView(R.id.shortBioTitle)
     TextView shortBioTitle;
@@ -139,17 +139,17 @@ public class ProfileFragment extends FragmentBase implements ProfileView, Notifi
     @BindView(R.id.content_root)
     View contentRoot;
 
-    @BindView(R.id.notificationStreakSwitch)
-    BetterSwitch notificationStreakSwitch;
-
-    @BindView(R.id.notificationIntervalTitle)
-    View notificationIntervalTitle;
-
-    @BindView(R.id.notificationIntervalValue)
-    TextView notificationIntervalValue;
-
-    @BindView(R.id.notificationTimeZoneInfo)
-    TextView notificationTimeZoneInfo;
+//    @BindView(R.id.notificationStreakSwitch)
+//    BetterSwitch notificationStreakSwitch;
+//
+//    @BindView(R.id.notificationIntervalTitle)
+//    View notificationIntervalTitle;
+//
+//    @BindView(R.id.notificationIntervalValue)
+//    TextView notificationIntervalValue;
+//
+//    @BindView(R.id.notificationTimeZoneInfo)
+//    TextView notificationTimeZoneInfo;
 
     long userId;
     private UserViewModel localUserViewModel = null;
@@ -175,7 +175,7 @@ public class ProfileFragment extends FragmentBase implements ProfileView, Notifi
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_profile, container, false);
+        return inflater.inflate(R.layout.fragment_profile_new, container, false);
     }
 
     @Override
@@ -208,17 +208,17 @@ public class ProfileFragment extends FragmentBase implements ProfileView, Notifi
             }
         });
 
-        notificationIntervalValue.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                analytic.reportEvent(Analytic.Interaction.CLICK_CHOOSE_NOTIFICATION_INTERVAL);
-                DialogFragment dialogFragment = TimeIntervalPickerDialogFragment.Companion.newInstance();
-                if (!dialogFragment.isAdded()) {
-                    dialogFragment.setTargetFragment(ProfileFragment.this, NOTIFICATION_INTERVAL_REQUEST_CODE);
-                    dialogFragment.show(getFragmentManager(), null);
-                }
-            }
-        });
+//        notificationIntervalValue.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                analytic.reportEvent(Analytic.Interaction.CLICK_CHOOSE_NOTIFICATION_INTERVAL);
+//                DialogFragment dialogFragment = TimeIntervalPickerDialogFragment.Companion.newInstance();
+//                if (!dialogFragment.isAdded()) {
+//                    dialogFragment.setTargetFragment(ProfileFragment.this, NOTIFICATION_INTERVAL_REQUEST_CODE);
+//                    dialogFragment.show(getFragmentManager(), null);
+//                }
+//            }
+//        });
     }
 
     private void initTimezone() {
@@ -230,17 +230,17 @@ public class ProfileFragment extends FragmentBase implements ProfileView, Notifi
                 .toFormatter();
         DateTime utc = DateTime.now(DateTimeZone.UTC).withMillisOfDay(0);
         String print = dateTimeFormatter.print(utc.withZone(DateTimeZone.getDefault()));
-        notificationTimeZoneInfo.setText(getString(R.string.streak_updated_timezone, print));
+//        notificationTimeZoneInfo.setText(getString(R.string.streak_updated_timezone, print));
     }
 
     @Override
     public void onDestroyView() {
-        notificationStreakSwitch.setOnCheckedChangeListener(null);
+//        notificationStreakSwitch.setOnCheckedChangeListener(null);
         profileName.setOnClickListener(null);
         currentStreakValue.setOnClickListener(null);
         maxStreakValue.setOnClickListener(null);
         profileImage.setOnClickListener(null);
-        notificationIntervalValue.setOnClickListener(null);
+//        notificationIntervalValue.setOnClickListener(null);
         streakPresenter.detachView(this);
         profilePresenter.detachView(this);
         super.onDestroyView();
@@ -252,6 +252,7 @@ public class ProfileFragment extends FragmentBase implements ProfileView, Notifi
         //noinspection ConstantConditions
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         activity.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
+        activity.getSupportActionBar().setElevation(0f);
     }
 
     @SuppressLint("SetTextI18n")
@@ -260,24 +261,24 @@ public class ProfileFragment extends FragmentBase implements ProfileView, Notifi
         String suffixCurrent = getResources().getQuantityString(R.plurals.day_number, currentStreak);
         String suffixMax = getResources().getQuantityString(R.plurals.day_number, maxStreak);
 
-        currentStreakSuffix.setText(suffixCurrent);
-        maxStreakSuffix.setText(suffixMax);
+//        currentStreakSuffix.setText(suffixCurrent);
+//        maxStreakSuffix.setText(suffixMax);
 
-        currentStreakValue.setText(currentStreak + "");
-        maxStreakValue.setText(maxStreak + "");
+        currentStreakValue.setText(currentStreak + " " + suffixCurrent);
+        maxStreakValue.setText(maxStreak + " " + suffixMax);
 
         showStreakRoot(true);
     }
 
     private void showStreakRoot(boolean needShow) {
         if (needShow) {
-            currentStreakSuffix.setVisibility(View.VISIBLE);
+//            currentStreakSuffix.setVisibility(View.VISIBLE);
             currentStreakValue.setVisibility(View.VISIBLE);
-            currentStreakPrefix.setVisibility(View.VISIBLE);
+//            currentStreakPrefix.setVisibility(View.VISIBLE);
 
-            maxStreakSuffix.setVisibility(View.VISIBLE);
+//            maxStreakSuffix.setVisibility(View.VISIBLE);
             maxStreakValue.setVisibility(View.VISIBLE);
-            maxStreakPrefix.setVisibility(View.VISIBLE);
+//            maxStreakPrefix.setVisibility(View.VISIBLE);
         }
     }
 
@@ -307,7 +308,17 @@ public class ProfileFragment extends FragmentBase implements ProfileView, Notifi
         }
 
         mainInfoRoot.setVisibility(View.VISIBLE);
-        profileName.setText(userViewModel.getFullName());
+        String[] nameArray = userViewModel.getFullName().split("\\s+");
+        StringBuilder builder = new StringBuilder();
+        for (String nameArrayItem : nameArray) {
+            if (builder.length() != 0) {
+                builder.append("\n");
+            }
+            builder.append(nameArrayItem);
+        }
+
+
+        profileName.setText(builder.toString());
         if (userViewModel.getImageLink() != null && userViewModel.getImageLink().endsWith(AppConstants.SVG_EXTENSION)) {
             GenericRequestBuilder<Uri, InputStream, SVG, PictureDrawable> svgRequestBuilder = GlideSvgRequestFactory.create(getContext(), userPlaceholder);
             Uri uri = Uri.parse(userViewModel.getImageLink());
@@ -363,37 +374,37 @@ public class ProfileFragment extends FragmentBase implements ProfileView, Notifi
 
     @Override
     public void showNotificationEnabledState(boolean notificationEnabled, @NotNull String notificationTimeValueString) {
-        notificationStreakSwitch.setChecked(notificationEnabled);
-        if (notificationStreakSwitch.getVisibility() != View.VISIBLE) {
-            notificationStreakSwitch.setVisibility(View.VISIBLE);
-        }
-        if (notificationEnabled) {
-            hideNotificationTime(false);
-        } else {
-            hideNotificationTime(true);
-        }
-
-        notificationStreakSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                streakPresenter.switchNotificationStreak(isChecked);
-                hideNotificationTime(!isChecked);
-            }
-        });
-        notificationIntervalValue.setText(notificationTimeValueString); //need to set for show default value, when user enable it
+//        notificationStreakSwitch.setChecked(notificationEnabled);
+//        if (notificationStreakSwitch.getVisibility() != View.VISIBLE) {
+//            notificationStreakSwitch.setVisibility(View.VISIBLE);
+//        }
+//        if (notificationEnabled) {
+//            hideNotificationTime(false);
+//        } else {
+//            hideNotificationTime(true);
+//        }
+//
+//        notificationStreakSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                streakPresenter.switchNotificationStreak(isChecked);
+//                hideNotificationTime(!isChecked);
+//            }
+//        });
+//        notificationIntervalValue.setText(notificationTimeValueString); //need to set for show default value, when user enable it
     }
 
     @Override
     public void hideNotificationTime(boolean needHide) {
         int visibility = needHide ? View.GONE : View.VISIBLE;
-        notificationTimeZoneInfo.setVisibility(visibility);
-        notificationIntervalTitle.setVisibility(visibility);
-        notificationIntervalValue.setVisibility(visibility);
+//        notificationTimeZoneInfo.setVisibility(visibility);
+//        notificationIntervalTitle.setVisibility(visibility);
+//        notificationIntervalValue.setVisibility(visibility);
     }
 
     @Override
     public void setNewTimeInterval(@NotNull String timePresentationString) {
-        notificationIntervalValue.setText(timePresentationString);
+//        notificationIntervalValue.setText(timePresentationString);
     }
 
     @Override
@@ -410,12 +421,6 @@ public class ProfileFragment extends FragmentBase implements ProfileView, Notifi
         }
     }
 
-
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-
-
-    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

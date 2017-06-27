@@ -40,7 +40,7 @@
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:layout_gravity="center_vertical"
-            app:border_color="#FF000000"
+            app:civ_border_color="#FF000000"
             tools:src="@drawable/general_placeholder"/>
 
         <TextView

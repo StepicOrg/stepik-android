@@ -1,6 +1,6 @@
 <resources>
 
-    <style name="AppTheme" parent="AppTheme.15"/>
+    <style name="AppTheme" parent="AppTheme.15" />
 
     <style name="AppTheme.15" parent="@style/Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/stepic_brand_primary</item>
@@ -29,13 +29,11 @@
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
     </style>
 
-    <style name="AppBottomSheetDialogTheme"
-           parent="Theme.Design.Light.BottomSheetDialog">
+    <style name="AppBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/AppModalStyle</item>
     </style>
 
-    <style name="AppModalStyle"
-           parent="Widget.Design.BottomSheet.Modal">
+    <style name="AppModalStyle" parent="Widget.Design.BottomSheet.Modal">
         <item name="behavior_peekHeight">@dimen/custom_peek_height</item>
     </style>
 
@@ -64,7 +62,7 @@
         <item name="android:colorBackground">@color/login_launch_registration_background</item>
     </style>
 
-    <style name="AppTheme.VideoPlayer" parent="AppTheme.VideoPlayer.7"/>
+    <style name="AppTheme.VideoPlayer" parent="AppTheme.VideoPlayer.7" />
 
     <style name="AppTheme.VideoPlayer.7" parent="Theme.AppCompat">
         <item name="colorAccent">@color/white</item>
@@ -247,6 +245,10 @@
         <item name="android:textSize">@dimen/rate_dialog_button_text_size</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
+    </style>
+
+    <style name="ProfileTheme" parent="AppTheme">
+        <item name="android:windowContentOverlay">@null</item>
     </style>
 
 

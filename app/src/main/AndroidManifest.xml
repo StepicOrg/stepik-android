@@ -385,6 +385,7 @@
         </activity>
 
         <activity
+            android:theme="@style/ProfileTheme"
             android:name=".ui.activities.ProfileActivity"
             android:label="@string/profile_title"
             android:windowSoftInputMode="adjustResize|stateHidden">
