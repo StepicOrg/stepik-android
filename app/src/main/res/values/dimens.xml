@@ -87,4 +87,5 @@
     <dimen name="margin_rewind">56dp</dimen>
 
     <dimen name="rate_dialog_button_text_size">16sp</dimen>
+    <dimen name="profile_round_rectangle_radius">16dp</dimen>
 </resources>

@@ -20,7 +20,9 @@
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
     </android.support.design.widget.AppBarLayout>
 
+    <!--todo: remove background and set it for theme-->
     <FrameLayout
+        android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
@@ -36,6 +38,14 @@
                 android:orientation="vertical"
                 android:visibility="gone"
                 tools:visibility="visible">
+
+                <FrameLayout
+                    android:layout_margin="10dp"
+                    android:background="@drawable/profile_round_rectangle_drawable"
+                    android:layout_width="300dp"
+                    android:layout_height="300dp">
+
+                </FrameLayout>
 
 
 
