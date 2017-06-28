@@ -110,8 +110,7 @@ android {
 
     buildTypes {
         release {
-            productFlavors.classic.signingConfig signingConfigs.release
-            productFlavors.sb.signingConfig signingConfigs.oldRelease
+            signingConfig signingConfigs.release
 
             minifyEnabled true
             shrinkResources true
@@ -132,9 +131,9 @@ android {
         //it makes apk testable (sign in, smart lock, etc are worked).
         //now new sign configs are used for providing to Google Play
         //assemble with oldProd on release/* branches
-        staging {
+        oldRelease {
             initWith release
-            productFlavors.classic.signingConfig signingConfigs.oldRelease
+            signingConfig signingConfigs.oldRelease
         }
     }
 }
