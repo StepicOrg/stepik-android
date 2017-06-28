@@ -110,8 +110,8 @@ android {
 
     buildTypes {
         release {
-            productFlavors.classic.signingConfig signingConfigs.release
             productFlavors.sb.signingConfig signingConfigs.oldRelease
+            productFlavors.classic.signingConfig signingConfigs.release
 
             minifyEnabled true
             shrinkResources true
