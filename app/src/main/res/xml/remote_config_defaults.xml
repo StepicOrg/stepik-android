@@ -4,4 +4,9 @@
         <key>continue_course_experiment_enabled</key>
         <value>false</value>
     </entry>
+
+    <entry>
+        <key>min_delay_rate_dialog_sec</key>
+        <value>86400</value>
+    </entry>
 </defaultsMap>

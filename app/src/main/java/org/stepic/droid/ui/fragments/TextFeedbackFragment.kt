@@ -1,5 +1,6 @@
 package org.stepic.droid.ui.fragments
 
+import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Context
 import android.os.Bundle
@@ -150,7 +151,8 @@ class TextFeedbackFragment : FragmentBase(), TextFeedbackView {
 
     override fun onFeedbackSent() {
         Toast.makeText(context, R.string.feedback_sent, Toast.LENGTH_SHORT).show()
-        screenManager.showMainFeed(activity)
+        activity.setResult(Activity.RESULT_OK)
+        activity?.finish()
     }
 
     override fun onDestroyView() {

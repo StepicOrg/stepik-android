@@ -238,4 +238,16 @@
         <item name="android:layout_height">@dimen/exo_media_button_height</item>
     </style>
 
+    <style name="RateItemTextView">
+        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:clickable">true</item>
+        <item name="android:padding">@dimen/guideline_standard_padding</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textSize">@dimen/rate_dialog_button_text_size</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+    </style>
+
+
 </resources>

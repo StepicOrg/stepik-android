@@ -6,9 +6,9 @@ import dagger.Component
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.base.FragmentBase
-import org.stepic.droid.concurrency.DownloadPoster
 import org.stepic.droid.di.certificates.CertificateComponent
 import org.stepic.droid.di.course_general.CourseGeneralComponent
+import org.stepic.droid.di.downloads.DownloadsComponent
 import org.stepic.droid.di.feedback.FeedbackComponent
 import org.stepic.droid.di.filters.FilterComponent
 import org.stepic.droid.di.lesson.LessonComponent
@@ -25,7 +25,6 @@ import org.stepic.droid.notifications.HackerFcmInstanceId
 import org.stepic.droid.notifications.NotificationBroadcastReceiver
 import org.stepic.droid.receivers.BootCompletedReceiver
 import org.stepic.droid.receivers.DownloadClickReceiver
-import org.stepic.droid.receivers.DownloadCompleteReceiver
 import org.stepic.droid.receivers.InternetConnectionEnabledReceiver
 import org.stepic.droid.services.*
 import org.stepic.droid.ui.adapters.*
@@ -34,7 +33,6 @@ import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout
 import org.stepic.droid.ui.custom.LatexSupportableWebView
 import org.stepic.droid.ui.custom_exo.PlaybackControlView
 import org.stepic.droid.ui.dialogs.*
-import org.stepic.droid.ui.fragments.DownloadsFragment
 
 @AppSingleton
 @Component(dependencies = arrayOf(StorageComponent::class), modules = arrayOf(AppCoreModule::class, RepositoryModule::class, AppStepModule::class))
@@ -51,6 +49,8 @@ interface AppCoreComponent {
     }
 
     fun feedbackComponentBuilder(): FeedbackComponent.Builder
+
+    fun downloadsComponentBuilder(): DownloadsComponent.Builder
 
     fun loginComponentBuilder(): LoginComponent.Builder
 
@@ -80,8 +80,6 @@ interface AppCoreComponent {
 
     fun inject(baseFragment: FragmentBase)
 
-    fun inject(baseFragment: DownloadsFragment)
-
     fun inject(dialogFragment: DiscountingPolicyDialogFragment)
 
     fun inject(adapter: UnitAdapter)
@@ -91,10 +89,6 @@ interface AppCoreComponent {
     fun inject(dialogFragment: VideoQualityDialog)
 
     fun inject(loadService: LoadService)
-
-    fun inject(loadService: DeleteService)
-
-    fun inject(downloadCompleteReceiver: DownloadCompleteReceiver)
 
     fun inject(viewPusher: ViewPusher)
 
@@ -123,8 +117,6 @@ interface AppCoreComponent {
     fun inject(needUpdatingDialog: NeedUpdatingDialog)
 
     fun inject(service: UpdateWithApkService)
-
-    fun inject(downloadPoster: DownloadPoster)
 
     fun inject(chooseStorageDialog: ChooseStorageDialog)
 
@@ -165,4 +157,6 @@ interface AppCoreComponent {
     fun inject(playbackControlView: PlaybackControlView)
 
     fun inject(videoQualityDialogInPlayer: VideoQualityDialogInPlayer)
+
+    fun inject(rateAppDialogFragment: RateAppDialogFragment)
 }
