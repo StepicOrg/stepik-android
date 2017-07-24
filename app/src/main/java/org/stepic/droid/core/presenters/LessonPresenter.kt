@@ -3,7 +3,6 @@ package org.stepic.droid.core.presenters
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.LessonView
-import org.stepic.droid.di.step.StepScope
 import org.stepic.droid.di.lesson.LessonScope
 import org.stepic.droid.model.Lesson
 import org.stepic.droid.model.Section
@@ -141,6 +140,13 @@ class LessonPresenter
                     this.stepList.addAll(stepList)
                     view?.showSteps(fromPreviousLesson, defaultStepPositionStartWithOne)
                 }
+            }
+
+            if (!isStepsShown && it.steps?.isEmpty() ?: true) {
+                mainHandler.post {
+                    view?.onEmptySteps()
+                }
+                return
             }
 
             // and try to update from internet
