@@ -30,14 +30,13 @@ class LessonPresenter
         private val sharedPreferenceHelper: SharedPreferenceHelper,
         private val analytic: Analytic) : PresenterBase<LessonView>() {
 
-    var lesson: Lesson? = null
-        private set
+    private var lesson: Lesson? = null
 
-    var isLoading = AtomicBoolean(false)
+    private var isLoading = AtomicBoolean(false)
 
-    var unit: Unit? = null
+    private var unit: Unit? = null
 
-    var section: Section? = null
+    private var section: Section? = null
 
     val stepList = ArrayList<Step>()
 
@@ -56,9 +55,19 @@ class LessonPresenter
         }
 
         if (lesson != null) {
-            //already loaded if THIS.Lesson != null -> show
             view?.onLessonUnitPrepared(lesson, unit, this.section)
-            view?.showSteps(fromPreviousLesson, defaultStepPositionStartWithOne)
+            if (this.stepList.isNotEmpty()) {
+                view?.showSteps(fromPreviousLesson, defaultStepPositionStartWithOne)
+            } else {
+                isLoading.set(true)
+                threadPoolExecutor.execute {
+                    try {
+                        loadSteps(defaultStepPositionStartWithOne, fromPreviousLesson)
+                    } finally {
+                        isLoading.set(false)
+                    }
+                }
+            }
             return
         }
 
@@ -334,5 +343,4 @@ class LessonPresenter
             // unit can be null for lesson, which is not in Course
         }
     }
-
 }

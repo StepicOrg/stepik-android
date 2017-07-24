@@ -138,7 +138,7 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
     View authView;
 
     @BindString(R.string.connectionProblems)
-    String connectioinProblemString;
+    String connectionProblemString;
 
     @BindView(R.id.empty_steps)
     View emptySteps;
@@ -206,8 +206,7 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
             stepsPresenter.init(lesson, unit, lessonId, unitId, defaultStepPos, fromPreviousLesson, section);
             fromPreviousLesson = false;
         } else {
-            onLessonUnitPrepared(lesson, unit, section);
-            showSteps(fromPreviousLesson, -1);
+            stepsPresenter.init();
         }
         updatingStepListenerClient.subscribe(this);
     }
@@ -395,7 +394,7 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
         if (stepsPresenter.getStepList().isEmpty()) {
             reportProblem.setVisibility(View.VISIBLE);
         } else {
-            Toast.makeText(getActivity(), connectioinProblemString, Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), connectionProblemString, Toast.LENGTH_LONG).show();
         }
     }
 
