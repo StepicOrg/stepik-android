@@ -77,6 +77,11 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         upgradeFrom19To20();
         upgradeFrom20To21(db);
         upgradeFrom21To22(db);
+        upgradeFrom22To23(db);
+    }
+
+    private void upgradeFrom22To23(SQLiteDatabase db) {
+        alterColumn(db, DbStructureBlock.BLOCKS, DbStructureBlock.Column.EXTERNAL_VIDEO_DURATION, LONG_TYPE);
     }
 
     private void upgradeFrom21To22(SQLiteDatabase db) {
@@ -289,6 +294,11 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         if (oldVersion < 22) {
             upgradeFrom21To22(db);
         }
+
+        if (oldVersion < 23) {
+            upgradeFrom22To23(db);
+        }
+
     }
 
     private void upgradeFrom3To4(SQLiteDatabase db) {

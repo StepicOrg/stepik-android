@@ -12,8 +12,9 @@ import java.util.List;
 public class Video implements Parcelable, Serializable {
     private long id;
     private String thumbnail;
-
     private List<VideoUrl> urls;
+    private long duration; //check for 0
+
 
     @Override
     public int describeContents() {
@@ -25,6 +26,7 @@ public class Video implements Parcelable, Serializable {
         dest.writeLong(this.id);
         dest.writeString(this.thumbnail);
         dest.writeList(this.urls);
+        dest.writeLong(this.duration);
     }
 
     public Video() {
@@ -47,6 +49,7 @@ public class Video implements Parcelable, Serializable {
         this.thumbnail = in.readString();
         this.urls = new ArrayList<>();
         in.readList(this.urls, App.Companion.getAppContext().getClassLoader());
+        this.duration = in.readLong();
     }
 
     public static final Creator<Video> CREATOR = new Creator<Video>() {
@@ -69,5 +72,13 @@ public class Video implements Parcelable, Serializable {
 
     public String getThumbnail() {
         return thumbnail;
+    }
+
+    public long getDuration() {
+        return duration;
+    }
+
+    public void setDuration(long duration) {
+        this.duration = duration;
     }
 }
