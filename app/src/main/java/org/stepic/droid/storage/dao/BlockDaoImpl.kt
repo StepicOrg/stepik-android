@@ -98,6 +98,12 @@ constructor(
         if (blockWrapper != null && blockWrapper.block != null) {
             val cachedVideo = videoDao.get(DbStructureCachedVideo.Column.STEP_ID, blockWrapper.stepId.toString() + "")
             blockWrapper.block.cachedLocalVideo = cachedVideo?.transformToVideo() // not local video is saved only with stepId = -1
+
+            val durationOfExternalVideo = blockWrapper.block.video?.duration ?: 0
+            if (durationOfExternalVideo > 0) {
+                //set it from external, because the cached video does not have this property
+                blockWrapper.block.cachedLocalVideo?.duration = durationOfExternalVideo
+            }
         }
     }
 
