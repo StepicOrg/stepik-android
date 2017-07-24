@@ -1,5 +1,6 @@
 package org.stepic.droid.ui.activities;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
@@ -13,6 +14,12 @@ import org.stepic.droid.util.AppConstants;
 import java.util.List;
 
 public class UnitsActivity extends SingleFragmentActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setTitle(R.string.units_lessons_title);
+    }
 
     @Override
     public void finish() {

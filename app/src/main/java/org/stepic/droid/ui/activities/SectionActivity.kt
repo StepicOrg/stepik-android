@@ -1,6 +1,7 @@
 package org.stepic.droid.ui.activities
 
 import android.content.Intent
+import android.os.Bundle
 import android.support.annotation.NonNull
 import android.support.v4.app.Fragment
 import org.stepic.droid.R
@@ -36,5 +37,10 @@ class SectionActivity : SingleFragmentActivity() {
                 fragment?.onRequestPermissionsResult(requestCode, permissions, grantResults)
             }
         }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setTitle(R.string.syllabus_title);
     }
 }

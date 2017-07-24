@@ -62,7 +62,6 @@ import org.stepic.droid.services.UpdateWithApkService;
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment;
 import org.stepic.droid.ui.dialogs.LogoutAreYouSureDialog;
 import org.stepic.droid.ui.dialogs.NeedUpdatingDialog;
-import org.stepic.droid.ui.dialogs.RateAppDialogFragment;
 import org.stepic.droid.ui.fragments.CertificateFragment;
 import org.stepic.droid.ui.fragments.DownloadsFragment;
 import org.stepic.droid.ui.fragments.FindCoursesFragment;
@@ -85,7 +84,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.BindDrawable;
-import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
@@ -122,9 +120,6 @@ public class MainFeedActivity extends BackToExitActivityBase
     TextView userNameTextView;
 
     View signInProfileView;
-
-    @BindString(R.string.my_courses_title)
-    String coursesTitle;
 
     @BindDrawable(R.drawable.general_placeholder)
     Drawable userPlaceholder;

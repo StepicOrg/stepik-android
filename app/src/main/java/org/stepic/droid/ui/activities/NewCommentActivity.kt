@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.MenuItem
+import org.stepic.droid.R
 import org.stepic.droid.base.SingleFragmentActivity
 import org.stepic.droid.ui.fragments.NewCommentFragment
 import org.stepic.droid.ui.util.BackButtonHandler
@@ -31,6 +32,7 @@ class NewCommentActivity : SingleFragmentActivity(), BackButtonHandler {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.setBackgroundDrawable(null)
+        setTitle(R.string.new_comment_title)
     }
 
     override fun createFragment(): Fragment? {
