@@ -15,13 +15,31 @@ class VideoLengthPresenter
         private val mainHandler: MainHandler,
         private val videoResolver: VideoResolver,
         private val videoLengthResolver: VideoLengthResolver) : PresenterBase<VideoLengthView>() {
-    var cachedFormat: String? = null
+
+    companion object {
+        private val millisecondsInSecond = 1000L
+    }
+
+    private var cachedFormat: String? = null
 
     fun fetchLength(video: Video?, thumbnailPath: String?) {
         cachedFormat?.let {
             view?.onVideoLengthDetermined(it, thumbnailPath)
             return
         }
+
+        video?.let {
+            if (it.duration <= 0) {
+                return@let
+            }
+
+            //the duration from server
+            val printable = TimeUtil.getFormattedVideoTime(video.duration * millisecondsInSecond)
+            cachedFormat = printable
+            view?.onVideoLengthDetermined(printable, thumbnailPath)
+            return
+        }
+
         threadPoolExecutor.execute {
             val path = videoResolver.resolveVideoUrl(video)
             val millis = videoLengthResolver.determineLengthInMillis(path)

@@ -36,13 +36,16 @@ constructor(
         //now get video related info:
         val indexExternalVideoThumbnail = cursor.getColumnIndex(DbStructureBlock.Column.EXTERNAL_THUMBNAIL)
         val indexExternalVideoId = cursor.getColumnIndex(DbStructureBlock.Column.EXTERNAL_VIDEO_ID)
+        val indexExternalVideoDuration = cursor.getColumnIndex(DbStructureBlock.Column.EXTERNAL_VIDEO_DURATION)
 
         val externalThumbnail = cursor.getString(indexExternalVideoThumbnail)
         val externalVideoId = cursor.getLong(indexExternalVideoId)
+        val externalVideoDuration = cursor.getLong(indexExternalVideoDuration)
         if (externalThumbnail != null && externalVideoId > 0) {
             val video = Video()
             video.thumbnail = externalThumbnail
             video.id = externalVideoId
+            video.duration = externalVideoDuration
             block.video = video
         }
 
@@ -61,6 +64,7 @@ constructor(
 
         val externalVideo = blockWrapper.block.video
         if (externalVideo != null) {
+            values.put(DbStructureBlock.Column.EXTERNAL_VIDEO_DURATION, externalVideo.duration)
             values.put(DbStructureBlock.Column.EXTERNAL_THUMBNAIL, externalVideo.thumbnail)
             values.put(DbStructureBlock.Column.EXTERNAL_VIDEO_ID, externalVideo.id)
         }
