@@ -50,23 +50,21 @@ class LessonPresenter
              fromPreviousLesson: Boolean = false,
              section: Section? = null) {
 
-        if (isLoading.get()) {
-            return
-        }
-
         if (lesson != null) {
             view?.onLessonUnitPrepared(lesson, unit, this.section)
-            if (this.stepList.isNotEmpty()) {
-                view?.showSteps(fromPreviousLesson, defaultStepPositionStartWithOne)
-            } else {
-                isLoading.set(true)
-                threadPoolExecutor.execute {
-                    try {
-                        loadSteps(defaultStepPositionStartWithOne, fromPreviousLesson)
-                    } finally {
-                        isLoading.set(false)
+            if (this.stepList.isEmpty()) {
+                if (isLoading.compareAndSet(false, true)) {
+                    threadPoolExecutor.execute {
+                        try {
+                            loadSteps(defaultStepPositionStartWithOne, fromPreviousLesson)
+                        } finally {
+                            isLoading.set(false)
+                        }
                     }
                 }
+            }
+            else{
+                view?.showSteps(fromPreviousLesson, defaultStepPositionStartWithOne)
             }
             return
         }
