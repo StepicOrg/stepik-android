@@ -113,13 +113,16 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
         return fragment;
     }
 
+
+    private boolean isRestarted = false;
+
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
     @BindView(R.id.viewpager)
     ViewPager viewPager;
 
-    @BindView(R.id.tabs)
+    @BindView(R.id.stepsTabs)
     TabLayout tabLayout;
 
     @BindView(R.id.loadProgressbar)
@@ -138,7 +141,7 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
     View authView;
 
     @BindString(R.string.connectionProblems)
-    String connectioinProblemString;
+    String connectionProblemString;
 
     @BindView(R.id.empty_steps)
     View emptySteps;
@@ -181,6 +184,9 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        if (savedInstanceState != null) {
+            isRestarted = true;
+        }
 
         boolean keepScreenOnSteps = userPreferences.isKeepScreenOnSteps();
         if (keepScreenOnSteps) {
@@ -206,8 +212,12 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
             stepsPresenter.init(lesson, unit, lessonId, unitId, defaultStepPos, fromPreviousLesson, section);
             fromPreviousLesson = false;
         } else {
-            onLessonUnitPrepared(lesson, unit, section);
-            showSteps(fromPreviousLesson, -1);
+            if (stepsPresenter.getStepList().isEmpty()) {
+                stepsPresenter.init();
+            } else {
+                onLessonUnitPrepared(lesson, unit, section);
+                showSteps(fromPreviousLesson, -1);
+            }
         }
         updatingStepListenerClient.subscribe(this);
     }
@@ -258,6 +268,11 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
     }
 
     private void pushState(int position) {
+        if (isRestarted) {
+            isRestarted = false;
+            return;
+        }
+
         reportSelectedPageToGoogle(position);
         boolean isTryToPushFirstStep = position == 0;
         if (isTryToPushFirstStep && fromPreviousLesson && stepsPresenter.getStepList().size() != 1) {
@@ -395,7 +410,7 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
         if (stepsPresenter.getStepList().isEmpty()) {
             reportProblem.setVisibility(View.VISIBLE);
         } else {
-            Toast.makeText(getActivity(), connectioinProblemString, Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), connectionProblemString, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -515,6 +530,11 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
     private int previousGoogleIndexedPosition = -1;
 
     private void reportSelectedPageToGoogle(int position) {
+        if (position == previousGoogleIndexedPosition) {
+            // do not index twice
+            return;
+        }
+
         int stepListSize = stepsPresenter.getStepList().size();
         if (previousGoogleIndexedPosition >= 0 && previousGoogleIndexedPosition < stepListSize) {
             stopIndexStep(stepsPresenter.getStepList().get(previousGoogleIndexedPosition));
