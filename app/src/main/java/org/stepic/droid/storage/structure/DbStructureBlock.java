@@ -10,5 +10,6 @@ public final class DbStructureBlock {
 
         public static final String EXTERNAL_THUMBNAIL = "optional_thumbnail";
         public static final String EXTERNAL_VIDEO_ID = "optional_video_id";
+        public static final String EXTERNAL_VIDEO_DURATION = "optional_video_duration";
     }
 }

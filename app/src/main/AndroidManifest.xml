@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
-    package="org.stepic.droid"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    package="org.stepic.droid"
     android:installLocation="auto">
 
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -31,10 +31,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="false"
         android:theme="@style/AppTheme"
-        tools:replace="allowBackup, supportsRtl"
-    >
+        tools:replace="allowBackup, supportsRtl">
 
-        <meta-data android:name="asset_statements" android:resource="@string/asset_statements"/>
+        <meta-data
+            android:name="asset_statements"
+            android:resource="@string/asset_statements"/>
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -42,15 +43,15 @@
 
         <activity
             android:name="org.stepic.droid.ui.activities.SplashActivity"
-            android:theme="@style/AppTheme.BrandedLaunch"
-            android:noHistory="true">
-        </activity>
+            android:noHistory="true"
+            android:theme="@style/AppTheme.BrandedLaunch"/>
 
         <activity-alias
             android:name="org.stepic.droid.view.activities.SplashActivity"
             android:targetActivity="org.stepic.droid.ui.activities.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
+
                 <category android:name="android.intent.category.LAUNCHER"/>
                 <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER"/>
             </intent-filter>
@@ -81,21 +82,17 @@
         <activity
             android:name="org.stepic.droid.ui.activities.LoginActivity"
             android:launchMode="singleTop"
-            android:theme="@style/AppTheme.LoginLaunchRegistration">
-        </activity>
+            android:theme="@style/AppTheme.LoginLaunchRegistration"/>
 
         <activity
             android:name="org.stepic.droid.ui.activities.MainFeedActivity"
-            android:label="@string/my_courses_title"
             android:launchMode="singleTask">
             <meta-data
                 android:name="android.app.default_searchable"
                 android:value=".ui.activities.CourseSearchResultActivity"/>
         </activity>
 
-        <activity
-            android:name=".ui.activities.CourseDetailActivity"
-            android:label="@string/course_info_title">
+        <activity android:name=".ui.activities.CourseDetailActivity">
 
             <intent-filter
                 android:autoVerify="true"
@@ -119,7 +116,6 @@
 
         <activity
             android:name=".ui.activities.SectionActivity"
-            android:label="@string/syllabus_title"
             android:parentActivityName=".ui.activities.MainFeedActivity">
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
@@ -145,7 +141,6 @@
 
         <activity
             android:name=".ui.activities.StepsActivity"
-            android:label="@string/steps_title"
             android:parentActivityName=".ui.activities.UnitsActivity">
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
@@ -209,9 +204,7 @@
 
         </activity>
 
-        <activity
-            android:name=".ui.activities.UnitsActivity"
-            android:label="@string/units_lessons_title"/>
+        <activity android:name=".ui.activities.UnitsActivity"/>
 
         <receiver
             android:name="org.stepic.droid.receivers.DownloadCompleteReceiver"
@@ -237,24 +230,16 @@
             </intent-filter>
         </receiver>
 
-        <service
-            android:name="org.stepic.droid.services.NewUserAlarmService"/>
-        <service
-            android:name="org.stepic.droid.services.StreakAlarmService"/>
-        <service
-            android:name="org.stepic.droid.services.LoadService"/>
-        <service
-            android:name="org.stepic.droid.services.DeleteService"/>
-        <service
-            android:name="org.stepic.droid.services.ViewPusher"/>
-        <service
-            android:name="org.stepic.droid.services.CancelLoadingService"/>
-        <service
-            android:name="org.stepic.droid.services.UpdateWithApkService"/>
+        <service android:name="org.stepic.droid.services.NewUserAlarmService"/>
+        <service android:name="org.stepic.droid.services.StreakAlarmService"/>
+        <service android:name="org.stepic.droid.services.LoadService"/>
+        <service android:name="org.stepic.droid.services.DeleteService"/>
+        <service android:name="org.stepic.droid.services.ViewPusher"/>
+        <service android:name="org.stepic.droid.services.CancelLoadingService"/>
+        <service android:name="org.stepic.droid.services.UpdateWithApkService"/>
 
         <activity
             android:name=".ui.activities.CourseSearchResultActivity"
-            android:label="@string/search_title"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH"/>
@@ -266,7 +251,6 @@
 
         <activity
             android:name=".ui.activities.TextFeedbackActivity"
-            android:label="@string/feedback_title"
             android:parentActivityName="org.stepic.droid.ui.activities.MainFeedActivity">
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
@@ -278,18 +262,15 @@
             android:name=".ui.activities.VideoActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:hardwareAccelerated="true"
-            android:label="@string/video_title"
             android:theme="@style/AppTheme.VideoPlayer"/>
 
-        <service
-            android:name=".notifications.StepicFcmListenerService">
+        <service android:name=".notifications.StepicFcmListenerService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
 
-        <service
-            android:name=".notifications.StepicInstanceIdService">
+        <service android:name=".notifications.StepicInstanceIdService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
             </intent-filter>
@@ -297,7 +278,6 @@
 
         <activity
             android:name=".ui.activities.SettingsActivity"
-            android:label="@string/settings_title"
             android:launchMode="singleTop"
             android:parentActivityName=".ui.activities.MainFeedActivity">
             <!-- Parent activity meta-data to support 4.0 and lower -->
@@ -313,7 +293,6 @@
 
         <activity
             android:name=".ui.activities.FeedbackActivity"
-            android:label="@string/feedback_title"
             android:launchMode="singleTop"
             android:parentActivityName=".ui.activities.MainFeedActivity">
             <!-- Parent activity meta-data to support 4.0 and lower -->
@@ -325,7 +304,6 @@
 
         <activity
             android:name=".ui.activities.AboutAppActivity"
-            android:label="@string/about_app"
             android:launchMode="singleTop"
             android:parentActivityName=".ui.activities.SettingsActivity">
             <!-- Parent activity meta-data to support 4.0 and lower -->
@@ -336,7 +314,6 @@
 
         <activity
             android:name=".ui.activities.StoreManagementActivity"
-            android:label="@string/space_management_title"
             android:launchMode="singleTop"
             android:parentActivityName=".ui.activities.SettingsActivity">
             <!-- Parent activity meta-data to support 4.0 and lower -->
@@ -353,7 +330,6 @@
 
         <activity
             android:name=".ui.activities.CommentsActivity"
-            android:label="@string/comments_title"
             android:launchMode="singleTop"
             android:parentActivityName=".ui.activities.StepsActivity">
             <!-- Parent activity meta-data to support 4.0 and lower -->
@@ -364,7 +340,6 @@
 
         <activity
             android:name=".ui.activities.NewCommentActivity"
-            android:label="@string/new_comment_title"
             android:parentActivityName=".ui.activities.CommentsActivity"
             android:windowSoftInputMode="adjustResize|stateHidden">
             <!-- Parent activity meta-data to support 4.0 and lower -->
@@ -375,7 +350,6 @@
 
         <activity
             android:name=".ui.activities.FilterActivity"
-            android:label="@string/filter_title"
             android:parentActivityName=".ui.activities.MainFeedActivity"
             android:windowSoftInputMode="adjustResize|stateHidden">
             <!-- Parent activity meta-data to support 4.0 and lower -->
@@ -386,7 +360,6 @@
 
         <activity
             android:name=".ui.activities.ProfileActivity"
-            android:label="@string/profile_title"
             android:windowSoftInputMode="adjustResize|stateHidden">
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <intent-filter
@@ -424,12 +397,25 @@
             android:name=".ui.activities.PhotoViewActivity"
             android:theme="@style/AppTheme.PhotoView"/>
 
-        <uses-library android:name="com.sec.android.app.multiwindow" android:required="false"/>
-        <meta-data android:name="com.sec.android.support.multiwindow" android:value="true"/>
-        <meta-data android:name="com.sec.android.multiwindow.DEFAULT_SIZE_W" android:value="632dp"/>
-        <meta-data android:name="com.sec.android.multiwindow.DEFAULT_SIZE_H" android:value="598dp"/>
-        <meta-data android:name="com.sec.android.multiwindow.MINIMUM_SIZE_W" android:value="632dp"/>
-        <meta-data android:name="com.sec.android.multiwindow.MINIMUM_SIZE_H" android:value="598dp"/>
+        <uses-library
+            android:name="com.sec.android.app.multiwindow"
+            android:required="false"/>
+
+        <meta-data
+            android:name="com.sec.android.support.multiwindow"
+            android:value="true"/>
+        <meta-data
+            android:name="com.sec.android.multiwindow.DEFAULT_SIZE_W"
+            android:value="632dp"/>
+        <meta-data
+            android:name="com.sec.android.multiwindow.DEFAULT_SIZE_H"
+            android:value="598dp"/>
+        <meta-data
+            android:name="com.sec.android.multiwindow.MINIMUM_SIZE_W"
+            android:value="632dp"/>
+        <meta-data
+            android:name="com.sec.android.multiwindow.MINIMUM_SIZE_H"
+            android:value="598dp"/>
 
     </application>
 </manifest>

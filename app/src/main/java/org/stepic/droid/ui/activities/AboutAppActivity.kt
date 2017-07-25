@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
-import butterknife.ButterKnife
 import org.stepic.droid.R
 import org.stepic.droid.base.SingleFragmentActivity
 import org.stepic.droid.ui.fragments.AboutAppFragment
@@ -23,7 +22,7 @@ open class AboutAppActivity : SingleFragmentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        ButterKnife.bind(this)
+        setTitle(R.string.about_app_title)
         toolbar = findViewById(R.id.toolbar) as Toolbar
         setUpToolbar()
     }

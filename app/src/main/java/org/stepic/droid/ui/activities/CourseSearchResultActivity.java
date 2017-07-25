@@ -39,6 +39,7 @@ public class CourseSearchResultActivity extends FragmentActivityBase {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTitle(R.string.search_title);
         setContentView(R.layout.activity_search_courses);
         unbinder = ButterKnife.bind(this);
 

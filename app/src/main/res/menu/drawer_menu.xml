@@ -58,7 +58,7 @@
             android:id="@+id/information"
             android:checkable="false"
             android:icon="@drawable/ic_info_outline_white_24dp"
-            android:title="@string/about_app"/>
+            android:title="@string/about_app_title"/>
 
 
         <item
