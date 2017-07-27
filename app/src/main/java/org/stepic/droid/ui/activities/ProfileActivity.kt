@@ -2,8 +2,10 @@ package org.stepic.droid.ui.activities
 
 import android.content.pm.ShortcutManager
 import android.net.Uri
+import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.MenuItem
+import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.SingleFragmentActivity
 import org.stepic.droid.ui.fragments.ProfileFragment
@@ -13,6 +15,11 @@ class ProfileActivity : SingleFragmentActivity() {
 
     companion object {
         val optionalUserIdKey = "optionalUserIdKey"
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setTitle(R.string.profile_title)
     }
 
     override fun createFragment(): Fragment? {
@@ -44,7 +51,6 @@ class ProfileActivity : SingleFragmentActivity() {
             return -1;
         }
     }
-
 
     override fun onBackPressed() {
         super.onBackPressed()

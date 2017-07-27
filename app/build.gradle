@@ -36,8 +36,8 @@ android {
         applicationId "org.stepic.droid"
         minSdkVersion rootProject.androidMinSdkVersion
         targetSdkVersion rootProject.androidTargetSdkVersion
-        versionCode 163
-        versionName "1.36.2"
+        versionCode 164
+        versionName "1.37"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -68,6 +68,7 @@ android {
         prod {
             dimension "type"
         }
+
     }
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -109,8 +110,7 @@ android {
 
     buildTypes {
         release {
-            productFlavors.classic.signingConfig signingConfigs.release
-            productFlavors.sb.signingConfig signingConfigs.oldRelease
+            signingConfig signingConfigs.release
 
             minifyEnabled true
             shrinkResources true
@@ -124,6 +124,16 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'),
                     'proguard-rules.pro'
             versionNameSuffix "DEV"
+        }
+
+
+        //the apk of this type is signed by old prod keys
+        //it makes apk testable (sign in, smart lock, etc are worked).
+        //now new sign configs are used for providing to Google Play
+        //assemble with oldProd on release/* branches
+        oldRelease {
+            initWith release
+            signingConfig signingConfigs.oldRelease
         }
     }
 }

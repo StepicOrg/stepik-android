@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
-import butterknife.ButterKnife
 import org.stepic.droid.R
 import org.stepic.droid.base.SingleFragmentActivity
 import org.stepic.droid.ui.fragments.FeedbackFragment
@@ -23,7 +22,7 @@ class FeedbackActivity : SingleFragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.setBackgroundDrawable(null)
-        ButterKnife.bind(this)
+        setTitle(R.string.feedback_title)
         toolbar = findViewById(R.id.toolbar) as Toolbar
         setUpToolbar()
     }

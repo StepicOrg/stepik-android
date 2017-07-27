@@ -15,6 +15,7 @@ class TextFeedbackActivity : SingleFragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.setBackgroundDrawable(null)
+        setTitle(R.string.feedback_title)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

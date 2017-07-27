@@ -1,7 +1,9 @@
 package org.stepic.droid.ui.activities
 
+import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.KeyEvent
+import org.stepic.droid.R
 import org.stepic.droid.base.SingleFragmentActivity
 import org.stepic.droid.model.Video
 import org.stepic.droid.ui.fragments.VideoExoFragment
@@ -44,6 +46,11 @@ class VideoActivity : SingleFragmentActivity() {
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
         // If the event was not handled then see if the player view can handle it as a media key event.
         return super.dispatchKeyEvent(event) || (fragment as KeyDispatchableFragment).dispatchKeyEventInFragment(event)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setTitle(R.string.video_title)
     }
 
 }

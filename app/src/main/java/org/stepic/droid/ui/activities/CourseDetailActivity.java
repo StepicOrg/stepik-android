@@ -75,4 +75,10 @@ public class CourseDetailActivity extends SingleFragmentActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setTitle(R.string.course_info_title);
+    }
 }

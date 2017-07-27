@@ -24,6 +24,7 @@ open class SettingsActivity : SingleFragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         ButterKnife.bind(this)
+        setTitle(R.string.settings_title)
         toolbar = findViewById(R.id.toolbar) as Toolbar
         setUpToolbar()
     }
