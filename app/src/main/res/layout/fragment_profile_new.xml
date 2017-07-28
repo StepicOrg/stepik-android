@@ -22,10 +22,10 @@
 
             <TextView
                 android:id="@+id/toolbarTitle"
-                android:textAppearance="@style/StepikToolbarTextAppearance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"/>
+                android:layout_gravity="center"
+                android:textAppearance="@style/StepikToolbarTextAppearance"/>
 
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
@@ -228,7 +228,6 @@
                             fontPath="fonts/Roboto-Light.ttf"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignLeft="@id/notificationIntervalTitle"
                             android:layout_below="@+id/notificationIntervalTitle"
                             android:layout_marginBottom="16dp"
                             android:layout_toLeftOf="@id/notification_arrow_image"
