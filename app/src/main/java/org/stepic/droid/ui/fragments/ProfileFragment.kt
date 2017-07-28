@@ -120,9 +120,11 @@ class ProfileFragment : FragmentBase(),
         val activity = activity as AppCompatActivity
         activity.setSupportActionBar(toolbar)
 
+        //for preventing showing default title
         activity.supportActionBar!!.setDisplayShowTitleEnabled(false)
-        activity.supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        activity.supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp)
+
+//        activity.supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+//        activity.supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp)
         activity.supportActionBar!!.elevation = 0f
 
         toolbarTitle.setText(R.string.profile_title)
