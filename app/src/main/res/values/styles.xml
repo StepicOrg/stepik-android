@@ -1,5 +1,39 @@
 <resources>
 
+    <style name="StepikTheme" parent="StepikTheme.15"/>
+
+    <style name="StepikTheme.15" parent="@style/Theme.AppCompat.Light">
+        <item name="colorPrimary">#F6F6F6</item>
+        <item name="colorPrimaryDark">@color/new_main_color</item>
+        <item name="colorAccent">@color/new_main_color</item>
+
+        <!--this change the background of main window (activity)-->
+        <item name="android:windowBackground">@color/white</item>
+
+        <!--this change the background of main window (activity and) AND all the components (dialogs) -->
+        <item name="android:colorBackground">@color/white</item>
+
+        <item name="android:textColor">@color/stepic_regular_text</item>
+        <item name="android:textViewStyle">@style/AppTheme.Widget.TextView</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:actionMenuTextColor">@color/white</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="buttonStyle">@style/StepicButton</item>
+        <item name="android:textAppearance">@style/TextAppearance.FontPath</item>
+        <item name="android:dialogTheme">@style/AppTheme.Dialog</item>
+        <item name="dialogTheme">@style/AppTheme.Dialog</item>
+        <item name="android:alertDialogTheme">@style/AppTheme.Dialog</item>
+        <item name="alertDialogTheme">@style/AppTheme.Dialog</item>
+        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
+
+        <item name="colorSwitchThumbNormal">#D8D8D8</item>
+        <item name="android:colorForeground">#c7c7c7</item>
+
+        <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+    </style>
+
+
     <style name="AppTheme" parent="AppTheme.15"/>
 
     <style name="AppTheme.15" parent="@style/Theme.AppCompat.Light.DarkActionBar">
@@ -65,7 +99,7 @@
         <item name="android:colorBackground">@color/login_launch_registration_background</item>
     </style>
 
-    <style name="AppTheme.VideoPlayer" parent="AppTheme.VideoPlayer.7" />
+    <style name="AppTheme.VideoPlayer" parent="AppTheme.VideoPlayer.7"/>
 
     <style name="AppTheme.VideoPlayer.7" parent="Theme.AppCompat">
         <item name="colorAccent">@color/white</item>
@@ -262,6 +296,15 @@
 
     <style name="ProfileTheme" parent="AppTheme">
         <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <style name="StepikToolbarTheme" parent="@style/ThemeOverlay.AppCompat.Light">
+    </style>
+
+    <style name="StepikToolbarTextAppearance" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">16sp</item>
+        <item name="fontPath">fonts/Roboto-Light.ttf</item>
+        <item name="android:textColor">@color/new_main_color</item>
     </style>
 
 

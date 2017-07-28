@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <string name="yet_have_not_account">Регистрация с e-mail</string>
     <string name="stepik_free_courses_title">Stepik.org: бесплатные курсы</string>
@@ -346,14 +346,14 @@
     </string>
     <string name="too_many_attempts">Слишком много неверных попыток. Попробуйте позже</string>
     <string name="profile_title">Профиль</string>
-    <string name="current_streak">Решаю без перерыва</string>
+    <string name="current_streak">Текущий рекорд</string>
     <string name="solving_without_break">@string/current_streak</string>
     <string name="max_streak">Мой рекорд</string>
     <string name="about_me">Обо мне</string>
     <string name="short_bio">Краткая биография</string>
     <string name="user_info">Информация</string>
     <plurals name="day_number">
-        <item quantity="one">день</item>
+        <item quantity="one" tools:ignore="ImpliedQuantity">день</item>
         <item quantity="few">дня</item>
         <item quantity="many">дней</item>
         <item quantity="other">дней</item>

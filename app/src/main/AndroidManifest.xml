@@ -359,7 +359,7 @@
         </activity>
 
         <activity
-            android:theme="@style/ProfileTheme"
+            android:theme="@style/StepikTheme"
             android:name=".ui.activities.ProfileActivity"
             android:windowSoftInputMode="adjustResize|stateHidden">
             <!-- Parent activity meta-data to support 4.0 and lower -->
