@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                 xmlns:tools="http://schemas.android.com/tools"
+                                                 android:layout_width="match_parent"
+                                                 android:layout_height="match_parent">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBarLayout"
-        app:elevation="0dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:elevation="0dp">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -17,7 +17,7 @@
             android:layout_height="@dimen/abc_action_bar_default_height_material"
             android:background="@color/new_secondary_color"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
     </android.support.design.widget.AppBarLayout>
 
     <!--todo: remove background and set it for theme-->
@@ -28,26 +28,28 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <android.support.v4.widget.NestedScrollView
+            android:id="@+id/contentRoot"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            tools:visibility="visible">
 
             <LinearLayout
-                android:id="@+id/content_root"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:baselineAligned="false"
                 android:orientation="vertical"
-                android:visibility="gone"
-                tools:visibility="visible">
+                >
 
                 <FrameLayout
-                    tools:visibility="visible"
-                    android:visibility="gone"
                     android:id="@+id/mainInfoRoot"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="32dp"
                     android:layout_marginRight="32dp"
-                    android:layout_marginTop="28dp">
+                    android:layout_marginTop="28dp"
+                    android:visibility="gone"
+                    tools:visibility="visible">
 
 
                     <android.support.constraint.ConstraintLayout
@@ -59,9 +61,8 @@
                         android:paddingTop="16dp">
 
                         <TextView
-                            tools:ignore="MissingPrefix"
-                            fontPath="fonts/Roboto-Light.ttf"
                             android:id="@+id/profileName"
+                            fontPath="fonts/Roboto-Light.ttf"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center"
@@ -72,66 +73,67 @@
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintRight_toRightOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                             />
+                            tools:ignore="MissingPrefix"
+                            />
 
 
                         <TextView
-                            tools:ignore="MissingPrefix"
-                            fontPath="fonts/Roboto-Light.ttf"
                             android:id="@+id/currentStreakValue"
+                            fontPath="fonts/Roboto-Light.ttf"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="32dp"
                             android:layout_marginTop="14dp"
                             android:gravity="left"
-                            android:text="77 days"
                             android:textColor="@color/new_main_color"
                             android:textSize="16sp"
                             app:layout_constraintLeft_toLeftOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/profileName" />
+                            app:layout_constraintTop_toBottomOf="@+id/profileName"
+                            tools:ignore="MissingPrefix"
+                            tools:text="77 days"/>
 
                         <TextView
-                            tools:ignore="MissingPrefix"
+                            android:id="@+id/currentStreakSuffix"
                             fontPath="fonts/Roboto-Light.ttf"
-                            android:id="@+id/textView2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="0dp"
                             android:layout_marginTop="0dp"
                             android:gravity="left"
-                            android:text="Current streak"
+                            android:text="@string/current_streak"
                             android:textColor="@color/new_main_color"
                             android:textSize="12sp"
                             app:layout_constraintLeft_toLeftOf="@+id/currentStreakValue"
-                            app:layout_constraintTop_toBottomOf="@+id/currentStreakValue" />
+                            app:layout_constraintTop_toBottomOf="@+id/currentStreakValue"
+                            tools:ignore="MissingPrefix"/>
 
                         <TextView
-                            tools:ignore="MissingPrefix"
-                            fontPath="fonts/Roboto-Light.ttf"
                             android:id="@+id/maxStreakValue"
+                            fontPath="fonts/Roboto-Light.ttf"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginRight="32dp"
                             android:gravity="right"
-                            android:text="365 days"
                             android:textColor="@color/new_main_color"
                             android:textSize="16sp"
                             app:layout_constraintBaseline_toBaselineOf="@+id/currentStreakValue"
-                            app:layout_constraintRight_toRightOf="parent" />
+                            app:layout_constraintRight_toRightOf="parent"
+                            tools:ignore="MissingPrefix"
+                            tools:text="365 days"/>
 
                         <TextView
-                            tools:ignore="MissingPrefix"
+                            android:id="@+id/maxStreakSuffix"
                             fontPath="fonts/Roboto-Light.ttf"
-                            android:id="@+id/textView3"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginRight="0dp"
                             android:gravity="right"
-                            android:text="Max streak"
+                            android:text="@string/max_streak"
                             android:textColor="@color/new_main_color"
                             android:textSize="12sp"
-                            app:layout_constraintBaseline_toBaselineOf="@+id/textView2"
-                            app:layout_constraintRight_toRightOf="@+id/maxStreakValue" />
+                            app:layout_constraintBaseline_toBaselineOf="@+id/currentStreakSuffix"
+                            app:layout_constraintRight_toRightOf="@+id/maxStreakValue"
+                            tools:ignore="MissingPrefix"/>
 
 
                         <ImageView
@@ -142,10 +144,10 @@
                             android:layout_marginRight="8dp"
                             android:layout_marginTop="8dp"
                             android:src="@drawable/ic_lightning"
-                            app:layout_constraintBottom_toBottomOf="@+id/textView2"
+                            app:layout_constraintBottom_toBottomOf="@+id/currentStreakSuffix"
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintTop_toTopOf="@+id/currentStreakValue" />
+                            app:layout_constraintTop_toTopOf="@+id/currentStreakValue"/>
 
 
                     </android.support.constraint.ConstraintLayout>
@@ -154,17 +156,99 @@
                         android:id="@+id/profileImage"
                         android:layout_width="100dp"
                         android:layout_height="100dp"
-                        app:civ_border_width="1dp"
-                        app:civ_border_color="@color/new_border_color"
                         android:layout_gravity="center_horizontal"
-                        tools:src="@drawable/dialog_background" />
+                        app:civ_border_color="@color/new_border_color"
+                        app:civ_border_width="1dp"
+                        tools:src="@drawable/dialog_background"/>
                 </FrameLayout>
 
+
+                <org.stepic.droid.ui.custom.BetterSwitch
+                    android:id="@+id/notificationStreakSwitch"
+                    style="@style/NewSettingSwitch"
+                    fontPath="fonts/Roboto-Light.ttf"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:paddingLeft="32dp"
+                    android:paddingRight="32dp"
+                    android:text="@string/notification_about_learning"
+                    android:visibility="gone"
+                    tools:visibility="visible"/>
+
+                <FrameLayout
+                    android:id="@+id/notificationIntervalChooser"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:foreground="@drawable/non_radius_foreground">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/notificationIntervalTitle"
+                            fontPath="fonts/Roboto-Light.ttf"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_toLeftOf="@+id/notificationIntervalValue"
+                            android:paddingBottom="4dp"
+                            android:paddingLeft="32dp"
+                            android:paddingRight="32dp"
+                            android:paddingTop="@dimen/guideline_standard_padding"
+                            android:text="@string/notification_time"
+                            android:textSize="@dimen/text_header"
+                            tools:ignore="MissingPrefix"
+                            tools:text="Notification time: 12:00 – 13:00"/>
+
+
+                        <ImageView
+                            android:id="@+id/notification_arrow_image"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="24dp"
+                            android:src="@drawable/ic_nav_arrow_right"/>
+
+                        <TextView
+                            android:id="@+id/notificationTimeZoneInfo"
+                            fontPath="fonts/Roboto-Light.ttf"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignLeft="@id/notificationIntervalTitle"
+                            android:layout_below="@+id/notificationIntervalTitle"
+                            android:layout_marginBottom="16dp"
+                            android:layout_toLeftOf="@id/notification_arrow_image"
+                            android:paddingLeft="32dp"
+                            android:paddingRight="@dimen/guideline_standard_padding"
+                            android:textSize="@dimen/text_height"
+                            tools:ignore="MissingPrefix"
+                            tools:text="Рекорды обновляются в 19:00екорды обновляются в 19:00"/>
+                    </RelativeLayout>
+                </FrameLayout>
+
+                <include
+                    layout="@layout/profile_item_right_arrow"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="32dp"/>
+
+                <include
+                    layout="@layout/profile_item_right_arrow"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <include layout="@layout/profile_item_right_arrow"/>
+
                 <android.support.v7.widget.CardView
-                    android:layout_marginTop="32dp"
                     android:id="@+id/aboutMeRoot"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/notificationTimeZoneInfo"
+                    android:layout_marginTop="32dp"
                     android:visibility="gone"
                     app:cardBackgroundColor="@color/white"
                     app:cardCornerRadius="@dimen/card_corner_radius_guideline"
@@ -187,14 +271,14 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:paddingBottom="@dimen/padding_text_in_cv"
-                            tools:text="Обо мне" />
+                            tools:text="Обо мне"/>
 
                         <TextView
                             android:id="@+id/shortBioValue"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/padding_bot_top_cv"
-                            tools:text="Android expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expert" />
+                            tools:text="Android expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expert"/>
 
                         <TextView
                             android:id="@+id/infoTitle"
@@ -202,14 +286,14 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:paddingBottom="@dimen/padding_text_in_cv"
-                            android:text="@string/user_info" />
+                            android:text="@string/user_info"/>
 
                         <TextView
                             android:id="@+id/infoValue"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/padding_bot_top_cv"
-                            tools:text="Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***" />
+                            tools:text="Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***"/>
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
             </LinearLayout>
@@ -217,16 +301,19 @@
         </android.support.v4.widget.NestedScrollView>
 
         <include
+            android:id="@+id/profileLoadingView"
             layout="@layout/progress_bar_on_empty_screen"
-            tools:visibility="gone" />
+            tools:visibility="gone"/>
 
         <include
+            android:id="@+id/profileEmptyUser"
             layout="@layout/empty_users"
-            tools:visibility="gone" />
+            tools:visibility="gone"/>
 
         <include
+            android:id="@+id/profileReportProblem"
             layout="@layout/report_problem_layout"
-            tools:visibility="gone" />
+            tools:visibility="gone"/>
 
     </FrameLayout>
 
