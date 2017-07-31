@@ -122,6 +122,12 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
+    public void showNotifications(@NotNull Activity activity) {
+        // TODO: 31.07.17 implement it
+        Toast.makeText(activity, "Notifications are shown", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
     public void showLaunchScreen(Context context, boolean fromMainFeed, int index) {
         analytic.reportEvent(Analytic.Screens.SHOW_LAUNCH);
         Intent launchIntent = new Intent(context, LaunchActivity.class);
@@ -257,13 +263,13 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void showDownload() {
+    public void showDownloads() {
         Context context = App.Companion.getAppContext();
-        showDownload(context);
+        showDownloads(context);
     }
 
     @Override
-    public void showDownload(Context context) {
+    public void showDownloads(Context context) {
         int index = MainFeedActivity.getDownloadFragmentIndex();
         context.startActivity(getFromMainActivityIntent(context, index));
     }

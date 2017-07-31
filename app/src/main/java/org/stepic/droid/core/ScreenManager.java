@@ -76,9 +76,9 @@ public interface ScreenManager {
 
     void showStoreWithApp(Activity sourceActivity);
 
-    void showDownload();
+    void showDownloads();
 
-    void showDownload(Context context);
+    void showDownloads(Context context);
 
     void showFindCourses(Context context);
 
@@ -127,4 +127,6 @@ public interface ScreenManager {
     void showLaunchScreen(FragmentActivity activity, @NotNull Course course);
 
     void openImage(Context context, String path);
+
+    void showNotifications(@NotNull Activity activity);
 }

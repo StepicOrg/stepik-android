@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
 import android.view.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -22,10 +23,13 @@ import org.stepic.droid.core.presenters.StreakPresenter
 import org.stepic.droid.core.presenters.contracts.NotificationTimeView
 import org.stepic.droid.core.presenters.contracts.ProfileView
 import org.stepic.droid.model.UserViewModel
+import org.stepic.droid.ui.adapters.ProfileSettingsAdapter
 import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment
 import org.stepic.droid.ui.util.TimeIntervalUtil
 import org.stepic.droid.util.AppConstants
+import org.stepic.droid.util.ProfileSettingsHelper
 import org.stepic.droid.util.svg.GlideSvgRequestFactory
+import org.stepic.droid.viewmodel.ProfileSettingsViewModel
 import javax.inject.Inject
 
 class ProfileFragment : FragmentBase(),
@@ -48,6 +52,7 @@ class ProfileFragment : FragmentBase(),
 
     private var userId: Long = 0
     private var localUserViewModel: UserViewModel? = null
+    private var profileSettingsList: ArrayList<ProfileSettingsViewModel> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +60,8 @@ class ProfileFragment : FragmentBase(),
         userId = arguments.getLong(USER_ID_KEY)
         analytic.reportEvent(Analytic.Profile.OPEN_SCREEN_OVERALL)
         setHasOptionsMenu(true)
+        profileSettingsList.clear()
+        profileSettingsList.addAll(ProfileSettingsHelper.getProfileSettings(screenManager))
     }
 
     override fun injectComponent() {
@@ -72,6 +79,10 @@ class ProfileFragment : FragmentBase(),
         super.onViewCreated(view, savedInstanceState)
         initToolbar()
         initTimezone()
+
+        profileSettingsRecyclerView.layoutManager = LinearLayoutManager(context)
+        profileSettingsRecyclerView.adapter = ProfileSettingsAdapter(activity, profileSettingsList, screenManager)
+        profileSettingsRecyclerView.isNestedScrollingEnabled = false
 
         profilePresenter.attachView(this)
         streakPresenter.attachView(this)
