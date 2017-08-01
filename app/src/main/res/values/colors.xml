@@ -71,5 +71,6 @@
     <color name="new_secondary_color">#F6F6F6</color>
     <color name="new_border_color">@color/new_secondary_color</color>>
     <color name="new_logout_color">#C82850</color>>
+    <color name="arrow_color">#3A3947</color>>
 
 </resources>

@@ -23,7 +23,7 @@ open class AboutAppActivity : SingleFragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTitle(R.string.about_app_title)
-        toolbar = findViewById(R.id.toolbar) as Toolbar
+        toolbar = findViewById<Toolbar>(R.id.toolbar)
         setUpToolbar()
     }
 

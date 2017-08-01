@@ -6,7 +6,7 @@ import android.support.design.widget.Snackbar
 import android.widget.TextView
 
 fun Snackbar.setTextColor(@ColorInt textColor: Int): Snackbar {
-    val tv = this.view.findViewById(android.support.design.R.id.snackbar_text) as TextView
+    val tv = this.view.findViewById<TextView>(android.support.design.R.id.snackbar_text)
     tv.setTextColor(textColor)
     return this
 }

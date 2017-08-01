@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/ic_arrow_top">
+    <target
+        android:name="arrow_top"
+        android:animation="@animator/arrow_top_to_bottom"/>
+</animated-vector>

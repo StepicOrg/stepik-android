@@ -4,6 +4,7 @@ import android.content.pm.ShortcutManager
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.app.AppCompatDelegate
 import android.view.MenuItem
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
@@ -11,10 +12,16 @@ import org.stepic.droid.base.SingleFragmentActivity
 import org.stepic.droid.ui.fragments.ProfileFragment
 import org.stepic.droid.util.AppConstants
 
+
+
 class ProfileActivity : SingleFragmentActivity() {
 
     companion object {
         val optionalUserIdKey = "optionalUserIdKey"
+
+        init {
+            AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

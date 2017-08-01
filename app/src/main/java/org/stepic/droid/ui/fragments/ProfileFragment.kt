@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.*
@@ -100,6 +101,10 @@ class ProfileFragment : FragmentBase(),
                 dialogFragment.setTargetFragment(this@ProfileFragment, NOTIFICATION_INTERVAL_REQUEST_CODE)
                 dialogFragment.show(fragmentManager, null)
             }
+        }
+
+        shortBioInfoContainer.setOnClickListener {
+            shortBioArrowImageView.changeState()
         }
     }
 
@@ -197,7 +202,7 @@ class ProfileFragment : FragmentBase(),
 
 
         profileName.text = builder.toString()
-        val userPlaceholder = resources.getDrawable(R.drawable.general_placeholder, null)
+        val userPlaceholder = ContextCompat.getDrawable(context, R.drawable.general_placeholder)
         if (userViewModel.imageLink != null && userViewModel.imageLink.endsWith(AppConstants.SVG_EXTENSION)) {
             val svgRequestBuilder = GlideSvgRequestFactory.create(context, userPlaceholder)
             val uri = Uri.parse(userViewModel.imageLink)

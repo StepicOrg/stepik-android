@@ -25,7 +25,7 @@ open class SettingsActivity : SingleFragmentActivity() {
         super.onCreate(savedInstanceState)
         ButterKnife.bind(this)
         setTitle(R.string.settings_title)
-        toolbar = findViewById(R.id.toolbar) as Toolbar
+        toolbar = findViewById<Toolbar>(R.id.toolbar)
         setUpToolbar()
     }
 

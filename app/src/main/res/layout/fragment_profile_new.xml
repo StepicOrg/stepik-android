@@ -239,6 +239,37 @@
                     </RelativeLayout>
                 </FrameLayout>
 
+                <FrameLayout
+                    android:id="@+id/shortBioInfoContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:foreground="@drawable/non_radius_foreground">
+
+                    <TextView
+                        android:id="@+id/shortBioInfoHeader"
+                        fontPath="fonts/Roboto-Light.ttf"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_toLeftOf="@+id/notificationIntervalValue"
+                        android:gravity="center_vertical"
+                        android:paddingBottom="16dp"
+                        android:paddingLeft="32dp"
+                        android:paddingRight="24dp"
+                        android:paddingTop="@dimen/guideline_standard_padding"
+                        android:text="Short bio &amp; Info"
+                        android:textSize="@dimen/text_header"
+                        tools:ignore="MissingPrefix"/>
+
+                    <org.stepic.droid.ui.custom.ArrowImageView
+                        android:id="@+id/shortBioArrowImageView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end|center_vertical"
+                        android:layout_marginRight="32dp"/>
+                </FrameLayout>
+
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/profileSettingsRecyclerView"

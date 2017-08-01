@@ -471,4 +471,8 @@
     <string name="rate_dialog_hint_positive">Please, leave your feedback in the Google Play</string>
     <string name="rate_dialog_hint_negative">Please, write your feedback to Support</string>
     <string name="rate_dialog_thanks">Thanks!</string>
+
+    <!--svg paths-->
+    <string name="arrow_bottom_path" translatable="false">M 4.06 2.513 L 22.547 21 C 23.365 21.816 24.692 21.816 25.508 21 L 43.995 2.513</string>
+    <string name="arrow_top_path" translatable="false">M 4.06 22 L 22.547 3.513 C 23.365 2.697 24.692 2.697 25.508 3.512 L 43.995 22</string>
 </resources>

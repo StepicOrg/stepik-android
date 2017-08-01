@@ -23,7 +23,7 @@ class FeedbackActivity : SingleFragmentActivity() {
         super.onCreate(savedInstanceState)
         window.setBackgroundDrawable(null)
         setTitle(R.string.feedback_title)
-        toolbar = findViewById(R.id.toolbar) as Toolbar
+        toolbar = findViewById<Toolbar>(R.id.toolbar)
         setUpToolbar()
     }
 

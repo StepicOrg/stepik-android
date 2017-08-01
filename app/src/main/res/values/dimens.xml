@@ -88,4 +88,8 @@
 
     <dimen name="rate_dialog_button_text_size">16sp</dimen>
     <dimen name="profile_round_rectangle_radius">16dp</dimen>
+
+    <!--width should be 2 time greater than height-->
+    <dimen name="arrow_profile_width">24dp</dimen>
+    <dimen name="arrow_profile_height">12dp</dimen>
 </resources>

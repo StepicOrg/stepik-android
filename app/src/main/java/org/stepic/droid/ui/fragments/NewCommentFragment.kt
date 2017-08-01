@@ -97,7 +97,7 @@ class NewCommentFragment : FragmentBase(), OnBackClickListener {
     }
 
     private fun initEditBody(v: View) {
-        textBody = v.findViewById(R.id.input_comment_form) as EditText
+        textBody = v.findViewById<EditText>(R.id.input_comment_form)
     }
 
     override fun onResume() {
@@ -111,7 +111,7 @@ class NewCommentFragment : FragmentBase(), OnBackClickListener {
     }
 
     private fun initToolbar(v: View) {
-        toolbar = v.findViewById(R.id.toolbar) as Toolbar
+        toolbar = v.findViewById<Toolbar>(R.id.toolbar)
         (activity as AppCompatActivity).setSupportActionBar(toolbar)
         (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
         (activity as AppCompatActivity).supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp)
