@@ -470,4 +470,7 @@
     <string name="rate_dialog_hint_positive">Пожалуйста, оставьте отзыв в Google Play</string>
     <string name="rate_dialog_hint_negative">Пожалуйста, напишите в Поддержку</string>
     <string name="rate_dialog_thanks">Спасибо!</string>
+
+    <!--Profile screen-->
+    <string name="short_bio_and_info">Краткая биография &amp; Информация</string>
 </resources>

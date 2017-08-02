@@ -68,4 +68,8 @@ class ArrowImageView(context: Context, attrs: AttributeSet?, defStyleAttr: Int)
             super.onRestoreInstanceState(state)
         }
     }
+
+    fun isExpanded(): Boolean {
+        return !isArrowBottom
+    }
 }

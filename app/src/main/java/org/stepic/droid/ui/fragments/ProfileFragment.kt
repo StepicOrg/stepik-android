@@ -104,7 +104,54 @@ class ProfileFragment : FragmentBase(),
         }
 
         shortBioInfoContainer.setOnClickListener {
-            shortBioArrowImageView.changeState()
+            changeStateOfUserInfo(localUserViewModel!!)
+
+        }
+    }
+
+    private fun changeStateOfUserInfo(localUserViewModel: UserViewModel) {
+        shortBioArrowImageView.changeState()
+        val isExpanded = shortBioArrowImageView.isExpanded()
+        if (isExpanded) {
+            shortBioFirstText.visibility = View.VISIBLE
+            if (localUserViewModel.shortBio.isNotBlank()
+                    && localUserViewModel.information.isNotBlank()) {
+                shortBioSecondHeader.visibility = View.VISIBLE
+                shortBioSecondText.visibility = View.VISIBLE
+            }
+        } else {
+            shortBioFirstText.visibility = View.GONE
+            shortBioSecondHeader.visibility = View.GONE
+            shortBioSecondText.visibility = View.GONE
+        }
+    }
+
+    private val shortBioFirstTextKey = "shortBioFirstTextKey"
+    private val shortBioSecondHeaderKey = "shortBioSecondHeaderKey"
+    private val shortBioSecondTextKey = "shortBioSecondTextKey"
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean(shortBioFirstTextKey, shortBioFirstText.visibility == View.VISIBLE)
+        outState.putBoolean(shortBioSecondHeaderKey, shortBioSecondHeader.visibility == View.VISIBLE)
+        outState.putBoolean(shortBioSecondTextKey, shortBioSecondText.visibility == View.VISIBLE)
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        savedInstanceState?.let {
+            restoreVisibility(shortBioFirstText, it, shortBioFirstTextKey)
+            restoreVisibility(shortBioSecondHeader, it, shortBioSecondHeaderKey)
+            restoreVisibility(shortBioSecondText, it, shortBioSecondTextKey)
+        }
+
+    }
+
+    private fun restoreVisibility(view: View, bundle: Bundle, bundleKey: String) {
+        view.visibility = if (bundle.getBoolean(bundleKey)) {
+            View.VISIBLE
+        } else {
+            View.GONE
         }
     }
 
@@ -184,10 +231,7 @@ class ProfileFragment : FragmentBase(),
         activity.supportInvalidateOptionsMenu()
 
         if (userViewModel.isMyProfile) {
-            shortBioTitle.text = aboutMeTitle
             streakPresenter.tryShowNotificationSetting()
-        } else {
-            shortBioTitle.text = shortBioTitleString
         }
 
         mainInfoRoot.visibility = View.VISIBLE
@@ -219,23 +263,28 @@ class ProfileFragment : FragmentBase(),
                     .into(profileImage)
         }
 
-        if (userViewModel.shortBio.isEmpty() && userViewModel.information.isEmpty()) {
-            aboutMeRoot.visibility = View.GONE
-        } else {
-            if (userViewModel.shortBio.isNotBlank()) {
-                shortBioValue.text = userViewModel.shortBio
-                aboutMeRoot.visibility = View.VISIBLE
-            } else {
-                shortBioTitle.visibility = View.GONE
-                shortBioValue.visibility = View.GONE
+        with(userViewModel) {
+            if (shortBio.isBlank() && information.isBlank()) {
+                //do not show any header
+                shortBioInfoContainer.visibility = View.GONE
+                //todo: Show placeholder for not my profile
+            } else if (shortBio.isBlank() && information.isNotBlank()) {
+                //show header with 'information'
+                shortBioFirstHeader.setText(R.string.user_info)
+                shortBioFirstText.text = information
+            } else if (shortBio.isNotBlank() && information.isBlank()) {
+                shortBioFirstHeader.setText(R.string.short_bio)
+                shortBioFirstText.text = shortBio
+            } else if (shortBio.isNotBlank() && information.isNotBlank()) {
+                //show general header and all info
+                shortBioFirstHeader.setText(R.string.short_bio_and_info)
+                shortBioFirstText.text = shortBio
+                shortBioSecondHeader.setText(R.string.user_info)
+                shortBioSecondText.text = information
             }
 
-            if (userViewModel.information.isNotBlank()) {
-                infoValue.text = userViewModel.information
-                aboutMeRoot.visibility = View.VISIBLE
-            } else {
-                infoValue.visibility = View.GONE
-                infoTitle.visibility = View.GONE
+            if (shortBio.isNotBlank() || information.isNotBlank()) {
+                shortBioInfoContainer.visibility = View.VISIBLE
             }
         }
     }

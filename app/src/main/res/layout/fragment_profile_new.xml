@@ -245,23 +245,23 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:clickable="true"
-                    android:foreground="@drawable/non_radius_foreground">
+                    android:foreground="@drawable/non_radius_foreground"
+                    android:visibility="gone"
+                    tools:visibility="visible">
 
                     <TextView
-                        android:id="@+id/shortBioInfoHeader"
+                        android:id="@+id/shortBioFirstHeader"
                         fontPath="fonts/Roboto-Light.ttf"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_toLeftOf="@+id/notificationIntervalValue"
                         android:gravity="center_vertical"
-                        android:paddingBottom="16dp"
+                        android:paddingBottom="@dimen/guideline_standard_padding"
                         android:paddingLeft="32dp"
                         android:paddingRight="24dp"
                         android:paddingTop="@dimen/guideline_standard_padding"
-                        android:text="Short bio &amp; Info"
                         android:textSize="@dimen/text_header"
-                        tools:ignore="MissingPrefix"/>
+                        tools:ignore="MissingPrefix"
+                        tools:text="Short bio &amp; Info"/>
 
                     <org.stepic.droid.ui.custom.ArrowImageView
                         android:id="@+id/shortBioArrowImageView"
@@ -271,6 +271,51 @@
                         android:layout_marginRight="32dp"/>
                 </FrameLayout>
 
+                <TextView
+                    android:id="@+id/shortBioFirstText"
+                    fontPath="fonts/Roboto-Light.ttf"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:lineSpacingExtra="3.3sp"
+                    android:paddingBottom="@dimen/guideline_standard_padding"
+                    android:paddingLeft="32dp"
+                    android:paddingRight="32dp"
+                    android:paddingTop="4dp"
+                    android:textSize="14sp"
+                    android:visibility="gone"
+                    tools:ignore="MissingPrefix"
+                    tools:text="Lalala it is info"
+                    tools:visibility="visible"/>
+
+                <TextView
+                    android:id="@+id/shortBioSecondHeader"
+                    fontPath="fonts/Roboto-Light.ttf"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="@dimen/guideline_standard_padding"
+                    android:paddingLeft="32dp"
+                    android:paddingTop="4dp"
+                    android:text="@string/user_info"
+                    android:textSize="@dimen/text_header"
+                    android:visibility="gone"
+                    tools:ignore="MissingPrefix"
+                    tools:visibility="visible"/>
+
+                <TextView
+                    android:id="@+id/shortBioSecondText"
+                    fontPath="fonts/Roboto-Light.ttf"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:lineSpacingExtra="3.3sp"
+                    android:paddingBottom="@dimen/guideline_standard_padding"
+                    android:paddingLeft="32dp"
+                    android:paddingRight="32dp"
+                    android:paddingTop="4dp"
+                    android:textSize="14sp"
+                    android:visibility="gone"
+                    tools:ignore="MissingPrefix"
+                    tools:text="Lalala it is info"
+                    tools:visibility="visible"/>
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/profileSettingsRecyclerView"
@@ -282,59 +327,6 @@
                     android:scrollbarStyle="outsideOverlay"
                     android:splitMotionEvents="false"/>
 
-                <android.support.v7.widget.CardView
-                    android:id="@+id/aboutMeRoot"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/notificationTimeZoneInfo"
-                    android:layout_marginTop="32dp"
-                    android:visibility="gone"
-                    app:cardBackgroundColor="@color/white"
-                    app:cardCornerRadius="@dimen/card_corner_radius_guideline"
-                    app:cardPreventCornerOverlap="true"
-                    app:cardUseCompatPadding="false"
-                    app:contentPaddingLeft="@dimen/padding_text_in_cv"
-                    app:contentPaddingRight="@dimen/padding_text_in_cv"
-                    app:contentPaddingTop="@dimen/padding_bot_top_cv"
-                    tools:visibility="visible">
-
-                    <LinearLayout
-                        android:id="@+id/shortBioRoot"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/shortBioTitle"
-                            style="@style/cv_text_title"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:paddingBottom="@dimen/padding_text_in_cv"
-                            tools:text="Обо мне"/>
-
-                        <TextView
-                            android:id="@+id/shortBioValue"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="@dimen/padding_bot_top_cv"
-                            tools:text="Android expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expert"/>
-
-                        <TextView
-                            android:id="@+id/infoTitle"
-                            style="@style/cv_text_title"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:paddingBottom="@dimen/padding_text_in_cv"
-                            android:text="@string/user_info"/>
-
-                        <TextView
-                            android:id="@+id/infoValue"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="@dimen/padding_bot_top_cv"
-                            tools:text="Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***Android ***"/>
-                    </LinearLayout>
-                </android.support.v7.widget.CardView>
             </LinearLayout>
 
         </android.support.v4.widget.NestedScrollView>
