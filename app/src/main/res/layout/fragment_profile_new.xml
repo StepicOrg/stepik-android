@@ -226,7 +226,7 @@
                         <TextView
                             android:id="@+id/notificationTimeZoneInfo"
                             fontPath="fonts/Roboto-Light.ttf"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/notificationIntervalTitle"
                             android:layout_marginBottom="16dp"
@@ -235,7 +235,7 @@
                             android:paddingRight="@dimen/guideline_standard_padding"
                             android:textSize="@dimen/text_height"
                             tools:ignore="MissingPrefix"
-                            tools:text="Рекорды обновляются в 19:00екорды обновляются в 19:00"/>
+                            tools:text="Рекорды обновляются"/>
                     </RelativeLayout>
                 </FrameLayout>
 

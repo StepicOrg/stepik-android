@@ -146,7 +146,8 @@ class ProfileFragment : FragmentBase(),
     private fun initTimezone() {
         val dateTimeFormatter = DateTimeFormatterBuilder()
                 .appendHourOfDay(2)
-                .appendLiteral(":00 (")
+                .appendLiteral(":00")
+                .appendLiteral("\n(")
                 .appendTimeZoneName()
                 .appendLiteral(')')
                 .toFormatter()
