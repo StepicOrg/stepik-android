@@ -174,7 +174,6 @@
 
 
                 <org.stepic.droid.ui.custom.BetterSwitch
-                    android:checked="true"
                     android:id="@+id/notificationStreakSwitch"
                     style="@style/NewSettingSwitch"
                     fontPath="fonts/Roboto-Light.ttf"
@@ -271,51 +270,57 @@
                         android:layout_marginRight="32dp"/>
                 </FrameLayout>
 
-                <TextView
-                    android:id="@+id/shortBioFirstText"
-                    fontPath="fonts/Roboto-Light.ttf"
+                <LinearLayout
+                    android:id="@+id/detailedInfoContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:lineSpacingExtra="3.3sp"
-                    android:paddingBottom="@dimen/guideline_standard_padding"
-                    android:paddingLeft="32dp"
-                    android:paddingRight="32dp"
-                    android:paddingTop="4dp"
-                    android:textSize="14sp"
-                    android:visibility="gone"
-                    tools:ignore="MissingPrefix"
-                    tools:text="Lalala it is info"
-                    tools:visibility="visible"/>
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
-                <TextView
-                    android:id="@+id/shortBioSecondHeader"
-                    fontPath="fonts/Roboto-Light.ttf"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="@dimen/guideline_standard_padding"
-                    android:paddingLeft="32dp"
-                    android:paddingTop="4dp"
-                    android:text="@string/user_info"
-                    android:textSize="@dimen/text_header"
-                    android:visibility="gone"
-                    tools:ignore="MissingPrefix"
-                    tools:visibility="visible"/>
+                    <TextView
+                        android:id="@+id/shortBioFirstText"
+                        fontPath="fonts/Roboto-Light.ttf"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:lineSpacingExtra="3.3sp"
+                        android:paddingBottom="@dimen/guideline_standard_padding"
+                        android:paddingLeft="32dp"
+                        android:paddingRight="32dp"
+                        android:paddingTop="4dp"
+                        android:textSize="14sp"
+                        tools:ignore="MissingPrefix"
+                        tools:text="Lalala it is info"
+                        tools:visibility="visible"/>
 
-                <TextView
-                    android:id="@+id/shortBioSecondText"
-                    fontPath="fonts/Roboto-Light.ttf"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:lineSpacingExtra="3.3sp"
-                    android:paddingBottom="@dimen/guideline_standard_padding"
-                    android:paddingLeft="32dp"
-                    android:paddingRight="32dp"
-                    android:paddingTop="4dp"
-                    android:textSize="14sp"
-                    android:visibility="gone"
-                    tools:ignore="MissingPrefix"
-                    tools:text="Lalala it is info"
-                    tools:visibility="visible"/>
+                    <TextView
+                        android:id="@+id/shortBioSecondHeader"
+                        fontPath="fonts/Roboto-Light.ttf"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="@dimen/guideline_standard_padding"
+                        android:paddingLeft="32dp"
+                        android:paddingTop="4dp"
+                        android:text="@string/user_info"
+                        android:textSize="@dimen/text_header"
+                        tools:ignore="MissingPrefix"
+                        tools:visibility="visible"/>
+
+                    <TextView
+                        android:id="@+id/shortBioSecondText"
+                        fontPath="fonts/Roboto-Light.ttf"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:lineSpacingExtra="3.3sp"
+                        android:paddingBottom="@dimen/guideline_standard_padding"
+                        android:paddingLeft="32dp"
+                        android:paddingRight="32dp"
+                        android:paddingTop="4dp"
+                        android:textSize="14sp"
+                        tools:ignore="MissingPrefix"
+                        tools:text="Lalala it is info"
+                        tools:visibility="visible"/>
+
+                </LinearLayout>
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/profileSettingsRecyclerView"

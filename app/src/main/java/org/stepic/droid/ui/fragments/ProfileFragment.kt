@@ -26,6 +26,7 @@ import org.stepic.droid.core.presenters.contracts.ProfileView
 import org.stepic.droid.model.UserViewModel
 import org.stepic.droid.ui.adapters.ProfileSettingsAdapter
 import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment
+import org.stepic.droid.ui.util.StepikAnimUtils
 import org.stepic.droid.ui.util.TimeIntervalUtil
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.ProfileSettingsHelper
@@ -113,36 +114,23 @@ class ProfileFragment : FragmentBase(),
         shortBioArrowImageView.changeState()
         val isExpanded = shortBioArrowImageView.isExpanded()
         if (isExpanded) {
-            shortBioFirstText.visibility = View.VISIBLE
-            if (localUserViewModel.shortBio.isNotBlank()
-                    && localUserViewModel.information.isNotBlank()) {
-                shortBioSecondHeader.visibility = View.VISIBLE
-                shortBioSecondText.visibility = View.VISIBLE
-            }
+            StepikAnimUtils.expand(detailedInfoContainer)
         } else {
-            shortBioFirstText.visibility = View.GONE
-            shortBioSecondHeader.visibility = View.GONE
-            shortBioSecondText.visibility = View.GONE
+            StepikAnimUtils.collapse(detailedInfoContainer)
         }
     }
 
-    private val shortBioFirstTextKey = "shortBioFirstTextKey"
-    private val shortBioSecondHeaderKey = "shortBioSecondHeaderKey"
-    private val shortBioSecondTextKey = "shortBioSecondTextKey"
+    private val detailedInfoContainerKey = "detailedInfoContainerKey"
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putBoolean(shortBioFirstTextKey, shortBioFirstText.visibility == View.VISIBLE)
-        outState.putBoolean(shortBioSecondHeaderKey, shortBioSecondHeader.visibility == View.VISIBLE)
-        outState.putBoolean(shortBioSecondTextKey, shortBioSecondText.visibility == View.VISIBLE)
+        outState.putBoolean(detailedInfoContainerKey, detailedInfoContainer.visibility == View.VISIBLE)
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
         savedInstanceState?.let {
-            restoreVisibility(shortBioFirstText, it, shortBioFirstTextKey)
-            restoreVisibility(shortBioSecondHeader, it, shortBioSecondHeaderKey)
-            restoreVisibility(shortBioSecondText, it, shortBioSecondTextKey)
+            restoreVisibility(detailedInfoContainer, it, detailedInfoContainerKey)
         }
 
     }
