@@ -98,3 +98,8 @@
 -keep class org.stepic.droid.configuration.** { *; }
 -keep interface org.stepic.droid.configuration.** { *; }
 -dontwarn org.stepic.droid.configuration.**
+
+#BottomNavigationHelper uses reflection for changing this field (watch support updates for removing the reflection)
+-keepclassmembers class android.support.design.internal.BottomNavigationMenuView {
+    boolean mShiftingMode;
+}

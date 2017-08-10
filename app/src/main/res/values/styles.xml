@@ -2,7 +2,7 @@
 
     <style name="StepikTheme" parent="StepikTheme.15"/>
 
-    <style name="StepikTheme.15" parent="@style/Theme.AppCompat.Light">
+    <style name="StepikTheme.15" parent="@style/Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">#F6F6F6</item>
         <item name="colorPrimaryDark">@color/new_main_color</item>
         <item name="colorAccent">@color/new_main_color</item>

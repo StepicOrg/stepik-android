@@ -10,6 +10,7 @@ import android.os.Parcelable;
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -148,7 +149,7 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
 
     protected void setFragment(@IdRes int res, Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
-        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(res, fragment, fragment.getClass().getSimpleName());
         int countInBackStack = fragmentManager.getBackStackEntryCount();
         boolean isRootScreen = MyCoursesFragment.class.getSimpleName().equals(fragment.getClass().getSimpleName());

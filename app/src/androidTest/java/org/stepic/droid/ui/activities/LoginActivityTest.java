@@ -2,7 +2,6 @@ package org.stepic.droid.ui.activities;
 
 
 import android.support.test.espresso.ViewInteraction;
-import android.support.test.espresso.contrib.DrawerActions;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -55,8 +54,8 @@ public class LoginActivityTest {
         onView(withId(R.id.loginButton))
                 .perform(scrollTo(), click());
 
-        onView(withId(R.id.drawer))
-                .perform(DrawerActions.open());
+//        onView(withId(R.id.drawer))
+//                .perform(DrawerActions.open());
 
         ViewInteraction checkedTextView = onView(
                 allOf(withId(R.id.design_menu_item_text),

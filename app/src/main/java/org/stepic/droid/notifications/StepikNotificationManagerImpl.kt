@@ -81,7 +81,7 @@ class StepikNotificationManagerImpl
         val intent = screenManager.getShowFindCoursesIntent(context)
         intent.action = AppConstants.OPEN_NOTIFICATION_FOR_ENROLL_REMINDER
         val analyticDayTypeName = dayType?.name ?: ""
-        intent.putExtra(MainFeedActivity.REMINDER_KEY, analyticDayTypeName)
+        intent.putExtra(MainFeedActivity.reminderKey, analyticDayTypeName)
         val taskBuilder: TaskStackBuilder =
                 TaskStackBuilder
                         .create(context)

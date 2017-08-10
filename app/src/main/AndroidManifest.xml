@@ -30,7 +30,7 @@
         android:manageSpaceActivity=".ui.activities.StoreManagementActivity"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="false"
-        android:theme="@style/AppTheme"
+        android:theme="@style/StepikTheme"
         tools:replace="allowBackup, supportsRtl">
 
         <meta-data
@@ -86,7 +86,8 @@
 
         <activity
             android:name="org.stepic.droid.ui.activities.MainFeedActivity"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.app.default_searchable"
                 android:value=".ui.activities.CourseSearchResultActivity"/>
@@ -359,7 +360,6 @@
         </activity>
 
         <activity
-            android:theme="@style/StepikTheme"
             android:name=".ui.activities.ProfileActivity"
             android:windowSoftInputMode="adjustResize|stateHidden">
             <!-- Parent activity meta-data to support 4.0 and lower -->

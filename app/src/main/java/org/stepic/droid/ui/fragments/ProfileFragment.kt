@@ -363,6 +363,10 @@ class ProfileFragment : FragmentBase(),
         private val USER_ID_KEY = "user_id_key"
         private val NOTIFICATION_INTERVAL_REQUEST_CODE = 11
 
+        fun newInstance(): ProfileFragment {
+            return newInstance(0)
+        }
+
         fun newInstance(userId: Long): ProfileFragment {
             val args = Bundle()
             args.putLong(USER_ID_KEY, userId)

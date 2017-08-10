@@ -92,7 +92,7 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void showLaunchScreen(Context context) {
-        showLaunchScreen(context, false, MainFeedActivity.DEFAULT_START_INDEX);
+        showLaunchScreen(context, false, MainFeedActivity.defaultIndex);
     }
 
     @Override
@@ -133,7 +133,7 @@ public class ScreenManagerImpl implements ScreenManager {
         Intent launchIntent = new Intent(context, LaunchActivity.class);
         if (fromMainFeed) {
             launchIntent.putExtra(AppConstants.FROM_MAIN_FEED_FLAG, true);
-            launchIntent.putExtra(MainFeedActivity.KEY_CURRENT_INDEX, index);
+            launchIntent.putExtra(MainFeedActivity.Companion.getCurrentIndexKey(), index);
         }
         launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK); //app context -- new task
         context.startActivity(launchIntent);
@@ -189,7 +189,7 @@ public class ScreenManagerImpl implements ScreenManager {
         analytic.reportEvent(Analytic.Screens.SHOW_MAIN_FEED);
         Intent intent = new Intent(sourceActivity, MainFeedActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra(MainFeedActivity.KEY_CURRENT_INDEX, indexOfMenu);
+        intent.putExtra(MainFeedActivity.Companion.getCurrentIndexKey(), indexOfMenu);
         sourceActivity.startActivity(intent);
     }
 
@@ -246,11 +246,11 @@ public class ScreenManagerImpl implements ScreenManager {
     @Override
     public Intent getCertificateIntent() {
         Context context = App.Companion.getAppContext();
-        int index = MainFeedActivity.getCertificateFragmentIndex();
+        int index = MainFeedActivity.Companion.getCertificateFragmentIndex();
         Intent intent = new Intent(context, MainFeedActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         Bundle bundle = new Bundle();
-        bundle.putInt(MainFeedActivity.KEY_CURRENT_INDEX, index);
+        bundle.putInt(MainFeedActivity.Companion.getCurrentIndexKey(), index);
         intent.putExtras(bundle);
         return intent;
     }
@@ -258,7 +258,7 @@ public class ScreenManagerImpl implements ScreenManager {
     @Override
     public void showCertificates() {
         Context context = App.Companion.getAppContext();
-        int index = MainFeedActivity.getCertificateFragmentIndex();
+        int index = MainFeedActivity.Companion.getCertificateFragmentIndex();
         context.startActivity(getFromMainActivityIntent(context, index));
     }
 
@@ -270,7 +270,7 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void showDownloads(Context context) {
-        int index = MainFeedActivity.getDownloadFragmentIndex();
+        int index = MainFeedActivity.Companion.getDownloadFragmentIndex();
         context.startActivity(getFromMainActivityIntent(context, index));
     }
 
@@ -281,7 +281,7 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public Intent getShowFindCoursesIntent(Context context) {
-        int index = MainFeedActivity.getFindCoursesIndex();
+        int index = MainFeedActivity.Companion.getFindCoursesIndex();
         return getFromMainActivityIntent(context, index);
     }
 
@@ -289,7 +289,7 @@ public class ScreenManagerImpl implements ScreenManager {
         Intent intent = new Intent(context, MainFeedActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         Bundle bundle = new Bundle();
-        bundle.putInt(MainFeedActivity.KEY_CURRENT_INDEX, index);
+        bundle.putInt(MainFeedActivity.Companion.getCurrentIndexKey(), index);
         intent.putExtras(bundle);
         return intent;
     }
@@ -389,7 +389,7 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public Intent getMyCoursesIntent(@NotNull Context context) {
-        int index = MainFeedActivity.getMyCoursesIndex();
+        int index = MainFeedActivity.Companion.getMyCoursesIndex();
         return getFromMainActivityIntent(context, index);
     }
 
