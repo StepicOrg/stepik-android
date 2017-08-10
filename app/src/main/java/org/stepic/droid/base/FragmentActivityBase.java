@@ -149,8 +149,10 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
 
     protected void setFragment(@IdRes int res, Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(res, fragment, fragment.getClass().getSimpleName());
+        FragmentTransaction fragmentTransaction = fragmentManager
+                .beginTransaction()
+                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
+                .replace(res, fragment, fragment.getClass().getSimpleName());
         int countInBackStack = fragmentManager.getBackStackEntryCount();
         boolean isRootScreen = MyCoursesFragment.class.getSimpleName().equals(fragment.getClass().getSimpleName());
         if ((isRootScreen && countInBackStack < 1) || (!isRootScreen && countInBackStack < 2)) {

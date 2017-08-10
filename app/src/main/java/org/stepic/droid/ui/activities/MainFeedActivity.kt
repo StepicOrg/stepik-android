@@ -127,11 +127,11 @@ class MainFeedActivity : BackToExitActivityBase(),
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
         if (navigationView.selectedItemId == R.id.my_courses) {
             finish()
             return
         }
+        super.onBackPressed()
         val fragmentManager = supportFragmentManager
         val fragment = fragmentManager
                 .findFragmentById(R.id.frame)

@@ -2,6 +2,7 @@
 <resources>
     <!-- This is animation time for activity transition -->
     <integer name="activity_transition_duration">300</integer>
+    <integer name="fragment_fade_duration">300</integer>
     <integer name="max_length_of_password">128</integer>
     <integer name="arrow_bottom_top_duration">300</integer>
     <integer name="arrow_stroke">4</integer>
