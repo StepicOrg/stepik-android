@@ -24,5 +24,5 @@
         app:itemTextColor="@color/drawer_item_color"
         app:layout_behavior="org.stepic.droid.ui.util.BottomNavigationBehavior"
         app:menu="@menu/drawer_menu"/>
-    
+
 </android.support.design.widget.CoordinatorLayout>

@@ -158,7 +158,7 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
         if ((isRootScreen && countInBackStack < 1) || (!isRootScreen && countInBackStack < 2)) {
             fragmentTransaction.addToBackStack(fragment.getClass().getSimpleName());
         }
-        fragmentTransaction.commit();
+        fragmentTransaction.commitAllowingStateLoss();
     }
 
     /**
