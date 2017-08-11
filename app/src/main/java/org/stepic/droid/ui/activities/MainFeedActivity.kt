@@ -26,7 +26,6 @@ import org.stepic.droid.ui.fragments.FindCoursesFragment
 import org.stepic.droid.ui.fragments.MyCoursesFragment
 import org.stepic.droid.ui.fragments.ProfileFragment
 import org.stepic.droid.ui.util.BottomNavigationBehavior
-import org.stepic.droid.ui.util.VerticalScrollingBehavior
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import timber.log.Timber
@@ -248,6 +247,6 @@ class MainFeedActivity : BackToExitActivityBase(),
     private fun showBottomBar() {
         val params = navigationView.layoutParams as CoordinatorLayout.LayoutParams
         val behavior = params.behavior as BottomNavigationBehavior
-        behavior.onDirectionNestedPreScroll(coordinatorLayoutMainFeed, navigationView, null, 0, 0, null, VerticalScrollingBehavior.ScrollDirection.SCROLL_DIRECTION_DOWN)
+        behavior.showBottomBar(navigationView)
     }
 }
