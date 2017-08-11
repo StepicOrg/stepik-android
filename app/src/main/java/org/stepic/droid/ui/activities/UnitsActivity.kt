@@ -1,0 +1,37 @@
+package org.stepic.droid.ui.activities
+
+import android.os.Bundle
+import android.support.v4.app.Fragment
+import org.stepic.droid.R
+import org.stepic.droid.base.SingleFragmentActivity
+import org.stepic.droid.model.Section
+import org.stepic.droid.ui.fragments.UnitsFragment
+import org.stepic.droid.util.AppConstants
+
+class UnitsActivity : SingleFragmentActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setTitle(R.string.units_lessons_title)
+    }
+
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(R.anim.slide_in_from_start, R.anim.slide_out_to_end)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        val fragments = supportFragmentManager.fragments
+        if (fragments != null) {
+            for (fragment in fragments) {
+                fragment?.onRequestPermissionsResult(requestCode, permissions, grantResults)
+            }
+        }
+    }
+
+    override fun createFragment(): Fragment {
+        val section = intent.getParcelableExtra<Section>(AppConstants.KEY_SECTION_BUNDLE)
+        return UnitsFragment.newInstance(section)
+    }
+}
