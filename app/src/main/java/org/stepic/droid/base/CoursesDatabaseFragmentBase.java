@@ -50,7 +50,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     @Inject
     Client<DroppingListener> droppingClient;
 
-    BackButtonHandler backButtonHandler = null;
+    private BackButtonHandler backButtonHandler = null;
     private boolean isScreenCreated;
 
     @Override
@@ -303,16 +303,10 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
     public boolean onBackClick() {
         sharedPreferenceHelper.onTryDiscardFilters(getCourseType());
         return false;
     }
-
 
     @Override
     public void onDetach() {

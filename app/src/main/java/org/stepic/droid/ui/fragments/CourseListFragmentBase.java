@@ -42,7 +42,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.BindView;
-import timber.log.Timber;
 
 public abstract class CourseListFragmentBase extends FragmentBase implements SwipeRefreshLayout.OnRefreshListener, CoursesView, ContinueCourseView, JoiningListener {
 
@@ -187,7 +186,7 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
         joiningListenerClient.unsubscribe(this);
         continueCoursePresenter.detachView(this);
         if (listOfCoursesView != null) {
-            listOfCoursesView.setAdapter(null);
+            // do not set adapter to null, because fade out animation for fragment will not working
             unregisterForContextMenu(listOfCoursesView);
         }
         super.onDestroyView();
