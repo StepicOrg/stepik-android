@@ -36,8 +36,6 @@ public interface ScreenManager {
 
     void showMainFeed(Context sourceActivity, @Nullable Course course);
 
-    void showMainFeed(Context sourceActivity);
-
     void showMainFeedFromSplash(Activity sourceActivity);
 
     void showMainFeed(Context sourceActivity, int indexOfMenu);

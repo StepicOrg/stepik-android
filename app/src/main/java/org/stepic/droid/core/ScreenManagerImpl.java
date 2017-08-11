@@ -44,6 +44,7 @@ import org.stepic.droid.ui.activities.LaunchActivity;
 import org.stepic.droid.ui.activities.LoginActivity;
 import org.stepic.droid.ui.activities.MainFeedActivity;
 import org.stepic.droid.ui.activities.NewCommentActivity;
+import org.stepic.droid.ui.activities.NotificationsActivity;
 import org.stepic.droid.ui.activities.PhotoViewActivity;
 import org.stepic.droid.ui.activities.ProfileActivity;
 import org.stepic.droid.ui.activities.RegisterActivity;
@@ -117,14 +118,14 @@ public class ScreenManagerImpl implements ScreenManager {
     public void openImage(Context context, String path) {
         analytic.reportEvent(Analytic.Interaction.USER_OPEN_IMAGE);
         Intent intent = new Intent(context, PhotoViewActivity.class);
-        intent.putExtra(PhotoViewActivity.pathKey, path);
+        intent.putExtra(PhotoViewActivity.Companion.getPathKey(), path);
         context.startActivity(intent);
     }
 
     @Override
     public void showNotifications(@NotNull Activity activity) {
-        // TODO: 31.07.17 implement it
-        Toast.makeText(activity, "Notifications are shown", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(activity, NotificationsActivity.class);
+        activity.startActivity(intent);
     }
 
     @Override
@@ -158,11 +159,6 @@ public class ScreenManagerImpl implements ScreenManager {
             loginIntent.putExtra(AppConstants.KEY_COURSE_BUNDLE, (Parcelable) course);
         }
         sourceActivity.startActivity(loginIntent);
-    }
-
-    @Override
-    public void showMainFeed(Context sourceActivity) {
-        showMainFeed(sourceActivity, null);
     }
 
     @Override
@@ -490,7 +486,7 @@ public class ScreenManagerImpl implements ScreenManager {
         } else {
             code = AppConstants.FEATURED_FILTER;
         }
-        intent.putExtra(FilterActivity.FILTER_TYPE_KEY, code);
+        intent.putExtra(FilterActivity.Companion.getFILTER_TYPE_KEY(), code);
         sourceFragment.startActivityForResult(intent, requestCode);
     }
 

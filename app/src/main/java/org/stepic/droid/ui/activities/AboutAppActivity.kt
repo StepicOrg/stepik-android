@@ -10,7 +10,7 @@ import org.stepic.droid.ui.fragments.AboutAppFragment
 
 open class AboutAppActivity : SingleFragmentActivity() {
 
-    override fun createFragment(): Fragment? {
+    override fun createFragment(): Fragment {
         return AboutAppFragment.newInstance()
     }
 

@@ -1,6 +1,5 @@
 package org.stepic.droid.ui.activities
 
-import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.MenuItem
@@ -35,7 +34,7 @@ class NewCommentActivity : SingleFragmentActivity(), BackButtonHandler {
         setTitle(R.string.new_comment_title)
     }
 
-    override fun createFragment(): Fragment? {
+    override fun createFragment(): Fragment {
         val target: Long = intent.extras.getLong(NewCommentActivity.keyTarget)
         var parent: Long? = intent.extras.getLong(NewCommentActivity.keyParent)
         if (parent == 0L) {

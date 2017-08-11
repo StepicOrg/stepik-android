@@ -9,7 +9,7 @@ import org.stepic.droid.ui.fragments.PhotoViewFragment
 
 class PhotoViewActivity : SingleFragmentActivity() {
     companion object {
-        private val pathKey = "pathKey"
+        val pathKey = "pathKey"
     }
 
     override fun createFragment(): Fragment {

@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
@@ -32,6 +33,7 @@ public class NotificationsFragment extends FragmentBase {
 
     private ActionBarDrawerToggle actionBarDrawerToggle;
 
+    @NotNull
     public static NotificationsFragment newInstance() {
         Bundle args = new Bundle();
         NotificationsFragment fragment = new NotificationsFragment();

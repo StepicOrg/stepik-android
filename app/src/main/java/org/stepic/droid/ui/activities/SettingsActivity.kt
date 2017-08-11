@@ -11,9 +11,7 @@ import org.stepic.droid.ui.fragments.SettingsFragment
 
 open class SettingsActivity : SingleFragmentActivity() {
 
-    override fun createFragment(): Fragment? {
-        return SettingsFragment.newInstance()
-    }
+    override fun createFragment() : Fragment = SettingsFragment.newInstance()
 
     var toolbar: Toolbar? = null;
 

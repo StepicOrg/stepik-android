@@ -29,7 +29,7 @@ class ProfileActivity : SingleFragmentActivity() {
         setTitle(R.string.profile_title)
     }
 
-    override fun createFragment(): Fragment? {
+    override fun createFragment(): Fragment {
         if (intent?.action?.equals(AppConstants.OPEN_SHORTCUT_PROFILE) ?: false) {
             analytic.reportEvent(Analytic.Shortcut.OPEN_PROFILE)
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N_MR1) {

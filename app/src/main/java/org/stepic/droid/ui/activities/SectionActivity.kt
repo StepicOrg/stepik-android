@@ -3,16 +3,13 @@ package org.stepic.droid.ui.activities
 import android.content.Intent
 import android.os.Bundle
 import android.support.annotation.NonNull
-import android.support.v4.app.Fragment
 import org.stepic.droid.R
 import org.stepic.droid.base.SingleFragmentActivity
 import org.stepic.droid.ui.fragments.SectionsFragment
 
 class SectionActivity : SingleFragmentActivity() {
 
-    override fun createFragment(): Fragment? {
-        return SectionsFragment.newInstance()
-    }
+    override fun createFragment() = SectionsFragment.newInstance()
 
     override fun onBackPressed() {
         super.onBackPressed()

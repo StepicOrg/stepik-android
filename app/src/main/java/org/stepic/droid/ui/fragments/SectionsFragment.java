@@ -126,6 +126,7 @@ public class SectionsFragment
     private static final int ANIMATION_DURATION = 0;
     public static final int DELETE_POSITION_REQUEST_CODE = 177;
 
+    @NotNull
     public static SectionsFragment newInstance() {
         return new SectionsFragment();
     }
