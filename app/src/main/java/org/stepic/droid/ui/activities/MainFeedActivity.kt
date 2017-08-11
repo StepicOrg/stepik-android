@@ -7,6 +7,7 @@ import android.content.pm.ShortcutManager
 import android.os.Bundle
 import android.support.annotation.IdRes
 import android.support.design.widget.BottomNavigationView
+import android.support.design.widget.CoordinatorLayout
 import android.support.v4.app.Fragment
 import android.view.MenuItem
 import android.widget.Toast
@@ -24,6 +25,8 @@ import org.stepic.droid.ui.dialogs.NeedUpdatingDialog
 import org.stepic.droid.ui.fragments.FindCoursesFragment
 import org.stepic.droid.ui.fragments.MyCoursesFragment
 import org.stepic.droid.ui.fragments.ProfileFragment
+import org.stepic.droid.ui.util.BottomNavigationBehavior
+import org.stepic.droid.ui.util.VerticalScrollingBehavior
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import timber.log.Timber
@@ -145,6 +148,8 @@ class MainFeedActivity : BackToExitActivityBase(),
             showCurrentFragment(R.id.my_courses)
         }
         navigationView.selectedItemId = R.id.my_courses
+
+        showBottomBar()
     }
 
     fun showFindLesson() {
@@ -191,7 +196,7 @@ class MainFeedActivity : BackToExitActivityBase(),
     }
 
     override fun onNavigationItemReselected(menuItem: MenuItem) {
-
+//        scrollUp()
     }
 
     private fun sendOpenUserAnalytic(itemId: Int) {
@@ -238,5 +243,11 @@ class MainFeedActivity : BackToExitActivityBase(),
         // FIXME: 10.08.17 remove it
         val findCoursesIndex: Int
             get() = 2
+    }
+
+    private fun showBottomBar() {
+        val params = navigationView.layoutParams as CoordinatorLayout.LayoutParams
+        val behavior = params.behavior as BottomNavigationBehavior
+        behavior.onDirectionNestedPreScroll(coordinatorLayoutMainFeed, navigationView, null, 0, 0, null, VerticalScrollingBehavior.ScrollDirection.SCROLL_DIRECTION_DOWN)
     }
 }

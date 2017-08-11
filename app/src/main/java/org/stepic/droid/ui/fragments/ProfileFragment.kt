@@ -55,6 +55,7 @@ class ProfileFragment : FragmentBase(),
     private var userId: Long = 0
     private var localUserViewModel: UserViewModel? = null
     private var profileSettingsList: ArrayList<ProfileSettingsViewModel> = ArrayList()
+    private var isShortInfoExpanded: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -105,14 +106,14 @@ class ProfileFragment : FragmentBase(),
         }
 
         shortBioInfoContainer.setOnClickListener {
-            changeStateOfUserInfo(localUserViewModel!!)
-
+            changeStateOfUserInfo()
         }
     }
 
-    private fun changeStateOfUserInfo(localUserViewModel: UserViewModel) {
+    private fun changeStateOfUserInfo() {
         shortBioArrowImageView.changeState()
         val isExpanded = shortBioArrowImageView.isExpanded()
+        isShortInfoExpanded = isExpanded
         if (isExpanded) {
             StepikAnimUtils.expand(detailedInfoContainer)
         } else {
@@ -124,12 +125,13 @@ class ProfileFragment : FragmentBase(),
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putBoolean(detailedInfoContainerKey, detailedInfoContainer.visibility == View.VISIBLE)
+        outState.putBoolean(detailedInfoContainerKey, isShortInfoExpanded)
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
         savedInstanceState?.let {
+            isShortInfoExpanded = it.getBoolean(detailedInfoContainerKey)
             restoreVisibility(detailedInfoContainer, it, detailedInfoContainerKey)
         }
 
@@ -165,6 +167,7 @@ class ProfileFragment : FragmentBase(),
         notificationIntervalChooser.setOnClickListener(null)
         streakPresenter.detachView(this)
         profilePresenter.detachView(this)
+        isShortInfoExpanded = detailedInfoContainer.visibility == View.VISIBLE
         super.onDestroyView()
     }
 

@@ -146,7 +146,6 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
                     int visibleItemCount = layoutManager.getChildCount();
                     int totalItemCount = layoutManager.getItemCount();
                     int pastVisibleItems = layoutManager.findFirstVisibleItemPosition();
-                    Timber.d("visibleItemCount = %d, totalItemCount = %d, pastVisibleItems=%d", visibleItemCount, totalItemCount, pastVisibleItems);
 
                     if ((visibleItemCount + pastVisibleItems) >= totalItemCount && StepikUtil.INSTANCE.isInternetAvailable()) {
                         onNeedDownloadNextPage();
