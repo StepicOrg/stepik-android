@@ -134,13 +134,23 @@ public final class BottomNavigationBehavior<V extends View> extends VerticalScro
         return true;
     }
 
-    public void showBottomBar(V navigationView) {
+    public void showBottomBar(V navigationView, boolean needAnimation) {
         if (!scrollingEnabled) {
             return;
         }
-        if (hidden) {
-            hidden = false;
+        if (!hidden) {
+            return;
+        }
+
+        hidden = false;
+        if (needAnimation) {
             animateOffset(navigationView, 0);
+        } else {
+            if (mOffsetValueAnimator != null) {
+                mOffsetValueAnimator.cancel();
+            }
+            navigationView.setTranslationY(0f);
+
         }
     }
 

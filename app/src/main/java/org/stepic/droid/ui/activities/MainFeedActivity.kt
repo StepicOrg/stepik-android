@@ -151,33 +151,19 @@ class MainFeedActivity : BackToExitActivityBase(),
     }
 
     override fun onBackPressed() {
-//        if (navigationView.selectedItemId == R.id.my_courses) {
-//            finish()
-//            return
-//        }
-//        super.onBackPressed()
-//        navigationView.selectedItemId = R.id.my_courses
-//
-//        showBottomBar()
-
         if (navigationView.selectedItemId == R.id.my_courses) {
             finish();
             return;
         }
-        val fragmentManager = supportFragmentManager;
-        val fragment = fragmentManager.findFragmentById(R.id.frame);
-        fragmentManager.popBackStackImmediate();
-        fragmentManager
-                .beginTransaction()
-                .remove(fragment)
-                .commit();
-        if (fragmentManager.backStackEntryCount <= 0) {
-            showCurrentFragment(R.id.my_courses);
-        } else {
-            navigationView.selectedItemId = R.id.my_courses
-        }
-
+        super.onBackPressed()
+        navigationView.selectedItemId = R.id.my_courses
         showBottomBar()
+    }
+
+
+    override fun onStart() {
+        super.onStart()
+        showBottomBar(false)
     }
 
     fun showFindLesson() {
@@ -270,18 +256,18 @@ class MainFeedActivity : BackToExitActivityBase(),
         }
     }
 
-    private fun showBottomBar() {
+    private fun showBottomBar(needAnimation: Boolean = true) {
         val params = navigationView.layoutParams as CoordinatorLayout.LayoutParams
         val behavior = params.behavior as BottomNavigationBehavior
-        behavior.showBottomBar(navigationView)
+        behavior.showBottomBar(navigationView, needAnimation)
     }
 
 
-    private fun setFragment(@IdRes res: Int, fragment: Fragment) {
+    private fun setFragment(@IdRes containerId: Int, fragment: Fragment) {
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction
                 .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)//, R.anim.fade_out, R.anim.fade_in)
-                .replace(res, fragment, fragment.javaClass.simpleName)
+                .replace(containerId, fragment, fragment.javaClass.simpleName)
         val countInBackStack = supportFragmentManager.backStackEntryCount
         val isRootScreen = defaultTag == fragment.javaClass.simpleName
 
@@ -289,5 +275,7 @@ class MainFeedActivity : BackToExitActivityBase(),
             fragmentTransaction.addToBackStack(fragment.javaClass.simpleName)
         }
         fragmentTransaction.commit()
+
+        Timber.d("Fragment on main screen %s is set", fragment)
     }
 }
