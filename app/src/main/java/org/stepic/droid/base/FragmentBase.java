@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.View;
+import android.view.animation.Animation;
 import android.view.inputmethod.InputMethodManager;
 
 import org.stepic.droid.analytic.Analytic;
@@ -36,6 +37,7 @@ import butterknife.Unbinder;
 
 public class FragmentBase extends Fragment {
 
+    private boolean viewHasBeenDestroyed = false;
     private Unbinder unbinder;
 
     @Inject
@@ -153,6 +155,7 @@ public class FragmentBase extends Fragment {
             //in Kotlin, for example, butter knife is not used
             unbinder.unbind();
         }
+        viewHasBeenDestroyed = true;
     }
 
     @Override
@@ -168,4 +171,13 @@ public class FragmentBase extends Fragment {
         super.onDetach();
     }
 
+    @Override
+    public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
+        boolean shouldNotBeenDestroyed = viewHasBeenDestroyed && enter;
+        viewHasBeenDestroyed = false;
+
+        //do not animate fragment on rotation via setCustomAnimations
+        return shouldNotBeenDestroyed ? new Animation() {
+        } : super.onCreateAnimation(transit, enter, nextAnim);
+    }
 }
