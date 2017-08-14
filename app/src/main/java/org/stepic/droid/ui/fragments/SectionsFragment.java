@@ -518,6 +518,8 @@ public class SectionsFragment
         storeStateManager.removeSectionCallback(this);
         droppingListenerClient.unsubscribe(this);
         courseNotParsedView.setOnClickListener(null);
+        swipeRefreshLayout.setOnRefreshListener(null);
+        localProgressManager.unsubscribe(this);
         super.onDestroyView();
     }
 
