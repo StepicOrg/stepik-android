@@ -217,6 +217,9 @@ dependencies {
     //add echo player for video (change playback speed supported)
     compile 'com.google.android.exoplayer:exoplayer-core:r2.4.1'
 
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.2'
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.2'
+
     // Required -- JUnit 4 framework
     testCompile 'junit:junit:4.12'
     // Optional -- Mockito framework
