@@ -244,7 +244,9 @@ class MainFeedActivity : BackToExitActivityBase(),
             }
         }
         if (nextFragment != null) {
-            setFragment(R.id.frame, nextFragment)
+            //animation on change fragment, not for just adding
+            val needAnimation = currentFragmentTag != null
+            setFragment(R.id.frame, nextFragment, needAnimation)
         }
     }
 
@@ -263,11 +265,12 @@ class MainFeedActivity : BackToExitActivityBase(),
     }
 
 
-    private fun setFragment(@IdRes containerId: Int, fragment: Fragment) {
+    private fun setFragment(@IdRes containerId: Int, fragment: Fragment, needAnimation: Boolean) {
         val fragmentTransaction = supportFragmentManager.beginTransaction()
-        fragmentTransaction
-                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)//, R.anim.fade_out, R.anim.fade_in)
-                .replace(containerId, fragment, fragment.javaClass.simpleName)
+        if (needAnimation) {
+            fragmentTransaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
+        }
+        fragmentTransaction.replace(containerId, fragment, fragment.javaClass.simpleName)
         val countInBackStack = supportFragmentManager.backStackEntryCount
         val isRootScreen = defaultTag == fragment.javaClass.simpleName
 

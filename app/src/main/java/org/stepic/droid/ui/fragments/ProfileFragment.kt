@@ -5,8 +5,6 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.annotation.IdRes
-import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -227,8 +225,7 @@ class ProfileFragment : FragmentBase(),
         contentRoot.visibility = View.VISIBLE
 
         localUserViewModel = userViewModel
-//        activity.supportInvalidateOptionsMenu()
-
+        activity.invalidateOptionsMenu()
         if (userViewModel.isMyProfile) {
             streakPresenter.tryShowNotificationSetting()
         }
@@ -346,7 +343,6 @@ class ProfileFragment : FragmentBase(),
 
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater) {
-//        super.onCreateOptionsMenu(menu, inflater)
         if (localUserViewModel != null) {
             Timber.d("onCreateOptionsMenu non null+ %s", this)
             inflater.inflate(R.menu.share_menu, menu)
