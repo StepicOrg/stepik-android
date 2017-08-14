@@ -54,8 +54,8 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private static final String screenshotServiceName = "com.android.systemui:screenshot";
 
-    protected Unbinder unbinder;
 
+    protected Unbinder unbinder;
     @Inject
     protected Retrofit retrofit;
 
@@ -145,20 +145,6 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
         if (unbinder != null) {
             unbinder.unbind();
         }
-    }
-
-    protected void setFragment(@IdRes int res, Fragment fragment) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager
-                .beginTransaction()
-                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                .replace(res, fragment, fragment.getClass().getSimpleName());
-        int countInBackStack = fragmentManager.getBackStackEntryCount();
-        boolean isRootScreen = MyCoursesFragment.class.getSimpleName().equals(fragment.getClass().getSimpleName());
-        if ((isRootScreen && countInBackStack < 1) || (!isRootScreen && countInBackStack < 2)) {
-            fragmentTransaction.addToBackStack(fragment.getClass().getSimpleName());
-        }
-        fragmentTransaction.commitAllowingStateLoss();
     }
 
     /**

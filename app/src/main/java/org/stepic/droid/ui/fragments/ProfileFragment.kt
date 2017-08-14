@@ -5,6 +5,8 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.support.annotation.IdRes
+import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -32,6 +34,7 @@ import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.ProfileSettingsHelper
 import org.stepic.droid.util.svg.GlideSvgRequestFactory
 import org.stepic.droid.viewmodel.ProfileSettingsViewModel
+import timber.log.Timber
 import javax.inject.Inject
 
 class ProfileFragment : FragmentBase(),
@@ -59,12 +62,13 @@ class ProfileFragment : FragmentBase(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        retainInstance = true
+        retainInstance = false
         userId = arguments.getLong(USER_ID_KEY)
         analytic.reportEvent(Analytic.Profile.OPEN_SCREEN_OVERALL)
         setHasOptionsMenu(true)
         profileSettingsList.clear()
         profileSettingsList.addAll(ProfileSettingsHelper.getProfileSettings(screenManager))
+        Timber.d("onCreate %s", this)
     }
 
     override fun injectComponent() {
@@ -108,6 +112,8 @@ class ProfileFragment : FragmentBase(),
         shortBioInfoContainer.setOnClickListener {
             changeStateOfUserInfo()
         }
+
+        Timber.d("onViewCreated %s", this)
     }
 
     private fun changeStateOfUserInfo() {
@@ -169,6 +175,7 @@ class ProfileFragment : FragmentBase(),
         profilePresenter.detachView(this)
         isShortInfoExpanded = detailedInfoContainer.visibility == View.VISIBLE
         super.onDestroyView()
+        Timber.d("onDestroyView %s", this)
     }
 
     private fun initToolbar() {
@@ -220,7 +227,7 @@ class ProfileFragment : FragmentBase(),
         contentRoot.visibility = View.VISIBLE
 
         localUserViewModel = userViewModel
-        activity.supportInvalidateOptionsMenu()
+//        activity.supportInvalidateOptionsMenu()
 
         if (userViewModel.isMyProfile) {
             streakPresenter.tryShowNotificationSetting()
@@ -339,8 +346,9 @@ class ProfileFragment : FragmentBase(),
 
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
+//        super.onCreateOptionsMenu(menu, inflater)
         if (localUserViewModel != null) {
+            Timber.d("onCreateOptionsMenu non null+ %s", this)
             inflater.inflate(R.menu.share_menu, menu)
         }
     }

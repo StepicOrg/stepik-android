@@ -22,9 +22,9 @@ import org.stepic.droid.core.presenters.contracts.UpdateAppView
 import org.stepic.droid.notifications.StepicInstanceIdService
 import org.stepic.droid.services.UpdateWithApkService
 import org.stepic.droid.ui.dialogs.NeedUpdatingDialog
-import org.stepic.droid.ui.fragments.FindCoursesFragment
 import org.stepic.droid.ui.fragments.MyCoursesFragment
 import org.stepic.droid.ui.fragments.ProfileFragment
+import org.stepic.droid.ui.fragments.TestFragment
 import org.stepic.droid.ui.util.BottomNavigationBehavior
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
@@ -36,6 +36,28 @@ class MainFeedActivity : BackToExitActivityBase(),
         BottomNavigationView.OnNavigationItemSelectedListener,
         BottomNavigationView.OnNavigationItemReselectedListener,
         UpdateAppView {
+
+    companion object {
+        val currentIndexKey = "currentIndexKey"
+        val reminderKey = "reminderKey"
+        const val defaultIndex: Int = 0
+        val defaultTag: String = MyCoursesFragment::class.java.simpleName
+
+        // FIXME: 10.08.17 remove it
+        val certificateFragmentIndex: Int
+            get() = 4
+
+        // FIXME: 10.08.17 remove it
+        val downloadFragmentIndex: Int
+            get() = 3
+
+        // FIXME: 10.08.17 remove it
+        val myCoursesIndex: Int
+            get() = 1
+        // FIXME: 10.08.17 remove it
+        val findCoursesIndex: Int
+            get() = 2
+    }
 
     @Inject
     lateinit var updateAppPresenter: UpdateAppPresenter
@@ -129,24 +151,31 @@ class MainFeedActivity : BackToExitActivityBase(),
     }
 
     override fun onBackPressed() {
+//        if (navigationView.selectedItemId == R.id.my_courses) {
+//            finish()
+//            return
+//        }
+//        super.onBackPressed()
+//        navigationView.selectedItemId = R.id.my_courses
+//
+//        showBottomBar()
+
         if (navigationView.selectedItemId == R.id.my_courses) {
-            finish()
-            return
+            finish();
+            return;
         }
-        super.onBackPressed()
-        val fragmentManager = supportFragmentManager
-        val fragment = fragmentManager
-                .findFragmentById(R.id.frame)
-        fragmentManager
-                .popBackStackImmediate()
+        val fragmentManager = supportFragmentManager;
+        val fragment = fragmentManager.findFragmentById(R.id.frame);
+        fragmentManager.popBackStackImmediate();
         fragmentManager
                 .beginTransaction()
                 .remove(fragment)
-                .commitAllowingStateLoss()
+                .commit();
         if (fragmentManager.backStackEntryCount <= 0) {
-            showCurrentFragment(R.id.my_courses)
+            showCurrentFragment(R.id.my_courses);
+        } else {
+            navigationView.selectedItemId = R.id.my_courses
         }
-        navigationView.selectedItemId = R.id.my_courses
 
         showBottomBar()
     }
@@ -213,40 +242,52 @@ class MainFeedActivity : BackToExitActivityBase(),
     }
 
     private fun setFragment(@IdRes id: Int) {
-        val fragmentToSet: Fragment =
-                when (id) {
-                    R.id.my_courses -> MyCoursesFragment.newInstance()
-                    R.id.find_lessons -> FindCoursesFragment.newInstance()
-                    R.id.profile -> ProfileFragment.newInstance()
-                    else -> throw IllegalStateException("Id res of item is not correct")
-                }
-        setFragment(R.id.frame, fragmentToSet)
+        val currentFragmentTag: String? = supportFragmentManager.findFragmentById(R.id.frame)?.tag
+        val nextFragment: Fragment? = when (id) {
+            R.id.my_courses -> {
+                getNextFragmentOrNull(currentFragmentTag, MyCoursesFragment::class.java.simpleName, MyCoursesFragment::newInstance)
+            }
+            R.id.find_lessons -> {
+                getNextFragmentOrNull(currentFragmentTag, TestFragment::class.java.simpleName, TestFragment.Companion::newInstance)
+            }
+            R.id.profile -> {
+                getNextFragmentOrNull(currentFragmentTag, ProfileFragment::class.java.simpleName, ProfileFragment.Companion::newInstance)
+            }
+            else -> {
+                null
+            }
+        }
+        if (nextFragment != null) {
+            setFragment(R.id.frame, nextFragment)
+        }
     }
 
-    companion object {
-        val currentIndexKey = "currentIndexKey"
-        val reminderKey = "reminderKey"
-        const val defaultIndex: Int = 0
-
-        // FIXME: 10.08.17 remove it
-        val certificateFragmentIndex: Int
-            get() = 4
-
-        // FIXME: 10.08.17 remove it
-        val downloadFragmentIndex: Int
-            get() = 3
-
-        // FIXME: 10.08.17 remove it
-        val myCoursesIndex: Int
-            get() = 1
-        // FIXME: 10.08.17 remove it
-        val findCoursesIndex: Int
-            get() = 2
+    private fun getNextFragmentOrNull(currentFragmentTag: String?, nextFragmentTag: String, nextFragmentCreation: () -> Fragment): Fragment? {
+        if (currentFragmentTag == null || currentFragmentTag != nextFragmentTag) {
+            return nextFragmentCreation.invoke()
+        } else {
+            return null
+        }
     }
 
     private fun showBottomBar() {
         val params = navigationView.layoutParams as CoordinatorLayout.LayoutParams
         val behavior = params.behavior as BottomNavigationBehavior
         behavior.showBottomBar(navigationView)
+    }
+
+
+    private fun setFragment(@IdRes res: Int, fragment: Fragment) {
+        val fragmentTransaction = supportFragmentManager.beginTransaction()
+        fragmentTransaction
+                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)//, R.anim.fade_out, R.anim.fade_in)
+                .replace(res, fragment, fragment.javaClass.simpleName)
+        val countInBackStack = supportFragmentManager.backStackEntryCount
+        val isRootScreen = defaultTag == fragment.javaClass.simpleName
+
+        if (isRootScreen && countInBackStack < 1 || !isRootScreen && countInBackStack < 2) {
+            fragmentTransaction.addToBackStack(fragment.javaClass.simpleName)
+        }
+        fragmentTransaction.commit()
     }
 }
