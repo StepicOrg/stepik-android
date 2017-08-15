@@ -30,7 +30,6 @@ class StepsActivity : SingleFragmentActivity() {
             }
         }
         super.onCreate(savedInstanceState)
-        setTitle(R.string.steps_title)
     }
 
     override fun createFragment(): Fragment {

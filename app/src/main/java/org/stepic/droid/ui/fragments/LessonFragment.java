@@ -6,8 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -44,6 +42,7 @@ import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.ui.adapters.StepFragmentAdapter;
 import org.stepic.droid.ui.listeners.NextMoveable;
+import org.stepic.droid.ui.util.ToolbarHelperKt;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.StringUtil;
@@ -59,6 +58,7 @@ import javax.inject.Inject;
 import butterknife.BindString;
 import butterknife.BindView;
 
+// FIXME: 15.08.17 show title R.string.steps_title, when lesson is not loaded
 public class LessonFragment extends FragmentBase implements LessonView, LessonTrackingView, NextMoveable, UpdatingStepListener {
     private static final String FROM_PREVIOUS_KEY = "fromPrevKey";
     private static final String SIMPLE_UNIT_ID_KEY = "simpleUnitId";
@@ -115,9 +115,6 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
 
 
     private boolean isRestarted = false;
-
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
 
     @BindView(R.id.viewpager)
     ViewPager viewPager;
@@ -250,9 +247,11 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
     }
 
     private void init(Lesson lesson) {
-        getActivity().setTitle(lesson.getTitle());
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        String title = lesson.getTitle();
+        if (title == null || title.isEmpty()) {
+            title = getString(R.string.steps_title);
+        }
+        ToolbarHelperKt.initCenteredToolbar(this, title, true);
     }
 
     @Override
