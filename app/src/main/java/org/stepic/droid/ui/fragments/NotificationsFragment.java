@@ -1,6 +1,5 @@
 package org.stepic.droid.ui.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -8,11 +7,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,14 +21,12 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.model.NotificationCategory;
-import org.stepic.droid.ui.activities.HasDrawer;
+import org.stepic.droid.ui.util.ToolbarHelperKt;
 
 import butterknife.BindView;
 import timber.log.Timber;
 
 public class NotificationsFragment extends FragmentBase {
-
-    private ActionBarDrawerToggle actionBarDrawerToggle;
 
     @NotNull
     public static NotificationsFragment newInstance() {
@@ -40,9 +35,6 @@ public class NotificationsFragment extends FragmentBase {
         fragment.setArguments(args);
         return fragment;
     }
-
-    @BindView(R.id.toolbar_fragment)
-    Toolbar toolbar;
 
     @BindView(R.id.notification_tabs)
     TabLayout tabLayout;
@@ -56,26 +48,11 @@ public class NotificationsFragment extends FragmentBase {
     @BindView(R.id.auth_action)
     Button authUserButton;
 
-    private HasDrawer hasDrawerHost;
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof HasDrawer) {
-            hasDrawerHost = (HasDrawer) context;
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        hasDrawerHost = null;
-        super.onDetach();
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        setHasOptionsMenu(true);
     }
 
     @Nullable
@@ -94,14 +71,14 @@ public class NotificationsFragment extends FragmentBase {
                     screenManager.showLaunchScreen(getActivity());
                 }
             });
-            toolbar.setVisibility(View.GONE);
+//            toolbar.setVisibility(View.GONE); // FIXME: 15.08.17 hide, when it is needed
             tabLayout.setVisibility(View.GONE);
             needAuthRootView.setVisibility(View.VISIBLE);
             viewPager.setVisibility(View.GONE);
         } else {
             tabLayout.setVisibility(View.VISIBLE);
             initToolbar();
-            toolbar.setVisibility(View.VISIBLE);
+//            toolbar.setVisibility(View.VISIBLE);
             viewPager.setVisibility(View.VISIBLE);
             needAuthRootView.setVisibility(View.GONE);
             initViewPager();
@@ -115,49 +92,33 @@ public class NotificationsFragment extends FragmentBase {
 
     @Override
     public void onDestroyView() {
-        destroyToolbar();
         authUserButton.setOnClickListener(null);
         super.onDestroyView();
     }
 
     private void initToolbar() {
-        toolbar.setTitle(R.string.notification_title);
-        if (hasDrawerHost != null) {
-            actionBarDrawerToggle = new ActionBarDrawerToggle(getActivity(), hasDrawerHost.getDrawerLayout(), toolbar, R.string.drawer_open, R.string.drawer_closed);
-            hasDrawerHost.getDrawerLayout().addDrawerListener(actionBarDrawerToggle);
-            actionBarDrawerToggle.syncState();
-
-            toolbar.inflateMenu(R.menu.notification_center_menu);
-            toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    switch (item.getItemId()) {
-                        case R.id.action_settings:
-                            analytic.reportEvent(Analytic.Interaction.CLICK_SETTINGS_FROM_NOTIFICATION);
-                            screenManager.showSettings(getActivity());
-                            return true;
-                    }
-                    return false;
-                }
-            });
-        }
-        ActionBar supportActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        if (supportActionBar != null) {
-            supportActionBar.hide();
-        }
+        ToolbarHelperKt.initCenteredToolbar(this, R.string.notification_title, true);
     }
 
-    private void destroyToolbar() {
-        if (actionBarDrawerToggle != null && hasDrawerHost != null) {
-            hasDrawerHost.getDrawerLayout().removeDrawerListener(actionBarDrawerToggle);
-        }
-        toolbar.setOnMenuItemClickListener(null);
-        ActionBar supportActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        if (supportActionBar != null) {
-            supportActionBar.show();
-        }
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.notification_center_menu, menu);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                analytic.reportEvent(Analytic.Interaction.CLICK_SETTINGS_FROM_NOTIFICATION);
+                screenManager.showSettings(getActivity());
+                return true;
+            case android.R.id.home:
+                // Respond to the action bar's Up/Home button
+                getActivity().finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     static class NotificationPagerAdapter extends FragmentStatePagerAdapter {
         private final int numberOfCategories = NotificationCategory.values().length;
