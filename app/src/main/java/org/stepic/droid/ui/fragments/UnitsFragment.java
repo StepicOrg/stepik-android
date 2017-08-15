@@ -44,6 +44,7 @@ import org.stepic.droid.model.Unit;
 import org.stepic.droid.storage.StoreStateManager;
 import org.stepic.droid.ui.adapters.UnitAdapter;
 import org.stepic.droid.ui.dialogs.DeleteItemDialogFragment;
+import org.stepic.droid.ui.util.ToolbarHelperKt;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.SnackbarShower;
@@ -84,9 +85,6 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
     @BindView(R.id.loadProgressbar)
     ProgressBar progressBar;
 
-    @BindView(R.id.toolbar)
-    android.support.v7.widget.Toolbar toolbar;
-
     @BindView(R.id.reportProblem)
     protected View reportConnectionProblem;
 
@@ -119,7 +117,7 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
     @Inject
     StoreStateManager storeStateManager;
 
-    UnitAdapter adapter;
+    private UnitAdapter adapter;
 
     private List<Unit> unitList;
     private List<Lesson> lessonList;
@@ -174,8 +172,7 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
                 R.color.stepic_orange_carrot,
                 R.color.stepic_blue_ribbon);
 
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ToolbarHelperKt.initCenteredToolbar(this, R.string.units_lessons_title, true);
 
         unitsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         unitList = new ArrayList<>();
