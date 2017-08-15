@@ -31,6 +31,11 @@
         <item name="android:colorForeground">#c7c7c7</item>
 
         <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="android:actionOverflowButtonStyle">@style/OverflowMenuButton</item>
+    </style>
+
+    <style name="OverflowMenuButton" parent="@android:style/Widget.Holo.ActionButton.Overflow">
+        <item name="android:src">@drawable/ic_action_more_vert</item>
     </style>
 
 

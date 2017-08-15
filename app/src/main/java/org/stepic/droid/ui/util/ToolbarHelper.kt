@@ -1,10 +1,14 @@
 package org.stepic.droid.ui.util
 
+import android.annotation.SuppressLint
+import android.graphics.PorterDuff
 import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
+import org.stepic.droid.R
 
 
 //Fragment's functions:
@@ -38,7 +42,7 @@ fun AppCompatActivity.initCenteredToolbar(@StringRes titleRes: Int,
 }
 
 private fun AppCompatActivity.initCenteredToolbarBase(showHomeButton: Boolean,
-                                                      @DrawableRes homeIndicator: Int = -1) {
+                                                      @DrawableRes homeIndicatorRes: Int = -1) {
     this.setSupportActionBar(centeredToolbar)
 
     val actionBar = this.supportActionBar
@@ -51,8 +55,14 @@ private fun AppCompatActivity.initCenteredToolbarBase(showHomeButton: Boolean,
         actionBar.setDisplayHomeAsUpEnabled(true)
     }
 
-    if (homeIndicator != -1) {
+    if (homeIndicatorRes != -1) {
         //is not default
-        actionBar.setHomeAsUpIndicator(homeIndicator)
+        actionBar.setHomeAsUpIndicator(homeIndicatorRes)
+    } else {
+        //default
+        @SuppressLint("PrivateResource")
+        val defaultDrawable = ContextCompat.getDrawable(this, R.drawable.abc_ic_ab_back_material)
+        defaultDrawable.setColorFilter(ContextCompat.getColor(this, R.color.new_accent_color), PorterDuff.Mode.SRC_ATOP);
+        actionBar.setHomeAsUpIndicator(defaultDrawable)
     }
 }
