@@ -155,7 +155,14 @@ class MainFeedActivity : BackToExitActivityBase(),
             finish();
             return;
         }
-        super.onBackPressed()
+
+        //avoid memory leak, when user click back:
+        val fragment = supportFragmentManager.findFragmentById(R.id.frame);
+        supportFragmentManager.popBackStackImmediate();
+        supportFragmentManager
+                .beginTransaction()
+                .remove(fragment)
+                .commit();
         navigationView.selectedItemId = R.id.my_courses
         showBottomBar()
     }

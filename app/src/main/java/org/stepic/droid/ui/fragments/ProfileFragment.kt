@@ -39,14 +39,6 @@ class ProfileFragment : FragmentBase(),
         ProfileView,
         NotificationTimeView {
 
-    val aboutMeTitle: String by lazy {
-        getString(R.string.about_me)
-    }
-
-    val shortBioTitleString: String by lazy {
-        getString(R.string.short_bio)
-    }
-
     @Inject
     lateinit var profilePresenter: ProfilePresenter
 
@@ -114,6 +106,21 @@ class ProfileFragment : FragmentBase(),
         Timber.d("onViewCreated %s", this)
     }
 
+    override fun onDestroyView() {
+        notificationStreakSwitch.setOnCheckedChangeListener(null)
+        profileName.setOnClickListener(null)
+        currentStreakValue.setOnClickListener(null)
+        maxStreakValue.setOnClickListener(null)
+        profileImage.setOnClickListener(null)
+        notificationIntervalChooser.setOnClickListener(null)
+        streakPresenter.detachView(this)
+        profilePresenter.detachView(this)
+        shortBioInfoContainer.setOnClickListener(null)
+        isShortInfoExpanded = detailedInfoContainer.visibility == View.VISIBLE
+        super.onDestroyView()
+        Timber.d("onDestroyView %s", this)
+    }
+
     private fun changeStateOfUserInfo() {
         shortBioArrowImageView.changeState()
         val isExpanded = shortBioArrowImageView.isExpanded()
@@ -160,20 +167,6 @@ class ProfileFragment : FragmentBase(),
         val utc = DateTime.now(DateTimeZone.UTC).withMillisOfDay(0)
         val print = dateTimeFormatter.print(utc.withZone(DateTimeZone.getDefault()))
         notificationTimeZoneInfo.text = getString(R.string.streak_updated_timezone, print)
-    }
-
-    override fun onDestroyView() {
-        notificationStreakSwitch.setOnCheckedChangeListener(null)
-        profileName.setOnClickListener(null)
-        currentStreakValue.setOnClickListener(null)
-        maxStreakValue.setOnClickListener(null)
-        profileImage.setOnClickListener(null)
-        notificationIntervalChooser.setOnClickListener(null)
-        streakPresenter.detachView(this)
-        profilePresenter.detachView(this)
-        isShortInfoExpanded = detailedInfoContainer.visibility == View.VISIBLE
-        super.onDestroyView()
-        Timber.d("onDestroyView %s", this)
     }
 
     private fun initToolbar() {
