@@ -21,11 +21,9 @@
             android:paddingRight="@dimen/padding_tab_bar"
             android:paddingStart="@dimen/padding_tab_bar"
             android:visibility="gone"
-            app:tabIndicatorColor="@android:color/white"
+            app:tabIndicatorColor="@color/new_accent_color"
             app:tabIndicatorHeight="@dimen/guideline_tab_indicator_height"
-            app:tabMode="scrollable"
-            app:tabSelectedTextColor="@color/white"
-            app:tabTextColor="@color/white70percent"/>
+            app:tabMode="scrollable"/>
     </android.support.design.widget.AppBarLayout>
 
     <FrameLayout

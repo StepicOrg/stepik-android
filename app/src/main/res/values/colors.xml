@@ -25,7 +25,7 @@
     <color name="white70percent">#B3FFFFFF</color>
     <color name="stepic_not_viewed">#A5A5A5</color>
     <color name="stepic_cover">#EEEEEE</color>
-    <color name="stepic_viewed_steps">#C5EBB8</color>
+    <color name="stepic_viewed_steps">@color/tab_text_color</color>
     <color name="warning_light_yellow">#FFFAE9</color>
     <color name="warning_comment_highlight_yellow">#FFF4B3</color>
     <color name="streak_default_color">#48A245</color>

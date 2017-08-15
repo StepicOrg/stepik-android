@@ -4,8 +4,11 @@ import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.ColorInt;
+import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
@@ -143,14 +146,14 @@ public class StepTypeResolverImpl implements StepTypeResolver {
 
     @NonNull
     private Drawable getViewedDrawable(Drawable drawable) {
-        int COLOR2 = 0;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            COLOR2 = context.getColor(R.color.stepic_viewed_steps);
-        } else {
-            COLOR2 = context.getResources().getColor(R.color.stepic_viewed_steps);
-        }
+        return getDrawableWithColor(drawable, R.color.stepic_viewed_steps);
+    }
+
+    private Drawable getDrawableWithColor(Drawable drawable, @ColorRes int colorRes) {
+        @ColorInt
+        int colorToSet = ContextCompat.getColor(context, colorRes);
         PorterDuff.Mode mMode = PorterDuff.Mode.SRC_ATOP;
-        drawable.setColorFilter(COLOR2, mMode);
+        drawable.setColorFilter(colorToSet, mMode);
         return drawable;
     }
 
