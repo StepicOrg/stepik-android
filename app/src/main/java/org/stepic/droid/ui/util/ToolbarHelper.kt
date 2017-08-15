@@ -6,7 +6,17 @@ import android.support.v7.app.AppCompatActivity
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
 
 
-fun Fragment.initCenteredToolbar(@StringRes titleRes: Int) {
+fun Fragment.initCenteredToolbar(@StringRes titleRes: Int, showHomeButton: Boolean = false) {
+    initCenteredToolbarBase(showHomeButton)
+    centeredToolbarTitle.setText(titleRes)
+}
+
+fun Fragment.initCenteredToolbar(title: String, showHomeButton: Boolean = false) {
+    initCenteredToolbarBase(showHomeButton)
+    centeredToolbarTitle.text = title
+}
+
+private fun Fragment.initCenteredToolbarBase(showHomeButton: Boolean) {
     val appCompatActivity = activity as AppCompatActivity
     appCompatActivity.setSupportActionBar(centeredToolbar)
 
@@ -16,5 +26,11 @@ fun Fragment.initCenteredToolbar(@StringRes titleRes: Int) {
     //for preventing showing default title
     actionBar.setDisplayShowTitleEnabled(false)
 
-    centeredToolbarTitle.setText(titleRes)
+    if (showHomeButton) {
+        actionBar.setHomeButtonEnabled(true)
+    }
+}
+
+fun Fragment.setTitleToCenteredToolbar(title: String) {
+    centeredToolbarTitle.text = title
 }

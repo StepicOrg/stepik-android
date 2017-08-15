@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".ui.activities.ProfileActivity">
 
-    <include layout="@layout/view_centered_toolbar"/>
+    <include layout="@layout/view_centered_appbar"/>
 
     <!--todo: remove background and set it for theme-->
     <FrameLayout
