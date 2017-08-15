@@ -12,6 +12,7 @@ import android.view.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import kotlinx.android.synthetic.main.fragment_profile_new.*
+import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.joda.time.format.DateTimeFormatterBuilder
@@ -170,17 +171,17 @@ class ProfileFragment : FragmentBase(),
     }
 
     private fun initToolbar() {
-        val activity = activity as AppCompatActivity
-        activity.setSupportActionBar(toolbar)
+        val appCompatActivity = activity as AppCompatActivity
+        appCompatActivity.setSupportActionBar(centeredToolbar)
+
+        val actionBar = appCompatActivity.supportActionBar
+                ?: throw IllegalStateException("support action bar should be set")
 
         //for preventing showing default title
-        activity.supportActionBar!!.setDisplayShowTitleEnabled(false)
+        actionBar.setDisplayShowTitleEnabled(false)
+        actionBar.elevation = 0f
 
-//        activity.supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-//        activity.supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp)
-        activity.supportActionBar!!.elevation = 0f
-
-        toolbarTitle.setText(R.string.profile_title)
+        centeredToolbarTitle.setText(R.string.profile_title)
     }
 
     @SuppressLint("SetTextI18n")
