@@ -22,9 +22,9 @@ import org.stepic.droid.core.presenters.contracts.UpdateAppView
 import org.stepic.droid.notifications.StepicInstanceIdService
 import org.stepic.droid.services.UpdateWithApkService
 import org.stepic.droid.ui.dialogs.NeedUpdatingDialog
+import org.stepic.droid.ui.fragments.FindCoursesFragment
 import org.stepic.droid.ui.fragments.MyCoursesFragment
 import org.stepic.droid.ui.fragments.ProfileFragment
-import org.stepic.droid.ui.fragments.TestFragment
 import org.stepic.droid.ui.util.BottomNavigationBehavior
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
@@ -241,7 +241,7 @@ class MainFeedActivity : BackToExitActivityBase(),
                 getNextFragmentOrNull(currentFragmentTag, MyCoursesFragment::class.java.simpleName, MyCoursesFragment::newInstance)
             }
             R.id.find_lessons -> {
-                getNextFragmentOrNull(currentFragmentTag, TestFragment::class.java.simpleName, TestFragment.Companion::newInstance)
+                getNextFragmentOrNull(currentFragmentTag, FindCoursesFragment::class.java.simpleName, FindCoursesFragment::newInstance)
             }
             R.id.profile -> {
                 getNextFragmentOrNull(currentFragmentTag, ProfileFragment::class.java.simpleName, ProfileFragment.Companion::newInstance)
