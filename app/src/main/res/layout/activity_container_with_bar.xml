@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
     <include
         android:id="@+id/appBarLayout"
         layout="@layout/view_centered_appbar"/>
