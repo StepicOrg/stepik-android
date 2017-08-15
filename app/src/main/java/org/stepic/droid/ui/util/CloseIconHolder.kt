@@ -6,5 +6,5 @@ import org.stepic.droid.R
 object CloseIconHolder {
 
     @DrawableRes
-    fun getCloseIconDrawableRes(): Int = R.drawable.ic_close_white_24dp
+    fun getCloseIconDrawableRes(): Int = R.drawable.ic_close_dark
 }
