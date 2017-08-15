@@ -38,6 +38,7 @@ import org.stepic.droid.storage.operations.Table;
 import org.stepic.droid.ui.activities.AboutAppActivity;
 import org.stepic.droid.ui.activities.CommentsActivity;
 import org.stepic.droid.ui.activities.CourseDetailActivity;
+import org.stepic.droid.ui.activities.DownloadsActivity;
 import org.stepic.droid.ui.activities.FeedbackActivity;
 import org.stepic.droid.ui.activities.FilterActivity;
 import org.stepic.droid.ui.activities.LaunchActivity;
@@ -259,15 +260,12 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void showDownloads() {
-        Context context = App.Companion.getAppContext();
-        showDownloads(context);
-    }
-
-    @Override
     public void showDownloads(Context context) {
-        int index = MainFeedActivity.Companion.getDownloadFragmentIndex();
-        context.startActivity(getFromMainActivityIntent(context, index));
+        Intent intent = new Intent(context, DownloadsActivity.class);
+        if (!(context instanceof Activity)) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        }
+        context.startActivity(intent);
     }
 
     @Override

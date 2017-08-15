@@ -1,23 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:orientation="vertical">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
+    <include layout="@layout/view_centered_appbar"/>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/list_of_downloads"
+    <FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:divider="@color/transparent"
-        android:scrollbarStyle="outsideOverlay"/>
+        android:layout_height="match_parent">
 
-    <include layout="@layout/empty_downloading"/>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/list_of_downloads"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:divider="@color/transparent"
+            android:scrollbarStyle="outsideOverlay"/>
 
-    <include
-        android:id="@+id/progress_bar"
-        layout="@layout/progress_bar_on_empty_screen"/>
+        <include layout="@layout/empty_downloading"/>
 
-    <include layout="@layout/need_auth_placeholder"/>
-</FrameLayout>
+        <include
+            android:id="@+id/progress_bar"
+            layout="@layout/progress_bar_on_empty_screen"/>
+
+        <include layout="@layout/need_auth_placeholder"/>
+    </FrameLayout>
+</LinearLayout>

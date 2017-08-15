@@ -37,6 +37,7 @@ import org.stepic.droid.ui.dialogs.CancelVideosDialog;
 import org.stepic.droid.ui.dialogs.ClearVideosDialog;
 import org.stepic.droid.ui.dialogs.LoadingProgressDialog;
 import org.stepic.droid.ui.listeners.OnClickCancelListener;
+import org.stepic.droid.ui.util.ToolbarHelperKt;
 import org.stepic.droid.util.DbParseHelper;
 import org.stepic.droid.util.KotlinUtil;
 import org.stepic.droid.util.ProgressHelper;
@@ -138,6 +139,7 @@ public class DownloadsFragment extends FragmentBase implements
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setHasOptionsMenu(true);
+        initToolbar();
 
         needAuthRootView.setVisibility(View.GONE);
         authUserButton.setOnClickListener(new View.OnClickListener() {
@@ -165,6 +167,10 @@ public class DownloadsFragment extends FragmentBase implements
         loadingProgressDialog = new LoadingProgressDialog(getContext());
         downloadsListenerClient.subscribe(this);
         videoMovedListenerClient.subscribe(this);
+    }
+
+    private void initToolbar() {
+        ToolbarHelperKt.initCenteredToolbar(this, R.string.downloads, true);
     }
 
     private void startLoadingStatusUpdater() {

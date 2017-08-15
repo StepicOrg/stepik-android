@@ -74,8 +74,6 @@ public interface ScreenManager {
 
     void showStoreWithApp(Activity sourceActivity);
 
-    void showDownloads();
-
     void showDownloads(Context context);
 
     void showFindCourses(Context context);

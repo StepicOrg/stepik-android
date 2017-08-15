@@ -384,6 +384,10 @@
             android:name=".ui.activities.NotificationsActivity">
         </activity>
 
+        <activity
+            android:name=".ui.activities.DownloadsActivity">
+        </activity>
+
         <receiver
             android:name=".receivers.BootCompletedReceiver"
             android:enabled="true"
