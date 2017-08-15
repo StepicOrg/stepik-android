@@ -17,6 +17,7 @@ import org.stepic.droid.R;
 import org.stepic.droid.base.CoursesDatabaseFragmentBase;
 import org.stepic.droid.storage.operations.Table;
 import org.stepic.droid.ui.listeners.OnRootTouchedListener;
+import org.stepic.droid.ui.util.ToolbarHelperKt;
 
 public class FindCoursesFragment extends CoursesDatabaseFragmentBase {
 
@@ -32,6 +33,7 @@ public class FindCoursesFragment extends CoursesDatabaseFragmentBase {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         super.onViewCreated(view, savedInstanceState);
+        ToolbarHelperKt.initCenteredToolbar(this, R.string.find_courses_title);
         rootView.setParentTouchEvent(new OnRootTouchedListener() {
             @Override
             public void makeBeforeChildren() {

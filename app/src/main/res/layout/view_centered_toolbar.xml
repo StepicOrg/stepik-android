@@ -4,8 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/centeredAppBarLayout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:elevation="0dp">
+    android:layout_height="wrap_content">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/centeredToolbar"

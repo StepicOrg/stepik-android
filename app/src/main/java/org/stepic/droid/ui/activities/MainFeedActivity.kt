@@ -238,7 +238,7 @@ class MainFeedActivity : BackToExitActivityBase(),
         val currentFragmentTag: String? = supportFragmentManager.findFragmentById(R.id.frame)?.tag
         val nextFragment: Fragment? = when (id) {
             R.id.my_courses -> {
-                getNextFragmentOrNull(currentFragmentTag, MyCoursesFragment::class.java.simpleName, MyCoursesFragment::newInstance)
+                getNextFragmentOrNull(currentFragmentTag, MyCoursesFragment::class.java.simpleName, MyCoursesFragment.Companion::newInstance)
             }
             R.id.find_lessons -> {
                 getNextFragmentOrNull(currentFragmentTag, FindCoursesFragment::class.java.simpleName, FindCoursesFragment::newInstance)

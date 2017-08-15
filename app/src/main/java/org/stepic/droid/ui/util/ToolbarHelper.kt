@@ -15,7 +15,6 @@ fun Fragment.initCenteredToolbar(@StringRes titleRes: Int) {
 
     //for preventing showing default title
     actionBar.setDisplayShowTitleEnabled(false)
-    actionBar.elevation = 0f
 
     centeredToolbarTitle.setText(titleRes)
 }
