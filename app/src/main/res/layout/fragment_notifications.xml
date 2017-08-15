@@ -19,11 +19,11 @@
             android:overScrollMode="never"
             android:paddingLeft="@dimen/left_padding_tablayout_scrollable"
             android:paddingStart="@dimen/left_padding_tablayout_scrollable"
-            app:tabIndicatorColor="@android:color/white"
+            app:tabIndicatorColor="@color/new_accent_color"
             app:tabIndicatorHeight="@dimen/guideline_tab_indicator_height"
             app:tabMode="scrollable"
-            app:tabSelectedTextColor="@color/white"
-            app:tabTextColor="@color/white70percent"/>
+            app:tabSelectedTextColor="@color/tab_text_color"
+            app:tabTextColor="@color/tab_text_color_70percent"/>
     </android.support.design.widget.AppBarLayout>
 
     <FrameLayout
