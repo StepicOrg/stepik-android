@@ -12,7 +12,6 @@
         android:gravity="center_horizontal"
         android:padding="@dimen/guideline_standard_padding"
         android:text="@string/rate_dialog_title"
-        android:textColor="@color/drawer_text_color_checked"
         android:textSize="20sp"/>
 
     <RatingBar
@@ -33,30 +32,33 @@
         android:layout_below="@id/rateDialogRatingBar"
         android:gravity="center"
         android:padding="@dimen/half_padding"
-        android:textColor="@color/drawer_text_color_checked"
         android:textSize="@dimen/rate_dialog_button_text_size"
         android:visibility="gone"
         tools:text="ПожалуйстаПожалуйстаПожалуйста, оставьте отзыв в Google Play"
         tools:visibility="visible"
-    />
+        />
 
 
     <LinearLayout
         android:id="@+id/rateDialogButtonsContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/rateDialogHint"
         android:orientation="horizontal"
         android:visibility="gone"
-        tools:visibility="visible">
+        tools:visibility="visible"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true">
+
         <TextView
             android:id="@+id/rateDialogLater"
             style="@style/RateItemTextView"
             tools:text="Later"/>
+
         <View
             android:layout_width="2dp"
             android:layout_height="match_parent"
             android:background="@color/silver"/>
+
         <TextView
             android:id="@+id/rateDialogPositive"
             style="@style/RateItemTextView"

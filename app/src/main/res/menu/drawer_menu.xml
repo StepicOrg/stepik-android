@@ -3,16 +3,16 @@
 
     <item
         android:id="@+id/my_courses"
-        android:icon="@drawable/ic_my_courses"
-        android:title="@string/my_courses_title"/>
+        android:icon="@drawable/ic_home"
+        android:title="@string/home_title"/>
     <item
         android:id="@+id/find_lessons"
-        android:icon="@drawable/ic_search_courses"
-        android:title="@string/find_courses_title"/>
+        android:icon="@drawable/ic_search_menu"
+        android:title="@string/catalog_title"/>
 
     <item
         android:id="@+id/profile"
         android:checkable="false"
-        android:icon="@drawable/ic_account_circle_black_24dp"
+        android:icon="@drawable/ic_profile"
         android:title="@string/profile_title"/>
 </menu>

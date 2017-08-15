@@ -16,7 +16,7 @@
     <string name="find_courses_title">Найти курсы</string>
     <string name="first_name">Имя</string>
     <string name="logout_title">Выход</string>
-    <string name="my_courses_title">Мои курсы</string>
+    <string name="home_title">Главная</string>
     <string name="or_sign_up_with_email">или зарегистрироваться через e-mail</string>
     <string name="password_hint">Пароль</string>
     <string name="remind_password">Вспомнить пароль</string>
@@ -473,4 +473,7 @@
 
     <!--Profile screen-->
     <string name="short_bio_and_info">Краткая биография &amp; Информация</string>
+
+    <!--Home screen-->
+    <string name="catalog_title">Каталог</string>
 </resources>

@@ -10,8 +10,6 @@
     <color name="stepic_regular_text">#5E5E5E</color>
     <color name="stepic_weak_text">#A5A5A5</color>
     <color name="black">#000000</color>
-    <color name="drawer_text_color_checked">#505050</color>
-    <color name="drawer_text_color_unchecked">#5e5e5e</color>
     <color name="drawer_background">@color/white</color>
     <color name="drawer_item_highlighting">#eeeeee</color>
     <color name="drawer_item_highlighting_pressed">#EDEDED</color>
@@ -68,9 +66,10 @@
 
     <!--Redesigned colors-->
     <color name="new_main_color">#535366</color>
+    <color name="text_color">@color/new_main_color</color>
     <color name="new_secondary_color">#F6F6F6</color>
     <color name="new_border_color">@color/new_secondary_color</color>>
     <color name="new_logout_color">#C82850</color>>
     <color name="arrow_color">@color/new_main_color</color>>
-
+    <color name="bottom_menu_color">@color/new_main_color</color>
 </resources>

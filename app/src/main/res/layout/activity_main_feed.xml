@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout
-    android:id="@+id/coordinatorLayoutMainFeed"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/coordinatorLayoutMainFeed"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -21,8 +21,8 @@
         android:layout_gravity="bottom"
         android:background="@color/white"
         app:itemBackground="@drawable/drawer_item_background_selector"
-        app:itemIconTint="@color/drawer_item_color"
-        app:itemTextColor="@color/drawer_item_color"
+        app:itemIconTint="@color/bottom_menu_color"
+        app:itemTextColor="@color/bottom_menu_color"
         app:layout_behavior="org.stepic.droid.ui.util.BottomNavigationBehavior"
         app:menu="@menu/drawer_menu"/>
 

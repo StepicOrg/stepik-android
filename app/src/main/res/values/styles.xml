@@ -13,7 +13,7 @@
         <!--this change the background of main window (activity and) AND all the components (dialogs) -->
         <item name="android:colorBackground">@color/white</item>
 
-        <item name="android:textColor">@color/stepic_regular_text</item>
+        <item name="android:textColor">@color/text_color</item>
         <item name="android:textViewStyle">@style/AppTheme.Widget.TextView</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:actionMenuTextColor">@color/white</item>

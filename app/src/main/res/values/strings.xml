@@ -26,7 +26,7 @@
     <string name="first_name">First name</string>
     <string name="second_name">Second name</string>
     <string name="password_hint">Password</string>
-    <string name="my_courses_title">My courses</string>
+    <string name="home_title">Home</string>
     <string name="best_lessons_title">Best lessons</string>
     <string name="drawer_open">open drawer</string>
     <string name="drawer_closed">close drawer</string>
@@ -478,4 +478,7 @@
 
     <!--Profile screen-->
     <string name="short_bio_and_info">Short bio &amp; Info</string>
+
+    <!--Home screen-->
+    <string name="catalog_title">Catalog</string>
 </resources>
