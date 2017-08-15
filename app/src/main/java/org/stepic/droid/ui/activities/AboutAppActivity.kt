@@ -33,7 +33,7 @@ open class AboutAppActivity : SingleFragmentActivity() {
         supportActionBar!!.setDisplayShowHomeEnabled(true)
         supportActionBar!!.setHomeButtonEnabled(true)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp)
+        supportActionBar!!.setHomeAsUpIndicator(closeIconDrawableRes)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {

@@ -129,7 +129,7 @@ public class FilterFragment extends FragmentBase implements FilterView {
     private void initToolbar() {
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(getCloseIconDrawableRes());
     }
 
     @Override

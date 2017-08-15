@@ -114,7 +114,7 @@ class NewCommentFragment : FragmentBase(), OnBackClickListener {
         toolbar = v.findViewById<Toolbar>(R.id.toolbar)
         (activity as AppCompatActivity).setSupportActionBar(toolbar)
         (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        (activity as AppCompatActivity).supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp)
+        (activity as AppCompatActivity).supportActionBar?.setHomeAsUpIndicator(closeIconDrawableRes)
     }
 
     private fun showSoftKeypad(editTextView: View) {

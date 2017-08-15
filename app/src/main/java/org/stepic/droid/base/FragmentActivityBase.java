@@ -7,10 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Parcelable;
-import android.support.annotation.IdRes;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.support.annotation.DrawableRes;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -33,7 +30,7 @@ import org.stepic.droid.notifications.StepikNotificationManager;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.storage.operations.DatabaseFacade;
-import org.stepic.droid.ui.fragments.MyCoursesFragment;
+import org.stepic.droid.ui.util.CloseIconHolder;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.resolvers.CoursePropertyResolver;
 import org.stepic.droid.util.resolvers.text.TextResolver;
@@ -239,5 +236,10 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
             }
 
         }
+    }
+
+    @DrawableRes
+    protected final int getCloseIconDrawableRes() {
+        return CloseIconHolder.INSTANCE.getCloseIconDrawableRes();
     }
 }

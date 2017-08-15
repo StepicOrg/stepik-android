@@ -111,7 +111,7 @@ public class PhotoViewFragment extends FragmentBase {
             supportActionBar.setDisplayShowHomeEnabled(true);
             supportActionBar.setHomeButtonEnabled(true);
             supportActionBar.setDisplayHomeAsUpEnabled(true);
-            supportActionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
+            supportActionBar.setHomeAsUpIndicator(getCloseIconDrawableRes());
         }
     }
 }

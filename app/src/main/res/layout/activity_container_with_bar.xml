@@ -7,7 +7,7 @@
 
     <include
         android:id="@+id/appBarLayout"
-        layout="@layout/appbar_only_toolbar"/>
+        layout="@layout/view_centered_appbar"/>
 
     <FrameLayout
         android:id="@+id/fragmentContainer"

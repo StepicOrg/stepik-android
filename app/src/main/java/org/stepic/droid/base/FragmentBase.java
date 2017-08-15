@@ -3,6 +3,7 @@ package org.stepic.droid.base;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.View;
@@ -24,6 +25,7 @@ import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.storage.CancelSniffer;
 import org.stepic.droid.storage.IDownloadManager;
 import org.stepic.droid.storage.operations.DatabaseFacade;
+import org.stepic.droid.ui.util.CloseIconHolder;
 import org.stepic.droid.util.resolvers.CoursePropertyResolver;
 import org.stepic.droid.util.resolvers.text.TextResolver;
 import org.stepic.droid.web.Api;
@@ -179,5 +181,10 @@ public class FragmentBase extends Fragment {
         //do not animate fragment on rotation via setCustomAnimations
         return shouldNotBeenDestroyed ? new Animation() {
         } : super.onCreateAnimation(transit, enter, nextAnim);
+    }
+
+    @DrawableRes
+    protected final int getCloseIconDrawableRes() {
+        return CloseIconHolder.INSTANCE.getCloseIconDrawableRes();
     }
 }
