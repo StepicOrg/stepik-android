@@ -13,7 +13,6 @@ class TextFeedbackActivity : SingleFragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.setBackgroundDrawable(null)
-        setTitle(R.string.feedback_title)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -29,7 +28,7 @@ class TextFeedbackActivity : SingleFragmentActivity() {
 
     override fun finish() {
         super.finish()
-        overridePendingTransition(org.stepic.droid.R.anim.no_transition, org.stepic.droid.R.anim.push_down)
+        overridePendingTransition(R.anim.no_transition, R.anim.push_down)
     }
 
     companion object {

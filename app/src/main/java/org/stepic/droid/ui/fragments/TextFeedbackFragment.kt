@@ -4,13 +4,10 @@ import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Context
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import kotlinx.android.synthetic.main.appbar_only_toolbar.*
 import kotlinx.android.synthetic.main.fragment_text_feedback.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
@@ -18,6 +15,7 @@ import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.core.presenters.TextFeedbackPresenter
 import org.stepic.droid.core.presenters.contracts.TextFeedbackView
 import org.stepic.droid.ui.dialogs.LoadingProgressDialog
+import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.ValidatorUtil
 import javax.inject.Inject
@@ -27,7 +25,7 @@ class TextFeedbackFragment : FragmentBase(), TextFeedbackView {
         fun newInstance(): TextFeedbackFragment = TextFeedbackFragment()
     }
 
-    var progressDialog: ProgressDialog? = null
+    private var progressDialog: ProgressDialog? = null
 
     @Inject
     lateinit var textFeedbackPresenter: TextFeedbackPresenter
@@ -81,8 +79,7 @@ class TextFeedbackFragment : FragmentBase(), TextFeedbackView {
     }
 
     fun initToolbar() {
-        (activity as AppCompatActivity).setSupportActionBar(toolbar as Toolbar)
-        (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        initCenteredToolbar(R.string.feedback_title, showHomeButton = true)
     }
 
     fun initTextFields() {

@@ -3,17 +3,14 @@ package org.stepic.droid.ui.activities
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import org.stepic.droid.R
 import org.stepic.droid.base.SingleFragmentActivity
 import org.stepic.droid.ui.fragments.FeedbackFragment
+import org.stepic.droid.ui.util.initCenteredToolbar
 
 class FeedbackActivity : SingleFragmentActivity() {
     override fun createFragment() = FeedbackFragment.newInstance()
-
-
-    var toolbar: Toolbar? = null;
 
     override fun getLayoutResId(): Int {
         return R.layout.activity_container_with_bar
@@ -22,18 +19,14 @@ class FeedbackActivity : SingleFragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.setBackgroundDrawable(null)
-        setTitle(R.string.feedback_title)
-        toolbar = findViewById<Toolbar>(R.id.toolbar)
         setUpToolbar()
     }
 
 
     private fun setUpToolbar() {
-        setSupportActionBar(toolbar)
-        supportActionBar!!.setDisplayShowHomeEnabled(true)
-        supportActionBar!!.setHomeButtonEnabled(true)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        supportActionBar!!.setHomeAsUpIndicator(closeIconDrawableRes)
+        initCenteredToolbar(R.string.feedback_title,
+                showHomeButton = true,
+                homeIndicator = closeIconDrawableRes)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
