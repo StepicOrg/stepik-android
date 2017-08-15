@@ -3,9 +3,9 @@
     <style name="StepikTheme" parent="StepikTheme.15"/>
 
     <style name="StepikTheme.15" parent="@style/Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">#F6F6F6</item>
-        <item name="colorPrimaryDark">@color/new_main_color</item>
-        <item name="colorAccent">@color/new_main_color</item>
+        <item name="colorPrimary">@color/new_primary_color</item>
+        <item name="colorPrimaryDark">@color/new_accent_color</item>
+        <item name="colorAccent">@color/new_accent_color</item>
 
         <!--this change the background of main window (activity)-->
         <item name="android:windowBackground">@color/white</item>
@@ -39,7 +39,7 @@
     <style name="AppTheme.15" parent="@style/Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/stepic_brand_primary</item>
         <item name="colorPrimaryDark">@color/black</item>
-        <item name="colorAccent">@color/new_main_color</item>
+        <item name="colorAccent">@color/new_accent_color</item>
 
         <!--this change the background of main window (activity)-->
         <item name="android:windowBackground">@color/stepic_cover</item>
@@ -210,7 +210,7 @@
     </style>
 
     <style name="NewSettingSwitch">
-        <item name="android:textColor">@color/new_main_color</item>
+        <item name="android:textColor">@color/new_accent_color</item>
         <item name="android:textSize">@dimen/text_header</item>
         <item name="android:foreground">@drawable/non_radius_foreground</item>
         <item name="android:paddingBottom">@dimen/guideline_standard_padding</item>
@@ -304,7 +304,7 @@
     <style name="StepikToolbarTextAppearance" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textSize">16sp</item>
         <item name="fontPath">fonts/Roboto-Light.ttf</item>
-        <item name="android:textColor">@color/new_main_color</item>
+        <item name="android:textColor">@color/new_accent_color</item>
     </style>
 
 
