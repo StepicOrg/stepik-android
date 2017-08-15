@@ -16,7 +16,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -82,6 +81,7 @@ import org.stepic.droid.ui.dialogs.DeleteItemDialogFragment;
 import org.stepic.droid.ui.dialogs.ExplainCalendarPermissionDialog;
 import org.stepic.droid.ui.dialogs.LoadingProgressDialog;
 import org.stepic.droid.ui.dialogs.UnauthorizedDialogFragment;
+import org.stepic.droid.ui.util.ToolbarHelperKt;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ColorUtil;
 import org.stepic.droid.util.HtmlHelper;
@@ -140,9 +140,6 @@ public class SectionsFragment
 
     @BindView(R.id.loadProgressbar)
     ProgressBar loadOnCenterProgressBar;
-
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
 
     @BindView(R.id.reportProblem)
     protected View reportConnectionProblem;
@@ -296,14 +293,14 @@ public class SectionsFragment
         courseJoinerPresenter.attachView(this);
         sectionsPresenter.attachView(this);
         invitationPresenter.attachView(this);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        ToolbarHelperKt.initCenteredToolbar(this, R.string.syllabus_title, true);
         onNewIntent(getActivity().getIntent());
     }
 
     private void setUpToolbarWithCourse() {
         if (course != null && course.getTitle() != null && !course.getTitle().isEmpty()) {
-            getActivity().setTitle(course.getTitle());
+            ToolbarHelperKt.setTitleToCenteredToolbar(this, course.getTitle());
         }
     }
 

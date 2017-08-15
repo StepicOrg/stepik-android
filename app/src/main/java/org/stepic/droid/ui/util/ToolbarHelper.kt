@@ -27,7 +27,7 @@ private fun Fragment.initCenteredToolbarBase(showHomeButton: Boolean) {
     actionBar.setDisplayShowTitleEnabled(false)
 
     if (showHomeButton) {
-        actionBar.setHomeButtonEnabled(true)
+        actionBar.setDisplayHomeAsUpEnabled(true)
     }
 }
 
