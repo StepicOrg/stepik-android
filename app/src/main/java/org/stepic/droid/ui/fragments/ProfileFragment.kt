@@ -6,13 +6,11 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import kotlinx.android.synthetic.main.fragment_profile_new.*
-import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.joda.time.format.DateTimeFormatterBuilder
@@ -29,6 +27,7 @@ import org.stepic.droid.ui.adapters.ProfileSettingsAdapter
 import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment
 import org.stepic.droid.ui.util.StepikAnimUtils
 import org.stepic.droid.ui.util.TimeIntervalUtil
+import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.ProfileSettingsHelper
 import org.stepic.droid.util.svg.GlideSvgRequestFactory
@@ -171,17 +170,7 @@ class ProfileFragment : FragmentBase(),
     }
 
     private fun initToolbar() {
-        val appCompatActivity = activity as AppCompatActivity
-        appCompatActivity.setSupportActionBar(centeredToolbar)
-
-        val actionBar = appCompatActivity.supportActionBar
-                ?: throw IllegalStateException("support action bar should be set")
-
-        //for preventing showing default title
-        actionBar.setDisplayShowTitleEnabled(false)
-        actionBar.elevation = 0f
-
-        centeredToolbarTitle.setText(R.string.profile_title)
+        initCenteredToolbar(R.string.profile_title)
     }
 
     @SuppressLint("SetTextI18n")
