@@ -55,22 +55,22 @@ public class StepTypeResolverImpl implements StepTypeResolver {
         mapFromTypeToDrawable = new HashMap<>();
         mapFromTypeToDrawableNotViewed = new HashMap<>();
 
-        peerReviewDrawableNotViewed = getDrawable(context, R.drawable.ic_peer_review);
+        peerReviewDrawableNotViewed = getNotViewedDrawable(getDrawable(context, R.drawable.ic_peer_review));
         peerReviewDrawable = getViewedDrawable(getDrawable(context, R.drawable.ic_peer_review).mutate());
 
-        Drawable simpleQuestionDrawableNotViewed = getDrawable(context, R.drawable.ic_easy_quiz);
+        Drawable simpleQuestionDrawableNotViewed = getNotViewedDrawable(getDrawable(context, R.drawable.ic_easy_quiz));
         Drawable simpleQuestionDrawable = getViewedDrawable(getDrawable(context, R.drawable.ic_easy_quiz).mutate());
 
-        Drawable videoDrawableNotViewed = getDrawable(context, R.drawable.ic_video_pin);
+        Drawable videoDrawableNotViewed = getNotViewedDrawable(getDrawable(context, R.drawable.ic_video_pin));
         Drawable videoDrawable = getViewedDrawable(getDrawable(context, R.drawable.ic_video_pin).mutate());
 
-        Drawable animationDrawableNotViewed = getDrawable(context, R.drawable.ic_animation);
+        Drawable animationDrawableNotViewed = getNotViewedDrawable(getDrawable(context, R.drawable.ic_animation));
         Drawable animationDrawable = getViewedDrawable(getDrawable(context, R.drawable.ic_animation).mutate());
 
-        Drawable hardQuizDrawableNotViewed = getDrawable(context, R.drawable.ic_hard_quiz);
+        Drawable hardQuizDrawableNotViewed = getNotViewedDrawable(getDrawable(context, R.drawable.ic_hard_quiz));
         Drawable hardQuizDrawable = getViewedDrawable(getDrawable(context, R.drawable.ic_hard_quiz).mutate());
 
-        Drawable theoryDrawableNotViewed = getDrawable(context, R.drawable.ic_theory);
+        Drawable theoryDrawableNotViewed = getNotViewedDrawable(getDrawable(context, R.drawable.ic_theory));
         Drawable theoryQuizDrawable = getViewedDrawable(getDrawable(context, R.drawable.ic_theory).mutate());
 
         mapFromTypeToDrawable.put(AppConstants.TYPE_TEXT, theoryQuizDrawable);
@@ -142,6 +142,12 @@ public class StepTypeResolverImpl implements StepTypeResolver {
             }
             return drawable;
         }
+    }
+
+    private Drawable getNotViewedDrawable(Drawable drawable) {
+//        return drawable;//it is default implementation
+        return getDrawableWithColor(drawable, R.color.stepic_orange_carrot);
+
     }
 
     @NonNull
