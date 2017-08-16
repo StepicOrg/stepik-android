@@ -8,7 +8,7 @@
 
     <include
         android:id="@+id/appBarLayout"
-        layout="@layout/appbar_only_toolbar"/>
+        layout="@layout/view_centered_appbar"/>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -39,7 +39,7 @@
                         />
 
                     <CheckBox
-                        android:id="@+id/language_ru_courses"
+                        android:id="@+id/languageRuCheckBox"
                         style="@style/SettingCompoundButton"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -47,7 +47,7 @@
                         />
 
                     <CheckBox
-                        android:id="@+id/language_en_courses"
+                        android:id="@+id/languageEnCheckBox"
                         style="@style/SettingCompoundButton"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -74,21 +74,21 @@
                         android:text="@string/timing_title"/>
 
                     <CheckBox
-                        android:id="@+id/timing_upcoming"
+                        android:id="@+id/upcomingCheckBox"
                         style="@style/SettingCompoundButton"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/timing_upcoming_title"/>
 
                     <CheckBox
-                        android:id="@+id/timing_active"
+                        android:id="@+id/activeCheckBox"
                         style="@style/SettingCompoundButton"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/timing_active_title"/>
 
                     <CheckBox
-                        android:id="@+id/timing_past"
+                        android:id="@+id/pastCheckBox"
                         style="@style/SettingCompoundButton"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -116,7 +116,7 @@
                         android:text="@string/title_confirmation"/>
 
                     <CheckBox
-                        android:id="@+id/filter_persistent_switch"
+                        android:id="@+id/persistentCheckBox"
                         style="@style/SettingCompoundButton"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -124,13 +124,13 @@
                         android:text="@string/save_filter_title"/>
 
                     <Button
-                        android:id="@+id/filter_accept_button"
+                        android:id="@+id/acceptButton"
                         style="@style/StepicSmallMaterialButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentRight="true"
-                        android:layout_below="@id/filter_persistent_switch"
+                        android:layout_below="@id/persistentCheckBox"
                         android:layout_marginBottom="@dimen/guideline_standard_padding"
                         android:layout_marginEnd="@dimen/guideline_standard_padding"
                         android:layout_marginRight="@dimen/guideline_standard_padding"
@@ -139,17 +139,17 @@
                         />
 
                     <Button
-                        android:id="@+id/filter_cancel_button"
+                        android:id="@+id/cancelButton"
                         style="@style/Widget.AppCompat.Button.Borderless.Colored"
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/height_of_small_button"
-                        android:layout_below="@id/filter_persistent_switch"
+                        android:layout_below="@id/persistentCheckBox"
                         android:layout_marginBottom="@dimen/guideline_standard_padding"
                         android:layout_marginEnd="@dimen/guideline_standard_padding"
                         android:layout_marginRight="@dimen/guideline_standard_padding"
                         android:layout_marginTop="@dimen/half_padding"
-                        android:layout_toLeftOf="@id/filter_accept_button"
-                        android:layout_toStartOf="@id/filter_accept_button"
+                        android:layout_toLeftOf="@id/acceptButton"
+                        android:layout_toStartOf="@id/acceptButton"
                         android:text="@string/cancel"
                         android:textColor="?colorAccent"
                         android:textSize="@dimen/stepik_text_size_in_button"
