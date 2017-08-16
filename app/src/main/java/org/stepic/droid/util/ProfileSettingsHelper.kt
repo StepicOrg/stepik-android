@@ -2,9 +2,10 @@ package org.stepic.droid.util
 
 import android.app.Activity
 import android.support.annotation.StringRes
-import android.widget.Toast
+import android.support.v4.app.Fragment
 import org.stepic.droid.R
 import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.ui.dialogs.LogoutAreYouSureDialog
 import org.stepic.droid.viewmodel.ProfileSettingsViewModel
 
 
@@ -28,8 +29,8 @@ private val logoutTitleRes = R.string.logout_title
 
 object ProfileSettingsHelper {
 
-    fun getProfileSettings(screenManager: ScreenManager): List<ProfileSettingsViewModel> {
-        val list = ArrayList<ProfileSettingsViewModel>(16)
+    fun getProfileSettings(): List<ProfileSettingsViewModel> {
+        val list = ArrayList<ProfileSettingsViewModel>(8)
 
         list.add(ProfileSettingsViewModel(settingTitleRes))
         list.add(ProfileSettingsViewModel(downloadsTitleRes))
@@ -43,7 +44,8 @@ object ProfileSettingsHelper {
 }
 
 fun ProfileSettingsViewModel?.clickProfileSettings(activity: Activity,
-                                                   screenManager: ScreenManager) {
+                                                   screenManager: ScreenManager,
+                                                   fragment: Fragment) {
     if (this == null) {
         return
     }
@@ -70,8 +72,11 @@ fun ProfileSettingsViewModel?.clickProfileSettings(activity: Activity,
         }
 
         logoutTitleRes -> {
-            //FIXME: implement it
-            Toast.makeText(activity, "Not implemented", Toast.LENGTH_SHORT).show()
+            //// TODO: 16.08.17 add analytic event
+            val dialog = LogoutAreYouSureDialog.newInstance()
+            if (!dialog.isAdded) {
+                dialog.show(fragment.childFragmentManager, null)
+            }
         }
 
     }

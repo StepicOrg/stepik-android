@@ -1,6 +1,7 @@
 package org.stepic.droid.ui.adapters
 
 import android.app.Activity
+import android.support.v4.app.Fragment
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -15,13 +16,14 @@ import org.stepic.droid.viewmodel.ProfileSettingsViewModel
 class ProfileSettingsAdapter(
         private val activity: Activity,
         private val profileSettingsList: ArrayList<ProfileSettingsViewModel>,
-        private val screenManager: ScreenManager
+        private val screenManager: ScreenManager,
+        private val fragment: Fragment
 ) : RecyclerView.Adapter<ProfileSettingsAdapter.Companion.SettingsViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SettingsViewHolder {
         val view = LayoutInflater.from(activity).inflate(R.layout.profile_item_right_arrow, parent, false);
-        return SettingsViewHolder(view, profileSettingsList, screenManager, activity)
+        return SettingsViewHolder(view, profileSettingsList, screenManager, activity, fragment)
     }
 
     override fun onBindViewHolder(holder: SettingsViewHolder, position: Int) {
@@ -36,7 +38,8 @@ class ProfileSettingsAdapter(
         class SettingsViewHolder(itemView: View,
                                  private val profileSettingsList: ArrayList<ProfileSettingsViewModel>,
                                  private val screenManager: ScreenManager,
-                                 private val activity: Activity)
+                                 private val activity: Activity,
+                                 private val fragment: Fragment)
             : RecyclerView.ViewHolder(itemView) {
 
             init {
@@ -51,7 +54,8 @@ class ProfileSettingsAdapter(
                 }
 
                 val profileSettingsItem = profileSettingsList[adapterPosition]
-                profileSettingsItem.clickProfileSettings(activity, screenManager)
+
+                profileSettingsItem.clickProfileSettings(activity, screenManager, fragment)
             }
 
             fun setData(profileSettingsViewModel: ProfileSettingsViewModel) {

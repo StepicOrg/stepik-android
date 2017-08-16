@@ -11,16 +11,28 @@ import android.support.design.widget.CoordinatorLayout
 import android.support.v4.app.Fragment
 import android.view.MenuItem
 import android.widget.Toast
+import com.facebook.login.LoginManager
+import com.google.android.gms.auth.api.Auth
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.Scopes
+import com.google.android.gms.common.api.GoogleApiClient
+import com.google.android.gms.common.api.Scope
+import com.vk.sdk.VKSdk
 import kotlinx.android.synthetic.main.activity_main_feed.*
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
+import org.stepic.droid.core.presenters.ProfileMainFeedPresenter
 import org.stepic.droid.core.presenters.UpdateAppPresenter
+import org.stepic.droid.core.presenters.contracts.ProfileMainFeedView
 import org.stepic.droid.core.presenters.contracts.UpdateAppView
+import org.stepic.droid.model.Profile
 import org.stepic.droid.notifications.StepicInstanceIdService
 import org.stepic.droid.services.UpdateWithApkService
+import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
+import org.stepic.droid.ui.dialogs.LogoutAreYouSureDialog
 import org.stepic.droid.ui.dialogs.NeedUpdatingDialog
 import org.stepic.droid.ui.fragments.FindCoursesFragment
 import org.stepic.droid.ui.fragments.MyCoursesFragment
@@ -28,6 +40,7 @@ import org.stepic.droid.ui.fragments.ProfileFragment
 import org.stepic.droid.ui.util.BottomNavigationBehavior
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
+import org.stepic.droid.util.ProgressHelper
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -35,13 +48,15 @@ import javax.inject.Inject
 class MainFeedActivity : BackToExitActivityBase(),
         BottomNavigationView.OnNavigationItemSelectedListener,
         BottomNavigationView.OnNavigationItemReselectedListener,
-        UpdateAppView {
+        LogoutAreYouSureDialog.Companion.OnLogoutSuccessListener,
+        UpdateAppView, ProfileMainFeedView {
 
     companion object {
         val currentIndexKey = "currentIndexKey"
         val reminderKey = "reminderKey"
         const val defaultIndex: Int = 0
         val defaultTag: String = MyCoursesFragment::class.java.simpleName
+        private val progressLogoutTag = "progressLogoutTag"
 
         // FIXME: 10.08.17 remove it
         val certificateFragmentIndex: Int
@@ -61,6 +76,11 @@ class MainFeedActivity : BackToExitActivityBase(),
 
     @Inject
     lateinit var updateAppPresenter: UpdateAppPresenter
+
+    @Inject
+    lateinit var profileMainFeedPresenter: ProfileMainFeedPresenter
+
+    private var googleApiClient: GoogleApiClient? = null
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
@@ -109,6 +129,9 @@ class MainFeedActivity : BackToExitActivityBase(),
         setContentView(R.layout.activity_main_feed)
 
         notificationClickedCheck(intent)
+        if (checkPlayServices()) {
+            initGoogleApiClient();
+        }
         initNavigation()
 
 
@@ -130,6 +153,21 @@ class MainFeedActivity : BackToExitActivityBase(),
         if (savedInstanceState == null) {
             setFragment(R.id.my_courses)
         }
+
+        profileMainFeedPresenter.attachView(this)
+    }
+
+    private fun initGoogleApiClient() {
+        val serverClientId = config.googleServerClientId
+        val googleSignInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestScopes(Scope(Scopes.EMAIL), Scope(Scopes.PROFILE))
+                .requestServerAuthCode(serverClientId)
+                .build();
+
+        googleApiClient = GoogleApiClient.Builder(this)
+                .enableAutoManage(this /* FragmentActivity */, {} /* OnConnectionFailedListener */)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, googleSignInOptions)
+                .build();
     }
 
     private fun initNavigation() {
@@ -144,6 +182,7 @@ class MainFeedActivity : BackToExitActivityBase(),
 
     override fun onDestroy() {
         updateAppPresenter.detachView(this)
+        profileMainFeedPresenter.detachView(this)
         if (isFinishing) {
             App.componentManager().releaseMainFeedComponent()
         }
@@ -285,7 +324,35 @@ class MainFeedActivity : BackToExitActivityBase(),
             fragmentTransaction.addToBackStack(fragment.javaClass.simpleName)
         }
         fragmentTransaction.commit()
-
-        Timber.d("Fragment on main screen %s is set", fragment)
     }
+
+    override fun onLogout() {
+        profileMainFeedPresenter.logout();
+    }
+
+    //profileMainFeedView methods
+    override fun showAnonymous() {
+        //stub
+    }
+
+    override fun showProfile(profile: Profile) {
+        //stub
+    }
+
+    override fun showLogoutLoading() {
+        val loadingProgressDialogFragment = LoadingProgressDialogFragment.newInstance()
+        ProgressHelper.activate(loadingProgressDialogFragment, supportFragmentManager, progressLogoutTag)
+    }
+
+    override fun onLogoutSuccess() {
+        ProgressHelper.dismiss(supportFragmentManager, progressLogoutTag);
+        LoginManager.getInstance().logOut();
+        VKSdk.logout();
+        if (googleApiClient?.isConnected ?: false) {
+            Auth.GoogleSignInApi.signOut(googleApiClient);
+        }
+        screenManager.showLaunchScreenAfterLogout(this);
+    }
+    //end profileMainFeedView methods
+
 }

@@ -57,7 +57,7 @@ class ProfileFragment : FragmentBase(),
         analytic.reportEvent(Analytic.Profile.OPEN_SCREEN_OVERALL)
         setHasOptionsMenu(true)
         profileSettingsList.clear()
-        profileSettingsList.addAll(ProfileSettingsHelper.getProfileSettings(screenManager))
+        profileSettingsList.addAll(ProfileSettingsHelper.getProfileSettings())
         Timber.d("onCreate %s", this)
     }
 
@@ -78,7 +78,7 @@ class ProfileFragment : FragmentBase(),
         initTimezone()
 
         profileSettingsRecyclerView.layoutManager = LinearLayoutManager(context)
-        profileSettingsRecyclerView.adapter = ProfileSettingsAdapter(activity, profileSettingsList, screenManager)
+        profileSettingsRecyclerView.adapter = ProfileSettingsAdapter(activity, profileSettingsList, screenManager, this)
         profileSettingsRecyclerView.isNestedScrollingEnabled = false
 
         profilePresenter.attachView(this)
