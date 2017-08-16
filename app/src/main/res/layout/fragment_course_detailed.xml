@@ -8,7 +8,7 @@
 
     <include
         android:id="@+id/appBarLayout"
-        layout="@layout/appbar_only_toolbar" />
+        layout="@layout/view_centered_appbar"/>
 
 
     <ListView
@@ -22,19 +22,21 @@
         android:listSelector="@android:color/transparent"
         android:scrollbarStyle="outsideOverlay"
         android:scrollbars="none"
-        android:soundEffectsEnabled="true" />
+        android:soundEffectsEnabled="true"/>
 
 
-    <include layout="@layout/internet_fail_clickable"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:layout_centerInParent="true"
-        tools:visibility= "gone"/>
+    <include
+        layout="@layout/internet_fail_clickable"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        tools:visibility="gone"/>
 
-    <include layout="@layout/fail_to_parse_course"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:layout_centerInParent="true">
+    <include
+        layout="@layout/fail_to_parse_course"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
 
     </include>
 

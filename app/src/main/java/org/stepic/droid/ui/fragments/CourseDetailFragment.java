@@ -10,10 +10,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -62,6 +60,7 @@ import org.stepic.droid.ui.adapters.CoursePropertyAdapter;
 import org.stepic.droid.ui.adapters.InstructorAdapter;
 import org.stepic.droid.ui.dialogs.LoadingProgressDialog;
 import org.stepic.droid.ui.dialogs.UnauthorizedDialogFragment;
+import org.stepic.droid.ui.util.ToolbarHelperKt;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.StepikLogicHelper;
@@ -116,9 +115,6 @@ public class CourseDetailFragment extends FragmentBase implements
 
     @BindView(R.id.root_view)
     View rootView;
-
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
 
     @BindView(R.id.course_not_found)
     View courseNotFoundView;
@@ -267,8 +263,7 @@ public class CourseDetailFragment extends FragmentBase implements
                 new LinearLayoutManager(getActivity(),
                         LinearLayoutManager.HORIZONTAL, false);//// TODO: 30.09.15 determine right-to-left-mode
         instructorsCarousel.setLayoutManager(layoutManager);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ToolbarHelperKt.initCenteredToolbar(this, R.string.course_info_title, true);
         onClickReportListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
