@@ -13,8 +13,11 @@ import org.stepic.droid.R
 
 //Fragment's functions:
 
-fun Fragment.initCenteredToolbar(@StringRes titleRes: Int, showHomeButton: Boolean = false) {
-    initCenteredToolbarBase(showHomeButton)
+@JvmOverloads
+fun Fragment.initCenteredToolbar(@StringRes titleRes: Int,
+                                 showHomeButton: Boolean = false,
+                                 @DrawableRes homeIndicatorRes: Int = -1) {
+    initCenteredToolbarBase(showHomeButton, homeIndicatorRes)
     centeredToolbarTitle.setText(titleRes)
 }
 
@@ -23,9 +26,10 @@ fun Fragment.initCenteredToolbar(title: String, showHomeButton: Boolean = false)
     centeredToolbarTitle.text = title
 }
 
-private fun Fragment.initCenteredToolbarBase(showHomeButton: Boolean) {
+private fun Fragment.initCenteredToolbarBase(showHomeButton: Boolean,
+                                             @DrawableRes homeIndicatorRes: Int = -1) {
     val appCompatActivity = activity as AppCompatActivity
-    appCompatActivity.initCenteredToolbarBase(showHomeButton)
+    appCompatActivity.initCenteredToolbarBase(showHomeButton, homeIndicatorRes)
 }
 
 fun Fragment.setTitleToCenteredToolbar(title: String) {
@@ -55,7 +59,7 @@ private fun AppCompatActivity.initCenteredToolbarBase(showHomeButton: Boolean,
         actionBar.setDisplayHomeAsUpEnabled(true)
     }
 
-    if (homeIndicatorRes != -1) {
+    if (homeIndicatorRes > 0) {
         //is not default
         actionBar.setHomeAsUpIndicator(homeIndicatorRes)
     } else {

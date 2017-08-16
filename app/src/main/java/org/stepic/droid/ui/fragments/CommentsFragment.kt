@@ -9,14 +9,11 @@ import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.Toolbar
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.*
 import android.widget.Toast
-import kotlinx.android.synthetic.main.appbar_only_toolbar.*
 import kotlinx.android.synthetic.main.empty_comments.*
 import kotlinx.android.synthetic.main.fragment_comments.*
 import kotlinx.android.synthetic.main.internet_fail_clickable.*
@@ -39,6 +36,7 @@ import org.stepic.droid.ui.activities.NewCommentActivity
 import org.stepic.droid.ui.adapters.CommentsAdapter
 import org.stepic.droid.ui.dialogs.DeleteCommentDialogFragment
 import org.stepic.droid.ui.util.ContextMenuRecyclerView
+import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.StringUtil
@@ -161,8 +159,7 @@ class CommentsFragment : FragmentBase(),
     }
 
     private fun initToolbar() {
-        (activity as AppCompatActivity).setSupportActionBar(toolbar as Toolbar)
-        (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        initCenteredToolbar(R.string.comments_title, true, closeIconDrawableRes)
     }
 
     private fun initSwipeRefreshLayout() {
