@@ -10,7 +10,6 @@ import android.support.design.widget.BottomNavigationView
 import android.support.design.widget.CoordinatorLayout
 import android.support.v4.app.Fragment
 import android.view.MenuItem
-import android.widget.Toast
 import com.facebook.login.LoginManager
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -31,6 +30,7 @@ import org.stepic.droid.core.presenters.contracts.UpdateAppView
 import org.stepic.droid.model.Profile
 import org.stepic.droid.notifications.StepicInstanceIdService
 import org.stepic.droid.services.UpdateWithApkService
+import org.stepic.droid.ui.activities.contracts.RootScreen
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.dialogs.LogoutAreYouSureDialog
 import org.stepic.droid.ui.dialogs.NeedUpdatingDialog
@@ -49,15 +49,16 @@ class MainFeedActivity : BackToExitActivityBase(),
         BottomNavigationView.OnNavigationItemSelectedListener,
         BottomNavigationView.OnNavigationItemReselectedListener,
         LogoutAreYouSureDialog.Companion.OnLogoutSuccessListener,
-        UpdateAppView, ProfileMainFeedView {
-
+        RootScreen,
+        UpdateAppView,
+        ProfileMainFeedView {
     companion object {
+
         val currentIndexKey = "currentIndexKey"
         val reminderKey = "reminderKey"
         const val defaultIndex: Int = 0
         val defaultTag: String = MyCoursesFragment::class.java.simpleName
         private val progressLogoutTag = "progressLogoutTag"
-
         // FIXME: 10.08.17 remove it
         val certificateFragmentIndex: Int
             get() = 4
@@ -69,6 +70,7 @@ class MainFeedActivity : BackToExitActivityBase(),
         // FIXME: 10.08.17 remove it
         val myCoursesIndex: Int
             get() = 1
+
         // FIXME: 10.08.17 remove it
         val findCoursesIndex: Int
             get() = 2
@@ -119,7 +121,6 @@ class MainFeedActivity : BackToExitActivityBase(),
         }
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         App.componentManager()
@@ -164,6 +165,7 @@ class MainFeedActivity : BackToExitActivityBase(),
         profileMainFeedPresenter.attachView(this)
     }
 
+
     private fun initGoogleApiClient() {
         val serverClientId = config.googleServerClientId
         val googleSignInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -186,7 +188,6 @@ class MainFeedActivity : BackToExitActivityBase(),
         setFragment(id)
     }
 
-
     override fun onDestroy() {
         updateAppPresenter.detachView(this)
         profileMainFeedPresenter.detachView(this)
@@ -195,6 +196,7 @@ class MainFeedActivity : BackToExitActivityBase(),
         }
         super.onDestroy()
     }
+
 
     override fun onBackPressed() {
         if (navigationView.selectedItemId == R.id.my_courses) {
@@ -213,15 +215,9 @@ class MainFeedActivity : BackToExitActivityBase(),
         showBottomBar()
     }
 
-
     override fun onStart() {
         super.onStart()
         showBottomBar(false)
-    }
-
-    fun showFindLesson() {
-        // FIXME: 10.08.17
-        Toast.makeText(this, "Show find courses", Toast.LENGTH_SHORT).show()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String?>, grantResults: IntArray) {
@@ -317,7 +313,6 @@ class MainFeedActivity : BackToExitActivityBase(),
         behavior.showBottomBar(navigationView, needAnimation)
     }
 
-
     private fun setFragment(@IdRes containerId: Int, fragment: Fragment, needAnimation: Boolean) {
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         if (needAnimation) {
@@ -334,6 +329,7 @@ class MainFeedActivity : BackToExitActivityBase(),
         }
         fragmentTransaction.commit()
     }
+
 
     override fun onLogout() {
         profileMainFeedPresenter.logout();
@@ -362,6 +358,14 @@ class MainFeedActivity : BackToExitActivityBase(),
         }
         screenManager.showLaunchScreenAfterLogout(this);
     }
+
     //end profileMainFeedView methods
+
+    //RootScreen methods
+    override fun showFindCourses() {
+        if (navigationView.selectedItemId != R.id.find_courses) {
+            navigationView.selectedItemId = R.id.find_courses
+        }
+    }
 
 }

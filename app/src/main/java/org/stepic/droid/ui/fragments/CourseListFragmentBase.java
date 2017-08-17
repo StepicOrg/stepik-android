@@ -27,7 +27,7 @@ import org.stepic.droid.core.presenters.contracts.CoursesView;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.storage.operations.Table;
-import org.stepic.droid.ui.activities.MainFeedActivity;
+import org.stepic.droid.ui.activities.contracts.RootScreen;
 import org.stepic.droid.ui.adapters.CoursesAdapter;
 import org.stepic.droid.ui.custom.TouchDispatchableFrameLayout;
 import org.stepic.droid.ui.custom.WrapContentLinearLayoutManager;
@@ -169,12 +169,14 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
             @Override
             public void onClick(View v) {
                 Activity parent = getActivity();
-                if (parent == null || !(parent instanceof MainFeedActivity)) return;
+                if (parent == null || !(parent instanceof RootScreen)) {
+                    return;
+                }
                 getAnalytic().reportEvent(Analytic.Interaction.CLICK_FIND_COURSE_EMPTY_SCREEN);
-                if (getSharedPreferenceHelper().getAuthResponseFromStore() == null) { // TODO: 27.12.16 make it on background thread
+                if (getSharedPreferenceHelper().getAuthResponseFromStore() == null) {
                     getAnalytic().reportEvent(Analytic.Anonymous.BROWSE_COURSES_CENTER);
                 }
-                ((MainFeedActivity) parent).showFindLesson();
+                ((RootScreen) parent).showFindCourses();
             }
         });
         joiningListenerClient.subscribe(this);
