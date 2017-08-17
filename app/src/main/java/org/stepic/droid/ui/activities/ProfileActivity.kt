@@ -9,12 +9,13 @@ import android.view.MenuItem
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.SingleFragmentActivity
+import org.stepic.droid.ui.activities.contracts.CloseButtonInToolbar
 import org.stepic.droid.ui.fragments.ProfileFragment
 import org.stepic.droid.util.AppConstants
 
 
-
-class ProfileActivity : SingleFragmentActivity() {
+class ProfileActivity : SingleFragmentActivity(),
+        CloseButtonInToolbar {
 
     companion object {
         val optionalUserIdKey = "optionalUserIdKey"

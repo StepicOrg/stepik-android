@@ -25,6 +25,7 @@ import org.stepic.droid.core.presenters.StreakPresenter
 import org.stepic.droid.core.presenters.contracts.NotificationTimeView
 import org.stepic.droid.core.presenters.contracts.ProfileView
 import org.stepic.droid.model.UserViewModel
+import org.stepic.droid.ui.activities.contracts.CloseButtonInToolbar
 import org.stepic.droid.ui.adapters.ProfileSettingsAdapter
 import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment
 import org.stepic.droid.ui.util.StepikAnimUtils
@@ -172,7 +173,8 @@ class ProfileFragment : FragmentBase(),
     }
 
     private fun initToolbar() {
-        initCenteredToolbar(R.string.profile_title)
+        val needCloseButton = context is CloseButtonInToolbar
+        initCenteredToolbar(R.string.profile_title, needCloseButton, getCloseIconDrawableRes())
     }
 
     @SuppressLint("SetTextI18n")
@@ -334,7 +336,6 @@ class ProfileFragment : FragmentBase(),
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater) {
         if (localUserViewModel != null) {
-            Timber.d("onCreateOptionsMenu non null+ %s", this)
             inflater.inflate(R.menu.share_menu, menu)
         }
     }
