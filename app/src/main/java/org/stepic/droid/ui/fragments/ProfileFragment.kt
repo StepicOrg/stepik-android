@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.view.*
+import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import kotlinx.android.synthetic.main.fragment_profile_new.*
@@ -281,6 +282,11 @@ class ProfileFragment : FragmentBase(),
         contentRoot.visibility = View.GONE
         profileReportProblem.visibility = View.GONE
         profileEmptyUser.visibility = View.VISIBLE
+    }
+
+    override fun onUserNotAuth() {
+        // FIXME: 17.08.17 implement it
+        Toast.makeText(context, "Pls, Auth!", Toast.LENGTH_LONG).show()
     }
 
     override fun showNotificationEnabledState(notificationEnabled: Boolean, notificationTimeValue: String) {

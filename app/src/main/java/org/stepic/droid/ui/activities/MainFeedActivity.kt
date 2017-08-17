@@ -321,7 +321,9 @@ class MainFeedActivity : BackToExitActivityBase(),
     private fun setFragment(@IdRes containerId: Int, fragment: Fragment, needAnimation: Boolean) {
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         if (needAnimation) {
-            fragmentTransaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
+            //do not use fade_in - fade_out animation, because it is looking as lag
+            //the second problem is null background for window
+//            fragmentTransaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
         }
         fragmentTransaction.replace(containerId, fragment, fragment.javaClass.simpleName)
         val countInBackStack = supportFragmentManager.backStackEntryCount

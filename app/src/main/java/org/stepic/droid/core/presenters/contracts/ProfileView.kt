@@ -13,4 +13,6 @@ interface ProfileView {
     fun onInternetFailed()
 
     fun onProfileNotFound()
+
+    fun onUserNotAuth()
 }

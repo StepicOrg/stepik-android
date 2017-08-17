@@ -59,14 +59,25 @@ class ProfilePresenterImpl
 
         view?.showLoadingAll()
         threadPoolExecutor.execute {
-            val profile: Profile? = sharedPreferences.profile //need background thread?
+            val profile: Profile? = sharedPreferences.profile
             if (profileId < 0) {
                 mainHandler.post {
                     view?.onProfileNotFound()
                     isLoading = false
                 }
-            } else if (profile != null && (profileId == 0L || profile.id == profileId)) {
+            } else if (profile != null && (profileId == 0L || profile.id == profileId) && !profile.is_guest) {
                 showLocalProfile(profile)
+            } else if (profileId == 0L && (profile != null && profile.is_guest || profile == null)) {
+                try {
+                    val realProfile = api.userProfile.execute().body().profile
+                    sharedPreferences.storeProfile(realProfile)
+                    showLocalProfile(realProfile)
+                } catch (noInternetOrPermission: Exception) {
+                    mainHandler.post {
+                        view?.onInternetFailed()
+                        isLoading = false
+                    }
+                }
             } else {
                 showInternetProfile(profileId)
             }
@@ -77,7 +88,7 @@ class ProfilePresenterImpl
     private fun showInternetProfile(userId: Long) {
         //1) show profile
         //2) no internet
-        //3) user hide profile == Anonymous. We do not need handle this sitation
+        //3) user hide profile == Anonymous. We do not need handle this situation
 
         val user = try {
             api.getUsers(longArrayOf(userId)).execute().body().users.firstOrNull()
@@ -152,8 +163,13 @@ class ProfilePresenterImpl
                 id = profile.id)
         this.userViewModel = userViewModelLocal
 
+
         mainHandler.post {
-            view?.showNameImageShortBio(userViewModelLocal)
+            if (profile.is_guest) {
+                view?.onUserNotAuth()
+            } else {
+                view?.showNameImageShortBio(userViewModelLocal)
+            }
             isLoading = false
         }
     }
