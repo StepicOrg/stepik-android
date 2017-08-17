@@ -12,15 +12,13 @@
         fontPath="fonts/Roboto-Light.ttf"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_toLeftOf="@+id/notificationIntervalValue"
         android:drawableEnd="@drawable/ic_nav_arrow_right"
         android:gravity="center_vertical"
-        android:paddingBottom="16dp"
-        android:paddingLeft="32dp"
+        android:paddingBottom="@dimen/guideline_standard_padding"
+        android:paddingLeft="@dimen/left_right_margin_in_profile"
         android:paddingRight="24dp"
         android:paddingTop="@dimen/guideline_standard_padding"
-        android:text="Short &amp; Info"
         android:textSize="@dimen/text_header"
-        tools:ignore="MissingPrefix"/>
+        tools:ignore="MissingPrefix"
+        tools:text="Short &amp; Info"/>
 </FrameLayout>

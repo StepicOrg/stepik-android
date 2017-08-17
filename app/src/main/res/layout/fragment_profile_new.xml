@@ -32,9 +32,9 @@
                     android:id="@+id/mainInfoRoot"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="32dp"
-                    android:layout_marginRight="32dp"
-                    android:layout_marginTop="28dp"
+                    android:layout_marginLeft="@dimen/left_right_margin_in_profile"
+                    android:layout_marginRight="@dimen/left_right_margin_in_profile"
+                    android:layout_marginTop="@dimen/profile_panel_top_margin"
                     android:visibility="gone"
                     tools:visibility="visible">
 
@@ -42,10 +42,10 @@
                     <android.support.constraint.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginTop="50dp"
+                        android:layout_marginTop="@dimen/main_profile_avatar_half_size"
                         android:background="@drawable/profile_round_rectangle_drawable"
-                        android:paddingBottom="16dp"
-                        android:paddingTop="16dp">
+                        android:paddingBottom="@dimen/guideline_standard_padding"
+                        android:paddingTop="@dimen/guideline_standard_padding">
 
                         <TextView
                             android:id="@+id/profileName"
@@ -53,16 +53,16 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="Augustine\nSolarson"
+                            android:paddingLeft="32dp"
+                            android:paddingRight="32dp"
                             android:textColor="@color/new_accent_color"
-                            android:textSize="22sp"
+                            android:textSize="@dimen/text_big_header"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintRight_toRightOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
                             tools:ignore="MissingPrefix"
-                            />
-
+                            tools:text="Augustine\nSolarson"/>
 
                         <TextView
                             android:id="@+id/currentStreakValue"
@@ -71,9 +71,9 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="32dp"
                             android:layout_marginTop="14dp"
-                            android:gravity="left"
+                            android:gravity="left|start"
                             android:textColor="@color/new_accent_color"
-                            android:textSize="16sp"
+                            android:textSize="@dimen/text_header"
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/profileName"
                             tools:ignore="MissingPrefix"
@@ -85,8 +85,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="0dp"
+                            android:layout_marginStart="0dp"
                             android:layout_marginTop="0dp"
-                            android:gravity="left"
+                            android:gravity="left|start"
                             android:text="@string/current_streak"
                             android:textColor="@color/new_accent_color"
                             android:textSize="12sp"
@@ -141,8 +142,8 @@
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/profileImage"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
+                        android:layout_width="@dimen/main_profile_avatar_size"
+                        android:layout_height="@dimen/main_profile_avatar_size"
                         android:layout_gravity="center_horizontal"
                         app:civ_border_color="@color/new_border_color"
                         app:civ_border_width="1dp"
@@ -156,64 +157,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
-                    android:paddingLeft="32dp"
-                    android:paddingRight="28dp"
+                    android:paddingLeft="@dimen/left_right_margin_in_profile"
+                    android:paddingRight="@dimen/right_margin_switch"
                     android:text="@string/notification_about_learning"
                     android:visibility="gone"
                     tools:visibility="visible"/>
 
-                <FrameLayout
-                    android:id="@+id/notificationIntervalChooser"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:foreground="@drawable/non_radius_foreground">
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:id="@+id/notificationIntervalTitle"
-                            fontPath="fonts/Roboto-Light.ttf"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentLeft="true"
-                            android:layout_toLeftOf="@+id/notificationIntervalValue"
-                            android:paddingBottom="4dp"
-                            android:paddingLeft="32dp"
-                            android:paddingRight="32dp"
-                            android:paddingTop="@dimen/guideline_standard_padding"
-                            android:text="@string/notification_time"
-                            android:textSize="@dimen/text_header"
-                            tools:ignore="MissingPrefix"
-                            tools:text="Notification time: 12:00 – 13:00"/>
-
-
-                        <ImageView
-                            android:id="@+id/notification_arrow_image"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginRight="24dp"
-                            android:src="@drawable/ic_nav_arrow_right"/>
-
-                        <TextView
-                            android:id="@+id/notificationTimeZoneInfo"
-                            fontPath="fonts/Roboto-Light.ttf"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/notificationIntervalTitle"
-                            android:layout_marginBottom="16dp"
-                            android:layout_toLeftOf="@id/notification_arrow_image"
-                            android:paddingLeft="32dp"
-                            android:paddingRight="@dimen/guideline_standard_padding"
-                            android:textSize="@dimen/text_height"
-                            tools:ignore="MissingPrefix"
-                            tools:text="Рекорды обновляются"/>
-                    </RelativeLayout>
-                </FrameLayout>
+                <include layout="@layout/view_notification_interval_chooser"/>
 
                 <FrameLayout
                     android:id="@+id/shortBioInfoContainer"
@@ -231,8 +181,8 @@
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:paddingBottom="@dimen/guideline_standard_padding"
-                        android:paddingLeft="32dp"
-                        android:paddingRight="24dp"
+                        android:paddingLeft="@dimen/left_right_margin_in_profile"
+                        android:paddingRight="@dimen/left_right_margin_in_profile"
                         android:paddingTop="@dimen/guideline_standard_padding"
                         android:textSize="@dimen/text_header"
                         tools:ignore="MissingPrefix"
@@ -243,7 +193,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="end|center_vertical"
-                        android:layout_marginRight="32dp"/>
+                        android:layout_marginRight="@dimen/left_right_margin_in_profile"/>
                 </FrameLayout>
 
                 <LinearLayout

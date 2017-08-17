@@ -69,6 +69,7 @@
     <dimen name="progress_bar_size">3dp</dimen>
     <dimen name="progress_square_size">7dp</dimen>
     <dimen name="progress_clickable_size">56dp</dimen>
+    <dimen name="table_cell_fixed_height">96dp</dimen>
 
 
     <dimen name="exo_media_button_width">71dp</dimen>
@@ -81,6 +82,15 @@
     <!--width should be 2 time greater than height-->
     <dimen name="arrow_profile_width">16dp</dimen>
     <dimen name="arrow_profile_height">8dp</dimen>
+
+    <!--Profile specific-->
+    <dimen name="main_profile_avatar_size">100dp</dimen>
+    <dimen name="main_profile_avatar_half_size">50dp</dimen>
+    <dimen name="left_right_margin_in_profile">32dp</dimen>
+    <!--should be smaller than left right margin a bit-->
+    <dimen name="right_margin_switch">28dp</dimen>
+    <dimen name="profile_panel_top_margin">28dp</dimen>
+    <dimen name="text_big_header">22sp</dimen>
 
 
 </resources>
