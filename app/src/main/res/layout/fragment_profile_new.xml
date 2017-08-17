@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".ui.activities.ProfileActivity">
 
     <include layout="@layout/view_centered_appbar"/>
@@ -12,8 +13,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:background="@color/white">
 
         <android.support.v4.widget.NestedScrollView
             android:id="@+id/contentRoot"
@@ -24,10 +24,9 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:baselineAligned="false"
-                android:orientation="vertical"
-                >
+                android:orientation="vertical">
 
                 <FrameLayout
                     android:id="@+id/mainInfoRoot"
@@ -149,7 +148,6 @@
                         app:civ_border_width="1dp"
                         tools:src="@drawable/dialog_background"/>
                 </FrameLayout>
-
 
                 <org.stepic.droid.ui.custom.BetterSwitch
                     android:id="@+id/notificationStreakSwitch"
@@ -331,4 +329,4 @@
 
     </FrameLayout>
 
-</android.support.design.widget.CoordinatorLayout>
+</LinearLayout>
