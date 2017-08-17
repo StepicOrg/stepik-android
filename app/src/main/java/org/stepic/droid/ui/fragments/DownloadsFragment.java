@@ -145,7 +145,7 @@ public class DownloadsFragment extends FragmentBase implements
         authUserButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                screenManager.showLaunchScreen(getActivity());
+                getScreenManager().showLaunchScreen(getActivity());
             }
         });
         downloadAdapter = new DownloadsAdapter(cachedVideoList, stepIdToLesson, getActivity(), this, downloadingWithProgressList, cachedStepsSet, this);
@@ -181,7 +181,7 @@ public class DownloadsFragment extends FragmentBase implements
             //Query the download manager about downloads that have been requested.
             @Nullable
             private Pair<Cursor, List<DownloadEntity>> getCursorAndEntitiesForAllDownloads() {
-                List<DownloadEntity> nowDownloadingList = databaseFacade.getAllDownloadEntities();
+                List<DownloadEntity> nowDownloadingList = getDatabaseFacade().getAllDownloadEntities();
 
                 long[] ids = getAllDownloadIds(nowDownloadingList);
                 if (ids == null || ids.length == 0) return null;
@@ -189,7 +189,7 @@ public class DownloadsFragment extends FragmentBase implements
 
                 DownloadManager.Query query = new DownloadManager.Query();
                 query.setFilterById(ids);
-                return new Pair<>(systemDownloadManager.query(query), nowDownloadingList);
+                return new Pair<>(getSystemDownloadManager().query(query), nowDownloadingList);
 
             }
 
@@ -198,7 +198,7 @@ public class DownloadsFragment extends FragmentBase implements
                 long[] result = new long[copyOfList.size()];
                 int i = 0;
                 for (DownloadEntity element : copyOfList) {
-                    if (!cancelSniffer.isStepIdCanceled(element.getStepId()))
+                    if (!getCancelSniffer().isStepIdCanceled(element.getStepId()))
                         result[i++] = element.getDownloadId();
                 }
                 return result;
@@ -208,7 +208,7 @@ public class DownloadsFragment extends FragmentBase implements
                 boolean isInDM = false;
                 DownloadManager.Query query = new DownloadManager.Query();
                 query.setFilterById(downloadId);
-                Cursor cursor = systemDownloadManager.query(query);
+                Cursor cursor = getSystemDownloadManager().query(query);
                 try {
                     isInDM = cursor.getCount() > 0;
                 } finally {
@@ -243,7 +243,7 @@ public class DownloadsFragment extends FragmentBase implements
                             int columnReason = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_REASON));
 
                             if (columnStatus == DownloadManager.STATUS_SUCCESSFUL) {
-                                mainHandler.post(new Function0<kotlin.Unit>() {
+                                getMainHandler().post(new Function0<kotlin.Unit>() {
                                     @Override
                                     public kotlin.Unit invoke() {
                                         DownloadsFragment downloadsFragment = downloadsFragmentWeakReference.get();
@@ -266,9 +266,9 @@ public class DownloadsFragment extends FragmentBase implements
                                 }
                             }
 
-                            if (relatedDownloadEntity != null && !cancelSniffer.isStepIdCanceled(relatedDownloadEntity.getStepId()) && isInDownloadManager(relatedDownloadEntity.getDownloadId())) {
+                            if (relatedDownloadEntity != null && !getCancelSniffer().isStepIdCanceled(relatedDownloadEntity.getStepId()) && isInDownloadManager(relatedDownloadEntity.getDownloadId())) {
                                 final DownloadingVideoItem downloadingVideoItem = new DownloadingVideoItem(downloadReportItem, relatedDownloadEntity);
-                                mainHandler.post(new Function0<Unit>() {
+                                getMainHandler().post(new Function0<Unit>() {
                                     @Override
                                     public Unit invoke() {
                                         downloadsPoster.downloadUpdate(downloadingVideoItem);
@@ -353,7 +353,7 @@ public class DownloadsFragment extends FragmentBase implements
         AsyncTask<Void, Void, VideosAndMapToLesson> task = new AsyncTask<Void, Void, VideosAndMapToLesson>() {
             @Override
             protected VideosAndMapToLesson doInBackground(Void... params) {
-                List<CachedVideo> videos = databaseFacade.getAllCachedVideos();
+                List<CachedVideo> videos = getDatabaseFacade().getAllCachedVideos();
                 List<CachedVideo> filteredVideos = new ArrayList<>();
                 for (CachedVideo video : videos) {
                     if (video != null && video.getStepId() >= 0) {
@@ -362,7 +362,7 @@ public class DownloadsFragment extends FragmentBase implements
                 }
                 long[] stepIds = StepikLogicHelper.fromVideosToStepIds(filteredVideos);
 
-                Map<Long, Lesson> map = databaseFacade.getMapFromStepIdToTheirLesson(stepIds);
+                Map<Long, Lesson> map = getDatabaseFacade().getMapFromStepIdToTheirLesson(stepIds);
 
                 return new VideosAndMapToLesson(filteredVideos, map);
             }
@@ -373,7 +373,7 @@ public class DownloadsFragment extends FragmentBase implements
                 downloadsPoster.finishDownloadVideo(videoAndMap.getCachedVideoList(), videoAndMap.getStepIdToLesson());
             }
         };
-        task.executeOnExecutor(threadPoolExecutor);
+        task.executeOnExecutor(getThreadPoolExecutor());
     }
 
     private void showCachedVideos(List<CachedVideo> videosForShowing, Map<Long, Lesson> map) {
@@ -441,7 +441,7 @@ public class DownloadsFragment extends FragmentBase implements
 
     public void checkForEmpty() {
         //// FIXME: 14.12.15 add to notify methods
-        if (sharedPreferenceHelper.getAuthResponseFromStore() == null) {
+        if (getSharedPreferenceHelper().getAuthResponseFromStore() == null) {
             emptyDownloadView.setVisibility(View.GONE);
             downloadsView.setVisibility(View.GONE);
             needAuthRootView.setVisibility(View.VISIBLE);
@@ -469,28 +469,28 @@ public class DownloadsFragment extends FragmentBase implements
                 try {
                     RWLocks.CancelLock.writeLock().lock();
 
-                    long[] lessonIds = databaseFacade.getAllDownloadingLessons();
+                    long[] lessonIds = getDatabaseFacade().getAllDownloadingLessons();
                     for (long lessonId : lessonIds) {
-                        Lesson lesson = databaseFacade.getLessonById(lessonId);
+                        Lesson lesson = getDatabaseFacade().getLessonById(lessonId);
                         if (lesson != null) {
-                            List<Step> steps = databaseFacade.getStepsOfLesson(lesson.getId());
+                            List<Step> steps = getDatabaseFacade().getStepsOfLesson(lesson.getId());
                             if (!steps.isEmpty()) {
                                 for (Step stepItem : steps) {
-                                    cancelSniffer.addStepIdCancel(stepItem.getId());
+                                    getCancelSniffer().addStepIdCancel(stepItem.getId());
                                 }
                             }
                         }
                     }
 
-                    List<DownloadEntity> downloadEntities = databaseFacade.getAllDownloadEntities();
+                    List<DownloadEntity> downloadEntities = getDatabaseFacade().getAllDownloadEntities();
                     long stepIds[] = new long[downloadEntities.size()];
                     for (int i = 0; i < downloadEntities.size(); i++) {
                         stepIds[i] = downloadEntities.get(i).getStepId();
                     }
 
                     for (long stepId : stepIds) {
-                        cancelSniffer.addStepIdCancel(stepId);
-                        downloadManager.cancelStep(stepId);
+                        getCancelSniffer().addStepIdCancel(stepId);
+                        getDownloadManager().cancelStep(stepId);
                     }
                 } finally {
                     RWLocks.CancelLock.writeLock().unlock();
@@ -509,7 +509,7 @@ public class DownloadsFragment extends FragmentBase implements
                 ProgressHelper.dismiss(loadingProgressDialog);
             }
         };
-        task.executeOnExecutor(threadPoolExecutor);
+        task.executeOnExecutor(getThreadPoolExecutor());
     }
 
     @Override
@@ -588,13 +588,13 @@ public class DownloadsFragment extends FragmentBase implements
         }
         final long stepId = item.getDownloadEntity().getStepId();
         if (!stepIdToLesson.containsKey(stepId)) {
-            threadPoolExecutor.execute(new Runnable() {
+            getThreadPoolExecutor().execute(new Runnable() {
                 @Override
                 public void run() {
-                    Step step = databaseFacade.getStepById(stepId);
+                    Step step = getDatabaseFacade().getStepById(stepId);
                     if (step != null) {
 
-                        Lesson lesson = databaseFacade.getLessonById(step.getLesson());
+                        Lesson lesson = getDatabaseFacade().getLessonById(step.getLesson());
                         if (lesson != null) {
                             stepIdToLesson.put(stepId, lesson);
                         }

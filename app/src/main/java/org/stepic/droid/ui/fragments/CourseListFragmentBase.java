@@ -160,8 +160,8 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                analytic.reportEvent(Analytic.Anonymous.AUTH_CENTER);
-                screenManager.showLaunchScreen(getActivity());
+                getAnalytic().reportEvent(Analytic.Anonymous.AUTH_CENTER);
+                getScreenManager().showLaunchScreen(getActivity());
             }
         });
 
@@ -170,9 +170,9 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
             public void onClick(View v) {
                 Activity parent = getActivity();
                 if (parent == null || !(parent instanceof MainFeedActivity)) return;
-                analytic.reportEvent(Analytic.Interaction.CLICK_FIND_COURSE_EMPTY_SCREEN);
-                if (sharedPreferenceHelper.getAuthResponseFromStore() == null) { // TODO: 27.12.16 make it on background thread
-                    analytic.reportEvent(Analytic.Anonymous.BROWSE_COURSES_CENTER);
+                getAnalytic().reportEvent(Analytic.Interaction.CLICK_FIND_COURSE_EMPTY_SCREEN);
+                if (getSharedPreferenceHelper().getAuthResponseFromStore() == null) { // TODO: 27.12.16 make it on background thread
+                    getAnalytic().reportEvent(Analytic.Anonymous.BROWSE_COURSES_CENTER);
                 }
                 ((MainFeedActivity) parent).showFindLesson();
             }
@@ -237,7 +237,7 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
         reportConnectionProblem.setVisibility(View.GONE);
         if (courses.isEmpty()) {
             showEmptyScreen(true);
-            localReminder.remindAboutApp();
+            getLocalReminder().remindAboutApp();
         }
     }
 
@@ -287,13 +287,13 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
     @Override
     public void onOpenStep(long courseId, @NotNull Section section, long lessonId, long unitId, int stepPosition) {
         ProgressHelper.dismiss(getFragmentManager(), continueLoadingTag);
-        screenManager.continueCourse(getActivity(), courseId, section, lessonId, unitId, stepPosition);
+        getScreenManager().continueCourse(getActivity(), courseId, section, lessonId, unitId, stepPosition);
     }
 
     @Override
     public void onAnyProblemWhileContinue(@NotNull Course course) {
         ProgressHelper.dismiss(getFragmentManager(), continueLoadingTag);
-        screenManager.showSections(getActivity(), course);
+        getScreenManager().showSections(getActivity(), course);
     }
 
     @Override

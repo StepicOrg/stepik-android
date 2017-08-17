@@ -9,7 +9,6 @@
 
     <include layout="@layout/view_centered_appbar"/>
 
-    <!--todo: remove background and set it for theme-->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -80,7 +80,7 @@ class FilterFragment : FragmentBase(),
     }
 
     private fun initToolbar() {
-        initCenteredToolbar(R.string.filter_title, true, closeIconDrawableRes)
+        initCenteredToolbar(R.string.filter_title, true, getCloseIconDrawableRes())
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {

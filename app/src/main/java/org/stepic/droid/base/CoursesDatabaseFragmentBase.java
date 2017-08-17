@@ -99,7 +99,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_filter_menu:
-                screenManager.showFilterScreen(this, FILTER_REQUEST_CODE, getCourseType());
+                getScreenManager().showFilterScreen(this, FILTER_REQUEST_CODE, getCourseType());
                 return true;
         }
 
@@ -108,6 +108,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        nullifyActivityBackground();
         super.onViewCreated(view, savedInstanceState);
         droppingClient.subscribe(this);
         courseListPresenter.attachView(this);
@@ -160,7 +161,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        analytic.reportEvent(Analytic.Interaction.LONG_TAP_COURSE);
+        getAnalytic().reportEvent(Analytic.Interaction.LONG_TAP_COURSE);
         ContextMenuRecyclerView.RecyclerViewContextMenuInfo info = (ContextMenuRecyclerView.RecyclerViewContextMenuInfo) item.getMenuInfo();
         switch (item.getItemId()) {
             case R.id.menu_item_info:
@@ -184,21 +185,21 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
             Toast.makeText(getContext(), R.string.you_not_enrolled, Toast.LENGTH_SHORT).show();
             return;
         }
-        Call<Void> drop = api.dropCourse(course.getCourseId());
+        Call<Void> drop = getApi().dropCourse(course.getCourseId());
         if (drop != null) {
             drop.enqueue(new Callback<Void>() {
                 Course localRef = course;
 
                 @Override
                 public void onResponse(Call<Void> call, Response<Void> response) {
-                    threadPoolExecutor.execute(new Runnable() {
+                    getThreadPoolExecutor().execute(new Runnable() {
                         @Override
                         public void run() {
-                            databaseFacade.deleteCourse(localRef, Table.enrolled);
+                            getDatabaseFacade().deleteCourse(localRef, Table.enrolled);
 
-                            if (databaseFacade.getCourseById(course.getCourseId(), Table.featured) != null) {
+                            if (getDatabaseFacade().getCourseById(course.getCourseId(), Table.featured) != null) {
                                 localRef.setEnrollment(0);
-                                databaseFacade.addCourse(localRef, Table.featured);
+                                getDatabaseFacade().addCourse(localRef, Table.featured);
                             }
 
                         }
@@ -218,9 +219,9 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     }
 
     private void showInfo(int position) {
-        analytic.reportEvent(Analytic.Interaction.SHOW_DETAILED_INFO_CLICK);
+        getAnalytic().reportEvent(Analytic.Interaction.SHOW_DETAILED_INFO_CLICK);
         Course course = courses.get(position);
-        screenManager.showCourseDescription(this, course);
+        getScreenManager().showCourseDescription(this, course);
     }
 
     @Override
@@ -236,7 +237,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
             }
 
             if (requestCode == FILTER_REQUEST_CODE) {
-                analytic.reportEvent(Analytic.Filters.FILTERS_NEED_UPDATE);
+                getAnalytic().reportEvent(Analytic.Filters.FILTERS_NEED_UPDATE);
                 needFilter = true; // not last filter? check it
                 courses.clear();
                 coursesAdapter.notifyDataSetChanged();
@@ -247,7 +248,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
         if (resultCode == FragmentActivity.RESULT_CANCELED) {
             if (requestCode == FILTER_REQUEST_CODE) {
-                analytic.reportEvent(Analytic.Filters.FILTERS_CANCELED);
+                getAnalytic().reportEvent(Analytic.Filters.FILTERS_CANCELED);
             }
         }
     }
@@ -257,7 +258,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
         if (isShowed) {
             if (getCourseType() == Table.enrolled) {
                 emptyCoursesView.setVisibility(View.VISIBLE);
-                if (sharedPreferenceHelper.getAuthResponseFromStore() != null) { //// TODO: 23.12.16 optimize it and do on background thread
+                if (getSharedPreferenceHelper().getAuthResponseFromStore() != null) { //// TODO: 23.12.16 optimize it and do on background thread
                     //logged
                     emptyCoursesTextView.setText(R.string.empty_courses);
                     signInButton.setVisibility(View.GONE);
@@ -298,13 +299,13 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
     @Override
     public void onRefresh() {
-        analytic.reportEvent(Analytic.Interaction.PULL_TO_REFRESH_COURSE);
+        getAnalytic().reportEvent(Analytic.Interaction.PULL_TO_REFRESH_COURSE);
         courseListPresenter.refreshData(getCourseType(), needFilter, true);
     }
 
     @Override
     public boolean onBackClick() {
-        sharedPreferenceHelper.onTryDiscardFilters(getCourseType());
+        getSharedPreferenceHelper().onTryDiscardFilters(getCourseType());
         return false;
     }
 
@@ -321,7 +322,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     public void onFailDropCourse(@NotNull Course droppedCourse) {
         long courseId = -1L;
         courseId = droppedCourse.getCourseId();
-        analytic.reportEvent(Analytic.Web.DROP_COURSE_FAIL, courseId + "");
+        getAnalytic().reportEvent(Analytic.Web.DROP_COURSE_FAIL, courseId + "");
         Toast.makeText(getContext(), R.string.internet_problem, Toast.LENGTH_LONG).show();
     }
 
@@ -329,7 +330,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     public void onSuccessDropCourse(@NotNull Course droppedCourse) {
         long courseId = -1L;
         courseId = droppedCourse.getCourseId();
-        analytic.reportEvent(Analytic.Web.DROP_COURSE_SUCCESSFUL, courseId + "");
+        getAnalytic().reportEvent(Analytic.Web.DROP_COURSE_SUCCESSFUL, courseId + "");
         Toast.makeText(getContext(), getContext().getString(R.string.you_dropped) + " " + droppedCourse.getTitle(), Toast.LENGTH_LONG).show();
         if (getCourseType() == Table.enrolled) { //why here was e.getCourseType?
             courses.remove(droppedCourse);

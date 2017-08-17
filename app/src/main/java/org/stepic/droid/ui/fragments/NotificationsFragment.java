@@ -64,11 +64,11 @@ public class NotificationsFragment extends FragmentBase {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if (sharedPreferenceHelper.getAuthResponseFromStore() == null) {
+        if (getSharedPreferenceHelper().getAuthResponseFromStore() == null) {
             authUserButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    screenManager.showLaunchScreen(getActivity());
+                    getScreenManager().showLaunchScreen(getActivity());
                 }
             });
 //            toolbar.setVisibility(View.GONE); // FIXME: 15.08.17 hide, when it is needed
@@ -109,8 +109,8 @@ public class NotificationsFragment extends FragmentBase {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_settings:
-                analytic.reportEvent(Analytic.Interaction.CLICK_SETTINGS_FROM_NOTIFICATION);
-                screenManager.showSettings(getActivity());
+                getAnalytic().reportEvent(Analytic.Interaction.CLICK_SETTINGS_FROM_NOTIFICATION);
+                getScreenManager().showSettings(getActivity());
                 return true;
             case android.R.id.home:
                 // Respond to the action bar's Up/Home button

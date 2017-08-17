@@ -72,8 +72,8 @@ class NewCommentFragment : FragmentBase(), OnBackClickListener {
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?)
             = inflater?.inflate(R.layout.new_comment_fragment, container, false)
 
-    override fun onViewCreated(v: View?, savedInstanceState: Bundle?) {
-        super.onViewCreated(v, savedInstanceState)
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         target = arguments.getLong(NewCommentFragment.targetKey)
         parent = arguments.getLong(NewCommentFragment.parentKey)
         if (parent == 0L) {

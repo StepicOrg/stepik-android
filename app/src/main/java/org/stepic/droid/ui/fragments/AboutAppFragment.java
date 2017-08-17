@@ -35,16 +35,16 @@ public class AboutAppFragment extends FragmentBase {
         privacyPolicyView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                analytic.reportEvent(Analytic.Interaction.CLICK_PRIVACY_POLICY);
-                screenManager.openPrivacyPolicyWeb(getActivity());
+                getAnalytic().reportEvent(Analytic.Interaction.CLICK_PRIVACY_POLICY);
+                getScreenManager().openPrivacyPolicyWeb(getActivity());
             }
         });
 
         termsOfService.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                analytic.reportEvent(Analytic.Interaction.CLICK_TERMS_OF_SERVICE);
-                screenManager.openTermsOfServiceWeb(getActivity());
+                getAnalytic().reportEvent(Analytic.Interaction.CLICK_TERMS_OF_SERVICE);
+                getScreenManager().openTermsOfServiceWeb(getActivity());
             }
         });
     }

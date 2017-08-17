@@ -129,7 +129,7 @@ class CommentsFragment : FragmentBase(),
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?)
             = inflater?.inflate(R.layout.fragment_comments, container, false)
 
-    override fun onViewCreated(v: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         discussionId = arguments.getString(discussionIdKey)
         setHasOptionsMenu(true)
@@ -159,7 +159,7 @@ class CommentsFragment : FragmentBase(),
     }
 
     private fun initToolbar() {
-        initCenteredToolbar(R.string.comments_title, true, closeIconDrawableRes)
+        initCenteredToolbar(R.string.comments_title, true, getCloseIconDrawableRes())
     }
 
     private fun initSwipeRefreshLayout() {

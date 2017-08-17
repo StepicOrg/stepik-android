@@ -52,7 +52,6 @@ class ProfileFragment : FragmentBase(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        retainInstance = false
         userId = arguments.getLong(USER_ID_KEY)
         analytic.reportEvent(Analytic.Profile.OPEN_SCREEN_OVERALL)
         setHasOptionsMenu(true)
@@ -73,6 +72,7 @@ class ProfileFragment : FragmentBase(),
             = inflater?.inflate(R.layout.fragment_profile_new, container, false)
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        nullifyActivityBackground()
         super.onViewCreated(view, savedInstanceState)
         initToolbar()
         initTimezone()

@@ -132,7 +132,7 @@ public class ChoiceStepFragment extends StepAttemptFragment {
                 if (submission != null && submission.getId() != null) {
                     submissionIdAnalytic = submission.getId() + "";
                 }
-                analytic.reportEventWithName(Analytic.Error.CHOICES_ARE_SMALLER, submissionIdAnalytic);
+                getAnalytic().reportEventWithName(Analytic.Error.CHOICES_ARE_SMALLER, submissionIdAnalytic);
             }
         }
     }

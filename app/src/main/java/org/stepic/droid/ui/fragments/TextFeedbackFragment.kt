@@ -42,13 +42,13 @@ class TextFeedbackFragment : FragmentBase(), TextFeedbackView {
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?)
             = inflater?.inflate(R.layout.fragment_text_feedback, container, false)
 
-    override fun onViewCreated(v: View?, savedInstanceState: Bundle?) {
-        super.onViewCreated(v, savedInstanceState)
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
-        v?.let {
+        view?.let {
             initToolbar()
             initTextFields()
-            initScrollView(v)
+            initScrollView(view)
 
             if (feedbackContactsEditText.text.isEmpty()) {
                 feedbackContactsEditText.requestFocus()
