@@ -64,10 +64,6 @@ class MainFeedActivity : BackToExitActivityBase(),
             get() = 4
 
         // FIXME: 10.08.17 remove it
-        val downloadFragmentIndex: Int
-            get() = 3
-
-        // FIXME: 10.08.17 remove it
         val myCoursesIndex: Int
             get() = 1
 
