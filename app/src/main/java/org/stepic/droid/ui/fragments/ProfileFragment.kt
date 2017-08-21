@@ -218,6 +218,8 @@ class ProfileFragment : FragmentBase(),
 
             //// TODO: 21.08.17 init here and do not spend resources for creating recycler on the another profiles
             profileSettingsRecyclerView.visibility = View.VISIBLE
+
+            notificationIntervalChooserContainer.visibility = View.VISIBLE
         }
 
         mainInfoRoot.visibility = View.VISIBLE
