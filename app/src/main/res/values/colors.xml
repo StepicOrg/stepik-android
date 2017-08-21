@@ -23,7 +23,7 @@
     <color name="stepic_blue_ribbon">#2669E1</color>
     <color name="silver">#e6e6e6</color>
     <color name="white70percent">#B3FFFFFF</color>
-    <color name="stepic_cover">#EEEEEE</color>
+    <color name="old_cover">#EEEEEE</color>
     <color name="warning_light_yellow">#FFFAE9</color>
     <color name="warning_comment_highlight_yellow">#FFF4B3</color>
     <color name="streak_default_color">#48A245</color>
