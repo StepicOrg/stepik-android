@@ -67,6 +67,7 @@ class FilterFragment : FragmentBase(),
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        nullifyActivityBackground()
         initToolbar()
 
         acceptButton.setOnClickListener {
