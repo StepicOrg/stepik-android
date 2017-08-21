@@ -215,10 +215,17 @@ class ProfileFragment : FragmentBase(),
         activity.invalidateOptionsMenu()
         if (userViewModel.isMyProfile) {
             streakPresenter.tryShowNotificationSetting()
+
+            //// TODO: 21.08.17 init here and do not spend resources for creating recycler on the another profiles
+            profileSettingsRecyclerView.visibility = View.VISIBLE
         }
 
         mainInfoRoot.visibility = View.VISIBLE
-        val nameArray = userViewModel.fullName.split("\\s+".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+        val nameArray = userViewModel
+                .fullName
+                .split("\\s+".toRegex())
+                .dropLastWhile { it.isEmpty() }
+                .toTypedArray()
         val builder = StringBuilder()
         for (nameArrayItem in nameArray) {
             if (builder.isNotEmpty()) {
