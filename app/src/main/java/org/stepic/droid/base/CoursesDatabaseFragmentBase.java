@@ -285,10 +285,6 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
         }
     }
 
-    private void setBackgroundColorToRootView(@ColorRes int colorRes) {
-        rootView.setBackgroundColor(ColorUtil.INSTANCE.getColorArgb(colorRes, getContext()));
-    }
-
     @Override
     public void onNeedDownloadNextPage() {
         courseListPresenter.loadMore(getCourseType(), needFilter);
