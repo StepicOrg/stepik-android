@@ -178,6 +178,10 @@ class ProfileFragment : FragmentBase(),
         initCenteredToolbar(R.string.profile_title, needCloseButton, getCloseIconDrawableRes())
     }
 
+
+    /**
+     * This method is invoked only for My Profile
+     */
     @SuppressLint("SetTextI18n")
     override fun streaksAreLoaded(currentStreak: Int, maxStreak: Int) {
         val suffixCurrent = resources.getQuantityString(R.plurals.day_number, currentStreak)
@@ -186,17 +190,7 @@ class ProfileFragment : FragmentBase(),
         currentStreakValue.text = String.format("%d %s", currentStreak, suffixCurrent)
         maxStreakValue.text = String.format("%d %s", maxStreak, suffixMax)
 
-        showStreakRoot(true)
-    }
-
-    private fun showStreakRoot(needShow: Boolean) {
-        if (needShow) {
-            currentStreakSuffix.visibility = View.VISIBLE
-            currentStreakValue.visibility = View.VISIBLE
-
-            maxStreakSuffix.visibility = View.VISIBLE
-            maxStreakValue.visibility = View.VISIBLE
-        }
+        setStreakInfoVisibility(true)
     }
 
     override fun showLoadingAll() {
@@ -400,6 +394,20 @@ class ProfileFragment : FragmentBase(),
     override fun onPause() {
         super.onPause()
         (activity as? BottomNavigationViewRoot)?.resetDefaultBehaviour()
+    }
+
+    private fun setStreakInfoVisibility(needShow: Boolean) {
+        val visibility = if (needShow) {
+            View.VISIBLE
+        } else {
+            View.INVISIBLE
+        }
+
+        currentStreakSuffix.visibility = visibility
+        currentStreakValue.visibility = visibility
+        maxStreakSuffix.visibility = visibility
+        maxStreakValue.visibility = visibility
+        streakIndicator.visibility = visibility
     }
 
 }

@@ -76,6 +76,7 @@
                             android:gravity="left|start"
                             android:textColor="@color/new_accent_color"
                             android:textSize="@dimen/text_header"
+                            android:visibility="invisible"
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/profileName"
                             tools:ignore="MissingPrefix"
@@ -93,6 +94,7 @@
                             android:text="@string/current_streak"
                             android:textColor="@color/new_accent_color"
                             android:textSize="12sp"
+                            android:visibility="invisible"
                             app:layout_constraintLeft_toLeftOf="@+id/currentStreakValue"
                             app:layout_constraintTop_toBottomOf="@+id/currentStreakValue"
                             tools:ignore="MissingPrefix"/>
@@ -106,6 +108,7 @@
                             android:gravity="right"
                             android:textColor="@color/new_accent_color"
                             android:textSize="16sp"
+                            android:visibility="invisible"
                             app:layout_constraintBaseline_toBaselineOf="@+id/currentStreakValue"
                             app:layout_constraintRight_toRightOf="parent"
                             tools:ignore="MissingPrefix"
@@ -121,12 +124,14 @@
                             android:text="@string/max_streak"
                             android:textColor="@color/new_accent_color"
                             android:textSize="12sp"
+                            android:visibility="invisible"
                             app:layout_constraintBaseline_toBaselineOf="@+id/currentStreakSuffix"
                             app:layout_constraintRight_toRightOf="@+id/maxStreakValue"
                             tools:ignore="MissingPrefix"/>
 
 
                         <ImageView
+                            android:id="@+id/streakIndicator"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"
@@ -134,6 +139,7 @@
                             android:layout_marginRight="8dp"
                             android:layout_marginTop="8dp"
                             android:src="@drawable/ic_lightning"
+                            android:visibility="invisible"
                             app:layout_constraintBottom_toBottomOf="@+id/currentStreakSuffix"
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintRight_toRightOf="parent"
@@ -228,7 +234,7 @@
                         android:paddingBottom="@dimen/guideline_standard_padding"
                         android:paddingLeft="32dp"
                         android:paddingTop="4dp"
-                        android:text="@string/user_info"
+                        tools:text="@string/user_info"
                         android:textSize="@dimen/text_header"
                         tools:ignore="MissingPrefix"
                         tools:visibility="visible"/>
@@ -251,7 +257,6 @@
                 </LinearLayout>
 
                 <android.support.v7.widget.RecyclerView
-                    android:visibility="gone"
                     android:id="@+id/profileSettingsRecyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -259,7 +264,8 @@
                     android:divider="@color/transparent"
                     android:overScrollMode="never"
                     android:scrollbarStyle="outsideOverlay"
-                    android:splitMotionEvents="false"/>
+                    android:splitMotionEvents="false"
+                    android:visibility="gone"/>
 
             </LinearLayout>
 
