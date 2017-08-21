@@ -131,7 +131,7 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
     @BindView(R.id.corrupted_lesson)
     View corruptedLesson;
 
-    @BindView(R.id.auth_action)
+    @BindView(R.id.authAction)
     View authActionView;
 
     @BindView(R.id.need_auth_view)

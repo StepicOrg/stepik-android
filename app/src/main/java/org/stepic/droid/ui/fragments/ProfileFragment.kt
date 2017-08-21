@@ -8,10 +8,10 @@ import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.view.*
-import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import kotlinx.android.synthetic.main.fragment_profile_new.*
+import kotlinx.android.synthetic.main.need_auth_placeholder.*
 import kotlinx.android.synthetic.main.view_notification_interval_chooser.*
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
@@ -25,6 +25,7 @@ import org.stepic.droid.core.presenters.StreakPresenter
 import org.stepic.droid.core.presenters.contracts.NotificationTimeView
 import org.stepic.droid.core.presenters.contracts.ProfileView
 import org.stepic.droid.model.UserViewModel
+import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.ui.activities.contracts.BottomNavigationViewRoot
 import org.stepic.droid.ui.activities.contracts.CloseButtonInToolbar
 import org.stepic.droid.ui.adapters.ProfileSettingsAdapter
@@ -107,7 +108,9 @@ class ProfileFragment : FragmentBase(),
             changeStateOfUserInfo()
         }
 
-        Timber.d("onViewCreated %s", this)
+        authAction.setOnClickListener {
+            screenManager.showLaunchScreen(context, true, MainFeedActivity.profileIndex)
+        }
     }
 
     override fun onDestroyView() {
@@ -197,10 +200,12 @@ class ProfileFragment : FragmentBase(),
         contentRoot.visibility = View.GONE
         profileEmptyUser.visibility = View.GONE
         profileReportProblem.visibility = View.GONE
+        profileNeedAuth.visibility = View.GONE
         profileLoadingView.visibility = View.VISIBLE
     }
 
     override fun showNameImageShortBio(userViewModel: UserViewModel) {
+        profileNeedAuth.visibility = View.GONE
         profileEmptyUser.visibility = View.GONE
         profileReportProblem.visibility = View.GONE
         profileLoadingView.visibility = View.GONE
@@ -285,6 +290,7 @@ class ProfileFragment : FragmentBase(),
         profileLoadingView.visibility = View.GONE
         contentRoot.visibility = View.GONE
         profileEmptyUser.visibility = View.GONE
+        profileNeedAuth.visibility = View.GONE
         profileReportProblem.visibility = View.VISIBLE
     }
 
@@ -292,12 +298,16 @@ class ProfileFragment : FragmentBase(),
         profileLoadingView.visibility = View.GONE
         contentRoot.visibility = View.GONE
         profileReportProblem.visibility = View.GONE
+        profileNeedAuth.visibility = View.GONE
         profileEmptyUser.visibility = View.VISIBLE
     }
 
     override fun onUserNotAuth() {
-        // FIXME: 17.08.17 implement it
-        Toast.makeText(context, "Pls, Auth!", Toast.LENGTH_LONG).show()
+        profileLoadingView.visibility = View.GONE
+        contentRoot.visibility = View.GONE
+        profileReportProblem.visibility = View.GONE
+        profileEmptyUser.visibility = View.GONE
+        profileNeedAuth.visibility = View.VISIBLE
     }
 
     override fun showNotificationEnabledState(notificationEnabled: Boolean, notificationTimeValue: String) {

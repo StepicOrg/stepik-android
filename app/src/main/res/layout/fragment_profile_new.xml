@@ -234,9 +234,9 @@
                         android:paddingBottom="@dimen/guideline_standard_padding"
                         android:paddingLeft="32dp"
                         android:paddingTop="4dp"
-                        tools:text="@string/user_info"
                         android:textSize="@dimen/text_header"
                         tools:ignore="MissingPrefix"
+                        tools:text="@string/user_info"
                         tools:visibility="visible"/>
 
                     <TextView
@@ -284,6 +284,11 @@
         <include
             android:id="@+id/profileReportProblem"
             layout="@layout/report_problem_layout"
+            tools:visibility="gone"/>
+
+        <include
+            android:id="@+id/profileNeedAuth"
+            layout="@layout/need_auth_placeholder"
             tools:visibility="gone"/>
 
     </FrameLayout>

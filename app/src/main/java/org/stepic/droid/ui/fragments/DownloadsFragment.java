@@ -88,7 +88,7 @@ public class DownloadsFragment extends FragmentBase implements
     @BindView(R.id.need_auth_view)
     View needAuthRootView;
 
-    @BindView(R.id.auth_action)
+    @BindView(R.id.authAction)
     Button authUserButton;
 
     private DownloadsAdapter downloadAdapter;

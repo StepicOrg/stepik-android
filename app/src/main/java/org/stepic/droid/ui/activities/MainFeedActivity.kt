@@ -74,6 +74,9 @@ class MainFeedActivity : BackToExitActivityBase(),
         val findCoursesIndex: Int
             get() = 2
 
+        val profileIndex: Int
+            get() = 3
+
     }
 
     @Inject

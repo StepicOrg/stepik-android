@@ -45,7 +45,7 @@ public class NotificationsFragment extends FragmentBase {
     @BindView(R.id.need_auth_view)
     View needAuthRootView;
 
-    @BindView(R.id.auth_action)
+    @BindView(R.id.authAction)
     Button authUserButton;
 
     @Override
