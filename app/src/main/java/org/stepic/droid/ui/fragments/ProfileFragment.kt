@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.view.*
+import android.widget.LinearLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import kotlinx.android.synthetic.main.fragment_profile_new.*
@@ -79,6 +80,7 @@ class ProfileFragment : FragmentBase(),
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         nullifyActivityBackground()
         super.onViewCreated(view, savedInstanceState)
+        applyBottomMarginForRootView()
         initToolbar()
         initTimezone()
 
@@ -418,6 +420,16 @@ class ProfileFragment : FragmentBase(),
         maxStreakSuffix.visibility = visibility
         maxStreakValue.visibility = visibility
         streakIndicator.visibility = visibility
+    }
+
+    /**
+     * Apply margin if activity has bottom navigation bar
+     */
+    private fun applyBottomMarginForRootView() {
+        activity as? BottomNavigationViewRoot ?: return
+
+        val layoutParams = profileRootView.layoutParams as LinearLayout.LayoutParams
+        layoutParams.bottomMargin = resources.getDimensionPixelSize(R.dimen.bottom_navigation_height)
     }
 
 }

@@ -91,6 +91,7 @@
     <dimen name="right_margin_switch">28dp</dimen>
     <dimen name="profile_panel_top_margin">28dp</dimen>
     <dimen name="text_big_header">22sp</dimen>
+    <dimen name="bottom_navigation_height">56dp</dimen>
 
 
 </resources>
