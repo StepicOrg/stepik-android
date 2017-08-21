@@ -6,12 +6,14 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.CoursesDatabaseFragmentBase;
@@ -84,6 +86,9 @@ public class FindCoursesFragment extends CoursesDatabaseFragmentBase {
         SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
         menuItem = menu.findItem(R.id.action_search);
         searchView = (SearchView) menuItem.getActionView();
+
+        ImageView closeImageView = searchView.findViewById(R.id.search_close_btn);
+        closeImageView.setImageDrawable(ContextCompat.getDrawable(getContext(), getCloseIconDrawableRes()));
 
         ComponentName componentName = getActivity().getComponentName();
         SearchableInfo searchableInfo = searchManager.getSearchableInfo(componentName);
