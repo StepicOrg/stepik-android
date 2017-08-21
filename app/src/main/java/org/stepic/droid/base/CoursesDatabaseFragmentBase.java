@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.ColorRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.view.ContextMenu;
@@ -27,6 +28,7 @@ import org.stepic.droid.ui.util.BackButtonHandler;
 import org.stepic.droid.ui.util.ContextMenuRecyclerView;
 import org.stepic.droid.ui.util.OnBackClickListener;
 import org.stepic.droid.util.AppConstants;
+import org.stepic.droid.util.ColorUtil;
 
 import java.util.List;
 
@@ -254,9 +256,10 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     }
 
     @Override
-    public void showEmptyScreen(boolean isShowed) {
-        if (isShowed) {
+    public void showEmptyScreen(boolean isShown) {
+        if (isShown) {
             if (getCourseType() == Table.enrolled) {
+                setBackgroundColorToRootView(R.color.old_cover);
                 emptyCoursesView.setVisibility(View.VISIBLE);
                 if (getSharedPreferenceHelper().getAuthResponseFromStore() != null) { //// TODO: 23.12.16 optimize it and do on background thread
                     //logged
@@ -269,15 +272,21 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
                 }
                 emptySearch.setVisibility(View.GONE);
             } else {
+                setBackgroundColorToRootView(R.color.old_cover);
                 emptyCoursesView.setVisibility(View.GONE);
                 emptySearch.setVisibility(View.VISIBLE);
             }
             swipeRefreshLayout.setVisibility(View.GONE);
         } else {
+            setBackgroundColorToRootView(R.color.new_cover);
             emptySearch.setVisibility(View.GONE);
             emptyCoursesView.setVisibility(View.GONE);
             swipeRefreshLayout.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void setBackgroundColorToRootView(@ColorRes int colorRes) {
+        rootView.setBackgroundColor(ColorUtil.INSTANCE.getColorArgb(colorRes, getContext()));
     }
 
     @Override

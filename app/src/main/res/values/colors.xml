@@ -80,4 +80,6 @@
 
     <color name="unviewed_step">@color/new_accent_color</color>
     <color name="viewed_step">@color/new_accent_color_alpha_40</color>
+
+    <color name="new_cover">@color/white</color>
 </resources>
