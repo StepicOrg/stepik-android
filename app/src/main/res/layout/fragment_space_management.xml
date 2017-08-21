@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/old_cover"
     android:scrollbars="none">
 
     <LinearLayout
@@ -20,7 +21,6 @@
             android:text="@string/clear_cache_explanation"/>
 
         <android.support.v7.widget.CardView
-            app:cardBackgroundColor="@color/white"
             android:id="@+id/clear_cache_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -29,6 +29,7 @@
             android:clickable="true"
             android:focusable="true"
             android:foreground="@drawable/non_radius_foreground"
+            app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="0dp">
 
             <RelativeLayout
@@ -62,21 +63,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="16dp"
+            android:text="@string/notMountExplanation"
             android:visibility="gone"
-            tools:visibility = "visible"
-            android:text="@string/notMountExplanation"/>
+            tools:visibility="visible"/>
 
         <TextView
             android:id="@+id/mountExplanation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="16dp"
+            android:text="@string/mountExplanation"
             android:visibility="gone"
-            tools:visibility = "visible"
-            android:text="@string/mountExplanation"/>
+            tools:visibility="visible"/>
 
         <android.support.v7.widget.CardView
-            app:cardBackgroundColor="@color/white"
             android:id="@+id/choose_storage_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -85,8 +85,9 @@
             android:clickable="true"
             android:focusable="true"
             android:foreground="@drawable/non_radius_foreground"
-            app:cardCornerRadius="0dp"
             android:visibility="gone"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="0dp"
             tools:visibility="visible">
 
             <RelativeLayout

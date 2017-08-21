@@ -46,6 +46,7 @@ class StoreManagementFragment : FragmentBase(), WantMoveDataDialog.Callback {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        nullifyActivityBackground()
         view?.let {
             initResStrings()
             initClearCacheFeature(it)
