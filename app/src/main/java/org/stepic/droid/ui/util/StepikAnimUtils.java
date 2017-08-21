@@ -7,7 +7,7 @@ import android.view.animation.Transformation;
 
 public class StepikAnimUtils {
 
-    private final static int dpPerMs = 1;
+    private final static int durationMillis = 300;
 
     public static void expand(final View v) {
         v.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -31,7 +31,7 @@ public class StepikAnimUtils {
             }
         };
 
-        a.setDuration(((int) (targetHeight / v.getContext().getResources().getDisplayMetrics().density)) / dpPerMs);
+        a.setDuration(durationMillis);
         v.startAnimation(a);
     }
 
@@ -55,7 +55,7 @@ public class StepikAnimUtils {
             }
         };
 
-        a.setDuration(((int) (initialHeight / v.getContext().getResources().getDisplayMetrics().density)) / dpPerMs);
+        a.setDuration(durationMillis);
         v.startAnimation(a);
     }
 }
