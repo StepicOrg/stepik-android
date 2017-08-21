@@ -9,4 +9,8 @@ import org.stepic.droid.ui.fragments.CertificatesFragment
  */
 class CertificatesActivity : SingleFragmentActivity() {
     override fun createFragment(): Fragment = CertificatesFragment.newInstance()
+
+    override fun applyTransitionPrev() {
+        //stub, do not add something
+    }
 }

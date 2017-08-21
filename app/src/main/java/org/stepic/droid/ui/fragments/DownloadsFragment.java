@@ -138,6 +138,7 @@ public class DownloadsFragment extends FragmentBase implements
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        nullifyActivityBackground();
         setHasOptionsMenu(true);
         initToolbar();
 
