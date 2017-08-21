@@ -93,7 +93,7 @@ class ProfileFragment : FragmentBase(),
         maxStreakValue.setOnClickListener(clickStreakValue)
         profileName.setOnClickListener { analytic.reportEvent(Analytic.Profile.CLICK_FULL_NAME) }
 
-        notificationIntervalChooser.setOnClickListener {
+        notificationIntervalChooserContainer.setOnClickListener {
             analytic.reportEvent(Analytic.Interaction.CLICK_CHOOSE_NOTIFICATION_INTERVAL)
             val dialogFragment = TimeIntervalPickerDialogFragment.newInstance()
             if (!dialogFragment.isAdded) {
@@ -115,7 +115,7 @@ class ProfileFragment : FragmentBase(),
         currentStreakValue.setOnClickListener(null)
         maxStreakValue.setOnClickListener(null)
         profileImage.setOnClickListener(null)
-        notificationIntervalChooser.setOnClickListener(null)
+        notificationIntervalChooserContainer.setOnClickListener(null)
         streakPresenter.detachView(this)
         profilePresenter.detachView(this)
         shortBioInfoContainer.setOnClickListener(null)
@@ -312,8 +312,11 @@ class ProfileFragment : FragmentBase(),
     }
 
     override fun hideNotificationTime(needHide: Boolean) {
-        val visibility = if (needHide) View.GONE else View.VISIBLE
-        notificationIntervalChooser.visibility = visibility
+        if (needHide) {
+            StepikAnimUtils.collapse(notificationIntervalChooserContainer)
+        } else {
+            StepikAnimUtils.expand(notificationIntervalChooserContainer)
+        }
     }
 
     override fun setNewTimeInterval(timePresentationString: String) {
