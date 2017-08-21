@@ -146,13 +146,13 @@ public class StepTypeResolverImpl implements StepTypeResolver {
 
     private Drawable getNotViewedDrawable(Drawable drawable) {
 //        return drawable;//it is default implementation
-        return getDrawableWithColor(drawable, R.color.stepic_orange_carrot);
+        return getDrawableWithColor(drawable, R.color.unviewed_step);
 
     }
 
     @NonNull
     private Drawable getViewedDrawable(Drawable drawable) {
-        return getDrawableWithColor(drawable, R.color.stepic_viewed_steps);
+        return getDrawableWithColor(drawable, R.color.viewed_step);
     }
 
     private Drawable getDrawableWithColor(Drawable drawable, @ColorRes int colorRes) {
