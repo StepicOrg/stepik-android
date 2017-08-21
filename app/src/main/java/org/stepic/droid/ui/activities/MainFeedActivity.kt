@@ -10,6 +10,7 @@ import android.support.design.widget.BottomNavigationView
 import android.support.design.widget.CoordinatorLayout
 import android.support.v4.app.Fragment
 import android.view.MenuItem
+import android.view.View
 import com.facebook.login.LoginManager
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -30,6 +31,7 @@ import org.stepic.droid.core.presenters.contracts.UpdateAppView
 import org.stepic.droid.model.Profile
 import org.stepic.droid.notifications.StepicInstanceIdService
 import org.stepic.droid.services.UpdateWithApkService
+import org.stepic.droid.ui.activities.contracts.BottomNavigationViewRoot
 import org.stepic.droid.ui.activities.contracts.RootScreen
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.dialogs.LogoutAreYouSureDialog
@@ -50,11 +52,13 @@ class MainFeedActivity : BackToExitActivityBase(),
         BottomNavigationView.OnNavigationItemReselectedListener,
         LogoutAreYouSureDialog.Companion.OnLogoutSuccessListener,
         RootScreen,
+        BottomNavigationViewRoot,
         UpdateAppView,
         ProfileMainFeedView {
     companion object {
 
         val currentIndexKey = "currentIndexKey"
+
         val reminderKey = "reminderKey"
         const val defaultIndex: Int = 0
         val defaultTag: String = MyCoursesFragment::class.java.simpleName
@@ -62,7 +66,6 @@ class MainFeedActivity : BackToExitActivityBase(),
         // FIXME: 10.08.17 remove it
         val certificateFragmentIndex: Int
             get() = 4
-
         // FIXME: 10.08.17 remove it
         val myCoursesIndex: Int
             get() = 1
@@ -70,6 +73,7 @@ class MainFeedActivity : BackToExitActivityBase(),
         // FIXME: 10.08.17 remove it
         val findCoursesIndex: Int
             get() = 2
+
     }
 
     @Inject
@@ -127,7 +131,7 @@ class MainFeedActivity : BackToExitActivityBase(),
 
         notificationClickedCheck(intent)
         if (checkPlayServices()) {
-            initGoogleApiClient();
+            initGoogleApiClient()
         }
         initNavigation()
 
@@ -161,19 +165,19 @@ class MainFeedActivity : BackToExitActivityBase(),
         profileMainFeedPresenter.attachView(this)
     }
 
-
     private fun initGoogleApiClient() {
         val serverClientId = config.googleServerClientId
         val googleSignInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestScopes(Scope(Scopes.EMAIL), Scope(Scopes.PROFILE))
                 .requestServerAuthCode(serverClientId)
-                .build();
+                .build()
 
         googleApiClient = GoogleApiClient.Builder(this)
                 .enableAutoManage(this /* FragmentActivity */, {} /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, googleSignInOptions)
-                .build();
+                .build()
     }
+
 
     private fun initNavigation() {
         navigationView.setOnNavigationItemSelectedListener(this)
@@ -193,23 +197,23 @@ class MainFeedActivity : BackToExitActivityBase(),
         super.onDestroy()
     }
 
-
     override fun onBackPressed() {
         if (navigationView.selectedItemId == R.id.my_courses) {
-            finish();
-            return;
+            finish()
+            return
         }
 
         //avoid memory leak, when user click back:
-        val fragment = supportFragmentManager.findFragmentById(R.id.frame);
-        supportFragmentManager.popBackStackImmediate();
+        val fragment = supportFragmentManager.findFragmentById(R.id.frame)
+        supportFragmentManager.popBackStackImmediate()
         supportFragmentManager
                 .beginTransaction()
                 .remove(fragment)
-                .commit();
+                .commit()
         navigationView.selectedItemId = R.id.my_courses
         showBottomBar()
     }
+
 
     override fun onStart() {
         super.onStart()
@@ -305,8 +309,8 @@ class MainFeedActivity : BackToExitActivityBase(),
 
     private fun showBottomBar(needAnimation: Boolean = true) {
         val params = navigationView.layoutParams as CoordinatorLayout.LayoutParams
-        val behavior = params.behavior as BottomNavigationBehavior
-        behavior.showBottomBar(navigationView, needAnimation)
+        val behavior = params.behavior as? BottomNavigationBehavior
+        behavior?.showBottomBar(navigationView, needAnimation)
     }
 
     private fun setFragment(@IdRes containerId: Int, fragment: Fragment, needAnimation: Boolean) {
@@ -326,10 +330,10 @@ class MainFeedActivity : BackToExitActivityBase(),
         fragmentTransaction.commit()
     }
 
-
     override fun onLogout() {
-        profileMainFeedPresenter.logout();
+        profileMainFeedPresenter.logout()
     }
+
 
     //profileMainFeedView methods
     override fun showAnonymous() {
@@ -346,13 +350,13 @@ class MainFeedActivity : BackToExitActivityBase(),
     }
 
     override fun onLogoutSuccess() {
-        ProgressHelper.dismiss(supportFragmentManager, progressLogoutTag);
-        LoginManager.getInstance().logOut();
-        VKSdk.logout();
+        ProgressHelper.dismiss(supportFragmentManager, progressLogoutTag)
+        LoginManager.getInstance().logOut()
+        VKSdk.logout()
         if (googleApiClient?.isConnected ?: false) {
-            Auth.GoogleSignInApi.signOut(googleApiClient);
+            Auth.GoogleSignInApi.signOut(googleApiClient)
         }
-        screenManager.showLaunchScreenAfterLogout(this);
+        screenManager.showLaunchScreenAfterLogout(this)
     }
 
     //end profileMainFeedView methods
@@ -362,6 +366,16 @@ class MainFeedActivity : BackToExitActivityBase(),
         if (navigationView.selectedItemId != R.id.find_courses) {
             navigationView.selectedItemId = R.id.find_courses
         }
+    }
+
+    override fun disableAnyBehaviour() {
+        val params = navigationView.layoutParams as CoordinatorLayout.LayoutParams
+        params.behavior = null
+    }
+
+    override fun resetDefaultBehaviour() {
+        val params = navigationView.layoutParams as CoordinatorLayout.LayoutParams
+        params.behavior = BottomNavigationBehavior<View>()
     }
 
 }

@@ -25,6 +25,7 @@ import org.stepic.droid.core.presenters.StreakPresenter
 import org.stepic.droid.core.presenters.contracts.NotificationTimeView
 import org.stepic.droid.core.presenters.contracts.ProfileView
 import org.stepic.droid.model.UserViewModel
+import org.stepic.droid.ui.activities.contracts.BottomNavigationViewRoot
 import org.stepic.droid.ui.activities.contracts.CloseButtonInToolbar
 import org.stepic.droid.ui.adapters.ProfileSettingsAdapter
 import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment
@@ -389,6 +390,16 @@ class ProfileFragment : FragmentBase(),
             fragment.arguments = args
             return fragment
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (activity as? BottomNavigationViewRoot)?.disableAnyBehaviour()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        (activity as? BottomNavigationViewRoot)?.resetDefaultBehaviour()
     }
 
 }
