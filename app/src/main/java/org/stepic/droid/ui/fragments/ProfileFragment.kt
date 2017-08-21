@@ -220,6 +220,11 @@ class ProfileFragment : FragmentBase(),
             profileSettingsRecyclerView.visibility = View.VISIBLE
 
             notificationIntervalChooserContainer.visibility = View.VISIBLE
+        } else {
+            //show user info expanded for strangers
+            if (!shortBioArrowImageView.isExpanded()) {
+                changeStateOfUserInfo()
+            }
         }
 
         mainInfoRoot.visibility = View.VISIBLE
