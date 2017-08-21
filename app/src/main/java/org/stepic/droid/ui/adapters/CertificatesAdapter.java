@@ -26,13 +26,13 @@ import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class CertificateAdapter extends RecyclerView.Adapter<CertificateAdapter.CertificateViewHolder> {
+public class CertificatesAdapter extends RecyclerView.Adapter<CertificatesAdapter.CertificateViewHolder> {
 
     private CertificatePresenter certificatePresenter;
     private Activity activity;
     private Drawable certificatePlaceholder;
 
-    public CertificateAdapter(@NotNull CertificatePresenter certificatePresenter, @NotNull Activity activity) {
+    public CertificatesAdapter(@NotNull CertificatePresenter certificatePresenter, @NotNull Activity activity) {
         this.certificatePresenter = certificatePresenter;
         this.activity = activity;
         certificatePlaceholder = ContextCompat.getDrawable(App.Companion.getAppContext(), R.drawable.general_placeholder);
@@ -94,14 +94,14 @@ public class CertificateAdapter extends RecyclerView.Adapter<CertificateAdapter.
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    CertificateViewHolder.this.onClick(CertificateAdapter.this.certificatePresenter.get(getAdapterPosition()));
+                    CertificateViewHolder.this.onClick(CertificatesAdapter.this.certificatePresenter.get(getAdapterPosition()));
                 }
             });
 
             certificateShareButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    CertificateViewItem certificateViewItem = CertificateAdapter.this.certificatePresenter.get(getAdapterPosition());
+                    CertificateViewItem certificateViewItem = CertificatesAdapter.this.certificatePresenter.get(getAdapterPosition());
                     certificatePresenter.showShareDialogForCertificate(certificateViewItem);
                 }
             });

@@ -36,6 +36,7 @@ import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.services.ViewPusher;
 import org.stepic.droid.storage.operations.Table;
 import org.stepic.droid.ui.activities.AboutAppActivity;
+import org.stepic.droid.ui.activities.CertificatesActivity;
 import org.stepic.droid.ui.activities.CommentsActivity;
 import org.stepic.droid.ui.activities.CourseDetailActivity;
 import org.stepic.droid.ui.activities.DownloadsActivity;
@@ -253,10 +254,12 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void showCertificates() {
-        Context context = App.Companion.getAppContext();
-        int index = MainFeedActivity.Companion.getCertificateFragmentIndex();
-        context.startActivity(getFromMainActivityIntent(context, index));
+    public void showCertificates(Context context) {
+        Intent intent = new Intent(context, CertificatesActivity.class);
+        if (!(context instanceof Activity)) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        }
+        context.startActivity(intent);
     }
 
     @Override

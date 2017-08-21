@@ -388,6 +388,12 @@
             android:name=".ui.activities.DownloadsActivity">
         </activity>
 
+
+        <activity
+            android:name=".ui.activities.CertificatesActivity">
+        </activity>
+
+
         <receiver
             android:name=".receivers.BootCompletedReceiver"
             android:enabled="true"

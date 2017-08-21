@@ -92,7 +92,7 @@ public interface ScreenManager {
 
     void showFilterScreen(Fragment sourceFragment, int requestCode, Table courseType);
 
-    void showCertificates();
+    void showCertificates(Context context);
 
     void openSyllabusInWeb(Context context, long courseId);
 

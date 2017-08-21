@@ -27,6 +27,9 @@ private val aboutTitleRes = R.string.about_app_title
 @StringRes
 private val logoutTitleRes = R.string.logout_title
 
+@StringRes
+private val certificatesTitleRes = R.string.certificates_title
+
 object ProfileSettingsHelper {
 
     fun getProfileSettings(): List<ProfileSettingsViewModel> {
@@ -34,6 +37,7 @@ object ProfileSettingsHelper {
 
         list.add(ProfileSettingsViewModel(settingTitleRes))
         list.add(ProfileSettingsViewModel(downloadsTitleRes))
+        list.add(ProfileSettingsViewModel(certificatesTitleRes))
         list.add(ProfileSettingsViewModel(notificationsTitleRes))
         list.add(ProfileSettingsViewModel(feedbackTitleRes))
         list.add(ProfileSettingsViewModel(aboutTitleRes))
@@ -53,6 +57,10 @@ fun ProfileSettingsViewModel?.clickProfileSettings(activity: Activity,
     when (this.stringRes) {
         settingTitleRes -> {
             screenManager.showSettings(activity)
+        }
+
+        certificatesTitleRes -> {
+            screenManager.showCertificates(activity)
         }
 
         downloadsTitleRes -> {

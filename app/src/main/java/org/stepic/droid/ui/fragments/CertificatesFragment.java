@@ -20,8 +20,9 @@ import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.core.presenters.CertificatePresenter;
 import org.stepic.droid.core.presenters.contracts.CertificateView;
 import org.stepic.droid.model.CertificateViewItem;
-import org.stepic.droid.ui.adapters.CertificateAdapter;
+import org.stepic.droid.ui.adapters.CertificatesAdapter;
 import org.stepic.droid.ui.dialogs.CertificateShareDialogFragment;
+import org.stepic.droid.ui.util.ToolbarHelperKt;
 import org.stepic.droid.util.ProgressHelper;
 
 import java.util.List;
@@ -30,15 +31,12 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 
-public class CertificateFragment extends FragmentBase implements CertificateView, SwipeRefreshLayout.OnRefreshListener {
+public class CertificatesFragment extends FragmentBase implements CertificateView, SwipeRefreshLayout.OnRefreshListener {
 
-    private CertificateAdapter adapter;
+    private CertificatesAdapter adapter;
 
     public static Fragment newInstance() {
-        Bundle args = new Bundle();
-        CertificateFragment fragment = new CertificateFragment();
-        fragment.setArguments(args);
-        return fragment;
+        return new CertificatesFragment();
     }
 
     @Inject
@@ -88,9 +86,12 @@ public class CertificateFragment extends FragmentBase implements CertificateView
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        nullifyActivityBackground();
         super.onViewCreated(view, savedInstanceState);
 
-        adapter = new CertificateAdapter(certificatePresenter, getActivity());
+        ToolbarHelperKt.initCenteredToolbar(this, R.string.certificates_title, true, getCloseIconDrawableRes());
+
+        adapter = new CertificatesAdapter(certificatePresenter, getActivity());
         certificateRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         certificateRecyclerView.setAdapter(adapter);
 
