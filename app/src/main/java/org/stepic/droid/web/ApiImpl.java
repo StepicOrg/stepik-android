@@ -33,6 +33,7 @@ import org.stepic.droid.di.AppSingleton;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.DatasetWrapper;
 import org.stepic.droid.model.EnrollmentWrapper;
+import org.stepic.droid.model.NotificationCategory;
 import org.stepic.droid.model.Profile;
 import org.stepic.droid.model.RegistrationUser;
 import org.stepic.droid.model.Reply;
@@ -46,7 +47,6 @@ import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.serializers.ReplySerializer;
 import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.social.SocialManager;
-import org.stepic.droid.model.NotificationCategory;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DeviceInfoUtil;
 import org.stepic.droid.util.RWLocks;
@@ -308,14 +308,14 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Call<AuthenticationStepicResponse> authWithNativeCode(String code, SocialManager.SocialType type) {
+    public Call<AuthenticationStepicResponse> authWithNativeCode(String code, SocialManager.SocialType type, @Nullable String email) {
         analytic.reportEvent(Analytic.Web.AUTH_SOCIAL);
         makeOauthServiceWithNewAuthHeader(TokenType.social);
         String codeType = null;
         if (type.needUseAccessTokenInsteadOfCode()) {
             codeType = "access_token";
         }
-        return oAuthService.getTokenByNativeCode(type.getIdentifier(), code, config.getGrantType(TokenType.social), config.getRedirectUri(), codeType);
+        return oAuthService.getTokenByNativeCode(type.getIdentifier(), code, config.getGrantType(TokenType.social), config.getRedirectUri(), codeType, email);
     }
 
     @Override

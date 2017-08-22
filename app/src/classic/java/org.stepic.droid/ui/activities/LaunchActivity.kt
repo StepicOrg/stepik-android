@@ -276,8 +276,8 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
         }
 
         if (VKSdk.onActivityResult(requestCode, resultCode, data, object : VKCallback<VKAccessToken> {
-            override fun onResult(res: VKAccessToken) {
-                loginPresenter.loginWithNativeProviderCode(res.accessToken, SocialManager.SocialType.vk)
+            override fun onResult(result: VKAccessToken) {
+                loginPresenter.loginWithNativeProviderCode(result.accessToken, SocialManager.SocialType.vk, result.email)
             }
 
             override fun onError(error: VKError) {
