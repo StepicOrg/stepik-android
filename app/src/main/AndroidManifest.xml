@@ -209,7 +209,7 @@
 
         <receiver
             android:name="org.stepic.droid.receivers.DownloadCompleteReceiver"
-            android:exported="false">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/>
             </intent-filter>
@@ -217,7 +217,7 @@
 
         <receiver
             android:name="org.stepic.droid.receivers.DownloadClickReceiver"
-            android:exported="false">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED"/>
             </intent-filter>
@@ -225,7 +225,7 @@
 
         <receiver
             android:name=".receivers.InternetConnectionEnabledReceiver"
-            android:exported="false">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
             </intent-filter>
