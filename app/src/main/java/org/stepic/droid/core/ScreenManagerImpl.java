@@ -244,12 +244,8 @@ public class ScreenManagerImpl implements ScreenManager {
     @Override
     public Intent getCertificateIntent() {
         Context context = App.Companion.getAppContext();
-        int index = MainFeedActivity.Companion.getCertificateFragmentIndex();
-        Intent intent = new Intent(context, MainFeedActivity.class);
+        Intent intent = new Intent(context, CertificatesActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        Bundle bundle = new Bundle();
-        bundle.putInt(MainFeedActivity.Companion.getCurrentIndexKey(), index);
-        intent.putExtras(bundle);
         return intent;
     }
 
