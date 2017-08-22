@@ -25,6 +25,7 @@ class ProfilePresenterImpl
     private var userViewModel: UserViewModel? = null //both threads, but access only when isLoading = false, write isLoading = true.
     private var currentStreak: Int? = null
     private var maxStreak: Int? = null
+    private var haveSolvedToday: Boolean? = null
 
     override fun initProfile() {
         // default params are not allowed for override.
@@ -40,8 +41,9 @@ class ProfilePresenterImpl
             if (it.isMyProfile) {
                 val currentStreakLocal = currentStreak
                 val maxStreakLocal = maxStreak
-                if (maxStreakLocal != null && currentStreakLocal != null) {
-                    view?.streaksAreLoaded(currentStreakLocal, maxStreakLocal)
+                val haveSolvedTodayLocal = haveSolvedToday
+                if (maxStreakLocal != null && currentStreakLocal != null && haveSolvedTodayLocal != null) {
+                    view?.streaksAreLoaded(currentStreakLocal, maxStreakLocal, haveSolvedTodayLocal)
                     isLoading = false
                     return
                 } else {
@@ -139,11 +141,14 @@ class ProfilePresenterImpl
 
         val currentStreakLocal = StepikUtil.getCurrentStreak(pins)
         val maxStreakLocal = StepikUtil.getMaxStreak(pins)
+        val haveSolvedTodayLocal = pins.first() != 0L
         mainHandler.post {
+            haveSolvedToday = haveSolvedTodayLocal
             currentStreak = currentStreakLocal
             maxStreak = maxStreakLocal
             view?.streaksAreLoaded(currentStreak = currentStreakLocal,
-                    maxStreak = maxStreakLocal)
+                    maxStreak = maxStreakLocal,
+                    haveSolvedToday = haveSolvedTodayLocal)
         }
     }
 

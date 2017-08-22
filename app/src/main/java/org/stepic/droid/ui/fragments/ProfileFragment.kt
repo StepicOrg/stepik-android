@@ -188,12 +188,18 @@ class ProfileFragment : FragmentBase(),
      * This method is invoked only for My Profile
      */
     @SuppressLint("SetTextI18n")
-    override fun streaksAreLoaded(currentStreak: Int, maxStreak: Int) {
+    override fun streaksAreLoaded(currentStreak: Int, maxStreak: Int, haveSolvedToday: Boolean) {
         val suffixCurrent = resources.getQuantityString(R.plurals.day_number, currentStreak)
         val suffixMax = resources.getQuantityString(R.plurals.day_number, maxStreak)
 
         currentStreakValue.text = String.format("%d %s", currentStreak, suffixCurrent)
         maxStreakValue.text = String.format("%d %s", maxStreak, suffixMax)
+
+        if (haveSolvedToday) {
+            streakIndicator.setImageResource(R.drawable.ic_lightning)
+        } else {
+            streakIndicator.setImageResource(R.drawable.ic_lightning_inactive)
+        }
 
         setStreakInfoVisibility(true)
     }
