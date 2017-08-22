@@ -403,6 +403,9 @@ public class DownloadsFragment extends FragmentBase implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case android.R.id.home:
+                getActivity().finish();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
