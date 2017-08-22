@@ -85,7 +85,7 @@ class ProfileFragment : FragmentBase(),
         initTimezone()
 
         profileSettingsRecyclerView.layoutManager = LinearLayoutManager(context)
-        profileSettingsRecyclerView.adapter = ProfileSettingsAdapter(activity, profileSettingsList, screenManager, this)
+        profileSettingsRecyclerView.adapter = ProfileSettingsAdapter(activity, profileSettingsList, screenManager, this, analytic)
         profileSettingsRecyclerView.isNestedScrollingEnabled = false
 
         profilePresenter.attachView(this)

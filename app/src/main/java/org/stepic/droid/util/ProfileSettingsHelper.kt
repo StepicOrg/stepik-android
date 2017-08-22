@@ -4,13 +4,14 @@ import android.app.Activity
 import android.support.annotation.StringRes
 import android.support.v4.app.Fragment
 import org.stepic.droid.R
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.dialogs.LogoutAreYouSureDialog
 import org.stepic.droid.viewmodel.ProfileSettingsViewModel
 
 
 @StringRes
-private val settingTitleRes = R.string.settings_title
+private val settingsTitleRes = R.string.settings_title
 
 @StringRes
 private val downloadsTitleRes = R.string.downloads
@@ -35,7 +36,7 @@ object ProfileSettingsHelper {
     fun getProfileSettings(): List<ProfileSettingsViewModel> {
         val list = ArrayList<ProfileSettingsViewModel>(8)
 
-        list.add(ProfileSettingsViewModel(settingTitleRes))
+        list.add(ProfileSettingsViewModel(settingsTitleRes))
         list.add(ProfileSettingsViewModel(downloadsTitleRes))
         list.add(ProfileSettingsViewModel(certificatesTitleRes))
         list.add(ProfileSettingsViewModel(notificationsTitleRes))
@@ -49,38 +50,45 @@ object ProfileSettingsHelper {
 
 fun ProfileSettingsViewModel?.clickProfileSettings(activity: Activity,
                                                    screenManager: ScreenManager,
-                                                   fragment: Fragment) {
+                                                   fragment: Fragment,
+                                                   analytic: Analytic) {
     if (this == null) {
         return
     }
 
     when (this.stringRes) {
-        settingTitleRes -> {
+        settingsTitleRes -> {
+            analytic.reportEvent(Analytic.Screens.USER_OPEN_SETTINGS)
             screenManager.showSettings(activity)
         }
 
         certificatesTitleRes -> {
+            analytic.reportEvent(Analytic.Screens.USER_OPEN_CERTIFICATES)
             screenManager.showCertificates(activity)
         }
 
         downloadsTitleRes -> {
+            analytic.reportEvent(Analytic.Screens.USER_OPEN_DOWNLOADS)
             screenManager.showDownloads(activity)
         }
 
         notificationsTitleRes -> {
+            analytic.reportEvent(Analytic.Screens.USER_OPEN_NOTIFICATIONS)
             screenManager.showNotifications(activity)
         }
 
         feedbackTitleRes -> {
+            analytic.reportEvent(Analytic.Screens.USER_OPEN_FEEDBACK)
             screenManager.openFeedbackActivity(activity)
         }
 
         aboutTitleRes -> {
+            analytic.reportEvent(Analytic.Screens.USER_OPEN_ABOUT_APP)
             screenManager.openAboutActivity(activity)
         }
 
         logoutTitleRes -> {
-            //// TODO: 16.08.17 add analytic event
+            analytic.reportEvent(Analytic.Screens.USER_LOGOUT)
             val dialog = LogoutAreYouSureDialog.newInstance()
             if (!dialog.isAdded) {
                 dialog.show(fragment.childFragmentManager, null)
