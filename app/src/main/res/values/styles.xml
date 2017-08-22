@@ -118,9 +118,8 @@
     </style>
 
     <style name="AppTheme.Dialog" parent="Theme.AppCompat.Light.Dialog">
-        <item name="colorPrimary">@color/stepic_brand_primary</item>
-        <item name="colorPrimaryDark">@color/stepic_brand_primary_dark</item>
-        <item name="colorAccent">@color/stepic_blue_ribbon</item>
+        <item name="colorPrimary">@color/new_primary_color</item>
+        <item name="colorAccent">@color/new_accent_color</item>
     </style>
 
     <style name="TextAppearance.FontPath" parent="android:TextAppearance">
