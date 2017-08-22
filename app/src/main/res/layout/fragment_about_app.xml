@@ -13,7 +13,7 @@
         android:orientation="vertical">
 
         <FrameLayout
-            android:id="@+id/terms_of_service_view"
+            android:id="@+id/termsOfServiceView"
             style="@style/SettingSwitch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -29,7 +29,7 @@
 
 
         <FrameLayout
-            android:id="@+id/privacy_policy_view"
+            android:id="@+id/privacyPolicyView"
             style="@style/SettingSwitch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
