@@ -203,9 +203,7 @@ dependencies {
 
     compile 'com.github.chrisbanes:PhotoView:1.3.1'
 
-    compile('com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:0.10.2@aar') {
-        transitive = true
-    }
+    compile 'com.github.h6ah4i:android-advancedrecyclerview:feature~support_libraries_v26-SNAPSHOT'
 
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
 
