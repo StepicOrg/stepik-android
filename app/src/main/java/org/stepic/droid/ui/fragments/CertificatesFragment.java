@@ -77,6 +77,7 @@ public class CertificatesFragment extends FragmentBase implements CertificateVie
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        setHasOptionsMenu(true);
     }
 
     @Nullable
