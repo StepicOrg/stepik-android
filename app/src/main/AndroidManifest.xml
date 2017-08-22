@@ -30,7 +30,7 @@
         android:manageSpaceActivity=".ui.activities.StoreManagementActivity"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="false"
-        android:theme="@style/AppTheme"
+        android:theme="@style/StepikTheme"
         tools:replace="allowBackup, supportsRtl">
 
         <meta-data
@@ -86,7 +86,8 @@
 
         <activity
             android:name="org.stepic.droid.ui.activities.MainFeedActivity"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.app.default_searchable"
                 android:value=".ui.activities.CourseSearchResultActivity"/>
@@ -378,6 +379,20 @@
                 <data android:pathPattern="/users/.*/"/>
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".ui.activities.NotificationsActivity">
+        </activity>
+
+        <activity
+            android:name=".ui.activities.DownloadsActivity">
+        </activity>
+
+
+        <activity
+            android:name=".ui.activities.CertificatesActivity">
+        </activity>
+
 
         <receiver
             android:name=".receivers.BootCompletedReceiver"

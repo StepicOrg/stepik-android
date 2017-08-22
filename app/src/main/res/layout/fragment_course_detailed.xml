@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:id="@+id/root_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/old_cover"
+    android:orientation="vertical">
 
     <include
         android:id="@+id/appBarLayout"
-        layout="@layout/appbar_only_toolbar" />
-
+        layout="@layout/view_centered_appbar"/>
 
     <ListView
         android:id="@+id/list_of_course_property"
@@ -22,21 +23,19 @@
         android:listSelector="@android:color/transparent"
         android:scrollbarStyle="outsideOverlay"
         android:scrollbars="none"
-        android:soundEffectsEnabled="true" />
+        android:soundEffectsEnabled="true"/>
 
+    <include
+        layout="@layout/internet_fail_clickable"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        tools:visibility="gone"/>
 
-    <include layout="@layout/internet_fail_clickable"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:layout_centerInParent="true"
-        tools:visibility= "gone"/>
-
-    <include layout="@layout/fail_to_parse_course"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:layout_centerInParent="true">
-
-    </include>
-
+    <include
+        layout="@layout/fail_to_parse_course"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"/>
 
 </RelativeLayout>

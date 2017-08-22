@@ -46,6 +46,7 @@ class StoreManagementFragment : FragmentBase(), WantMoveDataDialog.Callback {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        nullifyActivityBackground()
         view?.let {
             initResStrings()
             initClearCacheFeature(it)
@@ -57,7 +58,7 @@ class StoreManagementFragment : FragmentBase(), WantMoveDataDialog.Callback {
         notMountExplanation = view.findViewById(R.id.notMountExplanation)
         mountExplanation = view.findViewById(R.id.mountExplanation)
         chooseStorageButton = view.findViewById(R.id.choose_storage_button)
-        userStorageInfo = view.findViewById(R.id.user_storage_info) as TextView
+        userStorageInfo = view.findViewById<TextView>(R.id.user_storage_info)
 
         fun hideAllStorageInfo() {
             notMountExplanation.visibility = View.GONE
@@ -108,7 +109,7 @@ class StoreManagementFragment : FragmentBase(), WantMoveDataDialog.Callback {
 
     private fun initClearCacheFeature(v: View) {
         clearCacheButton = v.findViewById(R.id.clear_cache_button)
-        clearCacheLabel = v.findViewById(R.id.clear_cache_label) as TextView
+        clearCacheLabel = v.findViewById<TextView>(R.id.clear_cache_label)
         mClearCacheDialogFragment = ClearVideosDialog.newInstance()
         setUpClearCacheButton()
     }

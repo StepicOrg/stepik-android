@@ -18,7 +18,7 @@ class VideoActivity : SingleFragmentActivity() {
         val externalVideoKey = "external_video_key"
     }
 
-    override fun createFragment(): Fragment? {
+    override fun createFragment(): Fragment {
         val path: String? = intent.extras.getString(videoPathKey)
         val videoId: Long = intent.extras.getLong(videoIdKey)
         val cachedVideo = intent.extras.getParcelable<Video>(cachedVideoKey)
@@ -30,7 +30,7 @@ class VideoActivity : SingleFragmentActivity() {
                     externalVideo = externalVideo
             )
         } else {
-            return null
+            throw IllegalStateException("external video or cached video should be initialized")
         }
     }
 

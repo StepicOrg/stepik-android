@@ -7,9 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Parcelable;
-import android.support.annotation.IdRes;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import android.support.annotation.DrawableRes;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -32,7 +30,7 @@ import org.stepic.droid.notifications.StepikNotificationManager;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.storage.operations.DatabaseFacade;
-import org.stepic.droid.ui.fragments.MyCoursesFragment;
+import org.stepic.droid.ui.util.CloseIconHolder;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.resolvers.CoursePropertyResolver;
 import org.stepic.droid.util.resolvers.text.TextResolver;
@@ -53,8 +51,8 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private static final String screenshotServiceName = "com.android.systemui:screenshot";
 
-    protected Unbinder unbinder;
 
+    protected Unbinder unbinder;
     @Inject
     protected Retrofit retrofit;
 
@@ -144,18 +142,6 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
         if (unbinder != null) {
             unbinder.unbind();
         }
-    }
-
-    protected void setFragment(@IdRes int res, Fragment fragment) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(res, fragment, fragment.getClass().getSimpleName());
-        int countInBackStack = fragmentManager.getBackStackEntryCount();
-        boolean isRootScreen = MyCoursesFragment.class.getSimpleName().equals(fragment.getClass().getSimpleName());
-        if ((isRootScreen && countInBackStack < 1) || (!isRootScreen && countInBackStack < 2)) {
-            fragmentTransaction.addToBackStack(fragment.getClass().getSimpleName());
-        }
-        fragmentTransaction.commit();
     }
 
     /**
@@ -250,5 +236,10 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
             }
 
         }
+    }
+
+    @DrawableRes
+    protected final int getCloseIconDrawableRes() {
+        return CloseIconHolder.INSTANCE.getCloseIconDrawableRes();
     }
 }

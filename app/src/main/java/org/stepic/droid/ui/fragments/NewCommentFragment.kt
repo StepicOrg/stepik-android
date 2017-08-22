@@ -6,12 +6,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
 import android.view.*
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
 import android.widget.Toast
+import kotlinx.android.synthetic.main.new_comment_fragment.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
@@ -21,6 +19,7 @@ import org.stepic.droid.ui.dialogs.DiscardTextDialogFragment
 import org.stepic.droid.ui.dialogs.LoadingProgressDialog
 import org.stepic.droid.ui.util.BackButtonHandler
 import org.stepic.droid.ui.util.OnBackClickListener
+import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.web.CommentsResponse
 import retrofit2.Call
@@ -30,7 +29,7 @@ import retrofit2.Response
 class NewCommentFragment : FragmentBase(), OnBackClickListener {
 
     companion object {
-        private val requestDiscardText = 913;
+        private val discardTextRequestCode = 913;
         private val targetKey = "targetKey"
         private val parentKey = "parentKey"
 
@@ -46,12 +45,10 @@ class NewCommentFragment : FragmentBase(), OnBackClickListener {
         }
     }
 
-    lateinit var toolbar: Toolbar
-    lateinit var textBody: EditText
-    var target: Long? = null
-    var parent: Long? = null
-    var isCommentSending: Boolean = false
-    lateinit var loadingProgressDialog: ProgressDialog
+    private var target: Long? = null
+    private var parent: Long? = null
+    private var isCommentSending: Boolean = false
+    private lateinit var loadingProgressDialog: ProgressDialog
     private var sendMenuItem: MenuItem? = null
 
     private var backButtonHandler: BackButtonHandler? = null
@@ -67,54 +64,42 @@ class NewCommentFragment : FragmentBase(), OnBackClickListener {
         super.onDetach()
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
-
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?)
             = inflater?.inflate(R.layout.new_comment_fragment, container, false)
 
-    override fun onViewCreated(v: View?, savedInstanceState: Bundle?) {
-        super.onViewCreated(v, savedInstanceState)
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         target = arguments.getLong(NewCommentFragment.targetKey)
         parent = arguments.getLong(NewCommentFragment.parentKey)
         if (parent == 0L) {
             parent = null
         }
         setHasOptionsMenu(true)
-        v?.let {
-            initToolbar(v)
-            initEditBody(v)
-            initProgressDialog()
-        }
+        initToolbar()
+        initProgressDialog()
     }
 
     private fun initProgressDialog() {
         loadingProgressDialog = LoadingProgressDialog(context)
     }
 
-    private fun initEditBody(v: View) {
-        textBody = v.findViewById(R.id.input_comment_form) as EditText
-    }
-
     override fun onResume() {
         super.onResume()
-        if (!textBody.isFocused) {
-            textBody.requestFocus()
+        if (!inputCommentForm.isFocused) {
+            inputCommentForm.requestFocus()
         }
-        textBody.postDelayed({
-            showSoftKeypad(textBody)
+        inputCommentForm.postDelayed({
+            showSoftKeypad(inputCommentForm)
         }, 300)
     }
 
-    private fun initToolbar(v: View) {
-        toolbar = v.findViewById(R.id.toolbar) as Toolbar
-        (activity as AppCompatActivity).setSupportActionBar(toolbar)
-        (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        (activity as AppCompatActivity).supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp)
+    private fun initToolbar() {
+        initCenteredToolbar(R.string.new_comment_title, true, -1)
     }
 
     private fun showSoftKeypad(editTextView: View) {
@@ -140,10 +125,10 @@ class NewCommentFragment : FragmentBase(), OnBackClickListener {
 
     private fun sendComment() {
         analytic.reportEvent(Analytic.Comments.CLICK_SEND_COMMENTS)
-        val text: String = textResolver.replaceWhitespaceToBr(textBody.text.toString())
+        val text: String = textResolver.replaceWhitespaceToBr(inputCommentForm.text.toString())
         if (text.isEmpty()) {
             Toast.makeText(context, R.string.feedback_fill_fields, Toast.LENGTH_SHORT).show()
-        } else {
+        } else if (!isCommentSending) {
 
             fun enableMenuItem(needEnable: Boolean = true) {
                 sendMenuItem?.isEnabled = needEnable
@@ -154,52 +139,50 @@ class NewCommentFragment : FragmentBase(), OnBackClickListener {
                 }
             }
 
-            if (!isCommentSending) {
-                isCommentSending = true
-                enableMenuItem(false)
-                ProgressHelper.activate(loadingProgressDialog)
+            isCommentSending = true
+            enableMenuItem(false)
+            ProgressHelper.activate(loadingProgressDialog)
 
-                fun onFinishTryingSending() {
-                    isCommentSending = false
-                    ProgressHelper.dismiss(loadingProgressDialog)
-                    enableMenuItem(true)
-                }
+            fun onFinishTryingSending() {
+                isCommentSending = false
+                ProgressHelper.dismiss(loadingProgressDialog)
+                enableMenuItem(true)
+            }
 
-                api.postComment(text, target!!, parent).enqueue(object : Callback<CommentsResponse> {
+            api.postComment(text, target!!, parent).enqueue(object : Callback<CommentsResponse> {
 
-                    override fun onResponse(call: Call<CommentsResponse>?, response: Response<CommentsResponse>?) {
-                        if (response?.isSuccessful ?: false && response?.body()?.comments != null) {
-                            analytic.reportEvent(Analytic.Comments.COMMENTS_SENT_SUCCESSFULLY)
-                            val newComment = response.body()?.comments?.firstOrNull()
-                            if (newComment != null) {
-                                val data = Intent()
-                                //set id, target, parent
-                                data.putExtra(NewCommentActivity.keyComment, newComment)
-                                activity?.setResult(Activity.RESULT_OK, data)
-                            }
-                            Toast.makeText(App.getAppContext(), R.string.comment_sent, Toast.LENGTH_SHORT).show()
-                            onFinishTryingSending()
-                            activity?.finish()
-                        } else {
-                            Toast.makeText(App.getAppContext(), R.string.comment_denied, Toast.LENGTH_SHORT).show()
-                            onFinishTryingSending()
+                override fun onResponse(call: Call<CommentsResponse>?, response: Response<CommentsResponse>?) {
+                    if (response?.isSuccessful ?: false && response?.body()?.comments != null) {
+                        analytic.reportEvent(Analytic.Comments.COMMENTS_SENT_SUCCESSFULLY)
+                        val newComment = response.body()?.comments?.firstOrNull()
+                        if (newComment != null) {
+                            val data = Intent()
+                            //set id, target, parent
+                            data.putExtra(NewCommentActivity.keyComment, newComment)
+                            activity?.setResult(Activity.RESULT_OK, data)
                         }
-                    }
-
-                    override fun onFailure(call: Call<CommentsResponse>?, t: Throwable?) {
-                        Toast.makeText(App.getAppContext(), R.string.connectionProblems, Toast.LENGTH_LONG).show()
+                        Toast.makeText(App.getAppContext(), R.string.comment_sent, Toast.LENGTH_SHORT).show()
+                        onFinishTryingSending()
+                        activity?.finish()
+                    } else {
+                        Toast.makeText(App.getAppContext(), R.string.comment_denied, Toast.LENGTH_SHORT).show()
                         onFinishTryingSending()
                     }
+                }
 
-                })
-            }
+                override fun onFailure(call: Call<CommentsResponse>?, t: Throwable?) {
+                    Toast.makeText(App.getAppContext(), R.string.connectionProblems, Toast.LENGTH_LONG).show()
+                    onFinishTryingSending()
+                }
+
+            })
         }
     }
 
     override fun onBackClick(): Boolean {
-        if (textBody.text?.isNotBlank() ?: false) {
+        if (inputCommentForm.text?.isNotBlank() ?: false) {
             val dialog = DiscardTextDialogFragment.newInstance()
-            dialog.setTargetFragment(this, requestDiscardText)
+            dialog.setTargetFragment(this, discardTextRequestCode)
             if (!dialog.isAdded) {
                 analytic.reportEvent(Analytic.Comments.SHOW_CONFIRM_DISCARD_TEXT_DIALOG)
                 dialog.show(fragmentManager, null)
@@ -211,11 +194,9 @@ class NewCommentFragment : FragmentBase(), OnBackClickListener {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == requestDiscardText) {
-                analytic.reportEvent(Analytic.Comments.SHOW_CONFIRM_DISCARD_TEXT_DIALOG_SUCCESS)
-                activity?.finish()
-            }
+        if (resultCode == Activity.RESULT_OK && requestCode == discardTextRequestCode) {
+            analytic.reportEvent(Analytic.Comments.SHOW_CONFIRM_DISCARD_TEXT_DIALOG_SUCCESS)
+            activity?.finish()
         }
     }
 }

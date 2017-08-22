@@ -4,8 +4,11 @@ import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.ColorInt;
+import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
@@ -52,22 +55,22 @@ public class StepTypeResolverImpl implements StepTypeResolver {
         mapFromTypeToDrawable = new HashMap<>();
         mapFromTypeToDrawableNotViewed = new HashMap<>();
 
-        peerReviewDrawableNotViewed = getDrawable(context, R.drawable.ic_peer_review);
+        peerReviewDrawableNotViewed = getNotViewedDrawable(getDrawable(context, R.drawable.ic_peer_review));
         peerReviewDrawable = getViewedDrawable(getDrawable(context, R.drawable.ic_peer_review).mutate());
 
-        Drawable simpleQuestionDrawableNotViewed = getDrawable(context, R.drawable.ic_easy_quiz);
+        Drawable simpleQuestionDrawableNotViewed = getNotViewedDrawable(getDrawable(context, R.drawable.ic_easy_quiz));
         Drawable simpleQuestionDrawable = getViewedDrawable(getDrawable(context, R.drawable.ic_easy_quiz).mutate());
 
-        Drawable videoDrawableNotViewed = getDrawable(context, R.drawable.ic_video_pin);
+        Drawable videoDrawableNotViewed = getNotViewedDrawable(getDrawable(context, R.drawable.ic_video_pin));
         Drawable videoDrawable = getViewedDrawable(getDrawable(context, R.drawable.ic_video_pin).mutate());
 
-        Drawable animationDrawableNotViewed = getDrawable(context, R.drawable.ic_animation);
+        Drawable animationDrawableNotViewed = getNotViewedDrawable(getDrawable(context, R.drawable.ic_animation));
         Drawable animationDrawable = getViewedDrawable(getDrawable(context, R.drawable.ic_animation).mutate());
 
-        Drawable hardQuizDrawableNotViewed = getDrawable(context, R.drawable.ic_hard_quiz);
+        Drawable hardQuizDrawableNotViewed = getNotViewedDrawable(getDrawable(context, R.drawable.ic_hard_quiz));
         Drawable hardQuizDrawable = getViewedDrawable(getDrawable(context, R.drawable.ic_hard_quiz).mutate());
 
-        Drawable theoryDrawableNotViewed = getDrawable(context, R.drawable.ic_theory);
+        Drawable theoryDrawableNotViewed = getNotViewedDrawable(getDrawable(context, R.drawable.ic_theory));
         Drawable theoryQuizDrawable = getViewedDrawable(getDrawable(context, R.drawable.ic_theory).mutate());
 
         mapFromTypeToDrawable.put(AppConstants.TYPE_TEXT, theoryQuizDrawable);
@@ -141,16 +144,22 @@ public class StepTypeResolverImpl implements StepTypeResolver {
         }
     }
 
+    private Drawable getNotViewedDrawable(Drawable drawable) {
+//        return drawable;//it is default implementation
+        return getDrawableWithColor(drawable, R.color.unviewed_step);
+
+    }
+
     @NonNull
     private Drawable getViewedDrawable(Drawable drawable) {
-        int COLOR2 = 0;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            COLOR2 = context.getColor(R.color.stepic_viewed_steps);
-        } else {
-            COLOR2 = context.getResources().getColor(R.color.stepic_viewed_steps);
-        }
+        return getDrawableWithColor(drawable, R.color.viewed_step);
+    }
+
+    private Drawable getDrawableWithColor(Drawable drawable, @ColorRes int colorRes) {
+        @ColorInt
+        int colorToSet = ContextCompat.getColor(context, colorRes);
         PorterDuff.Mode mMode = PorterDuff.Mode.SRC_ATOP;
-        drawable.setColorFilter(COLOR2, mMode);
+        drawable.setColorFilter(colorToSet, mMode);
         return drawable;
     }
 

@@ -32,7 +32,7 @@ public class PyCharmStepFragment extends StepAttemptFragment {
 
     @Override
     protected void showAttempt(Attempt attempt) {
-        messageField.setText(textResolver.fromHtml(pyMessage));
+        messageField.setText(getTextResolver().fromHtml(pyMessage));
     }
 
     @Override
@@ -48,7 +48,7 @@ public class PyCharmStepFragment extends StepAttemptFragment {
 
     @Override
     protected void onRestoreSubmission() {
-        messageField.setText(textResolver.fromHtml(pyMessage));
+        messageField.setText(getTextResolver().fromHtml(pyMessage));
     }
 
 }

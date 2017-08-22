@@ -19,8 +19,6 @@ import org.stepic.droid.util.DpPixelsHelper;
 
 import java.util.List;
 
-import butterknife.ButterKnife;
-
 public abstract class DraggableStepFragment extends StepAttemptFragment {
 
     private RecyclerView recyclerView;
@@ -33,13 +31,13 @@ public abstract class DraggableStepFragment extends StepAttemptFragment {
     public void onViewCreated(View v, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(v, savedInstanceState);
 
-        View view = ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_draggable_container, attemptContainer, false);
+        View draggableContainer = ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_draggable_container, attemptContainer, false);
 
         int dp8inPx = (int) DpPixelsHelper.convertDpToPixel(8f);
         attemptContainer.setPadding(0, dp8inPx, 0, dp8inPx);
-        attemptContainer.addView(view);
+        attemptContainer.addView(draggableContainer);
 
-        recyclerView = ButterKnife.findById(view, R.id.recycler);
+        recyclerView = draggableContainer.findViewById(R.id.recycler);
         recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setLayoutManager(initLayoutManager());
         recyclerView.setItemAnimator(new DraggableItemAnimator());

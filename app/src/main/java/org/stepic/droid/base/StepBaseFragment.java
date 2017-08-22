@@ -170,7 +170,7 @@ public abstract class StepBaseFragment extends FragmentBase
         authLineText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                screenManager.showLaunchScreen(getActivity());
+                getScreenManager().showLaunchScreen(getActivity());
             }
         });
     }
@@ -189,12 +189,12 @@ public abstract class StepBaseFragment extends FragmentBase
             @Override
             public void onClick(View v) {
                 int discussionCount = step.getDiscussions_count();
-                analytic.reportEvent(Analytic.Comments.OPEN_FROM_STEP_UI);
+                getAnalytic().reportEvent(Analytic.Comments.OPEN_FROM_STEP_UI);
 
                 if (discussionCount == 0) {
-                    screenManager.openComments(getActivity(), step.getDiscussion_proxy(), step.getId(), true); //show new form, but in back stack comment oldList is exist.
+                    getScreenManager().openComments(getActivity(), step.getDiscussion_proxy(), step.getId(), true); //show new form, but in back stack comment oldList is exist.
                 } else {
-                    screenManager.openComments(getActivity(), step.getDiscussion_proxy(), step.getId());
+                    getScreenManager().openComments(getActivity(), step.getDiscussion_proxy(), step.getId());
                 }
             }
         });
@@ -217,7 +217,7 @@ public abstract class StepBaseFragment extends FragmentBase
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_item_share:
-                analytic.reportEvent(Analytic.Interaction.SHARE_STEP_CLICK);
+                getAnalytic().reportEvent(Analytic.Interaction.SHARE_STEP_CLICK);
                 DialogFragment bottomSheetDialogFragment = StepShareDialogFragment.newInstance(step, lesson, unit);
                 if (bottomSheetDialogFragment != null && !bottomSheetDialogFragment.isAdded()) {
                     bottomSheetDialogFragment.show(getFragmentManager(), null);
@@ -257,7 +257,7 @@ public abstract class StepBaseFragment extends FragmentBase
     @Override
     public final void openNextLesson(Unit nextUnit, Lesson nextLesson) {
         ProgressHelper.dismiss(getFragmentManager(), LOAD_DIALOG_TAG);
-        screenManager.showSteps(getActivity(), nextUnit, nextLesson, section);
+        getScreenManager().showSteps(getActivity(), nextUnit, nextLesson, section);
         getActivity().finish();
     }
 
@@ -284,7 +284,7 @@ public abstract class StepBaseFragment extends FragmentBase
     @Override
     public void openPreviousLesson(Unit previousUnit, Lesson previousLesson) {
         ProgressHelper.dismiss(getFragmentManager(), LOAD_DIALOG_TAG);
-        screenManager.showSteps(getActivity(), previousUnit, previousLesson, true, section);
+        getScreenManager().showSteps(getActivity(), previousUnit, previousLesson, true, section);
         getActivity().finish();
     }
 
@@ -316,7 +316,7 @@ public abstract class StepBaseFragment extends FragmentBase
     @Override
     public void onCommentCountUpdated() {
         long[] arr = new long[]{step.getId()};
-        api.getSteps(arr).enqueue(new StepResponseCallback(threadPoolExecutor, databaseFacade, this));
+        getApi().getSteps(arr).enqueue(new StepResponseCallback(getThreadPoolExecutor(), getDatabaseFacade(), this));
     }
 
 

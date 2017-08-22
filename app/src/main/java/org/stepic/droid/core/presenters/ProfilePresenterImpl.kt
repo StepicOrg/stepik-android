@@ -25,6 +25,7 @@ class ProfilePresenterImpl
     private var userViewModel: UserViewModel? = null //both threads, but access only when isLoading = false, write isLoading = true.
     private var currentStreak: Int? = null
     private var maxStreak: Int? = null
+    private var haveSolvedToday: Boolean? = null
 
     override fun initProfile() {
         // default params are not allowed for override.
@@ -40,8 +41,9 @@ class ProfilePresenterImpl
             if (it.isMyProfile) {
                 val currentStreakLocal = currentStreak
                 val maxStreakLocal = maxStreak
-                if (maxStreakLocal != null && currentStreakLocal != null) {
-                    view?.streaksAreLoaded(currentStreakLocal, maxStreakLocal)
+                val haveSolvedTodayLocal = haveSolvedToday
+                if (maxStreakLocal != null && currentStreakLocal != null && haveSolvedTodayLocal != null) {
+                    view?.streaksAreLoaded(currentStreakLocal, maxStreakLocal, haveSolvedTodayLocal)
                     isLoading = false
                     return
                 } else {
@@ -59,14 +61,25 @@ class ProfilePresenterImpl
 
         view?.showLoadingAll()
         threadPoolExecutor.execute {
-            val profile: Profile? = sharedPreferences.profile //need background thread?
+            val profile: Profile? = sharedPreferences.profile
             if (profileId < 0) {
                 mainHandler.post {
                     view?.onProfileNotFound()
                     isLoading = false
                 }
-            } else if (profile != null && (profileId == 0L || profile.id == profileId)) {
+            } else if (profile != null && (profileId == 0L || profile.id == profileId) && !profile.is_guest) {
                 showLocalProfile(profile)
+            } else if (profileId == 0L && (profile != null && profile.is_guest || profile == null)) {
+                try {
+                    val realProfile = api.userProfile.execute().body().profile
+                    sharedPreferences.storeProfile(realProfile)
+                    showLocalProfile(realProfile)
+                } catch (noInternetOrPermission: Exception) {
+                    mainHandler.post {
+                        view?.onInternetFailed()
+                        isLoading = false
+                    }
+                }
             } else {
                 showInternetProfile(profileId)
             }
@@ -77,7 +90,7 @@ class ProfilePresenterImpl
     private fun showInternetProfile(userId: Long) {
         //1) show profile
         //2) no internet
-        //3) user hide profile == Anonymous. We do not need handle this sitation
+        //3) user hide profile == Anonymous. We do not need handle this situation
 
         val user = try {
             api.getUsers(longArrayOf(userId)).execute().body().users.firstOrNull()
@@ -128,11 +141,14 @@ class ProfilePresenterImpl
 
         val currentStreakLocal = StepikUtil.getCurrentStreak(pins)
         val maxStreakLocal = StepikUtil.getMaxStreak(pins)
+        val haveSolvedTodayLocal = pins.first() != 0L
         mainHandler.post {
+            haveSolvedToday = haveSolvedTodayLocal
             currentStreak = currentStreakLocal
             maxStreak = maxStreakLocal
             view?.streaksAreLoaded(currentStreak = currentStreakLocal,
-                    maxStreak = maxStreakLocal)
+                    maxStreak = maxStreakLocal,
+                    haveSolvedToday = haveSolvedTodayLocal)
         }
     }
 
@@ -152,8 +168,13 @@ class ProfilePresenterImpl
                 id = profile.id)
         this.userViewModel = userViewModelLocal
 
+
         mainHandler.post {
-            view?.showNameImageShortBio(userViewModelLocal)
+            if (profile.is_guest) {
+                view?.onUserNotAuth()
+            } else {
+                view?.showNameImageShortBio(userViewModelLocal)
+            }
             isLoading = false
         }
     }

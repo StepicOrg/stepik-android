@@ -6,17 +6,20 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.CoursesDatabaseFragmentBase;
 import org.stepic.droid.storage.operations.Table;
 import org.stepic.droid.ui.listeners.OnRootTouchedListener;
+import org.stepic.droid.ui.util.ToolbarHelperKt;
 
 public class FindCoursesFragment extends CoursesDatabaseFragmentBase {
 
@@ -32,6 +35,7 @@ public class FindCoursesFragment extends CoursesDatabaseFragmentBase {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         super.onViewCreated(view, savedInstanceState);
+        ToolbarHelperKt.initCenteredToolbar(this, R.string.find_courses_title, false);
         rootView.setParentTouchEvent(new OnRootTouchedListener() {
             @Override
             public void makeBeforeChildren() {
@@ -82,6 +86,9 @@ public class FindCoursesFragment extends CoursesDatabaseFragmentBase {
         SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
         menuItem = menu.findItem(R.id.action_search);
         searchView = (SearchView) menuItem.getActionView();
+
+        ImageView closeImageView = searchView.findViewById(R.id.search_close_btn);
+        closeImageView.setImageDrawable(ContextCompat.getDrawable(getContext(), getCloseIconDrawableRes()));
 
         ComponentName componentName = getActivity().getComponentName();
         SearchableInfo searchableInfo = searchManager.getSearchableInfo(componentName);

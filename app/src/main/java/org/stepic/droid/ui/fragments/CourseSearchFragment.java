@@ -5,9 +5,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
+import org.stepic.droid.R;
 import org.stepic.droid.base.App;
 import org.stepic.droid.core.presenters.SearchCoursesPresenter;
 import org.stepic.droid.storage.operations.Table;
+import org.stepic.droid.ui.util.ToolbarHelperKt;
 
 import javax.inject.Inject;
 
@@ -54,6 +56,7 @@ public class CourseSearchFragment extends CourseListFragmentBase {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         searchQuery = getArguments().getString(QUERY_KEY);
         super.onViewCreated(view, savedInstanceState);
+        ToolbarHelperKt.initCenteredToolbar(this, R.string.search_title, true);
         emptySearch.setClickable(false);
         emptySearch.setFocusable(false);
         searchCoursesPresenter.attachView(this);

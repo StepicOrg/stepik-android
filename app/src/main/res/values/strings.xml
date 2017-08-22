@@ -26,7 +26,7 @@
     <string name="first_name">First name</string>
     <string name="second_name">Second name</string>
     <string name="password_hint">Password</string>
-    <string name="my_courses_title">My courses</string>
+    <string name="home_title">Home</string>
     <string name="best_lessons_title">Best lessons</string>
     <string name="drawer_open">open drawer</string>
     <string name="drawer_closed">close drawer</string>
@@ -381,7 +381,7 @@
         </item>
     </plurals>
     <string name="choose_notification_time_interval">Choose notification interval</string>
-    <string name="notification_time">Notification time</string>
+    <string name="notification_time">Notification time: %s</string>
     <string name="notification_about_learning">Notifications about learning</string>
     <string name="time_to_learn_notification_title">Time to learn!</string>
     <string name="streak_description_not_positive">Correct! Solve assignments every day in order to
@@ -471,4 +471,14 @@
     <string name="rate_dialog_hint_positive">Please, leave your feedback in the Google Play</string>
     <string name="rate_dialog_hint_negative">Please, write your feedback to Support</string>
     <string name="rate_dialog_thanks">Thanks!</string>
+
+    <!--svg paths-->
+    <string name="arrow_bottom_path" translatable="false">M 4.06 2.513 L 22.547 21 C 23.365 21.816 24.692 21.816 25.508 21 L 43.995 2.513</string>
+    <string name="arrow_top_path" translatable="false">M 4.06 22 L 22.547 3.513 C 23.365 2.697 24.692 2.697 25.508 3.512 L 43.995 22</string>
+
+    <!--Profile screen-->
+    <string name="short_bio_and_info">Short bio &amp; Info</string>
+
+    <!--Home screen-->
+    <string name="catalog_title">Catalog</string>
 </resources>

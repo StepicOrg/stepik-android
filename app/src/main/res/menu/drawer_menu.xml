@@ -1,72 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group
-        android:id="@+id/main_drawer_menu"
-        android:checkableBehavior="single">
+    <item
+        android:id="@+id/my_courses"
+        android:icon="@drawable/ic_home"
+        android:title="@string/home_title"/>
+    <item
+        android:id="@+id/find_courses"
+        android:icon="@drawable/ic_search_menu"
+        android:title="@string/catalog_title"/>
 
-        <item
-            android:id="@+id/profile"
-            android:checkable="false"
-            android:icon="@drawable/ic_account_circle_black_24dp"
-            android:title="@string/profile_title"/>
-
-        <item
-            android:id="@+id/my_courses"
-            android:icon="@drawable/ic_my_courses"
-            android:title="@string/my_courses_title"/>
-        <item
-            android:id="@+id/find_lessons"
-            android:icon="@drawable/ic_search_courses"
-            android:title="@string/find_courses_title"/>
-
-        <item
-            android:id="@+id/cached_videos"
-            android:icon="@drawable/ic_local_movies_black_24dp"
-            android:title="@string/downloads"
-        />
-
-        <item
-            android:id="@+id/certificates"
-            android:icon="@drawable/ic_mobile_certificates"
-            android:title="@string/certificates_title"/>
-
-        <item
-            android:id="@+id/notifications"
-            android:icon="@drawable/ic_notifications_black_24dp"
-            android:title="@string/notification_title"/>
-
-    </group>
-
-    <group
-        android:id="@+id/settings_drawer_menu"
-        android:checkableBehavior="single">
-
-        <item
-            android:id="@+id/my_settings"
-            android:checkable="false"
-            android:icon="@drawable/ic_settings_black_24dp"
-            android:title="@string/settings_title"/>
-
-        <item
-            android:id="@+id/feedback"
-            android:checkable="false"
-            android:icon="@drawable/ic_comment_black_24dp"
-            android:title="@string/feedback_title"/>
-
-        <item
-            android:id="@+id/information"
-            android:checkable="false"
-            android:icon="@drawable/ic_info_outline_white_24dp"
-            android:title="@string/about_app_title"/>
-
-
-        <item
-            android:id="@+id/logout_item"
-            android:checkable="false"
-            android:icon="@drawable/ic_exit_to_app_black_24dp"
-            android:title="@string/logout_title"
-            android:visible="false"/>
-    </group>
-
+    <item
+        android:id="@+id/profile"
+        android:checkable="false"
+        android:icon="@drawable/ic_profile"
+        android:title="@string/profile_title"/>
 </menu>

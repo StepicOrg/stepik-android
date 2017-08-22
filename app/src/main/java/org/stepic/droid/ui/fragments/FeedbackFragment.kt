@@ -22,9 +22,9 @@ class FeedbackFragment : FragmentBase() {
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?)
             = inflater?.inflate(R.layout.fragment_feedback, container, false)
 
-    override fun onViewCreated(v: View?, savedInstanceState: Bundle?) {
-        super.onViewCreated(v, savedInstanceState)
-        v?.let {
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        view?.let {
             initButtons()
         }
     }

@@ -17,5 +17,5 @@ class DownloadClickReceiver : BroadcastReceiver() {
         App.component().inject(this)
     }
 
-    override fun onReceive(context: Context, intent: Intent) = screenProvider.showDownload()
+    override fun onReceive(context: Context, intent: Intent) = screenProvider.showDownloads(context)
 }

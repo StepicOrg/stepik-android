@@ -81,7 +81,7 @@ class StepikNotificationManagerImpl
         val intent = screenManager.getShowFindCoursesIntent(context)
         intent.action = AppConstants.OPEN_NOTIFICATION_FOR_ENROLL_REMINDER
         val analyticDayTypeName = dayType?.name ?: ""
-        intent.putExtra(MainFeedActivity.REMINDER_KEY, analyticDayTypeName)
+        intent.putExtra(MainFeedActivity.reminderKey, analyticDayTypeName)
         val taskBuilder: TaskStackBuilder =
                 TaskStackBuilder
                         .create(context)
@@ -628,7 +628,7 @@ class StepikNotificationManagerImpl
     private fun openLearnNotification(notification: Notification): Boolean {
         if (notification.action != null && notification.action == NotificationHelper.ISSUED_CERTIFICATE) {
             analytic.reportEvent(Analytic.Certificate.OPEN_CERTIFICATE_FROM_NOTIFICATION_CENTER)
-            screenManager.showCertificates()
+            screenManager.showCertificates(context)
             return true
         } else if (notification.action == NotificationHelper.ISSUED_LICENSE) {
             val intent: Intent = getLicenseIntent(notification) ?: return false

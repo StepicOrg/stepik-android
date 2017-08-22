@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <string name="yet_have_not_account">Регистрация с e-mail</string>
     <string name="stepik_free_courses_title">Stepik.org: бесплатные курсы</string>
@@ -16,7 +16,7 @@
     <string name="find_courses_title">Найти курсы</string>
     <string name="first_name">Имя</string>
     <string name="logout_title">Выход</string>
-    <string name="my_courses_title">Мои курсы</string>
+    <string name="home_title">Главная</string>
     <string name="or_sign_up_with_email">или зарегистрироваться через e-mail</string>
     <string name="password_hint">Пароль</string>
     <string name="remind_password">Вспомнить пароль</string>
@@ -346,14 +346,14 @@
     </string>
     <string name="too_many_attempts">Слишком много неверных попыток. Попробуйте позже</string>
     <string name="profile_title">Профиль</string>
-    <string name="current_streak">Решаю без перерыва</string>
+    <string name="current_streak">Текущий рекорд</string>
     <string name="solving_without_break">@string/current_streak</string>
     <string name="max_streak">Мой рекорд</string>
     <string name="about_me">Обо мне</string>
     <string name="short_bio">Краткая биография</string>
     <string name="user_info">Информация</string>
     <plurals name="day_number">
-        <item quantity="one">день</item>
+        <item quantity="one" tools:ignore="ImpliedQuantity">день</item>
         <item quantity="few">дня</item>
         <item quantity="many">дней</item>
         <item quantity="other">дней</item>
@@ -381,7 +381,7 @@
     <string name="streak_dialog_title">Поздравляем!</string>
     <string name="later_tatle">Позже</string>
     <string name="choose_notification_time_interval">Выберите время напоминания</string>
-    <string name="notification_time">Время напоминания</string>
+    <string name="notification_time">Время напоминания: %s</string>
     <string name="notification_about_learning">Уведомления о занятиях</string>
     <string name="time_to_learn_notification_title">Время учиться!</string>
     <plurals name="streak_notification_message_call_to_action">
@@ -470,4 +470,10 @@
     <string name="rate_dialog_hint_positive">Пожалуйста, оставьте отзыв в Google Play</string>
     <string name="rate_dialog_hint_negative">Пожалуйста, напишите в Поддержку</string>
     <string name="rate_dialog_thanks">Спасибо!</string>
+
+    <!--Profile screen-->
+    <string name="short_bio_and_info">Краткая биография &amp; Информация</string>
+
+    <!--Home screen-->
+    <string name="catalog_title">Каталог</string>
 </resources>
