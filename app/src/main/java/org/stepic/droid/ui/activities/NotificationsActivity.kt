@@ -5,4 +5,8 @@ import org.stepic.droid.ui.fragments.NotificationsFragment
 
 class NotificationsActivity : SingleFragmentActivity() {
     override fun createFragment() = NotificationsFragment.newInstance()
+
+    override fun applyTransitionPrev() {
+        //stub, do not add something
+    }
 }
