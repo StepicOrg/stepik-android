@@ -5,12 +5,12 @@ import android.graphics.drawable.Animatable
 import android.os.Bundle
 import android.os.Parcelable
 import android.support.annotation.MainThread
+import android.support.v7.widget.AppCompatImageView
 import android.util.AttributeSet
-import android.widget.ImageView
 import org.stepic.droid.R
 
 class ArrowImageView(context: Context, attrs: AttributeSet?, defStyleAttr: Int)
-    : ImageView(context, attrs, defStyleAttr) {
+    : AppCompatImageView(context, attrs, defStyleAttr) {
 
     constructor(context: Context) : this(context, null)
 
