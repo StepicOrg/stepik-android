@@ -32,6 +32,9 @@
 
         <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
         <item name="android:actionOverflowButtonStyle">@style/OverflowMenuButton</item>
+
+        <!--color of back button and overflow-->
+        <item name="colorControlNormal">@color/new_accent_color</item>
     </style>
 
     <style name="OverflowMenuButton" parent="@android:style/Widget.Holo.ActionButton.Overflow">
