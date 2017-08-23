@@ -60,7 +60,7 @@
         <activity
             android:name="org.stepic.droid.ui.activities.LaunchActivity"
             android:launchMode="singleTask"
-            android:theme="@style/AppTheme.LoginLaunchRegistration">
+            android:theme="@style/StepikTheme.LoginLaunchRegistration">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -77,12 +77,12 @@
 
         <activity
             android:name="org.stepic.droid.ui.activities.RegisterActivity"
-            android:theme="@style/AppTheme.LoginLaunchRegistration"/>
+            android:theme="@style/StepikTheme.LoginLaunchRegistration"/>
 
         <activity
             android:name="org.stepic.droid.ui.activities.LoginActivity"
             android:launchMode="singleTop"
-            android:theme="@style/AppTheme.LoginLaunchRegistration"/>
+            android:theme="@style/StepikTheme.LoginLaunchRegistration"/>
 
         <activity
             android:name="org.stepic.droid.ui.activities.MainFeedActivity"
