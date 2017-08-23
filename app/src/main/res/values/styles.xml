@@ -35,6 +35,9 @@
 
         <!--color of back button and overflow-->
         <item name="colorControlNormal">@color/new_accent_color</item>
+
+        <!--For setting text color to edit text (android O)-->
+        <item name="editTextStyle">@style/StepikTheme.EditTextStyle</item>
     </style>
 
     <style name="OverflowMenuButton" parent="@android:style/Widget.Holo.ActionButton.Overflow">
@@ -94,6 +97,10 @@
         <item name="android:windowBackground">@color/black</item>
     </style>
 
+    <style name="StepikTheme.EditTextStyle" parent="@android:style/Widget.EditText">
+        <item name="android:textColor">@color/text_color</item>
+    </style>
+
     <style name="TransparentActionBar" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:windowActionBarOverlay">true</item>
         <!-- Support library compatibility -->
@@ -104,6 +111,7 @@
         <item name="colorPrimaryDark">@color/transparent_black_30</item>
         <item name="android:windowBackground">@color/login_launch_registration_background</item>
         <item name="android:colorBackground">@color/login_launch_registration_background</item>
+        <item name="android:textColor">@color/text_color</item>
     </style>
 
     <style name="AppTheme.VideoPlayer" parent="AppTheme.VideoPlayer.7"/>
