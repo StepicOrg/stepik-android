@@ -226,6 +226,7 @@ public interface Analytic {
         String NO_VIDEO_ON_STEP_SHOWING = "illegal_state_video_no_video";
         String CANT_PARSE_QUALITY = "cant_parse_quality";
         String JOIN_FAILED = "error_join_failed"; //#Apps-580
+        String UNIT_CACHED_LESSON_NO = "error_unit_cached_lesson_not";
     }
 
     interface Web {
