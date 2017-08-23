@@ -166,6 +166,9 @@ class MainFeedActivity : BackToExitActivityBase(),
         }
 
         profileMainFeedPresenter.attachView(this)
+        if (savedInstanceState == null) {
+            profileMainFeedPresenter.fetchProfile()
+        }
     }
 
     private fun initGoogleApiClient() {
