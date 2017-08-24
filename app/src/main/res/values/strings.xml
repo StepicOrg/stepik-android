@@ -481,4 +481,21 @@
 
     <!--Home screen-->
     <string name="catalog_title">Catalog</string>
+
+
+    <!--Notification channel's names-->
+    <string name="comments_channel_name">Comments</string>
+    <string name="review_channel_name">Reviews</string>
+    <string name="teach_channel_name">Teaching</string>
+    <string name="learn_channel_name">Learning</string>
+    <string name="other_channel_name">Other</string>
+    <string name="user_channel_name">User\'s Notifications</string>
+
+    <string name="comments_channel_description">Notifications about replying on your comments</string>
+    <string name="review_channel_description">Notifications about getting peer-review</string>
+    <string name="teach_channel_description">Notifications about teaching activities at platform</string>
+    <string name="learn_channel_description">Notifications about deadlines and opening new modules</string>
+    <string name="other_channel_description">Notifications about other actions at platform</string>
+    <string name="user_channel_description">Notifications which user set locally</string>
+
 </resources>
