@@ -16,7 +16,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -82,6 +81,7 @@ import org.stepic.droid.ui.dialogs.DeleteItemDialogFragment;
 import org.stepic.droid.ui.dialogs.ExplainCalendarPermissionDialog;
 import org.stepic.droid.ui.dialogs.LoadingProgressDialog;
 import org.stepic.droid.ui.dialogs.UnauthorizedDialogFragment;
+import org.stepic.droid.ui.util.ToolbarHelperKt;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ColorUtil;
 import org.stepic.droid.util.HtmlHelper;
@@ -126,6 +126,7 @@ public class SectionsFragment
     private static final int ANIMATION_DURATION = 0;
     public static final int DELETE_POSITION_REQUEST_CODE = 177;
 
+    @NotNull
     public static SectionsFragment newInstance() {
         return new SectionsFragment();
     }
@@ -139,9 +140,6 @@ public class SectionsFragment
 
     @BindView(R.id.loadProgressbar)
     ProgressBar loadOnCenterProgressBar;
-
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
 
     @BindView(R.id.reportProblem)
     protected View reportConnectionProblem;
@@ -295,14 +293,14 @@ public class SectionsFragment
         courseJoinerPresenter.attachView(this);
         sectionsPresenter.attachView(this);
         invitationPresenter.attachView(this);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        ToolbarHelperKt.initCenteredToolbar(this, R.string.syllabus_title, true);
         onNewIntent(getActivity().getIntent());
     }
 
     private void setUpToolbarWithCourse() {
         if (course != null && course.getTitle() != null && !course.getTitle().isEmpty()) {
-            getActivity().setTitle(course.getTitle());
+            ToolbarHelperKt.setTitleToCenteredToolbar(this, course.getTitle());
         }
     }
 
@@ -316,7 +314,7 @@ public class SectionsFragment
 
         if (course != null && course.getSlug() != null && !wasIndexed) {
             title = getString(R.string.syllabus_title) + ": " + course.getTitle();
-            urlInWeb = Uri.parse(StringUtil.getUriForSyllabus(config.getBaseUrl(), course.getSlug()));
+            urlInWeb = Uri.parse(StringUtil.getUriForSyllabus(getConfig().getBaseUrl(), course.getSlug()));
             reportIndexToGoogle();
         }
 
@@ -332,7 +330,7 @@ public class SectionsFragment
             wasIndexed = true;
             FirebaseAppIndex.getInstance().update(getIndexable());
             FirebaseUserActions.getInstance().start(getAction());
-            analytic.reportEventWithIdName(Analytic.AppIndexing.COURSE_SYLLABUS, course.getCourseId() + "", course.getTitle());
+            getAnalytic().reportEventWithIdName(Analytic.AppIndexing.COURSE_SYLLABUS, course.getCourseId() + "", course.getTitle());
         }
     }
 
@@ -349,14 +347,14 @@ public class SectionsFragment
                 @Override
                 public void onClick(View v) {
                     if (course != null) {
-                        analytic.reportEvent(Analytic.Interaction.JOIN_COURSE);
+                        getAnalytic().reportEvent(Analytic.Interaction.JOIN_COURSE);
                         courseJoinerPresenter.joinCourse(course);
                     }
                 }
             });
             courseName.setText(course.getTitle());
             Glide.with(this)
-                    .load(StepikLogicHelper.getPathForCourseOrEmpty(course, config))
+                    .load(StepikLogicHelper.getPathForCourseOrEmpty(course, getConfig()))
                     .placeholder(R.drawable.general_placeholder)
                     .into(imageViewTarget);
         } else {
@@ -370,14 +368,14 @@ public class SectionsFragment
         switch (item.getItemId()) {
             case R.id.action_info:
                 if (course != null) {
-                    screenManager.showCourseDescription(this, course);
+                    getScreenManager().showCourseDescription(this, course);
                 }
                 return true;
 
             case R.id.menu_item_share:
                 if (course != null) {
                     if (course.getTitle() != null) {
-                        analytic.reportEventWithIdName(Analytic.Interaction.SHARE_COURSE_SECTION, course.getCourseId() + "", course.getTitle());
+                        getAnalytic().reportEventWithIdName(Analytic.Interaction.SHARE_COURSE_SECTION, course.getCourseId() + "", course.getTitle());
                     }
                     Intent intent = shareHelper.getIntentForCourseSharing(course);
                     startActivity(intent);
@@ -386,7 +384,7 @@ public class SectionsFragment
                 return true;
 
             case R.id.menu_item_calendar:
-                analytic.reportEventWithIdName(Analytic.Calendar.USER_CLICK_ADD_MENU, course.getCourseId() + "", course.getTitle());
+                getAnalytic().reportEventWithIdName(Analytic.Calendar.USER_CLICK_ADD_MENU, course.getCourseId() + "", course.getTitle());
                 calendarPresenter.addDeadlinesToCalendar(sectionList, null);
                 return true;
             case android.R.id.home:
@@ -431,7 +429,7 @@ public class SectionsFragment
 
                 boolean userHasAccess = SectionUtilKt.hasUserAccess(section, course);
                 if (userHasAccess) {
-                    screenManager.showUnitsForSection(SectionsFragment.this.getActivity(), sections.get(modulePosition - 1));
+                    getScreenManager().showUnitsForSection(SectionsFragment.this.getActivity(), sections.get(modulePosition - 1));
                 } else {
                     adapter.setDefaultHighlightPosition(modulePosition - 1);
                     int scrollTo = modulePosition + SectionAdapter.PRE_SECTION_LIST_DELTA - 1;
@@ -473,7 +471,7 @@ public class SectionsFragment
 
     @Override
     public void onRefresh() {
-        analytic.reportEvent(Analytic.Interaction.REFRESH_SECTION);
+        getAnalytic().reportEvent(Analytic.Interaction.REFRESH_SECTION);
         if (course != null) {
             sectionsPresenter.showSections(course, true);
         } else {
@@ -517,6 +515,8 @@ public class SectionsFragment
         storeStateManager.removeSectionCallback(this);
         droppingListenerClient.unsubscribe(this);
         courseNotParsedView.setOnClickListener(null);
+        swipeRefreshLayout.setOnRefreshListener(null);
+        localProgressManager.unsubscribe(this);
         super.onDestroyView();
     }
 
@@ -562,7 +562,7 @@ public class SectionsFragment
             if (permissionExternalStorage.equals(Manifest.permission.WRITE_EXTERNAL_STORAGE) &&
                     grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                int position = sharedPreferenceHelper.getTempPosition();
+                int position = getSharedPreferenceHelper().getTempPosition();
                 if (adapter != null) {
                     adapter.requestClickLoad(position);
                 }
@@ -602,8 +602,8 @@ public class SectionsFragment
             courseNotParsedView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (sharedPreferenceHelper.getAuthResponseFromStore() != null) {
-                        screenManager.showFindCourses(getActivity());
+                    if (getSharedPreferenceHelper().getAuthResponseFromStore() != null) {
+                        getScreenManager().showFindCourses(getActivity());
                         getActivity().finish();
                     } else {
                         unauthorizedDialog = UnauthorizedDialogFragment.newInstance(course);
@@ -744,7 +744,7 @@ public class SectionsFragment
 
     @Override
     public void onUserDoesntHaveCalendar() {
-        userPreferences.setNeedToShowCalendarWidget(false);
+        getUserPreferences().setNeedToShowCalendarWidget(false);
         adapter.setNeedShowCalendarWidget(false);
         adapter.notifyItemChanged(0);
         SnackbarExtensionKt.setTextColor(Snackbar.make(rootView, R.string.user_not_have_calendar, Snackbar.LENGTH_LONG), ColorUtil.INSTANCE.getColorArgb(R.color.white, getContext())).show();
@@ -803,10 +803,10 @@ public class SectionsFragment
                 String action = intent.getAction();
                 if (action != null) {
                     if (action.equals(AppConstants.OPEN_NOTIFICATION)) {
-                        analytic.reportEvent(Analytic.Notification.OPEN_NOTIFICATION);
+                        getAnalytic().reportEvent(Analytic.Notification.OPEN_NOTIFICATION);
                     } else if (!action.equals(AppConstants.INTERNAL_STEPIK_ACTION)) {
-                        analytic.reportEvent(Analytic.DeepLink.USER_OPEN_SYLLABUS_LINK, simpleCourseId + "");
-                        analytic.reportEvent(Analytic.DeepLink.USER_OPEN_LINK_GENERAL);
+                        getAnalytic().reportEvent(Analytic.DeepLink.USER_OPEN_SYLLABUS_LINK, simpleCourseId + "");
+                        getAnalytic().reportEvent(Analytic.DeepLink.USER_OPEN_LINK_GENERAL);
                     }
                 }
 
@@ -825,26 +825,26 @@ public class SectionsFragment
 
     private void postNotificationAsReadIfNeed(Intent intent, final long courseId) {
         if (intent.getAction() != null && intent.getAction().equals(AppConstants.OPEN_NOTIFICATION_FOR_CHECK_COURSE)) {
-            analytic.reportEvent(Analytic.Notification.OPEN_NOTIFICATION);
-            analytic.reportEvent(Analytic.Notification.OPEN_NOTIFICATION_SYLLABUS, courseId + "");
+            getAnalytic().reportEvent(Analytic.Notification.OPEN_NOTIFICATION);
+            getAnalytic().reportEvent(Analytic.Notification.OPEN_NOTIFICATION_SYLLABUS, courseId + "");
             AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
                 @Override
                 protected Void doInBackground(Void... params) {
-                    List<Notification> notifications = databaseFacade.getAllNotificationsOfCourse(courseId);
+                    List<Notification> notifications = getDatabaseFacade().getAllNotificationsOfCourse(courseId);
                     stepikNotificationManager.discardAllShownNotificationsRelatedToCourse(courseId);
                     for (Notification notificationItem : notifications) {
                         if (notificationItem != null && notificationItem.getId() != null) {
                             try {
-                                api.setReadStatusForNotification(notificationItem.getId(), true).execute();
+                                getApi().setReadStatusForNotification(notificationItem.getId(), true).execute();
                             } catch (Exception e) {
-                                analytic.reportError(Analytic.Error.NOTIFICATION_NOT_POSTED_ON_CLICK, e);
+                                getAnalytic().reportError(Analytic.Error.NOTIFICATION_NOT_POSTED_ON_CLICK, e);
                             }
                         }
                     }
                     return null;
                 }
             };
-            task.executeOnExecutor(threadPoolExecutor);
+            task.executeOnExecutor(getThreadPoolExecutor());
         }
     }
 
@@ -870,7 +870,7 @@ public class SectionsFragment
     public void onShowInvitationDialog(@NotNull final Course courseForSharing) {
         SpannableString inviteTitle = new SpannableString(getString(R.string.take_course_with_fiends));
         inviteTitle.setSpan(new ForegroundColorSpan(Color.BLACK), 0, inviteTitle.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        CalligraphyTypefaceSpan typefaceSpan = new CalligraphyTypefaceSpan(TypefaceUtils.load(getContext().getAssets(), fontsProvider.provideFontPath(FontType.bold)));
+        CalligraphyTypefaceSpan typefaceSpan = new CalligraphyTypefaceSpan(TypefaceUtils.load(getContext().getAssets(), getFontsProvider().provideFontPath(FontType.bold)));
         inviteTitle.setSpan(typefaceSpan, 0, inviteTitle.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
 
@@ -884,7 +884,7 @@ public class SectionsFragment
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        analytic.reportEvent(Analytic.Interaction.POSITIVE_MATERIAL_DIALOG_INVITATION);
+                        getAnalytic().reportEvent(Analytic.Interaction.POSITIVE_MATERIAL_DIALOG_INVITATION);
                         Intent intent = shareHelper.getIntentForCourseSharing(courseForSharing);
                         SectionsFragment.this.startActivityForResult(intent, INVITE_REQUEST_CODE);
                     }
@@ -927,7 +927,7 @@ public class SectionsFragment
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (adapter != null && requestCode == DELETE_POSITION_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            analytic.reportEvent(Analytic.Interaction.ACCEPT_DELETING_SECTION);
+            getAnalytic().reportEvent(Analytic.Interaction.ACCEPT_DELETING_SECTION);
             int position = data.getIntExtra(DeleteItemDialogFragment.deletePositionKey, -1);
             adapter.requestClickDeleteSilence(position);
         }
@@ -940,13 +940,13 @@ public class SectionsFragment
 
     @Override
     public void onShowPreferenceSuggestion() {
-        analytic.reportEvent(Analytic.Downloading.SHOW_SNACK_PREFS_SECTIONS);
+        getAnalytic().reportEvent(Analytic.Downloading.SHOW_SNACK_PREFS_SECTIONS);
         SnackbarShower.INSTANCE.showTurnOnDownloadingInSettings(rootView, getContext(), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
-                    analytic.reportEvent(Analytic.Downloading.CLICK_SETTINGS_SECTIONS);
-                    screenManager.showSettings(getActivity());
+                    getAnalytic().reportEvent(Analytic.Downloading.CLICK_SETTINGS_SECTIONS);
+                    getScreenManager().showSettings(getActivity());
                 } catch (NullPointerException nullPointerException) {
                     Timber.e(nullPointerException);
                 }
@@ -956,11 +956,11 @@ public class SectionsFragment
 
     @Override
     public void onShowInternetIsNotAvailableRetry(final int position) {
-        analytic.reportEvent(Analytic.Downloading.SHOW_SNACK_INTERNET_SECTIONS);
+        getAnalytic().reportEvent(Analytic.Downloading.SHOW_SNACK_INTERNET_SECTIONS);
         SnackbarShower.INSTANCE.showInternetRetrySnackbar(rootView, getContext(), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                analytic.reportEvent(Analytic.Downloading.CLICK_RETRY_SECTIONS);
+                getAnalytic().reportEvent(Analytic.Downloading.CLICK_RETRY_SECTIONS);
                 if (adapter != null) {
                     adapter.requestClickLoad(position);
                 }

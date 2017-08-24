@@ -19,6 +19,7 @@ import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 @SectionScope
 class UnitsPresenter
@@ -71,16 +72,22 @@ class UnitsPresenter
 
                     sortUnitsByPosition(fromCacheUnits)
 
+                    val fromCacheUnitsOnlyWithLessons = ArrayList<Unit>()
                     //lessons will sort automatically
                     for (unitItem in fromCacheUnits) {
-                        val lesson = databaseFacade.getLessonOfUnit(unitItem) ?: throw UnitStoredButLessonNotException()
-                        fromCacheLessons.add(lesson)
+                        val lesson = databaseFacade.getLessonOfUnit(unitItem)
+                        if (lesson == null) {
+                            analytic.reportError(Analytic.Error.UNIT_CACHED_LESSON_NO, UnitStoredButLessonNotException())
+                        } else {
+                            fromCacheUnitsOnlyWithLessons.add(unitItem)
+                            fromCacheLessons.add(lesson)
+                        }
                     }
 
                     progressMap.clear()
                     progressMap.putAll(unitProgressMapLocal)
                     unitList.clear()
-                    unitList.addAll(fromCacheUnits)
+                    unitList.addAll(fromCacheUnitsOnlyWithLessons)
                     lessonList.clear()
                     lessonList.addAll(fromCacheLessons)
                     cacheLessonMap.clear()

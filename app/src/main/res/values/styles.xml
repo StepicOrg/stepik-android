@@ -1,17 +1,62 @@
 <resources>
 
+    <style name="StepikTheme" parent="StepikTheme.15"/>
+
+    <style name="StepikTheme.15" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/new_primary_color</item>
+        <item name="colorPrimaryDark">@color/new_accent_color</item>
+        <item name="colorAccent">@color/new_accent_color</item>
+
+        <!--this change the background of main window (activity)-->
+        <item name="android:windowBackground">@color/white</item>
+
+        <!--this change the background of main window (activity and) AND all the components (dialogs) -->
+        <item name="android:colorBackground">@color/new_cover</item>
+
+        <item name="android:textColor">@color/text_color</item>
+        <item name="android:textViewStyle">@style/AppTheme.Widget.TextView</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:actionMenuTextColor">@color/white</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="buttonStyle">@style/NewStepikButton</item>
+        <item name="android:textAppearance">@style/TextAppearance.FontPath</item>
+        <item name="android:dialogTheme">@style/AppTheme.Dialog</item>
+        <item name="dialogTheme">@style/AppTheme.Dialog</item>
+        <item name="android:alertDialogTheme">@style/AppTheme.Dialog</item>
+        <item name="alertDialogTheme">@style/AppTheme.Dialog</item>
+        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
+
+        <item name="colorSwitchThumbNormal">#D8D8D8</item>
+        <item name="android:colorForeground">#c7c7c7</item>
+
+        <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="android:actionOverflowButtonStyle">@style/OverflowMenuButton</item>
+
+        <!--color of back button and overflow-->
+        <item name="colorControlNormal">@color/new_accent_color</item>
+
+        <!--For setting text color to edit text (android O)-->
+        <item name="editTextStyle">@style/StepikTheme.EditTextStyle</item>
+    </style>
+
+    <style name="OverflowMenuButton" parent="@android:style/Widget.Holo.ActionButton.Overflow">
+        <item name="android:src">@drawable/ic_action_more_vert</item>
+    </style>
+
+
     <style name="AppTheme" parent="AppTheme.15"/>
 
     <style name="AppTheme.15" parent="@style/Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/stepic_brand_primary</item>
         <item name="colorPrimaryDark">@color/black</item>
-        <item name="colorAccent">@color/stepic_blue_ribbon</item>
+        <item name="colorAccent">@color/new_accent_color</item>
 
         <!--this change the background of main window (activity)-->
-        <item name="android:windowBackground">@color/stepic_cover</item>
+        <item name="android:windowBackground">@color/old_cover</item>
 
         <!--this change the background of main window (activity and) AND all the components (dialogs) -->
-        <item name="android:colorBackground">@color/stepic_cover</item>
+        <item name="android:colorBackground">@color/old_cover</item>
 
         <item name="android:textColor">@color/stepic_regular_text</item>
         <item name="android:textViewStyle">@style/AppTheme.Widget.TextView</item>
@@ -20,22 +65,22 @@
         <item name="android:actionMenuTextColor">@color/white</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="buttonStyle">@style/StepicButton</item>
         <item name="android:textAppearance">@style/TextAppearance.FontPath</item>
         <item name="android:dialogTheme">@style/AppTheme.Dialog</item>
         <item name="dialogTheme">@style/AppTheme.Dialog</item>
         <item name="android:alertDialogTheme">@style/AppTheme.Dialog</item>
         <item name="alertDialogTheme">@style/AppTheme.Dialog</item>
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
+
+        <item name="colorSwitchThumbNormal">#D8D8D8</item>
+        <item name="android:colorForeground">#c7c7c7</item>
     </style>
 
-    <style name="AppBottomSheetDialogTheme"
-           parent="Theme.Design.Light.BottomSheetDialog">
+    <style name="AppBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/AppModalStyle</item>
     </style>
 
-    <style name="AppModalStyle"
-           parent="Widget.Design.BottomSheet.Modal">
+    <style name="AppModalStyle" parent="Widget.Design.BottomSheet.Modal">
         <item name="behavior_peekHeight">@dimen/custom_peek_height</item>
     </style>
 
@@ -52,16 +97,21 @@
         <item name="android:windowBackground">@color/black</item>
     </style>
 
+    <style name="StepikTheme.EditTextStyle" parent="@android:style/Widget.EditText">
+        <item name="android:textColor">@color/text_color</item>
+    </style>
+
     <style name="TransparentActionBar" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:windowActionBarOverlay">true</item>
         <!-- Support library compatibility -->
         <item name="windowActionBarOverlay">true</item>
     </style>
 
-    <style name="AppTheme.LoginLaunchRegistration">
+    <style name="StepikTheme.LoginLaunchRegistration">
         <item name="colorPrimaryDark">@color/transparent_black_30</item>
         <item name="android:windowBackground">@color/login_launch_registration_background</item>
         <item name="android:colorBackground">@color/login_launch_registration_background</item>
+        <item name="android:textColor">@color/text_color</item>
     </style>
 
     <style name="AppTheme.VideoPlayer" parent="AppTheme.VideoPlayer.7"/>
@@ -79,9 +129,8 @@
     </style>
 
     <style name="AppTheme.Dialog" parent="Theme.AppCompat.Light.Dialog">
-        <item name="colorPrimary">@color/stepic_brand_primary</item>
-        <item name="colorPrimaryDark">@color/stepic_brand_primary_dark</item>
-        <item name="colorAccent">@color/stepic_blue_ribbon</item>
+        <item name="colorPrimary">@color/new_primary_color</item>
+        <item name="colorAccent">@color/new_accent_color</item>
     </style>
 
     <style name="TextAppearance.FontPath" parent="android:TextAppearance">
@@ -92,21 +141,11 @@
         <item name="fontPath">fonts/Roboto-Regular.ttf</item>
     </style>
 
-    <style name="StepicButton" parent="@style/Widget.AppCompat.Button">
-        <item name="android:foreground">@drawable/non_radius_foreground</item>
-        <item name="android:background">@drawable/btn_color_selector</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:padding">8dp</item>
-        <item name="fontPath">fonts/Roboto-Bold.ttf</item>
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:minHeight">@dimen/min_ux_touchable_size</item>
-    </style>
-
     <style name="StepicSmallMaterialButton" parent="Theme.AppCompat.Light">
         <item name="android:minHeight">@dimen/height_of_small_button</item>
         <item name="android:maxHeight">@dimen/height_of_small_button</item>
         <item name="android:textSize">@dimen/stepik_text_size_in_button</item>
-        <item name="android:background">@drawable/btn_color_selector_accent</item>
+        <item name="android:background">@drawable/new_button_selector</item>
         <item name="android:textAllCaps">true</item>
     </style>
 
@@ -166,6 +205,16 @@
 
     <style name="SettingSwitch">
         <item name="android:textColor">@color/stepic_regular_text</item>
+        <item name="android:textSize">@dimen/text_header</item>
+        <item name="android:foreground">@drawable/non_radius_foreground</item>
+        <item name="android:paddingBottom">@dimen/guideline_standard_padding</item>
+        <item name="android:paddingLeft">@dimen/guideline_standard_padding</item>
+        <item name="android:paddingTop">@dimen/guideline_standard_padding</item>
+        <item name="android:paddingRight">@dimen/guideline_standard_padding</item>
+    </style>
+
+    <style name="NewSettingSwitch">
+        <item name="android:textColor">@color/new_accent_color</item>
         <item name="android:textSize">@dimen/text_header</item>
         <item name="android:foreground">@drawable/non_radius_foreground</item>
         <item name="android:paddingBottom">@dimen/guideline_standard_padding</item>
@@ -247,6 +296,29 @@
         <item name="android:textSize">@dimen/rate_dialog_button_text_size</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
+    </style>
+
+    <style name="ProfileTheme" parent="AppTheme">
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <style name="StepikToolbarTheme" parent="@style/ThemeOverlay.AppCompat.Light">
+    </style>
+
+    <style name="StepikToolbarTextAppearance" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">16sp</item>
+        <item name="fontPath">fonts/Roboto-Light.ttf</item>
+        <item name="android:textColor">@color/new_accent_color</item>
+    </style>
+
+    <style name="NewStepikButton" parent="@style/Widget.AppCompat.Button">
+        <item name="android:foreground">@drawable/non_radius_foreground</item>
+        <item name="android:background">@drawable/new_button_selector</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:padding">8dp</item>
+        <item name="fontPath">fonts/Roboto-Bold.ttf</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:minHeight">@dimen/min_ux_touchable_size</item>
     </style>
 
 

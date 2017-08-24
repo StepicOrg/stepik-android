@@ -276,8 +276,8 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
         }
 
         if (VKSdk.onActivityResult(requestCode, resultCode, data, object : VKCallback<VKAccessToken> {
-            override fun onResult(res: VKAccessToken) {
-                loginPresenter.loginWithNativeProviderCode(res.accessToken, SocialManager.SocialType.vk)
+            override fun onResult(result: VKAccessToken) {
+                loginPresenter.loginWithNativeProviderCode(result.accessToken, SocialManager.SocialType.vk, result.email)
             }
 
             override fun onError(error: VKError) {
@@ -323,7 +323,7 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
 
     override fun onBackPressed() {
         val fromMainFeed = intent?.extras?.getBoolean(AppConstants.FROM_MAIN_FEED_FLAG) ?: false
-        val index = intent?.extras?.getInt(MainFeedActivity.KEY_CURRENT_INDEX) ?: MainFeedActivity.DEFAULT_START_INDEX
+        val index = intent?.extras?.getInt(MainFeedActivity.currentIndexKey) ?: MainFeedActivity.defaultIndex
 
         if (fromMainFeed) {
             screenManager.showMainFeed(this, index)

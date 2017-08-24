@@ -35,19 +35,19 @@ class LoginPresenter
         doRequest(api.authWithCode(code), null, Type.social)
     }
 
-    fun loginWithNativeProviderCode(nativeCode: String, type: SocialManager.SocialType) {
+    fun loginWithNativeProviderCode(nativeCode: String, type: SocialManager.SocialType, email: String? = null) {
         val code = nativeCode.trim()
-        doRequest(api.authWithNativeCode(code, type),
+        doRequest(api.authWithNativeCode(code, type, email),
                 null,
                 Type.social)
     }
 
     @MainThread
     private fun doRequest(callToServer: Call<AuthenticationStepicResponse>, authData: AuthData?, type: Type, credential: Credential? = null) {
-        fun onFail(type: LoginFailType, credential: Credential? = null) {
-            analytic.reportEventWithName(Analytic.Login.FAIL_LOGIN, type.toString())
+        fun onFail(loginFailType: LoginFailType) {
+            analytic.reportEventWithName(Analytic.Login.FAIL_LOGIN, loginFailType.toString())
             mainHandler.post {
-                view?.onFailLogin(type, credential)
+                view?.onFailLogin(loginFailType, credential)
             }
         }
 
@@ -72,7 +72,7 @@ class LoginPresenter
                 } else if (response.code() == 401 && type == Type.social) {
                     onFail(LoginFailType.emailAlreadyUsed)
                 } else {
-                    onFail(LoginFailType.emailPasswordInvalid, credential)
+                    onFail(LoginFailType.emailPasswordInvalid)
                 }
             } catch (ex: Exception) {
                 onFail(LoginFailType.connectionProblem)

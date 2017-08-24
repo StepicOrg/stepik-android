@@ -1,29 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
+    <include layout="@layout/view_centered_appbar"/>
 
-    <include layout="@layout/progress_bar_on_empty_screen"/>
-
-    <include layout="@layout/report_problem_layout"/>
-
-    <include layout="@layout/empty_certificates"/>
-
-    <include layout="@layout/need_auth_placeholder"/>
-
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/certificate_swipe_refresh"
+    <FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/old_cover">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/certificates_recycler_view"
+
+        <include layout="@layout/progress_bar_on_empty_screen"/>
+
+        <include layout="@layout/report_problem_layout"/>
+
+        <include layout="@layout/empty_certificates"/>
+
+        <include layout="@layout/need_auth_placeholder"/>
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/certificate_swipe_refresh"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:divider="@color/transparent"
-            android:scrollbarStyle="outsideOverlay"/>
+            android:layout_height="match_parent">
 
-    </android.support.v4.widget.SwipeRefreshLayout>
-</FrameLayout>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/certificates_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:divider="@color/transparent"
+                android:scrollbarStyle="outsideOverlay"/>
+
+        </android.support.v4.widget.SwipeRefreshLayout>
+    </FrameLayout>
+</LinearLayout>

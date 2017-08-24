@@ -6,8 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -44,6 +42,7 @@ import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.ui.adapters.StepFragmentAdapter;
 import org.stepic.droid.ui.listeners.NextMoveable;
+import org.stepic.droid.ui.util.ToolbarHelperKt;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.StringUtil;
@@ -59,6 +58,7 @@ import javax.inject.Inject;
 import butterknife.BindString;
 import butterknife.BindView;
 
+// FIXME: 15.08.17 show title R.string.steps_title, when lesson is not loaded
 public class LessonFragment extends FragmentBase implements LessonView, LessonTrackingView, NextMoveable, UpdatingStepListener {
     private static final String FROM_PREVIOUS_KEY = "fromPrevKey";
     private static final String SIMPLE_UNIT_ID_KEY = "simpleUnitId";
@@ -116,9 +116,6 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
 
     private boolean isRestarted = false;
 
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
-
     @BindView(R.id.viewpager)
     ViewPager viewPager;
 
@@ -134,7 +131,7 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
     @BindView(R.id.corrupted_lesson)
     View corruptedLesson;
 
-    @BindView(R.id.auth_action)
+    @BindView(R.id.authAction)
     View authActionView;
 
     @BindView(R.id.need_auth_view)
@@ -188,11 +185,11 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
             isRestarted = true;
         }
 
-        boolean keepScreenOnSteps = userPreferences.isKeepScreenOnSteps();
+        boolean keepScreenOnSteps = getUserPreferences().isKeepScreenOnSteps();
         if (keepScreenOnSteps) {
-            analytic.reportEvent(Analytic.Steps.SHOW_KEEP_ON_SCREEN);
+            getAnalytic().reportEvent(Analytic.Steps.SHOW_KEEP_ON_SCREEN);
         } else {
-            analytic.reportEvent(Analytic.Steps.SHOW_KEEP_OFF_SCREEN);
+            getAnalytic().reportEvent(Analytic.Steps.SHOW_KEEP_OFF_SCREEN);
         }
         view.setKeepScreenOn(keepScreenOnSteps);
         setHasOptionsMenu(true);
@@ -242,17 +239,19 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
         authActionView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                analytic.reportEvent(Analytic.Interaction.CLICK_AUTH_FROM_STEPS);
-                screenManager.showLaunchScreen(getActivity());
+                getAnalytic().reportEvent(Analytic.Interaction.CLICK_AUTH_FROM_STEPS);
+                getScreenManager().showLaunchScreen(getActivity());
                 getActivity().finish();
             }
         });
     }
 
     private void init(Lesson lesson) {
-        getActivity().setTitle(lesson.getTitle());
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        String title = lesson.getTitle();
+        if (title == null || title.isEmpty()) {
+            title = getString(R.string.steps_title);
+        }
+        ToolbarHelperKt.initCenteredToolbar(this, title, true);
     }
 
     @Override
@@ -303,23 +302,23 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
 
                 protected Void doInBackground(Void... params) {
                     try {
-                        long assignmentID = databaseFacade.getAssignmentIdByStepId(stepId);
-                        screenManager.pushToViewedQueue(new ViewAssignment(assignmentID, stepId));
+                        long assignmentID = getDatabaseFacade().getAssignmentIdByStepId(stepId);
+                        getScreenManager().pushToViewedQueue(new ViewAssignment(assignmentID, stepId));
                         if (unit != null && unit.getSection() > 0) {
-                            Section section = databaseFacade.getSectionById(unit.getSection());
+                            Section section = getDatabaseFacade().getSectionById(unit.getSection());
                             if (section != null && section.getCourse() > 0) {
                                 PersistentLastStep persistentLastStep = new PersistentLastStep(section.getCourse(), stepId, unit.getId());
-                                databaseFacade.updateLastStep(persistentLastStep);
-                                databaseFacade.updateCourseLastInteraction(section.getCourse(), DateTime.now().getMillis()); // It does not happen, when section is not cached (example: Continue course).
+                                getDatabaseFacade().updateLastStep(persistentLastStep);
+                                getDatabaseFacade().updateCourseLastInteraction(section.getCourse(), DateTime.now().getMillis()); // It does not happen, when section is not cached (example: Continue course).
                             }
                         }
                     } catch (Exception exception) {
-                        analytic.reportError(Analytic.Error.FAIL_PUSH_STEP_VIEW, exception);
+                        getAnalytic().reportError(Analytic.Error.FAIL_PUSH_STEP_VIEW, exception);
                     }
                     return null;
                 }
             };
-            task.executeOnExecutor(threadPoolExecutor);
+            task.executeOnExecutor(getThreadPoolExecutor());
         }
     }
 
@@ -373,8 +372,8 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
                 }
 
                 Step step = stepsPresenter.getStepList().get(position);
-                analytic.reportEvent(Analytic.Comments.OPEN_FROM_OPTION_MENU);
-                screenManager.openComments(getActivity(), step.getDiscussion_proxy(), step.getId());
+                getAnalytic().reportEvent(Analytic.Comments.OPEN_FROM_OPTION_MENU);
+                getScreenManager().openComments(getActivity(), step.getDiscussion_proxy(), step.getId());
                 break;
             default:
                 return super.onOptionsItemSelected(item);
@@ -451,7 +450,7 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
 
         if (discussionId > 0 && position >= 0 && position < stepsPresenter.getStepList().size()) {
             Step step = stepsPresenter.getStepList().get(position);
-            screenManager.openComments(getActivity(), step.getDiscussion_proxy(), step.getId());
+            getScreenManager().openComments(getActivity(), step.getDiscussion_proxy(), step.getId());
             discussionId = -1;
         }
     }
@@ -557,7 +556,7 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
     private Indexable getIndexable(Step step) {
         String urlInWeb = getUrlInWeb(step);
         String title = getTitle(step);
-        analytic.reportEventWithIdName(Analytic.AppIndexing.STEP, urlInWeb, title);
+        getAnalytic().reportEventWithIdName(Analytic.AppIndexing.STEP, urlInWeb, title);
         return Indexables.newSimple(title, urlInWeb);
     }
 
@@ -579,7 +578,7 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
     private String getUrlInWeb(Step step) {
         String stepUrl = stepToUrlMap.get(step.getId());
         if (stepUrl == null) {
-            stepUrl = StringUtil.getUriForStep(config.getBaseUrl(), lesson, unit, step);
+            stepUrl = StringUtil.getUriForStep(getConfig().getBaseUrl(), lesson, unit, step);
             stepToUrlMap.put(step.getId(), stepUrl);
         }
         return stepUrl;

@@ -1,5 +1,7 @@
 package org.stepic.droid.web;
 
+import android.support.annotation.Nullable;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -35,7 +37,9 @@ public interface StepicRestOAuthService {
                                                             @Field("code") String providerCode,
                                                             @Field("grant_type") String grant_type,
                                                             @Field("redirect_uri") String redirect_uri,
-                                                            @Field("code_type") String accessToken);
+                                                            @Field("code_type") String accessToken,
+                                                            @Nullable
+                                                            @Field("email") String email);
 
 
     @POST("/api/users")

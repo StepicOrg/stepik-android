@@ -4,7 +4,7 @@ interface NotificationTimeView {
 
     fun showNotificationEnabledState(notificationEnabled: Boolean, notificationTimeValue: String)
 
-    fun hideNotificationTime(changeToHide: Boolean)
+    fun hideNotificationTime(needHide: Boolean)
 
     fun setNewTimeInterval(timePresentationString: String)
 }

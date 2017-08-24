@@ -5,6 +5,7 @@ import android.content.Context
 import com.facebook.FacebookSdk
 import com.facebook.appevents.AppEventsLogger
 import com.facebook.stetho.Stetho
+import com.squareup.leakcanary.LeakCanary
 import com.vk.sdk.VKSdk
 import com.yandex.metrica.YandexMetrica
 import org.stepic.droid.BuildConfig
@@ -50,6 +51,12 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            // This process is dedicated to LeakCanary for heap analysis.
+            // You should not init your app in this process.
+            return
+        }
+        LeakCanary.install(this)
         init()
     }
 

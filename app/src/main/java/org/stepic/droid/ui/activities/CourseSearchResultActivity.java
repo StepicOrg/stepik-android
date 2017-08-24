@@ -8,12 +8,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.view.MenuItemCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentActivityBase;
@@ -25,9 +25,6 @@ import butterknife.ButterKnife;
 public class CourseSearchResultActivity extends FragmentActivityBase {
 
     private final static String TAG = "SearchActivity";
-
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
 
     @BindView(R.id.frame)
     View rootFrame;
@@ -42,10 +39,6 @@ public class CourseSearchResultActivity extends FragmentActivityBase {
         setTitle(R.string.search_title);
         setContentView(R.layout.activity_search_courses);
         unbinder = ButterKnife.bind(this);
-
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         query = getIntent().getStringExtra(SearchManager.QUERY);
         initOrTryRestoreFragment();
     }
@@ -74,7 +67,7 @@ public class CourseSearchResultActivity extends FragmentActivityBase {
                 .commit();
     }
 
-    Fragment createFragment() {
+    private Fragment createFragment() {
         return CourseSearchFragment.newInstance(query);
     }
 
@@ -98,6 +91,12 @@ public class CourseSearchResultActivity extends FragmentActivityBase {
         menuItem = menu.findItem(R.id.action_search);
         searchView = (SearchView) menuItem.getActionView();
 
+        ImageView closeImageView = searchView.findViewById(R.id.search_close_btn);
+        closeImageView.setImageDrawable(ContextCompat.getDrawable(this, getCloseIconDrawableRes()));
+
+        ImageView searchButtonImageView = searchView.findViewById(R.id.search_button);
+        searchButtonImageView.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_comment_black_24dp));
+
         ComponentName componentName = getComponentName();
         SearchableInfo searchableInfo = searchManager.getSearchableInfo(componentName);
         searchView.setSearchableInfo(searchableInfo);
@@ -108,7 +107,7 @@ public class CourseSearchResultActivity extends FragmentActivityBase {
         }
         searchView.clearFocus();
 
-        MenuItemCompat.setOnActionExpandListener(menuItem, new MenuItemCompat.OnActionExpandListener() {
+        menuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
                 return true;

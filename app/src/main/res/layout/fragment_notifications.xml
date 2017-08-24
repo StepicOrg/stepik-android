@@ -9,15 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar_fragment"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/abc_action_bar_default_height_material"
-            android:background="@color/stepic_brand_primary"
-            app:layout_scrollFlags="scroll|enterAlways|snap"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            />
+        <include layout="@layout/view_centered_toolbar"/>
 
         <android.support.design.widget.TabLayout
             android:id="@+id/notification_tabs"
@@ -27,15 +19,11 @@
             android:overScrollMode="never"
             android:paddingLeft="@dimen/left_padding_tablayout_scrollable"
             android:paddingStart="@dimen/left_padding_tablayout_scrollable"
-            app:tabIndicatorColor="@android:color/white"
+            app:tabIndicatorColor="@color/new_accent_color"
             app:tabIndicatorHeight="@dimen/guideline_tab_indicator_height"
             app:tabMode="scrollable"
-            app:tabSelectedTextColor="@color/white"
-            app:tabTextColor="@color/white70percent"
-            >
-
-
-        </android.support.design.widget.TabLayout>
+            app:tabSelectedTextColor="@color/tab_text_color"
+            app:tabTextColor="@color/tab_text_color_70percent"/>
     </android.support.design.widget.AppBarLayout>
 
     <FrameLayout

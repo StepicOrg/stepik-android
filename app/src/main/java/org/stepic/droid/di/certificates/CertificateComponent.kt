@@ -1,7 +1,7 @@
 package org.stepic.droid.di.certificates
 
 import dagger.Subcomponent
-import org.stepic.droid.ui.fragments.CertificateFragment
+import org.stepic.droid.ui.fragments.CertificatesFragment
 
 @CertificateScope
 @Subcomponent
@@ -12,5 +12,5 @@ interface CertificateComponent {
         fun build(): CertificateComponent
     }
 
-    fun inject(certificateFragment: CertificateFragment)
+    fun inject(certificateFragment: CertificatesFragment)
 }

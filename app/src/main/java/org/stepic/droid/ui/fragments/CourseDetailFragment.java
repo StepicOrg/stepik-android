@@ -10,10 +10,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -62,6 +60,7 @@ import org.stepic.droid.ui.adapters.CoursePropertyAdapter;
 import org.stepic.droid.ui.adapters.InstructorAdapter;
 import org.stepic.droid.ui.dialogs.LoadingProgressDialog;
 import org.stepic.droid.ui.dialogs.UnauthorizedDialogFragment;
+import org.stepic.droid.ui.util.ToolbarHelperKt;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.StepikLogicHelper;
@@ -116,9 +115,6 @@ public class CourseDetailFragment extends FragmentBase implements
 
     @BindView(R.id.root_view)
     View rootView;
-
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
 
     @BindView(R.id.course_not_found)
     View courseNotFoundView;
@@ -251,8 +247,8 @@ public class CourseDetailFragment extends FragmentBase implements
         courseNotFoundView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (sharedPreferenceHelper.getAuthResponseFromStore() != null) {
-                    screenManager.showFindCourses(getContext());
+                if (getSharedPreferenceHelper().getAuthResponseFromStore() != null) {
+                    getScreenManager().showFindCourses(getContext());
                     finish();
                 } else {
                     unauthorizedDialog = UnauthorizedDialogFragment.newInstance(course);
@@ -267,8 +263,7 @@ public class CourseDetailFragment extends FragmentBase implements
                 new LinearLayoutManager(getActivity(),
                         LinearLayoutManager.HORIZONTAL, false);//// TODO: 30.09.15 determine right-to-left-mode
         instructorsCarousel.setLayoutManager(layoutManager);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ToolbarHelperKt.initCenteredToolbar(this, R.string.course_info_title, true);
         onClickReportListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -331,13 +326,13 @@ public class CourseDetailFragment extends FragmentBase implements
 
         titleString = course.getTitle();
         if (course.getSlug() != null && !wasIndexed) {
-            urlInWeb = Uri.parse(StringUtil.getUriForCourse(config.getBaseUrl(), course.getSlug()));
+            urlInWeb = Uri.parse(StringUtil.getUriForCourse(getConfig().getBaseUrl(), course.getSlug()));
             reportIndexToGoogle();
         }
 
 
         coursePropertyList.clear();
-        coursePropertyList.addAll(coursePropertyResolver.getSortedPropertyList(course));
+        coursePropertyList.addAll(getCoursePropertyResolver().getSortedPropertyList(course));
         if (course.getTitle() != null && !course.getTitle().equals("")) {
             courseNameView.setText(course.getTitle());
         } else {
@@ -353,7 +348,7 @@ public class CourseDetailFragment extends FragmentBase implements
         setUpIntroVideo();
 
         Glide.with(App.Companion.getAppContext())
-                .load(StepikLogicHelper.getPathForCourseOrEmpty(course, config))
+                .load(StepikLogicHelper.getPathForCourseOrEmpty(course, getConfig()))
                 .placeholder(coursePlaceholder)
                 .into(courseTargetFigSupported);
 
@@ -369,7 +364,7 @@ public class CourseDetailFragment extends FragmentBase implements
         }
 
         if (needInstaEnroll) {
-            analytic.reportEvent(Analytic.Anonymous.SUCCESS_LOGIN_AND_ENROLL);
+            getAnalytic().reportEvent(Analytic.Anonymous.SUCCESS_LOGIN_AND_ENROLL);
             needInstaEnroll = false;
             joinCourse();
         }
@@ -380,7 +375,7 @@ public class CourseDetailFragment extends FragmentBase implements
             wasIndexed = true;
             FirebaseAppIndex.getInstance().update(getIndexable());
             FirebaseUserActions.getInstance().start(getAction());
-            analytic.reportEventWithIdName(Analytic.AppIndexing.COURSE_DETAIL, course.getCourseId() + "", course.getTitle());
+            getAnalytic().reportEventWithIdName(Analytic.AppIndexing.COURSE_DETAIL, course.getCourseId() + "", course.getTitle());
         }
     }
 
@@ -396,7 +391,7 @@ public class CourseDetailFragment extends FragmentBase implements
             continueCourseView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    screenManager.showSections(getActivity(), course);
+                    getScreenManager().showSections(getActivity(), course);
                 }
             });
         } else {
@@ -406,7 +401,7 @@ public class CourseDetailFragment extends FragmentBase implements
             joinCourseView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    analytic.reportEvent(Analytic.Interaction.JOIN_COURSE);
+                    getAnalytic().reportEvent(Analytic.Interaction.JOIN_COURSE);
                     joinCourse();
                 }
             });
@@ -450,7 +445,7 @@ public class CourseDetailFragment extends FragmentBase implements
             player.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    screenManager.showVideo(getActivity(), null, video);
+                    getScreenManager().showVideo(getActivity(), null, video);
                 }
             });
         }
@@ -462,7 +457,7 @@ public class CourseDetailFragment extends FragmentBase implements
             introView.setVisibility(View.GONE);
             player.setVisibility(View.GONE);
         } else {
-            analytic.reportEvent(Analytic.Video.OLD_STYLE); // if it is not reported to analytic system -> remove old style code (metric was introduced approximately 15/06/2017)
+            getAnalytic().reportEvent(Analytic.Video.OLD_STYLE); // if it is not reported to analytic system -> remove old style code (metric was introduced approximately 15/06/2017)
             WebSettings webSettings = introView.getSettings();
             webSettings.setJavaScriptEnabled(true);
             webSettings.setAppCacheEnabled(true);
@@ -482,7 +477,7 @@ public class CourseDetailFragment extends FragmentBase implements
     @Override
     public void onCourseUnavailable(long courseId) {
         if (course == null) {
-            analytic.reportEvent(Analytic.Interaction.COURSE_USER_TRY_FAIL, courseId + "");
+            getAnalytic().reportEvent(Analytic.Interaction.COURSE_USER_TRY_FAIL, courseId + "");
             reportInternetProblem.setVisibility(View.GONE);
             courseNotFoundView.setVisibility(View.VISIBLE);
         }
@@ -580,7 +575,7 @@ public class CourseDetailFragment extends FragmentBase implements
         if (course != null) {
             courseJoinerPresenter.joinCourse(course);
         } else {
-            analytic.reportEvent(Analytic.Interaction.JOIN_COURSE_NULL);
+            getAnalytic().reportEvent(Analytic.Interaction.JOIN_COURSE_NULL);
         }
     }
 
@@ -588,7 +583,7 @@ public class CourseDetailFragment extends FragmentBase implements
     public void onSuccessJoin(@NotNull Course joinedCourse) {
         if (course != null && joinedCourse.getCourseId() == course.getCourseId()) {
             joinedCourse.setEnrollment((int) joinedCourse.getCourseId());
-            screenManager.showSections(getActivity(), course, true);
+            getScreenManager().showSections(getActivity(), course, true);
             finish();
         }
         ProgressHelper.dismiss(joinCourseSpinner);
@@ -649,7 +644,7 @@ public class CourseDetailFragment extends FragmentBase implements
             case R.id.menu_item_share:
                 if (shareIntentWithChooser != null) {
                     if (course != null && course.getTitle() != null) {
-                        analytic.reportEventWithIdName(Analytic.Interaction.SHARE_COURSE, course.getCourseId() + "", course.getTitle());
+                        getAnalytic().reportEventWithIdName(Analytic.Interaction.SHARE_COURSE, course.getCourseId() + "", course.getTitle());
                     }
                     startActivity(shareIntentWithChooser);
                 }
@@ -661,7 +656,7 @@ public class CourseDetailFragment extends FragmentBase implements
     private void createIntentForSharing() {
         if (course == null) return;
 
-        shareIntentWithChooser = shareHelper.getIntentForCourseSharing(course);
+        shareIntentWithChooser = getShareHelper().getIntentForCourseSharing(course);
     }
 
     @Override

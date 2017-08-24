@@ -36,14 +36,17 @@ import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.services.ViewPusher;
 import org.stepic.droid.storage.operations.Table;
 import org.stepic.droid.ui.activities.AboutAppActivity;
+import org.stepic.droid.ui.activities.CertificatesActivity;
 import org.stepic.droid.ui.activities.CommentsActivity;
 import org.stepic.droid.ui.activities.CourseDetailActivity;
+import org.stepic.droid.ui.activities.DownloadsActivity;
 import org.stepic.droid.ui.activities.FeedbackActivity;
 import org.stepic.droid.ui.activities.FilterActivity;
 import org.stepic.droid.ui.activities.LaunchActivity;
 import org.stepic.droid.ui.activities.LoginActivity;
 import org.stepic.droid.ui.activities.MainFeedActivity;
 import org.stepic.droid.ui.activities.NewCommentActivity;
+import org.stepic.droid.ui.activities.NotificationsActivity;
 import org.stepic.droid.ui.activities.PhotoViewActivity;
 import org.stepic.droid.ui.activities.ProfileActivity;
 import org.stepic.droid.ui.activities.RegisterActivity;
@@ -92,7 +95,7 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void showLaunchScreen(Context context) {
-        showLaunchScreen(context, false, MainFeedActivity.DEFAULT_START_INDEX);
+        showLaunchScreen(context, false, MainFeedActivity.defaultIndex);
     }
 
     @Override
@@ -117,8 +120,14 @@ public class ScreenManagerImpl implements ScreenManager {
     public void openImage(Context context, String path) {
         analytic.reportEvent(Analytic.Interaction.USER_OPEN_IMAGE);
         Intent intent = new Intent(context, PhotoViewActivity.class);
-        intent.putExtra(PhotoViewActivity.pathKey, path);
+        intent.putExtra(PhotoViewActivity.Companion.getPathKey(), path);
         context.startActivity(intent);
+    }
+
+    @Override
+    public void showNotifications(@NotNull Activity activity) {
+        Intent intent = new Intent(activity, NotificationsActivity.class);
+        activity.startActivity(intent);
     }
 
     @Override
@@ -127,7 +136,7 @@ public class ScreenManagerImpl implements ScreenManager {
         Intent launchIntent = new Intent(context, LaunchActivity.class);
         if (fromMainFeed) {
             launchIntent.putExtra(AppConstants.FROM_MAIN_FEED_FLAG, true);
-            launchIntent.putExtra(MainFeedActivity.KEY_CURRENT_INDEX, index);
+            launchIntent.putExtra(MainFeedActivity.Companion.getCurrentIndexKey(), index);
         }
         launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK); //app context -- new task
         context.startActivity(launchIntent);
@@ -155,11 +164,6 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void showMainFeed(Context sourceActivity) {
-        showMainFeed(sourceActivity, null);
-    }
-
-    @Override
     public void showMainFeed(Context sourceActivity, @Nullable Course course) {
         analytic.reportEvent(Analytic.Screens.SHOW_MAIN_FEED);
         Intent intent = new Intent(sourceActivity, MainFeedActivity.class);
@@ -183,7 +187,7 @@ public class ScreenManagerImpl implements ScreenManager {
         analytic.reportEvent(Analytic.Screens.SHOW_MAIN_FEED);
         Intent intent = new Intent(sourceActivity, MainFeedActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra(MainFeedActivity.KEY_CURRENT_INDEX, indexOfMenu);
+        intent.putExtra(MainFeedActivity.Companion.getCurrentIndexKey(), indexOfMenu);
         sourceActivity.startActivity(intent);
     }
 
@@ -240,32 +244,27 @@ public class ScreenManagerImpl implements ScreenManager {
     @Override
     public Intent getCertificateIntent() {
         Context context = App.Companion.getAppContext();
-        int index = MainFeedActivity.getCertificateFragmentIndex();
-        Intent intent = new Intent(context, MainFeedActivity.class);
+        Intent intent = new Intent(context, CertificatesActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        Bundle bundle = new Bundle();
-        bundle.putInt(MainFeedActivity.KEY_CURRENT_INDEX, index);
-        intent.putExtras(bundle);
         return intent;
     }
 
     @Override
-    public void showCertificates() {
-        Context context = App.Companion.getAppContext();
-        int index = MainFeedActivity.getCertificateFragmentIndex();
-        context.startActivity(getFromMainActivityIntent(context, index));
+    public void showCertificates(Context context) {
+        Intent intent = new Intent(context, CertificatesActivity.class);
+        if (!(context instanceof Activity)) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        }
+        context.startActivity(intent);
     }
 
     @Override
-    public void showDownload() {
-        Context context = App.Companion.getAppContext();
-        showDownload(context);
-    }
-
-    @Override
-    public void showDownload(Context context) {
-        int index = MainFeedActivity.getDownloadFragmentIndex();
-        context.startActivity(getFromMainActivityIntent(context, index));
+    public void showDownloads(Context context) {
+        Intent intent = new Intent(context, DownloadsActivity.class);
+        if (!(context instanceof Activity)) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        }
+        context.startActivity(intent);
     }
 
     @Override
@@ -275,7 +274,7 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public Intent getShowFindCoursesIntent(Context context) {
-        int index = MainFeedActivity.getFindCoursesIndex();
+        int index = MainFeedActivity.Companion.getFindCoursesIndex();
         return getFromMainActivityIntent(context, index);
     }
 
@@ -283,7 +282,7 @@ public class ScreenManagerImpl implements ScreenManager {
         Intent intent = new Intent(context, MainFeedActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         Bundle bundle = new Bundle();
-        bundle.putInt(MainFeedActivity.KEY_CURRENT_INDEX, index);
+        bundle.putInt(MainFeedActivity.Companion.getCurrentIndexKey(), index);
         intent.putExtras(bundle);
         return intent;
     }
@@ -383,7 +382,7 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public Intent getMyCoursesIntent(@NotNull Context context) {
-        int index = MainFeedActivity.getMyCoursesIndex();
+        int index = MainFeedActivity.Companion.getMyCoursesIndex();
         return getFromMainActivityIntent(context, index);
     }
 
@@ -484,7 +483,7 @@ public class ScreenManagerImpl implements ScreenManager {
         } else {
             code = AppConstants.FEATURED_FILTER;
         }
-        intent.putExtra(FilterActivity.FILTER_TYPE_KEY, code);
+        intent.putExtra(FilterActivity.Companion.getFILTER_TYPE_KEY(), code);
         sourceFragment.startActivityForResult(intent, requestCode);
     }
 

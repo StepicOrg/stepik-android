@@ -57,7 +57,7 @@
                     android:imeOptions="flagNoFullscreen|actionNext"
                     android:inputType="textPersonName|textAutoCorrect|textCapWords"
                     android:maxLength="100"
-                    android:singleLine="true"/>
+                    android:maxLines="1"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -82,7 +82,7 @@
                     android:imeOptions="flagNoFullscreen|actionNext"
                     android:inputType="textPersonName|textAutoCorrect|textCapWords"
                     android:maxLength="100"
-                    android:singleLine="true"/>
+                    android:maxLines="1"/>
 
             </android.support.design.widget.TextInputLayout>
 

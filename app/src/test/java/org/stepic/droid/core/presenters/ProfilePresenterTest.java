@@ -151,7 +151,7 @@ public class ProfilePresenterTest {
         profilePresenter.initProfile();
 
         verify(sharedPreferenceHelper).getProfile();
-        verify(api).getUsers(any(long[].class));
+        verify(api).getUserProfile(); //should request the profile of logged user (because init is called without params)
 
         InOrder inOrder = inOrder(profileView);
         inOrder.verify(profileView).showLoadingAll();

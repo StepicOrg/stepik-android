@@ -5,7 +5,7 @@ import android.support.v4.app.Fragment
 import org.stepic.droid.R
 
 abstract class SingleFragmentActivity : FragmentActivityBase() {
-    protected abstract fun createFragment(): Fragment?
+    protected abstract fun createFragment(): Fragment
     open fun getLayoutResId() = R.layout.activity_fragment
 
     protected var fragment: Fragment? = null

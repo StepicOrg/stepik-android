@@ -13,6 +13,7 @@ import com.google.android.gms.tasks.Task;
 
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
+import org.stepic.droid.model.Profile;
 import org.stepic.droid.notifications.StepicInstanceIdService;
 import org.stepic.droid.util.AppConstants;
 
@@ -40,9 +41,15 @@ public class SplashActivity extends BackToExitActivityBase {
                     @Override
                     public void run() {
                         try {
-                            api.getUserProfile().execute(); // make this "ping" request for updating refresh tokens and log out user, if it is revoked.
+                            // make this "ping" request for updating refresh tokens and log out user, if it is revoked.
+                            // also it should update the profile
+                            Profile profile = api.getUserProfile().execute().body().getProfile();
+                            if (profile != null) {
+                                sharedPreferenceHelper.storeProfile(profile);
+                            }
                         } catch (IOException e) {
                             //ignore
+                            //offline or access if revoked
                         }
                     }
                 }

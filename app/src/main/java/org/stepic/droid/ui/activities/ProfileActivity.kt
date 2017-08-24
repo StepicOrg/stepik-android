@@ -4,17 +4,25 @@ import android.content.pm.ShortcutManager
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.app.AppCompatDelegate
 import android.view.MenuItem
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.SingleFragmentActivity
+import org.stepic.droid.ui.activities.contracts.CloseButtonInToolbar
 import org.stepic.droid.ui.fragments.ProfileFragment
 import org.stepic.droid.util.AppConstants
 
-class ProfileActivity : SingleFragmentActivity() {
+
+class ProfileActivity : SingleFragmentActivity(),
+        CloseButtonInToolbar {
 
     companion object {
         val optionalUserIdKey = "optionalUserIdKey"
+
+        init {
+            AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,7 +30,7 @@ class ProfileActivity : SingleFragmentActivity() {
         setTitle(R.string.profile_title)
     }
 
-    override fun createFragment(): Fragment? {
+    override fun createFragment(): Fragment {
         if (intent?.action?.equals(AppConstants.OPEN_SHORTCUT_PROFILE) ?: false) {
             analytic.reportEvent(Analytic.Shortcut.OPEN_PROFILE)
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N_MR1) {

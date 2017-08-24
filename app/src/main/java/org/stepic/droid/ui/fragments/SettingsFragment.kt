@@ -30,6 +30,8 @@ class SettingsFragment : FragmentBase(), AllowMobileDataDialogFragment.Callback 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        nullifyActivityBackground()
+
         setUpNotificationVibration()
 
         setUpNotifications()

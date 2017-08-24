@@ -2,7 +2,6 @@ package org.stepic.droid.ui.activities
 
 import android.net.Uri
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.support.v4.app.Fragment
 import android.view.MenuItem
 import org.stepic.droid.R
@@ -21,7 +20,6 @@ class StepsActivity : SingleFragmentActivity() {
         val needReverseAnimationKey = "needReverseAnimation"
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         if (savedInstanceState == null) {
             val isNeedReverseAnimation = intent?.extras?.getBoolean(needReverseAnimationKey, false)
@@ -32,7 +30,6 @@ class StepsActivity : SingleFragmentActivity() {
             }
         }
         super.onCreate(savedInstanceState)
-        setTitle(R.string.steps_title)
     }
 
     override fun createFragment(): Fragment {

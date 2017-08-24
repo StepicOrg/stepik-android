@@ -44,6 +44,7 @@ import org.stepic.droid.model.Unit;
 import org.stepic.droid.storage.StoreStateManager;
 import org.stepic.droid.ui.adapters.UnitAdapter;
 import org.stepic.droid.ui.dialogs.DeleteItemDialogFragment;
+import org.stepic.droid.ui.util.ToolbarHelperKt;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.SnackbarShower;
@@ -84,9 +85,6 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
     @BindView(R.id.loadProgressbar)
     ProgressBar progressBar;
 
-    @BindView(R.id.toolbar)
-    android.support.v7.widget.Toolbar toolbar;
-
     @BindView(R.id.reportProblem)
     protected View reportConnectionProblem;
 
@@ -119,7 +117,7 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
     @Inject
     StoreStateManager storeStateManager;
 
-    UnitAdapter adapter;
+    private UnitAdapter adapter;
 
     private List<Unit> unitList;
     private List<Lesson> lessonList;
@@ -174,8 +172,7 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
                 R.color.stepic_orange_carrot,
                 R.color.stepic_blue_ribbon);
 
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ToolbarHelperKt.initCenteredToolbar(this, R.string.units_lessons_title, true);
 
         unitsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         unitList = new ArrayList<>();
@@ -202,7 +199,7 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
         storeStateManager.addLessonCallback(this);
         unitsPresenter.attachView(this);
         unitsLearningProgressPresenter.attachView(this);
-        localProgressManager.subscribe(unitsLearningProgressPresenter);
+        getLocalProgressManager().subscribe(unitsLearningProgressPresenter);
         routingClient.subscribe(this);
         unitsPresenter.showUnits(section, false);
 
@@ -211,7 +208,7 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
     @Override
     public void onDestroyView() {
         routingClient.unsubscribe(this);
-        localProgressManager.unsubscribe(unitsLearningProgressPresenter);
+        getLocalProgressManager().unsubscribe(unitsLearningProgressPresenter);
         unitsLearningProgressPresenter.detachView(this);
         unitsPresenter.detachView(this);
         storeStateManager.removeLessonCallback(this);
@@ -240,7 +237,7 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
 
     @Override
     public void onRefresh() {
-        analytic.reportEvent(Analytic.Interaction.REFRESH_UNIT);
+        getAnalytic().reportEvent(Analytic.Interaction.REFRESH_UNIT);
         unitsPresenter.showUnits(section, true);
     }
 
@@ -254,7 +251,7 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
             if (permissionExternalStorage.equals(Manifest.permission.WRITE_EXTERNAL_STORAGE) &&
                     grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                int position = sharedPreferenceHelper.getTempPosition();
+                int position = getSharedPreferenceHelper().getTempPosition();
                 if (adapter != null) {
                     adapter.requestClickLoad(position);
                 }
@@ -296,7 +293,7 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
 
     private void shareSection() {
         if (section != null) {
-            Intent intent = shareHelper.getIntentForSectionSharing(section);
+            Intent intent = getShareHelper().getIntentForSectionSharing(section);
             startActivity(intent);
         }
     }
@@ -390,7 +387,7 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (adapter != null && requestCode == DELETE_POSITION_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            analytic.reportEvent(Analytic.Interaction.ACCEPT_DELETING_UNIT);
+            getAnalytic().reportEvent(Analytic.Interaction.ACCEPT_DELETING_UNIT);
             int position = data.getIntExtra(DeleteItemDialogFragment.deletePositionKey, -1);
             adapter.requestClickDeleteSilence(position);
         }
@@ -403,13 +400,13 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
 
     @Override
     public void onShowPreferenceSuggestion() {
-        analytic.reportEvent(Analytic.Downloading.SHOW_SNACK_PREFS_UNITS);
+        getAnalytic().reportEvent(Analytic.Downloading.SHOW_SNACK_PREFS_UNITS);
         SnackbarShower.INSTANCE.showTurnOnDownloadingInSettings(rootView, getContext(), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
-                    analytic.reportEvent(Analytic.Downloading.CLICK_SETTINGS_UNITS);
-                    screenManager.showSettings(getActivity());
+                    getAnalytic().reportEvent(Analytic.Downloading.CLICK_SETTINGS_UNITS);
+                    getScreenManager().showSettings(getActivity());
                 } catch (NullPointerException nullPointerException) {
                     Timber.e(nullPointerException);
                 }
@@ -419,11 +416,11 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
 
     @Override
     public void onShowInternetIsNotAvailableRetry(final int position) {
-        analytic.reportEvent(Analytic.Downloading.SHOW_SNACK_INTERNET_UNITS);
+        getAnalytic().reportEvent(Analytic.Downloading.SHOW_SNACK_INTERNET_UNITS);
         SnackbarShower.INSTANCE.showInternetRetrySnackbar(rootView, getContext(), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                analytic.reportEvent(Analytic.Downloading.CLICK_RETRY_UNITS);
+                getAnalytic().reportEvent(Analytic.Downloading.CLICK_RETRY_UNITS);
                 if (adapter != null) {
                     adapter.requestClickLoad(position);
                 }

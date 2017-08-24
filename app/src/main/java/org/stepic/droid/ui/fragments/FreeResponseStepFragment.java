@@ -40,7 +40,7 @@ public class FreeResponseStepFragment extends StepAttemptFragment {
     protected Reply generateReply() {
         String answer = answerField.getText().toString();
         if (attempt != null && attempt.getDataset() != null && attempt.getDataset().getIs_html_enabled() != null && attempt.getDataset().getIs_html_enabled()) {
-            answer = textResolver.replaceWhitespaceToBr(answer);
+            answer = getTextResolver().replaceWhitespaceToBr(answer);
         }
 
 
@@ -63,7 +63,7 @@ public class FreeResponseStepFragment extends StepAttemptFragment {
         String text = reply.getText();
         if (attempt != null && attempt.getDataset() != null && attempt.getDataset().getIs_html_enabled() != null && attempt.getDataset().getIs_html_enabled()) {
             //todo show as html in enhanced latexview
-            answerField.setText(textResolver.fromHtml(text));
+            answerField.setText(getTextResolver().fromHtml(text));
         } else {
             answerField.setText(text);
         }

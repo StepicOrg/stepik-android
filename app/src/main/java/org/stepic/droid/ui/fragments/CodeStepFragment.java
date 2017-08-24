@@ -36,7 +36,7 @@ public class CodeStepFragment extends StepAttemptFragment {
         //do nothing, because this attempt doesn't have any specific.
         // TODO: 29.03.16 we need render code for showing
         answerField.getText().clear();
-        answerField.setText(textResolver.fromHtml("#include <iostream> int main() { // put your code here return 0; }")); // TODO: 29.03.16  choose and after that get from step.block.options.code_templates
+        answerField.setText(getTextResolver().fromHtml("#include <iostream> int main() { // put your code here return 0; }")); // TODO: 29.03.16  choose and after that get from step.block.options.code_templates
     }
 
     @Override
@@ -58,7 +58,7 @@ public class CodeStepFragment extends StepAttemptFragment {
         if (reply == null) return;
 
         String text = reply.getCode();
-        answerField.setText(textResolver.fromHtml(text)); // TODO: 29.03.16 render code
+        answerField.setText(getTextResolver().fromHtml(text)); // TODO: 29.03.16 render code
     }
 
     @Override

@@ -2,6 +2,7 @@ package org.stepic.droid.ui.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.annotation.ColorRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -27,11 +28,12 @@ import org.stepic.droid.core.presenters.contracts.CoursesView;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.storage.operations.Table;
-import org.stepic.droid.ui.activities.MainFeedActivity;
+import org.stepic.droid.ui.activities.contracts.RootScreen;
 import org.stepic.droid.ui.adapters.CoursesAdapter;
 import org.stepic.droid.ui.custom.TouchDispatchableFrameLayout;
 import org.stepic.droid.ui.custom.WrapContentLinearLayoutManager;
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment;
+import org.stepic.droid.util.ColorUtil;
 import org.stepic.droid.util.KotlinUtil;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.StepikUtil;
@@ -42,7 +44,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.BindView;
-import timber.log.Timber;
 
 public abstract class CourseListFragmentBase extends FragmentBase implements SwipeRefreshLayout.OnRefreshListener, CoursesView, ContinueCourseView, JoiningListener {
 
@@ -146,7 +147,6 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
                     int visibleItemCount = layoutManager.getChildCount();
                     int totalItemCount = layoutManager.getItemCount();
                     int pastVisibleItems = layoutManager.findFirstVisibleItemPosition();
-                    Timber.d("visibleItemCount = %d, totalItemCount = %d, pastVisibleItems=%d", visibleItemCount, totalItemCount, pastVisibleItems);
 
                     if ((visibleItemCount + pastVisibleItems) >= totalItemCount && StepikUtil.INSTANCE.isInternetAvailable()) {
                         onNeedDownloadNextPage();
@@ -162,8 +162,8 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                analytic.reportEvent(Analytic.Anonymous.AUTH_CENTER);
-                screenManager.showLaunchScreen(getActivity());
+                getAnalytic().reportEvent(Analytic.Anonymous.AUTH_CENTER);
+                getScreenManager().showLaunchScreen(getActivity());
             }
         });
 
@@ -171,12 +171,14 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
             @Override
             public void onClick(View v) {
                 Activity parent = getActivity();
-                if (parent == null || !(parent instanceof MainFeedActivity)) return;
-                analytic.reportEvent(Analytic.Interaction.CLICK_FIND_COURSE_EMPTY_SCREEN);
-                if (sharedPreferenceHelper.getAuthResponseFromStore() == null) { // TODO: 27.12.16 make it on background thread
-                    analytic.reportEvent(Analytic.Anonymous.BROWSE_COURSES_CENTER);
+                if (parent == null || !(parent instanceof RootScreen)) {
+                    return;
                 }
-                ((MainFeedActivity) parent).showFindLesson();
+                getAnalytic().reportEvent(Analytic.Interaction.CLICK_FIND_COURSE_EMPTY_SCREEN);
+                if (getSharedPreferenceHelper().getAuthResponseFromStore() == null) {
+                    getAnalytic().reportEvent(Analytic.Anonymous.BROWSE_COURSES_CENTER);
+                }
+                ((RootScreen) parent).showFindCourses();
             }
         });
         joiningListenerClient.subscribe(this);
@@ -188,7 +190,7 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
         joiningListenerClient.unsubscribe(this);
         continueCoursePresenter.detachView(this);
         if (listOfCoursesView != null) {
-            listOfCoursesView.setAdapter(null);
+            // do not set adapter to null, because fade out animation for fragment will not working
             unregisterForContextMenu(listOfCoursesView);
         }
         super.onDestroyView();
@@ -226,6 +228,7 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
         reportConnectionProblem.setVisibility(View.GONE);
 
         if (courses.isEmpty()) {
+            setBackgroundColorToRootView(R.color.new_cover);
             ProgressHelper.activate(swipeRefreshLayout);
         } else if (swipeRefreshLayout != null && !swipeRefreshLayout.isRefreshing()) {
             coursesAdapter.showLoadingFooter(true);
@@ -238,8 +241,9 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
         ProgressHelper.dismiss(swipeRefreshLayout);
         reportConnectionProblem.setVisibility(View.GONE);
         if (courses.isEmpty()) {
+            setBackgroundColorToRootView(R.color.old_cover);
             showEmptyScreen(true);
-            localReminder.remindAboutApp();
+            getLocalReminder().remindAboutApp();
         }
     }
 
@@ -252,15 +256,17 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
         if (courses == null || courses.isEmpty()) {
             //screen is clear due to error connection
             showEmptyScreen(false);
+            setBackgroundColorToRootView(R.color.old_cover);
             reportConnectionProblem.setVisibility(View.VISIBLE);
         }
     }
 
     @Override
-    public void showCourses(List<Course> courses) {
+    public final void showCourses(List<Course> courses) {
         ProgressHelper.dismiss(progressBarOnEmptyScreen);
         ProgressHelper.dismiss(swipeRefreshLayout);
         coursesAdapter.showLoadingFooter(false);
+        setBackgroundColorToRootView(R.color.new_cover);
         reportConnectionProblem.setVisibility(View.GONE);
         showEmptyScreen(false);
         List<Course> finalCourses;
@@ -289,13 +295,13 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
     @Override
     public void onOpenStep(long courseId, @NotNull Section section, long lessonId, long unitId, int stepPosition) {
         ProgressHelper.dismiss(getFragmentManager(), continueLoadingTag);
-        screenManager.continueCourse(getActivity(), courseId, section, lessonId, unitId, stepPosition);
+        getScreenManager().continueCourse(getActivity(), courseId, section, lessonId, unitId, stepPosition);
     }
 
     @Override
     public void onAnyProblemWhileContinue(@NotNull Course course) {
         ProgressHelper.dismiss(getFragmentManager(), continueLoadingTag);
-        screenManager.showSections(getActivity(), course);
+        getScreenManager().showSections(getActivity(), course);
     }
 
     @Override
@@ -307,5 +313,9 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
     @Override
     public void onSuccessJoin(@Nullable Course joinedCourse) {
         updateEnrollment(joinedCourse, joinedCourse.getEnrollment());
+    }
+
+    protected final void setBackgroundColorToRootView(@ColorRes int colorRes) {
+        rootView.setBackgroundColor(ColorUtil.INSTANCE.getColorArgb(colorRes, getContext()));
     }
 }

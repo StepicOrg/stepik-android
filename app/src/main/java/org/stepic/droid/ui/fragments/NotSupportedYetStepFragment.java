@@ -29,7 +29,7 @@ public class NotSupportedYetStepFragment extends StepBaseFragment {
         openWebBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                screenManager.openStepInWeb(getContext(), step);
+                getScreenManager().openStepInWeb(getContext(), step);
             }
         });
     }

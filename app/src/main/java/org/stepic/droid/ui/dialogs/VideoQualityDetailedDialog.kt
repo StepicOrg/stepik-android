@@ -52,7 +52,7 @@ class VideoQualityDetailedDialog : VideoQualityDialogBase() {
         val adapterPosition = arguments.getInt(adapterPositionKey)
         val layoutInflater = LayoutInflater.from(context)
         val explanationView = layoutInflater.inflate(R.layout.not_ask_again_view, null)
-        val checkbox = explanationView.findViewById(R.id.do_not_ask_checkbox) as CheckBox
+        val checkbox = explanationView.findViewById<CheckBox>(R.id.do_not_ask_checkbox)
 
         var chosenOptionPosition = qualityToPositionMap[userPreferences.qualityVideo]!!
 

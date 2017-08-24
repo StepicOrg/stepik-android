@@ -3,13 +3,9 @@
     <dimen name="exo_media_button_height">52dp</dimen>
     <dimen name="play_pause_button_size">72dp</dimen>
     <dimen name="custom_peek_height">500dp</dimen>
-    <dimen name="margin_registration">10dp</dimen>
     <dimen name="card_corner_radius_guideline">2dp</dimen>
-    <dimen name="divider_height_guideline">4dp</dimen>
     <dimen name="text_header">16sp</dimen>
     <dimen name="text_height">11sp</dimen>
-    <dimen name="height_of_course_card">100dp</dimen>
-    <dimen name="guideline_elevation_toolbar">4dp</dimen>
     <dimen name="guideline_tile_corner">0dp</dimen>
     <dimen name="guideline_list_item_height">72dp</dimen>
     <dimen name="guideline_left_right_padding_list_item">6dp</dimen>
@@ -35,9 +31,7 @@
     <dimen name="seekbar_video_margin">8dp</dimen>
     <dimen name="control_item_margin">2dp</dimen>
     <dimen name="thumb_size">18dp</dimen>
-    <dimen name="settingsLeft_RightMargin">5dp</dimen>
     <dimen name="height_of_small_button">36dp</dimen>
-    <dimen name="min_height_of_comment">100dp</dimen>
     <dimen name="margin_leftRight_comment_depend_on_reply_margin">8dp</dimen>
     <dimen name="padding_for_circle_image">4dp</dimen>
     <dimen name="avatar_size_depend_on_reply_margin">48dp</dimen>
@@ -56,14 +50,10 @@
     <dimen name="padding_placeholders">16dp</dimen>
     <dimen name="drawable_padding_placeholders">40dp</dimen>
     <dimen name="video_height">200dp</dimen>
-    <dimen name="video_height_portrait">200dp</dimen>
     <dimen name="guideline_standard_padding">16dp</dimen>
     <dimen name="card_bottom_margin">10dp</dimen>
     <dimen name="stepik_text_size_in_button">14sp</dimen>
     <dimen name="left_padding_tablayout_scrollable">60dp</dimen>
-    <dimen name="profile_image_height_width">76dp</dimen>
-    <dimen name="privacy_policy_text_size">13sp</dimen>
-    <dimen name="horizontal_margin_buttons">50dp</dimen>
     <dimen name="login_button_border">2dp</dimen>
     <dimen name="login_button_radius">6dp</dimen>
     <dimen name="launch_button_text_size">18sp</dimen>
@@ -73,13 +63,13 @@
     <dimen name="fill_blanks_input_text_size">16sp</dimen>
     <dimen name="sort_image_view_height">24dp</dimen>
     <dimen name="padding_sort_controller">12dp</dimen>
-    <dimen name="table_cell_fixed_height">96dp</dimen>
     <dimen name="loading_size">24dp</dimen>
     <dimen name="progress_contour_size">1dp</dimen>
     <dimen name="progress_rim_size">2dp</dimen>
     <dimen name="progress_bar_size">3dp</dimen>
     <dimen name="progress_square_size">7dp</dimen>
     <dimen name="progress_clickable_size">56dp</dimen>
+    <dimen name="table_cell_fixed_height">96dp</dimen>
 
 
     <dimen name="exo_media_button_width">71dp</dimen>
@@ -87,4 +77,21 @@
     <dimen name="margin_rewind">56dp</dimen>
 
     <dimen name="rate_dialog_button_text_size">16sp</dimen>
+    <dimen name="profile_round_rectangle_radius">16dp</dimen>
+
+    <!--width should be 2 time greater than height-->
+    <dimen name="arrow_profile_width">16dp</dimen>
+    <dimen name="arrow_profile_height">8dp</dimen>
+
+    <!--Profile specific-->
+    <dimen name="main_profile_avatar_size">100dp</dimen>
+    <dimen name="main_profile_avatar_half_size">50dp</dimen>
+    <dimen name="left_right_margin_in_profile">32dp</dimen>
+    <!--should be smaller than left right margin a bit-->
+    <dimen name="right_margin_switch">28dp</dimen>
+    <dimen name="profile_panel_top_margin">28dp</dimen>
+    <dimen name="text_big_header">22sp</dimen>
+    <dimen name="bottom_navigation_height">56dp</dimen>
+
+
 </resources>

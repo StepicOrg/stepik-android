@@ -8,7 +8,7 @@
 
     <include
         android:id="@+id/appBarLayout"
-        layout="@layout/appbar_only_toolbar"/>
+        layout="@layout/view_centered_appbar"/>
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

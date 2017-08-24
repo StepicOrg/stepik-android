@@ -174,7 +174,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
                     Bundle bundle = new Bundle();
                     bundle.putLong(FirebaseAnalytics.Param.VALUE, 1L);
                     bundle.putString(FirebaseAnalytics.Param.ITEM_ID, step.getId() + "");
-                    analytic.reportEvent(Analytic.Interaction.CLICK_SEND_SUBMISSION, bundle);//value
+                    getAnalytic().reportEvent(Analytic.Interaction.CLICK_SEND_SUBMISSION, bundle);//value
 
                     final String stepTypeName;
                     if (step != null && step.getBlock() != null && step.getBlock().getName() != null) {
@@ -182,11 +182,11 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
                     } else {
                         stepTypeName = AppConstants.TYPE_NULL;
                     }
-                    analytic.reportEventWithName(Analytic.Steps.CLICK_SEND_SUBMISSION_STEP_TYPE, stepTypeName);
+                    getAnalytic().reportEventWithName(Analytic.Steps.CLICK_SEND_SUBMISSION_STEP_TYPE, stepTypeName);
 
                     makeSubmission();
                 } else {
-                    analytic.reportEvent(Analytic.Interaction.CLICK_TRY_STEP_AGAIN);
+                    getAnalytic().reportEvent(Analytic.Interaction.CLICK_TRY_STEP_AGAIN);
                     tryAgain();
                 }
             }
@@ -196,7 +196,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
         View.OnClickListener onTryAgainCorrectListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                analytic.reportEvent(Analytic.Interaction.CLICK_TRY_STEP_AGAIN_AFTER_CORRECT);
+                getAnalytic().reportEvent(Analytic.Interaction.CLICK_TRY_STEP_AGAIN_AFTER_CORRECT);
                 tryAgain();
             }
         };
@@ -233,7 +233,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
         if (attempt == null || attempt.getId() <= 0) return;
 
         if (section != null && section.getDiscountingPolicy() != DiscountingPolicyType.noDiscount
-                && userPreferences.isShowDiscountingPolicyWarning() && !step.is_custom_passed()) {
+                && getUserPreferences().isShowDiscountingPolicyWarning() && !step.is_custom_passed()) {
             //showDialog
             DialogFragment dialogFragment = DiscountingPolicyDialogFragment.Companion.newInstance();
             if (!dialogFragment.isAdded()) {
@@ -306,19 +306,19 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
     private void showStreakDialog(int daysOfCurrentStreakIncludeToday) {
         SpannableString streakTitle = new SpannableString(getString(R.string.streak_dialog_title));
         streakTitle.setSpan(new ForegroundColorSpan(Color.BLACK), 0, streakTitle.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        CalligraphyTypefaceSpan typefaceSpan = new CalligraphyTypefaceSpan(TypefaceUtils.load(getContext().getAssets(), fontsProvider.provideFontPath(FontType.bold)));
+        CalligraphyTypefaceSpan typefaceSpan = new CalligraphyTypefaceSpan(TypefaceUtils.load(getContext().getAssets(), getFontsProvider().provideFontPath(FontType.bold)));
         streakTitle.setSpan(typefaceSpan, 0, streakTitle.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         String description;
         if (daysOfCurrentStreakIncludeToday > 0) {
-            analytic.reportEvent(Analytic.Streak.SHOW_DIALOG_UNDEFINED_STREAKS, daysOfCurrentStreakIncludeToday + "");
+            getAnalytic().reportEvent(Analytic.Streak.SHOW_DIALOG_UNDEFINED_STREAKS, daysOfCurrentStreakIncludeToday + "");
             description = getResources().getQuantityString(R.plurals.streak_description, daysOfCurrentStreakIncludeToday, daysOfCurrentStreakIncludeToday);
         } else {
-            analytic.reportEvent(Analytic.Streak.SHOW_DIALOG_POSITIVE_STREAKS, daysOfCurrentStreakIncludeToday + "");
+            getAnalytic().reportEvent(Analytic.Streak.SHOW_DIALOG_POSITIVE_STREAKS, daysOfCurrentStreakIncludeToday + "");
             description = getString(R.string.streak_description_not_positive);
         }
 
-        analytic.reportEvent(Analytic.Streak.SHOWN_MATERIAL_DIALOG);
+        getAnalytic().reportEvent(Analytic.Streak.SHOWN_MATERIAL_DIALOG);
         MaterialStyledDialog dialog = new MaterialStyledDialog.Builder(getContext())
                 .setTitle(streakTitle)
                 .setDescription(description)
@@ -329,7 +329,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        analytic.reportEvent(Analytic.Streak.POSITIVE_MATERIAL_DIALOG);
+                        getAnalytic().reportEvent(Analytic.Streak.POSITIVE_MATERIAL_DIALOG);
                         DialogFragment dialogFragment = TimeIntervalPickerDialogFragment.Companion.newInstance();
                         if (!dialogFragment.isAdded()) {
                             dialogFragment.setTargetFragment(StepAttemptFragment.this, NOTIFICATION_TIME_REQUEST_CODE);
@@ -340,7 +340,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        analytic.reportEvent(Analytic.Streak.NEGATIVE_MATERIAL_DIALOG);
+                        getAnalytic().reportEvent(Analytic.Streak.NEGATIVE_MATERIAL_DIALOG);
                         messageOnNotEnablingNotification();
                     }
                 })
@@ -381,7 +381,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
 
     protected final void onWrongSubmission() {
         if (step != null) {
-            analytic.reportEvent(Analytic.Steps.WRONG_SUBMISSION_FILL, step.getId() + "");
+            getAnalytic().reportEvent(Analytic.Steps.WRONG_SUBMISSION_FILL, step.getId() + "");
         }
         attemptContainer.setBackgroundResource(R.color.wrong_answer_background);
         statusTextView.setCompoundDrawablesWithIntrinsicBounds(wrongIcon, null, null, null);
@@ -392,7 +392,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
 
     protected final void onCorrectSubmission() {
         if (step != null) {
-            analytic.reportEvent(Analytic.Steps.CORRECT_SUBMISSION_FILL, step.getId() + "");
+            getAnalytic().reportEvent(Analytic.Steps.CORRECT_SUBMISSION_FILL, step.getId() + "");
         }
         markLocalProgressAsViewed();
         attemptContainer.setBackgroundResource(R.color.correct_answer_background);
@@ -434,16 +434,16 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
                 long stepId = step.getId();
 
                 protected Void doInBackground(Void... params) {
-                    long assignmentId = databaseFacade.getAssignmentIdByStepId(stepId);
-                    databaseFacade.markProgressAsPassed(assignmentId);
-                    localProgressManager.checkUnitAsPassed(stepId);
+                    long assignmentId = getDatabaseFacade().getAssignmentIdByStepId(stepId);
+                    getDatabaseFacade().markProgressAsPassed(assignmentId);
+                    getLocalProgressManager().checkUnitAsPassed(stepId);
                     if (unit != null) {
-                        localProgressManager.updateUnitProgress(unit.getId()); //// FIXME: 05.09.16 update lesson progress
+                        getLocalProgressManager().updateUnitProgress(unit.getId()); //// FIXME: 05.09.16 update lesson progress
                     }
                     return null;
                 }
             };
-            task.executeOnExecutor(threadPoolExecutor);
+            task.executeOnExecutor(getThreadPoolExecutor());
         }
     }
 
@@ -574,7 +574,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
         peerReviewIndicator.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                screenManager.openStepInWeb(getContext(), step);
+                getScreenManager().openStepInWeb(getContext(), step);
             }
         });
     }
@@ -596,9 +596,9 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
         } else if (requestCode == NOTIFICATION_TIME_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 int intervalCode = data.getIntExtra(TimeIntervalPickerDialogFragment.Companion.getResultIntervalCodeKey(), TimeIntervalUtil.INSTANCE.getDefaultTimeCode());
-                sharedPreferenceHelper.setStreakNotificationEnabled(true);
+                getSharedPreferenceHelper().setStreakNotificationEnabled(true);
                 streakPresenter.setStreakTime(intervalCode); // we do not need attach this view, because we need only set in model
-                analytic.reportEvent(Analytic.Streak.CHOOSE_INTERVAL, intervalCode + "");
+                getAnalytic().reportEvent(Analytic.Streak.CHOOSE_INTERVAL, intervalCode + "");
                 SnackbarExtensionKt
                         .setTextColor(
                                 Snackbar.make(rootView,
@@ -608,7 +608,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
                                         getContext()))
                         .show();
             } else if (resultCode == Activity.RESULT_CANCELED) {
-                analytic.reportEvent(Analytic.Streak.CHOOSE_INTERVAL_CANCELED);
+                getAnalytic().reportEvent(Analytic.Streak.CHOOSE_INTERVAL_CANCELED);
                 messageOnNotEnablingNotification();
             }
         }
@@ -662,7 +662,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
         RateAppDialogFragment rateAppDialogFragment = RateAppDialogFragment.Companion.newInstance();
         rateAppDialogFragment.setTargetFragment(this, 0);
         if (!rateAppDialogFragment.isAdded()) {
-            analytic.reportEvent(Analytic.Rating.SHOWN);
+            getAnalytic().reportEvent(Analytic.Rating.SHOWN);
             rateAppDialogFragment.show(getFragmentManager(), null);
         }
     }
@@ -672,28 +672,28 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
     @Override
     public void onClickLater(int starNumber) {
         if (RatingUtil.INSTANCE.isExcellent(starNumber)) {
-            RatingUtilKt.reportRateEvent(analytic, starNumber, Analytic.Rating.POSITIVE_LATER);
+            RatingUtilKt.reportRateEvent(getAnalytic(), starNumber, Analytic.Rating.POSITIVE_LATER);
         } else {
-            RatingUtilKt.reportRateEvent(analytic, starNumber, Analytic.Rating.NEGATIVE_LATER);
+            RatingUtilKt.reportRateEvent(getAnalytic(), starNumber, Analytic.Rating.NEGATIVE_LATER);
         }
     }
 
     @Override
     public void onClickGooglePlay(int starNumber) {
-        sharedPreferenceHelper.afterRateWasHandled();
-        RatingUtilKt.reportRateEvent(analytic, starNumber, Analytic.Rating.POSITIVE_APPSTORE);
+        getSharedPreferenceHelper().afterRateWasHandled();
+        RatingUtilKt.reportRateEvent(getAnalytic(), starNumber, Analytic.Rating.POSITIVE_APPSTORE);
 
-        if (config.isAppInStore()) {
-            screenManager.showStoreWithApp(getActivity());
+        if (getConfig().isAppInStore()) {
+            getScreenManager().showStoreWithApp(getActivity());
         } else {
-            screenManager.showTextFeedback(getActivity());
+            getScreenManager().showTextFeedback(getActivity());
         }
     }
 
     @Override
     public void onClickSupport(int starNumber) {
-        sharedPreferenceHelper.afterRateWasHandled();
-        RatingUtilKt.reportRateEvent(analytic, starNumber, Analytic.Rating.NEGATIVE_EMAIL);
-        screenManager.showTextFeedback(getActivity());
+        getSharedPreferenceHelper().afterRateWasHandled();
+        RatingUtilKt.reportRateEvent(getAnalytic(), starNumber, Analytic.Rating.NEGATIVE_EMAIL);
+        getScreenManager().showTextFeedback(getActivity());
     }
 }

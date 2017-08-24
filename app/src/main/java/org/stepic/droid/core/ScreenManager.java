@@ -36,8 +36,6 @@ public interface ScreenManager {
 
     void showMainFeed(Context sourceActivity, @Nullable Course course);
 
-    void showMainFeed(Context sourceActivity);
-
     void showMainFeedFromSplash(Activity sourceActivity);
 
     void showMainFeed(Context sourceActivity, int indexOfMenu);
@@ -76,9 +74,7 @@ public interface ScreenManager {
 
     void showStoreWithApp(Activity sourceActivity);
 
-    void showDownload();
-
-    void showDownload(Context context);
+    void showDownloads(Context context);
 
     void showFindCourses(Context context);
 
@@ -96,7 +92,7 @@ public interface ScreenManager {
 
     void showFilterScreen(Fragment sourceFragment, int requestCode, Table courseType);
 
-    void showCertificates();
+    void showCertificates(Context context);
 
     void openSyllabusInWeb(Context context, long courseId);
 
@@ -127,4 +123,6 @@ public interface ScreenManager {
     void showLaunchScreen(FragmentActivity activity, @NotNull Course course);
 
     void openImage(Context context, String path);
+
+    void showNotifications(@NotNull Activity activity);
 }

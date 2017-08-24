@@ -3,7 +3,7 @@
       xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_send_comment"
-        android:icon="@drawable/ic_done_white_24dp"
+        android:icon="@drawable/ic_action_done"
         android:title="@string/send"
         app:showAsAction="ifRoom"/>
 </menu>

@@ -22,12 +22,13 @@ class ProfileMainFeedPresenter
         analytic: Analytic,
         private val stepikLogoutManager: StepikLogoutManager) : PresenterWithPotentialLeak<ProfileMainFeedView>(analytic) {
 
-    val isProfileFetching = AtomicBoolean(false)
-    var profile: Profile? = null
+    private val isProfileFetching = AtomicBoolean(false)
+    private var profile: Profile? = null
 
     fun fetchProfile() {
-        if (!isProfileFetching.compareAndSet(false, true))
+        if (!isProfileFetching.compareAndSet(false, true)) {
             return
+        }
 
         profile?.let {
             view?.showProfile(it)
@@ -58,7 +59,7 @@ class ProfileMainFeedPresenter
                 try {
                     val tempProfile = api.userProfile.execute().body().profile!!
                     val emailIds = tempProfile.emailAddresses
-                    if (emailIds != null && emailIds.isNotEmpty()) {
+                    if (emailIds?.isNotEmpty() ?: false) {
                         try {
                             api.getEmailAddresses(emailIds).execute().body()?.emailAddresses?.let {
                                 if (it.isNotEmpty()) {
@@ -68,9 +69,8 @@ class ProfileMainFeedPresenter
                         } catch (exceptionEmails: Exception) {
                             //ok emails is not critical
                         }
-
                     }
-                    sharedPreferenceHelper.storeProfile(tempProfile) //FIXME in some cases it can be after logout.
+                    sharedPreferenceHelper.storeProfile(tempProfile)
                     profile = tempProfile
                     mainHandler.post { view?.showProfile(tempProfile) }
                 } catch (exception: Exception) {

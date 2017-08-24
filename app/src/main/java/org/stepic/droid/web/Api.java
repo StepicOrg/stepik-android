@@ -5,11 +5,11 @@ import android.support.v4.app.FragmentActivity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.model.Course;
+import org.stepic.droid.model.NotificationCategory;
 import org.stepic.droid.model.Reply;
 import org.stepic.droid.model.comments.VoteValue;
 import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.social.SocialManager;
-import org.stepic.droid.model.NotificationCategory;
 
 import java.io.IOException;
 
@@ -22,7 +22,7 @@ public interface Api {
         social, loginPassword
     }
 
-    Call<AuthenticationStepicResponse> authWithNativeCode(String code, SocialManager.SocialType type);
+    Call<AuthenticationStepicResponse> authWithNativeCode(String code, SocialManager.SocialType type, @Nullable String email);
 
     Call<AuthenticationStepicResponse> authWithLoginPassword(String login, String password);
 
