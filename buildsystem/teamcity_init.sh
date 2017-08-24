@@ -1,8 +1,8 @@
 #!/bin/bash
 
-SDK_VERSION=`grep compileSdkVersion app/build.gradle | awk '{ print $2 }'`
+SDK_VERSION=`grep androidCompileSdkVersion build.gradle | awk '{ print $3 }'`
 SDK_DIR=$ANDROID_HOME/platforms/android-$SDK_VERSION
-TOOLS_VERSION=`grep buildToolsVersion app/build.gradle | cut -d \" -f 2`
+TOOLS_VERSION=`grep androidBuildToolsVersion build.gradle | cut -d \" -f 2`
 TOOLS_DIR=$ANDROID_HOME/build-tools/$TOOLS_VERSION
 
 if [ ! -d "$SDK_DIR" ]; then

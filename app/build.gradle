@@ -6,8 +6,8 @@ apply plugin: 'kotlin-android-extensions'
 def globalConf = rootProject.ext
 android {
 
-    compileSdkVersion 26
-    buildToolsVersion "26.0.1"
+    compileSdkVersion rootProject.androidCompileSdkVersion
+    buildToolsVersion rootProject.androidBuildToolsVersion
 
     signingConfigs {
         debug {
