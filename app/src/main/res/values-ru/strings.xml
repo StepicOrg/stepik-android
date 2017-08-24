@@ -492,4 +492,9 @@
     <string name="learn_channel_description">Уведомления о дедлайнах, открытии новых модулей в курсах</string>
     <string name="other_channel_description">Уведомления о прочих действиях на платформе</string>
     <string name="user_channel_description">Локальные уведомления пользователя</string>
+
+
+    <string name="notification_settings_title">Настройки уведомлений</string>
+
+    <string name="manage_notification_settings">Управлять уведомлениями</string>
 </resources>

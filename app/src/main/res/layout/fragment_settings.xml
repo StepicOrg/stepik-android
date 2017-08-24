@@ -2,6 +2,7 @@
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/old_cover"
@@ -83,10 +84,13 @@
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
+            android:id="@+id/notificationContainer"
             style="@style/SettingCardStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardBackgroundColor="@color/white">
+            android:visibility="gone"
+            app:cardBackgroundColor="@color/white"
+            tools:visibility="visible">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -100,64 +104,22 @@
                     android:layout_height="wrap_content"
                     android:text="@string/notification_title"/>
 
-                <org.stepic.droid.ui.custom.BetterSwitch
-                    android:id="@+id/fragmentSettingsNotificationSoundSwitch"
+
+                <FrameLayout
+                    android:id="@+id/notificationActionButton"
                     style="@style/SettingSwitch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:contentDescription="@string/notification_learn_list"
-                    android:text="@string/sound_title"/>
+                    android:clickable="true"
+                    android:focusable="true">
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/manage_notification_settings"
+                        android:textSize="16sp"/>
+                </FrameLayout>
 
-                <org.stepic.droid.ui.custom.BetterSwitch
-                    android:id="@+id/fragmentSettingsSotificationVibrationSwitch"
-                    style="@style/SettingSwitch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/notification_learn_list"
-                    android:text="@string/vibration_title"/>
-
-                <org.stepic.droid.ui.custom.BetterSwitch
-                    android:id="@+id/fragmentSettingsNotificationLearnSwitch"
-                    style="@style/SettingSwitch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/notification_learn_list"
-                    android:text="@string/notification_learn_list"/>
-
-                <org.stepic.droid.ui.custom.BetterSwitch
-                    android:id="@+id/fragmentSettingsNotificationCommentSwitch"
-                    style="@style/SettingSwitch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/notification_comment_list"
-                    android:text="@string/notification_comment_list"
-                    />
-
-                <org.stepic.droid.ui.custom.BetterSwitch
-                    android:id="@+id/fragmentSettingsNotificationReviewSwitch"
-                    style="@style/SettingSwitch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/reviews_title"
-                    android:text="@string/reviews_title"/>
-
-                <org.stepic.droid.ui.custom.BetterSwitch
-                    android:id="@+id/fragmentSettingsNotificationTeachingSwitch"
-                    style="@style/SettingSwitch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/teaching_title"
-                    android:text="@string/teaching_title"/>
-
-
-                <org.stepic.droid.ui.custom.BetterSwitch
-                    android:id="@+id/fragmentSettingsNotificationOtherSwitch"
-                    style="@style/SettingSwitch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/other_title"
-                    android:text="@string/other_title"/>
             </LinearLayout>
 
         </android.support.v7.widget.CardView>

@@ -84,6 +84,8 @@ public interface ScreenManager {
 
     void showSettings(Activity sourceActivity);
 
+    void showNotificationSettings(Activity sourceActivity);
+
     void showStorageManagement(Activity activity);
 
     void openInWeb(Activity context, String path);

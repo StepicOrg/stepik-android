@@ -1,5 +1,6 @@
 package org.stepic.droid.ui.fragments
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,7 +8,6 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_settings.*
 import org.stepic.droid.R
 import org.stepic.droid.base.FragmentBase
-import org.stepic.droid.notifications.model.NotificationType
 import org.stepic.droid.ui.dialogs.AllowMobileDataDialogFragment
 import org.stepic.droid.ui.dialogs.VideoQualityDialog
 
@@ -32,11 +32,14 @@ class SettingsFragment : FragmentBase(), AllowMobileDataDialogFragment.Callback 
 
         nullifyActivityBackground()
 
-        setUpNotificationVibration()
-
-        setUpNotifications()
-
-        setUpSound()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            notificationContainer.visibility = View.GONE
+        } else {
+            notificationContainer.visibility = View.VISIBLE
+            notificationActionButton.setOnClickListener {
+                screenManager.showNotificationSettings(activity)
+            }
+        }
 
         fragmentSettingsWifiEnableSwitch.isChecked = !sharedPreferenceHelper.isMobileInternetAlsoAllowed//if first time it is true
 
@@ -90,17 +93,6 @@ class SettingsFragment : FragmentBase(), AllowMobileDataDialogFragment.Callback 
         }
 
         storageManagementButton.setOnClickListener { screenManager.showStorageManagement(activity) }
-
-    }
-
-    private fun setUpNotificationVibration() {
-        fragmentSettingsSotificationVibrationSwitch.isChecked = userPreferences.isVibrateNotificationEnabled
-        fragmentSettingsSotificationVibrationSwitch.setOnCheckedChangeListener { _, isChecked -> userPreferences.isVibrateNotificationEnabled = isChecked }
-    }
-
-    private fun setUpSound() {
-        fragmentSettingsNotificationSoundSwitch.isChecked = userPreferences.isSoundNotificationEnabled
-        fragmentSettingsNotificationSoundSwitch.setOnCheckedChangeListener { _, isChecked -> userPreferences.setNotificationSoundEnabled(isChecked) }
     }
 
     override fun onDestroyView() {
@@ -109,37 +101,13 @@ class SettingsFragment : FragmentBase(), AllowMobileDataDialogFragment.Callback 
         fragmentSettingsCalendarWidgetSwitch.setOnCheckedChangeListener(null)
         fragmentSettingsWifiEnableSwitch.setOnCheckedChangeListener(null)
         fragmentSettingsExternalPlayerSwitch.setOnCheckedChangeListener(null)
-        fragmentSettingsNotificationLearnSwitch.setOnCheckedChangeListener(null)
-        fragmentSettingsNotificationCommentSwitch.setOnCheckedChangeListener(null)
-        fragmentSettingsNotificationTeachingSwitch.setOnCheckedChangeListener(null)
-        fragmentSettingsNotificationOtherSwitch.setOnCheckedChangeListener(null)
-        fragmentSettingsNotificationReviewSwitch.setOnCheckedChangeListener(null)
-        fragmentSettingsSotificationVibrationSwitch.setOnCheckedChangeListener(null)
-        fragmentSettingsNotificationSoundSwitch.setOnCheckedChangeListener(null)
         storageManagementButton.setOnClickListener(null)
+        notificationActionButton.setOnClickListener(null)
         super.onDestroyView()
     }
 
     private fun storeMobileState(isMobileAllowed: Boolean) {
         sharedPreferenceHelper.setMobileInternetAndWifiAllowed(isMobileAllowed)
-    }
-
-    private fun setUpNotifications() {
-        fragmentSettingsNotificationLearnSwitch.isChecked = userPreferences.isNotificationEnabled(NotificationType.learn)
-        fragmentSettingsNotificationLearnSwitch.setOnCheckedChangeListener { _, isChecked -> userPreferences.setNotificationEnabled(NotificationType.learn, isChecked) }
-
-        fragmentSettingsNotificationCommentSwitch.isChecked = userPreferences.isNotificationEnabled(NotificationType.comments)
-        fragmentSettingsNotificationCommentSwitch.setOnCheckedChangeListener { _, isChecked -> userPreferences.setNotificationEnabled(NotificationType.comments, isChecked) }
-
-        fragmentSettingsNotificationReviewSwitch.isChecked = userPreferences.isNotificationEnabled(NotificationType.review)
-        fragmentSettingsNotificationReviewSwitch.setOnCheckedChangeListener { _, isChecked -> userPreferences.setNotificationEnabled(NotificationType.review, isChecked) }
-
-        fragmentSettingsNotificationTeachingSwitch.isChecked = userPreferences.isNotificationEnabled(NotificationType.teach)
-        fragmentSettingsNotificationTeachingSwitch.setOnCheckedChangeListener { _, isChecked -> userPreferences.setNotificationEnabled(NotificationType.teach, isChecked) }
-
-        fragmentSettingsNotificationOtherSwitch.isChecked = userPreferences.isNotificationEnabled(NotificationType.other)
-        fragmentSettingsNotificationOtherSwitch.setOnCheckedChangeListener { _, isChecked -> userPreferences.setNotificationEnabled(NotificationType.other, isChecked) }
-
     }
 
     override fun onMobileDataStateChanged(isMobileAllowed: Boolean) {

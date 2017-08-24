@@ -285,12 +285,19 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.MainFeedActivity"/>
+        </activity>
 
+
+        <activity
+            android:name=".ui.activities.NotificationSettingsActivity"
+            android:enabled="@bool/notification_activity_enabled"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.NOTIFICATION_PREFERENCES"/>
             </intent-filter>
         </activity>
+
 
         <activity
             android:name=".ui.activities.FeedbackActivity"
