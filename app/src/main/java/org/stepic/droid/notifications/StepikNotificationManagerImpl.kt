@@ -379,7 +379,7 @@ class StepikNotificationManagerImpl
             val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
             taskBuilder.addNextIntent(intent)
 
-            analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, id.toString(), stepikNotification.type?.name)
+            analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, id.toString(), stepikNotification.type.name)
             showSimpleNotification(stepikNotification, justText, taskBuilder, title, id = id)
         } else {
             val courseId: Long = HtmlHelper.parseCourseIdFromNotification(stepikNotification) ?: 0L

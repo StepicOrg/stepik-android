@@ -88,9 +88,7 @@
             style="@style/SettingCardStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:cardBackgroundColor="@color/white"
-            tools:visibility="visible">
+            app:cardBackgroundColor="@color/white">
 
             <LinearLayout
                 android:layout_width="match_parent"

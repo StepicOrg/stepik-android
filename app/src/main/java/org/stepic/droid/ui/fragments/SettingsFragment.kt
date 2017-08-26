@@ -1,6 +1,5 @@
 package org.stepic.droid.ui.fragments
 
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -32,13 +31,8 @@ class SettingsFragment : FragmentBase(), AllowMobileDataDialogFragment.Callback 
 
         nullifyActivityBackground()
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            notificationContainer.visibility = View.GONE
-        } else {
-            notificationContainer.visibility = View.VISIBLE
-            notificationActionButton.setOnClickListener {
-                screenManager.showNotificationSettings(activity)
-            }
+        notificationActionButton.setOnClickListener {
+            screenManager.showNotificationSettings(activity)
         }
 
         fragmentSettingsWifiEnableSwitch.isChecked = !sharedPreferenceHelper.isMobileInternetAlsoAllowed//if first time it is true
