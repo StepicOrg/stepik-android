@@ -40,6 +40,7 @@ import org.stepic.droid.ui.fragments.FindCoursesFragment
 import org.stepic.droid.ui.fragments.MyCoursesFragment
 import org.stepic.droid.ui.fragments.ProfileFragment
 import org.stepic.droid.ui.util.BottomNavigationBehavior
+import org.stepic.droid.ui.util.BottomNavigationUtil
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.ProgressHelper
@@ -186,6 +187,7 @@ class MainFeedActivity : BackToExitActivityBase(),
 
 
     private fun initNavigation() {
+        BottomNavigationUtil.disableMenuShiftMode(navigationView)
         navigationView.setOnNavigationItemSelectedListener(this)
         navigationView.setOnNavigationItemReselectedListener(this)
     }
