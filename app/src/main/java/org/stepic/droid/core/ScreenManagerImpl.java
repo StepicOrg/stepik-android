@@ -157,11 +157,14 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void showLogin(Activity sourceActivity, @Nullable Course course) {
+    public void showLogin(Activity sourceActivity, @Nullable Course course, @Nullable String email) {
         analytic.reportEvent(Analytic.Screens.SHOW_LOGIN);
         Intent loginIntent = new Intent(sourceActivity, LoginActivity.class);
         if (course != null) {
             loginIntent.putExtra(AppConstants.KEY_COURSE_BUNDLE, (Parcelable) course);
+        }
+        if (email != null) {
+            loginIntent.putExtra(AppConstants.KEY_EMAIL_BUNDLE, email);
         }
         sourceActivity.startActivity(loginIntent);
     }

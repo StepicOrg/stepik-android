@@ -32,7 +32,7 @@ public interface ScreenManager {
 
     void showRegistration(Activity sourceActivity, @Nullable Course course);
 
-    void showLogin(Activity sourceActivity, @Nullable Course course);
+    void showLogin(Activity sourceActivity, @Nullable Course course, @Nullable String email);
 
     void showMainFeed(Context sourceActivity, @Nullable Course course);
 

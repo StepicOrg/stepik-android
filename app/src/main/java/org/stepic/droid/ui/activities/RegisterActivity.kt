@@ -321,4 +321,6 @@ class RegisterActivity : FragmentActivityBase(), LoginView {
         ProgressHelper.activate(progressBar)
     }
 
+    override fun onSocialLoginWithExistingEmail(email: String) {}
+
 }

@@ -2,6 +2,7 @@ package org.stepic.droid.core.presenters
 
 import android.support.annotation.MainThread
 import com.google.android.gms.auth.api.credentials.Credential
+import com.google.gson.Gson
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.LoginFailType
@@ -12,6 +13,7 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.social.SocialManager
 import org.stepic.droid.web.Api
 import org.stepic.droid.web.AuthenticationStepicResponse
+import org.stepic.droid.web.SocialAuthError
 import retrofit2.Call
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
@@ -70,6 +72,17 @@ class LoginPresenter
                 } else if (response.code() == 429) {
                     onFail(LoginFailType.tooManyAttempts)
                 } else if (response.code() == 401 && type == Type.social) {
+                    val errorBody = response.errorBody().string()
+
+                    Gson().fromJson(errorBody, SocialAuthError::class.java).let {
+                        val email = it.email
+                        if (email != null) {
+                            mainHandler.post {
+                                view?.onSocialLoginWithExistingEmail(email)
+                            }
+                        }
+                    }
+
                     onFail(LoginFailType.emailAlreadyUsed)
                 } else {
                     onFail(LoginFailType.emailPasswordInvalid)

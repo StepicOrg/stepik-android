@@ -90,7 +90,7 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
 
         signInWithEmail.setOnClickListener {
             analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_IN)
-            screenManager.showLogin(this@LaunchActivity, courseFromExtra)
+            screenManager.showLogin(this@LaunchActivity, courseFromExtra, null)
         }
 
 
@@ -369,6 +369,10 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
     override fun onSuccessLogin(authData: AuthData?) {
         progressHandler.dismiss()
         openMainFeed()
+    }
+
+    override fun onSocialLoginWithExistingEmail(email: String) {
+        screenManager.showLogin(this, courseFromExtra, email)
     }
 
     private fun openMainFeed() {
