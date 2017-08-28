@@ -36,6 +36,7 @@ import org.stepic.droid.ui.activities.contracts.RootScreen
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.dialogs.LogoutAreYouSureDialog
 import org.stepic.droid.ui.dialogs.NeedUpdatingDialog
+import org.stepic.droid.ui.fragments.CertificatesFragment
 import org.stepic.droid.ui.fragments.FindCoursesFragment
 import org.stepic.droid.ui.fragments.MyCoursesFragment
 import org.stepic.droid.ui.fragments.ProfileFragment
@@ -64,14 +65,11 @@ class MainFeedActivity : BackToExitActivityBase(),
         const val defaultIndex: Int = 0
         val defaultTag: String = MyCoursesFragment::class.java.simpleName
         private val progressLogoutTag = "progressLogoutTag"
-        // FIXME: 10.08.17 remove it
-        val certificateFragmentIndex: Int
+        val certificateIndex: Int
             get() = 4
-        // FIXME: 10.08.17 remove it
         val myCoursesIndex: Int
             get() = 1
 
-        // FIXME: 10.08.17 remove it
         val findCoursesIndex: Int
             get() = 2
 
@@ -160,6 +158,7 @@ class MainFeedActivity : BackToExitActivityBase(),
             val wantedIndex = intent?.getIntExtra(currentIndexKey, -1) ?: -1
             when (wantedIndex) {
                 findCoursesIndex -> navigationView.selectedItemId = R.id.find_courses
+                certificateIndex -> navigationView.selectedItemId = R.id.certificates
                 else -> {
                     //do nothing
                 }
@@ -295,6 +294,10 @@ class MainFeedActivity : BackToExitActivityBase(),
             }
             R.id.profile -> {
                 getNextFragmentOrNull(currentFragmentTag, ProfileFragment::class.java.simpleName, ProfileFragment.Companion::newInstance)
+            }
+            R.id.certificates -> {
+                analytic.reportEvent(Analytic.Screens.USER_OPEN_CERTIFICATES)
+                getNextFragmentOrNull(currentFragmentTag, CertificatesFragment::class.java.simpleName, CertificatesFragment::newInstance)
             }
             else -> {
                 null

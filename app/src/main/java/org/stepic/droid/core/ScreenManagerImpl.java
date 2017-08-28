@@ -254,11 +254,7 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void showCertificates(Context context) {
-        Intent intent = new Intent(context, CertificatesActivity.class);
-        if (!(context instanceof Activity)) {
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        }
-        context.startActivity(intent);
+        showMainFeed(context, MainFeedActivity.Companion.getCertificateIndex());
     }
 
     @Override

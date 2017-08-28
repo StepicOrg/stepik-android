@@ -91,7 +91,7 @@ public class CertificatesFragment extends FragmentBase implements CertificateVie
         nullifyActivityBackground();
         super.onViewCreated(view, savedInstanceState);
 
-        ToolbarHelperKt.initCenteredToolbar(this, R.string.certificates_title, true, getCloseIconDrawableRes());
+        ToolbarHelperKt.initCenteredToolbar(this, R.string.certificates_title, false);
 
         adapter = new CertificatesAdapter(certificatePresenter, getActivity());
         certificateRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
