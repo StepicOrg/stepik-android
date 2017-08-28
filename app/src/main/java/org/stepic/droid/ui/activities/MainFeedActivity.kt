@@ -297,7 +297,7 @@ class MainFeedActivity : BackToExitActivityBase(),
             }
             R.id.certificates -> {
                 analytic.reportEvent(Analytic.Screens.USER_OPEN_CERTIFICATES)
-                getNextFragmentOrNull(currentFragmentTag, CertificatesFragment::class.java.simpleName, CertificatesFragment::newInstance)
+                getNextFragmentOrNull(currentFragmentTag, CertificatesFragment::class.java.simpleName, CertificatesFragment.Companion::newInstance)
             }
             else -> {
                 null

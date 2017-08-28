@@ -42,7 +42,7 @@ public class NotificationsFragment extends FragmentBase {
     @BindView(R.id.notification_viewpager)
     ViewPager viewPager;
 
-    @BindView(R.id.need_auth_view)
+    @BindView(R.id.needAuthView)
     View needAuthRootView;
 
     @BindView(R.id.authAction)

@@ -23,12 +23,12 @@
         <include layout="@layout/need_auth_placeholder"/>
 
         <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/certificate_swipe_refresh"
+            android:id="@+id/certificateSwipeRefresh"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/certificates_recycler_view"
+                android:id="@+id/certificateRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clipToPadding="false"

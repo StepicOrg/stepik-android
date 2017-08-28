@@ -73,7 +73,7 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
     @BindView(R.id.root_fragment_view)
     protected TouchDispatchableFrameLayout rootView;
 
-    @BindView(R.id.loadProgressbar)
+    @BindView(R.id.loadProgressbarOnEmptyScreen)
     protected ProgressBar progressBarOnEmptyScreen;
 
     @BindView(R.id.empty_search)

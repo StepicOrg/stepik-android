@@ -82,7 +82,7 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
     @BindView(R.id.units_recycler_view)
     RecyclerView unitsRecyclerView;
 
-    @BindView(R.id.loadProgressbar)
+    @BindView(R.id.loadProgressbarOnEmptyScreen)
     ProgressBar progressBar;
 
     @BindView(R.id.reportProblem)

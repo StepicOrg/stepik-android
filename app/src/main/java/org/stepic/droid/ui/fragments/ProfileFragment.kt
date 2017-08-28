@@ -428,14 +428,4 @@ class ProfileFragment : FragmentBase(),
         streakIndicator.visibility = visibility
     }
 
-    /**
-     * Apply margin if activity has bottom navigation bar
-     */
-    private fun applyBottomMarginForRootView() {
-        activity as? BottomNavigationViewRoot ?: return
-
-        val layoutParams = profileRootView.layoutParams as LinearLayout.LayoutParams
-        layoutParams.bottomMargin = resources.getDimensionPixelSize(R.dimen.bottom_navigation_height)
-    }
-
 }

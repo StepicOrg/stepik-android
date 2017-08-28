@@ -138,7 +138,7 @@ public class SectionsFragment
     @BindView(R.id.sections_recycler_view)
     RecyclerView sectionsRecyclerView;
 
-    @BindView(R.id.loadProgressbar)
+    @BindView(R.id.loadProgressbarOnEmptyScreen)
     ProgressBar loadOnCenterProgressBar;
 
     @BindView(R.id.reportProblem)
