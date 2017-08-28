@@ -5,8 +5,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.TaskStackBuilder;
@@ -46,6 +48,7 @@ import org.stepic.droid.ui.activities.LaunchActivity;
 import org.stepic.droid.ui.activities.LoginActivity;
 import org.stepic.droid.ui.activities.MainFeedActivity;
 import org.stepic.droid.ui.activities.NewCommentActivity;
+import org.stepic.droid.ui.activities.NotificationSettingsActivity;
 import org.stepic.droid.ui.activities.NotificationsActivity;
 import org.stepic.droid.ui.activities.PhotoViewActivity;
 import org.stepic.droid.ui.activities.ProfileActivity;
@@ -338,6 +341,24 @@ public class ScreenManagerImpl implements ScreenManager {
         Intent intent = new Intent(sourceActivity, SettingsActivity.class);
         sourceActivity.startActivity(intent);
         sourceActivity.overridePendingTransition(org.stepic.droid.R.anim.push_up, org.stepic.droid.R.anim.no_transition);
+    }
+
+    @Override
+    public void showNotificationSettings(Activity sourceActivity) {
+        analytic.reportEvent(Analytic.Screens.SHOW_NOTIFICATION_SETTINGS);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            //show system settings
+            Intent intent = new Intent();
+            intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+            intent.putExtra(Settings.EXTRA_APP_PACKAGE, sourceActivity.getPackageName());
+            sourceActivity.startActivity(intent);
+        } else {
+            //show app notification settings
+            //(SDK < 26)
+            Intent intent = new Intent(sourceActivity, NotificationSettingsActivity.class);
+            sourceActivity.startActivity(intent);
+            sourceActivity.overridePendingTransition(org.stepic.droid.R.anim.push_up, org.stepic.droid.R.anim.no_transition);
+        }
     }
 
     @Override

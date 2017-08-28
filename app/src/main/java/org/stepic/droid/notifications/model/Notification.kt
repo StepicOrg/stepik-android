@@ -11,24 +11,29 @@ data class Notification(
         @SerializedName("is_favorite")
         var isFavourite: Boolean? = null,
         var time: String? = null,
-        var type: NotificationType? = null,
+        var type: NotificationType = NotificationType.other,
         var level: String? = null,
         var priority: String? = null,
         @SerializedName("html_text")
         var htmlText: String? = null,
         var action: String? = null,
-        var course_id : Long? = null
+        var course_id: Long? = null
 )
 
-enum class NotificationType {
+enum class NotificationType(val channel: StepikNotificationChannel) {
+
     @SerializedName("comments")
-    comments,
+    comments(StepikNotificationChannel.comments),
+
     @SerializedName("review")
-    review,
+    review(StepikNotificationChannel.review),
+
     @SerializedName("teach")
-    teach,
+    teach(StepikNotificationChannel.teach),
+
     @SerializedName("learn")
-    learn,
+    learn(StepikNotificationChannel.learn),
+
     @SerializedName("default")
-    other
+    other(StepikNotificationChannel.other)
 }

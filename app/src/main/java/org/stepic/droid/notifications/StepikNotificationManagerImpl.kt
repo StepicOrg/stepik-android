@@ -22,6 +22,7 @@ import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.model.Course
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.notifications.model.NotificationType
+import org.stepic.droid.notifications.model.StepikNotificationChannel
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.storage.operations.DatabaseFacade
@@ -378,11 +379,9 @@ class StepikNotificationManagerImpl
             val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
             taskBuilder.addNextIntent(intent)
 
-            analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, id.toString(), stepikNotification.type?.name)
+            analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, id.toString(), stepikNotification.type.name)
             showSimpleNotification(stepikNotification, justText, taskBuilder, title, id = id)
         } else {
-
-
             val courseId: Long = HtmlHelper.parseCourseIdFromNotification(stepikNotification) ?: 0L
             if (courseId == 0L) {
                 analytic.reportEvent(Analytic.Notification.CANT_PARSE_COURSE_ID, stepikNotification.id.toString())
@@ -423,7 +422,7 @@ class StepikNotificationManagerImpl
             val title = context.getString(R.string.app_name)
             val justText: String = textResolver.fromHtml(rawMessageHtml).toString()
 
-            val notification = NotificationCompat.Builder(context)
+            val notification = NotificationCompat.Builder(context, stepikNotification.type.channel.channelId)
                     .setLargeIcon(largeIcon)
                     .setSmallIcon(R.drawable.ic_notification_icon_1) // 1 is better
                     .setContentTitle(title)
@@ -463,7 +462,7 @@ class StepikNotificationManagerImpl
                 addSoundIfNeed(notification)
             }
 
-            analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, stepikNotification.id?.toString() ?: "", stepikNotification.type?.name)
+            analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, stepikNotification.id?.toString() ?: "", stepikNotification.type.name)
             notificationManager.notify(courseId.toInt(), notification.build())
         }
     }
@@ -475,7 +474,7 @@ class StepikNotificationManagerImpl
         val pendingIntent = taskBuilder.getPendingIntent(id.toInt(), PendingIntent.FLAG_ONE_SHOT) //fixme if it will overlay courses id -> bug
 
         val colorArgb = ColorUtil.getColorArgb(R.color.stepic_brand_primary)
-        val notification = NotificationCompat.Builder(context)
+        val notification = NotificationCompat.Builder(context, stepikNotification?.type?.channel?.channelId ?: StepikNotificationChannel.user.channelId)
                 .setSmallIcon(R.drawable.ic_notification_icon_1)
                 .setContentTitle(title)
                 .setContentText(justText)

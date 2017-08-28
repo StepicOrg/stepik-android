@@ -110,7 +110,7 @@ public class NotificationsFragment extends FragmentBase {
         switch (item.getItemId()) {
             case R.id.action_settings:
                 getAnalytic().reportEvent(Analytic.Interaction.CLICK_SETTINGS_FROM_NOTIFICATION);
-                getScreenManager().showSettings(getActivity());
+                getScreenManager().showNotificationSettings(getActivity());
                 return true;
             case android.R.id.home:
                 // Respond to the action bar's Up/Home button
