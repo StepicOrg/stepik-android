@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.view.*
-import android.widget.LinearLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import kotlinx.android.synthetic.main.fragment_profile_new.*
@@ -63,7 +62,6 @@ class ProfileFragment : FragmentBase(),
         setHasOptionsMenu(true)
         profileSettingsList.clear()
         profileSettingsList.addAll(ProfileSettingsHelper.getProfileSettings())
-        Timber.d("onCreate %s", this)
     }
 
     override fun injectComponent() {
@@ -427,5 +425,7 @@ class ProfileFragment : FragmentBase(),
         maxStreakValue.visibility = visibility
         streakIndicator.visibility = visibility
     }
+
+    override fun getRootView(): ViewGroup = profileRootView
 
 }

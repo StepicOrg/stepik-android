@@ -24,6 +24,7 @@ import org.stepic.droid.ui.activities.contracts.BottomNavigationViewRoot
 import org.stepic.droid.ui.adapters.CertificatesAdapter
 import org.stepic.droid.ui.dialogs.CertificateShareDialogFragment
 import org.stepic.droid.ui.util.initCenteredToolbar
+import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.ProgressHelper
 import javax.inject.Inject
 
@@ -32,6 +33,14 @@ class CertificatesFragment : FragmentBase(),
         SwipeRefreshLayout.OnRefreshListener {
 
     private var adapter: CertificatesAdapter? = null
+
+    private val oldCoverColor: Int by lazy {
+        ColorUtil.getColorArgb(R.color.old_cover, context)
+    }
+
+    private val newCoverColor: Int by lazy {
+        ColorUtil.getColorArgb(R.color.new_cover, context)
+    }
 
     @Inject
     lateinit var certificatePresenter: CertificatePresenter
@@ -89,8 +98,10 @@ class CertificatesFragment : FragmentBase(),
 
     override fun onLoading() {
         if (certificatePresenter.size() <= 0) {
+            certificateSwipeRefresh.visibility = View.GONE
             reportProblem.visibility = View.GONE
             reportEmptyCertificates.visibility = View.GONE
+            certificateRootView.setBackgroundColor(newCoverColor)
             ProgressHelper.activate(loadProgressbarOnEmptyScreen)
         }
     }
@@ -101,6 +112,8 @@ class CertificatesFragment : FragmentBase(),
         ProgressHelper.dismiss(loadProgressbarOnEmptyScreen)
         reportProblem.visibility = View.GONE
         if (certificatePresenter.size() <= 0) {
+            certificateRootView.setBackgroundColor(oldCoverColor)
+            certificateSwipeRefresh.visibility = View.GONE
             reportEmptyCertificates.visibility = View.VISIBLE
         }
     }
@@ -110,7 +123,9 @@ class CertificatesFragment : FragmentBase(),
         ProgressHelper.dismiss(loadProgressbarOnEmptyScreen)
         reportEmptyCertificates.visibility = View.GONE
         needAuthView.visibility = View.GONE
+        certificateSwipeRefresh.visibility = View.GONE
         if (certificatePresenter.size() <= 0) {
+            certificateRootView.setBackgroundColor(oldCoverColor)
             reportProblem.visibility = View.VISIBLE
         } else {
             Toast.makeText(context, R.string.connectionProblems, Toast.LENGTH_SHORT).show()
@@ -125,6 +140,7 @@ class CertificatesFragment : FragmentBase(),
         needAuthView.visibility = View.GONE
         certificateSwipeRefresh.visibility = View.VISIBLE
         certificateRecyclerView.visibility = View.VISIBLE
+        certificateRootView.setBackgroundColor(oldCoverColor)
         adapter?.updateCertificates(certificateViewItems)
     }
 
@@ -146,6 +162,7 @@ class CertificatesFragment : FragmentBase(),
         certificateRecyclerView.visibility = View.GONE
         certificateSwipeRefresh.visibility = View.GONE
         needAuthView.visibility = View.VISIBLE
+        certificateRootView.setBackgroundColor(newCoverColor)
     }
 
     override fun onRefresh() {
@@ -175,4 +192,6 @@ class CertificatesFragment : FragmentBase(),
         super.onPause()
         (activity as? BottomNavigationViewRoot)?.resetDefaultBehaviour()
     }
+
+    override fun getRootView(): ViewGroup = certificateRootView
 }
