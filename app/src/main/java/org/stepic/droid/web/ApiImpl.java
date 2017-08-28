@@ -47,6 +47,8 @@ import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.serializers.ReplySerializer;
 import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.social.SocialManager;
+import org.stepic.droid.ui.activities.LaunchActivity;
+import org.stepic.droid.ui.activities.SocialAuthActivity;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DeviceInfoUtil;
 import org.stepic.droid.util.RWLocks;
@@ -475,8 +477,8 @@ public class ApiImpl implements Api {
         String socialIdentifier = type.getIdentifier();
         String url = config.getBaseUrl() + "/accounts/" + socialIdentifier + "/login?next=/oauth2/authorize/?" + Uri.encode("client_id=" + config.getOAuthClientId(TokenType.social) + "&response_type=code");
         Uri uri = Uri.parse(url);
-        final Intent intent = new Intent(Intent.ACTION_VIEW).setData(uri);
-        activity.startActivity(intent);
+        final Intent intent = new Intent(activity, SocialAuthActivity.class).setData(uri);
+        activity.startActivityForResult(intent, LaunchActivity.REQUEST_CODE_SOCIAL_AUTH);
     }
 
     @Override

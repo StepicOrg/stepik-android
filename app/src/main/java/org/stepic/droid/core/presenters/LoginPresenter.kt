@@ -11,6 +11,7 @@ import org.stepic.droid.di.login.LoginScope
 import org.stepic.droid.model.AuthData
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.social.SocialManager
+import org.stepic.droid.util.AppConstants
 import org.stepic.droid.web.Api
 import org.stepic.droid.web.AuthenticationStepicResponse
 import org.stepic.droid.web.SocialAuthError
@@ -76,7 +77,7 @@ class LoginPresenter
 
                     Gson().fromJson(errorBody, SocialAuthError::class.java).let {
                         val email = it.email
-                        if (email != null) {
+                        if (email != null && it.error == AppConstants.ERROR_SOCIAL_AUTH_WITH_EXISTING_EMAIL) {
                             mainHandler.post {
                                 view?.onSocialLoginWithExistingEmail(email)
                             }
