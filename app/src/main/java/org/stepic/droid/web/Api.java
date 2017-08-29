@@ -60,7 +60,7 @@ public interface Api {
 
     Call<Void> postViewed(ViewAssignment stepAssignment);
 
-    void loginWithSocial(FragmentActivity activity, ISocialType type);
+    void loginWithSocial(FragmentActivity activity, ISocialType type, int requestCode);
 
     Call<SearchResultResponse> getSearchResultsCourses(int page, String rawQuery);
 

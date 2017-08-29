@@ -10,5 +10,7 @@ interface LoginView {
 
     fun onFailLogin(type: LoginFailType, credential: Credential?)
 
+    fun onSocialLoginWithExistingEmail(email: String)
+
     fun onSuccessLogin(authData : AuthData?)
 }

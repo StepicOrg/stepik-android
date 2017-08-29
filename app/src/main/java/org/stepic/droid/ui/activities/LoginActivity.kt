@@ -25,6 +25,7 @@ import org.stepic.droid.core.presenters.LoginPresenter
 import org.stepic.droid.core.presenters.contracts.LoginView
 import org.stepic.droid.model.AuthData
 import org.stepic.droid.ui.dialogs.LoadingProgressDialog
+import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.getMessageFor
 import org.stepic.droid.util.toBundle
@@ -139,6 +140,11 @@ class LoginActivity : FragmentActivityBase(), LoginView {
 
         loginPresenter.attachView(this)
         onNewIntent(intent)
+
+        if (savedInstanceState == null && intent.hasExtra(AppConstants.KEY_EMAIL_BUNDLE)) {
+            loginText.setText(intent.getStringExtra(AppConstants.KEY_EMAIL_BUNDLE))
+            passwordEditText.requestFocus()
+        }
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -222,7 +228,7 @@ class LoginActivity : FragmentActivityBase(), LoginView {
             } else {
                 analytic.reportEvent(Analytic.SmartLock.LOGIN_NOT_SAVED)
             }
-            openMainFeed();
+            openMainFeed()
         }
 
     }
@@ -234,5 +240,7 @@ class LoginActivity : FragmentActivityBase(), LoginView {
     override fun onLoadingWhileLogin() {
         progressHandler.activate()
     }
+
+    override fun onSocialLoginWithExistingEmail(email: String) {}
 
 }
