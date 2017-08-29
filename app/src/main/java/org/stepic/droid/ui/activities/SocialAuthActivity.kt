@@ -11,6 +11,7 @@ import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.util.AppConstants
 import kotlinx.android.synthetic.main.activity_social_auth.*
 import kotlinx.android.synthetic.main.panel_custom_action_bar.*
+import kotlinx.android.synthetic.main.progress_bar_on_empty_screen.*
 
 
 class SocialAuthActivity  : FragmentActivityBase() {
@@ -21,6 +22,7 @@ class SocialAuthActivity  : FragmentActivityBase() {
         overridePendingTransition(R.anim.slide_in_from_bottom, R.anim.no_transition)
 
 
+        loadProgressbar.visibility = View.VISIBLE
         socialAuthWebView.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
                 if (url != null) {
@@ -41,7 +43,7 @@ class SocialAuthActivity  : FragmentActivityBase() {
 
             override fun onPageFinished(view: WebView?, url: String?) {
                 socialAuthWebView.visibility = View.VISIBLE
-                progress.visibility = View.GONE
+                loadProgressbar.visibility = View.GONE
             }
         }
         socialAuthWebView.settings.javaScriptEnabled = true
