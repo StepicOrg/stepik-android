@@ -52,8 +52,6 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
         private val TAG = "LaunchActivity"
         val wasLogoutKey = "wasLogoutKey"
         private val resolvingAccountKey = "resolvingAccountKey"
-
-        const val REQUEST_CODE_SOCIAL_AUTH = 377
     }
 
     private val requestFromSmartLockCode = 314
@@ -318,7 +316,7 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
             }
         }
 
-        if (requestCode == REQUEST_CODE_SOCIAL_AUTH && data != null) {
+        if (requestCode == AppConstants.REQUEST_CODE_SOCIAL_AUTH && data != null) {
             if (resultCode == Activity.RESULT_OK) {
                 redirectFromSocial(data)
             } else if (resultCode == Activity.RESULT_CANCELED) {
