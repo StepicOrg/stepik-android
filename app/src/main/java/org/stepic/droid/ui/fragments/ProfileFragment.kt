@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.view.*
-import android.widget.LinearLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import kotlinx.android.synthetic.main.fragment_profile_new.*
@@ -63,7 +62,6 @@ class ProfileFragment : FragmentBase(),
         setHasOptionsMenu(true)
         profileSettingsList.clear()
         profileSettingsList.addAll(ProfileSettingsHelper.getProfileSettings())
-        Timber.d("onCreate %s", this)
     }
 
     override fun injectComponent() {
@@ -111,7 +109,7 @@ class ProfileFragment : FragmentBase(),
         }
 
         authAction.setOnClickListener {
-            screenManager.showLaunchScreen(context, true, MainFeedActivity.profileIndex)
+            screenManager.showLaunchScreen(context, true, MainFeedActivity.PROFILE_INDEX)
         }
     }
 
@@ -428,14 +426,6 @@ class ProfileFragment : FragmentBase(),
         streakIndicator.visibility = visibility
     }
 
-    /**
-     * Apply margin if activity has bottom navigation bar
-     */
-    private fun applyBottomMarginForRootView() {
-        activity as? BottomNavigationViewRoot ?: return
-
-        val layoutParams = profileRootView.layoutParams as LinearLayout.LayoutParams
-        layoutParams.bottomMargin = resources.getDimensionPixelSize(R.dimen.bottom_navigation_height)
-    }
+    override fun getRootView(): ViewGroup = profileRootView
 
 }

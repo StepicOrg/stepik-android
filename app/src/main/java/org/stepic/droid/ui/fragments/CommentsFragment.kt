@@ -413,11 +413,11 @@ class CommentsFragment : FragmentBase(),
 
     private fun showEmptyProgressOnCenter(needShow: Boolean = true) {
         if (needShow) {
-            ProgressHelper.activate(loadProgressbar)
+            ProgressHelper.activate(loadProgressbarOnEmptyScreen)
             showEmptyState(false)
             showInternetConnectionProblem(false)
         } else {
-            ProgressHelper.dismiss(loadProgressbar)
+            ProgressHelper.dismiss(loadProgressbarOnEmptyScreen)
         }
     }
 

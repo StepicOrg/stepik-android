@@ -85,7 +85,7 @@ public class DownloadsFragment extends FragmentBase implements
     @BindView(R.id.progress_bar)
     ProgressBar progressBar;
 
-    @BindView(R.id.need_auth_view)
+    @BindView(R.id.needAuthView)
     View needAuthRootView;
 
     @BindView(R.id.authAction)

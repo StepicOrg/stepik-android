@@ -9,9 +9,10 @@
 
     <FrameLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/certificateRootView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/old_cover">
+        android:background="@color/new_cover">
 
 
         <include layout="@layout/progress_bar_on_empty_screen"/>
@@ -22,13 +23,15 @@
 
         <include layout="@layout/need_auth_placeholder"/>
 
+        <!--Remove this old cover, when redesign will be finished-->
         <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/certificate_swipe_refresh"
+            android:id="@+id/certificateSwipeRefresh"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@color/old_cover">
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/certificates_recycler_view"
+                android:id="@+id/certificateRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clipToPadding="false"

@@ -265,11 +265,7 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void showCertificates(Context context) {
-        Intent intent = new Intent(context, CertificatesActivity.class);
-        if (!(context instanceof Activity)) {
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        }
-        context.startActivity(intent);
+        showMainFeed(context, MainFeedActivity.CERTIFICATE_INDEX);
     }
 
     @Override
@@ -288,7 +284,7 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public Intent getShowFindCoursesIntent(Context context) {
-        int index = MainFeedActivity.Companion.getFindCoursesIndex();
+        int index = MainFeedActivity.FIND_COURSES_INDEX;
         return getFromMainActivityIntent(context, index);
     }
 
@@ -414,7 +410,7 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public Intent getMyCoursesIntent(@NotNull Context context) {
-        int index = MainFeedActivity.Companion.getMyCoursesIndex();
+        int index = MainFeedActivity.MY_COURSES_INDEX;
         return getFromMainActivityIntent(context, index);
     }
 

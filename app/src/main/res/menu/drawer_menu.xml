@@ -15,4 +15,10 @@
         android:checkable="false"
         android:icon="@drawable/ic_profile"
         android:title="@string/profile_title"/>
+
+    <item
+        android:id="@+id/certificates"
+        android:checkable="false"
+        android:icon="@drawable/ic_mobile_certificates"
+        android:title="@string/certificates_title"/>
 </menu>
