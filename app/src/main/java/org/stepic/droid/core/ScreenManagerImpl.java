@@ -254,7 +254,7 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void showCertificates(Context context) {
-        showMainFeed(context, MainFeedActivity.Companion.getCertificateIndex());
+        showMainFeed(context, MainFeedActivity.CERTIFICATE_INDEX);
     }
 
     @Override
@@ -273,7 +273,7 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public Intent getShowFindCoursesIntent(Context context) {
-        int index = MainFeedActivity.Companion.getFindCoursesIndex();
+        int index = MainFeedActivity.FIND_COURSES_INDEX;
         return getFromMainActivityIntent(context, index);
     }
 
@@ -399,7 +399,7 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public Intent getMyCoursesIntent(@NotNull Context context) {
-        int index = MainFeedActivity.Companion.getMyCoursesIndex();
+        int index = MainFeedActivity.MY_COURSES_INDEX;
         return getFromMainActivityIntent(context, index);
     }
 

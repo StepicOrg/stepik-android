@@ -109,7 +109,7 @@ class ProfileFragment : FragmentBase(),
         }
 
         authAction.setOnClickListener {
-            screenManager.showLaunchScreen(context, true, MainFeedActivity.profileIndex)
+            screenManager.showLaunchScreen(context, true, MainFeedActivity.PROFILE_INDEX)
         }
     }
 

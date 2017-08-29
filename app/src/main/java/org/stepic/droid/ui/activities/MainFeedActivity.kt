@@ -65,17 +65,11 @@ class MainFeedActivity : BackToExitActivityBase(),
         const val defaultIndex: Int = 0
         val defaultTag: String = MyCoursesFragment::class.java.simpleName
         private val progressLogoutTag = "progressLogoutTag"
-        val certificateIndex: Int
-            get() = 4
-        val myCoursesIndex: Int
-            get() = 1
 
-        val findCoursesIndex: Int
-            get() = 2
-
-        val profileIndex: Int
-            get() = 3
-
+        const val MY_COURSES_INDEX: Int = 1
+        const val FIND_COURSES_INDEX: Int = 2
+        const val PROFILE_INDEX: Int = 3
+        const val CERTIFICATE_INDEX: Int = 4
     }
 
     @Inject
@@ -157,8 +151,8 @@ class MainFeedActivity : BackToExitActivityBase(),
             setFragment(R.id.my_courses)
             val wantedIndex = intent?.getIntExtra(currentIndexKey, -1) ?: -1
             when (wantedIndex) {
-                findCoursesIndex -> navigationView.selectedItemId = R.id.find_courses
-                certificateIndex -> navigationView.selectedItemId = R.id.certificates
+                FIND_COURSES_INDEX -> navigationView.selectedItemId = R.id.find_courses
+                CERTIFICATE_INDEX -> navigationView.selectedItemId = R.id.certificates
                 else -> {
                     //do nothing
                 }
