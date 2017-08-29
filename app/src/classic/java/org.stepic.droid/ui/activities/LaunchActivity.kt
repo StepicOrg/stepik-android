@@ -90,7 +90,7 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
 
         signInWithEmail.setOnClickListener {
             analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_IN)
-            screenManager.showLogin(this@LaunchActivity, courseFromExtra)
+            screenManager.showLogin(this@LaunchActivity, courseFromExtra, null)
         }
 
 
@@ -315,6 +315,18 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
                 onInternetProblems()
             }
         }
+
+        if (requestCode == AppConstants.REQUEST_CODE_SOCIAL_AUTH && data != null) {
+            if (resultCode == Activity.RESULT_OK) {
+                redirectFromSocial(data)
+            } else if (resultCode == Activity.RESULT_CANCELED) {
+                val email = data.data?.getQueryParameter(AppConstants.KEY_EMAIL_BUNDLE)
+                if (email != null) {
+                    onFailLogin(LoginFailType.emailAlreadyUsed, null)
+                    onSocialLoginWithExistingEmail(email)
+                }
+            }
+        }
     }
 
     private fun onInternetProblems() {
@@ -369,6 +381,10 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
     override fun onSuccessLogin(authData: AuthData?) {
         progressHandler.dismiss()
         openMainFeed()
+    }
+
+    override fun onSocialLoginWithExistingEmail(email: String) {
+        screenManager.showLogin(this, courseFromExtra, email)
     }
 
     private fun openMainFeed() {
