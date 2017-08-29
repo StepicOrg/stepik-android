@@ -3,26 +3,25 @@ package org.stepic.droid.ui.activities
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import org.stepic.droid.R
+import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.util.AppConstants
+import kotlinx.android.synthetic.main.activity_social_auth.*
+import kotlinx.android.synthetic.main.panel_custom_action_bar.*
 
 
-class SocialAuthActivity  : AppCompatActivity() {
-    private lateinit var authWebView : WebView
+class SocialAuthActivity  : FragmentActivityBase() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_social_auth)
         overridePendingTransition(R.anim.slide_in_from_bottom, R.anim.no_transition)
 
-        val d = intent.data.toString()
 
-        authWebView = findViewById(R.id.social_auth_web_view)
-        authWebView.webViewClient = object : WebViewClient() {
+        socialAuthWebView.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
                 if (url != null) {
                     val uri = Uri.parse(url)
@@ -39,16 +38,22 @@ class SocialAuthActivity  : AppCompatActivity() {
                 }
                 return false
             }
+
+            override fun onPageFinished(view: WebView?, url: String?) {
+                socialAuthWebView.visibility = View.VISIBLE
+                progress.visibility = View.GONE
+            }
         }
-        authWebView.settings.javaScriptEnabled = true
+        socialAuthWebView.settings.javaScriptEnabled = true
 
         if (savedInstanceState == null) {
-            authWebView.loadUrl(d)
+            val authUrl = intent.data.toString()
+            socialAuthWebView.loadUrl(authUrl)
         } else {
-            authWebView.restoreState(savedInstanceState)
+            socialAuthWebView.restoreState(savedInstanceState)
         }
 
-        findViewById<View>(R.id.actionbarCloseButtonLayout).setOnClickListener { finish() }
+        actionbarCloseButtonLayout.setOnClickListener { finish() }
     }
 
     override fun finish() {
@@ -57,12 +62,12 @@ class SocialAuthActivity  : AppCompatActivity() {
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
-        authWebView.saveState(outState)
+        socialAuthWebView.saveState(outState)
     }
 
     override fun onBackPressed() {
-        if (authWebView.canGoBack()) {
-            authWebView.goBack()
+        if (socialAuthWebView.canGoBack()) {
+            socialAuthWebView.goBack()
         } else {
             super.onBackPressed()
         }
