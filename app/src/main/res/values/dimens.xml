@@ -93,5 +93,7 @@
     <dimen name="text_big_header">22sp</dimen>
     <dimen name="bottom_navigation_height">56dp</dimen>
 
+    <!--new couse item-->
+    <dimen name="new_course_item_height">90dp</dimen>
 
 </resources>

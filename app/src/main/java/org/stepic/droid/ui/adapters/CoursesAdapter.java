@@ -23,8 +23,8 @@ import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
-import org.stepic.droid.configuration.RemoteConfig;
 import org.stepic.droid.configuration.Config;
+import org.stepic.droid.configuration.RemoteConfig;
 import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.presenters.ContinueCoursePresenter;
 import org.stepic.droid.model.Course;
@@ -40,7 +40,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseViewHolderBase> {
-
 
     @Inject
     Config config;
@@ -92,7 +91,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
             View view = inflater.inflate(R.layout.loading_view, parent, false);
             return new FooterViewHolderItem(view);
         } else if (itemViewType == viewType) {
-            View view = inflater.inflate(R.layout.course_item, parent, false);
+            View view = inflater.inflate(R.layout.new_course_item, parent, false);
             return new CourseViewHolderItem(view);
         } else {
             throw new IllegalStateException("Not valid item type");
@@ -103,7 +102,6 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
     public void onBindViewHolder(CourseViewHolderBase holder, int position) {
         holder.setDataOnView(position);
     }
-
 
     @Override
     public int getItemViewType(int position) {
@@ -153,16 +151,13 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
 
     class CourseViewHolderItem extends CourseViewHolderBase {
 
-        @BindView(R.id.course_name)
+        @BindView(R.id.courseItemName)
         TextView courseName;
 
-        @BindView(R.id.course_info)
-        TextView courseSummary;
-
-        @BindView(R.id.course_icon)
+        @BindView(R.id.courseItemImage)
         ImageView courseIcon;
 
-        @BindView(R.id.continue_button)
+        @BindView(R.id.continueButton)
         Button continueButton;
 
         GlideDrawableImageViewTarget imageViewTarget;
@@ -198,7 +193,6 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
             final Course course = courses.get(position);
 
             courseName.setText(course.getTitle());
-            courseSummary.setText(textResolver.fromHtml(course.getSummary()).toString());
             Glide
                     .with(contextActivity)
                     .load(StepikLogicHelper.getPathForCourseOrEmpty(course, config))
@@ -207,6 +201,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
                     .into(imageViewTarget);
 
 
+            //// FIXME: 29.08.17 change logic to GONE-> "Join course"
             if (course.getEnrollment() != 0 && course.isActive() && course.getLastStepId() != null) {
                 continueButton.setVisibility(View.VISIBLE);
             } else {

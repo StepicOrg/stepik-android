@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/new_course_item_height">
+
+    <ImageView
+        android:id="@+id/courseItemImage"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:contentDescription="@string/content_course_logo"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/general_placeholder"/>
+
+    <Button
+        android:id="@+id/continueButton"
+        style="@style/ContinueCourseButtons"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="@dimen/guideline_standard_padding"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/courseItemImage"
+        app:layout_constraintRight_toRightOf="parent"
+        />
+
+    <TextView
+        android:id="@+id/courseItemName"
+        fontPath="fonts/Roboto-Light.ttf"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/guideline_standard_padding"
+        android:layout_marginTop="0dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/new_accent_color"
+        android:textSize="16sp"
+        app:layout_constraintLeft_toRightOf="@+id/courseItemImage"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingPrefix"
+        tools:text="Architectural details in the  Architectural details in the  "/>
+
+</android.support.constraint.ConstraintLayout>
