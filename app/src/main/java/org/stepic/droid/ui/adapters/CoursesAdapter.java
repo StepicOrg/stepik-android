@@ -197,7 +197,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
                     .with(contextActivity)
                     .load(StepikLogicHelper.getPathForCourseOrEmpty(course, config))
                     .placeholder(coursePlaceholder)
-                    .centerCrop()
+                    .fitCenter()
                     .into(imageViewTarget);
 
 
