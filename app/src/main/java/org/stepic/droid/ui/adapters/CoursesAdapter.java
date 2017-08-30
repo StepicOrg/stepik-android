@@ -32,6 +32,7 @@ import org.stepic.droid.util.StepikLogicHelper;
 import org.stepic.droid.util.resolvers.text.TextResolver;
 
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -159,6 +160,9 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
         @BindView(R.id.continueButton)
         TextView continueButton;
 
+        @BindView(R.id.courseItemLearnersCount)
+        TextView learnersCount;
+
         GlideDrawableImageViewTarget imageViewTarget;
 
         CourseViewHolderItem(final View itemView) {
@@ -198,6 +202,13 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
                     .placeholder(coursePlaceholder)
                     .fitCenter()
                     .into(imageViewTarget);
+
+            if (course.getLearnersCount() > 0) {
+                learnersCount.setText(String.format(Locale.getDefault(), "%d", course.getLearnersCount()));
+                learnersCount.setVisibility(View.VISIBLE);
+            } else {
+                learnersCount.setVisibility(View.GONE);
+            }
 
 
             //// FIXME: 29.08.17 change logic to GONE-> "Join course"
