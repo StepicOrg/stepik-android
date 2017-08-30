@@ -5,13 +5,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import org.stepic.droid.storage.structure.DatabaseInfo;
-import org.stepic.droid.storage.structure.DbStructureEnrolledAndFeaturedCourses;
 import org.stepic.droid.storage.structure.DbStructureAssignment;
 import org.stepic.droid.storage.structure.DbStructureBlock;
 import org.stepic.droid.storage.structure.DbStructureCachedVideo;
 import org.stepic.droid.storage.structure.DbStructureCalendarSection;
 import org.stepic.droid.storage.structure.DbStructureCertificateViewItem;
 import org.stepic.droid.storage.structure.DbStructureCourseLastInteraction;
+import org.stepic.droid.storage.structure.DbStructureEnrolledAndFeaturedCourses;
 import org.stepic.droid.storage.structure.DbStructureLastStep;
 import org.stepic.droid.storage.structure.DbStructureLesson;
 import org.stepic.droid.storage.structure.DbStructureNotification;
@@ -78,6 +78,12 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         upgradeFrom20To21(db);
         upgradeFrom21To22(db);
         upgradeFrom22To23(db);
+        upgradeFrom23To24(db);
+    }
+
+    private void upgradeFrom23To24(SQLiteDatabase db) {
+        alterColumn(db, DbStructureEnrolledAndFeaturedCourses.ENROLLED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.LEARNERS_COUNT, LONG_TYPE);
+        alterColumn(db, DbStructureEnrolledAndFeaturedCourses.FEATURED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.LEARNERS_COUNT, LONG_TYPE);
     }
 
     private void upgradeFrom22To23(SQLiteDatabase db) {
@@ -297,6 +303,10 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
 
         if (oldVersion < 23) {
             upgradeFrom22To23(db);
+        }
+
+        if (oldVersion < 24) {
+            upgradeFrom23To24(db);
         }
 
     }

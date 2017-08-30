@@ -50,6 +50,7 @@ constructor(
         val indexScheduleLongLink = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.SCHEDULE_LONG_LINK)
         val indexLastStepId = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.LAST_STEP_ID)
         val indexIsActive = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.IS_ACTIVE)
+        val indexLearnersCount = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.LEARNERS_COUNT)
 
         course.lastStepId = cursor.getString(indexLastStepId)
         course.certificate = cursor.getString(indexCertificate)
@@ -76,6 +77,7 @@ constructor(
         course.scheduleLongLink = cursor.getString(indexScheduleLongLink)
         course.beginDate = cursor.getString(indexBeginDate)
         course.endDate = cursor.getString(indexEndDate)
+        course.learnersCount = cursor.getLong(indexLearnersCount)
 
         var isActive = true
         try {
@@ -124,6 +126,7 @@ constructor(
         values.put(DbStructureEnrolledAndFeaturedCourses.Column.BEGIN_DATE, course.beginDate)
         values.put(DbStructureEnrolledAndFeaturedCourses.Column.END_DATE, course.endDate)
         values.put(DbStructureEnrolledAndFeaturedCourses.Column.IS_ACTIVE, course.isActive)
+        values.put(DbStructureEnrolledAndFeaturedCourses.Column.LEARNERS_COUNT, course.learnersCount)
 
         val video = course.introVideo
         if (video != null) {
