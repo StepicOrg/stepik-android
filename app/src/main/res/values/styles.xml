@@ -253,6 +253,28 @@
         <item name="android:textSize">@dimen/continue_course_button_text_size</item>
     </style>
 
+    <style name="CourseWidgetContinueView" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">25sp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">@dimen/min_ux_touchable_size</item>
+        <item name="android:background">@drawable/course_widget_background</item>
+        <item name="android:textColor">@color/new_accent_color</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+
+    <style name="CourseWidgetContinueView.Continue">
+    </style>
+
+    <style name="CourseWidgetContinueView.Join">
+        <item name="android:textColor">@color/join_text_color</item>
+
+    </style>
+
+    <style name="NewContinueButton">
+        <item name="android:textSize">12sp</item>
+    </style>
+
     <style name="StepikSpinnerItem" parent="@style/Widget.AppCompat.TextView.SpinnerItem">
         <item name="android:gravity">center_horizontal</item>
     </style>
