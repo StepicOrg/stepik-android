@@ -65,6 +65,8 @@ public class Course implements Serializable, Parcelable {
     private String scheduleLongLink;
     @SerializedName("last_step")
     private String lastStepId;
+    @SerializedName("learners_count")
+    private long learnersCount;
 
     public Course() {
 
@@ -153,6 +155,14 @@ public class Course implements Serializable, Parcelable {
 
     public String getRequirements() {
         return requirements;
+    }
+
+    public long getLearnersCount() {
+        return learnersCount;
+    }
+
+    public void setLearnersCount(long learnersCount) {
+        this.learnersCount = learnersCount;
     }
 
     public String getDescription() {
@@ -329,6 +339,7 @@ public class Course implements Serializable, Parcelable {
         dest.writeString(beginDate);
         dest.writeString(endDate);
         dest.writeString(lastStepId);
+        dest.writeLong(learnersCount);
     }
 
     protected Course(Parcel in) {
@@ -367,6 +378,7 @@ public class Course implements Serializable, Parcelable {
         beginDate = in.readString();
         endDate = in.readString();
         lastStepId = in.readString();
+        learnersCount = in.readLong();
     }
 
     public static final Creator<Course> CREATOR = new Creator<Course>() {
