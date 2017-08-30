@@ -32,6 +32,7 @@ import org.stepic.droid.ui.activities.contracts.RootScreen;
 import org.stepic.droid.ui.adapters.CoursesAdapter;
 import org.stepic.droid.ui.custom.TouchDispatchableFrameLayout;
 import org.stepic.droid.ui.custom.WrapContentLinearLayoutManager;
+import org.stepic.droid.ui.decorators.VerticalSpacesDecoration;
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment;
 import org.stepic.droid.util.ColorUtil;
 import org.stepic.droid.util.KotlinUtil;
@@ -138,6 +139,7 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
         listOfCoursesView.setAdapter(coursesAdapter);
         layoutManager = new WrapContentLinearLayoutManager(getContext());
         listOfCoursesView.setLayoutManager(layoutManager);
+        listOfCoursesView.addItemDecoration(new VerticalSpacesDecoration(getResources().getDimensionPixelSize(R.dimen.course_list_between_items_padding)));
 
         listOfCoursesViewListener = new RecyclerView.OnScrollListener() {
             @Override

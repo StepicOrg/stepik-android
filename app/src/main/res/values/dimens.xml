@@ -96,5 +96,7 @@
     <!--new couse item-->
     <dimen name="new_course_item_height">90dp</dimen>
     <dimen name="course_widget_radius">7dp</dimen>
+    <dimen name="course_list_side_padding">20dp</dimen>
+    <dimen name="course_list_between_items_padding">16dp</dimen>
 
 </resources>
