@@ -17,12 +17,11 @@
         tools:src="@drawable/general_placeholder"/>
 
     <TextView
-        android:id="@+id/continueButton"
-        style="@style/CourseWidgetView.Continue"
+        android:id="@+id/courseWidgetButton"
+        style="@style/CourseWidgetView"
         android:layout_width="0dp"
         android:layout_height="33dp"
         android:layout_marginStart="@dimen/guideline_standard_padding"
-        android:text="@string/continue_course_title"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/courseItemImage"
         app:layout_constraintRight_toRightOf="parent"/>
@@ -65,9 +64,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:drawableStart="@drawable/ic_learners_count_image"
         android:drawableLeft="@drawable/ic_learners_count_image"
         android:drawablePadding="2dp"
+        android:drawableStart="@drawable/ic_learners_count_image"
         android:textSize="12sp"
         android:visibility="gone"
         app:layout_constraintLeft_toLeftOf="@+id/courseItemName"

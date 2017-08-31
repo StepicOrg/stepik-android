@@ -7,5 +7,5 @@
             <corners android:radius="@dimen/course_widget_radius" />
         </shape>
     </item>
-    <item android:drawable="@drawable/course_widget_background_source" />
+    <item android:drawable="@drawable/course_widget_continue_background_source" />
 </ripple>

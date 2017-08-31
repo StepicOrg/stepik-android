@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <inset
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:drawable="@drawable/course_widget_background_source"/>
+    android:drawable="@drawable/course_widget_join_background_source"/>

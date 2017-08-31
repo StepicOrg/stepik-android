@@ -88,6 +88,7 @@
 
     <color name="join_text_color">#66CC66</color>
     <color name="continue_button_color">#F5F5F6</color>
-    <color name="join_course_color">#1A66CC66</color>
+    <color name="join_button_color">#1A66CC66</color>
+    <color name="join_button_pressed_color">#6666CC66</color>
     <color name="continue_button_pressed_color">#DBDBDB</color>
 </resources>

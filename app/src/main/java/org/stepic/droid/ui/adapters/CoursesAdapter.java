@@ -3,6 +3,8 @@ package org.stepic.droid.ui.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.ColorInt;
+import android.support.annotation.DrawableRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -36,6 +38,7 @@ import java.util.Locale;
 
 import javax.inject.Inject;
 
+import butterknife.BindColor;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -68,6 +71,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
     private int NUMBER_OF_EXTRA_ITEMS = 1;
     private boolean isNeedShowFooter;
     private final String continueTitle;
+    private final String joinTitle;
     private final boolean isContinueExperimentEnabled;
 
     public CoursesAdapter(Fragment fragment, List<Course> courses, @Nullable Table type, @NotNull ContinueCoursePresenter continueCoursePresenter) {
@@ -83,6 +87,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
         } else {
             continueTitle = contextActivity.getString(R.string.continue_course_title);
         }
+        joinTitle = contextActivity.getString(R.string.course_item_join);
     }
 
     @Override
@@ -117,12 +122,18 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
         return courses.size() + NUMBER_OF_EXTRA_ITEMS;
     }
 
-    private void onClickContinue(int position) {
-        if (position >= 0 && position < courses.size()) {
+    private void onClickWidgetButton(int position, boolean enrolled) {
+        if (position < 0 && position >= courses.size()) {
+            //tbh, it is IllegalState
+            return;
+        }
+        Course course = courses.get(position);
+        if (enrolled) {
             analytic.reportEvent(Analytic.Interaction.CLICK_CONTINUE_COURSE);
             analytic.reportEvent(isContinueExperimentEnabled ? Analytic.ContinueExperiment.CONTINUE_NEW : Analytic.ContinueExperiment.CONTINUE_OLD);
-            Course course = courses.get(position);
             continueCoursePresenter.continueCourse(course); //provide position?
+        } else {
+            screenManager.showCourseDescription(contextActivity, course);
         }
     }
 
@@ -157,20 +168,31 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
         @BindView(R.id.courseItemImage)
         ImageView courseIcon;
 
-        @BindView(R.id.continueButton)
-        TextView continueButton;
+        @BindView(R.id.courseWidgetButton)
+        TextView courseWidgetButton;
 
         @BindView(R.id.courseItemLearnersCount)
         TextView learnersCount;
+
+        @ColorInt
+        @BindColor(R.color.new_accent_color)
+        int continueColor;
+
+        @ColorInt
+        @BindColor(R.color.join_text_color)
+        int joinColor;
 
         GlideDrawableImageViewTarget imageViewTarget;
 
         CourseViewHolderItem(final View itemView) {
             super(itemView);
             imageViewTarget = new GlideDrawableImageViewTarget(courseIcon);
-            continueButton.setOnClickListener(new View.OnClickListener() {
+            courseWidgetButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    CoursesAdapter.this.onClickContinue(getAdapterPosition());
+                    int adapterPosition = getAdapterPosition();
+                    if (!courses.isEmpty() && adapterPosition >= 0 && adapterPosition < courses.size()) {
+                        CoursesAdapter.this.onClickWidgetButton(adapterPosition, isEnrolled(courses.get(adapterPosition)));
+                    }
                 }
             });
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -188,7 +210,6 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
                     return true;
                 }
             });
-            continueButton.setText(continueTitle);
         }
 
         @Override
@@ -211,13 +232,31 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
             }
 
 
-            //// FIXME: 29.08.17 change logic to GONE-> "Join course"
-            if (course.getEnrollment() != 0 && course.isActive() && course.getLastStepId() != null) {
-                continueButton.setVisibility(View.VISIBLE);
+            if (isEnrolled(course)) {
+                showContinueButton();
             } else {
-                continueButton.setVisibility(View.GONE);
+                showJoinButton();
             }
         }
+
+        private boolean isEnrolled(Course course) {
+            return course.getEnrollment() != 0 && course.isActive() && course.getLastStepId() != null;
+        }
+
+        private void showJoinButton() {
+            showButton(joinTitle, joinColor, R.drawable.course_widget_join_background);
+        }
+
+        private void showContinueButton() {
+            showButton(continueTitle, continueColor, R.drawable.course_widget_continue_background);
+        }
+
+        private void showButton(String title, @ColorInt int textColor, @DrawableRes int background) {
+            courseWidgetButton.setText(title);
+            courseWidgetButton.setTextColor(textColor);
+            courseWidgetButton.setBackgroundResource(background);
+        }
+
     }
 
     class FooterViewHolderItem extends CourseViewHolderBase {
