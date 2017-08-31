@@ -21,17 +21,20 @@
         style="@style/CourseWidgetView"
         android:layout_width="0dp"
         android:layout_height="33dp"
+        android:layout_marginRight="@dimen/extraPaddingRightCourseItem"
         android:layout_marginStart="@dimen/guideline_standard_padding"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/courseItemImage"
-        app:layout_constraintRight_toRightOf="parent"/>
+        app:layout_constraintRight_toRightOf="parent"
+        tools:background="@drawable/course_widget_continue_background"
+        tools:text="Continue"/>
 
     <TextView
         android:id="@+id/courseItemName"
         fontPath="fonts/Roboto-Light.ttf"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginRight="@dimen/guideline_standard_padding"
+        android:layout_marginRight="@dimen/courseTitleRightPadding"
         android:layout_marginStart="@dimen/guideline_standard_padding"
         android:layout_marginTop="0dp"
         android:ellipsize="end"
@@ -54,6 +57,7 @@
         android:contentDescription="@string/course_item_more"
         android:paddingBottom="16dp"
         android:paddingEnd="0dp"
+        android:paddingRight="8dp"
         android:paddingStart="16dp"
         android:src="@drawable/ic_more_without_paddings"
         app:layout_constraintRight_toRightOf="parent"
