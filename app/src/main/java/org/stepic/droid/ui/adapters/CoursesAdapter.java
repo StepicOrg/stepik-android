@@ -7,13 +7,16 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
@@ -27,20 +30,28 @@ import org.stepic.droid.base.App;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.configuration.RemoteConfig;
 import org.stepic.droid.core.ScreenManager;
+import org.stepic.droid.core.dropping.contract.DroppingPoster;
 import org.stepic.droid.core.presenters.ContinueCoursePresenter;
 import org.stepic.droid.model.Course;
+import org.stepic.droid.storage.operations.DatabaseFacade;
 import org.stepic.droid.storage.operations.Table;
+import org.stepic.droid.util.ContextMenuCourseUtil;
 import org.stepic.droid.util.StepikLogicHelper;
 import org.stepic.droid.util.resolvers.text.TextResolver;
+import org.stepic.droid.web.Api;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import javax.inject.Inject;
 
 import butterknife.BindColor;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseViewHolderBase> {
 
@@ -57,6 +68,16 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
     Analytic analytic;
 
     @Inject
+    Api api;
+
+
+    @Inject
+    DatabaseFacade databaseFacade;
+
+    @Inject
+    ThreadPoolExecutor threadPoolExecutor;
+
+    @Inject
     FirebaseRemoteConfig firebaseRemoteConfig;
 
     private Drawable coursePlaceholder;
@@ -65,7 +86,11 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
 
     private Activity contextActivity;
     private final List<Course> courses;
+    @Nullable
+    private final Table type;
     private final ContinueCoursePresenter continueCoursePresenter;
+    @Nullable
+    private final DroppingPoster droppingPoster;
     private int footerViewType = 1;
     private int itemViewType = 2;
     private int NUMBER_OF_EXTRA_ITEMS = 1;
@@ -74,10 +99,12 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
     private final String joinTitle;
     private final boolean isContinueExperimentEnabled;
 
-    public CoursesAdapter(Fragment fragment, List<Course> courses, @Nullable Table type, @NotNull ContinueCoursePresenter continueCoursePresenter) {
+    public CoursesAdapter(Fragment fragment, List<Course> courses, @Nullable Table type, @NotNull ContinueCoursePresenter continueCoursePresenter, @Nullable DroppingPoster droppingPoster) {
         contextActivity = fragment.getActivity();
         this.courses = courses;
+        this.type = type;
         this.continueCoursePresenter = continueCoursePresenter;
+        this.droppingPoster = droppingPoster;
         inflater = (LayoutInflater) contextActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         App.Companion.component().inject(this);
         coursePlaceholder = ContextCompat.getDrawable(fragment.getContext(), R.drawable.general_placeholder);
@@ -122,12 +149,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
         return courses.size() + NUMBER_OF_EXTRA_ITEMS;
     }
 
-    private void onClickWidgetButton(int position, boolean enrolled) {
-        if (position < 0 && position >= courses.size()) {
-            //tbh, it is IllegalState
-            return;
-        }
-        Course course = courses.get(position);
+    private void onClickWidgetButton(@NotNull Course course, boolean enrolled) {
         if (enrolled) {
             analytic.reportEvent(Analytic.Interaction.CLICK_CONTINUE_COURSE);
             analytic.reportEvent(isContinueExperimentEnabled ? Analytic.ContinueExperiment.CONTINUE_NEW : Analytic.ContinueExperiment.CONTINUE_OLD);
@@ -149,6 +171,63 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
         }
     }
 
+    private void showMore(View view, @NotNull final Course course) {
+        PopupMenu morePopupMenu = new PopupMenu(contextActivity, view);
+        morePopupMenu.inflate(ContextMenuCourseUtil.INSTANCE.getMenuResource(course));
+
+        morePopupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.menu_item_info:
+                        screenManager.showCourseDescription(contextActivity, course);
+                        return true;
+                    case R.id.menu_item_unroll:
+                        if (course.getEnrollment() == 0) {
+                            Toast.makeText(contextActivity, R.string.you_not_enrolled, Toast.LENGTH_SHORT).show();
+                            return false;
+                        }
+                        Call<Void> drop = api.dropCourse(course.getCourseId());
+                        if (drop != null) {
+                            drop.enqueue(new Callback<Void>() {
+                                Course localRef = course;
+
+                                @Override
+                                public void onResponse(Call<Void> call, Response<Void> response) {
+                                    threadPoolExecutor.execute(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            databaseFacade.deleteCourse(localRef, Table.enrolled);
+
+                                            if (databaseFacade.getCourseById(course.getCourseId(), Table.featured) != null) {
+                                                localRef.setEnrollment(0);
+                                                databaseFacade.addCourse(localRef, Table.featured);
+                                            }
+
+                                        }
+                                    });
+
+                                    droppingPoster.successDropCourse(localRef);
+                                }
+
+                                @Override
+                                public void onFailure(Call<Void> call, Throwable t) {
+                                    droppingPoster.failDropCourse(localRef);
+                                }
+                            });
+                        } else {
+                            Toast.makeText(contextActivity, R.string.cant_drop, Toast.LENGTH_SHORT).show();
+                        }
+
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        });
+
+        morePopupMenu.show();
+    }
 
     abstract static class CourseViewHolderBase extends RecyclerView.ViewHolder {
 
@@ -174,6 +253,9 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
         @BindView(R.id.courseItemLearnersCount)
         TextView learnersCount;
 
+        @BindView(R.id.courseItemMore)
+        View courseItemMore;
+
         @ColorInt
         @BindColor(R.color.new_accent_color)
         int continueColor;
@@ -190,8 +272,9 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
             courseWidgetButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     int adapterPosition = getAdapterPosition();
-                    if (!courses.isEmpty() && adapterPosition >= 0 && adapterPosition < courses.size()) {
-                        CoursesAdapter.this.onClickWidgetButton(adapterPosition, isEnrolled(courses.get(adapterPosition)));
+                    Course course = getCourseSafety(adapterPosition);
+                    if (course != null) {
+                        CoursesAdapter.this.onClickWidgetButton(course, isEnrolled(course));
                     }
                 }
             });
@@ -210,6 +293,25 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
                     return true;
                 }
             });
+
+            courseItemMore.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Course course = getCourseSafety(getAdapterPosition());
+                    if (course != null) {
+                        CoursesAdapter.this.showMore(v, course);
+                    }
+                }
+            });
+        }
+
+        @Nullable
+        private Course getCourseSafety(int adapterPosition) {
+            if (adapterPosition >=courses.size() || adapterPosition < 0) {
+                return null;
+            } else {
+                return courses.get(adapterPosition);
+            }
         }
 
         @Override
@@ -236,6 +338,12 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
                 showContinueButton();
             } else {
                 showJoinButton();
+            }
+
+            if (type == Table.enrolled || type == Table.featured) {
+                courseItemMore.setVisibility(View.VISIBLE);
+            } else {
+                courseItemMore.setVisibility(View.GONE);
             }
         }
 

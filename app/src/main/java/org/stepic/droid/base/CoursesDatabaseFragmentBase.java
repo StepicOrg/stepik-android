@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.ColorRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.view.ContextMenu;
@@ -23,12 +22,13 @@ import org.stepic.droid.core.presenters.PersistentCourseListPresenter;
 import org.stepic.droid.core.presenters.contracts.FilterForCoursesView;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.storage.operations.Table;
+import org.stepic.droid.ui.adapters.CoursesAdapter;
 import org.stepic.droid.ui.fragments.CourseListFragmentBase;
 import org.stepic.droid.ui.util.BackButtonHandler;
 import org.stepic.droid.ui.util.ContextMenuRecyclerView;
 import org.stepic.droid.ui.util.OnBackClickListener;
 import org.stepic.droid.util.AppConstants;
-import org.stepic.droid.util.ColorUtil;
+import org.stepic.droid.util.ContextMenuCourseUtil;
 
 import java.util.List;
 
@@ -154,11 +154,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
         }
 
         MenuInflater inflater = getActivity().getMenuInflater();
-        if (courses.get(position).getEnrollment() != 0) {
-            inflater.inflate(R.menu.course_context_menu, menu);
-        } else {
-            inflater.inflate(R.menu.course_context_not_enrolled_menu, menu);
-        }
+        inflater.inflate(ContextMenuCourseUtil.INSTANCE.getMenuResource(courses.get(position)), menu);
     }
 
     @Override
@@ -359,5 +355,10 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
         if (courses.size() == 0) {
             showEmptyScreen(true);
         }
+    }
+
+    @Override
+    public CoursesAdapter getCoursesAdapter() {
+        return new CoursesAdapter(this, courses, getCourseType(), continueCoursePresenter, droppingPoster);
     }
 }

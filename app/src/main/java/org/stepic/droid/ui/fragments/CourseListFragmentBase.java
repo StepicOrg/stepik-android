@@ -87,7 +87,7 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
     private LinearLayoutManager layoutManager;
 
     @Inject
-    ContinueCoursePresenter continueCoursePresenter;
+    protected ContinueCoursePresenter continueCoursePresenter;
 
     @Inject
     Client<JoiningListener> joiningListenerClient;
@@ -135,7 +135,7 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
                 R.color.stepic_blue_ribbon);
 
         if (courses == null) courses = new ArrayList<>();
-        coursesAdapter = new CoursesAdapter(this, courses, getCourseType(), continueCoursePresenter);
+        coursesAdapter = getCoursesAdapter();
         listOfCoursesView.setAdapter(coursesAdapter);
         layoutManager = new WrapContentLinearLayoutManager(getContext());
         listOfCoursesView.setLayoutManager(layoutManager);
@@ -320,4 +320,6 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
     protected final void setBackgroundColorToRootView(@ColorRes int colorRes) {
         rootView.setBackgroundColor(ColorUtil.INSTANCE.getColorArgb(colorRes, getContext()));
     }
+
+    public abstract CoursesAdapter getCoursesAdapter();
 }
