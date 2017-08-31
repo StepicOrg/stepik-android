@@ -289,7 +289,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
                 showJoinButton();
             }
 
-            if (type == Table.enrolled || type == Table.featured) {
+            if (type == Table.enrolled) {
                 courseItemMore.setVisibility(View.VISIBLE);
             } else {
                 courseItemMore.setVisibility(View.GONE);
