@@ -9,7 +9,6 @@ import org.stepic.droid.R;
 import org.stepic.droid.base.App;
 import org.stepic.droid.core.presenters.SearchCoursesPresenter;
 import org.stepic.droid.storage.operations.Table;
-import org.stepic.droid.ui.adapters.CoursesAdapter;
 import org.stepic.droid.ui.util.ToolbarHelperKt;
 
 import javax.inject.Inject;
@@ -92,11 +91,6 @@ public class CourseSearchFragment extends CourseListFragmentBase {
             swipeRefreshLayout.setVisibility(View.VISIBLE);
 
         }
-    }
-
-    @Override
-    public CoursesAdapter getCoursesAdapter() {
-        return new CoursesAdapter(this, courses, getCourseType(), continueCoursePresenter, null);
     }
 
     @Override
