@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
@@ -23,8 +24,10 @@ import org.stepic.droid.base.Client;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.core.joining.contract.JoiningListener;
 import org.stepic.droid.core.presenters.ContinueCoursePresenter;
+import org.stepic.droid.core.presenters.DroppingPresenter;
 import org.stepic.droid.core.presenters.contracts.ContinueCourseView;
 import org.stepic.droid.core.presenters.contracts.CoursesView;
+import org.stepic.droid.core.presenters.contracts.DroppingView;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.storage.operations.Table;
@@ -32,6 +35,7 @@ import org.stepic.droid.ui.activities.contracts.RootScreen;
 import org.stepic.droid.ui.adapters.CoursesAdapter;
 import org.stepic.droid.ui.custom.TouchDispatchableFrameLayout;
 import org.stepic.droid.ui.custom.WrapContentLinearLayoutManager;
+import org.stepic.droid.ui.decorators.VerticalSpacesDecoration;
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment;
 import org.stepic.droid.util.ColorUtil;
 import org.stepic.droid.util.KotlinUtil;
@@ -45,7 +49,12 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 
-public abstract class CourseListFragmentBase extends FragmentBase implements SwipeRefreshLayout.OnRefreshListener, CoursesView, ContinueCourseView, JoiningListener {
+public abstract class CourseListFragmentBase extends FragmentBase
+        implements SwipeRefreshLayout.OnRefreshListener,
+        CoursesView,
+        ContinueCourseView,
+        JoiningListener,
+        DroppingView {
 
     private static final String continueLoadingTag = "continueLoadingTag";
 
@@ -86,10 +95,13 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
     private LinearLayoutManager layoutManager;
 
     @Inject
-    ContinueCoursePresenter continueCoursePresenter;
+    protected ContinueCoursePresenter continueCoursePresenter;
 
     @Inject
     Client<JoiningListener> joiningListenerClient;
+
+    @Inject
+    protected DroppingPresenter droppingPresenter;
 
     @Override
     protected void injectComponent() {
@@ -134,10 +146,11 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
                 R.color.stepic_blue_ribbon);
 
         if (courses == null) courses = new ArrayList<>();
-        coursesAdapter = new CoursesAdapter(this, courses, getCourseType(), continueCoursePresenter);
+        coursesAdapter = new CoursesAdapter(this, courses, getCourseType(), continueCoursePresenter, droppingPresenter);
         listOfCoursesView.setAdapter(coursesAdapter);
         layoutManager = new WrapContentLinearLayoutManager(getContext());
         listOfCoursesView.setLayoutManager(layoutManager);
+        listOfCoursesView.addItemDecoration(new VerticalSpacesDecoration(getResources().getDimensionPixelSize(R.dimen.course_list_between_items_padding)));
 
         listOfCoursesViewListener = new RecyclerView.OnScrollListener() {
             @Override
@@ -183,12 +196,14 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
         });
         joiningListenerClient.subscribe(this);
         continueCoursePresenter.attachView(this);
+        droppingPresenter.attachView(this);
     }
 
     @Override
     public void onDestroyView() {
         joiningListenerClient.unsubscribe(this);
         continueCoursePresenter.detachView(this);
+        droppingPresenter.detachView(this);
         if (listOfCoursesView != null) {
             // do not set adapter to null, because fade out animation for fragment will not working
             unregisterForContextMenu(listOfCoursesView);
@@ -317,5 +332,10 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
 
     protected final void setBackgroundColorToRootView(@ColorRes int colorRes) {
         rootView.setBackgroundColor(ColorUtil.INSTANCE.getColorArgb(colorRes, getContext()));
+    }
+
+    @Override
+    public final void onUserHasNotPermissionsToDrop() {
+        Toast.makeText(getContext(), R.string.cant_drop, Toast.LENGTH_SHORT).show();
     }
 }
