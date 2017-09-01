@@ -2,11 +2,14 @@ package org.stepic.droid.ui.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.HapticFeedbackConstants;
@@ -18,7 +21,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 import org.jetbrains.annotations.NotNull;
@@ -91,7 +94,13 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
         this.droppingPresenter = droppingPresenter;
         inflater = (LayoutInflater) contextActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         App.Companion.component().inject(this);
-        coursePlaceholder = ContextCompat.getDrawable(fragment.getContext(), R.drawable.general_placeholder);
+
+        Bitmap coursePlaceholderBitmap = BitmapFactory.decodeResource(contextActivity.getResources(), R.drawable.general_placeholder);
+        RoundedBitmapDrawable circularBitmapDrawable =
+                RoundedBitmapDrawableFactory.create(contextActivity.getResources(), coursePlaceholderBitmap);
+        circularBitmapDrawable.setCornerRadius(contextActivity.getResources().getDimension(R.dimen.course_image_radius));
+        coursePlaceholder = circularBitmapDrawable;
+
         isContinueExperimentEnabled = firebaseRemoteConfig.getBoolean(RemoteConfig.INSTANCE.getContinueCourseExperimentEnabledKey());
         if (isContinueExperimentEnabled) {
             continueTitle = contextActivity.getString(R.string.continue_course_title_experimental);
@@ -213,11 +222,19 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
         @BindColor(R.color.join_text_color)
         int joinColor;
 
-        GlideDrawableImageViewTarget imageViewTarget;
+        BitmapImageViewTarget imageViewTarget;
 
         CourseViewHolderItem(final View itemView) {
             super(itemView);
-            imageViewTarget = new GlideDrawableImageViewTarget(courseIcon);
+            imageViewTarget = new BitmapImageViewTarget(courseIcon) {
+                @Override
+                protected void setResource(Bitmap resource) {
+                    RoundedBitmapDrawable circularBitmapDrawable =
+                            RoundedBitmapDrawableFactory.create(contextActivity.getResources(), resource);
+                    circularBitmapDrawable.setCornerRadius(contextActivity.getResources().getDimension(R.dimen.course_image_radius));
+                    courseIcon.setImageDrawable(circularBitmapDrawable);
+                }
+            };
             courseWidgetButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     int adapterPosition = getAdapterPosition();
@@ -271,6 +288,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
             Glide
                     .with(contextActivity)
                     .load(StepikLogicHelper.getPathForCourseOrEmpty(course, config))
+                    .asBitmap()
                     .placeholder(coursePlaceholder)
                     .fitCenter()
                     .into(imageViewTarget);
