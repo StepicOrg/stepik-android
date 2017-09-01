@@ -93,5 +93,15 @@
     <dimen name="text_big_header">22sp</dimen>
     <dimen name="bottom_navigation_height">56dp</dimen>
 
+    <!--new couse item-->
+    <dimen name="new_course_item_height">90dp</dimen>
+    <dimen name="course_widget_radius">7dp</dimen>
+    <dimen name="course_list_side_padding">20dp</dimen>
+    <dimen name="course_list_side_right_padding">12dp</dimen>
+    <dimen name="course_list_between_items_padding">16dp</dimen>
+    <dimen name="extraPaddingRightCourseItem">8dp</dimen>
+
+    <!--Left padding (moteIcon) + right padding(moreIcon) + moreIcon.width-->
+    <dimen name="courseTitleRightPadding">28dp</dimen>
 
 </resources>
