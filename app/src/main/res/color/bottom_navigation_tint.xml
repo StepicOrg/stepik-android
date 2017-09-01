@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--Color of selected element-->
+    <item android:color="@color/new_accent_color" android:state_checked="true"/>
+
+    <!--Color of unselected-->
+    <item android:color="@color/new_accent_color"/>
+</selector>
