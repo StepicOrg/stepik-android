@@ -34,15 +34,15 @@ class PersistentCourseListPresenter
         private val sharedPreferenceHelper: SharedPreferenceHelper
 ) : PresenterBase<CoursesView>() {
 
-    val currentPage = AtomicInteger(1);
-    val hasNextPage = AtomicBoolean(true)
-    val isLoading = AtomicBoolean(false)
-    val isEmptyCourses = AtomicBoolean(false)
+    private val currentPage = AtomicInteger(1);
+    private val hasNextPage = AtomicBoolean(true)
+    private val isLoading = AtomicBoolean(false)
+    private val isEmptyCourses = AtomicBoolean(false)
 
 //    val isHandlingUpdatingOrder = AtomicBoolean(false)
 
     //if hasNextPage & <MIN_COURSES_ON_SCREEN -> load next page
-    val MIN_COURSES_ON_SCREEN = 5
+    private val MIN_COURSES_ON_SCREEN = 5
 
     fun restoreState() {
         if (isEmptyCourses.get() && !hasNextPage.get()) {
