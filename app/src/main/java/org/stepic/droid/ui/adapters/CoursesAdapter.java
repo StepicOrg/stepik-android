@@ -104,7 +104,18 @@ public class CoursesAdapter extends RecyclerView.Adapter<CourseViewHolderBase> {
             return new FooterItemViewHolder(view, isNeedShowFooter);
         } else if (itemViewType == viewType) {
             View view = inflater.inflate(R.layout.new_course_item, parent, false);
-            return new CourseItemViewHolder(joinTitle, continueTitle, droppingPresenter, coursePlaceholder, type, view, isContinueExperimentEnabled, config, courses, contextActivity, analytic, continueCoursePresenter, screenManager);
+            return new CourseItemViewHolder(
+                    view,
+                    contextActivity,
+                    type,
+                    joinTitle,
+                    continueTitle,
+                    coursePlaceholder,
+                    isContinueExperimentEnabled,
+                    courses,
+                    droppingPresenter,
+                    continueCoursePresenter
+            );
         } else {
             throw new IllegalStateException("Not valid item type");
         }

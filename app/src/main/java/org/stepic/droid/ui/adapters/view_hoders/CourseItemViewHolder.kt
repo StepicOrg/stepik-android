@@ -14,6 +14,7 @@ import com.bumptech.glide.request.target.BitmapImageViewTarget
 import kotlinx.android.synthetic.main.new_course_item.view.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.base.App
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.presenters.ContinueCoursePresenter
@@ -24,20 +25,28 @@ import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.ContextMenuCourseUtil
 import org.stepic.droid.util.StepikLogicHelper
 import java.util.*
+import javax.inject.Inject
 
-class CourseItemViewHolder(private val joinTitle: String,
-                           private val continueTitle: String,
-                           private val droppingPresenter: DroppingPresenter,
-                           private val coursePlaceholder: Drawable,
-                           private val type: Table,
-                           val view: View,
-                           private val isContinueExperimentEnabled: Boolean,
-                           private val config: Config,
-                           private val courses: List<Course>,
-                           private val contextActivity: Activity,
-                           private val analytic: Analytic,
-                           private val continueCoursePresenter: ContinueCoursePresenter,
-                           private val screenManager: ScreenManager) : CourseViewHolderBase(view) {
+class CourseItemViewHolder(
+        val view: View,
+        private val contextActivity: Activity,
+        private val type: Table?,
+        private val joinTitle: String,
+        private val continueTitle: String,
+        private val coursePlaceholder: Drawable,
+        private val isContinueExperimentEnabled: Boolean,
+        private val courses: List<Course>,
+        private val droppingPresenter: DroppingPresenter,
+        private val continueCoursePresenter: ContinueCoursePresenter) : CourseViewHolderBase(view) {
+
+    @Inject
+    lateinit var screenManager: ScreenManager
+
+    @Inject
+    lateinit var analytic: Analytic
+
+    @Inject
+    lateinit var config: Config
 
 
     private val continueColor: Int by lazy {
@@ -49,6 +58,8 @@ class CourseItemViewHolder(private val joinTitle: String,
     private var imageViewTarget: BitmapImageViewTarget
 
     init {
+        App.component().inject(this)
+
         imageViewTarget = object : BitmapImageViewTarget(itemView.courseItemImage) {
             override fun setResource(resource: Bitmap) {
                 val circularBitmapDrawable = RoundedBitmapDrawableFactory.create(contextActivity.resources, resource)

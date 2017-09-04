@@ -28,6 +28,7 @@ import org.stepic.droid.receivers.DownloadClickReceiver
 import org.stepic.droid.receivers.InternetConnectionEnabledReceiver
 import org.stepic.droid.services.*
 import org.stepic.droid.ui.adapters.*
+import org.stepic.droid.ui.adapters.view_hoders.CourseItemViewHolder
 import org.stepic.droid.ui.custom.ExpandableTextView
 import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout
 import org.stepic.droid.ui.custom.LatexSupportableWebView
@@ -139,6 +140,8 @@ interface AppCoreComponent {
     fun inject(latexSupportableWebView: LatexSupportableWebView)
 
     fun inject(expandableTextView: ExpandableTextView)
+
+    fun inject(courseItemViewHolder: CourseItemViewHolder)
 
     fun inject(notificationViewHolder: NotificationAdapter.NotificationViewHolder)
 
