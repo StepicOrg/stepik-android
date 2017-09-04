@@ -24,6 +24,7 @@ class HomeFragment : FragmentBase() {
             return fragment
         }
 
+        //FIXME: 04.09.17 if adapter.count < ROW_COUNT -> recycler creates extra padding
         private const val ROW_COUNT = 2
     }
 
