@@ -410,7 +410,7 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public Intent getMyCoursesIntent(@NotNull Context context) {
-        int index = MainFeedActivity.MY_COURSES_INDEX;
+        int index = MainFeedActivity.HOME_INDEX;
         return getFromMainActivityIntent(context, index);
     }
 

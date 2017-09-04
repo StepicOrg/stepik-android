@@ -36,10 +36,7 @@ import org.stepic.droid.ui.activities.contracts.RootScreen
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.dialogs.LogoutAreYouSureDialog
 import org.stepic.droid.ui.dialogs.NeedUpdatingDialog
-import org.stepic.droid.ui.fragments.CertificatesFragment
-import org.stepic.droid.ui.fragments.FindCoursesFragment
-import org.stepic.droid.ui.fragments.MyCoursesFragment
-import org.stepic.droid.ui.fragments.ProfileFragment
+import org.stepic.droid.ui.fragments.*
 import org.stepic.droid.ui.util.BottomNavigationBehavior
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
@@ -62,10 +59,10 @@ class MainFeedActivity : BackToExitActivityBase(),
 
         val reminderKey = "reminderKey"
         const val defaultIndex: Int = 0
-        val defaultTag: String = MyCoursesFragment::class.java.simpleName
+        val defaultTag: String = HomeFragment::class.java.simpleName
         private val progressLogoutTag = "progressLogoutTag"
 
-        const val MY_COURSES_INDEX: Int = 1
+        const val HOME_INDEX: Int = 1
         const val FIND_COURSES_INDEX: Int = 2
         const val PROFILE_INDEX: Int = 3
         const val CERTIFICATE_INDEX: Int = 4
@@ -147,7 +144,7 @@ class MainFeedActivity : BackToExitActivityBase(),
         }
 
         if (savedInstanceState == null) {
-            setFragment(R.id.my_courses)
+            setFragment(R.id.home)
             val wantedIndex = intent?.getIntExtra(currentIndexKey, -1) ?: -1
             when (wantedIndex) {
                 FIND_COURSES_INDEX -> navigationView.selectedItemId = R.id.find_courses
@@ -197,7 +194,7 @@ class MainFeedActivity : BackToExitActivityBase(),
     }
 
     override fun onBackPressed() {
-        if (navigationView.selectedItemId == R.id.my_courses) {
+        if (navigationView.selectedItemId == R.id.home) {
             finish()
             return
         }
@@ -209,7 +206,7 @@ class MainFeedActivity : BackToExitActivityBase(),
                 .beginTransaction()
                 .remove(fragment)
                 .commit()
-        navigationView.selectedItemId = R.id.my_courses
+        navigationView.selectedItemId = R.id.home
         showBottomBar()
     }
 
@@ -263,7 +260,7 @@ class MainFeedActivity : BackToExitActivityBase(),
 
     private fun sendOpenUserAnalytic(itemId: Int) {
         when (itemId) {
-            R.id.my_courses -> analytic.reportEvent(Analytic.Screens.USER_OPEN_MY_COURSES)
+            R.id.home -> analytic.reportEvent(Analytic.Screens.USER_OPEN_MY_COURSES)
             R.id.find_courses -> {
                 analytic.reportEvent(Analytic.Screens.USER_OPEN_FIND_COURSES)
                 if (sharedPreferenceHelper.authResponseFromStore == null) {
@@ -278,8 +275,8 @@ class MainFeedActivity : BackToExitActivityBase(),
     private fun setFragment(@IdRes id: Int) {
         val currentFragmentTag: String? = supportFragmentManager.findFragmentById(R.id.frame)?.tag
         val nextFragment: Fragment? = when (id) {
-            R.id.my_courses -> {
-                getNextFragmentOrNull(currentFragmentTag, MyCoursesFragment::class.java.simpleName, MyCoursesFragment.Companion::newInstance)
+            R.id.home -> {
+                getNextFragmentOrNull(currentFragmentTag, HomeFragment::class.java.simpleName, HomeFragment.Companion::newInstance)
             }
             R.id.find_courses -> {
                 getNextFragmentOrNull(currentFragmentTag, FindCoursesFragment::class.java.simpleName, FindCoursesFragment::newInstance)

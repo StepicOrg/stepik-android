@@ -104,5 +104,7 @@
 
     <!--Left padding (moteIcon) + right padding(moreIcon) + moreIcon.width-->
     <dimen name="courseTitleRightPadding">28dp</dimen>
-
+    <dimen name="home_right_recycler_padding">76dp</dimen>
+    <!-- 'home_right_recycler_padding' minus 'course_list_side_right_padding'-->
+    <dimen name="home_right_recycler_padding_without_extra">64dp</dimen>
 </resources>

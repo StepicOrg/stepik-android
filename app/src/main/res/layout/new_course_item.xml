@@ -56,7 +56,7 @@
         android:clickable="true"
         android:contentDescription="@string/course_item_more"
         android:paddingBottom="16dp"
-        android:paddingEnd="0dp"
+        android:paddingEnd="8dp"
         android:paddingRight="8dp"
         android:paddingStart="16dp"
         android:src="@drawable/ic_more_without_paddings"
