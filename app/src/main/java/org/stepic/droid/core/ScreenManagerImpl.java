@@ -55,7 +55,6 @@ import org.stepic.droid.ui.activities.ProfileActivity;
 import org.stepic.droid.ui.activities.RegisterActivity;
 import org.stepic.droid.ui.activities.SectionActivity;
 import org.stepic.droid.ui.activities.SettingsActivity;
-import org.stepic.droid.ui.activities.SocialAuthActivity;
 import org.stepic.droid.ui.activities.SplashActivity;
 import org.stepic.droid.ui.activities.StepsActivity;
 import org.stepic.droid.ui.activities.StoreManagementActivity;
@@ -168,13 +167,6 @@ public class ScreenManagerImpl implements ScreenManager {
             loginIntent.putExtra(AppConstants.KEY_EMAIL_BUNDLE, email);
         }
         sourceActivity.startActivity(loginIntent);
-    }
-
-    @Override
-    public void showSocialAuth(Activity sourceActivity, String authUrl, int requestCode) {
-        Uri uri = Uri.parse(authUrl);
-        final Intent intent = new Intent(sourceActivity, SocialAuthActivity.class).setData(uri);
-        sourceActivity.startActivityForResult(intent, requestCode);
     }
 
     @Override

@@ -85,10 +85,6 @@
             android:theme="@style/StepikTheme.LoginLaunchRegistration"/>
 
         <activity
-            android:name="org.stepic.droid.ui.activities.SocialAuthActivity"
-            android:theme="@style/StepikTheme.LoginLaunchRegistration"/>
-
-        <activity
             android:name="org.stepic.droid.ui.activities.MainFeedActivity"
             android:launchMode="singleTask"
             android:windowSoftInputMode="adjustPan">
