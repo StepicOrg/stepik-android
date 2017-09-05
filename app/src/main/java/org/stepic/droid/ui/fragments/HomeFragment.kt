@@ -22,8 +22,10 @@ import org.stepic.droid.ui.adapters.CoursesAdapter
 import org.stepic.droid.ui.decorators.LeftSpacesDecoration
 import org.stepic.droid.ui.decorators.RightMarginForLastItems
 import org.stepic.droid.ui.decorators.VerticalSpacesForFirstRowDecoration
+import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.StartSnapHelper
 import org.stepic.droid.ui.util.initCenteredToolbar
+import org.stepic.droid.util.ProgressHelper
 import javax.inject.Inject
 
 class HomeFragment : FragmentBase(), ContinueCourseView, CoursesView, DroppingView {
@@ -40,6 +42,7 @@ class HomeFragment : FragmentBase(), ContinueCourseView, CoursesView, DroppingVi
         //FIXME: 04.09.17 if adapter.count < ROW_COUNT -> recycler creates extra padding
         private const val ROW_COUNT = 2
 
+        private const val continueLoadingTag = "continueLoadingTag"
     }
 
     @Inject
@@ -99,6 +102,11 @@ class HomeFragment : FragmentBase(), ContinueCourseView, CoursesView, DroppingVi
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        ProgressHelper.dismiss(fragmentManager, continueLoadingTag)
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         continueCoursePresenter.detachView(this)
@@ -118,15 +126,20 @@ class HomeFragment : FragmentBase(), ContinueCourseView, CoursesView, DroppingVi
     }
 
     override fun onOpenStep(courseId: Long, section: Section, lessonId: Long, unitId: Long, stepPosition: Int) {
-//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        ProgressHelper.dismiss(fragmentManager, continueLoadingTag)
+        screenManager.continueCourse(activity, courseId, section, lessonId, unitId, stepPosition.toLong())
     }
 
     override fun onAnyProblemWhileContinue(course: Course) {
-//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        ProgressHelper.dismiss(fragmentManager, continueLoadingTag)
+        screenManager.showSections(activity, course)
     }
 
     override fun onShowContinueCourseLoadingDialog() {
-//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val loadingProgressDialogFragment = LoadingProgressDialogFragment.newInstance()
+        if (!loadingProgressDialogFragment.isAdded) {
+            loadingProgressDialogFragment.show(fragmentManager, continueLoadingTag)
+        }
     }
 
     override fun showLoading() {
