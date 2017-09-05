@@ -34,8 +34,6 @@ public interface ScreenManager {
 
     void showLogin(Activity sourceActivity, @Nullable Course course, @Nullable String email);
 
-    void showSocialAuth(Activity sourceActivity, String authUrl, int requestCode);
-
     void showMainFeed(Context sourceActivity, @Nullable Course course);
 
     void showMainFeedFromSplash(Activity sourceActivity);
