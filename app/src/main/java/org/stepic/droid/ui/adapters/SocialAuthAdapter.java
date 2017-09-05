@@ -95,7 +95,7 @@ public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.So
             String[] scopes = {VKScope.EMAIL};
             VKSdk.login(activity, scopes);
         } else {
-            api.loginWithSocial(activity, type, AppConstants.REQUEST_CODE_SOCIAL_AUTH);
+            api.loginWithSocial(activity, type);
         }
     }
 

@@ -12,7 +12,6 @@ public class AppConstants {
     public static final String APP_SCHEME = "stepic://";
     public static final String QUERY_ERROR = "error";
     public static final String ERROR_SOCIAL_AUTH_WITH_EXISTING_EMAIL = "social_signup_with_existing_email";
-    public static final int REQUEST_CODE_SOCIAL_AUTH = 377;
 
     public static final String USER_LOG_IN = "user_login_clicked";
     public static final String KEY_EMAIL_BUNDLE = "email";
