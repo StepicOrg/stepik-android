@@ -5,10 +5,14 @@ import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_home.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
+import org.stepic.droid.base.Client
 import org.stepic.droid.base.FragmentBase
+import org.stepic.droid.core.dropping.contract.DroppingListener
 import org.stepic.droid.core.presenters.ContinueCoursePresenter
 import org.stepic.droid.core.presenters.DroppingPresenter
 import org.stepic.droid.core.presenters.PersistentCourseListPresenter
@@ -28,10 +32,9 @@ import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.ProgressHelper
 import javax.inject.Inject
 
-class HomeFragment : FragmentBase(), ContinueCourseView, CoursesView, DroppingView {
+class HomeFragment : FragmentBase(), ContinueCourseView, CoursesView, DroppingView, DroppingListener {
 
     companion object {
-
         fun newInstance(): HomeFragment {
             val args = Bundle()
             val fragment = HomeFragment()
@@ -53,6 +56,9 @@ class HomeFragment : FragmentBase(), ContinueCourseView, CoursesView, DroppingVi
 
     @Inject
     lateinit var continueCoursePresenter: ContinueCoursePresenter
+
+    @Inject
+    lateinit var droppingClient: Client<DroppingListener>
 
     private val courses = ArrayList<Course>()
     private var isScreenCreated: Boolean = false
@@ -84,6 +90,7 @@ class HomeFragment : FragmentBase(), ContinueCourseView, CoursesView, DroppingVi
         continueCoursePresenter.attachView(this)
         courseListPresenter.attachView(this)
         droppingPresenter.attachView(this)
+        droppingClient.subscribe(this)
 
         courseListPresenter.restoreState()
         isScreenCreated = true
@@ -109,6 +116,7 @@ class HomeFragment : FragmentBase(), ContinueCourseView, CoursesView, DroppingVi
 
     override fun onDestroyView() {
         super.onDestroyView()
+        droppingClient.unsubscribe(this)
         continueCoursePresenter.detachView(this)
         courseListPresenter.detachView(this)
         droppingPresenter.detachView(this)
@@ -121,6 +129,7 @@ class HomeFragment : FragmentBase(), ContinueCourseView, CoursesView, DroppingVi
         myCoursesOnHome.addItemDecoration(VerticalSpacesForFirstRowDecoration(spacePx, ROW_COUNT))
         myCoursesOnHome.addItemDecoration(LeftSpacesDecoration(spacePx))
         myCoursesOnHome.addItemDecoration(RightMarginForLastItems(resources.getDimensionPixelSize(R.dimen.home_right_recycler_padding_without_extra), ROW_COUNT))
+        myCoursesOnHome.itemAnimator.changeDuration = 0
         val snapHelper = StartSnapHelper()
         snapHelper.attachToRecyclerView(myCoursesOnHome)
     }
@@ -162,6 +171,32 @@ class HomeFragment : FragmentBase(), ContinueCourseView, CoursesView, DroppingVi
 
     override fun onUserHasNotPermissionsToDrop() {
 //        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+
+    override fun onSuccessDropCourse(course: Course) {
+        val courseId = course.courseId
+        analytic.reportEvent(Analytic.Web.DROP_COURSE_SUCCESSFUL, courseId.toString())
+        Toast.makeText(context, context.getString(R.string.you_dropped) + " ${course.title}", Toast.LENGTH_LONG).show()
+        val index = courses.indexOfFirst { it.courseId == course.courseId }
+        courses.removeAt(index)
+        myCoursesOnHome.adapter.notifyItemRemoved(index)
+        if (courses.size == ROW_COUNT) {
+//           update 1st column for adjusting size
+            myCoursesOnHome.adapter.notifyItemRangeChanged(0, ROW_COUNT - 1) // "ROW_COUNT - 1" count is number of changed items, we shouldn't update the last item
+        }
+
+        if (courses.size == 0) {
+            // FIXME: 05.09.17 add moving state to empty
+//            showEmptyScreen(true)
+        }
+    }
+
+    override fun onFailDropCourse(course: Course) {
+        val courseId = course.courseId
+        analytic.reportEvent(Analytic.Web.DROP_COURSE_FAIL, courseId.toString())
+        Toast.makeText(context, R.string.internet_problem, Toast.LENGTH_LONG).show()
+
     }
 
 }

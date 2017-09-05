@@ -6,9 +6,9 @@ import android.graphics.drawable.Drawable
 import android.support.annotation.ColorInt
 import android.support.annotation.DrawableRes
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
-import android.support.v7.widget.PopupMenu
 import android.view.HapticFeedbackConstants
 import android.view.View
+import android.widget.PopupMenu
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.BitmapImageViewTarget
 import kotlinx.android.synthetic.main.new_course_item.view.*
