@@ -146,7 +146,7 @@ public abstract class CourseListFragmentBase extends FragmentBase
                 R.color.stepic_blue_ribbon);
 
         if (courses == null) courses = new ArrayList<>();
-        coursesAdapter = new CoursesAdapter(this, courses, getCourseType(), continueCoursePresenter, droppingPresenter);
+        coursesAdapter = new CoursesAdapter(this, courses, getCourseType(), continueCoursePresenter, droppingPresenter, true);
         listOfCoursesView.setAdapter(coursesAdapter);
         layoutManager = new WrapContentLinearLayoutManager(getContext());
         listOfCoursesView.setLayoutManager(layoutManager);

@@ -67,13 +67,23 @@ public class CoursesAdapter extends RecyclerView.Adapter<CourseViewHolderBase> {
 
     private int footerViewType = 1;
     private int itemViewType = 2;
-    private int NUMBER_OF_EXTRA_ITEMS = 1;
+    private final int NUMBER_OF_EXTRA_ITEMS;
     private Boolean isNeedShowFooter;
     private final String continueTitle;
     private final String joinTitle;
     private final boolean isContinueExperimentEnabled;
 
-    public CoursesAdapter(Fragment fragment, List<Course> courses, @Nullable Table type, @NotNull ContinueCoursePresenter continueCoursePresenter, @NotNull DroppingPresenter droppingPresenter) {
+    public CoursesAdapter(Fragment fragment,
+                          List<Course> courses,
+                          @Nullable Table type,
+                          @NotNull ContinueCoursePresenter continueCoursePresenter,
+                          @NotNull DroppingPresenter droppingPresenter,
+                          boolean withPagination) {
+        if (withPagination) {
+            NUMBER_OF_EXTRA_ITEMS = 1;
+        } else {
+            NUMBER_OF_EXTRA_ITEMS = 0;
+        }
         contextActivity = fragment.getActivity();
         this.courses = courses;
         this.type = type;
@@ -128,7 +138,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CourseViewHolderBase> {
 
     @Override
     public int getItemViewType(int position) {
-        if (position == getItemCount() - 1) {
+        if (position == getItemCount() - NUMBER_OF_EXTRA_ITEMS) {
             return footerViewType;
         } else {
             return itemViewType;
