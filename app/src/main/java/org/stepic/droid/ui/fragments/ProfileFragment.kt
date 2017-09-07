@@ -283,7 +283,7 @@ class ProfileFragment : FragmentBase(),
                 shortBioFirstHeader.setText(R.string.short_bio_and_info)
                 shortBioFirstText.text = shortBio
                 shortBioSecondHeader.setText(R.string.user_info)
-                shortBioSecondText.text = information
+                shortBioSecondText.setTextWithThinFont(information)
             }
 
             if (shortBio.isNotBlank() || information.isNotBlank()) {
