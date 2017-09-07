@@ -2,6 +2,8 @@ package org.stepic.droid.ui.custom;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.annotation.ColorInt;
+import android.support.annotation.ColorRes;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -12,6 +14,7 @@ import android.webkit.WebView;
 
 import org.stepic.droid.base.App;
 import org.stepic.droid.configuration.Config;
+import org.stepic.droid.util.ColorUtil;
 import org.stepic.droid.util.HtmlHelper;
 
 import java.util.Calendar;
@@ -67,8 +70,12 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
         setText(text, wantLaTeX, false);
     }
 
-    public void setTextWithThinFont(CharSequence text) {
-        setText(text, false, true);
+    public void setTextWithThinFontColored(CharSequence text, @ColorRes int colorRes) {
+        @ColorInt
+        int colorArgb = ColorUtil.INSTANCE.getColorArgb(colorRes, getContext());
+        String hexColor = String.format("#%06X", (0xFFFFFF & colorArgb));
+        String coloredText = "<font color='" + hexColor + "'>" + text + "</font>";
+        setText(coloredText, false, true);
     }
 
     public void setText(CharSequence text, boolean wantLaTeX, boolean thinFont) {

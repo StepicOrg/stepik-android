@@ -218,7 +218,7 @@
                         fontPath="fonts/Roboto-Light.ttf"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:lineSpacingExtra="3.3sp"
+                        android:lineSpacingExtra="5sp"
                         android:paddingBottom="@dimen/guideline_standard_padding"
                         android:paddingLeft="32dp"
                         android:paddingRight="32dp"
@@ -240,15 +240,30 @@
                         tools:ignore="MissingPrefix"
                         tools:text="@string/user_info"
                         tools:visibility="visible"/>
-
-                    <org.stepic.droid.ui.custom.LatexSupportableWebView
-                        android:id="@+id/shortBioSecondText"
+                    
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/guideline_standard_padding"
-                        android:layout_marginLeft="32dp"
-                        android:layout_marginRight="32dp"
-                        android:layout_marginTop="4dp" />
+                        android:orientation="vertical"
+                        android:paddingBottom="@dimen/guideline_standard_padding"
+                        android:paddingLeft="32dp"
+                        android:paddingRight="32dp"
+                        android:paddingTop="4dp">
+                        <org.stepic.droid.ui.custom.LatexSupportableWebView
+                            android:id="@+id/shortBioSecondHtml"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+                        <TextView
+                            android:id="@+id/shortBioSecondText"
+                            fontPath="fonts/Roboto-Light.ttf"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:lineSpacingExtra="5sp"
+                            android:textSize="14sp"
+                            tools:ignore="MissingPrefix"
+                            tools:text="Lalala it is info"
+                            tools:visibility="visible"/>
+                    </LinearLayout>
 
                 </LinearLayout>
 

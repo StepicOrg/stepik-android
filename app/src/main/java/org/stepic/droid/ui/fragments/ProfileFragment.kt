@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
+import android.text.util.Linkify
 import android.view.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -35,6 +36,8 @@ import org.stepic.droid.ui.util.TimeIntervalUtil
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.ProfileSettingsHelper
+import org.stepic.droid.util.resolvers.CoursePropertyResolver
+import org.stepic.droid.util.resolvers.text.TextResolver
 import org.stepic.droid.util.svg.GlideSvgRequestFactory
 import org.stepic.droid.viewmodel.ProfileSettingsViewModel
 import timber.log.Timber
@@ -283,7 +286,19 @@ class ProfileFragment : FragmentBase(),
                 shortBioFirstHeader.setText(R.string.short_bio_and_info)
                 shortBioFirstText.text = shortBio
                 shortBioSecondHeader.setText(R.string.user_info)
-                shortBioSecondText.setTextWithThinFont(information)
+
+                val (description, isNeedWebView, _) = textResolver.resolveStepText(information)
+                if (isNeedWebView) {
+                    shortBioSecondHtml.visibility = View.VISIBLE
+                    shortBioSecondText.visibility = View.GONE
+                    shortBioSecondHtml.setTextWithThinFontColored(description, R.color.new_accent_color)
+                } else {
+                    shortBioSecondHtml.visibility = View.GONE
+                    shortBioSecondText.visibility = View.VISIBLE
+                    shortBioSecondText.text = description
+                    Linkify.addLinks(shortBioSecondText, Linkify.ALL)
+                    shortBioSecondText.linksClickable = true
+                }
             }
 
             if (shortBio.isNotBlank() || information.isNotBlank()) {
