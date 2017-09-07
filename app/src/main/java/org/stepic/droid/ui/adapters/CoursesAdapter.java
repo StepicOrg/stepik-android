@@ -208,8 +208,11 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
         @BindView(R.id.courseWidgetButton)
         TextView courseWidgetButton;
 
-        @BindView(R.id.courseItemLearnersCount)
+        @BindView(R.id.learnersCountText)
         TextView learnersCount;
+
+        @BindView(R.id.learnersCountContainer)
+        View learnerCountContainer;
 
         @BindView(R.id.courseItemMore)
         View courseItemMore;
@@ -295,9 +298,9 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
 
             if (course.getLearnersCount() > 0) {
                 learnersCount.setText(String.format(Locale.getDefault(), "%d", course.getLearnersCount()));
-                learnersCount.setVisibility(View.VISIBLE);
+                learnerCountContainer.setVisibility(View.VISIBLE);
             } else {
-                learnersCount.setVisibility(View.GONE);
+                learnerCountContainer.setVisibility(View.GONE);
             }
 
 
