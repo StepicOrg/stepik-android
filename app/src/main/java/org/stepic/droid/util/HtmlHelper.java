@@ -153,13 +153,19 @@ public class HtmlHelper {
 
 
     public static String buildMathPage(CharSequence body, int widthPx, String baseUrl) {
-        String preBody = String.format(PRE_BODY, MathJaxScript, widthPx, baseUrl);
+        String preBody = String.format(PRE_BODY, MathJaxScript, DefaultFontStyle, widthPx, baseUrl);
         String result = preBody + body + POST_BODY;
         return result;
     }
 
     public static String buildPageWithAdjustingTextAndImage(CharSequence body, int widthPx, String baseUrl) {
-        String preBody = String.format(PRE_BODY, " ", widthPx, baseUrl);
+        String preBody = String.format(PRE_BODY, " ", DefaultFontStyle, widthPx, baseUrl);
+        String result = preBody + body + POST_BODY;
+        return result;
+    }
+
+    public static String buildPageWithLightFont(CharSequence body, int widthPx, String baseUrl) {
+        String preBody = String.format(PRE_BODY, " ", RobotoLightFontStyle, widthPx, baseUrl);
         String result = preBody + body + POST_BODY;
         return result;
     }
@@ -172,15 +178,7 @@ public class HtmlHelper {
 
             "%s" +
 
-            "<style>\n"
-            + "\nhtml{-webkit-text-size-adjust: 100%%;}"
-            + "\nbody{font-size: 12pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;}"
-            + "\nh1{font-size: 20pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;text-align: center;}"
-            + "\nh2{font-size: 17pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;text-align: center;}"
-            + "\nh3{font-size: 14pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;text-align: center;}"
-            + "\nimg { max-width: 100%%; }"
-
-            + "</style>\n" +
+            "%s" +
 
             "<meta name=\"viewport\" content=\"width=" +
 
@@ -193,6 +191,32 @@ public class HtmlHelper {
             "<base href=\"%s\">" +
             "</head>\n"
             + "<body style='margin:0;padding:0;'>";
+
+
+    private static final String DefaultFontStyle =
+            "<style>\n"
+            + "\nhtml{-webkit-text-size-adjust: 100%%;}"
+            + "\nbody{font-size: 12pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;}"
+            + "\nh1{font-size: 20pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;text-align: center;}"
+            + "\nh2{font-size: 17pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;text-align: center;}"
+            + "\nh3{font-size: 14pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;text-align: center;}"
+            + "\nimg { max-width: 100%%; }"
+
+            + "</style>\n";
+
+    private static final String RobotoLightFontStyle =
+            "<style>\n" +
+            "@font-face {" +
+            "    font-family: 'Roboto-Light';\n" +
+            "    src: url(\"file:///android_asset/fonts/Roboto-Light.ttf\")\n" +
+            "}"
+            + "\nhtml{-webkit-text-size-adjust: 100%%;}"
+            + "\nbody{font-size: 14px; font-family:'Roboto-Light', Helvetica, sans-serif; line-height:1.6em;}"
+            + "\nh1{font-size: 22px; font-family:'Roboto-Light', Helvetica, sans-serif; line-height:1.6em;text-align: center;}"
+            + "\nh2{font-size: 19px; font-family:'Roboto-Light', Helvetica, sans-serif; line-height:1.6em;text-align: center;}"
+            + "\nh3{font-size: 16px; font-family:'Roboto-Light', Helvetica, sans-serif; line-height:1.6em;text-align: center;}"
+            + "\nimg { max-width: 100%%; }"
+            + "</style>\n";
 
     private static final String POST_BODY = "</body>\n" +
             "</html>";
