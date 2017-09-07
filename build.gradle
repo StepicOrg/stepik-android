@@ -30,6 +30,7 @@ ext {
     androidMinSdkVersion = 15
     androidTargetSdkVersion = 25
     androidCompileSdkVersion = 26
+    firebaseVersion = '11.2.2'
 }
 
 task clean(type: Delete) {

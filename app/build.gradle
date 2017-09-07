@@ -127,7 +127,6 @@ android {
             versionNameSuffix "DEV"
         }
 
-
         //the apk of this type is signed by old prod keys
         //it makes apk testable (sign in, smart lock, etc are worked).
         //now new sign configs are used for providing to Google Play
@@ -186,12 +185,12 @@ dependencies {
 
     compile 'org.jsoup:jsoup:1.8.3'
 
-    compile 'com.google.firebase:firebase-messaging:10.2.4'
-    compile "com.google.firebase:firebase-appindexing:10.2.4"
-    compile 'com.google.android.gms:play-services-auth:10.2.4'
-    compile 'com.google.firebase:firebase-core:10.2.4'
-    compile 'com.google.firebase:firebase-crash:10.2.4'
-    compile 'com.google.firebase:firebase-config:10.2.4'
+    compile "com.google.firebase:firebase-messaging:${rootProject.firebaseVersion}"
+    compile "com.google.firebase:firebase-appindexing:${rootProject.firebaseVersion}"
+    compile "com.google.android.gms:play-services-auth:${rootProject.firebaseVersion}"
+    compile "com.google.firebase:firebase-core:${rootProject.firebaseVersion}"
+    compile "com.google.firebase:firebase-crash:${rootProject.firebaseVersion}"
+    compile "com.google.firebase:firebase-config:${rootProject.firebaseVersion}"
 
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.facebook.android:facebook-android-sdk:4.17.0'
