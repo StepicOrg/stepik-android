@@ -6,8 +6,8 @@ apply plugin: 'kotlin-android-extensions'
 def globalConf = rootProject.ext
 android {
 
-    compileSdkVersion 26
-    buildToolsVersion "26.0.1"
+    compileSdkVersion rootProject.androidCompileSdkVersion
+    buildToolsVersion rootProject.androidBuildToolsVersion
 
     signingConfigs {
         debug {
@@ -36,8 +36,8 @@ android {
         applicationId "org.stepic.droid"
         minSdkVersion rootProject.androidMinSdkVersion
         targetSdkVersion rootProject.androidTargetSdkVersion
-        versionCode 168
-        versionName "1.41.2"
+        versionCode 170
+        versionName "1.42"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }

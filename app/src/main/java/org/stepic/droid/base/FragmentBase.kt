@@ -6,10 +6,12 @@ import android.os.Bundle
 import android.support.annotation.DrawableRes
 import android.support.v4.app.Fragment
 import android.view.View
+import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.inputmethod.InputMethodManager
 import butterknife.ButterKnife
 import butterknife.Unbinder
+import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.configuration.Config
@@ -21,6 +23,7 @@ import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.storage.CancelSniffer
 import org.stepic.droid.storage.IDownloadManager
 import org.stepic.droid.storage.operations.DatabaseFacade
+import org.stepic.droid.ui.activities.contracts.BottomNavigationViewRoot
 import org.stepic.droid.ui.util.CloseIconHolder
 import org.stepic.droid.util.resolvers.CoursePropertyResolver
 import org.stepic.droid.util.resolvers.text.TextResolver
@@ -168,4 +171,18 @@ open class FragmentBase : Fragment() {
     protected fun nullifyActivityBackground() {
         activity?.window?.decorView?.background = null
     }
+
+    /**
+     * Apply margin if activity has bottom navigation bar
+     */
+    protected fun applyBottomMarginForRootView() {
+        activity as? BottomNavigationViewRoot ?: return
+        val rootView: ViewGroup = getRootView() ?: throw IllegalStateException("For using applyBottomMarginForRootView, you should override getRootView() in your fragment.")
+
+        val layoutParams = rootView.layoutParams as ViewGroup.MarginLayoutParams
+
+        layoutParams.bottomMargin = resources.getDimensionPixelSize(R.dimen.bottom_navigation_height)
+    }
+
+    protected open fun getRootView(): ViewGroup? = null
 }

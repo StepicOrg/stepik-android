@@ -32,7 +32,7 @@ public interface ScreenManager {
 
     void showRegistration(Activity sourceActivity, @Nullable Course course);
 
-    void showLogin(Activity sourceActivity, @Nullable Course course);
+    void showLogin(Activity sourceActivity, @Nullable Course course, @Nullable String email);
 
     void showMainFeed(Context sourceActivity, @Nullable Course course);
 
@@ -83,6 +83,8 @@ public interface ScreenManager {
     void showVideo(Activity sourceActivity, @Nullable Video cachedVideo, @Nullable Video externalVideo);
 
     void showSettings(Activity sourceActivity);
+
+    void showNotificationSettings(Activity sourceActivity);
 
     void showStorageManagement(Activity activity);
 

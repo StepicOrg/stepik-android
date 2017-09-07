@@ -39,5 +39,6 @@ public final class DbStructureEnrolledAndFeaturedCourses {
         public static final String END_DATE = "end_date";
         public static final String LAST_STEP_ID = "last_step";
         public static final String IS_ACTIVE = "is_active";
+        public static final String LEARNERS_COUNT = "learners_count";
     }
 }

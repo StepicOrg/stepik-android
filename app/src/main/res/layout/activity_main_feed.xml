@@ -19,8 +19,8 @@
         android:layout_height="@dimen/bottom_navigation_height"
         android:layout_gravity="bottom"
         android:background="@color/white"
-        app:itemBackground="@drawable/drawer_item_background_selector"
-        app:itemIconTint="@color/bottom_menu_color"
+        app:itemBackground="?android:attr/selectableItemBackground"
+        app:itemIconTint="@color/bottom_navigation_tint"
         app:itemTextColor="@color/bottom_menu_color"
         app:layout_behavior="org.stepic.droid.ui.util.BottomNavigationBehavior"
         app:menu="@menu/drawer_menu"/>

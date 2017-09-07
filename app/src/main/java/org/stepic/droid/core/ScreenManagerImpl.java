@@ -5,8 +5,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.TaskStackBuilder;
@@ -46,6 +48,7 @@ import org.stepic.droid.ui.activities.LaunchActivity;
 import org.stepic.droid.ui.activities.LoginActivity;
 import org.stepic.droid.ui.activities.MainFeedActivity;
 import org.stepic.droid.ui.activities.NewCommentActivity;
+import org.stepic.droid.ui.activities.NotificationSettingsActivity;
 import org.stepic.droid.ui.activities.NotificationsActivity;
 import org.stepic.droid.ui.activities.PhotoViewActivity;
 import org.stepic.droid.ui.activities.ProfileActivity;
@@ -154,11 +157,14 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void showLogin(Activity sourceActivity, @Nullable Course course) {
+    public void showLogin(Activity sourceActivity, @Nullable Course course, @Nullable String email) {
         analytic.reportEvent(Analytic.Screens.SHOW_LOGIN);
         Intent loginIntent = new Intent(sourceActivity, LoginActivity.class);
         if (course != null) {
             loginIntent.putExtra(AppConstants.KEY_COURSE_BUNDLE, (Parcelable) course);
+        }
+        if (email != null) {
+            loginIntent.putExtra(AppConstants.KEY_EMAIL_BUNDLE, email);
         }
         sourceActivity.startActivity(loginIntent);
     }
@@ -251,11 +257,7 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void showCertificates(Context context) {
-        Intent intent = new Intent(context, CertificatesActivity.class);
-        if (!(context instanceof Activity)) {
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        }
-        context.startActivity(intent);
+        showMainFeed(context, MainFeedActivity.CERTIFICATE_INDEX);
     }
 
     @Override
@@ -274,7 +276,7 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public Intent getShowFindCoursesIntent(Context context) {
-        int index = MainFeedActivity.Companion.getFindCoursesIndex();
+        int index = MainFeedActivity.FIND_COURSES_INDEX;
         return getFromMainActivityIntent(context, index);
     }
 
@@ -341,6 +343,24 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
+    public void showNotificationSettings(Activity sourceActivity) {
+        analytic.reportEvent(Analytic.Screens.SHOW_NOTIFICATION_SETTINGS);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            //show system settings
+            Intent intent = new Intent();
+            intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+            intent.putExtra(Settings.EXTRA_APP_PACKAGE, sourceActivity.getPackageName());
+            sourceActivity.startActivity(intent);
+        } else {
+            //show app notification settings
+            //(SDK < 26)
+            Intent intent = new Intent(sourceActivity, NotificationSettingsActivity.class);
+            sourceActivity.startActivity(intent);
+            sourceActivity.overridePendingTransition(org.stepic.droid.R.anim.push_up, org.stepic.droid.R.anim.no_transition);
+        }
+    }
+
+    @Override
     public void showStorageManagement(Activity activity) {
         analytic.reportEvent(Analytic.Screens.SHOW_STORAGE_MANAGEMENT);
         Intent intent = new Intent(activity, StoreManagementActivity.class);
@@ -382,7 +402,7 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public Intent getMyCoursesIntent(@NotNull Context context) {
-        int index = MainFeedActivity.Companion.getMyCoursesIndex();
+        int index = MainFeedActivity.MY_COURSES_INDEX;
         return getFromMainActivityIntent(context, index);
     }
 

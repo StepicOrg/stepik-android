@@ -126,6 +126,7 @@ public interface Analytic {
         String OPEN_STORE = "Open google play, estimation";
         String TRY_OPEN_VIDEO = "video is tried to show";
         String SHOW_SETTINGS = "show settings";
+        String SHOW_NOTIFICATION_SETTINGS = "show_notification_settings";
         String SHOW_STORAGE_MANAGEMENT = "show storage management";
         String OPEN_COMMENT_NOT_AVAILABLE = "comment: not available";
         String OPEN_COMMENT = "comments: open oldList";
@@ -347,7 +348,6 @@ public interface Analytic {
     interface Profile {
         String CLICK_INSTRUCTOR = "profile_click_instructor";
         String CLICK_USER_IN_COMMENT = "profile_click_in_comment";
-        String CLICK_OPEN_MY_PROFILE_IMAGE = "profile_click_open_my"; //click on image
         String SHOW_LOCAL = "profile_show_my";
         String OPEN_NO_INTERNET = "profile_no_internet";
         String STREAK_NO_INTERNET = "profile_no_internet_streak";

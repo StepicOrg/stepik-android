@@ -18,6 +18,7 @@ import org.stepic.droid.di.storage.DaggerStorageComponent
 import org.stepic.droid.fonts.FontType
 import org.stepic.droid.fonts.FontsProvider
 import org.stepic.droid.storage.InitialDownloadUpdater
+import org.stepic.droid.util.NotificationChannelInitializer
 import timber.log.Timber
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig
 import javax.inject.Inject
@@ -96,9 +97,10 @@ class App : Application() {
         // init AppMetrica SDK
         YandexMetrica.activate(applicationContext, "fd479031-bdf4-419e-8d8f-6895aab23502")
         YandexMetrica.enableActivityAutoTracking(this)
+        initChannels()
     }
 
-    override fun attachBaseContext(base: Context) {
-        super.attachBaseContext(base)
+    private fun initChannels() {
+        NotificationChannelInitializer.initNotificationChannels(this)
     }
 }

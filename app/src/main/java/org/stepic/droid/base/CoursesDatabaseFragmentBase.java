@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.ColorRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.view.ContextMenu;
@@ -18,7 +17,6 @@ import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.core.dropping.contract.DroppingListener;
-import org.stepic.droid.core.dropping.contract.DroppingPoster;
 import org.stepic.droid.core.presenters.PersistentCourseListPresenter;
 import org.stepic.droid.core.presenters.contracts.FilterForCoursesView;
 import org.stepic.droid.model.Course;
@@ -28,15 +26,11 @@ import org.stepic.droid.ui.util.BackButtonHandler;
 import org.stepic.droid.ui.util.ContextMenuRecyclerView;
 import org.stepic.droid.ui.util.OnBackClickListener;
 import org.stepic.droid.util.AppConstants;
-import org.stepic.droid.util.ColorUtil;
+import org.stepic.droid.util.ContextMenuCourseUtil;
 
 import java.util.List;
 
 import javax.inject.Inject;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase implements FilterForCoursesView, OnBackClickListener, DroppingListener {
     private static final int FILTER_REQUEST_CODE = 776;
@@ -45,9 +39,6 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
     @Inject
     PersistentCourseListPresenter courseListPresenter;
-
-    @Inject
-    DroppingPoster droppingPoster;
 
     @Inject
     Client<DroppingListener> droppingClient;
@@ -154,11 +145,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
         }
 
         MenuInflater inflater = getActivity().getMenuInflater();
-        if (courses.get(position).getEnrollment() != 0) {
-            inflater.inflate(R.menu.course_context_menu, menu);
-        } else {
-            inflater.inflate(R.menu.course_context_not_enrolled_menu, menu);
-        }
+        inflater.inflate(ContextMenuCourseUtil.INSTANCE.getMenuResource(courses.get(position)), menu);
     }
 
     @Override
@@ -179,45 +166,11 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
     private void dropCourse(int position) {
         if (position >= courses.size() || position < 0) {
-            Toast.makeText(getContext(), R.string.try_in_web_drop, Toast.LENGTH_SHORT).show();
+            //tbh, it should be illegal state
             return;
         }
         final Course course = courses.get(position);
-        if (course.getEnrollment() == 0) {
-            Toast.makeText(getContext(), R.string.you_not_enrolled, Toast.LENGTH_SHORT).show();
-            return;
-        }
-        Call<Void> drop = getApi().dropCourse(course.getCourseId());
-        if (drop != null) {
-            drop.enqueue(new Callback<Void>() {
-                Course localRef = course;
-
-                @Override
-                public void onResponse(Call<Void> call, Response<Void> response) {
-                    getThreadPoolExecutor().execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            getDatabaseFacade().deleteCourse(localRef, Table.enrolled);
-
-                            if (getDatabaseFacade().getCourseById(course.getCourseId(), Table.featured) != null) {
-                                localRef.setEnrollment(0);
-                                getDatabaseFacade().addCourse(localRef, Table.featured);
-                            }
-
-                        }
-                    });
-
-                    droppingPoster.successDropCourse(localRef);
-                }
-
-                @Override
-                public void onFailure(Call<Void> call, Throwable t) {
-                    droppingPoster.failDropCourse(localRef);
-                }
-            });
-        } else {
-            Toast.makeText(getContext(), R.string.cant_drop, Toast.LENGTH_SHORT).show();
-        }
+        droppingPresenter.dropCourse(course);
     }
 
     private void showInfo(int position) {

@@ -12,9 +12,7 @@ open class SettingsActivity : SingleFragmentActivity() {
 
     override fun createFragment(): Fragment = SettingsFragment.newInstance()
 
-    override fun getLayoutResId(): Int {
-        return R.layout.activity_container_with_bar
-    }
+    override fun getLayoutResId(): Int = R.layout.activity_container_with_bar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

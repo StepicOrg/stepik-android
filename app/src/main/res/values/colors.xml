@@ -82,4 +82,13 @@
     <color name="viewed_step">@color/new_accent_color_alpha_40</color>
 
     <color name="new_cover">@color/white</color>
+
+    <color name="dots_color">#F82401</color>
+    <color name="new_accent_color_opacity_50">#80535366</color>
+
+    <color name="join_text_color">#66CC66</color>
+    <color name="continue_button_color">#F5F5F6</color>
+    <color name="join_button_color">#1A66CC66</color>
+    <color name="join_button_pressed_color">#6666CC66</color>
+    <color name="continue_button_pressed_color">#DBDBDB</color>
 </resources>

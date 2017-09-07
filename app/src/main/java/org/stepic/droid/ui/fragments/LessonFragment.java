@@ -122,7 +122,7 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
     @BindView(R.id.stepsTabs)
     TabLayout tabLayout;
 
-    @BindView(R.id.loadProgressbar)
+    @BindView(R.id.loadProgressbarOnEmptyScreen)
     ProgressBar progressBar;
 
     @BindView(R.id.reportProblem)
@@ -134,7 +134,7 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
     @BindView(R.id.authAction)
     View authActionView;
 
-    @BindView(R.id.need_auth_view)
+    @BindView(R.id.needAuthView)
     View authView;
 
     @BindString(R.string.connectionProblems)
