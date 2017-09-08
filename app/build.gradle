@@ -101,7 +101,7 @@ android {
         }
         debug {
             minifyEnabled true
-            useProguard false
+            useProguard true
             signingConfig signingConfigs.debug
             proguardFiles getDefaultProguardFile('proguard-android.txt'),
                     'proguard-rules.pro'
@@ -195,11 +195,11 @@ dependencies {
     //add echo player for video (change playback speed supported)
     compile 'com.google.android.exoplayer:exoplayer-core:r2.4.1'
 
-    oldReleaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.2'
-    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.2'
-    androidTestCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.2'
-    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.2'
-    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.2'
+    oldReleaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:${rootProject.leakCanaryVersion}"
+    testCompile "com.squareup.leakcanary:leakcanary-android-no-op:${rootProject.leakCanaryVersion}"
+    androidTestCompile "com.squareup.leakcanary:leakcanary-android-no-op:${rootProject.leakCanaryVersion}"
+    debugCompile "com.squareup.leakcanary:leakcanary-android:${rootProject.leakCanaryVersion}"
+    releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:${rootProject.leakCanaryVersion}"
 
     // Required -- JUnit 4 framework
     testCompile 'junit:junit:4.12'
