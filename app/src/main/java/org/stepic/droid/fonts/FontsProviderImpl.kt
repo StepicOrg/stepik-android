@@ -10,5 +10,6 @@ class FontsProviderImpl @Inject constructor() : FontsProvider {
                 FontType.italic -> "fonts/Roboto-Italic.ttf"
                 FontType.bold -> "fonts/Roboto-Bold.ttf"
                 FontType.boldItalic -> "fonts/Roboto-BoldItalic.ttf"
+                FontType.medium -> "fonts/Roboto-Medium.ttf"
             }
 }
