@@ -55,7 +55,7 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
         private val TAG = "LaunchActivity"
         val wasLogoutKey = "wasLogoutKey"
         private val resolvingAccountKey = "resolvingAccountKey"
-        private val socialRecyclerStateKey = "socialRecyclerStateKey"
+        private val socialAdapterStateKey = "socialAdapterStateKey"
     }
 
     private val requestFromSmartLockCode = 314
@@ -103,7 +103,7 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
                     .build()
         }
 
-        val recyclerState = savedInstanceState?.getSerializable(socialRecyclerStateKey)
+        val recyclerState = savedInstanceState?.getSerializable(socialAdapterStateKey)
         if (recyclerState is SocialAuthAdapter.State) {
             initSocialRecycler(googleApiClient, recyclerState)
         } else {
@@ -111,7 +111,7 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
         }
 
         val signInString = getString(R.string.sign_in)
-        val signInWithSocial = getString(R.string.sign_in_with_social)
+        val signInWithSocial = getString(R.string.sign_in_with_social_suffix)
 
         val spannableSignIn = SpannableString(signInString + signInWithSocial)
         val typefaceSpan = CalligraphyTypefaceSpan(TypefaceUtils.load(assets, fontsProvider.provideFontPath(FontType.medium)))
@@ -400,7 +400,7 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
 
         val adapter = socialListRecyclerView.adapter
         if (adapter is SocialAuthAdapter) {
-            outState?.putSerializable(socialRecyclerStateKey, adapter.state)
+            outState?.putSerializable(socialAdapterStateKey, adapter.state)
         }
         super.onSaveInstanceState(outState)
     }
