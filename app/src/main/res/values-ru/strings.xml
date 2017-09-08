@@ -501,6 +501,6 @@
     <string name="course_item_more">Подробнее</string>
     <string name="course_item_join">Подробнее о курсе</string>
     <string name="sign_in_with_social">" через социальные сети"</string>
-    <string name="social_recycler_show_more">Больше</string>
+    <string name="social_recycler_show_more">Ещё</string>
     <string name="social_recycler_show_less">Меньше</string>
 </resources>
