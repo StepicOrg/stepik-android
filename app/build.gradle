@@ -43,34 +43,12 @@ android {
         vectorDrawables.useSupportLibrary = true
     }
 
-    flavorDimensions "type", "instance"
-
     productFlavors {
         sb {
-            applicationId "org.stepic.droid.sb"
-            dimension "instance"
+            applicationIdSuffix '.sb'
         }
         classic {
-            applicationId "org.stepic.droid"
-            dimension "instance"
         }
-
-        development {
-            //auto detecting in Android Studio is not working, because of declarations
-            //of multidex + shrinking resource, it is not compiling with -PdevBuild trick
-            //tested on Android Studio 2.3.2
-            minSdkVersion 21
-            //get Error:Execution failed for task ':app:transformClassesWithDexForDevelopmentDebug'.
-            //> com.android.build.api.transform.TransformException: com.android.ide.common.process.ProcessException: java.util.concurrent.ExecutionException: com.android.dex.DexIndexOverflowException: method ID not in [0, 0xffff]: 65536
-            //without it.
-            multiDexEnabled true
-            dimension "type"
-        }
-
-        prod {
-            dimension "type"
-        }
-
     }
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -122,7 +100,7 @@ android {
             testCoverageEnabled = true
         }
         debug {
-            minifyEnabled false
+            minifyEnabled true
             useProguard false
             signingConfig signingConfigs.debug
             proguardFiles getDefaultProguardFile('proguard-android.txt'),
