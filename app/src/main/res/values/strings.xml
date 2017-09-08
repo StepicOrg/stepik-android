@@ -506,4 +506,7 @@
     <string name="course_item_more">More</string>
     <string name="course_item_join">Course Info</string>
     <string name="learners_count">Learners count</string>
+    <string name="sign_in_with_social">" with social accounts"</string>
+    <string name="social_recycler_show_more">More</string>
+    <string name="social_recycler_show_less">Less</string>
 </resources>

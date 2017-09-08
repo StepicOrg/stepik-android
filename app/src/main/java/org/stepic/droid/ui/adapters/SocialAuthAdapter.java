@@ -50,11 +50,27 @@ public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.So
     @Nullable
     private GoogleApiClient client;
 
-    public SocialAuthAdapter(FragmentActivity activity, @Nullable GoogleApiClient client) {
+    private State state;
+
+    public enum State {
+        EXPANDED(1), NORMAL(2);
+
+        public final int multiplier;
+        State(int multiplier) {
+            this.multiplier = multiplier;
+        }
+    }
+
+    public SocialAuthAdapter(FragmentActivity activity, @Nullable GoogleApiClient client, State state) {
         this.client = client;
         App.Companion.component().inject(this);
         this.activity = activity;
         socialList = socialManager.getAllSocial();
+        if (state == null) {
+            this.state = State.NORMAL;
+        } else {
+            this.state = state;
+        }
     }
 
 
@@ -72,7 +88,7 @@ public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.So
 
     @Override
     public int getItemCount() {
-        return socialList.size();
+        return socialList.size() / state.multiplier;
     }
 
     @Override
@@ -97,6 +113,24 @@ public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.So
         } else {
             api.loginWithSocial(activity, type);
         }
+    }
+
+    public void showMore() {
+        int start = getItemCount();
+        state = State.EXPANDED;
+        int end = getItemCount();
+        notifyItemRangeInserted(start, end - start);
+    }
+
+    public void showLess() {
+        int end = getItemCount();
+        state = State.NORMAL;
+        int start = getItemCount();
+        notifyItemRangeRemoved(start, end - start);
+    }
+
+    public State getState() {
+        return state;
     }
 
     public static class SocialViewHolder extends RecyclerView.ViewHolder {

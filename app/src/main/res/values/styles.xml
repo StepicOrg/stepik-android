@@ -106,11 +106,12 @@
         <item name="windowActionBarOverlay">true</item>
     </style>
 
-    <style name="StepikTheme.LoginLaunchRegistration">
+    <style name="StepikTheme.LoginLaunchRegistration" parent="@style/Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimaryDark">@color/transparent_black_30</item>
         <item name="android:windowBackground">@color/login_launch_registration_background</item>
         <item name="android:colorBackground">@color/login_launch_registration_background</item>
         <item name="android:textColor">@color/text_color</item>
+        <item name="android:statusBarColor">@color/new_accent_color</item>
     </style>
 
     <style name="AppTheme.VideoPlayer" parent="AppTheme.VideoPlayer.7"/>
