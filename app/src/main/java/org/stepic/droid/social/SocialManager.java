@@ -24,10 +24,10 @@ public class SocialManager {
     private static final String VK_SOCIAL_IDENTIFIER = "vk";
 
     public enum SocialType implements ISocialType {
-        google(GOOGLE_SOCIAL_IDENTIFIER, ContextCompat.getDrawable(App.Companion.getAppContext(), R.drawable.ic_login_social_g)),
+        google(GOOGLE_SOCIAL_IDENTIFIER, ContextCompat.getDrawable(App.Companion.getAppContext(), R.drawable.ic_login_social_google)),
         vk(VK_SOCIAL_IDENTIFIER, ContextCompat.getDrawable(App.Companion.getAppContext(), R.drawable.ic_login_social_vk)),
         facebook(FACEBOOK_SOCIAL_IDENTIFIER, ContextCompat.getDrawable(App.Companion.getAppContext(), R.drawable.ic_login_social_fb)),
-        twitter(TWITTER_SOCIAL_IDENTIFIER, ContextCompat.getDrawable(App.Companion.getAppContext(), R.drawable.ic_login_social_tw)),
+        twitter(TWITTER_SOCIAL_IDENTIFIER, ContextCompat.getDrawable(App.Companion.getAppContext(), R.drawable.ic_login_social_twitter)),
         mailru(MAILRU_SOCIAL_IDENTIFIER, ContextCompat.getDrawable(App.Companion.getAppContext(), R.drawable.ic_login_social_mail)),
         github(GITHUB_SOCIAL_IDENTIFIER, ContextCompat.getDrawable(App.Companion.getAppContext(), R.drawable.ic_login_social_github));
 
