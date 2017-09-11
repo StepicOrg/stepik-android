@@ -103,6 +103,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'),
                     'proguard-rules.pro'
             versionNameSuffix "DEV"
+
+            testCoverageEnabled = true
         }
 
         //the apk of this type is signed by old prod keys
