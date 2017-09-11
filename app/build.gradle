@@ -50,9 +50,6 @@ android {
         classic {
         }
     }
-    sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
-    }
 
     android.applicationVariants.all { variant ->
         // assign different version code for each output
