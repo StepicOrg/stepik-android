@@ -6,6 +6,7 @@
 
     <description>Custom ruleset for Android application</description>
 
+    <exclude-pattern>.*/.*.kt</exclude-pattern>
     <exclude-pattern>.*/R.java</exclude-pattern>
     <exclude-pattern>.*/gen/.*</exclude-pattern>
 
