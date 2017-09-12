@@ -8,6 +8,7 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.util.FileUtil
+import org.stepic.droid.util.SuppressFBWarnings
 import java.io.File
 import javax.inject.Inject
 
@@ -38,6 +39,7 @@ class UpdateWithApkService : IntentService("update_with_apk") {
         return Service.START_REDELIVER_INTENT
     }
 
+    @SuppressFBWarnings(value = "RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE", justification = "false positive")
     private fun updateFromRemoteApk(path: String) {
         val filename = "updating.apk"
         FileUtil.saveFileToDisk(filename, path, userPrefs.userDownloadFolder)

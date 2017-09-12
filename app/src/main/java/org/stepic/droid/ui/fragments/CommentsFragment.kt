@@ -37,14 +37,11 @@ import org.stepic.droid.ui.adapters.CommentsAdapter
 import org.stepic.droid.ui.dialogs.DeleteCommentDialogFragment
 import org.stepic.droid.ui.util.ContextMenuRecyclerView
 import org.stepic.droid.ui.util.initCenteredToolbar
-import org.stepic.droid.util.ColorUtil
-import org.stepic.droid.util.ProgressHelper
-import org.stepic.droid.util.StringUtil
-import org.stepic.droid.util.getFirstAndLastName
+import org.stepic.droid.util.*
 import java.util.*
 import javax.inject.Inject
 
-
+@SuppressFBWarnings(value = "RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE", justification = "false positive: commentManager is not null")
 class CommentsFragment : FragmentBase(),
         SwipeRefreshLayout.OnRefreshListener,
         DiscussionView,

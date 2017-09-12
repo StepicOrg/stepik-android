@@ -51,22 +51,20 @@ class CancelLoadingService : IntentService("cancel_loading") {
     private fun cancelStepVideo(stepId: Long) {
         try {
             RWLocks.DownloadLock.writeLock().lock()
-            val downloadEntity = databaseFacade.getDownloadEntityByStepId(stepId)
-            downloadEntity?.let {
-                val numberOfRemoved = systemDownloadManager.remove(downloadEntity.downloadId)
-                if (numberOfRemoved > 0) {
-                    cancelSniffer.removeStepIdCancel(stepId)
-                    databaseFacade.deleteDownloadEntityByDownloadId(downloadEntity.downloadId)
-                    databaseFacade.deleteVideo(downloadEntity.videoId)
-                    val step = databaseFacade.getStepById(stepId)
+            val downloadEntity = databaseFacade.getDownloadEntityByStepId(stepId) ?: return
+            val numberOfRemoved = systemDownloadManager.remove(downloadEntity.downloadId)
+            if (numberOfRemoved > 0) {
+                cancelSniffer.removeStepIdCancel(stepId)
+                databaseFacade.deleteDownloadEntityByDownloadId(downloadEntity.downloadId)
+                databaseFacade.deleteVideo(downloadEntity.videoId)
+                val step = databaseFacade.getStepById(stepId)
 
-                    if (step != null) {
-                        step.is_cached = false
-                        step.is_loading = false
-                        databaseFacade.updateOnlyCachedLoadingStep(step)
-                        storeStateManager.updateStepAfterDeleting(step)
+                if (step != null) {
+                    step.is_cached = false
+                    step.is_loading = false
+                    databaseFacade.updateOnlyCachedLoadingStep(step)
+                    storeStateManager.updateStepAfterDeleting(step)
 
-                    }
                 }
             }
         } finally {

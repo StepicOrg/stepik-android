@@ -120,7 +120,7 @@ public class SectionsFragment
         DroppingListener,
         StoreStateManager.SectionCallback {
 
-    public static String joinFlag = "joinFlag";
+    public static final String joinFlag = "joinFlag";
     private static final int INVITE_REQUEST_CODE = 324;
     private static final int ANIMATION_DURATION = 0;
     public static final int DELETE_POSITION_REQUEST_CODE = 177;

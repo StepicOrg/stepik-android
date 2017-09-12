@@ -41,6 +41,8 @@ class CertificatePresenter
     @MainThread
     fun showCertificates(isRefreshing: Boolean) {
         when {
+            certificateViewItemList?.isEmpty() == true -> view?.showEmptyState()
+            certificateViewItemList?.isNotEmpty() == true -> view?.onDataLoaded(certificateViewItemList)
             certificateViewItemList == null -> {
                 //need load from internet
                 if (!isRefreshing) {
@@ -66,8 +68,6 @@ class CertificatePresenter
                     }
                 }
             }
-            certificateViewItemList?.isEmpty() == true -> view?.showEmptyState()
-            certificateViewItemList?.isNotEmpty() == true -> view?.onDataLoaded(certificateViewItemList)
         }
     }
 

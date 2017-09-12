@@ -99,16 +99,20 @@ class DeleteService : IntentService("delete_service") {
     }
 
     private fun removeFromDisk(lesson: Lesson?) {
-        lesson?.let {
-            val steps = databaseFacade.getStepsOfLesson(lesson.id)
-            for (step in steps) {
-                removeFromDisk(step)
-            }
+        if (lesson == null) {
+            return
+        }
+        val steps = databaseFacade.getStepsOfLesson(lesson.id)
+        for (step in steps) {
+            removeFromDisk(step)
         }
     }
 
     private fun removeFromDisk(sectionId: Long) {
         val units = databaseFacade.getAllUnitsOfSection(sectionId)
+//        @SuppressFBWarnings(
+//                value = "RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE",
+//                justification = "false positive")
         val lessons = units
                 .mapNotNull { databaseFacade.getLessonOfUnit(it) }
 
