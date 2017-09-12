@@ -1,0 +1,24 @@
+plugins.apply('findbugs')
+
+task findbugs(type: FindBugs) {
+    ignoreFailures = false // Fail early.
+    effort = 'max'
+//    start with high level, than set to 'medium', after that set to 'low'
+    reportLevel = 'high'
+
+    reports {
+        html.enabled = true
+        xml.enabled = false
+        html {
+            destination "${project.rootDir}/findbugs-report/findbugs-output.html"
+        }
+    }
+
+    classes = files("${project.projectDir}/build/intermediates/classes")
+    source = fileTree('src/main/java')
+
+    // If somebody has an idea how to make this work with support libraries -> open a PR please.
+    classpath = files()
+
+    excludeFilter = new File("${project.rootDir}/code_quality_tools/findbugs-filter.xml")
+}
