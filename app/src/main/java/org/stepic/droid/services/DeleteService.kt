@@ -13,6 +13,7 @@ import org.stepic.droid.model.Step
 import org.stepic.droid.storage.StoreStateManager
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants
+import org.stepic.droid.util.SuppressFBWarnings
 import java.io.File
 import javax.inject.Inject
 
@@ -98,6 +99,7 @@ class DeleteService : IntentService("delete_service") {
         }
     }
 
+    @SuppressFBWarnings(value = "RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE")
     private fun removeFromDisk(lesson: Lesson?) {
         if (lesson == null) {
             return
@@ -108,11 +110,9 @@ class DeleteService : IntentService("delete_service") {
         }
     }
 
+    @SuppressFBWarnings(value = "RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE")
     private fun removeFromDisk(sectionId: Long) {
         val units = databaseFacade.getAllUnitsOfSection(sectionId)
-//        @SuppressFBWarnings(
-//                value = "RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE",
-//                justification = "false positive")
         val lessons = units
                 .mapNotNull { databaseFacade.getLessonOfUnit(it) }
 

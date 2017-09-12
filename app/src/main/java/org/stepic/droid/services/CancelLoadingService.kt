@@ -10,6 +10,7 @@ import org.stepic.droid.storage.StoreStateManager
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.RWLocks
+import org.stepic.droid.util.SuppressFBWarnings
 import javax.inject.Inject
 
 class CancelLoadingService : IntentService("cancel_loading") {
@@ -48,6 +49,7 @@ class CancelLoadingService : IntentService("cancel_loading") {
         }
     }
 
+    @SuppressFBWarnings(value = "RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE")
     private fun cancelStepVideo(stepId: Long) {
         try {
             RWLocks.DownloadLock.writeLock().lock()
