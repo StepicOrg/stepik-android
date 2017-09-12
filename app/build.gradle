@@ -85,7 +85,10 @@ android {
     }
 
     lintOptions {
-        abortOnError false
+        warningsAsErrors false // after fixing existing errors set to true for fixing warnings
+        abortOnError false // after fixing existing errors set to true for failing fast
+        lintConfig rootProject.file('lint.xml')
+        htmlOutput rootProject.file("reports/lint/lint.html")
     }
 
     buildTypes {
