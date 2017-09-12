@@ -3,7 +3,8 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 apply from: '../code_quality_tools/jacoco.gradle'
-apply from: '../code_quality_tools/quality.gradle'
+apply from: '../code_quality_tools/findbugs.gradle'
+apply from: '../code_quality_tools/checkstyle.gradle'
 
 def globalConf = rootProject.ext
 android {
