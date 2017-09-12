@@ -70,6 +70,7 @@ class DeleteService : IntentService("delete_service") {
 
     }
 
+    @SuppressFBWarnings(value = "RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE")
     private fun removeFromDisk(step: Step?) {
         step?.block?.video?.let {
             val path = databaseFacade.getPathToVideoIfExist(it)
