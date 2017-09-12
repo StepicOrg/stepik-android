@@ -14,10 +14,9 @@ task findbugs(type: FindBugs) {
         }
     }
 
-    classes = files("${project.rootDir}/build/intermediates/classes")
+    classes = files("${project.projectDir}/build/intermediates/classes")
     source = fileTree('src/main/java')
 
-    // If somebody has an idea how to make this work with support libraries -> open a PR please.
     classpath = files()
 
     excludeFilter = new File("${project.rootDir}/code_quality_tools/findbugs-filter.xml")
