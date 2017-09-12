@@ -1,7 +1,7 @@
 plugins.apply('findbugs')
 
 task findbugs(type: FindBugs) {
-    ignoreFailures = false // Fail early.
+    ignoreFailures = false // Fail fast
     effort = 'max'
 //    start with high level, than set to 'medium', after that set to 'low'
     reportLevel = 'high'

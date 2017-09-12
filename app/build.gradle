@@ -5,6 +5,7 @@ apply plugin: 'kotlin-android-extensions'
 apply from: '../code_quality_tools/jacoco.gradle'
 apply from: '../code_quality_tools/findbugs.gradle'
 apply from: '../code_quality_tools/checkstyle.gradle'
+apply from: '../code_quality_tools/pmd.gradle'
 
 def globalConf = rootProject.ext
 android {
