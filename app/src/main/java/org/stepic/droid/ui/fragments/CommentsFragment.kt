@@ -303,12 +303,14 @@ class CommentsFragment : FragmentBase(),
         if (position < 0 && position >= commentManager.getSize()) return
 
         val comment = commentManager.getItemWithNeedUpdatingInfoByPosition(position).comment
-        if (comment.user != null) {
-            val userId = commentManager.getUserById(comment.user)?.id
-            if (userId != null) {
-                analytic.reportEvent(Analytic.Profile.CLICK_USER_IN_COMMENT)
-                screenManager.openProfile(activity, userId.toLong())
-            }
+        if (comment.user == null) {
+            //do nothing more
+            return
+        }
+        val userId = commentManager.getUserById(comment.user)?.id
+        if (userId != null) {
+            analytic.reportEvent(Analytic.Profile.CLICK_USER_IN_COMMENT)
+            screenManager.openProfile(activity, userId.toLong())
         }
     }
 

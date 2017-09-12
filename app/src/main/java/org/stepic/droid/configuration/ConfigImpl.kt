@@ -6,22 +6,23 @@ import com.google.gson.GsonBuilder
 import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.web.Api
 import java.io.InputStreamReader
+import java.nio.charset.Charset
 import javax.inject.Inject
 
 @AppSingleton
 class ConfigImpl
 private constructor() : Config {
 
-    @AppSingleton class ConfigFactory
+    @AppSingleton
+    class ConfigFactory
     @Inject
     constructor(private val context: Context) {
-
         fun create(): ConfigImpl {
             return context.assets.open("configs/config.json").use {
                 val gson = GsonBuilder()
                         .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                         .create()
-                gson.fromJson(InputStreamReader(it), ConfigImpl::class.java)
+                gson.fromJson(InputStreamReader(it, Charset.defaultCharset()), ConfigImpl::class.java)
             }
         }
     }
@@ -54,12 +55,12 @@ private constructor() : Config {
 
     override fun getBaseUrl() = apiHostUrl
 
-    override fun getOAuthClientSecret(type: Api. TokenType) = when (type) {
+    override fun getOAuthClientSecret(type: Api.TokenType) = when (type) {
         Api.TokenType.social -> oauthClientSecretSocial
         Api.TokenType.loginPassword -> oauthClientSecret
     }
 
-    override fun getGrantType(type: Api. TokenType) = when (type) {
+    override fun getGrantType(type: Api.TokenType) = when (type) {
         Api.TokenType.social -> grantTypeSocial
         Api.TokenType.loginPassword -> grantType
     }

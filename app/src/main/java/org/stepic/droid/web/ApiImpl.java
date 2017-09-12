@@ -190,9 +190,7 @@ public class ApiImpl implements Api {
                                     }
 
                                     String extendedMessage = "";
-                                    if (authenticationStepicResponse == null) {
-                                        extendedMessage = "rawResponse was null";
-                                    } else if (authenticationStepicResponse.isSuccessful()) {
+                                    if (authenticationStepicResponse.isSuccessful()) {
                                         extendedMessage = "was success " + authenticationStepicResponse.code();
                                     } else {
                                         try {

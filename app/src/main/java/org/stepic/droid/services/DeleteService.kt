@@ -14,7 +14,6 @@ import org.stepic.droid.storage.StoreStateManager
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants
 import java.io.File
-import java.util.*
 import javax.inject.Inject
 
 class DeleteService : IntentService("delete_service") {
@@ -110,13 +109,8 @@ class DeleteService : IntentService("delete_service") {
 
     private fun removeFromDisk(sectionId: Long) {
         val units = databaseFacade.getAllUnitsOfSection(sectionId)
-        val lessons = ArrayList<Lesson>()
-        for (unit in units) {
-            val lesson = databaseFacade.getLessonOfUnit(unit)
-            if (lesson != null) {
-                lessons.add(lesson)
-            }
-        }
+        val lessons = units
+                .mapNotNull { databaseFacade.getLessonOfUnit(it) }
 
         for (lesson in lessons) {
             removeFromDisk(lesson)

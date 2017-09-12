@@ -20,7 +20,7 @@ class UpdateWithApkService : IntentService("update_with_apk") {
     lateinit var userPrefs: UserPreferences
 
     @Inject
-    lateinit var analytic : Analytic
+    lateinit var analytic: Analytic
 
     override fun onHandleIntent(intent: Intent?) {
         try {
@@ -38,12 +38,12 @@ class UpdateWithApkService : IntentService("update_with_apk") {
         return Service.START_REDELIVER_INTENT
     }
 
-    fun updateFromRemoteApk(path: String) {
+    private fun updateFromRemoteApk(path: String) {
         val filename = "updating.apk"
         FileUtil.saveFileToDisk(filename, path, userPrefs.userDownloadFolder)
 
         val intent = Intent(Intent.ACTION_VIEW)
-        val result = userPrefs.userDownloadFolder.path + "/" + filename
+        val result = "${userPrefs.userDownloadFolder.path}/$filename";
         intent.setDataAndType(Uri.fromFile(File(result)), "application/vnd.android.package-archive")
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK // without this flag android returned a intent error!
         App.getAppContext().startActivity(intent)

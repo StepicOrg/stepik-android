@@ -40,34 +40,34 @@ class CertificatePresenter
 
     @MainThread
     fun showCertificates(isRefreshing: Boolean) {
-        if (certificateViewItemList == null) {
-            //need load from internet
-            if (!isRefreshing) {
-                view?.onLoading()
-            }
-            threadPoolExecutor.execute {
-                val isAnonymous = sharedPreferenceHelper.authResponseFromStore == null
-                if (isAnonymous) {
+        when {
+            certificateViewItemList == null -> {
+                //need load from internet
+                if (!isRefreshing) {
+                    view?.onLoading()
+                }
+                threadPoolExecutor.execute {
+                    val isAnonymous = sharedPreferenceHelper.authResponseFromStore == null
+                    if (isAnonymous) {
+                        mainHandler.post {
+                            view?.onAnonymousUser()
+                        }
+                        return@execute
+                    }
+
+
+                    certificateViewItemList = database.getAllCertificates()?.filterNotNull() as? ArrayList<CertificateViewItem>
                     mainHandler.post {
-                        view?.onAnonymousUser()
+                        if (certificateViewItemList != null) {
+                            view?.onDataLoaded(certificateViewItemList)
+                        }
+
+                        loadCertificatesSilent()
                     }
-                    return@execute
-                }
-
-
-                certificateViewItemList = database.getAllCertificates()?.filterNotNull() as? ArrayList<CertificateViewItem>
-                mainHandler.post {
-                    if (certificateViewItemList != null) {
-                        view?.onDataLoaded(certificateViewItemList)
-                    }
-
-                    loadCertificatesSilent()
                 }
             }
-        } else if (certificateViewItemList?.isEmpty() ?: false) {
-            view?.showEmptyState()
-        } else if (certificateViewItemList?.isNotEmpty() ?: false) {
-            view?.onDataLoaded(certificateViewItemList)
+            certificateViewItemList?.isEmpty() == true -> view?.showEmptyState()
+            certificateViewItemList?.isNotEmpty() == true -> view?.onDataLoaded(certificateViewItemList)
         }
     }
 
@@ -77,12 +77,12 @@ class CertificatePresenter
         certificatesCall = api.certificates
         certificatesCall?.enqueue(object : Callback<CertificateResponse> {
             override fun onResponse(call: Call<CertificateResponse>?, response: Response<CertificateResponse>?) {
-                if (response?.isSuccessful ?: false) {
+                if (response?.isSuccessful == true) {
                     if (certificateViewItemList == null) {
                         certificateViewItemList = ArrayList()
                     }
 
-                    val certificateList = response?.body()?.certificates
+                    val certificateList = response.body()?.certificates
                     if (certificateList == null) {
                         view?.onInternetProblem()
                         return
@@ -109,9 +109,9 @@ class CertificatePresenter
                             }
 
                             override fun onResponse(call: Call<CoursesStepicResponse>?, response: Response<CoursesStepicResponse>?) {
-                                if (response?.isSuccessful ?: false) {
+                                if (response?.isSuccessful == true) {
                                     val localCertificateViewItems: List<CertificateViewItem> = response
-                                            ?.body()
+                                            .body()
                                             ?.courses
                                             ?.mapNotNull {
                                                 val certificateRelatedToCourse = courseIdToCertificateMap[it.courseId]
@@ -128,8 +128,7 @@ class CertificatePresenter
                                                         certificateRelatedToCourse?.grade,
                                                         certificateRelatedToCourse?.issue_date
                                                 )
-                                            }
-                                            ?.orEmpty()!!
+                                            }.orEmpty()
                                     certificateViewItemList?.clear()
                                     certificateViewItemList?.addAll(localCertificateViewItems)
 
@@ -165,7 +164,7 @@ class CertificatePresenter
     }
 
     fun showCertificateAsPdf(activity: Activity, fullPath: String) {
-        analytic.reportEvent(Analytic.Certificate.OPEN_IN_BROWSER);
+        analytic.reportEvent(Analytic.Certificate.OPEN_IN_BROWSER)
         screenManager.showPdfInBrowserByGoogleDocs(activity, fullPath)
     }
 
