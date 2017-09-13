@@ -20,12 +20,10 @@ import javax.inject.Inject
 
 class TimeIntervalPickerDialogFragment : DialogFragment() {
     companion object {
-        public val resultIntervalCodeKey = "resultIntervalCodeKey"
+        val resultIntervalCodeKey = "resultIntervalCodeKey"
         private val chosenPositionKey = "chosenPositionKey"
-        fun newInstance(): android.support.v4.app.DialogFragment {
-            val fragment = TimeIntervalPickerDialogFragment()
-            return fragment
-        }
+        fun newInstance(): android.support.v4.app.DialogFragment =
+                TimeIntervalPickerDialogFragment()
     }
 
     @Inject
@@ -34,7 +32,7 @@ class TimeIntervalPickerDialogFragment : DialogFragment() {
     @Inject
     lateinit var analytic: Analytic
 
-    var picker: MaterialNumberPicker? = null
+    lateinit var picker: MaterialNumberPicker
 
     init {
         App.component().inject(this)
@@ -42,32 +40,32 @@ class TimeIntervalPickerDialogFragment : DialogFragment() {
 
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
-        outState?.putInt(chosenPositionKey, picker?.value ?: TimeIntervalUtil.defaultTimeCode)
+        outState?.putInt(chosenPositionKey, picker.value)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        picker = MaterialNumberPicker(context)
-        picker?.minValue = 0
-        picker?.maxValue = TimeIntervalUtil.values.size - 1
-        picker?.displayedValues = TimeIntervalUtil.values
-        picker?.value = savedInstanceState?.getInt(chosenPositionKey) ?: sharedPreferences.timeNotificationCode
-        picker?.descendantFocusability = NumberPicker.FOCUS_BLOCK_DESCENDANTS
-        picker?.wrapSelectorWheel = false
+        val picker = MaterialNumberPicker(context)
+        picker.minValue = 0
+        picker.maxValue = TimeIntervalUtil.values.size - 1
+        picker.displayedValues = TimeIntervalUtil.values
+        picker.value = savedInstanceState?.getInt(chosenPositionKey) ?: sharedPreferences.timeNotificationCode
+        picker.descendantFocusability = NumberPicker.FOCUS_BLOCK_DESCENDANTS
+        picker.wrapSelectorWheel = false
         try {
-            picker?.setTextSize(50f) //TODO: Warning: reflection!
+            picker.setTextSize(50f) //TODO: Warning: reflection!
         } catch (exception: Exception) {
             Timber.e("reflection failed -> ignore")
         }
 
         return MaterialDialog.Builder(activity)
                 .title(R.string.choose_notification_time_interval)
-                .customView(picker!!, false)
+                .customView(picker, false)
                 .positiveText(R.string.ok)
                 .negativeText(R.string.cancel)
                 .onPositive { _, _ ->
                     //todo set result to Ok with position
                     val data = Intent()
-                    data.putExtra(resultIntervalCodeKey, picker?.value)
+                    data.putExtra(resultIntervalCodeKey, picker.value)
                     targetFragment?.onActivityResult(targetRequestCode, Activity.RESULT_OK, data)
                 }
                 .build()

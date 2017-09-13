@@ -31,6 +31,7 @@ ext {
     androidTargetSdkVersion = 25
     androidCompileSdkVersion = 26
     firebaseVersion = '11.2.2'
+    leakCanaryVersion = '1.5.1'
 }
 
 task clean(type: Delete) {

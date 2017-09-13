@@ -9,4 +9,5 @@ buildsystem/secret.gradle filter=git-crypt diff=git-crypt
 fastlane/Fastfile filter=git-crypt diff=git-crypt
 googleplayprovider.json filter=git-crypt diff=git-crypt
 app/src/prodSb/google-services.json filter=git-crypt diff=git-crypt
+app/src/sb/google-services.json filter=git-crypt diff=git-crypt
 .gitattributes !filter !diff

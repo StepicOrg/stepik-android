@@ -13,8 +13,8 @@ import org.stepic.droid.model.Step
 import org.stepic.droid.storage.StoreStateManager
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants
+import org.stepic.droid.util.SuppressFBWarnings
 import java.io.File
-import java.util.*
 import javax.inject.Inject
 
 class DeleteService : IntentService("delete_service") {
@@ -70,6 +70,7 @@ class DeleteService : IntentService("delete_service") {
 
     }
 
+    @SuppressFBWarnings(value = "RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE")
     private fun removeFromDisk(step: Step?) {
         step?.block?.video?.let {
             val path = databaseFacade.getPathToVideoIfExist(it)
@@ -99,24 +100,22 @@ class DeleteService : IntentService("delete_service") {
         }
     }
 
+    @SuppressFBWarnings(value = "RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE")
     private fun removeFromDisk(lesson: Lesson?) {
-        lesson?.let {
-            val steps = databaseFacade.getStepsOfLesson(lesson.id)
-            for (step in steps) {
-                removeFromDisk(step)
-            }
+        if (lesson == null) {
+            return
+        }
+        val steps = databaseFacade.getStepsOfLesson(lesson.id)
+        for (step in steps) {
+            removeFromDisk(step)
         }
     }
 
+    @SuppressFBWarnings(value = "RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE")
     private fun removeFromDisk(sectionId: Long) {
         val units = databaseFacade.getAllUnitsOfSection(sectionId)
-        val lessons = ArrayList<Lesson>()
-        for (unit in units) {
-            val lesson = databaseFacade.getLessonOfUnit(unit)
-            if (lesson != null) {
-                lessons.add(lesson)
-            }
-        }
+        val lessons = units
+                .mapNotNull { databaseFacade.getLessonOfUnit(it) }
 
         for (lesson in lessons) {
             removeFromDisk(lesson)
