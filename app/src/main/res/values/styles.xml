@@ -237,6 +237,18 @@
         <item name="android:textSize">@dimen/launch_button_text_size</item>
     </style>
 
+    <style name="BorderLessTextButton">
+        <item name="android:textSize">@dimen/borderless_text_button_text_size</item>
+        <item name="android:background">?selectableItemBackground</item>
+        <item name="android:padding">12dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:minWidth">0dp</item>
+    </style>
+
     <style name="TryAgainButton" parent="Base.Widget.AppCompat.Button.Borderless">
         <item name="android:textColor">@color/launchTextColor</item>
     </style>

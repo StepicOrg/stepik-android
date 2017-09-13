@@ -41,29 +41,23 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent">
 
-            <TextView
+            <Button
                 android:id="@+id/signInWithEmail"
                 android:text="@string/sign_in_with_social"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:padding="12dp"
-                android:textSize="16sp"
-                android:background="?selectableItemBackground"
-                android:gravity="center"
+                style="@style/BorderLessTextButton"
                 android:layout_alignParentStart="true"
                 android:visibility="visible" />
 
-            <TextView
+            <Button
                 android:id="@+id/launchSignUpButton"
                 android:text="@string/sign_up"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:padding="12dp"
-                android:textSize="16sp"
-                android:background="?selectableItemBackground"
-                android:gravity="center"
+                style="@style/BorderLessTextButton"
                 android:layout_alignParentEnd="true"
                 android:visibility="visible" />
 
@@ -145,25 +139,17 @@
             </LinearLayout>
 
 
-            <TextView
-                android:clickable="true"
+            <Button
                 android:id="@+id/loginButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
 
                 android:layout_marginTop="20dp"
 
                 android:textSize="16sp"
                 android:text="@string/sign_in"
-                style="@style/CourseWidgetView"
-                android:padding="12dp"
                 android:gravity="center"
 
                 android:textColor="@color/stepic_brand_primary"
-                android:background="@drawable/login_button_background"
-
-                android:maxWidth="@dimen/min_max_width_for_tablets"
-                android:minWidth="@dimen/min_max_width_for_tablets" />
+                style="@style/LoginButtons" />
 
         </LinearLayout>
 
