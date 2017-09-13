@@ -32,9 +32,15 @@
 
         <RelativeLayout
             android:id="@+id/bottomButtons"
-            android:layout_width="0dp"
+            android:layout_width="@dimen/auth_elements_width"
             android:layout_height="wrap_content"
-            android:padding="24dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:paddingTop="24dp"
+            android:paddingBottom="24dp"
+
+            android:maxWidth="@dimen/min_max_width_for_tablets"
+            android:minWidth="@dimen/min_max_width_for_tablets"
 
             app:layout_constraintBottom_toBottomOf="parent"
 
@@ -89,13 +95,11 @@
                 tools:ignore="MissingPrefix"/>
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="@dimen/auth_elements_width"
                 android:layout_height="wrap_content"
                 android:background="@drawable/auth_edit_text_stroke"
                 android:orientation="vertical"
                 android:layout_marginTop="40dp"
-                android:maxWidth="@dimen/min_max_width_for_tablets"
-                android:minWidth="@dimen/min_max_width_for_tablets"
                 android:layout_marginLeft="@dimen/padding_registration_left_right"
                 android:layout_marginRight="@dimen/padding_registration_left_right">
 
@@ -150,6 +154,17 @@
 
                 android:textColor="@color/stepic_brand_primary"
                 style="@style/LoginButtons" />
+
+            <Button
+                android:id="@+id/forgotPasswordView"
+                android:layout_width="@dimen/auth_elements_width"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:textColor="@color/remind_password_button_text_color"
+                style="@style/BorderLessTextButton"
+                android:text="@string/remind_password" />
 
         </LinearLayout>
 
