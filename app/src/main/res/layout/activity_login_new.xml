@@ -124,6 +124,7 @@
                     android:id="@+id/password_text_input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    app:passwordToggleDrawable="@drawable/password_toggle"
                     app:hintEnabled="false"
                     app:passwordToggleEnabled="true">
 
