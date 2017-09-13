@@ -62,8 +62,7 @@ class LessonPresenter
                         }
                     }
                 }
-            }
-            else{
+            } else {
                 view?.showSteps(fromPreviousLesson, defaultStepPositionStartWithOne)
             }
             return
@@ -288,15 +287,14 @@ class LessonPresenter
 
             try {
                 lesson = response?.body()?.lessons?.firstOrNull()
+                lesson?.let {
+                    databaseFacade.addLesson(it)
+                }
                 if (lesson == null) {
                     mainHandler.post {
                         view?.onLessonCorrupted()
                     }
                     return
-                } else {
-                    lesson?.let {
-                        databaseFacade.addLesson(it)
-                    }
                 }
             } catch (ex: Exception) {
                 mainHandler.post {
