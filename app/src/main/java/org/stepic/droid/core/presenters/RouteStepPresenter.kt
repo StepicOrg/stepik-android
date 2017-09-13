@@ -26,8 +26,7 @@ class RouteStepPresenter
         private val unitRepository: Repository<Unit>,
         private val lessonRepository: Repository<Lesson>,
         private val routingPoster: RoutingPoster
-)
-    : PresenterBase<RouteStepView>() {
+) : PresenterBase<RouteStepView>() {
 
     /**
      * Last step in lesson can be shown differently
@@ -196,8 +195,8 @@ class RouteStepPresenter
                 }
             }
 
-            if (nextUnitId != null) {
-                val nextUnit = unitRepository.getObject(nextUnitId!!)
+            nextUnitId?.let {
+                val nextUnit = unitRepository.getObject(it)
                 if (nextUnit != null) {
                     val nextLesson = lessonRepository.getObject(nextUnit.lesson)
                     if (nextLesson != null) {
@@ -207,7 +206,8 @@ class RouteStepPresenter
                         return@execute
                     }
                 }
-            } else {
+            }
+            if (nextUnitId == null) else {
                 if (section != null) {
                     //unit in previous or next section
                     val course = courseRepository.getObject(section.course)

@@ -1,0 +1,17 @@
+plugins.apply('pmd')
+
+pmd {
+    toolVersion = '5.4.1'
+    reportsDir file("${project.rootDir}/reports/pmd")
+
+//    change up to 5 in the future
+    rulePriority 1
+}
+
+task pmd(type: Pmd) {
+    ignoreFailures = false // Fail fast
+    ruleSetFiles = files("${project.rootDir}/code_quality_tools/pmd.xml")
+    ruleSets = []
+
+    source = fileTree('src/main/java')
+}
