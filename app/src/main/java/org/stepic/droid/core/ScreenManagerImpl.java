@@ -12,6 +12,7 @@ import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.TaskStackBuilder;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
@@ -69,6 +70,7 @@ import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.StringUtil;
 import org.stepic.droid.web.ViewAssignment;
 
+import java.io.File;
 import java.net.URLEncoder;
 import java.util.Locale;
 
@@ -320,11 +322,22 @@ public class ScreenManagerImpl implements ScreenManager {
             }
             Uri videoUri = Uri.parse(videoPath);
             String scheme = videoUri.getScheme();
-            if (scheme == null) {
-                videoUri = Uri.parse(AppConstants.FILE_SCHEME_PREFIX + videoPath);
+            if (scheme == null && videoPath != null) {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+                    videoUri = Uri.parse(AppConstants.FILE_SCHEME_PREFIX + videoPath);
+                } else {
+                    //android 7 do not work with file scheme (we need content with authority)
+                    //check https://stackoverflow.com/questions/38200282/android-os-fileuriexposedexception-file-storage-emulated-0-test-txt-exposed
+                    //we do not need add file scheme. it will be added due to getUriForFile
+                    File file = new File(videoPath);
+                    videoUri = FileProvider.getUriForFile(sourceActivity, sourceActivity.getPackageName() + AppConstants.FILE_PROVIDER_AUTHORITY, file);
+                }
             }
             Intent intent = new Intent(Intent.ACTION_VIEW, videoUri);
             intent.setDataAndType(videoUri, "video/*");
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            }
             try {
                 sourceActivity.startActivity(intent);
             } catch (Exception ex) {

@@ -400,6 +400,9 @@
             android:name=".ui.activities.CertificatesActivity">
         </activity>
 
+        <activity
+            android:name=".ui.activities.PhotoViewActivity"
+            android:theme="@style/AppTheme.PhotoView"/>
 
         <receiver
             android:name=".receivers.BootCompletedReceiver"
@@ -411,13 +414,20 @@
             </intent-filter>
         </receiver>
 
+        <provider
+            android:name=".util.GenericFileProvider"
+            android:authorities="${applicationId}.my.package.name.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"/>
+        </provider>
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version"/>
 
-        <activity
-            android:name=".ui.activities.PhotoViewActivity"
-            android:theme="@style/AppTheme.PhotoView"/>
 
         <uses-library
             android:name="com.sec.android.app.multiwindow"
