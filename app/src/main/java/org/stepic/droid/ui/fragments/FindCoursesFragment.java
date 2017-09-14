@@ -27,8 +27,8 @@ public class FindCoursesFragment extends CoursesDatabaseFragmentBase {
         return new FindCoursesFragment();
     }
 
-    SearchView searchView = null;
-    MenuItem menuItem = null;
+    private SearchView searchView = null;
+    private MenuItem menuItem = null;
     private boolean handledByRoot = false;
 
     @Override
@@ -109,10 +109,12 @@ public class FindCoursesFragment extends CoursesDatabaseFragmentBase {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroyOptionsMenu() {
+        super.onDestroyOptionsMenu();
+
         if (searchView != null) {
             searchView.setOnQueryTextListener(null);
         }
+        searchView = null;
     }
 }
