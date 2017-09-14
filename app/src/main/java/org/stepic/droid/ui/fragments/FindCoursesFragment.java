@@ -7,7 +7,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -69,7 +68,7 @@ public class FindCoursesFragment extends CoursesDatabaseFragmentBase {
         if (searchView != null && menuItem != null && menuItem.isActionViewExpanded()) {
             if (rootHandle) handledByRoot = true;
             hideSoftKeypad();//in collapse action view keypad going to invisible after animation
-            MenuItemCompat.collapseActionView(menuItem);
+            menuItem.collapseActionView();
         }
     }
 
