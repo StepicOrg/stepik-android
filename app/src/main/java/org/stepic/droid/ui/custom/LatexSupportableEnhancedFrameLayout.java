@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
+import android.support.v4.content.ContextCompat;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.util.AttributeSet;
@@ -20,6 +21,8 @@ import org.stepic.droid.util.resolvers.text.TextResolver;
 import org.stepic.droid.util.resolvers.text.TextResult;
 
 import javax.inject.Inject;
+
+import uk.co.chrisjenx.calligraphy.CalligraphyUtils;
 
 public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
     private final static String assetUrl = "file:///android_asset/";
@@ -64,9 +67,9 @@ public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
 
     private void init(Context context) {
         LayoutInflater.from(context).inflate(R.layout.latex_supportabe_enhanced_view, this, true);
-        textView = (TextView) findViewById(R.id.textView);
+        textView = findViewById(R.id.textView);
         textView.setMovementMethod(LinkMovementMethod.getInstance());
-        webView = (LatexSupportableWebView) findViewById(R.id.webView);
+        webView = findViewById(R.id.webView);
 
     }
 
@@ -136,6 +139,21 @@ public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
             setPlainText(text);
             Linkify.addLinks(textView, Linkify.ALL);
             textView.setLinksClickable(true);
+        }
+    }
+
+    public void setPlainTextWithCustomFontColored(String text, String fontPath, @ColorRes int colorRes) {
+        TextResult textResult = textResolver.resolveStepText(text);
+        if (textResult.isNeedWebView()) {
+            webView.setVisibility(VISIBLE);
+            textView.setVisibility(GONE);
+            webView.setTextWithCustomFontColored(textResult.getText(), assetUrl + fontPath, colorRes);
+        } else {
+            webView.setVisibility(GONE);
+            textView.setVisibility(VISIBLE);
+            textView.setText(textResult.getText());
+            textView.setTextColor(ContextCompat.getColor(getContext(), colorRes));
+            CalligraphyUtils.applyFontToTextView(getContext(), textView, fontPath);
         }
     }
 }

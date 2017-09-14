@@ -7,11 +7,11 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
-import android.text.util.Linkify
 import android.view.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import kotlinx.android.synthetic.main.fragment_profile_new.*
+import kotlinx.android.synthetic.main.latex_supportabe_enhanced_view.view.*
 import kotlinx.android.synthetic.main.need_auth_placeholder.*
 import kotlinx.android.synthetic.main.view_notification_interval_chooser.*
 import org.joda.time.DateTime
@@ -25,6 +25,7 @@ import org.stepic.droid.core.ProfilePresenter
 import org.stepic.droid.core.presenters.StreakPresenter
 import org.stepic.droid.core.presenters.contracts.NotificationTimeView
 import org.stepic.droid.core.presenters.contracts.ProfileView
+import org.stepic.droid.fonts.FontType
 import org.stepic.droid.model.UserViewModel
 import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.ui.activities.contracts.BottomNavigationViewRoot
@@ -112,6 +113,9 @@ class ProfileFragment : FragmentBase(),
         authAction.setOnClickListener {
             screenManager.showLaunchScreen(context, true, MainFeedActivity.PROFILE_INDEX)
         }
+
+        shortBioSecondContainer.textView.textSize = 14f
+        shortBioSecondContainer.textView.setLineSpacing(0f, 1.6f)
     }
 
     override fun onDestroyView() {
@@ -294,18 +298,7 @@ class ProfileFragment : FragmentBase(),
             if (information.isBlank()) {
                 shortBioSecondContainer.visibility = View.GONE
             } else {
-                val (description, isNeedWebView, _) = textResolver.resolveStepText(information)
-                if (isNeedWebView) {
-                    shortBioSecondHtml.visibility = View.VISIBLE
-                    shortBioSecondText.visibility = View.GONE
-                    shortBioSecondHtml.setTextWithThinFontColored(description, R.color.new_accent_color)
-                } else {
-                    shortBioSecondHtml.visibility = View.GONE
-                    shortBioSecondText.visibility = View.VISIBLE
-                    shortBioSecondText.text = description
-                    Linkify.addLinks(shortBioSecondText, Linkify.ALL)
-                    shortBioSecondText.linksClickable = true
-                }
+                shortBioSecondContainer.setPlainTextWithCustomFontColored(information, fontsProvider.provideFontPath(FontType.light), R.color.new_accent_color)
             }
         }
     }

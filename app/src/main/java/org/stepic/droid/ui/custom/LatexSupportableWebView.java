@@ -67,18 +67,18 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
     }
 
     public void setText(CharSequence text, boolean wantLaTeX) {
-        setText(text, wantLaTeX, false);
+        setText(text, wantLaTeX, null);
     }
 
-    public void setTextWithThinFontColored(CharSequence text, @ColorRes int colorRes) {
+    public void setTextWithCustomFontColored(CharSequence text, String fontPath, @ColorRes int colorRes) {
         @ColorInt
         int colorArgb = ColorUtil.INSTANCE.getColorArgb(colorRes, getContext());
         String hexColor = String.format("#%06X", (0xFFFFFF & colorArgb));
         String coloredText = "<font color='" + hexColor + "'>" + text + "</font>";
-        setText(coloredText, false, true);
+        setText(coloredText, false, fontPath);
     }
 
-    public void setText(CharSequence text, boolean wantLaTeX, boolean thinFont) {
+    public void setText(CharSequence text, boolean wantLaTeX, String fontPath) {
 
         DisplayMetrics displaymetrics = new DisplayMetrics();
         ((AppCompatActivity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
@@ -90,9 +90,9 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
 
         final String html;
         WebSettings webSettings = getSettings();
-        if (thinFont) {
+        if (fontPath != null) {
             webSettings.setJavaScriptEnabled(true);
-            html = HtmlHelper.buildPageWithLightFont(text, width, config.getBaseUrl());
+            html = HtmlHelper.buildPageWithCustomFont(text, fontPath, width, config.getBaseUrl());
         } else if (wantLaTeX || HtmlHelper.hasLaTeX(textString)) {
             webSettings.setJavaScriptEnabled(true);
             html = HtmlHelper.buildMathPage(text, width, config.getBaseUrl());

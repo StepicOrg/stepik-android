@@ -1,5 +1,7 @@
 package org.stepic.droid.util;
 
+import android.annotation.SuppressLint;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jsoup.Jsoup;
@@ -153,19 +155,22 @@ public class HtmlHelper {
 
 
     public static String buildMathPage(CharSequence body, int widthPx, String baseUrl) {
+        @SuppressLint("DefaultLocale")
         String preBody = String.format(PRE_BODY, MathJaxScript, DefaultFontStyle, widthPx, baseUrl);
         String result = preBody + body + POST_BODY;
         return result;
     }
 
     public static String buildPageWithAdjustingTextAndImage(CharSequence body, int widthPx, String baseUrl) {
+        @SuppressLint("DefaultLocale")
         String preBody = String.format(PRE_BODY, " ", DefaultFontStyle, widthPx, baseUrl);
         String result = preBody + body + POST_BODY;
         return result;
     }
 
-    public static String buildPageWithLightFont(CharSequence body, int widthPx, String baseUrl) {
-        String preBody = String.format(PRE_BODY, " ", RobotoLightFontStyle, widthPx, baseUrl);
+    public static String buildPageWithCustomFont(CharSequence body, String fontPath, int widthPx, String baseUrl) {
+        @SuppressLint("DefaultLocale")
+        String preBody = String.format(PRE_BODY, " ", String.format(CustomFontStyle, fontPath), widthPx, baseUrl);
         String result = preBody + body + POST_BODY;
         return result;
     }
@@ -204,17 +209,17 @@ public class HtmlHelper {
 
             + "</style>\n";
 
-    private static final String RobotoLightFontStyle =
+    private static final String CustomFontStyle =
             "<style>\n" +
             "@font-face {" +
-            "    font-family: 'Roboto-Light';\n" +
-            "    src: url(\"file:///android_asset/fonts/Roboto-Light.ttf\")\n" +
+            "    font-family: 'Roboto';\n" +
+            "    src: url(\"%s\")\n" +
             "}"
             + "\nhtml{-webkit-text-size-adjust: 100%%;}"
-            + "\nbody{font-size: 14px; font-family:'Roboto-Light', Helvetica, sans-serif; line-height:1.6em;}"
-            + "\nh1{font-size: 22px; font-family:'Roboto-Light', Helvetica, sans-serif; line-height:1.6em;text-align: center;}"
-            + "\nh2{font-size: 19px; font-family:'Roboto-Light', Helvetica, sans-serif; line-height:1.6em;text-align: center;}"
-            + "\nh3{font-size: 16px; font-family:'Roboto-Light', Helvetica, sans-serif; line-height:1.6em;text-align: center;}"
+            + "\nbody{font-size: 14px; font-family:'Roboto', Helvetica, sans-serif; line-height:1.6em;}"
+            + "\nh1{font-size: 22px; font-family:'Roboto', Helvetica, sans-serif; line-height:1.6em;text-align: center;}"
+            + "\nh2{font-size: 19px; font-family:'Roboto', Helvetica, sans-serif; line-height:1.6em;text-align: center;}"
+            + "\nh3{font-size: 16px; font-family:'Roboto', Helvetica, sans-serif; line-height:1.6em;text-align: center;}"
             + "\nimg { max-width: 100%%; }"
             + "</style>\n";
 
