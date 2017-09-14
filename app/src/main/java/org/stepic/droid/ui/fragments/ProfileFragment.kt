@@ -36,8 +36,6 @@ import org.stepic.droid.ui.util.TimeIntervalUtil
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.ProfileSettingsHelper
-import org.stepic.droid.util.resolvers.CoursePropertyResolver
-import org.stepic.droid.util.resolvers.text.TextResolver
 import org.stepic.droid.util.svg.GlideSvgRequestFactory
 import org.stepic.droid.viewmodel.ProfileSettingsViewModel
 import timber.log.Timber
@@ -270,23 +268,32 @@ class ProfileFragment : FragmentBase(),
         }
 
         with(userViewModel) {
-            if (shortBio.isBlank() && information.isBlank()) {
-                //do not show any header
-                shortBioInfoContainer.visibility = View.GONE
-                //todo: Show placeholder for not my profile
-            } else if (shortBio.isBlank() && information.isNotBlank()) {
-                //show header with 'information'
-                shortBioFirstHeader.setText(R.string.user_info)
-                shortBioFirstText.text = information
-            } else if (shortBio.isNotBlank() && information.isBlank()) {
-                shortBioFirstHeader.setText(R.string.short_bio)
-                shortBioFirstText.text = shortBio
-            } else if (shortBio.isNotBlank() && information.isNotBlank()) {
-                //show general header and all info
-                shortBioFirstHeader.setText(R.string.short_bio_and_info)
-                shortBioFirstText.text = shortBio
-                shortBioSecondHeader.setText(R.string.user_info)
+            when {
+                shortBio.isBlank() && information.isBlank() ->
+                    shortBioInfoContainer.visibility = View.GONE //do not show any header
 
+                shortBio.isBlank() && information.isNotBlank() ->
+                    shortBioFirstHeader.setText(R.string.user_info) //show header with 'information'
+
+                shortBio.isNotBlank() && information.isBlank() ->
+                    shortBioFirstHeader.setText(R.string.short_bio)
+
+                shortBio.isNotBlank() && information.isNotBlank() -> { //show general header and all info
+                    shortBioFirstHeader.setText(R.string.short_bio_and_info)
+                    shortBioSecondHeader.visibility = View.VISIBLE
+                    shortBioSecondHeader.setText(R.string.user_info)
+                }
+            }
+
+            if (shortBio.isBlank()) {
+                shortBioFirstText.visibility = View.GONE
+            } else {
+                shortBioFirstText.text = shortBio.trim()
+            }
+
+            if (information.isBlank()) {
+                shortBioSecondContainer.visibility = View.GONE
+            } else {
                 val (description, isNeedWebView, _) = textResolver.resolveStepText(information)
                 if (isNeedWebView) {
                     shortBioSecondHtml.visibility = View.VISIBLE
@@ -299,10 +306,6 @@ class ProfileFragment : FragmentBase(),
                     Linkify.addLinks(shortBioSecondText, Linkify.ALL)
                     shortBioSecondText.linksClickable = true
                 }
-            }
-
-            if (shortBio.isNotBlank() || information.isNotBlank()) {
-                shortBioInfoContainer.visibility = View.VISIBLE
             }
         }
     }

@@ -181,7 +181,6 @@
                     android:layout_height="wrap_content"
                     android:clickable="true"
                     android:foreground="@drawable/non_radius_foreground"
-                    android:visibility="gone"
                     tools:visibility="visible">
 
                     <TextView
@@ -237,11 +236,13 @@
                         android:paddingLeft="32dp"
                         android:paddingTop="4dp"
                         android:textSize="@dimen/text_header"
+                        android:visibility="gone"
                         tools:ignore="MissingPrefix"
                         tools:text="@string/user_info"
                         tools:visibility="visible"/>
                     
                     <LinearLayout
+                        android:id="@+id/shortBioSecondContainer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
