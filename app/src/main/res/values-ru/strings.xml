@@ -500,4 +500,6 @@
 
     <string name="course_item_more">Подробнее</string>
     <string name="course_item_join">Подробнее о курсе</string>
+
+    <string name="learners_count">Количество студентов</string>
 </resources>
