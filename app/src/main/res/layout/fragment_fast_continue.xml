@@ -1,9 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/stepic_orange_carrot"
-    android:gravity="center"
-    android:padding="50dp"
-    android:text="HELLO HERE"/>
+    android:minHeight="100dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:text="It is the text step. It is the text step. It is the text step. It is the text step. It is the text step. It is the text step. It is the text step. It is the text step. It is the text step. It is the text step. It is the text step. It is the text step. It is the text step. It is the text step. It is the text step. It is the text step. It is the text step. It is the text step. "/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/shadow_opacity_10"/>
+
+</FrameLayout>
