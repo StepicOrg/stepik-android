@@ -147,6 +147,20 @@
 
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/loginErrorMessage"
+                android:layout_width="@dimen/auth_elements_width"
+                android:layout_height="match_parent"
+                android:textColor="@color/login_error_color"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="@dimen/padding_registration_left_right"
+                android:layout_marginRight="@dimen/padding_registration_left_right"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:visibility="gone"
+                tools:ignore="MissingPrefix"
+                fontPath="fonts/Roboto-Light.ttf"
+                tools:text="Whoops! The email address and/or password you specified are not correct." />
 
             <Button
                 android:id="@+id/loginButton"

@@ -100,5 +100,7 @@
     <color name="login_button_color_pressed">#6666CC66</color>
     <color name="login_button_color_disabled">#0C66CC66</color>
 
+    <color name="login_error_color">#c82850</color>
+
     <color name="remind_password_button_text_color">#4990e2</color>
 </resources>
