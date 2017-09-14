@@ -11,6 +11,7 @@ import android.view.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import kotlinx.android.synthetic.main.fragment_profile_new.*
+import kotlinx.android.synthetic.main.latex_supportabe_enhanced_view.view.*
 import kotlinx.android.synthetic.main.need_auth_placeholder.*
 import kotlinx.android.synthetic.main.view_notification_interval_chooser.*
 import org.joda.time.DateTime
@@ -24,6 +25,7 @@ import org.stepic.droid.core.ProfilePresenter
 import org.stepic.droid.core.presenters.StreakPresenter
 import org.stepic.droid.core.presenters.contracts.NotificationTimeView
 import org.stepic.droid.core.presenters.contracts.ProfileView
+import org.stepic.droid.fonts.FontType
 import org.stepic.droid.model.UserViewModel
 import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.ui.activities.contracts.BottomNavigationViewRoot
@@ -111,6 +113,9 @@ class ProfileFragment : FragmentBase(),
         authAction.setOnClickListener {
             screenManager.showLaunchScreen(context, true, MainFeedActivity.PROFILE_INDEX)
         }
+
+        shortBioSecondText.textView.textSize = 14f
+        shortBioSecondText.textView.setLineSpacing(0f, 1.6f)
     }
 
     override fun onDestroyView() {
@@ -267,27 +272,34 @@ class ProfileFragment : FragmentBase(),
         }
 
         with(userViewModel) {
-            if (shortBio.isBlank() && information.isBlank()) {
-                //do not show any header
-                shortBioInfoContainer.visibility = View.GONE
-                //todo: Show placeholder for not my profile
-            } else if (shortBio.isBlank() && information.isNotBlank()) {
-                //show header with 'information'
-                shortBioFirstHeader.setText(R.string.user_info)
-                shortBioFirstText.text = information
-            } else if (shortBio.isNotBlank() && information.isBlank()) {
-                shortBioFirstHeader.setText(R.string.short_bio)
-                shortBioFirstText.text = shortBio
-            } else if (shortBio.isNotBlank() && information.isNotBlank()) {
-                //show general header and all info
-                shortBioFirstHeader.setText(R.string.short_bio_and_info)
-                shortBioFirstText.text = shortBio
-                shortBioSecondHeader.setText(R.string.user_info)
-                shortBioSecondText.text = information
+            when {
+                shortBio.isBlank() && information.isBlank() ->
+                    shortBioInfoContainer.visibility = View.GONE //do not show any header
+
+                shortBio.isBlank() && information.isNotBlank() ->
+                    shortBioFirstHeader.setText(R.string.user_info) //show header with 'information'
+
+                shortBio.isNotBlank() && information.isBlank() ->
+                    shortBioFirstHeader.setText(R.string.short_bio)
+
+                shortBio.isNotBlank() && information.isNotBlank() -> { //show general header and all info
+                    shortBioFirstHeader.setText(R.string.short_bio_and_info)
+                    shortBioSecondHeader.visibility = View.VISIBLE
+                    shortBioSecondHeader.setText(R.string.user_info)
+                }
             }
 
-            if (shortBio.isNotBlank() || information.isNotBlank()) {
-                shortBioInfoContainer.visibility = View.VISIBLE
+            if (shortBio.isBlank()) {
+                shortBioFirstText.visibility = View.GONE
+            } else {
+                shortBioFirstText.text = shortBio.trim()
+            }
+
+            if (information.isBlank()) {
+                shortBioSecondText.visibility = View.GONE
+            } else {
+                shortBioSecondText.setPlainOrLaTeXTextWithCustomFontColored(
+                        information, fontsProvider.provideFontPath(FontType.light), R.color.new_accent_color, false)
             }
         }
     }

@@ -9,6 +9,8 @@ import org.jsoup.select.Elements;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.notifications.model.Notification;
 
+import java.util.Locale;
+
 import timber.log.Timber;
 
 public class HtmlHelper {
@@ -153,15 +155,18 @@ public class HtmlHelper {
 
 
     public static String buildMathPage(CharSequence body, int widthPx, String baseUrl) {
-        String preBody = String.format(PRE_BODY, MathJaxScript, widthPx, baseUrl);
-        String result = preBody + body + POST_BODY;
-        return result;
+        String preBody = String.format(Locale.getDefault(), PRE_BODY, MathJaxScript, DefaultFontStyle, widthPx, baseUrl);
+        return preBody + body + POST_BODY;
     }
 
     public static String buildPageWithAdjustingTextAndImage(CharSequence body, int widthPx, String baseUrl) {
-        String preBody = String.format(PRE_BODY, " ", widthPx, baseUrl);
-        String result = preBody + body + POST_BODY;
-        return result;
+        String preBody = String.format(Locale.getDefault(), PRE_BODY, " ", DefaultFontStyle, widthPx, baseUrl);
+        return preBody + body + POST_BODY;
+    }
+
+    public static String buildPageWithCustomFont(CharSequence body, String fontPath, int widthPx, String baseUrl) {
+        String preBody = String.format(Locale.getDefault(), PRE_BODY, " ", String.format(Locale.getDefault(), CustomFontStyle, fontPath), widthPx, baseUrl);
+        return preBody + body + POST_BODY;
     }
 
     //string with 2 format args
@@ -172,15 +177,7 @@ public class HtmlHelper {
 
             "%s" +
 
-            "<style>\n"
-            + "\nhtml{-webkit-text-size-adjust: 100%%;}"
-            + "\nbody{font-size: 12pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;}"
-            + "\nh1{font-size: 20pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;text-align: center;}"
-            + "\nh2{font-size: 17pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;text-align: center;}"
-            + "\nh3{font-size: 14pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;text-align: center;}"
-            + "\nimg { max-width: 100%%; }"
-
-            + "</style>\n" +
+            "%s" +
 
             "<meta name=\"viewport\" content=\"width=" +
 
@@ -193,6 +190,32 @@ public class HtmlHelper {
             "<base href=\"%s\">" +
             "</head>\n"
             + "<body style='margin:0;padding:0;'>";
+
+
+    private static final String DefaultFontStyle =
+            "<style>\n"
+            + "\nhtml{-webkit-text-size-adjust: 100%%;}"
+            + "\nbody{font-size: 12pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;}"
+            + "\nh1{font-size: 20pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;text-align: center;}"
+            + "\nh2{font-size: 17pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;text-align: center;}"
+            + "\nh3{font-size: 14pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;text-align: center;}"
+            + "\nimg { max-width: 100%%; }"
+
+            + "</style>\n";
+
+    private static final String CustomFontStyle =
+            "<style>\n" +
+            "@font-face {" +
+            "    font-family: 'Roboto';\n" +
+            "    src: url(\"%s\")\n" +
+            "}"
+            + "\nhtml{-webkit-text-size-adjust: 100%%;}"
+            + "\nbody{font-size: 14px; font-family:'Roboto', Helvetica, sans-serif; line-height:1.6em;}"
+            + "\nh1{font-size: 22px; font-family:'Roboto', Helvetica, sans-serif; line-height:1.6em;text-align: center;}"
+            + "\nh2{font-size: 19px; font-family:'Roboto', Helvetica, sans-serif; line-height:1.6em;text-align: center;}"
+            + "\nh3{font-size: 16px; font-family:'Roboto', Helvetica, sans-serif; line-height:1.6em;text-align: center;}"
+            + "\nimg { max-width: 100%%; }"
+            + "</style>\n";
 
     private static final String POST_BODY = "</body>\n" +
             "</html>";
