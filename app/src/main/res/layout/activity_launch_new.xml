@@ -50,6 +50,7 @@
                 android:layout_gravity="center_horizontal"
                 style="@style/BorderLessTextButton"
                 android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
                 android:visibility="visible" />
 
             <Button
@@ -60,6 +61,7 @@
                 android:layout_gravity="center_horizontal"
                 style="@style/BorderLessTextButton"
                 android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
                 android:visibility="visible" />
 
         </RelativeLayout>

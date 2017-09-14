@@ -54,6 +54,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 style="@style/BorderLessTextButton"
+                android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:visibility="visible" />
 
@@ -64,6 +65,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 style="@style/BorderLessTextButton"
+                android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
                 android:visibility="visible" />
 
@@ -145,14 +147,12 @@
 
             <Button
                 android:id="@+id/loginButton"
-
                 android:layout_marginTop="20dp"
-
                 android:textSize="16sp"
                 android:text="@string/sign_in"
-                android:gravity="center"
+                android:layout_marginLeft="@dimen/padding_registration_left_right"
+                android:layout_marginRight="@dimen/padding_registration_left_right"
 
-                android:textColor="@color/stepic_brand_primary"
                 style="@style/LoginButtons" />
 
             <Button
