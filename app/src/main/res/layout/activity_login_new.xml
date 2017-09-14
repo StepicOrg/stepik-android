@@ -34,7 +34,9 @@
             android:id="@+id/bottomButtons"
             android:layout_width="@dimen/auth_elements_width"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="24dp"
             android:layout_marginStart="24dp"
+            android:layout_marginRight="24dp"
             android:layout_marginEnd="24dp"
             android:paddingTop="24dp"
             android:paddingBottom="24dp"
@@ -97,9 +99,10 @@
                 tools:ignore="MissingPrefix"/>
 
             <LinearLayout
+                android:id="@+id/loginEditTextContainer"
                 android:layout_width="@dimen/auth_elements_width"
                 android:layout_height="wrap_content"
-                android:background="@drawable/auth_edit_text_stroke"
+                android:background="@drawable/login_edit_text_stroke"
                 android:orientation="vertical"
                 android:layout_marginTop="40dp"
                 android:layout_marginLeft="@dimen/padding_registration_left_right"

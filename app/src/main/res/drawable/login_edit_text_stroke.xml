@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_enabled="false">
+        <shape android:shape="rectangle">
+            <corners android:radius="6dp" />
+            <solid android:color="@color/login_edit_text_block_background_color_wrong" />
+            <stroke android:width="0.3dp" android:color="@color/login_edit_text_block_stroke_color" />
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="6dp" />
+            <solid android:color="@color/login_edit_text_block_background_color" />
+            <stroke android:width="0.3dp" android:color="@color/login_edit_text_block_stroke_color" />
+        </shape>
+    </item>
+</selector>

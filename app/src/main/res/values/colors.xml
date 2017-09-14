@@ -91,7 +91,10 @@
     <color name="join_button_pressed_color">#6666CC66</color>
     <color name="continue_button_pressed_color">#DBDBDB</color>
 
-    <color name="edit_text_block_stroke_color">#979797</color>
+    <color name="login_edit_text_block_stroke_color">#979797</color>
+    <color name="login_edit_text_block_background_color">@color/transparent</color>
+    <color name="login_edit_text_block_background_color_wrong">#0CC82850</color>
+
 
     <color name="login_button_color">#1966CC66</color>
     <color name="login_button_color_pressed">#6666CC66</color>

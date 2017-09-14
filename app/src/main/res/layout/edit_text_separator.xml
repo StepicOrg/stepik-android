@@ -2,4 +2,4 @@
 <View xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="0.3dp"
-    android:background="@color/edit_text_block_stroke_color" />
+    android:background="@color/login_edit_text_block_stroke_color" />
