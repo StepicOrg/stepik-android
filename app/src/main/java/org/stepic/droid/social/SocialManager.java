@@ -1,6 +1,8 @@
 package org.stepic.droid.social;
 
 import android.graphics.drawable.Drawable;
+import android.support.annotation.DrawableRes;
+import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.content.ContextCompat;
 
 import org.stepic.droid.R;
@@ -24,20 +26,23 @@ public class SocialManager {
     private static final String VK_SOCIAL_IDENTIFIER = "vk";
 
     public enum SocialType implements ISocialType {
-        google(GOOGLE_SOCIAL_IDENTIFIER, ContextCompat.getDrawable(App.Companion.getAppContext(), R.drawable.ic_login_social_google)),
-        vk(VK_SOCIAL_IDENTIFIER, ContextCompat.getDrawable(App.Companion.getAppContext(), R.drawable.ic_login_social_vk)),
-        facebook(FACEBOOK_SOCIAL_IDENTIFIER, ContextCompat.getDrawable(App.Companion.getAppContext(), R.drawable.ic_login_social_fb)),
-        twitter(TWITTER_SOCIAL_IDENTIFIER, ContextCompat.getDrawable(App.Companion.getAppContext(), R.drawable.ic_login_social_twitter)),
-        mailru(MAILRU_SOCIAL_IDENTIFIER, ContextCompat.getDrawable(App.Companion.getAppContext(), R.drawable.ic_login_social_mail)),
-        github(GITHUB_SOCIAL_IDENTIFIER, ContextCompat.getDrawable(App.Companion.getAppContext(), R.drawable.ic_login_social_github));
+        google(GOOGLE_SOCIAL_IDENTIFIER, R.drawable.ic_login_social_google),
+        vk(VK_SOCIAL_IDENTIFIER, R.drawable.ic_login_social_vk),
+        facebook(FACEBOOK_SOCIAL_IDENTIFIER, R.drawable.ic_login_social_fb),
+        twitter(TWITTER_SOCIAL_IDENTIFIER, R.drawable.ic_login_social_twitter),
+        mailru(MAILRU_SOCIAL_IDENTIFIER, R.drawable.ic_login_social_mail),
+        github(GITHUB_SOCIAL_IDENTIFIER, R.drawable.ic_login_social_github);
 
+        private static Drawable getSocialDrawable(@DrawableRes int drawableRes) {
+            return VectorDrawableCompat.create(App.Companion.getAppContext().getResources(), drawableRes, null);
+        }
 
         private String identifier;
         private Drawable icon;
 
-        SocialType(String identifier, Drawable drawable) {
+        SocialType(String identifier,@DrawableRes int drawableRes) {
             this.identifier = identifier;
-            this.icon = drawable;
+            this.icon = getSocialDrawable(drawableRes);
         }
 
         public String getIdentifier() {
