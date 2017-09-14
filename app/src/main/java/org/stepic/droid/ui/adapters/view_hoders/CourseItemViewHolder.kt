@@ -156,10 +156,10 @@ class CourseItemViewHolder(
                 .into(imageViewTarget)
 
         if (course.learnersCount > 0) {
-            itemView.courseItemLearnersCount.text = String.format(Locale.getDefault(), "%d", course.learnersCount)
-            itemView.courseItemLearnersCount.visibility = View.VISIBLE
+            itemView.learnersCountText.text = String.format(Locale.getDefault(), "%d", course.learnersCount)
+            itemView.learnersCountContainer.visibility = View.VISIBLE
         } else {
-            itemView.courseItemLearnersCount.visibility = View.GONE
+            itemView.learnersCountContainer.visibility = View.GONE
         }
 
 

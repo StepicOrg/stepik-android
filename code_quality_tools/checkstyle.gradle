@@ -1,0 +1,22 @@
+apply plugin: 'checkstyle'
+
+checkstyle {
+    configFile file("${project.rootDir}/code_quality_tools/checkstyle.xml")
+    ignoreFailures false
+    showViolations true
+    configProperties = [
+            'checkstyle.cache.file': file('${project.rootDir}/reports/checkstyle/checkstyle.cache'),
+    ]
+}
+
+task checkstyle(type: Checkstyle) {
+    source 'src/main', 'src/release'
+    include '**/*.java'
+    exclude '**/gen/**'
+    exclude '**/R.java'
+    exclude '**/BuildConfig.java'
+    reports {
+        html.destination "${project.rootDir}/reports/checkstyle/main.html"
+    }
+    classpath = files()
+}
