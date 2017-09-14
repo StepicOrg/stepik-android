@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout
-    android:id="@+id/homeRootView"
-    android:background="@color/white"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/homeRootView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <include
@@ -23,13 +23,19 @@
             android:orientation="vertical">
 
             <fragment
-                android:id="@+id/myCourses"
+                android:id="@+id/fastContinueFragment"
+                android:name="org.stepic.droid.ui.fragments.FastContinueFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <fragment
+                android:id="@+id/myCoursesFragment"
                 android:name="org.stepic.droid.ui.fragments.CoursesCarouselFragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
             <fragment
-                android:id="@+id/popularCourses"
+                android:id="@+id/popularCoursesFragment"
                 android:name="org.stepic.droid.ui.fragments.CoursesCarouselFragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
