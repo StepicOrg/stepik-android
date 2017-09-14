@@ -4,9 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
-import android.support.v4.content.ContextCompat;
 import android.text.method.LinkMovementMethod;
-import android.text.util.Linkify;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
@@ -93,13 +91,9 @@ public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
     public void setText(String text) {
         TextResult textResult = textResolver.resolveStepText(text);
         if (!textResult.isNeedWebView()) {
-            webView.setVisibility(GONE);
-            textView.setVisibility(VISIBLE);
-            textView.setText(textResult.getText());
+            setPlainText(textResult.getText());
         } else {
-            textView.setVisibility(GONE);
-            webView.setVisibility(VISIBLE);
-            webView.setText(textResult.getText());
+            setTextWebView(textResult.getText(), false, null);
         }
     }
 
@@ -107,13 +101,17 @@ public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
         return webView;
     }
 
-    private void setTextWebViewOnlyForLaTeX(String text) {
+    private void setTextWebView(CharSequence text, boolean wantLaTeX, String fontPath) {
         textView.setVisibility(GONE);
         webView.setVisibility(VISIBLE);
-        webView.setText(text, true);
+        webView.setText(text, wantLaTeX, fontPath != null ? assetUrl + fontPath : null);
     }
 
-    private void setPlainText(String text) {
+    private void setTextWebViewOnlyForLaTeX(String text) {
+        setTextWebView(text, true, null);
+    }
+
+    private void setPlainText(CharSequence text) {
         webView.setVisibility(GONE);
         textView.setVisibility(VISIBLE);
         textView.setText(text);
@@ -128,32 +126,23 @@ public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
     }
 
     public void setPlainOrLaTeXTextColored(String text, @ColorRes int colorRes) {
-        @ColorInt
-        int colorArgb = ColorUtil.INSTANCE.getColorArgb(colorRes, getContext());
-        if (HtmlHelper.hasLaTeX(text)) {
-            String hexColor = String.format("#%06X", (0xFFFFFF & colorArgb));
-            String coloredText = "<font color='" + hexColor + "'>" + text + "</font>";
-            setTextWebViewOnlyForLaTeX(coloredText);
-        } else {
-            textView.setTextColor(colorArgb);
-            setPlainText(text);
-            Linkify.addLinks(textView, Linkify.ALL);
-            textView.setLinksClickable(true);
-        }
+        setPlainOrLaTeXTextWithCustomFontColored(text, null, colorRes, true);
     }
 
-    public void setPlainTextWithCustomFontColored(String text, String fontPath, @ColorRes int colorRes) {
+    public void setPlainOrLaTeXTextWithCustomFontColored(String text, String fontPath, @ColorRes int colorRes, boolean allowLaTeX) {
+        @ColorInt
+        int colorArgb = ColorUtil.INSTANCE.getColorArgb(colorRes, getContext());
         TextResult textResult = textResolver.resolveStepText(text);
         if (textResult.isNeedWebView()) {
-            webView.setVisibility(VISIBLE);
-            textView.setVisibility(GONE);
-            webView.setTextWithCustomFontColored(textResult.getText(), assetUrl + fontPath, colorRes);
+            String hexColor = String.format("#%06X", (0xFFFFFF & colorArgb));
+            String coloredText = "<font color='" + hexColor + "'>" + textResult.getText() + "</font>";
+            setTextWebView(coloredText, HtmlHelper.hasLaTeX(text) && allowLaTeX, fontPath);
         } else {
-            webView.setVisibility(GONE);
-            textView.setVisibility(VISIBLE);
-            textView.setText(textResult.getText());
-            textView.setTextColor(ContextCompat.getColor(getContext(), colorRes));
-            CalligraphyUtils.applyFontToTextView(getContext(), textView, fontPath);
+            textView.setTextColor(colorArgb);
+            setPlainText(textResult.getText());
+            if (fontPath != null) {
+                CalligraphyUtils.applyFontToTextView(getContext(), textView, fontPath);
+            }
         }
     }
 }

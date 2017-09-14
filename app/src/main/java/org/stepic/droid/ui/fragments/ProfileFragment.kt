@@ -114,8 +114,8 @@ class ProfileFragment : FragmentBase(),
             screenManager.showLaunchScreen(context, true, MainFeedActivity.PROFILE_INDEX)
         }
 
-        shortBioSecondContainer.textView.textSize = 14f
-        shortBioSecondContainer.textView.setLineSpacing(0f, 1.6f)
+        shortBioSecondText.textView.textSize = 14f
+        shortBioSecondText.textView.setLineSpacing(0f, 1.6f)
     }
 
     override fun onDestroyView() {
@@ -296,9 +296,10 @@ class ProfileFragment : FragmentBase(),
             }
 
             if (information.isBlank()) {
-                shortBioSecondContainer.visibility = View.GONE
+                shortBioSecondText.visibility = View.GONE
             } else {
-                shortBioSecondContainer.setPlainTextWithCustomFontColored(information, fontsProvider.provideFontPath(FontType.light), R.color.new_accent_color)
+                shortBioSecondText.setPlainOrLaTeXTextWithCustomFontColored(
+                        information, fontsProvider.provideFontPath(FontType.light), R.color.new_accent_color, false)
             }
         }
     }
