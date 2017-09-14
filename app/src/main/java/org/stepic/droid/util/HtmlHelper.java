@@ -1,7 +1,5 @@
 package org.stepic.droid.util;
 
-import android.annotation.SuppressLint;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jsoup.Jsoup;
@@ -10,6 +8,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.notifications.model.Notification;
+
+import java.util.Locale;
 
 import timber.log.Timber;
 
@@ -155,24 +155,18 @@ public class HtmlHelper {
 
 
     public static String buildMathPage(CharSequence body, int widthPx, String baseUrl) {
-        @SuppressLint("DefaultLocale")
-        String preBody = String.format(PRE_BODY, MathJaxScript, DefaultFontStyle, widthPx, baseUrl);
-        String result = preBody + body + POST_BODY;
-        return result;
+        String preBody = String.format(Locale.getDefault(), PRE_BODY, MathJaxScript, DefaultFontStyle, widthPx, baseUrl);
+        return preBody + body + POST_BODY;
     }
 
     public static String buildPageWithAdjustingTextAndImage(CharSequence body, int widthPx, String baseUrl) {
-        @SuppressLint("DefaultLocale")
-        String preBody = String.format(PRE_BODY, " ", DefaultFontStyle, widthPx, baseUrl);
-        String result = preBody + body + POST_BODY;
-        return result;
+        String preBody = String.format(Locale.getDefault(), PRE_BODY, " ", DefaultFontStyle, widthPx, baseUrl);
+        return preBody + body + POST_BODY;
     }
 
     public static String buildPageWithCustomFont(CharSequence body, String fontPath, int widthPx, String baseUrl) {
-        @SuppressLint("DefaultLocale")
-        String preBody = String.format(PRE_BODY, " ", String.format(CustomFontStyle, fontPath), widthPx, baseUrl);
-        String result = preBody + body + POST_BODY;
-        return result;
+        String preBody = String.format(Locale.getDefault(), PRE_BODY, " ", String.format(Locale.getDefault(), CustomFontStyle, fontPath), widthPx, baseUrl);
+        return preBody + body + POST_BODY;
     }
 
     //string with 2 format args

@@ -136,7 +136,7 @@ public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
         if (textResult.isNeedWebView()) {
             String hexColor = String.format("#%06X", (0xFFFFFF & colorArgb));
             String coloredText = "<font color='" + hexColor + "'>" + textResult.getText() + "</font>";
-            setTextWebView(coloredText, HtmlHelper.hasLaTeX(text) && allowLaTeX, fontPath);
+            setTextWebView(coloredText, allowLaTeX && HtmlHelper.hasLaTeX(text), fontPath);
         } else {
             textView.setTextColor(colorArgb);
             setPlainText(textResult.getText());
