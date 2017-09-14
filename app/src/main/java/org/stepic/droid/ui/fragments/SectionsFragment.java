@@ -50,7 +50,6 @@ import org.stepic.droid.base.App;
 import org.stepic.droid.base.Client;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.core.LocalProgressManager;
-import org.stepic.droid.core.ShareHelper;
 import org.stepic.droid.core.dropping.contract.DroppingListener;
 import org.stepic.droid.core.presenters.CalendarPresenter;
 import org.stepic.droid.core.presenters.CourseFinderPresenter;
@@ -121,8 +120,8 @@ public class SectionsFragment
         DroppingListener,
         StoreStateManager.SectionCallback {
 
-    public static String joinFlag = "joinFlag";
-    private static int INVITE_REQUEST_CODE = 324;
+    public static final String joinFlag = "joinFlag";
+    private static final int INVITE_REQUEST_CODE = 324;
     private static final int ANIMATION_DURATION = 0;
     public static final int DELETE_POSITION_REQUEST_CODE = 177;
 
@@ -185,9 +184,6 @@ public class SectionsFragment
     CourseJoinerPresenter courseJoinerPresenter;
 
     @Inject
-    ShareHelper shareHelper;
-
-    @Inject
     CalendarPresenter calendarPresenter;
 
     @Inject
@@ -210,9 +206,6 @@ public class SectionsFragment
 
     @Inject
     StoreStateManager storeStateManager;
-
-    @Inject
-    LocalProgressManager localProgressManager;
 
     private boolean wasIndexed;
     private Uri urlInWeb;

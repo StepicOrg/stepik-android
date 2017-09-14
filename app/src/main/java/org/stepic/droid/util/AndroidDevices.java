@@ -32,9 +32,12 @@ import android.view.MotionEvent;
 import org.stepic.droid.base.App;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -54,7 +57,7 @@ public class AndroidDevices {
         devicesWithoutNavBar.add("HTC One S");
         devicesWithoutNavBar.add("HTC One X");
         devicesWithoutNavBar.add("HTC One XL");
-        hasNavBar =  !devicesWithoutNavBar.contains(android.os.Build.MODEL);
+        hasNavBar = !devicesWithoutNavBar.contains(android.os.Build.MODEL);
         hasTsp = App.Companion.getAppContext().getPackageManager().hasSystemFeature("android.hardware.touchscreen");
         isTv = App.Companion.getAppContext().getPackageManager().hasSystemFeature("android.software.leanback");
     }
@@ -111,7 +114,8 @@ public class AndroidDevices {
                 "/mnt/media_rw"};
 
         try {
-            bufReader = new BufferedReader(new FileReader("/proc/mounts"));
+            InputStream inputStream = new FileInputStream("/proc/mounts");
+            bufReader = new BufferedReader(new InputStreamReader(inputStream, Charset.defaultCharset()));
             String line;
             while ((line = bufReader.readLine()) != null) {
 
@@ -139,7 +143,6 @@ public class AndroidDevices {
         }
         return list;
     }
-
 
 
     @TargetApi(VERSION_CODES.HONEYCOMB_MR1)

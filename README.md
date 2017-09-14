@@ -1,6 +1,10 @@
 # Stepik for Android
+Build Status: <a href="https://tc.stepik.org/viewType.html?buildTypeId=Stepic_StepicMobile_Android_GooglePlay&guest=1"><img src="https://tc.stepik.org/app/rest/builds/buildType:(id:Stepic_StepicMobile_Android_GooglePlay)/statusIcon"/></a>
 
-Mobile application of [Stepik.org][1].
+Code Coverage: [![codecov](https://codecov.io/gh/StepicOrg/stepik-android/branch/master/graph/badge.svg)](https://codecov.io/gh/StepicOrg/stepik-android)
+
+
+Mobile application of [Stepik][1].
 
 ## Store
 New version of Stepic App is now available on Google Play

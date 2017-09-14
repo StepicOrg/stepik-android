@@ -129,10 +129,8 @@ open class FragmentBase : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        if (unbinder != null) {
-            //in Kotlin, for example, butterknife is not used
-            unbinder?.unbind()
-        }
+        //in Kotlin, for example, butterknife is not used
+        unbinder?.unbind()
         viewHasBeenDestroyed = true
     }
 
