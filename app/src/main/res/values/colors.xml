@@ -3,6 +3,7 @@
 <resources>
 
     <color name="white">#FFFFFF</color>
+    <color name="pressed_white">#e6e6e6</color>
 
     <color name="grey_act_background">#E2E3E5</color>
 
@@ -92,5 +93,5 @@
     <color name="join_button_pressed_color">#6666CC66</color>
     <color name="continue_button_pressed_color">#DBDBDB</color>
 
-    <color name="shadow_opacity_10">#1A000000</color>
+    <color name="fast_continue_learning_opacity">#99535366</color>
 </resources>

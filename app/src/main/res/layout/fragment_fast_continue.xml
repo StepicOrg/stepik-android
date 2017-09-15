@@ -1,19 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="100dp">
+    android:paddingEnd="@dimen/course_list_side_padding"
+    android:paddingLeft="@dimen/course_list_side_padding"
+    android:paddingRight="@dimen/course_list_side_padding"
+    android:paddingStart="@dimen/course_list_side_padding"
+    android:paddingTop="@dimen/guideline_standard_padding">
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/fast_continue_widget_height"
         android:padding="16dp"
-        android:text="It is the text step. It is the text step. It is the text step. It is the text step. It is the text step. It is the text step. It is the text step. It is the text step. It is the text step. It is the text step. It is the text step. It is the text step. It is the text step. It is the text step. It is the text step. It is the text step. It is the text step. It is the text step. "/>
+        android:text="It is the text step. It is the text step.It is the text step. It is the text step.It is the text step. It is the text step.It is the text step. It is the text step.It is the text step. It is the text step."
+        android:textColor="@color/new_accent_color"
+        android:textSize="16sp"/>
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/shadow_opacity_10"/>
+        android:layout_height="@dimen/fast_continue_widget_height"
+        android:background="@drawable/fast_continue_lesson_drawable"/>
+
+    <TextView
+        android:id="@+id/fastContinueAction"
+        style="@style/CourseWidgetView"
+        fontPath="fonts/Roboto-Light.ttf"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:layout_gravity="center"
+        android:layout_marginLeft="60dp"
+        android:layout_marginRight="60dp"
+        android:background="@drawable/fast_continue_action_background"
+        android:text="Continue Learning"
+        android:textSize="16sp"
+        tools:ignore="MissingPrefix"/>
 
 </FrameLayout>

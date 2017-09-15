@@ -101,6 +101,10 @@
     <dimen name="course_list_side_right_padding">12dp</dimen>
     <dimen name="course_list_between_items_padding">16dp</dimen>
     <dimen name="extraPaddingRightCourseItem">8dp</dimen>
+    <dimen name="fast_continue_widget">@dimen/course_widget_radius</dimen>
+    <dimen name="fast_continue_widget_height">140dp</dimen>
+    <dimen name="fast_continue_action_radius">33dp</dimen>
+
 
     <!--Left padding (moteIcon) + right padding(moreIcon) + moreIcon.width-->
     <dimen name="courseTitleRightPadding">28dp</dimen>
