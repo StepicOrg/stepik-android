@@ -3,17 +3,15 @@ package org.stepic.droid.ui.activities
 import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
+import android.support.v7.app.AppCompatDelegate
 import android.text.Editable
 import android.text.TextWatcher
-import android.text.method.LinkMovementMethod
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.widget.Toast
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.credentials.Credential
 import com.google.android.gms.common.api.GoogleApiClient
-import kotlinx.android.synthetic.main.activity_login.*
-import kotlinx.android.synthetic.main.panel_custom_action_bar.*
+import kotlinx.android.synthetic.main.activity_login_new.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.LoginInteractionType
@@ -38,8 +36,8 @@ class LoginActivity : FragmentActivityBase(), LoginView {
         private val RC_SAVE = 356
     }
 
-    private val termsMessageHtml by lazy {
-        resources.getString(R.string.terms_message_login)
+    init {
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
     }
 
     private var progressLogin: ProgressDialog? = null
@@ -53,7 +51,7 @@ class LoginActivity : FragmentActivityBase(), LoginView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
+        setContentView(R.layout.activity_login_new)
         overridePendingTransition(R.anim.slide_in_from_bottom, R.anim.no_transition)
         hideSoftKeypad()
         App.componentManager().loginComponent(TAG).inject(this)
@@ -70,8 +68,6 @@ class LoginActivity : FragmentActivityBase(), LoginView {
             }
         }
 
-        termsPrivacyLogin.movementMethod = LinkMovementMethod.getInstance()
-        termsPrivacyLogin.text = textResolver.fromHtml(termsMessageHtml)
         forgotPasswordView.setOnClickListener {
             screenManager.openRemindPassword(this@LoginActivity)
         }
@@ -112,6 +108,7 @@ class LoginActivity : FragmentActivityBase(), LoginView {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                onClearLoginError()
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -121,7 +118,13 @@ class LoginActivity : FragmentActivityBase(), LoginView {
         passwordEditText.addTextChangedListener(reportAnalyticWhenTextBecomeNotBlank)
 
 
-        actionbarCloseButtonLayout.setOnClickListener { finish() }
+        launchSignUpButton.setOnClickListener {
+            analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_UP)
+            screenManager.showRegistration(this@LoginActivity, courseFromExtra)
+            finish()
+        }
+
+        signInWithSocial.setOnClickListener { finish() }
         loginButton.setOnClickListener {
             analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_IN_ON_SIGN_IN_SCREEN)
             analytic.reportEvent(Analytic.Login.REQUEST_LOGIN_WITH_INTERACTION_TYPE, LoginInteractionType.button.toBundle())
@@ -178,16 +181,24 @@ class LoginActivity : FragmentActivityBase(), LoginView {
 
     override fun onDestroy() {
         loginPresenter.detachView(this)
-        actionbarCloseButtonLayout.setOnClickListener(null)
+        signInWithSocial.setOnClickListener(null)
         loginButton.setOnClickListener(null)
+        launchSignUpButton.setOnClickListener(null)
         if (isFinishing) {
             App.componentManager().releaseLoginComponent(TAG)
         }
         super.onDestroy()
     }
 
+    private fun onClearLoginError() {
+        loginEditTextContainer.isEnabled = true
+        loginErrorMessage.visibility = View.GONE
+    }
+
     override fun onFailLogin(type: LoginFailType, credential: Credential?) {
-        Toast.makeText(this, getMessageFor(type), Toast.LENGTH_SHORT).show()
+        loginEditTextContainer.isEnabled = false
+        loginErrorMessage.text = getMessageFor(type)
+        loginErrorMessage.visibility = View.VISIBLE
         progressHandler.dismiss()
     }
 

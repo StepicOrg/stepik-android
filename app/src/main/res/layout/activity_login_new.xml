@@ -6,6 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:fillViewport="true"
     android:overScrollMode="never"
+    android:id="@+id/loginRootView"
     tools:context=".ui.activities.LaunchActivity">
 
     <android.support.constraint.ConstraintLayout
@@ -50,7 +51,7 @@
             app:layout_constraintRight_toRightOf="parent">
 
             <Button
-                android:id="@+id/signInWithEmail"
+                android:id="@+id/signInWithSocial"
                 android:text="@string/sign_in_with_social"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
