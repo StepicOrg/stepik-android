@@ -31,7 +31,7 @@
             android:focusableInTouchMode="false"
             android:src="@drawable/ic_stepik_logotype_square_green" />
 
-        <RelativeLayout
+        <FrameLayout
             android:id="@+id/bottomButtons"
             android:layout_width="@dimen/auth_elements_width"
             android:layout_height="wrap_content"
@@ -41,9 +41,6 @@
             android:layout_marginEnd="24dp"
             android:paddingTop="24dp"
             android:paddingBottom="24dp"
-
-            android:maxWidth="@dimen/min_max_width_for_tablets"
-            android:minWidth="@dimen/min_max_width_for_tablets"
 
             app:layout_constraintBottom_toBottomOf="parent"
 
@@ -55,10 +52,8 @@
                 android:text="@string/sign_in_with_social"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
+                android:layout_gravity="start|center_vertical"
                 style="@style/BorderLessTextButton"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
                 android:visibility="visible" />
 
             <Button
@@ -66,13 +61,11 @@
                 android:text="@string/sign_up"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
+                android:layout_gravity="end|center_vertical"
                 style="@style/BorderLessTextButton"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
                 android:visibility="visible" />
 
-        </RelativeLayout>
+        </FrameLayout>
 
         <LinearLayout
             android:id="@+id/container"
