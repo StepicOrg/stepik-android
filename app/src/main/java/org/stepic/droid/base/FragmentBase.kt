@@ -2,6 +2,7 @@ package org.stepic.droid.base
 
 import android.app.DownloadManager
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.support.annotation.DrawableRes
 import android.support.v4.app.Fragment
@@ -167,7 +168,12 @@ open class FragmentBase : Fragment() {
      * Null is not used at Theme because of black background on pre-loading activity.
      */
     protected fun nullifyActivityBackground() {
-        activity?.window?.decorView?.background = null
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            activity?.window?.decorView?.background = null
+        } else {
+            @Suppress("DEPRECATION")
+            activity?.window?.decorView?.setBackgroundDrawable(null)
+        }
     }
 
     /**
