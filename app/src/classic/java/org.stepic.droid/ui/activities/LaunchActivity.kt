@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Intent
 import android.content.IntentSender
+import android.os.Build
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
 import android.text.Spannable
@@ -186,8 +187,11 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
 
     private fun initSocialRecycler(googleApiClient: GoogleApiClient?, state: SocialAuthAdapter.State = SocialAuthAdapter.State.NORMAL) {
         socialListRecyclerView.layoutManager = GridLayoutManager(this, 3)
-        socialListRecyclerView.itemAnimator = FadeInDownAnimator()
-        socialListRecyclerView.itemAnimator.removeDuration = 0
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            socialListRecyclerView.itemAnimator = FadeInDownAnimator()
+            socialListRecyclerView.itemAnimator.removeDuration = 0
+        }
 
         val adapter = SocialAuthAdapter(this, googleApiClient, state)
         showMore.setOnClickListener {
