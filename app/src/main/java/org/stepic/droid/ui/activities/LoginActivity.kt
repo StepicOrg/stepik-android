@@ -79,16 +79,16 @@ class LoginActivity : FragmentActivityBase(), LoginView {
             screenManager.openRemindPassword(this@LoginActivity)
         }
 
-        loginText.setOnEditorActionListener { _, actionId, _ ->
+        loginField.setOnEditorActionListener { _, actionId, _ ->
             var handled = false
             if (actionId == EditorInfo.IME_ACTION_NEXT) {
-                passwordEditText.requestFocus()
+                passwordField.requestFocus()
                 handled = true
             }
             handled
         }
 
-        passwordEditText.setOnEditorActionListener { _, actionId, _ ->
+        passwordField.setOnEditorActionListener { _, actionId, _ ->
             var handled = false
             if (actionId == EditorInfo.IME_ACTION_SEND) {
                 analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_IN_NEXT_ON_SIGN_IN_SCREEN)
@@ -104,8 +104,8 @@ class LoginActivity : FragmentActivityBase(), LoginView {
                 analytic.reportEvent(Analytic.Login.TAP_ON_FIELDS)
             }
         }
-        loginText.setOnFocusChangeListener(onFocusField)
-        passwordEditText.setOnFocusChangeListener(onFocusField)
+        loginField.setOnFocusChangeListener(onFocusField)
+        passwordField.setOnFocusChangeListener(onFocusField)
 
         val reportAnalyticWhenTextBecomeNotBlank = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -121,8 +121,8 @@ class LoginActivity : FragmentActivityBase(), LoginView {
             override fun afterTextChanged(s: Editable?) {
             }
         }
-        loginText.addTextChangedListener(reportAnalyticWhenTextBecomeNotBlank)
-        passwordEditText.addTextChangedListener(reportAnalyticWhenTextBecomeNotBlank)
+        loginField.addTextChangedListener(reportAnalyticWhenTextBecomeNotBlank)
+        passwordField.addTextChangedListener(reportAnalyticWhenTextBecomeNotBlank)
 
 
         launchSignUpButton.setOnClickListener {
@@ -152,8 +152,8 @@ class LoginActivity : FragmentActivityBase(), LoginView {
         onNewIntent(intent)
 
         if (savedInstanceState == null && intent.hasExtra(AppConstants.KEY_EMAIL_BUNDLE)) {
-            loginText.setText(intent.getStringExtra(AppConstants.KEY_EMAIL_BUNDLE))
-            passwordEditText.requestFocus()
+            loginField.setText(intent.getStringExtra(AppConstants.KEY_EMAIL_BUNDLE))
+            passwordField.requestFocus()
         }
     }
 
@@ -192,8 +192,8 @@ class LoginActivity : FragmentActivityBase(), LoginView {
     }
 
     private fun tryLogin() {
-        val login = loginText.text.toString()
-        val password = passwordEditText.text.toString()
+        val login = loginField.text.toString()
+        val password = passwordField.text.toString()
 
         loginPresenter.login(login, password)
     }
@@ -211,12 +211,12 @@ class LoginActivity : FragmentActivityBase(), LoginView {
 
     private fun onClearLoginError() {
         loginButton.isEnabled = true
-        loginEditTextContainer.isEnabled = true
+        loginForm.isEnabled = true
         loginErrorMessage.visibility = View.GONE
     }
 
     override fun onFailLogin(type: LoginFailType, credential: Credential?) {
-        loginEditTextContainer.isEnabled = false
+        loginForm.isEnabled = false
         loginErrorMessage.text = getMessageFor(type)
         loginErrorMessage.visibility = View.VISIBLE
         loginButton.isEnabled = false

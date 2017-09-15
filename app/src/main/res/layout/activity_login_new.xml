@@ -100,7 +100,7 @@
                 tools:ignore="MissingPrefix"/>
 
             <LinearLayout
-                android:id="@+id/loginEditTextContainer"
+                android:id="@+id/loginForm"
                 android:layout_width="@dimen/auth_elements_width"
                 android:layout_height="wrap_content"
                 android:background="@drawable/login_edit_text_stroke"
@@ -110,7 +110,7 @@
                 android:layout_marginRight="@dimen/padding_registration_left_right">
 
                 <EditText
-                    android:id="@+id/loginText"
+                    android:id="@+id/loginField"
                     style="@style/LoginEditFields"
                     android:hint="@string/email"
                     android:imeOptions="flagNoFullscreen|actionNext"
@@ -119,7 +119,6 @@
                 <include layout="@layout/edit_text_separator" />
 
                 <android.support.design.widget.TextInputLayout
-                    android:id="@+id/password_text_input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:passwordToggleDrawable="@drawable/password_toggle"
@@ -127,7 +126,7 @@
                     app:passwordToggleEnabled="true">
 
                     <EditText
-                        android:id="@+id/passwordEditText"
+                        android:id="@+id/passwordField"
                         style="@style/LoginEditFields"
                         android:hint="@string/password_hint"
                         android:imeOptions="flagNoFullscreen|actionSend"
