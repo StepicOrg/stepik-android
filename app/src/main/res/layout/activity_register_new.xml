@@ -7,7 +7,7 @@
     android:fillViewport="true"
     android:overScrollMode="never"
     android:id="@+id/registerRootView"
-    tools:context=".ui.activities.RegisterActivityNew">
+    tools:context=".ui.activities.RegisterActivity">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/root_view"
@@ -51,7 +51,7 @@
             app:layout_constraintRight_toRightOf="parent"
             android:gravity="center"
 
-            android:textSize="14sp"
+            android:textSize="16sp"
             android:textColorLink="@color/stepic_brand_primary" />
 
 

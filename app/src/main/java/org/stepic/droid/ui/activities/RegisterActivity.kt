@@ -26,10 +26,7 @@ import org.stepic.droid.core.presenters.LoginPresenter
 import org.stepic.droid.core.presenters.contracts.LoginView
 import org.stepic.droid.fonts.FontType
 import org.stepic.droid.model.AuthData
-import org.stepic.droid.util.ProgressHelper
-import org.stepic.droid.util.ValidatorUtil
-import org.stepic.droid.util.getMessageFor
-import org.stepic.droid.util.toBundle
+import org.stepic.droid.util.*
 import org.stepic.droid.web.RegistrationResponse
 import retrofit2.Call
 import retrofit2.Callback
@@ -71,6 +68,7 @@ class RegisterActivity : FragmentActivityBase(), LoginView {
 
         termsPrivacyRegisterTextView.movementMethod = LinkMovementMethod.getInstance()
         termsPrivacyRegisterTextView.text = textResolver.fromHtml(termsMessageHtml)
+        stripUnderlinesFromLinks(termsPrivacyRegisterTextView)
 
         signUpButton.setOnClickListener { createAccount(LoginInteractionType.button) }
 
