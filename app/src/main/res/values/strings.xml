@@ -511,4 +511,5 @@
     <string name="sign_in_with_social">Sign in with social</string>
     <string name="social_recycler_show_more">More</string>
     <string name="social_recycler_show_less">Less</string>
+    <string name="name">Name</string>
 </resources>

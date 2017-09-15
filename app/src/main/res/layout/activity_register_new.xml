@@ -6,8 +6,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:fillViewport="true"
     android:overScrollMode="never"
-    android:id="@+id/loginRootView"
-    tools:context=".ui.activities.LaunchActivity">
+    android:id="@+id/registerRootView"
+    tools:context=".ui.activities.RegisterActivityNew">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/root_view"
@@ -31,8 +31,8 @@
             android:focusableInTouchMode="false"
             android:src="@drawable/ic_stepik_logotype_square_green" />
 
-        <RelativeLayout
-            android:id="@+id/bottomButtons"
+        <TextView
+            android:id="@+id/termsPrivacyRegisterTextView"
             android:layout_width="@dimen/auth_elements_width"
             android:layout_height="wrap_content"
             android:layout_marginLeft="24dp"
@@ -48,31 +48,9 @@
             app:layout_constraintBottom_toBottomOf="parent"
 
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent">
+            app:layout_constraintRight_toRightOf="parent"
+            android:gravity="center" />
 
-            <Button
-                android:id="@+id/signInWithSocial"
-                android:text="@string/sign_in_with_social"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                style="@style/BorderLessTextButton"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:visibility="visible" />
-
-            <Button
-                android:id="@+id/launchSignUpButton"
-                android:text="@string/sign_up"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                style="@style/BorderLessTextButton"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:visibility="visible" />
-
-        </RelativeLayout>
 
         <LinearLayout
             android:id="@+id/container"
@@ -86,17 +64,17 @@
             app:layout_constraintRight_toRightOf="parent"
 
             app:layout_constraintTop_toBottomOf="@+id/stepikLogo"
-            app:layout_constraintBottom_toTopOf="@+id/bottomButtons"
+            app:layout_constraintBottom_toTopOf="@+id/termsPrivacyRegisterTextView"
 
             android:layout_marginTop="24dp">
 
             <TextView
-                android:id="@+id/signInText"
+                android:id="@+id/signUpText"
                 fontPath="fonts/Roboto-Light.ttf"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
-                tools:text="Sign in with e-mail"
+                tools:text="Sign up"
                 tools:ignore="MissingPrefix"/>
 
             <LinearLayout
@@ -110,7 +88,16 @@
                 android:layout_marginRight="@dimen/padding_registration_left_right">
 
                 <EditText
-                    android:id="@+id/loginText"
+                    android:id="@+id/registrationFirstName"
+                    style="@style/LoginEditFields"
+                    android:hint="@string/name"
+                    android:imeOptions="flagNoFullscreen|actionNext"
+                    android:inputType="textPersonName|textAutoCorrect|textCapWords"/>
+
+                <include layout="@layout/edit_text_separator" />
+
+                <EditText
+                    android:id="@+id/emailView"
                     style="@style/LoginEditFields"
                     android:hint="@string/email"
                     android:imeOptions="flagNoFullscreen|actionNext"
@@ -119,7 +106,7 @@
                 <include layout="@layout/edit_text_separator" />
 
                 <android.support.design.widget.TextInputLayout
-                    android:id="@+id/password_text_input"
+                    android:id="@+id/passwordWrapper"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:passwordToggleDrawable="@drawable/password_toggle"
@@ -127,9 +114,10 @@
                     app:passwordToggleEnabled="true">
 
                     <EditText
-                        android:id="@+id/passwordEditText"
+                        android:id="@+id/passwordTextView"
                         style="@style/LoginEditFields"
                         android:hint="@string/password_hint"
+                        android:textColor="@color/new_accent_color"
                         android:imeOptions="flagNoFullscreen|actionSend"
                         android:inputType="textPassword"
                         android:maxLength="@integer/max_length_of_password"/>
@@ -138,7 +126,7 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/loginErrorMessage"
+                android:id="@+id/registerErrorMessage"
                 android:layout_width="@dimen/auth_elements_width"
                 android:layout_height="match_parent"
                 android:textColor="@color/login_error_color"
@@ -153,25 +141,14 @@
                 tools:text="Whoops! The email address and/or password you specified are not correct." />
 
             <Button
-                android:id="@+id/loginButton"
+                android:id="@+id/signUpButton"
                 android:layout_marginTop="20dp"
                 android:textSize="16sp"
-                android:text="@string/sign_in"
+                android:text="@string/sign_up"
                 android:layout_marginLeft="@dimen/padding_registration_left_right"
                 android:layout_marginRight="@dimen/padding_registration_left_right"
 
                 style="@style/LoginButtons" />
-
-            <Button
-                android:id="@+id/forgotPasswordView"
-                android:layout_width="@dimen/auth_elements_width"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginStart="24dp"
-                android:layout_marginEnd="24dp"
-                android:textColor="@color/remind_password_button_text_color"
-                style="@style/BorderLessTextButton"
-                android:text="@string/remind_password" />
 
         </LinearLayout>
 
