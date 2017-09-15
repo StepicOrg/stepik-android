@@ -245,6 +245,7 @@
         <item name="android:maxLength">100</item>
         <item name="android:maxLines">1</item>
         <item name="android:background">@android:color/transparent</item>
+        <item name="android:textCursorDrawable">@null</item>
     </style>
 
     <style name="BorderLessTextButton">
