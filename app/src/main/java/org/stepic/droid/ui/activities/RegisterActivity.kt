@@ -63,7 +63,7 @@ class RegisterActivity : FragmentActivityBase(), LoginView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(org.stepic.droid.R.layout.activity_register_new)
-        overridePendingTransition(org.stepic.droid.R.anim.slide_in_from_bottom, org.stepic.droid.R.anim.no_transition)
+        overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start)
         hideSoftKeypad()
         App.componentManager().loginComponent(TAG).inject(this)
 
@@ -218,7 +218,7 @@ class RegisterActivity : FragmentActivityBase(), LoginView {
 
     override fun finish() {
         super.finish()
-        overridePendingTransition(org.stepic.droid.R.anim.no_transition, org.stepic.droid.R.anim.slide_out_to_bottom)
+        overridePendingTransition(R.anim.slide_in_from_start, R.anim.slide_out_to_end)
     }
 
     private fun showError(errorText: String?) {

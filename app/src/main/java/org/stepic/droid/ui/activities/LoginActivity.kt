@@ -57,7 +57,7 @@ class LoginActivity : FragmentActivityBase(), LoginView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login_new)
-        overridePendingTransition(R.anim.slide_in_from_bottom, R.anim.no_transition)
+        overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start)
         hideSoftKeypad()
         App.componentManager().loginComponent(TAG).inject(this)
 
@@ -128,7 +128,6 @@ class LoginActivity : FragmentActivityBase(), LoginView {
         launchSignUpButton.setOnClickListener {
             analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_UP)
             screenManager.showRegistration(this@LoginActivity, courseFromExtra)
-            finish()
         }
 
         signInWithSocial.setOnClickListener { finish() }
@@ -188,7 +187,7 @@ class LoginActivity : FragmentActivityBase(), LoginView {
 
     override fun finish() {
         super.finish()
-        overridePendingTransition(R.anim.no_transition, R.anim.slide_out_to_bottom)
+        overridePendingTransition(R.anim.slide_in_from_start, R.anim.slide_out_to_end)
     }
 
     private fun tryLogin() {
