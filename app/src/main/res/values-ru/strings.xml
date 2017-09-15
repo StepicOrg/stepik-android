@@ -506,4 +506,6 @@
     <string name="social_recycler_show_more">Ещё</string>
     <string name="social_recycler_show_less">Меньше</string>
     <string name="name">Имя</string>
+
+    <string name="sign_up_with_email_suffix">" с e-mail"</string>
 </resources>
