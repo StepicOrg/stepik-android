@@ -5,6 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatDelegate
 import android.text.Editable
+import android.text.Spannable
+import android.text.SpannableString
 import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -21,12 +23,15 @@ import org.stepic.droid.core.LoginFailType
 import org.stepic.droid.core.ProgressHandler
 import org.stepic.droid.core.presenters.LoginPresenter
 import org.stepic.droid.core.presenters.contracts.LoginView
+import org.stepic.droid.fonts.FontType
 import org.stepic.droid.model.AuthData
 import org.stepic.droid.ui.dialogs.LoadingProgressDialog
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.getMessageFor
 import org.stepic.droid.util.toBundle
+import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan
+import uk.co.chrisjenx.calligraphy.TypefaceUtils
 import javax.inject.Inject
 
 class LoginActivity : FragmentActivityBase(), LoginView {
@@ -67,6 +72,8 @@ class LoginActivity : FragmentActivityBase(), LoginView {
                 ProgressHelper.dismiss(progressLogin)
             }
         }
+
+        initTitle()
 
         forgotPasswordView.setOnClickListener {
             screenManager.openRemindPassword(this@LoginActivity)
@@ -150,6 +157,18 @@ class LoginActivity : FragmentActivityBase(), LoginView {
         }
     }
 
+    private fun initTitle() {
+        val signInString = getString(R.string.sign_in)
+        val signInWithPasswordSuffix = getString(R.string.sign_in_with_password_suffix)
+
+        val spannableSignIn = SpannableString(signInString + signInWithPasswordSuffix)
+        val typefaceSpan = CalligraphyTypefaceSpan(TypefaceUtils.load(assets, fontsProvider.provideFontPath(FontType.medium)))
+
+        spannableSignIn.setSpan(typefaceSpan, 0, signInString.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        signInText.text = spannableSignIn
+    }
+
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         //if we redirect from social:
@@ -191,6 +210,7 @@ class LoginActivity : FragmentActivityBase(), LoginView {
     }
 
     private fun onClearLoginError() {
+        loginButton.isEnabled = true
         loginEditTextContainer.isEnabled = true
         loginErrorMessage.visibility = View.GONE
     }
@@ -199,6 +219,7 @@ class LoginActivity : FragmentActivityBase(), LoginView {
         loginEditTextContainer.isEnabled = false
         loginErrorMessage.text = getMessageFor(type)
         loginErrorMessage.visibility = View.VISIBLE
+        loginButton.isEnabled = false
         progressHandler.dismiss()
     }
 
