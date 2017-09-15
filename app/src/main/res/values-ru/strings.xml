@@ -502,7 +502,7 @@
     <string name="course_item_more">Подробнее</string>
     <string name="course_item_join">Подробнее о курсе</string>
     <string name="sign_in_with_social_suffix">" через социальные сети"</string>
-    <string name="sign_in_with_social">Войти через социальные сети</string>
+    <string name="sign_in_with_social">Вход через соцсети</string>
     <string name="social_recycler_show_more">Ещё</string>
     <string name="social_recycler_show_less">Меньше</string>
     <string name="name">Имя</string>
