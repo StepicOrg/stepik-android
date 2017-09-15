@@ -13,7 +13,7 @@ import android.view.inputmethod.EditorInfo
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.credentials.Credential
 import com.google.android.gms.common.api.GoogleApiClient
-import kotlinx.android.synthetic.main.activity_login_new.*
+import kotlinx.android.synthetic.main.activity_login.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.LoginInteractionType
@@ -56,7 +56,7 @@ class LoginActivity : FragmentActivityBase(), LoginView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login_new)
+        setContentView(R.layout.activity_login)
         overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start)
         hideSoftKeypad()
         App.componentManager().loginComponent(TAG).inject(this)

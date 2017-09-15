@@ -29,7 +29,7 @@ import com.vk.sdk.VKCallback
 import com.vk.sdk.VKSdk
 import com.vk.sdk.api.VKError
 import jp.wasabeef.recyclerview.animators.FadeInDownAnimator
-import kotlinx.android.synthetic.main.activity_launch_new.*
+import kotlinx.android.synthetic.main.activity_launch.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
@@ -72,7 +72,7 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_launch_new)
+        setContentView(R.layout.activity_launch)
         App.componentManager().loginComponent(TAG).inject(this)
         overridePendingTransition(R.anim.no_transition, R.anim.slide_out_to_bottom)
 

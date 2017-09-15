@@ -15,7 +15,7 @@ import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.credentials.Credential
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.firebase.analytics.FirebaseAnalytics
-import kotlinx.android.synthetic.main.activity_register_new.*
+import kotlinx.android.synthetic.main.activity_register.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.LoginInteractionType
@@ -59,7 +59,7 @@ class RegisterActivity : FragmentActivityBase(), LoginView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(org.stepic.droid.R.layout.activity_register_new)
+        setContentView(org.stepic.droid.R.layout.activity_register)
         overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start)
         hideSoftKeypad()
         App.componentManager().loginComponent(TAG).inject(this)
