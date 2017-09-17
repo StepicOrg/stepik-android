@@ -86,6 +86,10 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/login_edit_text_stroke"
                 android:orientation="vertical"
+
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+
                 android:layout_marginTop="40dp"
                 android:layout_marginLeft="@dimen/padding_registration_left_right"
                 android:layout_marginRight="@dimen/padding_registration_left_right">

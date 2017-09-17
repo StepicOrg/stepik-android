@@ -61,7 +61,6 @@ class RegisterActivity : FragmentActivityBase(), LoginView {
         super.onCreate(savedInstanceState)
         setContentView(org.stepic.droid.R.layout.activity_register)
         overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start)
-        hideSoftKeypad()
         App.componentManager().loginComponent(TAG).inject(this)
 
         initTitle()
