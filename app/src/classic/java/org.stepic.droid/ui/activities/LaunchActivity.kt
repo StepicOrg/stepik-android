@@ -85,7 +85,6 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
 
         signInWithEmail.setOnClickListener {
             analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_IN)
-            signInWithEmail.isEnabled = false
             screenManager.showLogin(this@LaunchActivity, courseFromExtra, null)
         }
 
@@ -178,11 +177,6 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
         if (intent?.data != null) {
             redirectFromSocial(intent)
         }
-    }
-
-    override fun onEnterAnimationComplete() {
-        super.onEnterAnimationComplete()
-        signInWithEmail.isEnabled = true // to prevent from crashing when button clicked in transition and previous LoginActivity is not destroyed
     }
 
     private fun initSocialRecycler(googleApiClient: GoogleApiClient?, state: SocialAuthAdapter.State = SocialAuthAdapter.State.NORMAL) {

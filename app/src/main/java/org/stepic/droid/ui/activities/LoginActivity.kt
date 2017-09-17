@@ -147,7 +147,6 @@ class LoginActivity : FragmentActivityBase(), LoginView {
                     .build()
         }
 
-        loginPresenter.attachView(this)
         onNewIntent(intent)
 
         if (savedInstanceState == null && intent.hasExtra(AppConstants.KEY_EMAIL_BUNDLE)) {
@@ -198,7 +197,6 @@ class LoginActivity : FragmentActivityBase(), LoginView {
     }
 
     override fun onDestroy() {
-        loginPresenter.detachView(this)
         signInWithSocial.setOnClickListener(null)
         loginButton.setOnClickListener(null)
         launchSignUpButton.setOnClickListener(null)
@@ -274,4 +272,13 @@ class LoginActivity : FragmentActivityBase(), LoginView {
 
     override fun onSocialLoginWithExistingEmail(email: String) {}
 
+    override fun onResume() {
+        super.onResume()
+        loginPresenter.attachView(this)
+    }
+
+    override fun onPause() {
+        loginPresenter.detachView(this)
+        super.onPause()
+    }
 }
