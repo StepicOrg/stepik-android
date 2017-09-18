@@ -26,6 +26,7 @@ import org.stepic.droid.core.presenters.LoginPresenter
 import org.stepic.droid.core.presenters.contracts.LoginView
 import org.stepic.droid.fonts.FontType
 import org.stepic.droid.model.AuthData
+import org.stepic.droid.ui.util.setOnKeyboardOpenListener
 import org.stepic.droid.util.*
 import org.stepic.droid.web.RegistrationResponse
 import retrofit2.Call
@@ -140,6 +141,14 @@ class RegisterActivity : FragmentActivityBase(), LoginView {
         }
 
         setSignUpButtonState()
+
+        setOnKeyboardOpenListener(root_view, {
+            stepikLogo.visibility = View.GONE
+            signUpText.visibility = View.GONE
+        }, {
+            stepikLogo.visibility = View.VISIBLE
+            signUpText.visibility = View.VISIBLE
+        })
 
         loginPresenter.attachView(this)
     }

@@ -26,6 +26,7 @@ import org.stepic.droid.core.presenters.contracts.LoginView
 import org.stepic.droid.fonts.FontType
 import org.stepic.droid.model.AuthData
 import org.stepic.droid.ui.dialogs.LoadingProgressDialog
+import org.stepic.droid.ui.util.setOnKeyboardOpenListener
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.getMessageFor
@@ -151,6 +152,14 @@ class LoginActivity : FragmentActivityBase(), LoginView {
             loginField.setText(intent.getStringExtra(AppConstants.KEY_EMAIL_BUNDLE))
             passwordField.requestFocus()
         }
+
+        setOnKeyboardOpenListener(root_view, {
+            stepikLogo.visibility = View.GONE
+            signInText.visibility = View.GONE
+        }, {
+            stepikLogo.visibility = View.VISIBLE
+            signInText.visibility = View.VISIBLE
+        })
     }
 
     private fun initTitle() {
