@@ -504,4 +504,7 @@
     <string name="learners_count">Количество студентов</string>
     <string name="continue_learning">Продолжить учиться</string>
     <string name="accessibility_last_step_cover">Изображение последнего шага</string>
+    <string name="my_courses_title">Мои курсы</string>
+    <string name="popular_courses_title">Популярные</string>
+    <string name="view_all_courses">Показать все</string>
 </resources>

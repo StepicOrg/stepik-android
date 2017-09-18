@@ -509,4 +509,7 @@
     <string name="learners_count">Learners count</string>
     <string name="continue_learning">Continue Learning</string>
     <string name="accessibility_last_step_cover">Last step cover</string>
+    <string name="my_courses_title">My courses</string>
+    <string name="popular_courses_title">Popular</string>
+    <string name="view_all_courses">View all</string>
 </resources>

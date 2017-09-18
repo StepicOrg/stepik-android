@@ -1,15 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.RecyclerView
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/myCoursesOnHome"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:clipToPadding="false"
-    android:divider="@color/transparent"
-    android:overScrollMode="never"
-    android:paddingEnd="@dimen/home_right_recycler_padding"
-    android:paddingRight="@dimen/home_right_recycler_padding"
-    android:scrollbarStyle="outsideOverlay"
-    android:scrollbars="none"
-    android:splitMotionEvents="false"/>
+    android:layout_height="wrap_content">
 
+    <TextView
+        android:id="@+id/coursesTitle"
+        fontPath="fonts/Roboto-Regular.ttf"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/course_list_side_padding"
+        android:layout_marginStart="@dimen/course_list_side_padding"
+        android:layout_marginTop="@dimen/guideline_standard_padding"
+        android:layout_toLeftOf="@+id/coursesViewAll"
+        android:layout_toStartOf="@+id/coursesViewAll"
+        android:ellipsize="end"
+        android:lines="1"
+        android:text="@string/my_courses_title"
+        android:textColor="@color/text_color"
+        android:textSize="16sp"
+        tools:ignore="MissingPrefix"/>
+
+    <TextView
+        android:id="@+id/coursesViewAll"
+        fontPath="fonts/Roboto-Light.ttf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/coursesTitle"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginEnd="@dimen/course_list_side_padding"
+        android:layout_marginRight="@dimen/course_list_side_padding"
+        android:text="@string/view_all_courses"
+        android:textColor="@color/view_all_course_list_color"
+        android:textSize="16sp"
+        tools:ignore="MissingPrefix"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/myCoursesOnHome"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/coursesTitle"
+        android:layout_marginTop="@dimen/guideline_standard_padding"
+        android:clipToPadding="false"
+        android:divider="@color/transparent"
+        android:overScrollMode="never"
+        android:paddingEnd="@dimen/home_right_recycler_padding"
+        android:paddingRight="@dimen/home_right_recycler_padding"
+        android:scrollbarStyle="outsideOverlay"
+        android:scrollbars="none"
+        android:splitMotionEvents="false"
+        />
+
+</RelativeLayout>
