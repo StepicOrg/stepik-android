@@ -148,10 +148,10 @@ dependencies {
 
     compile 'de.hdodenhof:circleimageview:2.1.0'
 
-    compile 'com.android.support:appcompat-v7:26.0.1'
-    compile 'com.android.support:design:26.0.1'
-    compile 'com.android.support:recyclerview-v7:26.0.1'
-    compile 'com.android.support:cardview-v7:26.0.1'
+    compile 'com.android.support:appcompat-v7:26.1.0'
+    compile 'com.android.support:design:26.1.0'
+    compile 'com.android.support:recyclerview-v7:26.1.0'
+    compile 'com.android.support:cardview-v7:26.1.0'
     compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
 
     compile 'joda-time:joda-time:2.8'
@@ -188,7 +188,7 @@ dependencies {
 
     compile 'com.github.chrisbanes:PhotoView:1.3.1'
 
-    compile 'com.github.h6ah4i:android-advancedrecyclerview:feature~support_libraries_v26-SNAPSHOT'
+    compile 'com.github.h6ah4i:android-advancedrecyclerview:develop-SNAPSHOT'
 
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
 
@@ -213,7 +213,7 @@ dependencies {
 
     androidTestCompile 'org.hamcrest:hamcrest-library:1.3'
 
-    androidTestCompile 'com.android.support:support-annotations:26.0.1'
+    androidTestCompile 'com.android.support:support-annotations:26.1.0'
 
     androidTestCompile('com.android.support.test:runner:0.5') {
         exclude group: 'com.android.support'
