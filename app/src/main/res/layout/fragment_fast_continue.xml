@@ -11,12 +11,18 @@
     android:paddingTop="@dimen/guideline_standard_padding">
 
     <TextView
+        android:id="@+id/lastStepTextView"
         android:layout_width="match_parent"
         android:layout_height="@dimen/fast_continue_widget_height"
         android:padding="16dp"
-        android:text="It is the text step. It is the text step.It is the text step. It is the text step.It is the text step. It is the text step.It is the text step. It is the text step.It is the text step. It is the text step."
         android:textColor="@color/new_accent_color"
         android:textSize="16sp"/>
+
+    <ImageView
+        android:contentDescription="@string/accessibility_last_step_cover"
+        android:id="@+id/lastStepImageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
     <View
         android:layout_width="match_parent"
@@ -33,7 +39,7 @@
         android:layout_marginLeft="60dp"
         android:layout_marginRight="60dp"
         android:background="@drawable/fast_continue_action_background"
-        android:text="Continue Learning"
+        android:text="@string/continue_learning"
         android:textSize="16sp"
         tools:ignore="MissingPrefix"/>
 

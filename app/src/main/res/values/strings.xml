@@ -507,4 +507,6 @@
     <string name="course_item_join">Course Info</string>
 
     <string name="learners_count">Learners count</string>
+    <string name="continue_learning">Continue Learning</string>
+    <string name="accessibility_last_step_cover">Last step cover</string>
 </resources>

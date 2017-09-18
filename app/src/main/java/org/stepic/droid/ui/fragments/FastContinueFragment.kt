@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.fragment_fast_continue.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
@@ -13,19 +14,27 @@ import org.stepic.droid.core.dropping.contract.DroppingListener
 import org.stepic.droid.core.presenters.ContinueCoursePresenter
 import org.stepic.droid.core.presenters.LastStepPresenter
 import org.stepic.droid.core.presenters.PersistentCourseListPresenter
+import org.stepic.droid.core.presenters.VideoStepPresenter
 import org.stepic.droid.core.presenters.contracts.ContinueCourseView
 import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.core.presenters.contracts.LastStepView
+import org.stepic.droid.core.presenters.contracts.VideoStepView
 import org.stepic.droid.model.Course
 import org.stepic.droid.model.Section
 import org.stepic.droid.model.Step
+import org.stepic.droid.model.Video
 import org.stepic.droid.storage.operations.Table
+import org.stepic.droid.util.AppConstants
+import org.stepic.droid.util.ThumbnailParser
 import timber.log.Timber
 import javax.inject.Inject
 
 class FastContinueFragment : FragmentBase(),
         CoursesView,
-        ContinueCourseView, DroppingListener, LastStepView {
+        ContinueCourseView,
+        DroppingListener,
+        VideoStepView,
+        LastStepView {
 
     companion object {
         fun newInstance(): FastContinueFragment = FastContinueFragment()
@@ -42,6 +51,9 @@ class FastContinueFragment : FragmentBase(),
 
     @Inject
     lateinit var lastStepPresenter: LastStepPresenter
+
+    @Inject
+    lateinit var videoStepPresenter: VideoStepPresenter
 
     override fun injectComponent() {
         App
@@ -68,6 +80,7 @@ class FastContinueFragment : FragmentBase(),
         continueCoursePresenter.attachView(this)
         droppingClient.subscribe(this)
         lastStepPresenter.attachView(this)
+        videoStepPresenter.attachView(this)
     }
 
     override fun onStart() {
@@ -79,6 +92,7 @@ class FastContinueFragment : FragmentBase(),
 
     override fun onDestroyView() {
         super.onDestroyView()
+        videoStepPresenter.detachView(this)
         lastStepPresenter.detachView(this)
         courseListPresenter.detachView(this)
         continueCoursePresenter.detachView(this)
@@ -142,10 +156,39 @@ class FastContinueFragment : FragmentBase(),
     //LastStepPresenter
     override fun onShowLastStep(step: Step) {
         Timber.d("Step cover is prepared for step.id = ${step.id}")
+        if (step.block?.name == AppConstants.TYPE_VIDEO) {
+            videoStepPresenter.initVideo(step)
+        } else {
+            val textForView = step.block?.text
+            if (textForView != null && textForView.isNotBlank()) {
+                lastStepTextView.text = textResolver.fromHtml(textForView)
+            }
+        }
     }
 
     override fun onShowPlaceholder() {
         Timber.d("Show placeholder for step")
+    }
+
+
+    //VideoStepView
+    override fun onVideoLoaded(thumbnailPath: String?, cachedVideo: Video?, externalVideo: Video?) {
+        if (thumbnailPath == null) {
+            return
+        }
+        val uri = ThumbnailParser.getUriForThumbnail(thumbnailPath)
+        Glide
+                .with(context)
+                .load(uri)
+                .into(lastStepImageView)
+    }
+
+    override fun onInternetProblem() {
+        //no-op
+    }
+
+    override fun onNeedOpenVideo(videoId: Long, cachedVideo: Video?, externalVideo: Video?) {
+        //no-op
     }
 
 }

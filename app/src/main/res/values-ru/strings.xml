@@ -502,4 +502,6 @@
     <string name="course_item_join">Подробнее о курсе</string>
 
     <string name="learners_count">Количество студентов</string>
+    <string name="continue_learning">Продолжить учиться</string>
+    <string name="accessibility_last_step_cover">Изображение последнего шага</string>
 </resources>
