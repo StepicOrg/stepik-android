@@ -25,7 +25,7 @@ import org.stepic.droid.storage.operations.Table
 import org.stepic.droid.ui.adapters.CoursesAdapter
 import org.stepic.droid.ui.decorators.LeftSpacesDecoration
 import org.stepic.droid.ui.decorators.RightMarginForLastItems
-import org.stepic.droid.ui.decorators.VerticalSpacesForFirstRowDecoration
+import org.stepic.droid.ui.decorators.VerticalSpacesInGridDecoration
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.StartSnapHelper
 import org.stepic.droid.util.ProgressHelper
@@ -123,8 +123,9 @@ class CoursesCarouselFragment : FragmentBase(), ContinueCourseView, CoursesView,
         myCoursesOnHome.layoutManager = GridLayoutManager(context, ROW_COUNT, GridLayoutManager.HORIZONTAL, false)
         myCoursesOnHome.adapter = CoursesAdapter(this, courses, Table.enrolled, continueCoursePresenter, droppingPresenter, false)
         val spacePx = resources.getDimensionPixelSize(R.dimen.course_list_between_items_padding)
-        myCoursesOnHome.addItemDecoration(VerticalSpacesForFirstRowDecoration(spacePx, ROW_COUNT))
-        myCoursesOnHome.addItemDecoration(LeftSpacesDecoration(spacePx))
+        val leftSpacePx = resources.getDimensionPixelSize(R.dimen.course_list_side_padding)
+        myCoursesOnHome.addItemDecoration(VerticalSpacesInGridDecoration(spacePx / 2, ROW_COUNT)) //warning: spacePx/2 – workaround for some bug, decoration will set this param twice
+        myCoursesOnHome.addItemDecoration(LeftSpacesDecoration(leftSpacePx))
         myCoursesOnHome.addItemDecoration(RightMarginForLastItems(resources.getDimensionPixelSize(R.dimen.home_right_recycler_padding_without_extra), ROW_COUNT))
         myCoursesOnHome.itemAnimator.changeDuration = 0
         val snapHelper = StartSnapHelper()

@@ -7,6 +7,7 @@
     android:clipToPadding="false"
     android:divider="@color/transparent"
     android:overScrollMode="never"
+    android:paddingEnd="@dimen/home_right_recycler_padding"
     android:paddingRight="@dimen/home_right_recycler_padding"
     android:scrollbarStyle="outsideOverlay"
     android:scrollbars="none"
