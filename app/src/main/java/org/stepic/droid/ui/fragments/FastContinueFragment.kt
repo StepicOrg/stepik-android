@@ -11,17 +11,21 @@ import org.stepic.droid.base.Client
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.core.dropping.contract.DroppingListener
 import org.stepic.droid.core.presenters.ContinueCoursePresenter
+import org.stepic.droid.core.presenters.LastStepPresenter
 import org.stepic.droid.core.presenters.PersistentCourseListPresenter
 import org.stepic.droid.core.presenters.contracts.ContinueCourseView
 import org.stepic.droid.core.presenters.contracts.CoursesView
+import org.stepic.droid.core.presenters.contracts.LastStepView
 import org.stepic.droid.model.Course
 import org.stepic.droid.model.Section
+import org.stepic.droid.model.Step
 import org.stepic.droid.storage.operations.Table
+import timber.log.Timber
 import javax.inject.Inject
 
 class FastContinueFragment : FragmentBase(),
         CoursesView,
-        ContinueCourseView, DroppingListener {
+        ContinueCourseView, DroppingListener, LastStepView {
 
     companion object {
         fun newInstance(): FastContinueFragment = FastContinueFragment()
@@ -35,6 +39,9 @@ class FastContinueFragment : FragmentBase(),
 
     @Inject
     lateinit var droppingClient: Client<DroppingListener>
+
+    @Inject
+    lateinit var lastStepPresenter: LastStepPresenter
 
     override fun injectComponent() {
         App
@@ -60,6 +67,7 @@ class FastContinueFragment : FragmentBase(),
         courseListPresenter.attachView(this)
         continueCoursePresenter.attachView(this)
         droppingClient.subscribe(this)
+        lastStepPresenter.attachView(this)
     }
 
     override fun onStart() {
@@ -71,6 +79,7 @@ class FastContinueFragment : FragmentBase(),
 
     override fun onDestroyView() {
         super.onDestroyView()
+        lastStepPresenter.detachView(this)
         courseListPresenter.detachView(this)
         continueCoursePresenter.detachView(this)
         droppingClient.unsubscribe(this)
@@ -94,6 +103,7 @@ class FastContinueFragment : FragmentBase(),
         if (courses.isNotEmpty()) {
             // FIXME: 15.09.17 load async the last step of course and in some callback with step show the background
             val course = courses.first()
+            lastStepPresenter.fetchLastStep(courseId = course.courseId, lastStepId = course.lastStepId)
             fastContinueAction.setOnClickListener {
                 continueCoursePresenter.continueCourse(course)
             }
@@ -126,6 +136,16 @@ class FastContinueFragment : FragmentBase(),
 
     override fun onFailDropCourse(course: Course) {
         //no-op
+    }
+
+
+    //LastStepPresenter
+    override fun onShowLastStep(step: Step) {
+        Timber.d("Step cover is prepared for step.id = ${step.id}")
+    }
+
+    override fun onShowPlaceholder() {
+        Timber.d("Show placeholder for step")
     }
 
 }
