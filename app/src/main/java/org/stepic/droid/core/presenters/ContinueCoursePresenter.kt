@@ -27,8 +27,7 @@ class ContinueCoursePresenter
     fun continueCourse(course: Course) {
         if (isHandling.compareAndSet(false, true)) {
             view?.onShowContinueCourseLoadingDialog()
-            threadPoolExecutor.execute()
-            {
+            threadPoolExecutor.execute {
                 try {
                     databaseFacade.updateCourseLastInteraction(courseId = course.courseId, timestamp = DateTime.now().millis)
                     var unitId: Long

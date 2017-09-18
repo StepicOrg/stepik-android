@@ -721,7 +721,7 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Call<LastStepResponse> getLastStepResponse(String lastStepId) {
+    public Call<LastStepResponse> getLastStepResponse(@NonNull String lastStepId) {
         return loggedService.getLastStepResponse(lastStepId);
     }
 
