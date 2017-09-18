@@ -101,17 +101,35 @@ class RegisterActivity : FragmentActivityBase(), LoginView {
             }
         }
 
-        emailField.addTextChangedListener(reportAnalyticWhenTextBecomeNotBlank)
         firstNameField.addTextChangedListener(reportAnalyticWhenTextBecomeNotBlank)
+        emailField.addTextChangedListener(reportAnalyticWhenTextBecomeNotBlank)
         passwordField.addTextChangedListener(reportAnalyticWhenTextBecomeNotBlank)
 
         val onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
             reportTap(hasFocus)
         }
-        emailField.onFocusChangeListener = onFocusChangeListener
         firstNameField.onFocusChangeListener = onFocusChangeListener
+        emailField.onFocusChangeListener = onFocusChangeListener
         passwordField.onFocusChangeListener = onFocusChangeListener
 
+        firstNameField.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                emailField.requestFocus()
+                true
+            } else {
+                false
+            }
+        }
+
+        emailField.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                passwordField.requestFocus()
+                true
+            } else {
+                false
+            }
+        }
+        
         registerRootView.requestFocus()
 
         if (checkPlayServices()) {
@@ -152,6 +170,7 @@ class RegisterActivity : FragmentActivityBase(), LoginView {
 
     private fun createAccount(interactionType: LoginInteractionType) {
         analytic.reportEvent(Analytic.Registration.CLICK_WITH_INTERACTION_TYPE, interactionType.toBundle())
+        hideSoftKeypad()
 
         val firstName = firstNameField.text.toString().trim()
         val lastName = " " // registrationSecondName.text.toString().trim()
