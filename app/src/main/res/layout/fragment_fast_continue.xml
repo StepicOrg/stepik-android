@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/guideline_standard_padding"
     android:paddingEnd="@dimen/course_list_side_padding"
     android:paddingLeft="@dimen/course_list_side_padding"
     android:paddingRight="@dimen/course_list_side_padding"
@@ -19,10 +20,10 @@
         android:textSize="16sp"/>
 
     <ImageView
-        android:contentDescription="@string/accessibility_last_step_cover"
         android:id="@+id/lastStepImageView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:contentDescription="@string/accessibility_last_step_cover"/>
 
     <View
         android:layout_width="match_parent"
