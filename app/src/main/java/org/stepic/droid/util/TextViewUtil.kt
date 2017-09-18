@@ -21,8 +21,8 @@ fun stripUnderlinesFromLinks(tv: TextView) {
 }
 
 private class URLSpanWithoutUnderline(url: String) : URLSpan(url) {
-    override fun updateDrawState(ds: TextPaint?) {
-        super.updateDrawState(ds)
-        ds?.isUnderlineText = false
+    override fun updateDrawState(textPaint: TextPaint?) {
+        super.updateDrawState(textPaint)
+        textPaint?.isUnderlineText = false
     }
 }
