@@ -57,7 +57,6 @@ class LoginActivity : FragmentActivityBase(), LoginView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start)
         App.componentManager().loginComponent(TAG).inject(this)
 
         progressLogin = LoadingProgressDialog(this)
@@ -183,17 +182,14 @@ class LoginActivity : FragmentActivityBase(), LoginView {
         }
     }
 
-    override fun finish() {
-        super.finish()
-        overridePendingTransition(R.anim.slide_in_from_start, R.anim.slide_out_to_end)
-    }
-
     private fun tryLogin() {
         val login = loginField.text.toString()
         val password = passwordField.text.toString()
 
         loginPresenter.login(login, password)
     }
+
+    override fun applyTransitionPrev() {} // we need default system animation
 
     override fun onDestroy() {
         signInWithSocial.setOnClickListener(null)
