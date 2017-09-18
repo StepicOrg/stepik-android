@@ -212,10 +212,14 @@ class LoginActivity : FragmentActivityBase(), LoginView {
     }
 
     override fun onFailLogin(type: LoginFailType, credential: Credential?) {
-        loginForm.isEnabled = false
         loginErrorMessage.text = getMessageFor(type)
         loginErrorMessage.visibility = View.VISIBLE
-        loginButton.isEnabled = false
+
+        if (type == LoginFailType.emailAlreadyUsed || type == LoginFailType.emailPasswordInvalid) {
+            loginForm.isEnabled = false
+            loginButton.isEnabled = false
+        }
+
         progressHandler.dismiss()
     }
 
