@@ -1,24 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_pressed="true">
-        <shape android:padding="@dimen/login_button_radius"
-               android:shape="rectangle">
-            <solid android:color="@color/login_button_background_pressed"/>
-            <corners android:radius="@dimen/login_button_radius"/>
-            <stroke
-                android:width="@dimen/login_button_border"
-                android:color="@color/launchButtonsBorder"/>
-        </shape>
-    </item>
-    <item>
-        <shape xmlns:android="http://schemas.android.com/apk/res/android"
-               android:padding="@dimen/login_button_radius"
-               android:shape="rectangle">
-            <solid android:color="@color/transparent"/>
-            <corners android:radius="@dimen/login_button_radius"/>
-            <stroke
-                android:width="@dimen/login_button_border"
-                android:color="@color/launchButtonsBorder"/>
-        </shape>
-    </item>
-</selector>
+<inset
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/login_button_background_source"/>

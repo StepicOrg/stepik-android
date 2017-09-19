@@ -3,8 +3,9 @@ package org.stepic.droid.ui.activities
 import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.TextInputLayout
 import android.text.Editable
+import android.text.Spannable
+import android.text.SpannableString
 import android.text.TextWatcher
 import android.text.method.LinkMovementMethod
 import android.view.View
@@ -15,7 +16,6 @@ import com.google.android.gms.auth.api.credentials.Credential
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.android.synthetic.main.activity_register.*
-import kotlinx.android.synthetic.main.panel_custom_action_bar.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.LoginInteractionType
@@ -24,15 +24,16 @@ import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.core.LoginFailType
 import org.stepic.droid.core.presenters.LoginPresenter
 import org.stepic.droid.core.presenters.contracts.LoginView
+import org.stepic.droid.fonts.FontType
 import org.stepic.droid.model.AuthData
-import org.stepic.droid.util.ProgressHelper
-import org.stepic.droid.util.ValidatorUtil
-import org.stepic.droid.util.getMessageFor
-import org.stepic.droid.util.toBundle
+import org.stepic.droid.ui.util.setOnKeyboardOpenListener
+import org.stepic.droid.util.*
 import org.stepic.droid.web.RegistrationResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan
+import uk.co.chrisjenx.calligraphy.TypefaceUtils
 import javax.inject.Inject
 
 
@@ -51,7 +52,6 @@ class RegisterActivity : FragmentActivityBase(), LoginView {
     }
 
     private lateinit var progressBar: ProgressDialog
-    private lateinit var passwordWatcher: TextWatcher
 
     @Inject
     lateinit var loginPresenter: LoginPresenter
@@ -61,22 +61,22 @@ class RegisterActivity : FragmentActivityBase(), LoginView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(org.stepic.droid.R.layout.activity_register)
-        overridePendingTransition(org.stepic.droid.R.anim.slide_in_from_bottom, org.stepic.droid.R.anim.no_transition)
-        hideSoftKeypad()
         App.componentManager().loginComponent(TAG).inject(this)
+
+        initTitle()
 
         termsPrivacyRegisterTextView.movementMethod = LinkMovementMethod.getInstance()
         termsPrivacyRegisterTextView.text = textResolver.fromHtml(termsMessageHtml)
+        stripUnderlinesFromLinks(termsPrivacyRegisterTextView)
 
         signUpButton.setOnClickListener { createAccount(LoginInteractionType.button) }
-        actionbarCloseButtonLayout.setOnClickListener { finish() }
 
         progressBar = ProgressDialog(this)
         progressBar.setTitle(getString(R.string.loading))
         progressBar.setMessage(getString(R.string.loading_message))
         progressBar.setCancelable(false)
 
-        passwordTextView.setOnEditorActionListener { _, actionId, _ ->
+        passwordField.setOnEditorActionListener { _, actionId, _ ->
             var handled = false
             if (actionId == EditorInfo.IME_ACTION_SEND) {
                 analytic.reportEvent(Analytic.Registration.CLICK_SEND_IME)
@@ -96,43 +96,40 @@ class RegisterActivity : FragmentActivityBase(), LoginView {
             }
 
             override fun afterTextChanged(s: Editable?) {
+                onClearError()
+                setSignUpButtonState()
             }
         }
 
-        emailView.addTextChangedListener(reportAnalyticWhenTextBecomeNotBlank)
-        registrationFirstName.addTextChangedListener(reportAnalyticWhenTextBecomeNotBlank)
-        registrationSecondName.addTextChangedListener(reportAnalyticWhenTextBecomeNotBlank)
-        passwordTextView.addTextChangedListener(reportAnalyticWhenTextBecomeNotBlank)
+        firstNameField.addTextChangedListener(reportAnalyticWhenTextBecomeNotBlank)
+        emailField.addTextChangedListener(reportAnalyticWhenTextBecomeNotBlank)
+        passwordField.addTextChangedListener(reportAnalyticWhenTextBecomeNotBlank)
 
-        passwordWatcher = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-            }
-
-            override fun afterTextChanged(s: Editable) {
-                if (ValidatorUtil.isPasswordLengthValid(s.length)) {
-                    hideError(passwordWrapper)
-                }
-            }
-        }
-        passwordTextView.addTextChangedListener(passwordWatcher)
-
-        val onFocusChangeListener = View.OnFocusChangeListener { v, hasFocus ->
-            setClearErrorOnFocus(v, hasFocus)
+        val onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
             reportTap(hasFocus)
         }
-        emailView.onFocusChangeListener = onFocusChangeListener
-        registrationFirstName.onFocusChangeListener = onFocusChangeListener
-        registrationSecondName.onFocusChangeListener = onFocusChangeListener
+        firstNameField.onFocusChangeListener = onFocusChangeListener
+        emailField.onFocusChangeListener = onFocusChangeListener
+        passwordField.onFocusChangeListener = onFocusChangeListener
 
-        passwordTextView.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
-            reportTap(hasFocus)
+        firstNameField.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                emailField.requestFocus()
+                true
+            } else {
+                false
+            }
         }
 
-
-
+        emailField.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                passwordField.requestFocus()
+                true
+            } else {
+                false
+            }
+        }
+        
         registerRootView.requestFocus()
 
         if (checkPlayServices()) {
@@ -143,7 +140,33 @@ class RegisterActivity : FragmentActivityBase(), LoginView {
                     .build()
         }
 
+        setSignUpButtonState()
+
+        setOnKeyboardOpenListener(root_view, {
+            stepikLogo.visibility = View.GONE
+            signUpText.visibility = View.GONE
+        }, {
+            stepikLogo.visibility = View.VISIBLE
+            signUpText.visibility = View.VISIBLE
+        })
+
         loginPresenter.attachView(this)
+    }
+
+    private fun setSignUpButtonState() {
+        signUpButton.isEnabled = emailField.text.isNotBlank() && firstNameField.text.isNotBlank() && passwordField.text.isNotBlank()
+    }
+
+    private fun initTitle() {
+        val signUpString = getString(R.string.sign_up)
+        val signUpSuffix = getString(R.string.sign_up_with_email_suffix)
+
+        val spannableSignIn = SpannableString(signUpString + signUpSuffix)
+        val typefaceSpan = CalligraphyTypefaceSpan(TypefaceUtils.load(assets, fontsProvider.provideFontPath(FontType.medium)))
+
+        spannableSignIn.setSpan(typefaceSpan, 0, signUpString.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        signUpText.text = spannableSignIn
     }
 
     private fun reportTap(hasFocus: Boolean) {
@@ -155,26 +178,23 @@ class RegisterActivity : FragmentActivityBase(), LoginView {
 
     private fun createAccount(interactionType: LoginInteractionType) {
         analytic.reportEvent(Analytic.Registration.CLICK_WITH_INTERACTION_TYPE, interactionType.toBundle())
+        hideSoftKeypad()
 
-        val firstName = registrationFirstName.text.toString().trim()
-        val lastName = registrationSecondName.text.toString().trim()
-        val email = emailView.text.toString().trim()
-        val password = passwordTextView.text.toString()
+        val firstName = firstNameField.text.toString().trim()
+        val lastName = " " // registrationSecondName.text.toString().trim()
+        val email = emailField.text.toString().trim()
+        val password = passwordField.text.toString()
 
         analytic.reportEvent(Analytic.Interaction.CLICK_REGISTER_BUTTON)
 
         var isOk = true
 
         if (!ValidatorUtil.isPasswordValid(password)) {
-            showError(passwordWrapper, passwordTooShortMessage)
+            showError(passwordTooShortMessage)
             isOk = false
         }
 
         if (isOk) {
-            hideError(registrationFirstNameWrapper)
-            hideError(registrationSecondNameWrapper)
-            hideError(emailViewWrapper)
-            hideError(passwordWrapper)
             onLoadingWhileLogin()
             api.signUp(firstName, lastName, email, password).enqueue(object : Callback<RegistrationResponse> {
                 override fun onResponse(call: Call<RegistrationResponse>, response: Response<RegistrationResponse>) {
@@ -205,42 +225,41 @@ class RegisterActivity : FragmentActivityBase(), LoginView {
         }
     }
 
+    private fun onClearError() {
+        signUpButton.isEnabled = true
+        registerForm.isEnabled = true
+        registerErrorMessage.visibility = View.GONE
+    }
+
     override fun onDestroy() {
         loginPresenter.detachView(this)
-        passwordTextView.removeTextChangedListener(passwordWatcher)
-        passwordTextView.setOnEditorActionListener(null)
+        passwordField.setOnEditorActionListener(null)
         if (isFinishing) {
             App.componentManager().releaseLoginComponent(TAG)
         }
         super.onDestroy()
     }
 
-    override fun finish() {
-        super.finish()
-        overridePendingTransition(org.stepic.droid.R.anim.no_transition, org.stepic.droid.R.anim.slide_out_to_bottom)
-    }
+    override fun applyTransitionPrev() {} // we need default system animation
 
-    private fun hideError(textInputLayout: TextInputLayout?) {
-        if (textInputLayout != null) {
-            textInputLayout.error = ""
-            textInputLayout.isErrorEnabled = false
-        }
-    }
-
-    private fun showError(textInputLayout: TextInputLayout?, errorText: String?) {
-        if (textInputLayout != null && errorText != null) {
+    private fun showError(errorText: String?) {
+        errorText?.let {
             analytic.reportEventWithName(Analytic.Registration.ERROR, errorText)
-            textInputLayout.isErrorEnabled = true
-            textInputLayout.error = errorText
+            if (registerErrorMessage.visibility == View.GONE) {
+                signUpButton.isEnabled = false
+                registerForm.isEnabled = false
+                registerErrorMessage.text = it
+                registerErrorMessage.visibility = View.VISIBLE
+            }
         }
     }
 
     private fun handleErrorRegistrationResponse(registrationResponse: RegistrationResponse?) {
         if (registrationResponse == null) return
-        showError(emailViewWrapper, getErrorString(registrationResponse.email))
-        showError(registrationFirstNameWrapper, getErrorString(registrationResponse.first_name))
-        showError(registrationSecondNameWrapper, getErrorString(registrationResponse.last_name))
-        showError(passwordWrapper, getErrorString(registrationResponse.password))
+        showError(getErrorString(registrationResponse.email))
+        showError(getErrorString(registrationResponse.first_name))
+        showError(getErrorString(registrationResponse.last_name))
+        showError(getErrorString(registrationResponse.password))
     }
 
     private fun getErrorString(values: Array<String>?): String? {
@@ -253,16 +272,6 @@ class RegisterActivity : FragmentActivityBase(), LoginView {
             }
         }
         return sb.toString()
-    }
-
-    fun setClearErrorOnFocus(view: View?, hasFocus: Boolean) {
-        if (!hasFocus) return
-
-        when (view?.id) {
-            R.id.emailView -> hideError(emailViewWrapper)
-            R.id.registrationFirstName -> hideError(registrationFirstNameWrapper)
-            R.id.registrationSecondName -> hideError(registrationSecondNameWrapper)
-        }
     }
 
 

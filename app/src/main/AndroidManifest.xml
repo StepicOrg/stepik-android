@@ -77,11 +77,13 @@
 
         <activity
             android:name="org.stepic.droid.ui.activities.RegisterActivity"
+            android:windowSoftInputMode="adjustResize"
             android:theme="@style/StepikTheme.LoginLaunchRegistration"/>
 
         <activity
             android:name="org.stepic.droid.ui.activities.LoginActivity"
             android:launchMode="singleTop"
+            android:windowSoftInputMode="adjustResize"
             android:theme="@style/StepikTheme.LoginLaunchRegistration"/>
 
         <activity

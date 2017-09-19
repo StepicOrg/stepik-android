@@ -4,10 +4,12 @@ import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Intent
 import android.content.IntentSender
-import android.graphics.Point
+import android.os.Build
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
-import android.text.method.LinkMovementMethod
+import android.support.v7.widget.GridLayoutManager
+import android.text.Spannable
+import android.text.SpannableString
+import android.view.View
 import android.widget.Toast
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
@@ -26,6 +28,7 @@ import com.vk.sdk.VKAccessToken
 import com.vk.sdk.VKCallback
 import com.vk.sdk.VKSdk
 import com.vk.sdk.api.VKError
+import jp.wasabeef.recyclerview.animators.FadeInDownAnimator
 import kotlinx.android.synthetic.main.activity_launch.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
@@ -34,16 +37,17 @@ import org.stepic.droid.core.LoginFailType
 import org.stepic.droid.core.ProgressHandler
 import org.stepic.droid.core.presenters.LoginPresenter
 import org.stepic.droid.core.presenters.contracts.LoginView
+import org.stepic.droid.fonts.FontType
 import org.stepic.droid.model.AuthData
 import org.stepic.droid.social.SocialManager
 import org.stepic.droid.ui.adapters.SocialAuthAdapter
-import org.stepic.droid.ui.decorators.SpacesItemDecorationHorizontal
 import org.stepic.droid.ui.dialogs.LoadingProgressDialog
 import org.stepic.droid.util.AppConstants
-import org.stepic.droid.util.DpPixelsHelper
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.getMessageFor
 import timber.log.Timber
+import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan
+import uk.co.chrisjenx.calligraphy.TypefaceUtils
 import javax.inject.Inject
 
 
@@ -52,13 +56,10 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
         private val TAG = "LaunchActivity"
         val wasLogoutKey = "wasLogoutKey"
         private val resolvingAccountKey = "resolvingAccountKey"
+        private val socialAdapterStateKey = "socialAdapterStateKey"
     }
 
     private val requestFromSmartLockCode = 314
-
-    val termsMessageHtml: String by lazy {
-        resources.getString(R.string.terms_message_launch)
-    }
 
     private var googleApiClient: GoogleApiClient? = null
     private var progressLogin: ProgressDialog? = null
@@ -76,12 +77,6 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
         overridePendingTransition(R.anim.no_transition, R.anim.slide_out_to_bottom)
 
         resolvingWasShown = savedInstanceState?.getBoolean(resolvingAccountKey) ?: false
-
-        findCoursesButton.setOnClickListener {
-            analytic.reportEvent(Analytic.Interaction.CLICK_FIND_COURSE_LAUNCH)
-            screenManager.showFindCourses(this@LaunchActivity)
-            this@LaunchActivity.finish()
-        }
 
         launchSignUpButton.setOnClickListener {
             analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_UP)
@@ -109,10 +104,22 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
                     .build()
         }
 
-        initSocialRecycler(googleApiClient)
+        val recyclerState = savedInstanceState?.getSerializable(socialAdapterStateKey)
+        if (recyclerState is SocialAuthAdapter.State) {
+            initSocialRecycler(googleApiClient, recyclerState)
+        } else {
+            initSocialRecycler(googleApiClient)
+        }
 
-        termsPrivacyLaunchTextView.movementMethod = LinkMovementMethod.getInstance()
-        termsPrivacyLaunchTextView.text = textResolver.fromHtml(termsMessageHtml)
+        val signInString = getString(R.string.sign_in)
+        val signInWithSocial = getString(R.string.sign_in_with_social_suffix)
+
+        val spannableSignIn = SpannableString(signInString + signInWithSocial)
+        val typefaceSpan = CalligraphyTypefaceSpan(TypefaceUtils.load(assets, fontsProvider.provideFontPath(FontType.medium)))
+
+        spannableSignIn.setSpan(typefaceSpan, 0, signInString.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        signInText.text = spannableSignIn
 
         progressHandler = object : ProgressHandler {
             override fun activate() {
@@ -172,34 +179,47 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
         }
     }
 
-    private fun initSocialRecycler(googleApiClient: GoogleApiClient?) {
-        val pixelForPadding = DpPixelsHelper.convertDpToPixel(4f, this)//pixelForPadding * (count+1)
-        val widthOfItem = resources.getDimension(R.dimen.height_of_social)//width == height
-        val count = SocialManager.SocialType.values().size
-        val widthOfAllItems = widthOfItem * count + pixelForPadding * (count + 1)
+    private fun initSocialRecycler(googleApiClient: GoogleApiClient?, state: SocialAuthAdapter.State = SocialAuthAdapter.State.NORMAL) {
+        socialListRecyclerView.layoutManager = GridLayoutManager(this, 3)
 
-        val display = windowManager.defaultDisplay
-        val size = Point()
-        display.getSize(size)
-        val widthOfScreen = size.x
-
-
-        socialListRecyclerView.addItemDecoration(SpacesItemDecorationHorizontal(pixelForPadding.toInt()))//30 is ok
-        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        if (widthOfScreen > widthOfAllItems) {
-            val padding = (widthOfScreen - widthOfAllItems).toInt() / 2
-            socialListRecyclerView.setPadding(padding, 0, 0, 0)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            socialListRecyclerView.itemAnimator = FadeInDownAnimator()
+            socialListRecyclerView.itemAnimator.removeDuration = 0
         }
 
-        socialListRecyclerView.layoutManager = layoutManager
-        socialListRecyclerView.adapter = SocialAuthAdapter(this, googleApiClient)
+        val adapter = SocialAuthAdapter(this, googleApiClient, state)
+        showMore.setOnClickListener {
+            showMore.visibility = View.GONE
+            showLess.visibility = View.VISIBLE
+            adapter.showMore()
+        }
+
+        showLess.setOnClickListener {
+            showLess.visibility = View.GONE
+            showMore.visibility = View.VISIBLE
+            adapter.showLess()
+        }
+
+        when(state) {
+            SocialAuthAdapter.State.EXPANDED -> {
+                showLess.visibility = View.VISIBLE
+                showMore.visibility = View.GONE
+            }
+            SocialAuthAdapter.State.NORMAL -> {
+                showMore.visibility = View.VISIBLE
+                showLess.visibility = View.GONE
+            }
+        }
+
+        socialListRecyclerView.adapter = adapter
     }
 
     override fun onDestroy() {
         loginPresenter.detachView(this)
         signInWithEmail.setOnClickListener(null)
         launchSignUpButton.setOnClickListener(null)
-        findCoursesButton.setOnClickListener(null)
+        showMore.setOnClickListener(null)
+        showLess.setOnClickListener(null)
         if (isFinishing) {
             App.componentManager().releaseLoginComponent(TAG)
         }
@@ -381,6 +401,11 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
 
     override fun onSaveInstanceState(outState: Bundle?) {
         outState?.putBoolean(resolvingAccountKey, resolvingWasShown)
+
+        val adapter = socialListRecyclerView.adapter
+        if (adapter is SocialAuthAdapter) {
+            outState?.putSerializable(socialAdapterStateKey, adapter.state)
+        }
         super.onSaveInstanceState(outState)
     }
 
