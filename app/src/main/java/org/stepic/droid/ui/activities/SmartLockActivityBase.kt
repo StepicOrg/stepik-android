@@ -106,16 +106,29 @@ abstract class SmartLockActivityBase : FragmentActivityBase() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == requestFromSmartLockCode) {
-            if (resultCode == Activity.RESULT_OK && data != null) {
-                analytic.reportEvent(Analytic.SmartLock.LAUNCH_CREDENTIAL_RETRIEVED_PROMPT)
-                val credential = data.getParcelableExtra<Credential>(Credential.EXTRA_KEY)
-                onCredentialRetrieved(credential)
-            } else {
-                analytic.reportEvent(Analytic.SmartLock.LAUNCH_CREDENTIAL_CANCELED_PROMPT)
-                Timber.d("Credential Read not ok: canceled or no internet")
+        when (requestCode) {
+            requestFromSmartLockCode -> {
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    analytic.reportEvent(Analytic.SmartLock.LAUNCH_CREDENTIAL_RETRIEVED_PROMPT)
+                    val credential = data.getParcelableExtra<Credential>(Credential.EXTRA_KEY)
+                    onCredentialRetrieved(credential)
+                } else {
+                    analytic.reportEvent(Analytic.SmartLock.LAUNCH_CREDENTIAL_CANCELED_PROMPT)
+                    Timber.d("Credential Read not ok: canceled or no internet")
+                }
+            }
+
+            RC_SAVE -> {
+                if (resultCode == RESULT_OK) {
+                    analytic.reportEvent(Analytic.SmartLock.
+                            LOGIN_SAVED)
+                } else {
+                    analytic.reportEvent(Analytic.SmartLock.LOGIN_NOT_SAVED)
+                }
+                onCredentialSaved()
             }
         }
+
         super.onActivityResult(requestCode, resultCode, data)
     }
 
