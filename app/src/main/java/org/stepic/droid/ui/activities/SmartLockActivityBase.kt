@@ -1,6 +1,5 @@
 package org.stepic.droid.ui.activities
 
-import android.app.Activity
 import android.content.Intent
 import android.content.IntentSender
 import android.os.Bundle
@@ -20,16 +19,16 @@ import timber.log.Timber
 
 abstract class SmartLockActivityBase : FragmentActivityBase() {
     companion object {
-        private const val resolvingAccountKey = "resolvingAccountKey"
-        private const val requestFromSmartLockCode = 314
-        private const val RC_SAVE = 356
+        private const val RESOLVING_ACCOUNT_KEY = "RESOLVING_ACCOUNT_KEY"
+        private const val REQUEST_FROM_SMART_LOCK_CODE = 314
+        private const val REQUEST_SAVE_TO_SMART_LOCK_CODE = 356
     }
 
     private var resolvingWasShown = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        resolvingWasShown = savedInstanceState?.getBoolean(resolvingAccountKey) ?: false
+        resolvingWasShown = savedInstanceState?.getBoolean(RESOLVING_ACCOUNT_KEY) ?: false
     }
 
     protected var googleApiClient: GoogleApiClient? = null
@@ -73,7 +72,7 @@ abstract class SmartLockActivityBase : FragmentActivityBase() {
                         if (!resolvingWasShown) {
                             analytic.reportEvent(Analytic.SmartLock.PROMPT_TO_CHOOSE_CREDENTIALS)
                             resolvingWasShown = true
-                            credentialRequestResult.status.startResolutionForResult(this, requestFromSmartLockCode)
+                            credentialRequestResult.status.startResolutionForResult(this, REQUEST_FROM_SMART_LOCK_CODE)
                         }
                     } catch (e: IntentSender.SendIntentException) {
                         Timber.e(e, "STATUS: Failed to send resolution.")
@@ -97,7 +96,7 @@ abstract class SmartLockActivityBase : FragmentActivityBase() {
                 .setResultCallback { status ->
                     if (!status.isSuccess && status.hasResolution()) {
                         analytic.reportEvent(Analytic.SmartLock.SHOW_SAVE_LOGIN)
-                        status.startResolutionForResult(this, RC_SAVE)
+                        status.startResolutionForResult(this, REQUEST_SAVE_TO_SMART_LOCK_CODE)
                     } else {
                         analytic.reportEventWithName(Analytic.SmartLock.DISABLED_LOGIN, status.statusMessage)
                         onCredentialSaved()
@@ -107,8 +106,8 @@ abstract class SmartLockActivityBase : FragmentActivityBase() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
-            requestFromSmartLockCode -> {
-                if (resultCode == Activity.RESULT_OK && data != null) {
+            REQUEST_FROM_SMART_LOCK_CODE -> {
+                if (resultCode == RESULT_OK && data != null) {
                     analytic.reportEvent(Analytic.SmartLock.LAUNCH_CREDENTIAL_RETRIEVED_PROMPT)
                     val credential = data.getParcelableExtra<Credential>(Credential.EXTRA_KEY)
                     onCredentialRetrieved(credential)
@@ -118,10 +117,9 @@ abstract class SmartLockActivityBase : FragmentActivityBase() {
                 }
             }
 
-            RC_SAVE -> {
+            REQUEST_SAVE_TO_SMART_LOCK_CODE -> {
                 if (resultCode == RESULT_OK) {
-                    analytic.reportEvent(Analytic.SmartLock.
-                            LOGIN_SAVED)
+                    analytic.reportEvent(Analytic.SmartLock.LOGIN_SAVED)
                 } else {
                     analytic.reportEvent(Analytic.SmartLock.LOGIN_NOT_SAVED)
                 }
@@ -133,7 +131,7 @@ abstract class SmartLockActivityBase : FragmentActivityBase() {
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
-        outState?.putBoolean(resolvingAccountKey, resolvingWasShown)
+        outState?.putBoolean(RESOLVING_ACCOUNT_KEY, resolvingWasShown)
         super.onSaveInstanceState(outState)
     }
 
