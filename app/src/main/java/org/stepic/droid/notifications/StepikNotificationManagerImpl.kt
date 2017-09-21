@@ -120,7 +120,7 @@ class StepikNotificationManagerImpl
                     val (currentStreak, isSolvedToday) = StepikUtil.getCurrentStreakExtended(pins)
                     if (currentStreak <= 0) {
                         analytic.reportEvent(Analytic.Streak.GET_ZERO_STREAK_NOTIFICATION)
-                        showNotificationWithoutStreakInfo()
+                        showNotificationWithoutStreakInfo(Analytic.Streak.NotificationType.zero)
                     } else {
                         val bundle = Bundle()
                         if (isSolvedToday) {
@@ -135,7 +135,7 @@ class StepikNotificationManagerImpl
                 } catch (exception: Exception) {
                     // no internet || cant get streaks -> show some notification without streak information.
                     analytic.reportEvent(Analytic.Streak.GET_NO_INTERNET_NOTIFICATION)
-                    showNotificationWithoutStreakInfo()
+                    showNotificationWithoutStreakInfo(Analytic.Streak.NotificationType.noInternet)
                     return
                 } finally {
                     sharedPreferenceHelper.incrementNumberOfNotifications()
@@ -203,21 +203,21 @@ class StepikNotificationManagerImpl
 
     private fun showNotificationStreakImprovement(currentStreak: Int) {
         val message = context.resources.getString(R.string.streak_notification_message_improvement, currentStreak)
-        showNotificationStreakBase(message)
+        showNotificationStreakBase(message, Analytic.Streak.NotificationType.solvedToday)
     }
 
     private fun showNotificationWithStreakCallToAction(currentStreak: Int) {
         val message = context.resources.getQuantityString(R.plurals.streak_notification_message_call_to_action, currentStreak, currentStreak)
-        showNotificationStreakBase(message)
+        showNotificationStreakBase(message, Analytic.Streak.NotificationType.notSolvedToday)
     }
 
-    private fun showNotificationWithoutStreakInfo() {
+    private fun showNotificationWithoutStreakInfo(notificationType: Analytic.Streak.NotificationType) {
         val message = context.resources.getString(R.string.streak_notification_empty_number)
-        showNotificationStreakBase(message)
+        showNotificationStreakBase(message, notificationType)
     }
 
-    private fun showNotificationStreakBase(message: String) {
-        val taskBuilder: TaskStackBuilder = getStreakNotificationTaskBuilder()
+    private fun showNotificationStreakBase(message: String, notificationType: Analytic.Streak.NotificationType) {
+        val taskBuilder: TaskStackBuilder = getStreakNotificationTaskBuilder(notificationType)
         showSimpleNotification(stepikNotification = null,
                 justText = message,
                 taskBuilder = taskBuilder,
@@ -225,10 +225,11 @@ class StepikNotificationManagerImpl
                 deleteIntent = getDeleteIntentForStreaks(), id = notificationStreakId)
     }
 
-    private fun getStreakNotificationTaskBuilder(): TaskStackBuilder {
+    private fun getStreakNotificationTaskBuilder(notificationType: Analytic.Streak.NotificationType): TaskStackBuilder {
         val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
         val myCoursesIntent = screenManager.getMyCoursesIntent(context)
         myCoursesIntent.action = AppConstants.OPEN_NOTIFICATION_FROM_STREAK
+        myCoursesIntent.putExtra(Analytic.Streak.NOTIFICATION_TYPE_PARAM, notificationType)
         taskBuilder.addNextIntent(myCoursesIntent)
         return taskBuilder
     }
