@@ -103,6 +103,7 @@ class MainFeedActivity : BackToExitActivityBase(),
                     val notificationType = intent.getSerializableExtra(Analytic.Streak.NOTIFICATION_TYPE_PARAM) as Analytic.Streak.NotificationType
                     val bundle = Bundle()
                     bundle.putString(Analytic.Streak.NOTIFICATION_TYPE_PARAM, notificationType.name)
+                    analytic.reportEvent(Analytic.Streak.STREAK_NOTIFICATION_OPENED, bundle)
                 } else {
                     analytic.reportEvent(Analytic.Streak.STREAK_NOTIFICATION_OPENED)
                 }
