@@ -19,6 +19,8 @@ import java.util.Calendar;
 import javax.inject.Inject;
 
 public class LatexSupportableWebView extends WebView implements View.OnClickListener, View.OnTouchListener {
+    private static final String mimeType = "text/html";
+    private static final String encoding = "UTF-8";
 
     private static final int MAX_CLICK_DURATION = 200;
     private long startClickTime;
@@ -62,9 +64,10 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
     }
 
     public void setText(CharSequence text, boolean wantLaTeX) {
+        setText(text, wantLaTeX, null);
+    }
 
-        final String mimeType = "text/html";
-        final String encoding = "UTF-8";
+    public void setText(CharSequence text, boolean wantLaTeX, String fontPath) {
 
         DisplayMetrics displaymetrics = new DisplayMetrics();
         ((AppCompatActivity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
@@ -73,27 +76,25 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
 
         getSettings().setDomStorageEnabled(true);
         String textString = text.toString();
-        if (wantLaTeX || HtmlHelper.hasLaTeX(textString)) {
-            WebSettings webSettings = getSettings();
+
+        final String html;
+        WebSettings webSettings = getSettings();
+        if (fontPath != null) {
             webSettings.setJavaScriptEnabled(true);
-            final String html = HtmlHelper.buildMathPage(text, width, config.getBaseUrl());
-            postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    loadDataWithBaseURL(assetUrl, html, mimeType, encoding, "");
-                }
-            }, 0);
-
+            html = HtmlHelper.buildPageWithCustomFont(text, fontPath, width, config.getBaseUrl());
+        } else if (wantLaTeX || HtmlHelper.hasLaTeX(textString)) {
+            webSettings.setJavaScriptEnabled(true);
+            html = HtmlHelper.buildMathPage(text, width, config.getBaseUrl());
         } else {
-            final String html = HtmlHelper.buildPageWithAdjustingTextAndImage(text, width, config.getBaseUrl());
-            postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    loadDataWithBaseURL(assetUrl, html, mimeType, encoding, "");
-                }
-            }, 0);
-
+            html = HtmlHelper.buildPageWithAdjustingTextAndImage(text, width, config.getBaseUrl());
         }
+
+        postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                loadDataWithBaseURL(assetUrl, html, mimeType, encoding, "");
+            }
+        }, 0);
     }
 
 

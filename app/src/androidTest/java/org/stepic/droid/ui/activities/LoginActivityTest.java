@@ -42,13 +42,13 @@ public class LoginActivityTest {
         onView(withId(R.id.signInWithEmail))
                 .perform(scrollTo(), click());
 
-        onView(withId(R.id.loginText))
+        onView(withId(R.id.loginField))
                 .perform(scrollTo(), replaceText("test@stepik.org"), closeSoftKeyboard());
 
-        onView(allOf(withId(R.id.loginText), withText("test@stepik.org")))
+        onView(allOf(withId(R.id.loginField), withText("test@stepik.org")))
                 .perform(pressImeActionButton());
 
-        onView(withId(R.id.passwordEditText))
+        onView(withId(R.id.passwordField))
                 .perform(scrollTo(), replaceText("qwerty123"), closeSoftKeyboard());
 
         onView(withId(R.id.loginButton))

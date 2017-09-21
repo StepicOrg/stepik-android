@@ -37,14 +37,11 @@ import org.stepic.droid.ui.adapters.CommentsAdapter
 import org.stepic.droid.ui.dialogs.DeleteCommentDialogFragment
 import org.stepic.droid.ui.util.ContextMenuRecyclerView
 import org.stepic.droid.ui.util.initCenteredToolbar
-import org.stepic.droid.util.ColorUtil
-import org.stepic.droid.util.ProgressHelper
-import org.stepic.droid.util.StringUtil
-import org.stepic.droid.util.getFirstAndLastName
+import org.stepic.droid.util.*
 import java.util.*
 import javax.inject.Inject
 
-
+@SuppressFBWarnings(value = "RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE", justification = "false positive: commentManager is not null")
 class CommentsFragment : FragmentBase(),
         SwipeRefreshLayout.OnRefreshListener,
         DiscussionView,
@@ -303,12 +300,14 @@ class CommentsFragment : FragmentBase(),
         if (position < 0 && position >= commentManager.getSize()) return
 
         val comment = commentManager.getItemWithNeedUpdatingInfoByPosition(position).comment
-        if (comment.user != null) {
-            val userId = commentManager.getUserById(comment.user)?.id
-            if (userId != null) {
-                analytic.reportEvent(Analytic.Profile.CLICK_USER_IN_COMMENT)
-                screenManager.openProfile(activity, userId.toLong())
-            }
+        if (comment.user == null) {
+            //do nothing more
+            return
+        }
+        val userId = commentManager.getUserById(comment.user)?.id
+        if (userId != null) {
+            analytic.reportEvent(Analytic.Profile.CLICK_USER_IN_COMMENT)
+            screenManager.openProfile(activity, userId.toLong())
         }
     }
 

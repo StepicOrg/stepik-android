@@ -2,6 +2,10 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
+apply from: '../code_quality_tools/jacoco.gradle'
+apply from: '../code_quality_tools/findbugs.gradle'
+apply from: '../code_quality_tools/checkstyle.gradle'
+apply from: '../code_quality_tools/pmd.gradle'
 
 def globalConf = rootProject.ext
 android {
@@ -42,37 +46,12 @@ android {
         vectorDrawables.useSupportLibrary = true
     }
 
-    flavorDimensions "type", "instance"
-
     productFlavors {
         sb {
-            applicationId "org.stepic.droid.sb"
-            dimension "instance"
+            applicationIdSuffix '.sb'
         }
         classic {
-            applicationId "org.stepic.droid"
-            dimension "instance"
         }
-
-        development {
-            //auto detecting in Android Studio is not working, because of declarations
-            //of multidex + shrinking resource, it is not compiling with -PdevBuild trick
-            //tested on Android Studio 2.3.2
-            minSdkVersion 21
-            //get Error:Execution failed for task ':app:transformClassesWithDexForDevelopmentDebug'.
-            //> com.android.build.api.transform.TransformException: com.android.ide.common.process.ProcessException: java.util.concurrent.ExecutionException: com.android.dex.DexIndexOverflowException: method ID not in [0, 0xffff]: 65536
-            //without it.
-            multiDexEnabled true
-            dimension "type"
-        }
-
-        prod {
-            dimension "type"
-        }
-
-    }
-    sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
     }
 
     android.applicationVariants.all { variant ->
@@ -106,7 +85,10 @@ android {
     }
 
     lintOptions {
-        abortOnError false
+        warningsAsErrors false // after fixing existing errors set to true for fixing warnings
+        abortOnError false // after fixing existing errors set to true for failing fast
+        lintConfig rootProject.file('lint.xml')
+        htmlOutput rootProject.file("reports/lint/lint.html")
     }
 
     buildTypes {
@@ -117,16 +99,19 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'),
                     'proguard-rules.pro'
+
+            testCoverageEnabled = true
         }
         debug {
-            minifyEnabled false
-            useProguard false
+            minifyEnabled true
+            useProguard true
             signingConfig signingConfigs.debug
             proguardFiles getDefaultProguardFile('proguard-android.txt'),
                     'proguard-rules.pro'
             versionNameSuffix "DEV"
-        }
 
+            testCoverageEnabled = true
+        }
 
         //the apk of this type is signed by old prod keys
         //it makes apk testable (sign in, smart lock, etc are worked).
@@ -163,10 +148,10 @@ dependencies {
 
     compile 'de.hdodenhof:circleimageview:2.1.0'
 
-    compile 'com.android.support:appcompat-v7:26.0.1'
-    compile 'com.android.support:design:26.0.1'
-    compile 'com.android.support:recyclerview-v7:26.0.1'
-    compile 'com.android.support:cardview-v7:26.0.1'
+    compile 'com.android.support:appcompat-v7:26.1.0'
+    compile 'com.android.support:design:26.1.0'
+    compile 'com.android.support:recyclerview-v7:26.1.0'
+    compile 'com.android.support:cardview-v7:26.1.0'
     compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
 
     compile 'joda-time:joda-time:2.8'
@@ -186,24 +171,24 @@ dependencies {
 
     compile 'org.jsoup:jsoup:1.8.3'
 
-    compile 'com.google.firebase:firebase-messaging:10.2.4'
-    compile "com.google.firebase:firebase-appindexing:10.2.4"
-    compile 'com.google.android.gms:play-services-auth:10.2.4'
-    compile 'com.google.firebase:firebase-core:10.2.4'
-    compile 'com.google.firebase:firebase-crash:10.2.4'
-    compile 'com.google.firebase:firebase-config:10.2.4'
+    compile "com.google.firebase:firebase-messaging:${rootProject.firebaseVersion}"
+    compile "com.google.firebase:firebase-appindexing:${rootProject.firebaseVersion}"
+    compile "com.google.android.gms:play-services-auth:${rootProject.firebaseVersion}"
+    compile "com.google.firebase:firebase-core:${rootProject.firebaseVersion}"
+    compile "com.google.firebase:firebase-crash:${rootProject.firebaseVersion}"
+    compile "com.google.firebase:firebase-config:${rootProject.firebaseVersion}"
 
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.facebook.android:facebook-android-sdk:4.17.0'
     compile 'com.vk:androidsdk:1.6.5'
-    compile 'com.jakewharton.timber:timber:4.3.1'
+    compile 'com.jakewharton.timber:timber:4.5.1'
 
     compile 'com.github.javiersantos:MaterialStyledDialogs:2.0'
     compile 'biz.kasual:materialnumberpicker:1.2.1'
 
     compile 'com.github.chrisbanes:PhotoView:1.3.1'
 
-    compile 'com.github.h6ah4i:android-advancedrecyclerview:feature~support_libraries_v26-SNAPSHOT'
+    compile 'com.github.h6ah4i:android-advancedrecyclerview:develop-SNAPSHOT'
 
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
 
@@ -215,11 +200,11 @@ dependencies {
     //add echo player for video (change playback speed supported)
     compile 'com.google.android.exoplayer:exoplayer-core:r2.4.1'
 
-    oldReleaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.2'
-    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.2'
-    androidTestCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.2'
-    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.2'
-    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.2'
+    oldReleaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:${rootProject.leakCanaryVersion}"
+    testCompile "com.squareup.leakcanary:leakcanary-android-no-op:${rootProject.leakCanaryVersion}"
+    androidTestCompile "com.squareup.leakcanary:leakcanary-android-no-op:${rootProject.leakCanaryVersion}"
+    debugCompile "com.squareup.leakcanary:leakcanary-android:${rootProject.leakCanaryVersion}"
+    releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:${rootProject.leakCanaryVersion}"
 
     // Required -- JUnit 4 framework
     testCompile 'junit:junit:4.12'
@@ -228,7 +213,7 @@ dependencies {
 
     androidTestCompile 'org.hamcrest:hamcrest-library:1.3'
 
-    androidTestCompile 'com.android.support:support-annotations:26.0.1'
+    androidTestCompile 'com.android.support:support-annotations:26.1.0'
 
     androidTestCompile('com.android.support.test:runner:0.5') {
         exclude group: 'com.android.support'

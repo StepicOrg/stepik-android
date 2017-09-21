@@ -11,6 +11,7 @@ import android.widget.RadioGroup;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+@SuppressWarnings("PMD.ConstructorCallsOverridableMethod")
 public class StepikRadioGroup extends LinearLayout {
 
     // holds the checked id; the selection is empty by default

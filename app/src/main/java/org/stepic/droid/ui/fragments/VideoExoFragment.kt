@@ -404,12 +404,14 @@ class VideoExoFragment : FragmentBase(),
     }
 
     override fun onInternetEnabled() {
-        if (player != null && player?.playbackState == STATE_IDLE) {
-            releasePlayer()
+        player?.let {
+            if (it.playbackState == STATE_IDLE) {
+                releasePlayer()
 
-            autoPlay = true
-            videoId = createPlayer()
-            videoWithTimestampPresenter.showVideoWithPredefinedTimestamp(videoId)
+                autoPlay = true
+                videoId = createPlayer()
+                videoWithTimestampPresenter.showVideoWithPredefinedTimestamp(videoId)
+            }
         }
     }
 

@@ -46,7 +46,8 @@
         android:orientation="horizontal"
         android:visibility="gone"
         tools:visibility="visible"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@id/rateDialogHint"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
 
         <TextView

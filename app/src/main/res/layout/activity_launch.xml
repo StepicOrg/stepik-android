@@ -1,115 +1,127 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:fillViewport="true"
     android:overScrollMode="never"
     tools:context=".ui.activities.LaunchActivity">
 
-    <RelativeLayout
+    <android.support.constraint.ConstraintLayout
         android:id="@+id/root_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:splitMotionEvents="false">
+        android:layout_height="wrap_content">
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
+        <ImageView
+            android:id="@+id/stepikLogo"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:clickable="false"
+
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="50dp"
+
+            android:contentDescription="@string/app_name"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:src="@drawable/ic_stepik_logotype_square_green" />
+
+        <FrameLayout
+            android:id="@+id/bottomButtons"
+            android:layout_width="@dimen/auth_elements_width"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:splitMotionEvents="false">
+            android:layout_marginLeft="24dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginRight="24dp"
+            android:layout_marginEnd="24dp"
+            android:paddingTop="24dp"
+            android:paddingBottom="24dp"
 
-            <ImageView
-                android:id="@+id/stepik_logo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginLeft="@dimen/padding_registration_left_right"
-                android:layout_marginRight="@dimen/padding_registration_left_right"
-                android:layout_marginTop="@dimen/guideline_standard_padding"
-                android:clickable="false"
-                android:contentDescription="@string/app_name"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
-                android:src="@drawable/ic_stepik_logotype_square_green"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="0dp"
 
-            <Button
-                android:id="@+id/findCoursesButton"
-                style="@style/LoginButtons"
-                android:layout_below="@+id/stepik_logo"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="15dp"
-                android:layout_marginLeft="@dimen/padding_registration_left_right"
-                android:layout_marginRight="@dimen/padding_registration_left_right"
-                android:layout_marginTop="50dp"
-                android:contentDescription="@string/find_courses_title"
-                android:text="@string/find_courses_title"/>
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent">
 
             <Button
                 android:id="@+id/signInWithEmail"
-                style="@style/LoginButtons"
-                android:layout_alignLeft="@id/findCoursesButton"
-                android:layout_alignRight="@id/findCoursesButton"
-                android:layout_below="@+id/findCoursesButton"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="15dp"
-                android:contentDescription="@string/sign_in_with_password"
-                android:text="@string/sign_in_with_password"/>
+                android:text="@string/sign_in_with_password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/BorderLessTextButton"
+                android:layout_gravity="start|center_vertical" />
 
             <Button
                 android:id="@+id/launchSignUpButton"
-                style="@style/LoginButtons"
-                android:layout_alignLeft="@id/findCoursesButton"
-                android:layout_alignRight="@id/findCoursesButton"
-                android:layout_below="@id/signInWithEmail"
-                android:layout_centerHorizontal="true"
-                android:text="@string/yet_have_not_account"/>
-
-
-            <TextView
-                android:id="@+id/sign_in_text"
+                android:text="@string/sign_up"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/launchSignUpButton"
-                android:layout_centerHorizontal="true"
-                android:layout_marginEnd="@dimen/space_for_text"
-                android:layout_marginLeft="@dimen/space_for_text"
-                android:layout_marginRight="@dimen/space_for_text"
-                android:layout_marginStart="@dimen/space_for_text"
-                android:layout_marginTop="40dp"
-                android:text="@string/or_continue_social"
-                android:textColor="@color/launchTextColor"
-                android:textSize="@dimen/launch_not_button_text_size"/>
+                android:layout_gravity="end|center_vertical"
+                style="@style/BorderLessTextButton" />
 
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+
+
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+
+            app:layout_constraintTop_toBottomOf="@id/stepikLogo"
+            app:layout_constraintBottom_toTopOf="@id/bottomButtons"
+
+            android:layout_marginTop="36dp">
+
+            <TextView
+                android:id="@+id/signInText"
+                fontPath="fonts/Roboto-Light.ttf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textSize="20sp"
+                tools:text="Sign in with social accounts"
+                tools:ignore="MissingPrefix"/>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/socialListRecyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/height_of_social"
-                android:layout_below="@+id/sign_in_text"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="50dp"
-                android:layout_marginTop="25dp"
+                android:padding="12dp"
+                android:clipToPadding="false"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:overScrollMode="never"
-                android:scrollbarStyle="outsideOverlay"
-                android:splitMotionEvents="false"
-                android:stretchColumns="0"/>
+                android:layout_gravity="center_horizontal" />
 
-        </RelativeLayout>
+            <Button
+                android:id="@+id/showMore"
+                android:text="@string/social_recycler_show_more"
+                style="@style/BorderLessTextButton"
+                android:layout_width="@dimen/auth_elements_width"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/stepic_brand_primary"
+                android:visibility="visible"
+                tools:text="More" />
 
-        <TextView
-            android:id="@+id/termsPrivacyLaunchTextView"
-            style="@style/PrivacyPolicyTextStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:clickable="true"
-            android:gravity="center|bottom"
-            android:paddingBottom="@dimen/guideline_standard_padding"
-            android:paddingTop="@dimen/guideline_standard_padding"
-            tools:text="Условия использования и Политика конфиденциальности"/>
+            <Button
+                android:id="@+id/showLess"
+                android:text="@string/social_recycler_show_less"
+                style="@style/BorderLessTextButton"
+                android:textColor="@color/stepic_brand_primary"
+                android:layout_width="@dimen/auth_elements_width"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                tools:text="Less"
+                android:visibility="gone" />
 
-    </RelativeLayout>
+        </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>
 </ScrollView>
