@@ -122,12 +122,15 @@ class StepikNotificationManagerImpl
                         analytic.reportEvent(Analytic.Streak.GET_ZERO_STREAK_NOTIFICATION)
                         showNotificationWithoutStreakInfo()
                     } else {
-                        analytic.reportEvent(Analytic.Streak.GET_NON_ZERO_STREAK_NOTIFICATION)
+                        val bundle = Bundle()
                         if (isSolvedToday) {
                             showNotificationStreakImprovement(currentStreak)
+                            bundle.putString(Analytic.Streak.NOTIFICATION_TYPE_PARAM, Analytic.Streak.NotificationType.solvedToday.name)
                         } else {
                             showNotificationWithStreakCallToAction(currentStreak)
+                            bundle.putString(Analytic.Streak.NOTIFICATION_TYPE_PARAM, Analytic.Streak.NotificationType.notSolvedToday.name)
                         }
+                        analytic.reportEvent(Analytic.Streak.GET_NON_ZERO_STREAK_NOTIFICATION, bundle)
                     }
                 } catch (exception: Exception) {
                     // no internet || cant get streaks -> show some notification without streak information.
