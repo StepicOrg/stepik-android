@@ -44,7 +44,7 @@ import uk.co.chrisjenx.calligraphy.TypefaceUtils
 import javax.inject.Inject
 
 
-class LaunchActivity : BackToExitActivityWithSmartLockBase(), LoginView {
+class LaunchActivity : SmartLockActivityBase(), LoginView {
     companion object {
         private val TAG = "LaunchActivity"
         val wasLogoutKey = "wasLogoutKey"
