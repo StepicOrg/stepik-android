@@ -33,7 +33,7 @@ abstract class SmartLockActivityBase : FragmentActivityBase() {
 
     protected var googleApiClient: GoogleApiClient? = null
 
-    protected fun initGoogleApiClient(withAuth: Boolean = false, autoManage: OnConnectionFailedListener = OnConnectionFailedListener {}) {
+    protected fun initGoogleApiClient(withAuth: Boolean = false, autoManage: OnConnectionFailedListener? = null) {
         if (checkPlayServices()) {
             val builder = GoogleApiClient.Builder(this)
                     .enableAutoManage(this, autoManage)
