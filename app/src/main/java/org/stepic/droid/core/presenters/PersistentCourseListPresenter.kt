@@ -61,8 +61,12 @@ class PersistentCourseListPresenter
     }
 
     private fun downloadData(courseType: Table, applyFilter: Boolean, isRefreshing: Boolean, isLoadMore: Boolean = false) {
-        if (isLoading.compareAndSet(false, true)) {
-            threadPoolExecutor.execute {
+        if (!isLoading.compareAndSet(false, true)) {
+            //is loading
+            return
+        }
+        threadPoolExecutor.execute {
+            try {
                 if (!isRefreshing && !isLoadMore) {
                     getFromDatabaseAndShow(applyFilter, courseType)
                 } else if (hasNextPage.get()) {
@@ -84,13 +88,11 @@ class PersistentCourseListPresenter
 
                     if (response != null && response.isSuccessful) {
                         val coursesFromInternet = response.body().courses
-
                         try {
                             //this lock need for not saving enrolled courses to database after user click logout
                             RWLocks.ClearEnrollmentsLock.writeLock().lock()
                             if (sharedPreferenceHelper.authResponseFromStore != null || courseType == Table.featured) {
-
-                                if (isRefreshing && currentPage.get() == 1) {
+                                if (currentPage.get() == 1) {
                                     if (courseType == Table.featured) {
                                         databaseFacade.dropFeaturedCourses()
                                     } else if (courseType == Table.enrolled) {
@@ -145,6 +147,8 @@ class PersistentCourseListPresenter
                         break;
                     }
                 }
+            } finally {
+
                 isLoading.set(false)
             }
 
@@ -223,7 +227,7 @@ class PersistentCourseListPresenter
         return result
     }
 
-    public fun loadMore(courseType: Table, needFilter: Boolean) {
+    fun loadMore(courseType: Table, needFilter: Boolean) {
         downloadData(courseType, needFilter, isRefreshing = false, isLoadMore = true)
     }
 

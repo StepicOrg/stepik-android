@@ -3,6 +3,7 @@ package org.stepic.droid.ui.fragments;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -277,7 +278,7 @@ public abstract class CourseListFragmentBase extends FragmentBase
     }
 
     @Override
-    public final void showCourses(List<Course> courses) {
+    public final void showCourses(@NonNull List<Course> courses) {
         ProgressHelper.dismiss(progressBarOnEmptyScreen);
         ProgressHelper.dismiss(swipeRefreshLayout);
         coursesAdapter.showLoadingFooter(false);
