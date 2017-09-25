@@ -68,7 +68,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CourseViewHolderBase> {
     private int footerViewType = 1;
     private int itemViewType = 2;
     private final int NUMBER_OF_EXTRA_ITEMS;
-    private Boolean isNeedShowFooter;
+    private final FooterItemViewHolder.Companion.State isNeedShowFooterState;
     private final String continueTitle;
     private final String joinTitle;
     private final boolean isContinueExperimentEnabled;
@@ -105,13 +105,14 @@ public class CoursesAdapter extends RecyclerView.Adapter<CourseViewHolderBase> {
             continueTitle = contextActivity.getString(R.string.continue_course_title);
         }
         joinTitle = contextActivity.getString(R.string.course_item_join);
+        isNeedShowFooterState = new FooterItemViewHolder.Companion.State(false);
     }
 
     @Override
     public CourseViewHolderBase onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == footerViewType) {
             View view = inflater.inflate(R.layout.loading_view, parent, false);
-            return new FooterItemViewHolder(view, isNeedShowFooter);
+            return new FooterItemViewHolder(view, isNeedShowFooterState);
         } else if (itemViewType == viewType) {
             View view = inflater.inflate(R.layout.new_course_item, parent, false);
             return new CourseItemViewHolder(
@@ -151,7 +152,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CourseViewHolderBase> {
     }
 
     public void showLoadingFooter(boolean isNeedShow) {
-        isNeedShowFooter = isNeedShow;
+        isNeedShowFooterState.setNeedShow(isNeedShow);
         try {
             notifyItemChanged(getItemCount() - 1);
         } catch (IllegalStateException ignored) {
