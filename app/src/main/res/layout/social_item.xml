@@ -1,4 +1,5 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/root_view"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -6,15 +7,16 @@
     android:gravity="center"
     android:clickable="true"
     android:focusable="true"
-    android:foreground="@drawable/circle_foreground">
+    android:layout_margin="12dp">
 
 
-    <de.hdodenhof.circleimageview.CircleImageView
+    <ImageView
         android:id="@+id/social_item"
         android:layout_width="@dimen/height_of_social"
         android:layout_height="@dimen/height_of_social"
         android:layout_gravity="center"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"
+        android:background="?selectableItemBackgroundBorderless" />
 
 
-</FrameLayout>
+</android.support.v7.widget.CardView>

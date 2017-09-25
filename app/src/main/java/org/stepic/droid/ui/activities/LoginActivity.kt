@@ -3,43 +3,43 @@ package org.stepic.droid.ui.activities
 import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
+import android.support.v7.app.AppCompatDelegate
 import android.text.Editable
+import android.text.Spannable
+import android.text.SpannableString
 import android.text.TextWatcher
-import android.text.method.LinkMovementMethod
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.widget.Toast
-import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.credentials.Credential
-import com.google.android.gms.common.api.GoogleApiClient
 import kotlinx.android.synthetic.main.activity_login.*
-import kotlinx.android.synthetic.main.panel_custom_action_bar.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.LoginInteractionType
 import org.stepic.droid.base.App
-import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.core.LoginFailType
 import org.stepic.droid.core.ProgressHandler
 import org.stepic.droid.core.presenters.LoginPresenter
 import org.stepic.droid.core.presenters.contracts.LoginView
+import org.stepic.droid.fonts.FontType
 import org.stepic.droid.model.AuthData
 import org.stepic.droid.ui.dialogs.LoadingProgressDialog
+import org.stepic.droid.ui.util.setOnKeyboardOpenListener
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.getMessageFor
 import org.stepic.droid.util.toBundle
+import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan
+import uk.co.chrisjenx.calligraphy.TypefaceUtils
 import javax.inject.Inject
 
-class LoginActivity : FragmentActivityBase(), LoginView {
+class LoginActivity : SmartLockActivityBase(), LoginView {
 
     companion object {
-        private val TAG = "LoginActivity"
-        private val RC_SAVE = 356
+        private const val TAG = "LoginActivity"
     }
 
-    private val termsMessageHtml by lazy {
-        resources.getString(R.string.terms_message_login)
+    init {
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
     }
 
     private var progressLogin: ProgressDialog? = null
@@ -49,13 +49,9 @@ class LoginActivity : FragmentActivityBase(), LoginView {
     @Inject
     lateinit var loginPresenter: LoginPresenter
 
-    private var googleApiClient: GoogleApiClient? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        overridePendingTransition(R.anim.slide_in_from_bottom, R.anim.no_transition)
-        hideSoftKeypad()
         App.componentManager().loginComponent(TAG).inject(this)
 
         progressLogin = LoadingProgressDialog(this)
@@ -70,22 +66,22 @@ class LoginActivity : FragmentActivityBase(), LoginView {
             }
         }
 
-        termsPrivacyLogin.movementMethod = LinkMovementMethod.getInstance()
-        termsPrivacyLogin.text = textResolver.fromHtml(termsMessageHtml)
+        initTitle()
+
         forgotPasswordView.setOnClickListener {
             screenManager.openRemindPassword(this@LoginActivity)
         }
 
-        loginText.setOnEditorActionListener { _, actionId, _ ->
+        loginField.setOnEditorActionListener { _, actionId, _ ->
             var handled = false
             if (actionId == EditorInfo.IME_ACTION_NEXT) {
-                passwordEditText.requestFocus()
+                passwordField.requestFocus()
                 handled = true
             }
             handled
         }
 
-        passwordEditText.setOnEditorActionListener { _, actionId, _ ->
+        passwordField.setOnEditorActionListener { _, actionId, _ ->
             var handled = false
             if (actionId == EditorInfo.IME_ACTION_SEND) {
                 analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_IN_NEXT_ON_SIGN_IN_SCREEN)
@@ -101,8 +97,8 @@ class LoginActivity : FragmentActivityBase(), LoginView {
                 analytic.reportEvent(Analytic.Login.TAP_ON_FIELDS)
             }
         }
-        loginText.setOnFocusChangeListener(onFocusField)
-        passwordEditText.setOnFocusChangeListener(onFocusField)
+        loginField.setOnFocusChangeListener(onFocusField)
+        passwordField.setOnFocusChangeListener(onFocusField)
 
         val reportAnalyticWhenTextBecomeNotBlank = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -112,16 +108,22 @@ class LoginActivity : FragmentActivityBase(), LoginView {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                onClearLoginError()
             }
 
             override fun afterTextChanged(s: Editable?) {
             }
         }
-        loginText.addTextChangedListener(reportAnalyticWhenTextBecomeNotBlank)
-        passwordEditText.addTextChangedListener(reportAnalyticWhenTextBecomeNotBlank)
+        loginField.addTextChangedListener(reportAnalyticWhenTextBecomeNotBlank)
+        passwordField.addTextChangedListener(reportAnalyticWhenTextBecomeNotBlank)
 
 
-        actionbarCloseButtonLayout.setOnClickListener { finish() }
+        launchSignUpButton.setOnClickListener {
+            analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_UP)
+            screenManager.showRegistration(this@LoginActivity, courseFromExtra)
+        }
+
+        signInWithSocial.setOnClickListener { finish() }
         loginButton.setOnClickListener {
             analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_IN_ON_SIGN_IN_SCREEN)
             analytic.reportEvent(Analytic.Login.REQUEST_LOGIN_WITH_INTERACTION_TYPE, LoginInteractionType.button.toBundle())
@@ -130,21 +132,34 @@ class LoginActivity : FragmentActivityBase(), LoginView {
 
         loginRootView.requestFocus()
 
-        if (checkPlayServices()) {
-            googleApiClient = GoogleApiClient.Builder(this)
-                    .enableAutoManage(this)
-                    {}
-                    .addApi(Auth.CREDENTIALS_API)
-                    .build()
-        }
+        initGoogleApiClient()
 
-        loginPresenter.attachView(this)
         onNewIntent(intent)
 
         if (savedInstanceState == null && intent.hasExtra(AppConstants.KEY_EMAIL_BUNDLE)) {
-            loginText.setText(intent.getStringExtra(AppConstants.KEY_EMAIL_BUNDLE))
-            passwordEditText.requestFocus()
+            loginField.setText(intent.getStringExtra(AppConstants.KEY_EMAIL_BUNDLE))
+            passwordField.requestFocus()
         }
+
+        setOnKeyboardOpenListener(root_view, {
+            stepikLogo.visibility = View.GONE
+            signInText.visibility = View.GONE
+        }, {
+            stepikLogo.visibility = View.VISIBLE
+            signInText.visibility = View.VISIBLE
+        })
+    }
+
+    private fun initTitle() {
+        val signInString = getString(R.string.sign_in)
+        val signInWithPasswordSuffix = getString(R.string.sign_in_with_password_suffix)
+
+        val spannableSignIn = SpannableString(signInString + signInWithPasswordSuffix)
+        val typefaceSpan = CalligraphyTypefaceSpan(TypefaceUtils.load(assets, fontsProvider.provideFontPath(FontType.medium)))
+
+        spannableSignIn.setSpan(typefaceSpan, 0, signInString.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        signInText.text = spannableSignIn
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -164,30 +179,40 @@ class LoginActivity : FragmentActivityBase(), LoginView {
         }
     }
 
-    override fun finish() {
-        super.finish()
-        overridePendingTransition(R.anim.no_transition, R.anim.slide_out_to_bottom)
-    }
-
     private fun tryLogin() {
-        val login = loginText.text.toString()
-        val password = passwordEditText.text.toString()
+        val login = loginField.text.toString()
+        val password = passwordField.text.toString()
 
         loginPresenter.login(login, password)
     }
 
+    override fun applyTransitionPrev() {} // we need default system animation
+
     override fun onDestroy() {
-        loginPresenter.detachView(this)
-        actionbarCloseButtonLayout.setOnClickListener(null)
+        signInWithSocial.setOnClickListener(null)
         loginButton.setOnClickListener(null)
+        launchSignUpButton.setOnClickListener(null)
         if (isFinishing) {
             App.componentManager().releaseLoginComponent(TAG)
         }
         super.onDestroy()
     }
 
+    private fun onClearLoginError() {
+        loginButton.isEnabled = true
+        loginForm.isEnabled = true
+        loginErrorMessage.visibility = View.GONE
+    }
+
     override fun onFailLogin(type: LoginFailType, credential: Credential?) {
-        Toast.makeText(this, getMessageFor(type), Toast.LENGTH_SHORT).show()
+        loginErrorMessage.text = getMessageFor(type)
+        loginErrorMessage.visibility = View.VISIBLE
+
+        if (type == LoginFailType.emailAlreadyUsed || type == LoginFailType.emailPasswordInvalid) {
+            loginForm.isEnabled = false
+            loginButton.isEnabled = false
+        }
+
         progressHandler.dismiss()
     }
 
@@ -201,37 +226,7 @@ class LoginActivity : FragmentActivityBase(), LoginView {
         }
     }
 
-    private fun requestToSaveCredentials(authData: AuthData) {
-        val credential = Credential
-                .Builder(authData.login)
-                .setPassword(authData.password)
-                .build()
-
-        Auth.CredentialsApi.save(googleApiClient, credential)
-                .setResultCallback { status ->
-                    if (!status.isSuccess && status.hasResolution()) {
-                        analytic.reportEvent(Analytic.SmartLock.SHOW_SAVE_LOGIN)
-                        status.startResolutionForResult(this, RC_SAVE)
-                    } else {
-                        analytic.reportEventWithName(Analytic.SmartLock.DISABLED_LOGIN, status.statusMessage)
-                        openMainFeed()
-                    }
-                }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == RC_SAVE) {
-            if (resultCode == RESULT_OK) {
-                analytic.reportEvent(Analytic.SmartLock.
-                        LOGIN_SAVED)
-            } else {
-                analytic.reportEvent(Analytic.SmartLock.LOGIN_NOT_SAVED)
-            }
-            openMainFeed()
-        }
-
-    }
+    override fun onCredentialSaved() = openMainFeed()
 
     private fun openMainFeed() {
         screenManager.showMainFeed(this, courseFromExtra)
@@ -243,4 +238,13 @@ class LoginActivity : FragmentActivityBase(), LoginView {
 
     override fun onSocialLoginWithExistingEmail(email: String) {}
 
+    override fun onResume() {
+        super.onResume()
+        loginPresenter.attachView(this)
+    }
+
+    override fun onPause() {
+        loginPresenter.detachView(this)
+        super.onPause()
+    }
 }

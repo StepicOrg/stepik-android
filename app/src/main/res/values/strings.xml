@@ -432,6 +432,7 @@
         more likely to complete it. Invite your friends now by sending them a link to the course!
     </string>
     <string name="sign_in_with_password">Sign in with e-mail</string>
+    <string name="sign_in_with_password_suffix">" with e-mail"</string>
     <string name="or_continue_social">Or continue with</string>
     <string name="content_course_logo">Course logo</string>
     <string name="continue_course_title">Continue</string>
@@ -507,9 +508,19 @@
     <string name="course_item_join">Course Info</string>
 
     <string name="learners_count">Learners count</string>
+
     <string name="continue_learning">Continue Learning</string>
     <string name="accessibility_last_step_cover">Last step cover</string>
     <string name="my_courses_title">My courses</string>
     <string name="popular_courses_title">Popular</string>
     <string name="view_all_courses">View all</string>
+
+    <string name="sign_in_with_social_suffix">" with social accounts"</string>
+    <string name="sign_in_with_social">Sign in with social</string>
+    <string name="social_recycler_show_more">More</string>
+    <string name="social_recycler_show_less">Less</string>
+    <string name="name">Name</string>
+
+    <string name="sign_up_with_email_suffix">" with e-mail"</string>
+
 </resources>

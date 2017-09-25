@@ -3,11 +3,12 @@ package org.stepic.droid.ui.activities
 import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Intent
-import android.content.IntentSender
-import android.graphics.Point
+import android.os.Build
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
-import android.text.method.LinkMovementMethod
+import android.support.v7.widget.GridLayoutManager
+import android.text.Spannable
+import android.text.SpannableString
+import android.view.View
 import android.widget.Toast
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
@@ -16,16 +17,12 @@ import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.credentials.Credential
-import com.google.android.gms.auth.api.credentials.CredentialRequest
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.common.Scopes
-import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.common.api.GoogleApiClient
-import com.google.android.gms.common.api.Scope
 import com.vk.sdk.VKAccessToken
 import com.vk.sdk.VKCallback
 import com.vk.sdk.VKSdk
 import com.vk.sdk.api.VKError
+import jp.wasabeef.recyclerview.animators.FadeInDownAnimator
 import kotlinx.android.synthetic.main.activity_launch.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
@@ -34,37 +31,30 @@ import org.stepic.droid.core.LoginFailType
 import org.stepic.droid.core.ProgressHandler
 import org.stepic.droid.core.presenters.LoginPresenter
 import org.stepic.droid.core.presenters.contracts.LoginView
+import org.stepic.droid.fonts.FontType
 import org.stepic.droid.model.AuthData
 import org.stepic.droid.social.SocialManager
 import org.stepic.droid.ui.adapters.SocialAuthAdapter
-import org.stepic.droid.ui.decorators.SpacesItemDecorationHorizontal
 import org.stepic.droid.ui.dialogs.LoadingProgressDialog
 import org.stepic.droid.util.AppConstants
-import org.stepic.droid.util.DpPixelsHelper
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.getMessageFor
-import timber.log.Timber
+import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan
+import uk.co.chrisjenx.calligraphy.TypefaceUtils
 import javax.inject.Inject
 
 
-class LaunchActivity : BackToExitActivityBase(), LoginView {
+class LaunchActivity : SmartLockActivityBase(), LoginView {
     companion object {
         private val TAG = "LaunchActivity"
         val wasLogoutKey = "wasLogoutKey"
-        private val resolvingAccountKey = "resolvingAccountKey"
+        private val socialAdapterStateKey = "socialAdapterStateKey"
     }
 
-    private val requestFromSmartLockCode = 314
 
-    val termsMessageHtml: String by lazy {
-        resources.getString(R.string.terms_message_launch)
-    }
-
-    private var googleApiClient: GoogleApiClient? = null
     private var progressLogin: ProgressDialog? = null
     private lateinit var progressHandler: ProgressHandler
     private lateinit var callbackManager: CallbackManager
-    private var resolvingWasShown = false
 
     @Inject
     lateinit var loginPresenter: LoginPresenter
@@ -74,14 +64,6 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
         setContentView(R.layout.activity_launch)
         App.componentManager().loginComponent(TAG).inject(this)
         overridePendingTransition(R.anim.no_transition, R.anim.slide_out_to_bottom)
-
-        resolvingWasShown = savedInstanceState?.getBoolean(resolvingAccountKey) ?: false
-
-        findCoursesButton.setOnClickListener {
-            analytic.reportEvent(Analytic.Interaction.CLICK_FIND_COURSE_LAUNCH)
-            screenManager.showFindCourses(this@LaunchActivity)
-            this@LaunchActivity.finish()
-        }
 
         launchSignUpButton.setOnClickListener {
             analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_UP)
@@ -93,26 +75,26 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
             screenManager.showLogin(this@LaunchActivity, courseFromExtra, null)
         }
 
+        initGoogleApiClient(true, GoogleApiClient.OnConnectionFailedListener {
+            Toast.makeText(this@LaunchActivity, R.string.connectionProblems, Toast.LENGTH_SHORT).show()
+        })
 
-        if (checkPlayServices()) {
-            val serverClientId = config.googleServerClientId
-            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                    .requestScopes(Scope(Scopes.EMAIL), Scope(Scopes.PROFILE))
-                    .requestServerAuthCode(serverClientId)
-                    .build()
-            googleApiClient = GoogleApiClient.Builder(this)
-                    .enableAutoManage(this) {
-                        Toast.makeText(this@LaunchActivity, R.string.connectionProblems, Toast.LENGTH_SHORT).show()
-                    }
-                    .addApi(Auth.CREDENTIALS_API)
-                    .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                    .build()
+        val recyclerState = savedInstanceState?.getSerializable(socialAdapterStateKey)
+        if (recyclerState is SocialAuthAdapter.State) {
+            initSocialRecycler(recyclerState)
+        } else {
+            initSocialRecycler()
         }
 
-        initSocialRecycler(googleApiClient)
+        val signInString = getString(R.string.sign_in)
+        val signInWithSocial = getString(R.string.sign_in_with_social_suffix)
 
-        termsPrivacyLaunchTextView.movementMethod = LinkMovementMethod.getInstance()
-        termsPrivacyLaunchTextView.text = textResolver.fromHtml(termsMessageHtml)
+        val spannableSignIn = SpannableString(signInString + signInWithSocial)
+        val typefaceSpan = CalligraphyTypefaceSpan(TypefaceUtils.load(assets, fontsProvider.provideFontPath(FontType.medium)))
+
+        spannableSignIn.setSpan(typefaceSpan, 0, signInString.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        signInText.text = spannableSignIn
 
         progressHandler = object : ProgressHandler {
             override fun activate() {
@@ -172,34 +154,47 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
         }
     }
 
-    private fun initSocialRecycler(googleApiClient: GoogleApiClient?) {
-        val pixelForPadding = DpPixelsHelper.convertDpToPixel(4f, this)//pixelForPadding * (count+1)
-        val widthOfItem = resources.getDimension(R.dimen.height_of_social)//width == height
-        val count = SocialManager.SocialType.values().size
-        val widthOfAllItems = widthOfItem * count + pixelForPadding * (count + 1)
+    private fun initSocialRecycler(state: SocialAuthAdapter.State = SocialAuthAdapter.State.NORMAL) {
+        socialListRecyclerView.layoutManager = GridLayoutManager(this, 3)
 
-        val display = windowManager.defaultDisplay
-        val size = Point()
-        display.getSize(size)
-        val widthOfScreen = size.x
-
-
-        socialListRecyclerView.addItemDecoration(SpacesItemDecorationHorizontal(pixelForPadding.toInt()))//30 is ok
-        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        if (widthOfScreen > widthOfAllItems) {
-            val padding = (widthOfScreen - widthOfAllItems).toInt() / 2
-            socialListRecyclerView.setPadding(padding, 0, 0, 0)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            socialListRecyclerView.itemAnimator = FadeInDownAnimator()
+            socialListRecyclerView.itemAnimator.removeDuration = 0
         }
 
-        socialListRecyclerView.layoutManager = layoutManager
-        socialListRecyclerView.adapter = SocialAuthAdapter(this, googleApiClient)
+        val adapter = SocialAuthAdapter(this, googleApiClient, state)
+        showMore.setOnClickListener {
+            showMore.visibility = View.GONE
+            showLess.visibility = View.VISIBLE
+            adapter.showMore()
+        }
+
+        showLess.setOnClickListener {
+            showLess.visibility = View.GONE
+            showMore.visibility = View.VISIBLE
+            adapter.showLess()
+        }
+
+        when(state) {
+            SocialAuthAdapter.State.EXPANDED -> {
+                showLess.visibility = View.VISIBLE
+                showMore.visibility = View.GONE
+            }
+            SocialAuthAdapter.State.NORMAL -> {
+                showMore.visibility = View.VISIBLE
+                showLess.visibility = View.GONE
+            }
+        }
+
+        socialListRecyclerView.adapter = adapter
     }
 
     override fun onDestroy() {
         loginPresenter.detachView(this)
         signInWithEmail.setOnClickListener(null)
         launchSignUpButton.setOnClickListener(null)
-        findCoursesButton.setOnClickListener(null)
+        showMore.setOnClickListener(null)
+        showLess.setOnClickListener(null)
         if (isFinishing) {
             App.componentManager().releaseLoginComponent(TAG)
         }
@@ -221,41 +216,7 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
         overridePendingTransition(R.anim.no_transition, R.anim.slide_out_to_bottom)
     }
 
-    private fun requestCredentials() {
-        val credentialRequest = CredentialRequest.Builder()
-                .setPasswordLoginSupported(true)
-                .build()
-
-        Auth.CredentialsApi.request(googleApiClient, credentialRequest).setResultCallback { credentialRequestResult ->
-            if (credentialRequestResult.status.isSuccess) {
-                // Successfully read the credential without any user interaction, this
-                // means there was only a single credential and the user has auto
-                // sign-in enabled.
-                analytic.reportEvent(Analytic.SmartLock.READ_CREDENTIAL_WITHOUT_INTERACTION)
-                onCredentialRetrieved(credentialRequestResult.credential)
-            } else {
-                if (credentialRequestResult.status.statusCode == CommonStatusCodes.RESOLUTION_REQUIRED) {
-                    // Prompt the user to choose a saved credential; do not show the hint
-                    // selector.
-                    try {
-                        if (!resolvingWasShown) {
-                            analytic.reportEvent(Analytic.SmartLock.PROMPT_TO_CHOOSE_CREDENTIALS)
-                            resolvingWasShown = true
-                            credentialRequestResult.status.startResolutionForResult(this, requestFromSmartLockCode)
-                        }
-                    } catch (e: IntentSender.SendIntentException) {
-                        Timber.e(e, "STATUS: Failed to send resolution.")
-                    }
-
-                } else {
-                    Timber.d("STATUS: Failed to send resolution.")
-                    // The user must create an account or sign in manually.
-                }
-            }
-        }
-    }
-
-    private fun onCredentialRetrieved(credential: Credential) {
+    override fun onCredentialRetrieved(credential: Credential) {
         val accountType = credential.accountType
         if (accountType == null) {
             // Sign the user in with information from the Credential.
@@ -264,17 +225,6 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
     }
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == requestFromSmartLockCode) {
-            if (resultCode == Activity.RESULT_OK && data != null) {
-                analytic.reportEvent(Analytic.SmartLock.LAUNCH_CREDENTIAL_RETRIEVED_PROMPT)
-                val credential = data.getParcelableExtra<Credential>(Credential.EXTRA_KEY)
-                onCredentialRetrieved(credential)
-            } else {
-                analytic.reportEvent(Analytic.SmartLock.LAUNCH_CREDENTIAL_CANCELED_PROMPT)
-                Timber.d("Credential Read not ok: canceled or no internet")
-            }
-        }
-
         if (VKSdk.onActivityResult(requestCode, resultCode, data, object : VKCallback<VKAccessToken> {
             override fun onResult(result: VKAccessToken) {
                 loginPresenter.loginWithNativeProviderCode(result.accessToken, SocialManager.SocialType.vk, result.email)
@@ -380,7 +330,10 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
-        outState?.putBoolean(resolvingAccountKey, resolvingWasShown)
+        val adapter = socialListRecyclerView.adapter
+        if (adapter is SocialAuthAdapter) {
+            outState?.putSerializable(socialAdapterStateKey, adapter.state)
+        }
         super.onSaveInstanceState(outState)
     }
 

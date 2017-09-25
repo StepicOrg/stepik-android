@@ -1,172 +1,163 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:id="@+id/registerRootView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:focusableInTouchMode="true">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:fillViewport="true"
+    android:overScrollMode="never"
+    android:id="@+id/registerRootView"
+    tools:context=".ui.activities.RegisterActivity">
 
-
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/panel_custom_action_bar"/>
-
-    <ScrollView
-        android:id="@+id/scrollview"
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/root_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/toolbar"
-        android:fillViewport="true"
-        android:overScrollMode="never">
+        android:layout_height="wrap_content">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/stepikLogo"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:clickable="false"
+
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="50dp"
+
+            android:contentDescription="@string/app_name"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:src="@drawable/ic_stepik_logotype_square_green" />
+
+        <TextView
+            android:id="@+id/termsPrivacyRegisterTextView"
+            android:layout_width="@dimen/auth_elements_width"
             android:layout_height="wrap_content"
+
+            android:layout_marginLeft="@dimen/padding_registration_left_right"
+            android:layout_marginRight="@dimen/padding_registration_left_right"
+
+            android:paddingTop="24dp"
+            android:paddingBottom="24dp"
+
+            android:maxWidth="@dimen/min_max_width_for_tablets"
+            android:minWidth="@dimen/min_max_width_for_tablets"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             android:gravity="center"
-            android:splitMotionEvents="false">
 
-            <ImageView
-                android:id="@+id/login_logo"
+            android:textSize="16sp"
+            android:textColorLink="@color/stepic_brand_primary" />
+
+
+        <LinearLayout
+            android:id="@+id/container"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+
+            android:gravity="center_horizontal"
+
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+
+            app:layout_constraintTop_toBottomOf="@+id/stepikLogo"
+            app:layout_constraintBottom_toTopOf="@+id/termsPrivacyRegisterTextView"
+
+            android:layout_marginTop="36dp">
+
+            <TextView
+                android:id="@+id/signUpText"
+                fontPath="fonts/Roboto-Light.ttf"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="50dp"
-                android:layout_marginTop="@dimen/guideline_standard_padding"
-                android:contentDescription="@string/app_name"
-                android:src="@drawable/ic_stepik_logotype_square_green"/>
+                android:textSize="20sp"
+                android:layout_marginBottom="40dp"
+                tools:text="Sign up"
+                tools:ignore="MissingPrefix"/>
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/registrationFirstNameWrapper"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/registerForm"
+                android:layout_width="@dimen/auth_elements_width"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/login_logo"
-                android:layout_centerHorizontal="true"
+                android:background="@drawable/login_edit_text_stroke"
+                android:orientation="vertical"
+
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+
                 android:layout_marginLeft="@dimen/padding_registration_left_right"
-                android:layout_marginRight="@dimen/padding_registration_left_right"
-                android:maxWidth="@dimen/min_max_width_for_tablets"
-                android:minWidth="@dimen/min_max_width_for_tablets"
-                android:paddingBottom="@dimen/half_padding"
-                android:paddingTop="@dimen/half_padding">
+                android:layout_marginRight="@dimen/padding_registration_left_right">
 
                 <EditText
-                    android:id="@+id/registrationFirstName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/first_name"
+                    android:id="@+id/firstNameField"
+                    style="@style/LoginEditFields"
+                    android:hint="@string/name"
                     android:imeOptions="flagNoFullscreen|actionNext"
-                    android:inputType="textPersonName|textAutoCorrect|textCapWords"
-                    android:maxLength="100"
-                    android:maxLines="1"/>
+                    android:inputType="textPersonName|textAutoCorrect|textCapWords"/>
 
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/registrationSecondNameWrapper"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/registrationFirstNameWrapper"
-                android:layout_centerHorizontal="true"
-                android:layout_marginLeft="@dimen/padding_registration_left_right"
-                android:layout_marginRight="@dimen/padding_registration_left_right"
-                android:maxWidth="@dimen/min_max_width_for_tablets"
-                android:minWidth="@dimen/min_max_width_for_tablets"
-                android:paddingBottom="@dimen/half_padding"
-                android:paddingTop="@dimen/half_padding">
+                <include layout="@layout/edit_text_separator" />
 
                 <EditText
-                    android:id="@+id/registrationSecondName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/second_name"
-                    android:imeOptions="flagNoFullscreen|actionNext"
-                    android:inputType="textPersonName|textAutoCorrect|textCapWords"
-                    android:maxLength="100"
-                    android:maxLines="1"/>
-
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/emailViewWrapper"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/registrationSecondNameWrapper"
-                android:layout_centerHorizontal="true"
-                android:layout_marginLeft="@dimen/padding_registration_left_right"
-                android:layout_marginRight="@dimen/padding_registration_left_right"
-                android:maxWidth="@dimen/min_max_width_for_tablets"
-                android:minWidth="@dimen/min_max_width_for_tablets"
-                android:paddingBottom="@dimen/half_padding"
-                android:paddingTop="@dimen/half_padding">
-
-                <EditText
-                    android:id="@+id/emailView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:id="@+id/emailField"
+                    style="@style/LoginEditFields"
                     android:hint="@string/email"
                     android:imeOptions="flagNoFullscreen|actionNext"
-                    android:inputType="textEmailAddress"
-                    android:maxLength="100"
-                    android:maxLines="1"/>
+                    android:inputType="textEmailAddress"/>
 
-            </android.support.design.widget.TextInputLayout>
+                <include layout="@layout/edit_text_separator" />
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/passwordWrapper"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/emailViewWrapper"
-                android:layout_centerHorizontal="true"
-                android:layout_marginLeft="@dimen/padding_registration_left_right"
-                android:layout_marginRight="@dimen/padding_registration_left_right"
-                android:maxWidth="@dimen/min_max_width_for_tablets"
-                android:minWidth="@dimen/min_max_width_for_tablets"
-                android:paddingBottom="@dimen/half_padding"
-                android:paddingTop="@dimen/half_padding"
-                app:passwordToggleEnabled="true">
-
-                <EditText
-                    android:id="@+id/passwordTextView"
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/password_hint"
-                    android:imeOptions="flagNoFullscreen|actionSend"
-                    android:inputType="textPassword"
-                    android:maxLength="@integer/max_length_of_password"
-                    android:maxLines="1"/>
+                    app:passwordToggleDrawable="@drawable/password_toggle"
+                    app:hintEnabled="false"
+                    app:passwordToggleEnabled="true">
 
-            </android.support.design.widget.TextInputLayout>
+                    <EditText
+                        android:id="@+id/passwordField"
+                        style="@style/LoginEditFields"
+                        android:hint="@string/password_hint"
+                        android:textColor="@color/new_accent_color"
+                        android:imeOptions="flagNoFullscreen|actionSend"
+                        android:inputType="textPassword"
+                        android:maxLength="@integer/max_length_of_password"/>
+                </android.support.design.widget.TextInputLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/registerErrorMessage"
+                android:layout_width="@dimen/auth_elements_width"
+                android:layout_height="match_parent"
+                android:textColor="@color/login_error_color"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="@dimen/padding_registration_left_right"
+                android:layout_marginRight="@dimen/padding_registration_left_right"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:visibility="gone"
+                tools:ignore="MissingPrefix"
+                fontPath="fonts/Roboto-Light.ttf"
+                tools:text="Whoops! The email address and/or password you specified are not correct." />
 
             <Button
                 android:id="@+id/signUpButton"
-                style="@style/LoginButtons"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/min_ux_touchable_size"
-                android:layout_below="@id/passwordWrapper"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="20dp"
+                android:layout_marginTop="20dp"
+                android:textSize="16sp"
+                android:text="@string/sign_up"
                 android:layout_marginLeft="@dimen/padding_registration_left_right"
                 android:layout_marginRight="@dimen/padding_registration_left_right"
-                android:layout_marginTop="15dp"
-                android:maxWidth="@dimen/min_max_width_for_tablets"
-                android:minWidth="@dimen/min_max_width_for_tablets"
-                android:text="@string/sign_up"/>
 
+                style="@style/LoginButtons" />
 
-            <TextView
-                android:id="@+id/termsPrivacyRegisterTextView"
-                style="@style/PrivacyPolicyTextStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/signUpButton"
-                android:layout_centerHorizontal="true"
-                android:clickable="true"
-                android:gravity="center|bottom"
-                android:paddingBottom="@dimen/guideline_standard_padding"
-                android:paddingTop="@dimen/guideline_standard_padding"
-                tools:text="Входя в приложение, Вы соглашаетесь с Условиями испольесь с Условиями использования и Политикоесь с Условиями использования и Политикоесь с Условиями использования и Политикоесь с Условиями использования и Политикоесь с Условиями использования и Политикоесь с Условиями использования и Политикозования и Политикой конфиденциальностиВходя в приложение, Вы соглашаетесь с Условиями использования и Политикой конфиденциальности"/>
+        </LinearLayout>
 
-        </RelativeLayout>
-    </ScrollView>
+    </android.support.constraint.ConstraintLayout>
 
-</RelativeLayout>
+</ScrollView>

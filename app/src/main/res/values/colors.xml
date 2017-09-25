@@ -45,7 +45,6 @@
     <color name="default_option_color">#F9FAFB</color>
     <color name="material_grey">#ff757575</color>
     <color name="snack_action_color">#EAA833</color>
-    <color name="login_button_background_pressed">#EFEFEF</color>
     <color name="launchTextColor">#757575</color>
     <color name="launchButtonsBorder">#EEEEEE</color>
     <color name="black_alpha_40">#66000000</color>
@@ -95,4 +94,17 @@
 
     <color name="fast_continue_learning_opacity">#99535366</color>
     <color name="view_all_course_list_color">#CCCCD1</color>
+
+    <color name="login_edit_text_block_stroke_color">#979797</color>
+    <color name="login_edit_text_block_background_color">@color/transparent</color>
+    <color name="login_edit_text_block_background_color_wrong">#0CC82850</color>
+
+
+    <color name="login_button_color">#1966CC66</color>
+    <color name="login_button_color_pressed">#6666CC66</color>
+    <color name="login_button_color_disabled">#0C66CC66</color>
+
+    <color name="login_error_color">#c82850</color>
+
+    <color name="remind_password_button_text_color">#4990e2</color>
 </resources>

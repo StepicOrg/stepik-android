@@ -22,7 +22,7 @@
     <string name="remind_password">Вспомнить пароль</string>
     <string name="second_name">Фамилия</string>
     <string name="settings_title">Настройки</string>
-    <string name="sign_in">Вход</string>
+    <string name="sign_in">Войти</string>
     <string name="sign_up">Регистрация</string>
     <string name="terms">Правилами</string>
     <string name="tap_to_see_more">развернуть…</string>
@@ -429,6 +429,7 @@
     </string>
     <string name="take_course_with_fiends">Проходите курс с друзьями</string>
     <string name="sign_in_with_password">Войти с e-mail</string>
+    <string name="sign_in_with_password_suffix">" с e-mail"</string>
     <string name="or_continue_social">Или продолжить с</string>
     <string name="content_course_logo">Логотип курса</string>
     <string name="continue_course_title">Учиться</string>
@@ -507,4 +508,13 @@
     <string name="my_courses_title">Мои курсы</string>
     <string name="popular_courses_title">Популярные</string>
     <string name="view_all_courses">Показать все</string>
+
+    <string name="sign_in_with_social_suffix">" через социальные сети"</string>
+    <string name="sign_in_with_social">Вход через соцсети</string>
+    <string name="social_recycler_show_more">Ещё</string>
+    <string name="social_recycler_show_less">Меньше</string>
+    <string name="name">Имя</string>
+
+    <string name="sign_up_with_email_suffix">" с e-mail"</string>
+
 </resources>

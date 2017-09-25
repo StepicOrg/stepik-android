@@ -14,6 +14,7 @@
     <dimen name="height_of_social">@dimen/min_ux_touchable_size</dimen>
     <dimen name="space_for_text">8dp</dimen>
     <dimen name="min_max_width_for_tablets">316dp</dimen>
+    <dimen name="auth_elements_width">-1px</dimen>
     <dimen name="half_padding">8dp</dimen>
     <dimen name="padding_text_in_cv">16dp</dimen>
     <dimen name="padding_left_right_list_item">16dp</dimen>
@@ -21,7 +22,7 @@
     <dimen name="text_size_title">24sp</dimen>
     <dimen name="guide_top_bot_padding">4dp</dimen>
     <dimen name="min_ux_touchable_size">48dp</dimen>
-    <dimen name="padding_registration_left_right">44dp</dimen>
+    <dimen name="padding_registration_left_right">36dp</dimen>
     <dimen name="margin_from_image_in_items">8dp</dimen>
     <dimen name="attempt_padding">8dp</dimen>
     <dimen name="drawable_padding">2dp</dimen>
@@ -55,7 +56,7 @@
     <dimen name="stepik_text_size_in_button">14sp</dimen>
     <dimen name="left_padding_tablayout_scrollable">60dp</dimen>
     <dimen name="login_button_border">2dp</dimen>
-    <dimen name="login_button_radius">6dp</dimen>
+    <dimen name="login_button_radius">32dp</dimen>
     <dimen name="launch_button_text_size">18sp</dimen>
     <dimen name="launch_not_button_text_size">15sp</dimen>
     <dimen name="continue_course_button_text_size">13sp</dimen>
@@ -111,4 +112,6 @@
     <dimen name="home_right_recycler_padding">46dp</dimen>
     <!-- 'home_right_recycler_padding' minus 'course_list_side_right_padding'-->
     <dimen name="home_right_recycler_padding_without_extra">34dp</dimen>
+
+    <dimen name="borderless_text_button_text_size">16sp</dimen>
 </resources>
