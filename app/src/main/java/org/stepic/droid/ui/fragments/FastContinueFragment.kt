@@ -105,6 +105,8 @@ class FastContinueFragment : FragmentBase(),
     }
 
     override fun showEmptyCourses() {
+        //tbh: courses might be not empty, but not active
+        // we can show suggestion for enroll, but not write, that you have zero courses
         // FIXME: 15.09.17 show suggestion to enroll some course
     }
 
@@ -114,9 +116,14 @@ class FastContinueFragment : FragmentBase(),
 
     override fun showCourses(courses: MutableList<Course>) {
         // FIXME: 15.09.17 show "Continue" button with the 1st course
-        if (courses.isNotEmpty()) {
+        val course: Course? = courses
+                .find {
+                    it.isActive
+                            && it.sections?.isNotEmpty() ?: false
+                }
+
+        if (course != null) {
             // FIXME: 15.09.17 load async the last step of course and in some callback with step show the background
-            val course = courses.first()
             lastStepPresenter.fetchLastStep(courseId = course.courseId, lastStepId = course.lastStepId)
             fastContinueAction.setOnClickListener {
                 continueCoursePresenter.continueCourse(course)
