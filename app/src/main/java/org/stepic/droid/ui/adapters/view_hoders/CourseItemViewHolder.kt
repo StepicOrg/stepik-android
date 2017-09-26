@@ -20,7 +20,7 @@ import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.presenters.ContinueCoursePresenter
 import org.stepic.droid.core.presenters.DroppingPresenter
 import org.stepic.droid.model.Course
-import org.stepic.droid.storage.operations.Table
+import org.stepic.droid.model.CoursesCarouselColorType
 import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.ContextMenuCourseUtil
 import org.stepic.droid.util.StepikLogicHelper
@@ -30,14 +30,15 @@ import javax.inject.Inject
 class CourseItemViewHolder(
         val view: View,
         private val contextActivity: Activity,
-        private val type: Table?,
+        private val showMore: Boolean,
         private val joinTitle: String,
         private val continueTitle: String,
         private val coursePlaceholder: Drawable,
         private val isContinueExperimentEnabled: Boolean,
         private val courses: List<Course>,
         private val droppingPresenter: DroppingPresenter,
-        private val continueCoursePresenter: ContinueCoursePresenter) : CourseViewHolderBase(view) {
+        private val continueCoursePresenter: ContinueCoursePresenter,
+        private val colorType: CoursesCarouselColorType) : CourseViewHolderBase(view) {
 
     @Inject
     lateinit var screenManager: ScreenManager
@@ -50,7 +51,7 @@ class CourseItemViewHolder(
 
 
     private val continueColor: Int by lazy {
-        ColorUtil.getColorArgb(R.color.new_accent_color, contextActivity)
+        ColorUtil.getColorArgb(colorType.textColor, contextActivity)
     }
     private val joinColor: Int by lazy {
         ColorUtil.getColorArgb(R.color.join_text_color, contextActivity)
@@ -59,6 +60,9 @@ class CourseItemViewHolder(
 
     init {
         App.component().inject(this)
+
+        applyColorType(colorType)
+
 
         imageViewTarget = object : BitmapImageViewTarget(itemView.courseItemImage) {
             override fun setResource(resource: Bitmap) {
@@ -88,6 +92,13 @@ class CourseItemViewHolder(
                 showMore(v, course)
             }
         }
+    }
+
+    private fun applyColorType(colorType: CoursesCarouselColorType) {
+        itemView.courseItemName.setTextColor(ColorUtil.getColorArgb(colorType.textColor, itemView.context))
+        itemView.learnersCountText.setTextColor(ColorUtil.getColorArgb(colorType.textColor, itemView.context))
+        itemView.learnersCountImage.setColorFilter(ColorUtil.getColorArgb(colorType.textColor, itemView.context))
+        itemView.courseWidgetButton.setTextColor(ColorUtil.getColorArgb(colorType.textColor, itemView.context))
     }
 
 
@@ -169,7 +180,7 @@ class CourseItemViewHolder(
             showJoinButton()
         }
 
-        itemView.courseItemMore.visibility = if (type === Table.enrolled) {
+        itemView.courseItemMore.visibility = if (showMore) {
             View.VISIBLE
         } else {
             View.GONE
@@ -180,11 +191,11 @@ class CourseItemViewHolder(
             course != null && course.enrollment != 0 && course.isActive && course.lastStepId != null
 
     private fun showJoinButton() {
-        showButton(joinTitle, joinColor, R.drawable.course_widget_join_background)
+        showButton(joinTitle, joinColor, colorType.joinResource)
     }
 
     private fun showContinueButton() {
-        showButton(continueTitle, continueColor, R.drawable.course_widget_continue_background)
+        showButton(continueTitle, continueColor, colorType.continueResource)
     }
 
     private fun showButton(title: String, @ColorInt textColor: Int, @DrawableRes background: Int) {

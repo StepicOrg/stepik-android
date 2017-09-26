@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
@@ -26,7 +25,7 @@ import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.presenters.ContinueCoursePresenter;
 import org.stepic.droid.core.presenters.DroppingPresenter;
 import org.stepic.droid.model.Course;
-import org.stepic.droid.storage.operations.Table;
+import org.stepic.droid.model.CoursesCarouselColorType;
 import org.stepic.droid.ui.adapters.view_hoders.CourseItemViewHolder;
 import org.stepic.droid.ui.adapters.view_hoders.CourseViewHolderBase;
 import org.stepic.droid.ui.adapters.view_hoders.FooterItemViewHolder;
@@ -59,8 +58,6 @@ public class CoursesAdapter extends RecyclerView.Adapter<CourseViewHolderBase> {
 
     private Activity contextActivity;
     private final List<Course> courses;
-    @Nullable
-    private final Table type;
     private final ContinueCoursePresenter continueCoursePresenter;
     @NotNull
     private final DroppingPresenter droppingPresenter;
@@ -72,13 +69,19 @@ public class CoursesAdapter extends RecyclerView.Adapter<CourseViewHolderBase> {
     private final String continueTitle;
     private final String joinTitle;
     private final boolean isContinueExperimentEnabled;
+    private final boolean showMore;
+    private final CoursesCarouselColorType colorType;
 
     public CoursesAdapter(Fragment fragment,
                           List<Course> courses,
-                          @Nullable Table type,
                           @NotNull ContinueCoursePresenter continueCoursePresenter,
                           @NotNull DroppingPresenter droppingPresenter,
-                          boolean withPagination) {
+                          boolean withPagination,
+                          boolean showMore,
+                          CoursesCarouselColorType colorType
+    ) {
+        this.showMore = showMore;
+        this.colorType = colorType;
         if (withPagination) {
             NUMBER_OF_EXTRA_ITEMS = 1;
         } else {
@@ -86,7 +89,6 @@ public class CoursesAdapter extends RecyclerView.Adapter<CourseViewHolderBase> {
         }
         contextActivity = fragment.getActivity();
         this.courses = courses;
-        this.type = type;
         this.continueCoursePresenter = continueCoursePresenter;
         this.droppingPresenter = droppingPresenter;
         inflater = (LayoutInflater) contextActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -118,14 +120,15 @@ public class CoursesAdapter extends RecyclerView.Adapter<CourseViewHolderBase> {
             return new CourseItemViewHolder(
                     view,
                     contextActivity,
-                    type,
+                    showMore,
                     joinTitle,
                     continueTitle,
                     coursePlaceholder,
                     isContinueExperimentEnabled,
                     courses,
                     droppingPresenter,
-                    continueCoursePresenter
+                    continueCoursePresenter,
+                    colorType
             );
         } else {
             throw new IllegalStateException("Not valid item type");

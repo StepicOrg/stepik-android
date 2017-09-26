@@ -30,6 +30,7 @@ import org.stepic.droid.core.presenters.contracts.ContinueCourseView;
 import org.stepic.droid.core.presenters.contracts.CoursesView;
 import org.stepic.droid.core.presenters.contracts.DroppingView;
 import org.stepic.droid.model.Course;
+import org.stepic.droid.model.CoursesCarouselColorType;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.storage.operations.Table;
 import org.stepic.droid.ui.activities.contracts.RootScreen;
@@ -147,7 +148,8 @@ public abstract class CourseListFragmentBase extends FragmentBase
                 R.color.stepic_blue_ribbon);
 
         if (courses == null) courses = new ArrayList<>();
-        coursesAdapter = new CoursesAdapter(this, courses, getCourseType(), continueCoursePresenter, droppingPresenter, true);
+        boolean showMore = getCourseType() == Table.enrolled;
+        coursesAdapter = new CoursesAdapter(this, courses, continueCoursePresenter, droppingPresenter, true, showMore, CoursesCarouselColorType.Light);
         listOfCoursesView.setAdapter(coursesAdapter);
         layoutManager = new WrapContentLinearLayoutManager(getContext());
         listOfCoursesView.setLayoutManager(layoutManager);

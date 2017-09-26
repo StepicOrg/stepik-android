@@ -18,6 +18,7 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
+            android:id="@+id/homeFragmentsContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
@@ -27,19 +28,7 @@
                 android:name="org.stepic.droid.ui.fragments.FastContinueFragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
-
-            <fragment
-                android:id="@+id/myCoursesFragment"
-                android:name="org.stepic.droid.ui.fragments.CoursesCarouselFragment"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <!--<fragment-->
-                <!--android:id="@+id/popularCoursesFragment"-->
-                <!--android:name="org.stepic.droid.ui.fragments.CoursesCarouselFragment"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"/>-->
-
+w
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 </android.support.design.widget.CoordinatorLayout>

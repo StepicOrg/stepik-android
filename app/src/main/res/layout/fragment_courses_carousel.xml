@@ -2,32 +2,34 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coursesCarouselRoot"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/guideline_standard_padding"
+    android:paddingTop="@dimen/guideline_standard_padding">
 
     <TextView
-        android:id="@+id/coursesTitle"
+        android:id="@+id/coursesCarouselTitle"
         fontPath="fonts/Roboto-Regular.ttf"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/course_list_side_padding"
         android:layout_marginStart="@dimen/course_list_side_padding"
-        android:layout_marginTop="@dimen/guideline_standard_padding"
         android:layout_toLeftOf="@+id/coursesViewAll"
         android:layout_toStartOf="@+id/coursesViewAll"
         android:ellipsize="end"
         android:lines="1"
-        android:text="@string/my_courses_title"
         android:textColor="@color/text_color"
         android:textSize="16sp"
-        tools:ignore="MissingPrefix"/>
+        tools:ignore="MissingPrefix"
+        tools:text="@string/my_courses_title"/>
 
     <TextView
         android:id="@+id/coursesViewAll"
         fontPath="fonts/Roboto-Light.ttf"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@id/coursesTitle"
+        android:layout_alignBaseline="@id/coursesCarouselTitle"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_marginEnd="@dimen/course_list_side_padding"
@@ -38,10 +40,10 @@
         tools:ignore="MissingPrefix"/>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/myCoursesOnHome"
+        android:id="@+id/coursesRecycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/coursesTitle"
+        android:layout_below="@id/coursesCarouselTitle"
         android:layout_marginTop="@dimen/guideline_standard_padding"
         android:clipToPadding="false"
         android:divider="@color/transparent"

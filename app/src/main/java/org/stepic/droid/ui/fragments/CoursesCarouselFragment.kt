@@ -20,6 +20,7 @@ import org.stepic.droid.core.presenters.contracts.ContinueCourseView
 import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.core.presenters.contracts.DroppingView
 import org.stepic.droid.model.Course
+import org.stepic.droid.model.CoursesCarouselInfo
 import org.stepic.droid.model.Section
 import org.stepic.droid.storage.operations.Table
 import org.stepic.droid.ui.adapters.CoursesAdapter
@@ -28,15 +29,24 @@ import org.stepic.droid.ui.decorators.RightMarginForLastItems
 import org.stepic.droid.ui.decorators.VerticalSpacesInGridDecoration
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.StartSnapHelper
+import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.ProgressHelper
 import javax.inject.Inject
 
-class CoursesCarouselFragment : FragmentBase(), ContinueCourseView, CoursesView, DroppingView, DroppingListener {
+class CoursesCarouselFragment
+    : FragmentBase(),
+        ContinueCourseView,
+        CoursesView,
+        DroppingView,
+        DroppingListener {
 
     companion object {
-        fun newInstance(): CoursesCarouselFragment {
+        private const val COURSE_CAROUSEL_INFO_KEY = "COURSE_CAROUSEL_INFO_KEY"
+
+        fun newInstance(coursesCarouselInfo: CoursesCarouselInfo): CoursesCarouselFragment {
             val args = Bundle()
             val fragment = CoursesCarouselFragment()
+            args.putParcelable(COURSE_CAROUSEL_INFO_KEY, coursesCarouselInfo)
             fragment.arguments = args
             return fragment
         }
@@ -60,7 +70,12 @@ class CoursesCarouselFragment : FragmentBase(), ContinueCourseView, CoursesView,
     lateinit var droppingClient: Client<DroppingListener>
 
     private val courses = ArrayList<Course>()
-    private var isScreenCreated: Boolean = false
+    private lateinit var info: CoursesCarouselInfo
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        info = arguments.getParcelable(COURSE_CAROUSEL_INFO_KEY)
+    }
 
     override fun injectComponent() {
         App
@@ -80,30 +95,21 @@ class CoursesCarouselFragment : FragmentBase(), ContinueCourseView, CoursesView,
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View?
             = inflater?.inflate(R.layout.fragment_courses_carousel, container, false)
 
-    //
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initMyCoursesRecycler()
+        initCourseCarousel()
         continueCoursePresenter.attachView(this)
         courseListPresenter.attachView(this)
         droppingPresenter.attachView(this)
         droppingClient.subscribe(this)
 
-        courseListPresenter.restoreState()
-        isScreenCreated = true
+        restoreState()
     }
 
     override fun onStart() {
         super.onStart()
-        if (isScreenCreated) {
-            //reset all data
-            isScreenCreated = false
-            courses.clear()
-            courseListPresenter.refreshData(Table.enrolled, false, false)
-        } else {
-            //load if not
-            courseListPresenter.downloadData(Table.enrolled, false)
-        }
+        courses.clear()
+        downloadData()
     }
 
     override fun onPause() {
@@ -119,17 +125,23 @@ class CoursesCarouselFragment : FragmentBase(), ContinueCourseView, CoursesView,
         droppingPresenter.detachView(this)
     }
 
-    private fun initMyCoursesRecycler() {
-        myCoursesOnHome.layoutManager = GridLayoutManager(context, ROW_COUNT, GridLayoutManager.HORIZONTAL, false)
-        myCoursesOnHome.adapter = CoursesAdapter(this, courses, Table.enrolled, continueCoursePresenter, droppingPresenter, false)
+    private fun initCourseCarousel() {
+        coursesCarouselTitle.text = getCarouselTitle()
+        coursesCarouselTitle.setTextColor(ColorUtil.getColorArgb(info.colorType.textColor))
+
+        coursesCarouselRoot.setBackgroundColor(ColorUtil.getColorArgb(info.colorType.backgroundColorRes))
+
+        coursesRecycler.layoutManager = GridLayoutManager(context, ROW_COUNT, GridLayoutManager.HORIZONTAL, false)
+        val showMore = info.table == Table.enrolled
+        coursesRecycler.adapter = CoursesAdapter(this, courses, continueCoursePresenter, droppingPresenter, false, showMore, info.colorType)
         val spacePx = resources.getDimensionPixelSize(R.dimen.course_list_between_items_padding)
         val leftSpacePx = resources.getDimensionPixelSize(R.dimen.course_list_side_padding)
-        myCoursesOnHome.addItemDecoration(VerticalSpacesInGridDecoration(spacePx / 2, ROW_COUNT)) //warning: spacePx/2 – workaround for some bug, decoration will set this param twice
-        myCoursesOnHome.addItemDecoration(LeftSpacesDecoration(leftSpacePx))
-        myCoursesOnHome.addItemDecoration(RightMarginForLastItems(resources.getDimensionPixelSize(R.dimen.home_right_recycler_padding_without_extra), ROW_COUNT))
-        myCoursesOnHome.itemAnimator.changeDuration = 0
+        coursesRecycler.addItemDecoration(VerticalSpacesInGridDecoration(spacePx / 2, ROW_COUNT)) //warning: spacePx/2 – workaround for some bug, decoration will set this param twice
+        coursesRecycler.addItemDecoration(LeftSpacesDecoration(leftSpacePx))
+        coursesRecycler.addItemDecoration(RightMarginForLastItems(resources.getDimensionPixelSize(R.dimen.home_right_recycler_padding_without_extra), ROW_COUNT))
+        coursesRecycler.itemAnimator.changeDuration = 0
         val snapHelper = StartSnapHelper()
-        snapHelper.attachToRecyclerView(myCoursesOnHome)
+        snapHelper.attachToRecyclerView(coursesRecycler)
     }
 
     override fun onOpenStep(courseId: Long, section: Section, lessonId: Long, unitId: Long, stepPosition: Int) {
@@ -164,7 +176,7 @@ class CoursesCarouselFragment : FragmentBase(), ContinueCourseView, CoursesView,
     override fun showCourses(courses: MutableList<Course>) {
         this.courses.clear()
         this.courses.addAll(courses)
-        myCoursesOnHome.adapter.notifyDataSetChanged()
+        coursesRecycler.adapter.notifyDataSetChanged()
     }
 
     override fun onUserHasNotPermissionsToDrop() {
@@ -178,10 +190,10 @@ class CoursesCarouselFragment : FragmentBase(), ContinueCourseView, CoursesView,
         Toast.makeText(context, context.getString(R.string.you_dropped) + " ${course.title}", Toast.LENGTH_LONG).show()
         val index = courses.indexOfFirst { it.courseId == course.courseId }
         courses.removeAt(index)
-        myCoursesOnHome.adapter.notifyItemRemoved(index)
+        coursesRecycler.adapter.notifyItemRemoved(index)
         if (courses.size == ROW_COUNT) {
 //           update 1st column for adjusting size
-            myCoursesOnHome.adapter.notifyItemRangeChanged(0, ROW_COUNT - 1) // "ROW_COUNT - 1" count is number of changed items, we shouldn't update the last item
+            coursesRecycler.adapter.notifyItemRangeChanged(0, ROW_COUNT - 1) // "ROW_COUNT - 1" count is number of changed items, we shouldn't update the last item
         }
 
         if (courses.size == 0) {
@@ -197,4 +209,25 @@ class CoursesCarouselFragment : FragmentBase(), ContinueCourseView, CoursesView,
 
     }
 
+    private fun getCarouselTitle(): String = info.title
+
+
+    private fun restoreState() {
+        if (info.table != null) {
+            courseListPresenter.restoreState()
+        } else if (info.table == null) {
+//            no-op
+        }
+
+    }
+
+    private fun downloadData() {
+        info.table?.let {
+            courseListPresenter.refreshData(it, false, false)
+        }
+
+        if (info.table == null) {
+            // TODO: 26.09.2017 implement course list fetching (presenter and view : CoursesView)
+        }
+    }
 }

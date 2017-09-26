@@ -10,6 +10,7 @@
         android:id="@+id/courseItemImage"
         android:layout_width="90dp"
         android:layout_height="90dp"
+        android:background="@drawable/course_image_background"
         android:contentDescription="@string/content_course_logo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
