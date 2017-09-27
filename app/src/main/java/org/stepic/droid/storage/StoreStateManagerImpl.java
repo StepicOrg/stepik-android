@@ -41,10 +41,13 @@ public class StoreStateManagerImpl implements StoreStateManager {
     }
 
     @Override
-    public void updateUnitLessonState(long lessonId) {
+    public void updateUnitLessonState(final long lessonId) {
         List<Step> steps = databaseFacade.getStepsOfLesson(lessonId);
+        boolean cached = true;
+        boolean loading = false;
         for (Step step : steps) {
-            if (!step.is_cached()) return;
+            cached &= step.is_cached();
+            loading |= step.is_loading();
         }
 
         //all steps of lesson is cached
@@ -53,18 +56,26 @@ public class StoreStateManagerImpl implements StoreStateManager {
             analytic.reportError(Analytic.Error.LESSON_IN_STORE_STATE_NULL, new NullPointerException("lesson was null"));
             return;
         }
-        lesson.set_loading(false);
-        lesson.set_cached(true);
+        lesson.set_loading(loading);
+        lesson.set_cached(cached);
         databaseFacade.updateOnlyCachedLoadingLesson(lesson);
-        mainHandler.post(new Function0<kotlin.Unit>() {
-            @Override
-            public kotlin.Unit invoke() {
-                for (LessonCallback callback : lessonCallbackContainer.asIterable()) {
-                    callback.onLessonCached(lesson.getId());
+        if (!loading) {
+            final boolean isCached = cached;
+                mainHandler.post(new Function0<kotlin.Unit>() {
+            mainHandler.post(new Function0<kotlin.Unit>() {
+                @Override
+                public kotlin.Unit invoke() {
+                    for (LessonCallback callback : lessonCallbackContainer.asIterable()) {
+                        if (isCached) {
+                            callback.onLessonCached(lessonId);
+                        } else {
+                            callback.onLessonNotCached(lessonId);
+                        }
+                    }
+                    return kotlin.Unit.INSTANCE;
                 }
-                return kotlin.Unit.INSTANCE;
-            }
-        });
+            });
+        }
         Unit unit = databaseFacade.getUnitByLessonId(lessonId);
         if (unit != null) {
             updateSectionState(unit.getSection());

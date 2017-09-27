@@ -30,6 +30,12 @@ class DownloadsPosterImpl
         }
     }
 
+    override fun downloadFailed(downloadId: Long) {
+        listenerContainer.asIterable().forEach {
+            it.onDownloadFailed(downloadId)
+        }
+    }
+
     override fun finishDownloadVideo(list: List<CachedVideo>, map: Map<Long, Lesson>) {
         listenerContainer.asIterable().forEach {
             it.onFinishDownloadVideo(list, map)
