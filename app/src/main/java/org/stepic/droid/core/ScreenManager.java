@@ -66,7 +66,7 @@ public interface ScreenManager {
 
     void pushToViewedQueue(ViewAssignment viewAssignmentWrapper);
 
-    void showCourseDescription(Activity sourceActivity, @NotNull Course course);
+    void showCourseDescription(Context context, @NotNull Course course);
 
     void showCourseDescription(Activity sourceActivity, @NotNull Course course, boolean instaEnroll);
 

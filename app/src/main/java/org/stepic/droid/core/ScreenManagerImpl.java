@@ -206,9 +206,9 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void showCourseDescription(Activity sourceActivity, @NotNull Course course) {
-        Intent intent = getIntentForDescription(sourceActivity, course);
-        sourceActivity.startActivity(intent);
+    public void showCourseDescription(Context context, @NotNull Course course) {
+        Intent intent = getIntentForDescription(context, course);
+        context.startActivity(intent);
     }
 
     @Override
@@ -218,14 +218,17 @@ public class ScreenManagerImpl implements ScreenManager {
         sourceActivity.startActivity(intent);
     }
 
-    private Intent getIntentForDescription(Activity sourceActivity, @NotNull Course course) {
+    private Intent getIntentForDescription(Context context, @NotNull Course course) {
         analytic.reportEvent(Analytic.Screens.SHOW_COURSE_DESCRIPTION);
-        Intent intent = new Intent(sourceActivity, CourseDetailActivity.class);
+        Intent intent = new Intent(context, CourseDetailActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         Bundle bundle = new Bundle();
         bundle.putSerializable(AppConstants.KEY_COURSE_BUNDLE, course);
         intent.putExtras(bundle);
+        if (!(context instanceof Activity)) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        }
         return intent;
     }
 

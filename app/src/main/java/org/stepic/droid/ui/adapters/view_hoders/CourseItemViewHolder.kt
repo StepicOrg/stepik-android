@@ -51,10 +51,10 @@ class CourseItemViewHolder(
 
 
     private val continueColor: Int by lazy {
-        ColorUtil.getColorArgb(colorType.textColor, contextActivity)
+        ColorUtil.getColorArgb(colorType.textColor, itemView.context)
     }
     private val joinColor: Int by lazy {
-        ColorUtil.getColorArgb(R.color.join_text_color, contextActivity)
+        ColorUtil.getColorArgb(R.color.join_text_color, itemView.context)
     }
     private var imageViewTarget: BitmapImageViewTarget
 
@@ -66,8 +66,8 @@ class CourseItemViewHolder(
 
         imageViewTarget = object : BitmapImageViewTarget(itemView.courseItemImage) {
             override fun setResource(resource: Bitmap) {
-                val circularBitmapDrawable = RoundedBitmapDrawableFactory.create(contextActivity.resources, resource)
-                circularBitmapDrawable.cornerRadius = contextActivity.resources.getDimension(R.dimen.course_image_radius)
+                val circularBitmapDrawable = RoundedBitmapDrawableFactory.create(itemView.context.resources, resource)
+                circularBitmapDrawable.cornerRadius = itemView.context.resources.getDimension(R.dimen.course_image_radius)
                 itemView.courseItemImage.setImageDrawable(circularBitmapDrawable)
             }
         }
@@ -103,13 +103,13 @@ class CourseItemViewHolder(
 
 
     private fun showMore(view: View, course: Course) {
-        val morePopupMenu = PopupMenu(contextActivity, view)
+        val morePopupMenu = PopupMenu(itemView.context, view)
         morePopupMenu.inflate(ContextMenuCourseUtil.getMenuResource(course))
 
         morePopupMenu.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 R.id.menu_item_info -> {
-                    screenManager.showCourseDescription(contextActivity, course)
+                    screenManager.showCourseDescription(itemView.context, course)
                     true
                 }
                 R.id.menu_item_unroll -> {
@@ -159,7 +159,7 @@ class CourseItemViewHolder(
 
         itemView.courseItemName.text = course.title
         Glide
-                .with(contextActivity)
+                .with(itemView.context)
                 .load(StepikLogicHelper.getPathForCourseOrEmpty(course, config))
                 .asBitmap()
                 .placeholder(coursePlaceholder)
