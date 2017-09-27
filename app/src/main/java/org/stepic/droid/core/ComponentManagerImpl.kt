@@ -44,7 +44,7 @@ class ComponentManagerImpl(private val appCoreComponent: AppCoreComponent) : Com
     @SuppressFBWarnings(value = "RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE", justification = "false positive")
     override fun releaseStepComponent(stepId: Long) {
         releaseRoutingComponent()
-        val count = stepComponentCountMap.get(stepId) ?: throw IllegalStateException("release step component, which is not allocated")
+        val count: Int = stepComponentCountMap[stepId] ?: throw IllegalStateException("release step component, which is not allocated")
         if (count == 1) {
             //it is last
             stepComponentMap.remove(stepId)

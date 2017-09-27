@@ -8,9 +8,9 @@
 
     <ImageView
         android:id="@+id/courseItemImage"
-        android:layout_width="90dp"
-        android:layout_height="90dp"
         android:background="@drawable/course_image_background"
+        android:layout_width="@dimen/new_course_item_height"
+        android:layout_height="@dimen/new_course_item_height"
         android:contentDescription="@string/content_course_logo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -21,10 +21,12 @@
         android:id="@+id/courseWidgetButton"
         style="@style/CourseWidgetView"
         android:layout_width="0dp"
-        android:layout_height="33dp"
+        android:layout_height="@dimen/min_ux_touchable_size"
+        android:layout_marginEnd="@dimen/extraPaddingRightCourseItem"
         android:layout_marginLeft="@dimen/guideline_standard_padding"
         android:layout_marginRight="@dimen/extraPaddingRightCourseItem"
         android:layout_marginStart="@dimen/guideline_standard_padding"
+        android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/courseItemImage"
         app:layout_constraintRight_toRightOf="parent"
@@ -36,6 +38,7 @@
         fontPath="fonts/Roboto-Light.ttf"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/courseTitleRightPadding"
         android:layout_marginLeft="@dimen/guideline_standard_padding"
         android:layout_marginRight="@dimen/courseTitleRightPadding"
         android:layout_marginStart="@dimen/guideline_standard_padding"
@@ -43,7 +46,7 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:textColor="@color/new_accent_color"
-        android:textSize="16sp"
+        android:textSize="14sp"
         app:layout_constraintLeft_toRightOf="@+id/courseItemImage"
         app:layout_constraintRight_toLeftOf="@+id/courseItemMore"
         app:layout_constraintRight_toRightOf="parent"
@@ -60,9 +63,9 @@
         android:contentDescription="@string/course_item_more"
         android:paddingBottom="16dp"
         android:paddingEnd="8dp"
-        android:paddingLeft="16dp"
+        android:paddingLeft="@dimen/guideline_standard_padding"
         android:paddingRight="8dp"
-        android:paddingStart="16dp"
+        android:paddingStart="@dimen/guideline_standard_padding"
         android:src="@drawable/ic_more_without_paddings"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
@@ -98,12 +101,12 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_marginLeft="2dp"
+            android:layout_marginStart="2dp"
             android:layout_toEndOf="@id/learnersCountImage"
             android:layout_toRightOf="@id/learnersCountImage"
             android:textSize="12sp"
             tools:ignore="MissingPrefix"
-            tools:text="999K"
-            />
+            tools:text="999K"/>
 
     </RelativeLayout>
 
