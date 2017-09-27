@@ -22,7 +22,6 @@ enum class CoursesCarouselColorType(
     ),
     Dark(R.color.white,
             R.drawable.course_widget_continue_dark_background,
-            // FIXME: 26.09.2017 make new resource
             R.drawable.course_widget_join_background,
             R.color.new_accent_color
     );
