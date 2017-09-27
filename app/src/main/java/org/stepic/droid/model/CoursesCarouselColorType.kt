@@ -33,7 +33,7 @@ enum class CoursesCarouselColorType(
     }
 
     companion object {
-
+        @JvmField
         val CREATOR: Parcelable.Creator<CoursesCarouselColorType> = object : Parcelable.Creator<CoursesCarouselColorType> {
             override fun createFromParcel(source: Parcel): CoursesCarouselColorType =
                     CoursesCarouselColorType.values()[source.readInt()]

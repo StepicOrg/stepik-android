@@ -15,6 +15,7 @@ enum class Table(val storeName: String) : Parcelable {
     }
 
     companion object {
+        @JvmField
         val CREATOR: Parcelable.Creator<Table> = object : Parcelable.Creator<Table> {
             override fun createFromParcel(source: Parcel): Table =
                     Table.values()[source.readInt()]
