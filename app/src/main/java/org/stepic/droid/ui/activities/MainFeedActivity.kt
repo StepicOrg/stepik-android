@@ -48,7 +48,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 
-class MainFeedActivity : BackToExitActivityBase(),
+class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         BottomNavigationView.OnNavigationItemSelectedListener,
         BottomNavigationView.OnNavigationItemReselectedListener,
         LogoutAreYouSureDialog.Companion.OnLogoutSuccessListener,
@@ -76,8 +76,6 @@ class MainFeedActivity : BackToExitActivityBase(),
 
     @Inject
     lateinit var profileMainFeedPresenter: ProfileMainFeedPresenter
-
-    private var googleApiClient: GoogleApiClient? = null
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
@@ -132,9 +130,9 @@ class MainFeedActivity : BackToExitActivityBase(),
         setContentView(R.layout.activity_main_feed)
 
         notificationClickedCheck(intent)
-        if (checkPlayServices()) {
-            initGoogleApiClient()
-        }
+
+        initGoogleApiClient(true)
+
         initNavigation()
 
 
@@ -170,20 +168,6 @@ class MainFeedActivity : BackToExitActivityBase(),
             profileMainFeedPresenter.fetchProfile()
         }
     }
-
-    private fun initGoogleApiClient() {
-        val serverClientId = config.googleServerClientId
-        val googleSignInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestScopes(Scope(Scopes.EMAIL), Scope(Scopes.PROFILE))
-                .requestServerAuthCode(serverClientId)
-                .build()
-
-        googleApiClient = GoogleApiClient.Builder(this)
-                .enableAutoManage(this /* FragmentActivity */, {} /* OnConnectionFailedListener */)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, googleSignInOptions)
-                .build()
-    }
-
 
     private fun initNavigation() {
         navigationView.setOnNavigationItemSelectedListener(this)
@@ -363,9 +347,7 @@ class MainFeedActivity : BackToExitActivityBase(),
         ProgressHelper.dismiss(supportFragmentManager, progressLogoutTag)
         LoginManager.getInstance().logOut()
         VKSdk.logout()
-        if (googleApiClient?.isConnected ?: false) {
-            Auth.GoogleSignInApi.signOut(googleApiClient)
-        }
+        signOutFromGoogle()
         screenManager.showLaunchScreenAfterLogout(this)
     }
 
