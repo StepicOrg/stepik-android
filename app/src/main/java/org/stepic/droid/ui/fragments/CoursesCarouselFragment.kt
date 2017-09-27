@@ -131,6 +131,10 @@ class CoursesCarouselFragment
 
         coursesCarouselRoot.setBackgroundColor(ColorUtil.getColorArgb(info.colorType.backgroundColorRes))
 
+        coursesViewAll.setOnClickListener {
+            viewAll()
+        }
+
         coursesRecycler.layoutManager = GridLayoutManager(context, ROW_COUNT, GridLayoutManager.HORIZONTAL, false)
         val showMore = info.table == Table.enrolled
         coursesRecycler.adapter = CoursesAdapter(this, courses, continueCoursePresenter, droppingPresenter, false, showMore, info.colorType)
@@ -229,5 +233,9 @@ class CoursesCarouselFragment
         if (info.table == null) {
             // TODO: 26.09.2017 implement course list fetching (presenter and view : CoursesView)
         }
+    }
+
+    private fun viewAll() {
+        screenManager.showCoursesList(activity, info)
     }
 }

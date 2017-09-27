@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.model.Course;
+import org.stepic.droid.model.CoursesCarouselInfo;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
@@ -127,4 +128,6 @@ public interface ScreenManager {
     void openImage(Context context, String path);
 
     void showNotifications(@NotNull Activity activity);
+
+    void showCoursesList(Activity activity, @NotNull CoursesCarouselInfo info);
 }

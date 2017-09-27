@@ -29,6 +29,7 @@ import org.stepic.droid.configuration.Config;
 import org.stepic.droid.di.AppSingleton;
 import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.model.Course;
+import org.stepic.droid.model.CoursesCarouselInfo;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
@@ -42,6 +43,7 @@ import org.stepic.droid.ui.activities.AboutAppActivity;
 import org.stepic.droid.ui.activities.CertificatesActivity;
 import org.stepic.droid.ui.activities.CommentsActivity;
 import org.stepic.droid.ui.activities.CourseDetailActivity;
+import org.stepic.droid.ui.activities.CourseListActivity;
 import org.stepic.droid.ui.activities.DownloadsActivity;
 import org.stepic.droid.ui.activities.FeedbackActivity;
 import org.stepic.droid.ui.activities.FilterActivity;
@@ -132,6 +134,13 @@ public class ScreenManagerImpl implements ScreenManager {
     @Override
     public void showNotifications(@NotNull Activity activity) {
         Intent intent = new Intent(activity, NotificationsActivity.class);
+        activity.startActivity(intent);
+    }
+
+    @Override
+    public void showCoursesList(Activity activity, @NotNull CoursesCarouselInfo info) {
+        Intent intent = new Intent(activity, CourseListActivity.class);
+        intent.putExtra(CourseListActivity.COURSE_LIST_INFO_KEY, info);
         activity.startActivity(intent);
     }
 
