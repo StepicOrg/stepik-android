@@ -375,6 +375,12 @@ public interface Analytic {
         String GET_NON_ZERO_STREAK_NOTIFICATION = "streak_get_non_zero_notification";
         String GET_ZERO_STREAK_NOTIFICATION = "streak_get_zero_notification";
         String GET_NO_INTERNET_NOTIFICATION = " streak_get_no_internet_notification";
+
+        String NOTIFICATION_TYPE_PARAM = "type";
+
+        enum NotificationType {
+            zero, noInternet, solvedToday, notSolvedToday
+        }
     }
 
     interface Shortcut {

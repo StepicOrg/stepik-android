@@ -97,7 +97,14 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
                 sharedPreferenceHelper.clickEnrollNotification(DateTime.now(DateTimeZone.getDefault()).millis)
             } else if (action == AppConstants.OPEN_NOTIFICATION_FROM_STREAK) {
                 sharedPreferenceHelper.resetNumberOfStreakNotifications()
-                analytic.reportEvent(Analytic.Streak.STREAK_NOTIFICATION_OPENED)
+                if (intent.hasExtra(Analytic.Streak.NOTIFICATION_TYPE_PARAM)) {
+                    val notificationType = intent.getSerializableExtra(Analytic.Streak.NOTIFICATION_TYPE_PARAM) as Analytic.Streak.NotificationType
+                    val bundle = Bundle()
+                    bundle.putString(Analytic.Streak.NOTIFICATION_TYPE_PARAM, notificationType.name)
+                    analytic.reportEvent(Analytic.Streak.STREAK_NOTIFICATION_OPENED, bundle)
+                } else {
+                    analytic.reportEvent(Analytic.Streak.STREAK_NOTIFICATION_OPENED)
+                }
             } else if (action == AppConstants.OPEN_SHORTCUT_FIND_COURSES) {
                 analytic.reportEvent(Analytic.Shortcut.FIND_COURSES)
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N_MR1) {
