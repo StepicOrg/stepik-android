@@ -4,10 +4,11 @@ import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
+import android.widget.Toast;
 
+import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.concurrency.SingleThreadExecutor;
@@ -30,9 +31,9 @@ import javax.inject.Inject;
 
 import timber.log.Timber;
 
-public class DownloadCompleteReceiver extends BroadcastReceiver {
-    private final static int DOWNLOAD_STATUS_UNDEFINED = -1;
+import static org.stepic.droid.storage.DownloadManagerExtensionKt.getDownloadStatus;
 
+public class DownloadCompleteReceiver extends BroadcastReceiver {
     @Inject
     DownloadManager systemDownloadManager;
 
@@ -84,20 +85,6 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
         }
     }
 
-    private int getDownloadStatus(final long referenceId) {
-        DownloadManager.Query query = new DownloadManager.Query();
-        query.setFilterById(referenceId);
-        Cursor cursor = systemDownloadManager.query(query);
-        final int status;
-        if (cursor.moveToFirst() && cursor.getCount() > 0) {
-            status = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS));
-        } else {
-            status = DOWNLOAD_STATUS_UNDEFINED;
-        }
-        cursor.close();
-        return status;
-    }
-
     private CachedVideo prepareCachedVideo(DownloadEntity downloadEntity) {
         final long video_id = downloadEntity.getVideoId();
         final long step_id = downloadEntity.getStepId();
@@ -132,7 +119,7 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
         try {
             RWLocks.DownloadLock.writeLock().lock();
 
-            DownloadEntity downloadEntity = databaseFacade.getDownloadEntityIfExist(referenceId);
+            final DownloadEntity downloadEntity = databaseFacade.getDownloadEntityIfExist(referenceId);
             if (downloadEntity != null) {
                 final long step_id = downloadEntity.getStepId();
                 databaseFacade.deleteDownloadEntityByDownloadId(referenceId);
@@ -144,7 +131,7 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                 } else {
                     //is not canceled
                     final Step step = databaseFacade.getStepById(step_id);
-                    final long status = getDownloadStatus(referenceId);
+                    final long status = getDownloadStatus(systemDownloadManager, referenceId);
 
                     final CachedVideo cachedVideo;
                     if (status == DownloadManager.STATUS_SUCCESSFUL) {
@@ -170,6 +157,8 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                                 if (cachedVideo != null) {
                                     downloadsPoster.downloadComplete(step_id, lesson, cachedVideo);
                                 } else {
+                                    final Context context = App.Companion.getAppContext();
+                                    Toast.makeText(context, context.getString(R.string.video_download_fail, lesson.getTitle() + " " + downloadEntity.getVideoId()), Toast.LENGTH_SHORT).show();
                                     downloadsPoster.downloadFailed(referenceId);
                                 }
                             }

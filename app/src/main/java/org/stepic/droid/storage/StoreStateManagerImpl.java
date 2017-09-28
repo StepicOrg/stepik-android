@@ -61,7 +61,6 @@ public class StoreStateManagerImpl implements StoreStateManager {
         databaseFacade.updateOnlyCachedLoadingLesson(lesson);
         if (!loading) {
             final boolean isCached = cached;
-                mainHandler.post(new Function0<kotlin.Unit>() {
             mainHandler.post(new Function0<kotlin.Unit>() {
                 @Override
                 public kotlin.Unit invoke() {

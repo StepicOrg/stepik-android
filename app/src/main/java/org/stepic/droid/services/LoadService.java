@@ -48,6 +48,9 @@ import javax.inject.Inject;
 
 import retrofit2.Response;
 
+import static org.stepic.droid.storage.DownloadManagerExtensionKt.DOWNLOAD_STATUS_UNDEFINED;
+import static org.stepic.droid.storage.DownloadManagerExtensionKt.getDownloadStatus;
+
 
 public class LoadService extends IntentService {
 
@@ -140,7 +143,14 @@ public class LoadService extends IntentService {
             } else {
                 request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
             }
-            if (!databaseFacade.isExistDownloadEntityByVideoId(fileId) && !downloadFolderAndFile.exists()) {
+            DownloadEntity downloadEntity = databaseFacade.getDownloadEntityByStepId(step.getId());
+
+            if (downloadEntity != null && getDownloadStatus(systemDownloadManager, downloadEntity.getDownloadId()) == DOWNLOAD_STATUS_UNDEFINED) {
+                databaseFacade.deleteDownloadEntityByDownloadId(downloadEntity.getDownloadId()); // sync DownloadEntities with system DownloadManager
+                downloadEntity = null;
+            }
+
+            if (downloadEntity == null && !downloadFolderAndFile.exists()) {
 
                 String videoQuality = null;
                 try {
@@ -153,21 +163,26 @@ public class LoadService extends IntentService {
                 } catch (NullPointerException npe) {
                     videoQuality = userPrefs.getQualityVideo();
                 }
-                long downloadId;
                 try {
                     RWLocks.SectionCancelLock.writeLock().lock();
                     if (isNeedCancel(step, sectionId)) {
                         // we check it in need cancel
                         return;
                     }
-                    downloadId = systemDownloadManager.enqueue(request);
+                    // sometimes DownloadCompleteReceiver receives broadcast with this download before DownloadEntity was added
+                    // RWLocks.DownloadLock.writeLock().lock trying to prevent such behavior
+                    // todo improve
+                    RWLocks.DownloadLock.writeLock().lock();
+                    final long downloadId = systemDownloadManager.enqueue(request);
+
+                    String local_thumbnail = fileId + AppConstants.THUMBNAIL_POSTFIX_EXTENSION;
+                    String thumbnailsPath = FileUtil.saveFileToDisk(local_thumbnail, step.getBlock().getVideo().getThumbnail(), userPrefs.getUserDownloadFolder());
+                    final DownloadEntity newEntity = new DownloadEntity(downloadId, step.getId(), fileId, thumbnailsPath, videoQuality);
+                    databaseFacade.addDownloadEntity(newEntity);
                 } finally {
+                    RWLocks.DownloadLock.writeLock().unlock();
                     RWLocks.SectionCancelLock.writeLock().unlock();
                 }
-                String local_thumbnail = fileId + AppConstants.THUMBNAIL_POSTFIX_EXTENSION;
-                String thumbnailsPath = FileUtil.saveFileToDisk(local_thumbnail, step.getBlock().getVideo().getThumbnail(), userPrefs.getUserDownloadFolder());
-                final DownloadEntity newEntity = new DownloadEntity(downloadId, step.getId(), fileId, thumbnailsPath, videoQuality);
-                databaseFacade.addDownloadEntity(newEntity);
             }
         } catch (SecurityException ex) {
             storeStateManager.updateStepAfterDeleting(step);
