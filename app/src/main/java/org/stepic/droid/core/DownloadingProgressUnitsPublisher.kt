@@ -87,7 +87,7 @@ class DownloadingProgressUnitsPublisher
 
                 val stepIdToProgress = HashMap<Long, Float>()
                 if (entitiesMap != null) {
-                    cursor?.use { cursor ->
+                    if (cursor != null) {
                         cursor.moveToFirst()
                         while (!cursor.isAfterLast) {
                             val bytes_total = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES))
@@ -107,6 +107,8 @@ class DownloadingProgressUnitsPublisher
 
                             cursor.moveToNext()
                         }
+
+                        cursor.close()
                     }
                 }
 

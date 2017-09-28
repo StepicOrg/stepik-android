@@ -131,6 +131,7 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                 } else {
                     //is not canceled
                     final Step step = databaseFacade.getStepById(step_id);
+                    if (step == null) return;
                     final long status = getDownloadStatus(systemDownloadManager, referenceId);
 
                     final CachedVideo cachedVideo;

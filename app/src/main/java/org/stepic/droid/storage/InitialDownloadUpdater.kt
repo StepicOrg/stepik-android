@@ -44,7 +44,8 @@ class InitialDownloadUpdater
         val query = DownloadManager.Query()
         query.setFilterById(*currentDownloadingEntitiesMap.keys.toLongArray())
         val cursor : Cursor? = systemDownloadManager.query(query)
-        cursor?.use { cursor ->
+
+        if (cursor != null) {
             cursor.moveToFirst()
             while (!cursor.isAfterLast) {
                 val columnStatus = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))
@@ -65,6 +66,8 @@ class InitialDownloadUpdater
 
                 cursor.moveToNext()
             }
+
+            cursor.close()
         }
     }
 
