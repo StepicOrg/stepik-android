@@ -6,6 +6,7 @@ import android.text.Spannable
 import android.text.SpannableString
 import android.util.AttributeSet
 import android.util.TypedValue
+import android.view.Gravity
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.fonts.FontType
@@ -43,6 +44,7 @@ class PlaceholderTextView : android.support.v7.widget.AppCompatTextView {
 
         setTextColor(ColorUtil.getColorArgb(R.color.placeholder_text_color, this.context))
         setBackgroundResource(R.drawable.gradient_background)
+        gravity = Gravity.CENTER_VERTICAL
     }
 
 
