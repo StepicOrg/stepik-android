@@ -114,9 +114,13 @@ class FastContinueFragment : FragmentBase(),
     //CourseView
     override fun showLoading() {
         // FIXME: 15.09.17 show loading placeholder
+        fastContinueProgress.visibility = View.VISIBLE
+        showMainGroup(false)
+        fastContinuePlaceholder.visibility = View.GONE
     }
 
     override fun showEmptyCourses() {
+        fastContinueProgress.visibility = View.GONE
         //tbh: courses might be not empty, but not active
         // we can show suggestion for enroll, but not write, that you have zero courses
         analytic.reportEvent(Analytic.FastContinue.EMPTY_COURSES_SHOWN)
@@ -127,6 +131,7 @@ class FastContinueFragment : FragmentBase(),
     }
 
     override fun showConnectionProblem() {
+        fastContinueProgress.visibility = View.GONE
         analytic.reportEvent(Analytic.FastContinue.NO_INTERNET_SHOWN)
         showPlaceholder(R.string.internet_problem, { _ ->
             analytic.reportEvent(Analytic.FastContinue.NO_INTERNET_CLICK)
@@ -135,6 +140,7 @@ class FastContinueFragment : FragmentBase(),
     }
 
     override fun showCourses(courses: MutableList<Course>) {
+        fastContinueProgress.visibility = View.GONE
         fastContinuePlaceholder.visibility = View.GONE
         showMainGroup(true)
         val course: Course? = courses
