@@ -13,6 +13,9 @@ public interface Analytic {
 
         String NO_INTERNET_SHOWN = "fast_continue_no_internet";
         String NO_INTERNET_CLICK = "fast_continue_no_internet_click";
+
+        String AUTH_SHOWN = "fast_continue_auth";
+        String AUTH_CLICK = "fast_continue_auth_click";
     }
 
     interface Rating {

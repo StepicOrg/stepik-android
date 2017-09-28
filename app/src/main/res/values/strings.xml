@@ -524,4 +524,5 @@
     <string name="sign_up_with_email_suffix">" with e-mail"</string>
 
     <string name="placeholder_explore_courses">Discover new open free online courses. Tap to find</string>
+    <string name="placeholder_login">Login and start learning right now</string>
 </resources>

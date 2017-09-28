@@ -26,6 +26,7 @@ import org.stepic.droid.model.Section
 import org.stepic.droid.model.Step
 import org.stepic.droid.model.Video
 import org.stepic.droid.storage.operations.Table
+import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.ThumbnailParser
 import timber.log.Timber
@@ -90,7 +91,15 @@ class FastContinueFragment : FragmentBase(),
         super.onStart()
 
         //refresh the last course on start
-        courseListPresenter.downloadData(Table.enrolled, applyFilter = false)
+        if (sharedPreferenceHelper.authResponseFromStore != null) {
+            courseListPresenter.downloadData(Table.enrolled, applyFilter = false)
+        } else {
+            analytic.reportEvent(Analytic.FastContinue.AUTH_SHOWN)
+            showPlaceholder(R.string.placeholder_login, { _ ->
+                analytic.reportEvent(Analytic.FastContinue.AUTH_CLICK)
+                screenManager.showLaunchScreen(context, true, MainFeedActivity.HOME_INDEX)
+            })
+        }
     }
 
     override fun onDestroyView() {
@@ -228,6 +237,4 @@ class FastContinueFragment : FragmentBase(),
         fastContinueImageView.visibility = visibility
         fastContinueTextView.visibility = visibility
     }
-
-
 }
