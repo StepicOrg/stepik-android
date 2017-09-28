@@ -83,6 +83,7 @@ class FastContinueFragment : FragmentBase(),
         droppingClient.subscribe(this)
         lastStepPresenter.attachView(this)
         videoStepPresenter.attachView(this)
+        courseListPresenter.restoreState()
     }
 
     override fun onStart() {

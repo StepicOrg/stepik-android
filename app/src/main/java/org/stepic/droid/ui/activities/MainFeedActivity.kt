@@ -12,11 +12,6 @@ import android.support.v4.app.Fragment
 import android.view.MenuItem
 import android.view.View
 import com.facebook.login.LoginManager
-import com.google.android.gms.auth.api.Auth
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.common.Scopes
-import com.google.android.gms.common.api.GoogleApiClient
-import com.google.android.gms.common.api.Scope
 import com.vk.sdk.VKSdk
 import kotlinx.android.synthetic.main.activity_main_feed.*
 import org.joda.time.DateTime
@@ -36,7 +31,10 @@ import org.stepic.droid.ui.activities.contracts.RootScreen
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.dialogs.LogoutAreYouSureDialog
 import org.stepic.droid.ui.dialogs.NeedUpdatingDialog
-import org.stepic.droid.ui.fragments.*
+import org.stepic.droid.ui.fragments.CertificatesFragment
+import org.stepic.droid.ui.fragments.FindCoursesFragment
+import org.stepic.droid.ui.fragments.HomeFragment
+import org.stepic.droid.ui.fragments.ProfileFragment
 import org.stepic.droid.ui.util.BottomNavigationBehavior
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
@@ -77,6 +75,10 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         notificationClickedCheck(intent)
+
+        if (intent.hasExtra(currentIndexKey)) {
+            openFragment(intent)
+        }
     }
 
     private fun notificationClickedCheck(intent: Intent) {
@@ -149,20 +151,24 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         }
 
         if (savedInstanceState == null) {
-            setFragment(R.id.home)
-            val wantedIndex = intent?.getIntExtra(currentIndexKey, -1) ?: -1
-            when (wantedIndex) {
-                FIND_COURSES_INDEX -> navigationView.selectedItemId = R.id.find_courses
-                CERTIFICATE_INDEX -> navigationView.selectedItemId = R.id.certificates
-                else -> {
-                    //do nothing
-                }
-            }
+            openFragment(intent)
         }
 
         profileMainFeedPresenter.attachView(this)
         if (savedInstanceState == null) {
             profileMainFeedPresenter.fetchProfile()
+        }
+    }
+
+    private fun openFragment(launchIntent: Intent?) {
+        setFragment(R.id.home)
+        val wantedIndex = launchIntent?.getIntExtra(currentIndexKey, -1) ?: -1
+        when (wantedIndex) {
+            FIND_COURSES_INDEX -> navigationView.selectedItemId = R.id.find_courses
+            CERTIFICATE_INDEX -> navigationView.selectedItemId = R.id.certificates
+            else -> {
+                //do nothing
+            }
         }
     }
 
