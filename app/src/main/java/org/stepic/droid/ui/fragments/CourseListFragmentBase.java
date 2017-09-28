@@ -241,15 +241,18 @@ public abstract class CourseListFragmentBase extends FragmentBase
     @Override
     public void showLoading() {
         ProgressHelper.dismiss(progressBarOnEmptyScreen);
-        ProgressHelper.dismiss(swipeRefreshLayout);
-        coursesAdapter.showLoadingFooter(false);
         reportConnectionProblem.setVisibility(View.GONE);
 
         if (courses.isEmpty()) {
             setBackgroundColorToRootView(R.color.new_cover);
             ProgressHelper.activate(swipeRefreshLayout);
+            coursesAdapter.showLoadingFooter(false);
         } else if (swipeRefreshLayout != null && !swipeRefreshLayout.isRefreshing()) {
+            ProgressHelper.dismiss(swipeRefreshLayout);
             coursesAdapter.showLoadingFooter(true);
+        } else {
+            ProgressHelper.dismiss(swipeRefreshLayout);
+            coursesAdapter.showLoadingFooter(false);
         }
     }
 

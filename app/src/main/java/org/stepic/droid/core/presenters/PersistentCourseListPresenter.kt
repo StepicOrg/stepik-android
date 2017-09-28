@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.annotation.WorkerThread
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
+import org.stepic.droid.concurrency.SingleThreadExecutor
 import org.stepic.droid.core.FilterApplicator
 import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.di.course_list.CourseListScope
@@ -16,6 +17,7 @@ import org.stepic.droid.util.RWLocks
 import org.stepic.droid.web.Api
 import org.stepic.droid.web.CoursesStepicResponse
 import retrofit2.Response
+import timber.log.Timber
 import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.atomic.AtomicBoolean
@@ -27,6 +29,7 @@ class PersistentCourseListPresenter
 @Inject constructor(
         private val analytic: Analytic,
         private val databaseFacade: DatabaseFacade,
+        private val singleThreadExecutor: SingleThreadExecutor,
         private val threadPoolExecutor: ThreadPoolExecutor,
         private val mainHandler: MainHandler,
         private val api: Api,
@@ -34,15 +37,18 @@ class PersistentCourseListPresenter
         private val sharedPreferenceHelper: SharedPreferenceHelper
 ) : PresenterBase<CoursesView>() {
 
+    companion object {
+        //if hasNextPage & <MIN_COURSES_ON_SCREEN -> load next page
+        private const val MIN_COURSES_ON_SCREEN = 5
+        private const val MAX_CURRENT_NUMBER_OF_TASKS = 2
+    }
+
     private val currentPage = AtomicInteger(1);
     private val hasNextPage = AtomicBoolean(true)
-    private val isLoading = AtomicBoolean(false)
+    private var currentNumberOfTasks: Int = 0 //only main thread
     private val isEmptyCourses = AtomicBoolean(false)
 
 //    val isHandlingUpdatingOrder = AtomicBoolean(false)
-
-    //if hasNextPage & <MIN_COURSES_ON_SCREEN -> load next page
-    private val MIN_COURSES_ON_SCREEN = 5
 
     fun restoreState() {
         if (isEmptyCourses.get() && !hasNextPage.get()) {
@@ -61,97 +67,108 @@ class PersistentCourseListPresenter
     }
 
     private fun downloadData(courseType: Table, applyFilter: Boolean, isRefreshing: Boolean, isLoadMore: Boolean = false) {
-        if (!isLoading.compareAndSet(false, true)) {
-            //is loading
+        if (currentNumberOfTasks >= MAX_CURRENT_NUMBER_OF_TASKS) {
             return
         }
-        threadPoolExecutor.execute {
+        currentNumberOfTasks++
+        Timber.d("load more tasks = $currentNumberOfTasks") //here 1 or 2, not more
+        if (hasNextPage.get()) {
+            view?.showLoading()
+        }
+        singleThreadExecutor.execute {
             try {
-                if (!isRefreshing && !isLoadMore) {
-                    getFromDatabaseAndShow(applyFilter, courseType)
-                } else if (hasNextPage.get()) {
-                    mainHandler.post {
-                        view?.showLoading()
-                    }
-                }
-
-                while (hasNextPage.get()) {
-                    val response: Response<CoursesStepicResponse>? = try {
-                        if (courseType == Table.featured) {
-                            api.getPopularCourses(currentPage.get()).execute()
-                        } else {
-                            api.getEnrolledCourses(currentPage.get()).execute()
-                        }
-                    } catch (ex: Exception) {
-                        null
-                    }
-
-                    if (response != null && response.isSuccessful) {
-                        val coursesFromInternet = response.body().courses
-                        try {
-                            //this lock need for not saving enrolled courses to database after user click logout
-                            RWLocks.ClearEnrollmentsLock.writeLock().lock()
-                            if (sharedPreferenceHelper.authResponseFromStore != null || courseType == Table.featured) {
-                                if (currentPage.get() == 1) {
-                                    if (courseType == Table.featured) {
-                                        databaseFacade.dropFeaturedCourses()
-                                    } else if (courseType == Table.enrolled) {
-                                        databaseFacade.dropEnrolledCourses()
-                                    }
-                                }
-
-                                coursesFromInternet.filterNotNull().forEach {
-                                    databaseFacade.addCourse(it, courseType)
-                                }
-                            }
-                        } finally {
-                            RWLocks.ClearEnrollmentsLock.writeLock().unlock()
-                        }
-
-
-                        hasNextPage.set(response.body().meta.has_next)
-                        if (hasNextPage.get()) {
-                            currentPage.set(response.body().meta.page + 1) // page for next loading
-                        }
-
-                        val allCourses = databaseFacade.getAllCourses(courseType)
-
-                        val filteredCourseList: List<Course>
-                        if (!applyFilter && !sharedPreferenceHelper.getFilter(courseType).contains(StepikFilter.PERSISTENT)) {
-                            filteredCourseList = filterApplicator.getFilteredFromDefault(allCourses, courseType)
-                        } else {
-                            filteredCourseList = filterApplicator.getFilteredFromSharedPrefs(allCourses, courseType)
-                        }
-                        if ((filteredCourseList.size < MIN_COURSES_ON_SCREEN) && hasNextPage.get()) {
-                            //try to load next in loop
-                        } else {
-                            val coursesForShow = if (courseType == Table.enrolled) {
-                                sortByLastAction(filteredCourseList)
-                            } else {
-                                filteredCourseList
-                            }
-                            mainHandler.post {
-                                if (coursesForShow.isEmpty()) {
-                                    isEmptyCourses.set(true)
-                                    view?.showEmptyCourses()
-                                } else {
-                                    view?.showCourses(coursesForShow)
-                                }
-                            }
-                            break;
-                        }
-                    } else {
-                        mainHandler.post {
-                            view?.showConnectionProblem()
-                        }
-                        break;
-                    }
-                }
+                Timber.d("load more start downloading ${Thread.currentThread()}")
+                downloadDataPlain(isRefreshing, isLoadMore, applyFilter, courseType)
+                Timber.d("load more end downloading ${Thread.currentThread()}")
             } finally {
+                mainHandler.post {
+                    currentNumberOfTasks--
+                }
+            }
+        }
+    }
 
-                isLoading.set(false)
+    @WorkerThread
+    private fun downloadDataPlain(isRefreshing: Boolean, isLoadMore: Boolean, applyFilter: Boolean, courseType: Table) {
+        if (!isRefreshing && !isLoadMore) {
+            getFromDatabaseAndShow(applyFilter, courseType)
+        } else if (hasNextPage.get()) {
+            mainHandler.post {
+                view?.showLoading()
+            }
+        }
+
+        while (hasNextPage.get()) {
+            val response: Response<CoursesStepicResponse>? = try {
+                if (courseType == Table.featured) {
+                    api.getPopularCourses(currentPage.get()).execute()
+                } else {
+                    api.getEnrolledCourses(currentPage.get()).execute()
+                }
+            } catch (ex: Exception) {
+                null
             }
 
+            if (response != null && response.isSuccessful) {
+                val coursesFromInternet = response.body().courses
+                try {
+                    //this lock need for not saving enrolled courses to database after user click logout
+                    RWLocks.ClearEnrollmentsLock.writeLock().lock()
+                    if (sharedPreferenceHelper.authResponseFromStore != null || courseType == Table.featured) {
+                        if (isRefreshing && currentPage.get() == 1) {
+                            if (courseType == Table.featured) {
+                                databaseFacade.dropFeaturedCourses()
+                            } else if (courseType == Table.enrolled) {
+                                databaseFacade.dropEnrolledCourses()
+                            }
+                        }
+
+                        coursesFromInternet.filterNotNull().forEach {
+                            databaseFacade.addCourse(it, courseType)
+                        }
+                    }
+                } finally {
+                    RWLocks.ClearEnrollmentsLock.writeLock().unlock()
+                }
+
+
+                hasNextPage.set(response.body().meta.has_next)
+                if (hasNextPage.get()) {
+                    currentPage.set(response.body().meta.page + 1) // page for next loading
+                }
+
+                val allCourses = databaseFacade.getAllCourses(courseType)
+
+                val filteredCourseList: List<Course>
+                if (!applyFilter && !sharedPreferenceHelper.getFilter(courseType).contains(StepikFilter.PERSISTENT)) {
+                    filteredCourseList = filterApplicator.getFilteredFromDefault(allCourses, courseType)
+                } else {
+                    filteredCourseList = filterApplicator.getFilteredFromSharedPrefs(allCourses, courseType)
+                }
+                if ((filteredCourseList.size < MIN_COURSES_ON_SCREEN) && hasNextPage.get()) {
+                    //try to load next in loop
+                } else {
+                    val coursesForShow = if (courseType == Table.enrolled) {
+                        sortByLastAction(filteredCourseList)
+                    } else {
+                        filteredCourseList
+                    }
+                    mainHandler.post {
+                        if (coursesForShow.isEmpty()) {
+                            isEmptyCourses.set(true)
+                            view?.showEmptyCourses()
+                        } else {
+                            view?.showCourses(coursesForShow)
+                        }
+                    }
+                    break;
+                }
+            } else {
+                mainHandler.post {
+                    view?.showConnectionProblem()
+                }
+                break;
+            }
         }
     }
 
@@ -193,15 +210,16 @@ class PersistentCourseListPresenter
     }
 
     fun refreshData(courseType: Table, applyFilter: Boolean, allPAges: Boolean) {
-        if (isLoading.get()) return
+        if (currentNumberOfTasks >= MAX_CURRENT_NUMBER_OF_TASKS) {
+            return
+        }
         currentPage.set(1);
         hasNextPage.set(true)
         downloadData(courseType, applyFilter, isRefreshing = allPAges)
     }
 
-
     @WorkerThread
-    private fun sortByLastAction(courses: List<Course>): List<Course> {
+    private fun sortByLastAction(courses: List<Course>): MutableList<Course> {
         val result = ArrayList<Course>(courses.size)
         val localLastStepsList = databaseFacade.getAllLocalLastCourseInteraction()
         val sortedPersistentLastStepCourseIds = localLastStepsList
@@ -230,25 +248,4 @@ class PersistentCourseListPresenter
     fun loadMore(courseType: Table, needFilter: Boolean) {
         downloadData(courseType, needFilter, isRefreshing = false, isLoadMore = true)
     }
-
-//    @MainThread
-//    fun updateOrderLastInteraction(courseType: Table, courses: List<Course>) {
-//        if (courseType != Table.enrolled || courses.isEmpty()) {
-//            return
-//        }
-//        if (isHandlingUpdatingOrder.compareAndSet(false, true)) {
-//            threadPoolExecutor.execute {
-//                try {
-//                    val lastInteractedOrder   =  sortByLastAction(courses)
-//                    mainHandler.post {
-//                        view?.showCourses()
-//                    }
-//                } finally {
-//                    isHandlingUpdatingOrder.set(false)
-//                }
-//            }
-//        }
-//
-//    }
-
 }

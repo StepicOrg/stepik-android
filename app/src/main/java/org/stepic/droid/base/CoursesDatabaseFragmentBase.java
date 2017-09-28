@@ -32,6 +32,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import timber.log.Timber;
+
 public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase implements FilterForCoursesView, OnBackClickListener, DroppingListener {
     private static final int FILTER_REQUEST_CODE = 776;
 
@@ -116,7 +118,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
             isScreenCreated = false;
             needFilter = false;
             courses.clear();
-            courseListPresenter.refreshData(getCourseType(), needFilter, false);
+            courseListPresenter.refreshData(getCourseType(), needFilter, true);
         } else {
             //load if not
             courseListPresenter.downloadData(getCourseType(), needFilter);
@@ -197,7 +199,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
                 courses.clear();
                 coursesAdapter.notifyDataSetChanged();
                 courseListPresenter.reportCurrentFiltersToAnalytic(getCourseType());
-                courseListPresenter.refreshData(getCourseType(), needFilter, false);
+                courseListPresenter.refreshData(getCourseType(), needFilter, true);
             }
         }
 
@@ -240,6 +242,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
     @Override
     public void onNeedDownloadNextPage() {
+        Timber.d("loadMore onNeedDownloadNextPage");
         courseListPresenter.loadMore(getCourseType(), needFilter);
     }
 
