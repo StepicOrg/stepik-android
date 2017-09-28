@@ -15,9 +15,12 @@
         android:id="@+id/lastStepTextView"
         android:layout_width="match_parent"
         android:layout_height="@dimen/fast_continue_widget_height"
+        android:ellipsize="end"
+        android:maxLines="4"
         android:padding="16dp"
         android:textColor="@color/new_accent_color"
-        android:textSize="16sp"/>
+        android:textSize="16sp"
+        tools:text="Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world "/>
 
     <ImageView
         android:id="@+id/lastStepImageView"
@@ -40,6 +43,10 @@
         android:layout_marginLeft="60dp"
         android:layout_marginRight="60dp"
         android:background="@drawable/fast_continue_action_background"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:paddingEnd="@dimen/half_padding"
+        android:paddingStart="@dimen/half_padding"
         android:text="@string/continue_learning"
         android:textSize="16sp"
         tools:ignore="MissingPrefix"/>
