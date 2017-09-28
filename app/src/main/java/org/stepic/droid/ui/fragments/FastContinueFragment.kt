@@ -85,6 +85,7 @@ class FastContinueFragment : FragmentBase(),
         lastStepPresenter.attachView(this)
         videoStepPresenter.attachView(this)
         courseListPresenter.restoreState()
+        fastContinueAction.isEnabled = true
     }
 
     override fun onStart() {
@@ -113,7 +114,6 @@ class FastContinueFragment : FragmentBase(),
 
     //CourseView
     override fun showLoading() {
-        // FIXME: 15.09.17 show loading placeholder
         fastContinueProgress.visibility = View.VISIBLE
         showMainGroup(false)
         fastContinuePlaceholder.visibility = View.GONE
@@ -152,6 +152,7 @@ class FastContinueFragment : FragmentBase(),
         if (course != null) {
             lastStepPresenter.fetchLastStep(courseId = course.courseId, lastStepId = course.lastStepId)
             fastContinueAction.setOnClickListener {
+                Timber.d("Click continue course")
                 continueCoursePresenter.continueCourse(course)
             }
         } else {
@@ -161,17 +162,20 @@ class FastContinueFragment : FragmentBase(),
 
     //ContinueCourseView
     override fun onShowContinueCourseLoadingDialog() {
-        // FIXME: 15.09.17 show loading dialog
+        // FIXME: 15.09.17  Implement expand/collapse for fastContinueAction
+        //now it is just disabled
+        fastContinueAction.isEnabled = false
     }
 
     override fun onOpenStep(courseId: Long, section: Section, lessonId: Long, unitId: Long, stepPosition: Int) {
-        // FIXME: 15.09.17 dismiss progress dialog
-//        ProgressHelper.dismiss(fragmentManager, continueLoadingTag)
+        // FIXME: 15.09.17 expand fastContinueAction
+        fastContinueAction.isEnabled = true
         screenManager.continueCourse(activity, courseId, section, lessonId, unitId, stepPosition.toLong())
     }
 
     override fun onAnyProblemWhileContinue(course: Course) {
-        // FIXME: 15.09.17 dismiss progress dialog
+        // FIXME: 15.09.17 expand fastContinueAction
+        fastContinueAction.isEnabled = true
         screenManager.showSections(activity, course)
     }
 
