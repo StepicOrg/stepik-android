@@ -109,4 +109,9 @@
     <color name="login_error_color">#c82850</color>
 
     <color name="remind_password_button_text_color">#4990e2</color>
+
+    <color name="start_gradient_placeholder">#8E8EB5</color>
+    <color name="end_gradient_placeholder">#6969A0</color>
+
+
 </resources>
