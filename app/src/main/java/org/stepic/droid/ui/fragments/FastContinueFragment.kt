@@ -1,12 +1,14 @@
 package org.stepic.droid.ui.fragments
 
 import android.os.Bundle
+import android.support.annotation.StringRes
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.fragment_fast_continue.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.Client
 import org.stepic.droid.base.FragmentBase
@@ -107,15 +109,24 @@ class FastContinueFragment : FragmentBase(),
     override fun showEmptyCourses() {
         //tbh: courses might be not empty, but not active
         // we can show suggestion for enroll, but not write, that you have zero courses
-        // FIXME: 15.09.17 show suggestion to enroll some course
+        analytic.reportEvent(Analytic.FastContinue.EMPTY_COURSES_SHOWN)
+        showPlaceholder(R.string.placeholder_explore_courses, { _ ->
+            analytic.reportEvent(Analytic.FastContinue.EMPTY_COURSES_CLICK)
+            screenManager.showFindCourses(context)
+        })
     }
 
     override fun showConnectionProblem() {
-        // FIXME: 15.09.17 hide the view
+        analytic.reportEvent(Analytic.FastContinue.NO_INTERNET_SHOWN)
+        showPlaceholder(R.string.internet_problem, { _ ->
+            analytic.reportEvent(Analytic.FastContinue.NO_INTERNET_CLICK)
+            courseListPresenter.downloadData(Table.enrolled, applyFilter = false)
+        })
     }
 
     override fun showCourses(courses: MutableList<Course>) {
-        // FIXME: 15.09.17 show "Continue" button with the 1st course
+        fastContinuePlaceholder.visibility = View.GONE
+        showMainGroup(true)
         val course: Course? = courses
                 .find {
                     it.isActive
@@ -123,7 +134,6 @@ class FastContinueFragment : FragmentBase(),
                 }
 
         if (course != null) {
-            // FIXME: 15.09.17 load async the last step of course and in some callback with step show the background
             lastStepPresenter.fetchLastStep(courseId = course.courseId, lastStepId = course.lastStepId)
             fastContinueAction.setOnClickListener {
                 continueCoursePresenter.continueCourse(course)
@@ -168,7 +178,7 @@ class FastContinueFragment : FragmentBase(),
         } else {
             val textForView = step.block?.text
             if (textForView != null && textForView.isNotBlank()) {
-                lastStepTextView.text = textResolver.fromHtml(textForView)
+                fastContinueTextView.text = textResolver.fromHtml(textForView)
             }
         }
     }
@@ -187,7 +197,7 @@ class FastContinueFragment : FragmentBase(),
         Glide
                 .with(context)
                 .load(uri)
-                .into(lastStepImageView)
+                .into(fastContinueImageView)
     }
 
     override fun onInternetProblem() {
@@ -197,5 +207,26 @@ class FastContinueFragment : FragmentBase(),
     override fun onNeedOpenVideo(videoId: Long, cachedVideo: Video?, externalVideo: Video?) {
         //no-op
     }
+
+
+    private fun showPlaceholder(@StringRes stringRes: Int, listener: (view: View) -> Unit) {
+        fastContinuePlaceholder.setPlaceholderText(stringRes)
+        fastContinuePlaceholder.setOnClickListener(listener)
+        showMainGroup(false)
+        fastContinuePlaceholder.visibility = View.VISIBLE
+    }
+
+    private fun showMainGroup(needShow: Boolean) {
+        val visibility = if (needShow) {
+            View.VISIBLE
+        } else {
+            View.GONE
+        }
+        fastContinueAction.visibility = visibility
+        fastContinueOverlay.visibility = visibility
+        fastContinueImageView.visibility = visibility
+        fastContinueTextView.visibility = visibility
+    }
+
 
 }

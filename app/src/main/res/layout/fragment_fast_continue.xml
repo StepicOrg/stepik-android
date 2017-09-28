@@ -12,7 +12,7 @@
     android:paddingTop="@dimen/guideline_standard_padding">
 
     <TextView
-        android:id="@+id/lastStepTextView"
+        android:id="@+id/fastContinueTextView"
         android:layout_width="match_parent"
         android:layout_height="@dimen/fast_continue_widget_height"
         android:ellipsize="end"
@@ -20,15 +20,17 @@
         android:padding="16dp"
         android:textColor="@color/new_accent_color"
         android:textSize="16sp"
+        android:visibility="gone"
         tools:text="Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world "/>
 
     <ImageView
-        android:id="@+id/lastStepImageView"
+        android:id="@+id/fastContinueImageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:contentDescription="@string/accessibility_last_step_cover"/>
 
     <View
+        android:id="@+id/fastContinueOverlay"
         android:layout_width="match_parent"
         android:layout_height="@dimen/fast_continue_widget_height"
         android:background="@drawable/fast_continue_lesson_drawable"/>
@@ -50,5 +52,10 @@
         android:text="@string/continue_learning"
         android:textSize="16sp"
         tools:ignore="MissingPrefix"/>
+
+    <org.stepic.droid.ui.custom.PlaceholderTextView
+        android:id="@+id/fastContinuePlaceholder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
 </FrameLayout>

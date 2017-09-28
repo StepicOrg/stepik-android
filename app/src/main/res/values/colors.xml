@@ -112,6 +112,7 @@
 
     <color name="start_gradient_placeholder">#8E8EB5</color>
     <color name="end_gradient_placeholder">#6969A0</color>
+    <color name="placeholder_text_color">@color/white</color>
 
 
 </resources>

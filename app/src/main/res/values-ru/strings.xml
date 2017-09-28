@@ -516,5 +516,6 @@
     <string name="name">Имя</string>
 
     <string name="sign_up_with_email_suffix">" с e-mail"</string>
+    <string name="placeholder_explore_courses">Откройте для себя другие бесплатные онлайн курсы</string>
 
 </resources>
