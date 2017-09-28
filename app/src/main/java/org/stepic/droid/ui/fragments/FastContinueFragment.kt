@@ -27,7 +27,9 @@ import org.stepic.droid.model.Step
 import org.stepic.droid.model.Video
 import org.stepic.droid.storage.operations.Table
 import org.stepic.droid.ui.activities.MainFeedActivity
+import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.util.AppConstants
+import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.ThumbnailParser
 import timber.log.Timber
 import javax.inject.Inject
@@ -41,6 +43,8 @@ class FastContinueFragment : FragmentBase(),
 
     companion object {
         fun newInstance(): FastContinueFragment = FastContinueFragment()
+
+        private const val CONTINUE_LOADING_TAG = "CONTINUE_LOADING_TAG"
     }
 
     @Inject
@@ -103,6 +107,11 @@ class FastContinueFragment : FragmentBase(),
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        ProgressHelper.dismiss(fragmentManager, CONTINUE_LOADING_TAG)
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         videoStepPresenter.detachView(this)
@@ -163,18 +172,26 @@ class FastContinueFragment : FragmentBase(),
     //ContinueCourseView
     override fun onShowContinueCourseLoadingDialog() {
         // FIXME: 15.09.17  Implement expand/collapse for fastContinueAction
-        //now it is just disabled
+
         fastContinueAction.isEnabled = false
+        val loadingProgressDialogFragment = LoadingProgressDialogFragment.newInstance()
+        if (!loadingProgressDialogFragment.isAdded) {
+            loadingProgressDialogFragment.show(fragmentManager, CONTINUE_LOADING_TAG)
+        }
     }
 
     override fun onOpenStep(courseId: Long, section: Section, lessonId: Long, unitId: Long, stepPosition: Int) {
         // FIXME: 15.09.17 expand fastContinueAction
+
+        ProgressHelper.dismiss(fragmentManager, CONTINUE_LOADING_TAG)
         fastContinueAction.isEnabled = true
         screenManager.continueCourse(activity, courseId, section, lessonId, unitId, stepPosition.toLong())
     }
 
     override fun onAnyProblemWhileContinue(course: Course) {
         // FIXME: 15.09.17 expand fastContinueAction
+
+        ProgressHelper.dismiss(fragmentManager, CONTINUE_LOADING_TAG)
         fastContinueAction.isEnabled = true
         screenManager.showSections(activity, course)
     }
