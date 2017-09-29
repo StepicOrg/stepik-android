@@ -69,4 +69,13 @@
         <attr name="ad_marker_color" format="color"/>
     </declare-styleable>
 
+    <declare-styleable name="LoadingView">
+        <attr name="radius" format="dimension"/>
+        <attr name="duration" format="integer"/>
+        <attr name="interval" format="integer"/>
+        <attr name="baseColor" format="reference|color"/>
+        <attr name="deepColor" format="reference|color"/>
+        <attr name="progressLength" format="dimension"/>
+        <attr name="autoStart" format="boolean"/>
+    </declare-styleable>
 </resources>

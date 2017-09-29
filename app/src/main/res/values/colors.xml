@@ -114,5 +114,8 @@
     <color name="end_gradient_placeholder">#6969A0</color>
     <color name="placeholder_text_color">@color/white</color>
 
+    <color name="loading_view_base_color">#F6F7F9</color>
+    <color name="loading_view_deep_color">#EDEEF2</color>
+
 
 </resources>

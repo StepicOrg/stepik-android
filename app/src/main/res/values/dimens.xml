@@ -120,4 +120,7 @@
     <dimen name="placeholder_side_padding">28dp</dimen>
     <dimen name="placeholder_top_bottom_padding">32dp</dimen>
     <dimen name="placeholder_line_spacing_extra" format="float">4.7sp</dimen>
+
+    <dimen name="loading_view_course_title_width">150dp</dimen>
+    <dimen name="loading_view_course_detail_width">50dp</dimen>
 </resources>

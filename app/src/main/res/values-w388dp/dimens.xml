@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="auth_elements_width">316dp</dimen>
+
+    <dimen name="loading_view_course_title_width">300dp</dimen>
+    <dimen name="loading_view_course_detail_width">100dp</dimen>
 </resources>
