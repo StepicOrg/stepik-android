@@ -133,24 +133,29 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
     }
 
 
-    float startX = 0;
-    float startY = 0;
+    private float startX = 0;
+    private float startY = 0;
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            startX = event.getX();
-            startY = event.getY();
-        } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
-            float dx = startX - event.getX();
-            float dy = startY - event.getY();
-            event.setLocation(event.getX(), startY);
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                startX = event.getX();
+                startY = event.getY();
+            break;
+            case MotionEvent.ACTION_MOVE:
+                float dx = startX - event.getX();
+                float dy = startY - event.getY();
+                event.setLocation(event.getX(), startY);
 
-            if (Math.abs(dx) > Math.abs(dy) && canScrollHorizontally((int) dx)) {
-                getParent().requestDisallowInterceptTouchEvent(true);
-            }
-        } else if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL) {
-            getParent().requestDisallowInterceptTouchEvent(false);
+                if (Math.abs(dx) > Math.abs(dy) && canScrollHorizontally((int) dx)) {
+                    getParent().requestDisallowInterceptTouchEvent(true);
+                }
+            break;
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                getParent().requestDisallowInterceptTouchEvent(false);
+            break;
         }
         return super.onTouchEvent(event);
     }
