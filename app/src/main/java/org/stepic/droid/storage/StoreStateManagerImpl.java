@@ -46,8 +46,17 @@ public class StoreStateManagerImpl implements StoreStateManager {
         boolean cached = true;
         boolean loading = false;
         for (Step step : steps) {
-            cached &= step.is_cached();
-            loading |= step.is_loading();
+            if (!step.is_cached()) {
+                cached = false;
+                break;
+            }
+        }
+
+        for (Step step : steps) {
+            if (step.is_loading()) {
+                loading = true;
+                break;
+            }
         }
 
         //all steps of lesson is cached
@@ -56,8 +65,12 @@ public class StoreStateManagerImpl implements StoreStateManager {
             analytic.reportError(Analytic.Error.LESSON_IN_STORE_STATE_NULL, new NullPointerException("lesson was null"));
             return;
         }
+
+        // cached = true -> loading = false
+        // cached = false -> loading = false|true
         lesson.set_loading(loading);
         lesson.set_cached(cached);
+
         databaseFacade.updateOnlyCachedLoadingLesson(lesson);
         if (!loading) {
             final boolean isCached = cached;
