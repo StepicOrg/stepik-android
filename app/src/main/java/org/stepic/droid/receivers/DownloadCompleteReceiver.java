@@ -160,6 +160,7 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                                 } else {
                                     final Context context = App.Companion.getAppContext();
                                     Toast.makeText(context, context.getString(R.string.video_download_fail, lesson.getTitle() + " " + downloadEntity.getVideoId()), Toast.LENGTH_SHORT).show();
+                                    analytic.reportEvent(Analytic.Error.DOWNLOAD_FAILED);
                                     downloadsPoster.downloadFailed(referenceId);
                                 }
                             }
