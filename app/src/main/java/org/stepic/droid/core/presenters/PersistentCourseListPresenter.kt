@@ -190,11 +190,15 @@ class PersistentCourseListPresenter
                 mainHandler.post {
                     view?.showCourses(coursesForShow)
                 }
-            } else {
+            } else if (hasNextPage.get()) {
                 mainHandler.post { view?.showLoading() }
             }
         } else {
-            mainHandler.post { view?.showLoading() }
+            if (hasNextPage.get()) {
+                //do not show loading, if we have not the next page
+                //loading is useless in this case
+                mainHandler.post { view?.showLoading() }
+            }
         }
     }
 

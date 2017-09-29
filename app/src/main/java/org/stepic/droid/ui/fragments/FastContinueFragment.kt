@@ -129,7 +129,6 @@ class FastContinueFragment : FragmentBase(),
     }
 
     override fun showEmptyCourses() {
-        fastContinueProgress.visibility = View.GONE
         //tbh: courses might be not empty, but not active
         // we can show suggestion for enroll, but not write, that you have zero courses
         analytic.reportEvent(Analytic.FastContinue.EMPTY_COURSES_SHOWN)
@@ -140,7 +139,6 @@ class FastContinueFragment : FragmentBase(),
     }
 
     override fun showConnectionProblem() {
-        fastContinueProgress.visibility = View.GONE
         analytic.reportEvent(Analytic.FastContinue.NO_INTERNET_SHOWN)
         showPlaceholder(R.string.internet_problem, { _ ->
             analytic.reportEvent(Analytic.FastContinue.NO_INTERNET_CLICK)
@@ -247,6 +245,7 @@ class FastContinueFragment : FragmentBase(),
 
 
     private fun showPlaceholder(@StringRes stringRes: Int, listener: (view: View) -> Unit) {
+        fastContinueProgress.visibility = View.GONE
         fastContinuePlaceholder.setPlaceholderText(stringRes)
         fastContinuePlaceholder.setOnClickListener(listener)
         showMainGroup(false)
