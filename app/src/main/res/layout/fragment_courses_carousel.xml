@@ -71,4 +71,17 @@
         android:layout_below="@id/coursesCarouselTitle"
         android:visibility="gone"/>
 
+
+    <org.stepic.droid.ui.custom.PlaceholderTextView
+        android:id="@+id/coursesPlaceholder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/coursesCarouselTitle"
+        android:layout_marginEnd="@dimen/course_list_side_padding"
+        android:layout_marginLeft="@dimen/course_list_side_padding"
+        android:layout_marginRight="@dimen/course_list_side_padding"
+        android:layout_marginStart="@dimen/course_list_side_padding"
+        android:visibility="gone"
+        tools:visibility="visible"/>
+
 </RelativeLayout>

@@ -525,4 +525,7 @@
 
     <string name="placeholder_explore_courses">Discover new open free online courses. Tap to find</string>
     <string name="placeholder_login">Login and start learning right now</string>
+
+    <string name="courses_carousel_my_courses_empty">Enroll for free courses and they will be here</string>
+    <string name="empty_courses_popular">Open courses are on vacation. Please, see later</string>
 </resources>

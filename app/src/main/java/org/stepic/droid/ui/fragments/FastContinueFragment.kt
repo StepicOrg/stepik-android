@@ -30,6 +30,7 @@ import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.ProgressHelper
+import org.stepic.droid.util.StepikUtil
 import org.stepic.droid.util.ThumbnailParser
 import timber.log.Timber
 import javax.inject.Inject
@@ -142,7 +143,9 @@ class FastContinueFragment : FragmentBase(),
         analytic.reportEvent(Analytic.FastContinue.NO_INTERNET_SHOWN)
         showPlaceholder(R.string.internet_problem, { _ ->
             analytic.reportEvent(Analytic.FastContinue.NO_INTERNET_CLICK)
-            courseListPresenter.downloadData(Table.enrolled, applyFilter = false)
+            if (StepikUtil.isInternetAvailable()) {
+                courseListPresenter.downloadData(Table.enrolled, applyFilter = false)
+            }
         })
     }
 

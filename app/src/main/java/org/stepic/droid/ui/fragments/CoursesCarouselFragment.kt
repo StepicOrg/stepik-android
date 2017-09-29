@@ -1,6 +1,7 @@
 package org.stepic.droid.ui.fragments
 
 import android.os.Bundle
+import android.support.annotation.StringRes
 import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -31,6 +32,7 @@ import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.StartSnapHelper
 import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.ProgressHelper
+import org.stepic.droid.util.StepikUtil
 import javax.inject.Inject
 
 class CoursesCarouselFragment
@@ -166,24 +168,72 @@ class CoursesCarouselFragment
     }
 
     override fun showLoading() {
+        coursesViewAll.visibility = View.GONE
+        coursesRecycler.visibility = View.GONE
+        coursesPlaceholder.visibility = View.GONE
         coursesLoadingView.visibility = View.VISIBLE
+
     }
 
     override fun showEmptyCourses() {
-        coursesLoadingView.visibility = View.GONE
-//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        @StringRes
+        fun getEmptyStringRes(table: Table?): Int =
+                when (table) {
+                    Table.enrolled -> {
+                        R.string.courses_carousel_my_courses_empty
+                    }
+                    Table.featured -> {
+                        analytic.reportEvent(Analytic.Error.FEATURED_EMPTY)
+                        R.string.empty_courses_popular
+                    }
+                    else -> {
+                        // TODO: 29.09.2017 implement for course list
+                        TODO()
+                    }
+                }
+
+
+
+        if (info.table == Table.enrolled) {
+            analytic.reportEvent(Analytic.CoursesCarousel.EMPTY_ENROLLED_SHOWN)
+        }
+        showPlaceholder(getEmptyStringRes(info.table), {
+            if (info.table == Table.enrolled) {
+                analytic.reportEvent(Analytic.CoursesCarousel.EMPTY_ENROLLED_CLICK)
+                screenManager.showFindCourses(context)
+            }
+        })
     }
 
     override fun showConnectionProblem() {
-        coursesLoadingView.visibility = View.GONE
-//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (courses.isEmpty()) {
+            analytic.reportEvent(Analytic.CoursesCarousel.NO_INTERNET_SHOWN)
+            showPlaceholder(R.string.internet_problem, { _ ->
+                analytic.reportEvent(Analytic.CoursesCarousel.NO_INTERNET_CLICK)
+                if (StepikUtil.isInternetAvailable()) {
+                    downloadData()
+                }
+            })
+        }
     }
 
     override fun showCourses(courses: MutableList<Course>) {
         coursesLoadingView.visibility = View.GONE
+        coursesPlaceholder.visibility = View.GONE
+        coursesRecycler.visibility = View.VISIBLE
+        coursesViewAll.visibility = View.VISIBLE
         this.courses.clear()
         this.courses.addAll(courses)
         coursesRecycler.adapter.notifyDataSetChanged()
+    }
+
+    private fun showPlaceholder(@StringRes stringRes: Int, listener: (view: View) -> Unit) {
+        coursesViewAll.visibility = View.GONE
+        coursesLoadingView.visibility = View.GONE
+        coursesRecycler.visibility = View.GONE
+        coursesPlaceholder.setPlaceholderText(stringRes)
+        coursesPlaceholder.setOnClickListener(listener)
+        coursesPlaceholder.visibility = View.VISIBLE
     }
 
     override fun onUserHasNotPermissionsToDrop() {

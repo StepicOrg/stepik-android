@@ -519,4 +519,7 @@
     <string name="placeholder_explore_courses">Откройте для себя другие бесплатные онлайн курсы</string>
     <string name="placeholder_login">Войдите и начните учиться прямо сейчас</string>
 
+    <string name="courses_carousel_my_courses_empty">Запишитесь на курсы и они будут показаны здесь</string>
+    <string name="empty_courses_popular">Открытые курсы сейчас в отпуске. Пожалуйста, зайдите позже</string>
+
 </resources>

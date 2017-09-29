@@ -7,6 +7,14 @@ import org.jetbrains.annotations.Nullable;
 
 public interface Analytic {
 
+    interface CoursesCarousel {
+        String EMPTY_ENROLLED_SHOWN = "courses_carousel_empty_enrolled";
+        String EMPTY_ENROLLED_CLICK = "courses_carousel_empty_enrolled_clicked";
+
+        String NO_INTERNET_SHOWN = "courses_carousel_no_internet";
+        String NO_INTERNET_CLICK = "courses_carousel_no_internet_click";
+    }
+
     interface FastContinue {
         String EMPTY_COURSES_SHOWN = "fast_continue_empty_courses";
         String EMPTY_COURSES_CLICK = "fast_continue_empty_courses_click";
@@ -239,6 +247,8 @@ public interface Analytic {
         String CANT_PARSE_QUALITY = "cant_parse_quality";
         String JOIN_FAILED = "error_join_failed"; //#Apps-580
         String UNIT_CACHED_LESSON_NO = "error_unit_cached_lesson_not";
+        @Nullable
+        String FEATURED_EMPTY = "error_featured_empty";
     }
 
     interface Web {
