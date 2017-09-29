@@ -169,18 +169,21 @@ public class LoadService extends IntentService {
                         // we check it in need cancel
                         return;
                     }
-                    // sometimes DownloadCompleteReceiver receives broadcast with this download before DownloadEntity was added
-                    // RWLocks.DownloadLock.writeLock().lock trying to prevent such behavior
-                    // todo improve
-                    RWLocks.DownloadLock.writeLock().lock();
-                    final long downloadId = systemDownloadManager.enqueue(request);
+                    try {
+                        // sometimes DownloadCompleteReceiver receives broadcast with this download before DownloadEntity was added
+                        // RWLocks.DownloadLock.writeLock().lock trying to prevent such behavior
+                        // todo improve
+                        RWLocks.DownloadLock.writeLock().lock();
+                        final long downloadId = systemDownloadManager.enqueue(request);
 
-                    String local_thumbnail = fileId + AppConstants.THUMBNAIL_POSTFIX_EXTENSION;
-                    String thumbnailsPath = FileUtil.saveFileToDisk(local_thumbnail, step.getBlock().getVideo().getThumbnail(), userPrefs.getUserDownloadFolder());
-                    final DownloadEntity newEntity = new DownloadEntity(downloadId, step.getId(), fileId, thumbnailsPath, videoQuality);
-                    databaseFacade.addDownloadEntity(newEntity);
+                        String local_thumbnail = fileId + AppConstants.THUMBNAIL_POSTFIX_EXTENSION;
+                        String thumbnailsPath = FileUtil.saveFileToDisk(local_thumbnail, step.getBlock().getVideo().getThumbnail(), userPrefs.getUserDownloadFolder());
+                        final DownloadEntity newEntity = new DownloadEntity(downloadId, step.getId(), fileId, thumbnailsPath, videoQuality);
+                        databaseFacade.addDownloadEntity(newEntity);
+                    } finally {
+                        RWLocks.DownloadLock.writeLock().unlock();
+                    }
                 } finally {
-                    RWLocks.DownloadLock.writeLock().unlock();
                     RWLocks.SectionCancelLock.writeLock().unlock();
                 }
             }
