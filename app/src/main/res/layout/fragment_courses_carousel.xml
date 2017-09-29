@@ -63,4 +63,12 @@
         android:splitMotionEvents="false"
         />
 
+    <include
+        android:id="@+id/coursesLoadingView"
+        layout="@layout/course_item_loading_view_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/coursesCarouselTitle"
+        android:visibility="gone"/>
+
 </RelativeLayout>

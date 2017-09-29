@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="loading_view_radius_default">5dp</dimen>
+    <dimen name="loading_view_progress_length_default">120dp</dimen>
+</resources>

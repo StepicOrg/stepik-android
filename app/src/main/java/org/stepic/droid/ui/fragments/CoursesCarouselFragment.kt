@@ -166,18 +166,21 @@ class CoursesCarouselFragment
     }
 
     override fun showLoading() {
-//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        coursesLoadingView.visibility = View.VISIBLE
     }
 
     override fun showEmptyCourses() {
+        coursesLoadingView.visibility = View.GONE
 //        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun showConnectionProblem() {
+        coursesLoadingView.visibility = View.GONE
 //        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun showCourses(courses: MutableList<Course>) {
+        coursesLoadingView.visibility = View.GONE
         this.courses.clear()
         this.courses.addAll(courses)
         coursesRecycler.adapter.notifyDataSetChanged()
