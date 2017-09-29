@@ -8,11 +8,14 @@ fun DownloadManager.getDownloadStatus(referenceId: Long) : Int {
     val query = DownloadManager.Query()
     query.setFilterById(referenceId)
     val cursor = query(query)
-    val status = if (cursor.moveToFirst() && cursor.count > 0) {
-        cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))
-    } else {
-        DOWNLOAD_STATUS_UNDEFINED
+    try {
+        val status = if (cursor.moveToFirst() && cursor.count > 0) {
+            cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))
+        } else {
+            DOWNLOAD_STATUS_UNDEFINED
+        }
+        return status
+    } finally {
+        cursor.close()
     }
-    cursor.close()
-    return status
 }

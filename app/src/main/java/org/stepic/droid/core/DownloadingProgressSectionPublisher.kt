@@ -130,8 +130,8 @@ class DownloadingProgressSectionPublisher
                 val entitiesMap: Map<Int, DownloadEntity>? = pairCursorAndDownloading?.second?.associate { kotlin.Pair(it.downloadId.toInt(), it) }
 
                 val stepIdToProgress = HashMap<Long, Float>()
-                if (entitiesMap != null) {
-                    if (cursor != null) {
+                if (entitiesMap != null && cursor != null) {
+                    try {
                         cursor.moveToFirst()
                         while (!cursor.isAfterLast) {
                             val bytes_total = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES))
@@ -151,7 +151,7 @@ class DownloadingProgressSectionPublisher
 
                             cursor.moveToNext()
                         }
-
+                    } finally {
                         cursor.close()
                     }
                 }
