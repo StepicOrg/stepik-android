@@ -46,28 +46,30 @@ class InitialDownloadUpdater
         val cursor : Cursor? = systemDownloadManager.query(query)
 
         if (cursor != null) {
-            cursor.moveToFirst()
-            while (!cursor.isAfterLast) {
-                val columnStatus = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))
-                val downloadId = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_ID))
+            try {
+                cursor.moveToFirst()
+                while (!cursor.isAfterLast) {
+                    val columnStatus = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))
+                    val downloadId = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_ID))
 
-                val relatedDownloadEntity = currentDownloadingEntitiesMap.get(downloadId.toLong())
-                relatedDownloadEntity?.let {
-                    if (columnStatus == DownloadManager.STATUS_SUCCESSFUL) {
-                        onDownloadEntityFinished(it, STATUS.COMPLETE)
-                    } else if (columnStatus == DownloadManager.STATUS_FAILED) {
-                        onDownloadEntityFinished(it, STATUS.FAIL)
+                    val relatedDownloadEntity = currentDownloadingEntitiesMap.get(downloadId.toLong())
+                    relatedDownloadEntity?.let {
+                        if (columnStatus == DownloadManager.STATUS_SUCCESSFUL) {
+                            onDownloadEntityFinished(it, STATUS.COMPLETE)
+                        } else if (columnStatus == DownloadManager.STATUS_FAILED) {
+                            onDownloadEntityFinished(it, STATUS.FAIL)
+                        }
                     }
+
+                    if (relatedDownloadEntity != null && (columnStatus == DownloadManager.STATUS_SUCCESSFUL)) {
+
+                    }
+
+                    cursor.moveToNext()
                 }
-
-                if (relatedDownloadEntity != null && (columnStatus == DownloadManager.STATUS_SUCCESSFUL)) {
-
-                }
-
-                cursor.moveToNext()
+            } finally {
+                cursor.close()
             }
-
-            cursor.close()
         }
     }
 
