@@ -48,8 +48,6 @@ class PersistentCourseListPresenter
     private var currentNumberOfTasks: Int = 0 //only main thread
     private val isEmptyCourses = AtomicBoolean(false)
 
-//    val isHandlingUpdatingOrder = AtomicBoolean(false)
-
     fun restoreState() {
         if (isEmptyCourses.get() && !hasNextPage.get()) {
             view?.showEmptyCourses()
