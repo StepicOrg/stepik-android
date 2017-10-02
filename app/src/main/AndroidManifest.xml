@@ -403,6 +403,10 @@
         </activity>
 
         <activity
+            android:name=".ui.activities.CourseListActivity">
+        </activity>
+
+        <activity
             android:name=".ui.activities.PhotoViewActivity"
             android:theme="@style/AppTheme.PhotoView"/>
 

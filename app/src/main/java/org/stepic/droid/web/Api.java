@@ -117,4 +117,6 @@ public interface Api {
     Call<UserActivityResponse> getUserActivities(long userId);
 
     Call<LastStepResponse> getLastStepResponse(@NotNull String lastStepId);
+
+    Call<CourseListsResponse> getCourseLists ();
 }

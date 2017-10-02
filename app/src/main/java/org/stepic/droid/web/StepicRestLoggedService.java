@@ -135,4 +135,7 @@ public interface StepicRestLoggedService {
 
     @GET("api/last-steps/{lastStepId}")
     Call<LastStepResponse> getLastStepResponse(@Path("lastStepId") String lastStepId);
+
+    @GET("api/course-lists?platform=mobile")
+    Call<CourseListsResponse> getCourseLists(@Query("language") String language);
 }

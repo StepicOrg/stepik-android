@@ -58,7 +58,7 @@
     <string name="allow_mobile_snack">Загрузка через мобильный интернет недоступна</string>
     <string name="drop_course">Покинуть курс</string>
     <string name="about_course">О курсе</string>
-    <string name="you_dropped">Вы покинули</string>
+    <string name="you_dropped">Вы покинули %s</string>
     <string name="try_in_web_drop">Попробуйте отписаться в web-версии</string>
     <string name="you_not_enrolled">Вы не записаны на данный курс</string>
     <string name="cancel">Отмена</string>
@@ -502,6 +502,14 @@
 
     <string name="course_item_more">Подробнее</string>
     <string name="course_item_join">Подробнее о курсе</string>
+
+    <string name="learners_count">Количество студентов</string>
+    <string name="continue_learning">Продолжить учиться</string>
+    <string name="accessibility_last_step_cover">Изображение последнего шага</string>
+    <string name="my_courses_title">Мои курсы</string>
+    <string name="popular_courses_title">Популярные</string>
+    <string name="view_all_courses">Показать все</string>
+
     <string name="sign_in_with_social_suffix">" через социальные сети"</string>
     <string name="sign_in_with_social">Вход через соцсети</string>
     <string name="social_recycler_show_more">Ещё</string>
@@ -509,4 +517,10 @@
     <string name="name">Имя</string>
 
     <string name="sign_up_with_email_suffix">" с e-mail"</string>
+    <string name="placeholder_explore_courses">Откройте для себя другие бесплатные онлайн курсы</string>
+    <string name="placeholder_login">Войдите и начните учиться прямо сейчас</string>
+
+    <string name="courses_carousel_my_courses_empty">Запишитесь на курсы и они будут показаны здесь</string>
+    <string name="empty_courses_popular">Открытые курсы сейчас в отпуске. Пожалуйста, зайдите позже</string>
+
 </resources>

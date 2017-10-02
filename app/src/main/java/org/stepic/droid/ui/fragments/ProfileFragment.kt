@@ -28,7 +28,6 @@ import org.stepic.droid.core.presenters.contracts.ProfileView
 import org.stepic.droid.fonts.FontType
 import org.stepic.droid.model.UserViewModel
 import org.stepic.droid.ui.activities.MainFeedActivity
-import org.stepic.droid.ui.activities.contracts.BottomNavigationViewRoot
 import org.stepic.droid.ui.activities.contracts.CloseButtonInToolbar
 import org.stepic.droid.ui.adapters.ProfileSettingsAdapter
 import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment
@@ -80,7 +79,6 @@ class ProfileFragment : FragmentBase(),
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         nullifyActivityBackground()
         super.onViewCreated(view, savedInstanceState)
-        applyBottomMarginForRootView()
         initToolbar()
         initTimezone()
 
@@ -401,9 +399,7 @@ class ProfileFragment : FragmentBase(),
         private val USER_ID_KEY = "user_id_key"
         private val NOTIFICATION_INTERVAL_REQUEST_CODE = 11
 
-        fun newInstance(): ProfileFragment {
-            return newInstance(0)
-        }
+        fun newInstance(): ProfileFragment = newInstance(0)
 
         fun newInstance(userId: Long): ProfileFragment {
             val args = Bundle()
@@ -412,16 +408,6 @@ class ProfileFragment : FragmentBase(),
             fragment.arguments = args
             return fragment
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        (activity as? BottomNavigationViewRoot)?.disableAnyBehaviour()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        (activity as? BottomNavigationViewRoot)?.resetDefaultBehaviour()
     }
 
     private fun setStreakInfoVisibility(needShow: Boolean) {
@@ -437,7 +423,5 @@ class ProfileFragment : FragmentBase(),
         maxStreakValue.visibility = visibility
         streakIndicator.visibility = visibility
     }
-
-    override fun getRootView(): ViewGroup = profileRootView
 
 }

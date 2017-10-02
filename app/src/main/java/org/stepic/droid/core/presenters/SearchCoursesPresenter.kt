@@ -76,7 +76,7 @@ class SearchCoursesPresenter
                                 forInsert = null
                             }
                             mainHandler.post {
-                                view?.showCourses(sortedCopy.filterNotNull())
+                                view?.showCourses(sortedCopy)
                             }
 
                         }

@@ -3,6 +3,7 @@
 <resources>
 
     <color name="white">#FFFFFF</color>
+    <color name="pressed_white">#e6e6e6</color>
 
     <color name="grey_act_background">#E2E3E5</color>
 
@@ -86,10 +87,15 @@
     <color name="new_accent_color_opacity_50">#80535366</color>
 
     <color name="join_text_color">#66CC66</color>
-    <color name="continue_button_color">#F5F5F6</color>
+    <color name="continue_button_color">#0D535366</color>
+    <color name="continue_button_pressed_color">#1A535366</color>
+    <color name="continue_button_color_dark">#0DFFFFFF</color>
+    <color name="continue_button_pressed_color_dark">#1AFFFFFF</color>
     <color name="join_button_color">#1A66CC66</color>
     <color name="join_button_pressed_color">#6666CC66</color>
-    <color name="continue_button_pressed_color">#DBDBDB</color>
+
+    <color name="fast_continue_learning_opacity">#99535366</color>
+    <color name="view_all_course_list_color">#CCCCD1</color>
 
     <color name="login_edit_text_block_stroke_color">#979797</color>
     <color name="login_edit_text_block_background_color">@color/transparent</color>
@@ -103,4 +109,13 @@
     <color name="login_error_color">#c82850</color>
 
     <color name="remind_password_button_text_color">#4990e2</color>
+
+    <color name="start_gradient_placeholder">#8E8EB5</color>
+    <color name="end_gradient_placeholder">#6969A0</color>
+    <color name="placeholder_text_color">@color/white</color>
+
+    <color name="loading_view_base_color">#F6F7F9</color>
+    <color name="loading_view_deep_color">#DBDBDB</color>
+
+
 </resources>

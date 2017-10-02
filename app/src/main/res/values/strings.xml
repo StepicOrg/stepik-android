@@ -68,7 +68,7 @@
     <string name="allow_mobile_snack">Mobile downloading is disabled. Turn on in settings</string>
     <string name="drop_course">Drop the course</string>
     <string name="about_course">About the course</string>
-    <string name="you_dropped">"You dropped"</string>
+    <string name="you_dropped">"You dropped %s"</string>
     <string name="try_in_web_drop">Try dropping this course in the web version</string>
     <string name="you_not_enrolled">You are not enrolled</string>
     <string name="cancel">Cancel</string>
@@ -507,7 +507,15 @@
 
     <string name="course_item_more">More</string>
     <string name="course_item_join">Course Info</string>
+
     <string name="learners_count">Learners count</string>
+
+    <string name="continue_learning">Continue Learning</string>
+    <string name="accessibility_last_step_cover">Last step cover</string>
+    <string name="my_courses_title">My courses</string>
+    <string name="popular_courses_title">Popular</string>
+    <string name="view_all_courses">View all</string>
+
     <string name="sign_in_with_social_suffix">" with social accounts"</string>
     <string name="sign_in_with_social">Sign in with social</string>
     <string name="social_recycler_show_more">More</string>
@@ -515,4 +523,10 @@
     <string name="name">Name</string>
 
     <string name="sign_up_with_email_suffix">" with e-mail"</string>
+
+    <string name="placeholder_explore_courses">Discover new open free online courses. Tap to find</string>
+    <string name="placeholder_login">Login and start learning right now</string>
+
+    <string name="courses_carousel_my_courses_empty">Enroll for free courses and they will be here</string>
+    <string name="empty_courses_popular">Open courses are on vacation. Please, see later</string>
 </resources>

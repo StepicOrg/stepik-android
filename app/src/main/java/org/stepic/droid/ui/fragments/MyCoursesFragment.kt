@@ -17,6 +17,6 @@ class MyCoursesFragment : CoursesDatabaseFragmentBase() {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        this.initCenteredToolbar(R.string.home_title)
+        this.initCenteredToolbar(R.string.my_courses_title)
     }
 }

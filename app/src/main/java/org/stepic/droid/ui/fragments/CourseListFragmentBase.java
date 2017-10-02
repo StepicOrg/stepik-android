@@ -3,6 +3,7 @@ package org.stepic.droid.ui.fragments;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -29,6 +30,7 @@ import org.stepic.droid.core.presenters.contracts.ContinueCourseView;
 import org.stepic.droid.core.presenters.contracts.CoursesView;
 import org.stepic.droid.core.presenters.contracts.DroppingView;
 import org.stepic.droid.model.Course;
+import org.stepic.droid.model.CoursesCarouselColorType;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.storage.operations.Table;
 import org.stepic.droid.ui.activities.contracts.RootScreen;
@@ -146,7 +148,8 @@ public abstract class CourseListFragmentBase extends FragmentBase
                 R.color.stepic_blue_ribbon);
 
         if (courses == null) courses = new ArrayList<>();
-        coursesAdapter = new CoursesAdapter(this, courses, getCourseType(), continueCoursePresenter, droppingPresenter);
+        boolean showMore = getCourseType() == Table.enrolled;
+        coursesAdapter = new CoursesAdapter(this, courses, continueCoursePresenter, droppingPresenter, true, showMore, CoursesCarouselColorType.Light);
         listOfCoursesView.setAdapter(coursesAdapter);
         layoutManager = new WrapContentLinearLayoutManager(getContext());
         listOfCoursesView.setLayoutManager(layoutManager);
@@ -238,15 +241,18 @@ public abstract class CourseListFragmentBase extends FragmentBase
     @Override
     public void showLoading() {
         ProgressHelper.dismiss(progressBarOnEmptyScreen);
-        ProgressHelper.dismiss(swipeRefreshLayout);
-        coursesAdapter.showLoadingFooter(false);
         reportConnectionProblem.setVisibility(View.GONE);
 
         if (courses.isEmpty()) {
             setBackgroundColorToRootView(R.color.new_cover);
             ProgressHelper.activate(swipeRefreshLayout);
+            coursesAdapter.showLoadingFooter(false);
         } else if (swipeRefreshLayout != null && !swipeRefreshLayout.isRefreshing()) {
+            ProgressHelper.dismiss(swipeRefreshLayout);
             coursesAdapter.showLoadingFooter(true);
+        } else {
+            ProgressHelper.dismiss(swipeRefreshLayout);
+            coursesAdapter.showLoadingFooter(false);
         }
     }
 
@@ -277,7 +283,7 @@ public abstract class CourseListFragmentBase extends FragmentBase
     }
 
     @Override
-    public final void showCourses(List<Course> courses) {
+    public final void showCourses(@NonNull List<Course> courses) {
         ProgressHelper.dismiss(progressBarOnEmptyScreen);
         ProgressHelper.dismiss(swipeRefreshLayout);
         coursesAdapter.showLoadingFooter(false);

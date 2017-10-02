@@ -7,7 +7,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,8 +26,8 @@ public class FindCoursesFragment extends CoursesDatabaseFragmentBase {
         return new FindCoursesFragment();
     }
 
-    SearchView searchView = null;
-    MenuItem menuItem = null;
+    private SearchView searchView = null;
+    private MenuItem menuItem = null;
     private boolean handledByRoot = false;
 
     @Override
@@ -69,7 +68,7 @@ public class FindCoursesFragment extends CoursesDatabaseFragmentBase {
         if (searchView != null && menuItem != null && menuItem.isActionViewExpanded()) {
             if (rootHandle) handledByRoot = true;
             hideSoftKeypad();//in collapse action view keypad going to invisible after animation
-            MenuItemCompat.collapseActionView(menuItem);
+            menuItem.collapseActionView();
         }
     }
 
@@ -109,10 +108,12 @@ public class FindCoursesFragment extends CoursesDatabaseFragmentBase {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroyOptionsMenu() {
+        super.onDestroyOptionsMenu();
+
         if (searchView != null) {
             searchView.setOnQueryTextListener(null);
         }
+        searchView = null;
     }
 }

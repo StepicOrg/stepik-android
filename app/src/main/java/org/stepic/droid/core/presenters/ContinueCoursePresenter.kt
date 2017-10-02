@@ -22,13 +22,12 @@ class ContinueCoursePresenter
         private val threadPoolExecutor: ThreadPoolExecutor,
         private val mainHandler: MainHandler) : PresenterBase<ContinueCourseView>() {
 
-    val isHandling = AtomicBoolean(false)
+    private val isHandling = AtomicBoolean(false)
 
     fun continueCourse(course: Course) {
         if (isHandling.compareAndSet(false, true)) {
             view?.onShowContinueCourseLoadingDialog()
-            threadPoolExecutor.execute()
-            {
+            threadPoolExecutor.execute {
                 try {
                     databaseFacade.updateCourseLastInteraction(courseId = course.courseId, timestamp = DateTime.now().millis)
                     var unitId: Long
@@ -43,7 +42,7 @@ class ContinueCoursePresenter
                         if (persistentLastStep == null) {
                             // fetch data
 
-                            val sectionId = course.sections.first()
+                            val sectionId = course.sections?.first() ?: throw IllegalArgumentException("course without sections")
                             val section = fetchSection(sectionId)
                             val unit = fetchUnit(section.units?.first()!!)
                             val lessonId = unit.lesson
