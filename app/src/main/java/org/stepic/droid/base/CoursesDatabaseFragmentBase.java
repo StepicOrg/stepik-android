@@ -32,8 +32,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import timber.log.Timber;
-
 public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase implements FilterForCoursesView, OnBackClickListener, DroppingListener {
     private static final int FILTER_REQUEST_CODE = 776;
 
@@ -242,7 +240,6 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
     @Override
     public void onNeedDownloadNextPage() {
-        Timber.d("loadMore onNeedDownloadNextPage");
         courseListPresenter.loadMore(getCourseType(), needFilter);
     }
 
@@ -281,16 +278,14 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
     @Override
     public void onFailDropCourse(@NotNull Course droppedCourse) {
-        long courseId = -1L;
-        courseId = droppedCourse.getCourseId();
+        long courseId = droppedCourse.getCourseId();
         getAnalytic().reportEvent(Analytic.Web.DROP_COURSE_FAIL, courseId + "");
         Toast.makeText(getContext(), R.string.internet_problem, Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void onSuccessDropCourse(@NotNull Course droppedCourse) {
-        long courseId = -1L;
-        courseId = droppedCourse.getCourseId();
+        long courseId = droppedCourse.getCourseId();
         getAnalytic().reportEvent(Analytic.Web.DROP_COURSE_SUCCESSFUL, courseId + "");
         Toast.makeText(getContext(), getContext().getString(R.string.you_dropped) + " " + droppedCourse.getTitle(), Toast.LENGTH_LONG).show();
         if (getCourseType() == Table.enrolled) { //why here was e.getCourseType?
