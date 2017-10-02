@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import kotlinx.android.synthetic.main.empty_certificates.*
 import kotlinx.android.synthetic.main.fragment_certificates.*
 import kotlinx.android.synthetic.main.need_auth_placeholder.*
@@ -126,7 +125,7 @@ class CertificatesFragment : FragmentBase(),
             certificateRootView.setBackgroundColor(oldCoverColor)
             reportProblem.visibility = View.VISIBLE
         } else {
-            Toast.makeText(context, R.string.connectionProblems, Toast.LENGTH_SHORT).show()
+            certificateSwipeRefresh.visibility = View.VISIBLE
         }
     }
 
