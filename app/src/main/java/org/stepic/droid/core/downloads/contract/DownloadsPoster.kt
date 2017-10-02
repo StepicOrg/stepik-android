@@ -7,6 +7,8 @@ import org.stepic.droid.model.Lesson
 interface DownloadsPoster {
     fun downloadComplete(stepId: Long, lesson: Lesson, video: CachedVideo)
 
+    fun downloadFailed(downloadId: Long)
+
     fun downloadUpdate(downloadingVideoItem: DownloadingVideoItem)
 
     fun finishDownloadVideo(list: List<CachedVideo>, map: Map<Long, Lesson>)

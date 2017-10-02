@@ -44,26 +44,31 @@ class InitialDownloadUpdater
         val query = DownloadManager.Query()
         query.setFilterById(*currentDownloadingEntitiesMap.keys.toLongArray())
         val cursor : Cursor? = systemDownloadManager.query(query)
-        cursor?.use { cursor ->
-            cursor.moveToFirst()
-            while (!cursor.isAfterLast) {
-                val columnStatus = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))
-                val downloadId = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_ID))
 
-                val relatedDownloadEntity = currentDownloadingEntitiesMap.get(downloadId.toLong())
-                relatedDownloadEntity?.let {
-                    if (columnStatus == DownloadManager.STATUS_SUCCESSFUL) {
-                        onDownloadEntityFinished(it, STATUS.COMPLETE)
-                    } else if (columnStatus == DownloadManager.STATUS_FAILED) {
-                        onDownloadEntityFinished(it, STATUS.FAIL)
+        if (cursor != null) {
+            try {
+                cursor.moveToFirst()
+                while (!cursor.isAfterLast) {
+                    val columnStatus = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))
+                    val downloadId = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_ID))
+
+                    val relatedDownloadEntity = currentDownloadingEntitiesMap.get(downloadId.toLong())
+                    relatedDownloadEntity?.let {
+                        if (columnStatus == DownloadManager.STATUS_SUCCESSFUL) {
+                            onDownloadEntityFinished(it, STATUS.COMPLETE)
+                        } else if (columnStatus == DownloadManager.STATUS_FAILED) {
+                            onDownloadEntityFinished(it, STATUS.FAIL)
+                        }
                     }
+
+                    if (relatedDownloadEntity != null && (columnStatus == DownloadManager.STATUS_SUCCESSFUL)) {
+
+                    }
+
+                    cursor.moveToNext()
                 }
-
-                if (relatedDownloadEntity != null && (columnStatus == DownloadManager.STATUS_SUCCESSFUL)) {
-
-                }
-
-                cursor.moveToNext()
+            } finally {
+                cursor.close()
             }
         }
     }

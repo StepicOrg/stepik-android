@@ -249,7 +249,7 @@ public class DownloadsFragment extends FragmentBase implements
                                     public kotlin.Unit invoke() {
                                         DownloadsFragment downloadsFragment = downloadsFragmentWeakReference.get();
                                         if (downloadsFragment != null) {
-                                            downloadsFragment.onDownloadingSuccessfully(downloadId);
+                                            downloadsFragment.removeVideoFromDownloading(downloadId);
                                         }
                                         return kotlin.Unit.INSTANCE;
                                     }
@@ -298,7 +298,7 @@ public class DownloadsFragment extends FragmentBase implements
         thread.start();
     }
 
-    public void onDownloadingSuccessfully(long downloadId) {
+    public void removeVideoFromDownloading(long downloadId) {
         int pos = -1;
         for (int i = 0; i < downloadingWithProgressList.size(); i++) {
             DownloadingVideoItem item = downloadingWithProgressList.get(i);
@@ -579,6 +579,11 @@ public class DownloadsFragment extends FragmentBase implements
     @Override
     public void onDownloadComplete(long stepId, @NotNull Lesson lesson, @NotNull CachedVideo video) {
         addStepToList(stepId, lesson, video);
+    }
+
+    @Override
+    public void onDownloadFailed(long downloadId) {
+        removeVideoFromDownloading(downloadId);
     }
 
     @Override
