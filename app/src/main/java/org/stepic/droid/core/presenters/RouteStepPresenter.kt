@@ -207,61 +207,59 @@ class RouteStepPresenter
                     }
                 }
             }
-            if (nextUnitId == null) else {
-                if (section != null) {
-                    //unit in previous or next section
-                    val course = courseRepository.getObject(section.course)
-                    val slicedSectionIds = getSlicedSectionIds(direction, section, course)
-                    slicedSectionIds?.let {
-                        val sections = sectionRepository.getObjects(slicedSectionIds)
-                        when (direction) {
-                            RouteStepPresenter.Direction.previous -> {
-                                sections
-                                        .reversed()
-                                        .forEach {
-                                            if (it.hasUserAccessAndNotEmpty(course)) {
-                                                it.units?.last()?.let { previousUnitId ->
-                                                    val previousUnit = unitRepository.getObject(previousUnitId)
-                                                    if (previousUnit != null) {
-                                                        val previousLesson = lessonRepository.getObject(previousUnit.lesson)
-                                                        if (previousLesson != null) {
-                                                            notifyAboutChangingSection(section, it)
-                                                            mainHandler.post {
-                                                                onOpen(previousUnit, previousLesson)
-                                                            }
-                                                            return@execute
+            if (nextUnitId == null && section != null) {
+                //unit in previous or next section
+                val course = courseRepository.getObject(section.course)
+                val slicedSectionIds = getSlicedSectionIds(direction, section, course)
+                slicedSectionIds?.let {
+                    val sections = sectionRepository.getObjects(slicedSectionIds)
+                    when (direction) {
+                        RouteStepPresenter.Direction.previous -> {
+                            sections
+                                    .reversed()
+                                    .forEach {
+                                        if (it.hasUserAccessAndNotEmpty(course)) {
+                                            it.units?.last()?.let { previousUnitId ->
+                                                val previousUnit = unitRepository.getObject(previousUnitId)
+                                                if (previousUnit != null) {
+                                                    val previousLesson = lessonRepository.getObject(previousUnit.lesson)
+                                                    if (previousLesson != null) {
+                                                        notifyAboutChangingSection(section, it)
+                                                        mainHandler.post {
+                                                            onOpen(previousUnit, previousLesson)
                                                         }
+                                                        return@execute
                                                     }
                                                 }
-                                                return@let
                                             }
+                                            return@let
                                         }
-                            }
-                            RouteStepPresenter.Direction.next -> {
-                                sections
-                                        .forEach { nextSection ->
-                                            if (nextSection.hasUserAccessAndNotEmpty(course)) {
-                                                nextSection.units?.first()?.let { nextUnitId ->
-                                                    val nextUnit = unitRepository.getObject(nextUnitId)
-                                                    nextUnit?.lesson?.let { lessonId ->
-                                                        val nextLesson = lessonRepository.getObject(lessonId)
-                                                        if (nextLesson != null) {
-                                                            notifyAboutChangingSection(section, nextSection)
-                                                            mainHandler.post {
-                                                                onOpen(nextUnit, nextLesson)
-                                                            }
-                                                            return@execute
+                                    }
+                        }
+                        RouteStepPresenter.Direction.next -> {
+                            sections
+                                    .forEach { nextSection ->
+                                        if (nextSection.hasUserAccessAndNotEmpty(course)) {
+                                            nextSection.units?.first()?.let { nextUnitId ->
+                                                val nextUnit = unitRepository.getObject(nextUnitId)
+                                                nextUnit?.lesson?.let { lessonId ->
+                                                    val nextLesson = lessonRepository.getObject(lessonId)
+                                                    if (nextLesson != null) {
+                                                        notifyAboutChangingSection(section, nextSection)
+                                                        mainHandler.post {
+                                                            onOpen(nextUnit, nextLesson)
                                                         }
+                                                        return@execute
                                                     }
-
-                                                }
-                                                mainHandler.post {
                                                 }
 
-                                                return@let
                                             }
+                                            mainHandler.post {
+                                            }
+
+                                            return@let
                                         }
-                            }
+                                    }
                         }
                     }
                 }
