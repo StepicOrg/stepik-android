@@ -1,5 +1,6 @@
 package org.stepic.droid.core.presenters
 
+import android.os.Bundle
 import android.support.annotation.MainThread
 import android.support.annotation.WorkerThread
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
@@ -87,6 +88,9 @@ class StepAttemptPresenter
         threadPoolExecutor.execute {
             try {
                 api.createNewSubmission(reply, attemptId).execute().body().submissions
+                val bundle = Bundle()
+                bundle.putString(Analytic.Steps.SUBMISSION_CREATED_TYPE, step.block?.name ?: "undefined")
+                analytic.reportEvent(Analytic.Steps.SUBMISSION_CREATED, bundle)
                 mainHandler.post {
                     getStatusOfSubmission(step, attemptId, fromPosting = true)
                 }

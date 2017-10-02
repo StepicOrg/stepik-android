@@ -317,6 +317,8 @@ public interface Analytic {
     }
 
     interface Steps {
+        String SUBMISSION_CREATED = "submission_created";
+        String SUBMISSION_CREATED_TYPE = "type";
         String CORRECT_SUBMISSION_FILL = "submission_correct_fill"; // it can be existing submission, use in chain.
         String WRONG_SUBMISSION_FILL = "submission_wrong_fill";
         String SHARE_OPEN_IN_BROWSER = "step_share_open_in_browser";
