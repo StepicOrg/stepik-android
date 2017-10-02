@@ -109,8 +109,8 @@ class HtmlHelperTest{
     private fun predictCourseIdByHtml(courseId : Long, htmlRaw: String){
         val notification = buildNotificationWithHtml(htmlRaw)
         val id = HtmlHelper.parseCourseIdFromNotification(notification)
+        assertEquals(id ?:-1, courseId)
         assertNotNull(id)
-        assertEquals(id!!.toLong(), courseId)
     }
 
     private fun buildNotificationWithHtml(htmlRaw: String): Notification {

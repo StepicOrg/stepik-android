@@ -287,7 +287,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     public void onSuccessDropCourse(@NotNull Course droppedCourse) {
         long courseId = droppedCourse.getCourseId();
         getAnalytic().reportEvent(Analytic.Web.DROP_COURSE_SUCCESSFUL, courseId + "");
-        Toast.makeText(getContext(), getContext().getString(R.string.you_dropped) + " " + droppedCourse.getTitle(), Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), getContext().getString(R.string.you_dropped, droppedCourse.getTitle()), Toast.LENGTH_LONG).show();
         if (getCourseType() == Table.enrolled) { //why here was e.getCourseType?
             courses.remove(droppedCourse);
             coursesAdapter.notifyDataSetChanged();

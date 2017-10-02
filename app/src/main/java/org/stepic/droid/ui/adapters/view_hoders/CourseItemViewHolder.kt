@@ -24,9 +24,13 @@ import org.stepic.droid.model.CoursesCarouselColorType
 import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.ContextMenuCourseUtil
 import org.stepic.droid.util.StepikLogicHelper
+import org.stepic.droid.util.SuppressFBWarnings
 import java.util.*
 import javax.inject.Inject
 
+@SuppressFBWarnings("RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE",
+        justification = "Kotlin adds null check for lateinit properties, but" +
+                "Findbugs highlights it as redundant")
 class CourseItemViewHolder(
         val view: View,
         private val contextActivity: Activity,
@@ -122,7 +126,6 @@ class CourseItemViewHolder(
         morePopupMenu.show()
     }
 
-
     private fun onClickCourse(position: Int) {
         if (position >= courses.size || position < 0) return
         analytic.reportEvent(Analytic.Interaction.CLICK_COURSE)
@@ -134,7 +137,6 @@ class CourseItemViewHolder(
             screenManager.showCourseDescription(contextActivity, course)
         }
     }
-
 
     private fun onClickWidgetButton(course: Course, enrolled: Boolean) {
         if (enrolled) {

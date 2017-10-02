@@ -68,7 +68,7 @@
     <string name="allow_mobile_snack">Mobile downloading is disabled. Turn on in settings</string>
     <string name="drop_course">Drop the course</string>
     <string name="about_course">About the course</string>
-    <string name="you_dropped">"You dropped"</string>
+    <string name="you_dropped">"You dropped %s"</string>
     <string name="try_in_web_drop">Try dropping this course in the web version</string>
     <string name="you_not_enrolled">You are not enrolled</string>
     <string name="cancel">Cancel</string>

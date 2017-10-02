@@ -33,8 +33,10 @@ import org.stepic.droid.ui.util.StartSnapHelper
 import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.StepikUtil
+import org.stepic.droid.util.SuppressFBWarnings
 import javax.inject.Inject
 
+@SuppressFBWarnings("RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE", justification = "Kotlin adds null check for lateinit properties, but Findbugs highlights it as redundant")
 class CoursesCarouselFragment
     : FragmentBase(),
         ContinueCourseView,
@@ -244,8 +246,14 @@ class CoursesCarouselFragment
     override fun onSuccessDropCourse(course: Course) {
         val courseId = course.courseId
         analytic.reportEvent(Analytic.Web.DROP_COURSE_SUCCESSFUL, courseId.toString())
-        Toast.makeText(context, context.getString(R.string.you_dropped) + " ${course.title}", Toast.LENGTH_LONG).show()
+        Toast.makeText(context, context.getString(R.string.you_dropped, course.title), Toast.LENGTH_LONG).show()
         val index = courses.indexOfFirst { it.courseId == course.courseId }
+
+        if (index < 0) {
+//            course is not in list
+            return
+        }
+
         courses.removeAt(index)
         coursesRecycler.adapter.notifyItemRemoved(index)
         if (courses.size == ROW_COUNT) {
