@@ -16,6 +16,7 @@ class HomeFragment : FragmentBase() {
         fun newInstance(): HomeFragment = HomeFragment()
         private const val myCoursesTag = "my_courses"
         private const val popularCoursesTag = "popular_courses"
+        private const val fastContinueTag = "fastContinueTag"
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -27,7 +28,11 @@ class HomeFragment : FragmentBase() {
         initCenteredToolbar(R.string.home_title)
 
         if (savedInstanceState == null) {
-            val fragmentTransaction = fragmentManager.beginTransaction()
+            val fragmentTransaction = childFragmentManager.beginTransaction()
+
+            val fastContinueFragment = FastContinueFragment.newInstance()
+            fragmentTransaction.add(R.id.homeFragmentsContainer, fastContinueFragment, fastContinueTag)
+
             val myCoursesFragment = CoursesCarouselFragment.newInstance(CoursesCarouselInfo(
                     CoursesCarouselColorType.Light,
                     getString(R.string.my_courses_title),
