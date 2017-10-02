@@ -48,6 +48,8 @@ class FastContinueFragment : FragmentBase(),
         private const val CONTINUE_LOADING_TAG = "CONTINUE_LOADING_TAG"
     }
 
+    private var isCourseFound: Boolean = false
+
     @Inject
     lateinit var courseListPresenter: PersistentCourseListPresenter
 
@@ -140,6 +142,11 @@ class FastContinueFragment : FragmentBase(),
     }
 
     override fun showConnectionProblem() {
+        if (isCourseFound) {
+            //do not show connection problem, if we have  found the course already
+            return
+        }
+
         analytic.reportEvent(Analytic.FastContinue.NO_INTERNET_SHOWN)
         showPlaceholder(R.string.internet_problem, { _ ->
             analytic.reportEvent(Analytic.FastContinue.NO_INTERNET_CLICK)
@@ -160,12 +167,14 @@ class FastContinueFragment : FragmentBase(),
                 }
 
         if (course != null) {
+            isCourseFound = true
             lastStepPresenter.fetchLastStep(courseId = course.courseId, lastStepId = course.lastStepId)
             fastContinueAction.setOnClickListener {
                 Timber.d("Click continue course")
                 continueCoursePresenter.continueCourse(course)
             }
         } else {
+            isCourseFound = false
             showEmptyCourses()
         }
     }

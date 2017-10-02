@@ -161,13 +161,13 @@ class PersistentCourseListPresenter
                             view?.showCourses(coursesForShow)
                         }
                     }
-                    break;
+                    break
                 }
             } else {
                 mainHandler.post {
                     view?.showConnectionProblem()
                 }
-                break;
+                break
             }
         }
     }
