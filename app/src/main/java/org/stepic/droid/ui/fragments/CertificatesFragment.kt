@@ -20,7 +20,6 @@ import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.core.presenters.CertificatePresenter
 import org.stepic.droid.core.presenters.contracts.CertificateView
 import org.stepic.droid.model.CertificateViewItem
-import org.stepic.droid.ui.activities.contracts.BottomNavigationViewRoot
 import org.stepic.droid.ui.adapters.CertificatesAdapter
 import org.stepic.droid.ui.dialogs.CertificateShareDialogFragment
 import org.stepic.droid.ui.util.initCenteredToolbar
@@ -65,7 +64,6 @@ class CertificatesFragment : FragmentBase(),
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         nullifyActivityBackground()
         super.onViewCreated(view, savedInstanceState)
-        applyBottomMarginForRootView()
 
         initCenteredToolbar(R.string.certificates_title, false)
 
@@ -181,17 +179,4 @@ class CertificatesFragment : FragmentBase(),
     companion object {
         fun newInstance(): Fragment = CertificatesFragment()
     }
-
-
-    override fun onResume() {
-        super.onResume()
-        (activity as? BottomNavigationViewRoot)?.disableAnyBehaviour()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        (activity as? BottomNavigationViewRoot)?.resetDefaultBehaviour()
-    }
-
-    override fun getRootView(): ViewGroup = certificateRootView
 }

@@ -7,10 +7,8 @@ import android.content.pm.ShortcutManager
 import android.os.Bundle
 import android.support.annotation.IdRes
 import android.support.design.widget.BottomNavigationView
-import android.support.design.widget.CoordinatorLayout
 import android.support.v4.app.Fragment
 import android.view.MenuItem
-import android.view.View
 import com.facebook.login.LoginManager
 import com.vk.sdk.VKSdk
 import kotlinx.android.synthetic.main.activity_main_feed.*
@@ -26,7 +24,6 @@ import org.stepic.droid.core.presenters.contracts.UpdateAppView
 import org.stepic.droid.model.Profile
 import org.stepic.droid.notifications.StepicInstanceIdService
 import org.stepic.droid.services.UpdateWithApkService
-import org.stepic.droid.ui.activities.contracts.BottomNavigationViewRoot
 import org.stepic.droid.ui.activities.contracts.RootScreen
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.dialogs.LogoutAreYouSureDialog
@@ -35,7 +32,6 @@ import org.stepic.droid.ui.fragments.CertificatesFragment
 import org.stepic.droid.ui.fragments.FindCoursesFragment
 import org.stepic.droid.ui.fragments.HomeFragment
 import org.stepic.droid.ui.fragments.ProfileFragment
-import org.stepic.droid.ui.util.BottomNavigationBehavior
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.ProgressHelper
@@ -48,7 +44,6 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         BottomNavigationView.OnNavigationItemReselectedListener,
         LogoutAreYouSureDialog.Companion.OnLogoutSuccessListener,
         RootScreen,
-        BottomNavigationViewRoot,
         UpdateAppView,
         ProfileMainFeedView {
     companion object {
@@ -204,13 +199,6 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
                 .remove(fragment)
                 .commit()
         navigationView.selectedItemId = R.id.home
-        showBottomBar()
-    }
-
-
-    override fun onStart() {
-        super.onStart()
-        showBottomBar(false)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String?>, grantResults: IntArray) {
@@ -304,12 +292,6 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         }
     }
 
-    private fun showBottomBar(needAnimation: Boolean = true) {
-        val params = navigationView.layoutParams as CoordinatorLayout.LayoutParams
-        val behavior = params.behavior as? BottomNavigationBehavior
-        behavior?.showBottomBar(navigationView, needAnimation)
-    }
-
     private fun setFragment(@IdRes containerId: Int, fragment: Fragment, needAnimation: Boolean) {
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         if (needAnimation) {
@@ -362,15 +344,4 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
             navigationView.selectedItemId = R.id.find_courses
         }
     }
-
-    override fun disableAnyBehaviour() {
-        val params = navigationView.layoutParams as CoordinatorLayout.LayoutParams
-        params.behavior = null
-    }
-
-    override fun resetDefaultBehaviour() {
-        val params = navigationView.layoutParams as CoordinatorLayout.LayoutParams
-        params.behavior = BottomNavigationBehavior<View>()
-    }
-
 }
