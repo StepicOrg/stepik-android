@@ -348,7 +348,11 @@ class VideoExoFragment : FragmentBase(),
             userPreferences.videoPlaybackRate = rate
             true
         }
+        popupMenu.setOnDismissListener {
+            videoPlayerView.hideController()
+        }
         popupMenu.show()
+        videoPlayerView.showController(true)
     }
 
     private fun showMoreItemsPopup(view: View) {
@@ -401,7 +405,11 @@ class VideoExoFragment : FragmentBase(),
             }
         }
 
+        morePopupMenu.setOnDismissListener {
+            videoPlayerView.hideController()
+        }
         morePopupMenu.show()
+        videoPlayerView.showController(true)
     }
 
     override fun onInternetEnabled() {
