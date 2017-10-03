@@ -361,7 +361,6 @@ public interface Analytic {
     interface Filters {
         String FILTERS_CANCELED = "filters_canceled";
         String FILTERS_NEED_UPDATE = "filters_need_update";
-        String FILTER_APPLIED_IN_INTERFACE_WITH_PARAMS = "filters_params";
     }
 
     interface Exam {
