@@ -40,8 +40,8 @@ android {
         applicationId "org.stepic.droid"
         minSdkVersion rootProject.androidMinSdkVersion
         targetSdkVersion rootProject.androidTargetSdkVersion
-        versionCode 174
-        versionName "1.43.1"
+        versionCode 175
+        versionName "1.43.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
