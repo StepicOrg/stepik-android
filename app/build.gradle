@@ -200,8 +200,8 @@ dependencies {
     compile 'com.facebook.stetho:stetho:1.4.2'
     compile 'com.facebook.stetho:stetho-okhttp3:1.4.2'
 
-    //add echo player for video (change playback speed supported)
-    compile 'com.google.android.exoplayer:exoplayer-core:r2.4.1'
+    //add exo player for video (change playback speed supported)
+    compile 'com.google.android.exoplayer:exoplayer-core:r2.5.3'
 
     oldReleaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:${rootProject.leakCanaryVersion}"
     testCompile "com.squareup.leakcanary:leakcanary-android-no-op:${rootProject.leakCanaryVersion}"

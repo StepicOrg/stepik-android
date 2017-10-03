@@ -31,6 +31,7 @@ import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.PlaybackParameters;
+import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
@@ -41,7 +42,6 @@ import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 
-import java.util.Arrays;
 import java.util.Formatter;
 import java.util.Locale;
 
@@ -547,7 +547,7 @@ public class PlaybackControlView extends FrameLayout {
             isSeekable = window.isSeekable;
             enablePrevious = windowIndex > 0 || isSeekable || !window.isDynamic;
             enableNext = (windowIndex < timeline.getWindowCount() - 1) || window.isDynamic;
-            if (timeline.getPeriod(player.getCurrentPeriodIndex(), period).isAd) {
+            if (player.isPlayingAd()) {
                 // Always hide player controls during ads.
                 hide();
             }
@@ -585,45 +585,28 @@ public class PlaybackControlView extends FrameLayout {
                 long positionUs = 0;
                 long bufferedPositionUs = 0;
                 long durationUs = 0;
-                boolean isInAdBreak = false;
-                boolean isPlayingAd = false;
                 int adBreakCount = 0;
                 for (int i = 0; i < windowCount; i++) {
                     timeline.getWindow(i, window);
                     for (int j = window.firstPeriodIndex; j <= window.lastPeriodIndex; j++) {
-                        if (timeline.getPeriod(j, period).isAd) {
-                            isPlayingAd |= j == periodIndex;
-                            if (!isInAdBreak) {
-                                isInAdBreak = true;
-                                if (adBreakCount == adBreakTimesMs.length) {
-                                    adBreakTimesMs = Arrays.copyOf(adBreakTimesMs,
-                                            adBreakTimesMs.length == 0 ? 1 : adBreakTimesMs.length * 2);
-                                }
-                                adBreakTimesMs[adBreakCount++] = C.usToMs(durationUs);
-                            }
-                        } else {
-                            isInAdBreak = false;
-                            long periodDurationUs = period.getDurationUs();
-                            Assertions.checkState(periodDurationUs != C.TIME_UNSET);
-                            long periodDurationInWindowUs = periodDurationUs;
-                            if (j == window.firstPeriodIndex) {
-                                periodDurationInWindowUs -= window.positionInFirstPeriodUs;
-                            }
-                            if (i < periodIndex) {
-                                positionUs += periodDurationInWindowUs;
-                                bufferedPositionUs += periodDurationInWindowUs;
-                            }
-                            durationUs += periodDurationInWindowUs;
+                        long periodDurationUs = period.getDurationUs();
+                        Assertions.checkState(periodDurationUs != C.TIME_UNSET);
+                        long periodDurationInWindowUs = periodDurationUs;
+                        if (j == window.firstPeriodIndex) {
+                            periodDurationInWindowUs -= window.positionInFirstPeriodUs;
                         }
+                        if (i < periodIndex) {
+                            positionUs += periodDurationInWindowUs;
+                            bufferedPositionUs += periodDurationInWindowUs;
+                        }
+                        durationUs += periodDurationInWindowUs;
                     }
                 }
                 position = C.usToMs(positionUs);
                 bufferedPosition = C.usToMs(bufferedPositionUs);
                 duration = C.usToMs(durationUs);
-                if (!isPlayingAd) {
-                    position += player.getCurrentPosition();
-                    bufferedPosition += player.getBufferedPosition();
-                }
+                position += player.getCurrentPosition();
+                bufferedPosition += player.getBufferedPosition();
                 if (timeBar != null) {
                     timeBar.setAdBreakTimesMs(adBreakTimesMs, adBreakCount);
                 }
@@ -753,32 +736,8 @@ public class PlaybackControlView extends FrameLayout {
         if (multiWindowTimeBar) {
             Timeline timeline = player.getCurrentTimeline();
             int windowCount = timeline.getWindowCount();
-            long remainingMs = timebarPositionMs;
             for (int i = 0; i < windowCount; i++) {
                 timeline.getWindow(i, window);
-                for (int j = window.firstPeriodIndex; j <= window.lastPeriodIndex; j++) {
-                    if (!timeline.getPeriod(j, period).isAd) {
-                        long periodDurationMs = period.getDurationMs();
-                        if (periodDurationMs == C.TIME_UNSET) {
-                            // Should never happen as canShowMultiWindowTimeBar is true.
-                            throw new IllegalStateException();
-                        }
-                        if (j == window.firstPeriodIndex) {
-                            periodDurationMs -= window.getPositionInFirstPeriodMs();
-                        }
-                        if (i == windowCount - 1 && j == window.lastPeriodIndex
-                                && remainingMs >= periodDurationMs) {
-                            // Seeking past the end of the last window should seek to the end of the timeline.
-                            seekTo(i, window.getDurationMs());
-                            return;
-                        }
-                        if (remainingMs < periodDurationMs) {
-                            seekTo(i, period.getPositionInWindowMs() + remainingMs);
-                            return;
-                        }
-                        remainingMs -= periodDurationMs;
-                    }
-                }
             }
         } else {
             seekTo(timebarPositionMs);
@@ -891,14 +850,14 @@ public class PlaybackControlView extends FrameLayout {
         int periodCount = timeline.getPeriodCount();
         for (int i = 0; i < periodCount; i++) {
             timeline.getPeriod(i, period);
-            if (!period.isAd && period.durationUs == C.TIME_UNSET) {
+            if (period.durationUs == C.TIME_UNSET) {
                 return false;
             }
         }
         return true;
     }
 
-    private final class ComponentListener implements ExoPlayer.EventListener, TimeBar.OnScrubListener,
+    private final class ComponentListener implements Player.EventListener, TimeBar.OnScrubListener,
             OnClickListener {
 
         @Override
@@ -927,6 +886,12 @@ public class PlaybackControlView extends FrameLayout {
         public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
             updatePlayPauseButton();
             updateProgress();
+        }
+
+        @Override
+        public void onRepeatModeChanged(int i) {
+            //do nothing, it is not supported in our custom view
+            //remove this custom view and use library player
         }
 
         @Override

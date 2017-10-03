@@ -15,7 +15,6 @@ import android.view.ViewGroup
 import android.widget.PopupMenu
 import android.widget.Toast
 import com.google.android.exoplayer2.*
-import com.google.android.exoplayer2.ExoPlayer.*
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
 import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.source.TrackGroupArray
@@ -53,7 +52,7 @@ import javax.inject.Inject
  * We can't split it by api version, because Samsung's Tablets Api21+ can support Multi Window feature
  */
 class VideoExoFragment : FragmentBase(),
-        ExoPlayer.EventListener,
+        Player.EventListener,
         AudioManager.OnAudioFocusChangeListener,
         VideoWithTimestampView,
         MyExoPhoneStateListener.Callback,
@@ -63,19 +62,23 @@ class VideoExoFragment : FragmentBase(),
         VideoQualityDialogInPlayer.Callback {
 
 
-    override fun onPlaybackParametersChanged(p0: PlaybackParameters?) {
+    override fun onRepeatModeChanged(repeatMode: Int) {
+
     }
 
-    override fun onTracksChanged(p0: TrackGroupArray?, p1: TrackSelectionArray?) {
+    override fun onPlaybackParametersChanged(playbackParameters: PlaybackParameters?) {
     }
 
-    override fun onLoadingChanged(p0: Boolean) {
+    override fun onTracksChanged(trackGroups: TrackGroupArray?, trackSelections: TrackSelectionArray?) {
+    }
+
+    override fun onLoadingChanged(isLoading: Boolean) {
     }
 
     override fun onPositionDiscontinuity() {
     }
 
-    override fun onTimelineChanged(p0: Timeline?, p1: Any?) {
+    override fun onTimelineChanged(timeline: Timeline?, manifest: Any?) {
     }
 
     override fun dispatchKeyEventInFragment(keyEvent: KeyEvent?): Boolean {
@@ -95,7 +98,7 @@ class VideoExoFragment : FragmentBase(),
 
     override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
         when (playbackState) {
-            STATE_READY ->
+            Player.STATE_READY ->
                 if (playWhenReady) {
                     //now we click "play"
                     audioFocusHelper.requestAudioFocus(this)
@@ -103,14 +106,14 @@ class VideoExoFragment : FragmentBase(),
                     //pause clicked
                     audioFocusHelper.releaseAudioFocus(this)
                 }
-            STATE_ENDED -> {
+            Player.STATE_ENDED -> {
                 videoWithTimestampPresenter.saveMillis(0L, videoId)
                 activity?.finish()
             }
         }
     }
 
-    var videoUrl: String? = null
+    private var videoUrl: String? = null
 
     companion object {
         private val CACHED_VIDEO_KEY = "cached_video_key"
@@ -157,9 +160,8 @@ class VideoExoFragment : FragmentBase(),
         autoPlay = true
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater?.inflate(R.layout.fragment_exo_video, container, false) as ViewGroup
-    }
+    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+            inflater?.inflate(R.layout.fragment_exo_video, container, false) as ViewGroup
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -230,8 +232,8 @@ class VideoExoFragment : FragmentBase(),
     private fun createPlayer(): Long? {
         videoPlayerView?.hideController()
 
-        val cachedVideo: Video? = arguments.getParcelable<Video>(CACHED_VIDEO_KEY)
-        val externalVideo: Video? = arguments.getParcelable<Video>(EXTERNAL_VIDEO_KEY)
+        val cachedVideo: Video? = arguments.getParcelable(CACHED_VIDEO_KEY)
+        val externalVideo: Video? = arguments.getParcelable(EXTERNAL_VIDEO_KEY)
 
         val video = cachedVideo ?: externalVideo
 
@@ -313,7 +315,6 @@ class VideoExoFragment : FragmentBase(),
         }
         audioFocusHelper.releaseAudioFocus(this)
         player?.removeListener(this)
-        player?.setVideoListener(null)
         player?.release()
         player = null
     }
@@ -379,8 +380,8 @@ class VideoExoFragment : FragmentBase(),
                 }
                 R.id.video_quality -> {
                     analytic.reportEvent(Analytic.Video.QUALITY_MENU)
-                    val cachedVideo: Video? = arguments.getParcelable<Video>(CACHED_VIDEO_KEY)
-                    val externalVideo: Video? = arguments.getParcelable<Video>(EXTERNAL_VIDEO_KEY)
+                    val cachedVideo: Video? = arguments.getParcelable(CACHED_VIDEO_KEY)
+                    val externalVideo: Video? = arguments.getParcelable(EXTERNAL_VIDEO_KEY)
                     val nowPlaying = videoUrl
 
                     if (nowPlaying != null) {
@@ -405,7 +406,7 @@ class VideoExoFragment : FragmentBase(),
 
     override fun onInternetEnabled() {
         player?.let {
-            if (it.playbackState == STATE_IDLE) {
+            if (it.playbackState == Player.STATE_IDLE) {
                 releasePlayer()
 
                 autoPlay = true
