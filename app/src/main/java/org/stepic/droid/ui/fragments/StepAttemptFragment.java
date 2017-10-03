@@ -503,6 +503,12 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        rootView.requestFocus();
+    }
+
+    @Override
     public void onResultHandlingDiscountPolicy(boolean needShow, DiscountingPolicyType discountingPolicyType, int remainTries) {
         if (!needShow || discountingPolicyType == null) {
             discountingPolicyTextView.setVisibility(View.GONE);
