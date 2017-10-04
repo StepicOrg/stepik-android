@@ -61,7 +61,7 @@ constructor(
 
 
     private fun getFirstStepInCourse(courseId: Long): Step? {
-        val stepId = firstStepInCourseHelper.getStepIdOfTheFirstStepInCourse(courseId) ?: return null
+        val stepId = firstStepInCourseHelper.getStepIdOfTheFirstAvailableStepInCourse(courseId) ?: return null
         return getStep(stepId)
     }
 
