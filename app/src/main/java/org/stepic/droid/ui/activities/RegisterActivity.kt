@@ -2,6 +2,7 @@ package org.stepic.droid.ui.activities
 
 import android.app.ProgressDialog
 import android.os.Bundle
+import android.support.v7.app.AppCompatDelegate
 import android.text.Editable
 import android.text.Spannable
 import android.text.SpannableString
@@ -37,6 +38,10 @@ class RegisterActivity : SmartLockActivityBase(), LoginView {
     companion object {
         const val ERROR_DELIMITER = " "
         const val TAG = "RegisterActivity"
+
+        init {
+            AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
+        }
     }
 
     private val passwordTooShortMessage by lazy {
@@ -122,7 +127,7 @@ class RegisterActivity : SmartLockActivityBase(), LoginView {
                 false
             }
         }
-        
+
         registerRootView.requestFocus()
 
         initGoogleApiClient()

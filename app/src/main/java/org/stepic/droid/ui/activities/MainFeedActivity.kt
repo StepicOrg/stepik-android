@@ -189,16 +189,9 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         if (navigationView.selectedItemId == R.id.home) {
             finish()
             return
+        } else {
+            navigationView.selectedItemId = R.id.home
         }
-
-        //avoid memory leak, when user click back:
-        val fragment = supportFragmentManager.findFragmentById(R.id.frame)
-        supportFragmentManager.popBackStackImmediate()
-        supportFragmentManager
-                .beginTransaction()
-                .remove(fragment)
-                .commit()
-        navigationView.selectedItemId = R.id.home
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String?>, grantResults: IntArray) {
@@ -279,8 +272,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         }
         if (nextFragment != null) {
             //animation on change fragment, not for just adding
-            val needAnimation = currentFragmentTag != null
-            setFragment(R.id.frame, nextFragment, needAnimation)
+            setFragment(R.id.frame, nextFragment)
         }
     }
 
@@ -292,20 +284,9 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         }
     }
 
-    private fun setFragment(@IdRes containerId: Int, fragment: Fragment, needAnimation: Boolean) {
+    private fun setFragment(@IdRes containerId: Int, fragment: Fragment) {
         val fragmentTransaction = supportFragmentManager.beginTransaction()
-        if (needAnimation) {
-            //do not use fade_in - fade_out animation, because it is looking as lag
-            //the second problem is null background for window
-//            fragmentTransaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-        }
         fragmentTransaction.replace(containerId, fragment, fragment.javaClass.simpleName)
-        val countInBackStack = supportFragmentManager.backStackEntryCount
-        val isRootScreen = defaultTag == fragment.javaClass.simpleName
-
-        if (isRootScreen && countInBackStack < 1 || !isRootScreen && countInBackStack < 2) {
-            fragmentTransaction.addToBackStack(fragment.javaClass.simpleName)
-        }
         fragmentTransaction.commit()
     }
 

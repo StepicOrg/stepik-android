@@ -9,6 +9,9 @@ import org.stepic.droid.model.Section
 import org.stepic.droid.model.Step
 import org.stepic.droid.model.Unit
 import org.stepic.droid.storage.operations.DatabaseFacade
+import org.stepic.droid.storage.repositories.Repository
+import org.stepic.droid.util.hasUserAccess
+import org.stepic.droid.util.hasUserAccessAndNotEmpty
 import org.stepic.droid.web.Api
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.atomic.AtomicBoolean
@@ -20,7 +23,9 @@ class ContinueCoursePresenter
         private val databaseFacade: DatabaseFacade,
         private val api: Api,
         private val threadPoolExecutor: ThreadPoolExecutor,
-        private val mainHandler: MainHandler) : PresenterBase<ContinueCourseView>() {
+        private val mainHandler: MainHandler,
+        private val sectionRepository: Repository<Section>
+) : PresenterBase<ContinueCourseView>() {
 
     private val isHandling = AtomicBoolean(false)
 
@@ -34,17 +39,22 @@ class ContinueCoursePresenter
                     var stepId: Long
                     try {
                         val lastStep = api.getLastStepResponse(course.lastStepId!!).execute().body().lastSteps.first()
-                        unitId = lastStep.unit!!
-                        stepId = lastStep.step!!
-
+                        unitId = lastStep.unit!! //it can be null
+                        stepId = lastStep.step!!// it can be null -> we should fetch 1st step
                     } catch (exception: Exception) {
                         val persistentLastStep = databaseFacade.getLocalLastStepByCourseId(courseId = course.courseId)
                         if (persistentLastStep == null) {
                             // fetch data
-
-                            val sectionId = course.sections?.first() ?: throw IllegalArgumentException("course without sections")
-                            val section = fetchSection(sectionId)
-                            val unit = fetchUnit(section.units?.first()!!)
+                            val sectionIds = course.sections
+                            if (sectionIds?.isEmpty() != false) {
+                                throw IllegalArgumentException("course without sections")
+                            }
+                            val section = sectionRepository
+                                    .getObjects(sectionIds)
+                                    .firstOrNull {
+                                        it.hasUserAccessAndNotEmpty(course)
+                                    }
+                            val unit = fetchUnit(section?.units?.first()!!)
                             val lessonId = unit.lesson
                             // if server return Null on last step and local is not exist
                             mainHandler.post {
@@ -60,10 +70,15 @@ class ContinueCoursePresenter
                         stepId = persistentLastStep.stepId
                     }
 
+
                     val unit = fetchUnit(unitId)
                     val sectionId = unit.section
 
                     val section = fetchSection(sectionId)
+                    if (!section.hasUserAccess(course)) {
+                        throw IllegalAccessException("User doesn't have permission to this section ${section.id}")
+                    }
+
                     val lessonId = unit.lesson
 
                     val step = fetchStep(stepId)!!

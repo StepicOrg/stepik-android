@@ -36,8 +36,8 @@ import android.widget.ImageView;
 
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ExoPlaybackException;
-import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.PlaybackParameters;
+import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.metadata.Metadata;
@@ -486,8 +486,15 @@ public final class SimpleExoPlayerView extends FrameLayout {
      * Shows the playback controls. Does nothing if playback controls are disabled.
      */
     public void showController() {
+        showController(false);
+    }
+
+    /**
+     * Shows the playback controls. Does nothing if playback controls are disabled.
+     */
+    public void showController(boolean indefinitely) {
         if (useController) {
-            maybeShowController(true);
+            maybeShowController(true, indefinitely);
         }
     }
 
@@ -635,18 +642,22 @@ public final class SimpleExoPlayerView extends FrameLayout {
         return true;
     }
 
-    private void maybeShowController(boolean isForced) {
+    private void maybeShowController(boolean isForced, boolean indefinitely) {
         if (!useController || player == null) {
             return;
         }
         int playbackState = player.getPlaybackState();
-        boolean showIndefinitely = playbackState == ExoPlayer.STATE_IDLE
-                || playbackState == ExoPlayer.STATE_ENDED || !player.getPlayWhenReady();
+        boolean showIndefinitely = indefinitely || playbackState == Player.STATE_IDLE
+                || playbackState == Player.STATE_ENDED || !player.getPlayWhenReady();
         boolean wasShowingIndefinitely = controller.isVisible() && controller.getShowTimeoutMs() <= 0;
         controller.setShowTimeoutMs(showIndefinitely ? 0 : controllerShowTimeoutMs);
         if (isForced || showIndefinitely || wasShowingIndefinitely) {
             controller.show();
         }
+    }
+
+    private void maybeShowController(boolean isForced) {
+        maybeShowController(isForced, false);
     }
 
     private void updateForCurrentTrackSelections() {
@@ -741,9 +752,10 @@ public final class SimpleExoPlayerView extends FrameLayout {
     }
 
     private final class ComponentListener implements SimpleExoPlayer.VideoListener,
-            TextRenderer.Output, ExoPlayer.EventListener {
+            TextRenderer.Output, Player.EventListener {
 
         // TextRenderer.Output implementation
+
 
         @Override
         public void onCues(List<Cue> cues) {
@@ -785,6 +797,11 @@ public final class SimpleExoPlayerView extends FrameLayout {
         @Override
         public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
             maybeShowController(false);
+        }
+
+        @Override
+        public void onRepeatModeChanged(int i) {
+// Do nothing.
         }
 
         @Override

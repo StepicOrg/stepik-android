@@ -36,10 +36,9 @@ class LoginActivity : SmartLockActivityBase(), LoginView {
 
     companion object {
         private const val TAG = "LoginActivity"
-    }
-
-    init {
-        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
+        init {
+            AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
+        }
     }
 
     private var progressLogin: ProgressDialog? = null
