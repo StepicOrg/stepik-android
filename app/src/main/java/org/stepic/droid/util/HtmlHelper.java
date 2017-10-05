@@ -223,6 +223,7 @@ public class HtmlHelper {
     private static final String MathJaxScript =
             "<script type=\"text/x-mathjax-config\">\n" +
                     "  MathJax.Hub.Config({" +
+                    "showMathMenu: false, " +
                     "messageStyle: \"none\", " +
                     "TeX: {extensions: [ \"color.js\"]}, " +
                     "tex2jax: {preview: \"none\", inlineMath: [['$','$'], ['\\\\(','\\\\)']]}});\n" +
