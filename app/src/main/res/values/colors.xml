@@ -68,6 +68,7 @@
     <color name="new_accent_color_alpha_40">#66535366</color>
 
     <color name="text_color">@color/new_accent_color</color>
+    <color name="text_color_highlight">#babac2</color>
     <color name="new_border_color">@color/new_primary_color</color>>
     <color name="new_logout_color">#C82850</color>>
     <color name="arrow_color">@color/new_accent_color</color>>

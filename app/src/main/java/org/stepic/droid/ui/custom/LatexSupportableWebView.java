@@ -1,8 +1,11 @@
 package org.stepic.droid.ui.custom;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Build;
+import android.support.annotation.ColorInt;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -11,6 +14,7 @@ import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
+import org.stepic.droid.R;
 import org.stepic.droid.base.App;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.ui.util.AssetSupportWebViewClient;
@@ -28,6 +32,9 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
     private long startClickTime;
     OnWebViewImageClicked listener;
 
+    @ColorInt
+    private int textColorHighlight;
+
     @Inject
     Config config;
 
@@ -43,6 +50,18 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
 
     public LatexSupportableWebView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+
+        int[] set = {
+                android.R.attr.textColorHighlight
+        };
+
+        TypedArray a = context.obtainStyledAttributes(attrs, set);
+
+        try {
+            textColorHighlight = a.getColor(0, ContextCompat.getColor(getContext(), R.color.text_color_highlight));
+        } finally {
+            a.recycle();
+        }
         init();
     }
 
@@ -91,15 +110,15 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
         WebSettings webSettings = getSettings();
         if (fontPath != null) {
             webSettings.setJavaScriptEnabled(true);
-            html = HtmlHelper.buildPageWithCustomFont(text, fontPath, width, config.getBaseUrl());
+            html = HtmlHelper.buildPageWithCustomFont(text, fontPath, textColorHighlight, width, config.getBaseUrl());
         } else if (wantLaTeX || HtmlHelper.hasLaTeX(textString)) {
             webSettings.setJavaScriptEnabled(true);
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
                 setWebViewClient(new AssetSupportWebViewClient());
             }
-            html = HtmlHelper.buildMathPage(text, width, config.getBaseUrl());
+            html = HtmlHelper.buildMathPage(text, textColorHighlight, width, config.getBaseUrl());
         } else {
-            html = HtmlHelper.buildPageWithAdjustingTextAndImage(text, width, config.getBaseUrl());
+            html = HtmlHelper.buildPageWithAdjustingTextAndImage(text, textColorHighlight, width, config.getBaseUrl());
         }
 
         postDelayed(new Runnable() {
