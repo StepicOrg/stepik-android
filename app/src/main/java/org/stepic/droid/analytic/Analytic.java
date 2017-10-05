@@ -24,6 +24,9 @@ public interface Analytic {
 
         String AUTH_SHOWN = "fast_continue_auth";
         String AUTH_CLICK = "fast_continue_auth_click";
+
+        String CONTINUE_SHOWN = "fast_continue_shown";
+        String CONTINUE_CLICK = "fast_continue_click";
     }
 
     interface Rating {
