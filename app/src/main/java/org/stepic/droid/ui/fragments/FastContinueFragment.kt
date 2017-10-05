@@ -167,10 +167,13 @@ class FastContinueFragment : FragmentBase(),
                 }
 
         if (course != null) {
+            if (!isCourseFound) {
+                analytic.reportEvent(Analytic.FastContinue.CONTINUE_SHOWN)
+            }
             isCourseFound = true
             lastStepPresenter.fetchLastStep(courseId = course.courseId, lastStepId = course.lastStepId)
             fastContinueAction.setOnClickListener {
-                Timber.d("Click continue course")
+                analytic.reportEvent(Analytic.FastContinue.CONTINUE_CLICK)
                 continueCoursePresenter.continueCourse(course)
             }
         } else {
