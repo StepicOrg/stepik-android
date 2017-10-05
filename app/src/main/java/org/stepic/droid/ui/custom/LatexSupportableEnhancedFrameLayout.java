@@ -72,8 +72,8 @@ public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
     }
 
     public void setTextIsSelectable(boolean isSelectable) {
-        textView.setTextIsSelectable(true);
-        webView.setTextIsSelectable(true);
+        textView.setTextIsSelectable(isSelectable);
+        webView.setTextIsSelectable(isSelectable);
     }
 
     @Override
