@@ -20,7 +20,7 @@ import java.util.Calendar;
 
 import javax.inject.Inject;
 
-public class LatexSupportableWebView extends WebView implements View.OnClickListener, View.OnTouchListener {
+public class LatexSupportableWebView extends WebView implements View.OnClickListener, View.OnTouchListener, View.OnLongClickListener {
     private static final String mimeType = "text/html";
     private static final String encoding = "UTF-8";
 
@@ -58,6 +58,14 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
 
         setOnClickListener(this);
         setOnTouchListener(this);
+    }
+
+    public void setTextIsSelectable(boolean isSelectable) {
+        if (isSelectable) {
+            setOnLongClickListener(this);
+        } else {
+            setOnLongClickListener(null);
+        }
     }
 
 
@@ -132,6 +140,10 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
         return false;
     }
 
+    @Override
+    public boolean onLongClick(View view) {
+        return false;
+    }
 
     private float startX = 0;
     private float startY = 0;
