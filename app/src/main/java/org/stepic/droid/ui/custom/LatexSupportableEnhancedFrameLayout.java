@@ -2,6 +2,7 @@ package org.stepic.droid.ui.custom;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.text.method.LinkMovementMethod;
@@ -72,8 +73,10 @@ public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
     }
 
     public void setTextIsSelectable(boolean isSelectable) {
-        textView.setTextIsSelectable(isSelectable);
-        webView.setTextIsSelectable(isSelectable);
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR2) { // selection in WebView works incorrect on API <= 18, so its disabled
+            textView.setTextIsSelectable(isSelectable);
+            webView.setTextIsSelectable(isSelectable);
+        }
     }
 
     @Override
