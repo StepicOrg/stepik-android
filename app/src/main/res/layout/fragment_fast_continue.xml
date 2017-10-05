@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="20dp"
+    android:paddingEnd="@dimen/course_list_side_padding"
+    android:paddingLeft="@dimen/course_list_side_padding"
+    android:paddingRight="@dimen/course_list_side_padding"
+    android:paddingStart="@dimen/course_list_side_padding"
+    android:paddingTop="@dimen/guideline_standard_padding">
+
+    <TextView
+        android:id="@+id/fastContinueTextView"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/fast_continue_widget_height"
+        android:ellipsize="end"
+        android:maxLines="4"
+        android:padding="16dp"
+        android:textColor="@color/new_accent_color"
+        android:textSize="16sp"
+        android:visibility="gone"
+        tools:text="Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world "
+        tools:visibility="visible"/>
+
+    <ImageView
+        android:id="@+id/fastContinueImageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/accessibility_last_step_cover"
+        android:visibility="gone"
+        tools:visibility="visible"/>
+
+    <View
+        android:id="@+id/fastContinueOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/fast_continue_widget_height"
+        android:background="@drawable/fast_continue_lesson_drawable"
+        android:visibility="gone"
+        tools:visibility="visible"/>
+
+    <TextView
+        android:id="@+id/fastContinueAction"
+        style="@style/CourseWidgetView"
+        fontPath="fonts/Roboto-Light.ttf"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:layout_gravity="center"
+        android:layout_marginLeft="60dp"
+        android:layout_marginRight="60dp"
+        android:background="@drawable/fast_continue_action_background"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:paddingEnd="@dimen/half_padding"
+        android:paddingStart="@dimen/half_padding"
+        android:text="@string/continue_learning"
+        android:textSize="16sp"
+        android:visibility="gone"
+        tools:ignore="MissingPrefix"
+        tools:visibility="visible"/>
+
+    <org.stepic.droid.ui.custom.PlaceholderTextView
+        android:id="@+id/fastContinuePlaceholder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        tools:visibility="visible"/>
+
+    <FrameLayout
+        android:id="@+id/fastContinueProgress"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/fast_continue_widget_height"
+        android:visibility="gone">
+
+        <include
+            layout="@layout/progress_bar_on_empty_screen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="visible"/>
+    </FrameLayout>
+
+</FrameLayout>

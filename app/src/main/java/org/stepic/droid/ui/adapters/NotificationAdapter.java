@@ -277,7 +277,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     class FooterViewHolder extends GenericViewHolder {
 
-        @BindView(R.id.loading_root)
+        @BindView(R.id.loadingRoot)
         ViewGroup loadingRoot;
 
 

@@ -116,7 +116,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
             isScreenCreated = false;
             needFilter = false;
             courses.clear();
-            courseListPresenter.refreshData(getCourseType(), needFilter, false);
+            courseListPresenter.refreshData(getCourseType(), needFilter, true);
         } else {
             //load if not
             courseListPresenter.downloadData(getCourseType(), needFilter);
@@ -197,7 +197,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
                 courses.clear();
                 coursesAdapter.notifyDataSetChanged();
                 courseListPresenter.reportCurrentFiltersToAnalytic(getCourseType());
-                courseListPresenter.refreshData(getCourseType(), needFilter, false);
+                courseListPresenter.refreshData(getCourseType(), needFilter, true);
             }
         }
 
@@ -278,18 +278,16 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
     @Override
     public void onFailDropCourse(@NotNull Course droppedCourse) {
-        long courseId = -1L;
-        courseId = droppedCourse.getCourseId();
+        long courseId = droppedCourse.getCourseId();
         getAnalytic().reportEvent(Analytic.Web.DROP_COURSE_FAIL, courseId + "");
         Toast.makeText(getContext(), R.string.internet_problem, Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void onSuccessDropCourse(@NotNull Course droppedCourse) {
-        long courseId = -1L;
-        courseId = droppedCourse.getCourseId();
+        long courseId = droppedCourse.getCourseId();
         getAnalytic().reportEvent(Analytic.Web.DROP_COURSE_SUCCESSFUL, courseId + "");
-        Toast.makeText(getContext(), getContext().getString(R.string.you_dropped) + " " + droppedCourse.getTitle(), Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), getContext().getString(R.string.you_dropped, droppedCourse.getTitle()), Toast.LENGTH_LONG).show();
         if (getCourseType() == Table.enrolled) { //why here was e.getCourseType?
             courses.remove(droppedCourse);
             coursesAdapter.notifyDataSetChanged();

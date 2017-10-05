@@ -29,6 +29,7 @@ import org.stepic.droid.configuration.Config;
 import org.stepic.droid.di.AppSingleton;
 import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.model.Course;
+import org.stepic.droid.model.CoursesCarouselInfo;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
@@ -42,6 +43,7 @@ import org.stepic.droid.ui.activities.AboutAppActivity;
 import org.stepic.droid.ui.activities.CertificatesActivity;
 import org.stepic.droid.ui.activities.CommentsActivity;
 import org.stepic.droid.ui.activities.CourseDetailActivity;
+import org.stepic.droid.ui.activities.CourseListActivity;
 import org.stepic.droid.ui.activities.DownloadsActivity;
 import org.stepic.droid.ui.activities.FeedbackActivity;
 import org.stepic.droid.ui.activities.FilterActivity;
@@ -136,6 +138,13 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
+    public void showCoursesList(Activity activity, @NotNull CoursesCarouselInfo info) {
+        Intent intent = new Intent(activity, CourseListActivity.class);
+        intent.putExtra(CourseListActivity.COURSE_LIST_INFO_KEY, info);
+        activity.startActivity(intent);
+    }
+
+    @Override
     public void showLaunchScreen(Context context, boolean fromMainFeed, int index) {
         analytic.reportEvent(Analytic.Screens.SHOW_LAUNCH);
         Intent launchIntent = new Intent(context, LaunchActivity.class);
@@ -206,9 +215,9 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void showCourseDescription(Activity sourceActivity, @NotNull Course course) {
-        Intent intent = getIntentForDescription(sourceActivity, course);
-        sourceActivity.startActivity(intent);
+    public void showCourseDescription(Context context, @NotNull Course course) {
+        Intent intent = getIntentForDescription(context, course);
+        context.startActivity(intent);
     }
 
     @Override
@@ -218,14 +227,17 @@ public class ScreenManagerImpl implements ScreenManager {
         sourceActivity.startActivity(intent);
     }
 
-    private Intent getIntentForDescription(Activity sourceActivity, @NotNull Course course) {
+    private Intent getIntentForDescription(Context context, @NotNull Course course) {
         analytic.reportEvent(Analytic.Screens.SHOW_COURSE_DESCRIPTION);
-        Intent intent = new Intent(sourceActivity, CourseDetailActivity.class);
+        Intent intent = new Intent(context, CourseDetailActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         Bundle bundle = new Bundle();
         bundle.putSerializable(AppConstants.KEY_COURSE_BUNDLE, course);
         intent.putExtras(bundle);
+        if (!(context instanceof Activity)) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        }
         return intent;
     }
 
@@ -415,7 +427,7 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public Intent getMyCoursesIntent(@NotNull Context context) {
-        int index = MainFeedActivity.MY_COURSES_INDEX;
+        int index = MainFeedActivity.HOME_INDEX;
         return getFromMainActivityIntent(context, index);
     }
 

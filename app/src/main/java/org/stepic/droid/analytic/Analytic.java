@@ -7,6 +7,25 @@ import org.jetbrains.annotations.Nullable;
 
 public interface Analytic {
 
+    interface CoursesCarousel {
+        String EMPTY_ENROLLED_SHOWN = "courses_carousel_empty_enrolled";
+        String EMPTY_ENROLLED_CLICK = "courses_carousel_empty_enrolled_clicked";
+
+        String NO_INTERNET_SHOWN = "courses_carousel_no_internet";
+        String NO_INTERNET_CLICK = "courses_carousel_no_internet_click";
+    }
+
+    interface FastContinue {
+        String EMPTY_COURSES_SHOWN = "fast_continue_empty_courses";
+        String EMPTY_COURSES_CLICK = "fast_continue_empty_courses_click";
+
+        String NO_INTERNET_SHOWN = "fast_continue_no_internet";
+        String NO_INTERNET_CLICK = "fast_continue_no_internet_click";
+
+        String AUTH_SHOWN = "fast_continue_auth";
+        String AUTH_CLICK = "fast_continue_auth_click";
+    }
+
     interface Rating {
         String SHOWN = "app_rate_shown"; //on shown dialog
         String APP_RATE = "app_rate"; //number of stars, that user chosen, may multiple by session
@@ -205,6 +224,7 @@ public interface Analytic {
         String FAIL_PUSH_STEP_VIEW = "fail_push_step_view";
         String NO_INTERNET_EXISTING_ATTEMPTS = "no_internet_existing_attempts";
         String DOWNLOAD_ID_NEGATIVE = "download_id_negative";
+        String DOWNLOAD_FAILED = "download_failed";
         String STREAK_ON_STEP_SOLVED = "streak_on_step_solved";
         String GOOGLE_SERVICES_TOO_OLD = "google_services_too_old";
         String VIDEO_PATH_WAS_NULL_WITH_INTERNET = "video_path_was_null_internet_enabled";
@@ -228,6 +248,8 @@ public interface Analytic {
         String CANT_PARSE_QUALITY = "cant_parse_quality";
         String JOIN_FAILED = "error_join_failed"; //#Apps-580
         String UNIT_CACHED_LESSON_NO = "error_unit_cached_lesson_not";
+        @Nullable
+        String FEATURED_EMPTY = "error_featured_empty";
     }
 
     interface Web {
@@ -295,6 +317,8 @@ public interface Analytic {
     }
 
     interface Steps {
+        String SUBMISSION_CREATED = "submission_created";
+        String SUBMISSION_CREATED_TYPE = "type";
         String CORRECT_SUBMISSION_FILL = "submission_correct_fill"; // it can be existing submission, use in chain.
         String WRONG_SUBMISSION_FILL = "submission_wrong_fill";
         String SHARE_OPEN_IN_BROWSER = "step_share_open_in_browser";
@@ -375,6 +399,12 @@ public interface Analytic {
         String GET_NON_ZERO_STREAK_NOTIFICATION = "streak_get_non_zero_notification";
         String GET_ZERO_STREAK_NOTIFICATION = "streak_get_zero_notification";
         String GET_NO_INTERNET_NOTIFICATION = " streak_get_no_internet_notification";
+
+        String NOTIFICATION_TYPE_PARAM = "type";
+
+        enum NotificationType {
+            zero, noInternet, solvedToday, notSolvedToday
+        }
     }
 
     interface Shortcut {

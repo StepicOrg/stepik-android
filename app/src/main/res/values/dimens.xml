@@ -95,17 +95,32 @@
     <dimen name="bottom_navigation_height">56dp</dimen>
 
     <!--new course item-->
-    <dimen name="new_course_item_height">90dp</dimen>
+    <dimen name="new_course_item_height">100dp</dimen>
     <dimen name="course_widget_radius">7dp</dimen>
+    <dimen name="placeholder_radius">7dp</dimen>
     <dimen name="course_image_radius">7dp</dimen>
     <dimen name="course_list_side_padding">20dp</dimen>
     <dimen name="course_list_side_right_padding">12dp</dimen>
     <dimen name="course_list_between_items_padding">16dp</dimen>
     <dimen name="extraPaddingRightCourseItem">8dp</dimen>
+    <dimen name="fast_continue_widget">@dimen/course_widget_radius</dimen>
+    <dimen name="fast_continue_widget_height">140dp</dimen>
+    <dimen name="fast_continue_action_radius">33dp</dimen>
+
 
     <!--Left padding (moteIcon) + right padding(moreIcon) + moreIcon.width-->
     <dimen name="courseTitleRightPadding">28dp</dimen>
+    <dimen name="home_right_recycler_padding">46dp</dimen>
+    <!-- 'home_right_recycler_padding' minus 'course_list_side_right_padding'-->
+    <dimen name="home_right_recycler_padding_without_extra">34dp</dimen>
 
     <dimen name="borderless_text_button_text_size">16sp</dimen>
 
+    <dimen name="placeholder_text_size">16sp</dimen>
+    <dimen name="placeholder_side_padding">28dp</dimen>
+    <dimen name="placeholder_top_bottom_padding">32dp</dimen>
+    <dimen name="placeholder_line_spacing_extra" format="float">4.7sp</dimen>
+
+    <dimen name="loading_view_course_title_width">150dp</dimen>
+    <dimen name="loading_view_course_detail_width">50dp</dimen>
 </resources>

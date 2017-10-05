@@ -24,6 +24,7 @@ public class Course implements Serializable, Parcelable {
     @SerializedName("certificate_cover_org")
     private String certificateCoverOrg;
     private long[] instructors;
+    @Nullable
     private long[] sections;
     private String certificate;
     private String requirements;
@@ -277,6 +278,7 @@ public class Course implements Serializable, Parcelable {
         this.introVideoId = introVideoId;
     }
 
+    @Nullable
     public long[] getSections() {
         return sections;
     }

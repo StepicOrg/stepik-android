@@ -38,7 +38,7 @@ class DatabaseFacade
         private val lastStepDao: IDao<PersistentLastStep>,
         private val lastInteractions: IDao<CourseLastInteraction>,
         private val externalVideoUrlDao: IDao<DbVideoUrl>,
-        private val blockDao : IDao<BlockPersistentWrapper>) {
+        private val blockDao: IDao<BlockPersistentWrapper>) {
 
     fun dropDatabase() {
         sectionDao.removeAll()
@@ -102,13 +102,15 @@ class DatabaseFacade
 
     fun getStepById(stepId: Long) = stepDao.get(DbStructureStep.Column.STEP_ID, stepId.toString())
 
-    fun getStepsById(stepIds: List<Long>): List<Step> {
-        val stringIds = DbParseHelper.parseLongArrayToString(stepIds.toLongArray(), AppConstants.COMMA)
-        if (stringIds != null) {
-            return stepDao
+    fun getStepsById(stepIds: List<Long>): List<Step> = getStepsById(stepIds.toLongArray())
+
+    fun getStepsById(stepIds: LongArray): List<Step> {
+        val stringIds = DbParseHelper.parseLongArrayToString(stepIds, AppConstants.COMMA)
+        return if (stringIds != null) {
+            stepDao
                     .getAllInRange(DbStructureStep.Column.STEP_ID, stringIds)
         } else {
-            return ArrayList<Step>()
+            ArrayList<Step>()
         }
     }
 

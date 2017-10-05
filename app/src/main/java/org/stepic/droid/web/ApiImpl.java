@@ -721,8 +721,16 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Call<LastStepResponse> getLastStepResponse(String lastStepId) {
+    public Call<LastStepResponse> getLastStepResponse(@NonNull String lastStepId) {
         return loggedService.getLastStepResponse(lastStepId);
+    }
+
+    @Override
+    public Call<CourseListsResponse> getCourseLists() {
+        //// TODO: 26.09.2017 determine language of course list for not native russian speakers
+        String language = "ru";
+        return loggedService.getCourseLists(language);
+
     }
 
     @Nullable

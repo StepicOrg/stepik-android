@@ -7,16 +7,9 @@ import android.content.pm.ShortcutManager
 import android.os.Bundle
 import android.support.annotation.IdRes
 import android.support.design.widget.BottomNavigationView
-import android.support.design.widget.CoordinatorLayout
 import android.support.v4.app.Fragment
 import android.view.MenuItem
-import android.view.View
 import com.facebook.login.LoginManager
-import com.google.android.gms.auth.api.Auth
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.common.Scopes
-import com.google.android.gms.common.api.GoogleApiClient
-import com.google.android.gms.common.api.Scope
 import com.vk.sdk.VKSdk
 import kotlinx.android.synthetic.main.activity_main_feed.*
 import org.joda.time.DateTime
@@ -31,16 +24,14 @@ import org.stepic.droid.core.presenters.contracts.UpdateAppView
 import org.stepic.droid.model.Profile
 import org.stepic.droid.notifications.StepicInstanceIdService
 import org.stepic.droid.services.UpdateWithApkService
-import org.stepic.droid.ui.activities.contracts.BottomNavigationViewRoot
 import org.stepic.droid.ui.activities.contracts.RootScreen
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.dialogs.LogoutAreYouSureDialog
 import org.stepic.droid.ui.dialogs.NeedUpdatingDialog
 import org.stepic.droid.ui.fragments.CertificatesFragment
 import org.stepic.droid.ui.fragments.FindCoursesFragment
-import org.stepic.droid.ui.fragments.MyCoursesFragment
+import org.stepic.droid.ui.fragments.HomeFragment
 import org.stepic.droid.ui.fragments.ProfileFragment
-import org.stepic.droid.ui.util.BottomNavigationBehavior
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.ProgressHelper
@@ -48,12 +39,11 @@ import timber.log.Timber
 import javax.inject.Inject
 
 
-class MainFeedActivity : BackToExitActivityBase(),
+class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         BottomNavigationView.OnNavigationItemSelectedListener,
         BottomNavigationView.OnNavigationItemReselectedListener,
         LogoutAreYouSureDialog.Companion.OnLogoutSuccessListener,
         RootScreen,
-        BottomNavigationViewRoot,
         UpdateAppView,
         ProfileMainFeedView {
     companion object {
@@ -62,10 +52,10 @@ class MainFeedActivity : BackToExitActivityBase(),
 
         val reminderKey = "reminderKey"
         const val defaultIndex: Int = 0
-        val defaultTag: String = MyCoursesFragment::class.java.simpleName
+        val defaultTag: String = HomeFragment::class.java.simpleName
         private val progressLogoutTag = "progressLogoutTag"
 
-        const val MY_COURSES_INDEX: Int = 1
+        const val HOME_INDEX: Int = 1
         const val FIND_COURSES_INDEX: Int = 2
         const val PROFILE_INDEX: Int = 3
         const val CERTIFICATE_INDEX: Int = 4
@@ -77,11 +67,13 @@ class MainFeedActivity : BackToExitActivityBase(),
     @Inject
     lateinit var profileMainFeedPresenter: ProfileMainFeedPresenter
 
-    private var googleApiClient: GoogleApiClient? = null
-
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         notificationClickedCheck(intent)
+
+        if (intent.hasExtra(currentIndexKey)) {
+            openFragment(intent)
+        }
     }
 
     private fun notificationClickedCheck(intent: Intent) {
@@ -99,7 +91,14 @@ class MainFeedActivity : BackToExitActivityBase(),
                 sharedPreferenceHelper.clickEnrollNotification(DateTime.now(DateTimeZone.getDefault()).millis)
             } else if (action == AppConstants.OPEN_NOTIFICATION_FROM_STREAK) {
                 sharedPreferenceHelper.resetNumberOfStreakNotifications()
-                analytic.reportEvent(Analytic.Streak.STREAK_NOTIFICATION_OPENED)
+                if (intent.hasExtra(Analytic.Streak.NOTIFICATION_TYPE_PARAM)) {
+                    val notificationType = intent.getSerializableExtra(Analytic.Streak.NOTIFICATION_TYPE_PARAM) as Analytic.Streak.NotificationType
+                    val bundle = Bundle()
+                    bundle.putString(Analytic.Streak.NOTIFICATION_TYPE_PARAM, notificationType.name)
+                    analytic.reportEvent(Analytic.Streak.STREAK_NOTIFICATION_OPENED, bundle)
+                } else {
+                    analytic.reportEvent(Analytic.Streak.STREAK_NOTIFICATION_OPENED)
+                }
             } else if (action == AppConstants.OPEN_SHORTCUT_FIND_COURSES) {
                 analytic.reportEvent(Analytic.Shortcut.FIND_COURSES)
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N_MR1) {
@@ -125,9 +124,9 @@ class MainFeedActivity : BackToExitActivityBase(),
         setContentView(R.layout.activity_main_feed)
 
         notificationClickedCheck(intent)
-        if (checkPlayServices()) {
-            initGoogleApiClient()
-        }
+
+        initGoogleApiClient(true)
+
         initNavigation()
 
 
@@ -147,15 +146,7 @@ class MainFeedActivity : BackToExitActivityBase(),
         }
 
         if (savedInstanceState == null) {
-            setFragment(R.id.my_courses)
-            val wantedIndex = intent?.getIntExtra(currentIndexKey, -1) ?: -1
-            when (wantedIndex) {
-                FIND_COURSES_INDEX -> navigationView.selectedItemId = R.id.find_courses
-                CERTIFICATE_INDEX -> navigationView.selectedItemId = R.id.certificates
-                else -> {
-                    //do nothing
-                }
-            }
+            openFragment(intent)
         }
 
         profileMainFeedPresenter.attachView(this)
@@ -164,19 +155,17 @@ class MainFeedActivity : BackToExitActivityBase(),
         }
     }
 
-    private fun initGoogleApiClient() {
-        val serverClientId = config.googleServerClientId
-        val googleSignInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestScopes(Scope(Scopes.EMAIL), Scope(Scopes.PROFILE))
-                .requestServerAuthCode(serverClientId)
-                .build()
-
-        googleApiClient = GoogleApiClient.Builder(this)
-                .enableAutoManage(this /* FragmentActivity */, {} /* OnConnectionFailedListener */)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, googleSignInOptions)
-                .build()
+    private fun openFragment(launchIntent: Intent?) {
+        setFragment(R.id.home)
+        val wantedIndex = launchIntent?.getIntExtra(currentIndexKey, -1) ?: -1
+        when (wantedIndex) {
+            FIND_COURSES_INDEX -> navigationView.selectedItemId = R.id.find_courses
+            CERTIFICATE_INDEX -> navigationView.selectedItemId = R.id.certificates
+            else -> {
+                //do nothing
+            }
+        }
     }
-
 
     private fun initNavigation() {
         navigationView.setOnNavigationItemSelectedListener(this)
@@ -197,26 +186,12 @@ class MainFeedActivity : BackToExitActivityBase(),
     }
 
     override fun onBackPressed() {
-        if (navigationView.selectedItemId == R.id.my_courses) {
+        if (navigationView.selectedItemId == R.id.home) {
             finish()
             return
+        } else {
+            navigationView.selectedItemId = R.id.home
         }
-
-        //avoid memory leak, when user click back:
-        val fragment = supportFragmentManager.findFragmentById(R.id.frame)
-        supportFragmentManager.popBackStackImmediate()
-        supportFragmentManager
-                .beginTransaction()
-                .remove(fragment)
-                .commit()
-        navigationView.selectedItemId = R.id.my_courses
-        showBottomBar()
-    }
-
-
-    override fun onStart() {
-        super.onStart()
-        showBottomBar(false)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String?>, grantResults: IntArray) {
@@ -263,7 +238,7 @@ class MainFeedActivity : BackToExitActivityBase(),
 
     private fun sendOpenUserAnalytic(itemId: Int) {
         when (itemId) {
-            R.id.my_courses -> analytic.reportEvent(Analytic.Screens.USER_OPEN_MY_COURSES)
+            R.id.home -> analytic.reportEvent(Analytic.Screens.USER_OPEN_MY_COURSES)
             R.id.find_courses -> {
                 analytic.reportEvent(Analytic.Screens.USER_OPEN_FIND_COURSES)
                 if (sharedPreferenceHelper.authResponseFromStore == null) {
@@ -278,8 +253,8 @@ class MainFeedActivity : BackToExitActivityBase(),
     private fun setFragment(@IdRes id: Int) {
         val currentFragmentTag: String? = supportFragmentManager.findFragmentById(R.id.frame)?.tag
         val nextFragment: Fragment? = when (id) {
-            R.id.my_courses -> {
-                getNextFragmentOrNull(currentFragmentTag, MyCoursesFragment::class.java.simpleName, MyCoursesFragment.Companion::newInstance)
+            R.id.home -> {
+                getNextFragmentOrNull(currentFragmentTag, HomeFragment::class.java.simpleName, HomeFragment.Companion::newInstance)
             }
             R.id.find_courses -> {
                 getNextFragmentOrNull(currentFragmentTag, FindCoursesFragment::class.java.simpleName, FindCoursesFragment::newInstance)
@@ -297,8 +272,7 @@ class MainFeedActivity : BackToExitActivityBase(),
         }
         if (nextFragment != null) {
             //animation on change fragment, not for just adding
-            val needAnimation = currentFragmentTag != null
-            setFragment(R.id.frame, nextFragment, needAnimation)
+            setFragment(R.id.frame, nextFragment)
         }
     }
 
@@ -310,26 +284,9 @@ class MainFeedActivity : BackToExitActivityBase(),
         }
     }
 
-    private fun showBottomBar(needAnimation: Boolean = true) {
-        val params = navigationView.layoutParams as CoordinatorLayout.LayoutParams
-        val behavior = params.behavior as? BottomNavigationBehavior
-        behavior?.showBottomBar(navigationView, needAnimation)
-    }
-
-    private fun setFragment(@IdRes containerId: Int, fragment: Fragment, needAnimation: Boolean) {
+    private fun setFragment(@IdRes containerId: Int, fragment: Fragment) {
         val fragmentTransaction = supportFragmentManager.beginTransaction()
-        if (needAnimation) {
-            //do not use fade_in - fade_out animation, because it is looking as lag
-            //the second problem is null background for window
-//            fragmentTransaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-        }
         fragmentTransaction.replace(containerId, fragment, fragment.javaClass.simpleName)
-        val countInBackStack = supportFragmentManager.backStackEntryCount
-        val isRootScreen = defaultTag == fragment.javaClass.simpleName
-
-        if (isRootScreen && countInBackStack < 1 || !isRootScreen && countInBackStack < 2) {
-            fragmentTransaction.addToBackStack(fragment.javaClass.simpleName)
-        }
         fragmentTransaction.commit()
     }
 
@@ -356,9 +313,7 @@ class MainFeedActivity : BackToExitActivityBase(),
         ProgressHelper.dismiss(supportFragmentManager, progressLogoutTag)
         LoginManager.getInstance().logOut()
         VKSdk.logout()
-        if (googleApiClient?.isConnected ?: false) {
-            Auth.GoogleSignInApi.signOut(googleApiClient)
-        }
+        signOutFromGoogle()
         screenManager.showLaunchScreenAfterLogout(this)
     }
 
@@ -370,15 +325,4 @@ class MainFeedActivity : BackToExitActivityBase(),
             navigationView.selectedItemId = R.id.find_courses
         }
     }
-
-    override fun disableAnyBehaviour() {
-        val params = navigationView.layoutParams as CoordinatorLayout.LayoutParams
-        params.behavior = null
-    }
-
-    override fun resetDefaultBehaviour() {
-        val params = navigationView.layoutParams as CoordinatorLayout.LayoutParams
-        params.behavior = BottomNavigationBehavior<View>()
-    }
-
 }

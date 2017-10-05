@@ -6,7 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
+import android.widget.Toast;
 
+import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.concurrency.SingleThreadExecutor;
@@ -29,7 +31,11 @@ import javax.inject.Inject;
 
 import timber.log.Timber;
 
+import static org.stepic.droid.storage.DownloadManagerExtensionKt.getDownloadStatus;
+
 public class DownloadCompleteReceiver extends BroadcastReceiver {
+    @Inject
+    DownloadManager systemDownloadManager;
 
     @Inject
     UserPreferences userPreferences;
@@ -79,13 +85,42 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
         }
     }
 
+    private CachedVideo prepareCachedVideo(DownloadEntity downloadEntity) {
+        final long video_id = downloadEntity.getVideoId();
+        final long step_id = downloadEntity.getStepId();
+
+        File userDownloadFolder = userPreferences.getUserDownloadFolder();
+        File downloadFolderAndFile = new File(userDownloadFolder, video_id + "");
+        String path = Uri.fromFile(downloadFolderAndFile).getPath();
+        String thumbnail = downloadEntity.getThumbnail();
+        if (userPreferences.isSdChosen()) {
+            File sdFile = userPreferences.getSdCardDownloadFolder();
+            if (sdFile != null) {
+                try {
+                    StorageUtil.moveFile(userDownloadFolder.getPath(), video_id + "", sdFile.getPath());
+                    StorageUtil.moveFile(userDownloadFolder.getPath(), video_id + AppConstants.THUMBNAIL_POSTFIX_EXTENSION, sdFile.getPath());
+                    downloadFolderAndFile = new File(sdFile, video_id + "");
+                    final File thumbnailFile = new File(sdFile, video_id + AppConstants.THUMBNAIL_POSTFIX_EXTENSION);
+                    path = Uri.fromFile(downloadFolderAndFile).getPath();
+                    thumbnail = Uri.fromFile(thumbnailFile).getPath();
+                } catch (Exception er) {
+                    analytic.reportError(Analytic.Error.FAIL_TO_MOVE, er);
+                }
+            }
+
+        }
+
+        final CachedVideo cachedVideo = new CachedVideo(step_id, video_id, path, thumbnail);
+        cachedVideo.setQuality(downloadEntity.getQuality());
+        return cachedVideo;
+    }
+
     private void blockForInBackground(final long referenceId) {
         try {
             RWLocks.DownloadLock.writeLock().lock();
 
-            DownloadEntity downloadEntity = databaseFacade.getDownloadEntityIfExist(referenceId);
+            final DownloadEntity downloadEntity = databaseFacade.getDownloadEntityIfExist(referenceId);
             if (downloadEntity != null) {
-                final long video_id = downloadEntity.getVideoId();
                 final long step_id = downloadEntity.getStepId();
                 databaseFacade.deleteDownloadEntityByDownloadId(referenceId);
 
@@ -95,35 +130,24 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                     cancelSniffer.removeStepIdCancel(step_id);
                 } else {
                     //is not canceled
-                    File userDownloadFolder = userPreferences.getUserDownloadFolder();
-                    File downloadFolderAndFile = new File(userDownloadFolder, video_id + "");
-                    String path = Uri.fromFile(downloadFolderAndFile).getPath();
-                    String thumbnail = downloadEntity.getThumbnail();
-                    if (userPreferences.isSdChosen()) {
-                        File sdFile = userPreferences.getSdCardDownloadFolder();
-                        if (sdFile != null) {
-                            try {
-                                StorageUtil.moveFile(userDownloadFolder.getPath(), video_id + "", sdFile.getPath());
-                                StorageUtil.moveFile(userDownloadFolder.getPath(), video_id + AppConstants.THUMBNAIL_POSTFIX_EXTENSION, sdFile.getPath());
-                                downloadFolderAndFile = new File(sdFile, video_id + "");
-                                final File thumbnailFile = new File(sdFile, video_id + AppConstants.THUMBNAIL_POSTFIX_EXTENSION);
-                                path = Uri.fromFile(downloadFolderAndFile).getPath();
-                                thumbnail = Uri.fromFile(thumbnailFile).getPath();
-                            } catch (Exception er) {
-                                analytic.reportError(Analytic.Error.FAIL_TO_MOVE, er);
-                            }
-                        }
-
-                    }
-                    final CachedVideo cachedVideo = new CachedVideo(step_id, video_id, path, thumbnail);
-                    cachedVideo.setQuality(downloadEntity.getQuality());
-                    databaseFacade.addVideo(cachedVideo);
-
                     final Step step = databaseFacade.getStepById(step_id);
-                    step.set_cached(true);
+                    if (step == null) return;
+                    final long status = getDownloadStatus(systemDownloadManager, referenceId);
+
+                    final CachedVideo cachedVideo;
+                    if (status == DownloadManager.STATUS_SUCCESSFUL) {
+                        cachedVideo = prepareCachedVideo(downloadEntity);
+                        databaseFacade.addVideo(cachedVideo);
+                        step.set_cached(true);
+                    } else {
+                        cachedVideo = null;
+                        step.set_cached(false);
+                    }
+
                     step.set_loading(false);
                     databaseFacade.updateOnlyCachedLoadingStep(step);
                     storeStateManager.updateUnitLessonState(step.getLesson());
+
                     final Lesson lesson = databaseFacade.getLessonById(step.getLesson());
                     Handler mainHandler = new Handler(App.Companion.getAppContext().getMainLooper());
                     //Say to ui that ui is cached now
@@ -131,7 +155,14 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                         @Override
                         public void run() {
                             if (lesson != null) {
-                                downloadsPoster.downloadComplete(step_id, lesson, cachedVideo);
+                                if (cachedVideo != null) {
+                                    downloadsPoster.downloadComplete(step_id, lesson, cachedVideo);
+                                } else {
+                                    final Context context = App.Companion.getAppContext();
+                                    Toast.makeText(context, context.getString(R.string.video_download_fail, lesson.getTitle()), Toast.LENGTH_SHORT).show();
+                                    analytic.reportEvent(Analytic.Error.DOWNLOAD_FAILED);
+                                    downloadsPoster.downloadFailed(referenceId);
+                                }
                             }
                         }
                     };
@@ -144,9 +175,7 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                     downloadManager.remove(referenceId);//remove notification (is it really work and need?)
                 }
             }
-        } finally
-
-        {
+        } finally {
             RWLocks.DownloadLock.writeLock().unlock();
         }
     }

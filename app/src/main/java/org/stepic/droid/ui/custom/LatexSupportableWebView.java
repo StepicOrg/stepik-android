@@ -2,6 +2,7 @@ package org.stepic.droid.ui.custom;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -12,6 +13,7 @@ import android.webkit.WebView;
 
 import org.stepic.droid.base.App;
 import org.stepic.droid.configuration.Config;
+import org.stepic.droid.ui.util.AssetSupportWebViewClient;
 import org.stepic.droid.util.HtmlHelper;
 
 import java.util.Calendar;
@@ -84,6 +86,9 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
             html = HtmlHelper.buildPageWithCustomFont(text, fontPath, width, config.getBaseUrl());
         } else if (wantLaTeX || HtmlHelper.hasLaTeX(textString)) {
             webSettings.setJavaScriptEnabled(true);
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                setWebViewClient(new AssetSupportWebViewClient());
+            }
             html = HtmlHelper.buildMathPage(text, width, config.getBaseUrl());
         } else {
             html = HtmlHelper.buildPageWithAdjustingTextAndImage(text, width, config.getBaseUrl());
@@ -127,6 +132,33 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
         return false;
     }
 
+
+    private float startX = 0;
+    private float startY = 0;
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                startX = event.getX();
+                startY = event.getY();
+            break;
+            case MotionEvent.ACTION_MOVE:
+                float dx = startX - event.getX();
+                float dy = startY - event.getY();
+                event.setLocation(event.getX(), startY);
+
+                if (Math.abs(dx) > Math.abs(dy) && canScrollHorizontally((int) dx)) {
+                    getParent().requestDisallowInterceptTouchEvent(true);
+                }
+            break;
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                getParent().requestDisallowInterceptTouchEvent(false);
+            break;
+        }
+        return super.onTouchEvent(event);
+    }
 
     public void setOnWebViewClickListener(OnWebViewImageClicked listener) {
         this.listener = listener;

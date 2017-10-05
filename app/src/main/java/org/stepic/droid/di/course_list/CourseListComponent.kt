@@ -4,6 +4,8 @@ import dagger.Subcomponent
 import org.stepic.droid.base.CoursesDatabaseFragmentBase
 import org.stepic.droid.ui.fragments.CourseListFragmentBase
 import org.stepic.droid.ui.fragments.CourseSearchFragment
+import org.stepic.droid.ui.fragments.CoursesCarouselFragment
+import org.stepic.droid.ui.fragments.FastContinueFragment
 
 @CourseListScope
 @Subcomponent(modules = arrayOf(CourseListModule::class))
@@ -20,4 +22,8 @@ interface CourseListComponent {
     fun inject(fragment: CourseListFragmentBase)
 
     fun inject(fragment: CourseSearchFragment)
+
+    fun inject(fragment: CoursesCarouselFragment)
+
+    fun inject(fragment: FastContinueFragment)
 }

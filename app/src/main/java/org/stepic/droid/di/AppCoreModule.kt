@@ -226,13 +226,6 @@ abstract class AppCoreModule {
             return SocialManager()
         }
 
-        @Provides
-        @JvmStatic
-        @AppSingleton
-        internal fun provideSingle(): SingleThreadExecutor {
-            return SingleThreadExecutor(Executors.newSingleThreadExecutor())
-        }
-
         //it is good for many short lived, which should do async
         @Provides
         @AppSingleton

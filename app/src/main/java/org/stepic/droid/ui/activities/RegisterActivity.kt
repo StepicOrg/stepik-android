@@ -1,8 +1,8 @@
 package org.stepic.droid.ui.activities
 
 import android.app.ProgressDialog
-import android.content.Intent
 import android.os.Bundle
+import android.support.v7.app.AppCompatDelegate
 import android.text.Editable
 import android.text.Spannable
 import android.text.SpannableString
@@ -11,16 +11,13 @@ import android.text.method.LinkMovementMethod
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
-import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.credentials.Credential
-import com.google.android.gms.common.api.GoogleApiClient
 import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.android.synthetic.main.activity_register.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.LoginInteractionType
 import org.stepic.droid.base.App
-import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.core.LoginFailType
 import org.stepic.droid.core.presenters.LoginPresenter
 import org.stepic.droid.core.presenters.contracts.LoginView
@@ -37,11 +34,14 @@ import uk.co.chrisjenx.calligraphy.TypefaceUtils
 import javax.inject.Inject
 
 
-class RegisterActivity : FragmentActivityBase(), LoginView {
+class RegisterActivity : SmartLockActivityBase(), LoginView {
     companion object {
-        val ERROR_DELIMITER = " "
-        val TAG = "RegisterActivity"
-        private val RC_SAVE = 356
+        const val ERROR_DELIMITER = " "
+        const val TAG = "RegisterActivity"
+
+        init {
+            AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
+        }
     }
 
     private val passwordTooShortMessage by lazy {
@@ -55,8 +55,6 @@ class RegisterActivity : FragmentActivityBase(), LoginView {
 
     @Inject
     lateinit var loginPresenter: LoginPresenter
-
-    private var googleApiClient: GoogleApiClient? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -129,16 +127,10 @@ class RegisterActivity : FragmentActivityBase(), LoginView {
                 false
             }
         }
-        
+
         registerRootView.requestFocus()
 
-        if (checkPlayServices()) {
-            googleApiClient = GoogleApiClient.Builder(this)
-                    .enableAutoManage(this)
-                    {}
-                    .addApi(Auth.CREDENTIALS_API)
-                    .build()
-        }
+        initGoogleApiClient()
 
         setSignUpButtonState()
 
@@ -290,36 +282,7 @@ class RegisterActivity : FragmentActivityBase(), LoginView {
         }
     }
 
-    private fun requestToSaveCredentials(authData: AuthData) {
-        val credential = Credential
-                .Builder(authData.login)
-                .setPassword(authData.password)
-                .build()
-
-        Auth.CredentialsApi.save(googleApiClient, credential)
-                .setResultCallback { status ->
-                    if (!status.isSuccess && status.hasResolution()) {
-                        analytic.reportEvent(Analytic.SmartLock.SHOW_SAVE_REGISTRATION)
-                        status.startResolutionForResult(this, RegisterActivity.RC_SAVE)
-                    } else {
-                        analytic.reportEventWithName(Analytic.SmartLock.DISABLED_REGISTRATION, status.statusMessage)
-                        openMainFeed()
-                    }
-                }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == RegisterActivity.RC_SAVE) {
-            if (resultCode == RESULT_OK) {
-                analytic.reportEvent(Analytic.SmartLock.REGISTRATION_SAVED)
-            } else {
-                analytic.reportEvent(Analytic.SmartLock.REGISTRATION_NOT_SAVED)
-            }
-            openMainFeed()
-        }
-
-    }
+    override fun onCredentialSaved() = openMainFeed()
 
     private fun openMainFeed() {
         screenManager.showMainFeed(this, courseFromExtra)

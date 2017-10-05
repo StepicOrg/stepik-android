@@ -10,15 +10,12 @@ import android.text.SpannableString
 import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.credentials.Credential
-import com.google.android.gms.common.api.GoogleApiClient
 import kotlinx.android.synthetic.main.activity_login.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.LoginInteractionType
 import org.stepic.droid.base.App
-import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.core.LoginFailType
 import org.stepic.droid.core.ProgressHandler
 import org.stepic.droid.core.presenters.LoginPresenter
@@ -35,15 +32,13 @@ import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan
 import uk.co.chrisjenx.calligraphy.TypefaceUtils
 import javax.inject.Inject
 
-class LoginActivity : FragmentActivityBase(), LoginView {
+class LoginActivity : SmartLockActivityBase(), LoginView {
 
     companion object {
-        private val TAG = "LoginActivity"
-        private val RC_SAVE = 356
-    }
-
-    init {
-        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
+        private const val TAG = "LoginActivity"
+        init {
+            AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
+        }
     }
 
     private var progressLogin: ProgressDialog? = null
@@ -52,8 +47,6 @@ class LoginActivity : FragmentActivityBase(), LoginView {
 
     @Inject
     lateinit var loginPresenter: LoginPresenter
-
-    private var googleApiClient: GoogleApiClient? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -138,13 +131,7 @@ class LoginActivity : FragmentActivityBase(), LoginView {
 
         loginRootView.requestFocus()
 
-        if (checkPlayServices()) {
-            googleApiClient = GoogleApiClient.Builder(this)
-                    .enableAutoManage(this)
-                    {}
-                    .addApi(Auth.CREDENTIALS_API)
-                    .build()
-        }
+        initGoogleApiClient()
 
         onNewIntent(intent)
 
@@ -238,37 +225,7 @@ class LoginActivity : FragmentActivityBase(), LoginView {
         }
     }
 
-    private fun requestToSaveCredentials(authData: AuthData) {
-        val credential = Credential
-                .Builder(authData.login)
-                .setPassword(authData.password)
-                .build()
-
-        Auth.CredentialsApi.save(googleApiClient, credential)
-                .setResultCallback { status ->
-                    if (!status.isSuccess && status.hasResolution()) {
-                        analytic.reportEvent(Analytic.SmartLock.SHOW_SAVE_LOGIN)
-                        status.startResolutionForResult(this, RC_SAVE)
-                    } else {
-                        analytic.reportEventWithName(Analytic.SmartLock.DISABLED_LOGIN, status.statusMessage)
-                        openMainFeed()
-                    }
-                }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == RC_SAVE) {
-            if (resultCode == RESULT_OK) {
-                analytic.reportEvent(Analytic.SmartLock.
-                        LOGIN_SAVED)
-            } else {
-                analytic.reportEvent(Analytic.SmartLock.LOGIN_NOT_SAVED)
-            }
-            openMainFeed()
-        }
-
-    }
+    override fun onCredentialSaved() = openMainFeed()
 
     private fun openMainFeed() {
         screenManager.showMainFeed(this, courseFromExtra)
