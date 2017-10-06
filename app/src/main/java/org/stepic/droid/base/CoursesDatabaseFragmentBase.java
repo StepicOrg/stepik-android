@@ -196,7 +196,6 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
                 needFilter = true; // not last filter? check it
                 courses.clear();
                 coursesAdapter.notifyDataSetChanged();
-                courseListPresenter.reportCurrentFiltersToAnalytic(getCourseType());
                 courseListPresenter.refreshData(getCourseType(), needFilter, true);
             }
         }

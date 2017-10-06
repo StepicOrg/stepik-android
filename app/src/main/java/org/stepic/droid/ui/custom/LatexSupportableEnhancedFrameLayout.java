@@ -61,7 +61,6 @@ public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
         init(context);
 
         textView.setBackgroundColor(backgroundColor);
-        webView.setBackgroundColor(backgroundColor);
     }
 
     private void init(Context context) {
