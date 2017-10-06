@@ -67,7 +67,7 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
 
     private void init() {
         App.Companion.component().inject(this);
-        setBackgroundColor(Color.TRANSPARENT);
+        setBackgroundColor(Color.argb(1, 0, 0, 0));
         setOnLongClickListener(new OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -173,7 +173,7 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
             case MotionEvent.ACTION_DOWN:
                 startX = event.getX();
                 startY = event.getY();
-            break;
+                break;
             case MotionEvent.ACTION_MOVE:
                 float dx = startX - event.getX();
                 float dy = startY - event.getY();
@@ -182,11 +182,11 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
                 if (Math.abs(dx) > Math.abs(dy) && canScrollHorizontally((int) dx)) {
                     getParent().requestDisallowInterceptTouchEvent(true);
                 }
-            break;
+                break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
                 getParent().requestDisallowInterceptTouchEvent(false);
-            break;
+                break;
         }
         return super.onTouchEvent(event);
     }
