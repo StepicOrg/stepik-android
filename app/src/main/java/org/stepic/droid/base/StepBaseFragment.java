@@ -132,6 +132,7 @@ public abstract class StepBaseFragment extends FragmentBase
 
             headerWvEnhanced.setText(step.getBlock().getText());
             headerWvEnhanced.setVisibility(View.VISIBLE);
+            headerWvEnhanced.setTextIsSelectable(true);
 
         } else {
             headerWvEnhanced.setVisibility(View.GONE);
