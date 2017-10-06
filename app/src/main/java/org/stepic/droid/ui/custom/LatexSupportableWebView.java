@@ -1,8 +1,11 @@
 package org.stepic.droid.ui.custom;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Build;
+import android.support.annotation.ColorInt;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -11,6 +14,7 @@ import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
+import org.stepic.droid.R;
 import org.stepic.droid.base.App;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.ui.util.AssetSupportWebViewClient;
@@ -20,13 +24,16 @@ import java.util.Calendar;
 
 import javax.inject.Inject;
 
-public class LatexSupportableWebView extends WebView implements View.OnClickListener, View.OnTouchListener {
+public class LatexSupportableWebView extends WebView implements View.OnClickListener, View.OnTouchListener, View.OnLongClickListener {
     private static final String mimeType = "text/html";
     private static final String encoding = "UTF-8";
 
     private static final int MAX_CLICK_DURATION = 200;
     private long startClickTime;
     OnWebViewImageClicked listener;
+
+    @ColorInt
+    private int textColorHighlight;
 
     @Inject
     Config config;
@@ -43,12 +50,24 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
 
     public LatexSupportableWebView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+
+        int[] set = {
+                android.R.attr.textColorHighlight
+        };
+
+        TypedArray a = context.obtainStyledAttributes(attrs, set);
+
+        try {
+            textColorHighlight = a.getColor(0, ContextCompat.getColor(getContext(), R.color.text_color_highlight));
+        } finally {
+            a.recycle();
+        }
         init();
     }
 
     private void init() {
         App.Companion.component().inject(this);
-        setBackgroundColor(Color.TRANSPARENT);
+        setBackgroundColor(Color.argb(1, 0, 0, 0));
         setOnLongClickListener(new OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -58,6 +77,14 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
 
         setOnClickListener(this);
         setOnTouchListener(this);
+    }
+
+    public void setTextIsSelectable(boolean isSelectable) {
+        if (isSelectable) {
+            setOnLongClickListener(this);
+        } else {
+            setOnLongClickListener(null);
+        }
     }
 
 
@@ -83,15 +110,15 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
         WebSettings webSettings = getSettings();
         if (fontPath != null) {
             webSettings.setJavaScriptEnabled(true);
-            html = HtmlHelper.buildPageWithCustomFont(text, fontPath, width, config.getBaseUrl());
+            html = HtmlHelper.buildPageWithCustomFont(text, fontPath, textColorHighlight, width, config.getBaseUrl());
         } else if (wantLaTeX || HtmlHelper.hasLaTeX(textString)) {
             webSettings.setJavaScriptEnabled(true);
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
                 setWebViewClient(new AssetSupportWebViewClient());
             }
-            html = HtmlHelper.buildMathPage(text, width, config.getBaseUrl());
+            html = HtmlHelper.buildMathPage(text, textColorHighlight, width, config.getBaseUrl());
         } else {
-            html = HtmlHelper.buildPageWithAdjustingTextAndImage(text, width, config.getBaseUrl());
+            html = HtmlHelper.buildPageWithAdjustingTextAndImage(text, textColorHighlight, width, config.getBaseUrl());
         }
 
         postDelayed(new Runnable() {
@@ -132,6 +159,10 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
         return false;
     }
 
+    @Override
+    public boolean onLongClick(View view) {
+        return false;
+    }
 
     private float startX = 0;
     private float startY = 0;
@@ -142,7 +173,7 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
             case MotionEvent.ACTION_DOWN:
                 startX = event.getX();
                 startY = event.getY();
-            break;
+                break;
             case MotionEvent.ACTION_MOVE:
                 float dx = startX - event.getX();
                 float dy = startY - event.getY();
@@ -151,11 +182,11 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
                 if (Math.abs(dx) > Math.abs(dy) && canScrollHorizontally((int) dx)) {
                     getParent().requestDisallowInterceptTouchEvent(true);
                 }
-            break;
+                break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
                 getParent().requestDisallowInterceptTouchEvent(false);
-            break;
+                break;
         }
         return super.onTouchEvent(event);
     }

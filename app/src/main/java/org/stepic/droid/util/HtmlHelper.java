@@ -1,5 +1,7 @@
 package org.stepic.droid.util;
 
+import android.support.annotation.ColorInt;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jsoup.Jsoup;
@@ -154,18 +156,30 @@ public class HtmlHelper {
     }
 
 
-    public static String buildMathPage(CharSequence body, int widthPx, String baseUrl) {
-        String preBody = String.format(Locale.getDefault(), PRE_BODY, MathJaxScript, DefaultFontStyle, widthPx, baseUrl);
+    private static String getStyle(@Nullable String fontPath, @ColorInt int textColorHighlight) {
+        final String fontStyle;
+        if (fontPath  == null) {
+            fontStyle = DefaultFontStyle;
+        } else {
+            fontStyle = String.format(Locale.getDefault(), CustomFontStyle, fontPath);
+        }
+
+        final String selectionColorStyle = String.format(Locale.getDefault(), SelectionColorStyle, 0xFFFFFF & textColorHighlight);
+        return fontStyle + selectionColorStyle;
+    }
+
+    public static String buildMathPage(CharSequence body, @ColorInt int textColorHighlight, int widthPx, String baseUrl) {
+        String preBody = String.format(Locale.getDefault(), PRE_BODY, MathJaxScript, getStyle(null, textColorHighlight), widthPx, baseUrl);
         return preBody + body + POST_BODY;
     }
 
-    public static String buildPageWithAdjustingTextAndImage(CharSequence body, int widthPx, String baseUrl) {
-        String preBody = String.format(Locale.getDefault(), PRE_BODY, " ", DefaultFontStyle, widthPx, baseUrl);
+    public static String buildPageWithAdjustingTextAndImage(CharSequence body, @ColorInt int textColorHighlight, int widthPx, String baseUrl) {
+        String preBody = String.format(Locale.getDefault(), PRE_BODY, " ", getStyle(null, textColorHighlight), widthPx, baseUrl);
         return preBody + body + POST_BODY;
     }
 
-    public static String buildPageWithCustomFont(CharSequence body, String fontPath, int widthPx, String baseUrl) {
-        String preBody = String.format(Locale.getDefault(), PRE_BODY, " ", String.format(Locale.getDefault(), CustomFontStyle, fontPath), widthPx, baseUrl);
+    public static String buildPageWithCustomFont(CharSequence body, String fontPath, @ColorInt int textColorHighlight, int widthPx, String baseUrl) {
+        String preBody = String.format(Locale.getDefault(), PRE_BODY, " ", getStyle(fontPath, textColorHighlight), widthPx, baseUrl);
         return preBody + body + POST_BODY;
     }
 
@@ -191,6 +205,10 @@ public class HtmlHelper {
             "</head>\n"
             + "<body style='margin:0;padding:0;'>";
 
+    private static final String SelectionColorStyle =
+            "<style>\n"
+            + "::selection { background: #%06X; }\n"
+            + "</style>";
 
     private static final String DefaultFontStyle =
             "<style>\n"
@@ -223,6 +241,7 @@ public class HtmlHelper {
     private static final String MathJaxScript =
             "<script type=\"text/x-mathjax-config\">\n" +
                     "  MathJax.Hub.Config({" +
+                    "showMathMenu: false, " +
                     "messageStyle: \"none\", " +
                     "TeX: {extensions: [ \"color.js\"]}, " +
                     "tex2jax: {preview: \"none\", inlineMath: [['$','$'], ['\\\\(','\\\\)']]}});\n" +
