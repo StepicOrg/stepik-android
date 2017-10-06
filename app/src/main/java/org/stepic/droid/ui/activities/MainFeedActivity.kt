@@ -17,6 +17,7 @@ import org.joda.time.DateTimeZone
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
+import org.stepic.droid.code.ui.StubActivity
 import org.stepic.droid.core.presenters.ProfileMainFeedPresenter
 import org.stepic.droid.core.presenters.UpdateAppPresenter
 import org.stepic.droid.core.presenters.contracts.ProfileMainFeedView
@@ -153,6 +154,8 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         if (savedInstanceState == null) {
             profileMainFeedPresenter.fetchProfile()
         }
+
+        startActivity(Intent(this, StubActivity::class.java))
     }
 
     private fun openFragment(launchIntent: Intent?) {
