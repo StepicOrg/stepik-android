@@ -102,17 +102,15 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
         ((AppCompatActivity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         int width = displaymetrics.widthPixels;
 
-
-        getSettings().setDomStorageEnabled(true);
         String textString = text.toString();
 
         final String html;
         WebSettings webSettings = getSettings();
+        webSettings.setDomStorageEnabled(true);
+        webSettings.setJavaScriptEnabled(true);
         if (fontPath != null) {
-            webSettings.setJavaScriptEnabled(true);
             html = HtmlHelper.buildPageWithCustomFont(text, fontPath, textColorHighlight, width, config.getBaseUrl());
         } else if (wantLaTeX || HtmlHelper.hasLaTeX(textString)) {
-            webSettings.setJavaScriptEnabled(true);
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
                 setWebViewClient(new AssetSupportWebViewClient());
             }
