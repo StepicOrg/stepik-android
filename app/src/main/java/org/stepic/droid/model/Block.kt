@@ -4,6 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 
 import org.stepic.droid.base.App
+import org.stepic.droid.model.code.CodeOptions
 
 import java.io.Serializable
 
@@ -15,6 +16,7 @@ class Block : Parcelable, Serializable {
     var video: Video? = null //always external video
 
     var cachedLocalVideo: Video? = null
+    var options: CodeOptions? = null
 
     override fun describeContents(): Int = 0
 

@@ -1,4 +1,4 @@
-package org.stepic.droid.test_utils.generators
+package org.stepic.droid.testUtils.generators
 
 import org.stepic.droid.model.Course
 

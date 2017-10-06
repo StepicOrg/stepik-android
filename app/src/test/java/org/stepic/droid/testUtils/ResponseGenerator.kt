@@ -1,10 +1,10 @@
-package org.stepic.droid.test_utils
+package org.stepic.droid.testUtils
 
-import org.mockito.Mockito
 import org.mockito.Mockito.mock
 import org.mockito.stubbing.OngoingStubbing
 import retrofit2.Call
 import retrofit2.Response
+import org.mockito.Mockito.`when` as on
 
 @JvmOverloads
 fun <T> useMockInsteadCall(callOngoingStubbing: OngoingStubbing<Call<T>>, responseBodyMock: T, isSuccess: Boolean = true) {
@@ -12,7 +12,7 @@ fun <T> useMockInsteadCall(callOngoingStubbing: OngoingStubbing<Call<T>>, respon
     val retrofitResponse = mock<Response<*>>(Response::class.java) as Response<T>
 
     callOngoingStubbing.thenReturn(call)
-    Mockito.`when`(call.execute()).thenReturn(retrofitResponse)
-    Mockito.`when`(retrofitResponse.body()).thenReturn(responseBodyMock)
-    Mockito.`when`(retrofitResponse.isSuccessful).thenReturn(isSuccess)
+    on(call.execute()).thenReturn(retrofitResponse)
+    on(retrofitResponse.body()).thenReturn(responseBodyMock)
+    on(retrofitResponse.isSuccessful).thenReturn(isSuccess)
 }

@@ -1,4 +1,4 @@
-package org.stepic.droid.test_utils;
+package org.stepic.droid.testUtils;
 
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;

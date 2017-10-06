@@ -1,8 +1,8 @@
-package org.stepic.droid.test_utils.generators
+package org.stepic.droid.testUtils.generators
 
-import org.stepic.droid.model.Profile
+import org.stepic.droid.model.User
 
-object FakeProfileGenerator {
+object FakeUserGenerator {
 
     @JvmOverloads
     fun generate(id: Long = 0,
@@ -11,13 +11,12 @@ object FakeProfileGenerator {
                  avatar: String? = null,
                  shortBio: String = "",
                  details: String = ""
-    ): Profile {
-        return Profile(id = id,
+    ): User {
+        return User(id = id.toInt(),
                 avatar = avatar,
                 first_name = firstName,
                 last_name = lastName,
                 short_bio = shortBio,
                 details = details)
     }
-
 }
