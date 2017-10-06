@@ -14,11 +14,9 @@ class Block : Parcelable, Serializable {
     var text: String? = null
     var video: Video? = null //always external video
 
-    var cachedLocalVideo : Video? = null
+    var cachedLocalVideo: Video? = null
 
-    override fun describeContents(): Int {
-        return 0
-    }
+    override fun describeContents(): Int = 0
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
         dest.writeString(this.name)
@@ -27,25 +25,21 @@ class Block : Parcelable, Serializable {
         dest.writeParcelable(this.cachedLocalVideo, flags)
     }
 
-    constructor() {
-    }
+    constructor()
 
-    protected constructor(input: Parcel) {
+    constructor(input: Parcel) {
         this.name = input.readString()
         this.text = input.readString()
-        this.video = input.readParcelable<Video>(App.getAppContext().classLoader)
-        this.cachedLocalVideo = input.readParcelable<Video>(App.getAppContext().classLoader)
+        this.video = input.readParcelable(App.getAppContext().classLoader)
+        this.cachedLocalVideo = input.readParcelable(App.getAppContext().classLoader)
     }
 
     companion object {
-        @JvmField val CREATOR: Parcelable.Creator<Block> = object : Parcelable.Creator<Block> {
-            override fun createFromParcel(source: Parcel): Block {
-                return Block(source)
-            }
+        @JvmField
+        val CREATOR: Parcelable.Creator<Block> = object : Parcelable.Creator<Block> {
+            override fun createFromParcel(source: Parcel): Block = Block(source)
 
-            override fun newArray(size: Int): Array<Block?> {
-                return arrayOfNulls(size)
-            }
+            override fun newArray(size: Int): Array<Block?> = arrayOfNulls(size)
         }
     }
 }
