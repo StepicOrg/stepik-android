@@ -34,10 +34,15 @@ class SearchCoursesPresenter
         }
     }
 
-    fun downloadData(searchQuery: String) {
+    fun downloadData(searchQuery: String?) {
         if (isLoading.get() || !hasNextPage.get()) return
 
         if (hasNextPage.get() && isLoading.compareAndSet(false, true)) {
+            if (searchQuery == null) {
+                analytic.reportEvent(Analytic.Search.SEARCH_NULL)
+            } else {
+                analytic.reportEventWithName(Analytic.Search.SEARCH_QUERY, searchQuery)
+            }
             view?.showLoading()
             threadPoolExecutor.execute {
                 try {
@@ -97,7 +102,7 @@ class SearchCoursesPresenter
         }
     }
 
-    fun refreshData(searchQuery: String) {
+    fun refreshData(searchQuery: String?) {
         if (isLoading.get()) return
         currentPage.set(1);
         hasNextPage.set(true)
