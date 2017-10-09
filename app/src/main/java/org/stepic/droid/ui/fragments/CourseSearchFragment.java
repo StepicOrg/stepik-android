@@ -14,16 +14,18 @@ import org.stepic.droid.ui.util.ToolbarHelperKt;
 import javax.inject.Inject;
 
 public class CourseSearchFragment extends CourseListFragmentBase {
+
+    private final static String QUERY_KEY = "query_key";
+
     public static Fragment newInstance(String query) {
         Fragment fragment = new CourseSearchFragment();
         Bundle bundle = new Bundle();
-        bundle.putString(CourseSearchFragment.QUERY_KEY, query);
+        bundle.putString(QUERY_KEY, query);
         fragment.setArguments(bundle);
         return fragment;
     }
 
-    private final static String QUERY_KEY = "query_key";
-
+    @Nullable
     private String searchQuery;
 
     @Inject
