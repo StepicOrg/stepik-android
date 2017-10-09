@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical">
+
     <FrameLayout
         android:id="@+id/code_warning"
         android:layout_width="match_parent"
@@ -24,14 +24,14 @@
     </FrameLayout>
 
     <EditText
-        android:id="@+id/answer_edit_text"
         xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/codeQuizAnswerField"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="top|start"
         android:hint="@string/hint_for_type_answer"
-        android:inputType="textMultiLine"
         android:imeOptions="flagNoFullscreen"
+        android:inputType="textMultiLine"
         android:maxLines="9000"
         android:minLines="5"
         android:padding="8dp"
