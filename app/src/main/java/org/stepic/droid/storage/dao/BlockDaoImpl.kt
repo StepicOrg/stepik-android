@@ -3,9 +3,11 @@ package org.stepic.droid.storage.dao
 import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import com.google.gson.Gson
 import org.stepic.droid.mappers.toDbUrl
 import org.stepic.droid.mappers.toVideoUrls
 import org.stepic.droid.model.*
+import org.stepic.droid.model.code.CodeOptions
 import org.stepic.droid.storage.structure.DbStructureBlock
 import org.stepic.droid.storage.structure.DbStructureCachedVideo
 import org.stepic.droid.storage.structure.DbStructureVideoUrl
@@ -16,6 +18,7 @@ class BlockDaoImpl @Inject
 constructor(
         openHelper: SQLiteDatabase,
         private val videoDao: IDao<CachedVideo>,
+        private val gson: Gson,
         private val videoUrlIDao: IDao<DbVideoUrl>)
     : DaoBase<BlockPersistentWrapper>(openHelper) {
 
@@ -46,6 +49,13 @@ constructor(
             block.video = video
         }
 
+        val codeOptionsIndex = cursor.getColumnIndex(DbStructureBlock.Column.CODE_OPTIONS)
+        val storedCodeOptionJson = cursor.getString(codeOptionsIndex)
+        if (storedCodeOptionJson != null) {
+            val codeOptions = gson.fromJson(storedCodeOptionJson, CodeOptions::class.java)
+            block.options = codeOptions
+        }
+
         return blockPersistentWrapper
     }
 
@@ -61,6 +71,10 @@ constructor(
             values.put(DbStructureBlock.Column.EXTERNAL_VIDEO_DURATION, externalVideo.duration)
             values.put(DbStructureBlock.Column.EXTERNAL_THUMBNAIL, externalVideo.thumbnail)
             values.put(DbStructureBlock.Column.EXTERNAL_VIDEO_ID, externalVideo.id)
+        }
+
+        blockWrapper.block.options?.let {
+            values.put(DbStructureBlock.Column.CODE_OPTIONS, gson.toJson(it, CodeOptions::class.java))
         }
 
         return values

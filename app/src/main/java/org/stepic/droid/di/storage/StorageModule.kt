@@ -2,6 +2,7 @@ package org.stepic.droid.di.storage
 
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import com.google.gson.Gson
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -93,24 +94,26 @@ abstract class StorageModule {
         @StorageSingleton
         @Provides
         @JvmStatic
-        internal fun provideWritableDatabase(helper: SQLiteOpenHelper): SQLiteDatabase {
-            return helper.writableDatabase
-        }
+        internal fun provideStorageGson(): Gson = Gson()
+
+        @StorageSingleton
+        @Provides
+        @JvmStatic
+        internal fun provideWritableDatabase(helper: SQLiteOpenHelper): SQLiteDatabase =
+                helper.writableDatabase
 
         @StorageSingleton
         @Provides
         @JvmStatic
         @EnrolledCoursesDaoQualifier
-        internal fun provideEnrolledCoursesDao(writeableDatabase: SQLiteDatabase, cachedVideo: IDao<CachedVideo>, externalVideos: IDao<DbVideoUrl>): IDao<Course> {
-            return CourseDaoImpl(writeableDatabase, cachedVideo, externalVideos, DbStructureEnrolledAndFeaturedCourses.ENROLLED_COURSES)
-        }
+        internal fun provideEnrolledCoursesDao(writeableDatabase: SQLiteDatabase, cachedVideo: IDao<CachedVideo>, externalVideos: IDao<DbVideoUrl>): IDao<Course> =
+                CourseDaoImpl(writeableDatabase, cachedVideo, externalVideos, DbStructureEnrolledAndFeaturedCourses.ENROLLED_COURSES)
 
         @StorageSingleton
         @Provides
         @JvmStatic
         @FeaturedCoursesDaoQualifier
-        internal fun provideFeaturedCoursesDao(writeableDatabase: SQLiteDatabase, cachedVideo: IDao<CachedVideo>, externalVideos: IDao<DbVideoUrl>): IDao<Course> {
-            return CourseDaoImpl(writeableDatabase, cachedVideo, externalVideos, DbStructureEnrolledAndFeaturedCourses.FEATURED_COURSES)
-        }
+        internal fun provideFeaturedCoursesDao(writeableDatabase: SQLiteDatabase, cachedVideo: IDao<CachedVideo>, externalVideos: IDao<DbVideoUrl>): IDao<Course> =
+                CourseDaoImpl(writeableDatabase, cachedVideo, externalVideos, DbStructureEnrolledAndFeaturedCourses.FEATURED_COURSES)
     }
 }

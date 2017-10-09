@@ -79,6 +79,11 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         upgradeFrom21To22(db);
         upgradeFrom22To23(db);
         upgradeFrom23To24(db);
+        upgradeFrom24To25(db);
+    }
+
+    private void upgradeFrom24To25(SQLiteDatabase db) {
+        alterColumn(db, DbStructureBlock.BLOCKS, DbStructureBlock.Column.CODE_OPTIONS, TEXT_TYPE);
     }
 
     private void upgradeFrom23To24(SQLiteDatabase db) {
@@ -307,6 +312,10 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
 
         if (oldVersion < 24) {
             upgradeFrom23To24(db);
+        }
+
+        if (oldVersion < 25) {
+            upgradeFrom24To25(db);
         }
 
     }
