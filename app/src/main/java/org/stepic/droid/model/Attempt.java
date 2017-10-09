@@ -1,7 +1,10 @@
 package org.stepic.droid.model;
 
+import android.support.annotation.Nullable;
+
 public class Attempt {
     private long id;
+    @Nullable
     private DatasetWrapper dataset;
     private String dataset_url;
     private String time;
@@ -26,7 +29,11 @@ public class Attempt {
     }
 
     public Dataset getDataset() {
-        return dataset.getDataset();
+        if (dataset == null) {
+            return null;
+        } else {
+            return dataset.getDataset();
+        }
     }
 
     public String getDataset_url() {
