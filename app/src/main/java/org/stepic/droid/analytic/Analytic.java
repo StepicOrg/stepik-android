@@ -7,6 +7,11 @@ import org.jetbrains.annotations.Nullable;
 
 public interface Analytic {
 
+    interface Search {
+        String SEARCH_NULL = "search_null";
+        String SEARCH_QUERY = "search_with_query";
+    }
+
     interface CoursesCarousel {
         String EMPTY_ENROLLED_SHOWN = "courses_carousel_empty_enrolled";
         String EMPTY_ENROLLED_CLICK = "courses_carousel_empty_enrolled_clicked";
