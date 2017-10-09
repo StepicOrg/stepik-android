@@ -1,4 +1,4 @@
-package org.stepic.droid.deserializers
+package org.stepic.droid.jsonHelpers.deserializers
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder

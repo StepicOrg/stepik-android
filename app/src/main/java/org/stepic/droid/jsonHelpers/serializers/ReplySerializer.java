@@ -1,4 +1,4 @@
-package org.stepic.droid.serializers;
+package org.stepic.droid.jsonHelpers.serializers;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

@@ -1,4 +1,4 @@
-package org.stepic.droid.deserializers;
+package org.stepic.droid.jsonHelpers.deserializers;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
