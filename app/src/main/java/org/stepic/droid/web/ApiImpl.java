@@ -27,9 +27,11 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.StepikLogoutManager;
+import org.stepic.droid.di.AppSingleton;
+import org.stepic.droid.jsonHelpers.adapters.CodeOptionsAdapterFactory;
 import org.stepic.droid.jsonHelpers.deserializers.DatasetDeserializer;
 import org.stepic.droid.jsonHelpers.deserializers.ReplyDeserializer;
-import org.stepic.droid.di.AppSingleton;
+import org.stepic.droid.jsonHelpers.serializers.ReplySerializer;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.DatasetWrapper;
 import org.stepic.droid.model.EnrollmentWrapper;
@@ -44,7 +46,6 @@ import org.stepic.droid.model.comments.VoteValue;
 import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
-import org.stepic.droid.jsonHelpers.serializers.ReplySerializer;
 import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.util.AppConstants;
@@ -293,6 +294,7 @@ public class ApiImpl implements Api {
     private Converter.Factory generateGsonFactory() {
         Gson gson = new GsonBuilder()
 //                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+                .registerTypeAdapterFactory(new CodeOptionsAdapterFactory())
                 .registerTypeAdapter(DatasetWrapper.class, new DatasetDeserializer())
                 .registerTypeAdapter(ReplyWrapper.class, new ReplyDeserializer())
                 .registerTypeAdapter(ReplyWrapper.class, new ReplySerializer())
