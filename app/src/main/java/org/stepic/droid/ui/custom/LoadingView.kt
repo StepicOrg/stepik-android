@@ -5,6 +5,7 @@ import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
+import android.os.Build
 import android.util.AttributeSet
 import android.view.View
 import org.stepic.droid.R
@@ -65,6 +66,10 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
         } finally {
             array.recycle()
         }
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            //we use clipPath in onDraw see https://stackoverflow.com/a/8895894/5222184
+            setLayerType(View.LAYER_TYPE_SOFTWARE, null)
+        }
 
         basePaint = Paint().apply {
             style = Paint.Style.FILL
@@ -105,6 +110,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         stop()
+        animator.removeAllUpdateListeners()
     }
 
 
