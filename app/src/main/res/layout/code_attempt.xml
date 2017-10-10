@@ -28,6 +28,7 @@
         android:text="@string/choose_action"
         android:textColor="@color/stepic_blue_ribbon"
         android:textSize="16sp"
+        android:visibility="gone"
         tools:ignore="MissingPrefix"/>
 
     <TextView
@@ -37,12 +38,14 @@
         android:gravity="center"
         android:padding="@dimen/guideline_standard_padding"
         android:text="@string/choose_language"
-        android:textSize="16sp"/>
+        android:textSize="16sp"
+        android:visibility="gone"/>
 
     <biz.kasual.materialnumberpicker.MaterialNumberPicker
         android:id="@+id/codeQuizLanguagePicker"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
 
 
     <EditText
@@ -57,6 +60,7 @@
         android:minLines="5"
         android:padding="8dp"
         android:scrollbarStyle="outsideOverlay"
-        android:scrollbars="vertical"/>
+        android:scrollbars="vertical"
+        android:visibility="gone"/>
 
 </LinearLayout>

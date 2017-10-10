@@ -88,8 +88,11 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
     @BindView(R.id.attempt_container)
     ViewGroup attemptContainer;
 
-    @BindView(R.id.submit_button)
+    @BindView(R.id.stepAttemptSubmitButton)
     Button actionButton;
+
+    @BindView(R.id.buttonsContainer)
+    ViewGroup actionButtonsContainer;
 
     @BindView(R.id.peer_review_warning)
     View peerReviewIndicator;
@@ -281,7 +284,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
                 discountingPolicyTextView.setVisibility(View.GONE); // remove if user was correct
                 submissionRestrictionTextView.setVisibility(View.GONE);
                 tryAgainOnCorrectButton.setVisibility(View.VISIBLE);
-                actionButton.setVisibility(View.VISIBLE);
+                actionButtonsContainer.setVisibility(View.VISIBLE);
                 if (step.getHasSubmissionRestriction()) {
                     tryAgainOnCorrectButton.setVisibility(View.GONE);
                 }
@@ -363,9 +366,9 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
         showActionButtonLoadState(!isNeedShow);
         if (isNeedShow) {
             tryAgainOnCorrectButton.setVisibility(View.GONE);
-            actionButton.setVisibility(View.GONE);
+            actionButtonsContainer.setVisibility(View.GONE);
         } else {
-            actionButton.setVisibility(View.VISIBLE);
+            actionButtonsContainer.setVisibility(View.VISIBLE);
         }
         showAnswerField(!isNeedShow);
         enableInternetMessage(isNeedShow);
@@ -465,12 +468,11 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
 
     protected void showActionButtonLoadState(boolean isLoading) {
         if (isLoading) {
-            tryAgainOnCorrectButton.setVisibility(View.GONE);
-            actionButton.setVisibility(View.GONE);
+            actionButtonsContainer.setVisibility(View.GONE);
             ProgressHelper.activate(progressBar);
         } else {
             ProgressHelper.dismiss(progressBar);
-            actionButton.setVisibility(View.VISIBLE);
+            actionButtonsContainer.setVisibility(View.VISIBLE);
         }
 
     }
@@ -640,8 +642,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
             } else {
                 warningText = getString(R.string.restriction_submission_enough);
                 blockUIBeforeSubmit(true);
-                actionButton.setVisibility(View.GONE); //we cant send more
-                tryAgainOnCorrectButton.setVisibility(View.GONE);
+                actionButtonsContainer.setVisibility(View.GONE); //we cant send more
             }
             submissionRestrictionTextView.setText(warningText);
             submissionRestrictionTextView.setVisibility(View.VISIBLE);

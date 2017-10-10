@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.NumberPicker
 import kotlinx.android.synthetic.main.code_attempt.*
+import kotlinx.android.synthetic.main.fragment_step_attempt.*
 import org.stepic.droid.R
 import org.stepic.droid.model.Attempt
 import org.stepic.droid.model.Reply
@@ -19,31 +20,38 @@ class CodeStepFragment : StepAttemptFragment() {
         fun newInstance(): CodeStepFragment = CodeStepFragment()
     }
 
-    private var chosenProgrammingLanguage: ProgrammingLanguage? = null
+    private var chosenProgrammingLanguageName: String? = null
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val viewGroup = (this.activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(R.layout.code_attempt, attemptContainer, false) as ViewGroup
         attemptContainer.addView(viewGroup)
+
+        codeQuizChooseLangAction.setOnClickListener {
+            val programmingLanguageServerName = codeQuizLanguagePicker.displayedValues[codeQuizLanguagePicker.value]
+            chosenProgrammingLanguageName = programmingLanguageServerName
+
+            val programmingLanguage = ProgrammingLanguage.serverNameToLanguage(programmingLanguageServerName)
+            codeQuizAnswerField.text.clear()
+            codeQuizAnswerField.setText(step.block?.options?.codeTemplates?.get(programmingLanguage))
+            showLanguageChoosingView(false)
+            showCodeQuizEditor()
+        }
+
+        showCodeQuizEditor(false)
     }
 
     override fun showAttempt(attempt: Attempt) {
-        //do nothing, because this attempt doesn't have any specific.
-        codeQuizAnswerField.text.clear()
-        // TODO: 29.03.16  choose and after that get from step.block.options.code_templates or from stored submission
-        codeQuizAnswerField.setText(textResolver.fromHtml("#include <iostream> int main() { // put your code here return 0; }"))
-
         step.block?.options?.limits
                 ?.keys
                 ?.map {
-                    it.printableName
+                    it.serverPrintableName
                 }
                 ?.sorted()
                 ?.toTypedArray()
                 ?.let {
                     showLanguageChooser(it)
                 }
-
     }
 
     private fun showLanguageChooser(languageNames: Array<String>) {
@@ -58,6 +66,8 @@ class CodeStepFragment : StepAttemptFragment() {
         } catch (exception: Exception) {
             //reflection failed -> ignore
         }
+
+        showLanguageChoosingView()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -72,9 +82,32 @@ class CodeStepFragment : StepAttemptFragment() {
         }
     }
 
+    private fun showCodeQuizEditor(needShow: Boolean = true) {
+        val visibility = toVisibility(needShow)
+        codeQuizAnswerField.visibility = visibility
+        stepAttemptSubmitButton.visibility = visibility
+    }
+
+    private fun showLanguageChoosingView(needShow: Boolean = true) {
+        val visibility = toVisibility(needShow)
+
+        codeQuizChooseLangAction.visibility = visibility
+        codeQuizLanguagePicker.visibility = visibility
+        codeQuizChooseLangTitle.visibility = visibility
+    }
+
+    private fun toVisibility(needShow: Boolean): Int {
+        return if (needShow) {
+            View.VISIBLE
+        } else {
+            View.GONE
+        }
+    }
+
+
     override fun generateReply(): Reply {
         return Reply.Builder()
-                .setLanguage("c++11") // TODO: 29.03.16 choose and after that get from step.block.options.limits
+                .setLanguage(chosenProgrammingLanguageName)
                 .setCode(codeQuizAnswerField.text.toString())
                 .build()
     }
@@ -87,6 +120,6 @@ class CodeStepFragment : StepAttemptFragment() {
         val reply = submission.reply ?: return
 
         val text = reply.code
-        codeQuizAnswerField.setText(textResolver.fromHtml(text)) // TODO: 29.03.16 render code
+        codeQuizAnswerField.setText(text) // TODO: 29.03.16 render code
     }
 }

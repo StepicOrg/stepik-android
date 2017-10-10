@@ -4,7 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 
-enum class ProgrammingLanguage(val printableName: String) : Parcelable {
+enum class ProgrammingLanguage(val serverPrintableName: String) : Parcelable {
 
     @SerializedName("python3")
     PYTHON("python3"),
@@ -68,6 +68,14 @@ enum class ProgrammingLanguage(val printableName: String) : Parcelable {
                 ProgrammingLanguage.values()[parcel.readInt()]
 
         override fun newArray(size: Int): Array<ProgrammingLanguage?> = arrayOfNulls(size)
+
+
+        fun serverNameToLanguage(serverName: String): ProgrammingLanguage {
+            return values()
+                    .find {
+                        it.serverPrintableName.equals(serverName, ignoreCase = true)
+                    } ?: throw IllegalArgumentException("ProgrammingLanguage for $serverName is not found")
+        }
 
     }
 
