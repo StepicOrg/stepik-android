@@ -6,7 +6,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 
-@Deprecated("Use string literal instead. This class is only for knowledge what programming languages are exist")
+@Deprecated("Use string literal instead. This class is only for knowledge what programming languages are existed")
 enum class ProgrammingLanguage(val serverPrintableName: String) : Parcelable {
 
     @SerializedName("python3")
