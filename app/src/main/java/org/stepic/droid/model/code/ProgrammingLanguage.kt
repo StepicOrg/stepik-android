@@ -1,9 +1,12 @@
+@file:Suppress("DEPRECATION")
+
 package org.stepic.droid.model.code
 
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 
+@Deprecated("Use string literal instead. This class is only for knowledge what programming languages are exist")
 enum class ProgrammingLanguage(val serverPrintableName: String) : Parcelable {
 
     @SerializedName("python3")
@@ -69,12 +72,45 @@ enum class ProgrammingLanguage(val serverPrintableName: String) : Parcelable {
 
         override fun newArray(size: Int): Array<ProgrammingLanguage?> = arrayOfNulls(size)
 
+        //make it public and resolve highlighting
+        @Suppress("unused")
+        private fun highlighting(serverName: String) {
+            val language = serverNameToLanguage(serverName)
+            when (language) {
+                ProgrammingLanguage.PYTHON -> TODO()
+                ProgrammingLanguage.CPP11 -> TODO()
+                ProgrammingLanguage.CPP -> TODO()
+                ProgrammingLanguage.C -> TODO()
+                ProgrammingLanguage.HASKELL -> TODO()
+                ProgrammingLanguage.HASKELL7 -> TODO()
+                ProgrammingLanguage.HASKELL8 -> TODO()
+                ProgrammingLanguage.JAVA -> TODO()
+                ProgrammingLanguage.JAVA8 -> TODO()
+                ProgrammingLanguage.OCTAVE -> TODO()
+                ProgrammingLanguage.ASM32 -> TODO()
+                ProgrammingLanguage.ASM64 -> TODO()
+                ProgrammingLanguage.SHELL -> TODO()
+                ProgrammingLanguage.RUST -> TODO()
+                ProgrammingLanguage.R -> TODO()
+                ProgrammingLanguage.RUBY -> TODO()
+                ProgrammingLanguage.CLOJURE -> TODO()
+                ProgrammingLanguage.CS -> TODO()
+                ProgrammingLanguage.JAVASCRIPT -> TODO()
+                ProgrammingLanguage.SCALA -> TODO()
+                ProgrammingLanguage.KOTLIN -> TODO()
+                ProgrammingLanguage.GO -> TODO()
+                ProgrammingLanguage.PASCAL -> TODO()
+                ProgrammingLanguage.PERL -> TODO()
+                null -> TODO()
+            }
 
-        fun serverNameToLanguage(serverName: String): ProgrammingLanguage {
+        }
+
+        private fun serverNameToLanguage(serverName: String): ProgrammingLanguage? {
             return values()
                     .find {
                         it.serverPrintableName.equals(serverName, ignoreCase = true)
-                    } ?: throw IllegalArgumentException("ProgrammingLanguage for $serverName is not found")
+                    } ?: return null
         }
 
     }

@@ -17,7 +17,6 @@ import org.stepic.droid.core.presenters.contracts.CodeView
 import org.stepic.droid.model.Attempt
 import org.stepic.droid.model.Reply
 import org.stepic.droid.model.Submission
-import org.stepic.droid.model.code.ProgrammingLanguage
 import javax.inject.Inject
 
 class CodeStepFragment : StepAttemptFragment(), CodeView {
@@ -66,9 +65,8 @@ class CodeStepFragment : StepAttemptFragment(), CodeView {
             val programmingLanguageServerName = codeQuizLanguagePicker.displayedValues[codeQuizLanguagePicker.value]
             chosenProgrammingLanguageName = programmingLanguageServerName
 
-            val programmingLanguage = ProgrammingLanguage.serverNameToLanguage(programmingLanguageServerName)
             codeQuizAnswerField.text.clear()
-            codeQuizAnswerField.setText(step.block?.options?.codeTemplates?.get(programmingLanguage))
+            codeQuizAnswerField.setText(step.block?.options?.codeTemplates?.get(programmingLanguageServerName))
             showLanguageChoosingView(false)
             showCodeQuizEditor()
         }
@@ -183,9 +181,6 @@ class CodeStepFragment : StepAttemptFragment(), CodeView {
     override fun onAttemptIsNotStored() {
         step.block?.options?.limits
                 ?.keys
-                ?.map {
-                    it.serverPrintableName
-                }
                 ?.sorted()
                 ?.toTypedArray()
                 ?.let {

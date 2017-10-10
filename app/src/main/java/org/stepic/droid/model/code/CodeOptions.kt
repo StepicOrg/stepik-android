@@ -4,24 +4,24 @@ import android.os.Bundle
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import org.stepic.droid.util.readMapCustom
-import org.stepic.droid.util.writeMapCustom
+import org.stepic.droid.util.readMapCustomString
+import org.stepic.droid.util.writeMapCustomString
 
-data class CodeOptions(val limits: Map<ProgrammingLanguage, CodeLimit>,
+data class CodeOptions(val limits: Map<String, CodeLimit>,
                        @SerializedName("execution_time_limit")
                        val executionTimeLimit: Int,
                        @SerializedName("code_templates")
-                       val codeTemplates: HashMap<ProgrammingLanguage, String>,
+                       val codeTemplates: HashMap<String, String>,
                        @SerializedName("execution_memory_limit")
                        val executionMemoryLimit: Int,
                        val samples: List<ParcelableStringList>
 ) : Parcelable {
     private constructor(parcel: Parcel) : this(
-            parcel.readMapCustom<ProgrammingLanguage, CodeLimit>(ProgrammingLanguage::class.java.classLoader, CodeLimit::class.java.classLoader),
+            parcel.readMapCustomString(CodeLimit::class.java.classLoader),
             parcel.readInt(),
 
             parcel.readBundle().let {
-                val hashMap = it.getSerializable(CODE_TEMPLATES_KEY) as HashMap<ProgrammingLanguage, String>
+                val hashMap = it.getSerializable(CODE_TEMPLATES_KEY) as HashMap<String, String>
                 hashMap
             },
 
@@ -30,7 +30,7 @@ data class CodeOptions(val limits: Map<ProgrammingLanguage, CodeLimit>,
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeMapCustom(limits, flags)
+        parcel.writeMapCustomString(limits, flags)
         parcel.writeInt(executionTimeLimit)
 
         val codeTemplatesBundle = Bundle().apply { putSerializable(CODE_TEMPLATES_KEY, codeTemplates) }

@@ -17,10 +17,10 @@ class CodeOptionsTest {
             addAll(listOf("1", "2", "3", "4"))
         }
         val codeOptions = CodeOptions(
-                limits = mapOf(ProgrammingLanguage.JAVA to CodeLimit(3, 256)),
+                limits = mapOf("java" to CodeLimit(3, 256)),
                 executionMemoryLimit = 120,
                 executionTimeLimit = 5,
-                codeTemplates = hashMapOf(ProgrammingLanguage.JAVA to "public static etc"),
+                codeTemplates = hashMapOf("java" to "public static etc"),
                 samples = listOf(sample1, sample2)
         )
 
@@ -31,10 +31,10 @@ class CodeOptionsTest {
     @Test
     fun emptyListsAndMaps_success() {
         val codeOptions = CodeOptions(
-                limits = emptyMap<ProgrammingLanguage, CodeLimit>(),
+                limits = emptyMap<String, CodeLimit>(),
                 executionTimeLimit = 0,
                 executionMemoryLimit = 0,
-                codeTemplates = HashMap<ProgrammingLanguage, String>(),
+                codeTemplates = HashMap<String, String>(),
                 samples = emptyList()
         )
 
