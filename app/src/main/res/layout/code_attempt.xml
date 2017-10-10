@@ -4,27 +4,19 @@
               android:layout_height="match_parent"
               android:orientation="vertical">
 
-    <FrameLayout
-        android:id="@+id/code_warning"
+    <TextView
+        android:id="@+id/codeWarning"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:background="@color/warning_light_yellow"
-        android:clickable="false"
-        android:foreground="@drawable/non_radius_foreground"
-        android:minHeight="@dimen/min_ux_touchable_size">
+        android:gravity="center"
+        android:minHeight="@dimen/min_ux_touchable_size"
+        android:padding="8dp"
+        android:text="@string/code_warning"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:padding="8dp"
-            android:text="@string/code_warning"/>
-
-    </FrameLayout>
 
     <EditText
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/codeQuizAnswerField"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -36,8 +28,6 @@
         android:minLines="5"
         android:padding="8dp"
         android:scrollbarStyle="outsideOverlay"
-        android:scrollbars="vertical">
-
-    </EditText>
+        android:scrollbars="vertical"/>
 
 </LinearLayout>

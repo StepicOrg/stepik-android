@@ -9,12 +9,15 @@ import kotlinx.android.synthetic.main.code_attempt.*
 import org.stepic.droid.R
 import org.stepic.droid.model.Attempt
 import org.stepic.droid.model.Reply
+import org.stepic.droid.model.code.ProgrammingLanguage
 
 class CodeStepFragment : StepAttemptFragment() {
 
     companion object {
         fun newInstance(): CodeStepFragment = CodeStepFragment()
     }
+
+    private var chosenProgrammingLanguage: ProgrammingLanguage? = null
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
