@@ -525,5 +525,6 @@
 
     <string name="choose_language">Выберите язык</string>
     <string name="choose_action">Выбрать</string>
-
+    <string name="code_quiz_fullscreen">Развернуть</string>
+    <string name="code_quiz_reset">Сброс</string>
 </resources>

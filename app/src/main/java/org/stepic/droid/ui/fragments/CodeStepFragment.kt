@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.NumberPicker
-import kotlinx.android.synthetic.main.view_code_quiz.*
 import kotlinx.android.synthetic.main.fragment_step_attempt.*
+import kotlinx.android.synthetic.main.view_code_quiz.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.presenters.CodePresenter
@@ -54,6 +54,14 @@ class CodeStepFragment : StepAttemptFragment(), CodeView {
             showCodeQuizEditor()
         }
 
+        codeQuizFullscreenAction.setOnClickListener {
+            // TODO: 10/10/2017 implement
+        }
+
+        codeQuizResetAction.setOnClickListener {
+            // TODO: 10/10/2017 implement
+        }
+
         showCodeQuizEditor(false)
         codePresenter.attachView(this)
     }
@@ -97,8 +105,16 @@ class CodeStepFragment : StepAttemptFragment(), CodeView {
 
     private fun showCodeQuizEditor(needShow: Boolean = true) {
         val visibility = toVisibility(needShow)
+        if (needShow) {
+            codeQuizCurrentLanguage.text = chosenProgrammingLanguageName
+        }
+
         codeQuizAnswerField.visibility = visibility
         stepAttemptSubmitButton.visibility = visibility
+        codeQuizCurrentLanguage.visibility = visibility
+        codeQuizDelimiter.visibility = visibility
+        codeQuizFullscreenAction.visibility = visibility
+        codeQuizResetAction.visibility = visibility
     }
 
     private fun showLanguageChoosingView(needShow: Boolean = true) {

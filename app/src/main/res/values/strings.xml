@@ -532,4 +532,6 @@
 
     <string name="choose_language">Choose language</string>
     <string name="choose_action">Choose</string>
+    <string name="code_quiz_fullscreen">Fullscreen</string>
+    <string name="code_quiz_reset">Reset</string>
 </resources>
