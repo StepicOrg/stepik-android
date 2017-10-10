@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.NumberPicker
-import kotlinx.android.synthetic.main.code_attempt.*
+import kotlinx.android.synthetic.main.view_code_quiz.*
 import kotlinx.android.synthetic.main.fragment_step_attempt.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
@@ -40,7 +40,7 @@ class CodeStepFragment : StepAttemptFragment(), CodeView {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val viewGroup = (this.activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(R.layout.code_attempt, attemptContainer, false) as ViewGroup
+        val viewGroup = (this.activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(R.layout.view_code_quiz, attemptContainer, false) as ViewGroup
         attemptContainer.addView(viewGroup)
 
         codeQuizChooseLangAction.setOnClickListener {
