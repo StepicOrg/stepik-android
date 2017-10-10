@@ -2,6 +2,8 @@ package org.stepic.droid.ui.fragments
 
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +16,7 @@ import org.stepic.droid.core.presenters.CodePresenter
 import org.stepic.droid.core.presenters.contracts.CodeView
 import org.stepic.droid.model.Attempt
 import org.stepic.droid.model.Reply
+import org.stepic.droid.model.Submission
 import org.stepic.droid.model.code.ProgrammingLanguage
 import javax.inject.Inject
 
@@ -26,6 +29,22 @@ class CodeStepFragment : StepAttemptFragment(), CodeView {
 
     @Inject
     lateinit var codePresenter: CodePresenter
+
+    private val wrongAnswerTextWatcher = object : TextWatcher {
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            //no-op
+        }
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            resetBackgroundOfAttempt()
+            hideStatus()
+        }
+
+        override fun afterTextChanged(s: Editable?) {
+            //no-op
+        }
+
+    }
 
     override fun injectComponent() {
         App
@@ -62,12 +81,15 @@ class CodeStepFragment : StepAttemptFragment(), CodeView {
             // TODO: 10/10/2017 implement
         }
 
+        codeQuizAnswerField.addTextChangedListener(wrongAnswerTextWatcher)
+
         codePresenter.attachView(this)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         codePresenter.detachView(this)
+        codeQuizAnswerField.removeTextChangedListener(wrongAnswerTextWatcher)
     }
 
     override fun showAttempt(attempt: Attempt) {
@@ -146,10 +168,16 @@ class CodeStepFragment : StepAttemptFragment(), CodeView {
     }
 
     override fun onRestoreSubmission() {
-        val reply = submission.reply ?: return
+        val reply = submission?.reply ?: return
 
         val text = reply.code
         codeQuizAnswerField.setText(text)
+
+        if (submission.status == Submission.Status.WRONG) {
+            submission = null
+            actionButton.setText(R.string.send)
+            blockUIBeforeSubmit(false)
+        }
     }
 
     override fun onAttemptIsNotStored() {
@@ -172,4 +200,5 @@ class CodeStepFragment : StepAttemptFragment(), CodeView {
         showLanguageChoosingView(false)
         showCodeQuizEditor()
     }
+
 }

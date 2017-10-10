@@ -410,11 +410,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
         blockUIBeforeSubmit(false);
         setListenerToActionButton(actionButtonGeneralListener);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            attemptContainer.setBackground(rootView.getBackground());
-        } else {
-            attemptContainer.setBackgroundDrawable(rootView.getBackground());
-        }
+        resetBackgroundOfAttempt();
 
         hintTextView.setVisibility(View.GONE);
         statusTextView.setVisibility(View.GONE);
@@ -424,6 +420,18 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
         stepAttemptPresenter.tryAgain(step.getId());
         submission = null;
 
+    }
+
+    protected final void resetBackgroundOfAttempt() {
+        if (attemptContainer.getBackground() == rootView.getBackground()) {
+            return;
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            attemptContainer.setBackground(rootView.getBackground());
+        } else {
+            attemptContainer.setBackgroundDrawable(rootView.getBackground());
+        }
     }
 
     private void setListenerToActionButton(View.OnClickListener listener) {
@@ -588,7 +596,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
     }
 
     @Override
-    public void onNeedResolveActionButtonText() {
+    public final void onNeedResolveActionButtonText() {
         if (submission == null || submission.getStatus() == Submission.Status.LOCAL) {
             setTextToActionButton(submitText);
         } else {
@@ -702,5 +710,9 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
         getSharedPreferenceHelper().afterRateWasHandled();
         RatingUtilKt.reportRateEvent(getAnalytic(), starNumber, Analytic.Rating.NEGATIVE_EMAIL);
         getScreenManager().showTextFeedback(getActivity());
+    }
+
+    protected final void hideStatus() {
+        statusTextView.setVisibility(View.GONE);
     }
 }
