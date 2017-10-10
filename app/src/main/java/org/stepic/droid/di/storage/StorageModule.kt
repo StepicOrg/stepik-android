@@ -3,6 +3,7 @@ package org.stepic.droid.di.storage
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -94,7 +95,10 @@ abstract class StorageModule {
         @StorageSingleton
         @Provides
         @JvmStatic
-        internal fun provideStorageGson(): Gson = Gson()
+        internal fun provideStorageGson(): Gson =
+                GsonBuilder()
+                        .enableComplexMapKeySerialization()
+                        .create()
 
         @StorageSingleton
         @Provides

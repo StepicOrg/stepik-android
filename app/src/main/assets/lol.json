@@ -1,0 +1,104 @@
+{
+  "code_templates": {
+    "RUST": "fn main() {\n    // put your Rust code here\n}",
+    "CPP11": "#include \u003ccassert\u003e\n#include \u003ciostream\u003e\n\nclass Fibonacci final {\n public:\n  static int get(int n) {\n    assert(n \u003e\u003d 0);\n    // put your code here\n    return n;\n  }\n};\n\nint main(void) {\n  int n;\n  std::cin \u003e\u003e n;\n  std::cout \u003c\u003c Fibonacci::get(n) \u003c\u003c std::endl;\n  return 0;\n}",
+    "R": "# put your R code here",
+    "OCTAVE": "# put your octave code here",
+    "PYTHON": "def fib(n):\n    # put your code here\n\ndef main():\n    n \u003d int(input())\n    print(fib(n))\n\n\nif __name__ \u003d\u003d \"__main__\":\n    main()",
+    "CS": "using System;\n\npublic class MainClass\n{\n    public static void Main()\n    {\n        // put your c# code here\n    }\n}",
+    "ASM64": "# put your asm64 code here",
+    "SHELL": "# put your shell (bash) code here",
+    "JAVA": "class Main {\n  public static void main(String[] args) {\n    // put your code here\n  }\n}",
+    "CPP": "#include \u003ccassert\u003e\n#include \u003ciostream\u003e\n\nclass Fibonacci {\n public:\n  static int get(int n) {\n    assert(n \u003e\u003d 0);\n    // put your code here\n    return n;\n  }\n};\n\nint main(void) {\n  int n;\n  std::cin \u003e\u003e n;\n  std::cout \u003c\u003c Fibonacci::get(n) \u003c\u003c std::endl;\n  return 0;\n}",
+    "JAVA8": "class Main {\n  public static void main(String[] args) {\n    // put your code here\n  }\n}",
+    "CLOJURE": ";; put your clojure code here",
+    "HASKELL": "main :: IO ()\n-- put your code here",
+    "HASKELL7": "main :: IO ()\n-- put your code here",
+    "SCALA": "# put your Scala code here",
+    "KOTLIN": "fun main(args: Array\u003cString\u003e) {\n    // put your code here\n}",
+    "ASM32": "# put your asm32 code here",
+    "JAVASCRIPT": "// put your javascript (node.js) code here"
+  },
+  "execution_memory_limit": 256,
+  "execution_time_limit": 1,
+  "limits": {
+    "ASM64": {
+      "memory": 256,
+      "time": 1
+    },
+    "PYTHON": {
+      "memory": 256,
+      "time": 3
+    },
+    "KOTLIN": {
+      "memory": 256,
+      "time": 2
+    },
+    "HASKELL": {
+      "memory": 256,
+      "time": 2
+    },
+    "ASM32": {
+      "memory": 256,
+      "time": 1
+    },
+    "SHELL": {
+      "memory": 256,
+      "time": 1
+    },
+    "RUST": {
+      "memory": 256,
+      "time": 3
+    },
+    "R": {
+      "memory": 256,
+      "time": 2
+    },
+    "CPP11": {
+      "memory": 256,
+      "time": 1
+    },
+    "HASKELL7": {
+      "memory": 256,
+      "time": 2
+    },
+    "JAVA": {
+      "memory": 256,
+      "time": 2
+    },
+    "SCALA": {
+      "memory": 256,
+      "time": 2
+    },
+    "CS": {
+      "memory": 256,
+      "time": 2
+    },
+    "OCTAVE": {
+      "memory": 256,
+      "time": 3
+    },
+    "JAVASCRIPT": {
+      "memory": 256,
+      "time": 3
+    },
+    "CLOJURE": {
+      "memory": 256,
+      "time": 2
+    },
+    "CPP": {
+      "memory": 256,
+      "time": 1
+    },
+    "JAVA8": {
+      "memory": 256,
+      "time": 2
+    }
+  },
+  "samples": [
+    [
+      "3",
+      "2"
+    ]
+  ]
+}

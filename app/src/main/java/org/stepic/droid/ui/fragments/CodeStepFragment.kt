@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.NumberPicker
 import kotlinx.android.synthetic.main.code_attempt.*
 import org.stepic.droid.R
 import org.stepic.droid.model.Attempt
@@ -30,6 +31,25 @@ class CodeStepFragment : StepAttemptFragment() {
         codeQuizAnswerField.text.clear()
         // TODO: 29.03.16  choose and after that get from step.block.options.code_templates or from stored submission
         codeQuizAnswerField.setText(textResolver.fromHtml("#include <iostream> int main() { // put your code here return 0; }"))
+
+        step.block?.options?.limits
+                ?.keys
+                ?.map {
+                    it.printableName
+                }
+                ?.toTypedArray()
+                ?.let {
+                    showLanguageChooser(it)
+                }
+
+    }
+
+    private fun showLanguageChooser(languageNames: Array<String>) {
+        codeQuizLanguagePicker.minValue = 0
+        codeQuizLanguagePicker.maxValue = languageNames.size - 1
+        codeQuizLanguagePicker.displayedValues = languageNames
+        codeQuizLanguagePicker.descendantFocusability = NumberPicker.FOCUS_BLOCK_DESCENDANTS
+        codeQuizLanguagePicker.wrapSelectorWheel = false
     }
 
     override fun generateReply(): Reply {

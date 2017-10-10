@@ -74,7 +74,8 @@ constructor(
         }
 
         blockWrapper.block.options?.let {
-            values.put(DbStructureBlock.Column.CODE_OPTIONS, gson.toJson(it, CodeOptions::class.java))
+            val jsonString = gson.toJson(it, CodeOptions::class.java)
+            values.put(DbStructureBlock.Column.CODE_OPTIONS, jsonString)
         }
 
         return values

@@ -4,56 +4,56 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 
-enum class ProgrammingLanguage : Parcelable {
+enum class ProgrammingLanguage(val printableName: String) : Parcelable {
 
     @SerializedName("python3")
-    PYTHON,
+    PYTHON("python3"),
     @SerializedName("c++11")
-    CPP11,
+    CPP11("c++11"),
     @SerializedName("c++")
-    CPP,
+    CPP("c++"),
     @SerializedName("c")
-    C,
+    C("c"),
     @SerializedName("haskell")
-    HASKELL,
+    HASKELL("haskell"),
     @SerializedName("haskell 7.10")
-    HASKELL7,
+    HASKELL7("haskell 7.10"),
     @SerializedName("haskell 8.0")
-    HASKELL8,
+    HASKELL8("haskell 8.0"),
     @SerializedName("java")
-    JAVA,
+    JAVA("java"),
     @SerializedName("java8")
-    JAVA8,
+    JAVA8("java8"),
     @SerializedName("octave")
-    OCTAVE,
+    OCTAVE("octave"),
     @SerializedName("asm32")
-    ASM32,
+    ASM32("asm32"),
     @SerializedName("asm64")
-    ASM64,
+    ASM64("asm64"),
     @SerializedName("shell")
-    SHELL,
+    SHELL("shell"),
     @SerializedName("rust")
-    RUST,
+    RUST("rust"),
     @SerializedName("r")
-    R,
+    R("r"),
     @SerializedName("ruby")
-    RUBY,
+    RUBY("ruby"),
     @SerializedName("clojure")
-    CLOJURE,
+    CLOJURE("clojure"),
     @SerializedName("mono c#")
-    CS,
+    CS("mono c#"),
     @SerializedName("javascript")
-    JAVASCRIPT,
+    JAVASCRIPT("javascript"),
     @SerializedName("scala")
-    SCALA,
+    SCALA("scala"),
     @SerializedName("kotlin")
-    KOTLIN,
+    KOTLIN("kotlin"),
     @SerializedName("go")
-    GO,
+    GO("go"),
     @SerializedName("pascalabc")
-    PASCAL,
+    PASCAL("pascalabc"),
     @SerializedName("perl")
-    PERL;
+    PERL("perl");
 
     override fun describeContents(): Int = 0
 

@@ -15,6 +15,11 @@
         android:padding="8dp"
         android:text="@string/code_warning"/>
 
+    <biz.kasual.materialnumberpicker.MaterialNumberPicker
+        android:id="@+id/codeQuizLanguagePicker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
 
     <EditText
         android:id="@+id/codeQuizAnswerField"
