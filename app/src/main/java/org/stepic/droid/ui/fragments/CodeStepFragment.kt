@@ -62,7 +62,6 @@ class CodeStepFragment : StepAttemptFragment(), CodeView {
             // TODO: 10/10/2017 implement
         }
 
-        showCodeQuizEditor(false)
         codePresenter.attachView(this)
     }
 
@@ -88,6 +87,7 @@ class CodeStepFragment : StepAttemptFragment(), CodeView {
             //reflection failed -> ignore
         }
 
+        showCodeQuizEditor(false)
         showLanguageChoosingView()
     }
 
