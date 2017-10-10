@@ -149,7 +149,11 @@ class CodeStepFragment : StepAttemptFragment(), CodeView {
                 }
     }
 
-    override fun onShowStored(programmingLanguage: ProgrammingLanguage, code: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun onShowStored(language: String, code: String) {
+        chosenProgrammingLanguageName = language
+        codeQuizAnswerField.text.clear()
+        codeQuizAnswerField.setText(code)
+        showLanguageChoosingView(false)
+        showCodeQuizEditor()
     }
 }

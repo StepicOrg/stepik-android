@@ -6,6 +6,7 @@ import org.stepic.droid.di.qualifiers.FeaturedCoursesDaoQualifier
 import org.stepic.droid.di.storage.StorageSingleton
 import org.stepic.droid.model.*
 import org.stepic.droid.model.Unit
+import org.stepic.droid.model.code.CodeSubmission
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.storage.dao.IDao
 import org.stepic.droid.storage.structure.*
@@ -18,6 +19,7 @@ import javax.inject.Inject
 @StorageSingleton
 class DatabaseFacade
 @Inject constructor(
+        private val codeSubmissionDao: IDao<CodeSubmission>,
         private val sectionDao: IDao<Section>,
         private val unitDao: IDao<Unit>,
         private val progressDao: IDao<Progress>,
@@ -439,6 +441,17 @@ class DatabaseFacade
         return externalVideoUrlDao
                 .getAll(DbStructureVideoUrl.Column.videoId, videoId.toString())
                 .filterNotNull()
+    }
+
+    fun getCodeSubmission(attemptId: Long): CodeSubmission? =
+            codeSubmissionDao.get(DbStructureCodeSubmission.Column.ATTEMPT_ID, attemptId.toString())
+
+    fun removeCodeSubmissionsOfStep(stepId: Long) {
+        codeSubmissionDao.remove(DbStructureCodeSubmission.Column.STEP_ID, stepId.toString())
+    }
+
+    fun addCodeSubmission(codeSubmission: CodeSubmission) {
+        codeSubmissionDao.insertOrUpdate(codeSubmission)
     }
 
 }

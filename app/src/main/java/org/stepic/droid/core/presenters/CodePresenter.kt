@@ -3,7 +3,6 @@ package org.stepic.droid.core.presenters
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.CodeView
 import org.stepic.droid.di.step.code.CodeScope
-import org.stepic.droid.model.code.ProgrammingLanguage
 import org.stepic.droid.storage.operations.DatabaseFacade
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
@@ -19,11 +18,18 @@ class CodePresenter
     fun onShowAttempt(attemptId: Long, stepId: Long) {
         //if we have code for attemptId in database -> show
         //otherwise -> get by stepId and remove all -> show from block
-        view?.onAttemptIsNotStored()
+        threadPoolExecutor.execute {
+            val codeSubmission = databaseFacade.getCodeSubmission(attemptId)
+            if (codeSubmission == null) {
+                mainHandler.post {
+                    view?.onAttemptIsNotStored()
+                }
+            } else {
+                mainHandler.post {
+                    view?.onShowStored(codeSubmission.language, codeSubmission.code)
+                }
+            }
 
-        if (false) {
-            view?.onShowStored(ProgrammingLanguage.ASM32, "STUB")
         }
     }
-
 }

@@ -17,7 +17,7 @@ public abstract class DaoBase<T> implements IDao<T> {
 
     private SQLiteDatabase database;
 
-    public DaoBase(SQLiteDatabase writeableDatabase) {
+    public DaoBase(@NotNull SQLiteDatabase writeableDatabase) {
         database = writeableDatabase;
     }
 

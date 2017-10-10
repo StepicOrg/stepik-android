@@ -1,12 +1,22 @@
 package org.stepic.droid.core
 
+import org.stepic.droid.concurrency.SingleThreadExecutor
+import org.stepic.droid.di.AppCoreModule
 import org.stepic.droid.model.Attempt
 import org.stepic.droid.model.LessonSession
 import org.stepic.droid.model.Submission
+import org.stepic.droid.model.code.CodeSubmission
+import org.stepic.droid.storage.operations.DatabaseFacade
 import javax.inject.Inject
+import javax.inject.Named
 
 class LocalLessonSessionManagerImpl
-@Inject constructor() : LessonSessionManager {
+@Inject constructor(
+        //single thread for avoiding race condition and creation of tons of threads
+        @Named(AppCoreModule.SINGLE_THREAD_CODE_SAVER)
+        private val singleThreadExecutor: SingleThreadExecutor,
+        private val databaseFacade: DatabaseFacade
+) : LessonSessionManager {
 
     private val stepIdToLessonSession: MutableMap<Long, LessonSession> = hashMapOf()
 
@@ -16,6 +26,18 @@ class LocalLessonSessionManagerImpl
         }
 
         stepIdToLessonSession.put(stepId, LessonSession(stepId, attempt, submission, numberOfSubmissionOnFirstPage))
+
+        if (submission.reply?.language != null && submission.reply?.code != null) {
+            singleThreadExecutor.execute {
+                val codeSubmission = CodeSubmission(
+                        stepId = stepId,
+                        attemptId = attempt.id,
+                        code = submission.reply.code,
+                        language = submission.reply.language
+                )
+                databaseFacade.addCodeSubmission(codeSubmission)
+            }
+        }
     }
 
     override fun reset() {

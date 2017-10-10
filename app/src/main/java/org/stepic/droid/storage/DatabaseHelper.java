@@ -10,6 +10,7 @@ import org.stepic.droid.storage.structure.DbStructureBlock;
 import org.stepic.droid.storage.structure.DbStructureCachedVideo;
 import org.stepic.droid.storage.structure.DbStructureCalendarSection;
 import org.stepic.droid.storage.structure.DbStructureCertificateViewItem;
+import org.stepic.droid.storage.structure.DbStructureCodeSubmission;
 import org.stepic.droid.storage.structure.DbStructureCourseLastInteraction;
 import org.stepic.droid.storage.structure.DbStructureEnrolledAndFeaturedCourses;
 import org.stepic.droid.storage.structure.DbStructureLastStep;
@@ -80,6 +81,11 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         upgradeFrom22To23(db);
         upgradeFrom23To24(db);
         upgradeFrom24To25(db);
+        upgradeFrom25To26(db);
+    }
+
+    private void upgradeFrom25To26(SQLiteDatabase db) {
+        createCodeSubmissionTable(db);
     }
 
     private void upgradeFrom24To25(SQLiteDatabase db) {
@@ -172,11 +178,11 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         alterColumn(db, DbStructureStep.STEPS, DbStructureStep.Column.DISCUSSION_ID, TEXT_TYPE);
     }
 
-
     private void upgradeFrom6To7(SQLiteDatabase db) {
         db.execSQL("DROP TABLE IF EXISTS " + DbStructureNotification.NOTIFICATIONS_TEMP);
         createNotification(db, DbStructureNotification.NOTIFICATIONS_TEMP);
     }
+
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -316,6 +322,10 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
 
         if (oldVersion < 25) {
             upgradeFrom24To25(db);
+        }
+
+        if (oldVersion < 26) {
+            upgradeFrom25To26(db);
         }
 
     }
@@ -580,7 +590,6 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(sql);
     }
 
-
     private void createCertificateView(SQLiteDatabase db, String name) {
         String sql = "CREATE TABLE " + name
                 + " ("
@@ -594,6 +603,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
                 + ")";
         db.execSQL(sql);
     }
+
 
     private void createVideoTimestamp(SQLiteDatabase db) {
         String sql = "CREATE TABLE " + DbStructureVideoTimestamp.VIDEO_TIMESTAMP
@@ -614,7 +624,6 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(sql);
     }
 
-
     private void createCourseLastInteractionTable(SQLiteDatabase db) {
         String sql = "CREATE TABLE " + DbStructureCourseLastInteraction.COURSE_LAST_INTERACTION
                 + " ("
@@ -631,6 +640,18 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
                 + DbStructureVideoUrl.Column.INSTANCE.getVideoId() + WHITESPACE + LONG_TYPE + ", "
                 + DbStructureVideoUrl.Column.INSTANCE.getQuality() + WHITESPACE + TEXT_TYPE + ", "
                 + DbStructureVideoUrl.Column.INSTANCE.getUrl() + WHITESPACE + TEXT_TYPE
+                + ")";
+        db.execSQL(sql);
+    }
+
+
+    private void createCodeSubmissionTable(SQLiteDatabase db) {
+        String sql = "CREATE TABLE " + DbStructureCodeSubmission.CODE_SUBMISSION
+                + " ("
+                + DbStructureCodeSubmission.Column.ATTEMPT_ID + WHITESPACE + LONG_TYPE + ", "
+                + DbStructureCodeSubmission.Column.STEP_ID + WHITESPACE + LONG_TYPE + ", "
+                + DbStructureCodeSubmission.Column.PROGRAMMING_LANGUAGE + WHITESPACE + TEXT_TYPE + ", "
+                + DbStructureCodeSubmission.Column.CODE + WHITESPACE + TEXT_TYPE
                 + ")";
         db.execSQL(sql);
     }
