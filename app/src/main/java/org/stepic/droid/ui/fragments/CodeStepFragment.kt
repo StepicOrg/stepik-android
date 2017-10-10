@@ -9,15 +9,31 @@ import android.widget.NumberPicker
 import kotlinx.android.synthetic.main.code_attempt.*
 import kotlinx.android.synthetic.main.fragment_step_attempt.*
 import org.stepic.droid.R
+import org.stepic.droid.base.App
+import org.stepic.droid.core.presenters.CodePresenter
+import org.stepic.droid.core.presenters.contracts.CodeView
 import org.stepic.droid.model.Attempt
 import org.stepic.droid.model.Reply
 import org.stepic.droid.model.code.ProgrammingLanguage
+import javax.inject.Inject
 
-class CodeStepFragment : StepAttemptFragment() {
+class CodeStepFragment : StepAttemptFragment(), CodeView {
 
     companion object {
         private const val CHOSEN_POSITION_KEY: String = "chosenPositionKey"
         fun newInstance(): CodeStepFragment = CodeStepFragment()
+    }
+
+    @Inject
+    lateinit var codePresenter: CodePresenter
+
+    override fun injectComponent() {
+        App
+                .componentManager()
+                .stepComponent(step.id)
+                .codeComponentBuilder()
+                .build()
+                .inject(this)
     }
 
     private var chosenProgrammingLanguageName: String? = null
@@ -39,19 +55,16 @@ class CodeStepFragment : StepAttemptFragment() {
         }
 
         showCodeQuizEditor(false)
+        codePresenter.attachView(this)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        codePresenter.detachView(this)
     }
 
     override fun showAttempt(attempt: Attempt) {
-        step.block?.options?.limits
-                ?.keys
-                ?.map {
-                    it.serverPrintableName
-                }
-                ?.sorted()
-                ?.toTypedArray()
-                ?.let {
-                    showLanguageChooser(it)
-                }
+        codePresenter.onShowAttempt(attemptId = attempt.id, stepId = step.id)
     }
 
     private fun showLanguageChooser(languageNames: Array<String>) {
@@ -120,6 +133,23 @@ class CodeStepFragment : StepAttemptFragment() {
         val reply = submission.reply ?: return
 
         val text = reply.code
-        codeQuizAnswerField.setText(text) // TODO: 29.03.16 render code
+        codeQuizAnswerField.setText(text)
+    }
+
+    override fun onAttemptIsNotStored() {
+        step.block?.options?.limits
+                ?.keys
+                ?.map {
+                    it.serverPrintableName
+                }
+                ?.sorted()
+                ?.toTypedArray()
+                ?.let {
+                    showLanguageChooser(it)
+                }
+    }
+
+    override fun onShowStored(programmingLanguage: ProgrammingLanguage, code: String) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }
