@@ -523,4 +523,7 @@
     <string name="courses_carousel_my_courses_empty">Запишитесь на курсы и они будут показаны здесь</string>
     <string name="empty_courses_popular">Открытые курсы сейчас в отпуске. Пожалуйста, зайдите позже</string>
 
+    <string name="choose_language">Выберите язык</string>
+    <string name="choose_action">Выбрать</string>
+
 </resources>

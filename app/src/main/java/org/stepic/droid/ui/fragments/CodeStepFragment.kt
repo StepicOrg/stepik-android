@@ -15,6 +15,7 @@ import org.stepic.droid.model.code.ProgrammingLanguage
 class CodeStepFragment : StepAttemptFragment() {
 
     companion object {
+        private const val CHOSEN_POSITION_KEY: String = "chosenPositionKey"
         fun newInstance(): CodeStepFragment = CodeStepFragment()
     }
 
@@ -37,6 +38,7 @@ class CodeStepFragment : StepAttemptFragment() {
                 ?.map {
                     it.printableName
                 }
+                ?.sorted()
                 ?.toTypedArray()
                 ?.let {
                     showLanguageChooser(it)
@@ -50,6 +52,24 @@ class CodeStepFragment : StepAttemptFragment() {
         codeQuizLanguagePicker.displayedValues = languageNames
         codeQuizLanguagePicker.descendantFocusability = NumberPicker.FOCUS_BLOCK_DESCENDANTS
         codeQuizLanguagePicker.wrapSelectorWheel = false
+
+        try {
+            codeQuizLanguagePicker.setTextSize(50f) //Warning: reflection!
+        } catch (exception: Exception) {
+            //reflection failed -> ignore
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(CHOSEN_POSITION_KEY, codeQuizLanguagePicker.value)
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        savedInstanceState?.let {
+            codeQuizLanguagePicker.value = it.getInt(CHOSEN_POSITION_KEY)
+        }
     }
 
     override fun generateReply(): Reply {

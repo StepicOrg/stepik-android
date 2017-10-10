@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical">
@@ -14,6 +15,29 @@
         android:minHeight="@dimen/min_ux_touchable_size"
         android:padding="8dp"
         android:text="@string/code_warning"/>
+
+    <TextView
+        android:id="@+id/codeQuizChooseLangAction"
+        fontPath="fonts/Roboto-Bold.ttf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:padding="@dimen/guideline_standard_padding"
+        android:text="@string/choose_action"
+        android:textColor="@color/stepic_blue_ribbon"
+        android:textSize="16sp"
+        tools:ignore="MissingPrefix"/>
+
+    <TextView
+        android:id="@+id/codeQuizChooseLangTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="@dimen/guideline_standard_padding"
+        android:text="@string/choose_language"
+        android:textSize="16sp"/>
 
     <biz.kasual.materialnumberpicker.MaterialNumberPicker
         android:id="@+id/codeQuizLanguagePicker"
