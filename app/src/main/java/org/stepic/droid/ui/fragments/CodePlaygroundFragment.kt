@@ -4,9 +4,10 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
+import android.view.*
+import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_code_playground.*
 import org.stepic.droid.R
 import org.stepic.droid.base.FragmentBase
@@ -14,6 +15,7 @@ import org.stepic.droid.ui.activities.CodePlaygroundActivity
 import org.stepic.droid.ui.util.BackButtonHandler
 import org.stepic.droid.ui.util.OnBackClickListener
 import org.stepic.droid.ui.util.initCenteredToolbar
+import org.stepic.droid.util.ColorUtil
 
 class CodePlaygroundFragment : FragmentBase(), OnBackClickListener {
     companion object {
@@ -56,6 +58,7 @@ class CodePlaygroundFragment : FragmentBase(), OnBackClickListener {
         if (savedInstanceState == null) {
             codePlaygroundEditText.setText(arguments.getString(CODE_KEY))
         }
+        setHasOptionsMenu(true)
     }
 
     override fun onBackClick(): Boolean {
@@ -64,6 +67,29 @@ class CodePlaygroundFragment : FragmentBase(), OnBackClickListener {
         resultIntent.putExtra(CodePlaygroundActivity.CODE_KEY, codePlaygroundEditText.text.toString())
         activity?.setResult(Activity.RESULT_OK, resultIntent)
         return false
+    }
+
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater?.inflate(R.menu.code_playground_menu, menu)
+
+        val menuItem = menu?.findItem(R.id.action_reset_code)
+        val resetString = SpannableString(getString(R.string.code_quiz_reset))
+        resetString.setSpan(ForegroundColorSpan(ColorUtil.getColorArgb(R.color.new_red_color)), 0, resetString.length, 0)
+        menuItem?.title = resetString
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean = when (item?.itemId) {
+        R.id.action_reset_code -> {
+            Toast.makeText(context, "reset", Toast.LENGTH_SHORT).show()
+            true
+        }
+        R.id.action_language_code -> {
+            Toast.makeText(context, "lang", Toast.LENGTH_SHORT).show()
+            true
+        }
+        else -> false
     }
 
 }
