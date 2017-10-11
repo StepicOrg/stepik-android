@@ -7,29 +7,38 @@ import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.*
-import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_code_playground.*
 import org.stepic.droid.R
 import org.stepic.droid.base.FragmentBase
+import org.stepic.droid.model.code.CodeOptions
 import org.stepic.droid.ui.activities.CodePlaygroundActivity
+import org.stepic.droid.ui.dialogs.ProgrammingLanguageChooserDialogFragment
+import org.stepic.droid.ui.dialogs.ResetCodeDialogFragment
 import org.stepic.droid.ui.util.BackButtonHandler
 import org.stepic.droid.ui.util.OnBackClickListener
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.ColorUtil
 
-class CodePlaygroundFragment : FragmentBase(), OnBackClickListener {
+class CodePlaygroundFragment : FragmentBase(),
+        OnBackClickListener,
+        ProgrammingLanguageChooserDialogFragment.Callback,
+        ResetCodeDialogFragment.Callback {
+
     companion object {
+
         private const val CODE_KEY = "code_key"
         private const val LANG_KEY = "lang_key"
-
-        fun newInstance(code: String, lang: String): CodePlaygroundFragment {
+        private const val CODE_OPTIONS_KEY = "code_options_key"
+        fun newInstance(code: String, lang: String, codeOptions: CodeOptions): CodePlaygroundFragment {
             val args = Bundle()
             args.putString(CODE_KEY, code)
             args.putString(LANG_KEY, lang)
+            args.putParcelable(CODE_OPTIONS_KEY, codeOptions)
             val fragment = CodePlaygroundFragment()
             fragment.arguments = args
             return fragment
         }
+
     }
 
     private var currentLanguage: String? = null
@@ -61,15 +70,6 @@ class CodePlaygroundFragment : FragmentBase(), OnBackClickListener {
         setHasOptionsMenu(true)
     }
 
-    override fun onBackClick(): Boolean {
-        val resultIntent = Intent()
-        resultIntent.putExtra(CodePlaygroundActivity.LANG_KEY, currentLanguage)
-        resultIntent.putExtra(CodePlaygroundActivity.CODE_KEY, codePlaygroundEditText.text.toString())
-        activity?.setResult(Activity.RESULT_OK, resultIntent)
-        return false
-    }
-
-
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater?.inflate(R.menu.code_playground_menu, menu)
@@ -80,16 +80,52 @@ class CodePlaygroundFragment : FragmentBase(), OnBackClickListener {
         menuItem?.title = resetString
     }
 
+
     override fun onOptionsItemSelected(item: MenuItem?): Boolean = when (item?.itemId) {
         R.id.action_reset_code -> {
-            Toast.makeText(context, "reset", Toast.LENGTH_SHORT).show()
+            val dialog = ResetCodeDialogFragment.newInstance()
+            if (!dialog.isAdded) {
+                dialog.show(childFragmentManager, null)
+            }
             true
         }
         R.id.action_language_code -> {
-            Toast.makeText(context, "lang", Toast.LENGTH_SHORT).show()
+            arguments.getParcelable<CodeOptions>(CODE_OPTIONS_KEY)
+                    ?.limits
+                    ?.keys
+                    ?.sorted()
+                    ?.toTypedArray()
+                    ?.let {
+                        val dialog = ProgrammingLanguageChooserDialogFragment.newInstance(it)
+                        if (!dialog.isAdded) {
+                            dialog.show(childFragmentManager, null)
+                        }
+                    }
             true
         }
         else -> false
+    }
+
+
+    override fun onReset() {
+        currentLanguage?.let { lang ->
+            val template = arguments.getParcelable<CodeOptions>(CODE_OPTIONS_KEY)?.codeTemplates?.get(lang)
+            codePlaygroundEditText.setText(template)
+        }
+    }
+
+    override fun onLanguageChosen(programmingLanguage: String) {
+        currentLanguage = programmingLanguage
+        codePlaygroundEditText.setText(arguments.getParcelable<CodeOptions>(CODE_OPTIONS_KEY).codeTemplates[programmingLanguage])
+    }
+
+
+    override fun onBackClick(): Boolean {
+        val resultIntent = Intent()
+        resultIntent.putExtra(CodePlaygroundActivity.LANG_KEY, currentLanguage)
+        resultIntent.putExtra(CodePlaygroundActivity.CODE_KEY, codePlaygroundEditText.text.toString())
+        activity?.setResult(Activity.RESULT_OK, resultIntent)
+        return false
     }
 
 }

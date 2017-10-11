@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.NumberPicker
 import kotlinx.android.synthetic.main.fragment_step_attempt.*
 import kotlinx.android.synthetic.main.view_code_quiz.*
 import org.stepic.droid.R
@@ -20,6 +19,7 @@ import org.stepic.droid.model.Submission
 import org.stepic.droid.ui.activities.CodePlaygroundActivity
 import org.stepic.droid.ui.dialogs.ChangeCodeLanguageDialog
 import org.stepic.droid.ui.dialogs.ResetCodeDialogFragment
+import org.stepic.droid.ui.util.initForCodeLanguages
 import javax.inject.Inject
 
 class CodeStepFragment : StepAttemptFragment(),
@@ -65,7 +65,12 @@ class CodeStepFragment : StepAttemptFragment(),
         codeQuizFullscreenAction.setOnClickListener {
             chosenProgrammingLanguageName?.let { lang ->
                 if (submission?.status != Submission.Status.CORRECT) {
-                    val intent = CodePlaygroundActivity.intentForLaunch(activity, codeQuizAnswerField.text.toString(), lang)
+                    val intent = CodePlaygroundActivity.intentForLaunch(
+                            activity,
+                            codeQuizAnswerField.text.toString(),
+                            lang,
+                            step?.block?.options ?: throw IllegalStateException("can't find code options in code quiz"))
+
                     startActivityForResult(intent, CODE_PLAYGROUND_REQUEST)
                 }
             }
@@ -179,26 +184,12 @@ class CodeStepFragment : StepAttemptFragment(),
 
 
     private fun initLanguageChooser() {
-        fun initView(languageNames: Array<String>) {
-            codeQuizLanguagePicker.minValue = 0
-            codeQuizLanguagePicker.maxValue = languageNames.size - 1
-            codeQuizLanguagePicker.displayedValues = languageNames
-            codeQuizLanguagePicker.descendantFocusability = NumberPicker.FOCUS_BLOCK_DESCENDANTS
-            codeQuizLanguagePicker.wrapSelectorWheel = false
-
-            try {
-                codeQuizLanguagePicker.setTextSize(50f) //Warning: reflection!
-            } catch (exception: Exception) {
-                //reflection failed -> ignore
-            }
-        }
-
         step.block?.options?.limits
                 ?.keys
                 ?.sorted()
                 ?.toTypedArray()
                 ?.let {
-                    initView(it)
+                    codeQuizLanguagePicker.initForCodeLanguages(it)
                 }
     }
 

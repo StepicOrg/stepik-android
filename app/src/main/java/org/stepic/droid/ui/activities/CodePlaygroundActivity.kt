@@ -5,6 +5,7 @@ import android.content.Intent
 import android.support.v4.app.Fragment
 import android.view.MenuItem
 import org.stepic.droid.base.SingleFragmentActivity
+import org.stepic.droid.model.code.CodeOptions
 import org.stepic.droid.ui.fragments.CodePlaygroundFragment
 import org.stepic.droid.ui.util.BackButtonHandler
 import org.stepic.droid.ui.util.OnBackClickListener
@@ -15,18 +16,23 @@ class CodePlaygroundActivity : SingleFragmentActivity(), BackButtonHandler {
     companion object {
         const val CODE_KEY = "code_key"
         const val LANG_KEY = "lang_key"
+        private const val QUIZ_INFO_KEY = "quiz_info_key"
 
-        fun intentForLaunch(callingActivity: Activity, code: String, lang: String): Intent {
+        fun intentForLaunch(callingActivity: Activity, code: String, lang: String, codeOptions: CodeOptions): Intent {
             val intent = Intent(callingActivity, CodePlaygroundActivity::class.java)
             intent.putExtra(CODE_KEY, code)
             intent.putExtra(LANG_KEY, lang)
+            intent.putExtra(QUIZ_INFO_KEY, codeOptions)
             return intent
         }
     }
 
     private var onBackClickListener: WeakReference<OnBackClickListener>? = null
 
-    override fun createFragment(): Fragment = CodePlaygroundFragment.newInstance(intent.getStringExtra(CODE_KEY), intent.getStringExtra(LANG_KEY))
+    override fun createFragment(): Fragment = CodePlaygroundFragment.newInstance(
+            intent.getStringExtra(CODE_KEY),
+            intent.getStringExtra(LANG_KEY),
+            intent.getParcelableExtra<CodeOptions>(QUIZ_INFO_KEY))
 
     override fun applyTransitionPrev() {
         //no-op
