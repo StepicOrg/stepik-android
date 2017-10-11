@@ -65,7 +65,6 @@ class CodeStepFragment : StepAttemptFragment(), CodeView {
             val programmingLanguageServerName = codeQuizLanguagePicker.displayedValues[codeQuizLanguagePicker.value]
             chosenProgrammingLanguageName = programmingLanguageServerName
 
-            codeQuizAnswerField.text.clear()
             codeQuizAnswerField.setText(step.block?.options?.codeTemplates?.get(programmingLanguageServerName))
             showLanguageChoosingView(false)
             showCodeQuizEditor()
@@ -80,8 +79,6 @@ class CodeStepFragment : StepAttemptFragment(), CodeView {
         codeQuizResetAction.setOnClickListener {
             // TODO: 10/10/2017 implement
         }
-
-        codeQuizAnswerField.addTextChangedListener(wrongAnswerTextWatcher)
 
         codePresenter.attachView(this)
     }
@@ -165,7 +162,6 @@ class CodeStepFragment : StepAttemptFragment(), CodeView {
 
     override fun onShowStored(language: String, code: String) {
         chosenProgrammingLanguageName = language
-        codeQuizAnswerField.text.clear()
         codeQuizAnswerField.setText(code)
         showLanguageChoosingView(false)
         showCodeQuizEditor()
@@ -200,6 +196,9 @@ class CodeStepFragment : StepAttemptFragment(), CodeView {
         val visibility = toVisibility(needShow)
         if (needShow) {
             codeQuizCurrentLanguage.text = chosenProgrammingLanguageName
+            codeQuizAnswerField.addTextChangedListener(wrongAnswerTextWatcher)
+        } else {
+            codeQuizAnswerField.removeTextChangedListener(wrongAnswerTextWatcher)
         }
 
         codeQuizAnswerField.visibility = visibility
