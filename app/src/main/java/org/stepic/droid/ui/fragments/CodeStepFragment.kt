@@ -71,6 +71,8 @@ class CodeStepFragment : StepAttemptFragment(), CodeView {
             showCodeQuizEditor()
         }
 
+        initLanguageChooser()
+
         codeQuizFullscreenAction.setOnClickListener {
             // TODO: 10/10/2017 implement
         }
@@ -94,22 +96,6 @@ class CodeStepFragment : StepAttemptFragment(), CodeView {
         codePresenter.onShowAttempt(attemptId = attempt.id, stepId = step.id)
     }
 
-    private fun showLanguageChooser(languageNames: Array<String>) {
-        codeQuizLanguagePicker.minValue = 0
-        codeQuizLanguagePicker.maxValue = languageNames.size - 1
-        codeQuizLanguagePicker.displayedValues = languageNames
-        codeQuizLanguagePicker.descendantFocusability = NumberPicker.FOCUS_BLOCK_DESCENDANTS
-        codeQuizLanguagePicker.wrapSelectorWheel = false
-
-        try {
-            codeQuizLanguagePicker.setTextSize(50f) //Warning: reflection!
-        } catch (exception: Exception) {
-            //reflection failed -> ignore
-        }
-
-        showCodeQuizEditor(false)
-        showLanguageChoosingView()
-    }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -123,27 +109,6 @@ class CodeStepFragment : StepAttemptFragment(), CodeView {
         }
     }
 
-    private fun showCodeQuizEditor(needShow: Boolean = true) {
-        val visibility = toVisibility(needShow)
-        if (needShow) {
-            codeQuizCurrentLanguage.text = chosenProgrammingLanguageName
-        }
-
-        codeQuizAnswerField.visibility = visibility
-        stepAttemptSubmitButton.visibility = visibility
-        codeQuizCurrentLanguage.visibility = visibility
-        codeQuizDelimiter.visibility = visibility
-        codeQuizFullscreenAction.visibility = visibility
-        codeQuizResetAction.visibility = visibility
-    }
-
-    private fun showLanguageChoosingView(needShow: Boolean = true) {
-        val visibility = toVisibility(needShow)
-
-        codeQuizChooseLangAction.visibility = visibility
-        codeQuizLanguagePicker.visibility = visibility
-        codeQuizChooseLangTitle.visibility = visibility
-    }
 
     private fun toVisibility(needShow: Boolean): Int {
         return if (needShow) {
@@ -166,26 +131,36 @@ class CodeStepFragment : StepAttemptFragment(), CodeView {
     }
 
     override fun onRestoreSubmission() {
-        val reply = submission?.reply ?: return
-
-        val text = reply.code
-        codeQuizAnswerField.setText(text)
-
-        if (submission.status == Submission.Status.WRONG) {
-            submission = null
-            actionButton.setText(R.string.send)
-            blockUIBeforeSubmit(false)
+        if (submission?.reply == null) {
+            if (chosenProgrammingLanguageName == null) {
+                //we haven't submission from the server and stored submission
+                showLanguageChoosingView(false)
+                showCodeQuizEditor()
+            }
+        } else {
+            if (submission.status == Submission.Status.WRONG) {
+                actionButton.setText(R.string.send)
+                blockUIBeforeSubmit(false)
+                if (submission.reply.code != codeQuizAnswerField.text.toString()) {
+                    hideStatus()
+                    resetBackgroundOfAttempt()
+                    hideHint()
+                }
+                submission = null
+            } else {
+                codeQuizAnswerField.setText(submission.reply.code)
+                chosenProgrammingLanguageName = submission.reply.language
+                showLanguageChoosingView(false)
+                showCodeQuizEditor()
+            }
         }
     }
 
     override fun onAttemptIsNotStored() {
-        step.block?.options?.limits
-                ?.keys
-                ?.sorted()
-                ?.toTypedArray()
-                ?.let {
-                    showLanguageChooser(it)
-                }
+        if (codeQuizAnswerField.visibility != View.VISIBLE) {
+            showCodeQuizEditor(false)
+            showLanguageChoosingView()
+        }
     }
 
     override fun onShowStored(language: String, code: String) {
@@ -194,6 +169,53 @@ class CodeStepFragment : StepAttemptFragment(), CodeView {
         codeQuizAnswerField.setText(code)
         showLanguageChoosingView(false)
         showCodeQuizEditor()
+    }
+
+
+    private fun initLanguageChooser() {
+        fun initView(languageNames: Array<String>) {
+            codeQuizLanguagePicker.minValue = 0
+            codeQuizLanguagePicker.maxValue = languageNames.size - 1
+            codeQuizLanguagePicker.displayedValues = languageNames
+            codeQuizLanguagePicker.descendantFocusability = NumberPicker.FOCUS_BLOCK_DESCENDANTS
+            codeQuizLanguagePicker.wrapSelectorWheel = false
+
+            try {
+                codeQuizLanguagePicker.setTextSize(50f) //Warning: reflection!
+            } catch (exception: Exception) {
+                //reflection failed -> ignore
+            }
+        }
+
+        step.block?.options?.limits
+                ?.keys
+                ?.sorted()
+                ?.toTypedArray()
+                ?.let {
+                    initView(it)
+                }
+    }
+
+    private fun showCodeQuizEditor(needShow: Boolean = true) {
+        val visibility = toVisibility(needShow)
+        if (needShow) {
+            codeQuizCurrentLanguage.text = chosenProgrammingLanguageName
+        }
+
+        codeQuizAnswerField.visibility = visibility
+        stepAttemptSubmitButton.visibility = visibility
+        codeQuizCurrentLanguage.visibility = visibility
+        codeQuizDelimiter.visibility = visibility
+        codeQuizFullscreenAction.visibility = visibility
+        codeQuizResetAction.visibility = visibility
+    }
+
+    private fun showLanguageChoosingView(needShow: Boolean = true) {
+        val visibility = toVisibility(needShow)
+
+        codeQuizChooseLangAction.visibility = visibility
+        codeQuizLanguagePicker.visibility = visibility
+        codeQuizChooseLangTitle.visibility = visibility
     }
 
 }

@@ -715,4 +715,8 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
     protected final void hideStatus() {
         statusTextView.setVisibility(View.GONE);
     }
+
+    protected final void hideHint() {
+        hintTextView.setVisibility(View.GONE);
+    }
 }

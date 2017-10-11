@@ -61,6 +61,7 @@ class DatabaseFacade
         videoTimestampDao.removeAll()
         externalVideoUrlDao.removeAll()
         assignmentDao.removeAll()
+        codeSubmissionDao.removeAll()
     }
 
     fun getCourseDao(table: Table) =

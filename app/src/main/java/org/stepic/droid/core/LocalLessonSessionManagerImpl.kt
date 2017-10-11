@@ -27,7 +27,7 @@ class LocalLessonSessionManagerImpl
 
         stepIdToLessonSession.put(stepId, LessonSession(stepId, attempt, submission, numberOfSubmissionOnFirstPage))
 
-        if (submission.reply?.language != null && submission.reply?.code != null) {
+        if (submission.reply?.language != null && submission.reply?.code != null && submission.status == Submission.Status.LOCAL) {
             singleThreadExecutor.execute {
                 val codeSubmission = CodeSubmission(
                         stepId = stepId,
