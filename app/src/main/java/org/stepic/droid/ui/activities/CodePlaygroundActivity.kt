@@ -41,6 +41,10 @@ class CodePlaygroundActivity : SingleFragmentActivity(), BackButtonHandler {
         this.onBackClickListener = null
     }
 
+    override fun finish() {
+        hideSoftKeypad()
+        super.finish()
+    }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
@@ -48,7 +52,7 @@ class CodePlaygroundActivity : SingleFragmentActivity(), BackButtonHandler {
                 if (fragmentBackKeyIntercept()) {
                     return true
                 } else {
-                    finish();
+                    finish()
                     return true
                 }
             }
