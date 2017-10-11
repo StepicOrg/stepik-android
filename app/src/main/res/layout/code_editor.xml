@@ -10,5 +10,6 @@
         android:layout_width="match_parent"
         android:typeface="monospace"
         android:textSize="12sp"
+        android:inputType="textNoSuggestions|text|textMultiLine"
         android:layout_height="wrap_content" />
 </ScrollView>
