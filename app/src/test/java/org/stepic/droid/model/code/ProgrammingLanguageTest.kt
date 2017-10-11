@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION") //suppress for testing
+
 package org.stepic.droid.model.code
 
 import org.junit.Test
