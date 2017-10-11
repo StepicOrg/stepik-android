@@ -712,7 +712,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
         getScreenManager().showTextFeedback(getActivity());
     }
 
-    protected final void hideStatus() {
+    protected final void hideWrongStatus() {
         statusTextView.setVisibility(View.GONE);
     }
 

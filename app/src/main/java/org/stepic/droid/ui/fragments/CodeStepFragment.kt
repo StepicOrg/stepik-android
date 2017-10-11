@@ -2,8 +2,6 @@ package org.stepic.droid.ui.fragments
 
 import android.content.Context
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,9 +15,10 @@ import org.stepic.droid.core.presenters.contracts.CodeView
 import org.stepic.droid.model.Attempt
 import org.stepic.droid.model.Reply
 import org.stepic.droid.model.Submission
+import org.stepic.droid.ui.dialogs.ResetCodeDialogFragment
 import javax.inject.Inject
 
-class CodeStepFragment : StepAttemptFragment(), CodeView {
+class CodeStepFragment : StepAttemptFragment(), CodeView, ResetCodeDialogFragment.Callback {
 
     companion object {
         private const val CHOSEN_POSITION_KEY: String = "chosenPositionKey"
@@ -28,22 +27,6 @@ class CodeStepFragment : StepAttemptFragment(), CodeView {
 
     @Inject
     lateinit var codePresenter: CodePresenter
-
-    private val wrongAnswerTextWatcher = object : TextWatcher {
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            //no-op
-        }
-
-        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            resetBackgroundOfAttempt()
-            hideStatus()
-        }
-
-        override fun afterTextChanged(s: Editable?) {
-            //no-op
-        }
-
-    }
 
     override fun injectComponent() {
         App
@@ -77,7 +60,17 @@ class CodeStepFragment : StepAttemptFragment(), CodeView {
         }
 
         codeQuizResetAction.setOnClickListener {
-            // TODO: 10/10/2017 implement
+            chosenProgrammingLanguageName?.let {
+                val template = step.block?.options?.codeTemplates?.get(it)
+                if (template != null && template != codeQuizAnswerField.text.toString() && submission?.status != Submission.Status.CORRECT) {
+                    val dialog = ResetCodeDialogFragment.newInstance()
+                    if (!dialog.isAdded) {
+                        dialog.show(childFragmentManager, null)
+                    }
+                } else {
+                    //already reset
+                }
+            }
         }
 
         codePresenter.attachView(this)
@@ -86,7 +79,6 @@ class CodeStepFragment : StepAttemptFragment(), CodeView {
     override fun onDestroyView() {
         super.onDestroyView()
         codePresenter.detachView(this)
-        codeQuizAnswerField.removeTextChangedListener(wrongAnswerTextWatcher)
     }
 
     override fun showAttempt(attempt: Attempt) {
@@ -139,7 +131,7 @@ class CodeStepFragment : StepAttemptFragment(), CodeView {
                 actionButton.setText(R.string.send)
                 blockUIBeforeSubmit(false)
                 if (submission.reply.code != codeQuizAnswerField.text.toString()) {
-                    hideStatus()
+                    hideWrongStatus()
                     resetBackgroundOfAttempt()
                     hideHint()
                 }
@@ -196,9 +188,6 @@ class CodeStepFragment : StepAttemptFragment(), CodeView {
         val visibility = toVisibility(needShow)
         if (needShow) {
             codeQuizCurrentLanguage.text = chosenProgrammingLanguageName
-            codeQuizAnswerField.addTextChangedListener(wrongAnswerTextWatcher)
-        } else {
-            codeQuizAnswerField.removeTextChangedListener(wrongAnswerTextWatcher)
         }
 
         codeQuizAnswerField.visibility = visibility
@@ -215,6 +204,16 @@ class CodeStepFragment : StepAttemptFragment(), CodeView {
         codeQuizChooseLangAction.visibility = visibility
         codeQuizLanguagePicker.visibility = visibility
         codeQuizChooseLangTitle.visibility = visibility
+    }
+
+    override fun onReset() {
+        chosenProgrammingLanguageName?.let {
+            val template = step?.block?.options?.codeTemplates?.get(it)
+            codeQuizAnswerField.setText(template)
+            resetBackgroundOfAttempt()
+            hideHint()
+            hideWrongStatus()
+        }
     }
 
 }
