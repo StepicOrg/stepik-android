@@ -24,6 +24,7 @@ class CodePresenter
                 mainHandler.post {
                     view?.onAttemptIsNotStored()
                 }
+                databaseFacade.removeCodeSubmissionsOfStep(stepId)
             } else {
                 mainHandler.post {
                     view?.onShowStored(codeSubmission.language, codeSubmission.code)
