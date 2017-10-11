@@ -197,6 +197,14 @@ class CodeStepFragment : StepAttemptFragment(),
         val visibility = toVisibility(needShow)
         if (needShow) {
             codeQuizCurrentLanguage.text = chosenProgrammingLanguageName
+            step?.block?.options?.limits?.get(chosenProgrammingLanguageName)?.let { codeLimit ->
+                val stringFromResources = getString(R.string.code_quiz_limits,
+                        resources.getQuantityString(R.plurals.time_seconds, codeLimit.time, codeLimit.time),
+                        codeLimit.memory.toString())
+                val spanned = textResolver.fromHtml(stringFromResources)
+                codeQuizLimits.setText(spanned)
+            }
+
         }
 
         codeQuizAnswerField.visibility = visibility
@@ -205,6 +213,7 @@ class CodeStepFragment : StepAttemptFragment(),
         codeQuizDelimiter.visibility = visibility
         codeQuizFullscreenAction.visibility = visibility
         codeQuizResetAction.visibility = visibility
+        codeQuizLimits.visibility = visibility
     }
 
     private fun showLanguageChoosingView(needShow: Boolean = true) {

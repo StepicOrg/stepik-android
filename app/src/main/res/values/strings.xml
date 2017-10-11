@@ -540,4 +540,10 @@
     <string name="code_playground_title">Code</string>
     <string name="code_playground_language" translatable="false">Code</string>
     <string name="code_playground_language_title">Language</string>
+
+    <plurals name="time_seconds">
+        <item quantity="one">%d second</item>
+        <item quantity="other">%d seconds</item>
+    </plurals>
+    <string name="code_quiz_limits">&lt;b>Time limit:&lt;/b> %1$s\n&lt;b>Memory limit:&lt;/b>%2$s MB</string>
 </resources>

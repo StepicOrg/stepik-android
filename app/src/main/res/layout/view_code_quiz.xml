@@ -5,17 +5,35 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
     <TextView
         android:id="@+id/codeWarning"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_gravity="center"
         android:background="@color/warning_light_yellow"
         android:gravity="center"
         android:minHeight="@dimen/min_ux_touchable_size"
         android:padding="8dp"
         android:text="@string/code_warning"/>
+
+    <View
+        android:id="@+id/topView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_below="@id/codeWarning"/>
+
+    <TextView
+        android:id="@+id/codeQuizLimits"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/topView"
+        android:gravity="start"
+        android:padding="@dimen/guideline_standard_padding"
+        android:text="@string/code_warning"
+        android:visibility="visible"
+        tools:text="Memory 256 MB, \nTime 2 sec"/>
+
 
     <TextView
         android:id="@+id/codeQuizChooseLangAction"
@@ -24,7 +42,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@id/codeWarning"
+        android:layout_below="@id/topView"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
         android:padding="@dimen/guideline_standard_padding"
@@ -60,7 +78,7 @@
         android:id="@+id/codeQuizCurrentLanguage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/codeWarning"
+        android:layout_below="@id/codeQuizLimits"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
         android:padding="@dimen/guideline_standard_padding"
@@ -75,7 +93,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@id/codeWarning"
+        android:layout_below="@id/codeQuizLimits"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
         android:padding="@dimen/guideline_standard_padding"
@@ -87,7 +105,7 @@
         android:id="@+id/codeQuizResetAction"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/codeWarning"
+        android:layout_below="@id/codeQuizLimits"
         android:layout_toLeftOf="@id/codeQuizFullscreenAction"
         android:layout_toStartOf="@id/codeQuizFullscreenAction"
         android:background="?attr/selectableItemBackgroundBorderless"
