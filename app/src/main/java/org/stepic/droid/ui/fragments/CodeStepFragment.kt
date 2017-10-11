@@ -1,6 +1,8 @@
 package org.stepic.droid.ui.fragments
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +17,7 @@ import org.stepic.droid.core.presenters.contracts.CodeView
 import org.stepic.droid.model.Attempt
 import org.stepic.droid.model.Reply
 import org.stepic.droid.model.Submission
+import org.stepic.droid.ui.activities.CodePlaygroundActivity
 import org.stepic.droid.ui.dialogs.ChangeCodeLanguageDialog
 import org.stepic.droid.ui.dialogs.ResetCodeDialogFragment
 import javax.inject.Inject
@@ -25,6 +28,7 @@ class CodeStepFragment : StepAttemptFragment(),
         ChangeCodeLanguageDialog.Callback {
     companion object {
         private const val CHOSEN_POSITION_KEY: String = "chosenPositionKey"
+        private const val CODE_PLAYGROUND_REQUEST = 153
         fun newInstance(): CodeStepFragment = CodeStepFragment()
     }
 
@@ -59,7 +63,12 @@ class CodeStepFragment : StepAttemptFragment(),
         initLanguageChooser()
 
         codeQuizFullscreenAction.setOnClickListener {
-            // TODO: 10/10/2017 implement
+            chosenProgrammingLanguageName?.let { lang ->
+                if (submission?.status != Submission.Status.CORRECT) {
+                    val intent = CodePlaygroundActivity.intentForLaunch(activity, codeQuizAnswerField.text.toString(), lang)
+                    startActivityForResult(intent, CODE_PLAYGROUND_REQUEST)
+                }
+            }
         }
 
         codeQuizResetAction.setOnClickListener {
@@ -77,7 +86,7 @@ class CodeStepFragment : StepAttemptFragment(),
                 if (!dialog.isAdded) {
                     dialog.show(childFragmentManager, null)
                 }
-            } else if (submission.status != Submission.Status.CORRECT) {
+            } else if (submission?.status != Submission.Status.CORRECT) {
                 onChangeLanguage()
             }
         }
@@ -228,6 +237,9 @@ class CodeStepFragment : StepAttemptFragment(),
     override fun onChangeLanguage() {
         showCodeQuizEditor(false)
         showLanguageChoosingView()
+        resetBackgroundOfAttempt()
+        hideHint()
+        hideWrongStatus()
     }
 
     private fun checkForResetDialog(): Boolean {
@@ -239,6 +251,17 @@ class CodeStepFragment : StepAttemptFragment(),
             return needDialog
         }
         return false
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == CODE_PLAYGROUND_REQUEST && resultCode == Activity.RESULT_OK) {
+            chosenProgrammingLanguageName = data?.getStringExtra(CodePlaygroundActivity.LANG_KEY)
+            val newCode = data?.getStringExtra(CodePlaygroundActivity.CODE_KEY)
+            codeQuizAnswerField.setText(newCode)
+            showCodeQuizEditor()
+        }
     }
 
 }

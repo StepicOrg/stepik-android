@@ -77,14 +77,14 @@
 
         <activity
             android:name="org.stepic.droid.ui.activities.RegisterActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:theme="@style/StepikTheme.LoginLaunchRegistration"/>
+            android:theme="@style/StepikTheme.LoginLaunchRegistration"
+            android:windowSoftInputMode="adjustResize"/>
 
         <activity
             android:name="org.stepic.droid.ui.activities.LoginActivity"
             android:launchMode="singleTop"
-            android:windowSoftInputMode="adjustResize"
-            android:theme="@style/StepikTheme.LoginLaunchRegistration"/>
+            android:theme="@style/StepikTheme.LoginLaunchRegistration"
+            android:windowSoftInputMode="adjustResize"/>
 
         <activity
             android:name="org.stepic.droid.ui.activities.MainFeedActivity"
@@ -405,6 +405,9 @@
         <activity
             android:name=".ui.activities.CourseListActivity">
         </activity>
+
+        <activity
+            android:name=".ui.activities.CodePlaygroundActivity"/>
 
         <activity
             android:name=".ui.activities.PhotoViewActivity"
