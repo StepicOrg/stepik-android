@@ -529,4 +529,5 @@
     <string name="code_quiz_reset">Сброс</string>
     <string name="reset_code_dialog_title">Вы уверены?</string>
     <string name="reset_code_dialog_explanation">Ваш код будет утерян</string>
+    <string name="change_code_dialog_explanation">После смены языка программирования Ваш текущий код будет утерян</string>
 </resources>

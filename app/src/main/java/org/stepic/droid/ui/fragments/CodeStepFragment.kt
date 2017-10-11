@@ -15,11 +15,14 @@ import org.stepic.droid.core.presenters.contracts.CodeView
 import org.stepic.droid.model.Attempt
 import org.stepic.droid.model.Reply
 import org.stepic.droid.model.Submission
+import org.stepic.droid.ui.dialogs.ChangeCodeLanguageDialog
 import org.stepic.droid.ui.dialogs.ResetCodeDialogFragment
 import javax.inject.Inject
 
-class CodeStepFragment : StepAttemptFragment(), CodeView, ResetCodeDialogFragment.Callback {
-
+class CodeStepFragment : StepAttemptFragment(),
+        CodeView,
+        ResetCodeDialogFragment.Callback,
+        ChangeCodeLanguageDialog.Callback {
     companion object {
         private const val CHOSEN_POSITION_KEY: String = "chosenPositionKey"
         fun newInstance(): CodeStepFragment = CodeStepFragment()
@@ -60,16 +63,22 @@ class CodeStepFragment : StepAttemptFragment(), CodeView, ResetCodeDialogFragmen
         }
 
         codeQuizResetAction.setOnClickListener {
-            chosenProgrammingLanguageName?.let {
-                val template = step.block?.options?.codeTemplates?.get(it)
-                if (template != null && template != codeQuizAnswerField.text.toString() && submission?.status != Submission.Status.CORRECT) {
-                    val dialog = ResetCodeDialogFragment.newInstance()
-                    if (!dialog.isAdded) {
-                        dialog.show(childFragmentManager, null)
-                    }
-                } else {
-                    //already reset
+            if (checkForResetDialog()) {
+                val dialog = ResetCodeDialogFragment.newInstance()
+                if (!dialog.isAdded) {
+                    dialog.show(childFragmentManager, null)
                 }
+            }
+        }
+
+        codeQuizCurrentLanguage.setOnClickListener {
+            if (checkForResetDialog()) {
+                val dialog = ChangeCodeLanguageDialog.newInstance()
+                if (!dialog.isAdded) {
+                    dialog.show(childFragmentManager, null)
+                }
+            } else if (submission.status != Submission.Status.CORRECT) {
+                onChangeLanguage()
             }
         }
 
@@ -214,6 +223,22 @@ class CodeStepFragment : StepAttemptFragment(), CodeView, ResetCodeDialogFragmen
             hideHint()
             hideWrongStatus()
         }
+    }
+
+    override fun onChangeLanguage() {
+        showCodeQuizEditor(false)
+        showLanguageChoosingView()
+    }
+
+    private fun checkForResetDialog(): Boolean {
+        chosenProgrammingLanguageName?.let {
+            val template = step.block?.options?.codeTemplates?.get(it)
+            val needDialog = template != null &&
+                    template != codeQuizAnswerField.text.toString() &&
+                    submission?.status != Submission.Status.CORRECT
+            return needDialog
+        }
+        return false
     }
 
 }
