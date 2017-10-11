@@ -5,34 +5,34 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
-    <TextView
-        android:id="@+id/codeWarning"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:background="@color/warning_light_yellow"
-        android:gravity="center"
-        android:minHeight="@dimen/min_ux_touchable_size"
-        android:padding="8dp"
-        android:text="@string/code_warning"/>
-
     <View
         android:id="@+id/topView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_below="@id/codeWarning"/>
+        android:layout_alignParentTop="true"/>
+
+    <TextView
+        android:id="@+id/codeQuizSamples"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/topView"
+        android:gravity="start"
+        android:padding="@dimen/half_padding"
+        android:textSize="16sp"
+        android:visibility="visible"
+        tools:text="sample 1\nlala\nsample2\nsampe3\n"/>
 
     <TextView
         android:id="@+id/codeQuizLimits"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/topView"
+        android:layout_below="@id/codeQuizSamples"
         android:gravity="start"
         android:padding="@dimen/guideline_standard_padding"
         android:text="@string/code_warning"
-        android:visibility="visible"
-        tools:text="Memory 256 MB, \nTime 2 sec"/>
+        android:visibility="gone"
+        tools:text="Memory 256 MB, \nTime 2 sec"
+        tools:visibility="visible"/>
 
 
     <TextView
@@ -42,7 +42,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@id/topView"
+        android:layout_below="@id/codeQuizSamples"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
         android:padding="@dimen/guideline_standard_padding"

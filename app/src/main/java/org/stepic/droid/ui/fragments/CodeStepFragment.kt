@@ -96,7 +96,30 @@ class CodeStepFragment : StepAttemptFragment(),
             }
         }
 
+        initSamples()
+
         codePresenter.attachView(this)
+    }
+
+    private fun initSamples() {
+        val newLine = "<br>"
+        val stringBuilder = StringBuilder()
+        step?.block?.options?.samples?.forEachIndexed { index, parcelableStringList ->
+            if (index != 0) {
+                stringBuilder.append(newLine)
+                stringBuilder.append(newLine)
+            }
+            stringBuilder.append(getString(R.string.sample_input, index + 1))
+            stringBuilder.append(newLine)
+            stringBuilder.append(parcelableStringList[0])
+            stringBuilder.append(newLine)
+            stringBuilder.append(getString(R.string.sample_output, index + 1))
+            stringBuilder.append(newLine)
+            stringBuilder.append(parcelableStringList[1])
+
+        }
+        val samplesString = textResolver.fromHtml(stringBuilder.toString())
+        codeQuizSamples.text = samplesString
     }
 
     override fun onDestroyView() {

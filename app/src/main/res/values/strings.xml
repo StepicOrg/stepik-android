@@ -546,4 +546,6 @@
         <item quantity="other">%d seconds</item>
     </plurals>
     <string name="code_quiz_limits">&lt;b>Time limit:&lt;/b> %1$s\n&lt;b>Memory limit:&lt;/b>%2$s MB</string>
+    <string name="sample_input" translatable="false">&lt;b>Sample input %d:&lt;/b></string>
+    <string name="sample_output" translatable="false">&lt;b>Sample output %d:&lt;/b></string>
 </resources>
