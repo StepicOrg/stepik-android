@@ -4,9 +4,12 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_step_attempt.*
 import kotlinx.android.synthetic.main.view_code_quiz.*
 import org.stepic.droid.R
@@ -18,6 +21,7 @@ import org.stepic.droid.model.Attempt
 import org.stepic.droid.model.Reply
 import org.stepic.droid.model.Submission
 import org.stepic.droid.ui.activities.CodePlaygroundActivity
+import org.stepic.droid.ui.adapters.CodeToolbarAdapter
 import org.stepic.droid.ui.dialogs.ChangeCodeLanguageDialog
 import org.stepic.droid.ui.dialogs.ResetCodeDialogFragment
 import org.stepic.droid.ui.util.initForCodeLanguages
@@ -26,7 +30,7 @@ import javax.inject.Inject
 class CodeStepFragment : StepAttemptFragment(),
         CodeView,
         ResetCodeDialogFragment.Callback,
-        ChangeCodeLanguageDialog.Callback {
+        ChangeCodeLanguageDialog.Callback, CodeToolbarAdapter.OnSymbolClickListener {
     companion object {
         private const val CHOSEN_POSITION_KEY: String = "chosenPositionKey"
         private const val CODE_PLAYGROUND_REQUEST = 153
@@ -35,6 +39,8 @@ class CodeStepFragment : StepAttemptFragment(),
 
     @Inject
     lateinit var codePresenter: CodePresenter
+
+    private var codeToolbarAdapter: CodeToolbarAdapter? = null
 
     override fun injectComponent() {
         App
@@ -47,10 +53,21 @@ class CodeStepFragment : StepAttemptFragment(),
 
     private var chosenProgrammingLanguageName: String? = null
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        codeToolbarAdapter = CodeToolbarAdapter(context)
+    }
+
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val viewGroup = (this.activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(R.layout.view_code_quiz, attemptContainer, false) as ViewGroup
         attemptContainer.addView(viewGroup)
+
+        val codeToolbar = LayoutInflater.from(context).inflate(R.layout.view_code_toolbar, rootStepAttemptView, false) as RecyclerView
+        codeToolbar.adapter = codeToolbarAdapter
+        codeToolbarAdapter?.onSymbolClickListener = this
+        codeToolbar.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        rootStepAttemptView.addView(codeToolbar)
 
         codeQuizChooseLangAction.setOnClickListener {
             val programmingLanguageServerName = codeQuizLanguagePicker.displayedValues[codeQuizLanguagePicker.value]
@@ -131,12 +148,17 @@ class CodeStepFragment : StepAttemptFragment(),
     override fun onDestroyView() {
         super.onDestroyView()
         codePresenter.detachView(this)
+        codeToolbarAdapter?.onSymbolClickListener = null
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        codeToolbarAdapter = null
     }
 
     override fun showAttempt(attempt: Attempt) {
         codePresenter.onShowAttempt(attemptId = attempt.id, stepId = step.id)
     }
-
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -238,15 +260,17 @@ class CodeStepFragment : StepAttemptFragment(),
     private fun showCodeQuizEditor(needShow: Boolean = true) {
         val visibility = toVisibility(needShow)
         if (needShow) {
-            codeQuizCurrentLanguage.text = chosenProgrammingLanguageName
-            step?.block?.options?.limits?.get(chosenProgrammingLanguageName)?.let { codeLimit ->
-                val stringFromResources = getString(R.string.code_quiz_limits,
-                        resources.getQuantityString(R.plurals.time_seconds, codeLimit.time, codeLimit.time),
-                        codeLimit.memory.toString())
-                val spanned = textResolver.fromHtml(stringFromResources)
-                codeQuizLimits.setText(spanned)
+            chosenProgrammingLanguageName?.let { chosenLanguage ->
+                codeToolbarAdapter?.setLanguage(chosenLanguage)
+                codeQuizCurrentLanguage.text = chosenLanguage
+                step?.block?.options?.limits?.get(chosenLanguage)?.let { codeLimit ->
+                    val stringFromResources = getString(R.string.code_quiz_limits,
+                            resources.getQuantityString(R.plurals.time_seconds, codeLimit.time, codeLimit.time),
+                            codeLimit.memory.toString())
+                    val spanned = textResolver.fromHtml(stringFromResources)
+                    codeQuizLimits.setText(spanned)
+                }
             }
-
         }
 
         codeQuizAnswerField.visibility = visibility
@@ -312,5 +336,9 @@ class CodeStepFragment : StepAttemptFragment(),
 
     private fun isOneLanguageAvailable(): Boolean =
             step?.block?.options?.codeTemplates?.size == 1
+
+    override fun onSymbolClick(symbol: String) {
+        Toast.makeText(context, symbol, Toast.LENGTH_SHORT).show()
+    }
 
 }

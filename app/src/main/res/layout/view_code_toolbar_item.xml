@@ -7,6 +7,8 @@
     android:layout_height="@dimen/min_ux_touchable_size"
     android:background="?attr/selectableItemBackgroundBorderless"
     android:clickable="true"
-    android:padding="@dimen/guideline_standard_padding"
+    android:gravity="center"
+    android:minWidth="@dimen/min_ux_touchable_size"
+    android:padding="@dimen/half_padding"
     android:textSize="16sp"
     tools:text="TAB"/>

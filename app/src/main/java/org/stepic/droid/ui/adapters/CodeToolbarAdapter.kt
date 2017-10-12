@@ -10,20 +10,22 @@ import org.stepic.droid.R
 import org.stepic.droid.model.code.symbolsForLanguage
 import org.stepic.droid.ui.listeners.OnItemClickListener
 
-class CodeToolbarAdapter(
-        language: String,
-        context: Context,
-        private val onSymbolClickListener: OnSymbolClickListener
-) : RecyclerView.Adapter<CodeToolbarAdapter.Companion.CodeToolbarItem>() {
+class CodeToolbarAdapter(private val context: Context) : RecyclerView.Adapter<CodeToolbarAdapter.Companion.CodeToolbarItem>() {
 
     interface OnSymbolClickListener {
         fun onSymbolClick(symbol: String)
     }
 
-    private val symbols = symbolsForLanguage(language, context)
+    var onSymbolClickListener: OnSymbolClickListener? = null
+    private var symbols: Array<String> = emptyArray()
     private val onItemClickListener = OnItemClickListener { position ->
         val symbol = symbols[position]
-        onSymbolClickListener.onSymbolClick(symbol)
+        onSymbolClickListener?.onSymbolClick(symbol)
+    }
+
+    fun setLanguage(language: String) {
+        symbols = symbolsForLanguage(language, context)
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CodeToolbarItem? {
