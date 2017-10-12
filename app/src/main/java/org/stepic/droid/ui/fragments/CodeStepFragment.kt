@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_step_attempt.*
 import kotlinx.android.synthetic.main.view_code_quiz.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.presenters.CodePresenter
 import org.stepic.droid.core.presenters.contracts.CodeView
@@ -86,6 +87,11 @@ class CodeStepFragment : StepAttemptFragment(),
         }
 
         codeQuizCurrentLanguage.setOnClickListener {
+            if (isOneLanguageAvailable()) {
+                //we shouldn't change it
+                return@setOnClickListener
+            }
+
             if (checkForResetDialog()) {
                 val dialog = ChangeCodeLanguageDialog.newInstance()
                 if (!dialog.isAdded) {
@@ -144,7 +150,6 @@ class CodeStepFragment : StepAttemptFragment(),
         }
     }
 
-
     private fun toVisibility(needShow: Boolean): Int {
         return if (needShow) {
             View.VISIBLE
@@ -152,7 +157,6 @@ class CodeStepFragment : StepAttemptFragment(),
             View.GONE
         }
     }
-
 
     override fun generateReply(): Reply {
         return Reply.Builder()
@@ -192,7 +196,22 @@ class CodeStepFragment : StepAttemptFragment(),
     }
 
     override fun onAttemptIsNotStored() {
-        if (codeQuizAnswerField.visibility != View.VISIBLE) {
+        if (codeQuizAnswerField.visibility == View.VISIBLE) {
+            return
+        }
+
+        if (isOneLanguageAvailable()) {
+            val langTemplate = step?.block?.options?.codeTemplates?.entries?.singleOrNull()
+            if (langTemplate == null) {
+                analytic.reportEvent(Analytic.Error.TEMPLATE_WAS_NULL, step.id.toString())
+                return
+            }
+            chosenProgrammingLanguageName = langTemplate.key
+            codeQuizAnswerField.setText(langTemplate.value)
+
+            showLanguageChoosingView(false)
+            showCodeQuizEditor()
+        } else {
             showCodeQuizEditor(false)
             showLanguageChoosingView()
         }
@@ -258,6 +277,10 @@ class CodeStepFragment : StepAttemptFragment(),
     }
 
     override fun onChangeLanguage() {
+        if (isOneLanguageAvailable()) {
+            //we shouldn't do anything
+            return
+        }
         showCodeQuizEditor(false)
         showLanguageChoosingView()
         resetBackgroundOfAttempt()
@@ -286,5 +309,8 @@ class CodeStepFragment : StepAttemptFragment(),
             showCodeQuizEditor()
         }
     }
+
+    private fun isOneLanguageAvailable(): Boolean =
+            step?.block?.options?.codeTemplates?.size == 1
 
 }
