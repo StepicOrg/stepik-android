@@ -119,4 +119,6 @@
 
     <color name="loading_view_base_color">#F6F7F9</color>
     <color name="loading_view_deep_color">#DBDBDB</color>
+
+    <color name="code_toolbar_background">#EEEEEE</color>
 </resources>
