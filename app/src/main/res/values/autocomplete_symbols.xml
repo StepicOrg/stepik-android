@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="autocomplete_symbols_list_default">
+    <string-array name="autocomplete_symbols_default">
         <item>Tab</item>
         <item>&lt;</item>
         <item>></item>
