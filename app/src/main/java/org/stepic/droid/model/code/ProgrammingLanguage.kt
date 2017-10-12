@@ -120,7 +120,7 @@ private fun serverNameToLanguage(serverName: String): ProgrammingLanguage? {
             } ?: return null
 }
 
-fun getSymbolsFor(lang: String, context: Context): Array<String> {
+fun symbolsForLanguage(lang: String, context: Context): Array<String> {
     val programmingLanguage = serverNameToLanguage(lang)
     with(context.resources) {
         return when (programmingLanguage) {

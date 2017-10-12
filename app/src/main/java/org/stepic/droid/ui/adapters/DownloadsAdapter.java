@@ -32,7 +32,7 @@ import org.stepic.droid.ui.custom.progressbutton.ProgressWheel;
 import org.stepic.droid.ui.fragments.DownloadsFragment;
 import org.stepic.droid.ui.listeners.OnClickCancelListener;
 import org.stepic.droid.ui.listeners.OnClickLoadListener;
-import org.stepic.droid.ui.listeners.StepicOnClickItemListener;
+import org.stepic.droid.ui.listeners.OnItemClickListener;
 import org.stepic.droid.util.FileUtil;
 import org.stepic.droid.util.ThumbnailParser;
 import org.stepic.droid.util.VideoStepHelperKt;
@@ -50,7 +50,7 @@ import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.GenericViewHolder> implements StepicOnClickItemListener, OnClickLoadListener, OnClickCancelListener {
+public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.GenericViewHolder> implements OnItemClickListener, OnClickLoadListener, OnClickCancelListener {
 
     public static final int TYPE_DOWNLOADING_VIDEO = 1;
     public static final int TYPE_DOWNLOADED_VIDEO = 2;
@@ -143,7 +143,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
     }
 
     @Override
-    public void onClick(int position) {
+    public void onItemClick(int position) {
         //the position in oldList!
         if (position >= 0 && position < cachedVideoList.size()) {
             final CachedVideo video = cachedVideoList.get(position);
@@ -367,14 +367,14 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
         @BindView(R.id.load_button)
         View loadRoot;
 
-        public DownloadsViewHolder(View itemView, final StepicOnClickItemListener click, final OnClickLoadListener loadListener) {
+        public DownloadsViewHolder(View itemView, final OnItemClickListener click, final OnClickLoadListener loadListener) {
             super(itemView);
 
             itemView.setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
-                    click.onClick(getAdapterPosition() - downloadingVideoList.size() - getTitleCount(downloadingVideoList) - getTitleCount(cachedVideoList));
+                    click.onItemClick(getAdapterPosition() - downloadingVideoList.size() - getTitleCount(downloadingVideoList) - getTitleCount(cachedVideoList));
                 }
             });
 
