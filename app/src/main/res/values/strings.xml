@@ -548,4 +548,5 @@
     <string name="code_quiz_limits">&lt;b>Time limit:&lt;/b> %1$s\n&lt;b>Memory limit:&lt;/b>%2$s MB</string>
     <string name="sample_input">&lt;b>Sample input %d:&lt;/b></string>
     <string name="sample_output">&lt;b>Sample output %d:&lt;/b></string>
+    <string name="hint_for_code">Type code here…</string>
 </resources>

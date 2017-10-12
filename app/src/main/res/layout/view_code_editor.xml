@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<EditText
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/codeEditor"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="top|start"
+    android:hint="@string/hint_for_code"
+    android:imeOptions="flagNoFullscreen"
+    android:inputType="textMultiLine"
+    android:maxLines="9000"
+    android:scrollbarStyle="outsideOverlay"
+    android:scrollbars="vertical"/>

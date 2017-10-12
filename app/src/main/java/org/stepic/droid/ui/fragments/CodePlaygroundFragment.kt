@@ -7,7 +7,7 @@ import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.*
-import kotlinx.android.synthetic.main.fragment_code_playground.*
+import kotlinx.android.synthetic.main.view_code_editor.*
 import org.stepic.droid.R
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.model.code.CodeOptions
@@ -64,7 +64,7 @@ class CodePlaygroundFragment : FragmentBase(),
         super.onViewCreated(view, savedInstanceState)
         initCenteredToolbar(R.string.code_playground_title, true)
         if (savedInstanceState == null) {
-            codePlaygroundEditText.setText(arguments.getString(CODE_KEY))
+            codeEditor.setText(arguments.getString(CODE_KEY))
         }
         setHasOptionsMenu(true)
     }
@@ -109,20 +109,20 @@ class CodePlaygroundFragment : FragmentBase(),
     override fun onReset() {
         currentLanguage?.let { lang ->
             val template = arguments.getParcelable<CodeOptions>(CODE_OPTIONS_KEY)?.codeTemplates?.get(lang)
-            codePlaygroundEditText.setText(template)
+            codeEditor.setText(template)
         }
     }
 
     override fun onLanguageChosen(programmingLanguage: String) {
         currentLanguage = programmingLanguage
-        codePlaygroundEditText.setText(arguments.getParcelable<CodeOptions>(CODE_OPTIONS_KEY).codeTemplates[programmingLanguage])
+        codeEditor.setText(arguments.getParcelable<CodeOptions>(CODE_OPTIONS_KEY).codeTemplates[programmingLanguage])
     }
 
 
     override fun onBackClick(): Boolean {
         val resultIntent = Intent()
         resultIntent.putExtra(CodePlaygroundActivity.LANG_KEY, currentLanguage)
-        resultIntent.putExtra(CodePlaygroundActivity.CODE_KEY, codePlaygroundEditText.text.toString())
+        resultIntent.putExtra(CodePlaygroundActivity.CODE_KEY, codeEditor.text.toString())
         activity?.setResult(Activity.RESULT_OK, resultIntent)
         return false
     }
