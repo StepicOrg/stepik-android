@@ -393,8 +393,6 @@
             android:name=".ui.activities.NotificationsActivity">
         </activity>
 
-        <activity android:name=".code.ui.StubActivity" />
-
         <activity
             android:name=".ui.activities.DownloadsActivity">
         </activity>
