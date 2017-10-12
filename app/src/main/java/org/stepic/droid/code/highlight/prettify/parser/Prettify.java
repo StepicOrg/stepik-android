@@ -406,7 +406,7 @@ public class Prettify {
      * @param basePos the index of sourceCode within the chunk of source
      *    whose decorations are already present on out.
      */
-    protected static void appendDecorations(int basePos, String sourceCode, CreateSimpleLexer langHandler, List<Object> out) {
+    private static void appendDecorations(int basePos, String sourceCode, CreateSimpleLexer langHandler, List<Object> out) {
         if (sourceCode == null) {
             throw new NullPointerException("argument 'sourceCode' cannot be null");
         }
@@ -611,7 +611,7 @@ public class Prettify {
      * @return a function that examines the source code
      *     in the input job and builds the decoration list.
      */
-    protected CreateSimpleLexer sourceDecorator(Map<String, Object> options) throws Exception {
+    private CreateSimpleLexer sourceDecorator(Map<String, Object> options) throws Exception {
         List<List<Object>> shortcutStylePatterns = new ArrayList<>();
         List<List<Object>> fallthroughStylePatterns = new ArrayList<>();
         if (Util.getVariableValueAsBoolean(options.get("tripleQuotedStrings"))) {
@@ -821,7 +821,7 @@ public class Prettify {
      *                 to the larger source chunk.
      *      } }
      */
-    protected void registerLangHandler(CreateSimpleLexer handler, List<String> fileExtensions) throws Exception {
+    private void registerLangHandler(CreateSimpleLexer handler, List<String> fileExtensions) throws Exception {
         for (int i = fileExtensions.size(); --i >= 0;) {
             String ext = fileExtensions.get(i);
             if (langHandlerRegistry.get(ext) == null) {
