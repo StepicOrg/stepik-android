@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +12,7 @@ import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_step_attempt.*
 import kotlinx.android.synthetic.main.view_code_editor.*
 import kotlinx.android.synthetic.main.view_code_quiz.*
+import kotlinx.android.synthetic.main.view_code_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
@@ -65,11 +65,10 @@ class CodeStepFragment : StepAttemptFragment(),
         val viewGroup = (this.activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(R.layout.view_code_quiz, attemptContainer, false) as ViewGroup
         attemptContainer.addView(viewGroup)
 
-        val codeToolbar = LayoutInflater.from(context).inflate(R.layout.view_code_toolbar, rootStepAttemptView, false) as RecyclerView
-        codeToolbar.adapter = codeToolbarAdapter
+        codeToolbarView.adapter = codeToolbarAdapter
         codeToolbarAdapter?.onSymbolClickListener = this
-        codeToolbar.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        rootStepAttemptView.addView(codeToolbar)
+        codeToolbarView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+
         codeEditor.minLines = MIN_LINES_IN_ANSWER_FIELD
 
         codeQuizChooseLangAction.setOnClickListener {
@@ -271,7 +270,7 @@ class CodeStepFragment : StepAttemptFragment(),
                             resources.getQuantityString(R.plurals.time_seconds, codeLimit.time, codeLimit.time),
                             codeLimit.memory.toString())
                     val spanned = textResolver.fromHtml(stringFromResources)
-                    codeQuizLimits.setText(spanned)
+                    codeQuizLimits.text = spanned
                 }
             }
         }
