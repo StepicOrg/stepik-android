@@ -25,7 +25,6 @@ class CodePlaygroundFragment : FragmentBase(),
         ResetCodeDialogFragment.Callback {
 
     companion object {
-
         private const val CODE_KEY = "code_key"
         private const val LANG_KEY = "lang_key"
         private const val CODE_OPTIONS_KEY = "code_options_key"
