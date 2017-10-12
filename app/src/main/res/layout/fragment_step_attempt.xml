@@ -135,6 +135,12 @@
 
             <include layout="@layout/next_lesson_view"/>
 
+            <android.support.v4.widget.Space
+                android:id="@+id/codeToolbarSpaceInContainer"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/code_toolbar_height"
+                android:visibility="gone"/>
+
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 

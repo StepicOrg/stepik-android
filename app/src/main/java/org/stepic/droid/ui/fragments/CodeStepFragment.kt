@@ -27,7 +27,6 @@ import org.stepic.droid.ui.adapters.CodeToolbarAdapter
 import org.stepic.droid.ui.dialogs.ChangeCodeLanguageDialog
 import org.stepic.droid.ui.dialogs.ResetCodeDialogFragment
 import org.stepic.droid.ui.util.initForCodeLanguages
-import timber.log.Timber
 import javax.inject.Inject
 
 class CodeStepFragment : StepAttemptFragment(),
@@ -147,15 +146,13 @@ class CodeStepFragment : StepAttemptFragment(),
         onGlobalLayoutListener = ViewTreeObserver.OnGlobalLayoutListener {
             val rect = Rect()
             someView.getWindowVisibleDisplayFrame(rect)
-
             val keyboardHeight = height - rect.bottom
-            Timber.d("screenHeight = $height")
-            Timber.d("keyboardHeight = $keyboardHeight")
-
             if (keyboardHeight > height * 0.15) {
-                codeToolbarView?.visibility = View.VISIBLE
+                codeToolbarView.visibility = View.VISIBLE
+                codeToolbarSpaceInContainer.visibility = View.VISIBLE
             } else {
-                codeToolbarView?.visibility = View.GONE
+                codeToolbarView.visibility = View.GONE
+                codeToolbarSpaceInContainer.visibility = View.GONE
             }
         }
         rootFrameLayoutInStepAttempt.viewTreeObserver.addOnGlobalLayoutListener(onGlobalLayoutListener)
