@@ -6,9 +6,12 @@ import android.support.v7.widget.AppCompatEditText
 import android.text.*
 import android.text.style.ForegroundColorSpan
 import android.util.AttributeSet
+import android.util.Log
+import android.view.View
 import android.widget.ScrollView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
@@ -38,6 +41,7 @@ class CodeEditor : AppCompatEditText, TextWatcher {
     private val highlightPublisher = PublishSubject.create<Editable>()
     private val spanPublisher = BehaviorSubject.create<List<ParseResult>>()
     private val scrollPublisher = PublishSubject.create<Int>()
+    private var scrollDisposable: Disposable? = null
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -59,26 +63,29 @@ class CodeEditor : AppCompatEditText, TextWatcher {
             afterTextChanged(editableText) // refresh highlight
         }
 
+    
+    var scrollContainer: ScrollView? = null
+        set(value) {
+            field = value
+            value?.let { container ->
+                container.viewTreeObserver.addOnScrollChangedListener {
+                    scrollPublisher.onNext(container.scrollY)
+                }
+
+                container.viewTreeObserver.addOnGlobalLayoutListener {
+                    scrollPublisher.onNext(container.scrollY)
+                }
+
+                scrollDisposable = scrollPublisher
+                    .debounce(SCROLL_DEBOUNCE_MS, TimeUnit.MILLISECONDS)
+                    .subscribeOn(Schedulers.computation())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe { spanPublisher.value?.let(this::updateHighlight) }
+            }
+        }
+
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        val p = parent
-        if (p is ScrollView) {
-            p.viewTreeObserver.addOnScrollChangedListener {
-                scrollPublisher.onNext(p.scrollY)
-            }
-
-            p.viewTreeObserver.addOnGlobalLayoutListener {
-                scrollPublisher.onNext(p.scrollY)
-            }
-
-            compositeDisposable.add(
-                    scrollPublisher
-                            .debounce(SCROLL_DEBOUNCE_MS, TimeUnit.MILLISECONDS)
-                            .subscribeOn(Schedulers.computation())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe { spanPublisher.value?.let(this::updateHighlight) }
-            )
-        }
 
         compositeDisposable.add(
                 spanPublisher
@@ -105,6 +112,7 @@ class CodeEditor : AppCompatEditText, TextWatcher {
     override fun onDetachedFromWindow() {
         removeTextChangedListener(this)
         compositeDisposable.dispose()
+        scrollDisposable?.dispose()
         super.onDetachedFromWindow()
     }
 
@@ -170,6 +178,7 @@ class CodeEditor : AppCompatEditText, TextWatcher {
         super.onDraw(canvas)
     }
 
+
     override fun afterTextChanged(editable: Editable) {
         lines = text.toString().lines()
         highlightPublisher.onNext(editable)
@@ -179,25 +188,16 @@ class CodeEditor : AppCompatEditText, TextWatcher {
 
     override fun onTextChanged(text: CharSequence, start: Int, lengthBefore: Int, count: Int) {}
 
-    private fun getFirstVisibleLine() : Int {
-        val p = parent
-        if (p is ScrollView) layout?.let { layout ->
-            val y = p.scrollY
-            return layout.getLineForVertical(y)
-        }
 
-        return 0
-    }
+    private fun getFirstVisibleLine() = scrollContainer?.let {
+        return@let layout.getLineForVertical(Math.max(0, it.scrollY - top))
+    } ?: 0
 
-    private fun getLastVisibleLine() : Int {
-        val p = parent
-        if (p is ScrollView) layout?.let { layout ->
-            val y = p.scrollY + p.height
-            return layout.getLineForVertical(y)
-        }
 
-        return lineCount - 1
-    }
+    private fun getLastVisibleLine() = scrollContainer?.let {
+        return@let layout.getLineForVertical(Math.max(0, it.scrollY + it.height - top))
+    } ?: lineCount - 1
+
 
     private fun updateHighlight(results: List<ParseResult>) = layout?.let { layout ->
         val start = layout.getLineStart(getFirstVisibleLine())
@@ -206,12 +206,10 @@ class CodeEditor : AppCompatEditText, TextWatcher {
         setSpans(start, end, results)
     }
 
-
     private fun removeSpans() =
         editableText.getSpans(0, editableText.length, ParcelableSpan::class.java).forEach {
             editableText.removeSpan(it)
         }
-
 
     private fun setSpans(start: Int, end: Int, parseResults: List<ParseResult>) {
         parseResults
