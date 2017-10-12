@@ -13,10 +13,9 @@ import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.code.highlight.prettify.PrettifyParser
-import org.stepic.droid.code.highlight.prettify.parser.Prettify.PR_PLAIN
 import org.stepic.droid.code.highlight.syntaxhighlight.ParseResult
 import org.stepic.droid.code.highlight.themes.CodeTheme
-import org.stepic.droid.code.highlight.themes.DefaultTheme
+import org.stepic.droid.code.highlight.themes.Presets.DefaultTheme
 import org.stepic.droid.util.DpPixelsHelper
 import java.util.concurrent.TimeUnit
 
@@ -120,17 +119,19 @@ class CodeEditor : AppCompatEditText, TextWatcher {
 
     private val bufferRect = Rect()
 
+    var lines: List<String> = emptyList()
+    var linesWithNumbers: List<Int> = emptyList()
+
     override fun onDraw(canvas: Canvas) {
-        val lineNumbersOffset = lineCount.toString().length * lineNumbersTextPaint.textSize.toInt()
+        val lineNumbersOffset = lineNumbersTextPaint.measureText(lineCount.toString()).toInt() + 2 * LINE_NUMBERS_MARGIN
 
         setPadding(lineNumbersOffset + LINE_NUMBERS_MARGIN, paddingTop, paddingRight, paddingBottom)
         canvas.drawRect(0f, 0f, lineNumbersOffset.toFloat(), height.toFloat(), lineNumbersBackgroundPaint) // line numbers bg
         canvas.drawLine(lineNumbersOffset.toFloat(), 0f, lineNumbersOffset.toFloat(), height.toFloat(), lineNumbersStrokePaint) // line numbers stroke
 
         layout?.let { layout ->
-            val lines = text.toString().split("\n")
             var pos = 0
-            val linesWithNumbers = lines.map {
+            linesWithNumbers = lines.map {
                 val line = layout.getLineForOffset(pos)
                 pos += it.length + 1
                 line
@@ -166,6 +167,7 @@ class CodeEditor : AppCompatEditText, TextWatcher {
     }
 
     override fun afterTextChanged(editable: Editable) {
+        lines = text.toString().lines()
         highlightPublisher.onNext(editable)
     }
 
@@ -209,11 +211,11 @@ class CodeEditor : AppCompatEditText, TextWatcher {
 
     private fun setSpans(start: Int, end: Int, parseResults: List<ParseResult>) {
         parseResults
-                .filterNot { it.styleKeysString == PR_PLAIN }
                 .filterNot { it.offset + it.length < start || it.offset > end }
+                .filter { theme.syntax.shouldBePainted(it.styleKeysString) }
                 .forEach { pr ->
                     theme.syntax.colorMap[pr.styleKeysString]?.let {
-                        editableText.setSpan(ForegroundColorSpan(it), pr.offset, pr.offset + pr.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                        editableText.setSpan(ForegroundColorSpan(it), pr.offset, Math.min(pr.offset + pr.length, editableText.length), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                     }
                 }
     }

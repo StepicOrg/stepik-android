@@ -19,6 +19,8 @@ data class CodeSyntax(
         @ColorInt val nocode: Int = plain
 ) {
 
+    fun shouldBePainted(prType: String) = colorMap[prType] != plain
+
     val colorMap = hashMapOf(
             PR_STRING       to string,
             PR_KEYWORD      to keyword,
