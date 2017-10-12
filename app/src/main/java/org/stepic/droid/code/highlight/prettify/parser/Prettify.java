@@ -32,6 +32,7 @@ import org.stepic.droid.code.highlight.prettify.lang.LangDart;
 import org.stepic.droid.code.highlight.prettify.lang.LangErlang;
 import org.stepic.droid.code.highlight.prettify.lang.LangGo;
 import org.stepic.droid.code.highlight.prettify.lang.LangHs;
+import org.stepic.droid.code.highlight.prettify.lang.LangKotlin;
 import org.stepic.droid.code.highlight.prettify.lang.LangLisp;
 import org.stepic.droid.code.highlight.prettify.lang.LangLlvm;
 import org.stepic.droid.code.highlight.prettify.lang.LangLua;
@@ -374,6 +375,7 @@ public class Prettify {
             register(LangErlang.class);
             register(LangGo.class);
             register(LangHs.class);
+            register(LangKotlin.class);
             register(LangLisp.class);
             register(LangLlvm.class);
             register(LangLua.class);

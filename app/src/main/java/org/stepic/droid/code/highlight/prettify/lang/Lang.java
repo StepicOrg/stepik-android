@@ -54,7 +54,7 @@ public abstract class Lang {
      * @return the list of file extensions
      */
     public static List<String> getFileExtensions() {
-        return new ArrayList<String>();
+        return new ArrayList<>();
     }
 
     public List<List<Object>> getShortcutStylePatterns() {
