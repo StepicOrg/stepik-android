@@ -97,6 +97,16 @@ public class SortingStepDraggableAdapter extends RecyclerView.Adapter<SortingSte
         return true;
     }
 
+    @Override
+    public void onItemDragStarted(int position) {
+
+    }
+
+    @Override
+    public void onItemDragFinished(int fromPosition, int toPosition, boolean result) {
+
+    }
+
     static class OptionViewHolder extends AbstractDraggableItemViewHolder {
 
         @BindView(R.id.container)
