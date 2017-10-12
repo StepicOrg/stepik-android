@@ -31,7 +31,7 @@ import org.stepic.droid.code.highlight.prettify.parser.Prettify;
  */
 public class LangN extends Lang {
 
-    protected static String keywords = "abstract|and|as|base|catch|class|def|delegate|enum|event|extern|false|finally|"
+    private static final String keywords = "abstract|and|as|base|catch|class|def|delegate|enum|event|extern|false|finally|"
             + "fun|implements|interface|internal|is|macro|match|matches|module|mutable|namespace|new|"
             + "null|out|override|params|partial|private|protected|public|ref|sealed|static|struct|"
             + "syntax|this|throw|true|try|type|typeof|using|variant|virtual|volatile|when|where|with|"
