@@ -28,8 +28,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/codeQuizSamples"
         android:gravity="start"
-        android:padding="@dimen/guideline_standard_padding"
+        android:padding="@dimen/half_padding"
         android:text="@string/code_warning"
+        android:textSize="16sp"
         android:visibility="gone"
         tools:text="Memory 256 MB, \nTime 2 sec"
         tools:visibility="visible"/>
