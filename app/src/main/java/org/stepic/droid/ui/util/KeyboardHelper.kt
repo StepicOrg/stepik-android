@@ -2,6 +2,7 @@ package org.stepic.droid.ui.util
 
 import android.graphics.Rect
 import android.view.View
+import timber.log.Timber
 
 inline fun setOnKeyboardOpenListener(
         rootView: View,
@@ -13,6 +14,8 @@ inline fun setOnKeyboardOpenListener(
 
         val screenHeight = rootView.rootView.height
         val keyboardHeight = screenHeight - rect.bottom
+
+        Timber.d("keyboardHeight = $keyboardHeight")
 
         if (keyboardHeight > screenHeight * 0.15) {
             onKeyboardShown()

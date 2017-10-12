@@ -3,11 +3,12 @@ package org.stepic.droid.ui.fragments
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Rect
+import android.os.Build
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.util.DisplayMetrics
+import android.view.*
 import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_step_attempt.*
 import kotlinx.android.synthetic.main.view_code_editor.*
@@ -26,6 +27,7 @@ import org.stepic.droid.ui.adapters.CodeToolbarAdapter
 import org.stepic.droid.ui.dialogs.ChangeCodeLanguageDialog
 import org.stepic.droid.ui.dialogs.ResetCodeDialogFragment
 import org.stepic.droid.ui.util.initForCodeLanguages
+import timber.log.Timber
 import javax.inject.Inject
 
 class CodeStepFragment : StepAttemptFragment(),
@@ -43,6 +45,7 @@ class CodeStepFragment : StepAttemptFragment(),
     lateinit var codePresenter: CodePresenter
 
     private var codeToolbarAdapter: CodeToolbarAdapter? = null
+    private var onGlobalLayoutListener: ViewTreeObserver.OnGlobalLayoutListener? = null
 
     override fun injectComponent() {
         App
@@ -125,6 +128,50 @@ class CodeStepFragment : StepAttemptFragment(),
 
         codePresenter.attachView(this)
     }
+
+    override fun onStart() {
+        super.onStart()
+        listenKeyboardChanges()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        stopListenKeyboardChanges()
+    }
+
+    private fun listenKeyboardChanges() {
+        val someView = rootFrameLayoutInStepAttempt
+        val metrics = DisplayMetrics()
+        (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay.getMetrics(metrics)
+        val height = metrics.heightPixels
+        onGlobalLayoutListener = ViewTreeObserver.OnGlobalLayoutListener {
+            val rect = Rect()
+            someView.getWindowVisibleDisplayFrame(rect)
+
+            val keyboardHeight = height - rect.bottom
+            Timber.d("screenHeight = $height")
+            Timber.d("keyboardHeight = $keyboardHeight")
+
+            if (keyboardHeight > height * 0.15) {
+                codeToolbarView?.visibility = View.VISIBLE
+            } else {
+                codeToolbarView?.visibility = View.GONE
+            }
+        }
+        rootFrameLayoutInStepAttempt.viewTreeObserver.addOnGlobalLayoutListener(onGlobalLayoutListener)
+    }
+
+    private fun stopListenKeyboardChanges() {
+        onGlobalLayoutListener?.let {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                rootFrameLayoutInStepAttempt.viewTreeObserver.removeOnGlobalLayoutListener(it)
+            } else {
+                rootFrameLayoutInStepAttempt.viewTreeObserver.removeGlobalOnLayoutListener(it)
+            }
+        }
+        onGlobalLayoutListener = null
+    }
+
 
     private fun initSamples() {
         val newLine = "<br>"
