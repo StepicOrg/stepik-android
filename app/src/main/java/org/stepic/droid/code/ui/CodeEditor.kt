@@ -67,6 +67,10 @@ class CodeEditor : AppCompatEditText, TextWatcher {
                 scrollPublisher.onNext(p.scrollY)
             }
 
+            p.viewTreeObserver.addOnGlobalLayoutListener {
+                scrollPublisher.onNext(p.scrollY)
+            }
+
             compositeDisposable.add(
                     scrollPublisher
                             .debounce(SCROLL_DEBOUNCE_MS, TimeUnit.MILLISECONDS)
@@ -188,7 +192,7 @@ class CodeEditor : AppCompatEditText, TextWatcher {
     private fun getLastVisibleLine() : Int {
         val p = parent
         if (p is ScrollView) layout?.let { layout ->
-            val y = p.scrollY + rootView.height
+            val y = p.scrollY + p.height
             return layout.getLineForVertical(y)
         }
 
