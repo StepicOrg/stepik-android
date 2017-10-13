@@ -3,12 +3,12 @@ package org.stepic.droid.ui.fragments
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.graphics.Rect
-import android.os.Build
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
-import android.util.DisplayMetrics
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_step_attempt.*
 import kotlinx.android.synthetic.main.view_code_editor.*
@@ -27,6 +27,8 @@ import org.stepic.droid.ui.adapters.CodeToolbarAdapter
 import org.stepic.droid.ui.dialogs.ChangeCodeLanguageDialog
 import org.stepic.droid.ui.dialogs.ResetCodeDialogFragment
 import org.stepic.droid.ui.util.initForCodeLanguages
+import org.stepic.droid.ui.util.listenKeyboardChanges
+import org.stepic.droid.ui.util.stopListenKeyboardChanges
 import javax.inject.Inject
 
 class CodeStepFragment : StepAttemptFragment(),
@@ -130,45 +132,24 @@ class CodeStepFragment : StepAttemptFragment(),
 
     override fun onStart() {
         super.onStart()
-        listenKeyboardChanges()
+        onGlobalLayoutListener = listenKeyboardChanges(
+                rootFrameLayoutInStepAttempt,
+                onKeyboardShown = {
+                    codeToolbarView.visibility = View.VISIBLE
+                    codeToolbarSpaceInContainer.visibility = View.VISIBLE
+                },
+                onKeyboardHidden = {
+                    codeToolbarView.visibility = View.GONE
+                    codeToolbarSpaceInContainer.visibility = View.GONE
+                }
+        )
     }
 
     override fun onStop() {
         super.onStop()
-        stopListenKeyboardChanges()
-    }
-
-    private fun listenKeyboardChanges() {
-        val someView = rootFrameLayoutInStepAttempt
-        val metrics = DisplayMetrics()
-        (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay.getMetrics(metrics)
-        val height = metrics.heightPixels
-        onGlobalLayoutListener = ViewTreeObserver.OnGlobalLayoutListener {
-            val rect = Rect()
-            someView.getWindowVisibleDisplayFrame(rect)
-            val keyboardHeight = height - rect.bottom
-            if (keyboardHeight > height * 0.15) {
-                codeToolbarView.visibility = View.VISIBLE
-                codeToolbarSpaceInContainer.visibility = View.VISIBLE
-            } else {
-                codeToolbarView.visibility = View.GONE
-                codeToolbarSpaceInContainer.visibility = View.GONE
-            }
-        }
-        rootFrameLayoutInStepAttempt.viewTreeObserver.addOnGlobalLayoutListener(onGlobalLayoutListener)
-    }
-
-    private fun stopListenKeyboardChanges() {
-        onGlobalLayoutListener?.let {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                rootFrameLayoutInStepAttempt.viewTreeObserver.removeOnGlobalLayoutListener(it)
-            } else {
-                rootFrameLayoutInStepAttempt.viewTreeObserver.removeGlobalOnLayoutListener(it)
-            }
-        }
+        stopListenKeyboardChanges(rootFrameLayoutInStepAttempt, onGlobalLayoutListener)
         onGlobalLayoutListener = null
     }
-
 
     private fun initSamples() {
         val newLine = "<br>"
