@@ -64,7 +64,7 @@ class CodeEditor : AppCompatEditText, TextWatcher {
         }
 
     
-    var scrollContainer: ScrollView? = null
+    internal var scrollContainer: ScrollView? = null
         set(value) {
             field?.let { container ->
                 container.viewTreeObserver.removeOnScrollChangedListener(onScrollChangedListener)
@@ -122,7 +122,6 @@ class CodeEditor : AppCompatEditText, TextWatcher {
     var theme : CodeTheme = DefaultTheme
         set(value) {
             field = value
-            setBackgroundColor(value.background)
             setTextColor(value.syntax.plain)
             lineNumbersBackgroundPaint.color = value.lineNumberBackground
             lineNumbersStrokePaint.color = value.lineNumberStroke
