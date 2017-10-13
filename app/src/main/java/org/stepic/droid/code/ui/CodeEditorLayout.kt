@@ -8,6 +8,7 @@ import android.widget.ScrollView
 import org.stepic.droid.R
 import org.stepic.droid.code.highlight.themes.CodeTheme
 import org.stepic.droid.code.highlight.themes.Presets
+import org.stepic.droid.util.insertText
 
 class CodeEditorLayout : ScrollView {
     private val codeEditor: CodeEditor
@@ -18,6 +19,9 @@ class CodeEditorLayout : ScrollView {
             setBackgroundColor(value.background)
             codeEditor.theme = value
         }
+
+    val text : CharSequence
+        get() = codeEditor.text.toString()
 
     constructor(context: Context) : this(context, null)
 
@@ -42,4 +46,10 @@ class CodeEditorLayout : ScrollView {
         codeEditor.lang = lang
         codeEditor.setText(code)
     }
+
+    fun setText(text: String?) {
+        text?.let { codeEditor.setText(it) }
+    }
+
+    fun insertText(text: String) = codeEditor.insertText(text)
 }

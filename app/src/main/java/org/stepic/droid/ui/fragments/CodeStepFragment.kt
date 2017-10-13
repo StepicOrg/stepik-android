@@ -29,7 +29,6 @@ import org.stepic.droid.ui.dialogs.ResetCodeDialogFragment
 import org.stepic.droid.ui.util.initForCodeLanguages
 import org.stepic.droid.ui.util.listenKeyboardChanges
 import org.stepic.droid.ui.util.stopListenKeyboardChanges
-import org.stepic.droid.util.insertText
 import javax.inject.Inject
 
 class CodeStepFragment : StepAttemptFragment(),
@@ -74,7 +73,7 @@ class CodeStepFragment : StepAttemptFragment(),
         codeToolbarAdapter?.onSymbolClickListener = this
         codeToolbarView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
-        codeEditor.minLines = MIN_LINES_IN_ANSWER_FIELD
+//        codeEditor.minLines = MIN_LINES_IN_ANSWER_FIELD
 
         codeQuizChooseLangAction.setOnClickListener {
             val programmingLanguageServerName = codeQuizLanguagePicker.displayedValues[codeQuizLanguagePicker.value]
