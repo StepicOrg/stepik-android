@@ -11,9 +11,11 @@ object Presets {
                 syntax = CodeSyntax(
                         plain           = ColorUtil.getColorArgb(R.color.light_theme_plain),
                         string          = ColorUtil.getColorArgb(R.color.light_theme_string),
+                        keyword         = ColorUtil.getColorArgb(R.color.light_theme_keyword),
                         comment         = ColorUtil.getColorArgb(R.color.light_theme_comment),
                         type            = ColorUtil.getColorArgb(R.color.light_theme_type),
                         literal         = ColorUtil.getColorArgb(R.color.light_theme_literal),
+                        punctuation     = ColorUtil.getColorArgb(R.color.light_theme_punctuation),
                         attributeName   = ColorUtil.getColorArgb(R.color.light_theme_attribute_name),
                         attributeValue  = ColorUtil.getColorArgb(R.color.light_theme_attribute_value)
                 ),
