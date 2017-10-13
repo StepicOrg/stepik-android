@@ -150,7 +150,7 @@ public class StepDaoImpl extends DaoBase<Step> {
         if (step == null) return;
         BlockPersistentWrapper blockPersistentWrapper =
                 blockWrapperDao.get(DbStructureBlock.Column.STEP_ID, step.getId() + "");
-        if (blockPersistentWrapper != null && blockPersistentWrapper.getBlock() != null) {
+        if (blockPersistentWrapper != null) {
             step.setBlock(blockPersistentWrapper.getBlock());
         }
 
@@ -174,7 +174,7 @@ public class StepDaoImpl extends DaoBase<Step> {
     @Override
     public void insertOrUpdate(Step persistentObject) {
         super.insertOrUpdate(persistentObject);
-        if (persistentObject != null) {
+        if (persistentObject != null && persistentObject.getBlock() != null) {
             blockWrapperDao.insertOrUpdate(new BlockPersistentWrapper(persistentObject.getBlock(), persistentObject.getId()));
         }
     }

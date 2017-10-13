@@ -13,5 +13,4 @@ interface CommentsComponent {
     }
 
     fun inject(commentsFragment: CommentsFragment)
-
 }

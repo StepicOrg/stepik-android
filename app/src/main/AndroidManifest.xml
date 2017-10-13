@@ -33,14 +33,6 @@
         android:theme="@style/StepikTheme"
         tools:replace="allowBackup, supportsRtl">
 
-        <meta-data
-            android:name="asset_statements"
-            android:resource="@string/asset_statements"/>
-
-        <meta-data
-            android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id"/>
-
         <activity
             android:name="org.stepic.droid.ui.activities.SplashActivity"
             android:noHistory="true"
@@ -77,14 +69,14 @@
 
         <activity
             android:name="org.stepic.droid.ui.activities.RegisterActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:theme="@style/StepikTheme.LoginLaunchRegistration"/>
+            android:theme="@style/StepikTheme.LoginLaunchRegistration"
+            android:windowSoftInputMode="adjustResize"/>
 
         <activity
             android:name="org.stepic.droid.ui.activities.LoginActivity"
             android:launchMode="singleTop"
-            android:windowSoftInputMode="adjustResize"
-            android:theme="@style/StepikTheme.LoginLaunchRegistration"/>
+            android:theme="@style/StepikTheme.LoginLaunchRegistration"
+            android:windowSoftInputMode="adjustResize"/>
 
         <activity
             android:name="org.stepic.droid.ui.activities.MainFeedActivity"
@@ -144,7 +136,8 @@
 
         <activity
             android:name=".ui.activities.StepsActivity"
-            android:parentActivityName=".ui.activities.UnitsActivity">
+            android:parentActivityName=".ui.activities.UnitsActivity"
+            android:windowSoftInputMode="adjustResize">
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -209,38 +202,6 @@
 
         <activity android:name=".ui.activities.UnitsActivity"/>
 
-        <receiver
-            android:name="org.stepic.droid.receivers.DownloadCompleteReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/>
-            </intent-filter>
-        </receiver>
-
-        <receiver
-            android:name="org.stepic.droid.receivers.DownloadClickReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED"/>
-            </intent-filter>
-        </receiver>
-
-        <receiver
-            android:name=".receivers.InternetConnectionEnabledReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
-            </intent-filter>
-        </receiver>
-
-        <service android:name="org.stepic.droid.services.NewUserAlarmService"/>
-        <service android:name="org.stepic.droid.services.StreakAlarmService"/>
-        <service android:name="org.stepic.droid.services.LoadService"/>
-        <service android:name="org.stepic.droid.services.DeleteService"/>
-        <service android:name="org.stepic.droid.services.ViewPusher"/>
-        <service android:name="org.stepic.droid.services.CancelLoadingService"/>
-        <service android:name="org.stepic.droid.services.UpdateWithApkService"/>
-
         <activity
             android:name=".ui.activities.CourseSearchResultActivity"
             android:launchMode="singleTop">
@@ -266,77 +227,6 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:hardwareAccelerated="true"
             android:theme="@style/AppTheme.VideoPlayer"/>
-
-        <service android:name=".notifications.StepicFcmListenerService">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
-            </intent-filter>
-        </service>
-
-        <service android:name=".notifications.StepicInstanceIdService">
-            <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
-            </intent-filter>
-        </service>
-
-        <activity
-            android:name=".ui.activities.SettingsActivity"
-            android:launchMode="singleTop"
-            android:parentActivityName=".ui.activities.MainFeedActivity">
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activities.MainFeedActivity"/>
-        </activity>
-
-
-        <activity
-            android:name=".ui.activities.NotificationSettingsActivity"
-            android:enabled="@bool/notification_activity_enabled"
-            android:launchMode="singleTop">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.NOTIFICATION_PREFERENCES"/>
-            </intent-filter>
-        </activity>
-
-
-        <activity
-            android:name=".ui.activities.FeedbackActivity"
-            android:launchMode="singleTop"
-            android:parentActivityName=".ui.activities.MainFeedActivity">
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activities.MainFeedActivity"/>
-
-        </activity>
-
-        <activity
-            android:name=".ui.activities.AboutAppActivity"
-            android:launchMode="singleTop"
-            android:parentActivityName=".ui.activities.SettingsActivity">
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activities.SettingsActivity"/>
-        </activity>
-
-        <activity
-            android:name=".ui.activities.StoreManagementActivity"
-            android:launchMode="singleTop"
-            android:parentActivityName=".ui.activities.SettingsActivity">
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activities.MainFeedActivity"/>
-        </activity>
-
-        <receiver android:name=".notifications.NotificationBroadcastReceiver">
-            <intent-filter>
-                <action android:name="notification_cancelled"/>
-            </intent-filter>
-        </receiver>
 
         <activity
             android:name=".ui.activities.CommentsActivity"
@@ -389,26 +279,102 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".ui.activities.NotificationsActivity">
-        </activity>
+        <activity android:name=".ui.activities.NotificationsActivity"/>
+
+        <activity android:name=".ui.activities.DownloadsActivity"/>
+
+        <activity android:name=".ui.activities.CertificatesActivity"/>
+
+        <activity android:name=".ui.activities.CourseListActivity"/>
 
         <activity
-            android:name=".ui.activities.DownloadsActivity">
-        </activity>
-
-
-        <activity
-            android:name=".ui.activities.CertificatesActivity">
-        </activity>
-
-        <activity
-            android:name=".ui.activities.CourseListActivity">
-        </activity>
+            android:name=".ui.activities.CodePlaygroundActivity"
+            android:windowSoftInputMode="adjustResize"/>
 
         <activity
             android:name=".ui.activities.PhotoViewActivity"
             android:theme="@style/AppTheme.PhotoView"/>
+
+        <activity
+            android:name=".ui.activities.SettingsActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".ui.activities.MainFeedActivity">
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.activities.MainFeedActivity"/>
+        </activity>
+
+        <activity
+            android:name=".ui.activities.NotificationSettingsActivity"
+            android:enabled="@bool/notification_activity_enabled"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.NOTIFICATION_PREFERENCES"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ui.activities.FeedbackActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".ui.activities.MainFeedActivity">
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.activities.MainFeedActivity"/>
+        </activity>
+
+        <activity
+            android:name=".ui.activities.AboutAppActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".ui.activities.SettingsActivity">
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.activities.SettingsActivity"/>
+        </activity>
+
+        <activity
+            android:name=".ui.activities.StoreManagementActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".ui.activities.SettingsActivity">
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.activities.MainFeedActivity"/>
+        </activity>
+
+
+        <receiver
+            android:name="org.stepic.droid.receivers.DownloadCompleteReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/>
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name="org.stepic.droid.receivers.DownloadClickReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED"/>
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".receivers.InternetConnectionEnabledReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".notifications.NotificationBroadcastReceiver">
+            <intent-filter>
+                <action android:name="notification_cancelled"/>
+            </intent-filter>
+        </receiver>
 
         <receiver
             android:name=".receivers.BootCompletedReceiver"
@@ -420,6 +386,26 @@
             </intent-filter>
         </receiver>
 
+
+        <service android:name="org.stepic.droid.services.NewUserAlarmService"/>
+        <service android:name="org.stepic.droid.services.StreakAlarmService"/>
+        <service android:name="org.stepic.droid.services.LoadService"/>
+        <service android:name="org.stepic.droid.services.DeleteService"/>
+        <service android:name="org.stepic.droid.services.ViewPusher"/>
+        <service android:name="org.stepic.droid.services.CancelLoadingService"/>
+        <service android:name="org.stepic.droid.services.UpdateWithApkService"/>
+
+        <service android:name=".notifications.StepicFcmListenerService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+        <service android:name=".notifications.StepicInstanceIdService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
+
         <provider
             android:name=".util.GenericFileProvider"
             android:authorities="${applicationId}.my.package.name.provider"
@@ -430,14 +416,13 @@
                 android:resource="@xml/provider_paths"/>
         </provider>
 
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version"/>
-
-
         <uses-library
             android:name="com.sec.android.app.multiwindow"
             android:required="false"/>
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version"/>
 
         <meta-data
             android:name="com.sec.android.support.multiwindow"
@@ -454,6 +439,12 @@
         <meta-data
             android:name="com.sec.android.multiwindow.MINIMUM_SIZE_H"
             android:value="598dp"/>
+        <meta-data
+            android:name="asset_statements"
+            android:resource="@string/asset_statements"/>
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id"/>
 
     </application>
 </manifest>

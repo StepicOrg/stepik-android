@@ -7,6 +7,10 @@ import org.jetbrains.annotations.Nullable;
 
 public interface Analytic {
 
+    interface Code {
+        String TOOLBAR_SELECTED = "code_toolbar_selected";
+    }
+
     interface Search {
         String SEARCH_NULL = "search_null";
         String SEARCH_QUERY = "search_with_query";
@@ -256,8 +260,8 @@ public interface Analytic {
         String CANT_PARSE_QUALITY = "cant_parse_quality";
         String JOIN_FAILED = "error_join_failed"; //#Apps-580
         String UNIT_CACHED_LESSON_NO = "error_unit_cached_lesson_not";
-        @Nullable
         String FEATURED_EMPTY = "error_featured_empty";
+        String TEMPLATE_WAS_NULL = "error_code_template_null";
     }
 
     interface Web {

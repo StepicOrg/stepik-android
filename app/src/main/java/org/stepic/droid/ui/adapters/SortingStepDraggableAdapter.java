@@ -21,7 +21,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SortingStepDraggableAdapter extends RecyclerView.Adapter<SortingStepDraggableAdapter.OptionViewHolder>
+public class SortingStepDraggableAdapter
+        extends RecyclerView.Adapter<SortingStepDraggableAdapter.OptionViewHolder>
         implements DraggableItemAdapter<SortingStepDraggableAdapter.OptionViewHolder> {
 
     @Nullable
