@@ -23,6 +23,12 @@ class CodeEditorLayout : ScrollView {
     val text : CharSequence
         get() = codeEditor.text.toString()
 
+    var lang : String
+        get() = codeEditor.lang
+        set(value) {
+            codeEditor.lang = value
+        }
+
     constructor(context: Context) : this(context, null)
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
@@ -42,14 +48,14 @@ class CodeEditorLayout : ScrollView {
         super.onDetachedFromWindow()
     }
 
-    fun setCode(code: CharSequence, lang: String) {
-        codeEditor.lang = lang
-        codeEditor.setText(code)
-    }
-
     fun setText(text: String?) {
         text?.let { codeEditor.setText(it) }
     }
 
     fun insertText(text: String) = codeEditor.insertText(text)
+
+    override fun setEnabled(enabled: Boolean) {
+        super.setEnabled(enabled)
+        codeEditor.isEnabled = enabled
+    }
 }

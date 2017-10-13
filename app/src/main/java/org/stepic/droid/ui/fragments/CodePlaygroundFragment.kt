@@ -16,6 +16,7 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.code.util.CodeToolbarUtil
 import org.stepic.droid.model.code.CodeOptions
+import org.stepic.droid.model.code.extensionForLanguage
 import org.stepic.droid.ui.activities.CodePlaygroundActivity
 import org.stepic.droid.ui.adapters.CodeToolbarAdapter
 import org.stepic.droid.ui.dialogs.ChangeCodeLanguageDialog
@@ -81,6 +82,9 @@ class CodePlaygroundFragment : FragmentBase(),
 
         if (savedInstanceState == null) {
             codeEditor.setText(arguments.getString(CODE_KEY))
+        }
+        currentLanguage?.let {
+            codeEditor.lang = extensionForLanguage(it)
         }
         setHasOptionsMenu(true)
     }
@@ -153,6 +157,7 @@ class CodePlaygroundFragment : FragmentBase(),
         currentLanguage = programmingLanguage
         codeToolbarAdapter?.setLanguage(programmingLanguage)
         codeEditor.setText(arguments.getParcelable<CodeOptions>(CODE_OPTIONS_KEY).codeTemplates[programmingLanguage])
+        codeEditor.lang = extensionForLanguage(programmingLanguage)
     }
 
     override fun onBackClick(): Boolean {

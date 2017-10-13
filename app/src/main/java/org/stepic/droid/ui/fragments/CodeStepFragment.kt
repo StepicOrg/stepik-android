@@ -22,6 +22,7 @@ import org.stepic.droid.core.presenters.contracts.CodeView
 import org.stepic.droid.model.Attempt
 import org.stepic.droid.model.Reply
 import org.stepic.droid.model.Submission
+import org.stepic.droid.model.code.extensionForLanguage
 import org.stepic.droid.ui.activities.CodePlaygroundActivity
 import org.stepic.droid.ui.adapters.CodeToolbarAdapter
 import org.stepic.droid.ui.dialogs.ChangeCodeLanguageDialog
@@ -58,6 +59,10 @@ class CodeStepFragment : StepAttemptFragment(),
     }
 
     private var chosenProgrammingLanguageName: String? = null
+        set(value) {
+            field = value
+            if (value != null) codeEditor?.let { it.lang = value }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
