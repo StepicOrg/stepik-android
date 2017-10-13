@@ -25,7 +25,7 @@ class CodeEditorLayout : ScrollView {
         LayoutInflater.from(context).inflate(R.layout.code_editor, this, true)
         codeEditor = findViewById(R.id.codeEdit)
         codeEditor.typeface = Typeface.MONOSPACE
-        theme = Presets.DefaultTheme
+        theme = Presets.themes[0]
     }
 
     override fun onAttachedToWindow() {

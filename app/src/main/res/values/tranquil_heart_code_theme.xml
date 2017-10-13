@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tranquil_heart_theme_name" translatable="false">Tranquil Heart</string>
+    <color name="tranquil_heart_theme_plain">#e6e9ed</color>
+    <color name="tranquil_heart_theme_string">#ffce54</color>
+    <color name="tranquil_heart_theme_keyword">#4fc1e9</color>
+    <color name="tranquil_heart_theme_comment">#656d78</color>
+    <color name="tranquil_heart_theme_type">#4fc1e9</color>
+    <color name="tranquil_heart_theme_literal">#ac92ec</color>
+    <color name="tranquil_heart_theme_tag">#ed5565</color>
+    <color name="tranquil_heart_theme_attribute_name">#a0d468</color>
+    <color name="tranquil_heart_theme_attribute_value">#ffce54</color>
+    <color name="tranquil_heart_theme_declaration">#ac92ec</color>
+
+    <color name="tranquil_heart_theme_background">#2f3640</color>
+    <color name="tranquil_heart_theme_line_number_background">#656d78</color>
+    <color name="tranquil_heart_theme_line_number_text">#e6e9ed</color>
+    <color name="tranquil_heart_theme_selected_line_background">#44e6e9ed</color>
+    <color name="tranquil_heart_theme_line_number_stroke">#656d78</color>
+</resources>

@@ -8,7 +8,6 @@ import android.text.*
 import android.text.style.ForegroundColorSpan
 import android.util.AttributeSet
 import android.view.ViewTreeObserver
-import android.widget.ScrollView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -17,7 +16,7 @@ import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.code.highlight.prettify.PrettifyParser
 import org.stepic.droid.code.highlight.syntaxhighlight.ParseResult
 import org.stepic.droid.code.highlight.themes.CodeTheme
-import org.stepic.droid.code.highlight.themes.Presets.DefaultTheme
+import org.stepic.droid.code.highlight.themes.Presets
 import org.stepic.droid.util.DpPixelsHelper
 import java.util.concurrent.TimeUnit
 
@@ -119,7 +118,7 @@ class CodeEditor : AppCompatEditText, TextWatcher {
         super.onDetachedFromWindow()
     }
 
-    var theme : CodeTheme = DefaultTheme
+    var theme : CodeTheme = Presets.themes[0]
         set(value) {
             field = value
             setTextColor(value.syntax.plain)
