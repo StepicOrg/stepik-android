@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.fragment_code_playground.*
 import kotlinx.android.synthetic.main.view_code_editor.*
 import kotlinx.android.synthetic.main.view_code_toolbar.codeToolbarView
 import org.stepic.droid.R
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.code.util.CodeToolbarUtil
 import org.stepic.droid.model.code.CodeOptions
@@ -168,6 +169,7 @@ class CodePlaygroundFragment : FragmentBase(),
     }
 
     override fun onSymbolClick(symbol: String) {
+        analytic.reportEventWithName(Analytic.Code.TOOLBAR_SELECTED, "$currentLanguage $symbol")
         codeEditor.insertText(CodeToolbarUtil.mapToolbarSymbolToPrintable(symbol))
     }
 }

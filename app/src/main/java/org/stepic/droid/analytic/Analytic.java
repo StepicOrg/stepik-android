@@ -7,6 +7,10 @@ import org.jetbrains.annotations.Nullable;
 
 public interface Analytic {
 
+    interface Code {
+        String TOOLBAR_SELECTED = "code_toolbar_selected";
+    }
+
     interface Search {
         String SEARCH_NULL = "search_null";
         String SEARCH_QUERY = "search_with_query";
