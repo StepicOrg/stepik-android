@@ -12,9 +12,9 @@ import org.stepic.droid.code.highlight.themes.Presets
 class CodeEditorLayout : ScrollView {
     private val codeEditor: CodeEditor
 
-    var theme : CodeTheme = Presets.DefaultTheme
+    var theme : CodeTheme
+        get() = codeEditor.theme
         set(value) {
-            field = value
             setBackgroundColor(value.background)
             codeEditor.theme = value
         }
@@ -25,6 +25,7 @@ class CodeEditorLayout : ScrollView {
         LayoutInflater.from(context).inflate(R.layout.code_editor, this, true)
         codeEditor = findViewById(R.id.codeEdit)
         codeEditor.typeface = Typeface.MONOSPACE
+        theme = Presets.DefaultTheme
     }
 
     override fun onAttachedToWindow() {
