@@ -10,9 +10,10 @@ import android.text.style.ForegroundColorSpan
 import android.view.*
 import kotlinx.android.synthetic.main.fragment_code_playground.*
 import kotlinx.android.synthetic.main.view_code_editor.*
-import kotlinx.android.synthetic.main.view_code_toolbar.codeToolbarView as codeToolbarView
+import kotlinx.android.synthetic.main.view_code_toolbar.codeToolbarView
 import org.stepic.droid.R
 import org.stepic.droid.base.FragmentBase
+import org.stepic.droid.code.util.CodeToolbarUtil
 import org.stepic.droid.model.code.CodeOptions
 import org.stepic.droid.ui.activities.CodePlaygroundActivity
 import org.stepic.droid.ui.adapters.CodeToolbarAdapter
@@ -20,6 +21,7 @@ import org.stepic.droid.ui.dialogs.ProgrammingLanguageChooserDialogFragment
 import org.stepic.droid.ui.dialogs.ResetCodeDialogFragment
 import org.stepic.droid.ui.util.*
 import org.stepic.droid.util.ColorUtil
+import org.stepic.droid.util.insertText
 
 class CodePlaygroundFragment : FragmentBase(),
         OnBackClickListener,
@@ -166,5 +168,6 @@ class CodePlaygroundFragment : FragmentBase(),
     }
 
     override fun onSymbolClick(symbol: String) {
+        codeEditor.insertText(CodeToolbarUtil.mapToolbarSymbolToPrintable(symbol))
     }
 }

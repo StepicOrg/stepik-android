@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
-import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_step_attempt.*
 import kotlinx.android.synthetic.main.view_code_editor.*
 import kotlinx.android.synthetic.main.view_code_quiz.*
@@ -17,6 +16,7 @@ import kotlinx.android.synthetic.main.view_code_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
+import org.stepic.droid.code.util.CodeToolbarUtil
 import org.stepic.droid.core.presenters.CodePresenter
 import org.stepic.droid.core.presenters.contracts.CodeView
 import org.stepic.droid.model.Attempt
@@ -29,6 +29,7 @@ import org.stepic.droid.ui.dialogs.ResetCodeDialogFragment
 import org.stepic.droid.ui.util.initForCodeLanguages
 import org.stepic.droid.ui.util.listenKeyboardChanges
 import org.stepic.droid.ui.util.stopListenKeyboardChanges
+import org.stepic.droid.util.insertText
 import javax.inject.Inject
 
 class CodeStepFragment : StepAttemptFragment(),
@@ -365,7 +366,7 @@ class CodeStepFragment : StepAttemptFragment(),
             step?.block?.options?.codeTemplates?.size == 1
 
     override fun onSymbolClick(symbol: String) {
-        Toast.makeText(context, symbol, Toast.LENGTH_SHORT).show()
+        codeEditor.insertText(CodeToolbarUtil.mapToolbarSymbolToPrintable(symbol))
     }
 
 }
