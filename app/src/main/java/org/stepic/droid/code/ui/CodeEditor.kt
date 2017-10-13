@@ -135,50 +135,71 @@ class CodeEditor : AppCompatEditText, TextWatcher {
     private val bufferRect = Rect()
 
     var lines: List<String> = emptyList()
+        private set(value) {
+            field = value
+            linesWithNumbers = layout?.let(this::countNumbersForLines) ?: emptyList()
+        }
+
     var linesWithNumbers: List<Int> = emptyList()
+        private set
+
+    
+    private fun countNumbersForLines(layout: Layout) : List<Int> {
+        var pos = 0
+        return lines.map {
+            val line = layout.getLineForOffset(pos)
+            pos += it.length + 1
+            line
+        }
+    }
+
 
     override fun onDraw(canvas: Canvas) {
-        val lineNumbersOffset = lineNumbersTextPaint.measureText(lineCount.toString()).toInt() + 2 * LINE_NUMBERS_MARGIN
+        val lineNumbersOffset = lineNumbersTextPaint.measureText(lineCount.toString()).toInt() + 2 * LINE_NUMBERS_MARGIN_PX
 
-        setPadding(lineNumbersOffset + LINE_NUMBERS_MARGIN, paddingTop, paddingRight, paddingBottom)
-        canvas.drawRect(0f, 0f, lineNumbersOffset.toFloat(), height.toFloat(), lineNumbersBackgroundPaint) // line numbers bg
-        canvas.drawLine(lineNumbersOffset.toFloat(), 0f, lineNumbersOffset.toFloat(), height.toFloat(), lineNumbersStrokePaint) // line numbers stroke
+        if (paddingLeft != lineNumbersOffset + LINE_NUMBERS_MARGIN_PX) {
+            setPadding(lineNumbersOffset + LINE_NUMBERS_MARGIN_PX, paddingTop, paddingRight, paddingBottom)
+        }
 
-        layout?.let { layout ->
-            var pos = 0
-            linesWithNumbers = lines.map {
-                val line = layout.getLineForOffset(pos)
-                pos += it.length + 1
-                line
+        canvas.drawRect(0f, 0f, lineNumbersOffset.toFloat(), lineHeight * lineCount.toFloat(), lineNumbersBackgroundPaint) // line numbers bg
+        canvas.drawLine(lineNumbersOffset.toFloat(), 0f, lineNumbersOffset.toFloat(), lineHeight * lineCount.toFloat(), lineNumbersStrokePaint) // line numbers stroke
+
+        if (layout != null) {
+            if (linesWithNumbers.isEmpty() && lines.isNotEmpty()) { // layout could be null when lines is set so we have to check and recount line numbers in such case
+                linesWithNumbers = countNumbersForLines(layout)
             }
 
             linesWithNumbers.forEachIndexed { lineNumber, line ->
                 val y = getLineBounds(line, bufferRect)
-                canvas.drawText(lineNumber.toString(), lineNumbersOffset.toFloat() - LINE_NUMBERS_MARGIN, y.toFloat(), lineNumbersTextPaint)
+                canvas.drawText(lineNumber.toString(), lineNumbersOffset.toFloat() - LINE_NUMBERS_MARGIN_PX, y.toFloat(), lineNumbersTextPaint)
             }
 
-            val cursorPosition = selectionStart
-            if (cursorPosition > 0) {
-                val selectedLine = layout.getLineForOffset(cursorPosition)
-                var lineStart = selectedLine
-                var lineEnd = selectedLine + 1
-
-                while (!linesWithNumbers.contains(lineStart) && lineStart > 0) lineStart--
-                while (!linesWithNumbers.contains(lineEnd) && lineEnd < lineCount) lineEnd++
-
-                lineEnd -= 1
-
-                getLineBounds(lineStart, bufferRect)
-                val top = bufferRect.top.toFloat()
-
-                getLineBounds(lineEnd, bufferRect)
-                val bottom = bufferRect.bottom.toFloat()
-
-                canvas.drawRect(0f, top, width.toFloat(), bottom, selectedLinePaint)
-            }
+            drawHighlightForCurrentLine(layout, canvas)
         }
 
         super.onDraw(canvas)
+    }
+
+    private fun drawHighlightForCurrentLine(layout: Layout, canvas: Canvas) {
+        val cursorPosition = selectionStart
+        if (cursorPosition > 0) {
+            val selectedLine = layout.getLineForOffset(cursorPosition)
+            var lineStart = selectedLine
+            var lineEnd = selectedLine + 1
+
+            while (!linesWithNumbers.contains(lineStart) && lineStart > 0) lineStart--
+            while (!linesWithNumbers.contains(lineEnd) && lineEnd < lineCount) lineEnd++
+
+            lineEnd -= 1
+
+            getLineBounds(lineStart, bufferRect)
+            val top = bufferRect.top.toFloat()
+
+            getLineBounds(lineEnd, bufferRect)
+            val bottom = bufferRect.bottom.toFloat()
+
+            canvas.drawRect(0f, top, width.toFloat(), bottom, selectedLinePaint)
+        }
     }
 
 
