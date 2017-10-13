@@ -159,8 +159,8 @@ class CodeEditor : AppCompatEditText, TextWatcher {
             setPadding(lineNumbersOffset + LINE_NUMBERS_MARGIN_PX, paddingTop, paddingRight, paddingBottom)
         }
 
-        canvas.drawRect(0f, 0f, lineNumbersOffset.toFloat(), lineHeight * lineCount.toFloat(), lineNumbersBackgroundPaint) // line numbers bg
-        canvas.drawLine(lineNumbersOffset.toFloat(), 0f, lineNumbersOffset.toFloat(), lineHeight * lineCount.toFloat(), lineNumbersStrokePaint) // line numbers stroke
+        canvas.drawRect(0f, 0f, lineNumbersOffset.toFloat(), height.toFloat(), lineNumbersBackgroundPaint) // line numbers bg
+        canvas.drawLine(lineNumbersOffset.toFloat(), 0f, lineNumbersOffset.toFloat(), height.toFloat(), lineNumbersStrokePaint) // line numbers stroke
 
         if (layout != null) {
             if (linesWithNumbers.isEmpty() && lines.isNotEmpty()) { // layout could be null when lines is set so we have to check and recount line numbers in such case
