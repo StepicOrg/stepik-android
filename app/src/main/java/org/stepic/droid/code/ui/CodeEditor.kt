@@ -26,6 +26,7 @@ class CodeEditor : AppCompatEditText, TextWatcher {
     companion object {
         const val SCROLL_DEBOUNCE_MS = 100L
         const val INPUT_DEBOUNCE_MS = 300L
+        const val LINE_NUMBERS_MARGIN_DP = 4f
     }
 
     constructor(context: Context) : super(context)
@@ -34,9 +35,7 @@ class CodeEditor : AppCompatEditText, TextWatcher {
 
     private val parser = PrettifyParser()
 
-    private val LINE_NUMBERS_MARGIN by lazy {
-        DpPixelsHelper.convertDpToPixel(4f).toInt()
-    }
+    private val LINE_NUMBERS_MARGIN_PX = DpPixelsHelper.convertDpToPixel(LINE_NUMBERS_MARGIN_DP).toInt()
 
     private val highlightPublisher = PublishSubject.create<Editable>()
     private val spanPublisher = BehaviorSubject.create<List<ParseResult>>()
