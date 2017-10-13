@@ -92,12 +92,13 @@
             tools:visibility="visible"/>
 
         <LinearLayout
+            android:id="@+id/buttonsContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/submit_button"
+                android:id="@+id/stepAttemptSubmitButton"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/min_ux_touchable_size"
                 android:layout_margin="5dp"

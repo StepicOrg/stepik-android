@@ -21,7 +21,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SortingStepDraggableAdapter extends RecyclerView.Adapter<SortingStepDraggableAdapter.OptionViewHolder>
+public class SortingStepDraggableAdapter
+        extends RecyclerView.Adapter<SortingStepDraggableAdapter.OptionViewHolder>
         implements DraggableItemAdapter<SortingStepDraggableAdapter.OptionViewHolder> {
 
     @Nullable
@@ -95,6 +96,16 @@ public class SortingStepDraggableAdapter extends RecyclerView.Adapter<SortingSte
     @Override
     public boolean onCheckCanDrop(int draggingPosition, int dropPosition) {
         return true;
+    }
+
+    @Override
+    public void onItemDragStarted(int position) {
+
+    }
+
+    @Override
+    public void onItemDragFinished(int fromPosition, int toPosition, boolean result) {
+
     }
 
     static class OptionViewHolder extends AbstractDraggableItemViewHolder {

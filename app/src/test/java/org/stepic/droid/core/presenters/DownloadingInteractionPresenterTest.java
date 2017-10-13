@@ -7,7 +7,7 @@ import org.mockito.MockitoAnnotations;
 import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.core.presenters.contracts.DownloadingInteractionView;
 import org.stepic.droid.preferences.UserPreferences;
-import org.stepic.droid.test_utils.ConcurrencyUtilForTest;
+import org.stepic.droid.testUtils.ConcurrencyUtilForTest;
 import org.stepic.droid.util.connectivity.NetworkType;
 import org.stepic.droid.util.connectivity.NetworkTypeDeterminer;
 

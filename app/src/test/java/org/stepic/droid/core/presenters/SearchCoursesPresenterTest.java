@@ -11,11 +11,11 @@ import org.stepic.droid.core.presenters.contracts.CoursesView;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Meta;
 import org.stepic.droid.model.SearchResult;
-import org.stepic.droid.test_utils.ConcurrencyUtilForTest;
-import org.stepic.droid.test_utils.ResponseGeneratorKt;
-import org.stepic.droid.test_utils.generators.FakeCourseGenerator;
-import org.stepic.droid.test_utils.generators.FakeMetaGenerator;
-import org.stepic.droid.test_utils.generators.FakeSearchResultGenerator;
+import org.stepic.droid.testUtils.ConcurrencyUtilForTest;
+import org.stepic.droid.testUtils.ResponseGeneratorKt;
+import org.stepic.droid.testUtils.generators.FakeCourseGenerator;
+import org.stepic.droid.testUtils.generators.FakeMetaGenerator;
+import org.stepic.droid.testUtils.generators.FakeSearchResultGenerator;
 import org.stepic.droid.util.resolvers.SearchResolver;
 import org.stepic.droid.util.resolvers.SearchResolverImpl;
 import org.stepic.droid.web.Api;
@@ -49,7 +49,7 @@ public class SearchCoursesPresenterTest {
     @Mock
     MainHandler mainHandler;
 
-    SearchResolver searchResolver;
+    private SearchResolver searchResolver;
 
     @Mock
     Analytic analytic;

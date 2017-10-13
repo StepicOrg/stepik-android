@@ -14,10 +14,10 @@ import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.storage.operations.DatabaseFacade;
 import org.stepic.droid.storage.repositories.Repository;
-import org.stepic.droid.test_utils.ConcurrencyUtilForTest;
-import org.stepic.droid.test_utils.ResponseGeneratorKt;
-import org.stepic.droid.test_utils.generators.FakeSectionGenerator;
-import org.stepic.droid.test_utils.generators.FakeUnitGenerator;
+import org.stepic.droid.testUtils.ConcurrencyUtilForTest;
+import org.stepic.droid.testUtils.ResponseGeneratorKt;
+import org.stepic.droid.testUtils.generators.FakeSectionGenerator;
+import org.stepic.droid.testUtils.generators.FakeUnitGenerator;
 import org.stepic.droid.web.Api;
 import org.stepic.droid.web.LastStepResponse;
 
