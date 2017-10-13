@@ -64,7 +64,7 @@ class CodeEditor : AppCompatEditText, TextWatcher {
         }
 
     
-    internal var scrollContainer: ScrollView? = null
+    internal var scrollContainer: CodeEditorLayout? = null
         set(value) {
             field?.let { container ->
                 container.viewTreeObserver.removeOnScrollChangedListener(onScrollChangedListener)
