@@ -10,7 +10,7 @@ import org.stepic.droid.R
 import org.stepic.droid.model.code.symbolsForLanguage
 import org.stepic.droid.ui.listeners.OnItemClickListener
 
-class CodeToolbarAdapter(private val context: Context) : RecyclerView.Adapter<CodeToolbarAdapter.Companion.CodeToolbarItem>() {
+class CodeToolbarAdapter(private val context: Context) : RecyclerView.Adapter<CodeToolbarAdapter.CodeToolbarItem>() {
 
     interface OnSymbolClickListener {
         fun onSymbolClick(symbol: String)
@@ -39,18 +39,15 @@ class CodeToolbarAdapter(private val context: Context) : RecyclerView.Adapter<Co
 
     override fun getItemCount(): Int = symbols.size
 
-    companion object {
-        class CodeToolbarItem(itemView: View, onItemClickListener: OnItemClickListener) : RecyclerView.ViewHolder(itemView) {
-
-            init {
-                itemView.setOnClickListener {
-                    onItemClickListener.onItemClick(adapterPosition)
-                }
+    class CodeToolbarItem(itemView: View, onItemClickListener: OnItemClickListener) : RecyclerView.ViewHolder(itemView) {
+        init {
+            itemView.setOnClickListener {
+                onItemClickListener.onItemClick(adapterPosition)
             }
+        }
 
-            fun bindData(symbol: String) {
-                itemView.codeToolbarSymbol.text = symbol
-            }
+        fun bindData(symbol: String) {
+            itemView.codeToolbarSymbol.text = symbol
         }
     }
 
