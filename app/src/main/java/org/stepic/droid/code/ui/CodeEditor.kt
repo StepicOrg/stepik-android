@@ -2,16 +2,15 @@ package org.stepic.droid.code.ui
 
 import android.content.Context
 import android.graphics.*
+import android.os.Build
 import android.support.v7.widget.AppCompatEditText
 import android.text.*
 import android.text.style.ForegroundColorSpan
 import android.util.AttributeSet
-import android.util.Log
-import android.view.View
+import android.view.ViewTreeObserver
 import android.widget.ScrollView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
@@ -40,7 +39,9 @@ class CodeEditor : AppCompatEditText, TextWatcher {
     private val highlightPublisher = PublishSubject.create<Editable>()
     private val spanPublisher = BehaviorSubject.create<List<ParseResult>>()
     private val scrollPublisher = PublishSubject.create<Int>()
-    private var scrollDisposable: Disposable? = null
+
+    private val onGlobalLayoutListener  = ViewTreeObserver.OnGlobalLayoutListener  { scrollPublisher.onNext(0) }
+    private val onScrollChangedListener = ViewTreeObserver.OnScrollChangedListener { scrollPublisher.onNext(0) }
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -65,22 +66,20 @@ class CodeEditor : AppCompatEditText, TextWatcher {
     
     var scrollContainer: ScrollView? = null
         set(value) {
-            field = value
-            value?.let { container ->
-                container.viewTreeObserver.addOnScrollChangedListener {
-                    scrollPublisher.onNext(container.scrollY)
+            field?.let { container ->
+                container.viewTreeObserver.removeOnScrollChangedListener(onScrollChangedListener)
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+                    container.viewTreeObserver.removeOnGlobalLayoutListener(onGlobalLayoutListener)
+                } else {
+                    container.viewTreeObserver.removeGlobalOnLayoutListener(onGlobalLayoutListener)
                 }
-
-                container.viewTreeObserver.addOnGlobalLayoutListener {
-                    scrollPublisher.onNext(container.scrollY)
-                }
-
-                scrollDisposable = scrollPublisher
-                    .debounce(SCROLL_DEBOUNCE_MS, TimeUnit.MILLISECONDS)
-                    .subscribeOn(Schedulers.computation())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe { spanPublisher.value?.let(this::updateHighlight) }
             }
+
+            value?.let { container ->
+                container.viewTreeObserver.addOnScrollChangedListener(onScrollChangedListener)
+                container.viewTreeObserver.addOnGlobalLayoutListener(onGlobalLayoutListener)
+            }
+            field = value
         }
 
     override fun onAttachedToWindow() {
@@ -99,9 +98,15 @@ class CodeEditor : AppCompatEditText, TextWatcher {
                         .map {
                             parser.parse(lang, it.toString())
                         }
-                        .subscribeOn(Schedulers.computation())
-                        .observeOn(Schedulers.computation())
                         .subscribe(spanPublisher::onNext)
+        )
+
+        compositeDisposable.add(
+                scrollPublisher
+                        .debounce(SCROLL_DEBOUNCE_MS, TimeUnit.MILLISECONDS)
+                        .subscribeOn(Schedulers.computation())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe { spanPublisher.value?.let(this::updateHighlight) }
         )
 
         addTextChangedListener(this)
@@ -111,7 +116,6 @@ class CodeEditor : AppCompatEditText, TextWatcher {
     override fun onDetachedFromWindow() {
         removeTextChangedListener(this)
         compositeDisposable.dispose()
-        scrollDisposable?.dispose()
         super.onDetachedFromWindow()
     }
 
