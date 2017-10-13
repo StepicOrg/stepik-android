@@ -1,13 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/view_centered_appbar"/>
     <include
+        android:id="@+id/centeredToolbar"
+        layout="@layout/view_centered_appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"/>
+
+    <include
+        android:id="@+id/codeToolbarView"
+        layout="@layout/view_code_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:visibility="visible"/>
+
+    <include
+        android:id="@+id/codeEditor"
         layout="@layout/view_code_editor"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-</LinearLayout>
+        android:layout_height="match_parent"
+        android:layout_above="@id/codeToolbarView"
+        android:layout_below="@id/centeredToolbar"/>
+
+</RelativeLayout>
