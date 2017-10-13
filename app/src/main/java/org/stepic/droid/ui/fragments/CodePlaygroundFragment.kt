@@ -18,6 +18,7 @@ import org.stepic.droid.code.util.CodeToolbarUtil
 import org.stepic.droid.model.code.CodeOptions
 import org.stepic.droid.ui.activities.CodePlaygroundActivity
 import org.stepic.droid.ui.adapters.CodeToolbarAdapter
+import org.stepic.droid.ui.dialogs.ChangeCodeLanguageDialog
 import org.stepic.droid.ui.dialogs.ProgrammingLanguageChooserDialogFragment
 import org.stepic.droid.ui.dialogs.ResetCodeDialogFragment
 import org.stepic.droid.ui.util.*
@@ -27,8 +28,9 @@ import org.stepic.droid.util.insertText
 class CodePlaygroundFragment : FragmentBase(),
         OnBackClickListener,
         ProgrammingLanguageChooserDialogFragment.Callback,
-        ResetCodeDialogFragment.Callback, CodeToolbarAdapter.OnSymbolClickListener {
-
+        ResetCodeDialogFragment.Callback,
+        ChangeCodeLanguageDialog.Callback,
+        CodeToolbarAdapter.OnSymbolClickListener {
     companion object {
         private const val CODE_KEY = "code_key"
         private const val LANG_KEY = "lang_key"
@@ -131,17 +133,10 @@ class CodePlaygroundFragment : FragmentBase(),
             true
         }
         R.id.action_language_code -> {
-            arguments.getParcelable<CodeOptions>(CODE_OPTIONS_KEY)
-                    ?.limits
-                    ?.keys
-                    ?.sorted()
-                    ?.toTypedArray()
-                    ?.let {
-                        val dialog = ProgrammingLanguageChooserDialogFragment.newInstance(it)
-                        if (!dialog.isAdded) {
-                            dialog.show(childFragmentManager, null)
-                        }
-                    }
+            val dialog = ChangeCodeLanguageDialog.newInstance()
+            if (!dialog.isAdded) {
+                dialog.show(childFragmentManager, null)
+            }
             true
         }
         else -> false
@@ -172,4 +167,24 @@ class CodePlaygroundFragment : FragmentBase(),
         analytic.reportEventWithName(Analytic.Code.TOOLBAR_SELECTED, "$currentLanguage $symbol")
         codeEditor.insertText(CodeToolbarUtil.mapToolbarSymbolToPrintable(symbol))
     }
+
+
+    override fun onChangeLanguage() {
+        showLanguageChoosingDialog()
+    }
+
+    private fun showLanguageChoosingDialog() {
+        arguments.getParcelable<CodeOptions>(CODE_OPTIONS_KEY)
+                ?.limits
+                ?.keys
+                ?.sorted()
+                ?.toTypedArray()
+                ?.let {
+                    val dialog = ProgrammingLanguageChooserDialogFragment.newInstance(it)
+                    if (!dialog.isAdded) {
+                        dialog.show(childFragmentManager, null)
+                    }
+                }
+    }
+
 }
