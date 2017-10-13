@@ -118,6 +118,7 @@
         android:visibility="gone"/>
 
     <View
+
         android:id="@+id/codeQuizDelimiter"
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -125,20 +126,11 @@
         android:background="@color/silver"
         android:visibility="gone"/>
 
-    <EditText
-        android:id="@+id/codeQuizAnswerField"
+    <include
+        layout="@layout/view_code_editor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/codeQuizDelimiter"
-        android:gravity="top|start"
-        android:hint="@string/hint_for_type_answer"
-        android:imeOptions="flagNoFullscreen"
-        android:inputType="textMultiLine"
-        android:maxLines="9000"
-        android:minLines="5"
-        android:padding="8dp"
-        android:scrollbarStyle="outsideOverlay"
-        android:scrollbars="vertical"
         android:visibility="gone"
         tools:visibility="visible"/>
 

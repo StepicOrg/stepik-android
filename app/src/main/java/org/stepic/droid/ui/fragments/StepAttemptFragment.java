@@ -73,7 +73,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
     private final int DISCOUNTING_POLICY_REQUEST_CODE = 131;
     private final int NOTIFICATION_TIME_REQUEST_CODE = 11;
 
-    @BindView(R.id.root_view)
+    @BindView(R.id.rootStepAttemptView)
     ViewGroup rootView;
 
     @BindView(R.id.answer_status_text)

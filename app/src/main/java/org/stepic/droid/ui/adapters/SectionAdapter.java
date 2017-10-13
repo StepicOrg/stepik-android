@@ -38,7 +38,7 @@ import org.stepic.droid.ui.dialogs.OnLoadPositionListener;
 import org.stepic.droid.ui.dialogs.VideoQualityDetailedDialog;
 import org.stepic.droid.ui.fragments.SectionsFragment;
 import org.stepic.droid.ui.listeners.OnClickLoadListener;
-import org.stepic.droid.ui.listeners.StepicOnClickItemListener;
+import org.stepic.droid.ui.listeners.OnItemClickListener;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ColorUtil;
 import org.stepic.droid.util.SectionUtilKt;
@@ -300,7 +300,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         }
     }
 
-    class SectionViewHolder extends GenericViewHolder implements StepicOnClickItemListener {
+    class SectionViewHolder extends GenericViewHolder implements OnItemClickListener {
 
         @BindView(R.id.cv)
         ViewGroup cv;
@@ -358,7 +358,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
 
                 @Override
                 public void onClick(View v) {
-                    SectionViewHolder.this.onClick(getAdapterPosition());
+                    SectionViewHolder.this.onItemClick(getAdapterPosition());
                 }
 
             });
@@ -380,7 +380,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
 
 
         @Override
-        public void onClick(int adapterPosition) {
+        public void onItemClick(int adapterPosition) {
             int itemPosition = adapterPosition - PRE_SECTION_LIST_DELTA;
             if (itemPosition >= 0 && itemPosition < sections.size()) {
                 screenManager.showUnitsForSection(activity, sections.get(itemPosition));

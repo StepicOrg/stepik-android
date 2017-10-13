@@ -2,9 +2,11 @@
 
 package org.stepic.droid.model.code
 
+import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import org.stepic.droid.R
 
 @Deprecated("Use string literal instead. This class is only for knowledge what programming languages are existed")
 enum class ProgrammingLanguage(val serverPrintableName: String) : Parcelable {
@@ -106,13 +108,60 @@ enum class ProgrammingLanguage(val serverPrintableName: String) : Parcelable {
 
         }
 
-        private fun serverNameToLanguage(serverName: String): ProgrammingLanguage? {
-            return values()
-                    .find {
-                        it.serverPrintableName.equals(serverName, ignoreCase = true)
-                    } ?: return null
-        }
 
     }
 
+}
+
+private fun serverNameToLanguage(serverName: String): ProgrammingLanguage? {
+    return ProgrammingLanguage.values()
+            .find {
+                it.serverPrintableName.equals(serverName, ignoreCase = true)
+            }
+}
+
+fun symbolsForLanguage(lang: String, context: Context): Array<String> {
+    val programmingLanguage = serverNameToLanguage(lang)
+    with(context.resources) {
+        return when (programmingLanguage) {
+            ProgrammingLanguage.PYTHON ->
+                getStringArray(R.array.frequent_symbols_py)
+            ProgrammingLanguage.CPP11, ProgrammingLanguage.CPP, ProgrammingLanguage.C ->
+                getStringArray(R.array.frequent_symbols_cpp)
+            ProgrammingLanguage.HASKELL, ProgrammingLanguage.HASKELL7, ProgrammingLanguage.HASKELL8 ->
+                getStringArray(R.array.frequent_symbols_default)
+            ProgrammingLanguage.JAVA, ProgrammingLanguage.JAVA8 ->
+                getStringArray(R.array.frequent_symbols_java)
+            ProgrammingLanguage.OCTAVE ->
+                getStringArray(R.array.frequent_symbols_default)
+            ProgrammingLanguage.ASM32, ProgrammingLanguage.ASM64 ->
+                getStringArray(R.array.frequent_symbols_default)
+            ProgrammingLanguage.SHELL ->
+                getStringArray(R.array.frequent_symbols_default)
+            ProgrammingLanguage.RUST ->
+                getStringArray(R.array.frequent_symbols_default)
+            ProgrammingLanguage.R ->
+                getStringArray(R.array.frequent_symbols_default)
+            ProgrammingLanguage.RUBY ->
+                getStringArray(R.array.frequent_symbols_default)
+            ProgrammingLanguage.CLOJURE ->
+                getStringArray(R.array.frequent_symbols_default)
+            ProgrammingLanguage.CS ->
+                getStringArray(R.array.frequent_symbols_cs)
+            ProgrammingLanguage.JAVASCRIPT ->
+                getStringArray(R.array.frequent_symbols_js)
+            ProgrammingLanguage.SCALA ->
+                getStringArray(R.array.frequent_symbols_default)
+            ProgrammingLanguage.KOTLIN ->
+                getStringArray(R.array.frequent_symbols_default)
+            ProgrammingLanguage.GO ->
+                getStringArray(R.array.frequent_symbols_default)
+            ProgrammingLanguage.PASCAL ->
+                getStringArray(R.array.frequent_symbols_default)
+            ProgrammingLanguage.PERL ->
+                getStringArray(R.array.frequent_symbols_default)
+            null ->
+                getStringArray(R.array.frequent_symbols_default)
+        }
+    }
 }

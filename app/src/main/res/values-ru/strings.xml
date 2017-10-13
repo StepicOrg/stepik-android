@@ -540,4 +540,5 @@
     <string name="code_quiz_limits">&lt;b>Временное ограничение:&lt;/b> %1$s\n&lt;b>Ограничение памяти:&lt;/b> %2$s MB</string>
     <string name="sample_input">&lt;b>Пример входных данных %d:&lt;/b></string>
     <string name="sample_output">&lt;b>Пример выходных данных %d:&lt;/b></string>
+    <string name="hint_for_code">Введите код здесь…</string>
 </resources>
