@@ -8,6 +8,9 @@ import android.view.View
 import android.view.ViewTreeObserver
 import android.view.WindowManager
 
+const val PART_OF_KEYBOARD_ON_SCREEN = 0.15
+
+//this method works good with activities, this listener will be destroyed with viewTree
 inline fun setOnKeyboardOpenListener(
         rootView: View,
         crossinline onKeyboardShown: () -> Unit,
@@ -19,7 +22,7 @@ inline fun setOnKeyboardOpenListener(
         val screenHeight = rootView.rootView.height
         val keyboardHeight = screenHeight - rect.bottom
 
-        if (keyboardHeight > screenHeight * 0.15) {
+        if (keyboardHeight > screenHeight * PART_OF_KEYBOARD_ON_SCREEN) {
             onKeyboardShown()
         } else {
             onKeyboardHidden()
@@ -27,7 +30,7 @@ inline fun setOnKeyboardOpenListener(
     }
 }
 
-
+//methods for retain fragments
 fun listenKeyboardChanges(
         rootView: View,
         onKeyboardShown: () -> Unit,
@@ -39,7 +42,7 @@ fun listenKeyboardChanges(
         val rect = Rect()
         rootView.getWindowVisibleDisplayFrame(rect)
         val keyboardHeight = height - rect.bottom
-        if (keyboardHeight > height * 0.15) {
+        if (keyboardHeight > height * PART_OF_KEYBOARD_ON_SCREEN) {
             onKeyboardShown()
         } else {
             onKeyboardHidden()
@@ -49,6 +52,7 @@ fun listenKeyboardChanges(
     return onGlobalLayoutListener
 }
 
+//stop listening for avoiding memory leak
 fun stopListenKeyboardChanges(
         rootView: View,
         onGlobalLayoutListener: ViewTreeObserver.OnGlobalLayoutListener?) {
