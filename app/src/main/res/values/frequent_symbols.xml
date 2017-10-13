@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="autocomplete_symbols_default">
+    <string-array name="frequent_symbols_default">
         <item>Tab</item>
         <item>&lt;</item>
         <item>></item>
@@ -31,7 +31,7 @@
         <item>^</item>
         <item>"'"</item>
     </string-array>
-    <string-array name="autocomplete_symbols_cpp">
+    <string-array name="frequent_symbols_cpp">
         <item>Tab</item>
         <item>&lt;</item>
         <item>></item>
@@ -63,7 +63,7 @@
         <item>"'"</item>
         <item>\#</item>
     </string-array>
-    <string-array name="autocomplete_symbols_cs">
+    <string-array name="frequent_symbols_cs">
         <item>Tab</item>
         <item>{</item>
         <item>}</item>
@@ -94,7 +94,7 @@
         <item>"'"</item>
         <item>\#</item>
     </string-array>
-    <string-array name="autocomplete_symbols_css">
+    <string-array name="frequent_symbols_css">
         <item>Tab</item>
         <item>:</item>
         <item>-</item>
@@ -125,7 +125,7 @@
         <item>\?</item>
         <item>^</item>
     </string-array>
-    <string-array name="autocomplete_symbols_html">
+    <string-array name="frequent_symbols_html">
         <item>Tab</item>
         <item>&lt;</item>
         <item>></item>
@@ -156,7 +156,7 @@
         <item>^</item>
         <item>"'"</item>
     </string-array>
-    <string-array name="autocomplete_symbols_java">
+    <string-array name="frequent_symbols_java">
         <item>Tab</item>
         <item>{</item>
         <item>}</item>
@@ -187,7 +187,7 @@
         <item>"'"</item>
         <item>\#</item>
     </string-array>
-    <string-array name="autocomplete_symbols_js">
+    <string-array name="frequent_symbols_js">
         <item>Tab</item>
         <item>{</item>
         <item>}</item>
@@ -218,7 +218,7 @@
         <item>^</item>
         <item>"'"</item>
     </string-array>
-    <string-array name="autocomplete_symbols_php">
+    <string-array name="frequent_symbols_php">
         <item>Tab</item>
         <item>$</item>
         <item>(</item>
@@ -250,7 +250,7 @@
         <item>\?</item>
         <item>^</item>
     </string-array>
-    <string-array name="autocomplete_symbols_py">
+    <string-array name="frequent_symbols_py">
         <item>Tab</item>
         <item>(</item>
         <item>)</item>
@@ -281,7 +281,7 @@
         <item>\?</item>
         <item>^</item>
     </string-array>
-    <string-array name="autocomplete_symbols_rb">
+    <string-array name="frequent_symbols_rb">
         <item>Tab</item>
         <item>(</item>
         <item>)</item>
