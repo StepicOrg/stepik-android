@@ -18,18 +18,18 @@ import org.stepic.droid.code.highlight.syntaxhighlight.ParseResult
 import org.stepic.droid.code.highlight.themes.CodeTheme
 import org.stepic.droid.code.highlight.themes.Presets
 import org.stepic.droid.util.DpPixelsHelper
+import org.stepic.droid.util.RxEmpty
 import java.util.concurrent.TimeUnit
 
-class CodeEditor : AppCompatEditText, TextWatcher {
+class CodeEditor
+@JvmOverloads
+constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0)
+    : AppCompatEditText(context, attrs, defStyleAttr), TextWatcher {
     companion object {
         const val SCROLL_DEBOUNCE_MS = 100L
-        const val INPUT_DEBOUNCE_MS = 300L
+        const val INPUT_DEBOUNCE_MS = 200L
         const val LINE_NUMBERS_MARGIN_DP = 4f
     }
-
-    constructor(context: Context) : super(context)
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     private val parser = PrettifyParser()
 
@@ -37,10 +37,10 @@ class CodeEditor : AppCompatEditText, TextWatcher {
 
     private val highlightPublisher = PublishSubject.create<Editable>()
     private val spanPublisher = BehaviorSubject.create<List<ParseResult>>()
-    private val scrollPublisher = PublishSubject.create<Int>()
+    private val layoutChangesPublisher = PublishSubject.create<Any>()
 
-    private val onGlobalLayoutListener  = ViewTreeObserver.OnGlobalLayoutListener  { scrollPublisher.onNext(0) }
-    private val onScrollChangedListener = ViewTreeObserver.OnScrollChangedListener { scrollPublisher.onNext(0) }
+    private val onGlobalLayoutListener  = ViewTreeObserver.OnGlobalLayoutListener  { layoutChangesPublisher.onNext(RxEmpty.INSTANCE) }
+    private val onScrollChangedListener = ViewTreeObserver.OnScrollChangedListener { layoutChangesPublisher.onNext(RxEmpty.INSTANCE) }
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -101,7 +101,7 @@ class CodeEditor : AppCompatEditText, TextWatcher {
         )
 
         compositeDisposable.add(
-                scrollPublisher
+                layoutChangesPublisher
                         .debounce(SCROLL_DEBOUNCE_MS, TimeUnit.MILLISECONDS)
                         .subscribeOn(Schedulers.computation())
                         .observeOn(AndroidSchedulers.mainThread())

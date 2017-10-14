@@ -39,7 +39,6 @@ class CodeStepFragment : StepAttemptFragment(),
     companion object {
         private const val CHOSEN_POSITION_KEY: String = "chosenPositionKey"
         private const val CODE_PLAYGROUND_REQUEST = 153
-        private const val MIN_LINES_IN_ANSWER_FIELD = 5
         fun newInstance(): CodeStepFragment = CodeStepFragment()
     }
 
@@ -61,7 +60,7 @@ class CodeStepFragment : StepAttemptFragment(),
     private var chosenProgrammingLanguageName: String? = null
         set(value) {
             field = value
-            if (value != null) codeEditor?.let { it.lang = value }
+            if (value != null) codeEditor?.let { it.lang = extensionForLanguage(value) }
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,8 +76,6 @@ class CodeStepFragment : StepAttemptFragment(),
         codeToolbarView.adapter = codeToolbarAdapter
         codeToolbarAdapter?.onSymbolClickListener = this
         codeToolbarView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-
-//        codeEditor.minLines = MIN_LINES_IN_ANSWER_FIELD
 
         codeQuizChooseLangAction.setOnClickListener {
             val programmingLanguageServerName = codeQuizLanguagePicker.displayedValues[codeQuizLanguagePicker.value]

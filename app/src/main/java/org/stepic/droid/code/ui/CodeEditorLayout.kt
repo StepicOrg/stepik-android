@@ -10,7 +10,10 @@ import org.stepic.droid.code.highlight.themes.CodeTheme
 import org.stepic.droid.code.highlight.themes.Presets
 import org.stepic.droid.util.insertText
 
-class CodeEditorLayout : ScrollView {
+class CodeEditorLayout
+@JvmOverloads
+constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0)
+    : ScrollView(context, attrs, defStyleAttr) {
     private val codeEditor: CodeEditor
 
     var theme : CodeTheme
@@ -29,9 +32,7 @@ class CodeEditorLayout : ScrollView {
             codeEditor.lang = value
         }
 
-    constructor(context: Context) : this(context, null)
-
-    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
+    init {
         LayoutInflater.from(context).inflate(R.layout.code_editor, this, true)
         codeEditor = findViewById(R.id.codeEdit)
         codeEditor.typeface = Typeface.MONOSPACE
