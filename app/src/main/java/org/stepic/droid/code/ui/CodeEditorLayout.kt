@@ -2,9 +2,9 @@ package org.stepic.droid.code.ui
 
 import android.content.Context
 import android.graphics.Typeface
+import android.support.v4.widget.NestedScrollView
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.widget.ScrollView
 import org.stepic.droid.R
 import org.stepic.droid.code.highlight.themes.CodeTheme
 import org.stepic.droid.code.highlight.themes.Presets
@@ -13,7 +13,7 @@ import org.stepic.droid.util.insertText
 class CodeEditorLayout
 @JvmOverloads
 constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0)
-    : ScrollView(context, attrs, defStyleAttr) {
+    : NestedScrollView(context, attrs, defStyleAttr) {
     private val codeEditor: CodeEditor
 
     var theme: CodeTheme
