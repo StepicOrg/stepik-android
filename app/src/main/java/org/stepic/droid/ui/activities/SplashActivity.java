@@ -53,7 +53,7 @@ public class SplashActivity extends BackToExitActivityBase {
                             }
                         } catch (Exception e) {
                             //ignore
-                            //offline or access if revoked
+                            //offline or access is revoked
                         }
                     }
                 }
