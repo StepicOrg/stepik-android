@@ -14,6 +14,8 @@ public interface Analytic {
         String TOOLBAR_SELECTED_LANGUAGE_SYMBOL = "language_symbol";
 
         String CODE_FULLSCREEN_PRESSED = "code_fullscreen_pressed";
+        String CODE_RESET_PRESSED = "code_reset_pressed";
+        String CODE_RESET_PRESSED_USELESS = "code_reset_pressed_useless";
     }
 
     interface Search {

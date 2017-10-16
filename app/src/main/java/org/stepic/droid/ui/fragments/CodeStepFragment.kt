@@ -30,6 +30,7 @@ import org.stepic.droid.ui.dialogs.ResetCodeDialogFragment
 import org.stepic.droid.ui.util.initForCodeLanguages
 import org.stepic.droid.ui.util.listenKeyboardChanges
 import org.stepic.droid.ui.util.stopListenKeyboardChanges
+import org.stepic.droid.util.AppConstants
 import javax.inject.Inject
 
 class CodeStepFragment : StepAttemptFragment(),
@@ -37,6 +38,7 @@ class CodeStepFragment : StepAttemptFragment(),
         ResetCodeDialogFragment.Callback,
         ChangeCodeLanguageDialog.Callback, CodeToolbarAdapter.OnSymbolClickListener {
     companion object {
+        private const val ANALYTIC_SCREEN_TYPE = "standard"
         private const val CHOSEN_POSITION_KEY: String = "chosenPositionKey"
         private const val CODE_PLAYGROUND_REQUEST = 153
         fun newInstance(): CodeStepFragment = CodeStepFragment()
@@ -105,10 +107,15 @@ class CodeStepFragment : StepAttemptFragment(),
 
         codeQuizResetAction.setOnClickListener {
             if (checkForResetDialog()) {
+                analytic.reportEvent(Analytic.Code.CODE_RESET_PRESSED,
+                        Bundle().apply { putString(AppConstants.ANALYTIC_CODE_SCREEN_KEY, ANALYTIC_SCREEN_TYPE) }
+                )
                 val dialog = ResetCodeDialogFragment.newInstance()
                 if (!dialog.isAdded) {
                     dialog.show(childFragmentManager, null)
                 }
+            } else {
+                analytic.reportEvent(Analytic.Code.CODE_RESET_PRESSED_USELESS)
             }
         }
 
