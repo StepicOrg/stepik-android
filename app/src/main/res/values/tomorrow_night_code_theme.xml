@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tomorrow_night_theme_name" translatable="false">Tomorrow Night</string>
+    <color name="tomorrow_night_theme_plain">#cccccc</color>
+    <color name="tomorrow_night_theme_string">#99cc99</color>
+    <color name="tomorrow_night_theme_keyword">#cc99cc</color>
+    <color name="tomorrow_night_theme_comment">#999999</color>
+    <color name="tomorrow_night_theme_type">#6699cc</color>
+    <color name="tomorrow_night_theme_literal">#f99157</color>
+    <color name="tomorrow_night_theme_tag">#f2777a</color>
+    <color name="tomorrow_night_theme_attribute_name">#f99157</color>
+    <color name="tomorrow_night_theme_attribute_value">#66cccc</color>
+    <color name="tomorrow_night_theme_declaration">#f99157</color>
+
+    <color name="tomorrow_night_theme_background">#2d2d2d</color>
+    <color name="tomorrow_night_theme_line_number_background">#44999999</color>
+    <color name="tomorrow_night_theme_line_number_text">#cccccc</color>
+    <color name="tomorrow_night_theme_selected_line_background">#44CCCCCC</color>
+    <color name="tomorrow_night_theme_line_number_stroke">#55999999</color>
+</resources>

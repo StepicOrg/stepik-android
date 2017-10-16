@@ -40,7 +40,7 @@ import org.stepic.droid.ui.dialogs.OnLoadPositionListener;
 import org.stepic.droid.ui.dialogs.VideoQualityDetailedDialog;
 import org.stepic.droid.ui.fragments.UnitsFragment;
 import org.stepic.droid.ui.listeners.OnClickLoadListener;
-import org.stepic.droid.ui.listeners.StepicOnClickItemListener;
+import org.stepic.droid.ui.listeners.OnItemClickListener;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.viewmodel.ProgressViewModel;
 
@@ -54,7 +54,7 @@ import butterknife.BindDrawable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder> implements StepicOnClickItemListener, OnClickLoadListener, OnLoadPositionListener {
+public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder> implements OnItemClickListener, OnClickLoadListener, OnLoadPositionListener {
 
     @Inject
     ScreenManager screenManager;
@@ -195,7 +195,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
 
 
     @Override
-    public void onClick(int itemPosition) {
+    public void onItemClick(int itemPosition) {
         if (itemPosition >= 0 && itemPosition < unitList.size()) {
             screenManager.showSteps(activity, unitList.get(itemPosition), lessonList.get(itemPosition), parentSection);
         }
@@ -373,13 +373,13 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
 
         long oldLessonId = -1;
 
-        UnitViewHolder(View itemView, final StepicOnClickItemListener listener, final OnClickLoadListener loadListener) {
+        UnitViewHolder(View itemView, final OnItemClickListener listener, final OnClickLoadListener loadListener) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    listener.onClick(getAdapterPosition());
+                    listener.onItemClick(getAdapterPosition());
                 }
             });
 

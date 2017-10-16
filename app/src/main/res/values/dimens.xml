@@ -22,6 +22,7 @@
     <dimen name="text_size_title">24sp</dimen>
     <dimen name="guide_top_bot_padding">4dp</dimen>
     <dimen name="min_ux_touchable_size">48dp</dimen>
+    <dimen name="code_toolbar_height">@dimen/min_ux_touchable_size</dimen>
     <dimen name="padding_registration_left_right">36dp</dimen>
     <dimen name="margin_from_image_in_items">8dp</dimen>
     <dimen name="attempt_padding">8dp</dimen>
@@ -72,6 +73,7 @@
     <dimen name="progress_clickable_size">56dp</dimen>
     <dimen name="table_cell_fixed_height">96dp</dimen>
 
+    <dimen name="text_size_default">16sp</dimen>
 
     <dimen name="exo_media_button_width">71dp</dimen>
     <dimen name="rewind_size">48dp</dimen>
@@ -123,4 +125,7 @@
 
     <dimen name="loading_view_course_title_width">150dp</dimen>
     <dimen name="loading_view_course_detail_width">50dp</dimen>
+
+    <dimen name="code_text_size_default">@dimen/text_size_default</dimen>
+    <dimen name="embedded_code_editor_height">150dp</dimen>
 </resources>

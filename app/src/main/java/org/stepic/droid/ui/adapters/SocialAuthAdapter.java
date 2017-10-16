@@ -21,7 +21,7 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.social.SocialManager;
-import org.stepic.droid.ui.listeners.StepicOnClickItemListener;
+import org.stepic.droid.ui.listeners.OnItemClickListener;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.web.Api;
 
@@ -33,7 +33,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.SocialViewHolder> implements StepicOnClickItemListener {
+public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.SocialViewHolder> implements OnItemClickListener {
 
     @Inject
     SocialManager socialManager;
@@ -92,7 +92,7 @@ public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.So
     }
 
     @Override
-    public void onClick(int position) {
+    public void onItemClick(int position) {
         ISocialType type = socialList.get(position);
         analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_IN_SOCIAL, type.getIdentifier());
         if (type == SocialManager.SocialType.google) {
@@ -140,14 +140,14 @@ public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.So
         @BindView(R.id.social_item)
         ImageView imageView;
 
-        public SocialViewHolder(View itemView, final StepicOnClickItemListener clickItemListener) {
+        public SocialViewHolder(View itemView, final OnItemClickListener clickItemListener) {
             super(itemView);
             ButterKnife.bind(this, itemView);
 
             rootView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    clickItemListener.onClick(getAdapterPosition());
+                    clickItemListener.onItemClick(getAdapterPosition());
                 }
             });
         }

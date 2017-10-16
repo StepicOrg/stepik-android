@@ -9,10 +9,10 @@ import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.core.presenters.contracts.InstructorsView;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.User;
-import org.stepic.droid.test_utils.ConcurrencyUtilForTest;
-import org.stepic.droid.test_utils.ResponseGeneratorKt;
-import org.stepic.droid.test_utils.generators.FakeCourseGenerator;
-import org.stepic.droid.test_utils.generators.FakeUserGenerator;
+import org.stepic.droid.testUtils.ConcurrencyUtilForTest;
+import org.stepic.droid.testUtils.ResponseGeneratorKt;
+import org.stepic.droid.testUtils.generators.FakeCourseGenerator;
+import org.stepic.droid.testUtils.generators.FakeUserGenerator;
 import org.stepic.droid.web.Api;
 import org.stepic.droid.web.UserStepicResponse;
 

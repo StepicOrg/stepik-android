@@ -50,12 +50,13 @@ import org.stepic.droid.ui.dialogs.RateAppDialogFragment;
 import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment;
 import org.stepic.droid.ui.listeners.NextMoveable;
 import org.stepic.droid.ui.util.TimeIntervalUtil;
-import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ColorUtil;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.RatingUtil;
 import org.stepic.droid.util.RatingUtilKt;
 import org.stepic.droid.util.SnackbarExtensionKt;
+import org.stepic.droid.util.StepExtensionsKt;
+import org.stepic.droid.util.SubmissionExtensionsKt;
 
 import javax.inject.Inject;
 
@@ -73,7 +74,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
     private final int DISCOUNTING_POLICY_REQUEST_CODE = 131;
     private final int NOTIFICATION_TIME_REQUEST_CODE = 11;
 
-    @BindView(R.id.root_view)
+    @BindView(R.id.rootStepAttemptView)
     ViewGroup rootView;
 
     @BindView(R.id.answer_status_text)
@@ -88,8 +89,11 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
     @BindView(R.id.attempt_container)
     ViewGroup attemptContainer;
 
-    @BindView(R.id.submit_button)
+    @BindView(R.id.stepAttemptSubmitButton)
     Button actionButton;
+
+    @BindView(R.id.buttonsContainer)
+    ViewGroup actionButtonsContainer;
 
     @BindView(R.id.peer_review_warning)
     View peerReviewIndicator;
@@ -174,15 +178,15 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
                     Bundle bundle = new Bundle();
                     bundle.putLong(FirebaseAnalytics.Param.VALUE, 1L);
                     bundle.putString(FirebaseAnalytics.Param.ITEM_ID, step.getId() + "");
+                    String codeLanguage = SubmissionExtensionsKt.getLanguage(submission);
+                    if (codeLanguage != null) {
+                        bundle.putString(Analytic.Steps.CODE_LANGUAGE_KEY, codeLanguage);
+                    }
+                    String stepType = StepExtensionsKt.getStepType(step);
+                    bundle.putString(Analytic.Steps.STEP_TYPE_KEY, stepType);
                     getAnalytic().reportEvent(Analytic.Interaction.CLICK_SEND_SUBMISSION, bundle);//value
 
-                    final String stepTypeName;
-                    if (step != null && step.getBlock() != null && step.getBlock().getName() != null) {
-                        stepTypeName = step.getBlock().getName();
-                    } else {
-                        stepTypeName = AppConstants.TYPE_NULL;
-                    }
-                    getAnalytic().reportEventWithName(Analytic.Steps.CLICK_SEND_SUBMISSION_STEP_TYPE, stepTypeName);
+                    getAnalytic().reportEventWithName(Analytic.Steps.CLICK_SEND_SUBMISSION_STEP_TYPE, stepType);
 
                     makeSubmission();
                 } else {
@@ -281,7 +285,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
                 discountingPolicyTextView.setVisibility(View.GONE); // remove if user was correct
                 submissionRestrictionTextView.setVisibility(View.GONE);
                 tryAgainOnCorrectButton.setVisibility(View.VISIBLE);
-                actionButton.setVisibility(View.VISIBLE);
+                actionButtonsContainer.setVisibility(View.VISIBLE);
                 if (step.getHasSubmissionRestriction()) {
                     tryAgainOnCorrectButton.setVisibility(View.GONE);
                 }
@@ -363,9 +367,9 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
         showActionButtonLoadState(!isNeedShow);
         if (isNeedShow) {
             tryAgainOnCorrectButton.setVisibility(View.GONE);
-            actionButton.setVisibility(View.GONE);
+            actionButtonsContainer.setVisibility(View.GONE);
         } else {
-            actionButton.setVisibility(View.VISIBLE);
+            actionButtonsContainer.setVisibility(View.VISIBLE);
         }
         showAnswerField(!isNeedShow);
         enableInternetMessage(isNeedShow);
@@ -407,11 +411,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
         blockUIBeforeSubmit(false);
         setListenerToActionButton(actionButtonGeneralListener);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            attemptContainer.setBackground(rootView.getBackground());
-        } else {
-            attemptContainer.setBackgroundDrawable(rootView.getBackground());
-        }
+        resetBackgroundOfAttempt();
 
         hintTextView.setVisibility(View.GONE);
         statusTextView.setVisibility(View.GONE);
@@ -421,6 +421,18 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
         stepAttemptPresenter.tryAgain(step.getId());
         submission = null;
 
+    }
+
+    protected final void resetBackgroundOfAttempt() {
+        if (attemptContainer.getBackground() == rootView.getBackground()) {
+            return;
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            attemptContainer.setBackground(rootView.getBackground());
+        } else {
+            attemptContainer.setBackgroundDrawable(rootView.getBackground());
+        }
     }
 
     private void setListenerToActionButton(View.OnClickListener listener) {
@@ -465,12 +477,11 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
 
     protected void showActionButtonLoadState(boolean isLoading) {
         if (isLoading) {
-            tryAgainOnCorrectButton.setVisibility(View.GONE);
-            actionButton.setVisibility(View.GONE);
+            actionButtonsContainer.setVisibility(View.GONE);
             ProgressHelper.activate(progressBar);
         } else {
             ProgressHelper.dismiss(progressBar);
-            actionButton.setVisibility(View.VISIBLE);
+            actionButtonsContainer.setVisibility(View.VISIBLE);
         }
 
     }
@@ -586,7 +597,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
     }
 
     @Override
-    public void onNeedResolveActionButtonText() {
+    public final void onNeedResolveActionButtonText() {
         if (submission == null || submission.getStatus() == Submission.Status.LOCAL) {
             setTextToActionButton(submitText);
         } else {
@@ -640,8 +651,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
             } else {
                 warningText = getString(R.string.restriction_submission_enough);
                 blockUIBeforeSubmit(true);
-                actionButton.setVisibility(View.GONE); //we cant send more
-                tryAgainOnCorrectButton.setVisibility(View.GONE);
+                actionButtonsContainer.setVisibility(View.GONE); //we cant send more
             }
             submissionRestrictionTextView.setText(warningText);
             submissionRestrictionTextView.setVisibility(View.VISIBLE);
@@ -701,5 +711,13 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
         getSharedPreferenceHelper().afterRateWasHandled();
         RatingUtilKt.reportRateEvent(getAnalytic(), starNumber, Analytic.Rating.NEGATIVE_EMAIL);
         getScreenManager().showTextFeedback(getActivity());
+    }
+
+    protected final void hideWrongStatus() {
+        statusTextView.setVisibility(View.GONE);
+    }
+
+    protected final void hideHint() {
+        hintTextView.setVisibility(View.GONE);
     }
 }

@@ -52,7 +52,7 @@ class TimeIntervalPickerDialogFragment : DialogFragment() {
         picker.descendantFocusability = NumberPicker.FOCUS_BLOCK_DESCENDANTS
         picker.wrapSelectorWheel = false
         try {
-            picker.setTextSize(50f) //TODO: Warning: reflection!
+            picker.setTextSize(50f) //Warning: reflection!
         } catch (exception: Exception) {
             Timber.e("reflection failed -> ignore")
         }
