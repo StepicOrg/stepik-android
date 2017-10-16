@@ -127,9 +127,9 @@
         android:visibility="gone"/>
 
     <include
-        layout="@layout/view_code_editor"
+        layout="@layout/view_code_editor_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/embedded_code_editor_height"
         android:layout_below="@id/codeQuizDelimiter"
         android:visibility="gone"
         tools:visibility="visible"/>

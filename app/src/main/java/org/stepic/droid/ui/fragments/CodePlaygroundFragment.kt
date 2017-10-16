@@ -9,7 +9,7 @@ import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.*
 import kotlinx.android.synthetic.main.fragment_code_playground.*
-import kotlinx.android.synthetic.main.view_code_editor.*
+import kotlinx.android.synthetic.main.view_code_editor_layout.*
 import kotlinx.android.synthetic.main.view_code_toolbar.codeToolbarView
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic

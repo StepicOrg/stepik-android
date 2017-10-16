@@ -127,4 +127,5 @@
     <dimen name="loading_view_course_detail_width">50dp</dimen>
 
     <dimen name="code_text_size_default">@dimen/text_size_default</dimen>
+    <dimen name="embedded_code_editor_height">150dp</dimen>
 </resources>

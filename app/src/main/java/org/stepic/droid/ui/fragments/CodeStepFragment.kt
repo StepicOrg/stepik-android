@@ -10,7 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import kotlinx.android.synthetic.main.fragment_step_attempt.*
-import kotlinx.android.synthetic.main.view_code_editor.*
+import kotlinx.android.synthetic.main.view_code_editor_layout.*
 import kotlinx.android.synthetic.main.view_code_quiz.*
 import kotlinx.android.synthetic.main.view_code_toolbar.*
 import org.stepic.droid.R

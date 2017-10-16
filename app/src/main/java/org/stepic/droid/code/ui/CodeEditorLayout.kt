@@ -16,24 +16,24 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     : ScrollView(context, attrs, defStyleAttr) {
     private val codeEditor: CodeEditor
 
-    var theme : CodeTheme
+    var theme: CodeTheme
         get() = codeEditor.theme
         set(value) {
             setBackgroundColor(value.background)
             codeEditor.theme = value
         }
 
-    val text : CharSequence
+    val text: CharSequence
         get() = codeEditor.text.toString()
 
-    var lang : String
+    var lang: String
         get() = codeEditor.lang
         set(value) {
             codeEditor.lang = value
         }
 
     init {
-        LayoutInflater.from(context).inflate(R.layout.code_editor, this, true)
+        LayoutInflater.from(context).inflate(R.layout.view_code_editor, this, true)
         codeEditor = findViewById(R.id.codeEdit)
         codeEditor.typeface = Typeface.MONOSPACE
         theme = Presets.themes[0]
