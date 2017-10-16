@@ -23,8 +23,8 @@ import org.stepic.droid.ui.dialogs.ChangeCodeLanguageDialog
 import org.stepic.droid.ui.dialogs.ProgrammingLanguageChooserDialogFragment
 import org.stepic.droid.ui.dialogs.ResetCodeDialogFragment
 import org.stepic.droid.ui.util.*
+import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.ColorUtil
-import org.stepic.droid.util.insertText
 
 class CodePlaygroundFragment : FragmentBase(),
         OnBackClickListener,
@@ -36,6 +36,7 @@ class CodePlaygroundFragment : FragmentBase(),
         private const val CODE_KEY = "code_key"
         private const val LANG_KEY = "lang_key"
         private const val CODE_OPTIONS_KEY = "code_options_key"
+        private const val ANALYTIC_SCREEN_TYPE: String = "fullscreen"
         fun newInstance(code: String, lang: String, codeOptions: CodeOptions): CodePlaygroundFragment {
             val args = Bundle()
             args.putString(CODE_KEY, code)
@@ -130,6 +131,9 @@ class CodePlaygroundFragment : FragmentBase(),
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean = when (item?.itemId) {
         R.id.action_reset_code -> {
+            analytic.reportEvent(Analytic.Code.CODE_RESET_PRESSED,
+                    Bundle().apply { putString(AppConstants.ANALYTIC_CODE_SCREEN_KEY, ANALYTIC_SCREEN_TYPE) }
+            )
             val dialog = ResetCodeDialogFragment.newInstance()
             if (!dialog.isAdded) {
                 dialog.show(childFragmentManager, null)
@@ -169,7 +173,7 @@ class CodePlaygroundFragment : FragmentBase(),
     }
 
     override fun onSymbolClick(symbol: String) {
-        analytic.reportEventWithName(Analytic.Code.TOOLBAR_SELECTED, "$currentLanguage $symbol")
+        CodeToolbarUtil.reportSelectedSymbol(analytic, currentLanguage, symbol)
         codeEditor.insertText(CodeToolbarUtil.mapToolbarSymbolToPrintable(symbol))
     }
 

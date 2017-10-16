@@ -13,6 +13,7 @@ import org.stepic.droid.core.presenters.contracts.StepAttemptView
 import org.stepic.droid.model.*
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.StepikUtil
+import org.stepic.droid.util.getStepType
 import org.stepic.droid.web.Api
 import java.util.*
 import java.util.concurrent.Executors
@@ -89,7 +90,10 @@ class StepAttemptPresenter
             try {
                 api.createNewSubmission(reply, attemptId).execute().body().submissions
                 val bundle = Bundle()
-                bundle.putString(Analytic.Steps.SUBMISSION_CREATED_TYPE, step.block?.name ?: "undefined")
+                bundle.putString(Analytic.Steps.STEP_TYPE_KEY, step.getStepType())
+                reply.language?.let {
+                    bundle.putString(Analytic.Steps.CODE_LANGUAGE_KEY, reply.language)
+                }
                 analytic.reportEvent(Analytic.Steps.SUBMISSION_CREATED, bundle)
                 mainHandler.post {
                     getStatusOfSubmission(step, attemptId, fromPosting = true)
