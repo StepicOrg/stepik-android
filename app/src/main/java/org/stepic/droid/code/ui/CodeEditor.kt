@@ -1,7 +1,10 @@
 package org.stepic.droid.code.ui
 
 import android.content.Context
-import android.graphics.*
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.Rect
+import android.graphics.Typeface
 import android.os.Build
 import android.support.v7.widget.AppCompatEditText
 import android.text.*
@@ -169,7 +172,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 
             linesWithNumbers.forEachIndexed { lineNumber, line ->
                 val y = getLineBounds(line, bufferRect)
-                canvas.drawText(lineNumber.toString(), lineNumbersOffset.toFloat() - LINE_NUMBERS_MARGIN_PX, y.toFloat(), lineNumbersTextPaint)
+                canvas.drawText((lineNumber + 1).toString(), lineNumbersOffset.toFloat() - LINE_NUMBERS_MARGIN_PX, y.toFloat(), lineNumbersTextPaint)
             }
 
             drawHighlightForCurrentLine(layout, canvas)
