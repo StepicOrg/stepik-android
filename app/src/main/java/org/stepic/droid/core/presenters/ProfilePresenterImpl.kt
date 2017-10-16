@@ -71,7 +71,7 @@ class ProfilePresenterImpl
                 showLocalProfile(profile)
             } else if (profileId == 0L && (profile != null && profile.is_guest || profile == null)) {
                 try {
-                    val realProfile = api.userProfile.execute().body().profile
+                    val realProfile = api.userProfile.execute().body().getProfile() ?: throw IllegalStateException("profile can't be null on API here")
                     sharedPreferences.storeProfile(realProfile)
                     showLocalProfile(realProfile)
                 } catch (noInternetOrPermission: Exception) {
