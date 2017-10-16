@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="light_theme_name" translatable="false">Light</string>
+    <color name="light_theme_plain">#333333</color>
+    <color name="light_theme_string">#c18401</color>
+    <color name="light_theme_keyword">#0184bc</color>
+    <color name="light_theme_comment">#999999</color>
+    <color name="light_theme_type">#458458</color>
+    <color name="light_theme_literal">#50a14f</color>
+    <color name="light_theme_punctuation">#4078f2</color>
+    <color name="light_theme_attribute_name">#000080</color>
+    <color name="light_theme_attribute_value">#d14d14</color>
+
+    <color name="light_theme_background">#FFFFFF</color>
+    <color name="light_theme_line_number_background">#EEEEEE</color>
+    <color name="light_theme_line_number_text">#333333</color>
+    <color name="light_theme_selected_line_background">#44CCCCCC</color>
+    <color name="light_theme_line_number_stroke">#CCCCCC</color>
+</resources>

@@ -165,3 +165,32 @@ fun symbolsForLanguage(lang: String, context: Context): Array<String> {
         }
     }
 }
+
+fun extensionForLanguage(lang: String) : String =
+        when (serverNameToLanguage(lang)) {
+            ProgrammingLanguage.PYTHON      -> "py"
+            ProgrammingLanguage.CPP11,
+            ProgrammingLanguage.CPP,
+            ProgrammingLanguage.C           -> "cpp"
+            ProgrammingLanguage.HASKELL,
+            ProgrammingLanguage.HASKELL7,
+            ProgrammingLanguage.HASKELL8    -> "hs"
+            ProgrammingLanguage.JAVA,
+            ProgrammingLanguage.JAVA8       -> "java"
+            ProgrammingLanguage.OCTAVE      -> "m"
+            ProgrammingLanguage.ASM32,
+            ProgrammingLanguage.ASM64       -> "asm"
+            ProgrammingLanguage.SHELL       -> "sh"
+            ProgrammingLanguage.RUST        -> "rust"
+            ProgrammingLanguage.R           -> "r"
+            ProgrammingLanguage.RUBY        -> "rb"
+            ProgrammingLanguage.CLOJURE     -> "clj"
+            ProgrammingLanguage.CS          -> "cs"
+            ProgrammingLanguage.JAVASCRIPT  -> "js"
+            ProgrammingLanguage.SCALA       -> "scala"
+            ProgrammingLanguage.KOTLIN      -> "kt"
+            ProgrammingLanguage.GO          -> "go"
+            ProgrammingLanguage.PASCAL      -> "pascal"
+            ProgrammingLanguage.PERL        -> "perl"
+            null -> ""
+        }

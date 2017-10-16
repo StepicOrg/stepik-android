@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="github_theme_name" translatable="false">GitHub</string>
+    <color name="github_theme_plain">#333333</color>
+    <color name="github_theme_string">#d14d14</color>
+    <color name="github_theme_comment">#998998</color>
+    <color name="github_theme_type">#458458</color>
+    <color name="github_theme_literal">#458458</color>
+    <color name="github_theme_attribute_name">#000080</color>
+    <color name="github_theme_attribute_value">#d14d14</color>
+
+    <color name="github_theme_background">#FFFFFF</color>
+    <color name="github_theme_line_number_background">#EEEEEE</color>
+    <color name="github_theme_line_number_text">#333333</color>
+    <color name="github_theme_selected_line_background">#44CCCCCC</color>
+    <color name="github_theme_line_number_stroke">#CCCCCC</color>
+</resources>
