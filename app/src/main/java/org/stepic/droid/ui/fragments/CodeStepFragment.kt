@@ -97,6 +97,7 @@ class CodeStepFragment : StepAttemptFragment(),
                             lang,
                             step?.block?.options ?: throw IllegalStateException("can't find code options in code quiz"))
 
+                    analytic.reportEvent(Analytic.Code.CODE_FULLSCREEN_PRESSED)
                     startActivityForResult(intent, CODE_PLAYGROUND_REQUEST)
                 }
             }
