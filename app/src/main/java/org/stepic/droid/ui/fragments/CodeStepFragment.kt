@@ -367,7 +367,7 @@ class CodeStepFragment : StepAttemptFragment(),
             step?.block?.options?.codeTemplates?.size == 1
 
     override fun onSymbolClick(symbol: String) {
-        analytic.reportEventWithName(Analytic.Code.TOOLBAR_SELECTED, "$chosenProgrammingLanguageName $symbol")
+        CodeToolbarUtil.reportSelectedSymbol(analytic, chosenProgrammingLanguageName, symbol)
         codeEditor.insertText(CodeToolbarUtil.mapToolbarSymbolToPrintable(symbol))
     }
 

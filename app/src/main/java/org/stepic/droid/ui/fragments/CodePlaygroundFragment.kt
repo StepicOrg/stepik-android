@@ -12,7 +12,6 @@ import kotlinx.android.synthetic.main.fragment_code_playground.*
 import kotlinx.android.synthetic.main.view_code_editor_layout.*
 import kotlinx.android.synthetic.main.view_code_toolbar.codeToolbarView
 import org.stepic.droid.R
-import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.code.util.CodeToolbarUtil
 import org.stepic.droid.model.code.CodeOptions
@@ -24,7 +23,6 @@ import org.stepic.droid.ui.dialogs.ProgrammingLanguageChooserDialogFragment
 import org.stepic.droid.ui.dialogs.ResetCodeDialogFragment
 import org.stepic.droid.ui.util.*
 import org.stepic.droid.util.ColorUtil
-import org.stepic.droid.util.insertText
 
 class CodePlaygroundFragment : FragmentBase(),
         OnBackClickListener,
@@ -169,7 +167,7 @@ class CodePlaygroundFragment : FragmentBase(),
     }
 
     override fun onSymbolClick(symbol: String) {
-        analytic.reportEventWithName(Analytic.Code.TOOLBAR_SELECTED, "$currentLanguage $symbol")
+        CodeToolbarUtil.reportSelectedSymbol(analytic, currentLanguage, symbol)
         codeEditor.insertText(CodeToolbarUtil.mapToolbarSymbolToPrintable(symbol))
     }
 

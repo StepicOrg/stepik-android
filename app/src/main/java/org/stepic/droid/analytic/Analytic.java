@@ -9,6 +9,9 @@ public interface Analytic {
 
     interface Code {
         String TOOLBAR_SELECTED = "code_toolbar_selected";
+        String TOOLBAR_SELECTED_LANGUAGE = "language";
+        String TOOLBAR_SELECTED_SYMBOL = "symbol";
+        String TOOLBAR_SELECTED_LANGUAGE_SYMBOL = "language_symbol";
     }
 
     interface Search {
