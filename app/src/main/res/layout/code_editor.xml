@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge>
-    <org.stepic.droid.code.ui.CodeEditor
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:id="@+id/codeEdit"
-        android:typeface="monospace"
-        android:textSize="12sp"
-        android:minHeight="150dp"
-        android:inputType="textNoSuggestions|text|textMultiLine" />
-</merge>
+<org.stepic.droid.code.ui.CodeEditor
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/codeEdit"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
+    android:inputType="textNoSuggestions|text|textMultiLine"
+    android:minHeight="150dp"
+    android:textSize="@dimen/code_text_size_default"
+    android:typeface="monospace"/>
