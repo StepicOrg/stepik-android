@@ -204,15 +204,22 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     }
 
 
+    var inserted: String = ""
+    var insertedPos: Int = 0
+
     override fun afterTextChanged(editable: Editable) {
         lines = text.toString().lines()
+        CodeAnalyzer.onTextInserted(inserted, insertedPos, this)
         highlightPublisher.onNext(editable)
         requestLayout()
     }
 
     override fun beforeTextChanged(text: CharSequence?, start: Int, lengthBefore: Int, count: Int) {}
 
-    override fun onTextChanged(text: CharSequence, start: Int, lengthBefore: Int, count: Int) {}
+    override fun onTextChanged(text: CharSequence, start: Int, lengthBefore: Int, count: Int) {
+        inserted = text.substring(start, start + count)
+        insertedPos = start
+    }
 
 
     private fun getFirstVisibleLine() = scrollContainer?.let {
