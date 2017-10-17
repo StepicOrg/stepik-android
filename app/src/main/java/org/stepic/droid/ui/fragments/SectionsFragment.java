@@ -75,6 +75,7 @@ import org.stepic.droid.notifications.StepikNotificationManager;
 import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.storage.StoreStateManager;
 import org.stepic.droid.ui.adapters.SectionAdapter;
+import org.stepic.droid.ui.custom.StepikSwipeRefreshLayout;
 import org.stepic.droid.ui.dialogs.ChooseCalendarDialog;
 import org.stepic.droid.ui.dialogs.DeleteItemDialogFragment;
 import org.stepic.droid.ui.dialogs.ExplainCalendarPermissionDialog;
@@ -132,7 +133,7 @@ public class SectionsFragment
 
 
     @BindView(R.id.swipe_refresh_layout_sections)
-    SwipeRefreshLayout swipeRefreshLayout;
+    StepikSwipeRefreshLayout swipeRefreshLayout;
 
     @BindView(R.id.sections_recycler_view)
     RecyclerView sectionsRecyclerView;
@@ -257,10 +258,6 @@ public class SectionsFragment
         firstLoad = true;
 
         swipeRefreshLayout.setOnRefreshListener(this);
-        swipeRefreshLayout.setColorSchemeResources(
-                R.color.stepic_brand_primary,
-                R.color.stepic_orange_carrot,
-                R.color.stepic_blue_ribbon);
 
         sectionsRecyclerView.setVisibility(View.GONE);
         linearLayoutManager = new LinearLayoutManager(getActivity());
