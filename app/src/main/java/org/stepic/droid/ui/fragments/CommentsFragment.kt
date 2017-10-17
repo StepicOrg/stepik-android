@@ -161,10 +161,6 @@ class CommentsFragment : FragmentBase(),
 
     private fun initSwipeRefreshLayout() {
         swipeRefreshLayoutComments.setOnRefreshListener(this)
-        swipeRefreshLayoutComments.setColorSchemeResources(
-                R.color.stepic_brand_primary,
-                R.color.stepic_orange_carrot,
-                R.color.stepic_blue_ribbon)
     }
 
     private fun initAddCommentButton() {

@@ -10,7 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import kotlinx.android.synthetic.main.fragment_step_attempt.*
-import kotlinx.android.synthetic.main.view_code_editor.*
+import kotlinx.android.synthetic.main.view_code_editor_layout.*
 import kotlinx.android.synthetic.main.view_code_quiz.*
 import kotlinx.android.synthetic.main.view_code_toolbar.*
 import org.stepic.droid.R
@@ -22,6 +22,7 @@ import org.stepic.droid.core.presenters.contracts.CodeView
 import org.stepic.droid.model.Attempt
 import org.stepic.droid.model.Reply
 import org.stepic.droid.model.Submission
+import org.stepic.droid.model.code.extensionForLanguage
 import org.stepic.droid.ui.activities.CodePlaygroundActivity
 import org.stepic.droid.ui.adapters.CodeToolbarAdapter
 import org.stepic.droid.ui.dialogs.ChangeCodeLanguageDialog
@@ -29,6 +30,7 @@ import org.stepic.droid.ui.dialogs.ResetCodeDialogFragment
 import org.stepic.droid.ui.util.initForCodeLanguages
 import org.stepic.droid.ui.util.listenKeyboardChanges
 import org.stepic.droid.ui.util.stopListenKeyboardChanges
+import org.stepic.droid.util.AppConstants
 import javax.inject.Inject
 
 class CodeStepFragment : StepAttemptFragment(),
@@ -36,9 +38,9 @@ class CodeStepFragment : StepAttemptFragment(),
         ResetCodeDialogFragment.Callback,
         ChangeCodeLanguageDialog.Callback, CodeToolbarAdapter.OnSymbolClickListener {
     companion object {
+        private const val ANALYTIC_SCREEN_TYPE = "standard"
         private const val CHOSEN_POSITION_KEY: String = "chosenPositionKey"
         private const val CODE_PLAYGROUND_REQUEST = 153
-        private const val MIN_LINES_IN_ANSWER_FIELD = 5
         fun newInstance(): CodeStepFragment = CodeStepFragment()
     }
 
@@ -58,6 +60,10 @@ class CodeStepFragment : StepAttemptFragment(),
     }
 
     private var chosenProgrammingLanguageName: String? = null
+        set(value) {
+            field = value
+            if (value != null) codeEditor?.let { it.lang = extensionForLanguage(value) }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,8 +78,6 @@ class CodeStepFragment : StepAttemptFragment(),
         codeToolbarView.adapter = codeToolbarAdapter
         codeToolbarAdapter?.onSymbolClickListener = this
         codeToolbarView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-
-//        codeEditor.minLines = MIN_LINES_IN_ANSWER_FIELD
 
         codeQuizChooseLangAction.setOnClickListener {
             val programmingLanguageServerName = codeQuizLanguagePicker.displayedValues[codeQuizLanguagePicker.value]
@@ -95,6 +99,7 @@ class CodeStepFragment : StepAttemptFragment(),
                             lang,
                             step?.block?.options ?: throw IllegalStateException("can't find code options in code quiz"))
 
+                    analytic.reportEvent(Analytic.Code.CODE_FULLSCREEN_PRESSED)
                     startActivityForResult(intent, CODE_PLAYGROUND_REQUEST)
                 }
             }
@@ -102,10 +107,15 @@ class CodeStepFragment : StepAttemptFragment(),
 
         codeQuizResetAction.setOnClickListener {
             if (checkForResetDialog()) {
+                analytic.reportEvent(Analytic.Code.CODE_RESET_PRESSED,
+                        Bundle().apply { putString(AppConstants.ANALYTIC_CODE_SCREEN_KEY, ANALYTIC_SCREEN_TYPE) }
+                )
                 val dialog = ResetCodeDialogFragment.newInstance()
                 if (!dialog.isAdded) {
                     dialog.show(childFragmentManager, null)
                 }
+            } else {
+                analytic.reportEvent(Analytic.Code.CODE_RESET_PRESSED_USELESS)
             }
         }
 
@@ -365,7 +375,7 @@ class CodeStepFragment : StepAttemptFragment(),
             step?.block?.options?.codeTemplates?.size == 1
 
     override fun onSymbolClick(symbol: String) {
-        analytic.reportEventWithName(Analytic.Code.TOOLBAR_SELECTED, "$chosenProgrammingLanguageName $symbol")
+        CodeToolbarUtil.reportSelectedSymbol(analytic, chosenProgrammingLanguageName, symbol)
         codeEditor.insertText(CodeToolbarUtil.mapToolbarSymbolToPrintable(symbol))
     }
 

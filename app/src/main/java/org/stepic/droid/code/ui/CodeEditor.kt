@@ -1,7 +1,10 @@
 package org.stepic.droid.code.ui
 
 import android.content.Context
-import android.graphics.*
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.Rect
+import android.graphics.Typeface
 import android.os.Build
 import android.support.v7.widget.AppCompatEditText
 import android.text.*
@@ -18,18 +21,18 @@ import org.stepic.droid.code.highlight.syntaxhighlight.ParseResult
 import org.stepic.droid.code.highlight.themes.CodeTheme
 import org.stepic.droid.code.highlight.themes.Presets
 import org.stepic.droid.util.DpPixelsHelper
+import org.stepic.droid.util.RxEmpty
 import java.util.concurrent.TimeUnit
 
-class CodeEditor : AppCompatEditText, TextWatcher {
+class CodeEditor
+@JvmOverloads
+constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0)
+    : AppCompatEditText(context, attrs, defStyleAttr), TextWatcher {
     companion object {
         const val SCROLL_DEBOUNCE_MS = 100L
-        const val INPUT_DEBOUNCE_MS = 300L
+        const val INPUT_DEBOUNCE_MS = 200L
         const val LINE_NUMBERS_MARGIN_DP = 4f
     }
-
-    constructor(context: Context) : super(context)
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     private val parser = PrettifyParser()
 
@@ -37,10 +40,10 @@ class CodeEditor : AppCompatEditText, TextWatcher {
 
     private val highlightPublisher = PublishSubject.create<Editable>()
     private val spanPublisher = BehaviorSubject.create<List<ParseResult>>()
-    private val scrollPublisher = PublishSubject.create<Int>()
+    private val layoutChangesPublisher = PublishSubject.create<Any>()
 
-    private val onGlobalLayoutListener  = ViewTreeObserver.OnGlobalLayoutListener  { scrollPublisher.onNext(0) }
-    private val onScrollChangedListener = ViewTreeObserver.OnScrollChangedListener { scrollPublisher.onNext(0) }
+    private val onGlobalLayoutListener  = ViewTreeObserver.OnGlobalLayoutListener  { layoutChangesPublisher.onNext(RxEmpty.INSTANCE) }
+    private val onScrollChangedListener = ViewTreeObserver.OnScrollChangedListener { layoutChangesPublisher.onNext(RxEmpty.INSTANCE) }
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -101,7 +104,7 @@ class CodeEditor : AppCompatEditText, TextWatcher {
         )
 
         compositeDisposable.add(
-                scrollPublisher
+                layoutChangesPublisher
                         .debounce(SCROLL_DEBOUNCE_MS, TimeUnit.MILLISECONDS)
                         .subscribeOn(Schedulers.computation())
                         .observeOn(AndroidSchedulers.mainThread())
@@ -159,8 +162,8 @@ class CodeEditor : AppCompatEditText, TextWatcher {
             setPadding(lineNumbersOffset + LINE_NUMBERS_MARGIN_PX, paddingTop, paddingRight, paddingBottom)
         }
 
-        canvas.drawRect(0f, 0f, lineNumbersOffset.toFloat(), lineHeight * lineCount.toFloat(), lineNumbersBackgroundPaint) // line numbers bg
-        canvas.drawLine(lineNumbersOffset.toFloat(), 0f, lineNumbersOffset.toFloat(), lineHeight * lineCount.toFloat(), lineNumbersStrokePaint) // line numbers stroke
+        canvas.drawRect(0f, 0f, lineNumbersOffset.toFloat(), height.toFloat(), lineNumbersBackgroundPaint) // line numbers bg
+        canvas.drawLine(lineNumbersOffset.toFloat(), 0f, lineNumbersOffset.toFloat(), height.toFloat(), lineNumbersStrokePaint) // line numbers stroke
 
         if (layout != null) {
             if (linesWithNumbers.isEmpty() && lines.isNotEmpty()) { // layout could be null when lines is set so we have to check and recount line numbers in such case
@@ -169,7 +172,7 @@ class CodeEditor : AppCompatEditText, TextWatcher {
 
             linesWithNumbers.forEachIndexed { lineNumber, line ->
                 val y = getLineBounds(line, bufferRect)
-                canvas.drawText(lineNumber.toString(), lineNumbersOffset.toFloat() - LINE_NUMBERS_MARGIN_PX, y.toFloat(), lineNumbersTextPaint)
+                canvas.drawText((lineNumber + 1).toString(), lineNumbersOffset.toFloat() - LINE_NUMBERS_MARGIN_PX, y.toFloat(), lineNumbersTextPaint)
             }
 
             drawHighlightForCurrentLine(layout, canvas)
@@ -204,6 +207,7 @@ class CodeEditor : AppCompatEditText, TextWatcher {
     override fun afterTextChanged(editable: Editable) {
         lines = text.toString().lines()
         highlightPublisher.onNext(editable)
+        requestLayout()
     }
 
     override fun beforeTextChanged(text: CharSequence?, start: Int, lengthBefore: Int, count: Int) {}

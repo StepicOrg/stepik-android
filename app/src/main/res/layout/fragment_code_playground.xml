@@ -20,7 +20,7 @@
         android:layout_alignParentBottom="true"/>
 
     <include
-        layout="@layout/view_code_editor"
+        layout="@layout/view_code_editor_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/codeToolbarView"

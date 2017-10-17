@@ -156,8 +156,11 @@ public class ApiImpl implements Api {
                         if (cookies != null) {
                             String csrfTokenFromCookies = getCsrfTokenFromCookies(cookies);
                             if (sharedPreference.getProfile() == null) {
-                                Profile profile = stepikEmptyAuthService.getUserProfileWithCookie(config.getBaseUrl(), cookies, csrfTokenFromCookies).execute().body().getProfile();
-                                sharedPreference.storeProfile(profile);
+                                StepicProfileResponse stepicProfileResponse = stepikEmptyAuthService.getUserProfileWithCookie(config.getBaseUrl(), cookies, csrfTokenFromCookies).execute().body();
+                                if (stepicProfileResponse != null) {
+                                    Profile profile = stepicProfileResponse.getProfile();
+                                    sharedPreference.storeProfile(profile);
+                                }
                             }
                             newRequest = newRequest
                                     .newBuilder()

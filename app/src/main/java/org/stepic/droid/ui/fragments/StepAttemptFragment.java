@@ -50,12 +50,13 @@ import org.stepic.droid.ui.dialogs.RateAppDialogFragment;
 import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment;
 import org.stepic.droid.ui.listeners.NextMoveable;
 import org.stepic.droid.ui.util.TimeIntervalUtil;
-import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ColorUtil;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.RatingUtil;
 import org.stepic.droid.util.RatingUtilKt;
 import org.stepic.droid.util.SnackbarExtensionKt;
+import org.stepic.droid.util.StepExtensionsKt;
+import org.stepic.droid.util.SubmissionExtensionsKt;
 
 import javax.inject.Inject;
 
@@ -177,15 +178,15 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
                     Bundle bundle = new Bundle();
                     bundle.putLong(FirebaseAnalytics.Param.VALUE, 1L);
                     bundle.putString(FirebaseAnalytics.Param.ITEM_ID, step.getId() + "");
+                    String codeLanguage = SubmissionExtensionsKt.getLanguage(submission);
+                    if (codeLanguage != null) {
+                        bundle.putString(Analytic.Steps.CODE_LANGUAGE_KEY, codeLanguage);
+                    }
+                    String stepType = StepExtensionsKt.getStepType(step);
+                    bundle.putString(Analytic.Steps.STEP_TYPE_KEY, stepType);
                     getAnalytic().reportEvent(Analytic.Interaction.CLICK_SEND_SUBMISSION, bundle);//value
 
-                    final String stepTypeName;
-                    if (step != null && step.getBlock() != null && step.getBlock().getName() != null) {
-                        stepTypeName = step.getBlock().getName();
-                    } else {
-                        stepTypeName = AppConstants.TYPE_NULL;
-                    }
-                    getAnalytic().reportEventWithName(Analytic.Steps.CLICK_SEND_SUBMISSION_STEP_TYPE, stepTypeName);
+                    getAnalytic().reportEventWithName(Analytic.Steps.CLICK_SEND_SUBMISSION_STEP_TYPE, stepType);
 
                     makeSubmission();
                 } else {
