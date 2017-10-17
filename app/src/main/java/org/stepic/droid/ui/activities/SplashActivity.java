@@ -16,8 +16,8 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.model.Profile;
 import org.stepic.droid.notifications.StepicInstanceIdService;
 import org.stepic.droid.util.AppConstants;
+import org.stepic.droid.web.StepicProfileResponse;
 
-import java.io.IOException;
 import java.util.Arrays;
 
 import kotlin.Unit;
@@ -43,13 +43,17 @@ public class SplashActivity extends BackToExitActivityBase {
                         try {
                             // make this "ping" request for updating refresh tokens and log out user, if it is revoked.
                             // also it should update the profile
-                            Profile profile = api.getUserProfile().execute().body().getProfile();
+                            StepicProfileResponse response = api.getUserProfile().execute().body();
+                            if (response == null) {
+                                return;
+                            }
+                            Profile profile = response.getProfile();
                             if (profile != null) {
                                 sharedPreferenceHelper.storeProfile(profile);
                             }
-                        } catch (IOException e) {
+                        } catch (Exception e) {
                             //ignore
-                            //offline or access if revoked
+                            //offline or access is revoked
                         }
                     }
                 }
