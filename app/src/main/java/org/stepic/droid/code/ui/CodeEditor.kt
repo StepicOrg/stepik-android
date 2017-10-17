@@ -207,6 +207,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     override fun afterTextChanged(editable: Editable) {
         lines = text.toString().lines()
         highlightPublisher.onNext(editable)
+        requestLayout()
     }
 
     override fun beforeTextChanged(text: CharSequence?, start: Int, lengthBefore: Int, count: Int) {}
