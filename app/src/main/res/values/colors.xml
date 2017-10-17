@@ -121,4 +121,5 @@
     <color name="loading_view_deep_color">#DBDBDB</color>
 
     <color name="code_toolbar_background">#EEEEEE</color>
+    <color name="stepik_swipe_refresh">@color/new_accent_color</color>
 </resources>

@@ -19,7 +19,7 @@
 
         <include layout="@layout/report_empty_layout"/>
 
-        <android.support.v4.widget.SwipeRefreshLayout
+        <org.stepic.droid.ui.custom.StepikSwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout_units"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -32,7 +32,7 @@
                 android:scrollbarStyle="outsideOverlay"
                 android:splitMotionEvents="false"/>
 
-        </android.support.v4.widget.SwipeRefreshLayout>
+        </org.stepic.droid.ui.custom.StepikSwipeRefreshLayout>
 
         <include layout="@layout/progress_bar_on_empty_screen"/>
     </FrameLayout>

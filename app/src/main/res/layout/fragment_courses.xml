@@ -22,7 +22,7 @@
         <include layout="@layout/empty_search"/>
 
 
-        <android.support.v4.widget.SwipeRefreshLayout
+        <org.stepic.droid.ui.custom.StepikSwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout_mycourses"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -40,6 +40,6 @@
                 android:scrollbars="vertical"
                 android:splitMotionEvents="false"/>
 
-        </android.support.v4.widget.SwipeRefreshLayout>
+        </org.stepic.droid.ui.custom.StepikSwipeRefreshLayout>
     </org.stepic.droid.ui.custom.TouchDispatchableFrameLayout>
 </LinearLayout>
