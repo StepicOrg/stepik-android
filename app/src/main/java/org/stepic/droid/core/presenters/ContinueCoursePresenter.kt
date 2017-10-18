@@ -34,7 +34,7 @@ class ContinueCoursePresenter
             view?.onShowContinueCourseLoadingDialog()
             threadPoolExecutor.execute {
                 try {
-                    databaseFacade.updateCourseLastInteraction(courseId = course.courseId, timestamp = DateTimeHelper.now())
+                    databaseFacade.updateCourseLastInteraction(courseId = course.courseId, timestamp = DateTimeHelper.nowUtc())
                     var unitId: Long
                     var stepId: Long
                     try {

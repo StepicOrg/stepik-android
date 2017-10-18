@@ -241,7 +241,7 @@ public class SharedPreferenceHelper {
                 return true;
             } else {
                 long calculatedMillis = millis + AppConstants.NUMBER_OF_DAYS_BETWEEN_STREAK_SHOWING * AppConstants.MILLIS_IN_24HOURS;
-                if (DateTimeHelper.INSTANCE.isBeforeNow(calculatedMillis)) {
+                if (DateTimeHelper.INSTANCE.isBeforeNowUtc(calculatedMillis)) {
                     //we can show
                     onShowStreakDialog(streakDialogShownNumber);
                     return true;
@@ -254,7 +254,7 @@ public class SharedPreferenceHelper {
 
     private void onShowStreakDialog(int streakDialogShownNumber) {
         analytic.reportEvent(Analytic.Streak.CAN_SHOW_DIALOG, streakDialogShownNumber + "");
-        put(PreferenceType.LOGIN, STREAK_DIALOG_SHOWN_TIMESTAMP, DateTimeHelper.INSTANCE.now());
+        put(PreferenceType.LOGIN, STREAK_DIALOG_SHOWN_TIMESTAMP, DateTimeHelper.INSTANCE.nowUtc());
         put(PreferenceType.LOGIN, NUMBER_OF_SHOWN_STREAK_DIALOG, streakDialogShownNumber + 1);
     }
 
@@ -651,12 +651,12 @@ public class SharedPreferenceHelper {
         put(PreferenceType.LOGIN, AUTH_RESPONSE_JSON, json);
         cachedAuthStepikResponse = response;
 
-        long millisNow = DateTimeHelper.INSTANCE.now(); // we should use +0 UTC for avoid problems with TimeZones
+        long millisNow = DateTimeHelper.INSTANCE.nowUtc(); // we should use +0 UTC for avoid problems with TimeZones
         put(PreferenceType.LOGIN, ACCESS_TOKEN_TIMESTAMP, millisNow);
     }
 
     public void storeLastShownUpdatingMessage() {
-        long millisNow = DateTimeHelper.INSTANCE.now();
+        long millisNow = DateTimeHelper.INSTANCE.nowUtc();
         put(PreferenceType.DEVICE_SPECIFIC, UPDATING_TIMESTAMP, millisNow);
     }
 

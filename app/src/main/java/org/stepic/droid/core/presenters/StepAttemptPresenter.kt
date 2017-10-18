@@ -197,7 +197,7 @@ class StepAttemptPresenter
                                         && isRateDelayGreater()
 
                                 if (!needShowStreakDialog && needShowRateAppDialog) {
-                                    sharedPreferenceHelper.rateShown(DateTimeHelper.now())
+                                    sharedPreferenceHelper.rateShown(DateTimeHelper.nowUtc())
                                 }
 
                                 mainHandler.post {
@@ -234,7 +234,7 @@ class StepAttemptPresenter
 
         val delay = firebaseRemoteConfig.getLong(RemoteConfig.minDelayRateDialogSec).toInt()
 
-        return DateTimeHelper.isBeforeNow(delay + wasShownMillis) //if delay is expired (before now) -> show
+        return DateTimeHelper.isBeforeNowUtc(delay + wasShownMillis) //if delay is expired (before now) -> show
     }
 
     @WorkerThread

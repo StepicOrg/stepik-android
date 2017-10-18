@@ -86,7 +86,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
                 }
                 analytic.reportEvent(Analytic.Notification.REMIND_OPEN, dayTypeString)
                 Timber.d(Analytic.Notification.REMIND_OPEN)
-                sharedPreferenceHelper.clickEnrollNotification(DateTimeHelper.now())
+                sharedPreferenceHelper.clickEnrollNotification(DateTimeHelper.nowUtc())
             } else if (action == AppConstants.OPEN_NOTIFICATION_FROM_STREAK) {
                 sharedPreferenceHelper.resetNumberOfStreakNotifications()
                 if (intent.hasExtra(Analytic.Streak.NOTIFICATION_TYPE_PARAM)) {

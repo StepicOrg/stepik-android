@@ -2,6 +2,7 @@ package org.stepic.droid.util
 
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormatter
+import java.util.*
 
 object DateTimeHelper {
     fun getPresentOfDate(dateInISOFormat: String?, formatForView: DateTimeFormatter): String {
@@ -14,15 +15,20 @@ object DateTimeHelper {
         //delta is 24 hours by default
         if (timestampStored == -1L) return true
 
-        val nowTemp = now()
+        val nowTemp = nowUtc()
         val delta = nowTemp - timestampStored
         return delta > deltaInMillis
     }
 
-    fun now(): Long = DateTime.now().millis
+    fun nowLocal(): Long {
+        val localTimezoneCalendar = Calendar.getInstance()
+        return localTimezoneCalendar.timeInMillis + localTimezoneCalendar.timeZone.rawOffset
+    }
 
-    fun isAfterNow(yourMillis: Long): Boolean = yourMillis > now()
+    fun nowUtc(): Long = Calendar.getInstance().timeInMillis
 
-    fun isBeforeNow(yourMillis: Long): Boolean = yourMillis < now()
+    fun isAfterNowUtc(yourMillis: Long): Boolean = yourMillis > nowUtc()
+
+    fun isBeforeNowUtc(yourMillis: Long): Boolean = yourMillis < nowUtc()
 
 }

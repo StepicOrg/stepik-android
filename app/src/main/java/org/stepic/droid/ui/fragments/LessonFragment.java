@@ -309,7 +309,7 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
                             if (section != null && section.getCourse() > 0) {
                                 PersistentLastStep persistentLastStep = new PersistentLastStep(section.getCourse(), stepId, unit.getId());
                                 getDatabaseFacade().updateLastStep(persistentLastStep);
-                                getDatabaseFacade().updateCourseLastInteraction(section.getCourse(), DateTimeHelper.INSTANCE.now()); // It does not happen, when section is not cached (example: Continue course).
+                                getDatabaseFacade().updateCourseLastInteraction(section.getCourse(), DateTimeHelper.INSTANCE.nowUtc()); // It does not happen, when section is not cached (example: Continue course).
                             }
                         }
                     } catch (Exception exception) {

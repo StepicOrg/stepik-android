@@ -453,7 +453,7 @@ class StepikNotificationManagerImpl
             }
 
 
-            if (notificationTimeChecker.isNight(DateTimeHelper.now())) {
+            if (notificationTimeChecker.isNight(DateTimeHelper.nowLocal())) {
                 analytic.reportEvent(Analytic.Notification.NIGHT_WITHOUT_SOUND_AND_VIBRATE)
             } else {
                 addVibrationIfNeed(notification)
@@ -490,7 +490,7 @@ class StepikNotificationManagerImpl
 
         //if notification is null (for example for streaks) -> show it always with sound and vibrate
 
-        val isNight = notificationTimeChecker.isNight(DateTimeHelper.now())
+        val isNight = notificationTimeChecker.isNight(DateTimeHelper.nowLocal())
         if (isNight) {
             analytic.reportEvent(Analytic.Notification.NIGHT_WITHOUT_SOUND_AND_VIBRATE)
         }
