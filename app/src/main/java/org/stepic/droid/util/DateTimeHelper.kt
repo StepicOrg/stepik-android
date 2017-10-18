@@ -1,7 +1,6 @@
 package org.stepic.droid.util
 
 import org.joda.time.DateTime
-import org.joda.time.DateTimeZone
 import org.joda.time.format.DateTimeFormatter
 
 object DateTimeHelper {
@@ -15,7 +14,7 @@ object DateTimeHelper {
         //delta is 24 hours by default
         if (timestampStored == -1L) return true
 
-        val nowTemp = DateTime.now(DateTimeZone.UTC).millis
+        val nowTemp = now()
         val delta = nowTemp - timestampStored
         return delta > deltaInMillis
     }
