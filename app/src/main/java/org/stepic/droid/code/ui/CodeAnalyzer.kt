@@ -13,9 +13,8 @@ object CodeAnalyzer {
         "[" to "]"
     )
 
-    private val quotes = hashMapOf(
-        "\"" to "\"",
-        "'"  to "'"
+    private val quotes = hashSetOf(
+        "\"", "'"
     )
 
     private fun getIndentForCurrentLine(start: Int, string: String) : Int {
@@ -62,7 +61,7 @@ object CodeAnalyzer {
             in quotes -> {
                 val next = getNextSymbol(start + 1, text)
                 if (next == null || Character.isWhitespace(next[0])) { // don't want auto quote if there is a statement next
-                    codeEditor.editableText.insert(start, quotes[inserted])
+                    codeEditor.editableText.insert(start, inserted)
                     codeEditor.setSelection(start + count)
                 }
             }
