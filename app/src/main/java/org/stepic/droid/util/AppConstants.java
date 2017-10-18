@@ -72,6 +72,8 @@ public class AppConstants {
     public static final String OPEN_NOTIFICATION = "Open_notification";
     public static final long MILLIS_IN_24HOURS = 86400000L;
     public static final long MILLIS_IN_1HOUR = 3600000L;
+    public static final long MILLIS_IN_1MINUTE = 60000L;
+
 
     public static final String APP_INDEXING_COURSE_DETAIL_MANIFEST_HACK = "course_app";
     public static final String APP_INDEXING_SYLLABUS_MANIFEST = "syllabus";
