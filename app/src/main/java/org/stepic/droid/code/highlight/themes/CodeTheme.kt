@@ -12,6 +12,6 @@ data class CodeTheme (
         @ColorInt val lineNumberStroke: Int,
         @ColorInt val lineNumberText: Int,
         @ColorInt val selectedLineBackground: Int,
-        @ColorInt val bracketsHighlight: Int = selectedLineBackground,
+        @ColorInt val bracketsHighlight: Int = ColorUtil.getColorArgb(R.color.default_code_brackets_highlight_color),
         @ColorInt val errorHighlight: Int = ColorUtil.getColorArgb(R.color.default_code_error_highlight_color)
 )
