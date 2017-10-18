@@ -1,5 +1,8 @@
 package org.stepic.droid.code.ui
 
+import org.stepic.droid.util.countWhile
+import org.stepic.droid.util.substringOrNull
+
 /**
  * Class for smart code analyzing
  */
@@ -15,28 +18,16 @@ object CodeAnalyzer {
         "'"  to "'"
     ) + brackets
 
-    private inline fun String.countWhile(start: Int = 0, predicate: (Char) -> Boolean) : Int {
-        var pos = start
-        while (pos >= 0 && pos < this.length && predicate(this[pos])) pos++
-        return pos - start
-    }
-
     private fun getIndentForCurrentLine(start: Int, string: String) : Int {
         val prevLineStart = string.substring(0, start).lastIndexOf('\n')
         return string.countWhile (prevLineStart + 1) { Character.isWhitespace(it) && it != '\n' }
     }
 
     private fun getPrevSymbol(start: Int, string: String) : String? =
-            if (start > 0)
-                string.substring(start - 1, start)
-            else null
-
+            string.substringOrNull(start - 1, start)
 
     private fun getNextSymbol(start: Int, string: String) : String? =
-            if (start + 1 <= string.length)
-                string.substring(start, start + 1)
-            else null
-
+            string.substringOrNull(start, start + 1)
 
 
     private const val TAB_SIZE = 2 // todo count tabs
@@ -70,4 +61,27 @@ object CodeAnalyzer {
             }
         }
     }
+
+    fun findSecondBracket(bracket: String, start: Int, string: String) : Int {
+        getBracketsPair(bracket)?.let {
+            val delta = if (it.key == bracket) 1 else -1 // if bracket is opening delta will be positive otherwise negative
+            var deep = 1
+            var pos = start + delta
+
+            while (0 <= pos && pos < string.length) {
+                when (string.substring(pos, pos + 1)) {
+                    it.key   -> deep += delta  // opening bracket
+                    it.value -> deep -= delta  // closing bracket
+                }
+
+                if (deep == 0)
+                    return pos
+
+                pos += delta
+            }
+        }
+        return -1
+    }
+
+    fun getBracketsPair(bracket: String) = brackets.entries.find { it.key == bracket || it.value == bracket }
 }

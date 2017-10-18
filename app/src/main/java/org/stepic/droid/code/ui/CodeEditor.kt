@@ -6,8 +6,10 @@ import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.Typeface
 import android.os.Build
+import android.support.annotation.ColorInt
 import android.support.v7.widget.AppCompatEditText
 import android.text.*
+import android.text.style.BackgroundColorSpan
 import android.text.style.ForegroundColorSpan
 import android.util.AttributeSet
 import android.view.ViewTreeObserver
@@ -22,6 +24,7 @@ import org.stepic.droid.code.highlight.themes.CodeTheme
 import org.stepic.droid.code.highlight.themes.Presets
 import org.stepic.droid.util.DpPixelsHelper
 import org.stepic.droid.util.RxEmpty
+import org.stepic.droid.util.substringOrNull
 import java.util.concurrent.TimeUnit
 
 class CodeEditor
@@ -222,6 +225,39 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     }
 
 
+    override fun onSelectionChanged(start: Int, end: Int) {
+        super.onSelectionChanged(start, end)
+
+        removeSpans(CodeHighlightSpan::class.java)
+
+        var isBracket = false
+        var isClosingBracket = false
+        editableText.toString().substringOrNull(start, start + 1)?.let { bracket ->
+            CodeAnalyzer.getBracketsPair(bracket)?.let {
+                highlightBracket(start, bracket)
+                isBracket = true
+                isClosingBracket = it.value == bracket
+            }
+        }
+
+        editableText.toString().substringOrNull(start - 1, start)?.let { bracket ->
+            CodeAnalyzer.getBracketsPair(bracket)?.let {
+                if (!isBracket || it.value == bracket && !isClosingBracket)
+                    highlightBracket(start - 1, bracket)
+            }
+        }
+    }
+
+    private fun highlightBracket(start: Int, bracket: String) {
+        val secondBracketPos = CodeAnalyzer.findSecondBracket(bracket, start, editableText.toString())
+        if (secondBracketPos != -1) {
+            editableText.setSpan(BackgroundColorSpan(0xAAFFD77A.toInt()), start, start + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            editableText.setSpan(BackgroundColorSpan(0xAAFFD77A.toInt()), secondBracketPos, secondBracketPos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        } else {
+            editableText.setSpan(BackgroundColorSpan(0xAAFF0000.toInt()), start, start + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
+    }
+
     private fun getFirstVisibleLine() = scrollContainer?.let {
         return@let layout.getLineForVertical(Math.max(0, it.scrollY - top))
     } ?: 0
@@ -235,12 +271,12 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     private fun updateHighlight(results: List<ParseResult>) = layout?.let { layout ->
         val start = layout.getLineStart(getFirstVisibleLine())
         val end = layout.getLineEnd(getLastVisibleLine())
-        removeSpans()
+        removeSpans(CodeSyntaxSpan::class.java)
         setSpans(start, end, results)
     }
 
-    private fun removeSpans() =
-        editableText.getSpans(0, editableText.length, ParcelableSpan::class.java).forEach {
+    private fun removeSpans(spanClass: Class<*>) =
+        editableText.getSpans(0, editableText.length, spanClass).forEach {
             editableText.removeSpan(it)
         }
 
@@ -250,8 +286,11 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
                 .filter { theme.syntax.shouldBePainted(it.styleKeysString) }
                 .forEach { pr ->
                     theme.syntax.colorMap[pr.styleKeysString]?.let {
-                        editableText.setSpan(ForegroundColorSpan(it), pr.offset, Math.min(pr.offset + pr.length, editableText.length), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                        editableText.setSpan(CodeSyntaxSpan(it), pr.offset, Math.min(pr.offset + pr.length, editableText.length), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                     }
                 }
     }
+
+    private class CodeSyntaxSpan   (@ColorInt color: Int) : ForegroundColorSpan(color) // classes to distinct internal spans from non CodeEditor spans
+    private class CodeHighlightSpan(@ColorInt color: Int) : BackgroundColorSpan(color)
 }
