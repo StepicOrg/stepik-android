@@ -15,6 +15,12 @@ object CodeAnalyzer {
         "[" to "]"
     )
 
+    private val indentation = hashMapOf( // code specific indentation symbols
+            "py" to hashSetOf(
+                    ":"
+            )
+    )
+
     private val quotes = hashSetOf(
         "\"", "'"
     )
@@ -46,7 +52,7 @@ object CodeAnalyzer {
 
                 codeEditor.editableText.insert(start + count, " ".repeat(indent))
 
-                if (prev in brackets) {
+                if (prev in brackets || indentation[codeEditor.lang]?.contains(prev) == true) {
                     if (next != null && brackets[prev] == next) {
                         codeEditor.editableText.insert(start + count + indent, LINE_BREAK.toString())
                         codeEditor.setSelection(start + count + indent)
