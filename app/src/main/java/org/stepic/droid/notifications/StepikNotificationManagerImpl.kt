@@ -122,6 +122,10 @@ class StepikNotificationManagerImpl
                         analytic.reportEvent(Analytic.Streak.GET_ZERO_STREAK_NOTIFICATION)
                         showNotificationWithoutStreakInfo(Analytic.Streak.NotificationType.zero)
                     } else {
+                        //if current streak is > 0 -> streaks works! -> continue send it
+                        //it will reset before sending, after sending it will be incremented
+                        sharedPreferenceHelper.resetNumberOfStreakNotifications()
+
                         val bundle = Bundle()
                         if (isSolvedToday) {
                             showNotificationStreakImprovement(currentStreak)
