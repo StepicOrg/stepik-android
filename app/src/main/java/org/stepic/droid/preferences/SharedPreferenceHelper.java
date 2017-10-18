@@ -651,7 +651,7 @@ public class SharedPreferenceHelper {
         put(PreferenceType.LOGIN, AUTH_RESPONSE_JSON, json);
         cachedAuthStepikResponse = response;
 
-        long millisNow = DateTimeHelper.INSTANCE.now();
+        long millisNow = DateTimeHelper.INSTANCE.now(); // we should use +0 UTC for avoid problems with TimeZones
         put(PreferenceType.LOGIN, ACCESS_TOKEN_TIMESTAMP, millisNow);
     }
 
