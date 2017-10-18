@@ -22,6 +22,7 @@ import org.stepic.droid.model.Section
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants
+import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.StringUtil
 import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
@@ -52,7 +53,7 @@ class CalendarPresenter
         val sectionList = ArrayList(outSectionList)
 
         threadPool.execute {
-            val now: Long = DateTime.now(DateTimeZone.getDefault()).millis
+            val now: Long = DateTimeHelper.nowLocal()
             val nowMinus1Hour = now - AppConstants.MILLIS_IN_1HOUR
 
             val ids = sectionList
@@ -96,7 +97,7 @@ class CalendarPresenter
                         }
                     }
 
-                    val lastDeadline = calendarSection.hardDeadline ?: calendarSection.softDeadline
+                    val lastDeadline : String? = calendarSection.hardDeadline ?: calendarSection.softDeadline //2017-01-06T15:59:06Z format
                     var calendarDeadlineMillisPlusMonth = Long.MAX_VALUE
                     if (lastDeadline != null) {
                         calendarDeadlineMillisPlusMonth = DateTime(lastDeadline).millis + AppConstants.MILLIS_IN_1MONTH
