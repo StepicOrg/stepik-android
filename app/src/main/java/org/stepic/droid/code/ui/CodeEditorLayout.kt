@@ -32,11 +32,8 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
             codeEditor.lang = value
         }
 
-    var indentSize: Int
+    val indentSize: Int
         get() = codeEditor.indentSize
-        set(value) {
-            codeEditor.indentSize = value
-        }
 
     init {
         LayoutInflater.from(context).inflate(R.layout.view_code_editor, this, true)

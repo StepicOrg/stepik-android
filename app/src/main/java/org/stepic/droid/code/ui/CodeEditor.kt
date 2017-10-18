@@ -37,6 +37,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
         const val INPUT_DEBOUNCE_MS = 200L
         const val LINE_NUMBERS_MARGIN_DP = 4f
         const val DEFAULT_INDENT_SIZE = 2
+        const val MAX_INDENT_SIZE = 8
     }
 
     private val parser = PrettifyParser()

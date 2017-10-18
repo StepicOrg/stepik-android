@@ -11,6 +11,8 @@ inline fun String.countWhile(start: Int = 0, predicate: (Char) -> Boolean) : Int
 }
 
 fun String.substringOrNull(start: Int, end: Int = length) =
-    if (0 <= start && end <= length)
+    if (0 <= start && end <= length) {
         substring(start, end)
-    else null
+    } else {
+        null
+    }

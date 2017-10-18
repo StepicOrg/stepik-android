@@ -25,19 +25,13 @@ object CodeAnalyzer {
         "\"", "'"
     )
 
-    private fun getIndentForCurrentLine(start: Int, string: String) : Int {
-        val prevLineStart = string.substring(0, start).lastIndexOf(LINE_BREAK)
-        return string.countWhile (prevLineStart + 1) { Character.isWhitespace(it) && it != LINE_BREAK }
+    private fun getIndentForCurrentLine(cursorPosition: Int, text: String) : Int {
+        val prevLineStart = text.substring(0, cursorPosition).lastIndexOf(LINE_BREAK)
+        return text.countWhile (prevLineStart + 1) { Character.isWhitespace(it) && it != LINE_BREAK }
     }
 
     fun getIndentForLines(lines: List<String>) =
-            lines.map { getIndentForCurrentLine(0, it) }.filter { it > 0 }.min() ?: CodeEditor.DEFAULT_INDENT_SIZE
-
-    private fun getPrevSymbol(start: Int, string: String) : String? =
-            string.substringOrNull(start - 1, start)
-
-    private fun getNextSymbol(start: Int, string: String) : String? =
-            string.substringOrNull(start, start + 1)
+            Math.min(lines.map { getIndentForCurrentLine(0, it) }.filter { it > 0 }.min() ?: CodeEditor.DEFAULT_INDENT_SIZE, CodeEditor.MAX_INDENT_SIZE)
 
 
     fun onTextInserted(start: Int, count: Int, codeEditor: CodeEditor) {
@@ -79,14 +73,21 @@ object CodeAnalyzer {
         }
     }
 
-    fun findSecondBracket(bracket: String, start: Int, string: String) : Int {
+    private fun getPrevSymbol(start: Int, text: String) : String? =
+            text.substringOrNull(start - 1, start)
+
+    private fun getNextSymbol(start: Int, text: String) : String? =
+            text.substringOrNull(start, start + 1)
+
+
+    fun findSecondBracket(bracket: String, start: Int, text: String) : Int {
         getBracketsPair(bracket)?.let {
             val delta = if (it.key == bracket) 1 else -1 // if bracket is opening delta will be positive otherwise negative
             var deep = 1
             var pos = start + delta
 
-            while (0 <= pos && pos < string.length) {
-                when (string.substring(pos, pos + 1)) {
+            while (0 <= pos && pos < text.length) {
+                when (text.substring(pos, pos + 1)) {
                     it.key   -> deep += delta  // opening bracket
                     it.value -> deep -= delta  // closing bracket
                 }
