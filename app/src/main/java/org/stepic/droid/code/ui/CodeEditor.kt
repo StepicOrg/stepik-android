@@ -218,6 +218,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     override fun afterTextChanged(editable: Editable) {
         lines = text.toString().lines()
         CodeAnalyzer.onTextInserted(insertedStart, insertedCount, this)
+        highlightBrackets(selectionStart)
         highlightPublisher.onNext(editable)
         requestLayout()
     }
