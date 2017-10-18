@@ -1,6 +1,8 @@
 package org.stepic.droid.code.highlight.themes
 
 import android.support.annotation.ColorInt
+import org.stepic.droid.util.ColorUtil
+import org.stepic.droid.R
 
 data class CodeTheme (
         val name: String,
@@ -9,5 +11,7 @@ data class CodeTheme (
         @ColorInt val lineNumberBackground: Int,
         @ColorInt val lineNumberStroke: Int,
         @ColorInt val lineNumberText: Int,
-        @ColorInt val selectedLineBackground: Int
+        @ColorInt val selectedLineBackground: Int,
+        @ColorInt val bracketsHighlight: Int = selectedLineBackground,
+        @ColorInt val errorHighlight: Int = ColorUtil.getColorArgb(R.color.default_code_error_highlight_color)
 )

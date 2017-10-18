@@ -251,10 +251,10 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     private fun highlightBracket(start: Int, bracket: String) {
         val secondBracketPos = CodeAnalyzer.findSecondBracket(bracket, start, editableText.toString())
         if (secondBracketPos != -1) {
-            editableText.setSpan(CodeHighlightSpan(0xAAFFD77A.toInt()), start, start + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-            editableText.setSpan(CodeHighlightSpan(0xAAFFD77A.toInt()), secondBracketPos, secondBracketPos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            editableText.setSpan(CodeHighlightSpan(theme.bracketsHighlight), start, start + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            editableText.setSpan(CodeHighlightSpan(theme.bracketsHighlight), secondBracketPos, secondBracketPos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         } else {
-            editableText.setSpan(CodeHighlightSpan(0xAAFF0000.toInt()), start, start + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            editableText.setSpan(CodeHighlightSpan(theme.errorHighlight), start, start + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
     }
 
