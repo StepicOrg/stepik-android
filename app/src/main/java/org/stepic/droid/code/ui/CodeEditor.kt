@@ -138,14 +138,13 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 
     private val bufferRect = Rect()
 
-    var lines: List<String> = emptyList()
+    private var lines: List<String> = emptyList()
         private set(value) {
             field = value
             linesWithNumbers = layout?.let(this::countNumbersForLines) ?: emptyList()
         }
 
-    var linesWithNumbers: List<Int> = emptyList()
-        private set
+    private var linesWithNumbers: List<Int> = emptyList()
 
     
     private fun countNumbersForLines(layout: Layout) : List<Int> {
@@ -227,34 +226,40 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 
     override fun onSelectionChanged(start: Int, end: Int) {
         super.onSelectionChanged(start, end)
+        highlightBrackets(start)
+    }
 
+    private fun highlightBrackets(cursorPosition: Int) {
         removeSpans(CodeHighlightSpan::class.java)
 
-        var isBracket = false
-        var isClosingBracket = false
-        editableText.toString().substringOrNull(start, start + 1)?.let { bracket ->
+        val text = editableText.toString()
+
+        var isRightBracketHighlighted = false
+        var isRightBracketClosing     = false
+
+        text.substringOrNull(cursorPosition, cursorPosition + 1)?.let { bracket -> // bracket to right of cursor
             CodeAnalyzer.getBracketsPair(bracket)?.let {
-                highlightBracket(start, bracket)
-                isBracket = true
-                isClosingBracket = it.value == bracket
+                highlightBracket(cursorPosition, bracket)
+                isRightBracketHighlighted = true
+                isRightBracketClosing = it.value == bracket
             }
         }
 
-        editableText.toString().substringOrNull(start - 1, start)?.let { bracket ->
+        text.substringOrNull(cursorPosition - 1, cursorPosition)?.let { bracket -> // bracket to left of cursor
             CodeAnalyzer.getBracketsPair(bracket)?.let {
-                if (!isBracket || it.value == bracket && !isClosingBracket)
-                    highlightBracket(start - 1, bracket)
+                if (!isRightBracketHighlighted || it.value == bracket && !isRightBracketClosing)
+                    highlightBracket(cursorPosition - 1, bracket)
             }
         }
     }
 
-    private fun highlightBracket(start: Int, bracket: String) {
-        val secondBracketPos = CodeAnalyzer.findSecondBracket(bracket, start, editableText.toString())
+    private fun highlightBracket(firstBracketPos: Int, bracket: String) {
+        val secondBracketPos = CodeAnalyzer.findSecondBracket(bracket, firstBracketPos, editableText.toString())
         if (secondBracketPos != -1) {
-            editableText.setSpan(CodeHighlightSpan(theme.bracketsHighlight), start, start + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            editableText.setSpan(CodeHighlightSpan(theme.bracketsHighlight), firstBracketPos, firstBracketPos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             editableText.setSpan(CodeHighlightSpan(theme.bracketsHighlight), secondBracketPos, secondBracketPos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         } else {
-            editableText.setSpan(CodeHighlightSpan(theme.errorHighlight), start, start + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            editableText.setSpan(CodeHighlightSpan(theme.errorHighlight), firstBracketPos, firstBracketPos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
     }
 
