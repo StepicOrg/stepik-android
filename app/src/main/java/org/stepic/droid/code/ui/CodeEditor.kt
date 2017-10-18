@@ -6,6 +6,7 @@ import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.Typeface
 import android.os.Build
+import android.os.Parcelable
 import android.support.annotation.ColorInt
 import android.support.v7.widget.AppCompatEditText
 import android.text.*
@@ -268,6 +269,12 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
         } else {
             editableText.setSpan(CodeHighlightSpan(theme.errorHighlight), firstBracketPos, firstBracketPos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
+    }
+
+
+    override fun onSaveInstanceState(): Parcelable {
+        removeSpans(CodeHighlightSpan::class.java) // to fix crashes on low APIs when brackets are highlighted
+        return super.onSaveInstanceState()
     }
 
     private fun getFirstVisibleLine() = scrollContainer?.let {
