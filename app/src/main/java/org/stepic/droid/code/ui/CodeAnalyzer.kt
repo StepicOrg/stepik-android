@@ -7,6 +7,8 @@ import org.stepic.droid.util.substringOrNull
  * Class for smart code analyzing
  */
 object CodeAnalyzer {
+    private const val LINE_BREAK = '\n'
+
     private val brackets = hashMapOf(
         "{" to "}",
         "(" to ")",
@@ -18,9 +20,12 @@ object CodeAnalyzer {
     )
 
     private fun getIndentForCurrentLine(start: Int, string: String) : Int {
-        val prevLineStart = string.substring(0, start).lastIndexOf('\n')
-        return string.countWhile (prevLineStart + 1) { Character.isWhitespace(it) && it != '\n' }
+        val prevLineStart = string.substring(0, start).lastIndexOf(LINE_BREAK)
+        return string.countWhile (prevLineStart + 1) { Character.isWhitespace(it) && it != LINE_BREAK }
     }
+
+    fun getIndentForLines(lines: List<String>) =
+            lines.map { getIndentForCurrentLine(0, it) }.filter { it > 0 }.min() ?: CodeEditor.DEFAULT_INDENT_SIZE
 
     private fun getPrevSymbol(start: Int, string: String) : String? =
             string.substringOrNull(start - 1, start)
@@ -29,13 +34,11 @@ object CodeAnalyzer {
             string.substringOrNull(start, start + 1)
 
 
-    private const val TAB_SIZE = 2 // todo count tabs
-
     fun onTextInserted(start: Int, count: Int, codeEditor: CodeEditor) {
         val inserted = codeEditor.editableText.toString().substring(start, start + count)
         val text = codeEditor.editableText.toString()
         when (inserted) {
-            "\n" -> {
+            LINE_BREAK.toString() -> {
                 val indent = getIndentForCurrentLine(start, text)
 
                 val prev = getPrevSymbol(start, text)
@@ -45,12 +48,13 @@ object CodeAnalyzer {
 
                 if (prev in brackets) {
                     if (next != null && brackets[prev] == next) {
-                        codeEditor.editableText.insert(start + count + indent, "\n")
+                        codeEditor.editableText.insert(start + count + indent, LINE_BREAK.toString())
                         codeEditor.setSelection(start + count + indent)
                     }
-                    codeEditor.editableText.insert(start + count, " ".repeat(TAB_SIZE))
+                    codeEditor.editableText.insert(start + count, " ".repeat(codeEditor.indentSize))
                 }
             }
+
             in brackets -> {
                 val next = getNextSymbol(start + 1, text)
                 if (next == null || Character.isWhitespace(next[0]) || next in brackets.values) { // don't want auto bracket if there is a statement next
@@ -58,6 +62,7 @@ object CodeAnalyzer {
                     codeEditor.setSelection(start + count)
                 }
             }
+
             in quotes -> {
                 val next = getNextSymbol(start + 1, text)
                 if (next == null || Character.isWhitespace(next[0])) { // don't want auto quote if there is a statement next

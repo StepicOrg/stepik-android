@@ -35,6 +35,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
         const val SCROLL_DEBOUNCE_MS = 100L
         const val INPUT_DEBOUNCE_MS = 200L
         const val LINE_NUMBERS_MARGIN_DP = 4f
+        const val DEFAULT_INDENT_SIZE = 2
     }
 
     private val parser = PrettifyParser()
@@ -67,6 +68,10 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
             field = value
             afterTextChanged(editableText) // refresh highlight
         }
+
+
+    var indentSize = DEFAULT_INDENT_SIZE
+        internal set
 
     
     internal var scrollContainer: CodeEditorLayout? = null
@@ -142,6 +147,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
         private set(value) {
             field = value
             linesWithNumbers = layout?.let(this::countNumbersForLines) ?: emptyList()
+            indentSize = CodeAnalyzer.getIndentForLines(value)
         }
 
     private var linesWithNumbers: List<Int> = emptyList()
