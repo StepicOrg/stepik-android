@@ -13,10 +13,10 @@ object CodeAnalyzer {
         "[" to "]"
     )
 
-    private val pairedChars = hashMapOf(
+    private val quotes = hashMapOf(
         "\"" to "\"",
         "'"  to "'"
-    ) + brackets
+    )
 
     private fun getIndentForCurrentLine(start: Int, string: String) : Int {
         val prevLineStart = string.substring(0, start).lastIndexOf('\n')
@@ -55,7 +55,14 @@ object CodeAnalyzer {
             in brackets -> {
                 val next = getNextSymbol(start + 1, text)
                 if (next == null || Character.isWhitespace(next[0]) || next in brackets.values) { // don't want auto bracket if there is a statement next
-                    codeEditor.editableText.insert(start + count, pairedChars[inserted])
+                    codeEditor.editableText.insert(start + count, brackets[inserted])
+                    codeEditor.setSelection(start + count)
+                }
+            }
+            in quotes -> {
+                val next = getNextSymbol(start + 1, text)
+                if (next == null || Character.isWhitespace(next[0])) { // don't want auto quote if there is a statement next
+                    codeEditor.editableText.insert(start, quotes[inserted])
                     codeEditor.setSelection(start + count)
                 }
             }
