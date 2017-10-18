@@ -1,6 +1,5 @@
 package org.stepic.droid.core.presenters
 
-import org.joda.time.DateTime
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.ContinueCourseView
 import org.stepic.droid.di.course_list.CourseListScope
@@ -10,6 +9,7 @@ import org.stepic.droid.model.Step
 import org.stepic.droid.model.Unit
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.storage.repositories.Repository
+import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.hasUserAccess
 import org.stepic.droid.util.hasUserAccessAndNotEmpty
 import org.stepic.droid.web.Api
@@ -34,7 +34,7 @@ class ContinueCoursePresenter
             view?.onShowContinueCourseLoadingDialog()
             threadPoolExecutor.execute {
                 try {
-                    databaseFacade.updateCourseLastInteraction(courseId = course.courseId, timestamp = DateTime.now().millis)
+                    databaseFacade.updateCourseLastInteraction(courseId = course.courseId, timestamp = DateTimeHelper.now())
                     var unitId: Long
                     var stepId: Long
                     try {

@@ -20,4 +20,6 @@ object DateTimeHelper {
         return delta > deltaInMillis
     }
 
+    fun now(): Long = DateTime.now().millis
+
 }

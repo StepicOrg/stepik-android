@@ -23,6 +23,7 @@ import org.stepic.droid.notifications.model.NotificationType;
 import org.stepic.droid.storage.operations.Table;
 import org.stepic.droid.ui.util.TimeIntervalUtil;
 import org.stepic.droid.util.AppConstants;
+import org.stepic.droid.util.DateTimeHelper;
 import org.stepic.droid.util.RWLocks;
 import org.stepic.droid.web.AuthenticationStepicResponse;
 
@@ -255,7 +256,7 @@ public class SharedPreferenceHelper {
 
     private void onShowStreakDialog(int streakDialogShownNumber) {
         analytic.reportEvent(Analytic.Streak.CAN_SHOW_DIALOG, streakDialogShownNumber + "");
-        put(PreferenceType.LOGIN, STREAK_DIALOG_SHOWN_TIMESTAMP, DateTime.now().getMillis());
+        put(PreferenceType.LOGIN, STREAK_DIALOG_SHOWN_TIMESTAMP, DateTimeHelper.INSTANCE.now());
         put(PreferenceType.LOGIN, NUMBER_OF_SHOWN_STREAK_DIALOG, streakDialogShownNumber + 1);
     }
 

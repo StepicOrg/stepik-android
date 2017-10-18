@@ -12,6 +12,7 @@ import org.stepic.droid.core.LessonSessionManager
 import org.stepic.droid.core.presenters.contracts.StepAttemptView
 import org.stepic.droid.model.*
 import org.stepic.droid.preferences.SharedPreferenceHelper
+import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.StepikUtil
 import org.stepic.droid.util.getStepType
 import org.stepic.droid.web.Api
@@ -197,7 +198,7 @@ class StepAttemptPresenter
                                         && isRateGreaterDelay()
 
                                 if (!needShowStreakDialog && needShowRateAppDialog) {
-                                    sharedPreferenceHelper.rateShown(DateTime.now().millis)
+                                    sharedPreferenceHelper.rateShown(DateTimeHelper.now())
                                 }
 
                                 mainHandler.post {
