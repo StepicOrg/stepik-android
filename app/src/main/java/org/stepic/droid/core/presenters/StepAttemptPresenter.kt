@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.support.annotation.MainThread
 import android.support.annotation.WorkerThread
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import org.joda.time.DateTime
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.configuration.RemoteConfig
@@ -195,7 +194,7 @@ class StepAttemptPresenter
                                         && isCorrectSolution
                                         && !sharedPreferenceHelper.wasRateHandled()
                                         && isUserSolveEnough()
-                                        && isRateGreaterDelay()
+                                        && isRateDelayGreater()
 
                                 if (!needShowStreakDialog && needShowRateAppDialog) {
                                     sharedPreferenceHelper.rateShown(DateTimeHelper.now())
@@ -227,14 +226,15 @@ class StepAttemptPresenter
     }
 
     @WorkerThread
-    private fun isRateGreaterDelay(): Boolean {
+    private fun isRateDelayGreater(): Boolean {
         val wasShownMillis = sharedPreferenceHelper.whenRateWasShown()
         if (wasShownMillis < 0) {
-            return true
+            return true // we can show it
         }
 
         val delay = firebaseRemoteConfig.getLong(RemoteConfig.minDelayRateDialogSec).toInt()
-        return !DateTime(wasShownMillis).plusSeconds(delay).isAfterNow
+
+        return DateTimeHelper.isBeforeNow(delay + wasShownMillis) //if delay is expired (before now) -> show
     }
 
     @WorkerThread

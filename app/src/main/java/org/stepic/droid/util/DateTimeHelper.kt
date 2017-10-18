@@ -22,4 +22,8 @@ object DateTimeHelper {
 
     fun now(): Long = DateTime.now().millis
 
+    fun isAfterNow(yourMillis: Long): Boolean = yourMillis > now()
+
+    fun isBeforeNow(yourMillis: Long): Boolean = yourMillis < now()
+
 }
