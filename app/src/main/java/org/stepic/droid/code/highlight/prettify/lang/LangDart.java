@@ -89,7 +89,7 @@ public class LangDart extends Lang {
         setFallthroughStylePatterns(_fallthroughStylePatterns);
     }
 
-    public List<String> getFileExtensions() {
+    public static List<String> getFileExtensions() {
         return Collections.singletonList("dart");
     }
 }

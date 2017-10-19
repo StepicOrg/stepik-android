@@ -75,7 +75,7 @@ public class LangXq extends Lang {
         setFallthroughStylePatterns(_fallthroughStylePatterns);
     }
 
-    public List<String> getFileExtensions() {
+    public static List<String> getFileExtensions() {
         return Arrays.asList("xq", "xquery");
     }
 }

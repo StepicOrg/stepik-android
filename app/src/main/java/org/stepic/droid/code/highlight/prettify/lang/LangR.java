@@ -65,7 +65,7 @@ public class LangR extends Lang {
         setFallthroughStylePatterns(_fallthroughStylePatterns);
     }
 
-    public List<String> getFileExtensions() {
+    public static List<String> getFileExtensions() {
         return Arrays.asList("r", "s", "R", "S", "Splus");
     }
 }

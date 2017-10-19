@@ -40,7 +40,7 @@ public class LangBasic extends Lang {
         setFallthroughStylePatterns(_fallthroughStylePatterns);
     }
 
-    public List<String> getFileExtensions() {
+    public static List<String> getFileExtensions() {
         return Arrays.asList("basic", "cbm");
     }
 }
