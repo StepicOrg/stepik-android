@@ -71,48 +71,21 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Timber.d("onReceive");
         final long referenceId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
-        Timber.d("referenceId = %d", referenceId);
-
+        final PendingResult result = goAsync();
         if (referenceId >= 0) {
             threadSingleThreadExecutor.execute(new Runnable() {
                 @Override
                 public void run() {
-                    blockForInBackground(referenceId);
+                    try {
+                        blockForInBackground(referenceId);
+                    } finally {
+                        result.finish();
+                    }
+
                 }
             });
         }
-    }
-
-    private CachedVideo prepareCachedVideo(DownloadEntity downloadEntity) {
-        final long video_id = downloadEntity.getVideoId();
-        final long step_id = downloadEntity.getStepId();
-
-        File userDownloadFolder = userPreferences.getUserDownloadFolder();
-        File downloadFolderAndFile = new File(userDownloadFolder, video_id + "");
-        String path = Uri.fromFile(downloadFolderAndFile).getPath();
-        String thumbnail = downloadEntity.getThumbnail();
-        if (userPreferences.isSdChosen()) {
-            File sdFile = userPreferences.getSdCardDownloadFolder();
-            if (sdFile != null) {
-                try {
-                    StorageUtil.moveFile(userDownloadFolder.getPath(), video_id + "", sdFile.getPath());
-                    StorageUtil.moveFile(userDownloadFolder.getPath(), video_id + AppConstants.THUMBNAIL_POSTFIX_EXTENSION, sdFile.getPath());
-                    downloadFolderAndFile = new File(sdFile, video_id + "");
-                    final File thumbnailFile = new File(sdFile, video_id + AppConstants.THUMBNAIL_POSTFIX_EXTENSION);
-                    path = Uri.fromFile(downloadFolderAndFile).getPath();
-                    thumbnail = Uri.fromFile(thumbnailFile).getPath();
-                } catch (Exception er) {
-                    analytic.reportError(Analytic.Error.FAIL_TO_MOVE, er);
-                }
-            }
-
-        }
-
-        final CachedVideo cachedVideo = new CachedVideo(step_id, video_id, path, thumbnail);
-        cachedVideo.setQuality(downloadEntity.getQuality());
-        return cachedVideo;
     }
 
     private void blockForInBackground(final long referenceId) {
@@ -178,6 +151,36 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
         } finally {
             RWLocks.DownloadLock.writeLock().unlock();
         }
+    }
+
+    private CachedVideo prepareCachedVideo(DownloadEntity downloadEntity) {
+        final long video_id = downloadEntity.getVideoId();
+        final long step_id = downloadEntity.getStepId();
+
+        File userDownloadFolder = userPreferences.getUserDownloadFolder();
+        File downloadFolderAndFile = new File(userDownloadFolder, video_id + "");
+        String path = Uri.fromFile(downloadFolderAndFile).getPath();
+        String thumbnail = downloadEntity.getThumbnail();
+        if (userPreferences.isSdChosen()) {
+            File sdFile = userPreferences.getSdCardDownloadFolder();
+            if (sdFile != null) {
+                try {
+                    StorageUtil.moveFile(userDownloadFolder.getPath(), video_id + "", sdFile.getPath());
+                    StorageUtil.moveFile(userDownloadFolder.getPath(), video_id + AppConstants.THUMBNAIL_POSTFIX_EXTENSION, sdFile.getPath());
+                    downloadFolderAndFile = new File(sdFile, video_id + "");
+                    final File thumbnailFile = new File(sdFile, video_id + AppConstants.THUMBNAIL_POSTFIX_EXTENSION);
+                    path = Uri.fromFile(downloadFolderAndFile).getPath();
+                    thumbnail = Uri.fromFile(thumbnailFile).getPath();
+                } catch (Exception er) {
+                    analytic.reportError(Analytic.Error.FAIL_TO_MOVE, er);
+                }
+            }
+
+        }
+
+        final CachedVideo cachedVideo = new CachedVideo(step_id, video_id, path, thumbnail);
+        cachedVideo.setQuality(downloadEntity.getQuality());
+        return cachedVideo;
     }
 
 }
