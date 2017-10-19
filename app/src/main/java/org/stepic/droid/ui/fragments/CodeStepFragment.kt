@@ -376,7 +376,7 @@ class CodeStepFragment : StepAttemptFragment(),
 
     override fun onSymbolClick(symbol: String) {
         CodeToolbarUtil.reportSelectedSymbol(analytic, chosenProgrammingLanguageName, symbol)
-        codeEditor.insertText(CodeToolbarUtil.mapToolbarSymbolToPrintable(symbol))
+        codeEditor.insertText(CodeToolbarUtil.mapToolbarSymbolToPrintable(symbol, codeEditor.indentSize))
     }
 
 }

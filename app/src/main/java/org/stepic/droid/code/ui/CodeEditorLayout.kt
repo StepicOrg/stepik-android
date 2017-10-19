@@ -32,6 +32,9 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
             codeEditor.lang = value
         }
 
+    val indentSize: Int
+        get() = codeEditor.indentSize
+
     init {
         LayoutInflater.from(context).inflate(R.layout.view_code_editor, this, true)
         codeEditor = findViewById(R.id.codeEdit)
