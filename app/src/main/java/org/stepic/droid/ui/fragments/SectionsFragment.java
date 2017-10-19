@@ -396,8 +396,8 @@ public class SectionsFragment
 
     @Override
     public void onConnectionProblem() {
+        dismissLoadState();
         if (sectionList.isEmpty()) {
-            dismissLoadState();
             reportConnectionProblem.setVisibility(View.VISIBLE);
         }
     }
