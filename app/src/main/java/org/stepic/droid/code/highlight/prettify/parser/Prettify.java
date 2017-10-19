@@ -14,7 +14,6 @@
 package org.stepic.droid.code.highlight.prettify.parser;
 
 import org.stepic.droid.code.highlight.prettify.lang.Lang;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -27,7 +26,6 @@ import java.util.regex.Pattern;
 import org.stepic.droid.code.highlight.prettify.lang.LangAppollo;
 import org.stepic.droid.code.highlight.prettify.lang.LangBasic;
 import org.stepic.droid.code.highlight.prettify.lang.LangClj;
-import org.stepic.droid.code.highlight.prettify.lang.LangCss;
 import org.stepic.droid.code.highlight.prettify.lang.LangDart;
 import org.stepic.droid.code.highlight.prettify.lang.LangErlang;
 import org.stepic.droid.code.highlight.prettify.lang.LangGo;
@@ -49,7 +47,6 @@ import org.stepic.droid.code.highlight.prettify.lang.LangTcl;
 import org.stepic.droid.code.highlight.prettify.lang.LangTex;
 import org.stepic.droid.code.highlight.prettify.lang.LangVb;
 import org.stepic.droid.code.highlight.prettify.lang.LangVhdl;
-import org.stepic.droid.code.highlight.prettify.lang.LangWiki;
 import org.stepic.droid.code.highlight.prettify.lang.LangXq;
 import org.stepic.droid.code.highlight.prettify.lang.LangYaml;
 
@@ -367,34 +364,34 @@ public class Prettify {
             decorateSourceMap.put("cStyleComments", true);
             registerLangHandler(sourceDecorator(decorateSourceMap), Collections.singletonList("proto"));
 
-            register(LangAppollo.class);
-            register(LangBasic.class);
-            register(LangClj.class);
-            register(LangCss.class);
-            register(LangDart.class);
-            register(LangErlang.class);
-            register(LangGo.class);
-            register(LangHs.class);
-            register(LangKotlin.class);
-            register(LangLisp.class);
-            register(LangLlvm.class);
-            register(LangLua.class);
-            register(LangMatlab.class);
-            register(LangMl.class);
-            register(LangMumps.class);
-            register(LangN.class);
-            register(LangPascal.class);
-            register(LangR.class);
-            register(LangRd.class);
-            register(LangScala.class);
-            register(LangSql.class);
-            register(LangTex.class);
-            register(LangVb.class);
-            register(LangVhdl.class);
-            register(LangTcl.class);
-            register(LangWiki.class);
-            register(LangXq.class);
-            register(LangYaml.class);
+            register(LangAppollo.class, LangAppollo.getFileExtensions());
+            register(LangBasic.class, LangBasic.getFileExtensions());
+            register(LangClj.class, LangClj.getFileExtensions());
+            register(LangDart.class, LangDart.getFileExtensions());
+            register(LangErlang.class, LangErlang.getFileExtensions());
+            register(LangGo.class, LangGo.getFileExtensions());
+            register(LangHs.class, LangHs.getFileExtensions());
+            register(LangKotlin.class, LangKotlin.getFileExtensions());
+            register(LangLisp.class, LangLisp.getFileExtensions());
+            register(LangLlvm.class, LangLlvm.getFileExtensions());
+            register(LangLua.class, LangLua.getFileExtensions());
+            register(LangMatlab.class, LangMatlab.getFileExtensions());
+            register(LangMatlab.LangMatlabIdentifier.class, LangMatlab.LangMatlabIdentifier.getFileExtensions());
+            register(LangMatlab.LangMatlabOperator.class, LangMatlab.LangMatlabOperator.getFileExtensions());
+            register(LangMl.class, LangMl.getFileExtensions());
+            register(LangMumps.class, LangMumps.getFileExtensions());
+            register(LangN.class, LangN.getFileExtensions());
+            register(LangPascal.class, LangPascal.getFileExtensions());
+            register(LangR.class, LangR.getFileExtensions());
+            register(LangRd.class, LangRd.getFileExtensions());
+            register(LangScala.class, LangScala.getFileExtensions());
+            register(LangSql.class, LangSql.getFileExtensions());
+            register(LangTex.class, LangTex.getFileExtensions());
+            register(LangVb.class, LangVb.getFileExtensions());
+            register(LangVhdl.class, LangVhdl.getFileExtensions());
+            register(LangTcl.class, LangTcl.getFileExtensions());
+            register(LangXq.class, LangXq.getFileExtensions());
+            register(LangYaml.class, LangYaml.getFileExtensions());
         } catch (Exception ex) {
             LOG.log(Level.SEVERE, null, ex);
         }
@@ -804,7 +801,7 @@ public class Prettify {
         return new CreateSimpleLexer(shortcutStylePatterns, fallthroughStylePatterns);
     }
     /** Maps language-specific file extensions to handlers. */
-    protected Map<String, Object> langHandlerRegistry = new HashMap<>();
+    private Map<String, Object> langHandlerRegistry = new HashMap<>();
 
     /** Register a language handler for the given file extensions.
      * @param handler a function from source code to a list
@@ -838,11 +835,10 @@ public class Prettify {
      * @throws Exception cannot instantiate the object using the class,
      * or language handler with specified extension exist already
      */
-    public void register(Class<? extends Lang> clazz) throws Exception {
+    private void register(Class<? extends Lang> clazz, List<String> fileExtensions) throws Exception {
         if (clazz == null) {
             throw new NullPointerException("argument 'clazz' cannot be null");
         }
-        List<String> fileExtensions = getFileExtensionsFromClass(clazz);
         for (int i = fileExtensions.size(); --i >= 0;) {
             String ext = fileExtensions.get(i);
             if (langHandlerRegistry.get(ext) == null) {
@@ -851,11 +847,6 @@ public class Prettify {
                 throw new Exception("cannot override language handler " + ext);
             }
         }
-    }
-
-    protected List<String> getFileExtensionsFromClass(Class<? extends Lang> clazz) throws Exception {
-        Method getExtensionsMethod = clazz.getMethod("getFileExtensions", (Class<?>[]) null);
-        return (List<String>) getExtensionsMethod.invoke(null, null);
     }
 
     /**
@@ -881,16 +872,7 @@ public class Prettify {
             try {
                 Lang _lang = ((Class<Lang>) handler).newInstance();
                 _simpleLexer = new CreateSimpleLexer(_lang.getShortcutStylePatterns(), _lang.getFallthroughStylePatterns());
-
-                List<Lang> extendedLangs = _lang.getExtendedLangs();
-                for (Lang _extendedLang : extendedLangs) {
-                    register(_extendedLang.getClass());
-                }
-
-                List<String> fileExtensions = getFileExtensionsFromClass((Class<Lang>) handler);
-                for (String _extension : fileExtensions) {
-                    langHandlerRegistry.put(_extension, _simpleLexer);
-                }
+                langHandlerRegistry.put(extension, _simpleLexer);
             } catch (Exception ex) {
                 LOG.log(Level.SEVERE, null, ex);
                 return null;
