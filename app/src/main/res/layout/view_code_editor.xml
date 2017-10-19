@@ -8,6 +8,6 @@
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:imeOptions="flagNoFullscreen"
-    android:inputType="textNoSuggestions|text|textMultiLine|textVisiblePassword"
+    android:inputType="textWebEmailAddress|textMultiLine|textNoSuggestions"
     android:textSize="@dimen/code_text_size_default"
     android:typeface="monospace"/>

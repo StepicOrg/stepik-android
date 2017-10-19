@@ -23,7 +23,8 @@ object Presets {
                 lineNumberBackground    = ColorUtil.getColorArgb(R.color.light_theme_line_number_background),
                 lineNumberText          = ColorUtil.getColorArgb(R.color.light_theme_line_number_text),
                 selectedLineBackground  = ColorUtil.getColorArgb(R.color.light_theme_selected_line_background),
-                lineNumberStroke        = ColorUtil.getColorArgb(R.color.light_theme_line_number_stroke)
+                lineNumberStroke        = ColorUtil.getColorArgb(R.color.light_theme_line_number_stroke),
+                bracketsHighlight       = ColorUtil.getColorArgb(R.color.light_theme_brackets_highlight)
         ),
         CodeTheme(
             name = App.getAppContext().getString(R.string.github_theme_name),

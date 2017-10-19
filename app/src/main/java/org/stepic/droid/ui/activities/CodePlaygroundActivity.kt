@@ -16,6 +16,7 @@ class CodePlaygroundActivity : SingleFragmentActivity(), BackButtonHandler {
     companion object {
         const val CODE_KEY = "code_key"
         const val LANG_KEY = "lang_key"
+        const val WAS_RESET = "WAS_RESET"
         private const val QUIZ_INFO_KEY = "quiz_info_key"
 
         fun intentForLaunch(callingActivity: Activity, code: String, lang: String, codeOptions: CodeOptions): Intent {

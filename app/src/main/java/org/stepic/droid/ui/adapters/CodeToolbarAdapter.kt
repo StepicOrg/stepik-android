@@ -5,7 +5,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.view_code_toolbar_item.view.*
+import android.widget.TextView
 import org.stepic.droid.R
 import org.stepic.droid.model.code.symbolsForLanguage
 import org.stepic.droid.ui.listeners.OnItemClickListener
@@ -40,6 +40,8 @@ class CodeToolbarAdapter(private val context: Context) : RecyclerView.Adapter<Co
     override fun getItemCount(): Int = symbols.size
 
     class CodeToolbarItem(itemView: View, onItemClickListener: OnItemClickListener) : RecyclerView.ViewHolder(itemView) {
+        private val codeToolbarSymbol = itemView.findViewById<TextView>(R.id.codeToolbarSymbol)
+
         init {
             itemView.setOnClickListener {
                 onItemClickListener.onItemClick(adapterPosition)
@@ -47,7 +49,7 @@ class CodeToolbarAdapter(private val context: Context) : RecyclerView.Adapter<Co
         }
 
         fun bindData(symbol: String) {
-            itemView.codeToolbarSymbol.text = symbol
+            codeToolbarSymbol.text = symbol
         }
     }
 

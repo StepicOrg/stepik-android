@@ -16,4 +16,5 @@
     <color name="light_theme_line_number_text">#333333</color>
     <color name="light_theme_selected_line_background">#44CCCCCC</color>
     <color name="light_theme_line_number_stroke">#CCCCCC</color>
+    <color name="light_theme_brackets_highlight">#AAFFD77A</color>
 </resources>

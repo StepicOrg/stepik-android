@@ -106,17 +106,19 @@ class CodeStepFragment : StepAttemptFragment(),
         }
 
         codeQuizResetAction.setOnClickListener {
-            if (checkForResetDialog()) {
-                analytic.reportEvent(Analytic.Code.CODE_RESET_PRESSED,
-                        Bundle().apply { putString(AppConstants.ANALYTIC_CODE_SCREEN_KEY, ANALYTIC_SCREEN_TYPE) }
-                )
+            analytic.reportEvent(Analytic.Code.CODE_RESET_PRESSED,
+                    Bundle().apply { putString(AppConstants.ANALYTIC_CODE_SCREEN_KEY, ANALYTIC_SCREEN_TYPE) }
+            )
+
+            if (submission?.status == Submission.Status.CORRECT) {
+                tryAgain()
+            } else {
                 val dialog = ResetCodeDialogFragment.newInstance()
                 if (!dialog.isAdded) {
                     dialog.show(childFragmentManager, null)
                 }
-            } else {
-                analytic.reportEvent(Analytic.Code.CODE_RESET_PRESSED_USELESS)
             }
+
         }
 
         codeQuizCurrentLanguage.setOnClickListener {
@@ -368,6 +370,11 @@ class CodeStepFragment : StepAttemptFragment(),
             val newCode = data?.getStringExtra(CodePlaygroundActivity.CODE_KEY)
             codeEditor.setText(newCode)
             showCodeQuizEditor()
+            if (data?.getBooleanExtra(CodePlaygroundActivity.WAS_RESET, false)==true){
+                resetBackgroundOfAttempt()
+                hideHint()
+                hideWrongStatus()
+            }
         }
     }
 
@@ -376,7 +383,7 @@ class CodeStepFragment : StepAttemptFragment(),
 
     override fun onSymbolClick(symbol: String) {
         CodeToolbarUtil.reportSelectedSymbol(analytic, chosenProgrammingLanguageName, symbol)
-        codeEditor.insertText(CodeToolbarUtil.mapToolbarSymbolToPrintable(symbol))
+        codeEditor.insertText(CodeToolbarUtil.mapToolbarSymbolToPrintable(symbol, codeEditor.indentSize))
     }
 
 }
