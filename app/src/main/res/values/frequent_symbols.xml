@@ -252,6 +252,7 @@
     </string-array>
     <string-array name="frequent_symbols_py">
         <item>Tab</item>
+        <item>:</item>
         <item>(</item>
         <item>)</item>
         <item>\"</item>
@@ -274,7 +275,6 @@
         <item>*</item>
         <item>+</item>
         <item>-</item>
-        <item>:</item>
         <item>%</item>
         <item>_</item>
         <item>\@</item>
