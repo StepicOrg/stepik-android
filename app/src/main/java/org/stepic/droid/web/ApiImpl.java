@@ -20,8 +20,6 @@ import com.vk.sdk.VKSdk;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.configuration.Config;
@@ -49,6 +47,7 @@ import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.util.AppConstants;
+import org.stepic.droid.util.DateTimeHelper;
 import org.stepic.droid.util.DeviceInfoUtil;
 import org.stepic.droid.util.RWLocks;
 
@@ -807,7 +806,7 @@ public class ApiImpl implements Api {
         long timestampStored = sharedPreference.getAccessTokenTimestamp();
         if (timestampStored == -1) return true;
 
-        long nowTemp = DateTime.now(DateTimeZone.UTC).getMillis();
+        long nowTemp = DateTimeHelper.INSTANCE.nowUtc();
         long delta = nowTemp - timestampStored;
         long expiresMillis = (response.getExpires_in() - 50) * 1000;
         return delta > expiresMillis;//token expired --> need update
