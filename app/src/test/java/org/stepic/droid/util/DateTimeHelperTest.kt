@@ -6,7 +6,6 @@ import java.util.*
 
 class DateTimeHelperTest {
 
-
     @Test
     fun isoToCalendar() {
         val expected = Calendar.getInstance()
@@ -30,5 +29,25 @@ class DateTimeHelperTest {
         assertEquals(6, calendar.get(Calendar.SECOND))
 
         assertEquals(expected.timeInMillis, calendar.timeInMillis)
+    }
+
+    @Test
+    fun printableOfIsoDateUtc() {
+        val pattern = "dd.MM.yyyy HH:mm"
+        val isoFormat = "2017-01-06T15:59:06Z"
+
+        val result = DateTimeHelper.getPrintableOfIsoDate(isoFormat, pattern, timeZone = TimeZone.getTimeZone("UTC"))
+
+        assertEquals("06.01.2017 15:59", result)
+    }
+
+    @Test
+    fun printableOfIsoDateAnotherTimezone() {
+        val pattern = "dd.MM.yyyy HH:mm"
+        val isoFormat = "2017-01-06T15:59:06Z"
+
+        val result = DateTimeHelper.getPrintableOfIsoDate(isoFormat, pattern, timeZone = TimeZone.getTimeZone("Europe/Moscow")) //is it depend on summer time?
+
+        assertEquals("06.01.2017 18:59", result)
     }
 }

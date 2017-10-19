@@ -7,6 +7,19 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 object DateTimeHelper {
+
+    private val isoPattern = "yyyy-MM-dd'T'HH:mm:ssZ"
+
+    fun getPrintableOfIsoDate(dateInISOFormat: String?, pattern: String, timeZone: TimeZone): String {
+        if (dateInISOFormat == null) return ""
+        val date = getDateOfIso(isoPattern)
+
+        val finalDateFormat = SimpleDateFormat(pattern, Locale.ENGLISH)
+        finalDateFormat.timeZone = timeZone
+
+        return finalDateFormat.format(date)
+    }
+
     fun getPresentOfDate(dateInISOFormat: String?, formatForView: DateTimeFormatter): String {
         if (dateInISOFormat == null) return ""
         val dateTime = DateTime(dateInISOFormat)
@@ -41,20 +54,25 @@ object DateTimeHelper {
      * parsing the "Z" timezone, but many other less-used features are
      * missing.
      */
-    fun toCalendar(iso8601string: String): Calendar {
+    fun toCalendar(iso8601string: String, timeZone: TimeZone = TimeZone.getTimeZone("UTC")): Calendar {
         val calendar = GregorianCalendar.getInstance()
+        val date = getDateOfIso(iso8601string)
+        calendar.time = date
+        calendar.timeZone = timeZone
+        return calendar
+    }
+
+
+    private fun getDateOfIso(iso8601string: String): Date {
         var s = iso8601string.replace("Z", "+00:00")
         try {
             s = s.substring(0, 22) + s.substring(23)  // to get rid of the ":"
         } catch (e: IndexOutOfBoundsException) {
             throw ParseException("Invalid length", 0)
         }
-
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
+        val dateFormat = SimpleDateFormat(isoPattern, Locale.ENGLISH)
         val date = dateFormat.parse(s)
-        calendar.time = date
-        calendar.timeZone = TimeZone.getTimeZone("UTC")
-        return calendar
+        return date
     }
 
 }
