@@ -489,7 +489,8 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void addCertificateToLinkedIn(CertificateViewItem certificateViewItem) {
-        //// TODO: 19/10/2017 linkeding exporting is not working due to changing API, fix it
+        // TODO: 19/10/2017 linkedin exporting is not working due to changing API params is not filled
+
         StringBuilder sb = new StringBuilder();
         sb.append(AppConstants.LINKEDIN_ADD_URL);
         sb.append("_ed=");//linkedin id parameter
