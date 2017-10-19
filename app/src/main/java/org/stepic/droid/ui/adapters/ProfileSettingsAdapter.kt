@@ -6,7 +6,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.profile_item_right_arrow.view.*
+import android.widget.TextView
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.core.ScreenManager
@@ -20,11 +20,11 @@ class ProfileSettingsAdapter(
         private val screenManager: ScreenManager,
         private val fragment: Fragment,
         private val analytic: Analytic
-) : RecyclerView.Adapter<ProfileSettingsAdapter.Companion.SettingsViewHolder>() {
+) : RecyclerView.Adapter<ProfileSettingsAdapter.SettingsViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SettingsViewHolder {
-        val view = LayoutInflater.from(activity).inflate(R.layout.profile_item_right_arrow, parent, false);
+        val view = LayoutInflater.from(activity).inflate(R.layout.profile_item_right_arrow, parent, false)
         return SettingsViewHolder(view, profileSettingsList, screenManager, activity, fragment, analytic)
     }
 
@@ -32,43 +32,40 @@ class ProfileSettingsAdapter(
         holder.setData(profileSettingsList[position])
     }
 
-    override fun getItemCount(): Int {
-        return profileSettingsList.size
-    }
+    override fun getItemCount(): Int = profileSettingsList.size
 
-    companion object {
-        class SettingsViewHolder(itemView: View,
-                                 private val profileSettingsList: ArrayList<ProfileSettingsViewModel>,
-                                 private val screenManager: ScreenManager,
-                                 private val activity: Activity,
-                                 private val fragment: Fragment,
-                                 private val analytic: Analytic)
-            : RecyclerView.ViewHolder(itemView) {
+    class SettingsViewHolder(itemView: View,
+                             private val profileSettingsList: ArrayList<ProfileSettingsViewModel>,
+                             private val screenManager: ScreenManager,
+                             private val activity: Activity,
+                             private val fragment: Fragment,
+                             private val analytic: Analytic)
+        : RecyclerView.ViewHolder(itemView) {
 
-            init {
-                itemView.setOnClickListener {
-                    clickOnPosition(adapterPosition)
-                }
+        private val optionTitle = itemView.findViewById<TextView>(R.id.optionTitle)
+
+        init {
+            itemView.setOnClickListener {
+                clickOnPosition(adapterPosition)
             }
-
-            private fun clickOnPosition(adapterPosition: Int) {
-                if (adapterPosition < 0 || adapterPosition >= profileSettingsList.size) {
-                    return
-                }
-
-                val profileSettingsItem = profileSettingsList[adapterPosition]
-
-                profileSettingsItem.clickProfileSettings(activity, screenManager, fragment, analytic)
-            }
-
-            fun setData(profileSettingsViewModel: ProfileSettingsViewModel) {
-                itemView.optionTitle.setText(profileSettingsViewModel.stringRes)
-                itemView.optionTitle.setTextColor(
-                        ColorUtil.getColorArgb(profileSettingsViewModel.textColor,
-                                itemView.context))
-            }
-
         }
+
+        private fun clickOnPosition(adapterPosition: Int) {
+            if (adapterPosition < 0 || adapterPosition >= profileSettingsList.size) {
+                return
+            }
+
+            val profileSettingsItem = profileSettingsList[adapterPosition]
+
+            profileSettingsItem.clickProfileSettings(activity, screenManager, fragment, analytic)
+        }
+
+        fun setData(profileSettingsViewModel: ProfileSettingsViewModel) {
+            optionTitle.setText(profileSettingsViewModel.stringRes)
+            optionTitle.setTextColor(
+                    ColorUtil.getColorArgb(profileSettingsViewModel.textColor, itemView.context))
+        }
+
     }
 
 }

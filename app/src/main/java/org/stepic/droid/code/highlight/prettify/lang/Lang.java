@@ -96,23 +96,4 @@ public abstract class Lang {
         }
         this.fallthroughStylePatterns = cloneList;
     }
-
-    /**
-     * Get the extended languages list.
-     * @return the list
-     */
-    public List<Lang> getExtendedLangs() {
-        return new ArrayList<>(extendedLangs);
-    }
-
-    /**
-     * Set extended languages. Because we cannot register multiple languages
-     * within one {@link org.stepic.droid.code.highlight.prettify.lang.Lang}, so it is used as an solution. See
-     * {@link org.stepic.droid.code.highlight.prettify.lang.LangCss} for example.
-     *
-     * @param extendedLangs the list of {@link org.stepic.droid.code.highlight.prettify.lang.Lang}s
-     */
-    public void setExtendedLangs(List<Lang> extendedLangs) {
-        this.extendedLangs = new ArrayList<>(extendedLangs);
-    }
 }

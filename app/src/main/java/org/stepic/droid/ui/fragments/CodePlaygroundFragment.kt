@@ -52,6 +52,7 @@ class CodePlaygroundFragment : FragmentBase(),
     private var currentLanguage: String? = null
     private var codeToolbarAdapter: CodeToolbarAdapter? = null
     private var onGlobalLayoutListener: ViewTreeObserver.OnGlobalLayoutListener? = null
+    private var wasReset: Boolean = false
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -152,6 +153,7 @@ class CodePlaygroundFragment : FragmentBase(),
 
     override fun onReset() {
         currentLanguage?.let { lang ->
+            wasReset = true
             val template = arguments.getParcelable<CodeOptions>(CODE_OPTIONS_KEY)?.codeTemplates?.get(lang)
             codeEditor.setText(template)
         }
@@ -166,6 +168,7 @@ class CodePlaygroundFragment : FragmentBase(),
 
     override fun onBackClick(): Boolean {
         val resultIntent = Intent()
+        resultIntent.putExtra(CodePlaygroundActivity.WAS_RESET, wasReset)
         resultIntent.putExtra(CodePlaygroundActivity.LANG_KEY, currentLanguage)
         resultIntent.putExtra(CodePlaygroundActivity.CODE_KEY, codeEditor.text.toString())
         activity?.setResult(Activity.RESULT_OK, resultIntent)
