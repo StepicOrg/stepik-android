@@ -3,9 +3,6 @@ package org.stepic.droid.model
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import org.joda.time.DateTimeZone
-import org.joda.time.format.DateTimeFormat
-import org.joda.time.format.DateTimeFormatter
 import org.stepic.droid.util.DateTimeHelper
 import java.io.Serializable
 import java.util.*
@@ -46,20 +43,16 @@ class Section() : Serializable, Parcelable {
     private var formatted_soft_deadline: String? = null
     private var formatted_hard_deadline: String? = null
 
-    private val formatterForView: DateTimeFormatter by lazy {
-        DateTimeFormat.forPattern(datePattern).withZone(DateTimeZone.getDefault()).withLocale(Locale.getDefault())
-    }
-
     val formattedBeginDate: String by lazy {
-        DateTimeHelper.getPresentOfDate(begin_date, formatterForView)
+        DateTimeHelper.getPrintableOfIsoDate(begin_date, datePattern, TimeZone.getDefault())
     }
 
     val formattedSoftDeadline: String by lazy {
-        DateTimeHelper.getPresentOfDate(soft_deadline, formatterForView)
+        DateTimeHelper.getPrintableOfIsoDate(soft_deadline, datePattern, TimeZone.getDefault())
     }
 
     val formattedHardDeadline: String by lazy {
-        DateTimeHelper.getPresentOfDate(hard_deadline, formatterForView)
+        DateTimeHelper.getPrintableOfIsoDate(hard_deadline, datePattern, TimeZone.getDefault())
     }
 
 

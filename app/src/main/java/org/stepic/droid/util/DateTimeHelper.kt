@@ -1,7 +1,5 @@
 package org.stepic.droid.util
 
-import org.joda.time.DateTime
-import org.joda.time.format.DateTimeFormatter
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -20,11 +18,6 @@ object DateTimeHelper {
         return finalDateFormat.format(date)
     }
 
-    fun getPresentOfDate(dateInISOFormat: String?, formatForView: DateTimeFormatter): String {
-        if (dateInISOFormat == null) return ""
-        val dateTime = DateTime(dateInISOFormat)
-        return formatForView.print(dateTime)
-    }
 
     fun isNeededUpdate(timestampStored: Long, deltaInMillis: Long = AppConstants.MILLIS_IN_24HOURS): Boolean {
         //delta is 24 hours by default
