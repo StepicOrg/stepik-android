@@ -4,12 +4,9 @@ import android.os.Bundle
 import org.stepic.droid.analytic.Analytic
 
 object CodeToolbarUtil {
-    //it should be language specific, fix it in later versions
-    private const val INDENT_SYMBOL = "  " // 2 spaces
-
-    fun mapToolbarSymbolToPrintable(symbol: String): String {
+    fun mapToolbarSymbolToPrintable(symbol: String, indentSize: Int): String {
         return if (symbol.equals("tab", ignoreCase = true)) {
-            INDENT_SYMBOL
+            " ".repeat(indentSize)
         } else {
             symbol
         }

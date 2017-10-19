@@ -174,7 +174,7 @@ class CodePlaygroundFragment : FragmentBase(),
 
     override fun onSymbolClick(symbol: String) {
         CodeToolbarUtil.reportSelectedSymbol(analytic, currentLanguage, symbol)
-        codeEditor.insertText(CodeToolbarUtil.mapToolbarSymbolToPrintable(symbol))
+        codeEditor.insertText(CodeToolbarUtil.mapToolbarSymbolToPrintable(symbol, codeEditor.indentSize))
     }
 
 
