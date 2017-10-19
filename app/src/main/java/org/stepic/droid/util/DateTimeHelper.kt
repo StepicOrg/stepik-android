@@ -10,7 +10,6 @@ object DateTimeHelper {
     private val millisecondsInHour = 1000 * 60 * 60
     private val millisecondsInMinute = 1000 * 60
     private val hoursInDay = 24
-    private val minutesInHour = 60
 
     fun hourMinutesOfMidnightDiffWithUtc(timeZone: TimeZone, isDaylight: Boolean): String {
         val instance = Calendar.getInstance(timeZone)
@@ -56,9 +55,18 @@ object DateTimeHelper {
         return delta > deltaInMillis
     }
 
-    fun nowLocal(): Long {
-        val localTimezoneCalendar = Calendar.getInstance()
-        return localTimezoneCalendar.timeInMillis + localTimezoneCalendar.timeZone.rawOffset
+    fun nowLocal(): Long = calendarToLocalMillis(Calendar.getInstance())
+
+    fun calendarToLocalMillis(calendar: Calendar): Long {
+        val isDaylight = TimeZone.getDefault().inDaylightTime(calendar.time)
+
+        return calendar.timeInMillis +
+                calendar.timeZone.rawOffset +
+                if (isDaylight) {
+                    calendar.get(Calendar.DST_OFFSET)
+                } else {
+                    0
+                }
     }
 
     fun nowUtc(): Long = Calendar.getInstance().timeInMillis

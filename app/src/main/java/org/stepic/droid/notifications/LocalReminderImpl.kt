@@ -6,14 +6,15 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.support.annotation.MainThread
-import org.joda.time.DateTime
-import org.joda.time.DateTimeZone
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.services.NewUserAlarmService
 import org.stepic.droid.services.StreakAlarmService
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.storage.operations.Table
+import org.stepic.droid.util.AppConstants
+import org.stepic.droid.util.DateTimeHelper
+import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
@@ -25,10 +26,9 @@ class LocalReminderImpl
         private val databaseFacade: DatabaseFacade,
         private val context: Context,
         private val alarmManager: AlarmManager,
-        private val analytic: Analytic,
-        private val blockNotificationIntervalProvider: BlockNotificationIntervalProvider) : LocalReminder {
+        private val analytic: Analytic) : LocalReminder {
 
-    val isHandling = AtomicBoolean(false)
+    private val isHandling = AtomicBoolean(false)
 
     override fun remindAboutApp(millis: Long?) {
         threadPoolExecutor.execute {
@@ -53,30 +53,30 @@ class LocalReminderImpl
 
                     //now we can plan alarm
 
-                    val now = DateTime.now(DateTimeZone.getDefault())
+                    val now = DateTimeHelper.nowLocal()
                     val scheduleMillis: Long
-                    if (millis != null && millis > 0L && DateTime(millis).isAfterNow) {
+                    if (millis != null && millis > 0L && millis > now) {
                         scheduleMillis = millis // after reboot we already scheduled.
                     } else {
                         val dayDiff: Int =
-                                if (!isFirstDayNotificationShown) {
-                                    1
-                                } else if (!isSevenDayNotificationShown) {
-                                    7
-                                } else {
-                                    return@execute
+                                when {
+                                    !isFirstDayNotificationShown -> 1
+                                    !isSevenDayNotificationShown -> 7
+                                    else -> return@execute
                                 }
 
-                        val nowHour = now.hourOfDay().get()
-                        val scheduleTime: DateTime
-                        if (nowHour < 12) {
-                            scheduleTime = now.plusDays(dayDiff).withHourOfDay(12)
+
+                        val calendar = Calendar.getInstance()
+                        calendar.set(Calendar.HOUR_OF_DAY, 12)
+                        val nowAt12 = DateTimeHelper.calendarToLocalMillis(calendar)
+                        val nowHour = calendar.get(Calendar.HOUR_OF_DAY)
+                        scheduleMillis = if (nowHour < 12) {
+                            nowAt12 + AppConstants.MILLIS_IN_24HOURS * dayDiff
                         } else if (nowHour >= 19) {
-                            scheduleTime = now.plusDays(dayDiff + 1).withHourOfDay(12)
+                            nowAt12 + AppConstants.MILLIS_IN_24HOURS * (dayDiff + 1)
                         } else {
-                            scheduleTime = now.plusDays(dayDiff)
+                            now + AppConstants.MILLIS_IN_24HOURS * dayDiff
                         }
-                        scheduleMillis = scheduleTime.millis
                     }
 
                     sharedPreferenceHelper.saveNewUserRemindTimestamp(scheduleMillis)
@@ -103,7 +103,7 @@ class LocalReminderImpl
         }
     }
 
-    val stateNotificationHandling = AtomicBoolean(false)
+    private val stateNotificationHandling = AtomicBoolean(false)
 
     override fun userChangeStateOfNotification() {
         threadPoolExecutor.execute {
@@ -114,23 +114,24 @@ class LocalReminderImpl
                     if (sharedPreferenceHelper.isStreakNotificationEnabled) {
                         //plan new alarm
                         val hour = sharedPreferenceHelper.timeNotificationCode
-                        val now = DateTime.now()
+                        val now = DateTimeHelper.nowLocal()
+                        val calendar = Calendar.getInstance(TimeZone.getDefault())
+                        calendar.set(Calendar.HOUR_OF_DAY, hour)
+                        calendar.set(Calendar.MINUTE, 0)
+                        calendar.set(Calendar.SECOND, 0)
+                        calendar.set(Calendar.MILLISECOND, 0)
 
-                        //start of interval
-                        var nextNotification = now
-                                .withHourOfDay(hour)
-                                .withMinuteOfHour(0)
-                                .withSecondOfMinute(0)
-                                .withMillisOfSecond(0)
-                        if (nextNotification.isBefore(now)) {
-                            nextNotification = nextNotification.plusDays(1)
+                        var nextNotificationMillis = DateTimeHelper.calendarToLocalMillis(calendar)
+
+                        if (nextNotificationMillis < now) {
+                            nextNotificationMillis += AppConstants.MILLIS_IN_24HOURS
                         }
 
                         val intent = Intent(context, StreakAlarmService::class.java)
                         val pendingIntent = PendingIntent.getService(context, StreakAlarmService.requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
 
-                        scheduleCompat(nextNotification.millis, AlarmManager.INTERVAL_HOUR, pendingIntent)
+                        scheduleCompat(nextNotificationMillis, AlarmManager.INTERVAL_HOUR, pendingIntent)
                     }
                 } finally {
                     stateNotificationHandling.set(false)
