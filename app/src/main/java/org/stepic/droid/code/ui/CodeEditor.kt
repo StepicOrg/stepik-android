@@ -6,8 +6,11 @@ import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.Typeface
 import android.os.Build
+import android.os.Parcelable
+import android.support.annotation.ColorInt
 import android.support.v7.widget.AppCompatEditText
 import android.text.*
+import android.text.style.BackgroundColorSpan
 import android.text.style.ForegroundColorSpan
 import android.util.AttributeSet
 import android.view.ViewTreeObserver
@@ -22,6 +25,7 @@ import org.stepic.droid.code.highlight.themes.CodeTheme
 import org.stepic.droid.code.highlight.themes.Presets
 import org.stepic.droid.util.DpPixelsHelper
 import org.stepic.droid.util.RxEmpty
+import org.stepic.droid.util.substringOrNull
 import java.util.concurrent.TimeUnit
 
 class CodeEditor
@@ -32,6 +36,8 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
         const val SCROLL_DEBOUNCE_MS = 100L
         const val INPUT_DEBOUNCE_MS = 200L
         const val LINE_NUMBERS_MARGIN_DP = 4f
+        const val DEFAULT_INDENT_SIZE = 2
+        const val MAX_INDENT_SIZE = 8
     }
 
     private val parser = PrettifyParser()
@@ -64,6 +70,10 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
             field = value
             afterTextChanged(editableText) // refresh highlight
         }
+
+
+    var indentSize = DEFAULT_INDENT_SIZE
+        internal set
 
     
     internal var scrollContainer: CodeEditorLayout? = null
@@ -135,14 +145,14 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 
     private val bufferRect = Rect()
 
-    var lines: List<String> = emptyList()
+    private var lines: List<String> = emptyList()
         private set(value) {
             field = value
             linesWithNumbers = layout?.let(this::countNumbersForLines) ?: emptyList()
+            indentSize = CodeAnalyzer.getIndentForLines(value)
         }
 
-    var linesWithNumbers: List<Int> = emptyList()
-        private set
+    private var linesWithNumbers: List<Int> = emptyList()
 
     
     private fun countNumbersForLines(layout: Layout) : List<Int> {
@@ -204,16 +214,69 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     }
 
 
+    private var insertedStart: Int = 0
+    private var insertedCount: Int = 0
+
     override fun afterTextChanged(editable: Editable) {
         lines = text.toString().lines()
+        CodeAnalyzer.onTextInserted(insertedStart, insertedCount, this)
+        highlightBrackets(selectionStart)
         highlightPublisher.onNext(editable)
         requestLayout()
     }
 
     override fun beforeTextChanged(text: CharSequence?, start: Int, lengthBefore: Int, count: Int) {}
 
-    override fun onTextChanged(text: CharSequence, start: Int, lengthBefore: Int, count: Int) {}
+    override fun onTextChanged(text: CharSequence, start: Int, lengthBefore: Int, count: Int) {
+        insertedStart = start
+        insertedCount = count
+    }
 
+
+    override fun onSelectionChanged(start: Int, end: Int) {
+        super.onSelectionChanged(start, end)
+        highlightBrackets(start)
+    }
+
+    private fun highlightBrackets(cursorPosition: Int) {
+        removeSpans(CodeHighlightSpan::class.java)
+
+        val text = editableText.toString()
+
+        var isRightBracketHighlighted = false
+        var isRightBracketClosing     = false
+
+        text.substringOrNull(cursorPosition, cursorPosition + 1)?.let { bracket -> // bracket to right of cursor
+            CodeAnalyzer.getBracketsPair(bracket)?.let {
+                highlightBracket(cursorPosition, bracket)
+                isRightBracketHighlighted = true
+                isRightBracketClosing = it.value == bracket
+            }
+        }
+
+        text.substringOrNull(cursorPosition - 1, cursorPosition)?.let { bracket -> // bracket to left of cursor
+            CodeAnalyzer.getBracketsPair(bracket)?.let {
+                if (!isRightBracketHighlighted || it.value == bracket && !isRightBracketClosing)
+                    highlightBracket(cursorPosition - 1, bracket)
+            }
+        }
+    }
+
+    private fun highlightBracket(firstBracketPos: Int, bracket: String) {
+        val secondBracketPos = CodeAnalyzer.findSecondBracket(bracket, firstBracketPos, editableText.toString())
+        if (secondBracketPos != -1) {
+            editableText.setSpan(CodeHighlightSpan(theme.bracketsHighlight), firstBracketPos, firstBracketPos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            editableText.setSpan(CodeHighlightSpan(theme.bracketsHighlight), secondBracketPos, secondBracketPos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        } else {
+            editableText.setSpan(CodeHighlightSpan(theme.errorHighlight), firstBracketPos, firstBracketPos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
+    }
+
+
+    override fun onSaveInstanceState(): Parcelable {
+        removeSpans(CodeHighlightSpan::class.java) // to fix crashes on low APIs when brackets are highlighted
+        return super.onSaveInstanceState()
+    }
 
     private fun getFirstVisibleLine() = scrollContainer?.let {
         return@let layout.getLineForVertical(Math.max(0, it.scrollY - top))
@@ -228,12 +291,12 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     private fun updateHighlight(results: List<ParseResult>) = layout?.let { layout ->
         val start = layout.getLineStart(getFirstVisibleLine())
         val end = layout.getLineEnd(getLastVisibleLine())
-        removeSpans()
+        removeSpans(CodeSyntaxSpan::class.java)
         setSpans(start, end, results)
     }
 
-    private fun removeSpans() =
-        editableText.getSpans(0, editableText.length, ParcelableSpan::class.java).forEach {
+    private fun removeSpans(spanClass: Class<*>) =
+        editableText.getSpans(0, editableText.length, spanClass).forEach {
             editableText.removeSpan(it)
         }
 
@@ -243,8 +306,11 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
                 .filter { theme.syntax.shouldBePainted(it.styleKeysString) }
                 .forEach { pr ->
                     theme.syntax.colorMap[pr.styleKeysString]?.let {
-                        editableText.setSpan(ForegroundColorSpan(it), pr.offset, Math.min(pr.offset + pr.length, editableText.length), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                        editableText.setSpan(CodeSyntaxSpan(it), pr.offset, Math.min(pr.offset + pr.length, editableText.length), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                     }
                 }
     }
+
+    private class CodeSyntaxSpan   (@ColorInt color: Int) : ForegroundColorSpan(color) // classes to distinct internal spans from non CodeEditor spans
+    private class CodeHighlightSpan(@ColorInt color: Int) : BackgroundColorSpan(color)
 }
