@@ -104,15 +104,13 @@ public class LangMatlab extends Lang {
 
         setShortcutStylePatterns(_shortcutStylePatterns);
         setFallthroughStylePatterns(_fallthroughStylePatterns);
-
-        setExtendedLangs(Arrays.asList(new LangMatlabIdentifier(), new LangMatlabOperator()));
     }
 
     public static List<String> getFileExtensions() {
         return Collections.singletonList("matlab");
     }
 
-    protected static class LangMatlabIdentifier extends Lang {
+    public static class LangMatlabIdentifier extends Lang {
 
         public LangMatlabIdentifier() {
             List<List<Object>> _shortcutStylePatterns = new ArrayList<List<Object>>();
@@ -147,7 +145,7 @@ public class LangMatlab extends Lang {
         }
     }
 
-    protected static class LangMatlabOperator extends Lang {
+    public static class LangMatlabOperator extends Lang {
 
         public LangMatlabOperator() {
             List<List<Object>> _shortcutStylePatterns = new ArrayList<>();
