@@ -39,7 +39,7 @@ object DateTimeHelper {
         if (dateInISOFormat == null) return ""
         val date = getDateOfIso(dateInISOFormat)
 
-        val finalDateFormat = SimpleDateFormat(pattern, Locale.ENGLISH)
+        val finalDateFormat = SimpleDateFormat(pattern, Locale.getDefault())
         finalDateFormat.timeZone = timeZone
 
         return finalDateFormat.format(date)
@@ -99,7 +99,7 @@ object DateTimeHelper {
         } catch (e: IndexOutOfBoundsException) {
             throw ParseException("Invalid length", 0)
         }
-        val dateFormat = SimpleDateFormat(isoPattern, Locale.ENGLISH)
+        val dateFormat = SimpleDateFormat(isoPattern, Locale.getDefault())
         return dateFormat.parse(s)
     }
 
