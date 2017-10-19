@@ -5,11 +5,10 @@ import android.content.ContentUris
 import android.content.ContentValues
 import android.content.Context
 import android.content.pm.PackageManager
+import android.os.Build
 import android.provider.CalendarContract
 import android.support.annotation.WorkerThread
 import android.support.v4.content.ContextCompat
-import org.joda.time.DateTime
-import org.joda.time.DateTimeZone
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.configuration.Config
@@ -65,7 +64,7 @@ class CalendarPresenter
             sectionList.forEach {
                 val calendarSection: CalendarSection? = addedCalendarSectionsMap[it.id]
                 // We can't check calendar permission, when we want to show widget
-                val isDeadlineGreaterThanNow = isDateGreaterThanOther(it.soft_deadline, nowMinus1Hour) || isDateGreaterThanOther(it.hard_deadline, nowMinus1Hour)
+                val isDeadlineGreaterThanNow = isDeadlineAfterDate(it.soft_deadline, nowMinus1Hour) || isDeadlineAfterDate(it.hard_deadline, nowMinus1Hour)
 
                 if (calendarSection == null) {
                     if (isDeadlineGreaterThanNow) {
@@ -97,14 +96,13 @@ class CalendarPresenter
                         }
                     }
 
-                    val lastDeadline : String? = calendarSection.hardDeadline ?: calendarSection.softDeadline //2017-01-06T15:59:06Z format
-                    var calendarDeadlineMillisPlusMonth = Long.MAX_VALUE
+                    val lastDeadline: String? = calendarSection.hardDeadline ?: calendarSection.softDeadline //2017-01-06T15:59:06Z format
+                    var calendarDeadlinePlusMonthUtc = Long.MAX_VALUE
                     if (lastDeadline != null) {
-                        calendarDeadlineMillisPlusMonth = DateTime(lastDeadline).millis + AppConstants.MILLIS_IN_1MONTH
+                        calendarDeadlinePlusMonthUtc = DateTimeHelper.toCalendar(lastDeadline).timeInMillis + AppConstants.MILLIS_IN_1MONTH
                     }
 
-                    if ((isDateGreaterThanOther(it.soft_deadline, calendarDeadlineMillisPlusMonth) || isDateGreaterThanOther(it.hard_deadline, calendarDeadlineMillisPlusMonth))
-                            && isDeadlineGreaterThanNow) {
+                    if ((isDeadlineAfterDate(it.soft_deadline, calendarDeadlinePlusMonthUtc) || isDeadlineAfterDate(it.hard_deadline, calendarDeadlinePlusMonthUtc)) && isDeadlineGreaterThanNow) {
                         if (userPrefs.isNeedToShowCalendarWidget) {
                             analytic.reportEvent(Analytic.Calendar.SHOW_CALENDAR_AS_WIDGET)
                             mainHandler.post {
@@ -124,18 +122,13 @@ class CalendarPresenter
         }
     }
 
-    private fun isDateGreaterThanOther(deadline: String?, otherDate: Long): Boolean {
-        if (deadline != null) {
-            val deadlineDateTime = DateTime(deadline)
-            val deadlineMillis = deadlineDateTime.millis
-            if (deadlineMillis - otherDate > 0) {
-                return true
-            } else {
-                return false
-            }
-        } else {
+    private fun isDeadlineAfterDate(deadline: String?, dateUtcMillis: Long): Boolean {
+        if (deadline == null) {
             return false
         }
+
+        val deadlineMillis = DateTimeHelper.toCalendar(deadline).timeInMillis //utc millis
+        return deadlineMillis - dateUtcMillis > 0
     }
 
     fun clickNotNow() {
@@ -150,7 +143,6 @@ class CalendarPresenter
     /**
      * add soft and hard deadline to calendar, if permission not granted put it to {@code exportableView}
      *
-     * @param sectionList oldList of sections of course
      */
     fun addDeadlinesToCalendar(outSectionList: List<Section>, calendarItemOut: CalendarItem?) {
         val permissionCheck = ContextCompat.checkSelfPermission(context,
@@ -162,7 +154,7 @@ class CalendarPresenter
         val sectionList = ArrayList(outSectionList)
 
         threadPool.execute {
-            val now: Long = DateTime.now(DateTimeZone.getDefault()).millis
+            val now: Long = DateTimeHelper.nowUtc()
             val nowMinus1Hour = now - AppConstants.MILLIS_IN_1HOUR
             val ids = sectionList
                     .map { it.id }
@@ -172,17 +164,19 @@ class CalendarPresenter
             var calendarItem: CalendarItem? = null
             if (calendarItemOut == null) {
                 val primariesCalendars = getListOfPrimariesCalendars()
-                if (primariesCalendars.size == 1) {
-                    calendarItem = primariesCalendars[0]
-                } else if (primariesCalendars.size > 1) {
-                    mainHandler.post {
-                        view?.onNeedToChooseCalendar(primariesCalendars)
+                when (primariesCalendars.size) {
+                    0 -> {
+                        analytic.reportEvent(Analytic.Calendar.CALENDAR_ADDED_FAIL)
+                        mainHandler.post {
+                            view?.onUserDoesntHaveCalendar()
+                        }
                     }
-                    return@execute
-                } else if (primariesCalendars.isEmpty()) {
-                    analytic.reportEvent(Analytic.Calendar.CALENDAR_ADDED_FAIL)
-                    mainHandler.post {
-                        view?.onUserDoesntHaveCalendar()
+                    1 -> calendarItem = primariesCalendars[0]
+                    else -> {
+                        mainHandler.post {
+                            view?.onNeedToChooseCalendar(primariesCalendars)
+                        }
+                        return@execute
                     }
                 }
             } else {
@@ -195,14 +189,14 @@ class CalendarPresenter
                 // We can choose soft_deadline or last_deadline of the Course, if section doesn't have it, but it will pollute calendar.
 
                 // Add upcoming deadlines of sections:
-                if (isDateGreaterThanOther(it.soft_deadline, nowMinus1Hour)) {
+                if (isDeadlineAfterDate(it.soft_deadline, nowMinus1Hour)) {
                     val deadline = it.soft_deadline
                     if (deadline != null) {
                         addDeadlineEvent(it, deadline, DeadlineType.softDeadline, addedCalendarSectionsMap[it.id], calendarItemFinal)
                     }
                 }
 
-                if (isDateGreaterThanOther(it.hard_deadline, nowMinus1Hour)) {
+                if (isDeadlineAfterDate(it.hard_deadline, nowMinus1Hour)) {
                     val deadline = it.hard_deadline
                     if (deadline != null) {
                         addDeadlineEvent(it, deadline, DeadlineType.hardDeadline, addedCalendarSectionsMap[it.id], calendarItemFinal)
@@ -217,6 +211,7 @@ class CalendarPresenter
         }
     }
 
+    @WorkerThread
     private fun getListOfPrimariesCalendars(): ArrayList<CalendarItem> {
         val listOfCalendarItems = ArrayList<CalendarItem>()
         context.contentResolver.query(CalendarContract.Calendars.CONTENT_URI, null, null, null, null).use {
@@ -225,11 +220,13 @@ class CalendarPresenter
                 val indexId = it.getColumnIndex(CalendarContract.Calendars._ID)
                 var indexIsPrimary = -1
                 try {
-                    indexIsPrimary = it.getColumnIndex(CalendarContract.Calendars.IS_PRIMARY)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                        indexIsPrimary = it.getColumnIndex(CalendarContract.Calendars.IS_PRIMARY)
+                    }
                     if (indexIsPrimary < 0) {
                         indexIsPrimary = it.getColumnIndex("COALESCE(isPrimary, ownerAccount = account_name)")//look at http://stackoverflow.com/questions/25870556/check-if-calendar-is-primary
                     }
-                } catch(ex: NoSuchFieldError) {
+                } catch (ex: NoSuchFieldError) {
                     //if no such field we will show all calendars, see below
                 }
                 val indexOwner = it.getColumnIndex(CalendarContract.Calendars.OWNER_ACCOUNT)
@@ -253,8 +250,7 @@ class CalendarPresenter
 
     @WorkerThread
     private fun addDeadlineEvent(section: Section, deadline: String, deadlineType: DeadlineType, calendarSection: CalendarSection?, calendarItem: CalendarItem) {
-
-        val dateEndInMillis = DateTime(deadline).millis
+        val dateEndInMillis = DateTimeHelper.toCalendar(deadline).timeInMillis //UTC
         val dateStartInMillis = dateEndInMillis - AppConstants.MILLIS_IN_1HOUR
 
         val contentValues = ContentValues()
@@ -262,10 +258,10 @@ class CalendarPresenter
         contentValues.put(CalendarContract.Events.DTEND, dateEndInMillis)
 
         val calendarTitle = section.title + " — " + context.getString(deadlineType.deadlineTitle)
-        contentValues.put(CalendarContract.Events.TITLE, calendarTitle);
-        contentValues.put(CalendarContract.Events.DESCRIPTION, StringUtil.getAbsoluteUriForSection(config, section));
+        contentValues.put(CalendarContract.Events.TITLE, calendarTitle)
+        contentValues.put(CalendarContract.Events.DESCRIPTION, StringUtil.getAbsoluteUriForSection(config, section))
         contentValues.put(CalendarContract.Events.CALENDAR_ID, calendarItem.calendarId)
-        contentValues.put(CalendarContract.Events.EVENT_TIMEZONE, DateTimeZone.getDefault().id)
+        contentValues.put(CalendarContract.Events.EVENT_TIMEZONE, TimeZone.getDefault().id)
         contentValues.put(CalendarContract.Events.HAS_ALARM, 1)
 
 
@@ -304,7 +300,7 @@ class CalendarPresenter
     }
 
 
-    fun addToDatabase(section: Section, deadlineType: DeadlineType, eventId: Long) {
+    private fun addToDatabase(section: Section, deadlineType: DeadlineType, eventId: Long) {
         val infoFromDb = database.getCalendarEvent(section.id)
         if (deadlineType == DeadlineType.softDeadline) {
             database.addCalendarEvent(CalendarSection(section.id, infoFromDb?.eventIdHardDeadline, eventId, infoFromDb?.hardDeadline, section.soft_deadline))
