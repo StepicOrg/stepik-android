@@ -106,17 +106,19 @@ class CodeStepFragment : StepAttemptFragment(),
         }
 
         codeQuizResetAction.setOnClickListener {
-            if (checkForResetDialog()) {
-                analytic.reportEvent(Analytic.Code.CODE_RESET_PRESSED,
-                        Bundle().apply { putString(AppConstants.ANALYTIC_CODE_SCREEN_KEY, ANALYTIC_SCREEN_TYPE) }
-                )
+            analytic.reportEvent(Analytic.Code.CODE_RESET_PRESSED,
+                    Bundle().apply { putString(AppConstants.ANALYTIC_CODE_SCREEN_KEY, ANALYTIC_SCREEN_TYPE) }
+            )
+
+            if (submission?.status == Submission.Status.CORRECT) {
+                tryAgain()
+            } else {
                 val dialog = ResetCodeDialogFragment.newInstance()
                 if (!dialog.isAdded) {
                     dialog.show(childFragmentManager, null)
                 }
-            } else {
-                analytic.reportEvent(Analytic.Code.CODE_RESET_PRESSED_USELESS)
             }
+
         }
 
         codeQuizCurrentLanguage.setOnClickListener {
