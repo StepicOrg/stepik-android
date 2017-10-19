@@ -1,11 +1,10 @@
 package org.stepic.droid.core
 
-import org.joda.time.DateTime
-import org.joda.time.DateTimeZone
 import org.stepic.droid.model.Course
 import org.stepic.droid.model.StepikFilter
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.Table
+import org.stepic.droid.util.DateTimeHelper
 import javax.inject.Inject
 
 class FilterApplicatorImpl
@@ -33,17 +32,17 @@ class FilterApplicatorImpl
         fun resolveFilters(course: Course, now: Long, applyFilters: (Course, endDate: Long?, isAfterBeginOrNotStartable: Boolean, isBeginDateInFuture: Boolean, isEndDateInFuture: Boolean, isEnded: Boolean, filterSet: Set<StepikFilter>) -> Boolean, filterSet: Set<StepikFilter>): Boolean {
             var beginDate: Long? = null
             course.beginDate?.let {
-                beginDate = DateTime(it).millis
+                beginDate = DateTimeHelper.toCalendar(it).timeInMillis
             }
 
             var endDate: Long? = null
             course.endDate?.let {
-                endDate = DateTime(it).millis
+                endDate = DateTimeHelper.toCalendar(it).timeInMillis
             }
 
             var isEnded: Boolean = false
             course.lastDeadline?.let {
-                val lastDeadlineMillis = DateTime(it).millis
+                val lastDeadlineMillis = DateTimeHelper.toCalendar(it).timeInMillis
                 if (now > lastDeadlineMillis) {
                     isEnded = true
                 }
@@ -79,8 +78,8 @@ class FilterApplicatorImpl
             return sourceCourses
         }
 
-        val now: Long = DateTime.now(DateTimeZone.getDefault()).millis
-        val filteredList = sourceCourses.filterNotNull().filter { course ->
+        val now: Long = DateTimeHelper.nowUtc()
+        val filteredList = sourceCourses.filter { course ->
             resolveFilters(course, now, ::applyFiltersForSet, filters)
         }
         return filteredList
