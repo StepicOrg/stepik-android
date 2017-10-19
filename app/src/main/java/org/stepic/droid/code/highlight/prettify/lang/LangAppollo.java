@@ -60,7 +60,7 @@ public class LangAppollo extends Lang {
         setFallthroughStylePatterns(_fallthroughStylePatterns);
     }
 
-    public static List<String> getFileExtensions() {
+    public List<String> getFileExtensions() {
         return Arrays.asList("apollo", "agc", "aea");
     }
 }

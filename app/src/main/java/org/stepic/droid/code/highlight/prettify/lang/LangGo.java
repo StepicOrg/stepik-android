@@ -69,7 +69,7 @@ public class LangGo extends Lang {
         setFallthroughStylePatterns(_fallthroughStylePatterns);
     }
 
-    public static List<String> getFileExtensions() {
+    public List<String> getFileExtensions() {
         return Collections.singletonList("go");
     }
 }

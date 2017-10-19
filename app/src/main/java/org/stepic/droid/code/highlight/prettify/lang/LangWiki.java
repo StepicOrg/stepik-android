@@ -60,7 +60,7 @@ public class LangWiki extends Lang {
         setExtendedLangs(Arrays.asList(new Lang[]{new LangWikiMeta()}));
     }
 
-    public static List<String> getFileExtensions() {
+    public List<String> getFileExtensions() {
         return Collections.singletonList("wiki");
     }
 
@@ -76,7 +76,7 @@ public class LangWiki extends Lang {
             setFallthroughStylePatterns(_fallthroughStylePatterns);
         }
 
-        public static List<String> getFileExtensions() {
+        public List<String> getFileExtensions() {
             return Collections.singletonList("wiki.meta");
         }
     }

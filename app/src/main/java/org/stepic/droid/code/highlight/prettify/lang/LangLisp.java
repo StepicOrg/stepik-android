@@ -101,7 +101,7 @@ public class LangLisp extends Lang {
         setFallthroughStylePatterns(_fallthroughStylePatterns);
     }
 
-    public static List<String> getFileExtensions() {
+    public List<String> getFileExtensions() {
         return Arrays.asList("cl", "el", "lisp", "lsp", "scm", "ss", "rkt");
     }
 }

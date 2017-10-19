@@ -60,7 +60,7 @@ public class LangPascal extends Lang {
         setFallthroughStylePatterns(_fallthroughStylePatterns);
     }
 
-    public static List<String> getFileExtensions() {
+    public List<String> getFileExtensions() {
         return Collections.singletonList("pascal");
     }
 }

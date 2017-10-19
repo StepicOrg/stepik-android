@@ -63,7 +63,7 @@ public class LangMl extends Lang {
         setFallthroughStylePatterns(_fallthroughStylePatterns);
     }
 
-    public static List<String> getFileExtensions() {
+    public List<String> getFileExtensions() {
         return Arrays.asList("fs", "ml");
     }
 }

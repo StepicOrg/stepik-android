@@ -73,7 +73,7 @@ public class LangCss extends Lang {
         setExtendedLangs(Arrays.asList(new LangCssKeyword(), new LangCssString()));
     }
 
-    public static List<String> getFileExtensions() {
+    public List<String> getFileExtensions() {
         return Collections.singletonList("css");
     }
 
@@ -89,7 +89,7 @@ public class LangCss extends Lang {
             setFallthroughStylePatterns(_fallthroughStylePatterns);
         }
 
-        public static List<String> getFileExtensions() {
+        public List<String> getFileExtensions() {
             return Collections.singletonList("css-kw");
         }
     }
@@ -106,7 +106,7 @@ public class LangCss extends Lang {
             setFallthroughStylePatterns(_fallthroughStylePatterns);
         }
 
-        public static List<String> getFileExtensions() {
+        public List<String> getFileExtensions() {
             return Collections.singletonList("css-str");
         }
     }

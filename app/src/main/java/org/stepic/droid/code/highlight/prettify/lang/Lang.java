@@ -53,7 +53,7 @@ public abstract class Lang {
      *
      * @return the list of file extensions
      */
-    public static List<String> getFileExtensions() {
+    public List<String> getFileExtensions() {
         return new ArrayList<>();
     }
 

@@ -14,7 +14,6 @@
 package org.stepic.droid.code.highlight.prettify.parser;
 
 import org.stepic.droid.code.highlight.prettify.lang.Lang;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -854,8 +853,7 @@ public class Prettify {
     }
 
     protected List<String> getFileExtensionsFromClass(Class<? extends Lang> clazz) throws Exception {
-        Method getExtensionsMethod = clazz.getMethod("getFileExtensions", (Class<?>[]) null);
-        return (List<String>) getExtensionsMethod.invoke(null, null);
+        return clazz.newInstance().getFileExtensions();
     }
 
     /**
