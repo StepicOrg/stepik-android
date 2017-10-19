@@ -75,9 +75,8 @@ public class LoadService extends IntentService {
         Section, Lesson, Step
     }
 
-
     public LoadService() {
-        super("Loading_video_service");
+        super("LoadService");
     }
 
     @Override
@@ -89,7 +88,6 @@ public class LoadService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-
         LoadTypeKey type = (LoadTypeKey) intent.getSerializableExtra(AppConstants.KEY_LOAD_TYPE);
         try {
             switch (type) {
@@ -394,11 +392,7 @@ public class LoadService extends IntentService {
 
     }
 
-    public boolean isDownloadManagerEnabled() {
-        if (App.Companion.getAppContext() == null) {
-            analytic.reportEvent(Analytic.Downloading.DOWNLOAD_MANAGER_IS_NOT_ENABLED);
-            return false;
-        }
+    private boolean isDownloadManagerEnabled() {
         int state;
         try {
             state = App.Companion.getAppContext().getPackageManager()
