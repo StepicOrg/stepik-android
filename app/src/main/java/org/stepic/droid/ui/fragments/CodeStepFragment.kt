@@ -370,6 +370,11 @@ class CodeStepFragment : StepAttemptFragment(),
             val newCode = data?.getStringExtra(CodePlaygroundActivity.CODE_KEY)
             codeEditor.setText(newCode)
             showCodeQuizEditor()
+            if (data?.getBooleanExtra(CodePlaygroundActivity.WAS_RESET, false)==true){
+                resetBackgroundOfAttempt()
+                hideHint()
+                hideWrongStatus()
+            }
         }
     }
 
