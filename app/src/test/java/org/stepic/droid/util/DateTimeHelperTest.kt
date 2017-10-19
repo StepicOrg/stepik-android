@@ -46,8 +46,39 @@ class DateTimeHelperTest {
         val pattern = "dd.MM.yyyy HH:mm"
         val isoFormat = "2017-01-06T15:59:06Z"
 
-        val result = DateTimeHelper.getPrintableOfIsoDate(isoFormat, pattern, timeZone = TimeZone.getTimeZone("Europe/Moscow")) //is it depend on summer time?
+        val result = DateTimeHelper.getPrintableOfIsoDate(isoFormat, pattern, timeZone = TimeZone.getTimeZone("Europe/Moscow"))
 
         assertEquals("06.01.2017 18:59", result)
+    }
+
+    @Test
+    fun hourMinutesMoscow() {
+        val printable = DateTimeHelper.hourMinutesOfMidnightDiffWithUtc(TimeZone.getTimeZone("Europe/Moscow"), isDaylight = false)
+        assertEquals("03:00", printable)
+    }
+
+    @Test
+    fun hourMinutesUtc() {
+        val printable = DateTimeHelper.hourMinutesOfMidnightDiffWithUtc(TimeZone.getTimeZone("UTC"), isDaylight = false)
+        assertEquals("00:00", printable)
+    }
+
+    @Test
+    fun hourMinutesNegative() {
+        val printable = DateTimeHelper.hourMinutesOfMidnightDiffWithUtc(TimeZone.getTimeZone("America/Chicago"), isDaylight = true) //-5 UTC
+        assertEquals("19:00", printable)
+        //Canada/Newfoundland
+    }
+
+    @Test
+    fun hourMinutesNegativeHalf() {
+        val printable = DateTimeHelper.hourMinutesOfMidnightDiffWithUtc(TimeZone.getTimeZone("Canada/Newfoundland"), isDaylight = true) //-2:30 UTC
+        assertEquals("21:30", printable)
+    }
+
+    @Test
+    fun hourMinutesLondon() {
+        val printable = DateTimeHelper.hourMinutesOfMidnightDiffWithUtc(TimeZone.getTimeZone("Europe/London"), isDaylight = true) //+1:00 UTC
+        assertEquals("01:00", printable)
     }
 }

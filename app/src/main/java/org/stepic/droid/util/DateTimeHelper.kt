@@ -7,10 +7,38 @@ import java.util.*
 object DateTimeHelper {
 
     private val isoPattern = "yyyy-MM-dd'T'HH:mm:ssZ"
+    private val millisecondsInHour = 1000 * 60 * 60
+    private val millisecondsInMinute = 1000 * 60
+    private val hoursInDay = 24
+    private val minutesInHour = 60
+
+    fun hourMinutesOfMidnightDiffWithUtc(timeZone: TimeZone, isDaylight: Boolean): String {
+        val instance = Calendar.getInstance(timeZone)
+        var diff = instance.timeZone.rawOffset
+        if (isDaylight) {
+            val daylightOffset = instance.get(Calendar.DST_OFFSET)
+            diff += daylightOffset
+        }
+
+        val notNegative = diff >= 0
+        if (!notNegative) {
+            diff *= -1
+        }
+        var hours = diff / millisecondsInHour
+        val minutes = (diff % millisecondsInHour) / millisecondsInMinute
+        return if (notNegative) {
+            String.format("%02d:%02d", hours, minutes)
+        } else {
+            if (minutes > 0) {
+                hours += 1
+            }
+            String.format("%02d:%02d", hoursInDay - hours, minutes)
+        }
+    }
 
     fun getPrintableOfIsoDate(dateInISOFormat: String?, pattern: String, timeZone: TimeZone): String {
         if (dateInISOFormat == null) return ""
-        val date = getDateOfIso(isoPattern)
+        val date = getDateOfIso(dateInISOFormat)
 
         val finalDateFormat = SimpleDateFormat(pattern, Locale.ENGLISH)
         finalDateFormat.timeZone = timeZone
@@ -64,8 +92,7 @@ object DateTimeHelper {
             throw ParseException("Invalid length", 0)
         }
         val dateFormat = SimpleDateFormat(isoPattern, Locale.ENGLISH)
-        val date = dateFormat.parse(s)
-        return date
+        return dateFormat.parse(s)
     }
 
 }
