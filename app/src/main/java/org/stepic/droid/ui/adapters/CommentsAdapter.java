@@ -20,8 +20,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.caverock.androidsvg.SVG;
 
-import org.joda.time.DateTimeZone;
-import org.joda.time.format.DateTimeFormat;
 import org.stepic.droid.R;
 import org.stepic.droid.base.App;
 import org.stepic.droid.core.CommentManager;
@@ -39,6 +37,7 @@ import org.stepic.droid.util.svg.GlideSvgRequestFactory;
 
 import java.io.InputStream;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import butterknife.BindString;
 import butterknife.BindView;
@@ -52,16 +51,11 @@ public final class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.
     private final CommentManager commentManager;
     private final Context context;
 
-    private final DateTimeZone zone;
-    private final Locale locale;
-
     private final Drawable placeholderUserIcon;
 
     public CommentsAdapter(CommentManager commentManager, Context context) {
         this.commentManager = commentManager;
         this.context = context;
-        zone = DateTimeZone.getDefault();
-        locale = Locale.getDefault();
         placeholderUserIcon = ContextCompat.getDrawable(App.Companion.getAppContext(), R.drawable.general_placeholder);
     }
 
@@ -115,7 +109,7 @@ public final class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.
             if (needUpdateAndComment.isParentLoading()) {
                 loadMoreParentProgressState();
             } else {
-                if (comment.getReplyCount() == 0 && needUpdate) {
+                if (comment.getReplyCount() != null && comment.getReplyCount() == 0 && needUpdate) {
                     loadMoreSuggestLoadingState();
                 } else {
                     loadMoreHide();
@@ -289,8 +283,6 @@ public final class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.
         final void initialSetUp(CommentAdapterItem needUpdateAndComment) {
             final Comment comment = needUpdateAndComment.getComment();
 
-            final boolean isParent = comment.getParent() == null;
-
             if (comment.is_deleted() != null && comment.is_deleted()) {
                 commentClickableRoot.setBackgroundColor(ColorUtil.INSTANCE.getColorArgb(R.color.wrong_answer_background, context));
 
@@ -309,7 +301,7 @@ public final class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.
             }
 
             if (comment.getTime() != null && !comment.getTime().isEmpty()) {
-                commentTimeTextView.setText(DateTimeHelper.INSTANCE.getPresentOfDate(comment.getTime(), DateTimeFormat.forPattern(AppConstants.COMMENT_DATE_TIME_PATTERN).withZone(zone).withLocale(locale)));
+                commentTimeTextView.setText(DateTimeHelper.INSTANCE.getPrintableOfIsoDate(comment.getTime(), AppConstants.COMMENT_DATE_TIME_PATTERN, TimeZone.getDefault()));
             } else {
                 commentTimeTextView.setText("");
             }
@@ -324,7 +316,7 @@ public final class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.
                 likeRoot.setVisibility(View.VISIBLE);
 
                 if (comment.getEpic_count() != null) {
-                    likeCount.setText(epicCount + "");
+                    likeCount.setText(String.format(Locale.getDefault(), "%d", epicCount));
                 } else {
                     likeCount.setText("");
                 }
@@ -396,8 +388,7 @@ public final class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.
 
         protected final User getUser(Comment comment) {
             if (comment.getUser() != null) {
-                User user = commentManager.getUserById(comment.getUser());
-                return user;
+                return commentManager.getUserById(comment.getUser());
             }
             return null;
         }
