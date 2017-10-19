@@ -131,10 +131,12 @@ public class LoadService extends IntentService {
 
             Uri target = Uri.fromFile(downloadFolderAndFile);
 
-            DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
-            request.setDestinationUri(target);
-            request.setVisibleInDownloadsUi(false);
-            request.setTitle(title + "-" + fileId).setDescription(App.Companion.getAppContext().getString(R.string.description_download));
+            DownloadManager.Request request =
+                    new DownloadManager.Request(Uri.parse(url))
+                            .setDestinationUri(target)
+                            .setVisibleInDownloadsUi(false)
+                            .setTitle(title + "-" + fileId)
+                            .setDescription(getString(R.string.description_download));
 
             if (userPrefs.isNetworkMobileAllowed()) {
                 request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
@@ -149,7 +151,6 @@ public class LoadService extends IntentService {
             }
 
             if (downloadEntity == null && !downloadFolderAndFile.exists()) {
-
                 String videoQuality = null;
                 try {
                     for (VideoUrl urlItem : step.getBlock().getVideo().getUrls()) {
@@ -174,8 +175,8 @@ public class LoadService extends IntentService {
                         RWLocks.DownloadLock.writeLock().lock();
                         final long downloadId = systemDownloadManager.enqueue(request);
 
-                        String local_thumbnail = fileId + AppConstants.THUMBNAIL_POSTFIX_EXTENSION;
-                        String thumbnailsPath = FileUtil.saveFileToDisk(local_thumbnail, step.getBlock().getVideo().getThumbnail(), userPrefs.getUserDownloadFolder());
+                        String localThumbnail = fileId + AppConstants.THUMBNAIL_POSTFIX_EXTENSION;
+                        String thumbnailsPath = FileUtil.saveFileToDisk(localThumbnail, step.getBlock().getVideo().getThumbnail(), userPrefs.getUserDownloadFolder());
                         final DownloadEntity newEntity = new DownloadEntity(downloadId, step.getId(), fileId, thumbnailsPath, videoQuality);
                         databaseFacade.addDownloadEntity(newEntity);
                     } finally {
@@ -185,9 +186,6 @@ public class LoadService extends IntentService {
                     RWLocks.SectionCancelLock.writeLock().unlock();
                 }
             }
-        } catch (SecurityException ex) {
-            storeStateManager.updateStepAfterDeleting(step);
-            analytic.reportError(Analytic.Error.LOAD_SERVICE, ex);
         } catch (Exception ex) {
             storeStateManager.updateStepAfterDeleting(step);
             analytic.reportError(Analytic.Error.LOAD_SERVICE, ex);
@@ -395,7 +393,7 @@ public class LoadService extends IntentService {
     private boolean isDownloadManagerEnabled() {
         int state;
         try {
-            state = App.Companion.getAppContext().getPackageManager()
+            state = getPackageManager()
                     .getApplicationEnabledSetting("com.android.providers.downloads");
         } catch (Exception ex) {
             analytic.reportError(Analytic.Downloading.DOWNLOAD_MANAGER_IS_NOT_ENABLED, ex);
