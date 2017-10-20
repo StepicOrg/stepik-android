@@ -96,8 +96,8 @@ class SectionsPresenter
                             sections.forEach {
                                 val cachedSection: Section? = cachedSections[it.id]
                                 if (cachedSection != null) {
-                                    it.is_cached = cachedSection.is_cached
-                                    it.is_loading = cachedSection.is_loading
+                                    it.isCached = cachedSection.isCached
+                                    it.isLoading = cachedSection.isLoading
                                 }
                                 databaseFacade.addSection(it)
                                 databaseFacade.updateOnlyCachedLoadingSection(it)

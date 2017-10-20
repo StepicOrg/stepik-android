@@ -1,28 +1,15 @@
 package org.stepic.droid.jsonHelpers.deserializers
 
 import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import org.junit.Assert.*
-import org.junit.BeforeClass
 import org.junit.Test
 import org.stepic.droid.model.DatasetWrapper
+import org.stepic.droid.testUtils.TestingGsonProvider
 
 
 class DatasetDeserializerTest {
 
-
-    companion object {
-        private lateinit var gson: Gson
-
-        @BeforeClass
-        @JvmStatic
-        fun beforeAll() {
-            gson = GsonBuilder()
-                    .registerTypeAdapter(DatasetWrapper::class.java, DatasetDeserializer())
-                    .create()
-        }
-    }
-
+    private val gson: Gson = TestingGsonProvider.gson
 
     @Test
     fun datasetNull() {

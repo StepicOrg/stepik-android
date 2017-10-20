@@ -33,6 +33,9 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
     private static final String INT_TYPE = "INTEGER";
     private static final String BOOLEAN_TYPE = "BOOLEAN";
     private static final String WHITESPACE = " ";
+    private static final String FALSE_VALUE = "0";
+    private static final String TRUE_VALUE = "1";
+    private static final String DEFAULT = "DEFAULT";
 
 
     @Inject
@@ -82,6 +85,14 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         upgradeFrom23To24(db);
         upgradeFrom24To25(db);
         upgradeFrom25To26(db);
+        upgradeFrom26To27(db);
+    }
+
+
+    private void upgradeFrom26To27(SQLiteDatabase db) {
+        alterColumn(db, DbStructureSections.SECTIONS, DbStructureSections.Column.IS_REQUIREMENT_SATISFIED, BOOLEAN_TYPE, TRUE_VALUE);
+        alterColumn(db, DbStructureSections.SECTIONS, DbStructureSections.Column.REQUIRED_PERCENT, INT_TYPE);
+        alterColumn(db, DbStructureSections.SECTIONS, DbStructureSections.Column.REQUIRED_SECTION, LONG_TYPE);
     }
 
     private void upgradeFrom25To26(SQLiteDatabase db) {
@@ -328,6 +339,10 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
             upgradeFrom25To26(db);
         }
 
+        if (oldVersion < 27) {
+            upgradeFrom26To27(db);
+        }
+
     }
 
     private void upgradeFrom3To4(SQLiteDatabase db) {
@@ -349,6 +364,13 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
                 + column + " " + type + " ";
         db.execSQL(upgrade);
     }
+
+    private void alterColumn(SQLiteDatabase db, String dbName, String column, String type, String defaultValue) {
+        String upgrade = "ALTER TABLE " + dbName + " ADD COLUMN "
+                + column + WHITESPACE + type + WHITESPACE + DEFAULT + WHITESPACE + defaultValue;
+        db.execSQL(upgrade);
+    }
+
 
     private void createCourseTable(SQLiteDatabase db, String name) {
         String sql = "CREATE TABLE " + name
