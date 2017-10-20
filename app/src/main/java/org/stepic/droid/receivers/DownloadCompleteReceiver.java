@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
+import android.support.annotation.WorkerThread;
 import android.widget.Toast;
 
 import org.stepic.droid.R;
@@ -89,6 +90,7 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
         });
     }
 
+    @WorkerThread
     private void blockForInBackground(final long referenceId) {
         try {
             RWLocks.DownloadLock.writeLock().lock();
@@ -143,11 +145,7 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                     mainHandler.post(myRunnable);
                 }
             } else {
-                if (referenceId < 0) {
-                    analytic.reportError(Analytic.Error.DOWNLOAD_ID_NEGATIVE, new IllegalArgumentException("ReferenceId was " + referenceId));
-                } else {
-                    downloadManager.remove(referenceId);//remove notification (is it really work and need?)
-                }
+                downloadManager.remove(referenceId);//remove notification (is it really work and need?)
             }
         } finally {
             RWLocks.DownloadLock.writeLock().unlock();
