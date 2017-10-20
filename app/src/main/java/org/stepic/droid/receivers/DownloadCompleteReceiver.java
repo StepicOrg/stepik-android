@@ -50,7 +50,7 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
     CancelSniffer cancelSniffer;
 
     @Inject
-    SingleThreadExecutor threadSingleThreadExecutor;
+    SingleThreadExecutor singleThreadExecutor;
 
     @Inject
     DownloadManager downloadManager;
@@ -72,20 +72,21 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         final long referenceId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
-        final PendingResult result = goAsync();
-        if (referenceId >= 0) {
-            threadSingleThreadExecutor.execute(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        blockForInBackground(referenceId);
-                    } finally {
-                        result.finish();
-                    }
-
-                }
-            });
+        if (referenceId < 0) {
+            return;
         }
+
+        final PendingResult result = goAsync();
+        singleThreadExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    blockForInBackground(referenceId);
+                } finally {
+                    result.finish();
+                }
+            }
+        });
     }
 
     private void blockForInBackground(final long referenceId) {
