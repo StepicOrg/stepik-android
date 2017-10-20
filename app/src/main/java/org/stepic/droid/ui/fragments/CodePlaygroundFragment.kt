@@ -160,6 +160,7 @@ class CodePlaygroundFragment : FragmentBase(),
     }
 
     override fun onLanguageChosen(programmingLanguage: String) {
+        wasReset = true
         currentLanguage = programmingLanguage
         codeToolbarAdapter?.setLanguage(programmingLanguage)
         codeEditor.setText(arguments.getParcelable<CodeOptions>(CODE_OPTIONS_KEY).codeTemplates[programmingLanguage])
