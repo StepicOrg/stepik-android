@@ -40,8 +40,8 @@ android {
         applicationId "org.stepic.droid"
         minSdkVersion rootProject.androidMinSdkVersion
         targetSdkVersion rootProject.androidTargetSdkVersion
-        versionCode 178
-        versionName "1.44.5"
+        versionCode 185
+        versionName "1.45.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
@@ -108,7 +108,7 @@ android {
                     'proguard-rules.pro', 'proguard-rules-dev.pro'
             versionNameSuffix "DEV"
 
-            testCoverageEnabled = true
+            testCoverageEnabled = false
         }
 
         //the apk of this type is signed by old prod keys
@@ -213,11 +213,11 @@ dependencies {
     testCompile 'junit:junit:4.12'
     // Optional -- Mockito framework
     testCompile 'org.mockito:mockito-core:2.7.21'
+    testCompile 'org.robolectric:robolectric:3.1.2'
 
     androidTestCompile 'org.hamcrest:hamcrest-library:1.3'
 
     androidTestCompile 'com.android.support:support-annotations:26.1.0'
-
     androidTestCompile('com.android.support.test:runner:0.5') {
         exclude group: 'com.android.support'
     }
@@ -234,6 +234,8 @@ dependencies {
         exclude group: 'com.android.support'
     }
 
+    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    compile 'io.reactivex.rxjava2:rxjava:2.1.5'
 }
 
 repositories {

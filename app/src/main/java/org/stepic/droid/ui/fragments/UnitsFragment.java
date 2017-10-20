@@ -43,6 +43,7 @@ import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.storage.StoreStateManager;
 import org.stepic.droid.ui.adapters.UnitAdapter;
+import org.stepic.droid.ui.custom.StepikSwipeRefreshLayout;
 import org.stepic.droid.ui.dialogs.DeleteItemDialogFragment;
 import org.stepic.droid.ui.util.ToolbarHelperKt;
 import org.stepic.droid.util.AppConstants;
@@ -77,7 +78,7 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
 
 
     @BindView(R.id.swipe_refresh_layout_units)
-    SwipeRefreshLayout swipeRefreshLayout;
+    StepikSwipeRefreshLayout swipeRefreshLayout;
 
     @BindView(R.id.units_recycler_view)
     RecyclerView unitsRecyclerView;
@@ -167,10 +168,6 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
         super.onViewCreated(view, savedInstanceState);
         hideSoftKeypad();
         swipeRefreshLayout.setOnRefreshListener(this);
-        swipeRefreshLayout.setColorSchemeResources(
-                R.color.stepic_brand_primary,
-                R.color.stepic_orange_carrot,
-                R.color.stepic_blue_ribbon);
 
         ToolbarHelperKt.initCenteredToolbar(this, R.string.units_lessons_title, true);
 

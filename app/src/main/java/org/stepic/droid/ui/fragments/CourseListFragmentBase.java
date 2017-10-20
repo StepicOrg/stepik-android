@@ -35,6 +35,7 @@ import org.stepic.droid.model.Section;
 import org.stepic.droid.storage.operations.Table;
 import org.stepic.droid.ui.activities.contracts.RootScreen;
 import org.stepic.droid.ui.adapters.CoursesAdapter;
+import org.stepic.droid.ui.custom.StepikSwipeRefreshLayout;
 import org.stepic.droid.ui.custom.TouchDispatchableFrameLayout;
 import org.stepic.droid.ui.custom.WrapContentLinearLayoutManager;
 import org.stepic.droid.ui.decorators.VerticalSpacesDecoration;
@@ -61,7 +62,7 @@ public abstract class CourseListFragmentBase extends FragmentBase
     private static final String continueLoadingTag = "continueLoadingTag";
 
     @BindView(R.id.swipe_refresh_layout_mycourses)
-    protected SwipeRefreshLayout swipeRefreshLayout;
+    protected StepikSwipeRefreshLayout swipeRefreshLayout;
 
     @BindView(R.id.list_of_courses)
     protected RecyclerView listOfCoursesView;
@@ -142,10 +143,6 @@ public abstract class CourseListFragmentBase extends FragmentBase
         progressBarOnEmptyScreen.setVisibility(View.GONE);
 
         swipeRefreshLayout.setOnRefreshListener(this);
-        swipeRefreshLayout.setColorSchemeResources(
-                R.color.stepic_brand_primary,
-                R.color.stepic_orange_carrot,
-                R.color.stepic_blue_ribbon);
 
         if (courses == null) courses = new ArrayList<>();
         boolean showMore = getCourseType() == Table.enrolled;

@@ -2,6 +2,8 @@ package org.stepic.droid.di.storage
 
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -9,6 +11,7 @@ import org.stepic.droid.di.qualifiers.EnrolledCoursesDaoQualifier
 import org.stepic.droid.di.qualifiers.FeaturedCoursesDaoQualifier
 import org.stepic.droid.model.*
 import org.stepic.droid.model.Unit
+import org.stepic.droid.model.code.CodeSubmission
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.storage.DatabaseHelper
 import org.stepic.droid.storage.dao.*
@@ -21,6 +24,11 @@ abstract class StorageModule {
     @StorageSingleton
     @Binds
     internal abstract fun provideSqlOpenHelper(databaseHelper: DatabaseHelper): SQLiteOpenHelper
+
+
+    @StorageSingleton
+    @Binds
+    internal abstract fun provideCodeSubmissionDao(codeSubmissionDaoImpl: CodeSubmissionDaoImpl): IDao<CodeSubmission>
 
     @StorageSingleton
     @Binds
@@ -93,24 +101,29 @@ abstract class StorageModule {
         @StorageSingleton
         @Provides
         @JvmStatic
-        internal fun provideWritableDatabase(helper: SQLiteOpenHelper): SQLiteDatabase {
-            return helper.writableDatabase
-        }
+        internal fun provideStorageGson(): Gson =
+                GsonBuilder()
+                        .enableComplexMapKeySerialization()
+                        .create()
+
+        @StorageSingleton
+        @Provides
+        @JvmStatic
+        internal fun provideWritableDatabase(helper: SQLiteOpenHelper): SQLiteDatabase =
+                helper.writableDatabase
 
         @StorageSingleton
         @Provides
         @JvmStatic
         @EnrolledCoursesDaoQualifier
-        internal fun provideEnrolledCoursesDao(writeableDatabase: SQLiteDatabase, cachedVideo: IDao<CachedVideo>, externalVideos: IDao<DbVideoUrl>): IDao<Course> {
-            return CourseDaoImpl(writeableDatabase, cachedVideo, externalVideos, DbStructureEnrolledAndFeaturedCourses.ENROLLED_COURSES)
-        }
+        internal fun provideEnrolledCoursesDao(writeableDatabase: SQLiteDatabase, cachedVideo: IDao<CachedVideo>, externalVideos: IDao<DbVideoUrl>): IDao<Course> =
+                CourseDaoImpl(writeableDatabase, cachedVideo, externalVideos, DbStructureEnrolledAndFeaturedCourses.ENROLLED_COURSES)
 
         @StorageSingleton
         @Provides
         @JvmStatic
         @FeaturedCoursesDaoQualifier
-        internal fun provideFeaturedCoursesDao(writeableDatabase: SQLiteDatabase, cachedVideo: IDao<CachedVideo>, externalVideos: IDao<DbVideoUrl>): IDao<Course> {
-            return CourseDaoImpl(writeableDatabase, cachedVideo, externalVideos, DbStructureEnrolledAndFeaturedCourses.FEATURED_COURSES)
-        }
+        internal fun provideFeaturedCoursesDao(writeableDatabase: SQLiteDatabase, cachedVideo: IDao<CachedVideo>, externalVideos: IDao<DbVideoUrl>): IDao<Course> =
+                CourseDaoImpl(writeableDatabase, cachedVideo, externalVideos, DbStructureEnrolledAndFeaturedCourses.FEATURED_COURSES)
     }
 }

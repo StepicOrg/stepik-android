@@ -38,6 +38,7 @@
     <color name="feedback_good_color">#66CC66
     </color><!-- it is just green correct color, not the stepic primary -->
 
+
     <color name="transparent_black_30">#4D000000</color>
     <color name="shadow_on_video_content">#25000000</color>
 
@@ -66,10 +67,12 @@
     <color name="new_primary_color">#F6F6F6</color>
     <color name="new_accent_color">#535366</color>
     <color name="new_accent_color_alpha_40">#66535366</color>
+    <color name="new_red_color">#C82850</color>
 
     <color name="text_color">@color/new_accent_color</color>
+    <color name="text_color_highlight">#babac2</color>
     <color name="new_border_color">@color/new_primary_color</color>>
-    <color name="new_logout_color">#C82850</color>>
+    <color name="new_logout_color">@color/new_red_color</color>>
     <color name="arrow_color">@color/new_accent_color</color>>
     <color name="bottom_menu_color">@color/new_accent_color</color>
     <color name="new_background_white">#FFFFFF</color>
@@ -106,7 +109,7 @@
     <color name="login_button_color_pressed">#6666CC66</color>
     <color name="login_button_color_disabled">#0C66CC66</color>
 
-    <color name="login_error_color">#c82850</color>
+    <color name="login_error_color">@color/new_red_color</color>
 
     <color name="remind_password_button_text_color">#4990e2</color>
 
@@ -117,5 +120,8 @@
     <color name="loading_view_base_color">#F6F7F9</color>
     <color name="loading_view_deep_color">#DBDBDB</color>
 
-
+    <color name="code_toolbar_background">#EEEEEE</color>
+    <color name="default_code_error_highlight_color">#AAFF0000</color>
+    <color name="default_code_brackets_highlight_color">#AAFFD77A</color>
+    <color name="stepik_swipe_refresh">@color/new_accent_color</color>
 </resources>

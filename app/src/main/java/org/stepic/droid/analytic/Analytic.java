@@ -7,6 +7,17 @@ import org.jetbrains.annotations.Nullable;
 
 public interface Analytic {
 
+    interface Code {
+        String TOOLBAR_SELECTED = "code_toolbar_selected";
+        String TOOLBAR_SELECTED_LANGUAGE = "language";
+        String TOOLBAR_SELECTED_SYMBOL = "symbol";
+        String TOOLBAR_SELECTED_LANGUAGE_SYMBOL = "language_symbol";
+
+        String CODE_FULLSCREEN_PRESSED = "code_fullscreen_pressed";
+        String CODE_RESET_PRESSED = "code_reset_pressed";
+        String CODE_RESET_PRESSED_USELESS = "code_reset_pressed_useless";
+    }
+
     interface Search {
         String SEARCH_NULL = "search_null";
         String SEARCH_QUERY = "search_with_query";
@@ -256,8 +267,8 @@ public interface Analytic {
         String CANT_PARSE_QUALITY = "cant_parse_quality";
         String JOIN_FAILED = "error_join_failed"; //#Apps-580
         String UNIT_CACHED_LESSON_NO = "error_unit_cached_lesson_not";
-        @Nullable
         String FEATURED_EMPTY = "error_featured_empty";
+        String TEMPLATE_WAS_NULL = "error_code_template_null";
     }
 
     interface Web {
@@ -326,7 +337,7 @@ public interface Analytic {
 
     interface Steps {
         String SUBMISSION_CREATED = "submission_created";
-        String SUBMISSION_CREATED_TYPE = "type";
+        String STEP_TYPE_KEY = "type";
         String CORRECT_SUBMISSION_FILL = "submission_correct_fill"; // it can be existing submission, use in chain.
         String WRONG_SUBMISSION_FILL = "submission_wrong_fill";
         String SHARE_OPEN_IN_BROWSER = "step_share_open_in_browser";
@@ -335,7 +346,11 @@ public interface Analytic {
         String SHOW_KEEP_ON_SCREEN = "steps_show_keep_on_screen";
         String SHOW_KEEP_OFF_SCREEN = "steps_show_keep_off_screen";
         String STEP_OPENED = "step_opened";
+
+        //(message = "remove it, when click_send_submission will collect enough data")
+        @Deprecated
         String CLICK_SEND_SUBMISSION_STEP_TYPE = "step_click_send";
+        String CODE_LANGUAGE_KEY = "language";
     }
 
     interface Calendar {
@@ -369,7 +384,6 @@ public interface Analytic {
     interface Filters {
         String FILTERS_CANCELED = "filters_canceled";
         String FILTERS_NEED_UPDATE = "filters_need_update";
-        String FILTER_APPLIED_IN_INTERFACE_WITH_PARAMS = "filters_params";
     }
 
     interface Exam {

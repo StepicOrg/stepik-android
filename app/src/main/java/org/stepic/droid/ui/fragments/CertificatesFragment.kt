@@ -73,10 +73,6 @@ class CertificatesFragment : FragmentBase(),
         authAction.setOnClickListener { screenManager.showLaunchScreen(activity) }
 
         certificateSwipeRefresh.setOnRefreshListener(this)
-        certificateSwipeRefresh.setColorSchemeResources(
-                R.color.stepic_brand_primary,
-                R.color.stepic_orange_carrot,
-                R.color.stepic_blue_ribbon)
 
         certificatePresenter.attachView(this)
 

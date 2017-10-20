@@ -16,6 +16,7 @@ import org.stepic.droid.base.StepBaseFragment;
 import org.stepic.droid.di.lesson.LessonScope;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.ui.fragments.ChoiceStepFragment;
+import org.stepic.droid.ui.fragments.CodeStepFragment;
 import org.stepic.droid.ui.fragments.FillBlanksFragment;
 import org.stepic.droid.ui.fragments.FreeResponseStepFragment;
 import org.stepic.droid.ui.fragments.MatchingStepFragment;
@@ -199,6 +200,8 @@ public class StepTypeResolverImpl implements StepTypeResolver {
                 return new FillBlanksFragment();
             case AppConstants.TYPE_TABLE:
                 return TableChoiceStepFragment.newInstance();
+            case AppConstants.TYPE_CODE:
+                return CodeStepFragment.Companion.newInstance();
             default:
                 return new NotSupportedYetStepFragment();
         }

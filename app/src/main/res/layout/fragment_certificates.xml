@@ -24,7 +24,7 @@
         <include layout="@layout/need_auth_placeholder"/>
 
         <!--Remove this old cover, when redesign will be finished-->
-        <android.support.v4.widget.SwipeRefreshLayout
+        <org.stepic.droid.ui.custom.StepikSwipeRefreshLayout
             android:id="@+id/certificateSwipeRefresh"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -38,6 +38,6 @@
                 android:divider="@color/transparent"
                 android:scrollbarStyle="outsideOverlay"/>
 
-        </android.support.v4.widget.SwipeRefreshLayout>
+        </org.stepic.droid.ui.custom.StepikSwipeRefreshLayout>
     </FrameLayout>
 </LinearLayout>

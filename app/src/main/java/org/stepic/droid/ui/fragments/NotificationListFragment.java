@@ -20,6 +20,7 @@ import org.stepic.droid.core.presenters.contracts.NotificationListView;
 import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.model.NotificationCategory;
 import org.stepic.droid.ui.adapters.NotificationAdapter;
+import org.stepic.droid.ui.custom.StepikSwipeRefreshLayout;
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment;
 import org.stepic.droid.util.ColorUtil;
 import org.stepic.droid.util.ProgressHelper;
@@ -64,7 +65,7 @@ public class NotificationListFragment extends FragmentBase implements Notificati
     View emptyNotifications;
 
     @BindView(R.id.notification_swipe_refresh)
-    SwipeRefreshLayout notificationSwipeRefresh;
+    StepikSwipeRefreshLayout notificationSwipeRefresh;
 
     private RecyclerView.OnScrollListener recyclerViewScrollListener;
     private LinearLayoutManager layoutManager;
@@ -138,11 +139,6 @@ public class NotificationListFragment extends FragmentBase implements Notificati
 
     private void initSwipeRefreshLayout() {
         notificationSwipeRefresh.setOnRefreshListener(this);
-        notificationSwipeRefresh.setColorSchemeResources(
-                R.color.stepic_brand_primary,
-                R.color.stepic_orange_carrot,
-                R.color.stepic_blue_ribbon);
-
     }
 
     @Override

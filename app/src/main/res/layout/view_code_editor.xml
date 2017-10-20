@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.stepic.droid.code.ui.CodeEditor
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/codeEdit"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:imeOptions="flagNoFullscreen"
+    android:inputType="textWebEmailAddress|textMultiLine|textNoSuggestions"
+    android:textSize="@dimen/code_text_size_default"
+    android:typeface="monospace"/>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/codeToolbarSymbol"
+    android:layout_width="wrap_content"
+    android:layout_height="@dimen/code_toolbar_height"
+    android:background="?attr/selectableItemBackgroundBorderless"
+    android:clickable="true"
+    android:gravity="center"
+    android:minWidth="@dimen/code_toolbar_height"
+    android:padding="@dimen/half_padding"
+    android:textSize="16sp"
+    tools:text="TAB"/>
