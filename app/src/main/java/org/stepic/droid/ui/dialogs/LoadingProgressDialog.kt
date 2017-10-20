@@ -19,8 +19,8 @@ class LoadingProgressDialog
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         setContentView(R.layout.dialog_progress)
-        title.setText(titleRes)
-        message.setText(R.string.loading_message)
+        progressDialogTitle.setText(titleRes)
+        progressDialogMessage.setText(R.string.loading_message)
         setCancelable(false)
     }
 }
