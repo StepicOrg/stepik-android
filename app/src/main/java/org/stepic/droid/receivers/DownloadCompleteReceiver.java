@@ -68,7 +68,6 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
     MainHandler mainHandler;
 
     public DownloadCompleteReceiver() {
-        Timber.d("create DownloadCompleteReceiver");
         App.Companion
                 .componentManager()
                 .downloadsComponent()
@@ -163,26 +162,29 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
         final long stepId = downloadEntity.getStepId();
 
         File userDownloadFolder = userPreferences.getUserDownloadFolder();
-        File downloadFolderAndFile = new File(userDownloadFolder, videoId + "");
+        String loadedVideoFileName = videoId + AppConstants.VIDEO_EXTENSION;
+        File downloadFolderAndFile = new File(userDownloadFolder, loadedVideoFileName);
         String path = Uri.fromFile(downloadFolderAndFile).getPath();
         String thumbnail = downloadEntity.getThumbnail();
         if (userPreferences.isSdChosen()) {
             File sdFile = userPreferences.getSdCardDownloadFolder();
             if (sdFile != null) {
                 try {
-                    StorageUtil.moveFile(userDownloadFolder.getPath(), videoId + "", sdFile.getPath());
-                    StorageUtil.moveFile(userDownloadFolder.getPath(), videoId + AppConstants.THUMBNAIL_POSTFIX_EXTENSION, sdFile.getPath());
-                    downloadFolderAndFile = new File(sdFile, videoId + "");
-                    final File thumbnailFile = new File(sdFile, videoId + AppConstants.THUMBNAIL_POSTFIX_EXTENSION);
+                    String loadedImageFileName = videoId + AppConstants.THUMBNAIL_POSTFIX_EXTENSION;
+
+                    StorageUtil.moveFile(userDownloadFolder.getPath(), loadedVideoFileName, sdFile.getPath());
+                    StorageUtil.moveFile(userDownloadFolder.getPath(), loadedImageFileName, sdFile.getPath());
+                    downloadFolderAndFile = new File(sdFile, loadedVideoFileName);
+                    final File thumbnailFile = new File(sdFile, loadedImageFileName);
                     path = Uri.fromFile(downloadFolderAndFile).getPath();
                     thumbnail = Uri.fromFile(thumbnailFile).getPath();
-                } catch (Exception er) {
-                    analytic.reportError(Analytic.Error.FAIL_TO_MOVE, er);
+                } catch (Exception exception) {
+                    analytic.reportError(Analytic.Error.FAIL_TO_MOVE, exception);
                 }
             }
-
         }
 
+        Timber.d("downloading was success %s", path);
         final CachedVideo cachedVideo = new CachedVideo(stepId, videoId, path, thumbnail);
         cachedVideo.setQuality(downloadEntity.getQuality());
         return cachedVideo;

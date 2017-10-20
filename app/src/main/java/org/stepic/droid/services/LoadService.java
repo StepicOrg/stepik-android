@@ -47,6 +47,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import retrofit2.Response;
+import timber.log.Timber;
 
 import static org.stepic.droid.storage.DownloadManagerExtensionKt.DOWNLOAD_STATUS_UNDEFINED;
 import static org.stepic.droid.storage.DownloadManagerExtensionKt.getDownloadStatus;
@@ -119,7 +120,7 @@ public class LoadService extends IntentService {
         }
 
         try {
-            File downloadFolderAndFile = new File(userPrefs.getUserDownloadFolder(), fileId + "");
+            File downloadFolderAndFile = new File(userPrefs.getUserDownloadFolder(), fileId + AppConstants.VIDEO_EXTENSION);
             if (downloadFolderAndFile.exists()) {
                 //we do not need download the file, because we already have it.
                 // FIXME: 20.10.15 this simple check doesn't work if file is loading and at this moment adding to Download manager Queue,
@@ -174,6 +175,7 @@ public class LoadService extends IntentService {
                         // todo improve
                         RWLocks.DownloadLock.writeLock().lock();
                         final long downloadId = systemDownloadManager.enqueue(request);
+                        Timber.d("downloading %s", downloadFolderAndFile.getAbsolutePath());
 
                         String localThumbnail = fileId + AppConstants.THUMBNAIL_POSTFIX_EXTENSION;
                         String thumbnailsPath = FileUtil.saveFileToDisk(localThumbnail, step.getBlock().getVideo().getThumbnail(), userPrefs.getUserDownloadFolder());
