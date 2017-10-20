@@ -19,20 +19,35 @@ class Section() : Serializable, Parcelable {
     var progress: String? = null
     var title: String? = null
     var slug: String? = null
+    @SerializedName("begin_date")
     var begin_date: String? = null
+    @SerializedName("end_date")
     var end_date: String? = null
+    @SerializedName("soft_deadline")
     var soft_deadline: String? = null
+    @SerializedName("hard_deadline")
     var hard_deadline: String? = null
+    @SerializedName("grading_policy")
     var grading_policy: String? = null
+    @SerializedName("begin_date_source")
     var begin_date_source: String? = null
+    @SerializedName("end_date_source")
     var end_date_source: String? = null
+    @SerializedName("grading_policy_source")
     var soft_deadline_source: String? = null
+    @SerializedName("grading_policy_source")
     var hard_deadline_source: String? = null
+    @SerializedName("grading_policy_source")
     var grading_policy_source: String? = null
+    @SerializedName("is_active")
     var is_active: Boolean = false
+    @SerializedName("create_date")
     var create_date: String? = null
+    @SerializedName("update_date")
     var update_date: String? = null
+    @SerializedName("is_cached")
     var is_cached: Boolean = false
+    @SerializedName("is_loading")
     var is_loading: Boolean = false
     var actions: Actions? = null
     @SerializedName("is_exam")
@@ -40,6 +55,9 @@ class Section() : Serializable, Parcelable {
 
     @SerializedName("discounting_policy")
     var discountingPolicy: DiscountingPolicyType? = null
+
+    @SerializedName("is_requirement_satisfied")
+    var isRequirementSatisfied: Boolean = true
 
 
     private var formatted_begin_date: String? = null
@@ -130,22 +148,18 @@ class Section() : Serializable, Parcelable {
 
         @JvmField
         val CREATOR: Parcelable.Creator<Section> = object : Parcelable.Creator<Section> {
-            override fun createFromParcel(source: Parcel): Section {
-                return Section(source)
-            }
+            override fun createFromParcel(source: Parcel): Section = Section(source)
 
-            override fun newArray(size: Int): Array<Section?> {
-                return arrayOfNulls(size)
-            }
+            override fun newArray(size: Int): Array<Section?> = arrayOfNulls(size)
         }
 
         private fun getDiscountingPolicyTypeByParcel(input: Parcel): DiscountingPolicyType? {
             val temp = input.readInt()
             val localValues = DiscountingPolicyType.values()
-            if (temp >= 0 && temp < localValues.size) {
-                return localValues[temp]
+            return if (temp >= 0 && temp < localValues.size) {
+                localValues[temp]
             } else {
-                return null
+                null
             }
         }
 
