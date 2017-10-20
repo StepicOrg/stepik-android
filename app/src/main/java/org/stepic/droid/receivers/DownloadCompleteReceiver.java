@@ -5,13 +5,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Handler;
 import android.support.annotation.WorkerThread;
 import android.widget.Toast;
 
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
+import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.concurrency.SingleThreadExecutor;
 import org.stepic.droid.core.downloads.contract.DownloadsPoster;
 import org.stepic.droid.model.CachedVideo;
@@ -30,6 +30,8 @@ import java.io.File;
 
 import javax.inject.Inject;
 
+import kotlin.Unit;
+import kotlin.jvm.functions.Function0;
 import timber.log.Timber;
 
 import static org.stepic.droid.storage.DownloadManagerExtensionKt.getDownloadStatus;
@@ -61,6 +63,9 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
 
     @Inject
     DownloadsPoster downloadsPoster;
+
+    @Inject
+    MainHandler mainHandler;
 
     public DownloadCompleteReceiver() {
         Timber.d("create DownloadCompleteReceiver");
@@ -97,16 +102,16 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
 
             final DownloadEntity downloadEntity = databaseFacade.getDownloadEntityIfExist(referenceId);
             if (downloadEntity != null) {
-                final long step_id = downloadEntity.getStepId();
+                final long stepId = downloadEntity.getStepId();
                 databaseFacade.deleteDownloadEntityByDownloadId(referenceId);
 
 
-                if (cancelSniffer.isStepIdCanceled(step_id)) {
+                if (cancelSniffer.isStepIdCanceled(stepId)) {
                     downloadManager.remove(referenceId);//remove notification (is it really work and need?)
-                    cancelSniffer.removeStepIdCancel(step_id);
+                    cancelSniffer.removeStepIdCancel(stepId);
                 } else {
                     //is not canceled
-                    final Step step = databaseFacade.getStepById(step_id);
+                    final Step step = databaseFacade.getStepById(stepId);
                     if (step == null) return;
                     final long status = getDownloadStatus(systemDownloadManager, referenceId);
 
@@ -125,24 +130,25 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                     storeStateManager.updateUnitLessonState(step.getLesson());
 
                     final Lesson lesson = databaseFacade.getLessonById(step.getLesson());
-                    Handler mainHandler = new Handler(App.Companion.getAppContext().getMainLooper());
-                    //Say to ui that ui is cached now
-                    Runnable myRunnable = new Runnable() {
+                    if (lesson == null) {
+                        return;
+                    }
+
+                    //Say to ui that step is cached now
+                    mainHandler.post(new Function0<Unit>() {
                         @Override
-                        public void run() {
-                            if (lesson != null) {
-                                if (cachedVideo != null) {
-                                    downloadsPoster.downloadComplete(step_id, lesson, cachedVideo);
-                                } else {
-                                    final Context context = App.Companion.getAppContext();
-                                    Toast.makeText(context, context.getString(R.string.video_download_fail, lesson.getTitle()), Toast.LENGTH_SHORT).show();
-                                    analytic.reportEvent(Analytic.Error.DOWNLOAD_FAILED);
-                                    downloadsPoster.downloadFailed(referenceId);
-                                }
+                        public Unit invoke() {
+                            if (cachedVideo != null) {
+                                downloadsPoster.downloadComplete(stepId, lesson, cachedVideo);
+                            } else {
+                                final Context context = App.Companion.getAppContext();
+                                Toast.makeText(context, context.getString(R.string.video_download_fail, lesson.getTitle()), Toast.LENGTH_SHORT).show();
+                                analytic.reportEvent(Analytic.Error.DOWNLOAD_FAILED);
+                                downloadsPoster.downloadFailed(referenceId);
                             }
+                            return Unit.INSTANCE;
                         }
-                    };
-                    mainHandler.post(myRunnable);
+                    });
                 }
             } else {
                 downloadManager.remove(referenceId);//remove notification (is it really work and need?)
@@ -153,21 +159,21 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
     }
 
     private CachedVideo prepareCachedVideo(DownloadEntity downloadEntity) {
-        final long video_id = downloadEntity.getVideoId();
-        final long step_id = downloadEntity.getStepId();
+        final long videoId = downloadEntity.getVideoId();
+        final long stepId = downloadEntity.getStepId();
 
         File userDownloadFolder = userPreferences.getUserDownloadFolder();
-        File downloadFolderAndFile = new File(userDownloadFolder, video_id + "");
+        File downloadFolderAndFile = new File(userDownloadFolder, videoId + "");
         String path = Uri.fromFile(downloadFolderAndFile).getPath();
         String thumbnail = downloadEntity.getThumbnail();
         if (userPreferences.isSdChosen()) {
             File sdFile = userPreferences.getSdCardDownloadFolder();
             if (sdFile != null) {
                 try {
-                    StorageUtil.moveFile(userDownloadFolder.getPath(), video_id + "", sdFile.getPath());
-                    StorageUtil.moveFile(userDownloadFolder.getPath(), video_id + AppConstants.THUMBNAIL_POSTFIX_EXTENSION, sdFile.getPath());
-                    downloadFolderAndFile = new File(sdFile, video_id + "");
-                    final File thumbnailFile = new File(sdFile, video_id + AppConstants.THUMBNAIL_POSTFIX_EXTENSION);
+                    StorageUtil.moveFile(userDownloadFolder.getPath(), videoId + "", sdFile.getPath());
+                    StorageUtil.moveFile(userDownloadFolder.getPath(), videoId + AppConstants.THUMBNAIL_POSTFIX_EXTENSION, sdFile.getPath());
+                    downloadFolderAndFile = new File(sdFile, videoId + "");
+                    final File thumbnailFile = new File(sdFile, videoId + AppConstants.THUMBNAIL_POSTFIX_EXTENSION);
                     path = Uri.fromFile(downloadFolderAndFile).getPath();
                     thumbnail = Uri.fromFile(thumbnailFile).getPath();
                 } catch (Exception er) {
@@ -177,7 +183,7 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
 
         }
 
-        final CachedVideo cachedVideo = new CachedVideo(step_id, video_id, path, thumbnail);
+        final CachedVideo cachedVideo = new CachedVideo(stepId, videoId, path, thumbnail);
         cachedVideo.setQuality(downloadEntity.getQuality());
         return cachedVideo;
     }
