@@ -79,8 +79,15 @@ class CodeStepFragment : StepAttemptFragment(),
         codeToolbarAdapter?.onSymbolClickListener = this
         codeToolbarView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
+        initLanguageChooser()
+
         codeQuizChooseLangAction.setOnClickListener {
-            val programmingLanguageServerName = codeQuizLanguagePicker.displayedValues[codeQuizLanguagePicker.value]
+            val programmingLanguageServerName = codeQuizLanguagePicker?.displayedValues?.get(codeQuizLanguagePicker.value)
+            if (programmingLanguageServerName == null) {
+                analytic.reportEventWithName(Analytic.Code.CHOOSE_NULL, "${step?.lesson} ${step?.id}")
+                return@setOnClickListener
+            }
+
             chosenProgrammingLanguageName = programmingLanguageServerName
 
             codeEditor.setText(step.block?.options?.codeTemplates?.get(programmingLanguageServerName))
@@ -88,7 +95,6 @@ class CodeStepFragment : StepAttemptFragment(),
             showCodeQuizEditor()
         }
 
-        initLanguageChooser()
 
         codeQuizFullscreenAction.setOnClickListener {
             chosenProgrammingLanguageName?.let { lang ->
@@ -370,7 +376,7 @@ class CodeStepFragment : StepAttemptFragment(),
             val newCode = data?.getStringExtra(CodePlaygroundActivity.CODE_KEY)
             codeEditor.setText(newCode)
             showCodeQuizEditor()
-            if (data?.getBooleanExtra(CodePlaygroundActivity.WAS_RESET, false)==true){
+            if (data?.getBooleanExtra(CodePlaygroundActivity.WAS_RESET, false) == true) {
                 resetBackgroundOfAttempt()
                 hideHint()
                 hideWrongStatus()
