@@ -36,6 +36,9 @@ class DownloadingProgressSectionPublisher
 
     @MainThread
     fun subscribe(sectionIdList: List<Long>, downloadingProgressCallback: DownloadingProgressCallback) {
+        if (this.downloadingProgressCallback != null) {
+            throw IllegalStateException("DownloadingProgressSectionPublisher detects double subscription, unsubscribe first for avoiding memory leaks")
+        }
         this.downloadingProgressCallback = downloadingProgressCallback
         startLoadingStatusUpdater(sectionIdList)
     }
@@ -86,6 +89,7 @@ class DownloadingProgressSectionPublisher
                             continue
                         }
 
+                        //FIXME: memory leak here, we create new units from database, when sections are not loading
                         //here sectionIdToUnitIdsMap is filled
                         sectionIdToUnitIdsMap.forEach { mapPair ->
                             val units: Map<Long, Unit> = databaseFacade.getAllUnitsOfSection(mapPair.key).filterNotNull().associateBy(Unit::id)
@@ -98,7 +102,7 @@ class DownloadingProgressSectionPublisher
                                 lessonIdToStepsMap[lesson.id] = stepIds
                                 lessonIdsOfThisSection.add(lesson.id)
                             }
-                            sectionIdToLessonIdsMap [mapPair.key] = lessonIdsOfThisSection.toLongArray()
+                            sectionIdToLessonIdsMap[mapPair.key] = lessonIdsOfThisSection.toLongArray()
                         }
 
                         //pre calc is finished, lets publish progress

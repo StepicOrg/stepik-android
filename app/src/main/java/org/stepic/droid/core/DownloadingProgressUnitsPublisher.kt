@@ -34,6 +34,9 @@ class DownloadingProgressUnitsPublisher
 
     @MainThread
     fun subscribe(lessonIdToStepIds: Map<Long, Set<Long>>, downloadingProgressCallback: DownloadingProgressCallback) {
+        if (this.downloadingProgressCallback != null) {
+            throw IllegalStateException("DownloadingProgressUnitsPublisher detects double subscription. unsubscribe first for avoiding memory leaks")
+        }
         this.downloadingProgressCallback = downloadingProgressCallback
         startLoadingStatusUpdater(lessonIdToStepIds)
     }
