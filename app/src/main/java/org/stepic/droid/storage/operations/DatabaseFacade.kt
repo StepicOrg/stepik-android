@@ -335,12 +335,6 @@ class DatabaseFacade
         return lessonIds.toLongArray()
     }
 
-    fun getAllDownloadingSections(): LongArray {
-        val sections = sectionDao.getAll(DbStructureSections.Column.IS_LOADING, 1.toString())
-        val sectionIds = sections.map { it?.id }.filterNotNull()
-        return sectionIds.toLongArray()
-    }
-
     fun dropOnlyCourseTable() {
         coursesEnrolledDao.removeAll()
         coursesFeaturedDao.removeAll()
@@ -424,12 +418,15 @@ class DatabaseFacade
     fun updateCourseLastInteraction(courseId: Long, timestamp: Long)
             = lastInteractions.insertOrUpdate(CourseLastInteraction(courseId = courseId, timestamp = timestamp))
 
-    fun getUnitsByIds(keys: LongArray): List<Unit> {
+    fun getUnitsByIds(keys: LongArray?): List<Unit> {
+        if (keys == null) {
+            return emptyList()
+        }
         DbParseHelper.parseLongArrayToString(keys, AppConstants.COMMA)?.let {
             return unitDao.getAllInRange(DbStructureUnit.Column.UNIT_ID, it)
         }
 
-        return ArrayList<Unit>()
+        return emptyList()
     }
 
     fun getSectionsByIds(keys: LongArray): List<Section> {

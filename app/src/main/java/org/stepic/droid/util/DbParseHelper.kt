@@ -18,7 +18,7 @@ object DbParseHelper {
     @JvmStatic
     @JvmOverloads
     fun parseLongArrayToString(array: LongArray?, delimiter: String = DELIMITER): String? {
-        if (array == null || array.size == 0) return null
+        if (array == null || array.isEmpty()) return null
 
         val stringBuilder = StringBuilder()
         for (i in array.indices) {
@@ -32,7 +32,7 @@ object DbParseHelper {
     @JvmStatic
     @JvmOverloads
     fun parseStringArrayToString(array: Array<String>?, delimiter: String = DELIMITER): String? {
-        if (array == null || array.size == 0) return null
+        if (array == null || array.isEmpty()) return null
 
         val sb = StringBuilder()
         for (i in array.indices) {
@@ -52,15 +52,6 @@ object DbParseHelper {
         strArray.forEachIndexed { i, el ->
             val trimmed = el.trim()
             result[i] = trimmed
-        }
-        return result
-    }
-
-    @JvmStatic
-    fun parseLongArrayToStringArray(array: LongArray): Array<String?> {
-        val result = arrayOfNulls<String>(array.size)
-        for (i in array.indices) {
-            result[i] = array[i].toString()
         }
         return result
     }
