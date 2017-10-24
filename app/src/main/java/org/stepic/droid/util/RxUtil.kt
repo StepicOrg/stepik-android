@@ -4,6 +4,10 @@ import io.reactivex.Observable
 
 enum class RxEmpty { INSTANCE }
 
-@Suppress("UNCHECKED_CAST")
-fun <T> Observable<T?>.filterNotNull(): Observable<T> =
-        this.filter { it != null } as Observable<T>
+data class RxOptional<out T> (val value: T?) {
+    fun <R> map(f: (T) -> R?) =
+            RxOptional(value?.let(f))
+}
+
+fun <T> Observable<RxOptional<T>>.unwrapOptional(): Observable<T> =
+        this.filter { it.value != null }.map { it.value }
