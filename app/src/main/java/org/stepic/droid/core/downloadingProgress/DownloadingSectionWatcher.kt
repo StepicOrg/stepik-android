@@ -9,7 +9,7 @@ class DownloadingSectionWatcher
 @Inject
 constructor(
         private val databaseFacade: DatabaseFacade,
-        private val stepProgressPublisher: StepProgressPublisher) : DownloadingWatcher {
+        private val downloadingLessonWatcher: DownloadingLessonWatcher) : DownloadingWatcher {
 
     companion object {
         private const val RETRY_DELAY = 300
@@ -20,30 +20,24 @@ constructor(
                     .fromCallable {
                         databaseFacade.getSectionById(id)
                     }
+                    .retryWhen(RetryWithDelay(RETRY_DELAY))
+                    .cache()
                     .flatMap {
-                        Flowable.fromIterable(databaseFacade.getUnitsByIds(it.units))
+                        val unitsByIds = databaseFacade.getUnitsByIds(it.units)
+                        if (unitsByIds.size != it.units?.size) {
+                            throw UnitsAreNotCachedException()
+                        }
+                        Flowable.fromIterable(unitsByIds)
                     }
+                    .retryWhen(RetryWithDelay(RETRY_DELAY))
                     .cache()
                     .map {
-                        databaseFacade.getLessonOfUnit(it) //it can be null
+                        it.lesson
                     }
-                    .retryWhen(RetryWithDelay(RETRY_DELAY)) //retry if lessons are empty in database
-                    .map {
-                        it.steps
-                    }
-                    .map {
-                        it.toMutableList()
-                    }
-                    .reduce { accumulator: MutableList<Long>, item: MutableList<Long> ->
-                        accumulator.addAll(item)
-                        accumulator
-                    }
-                    .map {
-                        it.toSet()
-                    }
-                    .cache()
-                    .toFlowable()
                     .flatMap {
-                        stepProgressPublisher.subscribe(it)
+                        downloadingLessonWatcher.watch(it)
                     }
+
+
+    class UnitsAreNotCachedException : Exception("Units are not in database yet")
 }
