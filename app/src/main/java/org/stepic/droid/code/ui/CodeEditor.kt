@@ -27,10 +27,7 @@ import org.stepic.droid.code.highlight.ParserContainer
 import org.stepic.droid.code.highlight.syntaxhighlight.ParseResult
 import org.stepic.droid.code.highlight.themes.CodeTheme
 import org.stepic.droid.code.highlight.themes.Presets
-import org.stepic.droid.util.DpPixelsHelper
-import org.stepic.droid.util.RxEmpty
-import org.stepic.droid.util.filterNotNull
-import org.stepic.droid.util.substringOrNull
+import org.stepic.droid.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -120,9 +117,9 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
                 highlightPublisher
                         .debounce(INPUT_DEBOUNCE_MS, TimeUnit.MILLISECONDS)
                         .map {
-                            parserContainer.prettifyParser?.parse(lang, it.toString())
+                            RxOptional(parserContainer.prettifyParser?.parse(lang, it.toString()))
                         }
-                        .filterNotNull()
+                        .unwrapOptional()
                         .subscribe(spanPublisher::onNext)
         )
 
