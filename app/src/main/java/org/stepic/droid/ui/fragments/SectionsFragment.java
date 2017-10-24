@@ -511,7 +511,6 @@ public class SectionsFragment
     }
 
     private void updateState(long sectionId, boolean isCached, boolean isLoading) {
-
         int position = -1;
         Section section = null;
         for (int i = 0; i < sectionList.size(); i++) {

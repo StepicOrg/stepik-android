@@ -132,6 +132,16 @@ class DatabaseFacade
 
     fun getAllDownloadEntities() = downloadEntityDao.getAll()
 
+    fun getDownloadEntitiesBy(stepIds: LongArray): List<DownloadEntity> {
+        val stringIds = DbParseHelper.parseLongArrayToString(stepIds, AppConstants.COMMA)
+        return if (stringIds != null) {
+            downloadEntityDao
+                    .getAllInRange(DbStructureSharedDownloads.Column.STEP_ID, stringIds)
+        } else {
+            emptyList()
+        }
+    }
+
     fun isLessonCached(lesson: Lesson?): Boolean {
         val id = lesson?.id ?: return false
         val dbLesson = lessonDao.get(DbStructureLesson.Column.LESSON_ID, id.toString())
