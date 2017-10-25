@@ -5,7 +5,7 @@ import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.RetryWithDelay
 import javax.inject.Inject
 
-class ProgressLessonWatcher
+class LessonProgressWatcher
 @Inject
 constructor(
         private val databaseFacade: DatabaseFacade,

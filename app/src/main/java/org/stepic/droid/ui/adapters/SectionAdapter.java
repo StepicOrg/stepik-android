@@ -23,6 +23,7 @@ import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.core.ScreenManager;
+import org.stepic.droid.core.downloadingProgress.DownloadingPresenter;
 import org.stepic.droid.core.presenters.CalendarPresenter;
 import org.stepic.droid.core.presenters.DownloadingInteractionPresenter;
 import org.stepic.droid.model.Course;
@@ -82,6 +83,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     SharedPreferenceHelper sharedPreferenceHelper;
 
 
+    private final DownloadingPresenter downloadingPresenter;
     private List<Section> sections;
     private AppCompatActivity activity;
     private CalendarPresenter calendarPresenter;
@@ -100,13 +102,15 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         this.defaultHighlightPosition = defaultHighlightPosition;
     }
 
-    public SectionAdapter(List<Section> sections,
+    public SectionAdapter(DownloadingPresenter downloadingPresenter,
+                          List<Section> sections,
                           AppCompatActivity activity,
                           CalendarPresenter calendarPresenter,
                           Map<String, ProgressViewModel> progressMap,
                           Map<Long, Float> sectionIdToLoadingStateMap,
                           Fragment fragment,
                           DownloadingInteractionPresenter downloadingInteractionPresenter) {
+        this.downloadingPresenter = downloadingPresenter;
         this.sections = sections;
         this.activity = activity;
         this.calendarPresenter = calendarPresenter;
@@ -252,6 +256,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
             analytic.reportEvent(Analytic.Interaction.CLICK_CACHE_SECTION, section.getId() + "");
             section.set_cached(false);
             section.set_loading(true);
+            downloadingPresenter.onStateChanged(section.getId(), section.is_loading());
             threadPoolExecutor.execute(new Runnable() {
                 @Override
                 public void run() {

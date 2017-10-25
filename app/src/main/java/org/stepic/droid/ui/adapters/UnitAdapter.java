@@ -23,9 +23,9 @@ import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.core.ScreenManager;
+import org.stepic.droid.core.downloadingProgress.DownloadingPresenter;
 import org.stepic.droid.core.presenters.DownloadingInteractionPresenter;
 import org.stepic.droid.model.Lesson;
-import org.stepic.droid.model.LessonLoadingState;
 import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Unit;
@@ -79,14 +79,24 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
 
     private Section parentSection;
     private final List<Lesson> lessonList;
+    private final DownloadingPresenter downloadingPresenter;
     private AppCompatActivity activity;
     private final List<Unit> unitList;
     private final Map<Long, Progress> unitProgressMap;
-    private final Map<Long, LessonLoadingState> lessonIdToUnitLoadingStateMap;
+    private final Map<Long, Float> lessonIdToUnitLoadingStateMap;
     private Fragment fragment;
     private final DownloadingInteractionPresenter downloadingInteractionPresenter;
 
-    public UnitAdapter(Section parentSection, List<Unit> unitList, List<Lesson> lessonList, Map<Long, Progress> unitProgressMap, AppCompatActivity activity, Map<Long, LessonLoadingState> lessonIdToUnitLoadingStateMap, Fragment fragment, DownloadingInteractionPresenter downloadingInteractionPresenter) {
+    public UnitAdapter(Section parentSection,
+                       DownloadingPresenter downloadingPresenter,
+                       List<Unit> unitList,
+                       List<Lesson> lessonList,
+                       Map<Long, Progress> unitProgressMap,
+                       AppCompatActivity activity,
+                       Map<Long, Float> lessonIdToUnitLoadingStateMap,
+                       Fragment fragment,
+                       DownloadingInteractionPresenter downloadingInteractionPresenter) {
+        this.downloadingPresenter = downloadingPresenter;
         this.activity = activity;
         this.parentSection = parentSection;
         this.unitList = unitList;
@@ -173,9 +183,9 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
                 holder.whenLoad.setVisibility(View.VISIBLE);
                 holder.afterLoad.setVisibility(View.GONE);
 
-                LessonLoadingState lessonLoadingState = lessonIdToUnitLoadingStateMap.get(lesson.getId());
-                if (lessonLoadingState != null) {
-                    holder.whenLoad.setProgressPortion(lessonLoadingState.getPortion(), needAnimation);
+                Float lessonLoadingPortion = lessonIdToUnitLoadingStateMap.get(lesson.getId());
+                if (lessonLoadingPortion != null) {
+                    holder.whenLoad.setProgressPortion(lessonLoadingPortion, needAnimation);
                 }
             } else {
                 //not cached not loading
@@ -293,6 +303,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
             analytic.reportEvent(Analytic.Interaction.CLICK_CACHE_LESSON, unit.getId() + "");
             lesson.set_cached(false);
             lesson.set_loading(true);
+            downloadingPresenter.onStateChanged(lesson.getId(), lesson.is_loading());
             threadPoolExecutor.execute(new Runnable() {
                 @Override
                 public void run() {

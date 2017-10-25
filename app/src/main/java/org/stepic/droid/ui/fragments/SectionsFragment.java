@@ -261,7 +261,7 @@ public class SectionsFragment
         linearLayoutManager = new LinearLayoutManager(getActivity());
         sectionsRecyclerView.setLayoutManager(linearLayoutManager);
         sectionList = new ArrayList<>();
-        adapter = new SectionAdapter(sectionList, ((AppCompatActivity) getActivity()), calendarPresenter, sectionsPresenter.getProgressMap(), sectionIdToLoadingStateMap, this, downloadingInteractionPresenter);
+        adapter = new SectionAdapter(downloadingPresenter, sectionList, ((AppCompatActivity) getActivity()), calendarPresenter, sectionsPresenter.getProgressMap(), sectionIdToLoadingStateMap, this, downloadingInteractionPresenter);
         sectionsRecyclerView.setAdapter(adapter);
 
         sectionsRecyclerView.setItemAnimator(new SlideInRightAnimator());
@@ -904,10 +904,6 @@ public class SectionsFragment
 
     @Override
     public void onLoadingAccepted(int position) {
-        final Section section = getSectionByPosition(position - SectionAdapter.PRE_SECTION_LIST_DELTA);
-        if (section != null) {
-            downloadingPresenter.onStateChanged(section.getId(), true);
-        }
         adapter.loadAfterDetermineNetworkState(position);
     }
 
@@ -996,13 +992,5 @@ public class SectionsFragment
         //change state for updating in adapter
         sectionIdToLoadingStateMap.put(id, portion);
         adapter.notifyItemChanged(position);
-    }
-
-    @Nullable
-    private Section getSectionByPosition(int position) {
-        if (position < 0 || position >= sectionList.size()) {
-            return null;
-        }
-        return sectionList.get(position);
     }
 }
