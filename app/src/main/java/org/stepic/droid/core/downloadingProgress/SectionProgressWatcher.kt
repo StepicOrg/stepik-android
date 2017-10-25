@@ -6,7 +6,7 @@ import org.stepic.droid.util.RetryWithDelay
 import timber.log.Timber
 import javax.inject.Inject
 
-class ProgressSectionWatcher
+class SectionProgressWatcher
 @Inject
 constructor(
         private val databaseFacade: DatabaseFacade,
