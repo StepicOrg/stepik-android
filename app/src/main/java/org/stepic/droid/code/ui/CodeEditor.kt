@@ -337,9 +337,9 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     }
 
 
-    inline fun withoutAnalyze(f: (CodeEditor) -> Unit) {
+    inline fun withoutAnalyze(block: (CodeEditor) -> Unit) {
         isCodeAnalyzerEnabled = false
-        f(this)
+        block(this)
         isCodeAnalyzerEnabled = true
     }
 
