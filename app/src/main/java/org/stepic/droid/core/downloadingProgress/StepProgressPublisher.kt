@@ -42,9 +42,13 @@ constructor(
                     val totalProgressDownloading = downloadEntities
                             .map { it.downloadId }
                             .let {
-                                val query = DownloadManager.Query()
-                                query.setFilterById(*it.toLongArray())
-                                systemDownloadManager.query(query)
+                                if (it.isEmpty()) {
+                                    null
+                                } else {
+                                    val query = DownloadManager.Query()
+                                    query.setFilterById(*it.toLongArray())
+                                    systemDownloadManager.query(query)
+                                }
                             }
                             .totalProgressOfDownloading()
 
@@ -69,8 +73,11 @@ constructor(
                         databaseFacade.getDownloadEntitiesBy(stepIds.toLongArray())
                     }
 
-    private fun Cursor.totalProgressOfDownloading(): Float {
+    private fun Cursor?.totalProgressOfDownloading(): Float {
         var result = 0f
+        if (this == null) {
+            return result
+        }
         this.use {
             it.moveToFirst()
             while (!it.isAfterLast) {
