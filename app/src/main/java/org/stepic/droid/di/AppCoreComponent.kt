@@ -6,6 +6,7 @@ import dagger.Component
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.base.FragmentBase
+import org.stepic.droid.code.ui.CodeEditor
 import org.stepic.droid.di.certificates.CertificateComponent
 import org.stepic.droid.di.course_general.CourseGeneralComponent
 import org.stepic.droid.di.downloads.DownloadsComponent
@@ -165,4 +166,6 @@ interface AppCoreComponent {
     fun inject(rateAppDialogFragment: RateAppDialogFragment)
 
     fun inject(placeholderTextView: PlaceholderTextView)
+
+    fun inject(codeEditor: CodeEditor)
 }

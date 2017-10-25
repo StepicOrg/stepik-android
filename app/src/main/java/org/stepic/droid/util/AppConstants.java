@@ -91,7 +91,7 @@ public class AppConstants {
     public static final String NOTIFICATION_CANCELED_REMINDER = "notification_canceled_reminder";
     public static final int MAX_NUMBER_OF_SHOWING_STREAK_DIALOG = 3;
     public static final int NUMBER_OF_DAYS_BETWEEN_STREAK_SHOWING = 2;
-    public static final int MAX_NUMBER_OF_NOTIFICATION_STREAK = 3;
+    public static final int MAX_NUMBER_OF_NOTIFICATION_STREAK = 5;
     @Nullable
     public static final String NOTIFICATION_CANCELED_STREAK = "notification_canceled_streaks";
     public static final String FIND_COURSES_SHORTCUT_ID = "find_courses";
