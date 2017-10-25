@@ -1,12 +1,10 @@
 package org.stepic.droid.core.downloadingProgress
 
 import io.reactivex.Flowable
-import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.RetryWithDelay
 import javax.inject.Inject
 
-@AppSingleton
 class ProgressLessonWatcher
 @Inject
 constructor(

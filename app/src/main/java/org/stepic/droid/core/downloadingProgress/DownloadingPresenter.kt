@@ -9,7 +9,7 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import javax.inject.Inject
 
-abstract class DownloadingPresenter
+class DownloadingPresenter
 @Inject
 constructor(
         private val progressWatcher: ProgressWatcher,

@@ -50,18 +50,18 @@ import org.stepic.droid.base.App;
 import org.stepic.droid.base.Client;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.core.LocalProgressManager;
+import org.stepic.droid.core.downloadingProgress.DownloadingPresenter;
+import org.stepic.droid.core.downloadingProgress.DownloadingView;
 import org.stepic.droid.core.dropping.contract.DroppingListener;
 import org.stepic.droid.core.presenters.CalendarPresenter;
 import org.stepic.droid.core.presenters.CourseFinderPresenter;
 import org.stepic.droid.core.presenters.CourseJoinerPresenter;
 import org.stepic.droid.core.presenters.DownloadingInteractionPresenter;
-import org.stepic.droid.core.presenters.DownloadingProgressSectionsPresenter;
 import org.stepic.droid.core.presenters.InvitationPresenter;
 import org.stepic.droid.core.presenters.SectionsPresenter;
 import org.stepic.droid.core.presenters.contracts.CalendarExportableView;
 import org.stepic.droid.core.presenters.contracts.CourseJoinView;
 import org.stepic.droid.core.presenters.contracts.DownloadingInteractionView;
-import org.stepic.droid.core.presenters.contracts.DownloadingProgressSectionsView;
 import org.stepic.droid.core.presenters.contracts.InvitationView;
 import org.stepic.droid.core.presenters.contracts.LoadCourseView;
 import org.stepic.droid.core.presenters.contracts.SectionsView;
@@ -70,7 +70,6 @@ import org.stepic.droid.model.CalendarItem;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Section;
-import org.stepic.droid.model.SectionLoadingState;
 import org.stepic.droid.notifications.StepikNotificationManager;
 import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.storage.StoreStateManager;
@@ -114,12 +113,11 @@ public class SectionsFragment
         CalendarExportableView,
         SectionsView,
         InvitationView,
-        DownloadingProgressSectionsView,
         DownloadingInteractionView,
         LocalProgressManager.SectionProgressListener,
         ChooseCalendarDialog.CallbackContract,
         DroppingListener,
-        StoreStateManager.SectionCallback {
+        StoreStateManager.SectionCallback, DownloadingView {
 
     public static final String joinFlag = "joinFlag";
     private static final int INVITE_REQUEST_CODE = 324;
@@ -197,7 +195,7 @@ public class SectionsFragment
     InvitationPresenter invitationPresenter;
 
     @Inject
-    DownloadingProgressSectionsPresenter downloadingProgressSectionsPresenter;
+    DownloadingPresenter downloadingPresenter;
 
     @Inject
     DownloadingInteractionPresenter downloadingInteractionPresenter;
@@ -211,7 +209,7 @@ public class SectionsFragment
     private boolean wasIndexed;
     private Uri urlInWeb;
     private String title;
-    private Map<Long, SectionLoadingState> sectionIdToLoadingStateMap = new HashMap<>();
+    private Map<Long, Float> sectionIdToLoadingStateMap = new HashMap<>();
 
     LinearLayoutManager linearLayoutManager;
 
@@ -436,7 +434,9 @@ public class SectionsFragment
             afterUpdateModulePosition = -1;
         }
 
-        downloadingProgressSectionsPresenter.subscribeToProgressUpdates(sectionList);
+        for (Section section : sectionList) {
+            downloadingPresenter.onStateChanged(section.getId(), section.is_loading());
+        }
     }
 
     @Override
@@ -475,14 +475,16 @@ public class SectionsFragment
         reportIndexToGoogle();
         Timber.d("downloading interaction presenter instance: %s", downloadingInteractionPresenter);
         downloadingInteractionPresenter.attachView(this);
-        downloadingProgressSectionsPresenter.attachView(this);
-        downloadingProgressSectionsPresenter.subscribeToProgressUpdates(sectionList);
+        downloadingPresenter.attachView(this);
+        for(Section section : sectionList) {
+            downloadingPresenter.onStateChanged(section.getId(), section.is_loading());
+        }
     }
 
     @Override
     public void onStop() {
         downloadingInteractionPresenter.detachView(this);
-        downloadingProgressSectionsPresenter.detachView(this);
+        downloadingPresenter.detachView(this);
         super.onStop();
         if (wasIndexed) {
             FirebaseUserActions.getInstance().end(getAction());
@@ -525,6 +527,7 @@ public class SectionsFragment
         //now we have not null section and correct position at oldList
         section.set_cached(isCached);
         section.set_loading(isLoading);
+        downloadingPresenter.onStateChanged(sectionId, isLoading);
         adapter.notifyItemChanged(position + SectionAdapter.PRE_SECTION_LIST_DELTA);
     }
 
@@ -890,29 +893,6 @@ public class SectionsFragment
     }
 
     @Override
-    public void onNewProgressValue(@NotNull SectionLoadingState state) {
-        // FIXME: 21.02.17
-        int position = -1;
-        for (int i = 0; i < sectionList.size(); i++) {
-            Section section = sectionList.get(i);
-            if (section.getId() == state.getSectionId()) {
-                position = i;
-            }
-        }
-
-        if (position < 0) {
-            return;
-        }
-
-        position += SectionAdapter.PRE_SECTION_LIST_DELTA;
-
-        //change state for updating in adapter
-        sectionIdToLoadingStateMap.put(state.getSectionId(), state);
-        adapter.notifyItemChanged(position);
-
-    }
-
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (adapter != null && requestCode == DELETE_POSITION_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
@@ -990,5 +970,26 @@ public class SectionsFragment
         if (course != null && course.getCourseId() == courseId) {
             sectionsPresenter.updateSectionProgress(newProgress);
         }
+    }
+
+    @Override
+    public void onNewProgressValue(long id, float portion) {
+        int position = -1;
+        for (int i = 0; i < sectionList.size(); i++) {
+            Section section = sectionList.get(i);
+            if (section.getId() == id) {
+                position = i;
+            }
+        }
+
+        if (position < 0) {
+            return;
+        }
+
+        position += SectionAdapter.PRE_SECTION_LIST_DELTA;
+
+        //change state for updating in adapter
+        sectionIdToLoadingStateMap.put(id, portion);
+        adapter.notifyItemChanged(position);
     }
 }
