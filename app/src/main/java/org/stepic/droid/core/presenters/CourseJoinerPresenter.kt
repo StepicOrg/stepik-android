@@ -79,7 +79,7 @@ class CourseJoinerPresenter
         }
         val enrollNotificationClickMillis: Long? = sharedPreferenceHelper.lastClickEnrollNotification
         enrollNotificationClickMillis?.let {
-            val wasClickedPlus30Min = it + 30 * AppConstants.MILLIS_IN_1HOUR
+            val wasClickedPlus30Min = it + 30 * AppConstants.MILLIS_IN_1MINUTE
             if (DateTimeHelper.isAfterNowUtc(wasClickedPlus30Min)) {
                 //if  now < wasClicked+30min -> event is related to click
                 sharedPreferenceHelper.clickEnrollNotification(-1L)

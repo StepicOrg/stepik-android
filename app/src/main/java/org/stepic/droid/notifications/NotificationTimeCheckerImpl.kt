@@ -34,7 +34,7 @@ class NotificationTimeCheckerImpl
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = nowMillis
         val nowHourInt = calendar.get(Calendar.HOUR_OF_DAY)
-        val result: Boolean = nowHourInt in startHour..(endHour - 1)
+        val result: Boolean = nowHourInt in startHour until endHour
         return result.xor(invertAnswer)
     }
 }

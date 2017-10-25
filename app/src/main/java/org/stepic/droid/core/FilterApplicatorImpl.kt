@@ -35,18 +35,14 @@ class FilterApplicatorImpl
                 beginDate = DateTimeHelper.toCalendar(it).timeInMillis
             }
 
-            var endDate: Long? = null
-            course.endDate?.let {
-                endDate = DateTimeHelper.toCalendar(it).timeInMillis
+            val endDate: Long? = course.endDate?.let {
+                DateTimeHelper.toCalendar(it).timeInMillis
             }
 
-            var isEnded: Boolean = false
-            course.lastDeadline?.let {
+            val isEnded: Boolean = course.lastDeadline?.let {
                 val lastDeadlineMillis = DateTimeHelper.toCalendar(it).timeInMillis
-                if (now > lastDeadlineMillis) {
-                    isEnded = true
-                }
-            }
+                now > lastDeadlineMillis
+            } ?: false
 
             val isBeginDateInFuture: Boolean = beginDate?.compareTo(now) ?: -1 > 0
             val isEndDateInFuture: Boolean = endDate?.compareTo(now) ?: -1 > 0

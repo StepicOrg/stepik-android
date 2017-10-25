@@ -95,7 +95,7 @@ object DateTimeHelper {
     private fun getDateOfIso(iso8601string: String): Date {
         var s = iso8601string.replace("Z", "+00:00")
         try {
-            s = s.substring(0, 22) + s.substring(23)  // to get rid of the ":"
+            s = s.removeRange(startIndex = 22, endIndex = 23)
         } catch (e: IndexOutOfBoundsException) {
             throw ParseException("Invalid length", 0)
         }

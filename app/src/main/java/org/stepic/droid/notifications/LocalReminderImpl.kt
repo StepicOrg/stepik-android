@@ -67,15 +67,13 @@ class LocalReminderImpl
 
 
                         val calendar = Calendar.getInstance()
+                        val nowHour = calendar.get(Calendar.HOUR_OF_DAY)
                         calendar.set(Calendar.HOUR_OF_DAY, 12)
                         val nowAt12 = DateTimeHelper.calendarToLocalMillis(calendar)
-                        val nowHour = calendar.get(Calendar.HOUR_OF_DAY)
-                        scheduleMillis = if (nowHour < 12) {
-                            nowAt12 + AppConstants.MILLIS_IN_24HOURS * dayDiff
-                        } else if (nowHour >= 19) {
-                            nowAt12 + AppConstants.MILLIS_IN_24HOURS * (dayDiff + 1)
-                        } else {
-                            now + AppConstants.MILLIS_IN_24HOURS * dayDiff
+                        scheduleMillis = when {
+                            nowHour < 12 -> nowAt12 + AppConstants.MILLIS_IN_24HOURS * dayDiff
+                            nowHour >= 19 -> nowAt12 + AppConstants.MILLIS_IN_24HOURS * (dayDiff + 1)
+                            else -> now + AppConstants.MILLIS_IN_24HOURS * dayDiff
                         }
                     }
 

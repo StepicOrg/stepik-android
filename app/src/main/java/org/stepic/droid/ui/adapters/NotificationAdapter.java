@@ -40,7 +40,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     private static final int HEADER_VIEW_TYPE = 2;
     private static final int FOOTER_VIEW_TYPE = 3;
     private static final int FOOTER_COUNT = 1;
-    private static int HEADER_COUNT = 1;
+
+    private final int headerCount;
 
     private final Typeface boldTypeface;
     private final Typeface regularTypeface;
@@ -63,7 +64,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         boldTypeface = TypefaceUtils.load(context.getAssets(), fontsProvider.provideFontPath(FontType.bold));
         regularTypeface = TypefaceUtils.load(context.getAssets(), fontsProvider.provideFontPath(FontType.regular));
         if (notificationCategory != NotificationCategory.all) {
-            HEADER_COUNT = 0;
+            headerCount = 0;
+        }else {
+            headerCount = 1;
         }
     }
 
@@ -93,7 +96,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     @Override
     public int getItemViewType(int position) {
-        if (position < HEADER_COUNT) {
+        if (position < headerCount) {
             return HEADER_VIEW_TYPE;
         } else if (position == getItemCount() - 1) {
             return FOOTER_VIEW_TYPE;
@@ -104,7 +107,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     @Override
     public int getItemCount() {
-        return notifications.size() + HEADER_COUNT + FOOTER_COUNT;
+        return notifications.size() + headerCount + FOOTER_COUNT;
     }
 
     public void setNotifications(List<Notification> notifications) {
@@ -118,7 +121,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     }
 
     public void onClick(int adapterPosition, boolean needOpenNotification) {
-        int positionInList = adapterPosition - HEADER_COUNT;
+        int positionInList = adapterPosition - headerCount;
         if (positionInList >= 0 && positionInList < notifications.size()) {
             Notification notification = notifications.get(positionInList);
             Boolean unread = notification.is_unread();
@@ -150,7 +153,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 Boolean unread = notification.is_unread();
                 if (unread != null && unread != newValue) {
                     notification.set_unread(newValue);
-                    notifyItemChanged(position + HEADER_COUNT);
+                    notifyItemChanged(position + headerCount);
                 }
             }
         }
@@ -223,7 +226,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         }
 
         public void setData(int position) {
-            int positionInList = position - HEADER_COUNT;
+            int positionInList = position - headerCount;
             Notification notification = notifications.get(positionInList);
 
             notificationBody.setText(textResolver.fromHtml(notification.getHtmlText()));
