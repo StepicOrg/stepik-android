@@ -9,7 +9,7 @@ class LessonProgressWatcher
 @Inject
 constructor(
         private val databaseFacade: DatabaseFacade,
-        private val stepProgressPublisher: StepProgressPublisher
+        private val stepsProgressPublisher: StepsProgressPublisher
 ) : ProgressWatcher {
 
     companion object {
@@ -30,7 +30,7 @@ constructor(
                     }
                     .cache()
                     .concatMap {
-                        stepProgressPublisher.subscribe(it)
+                        stepsProgressPublisher.subscribe(it)
                     }
 
     private class LessonIsNotCachedException : Exception("lesson is not in database yet")

@@ -15,7 +15,7 @@ import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class StepProgressPublisher
+class StepsProgressPublisher
 @Inject
 constructor(
         private val databaseFacade: DatabaseFacade,

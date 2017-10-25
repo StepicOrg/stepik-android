@@ -10,7 +10,7 @@ class SectionProgressWatcher
 @Inject
 constructor(
         private val databaseFacade: DatabaseFacade,
-        private val stepProgressPublisher: StepProgressPublisher) : ProgressWatcher {
+        private val stepsProgressPublisher: StepsProgressPublisher) : ProgressWatcher {
 
     companion object {
         private const val RETRY_DELAY = 300
@@ -57,7 +57,7 @@ constructor(
                     .cache() // cache set of steps
                     .concatMap {
                         Timber.d("set.size = ${it.size}, $it")
-                        stepProgressPublisher.subscribe(it)
+                        stepsProgressPublisher.subscribe(it)
                     }
 
 
