@@ -21,6 +21,7 @@ class LoadingProgressDialog
         setContentView(R.layout.dialog_progress)
         progressDialogTitle.setText(titleRes)
         progressDialogMessage.setText(R.string.loading_message)
+        setCanceledOnTouchOutside(false)
         setCancelable(false)
     }
 }
