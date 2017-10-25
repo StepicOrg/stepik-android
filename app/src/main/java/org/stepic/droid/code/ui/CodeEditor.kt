@@ -229,9 +229,14 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     private var insertedStart: Int = 0
     private var insertedCount: Int = 0
 
+    private var replacedStart: Int = 0
+    private var replacedCount: Int = 0
+    private var replacedText: String = ""
+
     override fun afterTextChanged(editable: Editable) {
         lines = text.toString().lines()
         if (isCodeAnalyzerEnabled) {
+            CodeAnalyzer.onTextReplaced(replacedStart, replacedCount, this, replacedText)
             CodeAnalyzer.onTextInserted(insertedStart, insertedCount, this)
         }
         highlightBrackets(selectionStart)
@@ -239,9 +244,13 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
         requestLayout()
     }
 
-    override fun beforeTextChanged(text: CharSequence?, start: Int, lengthBefore: Int, count: Int) {}
+    override fun beforeTextChanged(text: CharSequence, start: Int, count: Int, after: Int) {
+        replacedStart = start
+        replacedCount = count
+        replacedText = text.substring(start, start + count)
+    }
 
-    override fun onTextChanged(text: CharSequence, start: Int, lengthBefore: Int, count: Int) {
+    override fun onTextChanged(text: CharSequence, start: Int, before: Int, count: Int) {
         insertedStart = start
         insertedCount = count
     }

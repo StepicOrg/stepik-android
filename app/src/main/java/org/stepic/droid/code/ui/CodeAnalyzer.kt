@@ -59,16 +59,18 @@ object CodeAnalyzer {
                 val next = getNextSymbol(start + 1, text)
                 if (next == null || Character.isWhitespace(next[0]) || next in brackets.values) { // don't want auto bracket if there is a statement next
                     codeEditor.withoutAnalyze {
-                        codeEditor.editableText.insert(start + count, brackets[inserted])
-                        codeEditor.setSelection(start + count)
+                        it.editableText.insert(start + count, brackets[inserted])
+                        it.setSelection(start + count)
                     }
                 }
             }
 
             in brackets.values -> {
                 if (inserted == text.substringOrNull(start + count, start + 2 * count)) {
-                    codeEditor.editableText.replace(start, start + count, "")
-                    codeEditor.setSelection(start + count)
+                    codeEditor.withoutAnalyze {
+                        it.editableText.replace(start, start + count, "")
+                        it.setSelection(start + count)
+                    }
                 }
             }
 
@@ -76,11 +78,38 @@ object CodeAnalyzer {
                 val next = getNextSymbol(start + 1, text)
                 val prev = getPrevSymbol(start, text)
                 if ((next == null || Character.isWhitespace(next[0])) && prev != inserted) { // don't want auto quote if there is a statement next
-                    codeEditor.editableText.insert(start + count, inserted)
-                    codeEditor.setSelection(start + count)
+                    codeEditor.withoutAnalyze {
+                        it.editableText.insert(start + count, inserted)
+                        it.setSelection(start + count)
+                    }
                 } else if (inserted == text.substringOrNull(start + count, start + 2 * count)) {
-                    codeEditor.editableText.replace(start, start + count, "")
-                    codeEditor.setSelection(start + count)
+                    codeEditor.withoutAnalyze {
+                        it.editableText.replace(start, start + count, "")
+                        it.setSelection(start + count)
+                    }
+                }
+            }
+        }
+    }
+
+    fun onTextReplaced(start: Int, count: Int, codeEditor: CodeEditor, replaced: String) {
+        val text = codeEditor.editableText.toString()
+        when (replaced) {
+            in brackets -> {
+                val next = getNextSymbol(start, text)
+                if (next != null && next == brackets[replaced]) {
+                    codeEditor.withoutAnalyze {
+                        it.editableText.replace(start, start + next.length, "")
+                    }
+                }
+            }
+
+            in quotes -> {
+                val next = getNextSymbol(start, text)
+                if (next != null && next == replaced) {
+                    codeEditor.withoutAnalyze {
+                        it.editableText.replace(start, start + next.length, "")
+                    }
                 }
             }
         }
