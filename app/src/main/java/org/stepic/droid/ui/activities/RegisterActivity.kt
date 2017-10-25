@@ -1,6 +1,5 @@
 package org.stepic.droid.ui.activities
 
-import android.app.ProgressDialog
 import android.os.Bundle
 import android.support.v7.app.AppCompatDelegate
 import android.text.Editable
@@ -23,6 +22,7 @@ import org.stepic.droid.core.presenters.LoginPresenter
 import org.stepic.droid.core.presenters.contracts.LoginView
 import org.stepic.droid.fonts.FontType
 import org.stepic.droid.model.AuthData
+import org.stepic.droid.ui.dialogs.LoadingProgressDialog
 import org.stepic.droid.ui.util.setOnKeyboardOpenListener
 import org.stepic.droid.util.*
 import org.stepic.droid.web.RegistrationResponse
@@ -51,7 +51,7 @@ class RegisterActivity : SmartLockActivityBase(), LoginView {
         resources.getString(R.string.terms_message_register)
     }
 
-    private lateinit var progressBar: ProgressDialog
+    private lateinit var progressBar: LoadingProgressDialog
 
     @Inject
     lateinit var loginPresenter: LoginPresenter
@@ -69,10 +69,7 @@ class RegisterActivity : SmartLockActivityBase(), LoginView {
 
         signUpButton.setOnClickListener { createAccount(LoginInteractionType.button) }
 
-        progressBar = ProgressDialog(this)
-        progressBar.setTitle(getString(R.string.loading))
-        progressBar.setMessage(getString(R.string.loading_message))
-        progressBar.setCancelable(false)
+        progressBar = LoadingProgressDialog(this)
 
         passwordField.setOnEditorActionListener { _, actionId, _ ->
             var handled = false

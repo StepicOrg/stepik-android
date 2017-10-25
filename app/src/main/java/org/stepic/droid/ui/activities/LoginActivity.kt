@@ -1,6 +1,5 @@
 package org.stepic.droid.ui.activities
 
-import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatDelegate
@@ -41,7 +40,7 @@ class LoginActivity : SmartLockActivityBase(), LoginView {
         }
     }
 
-    private var progressLogin: ProgressDialog? = null
+    private var progressLogin: LoadingProgressDialog? = null
 
     private lateinit var progressHandler: ProgressHandler
 
