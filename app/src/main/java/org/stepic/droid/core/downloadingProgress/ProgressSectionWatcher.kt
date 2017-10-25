@@ -3,6 +3,7 @@ package org.stepic.droid.core.downloadingProgress
 import io.reactivex.Flowable
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.RetryWithDelay
+import timber.log.Timber
 import javax.inject.Inject
 
 class ProgressSectionWatcher
@@ -27,6 +28,7 @@ constructor(
                         if (unitsFromDatabase.size != it.units?.size) {
                             throw UnitsAreNotCachedException()
                         }
+                        Timber.d("units from db are loaded ${unitsFromDatabase.size}")
                         unitsFromDatabase
                     }
                     .retryWhen(RetryWithDelay(RETRY_DELAY)) //wait until all units will be in database
@@ -41,6 +43,7 @@ constructor(
                         if (lessonIds.size != lessons.size) {
                             throw LessonsAreNotCachedException()
                         }
+                        Timber.d("lessons from db are loaded ${lessons.size}")
                         lessons
                     }
                     .retryWhen(RetryWithDelay(RETRY_DELAY)) //wait until all lessons will be in database
@@ -53,6 +56,7 @@ constructor(
                     .map { it.toSet() }
                     .cache() // cache set of steps
                     .concatMap {
+                        Timber.d("set.size = ${it.size}, $it")
                         stepProgressPublisher.subscribe(it)
                     }
 

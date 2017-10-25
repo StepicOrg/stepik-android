@@ -904,7 +904,7 @@ public class SectionsFragment
 
     @Override
     public void onLoadingAccepted(int position) {
-        final Section section = getSectionByPosition(position);
+        final Section section = getSectionByPosition(position - SectionAdapter.PRE_SECTION_LIST_DELTA);
         if (section != null) {
             downloadingPresenter.onStateChanged(section.getId(), true);
         }

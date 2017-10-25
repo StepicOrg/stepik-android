@@ -29,8 +29,6 @@ import java.io.File;
 
 import javax.inject.Inject;
 
-import timber.log.Timber;
-
 import static org.stepic.droid.storage.DownloadManagerExtensionKt.getDownloadStatus;
 
 public class DownloadCompleteReceiver extends BroadcastReceiver {
@@ -62,7 +60,6 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
     DownloadsPoster downloadsPoster;
 
     public DownloadCompleteReceiver() {
-        Timber.d("create DownloadCompleteReceiver");
         App.Companion
                 .componentManager()
                 .downloadsComponent()
@@ -71,9 +68,7 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Timber.d("onReceive");
         final long referenceId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
-        Timber.d("referenceId = %d", referenceId);
 
         if (referenceId >= 0) {
             threadSingleThreadExecutor.execute(new Runnable() {

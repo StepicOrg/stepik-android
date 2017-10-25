@@ -9,6 +9,7 @@ import org.stepic.droid.model.Step
 import org.stepic.droid.storage.CancelSniffer
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.getInt
+import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -37,7 +38,7 @@ constructor(
                                     false -> 0f
                                 }
                             }
-                            .reduce { acc, fl -> acc + fl }
+                            .fold(0f) { acc, value -> acc + value }
 
                     val totalProgressDownloading = downloadEntities
                             .map { it.downloadId }
@@ -53,10 +54,11 @@ constructor(
                             .totalProgressOfDownloading()
 
 
-                    (totalProgressDownloading + totalProgressCached) / stepNumber.toFloat()
+                    val progressPart = (totalProgressDownloading + totalProgressCached) / stepNumber.toFloat()
+                    Timber.d("progress = $progressPart")
+                    progressPart
                 })
                 .repeatWhen { completed -> completed.delay(POLISHING_DELAY, TimeUnit.MILLISECONDS) }
-                .distinctUntilChanged()
     }
 
 
