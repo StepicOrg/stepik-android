@@ -25,31 +25,34 @@ constructor(
 
     fun subscribe(stepIds: Set<Long>): Flowable<Float> {
         val stepNumber = stepIds.size
-        return Flowable.combineLatest(steps(stepIds), downloadEntities(stepIds), BiFunction<List<Step>, List<DownloadEntity>, Float> { steps, downloadEntities ->
-            val downloadEntitiesHashMap = downloadEntities.associateBy { it.stepId }
+        return Flowable
+                .combineLatest(steps(stepIds), downloadEntities(stepIds), BiFunction<List<Step>, List<DownloadEntity>, Float> { steps, downloadEntities ->
+                    val downloadEntitiesHashMap = downloadEntities.associateBy { it.stepId }
 
-            val totalProgressCached: Float = steps
-                    .filterNot { downloadEntitiesHashMap.contains(it.id) }
-                    .map {
-                        when (it.is_cached) {
-                            true -> 1f
-                            false -> 0f
-                        }
-                    }
-                    .reduce { acc, fl -> acc + fl }
+                    val totalProgressCached: Float = steps
+                            .filterNot { downloadEntitiesHashMap.contains(it.id) }
+                            .map {
+                                when (it.is_cached) {
+                                    true -> 1f
+                                    false -> 0f
+                                }
+                            }
+                            .reduce { acc, fl -> acc + fl }
 
-            val totalProgressDownloading = downloadEntities
-                    .map { it.downloadId }
-                    .let {
-                        val query = DownloadManager.Query()
-                        query.setFilterById(*it.toLongArray())
-                        systemDownloadManager.query(query)
-                    }
-                    .totalProgressOfDownloading()
+                    val totalProgressDownloading = downloadEntities
+                            .map { it.downloadId }
+                            .let {
+                                val query = DownloadManager.Query()
+                                query.setFilterById(*it.toLongArray())
+                                systemDownloadManager.query(query)
+                            }
+                            .totalProgressOfDownloading()
 
 
-            (totalProgressDownloading + totalProgressCached) / stepNumber.toFloat()
-        }).repeatWhen { completed -> completed.delay(POLISHING_DELAY, TimeUnit.MILLISECONDS) }
+                    (totalProgressDownloading + totalProgressCached) / stepNumber.toFloat()
+                })
+                .repeatWhen { completed -> completed.delay(POLISHING_DELAY, TimeUnit.MILLISECONDS) }
+                .distinctUntilChanged()
     }
 
 

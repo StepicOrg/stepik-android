@@ -5,11 +5,11 @@ import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.RetryWithDelay
 import javax.inject.Inject
 
-class DownloadingSectionWatcher
+class ProgressSectionWatcher
 @Inject
 constructor(
         private val databaseFacade: DatabaseFacade,
-        private val downloadingLessonWatcher: DownloadingLessonWatcher) : DownloadingWatcher {
+        private val downloadingLessonWatcher: ProgressLessonWatcher) : ProgressWatcher {
 
     companion object {
         private const val RETRY_DELAY = 300
@@ -30,11 +30,11 @@ constructor(
                         Flowable.fromIterable(unitsByIds)
                     }
                     .retryWhen(RetryWithDelay(RETRY_DELAY))
-                    .cache()
                     .map {
                         it.lesson
                     }
-                    .flatMap {
+                    .cache()
+                    .concatMap {
                         downloadingLessonWatcher.watch(it)
                     }
 

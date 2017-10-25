@@ -4,11 +4,11 @@ import io.reactivex.Flowable
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.RetryWithDelay
 
-class DownloadingLessonWatcher
+class ProgressLessonWatcher
 constructor(
         private val databaseFacade: DatabaseFacade,
         private val stepProgressPublisher: StepProgressPublisher
-) : DownloadingWatcher {
+) : ProgressWatcher {
 
     companion object {
         private const val RETRY_DELAY: Int = 300
@@ -36,9 +36,9 @@ constructor(
                     .map {
                         it.toSet()
                     }
-                    .cache()
                     .toFlowable()
-                    .flatMap {
+                    .cache()
+                    .concatMap {
                         stepProgressPublisher.subscribe(it)
                     }
 
