@@ -1,7 +1,6 @@
 package org.stepic.droid.ui.fragments
 
 import android.app.Activity
-import android.app.ProgressDialog
 import android.content.Context
 import android.os.Bundle
 import android.view.*
@@ -25,7 +24,7 @@ class TextFeedbackFragment : FragmentBase(), TextFeedbackView {
         fun newInstance(): TextFeedbackFragment = TextFeedbackFragment()
     }
 
-    private var progressDialog: ProgressDialog? = null
+    private var progressDialog: LoadingProgressDialog? = null
 
     @Inject
     lateinit var textFeedbackPresenter: TextFeedbackPresenter

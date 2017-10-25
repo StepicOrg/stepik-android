@@ -29,7 +29,7 @@ import retrofit2.Response
 class NewCommentFragment : FragmentBase(), OnBackClickListener {
 
     companion object {
-        private val discardTextRequestCode = 913;
+        private val discardTextRequestCode = 913
         private val targetKey = "targetKey"
         private val parentKey = "parentKey"
 
@@ -48,7 +48,7 @@ class NewCommentFragment : FragmentBase(), OnBackClickListener {
     private var target: Long? = null
     private var parent: Long? = null
     private var isCommentSending: Boolean = false
-    private lateinit var loadingProgressDialog: ProgressDialog
+    private lateinit var loadingProgressDialog: LoadingProgressDialog
     private var sendMenuItem: MenuItem? = null
 
     private var backButtonHandler: BackButtonHandler? = null
@@ -133,9 +133,9 @@ class NewCommentFragment : FragmentBase(), OnBackClickListener {
             fun enableMenuItem(needEnable: Boolean = true) {
                 sendMenuItem?.isEnabled = needEnable
                 if (needEnable) {
-                    sendMenuItem?.icon?.alpha = 255;
+                    sendMenuItem?.icon?.alpha = 255
                 } else {
-                    sendMenuItem?.icon?.alpha = 128;
+                    sendMenuItem?.icon?.alpha = 128
                 }
             }
 

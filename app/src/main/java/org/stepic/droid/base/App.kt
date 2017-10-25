@@ -10,6 +10,7 @@ import com.vk.sdk.VKSdk
 import com.yandex.metrica.YandexMetrica
 import org.stepic.droid.BuildConfig
 import org.stepic.droid.R
+import org.stepic.droid.code.highlight.ParserContainer
 import org.stepic.droid.core.ComponentManager
 import org.stepic.droid.core.ComponentManagerImpl
 import org.stepic.droid.di.AppCoreComponent
@@ -49,6 +50,11 @@ class App : Application() {
 
     @Inject
     lateinit var fontsProvider: FontsProvider
+
+
+    //don't use this field, it is just for init ASAP in background thread
+    @Inject
+    lateinit var codeParserContainer: ParserContainer
 
     override fun onCreate() {
         super.onCreate()

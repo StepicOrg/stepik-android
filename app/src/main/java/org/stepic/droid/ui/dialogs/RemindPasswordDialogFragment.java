@@ -44,7 +44,7 @@ public class RemindPasswordDialogFragment extends DialogFragment {
     }
 
     private TextInputLayout emailTextWrapper;
-    private ProgressDialog progressLogin;
+    private LoadingProgressDialog progressLogin;
     private View rootView;
 
     @BindString(R.string.email_wrong)
@@ -62,10 +62,7 @@ public class RemindPasswordDialogFragment extends DialogFragment {
         rootView = ButterKnife.findById(v, R.id.root_view_dialog);
         rootView.requestFocus();
 
-        progressLogin = new ProgressDialog(getContext());
-        progressLogin.setTitle(getString(R.string.loading));
-        progressLogin.setMessage(getString(R.string.loading_message));
-        progressLogin.setCancelable(false);
+        progressLogin = new LoadingProgressDialog(getContext());
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
