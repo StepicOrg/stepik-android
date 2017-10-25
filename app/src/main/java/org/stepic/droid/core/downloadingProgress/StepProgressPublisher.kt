@@ -37,6 +37,7 @@ constructor(
                             .toFloat()
 
                     val totalProgressDownloading = downloadEntities
+                            .filterNot { cancelSniffer.isStepIdCanceled(it.stepId) } // canceled is 0f in totalProgressDownloading
                             .map { it.downloadId }
                             .let {
                                 if (it.isEmpty()) {
@@ -55,7 +56,7 @@ constructor(
                     progressPart
                 })
                 .repeatWhen { completed -> completed.delay(POLISHING_DELAY, TimeUnit.MILLISECONDS) }
-                .distinctUntilChanged ()
+                .distinctUntilChanged()
     }
 
 
