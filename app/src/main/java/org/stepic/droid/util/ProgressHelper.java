@@ -1,11 +1,12 @@
 package org.stepic.droid.util;
 
-import android.app.ProgressDialog;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.ProgressBar;
+
+import org.stepic.droid.ui.dialogs.LoadingProgressDialog;
 
 public class ProgressHelper {
     public static void dismiss(ProgressBar mProgressLogin) {
@@ -30,13 +31,13 @@ public class ProgressHelper {
             swipeRefreshLayout.setRefreshing(true);
     }
 
-    public static void activate(ProgressDialog progressDialog) {
+    public static void activate(LoadingProgressDialog progressDialog) {
         if (progressDialog != null && !progressDialog.isShowing()) {
             progressDialog.show();
         }
     }
 
-    public static void dismiss(ProgressDialog progressDialog) {
+    public static void dismiss(LoadingProgressDialog progressDialog) {
         if (progressDialog != null && progressDialog.isShowing()) {
             try {
                 progressDialog.dismiss();

@@ -52,7 +52,7 @@ class LaunchActivity : SmartLockActivityBase(), LoginView {
     }
 
 
-    private var progressLogin: ProgressDialog? = null
+    private var progressLogin: LoadingProgressDialog? = null
     private lateinit var progressHandler: ProgressHandler
     private lateinit var callbackManager: CallbackManager
 

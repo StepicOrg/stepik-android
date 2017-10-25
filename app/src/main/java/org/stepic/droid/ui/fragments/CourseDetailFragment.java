@@ -1,7 +1,6 @@
 package org.stepic.droid.ui.fragments;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
@@ -131,7 +130,7 @@ public class CourseDetailFragment extends FragmentBase implements
     View joinCourseView;
     View continueCourseView;
 
-    ProgressDialog joinCourseSpinner;
+    LoadingProgressDialog joinCourseSpinner;
 
     @BindString(R.string.join_course_impossible)
     String joinCourseImpossible;
