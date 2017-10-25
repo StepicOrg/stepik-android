@@ -9,7 +9,10 @@ import android.os.Build
 import android.os.Parcelable
 import android.support.annotation.ColorInt
 import android.support.v7.widget.AppCompatEditText
-import android.text.*
+import android.text.Editable
+import android.text.Layout
+import android.text.Spannable
+import android.text.TextWatcher
 import android.text.style.BackgroundColorSpan
 import android.text.style.ForegroundColorSpan
 import android.util.AttributeSet
@@ -19,28 +22,33 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
-import org.stepic.droid.code.highlight.prettify.PrettifyParser
+import org.stepic.droid.base.App
+import org.stepic.droid.code.highlight.ParserContainer
 import org.stepic.droid.code.highlight.syntaxhighlight.ParseResult
 import org.stepic.droid.code.highlight.themes.CodeTheme
 import org.stepic.droid.code.highlight.themes.Presets
-import org.stepic.droid.util.DpPixelsHelper
-import org.stepic.droid.util.RxEmpty
-import org.stepic.droid.util.substringOrNull
+import org.stepic.droid.util.*
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 class CodeEditor
 @JvmOverloads
 constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0)
     : AppCompatEditText(context, attrs, defStyleAttr), TextWatcher {
     companion object {
-        const val SCROLL_DEBOUNCE_MS = 100L
-        const val INPUT_DEBOUNCE_MS = 200L
-        const val LINE_NUMBERS_MARGIN_DP = 4f
+        private const val SCROLL_DEBOUNCE_MS = 100L
+        private const val INPUT_DEBOUNCE_MS = 200L
+        private const val LINE_NUMBERS_MARGIN_DP = 4f
         const val DEFAULT_INDENT_SIZE = 2
         const val MAX_INDENT_SIZE = 8
     }
 
-    private val parser = PrettifyParser()
+    init {
+        App.component().inject(this)
+    }
+
+    @Inject
+    lateinit var parserContainer: ParserContainer
 
     private val LINE_NUMBERS_MARGIN_PX = DpPixelsHelper.convertDpToPixel(LINE_NUMBERS_MARGIN_DP).toInt()
 
@@ -48,7 +56,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     private val spanPublisher = BehaviorSubject.create<List<ParseResult>>()
     private val layoutChangesPublisher = PublishSubject.create<Any>()
 
-    private val onGlobalLayoutListener  = ViewTreeObserver.OnGlobalLayoutListener  { layoutChangesPublisher.onNext(RxEmpty.INSTANCE) }
+    private val onGlobalLayoutListener = ViewTreeObserver.OnGlobalLayoutListener { layoutChangesPublisher.onNext(RxEmpty.INSTANCE) }
     private val onScrollChangedListener = ViewTreeObserver.OnScrollChangedListener { layoutChangesPublisher.onNext(RxEmpty.INSTANCE) }
 
     private val compositeDisposable = CompositeDisposable()
@@ -75,7 +83,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     var indentSize = DEFAULT_INDENT_SIZE
         internal set
 
-    
+
     internal var scrollContainer: CodeEditorLayout? = null
         set(value) {
             field?.let { container ->
@@ -83,6 +91,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
                 if (Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
                     container.viewTreeObserver.removeOnGlobalLayoutListener(onGlobalLayoutListener)
                 } else {
+                    @Suppress("DEPRECATION") //use only on old API
                     container.viewTreeObserver.removeGlobalOnLayoutListener(onGlobalLayoutListener)
                 }
             }
@@ -108,8 +117,9 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
                 highlightPublisher
                         .debounce(INPUT_DEBOUNCE_MS, TimeUnit.MILLISECONDS)
                         .map {
-                            parser.parse(lang, it.toString())
+                            RxOptional(parserContainer.prettifyParser?.parse(lang, it.toString()))
                         }
+                        .unwrapOptional()
                         .subscribe(spanPublisher::onNext)
         )
 
@@ -131,7 +141,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
         super.onDetachedFromWindow()
     }
 
-    var theme : CodeTheme = Presets.themes[0]
+    var theme: CodeTheme = Presets.themes[0]
         set(value) {
             field = value
             setTextColor(value.syntax.plain)
@@ -154,8 +164,8 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 
     private var linesWithNumbers: List<Int> = emptyList()
 
-    
-    private fun countNumbersForLines(layout: Layout) : List<Int> {
+
+    private fun countNumbersForLines(layout: Layout): List<Int> {
         var pos = 0
         return lines.map {
             val line = layout.getLineForOffset(pos)
@@ -244,9 +254,10 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
         val text = editableText.toString()
 
         var isRightBracketHighlighted = false
-        var isRightBracketClosing     = false
+        var isRightBracketClosing = false
 
-        text.substringOrNull(cursorPosition, cursorPosition + 1)?.let { bracket -> // bracket to right of cursor
+        text.substringOrNull(cursorPosition, cursorPosition + 1)?.let { bracket ->
+            // bracket to right of cursor
             CodeAnalyzer.getBracketsPair(bracket)?.let {
                 highlightBracket(cursorPosition, bracket)
                 isRightBracketHighlighted = true
@@ -254,7 +265,8 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
             }
         }
 
-        text.substringOrNull(cursorPosition - 1, cursorPosition)?.let { bracket -> // bracket to left of cursor
+        text.substringOrNull(cursorPosition - 1, cursorPosition)?.let { bracket ->
+            // bracket to left of cursor
             CodeAnalyzer.getBracketsPair(bracket)?.let {
                 if (!isRightBracketHighlighted || it.value == bracket && !isRightBracketClosing)
                     highlightBracket(cursorPosition - 1, bracket)
@@ -296,9 +308,9 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     }
 
     private fun removeSpans(spanClass: Class<*>) =
-        editableText.getSpans(0, editableText.length, spanClass).forEach {
-            editableText.removeSpan(it)
-        }
+            editableText.getSpans(0, editableText.length, spanClass).forEach {
+                editableText.removeSpan(it)
+            }
 
     private fun setSpans(start: Int, end: Int, parseResults: List<ParseResult>) {
         parseResults
@@ -311,6 +323,6 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
                 }
     }
 
-    private class CodeSyntaxSpan   (@ColorInt color: Int) : ForegroundColorSpan(color) // classes to distinct internal spans from non CodeEditor spans
+    private class CodeSyntaxSpan(@ColorInt color: Int) : ForegroundColorSpan(color) // classes to distinct internal spans from non CodeEditor spans
     private class CodeHighlightSpan(@ColorInt color: Int) : BackgroundColorSpan(color)
 }

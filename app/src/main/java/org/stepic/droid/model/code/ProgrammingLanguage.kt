@@ -177,7 +177,7 @@ fun extensionForLanguage(lang: String) : String =
             ProgrammingLanguage.HASKELL8    -> "hs"
             ProgrammingLanguage.JAVA,
             ProgrammingLanguage.JAVA8       -> "java"
-            ProgrammingLanguage.OCTAVE      -> "m"
+            ProgrammingLanguage.OCTAVE      -> "matlab"
             ProgrammingLanguage.ASM32,
             ProgrammingLanguage.ASM64       -> "asm"
             ProgrammingLanguage.SHELL       -> "sh"

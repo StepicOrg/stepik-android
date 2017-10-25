@@ -64,7 +64,7 @@ public class LangMatlab extends Lang {
 
         // patterns that always start with a known character. Must have a shortcut string.
         // whitespaces: space, tab, carriage return, line feed, line tab, form-feed, non-break space
-        _shortcutStylePatterns.add(Arrays.asList(new Object[]{Prettify.PR_PLAIN, Pattern.compile("^[ \\t\\r\\n\\v\\f\\xA0]+"), null, " \t\n\r" + Character.toString((char) 0x0B) + Character.toString((char) 0x0C) + Character.toString((char) 0xA0)}));
+        _shortcutStylePatterns.add(Arrays.asList(new Object[]{Prettify.PR_PLAIN, Pattern.compile("^[\\t\\n\\r \\xA0]+"), null, " \t\n\r" + Character.toString((char) 0x0B) + Character.toString((char) 0x0C) + Character.toString((char) 0xA0)}));
         // block comments
         //TODO: chokes on nested block comments
         //TODO: false positives when the lines with %{ and %} contain non-spaces
