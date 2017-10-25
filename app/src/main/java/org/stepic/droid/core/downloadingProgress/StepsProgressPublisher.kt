@@ -11,7 +11,6 @@ import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.RetryWithDelay
 import org.stepic.droid.util.getInt
-import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -52,9 +51,7 @@ constructor(
                             }
                             .totalProgressOfDownloading()
 
-
                     val progressPart = (totalProgressDownloading + totalProgressCached) / videoSteps.size.toFloat()
-                    Timber.d("progress = $progressPart")
                     progressPart
                 })
                 .repeatWhen { completed -> completed.delay(POLISHING_DELAY, TimeUnit.MILLISECONDS) }

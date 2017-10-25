@@ -21,10 +21,8 @@ constructor(
                     .fromCallable {
                         //it can be null
                         databaseFacade.getLessonById(id) ?: throw LessonIsNotCachedException()
-
                     }
                     .retryWhen(RetryWithDelay(RETRY_DELAY)) //retry if lessons are empty in database
-                    .cache()
                     .map {
                         it.steps.toSet()
                     }
