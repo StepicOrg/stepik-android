@@ -32,13 +32,8 @@ constructor(
 
                     val totalProgressCached: Float = steps
                             .filterNot { downloadEntitiesHashMap.contains(it.id) }
-                            .map {
-                                when (it.is_cached) {
-                                    true -> 1f
-                                    false -> 0f
-                                }
-                            }
-                            .fold(0f) { acc, value -> acc + value }
+                            .filter { it.is_cached }
+                            .size.toFloat()
 
                     val totalProgressDownloading = downloadEntities
                             .map { it.downloadId }
