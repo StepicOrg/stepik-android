@@ -26,19 +26,8 @@ constructor(
                     .retryWhen(RetryWithDelay(RETRY_DELAY)) //retry if lessons are empty in database
                     .cache()
                     .map {
-                        it.steps
+                        it.steps.toSet()
                     }
-                    .map {
-                        it.toMutableList()
-                    }
-                    .reduce { accumulator: MutableList<Long>, item: MutableList<Long> ->
-                        accumulator.addAll(item)
-                        accumulator
-                    }
-                    .map {
-                        it.toSet()
-                    }
-                    .toFlowable()
                     .cache()
                     .concatMap {
                         stepProgressPublisher.subscribe(it)

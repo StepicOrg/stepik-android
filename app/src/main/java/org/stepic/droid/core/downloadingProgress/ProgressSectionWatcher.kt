@@ -9,7 +9,7 @@ class ProgressSectionWatcher
 @Inject
 constructor(
         private val databaseFacade: DatabaseFacade,
-        private val downloadingLessonWatcher: ProgressLessonWatcher) : ProgressWatcher {
+        private val stepProgressPublisher: StepProgressPublisher) : ProgressWatcher {
 
     companion object {
         private const val RETRY_DELAY = 300
@@ -20,24 +20,43 @@ constructor(
                     .fromCallable {
                         databaseFacade.getSectionById(id)
                     }
-                    .retryWhen(RetryWithDelay(RETRY_DELAY))
+                    .retryWhen(RetryWithDelay(RETRY_DELAY)) //wait, when section will be in database
                     .cache()
-                    .flatMap {
-                        val unitsByIds = databaseFacade.getUnitsByIds(it.units)
-                        if (unitsByIds.size != it.units?.size) {
+                    .flatMapIterable {
+                        val unitsFromDatabase = databaseFacade.getUnitsByIds(it.units)
+                        if (unitsFromDatabase.size != it.units?.size) {
                             throw UnitsAreNotCachedException()
                         }
-                        Flowable.fromIterable(unitsByIds)
+                        unitsFromDatabase
                     }
-                    .retryWhen(RetryWithDelay(RETRY_DELAY))
+                    .retryWhen(RetryWithDelay(RETRY_DELAY)) //wait until all units will be in database
                     .map {
                         it.lesson
                     }
-                    .cache()
+                    .toList() //get all fields 'lesson' in units
+                    .toFlowable()
+                    .flatMapIterable {
+                        val lessonIds = it.toLongArray()
+                        val lessons = databaseFacade.getLessonsByIds(lessonIds)
+                        if (lessonIds.size != lessons.size) {
+                            throw LessonsAreNotCachedException()
+                        }
+                        lessons
+                    }
+                    .retryWhen(RetryWithDelay(RETRY_DELAY)) //wait until all lessons will be in database
+                    .map { it.steps.toMutableList() }
+                    .reduce { accumulator: MutableList<Long>, current: MutableList<Long> ->
+                        accumulator.addAll(current)
+                        accumulator
+                    }
+                    .toFlowable()
+                    .map { it.toSet() }
+                    .cache() // cache set of steps
                     .concatMap {
-                        downloadingLessonWatcher.watch(it)
+                        stepProgressPublisher.subscribe(it)
                     }
 
 
     class UnitsAreNotCachedException : Exception("Units are not in database yet")
+    class LessonsAreNotCachedException : Exception("Lessons are not in database yet")
 }
