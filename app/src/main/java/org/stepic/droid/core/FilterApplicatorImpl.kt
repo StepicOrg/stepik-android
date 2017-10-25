@@ -30,9 +30,8 @@ class FilterApplicatorImpl
     private fun resolveFiltersForList(sourceCourses: List<Course>, filters: Set<StepikFilter>): List<Course> {
         //local helper functions:
         fun resolveFilters(course: Course, now: Long, applyFilters: (Course, endDate: Long?, isAfterBeginOrNotStartable: Boolean, isBeginDateInFuture: Boolean, isEndDateInFuture: Boolean, isEnded: Boolean, filterSet: Set<StepikFilter>) -> Boolean, filterSet: Set<StepikFilter>): Boolean {
-            var beginDate: Long? = null
-            course.beginDate?.let {
-                beginDate = DateTimeHelper.toCalendar(it).timeInMillis
+            val beginDate: Long? = course.beginDate?.let {
+                DateTimeHelper.toCalendar(it).timeInMillis
             }
 
             val endDate: Long? = course.endDate?.let {
