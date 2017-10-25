@@ -61,6 +61,6 @@ constructor(
                     }
 
 
-    class UnitsAreNotCachedException : Exception("Units are not in database yet")
-    class LessonsAreNotCachedException : Exception("Lessons are not in database yet")
+    private class UnitsAreNotCachedException : Exception("Units are not in database yet")
+    private class LessonsAreNotCachedException : Exception("Lessons are not in database yet")
 }

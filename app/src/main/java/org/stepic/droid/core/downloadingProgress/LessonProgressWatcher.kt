@@ -33,6 +33,6 @@ constructor(
                         stepProgressPublisher.subscribe(it)
                     }
 
-    class LessonIsNotCachedException : Exception("lesson is not in database yet")
+    private class LessonIsNotCachedException : Exception("lesson is not in database yet")
 
 }

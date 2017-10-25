@@ -8,6 +8,8 @@ import org.stepic.droid.model.DownloadEntity
 import org.stepic.droid.model.Step
 import org.stepic.droid.storage.CancelSniffer
 import org.stepic.droid.storage.operations.DatabaseFacade
+import org.stepic.droid.util.AppConstants
+import org.stepic.droid.util.RetryWithDelay
 import org.stepic.droid.util.getInt
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
@@ -22,15 +24,15 @@ constructor(
 
     companion object {
         private const val POLISHING_DELAY = 300L
+        private const val RETRY_DELAY = 300
     }
 
     fun subscribe(stepIds: Set<Long>): Flowable<Float> {
-        val stepNumber = stepIds.size
         return Flowable
-                .combineLatest(steps(stepIds), downloadEntities(stepIds), BiFunction<List<Step>, List<DownloadEntity>, Float> { steps, downloadEntities ->
+                .combineLatest(videoSteps(stepIds), downloadEntities(stepIds), BiFunction<List<Step>, List<DownloadEntity>, Float> { videoSteps, downloadEntities ->
                     val downloadEntitiesHashMap = downloadEntities.associateBy { it.stepId }
 
-                    val totalProgressCached: Float = steps
+                    val totalProgressCached: Float = videoSteps
                             .filterNot { downloadEntitiesHashMap.contains(it.id) }
                             .filter { it.is_cached }
                             .size
@@ -51,7 +53,7 @@ constructor(
                             .totalProgressOfDownloading()
 
 
-                    val progressPart = (totalProgressDownloading + totalProgressCached) / stepNumber.toFloat()
+                    val progressPart = (totalProgressDownloading + totalProgressCached) / videoSteps.size.toFloat()
                     Timber.d("progress = $progressPart")
                     progressPart
                 })
@@ -60,11 +62,16 @@ constructor(
     }
 
 
-    private fun steps(stepIds: Set<Long>): Flowable<List<Step>> =
+    private fun videoSteps(stepIds: Set<Long>): Flowable<List<Step>> =
             Flowable
                     .fromCallable {
-                        databaseFacade.getStepsById(stepIds = stepIds.toList())
+                        val steps = databaseFacade.getStepsById(stepIds = stepIds.toList())
+                        if (steps.size != stepIds.size) {
+                            throw StepsAreNotCached()
+                        }
+                        steps.filter { it.block?.name == AppConstants.TYPE_VIDEO }
                     }
+                    .retryWhen(RetryWithDelay(RETRY_DELAY)) //wait until all steps will be in database
 
 
     private fun downloadEntities(stepIds: Set<Long>): Flowable<List<DownloadEntity>> =
@@ -97,4 +104,6 @@ constructor(
         }
         return result
     }
+
+    private class StepsAreNotCached : Exception("wait, when all steps will in database")
 }
