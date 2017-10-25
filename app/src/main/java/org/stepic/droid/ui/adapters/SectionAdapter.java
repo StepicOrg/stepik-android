@@ -41,7 +41,7 @@ import org.stepic.droid.ui.listeners.OnClickLoadListener;
 import org.stepic.droid.ui.listeners.OnItemClickListener;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ColorUtil;
-import org.stepic.droid.util.SectionUtilKt;
+import org.stepic.droid.util.SectionExtensionsKt;
 import org.stepic.droid.viewmodel.ProgressViewModel;
 
 import java.util.List;
@@ -199,7 +199,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                 return;
             }
 
-            if (section.is_cached()) {
+            if (section.isCached()) {
                 analytic.reportEvent(Analytic.Interaction.CLICK_DELETE_SECTION, section.getId() + "");
                 DeleteItemDialogFragment dialogFragment = DeleteItemDialogFragment.newInstance(sectionPosition);
                 dialogFragment.setTargetFragment(fragment, SectionsFragment.DELETE_POSITION_REQUEST_CODE);
@@ -209,11 +209,11 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                     ft.commitAllowingStateLoss();
                 }
             } else {
-                if (section.is_loading()) {
+                if (section.isLoading()) {
                     //cancel loading
                     analytic.reportEvent(Analytic.Interaction.CLICK_CANCEL_SECTION, section.getId() + "");
-                    section.set_loading(false);
-                    section.set_cached(false);
+                    section.setLoading(false);
+                    section.setCached(false);
                     threadPoolExecutor.execute(new Runnable() {
                         @Override
                         public void run() {
@@ -252,8 +252,8 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         if (sectionPosition >= 0 && sectionPosition < sections.size()) {
             final Section section = sections.get(sectionPosition);
             analytic.reportEvent(Analytic.Interaction.CLICK_CACHE_SECTION, section.getId() + "");
-            section.set_cached(false);
-            section.set_loading(true);
+            section.setCached(false);
+            section.setLoading(true);
             threadPoolExecutor.execute(new Runnable() {
                 @Override
                 public void run() {
@@ -286,8 +286,8 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     public void requestClickDeleteSilence(int position) {
         if (position >= 0 && position < sections.size()) {
             final Section section = sections.get(position);
-            section.set_loading(false);
-            section.set_cached(false);
+            section.setLoading(false);
+            section.setCached(false);
             threadPoolExecutor.execute(new Runnable() {
                 @Override
                 public void run() {
@@ -436,7 +436,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                 hardDeadline.setVisibility(View.VISIBLE);
             }
 
-            if (SectionUtilKt.hasUserAccess(section, course)) {
+            if (SectionExtensionsKt.hasUserAccess(section, course)) {
 
                 int strong_text_color = ColorUtil.INSTANCE.getColorArgb(R.color.stepic_regular_text, App.Companion.getAppContext());
 
@@ -446,7 +446,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                 cv.setFocusableInTouchMode(false);
 
                 loadButton.setVisibility(View.VISIBLE);
-                if (section.is_cached()) {
+                if (section.isCached()) {
                     //cached
                     preLoadIV.setVisibility(View.GONE);
                     whenLoad.setVisibility(View.INVISIBLE);
@@ -454,7 +454,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
 
                     whenLoad.setProgressPortion(0, false);
                 } else {
-                    if (section.is_loading()) {
+                    if (section.isLoading()) {
 
                         preLoadIV.setVisibility(View.GONE);
                         whenLoad.setVisibility(View.VISIBLE);

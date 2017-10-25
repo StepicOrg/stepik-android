@@ -169,8 +169,8 @@ class DatabaseFacade
     fun updateOnlyCachedLoadingSection(section: Section?) {
         section?.let {
             val cv = ContentValues()
-            cv.put(DbStructureSections.Column.IS_LOADING, section.is_loading)
-            cv.put(DbStructureSections.Column.IS_CACHED, section.is_cached)
+            cv.put(DbStructureSections.Column.IS_LOADING, section.isLoading)
+            cv.put(DbStructureSections.Column.IS_CACHED, section.isCached)
             sectionDao.update(DbStructureSections.Column.SECTION_ID, section.id.toString(), cv)
         }
     }

@@ -5,7 +5,7 @@ import org.stepic.droid.model.Section
 object FakeSectionGenerator {
     @JvmOverloads
     fun generate(sectionId: Long = 0,
-                 unitIds: LongArray? = null,
+                 unitIds: LongArray = longArrayOf(),
                  position: Int = 1,
                  courseId: Long = 123,
                  isActive : Boolean = true): Section {
@@ -14,7 +14,7 @@ object FakeSectionGenerator {
         section.position = position
         section.units = unitIds
         section.course = courseId
-        section.is_active = isActive
+        section.isActive = isActive
         return section
     }
 }
