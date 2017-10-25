@@ -61,7 +61,14 @@ import butterknife.BindView;
 import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
 import timber.log.Timber;
 
-public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.OnRefreshListener, UnitsView, DownloadingProgressUnitsView, DownloadingInteractionView, UnitsLearningProgressView, RoutingListener, StoreStateManager.LessonCallback {
+public class UnitsFragment extends FragmentBase implements
+        SwipeRefreshLayout.OnRefreshListener,
+        UnitsView,
+        DownloadingProgressUnitsView,
+        DownloadingInteractionView,
+        UnitsLearningProgressView,
+        RoutingListener,
+        StoreStateManager.LessonCallback {
 
     private static final int ANIMATION_DURATION = 0;
     public static final int DELETE_POSITION_REQUEST_CODE = 165;
