@@ -1,0 +1,52 @@
+package org.stepic.droid.core.downloadingProgress
+
+import io.reactivex.Scheduler
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
+import io.reactivex.internal.disposables.DisposableContainer
+import org.stepic.droid.core.presenters.PresenterBase
+import org.stepic.droid.di.qualifiers.BackgroundScheduler
+import org.stepic.droid.di.qualifiers.MainScheduler
+import javax.inject.Inject
+
+abstract class DownloadingPresenter
+@Inject
+constructor(
+        private val progressWatcher: ProgressWatcher,
+        @BackgroundScheduler
+        private val scheduler: Scheduler,
+        @MainScheduler
+        private val mainScheduler: Scheduler) : PresenterBase<DownloadingView>() {
+
+    private val map = hashMapOf<Long, Disposable>()
+    private val compositeDisposable: DisposableContainer = CompositeDisposable()
+
+    fun onStateChanged(id: Long, isLoading: Boolean) {
+        if (isLoading) {
+            listenLoadingProgress(id)
+        } else {
+            stopListenProgress(id)
+        }
+    }
+
+    private fun listenLoadingProgress(id: Long) {
+        if (map.containsKey(id)) {
+            //we already listen
+            return
+        }
+        val disposable = progressWatcher
+                .watch(id)
+                .subscribeOn(scheduler)
+                .observeOn(mainScheduler)
+                .subscribe { progress -> view?.onNewProgressValue(id, progress) }
+        map.put(id, disposable)
+        compositeDisposable.add(disposable)
+    }
+
+    private fun stopListenProgress(id: Long) {
+        map.remove(id)?.let { compositeDisposable.remove(it) }
+    }
+
+    //should we stop listen all in onDetachView or will it be destroyed with component?
+
+}
