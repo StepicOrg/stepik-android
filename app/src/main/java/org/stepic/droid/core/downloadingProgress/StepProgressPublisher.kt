@@ -33,7 +33,8 @@ constructor(
                     val totalProgressCached: Float = steps
                             .filterNot { downloadEntitiesHashMap.contains(it.id) }
                             .filter { it.is_cached }
-                            .size.toFloat()
+                            .size
+                            .toFloat()
 
                     val totalProgressDownloading = downloadEntities
                             .map { it.downloadId }
@@ -88,9 +89,9 @@ constructor(
                         } else {
                             downloadedBytes.toFloat() / totalBytes
                         }
+                it.moveToNext()
             }
 
-            it.moveToNext()
         }
         return result
     }
