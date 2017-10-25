@@ -3,7 +3,6 @@ package org.stepic.droid.core.downloadingProgress
 import io.reactivex.Scheduler
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
-import io.reactivex.internal.disposables.DisposableContainer
 import org.stepic.droid.core.presenters.PresenterBase
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
@@ -19,7 +18,7 @@ constructor(
         private val mainScheduler: Scheduler) : PresenterBase<DownloadingView>() {
 
     private val map = hashMapOf<Long, Disposable>()
-    private val compositeDisposable: DisposableContainer = CompositeDisposable()
+    private val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
     fun onStateChanged(id: Long, isLoading: Boolean) {
         if (isLoading) {
@@ -27,6 +26,12 @@ constructor(
         } else {
             stopListenProgress(id)
         }
+    }
+
+    override fun detachView(view: DownloadingView) {
+        super.detachView(view)
+        compositeDisposable.dispose()
+        map.clear()
     }
 
     private fun listenLoadingProgress(id: Long) {
@@ -46,7 +51,5 @@ constructor(
     private fun stopListenProgress(id: Long) {
         map.remove(id)?.let { compositeDisposable.remove(it) }
     }
-
-    //should we stop listen all in onDetachView or will it be destroyed with component?
 
 }
