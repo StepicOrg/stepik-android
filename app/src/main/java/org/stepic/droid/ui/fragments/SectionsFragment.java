@@ -978,6 +978,7 @@ public class SectionsFragment
 
     @Override
     public void onNewProgressValue(long id, float portion) {
+        Timber.d("new progress value for " + id + " = " + portion);
         int position = -1;
         for (int i = 0; i < sectionList.size(); i++) {
             Section section = sectionList.get(i);

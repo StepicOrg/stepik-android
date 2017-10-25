@@ -52,7 +52,6 @@ import javax.inject.Inject;
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import timber.log.Timber;
 
 public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericViewHolder> implements OnClickLoadListener, OnLoadPositionListener {
     private final static String SECTION_TITLE_DELIMETER = ". ";
@@ -392,7 +391,6 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
             int position = positionInAdapter - PRE_SECTION_LIST_DELTA;
             Section section = sections.get(position);
 
-            Timber.d("onBind Holder = %s", this);
             long sectionId = section.getId();
             boolean needAnimation = true;
             if (oldSectionId != sectionId) {
