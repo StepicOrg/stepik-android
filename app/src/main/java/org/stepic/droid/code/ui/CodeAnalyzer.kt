@@ -58,15 +58,28 @@ object CodeAnalyzer {
             in brackets -> {
                 val next = getNextSymbol(start + 1, text)
                 if (next == null || Character.isWhitespace(next[0]) || next in brackets.values) { // don't want auto bracket if there is a statement next
-                    codeEditor.editableText.insert(start + count, brackets[inserted])
+                    codeEditor.withoutAnalyze {
+                        codeEditor.editableText.insert(start + count, brackets[inserted])
+                        codeEditor.setSelection(start + count)
+                    }
+                }
+            }
+
+            in brackets.values -> {
+                if (inserted == text.substringOrNull(start + count, start + 2 * count)) {
+                    codeEditor.editableText.replace(start, start + count, "")
                     codeEditor.setSelection(start + count)
                 }
             }
 
             in quotes -> {
                 val next = getNextSymbol(start + 1, text)
-                if (next == null || Character.isWhitespace(next[0])) { // don't want auto quote if there is a statement next
-                    codeEditor.editableText.insert(start, inserted)
+                val prev = getPrevSymbol(start, text)
+                if ((next == null || Character.isWhitespace(next[0])) && prev != inserted) { // don't want auto quote if there is a statement next
+                    codeEditor.editableText.insert(start + count, inserted)
+                    codeEditor.setSelection(start + count)
+                } else if (inserted == text.substringOrNull(start + count, start + 2 * count)) {
+                    codeEditor.editableText.replace(start, start + count, "")
                     codeEditor.setSelection(start + count)
                 }
             }

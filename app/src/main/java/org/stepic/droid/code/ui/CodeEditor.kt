@@ -103,6 +103,8 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
             field = value
         }
 
+    var isCodeAnalyzerEnabled = true
+
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
@@ -229,7 +231,9 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 
     override fun afterTextChanged(editable: Editable) {
         lines = text.toString().lines()
-        CodeAnalyzer.onTextInserted(insertedStart, insertedCount, this)
+        if (isCodeAnalyzerEnabled) {
+            CodeAnalyzer.onTextInserted(insertedStart, insertedCount, this)
+        }
         highlightBrackets(selectionStart)
         highlightPublisher.onNext(editable)
         requestLayout()
@@ -321,6 +325,13 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
                         editableText.setSpan(CodeSyntaxSpan(it), pr.offset, Math.min(pr.offset + pr.length, editableText.length), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                     }
                 }
+    }
+
+
+    inline fun withoutAnalyze(f: (CodeEditor) -> Unit) {
+        isCodeAnalyzerEnabled = false
+        f(this)
+        isCodeAnalyzerEnabled = true
     }
 
     private class CodeSyntaxSpan(@ColorInt color: Int) : ForegroundColorSpan(color) // classes to distinct internal spans from non CodeEditor spans
