@@ -22,7 +22,6 @@ constructor(
 
     companion object {
         private const val POLISHING_DELAY = 300L
-        private const val MIN_VALUABLE_DELTA = 1f / 360f // 1° of circle
     }
 
     fun subscribe(stepIds: Set<Long>): Flowable<Float> {
@@ -56,10 +55,7 @@ constructor(
                     progressPart
                 })
                 .repeatWhen { completed -> completed.delay(POLISHING_DELAY, TimeUnit.MILLISECONDS) }
-                .distinctUntilChanged { f1, f2 ->
-                    val distinction = Math.abs(f2 - f1)
-                    distinction < MIN_VALUABLE_DELTA
-                }
+                .distinctUntilChanged ()
     }
 
 
