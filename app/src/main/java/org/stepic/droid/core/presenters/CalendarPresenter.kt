@@ -64,7 +64,7 @@ class CalendarPresenter
             sectionList.forEach {
                 val calendarSection: CalendarSection? = addedCalendarSectionsMap[it.id]
                 // We can't check calendar permission, when we want to show widget
-                val isDeadlineGreaterThanNow = isDeadlineAfterDate(it.soft_deadline, nowMinus1Hour) || isDeadlineAfterDate(it.hard_deadline, nowMinus1Hour)
+                val isDeadlineGreaterThanNow = isDeadlineAfterDate(it.softDeadline, nowMinus1Hour) || isDeadlineAfterDate(it.hardDeadline, nowMinus1Hour)
 
                 if (calendarSection == null) {
                     if (isDeadlineGreaterThanNow) {
@@ -102,7 +102,7 @@ class CalendarPresenter
                         calendarDeadlinePlusMonthUtc = DateTimeHelper.toCalendar(lastDeadline).timeInMillis + AppConstants.MILLIS_IN_1MONTH
                     }
 
-                    if ((isDeadlineAfterDate(it.soft_deadline, calendarDeadlinePlusMonthUtc) || isDeadlineAfterDate(it.hard_deadline, calendarDeadlinePlusMonthUtc)) && isDeadlineGreaterThanNow) {
+                    if ((isDeadlineAfterDate(it.softDeadline, calendarDeadlinePlusMonthUtc) || isDeadlineAfterDate(it.softDeadline, calendarDeadlinePlusMonthUtc)) && isDeadlineGreaterThanNow) {
                         if (userPrefs.isNeedToShowCalendarWidget) {
                             analytic.reportEvent(Analytic.Calendar.SHOW_CALENDAR_AS_WIDGET)
                             mainHandler.post {
@@ -186,18 +186,18 @@ class CalendarPresenter
 
 
             sectionList.filterNotNull().forEach {
-                // We can choose soft_deadline or last_deadline of the Course, if section doesn't have it, but it will pollute calendar.
+                // We can choose softDeadline or last_deadline of the Course, if section doesn't have it, but it will pollute calendar.
 
                 // Add upcoming deadlines of sections:
-                if (isDeadlineAfterDate(it.soft_deadline, nowMinus1Hour)) {
-                    val deadline = it.soft_deadline
+                if (isDeadlineAfterDate(it.softDeadline, nowMinus1Hour)) {
+                    val deadline = it.softDeadline
                     if (deadline != null) {
                         addDeadlineEvent(it, deadline, DeadlineType.softDeadline, addedCalendarSectionsMap[it.id], calendarItemFinal)
                     }
                 }
 
-                if (isDeadlineAfterDate(it.hard_deadline, nowMinus1Hour)) {
-                    val deadline = it.hard_deadline
+                if (isDeadlineAfterDate(it.hardDeadline, nowMinus1Hour)) {
+                    val deadline = it.hardDeadline
                     if (deadline != null) {
                         addDeadlineEvent(it, deadline, DeadlineType.hardDeadline, addedCalendarSectionsMap[it.id], calendarItemFinal)
                     }
@@ -303,9 +303,9 @@ class CalendarPresenter
     private fun addToDatabase(section: Section, deadlineType: DeadlineType, eventId: Long) {
         val infoFromDb = database.getCalendarEvent(section.id)
         if (deadlineType == DeadlineType.softDeadline) {
-            database.addCalendarEvent(CalendarSection(section.id, infoFromDb?.eventIdHardDeadline, eventId, infoFromDb?.hardDeadline, section.soft_deadline))
+            database.addCalendarEvent(CalendarSection(section.id, infoFromDb?.eventIdHardDeadline, eventId, infoFromDb?.hardDeadline, section.softDeadline))
         } else {
-            database.addCalendarEvent(CalendarSection(section.id, eventId, infoFromDb?.eventIdSoftDeadline, section.hard_deadline, infoFromDb?.softDeadline))
+            database.addCalendarEvent(CalendarSection(section.id, eventId, infoFromDb?.eventIdSoftDeadline, section.hardDeadline, infoFromDb?.softDeadline))
         }
     }
 }

@@ -67,19 +67,24 @@ class WantMoveDataDialog : DialogFragment() {
                             val outputPath = outputFile.path // FIXME: 09.06.16 if sd is not available -> post event with fail
 
                             try {
-                                for (video in cachedVideos) {
-                                    if (video != null && video.url != null && video.stepId >= 0) {
-                                        val inputPath = File(video.url).parent
+                                for (cachedVideo in cachedVideos) {
+                                    if (cachedVideo != null && cachedVideo.url != null && cachedVideo.stepId >= 0) {
+                                        val inputPath = File(cachedVideo.url).parent
                                         if (inputPath != outputPath) {
-                                            StorageUtil.moveFile(inputPath, video.videoId.toString() + "", outputPath)
-                                            StorageUtil.moveFile(inputPath, video.videoId.toString() + AppConstants.THUMBNAIL_POSTFIX_EXTENSION, outputPath)
-                                            val newPathVideo = File(outputPath, video.videoId.toString() + "")
-                                            val newPathThumbnail = File(outputPath, video.videoId.toString() + AppConstants.THUMBNAIL_POSTFIX_EXTENSION)
+                                            val videoName = cachedVideo.videoId.toString() + AppConstants.VIDEO_EXTENSION
+                                            val thumbnailName = cachedVideo.videoId.toString() + AppConstants.THUMBNAIL_POSTFIX_EXTENSION
+
+                                            StorageUtil.moveFile(inputPath, videoName, outputPath)
+                                            StorageUtil.moveFile(inputPath, thumbnailName, outputPath)
+
+                                            val newPathVideo = File(outputPath, videoName)
+                                            val newPathThumbnail = File(outputPath, thumbnailName)
+
                                             val urlVideo = newPathVideo.path
                                             val urlThumbnail = newPathThumbnail.path
-                                            video.url = urlVideo
-                                            video.thumbnail = urlThumbnail
-                                            databaseFacade.addVideo(video)
+                                            cachedVideo.url = urlVideo
+                                            cachedVideo.thumbnail = urlThumbnail
+                                            databaseFacade.addVideo(cachedVideo)
                                         }
                                     }
                                 }

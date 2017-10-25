@@ -169,8 +169,8 @@ class DatabaseFacade
     fun updateOnlyCachedLoadingSection(section: Section?) {
         section?.let {
             val cv = ContentValues()
-            cv.put(DbStructureSections.Column.IS_LOADING, section.is_loading)
-            cv.put(DbStructureSections.Column.IS_CACHED, section.is_cached)
+            cv.put(DbStructureSections.Column.IS_LOADING, section.isLoading)
+            cv.put(DbStructureSections.Column.IS_CACHED, section.isCached)
             sectionDao.update(DbStructureSections.Column.SECTION_ID, section.id.toString(), cv)
         }
     }
@@ -229,17 +229,8 @@ class DatabaseFacade
 
     fun getAllCachedVideos() = cachedVideoDao.getAll()
 
-    /**
-     * getPath of cached video
-
-     * @param video video which we check for contains in db
-     * *
-     * @return null if video not existing in db, otherwise path to disk
-     */
-    fun getPathToVideoIfExist(video: Video): String? {
-        val cachedVideo = cachedVideoDao.get(DbStructureCachedVideo.Column.VIDEO_ID, video.id.toString())
-        return cachedVideo?.url
-    }
+    fun getCachedVideoIfExist (video : Video) : CachedVideo? =
+            cachedVideoDao.get(DbStructureCachedVideo.Column.VIDEO_ID, video.id.toString())
 
     fun getDownloadEntityIfExist(downloadId: Long?): DownloadEntity? {
         downloadId ?: return null
