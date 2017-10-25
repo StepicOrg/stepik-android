@@ -476,7 +476,7 @@ public class SectionsFragment
         Timber.d("downloading interaction presenter instance: %s", downloadingInteractionPresenter);
         downloadingInteractionPresenter.attachView(this);
         downloadingPresenter.attachView(this);
-        for(Section section : sectionList) {
+        for (Section section : sectionList) {
             downloadingPresenter.onStateChanged(section.getId(), section.is_loading());
         }
     }
@@ -904,6 +904,10 @@ public class SectionsFragment
 
     @Override
     public void onLoadingAccepted(int position) {
+        final Section section = getSectionByPosition(position);
+        if (section != null) {
+            downloadingPresenter.onStateChanged(section.getId(), true);
+        }
         adapter.loadAfterDetermineNetworkState(position);
     }
 
@@ -991,5 +995,13 @@ public class SectionsFragment
         //change state for updating in adapter
         sectionIdToLoadingStateMap.put(id, portion);
         adapter.notifyItemChanged(position);
+    }
+
+    @Nullable
+    private Section getSectionByPosition(int position) {
+        if (position < 0 || position >= sectionList.size()) {
+            return null;
+        }
+        return sectionList.get(position);
     }
 }
