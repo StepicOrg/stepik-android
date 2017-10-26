@@ -8,6 +8,7 @@ import org.stepic.droid.core.FilterApplicator
 import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.di.course_list.CourseListScope
 import org.stepic.droid.model.Course
+import org.stepic.droid.model.Progress
 import org.stepic.droid.model.StepikFilter
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
@@ -209,32 +210,32 @@ class PersistentCourseListPresenter
 
     @WorkerThread
     private fun sortByLastAction(courses: List<Course>): MutableList<Course> {
-        return courses.toMutableList() //fixme: sort by progresses
-//        val result = ArrayList<Course>(courses.size)
-//        courses.map {
-//        }
-//        val localLastStepsList = databaseFacade.getAllLocalLastCourseInteraction()
-//        val sortedPersistentLastStepCourseIds = localLastStepsList
-//                .filterNotNull()
-//                .filter { it.timestamp > 0 }
-//                .toSortedSet(compareBy { it.timestamp.times(-1L) })
-//        val coursesMap = courses.associateBy { it.courseId }
-//        val usedCourses = HashSet<Long>()
-//        sortedPersistentLastStepCourseIds.forEach {
-//            val course = coursesMap[it.courseId]
-//            if (course != null) {
-//                result.add(course)
-//                usedCourses.add(course.courseId)
-//            }
-//        }
-//
-//        courses.forEach {
-//            if (!usedCourses.contains(it.courseId)) {
-//                result.add(it)
-//            }
-//        }
-//
-//        return result
+        val progressIds = courses.mapNotNull {
+            it.progress
+        }
+        val courseProgressesMap = databaseFacade.getProgresses(progressIds).associateBy { it.id }
+
+        return courses.sortedWith(Comparator<Course> { course1, course2 ->
+            val progress1: Progress? = courseProgressesMap[course1.progress]
+            val progress2: Progress? = courseProgressesMap[course2.progress]
+
+            val lastViewed1 = progress1?.last_viewed?.toLongOrNull()
+            val lastViewed2 = progress2?.last_viewed?.toLongOrNull()
+
+            if (lastViewed1 == null && lastViewed2 == null) {
+                return@Comparator (course2.courseId - course1.courseId).toInt() // course2 - course1 (greater id is 1st)
+            }
+
+            if (lastViewed1 == null) {
+                return@Comparator 1 // 1st after 2nd
+            }
+
+            if (lastViewed2 == null) {
+                return@Comparator -1 //1st before 2nd. 2nd to end
+            }
+
+            return@Comparator (lastViewed2 - lastViewed1).toInt()
+        }).toMutableList()
     }
 
     fun loadMore(courseType: Table, needFilter: Boolean) {

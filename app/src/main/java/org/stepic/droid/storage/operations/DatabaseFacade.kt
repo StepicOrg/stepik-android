@@ -123,6 +123,15 @@ class DatabaseFacade
 
     fun getProgressById(progressId: String) = progressDao.get(DbStructureProgress.Column.ID, progressId)
 
+    fun getProgresses(progressIds: List<String>): List<Progress> {
+        val range = DbParseHelper.parseStringArrayToString(progressIds.toTypedArray(), AppConstants.COMMA)
+        return if (range == null) {
+            emptyList()
+        } else {
+            progressDao.getAllInRange(DbStructureProgress.Column.ID, range)
+        }
+    }
+
     @Deprecated("Lesson can have a lot of units", ReplaceWith("try to get unit from section"))
     fun getUnitByLessonId(lessonId: Long) = unitDao.get(DbStructureUnit.Column.LESSON, lessonId.toString())
 
@@ -227,7 +236,7 @@ class DatabaseFacade
 
     fun getAllCachedVideos() = cachedVideoDao.getAll()
 
-    fun getCachedVideoIfExist (video : Video) : CachedVideo? =
+    fun getCachedVideoIfExist(video: Video): CachedVideo? =
             cachedVideoDao.get(DbStructureCachedVideo.Column.VIDEO_ID, video.id.toString())
 
     fun getDownloadEntityIfExist(downloadId: Long?): DownloadEntity? {
