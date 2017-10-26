@@ -86,7 +86,7 @@ import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ColorUtil;
 import org.stepic.droid.util.HtmlHelper;
 import org.stepic.droid.util.ProgressHelper;
-import org.stepic.droid.util.SectionUtilKt;
+import org.stepic.droid.util.SectionExtensionsKt;
 import org.stepic.droid.util.SnackbarExtensionKt;
 import org.stepic.droid.util.SnackbarShower;
 import org.stepic.droid.util.StepikLogicHelper;
@@ -417,7 +417,7 @@ public class SectionsFragment
             if (modulePosition > 0 && modulePosition <= sections.size()) {
                 Section section = sections.get(modulePosition - 1);
 
-                boolean userHasAccess = SectionUtilKt.hasUserAccess(section, course);
+                boolean userHasAccess = SectionExtensionsKt.hasUserAccess(section, course);
                 if (userHasAccess) {
                     getScreenManager().showUnitsForSection(SectionsFragment.this.getActivity(), sections.get(modulePosition - 1));
                 } else {
@@ -524,8 +524,8 @@ public class SectionsFragment
         if (section == null || position == -1 || position >= sectionList.size()) return;
 
         //now we have not null section and correct position at oldList
-        section.set_cached(isCached);
-        section.set_loading(isLoading);
+        section.setCached(isCached);
+        section.setLoading(isLoading);
         adapter.notifyItemChanged(position + SectionAdapter.PRE_SECTION_LIST_DELTA);
     }
 

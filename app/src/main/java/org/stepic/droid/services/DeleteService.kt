@@ -73,15 +73,15 @@ class DeleteService : IntentService("delete_service") {
     @SuppressFBWarnings(value = "RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE")
     private fun removeFromDisk(step: Step?) {
         step?.block?.video?.let {
-            val path = databaseFacade.getPathToVideoIfExist(it)
-            var file = File(path)
-            if (file.exists()) {
+            val cachedVideo = databaseFacade.getCachedVideoIfExist(it)
+            var file = File(cachedVideo?.url)
+            if (cachedVideo != null && file.exists()) {
                 file.delete()
             }
 
             //delete png thumbnail
-            file = File(path + AppConstants.THUMBNAIL_POSTFIX_EXTENSION)
-            if (file.exists()) {
+            file = File(cachedVideo?.thumbnail)
+            if (cachedVideo != null && file.exists()) {
                 file.delete()
             }
 

@@ -1,7 +1,6 @@
 package org.stepic.droid.ui.fragments;
 
 import android.app.DownloadManager;
-import android.app.ProgressDialog;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -97,7 +96,7 @@ public class DownloadsFragment extends FragmentBase implements
     private List<DownloadingVideoItem> downloadingWithProgressList;
     private Runnable loadingUpdater = null;
     private Set<Long> cachedStepsSet;
-    private ProgressDialog loadingProgressDialog;
+    private LoadingProgressDialog loadingProgressDialog;
     private boolean isLoaded;
 
     @Inject
