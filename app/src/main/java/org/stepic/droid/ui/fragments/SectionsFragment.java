@@ -118,6 +118,8 @@ public class SectionsFragment
     private static final int ANIMATION_DURATION = 0;
     public static final int DELETE_POSITION_REQUEST_CODE = 177;
 
+    private final static long INVITE_FRIEND_POPUP_DELAY = 500;
+
     @NotNull
     public static SectionsFragment newInstance() {
         return new SectionsFragment();
@@ -839,13 +841,13 @@ public class SectionsFragment
 
     @Override
     public void onShowInvitationDialog(@NotNull final Course courseForSharing) {
-        rootView.post(new Runnable() {
+        rootView.postDelayed(new Runnable() {
             @Override
             public void run() {
                 final View shareView = rootView.findViewById(R.id.menu_item_share);
                 inviteFriendsPopupWindow = PopupHelper.INSTANCE.showPopupAnchoredToView(getContext(), shareView, R.layout.popup_invite_friends_to_course);
             }
-        });
+        }, INVITE_FRIEND_POPUP_DELAY);
     }
 
     @Override
