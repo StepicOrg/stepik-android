@@ -21,9 +21,13 @@ object CodeAnalyzer {
             )
     )
 
-    private val quotes = hashSetOf(
-        "\"", "'"
+    private val quotes = hashMapOf(
+        "\"" to "\"",
+        "'"  to "'"
     )
+
+    private val pairedSymbols = brackets + quotes
+
 
     private fun getIndentForCurrentLine(cursorPosition: Int, text: String) : Int {
         val prevLineStart = text.substring(0, cursorPosition).lastIndexOf(LINE_BREAK)
@@ -58,16 +62,51 @@ object CodeAnalyzer {
             in brackets -> {
                 val next = getNextSymbol(start + 1, text)
                 if (next == null || Character.isWhitespace(next[0]) || next in brackets.values) { // don't want auto bracket if there is a statement next
-                    codeEditor.editableText.insert(start + count, brackets[inserted])
-                    codeEditor.setSelection(start + count)
+                    insertTextAfterCursor(start, count, codeEditor, brackets[inserted])
                 }
+            }
+
+            in brackets.values -> {
+                onClosingSymbolInserted(start, count, codeEditor, inserted, text)
             }
 
             in quotes -> {
                 val next = getNextSymbol(start + 1, text)
-                if (next == null || Character.isWhitespace(next[0])) { // don't want auto quote if there is a statement next
-                    codeEditor.editableText.insert(start, inserted)
-                    codeEditor.setSelection(start + count)
+                val prev = getPrevSymbol(start, text)
+                if ((next == null || Character.isWhitespace(next[0])) && prev != inserted) { // don't want auto quote if there is a statement next
+                    insertTextAfterCursor(start, count, codeEditor, inserted)
+                } else {
+                    onClosingSymbolInserted(start, count, codeEditor, inserted, text)
+                }
+            }
+        }
+    }
+
+    private fun insertTextAfterCursor(start: Int, count: Int, codeEditor: CodeEditor, textToInsert: String?) {
+        codeEditor.withoutAnalyze {
+            it.editableText.insert(start + count, textToInsert)
+            it.setSelection(start + count)
+        }
+    }
+
+    private fun onClosingSymbolInserted(start: Int, count: Int, codeEditor: CodeEditor, inserted: String, text: String) {
+        if (inserted == text.substringOrNull(start + count, start + 2 * count)) {
+            codeEditor.withoutAnalyze {
+                it.editableText.replace(start, start + count, "")
+                it.setSelection(start + count)
+            }
+        }
+    }
+
+    fun onTextReplaced(start: Int, count: Int, codeEditor: CodeEditor, replaced: String) {
+        val text = codeEditor.editableText.toString()
+        when (replaced) {
+            in pairedSymbols -> {
+                val next = getNextSymbol(start, text)
+                if (next != null && next == pairedSymbols[replaced]) {
+                    codeEditor.withoutAnalyze {
+                        it.editableText.replace(start, start + next.length, "")
+                    }
                 }
             }
         }
