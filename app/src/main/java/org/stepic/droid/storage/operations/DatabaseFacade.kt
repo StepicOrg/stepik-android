@@ -124,7 +124,13 @@ class DatabaseFacade
     fun getProgressById(progressId: String) = progressDao.get(DbStructureProgress.Column.ID, progressId)
 
     fun getProgresses(progressIds: List<String>): List<Progress> {
-        val range = DbParseHelper.parseStringArrayToString(progressIds.toTypedArray(), AppConstants.COMMA)
+        //todo change implementation of getAllInRange and escape internally
+        val escapedIds = progressIds
+                .map {
+                    "\"$it\""
+                }
+                .toTypedArray()
+        val range = DbParseHelper.parseStringArrayToString(escapedIds, AppConstants.COMMA)
         return if (range == null) {
             emptyList()
         } else {

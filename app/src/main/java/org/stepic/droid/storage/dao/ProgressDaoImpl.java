@@ -54,7 +54,7 @@ public class ProgressDaoImpl extends DaoBase<Progress> {
         values.put(DbStructureProgress.Column.IS_PASSED, progress.is_passed());
         values.put(DbStructureProgress.Column.LAST_VIEWED, progress.getLast_viewed());
         values.put(DbStructureProgress.Column.N_STEPS, progress.getN_steps());
-        values.put(DbStructureProgress.Column.N_STEPS_PASSED, progress.getLast_viewed());
+        values.put(DbStructureProgress.Column.N_STEPS_PASSED, progress.getN_steps_passed());
         return values;
     }
 
