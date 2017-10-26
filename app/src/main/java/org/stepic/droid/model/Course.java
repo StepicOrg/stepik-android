@@ -66,10 +66,20 @@ public final class Course implements Parcelable {
     private String lastStepId;
     @SerializedName("learners_count")
     private long learnersCount;
+    @Nullable
     private String progress;
 
     public Course() {
 
+    }
+
+    @Nullable
+    public String getProgress() {
+        return progress;
+    }
+
+    public void setProgress(@Nullable String progress) {
+        this.progress = progress;
     }
 
     public String getEndDate() {
