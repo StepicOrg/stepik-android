@@ -103,6 +103,8 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
             field = value
         }
 
+    var isCodeAnalyzerEnabled = true
+
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
@@ -227,17 +229,28 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     private var insertedStart: Int = 0
     private var insertedCount: Int = 0
 
+    private var replacedStart: Int = 0
+    private var replacedCount: Int = 0
+    private var replacedText: String = ""
+
     override fun afterTextChanged(editable: Editable) {
         lines = text.toString().lines()
-        CodeAnalyzer.onTextInserted(insertedStart, insertedCount, this)
+        if (isCodeAnalyzerEnabled) {
+            CodeAnalyzer.onTextReplaced(replacedStart, replacedCount, this, replacedText)
+            CodeAnalyzer.onTextInserted(insertedStart, insertedCount, this)
+        }
         highlightBrackets(selectionStart)
         highlightPublisher.onNext(editable)
         requestLayout()
     }
 
-    override fun beforeTextChanged(text: CharSequence?, start: Int, lengthBefore: Int, count: Int) {}
+    override fun beforeTextChanged(text: CharSequence, start: Int, count: Int, after: Int) {
+        replacedStart = start
+        replacedCount = count
+        replacedText = text.substring(start, start + count)
+    }
 
-    override fun onTextChanged(text: CharSequence, start: Int, lengthBefore: Int, count: Int) {
+    override fun onTextChanged(text: CharSequence, start: Int, before: Int, count: Int) {
         insertedStart = start
         insertedCount = count
     }
@@ -321,6 +334,13 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
                         editableText.setSpan(CodeSyntaxSpan(it), pr.offset, Math.min(pr.offset + pr.length, editableText.length), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                     }
                 }
+    }
+
+
+    inline fun withoutAnalyze(block: (CodeEditor) -> Unit) {
+        isCodeAnalyzerEnabled = false
+        block(this)
+        isCodeAnalyzerEnabled = true
     }
 
     private class CodeSyntaxSpan(@ColorInt color: Int) : ForegroundColorSpan(color) // classes to distinct internal spans from non CodeEditor spans
