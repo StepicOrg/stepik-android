@@ -223,7 +223,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                             sectionDownloader.cancelSectionLoading(section.getId());
                         }
                     });
-
+                    downloadingPresenter.onStateChanged(section.getId(), false);
                     notifyItemChanged(adapterPosition);
                 } else {
                     if (sharedPreferenceHelper.isNeedToShowVideoQualityExplanation()) {

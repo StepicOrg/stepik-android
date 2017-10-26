@@ -203,7 +203,6 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
         return unitList.size();
     }
 
-
     @Override
     public void onItemClick(int itemPosition) {
         if (itemPosition >= 0 && itemPosition < unitList.size()) {
@@ -270,7 +269,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
                             lessonDownloader.cancelLessonLoading(lesson.getId());
                         }
                     });
-
+                    downloadingPresenter.onStateChanged(lesson.getId(), false);
                     notifyItemChanged(position);
                 } else {
                     if (sharedPreferenceHelper.isNeedToShowVideoQualityExplanation()) {

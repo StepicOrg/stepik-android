@@ -6,6 +6,7 @@ import io.reactivex.disposables.Disposable
 import org.stepic.droid.core.presenters.PresenterBase
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
+import timber.log.Timber
 import javax.inject.Inject
 
 class DownloadingPresenter
@@ -21,6 +22,7 @@ constructor(
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
     fun onStateChanged(id: Long, isLoading: Boolean) {
+        Timber.d("onStateChanged(id = $id, isLoading = $isLoading)")
         if (isLoading) {
             listenLoadingProgress(id)
         } else {
