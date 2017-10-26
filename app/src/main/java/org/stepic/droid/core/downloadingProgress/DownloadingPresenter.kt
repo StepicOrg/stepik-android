@@ -6,7 +6,6 @@ import io.reactivex.disposables.Disposable
 import org.stepic.droid.core.presenters.PresenterBase
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
-import timber.log.Timber
 import javax.inject.Inject
 
 class DownloadingPresenter
@@ -18,7 +17,7 @@ constructor(
         @MainScheduler
         private val mainScheduler: Scheduler) : PresenterBase<DownloadingView>() {
 
-    private val map = hashMapOf<Long, Disposable>()
+    private val idToDisposableMap = hashMapOf<Long, Disposable>()
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
     fun onStateChanged(id: Long, isLoading: Boolean) {
@@ -32,11 +31,11 @@ constructor(
     override fun detachView(view: DownloadingView) {
         super.detachView(view)
         compositeDisposable.dispose()
-        map.clear()
+        idToDisposableMap.clear()
     }
 
     private fun listenLoadingProgress(id: Long) {
-        if (map.containsKey(id)) {
+        if (idToDisposableMap.containsKey(id)) {
             //we already listen
             return
         }
@@ -45,12 +44,12 @@ constructor(
                 .subscribeOn(scheduler)
                 .observeOn(mainScheduler)
                 .subscribe { progress -> view?.onNewProgressValue(id, progress) }
-        map.put(id, disposable)
+        idToDisposableMap.put(id, disposable)
         compositeDisposable.add(disposable)
     }
 
     private fun stopListenProgress(id: Long) {
-        map.remove(id)?.let { compositeDisposable.remove(it) }
+        idToDisposableMap.remove(id)?.let { compositeDisposable.remove(it) }
     }
 
 }
