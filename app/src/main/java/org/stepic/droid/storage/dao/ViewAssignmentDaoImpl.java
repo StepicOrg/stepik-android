@@ -2,8 +2,8 @@ package org.stepic.droid.storage.dao;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
+import org.stepic.droid.storage.operations.CrudOperations;
 import org.stepic.droid.storage.structure.DbStructureViewQueue;
 import org.stepic.droid.web.ViewAssignment;
 
@@ -12,8 +12,8 @@ import javax.inject.Inject;
 public class ViewAssignmentDaoImpl extends DaoBase<ViewAssignment> {
 
     @Inject
-    public ViewAssignmentDaoImpl(SQLiteDatabase openHelper) {
-        super(openHelper);
+    public ViewAssignmentDaoImpl(CrudOperations crudOperations) {
+        super(crudOperations);
     }
 
     @Override

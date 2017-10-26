@@ -22,7 +22,6 @@ constructor(
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
     fun onStateChanged(id: Long, isLoading: Boolean) {
-        Timber.d("onStateChanged(id = $id, isLoading = $isLoading)")
         if (isLoading) {
             listenLoadingProgress(id)
         } else {

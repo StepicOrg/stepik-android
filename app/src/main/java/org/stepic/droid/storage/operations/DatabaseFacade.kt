@@ -19,6 +19,7 @@ import javax.inject.Inject
 @StorageSingleton
 class DatabaseFacade
 @Inject constructor(
+        private val stepInfoOperation: StepInfoOperation,
         private val codeSubmissionDao: IDao<CodeSubmission>,
         private val sectionDao: IDao<Section>,
         private val unitDao: IDao<Unit>,
@@ -106,6 +107,8 @@ class DatabaseFacade
     fun getStepById(stepId: Long) = stepDao.get(DbStructureStep.Column.STEP_ID, stepId.toString())
 
     fun getStepsById(stepIds: List<Long>): List<Step> = getStepsById(stepIds.toLongArray())
+
+    fun getPublishProgressStepInfoByIds(stepIds: List<Long>): List<StepInfo> = stepInfoOperation.getStepInfo(stepIds)
 
     fun getStepsById(stepIds: LongArray): List<Step> {
         val stringIds = DbParseHelper.parseLongArrayToString(stepIds, AppConstants.COMMA)
@@ -239,7 +242,7 @@ class DatabaseFacade
 
     fun getAllCachedVideos() = cachedVideoDao.getAll()
 
-    fun getCachedVideoIfExist (video : Video) : CachedVideo? =
+    fun getCachedVideoIfExist(video: Video): CachedVideo? =
             cachedVideoDao.get(DbStructureCachedVideo.Column.VIDEO_ID, video.id.toString())
 
     fun getDownloadEntityIfExist(downloadId: Long?): DownloadEntity? {

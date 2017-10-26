@@ -5,7 +5,7 @@ import android.database.Cursor
 import io.reactivex.Flowable
 import io.reactivex.functions.BiFunction
 import org.stepic.droid.model.DownloadEntity
-import org.stepic.droid.model.Step
+import org.stepic.droid.model.StepInfo
 import org.stepic.droid.storage.CancelSniffer
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants
@@ -28,12 +28,12 @@ constructor(
 
     fun subscribe(stepIds: Set<Long>): Flowable<Float> {
         return Flowable
-                .combineLatest(videoSteps(stepIds), downloadEntities(stepIds), BiFunction<List<Step>, List<DownloadEntity>, Float> { videoSteps, downloadEntities ->
+                .combineLatest(videoSteps(stepIds), downloadEntities(stepIds), BiFunction<List<StepInfo>, List<DownloadEntity>, Float> { videoSteps, downloadEntities ->
                     val downloadEntitiesHashMap = downloadEntities.associateBy { it.stepId }
 
                     val totalProgressCached: Float = videoSteps
-                            .filterNot { downloadEntitiesHashMap.contains(it.id) }
-                            .filter { it.is_cached }
+                            .filterNot { downloadEntitiesHashMap.contains(it.stepId) }
+                            .filter { it.isCached }
                             .size
                             .toFloat()
 
@@ -59,14 +59,14 @@ constructor(
     }
 
 
-    private fun videoSteps(stepIds: Set<Long>): Flowable<List<Step>> =
+    private fun videoSteps(stepIds: Set<Long>): Flowable<List<StepInfo>> =
             Flowable
                     .fromCallable {
-                        val steps = databaseFacade.getStepsById(stepIds = stepIds.toList())
+                        val steps = databaseFacade.getPublishProgressStepInfoByIds(stepIds = stepIds.toList())
                         if (steps.size != stepIds.size) {
                             throw StepsAreNotCached()
                         }
-                        steps.filter { it.block?.name == AppConstants.TYPE_VIDEO }
+                        steps.filter { it.name == AppConstants.TYPE_VIDEO }
                     }
                     .retryWhen(RetryWithDelay(RETRY_DELAY)) //wait until all steps will be in database
 
