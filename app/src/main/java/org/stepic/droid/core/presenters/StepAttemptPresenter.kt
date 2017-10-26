@@ -139,17 +139,14 @@ class StepAttemptPresenter
             worker?.schedule(
                     Runnable {
                         try {
-                            var submissionsResponse = api.getSubmissionForStep(step.id).execute()
-                            val submissions = submissionsResponse.body()!!.submissions
-                            val numberOfSubmissions = submissions.size
-                            if (submissionsResponse.isSuccessful
-                                    && submissions.isNotEmpty()
-                                    && submissions.firstOrNull()?.attempt != attemptId) {
-                                submissionsResponse = api.getSubmissions(attemptId).execute() // if we have another attempt id on server
+                            var submissions = api.getSubmissionForStep(step.id).execute().body()?.submissions
+                            if (submissions?.isNotEmpty() == true && submissions.firstOrNull()?.attempt != attemptId) {
+                                submissions = api.getSubmissions(attemptId).execute()?.body()?.submissions // if we have another attempt id on server
                             }
 
 
-                            if (submissionsResponse.isSuccessful) {
+                            if (submissions != null) {
+                                val numberOfSubmissions = submissions.size
                                 val submission = submissions.firstOrNull()
                                 // if null ->  we do not have submissions for THIS ATTEMPT
 

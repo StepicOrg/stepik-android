@@ -56,7 +56,12 @@ class InstructorsPresenter
     @WorkerThread
     private fun fetchInstructorsInternally(course: Course) {
         try {
-            val instructorList = api.getUsers(course.instructors).execute().body()!!.users
+            val instructorList =
+                    api
+                            .getUsers(course.instructors)
+                            .execute()
+                            .body()
+                            ?.users ?: throw NullPointerException("instructors are null on server")
             mainHandler.post {
                 cachedCourseId = course.courseId
                 cachedInstructors.clear()

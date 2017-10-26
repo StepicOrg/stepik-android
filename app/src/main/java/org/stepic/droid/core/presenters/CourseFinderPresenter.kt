@@ -31,8 +31,7 @@ class CourseFinderPresenter
                 }
             } else {
                 try {
-                    val response = api.getCourse(courseId).execute()
-                    val courseToPresent = response.body()?.courses?.firstOrNull()
+                    val courseToPresent = api.getCourse(courseId).execute().body()?.courses?.firstOrNull()
                     if (courseToPresent != null) {
                         mainHandler.post {
                             view?.onCourseFound(courseToPresent)

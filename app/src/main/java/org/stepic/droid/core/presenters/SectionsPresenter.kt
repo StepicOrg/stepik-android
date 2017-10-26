@@ -85,10 +85,8 @@ class SectionsPresenter
                 } else {
                     //get from Internet
                     try {
-                        val response = api.getSections(sectionIds).execute()
-                        val body = response.body()!!
-                        if (response.isSuccessful || body.sections?.isNotEmpty() == true) {
-                            val sections = body.sections
+                        val sections = api.getSections(sectionIds).execute()?.body()?.sections
+                        if (sections?.isNotEmpty() == true) {
                             val cachedSections: Map<Long, Section> = databaseFacade
                                     .getAllSectionsOfCourse(course)
                                     .filterNotNull()

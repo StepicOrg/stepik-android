@@ -104,7 +104,7 @@ class UnitsPresenter
                 // now try to update and show the data
 
                 val unitIds = section.units
-                if (unitIds == null || unitIds.isEmpty()) {
+                if (unitIds.isEmpty()) {
                     mainHandler.post {
                         view?.onEmptyUnits()
                     }
@@ -115,11 +115,11 @@ class UnitsPresenter
                         while (pointer < unitIds.size) {
                             val lastExclusive = Math.min(unitIds.size, pointer + AppConstants.DEFAULT_NUMBER_IDS_IN_QUERY)
                             val subArrayForLoading = Arrays.copyOfRange(unitIds, pointer, lastExclusive)
-                            val unitResponse = api.getUnits(subArrayForLoading).execute()
-                            if (!unitResponse.isSuccessful) {
-                                throw Exception("units is not gotten")
+                            val units = api.getUnits(subArrayForLoading).execute()?.body()?.units
+                            if (units == null) {
+                                throw Exception("units is not got")
                             } else {
-                                backgroundUnits.addAll(unitResponse.body()!!.units)
+                                backgroundUnits.addAll(units)
                                 pointer = lastExclusive
                             }
                         }
@@ -132,11 +132,11 @@ class UnitsPresenter
                         while (pointer < lessonIds.size) {
                             val lastExclusive = Math.min(lessonIds.size, pointer + AppConstants.DEFAULT_NUMBER_IDS_IN_QUERY)
                             val subArrayForLoading = Arrays.copyOfRange(lessonIds, pointer, lastExclusive)
-                            val lessonsResponse = api.getLessons(subArrayForLoading).execute()
-                            if (!lessonsResponse.isSuccessful) {
-                                throw Exception("lesson is not gotten")
+                            val lessons = api.getLessons(subArrayForLoading).execute()?.body()?.lessons
+                            if (lessons == null) {
+                                throw Exception("lesson is not got")
                             } else {
-                                backgroundLessons.addAll(lessonsResponse.body()!!.lessons)
+                                backgroundLessons.addAll(lessons)
                                 pointer = lastExclusive
                             }
                         }
@@ -156,11 +156,11 @@ class UnitsPresenter
                         while (pointer < progressIds.size) {
                             val lastExclusive = Math.min(progressIds.size, pointer + AppConstants.DEFAULT_NUMBER_IDS_IN_QUERY)
                             val subArrayForLoading = Arrays.copyOfRange<String>(progressIds, pointer, lastExclusive)
-                            val progressesResponse = api.getProgresses(subArrayForLoading).execute()
-                            if (!progressesResponse.isSuccessful) {
-                                throw Exception("progress is not gotten")
+                            val progresses = api.getProgresses(subArrayForLoading).execute()?.body()?.progresses
+                            if (progresses == null) {
+                                throw Exception("progress is not got")
                             } else {
-                                backgroundProgress.addAll(progressesResponse.body()!!.getProgresses())
+                                backgroundProgress.addAll(progresses)
                                 pointer = lastExclusive
                             }
                         }
