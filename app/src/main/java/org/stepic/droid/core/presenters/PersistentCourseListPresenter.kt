@@ -107,7 +107,8 @@ class PersistentCourseListPresenter
             }
 
             if (response != null && response.isSuccessful) {
-                val coursesFromInternet = response.body().courses
+                val body = response.body()!!
+                val coursesFromInternet = body.courses
                 try {
                     //this lock need for not saving enrolled courses to database after user click logout
                     RWLocks.ClearEnrollmentsLock.writeLock().lock()
@@ -129,9 +130,9 @@ class PersistentCourseListPresenter
                 }
 
 
-                hasNextPage.set(response.body().meta.has_next)
+                hasNextPage.set(body.meta.has_next)
                 if (hasNextPage.get()) {
-                    currentPage.set(response.body().meta.page + 1) // page for next loading
+                    currentPage.set(body.meta.page + 1) // page for next loading
                 }
 
                 val allCourses = databaseFacade.getAllCourses(courseType)

@@ -88,7 +88,7 @@ class StepAttemptPresenter
     fun postSubmission(step: Step, reply: Reply, attemptId: Long) {
         threadPoolExecutor.execute {
             try {
-                api.createNewSubmission(reply, attemptId).execute().body().submissions
+                api.createNewSubmission(reply, attemptId).execute().body()?.submissions
                 val bundle = Bundle()
                 bundle.putString(Analytic.Steps.STEP_TYPE_KEY, step.getStepType())
                 reply.language?.let {
@@ -140,16 +140,17 @@ class StepAttemptPresenter
                     Runnable {
                         try {
                             var submissionsResponse = api.getSubmissionForStep(step.id).execute()
-                            val numberOfSubmissions = submissionsResponse.body().submissions.size
+                            val submissions = submissionsResponse.body()!!.submissions
+                            val numberOfSubmissions = submissions.size
                             if (submissionsResponse.isSuccessful
-                                    && submissionsResponse.body().submissions.isNotEmpty()
-                                    && submissionsResponse.body().submissions.firstOrNull()?.attempt != attemptId) {
+                                    && submissions.isNotEmpty()
+                                    && submissions.firstOrNull()?.attempt != attemptId) {
                                 submissionsResponse = api.getSubmissions(attemptId).execute() // if we have another attempt id on server
                             }
 
 
                             if (submissionsResponse.isSuccessful) {
-                                val submission = submissionsResponse.body().submissions.firstOrNull()
+                                val submission = submissions.firstOrNull()
                                 // if null ->  we do not have submissions for THIS ATTEMPT
 
                                 if (submission?.status === Submission.Status.EVALUATION) {
@@ -289,8 +290,8 @@ class StepAttemptPresenter
     @WorkerThread
     private fun createNewAttempt(stepId: Long) {
         try {
-            val createdAttempt: Attempt = api.createNewAttempt(stepId).execute().body().attempts.first()
-            val numberOfSubmissions: Int = api.getSubmissionForStep(stepId).execute().body().submissions.size
+            val createdAttempt: Attempt = api.createNewAttempt(stepId).execute().body()!!.attempts.first()
+            val numberOfSubmissions: Int = api.getSubmissionForStep(stepId).execute().body()!!.submissions.size
             mainHandler.post { view?.onNeedShowAttempt(attempt = createdAttempt, numberOfSubmissionsForStep = numberOfSubmissions, isCreated = true) }
         } catch (ex: Exception) {
             //Internet is not available

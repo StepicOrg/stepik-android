@@ -56,7 +56,7 @@ class InstructorsPresenter
     @WorkerThread
     private fun fetchInstructorsInternally(course: Course) {
         try {
-            val instructorList = api.getUsers(course.instructors).execute().body().users
+            val instructorList = api.getUsers(course.instructors).execute().body()!!.users
             mainHandler.post {
                 cachedCourseId = course.courseId
                 cachedInstructors.clear()

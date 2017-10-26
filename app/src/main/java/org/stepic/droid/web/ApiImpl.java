@@ -74,6 +74,7 @@ import okhttp3.Response;
 import retrofit2.Call;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import timber.log.Timber;
 
@@ -121,6 +122,7 @@ public class ApiImpl implements Api {
                 .baseUrl(this.config.getBaseUrl())
                 .addConverterFactory(generateGsonFactory())
                 .client(okHttpClient.build())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
         stepikEmptyAuthService = retrofit.create(StepicEmptyAuthService.class);
         try {
@@ -289,6 +291,7 @@ public class ApiImpl implements Api {
                 .baseUrl(config.getBaseUrl())
                 .addConverterFactory(generateGsonFactory())
                 .client(okHttpBuilder.build())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
         oAuthService = notLogged.create(StepicRestOAuthService.class);
     }
@@ -372,6 +375,7 @@ public class ApiImpl implements Api {
         Retrofit notLogged = new Retrofit.Builder()
                 .baseUrl(config.getBaseUrl())
                 .addConverterFactory(generateGsonFactory())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(okHttpBuilder.build())
                 .build();
         StepicRestOAuthService tempService = notLogged.create(StepicRestOAuthService.class);
@@ -587,6 +591,7 @@ public class ApiImpl implements Api {
                 .baseUrl(config.getBaseUrl())
                 .addConverterFactory(generateGsonFactory())
                 .client(okHttpBuilder.build())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
         StepicEmptyAuthService tempService = notLogged.create(StepicEmptyAuthService.class);
         return tempService.remindPassword(encodedEmail);
@@ -605,6 +610,7 @@ public class ApiImpl implements Api {
                 .baseUrl(config.getZendeskHost())
                 .addConverterFactory(generateGsonFactory())
                 .client(okHttpClient)
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
         StepikDeskEmptyAuthService tempService = notLogged.create(StepikDeskEmptyAuthService.class);
 

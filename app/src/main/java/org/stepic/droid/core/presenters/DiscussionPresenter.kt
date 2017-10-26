@@ -21,7 +21,7 @@ class DiscussionPresenter
                         .getDiscussionProxies(discussionId)
                         .execute()
                         .body()
-                        .discussionProxies
+                        ?.discussionProxies!!
                         .first()
                 if (discussionProxy.discussions.isEmpty()) {
                     mainHandler.post {

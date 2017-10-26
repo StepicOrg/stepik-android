@@ -119,7 +119,7 @@ class UnitsPresenter
                             if (!unitResponse.isSuccessful) {
                                 throw Exception("units is not gotten")
                             } else {
-                                backgroundUnits.addAll(unitResponse.body().units)
+                                backgroundUnits.addAll(unitResponse.body()!!.units)
                                 pointer = lastExclusive
                             }
                         }
@@ -136,7 +136,7 @@ class UnitsPresenter
                             if (!lessonsResponse.isSuccessful) {
                                 throw Exception("lesson is not gotten")
                             } else {
-                                backgroundLessons.addAll(lessonsResponse.body().lessons)
+                                backgroundLessons.addAll(lessonsResponse.body()!!.lessons)
                                 pointer = lastExclusive
                             }
                         }
@@ -160,7 +160,7 @@ class UnitsPresenter
                             if (!progressesResponse.isSuccessful) {
                                 throw Exception("progress is not gotten")
                             } else {
-                                backgroundProgress.addAll(progressesResponse.body().getProgresses())
+                                backgroundProgress.addAll(progressesResponse.body()!!.getProgresses())
                                 pointer = lastExclusive
                             }
                         }

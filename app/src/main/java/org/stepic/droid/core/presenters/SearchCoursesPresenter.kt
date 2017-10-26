@@ -48,10 +48,10 @@ class SearchCoursesPresenter
                 try {
                     val response = api.getSearchResultsCourses(currentPage.get(), searchQuery).execute()
                     if (!response.isSuccessful) {
-                        analytic.reportEvent(Analytic.Error.SEARCH_COURSE_UNSUCCESSFUL, "${response.code()}  ${response.errorBody().string()}")
+                        analytic.reportEvent(Analytic.Error.SEARCH_COURSE_UNSUCCESSFUL, "${response.code()}  ${response.errorBody()?.string()}")
                     }
 
-                    val searchResultResponseBody = response.body()
+                    val searchResultResponseBody = response.body()!!
                     val searchResultList = searchResultResponseBody.searchResultList
                     val courseIdsForSearch = searchResolver.getCourseIdsFromSearchResults(searchResultList)
                     hasNextPage.set(searchResultResponseBody.meta.has_next)
@@ -62,7 +62,7 @@ class SearchCoursesPresenter
                             view?.showEmptyCourses()
                         }
                     } else {
-                        val courses = api.getCourses(1, courseIdsForSearch).execute().body().courses //FIXME: WARNING, here may pagination not working for query with ids[]
+                        val courses = api.getCourses(1, courseIdsForSearch).execute().body()?.courses //FIXME: WARNING, here may pagination not working for query with ids[]
                         if (courses == null || courses.isEmpty()) {
                             mainHandler.post { view?.showEmptyCourses() }
                         } else {

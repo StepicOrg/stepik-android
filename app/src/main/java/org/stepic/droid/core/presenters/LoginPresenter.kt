@@ -73,7 +73,7 @@ class LoginPresenter
                 } else if (response.code() == 429) {
                     onFail(LoginFailType.tooManyAttempts)
                 } else if (response.code() == 401 && type == Type.social) {
-                    val errorBody = response.errorBody().string()
+                    val errorBody = response.errorBody()?.string()
 
                     Gson().fromJson(errorBody, SocialAuthError::class.java).let {
                         val email = it.email
