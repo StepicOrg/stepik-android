@@ -17,7 +17,11 @@ import org.stepic.droid.R
 
 object PopupHelper {
 
-    fun showPopupAnchoredToView(context: Context, anchorView: View, @LayoutRes popupLayout: Int): PopupWindow {
+    fun showPopupAnchoredToView(context: Context, anchorView: View?, @LayoutRes popupLayout: Int): PopupWindow? {
+        if (anchorView == null) {
+            return null
+        }
+
         val inflater = context.getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val popupView = inflater.inflate(popupLayout, null)
         val arrowView: View = popupView.findViewById(R.id.arrowView)
@@ -38,9 +42,11 @@ object PopupHelper {
         popupView.viewTreeObserver.addOnGlobalLayoutListener(globalLayoutListener)
 
         val popupWindow = PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-        popupWindow.isOutsideTouchable = true
-        popupWindow.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         popupWindow.animationStyle = R.style.PopupAnimations
+
+        popupView.setOnClickListener {
+            popupWindow.dismiss()
+        }
 
         anchorView.post {
             PopupWindowCompat.showAsDropDown(popupWindow, anchorView, 0, 0, Gravity.CENTER)
