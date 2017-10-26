@@ -303,7 +303,7 @@ class DatabaseFacade
     fun isProgressViewed(progressId: String?): Boolean {
         if (progressId == null) return false
         val progress = progressDao.get(DbStructureProgress.Column.ID, progressId)
-        return progress?.is_passed ?: false
+        return progress?.isPassed ?: false
     }
 
     fun isStepPassed(step: Step): Boolean {

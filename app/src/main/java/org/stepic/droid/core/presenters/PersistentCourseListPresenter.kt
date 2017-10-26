@@ -233,12 +233,12 @@ class PersistentCourseListPresenter
         }
         val courseProgressesMap = databaseFacade.getProgresses(progressIds).associateBy { it.id }
 
-        return courses.sortedWith(Comparator<Course> { course1, course2 ->
+        return courses.sortedWith(Comparator { course1, course2 ->
             val progress1: Progress? = courseProgressesMap[course1.progress]
             val progress2: Progress? = courseProgressesMap[course2.progress]
 
-            val lastViewed1 = progress1?.last_viewed?.toLongOrNull()
-            val lastViewed2 = progress2?.last_viewed?.toLongOrNull()
+            val lastViewed1 = progress1?.lastViewed?.toLongOrNull()
+            val lastViewed2 = progress2?.lastViewed?.toLongOrNull()
 
             if (lastViewed1 == null && lastViewed2 == null) {
                 return@Comparator (course2.courseId - course1.courseId).toInt() // course2 - course1 (greater id is 1st)
