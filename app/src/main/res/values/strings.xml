@@ -428,9 +428,7 @@
     <string name="share_course_in_menu">You can always share a link to the course in the top menu
     </string>
     <string name="take_course_with_fiends">Take a course together with friends!</string>
-    <string name="invite_friends_description">People who take a course together with friends are
-        more likely to complete it. Invite your friends now by sending them a link to the course!
-    </string>
+    <string name="invite_friends_description">Invite your friends now by sending them a link to the course!</string>
     <string name="sign_in_with_password">Sign in with e-mail</string>
     <string name="sign_in_with_password_suffix">" with e-mail"</string>
     <string name="or_continue_social">Or continue with</string>
