@@ -2,14 +2,14 @@ package org.stepic.droid.util
 
 object DbParseHelper {
 
-    private val DELIMITER = "__,__"
+    private const val DEFAULT_SEPARATOR = "__,__"
 
     @JvmStatic
     @JvmOverloads
-    fun parseStringToLongArray(str: String?, delimiter: String = DELIMITER): LongArray? {
+    fun parseStringToLongArray(str: String?, separator: String = DEFAULT_SEPARATOR): LongArray? {
         if (str == null) return null
 
-        val strArray = str.split(delimiter)
+        val strArray = str.split(separator)
         val result = LongArray(strArray.size)
         strArray.forEachIndexed { i, value -> result[i] = value.trim().toLong() }
         return result
@@ -17,37 +17,25 @@ object DbParseHelper {
 
     @JvmStatic
     @JvmOverloads
-    fun parseLongArrayToString(array: LongArray?, delimiter: String = DELIMITER): String? {
-        if (array == null || array.isEmpty()) return null
+    fun parseLongArrayToString(longArray: LongArray?, separator: String = DEFAULT_SEPARATOR): String? {
+        if (longArray == null || longArray.isEmpty()) return null
 
-        val stringBuilder = StringBuilder()
-        for (i in array.indices) {
-            stringBuilder.append(array[i])
-            if (i != array.size - 1)
-                stringBuilder.append(delimiter)
-        }
-        return stringBuilder.toString()
+        return longArray.joinToString(separator)
     }
 
     @JvmStatic
     @JvmOverloads
-    fun parseStringArrayToString(array: Array<String>?, delimiter: String = DELIMITER): String? {
+    fun parseStringArrayToString(array: Array<String>?, separator: String = DEFAULT_SEPARATOR): String? {
         if (array == null || array.isEmpty()) return null
 
-        val sb = StringBuilder()
-        for (i in array.indices) {
-            sb.append(array[i])
-            if (i != array.size - 1)
-                sb.append(delimiter)
-        }
-        return sb.toString()
+        return array.joinToString(separator)
     }
 
     @JvmStatic
     @JvmOverloads
-    fun parseStringToStringArray(str: String?, delimiter: String = DELIMITER): Array<String?>? {
+    fun parseStringToStringArray(str: String?, separator: String = DEFAULT_SEPARATOR): Array<String?>? {
         if (str == null) return null
-        val strArray = str.split(delimiter)
+        val strArray = str.split(separator)
         val result = arrayOfNulls<String>(strArray.size)
         strArray.forEachIndexed { i, el ->
             val trimmed = el.trim()
