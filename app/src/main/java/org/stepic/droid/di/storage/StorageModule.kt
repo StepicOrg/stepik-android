@@ -89,10 +89,6 @@ abstract class StorageModule {
 
     @Binds
     @StorageSingleton
-    internal abstract fun provideCourseInteractionDao(courseLastInteractionDao: CourseLastInteractionDaoImpl): IDao<CourseLastInteraction>
-
-    @Binds
-    @StorageSingleton
     internal abstract fun provideExternalVideoUrlDao(videoUrlDao: VideoUrlDaoImpl): IDao<DbVideoUrl>
 
     @Module

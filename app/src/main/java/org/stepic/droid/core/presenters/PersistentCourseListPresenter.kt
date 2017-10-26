@@ -17,7 +17,6 @@ import org.stepic.droid.web.Api
 import org.stepic.droid.web.CoursesStepicResponse
 import retrofit2.Response
 import timber.log.Timber
-import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -210,29 +209,32 @@ class PersistentCourseListPresenter
 
     @WorkerThread
     private fun sortByLastAction(courses: List<Course>): MutableList<Course> {
-        val result = ArrayList<Course>(courses.size)
-        val localLastStepsList = databaseFacade.getAllLocalLastCourseInteraction()
-        val sortedPersistentLastStepCourseIds = localLastStepsList
-                .filterNotNull()
-                .filter { it.timestamp > 0 }
-                .toSortedSet(compareBy { it.timestamp.times(-1L) })
-        val coursesMap = courses.associateBy { it.courseId }
-        val usedCourses = HashSet<Long>()
-        sortedPersistentLastStepCourseIds.forEach {
-            val course = coursesMap[it.courseId]
-            if (course != null) {
-                result.add(course)
-                usedCourses.add(course.courseId)
-            }
-        }
-
-        courses.forEach {
-            if (!usedCourses.contains(it.courseId)) {
-                result.add(it)
-            }
-        }
-
-        return result
+        return courses.toMutableList() //fixme: sort by progresses
+//        val result = ArrayList<Course>(courses.size)
+//        courses.map {
+//        }
+//        val localLastStepsList = databaseFacade.getAllLocalLastCourseInteraction()
+//        val sortedPersistentLastStepCourseIds = localLastStepsList
+//                .filterNotNull()
+//                .filter { it.timestamp > 0 }
+//                .toSortedSet(compareBy { it.timestamp.times(-1L) })
+//        val coursesMap = courses.associateBy { it.courseId }
+//        val usedCourses = HashSet<Long>()
+//        sortedPersistentLastStepCourseIds.forEach {
+//            val course = coursesMap[it.courseId]
+//            if (course != null) {
+//                result.add(course)
+//                usedCourses.add(course.courseId)
+//            }
+//        }
+//
+//        courses.forEach {
+//            if (!usedCourses.contains(it.courseId)) {
+//                result.add(it)
+//            }
+//        }
+//
+//        return result
     }
 
     fun loadMore(courseType: Table, needFilter: Boolean) {

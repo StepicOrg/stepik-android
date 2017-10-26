@@ -38,7 +38,6 @@ class DatabaseFacade
         private val certificateViewItemDao: IDao<CertificateViewItem>,
         private val videoTimestampDao: IDao<VideoTimestamp>,
         private val lastStepDao: IDao<PersistentLastStep>,
-        private val lastInteractions: IDao<CourseLastInteraction>,
         private val externalVideoUrlDao: IDao<DbVideoUrl>,
         private val blockDao: IDao<BlockPersistentWrapper>) {
 
@@ -56,7 +55,6 @@ class DatabaseFacade
         notificationDao.removeAll()
         certificateViewItemDao.removeAll()
         lastStepDao.removeAll()
-        lastInteractions.removeAll()
         blockDao.removeAll()
         videoTimestampDao.removeAll()
         externalVideoUrlDao.removeAll()
@@ -398,12 +396,6 @@ class DatabaseFacade
 
     fun getLocalLastStepByCourseId(courseId: Long) =
             lastStepDao.get(DbStructureLastStep.Column.COURSE_ID, courseId.toString())
-
-    fun getAllLocalLastCourseInteraction() =
-            lastInteractions.getAll()
-
-    fun updateCourseLastInteraction(courseId: Long, timestamp: Long)
-            = lastInteractions.insertOrUpdate(CourseLastInteraction(courseId = courseId, timestamp = timestamp))
 
     fun getUnitsByIds(keys: LongArray): List<Unit> {
         DbParseHelper.parseLongArrayToString(keys, AppConstants.COMMA)?.let {

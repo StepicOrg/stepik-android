@@ -11,7 +11,6 @@ import org.stepic.droid.storage.structure.DbStructureCachedVideo;
 import org.stepic.droid.storage.structure.DbStructureCalendarSection;
 import org.stepic.droid.storage.structure.DbStructureCertificateViewItem;
 import org.stepic.droid.storage.structure.DbStructureCodeSubmission;
-import org.stepic.droid.storage.structure.DbStructureCourseLastInteraction;
 import org.stepic.droid.storage.structure.DbStructureEnrolledAndFeaturedCourses;
 import org.stepic.droid.storage.structure.DbStructureLastStep;
 import org.stepic.droid.storage.structure.DbStructureLesson;
@@ -119,7 +118,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     private void upgradeFrom20To21(SQLiteDatabase db) {
-        createCourseLastInteractionTable(db);
+//        createCourseLastInteractionTable(db); // There was creating of table, but not it is not needed
     }
 
     private void upgradeFrom19To20() {
@@ -642,16 +641,6 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
                 + ")";
         db.execSQL(sql);
     }
-
-    private void createCourseLastInteractionTable(SQLiteDatabase db) {
-        String sql = "CREATE TABLE " + DbStructureCourseLastInteraction.COURSE_LAST_INTERACTION
-                + " ("
-                + DbStructureCourseLastInteraction.Column.COURSE_ID + WHITESPACE + LONG_TYPE + ", "
-                + DbStructureCourseLastInteraction.Column.TIMESTAMP + WHITESPACE + LONG_TYPE
-                + ")";
-        db.execSQL(sql);
-    }
-
 
     private void createVideoUrlTable(SQLiteDatabase db, String name) {
         String sql = "CREATE TABLE " + name

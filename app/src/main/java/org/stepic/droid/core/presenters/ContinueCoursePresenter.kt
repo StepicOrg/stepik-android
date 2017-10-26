@@ -9,7 +9,6 @@ import org.stepic.droid.model.Step
 import org.stepic.droid.model.Unit
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.storage.repositories.Repository
-import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.hasUserAccess
 import org.stepic.droid.util.hasUserAccessAndNotEmpty
 import org.stepic.droid.web.Api
@@ -34,7 +33,6 @@ class ContinueCoursePresenter
             view?.onShowContinueCourseLoadingDialog()
             threadPoolExecutor.execute {
                 try {
-                    databaseFacade.updateCourseLastInteraction(courseId = course.courseId, timestamp = DateTimeHelper.nowUtc())
                     var unitId: Long
                     var stepId: Long
                     try {
