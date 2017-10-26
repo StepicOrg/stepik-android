@@ -14,7 +14,6 @@ import android.support.annotation.WorkerThread
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.TaskStackBuilder
 import com.bumptech.glide.Glide
-import org.joda.time.DateTime
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.configuration.Config
@@ -31,10 +30,7 @@ import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.ui.activities.ProfileActivity
 import org.stepic.droid.ui.activities.SectionActivity
 import org.stepic.droid.ui.activities.StepsActivity
-import org.stepic.droid.util.AppConstants
-import org.stepic.droid.util.ColorUtil
-import org.stepic.droid.util.HtmlHelper
-import org.stepic.droid.util.StepikUtil
+import org.stepic.droid.util.*
 import org.stepic.droid.util.resolvers.text.TextResolver
 import org.stepic.droid.web.Api
 import timber.log.Timber
@@ -461,9 +457,7 @@ class StepikNotificationManagerImpl
             }
 
 
-            val now = DateTime.now()
-            Timber.d(now.toString())
-            if (notificationTimeChecker.isNight(now.millis)) {
+            if (notificationTimeChecker.isNight(DateTimeHelper.nowLocal())) {
                 analytic.reportEvent(Analytic.Notification.NIGHT_WITHOUT_SOUND_AND_VIBRATE)
             } else {
                 addVibrationIfNeed(notification)
@@ -498,11 +492,9 @@ class StepikNotificationManagerImpl
                 .setContentText(justText)
 
 
-        val now = DateTime.now()
-        Timber.d(now.toString())
         //if notification is null (for example for streaks) -> show it always with sound and vibrate
 
-        val isNight = notificationTimeChecker.isNight(now.millis)
+        val isNight = notificationTimeChecker.isNight(DateTimeHelper.nowLocal())
         if (isNight) {
             analytic.reportEvent(Analytic.Notification.NIGHT_WITHOUT_SOUND_AND_VIBRATE)
         }
