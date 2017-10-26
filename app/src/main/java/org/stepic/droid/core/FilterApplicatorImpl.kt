@@ -1,11 +1,10 @@
 package org.stepic.droid.core
 
-import org.joda.time.DateTime
-import org.joda.time.DateTimeZone
 import org.stepic.droid.model.Course
 import org.stepic.droid.model.StepikFilter
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.Table
+import org.stepic.droid.util.DateTimeHelper
 import javax.inject.Inject
 
 class FilterApplicatorImpl
@@ -31,23 +30,18 @@ class FilterApplicatorImpl
     private fun resolveFiltersForList(sourceCourses: List<Course>, filters: Set<StepikFilter>): List<Course> {
         //local helper functions:
         fun resolveFilters(course: Course, now: Long, applyFilters: (Course, endDate: Long?, isAfterBeginOrNotStartable: Boolean, isBeginDateInFuture: Boolean, isEndDateInFuture: Boolean, isEnded: Boolean, filterSet: Set<StepikFilter>) -> Boolean, filterSet: Set<StepikFilter>): Boolean {
-            var beginDate: Long? = null
-            course.beginDate?.let {
-                beginDate = DateTime(it).millis
+            val beginDate: Long? = course.beginDate?.let {
+                DateTimeHelper.toCalendar(it).timeInMillis
             }
 
-            var endDate: Long? = null
-            course.endDate?.let {
-                endDate = DateTime(it).millis
+            val endDate: Long? = course.endDate?.let {
+                DateTimeHelper.toCalendar(it).timeInMillis
             }
 
-            var isEnded: Boolean = false
-            course.lastDeadline?.let {
-                val lastDeadlineMillis = DateTime(it).millis
-                if (now > lastDeadlineMillis) {
-                    isEnded = true
-                }
-            }
+            val isEnded: Boolean = course.lastDeadline?.let {
+                val lastDeadlineMillis = DateTimeHelper.toCalendar(it).timeInMillis
+                now > lastDeadlineMillis
+            } ?: false
 
             val isBeginDateInFuture: Boolean = beginDate?.compareTo(now) ?: -1 > 0
             val isEndDateInFuture: Boolean = endDate?.compareTo(now) ?: -1 > 0
@@ -79,8 +73,8 @@ class FilterApplicatorImpl
             return sourceCourses
         }
 
-        val now: Long = DateTime.now(DateTimeZone.getDefault()).millis
-        val filteredList = sourceCourses.filterNotNull().filter { course ->
+        val now: Long = DateTimeHelper.nowUtc()
+        val filteredList = sourceCourses.filter { course ->
             resolveFilters(course, now, ::applyFiltersForSet, filters)
         }
         return filteredList

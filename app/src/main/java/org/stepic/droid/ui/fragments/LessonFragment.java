@@ -24,7 +24,6 @@ import com.google.firebase.appindexing.builders.Actions;
 import com.google.firebase.appindexing.builders.Indexables;
 
 import org.jetbrains.annotations.NotNull;
-import org.joda.time.DateTime;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
@@ -44,6 +43,7 @@ import org.stepic.droid.ui.adapters.StepFragmentAdapter;
 import org.stepic.droid.ui.listeners.NextMoveable;
 import org.stepic.droid.ui.util.ToolbarHelperKt;
 import org.stepic.droid.util.AppConstants;
+import org.stepic.droid.util.DateTimeHelper;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.StringUtil;
 import org.stepic.droid.util.resolvers.StepHelper;
@@ -309,7 +309,7 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
                             if (section != null && section.getCourse() > 0) {
                                 PersistentLastStep persistentLastStep = new PersistentLastStep(section.getCourse(), stepId, unit.getId());
                                 getDatabaseFacade().updateLastStep(persistentLastStep);
-                                getDatabaseFacade().updateCourseLastInteraction(section.getCourse(), DateTime.now().getMillis()); // It does not happen, when section is not cached (example: Continue course).
+                                getDatabaseFacade().updateCourseLastInteraction(section.getCourse(), DateTimeHelper.INSTANCE.nowUtc()); // It does not happen, when section is not cached (example: Continue course).
                             }
                         }
                     } catch (Exception exception) {

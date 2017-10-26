@@ -1,6 +1,6 @@
 package org.stepic.droid.notifications
 
-import org.joda.time.DateTime
+import java.util.*
 import javax.inject.Inject
 
 class NotificationTimeCheckerImpl
@@ -31,9 +31,10 @@ class NotificationTimeCheckerImpl
     }
 
     override fun isNight(nowMillis: Long): Boolean {
-        val now = DateTime(nowMillis)
-        val nowHourInt = now.hourOfDay().get()
-        val result: Boolean = nowHourInt in startHour..(endHour - 1)
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = nowMillis
+        val nowHourInt = calendar.get(Calendar.HOUR_OF_DAY)
+        val result: Boolean = nowHourInt in startHour until endHour
         return result.xor(invertAnswer)
     }
 }

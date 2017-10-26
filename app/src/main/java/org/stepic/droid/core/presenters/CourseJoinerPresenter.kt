@@ -2,7 +2,6 @@ package org.stepic.droid.core.presenters
 
 import android.support.annotation.MainThread
 import android.support.annotation.WorkerThread
-import org.joda.time.DateTime
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.joining.contract.JoiningPoster
@@ -12,6 +11,8 @@ import org.stepic.droid.model.Course
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.storage.operations.Table
+import org.stepic.droid.util.AppConstants
+import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.web.Api
 import java.io.IOException
 import java.net.HttpURLConnection
@@ -78,8 +79,9 @@ class CourseJoinerPresenter
         }
         val enrollNotificationClickMillis: Long? = sharedPreferenceHelper.lastClickEnrollNotification
         enrollNotificationClickMillis?.let {
-            val wasClicked = DateTime(it)
-            if (wasClicked.plusMinutes(30).isAfterNow) {
+            val wasClickedPlus30Min = it + 30 * AppConstants.MILLIS_IN_1MINUTE
+            if (DateTimeHelper.isAfterNowUtc(wasClickedPlus30Min)) {
+                //if  now < wasClicked+30min -> event is related to click
                 sharedPreferenceHelper.clickEnrollNotification(-1L)
                 analytic.reportEvent(Analytic.Notification.REMIND_ENROLL)
             }

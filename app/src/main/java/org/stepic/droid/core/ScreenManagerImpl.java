@@ -18,10 +18,6 @@ import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
@@ -74,7 +70,6 @@ import org.stepic.droid.web.ViewAssignment;
 
 import java.io.File;
 import java.net.URLEncoder;
-import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -494,6 +489,8 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void addCertificateToLinkedIn(CertificateViewItem certificateViewItem) {
+        // TODO: 19/10/2017 linkedin exporting is not working due to changing API params is not filled
+
         StringBuilder sb = new StringBuilder();
         sb.append(AppConstants.LINKEDIN_ADD_URL);
         sb.append("_ed=");//linkedin id parameter
@@ -502,15 +499,6 @@ public class ScreenManagerImpl implements ScreenManager {
         sb.append(URLEncoder.encode(certificateViewItem.getTitle()));
         sb.append("&pfCertificationUrl=");//linkedin certificate url
         sb.append(certificateViewItem.getFullPath());
-
-        String issueDate = certificateViewItem.getIssue_date();
-        if (issueDate != null) {
-            sb.append("&pfCertStartDate=");
-            DateTime issueDateTime = new DateTime(issueDate);
-            DateTimeFormatter formatter = DateTimeFormat.forPattern("YYYYMM").withZone(DateTimeZone.getDefault()).withLocale(Locale.getDefault());
-            String issueDateInLinkedinFormat = formatter.print(issueDateTime);
-            sb.append(issueDateInLinkedinFormat);
-        }
 
 
         final Intent intent = new Intent(Intent.ACTION_VIEW);

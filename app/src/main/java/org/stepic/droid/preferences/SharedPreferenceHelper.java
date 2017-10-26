@@ -10,8 +10,6 @@ import com.google.gson.reflect.TypeToken;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.core.DefaultFilter;
 import org.stepic.droid.di.AppSingleton;
@@ -23,6 +21,7 @@ import org.stepic.droid.notifications.model.NotificationType;
 import org.stepic.droid.storage.operations.Table;
 import org.stepic.droid.ui.util.TimeIntervalUtil;
 import org.stepic.droid.util.AppConstants;
+import org.stepic.droid.util.DateTimeHelper;
 import org.stepic.droid.util.RWLocks;
 import org.stepic.droid.web.AuthenticationStepicResponse;
 
@@ -241,8 +240,8 @@ public class SharedPreferenceHelper {
                 // first time
                 return true;
             } else {
-                DateTime wasShownDateTime = new DateTime(millis);
-                if (wasShownDateTime.plusDays(AppConstants.NUMBER_OF_DAYS_BETWEEN_STREAK_SHOWING).isBeforeNow()) {
+                long calculatedMillis = millis + AppConstants.NUMBER_OF_DAYS_BETWEEN_STREAK_SHOWING * AppConstants.MILLIS_IN_24HOURS;
+                if (DateTimeHelper.INSTANCE.isBeforeNowUtc(calculatedMillis)) {
                     //we can show
                     onShowStreakDialog(streakDialogShownNumber);
                     return true;
@@ -255,7 +254,7 @@ public class SharedPreferenceHelper {
 
     private void onShowStreakDialog(int streakDialogShownNumber) {
         analytic.reportEvent(Analytic.Streak.CAN_SHOW_DIALOG, streakDialogShownNumber + "");
-        put(PreferenceType.LOGIN, STREAK_DIALOG_SHOWN_TIMESTAMP, DateTime.now().getMillis());
+        put(PreferenceType.LOGIN, STREAK_DIALOG_SHOWN_TIMESTAMP, DateTimeHelper.INSTANCE.nowUtc());
         put(PreferenceType.LOGIN, NUMBER_OF_SHOWN_STREAK_DIALOG, streakDialogShownNumber + 1);
     }
 
@@ -652,20 +651,17 @@ public class SharedPreferenceHelper {
         put(PreferenceType.LOGIN, AUTH_RESPONSE_JSON, json);
         cachedAuthStepikResponse = response;
 
-        DateTime now = DateTime.now(DateTimeZone.UTC);
-        long millisNow = now.getMillis();
+        long millisNow = DateTimeHelper.INSTANCE.nowUtc(); // we should use +0 UTC for avoid problems with TimeZones
         put(PreferenceType.LOGIN, ACCESS_TOKEN_TIMESTAMP, millisNow);
     }
 
     public void storeLastShownUpdatingMessage() {
-        DateTime now = DateTime.now(DateTimeZone.UTC);
-        long millisNow = now.getMillis();
+        long millisNow = DateTimeHelper.INSTANCE.nowUtc();
         put(PreferenceType.DEVICE_SPECIFIC, UPDATING_TIMESTAMP, millisNow);
     }
 
     public long getLastShownUpdatingMessageTimestamp() {
-        long timestamp = getLong(PreferenceType.DEVICE_SPECIFIC, UPDATING_TIMESTAMP);
-        return timestamp;
+        return getLong(PreferenceType.DEVICE_SPECIFIC, UPDATING_TIMESTAMP);
     }
 
     public void storeLastTokenType(boolean isSocial) {
