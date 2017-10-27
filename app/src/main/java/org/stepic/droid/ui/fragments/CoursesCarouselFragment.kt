@@ -108,10 +108,7 @@ class CoursesCarouselFragment
         droppingClient.subscribe(this)
 
         restoreState()
-    }
 
-    override fun onStart() {
-        super.onStart()
         courses.clear()
         downloadData()
     }
