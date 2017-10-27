@@ -506,6 +506,7 @@
 
     <string name="course_item_more">More</string>
     <string name="course_item_join">Course Info</string>
+    <string name="course_widget_info">Info</string>
 
     <string name="learners_count">Learners count</string>
 

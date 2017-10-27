@@ -508,6 +508,7 @@
     <string name="my_courses_title">Мои курсы</string>
     <string name="popular_courses_title">Популярные</string>
     <string name="view_all_courses">Показать все</string>
+    <string name="course_widget_info">Инфо</string>
 
     <string name="sign_in_with_social_suffix">" через социальные сети"</string>
     <string name="sign_in_with_social">Вход через соцсети</string>

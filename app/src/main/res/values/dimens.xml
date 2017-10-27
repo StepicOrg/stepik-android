@@ -99,6 +99,8 @@
 
     <!--new course item-->
     <dimen name="new_course_item_height">100dp</dimen>
+    <dimen name="new_course_image_size">80dp</dimen>
+    <dimen name="course_item_button_text_size">14sp</dimen>
     <dimen name="course_widget_radius">7dp</dimen>
     <dimen name="placeholder_radius">7dp</dimen>
     <dimen name="course_image_radius">7dp</dimen>
