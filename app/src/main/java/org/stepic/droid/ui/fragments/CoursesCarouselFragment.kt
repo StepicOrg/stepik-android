@@ -14,6 +14,7 @@ import org.stepic.droid.base.App
 import org.stepic.droid.base.Client
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.core.dropping.contract.DroppingListener
+import org.stepic.droid.core.joining.contract.JoiningListener
 import org.stepic.droid.core.presenters.ContinueCoursePresenter
 import org.stepic.droid.core.presenters.DroppingPresenter
 import org.stepic.droid.core.presenters.PersistentCourseListPresenter
@@ -42,8 +43,8 @@ class CoursesCarouselFragment
         ContinueCourseView,
         CoursesView,
         DroppingView,
+        JoiningListener,
         DroppingListener {
-
     companion object {
         private const val COURSE_CAROUSEL_INFO_KEY = "COURSE_CAROUSEL_INFO_KEY"
 
@@ -72,6 +73,9 @@ class CoursesCarouselFragment
 
     @Inject
     lateinit var droppingClient: Client<DroppingListener>
+
+    @Inject
+    lateinit var joiningListenerClient: Client<JoiningListener>
 
     private val courses = ArrayList<Course>()
     private lateinit var info: CoursesCarouselInfo
@@ -106,6 +110,7 @@ class CoursesCarouselFragment
         courseListPresenter.attachView(this)
         droppingPresenter.attachView(this)
         droppingClient.subscribe(this)
+        joiningListenerClient.subscribe(this)
 
         restoreState()
 
@@ -120,6 +125,7 @@ class CoursesCarouselFragment
 
     override fun onDestroyView() {
         super.onDestroyView()
+        joiningListenerClient.unsubscribe(this)
         droppingClient.unsubscribe(this)
         continueCoursePresenter.detachView(this)
         courseListPresenter.detachView(this)
@@ -273,7 +279,6 @@ class CoursesCarouselFragment
 
     private fun getCarouselTitle(): String = info.title
 
-
     private fun restoreState() {
         if (info.table != null) {
             courseListPresenter.restoreState()
@@ -295,5 +300,26 @@ class CoursesCarouselFragment
 
     private fun viewAll() {
         screenManager.showCoursesList(activity, info)
+    }
+
+    override fun onSuccessJoin(joinedCourse: Course) {
+        val courseIndex = courses.indexOfFirst {
+            val isFound = it.courseId == joinedCourse.courseId
+            if (isFound) {
+                it.enrollment = joinedCourse.enrollment
+            }
+            isFound
+        }
+        if (courseIndex >= 0) {
+            coursesRecycler.adapter.notifyItemChanged(courseIndex)
+        } else if (info.table == Table.enrolled) {
+            //insert at 0 index is more complex than just add, but order will be right
+            if (courses.isEmpty()) {
+                showCourses(mutableListOf(joinedCourse))
+            } else {
+                courses.add(0, joinedCourse)
+                coursesRecycler.adapter.notifyDataSetChanged()
+            }
+        }
     }
 }

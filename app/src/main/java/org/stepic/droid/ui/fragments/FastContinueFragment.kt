@@ -13,6 +13,7 @@ import org.stepic.droid.base.App
 import org.stepic.droid.base.Client
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.core.dropping.contract.DroppingListener
+import org.stepic.droid.core.joining.contract.JoiningListener
 import org.stepic.droid.core.presenters.ContinueCoursePresenter
 import org.stepic.droid.core.presenters.LastStepPresenter
 import org.stepic.droid.core.presenters.PersistentCourseListPresenter
@@ -39,6 +40,7 @@ class FastContinueFragment : FragmentBase(),
         CoursesView,
         ContinueCourseView,
         DroppingListener,
+        JoiningListener,
         VideoStepView,
         LastStepView {
 
@@ -64,6 +66,9 @@ class FastContinueFragment : FragmentBase(),
 
     @Inject
     lateinit var videoStepPresenter: VideoStepPresenter
+
+    @Inject
+    lateinit var joiningListenerClient: Client<JoiningListener>
 
     override fun injectComponent() {
         App
@@ -91,6 +96,7 @@ class FastContinueFragment : FragmentBase(),
         droppingClient.subscribe(this)
         lastStepPresenter.attachView(this)
         videoStepPresenter.attachView(this)
+        joiningListenerClient.subscribe(this)
         courseListPresenter.restoreState()
         fastContinueAction.isEnabled = true
 
@@ -114,6 +120,7 @@ class FastContinueFragment : FragmentBase(),
 
     override fun onDestroyView() {
         super.onDestroyView()
+        joiningListenerClient.unsubscribe(this)
         videoStepPresenter.detachView(this)
         lastStepPresenter.detachView(this)
         courseListPresenter.detachView(this)
@@ -274,5 +281,9 @@ class FastContinueFragment : FragmentBase(),
         fastContinueOverlay.visibility = visibility
         fastContinueImageView.visibility = visibility
         fastContinueTextView.visibility = visibility
+    }
+
+    override fun onSuccessJoin(joinedCourse: Course) {
+        showCourses(mutableListOf<Course>(joinedCourse))
     }
 }
