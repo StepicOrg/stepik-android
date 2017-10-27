@@ -204,7 +204,6 @@ public class CourseDetailFragment extends FragmentBase implements
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        getActivity().overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         instructorsList = new ArrayList<>();
@@ -567,7 +566,6 @@ public class CourseDetailFragment extends FragmentBase implements
             getActivity().setResult(Activity.RESULT_OK, intent);
         }
         getActivity().finish();
-        getActivity().overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
     }
 
     private void joinCourse() {

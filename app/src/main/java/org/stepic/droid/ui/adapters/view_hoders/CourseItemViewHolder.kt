@@ -61,6 +61,9 @@ class CourseItemViewHolder(
     private val joinColor: Int by lazy {
         ColorUtil.getColorArgb(R.color.join_text_color, itemView.context)
     }
+    private val infoTitle: String by lazy {
+        itemView.context.resources.getString(R.string.course_widget_info)
+    }
     private var imageViewTarget: BitmapImageViewTarget
 
     private val courseItemImage = view.courseItemImage
@@ -70,6 +73,7 @@ class CourseItemViewHolder(
     private val learnersCountText = view.learnersCountText
     private val courseItemMore = view.courseItemMore
     private val learnersCountContainer = view.learnersCountContainer
+    private val courseWidgetInfo = view.courseWidgetInfo
 
 
     init {
@@ -100,10 +104,16 @@ class CourseItemViewHolder(
             true
         })
 
-        itemView.courseItemMore.setOnClickListener { v ->
-            val course = getCourseSafety(adapterPosition)
-            if (course != null) {
-                showMore(v, course)
+        itemView.courseItemMore.setOnClickListener { view ->
+            getCourseSafety(adapterPosition)?.let {
+                showMore(view, it)
+            }
+        }
+
+        courseWidgetInfo.applyToButton(infoTitle, continueColor, colorType.continueResource)
+        courseWidgetInfo.setOnClickListener {
+            getCourseSafety(adapterPosition)?.let {
+                screenManager.showCourseDescription(contextActivity, it, false)
             }
         }
     }
@@ -153,7 +163,7 @@ class CourseItemViewHolder(
             analytic.reportEvent(if (isContinueExperimentEnabled) Analytic.ContinueExperiment.CONTINUE_NEW else Analytic.ContinueExperiment.CONTINUE_OLD)
             continueCoursePresenter.continueCourse(course) //provide position?
         } else {
-            screenManager.showCourseDescription(contextActivity, course)
+            screenManager.showCourseDescription(contextActivity, course, false)
         }
     }
 

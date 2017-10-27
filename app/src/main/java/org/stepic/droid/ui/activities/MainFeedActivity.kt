@@ -323,4 +323,8 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
             navigationView.selectedItemId = R.id.find_courses
         }
     }
+
+    override fun applyTransitionPrev() {
+        //no-op
+    }
 }
