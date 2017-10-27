@@ -199,13 +199,13 @@ class PersistentCourseListPresenter
         }
     }
 
-    fun refreshData(courseType: Table, applyFilter: Boolean, allPAges: Boolean) {
+    fun refreshData(courseType: Table, applyFilter: Boolean, isRefreshing: Boolean) {
         if (currentNumberOfTasks >= MAX_CURRENT_NUMBER_OF_TASKS) {
             return
         }
         currentPage.set(1);
         hasNextPage.set(true)
-        downloadData(courseType, applyFilter, isRefreshing = allPAges)
+        downloadData(courseType, applyFilter, isRefreshing = isRefreshing)
     }
 
     @WorkerThread

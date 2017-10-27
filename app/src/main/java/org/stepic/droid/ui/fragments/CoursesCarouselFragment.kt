@@ -257,16 +257,20 @@ class CoursesCarouselFragment
             return
         }
 
-        courses.removeAt(index)
-        coursesRecycler.adapter.notifyItemRemoved(index)
-        if (courses.size == ROW_COUNT) {
+        if (info.table == Table.enrolled) {
+            courses.removeAt(index)
+            coursesRecycler.adapter.notifyItemRemoved(index)
+            if (courses.size == ROW_COUNT) {
 //           update 1st column for adjusting size
-            coursesRecycler.adapter.notifyItemRangeChanged(0, ROW_COUNT - 1) // "ROW_COUNT - 1" count is number of changed items, we shouldn't update the last item
+                coursesRecycler.adapter.notifyItemRangeChanged(0, ROW_COUNT - 1) // "ROW_COUNT - 1" count is number of changed items, we shouldn't update the last item
+            }
+        } else {
+            courses[index].enrollment = 0
+            coursesRecycler.adapter.notifyItemChanged(index)
         }
 
-        if (courses.size == 0) {
-            // FIXME: 05.09.17 add moving state to empty
-//            showEmptyScreen(true)
+        if (courses.isEmpty()) {
+            showEmptyCourses()
         }
     }
 
@@ -303,14 +307,10 @@ class CoursesCarouselFragment
     }
 
     override fun onSuccessJoin(joinedCourse: Course) {
-        val courseIndex = courses.indexOfFirst {
-            val isFound = it.courseId == joinedCourse.courseId
-            if (isFound) {
-                it.enrollment = joinedCourse.enrollment
-            }
-            isFound
-        }
+        val courseIndex = courses.indexOfFirst { it.courseId == joinedCourse.courseId }
+
         if (courseIndex >= 0) {
+            courses[courseIndex].enrollment = joinedCourse.enrollment
             coursesRecycler.adapter.notifyItemChanged(courseIndex)
         } else if (info.table == Table.enrolled) {
             //insert at 0 index is more complex than just add, but order will be right

@@ -216,7 +216,7 @@ class FastContinueFragment : FragmentBase(),
     //Client<DroppingListener>
     override fun onSuccessDropCourse(course: Course) {
         //reload the last course
-        courseListPresenter.downloadData(Table.enrolled, applyFilter = false)
+        courseListPresenter.refreshData(Table.enrolled, applyFilter = false, isRefreshing = true)
     }
 
     override fun onFailDropCourse(course: Course) {
