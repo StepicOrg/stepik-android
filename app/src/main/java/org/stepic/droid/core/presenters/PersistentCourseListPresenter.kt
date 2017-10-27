@@ -137,7 +137,7 @@ class PersistentCourseListPresenter
                 val allCourses = databaseFacade.getAllCourses(courseType)
 
                 val filteredCourseList: List<Course>
-                if (!applyFilter && !sharedPreferenceHelper.getFilter(courseType).contains(StepikFilter.PERSISTENT)) {
+                if (courseType == Table.enrolled || !applyFilter && !sharedPreferenceHelper.getFilter(courseType).contains(StepikFilter.PERSISTENT)) { // only default filters for enrolled courses
                     filteredCourseList = filterApplicator.getFilteredFromDefault(allCourses, courseType)
                 } else {
                     filteredCourseList = filterApplicator.getFilteredFromSharedPrefs(allCourses, courseType)
