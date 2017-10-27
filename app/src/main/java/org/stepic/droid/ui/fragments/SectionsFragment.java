@@ -845,7 +845,8 @@ public class SectionsFragment
             @Override
             public void run() {
                 final View shareView = rootView.findViewById(R.id.menu_item_share);
-                inviteFriendsPopupWindow = PopupHelper.INSTANCE.showInviteFriendPopupAnchoredToView(getContext(), shareView);
+                inviteFriendsPopupWindow =
+                        PopupHelper.INSTANCE.showPopupAnchoredToView(getContext(), shareView, getString(R.string.invite_friends_description));
             }
         }, INVITE_FRIEND_POPUP_DELAY);
     }

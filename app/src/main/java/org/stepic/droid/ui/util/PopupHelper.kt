@@ -11,6 +11,8 @@ import android.widget.LinearLayout
 import android.widget.PopupWindow
 import org.stepic.droid.R
 
+import kotlinx.android.synthetic.main.popup_window.view.*
+
 
 object PopupHelper {
     private fun calcArrowHorizontalOffset(anchorView: View, popupView: View, arrowView: View): Float {
@@ -23,19 +25,20 @@ object PopupHelper {
     }
 
 
-    fun showInviteFriendPopupAnchoredToView(context: Context, anchorView: View?): PopupWindow? {
+    fun showPopupAnchoredToView(context: Context, anchorView: View?, popupText: String): PopupWindow? {
         if (anchorView == null) {
             return null
         }
 
         val inflater = context.getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val popupView = inflater.inflate(R.layout.popup_invite_friends_to_course, null)
-        val arrowView: View = popupView.findViewById(R.id.arrowView)
+        val popupView = inflater.inflate(R.layout.popup_window, null)
+
+        popupView.popupText.text = popupText
 
         val globalLayoutListener = object : ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
                 popupView.viewTreeObserver.removeGlobalLayoutListener(this)
-                arrowView.x = calcArrowHorizontalOffset(anchorView, popupView, arrowView)
+                popupView.arrowView.x = calcArrowHorizontalOffset(anchorView, popupView, popupView.arrowView)
             }
         }
         popupView.viewTreeObserver.addOnGlobalLayoutListener(globalLayoutListener)

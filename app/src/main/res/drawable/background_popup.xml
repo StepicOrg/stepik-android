@@ -2,7 +2,7 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape android:shape="rectangle">
-            <corners android:radius="@dimen/course_widget_radius" />
+            <corners android:radius="@dimen/popup_border_radius" />
             <solid android:color="@color/new_accent_color" />
         </shape>
     </item>
