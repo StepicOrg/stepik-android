@@ -239,6 +239,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
             CodeAnalyzer.onTextReplaced(replacedStart, replacedCount, this, replacedText)
             CodeAnalyzer.onTextInserted(insertedStart, insertedCount, this)
         }
+        CodeAnalyzer.resolveAutocomplete(selectionStart, lang, text.toString())
         highlightBrackets(selectionStart)
         highlightPublisher.onNext(editable)
         requestLayout()

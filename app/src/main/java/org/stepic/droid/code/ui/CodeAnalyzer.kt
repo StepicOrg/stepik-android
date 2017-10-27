@@ -1,7 +1,9 @@
 package org.stepic.droid.code.ui
 
+import org.stepic.droid.code.data.AutocompleteContainer
 import org.stepic.droid.util.countWhile
 import org.stepic.droid.util.substringOrNull
+import org.stepic.droid.util.takeLastFromIndexWhile
 
 /**
  * Class for smart code analyzing
@@ -27,6 +29,9 @@ object CodeAnalyzer {
     )
 
     private val pairedSymbols = brackets + quotes
+
+    private val autocomplete = AutocompleteContainer()
+    private const val MIN_AUTOCOMPLETE = 1
 
 
     private fun getIndentForCurrentLine(cursorPosition: Int, text: String) : Int {
@@ -141,4 +146,18 @@ object CodeAnalyzer {
     }
 
     fun getBracketsPair(bracket: String) = brackets.entries.find { it.key == bracket || it.value == bracket }
+
+    fun resolveAutocomplete(cursorPosition: Int, lang: String, text: String): List<String> {
+        val next = getNextSymbol(cursorPosition, text)
+        if (next == null || Character.isWhitespace(next[0])) {
+            val prefix = text.takeLastFromIndexWhile(cursorPosition - 1) { // get token before cursor
+                !Character.isWhitespace(it)
+            }
+
+            if (prefix != null && prefix.length > MIN_AUTOCOMPLETE) {
+                return autocomplete.getAutoCompleteForLangAndPrefix(lang, prefix)
+            }
+        }
+        return emptyList()
+    }
 }

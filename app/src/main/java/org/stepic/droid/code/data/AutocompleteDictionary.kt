@@ -18,7 +18,7 @@ class AutocompleteDictionary(private val dict: Array<String>, needSort: Boolean 
                     break
                 }
             }
-            return if (chars[0] == 0.toChar()) {
+            return if (chars.isEmpty() || chars[0] == 0.toChar()) {
                 1.toChar() + String(chars)
             } else {
                 String(chars)
