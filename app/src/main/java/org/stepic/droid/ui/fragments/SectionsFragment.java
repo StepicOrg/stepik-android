@@ -365,6 +365,10 @@ public class SectionsFragment
                     }
                     Intent intent = shareHelper.getIntentForCourseSharing(course);
                     startActivity(intent);
+
+                    if (inviteFriendsPopupWindow != null && inviteFriendsPopupWindow.isShowing()) {
+                        inviteFriendsPopupWindow.dismiss();
+                    }
                 }
 
                 return true;
@@ -503,7 +507,7 @@ public class SectionsFragment
         courseNotParsedView.setOnClickListener(null);
         swipeRefreshLayout.setOnRefreshListener(null);
         localProgressManager.unsubscribe(this);
-        if (inviteFriendsPopupWindow != null) {
+        if (inviteFriendsPopupWindow != null && inviteFriendsPopupWindow.isShowing()) {
             inviteFriendsPopupWindow.dismiss();
         }
         super.onDestroyView();
