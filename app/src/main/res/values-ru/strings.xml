@@ -424,7 +424,7 @@
     <string name="dont_want">Не хочу</string>
     <string name="share_course_in_menu">Вы всегда можете поделиться ссылкой на курс в меню сверху
     </string>
-    <string name="invite_friends_description">Пригласите друзей прямо сейчас, отправив им ссылку на курс!</string>
+    <string name="invite_friends_description">Поделитесь ссылкой с друзьями, чтобы проходить курс вместе!</string>
     <string name="take_course_with_fiends">Проходите курс с друзьями</string>
     <string name="sign_in_with_password">Войти с e-mail</string>
     <string name="sign_in_with_password_suffix">" с e-mail"</string>
