@@ -500,7 +500,9 @@
     <string name="manage_notification_settings">Управлять уведомлениями</string>
 
     <string name="course_item_more">Подробнее</string>
-    <string name="course_item_join">Подробнее о курсе</string>
+    <string name="course_item_join">Поступить на курс</string>
+    <string name="course_item_info">Инфо</string>
+    <string name="course_item_syllabus">Содерж-е</string>
 
     <string name="learners_count">Количество студентов</string>
     <string name="continue_learning">Продолжить учиться</string>
@@ -508,7 +510,6 @@
     <string name="my_courses_title">Мои курсы</string>
     <string name="popular_courses_title">Популярные</string>
     <string name="view_all_courses">Показать все</string>
-    <string name="course_widget_info">Инфо</string>
 
     <string name="sign_in_with_social_suffix">" через социальные сети"</string>
     <string name="sign_in_with_social">Вход через соцсети</string>

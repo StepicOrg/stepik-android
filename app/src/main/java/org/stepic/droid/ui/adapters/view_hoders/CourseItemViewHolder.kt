@@ -62,7 +62,7 @@ class CourseItemViewHolder(
         ColorUtil.getColorArgb(R.color.join_text_color, itemView.context)
     }
     private val infoTitle: String by lazy {
-        itemView.context.resources.getString(R.string.course_widget_info)
+        itemView.context.resources.getString(R.string.course_item_info)
     }
     private var imageViewTarget: BitmapImageViewTarget
 
@@ -113,7 +113,11 @@ class CourseItemViewHolder(
         courseWidgetInfo.applyToButton(infoTitle, continueColor, colorType.continueResource)
         courseWidgetInfo.setOnClickListener {
             getCourseSafety(adapterPosition)?.let {
-                screenManager.showCourseDescription(contextActivity, it, false)
+                if (isEnrolled(it)) {
+                    screenManager.showSections(contextActivity, it)
+                } else {
+                    screenManager.showCourseDescription(contextActivity, it, false)
+                }
             }
         }
     }
@@ -163,7 +167,7 @@ class CourseItemViewHolder(
             analytic.reportEvent(if (isContinueExperimentEnabled) Analytic.ContinueExperiment.CONTINUE_NEW else Analytic.ContinueExperiment.CONTINUE_OLD)
             continueCoursePresenter.continueCourse(course) //provide position?
         } else {
-            screenManager.showCourseDescription(contextActivity, course, false)
+            screenManager.showCourseDescription(contextActivity, course, true)
         }
     }
 
@@ -196,8 +200,10 @@ class CourseItemViewHolder(
 
 
         if (isEnrolled(course)) {
+            courseWidgetInfo.setText(R.string.course_item_syllabus)
             showContinueButton()
         } else {
+            courseWidgetInfo.setText(R.string.course_item_info)
             showJoinButton()
         }
 
@@ -209,7 +215,7 @@ class CourseItemViewHolder(
     }
 
     private fun isEnrolled(course: Course?): Boolean =
-            course != null && course.enrollment != 0 && course.isActive && course.lastStepId != null
+            course != null && course.enrollment != 0
 
     private fun showJoinButton() {
         courseWidgetButton.applyToButton(joinTitle, joinColor, colorType.joinResource)
