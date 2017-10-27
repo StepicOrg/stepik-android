@@ -93,12 +93,9 @@ class FastContinueFragment : FragmentBase(),
         videoStepPresenter.attachView(this)
         courseListPresenter.restoreState()
         fastContinueAction.isEnabled = true
-    }
 
-    override fun onStart() {
-        super.onStart()
 
-        //refresh the last course on start
+        //refresh the last course only when view is created
         if (sharedPreferenceHelper.authResponseFromStore != null) {
             courseListPresenter.downloadData(Table.enrolled, applyFilter = false)
         } else {
