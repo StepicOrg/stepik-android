@@ -2,7 +2,6 @@ package org.stepic.droid.ui.activities
 
 import android.content.Intent
 import android.support.annotation.NonNull
-import org.stepic.droid.R
 import org.stepic.droid.base.SingleFragmentActivity
 import org.stepic.droid.ui.fragments.SectionsFragment
 
@@ -13,11 +12,6 @@ class SectionActivity : SingleFragmentActivity() {
     override fun onBackPressed() {
         super.onBackPressed()
         finish()
-    }
-
-    override fun finish() {
-        super.finish()
-        overridePendingTransition(R.anim.slide_in_from_start, R.anim.slide_out_to_end)
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -33,5 +27,9 @@ class SectionActivity : SingleFragmentActivity() {
                 fragment?.onRequestPermissionsResult(requestCode, permissions, grantResults)
             }
         }
+    }
+
+    override fun applyTransitionPrev() {
+        //no-op
     }
 }
