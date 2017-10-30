@@ -139,10 +139,6 @@ public class SharedPreferenceHelper {
         return getBoolean(PreferenceType.DEVICE_SPECIFIC, INVITATION_WAS_DECLINED_DEVICE_SPECIFIC, false);
     }
 
-    public void onDeclineInvitation() {
-        put(PreferenceType.DEVICE_SPECIFIC, INVITATION_WAS_DECLINED_DEVICE_SPECIFIC, true);
-    }
-
     public void incrementNumberOfNotifications() {
         int numberOfIgnored = getInt(PreferenceType.LOGIN, STREAK_NUMBER_OF_IGNORED, 0);
         numberOfIgnored++;
