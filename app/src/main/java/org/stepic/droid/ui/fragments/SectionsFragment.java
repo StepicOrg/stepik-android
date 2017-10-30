@@ -368,6 +368,9 @@ public class SectionsFragment
 
                     if (inviteFriendsPopupWindow != null && inviteFriendsPopupWindow.isShowing()) {
                         inviteFriendsPopupWindow.dismiss();
+                        getAnalytic().reportEventWithName(
+                                Analytic.Interaction.INVITE_DIALOG_DISMISSED,
+                                Analytic.Interaction.InviteDialogDismissType.SHARE);
                     }
                 }
 
@@ -489,6 +492,13 @@ public class SectionsFragment
         }
         wasIndexed = false;
         ProgressHelper.dismiss(swipeRefreshLayout);
+
+        if (inviteFriendsPopupWindow != null && inviteFriendsPopupWindow.isShowing()) {
+            inviteFriendsPopupWindow.dismiss();
+            getAnalytic().reportEventWithName(
+                    Analytic.Interaction.INVITE_DIALOG_DISMISSED,
+                    Analytic.Interaction.InviteDialogDismissType.LEAVE);
+        }
     }
 
     public Action getAction() {
@@ -507,9 +517,6 @@ public class SectionsFragment
         courseNotParsedView.setOnClickListener(null);
         swipeRefreshLayout.setOnRefreshListener(null);
         localProgressManager.unsubscribe(this);
-        if (inviteFriendsPopupWindow != null && inviteFriendsPopupWindow.isShowing()) {
-            inviteFriendsPopupWindow.dismiss();
-        }
         super.onDestroyView();
     }
 

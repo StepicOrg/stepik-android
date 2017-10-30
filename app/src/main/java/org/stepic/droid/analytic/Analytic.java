@@ -136,8 +136,13 @@ public interface Analytic {
         String CLICK_CHOOSE_NOTIFICATION_INTERVAL = "click_choose_notification_interval";
         String CLICK_PRIVACY_POLICY = "click_privacy_policy";
         String CLICK_TERMS_OF_SERVICE = "click_terms_of_service";
-        String POSITIVE_MATERIAL_DIALOG_INVITATION = "material_dialog_invite_positive";
-        String NEGATIVE_MATERIAL_DIALOG_INVITATION = "material_dialog_invite_negative";
+
+        String INVITE_DIALOG_DISMISSED = "invite_dialog_dismissed";
+        interface InviteDialogDismissType {
+            String LEAVE = "leave";
+            String SHARE = "share";
+        }
+
         String SHOW_MATERIAL_DIALOG_INVITATION = "materdial_dialog_invite_shown";
         String INVITATION_PREVENTED = "invite_prevented";
         String CLICK_CONTINUE_COURSE = "click_continue_course";
