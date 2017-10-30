@@ -79,6 +79,7 @@ class CoursesCarouselFragment
 
     private val courses = ArrayList<Course>()
     private lateinit var info: CoursesCarouselInfo
+    private var gridLayoutManager: GridLayoutManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -142,7 +143,8 @@ class CoursesCarouselFragment
             viewAll()
         }
 
-        coursesRecycler.layoutManager = GridLayoutManager(context, ROW_COUNT, GridLayoutManager.HORIZONTAL, false)
+        gridLayoutManager = GridLayoutManager(context, ROW_COUNT, GridLayoutManager.HORIZONTAL, false)
+        coursesRecycler.layoutManager = gridLayoutManager
         val showMore = info.table == Table.enrolled
         coursesRecycler.adapter = CoursesAdapter(this, courses, continueCoursePresenter, droppingPresenter, false, showMore, info.colorType)
         val verticalSpaceBetweenItems = resources.getDimensionPixelSize(R.dimen.course_list_between_items_padding)
@@ -230,6 +232,7 @@ class CoursesCarouselFragment
         this.courses.clear()
         this.courses.addAll(courses)
         coursesRecycler.adapter.notifyDataSetChanged()
+        updateSpanCount()
     }
 
     private fun showPlaceholder(@StringRes stringRes: Int, listener: (view: View) -> Unit) {
@@ -253,7 +256,7 @@ class CoursesCarouselFragment
         val index = courses.indexOfFirst { it.courseId == course.courseId }
 
         if (index < 0) {
-//            course is not in list
+            //course is not in list
             return
         }
 
@@ -261,9 +264,10 @@ class CoursesCarouselFragment
             courses.removeAt(index)
             coursesRecycler.adapter.notifyItemRemoved(index)
             if (courses.size == ROW_COUNT) {
-//           update 1st column for adjusting size
+                // update 1st column for adjusting size
                 coursesRecycler.adapter.notifyItemRangeChanged(0, ROW_COUNT - 1) // "ROW_COUNT - 1" count is number of changed items, we shouldn't update the last item
             }
+            updateSpanCount()
         } else {
             courses[index].enrollment = 0
             coursesRecycler.adapter.notifyItemChanged(index)
@@ -287,9 +291,8 @@ class CoursesCarouselFragment
         if (info.table != null) {
             courseListPresenter.restoreState()
         } else if (info.table == null) {
-//            no-op
+            // no-op
         }
-
     }
 
     private fun downloadData() {
@@ -319,7 +322,13 @@ class CoursesCarouselFragment
             } else {
                 courses.add(0, joinedCourse)
                 coursesRecycler.adapter.notifyDataSetChanged()
+                updateSpanCount()
             }
         }
+    }
+
+    private fun updateSpanCount() {
+        val spanCount = Math.min(courses.size, ROW_COUNT)
+        gridLayoutManager?.spanCount = spanCount
     }
 }
