@@ -136,7 +136,7 @@ public class SplashActivity extends BackToExitActivityBase {
             ShortcutInfo findCoursesShortcut = new ShortcutInfo.Builder(this, AppConstants.FIND_COURSES_SHORTCUT_ID)
                     .setShortLabel(findCoursesLabel)
                     .setLongLabel(findCoursesLabel)
-                    .setIcon(Icon.createWithResource(this, R.mipmap.ic_search_icon_shortcut))
+                    .setIcon(Icon.createWithResource(this, R.drawable.ic_shortcut_find_courses))
                     .setIntent(findCoursesIntent)
                     .build();
 
@@ -148,7 +148,7 @@ public class SplashActivity extends BackToExitActivityBase {
             ShortcutInfo profileShortcut = new ShortcutInfo.Builder(this, AppConstants.PROFILE_SHORTCUT_ID)
                     .setShortLabel(profileLabel)
                     .setLongLabel(profileLabel)
-                    .setIcon(Icon.createWithResource(this, R.mipmap.ic_profile_shortcut))
+                    .setIcon(Icon.createWithResource(this, R.drawable.ic_shortcut_profile))
                     .setIntents(new Intent[]{mainFeedActivityIntent, profileIntent})
                     .build();
 
