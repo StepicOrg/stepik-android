@@ -33,14 +33,13 @@
             android:layout_marginLeft="@dimen/guideline_standard_padding"
             android:layout_marginRight="@dimen/courseTitleRightPadding"
             android:layout_marginStart="@dimen/guideline_standard_padding"
-            android:lineSpacingExtra="3sp"
             android:textColor="@color/new_accent_color"
             android:textSize="@dimen/course_item_titles_text_size"
             app:layout_constraintLeft_toRightOf="@+id/courseItemImage"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="MissingPrefix"
-            tools:text="345678921334567892133456789213345678921334567892133456789213345678921334567892133456789213345678921334567892133456789213345678921334567892133456789213"/>
+            tools:text="345678921334567892145678921334567892133456789213345678921334567892136789213"/>
 
         <ImageView
             android:id="@+id/courseItemMore"
@@ -61,7 +60,6 @@
             android:id="@+id/learnersCountContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
             android:visibility="gone"
             app:layout_constraintLeft_toLeftOf="@+id/courseItemName"
             app:layout_constraintTop_toBottomOf="@+id/courseItemName"
