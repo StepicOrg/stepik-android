@@ -21,7 +21,7 @@
         android:paddingBottom="@dimen/guideline_standard_padding"
         android:paddingTop="@dimen/guideline_standard_padding"
         android:textColor="@color/text_color"
-        android:textSize="16sp"
+        android:textSize="@dimen/course_carousel_title"
         tools:ignore="MissingPrefix"
         tools:text="@string/my_courses_title"/>
 
@@ -45,7 +45,7 @@
         android:paddingTop="@dimen/guideline_standard_padding"
         android:text="@string/view_all_courses"
         android:textColor="@color/view_all_course_list_color"
-        android:textSize="16sp"
+        android:textSize="@dimen/course_carousel_title"
         tools:ignore="MissingPrefix"/>
 
     <android.support.v7.widget.RecyclerView
@@ -57,7 +57,9 @@
         android:divider="@color/transparent"
         android:overScrollMode="never"
         android:paddingEnd="@dimen/home_right_recycler_padding"
+        android:paddingLeft="0dp"
         android:paddingRight="@dimen/home_right_recycler_padding"
+        android:paddingStart="0dp"
         android:scrollbarStyle="outsideOverlay"
         android:scrollbars="none"
         android:splitMotionEvents="false"

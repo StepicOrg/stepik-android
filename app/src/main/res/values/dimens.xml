@@ -112,6 +112,7 @@
     <dimen name="fast_continue_widget">@dimen/course_widget_radius</dimen>
     <dimen name="fast_continue_widget_height">140dp</dimen>
     <dimen name="fast_continue_action_radius">33dp</dimen>
+    <dimen name="course_carousel_title">20sp</dimen>
 
 
     <!--Left padding (moteIcon) + right padding(moreIcon) + moreIcon.width-->
