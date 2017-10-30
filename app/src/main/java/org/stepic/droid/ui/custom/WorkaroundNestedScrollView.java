@@ -201,7 +201,7 @@ public class WorkaroundNestedScrollView  extends FrameLayout implements NestedSc
     // NestedScrollingChild
 
     @Override
-    public void setNestedScrollingEnabled(boolean enabled) {
+    public final void setNestedScrollingEnabled(boolean enabled) {
         mChildHelper.setNestedScrollingEnabled(enabled);
     }
 
