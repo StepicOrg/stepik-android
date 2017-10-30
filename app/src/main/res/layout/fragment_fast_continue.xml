@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="20dp"
+    android:paddingBottom="0dp"
     android:paddingEnd="@dimen/course_list_side_padding"
     android:paddingLeft="@dimen/course_list_side_padding"
     android:paddingRight="@dimen/course_list_side_padding"
