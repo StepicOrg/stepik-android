@@ -114,7 +114,7 @@
     <dimen name="fast_continue_action_radius">33dp</dimen>
     <dimen name="course_carousel_title">20sp</dimen>
     <dimen name="course_carousel_title_top_padding">24dp</dimen>
-    <dimen name="course_carousel_title_bottom_padding">10dp</dimen>
+    <dimen name="course_carousel_title_bottom_padding">0dp</dimen>
 
 
     <!--Left padding (moteIcon) + right padding(moreIcon) + moreIcon.width-->
@@ -135,5 +135,5 @@
 
     <dimen name="code_text_size_default">14sp</dimen>
     <dimen name="embedded_code_editor_height">150dp</dimen>
-    <dimen name="courses_carousel_top_margin">18dp</dimen>
+    <dimen name="courses_carousel_top_margin">16dp</dimen>
 </resources>
