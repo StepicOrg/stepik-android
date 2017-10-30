@@ -35,7 +35,7 @@
             android:layout_marginStart="@dimen/guideline_standard_padding"
             android:lineSpacingExtra="3sp"
             android:textColor="@color/new_accent_color"
-            android:textSize="16sp"
+            android:textSize="@dimen/course_item_titles_text_size"
             app:layout_constraintLeft_toRightOf="@+id/courseItemImage"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -79,7 +79,7 @@
                 android:contentDescription="@string/learners_count"
                 android:focusable="false"
                 android:focusableInTouchMode="false"
-                android:src="@drawable/ic_learners_count_image"/>
+                android:src="@drawable/ic_learnes"/>
 
             <TextView
                 android:id="@+id/learnersCountText"
@@ -91,7 +91,7 @@
                 android:layout_marginStart="2dp"
                 android:layout_toEndOf="@id/learnersCountImage"
                 android:layout_toRightOf="@id/learnersCountImage"
-                android:textSize="12sp"
+                android:textSize="16sp"
                 tools:ignore="MissingPrefix"
                 tools:text="999K"/>
         </RelativeLayout>
