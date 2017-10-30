@@ -11,10 +11,11 @@ object DateTimeHelper {
     private val millisecondsInMinute = 1000 * 60
     private val hoursInDay = 24
 
-    fun hourMinutesOfMidnightDiffWithUtc(timeZone: TimeZone, isDaylight: Boolean): String {
+    fun hourMinutesOfMidnightDiffWithUtc(timeZone: TimeZone, date : Date): String {
         val instance = Calendar.getInstance(timeZone)
+        instance.time = date
         var diff = instance.timeZone.rawOffset
-        if (isDaylight) {
+        if (timeZone.inDaylightTime(date)) {
             val daylightOffset = instance.get(Calendar.DST_OFFSET)
             diff += daylightOffset
         }
