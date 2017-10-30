@@ -145,9 +145,9 @@ class CoursesCarouselFragment
         coursesRecycler.layoutManager = GridLayoutManager(context, ROW_COUNT, GridLayoutManager.HORIZONTAL, false)
         val showMore = info.table == Table.enrolled
         coursesRecycler.adapter = CoursesAdapter(this, courses, continueCoursePresenter, droppingPresenter, false, showMore, info.colorType)
-        val spacePx = resources.getDimensionPixelSize(R.dimen.course_list_between_items_padding)
+        val verticalSpaceBetweenItems = resources.getDimensionPixelSize(R.dimen.course_list_between_items_padding)
         val leftSpacePx = resources.getDimensionPixelSize(R.dimen.course_list_side_padding)
-        coursesRecycler.addItemDecoration(VerticalSpacesInGridDecoration(spacePx / 2, ROW_COUNT)) //warning: spacePx/2 – workaround for some bug, decoration will set this param twice
+        coursesRecycler.addItemDecoration(VerticalSpacesInGridDecoration(verticalSpaceBetweenItems / 2, ROW_COUNT)) //warning: verticalSpaceBetweenItems/2 – workaround for some bug, decoration will set this param twice
         coursesRecycler.addItemDecoration(LeftSpacesDecoration(leftSpacePx))
         coursesRecycler.addItemDecoration(RightMarginForLastItems(resources.getDimensionPixelSize(R.dimen.home_right_recycler_padding_without_extra), ROW_COUNT))
         coursesRecycler.itemAnimator.changeDuration = 0
