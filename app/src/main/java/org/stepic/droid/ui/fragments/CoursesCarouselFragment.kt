@@ -232,7 +232,7 @@ class CoursesCarouselFragment
         this.courses.clear()
         this.courses.addAll(courses)
         coursesRecycler.adapter.notifyDataSetChanged()
-        updateSpanCount()
+        updateOnCourseCountChanged()
     }
 
     private fun showPlaceholder(@StringRes stringRes: Int, listener: (view: View) -> Unit) {
@@ -267,7 +267,7 @@ class CoursesCarouselFragment
                 // update 1st column for adjusting size
                 coursesRecycler.adapter.notifyItemRangeChanged(0, ROW_COUNT - 1) // "ROW_COUNT - 1" count is number of changed items, we shouldn't update the last item
             }
-            updateSpanCount()
+            updateOnCourseCountChanged()
         } else {
             courses[index].enrollment = 0
             coursesRecycler.adapter.notifyItemChanged(index)
@@ -322,18 +322,34 @@ class CoursesCarouselFragment
             } else {
                 courses.add(0, joinedCourse)
                 coursesRecycler.adapter.notifyDataSetChanged()
-                updateSpanCount()
+                updateOnCourseCountChanged()
             }
         }
     }
 
-    private fun updateSpanCount() {
-        if (courses.isEmpty()) {
-            //do nothing
-            return
+    private fun updateOnCourseCountChanged() {
+        fun updateSpanCount() {
+            if (courses.isEmpty()) {
+                //do nothing
+                return
+            }
+
+            val spanCount = Math.min(courses.size, ROW_COUNT)
+            gridLayoutManager?.spanCount = spanCount
         }
 
-        val spanCount = Math.min(courses.size, ROW_COUNT)
-        gridLayoutManager?.spanCount = spanCount
+        fun updateCourseCount() {
+            if (info.table == Table.featured || courses.isEmpty()) {
+                coursesCarouselCount.visibility = View.GONE
+            } else {
+                coursesCarouselCount.visibility = View.VISIBLE
+                coursesCarouselCount.text = resources.getQuantityString(R.plurals.course_count, courses.size, courses.size)
+            }
+        }
+
+        updateSpanCount()
+        updateCourseCount()
     }
+
+
 }
