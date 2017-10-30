@@ -113,6 +113,8 @@ public interface ScreenManager {
 
     Intent getProfileIntent(@NotNull Context context);
 
+    Intent getMyProfileIntent(@NotNull Context context);
+
     void openSplash(Context context);
 
     void openAboutActivity(Activity activity);

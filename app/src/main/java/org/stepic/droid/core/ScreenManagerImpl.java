@@ -435,6 +435,11 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
+    public Intent getMyProfileIntent(@NotNull Context context) {
+        return getFromMainActivityIntent(context, MainFeedActivity.PROFILE_INDEX);
+    }
+
+    @Override
     public void openSplash(Context context) {
         Intent launchIntent = new Intent(context, SplashActivity.class);
         launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);

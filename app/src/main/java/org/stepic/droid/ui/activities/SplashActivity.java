@@ -141,15 +141,13 @@ public class SplashActivity extends BackToExitActivityBase {
                     .build();
 
             String profileLabel = getString(R.string.profile_title);
-            Intent mainFeedActivityIntent = screenManager.getMyCoursesIntent(getApplicationContext());
-            mainFeedActivityIntent.setAction(AppConstants.OPEN_SHORTCUT_PROFILE);
-            Intent profileIntent = screenManager.getProfileIntent(getApplicationContext());
+            Intent profileIntent = screenManager.getMyProfileIntent(getApplicationContext());
             profileIntent.setAction(AppConstants.OPEN_SHORTCUT_PROFILE);
             ShortcutInfo profileShortcut = new ShortcutInfo.Builder(this, AppConstants.PROFILE_SHORTCUT_ID)
                     .setShortLabel(profileLabel)
                     .setLongLabel(profileLabel)
                     .setIcon(Icon.createWithResource(this, R.drawable.ic_shortcut_profile))
-                    .setIntents(new Intent[]{mainFeedActivityIntent, profileIntent})
+                    .setIntent(profileIntent)
                     .build();
 
 
