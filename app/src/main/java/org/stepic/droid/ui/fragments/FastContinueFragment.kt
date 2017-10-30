@@ -233,6 +233,7 @@ class FastContinueFragment : FragmentBase(),
             val textForView = step.block?.text
             if (textForView != null && textForView.isNotBlank()) {
                 fastContinueTextView.text = textResolver.fromHtml(textForView)
+                fastContinueImageView.setImageDrawable(null)
             }
         }
     }
@@ -248,6 +249,7 @@ class FastContinueFragment : FragmentBase(),
             return
         }
         val uri = ThumbnailParser.getUriForThumbnail(thumbnailPath)
+        fastContinueTextView.text = ""
         Glide
                 .with(context)
                 .load(uri)
