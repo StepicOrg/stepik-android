@@ -328,6 +328,11 @@ class CoursesCarouselFragment
     }
 
     private fun updateSpanCount() {
+        if (courses.isEmpty()) {
+            //do nothing
+            return
+        }
+
         val spanCount = Math.min(courses.size, ROW_COUNT)
         gridLayoutManager?.spanCount = spanCount
     }
