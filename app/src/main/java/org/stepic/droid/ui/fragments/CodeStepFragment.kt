@@ -95,7 +95,6 @@ class CodeStepFragment : StepAttemptFragment(),
             showCodeQuizEditor()
         }
 
-
         codeQuizFullscreenAction.setOnClickListener {
             chosenProgrammingLanguageName?.let { lang ->
                 if (submission?.status != Submission.Status.CORRECT) {
