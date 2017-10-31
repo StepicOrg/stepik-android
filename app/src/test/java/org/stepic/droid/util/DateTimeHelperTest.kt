@@ -2,6 +2,7 @@ package org.stepic.droid.util
 
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import java.text.SimpleDateFormat
 import java.util.*
 
 class DateTimeHelperTest {
@@ -53,32 +54,37 @@ class DateTimeHelperTest {
 
     @Test
     fun hourMinutesMoscow() {
-        val printable = DateTimeHelper.hourMinutesOfMidnightDiffWithUtc(TimeZone.getTimeZone("Europe/Moscow"), isDaylight = false)
+        val date: Date = SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.ENGLISH).parse("2017-08-20 00:00:00")
+        val printable = DateTimeHelper.hourMinutesOfMidnightDiffWithUtc(TimeZone.getTimeZone("Europe/Moscow"), date)
         assertEquals("03:00", printable)
     }
 
     @Test
     fun hourMinutesUtc() {
-        val printable = DateTimeHelper.hourMinutesOfMidnightDiffWithUtc(TimeZone.getTimeZone("UTC"), isDaylight = false)
+        val date: Date = SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.ENGLISH).parse("2017-08-20 00:00:00")
+        val printable = DateTimeHelper.hourMinutesOfMidnightDiffWithUtc(TimeZone.getTimeZone("UTC"), date)
         assertEquals("00:00", printable)
     }
 
     @Test
     fun hourMinutesNegative() {
-        val printable = DateTimeHelper.hourMinutesOfMidnightDiffWithUtc(TimeZone.getTimeZone("America/Chicago"), isDaylight = true) //-5 UTC
+        val summerDate: Date = SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.ENGLISH).parse("2017-08-20 00:00:00")
+        val printable = DateTimeHelper.hourMinutesOfMidnightDiffWithUtc(TimeZone.getTimeZone("America/Chicago"), summerDate) //-5 UTC
         assertEquals("19:00", printable)
         //Canada/Newfoundland
     }
 
     @Test
     fun hourMinutesNegativeHalf() {
-        val printable = DateTimeHelper.hourMinutesOfMidnightDiffWithUtc(TimeZone.getTimeZone("Canada/Newfoundland"), isDaylight = true) //-2:30 UTC
+        val summerDate: Date = SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.ENGLISH).parse("2017-08-20 00:00:00")
+        val printable = DateTimeHelper.hourMinutesOfMidnightDiffWithUtc(TimeZone.getTimeZone("Canada/Newfoundland"), summerDate) //-2:30 UTC
         assertEquals("21:30", printable)
     }
 
     @Test
     fun hourMinutesLondon() {
-        val printable = DateTimeHelper.hourMinutesOfMidnightDiffWithUtc(TimeZone.getTimeZone("Europe/London"), isDaylight = true) //+1:00 UTC
+        val summerDate: Date = SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.ENGLISH).parse("2017-08-20 00:00:00")
+        val printable = DateTimeHelper.hourMinutesOfMidnightDiffWithUtc(TimeZone.getTimeZone("Europe/London"), summerDate) //+1:00 UTC
         assertEquals("01:00", printable)
     }
 }

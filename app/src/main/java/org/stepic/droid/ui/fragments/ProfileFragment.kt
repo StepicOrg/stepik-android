@@ -167,9 +167,10 @@ class ProfileFragment : FragmentBase(),
 
     private fun initTimezone() {
         val timezone = TimeZone.getDefault()
-        val isDaylight = timezone.inDaylightTime(Date())
+        val nowDate = Date()
+        val isDaylight = timezone.inDaylightTime(nowDate)
         val print = String.format("%s\n%s",
-                DateTimeHelper.hourMinutesOfMidnightDiffWithUtc(timezone, isDaylight),
+                DateTimeHelper.hourMinutesOfMidnightDiffWithUtc(timezone, nowDate),
                 timezone.getDisplayName(isDaylight, TimeZone.LONG))
         notificationTimeZoneInfo.text = getString(R.string.streak_updated_timezone, print)
     }

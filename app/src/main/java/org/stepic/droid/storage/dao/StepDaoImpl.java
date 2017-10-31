@@ -2,7 +2,7 @@ package org.stepic.droid.storage.dao;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.NonNull;
 
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.model.ActionsContainer;
@@ -10,6 +10,7 @@ import org.stepic.droid.model.Assignment;
 import org.stepic.droid.model.BlockPersistentWrapper;
 import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Step;
+import org.stepic.droid.storage.operations.CrudOperations;
 import org.stepic.droid.storage.structure.DbStructureAssignment;
 import org.stepic.droid.storage.structure.DbStructureBlock;
 import org.stepic.droid.storage.structure.DbStructureProgress;
@@ -28,11 +29,11 @@ public class StepDaoImpl extends DaoBase<Step> {
     private final IDao<Progress> progressDao;
 
     @Inject
-    public StepDaoImpl(SQLiteDatabase openHelper,
+    public StepDaoImpl(CrudOperations crudOperations,
                        IDao<BlockPersistentWrapper> blockWrapperDao,
                        IDao<Assignment> assignmentDao,
                        IDao<Progress> progressDao) {
-        super(openHelper);
+        super(crudOperations);
         this.blockWrapperDao = blockWrapperDao;
         this.assignmentDao = assignmentDao;
         this.progressDao = progressDao;
@@ -131,7 +132,7 @@ public class StepDaoImpl extends DaoBase<Step> {
 
     @Nullable
     @Override
-    public Step get(String whereColumnName, String whereValue) {
+    public Step get(@NonNull String whereColumnName, @NonNull String whereValue) {
         Step step = super.get(whereColumnName, whereValue);
         addInnerObjects(step);
         return step;

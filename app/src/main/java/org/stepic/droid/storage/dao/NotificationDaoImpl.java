@@ -2,10 +2,10 @@ package org.stepic.droid.storage.dao;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.notifications.model.NotificationType;
+import org.stepic.droid.storage.operations.CrudOperations;
 import org.stepic.droid.storage.structure.DbStructureNotification;
 
 import javax.inject.Inject;
@@ -13,8 +13,8 @@ import javax.inject.Inject;
 public class NotificationDaoImpl extends DaoBase<Notification> {
 
     @Inject
-    public NotificationDaoImpl(SQLiteDatabase openHelper) {
-        super(openHelper);
+    public NotificationDaoImpl(CrudOperations crudOperations) {
+        super(crudOperations);
     }
 
     @Override

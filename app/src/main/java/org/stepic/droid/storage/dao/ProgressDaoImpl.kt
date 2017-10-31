@@ -2,15 +2,13 @@ package org.stepic.droid.storage.dao
 
 import android.content.ContentValues
 import android.database.Cursor
-import android.database.sqlite.SQLiteDatabase
-
 import org.stepic.droid.model.Progress
+import org.stepic.droid.storage.operations.CrudOperations
 import org.stepic.droid.storage.structure.DbStructureProgress
-
 import javax.inject.Inject
 
 class ProgressDaoImpl @Inject
-constructor(openHelper: SQLiteDatabase) : DaoBase<Progress>(openHelper) {
+constructor(crudOperations: CrudOperations) : DaoBase<Progress>(crudOperations) {
 
     public override fun parsePersistentObject(cursor: Cursor): Progress {
         val indexId = cursor.getColumnIndex(DbStructureProgress.Column.ID)
@@ -30,9 +28,7 @@ constructor(openHelper: SQLiteDatabase) : DaoBase<Progress>(openHelper) {
                 nSteps = cursor.getInt(indexNSteps))
     }
 
-    public override fun getDbName(): String {
-        return DbStructureProgress.PROGRESS
-    }
+    public override fun getDbName(): String = DbStructureProgress.PROGRESS
 
     public override fun getContentValues(progress: Progress): ContentValues {
         val values = ContentValues()
@@ -46,12 +42,9 @@ constructor(openHelper: SQLiteDatabase) : DaoBase<Progress>(openHelper) {
         return values
     }
 
-    public override fun getDefaultPrimaryColumn(): String {
-        return DbStructureProgress.Column.ID
-    }
+    public override fun getDefaultPrimaryColumn(): String = DbStructureProgress.Column.ID
 
-    public override fun getDefaultPrimaryValue(persistentObject: Progress): String? {
-        return persistentObject.id
-    }
+    public override fun getDefaultPrimaryValue(persistentObject: Progress): String? =
+            persistentObject.id
 
 }
