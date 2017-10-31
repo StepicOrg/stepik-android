@@ -2,15 +2,13 @@ package org.stepic.droid.storage.dao
 
 import android.content.ContentValues
 import android.database.Cursor
-import android.database.sqlite.SQLiteDatabase
-
 import org.stepic.droid.model.Progress
+import org.stepic.droid.storage.operations.CrudOperations
 import org.stepic.droid.storage.structure.DbStructureProgress
-
 import javax.inject.Inject
 
 class ProgressDaoImpl @Inject
-constructor(openHelper: SQLiteDatabase) : DaoBase<Progress>(openHelper) {
+constructor(crudOperations: CrudOperations) : DaoBase<Progress>(crudOperations) {
 
     public override fun parsePersistentObject(cursor: Cursor): Progress {
         val indexId = cursor.getColumnIndex(DbStructureProgress.Column.ID)

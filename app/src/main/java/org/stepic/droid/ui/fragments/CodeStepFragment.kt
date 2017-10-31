@@ -18,7 +18,9 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.code.util.CodeToolbarUtil
 import org.stepic.droid.core.presenters.CodePresenter
+import org.stepic.droid.core.presenters.PreparingCodeStepPresenter
 import org.stepic.droid.core.presenters.contracts.CodeView
+import org.stepic.droid.core.presenters.contracts.PreparingCodeStepView
 import org.stepic.droid.model.Attempt
 import org.stepic.droid.model.Reply
 import org.stepic.droid.model.Submission
@@ -35,6 +37,7 @@ import javax.inject.Inject
 
 class CodeStepFragment : StepAttemptFragment(),
         CodeView,
+        PreparingCodeStepView,
         ResetCodeDialogFragment.Callback,
         ChangeCodeLanguageDialog.Callback, CodeToolbarAdapter.OnSymbolClickListener {
     companion object {
@@ -46,6 +49,9 @@ class CodeStepFragment : StepAttemptFragment(),
 
     @Inject
     lateinit var codePresenter: CodePresenter
+
+    @Inject
+    lateinit var preparingCodeStepPresenter: PreparingCodeStepPresenter
 
     private var codeToolbarAdapter: CodeToolbarAdapter? = null
     private var onGlobalLayoutListener: ViewTreeObserver.OnGlobalLayoutListener? = null
@@ -78,6 +84,14 @@ class CodeStepFragment : StepAttemptFragment(),
         codeToolbarView.adapter = codeToolbarAdapter
         codeToolbarAdapter?.onSymbolClickListener = this
         codeToolbarView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+
+        codePresenter.attachView(this)
+        preparingCodeStepPresenter.attachView(this)
+        preparingCodeStepPresenter.checkStep(step)
+    }
+
+    override fun onStepPrepared() {
+        //here code options should be prepared
 
         initLanguageChooser()
 
@@ -143,8 +157,15 @@ class CodeStepFragment : StepAttemptFragment(),
         }
 
         initSamples()
+    }
 
-        codePresenter.attachView(this)
+    override fun onStepNotPrepared() {
+        onConnectionFailWhenLoadAttempt()
+    }
+
+    override fun additionalActionOnClickReload() {
+        super.additionalActionOnClickReload()
+        preparingCodeStepPresenter.prepareStepIfNotPrepared(step)
     }
 
     override fun onStart() {
@@ -191,6 +212,7 @@ class CodeStepFragment : StepAttemptFragment(),
 
     override fun onDestroyView() {
         super.onDestroyView()
+        preparingCodeStepPresenter.detachView(this)
         codePresenter.detachView(this)
         codeToolbarAdapter?.onSymbolClickListener = null
     }
@@ -289,7 +311,6 @@ class CodeStepFragment : StepAttemptFragment(),
         showLanguageChoosingView(false)
         showCodeQuizEditor()
     }
-
 
     private fun initLanguageChooser() {
         step.block?.options?.limits

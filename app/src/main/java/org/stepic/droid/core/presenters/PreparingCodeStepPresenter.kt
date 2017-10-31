@@ -2,6 +2,7 @@ package org.stepic.droid.core.presenters
 
 import io.reactivex.Scheduler
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.exceptions.Exceptions
 import org.stepic.droid.core.presenters.contracts.PreparingCodeStepView
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
@@ -28,6 +29,14 @@ constructor(
 
     private val compositeDisposable = CompositeDisposable()
 
+    fun checkStep(step: Step) {
+        if (step.isCodeStepPrepared()) {
+            view?.onStepPrepared()
+        } else {
+            view?.onStepNotPrepared()
+        }
+    }
+
     fun prepareStepIfNotPrepared(step: Step) {
         if (step.isCodeStepPrepared()) {
             view?.onStepPrepared()
@@ -41,7 +50,7 @@ constructor(
                 .map {
                     when (it.isCodeStepPrepared()) {
                         true -> it
-                        false -> throw StepNotPrepared()
+                        false -> Exceptions.propagate(StepNotPrepared())
                     }
                 }
                 .retryWhen(RetryExponential(ATTEMPTS))
