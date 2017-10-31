@@ -328,27 +328,27 @@ class CoursesCarouselFragment
     }
 
     private fun updateOnCourseCountChanged() {
-        fun updateSpanCount() {
-            if (courses.isEmpty()) {
-                //do nothing
-                return
-            }
-
-            val spanCount = Math.min(courses.size, ROW_COUNT)
-            gridLayoutManager?.spanCount = spanCount
-        }
-
-        fun updateCourseCount() {
-            if (info.table == Table.featured || courses.isEmpty()) {
-                coursesCarouselCount.visibility = View.GONE
-            } else {
-                coursesCarouselCount.visibility = View.VISIBLE
-                coursesCarouselCount.text = resources.getQuantityString(R.plurals.course_count, courses.size, courses.size)
-            }
-        }
-
         updateSpanCount()
         updateCourseCount()
+    }
+
+    private fun updateSpanCount() {
+        if (courses.isEmpty()) {
+            //do nothing
+            return
+        }
+
+        val spanCount = Math.min(courses.size, ROW_COUNT)
+        gridLayoutManager?.spanCount = spanCount
+    }
+
+    private fun updateCourseCount() {
+        if (info.table == Table.featured || courses.isEmpty()) {
+            coursesCarouselCount.visibility = View.GONE
+        } else {
+            coursesCarouselCount.visibility = View.VISIBLE
+            coursesCarouselCount.text = resources.getQuantityString(R.plurals.course_count, courses.size, courses.size)
+        }
     }
 
 
