@@ -28,9 +28,7 @@ constructor(crudOperations: CrudOperations) : DaoBase<Progress>(crudOperations) 
                 nSteps = cursor.getInt(indexNSteps))
     }
 
-    public override fun getDbName(): String {
-        return DbStructureProgress.PROGRESS
-    }
+    public override fun getDbName(): String = DbStructureProgress.PROGRESS
 
     public override fun getContentValues(progress: Progress): ContentValues {
         val values = ContentValues()
@@ -44,12 +42,9 @@ constructor(crudOperations: CrudOperations) : DaoBase<Progress>(crudOperations) 
         return values
     }
 
-    public override fun getDefaultPrimaryColumn(): String {
-        return DbStructureProgress.Column.ID
-    }
+    public override fun getDefaultPrimaryColumn(): String = DbStructureProgress.Column.ID
 
-    public override fun getDefaultPrimaryValue(persistentObject: Progress): String? {
-        return persistentObject.id
-    }
+    public override fun getDefaultPrimaryValue(persistentObject: Progress): String? =
+            persistentObject.id
 
 }

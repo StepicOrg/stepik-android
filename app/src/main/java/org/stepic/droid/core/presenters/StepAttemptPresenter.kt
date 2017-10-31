@@ -150,7 +150,7 @@ class StepAttemptPresenter
                                 val submission = submissions.firstOrNull()
                                 // if null ->  we do not have submissions for THIS ATTEMPT
 
-                                if (submission?.status === Submission.Status.EVALUATION) {
+                                if (submission?.status == Submission.Status.EVALUATION) {
                                     mainHandler.post {
                                         getStatusOfSubmission(numberOfTry + 1)
                                     }
