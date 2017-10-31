@@ -52,6 +52,8 @@ public interface Api {
 
     Call<StepResponse> getSteps(long[] steps);
 
+    Single<StepResponse> getStepsReactive (long [] steps);
+
     @Nullable
     Call<Void> dropCourse(long courseId);
 
