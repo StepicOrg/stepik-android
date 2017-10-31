@@ -168,7 +168,7 @@ class SectionsPresenter
                     .filterNotNull()
                     .toTypedArray()
             val progresses = api.getProgresses(progressIds).execute().body()!!.progresses
-            val progressIdToProgressViewModel = progresses.map { it.transformToViewModel() }.filterNotNull().associateBy { it.progressId }
+            val progressIdToProgressViewModel = progresses.mapNotNull { it.transformToViewModel() }.associateBy { it.progressId }
             threadPoolExecutor.execute {
                 //save to database
                 progresses.filterNotNull().forEach { databaseFacade.addProgress(it) }
