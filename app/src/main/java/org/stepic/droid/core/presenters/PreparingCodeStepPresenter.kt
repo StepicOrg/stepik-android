@@ -1,12 +1,15 @@
 package org.stepic.droid.core.presenters
 
-import org.stepic.droid.concurrency.MainHandler
+import io.reactivex.Scheduler
+import io.reactivex.disposables.CompositeDisposable
 import org.stepic.droid.core.presenters.contracts.PreparingCodeStepView
+import org.stepic.droid.di.qualifiers.BackgroundScheduler
+import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.di.step.code.CodeScope
 import org.stepic.droid.model.Step
 import org.stepic.droid.model.StepStatus
+import org.stepic.droid.util.RetryExponential
 import org.stepic.droid.web.Api
-import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
 
 @CodeScope
@@ -14,15 +17,51 @@ class PreparingCodeStepPresenter
 @Inject
 constructor(
         private val api: Api,
-        private val threadPoolExecutor: ThreadPoolExecutor,
-        private val mainHandler: MainHandler) : PresenterBase<PreparingCodeStepView>() {
+        @BackgroundScheduler
+        private val scheduler: Scheduler,
+        @MainScheduler
+        private val mainScheduler: Scheduler) : PresenterBase<PreparingCodeStepView>() {
+
+    companion object {
+        private const val ATTEMPTS = 10
+    }
+
+    private val compositeDisposable = CompositeDisposable()
 
     fun prepareStepIfNotPrepared(step: Step) {
-        if (step.block?.options != null && step.status != StepStatus.PREPARING) {
+        if (step.isCodeStepPrepared()) {
             view?.onStepPrepared()
-        } else {
-
+            return
         }
 
+        val disposable = api.getStepsReactive(longArrayOf(step.id))
+                .map {
+                    it.steps?.first()
+                }
+                .map {
+                    when (it.isCodeStepPrepared()) {
+                        true -> it
+                        false -> throw StepNotPrepared()
+                    }
+                }
+                .retryWhen(RetryExponential(ATTEMPTS))
+                .subscribeOn(scheduler)
+                .observeOn(mainScheduler)
+                .subscribe({
+                    view?.onStepPrepared()
+                }, {
+                    view?.onStepNotPrepared()
+                })
+        compositeDisposable.add(disposable)
     }
+
+    override fun detachView(view: PreparingCodeStepView) {
+        super.detachView(view)
+        compositeDisposable.clear()
+    }
+
+    private fun Step.isCodeStepPrepared() =
+            this.block?.options != null && this.status != StepStatus.PREPARING
+
+    private class StepNotPrepared : Throwable("Step is not prepared")
 }
