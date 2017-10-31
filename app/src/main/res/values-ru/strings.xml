@@ -540,4 +540,5 @@
     <string name="sample_input">&lt;b>Пример входных данных %d:&lt;/b></string>
     <string name="sample_output">&lt;b>Пример выходных данных %d:&lt;/b></string>
     <string name="hint_for_code">Введите код здесь…</string>
+    <string name="step_preparing">Шаг еще не обработан. Нажмите, чтобы перезагрузить</string>
 </resources>

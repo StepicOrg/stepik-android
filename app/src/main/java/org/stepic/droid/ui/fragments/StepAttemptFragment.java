@@ -226,16 +226,11 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
             @Override
             public void onClick(View v) {
                 stepAttemptPresenter.startLoadAttempt(step, true);
-                additionalActionOnClickReload();
             }
         });
         stepAttemptPresenter.attachView(this);
         internetEnabledListenerClient.subscribe(this);
         stepAttemptPresenter.startLoadAttempt(step);
-    }
-
-    protected void additionalActionOnClickReload() {
-        //no-op
     }
 
     private void makeSubmission() {

@@ -124,9 +124,6 @@
 
             </LinearLayout>
 
-
-            <include layout="@layout/progress_bar_on_empty_screen"/>
-
             <include layout="@layout/steps_only_online"/>
 
             <include layout="@layout/open_comment_view"/>
