@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v4.widget.NestedScrollView
+    <org.stepic.droid.ui.custom.WorkaroundNestedScrollView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/rootScrollView"
@@ -142,7 +142,7 @@
                 android:visibility="gone"/>
 
         </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
+    </org.stepic.droid.ui.custom.WorkaroundNestedScrollView>
 
     <include
         layout="@layout/view_code_toolbar"
