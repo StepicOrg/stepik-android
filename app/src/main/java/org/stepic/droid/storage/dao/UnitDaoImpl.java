@@ -122,7 +122,7 @@ public class UnitDaoImpl extends DaoBase<Unit> {
                 progress = progressDao.get(DbStructureProgress.Column.ID, progressId);
             }
             if (progress != null)
-                isPassed = progress.is_passed();
+                isPassed = progress.isPassed();
             unit.set_viewed_custom(isPassed);
         }
 

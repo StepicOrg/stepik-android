@@ -580,7 +580,7 @@ public class SectionsFragment
             if (args == null) {
                 args = new Bundle();
             }
-            args.putSerializable(AppConstants.KEY_COURSE_BUNDLE, course);
+            args.putParcelable(AppConstants.KEY_COURSE_BUNDLE, course);
             getActivity().getIntent().putExtras(args);
             initScreenByCourse();
         }
@@ -744,7 +744,6 @@ public class SectionsFragment
 
 
     public void onNewIntent(Intent intent) {
-
         long simpleCourseId = -1;
         int simpleModulePosition = -1;
 
@@ -752,9 +751,9 @@ public class SectionsFragment
             isAfterJoining = intent.getExtras().getBoolean(joinFlag);
             intent.putExtra(joinFlag, false);
 
-            Object courseInBundle = intent.getExtras().get(AppConstants.KEY_COURSE_BUNDLE);
-            if (courseInBundle != null && courseInBundle instanceof Course) {
-                course = (Course) courseInBundle;
+            Course courseInBundle = intent.getExtras().getParcelable(AppConstants.KEY_COURSE_BUNDLE);
+            if (courseInBundle != null) {
+                course = courseInBundle;
             } else {
                 try {
                     simpleCourseId = intent.getExtras().getLong(AppConstants.KEY_COURSE_LONG_ID);

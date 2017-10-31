@@ -32,6 +32,7 @@ ext {
     androidCompileSdkVersion = 26
     firebaseVersion = '11.2.2'
     leakCanaryVersion = '1.5.1'
+    retrofitVersion = '2.3.0'
 }
 
 task clean(type: Delete) {
