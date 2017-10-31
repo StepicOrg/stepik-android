@@ -85,9 +85,8 @@ class SectionsPresenter
                 } else {
                     //get from Internet
                     try {
-                        val response = api.getSections(sectionIds).execute()
-                        if (response.isSuccessful || response.body()?.sections?.isNotEmpty() ?: false) {
-                            val sections = response.body().sections
+                        val sections = api.getSections(sectionIds).execute()?.body()?.sections
+                        if (sections?.isNotEmpty() == true) {
                             val cachedSections: Map<Long, Section> = databaseFacade
                                     .getAllSectionsOfCourse(course)
                                     .filterNotNull()
@@ -168,7 +167,7 @@ class SectionsPresenter
                     .map { it.progress }
                     .filterNotNull()
                     .toTypedArray()
-            val progresses = api.getProgresses(progressIds).execute().body().progresses
+            val progresses = api.getProgresses(progressIds).execute().body()!!.progresses
             val progressIdToProgressViewModel = progresses.map { it.transformToViewModel() }.filterNotNull().associateBy { it.progressId }
             threadPoolExecutor.execute {
                 //save to database

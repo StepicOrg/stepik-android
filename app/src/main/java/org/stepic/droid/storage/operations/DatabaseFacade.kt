@@ -38,7 +38,6 @@ class DatabaseFacade
         private val certificateViewItemDao: IDao<CertificateViewItem>,
         private val videoTimestampDao: IDao<VideoTimestamp>,
         private val lastStepDao: IDao<PersistentLastStep>,
-        private val lastInteractions: IDao<CourseLastInteraction>,
         private val externalVideoUrlDao: IDao<DbVideoUrl>,
         private val blockDao: IDao<BlockPersistentWrapper>) {
 
@@ -56,7 +55,6 @@ class DatabaseFacade
         notificationDao.removeAll()
         certificateViewItemDao.removeAll()
         lastStepDao.removeAll()
-        lastInteractions.removeAll()
         blockDao.removeAll()
         videoTimestampDao.removeAll()
         externalVideoUrlDao.removeAll()
@@ -124,6 +122,21 @@ class DatabaseFacade
     fun getCourseById(courseId: Long, type: Table) = getCourseDao(type).get(DbStructureEnrolledAndFeaturedCourses.Column.COURSE_ID, courseId.toString())
 
     fun getProgressById(progressId: String) = progressDao.get(DbStructureProgress.Column.ID, progressId)
+
+    fun getProgresses(progressIds: List<String>): List<Progress> {
+        //todo change implementation of getAllInRange and escape internally
+        val escapedIds = progressIds
+                .map {
+                    "\"$it\""
+                }
+                .toTypedArray()
+        val range = DbParseHelper.parseStringArrayToString(escapedIds, AppConstants.COMMA)
+        return if (range == null) {
+            emptyList()
+        } else {
+            progressDao.getAllInRange(DbStructureProgress.Column.ID, range)
+        }
+    }
 
     @Deprecated("Lesson can have a lot of units", ReplaceWith("try to get unit from section"))
     fun getUnitByLessonId(lessonId: Long) = unitDao.get(DbStructureUnit.Column.LESSON, lessonId.toString())
@@ -229,7 +242,7 @@ class DatabaseFacade
 
     fun getAllCachedVideos() = cachedVideoDao.getAll()
 
-    fun getCachedVideoIfExist (video : Video) : CachedVideo? =
+    fun getCachedVideoIfExist(video: Video): CachedVideo? =
             cachedVideoDao.get(DbStructureCachedVideo.Column.VIDEO_ID, video.id.toString())
 
     fun getDownloadEntityIfExist(downloadId: Long?): DownloadEntity? {
@@ -290,7 +303,7 @@ class DatabaseFacade
     fun isProgressViewed(progressId: String?): Boolean {
         if (progressId == null) return false
         val progress = progressDao.get(DbStructureProgress.Column.ID, progressId)
-        return progress?.is_passed ?: false
+        return progress?.isPassed ?: false
     }
 
     fun isStepPassed(step: Step): Boolean {
@@ -398,12 +411,6 @@ class DatabaseFacade
 
     fun getLocalLastStepByCourseId(courseId: Long) =
             lastStepDao.get(DbStructureLastStep.Column.COURSE_ID, courseId.toString())
-
-    fun getAllLocalLastCourseInteraction() =
-            lastInteractions.getAll()
-
-    fun updateCourseLastInteraction(courseId: Long, timestamp: Long)
-            = lastInteractions.insertOrUpdate(CourseLastInteraction(courseId = courseId, timestamp = timestamp))
 
     fun getUnitsByIds(keys: LongArray): List<Unit> {
         DbParseHelper.parseLongArrayToString(keys, AppConstants.COMMA)?.let {
