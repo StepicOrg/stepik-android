@@ -9,10 +9,10 @@ import org.stepic.droid.configuration.Config
 import org.stepic.droid.core.internet_state.contract.InternetEnabledListener
 import org.stepic.droid.core.presenters.contracts.NotificationListView
 import org.stepic.droid.di.notifications.NotificationsScope
+import org.stepic.droid.model.NotificationCategory
 import org.stepic.droid.notifications.StepikNotificationManager
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.notifications.model.NotificationType
-import org.stepic.droid.model.NotificationCategory
 import org.stepic.droid.util.not
 import org.stepic.droid.web.Api
 import timber.log.Timber
@@ -31,7 +31,7 @@ class NotificationListPresenter
         private val config: Config,
         private val analytic: Analytic,
         private val stepikNotificationManager: StepikNotificationManager,
-        private val internetEnabledListenerClient : Client<InternetEnabledListener>
+        private val internetEnabledListenerClient: Client<InternetEnabledListener>
 ) : PresenterBase<NotificationListView>(), InternetEnabledListener {
     private var notificationCategory: NotificationCategory? = null
     val isLoading = AtomicBoolean(false)
@@ -61,8 +61,7 @@ class NotificationListPresenter
                 try {
                     val notifications = getNotificationFromOnePage(notificationCategory)
                     notifications.forEachIndexed { position, notification ->
-                        notification.id?.let {
-                            notificationId ->
+                        notification.id?.let { notificationId ->
                             notificationMapIdToPosition[notificationId] = position
                         }
                     }
@@ -91,7 +90,7 @@ class NotificationListPresenter
     @WorkerThread
     private fun getNotificationFromOnePage(notificationCategory: NotificationCategory): Iterable<Notification> {
         Timber.d("loading from page %d", page.get())
-        val notificationResponse = api.getNotifications(notificationCategory, page.get()).execute().body()
+        val notificationResponse = api.getNotifications(notificationCategory, page.get()).execute().body() ?: throw NullPointerException("notifications null body")
         hasNextPage.set(notificationResponse.meta.has_next)
         page.set(notificationResponse.meta.page + 1)
 
@@ -127,8 +126,7 @@ class NotificationListPresenter
                     val notifications = getNotificationFromOnePage(category)
                     val oldSize = notificationList.size
                     notifications.forEachIndexed { shift, notification ->
-                        notification.id?.let {
-                            notificationId ->
+                        notification.id?.let { notificationId ->
                             notificationMapIdToPosition[notificationId] = shift + oldSize
                         }
                     }
@@ -258,7 +256,7 @@ class NotificationListPresenter
                         }
                     }
 
-            val list: List <Pair<Int?, Long?>> = listForNotificationForUI.map {
+            val list: List<Pair<Int?, Long?>> = listForNotificationForUI.map {
                 val first = notificationMapIdToPosition[it.id]
                 Pair(first, it.id)
             }

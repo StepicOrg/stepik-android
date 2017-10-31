@@ -9,7 +9,6 @@ import org.stepic.droid.model.Step
 import org.stepic.droid.model.Unit
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.storage.repositories.Repository
-import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.hasUserAccess
 import org.stepic.droid.util.hasUserAccessAndNotEmpty
 import org.stepic.droid.web.Api
@@ -34,11 +33,10 @@ class ContinueCoursePresenter
             view?.onShowContinueCourseLoadingDialog()
             threadPoolExecutor.execute {
                 try {
-                    databaseFacade.updateCourseLastInteraction(courseId = course.courseId, timestamp = DateTimeHelper.nowUtc())
                     var unitId: Long
                     var stepId: Long
                     try {
-                        val lastStep = api.getLastStepResponse(course.lastStepId!!).execute().body().lastSteps.first()
+                        val lastStep = api.getLastStepResponse(course.lastStepId!!).execute().body()!!.lastSteps.first()
                         unitId = lastStep.unit!! //it can be null
                         stepId = lastStep.step!!// it can be null -> we should fetch 1st step
                     } catch (exception: Exception) {
@@ -107,7 +105,7 @@ class ContinueCoursePresenter
     private fun fetchUnit(unitId: Long): Unit {
         var unit = databaseFacade.getUnitById(unitId)
         if (unit == null) {
-            unit = api.getUnits(longArrayOf(unitId)).execute().body().units.first()
+            unit = api.getUnits(longArrayOf(unitId)).execute().body()?.units?.first()
         }
         return unit!! //if null -> should throw Exception
     }
@@ -115,7 +113,7 @@ class ContinueCoursePresenter
     private fun fetchSection(sectionId: Long): Section {
         var section = databaseFacade.getSectionById(sectionId)
         if (section == null) {
-            section = api.getSections(longArrayOf(sectionId)).execute().body().sections.first()
+            section = api.getSections(longArrayOf(sectionId)).execute().body()?.sections?.first()
         }
         return section!!
     }

@@ -2,12 +2,12 @@ package org.stepic.droid.storage.dao
 
 import android.content.ContentValues
 import android.database.Cursor
-import android.database.sqlite.SQLiteDatabase
 import org.stepic.droid.model.VideoTimestamp
+import org.stepic.droid.storage.operations.CrudOperations
 import org.stepic.droid.storage.structure.DbStructureVideoTimestamp
 import javax.inject.Inject
 
-class VideoTimestampDaoImpl @Inject constructor(writeableDatabase: SQLiteDatabase) : DaoBase<VideoTimestamp>(writeableDatabase) {
+class VideoTimestampDaoImpl @Inject constructor(crudOperations: CrudOperations) : DaoBase<VideoTimestamp>(crudOperations) {
 
     public override fun getDbName() =
             DbStructureVideoTimestamp.VIDEO_TIMESTAMP
@@ -29,7 +29,7 @@ class VideoTimestampDaoImpl @Inject constructor(writeableDatabase: SQLiteDatabas
         val indexVideoId = cursor.getColumnIndex(DbStructureVideoTimestamp.Column.VIDEO_ID)
         val indexTimestamp = cursor.getColumnIndex(DbStructureVideoTimestamp.Column.TIMESTAMP)
 
-        val videoId: Long = cursor.getLong(indexVideoId);
+        val videoId: Long = cursor.getLong(indexVideoId)
         val timestamp: Long = cursor.getLong(indexTimestamp)
 
         return VideoTimestamp(

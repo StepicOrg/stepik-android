@@ -2,11 +2,12 @@ package org.stepic.droid.storage.dao;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.NonNull;
 
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Unit;
+import org.stepic.droid.storage.operations.CrudOperations;
 import org.stepic.droid.storage.structure.DbStructureProgress;
 import org.stepic.droid.storage.structure.DbStructureUnit;
 import org.stepic.droid.util.DbParseHelper;
@@ -20,8 +21,8 @@ public class UnitDaoImpl extends DaoBase<Unit> {
     private final IDao<Progress> progressDao;
 
     @Inject
-    public UnitDaoImpl(SQLiteDatabase openHelper, IDao<Progress> progressDao) {
-        super(openHelper);
+    public UnitDaoImpl(CrudOperations crudOperations, IDao<Progress> progressDao) {
+        super(crudOperations);
         this.progressDao = progressDao;
     }
 
@@ -98,7 +99,7 @@ public class UnitDaoImpl extends DaoBase<Unit> {
 
     @Nullable
     @Override
-    public Unit get(String whereColumnName, String whereValue) {
+    public Unit get(@NonNull String whereColumnName, @NonNull String whereValue) {
         Unit unit = super.get(whereColumnName, whereValue);
         return determinePassed(unit);
     }
@@ -121,7 +122,7 @@ public class UnitDaoImpl extends DaoBase<Unit> {
                 progress = progressDao.get(DbStructureProgress.Column.ID, progressId);
             }
             if (progress != null)
-                isPassed = progress.is_passed();
+                isPassed = progress.isPassed();
             unit.set_viewed_custom(isPassed);
         }
 

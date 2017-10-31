@@ -7,9 +7,7 @@ import com.google.gson.annotations.SerializedName;
 
 import org.jetbrains.annotations.Nullable;
 
-import java.io.Serializable;
-
-public class Course implements Serializable, Parcelable {
+public final class Course implements Parcelable {
     private long id;
     private String summary;
     private String workload;
@@ -68,9 +66,20 @@ public class Course implements Serializable, Parcelable {
     private String lastStepId;
     @SerializedName("learners_count")
     private long learnersCount;
+    @Nullable
+    private String progress;
 
     public Course() {
 
+    }
+
+    @Nullable
+    public String getProgress() {
+        return progress;
+    }
+
+    public void setProgress(@Nullable String progress) {
+        this.progress = progress;
     }
 
     public String getEndDate() {
@@ -342,6 +351,7 @@ public class Course implements Serializable, Parcelable {
         dest.writeString(endDate);
         dest.writeString(lastStepId);
         dest.writeLong(learnersCount);
+        dest.writeString(progress);
     }
 
     protected Course(Parcel in) {
@@ -381,6 +391,7 @@ public class Course implements Serializable, Parcelable {
         endDate = in.readString();
         lastStepId = in.readString();
         learnersCount = in.readLong();
+        progress = in.readString();
     }
 
     public static final Creator<Course> CREATOR = new Creator<Course>() {

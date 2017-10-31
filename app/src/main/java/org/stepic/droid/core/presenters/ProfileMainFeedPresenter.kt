@@ -57,7 +57,7 @@ class ProfileMainFeedPresenter
 
                 //after that try to update profile, because user can change avatar or something at web.
                 try {
-                    val tempProfile = api.userProfile.execute().body().getProfile() ?: throw IllegalStateException("profile can't be null")
+                    val tempProfile = api.userProfile.execute().body()?.getProfile() ?: throw IllegalStateException("profile can't be null")
                     val emailIds = tempProfile.emailAddresses
                     if (emailIds?.isNotEmpty() == true) {
                         try {

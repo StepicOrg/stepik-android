@@ -2,16 +2,16 @@ package org.stepic.droid.storage.dao
 
 import android.content.ContentValues
 import android.database.Cursor
-import android.database.sqlite.SQLiteDatabase
 import org.stepic.droid.di.storage.StorageSingleton
 import org.stepic.droid.model.code.CodeSubmission
+import org.stepic.droid.storage.operations.CrudOperations
 import org.stepic.droid.storage.structure.DbStructureCodeSubmission
 import javax.inject.Inject
 
 @StorageSingleton
 class CodeSubmissionDaoImpl
 @Inject constructor(
-        writeableDatabase: SQLiteDatabase) : DaoBase<CodeSubmission>(writeableDatabase) {
+        crudOperations: CrudOperations) : DaoBase<CodeSubmission>(crudOperations) {
 
     override fun getDbName(): String = DbStructureCodeSubmission.CODE_SUBMISSION
 
