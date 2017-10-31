@@ -66,7 +66,7 @@ public class StepDaoImpl extends DaoBase<Step> {
         step.setId(cursor.getLong(columnIndexStepId));
         step.setLesson(cursor.getLong(columnIndexLessonId));
         step.setCreate_date(cursor.getString(columnIndexCreateDate));
-        step.setCreate_date(cursor.getString(columnIndexStatus));
+        step.setStatus(cursor.getString(columnIndexStatus));
         step.setProgress(cursor.getString(columnIndexProgress));
         step.setViewed_by(cursor.getLong(columnIndexViewedBy));
         step.setPassed_by(cursor.getLong(columnIndexPassedBy));
