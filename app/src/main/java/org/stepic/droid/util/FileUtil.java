@@ -67,15 +67,20 @@ public class FileUtil {
 
     public static long getFileOrFolderSizeInKb(File f) {
         if (f == null) return 0L;
-        return getFileSize(f)/1024;
+        return getFileSize(f) / 1024;
     }
 
     private static long getFileSize(File f) {
 
         long size = 0;
         if (f.isDirectory()) {
-            for (File file : f.listFiles()) {
-                size += getFileSize(file);
+            File[] files = f.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    size += getFileSize(file);
+                }
+            } else {
+                //Here user doesn't have permission. todo: handle it in next updates
             }
         } else {
             size = f.length();
