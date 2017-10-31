@@ -23,11 +23,11 @@ import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.core.ScreenManager;
+import org.stepic.droid.core.downloadingProgress.DownloadingPresenter;
 import org.stepic.droid.core.presenters.CalendarPresenter;
 import org.stepic.droid.core.presenters.DownloadingInteractionPresenter;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
-import org.stepic.droid.model.SectionLoadingState;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.storage.SectionDownloader;
 import org.stepic.droid.storage.operations.DatabaseFacade;
@@ -53,13 +53,12 @@ import javax.inject.Inject;
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import timber.log.Timber;
 
 public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericViewHolder> implements OnClickLoadListener, OnLoadPositionListener {
     private final static String SECTION_TITLE_DELIMETER = ". ";
 
-    public static final int TYPE_SECTION_ITEM = 1;
-    public static final int TYPE_TITLE = 2;
+    private static final int TYPE_SECTION_ITEM = 1;
+    private static final int TYPE_TITLE = 2;
 
     public static final int PRE_SECTION_LIST_DELTA = 1;
 
@@ -84,6 +83,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     SharedPreferenceHelper sharedPreferenceHelper;
 
 
+    private final DownloadingPresenter downloadingPresenter;
     private List<Section> sections;
     private AppCompatActivity activity;
     private CalendarPresenter calendarPresenter;
@@ -93,7 +93,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     @ColorInt
     private int defaultColor;
     private Map<String, ProgressViewModel> progressMap;
-    private Map<Long, SectionLoadingState> sectionIdToLoadingStateMap;
+    private Map<Long, Float> sectionIdToLoadingStateMap;
     private Fragment fragment;
     private final DownloadingInteractionPresenter downloadingInteractionPresenter;
     private final int durationMillis = 3000;
@@ -102,13 +102,15 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         this.defaultHighlightPosition = defaultHighlightPosition;
     }
 
-    public SectionAdapter(List<Section> sections,
+    public SectionAdapter(DownloadingPresenter downloadingPresenter,
+                          List<Section> sections,
                           AppCompatActivity activity,
                           CalendarPresenter calendarPresenter,
                           Map<String, ProgressViewModel> progressMap,
-                          Map<Long, SectionLoadingState> sectionIdToLoadingStateMap,
+                          Map<Long, Float> sectionIdToLoadingStateMap,
                           Fragment fragment,
                           DownloadingInteractionPresenter downloadingInteractionPresenter) {
+        this.downloadingPresenter = downloadingPresenter;
         this.sections = sections;
         this.activity = activity;
         this.calendarPresenter = calendarPresenter;
@@ -221,7 +223,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                             sectionDownloader.cancelSectionLoading(section.getId());
                         }
                     });
-
+                    downloadingPresenter.onStateChanged(section.getId(), false);
                     notifyItemChanged(adapterPosition);
                 } else {
                     if (sharedPreferenceHelper.isNeedToShowVideoQualityExplanation()) {
@@ -254,6 +256,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
             analytic.reportEvent(Analytic.Interaction.CLICK_CACHE_SECTION, section.getId() + "");
             section.setCached(false);
             section.setLoading(true);
+            downloadingPresenter.onStateChanged(section.getId(), section.isLoading());
             threadPoolExecutor.execute(new Runnable() {
                 @Override
                 public void run() {
@@ -393,7 +396,6 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
             int position = positionInAdapter - PRE_SECTION_LIST_DELTA;
             Section section = sections.get(position);
 
-            Timber.d("onBind Holder = %s", this);
             long sectionId = section.getId();
             boolean needAnimation = true;
             if (oldSectionId != sectionId) {
@@ -460,9 +462,9 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                         whenLoad.setVisibility(View.VISIBLE);
                         afterLoad.setVisibility(View.GONE);
 
-                        SectionLoadingState sectionLoadingState = sectionIdToLoadingStateMap.get(section.getId());
+                        Float sectionLoadingState = sectionIdToLoadingStateMap.get(section.getId());
                         if (sectionLoadingState != null) {
-                            whenLoad.setProgressPortion(sectionLoadingState.getPortion(), needAnimation);
+                            whenLoad.setProgressPortion(sectionLoadingState, needAnimation);
                         }
 
                     } else {
@@ -626,6 +628,6 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     @Override
     public void onViewDetachedFromWindow(GenericViewHolder holder) {
         super.onViewDetachedFromWindow(holder);
-        ((GenericViewHolder) holder).clearAnimation();
+        holder.clearAnimation();
     }
 }

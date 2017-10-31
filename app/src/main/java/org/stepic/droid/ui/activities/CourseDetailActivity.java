@@ -28,7 +28,7 @@ public class CourseDetailActivity extends SingleFragmentActivity {
         Course course = null;
         boolean needInstaEnroll = false;
         if (extras != null) {
-            course = (Course) (extras.get(AppConstants.KEY_COURSE_BUNDLE));
+            course = extras.getParcelable(AppConstants.KEY_COURSE_BUNDLE);
             needInstaEnroll = extras.getBoolean(INSTA_ENROLL_KEY);
         }
 

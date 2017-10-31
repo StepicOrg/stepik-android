@@ -95,7 +95,7 @@ public class CourseDetailFragment extends FragmentBase implements
 
     public static CourseDetailFragment newInstance(Course course, boolean instaEnroll) {
         Bundle args = new Bundle();
-        args.putSerializable(AppConstants.KEY_COURSE_BUNDLE, course);
+        args.putParcelable(AppConstants.KEY_COURSE_BUNDLE, course);
         args.putBoolean(instaEnrollKey, instaEnroll);
         CourseDetailFragment fragment = new CourseDetailFragment();
         fragment.setArguments(args);
@@ -285,7 +285,7 @@ public class CourseDetailFragment extends FragmentBase implements
 
     private void tryToShowCourse() {
         reportInternetProblem.setVisibility(View.GONE); // now we try show -> it is not visible
-        course = (Course) (getArguments().getSerializable(AppConstants.KEY_COURSE_BUNDLE));
+        course = getArguments().getParcelable(AppConstants.KEY_COURSE_BUNDLE);
         if (course == null) {
             //it is not from our activity
             long courseId = getArguments().getLong(AppConstants.KEY_COURSE_LONG_ID);
@@ -306,7 +306,7 @@ public class CourseDetailFragment extends FragmentBase implements
         if (course == null) {
             course = foundCourse;
             Bundle args = getArguments();
-            args.putSerializable(AppConstants.KEY_COURSE_BUNDLE, course);
+            args.putParcelable(AppConstants.KEY_COURSE_BUNDLE, course);
             initScreenByCourse();
         }
     }

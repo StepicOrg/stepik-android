@@ -6,7 +6,7 @@ import org.stepic.droid.ui.fragments.SectionsFragment
 
 
 @CourseAndSectionsScope
-@Subcomponent
+@Subcomponent(modules = arrayOf(CourseAndSectionsModule::class))
 interface CourseComponent {
 
     @Subcomponent.Builder

@@ -7,7 +7,7 @@ import java.io.Serializable
 
 class Lesson : Parcelable, Serializable {
     var id: Long = 0
-    var steps: LongArray? = null
+    var steps: LongArray = longArrayOf()
     //    private String actions;
     var tags: IntArray? = null
     var playlists: Array<String>? = null
