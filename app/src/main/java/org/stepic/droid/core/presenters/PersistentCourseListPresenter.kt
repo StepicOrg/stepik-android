@@ -134,21 +134,19 @@ class PersistentCourseListPresenter
                     currentPage.set(response.body().meta.page + 1) // page for next loading
                 }
 
-                val allCourses = databaseFacade.getAllCourses(courseType)
+                val allCourses = databaseFacade.getAllCourses(courseType).filterNotNull()
 
-                val filteredCourseList: List<Course>
-                if (courseType == Table.enrolled || !applyFilter && !sharedPreferenceHelper.getFilter(courseType).contains(StepikFilter.PERSISTENT)) { // only default filters for enrolled courses
-                    filteredCourseList = filterApplicator.getFilteredFromDefault(allCourses, courseType)
-                } else {
-                    filteredCourseList = filterApplicator.getFilteredFromSharedPrefs(allCourses, courseType)
-                }
-                if ((filteredCourseList.size < MIN_COURSES_ON_SCREEN) && hasNextPage.get()) {
+                if ((allCourses.size < MIN_COURSES_ON_SCREEN) && hasNextPage.get()) {
                     //try to load next in loop
                 } else {
                     val coursesForShow = if (courseType == Table.enrolled) {
-                        sortByLastAction(filteredCourseList)
+                        sortByLastAction(allCourses)
                     } else {
-                        filteredCourseList
+                        if (!applyFilter && !sharedPreferenceHelper.filterForFeatured.contains(StepikFilter.PERSISTENT)) { // only default filters for enrolled courses
+                            filterApplicator.getFilteredFeaturedFromDefault(allCourses)
+                        } else {
+                            filterApplicator.getFilteredFeaturedFromSharedPrefs(allCourses)
+                        }
                     }
                     mainHandler.post {
                         if (coursesForShow.isEmpty()) {
@@ -172,16 +170,14 @@ class PersistentCourseListPresenter
     private fun getFromDatabaseAndShow(applyFilter: Boolean, courseType: Table) {
         val coursesBeforeLoading = databaseFacade.getAllCourses(courseType).filterNotNull()
         if (coursesBeforeLoading.isNotEmpty()) {
-            val filteredCourseList: List<Course>
-            if (!applyFilter && !sharedPreferenceHelper.getFilter(courseType).contains(StepikFilter.PERSISTENT)) {
-                filteredCourseList = filterApplicator.getFilteredFromDefault(coursesBeforeLoading, courseType)
-            } else {
-                filteredCourseList = filterApplicator.getFilteredFromSharedPrefs(coursesBeforeLoading, courseType)
-            }
             val coursesForShow = if (courseType == Table.enrolled) {
-                sortByLastAction(filteredCourseList)
+                sortByLastAction(coursesBeforeLoading)
             } else {
-                filteredCourseList
+                if (!applyFilter && !sharedPreferenceHelper.filterForFeatured.contains(StepikFilter.PERSISTENT)) {
+                    filterApplicator.getFilteredFeaturedFromDefault(coursesBeforeLoading)
+                } else {
+                    filterApplicator.getFilteredFeaturedFromSharedPrefs(coursesBeforeLoading)
+                }
             }
             if (coursesForShow.isNotEmpty()) {
                 mainHandler.post {

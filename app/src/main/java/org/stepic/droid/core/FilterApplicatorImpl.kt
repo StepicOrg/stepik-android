@@ -3,7 +3,6 @@ package org.stepic.droid.core
 import org.stepic.droid.model.Course
 import org.stepic.droid.model.StepikFilter
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import org.stepic.droid.storage.operations.Table
 import org.stepic.droid.util.DateTimeHelper
 import javax.inject.Inject
 
@@ -11,19 +10,12 @@ class FilterApplicatorImpl
 @Inject constructor(private val defaultFilter: DefaultFilter,
                     private val sharedPreferenceHelper: SharedPreferenceHelper) : FilterApplicator {
 
-    override fun getFilteredFromSharedPrefs(sourceCourses: List<Course>, courseType: Table): List<Course> {
-        val filters = sharedPreferenceHelper.getFilter(courseType)
-        return resolveFiltersForList(sourceCourses, filters)
-    }
+    override fun getFilteredFeaturedFromSharedPrefs(sourceCourses: List<Course>): List<Course> =
+            resolveFiltersForList(sourceCourses, sharedPreferenceHelper.filterForFeatured)
 
 
-    override fun getFilteredFromDefault(sourceCourses: List<Course>, courseType: Table): List<Course>? {
-        val filters = if (courseType == Table.enrolled) {
-            StepikFilter.values().filter { defaultFilter.getDefaultEnrolled(it) }.toSet()
-        } else {
-            StepikFilter.values().filter { defaultFilter.getDefaultFeatured(it) }.toSet()
-        }
-
+    override fun getFilteredFeaturedFromDefault(sourceCourses: List<Course>): List<Course>? {
+        val filters = StepikFilter.values().filter { defaultFilter.getDefaultFeatured(it) }.toSet()
         return resolveFiltersForList(sourceCourses, filters)
     }
 
