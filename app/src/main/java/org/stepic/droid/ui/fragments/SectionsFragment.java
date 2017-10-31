@@ -856,8 +856,12 @@ public class SectionsFragment
             @Override
             public void run() {
                 final View shareView = rootView.findViewById(R.id.menu_item_share);
-                inviteFriendsPopupWindow =
-                        PopupHelper.INSTANCE.showPopupAnchoredToView(getContext(), shareView, getString(R.string.invite_friends_description));
+                if (shareView != null) {
+                    inviteFriendsPopupWindow =
+                            PopupHelper.INSTANCE.showPopupAnchoredToView(getContext(), shareView, getString(R.string.invite_friends_description));
+                } else {
+                    getAnalytic().reportEvent(Analytic.Interaction.INVITE_DIALOG_BROKEN);
+                }
             }
         }, INVITE_FRIEND_POPUP_DELAY);
     }
