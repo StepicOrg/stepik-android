@@ -71,7 +71,7 @@ class ProfilePresenterImpl
                 showLocalProfile(profile)
             } else if (profileId == 0L && (profile != null && profile.is_guest || profile == null)) {
                 try {
-                    val realProfile = api.userProfile.execute().body().getProfile() ?: throw IllegalStateException("profile can't be null on API here")
+                    val realProfile = api.userProfile.execute().body()?.getProfile() ?: throw IllegalStateException("profile can't be null on API here")
                     sharedPreferences.storeProfile(realProfile)
                     showLocalProfile(realProfile)
                 } catch (noInternetOrPermission: Exception) {
@@ -93,7 +93,7 @@ class ProfilePresenterImpl
         //3) user hide profile == Anonymous. We do not need handle this situation
 
         val user = try {
-            api.getUsers(longArrayOf(userId)).execute().body().users.firstOrNull()
+            api.getUsers(longArrayOf(userId)).execute().body()?.users?.firstOrNull()
         } catch (exception: Exception) {
             null
         }
@@ -132,7 +132,7 @@ class ProfilePresenterImpl
     @WorkerThread
     private fun showStreaks(userId: Long) {
         val pins = try {
-            api.getUserActivities(userId).execute().body().userActivities.firstOrNull()?.pins
+            api.getUserActivities(userId).execute().body()?.userActivities?.firstOrNull()?.pins
         } catch (exception: Exception) {
             //if we do not have Internet or do not have access to streaks, just do nothing, because streaks is not primary on profile screen
             analytic.reportEvent(Analytic.Profile.STREAK_NO_INTERNET)

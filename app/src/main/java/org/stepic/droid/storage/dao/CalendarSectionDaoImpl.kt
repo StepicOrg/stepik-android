@@ -2,25 +2,20 @@ package org.stepic.droid.storage.dao
 
 import android.content.ContentValues
 import android.database.Cursor
-import android.database.sqlite.SQLiteDatabase
-
 import org.stepic.droid.model.CalendarSection
+import org.stepic.droid.storage.operations.CrudOperations
 import org.stepic.droid.storage.structure.DbStructureCalendarSection
 import javax.inject.Inject
 
-class CalendarSectionDaoImpl @Inject constructor(writableDatabase: SQLiteDatabase) : DaoBase<CalendarSection>(writableDatabase) {
+class CalendarSectionDaoImpl @Inject constructor(crudOperations: CrudOperations) : DaoBase<CalendarSection>(crudOperations) {
 
-    public override fun getDbName(): String {
-        return DbStructureCalendarSection.CALENDAR_SECTION
-    }
+    public override fun getDbName(): String = DbStructureCalendarSection.CALENDAR_SECTION
 
-    public override fun getDefaultPrimaryColumn(): String {
-        return DbStructureCalendarSection.Column.SECTION_ID
-    }
+    public override fun getDefaultPrimaryColumn(): String =
+            DbStructureCalendarSection.Column.SECTION_ID
 
-    public override fun getDefaultPrimaryValue(persistentObject: CalendarSection): String {
-        return persistentObject.id.toString()
-    }
+    public override fun getDefaultPrimaryValue(persistentObject: CalendarSection): String =
+            persistentObject.id.toString()
 
     public override fun getContentValues(persistentObject: CalendarSection): ContentValues {
         val contentValues = ContentValues()
@@ -45,14 +40,12 @@ class CalendarSectionDaoImpl @Inject constructor(writableDatabase: SQLiteDatabas
         var eventIdSoftDeadline: Long? = cursor.getLong(indexSoftDeadlineEvent)
         if (eventIdSoftDeadline == 0L) eventIdSoftDeadline = null
 
-        val calendarSection = CalendarSection(
+        return CalendarSection(
                 id = cursor.getLong(indexSection),
                 eventIdHardDeadline = eventIdHardDeadline,
                 eventIdSoftDeadline = eventIdSoftDeadline,
                 hardDeadline = cursor.getString(indexDeadline),
                 softDeadline = cursor.getString(indexSoftDeadline)
         )
-
-        return calendarSection
     }
 }
