@@ -502,7 +502,7 @@
     <string name="course_item_more">Подробнее</string>
     <string name="course_item_join">Поступить на курс</string>
     <string name="course_item_info">Инфо</string>
-    <string name="course_item_syllabus">Содерж-е</string>
+    <string name="course_item_syllabus">План</string>
 
     <string name="learners_count">Количество студентов</string>
     <string name="continue_learning">Продолжить учиться</string>
