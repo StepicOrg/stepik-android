@@ -44,7 +44,7 @@ class TimeIntervalPickerDialogFragment : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val picker = MaterialNumberPicker(context)
+        picker = MaterialNumberPicker(context)
         picker.minValue = 0
         picker.maxValue = TimeIntervalUtil.values.size - 1
         picker.displayedValues = TimeIntervalUtil.values
