@@ -10,6 +10,9 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import io.reactivex.Scheduler
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import okhttp3.OkHttpClient
 import org.stepic.droid.BuildConfig
 import org.stepic.droid.R
@@ -31,6 +34,8 @@ import org.stepic.droid.core.internet_state.contract.InternetEnabledPoster
 import org.stepic.droid.core.video_moves.VideosMovedPosterImpl
 import org.stepic.droid.core.video_moves.contract.VideosMovedListener
 import org.stepic.droid.core.video_moves.contract.VideosMovedPoster
+import org.stepic.droid.di.qualifiers.BackgroundScheduler
+import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.fonts.FontsProvider
 import org.stepic.droid.fonts.FontsProviderImpl
 import org.stepic.droid.notifications.*
@@ -194,6 +199,16 @@ abstract class AppCoreModule {
     @Module
     companion object {
         const val SINGLE_THREAD_CODE_SAVER = "SINGLE_THREAD_CODE_SAVER"
+
+        @Provides
+        @JvmStatic
+        @MainScheduler
+        internal fun provideAndroidScheduler(): Scheduler = AndroidSchedulers.mainThread()
+
+        @Provides
+        @JvmStatic
+        @BackgroundScheduler
+        internal fun provideBackgroundScheduler(): Scheduler = Schedulers.io()
 
         @Provides
         @JvmStatic

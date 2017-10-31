@@ -38,7 +38,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
 
 
     @Inject
-    DatabaseHelper(Context context) {
+    public DatabaseHelper(Context context) {
         super(context, DatabaseInfo.FILE_NAME, null, DatabaseInfo.VERSION);
     }
 

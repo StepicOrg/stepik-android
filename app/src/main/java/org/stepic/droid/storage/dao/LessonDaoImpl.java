@@ -2,9 +2,9 @@ package org.stepic.droid.storage.dao;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 import org.stepic.droid.model.Lesson;
+import org.stepic.droid.storage.operations.CrudOperations;
 import org.stepic.droid.storage.structure.DbStructureLesson;
 import org.stepic.droid.util.DbParseHelper;
 
@@ -13,8 +13,8 @@ import javax.inject.Inject;
 public class LessonDaoImpl extends DaoBase<Lesson> {
 
     @Inject
-    public LessonDaoImpl(SQLiteDatabase openHelper) {
-        super(openHelper);
+    public LessonDaoImpl(CrudOperations crudOperations) {
+        super(crudOperations);
     }
 
     @Override

@@ -2,14 +2,14 @@ package org.stepic.droid.storage.dao
 
 import android.content.ContentValues
 import android.database.Cursor
-import android.database.sqlite.SQLiteDatabase
 import org.stepic.droid.model.PersistentLastStep
+import org.stepic.droid.storage.operations.CrudOperations
 import org.stepic.droid.storage.structure.DbStructureLastStep
 import javax.inject.Inject
 
-class PersistentLastStepDaoImpl @Inject constructor(writableDatabase: SQLiteDatabase) : DaoBase<PersistentLastStep>(writableDatabase) {
+class PersistentLastStepDaoImpl @Inject constructor(crudOperations: CrudOperations) : DaoBase<PersistentLastStep>(crudOperations) {
     override fun getDefaultPrimaryColumn()
-            = DbStructureLastStep.Column.COURSE_ID;
+            = DbStructureLastStep.Column.COURSE_ID
 
     override fun getDefaultPrimaryValue(persistentObject: PersistentLastStep) = persistentObject.courseId.toString()
 

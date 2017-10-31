@@ -2,9 +2,9 @@ package org.stepic.droid.storage.dao;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 import org.stepic.droid.model.CachedVideo;
+import org.stepic.droid.storage.operations.CrudOperations;
 import org.stepic.droid.storage.structure.DbStructureCachedVideo;
 
 import javax.inject.Inject;
@@ -12,8 +12,8 @@ import javax.inject.Inject;
 public class PersistentVideoDaoImpl extends DaoBase<CachedVideo> {
 
     @Inject
-    public PersistentVideoDaoImpl(SQLiteDatabase openHelper) {
-        super(openHelper);
+    public PersistentVideoDaoImpl(CrudOperations crudOperations) {
+        super(crudOperations);
     }
 
     @Override
