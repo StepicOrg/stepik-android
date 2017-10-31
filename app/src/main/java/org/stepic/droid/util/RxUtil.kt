@@ -4,6 +4,7 @@ import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
+import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 
@@ -31,6 +32,7 @@ class RetryExponential(private val maxAttempts: Int)
 
     override fun apply(attempts: Flowable<out Throwable>): Flowable<*> =
             attempts.zipWith(Flowable.range(1, maxAttempts), BiFunction { t1: Throwable, t2: Int -> handleRetryAttempt(t1, t2) })
+                    .flatMap { x -> x.toFlowable() }
 
     private fun handleRetryAttempt(throwable: Throwable, attempt: Int): Single<Long> =
             when (attempt) {
