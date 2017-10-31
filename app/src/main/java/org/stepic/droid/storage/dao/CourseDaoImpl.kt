@@ -2,25 +2,24 @@ package org.stepic.droid.storage.dao
 
 import android.content.ContentValues
 import android.database.Cursor
-import android.database.sqlite.SQLiteDatabase
 import org.stepic.droid.mappers.toDbUrl
 import org.stepic.droid.mappers.toVideoUrls
 import org.stepic.droid.model.*
+import org.stepic.droid.storage.operations.CrudOperations
 import org.stepic.droid.storage.structure.DbStructureCachedVideo
 import org.stepic.droid.storage.structure.DbStructureEnrolledAndFeaturedCourses
 import org.stepic.droid.storage.structure.DbStructureVideoUrl
 import org.stepic.droid.util.DbParseHelper
 import org.stepic.droid.util.transformToCachedVideo
-import java.util.*
 import javax.inject.Inject
 
 class CourseDaoImpl @Inject
 constructor(
-        openHelper: SQLiteDatabase,
+        crudOperations: CrudOperations,
         private val cachedVideoDao: IDao<CachedVideo>,
         private val externalVideoUrlIDao: IDao<DbVideoUrl>,
         private val tableName: String)
-    : DaoBase<Course>(openHelper) {
+    : DaoBase<Course>(crudOperations) {
 
     public override fun parsePersistentObject(cursor: Cursor): Course {
         val course = Course()
@@ -86,7 +85,7 @@ constructor(
             //it can be null before migration --> default active
         }
 
-        course.setActive(isActive)
+        course.isActive = isActive
 
         return course
     }
@@ -199,8 +198,7 @@ constructor(
                 val videoUrl = VideoUrl()
                 videoUrl.url = cachedVideo.url
                 videoUrl.quality = cachedVideo.quality
-                resultUrls = ArrayList<VideoUrl>()
-                resultUrls.add(videoUrl)
+                resultUrls = listOf(videoUrl)
             }
 
             realVideo.urls = resultUrls

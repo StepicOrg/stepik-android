@@ -19,6 +19,7 @@ import javax.inject.Inject
 @StorageSingleton
 class DatabaseFacade
 @Inject constructor(
+        private val stepInfoOperation: StepInfoOperation,
         private val codeSubmissionDao: IDao<CodeSubmission>,
         private val sectionDao: IDao<Section>,
         private val unitDao: IDao<Unit>,
@@ -107,6 +108,8 @@ class DatabaseFacade
 
     fun getStepsById(stepIds: List<Long>): List<Step> = getStepsById(stepIds.toLongArray())
 
+    fun getPublishProgressStepInfoByIds(stepIds: List<Long>): List<StepInfo> = stepInfoOperation.getStepInfo(stepIds)
+
     fun getStepsById(stepIds: LongArray): List<Step> {
         val stringIds = DbParseHelper.parseLongArrayToString(stepIds, AppConstants.COMMA)
         return if (stringIds != null) {
@@ -131,6 +134,16 @@ class DatabaseFacade
     fun getUnitById(unitId: Long) = unitDao.get(DbStructureUnit.Column.UNIT_ID, unitId.toString())
 
     fun getAllDownloadEntities() = downloadEntityDao.getAll()
+
+    fun getDownloadEntitiesBy(stepIds: LongArray): List<DownloadEntity> {
+        val stringIds = DbParseHelper.parseLongArrayToString(stepIds, AppConstants.COMMA)
+        return if (stringIds != null) {
+            downloadEntityDao
+                    .getAllInRange(DbStructureSharedDownloads.Column.STEP_ID, stringIds)
+        } else {
+            emptyList()
+        }
+    }
 
     fun isLessonCached(lesson: Lesson?): Boolean {
         val id = lesson?.id ?: return false
@@ -229,7 +242,7 @@ class DatabaseFacade
 
     fun getAllCachedVideos() = cachedVideoDao.getAll()
 
-    fun getCachedVideoIfExist (video : Video) : CachedVideo? =
+    fun getCachedVideoIfExist(video: Video): CachedVideo? =
             cachedVideoDao.get(DbStructureCachedVideo.Column.VIDEO_ID, video.id.toString())
 
     fun getDownloadEntityIfExist(downloadId: Long?): DownloadEntity? {
@@ -316,12 +329,6 @@ class DatabaseFacade
         return lessonIds.toLongArray()
     }
 
-    fun getAllDownloadingSections(): LongArray {
-        val sections = sectionDao.getAll(DbStructureSections.Column.IS_LOADING, 1.toString())
-        val sectionIds = sections.map { it?.id }.filterNotNull()
-        return sectionIds.toLongArray()
-    }
-
     fun dropOnlyCourseTable() {
         coursesEnrolledDao.removeAll()
         coursesFeaturedDao.removeAll()
@@ -405,12 +412,15 @@ class DatabaseFacade
     fun updateCourseLastInteraction(courseId: Long, timestamp: Long)
             = lastInteractions.insertOrUpdate(CourseLastInteraction(courseId = courseId, timestamp = timestamp))
 
-    fun getUnitsByIds(keys: LongArray): List<Unit> {
+    fun getUnitsByIds(keys: LongArray?): List<Unit> {
+        if (keys == null) {
+            return emptyList()
+        }
         DbParseHelper.parseLongArrayToString(keys, AppConstants.COMMA)?.let {
             return unitDao.getAllInRange(DbStructureUnit.Column.UNIT_ID, it)
         }
 
-        return ArrayList<Unit>()
+        return emptyList()
     }
 
     fun getSectionsByIds(keys: LongArray): List<Section> {

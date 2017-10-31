@@ -2,9 +2,9 @@ package org.stepic.droid.storage.dao;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 import org.stepic.droid.model.Progress;
+import org.stepic.droid.storage.operations.CrudOperations;
 import org.stepic.droid.storage.structure.DbStructureProgress;
 
 import javax.inject.Inject;
@@ -13,8 +13,8 @@ public class ProgressDaoImpl extends DaoBase<Progress> {
 
 
     @Inject
-    public ProgressDaoImpl(SQLiteDatabase openHelper) {
-        super(openHelper);
+    public ProgressDaoImpl(CrudOperations crudOperations) {
+        super(crudOperations);
     }
 
     @Override
