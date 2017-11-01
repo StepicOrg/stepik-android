@@ -423,14 +423,8 @@
     <string name="about_app_title">About</string>
     <string name="terms_of_service_title">Terms of Service</string>
     <string name="privacy_policy_title">Privacy Policy</string>
-    <string name="invite">Invite friends</string>
-    <string name="dont_want">Not now</string>
-    <string name="share_course_in_menu">You can always share a link to the course in the top menu
-    </string>
     <string name="take_course_with_fiends">Take a course together with friends!</string>
-    <string name="invite_friends_description">People who take a course together with friends are
-        more likely to complete it. Invite your friends now by sending them a link to the course!
-    </string>
+    <string name="invite_friends_description">Share link with your friends to take this course together!</string>
     <string name="sign_in_with_password">Sign in with e-mail</string>
     <string name="sign_in_with_password_suffix">" with e-mail"</string>
     <string name="or_continue_social">Or continue with</string>
@@ -505,7 +499,9 @@
     <string name="manage_notification_settings">Manage notifications</string>
 
     <string name="course_item_more">More</string>
-    <string name="course_item_join">Course Info</string>
+    <string name="course_item_join">Join course</string>
+    <string name="course_item_info">Info</string>
+    <string name="course_item_syllabus">Syllabus</string>
 
     <string name="learners_count">Learners count</string>
 
@@ -548,4 +544,9 @@
     <string name="sample_input">&lt;b>Sample input %d:&lt;/b></string>
     <string name="sample_output">&lt;b>Sample output %d:&lt;/b></string>
     <string name="hint_for_code">Type code here…</string>
+
+    <plurals name="course_count">
+        <item quantity="one">%d course</item>
+        <item quantity="other">%d courses</item>
+    </plurals>
 </resources>

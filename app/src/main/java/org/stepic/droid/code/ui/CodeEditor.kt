@@ -5,7 +5,6 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.Typeface
-import android.os.Build
 import android.os.Parcelable
 import android.support.annotation.ColorInt
 import android.support.v7.widget.AppCompatEditText
@@ -27,6 +26,7 @@ import org.stepic.droid.code.highlight.ParserContainer
 import org.stepic.droid.code.highlight.syntaxhighlight.ParseResult
 import org.stepic.droid.code.highlight.themes.CodeTheme
 import org.stepic.droid.code.highlight.themes.Presets
+import org.stepic.droid.ui.util.removeGlobalLayoutListener
 import org.stepic.droid.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -88,12 +88,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
         set(value) {
             field?.let { container ->
                 container.viewTreeObserver.removeOnScrollChangedListener(onScrollChangedListener)
-                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
-                    container.viewTreeObserver.removeOnGlobalLayoutListener(onGlobalLayoutListener)
-                } else {
-                    @Suppress("DEPRECATION") //use only on old API
-                    container.viewTreeObserver.removeGlobalOnLayoutListener(onGlobalLayoutListener)
-                }
+                container.viewTreeObserver.removeGlobalLayoutListener(onGlobalLayoutListener)
             }
 
             value?.let { container ->

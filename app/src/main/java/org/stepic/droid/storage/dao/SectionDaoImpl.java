@@ -2,11 +2,11 @@ package org.stepic.droid.storage.dao;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 import org.stepic.droid.model.Actions;
 import org.stepic.droid.model.DiscountingPolicyType;
 import org.stepic.droid.model.Section;
+import org.stepic.droid.storage.operations.CrudOperations;
 import org.stepic.droid.storage.structure.DbStructureSections;
 import org.stepic.droid.util.DbParseHelper;
 
@@ -15,8 +15,8 @@ import javax.inject.Inject;
 public class SectionDaoImpl extends DaoBase<Section> {
 
     @Inject
-    public SectionDaoImpl(SQLiteDatabase openHelper) {
-        super(openHelper);
+    public SectionDaoImpl(CrudOperations crudOperations) {
+        super(crudOperations);
     }
 
     @Override

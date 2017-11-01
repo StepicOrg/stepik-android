@@ -2,25 +2,24 @@ package org.stepic.droid.storage.dao
 
 import android.content.ContentValues
 import android.database.Cursor
-import android.database.sqlite.SQLiteDatabase
 import org.stepic.droid.mappers.toDbUrl
 import org.stepic.droid.mappers.toVideoUrls
 import org.stepic.droid.model.*
+import org.stepic.droid.storage.operations.CrudOperations
 import org.stepic.droid.storage.structure.DbStructureCachedVideo
 import org.stepic.droid.storage.structure.DbStructureEnrolledAndFeaturedCourses
 import org.stepic.droid.storage.structure.DbStructureVideoUrl
 import org.stepic.droid.util.DbParseHelper
 import org.stepic.droid.util.transformToCachedVideo
-import java.util.*
 import javax.inject.Inject
 
 class CourseDaoImpl @Inject
 constructor(
-        openHelper: SQLiteDatabase,
+        crudOperations: CrudOperations,
         private val cachedVideoDao: IDao<CachedVideo>,
         private val externalVideoUrlIDao: IDao<DbVideoUrl>,
         private val tableName: String)
-    : DaoBase<Course>(openHelper) {
+    : DaoBase<Course>(crudOperations) {
 
     public override fun parsePersistentObject(cursor: Cursor): Course {
         val course = Course()
@@ -51,6 +50,7 @@ constructor(
         val indexLastStepId = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.LAST_STEP_ID)
         val indexIsActive = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.IS_ACTIVE)
         val indexLearnersCount = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.LEARNERS_COUNT)
+        val indexProgress = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.PROGRESS)
 
         course.lastStepId = cursor.getString(indexLastStepId)
         course.certificate = cursor.getString(indexCertificate)
@@ -78,6 +78,7 @@ constructor(
         course.beginDate = cursor.getString(indexBeginDate)
         course.endDate = cursor.getString(indexEndDate)
         course.learnersCount = cursor.getLong(indexLearnersCount)
+        course.progress = cursor.getString(indexProgress)
 
         var isActive = true
         try {
@@ -86,7 +87,7 @@ constructor(
             //it can be null before migration --> default active
         }
 
-        course.setActive(isActive)
+        course.isActive = isActive
 
         return course
     }
@@ -127,6 +128,7 @@ constructor(
         values.put(DbStructureEnrolledAndFeaturedCourses.Column.END_DATE, course.endDate)
         values.put(DbStructureEnrolledAndFeaturedCourses.Column.IS_ACTIVE, course.isActive)
         values.put(DbStructureEnrolledAndFeaturedCourses.Column.LEARNERS_COUNT, course.learnersCount)
+        values.put(DbStructureEnrolledAndFeaturedCourses.Column.PROGRESS, course.progress)
 
         val video = course.introVideo
         if (video != null) {
@@ -199,8 +201,7 @@ constructor(
                 val videoUrl = VideoUrl()
                 videoUrl.url = cachedVideo.url
                 videoUrl.quality = cachedVideo.quality
-                resultUrls = ArrayList<VideoUrl>()
-                resultUrls.add(videoUrl)
+                resultUrls = listOf(videoUrl)
             }
 
             realVideo.urls = resultUrls

@@ -159,6 +159,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         when (wantedIndex) {
             FIND_COURSES_INDEX -> navigationView.selectedItemId = R.id.find_courses
             CERTIFICATE_INDEX -> navigationView.selectedItemId = R.id.certificates
+            PROFILE_INDEX -> navigationView.selectedItemId = R.id.profile
             else -> {
                 //do nothing
             }
@@ -322,5 +323,9 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         if (navigationView.selectedItemId != R.id.find_courses) {
             navigationView.selectedItemId = R.id.find_courses
         }
+    }
+
+    override fun applyTransitionPrev() {
+        //no-op
     }
 }

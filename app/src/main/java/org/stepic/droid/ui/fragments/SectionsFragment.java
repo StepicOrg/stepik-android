@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -16,9 +15,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,15 +22,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
-import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
 import com.google.firebase.appindexing.Action;
 import com.google.firebase.appindexing.FirebaseAppIndex;
 import com.google.firebase.appindexing.FirebaseUserActions;
@@ -50,27 +44,25 @@ import org.stepic.droid.base.App;
 import org.stepic.droid.base.Client;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.core.LocalProgressManager;
+import org.stepic.droid.core.downloadingProgress.DownloadingPresenter;
+import org.stepic.droid.core.downloadingProgress.DownloadingView;
 import org.stepic.droid.core.dropping.contract.DroppingListener;
 import org.stepic.droid.core.presenters.CalendarPresenter;
 import org.stepic.droid.core.presenters.CourseFinderPresenter;
 import org.stepic.droid.core.presenters.CourseJoinerPresenter;
 import org.stepic.droid.core.presenters.DownloadingInteractionPresenter;
-import org.stepic.droid.core.presenters.DownloadingProgressSectionsPresenter;
 import org.stepic.droid.core.presenters.InvitationPresenter;
 import org.stepic.droid.core.presenters.SectionsPresenter;
 import org.stepic.droid.core.presenters.contracts.CalendarExportableView;
 import org.stepic.droid.core.presenters.contracts.CourseJoinView;
 import org.stepic.droid.core.presenters.contracts.DownloadingInteractionView;
-import org.stepic.droid.core.presenters.contracts.DownloadingProgressSectionsView;
 import org.stepic.droid.core.presenters.contracts.InvitationView;
 import org.stepic.droid.core.presenters.contracts.LoadCourseView;
 import org.stepic.droid.core.presenters.contracts.SectionsView;
-import org.stepic.droid.fonts.FontType;
 import org.stepic.droid.model.CalendarItem;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Section;
-import org.stepic.droid.model.SectionLoadingState;
 import org.stepic.droid.notifications.StepikNotificationManager;
 import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.storage.StoreStateManager;
@@ -81,6 +73,7 @@ import org.stepic.droid.ui.dialogs.DeleteItemDialogFragment;
 import org.stepic.droid.ui.dialogs.ExplainCalendarPermissionDialog;
 import org.stepic.droid.ui.dialogs.LoadingProgressDialog;
 import org.stepic.droid.ui.dialogs.UnauthorizedDialogFragment;
+import org.stepic.droid.ui.util.PopupHelper;
 import org.stepic.droid.ui.util.ToolbarHelperKt;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ColorUtil;
@@ -103,8 +96,6 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
 import timber.log.Timber;
-import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan;
-import uk.co.chrisjenx.calligraphy.TypefaceUtils;
 
 public class SectionsFragment
         extends FragmentBase
@@ -114,17 +105,18 @@ public class SectionsFragment
         CalendarExportableView,
         SectionsView,
         InvitationView,
-        DownloadingProgressSectionsView,
         DownloadingInteractionView,
         LocalProgressManager.SectionProgressListener,
         ChooseCalendarDialog.CallbackContract,
         DroppingListener,
-        StoreStateManager.SectionCallback {
+        StoreStateManager.SectionCallback, DownloadingView {
 
     public static final String joinFlag = "joinFlag";
     private static final int INVITE_REQUEST_CODE = 324;
     private static final int ANIMATION_DURATION = 0;
     public static final int DELETE_POSITION_REQUEST_CODE = 177;
+
+    private final static long INVITE_FRIEND_POPUP_DELAY = 500;
 
     @NotNull
     public static SectionsFragment newInstance() {
@@ -197,7 +189,7 @@ public class SectionsFragment
     InvitationPresenter invitationPresenter;
 
     @Inject
-    DownloadingProgressSectionsPresenter downloadingProgressSectionsPresenter;
+    DownloadingPresenter downloadingPresenter;
 
     @Inject
     DownloadingInteractionPresenter downloadingInteractionPresenter;
@@ -211,13 +203,15 @@ public class SectionsFragment
     private boolean wasIndexed;
     private Uri urlInWeb;
     private String title;
-    private Map<Long, SectionLoadingState> sectionIdToLoadingStateMap = new HashMap<>();
+    private Map<Long, Float> sectionIdToLoadingStateMap = new HashMap<>();
 
     LinearLayoutManager linearLayoutManager;
 
     private int afterUpdateModulePosition = -1;
     private int modulePosition;
     private boolean isAfterJoining;
+
+    private PopupWindow inviteFriendsPopupWindow;
 
     @Override
     protected void injectComponent() {
@@ -263,7 +257,7 @@ public class SectionsFragment
         linearLayoutManager = new LinearLayoutManager(getActivity());
         sectionsRecyclerView.setLayoutManager(linearLayoutManager);
         sectionList = new ArrayList<>();
-        adapter = new SectionAdapter(sectionList, ((AppCompatActivity) getActivity()), calendarPresenter, sectionsPresenter.getProgressMap(), sectionIdToLoadingStateMap, this, downloadingInteractionPresenter);
+        adapter = new SectionAdapter(downloadingPresenter, sectionList, ((AppCompatActivity) getActivity()), calendarPresenter, sectionsPresenter.getProgressMap(), sectionIdToLoadingStateMap, this, downloadingInteractionPresenter);
         sectionsRecyclerView.setAdapter(adapter);
 
         sectionsRecyclerView.setItemAnimator(new SlideInRightAnimator());
@@ -369,6 +363,13 @@ public class SectionsFragment
                     }
                     Intent intent = shareHelper.getIntentForCourseSharing(course);
                     startActivity(intent);
+
+                    if (inviteFriendsPopupWindow != null && inviteFriendsPopupWindow.isShowing()) {
+                        inviteFriendsPopupWindow.dismiss();
+                        getAnalytic().reportEventWithName(
+                                Analytic.Interaction.INVITE_DIALOG_DISMISSED,
+                                Analytic.Interaction.InviteDialogDismissType.SHARE);
+                    }
                 }
 
                 return true;
@@ -436,7 +437,9 @@ public class SectionsFragment
             afterUpdateModulePosition = -1;
         }
 
-        downloadingProgressSectionsPresenter.subscribeToProgressUpdates(sectionList);
+        for (Section section : sectionList) {
+            downloadingPresenter.onStateChanged(section.getId(), section.isLoading());
+        }
     }
 
     @Override
@@ -475,20 +478,29 @@ public class SectionsFragment
         reportIndexToGoogle();
         Timber.d("downloading interaction presenter instance: %s", downloadingInteractionPresenter);
         downloadingInteractionPresenter.attachView(this);
-        downloadingProgressSectionsPresenter.attachView(this);
-        downloadingProgressSectionsPresenter.subscribeToProgressUpdates(sectionList);
+        downloadingPresenter.attachView(this);
+        for (Section section : sectionList) {
+            downloadingPresenter.onStateChanged(section.getId(), section.isLoading());
+        }
     }
 
     @Override
     public void onStop() {
         downloadingInteractionPresenter.detachView(this);
-        downloadingProgressSectionsPresenter.detachView(this);
+        downloadingPresenter.detachView(this);
         super.onStop();
         if (wasIndexed) {
             FirebaseUserActions.getInstance().end(getAction());
         }
         wasIndexed = false;
         ProgressHelper.dismiss(swipeRefreshLayout);
+
+        if (inviteFriendsPopupWindow != null && inviteFriendsPopupWindow.isShowing()) {
+            inviteFriendsPopupWindow.dismiss();
+            getAnalytic().reportEventWithName(
+                    Analytic.Interaction.INVITE_DIALOG_DISMISSED,
+                    Analytic.Interaction.InviteDialogDismissType.LEAVE);
+        }
     }
 
     public Action getAction() {
@@ -511,7 +523,6 @@ public class SectionsFragment
     }
 
     private void updateState(long sectionId, boolean isCached, boolean isLoading) {
-
         int position = -1;
         Section section = null;
         for (int i = 0; i < sectionList.size(); i++) {
@@ -526,6 +537,7 @@ public class SectionsFragment
         //now we have not null section and correct position at oldList
         section.setCached(isCached);
         section.setLoading(isLoading);
+        downloadingPresenter.onStateChanged(sectionId, isLoading);
         adapter.notifyItemChanged(position + SectionAdapter.PRE_SECTION_LIST_DELTA);
     }
 
@@ -578,7 +590,7 @@ public class SectionsFragment
             if (args == null) {
                 args = new Bundle();
             }
-            args.putSerializable(AppConstants.KEY_COURSE_BUNDLE, course);
+            args.putParcelable(AppConstants.KEY_COURSE_BUNDLE, course);
             getActivity().getIntent().putExtras(args);
             initScreenByCourse();
         }
@@ -667,22 +679,6 @@ public class SectionsFragment
         invitationPresenter.needShowInvitationDialog(courseForSharing);
     }
 
-    private void showMessageAboutSharing() {
-        SnackbarExtensionKt
-                .setTextColor(
-                        Snackbar.make(rootView, R.string.share_course_in_menu, Snackbar.LENGTH_INDEFINITE)
-                                .setAction(R.string.ok, new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        Timber.d("set empty click listener for appearing of Action text");
-                                    }
-                                })
-                                .setActionTextColor(ColorUtil.INSTANCE.getColorArgb(R.color.snack_action_color, getContext())),
-                        ColorUtil.INSTANCE.getColorArgb(R.color.white,
-                                getContext()))
-                .show();
-    }
-
 
     @Override
     public void permissionNotGranted() {
@@ -742,7 +738,6 @@ public class SectionsFragment
 
 
     public void onNewIntent(Intent intent) {
-
         long simpleCourseId = -1;
         int simpleModulePosition = -1;
 
@@ -750,9 +745,9 @@ public class SectionsFragment
             isAfterJoining = intent.getExtras().getBoolean(joinFlag);
             intent.putExtra(joinFlag, false);
 
-            Object courseInBundle = intent.getExtras().get(AppConstants.KEY_COURSE_BUNDLE);
-            if (courseInBundle != null && courseInBundle instanceof Course) {
-                course = (Course) courseInBundle;
+            Course courseInBundle = intent.getExtras().getParcelable(AppConstants.KEY_COURSE_BUNDLE);
+            if (courseInBundle != null) {
+                course = courseInBundle;
             } else {
                 try {
                     simpleCourseId = intent.getExtras().getLong(AppConstants.KEY_COURSE_LONG_ID);
@@ -858,59 +853,18 @@ public class SectionsFragment
 
     @Override
     public void onShowInvitationDialog(@NotNull final Course courseForSharing) {
-        SpannableString inviteTitle = new SpannableString(getString(R.string.take_course_with_fiends));
-        inviteTitle.setSpan(new ForegroundColorSpan(Color.BLACK), 0, inviteTitle.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        CalligraphyTypefaceSpan typefaceSpan = new CalligraphyTypefaceSpan(TypefaceUtils.load(getContext().getAssets(), getFontsProvider().provideFontPath(FontType.bold)));
-        inviteTitle.setSpan(typefaceSpan, 0, inviteTitle.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-
-        MaterialStyledDialog dialog = new MaterialStyledDialog.Builder(getContext())
-                .setTitle(inviteTitle)
-                .setDescription(R.string.invite_friends_description)
-                .setHeaderDrawable(R.drawable.dialog_background)
-                .setPositiveText(R.string.invite)
-                .setNegativeText(R.string.dont_want)
-                .setScrollable(true, 10) // number of lines
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        getAnalytic().reportEvent(Analytic.Interaction.POSITIVE_MATERIAL_DIALOG_INVITATION);
-                        Intent intent = shareHelper.getIntentForCourseSharing(courseForSharing);
-                        SectionsFragment.this.startActivityForResult(intent, INVITE_REQUEST_CODE);
-                    }
-                })
-                .onNegative(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        invitationPresenter.onClickDecline();
-                        showMessageAboutSharing();
-                    }
-                })
-                .build();
-        dialog.show();
-    }
-
-    @Override
-    public void onNewProgressValue(@NotNull SectionLoadingState state) {
-        // FIXME: 21.02.17
-        int position = -1;
-        for (int i = 0; i < sectionList.size(); i++) {
-            Section section = sectionList.get(i);
-            if (section.getId() == state.getSectionId()) {
-                position = i;
+        rootView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                final View shareView = rootView.findViewById(R.id.menu_item_share);
+                if (shareView != null) {
+                    inviteFriendsPopupWindow =
+                            PopupHelper.INSTANCE.showPopupAnchoredToView(getContext(), shareView, getString(R.string.invite_friends_description));
+                } else {
+                    getAnalytic().reportEvent(Analytic.Interaction.INVITE_DIALOG_BROKEN);
+                }
             }
-        }
-
-        if (position < 0) {
-            return;
-        }
-
-        position += SectionAdapter.PRE_SECTION_LIST_DELTA;
-
-        //change state for updating in adapter
-        sectionIdToLoadingStateMap.put(state.getSectionId(), state);
-        adapter.notifyItemChanged(position);
-
+        }, INVITE_FRIEND_POPUP_DELAY);
     }
 
     @Override
@@ -991,5 +945,27 @@ public class SectionsFragment
         if (course != null && course.getCourseId() == courseId) {
             sectionsPresenter.updateSectionProgress(newProgress);
         }
+    }
+
+    @Override
+    public void onNewProgressValue(long id, float portion) {
+        Timber.d("new progress value for " + id + " = " + portion);
+        int position = -1;
+        for (int i = 0; i < sectionList.size(); i++) {
+            Section section = sectionList.get(i);
+            if (section.getId() == id) {
+                position = i;
+            }
+        }
+
+        if (position < 0) {
+            return;
+        }
+
+        position += SectionAdapter.PRE_SECTION_LIST_DELTA;
+
+        //change state for updating in adapter
+        sectionIdToLoadingStateMap.put(id, portion);
+        adapter.notifyItemChanged(position);
     }
 }

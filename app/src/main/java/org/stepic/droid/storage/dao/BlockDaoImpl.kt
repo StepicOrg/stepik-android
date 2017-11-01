@@ -2,12 +2,12 @@ package org.stepic.droid.storage.dao
 
 import android.content.ContentValues
 import android.database.Cursor
-import android.database.sqlite.SQLiteDatabase
 import com.google.gson.Gson
 import org.stepic.droid.mappers.toDbUrl
 import org.stepic.droid.mappers.toVideoUrls
 import org.stepic.droid.model.*
 import org.stepic.droid.model.code.CodeOptions
+import org.stepic.droid.storage.operations.CrudOperations
 import org.stepic.droid.storage.structure.DbStructureBlock
 import org.stepic.droid.storage.structure.DbStructureCachedVideo
 import org.stepic.droid.storage.structure.DbStructureVideoUrl
@@ -16,11 +16,11 @@ import javax.inject.Inject
 
 class BlockDaoImpl @Inject
 constructor(
-        openHelper: SQLiteDatabase,
+        crudOperations: CrudOperations,
         private val videoDao: IDao<CachedVideo>,
         private val gson: Gson,
         private val videoUrlIDao: IDao<DbVideoUrl>)
-    : DaoBase<BlockPersistentWrapper>(openHelper) {
+    : DaoBase<BlockPersistentWrapper>(crudOperations) {
 
     public override fun parsePersistentObject(cursor: Cursor): BlockPersistentWrapper {
         val indexName = cursor.getColumnIndex(DbStructureBlock.Column.NAME)

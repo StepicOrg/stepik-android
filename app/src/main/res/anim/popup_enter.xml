@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:interpolator="@android:anim/accelerate_decelerate_interpolator">
+    <translate
+        android:duration="@integer/popup_transition_duration"
+        android:fromYDelta="15%"
+        android:toYDelta="0" />
+
+    <alpha
+        android:duration="@integer/popup_transition_duration"
+        android:fromAlpha="0"
+        android:toAlpha="1.0" />
+</set>

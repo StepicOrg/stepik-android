@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -113,7 +112,7 @@ public class ScreenManagerImpl implements ScreenManager {
     public void showLaunchScreen(FragmentActivity activity, @NotNull Course course) {
         analytic.reportEvent(Analytic.Screens.SHOW_LAUNCH);
         Intent launchIntent = new Intent(activity, LaunchActivity.class);
-        launchIntent.putExtra(AppConstants.KEY_COURSE_BUNDLE, (Parcelable) course);
+        launchIntent.putExtra(AppConstants.KEY_COURSE_BUNDLE, course);
         launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         activity.startActivity(launchIntent);
     }
@@ -157,7 +156,7 @@ public class ScreenManagerImpl implements ScreenManager {
         analytic.reportEvent(Analytic.Screens.SHOW_REGISTRATION);
         Intent launchIntent = new Intent(sourceActivity, RegisterActivity.class);
         if (course != null) {
-            launchIntent.putExtra(AppConstants.KEY_COURSE_BUNDLE, (Parcelable) course);
+            launchIntent.putExtra(AppConstants.KEY_COURSE_BUNDLE, course);
         }
         sourceActivity.startActivity(launchIntent);
     }
@@ -167,7 +166,7 @@ public class ScreenManagerImpl implements ScreenManager {
         analytic.reportEvent(Analytic.Screens.SHOW_LOGIN);
         Intent loginIntent = new Intent(sourceActivity, LoginActivity.class);
         if (course != null) {
-            loginIntent.putExtra(AppConstants.KEY_COURSE_BUNDLE, (Parcelable) course);
+            loginIntent.putExtra(AppConstants.KEY_COURSE_BUNDLE, course);
         }
         if (email != null) {
             loginIntent.putExtra(AppConstants.KEY_EMAIL_BUNDLE, email);
@@ -180,7 +179,7 @@ public class ScreenManagerImpl implements ScreenManager {
         analytic.reportEvent(Analytic.Screens.SHOW_MAIN_FEED);
         Intent intent = new Intent(sourceActivity, MainFeedActivity.class);
         if (course != null) {
-            intent.putExtra(AppConstants.KEY_COURSE_BUNDLE, (Parcelable) course);
+            intent.putExtra(AppConstants.KEY_COURSE_BUNDLE, course);
         }
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         sourceActivity.startActivity(intent);
@@ -228,7 +227,7 @@ public class ScreenManagerImpl implements ScreenManager {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         Bundle bundle = new Bundle();
-        bundle.putSerializable(AppConstants.KEY_COURSE_BUNDLE, course);
+        bundle.putParcelable(AppConstants.KEY_COURSE_BUNDLE, course);
         intent.putExtras(bundle);
         if (!(context instanceof Activity)) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -435,6 +434,11 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
+    public Intent getMyProfileIntent(@NotNull Context context) {
+        return getFromMainActivityIntent(context, MainFeedActivity.PROFILE_INDEX);
+    }
+
+    @Override
     public void openSplash(Context context) {
         Intent launchIntent = new Intent(context, SplashActivity.class);
         launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -571,7 +575,7 @@ public class ScreenManagerImpl implements ScreenManager {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         Bundle bundle = new Bundle();
-        bundle.putSerializable(AppConstants.KEY_COURSE_BUNDLE, course);
+        bundle.putParcelable(AppConstants.KEY_COURSE_BUNDLE, course);
         intent.putExtras(bundle);
         return intent;
     }
@@ -581,7 +585,6 @@ public class ScreenManagerImpl implements ScreenManager {
         analytic.reportEventWithIdName(Analytic.Screens.SHOW_SECTIONS, course.getCourseId() + "", course.getTitle());
         Intent intent = getSectionsIntent(sourceActivity, course);
         sourceActivity.startActivity(intent);
-        sourceActivity.overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
     }
 
     @Override
@@ -609,7 +612,7 @@ public class ScreenManagerImpl implements ScreenManager {
     private Intent getIntentForUnits(Activity activity, @NotNull Section section) {
         Intent intent = new Intent(activity, UnitsActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable(AppConstants.KEY_SECTION_BUNDLE, section);
+        bundle.putParcelable(AppConstants.KEY_SECTION_BUNDLE, section);
         intent.putExtras(bundle);
         return intent;
     }
