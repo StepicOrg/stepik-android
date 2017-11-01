@@ -499,7 +499,9 @@
     <string name="manage_notification_settings">Manage notifications</string>
 
     <string name="course_item_more">More</string>
-    <string name="course_item_join">Course Info</string>
+    <string name="course_item_join">Join course</string>
+    <string name="course_item_info">Info</string>
+    <string name="course_item_syllabus">Syllabus</string>
 
     <string name="learners_count">Learners count</string>
 
@@ -542,4 +544,9 @@
     <string name="sample_input">&lt;b>Sample input %d:&lt;/b></string>
     <string name="sample_output">&lt;b>Sample output %d:&lt;/b></string>
     <string name="hint_for_code">Type code here…</string>
+
+    <plurals name="course_count">
+        <item quantity="one">%d course</item>
+        <item quantity="other">%d courses</item>
+    </plurals>
 </resources>

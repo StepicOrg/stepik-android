@@ -11,21 +11,15 @@ import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.SingleFragmentActivity;
 import org.stepic.droid.model.Course;
+import org.stepic.droid.ui.fragments.CourseDetailFragment;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.HtmlHelper;
-import org.stepic.droid.ui.fragments.CourseDetailFragment;
 
 import java.util.List;
 
 public class CourseDetailActivity extends SingleFragmentActivity {
 
     public static final String INSTA_ENROLL_KEY = "insta_enroll";
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
-    }
 
     @NonNull
     @Override
@@ -37,7 +31,6 @@ public class CourseDetailActivity extends SingleFragmentActivity {
             course = extras.getParcelable(AppConstants.KEY_COURSE_BUNDLE);
             needInstaEnroll = extras.getBoolean(INSTA_ENROLL_KEY);
         }
-
 
         if (course == null) {
             //Warning: work only for pattern android:pathPattern="/course/.*/" NOT Working for /course/.*/.* !!!
@@ -80,5 +73,10 @@ public class CourseDetailActivity extends SingleFragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTitle(R.string.course_info_title);
+    }
+
+    @Override
+    public void applyTransitionPrev() {
+        //no-op
     }
 }
