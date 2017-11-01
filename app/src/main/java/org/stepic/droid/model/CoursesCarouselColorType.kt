@@ -14,16 +14,22 @@ enum class CoursesCarouselColorType(
         @DrawableRes
         val joinResource: Int,
         @ColorRes
-        val backgroundColorRes: Int) : Parcelable {
+        val backgroundColorRes: Int,
+        @ColorRes
+        val viewAllColorRes: Int
+) : Parcelable {
+
     Light(R.color.new_accent_color,
             R.drawable.course_widget_continue_background,
             R.drawable.course_widget_join_background,
-            R.color.transparent
+            R.color.transparent,
+            R.color.view_all_course_list_color
     ),
     Dark(R.color.white,
             R.drawable.course_widget_continue_dark_background,
             R.drawable.course_widget_join_background,
-            R.color.new_accent_color
+            R.color.new_accent_color,
+            R.color.view_all_course_list_color_dark
     );
 
     override fun describeContents(): Int = 0
