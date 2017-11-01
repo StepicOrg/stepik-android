@@ -27,17 +27,16 @@ import org.stepic.droid.base.App;
 import org.stepic.droid.base.Client;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.core.LessonSessionManager;
+import org.stepic.droid.core.downloadingProgress.DownloadingPresenter;
+import org.stepic.droid.core.downloadingProgress.DownloadingView;
 import org.stepic.droid.core.presenters.DownloadingInteractionPresenter;
-import org.stepic.droid.core.presenters.DownloadingProgressUnitsPresenter;
 import org.stepic.droid.core.presenters.UnitsLearningProgressPresenter;
 import org.stepic.droid.core.presenters.UnitsPresenter;
 import org.stepic.droid.core.presenters.contracts.DownloadingInteractionView;
-import org.stepic.droid.core.presenters.contracts.DownloadingProgressUnitsView;
 import org.stepic.droid.core.presenters.contracts.UnitsLearningProgressView;
 import org.stepic.droid.core.presenters.contracts.UnitsView;
 import org.stepic.droid.core.routing.contract.RoutingListener;
 import org.stepic.droid.model.Lesson;
-import org.stepic.droid.model.LessonLoadingState;
 import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Unit;
@@ -61,7 +60,14 @@ import butterknife.BindView;
 import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
 import timber.log.Timber;
 
-public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.OnRefreshListener, UnitsView, DownloadingProgressUnitsView, DownloadingInteractionView, UnitsLearningProgressView, RoutingListener, StoreStateManager.LessonCallback {
+public class UnitsFragment extends FragmentBase implements
+        SwipeRefreshLayout.OnRefreshListener,
+        UnitsView,
+        DownloadingView,
+        DownloadingInteractionView,
+        UnitsLearningProgressView,
+        RoutingListener,
+        StoreStateManager.LessonCallback {
 
     private static final int ANIMATION_DURATION = 0;
     public static final int DELETE_POSITION_REQUEST_CODE = 165;
@@ -107,7 +113,7 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
     LessonSessionManager lessonManager;
 
     @Inject
-    DownloadingProgressUnitsPresenter downloadingProgressUnitsPresenter;
+    DownloadingPresenter downloadingPresenter;
 
     @Inject
     DownloadingInteractionPresenter downloadingInteractionPresenter;
@@ -123,7 +129,7 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
     private List<Unit> unitList;
     private List<Lesson> lessonList;
     private Map<Long, Progress> progressMap;
-    private Map<Long, LessonLoadingState> lessonIdToLoadingStateMap;
+    private Map<Long, Float> lessonIdToLoadingStateMap;
 
     @Override
     protected void injectComponent() {
@@ -176,6 +182,7 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
         lessonList = new ArrayList<>();
         progressMap = new HashMap<>();
         adapter = new UnitAdapter(section,
+                downloadingPresenter,
                 unitList,
                 lessonList,
                 progressMap,
@@ -220,14 +227,16 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
         super.onStart();
         Timber.d("downloading interaction presenter instance: %s", downloadingInteractionPresenter);
         downloadingInteractionPresenter.attachView(this);
-        downloadingProgressUnitsPresenter.attachView(this);
-        downloadingProgressUnitsPresenter.subscribeToProgressUpdates(lessonList);
+        downloadingPresenter.attachView(this);
+        for (Lesson lesson : lessonList) {
+            downloadingPresenter.onStateChanged(lesson.getId(), lesson.is_loading());
+        }
     }
 
     @Override
     public void onStop() {
         downloadingInteractionPresenter.detachView(this);
-        downloadingProgressUnitsPresenter.detachView(this);
+        downloadingPresenter.detachView(this);
         super.onStop();
         ProgressHelper.dismiss(swipeRefreshLayout);
     }
@@ -271,6 +280,7 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
         lesson.set_cached(isCached);
         lesson.set_loading(isLoading);
         adapter.notifyItemChanged(position);
+        downloadingPresenter.onStateChanged(lessonId, isLoading);
     }
 
     @org.jetbrains.annotations.Nullable
@@ -338,7 +348,9 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
 
         dismiss();
 
-        downloadingProgressUnitsPresenter.subscribeToProgressUpdates(lessonList);
+        for (Lesson lesson : this.lessonList) {
+            downloadingPresenter.onStateChanged(lesson.getId(), lesson.is_cached());
+        }
     }
 
     @Override
@@ -357,27 +369,6 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
             reportEmpty.setVisibility(View.GONE);
             reportConnectionProblem.setVisibility(View.VISIBLE);
         }
-    }
-
-    @Override
-    public void onNewProgressValue(@NonNull LessonLoadingState lessonLoadingState) {
-//// FIXME: 20.02.17 store hash map, because it is executed each 300 ms
-        int position = -1;
-        for (int i = 0; i < lessonList.size(); i++) {
-            Lesson lesson = lessonList.get(i);
-            if (lesson.getId() == lessonLoadingState.getLessonId()) {
-                position = i;
-            }
-        }
-
-        if (position < 0) {
-            return;
-        }
-
-        //change state for updating in adapter
-        lessonIdToLoadingStateMap.put(lessonLoadingState.getLessonId(), lessonLoadingState);
-
-        adapter.notifyItemChanged(position);
     }
 
     @Override
@@ -468,5 +459,25 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
     @Override
     public void onLessonNotCached(long lessonId) {
         updateState(lessonId, false, false);
+    }
+
+    @Override
+    public void onNewProgressValue(long id, float portion) {
+        int position = -1;
+        for (int i = 0; i < lessonList.size(); i++) {
+            Lesson lesson = lessonList.get(i);
+            if (lesson.getId() == id) {
+                position = i;
+            }
+        }
+
+        if (position < 0) {
+            return;
+        }
+
+        //change state for updating in adapter
+        lessonIdToLoadingStateMap.put(id, portion);
+
+        adapter.notifyItemChanged(position);
     }
 }

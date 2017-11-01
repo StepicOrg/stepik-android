@@ -1,6 +1,8 @@
 package org.stepic.droid.ui.fragments
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.View
 import org.stepic.droid.R
 import org.stepic.droid.base.CoursesDatabaseFragmentBase
@@ -19,4 +21,6 @@ class MyCoursesFragment : CoursesDatabaseFragmentBase() {
         super.onViewCreated(view, savedInstanceState)
         this.initCenteredToolbar(R.string.my_courses_title)
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {}
 }

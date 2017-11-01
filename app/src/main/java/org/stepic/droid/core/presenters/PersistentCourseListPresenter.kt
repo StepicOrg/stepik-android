@@ -8,6 +8,7 @@ import org.stepic.droid.core.FilterApplicator
 import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.di.course_list.CourseListScope
 import org.stepic.droid.model.Course
+import org.stepic.droid.model.Progress
 import org.stepic.droid.model.StepikFilter
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
@@ -15,10 +16,7 @@ import org.stepic.droid.storage.operations.Table
 import org.stepic.droid.util.RWLocks
 import org.stepic.droid.web.Api
 import org.stepic.droid.web.CoursesStepicResponse
-import retrofit2.Response
 import timber.log.Timber
-import java.util.*
-import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
@@ -29,7 +27,6 @@ class PersistentCourseListPresenter
         private val analytic: Analytic,
         private val databaseFacade: DatabaseFacade,
         private val singleThreadExecutor: SingleThreadExecutor,
-        private val threadPoolExecutor: ThreadPoolExecutor,
         private val mainHandler: MainHandler,
         private val api: Api,
         private val filterApplicator: FilterApplicator,
@@ -96,92 +93,114 @@ class PersistentCourseListPresenter
         }
 
         while (hasNextPage.get()) {
-            val response: Response<CoursesStepicResponse>? = try {
+            val coursesFromInternet: List<Course>? = try {
                 if (courseType == Table.featured) {
-                    api.getPopularCourses(currentPage.get()).execute()
+                    val response = api.getPopularCourses(currentPage.get()).blockingGet()
+                    handleMeta(response)
+                    response.courses
                 } else {
-                    api.getEnrolledCourses(currentPage.get()).execute()
+                    val allMyCourses = arrayListOf<Course>()
+                    while (hasNextPage.get()) {
+                        val originalResponse = api.getEnrolledCourses(currentPage.get()).blockingGet()
+                        allMyCourses.addAll(originalResponse.courses)
+                        handleMeta(originalResponse)
+                    }
+                    allMyCourses
                 }
             } catch (ex: Exception) {
                 null
-            }
+            }?.distinctBy { it.courseId }
 
-            if (response != null && response.isSuccessful) {
-                val coursesFromInternet = response.body().courses
-                try {
-                    //this lock need for not saving enrolled courses to database after user click logout
-                    RWLocks.ClearEnrollmentsLock.writeLock().lock()
-                    if (sharedPreferenceHelper.authResponseFromStore != null || courseType == Table.featured) {
-                        if (isRefreshing && currentPage.get() == 1) {
-                            if (courseType == Table.featured) {
-                                databaseFacade.dropFeaturedCourses()
-                            } else if (courseType == Table.enrolled) {
-                                databaseFacade.dropEnrolledCourses()
-                            }
-                        }
-
-                        coursesFromInternet.filterNotNull().forEach {
-                            databaseFacade.addCourse(it, courseType)
-                        }
-                    }
-                } finally {
-                    RWLocks.ClearEnrollmentsLock.writeLock().unlock()
-                }
-
-
-                hasNextPage.set(response.body().meta.has_next)
-                if (hasNextPage.get()) {
-                    currentPage.set(response.body().meta.page + 1) // page for next loading
-                }
-
-                val allCourses = databaseFacade.getAllCourses(courseType)
-
-                val filteredCourseList: List<Course>
-                if (!applyFilter && !sharedPreferenceHelper.getFilter(courseType).contains(StepikFilter.PERSISTENT)) {
-                    filteredCourseList = filterApplicator.getFilteredFromDefault(allCourses, courseType)
-                } else {
-                    filteredCourseList = filterApplicator.getFilteredFromSharedPrefs(allCourses, courseType)
-                }
-                if ((filteredCourseList.size < MIN_COURSES_ON_SCREEN) && hasNextPage.get()) {
-                    //try to load next in loop
-                } else {
-                    val coursesForShow = if (courseType == Table.enrolled) {
-                        sortByLastAction(filteredCourseList)
-                    } else {
-                        filteredCourseList
-                    }
-                    mainHandler.post {
-                        if (coursesForShow.isEmpty()) {
-                            isEmptyCourses.set(true)
-                            view?.showEmptyCourses()
-                        } else {
-                            view?.showCourses(coursesForShow)
-                        }
-                    }
-                    break
-                }
-            } else {
+            if (coursesFromInternet == null) {
                 mainHandler.post {
                     view?.showConnectionProblem()
+                }
+                break
+            }
+
+            if (courseType == Table.enrolled) {
+                val progressIds = coursesFromInternet.map { it.progress }.toTypedArray()
+                val progresses: List<Progress>? = try {
+                    api.getProgresses(progressIds).execute().body()?.progresses
+                } catch (exception: Exception) {
+                    //ok show without progresses
+                    null
+                }
+                progresses?.forEach {
+                    databaseFacade.addProgress(progress = it)
+                }
+            }
+
+            try {
+                //this lock need for not saving enrolled courses to database after user click logout
+                RWLocks.ClearEnrollmentsLock.writeLock().lock()
+                if (sharedPreferenceHelper.authResponseFromStore != null || courseType == Table.featured) {
+                    if (isRefreshing && currentPage.get() == 1) {
+                        if (courseType == Table.featured) {
+                            databaseFacade.dropFeaturedCourses()
+                        } else if (courseType == Table.enrolled) {
+                            databaseFacade.dropEnrolledCourses()
+                        }
+                    }
+
+                    coursesFromInternet.forEach {
+                        databaseFacade.addCourse(it, courseType)
+                    }
+                }
+            } finally {
+                RWLocks.ClearEnrollmentsLock.writeLock().unlock()
+            }
+
+            val allCourses = databaseFacade.getAllCourses(courseType).filterNotNull().toMutableList()
+
+            val filteredCourseList: MutableList<Course> =
+                    if (courseType == Table.featured) {
+                        if (!applyFilter && !sharedPreferenceHelper.filterForFeatured.contains(StepikFilter.PERSISTENT)) {
+                            filterApplicator.getFilteredFeaturedFromDefault(allCourses)
+                        } else {
+                            filterApplicator.getFilteredFeaturedFromSharedPrefs(allCourses)
+                        }
+                    } else {
+                        allCourses
+                    }
+            if ((filteredCourseList.size < MIN_COURSES_ON_SCREEN) && hasNextPage.get()) {
+                //try to load next in loop
+            } else {
+                val coursesForShow = when (courseType) {
+                    Table.enrolled -> sortByLastAction(filteredCourseList)
+                    else -> filteredCourseList
+                }
+                mainHandler.post {
+                    if (coursesForShow.isEmpty()) {
+                        isEmptyCourses.set(true)
+                        view?.showEmptyCourses()
+                    } else {
+                        view?.showCourses(coursesForShow)
+                    }
                 }
                 break
             }
         }
     }
 
+    private fun handleMeta(response: CoursesStepicResponse) {
+        hasNextPage.set(response.meta.has_next)
+        if (hasNextPage.get()) {
+            currentPage.set(response.meta.page + 1) // page for next loading
+        }
+    }
+
     private fun getFromDatabaseAndShow(applyFilter: Boolean, courseType: Table) {
         val coursesBeforeLoading = databaseFacade.getAllCourses(courseType).filterNotNull()
         if (coursesBeforeLoading.isNotEmpty()) {
-            val filteredCourseList: List<Course>
-            if (!applyFilter && !sharedPreferenceHelper.getFilter(courseType).contains(StepikFilter.PERSISTENT)) {
-                filteredCourseList = filterApplicator.getFilteredFromDefault(coursesBeforeLoading, courseType)
-            } else {
-                filteredCourseList = filterApplicator.getFilteredFromSharedPrefs(coursesBeforeLoading, courseType)
-            }
             val coursesForShow = if (courseType == Table.enrolled) {
-                sortByLastAction(filteredCourseList)
+                sortByLastAction(coursesBeforeLoading)
             } else {
-                filteredCourseList
+                if (!applyFilter && !sharedPreferenceHelper.filterForFeatured.contains(StepikFilter.PERSISTENT)) {
+                    filterApplicator.getFilteredFeaturedFromDefault(coursesBeforeLoading)
+                } else {
+                    filterApplicator.getFilteredFeaturedFromSharedPrefs(coursesBeforeLoading)
+                }
             }
             if (coursesForShow.isNotEmpty()) {
                 mainHandler.post {
@@ -210,29 +229,32 @@ class PersistentCourseListPresenter
 
     @WorkerThread
     private fun sortByLastAction(courses: List<Course>): MutableList<Course> {
-        val result = ArrayList<Course>(courses.size)
-        val localLastStepsList = databaseFacade.getAllLocalLastCourseInteraction()
-        val sortedPersistentLastStepCourseIds = localLastStepsList
-                .filterNotNull()
-                .filter { it.timestamp > 0 }
-                .toSortedSet(compareBy { it.timestamp.times(-1L) })
-        val coursesMap = courses.associateBy { it.courseId }
-        val usedCourses = HashSet<Long>()
-        sortedPersistentLastStepCourseIds.forEach {
-            val course = coursesMap[it.courseId]
-            if (course != null) {
-                result.add(course)
-                usedCourses.add(course.courseId)
-            }
+        val progressIds = courses.mapNotNull {
+            it.progress
         }
+        val courseProgressesMap = databaseFacade.getProgresses(progressIds).associateBy { it.id }
 
-        courses.forEach {
-            if (!usedCourses.contains(it.courseId)) {
-                result.add(it)
+        return courses.sortedWith(Comparator { course1, course2 ->
+            val progress1: Progress? = courseProgressesMap[course1.progress]
+            val progress2: Progress? = courseProgressesMap[course2.progress]
+
+            val lastViewed1 = progress1?.lastViewed?.toLongOrNull()
+            val lastViewed2 = progress2?.lastViewed?.toLongOrNull()
+
+            if (lastViewed1 == null && lastViewed2 == null) {
+                return@Comparator (course2.courseId - course1.courseId).toInt() // course2 - course1 (greater id is 1st)
             }
-        }
 
-        return result
+            if (lastViewed1 == null) {
+                return@Comparator 1 // 1st after 2nd
+            }
+
+            if (lastViewed2 == null) {
+                return@Comparator -1 //1st before 2nd. 2nd to end
+            }
+
+            return@Comparator (lastViewed2 - lastViewed1).toInt()
+        }).toMutableList()
     }
 
     fun loadMore(courseType: Table, needFilter: Boolean) {

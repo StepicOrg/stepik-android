@@ -2,7 +2,6 @@ package org.stepic.droid.preferences;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -102,8 +101,7 @@ public class SharedPreferenceHelper {
         this.defaultFilter = defaultFilter;
         this.context = context;
 
-        resetFilters(Table.enrolled); //reset on app recreating and on destroy course's Fragments
-        resetFilters(Table.featured);
+        resetFiltersForFeatured(); //reset on app recreating and on destroy course's Fragments
     }
 
     /**
@@ -280,7 +278,9 @@ public class SharedPreferenceHelper {
 
 
     public void onTryDiscardFilters(Table type) {
-        resetFilters(type);
+        if (type == Table.featured) {
+            resetFiltersForFeatured();
+        }
     }
 
     public int incrementNumberOfLaunches() {
@@ -416,67 +416,45 @@ public class SharedPreferenceHelper {
         put(PreferenceType.DEVICE_SPECIFIC, NEED_DROP_116, false);
     }
 
-    private void resetFilters(Table type) {
-        if (type == Table.enrolled && !getBoolean(PreferenceType.ENROLLED_FILTER, FILTER_PERSISTENT, defaultFilter.getDefaultEnrolled(StepikFilter.PERSISTENT))) {
-            clear(PreferenceType.ENROLLED_FILTER);
-        }
-
-        if (type == Table.featured && !getBoolean(PreferenceType.FEATURED_FILTER, FILTER_PERSISTENT, defaultFilter.getDefaultFeatured(StepikFilter.PERSISTENT))) {
+    private void resetFiltersForFeatured() {
+        if (!getBoolean(PreferenceType.FEATURED_FILTER, FILTER_PERSISTENT, defaultFilter.getDefaultFeatured(StepikFilter.PERSISTENT))) {
             clear(PreferenceType.FEATURED_FILTER);
         }
     }
 
-    public EnumSet<StepikFilter> getFilter(Table type) {
-        EnumSet<StepikFilter> filter = EnumSet.noneOf(StepikFilter.class);
-        // TODO: 04.09.16 refactor
-        if (type == Table.enrolled) {
-            appendValueForFilter(type, filter, FILTER_RUSSIAN_LANGUAGE, StepikFilter.RUSSIAN, defaultFilter.getDefaultEnrolled(StepikFilter.RUSSIAN));
-            appendValueForFilter(type, filter, FILTER_ENGLISH_LANGUAGE, StepikFilter.ENGLISH, defaultFilter.getDefaultEnrolled(StepikFilter.ENGLISH));
-            appendValueForFilter(type, filter, FILTER_UPCOMING, StepikFilter.UPCOMING, defaultFilter.getDefaultEnrolled(StepikFilter.UPCOMING));
-            appendValueForFilter(type, filter, FILTER_ACTIVE, StepikFilter.ACTIVE, defaultFilter.getDefaultEnrolled(StepikFilter.ACTIVE));
-            appendValueForFilter(type, filter, FILTER_PAST, StepikFilter.PAST, defaultFilter.getDefaultEnrolled(StepikFilter.PAST));
-            appendValueForFilter(type, filter, FILTER_PERSISTENT, StepikFilter.PERSISTENT, defaultFilter.getDefaultEnrolled(StepikFilter.PERSISTENT));
-        } else {
-            appendValueForFilter(type, filter, FILTER_RUSSIAN_LANGUAGE, StepikFilter.RUSSIAN, defaultFilter.getDefaultFeatured(StepikFilter.RUSSIAN));
-            appendValueForFilter(type, filter, FILTER_ENGLISH_LANGUAGE, StepikFilter.ENGLISH, defaultFilter.getDefaultFeatured(StepikFilter.ENGLISH));
-            appendValueForFilter(type, filter, FILTER_UPCOMING, StepikFilter.UPCOMING, defaultFilter.getDefaultFeatured(StepikFilter.UPCOMING));
-            appendValueForFilter(type, filter, FILTER_ACTIVE, StepikFilter.ACTIVE, defaultFilter.getDefaultFeatured(StepikFilter.ACTIVE));
-            appendValueForFilter(type, filter, FILTER_PAST, StepikFilter.PAST, defaultFilter.getDefaultFeatured(StepikFilter.PAST));
-            appendValueForFilter(type, filter, FILTER_PERSISTENT, StepikFilter.PERSISTENT, defaultFilter.getDefaultFeatured(StepikFilter.PERSISTENT));
-
+    private String getPrefNameForFilter(StepikFilter filter) {
+        switch (filter) {
+            case RUSSIAN:    return FILTER_RUSSIAN_LANGUAGE;
+            case ENGLISH:    return FILTER_ENGLISH_LANGUAGE;
+            case UPCOMING:   return FILTER_UPCOMING;
+            case ACTIVE:     return FILTER_ACTIVE;
+            case PAST:       return FILTER_PAST;
+            case PERSISTENT: return FILTER_PERSISTENT;
+            default:         throw new IllegalArgumentException("Unknown StepikFilter type: " + filter);
         }
-        return filter;
     }
 
-    private void appendValueForFilter(Table type, EnumSet<StepikFilter> filter, String key, StepikFilter value, boolean defaultValue) {
-        PreferenceType preferenceType = resolvePreferenceType(type);
+    public EnumSet<StepikFilter> getFilterForFeatured() {
+        EnumSet<StepikFilter> filters = EnumSet.noneOf(StepikFilter.class);
+        for (StepikFilter filter : StepikFilter.values()) {
+            appendValueForFilter(PreferenceType.FEATURED_FILTER, filters, getPrefNameForFilter(filter), filter, defaultFilter.getDefaultFeatured(filter));
+        }
+        return filters;
+    }
+
+    private void appendValueForFilter(PreferenceType preferenceType, EnumSet<StepikFilter> filter, String key, StepikFilter value, boolean defaultValue) {
         if (getBoolean(preferenceType, key, defaultValue)) {
             filter.add(value);
         }
     }
 
-    @NonNull
-    private PreferenceType resolvePreferenceType(Table type) {
-        PreferenceType preferenceType;
-        if (type == Table.enrolled) {
-            preferenceType = PreferenceType.ENROLLED_FILTER;
-        } else {
-            preferenceType = PreferenceType.FEATURED_FILTER;
+    public void saveFilterForFeatured(EnumSet<StepikFilter> filters) {
+        for (StepikFilter filter : StepikFilter.values()) {
+            saveValueFromFilterIfExist(PreferenceType.FEATURED_FILTER, filters, getPrefNameForFilter(filter), filter);
         }
-        return preferenceType;
     }
 
-    public void saveFilter(Table type, EnumSet<StepikFilter> filter) {
-        saveValueFromFilterIfExist(type, filter, FILTER_RUSSIAN_LANGUAGE, StepikFilter.RUSSIAN);
-        saveValueFromFilterIfExist(type, filter, FILTER_ENGLISH_LANGUAGE, StepikFilter.ENGLISH);
-        saveValueFromFilterIfExist(type, filter, FILTER_UPCOMING, StepikFilter.UPCOMING);
-        saveValueFromFilterIfExist(type, filter, FILTER_ACTIVE, StepikFilter.ACTIVE);
-        saveValueFromFilterIfExist(type, filter, FILTER_PAST, StepikFilter.PAST);
-        saveValueFromFilterIfExist(type, filter, FILTER_PERSISTENT, StepikFilter.PERSISTENT);
-    }
-
-    private void saveValueFromFilterIfExist(Table type, EnumSet<StepikFilter> filter, String key, StepikFilter value) {
-        PreferenceType preferenceType = resolvePreferenceType(type);
+    private void saveValueFromFilterIfExist(PreferenceType preferenceType, EnumSet<StepikFilter> filter, String key, StepikFilter value) {
         put(preferenceType, key, filter.contains(value));
     }
 
@@ -487,7 +465,6 @@ public class SharedPreferenceHelper {
         TEMP("temporary"),
         VIDEO_SETTINGS("video_settings"),
         DEVICE_SPECIFIC("device_specific"),
-        ENROLLED_FILTER("filter_prefs"),
         FEATURED_FILTER("featured_filter_prefs");
 
         private String description;
@@ -680,7 +657,6 @@ public class SharedPreferenceHelper {
             cachedAuthStepikResponse = null;
             clear(PreferenceType.LOGIN);
             clear(PreferenceType.FEATURED_FILTER);
-            clear(PreferenceType.ENROLLED_FILTER);
         } finally {
             RWLocks.AuthLock.writeLock().unlock();
         }

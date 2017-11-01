@@ -31,10 +31,10 @@ class CourseFinderPresenter
                 }
             } else {
                 try {
-                    val response = api.getCourse(courseId).execute()
-                    if (response != null && response.isSuccessful && response.body().courses.isNotEmpty()) {
+                    val courseToPresent = api.getCourse(courseId).execute().body()?.courses?.firstOrNull()
+                    if (courseToPresent != null) {
                         mainHandler.post {
-                            view?.onCourseFound(response.body().courses.first())
+                            view?.onCourseFound(courseToPresent)
                         }
                     } else {
                         mainHandler.post {
