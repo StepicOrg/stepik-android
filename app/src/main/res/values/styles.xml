@@ -111,10 +111,13 @@
         <item name="android:windowBackground">@color/login_launch_registration_background</item>
         <item name="android:colorBackground">@color/login_launch_registration_background</item>
         <item name="android:textColor">@color/text_color</item>
-        <item name="android:statusBarColor" tools:targetApi="lollipop">@color/new_accent_color</item>
+        <item name="android:statusBarColor" tools:targetApi="lollipop">@color/new_accent_color
+        </item>
 
         <item name="colorControlActivated">@color/new_accent_color</item>
-        <item name="android:colorControlActivated" tools:targetApi="lollipop">@color/new_accent_color</item>
+        <item name="android:colorControlActivated" tools:targetApi="lollipop">
+            @color/new_accent_color
+        </item>
     </style>
 
     <style name="AppTheme.VideoPlayer" parent="AppTheme.VideoPlayer.7"/>
@@ -275,12 +278,14 @@
     </style>
 
     <style name="CourseWidgetView" parent="android:Widget.Holo.Light.TextView">
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">@dimen/course_item_button_text_size</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">@dimen/min_ux_touchable_size</item>
         <item name="android:clickable">true</item>
         <item name="fontPath">fonts/Roboto-Regular.ttf</item>
         <item name="android:gravity">center</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
     </style>
 
     <style name="NewContinueButton">
@@ -353,5 +358,10 @@
         <item name="fontPath">fonts/Roboto-Bold.ttf</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:minHeight">@dimen/min_ux_touchable_size</item>
+    </style>
+
+    <style name="PopupAnimations">
+        <item name="android:windowEnterAnimation">@anim/popup_enter</item>
+        <item name="android:windowExitAnimation">@anim/popup_exit</item>
     </style>
 </resources>

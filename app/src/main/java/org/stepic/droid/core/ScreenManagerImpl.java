@@ -585,7 +585,6 @@ public class ScreenManagerImpl implements ScreenManager {
         analytic.reportEventWithIdName(Analytic.Screens.SHOW_SECTIONS, course.getCourseId() + "", course.getTitle());
         Intent intent = getSectionsIntent(sourceActivity, course);
         sourceActivity.startActivity(intent);
-        sourceActivity.overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
     }
 
     @Override

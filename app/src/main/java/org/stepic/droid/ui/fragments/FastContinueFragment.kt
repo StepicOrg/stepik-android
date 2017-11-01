@@ -13,6 +13,7 @@ import org.stepic.droid.base.App
 import org.stepic.droid.base.Client
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.core.dropping.contract.DroppingListener
+import org.stepic.droid.core.joining.contract.JoiningListener
 import org.stepic.droid.core.presenters.ContinueCoursePresenter
 import org.stepic.droid.core.presenters.LastStepPresenter
 import org.stepic.droid.core.presenters.PersistentCourseListPresenter
@@ -39,6 +40,7 @@ class FastContinueFragment : FragmentBase(),
         CoursesView,
         ContinueCourseView,
         DroppingListener,
+        JoiningListener,
         VideoStepView,
         LastStepView {
 
@@ -64,6 +66,9 @@ class FastContinueFragment : FragmentBase(),
 
     @Inject
     lateinit var videoStepPresenter: VideoStepPresenter
+
+    @Inject
+    lateinit var joiningListenerClient: Client<JoiningListener>
 
     override fun injectComponent() {
         App
@@ -91,14 +96,12 @@ class FastContinueFragment : FragmentBase(),
         droppingClient.subscribe(this)
         lastStepPresenter.attachView(this)
         videoStepPresenter.attachView(this)
+        joiningListenerClient.subscribe(this)
         courseListPresenter.restoreState()
         fastContinueAction.isEnabled = true
-    }
 
-    override fun onStart() {
-        super.onStart()
 
-        //refresh the last course on start
+        //refresh the last course only when view is created
         if (sharedPreferenceHelper.authResponseFromStore != null) {
             courseListPresenter.downloadData(Table.enrolled, applyFilter = false)
         } else {
@@ -117,6 +120,7 @@ class FastContinueFragment : FragmentBase(),
 
     override fun onDestroyView() {
         super.onDestroyView()
+        joiningListenerClient.unsubscribe(this)
         videoStepPresenter.detachView(this)
         lastStepPresenter.detachView(this)
         courseListPresenter.detachView(this)
@@ -212,7 +216,7 @@ class FastContinueFragment : FragmentBase(),
     //Client<DroppingListener>
     override fun onSuccessDropCourse(course: Course) {
         //reload the last course
-        courseListPresenter.downloadData(Table.enrolled, applyFilter = false)
+        courseListPresenter.refreshData(Table.enrolled, applyFilter = false, isRefreshing = true)
     }
 
     override fun onFailDropCourse(course: Course) {
@@ -229,6 +233,7 @@ class FastContinueFragment : FragmentBase(),
             val textForView = step.block?.text
             if (textForView != null && textForView.isNotBlank()) {
                 fastContinueTextView.text = textResolver.fromHtml(textForView)
+                fastContinueImageView.setImageDrawable(null)
             }
         }
     }
@@ -244,6 +249,7 @@ class FastContinueFragment : FragmentBase(),
             return
         }
         val uri = ThumbnailParser.getUriForThumbnail(thumbnailPath)
+        fastContinueTextView.text = ""
         Glide
                 .with(context)
                 .load(uri)
@@ -277,5 +283,9 @@ class FastContinueFragment : FragmentBase(),
         fastContinueOverlay.visibility = visibility
         fastContinueImageView.visibility = visibility
         fastContinueTextView.visibility = visibility
+    }
+
+    override fun onSuccessJoin(joinedCourse: Course) {
+        showCourses(mutableListOf<Course>(joinedCourse))
     }
 }

@@ -420,13 +420,7 @@
     <string name="about_app_title">О приложении</string>
     <string name="terms_of_service_title">Условия использования</string>
     <string name="privacy_policy_title">Политика конфиденциальности</string>
-    <string name="invite">Позвать друзей</string>
-    <string name="dont_want">Не хочу</string>
-    <string name="share_course_in_menu">Вы всегда можете поделиться ссылкой на курс в меню сверху
-    </string>
-    <string name="invite_friends_description">Люди, которые проходят курс вместе с друзьями, чаще
-        завершают его. Пригласите друзей прямо сейчас, отправив им ссылку на курс!
-    </string>
+    <string name="invite_friends_description">Поделитесь ссылкой с друзьями, чтобы проходить курс вместе!</string>
     <string name="take_course_with_fiends">Проходите курс с друзьями</string>
     <string name="sign_in_with_password">Войти с e-mail</string>
     <string name="sign_in_with_password_suffix">" с e-mail"</string>
@@ -500,7 +494,9 @@
     <string name="manage_notification_settings">Управлять уведомлениями</string>
 
     <string name="course_item_more">Подробнее</string>
-    <string name="course_item_join">Подробнее о курсе</string>
+    <string name="course_item_join">Поступить на курс</string>
+    <string name="course_item_info">Инфо</string>
+    <string name="course_item_syllabus">План</string>
 
     <string name="learners_count">Количество студентов</string>
     <string name="continue_learning">Продолжить учиться</string>
@@ -541,4 +537,11 @@
     <string name="sample_output">&lt;b>Пример выходных данных %d:&lt;/b></string>
     <string name="hint_for_code">Введите код здесь…</string>
     <string name="step_preparing">Шаг еще не обработан. Нажмите, чтобы перезагрузить</string>
+
+    <plurals name="course_count">
+        <item quantity="one">%d курс</item>
+        <item quantity="few">%d курса</item>
+        <item quantity="many">%d курсов</item>
+        <item quantity="other">%d курсов</item>
+    </plurals>
 </resources>
