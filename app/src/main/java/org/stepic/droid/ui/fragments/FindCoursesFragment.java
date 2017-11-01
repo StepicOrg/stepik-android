@@ -6,6 +6,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
@@ -34,7 +35,7 @@ public class FindCoursesFragment extends CoursesDatabaseFragmentBase {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         super.onViewCreated(view, savedInstanceState);
-        ToolbarHelperKt.initCenteredToolbar(this, R.string.find_courses_title, false);
+        ToolbarHelperKt.initCenteredToolbar(this, getTitle(), false);
         rootView.setParentTouchEvent(new OnRootTouchedListener() {
             @Override
             public void makeBeforeChildren() {
@@ -115,5 +116,10 @@ public class FindCoursesFragment extends CoursesDatabaseFragmentBase {
             searchView.setOnQueryTextListener(null);
         }
         searchView = null;
+    }
+
+    @StringRes
+    protected int getTitle () {
+        return R.string.catalog_title;
     }
 }
