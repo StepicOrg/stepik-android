@@ -145,7 +145,6 @@ public interface Analytic {
         String INVITE_DIALOG_BROKEN = "invite_dialog_broken";
 
         String SHOW_MATERIAL_DIALOG_INVITATION = "materdial_dialog_invite_shown";
-        String INVITATION_PREVENTED = "invite_prevented";
         String CLICK_CONTINUE_COURSE = "click_continue_course";
         String CLICK_COURSE = "click_course";
         String CLICK_PROFILE_BEFORE_LOADING = "click_profile_before_loading";
