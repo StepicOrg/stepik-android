@@ -54,7 +54,8 @@ public class SectionDaoImpl extends DaoBase<Section> {
         section.setPosition(cursor.getInt(columnIndexPosition));
         section.setCached(cursor.getInt(indexIsCached) > 0);
         section.setLoading(cursor.getInt(indexIsLoading) > 0);
-        section.setUnits(DbParseHelper.INSTANCE.parseStringToLongArray(cursor.getString(columnIndexUnits)));
+        long[] units = DbParseHelper.parseStringToLongArray(cursor.getString(columnIndexUnits));
+        section.setUnits(units == null ? new long[0] : units);
         int typeId = cursor.getInt(indexDiscountingPolicy);
         DiscountingPolicyType discountingPolicyType = getDiscountingPolicyType(typeId);
         section.setDiscountingPolicy(discountingPolicyType);

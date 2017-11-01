@@ -458,6 +458,11 @@ public class ApiImpl implements Api {
     }
 
     @Override
+    public Single<StepResponse> getStepsReactive(long[] steps) {
+        return loggedService.getStepsReactive(steps);
+    }
+
+    @Override
     public Call<Void> dropCourse(long courseId) {
         if (!config.isUserCanDropCourse()) return null;
         analytic.reportEvent(Analytic.Web.DROP_COURSE, courseId + "");
