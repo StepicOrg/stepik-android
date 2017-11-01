@@ -2,9 +2,9 @@ package org.stepic.droid.storage.dao;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 import org.stepic.droid.model.Assignment;
+import org.stepic.droid.storage.operations.CrudOperations;
 import org.stepic.droid.storage.structure.DbStructureAssignment;
 
 import javax.inject.Inject;
@@ -12,8 +12,8 @@ import javax.inject.Inject;
 public class AssignmentDaoImpl extends DaoBase<Assignment> {
 
     @Inject
-    public AssignmentDaoImpl(SQLiteDatabase openHelper) {
-        super(openHelper);
+    public AssignmentDaoImpl(CrudOperations crudOperations) {
+        super(crudOperations);
     }
 
     @Override

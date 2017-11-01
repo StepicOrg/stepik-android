@@ -99,7 +99,7 @@ class LessonPresenter
                     this.section = databaseFacade.getSectionById(sectionId)
                     if (this.section == null) {
                         try {
-                            this.section = api.getSections(longArrayOf(sectionId)).execute().body().sections.firstOrNull()
+                            this.section = api.getSections(longArrayOf(sectionId)).execute().body()?.sections?.firstOrNull()
                             // do not add to cache section in this way, because we need to support loading/caching state :<
                         } catch (ignored: Exception) {
                             // ok, section is optional
@@ -235,8 +235,8 @@ class LessonPresenter
         try {
             val progressIds: Array<out String?>
             if (unit != null) {
-                val assignments = api.getAssignments(unit.assignments).execute().body().assignments
-                assignments.filterNotNull().forEach {
+                val assignments = api.getAssignments(unit.assignments).execute().body()?.assignments
+                assignments?.filterNotNull()?.forEach {
                     databaseFacade.addAssignment(assignment = it)
                 }
                 progressIds = ProgressUtil.getAllProgresses(assignments)
@@ -245,8 +245,8 @@ class LessonPresenter
             }
 
 
-            val progresses = api.getProgresses(progressIds).execute().body().progresses
-            progresses.filterNotNull().forEach {
+            val progresses = api.getProgresses(progressIds).execute().body()?.progresses
+            progresses?.filterNotNull()?.forEach {
                 databaseFacade.addProgress(progress = it)
             }
 

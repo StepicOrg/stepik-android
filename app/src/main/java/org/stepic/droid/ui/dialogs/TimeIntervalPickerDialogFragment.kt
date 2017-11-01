@@ -14,10 +14,11 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.ui.util.TimeIntervalUtil
+import org.stepic.droid.util.SuppressFBWarnings
 import timber.log.Timber
 import javax.inject.Inject
 
-
+@SuppressFBWarnings("RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE")
 class TimeIntervalPickerDialogFragment : DialogFragment() {
     companion object {
         val resultIntervalCodeKey = "resultIntervalCodeKey"
@@ -44,7 +45,7 @@ class TimeIntervalPickerDialogFragment : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val picker = MaterialNumberPicker(context)
+        picker = MaterialNumberPicker(context)
         picker.minValue = 0
         picker.maxValue = TimeIntervalUtil.values.size - 1
         picker.displayedValues = TimeIntervalUtil.values

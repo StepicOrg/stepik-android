@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.os.Parcelable;
 import android.support.annotation.DrawableRes;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -175,12 +174,7 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
 
     @Nullable
     protected Course getCourseFromExtra() {
-        Parcelable course = getIntent().getParcelableExtra(AppConstants.KEY_COURSE_BUNDLE);
-        if (course != null && course instanceof Course) {
-            return (Course) course;
-        } else {
-            return null;
-        }
+        return getIntent().getParcelableExtra(AppConstants.KEY_COURSE_BUNDLE);
     }
 
 

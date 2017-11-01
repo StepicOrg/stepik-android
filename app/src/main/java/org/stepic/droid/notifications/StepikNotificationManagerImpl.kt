@@ -411,7 +411,7 @@ class StepikNotificationManagerImpl
                 bundle.putLong(AppConstants.KEY_COURSE_LONG_ID, courseId)
                 bundle.putInt(AppConstants.KEY_MODULE_POSITION, modulePosition)
             } else {
-                bundle.putSerializable(AppConstants.KEY_COURSE_BUNDLE, relatedCourse)
+                bundle.putParcelable(AppConstants.KEY_COURSE_BUNDLE, relatedCourse)
             }
             intent.putExtras(bundle)
             intent.action = AppConstants.OPEN_NOTIFICATION_FOR_CHECK_COURSE
@@ -530,7 +530,7 @@ class StepikNotificationManagerImpl
 
     private fun getPictureByCourse(course: Course?): Bitmap {
         val cover = course?.cover
-        @DrawableRes val notificationPlaceholder = R.drawable.general_placeholder
+        val notificationPlaceholder = R.drawable.general_placeholder
         if (cover == null) {
             return getBitmap(R.drawable.general_placeholder)
         } else {
