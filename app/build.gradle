@@ -240,11 +240,4 @@ dependencies {
     }
 }
 
-repositories {
-    jcenter()
-    maven {
-        url "https://jitpack.io"
-    }
-    mavenCentral()
-}
 apply plugin: 'com.google.gms.google-services'
