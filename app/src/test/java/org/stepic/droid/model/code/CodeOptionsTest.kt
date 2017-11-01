@@ -1,15 +1,19 @@
 package org.stepic.droid.model.code
 
+import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import org.stepic.droid.testUtils.TestingGsonProvider
 import org.stepic.droid.testUtils.assertThatObjectParcelable
 
 @RunWith(RobolectricTestRunner::class)
 class CodeOptionsTest {
 
+    private val gson = TestingGsonProvider.gson
+
     @Test
-    fun simpleCodeOptions_success() {
+    fun simpleCodeOptionsSuccess() {
         val sample1 = ParcelableStringList().apply {
             addAll(listOf("1", "3"))
         }
@@ -29,7 +33,7 @@ class CodeOptionsTest {
 
 
     @Test
-    fun emptyListsAndMaps_success() {
+    fun emptyListsAndMapsSuccess() {
         val codeOptions = CodeOptions(
                 limits = emptyMap<String, CodeLimit>(),
                 executionTimeLimit = 0,
@@ -39,5 +43,13 @@ class CodeOptionsTest {
         )
 
         codeOptions.assertThatObjectParcelable<CodeOptions>()
+    }
+
+    @Test
+    fun emptyCodeOptionsNull() {
+        val optionsJson = "{}"
+        val options = gson.fromJson(optionsJson, CodeOptions::class.java)
+
+        Assert.assertNull(options)
     }
 }
