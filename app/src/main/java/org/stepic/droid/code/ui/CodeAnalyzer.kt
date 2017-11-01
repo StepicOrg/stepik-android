@@ -147,17 +147,19 @@ object CodeAnalyzer {
 
     fun getBracketsPair(bracket: String) = brackets.entries.find { it.key == bracket || it.value == bracket }
 
-    fun resolveAutocomplete(cursorPosition: Int, lang: String, text: String): List<String> {
+    data class Autocomplete(val prefix: String?, val autocompleteWords: List<String>)
+
+    fun resolveAutocomplete(cursorPosition: Int, lang: String, text: String): Autocomplete {
         val next = getNextSymbol(cursorPosition, text)
         if (next == null || Character.isWhitespace(next[0])) {
-            val prefix = text.takeLastFromIndexWhile(cursorPosition - 1) { // get token before cursor
+            val prefix = text.takeLastFromIndexWhile(cursorPosition) { // get token before cursor
                 !Character.isWhitespace(it)
             }
 
             if (prefix != null && prefix.length > MIN_AUTOCOMPLETE) {
-                return autocomplete.getAutoCompleteForLangAndPrefix(lang, prefix)
+                return Autocomplete(prefix, autocomplete.getAutoCompleteForLangAndPrefix(lang, prefix))
             }
         }
-        return emptyList()
+        return Autocomplete(null, emptyList())
     }
 }

@@ -20,4 +20,4 @@ fun String.substringOrNull(start: Int, end: Int = length) =
 
 
 inline fun String.takeLastFromIndexWhile(pos: Int, predicate: (Char) -> Boolean) =
-        this.substringOrNull(pos - this.countWhile(pos, reversed = true, predicate = predicate) + 1, pos)
+        this.substringOrNull(pos - this.countWhile(pos - 1, reversed = true, predicate = predicate), pos)

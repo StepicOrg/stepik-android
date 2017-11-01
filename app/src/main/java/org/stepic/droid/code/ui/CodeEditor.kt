@@ -26,6 +26,7 @@ import org.stepic.droid.code.highlight.ParserContainer
 import org.stepic.droid.code.highlight.syntaxhighlight.ParseResult
 import org.stepic.droid.code.highlight.themes.CodeTheme
 import org.stepic.droid.code.highlight.themes.Presets
+import org.stepic.droid.ui.adapters.CodeToolbarAdapter
 import org.stepic.droid.ui.util.removeGlobalLayoutListener
 import org.stepic.droid.util.*
 import java.util.concurrent.TimeUnit
@@ -83,6 +84,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     var indentSize = DEFAULT_INDENT_SIZE
         internal set
 
+    var codeToolbarAdapter: CodeToolbarAdapter? = null
 
     internal var scrollContainer: CodeEditorLayout? = null
         set(value) {
@@ -234,7 +236,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
             CodeAnalyzer.onTextReplaced(replacedStart, replacedCount, this, replacedText)
             CodeAnalyzer.onTextInserted(insertedStart, insertedCount, this)
         }
-        CodeAnalyzer.resolveAutocomplete(selectionStart, lang, text.toString())
+        resolveAutocomplete()
         highlightBrackets(selectionStart)
         highlightPublisher.onNext(editable)
         requestLayout()
@@ -255,6 +257,16 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     override fun onSelectionChanged(start: Int, end: Int) {
         super.onSelectionChanged(start, end)
         highlightBrackets(start)
+        resolveAutocomplete()
+    }
+
+    private fun resolveAutocomplete() {
+        if (lang == null) return
+        val (prefix, words) = CodeAnalyzer.resolveAutocomplete(selectionStart, lang, text.toString())
+        codeToolbarAdapter?.apply {
+            autoCompleteWords = words
+            autoCompletePrefix = prefix
+        }
     }
 
     private fun highlightBrackets(cursorPosition: Int) {

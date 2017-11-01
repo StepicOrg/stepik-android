@@ -78,6 +78,7 @@ class CodeStepFragment : StepAttemptFragment(),
         codeToolbarView.adapter = codeToolbarAdapter
         codeToolbarAdapter?.onSymbolClickListener = this
         codeToolbarView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        codeEditor.codeToolbarAdapter = codeToolbarAdapter
 
         initLanguageChooser()
 
