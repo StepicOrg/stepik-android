@@ -4,12 +4,14 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 
-enum class StepStatus() : Parcelable {
+enum class StepStatus : Parcelable {
 
     @SerializedName("ready")
     READY,
     @SerializedName("preparing")
-    PREPARING;
+    PREPARING,
+    @SerializedName("error")
+    ERROR;
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeInt(ordinal)

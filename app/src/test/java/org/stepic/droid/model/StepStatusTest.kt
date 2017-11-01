@@ -34,6 +34,11 @@ class StepStatusTest {
     }
 
     @Test
+    fun byNameError() {
+        assertEquals(StepStatus.ERROR, StepStatus.Helper.byName("error"))
+    }
+
+    @Test
     fun byNameUnexpectedValue() {
         assertNull(StepStatus.Helper.byName("Unexpected-value_-vdalue"))
     }
@@ -56,6 +61,11 @@ class StepStatusTest {
     @Test
     fun saveOrderOfPreparing() {
         assertEquals("backward compatibility (when write/read from memory)", 1, StepStatus.PREPARING.ordinal)
+    }
+
+    @Test
+    fun saveOrderOfError() {
+        assertEquals("backward compatibility", 1, StepStatus.ERROR.ordinal)
     }
 
 }
