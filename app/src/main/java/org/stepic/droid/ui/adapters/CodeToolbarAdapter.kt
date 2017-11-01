@@ -2,17 +2,16 @@ package org.stepic.droid.ui.adapters
 
 import android.content.Context
 import android.graphics.Typeface
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.BackgroundColorSpan
-import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import org.stepic.droid.R
-import org.stepic.droid.code.highlight.themes.Presets
 import org.stepic.droid.model.code.symbolsForLanguage
 import org.stepic.droid.ui.listeners.OnItemClickListener
 
@@ -20,6 +19,10 @@ class CodeToolbarAdapter(private val context: Context) : RecyclerView.Adapter<Co
 
     interface OnSymbolClickListener {
         fun onSymbolClick(symbol: String)
+    }
+
+    private val autocompletePrefixBackgroundSpan by lazy {
+        BackgroundColorSpan(ContextCompat.getColor(context, R.color.code_toolbar_autocomplete_prefix_background))
     }
 
     var autoCompleteWords: List<String> = emptyList()
