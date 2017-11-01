@@ -1,6 +1,7 @@
 package org.stepic.droid.ui.adapters
 
 import android.content.Context
+import android.graphics.Typeface
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -46,6 +47,7 @@ class CodeToolbarAdapter(private val context: Context) : RecyclerView.Adapter<Co
             itemView.setOnClickListener {
                 onItemClickListener.onItemClick(adapterPosition)
             }
+            codeToolbarSymbol.typeface = Typeface.MONOSPACE
         }
 
         fun bindData(symbol: String) {
