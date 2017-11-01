@@ -84,8 +84,6 @@ public class SharedPreferenceHelper {
 
     private final String USER_START_KEY = "user_start_app";
 
-    private final String INVITATION_WAS_DECLINED_DEVICE_SPECIFIC = "invitation_wast_declined";
-
     private final String RATE_LAST_TIMESTAMP = "rate_last_timestamp";
     private final String RATE_TIMES_SHOWN = "rate_times_shown";
     private final String RATE_WAS_HANDLED = "rate_was_handled";
@@ -130,11 +128,6 @@ public class SharedPreferenceHelper {
 
     public long howManyRateWasShownBefore() {
         return getLong(PreferenceType.DEVICE_SPECIFIC, RATE_TIMES_SHOWN, 0);
-    }
-
-
-    public boolean isInvitationWasDeclined() {
-        return getBoolean(PreferenceType.DEVICE_SPECIFIC, INVITATION_WAS_DECLINED_DEVICE_SPECIFIC, false);
     }
 
     public void incrementNumberOfNotifications() {
