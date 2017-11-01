@@ -7,7 +7,7 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.di.step.code.CodeScope
 import org.stepic.droid.model.Step
-import org.stepic.droid.util.isCodeStepPrepared
+import org.stepic.droid.util.isCodeStepReady
 import org.stepic.droid.web.Api
 import javax.inject.Inject
 
@@ -24,7 +24,7 @@ constructor(
     private val compositeDisposable = CompositeDisposable()
 
     fun prepareStep(step: Step) {
-        if (step.isCodeStepPrepared()) {
+        if (step.isCodeStepReady()) {
             view?.onStepPrepared(step)
             return
         }
@@ -33,7 +33,7 @@ constructor(
         val disposable = api.getStepsReactive(longArrayOf(step.id))
                 .map {
                     val internetStep = it.steps?.first()
-                    when (internetStep?.isCodeStepPrepared()) {
+                    when (internetStep?.isCodeStepReady()) {
                         true -> internetStep
                         else -> throw StepNotPrepared()
                     }
