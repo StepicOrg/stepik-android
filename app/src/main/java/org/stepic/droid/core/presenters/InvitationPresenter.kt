@@ -28,12 +28,4 @@ class InvitationPresenter
         }
     }
 
-
-    fun onClickDecline() {
-        threadPoolExecutor.execute {
-            analytic.reportEvent(Analytic.Interaction.NEGATIVE_MATERIAL_DIALOG_INVITATION)
-            sharedPreferenceHelper.onDeclineInvitation()
-        }
-    }
-
 }

@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -16,9 +15,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,15 +22,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
-import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
 import com.google.firebase.appindexing.Action;
 import com.google.firebase.appindexing.FirebaseAppIndex;
 import com.google.firebase.appindexing.FirebaseUserActions;
@@ -65,7 +59,6 @@ import org.stepic.droid.core.presenters.contracts.DownloadingInteractionView;
 import org.stepic.droid.core.presenters.contracts.InvitationView;
 import org.stepic.droid.core.presenters.contracts.LoadCourseView;
 import org.stepic.droid.core.presenters.contracts.SectionsView;
-import org.stepic.droid.fonts.FontType;
 import org.stepic.droid.model.CalendarItem;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Progress;
@@ -80,6 +73,7 @@ import org.stepic.droid.ui.dialogs.DeleteItemDialogFragment;
 import org.stepic.droid.ui.dialogs.ExplainCalendarPermissionDialog;
 import org.stepic.droid.ui.dialogs.LoadingProgressDialog;
 import org.stepic.droid.ui.dialogs.UnauthorizedDialogFragment;
+import org.stepic.droid.ui.util.PopupHelper;
 import org.stepic.droid.ui.util.ToolbarHelperKt;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ColorUtil;
@@ -102,8 +96,6 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
 import timber.log.Timber;
-import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan;
-import uk.co.chrisjenx.calligraphy.TypefaceUtils;
 
 public class SectionsFragment
         extends FragmentBase
@@ -123,6 +115,8 @@ public class SectionsFragment
     private static final int INVITE_REQUEST_CODE = 324;
     private static final int ANIMATION_DURATION = 0;
     public static final int DELETE_POSITION_REQUEST_CODE = 177;
+
+    private final static long INVITE_FRIEND_POPUP_DELAY = 500;
 
     @NotNull
     public static SectionsFragment newInstance() {
@@ -216,6 +210,8 @@ public class SectionsFragment
     private int afterUpdateModulePosition = -1;
     private int modulePosition;
     private boolean isAfterJoining;
+
+    private PopupWindow inviteFriendsPopupWindow;
 
     @Override
     protected void injectComponent() {
@@ -367,6 +363,13 @@ public class SectionsFragment
                     }
                     Intent intent = shareHelper.getIntentForCourseSharing(course);
                     startActivity(intent);
+
+                    if (inviteFriendsPopupWindow != null && inviteFriendsPopupWindow.isShowing()) {
+                        inviteFriendsPopupWindow.dismiss();
+                        getAnalytic().reportEventWithName(
+                                Analytic.Interaction.INVITE_DIALOG_DISMISSED,
+                                Analytic.Interaction.InviteDialogDismissType.SHARE);
+                    }
                 }
 
                 return true;
@@ -491,6 +494,13 @@ public class SectionsFragment
         }
         wasIndexed = false;
         ProgressHelper.dismiss(swipeRefreshLayout);
+
+        if (inviteFriendsPopupWindow != null && inviteFriendsPopupWindow.isShowing()) {
+            inviteFriendsPopupWindow.dismiss();
+            getAnalytic().reportEventWithName(
+                    Analytic.Interaction.INVITE_DIALOG_DISMISSED,
+                    Analytic.Interaction.InviteDialogDismissType.LEAVE);
+        }
     }
 
     public Action getAction() {
@@ -669,22 +679,6 @@ public class SectionsFragment
         invitationPresenter.needShowInvitationDialog(courseForSharing);
     }
 
-    private void showMessageAboutSharing() {
-        SnackbarExtensionKt
-                .setTextColor(
-                        Snackbar.make(rootView, R.string.share_course_in_menu, Snackbar.LENGTH_INDEFINITE)
-                                .setAction(R.string.ok, new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        Timber.d("set empty click listener for appearing of Action text");
-                                    }
-                                })
-                                .setActionTextColor(ColorUtil.INSTANCE.getColorArgb(R.color.snack_action_color, getContext())),
-                        ColorUtil.INSTANCE.getColorArgb(R.color.white,
-                                getContext()))
-                .show();
-    }
-
 
     @Override
     public void permissionNotGranted() {
@@ -859,36 +853,18 @@ public class SectionsFragment
 
     @Override
     public void onShowInvitationDialog(@NotNull final Course courseForSharing) {
-        SpannableString inviteTitle = new SpannableString(getString(R.string.take_course_with_fiends));
-        inviteTitle.setSpan(new ForegroundColorSpan(Color.BLACK), 0, inviteTitle.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        CalligraphyTypefaceSpan typefaceSpan = new CalligraphyTypefaceSpan(TypefaceUtils.load(getContext().getAssets(), getFontsProvider().provideFontPath(FontType.bold)));
-        inviteTitle.setSpan(typefaceSpan, 0, inviteTitle.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-
-        MaterialStyledDialog dialog = new MaterialStyledDialog.Builder(getContext())
-                .setTitle(inviteTitle)
-                .setDescription(R.string.invite_friends_description)
-                .setHeaderDrawable(R.drawable.dialog_background)
-                .setPositiveText(R.string.invite)
-                .setNegativeText(R.string.dont_want)
-                .setScrollable(true, 10) // number of lines
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        getAnalytic().reportEvent(Analytic.Interaction.POSITIVE_MATERIAL_DIALOG_INVITATION);
-                        Intent intent = shareHelper.getIntentForCourseSharing(courseForSharing);
-                        SectionsFragment.this.startActivityForResult(intent, INVITE_REQUEST_CODE);
-                    }
-                })
-                .onNegative(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        invitationPresenter.onClickDecline();
-                        showMessageAboutSharing();
-                    }
-                })
-                .build();
-        dialog.show();
+        rootView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                final View shareView = rootView.findViewById(R.id.menu_item_share);
+                if (shareView != null) {
+                    inviteFriendsPopupWindow =
+                            PopupHelper.INSTANCE.showPopupAnchoredToView(getContext(), shareView, getString(R.string.invite_friends_description));
+                } else {
+                    getAnalytic().reportEvent(Analytic.Interaction.INVITE_DIALOG_BROKEN);
+                }
+            }
+        }, INVITE_FRIEND_POPUP_DELAY);
     }
 
     @Override

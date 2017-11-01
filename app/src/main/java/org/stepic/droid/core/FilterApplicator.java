@@ -6,7 +6,7 @@ import org.stepic.droid.storage.operations.Table;
 import java.util.List;
 
 public interface FilterApplicator {
-    List<Course> getFilteredFromSharedPrefs(List<Course> sourceCourses, Table courseType);
+    List<Course> getFilteredFeaturedFromSharedPrefs(List<Course> sourceCourses);
 
-    List<Course> getFilteredFromDefault(List<Course> sourceCourses, Table courseType);
+    List<Course> getFilteredFeaturedFromDefault(List<Course> sourceCourses);
 }

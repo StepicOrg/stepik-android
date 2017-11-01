@@ -359,4 +359,9 @@
         <item name="android:textColor">@android:color/white</item>
         <item name="android:minHeight">@dimen/min_ux_touchable_size</item>
     </style>
+
+    <style name="PopupAnimations">
+        <item name="android:windowEnterAnimation">@anim/popup_enter</item>
+        <item name="android:windowExitAnimation">@anim/popup_exit</item>
+    </style>
 </resources>

@@ -136,4 +136,10 @@
     <dimen name="code_text_size_default">14sp</dimen>
     <dimen name="embedded_code_editor_height">150dp</dimen>
     <dimen name="courses_carousel_top_margin">16dp</dimen>
+
+    <!-- popup windows -->
+    <dimen name="popup_border_radius">7dp</dimen>
+    <dimen name="popup_window_padding">8dp</dimen>
+    <dimen name="popup_text_padding">12dp</dimen>
+    <dimen name="popup_arrow_size">16dp</dimen>
 </resources>
