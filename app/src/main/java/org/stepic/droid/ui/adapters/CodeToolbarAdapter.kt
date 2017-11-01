@@ -37,7 +37,7 @@ class CodeToolbarAdapter(private val context: Context) : RecyclerView.Adapter<Re
     var autoCompletePrefix: String? = null
 
     private val autocompleteItemsCount
-        get() = autoCompleteWords.size + if (autoCompleteWords.isNotEmpty()) 1 else 0
+        get() = autoCompleteWords.size + if (autoCompleteWords.isNotEmpty()) 1 else 0 // to add stub for separator view
 
     var onSymbolClickListener: OnSymbolClickListener? = null
     private var symbols: Array<String> = emptyArray()
@@ -80,7 +80,7 @@ class CodeToolbarAdapter(private val context: Context) : RecyclerView.Adapter<Re
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (getItemViewType(position)) {
             ELEMENT_VIEW_TYPE -> (holder as CodeToolbarItem).let {
-                if (autoCompleteWords.isNotEmpty() && position < autocompleteItemsCount) {
+                if (position < autocompleteItemsCount) {
                     val word = SpannableString(autoCompleteWords[position])
                     autoCompletePrefix?.let {
                         word.setSpan(autocompletePrefixBackgroundSpan, 0, it.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)

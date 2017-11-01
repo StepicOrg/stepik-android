@@ -31,7 +31,7 @@ object CodeAnalyzer {
     private val pairedSymbols = brackets + quotes
 
     private val autocomplete = AutocompleteContainer()
-    private const val MIN_AUTOCOMPLETE = 1
+    private const val MIN_AUTOCOMPLETE_LENGTH = 2
 
 
     private fun getIndentForCurrentLine(cursorPosition: Int, text: String) : Int {
@@ -147,19 +147,20 @@ object CodeAnalyzer {
 
     fun getBracketsPair(bracket: String) = brackets.entries.find { it.key == bracket || it.value == bracket }
 
-    data class Autocomplete(val prefix: String?, val autocompleteWords: List<String>)
 
-    fun resolveAutocomplete(cursorPosition: Int, lang: String, text: String): Autocomplete {
+    fun resolveAutocomplete(cursorPosition: Int, lang: String, text: String): AutocompleteState {
         val next = getNextSymbol(cursorPosition, text)
         if (next == null || Character.isWhitespace(next[0])) {
             val prefix = text.takeLastFromIndexWhile(cursorPosition) { // get token before cursor
                 !Character.isWhitespace(it)
             }
 
-            if (prefix != null && prefix.length > MIN_AUTOCOMPLETE) {
-                return Autocomplete(prefix, autocomplete.getAutoCompleteForLangAndPrefix(lang, prefix))
+            if (prefix != null && prefix.length >= MIN_AUTOCOMPLETE_LENGTH) {
+                return AutocompleteState(prefix, autocomplete.getAutoCompleteForLangAndPrefix(lang, prefix))
             }
         }
-        return Autocomplete(null, emptyList())
+        return AutocompleteState(null, emptyList())
     }
+
+    data class AutocompleteState(val prefix: String?, val autocompleteWords: List<String>)
 }
