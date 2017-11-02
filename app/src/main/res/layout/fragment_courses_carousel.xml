@@ -60,7 +60,6 @@
         android:paddingLeft="@dimen/guideline_standard_padding"
         android:paddingRight="@dimen/guideline_standard_padding"
         android:paddingStart="@dimen/guideline_standard_padding"
-        android:paddingTop="@dimen/course_carousel_title_top_padding"
         android:text="@string/view_all_courses"
         android:textColor="@color/view_all_course_list_color"
         android:textSize="@dimen/course_carousel_title"

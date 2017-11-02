@@ -142,6 +142,7 @@ class CoursesCarouselFragment
         coursesViewAll.setOnClickListener {
             viewAll()
         }
+        coursesViewAll.setTextColor(ColorUtil.getColorArgb(info.colorType.viewAllColorRes, context))
 
         gridLayoutManager = GridLayoutManager(context, ROW_COUNT, GridLayoutManager.HORIZONTAL, false)
         coursesRecycler.layoutManager = gridLayoutManager
@@ -179,7 +180,6 @@ class CoursesCarouselFragment
         coursesRecycler.visibility = View.GONE
         coursesPlaceholder.visibility = View.GONE
         coursesLoadingView.visibility = View.VISIBLE
-
     }
 
     override fun showEmptyCourses() {

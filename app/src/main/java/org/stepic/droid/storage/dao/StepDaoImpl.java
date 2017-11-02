@@ -10,6 +10,7 @@ import org.stepic.droid.model.Assignment;
 import org.stepic.droid.model.BlockPersistentWrapper;
 import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Step;
+import org.stepic.droid.model.StepStatus;
 import org.stepic.droid.storage.operations.CrudOperations;
 import org.stepic.droid.storage.structure.DbStructureAssignment;
 import org.stepic.droid.storage.structure.DbStructureBlock;
@@ -67,7 +68,7 @@ public class StepDaoImpl extends DaoBase<Step> {
         step.setId(cursor.getLong(columnIndexStepId));
         step.setLesson(cursor.getLong(columnIndexLessonId));
         step.setCreate_date(cursor.getString(columnIndexCreateDate));
-        step.setCreate_date(cursor.getString(columnIndexStatus));
+        step.setStatus(StepStatus.Helper.INSTANCE.byName(cursor.getString(columnIndexStatus)));
         step.setProgress(cursor.getString(columnIndexProgress));
         step.setViewed_by(cursor.getLong(columnIndexViewedBy));
         step.setPassed_by(cursor.getLong(columnIndexPassedBy));
@@ -95,7 +96,7 @@ public class StepDaoImpl extends DaoBase<Step> {
 
         values.put(DbStructureStep.Column.STEP_ID, step.getId());
         values.put(DbStructureStep.Column.LESSON_ID, step.getLesson());
-        values.put(DbStructureStep.Column.STATUS, step.getStatus());
+        values.put(DbStructureStep.Column.STATUS, step.getStatus() == null ? null : step.getStatus().name());
         values.put(DbStructureStep.Column.PROGRESS, step.getProgress());
         values.put(DbStructureStep.Column.SUBSCRIPTIONS, DbParseHelper.parseStringArrayToString(step.getSubscriptions()));
         values.put(DbStructureStep.Column.VIEWED_BY, step.getViewed_by());

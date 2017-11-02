@@ -45,6 +45,9 @@ public interface StepicRestLoggedService {
     @GET("api/steps")
     Call<StepResponse> getSteps(@Query("ids[]") long[] steps);
 
+    @GET("api/steps")
+    Single<StepResponse> getStepsReactive(@Query("ids[]") long[] steps);
+
     @DELETE("api/enrollments/{id}")
     Call<Void> dropCourse(@Path("id") long courseId);
 

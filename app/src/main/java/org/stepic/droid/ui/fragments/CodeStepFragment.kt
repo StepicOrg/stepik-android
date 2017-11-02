@@ -13,14 +13,18 @@ import kotlinx.android.synthetic.main.fragment_step_attempt.*
 import kotlinx.android.synthetic.main.view_code_editor_layout.*
 import kotlinx.android.synthetic.main.view_code_quiz.*
 import kotlinx.android.synthetic.main.view_code_toolbar.*
+import kotlinx.android.synthetic.main.view_step_preparing.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.code.util.CodeToolbarUtil
 import org.stepic.droid.core.presenters.CodePresenter
+import org.stepic.droid.core.presenters.PreparingCodeStepPresenter
 import org.stepic.droid.core.presenters.contracts.CodeView
+import org.stepic.droid.core.presenters.contracts.PreparingCodeStepView
 import org.stepic.droid.model.Attempt
 import org.stepic.droid.model.Reply
+import org.stepic.droid.model.Step
 import org.stepic.droid.model.Submission
 import org.stepic.droid.model.code.extensionForLanguage
 import org.stepic.droid.ui.activities.CodePlaygroundActivity
@@ -31,10 +35,12 @@ import org.stepic.droid.ui.util.initForCodeLanguages
 import org.stepic.droid.ui.util.listenKeyboardChanges
 import org.stepic.droid.ui.util.stopListenKeyboardChanges
 import org.stepic.droid.util.AppConstants
+import org.stepic.droid.util.ProgressHelper
 import javax.inject.Inject
 
 class CodeStepFragment : StepAttemptFragment(),
         CodeView,
+        PreparingCodeStepView,
         ResetCodeDialogFragment.Callback,
         ChangeCodeLanguageDialog.Callback, CodeToolbarAdapter.OnSymbolClickListener {
     companion object {
@@ -46,6 +52,9 @@ class CodeStepFragment : StepAttemptFragment(),
 
     @Inject
     lateinit var codePresenter: CodePresenter
+
+    @Inject
+    lateinit var preparingCodeStepPresenter: PreparingCodeStepPresenter
 
     private var codeToolbarAdapter: CodeToolbarAdapter? = null
     private var onGlobalLayoutListener: ViewTreeObserver.OnGlobalLayoutListener? = null
@@ -80,6 +89,15 @@ class CodeStepFragment : StepAttemptFragment(),
         codeToolbarView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         codeEditor.codeToolbarAdapter = codeToolbarAdapter
 
+        codePresenter.attachView(this)
+        preparingCodeStepPresenter.attachView(this)
+        preparingCodeStepPresenter.prepareStep(step)
+    }
+
+    override fun onStepPrepared(newStep: Step) {
+        //here code options should be prepared
+        step = newStep
+
         initLanguageChooser()
 
         codeQuizChooseLangAction.setOnClickListener {
@@ -95,7 +113,6 @@ class CodeStepFragment : StepAttemptFragment(),
             showLanguageChoosingView(false)
             showCodeQuizEditor()
         }
-
 
         codeQuizFullscreenAction.setOnClickListener {
             chosenProgrammingLanguageName?.let { lang ->
@@ -146,7 +163,37 @@ class CodeStepFragment : StepAttemptFragment(),
 
         initSamples()
 
-        codePresenter.attachView(this)
+        ProgressHelper.dismiss(progressBar)
+        stepPreparingView.visibility = View.GONE
+        codePreparedContainer.visibility = View.VISIBLE
+        if (chosenProgrammingLanguageName == null) {
+            showCodeQuizEditor(false)
+            showLanguageChoosingView(true)
+        } else {
+            showCodeQuizEditor(true)
+            showLanguageChoosingView(false)
+        }
+    }
+
+    override fun onStepNotPrepared() {
+        showCodeQuizEditor(false)
+        showLanguageChoosingView(false)
+        ProgressHelper.dismiss(progressBar)
+        codePreparedContainer.visibility = View.GONE
+
+        stepPreparingView.visibility = View.VISIBLE
+        stepPreparingView.setOnClickListener {
+            stepPreparingView.visibility = View.GONE
+            preparingCodeStepPresenter.prepareStep(step)
+        }
+    }
+
+    override fun onStepPreparing() {
+        //note: on 1st load this progress bar can be hidden by attempt is loading
+        //if we introduce progress bar for step loading, then we will have 2 progress bar on screen
+        //todo sync dismissing of progressbar in future
+        ProgressHelper.activate(progressBar)
+        stepAttemptSubmitButton.visibility = View.GONE
     }
 
     override fun onStart() {
@@ -193,6 +240,7 @@ class CodeStepFragment : StepAttemptFragment(),
 
     override fun onDestroyView() {
         super.onDestroyView()
+        preparingCodeStepPresenter.detachView(this)
         codePresenter.detachView(this)
         codeToolbarAdapter?.onSymbolClickListener = null
     }
@@ -292,7 +340,6 @@ class CodeStepFragment : StepAttemptFragment(),
         showCodeQuizEditor()
     }
 
-
     private fun initLanguageChooser() {
         step.block?.options?.limits
                 ?.keys
@@ -319,6 +366,10 @@ class CodeStepFragment : StepAttemptFragment(),
             }
         }
 
+        if (codePreparedContainer.visibility != View.VISIBLE) {
+            return
+        }
+
         codeEditor.visibility = visibility
         stepAttemptSubmitButton.visibility = visibility
         codeQuizCurrentLanguage.visibility = visibility
@@ -330,6 +381,13 @@ class CodeStepFragment : StepAttemptFragment(),
 
     private fun showLanguageChoosingView(needShow: Boolean = true) {
         val visibility = toVisibility(needShow)
+
+        if (needShow) {
+            chosenProgrammingLanguageName = null
+        }
+        if (codePreparedContainer.visibility != View.VISIBLE) {
+            return
+        }
 
         codeQuizChooseLangAction.visibility = visibility
         codeQuizLanguagePicker.visibility = visibility
