@@ -9,7 +9,7 @@ class PopularCoursesAloneFragment : FindCoursesFragment() {
         fun newInstance(): PopularCoursesAloneFragment = PopularCoursesAloneFragment()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         //no-op
     }
 
