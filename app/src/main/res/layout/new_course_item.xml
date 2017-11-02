@@ -99,6 +99,7 @@
                 android:layout_width="@dimen/course_item_progress_size"
                 android:layout_height="@dimen/course_item_progress_size"
                 android:layout_centerVertical="true"
+                app:progressBarStroke="@dimen/course_item_progress_bar_size"
                 android:layout_marginLeft="4dp"
                 android:layout_marginStart="4dp"
                 android:layout_toEndOf="@id/learnersCountText"
