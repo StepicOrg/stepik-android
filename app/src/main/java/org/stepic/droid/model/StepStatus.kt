@@ -26,9 +26,13 @@ enum class StepStatus : Parcelable {
     }
 
     object Helper {
-        fun byName(serverName: String): StepStatus? =
-                values().find {
-                    it.name.equals(serverName, ignoreCase = true)
+        fun byName(serverName: String?): StepStatus? =
+                when (serverName) {
+                    null -> null
+                    else ->
+                        values().find {
+                            it.name.equals(serverName, ignoreCase = true)
+                        }
                 }
     }
 }
