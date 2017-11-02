@@ -10,23 +10,21 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import org.joda.time.DateTimeZone;
-import org.joda.time.format.DateTimeFormat;
 import org.stepic.droid.R;
 import org.stepic.droid.base.App;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.core.presenters.NotificationListPresenter;
 import org.stepic.droid.fonts.FontType;
 import org.stepic.droid.fonts.FontsProvider;
-import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.model.NotificationCategory;
+import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DateTimeHelper;
 import org.stepic.droid.util.resolvers.text.TextResolver;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
+import java.util.TimeZone;
 
 import javax.inject.Inject;
 
@@ -38,19 +36,18 @@ import uk.co.chrisjenx.calligraphy.TypefaceUtils;
 
 public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.GenericViewHolder> {
 
-    private final int itemViewType = 1;
-    private final int headerViewType = 2;
-    private final int footerViewType = 3;
-    private int countOfHeads = 1;
-    private final int countOfFooter = 1;
+    private static final int ITEM_VIEW_TYPE = 1;
+    private static final int HEADER_VIEW_TYPE = 2;
+    private static final int FOOTER_VIEW_TYPE = 3;
+    private static final int FOOTER_COUNT = 1;
+
+    private final int headerCount;
+
     private final Typeface boldTypeface;
     private final Typeface regularTypeface;
 
     private Context context;
     private NotificationListPresenter notificationListPresenter;
-    private NotificationCategory notificationCategory;
-    private DateTimeZone zone;
-    private Locale locale;
     private List<Notification> notifications = new ArrayList<>();
     private boolean isNeedShowFooter;
     private View.OnClickListener markAllReadListener = new View.OnClickListener() {
@@ -64,13 +61,12 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     public NotificationAdapter(Context context, NotificationListPresenter notificationListPresenter, NotificationCategory notificationCategory, FontsProvider fontsProvider) {
         this.context = context;
         this.notificationListPresenter = notificationListPresenter;
-        this.notificationCategory = notificationCategory;
-        zone = DateTimeZone.getDefault();
-        locale = Locale.getDefault();
-        boldTypeface = TypefaceUtils.load(context.getAssets(),  fontsProvider.provideFontPath(FontType.bold));
+        boldTypeface = TypefaceUtils.load(context.getAssets(), fontsProvider.provideFontPath(FontType.bold));
         regularTypeface = TypefaceUtils.load(context.getAssets(), fontsProvider.provideFontPath(FontType.regular));
-        if (this.notificationCategory != NotificationCategory.all) {
-            countOfHeads = 0;
+        if (notificationCategory != NotificationCategory.all) {
+            headerCount = 0;
+        }else {
+            headerCount = 1;
         }
     }
 
@@ -81,10 +77,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     @Override
     public GenericViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Timber.d("createViewHolder of NotificationAdapter, viewType = %d", viewType);
-        if (viewType == headerViewType) {
+        if (viewType == HEADER_VIEW_TYPE) {
             View view = LayoutInflater.from(context).inflate(R.layout.notification_list_header_item, parent, false);
             return new HeaderViewHolder(view);
-        } else if (viewType == footerViewType) {
+        } else if (viewType == FOOTER_VIEW_TYPE) {
             View view = LayoutInflater.from(context).inflate(R.layout.view_notification_loading_footer, parent, false);
             return new FooterViewHolder(view);
         } else {
@@ -100,18 +96,18 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     @Override
     public int getItemViewType(int position) {
-        if (position < countOfHeads) {
-            return headerViewType;
+        if (position < headerCount) {
+            return HEADER_VIEW_TYPE;
         } else if (position == getItemCount() - 1) {
-            return footerViewType;
+            return FOOTER_VIEW_TYPE;
         } else {
-            return itemViewType;
+            return ITEM_VIEW_TYPE;
         }
     }
 
     @Override
     public int getItemCount() {
-        return notifications.size() + countOfHeads + countOfFooter;
+        return notifications.size() + headerCount + FOOTER_COUNT;
     }
 
     public void setNotifications(List<Notification> notifications) {
@@ -125,7 +121,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     }
 
     public void onClick(int adapterPosition, boolean needOpenNotification) {
-        int positionInList = adapterPosition - countOfHeads;
+        int positionInList = adapterPosition - headerCount;
         if (positionInList >= 0 && positionInList < notifications.size()) {
             Notification notification = notifications.get(positionInList);
             Boolean unread = notification.is_unread();
@@ -157,7 +153,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 Boolean unread = notification.is_unread();
                 if (unread != null && unread != newValue) {
                     notification.set_unread(newValue);
-                    notifyItemChanged(position + countOfHeads);
+                    notifyItemChanged(position + headerCount);
                 }
             }
         }
@@ -230,12 +226,12 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         }
 
         public void setData(int position) {
-            int positionInList = position - countOfHeads;
+            int positionInList = position - headerCount;
             Notification notification = notifications.get(positionInList);
 
             notificationBody.setText(textResolver.fromHtml(notification.getHtmlText()));
 
-            String timeForView = DateTimeHelper.INSTANCE.getPresentOfDate(notification.getTime(), DateTimeFormat.forPattern(AppConstants.COMMENT_DATE_TIME_PATTERN).withZone(zone).withLocale(locale)); // // TODO: 13.10.16 save in ViewModel
+            String timeForView = DateTimeHelper.INSTANCE.getPrintableOfIsoDate(notification.getTime(), AppConstants.COMMENT_DATE_TIME_PATTERN, TimeZone.getDefault());
             notificationTime.setText(timeForView);
 
             resolveViewedState(notification);

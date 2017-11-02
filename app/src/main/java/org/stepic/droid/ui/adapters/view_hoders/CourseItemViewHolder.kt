@@ -9,6 +9,7 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
 import android.view.HapticFeedbackConstants
 import android.view.View
 import android.widget.PopupMenu
+import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.BitmapImageViewTarget
 import kotlinx.android.synthetic.main.new_course_item.view.*
@@ -60,7 +61,20 @@ class CourseItemViewHolder(
     private val joinColor: Int by lazy {
         ColorUtil.getColorArgb(R.color.join_text_color, itemView.context)
     }
+    private val infoTitle: String by lazy {
+        itemView.context.resources.getString(R.string.course_item_info)
+    }
     private var imageViewTarget: BitmapImageViewTarget
+
+    private val courseItemImage = view.courseItemImage
+    private val courseWidgetButton = view.courseWidgetButton
+    private val courseItemName = view.courseItemName
+    private val learnersCountImage = view.learnersCountImage
+    private val learnersCountText = view.learnersCountText
+    private val courseItemMore = view.courseItemMore
+    private val learnersCountContainer = view.learnersCountContainer
+    private val courseWidgetInfo = view.courseWidgetInfo
+
 
     init {
         App.component().inject(this)
@@ -72,10 +86,10 @@ class CourseItemViewHolder(
             override fun setResource(resource: Bitmap) {
                 val circularBitmapDrawable = RoundedBitmapDrawableFactory.create(itemView.context.resources, resource)
                 circularBitmapDrawable.cornerRadius = itemView.context.resources.getDimension(R.dimen.course_image_radius)
-                itemView.courseItemImage.setImageDrawable(circularBitmapDrawable)
+                courseItemImage.setImageDrawable(circularBitmapDrawable)
             }
         }
-        itemView.courseWidgetButton.setOnClickListener {
+        courseWidgetButton.setOnClickListener {
             val adapterPosition = adapterPosition
             val course = getCourseSafety(adapterPosition)
             if (course != null) {
@@ -90,21 +104,30 @@ class CourseItemViewHolder(
             true
         })
 
-        itemView.courseItemMore.setOnClickListener { v ->
-            val course = getCourseSafety(adapterPosition)
-            if (course != null) {
-                showMore(v, course)
+        itemView.courseItemMore.setOnClickListener { view ->
+            getCourseSafety(adapterPosition)?.let {
+                showMore(view, it)
+            }
+        }
+
+        courseWidgetInfo.applyToButton(infoTitle, continueColor, colorType.continueResource)
+        courseWidgetInfo.setOnClickListener {
+            getCourseSafety(adapterPosition)?.let {
+                if (isEnrolled(it)) {
+                    screenManager.showSections(contextActivity, it)
+                } else {
+                    screenManager.showCourseDescription(contextActivity, it, false)
+                }
             }
         }
     }
 
     private fun applyColorType(colorType: CoursesCarouselColorType) {
-        itemView.courseItemName.setTextColor(ColorUtil.getColorArgb(colorType.textColor, itemView.context))
-        itemView.learnersCountText.setTextColor(ColorUtil.getColorArgb(colorType.textColor, itemView.context))
-        itemView.learnersCountImage.setColorFilter(ColorUtil.getColorArgb(colorType.textColor, itemView.context))
-        itemView.courseWidgetButton.setTextColor(ColorUtil.getColorArgb(colorType.textColor, itemView.context))
+        courseItemName.setTextColor(ColorUtil.getColorArgb(colorType.textColor, itemView.context))
+        learnersCountText.setTextColor(ColorUtil.getColorArgb(colorType.textColor, itemView.context))
+        learnersCountImage.setColorFilter(ColorUtil.getColorArgb(colorType.textColor, itemView.context))
+        courseWidgetButton.setTextColor(ColorUtil.getColorArgb(colorType.textColor, itemView.context))
     }
-
 
     private fun showMore(view: View, course: Course) {
         val morePopupMenu = PopupMenu(itemView.context, view)
@@ -144,7 +167,7 @@ class CourseItemViewHolder(
             analytic.reportEvent(if (isContinueExperimentEnabled) Analytic.ContinueExperiment.CONTINUE_NEW else Analytic.ContinueExperiment.CONTINUE_OLD)
             continueCoursePresenter.continueCourse(course) //provide position?
         } else {
-            screenManager.showCourseDescription(contextActivity, course)
+            screenManager.showCourseDescription(contextActivity, course, true)
         }
     }
 
@@ -159,7 +182,7 @@ class CourseItemViewHolder(
     override fun setDataOnView(position: Int) {
         val course = courses[position]
 
-        itemView.courseItemName.text = course.title
+        courseItemName.text = course.title
         Glide
                 .with(itemView.context)
                 .load(StepikLogicHelper.getPathForCourseOrEmpty(course, config))
@@ -169,20 +192,22 @@ class CourseItemViewHolder(
                 .into(imageViewTarget)
 
         if (course.learnersCount > 0) {
-            itemView.learnersCountText.text = String.format(Locale.getDefault(), "%d", course.learnersCount)
-            itemView.learnersCountContainer.visibility = View.VISIBLE
+            learnersCountText.text = String.format(Locale.getDefault(), "%d", course.learnersCount)
+            learnersCountContainer.visibility = View.VISIBLE
         } else {
-            itemView.learnersCountContainer.visibility = View.GONE
+            learnersCountContainer.visibility = View.GONE
         }
 
 
         if (isEnrolled(course)) {
+            courseWidgetInfo.setText(R.string.course_item_syllabus)
             showContinueButton()
         } else {
+            courseWidgetInfo.setText(R.string.course_item_info)
             showJoinButton()
         }
 
-        itemView.courseItemMore.visibility = if (showMore) {
+        courseItemMore.visibility = if (showMore) {
             View.VISIBLE
         } else {
             View.GONE
@@ -190,20 +215,20 @@ class CourseItemViewHolder(
     }
 
     private fun isEnrolled(course: Course?): Boolean =
-            course != null && course.enrollment != 0 && course.isActive && course.lastStepId != null
+            course != null && course.enrollment != 0
 
     private fun showJoinButton() {
-        showButton(joinTitle, joinColor, colorType.joinResource)
+        courseWidgetButton.applyToButton(joinTitle, joinColor, colorType.joinResource)
     }
 
     private fun showContinueButton() {
-        showButton(continueTitle, continueColor, colorType.continueResource)
+        courseWidgetButton.applyToButton(continueTitle, continueColor, colorType.continueResource)
     }
 
-    private fun showButton(title: String, @ColorInt textColor: Int, @DrawableRes background: Int) {
-        itemView.courseWidgetButton.text = title
-        itemView.courseWidgetButton.setTextColor(textColor)
-        itemView.courseWidgetButton.setBackgroundResource(background)
+    private fun TextView.applyToButton(title: String, @ColorInt textColor: Int, @DrawableRes background: Int) {
+        this.text = title
+        this.setTextColor(textColor)
+        this.setBackgroundResource(background)
     }
 
 }

@@ -139,9 +139,9 @@ public class StoreStateManagerImpl implements StoreStateManager {
             analytic.reportError(Analytic.Error.NULL_SECTION, new Exception("update Section after deleting"));
             return;
         }
-        if (section.is_cached() || section.is_loading()) {
-            section.set_cached(false);
-            section.set_loading(false);
+        if (section.isCached() || section.isLoading()) {
+            section.setCached(false);
+            section.setLoading(false);
             databaseFacade.updateOnlyCachedLoadingSection(section);
             mainHandler.post(
                     new Function0<kotlin.Unit>() {
@@ -189,11 +189,11 @@ public class StoreStateManagerImpl implements StoreStateManager {
             analytic.reportError(Analytic.Error.NULL_SECTION, new Exception("update section state"));
             return;
         }
-        if (!section.is_cached() || section.is_loading()) {
+        if (!section.isCached() || section.isLoading()) {
             // cached = true -> loading = false
             // cached = false -> loading = false|true
-            section.set_cached(cached);
-            section.set_loading(loading);
+            section.setCached(cached);
+            section.setLoading(loading);
             databaseFacade.updateOnlyCachedLoadingSection(section);
 
             if (!loading) {

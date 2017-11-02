@@ -47,6 +47,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import retrofit2.Response;
+import timber.log.Timber;
 
 import static org.stepic.droid.storage.DownloadManagerExtensionKt.DOWNLOAD_STATUS_UNDEFINED;
 import static org.stepic.droid.storage.DownloadManagerExtensionKt.getDownloadStatus;
@@ -75,9 +76,8 @@ public class LoadService extends IntentService {
         Section, Lesson, Step
     }
 
-
     public LoadService() {
-        super("Loading_video_service");
+        super("LoadService");
     }
 
     @Override
@@ -89,7 +89,6 @@ public class LoadService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-
         LoadTypeKey type = (LoadTypeKey) intent.getSerializableExtra(AppConstants.KEY_LOAD_TYPE);
         try {
             switch (type) {
@@ -121,7 +120,7 @@ public class LoadService extends IntentService {
         }
 
         try {
-            File downloadFolderAndFile = new File(userPrefs.getUserDownloadFolder(), fileId + "");
+            File downloadFolderAndFile = new File(userPrefs.getUserDownloadFolder(), fileId + AppConstants.VIDEO_EXTENSION);
             if (downloadFolderAndFile.exists()) {
                 //we do not need download the file, because we already have it.
                 // FIXME: 20.10.15 this simple check doesn't work if file is loading and at this moment adding to Download manager Queue,
@@ -133,10 +132,12 @@ public class LoadService extends IntentService {
 
             Uri target = Uri.fromFile(downloadFolderAndFile);
 
-            DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
-            request.setDestinationUri(target);
-            request.setVisibleInDownloadsUi(false);
-            request.setTitle(title + "-" + fileId).setDescription(App.Companion.getAppContext().getString(R.string.description_download));
+            DownloadManager.Request request =
+                    new DownloadManager.Request(Uri.parse(url))
+                            .setDestinationUri(target)
+                            .setVisibleInDownloadsUi(false)
+                            .setTitle(title + "-" + fileId)
+                            .setDescription(getString(R.string.description_download));
 
             if (userPrefs.isNetworkMobileAllowed()) {
                 request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
@@ -151,7 +152,6 @@ public class LoadService extends IntentService {
             }
 
             if (downloadEntity == null && !downloadFolderAndFile.exists()) {
-
                 String videoQuality = null;
                 try {
                     for (VideoUrl urlItem : step.getBlock().getVideo().getUrls()) {
@@ -175,9 +175,10 @@ public class LoadService extends IntentService {
                         // todo improve
                         RWLocks.DownloadLock.writeLock().lock();
                         final long downloadId = systemDownloadManager.enqueue(request);
+                        Timber.d("downloading %s", downloadFolderAndFile.getAbsolutePath());
 
-                        String local_thumbnail = fileId + AppConstants.THUMBNAIL_POSTFIX_EXTENSION;
-                        String thumbnailsPath = FileUtil.saveFileToDisk(local_thumbnail, step.getBlock().getVideo().getThumbnail(), userPrefs.getUserDownloadFolder());
+                        String localThumbnail = fileId + AppConstants.THUMBNAIL_POSTFIX_EXTENSION;
+                        String thumbnailsPath = FileUtil.saveFileToDisk(localThumbnail, step.getBlock().getVideo().getThumbnail(), userPrefs.getUserDownloadFolder());
                         final DownloadEntity newEntity = new DownloadEntity(downloadId, step.getId(), fileId, thumbnailsPath, videoQuality);
                         databaseFacade.addDownloadEntity(newEntity);
                     } finally {
@@ -187,9 +188,6 @@ public class LoadService extends IntentService {
                     RWLocks.SectionCancelLock.writeLock().unlock();
                 }
             }
-        } catch (SecurityException ex) {
-            storeStateManager.updateStepAfterDeleting(step);
-            analytic.reportError(Analytic.Error.LOAD_SERVICE, ex);
         } catch (Exception ex) {
             storeStateManager.updateStepAfterDeleting(step);
             analytic.reportError(Analytic.Error.LOAD_SERVICE, ex);
@@ -394,14 +392,10 @@ public class LoadService extends IntentService {
 
     }
 
-    public boolean isDownloadManagerEnabled() {
-        if (App.Companion.getAppContext() == null) {
-            analytic.reportEvent(Analytic.Downloading.DOWNLOAD_MANAGER_IS_NOT_ENABLED);
-            return false;
-        }
+    private boolean isDownloadManagerEnabled() {
         int state;
         try {
-            state = App.Companion.getAppContext().getPackageManager()
+            state = getPackageManager()
                     .getApplicationEnabledSetting("com.android.providers.downloads");
         } catch (Exception ex) {
             analytic.reportError(Analytic.Downloading.DOWNLOAD_MANAGER_IS_NOT_ENABLED, ex);

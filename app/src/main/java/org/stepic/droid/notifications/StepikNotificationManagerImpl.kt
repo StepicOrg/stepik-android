@@ -14,7 +14,6 @@ import android.support.annotation.WorkerThread
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.TaskStackBuilder
 import com.bumptech.glide.Glide
-import org.joda.time.DateTime
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.configuration.Config
@@ -31,10 +30,7 @@ import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.ui.activities.ProfileActivity
 import org.stepic.droid.ui.activities.SectionActivity
 import org.stepic.droid.ui.activities.StepsActivity
-import org.stepic.droid.util.AppConstants
-import org.stepic.droid.util.ColorUtil
-import org.stepic.droid.util.HtmlHelper
-import org.stepic.droid.util.StepikUtil
+import org.stepic.droid.util.*
 import org.stepic.droid.util.resolvers.text.TextResolver
 import org.stepic.droid.web.Api
 import timber.log.Timber
@@ -122,6 +118,10 @@ class StepikNotificationManagerImpl
                         analytic.reportEvent(Analytic.Streak.GET_ZERO_STREAK_NOTIFICATION)
                         showNotificationWithoutStreakInfo(Analytic.Streak.NotificationType.zero)
                     } else {
+                        //if current streak is > 0 -> streaks works! -> continue send it
+                        //it will reset before sending, after sending it will be incremented
+                        sharedPreferenceHelper.resetNumberOfStreakNotifications()
+
                         val bundle = Bundle()
                         if (isSolvedToday) {
                             showNotificationStreakImprovement(currentStreak)
@@ -411,7 +411,7 @@ class StepikNotificationManagerImpl
                 bundle.putLong(AppConstants.KEY_COURSE_LONG_ID, courseId)
                 bundle.putInt(AppConstants.KEY_MODULE_POSITION, modulePosition)
             } else {
-                bundle.putSerializable(AppConstants.KEY_COURSE_BUNDLE, relatedCourse)
+                bundle.putParcelable(AppConstants.KEY_COURSE_BUNDLE, relatedCourse)
             }
             intent.putExtras(bundle)
             intent.action = AppConstants.OPEN_NOTIFICATION_FOR_CHECK_COURSE
@@ -457,9 +457,7 @@ class StepikNotificationManagerImpl
             }
 
 
-            val now = DateTime.now()
-            Timber.d(now.toString())
-            if (notificationTimeChecker.isNight(now.millis)) {
+            if (notificationTimeChecker.isNight(DateTimeHelper.nowLocal())) {
                 analytic.reportEvent(Analytic.Notification.NIGHT_WITHOUT_SOUND_AND_VIBRATE)
             } else {
                 addVibrationIfNeed(notification)
@@ -494,11 +492,9 @@ class StepikNotificationManagerImpl
                 .setContentText(justText)
 
 
-        val now = DateTime.now()
-        Timber.d(now.toString())
         //if notification is null (for example for streaks) -> show it always with sound and vibrate
 
-        val isNight = notificationTimeChecker.isNight(now.millis)
+        val isNight = notificationTimeChecker.isNight(DateTimeHelper.nowLocal())
         if (isNight) {
             analytic.reportEvent(Analytic.Notification.NIGHT_WITHOUT_SOUND_AND_VIBRATE)
         }
@@ -534,7 +530,7 @@ class StepikNotificationManagerImpl
 
     private fun getPictureByCourse(course: Course?): Bitmap {
         val cover = course?.cover
-        @DrawableRes val notificationPlaceholder = R.drawable.general_placeholder
+        val notificationPlaceholder = R.drawable.general_placeholder
         if (cover == null) {
             return getBitmap(R.drawable.general_placeholder)
         } else {

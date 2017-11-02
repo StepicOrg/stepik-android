@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.support.annotation.MainThread
 import android.support.annotation.WorkerThread
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import org.joda.time.DateTime
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.configuration.RemoteConfig
@@ -12,6 +11,7 @@ import org.stepic.droid.core.LessonSessionManager
 import org.stepic.droid.core.presenters.contracts.StepAttemptView
 import org.stepic.droid.model.*
 import org.stepic.droid.preferences.SharedPreferenceHelper
+import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.StepikUtil
 import org.stepic.droid.util.getStepType
 import org.stepic.droid.web.Api
@@ -88,7 +88,7 @@ class StepAttemptPresenter
     fun postSubmission(step: Step, reply: Reply, attemptId: Long) {
         threadPoolExecutor.execute {
             try {
-                api.createNewSubmission(reply, attemptId).execute().body().submissions
+                api.createNewSubmission(reply, attemptId).execute().body()?.submissions
                 val bundle = Bundle()
                 bundle.putString(Analytic.Steps.STEP_TYPE_KEY, step.getStepType())
                 reply.language?.let {
@@ -139,20 +139,18 @@ class StepAttemptPresenter
             worker?.schedule(
                     Runnable {
                         try {
-                            var submissionsResponse = api.getSubmissionForStep(step.id).execute()
-                            val numberOfSubmissions = submissionsResponse.body().submissions.size
-                            if (submissionsResponse.isSuccessful
-                                    && submissionsResponse.body().submissions.isNotEmpty()
-                                    && submissionsResponse.body().submissions.firstOrNull()?.attempt != attemptId) {
-                                submissionsResponse = api.getSubmissions(attemptId).execute() // if we have another attempt id on server
+                            var submissions = api.getSubmissionForStep(step.id).execute().body()?.submissions
+                            if (submissions?.isNotEmpty() == true && submissions.firstOrNull()?.attempt != attemptId) {
+                                submissions = api.getSubmissions(attemptId).execute()?.body()?.submissions // if we have another attempt id on server
                             }
 
 
-                            if (submissionsResponse.isSuccessful) {
-                                val submission = submissionsResponse.body().submissions.firstOrNull()
+                            if (submissions != null) {
+                                val numberOfSubmissions = submissions.size
+                                val submission = submissions.firstOrNull()
                                 // if null ->  we do not have submissions for THIS ATTEMPT
 
-                                if (submission?.status === Submission.Status.EVALUATION) {
+                                if (submission?.status == Submission.Status.EVALUATION) {
                                     mainHandler.post {
                                         getStatusOfSubmission(numberOfTry + 1)
                                     }
@@ -194,10 +192,10 @@ class StepAttemptPresenter
                                         && isCorrectSolution
                                         && !sharedPreferenceHelper.wasRateHandled()
                                         && isUserSolveEnough()
-                                        && isRateGreaterDelay()
+                                        && isRateDelayGreater()
 
                                 if (!needShowStreakDialog && needShowRateAppDialog) {
-                                    sharedPreferenceHelper.rateShown(DateTime.now().millis)
+                                    sharedPreferenceHelper.rateShown(DateTimeHelper.nowUtc())
                                 }
 
                                 mainHandler.post {
@@ -226,14 +224,15 @@ class StepAttemptPresenter
     }
 
     @WorkerThread
-    private fun isRateGreaterDelay(): Boolean {
+    private fun isRateDelayGreater(): Boolean {
         val wasShownMillis = sharedPreferenceHelper.whenRateWasShown()
         if (wasShownMillis < 0) {
-            return true
+            return true // we can show it
         }
 
         val delay = firebaseRemoteConfig.getLong(RemoteConfig.minDelayRateDialogSec).toInt()
-        return !DateTime(wasShownMillis).plusSeconds(delay).isAfterNow
+
+        return DateTimeHelper.isBeforeNowUtc(delay + wasShownMillis) //if delay is expired (before now) -> show
     }
 
     @WorkerThread
@@ -288,8 +287,8 @@ class StepAttemptPresenter
     @WorkerThread
     private fun createNewAttempt(stepId: Long) {
         try {
-            val createdAttempt: Attempt = api.createNewAttempt(stepId).execute().body().attempts.first()
-            val numberOfSubmissions: Int = api.getSubmissionForStep(stepId).execute().body().submissions.size
+            val createdAttempt: Attempt = api.createNewAttempt(stepId).execute().body()!!.attempts.first()
+            val numberOfSubmissions: Int = api.getSubmissionForStep(stepId).execute().body()!!.submissions.size
             mainHandler.post { view?.onNeedShowAttempt(attempt = createdAttempt, numberOfSubmissionsForStep = numberOfSubmissions, isCreated = true) }
         } catch (ex: Exception) {
             //Internet is not available

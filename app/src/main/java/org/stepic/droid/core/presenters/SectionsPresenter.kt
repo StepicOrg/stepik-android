@@ -85,9 +85,8 @@ class SectionsPresenter
                 } else {
                     //get from Internet
                     try {
-                        val response = api.getSections(sectionIds).execute()
-                        if (response.isSuccessful || response.body()?.sections?.isNotEmpty() ?: false) {
-                            val sections = response.body().sections
+                        val sections = api.getSections(sectionIds).execute()?.body()?.sections
+                        if (sections?.isNotEmpty() == true) {
                             val cachedSections: Map<Long, Section> = databaseFacade
                                     .getAllSectionsOfCourse(course)
                                     .filterNotNull()
@@ -96,8 +95,8 @@ class SectionsPresenter
                             sections.forEach {
                                 val cachedSection: Section? = cachedSections[it.id]
                                 if (cachedSection != null) {
-                                    it.is_cached = cachedSection.is_cached
-                                    it.is_loading = cachedSection.is_loading
+                                    it.isCached = cachedSection.isCached
+                                    it.isLoading = cachedSection.isLoading
                                 }
                                 databaseFacade.addSection(it)
                                 databaseFacade.updateOnlyCachedLoadingSection(it)
@@ -168,8 +167,8 @@ class SectionsPresenter
                     .map { it.progress }
                     .filterNotNull()
                     .toTypedArray()
-            val progresses = api.getProgresses(progressIds).execute().body().progresses
-            val progressIdToProgressViewModel = progresses.map { it.transformToViewModel() }.filterNotNull().associateBy { it.progressId }
+            val progresses = api.getProgresses(progressIds).execute().body()!!.progresses
+            val progressIdToProgressViewModel = progresses.mapNotNull { it.transformToViewModel() }.associateBy { it.progressId }
             threadPoolExecutor.execute {
                 //save to database
                 progresses.filterNotNull().forEach { databaseFacade.addProgress(it) }

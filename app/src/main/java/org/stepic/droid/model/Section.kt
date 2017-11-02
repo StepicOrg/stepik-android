@@ -3,126 +3,113 @@ package org.stepic.droid.model
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import org.joda.time.DateTimeZone
-import org.joda.time.format.DateTimeFormat
-import org.joda.time.format.DateTimeFormatter
 import org.stepic.droid.util.DateTimeHelper
 import java.io.Serializable
 import java.util.*
 
-class Section() : Serializable, Parcelable {
+data class Section(
+        var id: Long = 0,
+        var course: Long = 0, // course id
+        var units: LongArray = longArrayOf(),
+        var position: Int = 0,
+        var progress: String? = null,
+        var title: String? = null,
+        var slug: String? = null,
+        @SerializedName("begin_date")
+        var beginDate: String? = null,
+        @SerializedName("end_date")
+        var endDate: String? = null,
+        @SerializedName("soft_deadline")
+        var softDeadline: String? = null,
+        @SerializedName("hard_deadline")
+        var hardDeadline: String? = null,
+        @SerializedName("grading_policy")
+        var gradingPolicy: String? = null,
+        @SerializedName("is_active")
+        var isActive: Boolean = false,
+        @SerializedName("create_date")
+        var createDate: String? = null,
+        @SerializedName("update_date")
+        var updateDate: String? = null,
+        var actions: Actions? = null,
+        @SerializedName("is_exam")
+        var isExam: Boolean = false,
+        @SerializedName("discounting_policy")
+        var discountingPolicy: DiscountingPolicyType? = null,
+        @SerializedName("is_requirement_satisfied")
+        var isRequirementSatisfied: Boolean = true,
+        @SerializedName("required_section")
+        var requiredSection: Long = 0, //id of required section
+        @SerializedName("required_percent")
+        var requiredPercent: Int = 0) : Serializable, Parcelable {
 
-    var id: Long = 0
-    var course: Long = 0 // course id
-    var units: LongArray? = null
-    var position: Int = 0
-    var progress: String? = null
-    var title: String? = null
-    var slug: String? = null
-    var begin_date: String? = null
-    var end_date: String? = null
-    var soft_deadline: String? = null
-    var hard_deadline: String? = null
-    var grading_policy: String? = null
-    var begin_date_source: String? = null
-    var end_date_source: String? = null
-    var soft_deadline_source: String? = null
-    var hard_deadline_source: String? = null
-    var grading_policy_source: String? = null
-    var is_active: Boolean = false
-    var create_date: String? = null
-    var update_date: String? = null
-    var is_cached: Boolean = false
-    var is_loading: Boolean = false
-    var actions: Actions? = null
-    @SerializedName("is_exam")
-    var isExam: Boolean = false
 
-    @SerializedName("discounting_policy")
-    var discountingPolicy: DiscountingPolicyType? = null
-
-
-    private var formatted_begin_date: String? = null
-    private var formatted_soft_deadline: String? = null
-    private var formatted_hard_deadline: String? = null
-
-    private val formatterForView: DateTimeFormatter by lazy {
-        DateTimeFormat.forPattern(datePattern).withZone(DateTimeZone.getDefault()).withLocale(Locale.getDefault())
-    }
+    var isCached: Boolean = false
+    var isLoading: Boolean = false
 
     val formattedBeginDate: String by lazy {
-        DateTimeHelper.getPresentOfDate(begin_date, formatterForView)
+        DateTimeHelper.getPrintableOfIsoDate(beginDate, datePattern, TimeZone.getDefault())
     }
 
     val formattedSoftDeadline: String by lazy {
-        DateTimeHelper.getPresentOfDate(soft_deadline, formatterForView)
+        DateTimeHelper.getPrintableOfIsoDate(softDeadline, datePattern, TimeZone.getDefault())
     }
 
     val formattedHardDeadline: String by lazy {
-        DateTimeHelper.getPresentOfDate(hard_deadline, formatterForView)
+        DateTimeHelper.getPrintableOfIsoDate(hardDeadline, datePattern, TimeZone.getDefault())
     }
 
 
     override fun describeContents() = 0
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
-        dest.writeLong(this.id)
-        dest.writeLong(this.course)
-        dest.writeLongArray(this.units)
-        dest.writeInt(this.position)
-        dest.writeString(this.progress)
-        dest.writeString(this.title)
-        dest.writeString(this.slug)
-        dest.writeString(this.begin_date)
-        dest.writeString(this.end_date)
-        dest.writeString(this.soft_deadline)
-        dest.writeString(this.hard_deadline)
-        dest.writeString(this.grading_policy)
-        dest.writeString(this.begin_date_source)
-        dest.writeString(this.end_date_source)
-        dest.writeString(this.soft_deadline_source)
-        dest.writeString(this.hard_deadline_source)
-        dest.writeString(this.grading_policy_source)
-        dest.writeByte(if (is_active) 1.toByte() else 0.toByte())
-        dest.writeString(this.create_date)
-        dest.writeString(this.update_date)
-        dest.writeByte(if (is_cached) 1.toByte() else 0.toByte())
-        dest.writeByte(if (is_loading) 1.toByte() else 0.toByte())
-        dest.writeString(this.formatted_begin_date)
-        dest.writeString(this.formatted_soft_deadline)
-        dest.writeString(this.formatted_hard_deadline)
-        dest.writeParcelable(this.actions, flags)
+        dest.writeLong(id)
+        dest.writeLong(course)
+        dest.writeLongArray(units)
+        dest.writeInt(position)
+        dest.writeString(progress)
+        dest.writeString(title)
+        dest.writeString(slug)
+        dest.writeString(beginDate)
+        dest.writeString(endDate)
+        dest.writeString(softDeadline)
+        dest.writeString(hardDeadline)
+        dest.writeString(gradingPolicy)
+        dest.writeByte(if (isActive) 1.toByte() else 0.toByte())
+        dest.writeString(createDate)
+        dest.writeString(updateDate)
+        dest.writeByte(if (isCached) 1.toByte() else 0.toByte())
+        dest.writeByte(if (isLoading) 1.toByte() else 0.toByte())
+        dest.writeParcelable(actions, flags)
         dest.writeInt(discountingPolicy?.ordinal ?: -1)
+        dest.writeByte(if (isRequirementSatisfied) 1.toByte() else 0.toByte())
+        dest.writeLong(requiredSection)
+        dest.writeInt(requiredPercent)
     }
 
     protected constructor(input: Parcel) : this() {
-        this.id = input.readLong()
-        this.course = input.readLong()
-        this.units = input.createLongArray()
-        this.position = input.readInt()
-        this.progress = input.readString()
-        this.title = input.readString()
-        this.slug = input.readString()
-        this.begin_date = input.readString()
-        this.end_date = input.readString()
-        this.soft_deadline = input.readString()
-        this.hard_deadline = input.readString()
-        this.grading_policy = input.readString()
-        this.begin_date_source = input.readString()
-        this.end_date_source = input.readString()
-        this.soft_deadline_source = input.readString()
-        this.hard_deadline_source = input.readString()
-        this.grading_policy_source = input.readString()
-        this.is_active = input.readByte().toInt() != 0
-        this.create_date = input.readString()
-        this.update_date = input.readString()
-        this.is_cached = input.readByte().toInt() != 0
-        this.is_loading = input.readByte().toInt() != 0
-        this.formatted_begin_date = input.readString()
-        this.formatted_soft_deadline = input.readString()
-        this.formatted_hard_deadline = input.readString()
-        this.actions = input.readParcelable<Actions>(Actions::class.java.classLoader)
-        this.discountingPolicy = getDiscountingPolicyTypeByParcel(input)
+        id = input.readLong()
+        course = input.readLong()
+        units = input.createLongArray()
+        position = input.readInt()
+        progress = input.readString()
+        title = input.readString()
+        slug = input.readString()
+        beginDate = input.readString()
+        endDate = input.readString()
+        softDeadline = input.readString()
+        hardDeadline = input.readString()
+        gradingPolicy = input.readString()
+        isActive = input.readByte().toInt() != 0
+        createDate = input.readString()
+        updateDate = input.readString()
+        isCached = input.readByte().toInt() != 0
+        isLoading = input.readByte().toInt() != 0
+        actions = input.readParcelable<Actions>(Actions::class.java.classLoader)
+        discountingPolicy = getDiscountingPolicyTypeByParcel(input)
+        isRequirementSatisfied = input.readByte().toInt() != 0
+        requiredSection = input.readLong()
+        requiredPercent = input.readInt()
     }
 
     companion object {
@@ -130,25 +117,80 @@ class Section() : Serializable, Parcelable {
 
         @JvmField
         val CREATOR: Parcelable.Creator<Section> = object : Parcelable.Creator<Section> {
-            override fun createFromParcel(source: Parcel): Section {
-                return Section(source)
-            }
+            override fun createFromParcel(input: Parcel): Section = Section(input)
 
-            override fun newArray(size: Int): Array<Section?> {
-                return arrayOfNulls(size)
-            }
+            override fun newArray(size: Int): Array<Section?> = arrayOfNulls(size)
         }
 
         private fun getDiscountingPolicyTypeByParcel(input: Parcel): DiscountingPolicyType? {
             val temp = input.readInt()
             val localValues = DiscountingPolicyType.values()
-            if (temp >= 0 && temp < localValues.size) {
-                return localValues[temp]
+            return if (temp >= 0 && temp < localValues.size) {
+                localValues[temp]
             } else {
-                return null
+                null
             }
         }
+    }
 
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Section
+
+        if (id != other.id) return false
+        if (course != other.course) return false
+        if (!Arrays.equals(units, other.units)) return false
+        if (position != other.position) return false
+        if (progress != other.progress) return false
+        if (title != other.title) return false
+        if (slug != other.slug) return false
+        if (beginDate != other.beginDate) return false
+        if (endDate != other.endDate) return false
+        if (softDeadline != other.softDeadline) return false
+        if (hardDeadline != other.hardDeadline) return false
+        if (gradingPolicy != other.gradingPolicy) return false
+        if (isActive != other.isActive) return false
+        if (createDate != other.createDate) return false
+        if (updateDate != other.updateDate) return false
+        if (actions != other.actions) return false
+        if (isExam != other.isExam) return false
+        if (discountingPolicy != other.discountingPolicy) return false
+        if (isRequirementSatisfied != other.isRequirementSatisfied) return false
+        if (requiredSection != other.requiredSection) return false
+        if (requiredPercent != other.requiredPercent) return false
+        if (isCached != other.isCached) return false
+        if (isLoading != other.isLoading) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = id.hashCode()
+        result = 31 * result + course.hashCode()
+        result = 31 * result + Arrays.hashCode(units)
+        result = 31 * result + position
+        result = 31 * result + (progress?.hashCode() ?: 0)
+        result = 31 * result + (title?.hashCode() ?: 0)
+        result = 31 * result + (slug?.hashCode() ?: 0)
+        result = 31 * result + (beginDate?.hashCode() ?: 0)
+        result = 31 * result + (endDate?.hashCode() ?: 0)
+        result = 31 * result + (softDeadline?.hashCode() ?: 0)
+        result = 31 * result + (hardDeadline?.hashCode() ?: 0)
+        result = 31 * result + (gradingPolicy?.hashCode() ?: 0)
+        result = 31 * result + isActive.hashCode()
+        result = 31 * result + (createDate?.hashCode() ?: 0)
+        result = 31 * result + (updateDate?.hashCode() ?: 0)
+        result = 31 * result + (actions?.hashCode() ?: 0)
+        result = 31 * result + isExam.hashCode()
+        result = 31 * result + (discountingPolicy?.hashCode() ?: 0)
+        result = 31 * result + isRequirementSatisfied.hashCode()
+        result = 31 * result + requiredSection.hashCode()
+        result = 31 * result + requiredPercent
+        result = 31 * result + isCached.hashCode()
+        result = 31 * result + isLoading.hashCode()
+        return result
     }
 
 }

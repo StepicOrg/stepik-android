@@ -11,7 +11,6 @@ import org.stepic.droid.storage.structure.DbStructureCachedVideo;
 import org.stepic.droid.storage.structure.DbStructureCalendarSection;
 import org.stepic.droid.storage.structure.DbStructureCertificateViewItem;
 import org.stepic.droid.storage.structure.DbStructureCodeSubmission;
-import org.stepic.droid.storage.structure.DbStructureCourseLastInteraction;
 import org.stepic.droid.storage.structure.DbStructureEnrolledAndFeaturedCourses;
 import org.stepic.droid.storage.structure.DbStructureLastStep;
 import org.stepic.droid.storage.structure.DbStructureLesson;
@@ -33,10 +32,13 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
     private static final String INT_TYPE = "INTEGER";
     private static final String BOOLEAN_TYPE = "BOOLEAN";
     private static final String WHITESPACE = " ";
+    private static final String FALSE_VALUE = "0";
+    private static final String TRUE_VALUE = "1";
+    private static final String DEFAULT = "DEFAULT";
 
 
     @Inject
-    DatabaseHelper(Context context) {
+    public DatabaseHelper(Context context) {
         super(context, DatabaseInfo.FILE_NAME, null, DatabaseInfo.VERSION);
     }
 
@@ -82,107 +84,9 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         upgradeFrom23To24(db);
         upgradeFrom24To25(db);
         upgradeFrom25To26(db);
+        upgradeFrom26To27(db);
+        upgradeFrom27To28(db);
     }
-
-    private void upgradeFrom25To26(SQLiteDatabase db) {
-        createCodeSubmissionTable(db);
-    }
-
-    private void upgradeFrom24To25(SQLiteDatabase db) {
-        alterColumn(db, DbStructureBlock.BLOCKS, DbStructureBlock.Column.CODE_OPTIONS, TEXT_TYPE);
-    }
-
-    private void upgradeFrom23To24(SQLiteDatabase db) {
-        alterColumn(db, DbStructureEnrolledAndFeaturedCourses.ENROLLED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.LEARNERS_COUNT, LONG_TYPE);
-        alterColumn(db, DbStructureEnrolledAndFeaturedCourses.FEATURED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.LEARNERS_COUNT, LONG_TYPE);
-    }
-
-    private void upgradeFrom22To23(SQLiteDatabase db) {
-        alterColumn(db, DbStructureBlock.BLOCKS, DbStructureBlock.Column.EXTERNAL_VIDEO_DURATION, LONG_TYPE);
-    }
-
-    private void upgradeFrom21To22(SQLiteDatabase db) {
-        createVideoUrlTable(db, DbStructureVideoUrl.INSTANCE.getExternalVideosName());
-        alterColumn(db, DbStructureBlock.BLOCKS, DbStructureBlock.Column.EXTERNAL_THUMBNAIL, TEXT_TYPE);
-        alterColumn(db, DbStructureBlock.BLOCKS, DbStructureBlock.Column.EXTERNAL_VIDEO_ID, LONG_TYPE);
-    }
-
-    private void upgradeFrom20To21(SQLiteDatabase db) {
-        createCourseLastInteractionTable(db);
-    }
-
-    private void upgradeFrom19To20() {
-        // NO ACTION FOR LEGACY
-    }
-
-    private void upgradeFrom18To19(SQLiteDatabase db) {
-        alterColumn(db, DbStructureEnrolledAndFeaturedCourses.ENROLLED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.LAST_STEP_ID, TEXT_TYPE);
-        alterColumn(db, DbStructureEnrolledAndFeaturedCourses.FEATURED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.LAST_STEP_ID, TEXT_TYPE);
-
-        createLastStepTable(db);
-        alterColumn(db, DbStructureEnrolledAndFeaturedCourses.ENROLLED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.IS_ACTIVE, BOOLEAN_TYPE);
-        alterColumn(db, DbStructureEnrolledAndFeaturedCourses.FEATURED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.IS_ACTIVE, BOOLEAN_TYPE);
-    }
-
-    private void upgradeFrom17To18(SQLiteDatabase db) {
-        alterColumn(db, DbStructureStep.STEPS, DbStructureStep.Column.HAS_SUBMISSION_RESTRICTION, BOOLEAN_TYPE);
-        alterColumn(db, DbStructureStep.STEPS, DbStructureStep.Column.MAX_SUBMISSION_COUNT, INT_TYPE);
-    }
-
-    private void upgradeFrom16To17(SQLiteDatabase db) {
-        alterColumn(db, DbStructureSections.SECTIONS, DbStructureSections.Column.IS_EXAM, BOOLEAN_TYPE);
-    }
-
-    private void upgradeFrom15To16(SQLiteDatabase db) {
-        alterColumn(db, DbStructureSections.SECTIONS, DbStructureSections.Column.DISCOUNTING_POLICY, INT_TYPE);
-    }
-
-    private void upgradeFrom14To15(SQLiteDatabase db) {
-        createVideoTimestamp(db);
-    }
-
-    private void upgradeFrom13To14(SQLiteDatabase db) {
-        alterColumn(db, DbStructureStep.STEPS, DbStructureStep.Column.PEER_REVIEW, TEXT_TYPE);
-    }
-
-    private void upgradeFrom12To13(SQLiteDatabase db) {
-        alterColumn(db, DbStructureEnrolledAndFeaturedCourses.ENROLLED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.BEGIN_DATE, TEXT_TYPE);
-        alterColumn(db, DbStructureEnrolledAndFeaturedCourses.FEATURED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.BEGIN_DATE, TEXT_TYPE);
-
-        alterColumn(db, DbStructureEnrolledAndFeaturedCourses.ENROLLED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.END_DATE, TEXT_TYPE);
-        alterColumn(db, DbStructureEnrolledAndFeaturedCourses.FEATURED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.END_DATE, TEXT_TYPE);
-    }
-
-    private void upgradeFrom11To12(SQLiteDatabase db) {
-        alterColumn(db, DbStructureSections.SECTIONS, DbStructureSections.Column.TEST_SECTION, BOOLEAN_TYPE);
-    }
-
-    private void upgradeFrom10To11(SQLiteDatabase db) {
-        createCertificateView(db, DbStructureCertificateViewItem.CERTIFICATE_VIEW_ITEM);
-    }
-
-    private void upgradeFrom9To10(SQLiteDatabase db) {
-        createCalendarSection(db, DbStructureCalendarSection.CALENDAR_SECTION);
-    }
-
-    private void upgradeFrom8To9(SQLiteDatabase db) {
-        alterColumn(db, DbStructureEnrolledAndFeaturedCourses.ENROLLED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.SCHEDULE_LINK, TEXT_TYPE);
-        alterColumn(db, DbStructureEnrolledAndFeaturedCourses.FEATURED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.SCHEDULE_LINK, TEXT_TYPE);
-
-        alterColumn(db, DbStructureEnrolledAndFeaturedCourses.ENROLLED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.SCHEDULE_LONG_LINK, TEXT_TYPE);
-        alterColumn(db, DbStructureEnrolledAndFeaturedCourses.FEATURED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.SCHEDULE_LONG_LINK, TEXT_TYPE);
-    }
-
-    private void upgradeFrom7To8(SQLiteDatabase db) {
-        alterColumn(db, DbStructureStep.STEPS, DbStructureStep.Column.DISCUSSION_COUNT, INT_TYPE);
-        alterColumn(db, DbStructureStep.STEPS, DbStructureStep.Column.DISCUSSION_ID, TEXT_TYPE);
-    }
-
-    private void upgradeFrom6To7(SQLiteDatabase db) {
-        db.execSQL("DROP TABLE IF EXISTS " + DbStructureNotification.NOTIFICATIONS_TEMP);
-        createNotification(db, DbStructureNotification.NOTIFICATIONS_TEMP);
-    }
-
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -328,6 +232,124 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
             upgradeFrom25To26(db);
         }
 
+        if (oldVersion < 27) {
+            upgradeFrom26To27(db);
+        }
+
+        if (oldVersion < 28) {
+            upgradeFrom27To28(db);
+        }
+
+    }
+
+    private void upgradeFrom27To28(SQLiteDatabase db) {
+        alterColumn(db, DbStructureEnrolledAndFeaturedCourses.ENROLLED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.PROGRESS, TEXT_TYPE);
+        alterColumn(db, DbStructureEnrolledAndFeaturedCourses.FEATURED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.PROGRESS, TEXT_TYPE);
+    }
+
+    private void upgradeFrom26To27(SQLiteDatabase db) {
+        alterColumn(db, DbStructureSections.SECTIONS, DbStructureSections.Column.IS_REQUIREMENT_SATISFIED, BOOLEAN_TYPE, TRUE_VALUE);
+        alterColumn(db, DbStructureSections.SECTIONS, DbStructureSections.Column.REQUIRED_PERCENT, INT_TYPE);
+        alterColumn(db, DbStructureSections.SECTIONS, DbStructureSections.Column.REQUIRED_SECTION, LONG_TYPE);
+    }
+
+    private void upgradeFrom25To26(SQLiteDatabase db) {
+        createCodeSubmissionTable(db);
+    }
+
+    private void upgradeFrom24To25(SQLiteDatabase db) {
+        alterColumn(db, DbStructureBlock.BLOCKS, DbStructureBlock.Column.CODE_OPTIONS, TEXT_TYPE);
+    }
+
+    private void upgradeFrom23To24(SQLiteDatabase db) {
+        alterColumn(db, DbStructureEnrolledAndFeaturedCourses.ENROLLED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.LEARNERS_COUNT, LONG_TYPE);
+        alterColumn(db, DbStructureEnrolledAndFeaturedCourses.FEATURED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.LEARNERS_COUNT, LONG_TYPE);
+    }
+
+    private void upgradeFrom22To23(SQLiteDatabase db) {
+        alterColumn(db, DbStructureBlock.BLOCKS, DbStructureBlock.Column.EXTERNAL_VIDEO_DURATION, LONG_TYPE);
+    }
+
+    private void upgradeFrom21To22(SQLiteDatabase db) {
+        createVideoUrlTable(db, DbStructureVideoUrl.INSTANCE.getExternalVideosName());
+        alterColumn(db, DbStructureBlock.BLOCKS, DbStructureBlock.Column.EXTERNAL_THUMBNAIL, TEXT_TYPE);
+        alterColumn(db, DbStructureBlock.BLOCKS, DbStructureBlock.Column.EXTERNAL_VIDEO_ID, LONG_TYPE);
+    }
+
+    private void upgradeFrom20To21(SQLiteDatabase db) {
+//        createCourseLastInteractionTable(db); // There was creating of table, but not it is not needed
+    }
+
+    private void upgradeFrom19To20() {
+        // NO ACTION FOR LEGACY
+    }
+
+    private void upgradeFrom18To19(SQLiteDatabase db) {
+        alterColumn(db, DbStructureEnrolledAndFeaturedCourses.ENROLLED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.LAST_STEP_ID, TEXT_TYPE);
+        alterColumn(db, DbStructureEnrolledAndFeaturedCourses.FEATURED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.LAST_STEP_ID, TEXT_TYPE);
+
+        createLastStepTable(db);
+        alterColumn(db, DbStructureEnrolledAndFeaturedCourses.ENROLLED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.IS_ACTIVE, BOOLEAN_TYPE);
+        alterColumn(db, DbStructureEnrolledAndFeaturedCourses.FEATURED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.IS_ACTIVE, BOOLEAN_TYPE);
+    }
+
+    private void upgradeFrom17To18(SQLiteDatabase db) {
+        alterColumn(db, DbStructureStep.STEPS, DbStructureStep.Column.HAS_SUBMISSION_RESTRICTION, BOOLEAN_TYPE);
+        alterColumn(db, DbStructureStep.STEPS, DbStructureStep.Column.MAX_SUBMISSION_COUNT, INT_TYPE);
+    }
+
+    private void upgradeFrom16To17(SQLiteDatabase db) {
+        alterColumn(db, DbStructureSections.SECTIONS, DbStructureSections.Column.IS_EXAM, BOOLEAN_TYPE);
+    }
+
+    private void upgradeFrom15To16(SQLiteDatabase db) {
+        alterColumn(db, DbStructureSections.SECTIONS, DbStructureSections.Column.DISCOUNTING_POLICY, INT_TYPE);
+    }
+
+    private void upgradeFrom14To15(SQLiteDatabase db) {
+        createVideoTimestamp(db);
+    }
+
+    private void upgradeFrom13To14(SQLiteDatabase db) {
+        alterColumn(db, DbStructureStep.STEPS, DbStructureStep.Column.PEER_REVIEW, TEXT_TYPE);
+    }
+
+    private void upgradeFrom12To13(SQLiteDatabase db) {
+        alterColumn(db, DbStructureEnrolledAndFeaturedCourses.ENROLLED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.BEGIN_DATE, TEXT_TYPE);
+        alterColumn(db, DbStructureEnrolledAndFeaturedCourses.FEATURED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.BEGIN_DATE, TEXT_TYPE);
+
+        alterColumn(db, DbStructureEnrolledAndFeaturedCourses.ENROLLED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.END_DATE, TEXT_TYPE);
+        alterColumn(db, DbStructureEnrolledAndFeaturedCourses.FEATURED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.END_DATE, TEXT_TYPE);
+    }
+
+    private void upgradeFrom11To12(SQLiteDatabase db) {
+        alterColumn(db, DbStructureSections.SECTIONS, DbStructureSections.Column.TEST_SECTION, BOOLEAN_TYPE);
+    }
+
+    private void upgradeFrom10To11(SQLiteDatabase db) {
+        createCertificateView(db, DbStructureCertificateViewItem.CERTIFICATE_VIEW_ITEM);
+    }
+
+    private void upgradeFrom9To10(SQLiteDatabase db) {
+        createCalendarSection(db, DbStructureCalendarSection.CALENDAR_SECTION);
+    }
+
+    private void upgradeFrom8To9(SQLiteDatabase db) {
+        alterColumn(db, DbStructureEnrolledAndFeaturedCourses.ENROLLED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.SCHEDULE_LINK, TEXT_TYPE);
+        alterColumn(db, DbStructureEnrolledAndFeaturedCourses.FEATURED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.SCHEDULE_LINK, TEXT_TYPE);
+
+        alterColumn(db, DbStructureEnrolledAndFeaturedCourses.ENROLLED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.SCHEDULE_LONG_LINK, TEXT_TYPE);
+        alterColumn(db, DbStructureEnrolledAndFeaturedCourses.FEATURED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.SCHEDULE_LONG_LINK, TEXT_TYPE);
+    }
+
+    private void upgradeFrom7To8(SQLiteDatabase db) {
+        alterColumn(db, DbStructureStep.STEPS, DbStructureStep.Column.DISCUSSION_COUNT, INT_TYPE);
+        alterColumn(db, DbStructureStep.STEPS, DbStructureStep.Column.DISCUSSION_ID, TEXT_TYPE);
+    }
+
+    private void upgradeFrom6To7(SQLiteDatabase db) {
+        db.execSQL("DROP TABLE IF EXISTS " + DbStructureNotification.NOTIFICATIONS_TEMP);
+        createNotification(db, DbStructureNotification.NOTIFICATIONS_TEMP);
     }
 
     private void upgradeFrom3To4(SQLiteDatabase db) {
@@ -349,6 +371,13 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
                 + column + " " + type + " ";
         db.execSQL(upgrade);
     }
+
+    private void alterColumn(SQLiteDatabase db, String dbName, String column, String type, String defaultValue) {
+        String upgrade = "ALTER TABLE " + dbName + " ADD COLUMN "
+                + column + WHITESPACE + type + WHITESPACE + DEFAULT + WHITESPACE + defaultValue;
+        db.execSQL(upgrade);
+    }
+
 
     private void createCourseTable(SQLiteDatabase db, String name) {
         String sql = "CREATE TABLE " + name
@@ -448,10 +477,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
                 + DbStructureUnit.Column.GRADING_POLICY_SOURCE + " TEXT, "
                 + DbStructureUnit.Column.IS_ACTIVE + " BOOLEAN, "
                 + DbStructureUnit.Column.CREATE_DATE + " TEXT, "
-//                + DbStructureUnit.Column.IS_CACHED + " BOOLEAN, "  // It is saved for history, it can help for debugging on old versions of app 03.03.17
-//                + DbStructureUnit.Column.IS_LOADING + " BOOLEAN, "
                 + DbStructureUnit.Column.UPDATE_DATE + " TEXT "
-
                 + ")";
         db.execSQL(sql);
     }
@@ -623,16 +649,6 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
                 + ")";
         db.execSQL(sql);
     }
-
-    private void createCourseLastInteractionTable(SQLiteDatabase db) {
-        String sql = "CREATE TABLE " + DbStructureCourseLastInteraction.COURSE_LAST_INTERACTION
-                + " ("
-                + DbStructureCourseLastInteraction.Column.COURSE_ID + WHITESPACE + LONG_TYPE + ", "
-                + DbStructureCourseLastInteraction.Column.TIMESTAMP + WHITESPACE + LONG_TYPE
-                + ")";
-        db.execSQL(sql);
-    }
-
 
     private void createVideoUrlTable(SQLiteDatabase db, String name) {
         String sql = "CREATE TABLE " + name

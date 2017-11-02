@@ -4,18 +4,110 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/new_course_item_height">
+    android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/courseItemImage"
-        android:layout_width="@dimen/new_course_item_height"
-        android:layout_height="@dimen/new_course_item_height"
-        android:background="@drawable/course_image_background"
-        android:contentDescription="@string/content_course_logo"
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/courseItemTopContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/courseItemImage"
+            android:layout_width="@dimen/new_course_image_size"
+            android:layout_height="@dimen/new_course_image_size"
+            android:background="@drawable/course_image_background"
+            android:contentDescription="@string/content_course_logo"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/general_placeholder"/>
+
+        <TextView
+            android:id="@+id/courseItemName"
+            fontPath="fonts/Roboto-Regular.ttf"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/courseTitleRightPadding"
+            android:layout_marginLeft="@dimen/course_item_space_between_items"
+            android:layout_marginRight="@dimen/courseTitleRightPadding"
+            android:layout_marginStart="@dimen/course_item_space_between_items"
+            android:textColor="@color/new_accent_color"
+            android:textSize="@dimen/course_item_titles_text_size"
+            app:layout_constraintLeft_toRightOf="@+id/courseItemImage"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="MissingPrefix"
+            tools:text="345678921334567892145678921334567892133456789213345678921334567892136789213"/>
+
+        <ImageView
+            android:id="@+id/courseItemMore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:contentDescription="@string/course_item_more"
+            android:paddingBottom="16dp"
+            android:paddingEnd="8dp"
+            android:paddingLeft="@dimen/guideline_standard_padding"
+            android:paddingRight="8dp"
+            android:paddingStart="@dimen/guideline_standard_padding"
+            android:src="@drawable/ic_more_without_padding"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <RelativeLayout
+            android:id="@+id/learnersCountContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:visibility="gone"
+            app:layout_constraintLeft_toLeftOf="@+id/courseItemName"
+            app:layout_constraintTop_toBottomOf="@+id/courseItemName"
+            tools:visibility="visible">
+
+            <ImageView
+                android:id="@+id/learnersCountImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/learnersCountText"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:baselineAlignBottom="true"
+                android:clickable="false"
+                android:contentDescription="@string/learners_count"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:src="@drawable/ic_learnes"/>
+
+            <TextView
+                android:id="@+id/learnersCountText"
+                fontPath="fonts/Roboto-Light.ttf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="2dp"
+                android:layout_marginStart="2dp"
+                android:layout_toEndOf="@id/learnersCountImage"
+                android:layout_toRightOf="@id/learnersCountImage"
+                android:textSize="16sp"
+                tools:ignore="MissingPrefix"
+                tools:text="999K"/>
+        </RelativeLayout>
+
+    </android.support.constraint.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/courseWidgetInfo"
+        style="@style/CourseWidgetView"
+        android:layout_width="@dimen/new_course_image_size"
+        android:layout_height="@dimen/min_ux_touchable_size"
+        android:layout_marginTop="@dimen/course_item_space_between_items"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/general_placeholder"/>
+        app:layout_constraintTop_toBottomOf="@+id/courseItemTopContainer"
+        tools:background="@drawable/course_widget_continue_background"
+        tools:text="@string/course_item_info"/>
 
     <TextView
         android:id="@+id/courseWidgetButton"
@@ -23,91 +115,13 @@
         android:layout_width="0dp"
         android:layout_height="@dimen/min_ux_touchable_size"
         android:layout_marginEnd="@dimen/extraPaddingRightCourseItem"
-        android:layout_marginLeft="@dimen/guideline_standard_padding"
+        android:layout_marginLeft="@dimen/course_item_space_between_items"
         android:layout_marginRight="@dimen/extraPaddingRightCourseItem"
-        android:layout_marginStart="@dimen/guideline_standard_padding"
-        android:textSize="14sp"
+        android:layout_marginStart="@dimen/course_item_space_between_items"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toRightOf="@+id/courseItemImage"
+        app:layout_constraintLeft_toRightOf="@+id/courseWidgetInfo"
         app:layout_constraintRight_toRightOf="parent"
         tools:background="@drawable/course_widget_continue_background"
         tools:text="Continue"/>
-
-    <TextView
-        android:id="@+id/courseItemName"
-        fontPath="fonts/Roboto-Light.ttf"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/courseTitleRightPadding"
-        android:layout_marginLeft="@dimen/guideline_standard_padding"
-        android:layout_marginRight="@dimen/courseTitleRightPadding"
-        android:layout_marginStart="@dimen/guideline_standard_padding"
-        android:layout_marginTop="0dp"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:textColor="@color/new_accent_color"
-        android:textSize="14sp"
-        app:layout_constraintLeft_toRightOf="@+id/courseItemImage"
-        app:layout_constraintRight_toLeftOf="@+id/courseItemMore"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingPrefix"
-        tools:text="Architectural details in the  Architectural details in the  "/>
-
-    <ImageView
-        android:id="@+id/courseItemMore"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="0dp"
-        android:clickable="true"
-        android:contentDescription="@string/course_item_more"
-        android:paddingBottom="16dp"
-        android:paddingEnd="8dp"
-        android:paddingLeft="@dimen/guideline_standard_padding"
-        android:paddingRight="8dp"
-        android:paddingStart="@dimen/guideline_standard_padding"
-        android:src="@drawable/ic_more_without_paddings"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
-
-    <RelativeLayout
-        android:id="@+id/learnersCountContainer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:visibility="gone"
-        app:layout_constraintLeft_toLeftOf="@+id/courseItemName"
-        app:layout_constraintTop_toBottomOf="@+id/courseItemName"
-        tools:visibility="visible">
-
-        <ImageView
-            android:id="@+id/learnersCountImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/learnersCountText"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:baselineAlignBottom="true"
-            android:clickable="false"
-            android:contentDescription="@string/learners_count"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            android:src="@drawable/ic_learners_count_image"/>
-
-        <TextView
-            android:id="@+id/learnersCountText"
-            fontPath="fonts/Roboto-Light.ttf"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="2dp"
-            android:layout_marginStart="2dp"
-            android:layout_toEndOf="@id/learnersCountImage"
-            android:layout_toRightOf="@id/learnersCountImage"
-            android:textSize="12sp"
-            tools:ignore="MissingPrefix"
-            tools:text="999K"/>
-
-    </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>

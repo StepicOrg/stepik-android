@@ -136,10 +136,15 @@ public interface Analytic {
         String CLICK_CHOOSE_NOTIFICATION_INTERVAL = "click_choose_notification_interval";
         String CLICK_PRIVACY_POLICY = "click_privacy_policy";
         String CLICK_TERMS_OF_SERVICE = "click_terms_of_service";
-        String POSITIVE_MATERIAL_DIALOG_INVITATION = "material_dialog_invite_positive";
-        String NEGATIVE_MATERIAL_DIALOG_INVITATION = "material_dialog_invite_negative";
+
+        String INVITE_DIALOG_DISMISSED = "invite_dialog_dismissed";
+        interface InviteDialogDismissType {
+            String LEAVE = "leave";
+            String SHARE = "share";
+        }
+        String INVITE_DIALOG_BROKEN = "invite_dialog_broken";
+
         String SHOW_MATERIAL_DIALOG_INVITATION = "materdial_dialog_invite_shown";
-        String INVITATION_PREVENTED = "invite_prevented";
         String CLICK_CONTINUE_COURSE = "click_continue_course";
         String CLICK_COURSE = "click_course";
         String CLICK_PROFILE_BEFORE_LOADING = "click_profile_before_loading";
@@ -243,7 +248,6 @@ public interface Analytic {
         String ILLEGAL_STATE_PREVIOUS_LESSON = "cant_show_previous_lesson";
         String FAIL_PUSH_STEP_VIEW = "fail_push_step_view";
         String NO_INTERNET_EXISTING_ATTEMPTS = "no_internet_existing_attempts";
-        String DOWNLOAD_ID_NEGATIVE = "download_id_negative";
         String DOWNLOAD_FAILED = "download_failed";
         String STREAK_ON_STEP_SOLVED = "streak_on_step_solved";
         String GOOGLE_SERVICES_TOO_OLD = "google_services_too_old";

@@ -5,16 +5,13 @@ import org.jetbrains.annotations.Nullable;
 
 public class AppConstants {
 
-
     public static final String FILE_SCHEME_PREFIX = "file://";
     public static final String FILE_PROVIDER_AUTHORITY = ".my.package.name.provider";
     public static final String SVG_EXTENSION = ".svg";
+    public static final String VIDEO_EXTENSION = ".mp4";
 
-    public static final String APP_SCHEME = "stepic://";
-    public static final String QUERY_ERROR = "error";
     public static final String ERROR_SOCIAL_AUTH_WITH_EXISTING_EMAIL = "social_signup_with_existing_email";
 
-    public static final String USER_LOG_IN = "user_login_clicked";
     public static final String KEY_EMAIL_BUNDLE = "email";
     public static final String KEY_COURSE_BUNDLE = "course";
     public static final String KEY_COURSE_LONG_ID = "course_id_key";
@@ -26,7 +23,6 @@ public class AppConstants {
     public static final String MAX_QUALITY = "720";
     public static final int MAX_QUALITY_INT = 720;
     public static final String KEY_LOAD_TYPE = "KEY_LOAD_TYPE";
-    public static final String KEY_TABLE_TYPE = "table_type";
     public static final String COMMENT_DATE_TIME_PATTERN = "dd.MM.yyyy HH:mm";
 
     public static final String WEB_URI_SEPARATOR = "/";
@@ -61,9 +57,9 @@ public class AppConstants {
     public static final String ENROLLMENT_KEY = "is_enrolled";
 
     public static final int REQUEST_CODE_DETAIL = 1;
-    public static final java.lang.String THUMBNAIL_POSTFIX_EXTENSION = ".png";
-    public static final java.lang.String DELIMITER_TEXT_SCORE = "/";
-    public static final java.lang.String NOTIFICATION_CANCELED = "notification_canceled";
+    public static final String THUMBNAIL_POSTFIX_EXTENSION = ".png";
+    public static final String DELIMITER_TEXT_SCORE = "/";
+    public static final String NOTIFICATION_CANCELED = "notification_canceled";
 
 
     public static final String OPEN_NOTIFICATION_FOR_CHECK_COURSE = "Open_notification_check_course";
@@ -72,6 +68,8 @@ public class AppConstants {
     public static final String OPEN_NOTIFICATION = "Open_notification";
     public static final long MILLIS_IN_24HOURS = 86400000L;
     public static final long MILLIS_IN_1HOUR = 3600000L;
+    public static final long MILLIS_IN_1MINUTE = 60000L;
+
 
     public static final String APP_INDEXING_COURSE_DETAIL_MANIFEST_HACK = "course_app";
     public static final String APP_INDEXING_SYLLABUS_MANIFEST = "syllabus";
@@ -89,13 +87,13 @@ public class AppConstants {
     public static final int FEATURED_FILTER = 2;
 
     public static final int DEFAULT_NUMBER_IDS_IN_QUERY = 100;
-    public static final java.lang.String KEY_MODULE_POSITION = "section_long_id";
+    public static final String KEY_MODULE_POSITION = "section_long_id";
     public static final int LAUNCHES_FOR_EXPERT_USER = 20;
     public static final long MILLIS_IN_SEVEN_DAYS = 604800000L;
     public static final String NOTIFICATION_CANCELED_REMINDER = "notification_canceled_reminder";
     public static final int MAX_NUMBER_OF_SHOWING_STREAK_DIALOG = 3;
     public static final int NUMBER_OF_DAYS_BETWEEN_STREAK_SHOWING = 2;
-    public static final int MAX_NUMBER_OF_NOTIFICATION_STREAK = 3;
+    public static final int MAX_NUMBER_OF_NOTIFICATION_STREAK = 5;
     @Nullable
     public static final String NOTIFICATION_CANCELED_STREAK = "notification_canceled_streaks";
     public static final String FIND_COURSES_SHORTCUT_ID = "find_courses";

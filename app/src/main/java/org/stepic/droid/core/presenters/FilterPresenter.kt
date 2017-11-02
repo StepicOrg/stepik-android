@@ -17,15 +17,16 @@ class FilterPresenter
     private var isInitiated: Boolean = false
 
     fun acceptFilter(uiFilters: EnumSet<StepikFilter>, courseType: Table) {
-        sharedPreferenceHelper.saveFilter(courseType, uiFilters)
+        if (courseType == Table.featured) {
+            sharedPreferenceHelper.saveFilterForFeatured(uiFilters)
+        }
         view?.onFilterAccepted()
     }
 
     fun initFiltersIfNeed(courseType: Table) {
-        if (!isInitiated) {
+        if (!isInitiated && courseType == Table.featured) {
             isInitiated = true
-            val filters = sharedPreferenceHelper.getFilter(courseType)
-            view?.onFiltersPreparedForView(filters)
+            view?.onFiltersPreparedForView(sharedPreferenceHelper.filterForFeatured)
         }
     }
 }

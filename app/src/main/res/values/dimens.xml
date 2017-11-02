@@ -79,6 +79,7 @@
     <dimen name="rewind_size">48dp</dimen>
     <dimen name="margin_rewind">56dp</dimen>
 
+    <dimen name="default_dialog_elements_margin">16dp</dimen>
     <dimen name="rate_dialog_button_text_size">16sp</dimen>
     <dimen name="profile_round_rectangle_radius">16dp</dimen>
 
@@ -98,16 +99,23 @@
 
     <!--new course item-->
     <dimen name="new_course_item_height">100dp</dimen>
+    <dimen name="new_course_image_size">80dp</dimen>
+    <dimen name="course_item_space_between_items">12dp</dimen>
+    <dimen name="course_item_titles_text_size">16sp</dimen>
+    <dimen name="course_item_button_text_size">14sp</dimen>
     <dimen name="course_widget_radius">7dp</dimen>
     <dimen name="placeholder_radius">7dp</dimen>
     <dimen name="course_image_radius">7dp</dimen>
     <dimen name="course_list_side_padding">20dp</dimen>
     <dimen name="course_list_side_right_padding">12dp</dimen>
-    <dimen name="course_list_between_items_padding">16dp</dimen>
+    <dimen name="course_list_between_items_padding">30dp</dimen>
     <dimen name="extraPaddingRightCourseItem">8dp</dimen>
     <dimen name="fast_continue_widget">@dimen/course_widget_radius</dimen>
     <dimen name="fast_continue_widget_height">140dp</dimen>
     <dimen name="fast_continue_action_radius">33dp</dimen>
+    <dimen name="course_carousel_title">20sp</dimen>
+    <dimen name="course_carousel_title_top_padding">24dp</dimen>
+    <dimen name="course_carousel_title_bottom_padding">0dp</dimen>
 
 
     <!--Left padding (moteIcon) + right padding(moreIcon) + moreIcon.width-->
@@ -128,4 +136,13 @@
 
     <dimen name="code_text_size_default">14sp</dimen>
     <dimen name="embedded_code_editor_height">150dp</dimen>
+    <dimen name="courses_carousel_top_margin">16dp</dimen>
+
+    <!-- popup windows -->
+    <dimen name="popup_border_radius">7dp</dimen>
+    <dimen name="popup_window_padding">8dp</dimen>
+    <dimen name="popup_text_padding">12dp</dimen>
+    <dimen name="popup_arrow_size">16dp</dimen>
+
+    <dimen name="action_bar_height">60dp</dimen>
 </resources>

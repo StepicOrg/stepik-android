@@ -12,8 +12,6 @@ import android.view.MenuItem
 import com.facebook.login.LoginManager
 import com.vk.sdk.VKSdk
 import kotlinx.android.synthetic.main.activity_main_feed.*
-import org.joda.time.DateTime
-import org.joda.time.DateTimeZone
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
@@ -88,7 +86,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
                 }
                 analytic.reportEvent(Analytic.Notification.REMIND_OPEN, dayTypeString)
                 Timber.d(Analytic.Notification.REMIND_OPEN)
-                sharedPreferenceHelper.clickEnrollNotification(DateTime.now(DateTimeZone.getDefault()).millis)
+                sharedPreferenceHelper.clickEnrollNotification(DateTimeHelper.nowUtc())
             } else if (action == AppConstants.OPEN_NOTIFICATION_FROM_STREAK) {
                 sharedPreferenceHelper.resetNumberOfStreakNotifications()
                 if (intent.hasExtra(Analytic.Streak.NOTIFICATION_TYPE_PARAM)) {
@@ -161,6 +159,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         when (wantedIndex) {
             FIND_COURSES_INDEX -> navigationView.selectedItemId = R.id.find_courses
             CERTIFICATE_INDEX -> navigationView.selectedItemId = R.id.certificates
+            PROFILE_INDEX -> navigationView.selectedItemId = R.id.profile
             else -> {
                 //do nothing
             }
@@ -324,5 +323,9 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         if (navigationView.selectedItemId != R.id.find_courses) {
             navigationView.selectedItemId = R.id.find_courses
         }
+    }
+
+    override fun applyTransitionPrev() {
+        //no-op
     }
 }

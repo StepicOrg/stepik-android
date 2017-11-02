@@ -99,6 +99,7 @@
 
     <color name="fast_continue_learning_opacity">#99535366</color>
     <color name="view_all_course_list_color">#CCCCD1</color>
+    <color name="view_all_course_list_color_dark">#868694</color>
 
     <color name="login_edit_text_block_stroke_color">#979797</color>
     <color name="login_edit_text_block_background_color">@color/transparent</color>

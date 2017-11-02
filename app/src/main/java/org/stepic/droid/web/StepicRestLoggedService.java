@@ -3,6 +3,7 @@ package org.stepic.droid.web;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.model.EnrollmentWrapper;
 
+import io.reactivex.Single;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -19,7 +20,7 @@ public interface StepicRestLoggedService {
     @GET("api/sections")
     Call<SectionsStepicResponse> getSections(@Query("ids[]") long[] sectionIds);
 
-    @Headers({"Content-Type : application/json"})
+    @Headers({"Content-Type:application/json"})
     @POST("api/enrollments")
     Call<Void> joinCourse(@Body EnrollmentWrapper enrollmentCourse);
 
@@ -30,11 +31,10 @@ public interface StepicRestLoggedService {
     Call<StepicProfileResponse> getUserProfile();
 
     @GET("api/courses?enrolled=true")
-    Call<CoursesStepicResponse> getEnrolledCourses(@Query("page") int page);
+    Single<CoursesStepicResponse> getEnrolledCourses(@Query("page") int page);
 
-    //todo:is_featured always true
     @GET("api/courses?is_public=true&order=-activity")
-    Call<CoursesStepicResponse> getPopularCourses(@Query("page") int page);
+    Single<CoursesStepicResponse> getPopularCourses(@Query("page") int page);
 
     @GET("api/units")
     Call<UnitStepicResponse> getUnits(@Query("ids[]") long[] units);
@@ -44,6 +44,9 @@ public interface StepicRestLoggedService {
 
     @GET("api/steps")
     Call<StepResponse> getSteps(@Query("ids[]") long[] steps);
+
+    @GET("api/steps")
+    Single<StepResponse> getStepsReactive(@Query("ids[]") long[] steps);
 
     @DELETE("api/enrollments/{id}")
     Call<Void> dropCourse(@Path("id") long courseId);
@@ -55,7 +58,7 @@ public interface StepicRestLoggedService {
     Call<AssignmentResponse> getAssignments(@Query("ids[]") long[] assignmentsIds);
 
 
-    @Headers({"Content-Type : application/json"})
+    @Headers({"Content-Type:application/json"})
     @POST("api/views")
     Call<Void> postViewed(@Body ViewAssignmentWrapper stepAssignment);
 

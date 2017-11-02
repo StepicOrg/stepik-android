@@ -20,8 +20,6 @@ import com.vk.sdk.VKSdk;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.configuration.Config;
@@ -49,6 +47,7 @@ import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.util.AppConstants;
+import org.stepic.droid.util.DateTimeHelper;
 import org.stepic.droid.util.DeviceInfoUtil;
 import org.stepic.droid.util.RWLocks;
 
@@ -63,6 +62,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
+import io.reactivex.Single;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
 import okhttp3.Credentials;
@@ -75,6 +75,7 @@ import okhttp3.Response;
 import retrofit2.Call;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import timber.log.Timber;
 
@@ -120,6 +121,7 @@ public class ApiImpl implements Api {
         setTimeout(okHttpClient, TIMEOUT_IN_SECONDS);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(this.config.getBaseUrl())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(generateGsonFactory())
                 .client(okHttpClient.build())
                 .build();
@@ -265,6 +267,7 @@ public class ApiImpl implements Api {
         OkHttpClient okHttpClient = okHttpBuilder.build();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(config.getBaseUrl())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(generateGsonFactory())
                 .client(okHttpClient)
                 .build();
@@ -288,6 +291,7 @@ public class ApiImpl implements Api {
         okHttpBuilder.addNetworkInterceptor(this.stethoInterceptor);
         Retrofit notLogged = new Retrofit.Builder()
                 .baseUrl(config.getBaseUrl())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(generateGsonFactory())
                 .client(okHttpBuilder.build())
                 .build();
@@ -372,6 +376,7 @@ public class ApiImpl implements Api {
         setTimeout(okHttpBuilder, TIMEOUT_IN_SECONDS);
         Retrofit notLogged = new Retrofit.Builder()
                 .baseUrl(config.getBaseUrl())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(generateGsonFactory())
                 .client(okHttpBuilder.build())
                 .build();
@@ -407,11 +412,11 @@ public class ApiImpl implements Api {
         return csrftoken;
     }
 
-    public Call<CoursesStepicResponse> getEnrolledCourses(int page) {
+    public Single<CoursesStepicResponse> getEnrolledCourses(int page) {
         return loggedService.getEnrolledCourses(page);
     }
 
-    public Call<CoursesStepicResponse> getPopularCourses(int page) {
+    public Single<CoursesStepicResponse> getPopularCourses(int page) {
         return loggedService.getPopularCourses(page);
     }
 
@@ -450,6 +455,11 @@ public class ApiImpl implements Api {
     @Override
     public Call<StepResponse> getSteps(long[] steps) {
         return loggedService.getSteps(steps);
+    }
+
+    @Override
+    public Single<StepResponse> getStepsReactive(long[] steps) {
+        return loggedService.getStepsReactive(steps);
     }
 
     @Override
@@ -586,6 +596,7 @@ public class ApiImpl implements Api {
         setTimeout(okHttpBuilder, TIMEOUT_IN_SECONDS);
         Retrofit notLogged = new Retrofit.Builder()
                 .baseUrl(config.getBaseUrl())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(generateGsonFactory())
                 .client(okHttpBuilder.build())
                 .build();
@@ -604,6 +615,7 @@ public class ApiImpl implements Api {
         OkHttpClient okHttpClient = new OkHttpClient();
         Retrofit notLogged = new Retrofit.Builder()
                 .baseUrl(config.getZendeskHost())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(generateGsonFactory())
                 .client(okHttpClient)
                 .build();
@@ -807,7 +819,7 @@ public class ApiImpl implements Api {
         long timestampStored = sharedPreference.getAccessTokenTimestamp();
         if (timestampStored == -1) return true;
 
-        long nowTemp = DateTime.now(DateTimeZone.UTC).getMillis();
+        long nowTemp = DateTimeHelper.INSTANCE.nowUtc();
         long delta = nowTemp - timestampStored;
         long expiresMillis = (response.getExpires_in() - 50) * 1000;
         return delta > expiresMillis;//token expired --> need update

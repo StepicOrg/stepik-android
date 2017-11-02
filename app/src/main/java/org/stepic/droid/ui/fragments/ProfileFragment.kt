@@ -14,9 +14,6 @@ import kotlinx.android.synthetic.main.fragment_profile_new.*
 import kotlinx.android.synthetic.main.latex_supportabe_enhanced_view.view.*
 import kotlinx.android.synthetic.main.need_auth_placeholder.*
 import kotlinx.android.synthetic.main.view_notification_interval_chooser.*
-import org.joda.time.DateTime
-import org.joda.time.DateTimeZone
-import org.joda.time.format.DateTimeFormatterBuilder
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
@@ -35,10 +32,12 @@ import org.stepic.droid.ui.util.StepikAnimUtils
 import org.stepic.droid.ui.util.TimeIntervalUtil
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.AppConstants
+import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.ProfileSettingsHelper
 import org.stepic.droid.util.svg.GlideSvgRequestFactory
 import org.stepic.droid.viewmodel.ProfileSettingsViewModel
 import timber.log.Timber
+import java.util.*
 import javax.inject.Inject
 
 class ProfileFragment : FragmentBase(),
@@ -167,15 +166,12 @@ class ProfileFragment : FragmentBase(),
     }
 
     private fun initTimezone() {
-        val dateTimeFormatter = DateTimeFormatterBuilder()
-                .appendHourOfDay(2)
-                .appendLiteral(":00")
-                .appendLiteral("\n(")
-                .appendTimeZoneName()
-                .appendLiteral(')')
-                .toFormatter()
-        val utc = DateTime.now(DateTimeZone.UTC).withMillisOfDay(0)
-        val print = dateTimeFormatter.print(utc.withZone(DateTimeZone.getDefault()))
+        val timezone = TimeZone.getDefault()
+        val nowDate = Date()
+        val isDaylight = timezone.inDaylightTime(nowDate)
+        val print = String.format("%s\n%s",
+                DateTimeHelper.hourMinutesOfMidnightDiffWithUtc(timezone, nowDate),
+                timezone.getDisplayName(isDaylight, TimeZone.LONG))
         notificationTimeZoneInfo.text = getString(R.string.streak_updated_timezone, print)
     }
 

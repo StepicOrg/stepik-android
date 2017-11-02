@@ -13,6 +13,7 @@ import org.stepic.droid.social.SocialManager;
 
 import java.io.IOException;
 
+import io.reactivex.Single;
 import retrofit2.Call;
 
 
@@ -30,9 +31,9 @@ public interface Api {
 
     Call<RegistrationResponse> signUp(String firstName, String secondName, String email, String password);
 
-    Call<CoursesStepicResponse> getEnrolledCourses(int page);
+    Single<CoursesStepicResponse> getEnrolledCourses(int page);
 
-    Call<CoursesStepicResponse> getPopularCourses(int page);
+    Single<CoursesStepicResponse> getPopularCourses(int page);
 
     Call<StepicProfileResponse> getUserProfile();
 
@@ -50,6 +51,8 @@ public interface Api {
     Call<LessonStepicResponse> getLessons(long[] lessons);
 
     Call<StepResponse> getSteps(long[] steps);
+
+    Single<StepResponse> getStepsReactive (long [] steps);
 
     @Nullable
     Call<Void> dropCourse(long courseId);

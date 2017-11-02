@@ -85,7 +85,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.my_courses_menu, menu);
+        inflater.inflate(R.menu.filter_courses_menu, menu);
     }
 
     @Override
