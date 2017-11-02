@@ -1,6 +1,5 @@
 package org.stepic.droid.util
 
-import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -10,8 +9,9 @@ object DateTimeHelper {
     private val millisecondsInHour = 1000 * 60 * 60
     private val millisecondsInMinute = 1000 * 60
     private val hoursInDay = 24
+    private val sizeOfIsoWithoutZ = 19
 
-    fun hourMinutesOfMidnightDiffWithUtc(timeZone: TimeZone, date : Date): String {
+    fun hourMinutesOfMidnightDiffWithUtc(timeZone: TimeZone, date: Date): String {
         val instance = Calendar.getInstance(timeZone)
         instance.time = date
         var diff = instance.timeZone.rawOffset
@@ -92,16 +92,17 @@ object DateTimeHelper {
         return calendar
     }
 
-
+    /**
+     * 2008-03-01T13:00:00
+     * 1234-67-94T23:56:89
+     * size is 19
+     */
     private fun getDateOfIso(iso8601string: String): Date {
-        var s = iso8601string.replace("Z", "+00:00")
-        try {
-            s = s.removeRange(startIndex = 22, endIndex = 23)
-        } catch (e: IndexOutOfBoundsException) {
-            throw ParseException("Invalid length", 0)
-        }
+        val stringBuilder = StringBuilder()
+        stringBuilder.append(iso8601string.subSequence(0 until sizeOfIsoWithoutZ))
+        stringBuilder.append("+00:00")
         val dateFormat = SimpleDateFormat(isoPattern, Locale.getDefault())
-        return dateFormat.parse(s)
+        return dateFormat.parse(stringBuilder.toString())
     }
 
 }
