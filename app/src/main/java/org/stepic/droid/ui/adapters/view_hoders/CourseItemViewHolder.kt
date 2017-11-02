@@ -74,6 +74,8 @@ class CourseItemViewHolder(
     private val courseItemMore = view.courseItemMore
     private val learnersCountContainer = view.learnersCountContainer
     private val courseWidgetInfo = view.courseWidgetInfo
+    private val courseItemProgress = view.courseItemProgressView
+    private val courseItemProgressTitle = view.courseItemProgressTitle
 
 
     init {
@@ -206,6 +208,11 @@ class CourseItemViewHolder(
             courseWidgetInfo.setText(R.string.course_item_info)
             showJoinButton()
         }
+
+        val progressPart = (position % 10).toFloat() / 10f
+        courseItemProgress.progress = progressPart
+        courseItemProgressTitle.text = "%.2f%%".format(progressPart * 100)
+
 
         courseItemMore.visibility = if (showMore) {
             View.VISIBLE
