@@ -12,6 +12,10 @@ import org.stepic.droid.R
 import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.DpPixelsHelper
 
+
+/**
+ * this view has different implementation of onDraw, based on stroke of circle
+ */
 class CircleProgressView
 @JvmOverloads
 constructor(context: Context, attributeSet: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0)
@@ -19,9 +23,12 @@ constructor(context: Context, attributeSet: AttributeSet? = null, defStyleAttr: 
 
     companion object {
         private const val MAX_DEGREES = 360f
+        private const val DEFAULT_STROKE_WIDTH_DP = 2f
     }
 
     var progress: Float = 0.0f
+
+    private val strokeBound = DpPixelsHelper.convertDpToPixel(5f) //if < 5dp -> onDraw with space, >= 5dp -> without spaces
 
     //Rectangles
     private val oval = RectF()
@@ -30,14 +37,18 @@ constructor(context: Context, attributeSet: AttributeSet? = null, defStyleAttr: 
     private val backgroundPaint = Paint()
     private val foregroundPaint = Paint()
 
-
     //Colors (with defaults)
     @ColorInt
     private var backgroundPaintColor = ColorUtil.getColorArgb(R.color.new_accent_color, context)
     @ColorInt
     private var foregroundPaintColor = ColorUtil.getColorArgb(R.color.stepic_brand_primary, context)
 
-    private var strokeWidth = DpPixelsHelper.convertDpToPixel(2f)
+    private var isStrokeSmall: Boolean = true
+    private var strokeWidth = DpPixelsHelper.convertDpToPixel(DEFAULT_STROKE_WIDTH_DP)
+        set(value) {
+            isStrokeSmall = DpPixelsHelper.convertPixelsToDp(value, context) < strokeBound
+            field = value
+        }
 
     init {
         parseAttributes(context.obtainStyledAttributes(attributeSet, R.styleable.CircleProgressView))
@@ -82,8 +93,22 @@ constructor(context: Context, attributeSet: AttributeSet? = null, defStyleAttr: 
         paint.strokeWidth = strokeWidth
     }
 
-
     override fun onDraw(canvas: Canvas) {
+        when (isStrokeSmall) {
+            true -> drawSmallStroke(canvas)
+            false -> drawLargeStroke(canvas)
+        }
+    }
+
+    private fun drawSmallStroke(canvas: Canvas) {
+        val progressDegrees: Int = (progress * MAX_DEGREES).toInt()
+        val remain = MAX_DEGREES - progressDegrees
+
+        canvas.drawArc(oval, progressDegrees - 90F, remain, false, backgroundPaint)
+        canvas.drawArc(oval, -90F, progressDegrees.toFloat(), false, foregroundPaint)
+    }
+
+    private fun drawLargeStroke(canvas: Canvas) {
         canvas.drawArc(oval, MAX_DEGREES, MAX_DEGREES, false, backgroundPaint)
         val progressDegrees = progress * MAX_DEGREES
         canvas.drawArc(oval, -90F, progressDegrees, false, foregroundPaint)
