@@ -100,7 +100,7 @@ object DateTimeHelper {
     private fun getDateOfIso(iso8601string: String): Date {
         val stringBuilder = StringBuilder()
         stringBuilder.append(iso8601string.subSequence(0 until sizeOfIsoWithoutZ))
-        stringBuilder.append("+00:00")
+        stringBuilder.append("+0000")
         val dateFormat = SimpleDateFormat(isoPattern, Locale.getDefault())
         return dateFormat.parse(stringBuilder.toString())
     }

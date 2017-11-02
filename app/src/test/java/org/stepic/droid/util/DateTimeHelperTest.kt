@@ -87,4 +87,12 @@ class DateTimeHelperTest {
         val printable = DateTimeHelper.hourMinutesOfMidnightDiffWithUtc(TimeZone.getTimeZone("Europe/London"), summerDate) //+1:00 UTC
         assertEquals("01:00", printable)
     }
+
+    @Test
+    fun isoOnPostInComments() {
+        val timeInComment = "2017-11-02T00:43:52.587Z"
+        val pattern = "dd.MM.yyyy HH:mm"
+        val result = DateTimeHelper.getPrintableOfIsoDate(timeInComment, pattern, TimeZone.getTimeZone("UTC"))
+        assertEquals("02.11.2017 00:43", result)
+    }
 }
