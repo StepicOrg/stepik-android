@@ -65,7 +65,7 @@ class StepStatusTest {
 
     @Test
     fun saveOrderOfError() {
-        assertEquals("backward compatibility", 1, StepStatus.ERROR.ordinal)
+        assertEquals("backward compatibility", 2, StepStatus.ERROR.ordinal)
     }
 
 }
