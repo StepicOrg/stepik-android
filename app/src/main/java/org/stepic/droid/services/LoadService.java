@@ -244,7 +244,7 @@ public class LoadService extends IntentService {
                         databaseFacade.addAssignment(item);
                     }
 
-                    String[] ids = ProgressUtil.getAllProgresses(assignments);
+                    String[] ids = ProgressUtil.INSTANCE.getAllProgresses(assignments);
                     List<Progress> progresses = fetchProgresses(ids);
                     for (Progress item : progresses) {
                         databaseFacade.addProgress(item);
@@ -319,7 +319,7 @@ public class LoadService extends IntentService {
 
                 if (responseIsSuccess) {
                     long[] lessonsIds = StepikLogicHelper.fromUnitsToLessonIds(units);
-                    List<Progress> progresses = fetchProgresses(ProgressUtil.getAllProgresses(units));
+                    List<Progress> progresses = fetchProgresses(ProgressUtil.INSTANCE.getAllProgresses(units));
                     for (Progress item : progresses) {
                         databaseFacade.addProgress(item);
                     }

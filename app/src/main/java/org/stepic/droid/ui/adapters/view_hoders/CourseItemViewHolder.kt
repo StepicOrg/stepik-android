@@ -22,10 +22,8 @@ import org.stepic.droid.core.presenters.ContinueCoursePresenter
 import org.stepic.droid.core.presenters.DroppingPresenter
 import org.stepic.droid.model.Course
 import org.stepic.droid.model.CoursesCarouselColorType
-import org.stepic.droid.util.ColorUtil
-import org.stepic.droid.util.ContextMenuCourseUtil
-import org.stepic.droid.util.StepikLogicHelper
-import org.stepic.droid.util.SuppressFBWarnings
+import org.stepic.droid.ui.util.changeVisibility
+import org.stepic.droid.util.*
 import java.util.*
 import javax.inject.Inject
 
@@ -193,12 +191,11 @@ class CourseItemViewHolder(
                 .fitCenter()
                 .into(imageViewTarget)
 
-        if (course.learnersCount > 0) {
+        val needShowLearners = course.learnersCount > 0
+        if (needShowLearners) {
             learnersCountText.text = String.format(Locale.getDefault(), "%d", course.learnersCount)
-            learnersCountContainer.visibility = View.VISIBLE
-        } else {
-            learnersCountContainer.visibility = View.GONE
         }
+        learnersCountContainer.changeVisibility(needShowLearners)
 
 
         if (isEnrolled(course)) {
@@ -209,16 +206,28 @@ class CourseItemViewHolder(
             showJoinButton()
         }
 
-        val progressPart = (position % 10).toFloat() / 10f
-        courseItemProgress.progress = progressPart
-        courseItemProgressTitle.text = "%.2f%%".format(progressPart * 100)
+        changeProgressView(course)
 
+        courseItemMore.changeVisibility(showMore)
+    }
 
-        courseItemMore.visibility = if (showMore) {
-            View.VISIBLE
-        } else {
-            View.GONE
-        }
+    private fun changeProgressView(course: Course) {
+        val progressPercent: Int? = ProgressUtil.getProgressPercent(course.progressObject)
+        val needShow: Boolean =
+                if (progressPercent != null && progressPercent > 0) {
+
+                    // title and image should be equal
+                    courseItemProgress.progress = progressPercent / 100f
+                    courseItemProgressTitle.text = itemView
+                            .context
+                            .resources
+                            .getString(R.string.percent_symbol, progressPercent)
+                    true
+                } else {
+                    false
+                }
+        courseItemProgress.changeVisibility(needShow)
+        courseItemProgressTitle.changeVisibility(needShow)
     }
 
     private fun isEnrolled(course: Course?): Boolean =

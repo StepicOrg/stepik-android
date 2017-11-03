@@ -75,6 +75,7 @@ public final class Course implements Parcelable {
 
     }
 
+    @Nullable
     public Progress getProgressObject() {
         return progressObject;
     }

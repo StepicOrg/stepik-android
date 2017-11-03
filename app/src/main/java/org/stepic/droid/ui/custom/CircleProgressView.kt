@@ -27,6 +27,10 @@ constructor(context: Context, attributeSet: AttributeSet? = null, defStyleAttr: 
     }
 
     var progress: Float = 0.0f
+        set (value) {
+            field = value
+            invalidate()
+        }
 
     private val strokeBound = DpPixelsHelper.convertDpToPixel(5f) //if < 5dp -> onDraw with space, >= 5dp -> without spaces
 
