@@ -69,8 +69,18 @@ public final class Course implements Parcelable {
     @Nullable
     private String progress;
 
+    private Progress progressObject;
+
     public Course() {
 
+    }
+
+    public Progress getProgressObject() {
+        return progressObject;
+    }
+
+    public void setProgressObject(Progress progressObject) {
+        this.progressObject = progressObject;
     }
 
     @Nullable
@@ -352,6 +362,7 @@ public final class Course implements Parcelable {
         dest.writeString(lastStepId);
         dest.writeLong(learnersCount);
         dest.writeString(progress);
+        dest.writeParcelable(progressObject, flags);
     }
 
     protected Course(Parcel in) {
@@ -392,6 +403,7 @@ public final class Course implements Parcelable {
         lastStepId = in.readString();
         learnersCount = in.readLong();
         progress = in.readString();
+        progressObject = in.readParcelable(Progress.class.getClassLoader());
     }
 
     public static final Creator<Course> CREATOR = new Creator<Course>() {

@@ -166,8 +166,13 @@ class PersistentCourseListPresenter
             if ((filteredCourseList.size < MIN_COURSES_ON_SCREEN) && hasNextPage.get()) {
                 //try to load next in loop
             } else {
+                val progressesMap = getProgressesFromDb(filteredCourseList)
                 val coursesForShow = when (courseType) {
-                    Table.enrolled -> sortByLastAction(filteredCourseList)
+                    Table.enrolled -> {
+                        //progresses should be shown only for enrolled lists
+                        applyProgressesToCourses(progressesMap, filteredCourseList)
+                        sortByLastAction(filteredCourseList, progressesMap)
+                    }
                     else -> filteredCourseList
                 }
                 mainHandler.post {
@@ -193,15 +198,19 @@ class PersistentCourseListPresenter
     private fun getFromDatabaseAndShow(applyFilter: Boolean, courseType: Table) {
         val coursesBeforeLoading = databaseFacade.getAllCourses(courseType).filterNotNull()
         if (coursesBeforeLoading.isNotEmpty()) {
-            val coursesForShow = if (courseType == Table.enrolled) {
-                sortByLastAction(coursesBeforeLoading)
-            } else {
-                if (!applyFilter && !sharedPreferenceHelper.filterForFeatured.contains(StepikFilter.PERSISTENT)) {
-                    filterApplicator.getFilteredFeaturedFromDefault(coursesBeforeLoading)
-                } else {
-                    filterApplicator.getFilteredFeaturedFromSharedPrefs(coursesBeforeLoading)
-                }
-            }
+            val progressMap = getProgressesFromDb(coursesBeforeLoading)
+            val coursesForShow =
+                    if (courseType == Table.enrolled) {
+                        //apply only for enrolled list/carousel
+                        applyProgressesToCourses(progressMap, coursesBeforeLoading)
+                        sortByLastAction(coursesBeforeLoading, progressMap)
+                    } else {
+                        if (!applyFilter && !sharedPreferenceHelper.filterForFeatured.contains(StepikFilter.PERSISTENT)) {
+                            filterApplicator.getFilteredFeaturedFromDefault(coursesBeforeLoading)
+                        } else {
+                            filterApplicator.getFilteredFeaturedFromSharedPrefs(coursesBeforeLoading)
+                        }
+                    }
             if (coursesForShow.isNotEmpty()) {
                 mainHandler.post {
                     view?.showCourses(coursesForShow)
@@ -228,15 +237,10 @@ class PersistentCourseListPresenter
     }
 
     @WorkerThread
-    private fun sortByLastAction(courses: List<Course>): MutableList<Course> {
-        val progressIds = courses.mapNotNull {
-            it.progress
-        }
-        val courseProgressesMap = databaseFacade.getProgresses(progressIds).associateBy { it.id }
-
+    private fun sortByLastAction(courses: List<Course>, idProgressesMap: Map<String?, Progress>): MutableList<Course> {
         return courses.sortedWith(Comparator { course1, course2 ->
-            val progress1: Progress? = courseProgressesMap[course1.progress]
-            val progress2: Progress? = courseProgressesMap[course2.progress]
+            val progress1: Progress? = idProgressesMap[course1.progress]
+            val progress2: Progress? = idProgressesMap[course2.progress]
 
             val lastViewed1 = progress1?.lastViewed?.toLongOrNull()
             val lastViewed2 = progress2?.lastViewed?.toLongOrNull()
@@ -255,6 +259,22 @@ class PersistentCourseListPresenter
 
             return@Comparator (lastViewed2 - lastViewed1).toInt()
         }).toMutableList()
+    }
+
+    @WorkerThread
+    private fun getProgressesFromDb(courses: List<Course>): Map<String?, Progress> {
+        val progressIds = courses.mapNotNull {
+            it.progress
+        }
+        return databaseFacade.getProgresses(progressIds).associateBy { it.id }
+    }
+
+    private fun applyProgressesToCourses(progresses: Map<String?, Progress>, courses: List<Course>) {
+        courses.forEach { course ->
+            progresses[course.progress]?.let {
+                course.progressObject = it
+            }
+        }
     }
 
     fun loadMore(courseType: Table, needFilter: Boolean) {
