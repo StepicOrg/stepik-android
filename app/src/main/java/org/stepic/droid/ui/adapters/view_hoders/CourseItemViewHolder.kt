@@ -70,7 +70,7 @@ class CourseItemViewHolder(
     private val learnersCountImage = view.learnersCountImage
     private val learnersCountText = view.learnersCountText
     private val courseItemMore = view.courseItemMore
-    private val learnersCountContainer = view.learnersCountContainer
+    private val coursePropertiesContainer = view.coursePropertiesContainer
     private val courseWidgetInfo = view.courseWidgetInfo
     private val courseItemProgress = view.courseItemProgressView
     private val courseItemProgressTitle = view.courseItemProgressTitle
@@ -200,8 +200,6 @@ class CourseItemViewHolder(
         if (needShowLearners) {
             learnersCountText.text = String.format(Locale.getDefault(), "%d", course.learnersCount)
         }
-        learnersCountContainer.changeVisibility(needShowLearners)
-
 
         if (isEnrolled(course)) {
             courseWidgetInfo.setText(R.string.course_item_syllabus)
@@ -211,13 +209,16 @@ class CourseItemViewHolder(
             showJoinButton()
         }
 
-        bindProgressView(course)
-        bindRatingView(course)
+        val needShowProgress = bindProgressView(course)
+        val needShowRating = bindRatingView(course)
+
+        val showContainer = needShowLearners || needShowProgress || needShowRating
+        coursePropertiesContainer.changeVisibility(showContainer)
 
         courseItemMore.changeVisibility(showMore)
     }
 
-    private fun bindProgressView(course: Course) {
+    private fun bindProgressView(course: Course): Boolean {
         val progressPercent: Int? = ProgressUtil.getProgressPercent(course.progressObject)
         val needShow: Boolean =
                 if (progressPercent != null && progressPercent > 0) {
@@ -233,15 +234,17 @@ class CourseItemViewHolder(
                 }
         courseItemProgress.changeVisibility(needShow)
         courseItemProgressTitle.changeVisibility(needShow)
+        return needShow
     }
 
-    private fun bindRatingView(course: Course) {
+    private fun bindRatingView(course: Course): Boolean {
         val needShow = course.rating > 0
         if (needShow) {
             courseRatingText.text = String.format(Locale.ROOT, itemView.resources.getString(R.string.course_rating_value), course.rating)
         }
         courseRatingImage.changeVisibility(needShow)
         courseRatingText.changeVisibility(needShow)
+        return needShow
     }
 
     private fun isEnrolled(course: Course?): Boolean =
