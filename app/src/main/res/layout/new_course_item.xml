@@ -93,6 +93,30 @@
                 android:textSize="16sp"
                 tools:ignore="MissingPrefix"
                 tools:text="999K"/>
+
+            <org.stepic.droid.ui.custom.CircleProgressView
+                android:id="@+id/courseItemProgressView"
+                android:layout_width="@dimen/course_item_progress_size"
+                android:layout_height="@dimen/course_item_progress_size"
+                android:layout_centerVertical="true"
+                app:progressBarStroke="@dimen/course_item_progress_bar_size"
+                android:layout_marginLeft="4dp"
+                android:layout_marginStart="4dp"
+                android:layout_toEndOf="@id/learnersCountText"
+                android:layout_toRightOf="@id/learnersCountText"/>
+
+            <TextView
+                android:id="@+id/courseItemProgressTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="2dp"
+                android:layout_marginStart="2dp"
+                android:layout_toEndOf="@id/courseItemProgressView"
+                android:layout_toRightOf="@id/courseItemProgressView"
+                android:textSize="16sp"
+                tools:ignore="MissingPrefix"
+                tools:text="77%"/>
         </RelativeLayout>
 
     </android.support.constraint.ConstraintLayout>
