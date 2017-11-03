@@ -43,7 +43,12 @@ constructor(context: Context, attributeSet: AttributeSet? = null, defStyleAttr: 
 
     //Colors (with defaults)
     @ColorInt
-    private var backgroundPaintColor = ColorUtil.getColorArgb(R.color.new_accent_color, context)
+    var backgroundPaintColor = ColorUtil.getColorArgb(R.color.new_accent_color, context)
+        set(value) {
+            field = value
+            setupPaint(backgroundPaint, field)
+            invalidate()
+        }
     @ColorInt
     private var foregroundPaintColor = ColorUtil.getColorArgb(R.color.stepic_brand_primary, context)
 

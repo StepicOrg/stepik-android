@@ -752,7 +752,7 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Single<CourseReviewResponse> getCourseReviews(long[] courseIds) {
+    public Single<CourseReviewResponse> getCourseReviews(int[] courseIds) {
         return loggedService.getCourseReviews(courseIds);
     }
 

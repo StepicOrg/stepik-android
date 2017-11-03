@@ -123,5 +123,5 @@ public interface Api {
 
     Call<CourseListsResponse> getCourseLists ();
 
-    Single<CourseReviewResponse> getCourseReviews (long[] courseIds);
+    Single<CourseReviewResponse> getCourseReviews (int[] reviewSummaryIds);
 }

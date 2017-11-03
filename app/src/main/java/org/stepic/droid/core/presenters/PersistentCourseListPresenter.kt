@@ -8,6 +8,7 @@ import org.stepic.droid.core.FilterApplicator
 import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.di.course_list.CourseListScope
 import org.stepic.droid.model.Course
+import org.stepic.droid.model.CourseReviewSummary
 import org.stepic.droid.model.Progress
 import org.stepic.droid.model.StepikFilter
 import org.stepic.droid.preferences.SharedPreferenceHelper
@@ -130,6 +131,15 @@ class PersistentCourseListPresenter
                     databaseFacade.addProgress(progress = it)
                 }
             }
+
+            val reviewSummaryIds = coursesFromInternet.map { it.reviewSummary }.toIntArray()
+            val reviews: List<CourseReviewSummary>? = try {
+                api.getCourseReviews(reviewSummaryIds).blockingGet().courseReviewSummaries
+            } catch (exception: Exception) {
+                //ok show without new ratings
+                null
+            }
+            applyReviewToCourses(reviews, coursesFromInternet)
 
             try {
                 //this lock need for not saving enrolled courses to database after user click logout
@@ -276,6 +286,17 @@ class PersistentCourseListPresenter
             }
         }
     }
+
+    private fun applyReviewToCourses(reviews: List<CourseReviewSummary>?, coursesFromInternet: List<Course>) {
+        val courseMap = coursesFromInternet.associateBy { it.courseId }
+        reviews?.forEach { review ->
+            courseMap[review.course]
+                    ?.let {
+                        it.rating = review.average
+                    }
+        }
+    }
+
 
     fun loadMore(courseType: Table, needFilter: Boolean) {
         downloadData(courseType, needFilter, isRefreshing = false, isLoadMore = true)

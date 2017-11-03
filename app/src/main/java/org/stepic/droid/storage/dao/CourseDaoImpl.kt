@@ -49,6 +49,7 @@ constructor(
         course.learnersCount = cursor.getLong(DbStructureEnrolledAndFeaturedCourses.Column.LEARNERS_COUNT)
         course.progress = cursor.getString(DbStructureEnrolledAndFeaturedCourses.Column.PROGRESS)
         course.rating = cursor.getDouble(DbStructureEnrolledAndFeaturedCourses.Column.AVERAGE_RATING)
+        course.reviewSummary = cursor.getInt(DbStructureEnrolledAndFeaturedCourses.Column.REVIEW_SUMMARY)
 
         var isActive = true
         try {
@@ -99,6 +100,7 @@ constructor(
         values.put(DbStructureEnrolledAndFeaturedCourses.Column.LEARNERS_COUNT, course.learnersCount)
         values.put(DbStructureEnrolledAndFeaturedCourses.Column.PROGRESS, course.progress)
         values.put(DbStructureEnrolledAndFeaturedCourses.Column.AVERAGE_RATING, course.rating)
+        values.put(DbStructureEnrolledAndFeaturedCourses.Column.REVIEW_SUMMARY, course.reviewSummary)
 
         val video = course.introVideo
         if (video != null) {

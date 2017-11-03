@@ -43,5 +43,6 @@ public final class DbStructureEnrolledAndFeaturedCourses {
         public static final String LEARNERS_COUNT = "learners_count";
         public static final String PROGRESS = "progress";
         public static final String AVERAGE_RATING = "average_rating";
+        public static final String REVIEW_SUMMARY = "review_summary";
     }
 }

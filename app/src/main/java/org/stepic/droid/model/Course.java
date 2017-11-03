@@ -66,6 +66,8 @@ public final class Course implements Parcelable {
     private long learnersCount;
     @Nullable
     private String progress;
+    @SerializedName("review_summary")
+    private int reviewSummary;
 
     private Progress progressObject;
     private double rating;
@@ -82,6 +84,13 @@ public final class Course implements Parcelable {
         this.rating = rating;
     }
 
+    public int getReviewSummary() {
+        return reviewSummary;
+    }
+
+    public void setReviewSummary(int reviewSummary) {
+        this.reviewSummary = reviewSummary;
+    }
 
     @Nullable
     public Progress getProgressObject() {
@@ -364,6 +373,7 @@ public final class Course implements Parcelable {
         dest.writeString(progress);
         dest.writeParcelable(progressObject, flags);
         dest.writeDouble(rating);
+        dest.writeInt(reviewSummary);
     }
 
     protected Course(Parcel in) {
@@ -405,6 +415,7 @@ public final class Course implements Parcelable {
         progress = in.readString();
         progressObject = in.readParcelable(Progress.class.getClassLoader());
         rating = in.readDouble();
+        reviewSummary = in.readInt();
     }
 
     public static final Creator<Course> CREATOR = new Creator<Course>() {

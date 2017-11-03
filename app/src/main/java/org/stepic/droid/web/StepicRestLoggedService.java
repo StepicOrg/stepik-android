@@ -143,5 +143,5 @@ public interface StepicRestLoggedService {
     Call<CourseListsResponse> getCourseLists(@Query("language") String language);
 
     @GET("api/course-review-summaries")
-    Single<CourseReviewResponse> getCourseReviews(@Query("ids[]") long[] courseIds);
+    Single<CourseReviewResponse> getCourseReviews(@Query("ids[]") int[] reviewSummaryIds);
 }

@@ -73,6 +73,8 @@
                 android:layout_alignBaseline="@+id/learnersCountText"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
+                android:layout_marginEnd="2dp"
+                android:layout_marginRight="2dp"
                 android:baselineAlignBottom="true"
                 android:clickable="false"
                 android:contentDescription="@string/learners_count"
@@ -86,24 +88,52 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:layout_marginLeft="2dp"
-                android:layout_marginStart="2dp"
                 android:layout_toEndOf="@id/learnersCountImage"
                 android:layout_toRightOf="@id/learnersCountImage"
                 android:textSize="16sp"
                 tools:ignore="MissingPrefix"
                 tools:text="999K"/>
 
+            <ImageView
+                android:id="@+id/courseRatingImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/courseRatingText"
+                android:layout_marginLeft="7dp"
+                android:layout_marginStart="7dp"
+                android:layout_toEndOf="@id/learnersCountText"
+                android:layout_toRightOf="@id/learnersCountText"
+                android:baselineAlignBottom="true"
+                android:clickable="false"
+                android:contentDescription="@string/course_rating"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:src="@drawable/ic_rating"/>
+
+            <TextView
+                android:id="@+id/courseRatingText"
+                fontPath="fonts/Roboto-Light.ttf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="2dp"
+                android:layout_marginStart="2dp"
+                android:layout_toEndOf="@id/courseRatingImage"
+                android:layout_toRightOf="@id/courseRatingImage"
+                android:textSize="16sp"
+                tools:ignore="MissingPrefix"
+                tools:text="4.7"/>
+
             <org.stepic.droid.ui.custom.CircleProgressView
                 android:id="@+id/courseItemProgressView"
                 android:layout_width="@dimen/course_item_progress_size"
                 android:layout_height="@dimen/course_item_progress_size"
                 android:layout_centerVertical="true"
-                app:progressBarStroke="@dimen/course_item_progress_bar_size"
-                android:layout_marginLeft="4dp"
-                android:layout_marginStart="4dp"
-                android:layout_toEndOf="@id/learnersCountText"
-                android:layout_toRightOf="@id/learnersCountText"/>
+                android:layout_marginLeft="7dp"
+                android:layout_marginStart="7dp"
+                android:layout_toEndOf="@id/courseRatingText"
+                android:layout_toRightOf="@id/courseRatingText"
+                app:progressBarStroke="@dimen/course_item_progress_bar_size"/>
 
             <TextView
                 android:id="@+id/courseItemProgressTitle"
