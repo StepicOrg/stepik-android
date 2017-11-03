@@ -67,6 +67,8 @@ public interface Api {
 
     Call<SearchResultResponse> getSearchResultsCourses(int page, String rawQuery);
 
+    Single<QueriesResponse> getSearchQueries(String query);
+
     Call<CoursesStepicResponse> getCourses(int page, long[] ids);
 
     Call<AttemptResponse> createNewAttempt(long stepId);
