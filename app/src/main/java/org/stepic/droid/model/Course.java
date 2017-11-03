@@ -42,8 +42,6 @@ public final class Course implements Parcelable {
     @SerializedName("certificate_link")
     private String certificateLink;
     private String title;
-    @SerializedName("begin_date_source")
-    private String beginDateSource;
     @SerializedName("last_deadline")
     private String lastDeadline;
     @SerializedName("begin_date")
@@ -70,10 +68,20 @@ public final class Course implements Parcelable {
     private String progress;
 
     private Progress progressObject;
+    private double rating;
 
     public Course() {
 
     }
+
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
+    }
+
 
     @Nullable
     public Progress getProgressObject() {
@@ -266,10 +274,6 @@ public final class Course implements Parcelable {
         this.title = title;
     }
 
-    public void setBeginDateSource(String beginDateSource) {
-        this.beginDateSource = beginDateSource;
-    }
-
     public void setLastDeadline(String lastDeadline) {
         this.lastDeadline = lastDeadline;
     }
@@ -280,10 +284,6 @@ public final class Course implements Parcelable {
 
     public void setSlug(String slug) {
         this.slug = slug;
-    }
-
-    public String getBeginDateSource() {
-        return beginDateSource;
     }
 
     public String getLastDeadline() {
@@ -303,7 +303,7 @@ public final class Course implements Parcelable {
         return sections;
     }
 
-    public void setSections(long[] sections) {
+    public void setSections(@Nullable long[] sections) {
         this.sections = sections;
     }
 
@@ -349,7 +349,6 @@ public final class Course implements Parcelable {
         dest.writeByte(isActive ? (byte) 1 : (byte) 0);
         dest.writeString(this.certificateLink);
         dest.writeString(this.title);
-        dest.writeString(this.beginDateSource);
         dest.writeString(this.lastDeadline);
         dest.writeString(this.language);
         dest.writeByte(isPublic ? (byte) 1 : (byte) 0);
@@ -364,6 +363,7 @@ public final class Course implements Parcelable {
         dest.writeLong(learnersCount);
         dest.writeString(progress);
         dest.writeParcelable(progressObject, flags);
+        dest.writeDouble(rating);
     }
 
     protected Course(Parcel in) {
@@ -390,7 +390,6 @@ public final class Course implements Parcelable {
         this.isActive = in.readByte() != 0;
         this.certificateLink = in.readString();
         this.title = in.readString();
-        this.beginDateSource = in.readString();
         this.lastDeadline = in.readString();
         this.language = in.readString();
         this.isPublic = in.readByte() != 0;
@@ -405,6 +404,7 @@ public final class Course implements Parcelable {
         learnersCount = in.readLong();
         progress = in.readString();
         progressObject = in.readParcelable(Progress.class.getClassLoader());
+        rating = in.readDouble();
     }
 
     public static final Creator<Course> CREATOR = new Creator<Course>() {

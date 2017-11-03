@@ -27,6 +27,7 @@ public final class DbStructureEnrolledAndFeaturedCourses {
         public static final String IS_PUBLIC = "is_public";
         public static final String TITLE = "title";
         public static final String SLUG = "slug";
+        @Deprecated
         public static final String BEGIN_DATE_SOURCE = "begin_date_source";
         public static final String BEGIN_DATE = "begin_date";
         public static final String LAST_DEADLINE = "last_deadline";
@@ -41,5 +42,6 @@ public final class DbStructureEnrolledAndFeaturedCourses {
         public static final String IS_ACTIVE = "is_active";
         public static final String LEARNERS_COUNT = "learners_count";
         public static final String PROGRESS = "progress";
+        public static final String AVERAGE_RATING = "average_rating";
     }
 }
