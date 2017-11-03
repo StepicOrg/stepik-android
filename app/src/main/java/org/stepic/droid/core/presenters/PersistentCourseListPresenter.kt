@@ -15,7 +15,7 @@ import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.storage.operations.Table
 import org.stepic.droid.util.RWLocks
 import org.stepic.droid.web.Api
-import org.stepic.droid.web.CoursesStepicResponse
+import org.stepic.droid.web.CoursesMetaResponse
 import timber.log.Timber
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -188,7 +188,7 @@ class PersistentCourseListPresenter
         }
     }
 
-    private fun handleMeta(response: CoursesStepicResponse) {
+    private fun handleMeta(response: CoursesMetaResponse) {
         hasNextPage.set(response.meta.has_next)
         if (hasNextPage.get()) {
             currentPage.set(response.meta.page + 1) // page for next loading

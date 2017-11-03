@@ -33,7 +33,7 @@ import org.stepic.droid.web.Api;
 import org.stepic.droid.web.LessonStepicResponse;
 import org.stepic.droid.web.ProgressesResponse;
 import org.stepic.droid.web.StepResponse;
-import org.stepic.droid.web.UnitStepicResponse;
+import org.stepic.droid.web.UnitMetaResponse;
 
 import java.io.File;
 import java.io.IOException;
@@ -307,7 +307,7 @@ public class LoadService extends IntentService {
                 while (responseIsSuccess && pointer < unitIds.length) {
                     int lastExclusive = Math.min(unitIds.length, pointer + AppConstants.DEFAULT_NUMBER_IDS_IN_QUERY);
                     long[] subArrayForLoading = Arrays.copyOfRange(unitIds, pointer, lastExclusive);
-                    Response<UnitStepicResponse> unitResponse = api.getUnits(subArrayForLoading).execute();
+                    Response<UnitMetaResponse> unitResponse = api.getUnits(subArrayForLoading).execute();
                     if (!unitResponse.isSuccessful()) {
                         responseIsSuccess = false;
                     } else {

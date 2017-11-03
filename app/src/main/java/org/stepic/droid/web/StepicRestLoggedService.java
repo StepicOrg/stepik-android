@@ -18,26 +18,26 @@ import retrofit2.http.Query;
 
 public interface StepicRestLoggedService {
     @GET("api/sections")
-    Call<SectionsStepicResponse> getSections(@Query("ids[]") long[] sectionIds);
+    Call<SectionsMetaResponse> getSections(@Query("ids[]") long[] sectionIds);
 
     @Headers({"Content-Type:application/json"})
     @POST("api/enrollments")
     Call<Void> joinCourse(@Body EnrollmentWrapper enrollmentCourse);
 
     @GET("api/users")
-    Call<UserStepicResponse> getUsers(@Query("ids[]") long[] userIds);
+    Call<UsersResponse> getUsers(@Query("ids[]") long[] userIds);
 
     @GET("api/stepics/1")
     Call<StepicProfileResponse> getUserProfile();
 
     @GET("api/courses?enrolled=true")
-    Single<CoursesStepicResponse> getEnrolledCourses(@Query("page") int page);
+    Single<CoursesMetaResponse> getEnrolledCourses(@Query("page") int page);
 
     @GET("api/courses?is_public=true&order=-activity")
-    Single<CoursesStepicResponse> getPopularCourses(@Query("page") int page);
+    Single<CoursesMetaResponse> getPopularCourses(@Query("page") int page);
 
     @GET("api/units")
-    Call<UnitStepicResponse> getUnits(@Query("ids[]") long[] units);
+    Call<UnitMetaResponse> getUnits(@Query("ids[]") long[] units);
 
     @GET("api/lessons")
     Call<LessonStepicResponse> getLessons(@Query("ids[]") long[] lessons);
@@ -67,7 +67,7 @@ public interface StepicRestLoggedService {
                                                 @Query(value = "query", encoded = true) String encodedQuery, @Query("type") String type);
 
     @GET("api/courses")
-    Call<CoursesStepicResponse> getCourses(@Query("page") int page, @Query("ids[]") long[] courseIds);
+    Call<CoursesMetaResponse> getCourses(@Query("page") int page, @Query("ids[]") long[] courseIds);
 
     @POST("api/attempts")
     Call<AttemptResponse> createNewAttempt(@Body AttemptRequest attemptRequest);
@@ -91,7 +91,7 @@ public interface StepicRestLoggedService {
     Call<DeviceResponse> registerDevice(@Body DeviceRequest deviceRequest);
 
     @GET("api/courses")
-    Call<CoursesStepicResponse> getCourses(@Query("ids[]") long[] courseIds);
+    Call<CoursesMetaResponse> getCourses(@Query("ids[]") long[] courseIds);
 
     @PUT("api/notifications/{id}")
     Call<Void> putNotification(@Path("id") long notificationId, @Body NotificationRequest notificationRequest);
@@ -118,7 +118,7 @@ public interface StepicRestLoggedService {
     Call<CertificateResponse> getCertificates(@Query("user") long userId);
 
     @GET("api/units")
-    Call<UnitStepicResponse> getUnitByLessonId(@Query("lesson") long lessonId);
+    Call<UnitMetaResponse> getUnitByLessonId(@Query("lesson") long lessonId);
 
     @GET("api/steps")
     Call<StepResponse> geStepsByLessonId(@Query("lesson") long lessonId);
@@ -141,4 +141,7 @@ public interface StepicRestLoggedService {
 
     @GET("api/course-lists?platform=mobile")
     Call<CourseListsResponse> getCourseLists(@Query("language") String language);
+
+    @GET("api/course-review-summaries")
+    Single<CourseReviewResponse> getCourseReviews(@Query("ids[]") long[] courseIds);
 }
