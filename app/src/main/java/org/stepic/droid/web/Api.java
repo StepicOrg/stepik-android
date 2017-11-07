@@ -52,7 +52,7 @@ public interface Api {
 
     Call<StepResponse> getSteps(long[] steps);
 
-    Single<StepResponse> getStepsReactive (long [] steps);
+    Single<StepResponse> getStepsReactive(long[] steps);
 
     @Nullable
     Call<Void> dropCourse(long courseId);
@@ -121,5 +121,5 @@ public interface Api {
 
     Call<LastStepResponse> getLastStepResponse(@NotNull String lastStepId);
 
-    Call<CourseListsResponse> getCourseLists ();
+    Single<CourseListsResponse> getCourseLists();
 }

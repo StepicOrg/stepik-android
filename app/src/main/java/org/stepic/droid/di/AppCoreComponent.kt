@@ -7,6 +7,7 @@ import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.code.ui.CodeEditor
+import org.stepic.droid.di.catalog.CatalogComponent
 import org.stepic.droid.di.certificates.CertificateComponent
 import org.stepic.droid.di.course_general.CourseGeneralComponent
 import org.stepic.droid.di.downloads.DownloadsComponent
@@ -74,6 +75,8 @@ interface AppCoreComponent {
     fun notificationsComponentBuilder(): NotificationsComponent.Builder
 
     fun routingComponentBuilder(): RoutingComponent.Builder
+
+    fun catalogComponentBuilder(): CatalogComponent.Builder
 
     fun inject(someActivity: FragmentActivityBase)
 

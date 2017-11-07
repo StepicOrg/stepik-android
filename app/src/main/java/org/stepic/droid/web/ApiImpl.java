@@ -744,7 +744,7 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Call<CourseListsResponse> getCourseLists() {
+    public Single<CourseListsResponse> getCourseLists() {
         //// TODO: 26.09.2017 determine language of course list for not native russian speakers
         String language = "ru";
         return loggedService.getCourseLists(language);
