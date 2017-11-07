@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_catalog.*
 import org.stepic.droid.R
 import org.stepic.droid.base.FragmentBase
+import org.stepic.droid.model.CourseListItem
+import org.stepic.droid.ui.adapters.CatalogAdapter
 import org.stepic.droid.ui.util.initCenteredToolbar
 
 class CatalogFragment : FragmentBase() {
@@ -29,6 +31,7 @@ class CatalogFragment : FragmentBase() {
 
     private fun initMainRecycler() {
         catalogRecyclerView.layoutManager = LinearLayoutManager(context)
+        catalogRecyclerView.adapter = CatalogAdapter(emptyList<CourseListItem>())
     }
 
 }

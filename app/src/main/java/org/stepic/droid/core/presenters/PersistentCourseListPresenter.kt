@@ -16,7 +16,6 @@ import org.stepic.droid.storage.operations.Table
 import org.stepic.droid.util.RWLocks
 import org.stepic.droid.web.Api
 import org.stepic.droid.web.CoursesStepicResponse
-import timber.log.Timber
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
@@ -65,15 +64,10 @@ class PersistentCourseListPresenter
             return
         }
         currentNumberOfTasks++
-        Timber.d("load more tasks = $currentNumberOfTasks") //here 1 or 2, not more
-        if (hasNextPage.get()) {
-            view?.showLoading()
-        }
+        view?.showLoading()
         singleThreadExecutor.execute {
             try {
-                Timber.d("load more start downloading ${Thread.currentThread()}")
                 downloadDataPlain(isRefreshing, isLoadMore, applyFilter, courseType)
-                Timber.d("load more end downloading ${Thread.currentThread()}")
             } finally {
                 mainHandler.post {
                     currentNumberOfTasks--

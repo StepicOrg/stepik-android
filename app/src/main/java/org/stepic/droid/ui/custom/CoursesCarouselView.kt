@@ -5,6 +5,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import android.support.annotation.StringRes
 import android.support.v4.app.FragmentActivity
+import android.support.v4.view.ViewCompat
 import android.support.v7.widget.GridLayoutManager
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -92,12 +93,13 @@ constructor(
     private var _info: CoursesCarouselInfo? = null
         private set(value) {
             field = value
-            if (field != null) {
-                onInfoInitialized()
+            if (value != null) {
+                onInfoInitialized(value)
             }
         }
     private val info: CoursesCarouselInfo
         get() = _info ?: throw IllegalStateException("Info is not set")
+    private var needExecuteOnInfoInitialized = false
 
 
     private var gridLayoutManager: GridLayoutManager? = null
@@ -118,16 +120,22 @@ constructor(
 
         val layoutInflater = LayoutInflater.from(context)
         layoutInflater.inflate(R.layout.fragment_courses_carousel, this, true)
-        Timber.d("this is created")
+        initCourseCarousel()
     }
 
-    private fun onInfoInitialized() {
-        initCourseCarousel()
+    private fun onInfoInitialized(info: CoursesCarouselInfo) {
+        needExecuteOnInfoInitialized = if (ViewCompat.isAttachedToWindow(this)) {
+            initCourseCarouselWithInfo(info)
 
-        courses.clear()
-        downloadData()
+            courses.clear()
+            downloadData()
 
-        restoreState()
+            restoreState()
+
+            false
+        } else {
+            true
+        }
     }
 
     override fun onAttachedToWindow() {
@@ -138,6 +146,10 @@ constructor(
         droppingPresenter.attachView(this)
         droppingClient.subscribe(this)
         joiningListenerClient.subscribe(this)
+
+        if (needExecuteOnInfoInitialized) {
+            onInfoInitialized(info)
+        }
     }
 
     override fun onDetachedFromWindow() {
@@ -152,28 +164,32 @@ constructor(
     }
 
     private fun initCourseCarousel() {
-        coursesCarouselTitle.text = getCarouselTitle()
-        coursesCarouselTitle.setTextColor(ColorUtil.getColorArgb(info.colorType.textColor))
-
-        coursesCarouselRoot.setBackgroundColor(ColorUtil.getColorArgb(info.colorType.backgroundColorRes))
-
+        coursesCarouselCount.visibility = View.GONE
         coursesViewAll.setOnClickListener {
             viewAll()
         }
-        coursesViewAll.setTextColor(ColorUtil.getColorArgb(info.colorType.viewAllColorRes, context))
 
         gridLayoutManager = GridLayoutManager(context, ROW_COUNT, GridLayoutManager.HORIZONTAL, false)
         coursesRecycler.layoutManager = gridLayoutManager
-        val showMore = info.table == Table.enrolled
-        coursesRecycler.adapter = CoursesAdapter(context as FragmentActivity, courses, continueCoursePresenter, droppingPresenter, false, showMore, info.colorType)
         val verticalSpaceBetweenItems = resources.getDimensionPixelSize(R.dimen.course_list_between_items_padding)
         val leftSpacePx = resources.getDimensionPixelSize(R.dimen.course_list_side_padding)
+
         coursesRecycler.addItemDecoration(VerticalSpacesInGridDecoration(verticalSpaceBetweenItems / 2, ROW_COUNT)) //warning: verticalSpaceBetweenItems/2 – workaround for some bug, decoration will set this param twice
         coursesRecycler.addItemDecoration(LeftSpacesDecoration(leftSpacePx))
         coursesRecycler.addItemDecoration(RightMarginForLastItems(resources.getDimensionPixelSize(R.dimen.home_right_recycler_padding_without_extra), ROW_COUNT))
         coursesRecycler.itemAnimator.changeDuration = 0
         val snapHelper = StartSnapHelper()
         snapHelper.attachToRecyclerView(coursesRecycler)
+    }
+
+    private fun initCourseCarouselWithInfo(info: CoursesCarouselInfo) {
+        coursesCarouselTitle.text = getCarouselTitle(info)
+        coursesCarouselTitle.setTextColor(ColorUtil.getColorArgb(info.colorType.textColor))
+        coursesCarouselRoot.setBackgroundColor(ColorUtil.getColorArgb(info.colorType.backgroundColorRes))
+        coursesViewAll.setTextColor(ColorUtil.getColorArgb(info.colorType.viewAllColorRes, context))
+
+        val showMore = info.table == Table.enrolled
+        coursesRecycler.adapter = CoursesAdapter(context as FragmentActivity, courses, continueCoursePresenter, droppingPresenter, false, showMore, info.colorType)
     }
 
     override fun onOpenStep(courseId: Long, section: Section, lessonId: Long, unitId: Long, stepPosition: Int) {
@@ -194,6 +210,7 @@ constructor(
     }
 
     override fun showLoading() {
+        Timber.d("show loading")
         coursesViewAll.visibility = View.GONE
         coursesRecycler.visibility = View.GONE
         coursesPlaceholder.visibility = View.GONE
@@ -307,7 +324,7 @@ constructor(
 
     }
 
-    private fun getCarouselTitle(): String = info.title
+    private fun getCarouselTitle(info: CoursesCarouselInfo): String = info.title
 
     private fun restoreState() {
         if (info.table != null) {
