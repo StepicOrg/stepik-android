@@ -6,10 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.catalog_item.view.*
 import org.stepic.droid.R
-import org.stepic.droid.model.CourseListItem
+import org.stepic.droid.model.CoursesCarouselInfo
 
 class CatalogAdapter(
-        private val courseListItems: List<CourseListItem>
+        private val courseListItems: List<CoursesCarouselInfo>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
@@ -33,7 +33,7 @@ class CatalogAdapter(
         }
     }
 
-    private fun courseListItemBy(adapterPosition: Int): CourseListItem = courseListItems[adapterPosition]
+    private fun courseListItemBy(adapterPosition: Int): CoursesCarouselInfo = courseListItems[adapterPosition]
 
     override fun getItemCount(): Int = courseListItems.size
 
@@ -43,9 +43,8 @@ class CatalogAdapter(
 
         private val coursesCarousel = itemView.coursesCarouselItem
 
-        fun bindData(courseListItem: CourseListItem) {
-
-
+        fun bindData(coursesCarouselInfo: CoursesCarouselInfo) {
+            coursesCarousel.setCourseCarouselInfo(coursesCarouselInfo)
         }
 
     }

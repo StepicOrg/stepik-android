@@ -11,7 +11,7 @@ import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.core.presenters.CatalogPresenter
 import org.stepic.droid.core.presenters.contracts.CatalogView
-import org.stepic.droid.model.CourseListItem
+import org.stepic.droid.model.CoursesCarouselInfo
 import org.stepic.droid.ui.adapters.CatalogAdapter
 import org.stepic.droid.ui.util.initCenteredToolbar
 import javax.inject.Inject
@@ -26,7 +26,7 @@ class CatalogFragment : FragmentBase(),
     @Inject
     lateinit var catalogPresenter: CatalogPresenter
 
-    private val courseItems = mutableListOf<CourseListItem>()
+    private val courseCarouselInfoList = mutableListOf<CoursesCarouselInfo>()
 
     override fun injectComponent() {
         App
@@ -58,12 +58,12 @@ class CatalogFragment : FragmentBase(),
 
     private fun initMainRecycler() {
         catalogRecyclerView.layoutManager = LinearLayoutManager(context)
-        catalogRecyclerView.adapter = CatalogAdapter(courseItems)
+        catalogRecyclerView.adapter = CatalogAdapter(courseCarouselInfoList)
     }
 
-    override fun showCourseItems(courseItems: List<CourseListItem>) {
-        this.courseItems.clear()
-        this.courseItems.addAll(courseItems)
+    override fun showCarousels(courseItems: List<CoursesCarouselInfo>) {
+        this.courseCarouselInfoList.clear()
+        this.courseCarouselInfoList.addAll(courseItems)
         catalogRecyclerView.adapter.notifyDataSetChanged()
     }
 

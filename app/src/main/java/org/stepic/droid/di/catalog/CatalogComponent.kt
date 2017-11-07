@@ -4,7 +4,7 @@ import dagger.Subcomponent
 import org.stepic.droid.ui.fragments.CatalogFragment
 
 @CatalogScope
-@Subcomponent
+@Subcomponent(modules = arrayOf(CatalogModule::class))
 interface CatalogComponent {
 
     @Subcomponent.Builder

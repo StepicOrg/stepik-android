@@ -21,6 +21,7 @@ import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.dropping.contract.DroppingListener
 import org.stepic.droid.core.joining.contract.JoiningListener
 import org.stepic.droid.core.presenters.ContinueCoursePresenter
+import org.stepic.droid.core.presenters.CourseListCollection
 import org.stepic.droid.core.presenters.DroppingPresenter
 import org.stepic.droid.core.presenters.PersistentCourseListPresenter
 import org.stepic.droid.core.presenters.contracts.ContinueCourseView
@@ -86,6 +87,9 @@ constructor(
     @Inject
     lateinit var analytic: Analytic
 
+    @Inject
+    lateinit var courseListCollection: CourseListCollection
+
     private val courses = ArrayList<Course>()
 
     private var lastSavedScrollPosition: Int = DEFAULT_SCROLL_POSITION
@@ -146,6 +150,7 @@ constructor(
         droppingPresenter.attachView(this)
         droppingClient.subscribe(this)
         joiningListenerClient.subscribe(this)
+        courseListCollection.attachView(this)
 
         if (needExecuteOnInfoInitialized) {
             onInfoInitialized(info)
@@ -155,6 +160,7 @@ constructor(
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
 
+        courseListCollection.detachView(this)
         joiningListenerClient.unsubscribe(this)
         droppingClient.unsubscribe(this)
         continueCoursePresenter.detachView(this)
@@ -210,7 +216,6 @@ constructor(
     }
 
     override fun showLoading() {
-        Timber.d("show loading")
         coursesViewAll.visibility = View.GONE
         coursesRecycler.visibility = View.GONE
         coursesPlaceholder.visibility = View.GONE
@@ -340,7 +345,9 @@ constructor(
         }
 
         if (info.table == null) {
-            // TODO: 26.09.2017 implement course list fetching (presenter and view : CoursesView)
+            info.courseIds?.let {
+                courseListCollection.onShowCollection(it)
+            }
         }
     }
 

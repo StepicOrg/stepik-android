@@ -5,9 +5,9 @@ import java.util.*
 data class CourseListItem(
         private val id: Long,
         private val position: Int,
-        private val title: String,
+        val title: String,
         private val language: String,
-        private val courses: LongArray
+        val courses: LongArray
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

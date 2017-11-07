@@ -1,17 +1,8 @@
 package org.stepic.droid.mappers
 
+//dagger 2 cannot find class with "in S"
+interface Mapper<S, out D> {
+    fun map(item: S): D
 
-/**
- * this class is ok, when we don't need some extra information
- */
-interface Mapper<in S, out D> {
-    fun S.to(): D
-
-    fun List<S>.to(): List<D> {
-        val result = ArrayList<D>()
-        this.forEach {
-            result.add(it.to())
-        }
-        return result
-    }
+    fun map(sourceList: List<S>): List<D> = sourceList.map { map(it) }
 }

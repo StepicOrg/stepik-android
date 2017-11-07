@@ -69,6 +69,8 @@ public interface Api {
 
     Call<CoursesStepicResponse> getCourses(int page, long[] ids);
 
+    Single<CoursesStepicResponse> getCoursesReactive(int page, @NotNull long[] ids);
+
     Call<AttemptResponse> createNewAttempt(long stepId);
 
     Call<SubmissionResponse> createNewSubmission(Reply reply, long attemptId);
