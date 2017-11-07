@@ -79,12 +79,6 @@ class FastContinueFragment : FragmentBase(),
                 .inject(this)
     }
 
-    override fun onReleaseComponent() {
-        App
-                .componentManager()
-                .releaseCourseGeneralComponent()
-    }
-
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View?
             = inflater?.inflate(R.layout.fragment_fast_continue, container, false)
 

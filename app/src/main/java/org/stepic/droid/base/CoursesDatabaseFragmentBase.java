@@ -68,13 +68,6 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     }
 
     @Override
-    protected void onReleaseComponent() {
-        App.Companion
-                .componentManager()
-                .releaseCourseGeneralComponent();
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);

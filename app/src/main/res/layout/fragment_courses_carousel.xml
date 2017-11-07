@@ -95,6 +95,7 @@
         android:scrollbarStyle="outsideOverlay"
         android:scrollbars="none"
         android:splitMotionEvents="false"
+        android:visibility="gone"
         />
 
     <include

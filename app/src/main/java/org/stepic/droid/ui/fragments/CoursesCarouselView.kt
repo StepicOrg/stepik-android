@@ -1,18 +1,22 @@
 package org.stepic.droid.ui.fragments
 
-import android.os.Bundle
+import android.content.Context
+import android.os.Parcel
+import android.os.Parcelable
 import android.support.annotation.StringRes
+import android.support.v4.app.FragmentActivity
 import android.support.v7.widget.GridLayoutManager
+import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.Toast
-import kotlinx.android.synthetic.main.fragment_courses_carousel.*
+import kotlinx.android.synthetic.main.fragment_courses_carousel.view.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.Client
-import org.stepic.droid.base.FragmentBase
+import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.dropping.contract.DroppingListener
 import org.stepic.droid.core.joining.contract.JoiningListener
 import org.stepic.droid.core.presenters.ContinueCoursePresenter
@@ -35,28 +39,26 @@ import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.StepikUtil
 import org.stepic.droid.util.SuppressFBWarnings
+import timber.log.Timber
 import javax.inject.Inject
 
 @SuppressFBWarnings("RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE", justification = "Kotlin adds null check for lateinit properties, but Findbugs highlights it as redundant")
-class CoursesCarouselFragment
-    : FragmentBase(),
+class CoursesCarouselView
+@JvmOverloads
+constructor(
+        context: Context,
+        attrs: AttributeSet? = null,
+        defStyleAttr: Int = 0,
+        defStyleRes: Int = 0
+) : FrameLayout(context, attrs, defStyleAttr, defStyleRes),
         ContinueCourseView,
         CoursesView,
         DroppingView,
         JoiningListener,
         DroppingListener {
+
     companion object {
-        private const val COURSE_CAROUSEL_INFO_KEY = "COURSE_CAROUSEL_INFO_KEY"
-
-        fun newInstance(coursesCarouselInfo: CoursesCarouselInfo): CoursesCarouselFragment {
-            val args = Bundle()
-            val fragment = CoursesCarouselFragment()
-            args.putParcelable(COURSE_CAROUSEL_INFO_KEY, coursesCarouselInfo)
-            fragment.arguments = args
-            return fragment
-        }
-
-        //FIXME: 04.09.17 if adapter.count < ROW_COUNT -> recycler creates extra padding
+        private const val DEFAULT_SCROLL_POSITION = -1
         private const val ROW_COUNT = 2
 
         private const val continueLoadingTag = "continueLoadingTag"
@@ -77,60 +79,76 @@ class CoursesCarouselFragment
     @Inject
     lateinit var joiningListenerClient: Client<JoiningListener>
 
-    private val courses = ArrayList<Course>()
-    private lateinit var info: CoursesCarouselInfo
-    private var gridLayoutManager: GridLayoutManager? = null
+    @Inject
+    lateinit var screenManager: ScreenManager
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        info = arguments.getParcelable(COURSE_CAROUSEL_INFO_KEY)
+    @Inject
+    lateinit var analytic: Analytic
+
+    private val courses = ArrayList<Course>()
+
+    private var lastSavedScrollPosition: Int = DEFAULT_SCROLL_POSITION
+
+    private var _info: CoursesCarouselInfo? = null
+        private set(value) {
+            field = value
+            if (field != null) {
+                onInfoInitialized()
+            }
+        }
+    private val info: CoursesCarouselInfo
+        get() = _info ?: throw IllegalStateException("Info is not set")
+
+
+    private var gridLayoutManager: GridLayoutManager? = null
+    private val activity = context as FragmentActivity
+    private val fragmentManager = activity.supportFragmentManager
+
+    fun setCourseCarouselInfo(outerInfo: CoursesCarouselInfo) {
+        _info = outerInfo
     }
 
-    override fun injectComponent() {
+    init {
         App
                 .componentManager()
                 .courseGeneralComponent()
                 .courseListComponentBuilder()
                 .build()
                 .inject(this)
+
+        val layoutInflater = LayoutInflater.from(context)
+        layoutInflater.inflate(R.layout.fragment_courses_carousel, this, true)
+        Timber.d("this is created")
     }
 
-    override fun onReleaseComponent() {
-        App
-                .componentManager()
-                .releaseCourseGeneralComponent()
-    }
-
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View?
-            = inflater?.inflate(R.layout.fragment_courses_carousel, container, false)
-
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    private fun onInfoInitialized() {
         initCourseCarousel()
+
+        courses.clear()
+        downloadData()
+
+        restoreState()
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+
         continueCoursePresenter.attachView(this)
         courseListPresenter.attachView(this)
         droppingPresenter.attachView(this)
         droppingClient.subscribe(this)
         joiningListenerClient.subscribe(this)
-
-        restoreState()
-
-        courses.clear()
-        downloadData()
     }
 
-    override fun onPause() {
-        super.onPause()
-        ProgressHelper.dismiss(fragmentManager, continueLoadingTag)
-    }
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
 
-    override fun onDestroyView() {
-        super.onDestroyView()
         joiningListenerClient.unsubscribe(this)
         droppingClient.unsubscribe(this)
         continueCoursePresenter.detachView(this)
         courseListPresenter.detachView(this)
         droppingPresenter.detachView(this)
+        ProgressHelper.dismiss(fragmentManager, continueLoadingTag)
     }
 
     private fun initCourseCarousel() {
@@ -147,7 +165,7 @@ class CoursesCarouselFragment
         gridLayoutManager = GridLayoutManager(context, ROW_COUNT, GridLayoutManager.HORIZONTAL, false)
         coursesRecycler.layoutManager = gridLayoutManager
         val showMore = info.table == Table.enrolled
-        coursesRecycler.adapter = CoursesAdapter(this, courses, continueCoursePresenter, droppingPresenter, false, showMore, info.colorType)
+        coursesRecycler.adapter = CoursesAdapter(context as FragmentActivity, courses, continueCoursePresenter, droppingPresenter, false, showMore, info.colorType)
         val verticalSpaceBetweenItems = resources.getDimensionPixelSize(R.dimen.course_list_between_items_padding)
         val leftSpacePx = resources.getDimensionPixelSize(R.dimen.course_list_side_padding)
         coursesRecycler.addItemDecoration(VerticalSpacesInGridDecoration(verticalSpaceBetweenItems / 2, ROW_COUNT)) //warning: verticalSpaceBetweenItems/2 – workaround for some bug, decoration will set this param twice
@@ -227,6 +245,10 @@ class CoursesCarouselFragment
     override fun showCourses(courses: MutableList<Course>) {
         coursesLoadingView.visibility = View.GONE
         coursesPlaceholder.visibility = View.GONE
+        if (lastSavedScrollPosition != DEFAULT_SCROLL_POSITION) {
+            coursesRecycler.scrollToPosition(lastSavedScrollPosition)
+            lastSavedScrollPosition = DEFAULT_SCROLL_POSITION
+        }
         coursesRecycler.visibility = View.VISIBLE
         coursesViewAll.visibility = View.VISIBLE
         this.courses.clear()
@@ -348,6 +370,56 @@ class CoursesCarouselFragment
         } else {
             coursesCarouselCount.visibility = View.VISIBLE
             coursesCarouselCount.text = resources.getQuantityString(R.plurals.course_count, courses.size, courses.size)
+        }
+    }
+
+    public override fun onSaveInstanceState(): Parcelable {
+        val superState = super.onSaveInstanceState()
+        val savedState = SavedState(superState)
+
+        savedState.info = this._info
+        savedState.scrollPosition = (coursesRecycler.layoutManager as GridLayoutManager).findFirstCompletelyVisibleItemPosition()
+        Timber.d("onSave ${savedState.scrollPosition}")
+        return savedState
+    }
+
+    public override fun onRestoreInstanceState(state: Parcelable) {
+        if (state !is SavedState) {
+            super.onRestoreInstanceState(state)
+            return
+        }
+
+        super.onRestoreInstanceState(state.superState)
+
+        this._info = state.info
+
+        lastSavedScrollPosition = state.scrollPosition
+    }
+
+    private class SavedState : View.BaseSavedState {
+
+        var info: CoursesCarouselInfo? = null
+        var scrollPosition: Int = 0
+
+        constructor(superState: Parcelable) : super(superState)
+
+        private constructor(input: Parcel) : super(input) {
+            this.info = input.readParcelable<CoursesCarouselInfo>(CoursesCarouselInfo::class.java.classLoader)
+        }
+
+        override fun writeToParcel(out: Parcel, flags: Int) {
+            super.writeToParcel(out, flags)
+            out.writeParcelable(this.info, flags)
+        }
+
+        companion object {
+            @JvmField
+            val CREATOR: Parcelable.Creator<SavedState> = object : Parcelable.Creator<SavedState> {
+                override fun createFromParcel(input: Parcel): SavedState = SavedState(input)
+
+                override fun newArray(size: Int): Array<SavedState?> = arrayOfNulls(size)
+            }
+
         }
     }
 

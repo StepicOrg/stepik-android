@@ -117,14 +117,6 @@ public abstract class CourseListFragmentBase extends FragmentBase
     }
 
     @Override
-    protected void onReleaseComponent() {
-        App
-                .Companion
-                .componentManager()
-                .releaseCourseGeneralComponent();
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
@@ -146,7 +138,7 @@ public abstract class CourseListFragmentBase extends FragmentBase
 
         if (courses == null) courses = new ArrayList<>();
         boolean showMore = getCourseType() == Table.enrolled;
-        coursesAdapter = new CoursesAdapter(this, courses, continueCoursePresenter, droppingPresenter, true, showMore, CoursesCarouselColorType.Light);
+        coursesAdapter = new CoursesAdapter(getActivity(), courses, continueCoursePresenter, droppingPresenter, true, showMore, CoursesCarouselColorType.Light);
         listOfCoursesView.setAdapter(coursesAdapter);
         layoutManager = new WrapContentLinearLayoutManager(getContext());
         listOfCoursesView.setLayoutManager(layoutManager);

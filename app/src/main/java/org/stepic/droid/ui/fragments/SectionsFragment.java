@@ -224,14 +224,6 @@ public class SectionsFragment
     }
 
     @Override
-    protected void onReleaseComponent() {
-        App
-                .Companion
-                .componentManager()
-                .releaseCourseGeneralComponent();
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);

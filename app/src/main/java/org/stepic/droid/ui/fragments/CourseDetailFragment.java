@@ -196,13 +196,6 @@ public class CourseDetailFragment extends FragmentBase implements
     }
 
     @Override
-    protected void onReleaseComponent() {
-        App.Companion
-                .componentManager()
-                .releaseCourseGeneralComponent();
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
