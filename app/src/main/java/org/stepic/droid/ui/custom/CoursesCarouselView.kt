@@ -1,4 +1,4 @@
-package org.stepic.droid.ui.fragments
+package org.stepic.droid.ui.custom
 
 import android.content.Context
 import android.os.Parcel

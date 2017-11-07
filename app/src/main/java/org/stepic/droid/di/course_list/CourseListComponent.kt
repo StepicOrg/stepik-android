@@ -4,7 +4,7 @@ import dagger.Subcomponent
 import org.stepic.droid.base.CoursesDatabaseFragmentBase
 import org.stepic.droid.ui.fragments.CourseListFragmentBase
 import org.stepic.droid.ui.fragments.CourseSearchFragment
-import org.stepic.droid.ui.fragments.CoursesCarouselView
+import org.stepic.droid.ui.custom.CoursesCarouselView
 import org.stepic.droid.ui.fragments.FastContinueFragment
 
 @CourseListScope

@@ -28,12 +28,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
-            <org.stepic.droid.ui.fragments.CoursesCarouselView
+            <org.stepic.droid.ui.custom.CoursesCarouselView
                 android:id="@+id/myCoursesView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
-            <org.stepic.droid.ui.fragments.CoursesCarouselView
+            <org.stepic.droid.ui.custom.CoursesCarouselView
                 android:id="@+id/popularCoursesView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
