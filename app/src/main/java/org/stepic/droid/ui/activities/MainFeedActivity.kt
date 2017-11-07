@@ -26,8 +26,8 @@ import org.stepic.droid.ui.activities.contracts.RootScreen
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.dialogs.LogoutAreYouSureDialog
 import org.stepic.droid.ui.dialogs.NeedUpdatingDialog
+import org.stepic.droid.ui.fragments.CatalogFragment
 import org.stepic.droid.ui.fragments.CertificatesFragment
-import org.stepic.droid.ui.fragments.FindCoursesFragment
 import org.stepic.droid.ui.fragments.HomeFragment
 import org.stepic.droid.ui.fragments.ProfileFragment
 import org.stepic.droid.util.AppConstants
@@ -256,7 +256,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
                 getNextFragmentOrNull(currentFragmentTag, HomeFragment::class.java.simpleName, HomeFragment.Companion::newInstance)
             }
             R.id.find_courses -> {
-                getNextFragmentOrNull(currentFragmentTag, FindCoursesFragment::class.java.simpleName, FindCoursesFragment::newInstance)
+                getNextFragmentOrNull(currentFragmentTag, CatalogFragment::class.java.simpleName, CatalogFragment.Companion::newInstance)
             }
             R.id.profile -> {
                 getNextFragmentOrNull(currentFragmentTag, ProfileFragment::class.java.simpleName, ProfileFragment.Companion::newInstance)

@@ -7,11 +7,25 @@
     android:layout_height="wrap_content"
     android:paddingBottom="@dimen/guideline_standard_padding">
 
+    <org.stepic.droid.ui.custom.PlaceholderTextView
+        android:id="@+id/coursesCarouselDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="@dimen/course_list_side_padding"
+        android:layout_marginLeft="@dimen/course_list_side_padding"
+        android:layout_marginRight="@dimen/course_list_side_padding"
+        android:layout_marginStart="@dimen/course_list_side_padding"
+        android:layout_marginTop="@dimen/guideline_standard_padding"
+        android:visibility="gone"
+        tools:visibility="visible"/>
+
     <TextView
         android:id="@+id/coursesCarouselTitle"
         fontPath="fonts/Roboto-Regular.ttf"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/coursesCarouselDescription"
         android:layout_marginLeft="@dimen/course_list_side_padding"
         android:layout_marginStart="@dimen/course_list_side_padding"
         android:layout_toLeftOf="@+id/coursesViewAll"
