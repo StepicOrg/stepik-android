@@ -856,7 +856,12 @@ public class SectionsFragment
         rootView.postDelayed(new Runnable() {
             @Override
             public void run() {
-                final View shareView = rootView.findViewById(R.id.menu_item_share);
+                @Nullable
+                View shareView = null;
+                if (rootView != null) {
+                    shareView = rootView.findViewById(R.id.menu_item_share);
+                }
+
                 if (shareView != null) {
                     inviteFriendsPopupWindow =
                             PopupHelper.INSTANCE.showPopupAnchoredToView(getContext(), shareView, getString(R.string.invite_friends_description));
