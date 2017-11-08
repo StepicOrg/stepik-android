@@ -112,7 +112,7 @@ open class FindCoursesFragment: CoursesDatabaseFragmentBase() {
             })
 
             it.setOnSearchClickListener {
-                searchQueriesRecyclerView.scrollTo(0, 0)
+                searchQueriesRecyclerView.layoutManager?.scrollToPosition(0)
                 searchQueriesRecyclerView.visibility = View.VISIBLE
             }
 
