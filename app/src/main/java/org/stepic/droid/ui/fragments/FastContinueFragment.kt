@@ -154,7 +154,7 @@ class FastContinueFragment : FragmentBase(),
         })
     }
 
-    override fun showCourses(courses: MutableList<Course>) {
+    override fun showCourses(courses: List<Course>) {
         fastContinueProgress.visibility = View.GONE
         fastContinuePlaceholder.visibility = View.GONE
         showMainGroup(true)

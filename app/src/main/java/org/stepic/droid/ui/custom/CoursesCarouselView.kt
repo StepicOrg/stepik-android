@@ -264,7 +264,7 @@ constructor(
         }
     }
 
-    override fun showCourses(courses: MutableList<Course>) {
+    override fun showCourses(courses: List<Course>) {
         coursesLoadingView.visibility = View.GONE
         coursesPlaceholder.visibility = View.GONE
         if (lastSavedScrollPosition != DEFAULT_SCROLL_POSITION) {

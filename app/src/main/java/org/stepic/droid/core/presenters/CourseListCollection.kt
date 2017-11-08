@@ -29,7 +29,14 @@ constructor(
         view?.showLoading()
         api
                 .getCoursesReactive(DEFAULT_PAGE, courseIds)
-                .map { it.courses }
+                .map {
+                    val coursesMap = it.courses.associateBy { it.courseId }
+                    courseIds
+                            .asIterable()
+                            .mapNotNull {
+                                coursesMap[it]
+                            }
+                }
                 .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)
                 .subscribe({
