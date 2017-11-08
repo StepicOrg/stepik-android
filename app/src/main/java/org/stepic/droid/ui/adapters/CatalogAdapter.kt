@@ -15,6 +15,9 @@ class CatalogAdapter(
 
     companion object {
         private const val CAROUSEL_TYPE = 0
+        private const val LANGUAGES_TYPE = 1
+
+        private const val PRE_CAROUSEL_COUNT = 1
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -23,6 +26,10 @@ class CatalogAdapter(
             CAROUSEL_TYPE -> {
                 val view = layoutInflater.inflate(R.layout.catalog_item, parent, false)
                 CarouselViewHolder(view)
+            }
+            LANGUAGES_TYPE -> {
+                val view = layoutInflater.inflate(R.layout.view_course_languages, parent, false)
+                LanguagesViewHolder(view)
             }
             else -> throw IllegalStateException("CatalogAdapter viewType = $viewType is unsupported")
         }
@@ -36,6 +43,9 @@ class CatalogAdapter(
                 val descriptionColors = getDescriptionColors(position)
                 holder.bindData(coursesCarouselInfo, descriptionColors)
             }
+            LANGUAGES_TYPE -> {
+                // no-op
+            }
         }
     }
 
@@ -46,11 +56,17 @@ class CatalogAdapter(
                 else -> throw IllegalStateException("Use correct divider")
             }
 
-    private fun courseListItemBy(adapterPosition: Int): CoursesCarouselInfo = courseListItems[adapterPosition]
+    private fun courseListItemBy(adapterPosition: Int): CoursesCarouselInfo =
+            courseListItems[adapterPosition - PRE_CAROUSEL_COUNT]
 
-    override fun getItemCount(): Int = courseListItems.size
+    override fun getItemCount(): Int = courseListItems.size + PRE_CAROUSEL_COUNT
 
-    override fun getItemViewType(position: Int): Int = CAROUSEL_TYPE
+    override fun getItemViewType(adapterPosition: Int): Int =
+            when (adapterPosition) {
+                0 -> LANGUAGES_TYPE
+                in PRE_CAROUSEL_COUNT until itemCount -> CAROUSEL_TYPE
+                else -> throw IllegalStateException("Catalog recycler type is not identified")
+            }
 
     private class CarouselViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
@@ -60,6 +76,10 @@ class CatalogAdapter(
             coursesCarousel.setDescriptionColors(descriptionColors)
             coursesCarousel.setCourseCarouselInfo(coursesCarouselInfo)
         }
+
+    }
+
+    private class LanguagesViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     }
 }
