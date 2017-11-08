@@ -84,7 +84,6 @@ public class CourseSearchFragment extends CourseListFragmentBase {
         } else {
             emptySearch.setVisibility(View.GONE);
             swipeRefreshLayout.setVisibility(View.VISIBLE);
-
         }
     }
 

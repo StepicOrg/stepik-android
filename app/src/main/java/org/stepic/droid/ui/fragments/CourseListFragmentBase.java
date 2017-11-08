@@ -203,6 +203,7 @@ public abstract class CourseListFragmentBase extends FragmentBase
         super.onDestroyView();
     }
 
+    @Nullable
     protected abstract Table getCourseType();
 
     public final void updateEnrollment(Course courseForUpdate, long enrollment) {

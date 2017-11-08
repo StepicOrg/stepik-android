@@ -4,7 +4,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import org.stepic.droid.R
 
-class PopularCoursesAloneFragment : FindCoursesFragment() {
+open class PopularCoursesAloneFragment : FindCoursesFragment() {
     companion object {
         fun newInstance(): PopularCoursesAloneFragment = PopularCoursesAloneFragment()
     }
@@ -13,5 +13,5 @@ class PopularCoursesAloneFragment : FindCoursesFragment() {
         //no-op
     }
 
-    override fun getTitle(): Int = R.string.popular_courses_title
+    override fun getTitle(): String = getString(R.string.popular_courses_title)
 }
