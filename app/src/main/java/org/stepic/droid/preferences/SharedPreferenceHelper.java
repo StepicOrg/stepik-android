@@ -36,7 +36,6 @@ public class SharedPreferenceHelper {
     private static final String DISCOUNTING_POLICY_DIALOG = "discounting_pol_dialog";
     private static final String KEEP_SCREEN_ON_STEPS = "keep_screen_on_steps";
     private static final String ROTATE_PREF = "rotate_pref";
-    private static final String SHOW_FILTER_FEATURE_WITH_LANGUAGE_RESOLVING = "before116";
     private static final String NOTIFICATION_LEARN_DISABLED = "notification_disabled_by_user";
     private static final String NOTIFICATION_COMMENT_DISABLED = "notification_comment_disabled";
     private static final String NOTIFICATION_TEACH_DISABLED = "notification_teach_disabled";
@@ -237,13 +236,6 @@ public class SharedPreferenceHelper {
         put(PreferenceType.LOGIN, NUMBER_OF_SHOWN_STREAK_DIALOG, streakDialogShownNumber + 1);
     }
 
-    public void setNeedResolveLanguage() {
-        put(SharedPreferenceHelper.PreferenceType.DEVICE_SPECIFIC, SHOW_FILTER_FEATURE_WITH_LANGUAGE_RESOLVING, true);
-    }
-
-    private boolean needResolveLanguage() {
-        return getBoolean(SharedPreferenceHelper.PreferenceType.DEVICE_SPECIFIC, SHOW_FILTER_FEATURE_WITH_LANGUAGE_RESOLVING, false); //by default user before 116 and we don't show he/she only language courses #Apps-430
-    }
 
     public enum NotificationDay {
         DAY_ONE(ONE_DAY_NOTIFICATION),
@@ -416,10 +408,15 @@ public class SharedPreferenceHelper {
     @NotNull
     public EnumSet<StepikFilter> getFilterForFeatured() {
         EnumSet<StepikFilter> filters = EnumSet.noneOf(StepikFilter.class);
-        boolean needResolveLanguage = needResolveLanguage();
         for (StepikFilter filter : StepikFilter.values()) {
-            appendValueForFilter(filters, filter, defaultFilter.getDefaultFilter(filter, needResolveLanguage));
+            appendValueForFilter(filters, filter, defaultFilter.getDefaultFilter(filter));
         }
+        if (filters.size() > 1) {
+            //only one of languages are allowed
+            put(PreferenceType.FEATURED_FILTER, mapToPreferenceName(StepikFilter.ENGLISH), false);
+            return EnumSet.of(StepikFilter.RUSSIAN);
+        }
+
         return filters;
     }
 

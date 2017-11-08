@@ -4,5 +4,5 @@ import org.stepic.droid.model.StepikFilter
 
 interface DefaultFilter {
 
-    fun getDefaultFilter(filterValue: StepikFilter, needResolveLanguage: Boolean): Boolean
+    fun getDefaultFilter(filterValue: StepikFilter): Boolean
 }

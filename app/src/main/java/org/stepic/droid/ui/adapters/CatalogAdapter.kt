@@ -4,7 +4,6 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Checkable
 import kotlinx.android.synthetic.main.catalog_item.view.*
 import kotlinx.android.synthetic.main.view_course_languages.view.*
 import org.stepic.droid.R
@@ -99,7 +98,8 @@ class CatalogAdapter(
 
         init {
             val onClickListener = View.OnClickListener { checkableView ->
-                (checkableView as Checkable).toggle()
+                languageRu.toggle()
+                languageEn.toggle()
                 val filters = composeFilters()
                 onFiltersChanged(filters)
             }
