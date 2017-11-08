@@ -8,7 +8,7 @@
 
     <ImageView
         android:id="@+id/searchIcon"
-        android:src="@drawable/ic_action_search"
+        android:tint="@color/new_accent_color"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_margin="16dp" />

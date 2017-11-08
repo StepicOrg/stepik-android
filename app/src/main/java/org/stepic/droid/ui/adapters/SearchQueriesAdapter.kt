@@ -11,11 +11,24 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.search_query_item.view.*
 import org.stepic.droid.R
 import org.stepic.droid.model.SearchQuery
+import org.stepic.droid.model.SearchQuerySource
 
 
 class SearchQueriesAdapter : RecyclerView.Adapter<SearchQueriesAdapter.SearchQueryViewHolder>() {
     private var items: List<SearchQuery> = emptyList()
-    private var rawItems: List<SearchQuery> = emptyList()
+
+    var rawDBItems: List<SearchQuery> = emptyList()
+        set(value) {
+            field = value
+            filterItems()
+        }
+
+    var rawAPIItems: List<SearchQuery> = emptyList()
+        set(value) {
+            field = value
+            filterItems()
+        }
+
     var constraint: String = ""
         set(value) {
             field = value
@@ -33,15 +46,18 @@ class SearchQueriesAdapter : RecyclerView.Adapter<SearchQueriesAdapter.SearchQue
             spannable.setSpan(ForegroundColorSpan(0x44000000), spanStart, spanStart + constraint.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
 
+        holder.itemView.searchIcon.setImageResource(
+                if (query.source == SearchQuerySource.DB) {
+                    R.drawable.ic_history
+                } else {
+                    R.drawable.ic_action_search
+                }
+        )
+
         holder.itemView.searchQuery.text = spannable
         holder.itemView.setOnClickListener {
             searchView?.setQuery(query.text, true)
         }
-    }
-
-    fun replace(collection: List<SearchQuery>) {
-        rawItems = collection
-        filterItems()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
@@ -51,7 +67,9 @@ class SearchQueriesAdapter : RecyclerView.Adapter<SearchQueriesAdapter.SearchQue
     override fun getItemCount() = items.size
 
     private fun filterItems() {
-        items = rawItems.filter { it.text.contains(constraint, ignoreCase = true) }
+        items = (rawDBItems + rawAPIItems)
+                .filter { it.text.contains(constraint, ignoreCase = true) }
+                .distinctBy { it.text.toLowerCase() }
         notifyDataSetChanged()
     }
 

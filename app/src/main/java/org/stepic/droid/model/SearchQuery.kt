@@ -1,3 +1,9 @@
 package org.stepic.droid.model
 
-data class SearchQuery(val text: String)
+enum class SearchQuerySource {
+    DB, API
+}
+
+data class SearchQuery(
+        val text: String,
+        val source: SearchQuerySource = SearchQuerySource.API)
