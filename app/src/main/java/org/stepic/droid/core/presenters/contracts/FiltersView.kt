@@ -4,5 +4,5 @@ import org.stepic.droid.model.StepikFilter
 import java.util.*
 
 interface FiltersView {
-    fun onFiltersPrepared(filterForFeatured: EnumSet<StepikFilter>)
+    fun onFiltersPrepared(filters: EnumSet<StepikFilter>)
 }

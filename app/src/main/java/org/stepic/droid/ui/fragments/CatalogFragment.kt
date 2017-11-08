@@ -7,7 +7,9 @@ import android.view.*
 import kotlinx.android.synthetic.main.fragment_catalog.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
+import org.stepic.droid.base.Client
 import org.stepic.droid.base.FragmentBase
+import org.stepic.droid.core.filters.contract.FiltersListener
 import org.stepic.droid.core.presenters.CatalogPresenter
 import org.stepic.droid.core.presenters.FiltersPresenter
 import org.stepic.droid.core.presenters.contracts.CatalogView
@@ -21,7 +23,7 @@ import java.util.*
 import javax.inject.Inject
 
 class CatalogFragment : FragmentBase(),
-        CatalogView, FiltersView {
+        CatalogView, FiltersView, FiltersListener {
 
     companion object {
         fun newInstance(): FragmentBase = CatalogFragment()
@@ -32,6 +34,9 @@ class CatalogFragment : FragmentBase(),
 
     @Inject
     lateinit var filtersPresenter: FiltersPresenter
+
+    @Inject
+    lateinit var filtersClient: Client<FiltersListener>
 
     private val courseCarouselInfoList = mutableListOf<CoursesCarouselInfo>()
 
@@ -66,14 +71,15 @@ class CatalogFragment : FragmentBase(),
         initCenteredToolbar(R.string.catalog_title, showHomeButton = false)
         initMainRecycler()
 
+        filtersClient.subscribe(this)
         filtersPresenter.attachView(this)
         catalogPresenter.attachView(this)
         filtersPresenter.onNeedFilters()
-        catalogPresenter.onCatalogOpened()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        filtersClient.unsubscribe(this)
         catalogPresenter.detachView(this)
         filtersPresenter.detachView(this)
     }
@@ -122,8 +128,17 @@ class CatalogFragment : FragmentBase(),
         }
     }
 
-    override fun onFiltersPrepared(filterForFeatured: EnumSet<StepikFilter>) {
-        (catalogRecyclerView.adapter as CatalogAdapter).showFilters(filterForFeatured)
+    override fun onFiltersPrepared(filters: EnumSet<StepikFilter>) {
+        updateFilters(filters)
+    }
+
+    override fun onFiltersChanged(filters: EnumSet<StepikFilter>) {
+        updateFilters(filters)
+    }
+
+    private fun updateFilters(filters: EnumSet<StepikFilter>) {
+        (catalogRecyclerView.adapter as CatalogAdapter).showFilters(filters)
+        catalogPresenter.onNeedLoadCatalog(filters)
     }
 
 }
