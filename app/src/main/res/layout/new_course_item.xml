@@ -16,8 +16,8 @@
 
         <ImageView
             android:id="@+id/courseItemImage"
-            android:layout_width="@dimen/new_course_image_size"
-            android:layout_height="@dimen/new_course_image_size"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:background="@drawable/course_image_background"
             android:contentDescription="@string/content_course_logo"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -39,6 +39,8 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="MissingPrefix"
+            android:ellipsize="end"
+            android:maxLines="3"
             tools:text="345678921334567892145678921334567892133456789213345678921334567892136789213"/>
 
         <ImageView
