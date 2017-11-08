@@ -1,10 +1,16 @@
 package org.stepic.droid.core.presenters
 
+import io.reactivex.Completable
+import io.reactivex.Scheduler
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.di.course_list.CourseListScope
+import org.stepic.droid.di.qualifiers.BackgroundScheduler
+import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.model.Course
+import org.stepic.droid.model.SearchQuery
+import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.resolvers.SearchResolver
 import org.stepic.droid.web.Api
 import java.util.*
@@ -20,7 +26,12 @@ class SearchCoursesPresenter
         private val threadPoolExecutor: ThreadPoolExecutor,
         private val mainHandler: MainHandler,
         private val searchResolver: SearchResolver,
-        private val analytic: Analytic)
+        private val databaseFacade: DatabaseFacade,
+        private val analytic: Analytic,
+        @BackgroundScheduler
+        private val scheduler: Scheduler,
+        @MainScheduler
+        private val mainScheduler: Scheduler)
     : PresenterBase<CoursesView>() {
 
     private var isLoading = AtomicBoolean(false)
@@ -42,6 +53,7 @@ class SearchCoursesPresenter
                 analytic.reportEvent(Analytic.Search.SEARCH_NULL)
             } else {
                 analytic.reportEventWithName(Analytic.Search.SEARCH_QUERY, searchQuery)
+                saveSearchQuery(searchQuery)
             }
             view?.showLoading()
             threadPoolExecutor.execute {
@@ -104,8 +116,20 @@ class SearchCoursesPresenter
 
     fun refreshData(searchQuery: String?) {
         if (isLoading.get()) return
-        currentPage.set(1);
+        currentPage.set(1)
         hasNextPage.set(true)
         downloadData(searchQuery)
     }
+
+    private fun saveSearchQuery(query: String) {
+        Completable.fromAction {
+            databaseFacade.addSearchQuery(SearchQuery(query))
+        }
+        .subscribeOn(scheduler)
+        .observeOn(mainScheduler)
+        .subscribe({}, {
+            throwable -> throwable.printStackTrace()
+        })
+    }
+
 }
