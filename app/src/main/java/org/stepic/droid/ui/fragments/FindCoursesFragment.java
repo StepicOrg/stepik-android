@@ -1,18 +1,8 @@
 package org.stepic.droid.ui.fragments;
 
-import android.app.SearchManager;
-import android.app.SearchableInfo;
-import android.content.ComponentName;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.SearchView;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.CoursesDatabaseFragmentBase;
@@ -26,10 +16,6 @@ public class FindCoursesFragment extends CoursesDatabaseFragmentBase {
         return new FindCoursesFragment();
     }
 
-    private SearchView searchView = null;
-    private MenuItem menuItem = null;
-    private boolean handledByRoot = false;
-
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
@@ -41,19 +27,6 @@ public class FindCoursesFragment extends CoursesDatabaseFragmentBase {
                 collapseAndHide(true);
             }
         });
-
-        listOfCoursesView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    if (!handledByRoot) {
-                        collapseAndHide(false);
-                    }
-                    handledByRoot = false;
-                }
-            }
-        });
-
     }
 
     @Override
@@ -65,11 +38,6 @@ public class FindCoursesFragment extends CoursesDatabaseFragmentBase {
     }
 
     private void collapseAndHide(boolean rootHandle) {
-        if (searchView != null && menuItem != null && menuItem.isActionViewExpanded()) {
-            if (rootHandle) handledByRoot = true;
-            hideSoftKeypad();//in collapse action view keypad going to invisible after animation
-            menuItem.collapseActionView();
-        }
     }
 
     @Override
@@ -77,47 +45,7 @@ public class FindCoursesFragment extends CoursesDatabaseFragmentBase {
         return Table.featured;
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.search_menu, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-
-        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
-        menuItem = menu.findItem(R.id.action_search);
-        searchView = (SearchView) menuItem.getActionView();
-
-        ImageView closeImageView = searchView.findViewById(R.id.search_close_btn);
-        closeImageView.setImageDrawable(ContextCompat.getDrawable(getContext(), getCloseIconDrawableRes()));
-
-        ComponentName componentName = getActivity().getComponentName();
-        SearchableInfo searchableInfo = searchManager.getSearchableInfo(componentName);
-        searchView.setSearchableInfo(searchableInfo);
-        searchView.setMaxWidth(20000);//it is dirty workaround for expand in landscape
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                collapseAndHide(false);
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
-    }
-
-    @Override
-    public void onDestroyOptionsMenu() {
-        super.onDestroyOptionsMenu();
-
-        if (searchView != null) {
-            searchView.setOnQueryTextListener(null);
-        }
-        searchView = null;
-    }
-
-    protected String getTitle () {
+    protected String getTitle() {
         return getString(R.string.catalog_title);
     }
 }
