@@ -10,7 +10,7 @@ import javax.inject.Inject
 
 
 class SearchQueryDaoImpl @Inject
-constructor(crudOperations: CrudOperations) : DaoBase<SearchQuery>(crudOperations) {
+constructor(crudOperations: CrudOperations) : DaoBase<SearchQuery>(crudOperations), SearchQueryDao {
     override fun getDbName(): String = DbStructureSearchQuery.SEARCH_QUERY
 
     override fun getDefaultPrimaryColumn(): String = DbStructureSearchQuery.Column.QUERY_TEXT
@@ -30,5 +30,16 @@ constructor(crudOperations: CrudOperations) : DaoBase<SearchQuery>(crudOperation
                     text = cursor.getString(cursor.getColumnIndex(DbStructureSearchQuery.Column.QUERY_TEXT)),
                     source = SearchQuerySource.DB
             )
+
+    override fun getSearchQueries(constraint: String, count: Int): List<SearchQuery> {
+        val sql =
+                "SELECT * FROM $dbName " +
+                "WHERE ${DbStructureSearchQuery.Column.QUERY_TEXT} LIKE ? " +
+                        "ORDER BY ${DbStructureSearchQuery.Column.QUERY_TIMESTAMP} DESC " +
+                        "LIMIT $count"
+
+        val pattern = "%${constraint.toLowerCase()}%"
+        return getAllWithQuery(sql, arrayOf(pattern))
+    }
 
 }

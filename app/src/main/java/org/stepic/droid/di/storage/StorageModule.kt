@@ -106,7 +106,7 @@ abstract class StorageModule {
 
     @StorageSingleton
     @Binds
-    internal abstract fun provideSearchQueryDao(searchQueryDaoImpl: SearchQueryDaoImpl): IDao<SearchQuery>
+    internal abstract fun provideSearchQueryDao(searchQueryDaoImpl: SearchQueryDaoImpl): SearchQueryDao
 
     @Module
     companion object {

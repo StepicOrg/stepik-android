@@ -9,6 +9,7 @@ import org.stepic.droid.model.Unit
 import org.stepic.droid.model.code.CodeSubmission
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.storage.dao.IDao
+import org.stepic.droid.storage.dao.SearchQueryDao
 import org.stepic.droid.storage.structure.*
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DbParseHelper
@@ -21,6 +22,7 @@ class DatabaseFacade
 @Inject constructor(
         private val stepInfoOperation: StepInfoOperation,
         private val codeSubmissionDao: IDao<CodeSubmission>,
+        private val searchQueryDao: SearchQueryDao,
         private val sectionDao: IDao<Section>,
         private val unitDao: IDao<Unit>,
         private val progressDao: IDao<Progress>,
@@ -61,6 +63,7 @@ class DatabaseFacade
         externalVideoUrlDao.removeAll()
         assignmentDao.removeAll()
         codeSubmissionDao.removeAll()
+        searchQueryDao.removeAll()
     }
 
     fun getCourseDao(table: Table) =
@@ -458,6 +461,13 @@ class DatabaseFacade
 
     fun addCodeSubmission(codeSubmission: CodeSubmission) {
         codeSubmissionDao.insertOrUpdate(codeSubmission)
+    }
+
+    fun getSearchQueries(constraint: String, count: Int) =
+            searchQueryDao.getSearchQueries(constraint, count)
+
+    fun addSearchQuery(searchQuery: SearchQuery) {
+        searchQueryDao.insertOrUpdate(searchQuery)
     }
 
 }
