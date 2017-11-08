@@ -50,7 +50,7 @@ class CatalogFragment : FragmentBase(),
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        catalogRecyclerView.setOnFocusChangeListener { v, hasFocus ->
+        catalogRecyclerView.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 collapseAndHide()
             }
