@@ -12,7 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.Toast
-import kotlinx.android.synthetic.main.fragment_courses_carousel.view.*
+import kotlinx.android.synthetic.main.view_courses_carousel.view.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
@@ -123,7 +123,7 @@ constructor(
                 .inject(this)
 
         val layoutInflater = LayoutInflater.from(context)
-        layoutInflater.inflate(R.layout.fragment_courses_carousel, this, true)
+        layoutInflater.inflate(R.layout.view_courses_carousel, this, true)
         initCourseCarousel()
     }
 
