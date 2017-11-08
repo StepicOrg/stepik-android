@@ -9,7 +9,8 @@ data class CoursesCarouselInfo(
         val colorType: CoursesCarouselColorType,
         val title: String,
         val table: Table?, //if null -> see courseIds:LongArray
-        val courseIds: LongArray?
+        val courseIds: LongArray?,
+        val description: String = ""
 ) : Parcelable {
 
     private constructor(source: Parcel) : this(

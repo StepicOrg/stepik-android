@@ -7,4 +7,5 @@
     <integer name="max_length_of_password">128</integer>
     <integer name="arrow_bottom_top_duration">300</integer>
     <integer name="arrow_stroke">4</integer>
+    <integer name="gradient_angle">45</integer>
 </resources>

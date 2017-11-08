@@ -7,7 +7,8 @@ data class CourseListItem(
         private val position: Int,
         val title: String,
         private val language: String,
-        val courses: LongArray
+        val courses: LongArray,
+        val description: String
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

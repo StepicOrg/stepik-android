@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.catalog_item.view.*
 import org.stepic.droid.R
+import org.stepic.droid.model.CollectionDescriptionColors
 import org.stepic.droid.model.CoursesCarouselInfo
 
 class CatalogAdapter(
@@ -29,9 +30,21 @@ class CatalogAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (getItemViewType(position)) {
-            CAROUSEL_TYPE -> (holder as CarouselViewHolder).bindData(courseListItemBy(adapterPosition = position))
+            CAROUSEL_TYPE -> {
+                holder as CarouselViewHolder
+                val coursesCarouselInfo = courseListItemBy(adapterPosition = position)
+                val descriptionColors = getDescriptionColors(position)
+                holder.bindData(coursesCarouselInfo, descriptionColors)
+            }
         }
     }
+
+    private fun getDescriptionColors(position: Int): CollectionDescriptionColors =
+            when (position % 2) {
+                0 -> CollectionDescriptionColors.BLUE
+                1 -> CollectionDescriptionColors.FIRE
+                else -> throw IllegalStateException("Use correct divider")
+            }
 
     private fun courseListItemBy(adapterPosition: Int): CoursesCarouselInfo = courseListItems[adapterPosition]
 
@@ -43,7 +56,8 @@ class CatalogAdapter(
 
         private val coursesCarousel = itemView.coursesCarouselItem
 
-        fun bindData(coursesCarouselInfo: CoursesCarouselInfo) {
+        fun bindData(coursesCarouselInfo: CoursesCarouselInfo, descriptionColors: CollectionDescriptionColors) {
+            coursesCarousel.setDescriptionColors(descriptionColors)
             coursesCarousel.setCourseCarouselInfo(coursesCarouselInfo)
         }
 

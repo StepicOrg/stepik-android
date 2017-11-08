@@ -14,7 +14,8 @@ constructor() : Mapper<CourseListItem, CoursesCarouselInfo> {
                 colorType = CoursesCarouselColorType.Light,
                 title = item.title,
                 table = null,
-                courseIds = item.courses
+                courseIds = item.courses,
+                description = item.description
         )
     }
 }

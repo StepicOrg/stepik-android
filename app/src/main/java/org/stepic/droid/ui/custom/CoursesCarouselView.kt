@@ -27,6 +27,7 @@ import org.stepic.droid.core.presenters.PersistentCourseListPresenter
 import org.stepic.droid.core.presenters.contracts.ContinueCourseView
 import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.core.presenters.contracts.DroppingView
+import org.stepic.droid.model.CollectionDescriptionColors
 import org.stepic.droid.model.Course
 import org.stepic.droid.model.CoursesCarouselInfo
 import org.stepic.droid.model.Section
@@ -41,7 +42,6 @@ import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.StepikUtil
 import org.stepic.droid.util.SuppressFBWarnings
-import timber.log.Timber
 import javax.inject.Inject
 
 @SuppressFBWarnings("RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE", justification = "Kotlin adds null check for lateinit properties, but Findbugs highlights it as redundant")
@@ -193,9 +193,19 @@ constructor(
         coursesCarouselTitle.setTextColor(ColorUtil.getColorArgb(info.colorType.textColor))
         coursesCarouselRoot.setBackgroundColor(ColorUtil.getColorArgb(info.colorType.backgroundColorRes))
         coursesViewAll.setTextColor(ColorUtil.getColorArgb(info.colorType.viewAllColorRes, context))
+        showDescription(info.description)
 
         val showMore = info.table == Table.enrolled
         coursesRecycler.adapter = CoursesAdapter(context as FragmentActivity, courses, continueCoursePresenter, droppingPresenter, false, showMore, info.colorType)
+    }
+
+    private fun showDescription(description: String) {
+        if (description.isNotBlank()) {
+            coursesCarouselDescription.setPlaceholderText(description)
+            coursesCarouselDescription.visibility = View.VISIBLE
+        } else {
+            coursesCarouselDescription.visibility = View.GONE
+        }
     }
 
     override fun onOpenStep(courseId: Long, section: Section, lessonId: Long, unitId: Long, stepPosition: Int) {
@@ -271,6 +281,7 @@ constructor(
             coursesRecycler.scrollToPosition(lastSavedScrollPosition)
             lastSavedScrollPosition = DEFAULT_SCROLL_POSITION
         }
+        showDescription(info.description)
         coursesRecycler.visibility = View.VISIBLE
         coursesViewAll.visibility = View.VISIBLE
         this.courses.clear()
@@ -283,6 +294,7 @@ constructor(
         coursesViewAll.visibility = View.GONE
         coursesLoadingView.visibility = View.GONE
         coursesRecycler.visibility = View.GONE
+        coursesCarouselDescription.visibility = View.GONE
         coursesPlaceholder.setPlaceholderText(stringRes)
         coursesPlaceholder.setOnClickListener(listener)
         coursesPlaceholder.visibility = View.VISIBLE
@@ -403,7 +415,6 @@ constructor(
 
         savedState.info = this._info
         savedState.scrollPosition = (coursesRecycler.layoutManager as GridLayoutManager).findFirstCompletelyVisibleItemPosition()
-        Timber.d("onSave ${savedState.scrollPosition}")
         return savedState
     }
 
@@ -447,5 +458,9 @@ constructor(
         }
     }
 
+    fun setDescriptionColors(collectionDescriptionColors: CollectionDescriptionColors) {
+        coursesCarouselDescription.setBackgroundResource(collectionDescriptionColors.backgroundRes)
+        coursesCarouselDescription.setTextColor(ColorUtil.getColorArgb(collectionDescriptionColors.textColorRes, context))
+    }
 
 }

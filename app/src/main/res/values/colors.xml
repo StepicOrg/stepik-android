@@ -118,12 +118,14 @@
     <color name="end_gradient_placeholder">#6969A0</color>
     <color name="placeholder_text_color">@color/white</color>
 
-    <color name="start_gradient_blue">#D7E1E7</color>
-    <color name="end_gradient_blue">#E1E8EF</color>
+    <color name="start_gradient_blue">#D3E4EC</color>
+    <color name="end_gradient_blue">#CFE8F5</color>
+    <color name="text_color_gradient_blue">#00484E</color>
 
-    <color name="start_gradient_fire">#D4D0D9</color>
-    <color name="center_gradient_fire">#EDDFEB</color>
-    <color name="end_gradient_fire">#F5DEDC</color>
+    <color name="start_gradient_fire">#E8E0F3</color>
+    <color name="center_gradient_fire">#EFDFE7</color>
+    <color name="end_gradient_fire">#F5DEDD</color>
+    <color name="text_color_gradient_fire">#18073D</color>
 
     <color name="loading_view_base_color">#F6F7F9</color>
     <color name="loading_view_deep_color">#DBDBDB</color>
