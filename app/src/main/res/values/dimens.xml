@@ -109,6 +109,7 @@
     <dimen name="course_list_side_padding">20dp</dimen>
     <dimen name="course_list_side_right_padding">12dp</dimen>
     <dimen name="course_list_between_items_padding">30dp</dimen>
+    <dimen name="course_list_bottom_padding">14dp</dimen>
     <dimen name="extraPaddingRightCourseItem">8dp</dimen>
     <dimen name="fast_continue_widget">@dimen/course_widget_radius</dimen>
     <dimen name="fast_continue_widget_height">140dp</dimen>
