@@ -104,6 +104,10 @@ abstract class StorageModule {
     @StorageSingleton
     internal abstract fun provideExternalVideoUrlDao(videoUrlDao: VideoUrlDaoImpl): IDao<DbVideoUrl>
 
+    @StorageSingleton
+    @Binds
+    internal abstract fun provideSearchQueryDao(searchQueryDaoImpl: SearchQueryDaoImpl): IDao<SearchQuery>
+
     @Module
     companion object {
 

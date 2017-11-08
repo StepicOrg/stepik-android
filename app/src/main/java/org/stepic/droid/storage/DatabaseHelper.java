@@ -16,6 +16,7 @@ import org.stepic.droid.storage.structure.DbStructureLastStep;
 import org.stepic.droid.storage.structure.DbStructureLesson;
 import org.stepic.droid.storage.structure.DbStructureNotification;
 import org.stepic.droid.storage.structure.DbStructureProgress;
+import org.stepic.droid.storage.structure.DbStructureSearchQuery;
 import org.stepic.droid.storage.structure.DbStructureSections;
 import org.stepic.droid.storage.structure.DbStructureSharedDownloads;
 import org.stepic.droid.storage.structure.DbStructureStep;
@@ -31,6 +32,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
     private static final String LONG_TYPE = "LONG";
     private static final String INT_TYPE = "INTEGER";
     private static final String BOOLEAN_TYPE = "BOOLEAN";
+    private static final String DATETIME_TYPE = "DATETIME";
     private static final String WHITESPACE = " ";
     private static final String FALSE_VALUE = "0";
     private static final String TRUE_VALUE = "1";
@@ -86,6 +88,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         upgradeFrom25To26(db);
         upgradeFrom26To27(db);
         upgradeFrom27To28(db);
+        upgradeFrom28To29(db);
     }
 
     @Override
@@ -240,6 +243,15 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
             upgradeFrom27To28(db);
         }
 
+        if (oldVersion < 29) {
+            upgradeFrom28To29(db);
+        }
+
+    }
+
+    private void upgradeFrom28To29(SQLiteDatabase db) {
+        createSearchQueryTable(db);
+        createSearchQueryTableSizeLimiterTrigger(db);
     }
 
     private void upgradeFrom27To28(SQLiteDatabase db) {
@@ -669,6 +681,30 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
                 + DbStructureCodeSubmission.Column.PROGRAMMING_LANGUAGE + WHITESPACE + TEXT_TYPE + ", "
                 + DbStructureCodeSubmission.Column.CODE + WHITESPACE + TEXT_TYPE
                 + ")";
+        db.execSQL(sql);
+    }
+
+    private void createSearchQueryTable(SQLiteDatabase db) {
+        String sql = "CREATE TABLE " + DbStructureSearchQuery.SEARCH_QUERY
+                + " ("
+                + DbStructureSearchQuery.Column.QUERY_TEXT + WHITESPACE + TEXT_TYPE + " PRIMARY KEY, "
+                + DbStructureSearchQuery.Column.QUERY_TIMESTAMP + WHITESPACE + DATETIME_TYPE + WHITESPACE + DEFAULT + WHITESPACE + "(DATETIME('now', 'utc'))"
+                + ")";
+        db.execSQL(sql);
+    }
+
+    private void createSearchQueryTableSizeLimiterTrigger(SQLiteDatabase db) {
+        String sql = "CREATE TRIGGER IF NOT EXISTS" + WHITESPACE + DbStructureSearchQuery.LIMITER_TRIGGER_NAME + WHITESPACE
+                + "AFTER INSERT ON" + WHITESPACE + DbStructureSearchQuery.SEARCH_QUERY + WHITESPACE
+                + "BEGIN" + WHITESPACE
+                + "DELETE FROM" + WHITESPACE + DbStructureSearchQuery.SEARCH_QUERY + WHITESPACE
+                + "WHERE" + WHITESPACE + DbStructureSearchQuery.Column.QUERY_TEXT + WHITESPACE
+                + "NOT IN"
+                + "(SELECT" + WHITESPACE + DbStructureSearchQuery.Column.QUERY_TEXT + WHITESPACE
+                + "FROM" + WHITESPACE + DbStructureSearchQuery.SEARCH_QUERY + WHITESPACE
+                + "ORDER BY" + WHITESPACE + DbStructureSearchQuery.Column.QUERY_TIMESTAMP + WHITESPACE + "DESC" + WHITESPACE
+                + "LIMIT" + WHITESPACE + DbStructureSearchQuery.TABLE_SIZE_LIMIT + ");"
+                + "END;";
         db.execSQL(sql);
     }
 }
