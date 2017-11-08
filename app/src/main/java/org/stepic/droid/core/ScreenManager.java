@@ -93,8 +93,6 @@ public interface ScreenManager {
 
     void addCertificateToLinkedIn(CertificateViewItem certificateViewItem);
 
-    void showFilterScreen(Fragment sourceFragment, int requestCode, Table courseType);
-
     void showCertificates(Context context);
 
     void openSyllabusInWeb(Context context, long courseId);

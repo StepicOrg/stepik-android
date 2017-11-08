@@ -33,7 +33,6 @@ import org.stepic.droid.model.Video;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.services.ViewPusher;
-import org.stepic.droid.storage.operations.Table;
 import org.stepic.droid.ui.activities.AboutAppActivity;
 import org.stepic.droid.ui.activities.CertificatesActivity;
 import org.stepic.droid.ui.activities.CommentsActivity;
@@ -41,7 +40,6 @@ import org.stepic.droid.ui.activities.CourseDetailActivity;
 import org.stepic.droid.ui.activities.CourseListActivity;
 import org.stepic.droid.ui.activities.DownloadsActivity;
 import org.stepic.droid.ui.activities.FeedbackActivity;
-import org.stepic.droid.ui.activities.FilterActivity;
 import org.stepic.droid.ui.activities.LaunchActivity;
 import org.stepic.droid.ui.activities.LoginActivity;
 import org.stepic.droid.ui.activities.MainFeedActivity;
@@ -509,19 +507,6 @@ public class ScreenManagerImpl implements ScreenManager {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setData(Uri.parse(sb.toString()));
         App.Companion.getAppContext().startActivity(intent);
-    }
-
-    @Override
-    public void showFilterScreen(Fragment sourceFragment, int requestCode, Table courseType) {
-        Intent intent = new Intent(sourceFragment.getContext(), FilterActivity.class);
-        int code;
-        if (courseType == Table.enrolled) {
-            code = AppConstants.ENROLLED_FILTER;
-        } else {
-            code = AppConstants.FEATURED_FILTER;
-        }
-        intent.putExtra(FilterActivity.Companion.getFILTER_TYPE_KEY(), code);
-        sourceFragment.startActivityForResult(intent, requestCode);
     }
 
     @Override

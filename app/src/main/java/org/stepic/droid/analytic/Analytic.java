@@ -386,11 +386,6 @@ public interface Analytic {
         String OPEN_CERTIFICATE_FROM_NOTIFICATION_CENTER = "certificate_notification_center";
     }
 
-    interface Filters {
-        String FILTERS_CANCELED = "filters_canceled";
-        String FILTERS_NEED_UPDATE = "filters_need_update";
-    }
-
     interface Exam {
         String START_EXAM = "exam_start";
         String SHOW_EXAM = "exam_shown_on_bind_view";

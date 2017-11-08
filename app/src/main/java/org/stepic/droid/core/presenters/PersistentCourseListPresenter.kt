@@ -1,7 +1,6 @@
 package org.stepic.droid.core.presenters
 
 import android.support.annotation.WorkerThread
-import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.concurrency.SingleThreadExecutor
 import org.stepic.droid.core.FilterApplicator
@@ -9,7 +8,6 @@ import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.di.course_list.CourseListScope
 import org.stepic.droid.model.Course
 import org.stepic.droid.model.Progress
-import org.stepic.droid.model.StepikFilter
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.storage.operations.Table
@@ -23,7 +21,6 @@ import javax.inject.Inject
 @CourseListScope
 class PersistentCourseListPresenter
 @Inject constructor(
-        private val analytic: Analytic,
         private val databaseFacade: DatabaseFacade,
         private val singleThreadExecutor: SingleThreadExecutor,
         private val mainHandler: MainHandler,
@@ -38,7 +35,7 @@ class PersistentCourseListPresenter
         private const val MAX_CURRENT_NUMBER_OF_TASKS = 2
     }
 
-    private val currentPage = AtomicInteger(1);
+    private val currentPage = AtomicInteger(1)
     private val hasNextPage = AtomicBoolean(true)
     private var currentNumberOfTasks: Int = 0 //only main thread
     private val isEmptyCourses = AtomicBoolean(false)
@@ -55,11 +52,11 @@ class PersistentCourseListPresenter
      * 3) Save to db
      * 4) show from cache. (all states)
      */
-    fun downloadData(courseType: Table, applyFilter: Boolean) {
-        downloadData(courseType, applyFilter, isRefreshing = false)
+    fun downloadData(courseType: Table) {
+        downloadData(courseType, isRefreshing = false)
     }
 
-    private fun downloadData(courseType: Table, applyFilter: Boolean, isRefreshing: Boolean, isLoadMore: Boolean = false) {
+    private fun downloadData(courseType: Table, isRefreshing: Boolean, isLoadMore: Boolean = false) {
         if (currentNumberOfTasks >= MAX_CURRENT_NUMBER_OF_TASKS) {
             return
         }
@@ -67,7 +64,7 @@ class PersistentCourseListPresenter
         view?.showLoading()
         singleThreadExecutor.execute {
             try {
-                downloadDataPlain(isRefreshing, isLoadMore, applyFilter, courseType)
+                downloadDataPlain(isRefreshing, isLoadMore, courseType)
             } finally {
                 mainHandler.post {
                     currentNumberOfTasks--
@@ -77,9 +74,9 @@ class PersistentCourseListPresenter
     }
 
     @WorkerThread
-    private fun downloadDataPlain(isRefreshing: Boolean, isLoadMore: Boolean, applyFilter: Boolean, courseType: Table) {
+    private fun downloadDataPlain(isRefreshing: Boolean, isLoadMore: Boolean, courseType: Table) {
         if (!isRefreshing && !isLoadMore) {
-            getFromDatabaseAndShow(applyFilter, courseType)
+            getFromDatabaseAndShow(courseType)
         } else if (hasNextPage.get()) {
             mainHandler.post {
                 view?.showLoading()
@@ -149,11 +146,7 @@ class PersistentCourseListPresenter
 
             val filteredCourseList: MutableList<Course> =
                     if (courseType == Table.featured) {
-                        if (!applyFilter && !sharedPreferenceHelper.filterForFeatured.contains(StepikFilter.PERSISTENT)) {
-                            filterApplicator.getFilteredFeaturedFromDefault(allCourses)
-                        } else {
-                            filterApplicator.getFilteredFeaturedFromSharedPrefs(allCourses)
-                        }
+                        filterApplicator.filterCourses(allCourses)
                     } else {
                         allCourses
                     }
@@ -184,17 +177,13 @@ class PersistentCourseListPresenter
         }
     }
 
-    private fun getFromDatabaseAndShow(applyFilter: Boolean, courseType: Table) {
+    private fun getFromDatabaseAndShow(courseType: Table) {
         val coursesBeforeLoading = databaseFacade.getAllCourses(courseType).filterNotNull()
         if (coursesBeforeLoading.isNotEmpty()) {
             val coursesForShow = if (courseType == Table.enrolled) {
                 sortByLastAction(coursesBeforeLoading)
             } else {
-                if (!applyFilter && !sharedPreferenceHelper.filterForFeatured.contains(StepikFilter.PERSISTENT)) {
-                    filterApplicator.getFilteredFeaturedFromDefault(coursesBeforeLoading)
-                } else {
-                    filterApplicator.getFilteredFeaturedFromSharedPrefs(coursesBeforeLoading)
-                }
+                filterApplicator.filterCourses(coursesBeforeLoading)
             }
             if (coursesForShow.isNotEmpty()) {
                 mainHandler.post {
@@ -212,13 +201,13 @@ class PersistentCourseListPresenter
         }
     }
 
-    fun refreshData(courseType: Table, applyFilter: Boolean, isRefreshing: Boolean) {
+    fun refreshData(courseType: Table, isRefreshing: Boolean) {
         if (currentNumberOfTasks >= MAX_CURRENT_NUMBER_OF_TASKS) {
             return
         }
-        currentPage.set(1);
+        currentPage.set(1)
         hasNextPage.set(true)
-        downloadData(courseType, applyFilter, isRefreshing = isRefreshing)
+        downloadData(courseType, isRefreshing = isRefreshing)
     }
 
     @WorkerThread
@@ -251,7 +240,7 @@ class PersistentCourseListPresenter
         }).toMutableList()
     }
 
-    fun loadMore(courseType: Table, needFilter: Boolean) {
-        downloadData(courseType, needFilter, isRefreshing = false, isLoadMore = true)
+    fun loadMore(courseType: Table) {
+        downloadData(courseType, isRefreshing = false, isLoadMore = true)
     }
 }

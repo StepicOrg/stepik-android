@@ -99,7 +99,7 @@ public class SplashActivity extends BackToExitActivityBase {
                         sharedPreferenceHelper.afterFirstTime();
                         sharedPreferenceHelper.afterScheduleAdded();
                         sharedPreferenceHelper.afterNeedDropCoursesIn114();
-                        defaultFilter.setNeedResolveLanguage(); //if user 1st time and v1.16 or more --> resolve language
+                        sharedPreferenceHelper.setNeedResolveLanguage(); //if user 1st time and v1.16 or more --> resolve language
                     } else if (!sharedPreferenceHelper.isScheduleAdded()) {
                         databaseFacade.dropOnlyCourseTable();
                         sharedPreferenceHelper.afterScheduleAdded();

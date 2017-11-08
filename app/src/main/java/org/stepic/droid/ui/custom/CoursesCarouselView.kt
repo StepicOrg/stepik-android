@@ -353,7 +353,7 @@ constructor(
 
     private fun downloadData() {
         info.table?.let {
-            courseListPresenter.refreshData(it, false, false)
+            courseListPresenter.refreshData(it, false)
         }
 
         if (info.table == null) {
