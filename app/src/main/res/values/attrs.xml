@@ -78,4 +78,9 @@
         <attr name="progressLength" format="dimension"/>
         <attr name="autoStart" format="boolean"/>
     </declare-styleable>
+
+    <declare-styleable name="PlaceholderTextView">
+        <attr name="android:background"/>
+        <attr name="android:gravity"/>
+    </declare-styleable>
 </resources>
