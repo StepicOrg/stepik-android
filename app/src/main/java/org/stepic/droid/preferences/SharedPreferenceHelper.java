@@ -243,7 +243,6 @@ public class SharedPreferenceHelper {
 
     private boolean needResolveLanguage() {
         return getBoolean(SharedPreferenceHelper.PreferenceType.DEVICE_SPECIFIC, SHOW_FILTER_FEATURE_WITH_LANGUAGE_RESOLVING, false); //by default user before 116 and we don't show he/she only language courses #Apps-430
-
     }
 
     public enum NotificationDay {
@@ -403,7 +402,7 @@ public class SharedPreferenceHelper {
         put(PreferenceType.DEVICE_SPECIFIC, NEED_DROP_116, false);
     }
 
-    private String getPrefNameForFilter(StepikFilter filter) {
+    private String mapToPreferenceName(StepikFilter filter) {
         switch (filter) {
             case RUSSIAN:
                 return FILTER_RUSSIAN_LANGUAGE;
@@ -414,6 +413,7 @@ public class SharedPreferenceHelper {
         }
     }
 
+    @NotNull
     public EnumSet<StepikFilter> getFilterForFeatured() {
         EnumSet<StepikFilter> filters = EnumSet.noneOf(StepikFilter.class);
         boolean needResolveLanguage = needResolveLanguage();
@@ -424,19 +424,16 @@ public class SharedPreferenceHelper {
     }
 
     private void appendValueForFilter(EnumSet<StepikFilter> filter, StepikFilter value, boolean defaultValue) {
-        if (getBoolean(PreferenceType.FEATURED_FILTER, getPrefNameForFilter(value), defaultValue)) {
+        if (getBoolean(PreferenceType.FEATURED_FILTER, mapToPreferenceName(value), defaultValue)) {
             filter.add(value);
         }
     }
 
     public void saveFilterForFeatured(EnumSet<StepikFilter> filters) {
-        for (StepikFilter filter : StepikFilter.values()) {
-            saveValueFromFilterIfExist(PreferenceType.FEATURED_FILTER, filters, getPrefNameForFilter(filter), filter);
+        for (StepikFilter filterValue : StepikFilter.values()) {
+            String key = mapToPreferenceName(filterValue);
+            put(PreferenceType.FEATURED_FILTER, key, filters.contains(filterValue));
         }
-    }
-
-    private void saveValueFromFilterIfExist(PreferenceType preferenceType, EnumSet<StepikFilter> filter, String key, StepikFilter value) {
-        put(preferenceType, key, filter.contains(value));
     }
 
     private enum PreferenceType {

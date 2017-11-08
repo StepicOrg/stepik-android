@@ -4,13 +4,18 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Checkable
 import kotlinx.android.synthetic.main.catalog_item.view.*
+import kotlinx.android.synthetic.main.view_course_languages.view.*
 import org.stepic.droid.R
 import org.stepic.droid.model.CollectionDescriptionColors
 import org.stepic.droid.model.CoursesCarouselInfo
+import org.stepic.droid.model.StepikFilter
+import java.util.*
 
 class CatalogAdapter(
-        private val courseListItems: List<CoursesCarouselInfo>
+        private val courseListItems: List<CoursesCarouselInfo>,
+        private val onFiltersChanged: (EnumSet<StepikFilter>) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
@@ -18,7 +23,10 @@ class CatalogAdapter(
         private const val LANGUAGES_TYPE = 1
 
         private const val PRE_CAROUSEL_COUNT = 1
+        private const val LANGUAGE_INDEX = 0
     }
+
+    private var filters: EnumSet<StepikFilter>? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -44,9 +52,15 @@ class CatalogAdapter(
                 holder.bindData(coursesCarouselInfo, descriptionColors)
             }
             LANGUAGES_TYPE -> {
-                // no-op
+                holder as LanguagesViewHolder
+                holder.refreshLanguages()
             }
         }
+    }
+
+    fun showFilters(filtersFromPreferences: EnumSet<StepikFilter>) {
+        filters = filtersFromPreferences
+        notifyItemChanged(LANGUAGE_INDEX)
     }
 
     private fun getDescriptionColors(position: Int): CollectionDescriptionColors =
@@ -79,7 +93,38 @@ class CatalogAdapter(
 
     }
 
-    private class LanguagesViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    private inner class LanguagesViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        private val languageRu = itemView.languageRu
+        private val languageEn = itemView.languageEn
 
+        init {
+            val onClickListener = View.OnClickListener { checkableView ->
+                (checkableView as Checkable).toggle()
+                val filters = composeFilters()
+                onFiltersChanged(filters)
+            }
+
+            languageRu.setOnClickListener(onClickListener)
+            languageEn.setOnClickListener(onClickListener)
+        }
+
+        fun refreshLanguages() {
+            val localFilters = filters ?: return
+
+            languageRu.isChecked = localFilters.contains(StepikFilter.RUSSIAN)
+            languageEn.isChecked = localFilters.contains(StepikFilter.ENGLISH)
+        }
+
+        private fun composeFilters(): EnumSet<StepikFilter> {
+            val filters = EnumSet.noneOf(StepikFilter::class.java)
+            if (languageRu.isChecked) {
+                filters.add(StepikFilter.RUSSIAN)
+            }
+
+            if (languageEn.isChecked) {
+                filters.add(StepikFilter.ENGLISH)
+            }
+            return filters
+        }
     }
 }

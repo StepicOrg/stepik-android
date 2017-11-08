@@ -9,15 +9,19 @@ import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.core.presenters.CatalogPresenter
+import org.stepic.droid.core.presenters.FiltersPresenter
 import org.stepic.droid.core.presenters.contracts.CatalogView
+import org.stepic.droid.core.presenters.contracts.FiltersView
 import org.stepic.droid.model.CoursesCarouselInfo
+import org.stepic.droid.model.StepikFilter
 import org.stepic.droid.ui.adapters.CatalogAdapter
 import org.stepic.droid.ui.util.SearchHelper
 import org.stepic.droid.ui.util.initCenteredToolbar
+import java.util.*
 import javax.inject.Inject
 
 class CatalogFragment : FragmentBase(),
-        CatalogView {
+        CatalogView, FiltersView {
 
     companion object {
         fun newInstance(): FragmentBase = CatalogFragment()
@@ -25,6 +29,9 @@ class CatalogFragment : FragmentBase(),
 
     @Inject
     lateinit var catalogPresenter: CatalogPresenter
+
+    @Inject
+    lateinit var filtersPresenter: FiltersPresenter
 
     private val courseCarouselInfoList = mutableListOf<CoursesCarouselInfo>()
 
@@ -59,18 +66,21 @@ class CatalogFragment : FragmentBase(),
         initCenteredToolbar(R.string.catalog_title, showHomeButton = false)
         initMainRecycler()
 
+        filtersPresenter.attachView(this)
         catalogPresenter.attachView(this)
+        filtersPresenter.onNeedFilters()
         catalogPresenter.onCatalogOpened()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         catalogPresenter.detachView(this)
+        filtersPresenter.detachView(this)
     }
 
     private fun initMainRecycler() {
         catalogRecyclerView.layoutManager = LinearLayoutManager(context)
-        catalogRecyclerView.adapter = CatalogAdapter(courseCarouselInfoList)
+        catalogRecyclerView.adapter = CatalogAdapter(courseCarouselInfoList, { filtersPresenter.onFilterChanged(it) })
     }
 
     override fun showCarousels(courseItems: List<CoursesCarouselInfo>) {
@@ -112,5 +122,8 @@ class CatalogFragment : FragmentBase(),
         }
     }
 
+    override fun onFiltersPrepared(filterForFeatured: EnumSet<StepikFilter>) {
+        (catalogRecyclerView.adapter as CatalogAdapter).showFilters(filterForFeatured)
+    }
 
 }

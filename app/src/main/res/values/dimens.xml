@@ -144,4 +144,6 @@
     <dimen name="popup_window_padding">8dp</dimen>
     <dimen name="popup_text_padding">12dp</dimen>
     <dimen name="popup_arrow_size">16dp</dimen>
+
+    <dimen name="language_radius">4dp</dimen>
 </resources>

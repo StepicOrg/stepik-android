@@ -15,7 +15,6 @@ import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.core.dropping.contract.DroppingListener;
 import org.stepic.droid.core.presenters.PersistentCourseListPresenter;
-import org.stepic.droid.core.presenters.contracts.FilterForCoursesView;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.storage.operations.Table;
 import org.stepic.droid.ui.fragments.CourseListFragmentBase;
@@ -23,11 +22,9 @@ import org.stepic.droid.ui.util.ContextMenuRecyclerView;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ContextMenuCourseUtil;
 
-import java.util.List;
-
 import javax.inject.Inject;
 
-public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase implements FilterForCoursesView, DroppingListener {
+public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase implements DroppingListener {
     @Inject
     PersistentCourseListPresenter courseListPresenter;
 
@@ -179,18 +176,6 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     @Override
     public void onNeedDownloadNextPage() {
         courseListPresenter.loadMore(getCourseType());
-    }
-
-    @Override
-    public void clearAndShowLoading() {
-        courses.clear();
-        coursesAdapter.notifyDataSetChanged();
-        showLoading();
-    }
-
-    @Override
-    public void showFilteredCourses(@NotNull List<Course> filteredList) {
-        showCourses(filteredList);
     }
 
     @Override
