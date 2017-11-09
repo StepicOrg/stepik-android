@@ -467,7 +467,7 @@ class DatabaseFacade
             searchQueryDao.getSearchQueries(constraint, count)
 
     fun addSearchQuery(searchQuery: SearchQuery) {
-        searchQueryDao.insertOrUpdate(searchQuery)
+        searchQueryDao.replace(searchQuery)
     }
 
 }

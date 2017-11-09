@@ -60,6 +60,15 @@ constructor(private val database: SQLiteDatabase) : CrudOperations {
         }
     }
 
+    override fun executeReplace(table: String, values: ContentValues?) {
+        try {
+            open()
+            database.replace(table, null, values)
+        } finally {
+            close()
+        }
+    }
+
     override fun executeDelete(table: String, whereClause: String?, whereArgs: Array<String>?) {
         try {
             open()

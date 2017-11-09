@@ -23,5 +23,7 @@ interface IDao<T> {
 
     fun remove(whereColumn: String, whereValue: String)
 
+    fun replace(persistentObject: T)
+
     fun removeAll()
 }

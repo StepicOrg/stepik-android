@@ -9,5 +9,7 @@ interface CrudOperations {
 
     fun executeInsert(table: String, values: ContentValues?)
 
+    fun executeReplace(table: String, values: ContentValues?)
+
     fun executeDelete(table: String, whereClause: String?, whereArgs: Array<String>?)
 }

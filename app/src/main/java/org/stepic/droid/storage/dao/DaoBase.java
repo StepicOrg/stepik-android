@@ -76,6 +76,11 @@ public abstract class DaoBase<T> implements IDao<T> {
         crudOperations.executeDelete(getDbName(), whereClause, new String[]{whereValue});
     }
 
+    @Override
+    public final void replace(T persistentObject) {
+        crudOperations.executeReplace(getDbName(), getContentValues(persistentObject));
+    }
+
     @NotNull
     @Override
     public final List<T> getAllInRange(@NonNull String whereColumn, @NonNull String commaSeparatedIds) {
