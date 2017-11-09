@@ -3,15 +3,22 @@ package org.stepic.droid.ui.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.App;
 import org.stepic.droid.core.presenters.SearchCoursesPresenter;
 import org.stepic.droid.storage.operations.Table;
+import org.stepic.droid.ui.custom.AutoCompleteSearchView;
+import org.stepic.droid.ui.util.SearchViewHelper;
 import org.stepic.droid.ui.util.ToolbarHelperKt;
 
 import javax.inject.Inject;
+
+import io.reactivex.disposables.CompositeDisposable;
 
 public class CourseSearchFragment extends CourseListFragmentBase {
 
@@ -30,6 +37,8 @@ public class CourseSearchFragment extends CourseListFragmentBase {
 
     @Inject
     SearchCoursesPresenter searchCoursesPresenter;
+
+    private CompositeDisposable searchSuggestionsDisposable;
 
     @Override
     protected void injectComponent() {
@@ -52,6 +61,7 @@ public class CourseSearchFragment extends CourseListFragmentBase {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -93,6 +103,46 @@ public class CourseSearchFragment extends CourseListFragmentBase {
             swipeRefreshLayout.setVisibility(View.VISIBLE);
 
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.search_menu, menu);
+        MenuItem searchMenuItem = menu.findItem(R.id.action_search);
+        AutoCompleteSearchView searchView = (AutoCompleteSearchView) searchMenuItem.getActionView();
+
+        searchView.setCloseIconDrawableRes(getCloseIconDrawableRes());
+        searchView.setSearchable(getActivity());
+        searchView.initSuggestions(rootView);
+
+        searchSuggestionsDisposable = SearchViewHelper.INSTANCE.setupSearchViewSuggestionsSources(searchView, api, databaseFacade, null);
+
+        searchMenuItem.expandActionView();
+        if (searchQuery != null) {
+            searchView.setQuery(searchQuery, false);
+        }
+        searchView.clearFocus();
+
+        searchMenuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                getActivity().finish();
+                return true;
+            }
+        });
+    }
+
+    @Override
+    public void onDestroyOptionsMenu() {
+        if (searchSuggestionsDisposable != null) {
+            searchSuggestionsDisposable.dispose();
+        }
+        super.onDestroyOptionsMenu();
     }
 
     @Override

@@ -1,11 +1,8 @@
 package org.stepic.droid.ui.fragments
 
-import android.app.SearchManager
-import android.content.Context
 import android.os.Bundle
 import android.support.annotation.StringRes
 import android.view.*
-import android.widget.*
 import io.reactivex.disposables.CompositeDisposable
 import org.stepic.droid.R
 import org.stepic.droid.base.CoursesDatabaseFragmentBase
@@ -62,24 +59,17 @@ open class FindCoursesFragment: CoursesDatabaseFragmentBase() {
         inflater.inflate(R.menu.search_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
 
-        val searchManager = activity.getSystemService(Context.SEARCH_SERVICE) as SearchManager
         searchMenuItem = menu.findItem(R.id.action_search)
         searchView = searchMenuItem?.actionView as? AutoCompleteSearchView
 
-        searchView.liftM2(searchMenuItem) { autoCompleteSearchView, menuItem ->
-            autoCompleteSearchView.initSuggestions(rootView, menuItem)
+        searchView?.let { it ->
+            it.initSuggestions(rootView)
+            it.setCloseIconDrawableRes(getCloseIconDrawableRes())
+            it.setSearchable(activity)
 
-            val closeImageView: ImageView = autoCompleteSearchView.findViewById(R.id.search_close_btn)
-            closeImageView.setImageResource(getCloseIconDrawableRes())
-
-            val componentName = activity.componentName
-            val searchableInfo = searchManager.getSearchableInfo(componentName)
-            autoCompleteSearchView.setSearchableInfo(searchableInfo)
-            autoCompleteSearchView.maxWidth = 20000
-
-            autoCompleteSearchView.searchQueriesRecyclerView?.setOnTouchListener { _, event ->
+            it.searchQueriesRecyclerView?.setOnTouchListener { _, event ->
                 if (event.action == MotionEvent.ACTION_DOWN) {
-                    collapseAndHide(false)
+                    it.clearFocus()
                 } else {
                     hideSoftKeypad() // such compromise to avoid using adjustResize on parent activity
                 }
@@ -87,9 +77,9 @@ open class FindCoursesFragment: CoursesDatabaseFragmentBase() {
             }
 
             compositeDisposable = SearchViewHelper.setupSearchViewSuggestionsSources(
-                    autoCompleteSearchView, api, databaseFacade) {
+                    it, api, databaseFacade, onQueryTextSubmit = {
                 collapseAndHide(false)
-            }
+            })
         }
     }
 
