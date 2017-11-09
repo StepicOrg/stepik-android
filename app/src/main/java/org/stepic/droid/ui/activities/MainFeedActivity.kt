@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment
 import android.view.MenuItem
 import com.facebook.login.LoginManager
 import com.vk.sdk.VKSdk
+import io.reactivex.Flowable
 import kotlinx.android.synthetic.main.activity_main_feed.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
@@ -33,7 +34,9 @@ import org.stepic.droid.ui.fragments.ProfileFragment
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.ProgressHelper
+import org.stepic.droid.util.RxEmpty
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 

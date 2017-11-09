@@ -5,6 +5,9 @@
     android:id="@+id/coursesCarouselRoot"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:descendantFocusability="blocksDescendants"
+    android:focusable="false"
+    android:focusableInTouchMode="false"
     android:paddingBottom="@dimen/guideline_standard_padding">
 
     <org.stepic.droid.ui.custom.PlaceholderTextView
@@ -84,6 +87,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/coursesCarouselCount"
+        android:layout_marginBottom="@dimen/course_list_bottom_padding"
         android:layout_marginTop="@dimen/courses_carousel_top_margin"
         android:clipToPadding="false"
         android:divider="@color/transparent"
@@ -96,7 +100,6 @@
         android:scrollbars="none"
         android:splitMotionEvents="false"
         android:visibility="gone"
-        android:layout_marginBottom="@dimen/course_list_bottom_padding"
         />
 
     <include
@@ -105,8 +108,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/coursesCarouselCount"
-        android:layout_marginTop="@dimen/courses_carousel_top_margin"
         android:layout_marginBottom="@dimen/course_list_bottom_padding"
+        android:layout_marginTop="@dimen/courses_carousel_top_margin"
         android:visibility="gone"/>
 
 
