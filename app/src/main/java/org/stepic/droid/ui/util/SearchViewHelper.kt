@@ -13,6 +13,7 @@ import java.util.concurrent.TimeUnit
 
 object SearchViewHelper {
     private const val AUTOCOMPLETE_DEBOUNCE_MS = 300L
+    private const val DB_ELEMENTS_COUNT = 2
     
     fun setupSearchViewSuggestionsSources(searchView: AutoCompleteSearchView, api: Api, databaseFacade: DatabaseFacade, onQueryTextSubmit: (() -> Unit)?): CompositeDisposable {
         val compositeDisposable = CompositeDisposable()
@@ -25,7 +26,7 @@ object SearchViewHelper {
                 .subscribeOn(Schedulers.io())
 
         compositeDisposable.add(queryPublisher
-                .flatMap { query -> Observable.fromCallable { databaseFacade.getSearchQueries(query, 2) }.onErrorResumeNext(Observable.empty()) }
+                .flatMap { query -> Observable.fromCallable { databaseFacade.getSearchQueries(query, DB_ELEMENTS_COUNT) }.onErrorResumeNext(Observable.empty()) }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ adapter.rawDBItems = it }, { e -> e.printStackTrace() }))
 

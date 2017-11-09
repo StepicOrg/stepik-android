@@ -17,7 +17,6 @@ open class FindCoursesFragment: CoursesDatabaseFragmentBase() {
         fun newInstance() = FindCoursesFragment()
     }
 
-
     private var searchView: AutoCompleteSearchView? = null
     private var searchMenuItem: MenuItem? = null
     private var handledByRoot = false
@@ -90,7 +89,6 @@ open class FindCoursesFragment: CoursesDatabaseFragmentBase() {
         compositeDisposable?.dispose()
         compositeDisposable = null
     }
-
 
     @StringRes
     protected open fun getTitle() = R.string.catalog_title
