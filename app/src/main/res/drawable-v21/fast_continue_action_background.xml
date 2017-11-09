@@ -7,5 +7,10 @@
             <corners android:radius="@dimen/fast_continue_action_radius"/>
         </shape>
     </item>
-    <item android:drawable="@drawable/fast_continue_action_background_source"/>
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="@dimen/fast_continue_action_radius"/>
+            <solid android:color="@color/white"/>
+        </shape>
+    </item>
 </ripple>
