@@ -54,7 +54,7 @@ public class CourseSearchResultActivity extends FragmentActivityBase {
     }
 
     private Fragment createFragment() {
-        return CourseSearchFragment.newInstance(query);
+        return CourseSearchFragment.Companion.newInstance(query);
     }
 
     @Override
