@@ -5,10 +5,10 @@ import android.app.SearchManager
 import android.content.Context
 import android.support.annotation.DrawableRes
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -20,8 +20,8 @@ import org.stepic.droid.ui.adapters.SearchQueriesAdapter
 class AutoCompleteSearchView
 @JvmOverloads
 constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : SearchView(context, attrs, defStyleAttr) {
-    var searchQueriesRecyclerView: RecyclerView? = null
     val searchQueriesAdapter = SearchQueriesAdapter()
+    var suggestionsOnTouchListener: OnTouchListener? = null
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
@@ -39,12 +39,25 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 
     fun initSuggestions(rootView: ViewGroup) {
         val inflater = LayoutInflater.from(context)
-        searchQueriesRecyclerView = inflater.inflate(R.layout.search_queries_recycler_view, rootView, false).searchQueriesRecyclerView
+        val searchQueriesRecyclerView = inflater.inflate(R.layout.search_queries_recycler_view, rootView, false).searchQueriesRecyclerView
         searchQueriesRecyclerView?.let {
             it.layoutManager = LinearLayoutManager(context)
             it.adapter = searchQueriesAdapter
 
-            this.setOnQueryTextFocusChangeListener { _, hasFocus ->
+            it.setOnTouchListener { v, event ->
+                if (it.findChildViewUnder(event.x, event.y) == null) {
+                    if (event.action == MotionEvent.ACTION_UP
+                            && event.x > 0 && event.y > 0
+                            && event.x < v.width && event.y < v.height) { // to track events only inside view
+                        this@AutoCompleteSearchView.clearFocus()
+                    }
+                } else {
+                    suggestionsOnTouchListener?.onTouch(v, event)
+                }
+                false
+            }
+
+            this@AutoCompleteSearchView.setOnQueryTextFocusChangeListener { _, hasFocus ->
                 if (hasFocus) {
                     it.layoutManager?.scrollToPosition(0)
                     it.visibility = View.VISIBLE

@@ -66,7 +66,6 @@ class CourseSearchFragment: CourseListFragmentBase() {
         searchCoursesPresenter.attachView(this)
         searchCoursesPresenter.restoreState()
         swipeRefreshLayout.post { searchCoursesPresenter.downloadData(searchQuery) }
-
     }
 
     override fun onDestroyView() {
@@ -83,7 +82,6 @@ class CourseSearchFragment: CourseListFragmentBase() {
         } else {
             emptySearch.visibility = View.GONE
             swipeRefreshLayout.visibility = View.VISIBLE
-
         }
     }
 

@@ -10,7 +10,6 @@ import org.stepic.droid.storage.operations.Table
 import org.stepic.droid.ui.custom.AutoCompleteSearchView
 import org.stepic.droid.ui.util.SearchViewHelper
 import org.stepic.droid.ui.util.initCenteredToolbar
-import org.stepic.droid.util.liftM2
 
 open class FindCoursesFragment: CoursesDatabaseFragmentBase() {
     companion object {
@@ -19,20 +18,15 @@ open class FindCoursesFragment: CoursesDatabaseFragmentBase() {
 
     private var searchView: AutoCompleteSearchView? = null
     private var searchMenuItem: MenuItem? = null
-    private var handledByRoot = false
     private var compositeDisposable: CompositeDisposable? = null
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         setHasOptionsMenu(true)
         super.onViewCreated(view, savedInstanceState)
         initCenteredToolbar(getTitle(), false)
-
-        listOfCoursesView.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
+        listOfCoursesView.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
-                if (!handledByRoot) {
-                    collapseAndHide(false)
-                }
-                handledByRoot = false
+                searchMenuItem?.collapseActionView()
             }
         }
     }
@@ -40,16 +34,6 @@ open class FindCoursesFragment: CoursesDatabaseFragmentBase() {
     override fun onDestroyView() {
         listOfCoursesView.onFocusChangeListener = null
         super.onDestroyView()
-    }
-
-    private fun collapseAndHide(rootHandle: Boolean) {
-        searchView.liftM2(searchMenuItem) { _, menuItem ->
-            if (menuItem.isActionViewExpanded) {
-                if (rootHandle) handledByRoot = true
-                hideSoftKeypad()
-                menuItem.collapseActionView()
-            }
-        }
     }
 
     override fun getCourseType() = Table.featured
@@ -61,23 +45,19 @@ open class FindCoursesFragment: CoursesDatabaseFragmentBase() {
         searchMenuItem = menu.findItem(R.id.action_search)
         searchView = searchMenuItem?.actionView as? AutoCompleteSearchView
 
-        searchView?.let { it ->
+        searchView?.let {
             it.initSuggestions(rootView)
             it.setCloseIconDrawableRes(getCloseIconDrawableRes())
             it.setSearchable(activity)
 
-            it.searchQueriesRecyclerView?.setOnTouchListener { _, event ->
-                if (event.action == MotionEvent.ACTION_DOWN) {
-                    it.clearFocus()
-                } else {
-                    hideSoftKeypad() // such compromise to avoid using adjustResize on parent activity
-                }
+            it.suggestionsOnTouchListener = View.OnTouchListener { _, _ ->
+                hideSoftKeypad()
                 false
             }
 
             compositeDisposable = SearchViewHelper.setupSearchViewSuggestionsSources(
                     it, api, databaseFacade, onQueryTextSubmit = {
-                collapseAndHide(false)
+                searchMenuItem?.collapseActionView()
             })
         }
     }
@@ -86,6 +66,7 @@ open class FindCoursesFragment: CoursesDatabaseFragmentBase() {
         super.onDestroyOptionsMenu()
         searchView?.setOnQueryTextListener(null)
         searchView = null
+        searchMenuItem = null
         compositeDisposable?.dispose()
         compositeDisposable = null
     }
