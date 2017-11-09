@@ -1,5 +1,6 @@
 package org.stepic.droid.ui.adapters
 
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
 import android.text.Spannable
@@ -15,7 +16,7 @@ import org.stepic.droid.model.SearchQuerySource
 
 
 class SearchQueriesAdapter : RecyclerView.Adapter<SearchQueriesAdapter.SearchQueryViewHolder>() {
-    private var items: List<SearchQuery> = emptyList()
+    private var items: List<Pair<Spannable, SearchQuerySource>> = emptyList()
 
     var rawDBItems: List<SearchQuery> = emptyList()
         set(value) {
@@ -37,26 +38,27 @@ class SearchQueriesAdapter : RecyclerView.Adapter<SearchQueriesAdapter.SearchQue
 
     var searchView: SearchView? = null
 
-    override fun onBindViewHolder(holder: SearchQueryViewHolder, p: Int) {
-        val query = items[p]
-        val spannable = SpannableString(query.text)
+    private lateinit var querySpan: ForegroundColorSpan
 
-        val spanStart = query.text.indexOf(constraint, ignoreCase = true)
-        if (spanStart != -1) {
-            spannable.setSpan(ForegroundColorSpan(0x44000000), spanStart, spanStart + constraint.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-        }
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        querySpan = ForegroundColorSpan(ContextCompat.getColor(recyclerView.context, R.color.search_view_suggestions_prefix_color))
+        super.onAttachedToRecyclerView(recyclerView)
+    }
+
+    override fun onBindViewHolder(holder: SearchQueryViewHolder, p: Int) {
+        val (query, source) = items[p]
 
         holder.itemView.searchIcon.setImageResource(
-                if (query.source == SearchQuerySource.DB) {
+                if (source == SearchQuerySource.DB) {
                     R.drawable.ic_history
                 } else {
                     R.drawable.ic_action_search
                 }
         )
 
-        holder.itemView.searchQuery.text = spannable
+        holder.itemView.searchQuery.text = query
         holder.itemView.setOnClickListener {
-            searchView?.setQuery(query.text, true)
+            searchView?.setQuery(query.toString(), true)
         }
     }
 
@@ -70,6 +72,14 @@ class SearchQueriesAdapter : RecyclerView.Adapter<SearchQueriesAdapter.SearchQue
         items = (rawDBItems + rawAPIItems)
                 .filter { it.text.contains(constraint, ignoreCase = true) }
                 .distinctBy { it.text.toLowerCase() }
+                .map {
+                    val spannable = SpannableString(it.text)
+                    val spanStart = it.text.indexOf(constraint, ignoreCase = true)
+                    if (spanStart != -1) {
+                        spannable.setSpan(querySpan, spanStart, spanStart + constraint.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    }
+                    spannable to it.source
+                }
         notifyDataSetChanged()
     }
 
