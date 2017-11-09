@@ -68,7 +68,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
             //reset all data
             isScreenCreated = false;
             courses.clear();
-            courseListPresenter.refreshData(getCourseType(), true);
+            courseListPresenter.refreshData(getCourseType());
         } else {
             //load if not
             courseListPresenter.downloadData(getCourseType());
@@ -181,7 +181,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     @Override
     public void onRefresh() {
         getAnalytic().reportEvent(Analytic.Interaction.PULL_TO_REFRESH_COURSE);
-        courseListPresenter.refreshData(getCourseType(), true);
+        courseListPresenter.refreshData(getCourseType());
     }
 
     @Override

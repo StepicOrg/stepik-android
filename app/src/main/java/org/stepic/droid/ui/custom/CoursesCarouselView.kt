@@ -19,6 +19,7 @@ import org.stepic.droid.base.App
 import org.stepic.droid.base.Client
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.dropping.contract.DroppingListener
+import org.stepic.droid.core.filters.contract.FiltersListener
 import org.stepic.droid.core.joining.contract.JoiningListener
 import org.stepic.droid.core.presenters.ContinueCoursePresenter
 import org.stepic.droid.core.presenters.CourseListCollection
@@ -27,10 +28,7 @@ import org.stepic.droid.core.presenters.PersistentCourseListPresenter
 import org.stepic.droid.core.presenters.contracts.ContinueCourseView
 import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.core.presenters.contracts.DroppingView
-import org.stepic.droid.model.CollectionDescriptionColors
-import org.stepic.droid.model.Course
-import org.stepic.droid.model.CoursesCarouselInfo
-import org.stepic.droid.model.Section
+import org.stepic.droid.model.*
 import org.stepic.droid.storage.operations.Table
 import org.stepic.droid.ui.adapters.CoursesAdapter
 import org.stepic.droid.ui.decorators.LeftSpacesDecoration
@@ -42,6 +40,7 @@ import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.StepikUtil
 import org.stepic.droid.util.SuppressFBWarnings
+import java.util.*
 import javax.inject.Inject
 
 @SuppressFBWarnings("RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE", justification = "Kotlin adds null check for lateinit properties, but Findbugs highlights it as redundant")
@@ -57,7 +56,8 @@ constructor(
         CoursesView,
         DroppingView,
         JoiningListener,
-        DroppingListener {
+        DroppingListener,
+        FiltersListener {
 
     companion object {
         private const val DEFAULT_SCROLL_POSITION = -1
@@ -89,6 +89,9 @@ constructor(
 
     @Inject
     lateinit var courseListCollection: CourseListCollection
+
+    @Inject
+    lateinit var filterClient: Client<FiltersListener>
 
     private val courses = ArrayList<Course>()
 
@@ -150,6 +153,7 @@ constructor(
         droppingPresenter.attachView(this)
         droppingClient.subscribe(this)
         joiningListenerClient.subscribe(this)
+        filterClient.subscribe(this)
         courseListCollection.attachView(this)
 
         if (needExecuteOnInfoInitialized) {
@@ -160,12 +164,14 @@ constructor(
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
 
+        filterClient.unsubscribe(this)
         courseListCollection.detachView(this)
         joiningListenerClient.unsubscribe(this)
         droppingClient.unsubscribe(this)
         continueCoursePresenter.detachView(this)
         courseListPresenter.detachView(this)
         droppingPresenter.detachView(this)
+
         ProgressHelper.dismiss(fragmentManager, continueLoadingTag)
     }
 
@@ -353,7 +359,7 @@ constructor(
 
     private fun downloadData() {
         info.table?.let {
-            courseListPresenter.refreshData(it, false)
+            courseListPresenter.downloadData(it)
         }
 
         if (info.table == null) {
@@ -462,5 +468,12 @@ constructor(
         coursesCarouselDescription.setBackgroundResource(collectionDescriptionColors.backgroundRes)
         coursesCarouselDescription.setTextColor(ColorUtil.getColorArgb(collectionDescriptionColors.textColorRes, context))
     }
+
+    override fun onFiltersChanged(filters: EnumSet<StepikFilter>) {
+        if (info.table == Table.featured) {
+            courseListPresenter.refreshData(Table.featured)
+        }
+    }
+
 
 }

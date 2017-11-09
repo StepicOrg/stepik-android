@@ -30,7 +30,7 @@ class PersistentCourseListPresenter
 ) : PresenterBase<CoursesView>() {
 
     companion object {
-        //if hasNextPage & <MIN_COURSES_ON_SCREEN -> load next page
+        //if hasNextPage & < MIN_COURSES_ON_SCREEN -> load next page
         private const val MIN_COURSES_ON_SCREEN = 5
         private const val MAX_CURRENT_NUMBER_OF_TASKS = 2
     }
@@ -47,10 +47,10 @@ class PersistentCourseListPresenter
     }
 
     /**
-     * 1) Show from cache, if not empty (hide progress).
+     * 1) Show from cache, if not empty (hide progress)
      * 2) Load from internet (if fail -> show)
      * 3) Save to db
-     * 4) show from cache. (all states)
+     * 4) show from cache (all states)
      */
     fun downloadData(courseType: Table) {
         downloadData(courseType, isRefreshing = false)
@@ -201,13 +201,13 @@ class PersistentCourseListPresenter
         }
     }
 
-    fun refreshData(courseType: Table, isRefreshing: Boolean) {
+    fun refreshData(courseType: Table) {
         if (currentNumberOfTasks >= MAX_CURRENT_NUMBER_OF_TASKS) {
             return
         }
         currentPage.set(1)
         hasNextPage.set(true)
-        downloadData(courseType, isRefreshing = isRefreshing)
+        downloadData(courseType, isRefreshing = true)
     }
 
     @WorkerThread
