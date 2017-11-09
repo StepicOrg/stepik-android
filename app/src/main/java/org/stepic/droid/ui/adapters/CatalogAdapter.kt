@@ -107,6 +107,7 @@ class CatalogAdapter(
                 languageRu.toggle()
                 languageEn.toggle()
                 val filters = composeFilters()
+                this@CatalogAdapter.filters = filters // apply silently
                 onFiltersChanged(filters)
             }
 
@@ -116,9 +117,14 @@ class CatalogAdapter(
 
         fun refreshLanguages() {
             val localFilters = filters ?: return
+            updateCheckableView(languageRu, localFilters.contains(StepikFilter.RUSSIAN))
+            updateCheckableView(languageEn, localFilters.contains(StepikFilter.ENGLISH))
+        }
 
-            languageRu.isChecked = localFilters.contains(StepikFilter.RUSSIAN)
-            languageEn.isChecked = localFilters.contains(StepikFilter.ENGLISH)
+        private fun updateCheckableView(view: Checkable, shouldBeChecked: Boolean) {
+            if (view.isChecked != shouldBeChecked) {
+                view.isChecked = shouldBeChecked
+            }
         }
 
         private fun composeFilters(): EnumSet<StepikFilter> {

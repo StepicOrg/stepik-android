@@ -25,11 +25,11 @@ constructor(
             @ColorRes val textColor: Int
     ) {
         CHECKED(
-                R.drawable.language_background_checked,
+                R.drawable.language_checked_background,
                 R.color.language_text_color_checked
         ),
         UNCHECKED(
-                R.drawable.language_background_unchecked,
+                R.drawable.language_unchecked_background,
                 R.color.language_text_color_unchecked
         )
     }
@@ -58,6 +58,8 @@ constructor(
 
         setBackgroundResource(state.background)
         setTextColor(ColorUtil.getColorArgb(state.textColor, context))
+
+        isEnabled = !checked //enabled only unchecked
     }
 
     override fun onRestoreInstanceState(state: Parcelable) {

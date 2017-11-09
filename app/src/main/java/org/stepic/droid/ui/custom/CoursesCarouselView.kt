@@ -234,6 +234,7 @@ constructor(
         coursesViewAll.visibility = View.GONE
         coursesRecycler.visibility = View.GONE
         coursesPlaceholder.visibility = View.GONE
+        coursesCarouselCount.visibility = View.GONE
         coursesLoadingView.visibility = View.VISIBLE
     }
 
@@ -326,7 +327,7 @@ constructor(
             coursesRecycler.adapter.notifyItemRemoved(index)
             if (courses.size == ROW_COUNT) {
                 // update 1st column for adjusting size
-                coursesRecycler.adapter.notifyItemRangeChanged(0, ROW_COUNT - 1) // "ROW_COUNT - 1" count is number of changed items, we shouldn't update the last item
+                coursesRecycler.adapter.notifyDataSetChanged()
             }
             updateOnCourseCountChanged()
         } else {
