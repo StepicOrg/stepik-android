@@ -49,9 +49,8 @@ class CoursesCarouselView
 constructor(
         context: Context,
         attrs: AttributeSet? = null,
-        defStyleAttr: Int = 0,
-        defStyleRes: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr, defStyleRes),
+        defStyleAttr: Int = 0
+) : FrameLayout(context, attrs, defStyleAttr),
         ContinueCourseView,
         CoursesView,
         DroppingView,
