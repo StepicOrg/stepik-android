@@ -1,12 +1,15 @@
 package org.stepic.droid.code.data
 
+import org.stepic.droid.util.isNotOrdered
+
 /**
  * Class for fast search strings with common prefix
  */
 class AutocompleteDictionary(private val dict: Array<String>, needSort: Boolean = true) {
     companion object {
         /**
-         * Returns next in chars string
+         * Returns next in chars string.
+         * e.g.: incrementString("aa") == "ab"
          */
         fun incrementString(string: String): String {
             val chars = string.toCharArray()
@@ -25,6 +28,10 @@ class AutocompleteDictionary(private val dict: Array<String>, needSort: Boolean 
             }
         }
 
+        /**
+         * Kotlin's binarySearch provides element position or position where element should be multiplied by -1.
+         * This method convert result in second case to positive position.
+         */
         private fun getBinarySearchPosition(pos: Int) =
                 if (pos < 0)
                     -(pos + 1)
@@ -35,6 +42,8 @@ class AutocompleteDictionary(private val dict: Array<String>, needSort: Boolean 
     init {
         if (needSort) {
             dict.sort()
+        } else {
+            if (dict.isNotOrdered()) throw IllegalArgumentException("Given array should be sorted")
         }
     }
 
