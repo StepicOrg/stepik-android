@@ -36,7 +36,6 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     private var deepColor = deepColorDefault
     private var durationOfPass = durationDefault
     private var interval = intervalDefault
-    private var autoStart = true
 
     private var basePaint: Paint
     private var deepPaintLeft: Paint
@@ -61,7 +60,6 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
                 baseColor = getColor(R.styleable.LoadingView_baseColor, baseColorDefault)
                 deepColor = getColor(R.styleable.LoadingView_deepColor, deepColorDefault)
                 progressLength = getDimensionPixelOffset(R.styleable.LoadingView_progressLength, resources.getDimensionPixelOffset(R.dimen.loading_view_progress_length_default)).toFloat()
-                autoStart = getBoolean(R.styleable.LoadingView_autoStart, true)
             }
         } finally {
             array.recycle()
@@ -86,9 +84,6 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
             isAntiAlias = true
             shader = LinearGradient(0f, 0f, progressLength / 2, 0f, deepColor, baseColor, Shader.TileMode.CLAMP)
         }
-        if (autoStart) {
-            start()
-        }
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -110,7 +105,6 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         stop()
-        animator.removeAllUpdateListeners()
     }
 
 

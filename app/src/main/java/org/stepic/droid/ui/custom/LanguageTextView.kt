@@ -20,18 +20,20 @@ constructor(
         defStyleAttr: Int = android.R.attr.textViewStyle
 ) : AppCompatTextView(context, attrs, defStyleAttr), Checkable {
 
-    private enum class State(
-            @DrawableRes val background: Int,
-            @ColorRes val textColor: Int
-    ) {
-        CHECKED(
-                R.drawable.language_checked_background,
-                R.color.language_text_color_checked
-        ),
-        UNCHECKED(
-                R.drawable.language_unchecked_background,
-                R.color.language_text_color_unchecked
-        )
+    companion object {
+        private enum class State(
+                @DrawableRes val background: Int,
+                @ColorRes val textColor: Int
+        ) {
+            CHECKED(
+                    R.drawable.language_checked_background,
+                    R.color.language_text_color_checked
+            ),
+            UNCHECKED(
+                    R.drawable.language_unchecked_background,
+                    R.color.language_text_color_unchecked
+            )
+        }
     }
 
 

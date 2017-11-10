@@ -76,7 +76,6 @@
         <attr name="baseColor" format="reference|color"/>
         <attr name="deepColor" format="reference|color"/>
         <attr name="progressLength" format="dimension"/>
-        <attr name="autoStart" format="boolean"/>
     </declare-styleable>
 
     <declare-styleable name="PlaceholderTextView">
