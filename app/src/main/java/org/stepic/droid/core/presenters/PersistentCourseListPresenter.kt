@@ -74,7 +74,7 @@ class PersistentCourseListPresenter
 
     @WorkerThread
     private fun downloadDataPlain(isRefreshing: Boolean, isLoadMore: Boolean, courseType: Table) {
-        if (!isRefreshing && !isLoadMore) {
+        if (!isLoadMore) {
             mainHandler.post {
                 view?.showLoading()
             }
@@ -128,7 +128,7 @@ class PersistentCourseListPresenter
                 //this lock need for not saving enrolled courses to database after user click logout
                 RWLocks.ClearEnrollmentsLock.writeLock().lock()
                 if (sharedPreferenceHelper.authResponseFromStore != null || courseType == Table.featured) {
-                    if (isRefreshing && currentPage.get() == 1) {
+                    if (isRefreshing && currentPage.get() == 2) {
                         if (courseType == Table.featured) {
                             databaseFacade.dropFeaturedCourses()
                         } else if (courseType == Table.enrolled) {
