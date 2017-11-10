@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -11,66 +12,97 @@
     android:paddingStart="@dimen/course_list_side_padding"
     android:paddingTop="@dimen/guideline_standard_padding">
 
-    <TextView
-        android:id="@+id/fastContinueTextView"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/fast_continue_widget_height"
-        android:ellipsize="end"
-        android:maxLines="4"
-        android:padding="16dp"
-        android:textColor="@color/new_accent_color"
-        android:textSize="16sp"
-        android:visibility="gone"
-        tools:text="Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world "
-        tools:visibility="visible"/>
-
-    <ImageView
-        android:id="@+id/fastContinueImageView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:contentDescription="@string/accessibility_last_step_cover"
-        android:visibility="gone"
-        tools:visibility="visible"/>
-
-    <View
-        android:id="@+id/fastContinueOverlay"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/fast_continue_widget_height"
-        android:background="@drawable/fast_continue_lesson_drawable"
-        android:visibility="gone"
-        tools:visibility="visible"/>
-
-    <TextView
-        android:id="@+id/fastContinueAction"
-        style="@style/CourseWidgetView"
-        fontPath="fonts/Roboto-Regular.ttf"
-        android:layout_width="match_parent"
-        android:layout_height="42dp"
-        android:layout_gravity="center"
-        android:layout_marginLeft="60dp"
-        android:layout_marginRight="60dp"
-        android:background="@drawable/fast_continue_action_background"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:paddingEnd="@dimen/half_padding"
-        android:paddingStart="@dimen/half_padding"
-        android:text="@string/continue_learning"
-        android:textSize="16sp"
-        android:visibility="gone"
-        tools:ignore="MissingPrefix"
-        tools:visibility="visible"/>
-
-    <org.stepic.droid.ui.custom.PlaceholderTextView
-        android:id="@+id/fastContinuePlaceholder"
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        tools:visibility="visible"/>
+        android:orientation="vertical">
+        <ImageView
+            android:id="@+id/fastContinueImageView"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:scaleType="centerCrop"
+            android:contentDescription="@string/accessibility_last_step_cover"
+            tools:visibility="visible"
+            android:layout_margin="0dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+        <View
+            android:id="@+id/fastContinueOverlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/fast_continue_lesson_drawable"
+            android:visibility="gone"
+            android:layout_margin="0dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            tools:visibility="visible"/>
+
+        <TextView
+            android:id="@+id/fastContinueAction"
+            style="@style/CourseWidgetView"
+            fontPath="fonts/Roboto-Regular.ttf"
+            android:layout_width="0dp"
+            android:layout_height="42dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/fast_continue_action_background"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:paddingEnd="@dimen/half_padding"
+            android:paddingStart="@dimen/half_padding"
+            android:text="@string/continue_learning"
+            android:textSize="16sp"
+            android:visibility="gone"
+            tools:ignore="MissingPrefix"
+            tools:visibility="visible"
+            android:layout_marginRight="60dp"
+            android:layout_marginLeft="60dp"
+            android:layout_marginTop="36dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="60dp"
+            android:layout_marginEnd="60dp" />
+
+        <ImageView
+            android:id="@+id/fastContinueCourseCover"
+            android:contentDescription="@string/content_course_logo"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginTop="30dp"
+            app:layout_constraintTop_toBottomOf="@+id/fastContinueAction"
+            android:layout_marginStart="20dp"
+            android:layout_marginLeft="20dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:id="@+id/fastContinueCourseName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fontPath="fonts/Roboto-Light.ttf"
+            android:textSize="16sp"
+            android:textColor="@color/white"
+            android:ellipsize="end"
+            android:maxLines="1"
+            tools:ignore="MissingPrefix"
+            app:layout_constraintTop_toTopOf="@+id/fastContinueCourseCover"
+            app:layout_constraintLeft_toRightOf="@+id/fastContinueCourseCover"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            tools:text="Программирование на python" />
+
+    </android.support.constraint.ConstraintLayout>
 
     <FrameLayout
         android:id="@+id/fastContinueProgress"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/fast_continue_widget_height"
+        android:layout_height="match_parent"
         android:visibility="gone">
 
         <include
@@ -80,5 +112,12 @@
             android:layout_gravity="center"
             android:visibility="visible"/>
     </FrameLayout>
+
+    <org.stepic.droid.ui.custom.PlaceholderTextView
+        android:id="@+id/fastContinuePlaceholder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
 </FrameLayout>

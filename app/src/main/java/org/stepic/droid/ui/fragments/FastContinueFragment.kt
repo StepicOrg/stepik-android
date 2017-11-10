@@ -1,12 +1,18 @@
 package org.stepic.droid.ui.fragments
 
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.support.annotation.StringRes
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.BitmapImageViewTarget
 import kotlinx.android.synthetic.main.fragment_fast_continue.*
+import kotlinx.android.synthetic.main.new_course_item.view.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
@@ -17,32 +23,21 @@ import org.stepic.droid.core.joining.contract.JoiningListener
 import org.stepic.droid.core.presenters.ContinueCoursePresenter
 import org.stepic.droid.core.presenters.LastStepPresenter
 import org.stepic.droid.core.presenters.PersistentCourseListPresenter
-import org.stepic.droid.core.presenters.VideoStepPresenter
 import org.stepic.droid.core.presenters.contracts.ContinueCourseView
 import org.stepic.droid.core.presenters.contracts.CoursesView
-import org.stepic.droid.core.presenters.contracts.LastStepView
-import org.stepic.droid.core.presenters.contracts.VideoStepView
 import org.stepic.droid.model.Course
 import org.stepic.droid.model.Section
-import org.stepic.droid.model.Step
-import org.stepic.droid.model.Video
 import org.stepic.droid.storage.operations.Table
 import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
-import org.stepic.droid.util.AppConstants
-import org.stepic.droid.util.ProgressHelper
-import org.stepic.droid.util.StepikUtil
-import org.stepic.droid.util.ThumbnailParser
-import timber.log.Timber
+import org.stepic.droid.util.*
 import javax.inject.Inject
 
 class FastContinueFragment : FragmentBase(),
         CoursesView,
         ContinueCourseView,
         DroppingListener,
-        JoiningListener,
-        VideoStepView,
-        LastStepView {
+        JoiningListener {
 
     companion object {
         fun newInstance(): FastContinueFragment = FastContinueFragment()
@@ -65,10 +60,10 @@ class FastContinueFragment : FragmentBase(),
     lateinit var lastStepPresenter: LastStepPresenter
 
     @Inject
-    lateinit var videoStepPresenter: VideoStepPresenter
-
-    @Inject
     lateinit var joiningListenerClient: Client<JoiningListener>
+
+    private lateinit var courseCoverImageViewTarget: BitmapImageViewTarget
+    private lateinit var fastContinueImageViewTarget: BitmapImageViewTarget
 
     override fun injectComponent() {
         App
@@ -91,11 +86,26 @@ class FastContinueFragment : FragmentBase(),
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        courseCoverImageViewTarget = object : BitmapImageViewTarget(fastContinueCourseCover) {
+            override fun setResource(resource: Bitmap) {
+                val circularBitmapDrawable = RoundedBitmapDrawableFactory.create(context.resources, resource)
+                circularBitmapDrawable.cornerRadius = resources.getDimension(R.dimen.course_image_radius)
+                fastContinueCourseCover.setImageDrawable(circularBitmapDrawable)
+            }
+        }
+
+        fastContinueImageViewTarget = object : BitmapImageViewTarget(fastContinueImageView) {
+            override fun setResource(resource: Bitmap) {
+                val circularBitmapDrawable = RoundedBitmapDrawableFactory.create(context.resources, resource)
+                circularBitmapDrawable.cornerRadius = resources.getDimension(R.dimen.course_image_radius)
+                fastContinueImageView.setImageDrawable(circularBitmapDrawable)
+            }
+        }
+
+        setCoverImage()
         courseListPresenter.attachView(this)
         continueCoursePresenter.attachView(this)
         droppingClient.subscribe(this)
-        lastStepPresenter.attachView(this)
-        videoStepPresenter.attachView(this)
         joiningListenerClient.subscribe(this)
         courseListPresenter.restoreState()
         fastContinueAction.isEnabled = true
@@ -113,6 +123,15 @@ class FastContinueFragment : FragmentBase(),
         }
     }
 
+    private fun setCoverImage() {
+        Glide
+                .with(context)
+                .load(R.drawable.continue_learning_cover)
+                .asBitmap()
+                .centerCrop()
+                .into(fastContinueImageViewTarget)
+    }
+
     override fun onPause() {
         super.onPause()
         ProgressHelper.dismiss(fragmentManager, CONTINUE_LOADING_TAG)
@@ -121,8 +140,6 @@ class FastContinueFragment : FragmentBase(),
     override fun onDestroyView() {
         super.onDestroyView()
         joiningListenerClient.unsubscribe(this)
-        videoStepPresenter.detachView(this)
-        lastStepPresenter.detachView(this)
         courseListPresenter.detachView(this)
         continueCoursePresenter.detachView(this)
         droppingClient.unsubscribe(this)
@@ -174,6 +191,7 @@ class FastContinueFragment : FragmentBase(),
             if (!isCourseFound) {
                 analytic.reportEvent(Analytic.FastContinue.CONTINUE_SHOWN)
             }
+            setCourse(course)
             isCourseFound = true
             lastStepPresenter.fetchLastStep(courseId = course.courseId, lastStepId = course.lastStepId)
             fastContinueAction.setOnClickListener {
@@ -184,6 +202,18 @@ class FastContinueFragment : FragmentBase(),
             isCourseFound = false
             showEmptyCourses()
         }
+    }
+
+    private fun setCourse(course: Course) {
+        Log.d(javaClass.canonicalName, StepikLogicHelper.getPathForCourseOrEmpty(course, config))
+        Glide
+                .with(context)
+                .load(StepikLogicHelper.getPathForCourseOrEmpty(course, config))
+                .asBitmap()
+                .fitCenter()
+                .into(courseCoverImageViewTarget)
+
+        fastContinueCourseName.text = course.title
     }
 
     //ContinueCourseView
@@ -223,48 +253,6 @@ class FastContinueFragment : FragmentBase(),
         //no-op
     }
 
-
-    //LastStepPresenter
-    override fun onShowLastStep(step: Step) {
-        Timber.d("Step cover is prepared for step.id = ${step.id}")
-        if (step.block?.name == AppConstants.TYPE_VIDEO) {
-            videoStepPresenter.initVideo(step)
-        } else {
-            val textForView = step.block?.text
-            if (textForView != null && textForView.isNotBlank()) {
-                fastContinueTextView.text = textResolver.fromHtml(textForView)
-                fastContinueImageView.setImageDrawable(null)
-            }
-        }
-    }
-
-    override fun onShowPlaceholder() {
-        Timber.d("Show placeholder for step")
-    }
-
-
-    //VideoStepView
-    override fun onVideoLoaded(thumbnailPath: String?, cachedVideo: Video?, externalVideo: Video?) {
-        if (thumbnailPath == null) {
-            return
-        }
-        val uri = ThumbnailParser.getUriForThumbnail(thumbnailPath)
-        fastContinueTextView.text = ""
-        Glide
-                .with(context)
-                .load(uri)
-                .into(fastContinueImageView)
-    }
-
-    override fun onInternetProblem() {
-        //no-op
-    }
-
-    override fun onNeedOpenVideo(videoId: Long, cachedVideo: Video?, externalVideo: Video?) {
-        //no-op
-    }
-
-
     private fun showPlaceholder(@StringRes stringRes: Int, listener: (view: View) -> Unit) {
         fastContinueProgress.visibility = View.GONE
         fastContinuePlaceholder.setPlaceholderText(stringRes)
@@ -282,10 +270,9 @@ class FastContinueFragment : FragmentBase(),
         fastContinueAction.visibility = visibility
         fastContinueOverlay.visibility = visibility
         fastContinueImageView.visibility = visibility
-        fastContinueTextView.visibility = visibility
     }
 
     override fun onSuccessJoin(joinedCourse: Course) {
-        showCourses(mutableListOf<Course>(joinedCourse))
+        showCourses(mutableListOf(joinedCourse))
     }
 }
