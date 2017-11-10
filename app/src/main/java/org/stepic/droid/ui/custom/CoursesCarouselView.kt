@@ -435,14 +435,11 @@ constructor(
         }
 
         super.onRestoreInstanceState(state.superState)
-
         this._info = state.info
-
-        lastSavedScrollPosition = state.scrollPosition
+        this.lastSavedScrollPosition = state.scrollPosition
     }
 
     private class SavedState : View.BaseSavedState {
-
         var info: CoursesCarouselInfo? = null
         var scrollPosition: Int = 0
 
@@ -464,7 +461,6 @@ constructor(
 
                 override fun newArray(size: Int): Array<SavedState?> = arrayOfNulls(size)
             }
-
         }
     }
 
@@ -483,6 +479,5 @@ constructor(
             courseListPresenter.refreshData(Table.featured)
         }
     }
-
 
 }
