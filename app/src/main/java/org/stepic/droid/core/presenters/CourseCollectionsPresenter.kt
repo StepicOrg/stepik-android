@@ -9,7 +9,7 @@ import org.stepic.droid.web.Api
 import javax.inject.Inject
 
 @CourseListScope
-class CourseListCollection
+class CourseCollectionsPresenter
 @Inject
 constructor(
         @BackgroundScheduler
@@ -24,7 +24,7 @@ constructor(
         private val DEFAULT_PAGE = 1
     }
 
-    fun onShowCollection(courseIds: LongArray) {
+    fun onShowCollections(courseIds: LongArray) {
         //todo add progresses and ratings, when it will be implemented.
         view?.showLoading()
         api

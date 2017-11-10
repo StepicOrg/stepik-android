@@ -22,7 +22,7 @@ import org.stepic.droid.core.dropping.contract.DroppingListener
 import org.stepic.droid.core.filters.contract.FiltersListener
 import org.stepic.droid.core.joining.contract.JoiningListener
 import org.stepic.droid.core.presenters.ContinueCoursePresenter
-import org.stepic.droid.core.presenters.CourseListCollection
+import org.stepic.droid.core.presenters.CourseCollectionsPresenter
 import org.stepic.droid.core.presenters.DroppingPresenter
 import org.stepic.droid.core.presenters.PersistentCourseListPresenter
 import org.stepic.droid.core.presenters.contracts.ContinueCourseView
@@ -87,7 +87,7 @@ constructor(
     lateinit var analytic: Analytic
 
     @Inject
-    lateinit var courseListCollection: CourseListCollection
+    lateinit var courseCollectionsPresenter: CourseCollectionsPresenter
 
     @Inject
     lateinit var filterClient: Client<FiltersListener>
@@ -153,7 +153,7 @@ constructor(
         droppingClient.subscribe(this)
         joiningListenerClient.subscribe(this)
         filterClient.subscribe(this)
-        courseListCollection.attachView(this)
+        courseCollectionsPresenter.attachView(this)
 
         if (needExecuteOnInfoInitialized) {
             onInfoInitialized(info)
@@ -164,7 +164,7 @@ constructor(
         super.onDetachedFromWindow()
 
         filterClient.unsubscribe(this)
-        courseListCollection.detachView(this)
+        courseCollectionsPresenter.detachView(this)
         joiningListenerClient.unsubscribe(this)
         droppingClient.unsubscribe(this)
         continueCoursePresenter.detachView(this)
@@ -366,7 +366,7 @@ constructor(
 
         if (info.table == null) {
             info.courseIds?.let {
-                courseListCollection.onShowCollection(it)
+                courseCollectionsPresenter.onShowCollections(it)
             }
         }
     }

@@ -89,7 +89,7 @@ class CatalogFragment : FragmentBase(),
         catalogRecyclerView.adapter = CatalogAdapter(courseCarouselInfoList, { filtersPresenter.onFilterChanged(it) })
     }
 
-    override fun showCarousels(courseItems: List<CoursesCarouselInfo>) {
+    override fun showCollections(courseItems: List<CoursesCarouselInfo>) {
         this.courseCarouselInfoList.clear()
         this.courseCarouselInfoList.addAll(courseItems)
         catalogRecyclerView.adapter.notifyDataSetChanged()
@@ -112,7 +112,6 @@ class CatalogFragment : FragmentBase(),
 
         })
     }
-
 
     override fun onDestroyOptionsMenu() {
         super.onDestroyOptionsMenu()

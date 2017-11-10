@@ -1,11 +1,11 @@
 package org.stepic.droid.web
 
 import com.google.gson.annotations.SerializedName
-import org.stepic.droid.model.CourseListItem
+import org.stepic.droid.model.CourseCollection
 import org.stepic.droid.model.Meta
 
-class CourseListsResponse(
+class CourseCollectionsResponse(
         meta: Meta,
         @SerializedName("course-lists")
-        val courseLists: List<CourseListItem>
+        val courseCollections: List<CourseCollection>
 ) : StepicResponseBase(meta)

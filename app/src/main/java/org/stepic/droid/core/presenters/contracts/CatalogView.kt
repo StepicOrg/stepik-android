@@ -4,7 +4,7 @@ import org.stepic.droid.model.CoursesCarouselInfo
 
 interface CatalogView {
 
-    fun showCarousels(courseItems: List<CoursesCarouselInfo>)
+    fun showCollections(courseItems: List<CoursesCarouselInfo>)
 
     fun offlineMode()
 }

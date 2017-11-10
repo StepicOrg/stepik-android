@@ -7,7 +7,7 @@ import org.stepic.droid.di.catalog.CatalogScope
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.mappers.Mapper
-import org.stepic.droid.model.CourseListItem
+import org.stepic.droid.model.CourseCollection
 import org.stepic.droid.model.CoursesCarouselInfo
 import org.stepic.droid.model.StepikFilter
 import org.stepic.droid.web.Api
@@ -23,7 +23,7 @@ constructor(
         private val backgroundScheduler: Scheduler,
         @MainScheduler
         private val mainScheduler: Scheduler,
-        private val mapper: Mapper<CourseListItem, CoursesCarouselInfo>
+        private val mapper: Mapper<CourseCollection, CoursesCarouselInfo>
 ) : PresenterBase<CatalogView>() {
 
     private var disposableContainer: CompositeDisposable? = null
@@ -37,12 +37,12 @@ constructor(
         val disposable = api
                 .getCourseLists(lang)
                 .map {
-                    mapper.map(it.courseLists)
+                    mapper.map(it.courseCollections)
                 }
                 .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)
                 .subscribe({
-                    view?.showCarousels(it)
+                    view?.showCollections(it)
                 }, {
                     view?.offlineMode()
                 })

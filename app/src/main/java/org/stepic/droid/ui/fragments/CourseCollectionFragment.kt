@@ -3,7 +3,7 @@ package org.stepic.droid.ui.fragments
 import android.os.Bundle
 import android.view.View
 import org.stepic.droid.base.App
-import org.stepic.droid.core.presenters.CourseListCollection
+import org.stepic.droid.core.presenters.CourseCollectionsPresenter
 import org.stepic.droid.storage.operations.Table
 import org.stepic.droid.ui.util.initCenteredToolbar
 import javax.inject.Inject
@@ -23,7 +23,7 @@ class CourseCollectionFragment : CourseListFragmentBase() {
     }
 
     @Inject
-    lateinit var courseListCollection: CourseListCollection
+    lateinit var courseCollectionPresenter: CourseCollectionsPresenter
 
     override fun injectComponent() {
         App
@@ -37,17 +37,17 @@ class CourseCollectionFragment : CourseListFragmentBase() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initCenteredToolbar(getTitle())
-        courseListCollection.attachView(this)
-        courseListCollection.onShowCollection(arguments.getLongArray(COURSE_IDS))
+        courseCollectionPresenter.attachView(this)
+        courseCollectionPresenter.onShowCollections(arguments.getLongArray(COURSE_IDS))
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        courseListCollection.detachView(this)
+        courseCollectionPresenter.detachView(this)
     }
 
     override fun onRefresh() {
-        courseListCollection.onShowCollection(arguments.getLongArray(COURSE_IDS))
+        courseCollectionPresenter.onShowCollections(arguments.getLongArray(COURSE_IDS))
     }
 
     override fun getCourseType(): Table? = null

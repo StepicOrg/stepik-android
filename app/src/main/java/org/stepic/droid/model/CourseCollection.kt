@@ -2,7 +2,7 @@ package org.stepic.droid.model
 
 import java.util.*
 
-data class CourseListItem(
+data class CourseCollection(
         private val id: Long,
         private val position: Int,
         val title: String,
@@ -14,7 +14,7 @@ data class CourseListItem(
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as CourseListItem
+        other as CourseCollection
 
         if (id != other.id) return false
         if (position != other.position) return false
