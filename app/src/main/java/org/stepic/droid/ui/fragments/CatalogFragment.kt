@@ -138,6 +138,7 @@ class CatalogFragment : FragmentBase(),
 
     private fun updateFilters(filters: EnumSet<StepikFilter>) {
         (catalogRecyclerView.adapter as CatalogAdapter).showFilters(filters)
+
         catalogPresenter.onNeedLoadCatalog(filters)
     }
 

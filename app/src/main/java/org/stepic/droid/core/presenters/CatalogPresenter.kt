@@ -26,7 +26,7 @@ constructor(
         private val mapper: Mapper<CourseListItem, CoursesCarouselInfo>
 ) : PresenterBase<CatalogView>() {
 
-    private val disposableContainer = CompositeDisposable()
+    private var disposableContainer: CompositeDisposable? = null
 
     fun onNeedLoadCatalog(filters: EnumSet<StepikFilter>) {
         if (filters.size > 1) {
@@ -46,11 +46,16 @@ constructor(
                 }, {
                     view?.offlineMode()
                 })
-        disposableContainer.add(disposable)
+        disposableContainer?.add(disposable)
+    }
+
+    override fun attachView(view: CatalogView) {
+        super.attachView(view)
+        disposableContainer = CompositeDisposable()
     }
 
     override fun detachView(view: CatalogView) {
         super.detachView(view)
-        disposableContainer.dispose()
+        disposableContainer?.dispose()
     }
 }
