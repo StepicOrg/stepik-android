@@ -138,10 +138,12 @@ public interface Analytic {
         String CLICK_TERMS_OF_SERVICE = "click_terms_of_service";
 
         String INVITE_DIALOG_DISMISSED = "invite_dialog_dismissed";
+
         interface InviteDialogDismissType {
             String LEAVE = "leave";
             String SHARE = "share";
         }
+
         String INVITE_DIALOG_BROKEN = "invite_dialog_broken";
 
         String SHOW_MATERIAL_DIALOG_INVITATION = "materdial_dialog_invite_shown";
@@ -274,6 +276,7 @@ public interface Analytic {
         String UNIT_CACHED_LESSON_NO = "error_unit_cached_lesson_not";
         String FEATURED_EMPTY = "error_featured_empty";
         String TEMPLATE_WAS_NULL = "error_code_template_null";
+        String COURSE_COLLECTION_EMPTY = "course_collection_empty";
     }
 
     interface Web {

@@ -252,8 +252,8 @@ constructor(
                         R.string.empty_courses_popular
                     }
                     else -> {
-                        // TODO: 29.09.2017 implement for course list
-                        TODO()
+                        analytic.reportEvent(Analytic.Error.COURSE_COLLECTION_EMPTY)
+                        R.string.course_collection_empty
                     }
                 }
 
