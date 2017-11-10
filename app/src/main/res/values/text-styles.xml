@@ -5,22 +5,8 @@
         <item name="fontPath">fonts/Roboto-Bold.ttf</item>
     </style>
 
-
     <style name="regular_text">
         <item name="fontPath">fonts/Roboto-Regular.ttf</item>
-    </style>
-
-    <style name="italic_text">
-        <item name="fontPath">fonts/Roboto-Italic.ttf</item>
-    </style>
-
-    <style name="bolditalic_text">
-        <item name="fontPath">fonts/Roboto-BoldItalic.ttf</item>
-    </style>
-
-
-    <style name="bold_white_text" parent="@style/bold_text">
-        <item name="android:textColor">@android:color/white</item>
     </style>
 
     <style name="cv_text_title" parent="regular_text">
@@ -32,6 +18,17 @@
         <item name="android:gravity">center</item>
         <item name="android:textColor">@color/streak_default_color</item>
         <item name="android:textSize">30sp</item>
+    </style>
+
+    <style name="LanguageFilterStyle">
+        <item name="android:textSize">20sp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">@dimen/min_ux_touchable_size</item>
+        <item name="android:minWidth">@dimen/min_ux_touchable_size</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_marginBottom">20dp</item>
+        <item name="android:layout_marginRight">13dp</item>
     </style>
 
 </resources>

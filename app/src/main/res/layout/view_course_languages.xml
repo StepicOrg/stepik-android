@@ -16,31 +16,20 @@
 
     <org.stepic.droid.ui.custom.LanguageTextView
         android:id="@+id/languageRu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/LanguageFilterStyle"
         android:layout_alignLeft="@id/languageTitle"
+        android:layout_alignStart="@id/languageTitle"
         android:layout_below="@id/languageTitle"
-        android:layout_marginBottom="20dp"
-        android:background="@color/stepic_orange_carrot"
-        android:gravity="center"
-        android:minHeight="@dimen/min_ux_touchable_size"
-        android:minWidth="@dimen/min_ux_touchable_size"
-        android:text="Ru"/>
+        android:text="@string/ru_language_filter"/>
 
 
     <org.stepic.droid.ui.custom.LanguageTextView
         android:id="@+id/languageEn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/LanguageFilterStyle"
         android:layout_alignBaseline="@id/languageRu"
-        android:layout_marginLeft="13dp"
-        android:layout_marginStart="13dp"
+        android:layout_toEndOf="@id/languageRu"
         android:layout_toRightOf="@id/languageRu"
-        android:background="@color/stepic_orange_carrot"
-        android:gravity="center"
-        android:minHeight="@dimen/min_ux_touchable_size"
-        android:minWidth="@dimen/min_ux_touchable_size"
-        android:text="En"/>
+        android:text="@string/en_language_filter"/>
 
 
     <include

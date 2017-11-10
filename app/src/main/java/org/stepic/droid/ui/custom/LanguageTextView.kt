@@ -18,7 +18,7 @@ constructor(
         context: Context,
         attrs: AttributeSet? = null,
         defStyleAttr: Int = android.R.attr.textViewStyle
-) : AppCompatTextView(context, attrs), Checkable {
+) : AppCompatTextView(context, attrs, defStyleAttr), Checkable {
 
     private enum class State(
             @DrawableRes val background: Int,
