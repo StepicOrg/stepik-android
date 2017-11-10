@@ -70,6 +70,11 @@ class CatalogAdapter(
         notifyItemChanged(LANGUAGE_INDEX)
     }
 
+    fun refreshPopular() {
+        val popularAdapterIndex = (PRE_CAROUSEL_COUNT + courseListItems.size + POST_CAROUSEL_COUNT - 1)
+        notifyItemChanged(popularAdapterIndex)
+    }
+
     private fun getDescriptionColors(position: Int): CollectionDescriptionColors =
             when (position % 2) {
                 0 -> CollectionDescriptionColors.BLUE
