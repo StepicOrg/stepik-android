@@ -6,17 +6,17 @@
 
     <TextView
         android:id="@+id/languageTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/LanguageTitle"
         android:layout_marginBottom="20dp"
         android:layout_marginLeft="@dimen/course_list_side_padding"
+        android:layout_marginStart="@dimen/course_list_side_padding"
         android:layout_marginTop="@dimen/guideline_standard_padding"
-        android:text="Language of courses"/>
+        android:text="@string/language_of_courses"/>
 
 
     <org.stepic.droid.ui.custom.LanguageTextView
         android:id="@+id/languageRu"
-        style="@style/LanguageFilterStyle"
+        style="@style/LanguageFilterItem"
         android:layout_alignLeft="@id/languageTitle"
         android:layout_alignStart="@id/languageTitle"
         android:layout_below="@id/languageTitle"
@@ -25,7 +25,7 @@
 
     <org.stepic.droid.ui.custom.LanguageTextView
         android:id="@+id/languageEn"
-        style="@style/LanguageFilterStyle"
+        style="@style/LanguageFilterItem"
         android:layout_alignBaseline="@id/languageRu"
         android:layout_toEndOf="@id/languageRu"
         android:layout_toRightOf="@id/languageRu"

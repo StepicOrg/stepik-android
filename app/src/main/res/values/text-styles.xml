@@ -20,8 +20,8 @@
         <item name="android:textSize">30sp</item>
     </style>
 
-    <style name="LanguageFilterStyle">
-        <item name="android:textSize">20sp</item>
+    <style name="LanguageFilterItem">
+        <item name="android:textSize">16sp</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:minHeight">@dimen/min_ux_touchable_size</item>
@@ -29,6 +29,14 @@
         <item name="android:gravity">center</item>
         <item name="android:layout_marginBottom">20dp</item>
         <item name="android:layout_marginRight">13dp</item>
+        <item name="fontPath">fonts/Roboto-Light.ttf</item>
+    </style>
+
+    <style name="LanguageTitle">
+        <item name="android:textSize">20sp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/new_accent_color_alpha_30</item>
     </style>
 
 </resources>

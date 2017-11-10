@@ -536,6 +536,7 @@
     <string name="sample_output">&lt;b>Пример выходных данных %d:&lt;/b></string>
     <string name="hint_for_code">Введите код здесь…</string>
     <string name="step_preparing">Шаг еще не обработан. Нажмите, чтобы перезагрузить</string>
+    <string name="language_of_courses">Язык курсов</string>
 
     <plurals name="course_count">
         <item quantity="one">%d курс</item>
