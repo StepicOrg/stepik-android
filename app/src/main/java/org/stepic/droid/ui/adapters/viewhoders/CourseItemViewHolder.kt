@@ -1,4 +1,4 @@
-package org.stepic.droid.ui.adapters.view_hoders
+package org.stepic.droid.ui.adapters.viewhoders
 
 import android.app.Activity
 import android.graphics.Bitmap
@@ -51,7 +51,6 @@ class CourseItemViewHolder(
 
     @Inject
     lateinit var config: Config
-
 
     private val continueColor: Int by lazy {
         ColorUtil.getColorArgb(colorType.textColor, itemView.context)
