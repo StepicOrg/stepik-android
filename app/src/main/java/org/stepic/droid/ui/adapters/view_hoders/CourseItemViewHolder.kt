@@ -211,8 +211,13 @@ class CourseItemViewHolder(
             showJoinButton()
         }
 
-        val needShowProgress = bindProgressView(course)
-        val needShowRating = bindRatingView(course)
+        //bind
+        bindProgressView(course)
+        bindRatingView(course)
+
+        //check after binding
+        val needShowProgress = isProgressVisible()
+        val needShowRating = isRatingVisible()
 
         val showContainer = needShowLearners || needShowProgress || needShowRating
         coursePropertiesContainer.changeVisibility(showContainer)
@@ -220,7 +225,7 @@ class CourseItemViewHolder(
         courseItemMore.changeVisibility(showMore)
     }
 
-    private fun bindProgressView(course: Course): Boolean {
+    private fun bindProgressView(course: Course) {
         val progressPercent: Int? = ProgressUtil.getProgressPercent(course.progressObject)
         val needShow: Boolean =
                 if (progressPercent != null && progressPercent > 0) {
@@ -236,18 +241,20 @@ class CourseItemViewHolder(
                 }
         courseItemProgress.changeVisibility(needShow)
         courseItemProgressTitle.changeVisibility(needShow)
-        return needShow
     }
 
-    private fun bindRatingView(course: Course): Boolean {
+    private fun isProgressVisible() = courseItemProgress.visibility == View.VISIBLE
+
+    private fun bindRatingView(course: Course) {
         val needShow = course.rating > 0
         if (needShow) {
             courseRatingText.text = String.format(Locale.ROOT, itemView.resources.getString(R.string.course_rating_value), course.rating)
         }
         courseRatingImage.changeVisibility(needShow)
         courseRatingText.changeVisibility(needShow)
-        return needShow
     }
+
+    private fun isRatingVisible() = courseRatingImage.visibility == View.VISIBLE
 
     private fun isEnrolled(course: Course?): Boolean =
             course != null && course.enrollment != 0
