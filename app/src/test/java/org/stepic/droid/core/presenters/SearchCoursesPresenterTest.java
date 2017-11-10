@@ -8,9 +8,12 @@ import org.mockito.MockitoAnnotations;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.core.presenters.contracts.CoursesView;
+import org.stepic.droid.di.qualifiers.BackgroundScheduler;
+import org.stepic.droid.di.qualifiers.MainScheduler;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Meta;
 import org.stepic.droid.model.SearchResult;
+import org.stepic.droid.storage.operations.DatabaseFacade;
 import org.stepic.droid.testUtils.ConcurrencyUtilForTest;
 import org.stepic.droid.testUtils.ResponseGeneratorKt;
 import org.stepic.droid.testUtils.generators.FakeCourseGenerator;
@@ -26,6 +29,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadPoolExecutor;
+
+import io.reactivex.Scheduler;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.inOrder;
@@ -57,6 +62,17 @@ public class SearchCoursesPresenterTest {
     @Mock
     CoursesView coursesView;
 
+    @Mock
+    @MainScheduler
+    Scheduler mainScheduler;
+
+    @Mock
+    @BackgroundScheduler
+    Scheduler scheduler;
+
+    @Mock
+    DatabaseFacade databaseFacade;
+
 
     @Before
     public void beforeEachTest() {
@@ -67,7 +83,7 @@ public class SearchCoursesPresenterTest {
 
         searchResolver = spy(new SearchResolverImpl());
 
-        searchCoursesPresenter = new SearchCoursesPresenter(api, threadPoolExecutor, mainHandler, searchResolver, analytic);
+        searchCoursesPresenter = new SearchCoursesPresenter(api, threadPoolExecutor, mainHandler, searchResolver, databaseFacade, analytic, scheduler, mainScheduler);
     }
 
     @Test
