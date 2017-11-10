@@ -231,11 +231,13 @@ constructor(
     }
 
     override fun showLoading() {
-        coursesViewAll.visibility = View.GONE
-        coursesRecycler.visibility = View.GONE
-        coursesPlaceholder.visibility = View.GONE
-        coursesCarouselCount.visibility = View.GONE
-        coursesLoadingView.visibility = View.VISIBLE
+        if (courses.isEmpty()) {
+            coursesViewAll.visibility = View.GONE
+            coursesRecycler.visibility = View.GONE
+            coursesPlaceholder.visibility = View.GONE
+            coursesCarouselCount.visibility = View.GONE
+            coursesLoadingView.visibility = View.VISIBLE
+        }
     }
 
     override fun showEmptyCourses() {

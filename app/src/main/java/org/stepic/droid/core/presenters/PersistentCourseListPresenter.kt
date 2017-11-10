@@ -75,6 +75,9 @@ class PersistentCourseListPresenter
     @WorkerThread
     private fun downloadDataPlain(isRefreshing: Boolean, isLoadMore: Boolean, courseType: Table) {
         if (!isRefreshing && !isLoadMore) {
+            mainHandler.post {
+                view?.showLoading()
+            }
             showFromDatabaseAndGetCountOfShown(courseType)
         } else if (hasNextPage.get()) {
             mainHandler.post {
@@ -175,8 +178,6 @@ class PersistentCourseListPresenter
             mainHandler.post {
                 view?.showCourses(coursesForShow)
             }
-        } else if (hasNextPage.get()) {
-            mainHandler.post { view?.showLoading() }
         }
         return coursesForShow.size
     }
