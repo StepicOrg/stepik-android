@@ -61,7 +61,6 @@ class PersistentCourseListPresenter
             return
         }
         currentNumberOfTasks++
-        view?.showLoading()
         singleThreadExecutor.execute {
             try {
                 downloadDataPlain(isRefreshing, isLoadMore, courseType)
@@ -76,7 +75,7 @@ class PersistentCourseListPresenter
     @WorkerThread
     private fun downloadDataPlain(isRefreshing: Boolean, isLoadMore: Boolean, courseType: Table) {
         if (!isRefreshing && !isLoadMore) {
-            getFromDatabaseAndShow(courseType)
+            showFromDatabaseAndGetCountOfShown(courseType)
         } else if (hasNextPage.get()) {
             mainHandler.post {
                 view?.showLoading()
@@ -144,19 +143,10 @@ class PersistentCourseListPresenter
 
             val allCourses = databaseFacade.getAllCourses(courseType).filterNotNull().toMutableList()
 
-            val filteredCourseList: MutableList<Course> =
-                    if (courseType == Table.featured) {
-                        filterApplicator.filterCourses(allCourses)
-                    } else {
-                        allCourses
-                    }
-            if ((filteredCourseList.size < MIN_COURSES_ON_SCREEN) && hasNextPage.get()) {
+            val coursesForShow: List<Course> = handleCoursesWithType(allCourses, courseType)
+            if (coursesForShow.size < MIN_COURSES_ON_SCREEN && hasNextPage.get()) {
                 //try to load next in loop
             } else {
-                val coursesForShow = when (courseType) {
-                    Table.enrolled -> sortByLastAction(filteredCourseList)
-                    else -> filteredCourseList
-                }
                 mainHandler.post {
                     if (coursesForShow.isEmpty()) {
                         isEmptyCourses.set(true)
@@ -177,29 +167,26 @@ class PersistentCourseListPresenter
         }
     }
 
-    private fun getFromDatabaseAndShow(courseType: Table) {
+    private fun showFromDatabaseAndGetCountOfShown(courseType: Table): Int {
         val coursesBeforeLoading = databaseFacade.getAllCourses(courseType).filterNotNull()
-        if (coursesBeforeLoading.isNotEmpty()) {
-            val coursesForShow = if (courseType == Table.enrolled) {
-                sortByLastAction(coursesBeforeLoading)
-            } else {
-                filterApplicator.filterCourses(coursesBeforeLoading)
+        val coursesForShow = handleCoursesWithType(coursesBeforeLoading, courseType)
+
+        if (coursesForShow.isNotEmpty()) {
+            mainHandler.post {
+                view?.showCourses(coursesForShow)
             }
-            if (coursesForShow.isNotEmpty()) {
-                mainHandler.post {
-                    view?.showCourses(coursesForShow)
-                }
-            } else if (hasNextPage.get()) {
-                mainHandler.post { view?.showLoading() }
-            }
-        } else {
-            if (hasNextPage.get()) {
-                //do not show loading, if we have not the next page
-                //loading is useless in this case
-                mainHandler.post { view?.showLoading() }
-            }
+        } else if (hasNextPage.get()) {
+            mainHandler.post { view?.showLoading() }
         }
+        return coursesForShow.size
     }
+
+    private fun handleCoursesWithType(courses: List<Course>, courseType: Table?): List<Course> =
+            when (courseType) {
+                Table.enrolled -> sortByLastAction(courses)
+                Table.featured -> filterApplicator.filterCourses(courses)
+                null -> courses
+            }
 
     fun refreshData(courseType: Table) {
         if (currentNumberOfTasks >= MAX_CURRENT_NUMBER_OF_TASKS) {

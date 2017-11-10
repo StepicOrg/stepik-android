@@ -281,6 +281,8 @@ public abstract class CourseListFragmentBase extends FragmentBase
         reportConnectionProblem.setVisibility(View.GONE);
         showEmptyScreen(false);
         List<Course> finalCourses;
+        int oldSize = this.courses.size();
+        int updatedSize = courses.size();
         if (getCourseType() == null) {
             finalCourses = KotlinUtil.INSTANCE.getListOldPlusUpdated(this.courses, courses);
         } else {
@@ -289,6 +291,10 @@ public abstract class CourseListFragmentBase extends FragmentBase
         this.courses.clear();
         this.courses.addAll(finalCourses);
         coursesAdapter.notifyDataSetChanged();
+
+        if (oldSize >= updatedSize) {
+            onNeedDownloadNextPage();
+        }
     }
 
     protected abstract void onNeedDownloadNextPage();

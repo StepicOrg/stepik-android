@@ -31,7 +31,6 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     @Inject
     Client<DroppingListener> droppingClient;
 
-    private boolean isScreenCreated;
 
     @Override
     protected void injectComponent() {
@@ -49,7 +48,6 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
         setHasOptionsMenu(true);
         setRetainInstance(true);
 
-        isScreenCreated = true;
     }
 
     @Override
@@ -64,15 +62,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     @Override
     public void onStart() {
         super.onStart();
-        if (isScreenCreated) {
-            //reset all data
-            isScreenCreated = false;
-            courses.clear();
-            courseListPresenter.refreshData(getCourseType());
-        } else {
-            //load if not
-            courseListPresenter.downloadData(getCourseType());
-        }
+        courseListPresenter.downloadData(getCourseType());
         swipeRefreshLayout.setRefreshing(false);
     }
 
