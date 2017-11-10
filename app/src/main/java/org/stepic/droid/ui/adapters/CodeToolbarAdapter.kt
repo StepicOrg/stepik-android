@@ -95,7 +95,7 @@ class CodeToolbarAdapter(private val context: Context) : RecyclerView.Adapter<Re
 
     override fun getItemCount(): Int = symbols.size + autocompleteItemsCount
 
-    class CodeToolbarItem(itemView: View, onItemClickListener: OnItemClickListener) : RecyclerView.ViewHolder(itemView) {
+    private class CodeToolbarItem(itemView: View, onItemClickListener: OnItemClickListener) : RecyclerView.ViewHolder(itemView) {
         private val codeToolbarSymbol = itemView.findViewById<TextView>(R.id.codeToolbarSymbol)
 
         init {
@@ -109,6 +109,6 @@ class CodeToolbarAdapter(private val context: Context) : RecyclerView.Adapter<Re
             codeToolbarSymbol.text = symbol
         }
     }
-    class CodeToolbarSeparator(view: View) : RecyclerView.ViewHolder(view)
+    private class CodeToolbarSeparator(view: View) : RecyclerView.ViewHolder(view)
 
 }
