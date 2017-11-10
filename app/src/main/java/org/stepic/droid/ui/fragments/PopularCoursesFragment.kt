@@ -8,10 +8,9 @@ import org.stepic.droid.base.CoursesDatabaseFragmentBase
 import org.stepic.droid.storage.operations.Table
 import org.stepic.droid.ui.util.initCenteredToolbar
 
-open class PopularCoursesAloneFragment : CoursesDatabaseFragmentBase() {
+class PopularCoursesFragment : CoursesDatabaseFragmentBase() {
     companion object {
-
-        fun newInstance(): PopularCoursesAloneFragment = PopularCoursesAloneFragment()
+        fun newInstance(): PopularCoursesFragment = PopularCoursesFragment()
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
@@ -21,5 +20,4 @@ open class PopularCoursesAloneFragment : CoursesDatabaseFragmentBase() {
 
     @NotNull
     override fun getCourseType(): Table = Table.featured
-
 }
