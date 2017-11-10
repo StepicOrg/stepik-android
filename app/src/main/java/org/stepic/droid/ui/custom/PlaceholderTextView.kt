@@ -5,6 +5,7 @@ import android.support.annotation.StringRes
 import android.text.Spannable
 import android.text.SpannableString
 import android.util.AttributeSet
+import android.util.LruCache
 import android.util.TypedValue
 import android.view.Gravity
 import org.stepic.droid.R
@@ -27,6 +28,8 @@ constructor(
 
     @Inject
     lateinit var fontsProvider: FontsProvider
+
+    private val wordCache = LruCache<CharSequence, SpannableString>(4)
 
     init {
         App.component().inject(this)
@@ -52,6 +55,20 @@ constructor(
 
 
     fun setPlaceholderText(text: CharSequence) {
+        val result = highlightFirstWord(text)
+        setText(result)
+    }
+
+    fun setPlaceholderText(@StringRes textId: Int) {
+        val text = resources.getString(textId)
+        setPlaceholderText(text)
+    }
+
+    private fun highlightFirstWord(text: CharSequence): SpannableString? {
+        wordCache.get(text)?.let {
+            return it
+        }
+
         val lengthOfFirstWord = TextUtil.getIndexOfFirstSpace(text)
 
         val result = SpannableString(text)
@@ -62,12 +79,8 @@ constructor(
         result.setSpan(mediumText, 0, lengthOfFirstWord, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         result.setSpan(lightText, lengthOfFirstWord, text.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
-        setText(result)
-    }
-
-    fun setPlaceholderText(@StringRes textId: Int) {
-        val text = resources.getString(textId)
-        setPlaceholderText(text)
+        wordCache.put(text, result)
+        return result
     }
 
 }

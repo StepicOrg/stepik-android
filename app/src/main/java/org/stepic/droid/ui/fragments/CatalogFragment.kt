@@ -67,6 +67,7 @@ class CatalogFragment : FragmentBase(),
                 collapseAndHide()
             }
         }
+        catalogRecyclerView.itemAnimator = null
 
         initCenteredToolbar(R.string.catalog_title, showHomeButton = false)
         initMainRecycler()
@@ -86,17 +87,22 @@ class CatalogFragment : FragmentBase(),
 
     private fun initMainRecycler() {
         catalogRecyclerView.layoutManager = LinearLayoutManager(context)
-        catalogRecyclerView.adapter = CatalogAdapter(courseCarouselInfoList, { filtersPresenter.onFilterChanged(it) })
+        catalogRecyclerView.adapter = CatalogAdapter(courseCarouselInfoList,
+                { filtersPresenter.onFilterChanged(it) },
+                { filtersPresenter.onNeedFilters() }
+        )
     }
 
     override fun showCollections(courseItems: List<CoursesCarouselInfo>) {
         this.courseCarouselInfoList.clear()
         this.courseCarouselInfoList.addAll(courseItems)
-        catalogRecyclerView.adapter.notifyDataSetChanged()
+        val catalogAdapter = catalogRecyclerView.adapter as CatalogAdapter
+        catalogAdapter.showCollections()
     }
 
     override fun offlineMode() {
-        //do nothing
+        val catalogAdapter = catalogRecyclerView.adapter as CatalogAdapter
+        catalogAdapter.enableOfflineMode()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

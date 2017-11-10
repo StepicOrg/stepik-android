@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Checkable
 import kotlinx.android.synthetic.main.catalog_item.view.*
+import kotlinx.android.synthetic.main.view_catalog_no_internet_clickable.view.*
 import kotlinx.android.synthetic.main.view_course_languages.view.*
 import org.stepic.droid.R
 import org.stepic.droid.model.CollectionDescriptionColors
@@ -16,13 +17,15 @@ import java.util.*
 
 class CatalogAdapter(
         private val courseListItems: List<CoursesCarouselInfo>,
-        private val onFiltersChanged: (EnumSet<StepikFilter>) -> Unit
+        private val onFiltersChanged: (EnumSet<StepikFilter>) -> Unit,
+        private val onRetry: () -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
         private const val CAROUSEL_TYPE = 0
         private const val LANGUAGES_TYPE = 1
         private const val POPULAR_TYPE = 2
+        private const val OFFLINE_TYPE = 3
 
         private const val PRE_CAROUSEL_COUNT = 1
         private const val POST_CAROUSEL_COUNT = 1
@@ -30,6 +33,8 @@ class CatalogAdapter(
     }
 
     private var filters: EnumSet<StepikFilter>? = null
+    var isOfflineMode: Boolean = false
+        private set
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -41,6 +46,10 @@ class CatalogAdapter(
             LANGUAGES_TYPE -> {
                 val view = layoutInflater.inflate(R.layout.view_course_languages, parent, false)
                 LanguagesViewHolder(view)
+            }
+            OFFLINE_TYPE -> {
+                val view = layoutInflater.inflate(R.layout.view_catalog_no_internet_clickable, parent, false)
+                OfflineViewHolder(view)
             }
             else -> throw IllegalStateException("CatalogAdapter viewType = $viewType is unsupported")
         }
@@ -61,6 +70,10 @@ class CatalogAdapter(
             POPULAR_TYPE -> {
                 holder as CarouselViewHolder
                 holder.bindData(CoursesCarouselInfoConstants.popular, null)
+            }
+            OFFLINE_TYPE -> {
+                holder as OfflineViewHolder
+                holder.bindText()
             }
         }
     }
@@ -85,15 +98,41 @@ class CatalogAdapter(
     private fun courseListItemBy(adapterPosition: Int): CoursesCarouselInfo =
             courseListItems[adapterPosition - PRE_CAROUSEL_COUNT]
 
-    override fun getItemCount(): Int = courseListItems.size + PRE_CAROUSEL_COUNT + POST_CAROUSEL_COUNT
+    override fun getItemCount(): Int {
+        var count = PRE_CAROUSEL_COUNT + POST_CAROUSEL_COUNT
+        count +=
+                if (isOfflineMode) {
+                    1
+                } else {
+                    courseListItems.size
+                }
+        return count
+    }
 
-    override fun getItemViewType(adapterPosition: Int): Int =
+    override fun getItemViewType(adapterPosition: Int): Int {
+        return if (isOfflineMode) {
+            getItemViewTypeInOfflineMode(adapterPosition)
+        } else {
+            getItemViewTypeInOnlineMode(adapterPosition)
+        }
+    }
+
+    private fun getItemViewTypeInOfflineMode(adapterPosition: Int): Int =
+            when (adapterPosition) {
+                0 -> LANGUAGES_TYPE
+                1 -> OFFLINE_TYPE
+                2 -> POPULAR_TYPE
+                else -> throw IllegalStateException("Catalog recycler type is not identified in offline mode")
+            }
+
+    private fun getItemViewTypeInOnlineMode(adapterPosition: Int): Int =
             when (adapterPosition) {
                 0 -> LANGUAGES_TYPE
                 in PRE_CAROUSEL_COUNT until PRE_CAROUSEL_COUNT + courseListItems.size -> CAROUSEL_TYPE
                 PRE_CAROUSEL_COUNT + courseListItems.size -> POPULAR_TYPE // after coursesListItems
-                else -> throw IllegalStateException("Catalog recycler type is not identified")
+                else -> throw IllegalStateException("Catalog recycler type is not identified in online mode")
             }
+
 
     private class CarouselViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
@@ -150,5 +189,30 @@ class CatalogAdapter(
             }
             return filters
         }
+    }
+
+    inner class OfflineViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+
+        private val noInternetView = itemView.noInternetPlaceholder
+
+        init {
+            noInternetView.setOnClickListener {
+                onRetry()
+            }
+        }
+
+        fun bindText() {
+            noInternetView.setPlaceholderText(R.string.internet_problem_catalog)
+        }
+    }
+
+    fun enableOfflineMode() {
+        isOfflineMode = true
+        notifyDataSetChanged()
+    }
+
+    fun showCollections() {
+        isOfflineMode = false
+        notifyDataSetChanged()
     }
 }
