@@ -22,6 +22,9 @@ public interface Analytic {
     interface Search {
         String SEARCH_NULL = "search_null";
         String SEARCH_QUERY = "search_with_query";
+        String SEARCH_OPENED = "search_opened";
+        String SEARCH_SUBMITTED = "search_submitted";
+        String SEARCH_SUGGESTION_CLICKED = "search_suggestion_clicked";
     }
 
     interface CoursesCarousel {

@@ -94,7 +94,7 @@ class CourseSearchFragment: CourseListFragmentBase() {
         searchView.setSearchable(activity)
         searchView.initSuggestions(rootView)
 
-        searchSuggestionsDisposable = SearchViewHelper.setupSearchViewSuggestionsSources(searchView, api, databaseFacade, null)
+        searchSuggestionsDisposable = SearchViewHelper.setupSearchViewSuggestionsSources(searchView, api, databaseFacade, analytic, null)
 
         searchMenuItem.expandActionView()
         searchQuery?.let { searchView.setQuery(it, false) }

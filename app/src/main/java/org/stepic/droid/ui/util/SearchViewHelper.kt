@@ -6,6 +6,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.ui.custom.AutoCompleteSearchView
 import org.stepic.droid.web.Api
@@ -15,7 +16,13 @@ object SearchViewHelper {
     private const val AUTOCOMPLETE_DEBOUNCE_MS = 300L
     private const val DB_ELEMENTS_COUNT = 2
     
-    fun setupSearchViewSuggestionsSources(searchView: AutoCompleteSearchView, api: Api, databaseFacade: DatabaseFacade, onQueryTextSubmit: (() -> Unit)?): CompositeDisposable {
+    fun setupSearchViewSuggestionsSources(
+            searchView: AutoCompleteSearchView,
+            api: Api,
+            databaseFacade: DatabaseFacade,
+            analytic: Analytic,
+            onQueryTextSubmit: (() -> Unit)?): CompositeDisposable {
+
         val compositeDisposable = CompositeDisposable()
         val adapter = searchView.searchQueriesAdapter
 
@@ -39,6 +46,7 @@ object SearchViewHelper {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 onQueryTextSubmit?.invoke()
+                analytic.reportEventWithName(Analytic.Search.SEARCH_SUBMITTED, query)
                 return false
             }
 

@@ -5,6 +5,7 @@ import android.support.annotation.StringRes
 import android.view.*
 import io.reactivex.disposables.CompositeDisposable
 import org.stepic.droid.R
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.CoursesDatabaseFragmentBase
 import org.stepic.droid.storage.operations.Table
 import org.stepic.droid.ui.custom.AutoCompleteSearchView
@@ -45,6 +46,11 @@ open class FindCoursesFragment: CoursesDatabaseFragmentBase() {
         searchMenuItem = menu.findItem(R.id.action_search)
         searchView = searchMenuItem?.actionView as? AutoCompleteSearchView
 
+        searchMenuItem?.setOnMenuItemClickListener {
+            analytic.reportEvent(Analytic.Search.SEARCH_OPENED)
+            false
+        }
+
         searchView?.let {
             it.initSuggestions(rootView)
             it.setCloseIconDrawableRes(getCloseIconDrawableRes())
@@ -56,7 +62,7 @@ open class FindCoursesFragment: CoursesDatabaseFragmentBase() {
             }
 
             compositeDisposable = SearchViewHelper.setupSearchViewSuggestionsSources(
-                    it, api, databaseFacade, onQueryTextSubmit = {
+                    it, api, databaseFacade, analytic, onQueryTextSubmit = {
                 searchMenuItem?.collapseActionView()
             })
         }

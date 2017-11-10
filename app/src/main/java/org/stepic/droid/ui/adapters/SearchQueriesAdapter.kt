@@ -11,11 +11,21 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.search_query_item.view.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.base.App
 import org.stepic.droid.model.SearchQuery
 import org.stepic.droid.model.SearchQuerySource
+import javax.inject.Inject
 
 
 class SearchQueriesAdapter : RecyclerView.Adapter<SearchQueriesAdapter.SearchQueryViewHolder>() {
+    @Inject
+    lateinit var analytic: Analytic
+
+    init {
+        App.component().inject(this)
+    }
+
     private var items: List<Pair<Spannable, SearchQuerySource>> = emptyList()
 
     var rawDBItems: List<SearchQuery> = emptyList()
@@ -58,6 +68,7 @@ class SearchQueriesAdapter : RecyclerView.Adapter<SearchQueriesAdapter.SearchQue
 
         holder.itemView.searchQuery.text = query
         holder.itemView.setOnClickListener {
+            analytic.reportEventValue(Analytic.Search.SEARCH_SUGGESTION_CLICKED, (query.length - constraint.length).toLong())
             searchView?.setQuery(query.toString(), true)
         }
     }

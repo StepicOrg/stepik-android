@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import kotlinx.android.synthetic.main.search_queries_recycler_view.view.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.ui.adapters.SearchQueriesAdapter
 
 
