@@ -98,7 +98,6 @@
     <dimen name="bottom_navigation_height">56dp</dimen>
 
     <!--new course item-->
-    <dimen name="new_course_item_height">100dp</dimen>
     <dimen name="new_course_image_size">80dp</dimen>
     <dimen name="course_item_space_between_items">12dp</dimen>
     <dimen name="course_item_titles_text_size">16sp</dimen>
@@ -133,6 +132,7 @@
     <dimen name="placeholder_line_spacing_extra" format="float">4.7sp</dimen>
 
     <dimen name="loading_view_course_title_width">150dp</dimen>
+    <dimen name="loading_view_course_title_second_width">100dp</dimen>
     <dimen name="loading_view_course_detail_width">50dp</dimen>
 
     <dimen name="code_text_size_default">14sp</dimen>
