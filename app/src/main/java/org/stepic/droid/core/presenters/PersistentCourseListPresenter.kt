@@ -78,7 +78,7 @@ class PersistentCourseListPresenter
             mainHandler.post {
                 view?.showLoading()
             }
-            showFromDatabaseAndGetCountOfShown(courseType)
+            showFromDatabase(courseType)
         } else if (hasNextPage.get()) {
             mainHandler.post {
                 view?.showLoading()
@@ -170,7 +170,8 @@ class PersistentCourseListPresenter
         }
     }
 
-    private fun showFromDatabaseAndGetCountOfShown(courseType: Table): Int {
+    @WorkerThread
+    private fun showFromDatabase(courseType: Table) {
         val coursesBeforeLoading = databaseFacade.getAllCourses(courseType).filterNotNull()
         val coursesForShow = handleCoursesWithType(coursesBeforeLoading, courseType)
 
@@ -179,7 +180,6 @@ class PersistentCourseListPresenter
                 view?.showCourses(coursesForShow)
             }
         }
-        return coursesForShow.size
     }
 
     private fun handleCoursesWithType(courses: List<Course>, courseType: Table?): List<Course> =
