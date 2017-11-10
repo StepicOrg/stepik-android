@@ -200,6 +200,8 @@ class CourseItemViewHolder(
         if (needShowLearners) {
             learnersCountText.text = String.format(Locale.getDefault(), "%d", course.learnersCount)
         }
+        learnersCountImage.changeVisibility(needShowLearners)
+        learnersCountText.changeVisibility(needShowLearners)
 
         if (isEnrolled(course)) {
             courseWidgetInfo.setText(R.string.course_item_syllabus)
