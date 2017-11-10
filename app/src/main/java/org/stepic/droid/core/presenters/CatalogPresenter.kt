@@ -35,7 +35,7 @@ constructor(
 
         val lang = filters.first().language
         val disposable = api
-                .getCourseLists(lang)
+                .getCourseCollections(lang)
                 .map {
                     mapper.map(it.courseCollections)
                 }

@@ -752,7 +752,7 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Single<CourseCollectionsResponse> getCourseLists(String language) {
+    public Single<CourseCollectionsResponse> getCourseCollections(String language) {
         return loggedService.getCourseLists(language);
     }
 

@@ -123,5 +123,5 @@ public interface Api {
 
     Call<LastStepResponse> getLastStepResponse(@NotNull String lastStepId);
 
-    Single<CourseCollectionsResponse> getCourseLists(String language);
+    Single<CourseCollectionsResponse> getCourseCollections(String language);
 }
