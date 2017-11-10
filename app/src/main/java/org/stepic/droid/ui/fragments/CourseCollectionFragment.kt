@@ -3,7 +3,7 @@ package org.stepic.droid.ui.fragments
 import android.os.Bundle
 import android.view.View
 import org.stepic.droid.base.App
-import org.stepic.droid.core.presenters.CourseCollectionsPresenter
+import org.stepic.droid.core.presenters.CourseCollectionPresenter
 import org.stepic.droid.storage.operations.Table
 import org.stepic.droid.ui.util.initCenteredToolbar
 import javax.inject.Inject
@@ -23,7 +23,7 @@ class CourseCollectionFragment : CourseListFragmentBase() {
     }
 
     @Inject
-    lateinit var courseCollectionPresenter: CourseCollectionsPresenter
+    lateinit var courseCollectionPresenter: CourseCollectionPresenter
 
     override fun injectComponent() {
         App

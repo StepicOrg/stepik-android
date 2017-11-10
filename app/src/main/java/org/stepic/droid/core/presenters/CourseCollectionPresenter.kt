@@ -9,7 +9,7 @@ import org.stepic.droid.web.Api
 import javax.inject.Inject
 
 @CourseListScope
-class CourseCollectionsPresenter
+class CourseCollectionPresenter
 @Inject
 constructor(
         @BackgroundScheduler
@@ -20,7 +20,7 @@ constructor(
 ) : PresenterBase<CoursesView>() {
 
     companion object {
-        //collections are small (<10 courses), so pagination is not needed
+        //collections are small (less than 10 courses), so pagination is not needed
         private val DEFAULT_PAGE = 1
     }
 
@@ -44,7 +44,6 @@ constructor(
                 }, {
                     view?.showConnectionProblem()
                 })
-
     }
 
 }
