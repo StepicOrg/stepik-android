@@ -464,9 +464,14 @@ constructor(
         }
     }
 
-    fun setDescriptionColors(collectionDescriptionColors: CollectionDescriptionColors) {
-        coursesCarouselDescription.setBackgroundResource(collectionDescriptionColors.backgroundRes)
-        coursesCarouselDescription.setTextColor(ColorUtil.getColorArgb(collectionDescriptionColors.textColorRes, context))
+    fun setDescriptionColors(collectionDescriptionColors: CollectionDescriptionColors?) {
+        if (collectionDescriptionColors == null) {
+            return
+        }
+        with(coursesCarouselDescription) {
+            setBackgroundResource(collectionDescriptionColors.backgroundRes)
+            setTextColor(ColorUtil.getColorArgb(collectionDescriptionColors.textColorRes, context))
+        }
     }
 
     override fun onFiltersChanged(filters: EnumSet<StepikFilter>) {

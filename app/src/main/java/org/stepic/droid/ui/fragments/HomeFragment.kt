@@ -8,9 +8,7 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_home.*
 import org.stepic.droid.R
 import org.stepic.droid.base.FragmentBase
-import org.stepic.droid.model.CoursesCarouselColorType
-import org.stepic.droid.model.CoursesCarouselInfo
-import org.stepic.droid.storage.operations.Table
+import org.stepic.droid.model.CoursesCarouselInfoConstants
 import org.stepic.droid.ui.util.initCenteredToolbar
 
 class HomeFragment : FragmentBase() {
@@ -35,19 +33,8 @@ class HomeFragment : FragmentBase() {
                     .commitNow()
 
 
-            myCoursesView.setCourseCarouselInfo(CoursesCarouselInfo(
-                    CoursesCarouselColorType.Light,
-                    getString(R.string.my_courses_title),
-                    Table.enrolled,
-                    null)
-            )
-
-            popularCoursesView.setCourseCarouselInfo(CoursesCarouselInfo(
-                    CoursesCarouselColorType.Dark,
-                    getString(R.string.popular_courses_title),
-                    Table.featured,
-                    null)
-            )
+            myCoursesView.setCourseCarouselInfo(CoursesCarouselInfoConstants.myCourses)
+            popularCoursesView.setCourseCarouselInfo(CoursesCarouselInfoConstants.popular)
         }
 
 

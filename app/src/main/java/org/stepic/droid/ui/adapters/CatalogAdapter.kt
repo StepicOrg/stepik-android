@@ -10,6 +10,7 @@ import kotlinx.android.synthetic.main.view_course_languages.view.*
 import org.stepic.droid.R
 import org.stepic.droid.model.CollectionDescriptionColors
 import org.stepic.droid.model.CoursesCarouselInfo
+import org.stepic.droid.model.CoursesCarouselInfoConstants
 import org.stepic.droid.model.StepikFilter
 import java.util.*
 
@@ -21,8 +22,10 @@ class CatalogAdapter(
     companion object {
         private const val CAROUSEL_TYPE = 0
         private const val LANGUAGES_TYPE = 1
+        private const val POPULAR_TYPE = 2
 
         private const val PRE_CAROUSEL_COUNT = 1
+        private const val POST_CAROUSEL_COUNT = 1
         private const val LANGUAGE_INDEX = 0
     }
 
@@ -31,7 +34,7 @@ class CatalogAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         return when (viewType) {
-            CAROUSEL_TYPE -> {
+            CAROUSEL_TYPE, POPULAR_TYPE -> {
                 val view = layoutInflater.inflate(R.layout.catalog_item, parent, false)
                 CarouselViewHolder(view)
             }
@@ -55,6 +58,10 @@ class CatalogAdapter(
                 holder as LanguagesViewHolder
                 holder.refreshLanguages()
             }
+            POPULAR_TYPE -> {
+                holder as CarouselViewHolder
+                holder.bindData(CoursesCarouselInfoConstants.popular, null)
+            }
         }
     }
 
@@ -73,12 +80,13 @@ class CatalogAdapter(
     private fun courseListItemBy(adapterPosition: Int): CoursesCarouselInfo =
             courseListItems[adapterPosition - PRE_CAROUSEL_COUNT]
 
-    override fun getItemCount(): Int = courseListItems.size + PRE_CAROUSEL_COUNT
+    override fun getItemCount(): Int = courseListItems.size + PRE_CAROUSEL_COUNT + POST_CAROUSEL_COUNT
 
     override fun getItemViewType(adapterPosition: Int): Int =
             when (adapterPosition) {
                 0 -> LANGUAGES_TYPE
-                in PRE_CAROUSEL_COUNT until itemCount -> CAROUSEL_TYPE
+                in PRE_CAROUSEL_COUNT until PRE_CAROUSEL_COUNT + courseListItems.size -> CAROUSEL_TYPE
+                PRE_CAROUSEL_COUNT + courseListItems.size -> POPULAR_TYPE // after coursesListItems
                 else -> throw IllegalStateException("Catalog recycler type is not identified")
             }
 
@@ -86,11 +94,10 @@ class CatalogAdapter(
 
         private val coursesCarousel = itemView.coursesCarouselItem
 
-        fun bindData(coursesCarouselInfo: CoursesCarouselInfo, descriptionColors: CollectionDescriptionColors) {
+        fun bindData(coursesCarouselInfo: CoursesCarouselInfo, descriptionColors: CollectionDescriptionColors?) {
             coursesCarousel.setDescriptionColors(descriptionColors)
             coursesCarousel.setCourseCarouselInfo(coursesCarouselInfo)
         }
-
     }
 
     private inner class LanguagesViewHolder(view: View) : RecyclerView.ViewHolder(view) {
