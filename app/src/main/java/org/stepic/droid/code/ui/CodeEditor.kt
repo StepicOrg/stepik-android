@@ -51,6 +51,9 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     @Inject
     lateinit var parserContainer: ParserContainer
 
+    @Inject
+    lateinit var codeAnalyzer: CodeAnalyzer
+
     private val LINE_NUMBERS_MARGIN_PX = DpPixelsHelper.convertDpToPixel(LINE_NUMBERS_MARGIN_DP).toInt()
 
     private val highlightPublisher = PublishSubject.create<Editable>()
@@ -158,7 +161,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
         private set(value) {
             field = value
             linesWithNumbers = layout?.let(this::countNumbersForLines) ?: emptyList()
-            indentSize = CodeAnalyzer.getIndentForLines(value)
+            indentSize = codeAnalyzer.getIndentForLines(value)
         }
 
     private var linesWithNumbers: List<Int> = emptyList()
@@ -233,8 +236,8 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     override fun afterTextChanged(editable: Editable) {
         lines = text.toString().lines()
         if (isCodeAnalyzerEnabled) {
-            CodeAnalyzer.onTextReplaced(replacedStart, replacedCount, this, replacedText)
-            CodeAnalyzer.onTextInserted(insertedStart, insertedCount, this)
+            codeAnalyzer.onTextReplaced(replacedStart, replacedCount, this, replacedText)
+            codeAnalyzer.onTextInserted(insertedStart, insertedCount, this)
         }
         resolveAutocomplete()
         highlightBrackets(selectionStart)
@@ -263,7 +266,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     private fun resolveAutocomplete() {
         if (lang == null) return
         codeToolbarAdapter?.apply {
-            autocomplete = CodeAnalyzer.resolveAutocomplete(selectionStart, lang, text.toString())
+            autocomplete = codeAnalyzer.resolveAutocomplete(selectionStart, lang, text.toString())
         }
     }
 
@@ -277,7 +280,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 
         text.substringOrNull(cursorPosition, cursorPosition + 1)?.let { bracket ->
             // bracket to right of cursor
-            CodeAnalyzer.getBracketsPair(bracket)?.let {
+            codeAnalyzer.getBracketsPair(bracket)?.let {
                 highlightBracket(cursorPosition, bracket)
                 isRightBracketHighlighted = true
                 isRightBracketClosing = it.value == bracket
@@ -286,7 +289,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 
         text.substringOrNull(cursorPosition - 1, cursorPosition)?.let { bracket ->
             // bracket to left of cursor
-            CodeAnalyzer.getBracketsPair(bracket)?.let {
+            codeAnalyzer.getBracketsPair(bracket)?.let {
                 if (!isRightBracketHighlighted || it.value == bracket && !isRightBracketClosing)
                     highlightBracket(cursorPosition - 1, bracket)
             }
@@ -294,7 +297,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     }
 
     private fun highlightBracket(firstBracketPos: Int, bracket: String) {
-        val secondBracketPos = CodeAnalyzer.findSecondBracket(bracket, firstBracketPos, editableText.toString())
+        val secondBracketPos = codeAnalyzer.findSecondBracket(bracket, firstBracketPos, editableText.toString())
         if (secondBracketPos != -1) {
             editableText.setSpan(CodeHighlightSpan(theme.bracketsHighlight), firstBracketPos, firstBracketPos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             editableText.setSpan(CodeHighlightSpan(theme.bracketsHighlight), secondBracketPos, secondBracketPos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)

@@ -13,7 +13,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import org.stepic.droid.R
 import org.stepic.droid.code.data.AutocompleteState
-import org.stepic.droid.code.ui.CodeAnalyzer
 import org.stepic.droid.model.code.symbolsForLanguage
 import org.stepic.droid.ui.listeners.OnItemClickListener
 

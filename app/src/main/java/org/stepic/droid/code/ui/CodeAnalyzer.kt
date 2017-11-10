@@ -2,15 +2,23 @@ package org.stepic.droid.code.ui
 
 import org.stepic.droid.code.data.AutocompleteContainer
 import org.stepic.droid.code.data.AutocompleteState
+import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.util.countWhile
 import org.stepic.droid.util.substringOrNull
 import org.stepic.droid.util.takeLastFromIndexWhile
+import javax.inject.Inject
 
 /**
  * Class for smart code analyzing
  */
-object CodeAnalyzer {
-    private const val LINE_BREAK = '\n'
+@AppSingleton
+class CodeAnalyzer
+@Inject
+constructor(private val autocompleteContainer: AutocompleteContainer) {
+    companion object {
+        private const val LINE_BREAK = '\n'
+        private const val MIN_AUTOCOMPLETE_LENGTH = 2
+    }
 
     private val brackets = hashMapOf(
         "{" to "}",
@@ -31,10 +39,6 @@ object CodeAnalyzer {
 
     private val pairedSymbols = brackets + quotes
 
-    private val autocomplete = AutocompleteContainer()
-    private const val MIN_AUTOCOMPLETE_LENGTH = 2
-
-
     private fun getIndentForCurrentLine(cursorPosition: Int, text: String) : Int {
         val prevLineStart = text.substring(0, cursorPosition).lastIndexOf(LINE_BREAK)
         return text.countWhile (prevLineStart + 1) { Character.isWhitespace(it) && it != LINE_BREAK }
@@ -51,8 +55,8 @@ object CodeAnalyzer {
             LINE_BREAK.toString() -> {
                 val indent = getIndentForCurrentLine(start, text)
 
-                val prev = getPrevSymbol(start, text)
-                val next = getNextSymbol(start + 1, text)
+                val prev = getPrevSymbolAsString(start, text)
+                val next = getNextSymbolAsString(start + 1, text)
 
                 codeEditor.editableText.insert(start + count, " ".repeat(indent))
 
@@ -66,7 +70,7 @@ object CodeAnalyzer {
             }
 
             in brackets -> {
-                val next = getNextSymbol(start + 1, text)
+                val next = getNextSymbolAsString(start + 1, text)
                 if (next == null || Character.isWhitespace(next[0]) || next in brackets.values) { // don't want auto bracket if there is a statement next
                     insertTextAfterCursor(start, count, codeEditor, brackets[inserted])
                 }
@@ -77,8 +81,8 @@ object CodeAnalyzer {
             }
 
             in quotes -> {
-                val next = getNextSymbol(start + 1, text)
-                val prev = getPrevSymbol(start, text)
+                val next = getNextSymbolAsString(start + 1, text)
+                val prev = getPrevSymbolAsString(start, text)
                 if ((next == null || Character.isWhitespace(next[0])) && prev != inserted) { // don't want auto quote if there is a statement next
                     insertTextAfterCursor(start, count, codeEditor, inserted)
                 } else {
@@ -108,7 +112,7 @@ object CodeAnalyzer {
         val text = codeEditor.editableText.toString()
         when (replaced) {
             in pairedSymbols -> {
-                val next = getNextSymbol(start, text)
+                val next = getNextSymbolAsString(start, text)
                 if (next != null && next == pairedSymbols[replaced]) {
                     codeEditor.withoutAnalyze {
                         it.editableText.replace(start, start + next.length, "")
@@ -118,10 +122,10 @@ object CodeAnalyzer {
         }
     }
 
-    private fun getPrevSymbol(start: Int, text: String) : String? =
+    private fun getPrevSymbolAsString(start: Int, text: String) : String? =
             text.substringOrNull(start - 1, start)
 
-    private fun getNextSymbol(start: Int, text: String) : String? =
+    private fun getNextSymbolAsString(start: Int, text: String) : String? =
             text.substringOrNull(start, start + 1)
 
 
@@ -150,14 +154,14 @@ object CodeAnalyzer {
 
 
     fun resolveAutocomplete(cursorPosition: Int, lang: String, text: String): AutocompleteState {
-        val next = getNextSymbol(cursorPosition, text)
+        val next = getNextSymbolAsString(cursorPosition, text)
         if (next == null || Character.isWhitespace(next[0])) {
             val prefix = text.takeLastFromIndexWhile(cursorPosition) { // get token before cursor
                 !Character.isWhitespace(it)
             }
 
             if (prefix != null && prefix.length >= MIN_AUTOCOMPLETE_LENGTH) {
-                return AutocompleteState(prefix, autocomplete.getAutoCompleteForLangAndPrefix(lang, prefix))
+                return AutocompleteState(prefix, autocompleteContainer.getAutoCompleteForLangAndPrefix(lang, prefix))
             }
         }
         return AutocompleteState("", emptyList())
