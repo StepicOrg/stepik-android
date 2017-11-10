@@ -276,13 +276,13 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void showFindCourses(Context context) {
-        context.startActivity(getShowFindCoursesIntent(context));
+    public void showCatalog(Context context) {
+        context.startActivity(getCatalogIntent(context));
     }
 
     @Override
-    public Intent getShowFindCoursesIntent(Context context) {
-        int index = MainFeedActivity.FIND_COURSES_INDEX;
+    public Intent getCatalogIntent(Context context) {
+        int index = MainFeedActivity.CATALOG_INDEX;
         return getFromMainActivityIntent(context, index);
     }
 

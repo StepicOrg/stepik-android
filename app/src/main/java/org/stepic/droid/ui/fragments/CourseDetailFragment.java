@@ -239,7 +239,7 @@ public class CourseDetailFragment extends FragmentBase implements
             @Override
             public void onClick(View v) {
                 if (getSharedPreferenceHelper().getAuthResponseFromStore() != null) {
-                    getScreenManager().showFindCourses(getContext());
+                    getScreenManager().showCatalog(getContext());
                     finish();
                 } else {
                     unauthorizedDialog = UnauthorizedDialogFragment.newInstance(course);

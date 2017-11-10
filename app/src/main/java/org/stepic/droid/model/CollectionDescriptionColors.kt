@@ -12,5 +12,4 @@ enum class CollectionDescriptionColors(
 ) {
     BLUE(R.drawable.gradient_background_blue, R.color.text_color_gradient_blue),
     FIRE(R.drawable.gradient_background_fire, R.color.text_color_gradient_fire)
-
 }

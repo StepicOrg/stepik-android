@@ -267,7 +267,7 @@ constructor(
         showPlaceholder(getEmptyStringRes(info.table), {
             if (info.table == Table.enrolled) {
                 analytic.reportEvent(Analytic.CoursesCarousel.EMPTY_ENROLLED_CLICK)
-                screenManager.showFindCourses(context)
+                screenManager.showCatalog(context)
             }
         })
     }

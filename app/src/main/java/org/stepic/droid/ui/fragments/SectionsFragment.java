@@ -597,7 +597,7 @@ public class SectionsFragment
                 @Override
                 public void onClick(View v) {
                     if (getSharedPreferenceHelper().getAuthResponseFromStore() != null) {
-                        getScreenManager().showFindCourses(getActivity());
+                        getScreenManager().showCatalog(getActivity());
                         getActivity().finish();
                     } else {
                         unauthorizedDialog = UnauthorizedDialogFragment.newInstance(course);

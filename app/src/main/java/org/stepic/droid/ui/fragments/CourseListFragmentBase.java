@@ -183,7 +183,7 @@ public abstract class CourseListFragmentBase extends FragmentBase
                 if (getSharedPreferenceHelper().getAuthResponseFromStore() == null) {
                     getAnalytic().reportEvent(Analytic.Anonymous.BROWSE_COURSES_CENTER);
                 }
-                ((RootScreen) parent).showFindCourses();
+                ((RootScreen) parent).showCatalog();
             }
         });
         joiningListenerClient.subscribe(this);

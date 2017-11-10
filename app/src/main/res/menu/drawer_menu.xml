@@ -6,7 +6,7 @@
         android:icon="@drawable/ic_home"
         android:title="@string/home_title"/>
     <item
-        android:id="@+id/find_courses"
+        android:id="@+id/catalog"
         android:icon="@drawable/ic_search_menu"
         android:title="@string/catalog_title"/>
 

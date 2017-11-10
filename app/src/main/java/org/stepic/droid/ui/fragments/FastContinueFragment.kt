@@ -135,7 +135,7 @@ class FastContinueFragment : FragmentBase(),
         analytic.reportEvent(Analytic.FastContinue.EMPTY_COURSES_SHOWN)
         showPlaceholder(R.string.placeholder_explore_courses, { _ ->
             analytic.reportEvent(Analytic.FastContinue.EMPTY_COURSES_CLICK)
-            screenManager.showFindCourses(context)
+            screenManager.showCatalog(context)
         })
     }
 

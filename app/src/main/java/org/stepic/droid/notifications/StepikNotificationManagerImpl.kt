@@ -75,7 +75,7 @@ class StepikNotificationManagerImpl
         val deletePendingIntent = PendingIntent.getBroadcast(context, 0, deleteIntent, PendingIntent.FLAG_CANCEL_CURRENT)
 
         //now we can show notification
-        val intent = screenManager.getShowFindCoursesIntent(context)
+        val intent = screenManager.getCatalogIntent(context)
         intent.action = AppConstants.OPEN_NOTIFICATION_FOR_ENROLL_REMINDER
         val analyticDayTypeName = dayType?.name ?: ""
         intent.putExtra(MainFeedActivity.reminderKey, analyticDayTypeName)

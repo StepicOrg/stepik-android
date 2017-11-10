@@ -77,9 +77,9 @@ public interface ScreenManager {
 
     void showDownloads(Context context);
 
-    void showFindCourses(Context context);
+    void showCatalog(Context context);
 
-    Intent getShowFindCoursesIntent(Context context);
+    Intent getCatalogIntent(Context context);
 
     void showVideo(Activity sourceActivity, @Nullable Video cachedVideo, @Nullable Video externalVideo);
 

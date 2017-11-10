@@ -129,14 +129,14 @@ public class SplashActivity extends BackToExitActivityBase {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N_MR1) {
             ShortcutManager shortcutManager = getSystemService(ShortcutManager.class);
 
-            String findCoursesLabel = getString(R.string.find_courses_title);
-            Intent findCoursesIntent = screenManager.getShowFindCoursesIntent(getApplicationContext());
-            findCoursesIntent.setAction(AppConstants.OPEN_SHORTCUT_FIND_COURSES);
-            ShortcutInfo findCoursesShortcut = new ShortcutInfo.Builder(this, AppConstants.FIND_COURSES_SHORTCUT_ID)
-                    .setShortLabel(findCoursesLabel)
-                    .setLongLabel(findCoursesLabel)
+            String catalogLabel = getString(R.string.catalog_title);
+            Intent catalogIntent = screenManager.getCatalogIntent(getApplicationContext());
+            catalogIntent.setAction(AppConstants.OPEN_SHORTCUT_CATALOG);
+            ShortcutInfo catalogShortcut = new ShortcutInfo.Builder(this, AppConstants.CATALOG_SHORTCUT_ID)
+                    .setShortLabel(catalogLabel)
+                    .setLongLabel(catalogLabel)
                     .setIcon(Icon.createWithResource(this, R.drawable.ic_shortcut_find_courses))
-                    .setIntent(findCoursesIntent)
+                    .setIntent(catalogIntent)
                     .build();
 
             String profileLabel = getString(R.string.profile_title);
@@ -150,7 +150,7 @@ public class SplashActivity extends BackToExitActivityBase {
                     .build();
 
 
-            shortcutManager.setDynamicShortcuts(Arrays.asList(findCoursesShortcut, profileShortcut));
+            shortcutManager.setDynamicShortcuts(Arrays.asList(catalogShortcut, profileShortcut));
         }
     }
 
