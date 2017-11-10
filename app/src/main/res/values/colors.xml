@@ -97,7 +97,7 @@
     <color name="continue_button_color_dark">#0DFFFFFF</color>
     <color name="continue_button_pressed_color_dark">#555766</color>
     <color name="join_button_color">#1A66CC66</color>
-    <color name="join_button_pressed_color">#4F5A5E</color>
+    <color name="join_button_pressed_color">#6666CC66</color>
 
     <color name="fast_continue_learning_opacity">#99535366</color>
     <color name="view_all_course_list_color">#CCCCD1</color>
