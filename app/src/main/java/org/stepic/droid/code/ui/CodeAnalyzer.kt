@@ -1,6 +1,7 @@
 package org.stepic.droid.code.ui
 
 import org.stepic.droid.code.data.AutocompleteContainer
+import org.stepic.droid.code.data.AutocompleteState
 import org.stepic.droid.util.countWhile
 import org.stepic.droid.util.substringOrNull
 import org.stepic.droid.util.takeLastFromIndexWhile
@@ -159,8 +160,6 @@ object CodeAnalyzer {
                 return AutocompleteState(prefix, autocomplete.getAutoCompleteForLangAndPrefix(lang, prefix))
             }
         }
-        return AutocompleteState(null, emptyList())
+        return AutocompleteState("", emptyList())
     }
-
-    data class AutocompleteState(val prefix: String?, val autocompleteWords: List<String>)
 }

@@ -263,9 +263,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     private fun resolveAutocomplete() {
         if (lang == null) return
         codeToolbarAdapter?.apply {
-            val (prefix, words) = CodeAnalyzer.resolveAutocomplete(selectionStart, lang, text.toString())
-            autoCompleteWords = words
-            autoCompletePrefix = prefix
+            autocomplete = CodeAnalyzer.resolveAutocomplete(selectionStart, lang, text.toString())
         }
     }
 
