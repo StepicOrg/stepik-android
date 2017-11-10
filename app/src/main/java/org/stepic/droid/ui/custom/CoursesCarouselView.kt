@@ -155,10 +155,12 @@ constructor(
         filterClient.subscribe(this)
         courseCollectionsPresenter.attachView(this)
 
-        if (needExecuteOnInfoInitialized) {
+        if (needExecuteOnInfoInitialized || isCoursesNotLoadedYet()) {
             onInfoInitialized(info)
         }
     }
+
+    private fun isCoursesNotLoadedYet() = courses.isEmpty() && _info != null
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
