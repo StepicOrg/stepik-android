@@ -52,6 +52,7 @@ class CourseItemViewHolder(
     @Inject
     lateinit var config: Config
 
+
     private val continueColor: Int by lazy {
         ColorUtil.getColorArgb(colorType.textColor, itemView.context)
     }
@@ -210,13 +211,8 @@ class CourseItemViewHolder(
             showJoinButton()
         }
 
-        //bind
-        bindProgressView(course)
-        bindRatingView(course)
-
-        //check after binding
-        val needShowProgress = isProgressVisible()
-        val needShowRating = isRatingVisible()
+        val needShowProgress = bindProgressView(course)
+        val needShowRating = bindRatingView(course)
 
         val showContainer = needShowLearners || needShowProgress || needShowRating
         coursePropertiesContainer.changeVisibility(showContainer)
@@ -224,36 +220,36 @@ class CourseItemViewHolder(
         courseItemMore.changeVisibility(showMore)
     }
 
-    private fun bindProgressView(course: Course) {
+    private fun bindProgressView(course: Course): Boolean {
         val progressPercent: Int? = ProgressUtil.getProgressPercent(course.progressObject)
-        val needShow: Boolean =
+        val needShow =
                 if (progressPercent != null && progressPercent > 0) {
-
-                    // title and image should be equal
-                    courseItemProgress.progress = progressPercent / 100f
-                    courseItemProgressTitle.text = itemView
-                            .resources
-                            .getString(R.string.percent_symbol, progressPercent)
+                    prepareViewForProgress(progressPercent)
                     true
                 } else {
                     false
                 }
         courseItemProgress.changeVisibility(needShow)
         courseItemProgressTitle.changeVisibility(needShow)
+        return needShow
     }
 
-    private fun isProgressVisible() = courseItemProgress.visibility == View.VISIBLE
+    private fun prepareViewForProgress(progressPercent: Int) {
+        courseItemProgress.progress = progressPercent / 100f
+        courseItemProgressTitle.text = itemView
+                .resources
+                .getString(R.string.percent_symbol, progressPercent)
+    }
 
-    private fun bindRatingView(course: Course) {
+    private fun bindRatingView(course: Course): Boolean {
         val needShow = course.rating > 0
         if (needShow) {
             courseRatingText.text = String.format(Locale.ROOT, itemView.resources.getString(R.string.course_rating_value), course.rating)
         }
         courseRatingImage.changeVisibility(needShow)
         courseRatingText.changeVisibility(needShow)
+        return needShow
     }
-
-    private fun isRatingVisible() = courseRatingImage.visibility == View.VISIBLE
 
     private fun isEnrolled(course: Course?): Boolean =
             course != null && course.enrollment != 0
