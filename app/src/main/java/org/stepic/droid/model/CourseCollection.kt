@@ -4,7 +4,7 @@ import java.util.*
 
 data class CourseCollection(
         private val id: Long,
-        private val position: Int,
+        val position: Int,
         val title: String,
         private val language: String,
         val courses: LongArray,

@@ -37,7 +37,12 @@ constructor(
         val disposable = api
                 .getCourseCollections(lang)
                 .map {
-                    mapper.map(it.courseCollections)
+                    it.courseCollections.sortedBy {
+                        it.position
+                    }
+                }
+                .map {
+                    mapper.map(it)
                 }
                 .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)
