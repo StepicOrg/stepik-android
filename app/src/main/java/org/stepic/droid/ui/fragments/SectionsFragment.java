@@ -277,6 +277,7 @@ public class SectionsFragment
         courseJoinerPresenter.attachView(this);
         sectionsPresenter.attachView(this);
         invitationPresenter.attachView(this);
+        downloadingPresenter.attachView(this);
 
         ToolbarHelperKt.initCenteredToolbar(this, R.string.syllabus_title, true);
         onNewIntent(getActivity().getIntent());
@@ -476,9 +477,7 @@ public class SectionsFragment
     public void onStart() {
         super.onStart();
         reportIndexToGoogle();
-        Timber.d("downloading interaction presenter instance: %s", downloadingInteractionPresenter);
         downloadingInteractionPresenter.attachView(this);
-        downloadingPresenter.attachView(this);
         for (Section section : sectionList) {
             downloadingPresenter.onStateChanged(section.getId(), section.isLoading());
         }
@@ -487,7 +486,6 @@ public class SectionsFragment
     @Override
     public void onStop() {
         downloadingInteractionPresenter.detachView(this);
-        downloadingPresenter.detachView(this);
         super.onStop();
         if (wasIndexed) {
             FirebaseUserActions.getInstance().end(getAction());
@@ -519,6 +517,7 @@ public class SectionsFragment
         courseNotParsedView.setOnClickListener(null);
         swipeRefreshLayout.setOnRefreshListener(null);
         localProgressManager.unsubscribe(this);
+        downloadingPresenter.detachView(this);
         super.onDestroyView();
     }
 
