@@ -5,7 +5,7 @@ import org.stepic.droid.model.Meta;
 
 import java.util.List;
 
-public class AssignmentResponse extends StepicResponseBase {
+public class AssignmentResponse extends MetaResponseBase {
     private final List<Assignment> assignments;
 
     public AssignmentResponse(Meta meta, List<Assignment> assignmentList) {

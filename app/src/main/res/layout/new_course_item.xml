@@ -57,7 +57,7 @@
             app:layout_constraintTop_toTopOf="parent"/>
 
         <RelativeLayout
-            android:id="@+id/learnersCountContainer"
+            android:id="@+id/coursePropertiesContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
@@ -68,31 +68,53 @@
 
             <ImageView
                 android:id="@+id/learnersCountImage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/CourseWidgetPropertyImageView"
                 android:layout_alignBaseline="@+id/learnersCountText"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:baselineAlignBottom="true"
-                android:clickable="false"
                 android:contentDescription="@string/learners_count"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
-                android:src="@drawable/ic_learnes"/>
+                android:src="@drawable/ic_learners"/>
 
             <TextView
                 android:id="@+id/learnersCountText"
-                fontPath="fonts/Roboto-Light.ttf"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="2dp"
-                android:layout_marginStart="2dp"
+                style="@style/CourseWidgetPropertyTextView"
                 android:layout_toEndOf="@id/learnersCountImage"
                 android:layout_toRightOf="@id/learnersCountImage"
-                android:textSize="16sp"
-                tools:ignore="MissingPrefix"
                 tools:text="999K"/>
+
+            <ImageView
+                android:id="@+id/courseRatingImage"
+                style="@style/CourseWidgetPropertyImageView"
+                android:layout_alignBaseline="@+id/courseRatingText"
+                android:layout_toEndOf="@id/learnersCountText"
+                android:layout_toRightOf="@id/learnersCountText"
+                android:baselineAlignBottom="true"
+                android:contentDescription="@string/course_rating"
+                android:src="@drawable/ic_rating"/>
+
+            <TextView
+                android:id="@+id/courseRatingText"
+                style="@style/CourseWidgetPropertyTextView"
+                android:layout_toEndOf="@id/courseRatingImage"
+                android:layout_toRightOf="@id/courseRatingImage"
+                tools:text="4.7"/>
+
+            <org.stepic.droid.ui.custom.CircleProgressView
+                android:id="@+id/courseItemProgressView"
+                android:layout_width="@dimen/course_item_progress_size"
+                android:layout_height="@dimen/course_item_progress_size"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@id/courseRatingText"
+                android:layout_toRightOf="@id/courseRatingText"
+                app:progressBarStroke="@dimen/course_item_progress_bar_size"/>
+
+            <TextView
+                android:id="@+id/courseItemProgressTitle"
+                style="@style/CourseWidgetPropertyTextView"
+                android:layout_toEndOf="@id/courseItemProgressView"
+                android:layout_toRightOf="@id/courseItemProgressView"
+                tools:text="77%"/>
         </RelativeLayout>
 
     </android.support.constraint.ConstraintLayout>

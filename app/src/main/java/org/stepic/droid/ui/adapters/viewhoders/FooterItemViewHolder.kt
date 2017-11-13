@@ -1,4 +1,4 @@
-package org.stepic.droid.ui.adapters.view_hoders
+package org.stepic.droid.ui.adapters.viewhoders
 
 import android.view.View
 import kotlinx.android.synthetic.main.loading_view.view.*
