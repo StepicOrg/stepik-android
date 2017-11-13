@@ -68,14 +68,20 @@ constructor(
 
     private fun getReviewsSingle(reviewIds: IntArray): Single<List<CourseReviewSummary>> {
         return api.getCourseReviews(reviewIds)
-                .map { it.courseReviewSummaries }
+                .map {
+                    it.courseReviewSummaries
+                }
+                .subscribeOn(backgroundScheduler)
     }
 
 
     private fun getProgressesSingle(progressIds: Array<String?>): Single<Map<String?, Progress>> {
         return api.getProgressesReactive(progressIds)
-                .map { it.progresses }
+                .map {
+                    it.progresses
+                }
                 .map { it.associateBy { it.id } }
+                .subscribeOn(backgroundScheduler)
     }
 
 
