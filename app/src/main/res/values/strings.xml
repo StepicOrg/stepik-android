@@ -543,6 +543,8 @@
     <string name="sample_output">&lt;b>Sample output %d:&lt;/b></string>
     <string name="hint_for_code">Type code here…</string>
     <string name="step_preparing">Step is not prepared yet. Tap to reload</string>
+    <string name="course_rating">Course rating</string>
+    <string name="course_rating_value" translatable="false">%.1f</string>
 
     <string name="ru_language_filter" translatable="false">Ru</string>
     <string name="en_language_filter" translatable="false">En</string>

@@ -1,4 +1,4 @@
-package org.stepic.droid.ui.adapters.view_hoders
+package org.stepic.droid.ui.adapters.viewhoders
 
 import android.support.v7.widget.RecyclerView
 import android.view.View

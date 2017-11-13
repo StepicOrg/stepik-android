@@ -116,6 +116,11 @@
     <dimen name="course_carousel_title">20sp</dimen>
     <dimen name="course_carousel_title_top_padding">20dp</dimen>
     <dimen name="course_carousel_title_bottom_padding">0dp</dimen>
+    <dimen name="course_item_progress_size">11dp</dimen>
+    <dimen name="course_item_progress_bar_size">2dp</dimen>
+    <dimen name="course_item_property_text_size">16sp</dimen>
+    <dimen name="course_item_property_text_image_margin">2dp</dimen>
+    <dimen name="course_item_property_between_items_margin">7dp</dimen>
 
 
     <!--Left padding (moteIcon) + right padding(moreIcon) + moreIcon.width-->

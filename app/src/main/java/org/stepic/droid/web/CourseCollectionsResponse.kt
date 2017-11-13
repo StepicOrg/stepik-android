@@ -8,4 +8,4 @@ class CourseCollectionsResponse(
         meta: Meta,
         @SerializedName("course-lists")
         val courseCollections: List<CourseCollection>
-) : StepicResponseBase(meta)
+) : MetaResponseBase(meta)

@@ -21,7 +21,7 @@ import org.stepic.droid.testUtils.generators.FakeUserGenerator;
 import org.stepic.droid.util.ProfileExtensionKt;
 import org.stepic.droid.util.UserExtensionKt;
 import org.stepic.droid.web.Api;
-import org.stepic.droid.web.UserStepicResponse;
+import org.stepic.droid.web.UsersResponse;
 
 import java.io.IOException;
 import java.util.List;
@@ -186,7 +186,7 @@ public class ProfilePresenterTest {
     public void initProfile_notMy_success() throws IOException {
         profilePresenter.attachView(profileView);
 
-        UserStepicResponse responseMock = mock(UserStepicResponse.class);
+        UsersResponse responseMock = mock(UsersResponse.class);
         List<User> userListMock = (List<User>) mock(List.class);
 
         ResponseGeneratorKt.useMockInsteadCall(when(api.getUsers(any(long[].class))), responseMock);

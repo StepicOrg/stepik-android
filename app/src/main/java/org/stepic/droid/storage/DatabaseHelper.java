@@ -31,6 +31,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
     private static final String LONG_TYPE = "LONG";
     private static final String INT_TYPE = "INTEGER";
     private static final String BOOLEAN_TYPE = "BOOLEAN";
+    private static final String REAL_TYPE = "REAL";
     private static final String WHITESPACE = " ";
     private static final String FALSE_VALUE = "0";
     private static final String TRUE_VALUE = "1";
@@ -86,7 +87,9 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         upgradeFrom25To26(db);
         upgradeFrom26To27(db);
         upgradeFrom27To28(db);
+        upgradeFrom28To29(db);
     }
+
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -240,6 +243,19 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
             upgradeFrom27To28(db);
         }
 
+        if (oldVersion < 29) {
+            upgradeFrom28To29(db);
+        }
+
+    }
+
+
+    private void upgradeFrom28To29(SQLiteDatabase db) {
+        alterColumn(db, DbStructureEnrolledAndFeaturedCourses.ENROLLED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.AVERAGE_RATING, REAL_TYPE);
+        alterColumn(db, DbStructureEnrolledAndFeaturedCourses.FEATURED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.AVERAGE_RATING, REAL_TYPE);
+
+        alterColumn(db, DbStructureEnrolledAndFeaturedCourses.ENROLLED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.REVIEW_SUMMARY, INT_TYPE);
+        alterColumn(db, DbStructureEnrolledAndFeaturedCourses.FEATURED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.REVIEW_SUMMARY, INT_TYPE);
     }
 
     private void upgradeFrom27To28(SQLiteDatabase db) {

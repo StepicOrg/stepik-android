@@ -5,7 +5,7 @@ import org.stepic.droid.notifications.model.Notification;
 
 import java.util.List;
 
-public class NotificationResponse extends StepicResponseBase {
+public class NotificationResponse extends MetaResponseBase {
 
     List<Notification> notifications;
 
