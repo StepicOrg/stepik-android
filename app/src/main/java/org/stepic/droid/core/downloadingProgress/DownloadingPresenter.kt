@@ -6,8 +6,10 @@ import io.reactivex.disposables.Disposable
 import org.stepic.droid.core.presenters.PresenterBase
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
+import org.stepic.droid.util.SuppressFBWarnings
 import javax.inject.Inject
 
+@SuppressFBWarnings("RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE")
 class DownloadingPresenter
 @Inject
 constructor(
