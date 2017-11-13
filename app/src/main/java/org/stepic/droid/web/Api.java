@@ -59,6 +59,8 @@ public interface Api {
 
     Call<ProgressesResponse> getProgresses(String[] progresses);
 
+    Single<ProgressesResponse> getProgressesReactive(String[] progresses);
+
     Call<AssignmentResponse> getAssignments(long[] assignmentsIds);
 
     Call<Void> postViewed(ViewAssignment stepAssignment);

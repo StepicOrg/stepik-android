@@ -12,6 +12,7 @@ import org.stepic.droid.model.Progress
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.storage.operations.Table
+import org.stepic.droid.util.CourseUtil
 import org.stepic.droid.util.RWLocks
 import org.stepic.droid.web.Api
 import org.stepic.droid.web.CoursesMetaResponse
@@ -132,7 +133,7 @@ class PersistentCourseListPresenter
                 //ok show without new ratings
                 null
             }
-            applyReviewToCourses(reviews, coursesFromInternet)
+            CourseUtil.applyReviewsToCourses(reviews, coursesFromInternet)
 
             try {
                 //this lock need for not saving enrolled courses to database after user click logout
@@ -196,7 +197,7 @@ class PersistentCourseListPresenter
             when (courseType) {
                 Table.enrolled -> {
                     val progressMap = getProgressesFromDb(courses)
-                    applyProgressesToCourses(progressMap, courses)
+                    CourseUtil.applyProgressesToCourses(progressMap, courses)
                     sortByLastAction(courses, progressMap)
                 }
                 Table.featured -> {
@@ -245,24 +246,6 @@ class PersistentCourseListPresenter
             it.progress
         }
         return databaseFacade.getProgresses(progressIds).associateBy { it.id }
-    }
-
-    private fun applyProgressesToCourses(progresses: Map<String?, Progress>, courses: List<Course>) {
-        courses.forEach { course ->
-            progresses[course.progress]?.let {
-                course.progressObject = it
-            }
-        }
-    }
-
-    private fun applyReviewToCourses(reviews: List<CourseReviewSummary>?, coursesFromInternet: List<Course>) {
-        val courseMap = coursesFromInternet.associateBy { it.courseId }
-        reviews?.forEach { review ->
-            courseMap[review.course]
-                    ?.let {
-                        it.rating = review.average
-                    }
-        }
     }
 
 

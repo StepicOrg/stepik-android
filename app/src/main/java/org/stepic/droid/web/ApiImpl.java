@@ -475,6 +475,11 @@ public class ApiImpl implements Api {
     }
 
     @Override
+    public Single<ProgressesResponse> getProgressesReactive(String[] progresses) {
+        return loggedService.getProgressesReactive(progresses);
+    }
+
+    @Override
     public Call<AssignmentResponse> getAssignments(long[] assignmentsIds) {
         return loggedService.getAssignments(assignmentsIds);
     }
