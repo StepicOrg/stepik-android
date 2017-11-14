@@ -140,19 +140,19 @@ constructor(
         }
     }
 
-    override fun insertOrUpdate(persistentObject: Course?) {
-        super.insertOrUpdate(persistentObject)
+    override fun insertOrReplace(persistentObject: Course?) {
+        super.insertOrReplace(persistentObject)
         if (persistentObject != null && persistentObject.introVideo != null) {
             val video = persistentObject.introVideo
             val cachedVideo = video.transformToCachedVideo() //it is cached, but not stored video.
-            cachedVideoDao.insertOrUpdate(cachedVideo)
+            cachedVideoDao.insertOrReplace(cachedVideo)
 
             //add all urls for video
             val videoUrlList = video.urls
             if (videoUrlList.isNotEmpty()) {
                 externalVideoUrlIDao.remove(DbStructureVideoUrl.Column.videoId, video.id.toString())
                 videoUrlList.forEach { videoUrl ->
-                    externalVideoUrlIDao.insertOrUpdate(videoUrl.toDbUrl(video.id))
+                    externalVideoUrlIDao.insertOrReplace(videoUrl.toDbUrl(video.id))
                 }
             }
         }

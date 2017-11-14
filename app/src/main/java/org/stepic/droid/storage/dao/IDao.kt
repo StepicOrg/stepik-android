@@ -3,7 +3,7 @@ package org.stepic.droid.storage.dao
 import android.content.ContentValues
 
 interface IDao<T> {
-    fun insertOrUpdate(persistentObject: T)
+    fun insertOrReplace(persistentObject: T)
 
     fun isInDb(persistentObject: T): Boolean
 
@@ -22,8 +22,6 @@ interface IDao<T> {
     fun getAllInRange(whereColumn: String, commaSeparatedIds: String): List<T>
 
     fun remove(whereColumn: String, whereValue: String)
-
-    fun replace(persistentObject: T)
 
     fun removeAll()
 }
