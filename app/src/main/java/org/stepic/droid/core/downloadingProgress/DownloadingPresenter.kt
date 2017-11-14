@@ -20,7 +20,7 @@ constructor(
         private val mainScheduler: Scheduler) : PresenterBase<DownloadingView>() {
 
     private val idToDisposableMap = hashMapOf<Long, Disposable>()
-    private var compositeDisposable: CompositeDisposable? = null
+    private var compositeDisposable = CompositeDisposable()
 
     fun onStateChanged(id: Long, isLoading: Boolean) {
         if (isLoading) {
@@ -32,16 +32,14 @@ constructor(
 
     override fun attachView(view: DownloadingView) {
         super.attachView(view)
-        if (!isCompositeDisposedOrNull()) {
+        if (compositeDisposable.size() != 0) {
             throw IllegalStateException("Previous disposable is not disposed $compositeDisposable")
         }
-
-        compositeDisposable = CompositeDisposable()
     }
 
     override fun detachView(view: DownloadingView) {
         super.detachView(view)
-        compositeDisposable?.dispose()
+        compositeDisposable.clear()
         idToDisposableMap.clear()
     }
 
@@ -57,18 +55,11 @@ constructor(
                 .subscribe { progress -> view?.onNewProgressValue(id, progress) }
 
         idToDisposableMap.put(id, disposable)
-        if (isCompositeDisposedOrNull()) {
-            throw IllegalStateException("Composite should be not null and not disposed")
-        }
-        compositeDisposable?.add(disposable)
+        compositeDisposable.add(disposable)
     }
 
     private fun stopListenProgress(id: Long) {
-        idToDisposableMap.remove(id)?.let { compositeDisposable?.remove(it) }
+        idToDisposableMap.remove(id)?.let { compositeDisposable.remove(it) }
     }
-
-    private fun isCompositeDisposedOrNull() =
-            compositeDisposable == null || compositeDisposable?.isDisposed == true
-
 
 }
