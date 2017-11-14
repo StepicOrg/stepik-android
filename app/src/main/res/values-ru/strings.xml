@@ -545,4 +545,5 @@
         <item quantity="many">%d курсов</item>
         <item quantity="other">%d курсов</item>
     </plurals>
+    <string name="course_current_progress">Текущий прогресс %d%%</string>
 </resources>

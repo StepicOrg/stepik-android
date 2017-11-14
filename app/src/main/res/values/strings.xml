@@ -552,4 +552,5 @@
         <item quantity="one">%d course</item>
         <item quantity="other">%d courses</item>
     </plurals>
+    <string name="course_current_progress">Current progress: %d%%;</string>
 </resources>

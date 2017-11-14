@@ -2,7 +2,6 @@ package org.stepic.droid.ui.fragments
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.support.annotation.StringRes
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
@@ -13,7 +12,6 @@ import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.BitmapImageViewTarget
 import kotlinx.android.synthetic.main.fragment_fast_continue.*
-import kotlinx.android.synthetic.main.new_course_item.view.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
@@ -223,6 +221,9 @@ class FastContinueFragment : FragmentBase(),
                 .into(courseCoverImageViewTarget)
 
         fastContinueCourseName.text = course.title
+
+        val progress = ProgressUtil.getProgressPercent(course.progressObject)
+        fastContinueCourseProgressText.text = getString(R.string.course_current_progress, progress ?: 0)
     }
 
     //ContinueCourseView
