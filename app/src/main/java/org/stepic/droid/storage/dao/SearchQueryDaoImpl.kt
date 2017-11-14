@@ -13,9 +13,9 @@ class SearchQueryDaoImpl @Inject
 constructor(databaseOperations: DatabaseOperations) : DaoBase<SearchQuery>(databaseOperations), SearchQueryDao {
     override fun getDbName(): String = DbStructureSearchQuery.SEARCH_QUERY
 
-    override fun getDefaultPrimaryColumn(): String = DbStructureSearchQuery.Column.QUERY_TEXT
+    override fun getDefaultPrimaryColumn(): String = DbStructureSearchQuery.Column.QUERY_HASH
 
-    override fun getDefaultPrimaryValue(persistentObject: SearchQuery): String = persistentObject.text.toLowerCase()
+    override fun getDefaultPrimaryValue(persistentObject: SearchQuery): String = persistentObject.text.toLowerCase().hashCode().toString()
 
     override fun getContentValues(persistentObject: SearchQuery): ContentValues {
         val contentValues = ContentValues()
