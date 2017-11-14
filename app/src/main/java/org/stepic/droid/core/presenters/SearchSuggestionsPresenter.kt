@@ -76,7 +76,7 @@ class SearchSuggestionsPresenter
     }
 
     override fun detachView(view: AutoCompleteSearchView) {
-        compositeDisposable.dispose()
+        compositeDisposable.clear()
         searchQueriesAdapter = null
         super.detachView(view)
     }
