@@ -100,8 +100,8 @@ class CatalogAdapter(
 
     private fun getDescriptionColors(position: Int): CollectionDescriptionColors =
             when (position % 2) {
-                0 -> CollectionDescriptionColors.BLUE
-                1 -> CollectionDescriptionColors.FIRE
+                0 -> CollectionDescriptionColors.FIRE
+                1 -> CollectionDescriptionColors.BLUE
                 else -> throw IllegalStateException("Use correct divider")
             }
 

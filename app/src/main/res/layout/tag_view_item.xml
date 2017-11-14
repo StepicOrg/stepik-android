@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TextView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/tagTextView"
+    fontPath="fonts/Roboto-Light.ttf"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"/>
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/guideline_standard_padding"
+    android:layout_marginRight="@dimen/guideline_standard_padding"
+    android:background="@drawable/tag_background"
+    android:clickable="true"
+    android:focusable="false"
+    android:focusableInTouchMode="false"
+    android:padding="@dimen/guideline_standard_padding"
+    android:textSize="16sp"
+    tools:ignore="MissingPrefix"
+    tools:text="Tag text"/>

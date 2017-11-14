@@ -151,4 +151,5 @@
     <dimen name="popup_arrow_size">16dp</dimen>
 
     <dimen name="language_radius">4dp</dimen>
+    <dimen name="tag_radius">20dp</dimen>
 </resources>
