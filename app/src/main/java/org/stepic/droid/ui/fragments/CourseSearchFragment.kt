@@ -2,17 +2,17 @@ package org.stepic.droid.ui.fragments
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.SearchView
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import io.reactivex.disposables.CompositeDisposable
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.presenters.SearchCoursesPresenter
+import org.stepic.droid.core.presenters.SearchSuggestionsPresenter
 import org.stepic.droid.storage.operations.Table
 import org.stepic.droid.ui.custom.AutoCompleteSearchView
-import org.stepic.droid.ui.util.SearchViewHelper
 import org.stepic.droid.ui.util.initCenteredToolbar
 import javax.inject.Inject
 
@@ -30,11 +30,13 @@ class CourseSearchFragment: CourseListFragmentBase() {
     }
 
     private var searchQuery: String? = null
+    private var searchView: AutoCompleteSearchView? = null
 
     @Inject
     lateinit var searchCoursesPresenter: SearchCoursesPresenter
 
-    private var searchSuggestionsDisposable: CompositeDisposable? = null
+    @Inject
+    lateinit var searchSuggestionsPresenter: SearchSuggestionsPresenter
 
     override fun injectComponent() {
         App
@@ -70,6 +72,11 @@ class CourseSearchFragment: CourseListFragmentBase() {
 
     override fun onDestroyView() {
         searchCoursesPresenter.detachView(this)
+        searchView?.let {
+            searchSuggestionsPresenter.detachView(it)
+            it.setOnQueryTextListener(null)
+            searchView = null
+        }
         super.onDestroyView()
     }
 
@@ -94,7 +101,18 @@ class CourseSearchFragment: CourseListFragmentBase() {
         searchView.setSearchable(activity)
         searchView.initSuggestions(rootView)
 
-        searchSuggestionsDisposable = SearchViewHelper.setupSearchViewSuggestionsSources(searchView, api, databaseFacade, analytic, null)
+        searchSuggestionsPresenter.attachView(searchView)
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                searchSuggestionsPresenter.onQueryTextSubmit(query)
+                return false
+            }
+
+            override fun onQueryTextChange(query: String): Boolean {
+                searchSuggestionsPresenter.onQueryTextChange(query)
+                return false
+            }
+        })
 
         searchMenuItem.expandActionView()
         searchQuery?.let { searchView.setQuery(it, false) }
@@ -108,11 +126,7 @@ class CourseSearchFragment: CourseListFragmentBase() {
                 return true
             }
         })
-    }
-
-    override fun onDestroyOptionsMenu() {
-        searchSuggestionsDisposable?.dispose()
-        super.onDestroyOptionsMenu()
+        this.searchView = searchView
     }
 
     override fun onNeedDownloadNextPage() {
