@@ -5,10 +5,10 @@ import org.stepic.droid.model.Unit;
 
 import java.util.List;
 
-public class UnitStepicResponse extends StepicResponseBase {
+public class UnitMetaResponse extends MetaResponseBase {
     List<Unit> units;
 
-    public UnitStepicResponse(Meta meta) {
+    public UnitMetaResponse(Meta meta) {
         super(meta);
     }
 

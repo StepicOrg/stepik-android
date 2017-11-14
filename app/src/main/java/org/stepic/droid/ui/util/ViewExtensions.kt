@@ -1,6 +1,7 @@
 package org.stepic.droid.ui.util
 
 import android.os.Build
+import android.view.View
 import android.view.ViewTreeObserver
 
 
@@ -10,5 +11,13 @@ fun ViewTreeObserver.removeGlobalLayoutListener(listener: ViewTreeObserver.OnGlo
     } else {
         @Suppress("DEPRECATION") //use only on old API
         removeGlobalOnLayoutListener(listener)
+    }
+}
+
+fun View.changeVisibility(needShow: Boolean) {
+    if (needShow) {
+        this.visibility = View.VISIBLE
+    } else {
+        this.visibility = View.GONE
     }
 }

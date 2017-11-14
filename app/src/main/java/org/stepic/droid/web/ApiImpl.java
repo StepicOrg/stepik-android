@@ -412,11 +412,11 @@ public class ApiImpl implements Api {
         return csrftoken;
     }
 
-    public Single<CoursesStepicResponse> getEnrolledCourses(int page) {
+    public Single<CoursesMetaResponse> getEnrolledCourses(int page) {
         return loggedService.getEnrolledCourses(page);
     }
 
-    public Single<CoursesStepicResponse> getPopularCourses(int page) {
+    public Single<CoursesMetaResponse> getPopularCourses(int page) {
         return loggedService.getPopularCourses(page);
     }
 
@@ -426,7 +426,7 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Call<UserStepicResponse> getUsers(long[] userIds) {
+    public Call<UsersResponse> getUsers(long[] userIds) {
         return loggedService.getUsers(userIds);
     }
 
@@ -438,12 +438,12 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Call<SectionsStepicResponse> getSections(long[] sectionsIds) {
+    public Call<SectionsMetaResponse> getSections(long[] sectionsIds) {
         return loggedService.getSections(sectionsIds);
     }
 
     @Override
-    public Call<UnitStepicResponse> getUnits(long[] units) {
+    public Call<UnitMetaResponse> getUnits(long[] units) {
         return loggedService.getUnits(units);
     }
 
@@ -506,7 +506,7 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Call<CoursesStepicResponse> getCourses(int page, @Nullable long[] ids) {
+    public Call<CoursesMetaResponse> getCourses(int page, @Nullable long[] ids) {
         if (ids == null || ids.length == 0) {
             ids = new long[]{0};
         }
@@ -646,7 +646,7 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Call<CoursesStepicResponse> getCourse(long id) {
+    public Call<CoursesMetaResponse> getCourse(long id) {
         long[] ids = new long[]{id};
         return loggedService.getCourses(ids);
     }
@@ -717,7 +717,7 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Call<UnitStepicResponse> getUnitByLessonId(long lessonId) {
+    public Call<UnitMetaResponse> getUnitByLessonId(long lessonId) {
         return loggedService.getUnitByLessonId(lessonId);
     }
 
@@ -749,6 +749,11 @@ public class ApiImpl implements Api {
         String language = "ru";
         return loggedService.getCourseLists(language);
 
+    }
+
+    @Override
+    public Single<CourseReviewResponse> getCourseReviews(int[] courseIds) {
+        return loggedService.getCourseReviews(courseIds);
     }
 
     @Nullable
