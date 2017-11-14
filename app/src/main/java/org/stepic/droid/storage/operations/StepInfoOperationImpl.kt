@@ -8,7 +8,7 @@ import org.stepic.droid.util.*
 import javax.inject.Inject
 
 class StepInfoOperationImpl
-@Inject constructor(private val crudOperations: CrudOperations) : StepInfoOperation {
+@Inject constructor(private val databaseOperations: DatabaseOperations) : StepInfoOperation {
 
     override fun getStepInfo(stepIds: List<Long>): List<StepInfo> {
         val commaSeparatedIds = DbParseHelper.parseLongArrayToString(stepIds.toLongArray(), AppConstants.COMMA)
@@ -23,7 +23,7 @@ class StepInfoOperationImpl
                         "inner join $blockTable on $stepTable.${DbStructureStep.Column.STEP_ID} = $blockTable.${DbStructureBlock.Column.STEP_ID} " +
                         "and $stepTable.${DbStructureStep.Column.STEP_ID} in ($commaSeparatedIds)"
 
-        return crudOperations.executeQuery(query, null, ResultHandler<List<StepInfo>> { cursor ->
+        return databaseOperations.executeQuery(query, null, ResultHandler<List<StepInfo>> { cursor ->
             val stepInfoList = mutableListOf<StepInfo>()
             cursor.moveToFirst()
 

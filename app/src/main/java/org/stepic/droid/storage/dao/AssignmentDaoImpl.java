@@ -4,7 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 
 import org.stepic.droid.model.Assignment;
-import org.stepic.droid.storage.operations.CrudOperations;
+import org.stepic.droid.storage.operations.DatabaseOperations;
 import org.stepic.droid.storage.structure.DbStructureAssignment;
 
 import javax.inject.Inject;
@@ -12,8 +12,8 @@ import javax.inject.Inject;
 public class AssignmentDaoImpl extends DaoBase<Assignment> {
 
     @Inject
-    public AssignmentDaoImpl(CrudOperations crudOperations) {
-        super(crudOperations);
+    public AssignmentDaoImpl(DatabaseOperations databaseOperations) {
+        super(databaseOperations);
     }
 
     @Override

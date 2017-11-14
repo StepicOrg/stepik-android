@@ -5,7 +5,7 @@ import android.database.Cursor
 import org.stepic.droid.mappers.toDbUrl
 import org.stepic.droid.mappers.toVideoUrls
 import org.stepic.droid.model.*
-import org.stepic.droid.storage.operations.CrudOperations
+import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepic.droid.storage.structure.DbStructureCachedVideo
 import org.stepic.droid.storage.structure.DbStructureEnrolledAndFeaturedCourses
 import org.stepic.droid.storage.structure.DbStructureVideoUrl
@@ -15,11 +15,11 @@ import javax.inject.Inject
 
 class CourseDaoImpl @Inject
 constructor(
-        crudOperations: CrudOperations,
+        databaseOperations: DatabaseOperations,
         private val cachedVideoDao: IDao<CachedVideo>,
         private val externalVideoUrlIDao: IDao<DbVideoUrl>,
         private val tableName: String)
-    : DaoBase<Course>(crudOperations) {
+    : DaoBase<Course>(databaseOperations) {
 
     public override fun parsePersistentObject(cursor: Cursor): Course {
         val course = Course()

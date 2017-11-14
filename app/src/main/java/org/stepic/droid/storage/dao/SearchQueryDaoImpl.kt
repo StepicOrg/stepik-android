@@ -4,13 +4,13 @@ import android.content.ContentValues
 import android.database.Cursor
 import org.stepic.droid.model.SearchQuery
 import org.stepic.droid.model.SearchQuerySource
-import org.stepic.droid.storage.operations.CrudOperations
+import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepic.droid.storage.structure.DbStructureSearchQuery
 import javax.inject.Inject
 
 
 class SearchQueryDaoImpl @Inject
-constructor(crudOperations: CrudOperations) : DaoBase<SearchQuery>(crudOperations), SearchQueryDao {
+constructor(databaseOperations: DatabaseOperations) : DaoBase<SearchQuery>(databaseOperations), SearchQueryDao {
     override fun getDbName(): String = DbStructureSearchQuery.SEARCH_QUERY
 
     override fun getDefaultPrimaryColumn(): String = DbStructureSearchQuery.Column.QUERY_TEXT

@@ -3,11 +3,11 @@ package org.stepic.droid.storage.dao
 import android.content.ContentValues
 import android.database.Cursor
 import org.stepic.droid.model.DbVideoUrl
-import org.stepic.droid.storage.operations.CrudOperations
+import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepic.droid.storage.structure.DbStructureVideoUrl
 import javax.inject.Inject
 
-class VideoUrlDaoImpl @Inject constructor(crudOperations: CrudOperations) : DaoBase<DbVideoUrl>(crudOperations) {
+class VideoUrlDaoImpl @Inject constructor(databaseOperations: DatabaseOperations) : DaoBase<DbVideoUrl>(databaseOperations) {
 
     override fun getDbName() = DbStructureVideoUrl.externalVideosName
 

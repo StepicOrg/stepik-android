@@ -7,7 +7,7 @@ import android.support.annotation.NonNull;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.stepic.droid.storage.operations.CrudOperations;
+import org.stepic.droid.storage.operations.DatabaseOperations;
 import org.stepic.droid.storage.operations.ResultHandler;
 
 import java.util.ArrayList;
@@ -16,10 +16,10 @@ import java.util.List;
 public abstract class DaoBase<T> implements IDao<T> {
 
 
-    private final CrudOperations crudOperations;
+    private final DatabaseOperations databaseOperations;
 
-    public DaoBase(@NotNull CrudOperations crudOperations) {
-        this.crudOperations = crudOperations;
+    public DaoBase(@NotNull DatabaseOperations databaseOperations) {
+        this.databaseOperations = databaseOperations;
     }
 
 
@@ -27,9 +27,9 @@ public abstract class DaoBase<T> implements IDao<T> {
         if (isInDb(primaryKeyColumn, primaryValue)) {
             String whereClause = primaryKeyColumn + "=?";
             String[] whereArgs = new String[]{primaryValue};
-            crudOperations.executeUpdate(tableName, cv, whereClause, whereArgs);
+            databaseOperations.executeUpdate(tableName, cv, whereClause, whereArgs);
         } else {
-            crudOperations.executeInsert(tableName, cv);
+            databaseOperations.executeInsert(tableName, cv);
         }
     }
 
@@ -51,7 +51,7 @@ public abstract class DaoBase<T> implements IDao<T> {
     @Nullable
     public T get(@NonNull String whereColumnName, @NonNull String whereValue) {
         String query = "Select * from " + getDbName() + " where " + whereColumnName + " = ?";
-        return crudOperations.executeQuery(query, new String[]{whereValue}, new ResultHandler<T>() {
+        return databaseOperations.executeQuery(query, new String[]{whereValue}, new ResultHandler<T>() {
             @Override
             public T handle(Cursor cursor) throws SQLException {
                 cursor.moveToFirst();
@@ -67,18 +67,18 @@ public abstract class DaoBase<T> implements IDao<T> {
 
     @Override
     public final void update(@NonNull String whereColumn, @NonNull String whereValue, @NonNull ContentValues contentValues) {
-        crudOperations.executeUpdate(getDbName(), contentValues, whereColumn + "=?", new String[]{whereValue});
+        databaseOperations.executeUpdate(getDbName(), contentValues, whereColumn + "=?", new String[]{whereValue});
     }
 
     @Override
     public void remove(@NonNull String whereColumn, @NonNull String whereValue) {
         String whereClause = whereColumn + " =?";
-        crudOperations.executeDelete(getDbName(), whereClause, new String[]{whereValue});
+        databaseOperations.executeDelete(getDbName(), whereClause, new String[]{whereValue});
     }
 
     @Override
     public final void replace(T persistentObject) {
-        crudOperations.executeReplace(getDbName(), getContentValues(persistentObject));
+        databaseOperations.executeReplace(getDbName(), getContentValues(persistentObject));
     }
 
     @NotNull
@@ -89,7 +89,7 @@ public abstract class DaoBase<T> implements IDao<T> {
     }
 
     protected List<T> getAllWithQuery(String query, @Nullable String[] whereArgs) {
-        return crudOperations.executeQuery(query, whereArgs, new ResultHandler<List<T>>() {
+        return databaseOperations.executeQuery(query, whereArgs, new ResultHandler<List<T>>() {
             @Override
             public List<T> handle(Cursor cursor) throws SQLException {
                 List<T> listOfPersistentObjects = new ArrayList<>();
@@ -109,7 +109,7 @@ public abstract class DaoBase<T> implements IDao<T> {
     @Override
     public final boolean isInDb(@NotNull String column, @NotNull String columnValue) {
         String Query = "Select * from " + getDbName() + " where " + column + " = ?";
-        return crudOperations.executeQuery(Query, new String[]{columnValue}, new ResultHandler<Boolean>() {
+        return databaseOperations.executeQuery(Query, new String[]{columnValue}, new ResultHandler<Boolean>() {
             @Override
             public Boolean handle(Cursor cursor) throws SQLException {
                 if (cursor.getCount() <= 0) {
@@ -144,6 +144,6 @@ public abstract class DaoBase<T> implements IDao<T> {
 
     @Override
     public void removeAll() {
-        crudOperations.executeDelete(getDbName(), null, null);
+        databaseOperations.executeDelete(getDbName(), null, null);
     }
 }

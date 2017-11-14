@@ -7,7 +7,7 @@ import org.stepic.droid.mappers.toDbUrl
 import org.stepic.droid.mappers.toVideoUrls
 import org.stepic.droid.model.*
 import org.stepic.droid.model.code.CodeOptions
-import org.stepic.droid.storage.operations.CrudOperations
+import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepic.droid.storage.structure.DbStructureBlock
 import org.stepic.droid.storage.structure.DbStructureCachedVideo
 import org.stepic.droid.storage.structure.DbStructureVideoUrl
@@ -16,11 +16,11 @@ import javax.inject.Inject
 
 class BlockDaoImpl @Inject
 constructor(
-        crudOperations: CrudOperations,
+        databaseOperations: DatabaseOperations,
         private val videoDao: IDao<CachedVideo>,
         private val gson: Gson,
         private val videoUrlIDao: IDao<DbVideoUrl>)
-    : DaoBase<BlockPersistentWrapper>(crudOperations) {
+    : DaoBase<BlockPersistentWrapper>(databaseOperations) {
 
     public override fun parsePersistentObject(cursor: Cursor): BlockPersistentWrapper {
         val indexName = cursor.getColumnIndex(DbStructureBlock.Column.NAME)
