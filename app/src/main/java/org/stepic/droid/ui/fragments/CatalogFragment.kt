@@ -12,10 +12,13 @@ import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.core.filters.contract.FiltersListener
 import org.stepic.droid.core.presenters.CatalogPresenter
 import org.stepic.droid.core.presenters.FiltersPresenter
+import org.stepic.droid.core.presenters.TagsPresenter
 import org.stepic.droid.core.presenters.contracts.CatalogView
 import org.stepic.droid.core.presenters.contracts.FiltersView
+import org.stepic.droid.core.presenters.contracts.TagsView
 import org.stepic.droid.model.CoursesCarouselInfo
 import org.stepic.droid.model.StepikFilter
+import org.stepic.droid.model.Tag
 import org.stepic.droid.ui.adapters.CatalogAdapter
 import org.stepic.droid.ui.util.SearchHelper
 import org.stepic.droid.ui.util.initCenteredToolbar
@@ -23,7 +26,7 @@ import java.util.*
 import javax.inject.Inject
 
 class CatalogFragment : FragmentBase(),
-        CatalogView, FiltersView, FiltersListener {
+        CatalogView, FiltersView, FiltersListener, TagsView {
 
     companion object {
         fun newInstance(): FragmentBase = CatalogFragment()
@@ -37,6 +40,9 @@ class CatalogFragment : FragmentBase(),
 
     @Inject
     lateinit var filtersClient: Client<FiltersListener>
+
+    @Inject
+    lateinit var tagsPresenter: TagsPresenter
 
     private val courseCarouselInfoList = mutableListOf<CoursesCarouselInfo>()
 
@@ -72,14 +78,17 @@ class CatalogFragment : FragmentBase(),
         initCenteredToolbar(R.string.catalog_title, showHomeButton = false)
         initMainRecycler()
 
+        tagsPresenter.attachView(this)
         filtersClient.subscribe(this)
         filtersPresenter.attachView(this)
         catalogPresenter.attachView(this)
         filtersPresenter.onNeedFilters()
+        tagsPresenter.onNeedShowTags()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        tagsPresenter.detachView(this)
         filtersClient.unsubscribe(this)
         catalogPresenter.detachView(this)
         filtersPresenter.detachView(this)
@@ -89,7 +98,10 @@ class CatalogFragment : FragmentBase(),
         catalogRecyclerView.layoutManager = LinearLayoutManager(context)
         catalogRecyclerView.adapter = CatalogAdapter(courseCarouselInfoList,
                 { filtersPresenter.onFilterChanged(it) },
-                { filtersPresenter.onNeedFilters() }
+                {
+                    filtersPresenter.onNeedFilters()
+                    tagsPresenter.onNeedShowTags()
+                }
         )
     }
 
@@ -148,5 +160,16 @@ class CatalogFragment : FragmentBase(),
 
         catalogPresenter.onNeedLoadCatalog(filters)
     }
+
+    override fun onTagsFetched(tags: List<Tag>) {
+        val catalogAdapter = catalogRecyclerView.adapter as CatalogAdapter
+        catalogAdapter.onTagLoaded(tags)
+    }
+
+    override fun onTagsNotLoaded() {
+        val catalogAdapter = catalogRecyclerView.adapter as CatalogAdapter
+        catalogAdapter.onTagNotLoaded()
+    }
+
 
 }

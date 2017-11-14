@@ -5,8 +5,18 @@
     android:layout_height="wrap_content">
 
     <TextView
-        android:text="@string/trending_topics"
         android:id="@+id/tagsTitle"
-        style="@style/CatalogItemTitle"/>
+        style="@style/CatalogItemTitle"
+        android:text="@string/trending_topics"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/tagsRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tagsTitle"
+        android:clipToPadding="false"
+        android:divider="@color/transparent"
+        android:scrollbarStyle="outsideOverlay"
+        android:splitMotionEvents="false"/>
 
 </RelativeLayout>
