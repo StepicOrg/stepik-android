@@ -3,7 +3,6 @@ package org.stepic.droid.ui.fragments
 import android.os.Bundle
 import android.support.annotation.StringRes
 import android.support.v7.widget.SearchView
-import android.util.Log
 import android.view.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
@@ -63,6 +62,11 @@ open class FindCoursesFragment: CoursesDatabaseFragmentBase() {
         super.onDestroyView()
     }
 
+    override fun onResume() {
+        super.onResume()
+        searchSuggestionsPresenter.refreshSuggestions()
+    }
+
     override fun getCourseType() = Table.featured
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -87,7 +91,6 @@ open class FindCoursesFragment: CoursesDatabaseFragmentBase() {
                 false
             }
 
-            Log.d(javaClass.canonicalName, "onCreateOptionsMenu")
             searchSuggestionsPresenter.attachView(it)
 
             it.setOnQueryTextListener(object : SearchView.OnQueryTextListener {

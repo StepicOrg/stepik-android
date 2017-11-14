@@ -69,6 +69,12 @@ class SearchSuggestionsPresenter
         analytic.reportEventWithName(Analytic.Search.SEARCH_SUBMITTED, query)
     }
 
+    fun refreshSuggestions() {
+        searchQueriesAdapter?.let {
+            publisher.onNext(it.constraint)
+        }
+    }
+
     override fun detachView(view: AutoCompleteSearchView) {
         compositeDisposable.dispose()
         searchQueriesAdapter = null
