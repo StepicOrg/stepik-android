@@ -14,7 +14,7 @@ import org.stepic.droid.testUtils.ResponseGeneratorKt;
 import org.stepic.droid.testUtils.generators.FakeCourseGenerator;
 import org.stepic.droid.testUtils.generators.FakeUserGenerator;
 import org.stepic.droid.web.Api;
-import org.stepic.droid.web.UserStepicResponse;
+import org.stepic.droid.web.UsersResponse;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -105,7 +105,7 @@ public class InstructorsPresenterTest {
         List<User> instructorList = new ArrayList<>();
         instructorList.add(instructor);
 
-        UserStepicResponse responseMock = mock(UserStepicResponse.class);
+        UsersResponse responseMock = mock(UsersResponse.class);
         when(responseMock.getUsers()).thenReturn(instructorList);
         ResponseGeneratorKt.useMockInsteadCall(when(api.getUsers(any(long[].class))), responseMock);
 
@@ -154,7 +154,7 @@ public class InstructorsPresenterTest {
         List<User> instructorList = new ArrayList<>();
         instructorList.add(instructor);
 
-        UserStepicResponse responseMock = mock(UserStepicResponse.class);
+        UsersResponse responseMock = mock(UsersResponse.class);
         when(responseMock.getUsers()).thenReturn(instructorList);
         ResponseGeneratorKt.useMockInsteadCall(when(api.getUsers(any(long[].class))), responseMock);
 

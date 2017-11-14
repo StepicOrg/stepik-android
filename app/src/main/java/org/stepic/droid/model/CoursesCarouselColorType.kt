@@ -19,13 +19,15 @@ enum class CoursesCarouselColorType(
         val viewAllColorRes: Int
 ) : Parcelable {
 
-    Light(R.color.new_accent_color,
+    Light(
+            R.color.new_accent_color,
             R.drawable.course_widget_continue_background,
             R.drawable.course_widget_join_background,
             R.color.transparent,
             R.color.view_all_course_list_color
     ),
-    Dark(R.color.white,
+    Dark(
+            R.color.white,
             R.drawable.course_widget_continue_dark_background,
             R.drawable.course_widget_join_background,
             R.color.new_accent_color,
