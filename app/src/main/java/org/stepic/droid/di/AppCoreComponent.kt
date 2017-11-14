@@ -30,10 +30,7 @@ import org.stepic.droid.receivers.InternetConnectionEnabledReceiver
 import org.stepic.droid.services.*
 import org.stepic.droid.ui.adapters.*
 import org.stepic.droid.ui.adapters.viewhoders.CourseItemViewHolder
-import org.stepic.droid.ui.custom.ExpandableTextView
-import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout
-import org.stepic.droid.ui.custom.LatexSupportableWebView
-import org.stepic.droid.ui.custom.PlaceholderTextView
+import org.stepic.droid.ui.custom.*
 import org.stepic.droid.ui.custom_exo.PlaybackControlView
 import org.stepic.droid.ui.dialogs.*
 
@@ -142,6 +139,8 @@ interface AppCoreComponent {
     fun inject(latexSupportableWebView: LatexSupportableWebView)
 
     fun inject(expandableTextView: ExpandableTextView)
+
+    fun inject(autoCompleteSearchView: AutoCompleteSearchView)
 
     fun inject(courseItemViewHolder: CourseItemViewHolder)
 

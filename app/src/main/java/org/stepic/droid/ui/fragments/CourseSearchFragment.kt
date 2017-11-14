@@ -10,7 +10,6 @@ import android.view.View
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.presenters.SearchCoursesPresenter
-import org.stepic.droid.core.presenters.SearchSuggestionsPresenter
 import org.stepic.droid.storage.operations.Table
 import org.stepic.droid.ui.custom.AutoCompleteSearchView
 import org.stepic.droid.ui.util.initCenteredToolbar
@@ -34,9 +33,6 @@ class CourseSearchFragment: CourseListFragmentBase() {
 
     @Inject
     lateinit var searchCoursesPresenter: SearchCoursesPresenter
-
-    @Inject
-    lateinit var searchSuggestionsPresenter: SearchSuggestionsPresenter
 
     override fun injectComponent() {
         App
@@ -72,11 +68,8 @@ class CourseSearchFragment: CourseListFragmentBase() {
 
     override fun onDestroyView() {
         searchCoursesPresenter.detachView(this)
-        searchView?.let {
-            searchSuggestionsPresenter.detachView(it)
-            it.setOnQueryTextListener(null)
-            searchView = null
-        }
+        searchView?.setOnQueryTextListener(null)
+        searchView = null
         super.onDestroyView()
     }
 
@@ -101,15 +94,14 @@ class CourseSearchFragment: CourseListFragmentBase() {
         searchView.setSearchable(activity)
         searchView.initSuggestions(rootView)
 
-        searchSuggestionsPresenter.attachView(searchView)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
-                searchSuggestionsPresenter.onQueryTextSubmit(query)
+                searchView.onSubmitted(query)
                 return false
             }
 
             override fun onQueryTextChange(query: String): Boolean {
-                searchSuggestionsPresenter.onQueryTextChange(query)
+                searchView.setConstraint(query)
                 return false
             }
         })

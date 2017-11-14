@@ -20,8 +20,6 @@ interface CourseListComponent {
 
     fun inject(fragment: CourseSearchFragment)
 
-    fun inject(fragment: FindCoursesFragment)
-
     fun inject(fragment: CoursesCarouselFragment)
 
     fun inject(fragment: FastContinueFragment)

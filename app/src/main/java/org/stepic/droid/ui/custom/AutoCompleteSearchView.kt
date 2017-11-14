@@ -14,29 +14,42 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import org.stepic.droid.R
+import org.stepic.droid.base.App
+import org.stepic.droid.core.presenters.SearchSuggestionsPresenter
+import org.stepic.droid.core.presenters.contracts.SearchSuggestionsView
+import org.stepic.droid.model.SearchQuery
+import org.stepic.droid.model.SearchQuerySource
 import org.stepic.droid.ui.adapters.SearchQueriesAdapter
+import javax.inject.Inject
 
 
 class AutoCompleteSearchView
 @JvmOverloads
-constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : SearchView(context, attrs, defStyleAttr) {
-    val searchQueriesAdapter = SearchQueriesAdapter(context)
+constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : SearchView(context, attrs, defStyleAttr), SearchSuggestionsView {
+    private val searchQueriesAdapter = SearchQueriesAdapter(context)
+    private val closeIcon: ImageView = findViewById(R.id.search_close_btn)
+
     var suggestionsOnTouchListener: OnTouchListener? = null
 
-    private val closeIcon: ImageView = findViewById(R.id.search_close_btn)
+    @Inject
+    lateinit var searchSuggestionsPresenter: SearchSuggestionsPresenter
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         searchQueriesAdapter.searchView = this
+        searchSuggestionsPresenter.attachView(this)
+        refreshSuggestions()
     }
 
     override fun onDetachedFromWindow() {
+        searchSuggestionsPresenter.detachView(this)
         searchQueriesAdapter.searchView = null
         super.onDetachedFromWindow()
     }
 
     init {
         maxWidth = 20000
+        App.component().inject(this)
     }
 
     fun initSuggestions(rootView: ViewGroup) {
@@ -47,9 +60,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 
         searchQueriesRecyclerView.setOnTouchListener { v, event ->
             if (searchQueriesRecyclerView.findChildViewUnder(event.x, event.y) == null) {
-                if (event.action == MotionEvent.ACTION_UP
-                        && event.x > 0 && event.y > 0
-                        && event.x < v.width && event.y < v.height) { // to track events only inside view
+                if (event.action == MotionEvent.ACTION_UP && isEventInsideView(event)) {
                     this@AutoCompleteSearchView.clearFocus()
                 }
             } else {
@@ -81,4 +92,30 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
         val searchableInfo = searchManager.getSearchableInfo(componentName)
         setSearchableInfo(searchableInfo)
     }
+
+    fun setConstraint(constraint: String) {
+        searchQueriesAdapter.constraint = constraint
+        refreshSuggestions()
+    }
+
+    fun onSubmitted(constraint: String) {
+        searchSuggestionsPresenter.onQueryTextSubmit(constraint)
+    }
+
+    private fun refreshSuggestions() {
+        searchSuggestionsPresenter.onQueryTextChange(searchQueriesAdapter.constraint)
+    }
+
+    override fun setSuggestions(suggestions: List<SearchQuery>, source: SearchQuerySource) {
+        when (source) {
+            SearchQuerySource.API ->
+                    searchQueriesAdapter.rawAPIItems = suggestions
+            SearchQuerySource.DB ->
+                    searchQueriesAdapter.rawDBItems = suggestions
+        }
+    }
+
+    private fun isEventInsideView(event: MotionEvent) =
+            event.x > 0 && event.y > 0
+            && event.x < width && event.y < height
 }

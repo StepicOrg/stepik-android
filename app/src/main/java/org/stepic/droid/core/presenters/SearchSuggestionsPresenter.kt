@@ -5,11 +5,11 @@ import io.reactivex.Scheduler
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.core.presenters.contracts.SearchSuggestionsView
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
+import org.stepic.droid.model.SearchQuerySource
 import org.stepic.droid.storage.operations.DatabaseFacade
-import org.stepic.droid.ui.adapters.SearchQueriesAdapter
-import org.stepic.droid.ui.custom.AutoCompleteSearchView
 import org.stepic.droid.web.Api
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -24,7 +24,7 @@ class SearchSuggestionsPresenter
         private val scheduler: Scheduler,
         @MainScheduler
         private val mainScheduler: Scheduler
-        ) : PresenterBase<AutoCompleteSearchView>() {
+        ) : PresenterBase<SearchSuggestionsView>() {
 
     companion object {
         private const val AUTOCOMPLETE_DEBOUNCE_MS = 300L
@@ -32,36 +32,30 @@ class SearchSuggestionsPresenter
     }
 
     private val compositeDisposable = CompositeDisposable()
-    private var searchQueriesAdapter: SearchQueriesAdapter? = null
     private val publisher = PublishSubject.create<String>()
 
-    override fun attachView(view: AutoCompleteSearchView) {
+    override fun attachView(view: SearchSuggestionsView) {
         super.attachView(view)
         initSearchView(view)
     }
 
-    private fun initSearchView(searchView: AutoCompleteSearchView) {
-        val compositeDisposable = CompositeDisposable()
-        val adapter = searchView.searchQueriesAdapter
-
+    private fun initSearchView(searchView: SearchSuggestionsView) {
         val queryPublisher = publisher
                 .debounce(AUTOCOMPLETE_DEBOUNCE_MS, TimeUnit.MILLISECONDS)
                 .subscribeOn(scheduler)
 
         compositeDisposable.add(queryPublisher
-                .flatMap { query -> Observable.fromCallable { databaseFacade.getSearchQueries(query, DB_ELEMENTS_COUNT) }.onErrorResumeNext(Observable.empty()) }
+                .flatMap { query -> Observable.fromCallable { databaseFacade.getSearchQueries(query, DB_ELEMENTS_COUNT) } }
                 .observeOn(mainScheduler)
-                .subscribe({ adapter.rawDBItems = it }, { e -> e.printStackTrace() }))
+                .subscribe { searchView.setSuggestions(it, SearchQuerySource.DB) })
 
         compositeDisposable.add(queryPublisher
                 .flatMap { query -> api.getSearchQueries(query).toObservable().onErrorResumeNext(Observable.empty()) }
                 .observeOn(mainScheduler)
-                .subscribe({ adapter.rawAPIItems = it.queries }, { e -> e.printStackTrace() }))
-        searchQueriesAdapter = adapter
+                .subscribe { searchView.setSuggestions(it.queries, SearchQuerySource.API) })
     }
 
     fun onQueryTextChange(query: String) {
-        searchQueriesAdapter?.constraint = query
         publisher.onNext(query)
     }
 
@@ -69,15 +63,8 @@ class SearchSuggestionsPresenter
         analytic.reportEventWithName(Analytic.Search.SEARCH_SUBMITTED, query)
     }
 
-    fun refreshSuggestions() {
-        searchQueriesAdapter?.let {
-            publisher.onNext(it.constraint)
-        }
-    }
-
-    override fun detachView(view: AutoCompleteSearchView) {
+    override fun detachView(view: SearchSuggestionsView) {
         compositeDisposable.clear()
-        searchQueriesAdapter = null
         super.detachView(view)
     }
 }
