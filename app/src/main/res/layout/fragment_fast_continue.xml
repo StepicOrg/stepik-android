@@ -14,8 +14,7 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
         <ImageView
             android:id="@+id/fastContinueImageView"
             android:layout_height="match_parent"
@@ -124,6 +123,16 @@
             app:layout_constraintBottom_toBottomOf="@+id/fastContinueCourseCover"
             app:layout_constraintRight_toRightOf="parent" />
 
+        <View
+            android:id="@+id/fastContinueCourseProgress"
+            android:layout_width="0dp"
+            android:layout_height="3dp"
+            android:background="@color/stepic_brand_primary"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="0dp"
+            android:layout_marginLeft="0dp" />
     </android.support.constraint.ConstraintLayout>
 
     <FrameLayout

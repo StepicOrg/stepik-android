@@ -222,8 +222,8 @@ class FastContinueFragment : FragmentBase(),
 
         fastContinueCourseName.text = course.title
 
-        val progress = ProgressUtil.getProgressPercent(course.progressObject)
-        fastContinueCourseProgressText.text = getString(R.string.course_current_progress, progress ?: 0)
+        val progress = ProgressUtil.getProgressPercent(course.progressObject) ?: 0
+        fastContinueCourseProgressText.text = getString(R.string.course_current_progress, progress)
     }
 
     //ContinueCourseView
