@@ -1,4 +1,4 @@
-package org.stepic.droid.ui.adapters.view_hoders
+package org.stepic.droid.ui.adapters.viewhoders
 
 import android.app.Activity
 import android.graphics.Bitmap
@@ -22,10 +22,8 @@ import org.stepic.droid.core.presenters.ContinueCoursePresenter
 import org.stepic.droid.core.presenters.DroppingPresenter
 import org.stepic.droid.model.Course
 import org.stepic.droid.model.CoursesCarouselColorType
-import org.stepic.droid.util.ColorUtil
-import org.stepic.droid.util.ContextMenuCourseUtil
-import org.stepic.droid.util.StepikLogicHelper
-import org.stepic.droid.util.SuppressFBWarnings
+import org.stepic.droid.ui.util.changeVisibility
+import org.stepic.droid.util.*
 import java.util.*
 import javax.inject.Inject
 
@@ -72,8 +70,12 @@ class CourseItemViewHolder(
     private val learnersCountImage = view.learnersCountImage
     private val learnersCountText = view.learnersCountText
     private val courseItemMore = view.courseItemMore
-    private val learnersCountContainer = view.learnersCountContainer
+    private val coursePropertiesContainer = view.coursePropertiesContainer
     private val courseWidgetInfo = view.courseWidgetInfo
+    private val courseItemProgress = view.courseItemProgressView
+    private val courseItemProgressTitle = view.courseItemProgressTitle
+    private val courseRatingImage = view.courseRatingImage
+    private val courseRatingText = view.courseRatingText
 
 
     init {
@@ -127,6 +129,9 @@ class CourseItemViewHolder(
         learnersCountText.setTextColor(ColorUtil.getColorArgb(colorType.textColor, itemView.context))
         learnersCountImage.setColorFilter(ColorUtil.getColorArgb(colorType.textColor, itemView.context))
         courseWidgetButton.setTextColor(ColorUtil.getColorArgb(colorType.textColor, itemView.context))
+        courseRatingText.setTextColor(ColorUtil.getColorArgb(colorType.textColor, itemView.context))
+        courseRatingImage.setColorFilter(ColorUtil.getColorArgb(colorType.textColor, itemView.context))
+        courseItemProgress.backgroundPaintColor = ColorUtil.getColorArgb(colorType.textColor, itemView.context)
     }
 
     private fun showMore(view: View, course: Course) {
@@ -191,13 +196,12 @@ class CourseItemViewHolder(
                 .fitCenter()
                 .into(imageViewTarget)
 
-        if (course.learnersCount > 0) {
+        val needShowLearners = course.learnersCount > 0
+        if (needShowLearners) {
             learnersCountText.text = String.format(Locale.getDefault(), "%d", course.learnersCount)
-            learnersCountContainer.visibility = View.VISIBLE
-        } else {
-            learnersCountContainer.visibility = View.GONE
         }
-
+        learnersCountImage.changeVisibility(needShowLearners)
+        learnersCountText.changeVisibility(needShowLearners)
 
         if (isEnrolled(course)) {
             courseWidgetInfo.setText(R.string.course_item_syllabus)
@@ -207,11 +211,44 @@ class CourseItemViewHolder(
             showJoinButton()
         }
 
-        courseItemMore.visibility = if (showMore) {
-            View.VISIBLE
-        } else {
-            View.GONE
+        val needShowProgress = bindProgressView(course)
+        val needShowRating = bindRatingView(course)
+
+        val showContainer = needShowLearners || needShowProgress || needShowRating
+        coursePropertiesContainer.changeVisibility(showContainer)
+
+        courseItemMore.changeVisibility(showMore)
+    }
+
+    private fun bindProgressView(course: Course): Boolean {
+        val progressPercent: Int? = ProgressUtil.getProgressPercent(course.progressObject)
+        val needShow =
+                if (progressPercent != null && progressPercent > 0) {
+                    prepareViewForProgress(progressPercent)
+                    true
+                } else {
+                    false
+                }
+        courseItemProgress.changeVisibility(needShow)
+        courseItemProgressTitle.changeVisibility(needShow)
+        return needShow
+    }
+
+    private fun prepareViewForProgress(progressPercent: Int) {
+        courseItemProgress.progress = progressPercent / 100f
+        courseItemProgressTitle.text = itemView
+                .resources
+                .getString(R.string.percent_symbol, progressPercent)
+    }
+
+    private fun bindRatingView(course: Course): Boolean {
+        val needShow = course.rating > 0
+        if (needShow) {
+            courseRatingText.text = String.format(Locale.ROOT, itemView.resources.getString(R.string.course_rating_value), course.rating)
         }
+        courseRatingImage.changeVisibility(needShow)
+        courseRatingText.changeVisibility(needShow)
+        return needShow
     }
 
     private fun isEnrolled(course: Course?): Boolean =

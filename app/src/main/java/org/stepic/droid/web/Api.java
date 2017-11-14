@@ -31,22 +31,22 @@ public interface Api {
 
     Call<RegistrationResponse> signUp(String firstName, String secondName, String email, String password);
 
-    Single<CoursesStepicResponse> getEnrolledCourses(int page);
+    Single<CoursesMetaResponse> getEnrolledCourses(int page);
 
-    Single<CoursesStepicResponse> getPopularCourses(int page);
+    Single<CoursesMetaResponse> getPopularCourses(int page);
 
     Call<StepicProfileResponse> getUserProfile();
 
-    Call<UserStepicResponse> getUsers(long[] userIds);
+    Call<UsersResponse> getUsers(long[] userIds);
 
     Call<Void> tryJoinCourse(@NotNull Course course);
 
-    Call<SectionsStepicResponse> getSections(long[] sectionsIds);
+    Call<SectionsMetaResponse> getSections(long[] sectionsIds);
 
     /**
      * Max number of  units defined in AppConstants
      */
-    Call<UnitStepicResponse> getUnits(long[] units);
+    Call<UnitMetaResponse> getUnits(long[] units);
 
     Call<LessonStepicResponse> getLessons(long[] lessons);
 
@@ -69,7 +69,7 @@ public interface Api {
 
     Single<QueriesResponse> getSearchQueries(String query);
 
-    Call<CoursesStepicResponse> getCourses(int page, long[] ids);
+    Call<CoursesMetaResponse> getCourses(int page, long[] ids);
 
     Call<AttemptResponse> createNewAttempt(long stepId);
 
@@ -91,7 +91,7 @@ public interface Api {
 
     Call<DeviceResponse> registerDevice(String token);
 
-    Call<CoursesStepicResponse> getCourse(long id);
+    Call<CoursesMetaResponse> getCourse(long id);
 
     Call<Void> setReadStatusForNotification(long notificationId, boolean isRead);
 
@@ -113,7 +113,7 @@ public interface Api {
 
     Call<CertificateResponse> getCertificates();
 
-    Call<UnitStepicResponse> getUnitByLessonId(long lessonId);
+    Call<UnitMetaResponse> getUnitByLessonId(long lessonId);
 
     Call<NotificationResponse> getNotifications(NotificationCategory notificationCategory, int page);
 
@@ -124,4 +124,6 @@ public interface Api {
     Call<LastStepResponse> getLastStepResponse(@NotNull String lastStepId);
 
     Call<CourseListsResponse> getCourseLists ();
+
+    Single<CourseReviewResponse> getCourseReviews (int[] reviewSummaryIds);
 }

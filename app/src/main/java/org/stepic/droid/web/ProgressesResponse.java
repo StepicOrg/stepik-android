@@ -5,7 +5,7 @@ import org.stepic.droid.model.Progress;
 
 import java.util.List;
 
-public class ProgressesResponse extends StepicResponseBase {
+public class ProgressesResponse extends MetaResponseBase {
 
     List<Progress> progresses;
 
