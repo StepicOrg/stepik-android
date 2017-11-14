@@ -83,9 +83,10 @@
 
         <TextView
             android:id="@+id/fastContinueCourseName"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             fontPath="fonts/Roboto-Light.ttf"
+            android:gravity="start"
             android:textSize="16sp"
             android:textColor="@color/white"
             android:ellipsize="end"
@@ -95,7 +96,11 @@
             app:layout_constraintLeft_toRightOf="@+id/fastContinueCourseCover"
             android:layout_marginLeft="10dp"
             android:layout_marginStart="10dp"
-            tools:text="Программирование на python" />
+            app:layout_constraintHorizontal_weight="1"
+            tools:text="Программирование на python"
+            android:layout_marginRight="20dp"
+            android:layout_marginEnd="20dp"
+            app:layout_constraintRight_toRightOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 

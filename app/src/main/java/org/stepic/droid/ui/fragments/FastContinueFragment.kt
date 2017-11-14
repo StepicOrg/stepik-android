@@ -1,6 +1,7 @@
 package org.stepic.droid.ui.fragments
 
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.support.annotation.StringRes
@@ -64,6 +65,13 @@ class FastContinueFragment : FragmentBase(),
 
     private lateinit var courseCoverImageViewTarget: BitmapImageViewTarget
     private lateinit var fastContinueImageViewTarget: BitmapImageViewTarget
+
+    private val coursePlaceholderDrawable by lazy {
+        val coursePlaceholderBitmap = BitmapFactory.decodeResource(resources, R.drawable.general_placeholder)
+        val circularBitmapDrawable = RoundedBitmapDrawableFactory.create(resources, coursePlaceholderBitmap)
+        circularBitmapDrawable.cornerRadius = resources.getDimension(R.dimen.course_image_radius)
+        return@lazy circularBitmapDrawable
+    }
 
     override fun injectComponent() {
         App
@@ -210,6 +218,7 @@ class FastContinueFragment : FragmentBase(),
                 .with(context)
                 .load(StepikLogicHelper.getPathForCourseOrEmpty(course, config))
                 .asBitmap()
+                .placeholder(coursePlaceholderDrawable)
                 .fitCenter()
                 .into(courseCoverImageViewTarget)
 
