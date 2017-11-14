@@ -5,6 +5,7 @@ import android.app.SearchManager
 import android.content.Context
 import android.support.annotation.DrawableRes
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -12,9 +13,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import kotlinx.android.synthetic.main.search_queries_recycler_view.view.*
 import org.stepic.droid.R
-import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.ui.adapters.SearchQueriesAdapter
 
 
@@ -23,6 +22,8 @@ class AutoCompleteSearchView
 constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : SearchView(context, attrs, defStyleAttr) {
     val searchQueriesAdapter = SearchQueriesAdapter(context)
     var suggestionsOnTouchListener: OnTouchListener? = null
+
+    private val closeIcon: ImageView = findViewById(R.id.search_close_btn)
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
@@ -40,39 +41,38 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 
     fun initSuggestions(rootView: ViewGroup) {
         val inflater = LayoutInflater.from(context)
-        val searchQueriesRecyclerView = inflater.inflate(R.layout.search_queries_recycler_view, rootView, false).searchQueriesRecyclerView
-        searchQueriesRecyclerView?.let {
-            it.layoutManager = LinearLayoutManager(context)
-            it.adapter = searchQueriesAdapter
+        val searchQueriesRecyclerView = inflater.inflate(R.layout.search_queries_recycler_view, rootView, false) as RecyclerView
+        searchQueriesRecyclerView.layoutManager = LinearLayoutManager(context)
+        searchQueriesRecyclerView.adapter = searchQueriesAdapter
 
-            it.setOnTouchListener { v, event ->
-                if (it.findChildViewUnder(event.x, event.y) == null) {
-                    if (event.action == MotionEvent.ACTION_UP
-                            && event.x > 0 && event.y > 0
-                            && event.x < v.width && event.y < v.height) { // to track events only inside view
-                        this@AutoCompleteSearchView.clearFocus()
-                    }
-                } else {
-                    suggestionsOnTouchListener?.onTouch(v, event)
+        searchQueriesRecyclerView.setOnTouchListener { v, event ->
+            if (searchQueriesRecyclerView.findChildViewUnder(event.x, event.y) == null) {
+                if (event.action == MotionEvent.ACTION_UP
+                        && event.x > 0 && event.y > 0
+                        && event.x < v.width && event.y < v.height) { // to track events only inside view
+                    this@AutoCompleteSearchView.clearFocus()
                 }
-                false
+            } else {
+                suggestionsOnTouchListener?.onTouch(v, event)
             }
-
-            this@AutoCompleteSearchView.setOnQueryTextFocusChangeListener { _, hasFocus ->
-                if (hasFocus) {
-                    it.layoutManager?.scrollToPosition(0)
-                    it.visibility = View.VISIBLE
-                } else {
-                    it.visibility = View.GONE
-                }
-            }
-
-            rootView.addView(it)
+            false
         }
+
+        setOnQueryTextFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                searchQueriesRecyclerView.layoutManager?.scrollToPosition(0)
+                searchQueriesRecyclerView.visibility = View.VISIBLE
+            } else {
+                searchQueriesRecyclerView.visibility = View.GONE
+            }
+        }
+
+        rootView.addView(searchQueriesRecyclerView)
+
     }
 
     fun setCloseIconDrawableRes(@DrawableRes iconRes: Int) {
-        findViewById<ImageView>(R.id.search_close_btn)?.setImageResource(iconRes)
+        closeIcon.setImageResource(iconRes)
     }
 
     fun setSearchable(activity: Activity) {
