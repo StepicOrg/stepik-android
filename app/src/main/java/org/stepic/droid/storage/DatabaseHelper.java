@@ -699,11 +699,11 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
                 + "BEGIN" + WHITESPACE
                 + "DELETE FROM" + WHITESPACE + DbStructureSearchQuery.SEARCH_QUERY + WHITESPACE
                 + "WHERE" + WHITESPACE + DbStructureSearchQuery.Column.QUERY_TEXT + WHITESPACE
-                + "NOT IN"
+                + "IN"
                 + "(SELECT" + WHITESPACE + DbStructureSearchQuery.Column.QUERY_TEXT + WHITESPACE
                 + "FROM" + WHITESPACE + DbStructureSearchQuery.SEARCH_QUERY + WHITESPACE
                 + "ORDER BY" + WHITESPACE + DbStructureSearchQuery.Column.QUERY_TIMESTAMP + WHITESPACE + "DESC" + WHITESPACE
-                + "LIMIT" + WHITESPACE + DbStructureSearchQuery.TABLE_SIZE_LIMIT + ");"
+                + "LIMIT -1 OFFSET" + WHITESPACE + DbStructureSearchQuery.TABLE_SIZE_LIMIT + ");"
                 + "END;";
         db.execSQL(sql);
     }
