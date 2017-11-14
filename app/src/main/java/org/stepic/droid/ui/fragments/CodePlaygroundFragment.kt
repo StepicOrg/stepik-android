@@ -81,6 +81,7 @@ class CodePlaygroundFragment : FragmentBase(),
         codeToolbarAdapter?.onSymbolClickListener = this
         codeToolbarView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         codeToolbarAdapter?.setLanguage(arguments.getString(LANG_KEY))
+        codeEditor.codeToolbarAdapter = codeToolbarAdapter
 
         if (savedInstanceState == null) {
             codeEditor.setText(arguments.getString(CODE_KEY))
