@@ -150,4 +150,7 @@ public interface StepicRestLoggedService {
 
     @GET("api/course-review-summaries")
     Single<CourseReviewResponse> getCourseReviews(@Query("ids[]") int[] reviewSummaryIds);
+
+    @GET("api/tags?is_featured=true")
+    Single<TagResponse> getFeaturedTags();
 }

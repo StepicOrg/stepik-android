@@ -128,4 +128,6 @@ public interface Api {
     Single<CourseCollectionsResponse> getCourseCollections(String language);
 
     Single<CourseReviewResponse> getCourseReviews(int[] reviewSummaryIds);
+
+    Single<TagResponse> getFeaturedTags();
 }

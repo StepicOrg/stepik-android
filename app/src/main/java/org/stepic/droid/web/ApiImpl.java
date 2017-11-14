@@ -770,6 +770,11 @@ public class ApiImpl implements Api {
         return loggedService.getCourseReviews(courseIds);
     }
 
+    @Override
+    public Single<TagResponse> getFeaturedTags() {
+        return loggedService.getFeaturedTags();
+    }
+
     @Nullable
     private String getNotificationCategoryString(NotificationCategory notificationCategory) {
         String categoryType;
