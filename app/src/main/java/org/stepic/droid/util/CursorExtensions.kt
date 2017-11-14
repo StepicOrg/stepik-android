@@ -14,3 +14,6 @@ fun Cursor.getLong(columnName: String): Long =
 
 fun Cursor.getInt(columnName: String): Int =
         this.getInt(this.getColumnIndexOrThrow(columnName))
+
+fun Cursor.getDouble(columnName: String) : Double =
+        this.getDouble(this.getColumnIndexOrThrow(columnName))

@@ -14,7 +14,7 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.web.Api
 import org.stepic.droid.web.CertificateResponse
-import org.stepic.droid.web.CoursesStepicResponse
+import org.stepic.droid.web.CoursesMetaResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -36,7 +36,7 @@ class CertificatePresenter
 
     private var certificateViewItemList: ArrayList<CertificateViewItem>? = null
     private var certificatesCall: Call<CertificateResponse>? = null
-    private var coursesCall: Call<CoursesStepicResponse>? = null
+    private var coursesCall: Call<CoursesMetaResponse>? = null
 
     @MainThread
     fun showCertificates(isRefreshing: Boolean) {
@@ -102,13 +102,13 @@ class CertificatePresenter
                                 .associateBy { it.course!! }
                         val baseUrl = config.baseUrl
                         coursesCall = api.getCourses(1, courseIds)
-                        coursesCall?.enqueue(object : Callback<CoursesStepicResponse> {
+                        coursesCall?.enqueue(object : Callback<CoursesMetaResponse> {
 
-                            override fun onFailure(call: Call<CoursesStepicResponse>?, t: Throwable?) {
+                            override fun onFailure(call: Call<CoursesMetaResponse>?, t: Throwable?) {
                                 view?.onInternetProblem()
                             }
 
-                            override fun onResponse(call: Call<CoursesStepicResponse>?, response: Response<CoursesStepicResponse>?) {
+                            override fun onResponse(call: Call<CoursesMetaResponse>?, response: Response<CoursesMetaResponse>?) {
                                 if (response?.isSuccessful == true) {
                                     val localCertificateViewItems: List<CertificateViewItem> = response
                                             .body()

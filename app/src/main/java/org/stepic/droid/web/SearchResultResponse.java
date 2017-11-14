@@ -7,7 +7,7 @@ import org.stepic.droid.model.SearchResult;
 
 import java.util.List;
 
-public class SearchResultResponse extends StepicResponseBase {
+public class SearchResultResponse extends MetaResponseBase {
 
     @SerializedName("search-results")
     List<SearchResult> searchResultList;
