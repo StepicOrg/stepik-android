@@ -3,6 +3,8 @@ package org.stepic.droid.storage.dao
 import android.content.ContentValues
 
 interface IDao<T> {
+    fun insertOrUpdate(persistentObject: T)
+
     fun insertOrReplace(persistentObject: T)
 
     fun isInDb(persistentObject: T): Boolean

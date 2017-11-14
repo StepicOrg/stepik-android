@@ -22,6 +22,17 @@ public abstract class DaoBase<T> implements IDao<T> {
         this.databaseOperations = databaseOperations;
     }
 
+
+    private void insertOrUpdate(String tableName, ContentValues cv, String primaryKeyColumn, String primaryValue) {
+        if (isInDb(primaryKeyColumn, primaryValue)) {
+            String whereClause = primaryKeyColumn + "=?";
+            String[] whereArgs = new String[]{primaryValue};
+            databaseOperations.executeUpdate(tableName, cv, whereClause, whereArgs);
+        } else {
+            databaseOperations.executeInsert(tableName, cv);
+        }
+    }
+
     @NotNull
     @Override
     public final List<T> getAll() {
@@ -109,6 +120,11 @@ public abstract class DaoBase<T> implements IDao<T> {
     @Override
     public void insertOrReplace(T persistentObject) {
         databaseOperations.executeReplace(getDbName(), getContentValues(persistentObject));
+    }
+
+    @Override
+    public void insertOrUpdate(T persistentObject) {
+        insertOrUpdate(getDbName(), getContentValues(persistentObject), getDefaultPrimaryColumn(), getDefaultPrimaryValue(persistentObject));
     }
 
     @Override

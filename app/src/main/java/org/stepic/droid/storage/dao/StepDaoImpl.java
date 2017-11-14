@@ -174,10 +174,10 @@ public class StepDaoImpl extends DaoBase<Step> {
     }
 
     @Override
-    public void insertOrReplace(Step persistentObject) {
-        super.insertOrReplace(persistentObject);
+    public void insertOrUpdate(Step persistentObject) {
+        super.insertOrUpdate(persistentObject);
         if (persistentObject != null && persistentObject.getBlock() != null) {
-            blockWrapperDao.insertOrReplace(new BlockPersistentWrapper(persistentObject.getBlock(), persistentObject.getId()));
+            blockWrapperDao.insertOrUpdate(new BlockPersistentWrapper(persistentObject.getBlock(), persistentObject.getId()));
         }
     }
 

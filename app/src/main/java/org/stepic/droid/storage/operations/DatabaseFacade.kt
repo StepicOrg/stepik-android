@@ -71,7 +71,7 @@ class DatabaseFacade
             else coursesEnrolledDao
 
 
-    fun addAssignment(assignment: Assignment?) = assignment?.let { assignmentDao.insertOrReplace(assignment) }
+    fun addAssignment(assignment: Assignment?) = assignment?.let { assignmentDao.insertOrUpdate(assignment) }
 
     @Deprecated("because of step has 0..* assignments.")
     fun getAssignmentIdByStepId(stepId: Long): Long {
@@ -206,15 +206,15 @@ class DatabaseFacade
 
     fun getAllCourses(type: Table) = getCourseDao(type).getAll()
 
-    fun addCourse(course: Course, type: Table) = getCourseDao(type).insertOrReplace(course)
+    fun addCourse(course: Course, type: Table) = getCourseDao(type).insertOrUpdate(course)
 
     fun deleteCourse(course: Course, type: Table) {
         getCourseDao(type).remove(DbStructureEnrolledAndFeaturedCourses.Column.COURSE_ID, course.courseId.toString())
     }
 
-    fun addSection(section: Section) = sectionDao.insertOrReplace(section)
+    fun addSection(section: Section) = sectionDao.insertOrUpdate(section)
 
-    fun addStep(step: Step) = stepDao.insertOrReplace(step)
+    fun addStep(step: Step) = stepDao.insertOrUpdate(step)
 
     fun getAllSectionsOfCourse(course: Course) = sectionDao.getAll(DbStructureSections.Column.COURSE, course.courseId.toString())
 
@@ -231,7 +231,7 @@ class DatabaseFacade
     }
 
 
-    fun addVideo(cachedVideo: CachedVideo?) = cachedVideo?.let { cachedVideoDao.insertOrReplace(cachedVideo) }
+    fun addVideo(cachedVideo: CachedVideo?) = cachedVideo?.let { cachedVideoDao.insertOrUpdate(cachedVideo) }
 
     fun deleteDownloadEntityByDownloadId(downloadId: Long) =
             downloadEntityDao.remove(DbStructureSharedDownloads.Column.DOWNLOAD_ID, downloadId.toString())
@@ -276,18 +276,18 @@ class DatabaseFacade
         }
     }
 
-    fun addUnit(unit: Unit) = unitDao.insertOrReplace(unit)
+    fun addUnit(unit: Unit) = unitDao.insertOrUpdate(unit)
 
-    fun addDownloadEntity(downloadEntity: DownloadEntity) = downloadEntityDao.insertOrReplace(downloadEntity)
+    fun addDownloadEntity(downloadEntity: DownloadEntity) = downloadEntityDao.insertOrUpdate(downloadEntity)
 
-    fun addLesson(lesson: Lesson) = lessonDao.insertOrReplace(lesson)
+    fun addLesson(lesson: Lesson) = lessonDao.insertOrUpdate(lesson)
 
-    fun addToQueueViewedState(viewState: ViewAssignment) = viewAssignmentDao.insertOrReplace(viewState)
+    fun addToQueueViewedState(viewState: ViewAssignment) = viewAssignmentDao.insertOrUpdate(viewState)
 
     fun getAllInQueue() = viewAssignmentDao.getAll()
 
     fun addNotification(notification: Notification) {
-        notificationDao.insertOrReplace(notification)
+        notificationDao.insertOrUpdate(notification)
     }
 
     fun removeAllNotificationsWithCourseId(courseId: Long) {
@@ -314,7 +314,7 @@ class DatabaseFacade
         }
     }
 
-    fun addProgress(progress: Progress) = progressDao.insertOrReplace(progress)
+    fun addProgress(progress: Progress) = progressDao.insertOrUpdate(progress)
 
     fun isProgressViewed(progressId: String?): Boolean {
         if (progressId == null) return false
@@ -381,7 +381,7 @@ class DatabaseFacade
     }
 
     fun addCalendarEvent(calendarSection: CalendarSection) {
-        calendarSectionDao.insertOrReplace(calendarSection)
+        calendarSectionDao.insertOrUpdate(calendarSection)
     }
 
     fun getCalendarEvent(sectionId: Long) = calendarSectionDao.get(DbStructureCalendarSection.Column.SECTION_ID, sectionId.toString())
@@ -389,7 +389,7 @@ class DatabaseFacade
     fun addCertificateViewItems(certificates: List<CertificateViewItem?>) {
         certificates
                 .filterNotNull()
-                .forEach { certificateViewItemDao.insertOrReplace(it) } //todo change to insertAll
+                .forEach { certificateViewItemDao.insertOrUpdate(it) } //todo change to insertAll
     }
 
     /**
@@ -409,14 +409,14 @@ class DatabaseFacade
     }
 
     fun addTimestamp(videoTimestamp: VideoTimestamp) {
-        videoTimestampDao.insertOrReplace(videoTimestamp)
+        videoTimestampDao.insertOrUpdate(videoTimestamp)
     }
 
     fun getVideoTimestamp(videoId: Long): VideoTimestamp? =
             videoTimestampDao.get(DbStructureVideoTimestamp.Column.VIDEO_ID, videoId.toString())
 
     fun updateLastStep(persistentLastStep: PersistentLastStep) {
-        lastStepDao.insertOrReplace(persistentLastStep)
+        lastStepDao.insertOrUpdate(persistentLastStep)
     }
 
     fun getLocalLastStepByCourseId(courseId: Long) =
@@ -442,7 +442,7 @@ class DatabaseFacade
         //remove all related with this video and write new
         externalVideoUrlDao.remove(DbStructureVideoUrl.Column.videoId, videoId.toString())
         videoUrlList.forEach {
-            externalVideoUrlDao.insertOrReplace(it)
+            externalVideoUrlDao.insertOrUpdate(it)
         }
     }
 
@@ -460,7 +460,7 @@ class DatabaseFacade
     }
 
     fun addCodeSubmission(codeSubmission: CodeSubmission) {
-        codeSubmissionDao.insertOrReplace(codeSubmission)
+        codeSubmissionDao.insertOrUpdate(codeSubmission)
     }
 
     fun getSearchQueries(constraint: String, count: Int) =

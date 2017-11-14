@@ -128,8 +128,8 @@ constructor(
         blockWrapper.block.video?.urls = externalVideoUrls.toVideoUrls()
     }
 
-    override fun insertOrReplace(persistentObject: BlockPersistentWrapper?) {
-        super.insertOrReplace(persistentObject)
+    override fun insertOrUpdate(persistentObject: BlockPersistentWrapper?) {
+        super.insertOrUpdate(persistentObject)
         if (persistentObject == null) {
             return
         }
@@ -143,7 +143,7 @@ constructor(
             }
             videoUrlIDao.remove(DbStructureVideoUrl.Column.videoId, externalVideo.id.toString())
             list.forEach {
-                videoUrlIDao.insertOrReplace(it)
+                videoUrlIDao.insertOrUpdate(it)
             }
         }
     }
