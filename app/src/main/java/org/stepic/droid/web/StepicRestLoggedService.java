@@ -33,8 +33,8 @@ public interface StepicRestLoggedService {
     @GET("api/courses?enrolled=true")
     Single<CoursesMetaResponse> getEnrolledCourses(@Query("page") int page);
 
-    @GET("api/courses?is_public=true&order=-activity")
-    Single<CoursesMetaResponse> getPopularCourses(@Query("page") int page);
+    @GET("api/courses?exclude_ended=true&is_public=true&order=-activity")
+    Single<CoursesMetaResponse> getPopularCourses(@Query("page") int page, @Query("language") String language);
 
     @GET("api/units")
     Call<UnitMetaResponse> getUnits(@Query("ids[]") long[] units);

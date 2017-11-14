@@ -38,6 +38,7 @@ import org.stepic.droid.model.Profile;
 import org.stepic.droid.model.RegistrationUser;
 import org.stepic.droid.model.Reply;
 import org.stepic.droid.model.ReplyWrapper;
+import org.stepic.droid.model.StepikFilter;
 import org.stepic.droid.model.comments.Comment;
 import org.stepic.droid.model.comments.Vote;
 import org.stepic.droid.model.comments.VoteValue;
@@ -56,6 +57,7 @@ import java.net.HttpCookie;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -417,7 +419,9 @@ public class ApiImpl implements Api {
     }
 
     public Single<CoursesMetaResponse> getPopularCourses(int page) {
-        return loggedService.getPopularCourses(page);
+        EnumSet<StepikFilter> enumSet = sharedPreference.getFilterForFeatured();
+        String lang = enumSet.iterator().next().getLanguage();
+        return loggedService.getPopularCourses(page, lang);
     }
 
     @Override
