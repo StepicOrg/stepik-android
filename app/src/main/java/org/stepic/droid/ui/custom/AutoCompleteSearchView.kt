@@ -21,7 +21,7 @@ import org.stepic.droid.ui.adapters.SearchQueriesAdapter
 class AutoCompleteSearchView
 @JvmOverloads
 constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : SearchView(context, attrs, defStyleAttr) {
-    val searchQueriesAdapter = SearchQueriesAdapter()
+    val searchQueriesAdapter = SearchQueriesAdapter(context)
     var suggestionsOnTouchListener: OnTouchListener? = null
 
     override fun onAttachedToWindow() {

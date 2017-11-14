@@ -1,5 +1,6 @@
 package org.stepic.droid.ui.adapters
 
+import android.content.Context
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
@@ -9,6 +10,8 @@ import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import kotlinx.android.synthetic.main.search_query_item.view.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
@@ -18,7 +21,7 @@ import org.stepic.droid.model.SearchQuerySource
 import javax.inject.Inject
 
 
-class SearchQueriesAdapter : RecyclerView.Adapter<SearchQueriesAdapter.SearchQueryViewHolder>() {
+class SearchQueriesAdapter(context: Context) : RecyclerView.Adapter<SearchQueriesAdapter.SearchQueryViewHolder>() {
     @Inject
     lateinit var analytic: Analytic
 
@@ -48,25 +51,13 @@ class SearchQueriesAdapter : RecyclerView.Adapter<SearchQueriesAdapter.SearchQue
 
     var searchView: SearchView? = null
 
-    private lateinit var querySpan: ForegroundColorSpan
-
-    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
-        querySpan = ForegroundColorSpan(ContextCompat.getColor(recyclerView.context, R.color.search_view_suggestions_prefix_color))
-        super.onAttachedToRecyclerView(recyclerView)
-    }
+    private val querySpan = ForegroundColorSpan(ContextCompat.getColor(context, R.color.search_view_suggestions_prefix_color))
 
     override fun onBindViewHolder(holder: SearchQueryViewHolder, p: Int) {
         val (query, source) = items[p]
 
-        holder.itemView.searchIcon.setImageResource(
-                if (source == SearchQuerySource.DB) {
-                    R.drawable.ic_history
-                } else {
-                    R.drawable.ic_action_search
-                }
-        )
-
-        holder.itemView.searchQuery.text = query
+        holder.searchIcon.setImageResource(source.iconRes)
+        holder.searchQuery.text = query
         holder.itemView.setOnClickListener {
             analytic.reportEventValue(Analytic.Search.SEARCH_SUGGESTION_CLICKED, (query.length - constraint.length).toLong())
             searchView?.setQuery(query.toString(), true)
@@ -94,5 +85,8 @@ class SearchQueriesAdapter : RecyclerView.Adapter<SearchQueriesAdapter.SearchQue
         notifyDataSetChanged()
     }
 
-    class SearchQueryViewHolder(view: View) : RecyclerView.ViewHolder(view)
+    class SearchQueryViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val searchQuery: TextView = view.searchQuery
+        val searchIcon: ImageView = view.searchIcon
+    }
 }
