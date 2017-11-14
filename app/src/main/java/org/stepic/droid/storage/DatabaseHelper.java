@@ -687,7 +687,8 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
     private void createSearchQueryTable(SQLiteDatabase db) {
         String sql = "CREATE TABLE " + DbStructureSearchQuery.SEARCH_QUERY
                 + " ("
-                + DbStructureSearchQuery.Column.QUERY_TEXT + WHITESPACE + TEXT_TYPE + " PRIMARY KEY, "
+                + DbStructureSearchQuery.Column.QUERY_HASH + WHITESPACE + LONG_TYPE + " PRIMARY KEY, "
+                + DbStructureSearchQuery.Column.QUERY_TEXT + WHITESPACE + TEXT_TYPE + ", "
                 + DbStructureSearchQuery.Column.QUERY_TIMESTAMP + WHITESPACE + DATETIME_TYPE + WHITESPACE + DEFAULT + WHITESPACE + "(DATETIME('now', 'utc'))"
                 + ")";
         db.execSQL(sql);

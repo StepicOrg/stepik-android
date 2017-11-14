@@ -20,7 +20,8 @@ constructor(crudOperations: CrudOperations) : DaoBase<SearchQuery>(crudOperation
     override fun getContentValues(persistentObject: SearchQuery): ContentValues {
         val contentValues = ContentValues()
 
-        contentValues.put(DbStructureSearchQuery.Column.QUERY_TEXT, persistentObject.text.toLowerCase()) // toLowerCase to avoid problems with case sensitive duplicates due to SQLite
+        contentValues.put(DbStructureSearchQuery.Column.QUERY_HASH, persistentObject.text.toLowerCase().hashCode())  // toLowerCase to avoid problems with case sensitive duplicates due to SQLite
+        contentValues.put(DbStructureSearchQuery.Column.QUERY_TEXT, persistentObject.text)
 
         return contentValues
     }

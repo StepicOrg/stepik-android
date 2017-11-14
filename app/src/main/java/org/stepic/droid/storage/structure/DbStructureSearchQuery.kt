@@ -4,6 +4,7 @@ object DbStructureSearchQuery {
     const val SEARCH_QUERY = "search_query"
 
     object Column {
+        const val QUERY_HASH = "query_hash"
         const val QUERY_TEXT = "query_text"
         const val QUERY_TIMESTAMP = "query_timestamp"
     }
