@@ -3,11 +3,11 @@ package org.stepic.droid.storage.dao
 import android.content.ContentValues
 import android.database.Cursor
 import org.stepic.droid.model.PersistentLastStep
-import org.stepic.droid.storage.operations.CrudOperations
+import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepic.droid.storage.structure.DbStructureLastStep
 import javax.inject.Inject
 
-class PersistentLastStepDaoImpl @Inject constructor(crudOperations: CrudOperations) : DaoBase<PersistentLastStep>(crudOperations) {
+class PersistentLastStepDaoImpl @Inject constructor(databaseOperations: DatabaseOperations) : DaoBase<PersistentLastStep>(databaseOperations) {
     override fun getDefaultPrimaryColumn()
             = DbStructureLastStep.Column.COURSE_ID
 

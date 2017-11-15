@@ -126,4 +126,6 @@
     <color name="default_code_error_highlight_color">#AAFF0000</color>
     <color name="default_code_brackets_highlight_color">#AAFFD77A</color>
     <color name="stepik_swipe_refresh">@color/new_accent_color</color>
+
+    <color name="search_view_suggestions_prefix_color">#44000000</color>
 </resources>

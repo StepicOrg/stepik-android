@@ -3,11 +3,11 @@ package org.stepic.droid.storage.dao
 import android.content.ContentValues
 import android.database.Cursor
 import org.stepic.droid.model.DownloadEntity
-import org.stepic.droid.storage.operations.CrudOperations
+import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepic.droid.storage.structure.DbStructureSharedDownloads
 import javax.inject.Inject
 
-class DownloadEntityDaoImpl @Inject constructor(crudOperations: CrudOperations) : DaoBase<DownloadEntity>(crudOperations) {
+class DownloadEntityDaoImpl @Inject constructor(databaseOperations: DatabaseOperations) : DaoBase<DownloadEntity>(databaseOperations) {
 
     public override fun parsePersistentObject(cursor: Cursor): DownloadEntity {
         val indexDownloadId = cursor.getColumnIndex(DbStructureSharedDownloads.Column.DOWNLOAD_ID)

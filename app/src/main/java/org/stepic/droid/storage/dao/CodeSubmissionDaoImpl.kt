@@ -4,14 +4,14 @@ import android.content.ContentValues
 import android.database.Cursor
 import org.stepic.droid.di.storage.StorageSingleton
 import org.stepic.droid.model.code.CodeSubmission
-import org.stepic.droid.storage.operations.CrudOperations
+import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepic.droid.storage.structure.DbStructureCodeSubmission
 import javax.inject.Inject
 
 @StorageSingleton
 class CodeSubmissionDaoImpl
 @Inject constructor(
-        crudOperations: CrudOperations) : DaoBase<CodeSubmission>(crudOperations) {
+        databaseOperations: DatabaseOperations) : DaoBase<CodeSubmission>(databaseOperations) {
 
     override fun getDbName(): String = DbStructureCodeSubmission.CODE_SUBMISSION
 
