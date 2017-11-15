@@ -29,6 +29,7 @@ import org.stepic.droid.model.Section
 import org.stepic.droid.storage.operations.Table
 import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
+import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.util.*
 import javax.inject.Inject
 
@@ -62,7 +63,6 @@ class FastContinueFragment : FragmentBase(),
     lateinit var joiningListenerClient: Client<JoiningListener>
 
     private lateinit var courseCoverImageViewTarget: BitmapImageViewTarget
-    private lateinit var fastContinueImageViewTarget: BitmapImageViewTarget
 
     private val coursePlaceholderDrawable by lazy {
         val coursePlaceholderBitmap = BitmapFactory.decodeResource(resources, R.drawable.general_placeholder)
@@ -94,15 +94,6 @@ class FastContinueFragment : FragmentBase(),
             }
         }
 
-        fastContinueImageViewTarget = object : BitmapImageViewTarget(fastContinueImageView) {
-            override fun setResource(resource: Bitmap) {
-                val circularBitmapDrawable = RoundedBitmapDrawableFactory.create(context.resources, resource)
-                circularBitmapDrawable.cornerRadius = resources.getDimension(R.dimen.course_image_radius)
-                fastContinueImageView.setImageDrawable(circularBitmapDrawable)
-            }
-        }
-
-        setCoverImage()
         courseListPresenter.attachView(this)
         continueCoursePresenter.attachView(this)
         droppingClient.subscribe(this)
@@ -121,15 +112,8 @@ class FastContinueFragment : FragmentBase(),
                 screenManager.showLaunchScreen(context, true, MainFeedActivity.HOME_INDEX)
             })
         }
-    }
 
-    private fun setCoverImage() {
-        Glide
-                .with(context)
-                .load(R.drawable.continue_learning_cover)
-                .asBitmap()
-                .centerCrop()
-                .into(fastContinueImageViewTarget)
+        fastContinueMask.borderRadius = resources.getDimension(R.dimen.course_image_radius)
     }
 
     override fun onPause() {
@@ -205,7 +189,6 @@ class FastContinueFragment : FragmentBase(),
     }
 
     private fun setCourse(course: Course) {
-        Log.d(javaClass.canonicalName, StepikLogicHelper.getPathForCourseOrEmpty(course, config))
         Glide
                 .with(context)
                 .load(StepikLogicHelper.getPathForCourseOrEmpty(course, config))
@@ -218,6 +201,14 @@ class FastContinueFragment : FragmentBase(),
 
         val progress = ProgressUtil.getProgressPercent(course.progressObject) ?: 0
         fastContinueCourseProgressText.text = getString(R.string.course_current_progress, progress)
+
+        setCourseProgress(progress)
+    }
+
+    private fun setCourseProgress(progress: Int) {
+        val parentWidth = (fastContinueCourseProgress.parent as View).measuredWidth
+        fastContinueCourseProgress.layoutParams.width = parentWidth * progress / 100
+        fastContinueCourseProgress.changeVisibility(progress != 0)
     }
 
     //ContinueCourseView
@@ -273,7 +264,7 @@ class FastContinueFragment : FragmentBase(),
         }
         fastContinueAction.visibility = visibility
         fastContinueOverlay.visibility = visibility
-        fastContinueImageView.visibility = visibility
+        fastContinueMask.visibility = visibility
     }
 
     override fun onSuccessJoin(joinedCourse: Course) {
