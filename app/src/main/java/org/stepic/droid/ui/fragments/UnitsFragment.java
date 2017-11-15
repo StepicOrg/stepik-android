@@ -201,16 +201,17 @@ public class UnitsFragment extends FragmentBase implements
         ProgressHelper.activate(progressBar);
 
         storeStateManager.addLessonCallback(this);
+        downloadingPresenter.attachView(this);
         unitsPresenter.attachView(this);
         unitsLearningProgressPresenter.attachView(this);
         getLocalProgressManager().subscribe(unitsLearningProgressPresenter);
         routingClient.subscribe(this);
         unitsPresenter.showUnits(section, false);
-
     }
 
     @Override
     public void onDestroyView() {
+        downloadingPresenter.detachView(this);
         routingClient.unsubscribe(this);
         getLocalProgressManager().unsubscribe(unitsLearningProgressPresenter);
         unitsLearningProgressPresenter.detachView(this);
@@ -225,9 +226,7 @@ public class UnitsFragment extends FragmentBase implements
     @Override
     public void onStart() {
         super.onStart();
-        Timber.d("downloading interaction presenter instance: %s", downloadingInteractionPresenter);
         downloadingInteractionPresenter.attachView(this);
-        downloadingPresenter.attachView(this);
         for (Lesson lesson : lessonList) {
             downloadingPresenter.onStateChanged(lesson.getId(), lesson.is_loading());
         }
@@ -236,7 +235,6 @@ public class UnitsFragment extends FragmentBase implements
     @Override
     public void onStop() {
         downloadingInteractionPresenter.detachView(this);
-        downloadingPresenter.detachView(this);
         super.onStop();
         ProgressHelper.dismiss(swipeRefreshLayout);
     }

@@ -22,7 +22,7 @@ constructor(
         private val cancelSniffer: CancelSniffer) {
 
     companion object {
-        private const val POLISHING_DELAY = 1000L
+        private const val POLISHING_DELAY = 500L
         private const val RETRY_DELAY = 300
     }
 
