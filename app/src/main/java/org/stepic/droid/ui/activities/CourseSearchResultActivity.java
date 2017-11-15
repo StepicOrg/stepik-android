@@ -1,18 +1,11 @@
 package org.stepic.droid.ui.activities;
 
 import android.app.SearchManager;
-import android.app.SearchableInfo;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.SearchView;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentActivityBase;
@@ -71,41 +64,6 @@ public class CourseSearchResultActivity extends FragmentActivityBase {
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.search_menu, menu);
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        MenuItem menuItem = menu.findItem(R.id.action_search);
-        SearchView searchView = (SearchView) menuItem.getActionView();
-
-        ImageView closeImageView = searchView.findViewById(R.id.search_close_btn);
-        closeImageView.setImageDrawable(ContextCompat.getDrawable(this, getCloseIconDrawableRes()));
-
-        ComponentName componentName = getComponentName();
-        SearchableInfo searchableInfo = searchManager.getSearchableInfo(componentName);
-        searchView.setSearchableInfo(searchableInfo);
-        searchView.setMaxWidth(20000);//it is dirty hack for expand in landscape
-        menuItem.expandActionView();
-        if (query != null) {
-            searchView.setQuery(query, false);
-        }
-        searchView.clearFocus();
-
-        menuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
-                return true;
-            }
-
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
-                finish();
-                return true;
-            }
-        });
-        return true;
     }
 
     public void finish() {
