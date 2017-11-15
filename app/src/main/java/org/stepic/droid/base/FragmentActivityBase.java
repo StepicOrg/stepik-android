@@ -20,7 +20,6 @@ import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.configuration.Config;
-import org.stepic.droid.core.DefaultFilter;
 import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.ShareHelper;
 import org.stepic.droid.fonts.FontsProvider;
@@ -60,9 +59,6 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
 
     @Inject
     protected ShareHelper shareHelper;
-
-    @Inject
-    protected DefaultFilter defaultFilter;
 
     @Inject
     protected Config config;

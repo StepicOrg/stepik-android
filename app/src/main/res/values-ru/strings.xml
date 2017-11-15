@@ -13,7 +13,6 @@
     <string name="create_my_account">Создать аккаунт</string>
     <string name="drawer_closed">закрыть меню</string>
     <string name="drawer_open">открыть меню</string>
-    <string name="find_courses_title">Найти курсы</string>
     <string name="first_name">Имя</string>
     <string name="logout_title">Выход</string>
     <string name="home_title">Главная</string>
@@ -272,7 +271,6 @@
     <string name="cant_show_next_step">Извините, следующий урок недоступен</string>
     <string name="previous_lesson">Предыдущий урок</string>
     <string name="cant_show_previous_step">Извините, предыдущий урок недоступен</string>
-    <string name="filter_title">Фильтры</string>
     <string name="language_en_filter">Английский</string>
     <string name="language_ru_filter">Русский</string>
     <string name="course_language_title">Язык курса</string>
@@ -537,6 +535,9 @@
     <string name="sample_output">&lt;b>Пример выходных данных %d:&lt;/b></string>
     <string name="hint_for_code">Введите код здесь…</string>
     <string name="step_preparing">Шаг еще не обработан. Нажмите, чтобы перезагрузить</string>
+    <string name="language_of_courses">Язык курсов</string>
+    <string name="course_collection_empty">Извините, эта подборка на каникулах</string>
+    <string name="internet_problem_catalog">Включите инетренет, чтобы увидеть наши подборки курсов</string>
     <string name="course_rating">Рейтинг курса</string>
 
     <plurals name="course_count">

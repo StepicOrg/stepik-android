@@ -117,14 +117,6 @@ public abstract class CourseListFragmentBase extends FragmentBase
     }
 
     @Override
-    protected void onReleaseComponent() {
-        App
-                .Companion
-                .componentManager()
-                .releaseCourseGeneralComponent();
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
@@ -146,7 +138,7 @@ public abstract class CourseListFragmentBase extends FragmentBase
 
         if (courses == null) courses = new ArrayList<>();
         boolean showMore = getCourseType() == Table.enrolled;
-        coursesAdapter = new CoursesAdapter(this, courses, continueCoursePresenter, droppingPresenter, true, showMore, CoursesCarouselColorType.Light);
+        coursesAdapter = new CoursesAdapter(getActivity(), courses, continueCoursePresenter, droppingPresenter, true, showMore, CoursesCarouselColorType.Light);
         listOfCoursesView.setAdapter(coursesAdapter);
         layoutManager = new WrapContentLinearLayoutManager(getContext());
         listOfCoursesView.setLayoutManager(layoutManager);
@@ -191,7 +183,7 @@ public abstract class CourseListFragmentBase extends FragmentBase
                 if (getSharedPreferenceHelper().getAuthResponseFromStore() == null) {
                     getAnalytic().reportEvent(Analytic.Anonymous.BROWSE_COURSES_CENTER);
                 }
-                ((RootScreen) parent).showFindCourses();
+                ((RootScreen) parent).showCatalog();
             }
         });
         joiningListenerClient.subscribe(this);
@@ -211,6 +203,7 @@ public abstract class CourseListFragmentBase extends FragmentBase
         super.onDestroyView();
     }
 
+    @Nullable
     protected abstract Table getCourseType();
 
     public final void updateEnrollment(Course courseForUpdate, long enrollment) {
@@ -288,6 +281,8 @@ public abstract class CourseListFragmentBase extends FragmentBase
         reportConnectionProblem.setVisibility(View.GONE);
         showEmptyScreen(false);
         List<Course> finalCourses;
+        int oldSize = this.courses.size();
+        int updatedSize = courses.size();
         if (getCourseType() == null) {
             finalCourses = KotlinUtil.INSTANCE.getListOldPlusUpdated(this.courses, courses);
         } else {
@@ -296,6 +291,10 @@ public abstract class CourseListFragmentBase extends FragmentBase
         this.courses.clear();
         this.courses.addAll(finalCourses);
         coursesAdapter.notifyDataSetChanged();
+
+        if (oldSize >= updatedSize) {
+            onNeedDownloadNextPage();
+        }
     }
 
     protected abstract void onNeedDownloadNextPage();

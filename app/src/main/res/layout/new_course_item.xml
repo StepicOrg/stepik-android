@@ -39,6 +39,8 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="MissingPrefix"
+            android:ellipsize="end"
+            android:maxLines="3"
             tools:text="345678921334567892145678921334567892133456789213345678921334567892136789213"/>
 
         <ImageView

@@ -77,9 +77,9 @@ public interface ScreenManager {
 
     void showDownloads(Context context);
 
-    void showFindCourses(Context context);
+    void showCatalog(Context context);
 
-    Intent getShowFindCoursesIntent(Context context);
+    Intent getCatalogIntent(Context context);
 
     void showVideo(Activity sourceActivity, @Nullable Video cachedVideo, @Nullable Video externalVideo);
 
@@ -92,8 +92,6 @@ public interface ScreenManager {
     void openInWeb(Activity context, String path);
 
     void addCertificateToLinkedIn(CertificateViewItem certificateViewItem);
-
-    void showFilterScreen(Fragment sourceFragment, int requestCode, Table courseType);
 
     void showCertificates(Context context);
 

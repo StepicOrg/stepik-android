@@ -141,10 +141,12 @@ public interface Analytic {
         String CLICK_TERMS_OF_SERVICE = "click_terms_of_service";
 
         String INVITE_DIALOG_DISMISSED = "invite_dialog_dismissed";
+
         interface InviteDialogDismissType {
             String LEAVE = "leave";
             String SHARE = "share";
         }
+
         String INVITE_DIALOG_BROKEN = "invite_dialog_broken";
 
         String SHOW_MATERIAL_DIALOG_INVITATION = "materdial_dialog_invite_shown";
@@ -153,13 +155,11 @@ public interface Analytic {
         String CLICK_PROFILE_BEFORE_LOADING = "click_profile_before_loading";
         String JOIN_COURSE = "click_join_course";
 
-        String CLICK_FIND_COURSE_LAUNCH = "click_find_courses_launch";
         String USER_OPEN_IMAGE = "user_open_image";
         String SCREENSHOT = "screenshot";
         String GOOGLE_SOCIAL_IS_NOT_ENABLED = "google_social_is_not_enabled";
         String ACCEPT_DELETING_UNIT = "click_delete_unit_dialog";
         String ACCEPT_DELETING_SECTION = "click_delete_section_dialog";
-        String CLICK_STREAK_DRAWER = "click_streak_drawer";
         String SHOW_LAUNCH_SCREEN_AFTER_LOGOUT = "show_launch_screen_after_logout";
     }
 
@@ -186,7 +186,7 @@ public interface Analytic {
         String OPEN_LINK_IN_WEB = "open_link";
 
         String USER_OPEN_MY_COURSES = "main_choice_my_courses";
-        String USER_OPEN_FIND_COURSES = "main_choice_find_courses";
+        String USER_OPEN_CATALOG = "main_choice_find_courses";
         String USER_OPEN_DOWNLOADS = "main_choice_downloads";
         String USER_OPEN_CERTIFICATES = "main_choice_certificates";
         String USER_OPEN_FEEDBACK = "main_choice_feedback";
@@ -277,6 +277,7 @@ public interface Analytic {
         String UNIT_CACHED_LESSON_NO = "error_unit_cached_lesson_not";
         String FEATURED_EMPTY = "error_featured_empty";
         String TEMPLATE_WAS_NULL = "error_code_template_null";
+        String COURSE_COLLECTION_EMPTY = "course_collection_empty";
     }
 
     interface Web {
@@ -389,11 +390,6 @@ public interface Analytic {
         String OPEN_CERTIFICATE_FROM_NOTIFICATION_CENTER = "certificate_notification_center";
     }
 
-    interface Filters {
-        String FILTERS_CANCELED = "filters_canceled";
-        String FILTERS_NEED_UPDATE = "filters_need_update";
-    }
-
     interface Exam {
         String START_EXAM = "exam_start";
         String SHOW_EXAM = "exam_shown_on_bind_view";
@@ -439,7 +435,7 @@ public interface Analytic {
 
     interface Shortcut {
         String OPEN_PROFILE = "shortcut_open_profile";
-        String FIND_COURSES = "shortcut_find_courses";
+        String OPEN_CATALOG = "shortcut_find_courses";
     }
 
     interface Anonymous {

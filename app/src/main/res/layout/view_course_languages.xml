@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/languageTitle"
+        style="@style/LanguageTitle"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="@dimen/course_list_side_padding"
+        android:layout_marginStart="@dimen/course_list_side_padding"
+        android:layout_marginTop="@dimen/guideline_standard_padding"
+        android:text="@string/language_of_courses"/>
+
+
+    <org.stepic.droid.ui.custom.LanguageTextView
+        android:id="@+id/languageRu"
+        style="@style/LanguageFilterItem"
+        android:layout_alignLeft="@id/languageTitle"
+        android:layout_alignStart="@id/languageTitle"
+        android:layout_below="@id/languageTitle"
+        android:text="@string/ru_language_filter"/>
+
+
+    <org.stepic.droid.ui.custom.LanguageTextView
+        android:id="@+id/languageEn"
+        style="@style/LanguageFilterItem"
+        android:layout_alignBaseline="@id/languageRu"
+        android:layout_toEndOf="@id/languageRu"
+        android:layout_toRightOf="@id/languageRu"
+        android:text="@string/en_language_filter"/>
+
+
+    <include
+        layout="@layout/view_horizontal_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/languageRu"/>
+
+</RelativeLayout>

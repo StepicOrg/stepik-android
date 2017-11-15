@@ -26,8 +26,8 @@ import org.stepic.droid.ui.activities.contracts.RootScreen
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.dialogs.LogoutAreYouSureDialog
 import org.stepic.droid.ui.dialogs.NeedUpdatingDialog
+import org.stepic.droid.ui.fragments.CatalogFragment
 import org.stepic.droid.ui.fragments.CertificatesFragment
-import org.stepic.droid.ui.fragments.FindCoursesFragment
 import org.stepic.droid.ui.fragments.HomeFragment
 import org.stepic.droid.ui.fragments.ProfileFragment
 import org.stepic.droid.util.AppConstants
@@ -44,17 +44,16 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         RootScreen,
         UpdateAppView,
         ProfileMainFeedView {
-    companion object {
 
+    companion object {
         val currentIndexKey = "currentIndexKey"
 
         val reminderKey = "reminderKey"
         const val defaultIndex: Int = 0
-        val defaultTag: String = HomeFragment::class.java.simpleName
         private val progressLogoutTag = "progressLogoutTag"
 
         const val HOME_INDEX: Int = 1
-        const val FIND_COURSES_INDEX: Int = 2
+        const val CATALOG_INDEX: Int = 2
         const val PROFILE_INDEX: Int = 3
         const val CERTIFICATE_INDEX: Int = 4
     }
@@ -97,11 +96,11 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
                 } else {
                     analytic.reportEvent(Analytic.Streak.STREAK_NOTIFICATION_OPENED)
                 }
-            } else if (action == AppConstants.OPEN_SHORTCUT_FIND_COURSES) {
-                analytic.reportEvent(Analytic.Shortcut.FIND_COURSES)
+            } else if (action == AppConstants.OPEN_SHORTCUT_CATALOG) {
+                analytic.reportEvent(Analytic.Shortcut.OPEN_CATALOG)
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N_MR1) {
                     val shortcutManager = getSystemService(ShortcutManager::class.java)
-                    shortcutManager.reportShortcutUsed(AppConstants.FIND_COURSES_SHORTCUT_ID)
+                    shortcutManager.reportShortcutUsed(AppConstants.CATALOG_SHORTCUT_ID)
                 }
 
             }
@@ -157,7 +156,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         setFragment(R.id.home)
         val wantedIndex = launchIntent?.getIntExtra(currentIndexKey, -1) ?: -1
         when (wantedIndex) {
-            FIND_COURSES_INDEX -> navigationView.selectedItemId = R.id.find_courses
+            CATALOG_INDEX -> navigationView.selectedItemId = R.id.catalog
             CERTIFICATE_INDEX -> navigationView.selectedItemId = R.id.certificates
             PROFILE_INDEX -> navigationView.selectedItemId = R.id.profile
             else -> {
@@ -238,13 +237,13 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
     private fun sendOpenUserAnalytic(itemId: Int) {
         when (itemId) {
             R.id.home -> analytic.reportEvent(Analytic.Screens.USER_OPEN_MY_COURSES)
-            R.id.find_courses -> {
-                analytic.reportEvent(Analytic.Screens.USER_OPEN_FIND_COURSES)
+            R.id.catalog -> {
+                analytic.reportEvent(Analytic.Screens.USER_OPEN_CATALOG)
                 if (sharedPreferenceHelper.authResponseFromStore == null) {
                     analytic.reportEvent(Analytic.Anonymous.BROWSE_COURSES_DRAWER)
                 }
             }
-//            R.id.certificates -> analytic.reportEvent(Analytic.Screens.USER_OPEN_CERTIFICATES);
+            R.id.certificates -> analytic.reportEvent(Analytic.Screens.USER_OPEN_CERTIFICATES);
             R.id.profile -> analytic.reportEvent(Analytic.Screens.USER_OPEN_PROFILE)
         }
     }
@@ -255,8 +254,8 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
             R.id.home -> {
                 getNextFragmentOrNull(currentFragmentTag, HomeFragment::class.java.simpleName, HomeFragment.Companion::newInstance)
             }
-            R.id.find_courses -> {
-                getNextFragmentOrNull(currentFragmentTag, FindCoursesFragment::class.java.simpleName, FindCoursesFragment.Companion::newInstance)
+            R.id.catalog -> {
+                getNextFragmentOrNull(currentFragmentTag, CatalogFragment::class.java.simpleName, CatalogFragment.Companion::newInstance)
             }
             R.id.profile -> {
                 getNextFragmentOrNull(currentFragmentTag, ProfileFragment::class.java.simpleName, ProfileFragment.Companion::newInstance)
@@ -319,9 +318,9 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
     //end profileMainFeedView methods
 
     //RootScreen methods
-    override fun showFindCourses() {
-        if (navigationView.selectedItemId != R.id.find_courses) {
-            navigationView.selectedItemId = R.id.find_courses
+    override fun showCatalog() {
+        if (navigationView.selectedItemId != R.id.catalog) {
+            navigationView.selectedItemId = R.id.catalog
         }
     }
 

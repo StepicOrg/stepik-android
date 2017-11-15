@@ -79,12 +79,6 @@ class FastContinueFragment : FragmentBase(),
                 .inject(this)
     }
 
-    override fun onReleaseComponent() {
-        App
-                .componentManager()
-                .releaseCourseGeneralComponent()
-    }
-
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View?
             = inflater?.inflate(R.layout.fragment_fast_continue, container, false)
 
@@ -103,7 +97,7 @@ class FastContinueFragment : FragmentBase(),
 
         //refresh the last course only when view is created
         if (sharedPreferenceHelper.authResponseFromStore != null) {
-            courseListPresenter.downloadData(Table.enrolled, applyFilter = false)
+            courseListPresenter.downloadData(Table.enrolled)
         } else {
             analytic.reportEvent(Analytic.FastContinue.AUTH_SHOWN)
             showPlaceholder(R.string.placeholder_login, { _ ->
@@ -141,7 +135,7 @@ class FastContinueFragment : FragmentBase(),
         analytic.reportEvent(Analytic.FastContinue.EMPTY_COURSES_SHOWN)
         showPlaceholder(R.string.placeholder_explore_courses, { _ ->
             analytic.reportEvent(Analytic.FastContinue.EMPTY_COURSES_CLICK)
-            screenManager.showFindCourses(context)
+            screenManager.showCatalog(context)
         })
     }
 
@@ -155,12 +149,12 @@ class FastContinueFragment : FragmentBase(),
         showPlaceholder(R.string.internet_problem, { _ ->
             analytic.reportEvent(Analytic.FastContinue.NO_INTERNET_CLICK)
             if (StepikUtil.isInternetAvailable()) {
-                courseListPresenter.downloadData(Table.enrolled, applyFilter = false)
+                courseListPresenter.downloadData(Table.enrolled)
             }
         })
     }
 
-    override fun showCourses(courses: MutableList<Course>) {
+    override fun showCourses(courses: List<Course>) {
         fastContinueProgress.visibility = View.GONE
         fastContinuePlaceholder.visibility = View.GONE
         showMainGroup(true)
@@ -216,7 +210,7 @@ class FastContinueFragment : FragmentBase(),
     //Client<DroppingListener>
     override fun onSuccessDropCourse(course: Course) {
         //reload the last course
-        courseListPresenter.refreshData(Table.enrolled, applyFilter = false, isRefreshing = true)
+        courseListPresenter.refreshData(Table.enrolled)
     }
 
     override fun onFailDropCourse(course: Course) {
@@ -286,6 +280,6 @@ class FastContinueFragment : FragmentBase(),
     }
 
     override fun onSuccessJoin(joinedCourse: Course) {
-        showCourses(mutableListOf<Course>(joinedCourse))
+        showCourses(mutableListOf(joinedCourse))
     }
 }

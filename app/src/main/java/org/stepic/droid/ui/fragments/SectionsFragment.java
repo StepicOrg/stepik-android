@@ -224,14 +224,6 @@ public class SectionsFragment
     }
 
     @Override
-    protected void onReleaseComponent() {
-        App
-                .Companion
-                .componentManager()
-                .releaseCourseGeneralComponent();
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
@@ -604,7 +596,7 @@ public class SectionsFragment
                 @Override
                 public void onClick(View v) {
                     if (getSharedPreferenceHelper().getAuthResponseFromStore() != null) {
-                        getScreenManager().showFindCourses(getActivity());
+                        getScreenManager().showCatalog(getActivity());
                         getActivity().finish();
                     } else {
                         unauthorizedDialog = UnauthorizedDialogFragment.newInstance(course);

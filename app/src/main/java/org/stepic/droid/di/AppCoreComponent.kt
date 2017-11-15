@@ -7,11 +7,11 @@ import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.code.ui.CodeEditor
+import org.stepic.droid.di.catalog.CatalogComponent
 import org.stepic.droid.di.certificates.CertificateComponent
 import org.stepic.droid.di.course_general.CourseGeneralComponent
 import org.stepic.droid.di.downloads.DownloadsComponent
 import org.stepic.droid.di.feedback.FeedbackComponent
-import org.stepic.droid.di.filters.FilterComponent
 import org.stepic.droid.di.lesson.LessonComponent
 import org.stepic.droid.di.login.LoginComponent
 import org.stepic.droid.di.mainscreen.MainScreenComponent
@@ -35,7 +35,7 @@ import org.stepic.droid.ui.custom_exo.PlaybackControlView
 import org.stepic.droid.ui.dialogs.*
 
 @AppSingleton
-@Component(dependencies = arrayOf(StorageComponent::class), modules = arrayOf(AppCoreModule::class, RepositoryModule::class, AppStepModule::class))
+@Component(dependencies = arrayOf(StorageComponent::class), modules = arrayOf(AppCoreModule::class, RepositoryModule::class, AppStepModule::class, AppFiltersModule::class))
 interface AppCoreComponent {
 
     @Component.Builder
@@ -62,8 +62,6 @@ interface AppCoreComponent {
 
     fun lessonComponentBuilder(): LessonComponent.Builder
 
-    fun filterComponentBuilder(): FilterComponent.Builder
-
     fun videoComponentBuilder(): VideoComponent.Builder
 
     fun mainScreenComponentBuilder(): MainScreenComponent.Builder
@@ -71,6 +69,8 @@ interface AppCoreComponent {
     fun notificationsComponentBuilder(): NotificationsComponent.Builder
 
     fun routingComponentBuilder(): RoutingComponent.Builder
+
+    fun catalogComponentBuilder(): CatalogComponent.Builder
 
     fun inject(someActivity: FragmentActivityBase)
 

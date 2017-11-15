@@ -43,11 +43,6 @@ class CourseSearchFragment: CourseListFragmentBase() {
                 .inject(this)
     }
 
-    override fun onReleaseComponent() {
-        App
-                .componentManager()
-                .releaseCourseGeneralComponent()
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

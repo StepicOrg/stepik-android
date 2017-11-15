@@ -109,20 +109,13 @@ class ComponentManagerImpl(private val appCoreComponent: AppCoreComponent) : Com
 
 //    Course general
 
-    private val courseGeneralComponentHolder = ComponentHolder<CourseGeneralComponent>()
-
-    override fun courseGeneralComponent(): CourseGeneralComponent {
-        return courseGeneralComponentHolder.get {
-            appCoreComponent
-                    .courseGeneralComponentBuilder()
-                    .build()
-        }
+    private val _courseGeneralComponent by lazy {
+        appCoreComponent
+                .courseGeneralComponentBuilder()
+                .build()
     }
 
-    override fun releaseCourseGeneralComponent() {
-        courseGeneralComponentHolder.release()
-    }
-
+    override fun courseGeneralComponent(): CourseGeneralComponent = _courseGeneralComponent
 }
 
 class ComponentHolder<T> {
