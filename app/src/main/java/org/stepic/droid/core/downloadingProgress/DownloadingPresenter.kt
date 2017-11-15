@@ -20,7 +20,7 @@ constructor(
         private val mainScheduler: Scheduler) : PresenterBase<DownloadingView>() {
 
     private val idToDisposableMap = hashMapOf<Long, Disposable>()
-    private var compositeDisposable = CompositeDisposable()
+    private val compositeDisposable = CompositeDisposable()
 
     fun onStateChanged(id: Long, isLoading: Boolean) {
         if (isLoading) {
