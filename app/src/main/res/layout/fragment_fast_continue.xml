@@ -116,6 +116,7 @@
                 android:textColor="@color/white"
                 android:ellipsize="end"
                 android:maxLines="1"
+                android:lineSpacingMultiplier="1.33"
                 tools:ignore="MissingPrefix"
                 tools:text="Ваш прогресс 68%"
                 app:layout_constraintHorizontal_weight="1"
