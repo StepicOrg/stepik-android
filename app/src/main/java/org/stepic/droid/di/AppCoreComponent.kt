@@ -33,6 +33,7 @@ import org.stepic.droid.ui.adapters.viewhoders.CourseItemViewHolder
 import org.stepic.droid.ui.custom.*
 import org.stepic.droid.ui.custom_exo.PlaybackControlView
 import org.stepic.droid.ui.dialogs.*
+import org.stepic.droid.ui.fragments.HomeFragment
 
 @AppSingleton
 @Component(dependencies = arrayOf(StorageComponent::class), modules = arrayOf(AppCoreModule::class, RepositoryModule::class, AppStepModule::class, AppFiltersModule::class))
@@ -79,6 +80,8 @@ interface AppCoreComponent {
     fun inject(adapter: Course)
 
     fun inject(baseFragment: FragmentBase)
+
+    fun inject(homeFragment: HomeFragment)
 
     fun inject(dialogFragment: DiscountingPolicyDialogFragment)
 
