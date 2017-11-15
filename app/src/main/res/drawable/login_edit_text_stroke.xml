@@ -4,14 +4,14 @@
         <shape android:shape="rectangle">
             <corners android:radius="6dp" />
             <solid android:color="@color/login_edit_text_block_background_color_wrong" />
-            <strokeWidth android:width="0.3dp" android:color="@color/login_edit_text_block_stroke_color" />
+            <stroke android:width="0.3dp" android:color="@color/login_edit_text_block_stroke_color" />
         </shape>
     </item>
     <item>
         <shape android:shape="rectangle">
             <corners android:radius="6dp" />
             <solid android:color="@color/login_edit_text_block_background_color" />
-            <strokeWidth android:width="0.3dp" android:color="@color/login_edit_text_block_stroke_color" />
+            <stroke android:width="0.3dp" android:color="@color/login_edit_text_block_stroke_color" />
         </shape>
     </item>
 </selector>
