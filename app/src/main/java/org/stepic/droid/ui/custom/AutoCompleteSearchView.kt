@@ -106,6 +106,13 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
         searchSuggestionsPresenter.onQueryTextChange(searchQueriesAdapter.constraint)
     }
 
+    override fun setQuery(query: CharSequence, submit: Boolean) {
+        super.setQuery(query, submit)
+        if (!submit) {
+            setConstraint(query.toString())
+        }
+    }
+
     override fun setSuggestions(suggestions: List<SearchQuery>, source: SearchQuerySource) {
         when (source) {
             SearchQuerySource.API ->
