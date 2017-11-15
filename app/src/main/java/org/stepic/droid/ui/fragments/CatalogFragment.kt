@@ -118,7 +118,7 @@ class CatalogFragment : FragmentBase(),
         }
 
         searchView?.let {
-            it.initSuggestions(catalogRootView)
+            it.initSuggestions(catalogContainer)
             it.setCloseIconDrawableRes(getCloseIconDrawableRes())
             it.setSearchable(activity)
 
