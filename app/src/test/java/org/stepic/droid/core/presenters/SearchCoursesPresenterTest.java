@@ -11,6 +11,7 @@ import org.stepic.droid.core.presenters.contracts.CoursesView;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Meta;
 import org.stepic.droid.model.SearchResult;
+import org.stepic.droid.storage.operations.DatabaseFacade;
 import org.stepic.droid.testUtils.ConcurrencyUtilForTest;
 import org.stepic.droid.testUtils.ResponseGeneratorKt;
 import org.stepic.droid.testUtils.generators.FakeCourseGenerator;
@@ -57,6 +58,9 @@ public class SearchCoursesPresenterTest {
     @Mock
     CoursesView coursesView;
 
+    @Mock
+    DatabaseFacade databaseFacade;
+
 
     @Before
     public void beforeEachTest() {
@@ -67,7 +71,7 @@ public class SearchCoursesPresenterTest {
 
         searchResolver = spy(new SearchResolverImpl());
 
-        searchCoursesPresenter = new SearchCoursesPresenter(api, threadPoolExecutor, mainHandler, searchResolver, analytic);
+        searchCoursesPresenter = new SearchCoursesPresenter(api, threadPoolExecutor, mainHandler, searchResolver, databaseFacade, analytic);
     }
 
     @Test

@@ -33,8 +33,8 @@ public interface StepicRestLoggedService {
     @GET("api/courses?enrolled=true")
     Single<CoursesMetaResponse> getEnrolledCourses(@Query("page") int page);
 
-    @GET("api/courses?is_public=true&order=-activity")
-    Single<CoursesMetaResponse> getPopularCourses(@Query("page") int page);
+    @GET("api/courses?exclude_ended=true&is_public=true&order=-activity")
+    Single<CoursesMetaResponse> getPopularCourses(@Query("page") int page, @Query("language") String language);
 
     @GET("api/units")
     Call<UnitMetaResponse> getUnits(@Query("ids[]") long[] units);
@@ -54,6 +54,9 @@ public interface StepicRestLoggedService {
     @GET("api/progresses")
     Call<ProgressesResponse> getProgresses(@Query("ids[]") String[] progresses);
 
+    @GET("api/progresses")
+    Single<ProgressesResponse> getProgressesReactive(@Query("ids[]") String[] progresses);
+
     @GET("api/assignments")
     Call<AssignmentResponse> getAssignments(@Query("ids[]") long[] assignmentsIds);
 
@@ -66,8 +69,14 @@ public interface StepicRestLoggedService {
     Call<SearchResultResponse> getSearchResults(@Query("page") int page,
                                                 @Query(value = "query", encoded = true) String encodedQuery, @Query("type") String type);
 
+    @GET("api/queries")
+    Single<QueriesResponse> getSearchQueries(@Query("query") String query);
+
     @GET("api/courses")
     Call<CoursesMetaResponse> getCourses(@Query("page") int page, @Query("ids[]") long[] courseIds);
+
+    @GET("api/courses")
+    Single<CoursesMetaResponse> getCoursesReactive(@Query("page") int page, @Query("ids[]") long[] courseIds);
 
     @POST("api/attempts")
     Call<AttemptResponse> createNewAttempt(@Body AttemptRequest attemptRequest);
@@ -140,7 +149,7 @@ public interface StepicRestLoggedService {
     Call<LastStepResponse> getLastStepResponse(@Path("lastStepId") String lastStepId);
 
     @GET("api/course-lists?platform=mobile")
-    Call<CourseListsResponse> getCourseLists(@Query("language") String language);
+    Single<CourseCollectionsResponse> getCourseLists(@Query("language") String language);
 
     @GET("api/course-review-summaries")
     Single<CourseReviewResponse> getCourseReviews(@Query("ids[]") int[] reviewSummaryIds);

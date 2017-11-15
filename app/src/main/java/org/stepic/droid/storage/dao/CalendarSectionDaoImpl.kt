@@ -3,11 +3,11 @@ package org.stepic.droid.storage.dao
 import android.content.ContentValues
 import android.database.Cursor
 import org.stepic.droid.model.CalendarSection
-import org.stepic.droid.storage.operations.CrudOperations
+import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepic.droid.storage.structure.DbStructureCalendarSection
 import javax.inject.Inject
 
-class CalendarSectionDaoImpl @Inject constructor(crudOperations: CrudOperations) : DaoBase<CalendarSection>(crudOperations) {
+class CalendarSectionDaoImpl @Inject constructor(databaseOperations: DatabaseOperations) : DaoBase<CalendarSection>(databaseOperations) {
 
     public override fun getDbName(): String = DbStructureCalendarSection.CALENDAR_SECTION
 

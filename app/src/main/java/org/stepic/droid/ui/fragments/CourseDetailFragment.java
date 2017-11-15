@@ -196,13 +196,6 @@ public class CourseDetailFragment extends FragmentBase implements
     }
 
     @Override
-    protected void onReleaseComponent() {
-        App.Companion
-                .componentManager()
-                .releaseCourseGeneralComponent();
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
@@ -246,7 +239,7 @@ public class CourseDetailFragment extends FragmentBase implements
             @Override
             public void onClick(View v) {
                 if (getSharedPreferenceHelper().getAuthResponseFromStore() != null) {
-                    getScreenManager().showFindCourses(getContext());
+                    getScreenManager().showCatalog(getContext());
                     finish();
                 } else {
                     unauthorizedDialog = UnauthorizedDialogFragment.newInstance(course);

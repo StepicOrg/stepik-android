@@ -4,7 +4,7 @@ import android.support.annotation.MainThread
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.FirstStepInCourseHelper
 import org.stepic.droid.core.presenters.contracts.LastStepView
-import org.stepic.droid.di.course_list.CourseGeneralScope
+import org.stepic.droid.di.course_list.CourseListScope
 import org.stepic.droid.model.Section
 import org.stepic.droid.model.Step
 import org.stepic.droid.model.Unit
@@ -15,7 +15,7 @@ import org.stepic.droid.web.Api
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
 
-@CourseGeneralScope
+@CourseListScope
 class LastStepPresenter
 @Inject
 constructor(

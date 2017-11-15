@@ -9,5 +9,5 @@ interface CoursesView {
 
     fun showConnectionProblem()
 
-    fun showCourses(courses: MutableList<Course>)
+    fun showCourses(courses: List<Course>)
 }

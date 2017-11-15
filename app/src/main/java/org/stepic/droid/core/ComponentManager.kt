@@ -29,9 +29,6 @@ interface ComponentManager {
     fun courseGeneralComponent(): CourseGeneralComponent
 
     @MainThread
-    fun releaseCourseGeneralComponent()
-
-    @MainThread
     fun downloadsComponent(): DownloadsComponent
 
     @MainThread

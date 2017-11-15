@@ -52,12 +52,14 @@ public interface Api {
 
     Call<StepResponse> getSteps(long[] steps);
 
-    Single<StepResponse> getStepsReactive (long [] steps);
+    Single<StepResponse> getStepsReactive(long[] steps);
 
     @Nullable
     Call<Void> dropCourse(long courseId);
 
     Call<ProgressesResponse> getProgresses(String[] progresses);
+
+    Single<ProgressesResponse> getProgressesReactive(String[] progresses);
 
     Call<AssignmentResponse> getAssignments(long[] assignmentsIds);
 
@@ -67,7 +69,11 @@ public interface Api {
 
     Call<SearchResultResponse> getSearchResultsCourses(int page, String rawQuery);
 
+    Single<QueriesResponse> getSearchQueries(String query);
+
     Call<CoursesMetaResponse> getCourses(int page, long[] ids);
+
+    Single<CoursesMetaResponse> getCoursesReactive(int page, @NotNull long[] ids);
 
     Call<AttemptResponse> createNewAttempt(long stepId);
 
@@ -121,7 +127,7 @@ public interface Api {
 
     Call<LastStepResponse> getLastStepResponse(@NotNull String lastStepId);
 
-    Call<CourseListsResponse> getCourseLists ();
+    Single<CourseCollectionsResponse> getCourseCollections(String language);
 
-    Single<CourseReviewResponse> getCourseReviews (int[] reviewSummaryIds);
+    Single<CourseReviewResponse> getCourseReviews(int[] reviewSummaryIds);
 }

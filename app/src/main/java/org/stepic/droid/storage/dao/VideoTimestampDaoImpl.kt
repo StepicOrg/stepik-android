@@ -3,11 +3,11 @@ package org.stepic.droid.storage.dao
 import android.content.ContentValues
 import android.database.Cursor
 import org.stepic.droid.model.VideoTimestamp
-import org.stepic.droid.storage.operations.CrudOperations
+import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepic.droid.storage.structure.DbStructureVideoTimestamp
 import javax.inject.Inject
 
-class VideoTimestampDaoImpl @Inject constructor(crudOperations: CrudOperations) : DaoBase<VideoTimestamp>(crudOperations) {
+class VideoTimestampDaoImpl @Inject constructor(databaseOperations: DatabaseOperations) : DaoBase<VideoTimestamp>(databaseOperations) {
 
     public override fun getDbName() =
             DbStructureVideoTimestamp.VIDEO_TIMESTAMP

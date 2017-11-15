@@ -38,6 +38,8 @@
 
         <!--For setting text color to edit text (android O)-->
         <item name="editTextStyle">@style/StepikTheme.EditTextStyle</item>
+
+        <item name="searchViewStyle">@style/SearchViewStyle</item>
     </style>
 
     <style name="OverflowMenuButton" parent="@android:style/Widget.Holo.ActionButton.Overflow">
@@ -381,5 +383,12 @@
     <style name="PopupAnimations">
         <item name="android:windowEnterAnimation">@anim/popup_enter</item>
         <item name="android:windowExitAnimation">@anim/popup_exit</item>
+    </style>
+
+    <style name="SearchViewStyle" parent="Widget.AppCompat.SearchView">
+        <item name="queryBackground">@android:color/transparent</item>
+        <item name="searchIcon">@null</item>
+        <item name="searchHintIcon">@null</item>
+        <item name="android:iconifiedByDefault">false</item>
     </style>
 </resources>

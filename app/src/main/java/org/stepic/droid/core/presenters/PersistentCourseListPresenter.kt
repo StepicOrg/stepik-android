@@ -1,7 +1,6 @@
 package org.stepic.droid.core.presenters
 
 import android.support.annotation.WorkerThread
-import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.concurrency.SingleThreadExecutor
 import org.stepic.droid.core.FilterApplicator
@@ -10,14 +9,13 @@ import org.stepic.droid.di.course_list.CourseListScope
 import org.stepic.droid.model.Course
 import org.stepic.droid.model.CourseReviewSummary
 import org.stepic.droid.model.Progress
-import org.stepic.droid.model.StepikFilter
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.storage.operations.Table
+import org.stepic.droid.util.CourseUtil
 import org.stepic.droid.util.RWLocks
 import org.stepic.droid.web.Api
 import org.stepic.droid.web.CoursesMetaResponse
-import timber.log.Timber
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
@@ -25,7 +23,6 @@ import javax.inject.Inject
 @CourseListScope
 class PersistentCourseListPresenter
 @Inject constructor(
-        private val analytic: Analytic,
         private val databaseFacade: DatabaseFacade,
         private val singleThreadExecutor: SingleThreadExecutor,
         private val mainHandler: MainHandler,
@@ -35,12 +32,12 @@ class PersistentCourseListPresenter
 ) : PresenterBase<CoursesView>() {
 
     companion object {
-        //if hasNextPage & <MIN_COURSES_ON_SCREEN -> load next page
+        //if hasNextPage & < MIN_COURSES_ON_SCREEN -> load next page
         private const val MIN_COURSES_ON_SCREEN = 5
         private const val MAX_CURRENT_NUMBER_OF_TASKS = 2
     }
 
-    private val currentPage = AtomicInteger(1);
+    private val currentPage = AtomicInteger(1)
     private val hasNextPage = AtomicBoolean(true)
     private var currentNumberOfTasks: Int = 0 //only main thread
     private val isEmptyCourses = AtomicBoolean(false)
@@ -52,29 +49,23 @@ class PersistentCourseListPresenter
     }
 
     /**
-     * 1) Show from cache, if not empty (hide progress).
+     * 1) Show from cache, if not empty (hide progress)
      * 2) Load from internet (if fail -> show)
      * 3) Save to db
-     * 4) show from cache. (all states)
+     * 4) show from cache (all states)
      */
-    fun downloadData(courseType: Table, applyFilter: Boolean) {
-        downloadData(courseType, applyFilter, isRefreshing = false)
+    fun downloadData(courseType: Table) {
+        downloadData(courseType, isRefreshing = false)
     }
 
-    private fun downloadData(courseType: Table, applyFilter: Boolean, isRefreshing: Boolean, isLoadMore: Boolean = false) {
+    private fun downloadData(courseType: Table, isRefreshing: Boolean, isLoadMore: Boolean = false) {
         if (currentNumberOfTasks >= MAX_CURRENT_NUMBER_OF_TASKS) {
             return
         }
         currentNumberOfTasks++
-        Timber.d("load more tasks = $currentNumberOfTasks") //here 1 or 2, not more
-        if (hasNextPage.get()) {
-            view?.showLoading()
-        }
         singleThreadExecutor.execute {
             try {
-                Timber.d("load more start downloading ${Thread.currentThread()}")
-                downloadDataPlain(isRefreshing, isLoadMore, applyFilter, courseType)
-                Timber.d("load more end downloading ${Thread.currentThread()}")
+                downloadDataPlain(isRefreshing, isLoadMore, courseType)
             } finally {
                 mainHandler.post {
                     currentNumberOfTasks--
@@ -84,9 +75,12 @@ class PersistentCourseListPresenter
     }
 
     @WorkerThread
-    private fun downloadDataPlain(isRefreshing: Boolean, isLoadMore: Boolean, applyFilter: Boolean, courseType: Table) {
-        if (!isRefreshing && !isLoadMore) {
-            getFromDatabaseAndShow(applyFilter, courseType)
+    private fun downloadDataPlain(isRefreshing: Boolean, isLoadMore: Boolean, courseType: Table) {
+        if (!isLoadMore) {
+            mainHandler.post {
+                view?.showLoading()
+            }
+            showFromDatabase(courseType)
         } else if (hasNextPage.get()) {
             mainHandler.post {
                 view?.showLoading()
@@ -139,13 +133,13 @@ class PersistentCourseListPresenter
                 //ok show without new ratings
                 null
             }
-            applyReviewToCourses(reviews, coursesFromInternet)
+            CourseUtil.applyReviewsToCourses(reviews, coursesFromInternet)
 
             try {
                 //this lock need for not saving enrolled courses to database after user click logout
                 RWLocks.ClearEnrollmentsLock.writeLock().lock()
                 if (sharedPreferenceHelper.authResponseFromStore != null || courseType == Table.featured) {
-                    if (isRefreshing && currentPage.get() == 1) {
+                    if (isRefreshing && currentPage.get() == 2) {
                         if (courseType == Table.featured) {
                             databaseFacade.dropFeaturedCourses()
                         } else if (courseType == Table.enrolled) {
@@ -163,28 +157,10 @@ class PersistentCourseListPresenter
 
             val allCourses = databaseFacade.getAllCourses(courseType).filterNotNull().toMutableList()
 
-            val filteredCourseList: MutableList<Course> =
-                    if (courseType == Table.featured) {
-                        if (!applyFilter && !sharedPreferenceHelper.filterForFeatured.contains(StepikFilter.PERSISTENT)) {
-                            filterApplicator.getFilteredFeaturedFromDefault(allCourses)
-                        } else {
-                            filterApplicator.getFilteredFeaturedFromSharedPrefs(allCourses)
-                        }
-                    } else {
-                        allCourses
-                    }
-            if ((filteredCourseList.size < MIN_COURSES_ON_SCREEN) && hasNextPage.get()) {
+            val coursesForShow: List<Course> = handleCoursesWithType(allCourses, courseType)
+            if (coursesForShow.size < MIN_COURSES_ON_SCREEN && hasNextPage.get()) {
                 //try to load next in loop
             } else {
-                val progressesMap = getProgressesFromDb(filteredCourseList)
-                val coursesForShow = when (courseType) {
-                    Table.enrolled -> {
-                        //progresses should be shown only for enrolled lists
-                        applyProgressesToCourses(progressesMap, filteredCourseList)
-                        sortByLastAction(filteredCourseList, progressesMap)
-                    }
-                    else -> filteredCourseList
-                }
                 mainHandler.post {
                     if (coursesForShow.isEmpty()) {
                         isEmptyCourses.set(true)
@@ -205,45 +181,38 @@ class PersistentCourseListPresenter
         }
     }
 
-    private fun getFromDatabaseAndShow(applyFilter: Boolean, courseType: Table) {
+    @WorkerThread
+    private fun showFromDatabase(courseType: Table) {
         val coursesBeforeLoading = databaseFacade.getAllCourses(courseType).filterNotNull()
-        if (coursesBeforeLoading.isNotEmpty()) {
-            val progressMap = getProgressesFromDb(coursesBeforeLoading)
-            val coursesForShow =
-                    if (courseType == Table.enrolled) {
-                        //apply only for enrolled list/carousel
-                        applyProgressesToCourses(progressMap, coursesBeforeLoading)
-                        sortByLastAction(coursesBeforeLoading, progressMap)
-                    } else {
-                        if (!applyFilter && !sharedPreferenceHelper.filterForFeatured.contains(StepikFilter.PERSISTENT)) {
-                            filterApplicator.getFilteredFeaturedFromDefault(coursesBeforeLoading)
-                        } else {
-                            filterApplicator.getFilteredFeaturedFromSharedPrefs(coursesBeforeLoading)
-                        }
-                    }
-            if (coursesForShow.isNotEmpty()) {
-                mainHandler.post {
-                    view?.showCourses(coursesForShow)
-                }
-            } else if (hasNextPage.get()) {
-                mainHandler.post { view?.showLoading() }
-            }
-        } else {
-            if (hasNextPage.get()) {
-                //do not show loading, if we have not the next page
-                //loading is useless in this case
-                mainHandler.post { view?.showLoading() }
+        val coursesForShow = handleCoursesWithType(coursesBeforeLoading, courseType)
+
+        if (coursesForShow.isNotEmpty()) {
+            mainHandler.post {
+                view?.showCourses(coursesForShow)
             }
         }
     }
 
-    fun refreshData(courseType: Table, applyFilter: Boolean, isRefreshing: Boolean) {
+    private fun handleCoursesWithType(courses: List<Course>, courseType: Table?): List<Course> =
+            when (courseType) {
+                Table.enrolled -> {
+                    val progressMap = getProgressesFromDb(courses)
+                    CourseUtil.applyProgressesToCourses(progressMap, courses)
+                    sortByLastAction(courses, progressMap)
+                }
+                Table.featured -> {
+                    filterApplicator.filterCourses(courses)
+                }
+                null -> courses
+            }
+
+    fun refreshData(courseType: Table) {
         if (currentNumberOfTasks >= MAX_CURRENT_NUMBER_OF_TASKS) {
             return
         }
-        currentPage.set(1);
+        currentPage.set(1)
         hasNextPage.set(true)
-        downloadData(courseType, applyFilter, isRefreshing = isRefreshing)
+        downloadData(courseType, isRefreshing = true)
     }
 
     @WorkerThread
@@ -279,26 +248,8 @@ class PersistentCourseListPresenter
         return databaseFacade.getProgresses(progressIds).associateBy { it.id }
     }
 
-    private fun applyProgressesToCourses(progresses: Map<String?, Progress>, courses: List<Course>) {
-        courses.forEach { course ->
-            progresses[course.progress]?.let {
-                course.progressObject = it
-            }
-        }
-    }
 
-    private fun applyReviewToCourses(reviews: List<CourseReviewSummary>?, coursesFromInternet: List<Course>) {
-        val courseMap = coursesFromInternet.associateBy { it.courseId }
-        reviews?.forEach { review ->
-            courseMap[review.course]
-                    ?.let {
-                        it.rating = review.average
-                    }
-        }
-    }
-
-
-    fun loadMore(courseType: Table, needFilter: Boolean) {
-        downloadData(courseType, needFilter, isRefreshing = false, isLoadMore = true)
+    fun loadMore(courseType: Table) {
+        downloadData(courseType, isRefreshing = false, isLoadMore = true)
     }
 }

@@ -5,6 +5,8 @@ import android.content.ContentValues
 interface IDao<T> {
     fun insertOrUpdate(persistentObject: T)
 
+    fun insertOrReplace(persistentObject: T)
+
     fun isInDb(persistentObject: T): Boolean
 
     fun isInDb(whereColumn: String, value: String): Boolean

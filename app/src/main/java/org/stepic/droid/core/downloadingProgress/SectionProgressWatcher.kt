@@ -24,7 +24,7 @@ constructor(
                     .cache()
                     .flatMapIterable {
                         val unitsFromDatabase = databaseFacade.getUnitsByIds(it.units)
-                        if (unitsFromDatabase.size != it.units?.size) {
+                        if (unitsFromDatabase.size != it.units.size) {
                             throw UnitsAreNotCachedException()
                         }
                         unitsFromDatabase

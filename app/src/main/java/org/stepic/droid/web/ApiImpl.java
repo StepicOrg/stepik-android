@@ -38,6 +38,7 @@ import org.stepic.droid.model.Profile;
 import org.stepic.droid.model.RegistrationUser;
 import org.stepic.droid.model.Reply;
 import org.stepic.droid.model.ReplyWrapper;
+import org.stepic.droid.model.StepikFilter;
 import org.stepic.droid.model.comments.Comment;
 import org.stepic.droid.model.comments.Vote;
 import org.stepic.droid.model.comments.VoteValue;
@@ -56,6 +57,7 @@ import java.net.HttpCookie;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -417,7 +419,9 @@ public class ApiImpl implements Api {
     }
 
     public Single<CoursesMetaResponse> getPopularCourses(int page) {
-        return loggedService.getPopularCourses(page);
+        EnumSet<StepikFilter> enumSet = sharedPreference.getFilterForFeatured();
+        String lang = enumSet.iterator().next().getLanguage();
+        return loggedService.getPopularCourses(page, lang);
     }
 
     @Override
@@ -475,6 +479,11 @@ public class ApiImpl implements Api {
     }
 
     @Override
+    public Single<ProgressesResponse> getProgressesReactive(String[] progresses) {
+        return loggedService.getProgressesReactive(progresses);
+    }
+
+    @Override
     public Call<AssignmentResponse> getAssignments(long[] assignmentsIds) {
         return loggedService.getAssignments(assignmentsIds);
     }
@@ -506,11 +515,24 @@ public class ApiImpl implements Api {
     }
 
     @Override
+    public Single<QueriesResponse> getSearchQueries(String query) {
+        return loggedService.getSearchQueries(query);
+    }
+
+    @Override
     public Call<CoursesMetaResponse> getCourses(int page, @Nullable long[] ids) {
         if (ids == null || ids.length == 0) {
             ids = new long[]{0};
         }
         return loggedService.getCourses(page, ids);
+    }
+
+    @Override
+    public Single<CoursesMetaResponse> getCoursesReactive(int page, @NotNull long[] ids) {
+        if (ids.length == 0) {
+            ids = new long[]{0};
+        }
+        return loggedService.getCoursesReactive(page, ids);
     }
 
     @Override
@@ -744,11 +766,8 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Call<CourseListsResponse> getCourseLists() {
-        //// TODO: 26.09.2017 determine language of course list for not native russian speakers
-        String language = "ru";
+    public Single<CourseCollectionsResponse> getCourseCollections(String language) {
         return loggedService.getCourseLists(language);
-
     }
 
     @Override

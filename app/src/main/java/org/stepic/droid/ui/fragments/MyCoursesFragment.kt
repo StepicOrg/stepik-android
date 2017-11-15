@@ -1,9 +1,8 @@
 package org.stepic.droid.ui.fragments
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
 import android.view.View
+import org.jetbrains.annotations.NotNull
 import org.stepic.droid.R
 import org.stepic.droid.base.CoursesDatabaseFragmentBase
 import org.stepic.droid.storage.operations.Table
@@ -15,12 +14,11 @@ class MyCoursesFragment : CoursesDatabaseFragmentBase() {
         fun newInstance() = MyCoursesFragment()
     }
 
+    @NotNull
     override fun getCourseType() = Table.enrolled
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         this.initCenteredToolbar(R.string.my_courses_title)
     }
-
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {}
 }
