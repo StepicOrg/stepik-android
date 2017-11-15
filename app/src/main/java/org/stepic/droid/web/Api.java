@@ -69,6 +69,8 @@ public interface Api {
 
     Call<SearchResultResponse> getSearchResultsCourses(int page, String rawQuery);
 
+    Single<QueriesResponse> getSearchQueries(String query);
+
     Call<CoursesMetaResponse> getCourses(int page, long[] ids);
 
     Single<CoursesMetaResponse> getCoursesReactive(int page, @NotNull long[] ids);

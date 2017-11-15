@@ -7,9 +7,9 @@ import org.stepic.droid.util.RWLocks
 import javax.inject.Inject
 
 @StorageSingleton
-class CrudOperationsImpl
+class DatabaseOperationsImpl
 @Inject
-constructor(private val database: SQLiteDatabase) : CrudOperations {
+constructor(private val database: SQLiteDatabase) : DatabaseOperations {
 
     private fun open() {
         RWLocks.DatabaseLock.writeLock().lock()
@@ -55,6 +55,15 @@ constructor(private val database: SQLiteDatabase) : CrudOperations {
         try {
             open()
             database.insert(table, null, values)
+        } finally {
+            close()
+        }
+    }
+
+    override fun executeReplace(table: String, values: ContentValues?) {
+        try {
+            open()
+            database.replace(table, null, values)
         } finally {
             close()
         }

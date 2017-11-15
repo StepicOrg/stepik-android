@@ -12,20 +12,15 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.ui.fragments.CourseSearchFragment;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class CourseSearchResultActivity extends FragmentActivityBase {
-
-    @BindView(R.id.frame)
-    View rootFrame;
 
     private String query;
 
@@ -64,14 +59,12 @@ public class CourseSearchResultActivity extends FragmentActivityBase {
     }
 
     private Fragment createFragment() {
-        return CourseSearchFragment.newInstance(query);
+        return CourseSearchFragment.Companion.newInstance(query);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_search:
-                return true;
             case android.R.id.home:
                 // Respond to the action bar's Up/Home button
                 finish();

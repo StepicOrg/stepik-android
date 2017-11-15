@@ -93,6 +93,7 @@
 
 #for saving search view https://stackoverflow.com/questions/18407171/searchview-getactionview-returning-null
 -keep class android.support.v7.widget.SearchView { *; }
+-keep class org.stepic.droid.ui.custom.AutoCompleteSearchView { *; }
 
 #keep configs names
 -keep class org.stepic.droid.configuration.** { *; }

@@ -515,6 +515,11 @@ public class ApiImpl implements Api {
     }
 
     @Override
+    public Single<QueriesResponse> getSearchQueries(String query) {
+        return loggedService.getSearchQueries(query);
+    }
+
+    @Override
     public Call<CoursesMetaResponse> getCourses(int page, @Nullable long[] ids) {
         if (ids == null || ids.length == 0) {
             ids = new long[]{0};

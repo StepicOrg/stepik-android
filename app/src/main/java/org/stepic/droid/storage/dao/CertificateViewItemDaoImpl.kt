@@ -4,11 +4,11 @@ import android.content.ContentValues
 import android.database.Cursor
 import org.stepic.droid.model.CertificateType
 import org.stepic.droid.model.CertificateViewItem
-import org.stepic.droid.storage.operations.CrudOperations
+import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepic.droid.storage.structure.DbStructureCertificateViewItem
 import javax.inject.Inject
 
-class CertificateViewItemDaoImpl @Inject constructor(crudOperations: CrudOperations) : DaoBase<CertificateViewItem>(crudOperations) {
+class CertificateViewItemDaoImpl @Inject constructor(databaseOperations: DatabaseOperations) : DaoBase<CertificateViewItem>(databaseOperations) {
 
     override fun getDbName() = DbStructureCertificateViewItem.CERTIFICATE_VIEW_ITEM
 

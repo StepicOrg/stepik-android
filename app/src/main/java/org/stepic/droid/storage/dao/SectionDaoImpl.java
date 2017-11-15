@@ -6,7 +6,7 @@ import android.database.Cursor;
 import org.stepic.droid.model.Actions;
 import org.stepic.droid.model.DiscountingPolicyType;
 import org.stepic.droid.model.Section;
-import org.stepic.droid.storage.operations.CrudOperations;
+import org.stepic.droid.storage.operations.DatabaseOperations;
 import org.stepic.droid.storage.structure.DbStructureSections;
 import org.stepic.droid.util.DbParseHelper;
 
@@ -15,8 +15,8 @@ import javax.inject.Inject;
 public class SectionDaoImpl extends DaoBase<Section> {
 
     @Inject
-    public SectionDaoImpl(CrudOperations crudOperations) {
-        super(crudOperations);
+    public SectionDaoImpl(DatabaseOperations databaseOperations) {
+        super(databaseOperations);
     }
 
     @Override
