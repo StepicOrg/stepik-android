@@ -191,7 +191,7 @@ class CatalogAdapter(
         }
     }
 
-    inner class OfflineViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    private inner class OfflineViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         private val noInternetView = itemView.noInternetPlaceholder
 
