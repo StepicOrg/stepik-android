@@ -166,7 +166,7 @@ public class LoadService extends IntentService {
                 try {
                     RWLocks.SectionCancelLock.writeLock().lock();
                     if (isNeedCancel(step, sectionId)) {
-                        // we check it in need cancel
+                        storeStateManager.updateStepAfterDeleting(step);
                         return;
                     }
                     try {
