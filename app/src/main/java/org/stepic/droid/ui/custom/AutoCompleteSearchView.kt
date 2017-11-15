@@ -60,7 +60,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 
         searchQueriesRecyclerView.setOnTouchListener { v, event ->
             if (searchQueriesRecyclerView.findChildViewUnder(event.x, event.y) == null) {
-                if (event.action == MotionEvent.ACTION_UP && isEventInsideView(event)) {
+                if (event.action == MotionEvent.ACTION_UP && isEventInsideView(v, event)) {
                     this@AutoCompleteSearchView.clearFocus()
                 }
             } else {
@@ -115,7 +115,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
         }
     }
 
-    private fun isEventInsideView(event: MotionEvent) =
+    private fun isEventInsideView(v: View, event: MotionEvent) =
             event.x > 0 && event.y > 0
-            && event.x < width && event.y < height
+            && event.x < v.width && event.y < v.height
 }
