@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:padding="12dp"
+    android:layout_marginTop="20dp"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp"
+    android:background="@drawable/home_streak_view_background">
+
+    <ImageView
+        android:id="@+id/streakLightingIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_lightning"
+        android:tint="@color/new_accent_color"
+        android:contentDescription="@string/current_streak"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true" />
+
+    <TextView
+        android:id="@+id/streakCounter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:textColor="@color/new_accent_color"
+        android:textSize="16sp"
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_toRightOf="@id/streakLightingIcon"
+        android:layout_toEndOf="@id/streakLightingIcon"
+        tools:text="4" />
+
+    <TextView
+        android:id="@+id/streakText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/new_accent_color"
+        android:textSize="16sp"
+        fontPath="fonts/Roboto-Light.ttf"
+        tools:ignore="MissingPrefix"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/streakCounter"
+        android:layout_toEndOf="@id/streakCounter"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:gravity="start"
+        tools:text="Your current Streak is 4 days. Great!" />
+
+</RelativeLayout>
