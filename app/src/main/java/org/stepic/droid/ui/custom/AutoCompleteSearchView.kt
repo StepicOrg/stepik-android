@@ -71,6 +71,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 
         setOnQueryTextFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
+                setConstraint(query.toString())
                 searchQueriesRecyclerView.layoutManager?.scrollToPosition(0)
                 searchQueriesRecyclerView.visibility = View.VISIBLE
             } else {
@@ -104,13 +105,6 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 
     private fun refreshSuggestions() {
         searchSuggestionsPresenter.onQueryTextChange(searchQueriesAdapter.constraint)
-    }
-
-    override fun setQuery(query: CharSequence, submit: Boolean) {
-        super.setQuery(query, submit)
-        if (!submit) {
-            setConstraint(query.toString())
-        }
     }
 
     override fun setSuggestions(suggestions: List<SearchQuery>, source: SearchQuerySource) {
