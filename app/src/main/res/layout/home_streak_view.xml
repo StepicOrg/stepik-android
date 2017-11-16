@@ -4,9 +4,9 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:padding="12dp"
-    android:layout_marginTop="20dp"
-    android:layout_marginLeft="20dp"
-    android:layout_marginRight="20dp"
+    android:layout_marginTop="@dimen/guideline_standard_padding"
+    android:layout_marginLeft="@dimen/guideline_standard_padding"
+    android:layout_marginRight="@dimen/guideline_standard_padding"
     android:background="@drawable/home_streak_view_background">
 
     <ImageView

@@ -75,12 +75,12 @@
             <ImageView
                 android:id="@+id/fastContinueCourseCover"
                 android:contentDescription="@string/content_course_logo"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="@dimen/fast_continue_course_image_size"
+                android:layout_height="@dimen/fast_continue_course_image_size"
                 android:layout_marginTop="30dp"
                 app:layout_constraintTop_toBottomOf="@id/fastContinueAction"
-                android:layout_marginStart="20dp"
-                android:layout_marginLeft="20dp"
+                android:layout_marginStart="@dimen/fast_continue_inner_content_margin"
+                android:layout_marginLeft="@dimen/fast_continue_inner_content_margin"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_marginBottom="16dp" />
@@ -98,12 +98,12 @@
                 tools:ignore="MissingPrefix"
                 app:layout_constraintTop_toTopOf="@id/fastContinueCourseCover"
                 app:layout_constraintLeft_toRightOf="@id/fastContinueCourseCover"
-                android:layout_marginLeft="10dp"
-                android:layout_marginStart="10dp"
+                android:layout_marginLeft="@dimen/fast_continue_info_margin"
+                android:layout_marginStart="@dimen/fast_continue_info_margin"
                 app:layout_constraintHorizontal_weight="1"
                 tools:text="Программирование на python"
-                android:layout_marginRight="20dp"
-                android:layout_marginEnd="20dp"
+                android:layout_marginRight="@dimen/fast_continue_inner_content_margin"
+                android:layout_marginEnd="@dimen/fast_continue_inner_content_margin"
                 app:layout_constraintRight_toRightOf="parent" />
 
             <TextView
@@ -121,24 +121,25 @@
                 tools:text="Ваш прогресс 68%"
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintLeft_toRightOf="@id/fastContinueCourseCover"
-                android:layout_marginLeft="10dp"
-                android:layout_marginStart="10dp"
+                android:layout_marginLeft="@dimen/fast_continue_info_margin"
+                android:layout_marginStart="@dimen/fast_continue_info_margin"
                 app:layout_constraintTop_toBottomOf="@id/fastContinueCourseName"
-                android:layout_marginRight="20dp"
-                android:layout_marginEnd="20dp"
+                android:layout_marginRight="@dimen/fast_continue_inner_content_margin"
+                android:layout_marginEnd="@dimen/fast_continue_inner_content_margin"
                 app:layout_constraintBottom_toBottomOf="@+id/fastContinueCourseCover"
                 app:layout_constraintRight_toRightOf="parent" />
 
             <View
                 android:id="@+id/fastContinueCourseProgress"
                 android:layout_width="0dp"
-                android:layout_height="3dp"
+                android:layout_height="@dimen/fast_continue_course_progress_size"
                 android:background="@color/stepic_brand_primary"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_marginBottom="0dp"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="0dp"
-                android:layout_marginLeft="0dp" />
+                android:layout_marginLeft="0dp"
+                android:visibility="gone" />
         </android.support.constraint.ConstraintLayout>
     </org.stepic.droid.ui.custom.RoundedBorderMaskView>
 
