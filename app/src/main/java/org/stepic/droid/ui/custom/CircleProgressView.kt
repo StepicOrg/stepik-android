@@ -18,8 +18,8 @@ import org.stepic.droid.util.DpPixelsHelper
  */
 class CircleProgressView
 @JvmOverloads
-constructor(context: Context, attributeSet: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0)
-    : View(context, attributeSet, defStyleAttr, defStyleRes) {
+constructor(context: Context, attributeSet: AttributeSet? = null, defStyleAttr: Int = 0)
+    : View(context, attributeSet, defStyleAttr) {
 
     companion object {
         private const val MAX_DEGREES = 360f
