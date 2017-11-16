@@ -4,7 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 
 import org.stepic.droid.model.CachedVideo;
-import org.stepic.droid.storage.operations.CrudOperations;
+import org.stepic.droid.storage.operations.DatabaseOperations;
 import org.stepic.droid.storage.structure.DbStructureCachedVideo;
 
 import javax.inject.Inject;
@@ -12,8 +12,8 @@ import javax.inject.Inject;
 public class PersistentVideoDaoImpl extends DaoBase<CachedVideo> {
 
     @Inject
-    public PersistentVideoDaoImpl(CrudOperations crudOperations) {
-        super(crudOperations);
+    public PersistentVideoDaoImpl(DatabaseOperations databaseOperations) {
+        super(databaseOperations);
     }
 
     @Override

@@ -1,11 +1,10 @@
 package org.stepic.droid.ui.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.RecyclerView;
@@ -26,9 +25,9 @@ import org.stepic.droid.core.presenters.ContinueCoursePresenter;
 import org.stepic.droid.core.presenters.DroppingPresenter;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.CoursesCarouselColorType;
-import org.stepic.droid.ui.adapters.view_hoders.CourseItemViewHolder;
-import org.stepic.droid.ui.adapters.view_hoders.CourseViewHolderBase;
-import org.stepic.droid.ui.adapters.view_hoders.FooterItemViewHolder;
+import org.stepic.droid.ui.adapters.viewhoders.CourseItemViewHolder;
+import org.stepic.droid.ui.adapters.viewhoders.CourseViewHolderBase;
+import org.stepic.droid.ui.adapters.viewhoders.FooterItemViewHolder;
 import org.stepic.droid.util.resolvers.text.TextResolver;
 
 import java.util.List;
@@ -56,7 +55,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CourseViewHolderBase> {
 
     private LayoutInflater inflater;
 
-    private Activity contextActivity;
+    private FragmentActivity contextActivity;
     private final List<Course> courses;
     private final ContinueCoursePresenter continueCoursePresenter;
     @NotNull
@@ -72,7 +71,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CourseViewHolderBase> {
     private final boolean showMore;
     private final CoursesCarouselColorType colorType;
 
-    public CoursesAdapter(Fragment fragment,
+    public CoursesAdapter(FragmentActivity activity,
                           List<Course> courses,
                           @NotNull ContinueCoursePresenter continueCoursePresenter,
                           @NotNull DroppingPresenter droppingPresenter,
@@ -87,7 +86,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CourseViewHolderBase> {
         } else {
             NUMBER_OF_EXTRA_ITEMS = 0;
         }
-        contextActivity = fragment.getActivity();
+        contextActivity = activity;
         this.courses = courses;
         this.continueCoursePresenter = continueCoursePresenter;
         this.droppingPresenter = droppingPresenter;

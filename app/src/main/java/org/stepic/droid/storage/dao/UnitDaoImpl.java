@@ -7,7 +7,7 @@ import android.support.annotation.NonNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Unit;
-import org.stepic.droid.storage.operations.CrudOperations;
+import org.stepic.droid.storage.operations.DatabaseOperations;
 import org.stepic.droid.storage.structure.DbStructureProgress;
 import org.stepic.droid.storage.structure.DbStructureUnit;
 import org.stepic.droid.util.DbParseHelper;
@@ -21,8 +21,8 @@ public class UnitDaoImpl extends DaoBase<Unit> {
     private final IDao<Progress> progressDao;
 
     @Inject
-    public UnitDaoImpl(CrudOperations crudOperations, IDao<Progress> progressDao) {
-        super(crudOperations);
+    public UnitDaoImpl(DatabaseOperations databaseOperations, IDao<Progress> progressDao) {
+        super(databaseOperations);
         this.progressDao = progressDao;
     }
 

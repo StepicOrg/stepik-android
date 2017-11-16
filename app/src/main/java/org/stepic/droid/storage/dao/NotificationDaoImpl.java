@@ -5,7 +5,7 @@ import android.database.Cursor;
 
 import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.notifications.model.NotificationType;
-import org.stepic.droid.storage.operations.CrudOperations;
+import org.stepic.droid.storage.operations.DatabaseOperations;
 import org.stepic.droid.storage.structure.DbStructureNotification;
 
 import javax.inject.Inject;
@@ -13,8 +13,8 @@ import javax.inject.Inject;
 public class NotificationDaoImpl extends DaoBase<Notification> {
 
     @Inject
-    public NotificationDaoImpl(CrudOperations crudOperations) {
-        super(crudOperations);
+    public NotificationDaoImpl(DatabaseOperations databaseOperations) {
+        super(databaseOperations);
     }
 
     @Override

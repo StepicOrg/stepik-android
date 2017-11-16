@@ -1,13 +1,10 @@
 package org.stepic.droid.base;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.view.ContextMenu;
-import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,44 +15,22 @@ import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.core.dropping.contract.DroppingListener;
 import org.stepic.droid.core.presenters.PersistentCourseListPresenter;
-import org.stepic.droid.core.presenters.contracts.FilterForCoursesView;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.storage.operations.Table;
 import org.stepic.droid.ui.fragments.CourseListFragmentBase;
-import org.stepic.droid.ui.util.BackButtonHandler;
 import org.stepic.droid.ui.util.ContextMenuRecyclerView;
-import org.stepic.droid.ui.util.OnBackClickListener;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ContextMenuCourseUtil;
 
-import java.util.List;
-
 import javax.inject.Inject;
 
-public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase implements FilterForCoursesView, OnBackClickListener, DroppingListener {
-    private static final int FILTER_REQUEST_CODE = 776;
-
-    private boolean needFilter = false;
-
+public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase implements DroppingListener {
     @Inject
     PersistentCourseListPresenter courseListPresenter;
 
     @Inject
     Client<DroppingListener> droppingClient;
 
-    private BackButtonHandler backButtonHandler = null;
-    private boolean isScreenCreated;
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-        Activity rootActivity = getActivity();
-        if (rootActivity != null && rootActivity instanceof BackButtonHandler) {
-            backButtonHandler = ((BackButtonHandler) rootActivity);
-            backButtonHandler.setBackClickListener(this);
-        }
-    }
 
     @Override
     protected void injectComponent() {
@@ -68,35 +43,11 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     }
 
     @Override
-    protected void onReleaseComponent() {
-        App.Companion
-                .componentManager()
-                .releaseCourseGeneralComponent();
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         setRetainInstance(true);
 
-        isScreenCreated = true;
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.filter_courses_menu, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_filter_menu:
-                getScreenManager().showFilterScreen(this, FILTER_REQUEST_CODE, getCourseType());
-                return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -111,16 +62,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     @Override
     public void onStart() {
         super.onStart();
-        if (isScreenCreated) {
-            //reset all data
-            isScreenCreated = false;
-            needFilter = false;
-            courses.clear();
-            courseListPresenter.refreshData(getCourseType(), needFilter, true);
-        } else {
-            //load if not
-            courseListPresenter.downloadData(getCourseType(), needFilter);
-        }
+        courseListPresenter.downloadData(getCourseType());
         swipeRefreshLayout.setRefreshing(false);
     }
 
@@ -182,27 +124,11 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == FragmentActivity.RESULT_OK) {
-            if (requestCode == AppConstants.REQUEST_CODE_DETAIL) {
-                Course course = data.getParcelableExtra(AppConstants.COURSE_ID_KEY);
-                int enrollment = data.getIntExtra(AppConstants.ENROLLMENT_KEY, 0);
-                if (course != null && enrollment != 0) {
-                    updateEnrollment(course, enrollment);
-                }
-            }
-
-            if (requestCode == FILTER_REQUEST_CODE) {
-                getAnalytic().reportEvent(Analytic.Filters.FILTERS_NEED_UPDATE);
-                needFilter = true; // not last filter? check it
-                courses.clear();
-                coursesAdapter.notifyDataSetChanged();
-                courseListPresenter.refreshData(getCourseType(), needFilter, true);
-            }
-        }
-
-        if (resultCode == FragmentActivity.RESULT_CANCELED) {
-            if (requestCode == FILTER_REQUEST_CODE) {
-                getAnalytic().reportEvent(Analytic.Filters.FILTERS_CANCELED);
+        if (resultCode == FragmentActivity.RESULT_OK && requestCode == AppConstants.REQUEST_CODE_DETAIL) {
+            Course course = data.getParcelableExtra(AppConstants.COURSE_ID_KEY);
+            int enrollment = data.getIntExtra(AppConstants.ENROLLMENT_KEY, 0);
+            if (course != null && enrollment != 0) {
+                updateEnrollment(course, enrollment);
             }
         }
     }
@@ -239,40 +165,13 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
     @Override
     public void onNeedDownloadNextPage() {
-        courseListPresenter.loadMore(getCourseType(), needFilter);
-    }
-
-    @Override
-    public void clearAndShowLoading() {
-        courses.clear();
-        coursesAdapter.notifyDataSetChanged();
-        showLoading();
-    }
-
-    @Override
-    public void showFilteredCourses(@NotNull List<Course> filteredList) {
-        showCourses(filteredList);
+        courseListPresenter.loadMore(getCourseType());
     }
 
     @Override
     public void onRefresh() {
         getAnalytic().reportEvent(Analytic.Interaction.PULL_TO_REFRESH_COURSE);
-        courseListPresenter.refreshData(getCourseType(), needFilter, true);
-    }
-
-    @Override
-    public boolean onBackClick() {
-        getSharedPreferenceHelper().onTryDiscardFilters(getCourseType());
-        return false;
-    }
-
-    @Override
-    public void onDetach() {
-        if (backButtonHandler != null) {
-            backButtonHandler.removeBackClickListener(this);
-            backButtonHandler = null;
-        }
-        super.onDetach();
+        courseListPresenter.refreshData(getCourseType());
     }
 
     @Override
@@ -310,4 +209,9 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
             showEmptyScreen(true);
         }
     }
+
+
+    @NotNull
+    @Override
+    protected abstract Table getCourseType();
 }

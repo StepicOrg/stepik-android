@@ -35,7 +35,7 @@
                 android:layout_below="@+id/empty_courses_text"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="@dimen/guideline_standard_padding"
-                android:text="@string/find_courses_title"/>
+                android:text="@string/catalog_title"/>
 
             <Button
                 android:id="@+id/empty_courses_anonymous_button"

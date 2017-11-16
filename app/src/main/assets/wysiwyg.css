@@ -133,6 +133,7 @@
 
   img {
     display: block;
+    max-width: 100%;
     &.wysiwyg-float-left,
     &.wysiwyg-float-right {
       display: inline-block;

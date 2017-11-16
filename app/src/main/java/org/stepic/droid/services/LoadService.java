@@ -33,7 +33,7 @@ import org.stepic.droid.web.Api;
 import org.stepic.droid.web.LessonStepicResponse;
 import org.stepic.droid.web.ProgressesResponse;
 import org.stepic.droid.web.StepResponse;
-import org.stepic.droid.web.UnitStepicResponse;
+import org.stepic.droid.web.UnitMetaResponse;
 
 import java.io.File;
 import java.io.IOException;
@@ -166,7 +166,7 @@ public class LoadService extends IntentService {
                 try {
                     RWLocks.SectionCancelLock.writeLock().lock();
                     if (isNeedCancel(step, sectionId)) {
-                        // we check it in need cancel
+                        storeStateManager.updateStepAfterDeleting(step);
                         return;
                     }
                     try {
@@ -244,7 +244,7 @@ public class LoadService extends IntentService {
                         databaseFacade.addAssignment(item);
                     }
 
-                    String[] ids = ProgressUtil.getAllProgresses(assignments);
+                    String[] ids = ProgressUtil.INSTANCE.getAllProgresses(assignments);
                     List<Progress> progresses = fetchProgresses(ids);
                     for (Progress item : progresses) {
                         databaseFacade.addProgress(item);
@@ -307,7 +307,7 @@ public class LoadService extends IntentService {
                 while (responseIsSuccess && pointer < unitIds.length) {
                     int lastExclusive = Math.min(unitIds.length, pointer + AppConstants.DEFAULT_NUMBER_IDS_IN_QUERY);
                     long[] subArrayForLoading = Arrays.copyOfRange(unitIds, pointer, lastExclusive);
-                    Response<UnitStepicResponse> unitResponse = api.getUnits(subArrayForLoading).execute();
+                    Response<UnitMetaResponse> unitResponse = api.getUnits(subArrayForLoading).execute();
                     if (!unitResponse.isSuccessful()) {
                         responseIsSuccess = false;
                     } else {
@@ -319,7 +319,7 @@ public class LoadService extends IntentService {
 
                 if (responseIsSuccess) {
                     long[] lessonsIds = StepikLogicHelper.fromUnitsToLessonIds(units);
-                    List<Progress> progresses = fetchProgresses(ProgressUtil.getAllProgresses(units));
+                    List<Progress> progresses = fetchProgresses(ProgressUtil.INSTANCE.getAllProgresses(units));
                     for (Progress item : progresses) {
                         databaseFacade.addProgress(item);
                     }

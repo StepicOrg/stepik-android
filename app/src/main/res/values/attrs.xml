@@ -11,6 +11,12 @@
         <attr name="squareColor" format="color"/>
     </declare-styleable>
 
+    <declare-styleable name="CircleProgressView">
+        <attr name="progressBackgroundColor" format="color"/>
+        <attr name="progressForegroundColor" format="color"/>
+        <attr name="progressBarStroke" format="dimension"/>
+    </declare-styleable>
+
 
     <!-- Must be kept in sync with AspectRatioFrameLayout -->
     <attr name="resize_mode" format="enum">
@@ -76,6 +82,10 @@
         <attr name="baseColor" format="reference|color"/>
         <attr name="deepColor" format="reference|color"/>
         <attr name="progressLength" format="dimension"/>
-        <attr name="autoStart" format="boolean"/>
+    </declare-styleable>
+
+    <declare-styleable name="PlaceholderTextView">
+        <attr name="android:background"/>
+        <attr name="android:gravity"/>
     </declare-styleable>
 </resources>

@@ -7,11 +7,11 @@ import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.code.ui.CodeEditor
+import org.stepic.droid.di.catalog.CatalogComponent
 import org.stepic.droid.di.certificates.CertificateComponent
 import org.stepic.droid.di.course_general.CourseGeneralComponent
 import org.stepic.droid.di.downloads.DownloadsComponent
 import org.stepic.droid.di.feedback.FeedbackComponent
-import org.stepic.droid.di.filters.FilterComponent
 import org.stepic.droid.di.lesson.LessonComponent
 import org.stepic.droid.di.login.LoginComponent
 import org.stepic.droid.di.mainscreen.MainScreenComponent
@@ -29,16 +29,13 @@ import org.stepic.droid.receivers.DownloadClickReceiver
 import org.stepic.droid.receivers.InternetConnectionEnabledReceiver
 import org.stepic.droid.services.*
 import org.stepic.droid.ui.adapters.*
-import org.stepic.droid.ui.adapters.view_hoders.CourseItemViewHolder
-import org.stepic.droid.ui.custom.ExpandableTextView
-import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout
-import org.stepic.droid.ui.custom.LatexSupportableWebView
-import org.stepic.droid.ui.custom.PlaceholderTextView
+import org.stepic.droid.ui.adapters.viewhoders.CourseItemViewHolder
+import org.stepic.droid.ui.custom.*
 import org.stepic.droid.ui.custom_exo.PlaybackControlView
 import org.stepic.droid.ui.dialogs.*
 
 @AppSingleton
-@Component(dependencies = arrayOf(StorageComponent::class), modules = arrayOf(AppCoreModule::class, RepositoryModule::class, AppStepModule::class))
+@Component(dependencies = arrayOf(StorageComponent::class), modules = arrayOf(AppCoreModule::class, RepositoryModule::class, AppStepModule::class, AppFiltersModule::class))
 interface AppCoreComponent {
 
     @Component.Builder
@@ -65,8 +62,6 @@ interface AppCoreComponent {
 
     fun lessonComponentBuilder(): LessonComponent.Builder
 
-    fun filterComponentBuilder(): FilterComponent.Builder
-
     fun videoComponentBuilder(): VideoComponent.Builder
 
     fun mainScreenComponentBuilder(): MainScreenComponent.Builder
@@ -74,6 +69,8 @@ interface AppCoreComponent {
     fun notificationsComponentBuilder(): NotificationsComponent.Builder
 
     fun routingComponentBuilder(): RoutingComponent.Builder
+
+    fun catalogComponentBuilder(): CatalogComponent.Builder
 
     fun inject(someActivity: FragmentActivityBase)
 
@@ -143,6 +140,8 @@ interface AppCoreComponent {
 
     fun inject(expandableTextView: ExpandableTextView)
 
+    fun inject(autoCompleteSearchView: AutoCompleteSearchView)
+
     fun inject(courseItemViewHolder: CourseItemViewHolder)
 
     fun inject(notificationViewHolder: NotificationAdapter.NotificationViewHolder)
@@ -150,6 +149,8 @@ interface AppCoreComponent {
     fun inject(app: App)
 
     fun inject(instructorAdapter: InstructorAdapter)
+
+    fun inject(searchQueriesAdapter: SearchQueriesAdapter)
 
     fun inject(newUserAlarmService: NewUserAlarmService)
 

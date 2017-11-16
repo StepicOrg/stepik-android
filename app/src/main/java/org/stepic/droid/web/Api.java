@@ -31,33 +31,35 @@ public interface Api {
 
     Call<RegistrationResponse> signUp(String firstName, String secondName, String email, String password);
 
-    Single<CoursesStepicResponse> getEnrolledCourses(int page);
+    Single<CoursesMetaResponse> getEnrolledCourses(int page);
 
-    Single<CoursesStepicResponse> getPopularCourses(int page);
+    Single<CoursesMetaResponse> getPopularCourses(int page);
 
     Call<StepicProfileResponse> getUserProfile();
 
-    Call<UserStepicResponse> getUsers(long[] userIds);
+    Call<UsersResponse> getUsers(long[] userIds);
 
     Call<Void> tryJoinCourse(@NotNull Course course);
 
-    Call<SectionsStepicResponse> getSections(long[] sectionsIds);
+    Call<SectionsMetaResponse> getSections(long[] sectionsIds);
 
     /**
      * Max number of  units defined in AppConstants
      */
-    Call<UnitStepicResponse> getUnits(long[] units);
+    Call<UnitMetaResponse> getUnits(long[] units);
 
     Call<LessonStepicResponse> getLessons(long[] lessons);
 
     Call<StepResponse> getSteps(long[] steps);
 
-    Single<StepResponse> getStepsReactive (long [] steps);
+    Single<StepResponse> getStepsReactive(long[] steps);
 
     @Nullable
     Call<Void> dropCourse(long courseId);
 
     Call<ProgressesResponse> getProgresses(String[] progresses);
+
+    Single<ProgressesResponse> getProgressesReactive(String[] progresses);
 
     Call<AssignmentResponse> getAssignments(long[] assignmentsIds);
 
@@ -67,7 +69,11 @@ public interface Api {
 
     Call<SearchResultResponse> getSearchResultsCourses(int page, String rawQuery);
 
-    Call<CoursesStepicResponse> getCourses(int page, long[] ids);
+    Single<QueriesResponse> getSearchQueries(String query);
+
+    Call<CoursesMetaResponse> getCourses(int page, long[] ids);
+
+    Single<CoursesMetaResponse> getCoursesReactive(int page, @NotNull long[] ids);
 
     Call<AttemptResponse> createNewAttempt(long stepId);
 
@@ -89,7 +95,7 @@ public interface Api {
 
     Call<DeviceResponse> registerDevice(String token);
 
-    Call<CoursesStepicResponse> getCourse(long id);
+    Call<CoursesMetaResponse> getCourse(long id);
 
     Call<Void> setReadStatusForNotification(long notificationId, boolean isRead);
 
@@ -111,7 +117,7 @@ public interface Api {
 
     Call<CertificateResponse> getCertificates();
 
-    Call<UnitStepicResponse> getUnitByLessonId(long lessonId);
+    Call<UnitMetaResponse> getUnitByLessonId(long lessonId);
 
     Call<NotificationResponse> getNotifications(NotificationCategory notificationCategory, int page);
 
@@ -121,5 +127,7 @@ public interface Api {
 
     Call<LastStepResponse> getLastStepResponse(@NotNull String lastStepId);
 
-    Call<CourseListsResponse> getCourseLists ();
+    Single<CourseCollectionsResponse> getCourseCollections(String language);
+
+    Single<CourseReviewResponse> getCourseReviews(int[] reviewSummaryIds);
 }

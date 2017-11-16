@@ -249,16 +249,6 @@
         </activity>
 
         <activity
-            android:name=".ui.activities.FilterActivity"
-            android:parentActivityName=".ui.activities.MainFeedActivity"
-            android:windowSoftInputMode="adjustResize|stateHidden">
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activities.MainFeedActivity"/>
-        </activity>
-
-        <activity
             android:name=".ui.activities.ProfileActivity"
             android:windowSoftInputMode="adjustResize|stateHidden">
             <!-- Parent activity meta-data to support 4.0 and lower -->

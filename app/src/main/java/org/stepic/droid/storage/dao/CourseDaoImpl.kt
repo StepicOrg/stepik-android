@@ -5,84 +5,55 @@ import android.database.Cursor
 import org.stepic.droid.mappers.toDbUrl
 import org.stepic.droid.mappers.toVideoUrls
 import org.stepic.droid.model.*
-import org.stepic.droid.storage.operations.CrudOperations
+import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepic.droid.storage.structure.DbStructureCachedVideo
 import org.stepic.droid.storage.structure.DbStructureEnrolledAndFeaturedCourses
 import org.stepic.droid.storage.structure.DbStructureVideoUrl
-import org.stepic.droid.util.DbParseHelper
-import org.stepic.droid.util.transformToCachedVideo
+import org.stepic.droid.util.*
 import javax.inject.Inject
 
 class CourseDaoImpl @Inject
 constructor(
-        crudOperations: CrudOperations,
+        databaseOperations: DatabaseOperations,
         private val cachedVideoDao: IDao<CachedVideo>,
         private val externalVideoUrlIDao: IDao<DbVideoUrl>,
         private val tableName: String)
-    : DaoBase<Course>(crudOperations) {
+    : DaoBase<Course>(databaseOperations) {
 
     public override fun parsePersistentObject(cursor: Cursor): Course {
         val course = Course()
+        course.lastStepId = cursor.getString(DbStructureEnrolledAndFeaturedCourses.Column.LAST_STEP_ID)
+        course.certificate = cursor.getString(DbStructureEnrolledAndFeaturedCourses.Column.CERTIFICATE)
+        course.workload = cursor.getString(DbStructureEnrolledAndFeaturedCourses.Column.WORKLOAD)
+        course.courseFormat = cursor.getString(DbStructureEnrolledAndFeaturedCourses.Column.COURSE_FORMAT)
+        course.targetAudience = cursor.getString(DbStructureEnrolledAndFeaturedCourses.Column.TARGET_AUDIENCE)
 
-        val indexId = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.COURSE_ID)
-        val indexSummary = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.SUMMARY)
-        val indexCover = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.COVER_LINK)
-        val indexIntro = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.INTRO_LINK_VIMEO)
-        val indexTitle = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.TITLE)
-        val indexLanguage = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.LANGUAGE)
-        val indexBeginDateSource = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.BEGIN_DATE_SOURCE)
-        val indexBeginDate = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.BEGIN_DATE)
-        val indexEndDate = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.END_DATE)
-        val indexLastDeadline = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.LAST_DEADLINE)
-        val indexDescription = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.DESCRIPTION)
-        val indexInstructors = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.INSTRUCTORS)
-        val indexRequirements = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.REQUIREMENTS)
-        val indexEnrollment = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.ENROLLMENT)
-        val indexSection = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.SECTIONS)
-        val indexWorkload = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.WORKLOAD)
-        val indexCourseFormat = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.COURSE_FORMAT)
-        val indexTargetAudience = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.TARGET_AUDIENCE)
-        val indexCertificate = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.CERTIFICATE)
-        val indexIntroVideoId = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.INTRO_VIDEO_ID)
-        val indexSlug = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.SLUG)
-        val indexScheduleLink = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.SCHEDULE_LINK)
-        val indexScheduleLongLink = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.SCHEDULE_LONG_LINK)
-        val indexLastStepId = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.LAST_STEP_ID)
-        val indexIsActive = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.IS_ACTIVE)
-        val indexLearnersCount = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.LEARNERS_COUNT)
-        val indexProgress = cursor.getColumnIndex(DbStructureEnrolledAndFeaturedCourses.Column.PROGRESS)
-
-        course.lastStepId = cursor.getString(indexLastStepId)
-        course.certificate = cursor.getString(indexCertificate)
-        course.workload = cursor.getString(indexWorkload)
-        course.courseFormat = cursor.getString(indexCourseFormat)
-        course.targetAudience = cursor.getString(indexTargetAudience)
-
-        course.setId(cursor.getLong(indexId))
-        course.summary = cursor.getString(indexSummary)
-        course.cover = cursor.getString(indexCover)
-        course.intro = cursor.getString(indexIntro)
-        course.title = cursor.getString(indexTitle)
-        course.language = cursor.getString(indexLanguage)
-        course.beginDateSource = cursor.getString(indexBeginDateSource)
-        course.lastDeadline = cursor.getString(indexLastDeadline)
-        course.description = cursor.getString(indexDescription)
-        course.instructors = DbParseHelper.parseStringToLongArray(cursor.getString(indexInstructors))
-        course.requirements = cursor.getString(indexRequirements)
-        course.enrollment = cursor.getInt(indexEnrollment)
-        course.sections = DbParseHelper.parseStringToLongArray(cursor.getString(indexSection))
-        course.introVideoId = cursor.getLong(indexIntroVideoId)
-        course.slug = cursor.getString(indexSlug)
-        course.scheduleLink = cursor.getString(indexScheduleLink)
-        course.scheduleLongLink = cursor.getString(indexScheduleLongLink)
-        course.beginDate = cursor.getString(indexBeginDate)
-        course.endDate = cursor.getString(indexEndDate)
-        course.learnersCount = cursor.getLong(indexLearnersCount)
-        course.progress = cursor.getString(indexProgress)
+        course.setId(cursor.getLong(DbStructureEnrolledAndFeaturedCourses.Column.COURSE_ID))
+        course.summary = cursor.getString(DbStructureEnrolledAndFeaturedCourses.Column.SUMMARY)
+        course.cover = cursor.getString(DbStructureEnrolledAndFeaturedCourses.Column.COVER_LINK)
+        course.intro = cursor.getString(DbStructureEnrolledAndFeaturedCourses.Column.INTRO_LINK_VIMEO)
+        course.title = cursor.getString(DbStructureEnrolledAndFeaturedCourses.Column.TITLE)
+        course.language = cursor.getString(DbStructureEnrolledAndFeaturedCourses.Column.LANGUAGE)
+        course.lastDeadline = cursor.getString(DbStructureEnrolledAndFeaturedCourses.Column.LAST_DEADLINE)
+        course.description = cursor.getString(DbStructureEnrolledAndFeaturedCourses.Column.DESCRIPTION)
+        course.instructors = DbParseHelper.parseStringToLongArray(cursor.getString(DbStructureEnrolledAndFeaturedCourses.Column.INSTRUCTORS))
+        course.requirements = cursor.getString(DbStructureEnrolledAndFeaturedCourses.Column.REQUIREMENTS)
+        course.enrollment = cursor.getInt(DbStructureEnrolledAndFeaturedCourses.Column.ENROLLMENT)
+        course.sections = DbParseHelper.parseStringToLongArray(cursor.getString(DbStructureEnrolledAndFeaturedCourses.Column.SECTIONS))
+        course.introVideoId = cursor.getLong(DbStructureEnrolledAndFeaturedCourses.Column.INTRO_VIDEO_ID)
+        course.slug = cursor.getString(DbStructureEnrolledAndFeaturedCourses.Column.SLUG)
+        course.scheduleLink = cursor.getString(DbStructureEnrolledAndFeaturedCourses.Column.SCHEDULE_LINK)
+        course.scheduleLongLink = cursor.getString(DbStructureEnrolledAndFeaturedCourses.Column.SCHEDULE_LONG_LINK)
+        course.beginDate = cursor.getString(DbStructureEnrolledAndFeaturedCourses.Column.BEGIN_DATE)
+        course.endDate = cursor.getString(DbStructureEnrolledAndFeaturedCourses.Column.END_DATE)
+        course.learnersCount = cursor.getLong(DbStructureEnrolledAndFeaturedCourses.Column.LEARNERS_COUNT)
+        course.progress = cursor.getString(DbStructureEnrolledAndFeaturedCourses.Column.PROGRESS)
+        course.rating = cursor.getDouble(DbStructureEnrolledAndFeaturedCourses.Column.AVERAGE_RATING)
+        course.reviewSummary = cursor.getInt(DbStructureEnrolledAndFeaturedCourses.Column.REVIEW_SUMMARY)
 
         var isActive = true
         try {
-            isActive = cursor.getInt(indexIsActive) > 0
+            isActive = cursor.getInt(DbStructureEnrolledAndFeaturedCourses.Column.IS_ACTIVE) > 0
         } catch (exception: Exception) {
             //it can be null before migration --> default active
         }
@@ -102,7 +73,6 @@ constructor(
         values.put(DbStructureEnrolledAndFeaturedCourses.Column.INTRO_LINK_VIMEO, course.intro)
         values.put(DbStructureEnrolledAndFeaturedCourses.Column.TITLE, course.title)
         values.put(DbStructureEnrolledAndFeaturedCourses.Column.LANGUAGE, course.language)
-        values.put(DbStructureEnrolledAndFeaturedCourses.Column.BEGIN_DATE_SOURCE, course.beginDateSource)
         values.put(DbStructureEnrolledAndFeaturedCourses.Column.LAST_DEADLINE, course.lastDeadline)
         values.put(DbStructureEnrolledAndFeaturedCourses.Column.DESCRIPTION, course.description)
 
@@ -129,6 +99,8 @@ constructor(
         values.put(DbStructureEnrolledAndFeaturedCourses.Column.IS_ACTIVE, course.isActive)
         values.put(DbStructureEnrolledAndFeaturedCourses.Column.LEARNERS_COUNT, course.learnersCount)
         values.put(DbStructureEnrolledAndFeaturedCourses.Column.PROGRESS, course.progress)
+        values.put(DbStructureEnrolledAndFeaturedCourses.Column.AVERAGE_RATING, course.rating)
+        values.put(DbStructureEnrolledAndFeaturedCourses.Column.REVIEW_SUMMARY, course.reviewSummary)
 
         val video = course.introVideo
         if (video != null) {

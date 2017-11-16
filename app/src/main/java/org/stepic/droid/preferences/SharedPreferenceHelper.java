@@ -17,7 +17,6 @@ import org.stepic.droid.model.Profile;
 import org.stepic.droid.model.StepikFilter;
 import org.stepic.droid.model.comments.DiscussionOrder;
 import org.stepic.droid.notifications.model.NotificationType;
-import org.stepic.droid.storage.operations.Table;
 import org.stepic.droid.ui.util.TimeIntervalUtil;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DateTimeHelper;
@@ -33,10 +32,21 @@ import javax.inject.Inject;
 public class SharedPreferenceHelper {
     private static final String NOTIFICATION_SOUND_DISABLED = "notification_sound";
     private static final String TEMP_UPDATE_LINK = "temp_update_link";
-    private static final java.lang.String NEED_DROP_116 = "need_drop_116";
-    private static final java.lang.String DISCOUNTING_POLICY_DIALOG = "discounting_pol_dialog";
-    private static final java.lang.String KEEP_SCREEN_ON_STEPS = "keep_screen_on_steps";
+    private static final String NEED_DROP_116 = "need_drop_116";
+    private static final String DISCOUNTING_POLICY_DIALOG = "discounting_pol_dialog";
+    private static final String KEEP_SCREEN_ON_STEPS = "keep_screen_on_steps";
     private static final String ROTATE_PREF = "rotate_pref";
+    private static final String NOTIFICATION_LEARN_DISABLED = "notification_disabled_by_user";
+    private static final String NOTIFICATION_COMMENT_DISABLED = "notification_comment_disabled";
+    private static final String NOTIFICATION_TEACH_DISABLED = "notification_teach_disabled";
+    private static final String NOTIFICATION_REVIEW_DISABLED = "notification_review_disabled";
+    private static final String NOTIFICATION_OTHER_DISABLED = "notification_other_disabled";
+    private static final String NOTIFICATION_VIBRATION_DISABLED = "not_vibrat_disabled";
+    private final static String ONE_DAY_NOTIFICATION = "one_day_notification";
+    private final static String SEVEN_DAY_NOTIFICATION = "seven_day_notification";
+    private static final String FILTER_RUSSIAN_LANGUAGE = "russian_lang";
+    private static final String FILTER_ENGLISH_LANGUAGE = "english_lang";
+
     private final String ACCESS_TOKEN_TIMESTAMP = "access_token_timestamp";
     private final String UPDATING_TIMESTAMP = "updating_timestamp";
     private final String AUTH_RESPONSE_JSON = "auth_response_json";
@@ -50,12 +60,6 @@ public class SharedPreferenceHelper {
     private final String VIDEO_RATE_PREF_KEY = "video_rate_pref_key";
     private final String VIDEO_EXTERNAL_PREF_KEY = "video_external_pref_key";
     private final String GCM_TOKEN_ACTUAL = "gcm_token_actual";
-    private final String NOTIFICATION_LEARN_DISABLED = "notification_disabled_by_user";
-    private final String NOTIFICATION_COMMENT_DISABLED = "notification_comment_disabled";
-    private final String NOTIFICATION_TEACH_DISABLED = "notification_teach_disabled";
-    private final String NOTIFICATION_REVIEW_DISABLED = "notification_review_disabled";
-    private final String NOTIFICATION_OTHER_DISABLED = "notification_other_disabled";
-    private final String NOTIFICATION_VIBRATION_DISABLED = "not_vibrat_disabled";
     private final String SD_CHOSEN = "sd_chosen";
     private final String FIRST_TIME_LAUNCH = "first_time_launch";
     private final String SCHEDULED_LINK_CACHED = "scheduled_cached";
@@ -64,42 +68,29 @@ public class SharedPreferenceHelper {
     private final String VIDEO_QUALITY_EXPLANATION = "video_quality_explanation";
     private final String NEED_DROP_114 = "need_drop_114";
     private final String REMIND_CLICK = "remind_click";
-    private final static String ONE_DAY_NOTIFICATION = "one_day_notification";
-    private final static String SEVEN_DAY_NOTIFICATION = "seven_day_notification";
     private final String ANY_STEP_SOLVED = "any_step_solved";
     private final String NUMBER_OF_STEPS_SOLVED = "number_of_steps_solved";
     private final String NEW_USER_ALARM_TIMESTAMP = "new_user_alarm_timestamp";
     private final String NUMBER_OF_SHOWN_STREAK_DIALOG = "number_of_shown_streak_dialog";
     private final String STREAK_DIALOG_SHOWN_TIMESTAMP = "streak_dialog_shown_timestamp";
     private final String STREAK_NUMBER_OF_IGNORED = "streak_number_of_ignored";
-
-    private final String FILTER_PERSISTENT = "filter_persistent";
-    private final String FILTER_RUSSIAN_LANGUAGE = "russian_lang";
-    private final String FILTER_ENGLISH_LANGUAGE = "english_lang";
-    private final String FILTER_UPCOMING = "filter_upcoming";
-    private final String FILTER_ACTIVE = "filter_active";
-    private final String FILTER_PAST = "filter_past";
     private final String TIME_NOTIFICATION_CODE = "time_notification_code";
     private final String STREAK_NOTIFICATION = "streak_notification";
-
     private final String USER_START_KEY = "user_start_app";
-
     private final String RATE_LAST_TIMESTAMP = "rate_last_timestamp";
     private final String RATE_TIMES_SHOWN = "rate_times_shown";
     private final String RATE_WAS_HANDLED = "rate_was_handled";
 
 
-    private Context context;
-    private Analytic analytic;
-    private DefaultFilter defaultFilter;
+    private final Context context;
+    private final Analytic analytic;
+    private final DefaultFilter defaultFilter;
 
     @Inject
     public SharedPreferenceHelper(Analytic analytic, DefaultFilter defaultFilter, Context context) {
         this.analytic = analytic;
         this.defaultFilter = defaultFilter;
         this.context = context;
-
-        resetFiltersForFeatured(); //reset on app recreating and on destroy course's Fragments
     }
 
     /**
@@ -245,6 +236,7 @@ public class SharedPreferenceHelper {
         put(PreferenceType.LOGIN, NUMBER_OF_SHOWN_STREAK_DIALOG, streakDialogShownNumber + 1);
     }
 
+
     public enum NotificationDay {
         DAY_ONE(ONE_DAY_NOTIFICATION),
         DAY_SEVEN(SEVEN_DAY_NOTIFICATION);
@@ -267,13 +259,6 @@ public class SharedPreferenceHelper {
 
     public void setNotificationShown(NotificationDay day) {
         put(PreferenceType.DEVICE_SPECIFIC, day.getInternalNotificationKey(), true);
-    }
-
-
-    public void onTryDiscardFilters(Table type) {
-        if (type == Table.featured) {
-            resetFiltersForFeatured();
-        }
     }
 
     public int incrementNumberOfLaunches() {
@@ -409,49 +394,46 @@ public class SharedPreferenceHelper {
         put(PreferenceType.DEVICE_SPECIFIC, NEED_DROP_116, false);
     }
 
-    private void resetFiltersForFeatured() {
-        if (!getBoolean(PreferenceType.FEATURED_FILTER, FILTER_PERSISTENT, defaultFilter.getDefaultFeatured(StepikFilter.PERSISTENT))) {
-            clear(PreferenceType.FEATURED_FILTER);
-        }
-    }
-
-    private String getPrefNameForFilter(StepikFilter filter) {
+    private String mapToPreferenceName(StepikFilter filter) {
         switch (filter) {
-            case RUSSIAN:    return FILTER_RUSSIAN_LANGUAGE;
-            case ENGLISH:    return FILTER_ENGLISH_LANGUAGE;
-            case UPCOMING:   return FILTER_UPCOMING;
-            case ACTIVE:     return FILTER_ACTIVE;
-            case PAST:       return FILTER_PAST;
-            case PERSISTENT: return FILTER_PERSISTENT;
-            default:         throw new IllegalArgumentException("Unknown StepikFilter type: " + filter);
+            case RUSSIAN:
+                return FILTER_RUSSIAN_LANGUAGE;
+            case ENGLISH:
+                return FILTER_ENGLISH_LANGUAGE;
+            default:
+                throw new IllegalArgumentException("Unknown StepikFilter type: " + filter);
         }
     }
 
+    @NotNull
     public EnumSet<StepikFilter> getFilterForFeatured() {
         EnumSet<StepikFilter> filters = EnumSet.noneOf(StepikFilter.class);
         for (StepikFilter filter : StepikFilter.values()) {
-            appendValueForFilter(PreferenceType.FEATURED_FILTER, filters, getPrefNameForFilter(filter), filter, defaultFilter.getDefaultFeatured(filter));
+            appendValueForFilter(filters, filter, defaultFilter.getDefaultFilter(filter));
         }
+        if (filters.size() > 1) {
+            //only one of languages are allowed
+            put(PreferenceType.FEATURED_FILTER, mapToPreferenceName(StepikFilter.ENGLISH), false);
+            return EnumSet.of(StepikFilter.RUSSIAN);
+        }
+
         return filters;
     }
 
-    private void appendValueForFilter(PreferenceType preferenceType, EnumSet<StepikFilter> filter, String key, StepikFilter value, boolean defaultValue) {
-        if (getBoolean(preferenceType, key, defaultValue)) {
+    private void appendValueForFilter(EnumSet<StepikFilter> filter, StepikFilter value, boolean defaultValue) {
+        if (getBoolean(PreferenceType.FEATURED_FILTER, mapToPreferenceName(value), defaultValue)) {
             filter.add(value);
         }
     }
 
     public void saveFilterForFeatured(EnumSet<StepikFilter> filters) {
-        for (StepikFilter filter : StepikFilter.values()) {
-            saveValueFromFilterIfExist(PreferenceType.FEATURED_FILTER, filters, getPrefNameForFilter(filter), filter);
+        for (StepikFilter filterValue : StepikFilter.values()) {
+            String key = mapToPreferenceName(filterValue);
+            put(PreferenceType.FEATURED_FILTER, key, filters.contains(filterValue));
         }
     }
 
-    private void saveValueFromFilterIfExist(PreferenceType preferenceType, EnumSet<StepikFilter> filter, String key, StepikFilter value) {
-        put(preferenceType, key, filter.contains(value));
-    }
-
-    public enum PreferenceType {
+    private enum PreferenceType {
         LOGIN("login preference"),
         WIFI("wifi_preference"),
         VIDEO_QUALITY("video_quality_preference"),
@@ -656,7 +638,7 @@ public class SharedPreferenceHelper {
     }
 
 
-    AuthenticationStepicResponse cachedAuthStepikResponse = null;
+    private AuthenticationStepicResponse cachedAuthStepikResponse = null;
 
     @Nullable
     public AuthenticationStepicResponse getAuthResponseFromStore() {

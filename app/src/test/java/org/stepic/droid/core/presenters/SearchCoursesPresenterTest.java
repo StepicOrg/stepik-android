@@ -11,6 +11,7 @@ import org.stepic.droid.core.presenters.contracts.CoursesView;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Meta;
 import org.stepic.droid.model.SearchResult;
+import org.stepic.droid.storage.operations.DatabaseFacade;
 import org.stepic.droid.testUtils.ConcurrencyUtilForTest;
 import org.stepic.droid.testUtils.ResponseGeneratorKt;
 import org.stepic.droid.testUtils.generators.FakeCourseGenerator;
@@ -19,7 +20,7 @@ import org.stepic.droid.testUtils.generators.FakeSearchResultGenerator;
 import org.stepic.droid.util.resolvers.SearchResolver;
 import org.stepic.droid.util.resolvers.SearchResolverImpl;
 import org.stepic.droid.web.Api;
-import org.stepic.droid.web.CoursesStepicResponse;
+import org.stepic.droid.web.CoursesMetaResponse;
 import org.stepic.droid.web.SearchResultResponse;
 
 import java.io.IOException;
@@ -57,6 +58,9 @@ public class SearchCoursesPresenterTest {
     @Mock
     CoursesView coursesView;
 
+    @Mock
+    DatabaseFacade databaseFacade;
+
 
     @Before
     public void beforeEachTest() {
@@ -67,7 +71,7 @@ public class SearchCoursesPresenterTest {
 
         searchResolver = spy(new SearchResolverImpl());
 
-        searchCoursesPresenter = new SearchCoursesPresenter(api, threadPoolExecutor, mainHandler, searchResolver, analytic);
+        searchCoursesPresenter = new SearchCoursesPresenter(api, threadPoolExecutor, mainHandler, searchResolver, databaseFacade, analytic);
     }
 
     @Test
@@ -92,7 +96,7 @@ public class SearchCoursesPresenterTest {
         //mock calling api for getting course
         long[] courseIds = new long[1];
         courseIds[0] = expectedSingleSearchResult.getCourse();
-        CoursesStepicResponse coursesStepicResponse = mock(CoursesStepicResponse.class);
+        CoursesMetaResponse coursesStepicResponse = mock(CoursesMetaResponse.class);
         when(coursesStepicResponse.getMeta()).thenReturn(onePageMeta);
         List<Course> expectedCourses = new ArrayList<>();
         Course expectedCourse = FakeCourseGenerator.INSTANCE.generate(expectedCourseId);

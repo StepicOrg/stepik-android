@@ -38,6 +38,7 @@ import org.stepic.droid.model.Profile;
 import org.stepic.droid.model.RegistrationUser;
 import org.stepic.droid.model.Reply;
 import org.stepic.droid.model.ReplyWrapper;
+import org.stepic.droid.model.StepikFilter;
 import org.stepic.droid.model.comments.Comment;
 import org.stepic.droid.model.comments.Vote;
 import org.stepic.droid.model.comments.VoteValue;
@@ -56,6 +57,7 @@ import java.net.HttpCookie;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -412,12 +414,14 @@ public class ApiImpl implements Api {
         return csrftoken;
     }
 
-    public Single<CoursesStepicResponse> getEnrolledCourses(int page) {
+    public Single<CoursesMetaResponse> getEnrolledCourses(int page) {
         return loggedService.getEnrolledCourses(page);
     }
 
-    public Single<CoursesStepicResponse> getPopularCourses(int page) {
-        return loggedService.getPopularCourses(page);
+    public Single<CoursesMetaResponse> getPopularCourses(int page) {
+        EnumSet<StepikFilter> enumSet = sharedPreference.getFilterForFeatured();
+        String lang = enumSet.iterator().next().getLanguage();
+        return loggedService.getPopularCourses(page, lang);
     }
 
     @Override
@@ -426,7 +430,7 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Call<UserStepicResponse> getUsers(long[] userIds) {
+    public Call<UsersResponse> getUsers(long[] userIds) {
         return loggedService.getUsers(userIds);
     }
 
@@ -438,12 +442,12 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Call<SectionsStepicResponse> getSections(long[] sectionsIds) {
+    public Call<SectionsMetaResponse> getSections(long[] sectionsIds) {
         return loggedService.getSections(sectionsIds);
     }
 
     @Override
-    public Call<UnitStepicResponse> getUnits(long[] units) {
+    public Call<UnitMetaResponse> getUnits(long[] units) {
         return loggedService.getUnits(units);
     }
 
@@ -472,6 +476,11 @@ public class ApiImpl implements Api {
     @Override
     public Call<ProgressesResponse> getProgresses(String[] progresses) {
         return loggedService.getProgresses(progresses);
+    }
+
+    @Override
+    public Single<ProgressesResponse> getProgressesReactive(String[] progresses) {
+        return loggedService.getProgressesReactive(progresses);
     }
 
     @Override
@@ -506,11 +515,24 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Call<CoursesStepicResponse> getCourses(int page, @Nullable long[] ids) {
+    public Single<QueriesResponse> getSearchQueries(String query) {
+        return loggedService.getSearchQueries(query);
+    }
+
+    @Override
+    public Call<CoursesMetaResponse> getCourses(int page, @Nullable long[] ids) {
         if (ids == null || ids.length == 0) {
             ids = new long[]{0};
         }
         return loggedService.getCourses(page, ids);
+    }
+
+    @Override
+    public Single<CoursesMetaResponse> getCoursesReactive(int page, @NotNull long[] ids) {
+        if (ids.length == 0) {
+            ids = new long[]{0};
+        }
+        return loggedService.getCoursesReactive(page, ids);
     }
 
     @Override
@@ -646,7 +668,7 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Call<CoursesStepicResponse> getCourse(long id) {
+    public Call<CoursesMetaResponse> getCourse(long id) {
         long[] ids = new long[]{id};
         return loggedService.getCourses(ids);
     }
@@ -717,7 +739,7 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Call<UnitStepicResponse> getUnitByLessonId(long lessonId) {
+    public Call<UnitMetaResponse> getUnitByLessonId(long lessonId) {
         return loggedService.getUnitByLessonId(lessonId);
     }
 
@@ -744,11 +766,13 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Call<CourseListsResponse> getCourseLists() {
-        //// TODO: 26.09.2017 determine language of course list for not native russian speakers
-        String language = "ru";
+    public Single<CourseCollectionsResponse> getCourseCollections(String language) {
         return loggedService.getCourseLists(language);
+    }
 
+    @Override
+    public Single<CourseReviewResponse> getCourseReviews(int[] courseIds) {
+        return loggedService.getCourseReviews(courseIds);
     }
 
     @Nullable

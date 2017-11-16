@@ -30,7 +30,6 @@
     <string name="best_lessons_title">Best lessons</string>
     <string name="drawer_open">open drawer</string>
     <string name="drawer_closed">close drawer</string>
-    <string name="find_courses_title">Find courses</string>
     <string name="available_courses_title">Available courses</string>
     <string name="settings_title">Settings</string>
     <string name="logout_title">Logout</string>
@@ -287,7 +286,6 @@
     <string name="cant_show_next_step">Sorry, the next lesson is not available</string>
     <string name="cant_show_previous_step">Sorry, the previous lesson is not available</string>
     <string name="previous_lesson">Previous lesson</string>
-    <string name="filter_title">Filters</string>
     <string name="language_ru_filter">Russian</string>
     <string name="language_en_filter">English</string>
     <string name="course_language_title">Language of the course</string>
@@ -545,6 +543,14 @@
     <string name="sample_output">&lt;b>Sample output %d:&lt;/b></string>
     <string name="hint_for_code">Type code here…</string>
     <string name="step_preparing">Step is not prepared yet. Tap to reload</string>
+    <string name="course_rating">Course rating</string>
+    <string name="course_rating_value" translatable="false">%.1f</string>
+
+    <string name="ru_language_filter" translatable="false">Ru</string>
+    <string name="en_language_filter" translatable="false">En</string>
+    <string name="language_of_courses">Language of courses</string>
+    <string name="course_collection_empty">Sorry, this collection is on vacation</string>
+    <string name="internet_problem_catalog">Enable internet for see our Course Collections</string>
 
     <plurals name="course_count">
         <item quantity="one">%d course</item>

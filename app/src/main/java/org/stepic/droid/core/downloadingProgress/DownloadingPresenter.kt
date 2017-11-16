@@ -6,8 +6,10 @@ import io.reactivex.disposables.Disposable
 import org.stepic.droid.core.presenters.PresenterBase
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
+import org.stepic.droid.util.SuppressFBWarnings
 import javax.inject.Inject
 
+@SuppressFBWarnings("RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE")
 class DownloadingPresenter
 @Inject
 constructor(
@@ -18,7 +20,7 @@ constructor(
         private val mainScheduler: Scheduler) : PresenterBase<DownloadingView>() {
 
     private val idToDisposableMap = hashMapOf<Long, Disposable>()
-    private val compositeDisposable: CompositeDisposable = CompositeDisposable()
+    private val compositeDisposable = CompositeDisposable()
 
     fun onStateChanged(id: Long, isLoading: Boolean) {
         if (isLoading) {
@@ -28,9 +30,16 @@ constructor(
         }
     }
 
+    override fun attachView(view: DownloadingView) {
+        super.attachView(view)
+        if (compositeDisposable.size() != 0) {
+            throw IllegalStateException("Previous disposable is not disposed $compositeDisposable")
+        }
+    }
+
     override fun detachView(view: DownloadingView) {
         super.detachView(view)
-        compositeDisposable.dispose()
+        compositeDisposable.clear()
         idToDisposableMap.clear()
     }
 
@@ -44,6 +53,7 @@ constructor(
                 .subscribeOn(scheduler)
                 .observeOn(mainScheduler)
                 .subscribe { progress -> view?.onNewProgressValue(id, progress) }
+
         idToDisposableMap.put(id, disposable)
         compositeDisposable.add(disposable)
     }
