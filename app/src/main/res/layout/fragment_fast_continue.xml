@@ -143,6 +143,7 @@
                 android:max="100"
                 app:mpb_progressStyle="horizontal"
                 app:mpb_useIntrinsicPadding="false"
+                app:mpb_showTrack="false"
                 style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal.NoPadding" />
         </android.support.constraint.ConstraintLayout>
     </org.stepic.droid.ui.custom.RoundedBorderMaskView>
