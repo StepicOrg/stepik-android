@@ -129,17 +129,21 @@
                 app:layout_constraintBottom_toBottomOf="@+id/fastContinueCourseCover"
                 app:layout_constraintRight_toRightOf="parent" />
 
-            <View
+            <me.zhanghai.android.materialprogressbar.MaterialProgressBar
                 android:id="@+id/fastContinueCourseProgress"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="@dimen/fast_continue_course_progress_size"
-                android:background="@color/stepic_brand_primary"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_marginBottom="0dp"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="0dp"
                 android:layout_marginLeft="0dp"
-                android:visibility="gone" />
+                android:visibility="gone"
+                android:tint="@color/stepic_brand_primary"
+                android:max="100"
+                app:mpb_progressStyle="horizontal"
+                app:mpb_useIntrinsicPadding="false"
+                style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal.NoPadding" />
         </android.support.constraint.ConstraintLayout>
     </org.stepic.droid.ui.custom.RoundedBorderMaskView>
 

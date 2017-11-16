@@ -5,7 +5,6 @@ import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.support.annotation.StringRes
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,7 +19,6 @@ import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.core.dropping.contract.DroppingListener
 import org.stepic.droid.core.joining.contract.JoiningListener
 import org.stepic.droid.core.presenters.ContinueCoursePresenter
-import org.stepic.droid.core.presenters.LastStepPresenter
 import org.stepic.droid.core.presenters.PersistentCourseListPresenter
 import org.stepic.droid.core.presenters.contracts.ContinueCourseView
 import org.stepic.droid.core.presenters.contracts.CoursesView
@@ -198,12 +196,11 @@ class FastContinueFragment : FragmentBase(),
         val progress = ProgressUtil.getProgressPercent(course.progressObject) ?: 0
         fastContinueCourseProgressText.text = getString(R.string.course_current_progress, progress)
 
-        setCourseProgress(progress)
+        setCourseProgressBar(progress)
     }
 
-    private fun setCourseProgress(progress: Int) {
-        val parentWidth = (fastContinueCourseProgress.parent as View).measuredWidth
-        fastContinueCourseProgress.layoutParams.width = parentWidth * progress / 100
+    private fun setCourseProgressBar(progress: Int) {
+        fastContinueCourseProgress.progress = progress
         fastContinueCourseProgress.changeVisibility(progress != 0)
     }
 
