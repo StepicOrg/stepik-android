@@ -347,7 +347,7 @@ public class UnitsFragment extends FragmentBase implements
         dismiss();
 
         for (Lesson lesson : this.lessonList) {
-            downloadingPresenter.onStateChanged(lesson.getId(), lesson.is_cached());
+            downloadingPresenter.onStateChanged(lesson.getId(), lesson.is_loading());
         }
     }
 
