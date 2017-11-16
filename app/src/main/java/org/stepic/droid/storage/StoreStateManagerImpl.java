@@ -46,7 +46,6 @@ public class StoreStateManagerImpl implements StoreStateManager {
     public void updateUnitLessonState(final long lessonId) {
         List<Step> steps = databaseFacade.getStepsOfLesson(lessonId);
         boolean cached = true;
-        boolean loading = false;
         for (Step step : steps) {
             if (!step.is_cached()) {
                 cached = false;
@@ -54,46 +53,37 @@ public class StoreStateManagerImpl implements StoreStateManager {
             }
         }
 
-        for (Step step : steps) {
-            if (step.is_loading()) {
-                loading = true;
-                break;
+        if (cached) {
+            makeLessonCached(lessonId);
+
+            Unit unit = databaseFacade.getUnitByLessonId(lessonId);
+            if (unit != null) {
+                updateSectionState(unit.getSection());
             }
         }
+    }
 
-        //all steps of lesson is cached
+    @WorkerThread
+    private void makeLessonCached(final long lessonId) {
         final Lesson lesson = databaseFacade.getLessonById(lessonId);
         if (lesson == null) {
             analytic.reportError(Analytic.Error.LESSON_IN_STORE_STATE_NULL, new NullPointerException("lesson was null"));
             return;
         }
 
-        // cached = true -> loading = false
-        // cached = false -> loading = false|true
-        lesson.set_loading(loading);
-        lesson.set_cached(cached);
+        lesson.set_loading(false);
+        lesson.set_cached(true);
 
         databaseFacade.updateOnlyCachedLoadingLesson(lesson);
-        if (!loading) {
-            final boolean isCached = cached;
-            mainHandler.post(new Function0<kotlin.Unit>() {
-                @Override
-                public kotlin.Unit invoke() {
-                    for (LessonCallback callback : lessonCallbackContainer.asIterable()) {
-                        if (isCached) {
-                            callback.onLessonCached(lessonId);
-                        } else {
-                            callback.onLessonNotCached(lessonId);
-                        }
-                    }
-                    return kotlin.Unit.INSTANCE;
+        mainHandler.post(new Function0<kotlin.Unit>() {
+            @Override
+            public kotlin.Unit invoke() {
+                for (LessonCallback callback : lessonCallbackContainer.asIterable()) {
+                    callback.onLessonCached(lessonId);
                 }
-            });
-        }
-        Unit unit = databaseFacade.getUnitByLessonId(lessonId);
-        if (unit != null) {
-            updateSectionState(unit.getSection());
-        }
+                return kotlin.Unit.INSTANCE;
+            }
+        });
     }
 
     @Override
