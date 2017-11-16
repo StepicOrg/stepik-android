@@ -57,9 +57,6 @@ class FastContinueFragment : FragmentBase(),
     lateinit var droppingClient: Client<DroppingListener>
 
     @Inject
-    lateinit var lastStepPresenter: LastStepPresenter
-
-    @Inject
     lateinit var joiningListenerClient: Client<JoiningListener>
 
     private lateinit var courseCoverImageViewTarget: BitmapImageViewTarget
@@ -177,7 +174,6 @@ class FastContinueFragment : FragmentBase(),
             }
             setCourse(course)
             isCourseFound = true
-            lastStepPresenter.fetchLastStep(courseId = course.courseId, lastStepId = course.lastStepId)
             fastContinueAction.setOnClickListener {
                 analytic.reportEvent(Analytic.FastContinue.CONTINUE_CLICK)
                 continueCoursePresenter.continueCourse(course)
