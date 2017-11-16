@@ -1,5 +1,7 @@
 package org.stepic.droid.storage;
 
+import android.support.annotation.WorkerThread;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.analytic.Analytic;
@@ -167,7 +169,6 @@ public class StoreStateManagerImpl implements StoreStateManager {
         List<Lesson> lessonList = databaseFacade.getLessonsByIds(lessonIds);
 
         boolean cached = true;
-        boolean loading = false;
 
         for (Lesson lesson : lessonList) {
             if (!lesson.is_cached()) {
@@ -176,43 +177,33 @@ public class StoreStateManagerImpl implements StoreStateManager {
             }
         }
 
-        for (Lesson lesson : lessonList) {
-            if (lesson.is_loading()) {
-                loading = true;
-                break;
-            }
+        if (cached) {
+            makeSectionCached(sectionId);
         }
+    }
 
-        //all units, lessons, steps of sections are cached
+    @WorkerThread
+    private void makeSectionCached(long sectionId) {
+        //all units, lessons, steps of section are cached
         final Section section = databaseFacade.getSectionById(sectionId);
         if (section == null) {
             analytic.reportError(Analytic.Error.NULL_SECTION, new Exception("update section state"));
             return;
         }
-        if (!section.isCached() || section.isLoading()) {
-            // cached = true -> loading = false
-            // cached = false -> loading = false|true
-            section.setCached(cached);
-            section.setLoading(loading);
-            databaseFacade.updateOnlyCachedLoadingSection(section);
 
-            if (!loading) {
-                final boolean isCached = cached;
-                mainHandler.post(new Function0<kotlin.Unit>() {
-                    @Override
-                    public kotlin.Unit invoke() {
-                        for (SectionCallback callback : sectionCallbackContainer.asIterable()) {
-                            if (isCached) {
-                                callback.onSectionCached(section.getId());
-                            } else {
-                                callback.onSectionNotCached(section.getId());
-                            }
-                        }
-                        return kotlin.Unit.INSTANCE;
-                    }
-                });
+        section.setCached(true);
+        section.setLoading(false);
+        databaseFacade.updateOnlyCachedLoadingSection(section);
+
+        mainHandler.post(new Function0<kotlin.Unit>() {
+            @Override
+            public kotlin.Unit invoke() {
+                for (SectionCallback callback : sectionCallbackContainer.asIterable()) {
+                    callback.onSectionCached(section.getId());
+                }
+                return kotlin.Unit.INSTANCE;
             }
-        }
+        });
     }
 
     @Override
