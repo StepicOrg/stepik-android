@@ -15,9 +15,11 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
             updateMask(width, height)
         }
 
-    private var maskBitmap: Bitmap? = null
-    private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val maskPaint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
+
+    private var maskBitmap: Bitmap? = null
+    private var bufferBitmap: Bitmap? = null
+    private var bufferCanvas: Canvas? = null
 
     init {
         val attributes = context.obtainStyledAttributes(attrs, R.styleable.RoundedBorderMaskView)
@@ -27,35 +29,27 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
             attributes.recycle()
         }
 
-        maskPaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
+        maskPaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_IN)
         setWillNotDraw(false)
     }
 
     override fun draw(canvas: Canvas) {
-        val offscreenBitmap = Bitmap.createBitmap(canvas.width, canvas.height, Bitmap.Config.ARGB_8888)
-        val offscreenCanvas = Canvas(offscreenBitmap)
-
-        super.draw(offscreenCanvas)
-
-        if (maskBitmap == null) {
-            updateMask(canvas.width, canvas.height)
-        }
-
-        offscreenCanvas.drawBitmap(maskBitmap, 0f, 0f, maskPaint)
-        canvas.drawBitmap(offscreenBitmap, 0f, 0f, paint)
+        super.draw(bufferCanvas)
+        bufferCanvas?.drawBitmap(maskBitmap, 0f, 0f, maskPaint)
+        canvas.drawBitmap(bufferBitmap, 0f, 0f, null)
     }
 
     private fun updateMask(width: Int, height: Int) {
         if (width <= 0 || height <= 0) return
 
-        val mask = Bitmap.createBitmap(width, height, Bitmap.Config.ALPHA_8)
+        bufferBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        bufferCanvas = Canvas(bufferBitmap)
+
+        val rect = RectF(0f, 0f, width.toFloat(), height.toFloat())
+        val mask = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(mask)
 
         val paint = Paint(Paint.ANTI_ALIAS_FLAG)
-        val rect = RectF(0f, 0f, width.toFloat(), height.toFloat())
-        canvas.drawRect(rect, paint)
-
-        paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
         canvas.drawRoundRect(rect, borderRadius, borderRadius, paint)
 
         this.maskBitmap = mask
