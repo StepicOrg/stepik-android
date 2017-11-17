@@ -50,9 +50,8 @@
             <TextView
                 android:id="@+id/fastContinueAction"
                 style="@style/CourseWidgetView"
-                fontPath="fonts/Roboto-Regular.ttf"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/min_ux_touchable_size"
+                android:layout_height="@dimen/fast_continue_action_height"
                 android:layout_gravity="center_horizontal"
                 android:background="@drawable/fast_continue_action_background"
                 android:paddingEnd="@dimen/half_padding"
@@ -60,7 +59,6 @@
                 android:text="@string/continue_learning"
                 android:textSize="@dimen/fast_continue_action_text_size"
                 android:visibility="gone"
-                tools:ignore="MissingPrefix"
                 tools:visibility="visible"
                 android:layout_marginRight="@dimen/fast_continue_action_horizontal_margin"
                 android:layout_marginEnd="@dimen/fast_continue_action_horizontal_margin"
