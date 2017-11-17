@@ -12,6 +12,7 @@ import org.stepic.droid.di.certificates.CertificateComponent
 import org.stepic.droid.di.course_general.CourseGeneralComponent
 import org.stepic.droid.di.downloads.DownloadsComponent
 import org.stepic.droid.di.feedback.FeedbackComponent
+import org.stepic.droid.di.home.HomeComponent
 import org.stepic.droid.di.lesson.LessonComponent
 import org.stepic.droid.di.login.LoginComponent
 import org.stepic.droid.di.mainscreen.MainScreenComponent
@@ -57,6 +58,8 @@ interface AppCoreComponent {
 
     fun profileComponentBuilder(): ProfileComponent.Builder
 
+    fun homeComponentBuilder(): HomeComponent.Builder
+
     fun certificateComponentBuilder(): CertificateComponent.Builder
 
     fun courseGeneralComponentBuilder(): CourseGeneralComponent.Builder
@@ -80,8 +83,6 @@ interface AppCoreComponent {
     fun inject(adapter: Course)
 
     fun inject(baseFragment: FragmentBase)
-
-    fun inject(homeFragment: HomeFragment)
 
     fun inject(dialogFragment: DiscountingPolicyDialogFragment)
 

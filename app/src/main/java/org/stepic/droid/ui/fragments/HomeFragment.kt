@@ -37,7 +37,10 @@ class HomeFragment : FragmentBase(), HomeStreakView {
     }
 
     override fun injectComponent() {
-        App.component().inject(this)
+        App.component()
+                .homeComponentBuilder()
+                .build()
+                .inject(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? =
