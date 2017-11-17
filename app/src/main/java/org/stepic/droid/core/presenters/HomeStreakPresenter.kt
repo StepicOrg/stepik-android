@@ -25,8 +25,7 @@ constructor(
         ): PresenterBase<HomeStreakView>() {
     private val compositeDisposable = CompositeDisposable()
 
-    override fun attachView(view: HomeStreakView) {
-        super.attachView(view)
+    fun onNeedShowStreak() {
         compositeDisposable.add(Observable
                 .fromCallable { RxOptional(sharedPreferences.profile?.id) }
                 .unwrapOptional()
@@ -46,7 +45,11 @@ constructor(
     }
 
     private fun showStreak(streak: Int) {
-        view?.showStreak(streak)
+        if (streak > 0) {
+            view?.showStreak(streak)
+        } else {
+            view?.onEmptyStreak()
+        }
     }
 
     override fun detachView(view: HomeStreakView) {

@@ -61,6 +61,7 @@ class HomeFragment : FragmentBase(), HomeStreakView {
         }
 
         homeStreakPresenter.attachView(this)
+        homeStreakPresenter.onNeedShowStreak()
     }
 
     override fun onDestroyView() {
@@ -69,20 +70,21 @@ class HomeFragment : FragmentBase(), HomeStreakView {
     }
 
     override fun showStreak(streak: Int) {
-        val needShow = streak > 0
-        if (needShow) {
-            streakCounter.text = streak.toString()
+        streakCounter.text = streak.toString()
 
-            val daysPlural = resources.getQuantityString(R.plurals.day_number, streak)
-            val daysSpannable = SpannableString("$streak $daysPlural")
-            daysSpannable.setSpan(regularFontSpan, 0, daysSpannable.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        val daysPlural = resources.getQuantityString(R.plurals.day_number, streak)
+        val daysSpannable = SpannableString("$streak $daysPlural")
+        daysSpannable.setSpan(regularFontSpan, 0, daysSpannable.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
-            val streakTextSpannableBuilder = SpannableStringBuilder(getString(R.string.home_streak_counter_prefix))
-            streakTextSpannableBuilder.append(daysSpannable)
-            streakTextSpannableBuilder.append(getString(R.string.home_streak_counter_suffix))
+        val streakTextSpannableBuilder = SpannableStringBuilder(getString(R.string.home_streak_counter_prefix))
+        streakTextSpannableBuilder.append(daysSpannable)
+        streakTextSpannableBuilder.append(getString(R.string.home_streak_counter_suffix))
 
-            streakText.text = streakTextSpannableBuilder
-        }
-        homeStreak.changeVisibility(needShow)
+        streakText.text = streakTextSpannableBuilder
+        homeStreak.changeVisibility(true)
+    }
+
+    override fun onEmptyStreak() {
+        homeStreak.changeVisibility(false)
     }
 }
