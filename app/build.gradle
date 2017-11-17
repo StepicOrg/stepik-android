@@ -7,71 +7,48 @@ apply from: '../code_quality_tools/findbugs.gradle'
 apply from: '../code_quality_tools/checkstyle.gradle'
 apply from: '../code_quality_tools/pmd.gradle'
 
-def globalConf = rootProject.ext
 android {
 
-    compileSdkVersion rootProject.androidCompileSdkVersion
-    buildToolsVersion rootProject.androidBuildToolsVersion
+    compileSdkVersion androidCompileSdkVersion
+    buildToolsVersion androidBuildToolsVersion
 
     signingConfigs {
         debug {
-            storeFile file(globalConf.debugKeystore)
-            storePassword globalConf.debugKeystorePass
-            keyAlias globalConf.debugAlias
-            keyPassword globalConf.debugAliasPass
+            storeFile file(debugKeystore)
+            storePassword debugKeystorePass
+            keyAlias debugAlias
+            keyPassword debugAliasPass
         }
 
         release {
-            storeFile file(globalConf.keystore)
-            storePassword globalConf.keystorePass
-            keyAlias globalConf.alias
-            keyPassword globalConf.aliasPass
+            storeFile file(keystore)
+            storePassword keystorePass
+            keyAlias alias
+            keyPassword aliasPass
         }
 
         oldRelease {
-            storeFile file(globalConf.keystore)
-            storePassword globalConf.keystorePass
-            keyAlias globalConf.oldAlias
-            keyPassword globalConf.oldAliasPass
+            storeFile file(keystore)
+            storePassword keystorePass
+            keyAlias oldAlias
+            keyPassword oldAliasPass
         }
     }
 
     defaultConfig {
         applicationId "org.stepic.droid"
-        minSdkVersion rootProject.androidMinSdkVersion
-        targetSdkVersion rootProject.androidTargetSdkVersion
+        minSdkVersion androidMinSdkVersion
+        targetSdkVersion androidTargetSdkVersion
         versionCode 197
         versionName "1.47"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
 
-    productFlavors {
-        sb {
-            applicationIdSuffix '.sb'
-        }
-        classic {
-        }
-    }
-
     android.applicationVariants.all { variant ->
         // assign different version code for each output
         variant.outputs.each { output ->
             output.versionCodeOverride = android.defaultConfig.versionCode * 10
-        }
-    }
-
-    // delete unaligned files
-    android.applicationVariants.all { variant ->
-        variant.assemble.doLast {
-            variant.outputs.each { output ->
-                File unaligned = output.packageApplication.outputFile;
-                File aligned = output.outputFile
-                if (!unaligned.getName().equalsIgnoreCase(aligned.getName())) {
-                    println "deleting " + unaligned.getName()
-                    unaligned.delete()
-                }
-            }
         }
     }
 
@@ -118,6 +95,7 @@ android {
         oldRelease {
             initWith release
             signingConfig signingConfigs.oldRelease
+            matchingFallbacks = ['release']
         }
     }
 
@@ -132,10 +110,8 @@ kapt {
 }
 
 dependencies {
-
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(':androidsvg')
 
     //<DI>
     compile 'com.google.dagger:dagger:2.10'
@@ -196,8 +172,6 @@ dependencies {
 
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
 
-    compile project(':androidsvg')
-
     compile 'com.facebook.stetho:stetho:1.4.2'
     compile 'com.facebook.stetho:stetho-okhttp3:1.4.2'
 
@@ -207,9 +181,6 @@ dependencies {
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
     compile 'io.reactivex.rxjava2:rxjava:2.1.5'
 
-    oldReleaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:${rootProject.leakCanaryVersion}"
-    testCompile "com.squareup.leakcanary:leakcanary-android-no-op:${rootProject.leakCanaryVersion}"
-    androidTestCompile "com.squareup.leakcanary:leakcanary-android-no-op:${rootProject.leakCanaryVersion}"
     debugCompile "com.squareup.leakcanary:leakcanary-android:${rootProject.leakCanaryVersion}"
     releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:${rootProject.leakCanaryVersion}"
 

@@ -5,11 +5,11 @@ buildscript {
     ext.kotlin_version = '1.1.51'
     repositories {
         jcenter()
-        maven { url 'https://maven.google.com' }
+        google()
         maven { url "https://jitpack.io" }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.android.tools.build:gradle:3.0.0'
         classpath 'com.google.gms:google-services:3.0.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
@@ -18,9 +18,7 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
-        maven {
-            url 'https://maven.google.com'
-        }
+        google()
         maven {
             url "https://jitpack.io"
         }
@@ -29,7 +27,7 @@ allprojects {
 
 ext {
     //Android
-    androidBuildToolsVersion = "26.0.1"
+    androidBuildToolsVersion = "26.0.2"
     androidMinSdkVersion = 15
     androidTargetSdkVersion = 25
     androidCompileSdkVersion = 26
