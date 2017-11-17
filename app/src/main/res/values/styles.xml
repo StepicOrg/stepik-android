@@ -308,6 +308,15 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
+    <style name="FastContinueSubtextStyle">
+        <item name="fontPath">fonts/Roboto-Light.ttf</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:lineSpacingMultiplier">1.33</item>
+
+    </style>
+
     <style name="NewContinueButton">
         <item name="android:textSize">12sp</item>
     </style>

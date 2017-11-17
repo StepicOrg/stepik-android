@@ -113,6 +113,8 @@
     <dimen name="fast_continue_widget">@dimen/course_widget_radius</dimen>
     <dimen name="fast_continue_widget_height">160dp</dimen>
     <dimen name="fast_continue_action_radius">33dp</dimen>
+    <dimen name="fast_continue_action_text_size">16sp</dimen>
+    <dimen name="fast_continue_action_horizontal_margin">60dp</dimen>
     <dimen name="fast_continue_course_image_size">40dp</dimen>
     <dimen name="fast_continue_inner_content_margin">20dp</dimen>
     <dimen name="fast_continue_info_margin">10dp</dimen>
