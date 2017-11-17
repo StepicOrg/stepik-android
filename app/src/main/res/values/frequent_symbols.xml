@@ -312,4 +312,23 @@
         <item>\?</item>
         <item>^</item>
     </string-array>
+    <string-array name="frequent_symbols_sql">
+        <item>Tab</item>
+        <item>(</item>
+        <item>)</item>
+        <item>"'"</item>
+        <item>"`"</item>
+        <item>.</item>
+        <item>,</item>
+        <item>*</item>
+        <item>/</item>
+        <item>+</item>
+        <item>-</item>
+        <item>;</item>
+        <item>&lt;</item>
+        <item>></item>
+        <item>=</item>
+        <item>\#</item>
+        <item>\@</item>
+    </string-array>
 </resources>
