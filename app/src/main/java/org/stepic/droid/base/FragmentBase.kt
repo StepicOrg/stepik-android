@@ -134,8 +134,7 @@ open class FragmentBase : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         onReleaseComponent()
-        //        RefWatcher refWatcher = App.getRefWatcher(getActivity());
-        //        refWatcher.watch(this);
+        App.refWatcher.watch(this)
     }
 
     override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
