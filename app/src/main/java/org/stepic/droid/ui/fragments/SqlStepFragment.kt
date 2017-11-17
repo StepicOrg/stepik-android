@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import kotlinx.android.synthetic.main.fragment_step_attempt.*
+import kotlinx.android.synthetic.main.view_code_editor.*
 import kotlinx.android.synthetic.main.view_code_editor_layout.*
 import kotlinx.android.synthetic.main.view_code_toolbar.*
 import org.stepic.droid.R
@@ -77,19 +78,17 @@ class SqlStepFragment: StepAttemptFragment(), CodeToolbarAdapter.OnSymbolClickLi
         codeEditor.insertText(symbol)
     }
 
-    override fun showAttempt(attempt: Attempt?) {
-
-    }
+    override fun showAttempt(attempt: Attempt?) {}
 
     override fun generateReply() =
         Reply.Builder().setSolveSql(codeEditor.text.toString()).build()
 
 
     override fun blockUIBeforeSubmit(needBlock: Boolean) {
-
+        codeEdit.isEnabled = !needBlock
     }
 
     override fun onRestoreSubmission() {
-
+        codeEditor.setText(submission.reply?.solveSql)
     }
 }

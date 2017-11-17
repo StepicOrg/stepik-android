@@ -8,12 +8,11 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/silver"
-        android:visibility="gone"/>
+        android:background="@color/silver" />
 
     <include
         layout="@layout/view_code_editor_layout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/embedded_code_editor_height"/>
+        android:layout_height="@dimen/embedded_code_editor_height" />
 
 </LinearLayout>
