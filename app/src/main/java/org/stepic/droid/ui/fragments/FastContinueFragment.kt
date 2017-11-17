@@ -1,6 +1,5 @@
 package org.stepic.droid.ui.fragments
 
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.support.annotation.StringRes
@@ -27,7 +26,7 @@ import org.stepic.droid.model.Section
 import org.stepic.droid.storage.operations.Table
 import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
-import org.stepic.droid.ui.util.changeVisibility
+import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.util.*
 import javax.inject.Inject
 
@@ -81,13 +80,7 @@ class FastContinueFragment : FragmentBase(),
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        courseCoverImageViewTarget = object : BitmapImageViewTarget(fastContinueCourseCover) {
-            override fun setResource(resource: Bitmap) {
-                val circularBitmapDrawable = RoundedBitmapDrawableFactory.create(context.resources, resource)
-                circularBitmapDrawable.cornerRadius = resources.getDimension(R.dimen.course_image_radius)
-                fastContinueCourseCover.setImageDrawable(circularBitmapDrawable)
-            }
-        }
+        courseCoverImageViewTarget = RoundedBitmapImageViewTarget(resources.getDimension(R.dimen.course_image_radius), fastContinueCourseCover)
 
         courseListPresenter.attachView(this)
         continueCoursePresenter.attachView(this)
@@ -195,13 +188,7 @@ class FastContinueFragment : FragmentBase(),
 
         val progress = ProgressUtil.getProgressPercent(course.progressObject) ?: 0
         fastContinueCourseProgressText.text = getString(R.string.course_current_progress, progress)
-
-        setCourseProgressBar(progress)
-    }
-
-    private fun setCourseProgressBar(progress: Int) {
         fastContinueCourseProgress.progress = progress
-        fastContinueCourseProgress.changeVisibility(progress != 0)
     }
 
     //ContinueCourseView
