@@ -100,8 +100,6 @@ class FastContinueFragment : FragmentBase(),
                 screenManager.showLaunchScreen(context, true, MainFeedActivity.HOME_INDEX)
             })
         }
-
-        fastContinueMask.borderRadius = resources.getDimension(R.dimen.course_image_radius)
     }
 
     override fun onPause() {

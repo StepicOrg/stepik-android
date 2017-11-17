@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.widget.FrameLayout
+import org.stepic.droid.R
 
 class RoundedBorderMaskView
 @JvmOverloads
@@ -19,6 +20,13 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     private val maskPaint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
 
     init {
+        val attributes = context.obtainStyledAttributes(attrs, R.styleable.RoundedBorderMaskView)
+        try {
+            borderRadius = attributes.getDimension(R.styleable.RoundedBorderMaskView_borderRadius, 0f)
+        } finally {
+            attributes.recycle()
+        }
+
         maskPaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
         setWillNotDraw(false)
     }

@@ -3,4 +3,8 @@
     <declare-styleable name="ExpandableTextView">
         <attr name="trimLength" format="integer" />
     </declare-styleable>
+
+    <declare-styleable name="RoundedBorderMaskView">
+        <attr name="borderRadius" format="dimension" />
+    </declare-styleable>
 </resources>

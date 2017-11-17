@@ -15,7 +15,8 @@
     <org.stepic.droid.ui.custom.RoundedBorderMaskView
         android:id="@+id/fastContinueMask"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:borderRadius="@dimen/course_image_radius">
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
