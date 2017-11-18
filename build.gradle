@@ -1,17 +1,21 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 apply from: 'buildsystem/secret.gradle'
+apply from: 'dependencies.gradle'
 
 buildscript {
-    ext.kotlin_version = '1.1.51'
+    // Gradle will not find vars defined in an external file when referring to them
+    // in the buildscript block, unless you link it from the buildscript block, too.
+    apply from: 'dependencies.gradle'
+
     repositories {
         jcenter()
         google()
         maven { url "https://jitpack.io" }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.0'
-        classpath 'com.google.gms:google-services:3.0.0'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath gradlePlugins.android
+        classpath gradlePlugins.googleServices
+        classpath gradlePlugins.kotlin
     }
 }
 
@@ -23,17 +27,6 @@ allprojects {
             url "https://jitpack.io"
         }
     }
-}
-
-ext {
-    //Android
-    androidBuildToolsVersion = "26.0.2"
-    androidMinSdkVersion = 15
-    androidTargetSdkVersion = 25
-    androidCompileSdkVersion = 26
-    firebaseVersion = '11.2.2'
-    leakCanaryVersion = '1.5.1'
-    retrofitVersion = '2.3.0'
 }
 
 task clean(type: Delete) {

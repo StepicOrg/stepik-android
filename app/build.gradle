@@ -8,9 +8,20 @@ apply from: '../code_quality_tools/checkstyle.gradle'
 apply from: '../code_quality_tools/pmd.gradle'
 
 android {
+    compileSdkVersion versions.compileSdk
+    buildToolsVersion versions.buildTools
 
-    compileSdkVersion androidCompileSdkVersion
-    buildToolsVersion androidBuildToolsVersion
+    defaultConfig {
+        applicationId "org.stepic.droid"
+        minSdkVersion versions.minSdk
+        targetSdkVersion versions.targetSdk
+        versionCode versions.code
+        versionName versions.name
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
+    }
+
 
     signingConfigs {
         debug {
@@ -32,23 +43,6 @@ android {
             storePassword keystorePass
             keyAlias oldAlias
             keyPassword oldAliasPass
-        }
-    }
-
-    defaultConfig {
-        applicationId "org.stepic.droid"
-        minSdkVersion androidMinSdkVersion
-        targetSdkVersion androidTargetSdkVersion
-        versionCode 197
-        versionName "1.47"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        vectorDrawables.useSupportLibrary = true
-    }
-
-    android.applicationVariants.all { variant ->
-        // assign different version code for each output
-        variant.outputs.each { output ->
-            output.versionCodeOverride = android.defaultConfig.versionCode * 10
         }
     }
 
@@ -110,103 +104,81 @@ kapt {
 }
 
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation project(':androidsvg')
+    implementation libraries.kotlinStd
 
     //<DI>
-    compile 'com.google.dagger:dagger:2.10'
-    kapt 'com.google.dagger:dagger-compiler:2.10'
-    provided 'org.glassfish:javax.annotation:10.0-b28'
-    //needed to resolve compilation errors, thanks to tutplus.org for finding the dependency
-
-    compile 'com.jakewharton:butterknife:8.8.1'
-    kapt 'com.jakewharton:butterknife-compiler:8.8.1'
+    implementation libraries.dagger
+    kapt libraries.daggerCompiler
+    implementation libraries.butterKnife
+    kapt libraries.butterKnifeCompiler
     //</DI>
 
-    compile 'com.google.code.gson:gson:2.7'
+    implementation libraries.rxAndroid
+    implementation libraries.rxJava2
 
-    compile 'de.hdodenhof:circleimageview:2.1.0'
+    implementation libraries.supportAppCompat
+    implementation libraries.supportDesign
+    implementation libraries.supportRecyclerView
+    implementation libraries.supportCardView
+    implementation libraries.constraintLayout
+    implementation libraries.exoPlayer
 
-    compile 'com.android.support:appcompat-v7:26.1.0'
-    compile 'com.android.support:design:26.1.0'
-    compile 'com.android.support:recyclerview-v7:26.1.0'
-    compile 'com.android.support:cardview-v7:26.1.0'
+    implementation libraries.gson
+    implementation libraries.retrofit
+    implementation libraries.retrofitGsonConverter
+    implementation libraries.retrofitRxJavaAdapter
+    implementation libraries.jsoup
+    implementation libraries.stetho
+    implementation libraries.stethoOkHttp
 
-    compile "com.squareup.retrofit2:retrofit:${rootProject.retrofitVersion}"
-    compile "com.squareup.retrofit2:converter-gson:${rootProject.retrofitVersion}"
-    compile "com.squareup.retrofit2:adapter-rxjava2:${rootProject.retrofitVersion}"
+    implementation libraries.glide
 
-    // AppMetrica from maven central. Protobuf will be included as dependency.
-    compile 'com.yandex.android:mobmetricalib:2.62'
+    implementation libraries.appMetrica
 
-    compile 'jp.wasabeef:recyclerview-animators:2.1.0'
+    implementation libraries.calligraphy
 
-    compile 'uk.co.chrisjenx:calligraphy:2.1.0'
+    implementation libraries.firebaseMessaging
+    implementation libraries.firebaseAppindexing
+    implementation libraries.googleauth
+    implementation libraries.firebaseCore
+    implementation libraries.firebaseCrash
+    implementation libraries.firebaseConfig
 
-    compile 'me.zhanghai.android.materialprogressbar:library:1.1.6'
+    implementation libraries.facebookSdk
+    implementation libraries.vkSdk
 
-    compile 'org.jsoup:jsoup:1.8.3'
+    implementation libraries.timber
 
-    compile "com.google.firebase:firebase-messaging:${rootProject.firebaseVersion}"
-    compile "com.google.firebase:firebase-appindexing:${rootProject.firebaseVersion}"
-    compile "com.google.android.gms:play-services-auth:${rootProject.firebaseVersion}"
-    compile "com.google.firebase:firebase-core:${rootProject.firebaseVersion}"
-    compile "com.google.firebase:firebase-crash:${rootProject.firebaseVersion}"
-    compile "com.google.firebase:firebase-config:${rootProject.firebaseVersion}"
+    implementation libraries.materialDialog
+    implementation libraries.numberPicker
+    implementation libraries.photoView
+    implementation libraries.advancedRecycler
+    implementation libraries.recyclerAnimators
+    implementation libraries.materialProgress
+    implementation libraries.circleImageView
 
-    compile 'com.github.bumptech.glide:glide:3.7.0'
-    compile 'com.facebook.android:facebook-android-sdk:4.17.0'
-    compile 'com.vk:androidsdk:1.6.5'
-    compile 'com.jakewharton.timber:timber:4.5.1'
-
-    compile 'com.github.javiersantos:MaterialStyledDialogs:2.0'
-    compile 'biz.kasual:materialnumberpicker:1.2.1'
-
-    compile 'com.github.chrisbanes:PhotoView:1.3.1'
+    debugImplementation libraries.leakCanary
+    releaseImplementation libraries.leakCanaryNoOp
 
 
-    compile('com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:0.11.0@aar')
-    //depends on (remove this library in future or be care, when update support libs)
-    //    |    +--- com.android.support:appcompat-v7:27.0.0 (*)
-    //    |    \--- com.android.support:recyclerview-v7:27.0.0 (*)
+    testImplementation libraries.junit
+    testImplementation libraries.robolectric
+    testImplementation libraries.mockitoCore
+    testImplementation libraries.jodaTime
+    testImplementation libraries.hamcrest
 
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-
-    compile 'com.facebook.stetho:stetho:1.4.2'
-    compile 'com.facebook.stetho:stetho-okhttp3:1.4.2'
-
-    //add exo player for video (change playback speed supported)
-    compile 'com.google.android.exoplayer:exoplayer-core:r2.5.3'
-
-    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
-    compile 'io.reactivex.rxjava2:rxjava:2.1.5'
-
-    debugCompile "com.squareup.leakcanary:leakcanary-android:${rootProject.leakCanaryVersion}"
-    releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:${rootProject.leakCanaryVersion}"
-
-    // Required -- JUnit 4 framework
-    testCompile 'junit:junit:4.12'
-    // Optional -- Mockito framework
-    testCompile 'org.mockito:mockito-core:2.7.21'
-    testCompile 'org.robolectric:robolectric:3.1.2'
-    testCompile 'joda-time:joda-time:2.8'
-
-    androidTestCompile 'org.hamcrest:hamcrest-library:1.3'
-
-    androidTestCompile 'com.android.support:support-annotations:26.1.0'
-    androidTestCompile('com.android.support.test:runner:0.5') {
+    androidTestImplementation(libraries.supportTestRunner) {
         exclude group: 'com.android.support'
     }
-    androidTestCompile('com.android.support.test:rules:0.5') {
+    androidTestImplementation libraries.supportTestRules
+    androidTestImplementation(libraries.espressoCore) {
         exclude group: 'com.android.support'
     }
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2') {
+    androidTestImplementation(libraries.espressoContrib) {
         exclude group: 'com.android.support'
     }
-    androidTestCompile('com.android.support.test.espresso:espresso-contrib:2.2.2') {
-        exclude group: 'com.android.support'
-    }
-    androidTestCompile('com.android.support.test.espresso:espresso-intents:2.2.2') {
+    androidTestImplementation(libraries.espressoIntents) {
         exclude group: 'com.android.support'
     }
 }
