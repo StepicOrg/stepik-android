@@ -4,6 +4,7 @@ import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.disposables.CompositeDisposable
 import org.stepic.droid.core.presenters.contracts.HomeStreakView
+import org.stepic.droid.di.home.HomeScope
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.preferences.SharedPreferenceHelper
@@ -13,6 +14,7 @@ import org.stepic.droid.util.unwrapOptional
 import org.stepic.droid.web.Api
 import javax.inject.Inject
 
+@HomeScope
 class HomeStreakPresenter
 @Inject
 constructor(

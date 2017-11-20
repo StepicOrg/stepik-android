@@ -4,7 +4,7 @@ import dagger.Subcomponent
 import org.stepic.droid.ui.fragments.HomeFragment
 
 @HomeScope
-@Subcomponent(modules = arrayOf(HomeModule::class))
+@Subcomponent
 interface HomeComponent {
     @Subcomponent.Builder
     interface Builder {
