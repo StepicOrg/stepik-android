@@ -78,7 +78,9 @@ class SqlStepFragment: StepAttemptFragment(), CodeToolbarAdapter.OnSymbolClickLi
         codeEditor.insertText(symbol)
     }
 
-    override fun showAttempt(attempt: Attempt?) {}
+    override fun showAttempt(attempt: Attempt?) {
+        // no-op
+    }
 
     override fun generateReply() =
         Reply.Builder().setSolveSql(codeEditor.text.toString()).build()
