@@ -7,6 +7,7 @@ import org.stepic.droid.core.presenters.TagListPresenter
 import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.model.Tag
 import org.stepic.droid.storage.operations.Table
+import org.stepic.droid.ui.util.initCenteredToolbar
 import javax.inject.Inject
 
 class TagFragment : CourseListFragmentBase(), CoursesView {
@@ -38,6 +39,9 @@ class TagFragment : CourseListFragmentBase(), CoursesView {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val title = arguments.getParcelable<Tag>(TAG_KEY).title
+        initCenteredToolbar(title, showHomeButton = true, homeIndicatorRes = getCloseIconDrawableRes())
+
         tagListPresenter.attachView(this)
         tagListPresenter.downloadData()
     }
