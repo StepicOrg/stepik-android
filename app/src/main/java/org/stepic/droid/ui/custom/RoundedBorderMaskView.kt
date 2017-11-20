@@ -16,6 +16,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
         }
 
     private val maskPaint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
+    private val antiAliasedPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     private var maskBitmap: Bitmap? = null
     private var bufferBitmap: Bitmap? = null
@@ -49,8 +50,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
         val mask = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(mask)
 
-        val paint = Paint(Paint.ANTI_ALIAS_FLAG)
-        canvas.drawRoundRect(rect, borderRadius, borderRadius, paint)
+        canvas.drawRoundRect(rect, borderRadius, borderRadius, antiAliasedPaint)
 
         this.maskBitmap = mask
     }
