@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/tagsTitle"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="@dimen/catalog_header_bottom_margin"
         android:clipToPadding="false"
         android:divider="@color/transparent"
         android:paddingEnd="0dp"
@@ -23,5 +23,12 @@
         android:paddingStart="@dimen/course_list_side_padding"
         android:scrollbarStyle="outsideOverlay"
         android:splitMotionEvents="false"/>
+
+
+    <include
+        layout="@layout/view_horizontal_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/tagsRecycler"/>
 
 </RelativeLayout>
