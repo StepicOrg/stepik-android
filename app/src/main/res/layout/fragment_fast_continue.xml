@@ -108,8 +108,6 @@
                 style="@style/FastContinueSubtextStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:gravity="start"
-                android:textColor="@color/white"
                 tools:ignore="MissingPrefix"
                 tools:text="Ваш прогресс 68%"
                 app:layout_constraintHorizontal_weight="1"
