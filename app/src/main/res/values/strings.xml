@@ -557,6 +557,5 @@
         <item quantity="other">%d courses</item>
     </plurals>
     <string name="course_current_progress">Current progress: %d%%</string>
-    <string name="home_streak_counter_prefix">"Your current Streak is "</string>
-    <string name="home_streak_counter_suffix">!</string>
+    <string name="home_streak_counter_text">Your current Streak is %s!</string>
 </resources>

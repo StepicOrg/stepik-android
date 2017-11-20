@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
-import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +18,7 @@ import org.stepic.droid.fonts.FontType
 import org.stepic.droid.model.CoursesCarouselInfoConstants
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.ui.util.initCenteredToolbar
+import org.stepic.droid.util.format
 import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan
 import uk.co.chrisjenx.calligraphy.TypefaceUtils
 import javax.inject.Inject
@@ -79,11 +79,9 @@ class HomeFragment : FragmentBase(), HomeStreakView {
         val daysSpannable = SpannableString("$streak $daysPlural")
         daysSpannable.setSpan(regularFontSpan, 0, daysSpannable.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
-        val streakTextSpannableBuilder = SpannableStringBuilder(getString(R.string.home_streak_counter_prefix))
-        streakTextSpannableBuilder.append(daysSpannable)
-        streakTextSpannableBuilder.append(getString(R.string.home_streak_counter_suffix))
+        val streakString = SpannableString(getString(R.string.home_streak_counter_text))
 
-        streakText.text = streakTextSpannableBuilder
+        streakText.text = streakString.format(daysSpannable)
         homeStreak.changeVisibility(true)
     }
 

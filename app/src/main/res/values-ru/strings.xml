@@ -547,6 +547,5 @@
         <item quantity="other">%d курсов</item>
     </plurals>
     <string name="course_current_progress">Текущий прогресс %d%%</string>
-    <string name="home_streak_counter_prefix">"Вы решаете "</string>
-    <string name="home_streak_counter_suffix">" подряд!"</string>
+    <string name="home_streak_counter_text">Вы решаете %s подряд!</string>
 </resources>
