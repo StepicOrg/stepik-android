@@ -45,15 +45,16 @@ class CodeToolbarAdapter(private val context: Context) : RecyclerView.Adapter<Re
         }
 
     var onSymbolClickListener: OnSymbolClickListener? = null
-    private val onItemClickListener = OnItemClickListener { position ->
-        items[position]?.toString()?.let { word ->
-            onSymbolClickListener?.onSymbolClick(
-                    if (autocomplete.prefix.isNotEmpty() && word.startsWith(autocomplete.prefix)) {
-                        word.removePrefix(autocomplete.prefix) + " "
-                    } else {
-                        word
-                    }
-            )
+    private val onItemClickListener: OnItemClickListener = object : OnItemClickListener {
+        override fun onItemClick(position: Int) {
+            items[position]?.toString()?.let { word ->
+                onSymbolClickListener?.onSymbolClick(
+                        if (autocomplete.prefix.isNotEmpty() && word.startsWith(autocomplete.prefix)) {
+                            word.removePrefix(autocomplete.prefix) + " "
+                        } else {
+                            word
+                        })
+            }
         }
     }
 
@@ -152,6 +153,7 @@ class CodeToolbarAdapter(private val context: Context) : RecyclerView.Adapter<Re
             codeToolbarSymbol.text = symbol
         }
     }
+
     private class CodeToolbarSeparator(view: View) : RecyclerView.ViewHolder(view)
 
 }

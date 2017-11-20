@@ -1,7 +1,6 @@
 package org.stepic.droid.di.tags
 
 import dagger.BindsInstance
-import dagger.Component
 import dagger.Subcomponent
 import org.stepic.droid.model.Tag
 import org.stepic.droid.ui.fragments.TagFragment
@@ -10,7 +9,7 @@ import org.stepic.droid.ui.fragments.TagFragment
 @Subcomponent(modules = arrayOf(TagModule::class))
 interface TagComponent {
 
-    @Component.Builder
+    @Subcomponent.Builder
     interface Builder {
         fun build(): TagComponent
 

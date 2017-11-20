@@ -39,6 +39,7 @@ import org.stepic.droid.model.RegistrationUser;
 import org.stepic.droid.model.Reply;
 import org.stepic.droid.model.ReplyWrapper;
 import org.stepic.droid.model.StepikFilter;
+import org.stepic.droid.model.Tag;
 import org.stepic.droid.model.comments.Comment;
 import org.stepic.droid.model.comments.Vote;
 import org.stepic.droid.model.comments.VoteValue;
@@ -510,8 +511,7 @@ public class ApiImpl implements Api {
         bundle.putString(FirebaseAnalytics.Param.SEARCH_TERM, rawQuery);
         analytic.reportEvent(FirebaseAnalytics.Event.SEARCH, bundle);
 
-        String type = "course";
-        return loggedService.getSearchResults(page, encodedQuery, type);
+        return loggedService.getSearchResults(page, encodedQuery);
     }
 
     @Override
@@ -779,6 +779,12 @@ public class ApiImpl implements Api {
     public Single<TagResponse> getFeaturedTags() {
         return loggedService.getFeaturedTags();
     }
+
+    @Override
+    public Single<SearchResultResponse> getSearchResultsOfTag(int page, @NotNull Tag tag) {
+        return loggedService.getSearchResultsOfTag(page, tag.getId());
+    }
+
 
     @Nullable
     private String getNotificationCategoryString(NotificationCategory notificationCategory) {
