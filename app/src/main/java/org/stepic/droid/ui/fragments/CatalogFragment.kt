@@ -101,8 +101,14 @@ class CatalogFragment : FragmentBase(),
                 {
                     filtersPresenter.onNeedFilters()
                     tagsPresenter.onNeedShowTags()
-                }
+                },
+                { tag -> onTagClicked(tag) }
         )
+    }
+
+    private fun onTagClicked(tag: Tag) {
+        screenManager.showListOfTag(activity, tag)
+
     }
 
     override fun showCollections(courseItems: List<CoursesCarouselInfo>) {

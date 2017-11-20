@@ -7,8 +7,9 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.tag_item.view.*
 import org.stepic.droid.R
 import org.stepic.droid.model.Tag
+import org.stepic.droid.ui.listeners.OnItemClickListener
 
-class TagsAdapter() : RecyclerView.Adapter<TagsAdapter.TagViewHolder>() {
+class TagsAdapter(private val onTagClicked: (Tag) -> Unit) : RecyclerView.Adapter<TagsAdapter.TagViewHolder>() {
 
     private val _tags: MutableList<Tag> = mutableListOf()
 
@@ -27,12 +28,31 @@ class TagsAdapter() : RecyclerView.Adapter<TagsAdapter.TagViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TagViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val tagView = layoutInflater.inflate(R.layout.tag_item, parent, false)
-        return TagViewHolder(tagView)
+        val onItemClickListener: OnItemClickListener = object : OnItemClickListener {
+            override fun onItemClick(position: Int) {
+                onItemClicked(position)
+            }
+        }
+        return TagViewHolder(tagView, onItemClickListener)
     }
 
-    class TagViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    private fun onItemClicked(adapterPosition: Int) {
+        if (adapterPosition > _tags.size || adapterPosition < 0) {
+            return
+        }
+        val tag = _tags[adapterPosition]
+        onTagClicked.invoke(tag)
+    }
+
+    class TagViewHolder(view: View, onItemClickListener: OnItemClickListener) : RecyclerView.ViewHolder(view) {
 
         private val tagTextView = itemView.tagTextView
+
+        init {
+            itemView.setOnClickListener {
+                onItemClickListener.onItemClick(adapterPosition)
+            }
+        }
 
         fun bindTag(tag: Tag) {
             tagTextView.text = tag.title

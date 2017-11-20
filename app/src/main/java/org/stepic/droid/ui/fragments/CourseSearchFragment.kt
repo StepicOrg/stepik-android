@@ -70,8 +70,8 @@ class CourseSearchFragment: CourseListFragmentBase() {
 
     override fun getCourseType(): Table? = null
 
-    public override fun showEmptyScreen(isShowed: Boolean) {
-        if (isShowed) {
+    public override fun showEmptyScreen(isShown: Boolean) {
+        if (isShown) {
             emptySearch.visibility = View.VISIBLE
             swipeRefreshLayout.visibility = View.GONE
         } else {

@@ -17,7 +17,8 @@ import java.util.*
 class CatalogAdapter(
         private val courseListItems: List<CoursesCarouselInfo>,
         private val onFiltersChanged: (EnumSet<StepikFilter>) -> Unit,
-        private val onRetry: () -> Unit
+        private val onRetry: () -> Unit,
+        private val onTagClicked: (Tag) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
@@ -55,7 +56,7 @@ class CatalogAdapter(
             }
             TAGS_TYPE -> {
                 val view = layoutInflater.inflate(R.layout.view_catalog_tags, parent, false)
-                TagsViewHolder(view)
+                TagsViewHolder(view, onTagClicked)
             }
             else -> throw IllegalStateException("CatalogAdapter viewType = $viewType is unsupported")
         }
@@ -218,10 +219,11 @@ class CatalogAdapter(
         }
     }
 
-    class TagsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    class TagsViewHolder(view: View,
+                         onTagClicked: (Tag) -> Unit) : RecyclerView.ViewHolder(view) {
 
         private val tagsRecyclerView = itemView.tagsRecycler
-        private val tagsAdapter = TagsAdapter()
+        private val tagsAdapter = TagsAdapter(onTagClicked)
 
         init {
             tagsRecyclerView.layoutManager = LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)

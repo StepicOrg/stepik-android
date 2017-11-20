@@ -15,9 +15,9 @@ import org.stepic.droid.model.CoursesCarouselInfo;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
+import org.stepic.droid.model.Tag;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.model.Video;
-import org.stepic.droid.storage.operations.Table;
 import org.stepic.droid.ui.fragments.CommentsFragment;
 import org.stepic.droid.web.ViewAssignment;
 
@@ -130,4 +130,6 @@ public interface ScreenManager {
     void showNotifications(@NotNull Activity activity);
 
     void showCoursesList(Activity activity, @NotNull CoursesCarouselInfo info);
+
+    void showListOfTag(Activity activity, @NotNull Tag tag);
 }
