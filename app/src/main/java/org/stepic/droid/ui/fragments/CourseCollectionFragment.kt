@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import org.stepic.droid.base.App
 import org.stepic.droid.core.presenters.CourseCollectionPresenter
+import org.stepic.droid.model.CollectionDescriptionColors
 import org.stepic.droid.storage.operations.Table
 import org.stepic.droid.ui.util.initCenteredToolbar
 import javax.inject.Inject
@@ -12,11 +13,13 @@ class CourseCollectionFragment : CourseListFragmentBase() {
     companion object {
         private const val TITLE_KEY = "title_key"
         private const val COURSE_IDS = "course_ids"
+        private const val DESCRIPTION_COLORS = "description_colors"
 
-        fun newInstance(title: String, courseIds: LongArray): CourseCollectionFragment {
+        fun newInstance(title: String, courseIds: LongArray, descriptionColors: CollectionDescriptionColors?): CourseCollectionFragment {
             val args = Bundle().apply {
                 putString(TITLE_KEY, title)
                 putLongArray(COURSE_IDS, courseIds)
+                putSerializable(DESCRIPTION_COLORS, descriptionColors)
             }
             return CourseCollectionFragment().apply { arguments = args }
         }

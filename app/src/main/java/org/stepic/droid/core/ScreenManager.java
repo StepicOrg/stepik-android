@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.model.CertificateViewItem;
+import org.stepic.droid.model.CollectionDescriptionColors;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.CoursesCarouselInfo;
 import org.stepic.droid.model.Lesson;
@@ -129,5 +130,5 @@ public interface ScreenManager {
 
     void showNotifications(@NotNull Activity activity);
 
-    void showCoursesList(Activity activity, @NotNull CoursesCarouselInfo info);
+    void showCoursesList(Activity activity, @NotNull CoursesCarouselInfo info, @Nullable CollectionDescriptionColors collectionDescriptionColors);
 }

@@ -96,6 +96,8 @@ constructor(
 
     private var lastSavedScrollPosition: Int = DEFAULT_SCROLL_POSITION
 
+    private var descriptionColors: CollectionDescriptionColors? = null
+
     private var _info: CoursesCarouselInfo? = null
         private set(value) {
             field = value
@@ -374,7 +376,7 @@ constructor(
     }
 
     private fun viewAll() {
-        screenManager.showCoursesList(activity, info)
+        screenManager.showCoursesList(activity, info, descriptionColors)
     }
 
     override fun onSuccessJoin(joinedCourse: Course) {
@@ -468,6 +470,7 @@ constructor(
         if (collectionDescriptionColors == null) {
             return
         }
+        this.descriptionColors = collectionDescriptionColors
         with(coursesCarouselDescription) {
             setBackgroundResource(collectionDescriptionColors.backgroundRes)
             setTextColor(ColorUtil.getColorArgb(collectionDescriptionColors.textColorRes, context))
