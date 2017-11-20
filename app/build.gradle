@@ -160,6 +160,7 @@ dependencies {
 
     debugImplementation libraries.leakCanary
     releaseImplementation libraries.leakCanaryNoOp
+    oldReleaseImplementation libraries.leakCanaryNoOp
 
 
     testImplementation libraries.junit
