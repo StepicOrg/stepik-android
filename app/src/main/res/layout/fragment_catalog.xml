@@ -2,7 +2,7 @@
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/homeRootView"
+    android:id="@+id/catalogRootView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -12,19 +12,24 @@
         android:id="@+id/appBarLayout"
         layout="@layout/view_centered_appbar"/>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/catalogRecyclerView"
+    <FrameLayout
+        android:id="@+id/catalogContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:descendantFocusability="beforeDescendants"
-        android:divider="@color/transparent"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:overScrollMode="never"
-        android:scrollbarStyle="outsideOverlay"
-        android:scrollbars="none"
-        android:splitMotionEvents="false"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/catalogRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:descendantFocusability="beforeDescendants"
+            android:divider="@color/transparent"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:overScrollMode="never"
+            android:scrollbarStyle="outsideOverlay"
+            android:scrollbars="none"
+            android:splitMotionEvents="false"/>
+    </FrameLayout>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -6,6 +6,7 @@ import com.facebook.FacebookSdk
 import com.facebook.appevents.AppEventsLogger
 import com.facebook.stetho.Stetho
 import com.squareup.leakcanary.LeakCanary
+import com.squareup.leakcanary.RefWatcher
 import com.vk.sdk.VKSdk
 import com.yandex.metrica.YandexMetrica
 import org.stepic.droid.BuildConfig
@@ -28,6 +29,9 @@ class App : Application() {
 
     companion object {
         lateinit var application: App
+
+        lateinit var refWatcher: RefWatcher
+            private set
 
         fun component(): AppCoreComponent {
             return application.component
@@ -63,7 +67,7 @@ class App : Application() {
             // You should not init your app in this process.
             return
         }
-        LeakCanary.install(this)
+        refWatcher = LeakCanary.install(this)
         init()
     }
 

@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import org.stepic.droid.R
 import org.stepic.droid.code.highlight.themes.CodeTheme
 import org.stepic.droid.code.highlight.themes.Presets
+import org.stepic.droid.ui.adapters.CodeToolbarAdapter
 import org.stepic.droid.util.insertText
 
 class CodeEditorLayout
@@ -34,6 +35,12 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 
     val indentSize: Int
         get() = codeEditor.indentSize
+
+    var codeToolbarAdapter: CodeToolbarAdapter?
+        get() = codeEditor.codeToolbarAdapter
+        set(value) {
+            codeEditor.codeToolbarAdapter = value
+        }
 
     init {
         LayoutInflater.from(context).inflate(R.layout.view_code_editor, this, true)

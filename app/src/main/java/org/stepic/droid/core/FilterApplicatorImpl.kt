@@ -24,8 +24,8 @@ class FilterApplicatorImpl
 
     private fun applyFiltersForSet(course: Course, filters: Set<StepikFilter>): Boolean {
         return (
-                filters.contains(StepikFilter.RUSSIAN) && course.language?.equals("ru") ?: false
-                        || filters.contains(StepikFilter.ENGLISH) && course.language?.equals("en") ?: false
+                filters.contains(StepikFilter.RUSSIAN) && course.language == StepikFilter.RUSSIAN.language
+                        || filters.contains(StepikFilter.ENGLISH) && course.language == StepikFilter.ENGLISH.language
                         || (filters.contains(StepikFilter.RUSSIAN) && filters.contains(StepikFilter.ENGLISH)
                         || (!filters.contains(StepikFilter.RUSSIAN) && !filters.contains(StepikFilter.ENGLISH)))
                 )

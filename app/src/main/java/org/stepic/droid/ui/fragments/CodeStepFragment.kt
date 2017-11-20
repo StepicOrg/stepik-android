@@ -87,6 +87,7 @@ class CodeStepFragment : StepAttemptFragment(),
         codeToolbarView.adapter = codeToolbarAdapter
         codeToolbarAdapter?.onSymbolClickListener = this
         codeToolbarView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        codeEditor.codeToolbarAdapter = codeToolbarAdapter
 
         codePresenter.attachView(this)
         preparingCodeStepPresenter.attachView(this)
@@ -226,12 +227,11 @@ class CodeStepFragment : StepAttemptFragment(),
             }
             stringBuilder.append(getString(R.string.sample_input, index + 1))
             stringBuilder.append(newLine)
-            stringBuilder.append(parcelableStringList[0])
+            stringBuilder.append(parcelableStringList[0].replace("\n", newLine))
             stringBuilder.append(newLine)
             stringBuilder.append(getString(R.string.sample_output, index + 1))
             stringBuilder.append(newLine)
-            stringBuilder.append(parcelableStringList[1])
-
+            stringBuilder.append(parcelableStringList[1].replace("\n", newLine))
         }
         val samplesString = textResolver.fromHtml(stringBuilder.toString())
         codeQuizSamples.text = samplesString

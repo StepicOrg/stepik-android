@@ -2,6 +2,7 @@ package org.stepic.droid.core.presenters
 
 import io.reactivex.Scheduler
 import io.reactivex.Single
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.Function3
 import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.di.course_list.CourseListScope
@@ -30,9 +31,11 @@ constructor(
         private val DEFAULT_PAGE = 1
     }
 
+    private val compositeDisposable = CompositeDisposable()
+
     fun onShowCollections(courseIds: LongArray) {
         view?.showLoading()
-        api
+        val disposable = api
                 .getCoursesReactive(DEFAULT_PAGE, courseIds)
                 .map { it.courses }
                 .flatMap {
@@ -64,6 +67,8 @@ constructor(
                 }, {
                     view?.showConnectionProblem()
                 })
+
+        compositeDisposable.add(compositeDisposable)
     }
 
     private fun getReviewsSingle(reviewIds: IntArray): Single<List<CourseReviewSummary>> {
@@ -84,5 +89,9 @@ constructor(
                 .subscribeOn(backgroundScheduler)
     }
 
+    override fun detachView(view: CoursesView) {
+        super.detachView(view)
+        compositeDisposable.clear()
+    }
 
 }

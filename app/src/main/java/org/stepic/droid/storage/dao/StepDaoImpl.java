@@ -11,7 +11,7 @@ import org.stepic.droid.model.BlockPersistentWrapper;
 import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.StepStatus;
-import org.stepic.droid.storage.operations.CrudOperations;
+import org.stepic.droid.storage.operations.DatabaseOperations;
 import org.stepic.droid.storage.structure.DbStructureAssignment;
 import org.stepic.droid.storage.structure.DbStructureBlock;
 import org.stepic.droid.storage.structure.DbStructureProgress;
@@ -30,11 +30,11 @@ public class StepDaoImpl extends DaoBase<Step> {
     private final IDao<Progress> progressDao;
 
     @Inject
-    public StepDaoImpl(CrudOperations crudOperations,
+    public StepDaoImpl(DatabaseOperations databaseOperations,
                        IDao<BlockPersistentWrapper> blockWrapperDao,
                        IDao<Assignment> assignmentDao,
                        IDao<Progress> progressDao) {
-        super(crudOperations);
+        super(databaseOperations);
         this.blockWrapperDao = blockWrapperDao;
         this.assignmentDao = assignmentDao;
         this.progressDao = progressDao;

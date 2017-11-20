@@ -5,6 +5,8 @@ import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.di.course_list.CourseListScope
 import org.stepic.droid.model.Course
+import org.stepic.droid.model.SearchQuery
+import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.resolvers.SearchResolver
 import org.stepic.droid.web.Api
 import java.util.*
@@ -20,6 +22,7 @@ class SearchCoursesPresenter
         private val threadPoolExecutor: ThreadPoolExecutor,
         private val mainHandler: MainHandler,
         private val searchResolver: SearchResolver,
+        private val databaseFacade: DatabaseFacade,
         private val analytic: Analytic)
     : PresenterBase<CoursesView>() {
 
@@ -46,6 +49,9 @@ class SearchCoursesPresenter
             view?.showLoading()
             threadPoolExecutor.execute {
                 try {
+                    if (searchQuery != null) {
+                        databaseFacade.addSearchQuery(SearchQuery(searchQuery))
+                    }
                     val response = api.getSearchResultsCourses(currentPage.get(), searchQuery).execute()
                     if (!response.isSuccessful) {
                         analytic.reportEvent(Analytic.Error.SEARCH_COURSE_UNSUCCESSFUL, "${response.code()}  ${response.errorBody()?.string()}")
@@ -104,8 +110,9 @@ class SearchCoursesPresenter
 
     fun refreshData(searchQuery: String?) {
         if (isLoading.get()) return
-        currentPage.set(1);
+        currentPage.set(1)
         hasNextPage.set(true)
         downloadData(searchQuery)
     }
+
 }
