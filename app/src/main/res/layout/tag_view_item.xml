@@ -12,7 +12,11 @@
     android:clickable="true"
     android:focusable="false"
     android:focusableInTouchMode="false"
-    android:padding="@dimen/guideline_standard_padding"
+    android:gravity="center"
+    android:maxLines="1"
+    android:minHeight="@dimen/min_ux_touchable_size"
+    android:minWidth="@dimen/min_ux_touchable_size"
+    android:padding="12dp"
     android:textSize="16sp"
     tools:ignore="MissingPrefix"
     tools:text="Tag text"/>

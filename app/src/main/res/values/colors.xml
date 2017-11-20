@@ -140,8 +140,8 @@
 
     <color name="language_checked">@color/new_accent_color</color>
     <color name="language_checked_pressed">#555766</color>
-    <color name="language_unchecked">@color/new_accent_color_alpha_5</color>
-    <color name="language_unchecked_pressed">#E8E8E8</color>
+    <color name="element_gray">@color/new_accent_color_alpha_5</color>
+    <color name="element_gray_pressed">#E8E8E8</color>
     <color name="language_text_color_checked">@color/white</color>
     <color name="language_text_color_unchecked">@color/new_accent_color</color>
     <color name="search_view_suggestions_prefix_color">#44000000</color>

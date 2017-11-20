@@ -9,14 +9,9 @@
         </shape>
     </item>
     <item>
-        <shape
-            android:shape="rectangle">
-            <gradient
-                android:angle="@integer/gradient_angle"
-                android:endColor="@color/end_gradient_blue"
-                android:startColor="@color/start_gradient_blue"
-                android:type="linear"/>
+        <shape android:shape="rectangle">
             <corners android:radius="@dimen/tag_radius"/>
+            <solid android:color="@color/element_gray"/>
         </shape>
     </item>
 </ripple>
