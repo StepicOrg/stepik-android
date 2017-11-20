@@ -16,6 +16,10 @@
         android:layout_below="@id/tagsTitle"
         android:clipToPadding="false"
         android:divider="@color/transparent"
+        android:paddingEnd="0dp"
+        android:paddingLeft="@dimen/course_list_side_padding"
+        android:paddingRight="0dp"
+        android:paddingStart="@dimen/course_list_side_padding"
         android:scrollbarStyle="outsideOverlay"
         android:splitMotionEvents="false"/>
 
