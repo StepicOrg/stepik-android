@@ -108,7 +108,6 @@ class CatalogFragment : FragmentBase(),
 
     private fun onTagClicked(tag: Tag) {
         screenManager.showListOfTag(activity, tag)
-
     }
 
     override fun showCollections(courseItems: List<CoursesCarouselInfo>) {
@@ -166,7 +165,6 @@ class CatalogFragment : FragmentBase(),
         (searchMenuItem?.actionView as? SearchView)?.setOnQueryTextListener(null)
         searchMenuItem = null
     }
-
 
     override fun onFiltersPrepared(filters: EnumSet<StepikFilter>) {
         updateFilters(filters)
