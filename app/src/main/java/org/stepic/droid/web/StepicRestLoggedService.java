@@ -20,7 +20,7 @@ public interface StepicRestLoggedService {
     @GET("api/sections")
     Call<SectionsMetaResponse> getSections(@Query("ids[]") long[] sectionIds);
 
-    @Headers({"Content-Type:application/json"})
+    @Headers("Content-Type:application/json")
     @POST("api/enrollments")
     Call<Void> joinCourse(@Body EnrollmentWrapper enrollmentCourse);
 
@@ -61,7 +61,7 @@ public interface StepicRestLoggedService {
     Call<AssignmentResponse> getAssignments(@Query("ids[]") long[] assignmentsIds);
 
 
-    @Headers({"Content-Type:application/json"})
+    @Headers("Content-Type:application/json")
     @POST("api/views")
     Call<Void> postViewed(@Body ViewAssignmentWrapper stepAssignment);
 
