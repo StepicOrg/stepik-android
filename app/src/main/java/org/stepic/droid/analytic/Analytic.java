@@ -154,6 +154,11 @@ public interface Analytic {
         String SHOW_LAUNCH_SCREEN_AFTER_LOGOUT = "show_launch_screen_after_logout";
     }
 
+    interface Course {
+        String DROP_COURSE_SUCCESSFUL = "drop course successful";
+        String DROP_COURSE_FAIL = "drop course fail";
+    }
+
     interface Screens {
         String SHOW_LAUNCH = "Screen manager: show launch screen";
         String SHOW_REGISTRATION = "Screen manager: show registration";
@@ -258,13 +263,6 @@ public interface Analytic {
 
     interface Web {
         String UPDATE_TOKEN_FAILED = "update is failed";
-        String AUTH_LOGIN_PASSWORD = "Api:auth with login password";
-        String AUTH_SOCIAL = "Api:auth with social account";
-        String TRY_REGISTER = "Api: try register";
-        String TRY_JOIN_COURSE = "Api:try join to course";
-        String DROP_COURSE = "Api: drop course";
-        String DROP_COURSE_SUCCESSFUL = "drop course successful";
-        String DROP_COURSE_FAIL = "drop course fail";
     }
 
     interface Notification {

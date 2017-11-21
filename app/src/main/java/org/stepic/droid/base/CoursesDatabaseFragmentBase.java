@@ -15,7 +15,6 @@ import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.core.dropping.contract.DroppingListener;
 import org.stepic.droid.core.presenters.PersistentCourseListPresenter;
-import org.stepic.droid.model.Course;
 import org.stepic.droid.storage.operations.Table;
 import org.stepic.droid.ui.fragments.CourseListFragmentBase;
 import org.stepic.droid.ui.util.ContextMenuRecyclerView;
@@ -111,13 +110,13 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
             //tbh, it should be illegal state
             return;
         }
-        final Course course = courses.get(position);
+        final org.stepic.droid.model.Course course = courses.get(position);
         droppingPresenter.dropCourse(course);
     }
 
     private void showInfo(int position) {
         getAnalytic().reportEvent(Analytic.Interaction.SHOW_DETAILED_INFO_CLICK);
-        Course course = courses.get(position);
+        org.stepic.droid.model.Course course = courses.get(position);
         getScreenManager().showCourseDescription(this, course);
     }
 
@@ -125,7 +124,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == FragmentActivity.RESULT_OK && requestCode == AppConstants.REQUEST_CODE_DETAIL) {
-            Course course = data.getParcelableExtra(AppConstants.COURSE_ID_KEY);
+            org.stepic.droid.model.Course course = data.getParcelableExtra(AppConstants.COURSE_ID_KEY);
             int enrollment = data.getIntExtra(AppConstants.ENROLLMENT_KEY, 0);
             if (course != null && enrollment != 0) {
                 updateEnrollment(course, enrollment);
@@ -175,16 +174,16 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     }
 
     @Override
-    public void onFailDropCourse(@NotNull Course droppedCourse) {
+    public void onFailDropCourse(@NotNull org.stepic.droid.model.Course droppedCourse) {
         long courseId = droppedCourse.getCourseId();
-        getAnalytic().reportEvent(Analytic.Web.DROP_COURSE_FAIL, courseId + "");
+        getAnalytic().reportEvent(Analytic.Course.DROP_COURSE_FAIL, courseId + "");
         Toast.makeText(getContext(), R.string.internet_problem, Toast.LENGTH_LONG).show();
     }
 
     @Override
-    public void onSuccessDropCourse(@NotNull Course droppedCourse) {
+    public void onSuccessDropCourse(@NotNull org.stepic.droid.model.Course droppedCourse) {
         long courseId = droppedCourse.getCourseId();
-        getAnalytic().reportEvent(Analytic.Web.DROP_COURSE_SUCCESSFUL, courseId + "");
+        getAnalytic().reportEvent(Analytic.Course.DROP_COURSE_SUCCESSFUL, courseId + "");
         Toast.makeText(getContext(), getContext().getString(R.string.you_dropped, droppedCourse.getTitle()), Toast.LENGTH_LONG).show();
         if (getCourseType() == Table.enrolled) { //why here was e.getCourseType?
             courses.remove(droppedCourse);
@@ -192,7 +191,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
         } else if (getCourseType() == Table.featured) {
             int position = -1;
             for (int i = 0; i < courses.size(); i++) {
-                Course courseItem = courses.get(i);
+                org.stepic.droid.model.Course courseItem = courses.get(i);
                 if (courseItem.getCourseId() == droppedCourse.getCourseId()) {
                     courseItem.setEnrollment(0);
                     position = i;

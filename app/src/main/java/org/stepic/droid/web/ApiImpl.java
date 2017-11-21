@@ -321,7 +321,6 @@ public class ApiImpl implements Api {
 
     @Override
     public Call<AuthenticationStepikResponse> authWithNativeCode(String code, SocialManager.SocialType type, @Nullable String email) {
-        analytic.reportEvent(Analytic.Web.AUTH_SOCIAL);
         makeOauthServiceWithNewAuthHeader(TokenType.social);
         String codeType = null;
         if (type.needUseAccessTokenInsteadOfCode()) {
@@ -332,7 +331,6 @@ public class ApiImpl implements Api {
 
     @Override
     public Call<AuthenticationStepikResponse> authWithLoginPassword(String login, String password) {
-        analytic.reportEvent(Analytic.Web.AUTH_LOGIN_PASSWORD);
         makeOauthServiceWithNewAuthHeader(TokenType.loginPassword);
         String encodedPassword = URLEncoder.encode(password);
         String encodedLogin = URLEncoder.encode(login);
@@ -341,15 +339,12 @@ public class ApiImpl implements Api {
 
     @Override
     public Call<AuthenticationStepikResponse> authWithCode(String code) {
-        analytic.reportEvent(Analytic.Web.AUTH_SOCIAL);
         makeOauthServiceWithNewAuthHeader(TokenType.social);
         return oAuthService.getTokenByCode(config.getGrantType(TokenType.social), code, config.getRedirectUri());
     }
 
     @Override
     public Call<RegistrationResponse> signUp(String firstName, String lastName, String email, String password) {
-        analytic.reportEvent(Analytic.Web.TRY_REGISTER);
-
         Interceptor interceptor = new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {
@@ -438,7 +433,6 @@ public class ApiImpl implements Api {
 
     @Override
     public Call<Void> tryJoinCourse(@NotNull Course course) {
-        analytic.reportEventWithIdName(Analytic.Web.TRY_JOIN_COURSE, course.getCourseId() + "", course.getTitle());
         EnrollmentWrapper enrollmentWrapper = new EnrollmentWrapper(course.getCourseId());
         return loggedService.joinCourse(enrollmentWrapper);
     }
@@ -471,7 +465,6 @@ public class ApiImpl implements Api {
     @Override
     public Call<Void> dropCourse(long courseId) {
         if (!config.isUserCanDropCourse()) return null;
-        analytic.reportEvent(Analytic.Web.DROP_COURSE, courseId + "");
         return loggedService.dropCourse(courseId);
     }
 
