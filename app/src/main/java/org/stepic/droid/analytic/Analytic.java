@@ -259,6 +259,7 @@ public interface Analytic {
         String FEATURED_EMPTY = "error_featured_empty";
         String TEMPLATE_WAS_NULL = "error_code_template_null";
         String COURSE_COLLECTION_EMPTY = "course_collection_empty";
+        String FEEDBACK_BROKEN = "feedback_broken";
     }
 
     interface Web {
@@ -270,7 +271,7 @@ public interface Analytic {
         String ACTION_NOT_SUPPORT = "notification action is not support";
         String HTML_WAS_NULL = "notification_html_was_null";
         String WAS_MUTED = "notification_was_muted";
-        String NOT_SUPPORT_TYPE = "notification_type_is_not_support";//After checking action
+        String NOT_SUPPORT_TYPE = "notification_type_is_not_support"; // After checking action
 
         String CANT_PARSE_COURSE_ID = "notification, cant parse courseId";
         String TOKEN_UPDATED = "notification gcm token is updated";
@@ -302,8 +303,6 @@ public interface Analytic {
     }
 
     interface Feedback {
-        String FAILED_ON_SERVER = "Feedback is failed due to server";
-        String INTERNET_FAIL = "Feedback internet fail";
         String FEEDBACK_SENT = "feedback_sent";
     }
 
