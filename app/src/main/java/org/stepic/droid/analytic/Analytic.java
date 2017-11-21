@@ -205,7 +205,6 @@ public interface Analytic {
         String SHOW_CHOOSE_RATE = "video_player_show_choose_rate_menu";
         String JUMP_FORWARD = "video_player_jump_forward";
         String JUMP_BACKWARD = "video_player_jump_backward";
-        String QUALITY_NOT_DETERMINATED = "video_quality_failed";
         String SHOW_MORE_ITEMS = "video_player_show_more";
         String ROTATE_CLICKED = "video_player_rotate_clicked";
         String PLAYER_CREATED = "video_player_created";
@@ -215,7 +214,6 @@ public interface Analytic {
         String QUALITY_MENU = "video_player_quality";
         String CANCEL_VIDEO_QUALITY = "video_player_quality_cancel";
         String NOW_PLAYING_WAS_NULL = "video_player_now_playing_null";
-        String OLD_STYLE = "video_old_style";
     }
 
     interface AppIndexing {
