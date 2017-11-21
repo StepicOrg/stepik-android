@@ -9,7 +9,6 @@ import org.stepic.droid.base.App
 import org.stepic.droid.model.Video
 import org.stepic.droid.model.VideoUrl
 import org.stepic.droid.preferences.UserPreferences
-import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.greaterThanMaxQuality
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
@@ -105,7 +104,9 @@ class VideoQualityDialogInPlayer : VideoQualityDialogBase() {
                             val qualityForPlaying = listOfPresentedQuality[which]
                             threadPoolExecutor.execute {
                                 val toSave = findNearest(qualityForPlaying, qualityToPositionMap.keys)
-                                userPreferences.saveVideoQualityForPlaying(toSave)
+                                if (toSave != null) {
+                                    userPreferences.saveVideoQualityForPlaying(toSave)
+                                }
                             }
                         })
 
@@ -129,6 +130,9 @@ class VideoQualityDialogInPlayer : VideoQualityDialogBase() {
                 }
             }
             return result
+        } catch (exception: NumberFormatException) {
+            //qualityForPlaying can be "Downloaded(360)"
+            return null
         } catch (exception: Exception) {
             //when it can happen?
             analytic.reportError(Analytic.Error.CANT_PARSE_QUALITY, exception)
