@@ -119,7 +119,6 @@ public interface Analytic {
         String CLICK_REGISTER_BUTTON = "click_register_register_screen";
         String CLICK_SEND_SUBMISSION = "click_send_submission";
         String SHARE_COURSE = "share_course_detail";
-        String SHARE_COURSE_SECTION = "share_course_from_section";
         String CLICK_FIND_COURSE_EMPTY_SCREEN = "click_find_courses_empty_screen";
         String CLICK_NEXT_LESSON_IN_STEPS = "click_next_lesson_in_steps";
         String CLICK_PREVIOUS_LESSON_IN_STEPS = "click_previous_lesson_in_steps";
@@ -137,16 +136,16 @@ public interface Analytic {
         String CLICK_PRIVACY_POLICY = "click_privacy_policy";
         String CLICK_TERMS_OF_SERVICE = "click_terms_of_service";
 
+        String INVITE_DIALOG_SHOWN = "invite_dialog_shown";
         String INVITE_DIALOG_DISMISSED = "invite_dialog_dismissed";
+        String INVITE_DIALOG_BROKEN = "invite_dialog_broken";
+        String SHARE_COURSE_SECTION = "share_course_from_section";
 
         interface InviteDialogDismissType {
             String LEAVE = "leave";
             String SHARE = "share";
         }
 
-        String INVITE_DIALOG_BROKEN = "invite_dialog_broken";
-
-        String SHOW_MATERIAL_DIALOG_INVITATION = "materdial_dialog_invite_shown";
         String CLICK_CONTINUE_COURSE = "click_continue_course";
         String CLICK_COURSE = "click_course";
         String JOIN_COURSE = "click_join_course";
