@@ -14,7 +14,6 @@ import org.stepic.droid.model.Meta
 import org.stepic.droid.model.Tag
 import org.stepic.droid.util.resolvers.SearchResolver
 import org.stepic.droid.web.Api
-import timber.log.Timber
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
@@ -71,7 +70,6 @@ constructor(
                             }
                         },
                         { e ->
-                            Timber.e(e)
                             view?.showConnectionProblem()
                         }
                 )
