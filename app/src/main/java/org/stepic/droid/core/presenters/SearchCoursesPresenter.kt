@@ -29,10 +29,9 @@ class SearchCoursesPresenter
     private var isLoading = AtomicBoolean(false)
     private var currentPage = AtomicInteger(1)
     private var hasNextPage = AtomicBoolean(true)
-    private var isEmptyCourses = AtomicBoolean(false)
 
     fun restoreState() {
-        if (isEmptyCourses.get() && !hasNextPage.get()) {
+        if (!hasNextPage.get()) {
             view?.showEmptyCourses()
         }
     }
