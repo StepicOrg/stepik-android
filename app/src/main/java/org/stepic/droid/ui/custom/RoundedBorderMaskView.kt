@@ -19,8 +19,6 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     private val antiAliasedPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     private var maskBitmap: Bitmap? = null
-    private var bufferBitmap: Bitmap? = null
-    private var bufferCanvas: Canvas? = null
 
     init {
         val attributes = context.obtainStyledAttributes(attrs, R.styleable.RoundedBorderMaskView)
@@ -31,20 +29,16 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
         }
 
         maskPaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_IN)
-        setWillNotDraw(false)
+        setLayerType(LAYER_TYPE_SOFTWARE, null)
     }
 
-    override fun draw(canvas: Canvas) {
-        super.draw(bufferCanvas)
-        bufferCanvas?.drawBitmap(maskBitmap, 0f, 0f, maskPaint)
-        canvas.drawBitmap(bufferBitmap, 0f, 0f, null)
+    override fun dispatchDraw(canvas: Canvas) {
+        super.dispatchDraw(canvas)
+        canvas.drawBitmap(maskBitmap, 0f, 0f, maskPaint)
     }
 
     private fun updateMask(width: Int, height: Int) {
         if (width <= 0 || height <= 0) return
-
-        bufferBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-        bufferCanvas = Canvas(bufferBitmap)
 
         val rect = RectF(0f, 0f, width.toFloat(), height.toFloat())
         val mask = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
