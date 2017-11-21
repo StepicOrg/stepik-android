@@ -58,7 +58,8 @@ enum class ProgrammingLanguage(val serverPrintableName: String) : Parcelable {
     @SerializedName("pascalabc")
     PASCAL("pascalabc"),
     @SerializedName("perl")
-    PERL("perl");
+    PERL("perl"),
+    SQL("sql");
 
     override fun describeContents(): Int = 0
 
@@ -103,6 +104,7 @@ enum class ProgrammingLanguage(val serverPrintableName: String) : Parcelable {
                 ProgrammingLanguage.GO -> TODO()
                 ProgrammingLanguage.PASCAL -> TODO()
                 ProgrammingLanguage.PERL -> TODO()
+                ProgrammingLanguage.SQL -> TODO()
                 null -> TODO()
             }
 
@@ -160,6 +162,8 @@ fun symbolsForLanguage(lang: String, context: Context): Array<String> {
                 getStringArray(R.array.frequent_symbols_default)
             ProgrammingLanguage.PERL ->
                 getStringArray(R.array.frequent_symbols_default)
+            ProgrammingLanguage.SQL ->
+                getStringArray(R.array.frequent_symbols_sql)
             null ->
                 getStringArray(R.array.frequent_symbols_default)
         }
@@ -192,5 +196,6 @@ fun extensionForLanguage(lang: String) : String =
             ProgrammingLanguage.GO          -> "go"
             ProgrammingLanguage.PASCAL      -> "pascal"
             ProgrammingLanguage.PERL        -> "perl"
+            ProgrammingLanguage.SQL         -> "sql"
             null -> ""
         }
