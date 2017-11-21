@@ -10,6 +10,7 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.di.tags.TagScope
 import org.stepic.droid.model.Course
+import org.stepic.droid.model.Meta
 import org.stepic.droid.model.Tag
 import org.stepic.droid.util.resolvers.SearchResolver
 import org.stepic.droid.web.Api
@@ -51,6 +52,7 @@ constructor(
                     api.getSearchResultsOfTag(it, tag)
                             .toObservable()
                 }
+                .doOnNext { handleMeta(it.meta) }
                 .map { it.searchResultList }
                 .map { searchResolver.getCourseIdsFromSearchResults(it) }
                 .flatMap {
@@ -76,8 +78,16 @@ constructor(
         compositeDisposable.add(disposable)
     }
 
+
     fun downloadData() {
-        publisher.onNext(currentPage.get())
+        if (hasNextPage.get()) {
+            publisher.onNext(currentPage.get())
+        }
+    }
+
+    private fun handleMeta(meta: Meta) {
+        hasNextPage.set(meta.has_next)
+        currentPage.set(meta.page + 1)
     }
 
     private fun zipIdsAndCourses(it: LongArray): Observable<Pair<LongArray, List<Course>>>? {
@@ -102,7 +112,7 @@ constructor(
             val firstPosition = idToPositionMap[firstCourse.courseId] ?: return@Comparator 0
             val secondPosition = idToPositionMap[secondCourse.courseId] ?: return@Comparator 0
 
-            return@Comparator (secondPosition - firstPosition)
+            return@Comparator (firstPosition - secondPosition)
         })
     }
 
