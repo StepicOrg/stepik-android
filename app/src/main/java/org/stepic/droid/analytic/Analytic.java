@@ -15,7 +15,6 @@ public interface Analytic {
 
         String CODE_FULLSCREEN_PRESSED = "code_fullscreen_pressed";
         String CODE_RESET_PRESSED = "code_reset_pressed";
-        String CODE_RESET_PRESSED_USELESS = "code_reset_pressed_useless";
         String CHOOSE_NULL = "code_choose_null";
     }
 
@@ -96,7 +95,6 @@ public interface Analytic {
         String CLICK_CACHE_SECTION = "Click cache section";
         String CLICK_CACHE_LESSON = "Click cache unit";
         String CLICK_DELETE_LESSON = "Click delete unit from cache";
-        String CLICK_LOGOUT = "Click logout";
         String CLICK_CLEAR_CACHE = "Click clear cache button";
         String CLICK_YES_LOGOUT = "Click accept logout";
         String CANCEL_VIDEO_QUALITY = "Cancel video quality dialog";
@@ -126,7 +124,6 @@ public interface Analytic {
         String CLICK_NEXT_LESSON_IN_STEPS = "click_next_lesson_in_steps";
         String CLICK_PREVIOUS_LESSON_IN_STEPS = "click_previous_lesson_in_steps";
         String CLICK_SIGN_IN_SOCIAL = "social_login";
-        String CLICK_ACCEPT_FILTER_BUTTON = "click_accept_filter_btn";
         String CLICK_AUTH_FROM_STEPS = "click_auth_from_steps";
         String SHARE_STEP_CLICK = "share_step_click";
         String CLICK_TRY_STEP_AGAIN = "step_try_again";
@@ -152,7 +149,6 @@ public interface Analytic {
         String SHOW_MATERIAL_DIALOG_INVITATION = "materdial_dialog_invite_shown";
         String CLICK_CONTINUE_COURSE = "click_continue_course";
         String CLICK_COURSE = "click_course";
-        String CLICK_PROFILE_BEFORE_LOADING = "click_profile_before_loading";
         String JOIN_COURSE = "click_join_course";
 
         String USER_OPEN_IMAGE = "user_open_image";
@@ -228,20 +224,15 @@ public interface Analytic {
         String VIDEO_RESOLVER_FAILED = "video resolver is failed";
         String CANT_UPDATE_TOKEN = "cant update token";
         String AUTH_ERROR = "retrofitAuth";
-        String ERROR_CREATING_PLAYER = "video player: Error creating player";
-        String INIT_PHONE_STATE = "initPhoneStateListener";
-        String REMOVE_PHONE_STATE = "removePhoneStateCallbacks";
         String NOTIFICATION_ERROR_PARSE = "notification error parse";
         String DELETE_SERVICE_ERROR = "DeleteService nullptr";
         String ERROR_UPDATE_CHECK_APP = "update check failed";
         String UPDATE_FROM_APK_FAILED = "update apk is failed";
-        String CANT_RESOLVE_VIDEO = "can't Resolve video";
         String FAIL_TO_MOVE = "storage: fail to move";
         String REGISTRATION_IMPORTANT_ERROR = "registration important error";
         String NOTIFICATION_NOT_POSTED_ON_CLICK = "notification is not posted";
         String NULL_SECTION = "Null section is not expected";
         String LESSON_IN_STORE_STATE_NULL = "lesson was null in store state manager";
-        String UNIT_IN_STORE_STATE_NULL = "unit was null in store state manager";
         String LOAD_SERVICE = "Load Service";
         String PUSH_STATE_EXCEPTION = "Push state exception";
         String CANT_CREATE_NOMEDIA = "can't create .nomedia";
@@ -252,7 +243,6 @@ public interface Analytic {
         String DOWNLOAD_FAILED = "download_failed";
         String STREAK_ON_STEP_SOLVED = "streak_on_step_solved";
         String GOOGLE_SERVICES_TOO_OLD = "google_services_too_old";
-        String VIDEO_PATH_WAS_NULL_WITH_INTERNET = "video_path_was_null_internet_enabled";
         String FAIL_REFRESH_TOKEN_ONLINE = "fail_refresh_token_online";
         String FAIL_REFRESH_TOKEN_ONLINE_EXTENDED = "fail_refresh_token_online_extended";
         String COOKIE_MANAGER_ERROR = "cookie_manager_error";
@@ -390,7 +380,6 @@ public interface Analytic {
 
     interface Exam {
         String START_EXAM = "exam_start";
-        String SHOW_EXAM = "exam_shown_on_bind_view";
     }
 
     interface Profile {
@@ -404,7 +393,6 @@ public interface Analytic {
         String CLICK_STREAK_VALUE = "profile_click_streak";
         String CLICK_FULL_NAME = "profile_click_full_name";
         String OPEN_SCREEN_OVERALL = "profile_open_screen_overall";
-        String CLICK_FULL_NAME_DRAWER = "profile_click_fill_name_drawer";
     }
 
     interface Streak {
@@ -441,7 +429,6 @@ public interface Analytic {
         String BROWSE_COURSES_CENTER = "click_anonymous_browse_courses_center";
         String AUTH_CENTER = "click_anonymous_auth_center";
         String BROWSE_COURSES_DRAWER = "click_anonymous_auth_center";
-        String AUTH_DRAWER = "click_anonymous_auth_drawer";
         String SUCCESS_LOGIN_AND_ENROLL = "success_login_insta_enroll";
     }
 
@@ -463,15 +450,10 @@ public interface Analytic {
     interface SmartLock {
         String READ_CREDENTIAL_WITHOUT_INTERACTION = "smartlock_read_without_interaction";
         String DISABLED_LOGIN = "smartlock_disabled_login";
-        String DISABLED_REGISTRATION = "smartlock_disabled_registration";
 
         String SHOW_SAVE_LOGIN = "smartlock_show_save_login";
         String LOGIN_SAVED = "smartlock_login_saved";
         String LOGIN_NOT_SAVED = "smartlock_login_not_saved";
-
-        String SHOW_SAVE_REGISTRATION = "smartlock_show_save_registration";
-        String REGISTRATION_SAVED = "smartlock_registration_saved";
-        String REGISTRATION_NOT_SAVED = "smartlock_registration_not_saved";
 
         String PROMPT_TO_CHOOSE_CREDENTIALS = "smartlock_prompt_to_choose_credentials";
         String LAUNCH_CREDENTIAL_RETRIEVED_PROMPT = "smartlock_launch_credential_retrieved_prompt";
