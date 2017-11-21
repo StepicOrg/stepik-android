@@ -78,7 +78,7 @@ public interface Analytic {
 
     interface System {
         String BOOT_COMPLETED = "boot_completed";
-        java.lang.String FIRST_LAUNCH_AFTER_INSTALL = "first_launch_after_install";
+        String FIRST_LAUNCH_AFTER_INSTALL = "first_launch_after_install";
     }
 
     interface Preferences {
@@ -100,7 +100,6 @@ public interface Analytic {
         String CANCEL_VIDEO_QUALITY_DETAILED = "cancel_detailed_video";
         String YES_CLEAR_VIDEOS = "clear videos from downloads";
         String DELETE_COMMENT_TRIAL = "comment: delete comment trial";
-        String UPDATING_MESSAGE_IS_APPROVED = "updating approved";
         String PULL_TO_REFRESH_COURSE = "Pull from top to refreshWhenOnConnectionProblem course";
         String COURSE_USER_TRY_FAIL = "course: user open failed for him course";
         String JOIN_COURSE_NULL = "course is null when join, detail";
@@ -227,12 +226,10 @@ public interface Analytic {
         String NULL_SECTION = "Null section is not expected";
         String LESSON_IN_STORE_STATE_NULL = "lesson was null in store state manager";
         String LOAD_SERVICE = "Load Service";
-        String PUSH_STATE_EXCEPTION = "Push state exception";
         String CANT_CREATE_NOMEDIA = "can't create .nomedia";
         String ILLEGAL_STATE_NEXT_LESSON = "cant_show_next_lesson";
         String ILLEGAL_STATE_PREVIOUS_LESSON = "cant_show_previous_lesson";
         String FAIL_PUSH_STEP_VIEW = "fail_push_step_view";
-        String NO_INTERNET_EXISTING_ATTEMPTS = "no_internet_existing_attempts";
         String DOWNLOAD_FAILED = "download_failed";
         String STREAK_ON_STEP_SOLVED = "streak_on_step_solved";
         String GOOGLE_SERVICES_TOO_OLD = "google_services_too_old";
