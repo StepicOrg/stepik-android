@@ -43,6 +43,7 @@ class TagFragment : CourseListFragmentBase(), CoursesView {
         initCenteredToolbar(title, showHomeButton = true, homeIndicatorRes = getCloseIconDrawableRes())
 
         tagListPresenter.attachView(this)
+        tagListPresenter.onInitTag()
         tagListPresenter.downloadData()
     }
 
