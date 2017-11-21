@@ -1,9 +1,7 @@
 package org.stepic.droid.ui.fragments
 
 import android.annotation.SuppressLint
-import android.os.Build
 import android.os.Bundle
-import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -70,14 +68,7 @@ class HomeFragment : FragmentBase(), HomeStreakView {
         val daysPlural = resources.getQuantityString(R.plurals.day_number, streak)
         val days = "$streak $daysPlural"
 
-        streakText.text = getString(R.string.home_streak_counter_text, days).let {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                Html.fromHtml(it, Html.FROM_HTML_MODE_LEGACY)
-            } else {
-                @Suppress("DEPRECATION")
-                Html.fromHtml(it)
-            }
-        }
+        streakText.text = textResolver.fromHtml(getString(R.string.home_streak_counter_text, days))
         homeStreak.changeVisibility(true)
     }
 
