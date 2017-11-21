@@ -111,8 +111,8 @@ public interface Analytic {
         String CLICK_CANCEL_SECTION = "click cancel section";
         String CLICK_CANCEL_LESSON = "click cancel unit";
         String UPDATING_MESSAGE_IS_SHOWN = "updating shown";
-        String REFRESH_UNIT = "Pull from top to refreshWhenOnConnectionProblem section unit";
-        String REFRESH_SECTION = "Pull from top to refreshWhenOnConnectionProblem section";
+        String REFRESH_UNITS = "refresh_units";
+        String REFRESH_SECTIONS = "refresh_sections";
         String SUCCESS_LOGIN = "success login";
         String SHOW_DETAILED_INFO_CLICK = "Show detailed info click from context menu of course";
         String LONG_TAP_COURSE = "Long tap on course";

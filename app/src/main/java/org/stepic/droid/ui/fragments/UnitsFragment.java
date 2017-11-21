@@ -241,7 +241,7 @@ public class UnitsFragment extends FragmentBase implements
 
     @Override
     public void onRefresh() {
-        getAnalytic().reportEvent(Analytic.Interaction.REFRESH_UNIT);
+        getAnalytic().reportEvent(Analytic.Interaction.REFRESH_UNITS);
         unitsPresenter.showUnits(section, true);
     }
 
