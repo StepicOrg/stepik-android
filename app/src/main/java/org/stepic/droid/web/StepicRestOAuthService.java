@@ -15,25 +15,25 @@ import retrofit2.http.Streaming;
 public interface StepicRestOAuthService {
     @FormUrlEncoded
     @POST("/oauth2/token/")
-    Call<AuthenticationStepicResponse> updateToken(@Field("grant_type") String grant_type,
-                                                   @Field("refresh_token") String refresh_token);
+    Call<AuthenticationStepikResponse> updateToken(@Field("grant_type") String grant_type,
+                                                   @Field("refreshToken") String refresh_token);
 
     @FormUrlEncoded
     @POST("/oauth2/token/")
-    Call<AuthenticationStepicResponse> authWithLoginPassword(@Field("grant_type") String grant_type,
+    Call<AuthenticationStepikResponse> authWithLoginPassword(@Field("grant_type") String grant_type,
                                                              @Field(value = "username", encoded = true) String username,
                                                              @Field(value = "password", encoded = true) String password);
 
 
     @FormUrlEncoded
     @POST("/oauth2/token/")
-    Call<AuthenticationStepicResponse> getTokenByCode(@Field("grant_type") String grant_type,
+    Call<AuthenticationStepikResponse> getTokenByCode(@Field("grant_type") String grant_type,
                                                       @Field("code") String code,
                                                       @Field("redirect_uri") String redirect_uri);
 
     @FormUrlEncoded
     @POST("/oauth2/social-token/")
-    Call<AuthenticationStepicResponse> getTokenByNativeCode(@Field("provider") String providerName,
+    Call<AuthenticationStepikResponse> getTokenByNativeCode(@Field("provider") String providerName,
                                                             @Field("code") String providerCode,
                                                             @Field("grant_type") String grant_type,
                                                             @Field("redirect_uri") String redirect_uri,

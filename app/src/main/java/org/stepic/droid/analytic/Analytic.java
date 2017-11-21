@@ -220,7 +220,6 @@ public interface Analytic {
         String NOT_PLAYER = "NotPlayer";
         String VIDEO_RESOLVER_FAILED = "video resolver is failed";
         String CANT_UPDATE_TOKEN = "cant update token";
-        String AUTH_ERROR = "retrofitAuth";
         String NOTIFICATION_ERROR_PARSE = "notification error parse";
         String DELETE_SERVICE_ERROR = "DeleteService nullptr";
         String FAIL_TO_MOVE = "storage: fail to move";

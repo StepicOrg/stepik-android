@@ -21,11 +21,11 @@ public interface Api {
         social, loginPassword
     }
 
-    Call<AuthenticationStepicResponse> authWithNativeCode(String code, SocialManager.SocialType type, @Nullable String email);
+    Call<AuthenticationStepikResponse> authWithNativeCode(String code, SocialManager.SocialType type, @Nullable String email);
 
-    Call<AuthenticationStepicResponse> authWithLoginPassword(String login, String password);
+    Call<AuthenticationStepikResponse> authWithLoginPassword(String login, String password);
 
-    Call<AuthenticationStepicResponse> authWithCode(String code);
+    Call<AuthenticationStepikResponse> authWithCode(String code);
 
     Call<RegistrationResponse> signUp(String firstName, String secondName, String email, String password);
 

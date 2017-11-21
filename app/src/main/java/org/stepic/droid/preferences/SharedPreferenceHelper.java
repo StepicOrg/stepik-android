@@ -21,7 +21,7 @@ import org.stepic.droid.ui.util.TimeIntervalUtil;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DateTimeHelper;
 import org.stepic.droid.util.RWLocks;
-import org.stepic.droid.web.AuthenticationStepicResponse;
+import org.stepic.droid.web.AuthenticationStepikResponse;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -31,7 +31,6 @@ import javax.inject.Inject;
 @AppSingleton
 public class SharedPreferenceHelper {
     private static final String NOTIFICATION_SOUND_DISABLED = "notification_sound";
-    private static final String TEMP_UPDATE_LINK = "temp_update_link";
     private static final String NEED_DROP_116 = "need_drop_116";
     private static final String DISCOUNTING_POLICY_DIALOG = "discounting_pol_dialog";
     private static final String KEEP_SCREEN_ON_STEPS = "keep_screen_on_steps";
@@ -79,11 +78,26 @@ public class SharedPreferenceHelper {
     private final String RATE_LAST_TIMESTAMP = "rate_last_timestamp";
     private final String RATE_TIMES_SHOWN = "rate_times_shown";
     private final String RATE_WAS_HANDLED = "rate_was_handled";
+    private AuthenticationStepikResponse cachedAuthStepikResponse = null;
 
 
     private final Context context;
     private final Analytic analytic;
     private final DefaultFilter defaultFilter;
+    public enum NotificationDay {
+        DAY_ONE(ONE_DAY_NOTIFICATION),
+        DAY_SEVEN(SEVEN_DAY_NOTIFICATION);
+
+        private String internalNotificationKey;
+
+        NotificationDay(String notificationKey) {
+            this.internalNotificationKey = notificationKey;
+        }
+
+        public String getInternalNotificationKey() {
+            return internalNotificationKey;
+        }
+    }
 
     @Inject
     public SharedPreferenceHelper(Analytic analytic, DefaultFilter defaultFilter, Context context) {
@@ -234,23 +248,6 @@ public class SharedPreferenceHelper {
         put(PreferenceType.LOGIN, STREAK_DIALOG_SHOWN_TIMESTAMP, DateTimeHelper.INSTANCE.nowUtc());
         put(PreferenceType.LOGIN, NUMBER_OF_SHOWN_STREAK_DIALOG, streakDialogShownNumber + 1);
     }
-
-
-    public enum NotificationDay {
-        DAY_ONE(ONE_DAY_NOTIFICATION),
-        DAY_SEVEN(SEVEN_DAY_NOTIFICATION);
-
-        private String internalNotificationKey;
-
-        NotificationDay(String notificationKey) {
-            this.internalNotificationKey = notificationKey;
-        }
-
-        public String getInternalNotificationKey() {
-            return internalNotificationKey;
-        }
-    }
-
 
     public boolean isNotificationWasShown(NotificationDay day) {
         return getBoolean(PreferenceType.DEVICE_SPECIFIC, day.getInternalNotificationKey(), false);
@@ -556,15 +553,6 @@ public class SharedPreferenceHelper {
         put(PreferenceType.TEMP, TEMP_POSITION_KEY, position);
     }
 
-    public void storeTempLink(String link) {
-        put(PreferenceType.TEMP, TEMP_UPDATE_LINK, link);
-    }
-
-    public String getTempLink() {
-        return getString(PreferenceType.TEMP, TEMP_UPDATE_LINK);
-    }
-
-
     public int getTempPosition() {
         return getInt(PreferenceType.TEMP, TEMP_POSITION_KEY);
     }
@@ -592,7 +580,7 @@ public class SharedPreferenceHelper {
         }
     }
 
-    public void storeAuthInfo(AuthenticationStepicResponse response) {
+    public void storeAuthInfo(AuthenticationStepikResponse response) {
         Gson gson = new Gson();
         String json = gson.toJson(response);
         put(PreferenceType.LOGIN, AUTH_RESPONSE_JSON, json);
@@ -627,11 +615,8 @@ public class SharedPreferenceHelper {
         }
     }
 
-
-    private AuthenticationStepicResponse cachedAuthStepikResponse = null;
-
     @Nullable
-    public AuthenticationStepicResponse getAuthResponseFromStore() {
+    public AuthenticationStepikResponse getAuthResponseFromStore() {
         if (cachedAuthStepikResponse != null) {
             return cachedAuthStepikResponse;
         }
@@ -642,7 +627,7 @@ public class SharedPreferenceHelper {
         }
 
         Gson gson = new GsonBuilder().create();
-        cachedAuthStepikResponse = gson.fromJson(json, AuthenticationStepicResponse.class);
+        cachedAuthStepikResponse = gson.fromJson(json, AuthenticationStepikResponse.class);
         return cachedAuthStepikResponse;
     }
 
@@ -650,7 +635,6 @@ public class SharedPreferenceHelper {
         long timestamp = getLong(PreferenceType.LOGIN, ACCESS_TOKEN_TIMESTAMP);
         return timestamp;
     }
-
 
     public boolean isMobileInternetAlsoAllowed() {
         return getBoolean(PreferenceType.WIFI, WIFI_KEY);
@@ -713,7 +697,6 @@ public class SharedPreferenceHelper {
     private boolean getBoolean(PreferenceType preferenceType, String key) {
         return getBoolean(preferenceType, key, false);
     }
-
 
     private boolean getBoolean(PreferenceType preferenceType, String key, boolean defaultValue) {
         return context.getSharedPreferences(preferenceType.getStoreName(), Context.MODE_PRIVATE)
