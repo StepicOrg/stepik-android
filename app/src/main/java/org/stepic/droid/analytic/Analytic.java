@@ -371,8 +371,6 @@ public interface Analytic {
         String CLICK_INSTRUCTOR = "profile_click_instructor";
         String CLICK_USER_IN_COMMENT = "profile_click_in_comment";
         String SHOW_LOCAL = "profile_show_my";
-        String OPEN_NO_INTERNET = "profile_no_internet";
-        String STREAK_NO_INTERNET = "profile_no_internet_streak";
         String OPEN_BY_LINK = "profile_open_by_link";
         String CLICK_IMAGE = "profile_click_avatar";
         String CLICK_STREAK_VALUE = "profile_click_streak";
