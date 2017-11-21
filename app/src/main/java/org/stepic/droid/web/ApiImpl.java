@@ -782,7 +782,9 @@ public class ApiImpl implements Api {
 
     @Override
     public Single<SearchResultResponse> getSearchResultsOfTag(int page, @NotNull Tag tag) {
-        return loggedService.getSearchResultsOfTag(page, tag.getId());
+        EnumSet<StepikFilter> enumSet = sharedPreference.getFilterForFeatured();
+        String lang = enumSet.iterator().next().getLanguage();
+        return loggedService.getSearchResultsOfTag(page, tag.getId(), lang);
     }
 
 

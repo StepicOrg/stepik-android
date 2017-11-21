@@ -158,5 +158,5 @@ public interface StepicRestLoggedService {
     Single<TagResponse> getFeaturedTags();
 
     @GET("api/search-results?is_popular=true&is_public=true&type=course")
-    Single<SearchResultResponse> getSearchResultsOfTag(@Query("page") int page, @Query("tag") int id);
+    Single<SearchResultResponse> getSearchResultsOfTag(@Query("page") int page, @Query("tag") int id, @Query("language") String lang);
 }
