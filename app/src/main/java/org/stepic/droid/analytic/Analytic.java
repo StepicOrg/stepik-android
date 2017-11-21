@@ -117,7 +117,6 @@ public interface Analytic {
         String SHOW_DETAILED_INFO_CLICK = "Show detailed info click from context menu of course";
         String LONG_TAP_COURSE = "Long tap on course";
         String CLICK_REGISTER_BUTTON = "click_register_register_screen";
-        String CLICK_SEND_SUBMISSION = "click_send_submission";
         String SHARE_COURSE = "share_course_detail";
         String CLICK_FIND_COURSE_EMPTY_SCREEN = "click_find_courses_empty_screen";
         String CLICK_NEXT_LESSON_IN_STEPS = "click_next_lesson_in_steps";
