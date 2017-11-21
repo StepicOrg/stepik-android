@@ -467,13 +467,6 @@ public interface Analytic {
         String FETCHED_UNSUCCESSFUL = "remote_fetched_unsuccessful";
     }
 
-    interface ContinueExperiment {
-        String CONTINUE_OLD = "experiment_continue_old";
-        String CONTINUE_NEW = "experiment_continue_new";
-        String COURSE_OLD = "experiment_continue_course_old";// click whole course (only for enrolled)
-        String COURSE_NEW = "experiment_continue_course_new";// click whole course (only for enrolled)
-    }
-
     interface CourseDetailScreen {
         String ANONYMOUS = "course_detail_anonymous";
         String ENROLLED = "course_detail_enrolled";
