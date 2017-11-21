@@ -453,11 +453,10 @@ public interface Analytic {
 
         String SHOW_SAVE_LOGIN = "smartlock_show_save_login";
         String LOGIN_SAVED = "smartlock_login_saved";
-        String LOGIN_NOT_SAVED = "smartlock_login_not_saved";
 
         String PROMPT_TO_CHOOSE_CREDENTIALS = "smartlock_prompt_to_choose_credentials";
-        String LAUNCH_CREDENTIAL_RETRIEVED_PROMPT = "smartlock_launch_credential_retrieved_prompt";
-        String LAUNCH_CREDENTIAL_CANCELED_PROMPT = "smartlock_launch_credential_canceled_prompt";
+        String PROMPT_CREDENTIAL_RETRIEVED = "smartlock_prompt_credential_retrieved";
+
         String CREDENTIAL_DELETED_FAIL = "smartlock_credential_deleted_fail";
         String CREDENTIAL_DELETED_SUCCESSFUL = "smartlock_credential_deleted_successful";
     }
