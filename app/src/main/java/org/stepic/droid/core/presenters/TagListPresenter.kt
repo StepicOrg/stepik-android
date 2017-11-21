@@ -13,6 +13,7 @@ import org.stepic.droid.model.Course
 import org.stepic.droid.model.Tag
 import org.stepic.droid.util.resolvers.SearchResolver
 import org.stepic.droid.web.Api
+import timber.log.Timber
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
@@ -41,8 +42,14 @@ constructor(
 
     fun onInitTag() {
         val disposable = publisher
+                .observeOn(mainScheduler)
+                .doOnNext {
+                    view?.showLoading()
+                }
+                .observeOn(backgroundScheduler)
                 .flatMap {
-                    api.getSearchResultsOfTag(it, tag).toObservable()
+                    api.getSearchResultsOfTag(it, tag)
+                            .toObservable()
                 }
                 .map { it.searchResultList }
                 .map { searchResolver.getCourseIdsFromSearchResults(it) }
@@ -52,7 +59,6 @@ constructor(
                 .map {
                     sortByIdsInSearch(it.first, it.second)
                 }
-                .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)
                 .subscribe(
                         {
@@ -62,7 +68,8 @@ constructor(
                                 view?.showCourses(it)
                             }
                         },
-                        {
+                        { e ->
+                            Timber.e(e)
                             view?.showConnectionProblem()
                         }
                 )
