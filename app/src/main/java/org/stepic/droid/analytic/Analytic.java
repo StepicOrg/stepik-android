@@ -65,7 +65,6 @@ public interface Analytic {
         String TYPING_TEXT_FIELDS = "typing_text_fields_registration";
         String CLICK_WITH_INTERACTION_TYPE = "click_registration_with_interaction_type";
         String CLICK_SEND_IME = "click_registration_send_ime";
-
     }
 
     interface Login {

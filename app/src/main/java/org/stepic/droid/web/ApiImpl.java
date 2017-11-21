@@ -184,6 +184,8 @@ public class ApiImpl implements Api {
                                 try {
                                     authenticationStepicResponse = oAuthService.updateToken(config.getRefreshGrantType(), response.getRefreshToken()).execute();
                                     response = authenticationStepicResponse.body();
+                                } catch (IOException e) {
+                                    return chain.proceed(newRequest);
                                 } catch (Exception e) {
                                     analytic.reportError(Analytic.Error.CANT_UPDATE_TOKEN, e);
                                     return chain.proceed(newRequest);
