@@ -691,19 +691,6 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public UpdateResponse getInfoForUpdating() throws IOException {
-        Request request = new Request.Builder()
-                .url(config.getBaseUrl() + "/" + config.getUpdateEndpoint())
-                .build();
-
-        OkHttpClient okHttpClient = new OkHttpClient();
-        String jsonString = okHttpClient.newCall(request).execute().body().string();
-
-        Gson gson = new Gson();
-        return gson.fromJson(jsonString, UpdateResponse.class);
-    }
-
-    @Override
     public Call<CommentsResponse> getCommentAnd20Replies(long commentId) {
         long[] id = new long[]{commentId};
         return loggedService.getComments(id);

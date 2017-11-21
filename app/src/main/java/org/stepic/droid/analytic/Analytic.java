@@ -110,7 +110,6 @@ public interface Analytic {
         String TRANSFER_DATA_YES = "storage: transfer data";
         String CLICK_CANCEL_SECTION = "click cancel section";
         String CLICK_CANCEL_LESSON = "click cancel unit";
-        String UPDATING_MESSAGE_IS_SHOWN = "updating shown";
         String REFRESH_UNITS = "refresh_units";
         String REFRESH_SECTIONS = "refresh_sections";
         String SUCCESS_LOGIN = "success login";
@@ -224,8 +223,6 @@ public interface Analytic {
         String AUTH_ERROR = "retrofitAuth";
         String NOTIFICATION_ERROR_PARSE = "notification error parse";
         String DELETE_SERVICE_ERROR = "DeleteService nullptr";
-        String ERROR_UPDATE_CHECK_APP = "update check failed";
-        String UPDATE_FROM_APK_FAILED = "update apk is failed";
         String FAIL_TO_MOVE = "storage: fail to move";
         String REGISTRATION_IMPORTANT_ERROR = "registration important error";
         String NOTIFICATION_NOT_POSTED_ON_CLICK = "notification is not posted";

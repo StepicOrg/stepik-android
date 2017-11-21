@@ -11,8 +11,6 @@ import org.stepic.droid.model.comments.VoteValue;
 import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.social.SocialManager;
 
-import java.io.IOException;
-
 import io.reactivex.Single;
 import retrofit2.Call;
 
@@ -102,8 +100,6 @@ public interface Api {
     Call<Void> removeDevice(long deviceId);
 
     Call<DiscussionProxyResponse> getDiscussionProxies(String discussionProxyId);
-
-    UpdateResponse getInfoForUpdating() throws IOException;
 
     Call<CommentsResponse> getCommentAnd20Replies(long commentId);
 

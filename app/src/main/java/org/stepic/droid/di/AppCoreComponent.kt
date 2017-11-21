@@ -114,10 +114,6 @@ interface AppCoreComponent {
 
     fun inject(receiver: NotificationBroadcastReceiver)
 
-    fun inject(needUpdatingDialog: NeedUpdatingDialog)
-
-    fun inject(service: UpdateWithApkService)
-
     fun inject(chooseStorageDialog: ChooseStorageDialog)
 
     fun inject(wantMoveDataDialog: WantMoveDataDialog)

@@ -48,7 +48,6 @@ public class SharedPreferenceHelper {
     private static final String FILTER_ENGLISH_LANGUAGE = "english_lang";
 
     private final String ACCESS_TOKEN_TIMESTAMP = "access_token_timestamp";
-    private final String UPDATING_TIMESTAMP = "updating_timestamp";
     private final String AUTH_RESPONSE_JSON = "auth_response_json";
     private final String PROFILE_JSON = "profile_json";
     private final String EMAIL_LIST = "email_list";
@@ -601,15 +600,6 @@ public class SharedPreferenceHelper {
 
         long millisNow = DateTimeHelper.INSTANCE.nowUtc(); // we should use +0 UTC for avoid problems with TimeZones
         put(PreferenceType.LOGIN, ACCESS_TOKEN_TIMESTAMP, millisNow);
-    }
-
-    public void storeLastShownUpdatingMessage() {
-        long millisNow = DateTimeHelper.INSTANCE.nowUtc();
-        put(PreferenceType.DEVICE_SPECIFIC, UPDATING_TIMESTAMP, millisNow);
-    }
-
-    public long getLastShownUpdatingMessageTimestamp() {
-        return getLong(PreferenceType.DEVICE_SPECIFIC, UPDATING_TIMESTAMP);
     }
 
     public void storeLastTokenType(boolean isSocial) {

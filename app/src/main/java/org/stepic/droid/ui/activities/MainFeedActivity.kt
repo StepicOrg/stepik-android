@@ -1,8 +1,6 @@
 package org.stepic.droid.ui.activities
 
-import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.content.pm.ShortcutManager
 import android.os.Bundle
 import android.support.annotation.IdRes
@@ -16,16 +14,12 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.presenters.ProfileMainFeedPresenter
-import org.stepic.droid.core.presenters.UpdateAppPresenter
 import org.stepic.droid.core.presenters.contracts.ProfileMainFeedView
-import org.stepic.droid.core.presenters.contracts.UpdateAppView
 import org.stepic.droid.model.Profile
 import org.stepic.droid.notifications.StepicInstanceIdService
-import org.stepic.droid.services.UpdateWithApkService
 import org.stepic.droid.ui.activities.contracts.RootScreen
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.dialogs.LogoutAreYouSureDialog
-import org.stepic.droid.ui.dialogs.NeedUpdatingDialog
 import org.stepic.droid.ui.fragments.CatalogFragment
 import org.stepic.droid.ui.fragments.CertificatesFragment
 import org.stepic.droid.ui.fragments.HomeFragment
@@ -42,7 +36,6 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         BottomNavigationView.OnNavigationItemReselectedListener,
         LogoutAreYouSureDialog.Companion.OnLogoutSuccessListener,
         RootScreen,
-        UpdateAppView,
         ProfileMainFeedView {
 
     companion object {
@@ -57,9 +50,6 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         const val PROFILE_INDEX: Int = 3
         const val CERTIFICATE_INDEX: Int = 4
     }
-
-    @Inject
-    lateinit var updateAppPresenter: UpdateAppPresenter
 
     @Inject
     lateinit var profileMainFeedPresenter: ProfileMainFeedPresenter
@@ -126,10 +116,6 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
 
         initNavigation()
 
-
-        updateAppPresenter.attachView(this)
-        updateAppPresenter.checkForUpdate()
-
         if (checkPlayServices() && !sharedPreferenceHelper.isGcmTokenOk) {
             threadPoolExecutor.execute {
                 StepicInstanceIdService.updateAnywhere(api, sharedPreferenceHelper, analytic) //FCM!
@@ -175,7 +161,6 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
     }
 
     override fun onDestroy() {
-        updateAppPresenter.detachView(this)
         profileMainFeedPresenter.detachView(this)
         if (isFinishing) {
             App.componentManager().releaseMainFeedComponent()
@@ -189,38 +174,6 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
             return
         } else {
             navigationView.selectedItemId = R.id.home
-        }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String?>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == AppConstants.REQUEST_EXTERNAL_STORAGE) {
-            val permissionExternalStorage = permissions[0] ?: return
-
-            if (permissionExternalStorage == Manifest.permission.WRITE_EXTERNAL_STORAGE && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                val link = sharedPreferenceHelper.tempLink
-                if (link != null) {
-                    val updateIntent = Intent(this, UpdateWithApkService::class.java)
-                    updateIntent.putExtra(UpdateWithApkService.linkKey, link)
-                    this.startService(updateIntent)
-                }
-            }
-        }
-    }
-
-    override fun onNeedUpdate(linkForUpdate: String?, isAppInGp: Boolean) {
-        if (isAppInGp && linkForUpdate == null) {
-            return
-        }
-        val storedTimestamp = sharedPreferenceHelper.lastShownUpdatingMessageTimestamp
-        val needUpdate = DateTimeHelper.isNeededUpdate(storedTimestamp, AppConstants.MILLIS_IN_24HOURS)
-        if (!needUpdate) return
-
-        sharedPreferenceHelper.storeLastShownUpdatingMessage()
-        analytic.reportEvent(Analytic.Interaction.UPDATING_MESSAGE_IS_SHOWN)
-        val dialog = NeedUpdatingDialog.newInstance(linkForUpdate, isAppInGp)
-        if (!dialog.isAdded) {
-            dialog.show(supportFragmentManager, null)
         }
     }
 
@@ -243,7 +196,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
                     analytic.reportEvent(Analytic.Anonymous.BROWSE_COURSES_DRAWER)
                 }
             }
-            R.id.certificates -> analytic.reportEvent(Analytic.Screens.USER_OPEN_CERTIFICATES);
+            R.id.certificates -> analytic.reportEvent(Analytic.Screens.USER_OPEN_CERTIFICATES)
             R.id.profile -> analytic.reportEvent(Analytic.Screens.USER_OPEN_PROFILE)
         }
     }
