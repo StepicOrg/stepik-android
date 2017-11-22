@@ -17,7 +17,7 @@ class CourseListActivity : SingleFragmentActivity() {
             info.table == Table.featured -> PopularCoursesFragment.newInstance()
             info.table == null && info.courseIds != null -> {
                 val descriptionColors = intent.getSerializableExtra(COURSE_DESCRIPTION_COLORS) as CollectionDescriptionColors?
-                CourseCollectionFragment.newInstance(info.title, info.courseIds, descriptionColors)
+                CourseCollectionFragment.newInstance(info.title, info.courseIds, info.description, descriptionColors)
             }
             else -> throw IllegalStateException("course info is broken")
         }

@@ -25,9 +25,11 @@ import org.stepic.droid.core.presenters.ContinueCoursePresenter;
 import org.stepic.droid.core.presenters.DroppingPresenter;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.CoursesCarouselColorType;
+import org.stepic.droid.model.CoursesDescriptionContainer;
 import org.stepic.droid.ui.adapters.viewhoders.CourseItemViewHolder;
 import org.stepic.droid.ui.adapters.viewhoders.CourseViewHolderBase;
 import org.stepic.droid.ui.adapters.viewhoders.FooterItemViewHolder;
+import org.stepic.droid.ui.adapters.viewhoders.HeaderItemViewHolder;
 import org.stepic.droid.util.resolvers.text.TextResolver;
 
 import java.util.List;
@@ -61,8 +63,12 @@ public class CoursesAdapter extends RecyclerView.Adapter<CourseViewHolderBase> {
     @NotNull
     private final DroppingPresenter droppingPresenter;
 
-    private int footerViewType = 1;
-    private int itemViewType = 2;
+    private CoursesDescriptionContainer descriptionContainer;
+
+    private final static int HEADER_VIEW_TYPE = 3;
+    private final static int ITEM_VIEW_TYPE = 2;
+    private final static int FOOTER_VIEW_TYPE = 1;
+
     private final int NUMBER_OF_EXTRA_ITEMS;
     private final FooterItemViewHolder.Companion.State isNeedShowFooterState;
     private final String continueTitle;
@@ -111,10 +117,13 @@ public class CoursesAdapter extends RecyclerView.Adapter<CourseViewHolderBase> {
 
     @Override
     public CourseViewHolderBase onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == footerViewType) {
+        if (viewType == HEADER_VIEW_TYPE) {
+            View view = inflater.inflate(R.layout.placeholder_view, parent, false);
+            return new HeaderItemViewHolder(view);
+        } else if (viewType == FOOTER_VIEW_TYPE) {
             View view = inflater.inflate(R.layout.loading_view, parent, false);
             return new FooterItemViewHolder(view, isNeedShowFooterState);
-        } else if (itemViewType == viewType) {
+        } else if (ITEM_VIEW_TYPE == viewType) {
             View view = inflater.inflate(R.layout.new_course_item, parent, false);
             return new CourseItemViewHolder(
                     view,
@@ -142,15 +151,26 @@ public class CoursesAdapter extends RecyclerView.Adapter<CourseViewHolderBase> {
     @Override
     public int getItemViewType(int position) {
         if (position == getItemCount() - NUMBER_OF_EXTRA_ITEMS) {
-            return footerViewType;
+            return FOOTER_VIEW_TYPE;
         } else {
-            return itemViewType;
+            return ITEM_VIEW_TYPE;
         }
     }
 
     @Override
     public int getItemCount() {
         return courses.size() + NUMBER_OF_EXTRA_ITEMS;
+    }
+
+    public void setDescriptionContainer(CoursesDescriptionContainer descriptionContainer) {
+        if (this.descriptionContainer == null && descriptionContainer != null) {
+            notifyItemInserted(0);
+        } else if (this.descriptionContainer != null && descriptionContainer == null) {
+            notifyItemRemoved(0);
+        } else if (this.descriptionContainer != null) {
+            notifyItemChanged(0);
+        }
+        this.descriptionContainer = descriptionContainer;
     }
 
     public void showLoadingFooter(boolean isNeedShow) {
