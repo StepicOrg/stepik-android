@@ -545,4 +545,6 @@
         <item quantity="many">%d курсов</item>
         <item quantity="other">%d курсов</item>
     </plurals>
+    <string name="course_current_progress">Текущий прогресс %d%%</string>
+    <string name="home_streak_counter_text"><![CDATA[Вы решаете <b>%s</b> подряд!]]></string>
 </resources>

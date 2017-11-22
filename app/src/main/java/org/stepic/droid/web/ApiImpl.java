@@ -743,6 +743,11 @@ public class ApiImpl implements Api {
     }
 
     @Override
+    public Single<UserActivityResponse> getUserActivitiesReactive(long userId) {
+        return loggedService.getUserActivitiesReactive(userId);
+    }
+
+    @Override
     public Call<LastStepResponse> getLastStepResponse(@NonNull String lastStepId) {
         return loggedService.getLastStepResponse(lastStepId);
     }
