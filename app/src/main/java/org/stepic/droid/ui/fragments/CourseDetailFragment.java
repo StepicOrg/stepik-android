@@ -207,7 +207,7 @@ public class CourseDetailFragment extends FragmentBase implements
         //VIEW:
         coursePropertyList = new ArrayList<>();
         joinCourseSpinner = new LoadingProgressDialog(getActivity());
-        LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+        LayoutInflater layoutInflater = getLayoutInflater();
         initHeader(layoutInflater);
         initFooter(layoutInflater);
 
