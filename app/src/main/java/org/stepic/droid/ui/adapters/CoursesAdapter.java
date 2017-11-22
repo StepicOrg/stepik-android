@@ -69,7 +69,8 @@ public class CoursesAdapter extends RecyclerView.Adapter<CourseViewHolderBase> {
     private final static int ITEM_VIEW_TYPE = 2;
     private final static int FOOTER_VIEW_TYPE = 1;
 
-    private final int NUMBER_OF_EXTRA_ITEMS;
+    private int NUMBER_OF_PRE_ITEMS = 0;
+    private final int NUMBER_OF_POST_ITEMS;
     private final FooterItemViewHolder.Companion.State isNeedShowFooterState;
     private final String continueTitle;
     private final String joinTitle;
@@ -88,9 +89,9 @@ public class CoursesAdapter extends RecyclerView.Adapter<CourseViewHolderBase> {
         this.showMore = showMore;
         this.colorType = colorType;
         if (withPagination) {
-            NUMBER_OF_EXTRA_ITEMS = 1;
+            NUMBER_OF_POST_ITEMS = 1;
         } else {
-            NUMBER_OF_EXTRA_ITEMS = 0;
+            NUMBER_OF_POST_ITEMS = 0;
         }
         contextActivity = activity;
         this.courses = courses;
@@ -145,14 +146,14 @@ public class CoursesAdapter extends RecyclerView.Adapter<CourseViewHolderBase> {
 
     @Override
     public void onBindViewHolder(CourseViewHolderBase holder, int position) {
-        holder.setDataOnView(position);
+        holder.setDataOnView(position - NUMBER_OF_PRE_ITEMS);
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (position == 0 && descriptionContainer != null) {
+        if (position < NUMBER_OF_PRE_ITEMS) {
             return HEADER_VIEW_TYPE;
-        } else if (position == getItemCount() - NUMBER_OF_EXTRA_ITEMS) {
+        } else if (position == getItemCount() - NUMBER_OF_POST_ITEMS) {
             return FOOTER_VIEW_TYPE;
         } else {
             return ITEM_VIEW_TYPE;
@@ -161,18 +162,21 @@ public class CoursesAdapter extends RecyclerView.Adapter<CourseViewHolderBase> {
 
     @Override
     public int getItemCount() {
-        return courses.size() + NUMBER_OF_EXTRA_ITEMS;
+        return NUMBER_OF_PRE_ITEMS + courses.size() + NUMBER_OF_POST_ITEMS;
     }
 
     public void setDescriptionContainer(CoursesDescriptionContainer descriptionContainer) {
-        final boolean isAdd = this.descriptionContainer == null;
-        final boolean isRemove = descriptionContainer == null;
-        this.descriptionContainer = descriptionContainer;
-        if (isAdd && !isRemove) {
+        if (this.descriptionContainer == null && descriptionContainer != null) {
+            NUMBER_OF_PRE_ITEMS++;
+            this.descriptionContainer = descriptionContainer;
             notifyItemInserted(0);
-        } else if (!isAdd && isRemove) {
+        } else if (this.descriptionContainer != null && descriptionContainer == null) {
+            NUMBER_OF_PRE_ITEMS--;
+            this.descriptionContainer = null;
             notifyItemRemoved(0);
-        } else if (!isAdd) {
+        } else if (this.descriptionContainer != null) {
+            this.descriptionContainer.setDescription(descriptionContainer.getDescription());
+            this.descriptionContainer.setColors(descriptionContainer.getColors());
             notifyItemChanged(0);
         }
     }
