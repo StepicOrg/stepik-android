@@ -414,23 +414,29 @@ public interface Analytic {
         String CHOOSE_INTERVAL_PROFILE = "streak_choose_interval_profile";
         String CHOOSE_INTERVAL_CANCELED_PROFILE = "streak_choose_interval_canceled_profile";
         String CHOOSE_INTERVAL_CANCELED = "streak_choose_interval_canceled";
-        String CHOOSE_INTERVAL = "streak_choose_interval";
+
         String CAN_SHOW_DIALOG = "streak_can_show_dialog";
         String SHOW_DIALOG_UNDEFINED_STREAKS = "streak_show_dialog_undefined";
         String SHOW_DIALOG_POSITIVE_STREAKS = "streak_show_dialog_positive";
         String STREAK_NOTIFICATION_OPENED = "streak_notification_opened";
         String NEGATIVE_MATERIAL_DIALOG = "streak_material_dialog_negative";
-        String POSITIVE_MATERIAL_DIALOG = "streak_material_dialog_positive";
-        String SHOWN_MATERIAL_DIALOG = "streak_material_dialog_shown";
         String GET_NON_ZERO_STREAK_NOTIFICATION = "streak_get_non_zero_notification";
         String GET_ZERO_STREAK_NOTIFICATION = "streak_get_zero_notification";
         String GET_NO_INTERNET_NOTIFICATION = " streak_get_no_internet_notification";
+
+        String SHOWN_MATERIAL_DIALOG = "streak_material_dialog_shown";
+        String POSITIVE_MATERIAL_DIALOG = "streak_material_dialog_positive";
+        String CHOOSE_INTERVAL = "streak_choose_interval"; //complete
 
         String NOTIFICATION_TYPE_PARAM = "type";
 
         enum NotificationType {
             zero, noInternet, solvedToday, notSolvedToday
         }
+
+        String EARLY_DIALOG_SHOWN = "streak_early_shown";
+        String EARLY_DIALOG_POSITIVE = "streak_early_positive";
+        String EARLY_NOTIFICATION_COMPLETE = "streak_early_complete";
     }
 
     interface Shortcut {

@@ -5,13 +5,17 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.pm.ShortcutManager
+import android.graphics.Color
 import android.os.Bundle
 import android.support.annotation.IdRes
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.view.MenuItem
-import android.widget.Toast
 import com.facebook.login.LoginManager
+import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog
 import com.vk.sdk.VKSdk
 import kotlinx.android.synthetic.main.activity_main_feed.*
 import org.stepic.droid.R
@@ -20,9 +24,11 @@ import org.stepic.droid.base.App
 import org.stepic.droid.base.Client
 import org.stepic.droid.core.earlystreak.contract.EarlyStreakListener
 import org.stepic.droid.core.presenters.ProfileMainFeedPresenter
+import org.stepic.droid.core.presenters.StreakPresenter
 import org.stepic.droid.core.presenters.UpdateAppPresenter
 import org.stepic.droid.core.presenters.contracts.ProfileMainFeedView
 import org.stepic.droid.core.presenters.contracts.UpdateAppView
+import org.stepic.droid.fonts.FontType
 import org.stepic.droid.model.Course
 import org.stepic.droid.model.Profile
 import org.stepic.droid.notifications.StepicInstanceIdService
@@ -31,14 +37,18 @@ import org.stepic.droid.ui.activities.contracts.RootScreen
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.dialogs.LogoutAreYouSureDialog
 import org.stepic.droid.ui.dialogs.NeedUpdatingDialog
+import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment
 import org.stepic.droid.ui.fragments.CatalogFragment
 import org.stepic.droid.ui.fragments.CertificatesFragment
 import org.stepic.droid.ui.fragments.HomeFragment
 import org.stepic.droid.ui.fragments.ProfileFragment
+import org.stepic.droid.ui.util.TimeIntervalUtil
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.ProgressHelper
 import timber.log.Timber
+import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan
+import uk.co.chrisjenx.calligraphy.TypefaceUtils
 import javax.inject.Inject
 
 
@@ -48,7 +58,9 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         LogoutAreYouSureDialog.Companion.OnLogoutSuccessListener,
         RootScreen,
         UpdateAppView,
-        ProfileMainFeedView, EarlyStreakListener {
+        ProfileMainFeedView,
+        EarlyStreakListener,
+        TimeIntervalPickerDialogFragment.Callback {
     companion object {
         val currentIndexKey = "currentIndexKey"
 
@@ -81,6 +93,9 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
 
     @Inject
     lateinit var earlyStreakClient: Client<EarlyStreakListener>
+
+    @Inject
+    lateinit var streakPresenter: StreakPresenter
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
@@ -350,10 +365,40 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
 
     override fun onShowStreakSuggestion() {
         if (intent.action == LOGGED_ACTION) {
-            // todo show streak dialog
             intent.action = null
-            Timber.d("Hello there")
-            Toast.makeText(this, "Hello there", Toast.LENGTH_SHORT).show()
+
+
+            val streakTitle = SpannableString(getString(R.string.early_notification_title))
+            streakTitle.setSpan(ForegroundColorSpan(Color.BLACK), 0, streakTitle.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            val typefaceSpan = CalligraphyTypefaceSpan(TypefaceUtils.load(this.assets, fontsProvider.provideFontPath(FontType.bold)))
+            streakTitle.setSpan(typefaceSpan, 0, streakTitle.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+            val description = getString(R.string.early_notification_description)
+
+            analytic.reportEvent(Analytic.Streak.EARLY_DIALOG_SHOWN)
+            val dialog = MaterialStyledDialog.Builder(this)
+                    .setTitle(streakTitle)
+                    .setDescription(description)
+                    .setHeaderDrawable(R.drawable.dialog_background)
+                    .setPositiveText(R.string.ok)
+                    .setNegativeText(R.string.later_tatle)
+                    .setScrollable(true, 10) // number of lines lines
+                    .onPositive { _, _ ->
+                        analytic.reportEvent(Analytic.Streak.EARLY_DIALOG_POSITIVE)
+                        val dialogFragment = TimeIntervalPickerDialogFragment.newInstance()
+                        dialogFragment.callback = this
+                        if (!dialogFragment.isAdded) {
+                            dialogFragment.show(supportFragmentManager, null)
+                        }
+                    }
+                    .build()
+            dialog.show()
         }
+    }
+
+    override fun onTimeIntervalPicked(data: Intent) {
+        analytic.reportEvent(Analytic.Streak.EARLY_NOTIFICATION_COMPLETE)
+        val intervalCode = data.getIntExtra(TimeIntervalPickerDialogFragment.resultIntervalCodeKey, TimeIntervalUtil.defaultTimeCode)
+        streakPresenter.setStreakTime(intervalCode) // we do not need attach this view, because we need only set in model
     }
 }
