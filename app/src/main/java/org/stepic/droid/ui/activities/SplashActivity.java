@@ -6,58 +6,39 @@ import android.content.pm.ShortcutInfo;
 import android.content.pm.ShortcutManager;
 import android.graphics.drawable.Icon;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.model.Profile;
+import org.stepic.droid.base.App;
+import org.stepic.droid.core.presenters.SplashPresenter;
+import org.stepic.droid.core.presenters.contracts.SplashView;
 import org.stepic.droid.notifications.StepicInstanceIdService;
 import org.stepic.droid.util.AppConstants;
-import org.stepic.droid.web.StepicProfileResponse;
 
 import java.util.Arrays;
+
+import javax.inject.Inject;
 
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
 
 
-public class SplashActivity extends BackToExitActivityBase {
+public class SplashActivity extends BackToExitActivityBase implements SplashView {
+
+    @Inject
+    SplashPresenter splashPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         //This stops from opening again from the Splash screen when minimized
         if (!isTaskRoot()) {
             finish();
             return;
         }
-
-        threadPoolExecutor.execute(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            // make this "ping" request for updating refresh tokens and log out user, if it is revoked.
-                            // also it should update the profile
-                            StepicProfileResponse response = api.getUserProfile().execute().body();
-                            if (response == null) {
-                                return;
-                            }
-                            Profile profile = response.getProfile();
-                            if (profile != null) {
-                                sharedPreferenceHelper.storeProfile(profile);
-                            }
-                        } catch (Exception e) {
-                            //ignore
-                            //offline or access is revoked
-                        }
-                    }
-                }
-        );
+        App.Companion.componentManager().splashComponent().inject(this);
+        splashPresenter.attachView(this);
+        splashPresenter.onSplashCreated();
 
         defineShortcuts();
 
@@ -155,26 +136,7 @@ public class SplashActivity extends BackToExitActivityBase {
     }
 
     private void checkRemoteConfigs() {
-        if (!isFinishing()) {
-            if (checkPlayServices()) {
-                firebaseRemoteConfig.fetch().addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            analytic.reportEvent(Analytic.RemoteConfig.FETCHED_SUCCESSFUL);
-                            firebaseRemoteConfig.activateFetched();
-                        } else {
-                            analytic.reportEvent(Analytic.RemoteConfig.FETCHED_UNSUCCESSFUL);
-                        }
-                    }
-                });
-                //do not wait fetch, because fail of it may be about 3 mins. User can't wait for it!
-                showNextScreen();
-            } else {
-                showNextScreen();
-            }
-
-        }
+        //remove
     }
 
     private void showNextScreen() {
@@ -184,6 +146,29 @@ public class SplashActivity extends BackToExitActivityBase {
             } else {
                 screenManager.showLaunchFromSplash(this);
             }
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        splashPresenter.detachView(this);
+        if (isFinishing()) {
+            App.Companion.componentManager().releaseSplashComponent();
+        }
+    }
+
+    @Override
+    public void onShowLaunch() {
+        if (!isFinishing()) {
+            screenManager.showLaunchFromSplash(this);
+        }
+    }
+
+    @Override
+    public void onShowHome() {
+        if (!isFinishing()) {
+            screenManager.showMainFeedFromSplash(SplashActivity.this);
         }
     }
 }
