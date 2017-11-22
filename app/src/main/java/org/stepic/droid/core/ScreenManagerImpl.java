@@ -173,14 +173,9 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void showMainFeed(Context sourceActivity, @Nullable Course course) {
+    public void showMainFeedAfterLogin(Activity sourceActivity, @Nullable Course course) {
         analytic.reportEvent(Analytic.Screens.SHOW_MAIN_FEED);
-        Intent intent = new Intent(sourceActivity, MainFeedActivity.class);
-        if (course != null) {
-            intent.putExtra(AppConstants.KEY_COURSE_BUNDLE, course);
-        }
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        sourceActivity.startActivity(intent);
+        MainFeedActivity.Companion.launchAfterLogin(sourceActivity, course);
     }
 
     @Override

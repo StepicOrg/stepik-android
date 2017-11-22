@@ -1,6 +1,7 @@
 package org.stepic.droid.ui.activities
 
 import android.Manifest
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.pm.ShortcutManager
@@ -19,6 +20,7 @@ import org.stepic.droid.core.presenters.ProfileMainFeedPresenter
 import org.stepic.droid.core.presenters.UpdateAppPresenter
 import org.stepic.droid.core.presenters.contracts.ProfileMainFeedView
 import org.stepic.droid.core.presenters.contracts.UpdateAppView
+import org.stepic.droid.model.Course
 import org.stepic.droid.model.Profile
 import org.stepic.droid.notifications.StepicInstanceIdService
 import org.stepic.droid.services.UpdateWithApkService
@@ -51,11 +53,22 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         val reminderKey = "reminderKey"
         const val defaultIndex: Int = 0
         private val progressLogoutTag = "progressLogoutTag"
+        private const val LOGGED_ACTION = "LOGGED_ACTION"
 
         const val HOME_INDEX: Int = 1
         const val CATALOG_INDEX: Int = 2
         const val PROFILE_INDEX: Int = 3
         const val CERTIFICATE_INDEX: Int = 4
+
+        fun launchAfterLogin(sourceActivity: Activity, course: Course?) {
+            val intent = Intent(sourceActivity, MainFeedActivity::class.java)
+            if (course != null) {
+                intent.putExtra(AppConstants.KEY_COURSE_BUNDLE, course)
+            }
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            intent.action = LOGGED_ACTION
+            sourceActivity.startActivity(intent)
+        }
     }
 
     @Inject
