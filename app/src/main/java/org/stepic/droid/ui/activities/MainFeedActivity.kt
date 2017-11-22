@@ -10,12 +10,15 @@ import android.support.annotation.IdRes
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.view.MenuItem
+import android.widget.Toast
 import com.facebook.login.LoginManager
 import com.vk.sdk.VKSdk
 import kotlinx.android.synthetic.main.activity_main_feed.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
+import org.stepic.droid.base.Client
+import org.stepic.droid.core.earlystreak.contract.EarlyStreakListener
 import org.stepic.droid.core.presenters.ProfileMainFeedPresenter
 import org.stepic.droid.core.presenters.UpdateAppPresenter
 import org.stepic.droid.core.presenters.contracts.ProfileMainFeedView
@@ -45,8 +48,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         LogoutAreYouSureDialog.Companion.OnLogoutSuccessListener,
         RootScreen,
         UpdateAppView,
-        ProfileMainFeedView {
-
+        ProfileMainFeedView, EarlyStreakListener {
     companion object {
         val currentIndexKey = "currentIndexKey"
 
@@ -76,6 +78,9 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
 
     @Inject
     lateinit var profileMainFeedPresenter: ProfileMainFeedPresenter
+
+    @Inject
+    lateinit var earlyStreakClient: Client<EarlyStreakListener>
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
@@ -140,6 +145,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         initNavigation()
 
 
+        earlyStreakClient.subscribe(this)
         updateAppPresenter.attachView(this)
         updateAppPresenter.checkForUpdate()
 
@@ -188,6 +194,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
     }
 
     override fun onDestroy() {
+        earlyStreakClient.unsubscribe(this)
         updateAppPresenter.detachView(this)
         profileMainFeedPresenter.detachView(this)
         if (isFinishing) {
@@ -339,5 +346,14 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
 
     override fun applyTransitionPrev() {
         //no-op
+    }
+
+    override fun onShowStreakSuggestion() {
+        if (intent.action == LOGGED_ACTION) {
+            // todo show streak dialog
+            intent.action = null
+            Timber.d("Hello there")
+            Toast.makeText(this, "Hello there", Toast.LENGTH_SHORT).show()
+        }
     }
 }
