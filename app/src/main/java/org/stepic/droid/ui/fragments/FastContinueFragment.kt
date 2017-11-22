@@ -27,6 +27,7 @@ import org.stepic.droid.storage.operations.Table
 import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
+import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.util.*
 import javax.inject.Inject
 
@@ -150,7 +151,6 @@ class FastContinueFragment : FragmentBase(),
     override fun showCourses(courses: List<Course>) {
         fastContinueProgress.visibility = View.GONE
         fastContinuePlaceholder.visibility = View.GONE
-        showMainGroup(true)
         val course: Course? = courses
                 .find {
                     it.isActive
@@ -162,6 +162,7 @@ class FastContinueFragment : FragmentBase(),
                 analytic.reportEvent(Analytic.FastContinue.CONTINUE_SHOWN)
             }
             setCourse(course)
+            showMainGroup(true)
             isCourseFound = true
             fastContinueAction.setOnClickListener {
                 analytic.reportEvent(Analytic.FastContinue.CONTINUE_CLICK)
@@ -235,14 +236,7 @@ class FastContinueFragment : FragmentBase(),
     }
 
     private fun showMainGroup(needShow: Boolean) {
-        val visibility = if (needShow) {
-            View.VISIBLE
-        } else {
-            View.GONE
-        }
-        fastContinueAction.visibility = visibility
-        fastContinueOverlay.visibility = visibility
-        fastContinueMask.visibility = visibility
+        fastContinueMask.changeVisibility(needShow)
     }
 
     override fun onSuccessJoin(joinedCourse: Course) {
