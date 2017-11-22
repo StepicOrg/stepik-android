@@ -11,7 +11,6 @@ import org.stepic.droid.R;
 import org.stepic.droid.base.App;
 import org.stepic.droid.core.presenters.SplashPresenter;
 import org.stepic.droid.core.presenters.contracts.SplashView;
-import org.stepic.droid.notifications.StepicInstanceIdService;
 import org.stepic.droid.util.AppConstants;
 
 import java.util.Arrays;
@@ -40,16 +39,6 @@ public class SplashActivity extends BackToExitActivityBase implements SplashView
         splashPresenter.onSplashCreated();
 
         defineShortcuts();
-
-
-        if (checkPlayServices() && !sharedPreferenceHelper.isGcmTokenOk()) {
-            threadPoolExecutor.execute(new Runnable() {
-                @Override
-                public void run() {
-                    StepicInstanceIdService.Companion.updateAnywhere(api, sharedPreferenceHelper, analytic); //FCM!
-                }
-            });
-        }
 
         if (sharedPreferenceHelper.isFirstTime() || !sharedPreferenceHelper.isScheduleAdded() || sharedPreferenceHelper.isNeedDropCoursesIn114()) {
             //fix v11 bug:

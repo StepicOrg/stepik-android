@@ -6,6 +6,7 @@ import io.reactivex.Scheduler
 import io.reactivex.disposables.Disposable
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.core.GoogleApiChecker
+import org.stepic.droid.core.StepikDevicePoster
 import org.stepic.droid.core.presenters.contracts.SplashView
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
@@ -28,7 +29,8 @@ constructor(
         private val sharedPreferenceHelper: SharedPreferenceHelper,
         private val firebaseRemoteConfig: FirebaseRemoteConfig,
         private val googleApiChecker: GoogleApiChecker,
-        private val analytic: Analytic
+        private val analytic: Analytic,
+        private val stepikDevicePoster: StepikDevicePoster
 ) : PresenterBase<SplashView>() {
 
     private var disposable: Disposable? = null
@@ -39,6 +41,7 @@ constructor(
                     updateProfile()
                     checkRemoteConfigs()
                     countNumberOfLaunches()
+                    registerDeviceToPushes()
                 }
                 .map {
                     RxOptional(sharedPreferenceHelper.authResponseFromStore)
@@ -54,6 +57,7 @@ constructor(
                 }
 
     }
+
 
     override fun detachView(view: SplashView) {
         super.detachView(view)
@@ -93,6 +97,13 @@ constructor(
             analytic.reportEvent(Analytic.Interaction.START_SPLASH, numberOfLaunches.toString() + "")
         } else {
             analytic.reportEvent(Analytic.Interaction.START_SPLASH_EXPERT, numberOfLaunches.toString() + "")
+        }
+    }
+
+
+    private fun registerDeviceToPushes() {
+        if (!sharedPreferenceHelper.isGcmTokenOk && googleApiChecker.checkPlayServices()) {
+            stepikDevicePoster.registerDevice()
         }
     }
 

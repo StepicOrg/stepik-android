@@ -15,12 +15,12 @@ import kotlinx.android.synthetic.main.activity_main_feed.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
+import org.stepic.droid.core.StepikDevicePoster
 import org.stepic.droid.core.presenters.ProfileMainFeedPresenter
 import org.stepic.droid.core.presenters.UpdateAppPresenter
 import org.stepic.droid.core.presenters.contracts.ProfileMainFeedView
 import org.stepic.droid.core.presenters.contracts.UpdateAppView
 import org.stepic.droid.model.Profile
-import org.stepic.droid.notifications.StepicInstanceIdService
 import org.stepic.droid.services.UpdateWithApkService
 import org.stepic.droid.ui.activities.contracts.RootScreen
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
@@ -63,6 +63,9 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
 
     @Inject
     lateinit var profileMainFeedPresenter: ProfileMainFeedPresenter
+
+    @Inject
+    lateinit var stepikDevicePoster: StepikDevicePoster
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
@@ -132,7 +135,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
 
         if (checkPlayServices() && !sharedPreferenceHelper.isGcmTokenOk) {
             threadPoolExecutor.execute {
-                StepicInstanceIdService.updateAnywhere(api, sharedPreferenceHelper, analytic) //FCM!
+                stepikDevicePoster.registerDevice()
             }
         }
 
