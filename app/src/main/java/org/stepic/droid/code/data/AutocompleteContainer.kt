@@ -18,7 +18,8 @@ constructor(context: Context) {
             "js"   to AutocompleteDictionary(context.resources.getStringArray(R.array.autocomplete_words_js)),
             "php"  to AutocompleteDictionary(context.resources.getStringArray(R.array.autocomplete_words_php)),
             "py"   to AutocompleteDictionary(context.resources.getStringArray(R.array.autocomplete_words_py)),
-            "rb"   to AutocompleteDictionary(context.resources.getStringArray(R.array.autocomplete_words_rb))
+            "rb"   to AutocompleteDictionary(context.resources.getStringArray(R.array.autocomplete_words_rb)),
+            "sql"  to AutocompleteDictionary(context.resources.getStringArray(R.array.autocomplete_words_sql))
     )
 
     fun getAutoCompleteForLangAndPrefix(lang: String, prefix: String): List<String> =
