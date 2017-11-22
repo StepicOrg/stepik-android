@@ -25,8 +25,8 @@ import uk.co.chrisjenx.calligraphy.CalligraphyUtils;
 
 public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
     private final static String assetUrl = "file:///android_asset/";
-    TextView textView;
-    LatexSupportableWebView webView;
+    protected TextView textView;
+    protected LatexSupportableWebView webView;
 
     @ColorInt
     int backgroundColor;
@@ -63,12 +63,11 @@ public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
         textView.setBackgroundColor(backgroundColor);
     }
 
-    private void init(Context context) {
+    protected void init(Context context) {
         LayoutInflater.from(context).inflate(R.layout.latex_supportabe_enhanced_view, this, true);
         textView = findViewById(R.id.textView);
         textView.setMovementMethod(LinkMovementMethod.getInstance());
         webView = findViewById(R.id.webView);
-
     }
 
     public void setTextIsSelectable(boolean isSelectable) {
