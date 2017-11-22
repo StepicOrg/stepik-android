@@ -99,7 +99,6 @@ class ProfilePresenterImpl
         }
 
         if (user == null) {
-            analytic.reportEvent(Analytic.Profile.OPEN_NO_INTERNET)
             mainHandler.post {
                 view?.onInternetFailed()
                 isLoading = false
@@ -135,7 +134,6 @@ class ProfilePresenterImpl
             api.getUserActivities(userId).execute().body()?.userActivities?.firstOrNull()?.pins
         } catch (exception: Exception) {
             //if we do not have Internet or do not have access to streaks, just do nothing, because streaks is not primary on profile screen
-            analytic.reportEvent(Analytic.Profile.STREAK_NO_INTERNET)
             null
         } ?: return
 

@@ -457,7 +457,7 @@ public class SectionsFragment
 
     @Override
     public void onRefresh() {
-        getAnalytic().reportEvent(Analytic.Interaction.REFRESH_SECTION);
+        getAnalytic().reportEvent(Analytic.Interaction.REFRESH_SECTIONS);
         if (course != null) {
             sectionsPresenter.showSections(course, true);
         } else {
