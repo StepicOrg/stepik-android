@@ -1,5 +1,9 @@
 package org.stepic.droid.model;
 
+import com.google.gson.annotations.SerializedName;
+
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
 public class Reply {
@@ -11,6 +15,9 @@ public class Reply {
     private final List<Integer> ordering;
     private final String language;
     private final String code;
+
+    @SerializedName("solve_sql")
+    private final String solveSql;
     private final List<String> blanks;
 
     private List<TableChoiceAnswer> tableChoices; //this is not serialize by default, because  field 'choices' is already created by different type
@@ -24,6 +31,7 @@ public class Reply {
         private List<Integer> ordering;
         private String language;
         private String code;
+        private String solveSql;
         private List<String> blanks;
 
 
@@ -77,11 +85,17 @@ public class Reply {
             return this;
         }
 
+        public Builder setSolveSql(String solveSql) {
+            this.solveSql = solveSql;
+            return this;
+        }
+
         public Builder setBlanks(List<String> blanks) {
             this.blanks = blanks;
             return this;
         }
 
+        @NotNull
         public Reply build() {
             return new Reply(this);
         }
@@ -97,6 +111,7 @@ public class Reply {
         ordering = builder.ordering;
         language = builder.language;
         code = builder.code;
+        solveSql = builder.solveSql;
         blanks = builder.blanks;
         tableChoices = builder.tableChoices;
     }
@@ -131,6 +146,10 @@ public class Reply {
 
     public String getCode() {
         return code;
+    }
+
+    public String getSolveSql() {
+        return solveSql;
     }
 
     public List<String> getBlanks() {

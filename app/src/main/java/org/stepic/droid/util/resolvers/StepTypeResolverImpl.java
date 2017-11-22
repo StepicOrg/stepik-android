@@ -25,6 +25,7 @@ import org.stepic.droid.ui.fragments.NotSupportedYetStepFragment;
 import org.stepic.droid.ui.fragments.NumberStepFragment;
 import org.stepic.droid.ui.fragments.PyCharmStepFragment;
 import org.stepic.droid.ui.fragments.SortingStepFragment;
+import org.stepic.droid.ui.fragments.SqlStepFragment;
 import org.stepic.droid.ui.fragments.StringStepFragment;
 import org.stepic.droid.ui.fragments.TableChoiceStepFragment;
 import org.stepic.droid.ui.fragments.TextStepFragment;
@@ -202,6 +203,8 @@ public class StepTypeResolverImpl implements StepTypeResolver {
                 return TableChoiceStepFragment.newInstance();
             case AppConstants.TYPE_CODE:
                 return CodeStepFragment.Companion.newInstance();
+            case AppConstants.TYPE_SQL:
+                return SqlStepFragment.Companion.newInstance();
             default:
                 return new NotSupportedYetStepFragment();
         }
