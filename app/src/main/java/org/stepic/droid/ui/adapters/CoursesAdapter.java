@@ -119,7 +119,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CourseViewHolderBase> {
     public CourseViewHolderBase onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == HEADER_VIEW_TYPE) {
             View view = inflater.inflate(R.layout.placeholder_view, parent, false);
-            return new HeaderItemViewHolder(view);
+            return new HeaderItemViewHolder(view, descriptionContainer);
         } else if (viewType == FOOTER_VIEW_TYPE) {
             View view = inflater.inflate(R.layout.loading_view, parent, false);
             return new FooterItemViewHolder(view, isNeedShowFooterState);
@@ -150,7 +150,9 @@ public class CoursesAdapter extends RecyclerView.Adapter<CourseViewHolderBase> {
 
     @Override
     public int getItemViewType(int position) {
-        if (position == getItemCount() - NUMBER_OF_EXTRA_ITEMS) {
+        if (position == 0 && descriptionContainer != null) {
+            return HEADER_VIEW_TYPE;
+        } else if (position == getItemCount() - NUMBER_OF_EXTRA_ITEMS) {
             return FOOTER_VIEW_TYPE;
         } else {
             return ITEM_VIEW_TYPE;
@@ -163,14 +165,16 @@ public class CoursesAdapter extends RecyclerView.Adapter<CourseViewHolderBase> {
     }
 
     public void setDescriptionContainer(CoursesDescriptionContainer descriptionContainer) {
-        if (this.descriptionContainer == null && descriptionContainer != null) {
+        final boolean isAdd = this.descriptionContainer == null;
+        final boolean isRemove = descriptionContainer == null;
+        this.descriptionContainer = descriptionContainer;
+        if (isAdd && !isRemove) {
             notifyItemInserted(0);
-        } else if (this.descriptionContainer != null && descriptionContainer == null) {
+        } else if (!isAdd && isRemove) {
             notifyItemRemoved(0);
-        } else if (this.descriptionContainer != null) {
+        } else if (!isAdd) {
             notifyItemChanged(0);
         }
-        this.descriptionContainer = descriptionContainer;
     }
 
     public void showLoadingFooter(boolean isNeedShow) {
