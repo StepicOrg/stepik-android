@@ -12,6 +12,7 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.di.splash.SplashScope
 import org.stepic.droid.preferences.SharedPreferenceHelper
+import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.RxOptional
 import org.stepic.droid.web.Api
@@ -30,7 +31,8 @@ constructor(
         private val firebaseRemoteConfig: FirebaseRemoteConfig,
         private val googleApiChecker: GoogleApiChecker,
         private val analytic: Analytic,
-        private val stepikDevicePoster: StepikDevicePoster
+        private val stepikDevicePoster: StepikDevicePoster,
+        private val databaseFacade: DatabaseFacade
 ) : PresenterBase<SplashView>() {
 
     private var disposable: Disposable? = null
@@ -42,6 +44,7 @@ constructor(
                     checkRemoteConfigs()
                     countNumberOfLaunches()
                     registerDeviceToPushes()
+                    executeLegacyOperations()
                 }
                 .map {
                     RxOptional(sharedPreferenceHelper.authResponseFromStore)
@@ -104,6 +107,22 @@ constructor(
     private fun registerDeviceToPushes() {
         if (!sharedPreferenceHelper.isGcmTokenOk && googleApiChecker.checkPlayServices()) {
             stepikDevicePoster.registerDevice()
+        }
+    }
+
+    private fun executeLegacyOperations() {
+        if (sharedPreferenceHelper.isFirstTime) {
+            databaseFacade.dropOnlyCourseTable() //v11 bug, when slug was not cached. We can remove it, when all users will have v1.11 or above. (flavour problem)
+            sharedPreferenceHelper.afterFirstTime()
+            sharedPreferenceHelper.afterScheduleAdded()
+            sharedPreferenceHelper.afterNeedDropCoursesIn114()
+        } else if (!sharedPreferenceHelper.isScheduleAdded) {
+            databaseFacade.dropOnlyCourseTable()
+            sharedPreferenceHelper.afterScheduleAdded()
+            sharedPreferenceHelper.afterNeedDropCoursesIn114()
+        } else if (sharedPreferenceHelper.isNeedDropCoursesIn114) {
+            databaseFacade.dropOnlyCourseTable()
+            sharedPreferenceHelper.afterNeedDropCoursesIn114()
         }
     }
 

@@ -1,11 +1,15 @@
 package org.stepic.droid.ui.activities;
 
 
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.ShortcutInfo;
 import android.content.pm.ShortcutManager;
 import android.graphics.drawable.Icon;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.App;
@@ -16,9 +20,6 @@ import org.stepic.droid.util.AppConstants;
 import java.util.Arrays;
 
 import javax.inject.Inject;
-
-import kotlin.Unit;
-import kotlin.jvm.functions.Function0;
 
 
 public class SplashActivity extends BackToExitActivityBase implements SplashView {
@@ -35,88 +36,43 @@ public class SplashActivity extends BackToExitActivityBase implements SplashView
             return;
         }
         App.Companion.componentManager().splashComponent().inject(this);
-        splashPresenter.attachView(this);
-        splashPresenter.onSplashCreated();
 
         defineShortcuts();
 
-        if (sharedPreferenceHelper.isFirstTime() || !sharedPreferenceHelper.isScheduleAdded() || sharedPreferenceHelper.isNeedDropCoursesIn114()) {
-            //fix v11 bug:
-            threadPoolExecutor.execute(new Runnable() {
-                @Override
-                public void run() {
-                    if (sharedPreferenceHelper.isFirstTime()) {
-                        databaseFacade.dropOnlyCourseTable(); //v11 bug, when slug was not cached. We can remove it, when all users will have v1.11 or above. (flavour problem)
-                        sharedPreferenceHelper.afterFirstTime();
-                        sharedPreferenceHelper.afterScheduleAdded();
-                        sharedPreferenceHelper.afterNeedDropCoursesIn114();
-                    } else if (!sharedPreferenceHelper.isScheduleAdded()) {
-                        databaseFacade.dropOnlyCourseTable();
-                        sharedPreferenceHelper.afterScheduleAdded();
-                        sharedPreferenceHelper.afterNeedDropCoursesIn114();
-                    } else if (sharedPreferenceHelper.isNeedDropCoursesIn114()) {
-                        databaseFacade.dropOnlyCourseTable();
-                        sharedPreferenceHelper.afterNeedDropCoursesIn114();
-                    }
-
-                    mainHandler.post(new Function0<Unit>() {
-                        @Override
-                        public Unit invoke() {
-                            checkRemoteConfigs();
-                            return Unit.INSTANCE;
-                        }
-                    });
-
-                }
-            });
-
-        } else {
-            checkRemoteConfigs();
-        }
-
+        splashPresenter.attachView(this);
+        splashPresenter.onSplashCreated();
     }
 
     private void defineShortcuts() {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N_MR1) {
-            ShortcutManager shortcutManager = getSystemService(ShortcutManager.class);
-
-            String catalogLabel = getString(R.string.catalog_title);
-            Intent catalogIntent = screenManager.getCatalogIntent(getApplicationContext());
-            catalogIntent.setAction(AppConstants.OPEN_SHORTCUT_CATALOG);
-            ShortcutInfo catalogShortcut = new ShortcutInfo.Builder(this, AppConstants.CATALOG_SHORTCUT_ID)
-                    .setShortLabel(catalogLabel)
-                    .setLongLabel(catalogLabel)
-                    .setIcon(Icon.createWithResource(this, R.drawable.ic_shortcut_find_courses))
-                    .setIntent(catalogIntent)
-                    .build();
-
-            String profileLabel = getString(R.string.profile_title);
-            Intent profileIntent = screenManager.getMyProfileIntent(getApplicationContext());
-            profileIntent.setAction(AppConstants.OPEN_SHORTCUT_PROFILE);
-            ShortcutInfo profileShortcut = new ShortcutInfo.Builder(this, AppConstants.PROFILE_SHORTCUT_ID)
-                    .setShortLabel(profileLabel)
-                    .setLongLabel(profileLabel)
-                    .setIcon(Icon.createWithResource(this, R.drawable.ic_shortcut_profile))
-                    .setIntent(profileIntent)
-                    .build();
-
-
-            shortcutManager.setDynamicShortcuts(Arrays.asList(catalogShortcut, profileShortcut));
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.N_MR1) {
+            return;
         }
+        ShortcutManager shortcutManager = getSystemService(ShortcutManager.class);
+        if (shortcutManager == null) {
+            return;
+        }
+
+        Intent catalogIntent = screenManager.getCatalogIntent(getApplicationContext());
+        catalogIntent.setAction(AppConstants.OPEN_SHORTCUT_CATALOG);
+        ShortcutInfo catalogShortcut = createShortcutInfo(AppConstants.CATALOG_SHORTCUT_ID, R.string.catalog_title, catalogIntent, R.drawable.ic_shortcut_find_courses);
+
+        Intent profileIntent = screenManager.getMyProfileIntent(getApplicationContext());
+        profileIntent.setAction(AppConstants.OPEN_SHORTCUT_PROFILE);
+        ShortcutInfo profileShortcut = createShortcutInfo(AppConstants.PROFILE_SHORTCUT_ID, R.string.profile_title, profileIntent, R.drawable.ic_shortcut_profile);
+
+        shortcutManager.setDynamicShortcuts(Arrays.asList(catalogShortcut, profileShortcut));
     }
 
-    private void checkRemoteConfigs() {
-        //remove
-    }
-
-    private void showNextScreen() {
-        if (!isFinishing()) {
-            if (sharedPreferenceHelper.getAuthResponseFromStore() != null) {
-                screenManager.showMainFeedFromSplash(SplashActivity.this);
-            } else {
-                screenManager.showLaunchFromSplash(this);
-            }
-        }
+    @NonNull
+    @TargetApi(25)
+    private ShortcutInfo createShortcutInfo(String id, @StringRes int titleRes, Intent catalogIntent, @DrawableRes int iconRes) {
+        String title = getString(titleRes);
+        return new ShortcutInfo.Builder(this, id)
+                .setShortLabel(title)
+                .setLongLabel(title)
+                .setIcon(Icon.createWithResource(this, iconRes))
+                .setIntent(catalogIntent)
+                .build();
     }
 
     @Override
