@@ -10,7 +10,7 @@ class HeaderItemViewHolder(view: View, private val descriptionContainer: Courses
 
     override fun setDataOnView(position: Int) {
         placeholder.setPlaceholderText(descriptionContainer.description)
-        placeholder.setBackgroundResource(descriptionContainer.colors.backgroundRes)
+        placeholder.setBackgroundResource(descriptionContainer.colors.backgroundResSquared)
         placeholder.setTextColor(ColorUtil.getColorArgb(descriptionContainer.colors.textColorRes, placeholder.context))
     }
 }

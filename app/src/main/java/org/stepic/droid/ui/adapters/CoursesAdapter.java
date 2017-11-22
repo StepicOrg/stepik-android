@@ -120,6 +120,11 @@ public class CoursesAdapter extends RecyclerView.Adapter<CourseViewHolderBase> {
     public CourseViewHolderBase onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == HEADER_VIEW_TYPE) {
             View view = inflater.inflate(R.layout.placeholder_view, parent, false);
+            ((RecyclerView.LayoutParams) view.getLayoutParams()).setMargins(
+                    -(int) contextActivity.getResources().getDimension(R.dimen.course_list_side_padding),
+                    -(int) contextActivity.getResources().getDimension(R.dimen.course_list_between_items_padding),
+                    -(int) contextActivity.getResources().getDimension(R.dimen.course_list_side_right_padding),
+                    0); // todo refactor layouts
             return new HeaderItemViewHolder(view, descriptionContainer);
         } else if (viewType == FOOTER_VIEW_TYPE) {
             View view = inflater.inflate(R.layout.loading_view, parent, false);

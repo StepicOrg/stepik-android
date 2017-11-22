@@ -2,6 +2,6 @@
 <org.stepic.droid.ui.custom.PlaceholderTextView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginEnd="@dimen/extraPaddingRightCourseItem"
-    android:layout_marginRight="@dimen/extraPaddingRightCourseItem"
+    android:gravity="center_vertical"
+    android:minHeight="@dimen/course_collection_header_min_height"
     xmlns:android="http://schemas.android.com/apk/res/android" />
