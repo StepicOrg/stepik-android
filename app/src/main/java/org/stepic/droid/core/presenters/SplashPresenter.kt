@@ -4,7 +4,6 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.disposables.Disposable
-import io.reactivex.functions.BiFunction
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.core.GoogleApiChecker
 import org.stepic.droid.core.StepikDevicePoster
@@ -17,8 +16,6 @@ import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.RxOptional
 import org.stepic.droid.web.Api
-import timber.log.Timber
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @SplashScope
@@ -38,15 +35,16 @@ constructor(
         private val databaseFacade: DatabaseFacade
 ) : PresenterBase<SplashView>() {
 
-    companion object {
-        private const val UPDATING_PROFILE_TIMEOUT = 700L
-    }
-
     private var disposable: Disposable? = null
 
     fun onSplashCreated() {
         disposable = Observable
-                .zip(updateProfileStream(), prepareAppStream(), BiFunction<Unit, Unit, Unit> { _, _ -> Unit })
+                .fromCallable {
+                    checkRemoteConfigs()
+                    countNumberOfLaunches()
+                    registerDeviceToPushes()
+                    executeLegacyOperations()
+                }
                 .map {
                     RxOptional(sharedPreferenceHelper.authResponseFromStore)
                 }
@@ -67,44 +65,6 @@ constructor(
         disposable?.dispose()
         disposable = null
     }
-
-    private fun updateProfileStream(): Observable<Unit> {
-        return Observable
-                .fromCallable {
-                    Timber.d("update profile ${System.currentTimeMillis()}")
-                    updateProfile()
-                    Timber.d("update profile end ${System.currentTimeMillis()}")
-                }
-                .timeout(UPDATING_PROFILE_TIMEOUT, TimeUnit.MILLISECONDS)
-                .onErrorReturn {
-                    Timber.d("profile is not loaded ${System.currentTimeMillis()}")
-                    Unit
-                }
-                .subscribeOn(backgroundScheduler)
-    }
-
-    private fun updateProfile() {
-        val profile = try {
-            api.userProfile.execute().body()?.getProfile() ?: return
-        } catch (exception: Exception) {
-            return
-        }
-        sharedPreferenceHelper.storeProfile(profile)
-    }
-
-    private fun prepareAppStream(): Observable<Unit> {
-        return Observable
-                .fromCallable {
-                    Timber.d("prepareAppStream ${System.currentTimeMillis()}")
-                    checkRemoteConfigs()
-                    countNumberOfLaunches()
-                    registerDeviceToPushes()
-                    executeLegacyOperations()
-                    Timber.d("prepareAppStream end ${System.currentTimeMillis()}")
-                }
-                .subscribeOn(backgroundScheduler)
-    }
-
 
     private fun checkRemoteConfigs() {
         if (googleApiChecker.checkPlayServices()) {
