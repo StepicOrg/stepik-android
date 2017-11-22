@@ -54,9 +54,9 @@ class CourseCollectionFragment : CourseListFragmentBase() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
         courseCollectionPresenter.detachView(this)
+        super.onDestroyView()
     }
 
     override fun onRefresh() {
