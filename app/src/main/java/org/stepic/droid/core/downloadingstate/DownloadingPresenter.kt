@@ -1,4 +1,4 @@
-package org.stepic.droid.core.downloadingprogress
+package org.stepic.droid.core.downloadingstate
 
 import io.reactivex.Scheduler
 import io.reactivex.disposables.CompositeDisposable

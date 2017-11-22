@@ -1,4 +1,4 @@
-package org.stepic.droid.core.downloadingprogress
+package org.stepic.droid.core.downloadingstate
 
 import io.reactivex.Flowable
 import org.stepic.droid.storage.operations.DatabaseFacade

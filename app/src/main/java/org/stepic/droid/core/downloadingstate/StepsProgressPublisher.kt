@@ -1,4 +1,4 @@
-package org.stepic.droid.core.downloadingprogress
+package org.stepic.droid.core.downloadingstate
 
 import android.app.DownloadManager
 import android.database.Cursor
