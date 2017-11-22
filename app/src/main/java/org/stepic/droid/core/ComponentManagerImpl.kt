@@ -6,13 +6,29 @@ import org.stepic.droid.di.downloads.DownloadsComponent
 import org.stepic.droid.di.login.LoginComponent
 import org.stepic.droid.di.mainscreen.MainScreenComponent
 import org.stepic.droid.di.routing.RoutingComponent
+import org.stepic.droid.di.splash.SplashComponent
 import org.stepic.droid.di.step.StepComponent
 import org.stepic.droid.util.SuppressFBWarnings
 import timber.log.Timber
 
 class ComponentManagerImpl(private val appCoreComponent: AppCoreComponent) : ComponentManager {
 
-    //Downloads
+    // Splash
+
+    private var _splashComponent: SplashComponent? = null
+
+    override fun splashComponent(): SplashComponent {
+        if (_splashComponent == null) {
+            _splashComponent = appCoreComponent.splashComponent().build()
+        }
+        return _splashComponent!!
+    }
+
+    override fun releaseSplashComponent() {
+        _splashComponent = null
+    }
+
+    // Downloads
 
     private val downloadsComponent
             by lazy {
@@ -21,11 +37,9 @@ class ComponentManagerImpl(private val appCoreComponent: AppCoreComponent) : Com
                         .build()
             }
 
-    override fun downloadsComponent(): DownloadsComponent {
-        return downloadsComponent
-    }
+    override fun downloadsComponent(): DownloadsComponent = downloadsComponent
 
-//    Step
+    // Step
 
     private val stepComponentMap = HashMap<Long, StepComponent>()
     private val stepComponentCountMap = HashMap<Long, Int>()
@@ -53,7 +67,7 @@ class ComponentManagerImpl(private val appCoreComponent: AppCoreComponent) : Com
     }
 
 
-//    Login
+    // Login
 
     private val loginComponentMap = HashMap<String, LoginComponent>()
 
@@ -68,7 +82,7 @@ class ComponentManagerImpl(private val appCoreComponent: AppCoreComponent) : Com
                         .build()
             }
 
-//    Main Screen
+    // Main Screen
 
     private var mainScreenComponentProp: MainScreenComponent? = null
 
@@ -89,7 +103,7 @@ class ComponentManagerImpl(private val appCoreComponent: AppCoreComponent) : Com
         }
     }
 
-//    Routing
+    // Routing
 
     private val routingComponentHolder = ComponentHolder<RoutingComponent>()
 
@@ -107,7 +121,7 @@ class ComponentManagerImpl(private val appCoreComponent: AppCoreComponent) : Com
     }
 
 
-//    Course general
+    // Course general
 
     private val _courseGeneralComponent by lazy {
         appCoreComponent

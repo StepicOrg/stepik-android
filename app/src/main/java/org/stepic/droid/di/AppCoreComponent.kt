@@ -18,6 +18,7 @@ import org.stepic.droid.di.mainscreen.MainScreenComponent
 import org.stepic.droid.di.notifications.NotificationsComponent
 import org.stepic.droid.di.profile.ProfileComponent
 import org.stepic.droid.di.routing.RoutingComponent
+import org.stepic.droid.di.splash.SplashComponent
 import org.stepic.droid.di.storage.StorageComponent
 import org.stepic.droid.di.video.VideoComponent
 import org.stepic.droid.model.Course
@@ -47,6 +48,8 @@ interface AppCoreComponent {
         @BindsInstance
         fun context(context: Context): Builder
     }
+
+    fun splashComponent(): SplashComponent.Builder
 
     fun feedbackComponentBuilder(): FeedbackComponent.Builder
 
