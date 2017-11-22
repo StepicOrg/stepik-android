@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.core.comment_count.contract.CommentCountListener;
+import org.stepic.droid.core.commentcount.contract.CommentCountListener;
 import org.stepic.droid.core.presenters.AnonymousPresenter;
 import org.stepic.droid.core.presenters.RouteStepPresenter;
 import org.stepic.droid.core.presenters.contracts.AnonymousView;

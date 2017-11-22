@@ -1,4 +1,4 @@
-package org.stepic.droid.core.internet_state.contract
+package org.stepic.droid.core.internetstate.contract
 
 interface InternetEnabledPoster {
     fun internetEnabled()

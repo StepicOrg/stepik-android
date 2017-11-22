@@ -1,4 +1,4 @@
-package org.stepic.droid.core.updating_step.contract
+package org.stepic.droid.core.updatingstep.contract
 
 interface UpdatingStepPoster {
     fun updateStep(stepId: Long, isSuccessAttempt: Boolean)

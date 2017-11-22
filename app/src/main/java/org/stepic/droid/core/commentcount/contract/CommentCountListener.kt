@@ -1,4 +1,4 @@
-package org.stepic.droid.core.comment_count.contract
+package org.stepic.droid.core.commentcount.contract
 
 interface CommentCountListener {
     fun onCommentCountUpdated ()

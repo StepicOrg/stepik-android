@@ -1,9 +1,8 @@
-package org.stepic.droid.core.comment_count
+package org.stepic.droid.core.commentcount
 
 import org.stepic.droid.base.ListenerContainer
-import org.stepic.droid.core.comment_count.contract.CommentCountListener
-import org.stepic.droid.core.comment_count.contract.CommentCountPoster
-import org.stepic.droid.model.comments.Comment
+import org.stepic.droid.core.commentcount.contract.CommentCountListener
+import org.stepic.droid.core.commentcount.contract.CommentCountPoster
 import javax.inject.Inject
 
 class CommentCountPosterImpl

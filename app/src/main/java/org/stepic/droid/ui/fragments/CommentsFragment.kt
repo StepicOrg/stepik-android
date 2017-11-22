@@ -24,7 +24,7 @@ import org.stepic.droid.base.App
 import org.stepic.droid.base.Client
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.core.CommentManager
-import org.stepic.droid.core.comment_count.contract.CommentCountPoster
+import org.stepic.droid.core.commentcount.contract.CommentCountPoster
 import org.stepic.droid.core.comments.contract.CommentsListener
 import org.stepic.droid.core.presenters.DiscussionPresenter
 import org.stepic.droid.core.presenters.VotePresenter

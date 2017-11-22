@@ -1,8 +1,8 @@
-package org.stepic.droid.core.internet_state
+package org.stepic.droid.core.internetstate
 
 import org.stepic.droid.base.ListenerContainer
-import org.stepic.droid.core.internet_state.contract.InternetEnabledListener
-import org.stepic.droid.core.internet_state.contract.InternetEnabledPoster
+import org.stepic.droid.core.internetstate.contract.InternetEnabledListener
+import org.stepic.droid.core.internetstate.contract.InternetEnabledPoster
 import javax.inject.Inject
 
 class InternetEnabledPosterImpl

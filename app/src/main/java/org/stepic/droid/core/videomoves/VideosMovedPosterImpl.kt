@@ -1,8 +1,8 @@
-package org.stepic.droid.core.video_moves
+package org.stepic.droid.core.videomoves
 
 import org.stepic.droid.base.ListenerContainer
-import org.stepic.droid.core.video_moves.contract.VideosMovedListener
-import org.stepic.droid.core.video_moves.contract.VideosMovedPoster
+import org.stepic.droid.core.videomoves.contract.VideosMovedListener
+import org.stepic.droid.core.videomoves.contract.VideosMovedPoster
 import javax.inject.Inject
 
 class VideosMovedPosterImpl
