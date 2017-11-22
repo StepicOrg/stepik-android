@@ -8,7 +8,6 @@ import android.graphics.drawable.Icon;
 import android.os.Bundle;
 
 import org.stepic.droid.R;
-import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.core.presenters.SplashPresenter;
 import org.stepic.droid.core.presenters.contracts.SplashView;
@@ -48,24 +47,6 @@ public class SplashActivity extends BackToExitActivityBase implements SplashView
                 @Override
                 public void run() {
                     StepicInstanceIdService.Companion.updateAnywhere(api, sharedPreferenceHelper, analytic); //FCM!
-                }
-            });
-        }
-
-        if (savedInstanceState == null) {
-            threadPoolExecutor.execute(new Runnable() {
-                @Override
-                public void run() {
-                    int numberOfLaunches = sharedPreferenceHelper.incrementNumberOfLaunches();
-                    //after first increment it is 0, because of default value is -1.
-                    if (numberOfLaunches <= 0) {
-                        analytic.reportEvent(Analytic.System.FIRST_LAUNCH_AFTER_INSTALL);
-                    }
-                    if (numberOfLaunches < AppConstants.LAUNCHES_FOR_EXPERT_USER) {
-                        analytic.reportEvent(Analytic.Interaction.START_SPLASH, numberOfLaunches + "");
-                    } else {
-                        analytic.reportEvent(Analytic.Interaction.START_SPLASH_EXPERT, numberOfLaunches + "");
-                    }
                 }
             });
         }

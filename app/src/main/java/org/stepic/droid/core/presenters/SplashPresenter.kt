@@ -11,6 +11,7 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.di.splash.SplashScope
 import org.stepic.droid.preferences.SharedPreferenceHelper
+import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.RxOptional
 import org.stepic.droid.web.Api
 import javax.inject.Inject
@@ -37,6 +38,7 @@ constructor(
                 .fromCallable {
                     updateProfile()
                     checkRemoteConfigs()
+                    countNumberOfLaunches()
                 }
                 .map {
                     RxOptional(sharedPreferenceHelper.authResponseFromStore)
@@ -78,6 +80,19 @@ constructor(
                     analytic.reportEvent(Analytic.RemoteConfig.FETCHED_UNSUCCESSFUL)
                 }
             }
+        }
+    }
+
+    private fun countNumberOfLaunches() {
+        val numberOfLaunches = sharedPreferenceHelper.incrementNumberOfLaunches()
+        //after first increment it is 0, because of default value is -1.
+        if (numberOfLaunches <= 0) {
+            analytic.reportEvent(Analytic.System.FIRST_LAUNCH_AFTER_INSTALL)
+        }
+        if (numberOfLaunches < AppConstants.LAUNCHES_FOR_EXPERT_USER) {
+            analytic.reportEvent(Analytic.Interaction.START_SPLASH, numberOfLaunches.toString() + "")
+        } else {
+            analytic.reportEvent(Analytic.Interaction.START_SPLASH_EXPERT, numberOfLaunches.toString() + "")
         }
     }
 
