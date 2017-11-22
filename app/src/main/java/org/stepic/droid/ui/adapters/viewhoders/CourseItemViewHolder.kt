@@ -1,11 +1,9 @@
 package org.stepic.droid.ui.adapters.viewhoders
 
 import android.app.Activity
-import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.support.annotation.ColorInt
 import android.support.annotation.DrawableRes
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
 import android.view.HapticFeedbackConstants
 import android.view.View
 import android.widget.PopupMenu
@@ -22,6 +20,7 @@ import org.stepic.droid.core.presenters.ContinueCoursePresenter
 import org.stepic.droid.core.presenters.DroppingPresenter
 import org.stepic.droid.model.Course
 import org.stepic.droid.model.CoursesCarouselColorType
+import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.util.*
 import java.util.*
@@ -83,14 +82,8 @@ class CourseItemViewHolder(
 
         applyColorType(colorType)
 
+        imageViewTarget = RoundedBitmapImageViewTarget(itemView.resources.getDimension(R.dimen.course_image_radius), courseItemImage)
 
-        imageViewTarget = object : BitmapImageViewTarget(itemView.courseItemImage) {
-            override fun setResource(resource: Bitmap) {
-                val circularBitmapDrawable = RoundedBitmapDrawableFactory.create(itemView.context.resources, resource)
-                circularBitmapDrawable.cornerRadius = itemView.context.resources.getDimension(R.dimen.course_image_radius)
-                courseItemImage.setImageDrawable(circularBitmapDrawable)
-            }
-        }
         courseWidgetButton.setOnClickListener {
             val adapterPosition = adapterPosition
             val course = getCourseSafety(adapterPosition)
