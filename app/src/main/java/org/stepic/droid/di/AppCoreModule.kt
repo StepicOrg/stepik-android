@@ -66,6 +66,10 @@ abstract class AppCoreModule {
 
     @Binds
     @AppSingleton
+    abstract fun bindStepikDevicePoster(stepikDevicePosterImpl: StepikDevicePosterImpl): StepikDevicePoster
+
+    @Binds
+    @AppSingleton
     abstract fun provideLocalProgressManagerSectionProgressListenerContainer(container: ListenerContainerImpl<LocalProgressManager.SectionProgressListener>): ListenerContainer<LocalProgressManager.SectionProgressListener>
 
     @Binds
