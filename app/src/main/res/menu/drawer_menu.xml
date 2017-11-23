@@ -4,27 +4,27 @@
     <item
         android:id="@+id/home"
         android:icon="@drawable/ic_home"
-        android:title="@string/home_title"/>
+        android:title=""/>
     <item
         android:id="@+id/catalog"
         android:icon="@drawable/ic_search_menu"
-        android:title="@string/catalog_title"/>
+        android:title=""/>
 
     <item
         android:id="@+id/profile"
         android:checkable="false"
         android:icon="@drawable/ic_profile"
-        android:title="@string/profile_title"/>
+        android:title=""/>
 
     <item
         android:id="@+id/certificates"
         android:checkable="false"
         android:icon="@drawable/ic_mobile_certificates"
-        android:title="@string/certificates_title"/>
+        android:title=""/>
 
     <item
         android:id="@+id/notifications"
         android:checkable="false"
         android:icon="@drawable/ic_mobile_notifications"
-        android:title="@string/notification_title"/>
+        android:title=""/>
 </menu>

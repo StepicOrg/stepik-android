@@ -182,6 +182,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
             CATALOG_INDEX -> navigationView.selectedItemId = R.id.catalog
             CERTIFICATE_INDEX -> navigationView.selectedItemId = R.id.certificates
             PROFILE_INDEX -> navigationView.selectedItemId = R.id.profile
+            NOTIFICATIONS_INDEX -> navigationView.selectedItemId = R.id.notifications
             else -> {
                 //do nothing
             }
