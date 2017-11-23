@@ -45,7 +45,6 @@ import org.stepic.droid.model.LessonSession;
 import org.stepic.droid.model.Reply;
 import org.stepic.droid.model.Submission;
 import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout;
-import org.stepic.droid.ui.custom.LatexSupportableExpandableFrameLayout;
 import org.stepic.droid.ui.dialogs.DiscountingPolicyDialogFragment;
 import org.stepic.droid.ui.dialogs.RateAppDialogFragment;
 import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment;
@@ -58,7 +57,6 @@ import org.stepic.droid.util.RatingUtilKt;
 import org.stepic.droid.util.SnackbarExtensionKt;
 import org.stepic.droid.util.StepExtensionsKt;
 import org.stepic.droid.util.SubmissionExtensionsKt;
-import org.stepic.droid.util.resolvers.text.TextResult;
 
 import javax.inject.Inject;
 

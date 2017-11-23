@@ -25,6 +25,7 @@ import javax.inject.Inject;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyUtils;
 
+@SuppressWarnings("PMD.ConstructorCallsOverridableMethod")
 public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
     private final static String assetUrl = "file:///android_asset/";
     private TextView textView;
