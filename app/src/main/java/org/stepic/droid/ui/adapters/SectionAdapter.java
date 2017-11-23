@@ -280,7 +280,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     private void onClickStartExam(int adapterPosition) {
         int position = adapterPosition - PRE_SECTION_LIST_DELTA;
         if (position >= 0 && position < sections.size()) {
-            analytic.reportEvent(Analytic.Exam.SHOW_EXAM);
+            analytic.reportEvent(Analytic.Exam.START_EXAM);
             Section section = sections.get(position);
             screenManager.openSyllabusInWeb(activity, section.getCourse());
         }

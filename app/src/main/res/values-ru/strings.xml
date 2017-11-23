@@ -425,7 +425,6 @@
     <string name="or_continue_social">Или продолжить с</string>
     <string name="content_course_logo">Логотип курса</string>
     <string name="continue_course_title">Учиться</string>
-    <string name="continue_course_title_experimental">К шагам</string>
     <string name="auth_inline_message">Войдите, чтобы мы запомнили Ваши успехи</string>
     <string name="step_with_position">– Шаг %d</string>
     <string name="anonymous_write_comment">Чтобы присоединиться к этому обсуждению Вам нужно Войти
@@ -546,4 +545,6 @@
         <item quantity="many">%d курсов</item>
         <item quantity="other">%d курсов</item>
     </plurals>
+    <string name="course_current_progress">Текущий прогресс %d%%</string>
+    <string name="home_streak_counter_text"><![CDATA[Вы решаете <b>%s</b> подряд!]]></string>
 </resources>

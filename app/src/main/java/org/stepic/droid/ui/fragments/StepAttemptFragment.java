@@ -184,8 +184,6 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
                     }
                     String stepType = StepExtensionsKt.getStepType(step);
                     bundle.putString(Analytic.Steps.STEP_TYPE_KEY, stepType);
-                    getAnalytic().reportEvent(Analytic.Interaction.CLICK_SEND_SUBMISSION, bundle);//value
-
                     getAnalytic().reportEventWithName(Analytic.Steps.CLICK_SEND_SUBMISSION_STEP_TYPE, stepType);
 
                     makeSubmission();
