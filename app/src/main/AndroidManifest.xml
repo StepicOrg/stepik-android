@@ -269,8 +269,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.activities.NotificationsActivity"/>
-
         <activity android:name=".ui.activities.DownloadsActivity"/>
 
         <activity android:name=".ui.activities.CertificatesActivity"/>

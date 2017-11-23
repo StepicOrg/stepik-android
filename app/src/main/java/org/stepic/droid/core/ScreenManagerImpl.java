@@ -45,7 +45,6 @@ import org.stepic.droid.ui.activities.LoginActivity;
 import org.stepic.droid.ui.activities.MainFeedActivity;
 import org.stepic.droid.ui.activities.NewCommentActivity;
 import org.stepic.droid.ui.activities.NotificationSettingsActivity;
-import org.stepic.droid.ui.activities.NotificationsActivity;
 import org.stepic.droid.ui.activities.PhotoViewActivity;
 import org.stepic.droid.ui.activities.ProfileActivity;
 import org.stepic.droid.ui.activities.RegisterActivity;
@@ -121,12 +120,6 @@ public class ScreenManagerImpl implements ScreenManager {
         Intent intent = new Intent(context, PhotoViewActivity.class);
         intent.putExtra(PhotoViewActivity.Companion.getPathKey(), path);
         context.startActivity(intent);
-    }
-
-    @Override
-    public void showNotifications(@NotNull Activity activity) {
-        Intent intent = new Intent(activity, NotificationsActivity.class);
-        activity.startActivity(intent);
     }
 
     @Override
