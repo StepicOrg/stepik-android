@@ -159,5 +159,5 @@
 
     <dimen name="language_radius">4dp</dimen>
 
-    <dimen name="course_collection_header_min_height">160dp</dimen>
+    <dimen name="course_collection_header_min_height">120dp</dimen>
 </resources>
