@@ -334,6 +334,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.MainFeedActivity"/>
         </activity>
+        <activity android:name=".ui.activities.AnimatedOnboardingActivity" />
 
 
         <receiver

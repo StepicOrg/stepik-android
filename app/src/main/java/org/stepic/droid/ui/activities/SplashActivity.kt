@@ -74,12 +74,20 @@ class SplashActivity : BackToExitActivityBase(), SplashView {
     }
 
     override fun onShowLaunch() {
-        screenManager.showLaunchFromSplash(this)
+        showOnboarding()
+
+//        screenManager.showLaunchFromSplash(this)
         finish()
     }
 
     override fun onShowHome() {
-        screenManager.showMainFeedFromSplash(this@SplashActivity)
+        showOnboarding()
+//        screenManager.showMainFeedFromSplash(this@SplashActivity)
         finish()
+    }
+
+    private fun showOnboarding() {
+        val intent = Intent(this, AnimatedOnboardingActivity::class.java)
+        startActivity(intent)
     }
 }
