@@ -137,6 +137,8 @@ dependencies {
     implementation libraries.appMetrica
 
     implementation libraries.calligraphy
+    implementation libraries.lottie
+    implementation libraries.spritz
 
     implementation libraries.firebaseMessaging
     implementation libraries.firebaseAppindexing
