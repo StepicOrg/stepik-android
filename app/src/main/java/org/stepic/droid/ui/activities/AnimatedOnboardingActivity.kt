@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit
 
 class AnimatedOnboardingActivity : FragmentActivityBase() {
 
-    private val PAGES_COUNT = 3
+    private val PAGES_COUNT = 4
 
     var spritz: Spritz? = null
 
@@ -25,20 +25,27 @@ class AnimatedOnboardingActivity : FragmentActivityBase() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_onboarding)
 
+        lottieAnimationView.imageAssetsFolder = "images"
+//        lottieAnimationView.enableMergePathsForKitKatAndAbove(true)
         onboardingViewPager.adapter = ScreenSlidePagerAdapter(supportFragmentManager)
+
+        lottieAnimationView.enableMergePathsForKitKatAndAbove(true)
+        lottieAnimationView.addAnimatorUpdateListener { value ->
+
+        }
 
         spritz = Spritz.with(lottieAnimationView)
                 .withSteps(
                         SpritzStep.Builder()
-                                .withAutoPlayDuration(1, TimeUnit.SECONDS)
-                                .withSwipeDuration(500, TimeUnit.MILLISECONDS)
+                                .withSwipeDuration(2002, TimeUnit.MILLISECONDS)
                                 .build(),
                         SpritzStep.Builder()
-                                .withAutoPlayDuration(500, TimeUnit.MILLISECONDS)
-                                .withSwipeDuration(500, TimeUnit.MILLISECONDS)
+                                .withSwipeDuration(2002, TimeUnit.MILLISECONDS)
                                 .build(),
                         SpritzStep.Builder()
-                                .withAutoPlayDuration(500, TimeUnit.MILLISECONDS)
+                                .withSwipeDuration(2002, TimeUnit.MILLISECONDS)
+                                .build(),
+                        SpritzStep.Builder()
                                 .build()
                 )
                 .build()
