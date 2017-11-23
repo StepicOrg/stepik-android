@@ -119,7 +119,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CourseViewHolderBase> {
     @Override
     public CourseViewHolderBase onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == HEADER_VIEW_TYPE) {
-            View view = inflater.inflate(R.layout.placeholder_view, parent, false);
+            View view = inflater.inflate(R.layout.course_collection_header_view, parent, false);
             ((RecyclerView.LayoutParams) view.getLayoutParams()).setMargins(
                     -(int) contextActivity.getResources().getDimension(R.dimen.course_list_side_padding),
                     -(int) contextActivity.getResources().getDimension(R.dimen.course_list_between_items_padding),
