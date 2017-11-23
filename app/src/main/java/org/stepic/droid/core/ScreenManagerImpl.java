@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -134,7 +135,7 @@ public class ScreenManagerImpl implements ScreenManager {
     public void showCoursesList(Activity activity, @NotNull CoursesCarouselInfo info, @Nullable CollectionDescriptionColors descriptionColors) {
         Intent intent = new Intent(activity, CourseListActivity.class);
         intent.putExtra(CourseListActivity.COURSE_LIST_INFO_KEY, info);
-        intent.putExtra(CourseListActivity.COURSE_DESCRIPTION_COLORS, descriptionColors);
+        intent.putExtra(CourseListActivity.COURSE_DESCRIPTION_COLORS, (Parcelable) descriptionColors);
         activity.startActivity(intent);
     }
 

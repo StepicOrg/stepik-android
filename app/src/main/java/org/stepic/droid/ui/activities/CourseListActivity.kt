@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment
 import org.stepic.droid.base.SingleFragmentActivity
 import org.stepic.droid.model.CollectionDescriptionColors
 import org.stepic.droid.model.CoursesCarouselInfo
+import org.stepic.droid.model.CoursesDescriptionContainer
 import org.stepic.droid.storage.operations.Table
 import org.stepic.droid.ui.fragments.CourseCollectionFragment
 import org.stepic.droid.ui.fragments.MyCoursesFragment
@@ -16,8 +17,10 @@ class CourseListActivity : SingleFragmentActivity() {
             info.table == Table.enrolled -> MyCoursesFragment.newInstance()
             info.table == Table.featured -> PopularCoursesFragment.newInstance()
             info.table == null && info.courseIds != null -> {
-                val descriptionColors = intent.getSerializableExtra(COURSE_DESCRIPTION_COLORS) as CollectionDescriptionColors?
-                CourseCollectionFragment.newInstance(info.title, info.courseIds, info.description, descriptionColors)
+                val descriptionContainer = intent.getParcelableExtra<CollectionDescriptionColors?>(COURSE_DESCRIPTION_COLORS)?.let {
+                    CoursesDescriptionContainer(info.description, it)
+                }
+                CourseCollectionFragment.newInstance(info.title, info.courseIds, descriptionContainer)
             }
             else -> throw IllegalStateException("course info is broken")
         }
