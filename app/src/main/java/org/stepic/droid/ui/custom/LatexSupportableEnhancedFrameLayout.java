@@ -5,6 +5,8 @@ import android.content.res.TypedArray;
 import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
+import android.support.annotation.IdRes;
+import android.support.annotation.LayoutRes;
 import android.text.method.LinkMovementMethod;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -25,8 +27,8 @@ import uk.co.chrisjenx.calligraphy.CalligraphyUtils;
 
 public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
     private final static String assetUrl = "file:///android_asset/";
-    protected TextView textView;
-    protected LatexSupportableWebView webView;
+    private TextView textView;
+    private LatexSupportableWebView webView;
 
     @ColorInt
     int backgroundColor;
@@ -63,11 +65,26 @@ public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
         textView.setBackgroundColor(backgroundColor);
     }
 
-    protected void init(Context context) {
-        LayoutInflater.from(context).inflate(R.layout.latex_supportabe_enhanced_view, this, true);
-        textView = findViewById(R.id.textView);
+    @LayoutRes
+    protected int getViewRes() {
+        return R.layout.latex_supportabe_enhanced_view;
+    }
+
+    @IdRes
+    protected int getTextViewId() {
+        return R.id.textView;
+    }
+
+    @IdRes
+    protected int getWebViewId(){
+        return R.id.webView;
+    }
+
+    private void init(Context context) {
+        LayoutInflater.from(context).inflate(getViewRes(), this, true);
+        textView = findViewById(getTextViewId());
         textView.setMovementMethod(LinkMovementMethod.getInstance());
-        webView = findViewById(R.id.webView);
+        webView = findViewById(getWebViewId());
     }
 
     public void setTextIsSelectable(boolean isSelectable) {
