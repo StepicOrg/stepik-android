@@ -39,7 +39,15 @@ import org.stepic.droid.ui.fragments.HomeFragment
 
 @AppSingleton
 @Component(dependencies = arrayOf(StorageComponent::class),
-        modules = arrayOf(AppCoreModule::class, RepositoryModule::class, AppStepModule::class, AppFiltersModule::class, GoogleModule::class, FirebaseModule::class))
+        modules = arrayOf(
+                AppCoreModule::class,
+                RepositoryModule::class,
+                AppStepModule::class,
+                AppFiltersModule::class,
+                GoogleModule::class,
+                FirebaseModule::class,
+                RecentActiveCourseModule::class
+        ))
 interface AppCoreComponent {
 
     @Component.Builder

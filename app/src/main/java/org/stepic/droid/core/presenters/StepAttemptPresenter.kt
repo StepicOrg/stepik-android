@@ -230,7 +230,7 @@ class StepAttemptPresenter
             return true // we can show it
         }
 
-        val delay = firebaseRemoteConfig.getLong(RemoteConfig.minDelayRateDialogSec).toInt()
+        val delay = firebaseRemoteConfig.getLong(RemoteConfig.MIN_DELAY_RATE_DIALOG_SEC).toInt()
 
         return DateTimeHelper.isBeforeNowUtc(delay + wasShownMillis) //if delay is expired (before now) -> show
     }
