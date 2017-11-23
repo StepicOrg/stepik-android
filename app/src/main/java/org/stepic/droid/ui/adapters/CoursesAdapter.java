@@ -27,7 +27,6 @@ import org.stepic.droid.model.Course;
 import org.stepic.droid.model.CoursesCarouselColorType;
 import org.stepic.droid.model.CoursesDescriptionContainer;
 import org.stepic.droid.ui.adapters.viewhoders.CourseItemViewHolder;
-import org.stepic.droid.ui.adapters.viewhoders.CourseViewHolderBase;
 import org.stepic.droid.ui.adapters.viewhoders.FooterItemViewHolder;
 import org.stepic.droid.ui.adapters.viewhoders.HeaderItemViewHolder;
 import org.stepic.droid.util.resolvers.text.TextResolver;
@@ -36,7 +35,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class CoursesAdapter extends RecyclerView.Adapter<CourseViewHolderBase> {
+public class CoursesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Inject
     Config config;
@@ -71,7 +70,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CourseViewHolderBase> {
 
     private int NUMBER_OF_PRE_ITEMS = 0;
     private final int NUMBER_OF_POST_ITEMS;
-    private final FooterItemViewHolder.Companion.State isNeedShowFooterState;
+    private boolean isNeedShowFooter;
     private final String continueTitle;
     private final String joinTitle;
     private final boolean isContinueExperimentEnabled;
@@ -113,11 +112,11 @@ public class CoursesAdapter extends RecyclerView.Adapter<CourseViewHolderBase> {
             continueTitle = contextActivity.getString(R.string.continue_course_title);
         }
         joinTitle = contextActivity.getString(R.string.course_item_join);
-        isNeedShowFooterState = new FooterItemViewHolder.Companion.State(false);
+        isNeedShowFooter = false;
     }
 
     @Override
-    public CourseViewHolderBase onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == HEADER_VIEW_TYPE) {
             View view = inflater.inflate(R.layout.course_collection_header_view, parent, false);
             ((RecyclerView.LayoutParams) view.getLayoutParams()).setMargins(
@@ -125,10 +124,10 @@ public class CoursesAdapter extends RecyclerView.Adapter<CourseViewHolderBase> {
                     -(int) contextActivity.getResources().getDimension(R.dimen.course_list_between_items_padding),
                     -(int) contextActivity.getResources().getDimension(R.dimen.course_list_side_right_padding),
                     0); // todo refactor layouts
-            return new HeaderItemViewHolder(view, descriptionContainer);
+            return new HeaderItemViewHolder(view);
         } else if (viewType == FOOTER_VIEW_TYPE) {
             View view = inflater.inflate(R.layout.loading_view, parent, false);
-            return new FooterItemViewHolder(view, isNeedShowFooterState);
+            return new FooterItemViewHolder(view);
         } else if (ITEM_VIEW_TYPE == viewType) {
             View view = inflater.inflate(R.layout.new_course_item, parent, false);
             return new CourseItemViewHolder(
@@ -150,8 +149,24 @@ public class CoursesAdapter extends RecyclerView.Adapter<CourseViewHolderBase> {
     }
 
     @Override
-    public void onBindViewHolder(CourseViewHolderBase holder, int position) {
-        holder.setDataOnView(position - NUMBER_OF_PRE_ITEMS);
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        switch (getItemViewType(position)) {
+            case HEADER_VIEW_TYPE: {
+                HeaderItemViewHolder headerItemViewHolder = (HeaderItemViewHolder) holder;
+                headerItemViewHolder.bindData(descriptionContainer);
+                break;
+            }
+            case ITEM_VIEW_TYPE: {
+                CourseItemViewHolder courseItemViewHolder = (CourseItemViewHolder) holder;
+                courseItemViewHolder.setDataOnView(position - NUMBER_OF_PRE_ITEMS);
+                break;
+            }
+            case FOOTER_VIEW_TYPE: {
+                FooterItemViewHolder footerItemViewHolder = (FooterItemViewHolder) holder;
+                footerItemViewHolder.setLoaderVisibiluty(isNeedShowFooter);
+                break;
+            }
+        }
     }
 
     @Override
@@ -187,7 +202,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CourseViewHolderBase> {
     }
 
     public void showLoadingFooter(boolean isNeedShow) {
-        isNeedShowFooterState.setNeedShow(isNeedShow);
+        isNeedShowFooter = isNeedShow;
         try {
             notifyItemChanged(getItemCount() - 1);
         } catch (IllegalStateException ignored) {

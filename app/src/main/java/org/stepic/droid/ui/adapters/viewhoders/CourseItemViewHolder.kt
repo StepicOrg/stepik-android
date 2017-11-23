@@ -4,6 +4,7 @@ import android.app.Activity
 import android.graphics.drawable.Drawable
 import android.support.annotation.ColorInt
 import android.support.annotation.DrawableRes
+import android.support.v7.widget.RecyclerView
 import android.view.HapticFeedbackConstants
 import android.view.View
 import android.widget.PopupMenu
@@ -40,7 +41,7 @@ class CourseItemViewHolder(
         private val courses: List<Course>,
         private val droppingPresenter: DroppingPresenter,
         private val continueCoursePresenter: ContinueCoursePresenter,
-        private val colorType: CoursesCarouselColorType) : CourseViewHolderBase(view) {
+        private val colorType: CoursesCarouselColorType) : RecyclerView.ViewHolder(view) {
 
     @Inject
     lateinit var screenManager: ScreenManager
@@ -177,7 +178,7 @@ class CourseItemViewHolder(
         }
     }
 
-    override fun setDataOnView(position: Int) {
+    fun setDataOnView(position: Int) {
         val course = courses[position]
 
         courseItemName.text = course.title
