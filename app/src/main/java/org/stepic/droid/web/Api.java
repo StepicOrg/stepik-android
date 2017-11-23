@@ -11,8 +11,6 @@ import org.stepic.droid.model.comments.VoteValue;
 import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.social.SocialManager;
 
-import java.io.IOException;
-
 import io.reactivex.Single;
 import retrofit2.Call;
 
@@ -23,11 +21,11 @@ public interface Api {
         social, loginPassword
     }
 
-    Call<AuthenticationStepicResponse> authWithNativeCode(String code, SocialManager.SocialType type, @Nullable String email);
+    Call<AuthenticationStepikResponse> authWithNativeCode(String code, SocialManager.SocialType type, @Nullable String email);
 
-    Call<AuthenticationStepicResponse> authWithLoginPassword(String login, String password);
+    Call<AuthenticationStepikResponse> authWithLoginPassword(String login, String password);
 
-    Call<AuthenticationStepicResponse> authWithCode(String code);
+    Call<AuthenticationStepikResponse> authWithCode(String code);
 
     Call<RegistrationResponse> signUp(String firstName, String secondName, String email, String password);
 
@@ -102,8 +100,6 @@ public interface Api {
     Call<Void> removeDevice(long deviceId);
 
     Call<DiscussionProxyResponse> getDiscussionProxies(String discussionProxyId);
-
-    UpdateResponse getInfoForUpdating() throws IOException;
 
     Call<CommentsResponse> getCommentAnd20Replies(long commentId);
 

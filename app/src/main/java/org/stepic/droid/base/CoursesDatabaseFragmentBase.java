@@ -177,14 +177,14 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     @Override
     public void onFailDropCourse(@NotNull Course droppedCourse) {
         long courseId = droppedCourse.getCourseId();
-        getAnalytic().reportEvent(Analytic.Web.DROP_COURSE_FAIL, courseId + "");
+        getAnalytic().reportEvent(Analytic.Course.DROP_COURSE_FAIL, courseId + "");
         Toast.makeText(getContext(), R.string.internet_problem, Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void onSuccessDropCourse(@NotNull Course droppedCourse) {
         long courseId = droppedCourse.getCourseId();
-        getAnalytic().reportEvent(Analytic.Web.DROP_COURSE_SUCCESSFUL, courseId + "");
+        getAnalytic().reportEvent(Analytic.Course.DROP_COURSE_SUCCESSFUL, courseId + "");
         Toast.makeText(getContext(), getContext().getString(R.string.you_dropped, droppedCourse.getTitle()), Toast.LENGTH_LONG).show();
         if (getCourseType() == Table.enrolled) { //why here was e.getCourseType?
             courses.remove(droppedCourse);

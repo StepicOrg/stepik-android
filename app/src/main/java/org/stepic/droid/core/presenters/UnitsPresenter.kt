@@ -203,7 +203,6 @@ class UnitsPresenter
 
                     } catch (exception: Exception) {
                         mainHandler.post {
-                            analytic.reportError(Analytic.Error.UNITS_LOADING_FAIL, exception)
                             view?.onConnectionProblem()
                         }
                     }

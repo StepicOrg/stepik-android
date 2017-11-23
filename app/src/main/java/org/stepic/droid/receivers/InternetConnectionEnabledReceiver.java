@@ -116,7 +116,7 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
                             }
                         }
                     } catch (IOException e) {
-                        analytic.reportError(Analytic.Error.PUSH_STATE_EXCEPTION, e);
+                        //no internet, just ignore and send next time
                     }
                 }
                 inWork.set(false);

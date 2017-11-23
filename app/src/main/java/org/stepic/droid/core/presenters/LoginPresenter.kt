@@ -13,7 +13,7 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.social.SocialManager
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.web.Api
-import org.stepic.droid.web.AuthenticationStepicResponse
+import org.stepic.droid.web.AuthenticationStepikResponse
 import org.stepic.droid.web.SocialAuthError
 import retrofit2.Call
 import java.util.concurrent.ThreadPoolExecutor
@@ -46,7 +46,7 @@ class LoginPresenter
     }
 
     @MainThread
-    private fun doRequest(callToServer: Call<AuthenticationStepicResponse>, authData: AuthData?, type: Type, credential: Credential? = null) {
+    private fun doRequest(callToServer: Call<AuthenticationStepikResponse>, authData: AuthData?, type: Type, credential: Credential? = null) {
         fun onFail(loginFailType: LoginFailType) {
             analytic.reportEventWithName(Analytic.Login.FAIL_LOGIN, loginFailType.toString())
             mainHandler.post {
