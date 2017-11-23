@@ -6,9 +6,9 @@ import org.stepic.droid.base.Client
 import org.stepic.droid.base.ClientImpl
 import org.stepic.droid.base.ListenerContainer
 import org.stepic.droid.base.ListenerContainerImpl
-import org.stepic.droid.core.comment_count.CommentCountPosterImpl
-import org.stepic.droid.core.comment_count.contract.CommentCountListener
-import org.stepic.droid.core.comment_count.contract.CommentCountPoster
+import org.stepic.droid.core.commentcount.CommentCountPosterImpl
+import org.stepic.droid.core.commentcount.contract.CommentCountListener
+import org.stepic.droid.core.commentcount.contract.CommentCountPoster
 
 @Module
 interface CommentCountModule {

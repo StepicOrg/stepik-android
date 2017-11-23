@@ -33,11 +33,11 @@ import org.stepic.droid.base.App;
 import org.stepic.droid.base.Client;
 import org.stepic.droid.base.StepBaseFragment;
 import org.stepic.droid.core.LessonSessionManager;
-import org.stepic.droid.core.internet_state.contract.InternetEnabledListener;
+import org.stepic.droid.core.internetstate.contract.InternetEnabledListener;
 import org.stepic.droid.core.presenters.StepAttemptPresenter;
 import org.stepic.droid.core.presenters.StreakPresenter;
 import org.stepic.droid.core.presenters.contracts.StepAttemptView;
-import org.stepic.droid.core.updating_step.contract.UpdatingStepPoster;
+import org.stepic.droid.core.updatingstep.contract.UpdatingStepPoster;
 import org.stepic.droid.fonts.FontType;
 import org.stepic.droid.model.Attempt;
 import org.stepic.droid.model.DiscountingPolicyType;
@@ -184,8 +184,6 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
                     }
                     String stepType = StepExtensionsKt.getStepType(step);
                     bundle.putString(Analytic.Steps.STEP_TYPE_KEY, stepType);
-                    getAnalytic().reportEvent(Analytic.Interaction.CLICK_SEND_SUBMISSION, bundle);//value
-
                     getAnalytic().reportEventWithName(Analytic.Steps.CLICK_SEND_SUBMISSION_STEP_TYPE, stepType);
 
                     makeSubmission();

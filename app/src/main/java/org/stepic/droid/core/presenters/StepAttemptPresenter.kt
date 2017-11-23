@@ -280,7 +280,6 @@ class StepAttemptPresenter
             mainHandler.post {
                 view?.onConnectionFailWhenLoadAttempt()
             }
-            analytic.reportError(Analytic.Error.NO_INTERNET_EXISTING_ATTEMPTS, ex)
         }
     }
 
@@ -295,7 +294,6 @@ class StepAttemptPresenter
             mainHandler.post {
                 view?.onConnectionFailWhenLoadAttempt()
             }
-            analytic.reportError(Analytic.Error.NO_INTERNET_EXISTING_ATTEMPTS, ex)
         }
 
     }
