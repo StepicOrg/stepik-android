@@ -191,8 +191,13 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
     }
 
     private fun initNavigation() {
-        navigationView.setOnNavigationItemSelectedListener(this)
+        navigationView.onNavigationItemSelectedListener = this
         navigationView.setOnNavigationItemReselectedListener(this)
+
+        navigationView.enableAnimation(false)
+        navigationView.enableShiftingMode(false)
+        navigationView.enableItemShiftingMode(false)
+        navigationView.setTextVisibility(false)
     }
 
     private fun showCurrentFragment(@IdRes id: Int) {
