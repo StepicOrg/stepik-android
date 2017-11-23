@@ -99,7 +99,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CourseViewHolderBase> {
         circularBitmapDrawable.setCornerRadius(contextActivity.getResources().getDimension(R.dimen.course_image_radius));
         coursePlaceholder = circularBitmapDrawable;
 
-        isContinueExperimentEnabled = firebaseRemoteConfig.getBoolean(RemoteConfig.INSTANCE.getContinueCourseExperimentEnabledKey());
+        isContinueExperimentEnabled = firebaseRemoteConfig.getBoolean(RemoteConfig.CONTINUE_COURSE_EXPERIMENT_ENABLED);
         if (isContinueExperimentEnabled) {
             continueTitle = contextActivity.getString(R.string.continue_course_title_experimental);
         } else {

@@ -14,7 +14,7 @@ constructor(
         private val firebaseRemoteConfig: FirebaseRemoteConfig
 ) : EarlyStreakPoster {
     override fun showStreakSuggestion() {
-        if (firebaseRemoteConfig.getBoolean(RemoteConfig.showStreakDialogAfterLogin)) {
+        if (firebaseRemoteConfig.getBoolean(RemoteConfig.SHOW_STREAK_DIALOG_AFTER_LOGIN)) {
             listenerContainer.asIterable().forEach { it.onShowStreakSuggestion() }
         }
     }
