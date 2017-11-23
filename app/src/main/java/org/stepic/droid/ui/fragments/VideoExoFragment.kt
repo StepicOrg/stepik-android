@@ -33,7 +33,7 @@ import org.stepic.droid.base.App
 import org.stepic.droid.base.Client
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.core.MyExoPhoneStateListener
-import org.stepic.droid.core.internet_state.contract.InternetEnabledListener
+import org.stepic.droid.core.internetstate.contract.InternetEnabledListener
 import org.stepic.droid.core.presenters.VideoWithTimestampPresenter
 import org.stepic.droid.core.presenters.contracts.VideoWithTimestampView
 import org.stepic.droid.model.Video

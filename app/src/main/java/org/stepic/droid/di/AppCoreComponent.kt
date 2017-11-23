@@ -19,6 +19,7 @@ import org.stepic.droid.di.mainscreen.MainScreenComponent
 import org.stepic.droid.di.notifications.NotificationsComponent
 import org.stepic.droid.di.profile.ProfileComponent
 import org.stepic.droid.di.routing.RoutingComponent
+import org.stepic.droid.di.splash.SplashComponent
 import org.stepic.droid.di.storage.StorageComponent
 import org.stepic.droid.di.video.VideoComponent
 import org.stepic.droid.model.Course
@@ -37,7 +38,8 @@ import org.stepic.droid.ui.dialogs.*
 import org.stepic.droid.ui.fragments.HomeFragment
 
 @AppSingleton
-@Component(dependencies = arrayOf(StorageComponent::class), modules = arrayOf(AppCoreModule::class, RepositoryModule::class, AppStepModule::class, AppFiltersModule::class))
+@Component(dependencies = arrayOf(StorageComponent::class),
+        modules = arrayOf(AppCoreModule::class, RepositoryModule::class, AppStepModule::class, AppFiltersModule::class, GoogleModule::class, FirebaseModule::class))
 interface AppCoreComponent {
 
     @Component.Builder
@@ -49,6 +51,8 @@ interface AppCoreComponent {
         @BindsInstance
         fun context(context: Context): Builder
     }
+
+    fun splashComponent(): SplashComponent.Builder
 
     fun feedbackComponentBuilder(): FeedbackComponent.Builder
 
