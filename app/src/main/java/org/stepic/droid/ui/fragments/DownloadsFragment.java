@@ -23,7 +23,7 @@ import org.stepic.droid.base.Client;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.core.downloads.contract.DownloadsListener;
 import org.stepic.droid.core.downloads.contract.DownloadsPoster;
-import org.stepic.droid.core.video_moves.contract.VideosMovedListener;
+import org.stepic.droid.core.videomoves.contract.VideosMovedListener;
 import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.DownloadEntity;
 import org.stepic.droid.model.DownloadReportItem;

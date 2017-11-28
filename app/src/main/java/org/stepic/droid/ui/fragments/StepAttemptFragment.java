@@ -33,11 +33,11 @@ import org.stepic.droid.base.App;
 import org.stepic.droid.base.Client;
 import org.stepic.droid.base.StepBaseFragment;
 import org.stepic.droid.core.LessonSessionManager;
-import org.stepic.droid.core.internet_state.contract.InternetEnabledListener;
+import org.stepic.droid.core.internetstate.contract.InternetEnabledListener;
 import org.stepic.droid.core.presenters.StepAttemptPresenter;
 import org.stepic.droid.core.presenters.StreakPresenter;
 import org.stepic.droid.core.presenters.contracts.StepAttemptView;
-import org.stepic.droid.core.updating_step.contract.UpdatingStepPoster;
+import org.stepic.droid.core.updatingstep.contract.UpdatingStepPoster;
 import org.stepic.droid.fonts.FontType;
 import org.stepic.droid.model.Attempt;
 import org.stepic.droid.model.DiscountingPolicyType;
@@ -611,7 +611,6 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
         } else if (requestCode == NOTIFICATION_TIME_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 int intervalCode = data.getIntExtra(TimeIntervalPickerDialogFragment.Companion.getResultIntervalCodeKey(), TimeIntervalUtil.INSTANCE.getDefaultTimeCode());
-                getSharedPreferenceHelper().setStreakNotificationEnabled(true);
                 streakPresenter.setStreakTime(intervalCode); // we do not need attach this view, because we need only set in model
                 getAnalytic().reportEvent(Analytic.Streak.CHOOSE_INTERVAL, intervalCode + "");
                 SnackbarExtensionKt
