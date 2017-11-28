@@ -69,7 +69,8 @@ constructor(
                                 view?.showCourses(it)
                             }
                         },
-                        { e ->
+                        { _ ->
+                            onInitTag()
                             view?.showConnectionProblem()
                         }
                 )

@@ -219,8 +219,8 @@ class CatalogAdapter(
         }
     }
 
-    class TagsViewHolder(view: View,
-                         onTagClicked: (Tag) -> Unit) : RecyclerView.ViewHolder(view) {
+    private class TagsViewHolder(view: View,
+                                 onTagClicked: (Tag) -> Unit) : RecyclerView.ViewHolder(view) {
 
         private val tagsRecyclerView = itemView.tagsRecycler
         private val tagsAdapter = TagsAdapter(onTagClicked)

@@ -6,7 +6,7 @@ import org.stepic.droid.model.Tag
 import org.stepic.droid.ui.fragments.TagFragment
 
 @TagScope
-@Subcomponent(modules = arrayOf(TagModule::class))
+@Subcomponent()
 interface TagComponent {
 
     @Subcomponent.Builder
