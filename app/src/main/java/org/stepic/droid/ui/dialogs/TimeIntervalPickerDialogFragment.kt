@@ -10,7 +10,6 @@ import android.widget.NumberPicker
 import biz.kasual.materialnumberpicker.MaterialNumberPicker
 import com.afollestad.materialdialogs.MaterialDialog
 import org.stepic.droid.R
-import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.ui.util.TimeIntervalUtil
@@ -23,15 +22,18 @@ class TimeIntervalPickerDialogFragment : DialogFragment() {
     companion object {
         val resultIntervalCodeKey = "resultIntervalCodeKey"
         private val chosenPositionKey = "chosenPositionKey"
-        fun newInstance(): android.support.v4.app.DialogFragment =
+        fun newInstance(): TimeIntervalPickerDialogFragment =
                 TimeIntervalPickerDialogFragment()
     }
 
-    @Inject
-    lateinit var sharedPreferences: SharedPreferenceHelper
+    interface Callback {
+        fun onTimeIntervalPicked(data: Intent)
+    }
+
+    var callback: Callback? = null
 
     @Inject
-    lateinit var analytic: Analytic
+    lateinit var sharedPreferences: SharedPreferenceHelper
 
     lateinit var picker: MaterialNumberPicker
 
@@ -68,6 +70,7 @@ class TimeIntervalPickerDialogFragment : DialogFragment() {
                     val data = Intent()
                     data.putExtra(resultIntervalCodeKey, picker.value)
                     targetFragment?.onActivityResult(targetRequestCode, Activity.RESULT_OK, data)
+                    callback?.onTimeIntervalPicked(data)
                 }
                 .build()
     }

@@ -35,7 +35,7 @@ public interface ScreenManager {
 
     void showLogin(Activity sourceActivity, @Nullable Course course, @Nullable String email);
 
-    void showMainFeed(Context sourceActivity, @Nullable Course course);
+    void showMainFeedAfterLogin(Activity sourceActivity, @Nullable Course course);
 
     void showMainFeedFromSplash(Activity sourceActivity);
 

@@ -146,7 +146,7 @@ public class ApiImpl implements Api {
                 Request newRequest = addUserAgentTo(chain);
                 try {
                     RWLocks.AuthLock.readLock().lock();
-                    AuthenticationStepicResponse response = sharedPreference.getAuthResponseFromStore();
+                    AuthenticationStepikResponse response = sharedPreference.getAuthResponseFromStore();
                     String urlForCookies = newRequest.url().toString();
                     if (response == null) {
                         //it is Anonymous, we can log it.
@@ -181,10 +181,12 @@ public class ApiImpl implements Api {
                             Timber.d("writer 1");
                             response = sharedPreference.getAuthResponseFromStore();
                             if (isNeededUpdate(response)) {
-                                retrofit2.Response<AuthenticationStepicResponse> authenticationStepicResponse;
+                                retrofit2.Response<AuthenticationStepikResponse> authenticationStepicResponse;
                                 try {
-                                    authenticationStepicResponse = oAuthService.updateToken(config.getRefreshGrantType(), response.getRefresh_token()).execute();
+                                    authenticationStepicResponse = oAuthService.updateToken(config.getRefreshGrantType(), response.getRefreshToken()).execute();
                                     response = authenticationStepicResponse.body();
+                                } catch (IOException e) {
+                                    return chain.proceed(newRequest);
                                 } catch (Exception e) {
                                     analytic.reportError(Analytic.Error.CANT_UPDATE_TOKEN, e);
                                     return chain.proceed(newRequest);
@@ -319,8 +321,7 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Call<AuthenticationStepicResponse> authWithNativeCode(String code, SocialManager.SocialType type, @Nullable String email) {
-        analytic.reportEvent(Analytic.Web.AUTH_SOCIAL);
+    public Call<AuthenticationStepikResponse> authWithNativeCode(String code, SocialManager.SocialType type, @Nullable String email) {
         makeOauthServiceWithNewAuthHeader(TokenType.social);
         String codeType = null;
         if (type.needUseAccessTokenInsteadOfCode()) {
@@ -330,8 +331,7 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Call<AuthenticationStepicResponse> authWithLoginPassword(String login, String password) {
-        analytic.reportEvent(Analytic.Web.AUTH_LOGIN_PASSWORD);
+    public Call<AuthenticationStepikResponse> authWithLoginPassword(String login, String password) {
         makeOauthServiceWithNewAuthHeader(TokenType.loginPassword);
         String encodedPassword = URLEncoder.encode(password);
         String encodedLogin = URLEncoder.encode(login);
@@ -339,16 +339,13 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Call<AuthenticationStepicResponse> authWithCode(String code) {
-        analytic.reportEvent(Analytic.Web.AUTH_SOCIAL);
+    public Call<AuthenticationStepikResponse> authWithCode(String code) {
         makeOauthServiceWithNewAuthHeader(TokenType.social);
         return oAuthService.getTokenByCode(config.getGrantType(TokenType.social), code, config.getRedirectUri());
     }
 
     @Override
     public Call<RegistrationResponse> signUp(String firstName, String lastName, String email, String password) {
-        analytic.reportEvent(Analytic.Web.TRY_REGISTER);
-
         Interceptor interceptor = new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {
@@ -437,7 +434,6 @@ public class ApiImpl implements Api {
 
     @Override
     public Call<Void> tryJoinCourse(@NotNull Course course) {
-        analytic.reportEventWithIdName(Analytic.Web.TRY_JOIN_COURSE, course.getCourseId() + "", course.getTitle());
         EnrollmentWrapper enrollmentWrapper = new EnrollmentWrapper(course.getCourseId());
         return loggedService.joinCourse(enrollmentWrapper);
     }
@@ -470,7 +466,6 @@ public class ApiImpl implements Api {
     @Override
     public Call<Void> dropCourse(long courseId) {
         if (!config.isUserCanDropCourse()) return null;
-        analytic.reportEvent(Analytic.Web.DROP_COURSE, courseId + "");
         return loggedService.dropCourse(courseId);
     }
 
@@ -691,19 +686,6 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public UpdateResponse getInfoForUpdating() throws IOException {
-        Request request = new Request.Builder()
-                .url(config.getBaseUrl() + "/" + config.getUpdateEndpoint())
-                .build();
-
-        OkHttpClient okHttpClient = new OkHttpClient();
-        String jsonString = okHttpClient.newCall(request).execute().body().string();
-
-        Gson gson = new Gson();
-        return gson.fromJson(jsonString, UpdateResponse.class);
-    }
-
-    @Override
     public Call<CommentsResponse> getCommentAnd20Replies(long commentId) {
         long[] id = new long[]{commentId};
         return loggedService.getComments(id);
@@ -758,6 +740,11 @@ public class ApiImpl implements Api {
     @Override
     public Call<UserActivityResponse> getUserActivities(long userId) {
         return loggedService.getUserActivities(userId);
+    }
+
+    @Override
+    public Single<UserActivityResponse> getUserActivitiesReactive(long userId) {
+        return loggedService.getUserActivitiesReactive(userId);
     }
 
     @Override
@@ -831,23 +818,17 @@ public class ApiImpl implements Api {
 
 
     private String getAuthHeaderValueForLogged() {
-        try {
-            AuthenticationStepicResponse resp = sharedPreference.getAuthResponseFromStore();
-            if (resp == null) {
-                //not happen, look "resp null" in metrica before 07.2016
-                return "";
-            }
-            String access_token = resp.getAccess_token();
-            String type = resp.getToken_type();
-            return type + " " + access_token;
-        } catch (Exception ex) {
-            analytic.reportError(Analytic.Error.AUTH_ERROR, ex);
-            //it is unreachable from app version 1.2
+        AuthenticationStepikResponse resp = sharedPreference.getAuthResponseFromStore();
+        if (resp == null) {
+            //not happen, look "resp null" in metrica before 07.2016
             return "";
         }
+        String accessToken = resp.getAccessToken();
+        String type = resp.getTokenType();
+        return type + " " + accessToken;
     }
 
-    private boolean isNeededUpdate(AuthenticationStepicResponse response) {
+    private boolean isNeededUpdate(AuthenticationStepikResponse response) {
         if (response == null) {
             Timber.d("Token is null");
             return false;
@@ -858,7 +839,7 @@ public class ApiImpl implements Api {
 
         long nowTemp = DateTimeHelper.INSTANCE.nowUtc();
         long delta = nowTemp - timestampStored;
-        long expiresMillis = (response.getExpires_in() - 50) * 1000;
+        long expiresMillis = (response.getExpiresIn() - 50) * 1000;
         return delta > expiresMillis;//token expired --> need update
     }
 

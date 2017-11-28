@@ -95,7 +95,6 @@ class SearchCoursesPresenter
 
 
                 } catch (exception: Exception) {
-                    analytic.reportError(Analytic.Error.SEARCH_COURSE_NO_INTERNET, exception)
                     mainHandler.post {
                         view?.showConnectionProblem()
                     }

@@ -1,7 +1,6 @@
 package org.stepic.droid.ui.activities
 
 import android.app.Activity
-import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -326,7 +325,7 @@ class LaunchActivity : SmartLockActivityBase(), LoginView {
     }
 
     private fun openMainFeed() {
-        screenManager.showMainFeed(this, courseFromExtra)
+        screenManager.showMainFeedAfterLogin(this, courseFromExtra)
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {

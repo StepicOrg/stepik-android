@@ -4,6 +4,7 @@ import android.support.annotation.WorkerThread
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.concurrency.SingleThreadExecutor
 import org.stepic.droid.core.FilterApplicator
+import org.stepic.droid.core.earlystreak.contract.EarlyStreakPoster
 import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.di.course_list.CourseListScope
 import org.stepic.droid.model.Course
@@ -13,6 +14,7 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.storage.operations.Table
 import org.stepic.droid.util.CourseUtil
+import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.RWLocks
 import org.stepic.droid.web.Api
 import org.stepic.droid.web.CoursesMetaResponse
@@ -28,13 +30,16 @@ class PersistentCourseListPresenter
         private val mainHandler: MainHandler,
         private val api: Api,
         private val filterApplicator: FilterApplicator,
-        private val sharedPreferenceHelper: SharedPreferenceHelper
+        private val sharedPreferenceHelper: SharedPreferenceHelper,
+        private val earlyStreakPoster: EarlyStreakPoster
 ) : PresenterBase<CoursesView>() {
 
     companion object {
         //if hasNextPage & < MIN_COURSES_ON_SCREEN -> load next page
         private const val MIN_COURSES_ON_SCREEN = 5
         private const val MAX_CURRENT_NUMBER_OF_TASKS = 2
+        private const val SEVEN_DAYS_MILLIS = 7 * 24 * 60 * 60 * 1000L
+        private const val MILLIS_IN_SECOND = 1000L
     }
 
     private val currentPage = AtomicInteger(1)
@@ -198,13 +203,29 @@ class PersistentCourseListPresenter
                 Table.enrolled -> {
                     val progressMap = getProgressesFromDb(courses)
                     CourseUtil.applyProgressesToCourses(progressMap, courses)
-                    sortByLastAction(courses, progressMap)
+                    val sortedCourses = sortByLastAction(courses, progressMap)
+                    postLastActive(sortedCourses.firstOrNull(), progressMap)
+                    sortedCourses
                 }
                 Table.featured -> {
                     filterApplicator.filterCourses(courses)
                 }
                 null -> courses
             }
+
+    private fun postLastActive(course: Course?, progressMap: Map<String?, Progress>) {
+
+        val lastViewed = progressMap[course?.progress]?.lastViewed?.toLongOrNull()
+
+        if (lastViewed != null && isViewedDuringLast7Days(lastViewed)) {
+            mainHandler.post {
+                earlyStreakPoster.showStreakSuggestion()
+            }
+        }
+    }
+
+    private fun isViewedDuringLast7Days(lastViewed: Long): Boolean =
+            DateTimeHelper.isAfterNowUtc(lastViewed * MILLIS_IN_SECOND + SEVEN_DAYS_MILLIS)
 
     fun refreshData(courseType: Table) {
         if (currentNumberOfTasks >= MAX_CURRENT_NUMBER_OF_TASKS) {

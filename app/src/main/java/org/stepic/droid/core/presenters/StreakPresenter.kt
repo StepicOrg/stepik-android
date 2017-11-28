@@ -28,6 +28,7 @@ class StreakPresenter
     }
 
     fun setStreakTime(timeIntervalCode: Int) {
+        sharedPreferenceHelper.isStreakNotificationEnabled = true
         sharedPreferenceHelper.timeNotificationCode = timeIntervalCode
         val timePresentationString = TimeIntervalUtil.values[timeIntervalCode]
         localReminder.userChangeStateOfNotification()

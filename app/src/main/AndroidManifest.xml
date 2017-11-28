@@ -385,7 +385,6 @@
         <service android:name="org.stepic.droid.services.DeleteService"/>
         <service android:name="org.stepic.droid.services.ViewPusher"/>
         <service android:name="org.stepic.droid.services.CancelLoadingService"/>
-        <service android:name="org.stepic.droid.services.UpdateWithApkService"/>
 
         <service android:name=".notifications.StepicFcmListenerService">
             <intent-filter>

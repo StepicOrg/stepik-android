@@ -1,39 +1,48 @@
 package org.stepic.droid.ui.activities
 
-import android.Manifest
+import android.app.Activity
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.content.pm.ShortcutManager
+import android.graphics.Color
 import android.os.Bundle
 import android.support.annotation.IdRes
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.view.MenuItem
 import com.facebook.login.LoginManager
+import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog
 import com.vk.sdk.VKSdk
 import kotlinx.android.synthetic.main.activity_main_feed.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
+import org.stepic.droid.base.Client
+import org.stepic.droid.core.StepikDevicePoster
+import org.stepic.droid.core.earlystreak.contract.EarlyStreakListener
 import org.stepic.droid.core.presenters.ProfileMainFeedPresenter
-import org.stepic.droid.core.presenters.UpdateAppPresenter
+import org.stepic.droid.core.presenters.StreakPresenter
 import org.stepic.droid.core.presenters.contracts.ProfileMainFeedView
-import org.stepic.droid.core.presenters.contracts.UpdateAppView
+import org.stepic.droid.fonts.FontType
+import org.stepic.droid.model.Course
 import org.stepic.droid.model.Profile
-import org.stepic.droid.notifications.StepicInstanceIdService
-import org.stepic.droid.services.UpdateWithApkService
 import org.stepic.droid.ui.activities.contracts.RootScreen
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.dialogs.LogoutAreYouSureDialog
-import org.stepic.droid.ui.dialogs.NeedUpdatingDialog
+import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment
 import org.stepic.droid.ui.fragments.CatalogFragment
 import org.stepic.droid.ui.fragments.CertificatesFragment
 import org.stepic.droid.ui.fragments.HomeFragment
 import org.stepic.droid.ui.fragments.ProfileFragment
+import org.stepic.droid.ui.util.TimeIntervalUtil
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.ProgressHelper
 import timber.log.Timber
+import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan
+import uk.co.chrisjenx.calligraphy.TypefaceUtils
 import javax.inject.Inject
 
 
@@ -42,8 +51,9 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         BottomNavigationView.OnNavigationItemReselectedListener,
         LogoutAreYouSureDialog.Companion.OnLogoutSuccessListener,
         RootScreen,
-        UpdateAppView,
-        ProfileMainFeedView {
+        ProfileMainFeedView,
+        EarlyStreakListener,
+        TimeIntervalPickerDialogFragment.Callback {
 
     companion object {
         val currentIndexKey = "currentIndexKey"
@@ -51,18 +61,35 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         val reminderKey = "reminderKey"
         const val defaultIndex: Int = 0
         private val progressLogoutTag = "progressLogoutTag"
+        private const val LOGGED_ACTION = "LOGGED_ACTION"
 
         const val HOME_INDEX: Int = 1
         const val CATALOG_INDEX: Int = 2
         const val PROFILE_INDEX: Int = 3
         const val CERTIFICATE_INDEX: Int = 4
+
+        fun launchAfterLogin(sourceActivity: Activity, course: Course?) {
+            val intent = Intent(sourceActivity, MainFeedActivity::class.java)
+            if (course != null) {
+                intent.putExtra(AppConstants.KEY_COURSE_BUNDLE, course)
+            }
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            intent.action = LOGGED_ACTION
+            sourceActivity.startActivity(intent)
+        }
     }
 
     @Inject
-    lateinit var updateAppPresenter: UpdateAppPresenter
+    lateinit var profileMainFeedPresenter: ProfileMainFeedPresenter
 
     @Inject
-    lateinit var profileMainFeedPresenter: ProfileMainFeedPresenter
+    lateinit var stepikDevicePoster: StepikDevicePoster
+
+    @Inject
+    lateinit var earlyStreakClient: Client<EarlyStreakListener>
+
+    @Inject
+    lateinit var streakPresenter: StreakPresenter
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
@@ -127,12 +154,10 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         initNavigation()
 
 
-        updateAppPresenter.attachView(this)
-        updateAppPresenter.checkForUpdate()
-
+        earlyStreakClient.subscribe(this)
         if (checkPlayServices() && !sharedPreferenceHelper.isGcmTokenOk) {
             threadPoolExecutor.execute {
-                StepicInstanceIdService.updateAnywhere(api, sharedPreferenceHelper, analytic) //FCM!
+                stepikDevicePoster.registerDevice()
             }
         }
 
@@ -175,7 +200,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
     }
 
     override fun onDestroy() {
-        updateAppPresenter.detachView(this)
+        earlyStreakClient.unsubscribe(this)
         profileMainFeedPresenter.detachView(this)
         if (isFinishing) {
             App.componentManager().releaseMainFeedComponent()
@@ -189,38 +214,6 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
             return
         } else {
             navigationView.selectedItemId = R.id.home
-        }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String?>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == AppConstants.REQUEST_EXTERNAL_STORAGE) {
-            val permissionExternalStorage = permissions[0] ?: return
-
-            if (permissionExternalStorage == Manifest.permission.WRITE_EXTERNAL_STORAGE && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                val link = sharedPreferenceHelper.tempLink
-                if (link != null) {
-                    val updateIntent = Intent(this, UpdateWithApkService::class.java)
-                    updateIntent.putExtra(UpdateWithApkService.linkKey, link)
-                    this.startService(updateIntent)
-                }
-            }
-        }
-    }
-
-    override fun onNeedUpdate(linkForUpdate: String?, isAppInGp: Boolean) {
-        if (isAppInGp && linkForUpdate == null) {
-            return
-        }
-        val storedTimestamp = sharedPreferenceHelper.lastShownUpdatingMessageTimestamp
-        val needUpdate = DateTimeHelper.isNeededUpdate(storedTimestamp, AppConstants.MILLIS_IN_24HOURS)
-        if (!needUpdate) return
-
-        sharedPreferenceHelper.storeLastShownUpdatingMessage()
-        analytic.reportEvent(Analytic.Interaction.UPDATING_MESSAGE_IS_SHOWN)
-        val dialog = NeedUpdatingDialog.newInstance(linkForUpdate, isAppInGp)
-        if (!dialog.isAdded) {
-            dialog.show(supportFragmentManager, null)
         }
     }
 
@@ -243,7 +236,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
                     analytic.reportEvent(Analytic.Anonymous.BROWSE_COURSES_DRAWER)
                 }
             }
-            R.id.certificates -> analytic.reportEvent(Analytic.Screens.USER_OPEN_CERTIFICATES);
+            R.id.certificates -> analytic.reportEvent(Analytic.Screens.USER_OPEN_CERTIFICATES)
             R.id.profile -> analytic.reportEvent(Analytic.Screens.USER_OPEN_PROFILE)
         }
     }
@@ -326,5 +319,44 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
 
     override fun applyTransitionPrev() {
         //no-op
+    }
+
+    override fun onShowStreakSuggestion() {
+        if (intent.action == LOGGED_ACTION) {
+            intent.action = null
+
+
+            val streakTitle = SpannableString(getString(R.string.early_notification_title))
+            streakTitle.setSpan(ForegroundColorSpan(Color.BLACK), 0, streakTitle.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            val typefaceSpan = CalligraphyTypefaceSpan(TypefaceUtils.load(this.assets, fontsProvider.provideFontPath(FontType.bold)))
+            streakTitle.setSpan(typefaceSpan, 0, streakTitle.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+            val description = getString(R.string.early_notification_description)
+
+            analytic.reportEvent(Analytic.Streak.EARLY_DIALOG_SHOWN)
+            val dialog = MaterialStyledDialog.Builder(this)
+                    .setTitle(streakTitle)
+                    .setDescription(description)
+                    .setHeaderDrawable(R.drawable.dialog_background)
+                    .setPositiveText(R.string.ok)
+                    .setNegativeText(R.string.later_tatle)
+                    .setScrollable(true, 10) // number of lines lines
+                    .onPositive { _, _ ->
+                        analytic.reportEvent(Analytic.Streak.EARLY_DIALOG_POSITIVE)
+                        val dialogFragment = TimeIntervalPickerDialogFragment.newInstance()
+                        dialogFragment.callback = this
+                        if (!dialogFragment.isAdded) {
+                            dialogFragment.show(supportFragmentManager, null)
+                        }
+                    }
+                    .build()
+            dialog.show()
+        }
+    }
+
+    override fun onTimeIntervalPicked(data: Intent) {
+        analytic.reportEvent(Analytic.Streak.EARLY_NOTIFICATION_COMPLETE)
+        val intervalCode = data.getIntExtra(TimeIntervalPickerDialogFragment.resultIntervalCodeKey, TimeIntervalUtil.defaultTimeCode)
+        streakPresenter.setStreakTime(intervalCode) // we do not need attach this view, because we need only set in model
     }
 }
