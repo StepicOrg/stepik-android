@@ -116,7 +116,6 @@ public class CoursesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     joinTitle,
                     continueTitle,
                     coursePlaceholder,
-                    courses,
                     droppingPresenter,
                     continueCoursePresenter,
                     colorType
@@ -136,7 +135,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             }
             case ITEM_VIEW_TYPE: {
                 CourseItemViewHolder courseItemViewHolder = (CourseItemViewHolder) holder;
-                courseItemViewHolder.setDataOnView(position - NUMBER_OF_PRE_ITEMS);
+                courseItemViewHolder.setDataOnView(courses.get(position - NUMBER_OF_PRE_ITEMS));
                 break;
             }
             case FOOTER_VIEW_TYPE: {
