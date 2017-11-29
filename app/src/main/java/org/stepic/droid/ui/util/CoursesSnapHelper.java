@@ -64,12 +64,12 @@ public class CoursesSnapHelper extends SnapHelper {
     @Override
     public int findTargetSnapPosition(RecyclerView.LayoutManager layoutManager, int velocityX, int velocityY) {
         Timber.d("findTargetSnapPosition result start");
-        int result = findTagetSnapPositionInternal(layoutManager, velocityX, velocityY);
+        int result = findTargetSnapPositionInternal(layoutManager, velocityX, velocityY);
         Timber.d("findTargetSnapPosition result " + result);
         return result;
     }
 
-    private int findTagetSnapPositionInternal(RecyclerView.LayoutManager layoutManager, int velocityX, int velocityY) {
+    private int findTargetSnapPositionInternal(RecyclerView.LayoutManager layoutManager, int velocityX, int velocityY) {
         final int itemCount = layoutManager.getItemCount();
         if (itemCount == 0) {
             return RecyclerView.NO_POSITION;
@@ -171,12 +171,6 @@ public class CoursesSnapHelper extends SnapHelper {
         int previousPosition = Math.max(0, currentPositionMinusRowCount);
         return layoutManager.findViewByPosition(previousPosition);
     }
-
-    @Nullable
-    private View findStartView(RecyclerView.LayoutManager layoutManager) {
-        return layoutManager.getChildAt(0);
-    }
-
 
     private OrientationHelper getHorizontalHelper(RecyclerView.LayoutManager layoutManager) {
         if (mHorizontalHelper == null) {
