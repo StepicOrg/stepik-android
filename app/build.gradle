@@ -157,6 +157,7 @@ dependencies {
     implementation libraries.recyclerAnimators
     implementation libraries.materialProgress
     implementation libraries.circleImageView
+    implementation libraries.bottomNavigationView
 
     debugImplementation libraries.leakCanary
     releaseImplementation libraries.leakCanaryNoOp

@@ -17,9 +17,6 @@ private val settingsTitleRes = R.string.settings_title
 private val downloadsTitleRes = R.string.downloads
 
 @StringRes
-private val notificationsTitleRes = R.string.notification_title
-
-@StringRes
 private val feedbackTitleRes = R.string.feedback_title
 
 @StringRes
@@ -35,7 +32,6 @@ object ProfileSettingsHelper {
 
         list.add(ProfileSettingsViewModel(settingsTitleRes))
         list.add(ProfileSettingsViewModel(downloadsTitleRes))
-        list.add(ProfileSettingsViewModel(notificationsTitleRes))
         list.add(ProfileSettingsViewModel(feedbackTitleRes))
         list.add(ProfileSettingsViewModel(aboutTitleRes))
         list.add(ProfileSettingsViewModel(logoutTitleRes, R.color.new_logout_color))
@@ -61,11 +57,6 @@ fun ProfileSettingsViewModel?.clickProfileSettings(activity: Activity,
         downloadsTitleRes -> {
             analytic.reportEvent(Analytic.Screens.USER_OPEN_DOWNLOADS)
             screenManager.showDownloads(activity)
-        }
-
-        notificationsTitleRes -> {
-            analytic.reportEvent(Analytic.Screens.USER_OPEN_NOTIFICATIONS)
-            screenManager.showNotifications(activity)
         }
 
         feedbackTitleRes -> {

@@ -37,7 +37,6 @@ class CourseItemViewHolder(
         private val joinTitle: String,
         private val continueTitle: String,
         private val coursePlaceholder: Drawable,
-        private val isContinueExperimentEnabled: Boolean,
         private val courses: List<Course>,
         private val droppingPresenter: DroppingPresenter,
         private val continueCoursePresenter: ContinueCoursePresenter,
@@ -153,7 +152,6 @@ class CourseItemViewHolder(
         analytic.reportEvent(Analytic.Interaction.CLICK_COURSE)
         val course = courses[position]
         if (course.enrollment != 0) {
-            analytic.reportEvent(if (isContinueExperimentEnabled) Analytic.ContinueExperiment.COURSE_NEW else Analytic.ContinueExperiment.COURSE_OLD)
             screenManager.showSections(contextActivity, course)
         } else {
             screenManager.showCourseDescription(contextActivity, course)
@@ -163,7 +161,6 @@ class CourseItemViewHolder(
     private fun onClickWidgetButton(course: Course, enrolled: Boolean) {
         if (enrolled) {
             analytic.reportEvent(Analytic.Interaction.CLICK_CONTINUE_COURSE)
-            analytic.reportEvent(if (isContinueExperimentEnabled) Analytic.ContinueExperiment.CONTINUE_NEW else Analytic.ContinueExperiment.CONTINUE_OLD)
             continueCoursePresenter.continueCourse(course) //provide position?
         } else {
             screenManager.showCourseDescription(contextActivity, course, true)

@@ -319,7 +319,7 @@ constructor(
 
     override fun onSuccessDropCourse(course: Course) {
         val courseId = course.courseId
-        analytic.reportEvent(Analytic.Web.DROP_COURSE_SUCCESSFUL, courseId.toString())
+        analytic.reportEvent(Analytic.Course.DROP_COURSE_SUCCESSFUL, courseId.toString())
         Toast.makeText(context, context.getString(R.string.you_dropped, course.title), Toast.LENGTH_LONG).show()
         val index = courses.indexOfFirst { it.courseId == course.courseId }
 
@@ -348,7 +348,7 @@ constructor(
 
     override fun onFailDropCourse(course: Course) {
         val courseId = course.courseId
-        analytic.reportEvent(Analytic.Web.DROP_COURSE_FAIL, courseId.toString())
+        analytic.reportEvent(Analytic.Course.DROP_COURSE_FAIL, courseId.toString())
         Toast.makeText(context, R.string.internet_problem, Toast.LENGTH_LONG).show()
 
     }

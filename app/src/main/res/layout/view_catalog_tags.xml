@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tagsTitle"
+        style="@style/CatalogItemTitle"
+        android:text="@string/trending_topics"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/tagsRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tagsTitle"
+        android:layout_marginBottom="@dimen/catalog_header_bottom_margin"
+        android:clipToPadding="false"
+        android:divider="@color/transparent"
+        android:paddingEnd="0dp"
+        android:paddingLeft="@dimen/course_list_side_padding"
+        android:paddingRight="0dp"
+        android:paddingStart="@dimen/course_list_side_padding"
+        android:scrollbarStyle="outsideOverlay"
+        android:splitMotionEvents="false"/>
+
+
+    <include
+        layout="@layout/view_horizontal_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/tagsRecycler"/>
+
+</RelativeLayout>

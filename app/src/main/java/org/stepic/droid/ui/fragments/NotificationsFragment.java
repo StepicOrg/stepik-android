@@ -97,7 +97,7 @@ public class NotificationsFragment extends FragmentBase {
     }
 
     private void initToolbar() {
-        ToolbarHelperKt.initCenteredToolbar(this, R.string.notification_title, true);
+        ToolbarHelperKt.initCenteredToolbar(this, R.string.notification_title);
     }
 
     @Override
@@ -111,10 +111,6 @@ public class NotificationsFragment extends FragmentBase {
             case R.id.action_settings:
                 getAnalytic().reportEvent(Analytic.Interaction.CLICK_SETTINGS_FROM_NOTIFICATION);
                 getScreenManager().showNotificationSettings(getActivity());
-                return true;
-            case android.R.id.home:
-                // Respond to the action bar's Up/Home button
-                getActivity().finish();
                 return true;
         }
         return super.onOptionsItemSelected(item);

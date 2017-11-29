@@ -7,7 +7,7 @@ import android.content.Intent;
 import org.stepic.droid.base.App;
 import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.core.LocalProgressManager;
-import org.stepic.droid.core.updating_step.contract.UpdatingStepPoster;
+import org.stepic.droid.core.updatingstep.contract.UpdatingStepPoster;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.storage.StoreStateManager;

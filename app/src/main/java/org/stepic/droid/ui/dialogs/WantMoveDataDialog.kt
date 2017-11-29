@@ -8,7 +8,7 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.concurrency.MainHandler
-import org.stepic.droid.core.video_moves.contract.VideosMovedPoster
+import org.stepic.droid.core.videomoves.contract.VideosMovedPoster
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants

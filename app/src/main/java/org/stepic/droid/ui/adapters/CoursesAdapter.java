@@ -12,12 +12,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
-
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.base.App;
-import org.stepic.droid.configuration.RemoteConfig;
+import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.core.presenters.ContinueCoursePresenter;
 import org.stepic.droid.core.presenters.DroppingPresenter;
 import org.stepic.droid.model.Course;
@@ -31,10 +29,13 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import kotlin.Unit;
+import kotlin.jvm.functions.Function0;
+
 public class CoursesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Inject
-    FirebaseRemoteConfig firebaseRemoteConfig;
+    MainHandler mainHandler;
 
     private Drawable coursePlaceholder;
 
@@ -57,7 +58,6 @@ public class CoursesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private boolean isNeedShowFooter;
     private final String continueTitle;
     private final String joinTitle;
-    private final boolean isContinueExperimentEnabled;
     private final boolean showMore;
     private final CoursesCarouselColorType colorType;
 
@@ -89,12 +89,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         circularBitmapDrawable.setCornerRadius(contextActivity.getResources().getDimension(R.dimen.course_image_radius));
         coursePlaceholder = circularBitmapDrawable;
 
-        isContinueExperimentEnabled = firebaseRemoteConfig.getBoolean(RemoteConfig.INSTANCE.getContinueCourseExperimentEnabledKey());
-        if (isContinueExperimentEnabled) {
-            continueTitle = contextActivity.getString(R.string.continue_course_title_experimental);
-        } else {
-            continueTitle = contextActivity.getString(R.string.continue_course_title);
-        }
+        continueTitle = contextActivity.getString(R.string.continue_course_title);
         joinTitle = contextActivity.getString(R.string.course_item_join);
         isNeedShowFooter = false;
     }
@@ -121,7 +116,6 @@ public class CoursesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     joinTitle,
                     continueTitle,
                     coursePlaceholder,
-                    isContinueExperimentEnabled,
                     courses,
                     droppingPresenter,
                     continueCoursePresenter,
@@ -186,11 +180,16 @@ public class CoursesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public void showLoadingFooter(boolean isNeedShow) {
         isNeedShowFooter = isNeedShow;
-        try {
-            notifyItemChanged(getItemCount() - 1);
-        } catch (IllegalStateException ignored) {
-            //if it is already notified
-        }
+        postUpdateToNextFrame();
     }
 
+    private void postUpdateToNextFrame() {
+        mainHandler.post(new Function0<Unit>() {
+            @Override
+            public Unit invoke() {
+                notifyItemChanged(getItemCount() - 1);
+                return Unit.INSTANCE;
+            }
+        });
+    }
 }

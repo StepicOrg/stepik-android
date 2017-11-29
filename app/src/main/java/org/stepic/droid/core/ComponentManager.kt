@@ -6,6 +6,7 @@ import org.stepic.droid.di.downloads.DownloadsComponent
 import org.stepic.droid.di.login.LoginComponent
 import org.stepic.droid.di.mainscreen.MainScreenComponent
 import org.stepic.droid.di.routing.RoutingComponent
+import org.stepic.droid.di.splash.SplashComponent
 import org.stepic.droid.di.step.StepComponent
 
 // TODO: 16.03.17 make more generic solution, for every component handling
@@ -17,6 +18,12 @@ interface ComponentManager {
     fun loginComponent(tag: String): LoginComponent
 
     fun releaseLoginComponent(tag: String)
+
+    @MainThread
+    fun splashComponent(): SplashComponent
+
+    @MainThread
+    fun releaseSplashComponent()
 
 
     @MainThread
