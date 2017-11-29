@@ -3,6 +3,7 @@ package org.stepic.droid.ui.util;
 import android.graphics.PointF;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
@@ -38,18 +39,13 @@ public class CoursesSnapHelper extends SnapHelper {
                                               @NonNull View targetView) {
         int[] out = new int[2];
         if (layoutManager.canScrollHorizontally()) {
-            out[0] = distanceToCenter(layoutManager, targetView,
-                    getHorizontalHelper(layoutManager));
+            out[0] = distanceToStart(targetView, getHorizontalHelper(layoutManager));
         } else {
             out[0] = 0;
         }
 
-        if (layoutManager.canScrollVertically()) {
-            out[1] = distanceToCenter(layoutManager, targetView,
-                    getVerticalHelper(layoutManager));
-        } else {
-            out[1] = 0;
-        }
+        out[1] = 0;
+
         Timber.d("calculate distance to final snap " + out[0] + ";" + out[1]);
         return out;
     }
@@ -57,13 +53,9 @@ public class CoursesSnapHelper extends SnapHelper {
     @Nullable
     @Override
     public View findSnapView(RecyclerView.LayoutManager layoutManager) {
-        Timber.d("findSnapView");
-        if (layoutManager.canScrollVertically()) {
-            return findCenterView(layoutManager, getVerticalHelper(layoutManager));
-        } else if (layoutManager.canScrollHorizontally()) {
-            return findCenterView(layoutManager, getHorizontalHelper(layoutManager));
-        }
-        return null;
+        View snapView = getStartView(layoutManager, getHorizontalHelper(layoutManager));
+        Timber.d("snap view is " + snapView);
+        return snapView;
     }
 
     @Override
@@ -148,64 +140,38 @@ public class CoursesSnapHelper extends SnapHelper {
         };
     }
 
-    private int distanceToCenter(@NonNull RecyclerView.LayoutManager layoutManager,
-                                 @NonNull View targetView, OrientationHelper helper) {
-        final int childCenter = helper.getDecoratedStart(targetView)
-                + (helper.getDecoratedMeasurement(targetView) / 2);
-        final int containerCenter;
-        if (layoutManager.getClipToPadding()) {
-            containerCenter = helper.getStartAfterPadding() + helper.getTotalSpace() / 2;
-        } else {
-            containerCenter = helper.getEnd() / 2;
-        }
-        int distanceToCenter = childCenter - containerCenter;
-        Timber.d("distanceToCenter = " + distanceToCenter);
-        return distanceToCenter;
+
+    private int distanceToStart(View targetView, OrientationHelper helper) {
+        return helper.getDecoratedStart(targetView) - helper.getStartAfterPadding();
     }
 
-    /**
-     * Return the child view that is currently closest to the center of this parent.
-     *
-     * @param layoutManager The {@link RecyclerView.LayoutManager} associated with the attached
-     *                      {@link RecyclerView}.
-     * @param helper        The relevant {@link OrientationHelper} for the attached {@link RecyclerView}.
-     * @return the child view that is currently closest to the center of this parent.
-     */
-    @Nullable
-    private View findCenterView(RecyclerView.LayoutManager layoutManager,
-                                OrientationHelper helper) {
-        int childCount = layoutManager.getChildCount();
-        if (childCount == 0) {
+    private View getStartView(RecyclerView.LayoutManager layoutManager,
+                              OrientationHelper helper) {
+
+        GridLayoutManager gridLayoutManager = (GridLayoutManager) layoutManager;
+        int firstChild = gridLayoutManager.findFirstVisibleItemPosition();
+
+        boolean isLastItem = gridLayoutManager
+                .findLastCompletelyVisibleItemPosition()
+                == layoutManager.getItemCount() - 1;
+
+        if (firstChild == RecyclerView.NO_POSITION || isLastItem) {
             return null;
         }
 
-        View closestChild = null;
-        final int center;
-        if (layoutManager.getClipToPadding()) {
-            center = helper.getStartAfterPadding() + helper.getTotalSpace() / 2;
+        View child = layoutManager.findViewByPosition(firstChild);
+
+        if (helper.getDecoratedEnd(child) >= helper.getDecoratedMeasurement(child) / 2
+                && helper.getDecoratedEnd(child) > 0) {
+            return child;
         } else {
-            center = helper.getEnd() / 2;
-        }
-        int absClosest = Integer.MAX_VALUE;
-
-        int childCenterClosest  = 0;
-        for (int i = 0; i < childCount; i++) {
-            final View child = layoutManager.getChildAt(i);
-            int childCenter = helper.getDecoratedStart(child)
-                    + (helper.getDecoratedMeasurement(child) / 2);
-            int absDistance = Math.abs(childCenter - center);
-
-            /** if child center is closer than previous closest, set it as closest  **/
-            if (absDistance < absClosest) {
-                absClosest = absDistance;
-                closestChild = child;
-                childCenterClosest = childCenter;
+            if (gridLayoutManager.findLastCompletelyVisibleItemPosition()
+                    == layoutManager.getItemCount() - 1) {
+                return null;
+            } else {
+                return layoutManager.findViewByPosition(firstChild + 1);
             }
         }
-        Timber.d("findCenterView view = " + closestChild);
-        Timber.d("findCenterView center = " + center);
-        Timber.d("findCenterView childCenter = " + childCenterClosest);
-        return closestChild;
     }
 
     /**

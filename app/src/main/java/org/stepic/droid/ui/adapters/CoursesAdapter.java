@@ -31,6 +31,7 @@ import javax.inject.Inject;
 
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
+import timber.log.Timber;
 
 public class CoursesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -128,6 +129,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        Timber.d("Courses onBind " + position);
         switch (getItemViewType(position)) {
             case HEADER_VIEW_TYPE: {
                 HeaderItemViewHolder headerItemViewHolder = (HeaderItemViewHolder) holder;
