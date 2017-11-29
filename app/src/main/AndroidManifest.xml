@@ -335,6 +335,8 @@
                 android:value=".ui.activities.MainFeedActivity"/>
         </activity>
 
+        <activity android:name=".ui.activities.TagActivity"/>
+
 
         <receiver
             android:name="org.stepic.droid.receivers.DownloadCompleteReceiver"

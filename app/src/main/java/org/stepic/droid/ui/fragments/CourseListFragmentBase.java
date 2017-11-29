@@ -299,7 +299,7 @@ public abstract class CourseListFragmentBase extends FragmentBase
 
     protected abstract void onNeedDownloadNextPage();
 
-    protected abstract void showEmptyScreen(boolean isShow);
+    protected abstract void showEmptyScreen(boolean isShown);
 
     @Override
     public void onShowContinueCourseLoadingDialog() {

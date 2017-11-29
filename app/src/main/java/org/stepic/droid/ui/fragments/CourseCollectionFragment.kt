@@ -56,7 +56,7 @@ class CourseCollectionFragment : CourseListFragmentBase() {
         //no op
     }
 
-    override fun showEmptyScreen(isShow: Boolean) {
+    override fun showEmptyScreen(isShown: Boolean) {
 
     }
 

@@ -68,7 +68,7 @@ constructor(
                     view?.showConnectionProblem()
                 })
 
-        compositeDisposable.add(compositeDisposable)
+        compositeDisposable.add(disposable)
     }
 
     private fun getReviewsSingle(reviewIds: IntArray): Single<List<CourseReviewSummary>> {
