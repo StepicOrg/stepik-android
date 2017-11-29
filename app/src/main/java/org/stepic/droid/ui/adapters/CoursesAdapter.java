@@ -16,11 +16,8 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
-import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
-import org.stepic.droid.configuration.Config;
 import org.stepic.droid.configuration.RemoteConfig;
-import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.presenters.ContinueCoursePresenter;
 import org.stepic.droid.core.presenters.DroppingPresenter;
 import org.stepic.droid.model.Course;
@@ -29,25 +26,12 @@ import org.stepic.droid.model.CoursesDescriptionContainer;
 import org.stepic.droid.ui.adapters.viewhoders.CourseItemViewHolder;
 import org.stepic.droid.ui.adapters.viewhoders.FooterItemViewHolder;
 import org.stepic.droid.ui.adapters.viewhoders.HeaderItemViewHolder;
-import org.stepic.droid.util.resolvers.text.TextResolver;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
 public class CoursesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
-    @Inject
-    Config config;
-
-    @Inject
-    TextResolver textResolver;
-
-    @Inject
-    ScreenManager screenManager;
-
-    @Inject
-    Analytic analytic;
 
     @Inject
     FirebaseRemoteConfig firebaseRemoteConfig;
