@@ -42,12 +42,12 @@ constructor(
     }
 
     fun syncCounter() {
+        val now = nowUtc()
         api.notificationStatuses
                 .subscribeOn(scheduler)
                 .observeOn(scheduler)
                 .subscribe { res, _ ->
                     res.notificationStatuses?.firstOrNull()?.let {
-                        val now = nowUtc()
                         setCounter(it, now)
                     }
                 }
