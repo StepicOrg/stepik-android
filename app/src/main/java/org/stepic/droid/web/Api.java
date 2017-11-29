@@ -119,6 +119,8 @@ public interface Api {
 
     Call<Void> markAsReadAllType(@NotNull NotificationCategory notificationCategory);
 
+    Single<NotificationStatusesResponse> getNotificationStatuses();
+
     Call<UserActivityResponse> getUserActivities(long userId);
 
     Single<UserActivityResponse> getUserActivitiesReactive(long userId);

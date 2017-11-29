@@ -738,6 +738,11 @@ public class ApiImpl implements Api {
     }
 
     @Override
+    public Single<NotificationStatusesResponse> getNotificationStatuses() {
+        return loggedService.getNotificationStatuses();
+    }
+
+    @Override
     public Call<UserActivityResponse> getUserActivities(long userId) {
         return loggedService.getUserActivities(userId);
     }
