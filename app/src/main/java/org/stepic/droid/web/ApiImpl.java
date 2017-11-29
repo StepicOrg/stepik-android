@@ -324,7 +324,7 @@ public class ApiImpl implements Api {
         makeOauthServiceWithNewAuthHeader(TokenType.social);
         String codeType = null;
         if (type.needUseAccessTokenInsteadOfCode()) {
-            codeType = "accessToken";
+            codeType = "access_token";
         }
         return oAuthService.getTokenByNativeCode(type.getIdentifier(), code, config.getGrantType(TokenType.social), config.getRedirectUri(), codeType, email);
     }
