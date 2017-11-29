@@ -242,6 +242,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
             }
             R.id.certificates -> analytic.reportEvent(Analytic.Screens.USER_OPEN_CERTIFICATES)
             R.id.profile -> analytic.reportEvent(Analytic.Screens.USER_OPEN_PROFILE)
+            R.id.notifications -> analytic.reportEvent(Analytic.Screens.USER_OPEN_NOTIFICATIONS)
         }
     }
 
