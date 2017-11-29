@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.NotificationCategory;
 import org.stepic.droid.model.Reply;
+import org.stepic.droid.model.Tag;
 import org.stepic.droid.model.comments.VoteValue;
 import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.social.SocialManager;
@@ -130,4 +131,8 @@ public interface Api {
     Single<CourseCollectionsResponse> getCourseCollections(String language);
 
     Single<CourseReviewResponse> getCourseReviews(int[] reviewSummaryIds);
+
+    Single<TagResponse> getFeaturedTags();
+
+    Single<SearchResultResponse> getSearchResultsOfTag(int page, @NotNull Tag tag);
 }

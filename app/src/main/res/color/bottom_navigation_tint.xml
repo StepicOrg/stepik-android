@@ -4,5 +4,5 @@
     <item android:color="@color/new_accent_color" android:state_checked="true"/>
 
     <!--Color of unselected-->
-    <item android:color="@color/new_accent_color"/>
+    <item android:color="@color/new_accent_color_alpha_40"/>
 </selector>

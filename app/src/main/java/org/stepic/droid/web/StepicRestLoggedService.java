@@ -20,7 +20,7 @@ public interface StepicRestLoggedService {
     @GET("api/sections")
     Call<SectionsMetaResponse> getSections(@Query("ids[]") long[] sectionIds);
 
-    @Headers({"Content-Type:application/json"})
+    @Headers("Content-Type:application/json")
     @POST("api/enrollments")
     Call<Void> joinCourse(@Body EnrollmentWrapper enrollmentCourse);
 
@@ -61,13 +61,13 @@ public interface StepicRestLoggedService {
     Call<AssignmentResponse> getAssignments(@Query("ids[]") long[] assignmentsIds);
 
 
-    @Headers({"Content-Type:application/json"})
+    @Headers("Content-Type:application/json")
     @POST("api/views")
     Call<Void> postViewed(@Body ViewAssignmentWrapper stepAssignment);
 
-    @GET("api/search-results")
+    @GET("api/search-results?is_popular=true&is_public=true&type=course")
     Call<SearchResultResponse> getSearchResults(@Query("page") int page,
-                                                @Query(value = "query", encoded = true) String encodedQuery, @Query("type") String type);
+                                                @Query(value = "query", encoded = true) String encodedQuery);
 
     @GET("api/queries")
     Single<QueriesResponse> getSearchQueries(@Query("query") String query);
@@ -159,4 +159,10 @@ public interface StepicRestLoggedService {
 
     @GET("api/course-review-summaries")
     Single<CourseReviewResponse> getCourseReviews(@Query("ids[]") int[] reviewSummaryIds);
+
+    @GET("api/tags?is_featured=true")
+    Single<TagResponse> getFeaturedTags();
+
+    @GET("api/search-results?is_popular=true&is_public=true&type=course")
+    Single<SearchResultResponse> getSearchResultsOfTag(@Query("page") int page, @Query("tag") int id, @Query("language") String lang);
 }

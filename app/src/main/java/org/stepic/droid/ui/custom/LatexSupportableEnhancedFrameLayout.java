@@ -77,7 +77,7 @@ public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
     }
 
     @IdRes
-    protected int getWebViewId(){
+    protected int getWebViewId() {
         return R.id.webView;
     }
 
@@ -92,6 +92,7 @@ public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR2) { // selection in WebView works incorrect on API <= 18, so its disabled
             textView.setTextIsSelectable(isSelectable);
             webView.setTextIsSelectable(isSelectable);
+            textView.setMovementMethod(LinkMovementMethod.getInstance()); //fix opening links of the textview
         }
     }
 

@@ -269,8 +269,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.activities.NotificationsActivity"/>
-
         <activity android:name=".ui.activities.DownloadsActivity"/>
 
         <activity android:name=".ui.activities.CertificatesActivity"/>
@@ -334,6 +332,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.MainFeedActivity"/>
         </activity>
+
+        <activity android:name=".ui.activities.TagActivity"/>
 
 
         <receiver

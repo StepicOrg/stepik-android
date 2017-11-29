@@ -14,36 +14,28 @@ import android.view.ViewGroup;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
-import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
-import org.stepic.droid.configuration.Config;
-import org.stepic.droid.core.ScreenManager;
+import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.core.presenters.ContinueCoursePresenter;
 import org.stepic.droid.core.presenters.DroppingPresenter;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.CoursesCarouselColorType;
+import org.stepic.droid.model.CoursesDescriptionContainer;
 import org.stepic.droid.ui.adapters.viewhoders.CourseItemViewHolder;
-import org.stepic.droid.ui.adapters.viewhoders.CourseViewHolderBase;
 import org.stepic.droid.ui.adapters.viewhoders.FooterItemViewHolder;
-import org.stepic.droid.util.resolvers.text.TextResolver;
+import org.stepic.droid.ui.adapters.viewhoders.HeaderItemViewHolder;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
-public class CoursesAdapter extends RecyclerView.Adapter<CourseViewHolderBase> {
+import kotlin.Unit;
+import kotlin.jvm.functions.Function0;
+
+public class CoursesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Inject
-    Config config;
-
-    @Inject
-    TextResolver textResolver;
-
-    @Inject
-    ScreenManager screenManager;
-
-    @Inject
-    Analytic analytic;
+    MainHandler mainHandler;
 
     private Drawable coursePlaceholder;
 
@@ -55,10 +47,15 @@ public class CoursesAdapter extends RecyclerView.Adapter<CourseViewHolderBase> {
     @NotNull
     private final DroppingPresenter droppingPresenter;
 
-    private int footerViewType = 1;
-    private int itemViewType = 2;
-    private final int NUMBER_OF_EXTRA_ITEMS;
-    private final FooterItemViewHolder.Companion.State isNeedShowFooterState;
+    private CoursesDescriptionContainer descriptionContainer;
+
+    private final static int HEADER_VIEW_TYPE = 3;
+    private final static int ITEM_VIEW_TYPE = 2;
+    private final static int FOOTER_VIEW_TYPE = 1;
+
+    private int NUMBER_OF_PRE_ITEMS = 0;
+    private final int NUMBER_OF_POST_ITEMS;
+    private boolean isNeedShowFooter;
     private final String continueTitle;
     private final String joinTitle;
     private final boolean showMore;
@@ -75,9 +72,9 @@ public class CoursesAdapter extends RecyclerView.Adapter<CourseViewHolderBase> {
         this.showMore = showMore;
         this.colorType = colorType;
         if (withPagination) {
-            NUMBER_OF_EXTRA_ITEMS = 1;
+            NUMBER_OF_POST_ITEMS = 1;
         } else {
-            NUMBER_OF_EXTRA_ITEMS = 0;
+            NUMBER_OF_POST_ITEMS = 0;
         }
         contextActivity = activity;
         this.courses = courses;
@@ -94,15 +91,23 @@ public class CoursesAdapter extends RecyclerView.Adapter<CourseViewHolderBase> {
 
         continueTitle = contextActivity.getString(R.string.continue_course_title);
         joinTitle = contextActivity.getString(R.string.course_item_join);
-        isNeedShowFooterState = new FooterItemViewHolder.Companion.State(false);
+        isNeedShowFooter = false;
     }
 
     @Override
-    public CourseViewHolderBase onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == footerViewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == HEADER_VIEW_TYPE) {
+            View view = inflater.inflate(R.layout.course_collection_header_view, parent, false);
+            ((RecyclerView.LayoutParams) view.getLayoutParams()).setMargins(
+                    -(int) contextActivity.getResources().getDimension(R.dimen.course_list_side_padding),
+                    -(int) contextActivity.getResources().getDimension(R.dimen.course_list_between_items_padding),
+                    -(int) contextActivity.getResources().getDimension(R.dimen.course_list_side_right_padding),
+                    0); // todo refactor layouts
+            return new HeaderItemViewHolder(view);
+        } else if (viewType == FOOTER_VIEW_TYPE) {
             View view = inflater.inflate(R.layout.loading_view, parent, false);
-            return new FooterItemViewHolder(view, isNeedShowFooterState);
-        } else if (itemViewType == viewType) {
+            return new FooterItemViewHolder(view);
+        } else if (ITEM_VIEW_TYPE == viewType) {
             View view = inflater.inflate(R.layout.new_course_item, parent, false);
             return new CourseItemViewHolder(
                     view,
@@ -122,31 +127,69 @@ public class CoursesAdapter extends RecyclerView.Adapter<CourseViewHolderBase> {
     }
 
     @Override
-    public void onBindViewHolder(CourseViewHolderBase holder, int position) {
-        holder.setDataOnView(position);
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        switch (getItemViewType(position)) {
+            case HEADER_VIEW_TYPE: {
+                HeaderItemViewHolder headerItemViewHolder = (HeaderItemViewHolder) holder;
+                headerItemViewHolder.bindData(descriptionContainer);
+                break;
+            }
+            case ITEM_VIEW_TYPE: {
+                CourseItemViewHolder courseItemViewHolder = (CourseItemViewHolder) holder;
+                courseItemViewHolder.setDataOnView(position - NUMBER_OF_PRE_ITEMS);
+                break;
+            }
+            case FOOTER_VIEW_TYPE: {
+                FooterItemViewHolder footerItemViewHolder = (FooterItemViewHolder) holder;
+                footerItemViewHolder.setLoaderVisibiluty(isNeedShowFooter);
+                break;
+            }
+        }
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (position == getItemCount() - NUMBER_OF_EXTRA_ITEMS) {
-            return footerViewType;
+        if (position < NUMBER_OF_PRE_ITEMS) {
+            return HEADER_VIEW_TYPE;
+        } else if (position == getItemCount() - NUMBER_OF_POST_ITEMS) {
+            return FOOTER_VIEW_TYPE;
         } else {
-            return itemViewType;
+            return ITEM_VIEW_TYPE;
         }
     }
 
     @Override
     public int getItemCount() {
-        return courses.size() + NUMBER_OF_EXTRA_ITEMS;
+        return NUMBER_OF_PRE_ITEMS + courses.size() + NUMBER_OF_POST_ITEMS;
     }
 
-    public void showLoadingFooter(boolean isNeedShow) {
-        isNeedShowFooterState.setNeedShow(isNeedShow);
-        try {
-            notifyItemChanged(getItemCount() - 1);
-        } catch (IllegalStateException ignored) {
-            //if it is already notified
+    public void setDescriptionContainer(CoursesDescriptionContainer descriptionContainer) {
+        if (this.descriptionContainer == null && descriptionContainer != null) {
+            NUMBER_OF_PRE_ITEMS++;
+            this.descriptionContainer = descriptionContainer;
+            notifyItemInserted(0);
+        } else if (this.descriptionContainer != null && descriptionContainer == null) {
+            NUMBER_OF_PRE_ITEMS--;
+            this.descriptionContainer = null;
+            notifyItemRemoved(0);
+        } else if (this.descriptionContainer != null) {
+            this.descriptionContainer = descriptionContainer;
+            notifyItemChanged(0);
         }
     }
 
+    public void showLoadingFooter(boolean isNeedShow) {
+        isNeedShowFooter = isNeedShow;
+        postUpdateToNextFrame();
+    }
+
+    private void postUpdateToNextFrame() {
+        mainHandler.post(new Function0<Unit>() {
+            @Override
+            public Unit invoke() {
+                notifyItemChanged(getItemCount() - 1);
+                return Unit.INSTANCE;
+            }
+        });
+    }
 }

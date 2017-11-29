@@ -26,13 +26,12 @@ class SearchCoursesPresenter
         private val analytic: Analytic)
     : PresenterBase<CoursesView>() {
 
-    private var isLoading = AtomicBoolean(false)
-    private var currentPage = AtomicInteger(1)
-    private var hasNextPage = AtomicBoolean(true)
-    private var isEmptyCourses = AtomicBoolean(false)
+    private val isLoading = AtomicBoolean(false)
+    private val currentPage = AtomicInteger(1)
+    private val hasNextPage = AtomicBoolean(true)
 
     fun restoreState() {
-        if (isEmptyCourses.get() && !hasNextPage.get()) {
+        if (!hasNextPage.get()) {
             view?.showEmptyCourses()
         }
     }

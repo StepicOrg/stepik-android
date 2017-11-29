@@ -17,7 +17,8 @@ data class CoursesCarouselInfo(
             source.readParcelable<CoursesCarouselColorType>(CoursesCarouselColorType::class.java.classLoader),
             source.readString(),
             source.readParcelable<Table>(Table::class.java.classLoader),
-            source.createLongArray()
+            source.createLongArray(),
+            source.readString()
     )
 
     override fun describeContents() = 0
@@ -27,6 +28,7 @@ data class CoursesCarouselInfo(
         writeString(title)
         writeParcelable(table, flags)
         writeLongArray(courseIds)
+        writeString(description)
     }
 
     companion object {
