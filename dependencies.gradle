@@ -45,6 +45,7 @@ ext.versions = [
         recyclerAnimators    : '2.1.0',
         materialProgress     : '1.1.6',
         circleImageView      : '2.1.0',
+        bottomNavigationView : '1.2.4',
 
         stetho               : '1.4.2',
         leakCanary           : '1.5.1',
@@ -116,6 +117,7 @@ ext.libraries = [
         recyclerAnimators    : "jp.wasabeef:recyclerview-animators:$versions.recyclerAnimators",
         materialProgress     : "me.zhanghai.android.materialprogressbar:library:$versions.materialProgress",
         circleImageView      : "de.hdodenhof:circleimageview:$versions.circleImageView",
+        bottomNavigationView : "com.github.ittianyu:BottomNavigationViewEx:$versions.bottomNavigationView",
 
         // Developer Tools
         leakCanary           : "com.squareup.leakcanary:leakcanary-android:$versions.leakCanary",
