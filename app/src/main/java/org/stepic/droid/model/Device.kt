@@ -7,7 +7,8 @@ data class Device(
         var registration_id: String? = null,
         var user: Long = 0,
         var description: String? = null,
-        var client_type: ClientType
+        var client_type: ClientType,
+        val is_badges_enabled: Boolean?
 )
 
 enum class ClientType {
