@@ -28,6 +28,7 @@ import org.stepic.droid.model.CoursesCarouselInfo;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
+import org.stepic.droid.model.Tag;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.model.Video;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
@@ -53,6 +54,7 @@ import org.stepic.droid.ui.activities.SettingsActivity;
 import org.stepic.droid.ui.activities.SplashActivity;
 import org.stepic.droid.ui.activities.StepsActivity;
 import org.stepic.droid.ui.activities.StoreManagementActivity;
+import org.stepic.droid.ui.activities.TagActivity;
 import org.stepic.droid.ui.activities.TextFeedbackActivity;
 import org.stepic.droid.ui.activities.UnitsActivity;
 import org.stepic.droid.ui.activities.VideoActivity;
@@ -127,6 +129,11 @@ public class ScreenManagerImpl implements ScreenManager {
         Intent intent = new Intent(activity, CourseListActivity.class);
         intent.putExtra(CourseListActivity.COURSE_LIST_INFO_KEY, info);
         activity.startActivity(intent);
+    }
+
+    @Override
+    public void showListOfTag(Activity activity, @NotNull Tag tag) {
+        TagActivity.Companion.launch(activity, tag);
     }
 
     @Override
