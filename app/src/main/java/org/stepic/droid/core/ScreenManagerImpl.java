@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -23,6 +24,7 @@ import org.stepic.droid.base.App;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.di.AppSingleton;
 import org.stepic.droid.model.CertificateViewItem;
+import org.stepic.droid.model.CollectionDescriptionColors;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.CoursesCarouselInfo;
 import org.stepic.droid.model.Lesson;
@@ -125,9 +127,10 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void showCoursesList(Activity activity, @NotNull CoursesCarouselInfo info) {
+    public void showCoursesList(Activity activity, @NotNull CoursesCarouselInfo info, @Nullable CollectionDescriptionColors descriptionColors) {
         Intent intent = new Intent(activity, CourseListActivity.class);
         intent.putExtra(CourseListActivity.COURSE_LIST_INFO_KEY, info);
+        intent.putExtra(CourseListActivity.COURSE_DESCRIPTION_COLORS, (Parcelable) descriptionColors);
         activity.startActivity(intent);
     }
 

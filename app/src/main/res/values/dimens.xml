@@ -158,6 +158,8 @@
     <dimen name="popup_arrow_size">16dp</dimen>
 
     <dimen name="language_radius">4dp</dimen>
+
+    <dimen name="course_collection_header_min_height">120dp</dimen>
     <dimen name="tag_radius">20dp</dimen>
     <dimen name="catalog_header_bottom_margin">20dp</dimen>
 </resources>
