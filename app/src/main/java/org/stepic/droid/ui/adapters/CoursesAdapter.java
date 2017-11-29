@@ -195,8 +195,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             this.descriptionContainer = null;
             notifyItemRemoved(0);
         } else if (this.descriptionContainer != null) {
-//            this.descriptionContainer.setDescription(descriptionContainer.getDescription());
-//            this.descriptionContainer.setColors(descriptionContainer.getColors());
+            this.descriptionContainer = descriptionContainer;
             notifyItemChanged(0);
         }
     }
