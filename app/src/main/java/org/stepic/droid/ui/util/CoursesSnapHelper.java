@@ -1,6 +1,5 @@
 package org.stepic.droid.ui.util;
 
-import android.graphics.PointF;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
@@ -19,12 +18,17 @@ public class CoursesSnapHelper extends SnapHelper {
 
 
     private static final float MILLISECONDS_PER_INCH = 100f;
+    private final int rowCount;
     // Orientation helpers are lazily created per LayoutManager.
     @Nullable
     private OrientationHelper mVerticalHelper;
     @Nullable
     private OrientationHelper mHorizontalHelper;
     private RecyclerView recyclerView;
+
+    public CoursesSnapHelper(int rowCount) {
+        this.rowCount = rowCount;
+    }
 
     @Override
     public void attachToRecyclerView(RecyclerView recyclerView) throws IllegalStateException {
@@ -53,14 +57,13 @@ public class CoursesSnapHelper extends SnapHelper {
     @Nullable
     @Override
     public View findSnapView(RecyclerView.LayoutManager layoutManager) {
-        View snapView = getStartView(layoutManager, getHorizontalHelper(layoutManager));
-        Timber.d("snap view is " + snapView);
-        return snapView;
+        Timber.d("findSnapView");
+        return getStartView(layoutManager, getHorizontalHelper(layoutManager), true);
     }
 
     @Override
-    public int findTargetSnapPosition(RecyclerView.LayoutManager layoutManager, int velocityX,
-                                      int velocityY) {
+    public int findTargetSnapPosition(RecyclerView.LayoutManager layoutManager, int velocityX, int velocityY) {
+        Timber.d("findTargetSnapPosition result start");
         int result = findTagetSnapPositionInternal(layoutManager, velocityX, velocityY);
         Timber.d("findTargetSnapPosition result " + result);
         return result;
@@ -72,39 +75,20 @@ public class CoursesSnapHelper extends SnapHelper {
             return RecyclerView.NO_POSITION;
         }
 
-        View mStartMostChildView = null;
-        if (layoutManager.canScrollVertically()) {
-            mStartMostChildView = findStartView(layoutManager, getVerticalHelper(layoutManager));
-        } else if (layoutManager.canScrollHorizontally()) {
-            mStartMostChildView = findStartView(layoutManager, getHorizontalHelper(layoutManager));
-        }
-
-        if (mStartMostChildView == null) {
-            return RecyclerView.NO_POSITION;
-        }
-        final int centerPosition = layoutManager.getPosition(mStartMostChildView);
-        if (centerPosition == RecyclerView.NO_POSITION) {
-            return RecyclerView.NO_POSITION;
-        }
-
-        final boolean forwardDirection;
+        View startMostChildView = null;
+        boolean forwardDirection = velocityX > 0;
         if (layoutManager.canScrollHorizontally()) {
-            forwardDirection = velocityX > 0;
-        } else {
-            forwardDirection = velocityY > 0;
+            startMostChildView = getStartView(layoutManager, getHorizontalHelper(layoutManager), forwardDirection);
         }
-        boolean reverseLayout = false;
-        if ((layoutManager instanceof RecyclerView.SmoothScroller.ScrollVectorProvider)) {
-            RecyclerView.SmoothScroller.ScrollVectorProvider vectorProvider =
-                    (RecyclerView.SmoothScroller.ScrollVectorProvider) layoutManager;
-            PointF vectorForEnd = vectorProvider.computeScrollVectorForPosition(itemCount - 1);
-            if (vectorForEnd != null) {
-                reverseLayout = vectorForEnd.x < 0 || vectorForEnd.y < 0;
-            }
+
+        if (startMostChildView == null) {
+            return RecyclerView.NO_POSITION;
         }
-        return reverseLayout
-                ? (forwardDirection ? centerPosition - 1 : centerPosition)
-                : (forwardDirection ? centerPosition + 1 : centerPosition);
+        final int startPosition = layoutManager.getPosition(startMostChildView);
+        if (startPosition == RecyclerView.NO_POSITION) {
+            return RecyclerView.NO_POSITION;
+        }
+        return startPosition;
     }
 
     @Override
@@ -145,75 +129,54 @@ public class CoursesSnapHelper extends SnapHelper {
         return helper.getDecoratedStart(targetView) - helper.getStartAfterPadding();
     }
 
-    private View getStartView(RecyclerView.LayoutManager layoutManager,
-                              OrientationHelper helper) {
-
+    private View getStartView(
+            RecyclerView.LayoutManager layoutManager,
+            OrientationHelper helper,
+            boolean forwardDirection) {
         GridLayoutManager gridLayoutManager = (GridLayoutManager) layoutManager;
-        int firstChild = gridLayoutManager.findFirstVisibleItemPosition();
+        int firstChildPosition = gridLayoutManager.findFirstVisibleItemPosition();
 
-        boolean isLastItem = gridLayoutManager
-                .findLastCompletelyVisibleItemPosition()
-                == layoutManager.getItemCount() - 1;
+        boolean isLastItem = gridLayoutManager.findLastCompletelyVisibleItemPosition() == layoutManager.getItemCount() - 1;
 
-        if (firstChild == RecyclerView.NO_POSITION || isLastItem) {
+        if (firstChildPosition == RecyclerView.NO_POSITION || isLastItem) {
             return null;
         }
 
-        View child = layoutManager.findViewByPosition(firstChild);
+        View child = layoutManager.findViewByPosition(firstChildPosition);
 
-        if (helper.getDecoratedEnd(child) >= helper.getDecoratedMeasurement(child) / 2
-                && helper.getDecoratedEnd(child) > 0) {
+        int endOfChild = helper.getDecoratedEnd(child);
+        int threshold = (int) (helper.getDecoratedMeasurement(child) * 1);
+        Timber.d("get start view first visible = " + firstChildPosition);
+        Timber.d("forwardDirection = " + forwardDirection);
+        Timber.d("endOfChild = " + endOfChild + " threshold = " + threshold);
+        if (endOfChild >= threshold && endOfChild > 0) {
+            //here we can change "scrollable" of the list. for example divide it to 3 or 4
             return child;
+        } else if (forwardDirection) {
+            return getNextView(firstChildPosition, layoutManager);
         } else {
-            if (gridLayoutManager.findLastCompletelyVisibleItemPosition()
-                    == layoutManager.getItemCount() - 1) {
-                return null;
-            } else {
-                return layoutManager.findViewByPosition(firstChild + 1);
-            }
+            return getPreviousView(firstChildPosition, layoutManager);
         }
     }
 
-    /**
-     * Return the child view that is currently closest to the start of this parent.
-     *
-     * @param layoutManager The {@link RecyclerView.LayoutManager} associated with the attached
-     *                      {@link RecyclerView}.
-     * @param helper        The relevant {@link OrientationHelper} for the attached {@link RecyclerView}.
-     * @return the child view that is currently closest to the start of this parent.
-     */
+    private View getNextView(int currentPosition, RecyclerView.LayoutManager layoutManager) {
+        int lastPosition = layoutManager.getItemCount() - 1;
+        int currentPositionPlusRowCount = currentPosition + rowCount;
+        int nextPosition = Math.min(lastPosition, currentPositionPlusRowCount);
+        return layoutManager.findViewByPosition(nextPosition);
+    }
+
+    private View getPreviousView(int currentPosition, RecyclerView.LayoutManager layoutManager) {
+        int currentPositionMinusRowCount = currentPosition - rowCount;
+        int previousPosition = Math.max(0, currentPositionMinusRowCount);
+        return layoutManager.findViewByPosition(previousPosition);
+    }
+
     @Nullable
-    private View findStartView(RecyclerView.LayoutManager layoutManager,
-                               OrientationHelper helper) {
-        int childCount = layoutManager.getChildCount();
-        if (childCount == 0) {
-            return null;
-        }
-
-        View closestChild = null;
-        int startest = Integer.MAX_VALUE;
-
-        for (int i = 0; i < childCount; i++) {
-            final View child = layoutManager.getChildAt(i);
-            int childStart = helper.getDecoratedStart(child);
-
-            /** if child is more to start than previous closest, set it as closest  **/
-            if (childStart < startest) {
-                startest = childStart;
-                closestChild = child;
-            }
-        }
-        Timber.d("findStartView view = " + closestChild);
-        return closestChild;
+    private View findStartView(RecyclerView.LayoutManager layoutManager) {
+        return layoutManager.getChildAt(0);
     }
 
-
-    private OrientationHelper getVerticalHelper(RecyclerView.LayoutManager layoutManager) {
-        if (mVerticalHelper == null) {
-            mVerticalHelper = OrientationHelper.createVerticalHelper(layoutManager);
-        }
-        return mVerticalHelper;
-    }
 
     private OrientationHelper getHorizontalHelper(RecyclerView.LayoutManager layoutManager) {
         if (mHorizontalHelper == null) {

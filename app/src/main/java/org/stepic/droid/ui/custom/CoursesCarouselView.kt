@@ -60,7 +60,7 @@ constructor(
 
     companion object {
         private const val DEFAULT_SCROLL_POSITION = -1
-        private const val ROW_COUNT = 1
+        private const val ROW_COUNT = 2
 
         private const val continueLoadingTag = "continueLoadingTag"
     }
@@ -193,7 +193,7 @@ constructor(
         coursesRecycler.addItemDecoration(LeftSpacesDecoration(leftSpacePx))
         coursesRecycler.addItemDecoration(RightMarginForLastItems(resources.getDimensionPixelSize(R.dimen.home_right_recycler_padding_without_extra), ROW_COUNT))
         coursesRecycler.itemAnimator.changeDuration = 0
-        val snapHelper = CoursesSnapHelper()
+        val snapHelper = CoursesSnapHelper(ROW_COUNT)
         snapHelper.attachToRecyclerView(coursesRecycler)
     }
 
