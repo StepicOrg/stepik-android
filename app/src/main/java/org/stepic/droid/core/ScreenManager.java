@@ -127,8 +127,6 @@ public interface ScreenManager {
 
     void openImage(Context context, String path);
 
-    void showNotifications(@NotNull Activity activity);
-
     void showCoursesList(Activity activity, @NotNull CoursesCarouselInfo info);
 
     void showListOfTag(Activity activity, @NotNull Tag tag);
