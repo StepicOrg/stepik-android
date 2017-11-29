@@ -1,5 +1,5 @@
 package org.stepic.droid.notifications.model
 
 data class NotificationStatuses(
-        val badge: Int = 0
+        val total: Int = 0
 )

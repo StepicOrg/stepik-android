@@ -45,6 +45,8 @@ public class SharedPreferenceHelper {
     private final static String SEVEN_DAY_NOTIFICATION = "seven_day_notification";
     private static final String FILTER_RUSSIAN_LANGUAGE = "russian_lang";
     private static final String FILTER_ENGLISH_LANGUAGE = "english_lang";
+    private static final String NOTIFICATIONS_COUNT = "notifications_count";
+    private static final String NOTIFICATIONS_COUNT_TIMESTAMP = "notifications_count_timestamp";
 
     private final String ACCESS_TOKEN_TIMESTAMP = "access_token_timestamp";
     private final String AUTH_RESPONSE_JSON = "auth_response_json";
@@ -466,6 +468,19 @@ public class SharedPreferenceHelper {
 
     public boolean isGcmTokenOk() {
         return getBoolean(PreferenceType.LOGIN, GCM_TOKEN_ACTUAL);
+    }
+
+    public void setNotificationsCount(int count, long timestamp) {
+        put(PreferenceType.LOGIN, NOTIFICATIONS_COUNT, count);
+        put(PreferenceType.LOGIN, NOTIFICATIONS_COUNT_TIMESTAMP, timestamp);
+    }
+
+    public long getNotificationsCountTimestamp() {
+        return getLong(PreferenceType.LOGIN, NOTIFICATIONS_COUNT_TIMESTAMP, 0);
+    }
+
+    public int getNotificationsCount() {
+        return getInt(PreferenceType.LOGIN, NOTIFICATIONS_COUNT, 0);
     }
 
     public void storeVideoPlaybackRate(@NotNull VideoPlaybackRate videoPlaybackRate) {

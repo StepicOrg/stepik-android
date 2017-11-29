@@ -1,11 +1,12 @@
 package org.stepic.droid.notifications
 
+import android.util.Log
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.google.gson.Gson
-import me.leolin.shortcutbadger.ShortcutBadger
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
+import org.stepic.droid.notifications.badges.NotificationsBadgesManager
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.notifications.model.NotificationStatuses
 import org.stepic.droid.preferences.SharedPreferenceHelper
@@ -23,6 +24,7 @@ class StepicFcmListenerService : FirebaseMessagingService() {
     override fun onMessageReceived(message: RemoteMessage) {
         try {
             message.data?.let { data ->
+                Log.d(javaClass.canonicalName, data.toString())
                 val userId: Long? = hacker.sharedPreferenceHelper.profile?.id
                 val userIdServerString = data["user_id"] ?: ""
                 val userIdServer = Integer.parseInt(userIdServerString)
@@ -30,9 +32,10 @@ class StepicFcmListenerService : FirebaseMessagingService() {
                     return
                 }
 
+                val rawMessageObject = data["object"]
                 when (data["type"]) {
-                    NOTIFICATION_TYPE -> processNotification(data)
-                    NOTIFICATION_STATUSES_TYPE -> processNotificationStatuses(data)
+                    NOTIFICATION_TYPE -> processNotification(rawMessageObject)
+                    NOTIFICATION_STATUSES_TYPE -> processNotificationStatuses(rawMessageObject, message.sentTime)
                 }
             }
         } catch (e: IOException) {
@@ -42,17 +45,17 @@ class StepicFcmListenerService : FirebaseMessagingService() {
         }
     }
 
-    private fun processNotification(data: MutableMap<String, String>) {
-        val stepicNotification = Gson().fromJson(data["object"], Notification::class.java)
+    private fun processNotification(rawMessageObject: String?) {
+        val stepicNotification = Gson().fromJson(rawMessageObject, Notification::class.java)
         stepicNotification?.let {
             hacker.stepikNotificationManager.showNotification(it)
         }
     }
 
-    private fun processNotificationStatuses(data: MutableMap<String, String>) {
-        val notificationStatuses = Gson().fromJson(data["notification"], NotificationStatuses::class.java)
+    private fun processNotificationStatuses(rawMessageObject: String?, timestamp: Long) {
+        val notificationStatuses = Gson().fromJson(rawMessageObject, NotificationStatuses::class.java)
         notificationStatuses?.let {
-            ShortcutBadger.applyCount(applicationContext, it.badge)
+            hacker.notificationsBadgesManager.setCounter(it, timestamp)
         }
     }
 
@@ -67,6 +70,9 @@ class HackFcmListener {
 
     @Inject
     lateinit var analytic: Analytic
+
+    @Inject
+    lateinit var notificationsBadgesManager: NotificationsBadgesManager
 
     init {
         App.component().inject(this)
