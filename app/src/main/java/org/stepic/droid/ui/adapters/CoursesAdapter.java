@@ -16,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
+import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.presenters.ContinueCoursePresenter;
@@ -31,6 +32,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import kotlin.Unit;
+import kotlin.jvm.functions.Function0;
+
 public class CoursesAdapter extends RecyclerView.Adapter<CourseViewHolderBase> {
 
     @Inject
@@ -44,6 +48,9 @@ public class CoursesAdapter extends RecyclerView.Adapter<CourseViewHolderBase> {
 
     @Inject
     Analytic analytic;
+
+    @Inject
+    MainHandler mainHandler;
 
     private Drawable coursePlaceholder;
 
@@ -142,11 +149,17 @@ public class CoursesAdapter extends RecyclerView.Adapter<CourseViewHolderBase> {
 
     public void showLoadingFooter(boolean isNeedShow) {
         isNeedShowFooterState.setNeedShow(isNeedShow);
-        try {
-            notifyItemChanged(getItemCount() - 1);
-        } catch (IllegalStateException ignored) {
-            //if it is already notified
-        }
+        postUpdateToNextFrame();
+    }
+
+    private void postUpdateToNextFrame() {
+        mainHandler.post(new Function0<Unit>() {
+            @Override
+            public Unit invoke() {
+                notifyItemChanged(getItemCount() - 1);
+                return Unit.INSTANCE;
+            }
+        });
     }
 
 }
