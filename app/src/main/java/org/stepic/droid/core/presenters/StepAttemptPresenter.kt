@@ -34,6 +34,7 @@ class StepAttemptPresenter
 
     companion object {
         private val FIRST_DELAY = 1000L
+        private val MAX_RATE_TIMES = 5
     }
 
     private val minNumberOfSolvedStepsForRate = 5
@@ -135,6 +136,7 @@ class StepAttemptPresenter
     @JvmOverloads
     @MainThread
     fun getStatusOfSubmission(step: Step, attemptId: Long, fromPosting: Boolean = false) {
+
         fun getStatusOfSubmission(numberOfTry: Int) {
             worker?.schedule(
                     Runnable {
@@ -193,6 +195,7 @@ class StepAttemptPresenter
                                         && !sharedPreferenceHelper.wasRateHandled()
                                         && isUserSolveEnough()
                                         && isRateDelayGreater()
+                                        && isRateWasShownFewTimes()
 
                                 if (!needShowStreakDialog && needShowRateAppDialog) {
                                     sharedPreferenceHelper.rateShown(DateTimeHelper.nowUtc())
@@ -230,9 +233,15 @@ class StepAttemptPresenter
             return true // we can show it
         }
 
-        val delay = firebaseRemoteConfig.getLong(RemoteConfig.minDelayRateDialogSec).toInt()
+        val delayMillis = firebaseRemoteConfig.getLong(RemoteConfig.MIN_DELAY_RATE_DIALOG_SEC).toInt() * 1000L
 
-        return DateTimeHelper.isBeforeNowUtc(delay + wasShownMillis) //if delay is expired (before now) -> show
+        return DateTimeHelper.isBeforeNowUtc(delayMillis + wasShownMillis) //if delay is expired (before now) -> show
+    }
+
+    @WorkerThread
+    private fun isRateWasShownFewTimes(): Boolean {
+        val wasShown = sharedPreferenceHelper.howManyRateWasShownBefore()
+        return wasShown <= MAX_RATE_TIMES
     }
 
     @WorkerThread
@@ -280,7 +289,6 @@ class StepAttemptPresenter
             mainHandler.post {
                 view?.onConnectionFailWhenLoadAttempt()
             }
-            analytic.reportError(Analytic.Error.NO_INTERNET_EXISTING_ATTEMPTS, ex)
         }
     }
 
@@ -295,7 +303,6 @@ class StepAttemptPresenter
             mainHandler.post {
                 view?.onConnectionFailWhenLoadAttempt()
             }
-            analytic.reportError(Analytic.Error.NO_INTERNET_EXISTING_ATTEMPTS, ex)
         }
 
     }

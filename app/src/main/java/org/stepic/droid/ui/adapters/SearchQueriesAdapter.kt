@@ -18,10 +18,11 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.model.SearchQuery
 import org.stepic.droid.model.SearchQuerySource
+import org.stepic.droid.ui.listeners.OnItemClickListener
 import javax.inject.Inject
 
 
-class SearchQueriesAdapter(context: Context) : RecyclerView.Adapter<SearchQueriesAdapter.SearchQueryViewHolder>() {
+class SearchQueriesAdapter(context: Context) : RecyclerView.Adapter<SearchQueriesAdapter.SearchQueryViewHolder>(), OnItemClickListener {
     @Inject
     lateinit var analytic: Analytic
 
@@ -58,14 +59,21 @@ class SearchQueriesAdapter(context: Context) : RecyclerView.Adapter<SearchQuerie
 
         holder.searchIcon.setImageResource(source.iconRes)
         holder.searchQuery.text = query
-        holder.itemView.setOnClickListener {
-            analytic.reportEventValue(Analytic.Search.SEARCH_SUGGESTION_CLICKED, (query.length - constraint.length).toLong())
-            searchView?.setQuery(query.toString(), true)
-        }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-            SearchQueryViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.search_query_item, parent, false))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchQueryViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.search_query_item, parent, false)
+        return SearchQueryViewHolder(view, this)
+    }
+
+    override fun onItemClick(position: Int) {
+        if (position < 0 || position >= items.size) {
+            return
+        }
+        val (query, _) = items[position]
+        analytic.reportEventValue(Analytic.Search.SEARCH_SUGGESTION_CLICKED, (query.length - constraint.length).toLong())
+        searchView?.setQuery(query.toString(), true)
+    }
 
 
     override fun getItemCount() = items.size
@@ -85,8 +93,14 @@ class SearchQueriesAdapter(context: Context) : RecyclerView.Adapter<SearchQuerie
         notifyDataSetChanged()
     }
 
-    class SearchQueryViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    class SearchQueryViewHolder(view: View, onItemClickListener: OnItemClickListener) : RecyclerView.ViewHolder(view) {
         val searchQuery: TextView = view.searchQuery
         val searchIcon: ImageView = view.searchIcon
+
+        init {
+            itemView.setOnClickListener {
+                onItemClickListener.onItemClick(adapterPosition)
+            }
+        }
     }
 }

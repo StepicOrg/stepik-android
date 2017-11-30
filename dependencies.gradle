@@ -1,0 +1,140 @@
+ext.versions = [
+        code                 : 1973,
+        name                 : '1.48',
+
+        minSdk               : 15,
+        targetSdk            : 25,
+        compileSdk           : 26,
+        buildTools           : '26.0.2',
+
+        androidGradlePlugin  : '3.0.0',
+        kotlin               : '1.1.51',
+        googleServicesVersion: '3.0.0',
+
+        dagger               : '2.10',
+        butterKnife          : '8.8.1',
+
+        rxJava2              : '2.1.5',
+        rxAndroid            : '2.0.1',
+
+        supportLibs          : '26.1.0',
+        constraintLayout     : '1.0.2',
+        exoPlayer            : 'r2.5.3',
+
+        retrofit             : '2.3.0',
+        gson                 : '2.7',
+        jsoup                : '1.8.3',
+
+        glide                : '3.7.0',
+
+        appMetrica           : '2.78',
+
+        calligraphy          : '2.1.0',
+
+        firebase             : '11.2.2',
+
+        facebook             : '4.17.0',
+        vk                   : '1.6.5',
+
+        timber               : '4.5.1',
+
+        materialDialog       : '2.0',
+        numberPicker         : '1.2.1',
+        photoView            : '1.3.1',
+        advancedRecycler     : '0.11.0@aar',
+        recyclerAnimators    : '2.1.0',
+        materialProgress     : '1.1.6',
+        circleImageView      : '2.1.0',
+        bottomNavigationView : '1.2.4',
+
+        stetho               : '1.4.2',
+        leakCanary           : '1.5.1',
+
+        junit                : '4.12',
+        robolectric          : '3.1.2',
+        mockito              : '2.7.21',
+        joda                 : '2.8',
+        hamcrest             : '1.3',
+        espresso             : '2.2.2',
+        supportTestRunner    : '0.5',
+]
+
+ext.gradlePlugins = [
+        googleServices: "com.google.gms:google-services:$versions.googleServicesVersion",
+        kotlin        : "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin",
+        android       : "com.android.tools.build:gradle:$versions.androidGradlePlugin",
+]
+
+ext.libraries = [
+        kotlinStd            : "org.jetbrains.kotlin:kotlin-stdlib:$versions.kotlin",
+
+        dagger               : "com.google.dagger:dagger:$versions.dagger",
+        daggerCompiler       : "com.google.dagger:dagger-compiler:$versions.dagger",
+        butterKnife          : "com.jakewharton:butterknife:$versions.butterKnife",
+        butterKnifeCompiler  : "com.jakewharton:butterknife-compiler:$versions.butterKnife",
+
+        rxJava2              : "io.reactivex.rxjava2:rxjava:$versions.rxJava2",
+        rxAndroid            : "io.reactivex.rxjava2:rxandroid:$versions.rxAndroid",
+
+        supportAppCompat     : "com.android.support:appcompat-v7:$versions.supportLibs",
+        supportDesign        : "com.android.support:design:$versions.supportLibs",
+        supportRecyclerView  : "com.android.support:recyclerview-v7:$versions.supportLibs",
+        supportCardView      : "com.android.support:cardview-v7:$versions.supportLibs",
+        constraintLayout     : "com.android.support.constraint:constraint-layout:$versions.constraintLayout",
+        exoPlayer            : "com.google.android.exoplayer:exoplayer-core:$versions.exoPlayer",
+
+        retrofit             : "com.squareup.retrofit2:retrofit:$versions.retrofit",
+        retrofitGsonConverter: "com.squareup.retrofit2:converter-gson:$versions.retrofit",
+        retrofitRxJavaAdapter: "com.squareup.retrofit2:adapter-rxjava2:$versions.retrofit",
+        gson                 : "com.google.code.gson:gson:$versions.gson",
+        jsoup                : "org.jsoup:jsoup:$versions.jsoup",
+        stetho               : "com.facebook.stetho:stetho:$versions.stetho",
+        stethoOkHttp         : "com.facebook.stetho:stetho-okhttp3:$versions.stetho",
+
+        glide                : "com.github.bumptech.glide:glide:$versions.glide",
+
+        appMetrica           : "com.yandex.android:mobmetricalib:$versions.appMetrica",
+
+        calligraphy          : "uk.co.chrisjenx:calligraphy:$versions.calligraphy",
+
+        firebaseMessaging    : "com.google.firebase:firebase-messaging:$versions.firebase",
+        firebaseAppindexing  : "com.google.firebase:firebase-appindexing:$versions.firebase",
+        googleauth           : "com.google.android.gms:play-services-auth:$versions.firebase",
+        firebaseCore         : "com.google.firebase:firebase-core:$versions.firebase",
+        firebaseCrash        : "com.google.firebase:firebase-crash:$versions.firebase",
+        firebaseConfig       : "com.google.firebase:firebase-config:$versions.firebase",
+
+        facebookSdk          : "com.facebook.android:facebook-android-sdk:$versions.facebook",
+        vkSdk                : "com.vk:androidsdk:$versions.vk",
+
+        timber               : "com.jakewharton.timber:timber:$versions.timber",
+
+        // Candidates for removal
+        materialDialog       : "com.github.javiersantos:MaterialStyledDialogs:$versions.materialDialog",
+        numberPicker         : "biz.kasual:materialnumberpicker:$versions.numberPicker",
+        photoView            : "com.github.chrisbanes:PhotoView:$versions.photoView",
+        advancedRecycler     : "com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:$versions.advancedRecycler",
+        recyclerAnimators    : "jp.wasabeef:recyclerview-animators:$versions.recyclerAnimators",
+        materialProgress     : "me.zhanghai.android.materialprogressbar:library:$versions.materialProgress",
+        circleImageView      : "de.hdodenhof:circleimageview:$versions.circleImageView",
+        bottomNavigationView : "com.github.ittianyu:BottomNavigationViewEx:$versions.bottomNavigationView",
+
+        // Developer Tools
+        leakCanary           : "com.squareup.leakcanary:leakcanary-android:$versions.leakCanary",
+        leakCanaryNoOp       : "com.squareup.leakcanary:leakcanary-android-no-op:$versions.leakCanary",
+
+        // Test dependencies
+        junit                : "junit:junit:$versions.junit",
+        robolectric          : "org.robolectric:robolectric:$versions.robolectric",
+        mockitoCore          : "org.mockito:mockito-core:$versions.mockito",
+        jodaTime             : "joda-time:joda-time:$versions.joda",
+        hamcrest             : "org.hamcrest:hamcrest-library:$versions.hamcrest",
+
+        //Android Test Dependencies
+        supportAnnotations   : "com.android.support:support-annotations:$versions.supportLibs",
+        supportTestRunner    : "com.android.support.test:runner:$versions.supportTestRunner",
+        supportTestRules     : "com.android.support.test:rules:$versions.supportTestRunner",
+        espressoCore         : "com.android.support.test.espresso:espresso-core:$versions.espresso",
+        espressoContrib      : "com.android.support.test.espresso:espresso-contrib:$versions.espresso",
+        espressoIntents      : "com.android.support.test.espresso:espresso-intents:$versions.espresso",
+]

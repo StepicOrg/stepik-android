@@ -12,7 +12,7 @@ class InvitationPresenter
         private val analytic: Analytic) : PresenterBase<InvitationView>() {
 
     fun needShowInvitationDialog(course: Course) {
-        analytic.reportEvent(Analytic.Interaction.SHOW_MATERIAL_DIALOG_INVITATION)
+        analytic.reportEvent(Analytic.Interaction.INVITE_DIALOG_SHOWN)
         view?.onShowInvitationDialog(course)
     }
 

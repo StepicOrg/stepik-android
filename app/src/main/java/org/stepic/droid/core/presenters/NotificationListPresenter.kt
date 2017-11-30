@@ -6,7 +6,7 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.Client
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.configuration.Config
-import org.stepic.droid.core.internet_state.contract.InternetEnabledListener
+import org.stepic.droid.core.internetstate.contract.InternetEnabledListener
 import org.stepic.droid.core.presenters.contracts.NotificationListView
 import org.stepic.droid.di.notifications.NotificationsScope
 import org.stepic.droid.model.NotificationCategory

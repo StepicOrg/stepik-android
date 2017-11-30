@@ -44,8 +44,8 @@ import org.stepic.droid.base.App;
 import org.stepic.droid.base.Client;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.core.LocalProgressManager;
-import org.stepic.droid.core.downloadingProgress.DownloadingPresenter;
-import org.stepic.droid.core.downloadingProgress.DownloadingView;
+import org.stepic.droid.core.downloadingstate.DownloadingPresenter;
+import org.stepic.droid.core.downloadingstate.DownloadingView;
 import org.stepic.droid.core.dropping.contract.DroppingListener;
 import org.stepic.droid.core.presenters.CalendarPresenter;
 import org.stepic.droid.core.presenters.CourseFinderPresenter;
@@ -457,7 +457,7 @@ public class SectionsFragment
 
     @Override
     public void onRefresh() {
-        getAnalytic().reportEvent(Analytic.Interaction.REFRESH_SECTION);
+        getAnalytic().reportEvent(Analytic.Interaction.REFRESH_SECTIONS);
         if (course != null) {
             sectionsPresenter.showSections(course, true);
         } else {

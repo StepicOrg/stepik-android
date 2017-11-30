@@ -17,8 +17,11 @@ fun Fragment.initCenteredToolbar(@StringRes titleRes: Int,
     centeredToolbarTitle.setText(titleRes)
 }
 
-fun Fragment.initCenteredToolbar(title: String, showHomeButton: Boolean = false) {
-    initCenteredToolbarBase(showHomeButton)
+@JvmOverloads
+fun Fragment.initCenteredToolbar(title: String,
+                                 showHomeButton: Boolean = false,
+                                 @DrawableRes homeIndicatorRes: Int = -1) {
+    initCenteredToolbarBase(showHomeButton, homeIndicatorRes)
     centeredToolbarTitle.text = title
 }
 

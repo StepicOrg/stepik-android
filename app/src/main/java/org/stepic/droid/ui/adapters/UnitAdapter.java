@@ -23,7 +23,7 @@ import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.core.ScreenManager;
-import org.stepic.droid.core.downloadingProgress.DownloadingPresenter;
+import org.stepic.droid.core.downloadingstate.DownloadingPresenter;
 import org.stepic.droid.core.presenters.DownloadingInteractionPresenter;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Progress;

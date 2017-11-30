@@ -1,23 +1,16 @@
 package org.stepic.droid.ui.adapters.viewhoders
 
+import android.support.v7.widget.RecyclerView
 import android.view.View
 import kotlinx.android.synthetic.main.loading_view.view.*
+import org.stepic.droid.ui.util.changeVisibility
 import timber.log.Timber
 
-class FooterItemViewHolder(view: View, private val state: State) : CourseViewHolderBase(view) {
+class FooterItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     private val loadingRoot: View = view.loadingRoot
 
-    override fun setDataOnView(position: Int) {
-        Timber.d("loadMore loadView.state = ${state.isNeedShow}")
-        loadingRoot.visibility = if (state.isNeedShow) {
-            View.VISIBLE
-        } else {
-            View.GONE
-        }
-    }
-
-    companion object {
-        data class State(var isNeedShow: Boolean)
+    fun setLoaderVisibiluty(isNeedShow: Boolean) {
+        loadingRoot.changeVisibility(isNeedShow)
     }
 }

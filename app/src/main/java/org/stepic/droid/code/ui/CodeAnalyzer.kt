@@ -34,7 +34,8 @@ constructor(private val autocompleteContainer: AutocompleteContainer) {
 
     private val quotes = hashMapOf(
         "\"" to "\"",
-        "'"  to "'"
+        "'"  to "'",
+        "`" to "`"
     )
 
     private val pairedSymbols = brackets + quotes

@@ -15,7 +15,7 @@ class TextFeedbackPresenter
         private val threadPoolExecutor: ThreadPoolExecutor,
         private val api: Api,
         private val analytic: Analytic
-) : PresenterBase <TextFeedbackView>() {
+) : PresenterBase<TextFeedbackView>() {
 
     fun sendFeedback(email: String, description: String) {
         threadPoolExecutor.execute {
@@ -25,11 +25,10 @@ class TextFeedbackPresenter
                     analytic.reportEvent(Analytic.Feedback.FEEDBACK_SENT)
                     mainHandler.post { view?.onFeedbackSent() }
                 } else {
-                    analytic.reportEvent(Analytic.Feedback.FAILED_ON_SERVER)
+                    analytic.reportEvent(Analytic.Error.FEEDBACK_BROKEN)
                     mainHandler.post { view?.onServerFail() }
                 }
             } catch (exception: Exception) {
-                analytic.reportEvent(Analytic.Feedback.INTERNET_FAIL)
                 mainHandler.post { view?.onInternetProblems() }
             }
         }

@@ -1,11 +1,10 @@
 package org.stepic.droid.ui.adapters.viewhoders
 
 import android.app.Activity
-import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.support.annotation.ColorInt
 import android.support.annotation.DrawableRes
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
+import android.support.v7.widget.RecyclerView
 import android.view.HapticFeedbackConstants
 import android.view.View
 import android.widget.PopupMenu
@@ -22,6 +21,7 @@ import org.stepic.droid.core.presenters.ContinueCoursePresenter
 import org.stepic.droid.core.presenters.DroppingPresenter
 import org.stepic.droid.model.Course
 import org.stepic.droid.model.CoursesCarouselColorType
+import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.util.*
 import java.util.*
@@ -37,11 +37,9 @@ class CourseItemViewHolder(
         private val joinTitle: String,
         private val continueTitle: String,
         private val coursePlaceholder: Drawable,
-        private val isContinueExperimentEnabled: Boolean,
-        private val courses: List<Course>,
         private val droppingPresenter: DroppingPresenter,
         private val continueCoursePresenter: ContinueCoursePresenter,
-        private val colorType: CoursesCarouselColorType) : CourseViewHolderBase(view) {
+        private val colorType: CoursesCarouselColorType) : RecyclerView.ViewHolder(view) {
 
     @Inject
     lateinit var screenManager: ScreenManager
@@ -77,28 +75,21 @@ class CourseItemViewHolder(
     private val courseRatingImage = view.courseRatingImage
     private val courseRatingText = view.courseRatingText
 
+    private var course: Course? = null
 
     init {
         App.component().inject(this)
 
         applyColorType(colorType)
 
+        imageViewTarget = RoundedBitmapImageViewTarget(itemView.resources.getDimension(R.dimen.course_image_radius), courseItemImage)
 
-        imageViewTarget = object : BitmapImageViewTarget(itemView.courseItemImage) {
-            override fun setResource(resource: Bitmap) {
-                val circularBitmapDrawable = RoundedBitmapDrawableFactory.create(itemView.context.resources, resource)
-                circularBitmapDrawable.cornerRadius = itemView.context.resources.getDimension(R.dimen.course_image_radius)
-                courseItemImage.setImageDrawable(circularBitmapDrawable)
-            }
-        }
         courseWidgetButton.setOnClickListener {
-            val adapterPosition = adapterPosition
-            val course = getCourseSafety(adapterPosition)
-            if (course != null) {
-                onClickWidgetButton(course, isEnrolled(course))
+            course?.let {
+                onClickWidgetButton(it, isEnrolled(it))
             }
         }
-        itemView.setOnClickListener({ onClickCourse(adapterPosition) })
+        itemView.setOnClickListener { onClickCourse() }
 
         itemView.setOnLongClickListener({ v ->
             v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
@@ -107,14 +98,14 @@ class CourseItemViewHolder(
         })
 
         itemView.courseItemMore.setOnClickListener { view ->
-            getCourseSafety(adapterPosition)?.let {
+            course?.let {
                 showMore(view, it)
             }
         }
 
         courseWidgetInfo.applyToButton(infoTitle, continueColor, colorType.continueResource)
         courseWidgetInfo.setOnClickListener {
-            getCourseSafety(adapterPosition)?.let {
+            course?.let {
                 if (isEnrolled(it)) {
                     screenManager.showSections(contextActivity, it)
                 } else {
@@ -154,39 +145,25 @@ class CourseItemViewHolder(
         morePopupMenu.show()
     }
 
-    private fun onClickCourse(position: Int) {
-        if (position >= courses.size || position < 0) return
+    private fun onClickCourse() = course?.let {
         analytic.reportEvent(Analytic.Interaction.CLICK_COURSE)
-        val course = courses[position]
-        if (course.enrollment != 0) {
-            analytic.reportEvent(if (isContinueExperimentEnabled) Analytic.ContinueExperiment.COURSE_NEW else Analytic.ContinueExperiment.COURSE_OLD)
-            screenManager.showSections(contextActivity, course)
+        if (it.enrollment != 0) {
+            screenManager.showSections(contextActivity, it)
         } else {
-            screenManager.showCourseDescription(contextActivity, course)
+            screenManager.showCourseDescription(contextActivity, it)
         }
     }
 
     private fun onClickWidgetButton(course: Course, enrolled: Boolean) {
         if (enrolled) {
             analytic.reportEvent(Analytic.Interaction.CLICK_CONTINUE_COURSE)
-            analytic.reportEvent(if (isContinueExperimentEnabled) Analytic.ContinueExperiment.CONTINUE_NEW else Analytic.ContinueExperiment.CONTINUE_OLD)
             continueCoursePresenter.continueCourse(course) //provide position?
         } else {
             screenManager.showCourseDescription(contextActivity, course, true)
         }
     }
 
-    private fun getCourseSafety(adapterPosition: Int): Course? {
-        return if (adapterPosition >= courses.size || adapterPosition < 0) {
-            null
-        } else {
-            courses[adapterPosition]
-        }
-    }
-
-    override fun setDataOnView(position: Int) {
-        val course = courses[position]
-
+    fun setDataOnView(course: Course) {
         courseItemName.text = course.title
         Glide
                 .with(itemView.context)
@@ -218,6 +195,7 @@ class CourseItemViewHolder(
         coursePropertiesContainer.changeVisibility(showContainer)
 
         courseItemMore.changeVisibility(showMore)
+        this.course = course
     }
 
     private fun bindProgressView(course: Course): Boolean {

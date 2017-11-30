@@ -23,6 +23,11 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
+            <include
+                android:id="@+id/homeStreak"
+                layout="@layout/home_streak_view"
+                android:visibility="gone" />
+
             <FrameLayout
                 android:id="@+id/homeFastContinueContainer"
                 android:layout_width="match_parent"

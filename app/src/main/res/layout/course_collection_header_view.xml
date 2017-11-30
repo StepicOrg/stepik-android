@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.stepic.droid.ui.custom.PlaceholderTextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:minHeight="@dimen/course_collection_header_min_height"
+    xmlns:android="http://schemas.android.com/apk/res/android" />

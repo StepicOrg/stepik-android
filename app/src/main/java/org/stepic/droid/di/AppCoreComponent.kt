@@ -12,12 +12,14 @@ import org.stepic.droid.di.certificates.CertificateComponent
 import org.stepic.droid.di.course_general.CourseGeneralComponent
 import org.stepic.droid.di.downloads.DownloadsComponent
 import org.stepic.droid.di.feedback.FeedbackComponent
+import org.stepic.droid.di.home.HomeComponent
 import org.stepic.droid.di.lesson.LessonComponent
 import org.stepic.droid.di.login.LoginComponent
 import org.stepic.droid.di.mainscreen.MainScreenComponent
 import org.stepic.droid.di.notifications.NotificationsComponent
 import org.stepic.droid.di.profile.ProfileComponent
 import org.stepic.droid.di.routing.RoutingComponent
+import org.stepic.droid.di.splash.SplashComponent
 import org.stepic.droid.di.storage.StorageComponent
 import org.stepic.droid.di.video.VideoComponent
 import org.stepic.droid.model.Course
@@ -33,9 +35,19 @@ import org.stepic.droid.ui.adapters.viewhoders.CourseItemViewHolder
 import org.stepic.droid.ui.custom.*
 import org.stepic.droid.ui.custom_exo.PlaybackControlView
 import org.stepic.droid.ui.dialogs.*
+import org.stepic.droid.ui.fragments.HomeFragment
 
 @AppSingleton
-@Component(dependencies = arrayOf(StorageComponent::class), modules = arrayOf(AppCoreModule::class, RepositoryModule::class, AppStepModule::class, AppFiltersModule::class))
+@Component(dependencies = arrayOf(StorageComponent::class),
+        modules = arrayOf(
+                AppCoreModule::class,
+                RepositoryModule::class,
+                AppStepModule::class,
+                AppFiltersModule::class,
+                GoogleModule::class,
+                FirebaseModule::class,
+                RecentActiveCourseModule::class
+        ))
 interface AppCoreComponent {
 
     @Component.Builder
@@ -48,6 +60,8 @@ interface AppCoreComponent {
         fun context(context: Context): Builder
     }
 
+    fun splashComponent(): SplashComponent.Builder
+
     fun feedbackComponentBuilder(): FeedbackComponent.Builder
 
     fun downloadsComponentBuilder(): DownloadsComponent.Builder
@@ -55,6 +69,8 @@ interface AppCoreComponent {
     fun loginComponentBuilder(): LoginComponent.Builder
 
     fun profileComponentBuilder(): ProfileComponent.Builder
+
+    fun homeComponentBuilder(): HomeComponent.Builder
 
     fun certificateComponentBuilder(): CertificateComponent.Builder
 
@@ -113,10 +129,6 @@ interface AppCoreComponent {
     fun inject(instanceIdService: HackerFcmInstanceId)
 
     fun inject(receiver: NotificationBroadcastReceiver)
-
-    fun inject(needUpdatingDialog: NeedUpdatingDialog)
-
-    fun inject(service: UpdateWithApkService)
 
     fun inject(chooseStorageDialog: ChooseStorageDialog)
 

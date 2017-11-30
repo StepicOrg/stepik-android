@@ -10,14 +10,15 @@ import android.support.v7.app.AppCompatActivity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.model.CertificateViewItem;
+import org.stepic.droid.model.CollectionDescriptionColors;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.CoursesCarouselInfo;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
+import org.stepic.droid.model.Tag;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.model.Video;
-import org.stepic.droid.storage.operations.Table;
 import org.stepic.droid.ui.fragments.CommentsFragment;
 import org.stepic.droid.web.ViewAssignment;
 
@@ -35,7 +36,7 @@ public interface ScreenManager {
 
     void showLogin(Activity sourceActivity, @Nullable Course course, @Nullable String email);
 
-    void showMainFeed(Context sourceActivity, @Nullable Course course);
+    void showMainFeedAfterLogin(Activity sourceActivity, @Nullable Course course);
 
     void showMainFeedFromSplash(Activity sourceActivity);
 
@@ -127,7 +128,8 @@ public interface ScreenManager {
 
     void openImage(Context context, String path);
 
-    void showNotifications(@NotNull Activity activity);
 
-    void showCoursesList(Activity activity, @NotNull CoursesCarouselInfo info);
+    void showCoursesList(Activity activity, @NotNull CoursesCarouselInfo info, @Nullable CollectionDescriptionColors collectionDescriptionColors);
+
+    void showListOfTag(Activity activity, @NotNull Tag tag);
 }

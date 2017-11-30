@@ -72,7 +72,7 @@
                 android:visibility="gone"
                 tools:visibility="visible"/>
 
-            <org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout
+            <org.stepic.droid.ui.custom.LatexSupportableExpandableFrameLayout
                 android:id="@+id/hint_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

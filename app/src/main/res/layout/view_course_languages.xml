@@ -6,11 +6,7 @@
 
     <TextView
         android:id="@+id/languageTitle"
-        style="@style/LanguageTitle"
-        android:layout_marginBottom="20dp"
-        android:layout_marginLeft="@dimen/course_list_side_padding"
-        android:layout_marginStart="@dimen/course_list_side_padding"
-        android:layout_marginTop="@dimen/guideline_standard_padding"
+        style="@style/CatalogItemTitle"
         android:text="@string/language_of_courses"/>
 
 
