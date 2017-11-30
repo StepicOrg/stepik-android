@@ -4,6 +4,7 @@ import android.app.DownloadManager
 import android.os.Build
 import android.webkit.CookieManager
 import org.stepic.droid.concurrency.MainHandler
+import org.stepic.droid.notifications.badges.NotificationsBadgesManager
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.storage.operations.DatabaseFacade
@@ -18,7 +19,9 @@ class StepikLogoutManager
                     private val userPreferences: UserPreferences,
                     private val systemDownloadManager: DownloadManager,
                     private val sharedPreferenceHelper: SharedPreferenceHelper,
-                    private val databaseFacade: DatabaseFacade) {
+                    private val databaseFacade: DatabaseFacade,
+                    private val notificationsBadgesManager: NotificationsBadgesManager
+) {
 
     fun logout(afterClearData: () -> Unit) {
         threadPoolExecutor.execute {
@@ -40,6 +43,7 @@ class StepikLogoutManager
                 RWLocks.ClearEnrollmentsLock.writeLock().unlock()
             }
             mainHandler.post {
+                notificationsBadgesManager.clearCounter()
                 afterClearData.invoke()
             }
         }

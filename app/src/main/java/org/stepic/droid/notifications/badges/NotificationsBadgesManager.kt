@@ -6,6 +6,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import io.reactivex.Scheduler
 import io.reactivex.Single
 import me.leolin.shortcutbadger.ShortcutBadger
+import org.stepic.droid.base.ListenerContainer
 import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
@@ -25,6 +26,7 @@ constructor(
         private val context: Context,
         private val sharedPreferenceHelper: SharedPreferenceHelper,
         private val firebaseRemoteConfig: FirebaseRemoteConfig,
+        private val listenerContainer: ListenerContainer<NotificationsBadgesListener>,
 
         @BackgroundScheduler
         private val scheduler: Scheduler,
@@ -70,10 +72,23 @@ constructor(
                 .subscribe { count, _ -> updateCounter(count) }
     }
 
+    /**
+     * Used to clear counters on logout
+     */
+    fun clearCounter() {
+        updateCounter(0)
+    }
+
     @MainThread
     private fun updateCounter(count: Int) {
-        if (firebaseRemoteConfig.getBoolean(RemoteConfig.SHOW_NOTIFICATOINS_BADGES)) {
+        if (firebaseRemoteConfig.getBoolean(RemoteConfig.SHOW_NOTIFICATOINS_BADGES) && count != 0) {
             ShortcutBadger.applyCount(context, count)
+            listenerContainer.asIterable().forEach {
+                it.setBadge(count)
+            }
+        } else {
+            ShortcutBadger.applyCount(context, 0)
+            listenerContainer.asIterable().forEach(NotificationsBadgesListener::hideBadge)
         }
     }
 
