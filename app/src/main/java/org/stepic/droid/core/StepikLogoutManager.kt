@@ -5,7 +5,6 @@ import android.os.Build
 import android.webkit.CookieManager
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.notifications.badges.NotificationsBadgesLogoutPoster
-import org.stepic.droid.notifications.badges.NotificationsBadgesManager
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.storage.operations.DatabaseFacade
@@ -53,10 +52,11 @@ class StepikLogoutManager
     private fun removeCookiesCompat() {
         CookieManager.getInstance()
         if (Build.VERSION.SDK_INT < 21) {
+            @Suppress("DEPRECATION")
             CookieManager.getInstance().removeAllCookie()
         } else {
             mainHandler.post {
-                CookieManager.getInstance().removeAllCookies() {}
+                CookieManager.getInstance().removeAllCookies {}
             }
         }
     }
