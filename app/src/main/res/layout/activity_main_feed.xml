@@ -5,16 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
+    <com.aurelhubert.ahbottomnavigation.AHBottomNavigation
         android:id="@+id/navigationView"
         android:layout_width="match_parent"
         android:layout_height="@dimen/bottom_navigation_height"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
         android:background="@color/white"
-        app:itemIconTint="@color/bottom_navigation_tint"
-        app:itemTextColor="@color/bottom_menu_color"
-        app:menu="@menu/drawer_menu"/>
+        app:accentColor="@color/new_accent_color"
+        app:inactiveColor="@color/new_accent_color_alpha_40" />
 
 
     <FrameLayout

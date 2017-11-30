@@ -46,7 +46,7 @@ ext.versions = [
         materialProgress     : '1.1.6',
         circleImageView      : '2.1.0',
         shortcutBadger       : '1.1.19@aar',
-        bottomNavigationView : '1.2.4',
+        ahbottomnavigation   : '2.1.0',
 
         stetho               : '1.4.2',
         leakCanary           : '1.5.1',
@@ -119,7 +119,7 @@ ext.libraries = [
         materialProgress     : "me.zhanghai.android.materialprogressbar:library:$versions.materialProgress",
         circleImageView      : "de.hdodenhof:circleimageview:$versions.circleImageView",
         shortcutBadger       : "me.leolin:ShortcutBadger:$versions.shortcutBadger",
-        bottomNavigationView : "com.github.ittianyu:BottomNavigationViewEx:$versions.bottomNavigationView",
+        ahbottomnavigation   : "com.aurelhubert:ahbottomnavigation:$versions.ahbottomnavigation",
 
         // Developer Tools
         leakCanary           : "com.squareup.leakcanary:leakcanary-android:$versions.leakCanary",

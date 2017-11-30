@@ -12,6 +12,8 @@ import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.MenuItem
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigation
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter
 import com.facebook.login.LoginManager
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog
 import com.vk.sdk.VKSdk
@@ -92,6 +94,8 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
 
     @Inject
     lateinit var notificationsBadgesManager: NotificationsBadgesManager
+
+    private lateinit var navigationAdapter: AHBottomNavigationAdapter
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
@@ -184,10 +188,10 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         setFragment(R.id.home)
         val wantedIndex = launchIntent?.getIntExtra(currentIndexKey, -1) ?: -1
         when (wantedIndex) {
-            CATALOG_INDEX -> navigationView.selectedItemId = R.id.catalog
-            CERTIFICATE_INDEX -> navigationView.selectedItemId = R.id.certificates
-            PROFILE_INDEX -> navigationView.selectedItemId = R.id.profile
-            NOTIFICATIONS_INDEX -> navigationView.selectedItemId = R.id.notifications
+            CATALOG_INDEX       -> navigationView.currentItem = navigationAdapter.getPositionByMenuId(R.id.catalog)
+            CERTIFICATE_INDEX   -> navigationView.currentItem = navigationAdapter.getPositionByMenuId(R.id.certificates)
+            PROFILE_INDEX       -> navigationView.currentItem = navigationAdapter.getPositionByMenuId(R.id.profile)
+            NOTIFICATIONS_INDEX -> navigationView.currentItem = navigationAdapter.getPositionByMenuId(R.id.notifications)
             else -> {
                 //do nothing
             }
@@ -195,13 +199,19 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
     }
 
     private fun initNavigation() {
-        navigationView.onNavigationItemSelectedListener = this
-        navigationView.setOnNavigationItemReselectedListener(this)
+        navigationAdapter = AHBottomNavigationAdapter(this, R.menu.drawer_menu)
+        navigationAdapter.setupWithBottomNavigation(navigationView)
 
-        navigationView.enableAnimation(false)
-        navigationView.enableShiftingMode(false)
-        navigationView.enableItemShiftingMode(false)
-        navigationView.setTextVisibility(false)
+        navigationView.titleState = AHBottomNavigation.TitleState.ALWAYS_HIDE
+        navigationView.setOnTabSelectedListener { position, wasSelected ->
+            val menuItem = navigationAdapter.getMenuItem(position)
+            if (wasSelected) {
+                onNavigationItemReselected(menuItem)
+            } else {
+                onNavigationItemSelected(menuItem)
+            }
+            true
+        }
     }
 
     private fun showCurrentFragment(@IdRes id: Int) {
@@ -218,11 +228,12 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
     }
 
     override fun onBackPressed() {
-        if (navigationView.selectedItemId == R.id.home) {
+        val homeTabPosition = navigationAdapter.getPositionByMenuId(R.id.home)
+        if (navigationView.currentItem == homeTabPosition) {
             finish()
             return
         } else {
-            navigationView.selectedItemId = R.id.home
+            navigationView.currentItem = homeTabPosition
         }
     }
 
@@ -281,10 +292,10 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
     }
 
     private fun getNextFragmentOrNull(currentFragmentTag: String?, nextFragmentTag: String, nextFragmentCreation: () -> Fragment): Fragment? {
-        if (currentFragmentTag == null || currentFragmentTag != nextFragmentTag) {
-            return nextFragmentCreation.invoke()
+        return if (currentFragmentTag == null || currentFragmentTag != nextFragmentTag) {
+            nextFragmentCreation.invoke()
         } else {
-            return null
+            null
         }
     }
 
@@ -325,8 +336,9 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
 
     //RootScreen methods
     override fun showCatalog() {
-        if (navigationView.selectedItemId != R.id.catalog) {
-            navigationView.selectedItemId = R.id.catalog
+        val catalogTabPosition = navigationAdapter.getPositionByMenuId(R.id.catalog)
+        if (navigationView.currentItem != catalogTabPosition) {
+            navigationView.currentItem = catalogTabPosition
         }
     }
 
