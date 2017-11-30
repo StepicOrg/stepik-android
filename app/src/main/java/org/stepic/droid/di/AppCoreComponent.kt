@@ -35,7 +35,6 @@ import org.stepic.droid.ui.adapters.viewhoders.CourseItemViewHolder
 import org.stepic.droid.ui.custom.*
 import org.stepic.droid.ui.custom_exo.PlaybackControlView
 import org.stepic.droid.ui.dialogs.*
-import org.stepic.droid.ui.fragments.HomeFragment
 
 @AppSingleton
 @Component(dependencies = arrayOf(StorageComponent::class),
@@ -46,7 +45,8 @@ import org.stepic.droid.ui.fragments.HomeFragment
                 AppFiltersModule::class,
                 GoogleModule::class,
                 FirebaseModule::class,
-                RecentActiveCourseModule::class
+                RecentActiveCourseModule::class,
+                NotificationsBadgesModule::class
         ))
 interface AppCoreComponent {
 

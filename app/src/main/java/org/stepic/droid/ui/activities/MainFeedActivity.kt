@@ -30,6 +30,7 @@ import org.stepic.droid.core.presenters.contracts.ProfileMainFeedView
 import org.stepic.droid.fonts.FontType
 import org.stepic.droid.model.Course
 import org.stepic.droid.model.Profile
+import org.stepic.droid.notifications.badges.NotificationsBadgesListener
 import org.stepic.droid.notifications.badges.NotificationsBadgesManager
 import org.stepic.droid.ui.activities.contracts.RootScreen
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
@@ -53,6 +54,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         RootScreen,
         ProfileMainFeedView,
         EarlyStreakListener,
+        NotificationsBadgesListener,
         TimeIntervalPickerDialogFragment.Callback {
 
     companion object {
@@ -88,6 +90,9 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
 
     @Inject
     lateinit var earlyStreakClient: Client<EarlyStreakListener>
+
+    @Inject
+    lateinit var notificationsBadgesClient: Client<NotificationsBadgesListener>
 
     @Inject
     lateinit var streakPresenter: StreakPresenter
@@ -178,9 +183,10 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         }
 
         profileMainFeedPresenter.attachView(this)
+        notificationsBadgesClient.subscribe(this)
+        notificationsBadgesManager.fetchAndThenSyncCounter()
         if (savedInstanceState == null) {
             profileMainFeedPresenter.fetchProfile()
-            notificationsBadgesManager.fetchAndThenSyncCounter()
         }
     }
 
@@ -221,6 +227,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
     override fun onDestroy() {
         earlyStreakClient.unsubscribe(this)
         profileMainFeedPresenter.detachView(this)
+        notificationsBadgesClient.unsubscribe(this)
         if (isFinishing) {
             App.componentManager().releaseMainFeedComponent()
         }
@@ -383,5 +390,13 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         analytic.reportEvent(Analytic.Streak.EARLY_NOTIFICATION_COMPLETE)
         val intervalCode = data.getIntExtra(TimeIntervalPickerDialogFragment.resultIntervalCodeKey, TimeIntervalUtil.defaultTimeCode)
         streakPresenter.setStreakTime(intervalCode) // we do not need attach this view, because we need only set in model
+    }
+
+    override fun hideBadge() {
+        navigationView.setNotification("", navigationAdapter.getPositionByMenuId(R.id.notifications))
+    }
+
+    override fun setBadge(count: Int) {
+        navigationView.setNotification(count.toString(), navigationAdapter.getPositionByMenuId(R.id.notifications))
     }
 }
