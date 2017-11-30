@@ -72,13 +72,6 @@ constructor(
                 .subscribe { count, _ -> updateCounter(count) }
     }
 
-    /**
-     * Used to clear counters on logout
-     */
-    fun clearCounter() {
-        updateCounter(0)
-    }
-
     @MainThread
     private fun updateCounter(count: Int) {
         if (firebaseRemoteConfig.getBoolean(RemoteConfig.SHOW_NOTIFICATOINS_BADGES) && count != 0) {
