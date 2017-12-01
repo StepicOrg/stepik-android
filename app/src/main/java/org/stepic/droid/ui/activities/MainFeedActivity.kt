@@ -65,6 +65,8 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         private val progressLogoutTag = "progressLogoutTag"
         private const val LOGGED_ACTION = "LOGGED_ACTION"
 
+        private const val MAX_NOTIFICATION_BADGE_COUNT = 99
+
         const val HOME_INDEX: Int = 1
         const val CATALOG_INDEX: Int = 2
         const val PROFILE_INDEX: Int = 3
@@ -397,6 +399,10 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
     }
 
     override fun setBadge(count: Int) {
-        navigationView.setNotification(count.toString(), navigationAdapter.getPositionByMenuId(R.id.notifications))
+        navigationView.setNotification(if (count > MAX_NOTIFICATION_BADGE_COUNT) {
+            getString(R.string.notification_badge_placeholder)
+        } else {
+            count.toString()
+        }, navigationAdapter.getPositionByMenuId(R.id.notifications))
     }
 }
