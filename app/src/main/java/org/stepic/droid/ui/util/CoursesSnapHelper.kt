@@ -7,8 +7,8 @@ import android.view.View
 class CoursesSnapHelper(private val rowCount: Int) : SnapHelper() {
 
     companion object {
-        private val MAX_DURATION_OF_SCROLL = 100
-        private val MILLISECONDS_PER_INCH = 100f
+        private const val MAX_DURATION_OF_SCROLL = 100
+        private const val MILLISECONDS_PER_INCH = 100f
     }
 
     private var horizontalHelper: OrientationHelper? = null
