@@ -34,6 +34,7 @@ import org.stepic.droid.util.resolvers.CoursePropertyResolver;
 import org.stepic.droid.util.resolvers.text.TextResolver;
 import org.stepic.droid.web.Api;
 
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -103,6 +104,24 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         App.Companion.component().inject(this);
+
+        if (savedInstanceState == null && AppConstants.OPEN_NOTIFICATION.equals(getIntent().getAction())) {
+            markNotificationAsRead(getIntent());
+        }
+    }
+
+    private void markNotificationAsRead(Intent intent) {
+        final long notificationId = intent.getLongExtra(AppConstants.KEY_NOTIFICATION_ID, 0);
+        if (notificationId != 0) {
+            threadPoolExecutor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        api.setReadStatusForNotification(notificationId, true).execute();
+                    } catch (IOException e) {}
+                }
+            });
+        }
     }
 
     @Override
