@@ -26,6 +26,7 @@ class SplashActivity : BackToExitActivityBase(), SplashView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         App.componentManager().splashComponent().inject(this)
+        splashPresenter.attachView(this)
         if (!isTaskRoot) {
             finish()
             return
@@ -33,7 +34,6 @@ class SplashActivity : BackToExitActivityBase(), SplashView {
 
         defineShortcuts()
 
-        splashPresenter.attachView(this)
         splashPresenter.onSplashCreated()
     }
 
