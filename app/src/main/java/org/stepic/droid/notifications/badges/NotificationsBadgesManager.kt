@@ -66,7 +66,7 @@ constructor(
 
     @MainThread
     private fun updateCounter(count: Int) {
-        if (firebaseRemoteConfig.getBoolean(RemoteConfig.SHOW_NOTIFICATOINS_BADGES) && count != 0) {
+        if (firebaseRemoteConfig.getBoolean(RemoteConfig.SHOW_NOTIFICATIONS_BADGES) && count != 0) {
             ShortcutBadger.applyCount(context, count)
             listenerContainer.asIterable().forEach {
                 it.setBadge(count)
