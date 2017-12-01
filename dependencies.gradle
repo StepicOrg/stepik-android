@@ -31,7 +31,6 @@ ext.versions = [
 
         calligraphy          : '2.1.0',
         lottie               : '2.3.0',
-        spritz               : '0.0.1',
 
         firebase             : '11.2.2',
 
@@ -99,7 +98,6 @@ ext.libraries = [
 
         calligraphy          : "uk.co.chrisjenx:calligraphy:$versions.calligraphy",
         lottie               : "com.airbnb.android:lottie:$versions.lottie",
-        spritz               : "com.novoda:spritz:$versions.spritz",
 
         firebaseMessaging    : "com.google.firebase:firebase-messaging:$versions.firebase",
         firebaseAppindexing  : "com.google.firebase:firebase-appindexing:$versions.firebase",
