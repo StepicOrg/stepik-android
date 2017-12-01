@@ -35,7 +35,9 @@ constructor(
         Single.fromCallable { sharedPreferenceHelper.notificationsCount }
                 .subscribeOn(scheduler)
                 .observeOn(mainScheduler)
-                .subscribe { count, _ -> updateCounter(count) }
+                .subscribe { count, _ ->
+                    count?.let { updateCounter(it) }
+                }
         syncCounter()
     }
 
@@ -44,7 +46,7 @@ constructor(
                 .subscribeOn(scheduler)
                 .observeOn(scheduler)
                 .subscribe { res, _ ->
-                    res.notificationStatuses?.firstOrNull()?.let {
+                    res?.notificationStatuses?.firstOrNull()?.let {
                         setCounter(it)
                     }
                 }
@@ -57,7 +59,9 @@ constructor(
         }
                 .subscribeOn(scheduler)
                 .observeOn(mainScheduler)
-                .subscribe { count, _ -> updateCounter(count) }
+                .subscribe { count, _ ->
+                    count?.let { updateCounter(it) }
+                }
     }
 
     @MainThread
