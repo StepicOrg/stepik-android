@@ -32,10 +32,7 @@ import org.stepic.droid.ui.activities.contracts.RootScreen
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.dialogs.LogoutAreYouSureDialog
 import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment
-import org.stepic.droid.ui.fragments.CatalogFragment
-import org.stepic.droid.ui.fragments.CertificatesFragment
-import org.stepic.droid.ui.fragments.HomeFragment
-import org.stepic.droid.ui.fragments.ProfileFragment
+import org.stepic.droid.ui.fragments.*
 import org.stepic.droid.ui.util.TimeIntervalUtil
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
@@ -67,6 +64,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         const val CATALOG_INDEX: Int = 2
         const val PROFILE_INDEX: Int = 3
         const val CERTIFICATE_INDEX: Int = 4
+        const val NOTIFICATIONS_INDEX: Int = 5
 
         fun launchAfterLogin(sourceActivity: Activity, course: Course?) {
             val intent = Intent(sourceActivity, MainFeedActivity::class.java)
@@ -184,6 +182,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
             CATALOG_INDEX -> navigationView.selectedItemId = R.id.catalog
             CERTIFICATE_INDEX -> navigationView.selectedItemId = R.id.certificates
             PROFILE_INDEX -> navigationView.selectedItemId = R.id.profile
+            NOTIFICATIONS_INDEX -> navigationView.selectedItemId = R.id.notifications
             else -> {
                 //do nothing
             }
@@ -191,8 +190,13 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
     }
 
     private fun initNavigation() {
-        navigationView.setOnNavigationItemSelectedListener(this)
+        navigationView.onNavigationItemSelectedListener = this
         navigationView.setOnNavigationItemReselectedListener(this)
+
+        navigationView.enableAnimation(false)
+        navigationView.enableShiftingMode(false)
+        navigationView.enableItemShiftingMode(false)
+        navigationView.setTextVisibility(false)
     }
 
     private fun showCurrentFragment(@IdRes id: Int) {
@@ -238,6 +242,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
             }
             R.id.certificates -> analytic.reportEvent(Analytic.Screens.USER_OPEN_CERTIFICATES)
             R.id.profile -> analytic.reportEvent(Analytic.Screens.USER_OPEN_PROFILE)
+            R.id.notifications -> analytic.reportEvent(Analytic.Screens.USER_OPEN_NOTIFICATIONS)
         }
     }
 
@@ -256,6 +261,9 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
             R.id.certificates -> {
                 analytic.reportEvent(Analytic.Screens.USER_OPEN_CERTIFICATES)
                 getNextFragmentOrNull(currentFragmentTag, CertificatesFragment::class.java.simpleName, CertificatesFragment.Companion::newInstance)
+            }
+            R.id.notifications -> {
+                getNextFragmentOrNull(currentFragmentTag, NotificationsFragment::class.java.simpleName, NotificationsFragment::newInstance)
             }
             else -> {
                 null

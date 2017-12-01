@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -23,11 +24,13 @@ import org.stepic.droid.base.App;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.di.AppSingleton;
 import org.stepic.droid.model.CertificateViewItem;
+import org.stepic.droid.model.CollectionDescriptionColors;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.CoursesCarouselInfo;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
+import org.stepic.droid.model.Tag;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.model.Video;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
@@ -45,7 +48,6 @@ import org.stepic.droid.ui.activities.LoginActivity;
 import org.stepic.droid.ui.activities.MainFeedActivity;
 import org.stepic.droid.ui.activities.NewCommentActivity;
 import org.stepic.droid.ui.activities.NotificationSettingsActivity;
-import org.stepic.droid.ui.activities.NotificationsActivity;
 import org.stepic.droid.ui.activities.PhotoViewActivity;
 import org.stepic.droid.ui.activities.ProfileActivity;
 import org.stepic.droid.ui.activities.RegisterActivity;
@@ -54,6 +56,7 @@ import org.stepic.droid.ui.activities.SettingsActivity;
 import org.stepic.droid.ui.activities.SplashActivity;
 import org.stepic.droid.ui.activities.StepsActivity;
 import org.stepic.droid.ui.activities.StoreManagementActivity;
+import org.stepic.droid.ui.activities.TagActivity;
 import org.stepic.droid.ui.activities.TextFeedbackActivity;
 import org.stepic.droid.ui.activities.UnitsActivity;
 import org.stepic.droid.ui.activities.VideoActivity;
@@ -124,16 +127,16 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void showNotifications(@NotNull Activity activity) {
-        Intent intent = new Intent(activity, NotificationsActivity.class);
+    public void showCoursesList(Activity activity, @NotNull CoursesCarouselInfo info, @Nullable CollectionDescriptionColors descriptionColors) {
+        Intent intent = new Intent(activity, CourseListActivity.class);
+        intent.putExtra(CourseListActivity.COURSE_LIST_INFO_KEY, info);
+        intent.putExtra(CourseListActivity.COURSE_DESCRIPTION_COLORS, (Parcelable) descriptionColors);
         activity.startActivity(intent);
     }
 
     @Override
-    public void showCoursesList(Activity activity, @NotNull CoursesCarouselInfo info) {
-        Intent intent = new Intent(activity, CourseListActivity.class);
-        intent.putExtra(CourseListActivity.COURSE_LIST_INFO_KEY, info);
-        activity.startActivity(intent);
+    public void showListOfTag(Activity activity, @NotNull Tag tag) {
+        TagActivity.Companion.launch(activity, tag);
     }
 
     @Override

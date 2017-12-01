@@ -4,6 +4,7 @@ import android.app.Activity
 import android.graphics.drawable.Drawable
 import android.support.annotation.ColorInt
 import android.support.annotation.DrawableRes
+import android.support.v7.widget.RecyclerView
 import android.view.HapticFeedbackConstants
 import android.view.View
 import android.widget.PopupMenu
@@ -36,10 +37,9 @@ class CourseItemViewHolder(
         private val joinTitle: String,
         private val continueTitle: String,
         private val coursePlaceholder: Drawable,
-        private val courses: List<Course>,
         private val droppingPresenter: DroppingPresenter,
         private val continueCoursePresenter: ContinueCoursePresenter,
-        private val colorType: CoursesCarouselColorType) : CourseViewHolderBase(view) {
+        private val colorType: CoursesCarouselColorType) : RecyclerView.ViewHolder(view) {
 
     @Inject
     lateinit var screenManager: ScreenManager
@@ -75,6 +75,7 @@ class CourseItemViewHolder(
     private val courseRatingImage = view.courseRatingImage
     private val courseRatingText = view.courseRatingText
 
+    private var course: Course? = null
 
     init {
         App.component().inject(this)
@@ -84,13 +85,11 @@ class CourseItemViewHolder(
         imageViewTarget = RoundedBitmapImageViewTarget(itemView.resources.getDimension(R.dimen.course_image_radius), courseItemImage)
 
         courseWidgetButton.setOnClickListener {
-            val adapterPosition = adapterPosition
-            val course = getCourseSafety(adapterPosition)
-            if (course != null) {
-                onClickWidgetButton(course, isEnrolled(course))
+            course?.let {
+                onClickWidgetButton(it, isEnrolled(it))
             }
         }
-        itemView.setOnClickListener({ onClickCourse(adapterPosition) })
+        itemView.setOnClickListener { onClickCourse() }
 
         itemView.setOnLongClickListener({ v ->
             v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
@@ -99,14 +98,14 @@ class CourseItemViewHolder(
         })
 
         itemView.courseItemMore.setOnClickListener { view ->
-            getCourseSafety(adapterPosition)?.let {
+            course?.let {
                 showMore(view, it)
             }
         }
 
         courseWidgetInfo.applyToButton(infoTitle, continueColor, colorType.continueResource)
         courseWidgetInfo.setOnClickListener {
-            getCourseSafety(adapterPosition)?.let {
+            course?.let {
                 if (isEnrolled(it)) {
                     screenManager.showSections(contextActivity, it)
                 } else {
@@ -146,14 +145,12 @@ class CourseItemViewHolder(
         morePopupMenu.show()
     }
 
-    private fun onClickCourse(position: Int) {
-        if (position >= courses.size || position < 0) return
+    private fun onClickCourse() = course?.let {
         analytic.reportEvent(Analytic.Interaction.CLICK_COURSE)
-        val course = courses[position]
-        if (course.enrollment != 0) {
-            screenManager.showSections(contextActivity, course)
+        if (it.enrollment != 0) {
+            screenManager.showSections(contextActivity, it)
         } else {
-            screenManager.showCourseDescription(contextActivity, course)
+            screenManager.showCourseDescription(contextActivity, it)
         }
     }
 
@@ -166,17 +163,7 @@ class CourseItemViewHolder(
         }
     }
 
-    private fun getCourseSafety(adapterPosition: Int): Course? {
-        return if (adapterPosition >= courses.size || adapterPosition < 0) {
-            null
-        } else {
-            courses[adapterPosition]
-        }
-    }
-
-    override fun setDataOnView(position: Int) {
-        val course = courses[position]
-
+    fun setDataOnView(course: Course) {
         courseItemName.text = course.title
         Glide
                 .with(itemView.context)
@@ -208,6 +195,7 @@ class CourseItemViewHolder(
         coursePropertiesContainer.changeVisibility(showContainer)
 
         courseItemMore.changeVisibility(showMore)
+        this.course = course
     }
 
     private fun bindProgressView(course: Course): Boolean {
