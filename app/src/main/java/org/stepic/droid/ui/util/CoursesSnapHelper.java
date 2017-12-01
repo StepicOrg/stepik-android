@@ -10,18 +10,14 @@ import android.support.v7.widget.SnapHelper;
 import android.util.DisplayMetrics;
 import android.view.View;
 
-import timber.log.Timber;
+import org.jetbrains.annotations.NotNull;
 
 public class CoursesSnapHelper extends SnapHelper {
 
-    private static final int MAX_SCROLL_ON_FLING_DURATION = 100; // ms
-
-
+    private static final int MAX_SCROLL_ON_FLING_DURATION = 100;
     private static final float MILLISECONDS_PER_INCH = 100f;
     private final int rowCount;
-    // Orientation helpers are lazily created per LayoutManager.
-    @Nullable
-    private OrientationHelper mVerticalHelper;
+
     @Nullable
     private OrientationHelper mHorizontalHelper;
     private RecyclerView recyclerView;
@@ -34,66 +30,44 @@ public class CoursesSnapHelper extends SnapHelper {
     public void attachToRecyclerView(RecyclerView recyclerView) throws IllegalStateException {
         super.attachToRecyclerView(recyclerView);
         this.recyclerView = recyclerView;
-        Timber.d("attach");
     }
 
-    @Nullable
+    @NotNull
     @Override
     public int[] calculateDistanceToFinalSnap(@NonNull RecyclerView.LayoutManager layoutManager,
                                               @NonNull View targetView) {
         int[] out = new int[2];
-        if (layoutManager.canScrollHorizontally()) {
-            out[0] = distanceToStart(targetView, getHorizontalHelper(layoutManager));
-        } else {
-            out[0] = 0;
-        }
-
+        out[0] = distanceToStart(targetView, getHorizontalHelper(layoutManager));
         out[1] = 0;
-
-        Timber.d("calculate distance to final snap " + out[0] + ";" + out[1]);
         return out;
     }
 
     @Nullable
     @Override
     public View findSnapView(RecyclerView.LayoutManager layoutManager) {
-        Timber.d("findSnapView");
         return getStartView(layoutManager, getHorizontalHelper(layoutManager), true);
     }
 
     @Override
     public int findTargetSnapPosition(RecyclerView.LayoutManager layoutManager, int velocityX, int velocityY) {
-        Timber.d("findTargetSnapPosition result start");
-        int result = findTargetSnapPositionInternal(layoutManager, velocityX, velocityY);
-        Timber.d("findTargetSnapPosition result " + result);
-        return result;
-    }
-
-    private int findTargetSnapPositionInternal(RecyclerView.LayoutManager layoutManager, int velocityX, int velocityY) {
         final int itemCount = layoutManager.getItemCount();
         if (itemCount == 0) {
             return RecyclerView.NO_POSITION;
         }
 
-        View startMostChildView = null;
+        View startMostChildView;
         boolean forwardDirection = velocityX > 0;
-        if (layoutManager.canScrollHorizontally()) {
-            startMostChildView = getStartView(layoutManager, getHorizontalHelper(layoutManager), forwardDirection);
-        }
+        startMostChildView = getStartView(layoutManager, getHorizontalHelper(layoutManager), forwardDirection);
 
         if (startMostChildView == null) {
             return RecyclerView.NO_POSITION;
         }
-        final int startPosition = layoutManager.getPosition(startMostChildView);
-        if (startPosition == RecyclerView.NO_POSITION) {
-            return RecyclerView.NO_POSITION;
-        }
-        return startPosition;
+
+        return layoutManager.getPosition(startMostChildView);
     }
 
     @Override
     protected LinearSmoothScroller createSnapScroller(RecyclerView.LayoutManager layoutManager) {
-        Timber.d("createSnapScroller");
         if (!(layoutManager instanceof RecyclerView.SmoothScroller.ScrollVectorProvider)) {
             return null;
         }
@@ -105,9 +79,7 @@ public class CoursesSnapHelper extends SnapHelper {
                 final int dx = snapDistances[0];
                 final int dy = snapDistances[1];
                 final int time = calculateTimeForDeceleration(Math.max(Math.abs(dx), Math.abs(dy)));
-                Timber.d("onTargetFound dx = " + dx + " dy = " + dy + " time = " + time);
                 if (time > 0) {
-                    Timber.d("onTargetFound update with time =" + time);
                     action.update(dx, dy, time, mDecelerateInterpolator);
                 }
             }
@@ -143,14 +115,9 @@ public class CoursesSnapHelper extends SnapHelper {
         }
 
         View child = layoutManager.findViewByPosition(firstChildPosition);
-
         int endOfChild = helper.getDecoratedEnd(child);
-        int threshold = (int) (helper.getDecoratedMeasurement(child) * 1);
-        Timber.d("get start view first visible = " + firstChildPosition);
-        Timber.d("forwardDirection = " + forwardDirection);
-        Timber.d("endOfChild = " + endOfChild + " threshold = " + threshold);
+        int threshold = helper.getDecoratedMeasurement(child);
         if (endOfChild >= threshold && endOfChild > 0) {
-            //here we can change "scrollable" of the list. for example divide it to 3 or 4
             return child;
         } else if (forwardDirection) {
             return getNextView(firstChildPosition, layoutManager);
@@ -167,8 +134,7 @@ public class CoursesSnapHelper extends SnapHelper {
     }
 
     private View getPreviousView(int currentPosition, RecyclerView.LayoutManager layoutManager) {
-        int currentPositionMinusRowCount = currentPosition;
-        int previousPosition = Math.max(0, currentPositionMinusRowCount);
+        int previousPosition = Math.max(0, currentPosition);
         return layoutManager.findViewByPosition(previousPosition);
     }
 
