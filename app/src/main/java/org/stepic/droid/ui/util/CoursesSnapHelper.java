@@ -167,7 +167,7 @@ public class CoursesSnapHelper extends SnapHelper {
     }
 
     private View getPreviousView(int currentPosition, RecyclerView.LayoutManager layoutManager) {
-        int currentPositionMinusRowCount = currentPosition - rowCount;
+        int currentPositionMinusRowCount = currentPosition;
         int previousPosition = Math.max(0, currentPositionMinusRowCount);
         return layoutManager.findViewByPosition(previousPosition);
     }
