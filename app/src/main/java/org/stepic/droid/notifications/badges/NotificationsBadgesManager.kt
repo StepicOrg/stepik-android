@@ -13,9 +13,7 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.notifications.model.NotificationStatuses
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import org.stepic.droid.util.DateTimeHelper.nowUtc
 import org.stepic.droid.web.Api
-import java.util.concurrent.locks.ReentrantLock
 import javax.inject.Inject
 
 @AppSingleton
@@ -33,8 +31,6 @@ constructor(
         @MainScheduler
         private val mainScheduler: Scheduler
 ) {
-    private val lock = ReentrantLock()
-
     fun fetchAndThenSyncCounter() {
         Single.fromCallable { sharedPreferenceHelper.notificationsCount }
                 .subscribeOn(scheduler)
@@ -44,28 +40,20 @@ constructor(
     }
 
     fun syncCounter() {
-        val now = nowUtc()
         api.notificationStatuses
                 .subscribeOn(scheduler)
                 .observeOn(scheduler)
                 .subscribe { res, _ ->
                     res.notificationStatuses?.firstOrNull()?.let {
-                        setCounter(it, now)
+                        setCounter(it)
                     }
                 }
     }
 
-    fun setCounter(notificationStatuses: NotificationStatuses, timestamp: Long) {
+    private fun setCounter(notificationStatuses: NotificationStatuses) {
         Single.fromCallable {
-            lock.lock()
-            try {
-                if (sharedPreferenceHelper.notificationsCountTimestamp < timestamp) {
-                    sharedPreferenceHelper.setNotificationsCount(notificationStatuses.total, timestamp)
-                }
-                return@fromCallable sharedPreferenceHelper.notificationsCount
-            } finally {
-                lock.unlock()
-            }
+            sharedPreferenceHelper.notificationsCount = notificationStatuses.total
+            return@fromCallable notificationStatuses.total
         }
                 .subscribeOn(scheduler)
                 .observeOn(mainScheduler)

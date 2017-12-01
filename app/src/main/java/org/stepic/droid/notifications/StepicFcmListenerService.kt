@@ -1,6 +1,5 @@
 package org.stepic.droid.notifications
 
-import android.util.Log
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.google.gson.Gson
@@ -24,7 +23,6 @@ class StepicFcmListenerService : FirebaseMessagingService() {
     override fun onMessageReceived(message: RemoteMessage) {
         try {
             message.data?.let { data ->
-                Log.d(javaClass.canonicalName, data.toString())
                 val userId: Long? = hacker.sharedPreferenceHelper.profile?.id
                 val userIdServerString = data["user_id"] ?: ""
                 val userIdServer = Integer.parseInt(userIdServerString)
@@ -35,7 +33,7 @@ class StepicFcmListenerService : FirebaseMessagingService() {
                 val rawMessageObject = data["object"]
                 when (data["type"]) {
                     NOTIFICATION_TYPE -> processNotification(rawMessageObject)
-                    NOTIFICATION_STATUSES_TYPE -> processNotificationStatuses(rawMessageObject, message.sentTime)
+                    NOTIFICATION_STATUSES_TYPE -> processNotificationStatuses(rawMessageObject)
                 }
             }
         } catch (e: IOException) {
@@ -52,10 +50,10 @@ class StepicFcmListenerService : FirebaseMessagingService() {
         }
     }
 
-    private fun processNotificationStatuses(rawMessageObject: String?, timestamp: Long) {
+    private fun processNotificationStatuses(rawMessageObject: String?) {
         val notificationStatuses = Gson().fromJson(rawMessageObject, NotificationStatuses::class.java)
         notificationStatuses?.let {
-            hacker.notificationsBadgesManager.setCounter(it, timestamp)
+            hacker.notificationsBadgesManager.syncCounter()
         }
     }
 
