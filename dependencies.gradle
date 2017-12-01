@@ -1,6 +1,6 @@
 ext.versions = [
-        code                 : 1970,
-        name                 : '1.47',
+        code                 : 1974,
+        name                 : '1.48',
 
         minSdk               : 15,
         targetSdk            : 25,
@@ -27,7 +27,7 @@ ext.versions = [
 
         glide                : '3.7.0',
 
-        appMetrica           : '2.62',
+        appMetrica           : '2.78',
 
         calligraphy          : '2.1.0',
 
