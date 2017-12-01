@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class CoursesSnapHelper extends SnapHelper {
 
-    private static final int MAX_SCROLL_ON_FLING_DURATION = 100;
+    private static final int MAX_DURATION_OF_SCROLL = 100;
     private static final float MILLISECONDS_PER_INCH = 100f;
     private final int rowCount;
 
@@ -66,11 +66,9 @@ public class CoursesSnapHelper extends SnapHelper {
         return layoutManager.getPosition(startMostChildView);
     }
 
+    @NotNull
     @Override
-    protected LinearSmoothScroller createSnapScroller(RecyclerView.LayoutManager layoutManager) {
-        if (!(layoutManager instanceof RecyclerView.SmoothScroller.ScrollVectorProvider)) {
-            return null;
-        }
+    protected RecyclerView.SmoothScroller createScroller(RecyclerView.LayoutManager layoutManager) {
         return new LinearSmoothScroller(recyclerView.getContext()) {
             @Override
             protected void onTargetFound(View targetView, RecyclerView.State state, Action action) {
@@ -91,11 +89,10 @@ public class CoursesSnapHelper extends SnapHelper {
 
             @Override
             protected int calculateTimeForScrolling(int dx) {
-                return Math.min(MAX_SCROLL_ON_FLING_DURATION, super.calculateTimeForScrolling(dx));
+                return Math.min(MAX_DURATION_OF_SCROLL, super.calculateTimeForScrolling(dx));
             }
         };
     }
-
 
     private int distanceToStart(View targetView, OrientationHelper helper) {
         return helper.getDecoratedStart(targetView) - helper.getStartAfterPadding();
