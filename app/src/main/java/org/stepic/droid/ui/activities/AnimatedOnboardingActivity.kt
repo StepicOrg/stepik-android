@@ -8,8 +8,6 @@ import org.stepic.droid.base.FragmentActivityBase
 
 class AnimatedOnboardingActivity : FragmentActivityBase() {
 
-    private val PAGES_COUNT = 4
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
