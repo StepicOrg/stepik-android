@@ -274,6 +274,7 @@ class StepikNotificationManagerImpl
             return
         }
         intent.action = AppConstants.OPEN_NOTIFICATION
+        intent.putExtra(AppConstants.KEY_NOTIFICATION_ID, id)
 
         val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
         taskBuilder.addParentStack(SectionActivity::class.java)
@@ -295,6 +296,7 @@ class StepikNotificationManagerImpl
                 return
             }
             intent.action = AppConstants.OPEN_NOTIFICATION
+            intent.putExtra(AppConstants.KEY_NOTIFICATION_ID, id)
 
             val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
             taskBuilder.addParentStack(SectionActivity::class.java)
@@ -321,6 +323,7 @@ class StepikNotificationManagerImpl
             }
 
             intent.action = AppConstants.OPEN_NOTIFICATION
+            intent.putExtra(AppConstants.KEY_NOTIFICATION_ID, id)
 
             val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
             taskBuilder.addParentStack(StepsActivity::class.java)
@@ -345,6 +348,7 @@ class StepikNotificationManagerImpl
                 return
             }
             intent.action = AppConstants.OPEN_NOTIFICATION
+            intent.putExtra(AppConstants.KEY_NOTIFICATION_ID, id)
 
             val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
             taskBuilder.addParentStack(StepsActivity::class.java)
@@ -365,6 +369,7 @@ class StepikNotificationManagerImpl
 
             val intent = screenManager.certificateIntent
             intent.action = AppConstants.OPEN_NOTIFICATION
+            intent.putExtra(AppConstants.KEY_NOTIFICATION_ID, id)
 
             val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
             taskBuilder.addParentStack(StepsActivity::class.java)
