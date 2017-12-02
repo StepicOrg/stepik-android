@@ -47,6 +47,7 @@ ext.versions = [
         materialProgress     : '1.1.6',
         circleImageView      : '2.1.0',
         bottomNavigationView : '1.2.4',
+        circleIndicator      : '1.2.2@aar',
 
         stetho               : '1.4.2',
         leakCanary           : '1.5.1',
@@ -120,6 +121,7 @@ ext.libraries = [
         materialProgress     : "me.zhanghai.android.materialprogressbar:library:$versions.materialProgress",
         circleImageView      : "de.hdodenhof:circleimageview:$versions.circleImageView",
         bottomNavigationView : "com.github.ittianyu:BottomNavigationViewEx:$versions.bottomNavigationView",
+        circleIndicator      : "me.relex:circleindicator:$versions.circleIndicator",
 
         // Developer Tools
         leakCanary           : "com.squareup.leakcanary:leakcanary-android:$versions.leakCanary",

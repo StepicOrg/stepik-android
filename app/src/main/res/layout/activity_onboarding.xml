@@ -4,13 +4,5 @@
     android:layout_height="match_parent"
     android:background="@color/new_accent_color">
 
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/lottieAnimationView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        app:lottie_autoPlay="true"
-        app:lottie_fileName="allAnimations/firstAnimation.json" />
-
 
 </RelativeLayout>

@@ -159,6 +159,7 @@ dependencies {
     implementation libraries.materialProgress
     implementation libraries.circleImageView
     implementation libraries.bottomNavigationView
+    implementation libraries.circleIndicator
 
     debugImplementation libraries.leakCanary
     releaseImplementation libraries.leakCanaryNoOp
