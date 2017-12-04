@@ -4,10 +4,12 @@ import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_onboarding.*
 import org.stepic.droid.R
 import org.stepic.droid.base.FragmentActivityBase
+import org.stepic.droid.ui.activities.contracts.OnNextClickedListener
 import org.stepic.droid.ui.adapters.OnboardingAdapter
+import timber.log.Timber
 
 
-class AnimatedOnboardingActivity : FragmentActivityBase() {
+class AnimatedOnboardingActivity : FragmentActivityBase(), OnNextClickedListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,7 +25,26 @@ class AnimatedOnboardingActivity : FragmentActivityBase() {
 
     private fun initClose() {
         closeOnboarding.setOnClickListener {
-            //todo: close onboarding
+            onboardingClosed()
         }
+    }
+
+    private fun onboardingClosed() {
+        val position = onboardingViewPager.currentItem
+        Timber.d("closed at $position")
+    }
+
+    override fun onNextClicked() {
+        val current = onboardingViewPager.currentItem
+        val next = current + 1
+        if (next < onboardingViewPager.adapter.count) {
+            onboardingViewPager.setCurrentItem(next)
+        } else {
+            onboardingDone()
+        }
+    }
+
+    private fun onboardingDone() {
+        Timber.d("done")
     }
 }

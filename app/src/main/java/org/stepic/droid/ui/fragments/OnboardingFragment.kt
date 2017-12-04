@@ -8,6 +8,7 @@ import kotlinx.android.synthetic.main.fragment_onboarding_page.*
 import org.stepic.droid.R
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.model.OnboardingType
+import org.stepic.droid.ui.activities.contracts.OnNextClickedListener
 
 class OnboardingFragment : FragmentBase() {
     companion object {
@@ -35,7 +36,7 @@ class OnboardingFragment : FragmentBase() {
         onboardingPageAction.setText(type.getActionText())
 
         onboardingPageAction.setOnClickListener {
-            // todo implement it, cast context to interface, call next function
+            (context as OnNextClickedListener).onNextClicked()
         }
     }
 
