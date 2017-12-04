@@ -1,6 +1,7 @@
 package org.stepic.droid.ui.activities
 
 import android.os.Bundle
+import android.support.v4.view.ViewPager
 import kotlinx.android.synthetic.main.activity_onboarding.*
 import org.stepic.droid.R
 import org.stepic.droid.base.FragmentActivityBase
@@ -16,11 +17,24 @@ class AnimatedOnboardingActivity : FragmentActivityBase(), OnNextClickedListener
         setContentView(R.layout.activity_onboarding)
         initViewPager()
         initClose()
+
     }
 
     private fun initViewPager() {
         onboardingViewPager.adapter = OnboardingAdapter(supportFragmentManager)
         onboardingCircleIndicator.setViewPager(onboardingViewPager)
+        onboardingViewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrollStateChanged(state: Int) {
+            }
+
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+            }
+
+            override fun onPageSelected(position: Int) {
+                Timber.d("onPageSelected $position")
+
+            }
+        })
     }
 
     private fun initClose() {
@@ -46,5 +60,9 @@ class AnimatedOnboardingActivity : FragmentActivityBase(), OnNextClickedListener
 
     private fun onboardingDone() {
         Timber.d("done")
+    }
+
+    override fun applyTransitionPrev() {
+        // no-op
     }
 }
