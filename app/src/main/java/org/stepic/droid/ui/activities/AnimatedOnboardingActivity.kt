@@ -13,10 +13,17 @@ class AnimatedOnboardingActivity : FragmentActivityBase() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_onboarding)
         initViewPager()
+        initClose()
     }
 
     private fun initViewPager() {
         onboardingViewPager.adapter = OnboardingAdapter(supportFragmentManager)
         onboardingCircleIndicator.setViewPager(onboardingViewPager)
+    }
+
+    private fun initClose() {
+        closeOnboarding.setOnClickListener {
+            //todo: close onboarding
+        }
     }
 }
