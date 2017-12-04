@@ -1,31 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <TextView
-        android:id="@+id/onboardingPageTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:textColor="@color/white" />
-
-    <TextView
-        android:id="@+id/onboardingPageSubtitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/onboardingPageTitle"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="8dp"
-        android:textColor="@color/white" />
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    tools:context=".ui.activities.AnimatedOnboardingActivity">
 
     <TextView
         android:id="@+id/onboardingPageAction"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/onboardingPageSubtitle"
+        style="@style/Onboarding.Action"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="8dp"
-        android:textColor="@color/white" />
+        android:layout_marginBottom="60dp" />
+
+
+    <TextView
+        android:id="@+id/onboardingPageSubtitle"
+        style="@style/Onboarding.Subtitle"
+        android:layout_above="@id/onboardingPageAction"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/onboardingPageTitle"
+        style="@style/Onboarding.Title"
+        android:layout_above="@id/onboardingPageSubtitle" />
 
 </RelativeLayout>

@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_onboarding_page.*
 import org.stepic.droid.R
 import org.stepic.droid.base.FragmentBase
@@ -37,7 +36,6 @@ class OnboardingFragment : FragmentBase() {
 
         onboardingPageAction.setOnClickListener {
             // todo implement it, cast context to interface, call next function
-            Toast.makeText(context, "Clicked", Toast.LENGTH_SHORT).show()
         }
     }
 

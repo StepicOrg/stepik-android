@@ -22,7 +22,7 @@ enum class OnboardingType(
             isLast = false),
     FOURTH(R.string.onboarding_fourth_title,
             R.string.onboarding_fourth_subtitle,
-            isLast = false);
+            isLast = true);
 
     @StringRes
     fun getActionText(): Int {
