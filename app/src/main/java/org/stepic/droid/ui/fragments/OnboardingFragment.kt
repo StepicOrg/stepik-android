@@ -38,6 +38,15 @@ class OnboardingFragment : FragmentBase() {
         onboardingPageAction.setOnClickListener {
             (context as OnNextClickedListener).onNextClicked()
         }
+        initAnimation(type)
+    }
+
+    private fun initAnimation(type: OnboardingType) {
+        onboardingAnimationView.visibility = View.VISIBLE
+        onboardingAnimationView.pauseAnimation()
+        onboardingAnimationView.speed = 0.4f
+        onboardingAnimationView.setAnimation(type.assetPathToAnimation)
+        onboardingAnimationView.playAnimation()
     }
 
 }

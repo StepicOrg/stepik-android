@@ -8,4 +8,7 @@
     <integer name="arrow_bottom_top_duration">300</integer>
     <integer name="arrow_stroke">4</integer>
     <integer name="gradient_angle">45</integer>
+
+    <integer name="onboarding_anim_duration">3000</integer>
+    <integer name="onboarding_anim_half_duration">1500</integer>
 </resources>

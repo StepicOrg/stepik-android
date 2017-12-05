@@ -5,24 +5,38 @@ import android.os.Parcelable
 import android.support.annotation.StringRes
 import org.stepic.droid.R
 
+private object AnimationPaths {
+    const val FIRST_ANIMATION_PATH = "allAnimations/firstAnimation.json"
+    const val SECOND_ANIMATION_PATH = "allAnimations/secondAnimation.json"
+    const val THIRD_ANIMATION_PATH = "allAnimations/thirdAnimation.json"
+    const val FOURTH_ANIMATION_PATH = "allAnimations/fourthAnimation.json"
+}
+
 enum class OnboardingType(
         @StringRes
         val title: Int,
         @StringRes
         val subtitle: Int,
-        private val isLast: Boolean) : Parcelable {
+        private val isLast: Boolean,
+        val assetPathToAnimation: String) : Parcelable {
+
+
     FIRST(R.string.onboarding_first_title,
             R.string.onboarding_first_subtitle,
-            isLast = false),
+            isLast = false,
+            assetPathToAnimation = AnimationPaths.FIRST_ANIMATION_PATH),
     SECOND(R.string.onboarding_second_title,
             R.string.onboarding_second_subtitle,
-            isLast = false),
+            isLast = false,
+            assetPathToAnimation = AnimationPaths.SECOND_ANIMATION_PATH),
     THIRD(R.string.onboarding_third_title,
             R.string.onboarding_third_subtitle,
-            isLast = false),
+            isLast = false,
+            assetPathToAnimation = AnimationPaths.THIRD_ANIMATION_PATH),
     FOURTH(R.string.onboarding_fourth_title,
             R.string.onboarding_fourth_subtitle,
-            isLast = true);
+            isLast = true,
+            assetPathToAnimation = AnimationPaths.FOURTH_ANIMATION_PATH);
 
     @StringRes
     fun getActionText(): Int {
