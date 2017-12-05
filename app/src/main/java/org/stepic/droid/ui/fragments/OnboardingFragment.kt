@@ -44,8 +44,12 @@ class OnboardingFragment : FragmentBase() {
     private fun initAnimation(type: OnboardingType) {
         onboardingAnimationView.visibility = View.VISIBLE
         onboardingAnimationView.pauseAnimation()
-        onboardingAnimationView.speed = 0.4f
         onboardingAnimationView.setAnimation(type.assetPathToAnimation)
+        onboardingAnimationView.speed = 0.4f
+    }
+
+    override fun onResume() {
+        super.onResume()
         onboardingAnimationView.playAnimation()
     }
 
