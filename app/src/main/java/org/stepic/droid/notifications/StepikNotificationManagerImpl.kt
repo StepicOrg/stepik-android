@@ -273,12 +273,10 @@ class StepikNotificationManagerImpl
             analytic.reportEvent(Analytic.Notification.CANT_PARSE_NOTIFICATION, id.toString())
             return
         }
-        intent.action = AppConstants.OPEN_NOTIFICATION
-        intent.putExtra(AppConstants.KEY_NOTIFICATION_ID, id)
 
         val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
         taskBuilder.addParentStack(SectionActivity::class.java)
-        taskBuilder.addNextIntent(intent)
+        taskBuilder.addNextIntent(prepareNotificationIntent(intent, id))
 
         analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, id.toString(), stepikNotification.type?.name)
         showSimpleNotification(stepikNotification, justText, taskBuilder, title, id = id)
@@ -295,12 +293,10 @@ class StepikNotificationManagerImpl
                 analytic.reportEvent(Analytic.Notification.CANT_PARSE_NOTIFICATION, id.toString())
                 return
             }
-            intent.action = AppConstants.OPEN_NOTIFICATION
-            intent.putExtra(AppConstants.KEY_NOTIFICATION_ID, id)
 
             val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
             taskBuilder.addParentStack(SectionActivity::class.java)
-            taskBuilder.addNextIntent(intent)
+            taskBuilder.addNextIntent(prepareNotificationIntent(intent, id))
 
             showSimpleNotification(stepikNotification, justText, taskBuilder, title, id = id)
             analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, id.toString(), stepikNotification.type?.name)
@@ -322,12 +318,9 @@ class StepikNotificationManagerImpl
                 return
             }
 
-            intent.action = AppConstants.OPEN_NOTIFICATION
-            intent.putExtra(AppConstants.KEY_NOTIFICATION_ID, id)
-
             val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
             taskBuilder.addParentStack(StepsActivity::class.java)
-            taskBuilder.addNextIntent(intent)
+            taskBuilder.addNextIntent(prepareNotificationIntent(intent, id))
 
             analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, id.toString(), stepikNotification.type?.name)
             showSimpleNotification(stepikNotification, justText, taskBuilder, title, id = id)
@@ -347,12 +340,10 @@ class StepikNotificationManagerImpl
                 analytic.reportEvent(Analytic.Notification.CANT_PARSE_NOTIFICATION, id.toString())
                 return
             }
-            intent.action = AppConstants.OPEN_NOTIFICATION
-            intent.putExtra(AppConstants.KEY_NOTIFICATION_ID, id)
 
             val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
             taskBuilder.addParentStack(StepsActivity::class.java)
-            taskBuilder.addNextIntent(intent)
+            taskBuilder.addNextIntent(prepareNotificationIntent(intent, id))
 
             analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, id.toString(), stepikNotification.type?.name)
             showSimpleNotification(stepikNotification, justText, taskBuilder, title, id = id)
@@ -367,13 +358,9 @@ class StepikNotificationManagerImpl
             val title = context.getString(R.string.get_certifcate_title)
             val justText: String = textResolver.fromHtml(rawMessageHtml).toString()
 
-            val intent = screenManager.certificateIntent
-            intent.action = AppConstants.OPEN_NOTIFICATION
-            intent.putExtra(AppConstants.KEY_NOTIFICATION_ID, id)
-
             val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
             taskBuilder.addParentStack(StepsActivity::class.java)
-            taskBuilder.addNextIntent(intent)
+            taskBuilder.addNextIntent(prepareNotificationIntent(screenManager.certificateIntent, id))
 
 
             analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, id.toString(), stepikNotification.type?.name)
@@ -473,6 +460,12 @@ class StepikNotificationManagerImpl
             notificationManager.notify(courseId.toInt(), notification.build())
         }
     }
+
+    private fun prepareNotificationIntent(intent: Intent, notificationId: Long) =
+            intent.apply {
+                action = AppConstants.OPEN_NOTIFICATION
+                putExtra(AppConstants.KEY_NOTIFICATION_ID, notificationId)
+            }
 
     /**
      * @return true if notification was shown, false, when it was rescheduled (to morning)
