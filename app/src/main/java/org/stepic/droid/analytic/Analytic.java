@@ -74,6 +74,10 @@ public interface Analytic {
 
         String TAP_ON_FIELDS = "tap_on_fields_login";
         String TYPING_TEXT_FIELDS = "typing_text_fields_login";
+
+        String FACEBOOK_ERROR = "facebook_error";
+        String GOOGLE_FAILED_STATUS = "google_sign_in_failed";
+        String GOOGLE_AUTH_CODE_NULL = "google_auth_code_null";
     }
 
     interface System {
