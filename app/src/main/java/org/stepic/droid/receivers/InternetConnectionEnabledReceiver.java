@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.annotation.WorkerThread;
+import android.util.Log;
 
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
@@ -13,6 +15,7 @@ import org.stepic.droid.core.LocalProgressManager;
 import org.stepic.droid.core.internetstate.contract.InternetEnabledPoster;
 import org.stepic.droid.core.updatingstep.contract.UpdatingStepPoster;
 import org.stepic.droid.model.Step;
+import org.stepic.droid.model.ViewedNotification;
 import org.stepic.droid.storage.StoreStateManager;
 import org.stepic.droid.storage.operations.DatabaseFacade;
 import org.stepic.droid.util.resolvers.StepHelper;
@@ -84,44 +87,68 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
         threadPoolExecutor.execute(new Runnable() {
             @Override
             public void run() {
-                List<ViewAssignment> list = databaseFacade.getAllInQueue();
-                for (ViewAssignment item : list) {
-                    try {
-                        retrofit2.Response<Void> response = api.postViewed(item).execute();
-                        if (response.isSuccessful()) {
-                            databaseFacade.removeFromQueue(item);
-                            Step step = databaseFacade.getStepById(item.getStep());
-                            if (step != null) {
-                                final long stepId = step.getId();
-                                if (StepHelper.isViewedStatePost(step)) {
-                                    if (item.getAssignment() != null) {
-                                        databaseFacade.markProgressAsPassed(item.getAssignment());
-                                    } else {
-                                        if (step.getProgressId() != null) {
-                                            databaseFacade.markProgressAsPassedIfInDb(step.getProgressId());
-                                        }
-                                    }
-                                    unitProgressManager.checkUnitAsPassed(step.getId());
-                                }
-                                // Get a handler that can be used to post to the main thread
-
-                                mainHandler.post(new Function0<Unit>() {
-                                                     @Override
-                                                     public Unit invoke() {
-                                                         updatingStepPoster.updateStep(stepId, false);
-                                                         return Unit.INSTANCE;
-                                                     }
-                                                 }
-                                );
-                            }
-                        }
-                    } catch (IOException e) {
-                        //no internet, just ignore and send next time
-                    }
-                }
+                processViewAssignments();
+                processViewedNotifications();
                 inWork.set(false);
             }
         });
+    }
+
+    @WorkerThread
+    private void processViewedNotifications() {
+        List<ViewedNotification> viewedNotifications = databaseFacade.getViewedNotificationsQueue();
+        for (ViewedNotification viewedNotification : viewedNotifications) {
+            try {
+                retrofit2.Response<Void> response
+                        = api.setReadStatusForNotification(viewedNotification.getNotificationId(), true).execute();
+
+                if (response.isSuccessful()) {
+                    Log.d(getClass().getCanonicalName(), "notifications " + viewedNotification.getNotificationId() + " marked as read");
+                    databaseFacade.removeViewedNotitcation(viewedNotification);
+                }
+            } catch (IOException e) {
+                //no internet, just ignore and send next time
+            }
+        }
+    }
+
+    @WorkerThread
+    private void processViewAssignments() {
+        List<ViewAssignment> list = databaseFacade.getAllInQueue();
+        for (ViewAssignment item : list) {
+            try {
+                retrofit2.Response<Void> response = api.postViewed(item).execute();
+                if (response.isSuccessful()) {
+                    databaseFacade.removeFromQueue(item);
+                    Step step = databaseFacade.getStepById(item.getStep());
+                    if (step != null) {
+                        final long stepId = step.getId();
+                        if (StepHelper.isViewedStatePost(step)) {
+                            if (item.getAssignment() != null) {
+                                databaseFacade.markProgressAsPassed(item.getAssignment());
+                            } else {
+                                if (step.getProgressId() != null) {
+                                    databaseFacade.markProgressAsPassedIfInDb(step.getProgressId());
+                                }
+                            }
+                            unitProgressManager.checkUnitAsPassed(step.getId());
+                        }
+                        // Get a handler that can be used to post to the main thread
+
+                        mainHandler.post(new Function0<Unit>() {
+                                             @Override
+                                             public Unit invoke() {
+                                                 updatingStepPoster.updateStep(stepId, false);
+                                                 return Unit.INSTANCE;
+                                             }
+                                         }
+                        );
+                    }
+                }
+            } catch (IOException e) {
+                //no internet, just ignore and send next time
+            }
+        }
     }
 
     private boolean isDeviceChangeStateToOnline(Context context) {

@@ -12,6 +12,7 @@ import org.stepic.droid.model.comments.VoteValue;
 import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.social.SocialManager;
 
+import io.reactivex.Completable;
 import io.reactivex.Single;
 import retrofit2.Call;
 
@@ -97,6 +98,8 @@ public interface Api {
     Call<CoursesMetaResponse> getCourse(long id);
 
     Call<Void> setReadStatusForNotification(long notificationId, boolean isRead);
+
+    Completable setReadStatusForNotificationReactive(long notificationId, boolean isRead);
 
     Call<Void> removeDevice(long deviceId);
 

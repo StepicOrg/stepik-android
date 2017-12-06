@@ -10,6 +10,7 @@ import org.stepic.droid.model.code.CodeSubmission
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.storage.dao.IDao
 import org.stepic.droid.storage.dao.SearchQueryDao
+import org.stepic.droid.storage.dao.ViewedNotificationsQueueDaoImpl
 import org.stepic.droid.storage.structure.*
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DbParseHelper
@@ -23,6 +24,7 @@ class DatabaseFacade
         private val stepInfoOperation: StepInfoOperation,
         private val codeSubmissionDao: IDao<CodeSubmission>,
         private val searchQueryDao: SearchQueryDao,
+        private val viewedNotificationsQueueDao: IDao<ViewedNotification>,
         private val sectionDao: IDao<Section>,
         private val unitDao: IDao<Unit>,
         private val progressDao: IDao<Progress>,
@@ -468,6 +470,18 @@ class DatabaseFacade
 
     fun addSearchQuery(searchQuery: SearchQuery) {
         searchQueryDao.insertOrReplace(searchQuery)
+    }
+
+    fun addToViewedNotificationsQueue(viewedNotification: ViewedNotification) {
+        viewedNotificationsQueueDao.insertOrReplace(viewedNotification)
+    }
+
+    fun getViewedNotificationsQueue() = viewedNotificationsQueueDao.getAll()
+
+    fun removeViewedNotitcation(viewedNotification: ViewedNotification) {
+        viewedNotificationsQueueDao.remove(
+                DbStructureViewedNotificationsQueue.Column.NOTIFICATION_ID,
+                viewedNotification.notificationId.toString())
     }
 
 }

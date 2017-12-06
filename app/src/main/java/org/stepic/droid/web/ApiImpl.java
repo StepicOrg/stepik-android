@@ -65,6 +65,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
+import io.reactivex.Completable;
 import io.reactivex.Single;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
@@ -673,6 +674,13 @@ public class ApiImpl implements Api {
         Notification notification = new Notification();
         notification.set_unread(!isRead);
         return loggedService.putNotification(notificationId, new NotificationRequest(notification));
+    }
+
+    @Override
+    public Completable setReadStatusForNotificationReactive(long notificationId, boolean isRead) {
+        Notification notification = new Notification();
+        notification.set_unread(!isRead);
+        return loggedService.putNotificationReactive(notificationId, new NotificationRequest(notification));
     }
 
     @Override

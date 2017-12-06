@@ -3,6 +3,7 @@ package org.stepic.droid.web;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.model.EnrollmentWrapper;
 
+import io.reactivex.Completable;
 import io.reactivex.Single;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -104,6 +105,9 @@ public interface StepicRestLoggedService {
 
     @PUT("api/notifications/{id}")
     Call<Void> putNotification(@Path("id") long notificationId, @Body NotificationRequest notificationRequest);
+
+    @PUT("api/notifications/{id}")
+    Completable putNotificationReactive(@Path("id") long notificationId, @Body NotificationRequest notificationRequest);
 
     @DELETE("api/devices/{id}")
     Call<Void> removeDevice(@Path("id") long deviceId);
