@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.annotation.WorkerThread;
-import android.util.Log;
 
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
@@ -103,7 +102,6 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
                         = api.setReadStatusForNotification(viewedNotification.getNotificationId(), true).execute();
 
                 if (response.isSuccessful()) {
-                    Log.d(getClass().getCanonicalName(), "notifications " + viewedNotification.getNotificationId() + " marked as read");
                     databaseFacade.removeViewedNotitcation(viewedNotification);
                 }
             } catch (IOException e) {

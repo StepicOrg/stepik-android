@@ -7,6 +7,7 @@ import io.reactivex.Scheduler
 import io.reactivex.Single
 import me.leolin.shortcutbadger.ShortcutBadger
 import org.stepic.droid.base.ListenerContainer
+import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
@@ -57,7 +58,7 @@ constructor(
 
     @MainThread
     private fun updateCounter(count: Int) {
-        if (count != 0) {
+        if (firebaseRemoteConfig.getBoolean(RemoteConfig.SHOW_NOTIFICATIONS_BADGES) && count != 0) {
             ShortcutBadger.applyCount(context, count)
             listenerContainer.asIterable().forEach {
                 it.onBadgeCountChanged(count)
