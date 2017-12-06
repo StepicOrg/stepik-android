@@ -11,8 +11,8 @@ import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
-import org.stepic.droid.notifications.model.NotificationStatuses
 import org.stepic.droid.preferences.SharedPreferenceHelper
+import org.stepic.droid.util.mapNotNull
 import org.stepic.droid.web.Api
 import javax.inject.Inject
 
@@ -42,24 +42,18 @@ constructor(
 
     fun syncCounter() {
         api.notificationStatuses
-                .subscribeOn(scheduler)
-                .subscribe { response, _ ->
-                    response?.notificationStatuses?.firstOrNull()?.let {
-                        setCounter(it)
-                    }
+                .mapNotNull {
+                    it.notificationStatuses?.firstOrNull()?.total
                 }
-    }
-
-    private fun setCounter(notificationStatuses: NotificationStatuses) {
-        Single.fromCallable {
-            sharedPreferenceHelper.notificationsCount = notificationStatuses.total
-            return@fromCallable notificationStatuses.total
-        }
+                .map {
+                    sharedPreferenceHelper.notificationsCount = it
+                    return@map it
+                }
                 .subscribeOn(scheduler)
                 .observeOn(mainScheduler)
-                .subscribe { count, _ ->
-                    count?.let { updateCounter(it) }
-                }
+                .subscribe({
+                    updateCounter(it)
+                }, {})
     }
 
     @MainThread
