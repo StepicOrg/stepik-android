@@ -22,6 +22,6 @@ constructor(
      */
     fun clearCounter() {
         ShortcutBadger.applyCount(context, 0)
-        listenerContainer.asIterable().forEach(NotificationsBadgesListener::hideBadge)
+        listenerContainer.asIterable().forEach(NotificationsBadgesListener::onBadgeShouldBeHidden)
     }
 }

@@ -394,11 +394,11 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         streakPresenter.setStreakTime(intervalCode) // we do not need attach this view, because we need only set in model
     }
 
-    override fun hideBadge() {
+    override fun onBadgeShouldBeHidden() {
         navigationView.setNotification("", navigationAdapter.getPositionByMenuId(R.id.notifications))
     }
 
-    override fun setBadge(count: Int) {
+    override fun onBadgeCountChanged(count: Int) {
         navigationView.setNotification(if (count > MAX_NOTIFICATION_BADGE_COUNT) {
             getString(R.string.notification_badge_placeholder)
         } else {

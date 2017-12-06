@@ -61,11 +61,11 @@ constructor(
         if (firebaseRemoteConfig.getBoolean(RemoteConfig.SHOW_NOTIFICATIONS_BADGES) && count != 0) {
             ShortcutBadger.applyCount(context, count)
             listenerContainer.asIterable().forEach {
-                it.setBadge(count)
+                it.onBadgeCountChanged(count)
             }
         } else {
             ShortcutBadger.applyCount(context, 0)
-            listenerContainer.asIterable().forEach(NotificationsBadgesListener::hideBadge)
+            listenerContainer.asIterable().forEach(NotificationsBadgesListener::onBadgeShouldBeHidden)
         }
     }
 
