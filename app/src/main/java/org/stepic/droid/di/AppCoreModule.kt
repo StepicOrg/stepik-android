@@ -280,19 +280,6 @@ abstract class AppCoreModule {
         @Provides
         @JvmStatic
         @AppSingleton
-        internal fun provideStepikLogoutManager(threadPoolExecutor: ThreadPoolExecutor,
-                                                mainHandler: MainHandler,
-                                                userPreferences: UserPreferences,
-                                                sharedPreferenceHelper: SharedPreferenceHelper,
-                                                downloadManager: DownloadManager,
-                                                dbFacade: DatabaseFacade,
-                                                notificationsBadgesLogoutPoster: NotificationsBadgesLogoutPoster): StepikLogoutManager {
-            return StepikLogoutManager(threadPoolExecutor, mainHandler, userPreferences, downloadManager, sharedPreferenceHelper, dbFacade, notificationsBadgesLogoutPoster)
-        }
-
-        @Provides
-        @JvmStatic
-        @AppSingleton
         internal fun provideDownloadUpdaterAfterRestart(threadPoolExecutor: ThreadPoolExecutor,
                                                         systemDownloadManager: DownloadManager,
                                                         storeStateManager: StoreStateManager,
