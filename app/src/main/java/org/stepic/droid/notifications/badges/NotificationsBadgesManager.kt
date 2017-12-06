@@ -25,7 +25,6 @@ constructor(
         private val sharedPreferenceHelper: SharedPreferenceHelper,
         private val firebaseRemoteConfig: FirebaseRemoteConfig,
         private val listenerContainer: ListenerContainer<NotificationsBadgesListener>,
-
         @BackgroundScheduler
         private val scheduler: Scheduler,
         @MainScheduler
@@ -37,16 +36,15 @@ constructor(
                 .observeOn(mainScheduler)
                 .subscribe { count, _ ->
                     count?.let { updateCounter(it) }
+                    syncCounter()
                 }
-        syncCounter()
     }
 
     fun syncCounter() {
         api.notificationStatuses
                 .subscribeOn(scheduler)
-                .observeOn(scheduler)
-                .subscribe { res, _ ->
-                    res?.notificationStatuses?.firstOrNull()?.let {
+                .subscribe { response, _ ->
+                    response?.notificationStatuses?.firstOrNull()?.let {
                         setCounter(it)
                     }
                 }

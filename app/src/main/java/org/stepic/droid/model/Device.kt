@@ -7,8 +7,10 @@ data class Device(
         var registration_id: String? = null,
         var user: Long = 0,
         var description: String? = null,
-        var client_type: ClientType,
-        val is_badges_enabled: Boolean?
+        @SerializedName("client_type")
+        var clientType: ClientType,
+        @SerializedName("is_badges_enabled")
+        val isBadgesEnabled: Boolean?
 )
 
 enum class ClientType {

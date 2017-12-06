@@ -44,8 +44,8 @@ class StepicFcmListenerService : FirebaseMessagingService() {
     }
 
     private fun processNotification(rawMessageObject: String?) {
-        val stepicNotification = Gson().fromJson(rawMessageObject, Notification::class.java)
-        stepicNotification?.let {
+        val stepikNotification = Gson().fromJson(rawMessageObject, Notification::class.java)
+        stepikNotification?.let {
             hacker.stepikNotificationManager.showNotification(it)
         }
     }

@@ -118,8 +118,9 @@ ext.libraries = [
         recyclerAnimators    : "jp.wasabeef:recyclerview-animators:$versions.recyclerAnimators",
         materialProgress     : "me.zhanghai.android.materialprogressbar:library:$versions.materialProgress",
         circleImageView      : "de.hdodenhof:circleimageview:$versions.circleImageView",
-        shortcutBadger       : "me.leolin:ShortcutBadger:$versions.shortcutBadger",
         ahbottomnavigation   : "com.aurelhubert:ahbottomnavigation:$versions.ahbottomnavigation",
+
+        shortcutBadger       : "me.leolin:ShortcutBadger:$versions.shortcutBadger",
 
         // Developer Tools
         leakCanary           : "com.squareup.leakcanary:leakcanary-android:$versions.leakCanary",
