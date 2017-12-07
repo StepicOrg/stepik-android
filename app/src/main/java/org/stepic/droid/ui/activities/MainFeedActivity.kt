@@ -399,10 +399,13 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
     }
 
     override fun onBadgeCountChanged(count: Int) {
-        navigationView.setNotification(if (count > MAX_NOTIFICATION_BADGE_COUNT) {
-            getString(R.string.notification_badge_placeholder)
-        } else {
-            count.toString()
-        }, navigationAdapter.getPositionByMenuId(R.id.notifications))
+        navigationView.setNotification(getBadgeStringForCount(count), navigationAdapter.getPositionByMenuId(R.id.notifications))
     }
+
+    private fun getBadgeStringForCount(count: Int) =
+            if (count > MAX_NOTIFICATION_BADGE_COUNT) {
+                getString(R.string.notification_badge_placeholder)
+            } else {
+                count.toString()
+            }
 }
