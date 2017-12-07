@@ -35,7 +35,7 @@ import org.stepic.droid.ui.decorators.LeftSpacesDecoration
 import org.stepic.droid.ui.decorators.RightMarginForLastItems
 import org.stepic.droid.ui.decorators.VerticalSpacesInGridDecoration
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
-import org.stepic.droid.ui.util.StartSnapHelper
+import org.stepic.droid.ui.util.CoursesSnapHelper
 import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.StepikUtil
@@ -193,7 +193,7 @@ constructor(
         coursesRecycler.addItemDecoration(LeftSpacesDecoration(leftSpacePx))
         coursesRecycler.addItemDecoration(RightMarginForLastItems(resources.getDimensionPixelSize(R.dimen.home_right_recycler_padding_without_extra), ROW_COUNT))
         coursesRecycler.itemAnimator.changeDuration = 0
-        val snapHelper = StartSnapHelper()
+        val snapHelper = CoursesSnapHelper(ROW_COUNT)
         snapHelper.attachToRecyclerView(coursesRecycler)
     }
 
