@@ -14,4 +14,10 @@ constructor(
     fun postFirstCourse(course: Course?) {
         firstCourseSubjectHolder.firstCourseSubject.onNext(RxOptional(course))
     }
+
+    fun postConnectionError() {
+        if (!firstCourseSubjectHolder.firstCourseSubject.hasValue()) {
+            firstCourseSubjectHolder.firstCourseSubject.onNext(RxOptional(null))
+        }
+    }
 }

@@ -18,9 +18,10 @@ import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.core.dropping.contract.DroppingListener
 import org.stepic.droid.core.joining.contract.JoiningListener
 import org.stepic.droid.core.presenters.ContinueCoursePresenter
+import org.stepic.droid.core.presenters.FastContinuePresenter
 import org.stepic.droid.core.presenters.PersistentCourseListPresenter
 import org.stepic.droid.core.presenters.contracts.ContinueCourseView
-import org.stepic.droid.core.presenters.contracts.CoursesView
+import org.stepic.droid.core.presenters.contracts.FastContinueView
 import org.stepic.droid.model.Course
 import org.stepic.droid.model.Section
 import org.stepic.droid.storage.operations.Table
@@ -28,22 +29,20 @@ import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.ui.util.changeVisibility
-import org.stepic.droid.util.*
+import org.stepic.droid.util.ProgressHelper
+import org.stepic.droid.util.ProgressUtil
+import org.stepic.droid.util.StepikLogicHelper
 import javax.inject.Inject
 
 class FastContinueFragment : FragmentBase(),
-        CoursesView,
         ContinueCourseView,
         DroppingListener,
-        JoiningListener {
-
+        JoiningListener, FastContinueView {
     companion object {
         fun newInstance(): FastContinueFragment = FastContinueFragment()
 
         private const val CONTINUE_LOADING_TAG = "CONTINUE_LOADING_TAG"
     }
-
-    private var isCourseFound: Boolean = false
 
     @Inject
     lateinit var courseListPresenter: PersistentCourseListPresenter
@@ -56,6 +55,9 @@ class FastContinueFragment : FragmentBase(),
 
     @Inject
     lateinit var joiningListenerClient: Client<JoiningListener>
+
+    @Inject
+    lateinit var fastContinuePresenter: FastContinuePresenter
 
     private lateinit var courseCoverImageViewTarget: BitmapImageViewTarget
 
@@ -83,24 +85,14 @@ class FastContinueFragment : FragmentBase(),
 
         courseCoverImageViewTarget = RoundedBitmapImageViewTarget(resources.getDimension(R.dimen.course_image_radius), fastContinueCourseCover)
 
-        courseListPresenter.attachView(this)
         continueCoursePresenter.attachView(this)
         droppingClient.subscribe(this)
         joiningListenerClient.subscribe(this)
-        courseListPresenter.restoreState()
         fastContinueAction.isEnabled = true
 
 
-        //refresh the last course only when view is created
-        if (sharedPreferenceHelper.authResponseFromStore != null) {
-            courseListPresenter.downloadData(Table.enrolled)
-        } else {
-            analytic.reportEvent(Analytic.FastContinue.AUTH_SHOWN)
-            showPlaceholder(R.string.placeholder_login, { _ ->
-                analytic.reportEvent(Analytic.FastContinue.AUTH_CLICK)
-                screenManager.showLaunchScreen(context, true, MainFeedActivity.HOME_INDEX)
-            })
-        }
+        fastContinuePresenter.attachView(this)
+        fastContinuePresenter.onCreated()
     }
 
     override fun onPause() {
@@ -110,21 +102,22 @@ class FastContinueFragment : FragmentBase(),
 
     override fun onDestroyView() {
         super.onDestroyView()
+        fastContinuePresenter.detachView(this)
         joiningListenerClient.unsubscribe(this)
-        courseListPresenter.detachView(this)
         continueCoursePresenter.detachView(this)
         droppingClient.unsubscribe(this)
     }
 
-    //CourseView
-    override fun showLoading() {
-        fastContinueProgress.visibility = View.VISIBLE
-        showMainGroup(false)
-        fastContinuePlaceholder.visibility = View.GONE
+    override fun onAnonymous() {
+        analytic.reportEvent(Analytic.FastContinue.AUTH_SHOWN)
+        showPlaceholder(R.string.placeholder_login, { _ ->
+            analytic.reportEvent(Analytic.FastContinue.AUTH_CLICK)
+            screenManager.showLaunchScreen(context, true, MainFeedActivity.HOME_INDEX)
+        })
     }
 
-    override fun showEmptyCourses() {
-        //tbh: courses might be not empty, but not active
+    override fun onEmptyCourse() {
+        // tbh: courses might be not empty, but not active
         // we can show suggestion for enroll, but not write, that you have zero courses
         analytic.reportEvent(Analytic.FastContinue.EMPTY_COURSES_SHOWN)
         showPlaceholder(R.string.placeholder_explore_courses, { _ ->
@@ -133,46 +126,25 @@ class FastContinueFragment : FragmentBase(),
         })
     }
 
-    override fun showConnectionProblem() {
-        if (isCourseFound) {
-            //do not show connection problem, if we have  found the course already
-            return
-        }
-
-        analytic.reportEvent(Analytic.FastContinue.NO_INTERNET_SHOWN)
-        showPlaceholder(R.string.internet_problem, { _ ->
-            analytic.reportEvent(Analytic.FastContinue.NO_INTERNET_CLICK)
-            if (StepikUtil.isInternetAvailable()) {
-                courseListPresenter.downloadData(Table.enrolled)
-            }
-        })
-    }
-
-    override fun showCourses(courses: List<Course>) {
+    override fun onShowCourse(course: Course) {
         fastContinueProgress.visibility = View.GONE
         fastContinuePlaceholder.visibility = View.GONE
-        val course: Course? = courses
-                .find {
-                    it.isActive
-                            && it.sections?.isNotEmpty() ?: false
-                }
 
-        if (course != null) {
-            if (!isCourseFound) {
-                analytic.reportEvent(Analytic.FastContinue.CONTINUE_SHOWN)
-            }
-            setCourse(course)
-            showMainGroup(true)
-            isCourseFound = true
-            fastContinueAction.setOnClickListener {
-                analytic.reportEvent(Analytic.FastContinue.CONTINUE_CLICK)
-                continueCoursePresenter.continueCourse(course)
-            }
-        } else {
-            isCourseFound = false
-            showEmptyCourses()
+        analytic.reportEvent(Analytic.FastContinue.CONTINUE_SHOWN)
+        setCourse(course)
+        showMainGroup(true)
+        fastContinueAction.setOnClickListener {
+            analytic.reportEvent(Analytic.FastContinue.CONTINUE_CLICK)
+            continueCoursePresenter.continueCourse(course)
         }
     }
+
+    override fun onLoading() {
+        fastContinueProgress.visibility = View.VISIBLE
+        showMainGroup(false)
+        fastContinuePlaceholder.visibility = View.GONE
+    }
+
 
     private fun setCourse(course: Course) {
         Glide
@@ -192,8 +164,6 @@ class FastContinueFragment : FragmentBase(),
 
     //ContinueCourseView
     override fun onShowContinueCourseLoadingDialog() {
-        // FIXME: 15.09.17  Implement expand/collapse for fastContinueAction
-
         fastContinueAction.isEnabled = false
         val loadingProgressDialogFragment = LoadingProgressDialogFragment.newInstance()
         if (!loadingProgressDialogFragment.isAdded) {
@@ -202,16 +172,12 @@ class FastContinueFragment : FragmentBase(),
     }
 
     override fun onOpenStep(courseId: Long, section: Section, lessonId: Long, unitId: Long, stepPosition: Int) {
-        // FIXME: 15.09.17 expand fastContinueAction
-
         ProgressHelper.dismiss(fragmentManager, CONTINUE_LOADING_TAG)
         fastContinueAction.isEnabled = true
         screenManager.continueCourse(activity, courseId, section, lessonId, unitId, stepPosition.toLong())
     }
 
     override fun onAnyProblemWhileContinue(course: Course) {
-        // FIXME: 15.09.17 expand fastContinueAction
-
         ProgressHelper.dismiss(fragmentManager, CONTINUE_LOADING_TAG)
         fastContinueAction.isEnabled = true
         screenManager.showSections(activity, course)
@@ -240,6 +206,6 @@ class FastContinueFragment : FragmentBase(),
     }
 
     override fun onSuccessJoin(joinedCourse: Course) {
-        showCourses(mutableListOf(joinedCourse))
+        onShowCourse(joinedCourse)
     }
 }
