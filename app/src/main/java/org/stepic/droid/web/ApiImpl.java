@@ -657,6 +657,18 @@ public class ApiImpl implements Api {
     }
 
     @Override
+    public Call<DeviceResponse> getDevicesByRegistrationId(String token) {
+        return loggedService.getDeviceByRegistrationId(token);
+    }
+
+    @Override
+    public Call<DeviceResponse> renewDeviceRegistration(long deviceId, String token) {
+        String description = DeviceInfoUtil.getShortInfo(context);
+        DeviceRequest deviceRequest = new DeviceRequest(deviceId, token, description);
+        return loggedService.renewDeviceRegistration(deviceId, deviceRequest);
+    }
+
+    @Override
     public Call<DeviceResponse> registerDevice(String token) {
         String description = DeviceInfoUtil.getShortInfo(context);
         DeviceRequest deviceRequest = new DeviceRequest(token, description);

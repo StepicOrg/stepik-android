@@ -25,8 +25,12 @@ constructor(
             sharedPreferencesHelper.authResponseFromStore!! //for logged user only work
             val token = tokenNullable!!
             val response = api.registerDevice(token).execute()
-            if (!response.isSuccessful && response.code() != 400) { //400 -- device already registered
-                throw Exception("response was failed. it is ok. code: " + response.code())
+            if (!response.isSuccessful) { //400 -- device already registered
+                if (response.code() == 400) {
+                    renewDeviceRegistration(token)
+                } else {
+                    throw Exception("response was failed. it is ok. code: " + response.code())
+                }
             }
             sharedPreferencesHelper.setIsGcmTokenOk(true)
 
@@ -34,6 +38,18 @@ constructor(
         } catch (e: Exception) {
             analytic.reportEvent(Analytic.Notification.TOKEN_UPDATE_FAILED)
             sharedPreferencesHelper.setIsGcmTokenOk(false)
+        }
+    }
+
+    private fun renewDeviceRegistration(token: String) {
+        val deviceId = api.getDevicesByRegistrationId(token).execute()?.body()?.devices?.firstOrNull()?.id
+        if (deviceId != null) {
+            val response = api.renewDeviceRegistration(deviceId, token).execute()
+            if (!response.isSuccessful) {
+                throw Exception("Can't renew device registration for device: $deviceId")
+            }
+        } else {
+            throw Exception("Can't get device id for token: $token")
         }
     }
 }

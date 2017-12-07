@@ -93,6 +93,10 @@ public interface Api {
 
     Call<DeviceResponse> getDevices();
 
+    Call<DeviceResponse> getDevicesByRegistrationId(String token);
+
+    Call<DeviceResponse> renewDeviceRegistration(long deviceId, String token);
+
     Call<DeviceResponse> registerDevice(String token);
 
     Call<CoursesMetaResponse> getCourse(long id);
