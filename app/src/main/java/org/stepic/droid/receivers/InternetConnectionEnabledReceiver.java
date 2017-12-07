@@ -102,7 +102,7 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
                         = api.setReadStatusForNotification(viewedNotification.getNotificationId(), true).execute();
 
                 if (response.isSuccessful()) {
-                    databaseFacade.removeViewedNotitcation(viewedNotification);
+                    databaseFacade.removeViewedNotification(viewedNotification);
                 }
             } catch (IOException e) {
                 //no internet, just ignore and send next time

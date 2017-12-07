@@ -10,7 +10,6 @@ import org.stepic.droid.model.code.CodeSubmission
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.storage.dao.IDao
 import org.stepic.droid.storage.dao.SearchQueryDao
-import org.stepic.droid.storage.dao.ViewedNotificationsQueueDaoImpl
 import org.stepic.droid.storage.structure.*
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DbParseHelper
@@ -52,6 +51,7 @@ class DatabaseFacade
         progressDao.removeAll()
         lessonDao.removeAll()
         viewAssignmentDao.removeAll()
+        viewedNotificationsQueueDao.removeAll()
         downloadEntityDao.removeAll()
         cachedVideoDao.removeAll()
         stepDao.removeAll()
@@ -478,7 +478,7 @@ class DatabaseFacade
 
     fun getViewedNotificationsQueue() = viewedNotificationsQueueDao.getAll()
 
-    fun removeViewedNotitcation(viewedNotification: ViewedNotification) {
+    fun removeViewedNotification(viewedNotification: ViewedNotification) {
         viewedNotificationsQueueDao.remove(
                 DbStructureViewedNotificationsQueue.Column.NOTIFICATION_ID,
                 viewedNotification.notificationId.toString())
