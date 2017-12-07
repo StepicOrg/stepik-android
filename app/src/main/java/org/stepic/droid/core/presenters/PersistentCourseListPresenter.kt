@@ -144,8 +144,8 @@ class PersistentCourseListPresenter
                 //this lock need for not saving enrolled courses to database after user click logout
                 RWLocks.ClearEnrollmentsLock.writeLock().lock()
                 if (sharedPreferenceHelper.authResponseFromStore != null || courseType == Table.featured) {
-                    if (isRefreshing && currentPage.get() == 2) {
-                        if (courseType == Table.featured) {
+                    if (isRefreshing) {
+                        if (courseType == Table.featured && currentPage.get() == 2) {
                             databaseFacade.dropFeaturedCourses()
                         } else if (courseType == Table.enrolled) {
                             databaseFacade.dropEnrolledCourses()
