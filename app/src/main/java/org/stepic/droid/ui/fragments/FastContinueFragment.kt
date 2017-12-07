@@ -37,7 +37,9 @@ import javax.inject.Inject
 class FastContinueFragment : FragmentBase(),
         ContinueCourseView,
         DroppingListener,
-        JoiningListener, FastContinueView {
+        JoiningListener,
+        FastContinueView {
+
     companion object {
         fun newInstance(): FastContinueFragment = FastContinueFragment()
 
