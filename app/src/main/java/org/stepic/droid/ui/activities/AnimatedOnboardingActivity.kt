@@ -12,6 +12,7 @@ import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.ui.activities.contracts.OnNextClickedListener
 import org.stepic.droid.ui.adapters.OnboardingAdapter
 import org.stepic.droid.ui.custom.OnboardingPageTransformer
+import org.stepic.droid.ui.fragments.OnboardingFragment
 import timber.log.Timber
 
 
@@ -41,7 +42,9 @@ class AnimatedOnboardingActivity : FragmentActivityBase(), OnNextClickedListener
 
             override fun onPageSelected(position: Int) {
                 Timber.d("onPageSelected $position")
-                setAnimation(position)
+                val tag = "android:switcher:" + R.id.onboardingViewPager + ":" + position
+                val f = supportFragmentManager.findFragmentByTag(tag)
+                (f as OnboardingFragment).startAnimation()
             }
         })
         onboardingViewPager.setPageTransformer(false, OnboardingPageTransformer())
@@ -54,6 +57,7 @@ class AnimatedOnboardingActivity : FragmentActivityBase(), OnNextClickedListener
     }
 
     private fun setAnimation(position: Int) {
+
 //        onboardingAnimationView.pauseAnimation()
 //        onboardingAnimationView.speed = 0.4f
 //        onboardingAnimationView.loop(true)

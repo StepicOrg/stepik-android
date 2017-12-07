@@ -1,5 +1,6 @@
 package org.stepic.droid.ui.fragments
 
+import android.animation.ValueAnimator
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import org.stepic.droid.R
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.model.OnboardingType
 import org.stepic.droid.ui.activities.contracts.OnNextClickedListener
+import timber.log.Timber
 
 class OnboardingFragment : FragmentBase() {
     companion object {
@@ -45,12 +47,27 @@ class OnboardingFragment : FragmentBase() {
         onboardingAnimationView.visibility = View.VISIBLE
         onboardingAnimationView.pauseAnimation()
         onboardingAnimationView.setAnimation(type.assetPathToAnimation)
-        onboardingAnimationView.speed = 0.4f
+        onboardingAnimationView.speed = 1f
+
     }
 
-    override fun onResume() {
-        super.onResume()
-        onboardingAnimationView.playAnimation()
+    fun startAnimation() {
+        if (isResumed) {
+            val type = arguments.getParcelable<OnboardingType>(ONBOARDING_TYPE_KEY)
+            Timber.d("startAnimation ${getString(type.title)}")
+            onboardingAnimationView.pauseAnimation()
+            onboardingAnimationView.setAnimation(type.assetPathToAnimation)
+            onboardingAnimationView.setMaxFrame(40)
+            onboardingAnimationView.playAnimation()
+            onboardingAnimationView.addAnimatorUpdateListener(ValueAnimator.AnimatorUpdateListener() {
+                Timber.d("frame  ${onboardingAnimationView.frame}")
+            })
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        onboardingAnimationView.pauseAnimation()
     }
 
 }

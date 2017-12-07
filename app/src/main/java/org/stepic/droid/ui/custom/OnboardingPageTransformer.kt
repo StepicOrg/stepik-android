@@ -4,7 +4,6 @@ import android.support.v4.view.ViewPager
 import android.view.View
 import com.airbnb.lottie.LottieAnimationView
 import org.stepic.droid.R
-import timber.log.Timber
 
 class OnboardingPageTransformer : ViewPager.PageTransformer {
 
@@ -15,7 +14,6 @@ class OnboardingPageTransformer : ViewPager.PageTransformer {
         page.cameraDistance = 12000f
         setVisibility(page, position)
         setTranslation(rootView, page, viewPager)
-//        setSize(page, position, percentage)
         setRotation(page, position, percentage)
     }
 
@@ -31,13 +29,7 @@ class OnboardingPageTransformer : ViewPager.PageTransformer {
         val scrollX = viewPager.scrollX
         val left = rootView.left
         val scroll = scrollX - left
-        Timber.d("$scroll = $scrollX - $left")
         page.translationX = scroll.toFloat()
-    }
-
-    private fun setSize(page: View, position: Float, percentage: Float) {
-        page.scaleX = if (position != 0f && position != 1f) percentage else 1f
-        page.scaleY = if (position != 0f && position != 1f) percentage else 1f
     }
 
     private fun setRotation(page: View, position: Float, percentage: Float) {
