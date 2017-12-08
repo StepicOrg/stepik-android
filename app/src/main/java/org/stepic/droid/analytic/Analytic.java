@@ -38,9 +38,6 @@ public interface Analytic {
         String EMPTY_COURSES_SHOWN = "fast_continue_empty_courses";
         String EMPTY_COURSES_CLICK = "fast_continue_empty_courses_click";
 
-        String NO_INTERNET_SHOWN = "fast_continue_no_internet";
-        String NO_INTERNET_CLICK = "fast_continue_no_internet_click";
-
         String AUTH_SHOWN = "fast_continue_auth";
         String AUTH_CLICK = "fast_continue_auth_click";
 
