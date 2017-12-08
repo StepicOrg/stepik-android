@@ -359,6 +359,10 @@ public class SharedPreferenceHelper {
         put(PreferenceType.DEVICE_SPECIFIC, FIRST_TIME_LAUNCH, false);
     }
 
+    public void setHasEverLogged() {
+        put(PreferenceType.DEVICE_SPECIFIC, IS_EVER_LOGGED, true);
+    }
+
     public boolean isEverLogged() {
         return getBoolean(PreferenceType.DEVICE_SPECIFIC, IS_EVER_LOGGED, false);
     }

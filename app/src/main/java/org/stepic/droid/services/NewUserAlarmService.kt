@@ -26,6 +26,11 @@ class NewUserAlarmService : IntentService("NewUserAlarm") {
     }
 
     override fun onHandleIntent(intent: Intent?) {
-        stepikNotificationManager.showLocalNotificationRemind()
+        when (intent?.action) {
+            SHOW_REGISTRATION_NOTIFICATION ->
+                stepikNotificationManager.showRegistrationRemind()
+            else ->
+                stepikNotificationManager.showLocalNotificationRemind()
+        }
     }
 }

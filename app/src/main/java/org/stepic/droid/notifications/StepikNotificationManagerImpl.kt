@@ -13,6 +13,7 @@ import android.support.annotation.DrawableRes
 import android.support.annotation.WorkerThread
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.TaskStackBuilder
+import android.util.Log
 import com.bumptech.glide.Glide
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
@@ -145,6 +146,24 @@ class StepikNotificationManagerImpl
                 streakNotificationNumberIsOverflow()
             }
         }
+    }
+
+    @WorkerThread
+    override fun showRegistrationRemind() {
+        if (sharedPreferenceHelper.isEverLogged) return
+
+        val taskBuilder = TaskStackBuilder.create(context)
+
+        val title = context.resources.getString(R.string.stepik_free_courses_title)
+        val remindMessage = "Register please" // todo text
+        showSimpleNotification(
+                stepikNotification = null,
+                justText = remindMessage,
+                taskBuilder = taskBuilder,
+                title = title,
+                id = 5) // todo id constant
+
+        localReminder.remindAboutRegistration()
     }
 
     override fun showNotification(notification: Notification) {

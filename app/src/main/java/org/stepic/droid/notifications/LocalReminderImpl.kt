@@ -159,6 +159,10 @@ class LocalReminderImpl
         threadPoolExecutor.execute {
             val isNotLoading = registrationRemindHandling.compareAndSet(false, true)
             if (isNotLoading) try {
+                if (sharedPreferenceHelper.authResponseFromStore != null) {
+                    sharedPreferenceHelper.setHasEverLogged()
+                }
+
                 if (sharedPreferenceHelper.isEverLogged) return@execute
 
                 val now = DateTimeHelper.nowLocal()
@@ -178,7 +182,7 @@ class LocalReminderImpl
                 intent.action = NewUserAlarmService.SHOW_REGISTRATION_NOTIFICATION
                 intent.putExtra(NewUserAlarmService.NOTIFICATION_TIMESTAMP_SENT_KEY, scheduleMillis)
                 val pendingIntent = PendingIntent.getService(context, NewUserAlarmService.REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-                alarmManager.cancel(pendingIntent)//timer should not be triggered
+                alarmManager.cancel(pendingIntent)
 
                 scheduleCompat(scheduleMillis, AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent)
 
