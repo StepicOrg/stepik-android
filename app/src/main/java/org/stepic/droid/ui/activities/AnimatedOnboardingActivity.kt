@@ -1,5 +1,6 @@
 package org.stepic.droid.ui.activities
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.support.v4.view.ViewPager
 import kotlinx.android.synthetic.main.activity_onboarding.*
@@ -16,6 +17,7 @@ class AnimatedOnboardingActivity : FragmentActivityBase(), OnNextClickedListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         setContentView(R.layout.activity_onboarding)
         initViewPager()
         initClose()

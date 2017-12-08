@@ -1,20 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_alignParentBottom="true"
+    android:layout_height="match_parent"
     tools:context=".ui.activities.AnimatedOnboardingActivity">
-
 
     <TextView
         android:id="@+id/onboardingPageAction"
         style="@style/Onboarding.Action"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="60dp" />
-
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:id="@+id/onboardingPageSubtitle"
@@ -27,13 +22,13 @@
         style="@style/Onboarding.Title"
         android:layout_above="@id/onboardingPageSubtitle" />
 
-
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/onboardingAnimationView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/onboardingPageTitle"
-        android:layout_centerHorizontal="true" />
-
-
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/onboarding_top_margin"
+        android:layout_marginLeft="@dimen/onboarding_side_margin"
+        android:layout_marginRight="@dimen/onboarding_side_margin" />
 </RelativeLayout>

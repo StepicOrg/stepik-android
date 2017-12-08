@@ -62,8 +62,8 @@
         <item name="fontPath">fonts/Roboto-Medium.ttf</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginLeft">32dp</item>
-        <item name="android:layout_marginRight">32dp</item>
+        <item name="android:layout_marginLeft">@dimen/onboarding_side_margin</item>
+        <item name="android:layout_marginRight">@dimen/onboarding_side_margin</item>
     </style>
 
     <style name="Onboarding.Title">
@@ -85,6 +85,7 @@
         <item name="android:textSize">15sp</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:background">@drawable/onboarding_action_background</item>
+        <item name="android:layout_marginBottom">@dimen/onboarding_bottom_margin</item>
     </style>
 
 </resources>
