@@ -60,7 +60,7 @@ class OnboardingFragment : FragmentBase() {
 //            onboardingAnimationView.setMaxFrame(40)
             onboardingAnimationView.playAnimation()
             onboardingAnimationView.addAnimatorUpdateListener(ValueAnimator.AnimatorUpdateListener() {
-//                Timber.d("frame  ${onboardingAnimationView.frame}")
+                //                Timber.d("frame  ${onboardingAnimationView.frame}")
             })
         }
     }
