@@ -47,7 +47,7 @@ class OnboardingFragment : FragmentBase() {
         onboardingAnimationView.visibility = View.VISIBLE
         onboardingAnimationView.pauseAnimation()
         onboardingAnimationView.setAnimation(type.assetPathToAnimation)
-        onboardingAnimationView.speed = 1f
+//        onboardingAnimationView.speed = 1f
 
     }
 
@@ -57,10 +57,10 @@ class OnboardingFragment : FragmentBase() {
             Timber.d("startAnimation ${getString(type.title)}")
             onboardingAnimationView.pauseAnimation()
             onboardingAnimationView.setAnimation(type.assetPathToAnimation)
-            onboardingAnimationView.setMaxFrame(40)
+//            onboardingAnimationView.setMaxFrame(40)
             onboardingAnimationView.playAnimation()
             onboardingAnimationView.addAnimatorUpdateListener(ValueAnimator.AnimatorUpdateListener() {
-                Timber.d("frame  ${onboardingAnimationView.frame}")
+//                Timber.d("frame  ${onboardingAnimationView.frame}")
             })
         }
     }
