@@ -119,6 +119,7 @@ class LaunchActivity : SmartLockActivityBase(), LoginView {
             }
 
             override fun onError(exception: FacebookException) {
+                analytic.reportError(Analytic.Login.FACEBOOK_ERROR, exception)
                 onInternetProblems()
             }
         })
@@ -174,7 +175,7 @@ class LaunchActivity : SmartLockActivityBase(), LoginView {
             adapter.showLess()
         }
 
-        when(state) {
+        when (state) {
             SocialAuthAdapter.State.EXPANDED -> {
                 showLess.visibility = View.VISIBLE
                 showMore.visibility = View.GONE
@@ -247,13 +248,9 @@ class LaunchActivity : SmartLockActivityBase(), LoginView {
             val result = Auth.GoogleSignInApi.getSignInResultFromIntent(data)
             // here is not only fail due to Internet, fix it. see: https://developers.google.com/android/reference/com/google/android/gms/auth/api/signin/GoogleSignInResult
             if (result.isSuccess) {
-                val account = result.signInAccount
-                if (account == null) {
-                    onInternetProblems()
-                    return
-                }
-                val authCode = account.serverAuthCode
+                val authCode = result.signInAccount?.serverAuthCode
                 if (authCode == null) {
+                    analytic.reportEvent(Analytic.Login.GOOGLE_AUTH_CODE_NULL)
                     onInternetProblems()
                     return
                 }
@@ -261,6 +258,9 @@ class LaunchActivity : SmartLockActivityBase(), LoginView {
                 loginPresenter.loginWithNativeProviderCode(authCode,
                         SocialManager.SocialType.google)
             } else {
+                // check statusCode here https://developers.google.com/android/reference/com/google/android/gms/common/api/CommonStatusCodes
+                val statusCode = result?.status?.statusCode?.toString() ?: "was null"
+                analytic.reportEvent(Analytic.Login.GOOGLE_FAILED_STATUS, statusCode)
                 onInternetProblems()
             }
         }
