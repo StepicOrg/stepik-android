@@ -12,4 +12,8 @@
         <key>show_streak_dialog_after_login</key>
         <value>true</value>
     </entry>
+    <entry>
+        <key>show_notifications_badges</key>
+        <value>false</value>
+    </entry>
 </defaultsMap>
