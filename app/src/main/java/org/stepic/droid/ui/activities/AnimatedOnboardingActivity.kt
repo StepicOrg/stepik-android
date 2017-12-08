@@ -24,7 +24,7 @@ class AnimatedOnboardingActivity : FragmentActivityBase(), OnNextClickedListener
     private fun initViewPager() {
         onboardingViewPager.adapter = OnboardingAdapter(supportFragmentManager)
         onboardingCircleIndicator.setViewPager(onboardingViewPager)
-        onboardingViewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+        val pageChangeListener: ViewPager.OnPageChangeListener = object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {
             }
 
@@ -32,13 +32,20 @@ class AnimatedOnboardingActivity : FragmentActivityBase(), OnNextClickedListener
             }
 
             override fun onPageSelected(position: Int) {
-                Timber.d("onPageSelected $position")
-                val tag = "android:switcher:" + R.id.onboardingViewPager + ":" + position
-                val fragment = supportFragmentManager.findFragmentByTag(tag)
-                (fragment as OnboardingFragment).startAnimation()
+                invokeAnimationOnFragment(position)
             }
-        })
+        }
+        onboardingViewPager.addOnPageChangeListener(pageChangeListener)
         onboardingViewPager.setPageTransformer(false, OnboardingPageTransformer())
+
+        //we should post animation on next frame
+        onboardingViewPager.post { pageChangeListener.onPageSelected(onboardingViewPager.currentItem) }
+    }
+
+    private fun invokeAnimationOnFragment(position: Int) {
+        val tag = "android:switcher:" + R.id.onboardingViewPager + ":" + position
+        val fragment = supportFragmentManager.findFragmentByTag(tag)
+        (fragment as OnboardingFragment).startAnimation()
     }
 
     private fun initClose() {
@@ -69,5 +76,4 @@ class AnimatedOnboardingActivity : FragmentActivityBase(), OnNextClickedListener
     override fun applyTransitionPrev() {
         // no-op
     }
-
 }

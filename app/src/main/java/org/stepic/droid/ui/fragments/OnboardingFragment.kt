@@ -1,6 +1,5 @@
 package org.stepic.droid.ui.fragments
 
-import android.animation.ValueAnimator
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +9,6 @@ import org.stepic.droid.R
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.model.OnboardingType
 import org.stepic.droid.ui.activities.contracts.OnNextClickedListener
-import timber.log.Timber
 
 class OnboardingFragment : FragmentBase() {
     companion object {
@@ -25,11 +23,13 @@ class OnboardingFragment : FragmentBase() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
             inflater.inflate(R.layout.fragment_onboarding_page, container, false)
 
+    private lateinit var onboardingType: OnboardingType
+
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val type = arguments.getParcelable<OnboardingType>(ONBOARDING_TYPE_KEY)
-        initScreen(type)
+        onboardingType = arguments.getParcelable<OnboardingType>(ONBOARDING_TYPE_KEY)
+        initScreen(onboardingType)
     }
 
     private fun initScreen(type: OnboardingType) {
@@ -47,27 +47,15 @@ class OnboardingFragment : FragmentBase() {
         onboardingAnimationView.visibility = View.VISIBLE
         onboardingAnimationView.pauseAnimation()
         onboardingAnimationView.setAnimation(type.assetPathToAnimation)
-//        onboardingAnimationView.speed = 1f
-
     }
 
     fun startAnimation() {
-        if (isResumed) {
-            val type = arguments.getParcelable<OnboardingType>(ONBOARDING_TYPE_KEY)
-            Timber.d("startAnimation ${getString(type.title)}")
-            onboardingAnimationView.pauseAnimation()
-            onboardingAnimationView.setAnimation(type.assetPathToAnimation)
-//            onboardingAnimationView.setMaxFrame(40)
-            onboardingAnimationView.playAnimation()
-            onboardingAnimationView.addAnimatorUpdateListener(ValueAnimator.AnimatorUpdateListener() {
-                //                Timber.d("frame  ${onboardingAnimationView.frame}")
-            })
-        }
+        onboardingAnimationView.setAnimation(onboardingType.assetPathToAnimation)
+        onboardingAnimationView.playAnimation()
     }
 
     override fun onPause() {
         super.onPause()
         onboardingAnimationView.pauseAnimation()
     }
-
 }
