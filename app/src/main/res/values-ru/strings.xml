@@ -555,7 +555,7 @@
     <string name="onboarding_next_action">Далее</string>
     <string name="onboarding_done_action">Начать</string>
     <string name="onboarding_first_title">Выбирайте</string>
-    <string name="onboarding_first_subtitle">Доступ ко всем курсам на Stepik - выбирайте, что интересно</string>
+    <string name="onboarding_first_subtitle">Доступ ко всем курсам на Stepik \u2014 выбирайте, что интересно</string>
     <string name="onboarding_second_title">Сохраняйте</string>
     <string name="onboarding_second_subtitle">Смотрите лекции и сохраняйте их для просмотра без доступа в сеть</string>
     <string name="onboarding_third_title">Решайте</string>
