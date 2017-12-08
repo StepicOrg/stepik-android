@@ -30,6 +30,7 @@ public class BootCompletedReceiver extends BroadcastReceiver {
         if (timestamp > 0L) {
             localReminder.remindAboutApp(timestamp); //send to remind checker
         }
+        localReminder.remindAboutRegistration();
         localReminder.userChangeStateOfNotification();
     }
 }

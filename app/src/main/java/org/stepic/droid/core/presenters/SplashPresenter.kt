@@ -11,6 +11,7 @@ import org.stepic.droid.core.presenters.contracts.SplashView
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.di.splash.SplashScope
+import org.stepic.droid.notifications.LocalReminder
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants
@@ -32,7 +33,8 @@ constructor(
         private val googleApiChecker: GoogleApiChecker,
         private val analytic: Analytic,
         private val stepikDevicePoster: StepikDevicePoster,
-        private val databaseFacade: DatabaseFacade
+        private val databaseFacade: DatabaseFacade,
+        private val localReminder: LocalReminder
 ) : PresenterBase<SplashView>() {
 
     private var disposable: Disposable? = null
@@ -52,6 +54,7 @@ constructor(
                 .observeOn(mainScheduler)
                 .subscribe {
                     if (it.value == null) {
+                        localReminder.remindAboutRegistration()
                         view?.onShowLaunch()
                     } else {
                         view?.onShowHome()

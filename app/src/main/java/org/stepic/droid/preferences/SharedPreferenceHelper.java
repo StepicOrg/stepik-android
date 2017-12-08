@@ -45,6 +45,7 @@ public class SharedPreferenceHelper {
     private final static String SEVEN_DAY_NOTIFICATION = "seven_day_notification";
     private static final String FILTER_RUSSIAN_LANGUAGE = "russian_lang";
     private static final String FILTER_ENGLISH_LANGUAGE = "english_lang";
+    private static final String IS_EVER_LOGGED = "is_ever_logged";
 
     private final String ACCESS_TOKEN_TIMESTAMP = "access_token_timestamp";
     private final String AUTH_RESPONSE_JSON = "auth_response_json";
@@ -69,6 +70,7 @@ public class SharedPreferenceHelper {
     private final String ANY_STEP_SOLVED = "any_step_solved";
     private final String NUMBER_OF_STEPS_SOLVED = "number_of_steps_solved";
     private final String NEW_USER_ALARM_TIMESTAMP = "new_user_alarm_timestamp";
+    private final String REGISTRATION_ALARM_TIMESTAMP = "registration_alarm_timestamp";
     private final String NUMBER_OF_SHOWN_STREAK_DIALOG = "number_of_shown_streak_dialog";
     private final String STREAK_DIALOG_SHOWN_TIMESTAMP = "streak_dialog_shown_timestamp";
     private final String STREAK_NUMBER_OF_IGNORED = "streak_number_of_ignored";
@@ -171,6 +173,14 @@ public class SharedPreferenceHelper {
 
     public long getNewUserRemindTimestamp() {
         return getLong(PreferenceType.DEVICE_SPECIFIC, NEW_USER_ALARM_TIMESTAMP);
+    }
+
+    public void saveRegistrationRemindTimestamp(long scheduleMillis) {
+        put(PreferenceType.DEVICE_SPECIFIC, REGISTRATION_ALARM_TIMESTAMP, scheduleMillis);
+    }
+
+    public long getRegistrationRemindTimestamp() {
+        return getLong(PreferenceType.DEVICE_SPECIFIC, REGISTRATION_ALARM_TIMESTAMP);
     }
 
     public void clickEnrollNotification(long timestamp) {
@@ -347,6 +357,10 @@ public class SharedPreferenceHelper {
 
     public void afterFirstTime() {
         put(PreferenceType.DEVICE_SPECIFIC, FIRST_TIME_LAUNCH, false);
+    }
+
+    public boolean isEverLogged() {
+        return getBoolean(PreferenceType.DEVICE_SPECIFIC, IS_EVER_LOGGED, false);
     }
 
     public boolean isNeedToShowVideoQualityExplanation() {
@@ -588,6 +602,8 @@ public class SharedPreferenceHelper {
 
         long millisNow = DateTimeHelper.INSTANCE.nowUtc(); // we should use +0 UTC for avoid problems with TimeZones
         put(PreferenceType.LOGIN, ACCESS_TOKEN_TIMESTAMP, millisNow);
+
+        put(PreferenceType.DEVICE_SPECIFIC, IS_EVER_LOGGED, true);
     }
 
     public void storeLastTokenType(boolean isSocial) {

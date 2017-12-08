@@ -13,4 +13,7 @@ interface LocalReminder {
     @MainThread
     fun userChangeStateOfNotification()
 
+    @MainThread
+    fun remindAboutRegistration()
+
 }
