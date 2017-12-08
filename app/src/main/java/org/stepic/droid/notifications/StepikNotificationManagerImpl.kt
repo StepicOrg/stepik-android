@@ -48,6 +48,11 @@ class StepikNotificationManagerImpl
                     private val localReminder: LocalReminder,
                     private val notificationManager: NotificationManager,
                     private val notificationTimeChecker: NotificationTimeChecker) : StepikNotificationManager {
+    companion object {
+        private const val NEW_USER_REMIND_NOTIFICATION_ID = 4L
+        private const val REGISTRATION_REMIND_NOTIFICATION_ID = 5L
+    }
+
     val notificationStreakId: Long = 3214L
 
     @WorkerThread
@@ -86,7 +91,8 @@ class StepikNotificationManagerImpl
                 justText = remindMessage,
                 taskBuilder = taskBuilder,
                 title = title,
-                deleteIntent = deletePendingIntent, id = 4)
+                deleteIntent = deletePendingIntent,
+                id = NEW_USER_REMIND_NOTIFICATION_ID)
 
         if (!sharedPreferenceHelper.isNotificationWasShown(SharedPreferenceHelper.NotificationDay.DAY_ONE)) {
             afterLocalNotificationShown(SharedPreferenceHelper.NotificationDay.DAY_ONE)
@@ -153,14 +159,14 @@ class StepikNotificationManagerImpl
                 .create(context)
                 .addNextIntent(intent)
 
-        val title = context.resources.getString(R.string.stepik_free_courses_title)
-        val remindMessage = "Register please" // todo text
+        val title = context.getString(R.string.stepik_free_courses_title)
+        val remindMessage = context.getString(R.string.registration_remind_message)
         showSimpleNotification(
                 stepikNotification = null,
                 justText = remindMessage,
                 taskBuilder = taskBuilder,
                 title = title,
-                id = 5) // todo id constant
+                id = REGISTRATION_REMIND_NOTIFICATION_ID)
 
         localReminder.remindAboutRegistration()
     }
