@@ -4,6 +4,7 @@ import android.support.annotation.WorkerThread
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.concurrency.SingleThreadExecutor
 import org.stepic.droid.core.FilterApplicator
+import org.stepic.droid.core.FirstCoursePoster
 import org.stepic.droid.core.earlystreak.contract.EarlyStreakPoster
 import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.di.course_list.CourseListScope
@@ -31,7 +32,8 @@ class PersistentCourseListPresenter
         private val api: Api,
         private val filterApplicator: FilterApplicator,
         private val sharedPreferenceHelper: SharedPreferenceHelper,
-        private val earlyStreakPoster: EarlyStreakPoster
+        private val earlyStreakPoster: EarlyStreakPoster,
+        private val firstCoursePoster: FirstCoursePoster
 ) : PresenterBase<CoursesView>() {
 
     companion object {
@@ -113,6 +115,7 @@ class PersistentCourseListPresenter
 
             if (coursesFromInternet == null) {
                 mainHandler.post {
+                    firstCoursePoster.postConnectionError()
                     view?.showConnectionProblem()
                 }
                 break
@@ -144,8 +147,8 @@ class PersistentCourseListPresenter
                 //this lock need for not saving enrolled courses to database after user click logout
                 RWLocks.ClearEnrollmentsLock.writeLock().lock()
                 if (sharedPreferenceHelper.authResponseFromStore != null || courseType == Table.featured) {
-                    if (isRefreshing && currentPage.get() == 2) {
-                        if (courseType == Table.featured) {
+                    if (isRefreshing) {
+                        if (courseType == Table.featured && currentPage.get() == 2) {
                             databaseFacade.dropFeaturedCourses()
                         } else if (courseType == Table.enrolled) {
                             databaseFacade.dropEnrolledCourses()
@@ -167,6 +170,7 @@ class PersistentCourseListPresenter
                 //try to load next in loop
             } else {
                 mainHandler.post {
+                    postFirstCourse(courseType, coursesForShow)
                     if (coursesForShow.isEmpty()) {
                         isEmptyCourses.set(true)
                         view?.showEmptyCourses()
@@ -194,8 +198,19 @@ class PersistentCourseListPresenter
         if (coursesForShow.isNotEmpty()) {
             mainHandler.post {
                 view?.showCourses(coursesForShow)
+                postFirstCourse(courseType, coursesForShow)
             }
         }
+    }
+
+    private fun postFirstCourse(courseType: Table, coursesForShow: List<Course>) {
+        if (courseType != Table.enrolled) {
+            return
+        }
+        val course = coursesForShow.find {
+            it.isActive && it.sections?.isNotEmpty() ?: false
+        }
+        firstCoursePoster.postFirstCourse(course)
     }
 
     private fun handleCoursesWithType(courses: List<Course>, courseType: Table?): List<Course> =

@@ -509,7 +509,7 @@
     <string name="name">Имя</string>
 
     <string name="sign_up_with_email_suffix">" с e-mail"</string>
-    <string name="placeholder_explore_courses">Откройте для себя другие бесплатные онлайн курсы</string>
+    <string name="placeholder_explore_courses">Откройте для себя бесплатные онлайн курсы</string>
     <string name="placeholder_login">Войдите и начните учиться прямо сейчас</string>
 
     <string name="courses_carousel_my_courses_empty">Запишитесь на курсы и они будут показаны здесь</string>
