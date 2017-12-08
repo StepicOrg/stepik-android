@@ -1,8 +1,11 @@
 package org.stepic.droid.ui.fragments
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,10 +15,7 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.ui.dialogs.*
-import org.stepic.droid.util.FileUtil
-import org.stepic.droid.util.KotlinUtil
-import org.stepic.droid.util.ProgressHelper
-import org.stepic.droid.util.StorageUtil
+import org.stepic.droid.util.*
 
 class StoreManagementFragment : FragmentBase(), WantMoveDataDialog.Callback, ClearVideosDialog.Callback {
     companion object {
@@ -49,6 +49,9 @@ class StoreManagementFragment : FragmentBase(), WantMoveDataDialog.Callback, Cle
             initResStrings()
             initClearCacheFeature(it)
             initAccordingToStoreState(it)
+            if (savedInstanceState == null) {
+                checkForPermissions()
+            }
         }
     }
 
@@ -178,6 +181,31 @@ class StoreManagementFragment : FragmentBase(), WantMoveDataDialog.Callback, Cle
     override fun onFailToMove() {
         context?.let {
             Toast.makeText(context, R.string.fail_move, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun checkForPermissions() {
+        val permissionCheck = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            if (shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                val dialog = ExplainExternalStoragePermissionDialog.newInstance()
+                dialog.setTargetFragment(this, 0)
+                if (!dialog.isAdded) {
+                    dialog.show(activity.supportFragmentManager, null) // supportFragmentManager instead of child support manager to use targetFragment in dialog
+                }
+            } else {
+                requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), AppConstants.REQUEST_EXTERNAL_STORAGE)
+            }
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if (requestCode == AppConstants.REQUEST_EXTERNAL_STORAGE) {
+            if (grantResults.getOrNull(0) == PackageManager.PERMISSION_GRANTED) {
+                setUpClearCacheButton()
+            }
         }
     }
 }
