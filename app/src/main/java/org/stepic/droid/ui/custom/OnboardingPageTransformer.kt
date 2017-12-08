@@ -7,11 +7,14 @@ import org.stepic.droid.R
 
 class OnboardingPageTransformer : ViewPager.PageTransformer {
 
+    private val distance = 20000f
+
     override fun transformPage(rootView: View, position: Float) {
         val viewPager = rootView.parent as ViewPager
         val page = rootView.findViewById<LottieAnimationView>(R.id.onboardingAnimationView)
         val percentage = 1 - Math.abs(position)
-        page.cameraDistance = 12000f
+        val scale = rootView.resources.displayMetrics.density
+        page.cameraDistance = scale * distance
         setVisibility(page, position)
         setTranslation(rootView, page, viewPager)
         setRotation(page, position, percentage)
