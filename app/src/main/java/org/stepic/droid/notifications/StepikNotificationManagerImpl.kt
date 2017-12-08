@@ -13,7 +13,6 @@ import android.support.annotation.DrawableRes
 import android.support.annotation.WorkerThread
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.TaskStackBuilder
-import android.util.Log
 import com.bumptech.glide.Glide
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
@@ -27,10 +26,7 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.storage.operations.Table
-import org.stepic.droid.ui.activities.MainFeedActivity
-import org.stepic.droid.ui.activities.ProfileActivity
-import org.stepic.droid.ui.activities.SectionActivity
-import org.stepic.droid.ui.activities.StepsActivity
+import org.stepic.droid.ui.activities.*
 import org.stepic.droid.util.*
 import org.stepic.droid.util.resolvers.text.TextResolver
 import org.stepic.droid.web.Api
@@ -152,7 +148,10 @@ class StepikNotificationManagerImpl
     override fun showRegistrationRemind() {
         if (sharedPreferenceHelper.isEverLogged) return
 
-        val taskBuilder = TaskStackBuilder.create(context)
+        val intent = Intent(context, SplashActivity::class.java)
+        val taskBuilder = TaskStackBuilder
+                .create(context)
+                .addNextIntent(intent)
 
         val title = context.resources.getString(R.string.stepik_free_courses_title)
         val remindMessage = "Register please" // todo text
