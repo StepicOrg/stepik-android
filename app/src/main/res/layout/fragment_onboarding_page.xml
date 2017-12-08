@@ -28,7 +28,7 @@
         android:layout_height="match_parent"
         android:layout_above="@id/onboardingPageTitle"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/onboarding_top_margin"
         android:layout_marginLeft="@dimen/onboarding_side_margin"
-        android:layout_marginRight="@dimen/onboarding_side_margin" />
+        android:layout_marginRight="@dimen/onboarding_side_margin"
+        android:layout_marginTop="@dimen/onboarding_top_margin" />
 </RelativeLayout>

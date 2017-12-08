@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.v4.view.ViewPager
 import kotlinx.android.synthetic.main.activity_onboarding.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.ui.activities.contracts.OnNextClickedListener
 import org.stepic.droid.ui.adapters.OnboardingAdapter
@@ -35,6 +36,7 @@ class AnimatedOnboardingActivity : FragmentActivityBase(), OnNextClickedListener
 
             override fun onPageSelected(position: Int) {
                 invokeAnimationOnFragment(position)
+                reportToAnalytic(Analytic.Onboarding.SCREEN_OPENED)
             }
         }
         onboardingViewPager.addOnPageChangeListener(pageChangeListener)
@@ -51,37 +53,55 @@ class AnimatedOnboardingActivity : FragmentActivityBase(), OnNextClickedListener
     }
 
     private fun initClose() {
+        closeOnboarding.bringToFront()
         closeOnboarding.setOnClickListener {
             onboardingClosed()
         }
     }
 
     private fun onboardingClosed() {
-        val position = onboardingViewPager.currentItem
-        Timber.d("closed at $position")
+        Timber.d("onClose")
+        reportToAnalytic(Analytic.Onboarding.CLOSED)
+        openLaunchScreen()
     }
 
     override fun onNextClicked() {
+        reportToAnalytic(Analytic.Onboarding.ACTION)
         val current = onboardingViewPager.currentItem
         val next = current + 1
         if (next < onboardingViewPager.adapter.count) {
             onboardingViewPager.setCurrentItem(next, true)
         } else {
-            onboardingDone()
+            onboardingComplete()
         }
     }
 
-    private fun onboardingDone() {
-        Timber.d("done")
+    private fun reportToAnalytic(eventName: String) {
+        val analyticPosition = onboardingViewPager.currentItem + 1
+        val bundle = Bundle().apply { putInt(Analytic.Onboarding.SCREEN_PARAM, analyticPosition) }
+        analytic.reportEvent(eventName, bundle)
+    }
+
+    private fun onboardingComplete() {
+        analytic.reportEvent(Analytic.Onboarding.COMPLETE)
+        openLaunchScreen()
+    }
+
+    private fun openLaunchScreen() {
+        sharedPreferenceHelper.afterOnboardingPassed()
+        screenManager.showLaunchFromSplash(this)
+        finish()
     }
 
     override fun onBackPressed() {
-        if (onboardingViewPager.currentItem == 0) {
+        if (isFirstItem()) {
             super.onBackPressed()
         } else {
             showPreviousSlide()
         }
     }
+
+    private fun isFirstItem() = onboardingViewPager.currentItem == 0
 
     private fun showPreviousSlide() {
         val previous = onboardingViewPager.currentItem - 1

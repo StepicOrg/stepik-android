@@ -7,6 +7,15 @@ import org.jetbrains.annotations.Nullable;
 
 public interface Analytic {
 
+    interface Onboarding {
+        String CLOSED = "onboarding_closed";
+        String ACTION = "onboarding_action";
+        String COMPLETE = "onboarding_complete";
+        String SCREEN_OPENED = "onboarding_screen_opened";
+
+        String SCREEN_PARAM = "screen";
+    }
+
     interface Code {
         String TOOLBAR_SELECTED = "code_toolbar_selected";
         String TOOLBAR_SELECTED_LANGUAGE = "language";

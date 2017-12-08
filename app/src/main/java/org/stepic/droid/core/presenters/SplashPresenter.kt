@@ -14,8 +14,6 @@ import org.stepic.droid.di.splash.SplashScope
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants
-import org.stepic.droid.util.RxOptional
-import org.stepic.droid.web.Api
 import javax.inject.Inject
 
 @SplashScope
@@ -26,7 +24,6 @@ constructor(
         private val mainScheduler: Scheduler,
         @BackgroundScheduler
         private val backgroundScheduler: Scheduler,
-        private val api: Api,
         private val sharedPreferenceHelper: SharedPreferenceHelper,
         private val firebaseRemoteConfig: FirebaseRemoteConfig,
         private val googleApiChecker: GoogleApiChecker,
@@ -34,6 +31,10 @@ constructor(
         private val stepikDevicePoster: StepikDevicePoster,
         private val databaseFacade: DatabaseFacade
 ) : PresenterBase<SplashView>() {
+
+    enum class Result {
+        ONBOARDING, LAUNCH, HOME
+    }
 
     private var disposable: Disposable? = null
 
@@ -46,15 +47,22 @@ constructor(
                     executeLegacyOperations()
                 }
                 .map {
-                    RxOptional(sharedPreferenceHelper.authResponseFromStore)
+                    val isLogged = sharedPreferenceHelper.authResponseFromStore != null
+                    val isOnboardingNotPassedYet = sharedPreferenceHelper.isOnboardingNotPassedYet
+                    when {
+                        isOnboardingNotPassedYet -> Result.ONBOARDING
+                        isLogged -> Result.HOME
+                        else -> Result.LAUNCH
+                    }
                 }
                 .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)
                 .subscribe {
-                    if (it.value == null) {
-                        view?.onShowLaunch()
-                    } else {
-                        view?.onShowHome()
+                    when (it) {
+                        SplashPresenter.Result.ONBOARDING -> view?.onShowOnboarding()
+                        SplashPresenter.Result.LAUNCH -> view?.onShowLaunch()
+                        SplashPresenter.Result.HOME -> view?.onShowHome()
+                        else -> throw IllegalStateException("It is not reachable")
                     }
                 }
     }
@@ -100,9 +108,8 @@ constructor(
     }
 
     private fun executeLegacyOperations() {
-        if (sharedPreferenceHelper.isFirstTime) {
+        if (sharedPreferenceHelper.isOnboardingNotPassedYet) {
             databaseFacade.dropOnlyCourseTable() //v11 bug, when slug was not cached. We can remove it, when all users will have v1.11 or above. (flavour problem)
-            sharedPreferenceHelper.afterFirstTime()
             sharedPreferenceHelper.afterScheduleAdded()
             sharedPreferenceHelper.afterNeedDropCoursesIn114()
         } else if (!sharedPreferenceHelper.isScheduleAdded) {

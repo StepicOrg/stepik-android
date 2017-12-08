@@ -143,7 +143,7 @@ public class ScreenManagerImpl implements ScreenManager {
     @Override
     public void showOnboarding(@NotNull Activity activity) {
         Intent intent = new Intent(activity, AnimatedOnboardingActivity.class);
-
+        activity.startActivity(intent);
     }
 
     @Override
