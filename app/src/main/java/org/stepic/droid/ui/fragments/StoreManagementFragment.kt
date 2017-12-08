@@ -17,16 +17,15 @@ import org.stepic.droid.util.KotlinUtil
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.StorageUtil
 
-class StoreManagementFragment : FragmentBase(), WantMoveDataDialog.Callback {
+class StoreManagementFragment : FragmentBase(), WantMoveDataDialog.Callback, ClearVideosDialog.Callback {
     companion object {
-        fun newInstance(): Fragment {
-            val fragment = StoreManagementFragment()
-            return fragment
-        }
+        fun newInstance(): Fragment = StoreManagementFragment()
+
+        private const val LOADING_TAG = "loading_store_management"
     }
 
-    lateinit var clearCacheButton: View
-    lateinit var clearCacheLabel: TextView
+    private lateinit var clearCacheButton: View
+    private lateinit var clearCacheLabel: TextView
     private var mClearCacheDialogFragment: DialogFragment? = null
     private var loadingProgressDialogFragment: DialogFragment? = null
 
@@ -39,7 +38,6 @@ class StoreManagementFragment : FragmentBase(), WantMoveDataDialog.Callback {
     private var mb: String? = null
     private var gb: String? = null
     private var empty: String? = null
-    val loadingTag = "loading_storemanagement"
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?)
             = inflater?.inflate(R.layout.fragment_space_management, container, false)
@@ -58,7 +56,7 @@ class StoreManagementFragment : FragmentBase(), WantMoveDataDialog.Callback {
         notMountExplanation = view.findViewById(R.id.notMountExplanation)
         mountExplanation = view.findViewById(R.id.mountExplanation)
         chooseStorageButton = view.findViewById(R.id.choose_storage_button)
-        userStorageInfo = view.findViewById<TextView>(R.id.user_storage_info)
+        userStorageInfo = view.findViewById(R.id.user_storage_info)
 
         fun hideAllStorageInfo() {
             notMountExplanation.visibility = View.GONE
@@ -70,27 +68,28 @@ class StoreManagementFragment : FragmentBase(), WantMoveDataDialog.Callback {
         if (storageState == null) {
             hideAllStorageInfo()
         } else {
-            if (storageState == StorageUtil.SDState.sdcardMounted) {
-                notMountExplanation.visibility = View.GONE
-                mountExplanation.visibility = View.VISIBLE
-                chooseStorageButton.visibility = View.VISIBLE
-                val chooseStorageDialog = ChooseStorageDialog.newInstance()
-                chooseStorageDialog.setTargetFragment(this, 0)
-                chooseStorageButton.setOnClickListener {
-                    if (!chooseStorageDialog.isAdded) {
-                        chooseStorageDialog.show(fragmentManager, null)
+            when (storageState) {
+                StorageUtil.SDState.sdcardMounted -> {
+                    notMountExplanation.visibility = View.GONE
+                    mountExplanation.visibility = View.VISIBLE
+                    chooseStorageButton.visibility = View.VISIBLE
+                    val chooseStorageDialog = ChooseStorageDialog.newInstance()
+                    chooseStorageDialog.setTargetFragment(this, 0)
+                    chooseStorageButton.setOnClickListener {
+                        if (!chooseStorageDialog.isAdded) {
+                            chooseStorageDialog.show(fragmentManager, null)
+                        }
                     }
+                    //TODO: ADD user_storage_info from user prefs IN userStorageInfo!
                 }
-                //TODO: ADD user_storage_info from user prefs IN userStorageInfo!
-            } else if (storageState == StorageUtil.SDState.sdCardNotMounted) {
-                notMountExplanation.visibility = View.VISIBLE
-                mountExplanation.visibility = View.GONE
-                chooseStorageButton.visibility = View.GONE
-            } else {
-                //restricted and not available
-                hideAllStorageInfo()
+                StorageUtil.SDState.sdCardNotMounted -> {
+                    notMountExplanation.visibility = View.VISIBLE
+                    mountExplanation.visibility = View.GONE
+                    chooseStorageButton.visibility = View.GONE
+                }
+                else -> //restricted and not available
+                    hideAllStorageInfo()
             }
-
         }
     }
 
@@ -109,8 +108,9 @@ class StoreManagementFragment : FragmentBase(), WantMoveDataDialog.Callback {
 
     private fun initClearCacheFeature(v: View) {
         clearCacheButton = v.findViewById(R.id.clear_cache_button)
-        clearCacheLabel = v.findViewById<TextView>(R.id.clear_cache_label)
+        clearCacheLabel = v.findViewById(R.id.clear_cache_label)
         mClearCacheDialogFragment = ClearVideosDialog.newInstance()
+        mClearCacheDialogFragment?.setTargetFragment(this, 0)
         setUpClearCacheButton()
     }
 
@@ -118,7 +118,7 @@ class StoreManagementFragment : FragmentBase(), WantMoveDataDialog.Callback {
         clearCacheButton.setOnClickListener {
             analytic.reportEvent(Analytic.Interaction.CLICK_CLEAR_CACHE)
 
-            if (!(mClearCacheDialogFragment?.isAdded ?: true)) {
+            if (mClearCacheDialogFragment?.isAdded != true) {
                 mClearCacheDialogFragment?.show(fragmentManager, null)
             }
         }
@@ -159,12 +159,20 @@ class StoreManagementFragment : FragmentBase(), WantMoveDataDialog.Callback {
         } else {
             loadingProgressDialogFragment = LoadingProgressDialogFragment.newInstance()
         }
-        ProgressHelper.activate(loadingProgressDialogFragment, fragmentManager, loadingTag)
+        ProgressHelper.activate(loadingProgressDialogFragment, fragmentManager, LOADING_TAG)
     }
 
     override fun onFinishLoading() {
         setUpClearCacheButton()
-        ProgressHelper.dismiss(fragmentManager, loadingTag)
+        ProgressHelper.dismiss(fragmentManager, LOADING_TAG)
+    }
+
+    override fun onStartLoading() {
+        onStartLoading(false)
+    }
+
+    override fun onClearAllWithoutAnimation(stepIds: LongArray?) {
+        // no op
     }
 
     override fun onFailToMove() {
