@@ -73,6 +73,19 @@ class AnimatedOnboardingActivity : FragmentActivityBase(), OnNextClickedListener
         Timber.d("done")
     }
 
+    override fun onBackPressed() {
+        if (onboardingViewPager.currentItem == 0) {
+            super.onBackPressed()
+        } else {
+            showPreviousSlide()
+        }
+    }
+
+    private fun showPreviousSlide() {
+        val previous = onboardingViewPager.currentItem - 1
+        onboardingViewPager.setCurrentItem(previous, true)
+    }
+
     override fun applyTransitionPrev() {
         // no-op
     }
