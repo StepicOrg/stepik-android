@@ -11,7 +11,6 @@ import org.stepic.droid.ui.activities.contracts.OnNextClickedListener
 import org.stepic.droid.ui.adapters.OnboardingAdapter
 import org.stepic.droid.ui.custom.OnboardingPageTransformer
 import org.stepic.droid.ui.fragments.OnboardingFragment
-import timber.log.Timber
 
 
 class AnimatedOnboardingActivity : FragmentActivityBase(), OnNextClickedListener {
@@ -25,8 +24,12 @@ class AnimatedOnboardingActivity : FragmentActivityBase(), OnNextClickedListener
     }
 
     private fun initViewPager() {
-        onboardingViewPager.adapter = OnboardingAdapter(supportFragmentManager)
+        val onboardingAdapter = OnboardingAdapter(supportFragmentManager)
+        onboardingViewPager.adapter = onboardingAdapter
+        onboardingViewPager.offscreenPageLimit = onboardingAdapter.count
+
         onboardingCircleIndicator.setViewPager(onboardingViewPager)
+
         val pageChangeListener: ViewPager.OnPageChangeListener = object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {
             }
@@ -60,7 +63,6 @@ class AnimatedOnboardingActivity : FragmentActivityBase(), OnNextClickedListener
     }
 
     private fun onboardingClosed() {
-        Timber.d("onClose")
         reportToAnalytic(Analytic.Onboarding.CLOSED)
         openLaunchScreen()
     }
