@@ -79,7 +79,12 @@ class SplashActivity : BackToExitActivityBase(), SplashView {
     }
 
     override fun onShowHome() {
-        screenManager.showMainFeedFromSplash(this@SplashActivity)
+        screenManager.showMainFeedFromSplash(this)
+        finish()
+    }
+
+    override fun onShowOnboarding() {
+        screenManager.showOnboarding(this)
         finish()
     }
 }

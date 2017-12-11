@@ -137,6 +137,7 @@ dependencies {
     implementation libraries.appMetrica
 
     implementation libraries.calligraphy
+    implementation libraries.lottie
 
     implementation libraries.firebaseMessaging
     implementation libraries.firebaseAppindexing
@@ -158,6 +159,7 @@ dependencies {
     implementation libraries.materialProgress
     implementation libraries.circleImageView
     implementation libraries.bottomNavigationView
+    implementation libraries.circleIndicator
 
     debugImplementation libraries.leakCanary
     releaseImplementation libraries.leakCanaryNoOp

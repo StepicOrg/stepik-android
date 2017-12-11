@@ -84,6 +84,7 @@ public class SharedPreferenceHelper {
     private final Context context;
     private final Analytic analytic;
     private final DefaultFilter defaultFilter;
+
     public enum NotificationDay {
         DAY_ONE(ONE_DAY_NOTIFICATION),
         DAY_SEVEN(SEVEN_DAY_NOTIFICATION);
@@ -333,7 +334,9 @@ public class SharedPreferenceHelper {
         put(PreferenceType.DEVICE_SPECIFIC, NOTIFICATION_SOUND_DISABLED, isDisabled);
     }
 
-    public boolean isFirstTime() {
+    public boolean isOnboardingNotPassedYet() {
+        // before onboarding App was tracked first time launch
+        // for avoiding to show onboarding for old users this property is reused
         return getBoolean(PreferenceType.DEVICE_SPECIFIC, FIRST_TIME_LAUNCH, true);
     }
 
@@ -345,7 +348,7 @@ public class SharedPreferenceHelper {
         put(PreferenceType.DEVICE_SPECIFIC, SCHEDULED_LINK_CACHED, true);
     }
 
-    public void afterFirstTime() {
+    public void afterOnboardingPassed() {
         put(PreferenceType.DEVICE_SPECIFIC, FIRST_TIME_LAUNCH, false);
     }
 
