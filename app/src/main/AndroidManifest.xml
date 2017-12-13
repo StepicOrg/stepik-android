@@ -1,25 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="org.stepic.droid"
     android:installLocation="auto">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.STORAGE"/>
-    <uses-permission android:name="android.permission.READ_CALENDAR"/>
-    <uses-permission android:name="android.permission.WRITE_CALENDAR"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.STORAGE" />
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
 
-    <uses-permission android:name="android.permission.VIBRATE"/>
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission
         android:name="android.permission.READ_PHONE_STATE"
-        android:maxSdkVersion="22"/>
+        android:maxSdkVersion="22" />
 
     <application
         android:name=".base.App"
@@ -36,33 +35,37 @@
         <activity
             android:name="org.stepic.droid.ui.activities.SplashActivity"
             android:noHistory="true"
-            android:theme="@style/AppTheme.BrandedLaunch"/>
+            android:theme="@style/AppTheme.BrandedLaunch" />
 
         <activity-alias
             android:name="org.stepic.droid.view.activities.SplashActivity"
             android:targetActivity="org.stepic.droid.ui.activities.SplashActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
-                <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
             </intent-filter>
         </activity-alias>
+
+        <activity
+            android:name=".ui.activities.AnimatedOnboardingActivity"
+            android:theme="@style/StepikTheme.Onboarding" />
 
         <activity
             android:name="org.stepic.droid.ui.activities.LaunchActivity"
             android:launchMode="singleTask"
             android:theme="@style/StepikTheme.LoginLaunchRegistration">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:host="@string/host_name"/>
-                <data android:host="@string/secondary_host_name"/>
-                <data android:pathPattern="/oauth"/>
-                <data android:scheme="stepic"/>
+                <data android:host="@string/host_name" />
+                <data android:host="@string/secondary_host_name" />
+                <data android:pathPattern="/oauth" />
+                <data android:scheme="stepic" />
 
             </intent-filter>
         </activity>
@@ -70,13 +73,13 @@
         <activity
             android:name="org.stepic.droid.ui.activities.RegisterActivity"
             android:theme="@style/StepikTheme.LoginLaunchRegistration"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name="org.stepic.droid.ui.activities.LoginActivity"
             android:launchMode="singleTop"
             android:theme="@style/StepikTheme.LoginLaunchRegistration"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name="org.stepic.droid.ui.activities.MainFeedActivity"
@@ -84,7 +87,7 @@
             android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.app.default_searchable"
-                android:value=".ui.activities.CourseSearchResultActivity"/>
+                android:value=".ui.activities.CourseSearchResultActivity" />
         </activity>
 
         <activity android:name=".ui.activities.CourseDetailActivity">
@@ -93,18 +96,18 @@
                 android:autoVerify="true"
                 tools:ignore="UnusedAttribute">
 
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="https"/>
-                <data android:scheme="http"/>
-                <data android:host="@string/host_name"/>
-                <data android:host="@string/secondary_host_name"/>
+                <data android:scheme="https" />
+                <data android:scheme="http" />
+                <data android:host="@string/host_name" />
+                <data android:host="@string/secondary_host_name" />
 
-                <data android:pathPattern="/course/.*/"/>
-                <data android:pathPattern="/course/.*/course_app"/>
+                <data android:pathPattern="/course/.*/" />
+                <data android:pathPattern="/course/.*/course_app" />
 
             </intent-filter>
         </activity>
@@ -115,21 +118,21 @@
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activities.MainFeedActivity"/>
+                android:value=".ui.activities.MainFeedActivity" />
 
             <intent-filter
                 android:autoVerify="true"
                 tools:ignore="UnusedAttribute">
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="https"/>
-                <data android:scheme="http"/>
-                <data android:host="@string/host_name"/>
-                <data android:host="@string/secondary_host_name"/>
-                <data android:pathPattern="/course/.*/syllabus"/>
+                <data android:scheme="https" />
+                <data android:scheme="http" />
+                <data android:host="@string/host_name" />
+                <data android:host="@string/secondary_host_name" />
+                <data android:pathPattern="/course/.*/syllabus" />
             </intent-filter>
 
         </activity>
@@ -141,76 +144,76 @@
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activities.UnitsActivity"/>
+                android:value=".ui.activities.UnitsActivity" />
 
             <intent-filter
                 android:autoVerify="true"
                 tools:ignore="UnusedAttribute">
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="https"/>
-                <data android:scheme="http"/>
-                <data android:host="@string/secondary_host_name"/>
-                <data android:host="@string/host_name"/>
-                <data android:pathPattern="/lesson/.*/"/>
-                <data android:pathPattern="/lesson/.*/step/1"/>
-                <data android:pathPattern="/lesson/.*/step/2"/>
-                <data android:pathPattern="/lesson/.*/step/3"/>
-                <data android:pathPattern="/lesson/.*/step/4"/>
-                <data android:pathPattern="/lesson/.*/step/5"/>
-                <data android:pathPattern="/lesson/.*/step/6"/>
-                <data android:pathPattern="/lesson/.*/step/7"/>
-                <data android:pathPattern="/lesson/.*/step/8"/>
-                <data android:pathPattern="/lesson/.*/step/9"/>
-                <data android:pathPattern="/lesson/.*/step/10"/>
-                <data android:pathPattern="/lesson/.*/step/11"/>
-                <data android:pathPattern="/lesson/.*/step/12"/>
-                <data android:pathPattern="/lesson/.*/step/13"/>
-                <data android:pathPattern="/lesson/.*/step/14"/>
-                <data android:pathPattern="/lesson/.*/step/15"/>
-                <data android:pathPattern="/lesson/.*/step/16"/>
-                <data android:pathPattern="/lesson/.*/step/17"/>
-                <data android:pathPattern="/lesson/.*/step/18"/>
-                <data android:pathPattern="/lesson/.*/step/19"/>
-                <data android:pathPattern="/lesson/.*/step/20"/>
-                <data android:pathPattern="/lesson/.*/step/21"/>
-                <data android:pathPattern="/lesson/.*/step/22"/>
-                <data android:pathPattern="/lesson/.*/step/23"/>
-                <data android:pathPattern="/lesson/.*/step/24"/>
-                <data android:pathPattern="/lesson/.*/step/25"/>
-                <data android:pathPattern="/lesson/.*/step/26"/>
-                <data android:pathPattern="/lesson/.*/step/27"/>
-                <data android:pathPattern="/lesson/.*/step/28"/>
-                <data android:pathPattern="/lesson/.*/step/29"/>
-                <data android:pathPattern="/lesson/.*/step/30"/>
-                <data android:pathPattern="/lesson/.*/step/31"/>
-                <data android:pathPattern="/lesson/.*/step/32"/>
-                <data android:pathPattern="/lesson/.*/step/33"/>
-                <data android:pathPattern="/lesson/.*/step/34"/>
-                <data android:pathPattern="/lesson/.*/step/35"/>
-                <data android:pathPattern="/lesson/.*/step/36"/>
-                <data android:pathPattern="/lesson/.*/step/37"/>
-                <data android:pathPattern="/lesson/.*/step/38"/>
-                <data android:pathPattern="/lesson/.*/step/39"/>
-                <data android:pathPattern="/lesson/.*/step/40"/>
+                <data android:scheme="https" />
+                <data android:scheme="http" />
+                <data android:host="@string/secondary_host_name" />
+                <data android:host="@string/host_name" />
+                <data android:pathPattern="/lesson/.*/" />
+                <data android:pathPattern="/lesson/.*/step/1" />
+                <data android:pathPattern="/lesson/.*/step/2" />
+                <data android:pathPattern="/lesson/.*/step/3" />
+                <data android:pathPattern="/lesson/.*/step/4" />
+                <data android:pathPattern="/lesson/.*/step/5" />
+                <data android:pathPattern="/lesson/.*/step/6" />
+                <data android:pathPattern="/lesson/.*/step/7" />
+                <data android:pathPattern="/lesson/.*/step/8" />
+                <data android:pathPattern="/lesson/.*/step/9" />
+                <data android:pathPattern="/lesson/.*/step/10" />
+                <data android:pathPattern="/lesson/.*/step/11" />
+                <data android:pathPattern="/lesson/.*/step/12" />
+                <data android:pathPattern="/lesson/.*/step/13" />
+                <data android:pathPattern="/lesson/.*/step/14" />
+                <data android:pathPattern="/lesson/.*/step/15" />
+                <data android:pathPattern="/lesson/.*/step/16" />
+                <data android:pathPattern="/lesson/.*/step/17" />
+                <data android:pathPattern="/lesson/.*/step/18" />
+                <data android:pathPattern="/lesson/.*/step/19" />
+                <data android:pathPattern="/lesson/.*/step/20" />
+                <data android:pathPattern="/lesson/.*/step/21" />
+                <data android:pathPattern="/lesson/.*/step/22" />
+                <data android:pathPattern="/lesson/.*/step/23" />
+                <data android:pathPattern="/lesson/.*/step/24" />
+                <data android:pathPattern="/lesson/.*/step/25" />
+                <data android:pathPattern="/lesson/.*/step/26" />
+                <data android:pathPattern="/lesson/.*/step/27" />
+                <data android:pathPattern="/lesson/.*/step/28" />
+                <data android:pathPattern="/lesson/.*/step/29" />
+                <data android:pathPattern="/lesson/.*/step/30" />
+                <data android:pathPattern="/lesson/.*/step/31" />
+                <data android:pathPattern="/lesson/.*/step/32" />
+                <data android:pathPattern="/lesson/.*/step/33" />
+                <data android:pathPattern="/lesson/.*/step/34" />
+                <data android:pathPattern="/lesson/.*/step/35" />
+                <data android:pathPattern="/lesson/.*/step/36" />
+                <data android:pathPattern="/lesson/.*/step/37" />
+                <data android:pathPattern="/lesson/.*/step/38" />
+                <data android:pathPattern="/lesson/.*/step/39" />
+                <data android:pathPattern="/lesson/.*/step/40" />
             </intent-filter>
 
         </activity>
 
-        <activity android:name=".ui.activities.UnitsActivity"/>
+        <activity android:name=".ui.activities.UnitsActivity" />
 
         <activity
             android:name=".ui.activities.CourseSearchResultActivity"
             android:launchMode="singleTop">
             <intent-filter>
-                <action android:name="android.intent.action.SEARCH"/>
+                <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
             <meta-data
                 android:name="android.app.searchable"
-                android:resource="@xml/searchable"/>
+                android:resource="@xml/searchable" />
         </activity>
 
         <activity
@@ -219,14 +222,14 @@
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activities.MainFeedActivity"/>
+                android:value=".ui.activities.MainFeedActivity" />
         </activity>
 
         <activity
             android:name=".ui.activities.VideoActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:hardwareAccelerated="true"
-            android:theme="@style/AppTheme.VideoPlayer"/>
+            android:theme="@style/AppTheme.VideoPlayer" />
 
         <activity
             android:name=".ui.activities.CommentsActivity"
@@ -235,7 +238,7 @@
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activities.StepsActivity"/>
+                android:value=".ui.activities.StepsActivity" />
         </activity>
 
         <activity
@@ -245,7 +248,7 @@
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activities.CommentsActivity"/>
+                android:value=".ui.activities.CommentsActivity" />
         </activity>
 
         <activity
@@ -255,33 +258,33 @@
             <intent-filter
                 android:autoVerify="true"
                 tools:ignore="UnusedAttribute">
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="https"/>
-                <data android:scheme="http"/>
-                <data android:host="@string/secondary_host_name"/>
-                <data android:host="@string/host_name"/>
-                <data android:pathPattern="/users/.*"/>
-                <data android:pathPattern="/users/.*/"/>
+                <data android:scheme="https" />
+                <data android:scheme="http" />
+                <data android:host="@string/secondary_host_name" />
+                <data android:host="@string/host_name" />
+                <data android:pathPattern="/users/.*" />
+                <data android:pathPattern="/users/.*/" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.activities.DownloadsActivity"/>
+        <activity android:name=".ui.activities.DownloadsActivity" />
 
-        <activity android:name=".ui.activities.CertificatesActivity"/>
+        <activity android:name=".ui.activities.CertificatesActivity" />
 
-        <activity android:name=".ui.activities.CourseListActivity"/>
+        <activity android:name=".ui.activities.CourseListActivity" />
 
         <activity
             android:name=".ui.activities.CodePlaygroundActivity"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".ui.activities.PhotoViewActivity"
-            android:theme="@style/AppTheme.PhotoView"/>
+            android:theme="@style/AppTheme.PhotoView" />
 
         <activity
             android:name=".ui.activities.SettingsActivity"
@@ -290,7 +293,7 @@
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activities.MainFeedActivity"/>
+                android:value=".ui.activities.MainFeedActivity" />
         </activity>
 
         <activity
@@ -298,8 +301,8 @@
             android:enabled="@bool/notification_activity_enabled"
             android:launchMode="singleTop">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.NOTIFICATION_PREFERENCES"/>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.NOTIFICATION_PREFERENCES" />
             </intent-filter>
         </activity>
 
@@ -310,7 +313,7 @@
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activities.MainFeedActivity"/>
+                android:value=".ui.activities.MainFeedActivity" />
         </activity>
 
         <activity
@@ -320,7 +323,7 @@
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activities.SettingsActivity"/>
+                android:value=".ui.activities.SettingsActivity" />
         </activity>
 
         <activity
@@ -330,17 +333,17 @@
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activities.MainFeedActivity"/>
+                android:value=".ui.activities.MainFeedActivity" />
         </activity>
 
-        <activity android:name=".ui.activities.TagActivity"/>
+        <activity android:name=".ui.activities.TagActivity" />
 
 
         <receiver
             android:name="org.stepic.droid.receivers.DownloadCompleteReceiver"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/>
+                <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
             </intent-filter>
         </receiver>
 
@@ -348,7 +351,7 @@
             android:name="org.stepic.droid.receivers.DownloadClickReceiver"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED"/>
+                <action android:name="android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED" />
             </intent-filter>
         </receiver>
 
@@ -356,13 +359,13 @@
             android:name=".receivers.InternetConnectionEnabledReceiver"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
 
         <receiver android:name=".notifications.NotificationBroadcastReceiver">
             <intent-filter>
-                <action android:name="notification_cancelled"/>
+                <action android:name="notification_cancelled" />
             </intent-filter>
         </receiver>
 
@@ -372,26 +375,26 @@
             android:exported="false"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
 
-        <service android:name="org.stepic.droid.services.NewUserAlarmService"/>
-        <service android:name="org.stepic.droid.services.StreakAlarmService"/>
-        <service android:name="org.stepic.droid.services.LoadService"/>
-        <service android:name="org.stepic.droid.services.DeleteService"/>
-        <service android:name="org.stepic.droid.services.ViewPusher"/>
-        <service android:name="org.stepic.droid.services.CancelLoadingService"/>
+        <service android:name="org.stepic.droid.services.NewUserAlarmService" />
+        <service android:name="org.stepic.droid.services.StreakAlarmService" />
+        <service android:name="org.stepic.droid.services.LoadService" />
+        <service android:name="org.stepic.droid.services.DeleteService" />
+        <service android:name="org.stepic.droid.services.ViewPusher" />
+        <service android:name="org.stepic.droid.services.CancelLoadingService" />
 
         <service android:name=".notifications.StepicFcmListenerService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
         <service android:name=".notifications.StepicInstanceIdService">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
 
@@ -402,38 +405,38 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths"/>
+                android:resource="@xml/provider_paths" />
         </provider>
 
         <uses-library
             android:name="com.sec.android.app.multiwindow"
-            android:required="false"/>
+            android:required="false" />
 
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version"/>
+            android:value="@integer/google_play_services_version" />
 
         <meta-data
             android:name="com.sec.android.support.multiwindow"
-            android:value="true"/>
+            android:value="true" />
         <meta-data
             android:name="com.sec.android.multiwindow.DEFAULT_SIZE_W"
-            android:value="632dp"/>
+            android:value="632dp" />
         <meta-data
             android:name="com.sec.android.multiwindow.DEFAULT_SIZE_H"
-            android:value="598dp"/>
+            android:value="598dp" />
         <meta-data
             android:name="com.sec.android.multiwindow.MINIMUM_SIZE_W"
-            android:value="632dp"/>
+            android:value="632dp" />
         <meta-data
             android:name="com.sec.android.multiwindow.MINIMUM_SIZE_H"
-            android:value="598dp"/>
+            android:value="598dp" />
         <meta-data
             android:name="asset_statements"
-            android:resource="@string/asset_statements"/>
+            android:resource="@string/asset_statements" />
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id"/>
+            android:value="@string/facebook_app_id" />
 
     </application>
 </manifest>

@@ -132,4 +132,6 @@ public interface ScreenManager {
     void showCoursesList(Activity activity, @NotNull CoursesCarouselInfo info, @Nullable CollectionDescriptionColors collectionDescriptionColors);
 
     void showListOfTag(Activity activity, @NotNull Tag tag);
+
+    void showOnboarding(@NotNull Activity activity);
 }
