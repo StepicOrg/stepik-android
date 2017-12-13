@@ -158,7 +158,8 @@ class LocalReminderImpl
     override fun remindAboutRegistration() {
         threadPoolExecutor.execute {
             val isNotLoading = registrationRemindHandling.compareAndSet(false, true)
-            if (isNotLoading) try {
+            if (!isNotLoading) return@execute
+            try {
                 if (sharedPreferenceHelper.authResponseFromStore != null) {
                     sharedPreferenceHelper.setHasEverLogged()
                 }

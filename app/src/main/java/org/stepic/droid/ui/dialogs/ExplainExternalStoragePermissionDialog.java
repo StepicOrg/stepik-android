@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 
 import org.jetbrains.annotations.NotNull;
@@ -27,9 +28,16 @@ public class ExplainExternalStoragePermissionDialog extends DialogFragment {
                 .setPositiveButton(R.string.allow, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        ActivityCompat.requestPermissions(getActivity(),
-                                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                                AppConstants.REQUEST_EXTERNAL_STORAGE);
+                        Fragment targetFragment = getTargetFragment();
+                        if (targetFragment != null) {
+                            targetFragment.requestPermissions(
+                                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                    AppConstants.REQUEST_EXTERNAL_STORAGE);
+                        } else {
+                            ActivityCompat.requestPermissions(getActivity(),
+                                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                    AppConstants.REQUEST_EXTERNAL_STORAGE);
+                        }
                     }
                 })
                 .setNegativeButton(R.string.deny, null);

@@ -37,6 +37,7 @@ import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.services.ViewPusher;
 import org.stepic.droid.ui.activities.AboutAppActivity;
+import org.stepic.droid.ui.activities.AnimatedOnboardingActivity;
 import org.stepic.droid.ui.activities.CertificatesActivity;
 import org.stepic.droid.ui.activities.CommentsActivity;
 import org.stepic.droid.ui.activities.CourseDetailActivity;
@@ -137,6 +138,12 @@ public class ScreenManagerImpl implements ScreenManager {
     @Override
     public void showListOfTag(Activity activity, @NotNull Tag tag) {
         TagActivity.Companion.launch(activity, tag);
+    }
+
+    @Override
+    public void showOnboarding(@NotNull Activity activity) {
+        Intent intent = new Intent(activity, AnimatedOnboardingActivity.class);
+        activity.startActivity(intent);
     }
 
     @Override
