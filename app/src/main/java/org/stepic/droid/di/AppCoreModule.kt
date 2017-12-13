@@ -39,6 +39,7 @@ import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.fonts.FontsProvider
 import org.stepic.droid.fonts.FontsProviderImpl
 import org.stepic.droid.notifications.*
+import org.stepic.droid.notifications.badges.NotificationsBadgesLogoutPoster
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.social.SocialManager
@@ -274,13 +275,6 @@ abstract class AppCoreModule {
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(OkHttpClient())
                     .build()
-        }
-
-        @Provides
-        @JvmStatic
-        @AppSingleton
-        internal fun provideStepikLogoutManager(threadPoolExecutor: ThreadPoolExecutor, mainHandler: MainHandler, userPreferences: UserPreferences, sharedPreferenceHelper: SharedPreferenceHelper, downloadManager: DownloadManager, dbFacade: DatabaseFacade): StepikLogoutManager {
-            return StepikLogoutManager(threadPoolExecutor, mainHandler, userPreferences, downloadManager, sharedPreferenceHelper, dbFacade)
         }
 
         @Provides

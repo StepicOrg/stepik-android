@@ -45,6 +45,7 @@ public class SharedPreferenceHelper {
     private final static String SEVEN_DAY_NOTIFICATION = "seven_day_notification";
     private static final String FILTER_RUSSIAN_LANGUAGE = "russian_lang";
     private static final String FILTER_ENGLISH_LANGUAGE = "english_lang";
+    private static final String NOTIFICATIONS_COUNT = "notifications_count";
     private static final String IS_EVER_LOGGED = "is_ever_logged";
 
     private final String ACCESS_TOKEN_TIMESTAMP = "access_token_timestamp";
@@ -58,7 +59,7 @@ public class SharedPreferenceHelper {
     private final String TEMP_POSITION_KEY = "temp_position_key";
     private final String VIDEO_RATE_PREF_KEY = "video_rate_pref_key";
     private final String VIDEO_EXTERNAL_PREF_KEY = "video_external_pref_key";
-    private final String GCM_TOKEN_ACTUAL = "gcm_token_actual";
+    private final String GCM_TOKEN_ACTUAL = "gcm_token_actual_with_badges"; // '_with_badges' suffix was added to force update of gcm token to enable silent push with badge count, see #188
     private final String SD_CHOSEN = "sd_chosen";
     private final String FIRST_TIME_LAUNCH = "first_time_launch";
     private final String SCHEDULED_LINK_CACHED = "scheduled_cached";
@@ -487,6 +488,14 @@ public class SharedPreferenceHelper {
 
     public boolean isGcmTokenOk() {
         return getBoolean(PreferenceType.LOGIN, GCM_TOKEN_ACTUAL);
+    }
+
+    public void setNotificationsCount(int count) {
+        put(PreferenceType.LOGIN, NOTIFICATIONS_COUNT, count);
+    }
+
+    public int getNotificationsCount() {
+        return getInt(PreferenceType.LOGIN, NOTIFICATIONS_COUNT, 0);
     }
 
     public void storeVideoPlaybackRate(@NotNull VideoPlaybackRate videoPlaybackRate) {

@@ -23,6 +23,7 @@ class DatabaseFacade
         private val stepInfoOperation: StepInfoOperation,
         private val codeSubmissionDao: IDao<CodeSubmission>,
         private val searchQueryDao: SearchQueryDao,
+        private val viewedNotificationsQueueDao: IDao<ViewedNotification>,
         private val sectionDao: IDao<Section>,
         private val unitDao: IDao<Unit>,
         private val progressDao: IDao<Progress>,
@@ -50,6 +51,7 @@ class DatabaseFacade
         progressDao.removeAll()
         lessonDao.removeAll()
         viewAssignmentDao.removeAll()
+        viewedNotificationsQueueDao.removeAll()
         downloadEntityDao.removeAll()
         cachedVideoDao.removeAll()
         stepDao.removeAll()
@@ -468,6 +470,18 @@ class DatabaseFacade
 
     fun addSearchQuery(searchQuery: SearchQuery) {
         searchQueryDao.insertOrReplace(searchQuery)
+    }
+
+    fun addToViewedNotificationsQueue(viewedNotification: ViewedNotification) {
+        viewedNotificationsQueueDao.insertOrReplace(viewedNotification)
+    }
+
+    fun getViewedNotificationsQueue() = viewedNotificationsQueueDao.getAll()
+
+    fun removeViewedNotification(viewedNotification: ViewedNotification) {
+        viewedNotificationsQueueDao.remove(
+                DbStructureViewedNotificationsQueue.Column.NOTIFICATION_ID,
+                viewedNotification.notificationId.toString())
     }
 
 }

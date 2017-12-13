@@ -27,6 +27,7 @@ import org.stepic.droid.model.Course;
 import org.stepic.droid.notifications.StepikNotificationManager;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
+import org.stepic.droid.services.NotificationsViewPusher;
 import org.stepic.droid.storage.operations.DatabaseFacade;
 import org.stepic.droid.ui.util.CloseIconHolder;
 import org.stepic.droid.util.AppConstants;
@@ -99,10 +100,18 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
     @Inject
     protected FontsProvider fontsProvider;
 
+    @Inject
+    protected NotificationsViewPusher notificationsViewPusher;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         App.Companion.component().inject(this);
+
+        if (savedInstanceState == null && AppConstants.OPEN_NOTIFICATION.equals(getIntent().getAction())) {
+            notificationsViewPusher.pushToViewedNotificationsQueue(
+                    getIntent().getLongExtra(AppConstants.KEY_NOTIFICATION_ID, 0));
+        }
     }
 
     @Override

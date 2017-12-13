@@ -65,6 +65,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
+import io.reactivex.Completable;
 import io.reactivex.Single;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
@@ -656,6 +657,18 @@ public class ApiImpl implements Api {
     }
 
     @Override
+    public Call<DeviceResponse> getDevicesByRegistrationId(String token) {
+        return loggedService.getDeviceByRegistrationId(token);
+    }
+
+    @Override
+    public Call<DeviceResponse> renewDeviceRegistration(long deviceId, String token) {
+        String description = DeviceInfoUtil.getShortInfo(context);
+        DeviceRequest deviceRequest = new DeviceRequest(deviceId, token, description);
+        return loggedService.renewDeviceRegistration(deviceId, deviceRequest);
+    }
+
+    @Override
     public Call<DeviceResponse> registerDevice(String token) {
         String description = DeviceInfoUtil.getShortInfo(context);
         DeviceRequest deviceRequest = new DeviceRequest(token, description);
@@ -673,6 +686,13 @@ public class ApiImpl implements Api {
         Notification notification = new Notification();
         notification.set_unread(!isRead);
         return loggedService.putNotification(notificationId, new NotificationRequest(notification));
+    }
+
+    @Override
+    public Completable setReadStatusForNotificationReactive(long notificationId, boolean isRead) {
+        Notification notification = new Notification();
+        notification.set_unread(!isRead);
+        return loggedService.putNotificationReactive(notificationId, new NotificationRequest(notification));
     }
 
     @Override
@@ -735,6 +755,11 @@ public class ApiImpl implements Api {
     public Call<Void> markAsReadAllType(@NotNull NotificationCategory notificationCategory) {
         String categoryType = getNotificationCategoryString(notificationCategory);
         return loggedService.markAsRead(categoryType);
+    }
+
+    @Override
+    public Single<NotificationStatusesResponse> getNotificationStatuses() {
+        return loggedService.getNotificationStatuses();
     }
 
     @Override

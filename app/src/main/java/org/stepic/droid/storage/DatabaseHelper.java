@@ -24,6 +24,7 @@ import org.stepic.droid.storage.structure.DbStructureUnit;
 import org.stepic.droid.storage.structure.DbStructureVideoTimestamp;
 import org.stepic.droid.storage.structure.DbStructureVideoUrl;
 import org.stepic.droid.storage.structure.DbStructureViewQueue;
+import org.stepic.droid.storage.structure.DbStructureViewedNotificationsQueue;
 
 import javax.inject.Inject;
 
@@ -91,6 +92,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         upgradeFrom27To28(db);
         upgradeFrom28To29(db);
         upgradeFrom29To30(db);
+        upgradeFrom30To31(db);
     }
 
 
@@ -253,6 +255,14 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         if (oldVersion < 30) {
             upgradeFrom29To30(db);
         }
+
+        if (oldVersion < 31) {
+            upgradeFrom30To31(db);
+        }
+    }
+
+    private void upgradeFrom30To31(SQLiteDatabase db) {
+        createViewedNotificationsQueueTable(db);
     }
 
     private void upgradeFrom29To30(SQLiteDatabase db) {
@@ -720,6 +730,14 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
                 + "ORDER BY" + WHITESPACE + DbStructureSearchQuery.Column.QUERY_TIMESTAMP + WHITESPACE + "DESC" + WHITESPACE
                 + "LIMIT -1 OFFSET" + WHITESPACE + DbStructureSearchQuery.TABLE_SIZE_LIMIT + ");"
                 + "END;";
+        db.execSQL(sql);
+    }
+
+    private void createViewedNotificationsQueueTable(SQLiteDatabase db) {
+        String sql = "CREATE TABLE " + DbStructureViewedNotificationsQueue.VIEWED_NOTIFICATIONS_QUEUE
+                + " ("
+                + DbStructureViewedNotificationsQueue.Column.NOTIFICATION_ID + WHITESPACE + LONG_TYPE + " PRIMARY KEY"
+                + ")";
         db.execSQL(sql);
     }
 }

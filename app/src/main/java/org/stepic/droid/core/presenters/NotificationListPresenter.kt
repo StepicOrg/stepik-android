@@ -11,6 +11,7 @@ import org.stepic.droid.core.presenters.contracts.NotificationListView
 import org.stepic.droid.di.notifications.NotificationsScope
 import org.stepic.droid.model.NotificationCategory
 import org.stepic.droid.notifications.StepikNotificationManager
+import org.stepic.droid.notifications.badges.NotificationsBadgesManager
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.notifications.model.NotificationType
 import org.stepic.droid.util.not
@@ -31,14 +32,15 @@ class NotificationListPresenter
         private val config: Config,
         private val analytic: Analytic,
         private val stepikNotificationManager: StepikNotificationManager,
-        private val internetEnabledListenerClient: Client<InternetEnabledListener>
+        private val internetEnabledListenerClient: Client<InternetEnabledListener>,
+        private val notificationsBadgesManager: NotificationsBadgesManager
 ) : PresenterBase<NotificationListView>(), InternetEnabledListener {
     private var notificationCategory: NotificationCategory? = null
     val isLoading = AtomicBoolean(false)
     val wasShown = AtomicBoolean(false)
     val hasNextPage = AtomicBoolean(true)
     private val page = AtomicInteger(1)
-    val notificationList: MutableList<Notification> = ArrayList<Notification>()
+    val notificationList: MutableList<Notification> = ArrayList()
     val notificationMapIdToPosition: MutableMap<Long, Int> = HashMap()
 
     /**
@@ -46,6 +48,7 @@ class NotificationListPresenter
      */
     @MainThread
     fun init(notificationCategory: NotificationCategory): Boolean {
+        notificationsBadgesManager.syncCounter()
         this.notificationCategory = notificationCategory
         if (!isLoading && !wasShown) {
             //it is not lock, it is just check, but we still can enter twice if we use it in multithreading way, but it is only for main thread.
@@ -153,6 +156,7 @@ class NotificationListPresenter
                 if (isSuccess) {
                     mainHandler.post {
                         onNotificationShouldBeRead(id)
+                        notificationsBadgesManager.syncCounter()
                     }
                 } else {
                     val pos = notificationMapIdToPosition[id]
@@ -201,6 +205,7 @@ class NotificationListPresenter
                 try {
                     val response = api.markAsReadAllType(notificationCategoryLocal).execute()
                     if (response.isSuccessful) {
+                        notificationsBadgesManager.syncCounter()
                         notificationList.forEach {
                             it.is_unread = false
                         }
