@@ -80,8 +80,9 @@ class LocalReminderImpl
                     sharedPreferenceHelper.saveNewUserRemindTimestamp(scheduleMillis)
                     // Sets an alarm - note this alarm will be lost if the phone is turned off and on again
                     val intent = Intent(context, NewUserAlarmService::class.java)
-                    intent.putExtra(NewUserAlarmService.notificationTimestampSentKey, scheduleMillis)
-                    val pendingIntent = PendingIntent.getService(context, NewUserAlarmService.requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+                    intent.action = NewUserAlarmService.SHOW_NEW_USER_NOTIFICATION
+                    intent.putExtra(NewUserAlarmService.NOTIFICATION_TIMESTAMP_SENT_KEY, scheduleMillis)
+                    val pendingIntent = PendingIntent.getService(context, NewUserAlarmService.REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT)
                     alarmManager.cancel(pendingIntent)//timer should not be triggered
 
                     scheduleCompat(scheduleMillis, AlarmManager.INTERVAL_HALF_HOUR, pendingIntent)
@@ -150,6 +151,47 @@ class LocalReminderImpl
     @MainThread
     override fun remindAboutApp() {
         remindAboutApp(null)
+    }
+
+    private val registrationRemindHandling = AtomicBoolean(false)
+
+    override fun remindAboutRegistration() {
+        threadPoolExecutor.execute {
+            val isNotLoading = registrationRemindHandling.compareAndSet(false, true)
+            if (!isNotLoading) return@execute
+            try {
+                if (sharedPreferenceHelper.authResponseFromStore != null) {
+                    sharedPreferenceHelper.setHasEverLogged()
+                }
+
+                if (sharedPreferenceHelper.isEverLogged) return@execute
+
+                val now = DateTimeHelper.nowLocal()
+                val oldTimestamp = sharedPreferenceHelper.registrationRemindTimestamp
+
+                val scheduleMillis = if (now < oldTimestamp) {
+                    oldTimestamp
+                } else {
+                    if (oldTimestamp == 0L) { // means that notification wasn't shown before
+                        now + AppConstants.MILLIS_IN_1HOUR
+                    } else {
+                        now + 2 * AppConstants.MILLIS_IN_1HOUR
+                    }
+                }
+
+                val intent = Intent(context, NewUserAlarmService::class.java)
+                intent.action = NewUserAlarmService.SHOW_REGISTRATION_NOTIFICATION
+                intent.putExtra(NewUserAlarmService.NOTIFICATION_TIMESTAMP_SENT_KEY, scheduleMillis)
+                val pendingIntent = PendingIntent.getService(context, NewUserAlarmService.REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+                alarmManager.cancel(pendingIntent)
+
+                scheduleCompat(scheduleMillis, AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent)
+
+                sharedPreferenceHelper.saveRegistrationRemindTimestamp(scheduleMillis)
+            } finally {
+                registrationRemindHandling.set(false)
+            }
+        }
     }
 
     private fun scheduleCompat(scheduleMillis: Long, interval: Long, pendingIntent: PendingIntent) {

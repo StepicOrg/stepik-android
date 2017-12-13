@@ -17,4 +17,7 @@ interface StepikNotificationManager {
     @WorkerThread
     fun showStreakRemind()
 
+    @WorkerThread
+    fun showRegistrationRemind()
+
 }

@@ -24,12 +24,15 @@ public class BootCompletedReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        if (!Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) return;
+
         App.Companion.component().inject(this);
         analytic.reportEvent(Analytic.System.BOOT_COMPLETED);
         long timestamp = sharedPreferences.getNewUserRemindTimestamp();
         if (timestamp > 0L) {
             localReminder.remindAboutApp(timestamp); //send to remind checker
         }
+        localReminder.remindAboutRegistration();
         localReminder.userChangeStateOfNotification();
     }
 }
