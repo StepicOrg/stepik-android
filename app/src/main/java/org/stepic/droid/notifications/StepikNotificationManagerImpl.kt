@@ -26,10 +26,7 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.storage.operations.Table
-import org.stepic.droid.ui.activities.MainFeedActivity
-import org.stepic.droid.ui.activities.ProfileActivity
-import org.stepic.droid.ui.activities.SectionActivity
-import org.stepic.droid.ui.activities.StepsActivity
+import org.stepic.droid.ui.activities.*
 import org.stepic.droid.util.*
 import org.stepic.droid.util.resolvers.text.TextResolver
 import org.stepic.droid.web.Api
@@ -51,6 +48,11 @@ class StepikNotificationManagerImpl
                     private val localReminder: LocalReminder,
                     private val notificationManager: NotificationManager,
                     private val notificationTimeChecker: NotificationTimeChecker) : StepikNotificationManager {
+    companion object {
+        private const val NEW_USER_REMIND_NOTIFICATION_ID = 4L
+        private const val REGISTRATION_REMIND_NOTIFICATION_ID = 5L
+    }
+
     val notificationStreakId: Long = 3214L
 
     @WorkerThread
@@ -89,7 +91,8 @@ class StepikNotificationManagerImpl
                 justText = remindMessage,
                 taskBuilder = taskBuilder,
                 title = title,
-                deleteIntent = deletePendingIntent, id = 4)
+                deleteIntent = deletePendingIntent,
+                id = NEW_USER_REMIND_NOTIFICATION_ID)
 
         if (!sharedPreferenceHelper.isNotificationWasShown(SharedPreferenceHelper.NotificationDay.DAY_ONE)) {
             afterLocalNotificationShown(SharedPreferenceHelper.NotificationDay.DAY_ONE)
@@ -145,6 +148,27 @@ class StepikNotificationManagerImpl
                 streakNotificationNumberIsOverflow()
             }
         }
+    }
+
+    @WorkerThread
+    override fun showRegistrationRemind() {
+        if (sharedPreferenceHelper.isEverLogged) return
+
+        val intent = Intent(context, SplashActivity::class.java)
+        val taskBuilder = TaskStackBuilder
+                .create(context)
+                .addNextIntent(intent)
+
+        val title = context.getString(R.string.stepik_free_courses_title)
+        val remindMessage = context.getString(R.string.registration_remind_message)
+        showSimpleNotification(
+                stepikNotification = null,
+                justText = remindMessage,
+                taskBuilder = taskBuilder,
+                title = title,
+                id = REGISTRATION_REMIND_NOTIFICATION_ID)
+
+        localReminder.remindAboutRegistration()
     }
 
     override fun showNotification(notification: Notification) {

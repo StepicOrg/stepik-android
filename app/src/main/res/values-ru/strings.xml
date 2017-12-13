@@ -509,7 +509,7 @@
     <string name="name">Имя</string>
 
     <string name="sign_up_with_email_suffix">" с e-mail"</string>
-    <string name="placeholder_explore_courses">Откройте для себя другие бесплатные онлайн курсы</string>
+    <string name="placeholder_explore_courses">Откройте для себя бесплатные онлайн курсы</string>
     <string name="placeholder_login">Войдите и начните учиться прямо сейчас</string>
 
     <string name="courses_carousel_my_courses_empty">Запишитесь на курсы и они будут показаны здесь</string>
@@ -549,4 +549,17 @@
     </plurals>
     <string name="course_current_progress">Текущий прогресс %d%%</string>
     <string name="home_streak_counter_text"><![CDATA[Вы решаете <b>%s</b> подряд!]]></string>
+    <string name="registration_remind_message">Завершите регистрацию и получите доступ к неограниченному числу бесплатных курсов!</string>
+
+    <!--onboarding-->
+    <string name="onboarding_next_action">Далее</string>
+    <string name="onboarding_done_action">Начать</string>
+    <string name="onboarding_first_title">Выбирайте</string>
+    <string name="onboarding_first_subtitle">Доступ ко всем курсам на Stepik \u2014 выбирайте, что интересно</string>
+    <string name="onboarding_second_title">Сохраняйте</string>
+    <string name="onboarding_second_subtitle">Смотрите лекции и сохраняйте их для просмотра без доступа в сеть</string>
+    <string name="onboarding_third_title">Решайте</string>
+    <string name="onboarding_third_subtitle">Выполняйте задания прямо с\u00A0телефона!</string>
+    <string name="onboarding_fourth_title">Достигайте</string>
+    <string name="onboarding_fourth_subtitle">Установите напоминания, чтобы заниматься регулярнее и быстрее закончить курс</string>
 </resources>
