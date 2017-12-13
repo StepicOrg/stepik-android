@@ -11,6 +11,7 @@ import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.model.Assignment;
+import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.DownloadEntity;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Progress;
@@ -126,8 +127,18 @@ public class LoadService extends IntentService {
                 // FIXME: 20.10.15 this simple check doesn't work if file is loading and at this moment adding to Download manager Queue,
                 // FIXME: 20.10.15 but this is not useless, because, work if file exists on the disk.
                 // FIXME: 20.10.15 For 'singleton' file of Video (or Step) at storage use UI and Broadcasts.
-                storeStateManager.updateStepAfterDeleting(step);
-                return;
+                CachedVideo video = databaseFacade.getCachedVideoById(fileId);
+                if (video == null) {
+                    FileUtil.cleanDirectory(downloadFolderAndFile); // remove file that not present in database
+                } else {
+                    if (video.getStepId() != step.getId()) {
+                        // trying to link video again
+                        video.setStepId(step.getId());
+                        databaseFacade.addVideo(video);
+                    }
+                    storeStateManager.updateStepAfterDeleting(step);
+                    return;
+                }
             }
 
             Uri target = Uri.fromFile(downloadFolderAndFile);
