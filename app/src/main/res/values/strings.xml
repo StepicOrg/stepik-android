@@ -559,5 +559,5 @@
     </plurals>
     <string name="course_current_progress">Current progress: %d%%</string>
     <string name="home_streak_counter_text"><![CDATA[Your current Streak is <b>%s</b>!]]></string>
-    <string name="registration_remind_message">Complete registrations and get access to thousands free courses!</string>
+    <string name="registration_remind_message">Complete registration and get access to thousands of free courses!</string>
 </resources>
