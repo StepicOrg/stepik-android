@@ -115,17 +115,20 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
         super.onAttachedToWindow()
         isAttached = true
         initListeners()
+        addTextChangedListener(this)
     }
 
     private fun initListeners() {
-        if (!isAttached) return
         compositeDisposable.clear()
+
+        if (!isAttached) return
         compositeDisposable.add(
                 spanPublisher
                         .subscribeOn(Schedulers.computation())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ updateHighlight(it) }, {
                             analytic.reportError(Analytic.Code.CODE_QUIZ_ERROR, it)
+                            spanPublisher.onNext(emptyList()) // to avoid cyclic error's call due to publish subject behavior
                             initListeners()
                         })
         )
@@ -154,7 +157,6 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
                         })
         )
 
-        addTextChangedListener(this)
         afterTextChanged(editableText)
     }
 
