@@ -127,7 +127,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
                         .subscribeOn(Schedulers.computation())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ updateHighlight(it) }, {
-                            analytic.reportError(Analytic.Code.CODE_QUIZ_ERROR, it)
+                            analytic.reportError(Analytic.Code.CODE_EDITOR_ERROR, it)
                             spanPublisher.onNext(emptyList()) // to avoid cyclic error's call due to publish subject behavior
                             initListeners()
                         })
@@ -141,7 +141,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
                         }
                         .unwrapOptional()
                         .subscribe(spanPublisher::onNext) {
-                            analytic.reportError(Analytic.Code.CODE_QUIZ_ERROR, it)
+                            analytic.reportError(Analytic.Code.CODE_EDITOR_ERROR, it)
                             initListeners()
                         }
         )
@@ -152,7 +152,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
                         .subscribeOn(Schedulers.computation())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ spanPublisher.value?.let(this::updateHighlight) }, {
-                            analytic.reportError(Analytic.Code.CODE_QUIZ_ERROR, it)
+                            analytic.reportError(Analytic.Code.CODE_EDITOR_ERROR, it)
                             initListeners()
                         })
         )
