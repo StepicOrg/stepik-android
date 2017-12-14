@@ -166,7 +166,7 @@ class LocalReminderImpl
 
                 if (sharedPreferenceHelper.isEverLogged) return@execute
 
-                val now = DateTimeHelper.nowLocal()
+                val now = DateTimeHelper.nowUtc()
                 val oldTimestamp = sharedPreferenceHelper.registrationRemindTimestamp
 
                 val scheduleMillis = if (now < oldTimestamp) {
