@@ -62,6 +62,7 @@ public class AppConstants {
     public static final String NOTIFICATION_CANCELED = "notification_canceled";
 
 
+    public static final String KEY_NOTIFICATION_ID = "key_notification_id";
     public static final String OPEN_NOTIFICATION_FOR_CHECK_COURSE = "Open_notification_check_course";
     public static final String OPEN_NOTIFICATION_FOR_ENROLL_REMINDER = "open_notificatoin_for_enroll_reminder";
     public static final String OPEN_NOTIFICATION_FROM_STREAK = "open_notification_from_streak";

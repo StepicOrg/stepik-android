@@ -1,5 +1,6 @@
 package org.stepic.droid.notifications
 
+import android.support.annotation.AnyThread
 import android.support.annotation.MainThread
 
 interface LocalReminder {
@@ -12,5 +13,8 @@ interface LocalReminder {
 
     @MainThread
     fun userChangeStateOfNotification()
+
+    @AnyThread
+    fun remindAboutRegistration()
 
 }

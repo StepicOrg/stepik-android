@@ -45,6 +45,8 @@ public class SharedPreferenceHelper {
     private final static String SEVEN_DAY_NOTIFICATION = "seven_day_notification";
     private static final String FILTER_RUSSIAN_LANGUAGE = "russian_lang";
     private static final String FILTER_ENGLISH_LANGUAGE = "english_lang";
+    private static final String NOTIFICATIONS_COUNT = "notifications_count";
+    private static final String IS_EVER_LOGGED = "is_ever_logged";
 
     private final String ACCESS_TOKEN_TIMESTAMP = "access_token_timestamp";
     private final String AUTH_RESPONSE_JSON = "auth_response_json";
@@ -57,7 +59,7 @@ public class SharedPreferenceHelper {
     private final String TEMP_POSITION_KEY = "temp_position_key";
     private final String VIDEO_RATE_PREF_KEY = "video_rate_pref_key";
     private final String VIDEO_EXTERNAL_PREF_KEY = "video_external_pref_key";
-    private final String GCM_TOKEN_ACTUAL = "gcm_token_actual";
+    private final String GCM_TOKEN_ACTUAL = "gcm_token_actual_with_badges"; // '_with_badges' suffix was added to force update of gcm token to enable silent push with badge count, see #188
     private final String SD_CHOSEN = "sd_chosen";
     private final String FIRST_TIME_LAUNCH = "first_time_launch";
     private final String SCHEDULED_LINK_CACHED = "scheduled_cached";
@@ -69,6 +71,7 @@ public class SharedPreferenceHelper {
     private final String ANY_STEP_SOLVED = "any_step_solved";
     private final String NUMBER_OF_STEPS_SOLVED = "number_of_steps_solved";
     private final String NEW_USER_ALARM_TIMESTAMP = "new_user_alarm_timestamp";
+    private final String REGISTRATION_ALARM_TIMESTAMP = "registration_alarm_timestamp";
     private final String NUMBER_OF_SHOWN_STREAK_DIALOG = "number_of_shown_streak_dialog";
     private final String STREAK_DIALOG_SHOWN_TIMESTAMP = "streak_dialog_shown_timestamp";
     private final String STREAK_NUMBER_OF_IGNORED = "streak_number_of_ignored";
@@ -84,6 +87,7 @@ public class SharedPreferenceHelper {
     private final Context context;
     private final Analytic analytic;
     private final DefaultFilter defaultFilter;
+
     public enum NotificationDay {
         DAY_ONE(ONE_DAY_NOTIFICATION),
         DAY_SEVEN(SEVEN_DAY_NOTIFICATION);
@@ -171,6 +175,14 @@ public class SharedPreferenceHelper {
 
     public long getNewUserRemindTimestamp() {
         return getLong(PreferenceType.DEVICE_SPECIFIC, NEW_USER_ALARM_TIMESTAMP);
+    }
+
+    public void saveRegistrationRemindTimestamp(long scheduleMillis) {
+        put(PreferenceType.DEVICE_SPECIFIC, REGISTRATION_ALARM_TIMESTAMP, scheduleMillis);
+    }
+
+    public long getRegistrationRemindTimestamp() {
+        return getLong(PreferenceType.DEVICE_SPECIFIC, REGISTRATION_ALARM_TIMESTAMP);
     }
 
     public void clickEnrollNotification(long timestamp) {
@@ -333,7 +345,9 @@ public class SharedPreferenceHelper {
         put(PreferenceType.DEVICE_SPECIFIC, NOTIFICATION_SOUND_DISABLED, isDisabled);
     }
 
-    public boolean isFirstTime() {
+    public boolean isOnboardingNotPassedYet() {
+        // before onboarding App was tracked first time launch
+        // for avoiding to show onboarding for old users this property is reused
         return getBoolean(PreferenceType.DEVICE_SPECIFIC, FIRST_TIME_LAUNCH, true);
     }
 
@@ -345,8 +359,16 @@ public class SharedPreferenceHelper {
         put(PreferenceType.DEVICE_SPECIFIC, SCHEDULED_LINK_CACHED, true);
     }
 
-    public void afterFirstTime() {
+    public void afterOnboardingPassed() {
         put(PreferenceType.DEVICE_SPECIFIC, FIRST_TIME_LAUNCH, false);
+    }
+
+    public void setHasEverLogged() {
+        put(PreferenceType.DEVICE_SPECIFIC, IS_EVER_LOGGED, true);
+    }
+
+    public boolean isEverLogged() {
+        return getBoolean(PreferenceType.DEVICE_SPECIFIC, IS_EVER_LOGGED, false);
     }
 
     public boolean isNeedToShowVideoQualityExplanation() {
@@ -466,6 +488,14 @@ public class SharedPreferenceHelper {
 
     public boolean isGcmTokenOk() {
         return getBoolean(PreferenceType.LOGIN, GCM_TOKEN_ACTUAL);
+    }
+
+    public void setNotificationsCount(int count) {
+        put(PreferenceType.LOGIN, NOTIFICATIONS_COUNT, count);
+    }
+
+    public int getNotificationsCount() {
+        return getInt(PreferenceType.LOGIN, NOTIFICATIONS_COUNT, 0);
     }
 
     public void storeVideoPlaybackRate(@NotNull VideoPlaybackRate videoPlaybackRate) {
@@ -588,6 +618,8 @@ public class SharedPreferenceHelper {
 
         long millisNow = DateTimeHelper.INSTANCE.nowUtc(); // we should use +0 UTC for avoid problems with TimeZones
         put(PreferenceType.LOGIN, ACCESS_TOKEN_TIMESTAMP, millisNow);
+
+        put(PreferenceType.DEVICE_SPECIFIC, IS_EVER_LOGGED, true);
     }
 
     public void storeLastTokenType(boolean isSocial) {

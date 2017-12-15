@@ -1,6 +1,6 @@
 ext.versions = [
-        code                 : 1974,
-        name                 : '1.48',
+        code                 : 1976,
+        name                 : '1.49',
 
         minSdk               : 15,
         targetSdk            : 25,
@@ -30,6 +30,7 @@ ext.versions = [
         appMetrica           : '2.78',
 
         calligraphy          : '2.1.0',
+        lottie               : '2.3.1',
 
         firebase             : '11.2.2',
 
@@ -45,7 +46,10 @@ ext.versions = [
         recyclerAnimators    : '2.1.0',
         materialProgress     : '1.1.6',
         circleImageView      : '2.1.0',
-        bottomNavigationView : '1.2.4',
+        ahbottomnavigation   : '2.1.0',
+        circleIndicator      : '1.2.2@aar',
+
+        shortcutBadger       : '1.1.19@aar',
 
         stetho               : '1.4.2',
         leakCanary           : '1.5.1',
@@ -96,6 +100,7 @@ ext.libraries = [
         appMetrica           : "com.yandex.android:mobmetricalib:$versions.appMetrica",
 
         calligraphy          : "uk.co.chrisjenx:calligraphy:$versions.calligraphy",
+        lottie               : "com.airbnb.android:lottie:$versions.lottie",
 
         firebaseMessaging    : "com.google.firebase:firebase-messaging:$versions.firebase",
         firebaseAppindexing  : "com.google.firebase:firebase-appindexing:$versions.firebase",
@@ -117,7 +122,10 @@ ext.libraries = [
         recyclerAnimators    : "jp.wasabeef:recyclerview-animators:$versions.recyclerAnimators",
         materialProgress     : "me.zhanghai.android.materialprogressbar:library:$versions.materialProgress",
         circleImageView      : "de.hdodenhof:circleimageview:$versions.circleImageView",
-        bottomNavigationView : "com.github.ittianyu:BottomNavigationViewEx:$versions.bottomNavigationView",
+        ahbottomnavigation   : "com.aurelhubert:ahbottomnavigation:$versions.ahbottomnavigation",
+        circleIndicator      : "me.relex:circleindicator:$versions.circleIndicator",
+
+        shortcutBadger       : "me.leolin:ShortcutBadger:$versions.shortcutBadger",
 
         // Developer Tools
         leakCanary           : "com.squareup.leakcanary:leakcanary-android:$versions.leakCanary",

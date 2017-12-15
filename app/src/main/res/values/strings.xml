@@ -516,7 +516,7 @@
 
     <string name="sign_up_with_email_suffix">" with e-mail"</string>
 
-    <string name="placeholder_explore_courses">Discover new open free online courses. Tap to find</string>
+    <string name="placeholder_explore_courses">Discover free online courses. Tap to find</string>
     <string name="placeholder_login">Login and start learning right now</string>
 
     <string name="courses_carousel_my_courses_empty">Enroll for free courses and they will be here</string>
@@ -559,4 +559,20 @@
     </plurals>
     <string name="course_current_progress">Current progress: %d%%</string>
     <string name="home_streak_counter_text"><![CDATA[Your current Streak is <b>%s</b>!]]></string>
+
+    <string name="notification_badge_placeholder" translatable="false">99+</string>
+
+    <string name="registration_remind_message">Complete registration and get access to thousands of free courses!</string>
+
+    <!--onboarding-->
+    <string name="onboarding_next_action">Next</string>
+    <string name="onboarding_done_action">Done</string>
+    <string name="onboarding_first_title">Choose</string>
+    <string name="onboarding_first_subtitle">Browse through all the courses available on Stepik and choose what suits you</string>
+    <string name="onboarding_second_title">Download</string>
+    <string name="onboarding_second_subtitle">Watch the video lectures online or download them for access without the connection</string>
+    <string name="onboarding_third_title">Solve</string>
+    <string name="onboarding_third_subtitle">Complete the assignments using your mobile device</string>
+    <string name="onboarding_fourth_title">Complete</string>
+    <string name="onboarding_fourth_subtitle">Set up reminders to study regularly and complete the courses faster</string>
 </resources>

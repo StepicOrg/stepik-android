@@ -3,6 +3,7 @@ package org.stepic.droid.web;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.model.EnrollmentWrapper;
 
+import io.reactivex.Completable;
 import io.reactivex.Single;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -96,14 +97,23 @@ public interface StepicRestLoggedService {
     @GET("api/devices")
     Call<DeviceResponse> getDevices(@Query("user") long userId);
 
+    @GET("api/devices")
+    Call<DeviceResponse> getDeviceByRegistrationId(@Query("registration_id") String token);
+
     @POST("api/devices")
     Call<DeviceResponse> registerDevice(@Body DeviceRequest deviceRequest);
+
+    @PUT("api/devices/{id}")
+    Call<DeviceResponse> renewDeviceRegistration(@Path("id") long deviceId, @Body DeviceRequest deviceRequest);
 
     @GET("api/courses")
     Call<CoursesMetaResponse> getCourses(@Query("ids[]") long[] courseIds);
 
     @PUT("api/notifications/{id}")
     Call<Void> putNotification(@Path("id") long notificationId, @Body NotificationRequest notificationRequest);
+
+    @PUT("api/notifications/{id}")
+    Completable putNotificationReactive(@Path("id") long notificationId, @Body NotificationRequest notificationRequest);
 
     @DELETE("api/devices/{id}")
     Call<Void> removeDevice(@Path("id") long deviceId);
@@ -141,6 +151,9 @@ public interface StepicRestLoggedService {
     @FormUrlEncoded
     @POST("api/notifications/mark-as-read")
     Call<Void> markAsRead(@Nullable @Field(value = "type", encoded = true) String notificationType);
+
+    @GET("api/notification-statuses")
+    Single<NotificationStatusesResponse> getNotificationStatuses();
 
     @GET("api/user-activities/{userId}")
     Call<UserActivityResponse> getUserActivities(@Path("userId") long userId);

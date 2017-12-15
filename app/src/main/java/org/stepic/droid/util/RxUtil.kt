@@ -1,10 +1,10 @@
 package org.stepic.droid.util
 
 import io.reactivex.Flowable
+import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
-import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 
@@ -20,6 +20,12 @@ fun <T> Observable<RxOptional<T>>.unwrapOptional(): Observable<T> =
 
 fun <T> Flowable<RxOptional<T>>.unwrapOptional(): Flowable<T> =
         this.filter { it.value != null }.map { it.value }
+
+fun <T> Single<RxOptional<T>>.unwrapOptional(): Maybe<T> =
+        this.filter { it.value != null }.map { it.value }
+
+fun <T, R> Single<T>.mapNotNull(transform: (T) -> R?): Maybe<R> =
+        this.map { RxOptional(transform(it)) }.unwrapOptional()
 
 class RetryWithDelay(private val retryDelayMillis: Int) : io.reactivex.functions.Function<Flowable<out Throwable>, Flowable<*>> {
 

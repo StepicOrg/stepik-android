@@ -5,4 +5,6 @@ interface SplashView {
     fun onShowLaunch()
 
     fun onShowHome()
+
+    fun onShowOnboarding()
 }

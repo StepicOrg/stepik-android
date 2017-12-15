@@ -7,6 +7,15 @@ import org.jetbrains.annotations.Nullable;
 
 public interface Analytic {
 
+    interface Onboarding {
+        String CLOSED = "onboarding_closed";
+        String ACTION = "onboarding_action";
+        String COMPLETE = "onboarding_complete";
+        String SCREEN_OPENED = "onboarding_screen_opened";
+
+        String SCREEN_PARAM = "screen";
+    }
+
     interface Code {
         String TOOLBAR_SELECTED = "code_toolbar_selected";
         String TOOLBAR_SELECTED_LANGUAGE = "language";
@@ -37,9 +46,6 @@ public interface Analytic {
     interface FastContinue {
         String EMPTY_COURSES_SHOWN = "fast_continue_empty_courses";
         String EMPTY_COURSES_CLICK = "fast_continue_empty_courses_click";
-
-        String NO_INTERNET_SHOWN = "fast_continue_no_internet";
-        String NO_INTERNET_CLICK = "fast_continue_no_internet_click";
 
         String AUTH_SHOWN = "fast_continue_auth";
         String AUTH_CLICK = "fast_continue_auth_click";
@@ -74,6 +80,10 @@ public interface Analytic {
 
         String TAP_ON_FIELDS = "tap_on_fields_login";
         String TYPING_TEXT_FIELDS = "typing_text_fields_login";
+
+        String FACEBOOK_ERROR = "facebook_error";
+        String GOOGLE_FAILED_STATUS = "google_sign_in_failed";
+        String GOOGLE_AUTH_CODE_NULL = "google_auth_code_null";
     }
 
     interface System {

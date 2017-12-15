@@ -108,6 +108,10 @@ abstract class StorageModule {
     @Binds
     internal abstract fun provideSearchQueryDao(searchQueryDaoImpl: SearchQueryDaoImpl): SearchQueryDao
 
+    @StorageSingleton
+    @Binds
+    internal abstract fun provideViewedNotificationsQueueDao(viewedNotificationsQueueDaoImpl: ViewedNotificationsQueueDaoImpl): IDao<ViewedNotification>
+
     @Module
     companion object {
 
