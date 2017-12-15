@@ -201,6 +201,15 @@ public class HtmlHelper {
             ", user-scalable=no" +
             ", target-densitydpi=medium-dpi" +
             "\" />" +
+            "<script type=\"text/javascript\">\n" +
+            "function measureScroll(x, y) {" +
+            "var elem = document.elementFromPoint(x, y);" +
+            "while(elem.parentElement.tagName !== 'BODY' && elem.parentElement.tagName !== 'HTML') {" +
+            "elem = elem.parentElement;" +
+            "}" +
+            "scrollListener.onScroll(document.body.scrollWidth, elem.offsetWidth, elem.scrollWidth, elem.scrollLeft);" +
+            "}" +
+            "</script>\n" +
             "<link rel=\"stylesheet\" type=\"text/css\" href=\"wysiwyg.css\"/>" +
             "<base href=\"%s\">" +
             "</head>\n"

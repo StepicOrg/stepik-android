@@ -11,6 +11,7 @@ import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
@@ -18,6 +19,7 @@ import org.stepic.droid.R;
 import org.stepic.droid.base.App;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.ui.util.AssetSupportWebViewClient;
+import org.stepic.droid.util.DpPixelsHelper;
 import org.stepic.droid.util.HtmlHelper;
 
 import java.util.Calendar;
@@ -119,6 +121,8 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
             html = HtmlHelper.buildPageWithAdjustingTextAndImage(text, textColorHighlight, width, config.getBaseUrl());
         }
 
+        addJavascriptInterface(new OnScrollWebListener(), "scrollListener");
+
         postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -171,22 +175,33 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
             case MotionEvent.ACTION_DOWN:
                 startX = event.getX();
                 startY = event.getY();
+
+                final float dpx = DpPixelsHelper.convertPixelsToDp(event.getX(), getContext());
+                final float dpy = DpPixelsHelper.convertPixelsToDp(event.getY(), getContext());
+                evalScript("measureScroll(" + dpx + ", " + dpy + ")");
+
                 break;
             case MotionEvent.ACTION_MOVE:
                 float dx = startX - event.getX();
                 float dy = startY - event.getY();
                 event.setLocation(event.getX(), startY);
 
-                if (Math.abs(dx) > Math.abs(dy) && canScrollHorizontally((int) dx)) {
+                if (Math.abs(dx) * 1.4 > Math.abs(dy) &&
+                        ((dx < 0 && scrollState.canScrollLeft) || (dx > 0 && scrollState.canScrollRight))) {
                     getParent().requestDisallowInterceptTouchEvent(true);
                 }
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
                 getParent().requestDisallowInterceptTouchEvent(false);
+                scrollState.reset();
                 break;
         }
         return super.onTouchEvent(event);
+    }
+
+    private void evalScript(String code) {
+        loadUrl("javascript: " + code);
     }
 
     public void setOnWebViewClickListener(OnWebViewImageClicked listener) {
@@ -196,4 +211,25 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
     interface OnWebViewImageClicked {
         void onClick(String path);
     }
+
+    private final class OnScrollWebListener {
+        @JavascriptInterface
+        void onScroll(float bodyWidth, float offsetWidth, float scrollWidth, float scrollLeft) {
+            scrollState.canScrollLeft = scrollLeft > 0;
+            scrollState.canScrollRight = offsetWidth + scrollLeft < scrollWidth;
+        }
+    }
+
+    private static class ScrollState {
+        private boolean canScrollLeft = false;
+        private boolean canScrollRight = false;
+
+        private void reset() {
+            canScrollLeft = false;
+            canScrollRight = false;
+        }
+    }
+
+    private final ScrollState scrollState = new ScrollState();
+
 }
