@@ -214,7 +214,7 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
 
     private final class OnScrollWebListener {
         @JavascriptInterface
-        void onScroll(float bodyWidth, float offsetWidth, float scrollWidth, float scrollLeft) {
+        void onScroll(float offsetWidth, float scrollWidth, float scrollLeft) {
             scrollState.canScrollLeft = scrollLeft > 0;
             scrollState.canScrollRight = offsetWidth + scrollLeft < scrollWidth;
         }
