@@ -1,6 +1,6 @@
 ext.versions = [
-        code                 : 1974,
-        name                 : '1.48',
+        code                 : 1976,
+        name                 : '1.49',
 
         minSdk               : 15,
         targetSdk            : 25,
