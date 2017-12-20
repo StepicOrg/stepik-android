@@ -189,7 +189,7 @@ public class HtmlHelper {
     private static final String HORIZONTAL_SCROLL_STYLE;
 
     static {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             HORIZONTAL_SCROLL_STYLE = "<style>\n" +
                     "body > * {\n" +
                     "    width: 100%%;\n" +
