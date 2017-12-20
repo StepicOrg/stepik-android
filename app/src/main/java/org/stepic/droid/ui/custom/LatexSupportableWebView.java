@@ -186,8 +186,7 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
                 float dy = startY - event.getY();
                 event.setLocation(event.getX(), startY);
 
-                if (Math.abs(dx) * 1.4 > Math.abs(dy) &&
-                        ((dx < 0 && scrollState.canScrollLeft) || (dx > 0 && scrollState.canScrollRight))) {
+                if (Math.abs(dx) > Math.abs(dy) && canScrollHorizontally((int) dx)) {
                     getParent().requestDisallowInterceptTouchEvent(true);
                 }
                 break;
@@ -198,6 +197,11 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
                 break;
         }
         return super.onTouchEvent(event);
+    }
+
+    @Override
+    public boolean canScrollHorizontally(int dx) {
+        return (dx < 0 && scrollState.canScrollLeft) || (dx > 0 && scrollState.canScrollRight);
     }
 
     private void evalScript(String code) {
