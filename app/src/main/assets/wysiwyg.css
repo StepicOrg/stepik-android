@@ -241,11 +241,6 @@
     margin-bottom: 0;
   }
 
-  body > * {
-    width: 100%;
-    overflow-x: scroll;
-  }
-
   .step-text__limit-value {
     margin-left: 1em;
   }

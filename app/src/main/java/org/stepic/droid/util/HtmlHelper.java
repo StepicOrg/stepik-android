@@ -1,5 +1,6 @@
 package org.stepic.droid.util;
 
+import android.os.Build;
 import android.support.annotation.ColorInt;
 
 import org.jetbrains.annotations.NotNull;
@@ -185,6 +186,23 @@ public class HtmlHelper {
     }
 
     public static final String HORIZONTAL_SCROLL_LISTENER = "scrollListener";
+    private static final String HORIZONTAL_SCROLL_STYLE;
+
+    static {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            HORIZONTAL_SCROLL_STYLE = "<style>\n" +
+                    "body > * {\n" +
+                    "    width: 100%%;\n" +
+                    "    overflow-x: scroll;\n" +
+                    "}\n" +
+                    "::-webkit-scrollbar { \n" +
+                    "    display: none; \n" +
+                    "}\n" +
+                    "</style>\n";
+        } else {
+            HORIZONTAL_SCROLL_STYLE = "";
+        }
+    }
 
     //string with 2 format args
     private static final String PRE_BODY = "<html>\n" +
@@ -213,6 +231,7 @@ public class HtmlHelper {
             "}" +
             "</script>\n" +
             "<link rel=\"stylesheet\" type=\"text/css\" href=\"wysiwyg.css\"/>" +
+            HORIZONTAL_SCROLL_STYLE +
             "<base href=\"%s\">" +
             "</head>\n"
             + "<body style='margin:0;padding:0;'>";

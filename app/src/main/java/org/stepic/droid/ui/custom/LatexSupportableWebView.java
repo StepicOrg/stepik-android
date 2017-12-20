@@ -204,7 +204,9 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
 
     @Override
     public boolean canScrollHorizontally(int dx) {
-        return (dx < 0 && scrollState.canScrollLeft) || (dx > 0 && scrollState.canScrollRight);
+        return super.canScrollHorizontally(dx) ||
+                (dx < 0 && scrollState.canScrollLeft) ||
+                (dx > 0 && scrollState.canScrollRight);
     }
 
     private void evalScript(String code) {
@@ -223,9 +225,9 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
         void onClick(String path);
     }
 
-    private final class OnScrollWebListener {
+    public final class OnScrollWebListener {
         @JavascriptInterface
-        void onScroll(float offsetWidth, float scrollWidth, float scrollLeft) {
+        public void onScroll(float offsetWidth, float scrollWidth, float scrollLeft) {
             scrollState.canScrollLeft = scrollLeft > 0;
             scrollState.canScrollRight = offsetWidth + scrollLeft < scrollWidth;
         }
