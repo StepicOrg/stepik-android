@@ -184,6 +184,8 @@ public class HtmlHelper {
         return preBody + body + POST_BODY;
     }
 
+    public static final String HORIZONTAL_SCROLL_LISTENER = "scrollListener";
+
     //string with 2 format args
     private static final String PRE_BODY = "<html>\n" +
             "<head>\n" +
@@ -207,7 +209,7 @@ public class HtmlHelper {
             "while(elem.parentElement.tagName !== 'BODY' && elem.parentElement.tagName !== 'HTML') {" +
             "elem = elem.parentElement;" +
             "}" +
-            "scrollListener.onScroll(elem.offsetWidth, elem.scrollWidth, elem.scrollLeft);" +
+            HORIZONTAL_SCROLL_LISTENER + ".onScroll(elem.offsetWidth, elem.scrollWidth, elem.scrollLeft);" +
             "}" +
             "</script>\n" +
             "<link rel=\"stylesheet\" type=\"text/css\" href=\"wysiwyg.css\"/>" +

@@ -121,7 +121,7 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
             html = HtmlHelper.buildPageWithAdjustingTextAndImage(text, textColorHighlight, width, config.getBaseUrl());
         }
 
-        addJavascriptInterface(new OnScrollWebListener(), "scrollListener");
+        addJavascriptInterface(new OnScrollWebListener(), HtmlHelper.HORIZONTAL_SCROLL_LISTENER);
 
         postDelayed(new Runnable() {
             @Override
