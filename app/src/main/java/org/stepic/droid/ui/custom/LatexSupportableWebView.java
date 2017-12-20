@@ -1,5 +1,6 @@
 package org.stepic.droid.ui.custom;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -67,6 +68,7 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
         init();
     }
 
+    @SuppressLint({"SetJavaScriptEnabled", "AddJavascriptInterface"})
     private void init() {
         App.Companion.component().inject(this);
         setBackgroundColor(Color.argb(1, 0, 0, 0));
@@ -79,6 +81,12 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
 
         setOnClickListener(this);
         setOnTouchListener(this);
+
+
+        WebSettings webSettings = getSettings();
+        webSettings.setDomStorageEnabled(true);
+        webSettings.setJavaScriptEnabled(true);
+        addJavascriptInterface(new OnScrollWebListener(), HtmlHelper.HORIZONTAL_SCROLL_LISTENER);
     }
 
     public void setTextIsSelectable(boolean isSelectable) {
@@ -107,9 +115,6 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
         String textString = text.toString();
 
         final String html;
-        WebSettings webSettings = getSettings();
-        webSettings.setDomStorageEnabled(true);
-        webSettings.setJavaScriptEnabled(true);
         if (fontPath != null) {
             html = HtmlHelper.buildPageWithCustomFont(text, fontPath, textColorHighlight, width, config.getBaseUrl());
         } else if (wantLaTeX || HtmlHelper.hasLaTeX(textString)) {
@@ -120,8 +125,6 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
         } else {
             html = HtmlHelper.buildPageWithAdjustingTextAndImage(text, textColorHighlight, width, config.getBaseUrl());
         }
-
-        addJavascriptInterface(new OnScrollWebListener(), HtmlHelper.HORIZONTAL_SCROLL_LISTENER);
 
         postDelayed(new Runnable() {
             @Override
