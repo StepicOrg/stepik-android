@@ -201,7 +201,11 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
     }
 
     private void evalScript(String code) {
-        loadUrl("javascript: " + code);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            evaluateJavascript(code, null);
+        } else {
+            loadUrl("javascript: " + code);
+        }
     }
 
     public void setOnWebViewClickListener(OnWebViewImageClicked listener) {
