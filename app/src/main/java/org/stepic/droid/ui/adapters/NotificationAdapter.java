@@ -258,7 +258,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     class HeaderViewHolder extends GenericViewHolder {
 
         @BindView(R.id.mark_all_as_read_button)
-        Button markAllAsViewed;
+        TextView markAllAsViewed;
 
         public HeaderViewHolder(View itemView) {
             super(itemView);
