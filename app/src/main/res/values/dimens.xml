@@ -173,4 +173,7 @@
 
     <dimen name="light_rounded_button_text_size">16sp</dimen>
     <dimen name="light_rounded_button_radius">7dp</dimen>
+
+    <dimen name="notification_icon_size">32dp</dimen>
+    <dimen name="notification_icon_vertical_margin">4dp</dimen>
 </resources>
