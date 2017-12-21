@@ -1,27 +1,36 @@
 package org.stepic.droid.ui.adapters;
 
 import android.content.Context;
-import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.PictureDrawable;
+import android.net.Uri;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.GenericRequestBuilder;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.caverock.androidsvg.SVG;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.App;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.core.presenters.NotificationListPresenter;
-import org.stepic.droid.fonts.FontType;
 import org.stepic.droid.fonts.FontsProvider;
 import org.stepic.droid.model.NotificationCategory;
 import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DateTimeHelper;
 import org.stepic.droid.util.resolvers.text.TextResolver;
+import org.stepic.droid.util.svg.GlideSvgRequestFactory;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
@@ -31,8 +40,6 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
-import uk.co.chrisjenx.calligraphy.CalligraphyUtils;
-import uk.co.chrisjenx.calligraphy.TypefaceUtils;
 
 public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.GenericViewHolder> {
 
@@ -43,8 +50,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     private final int headerCount;
 
-    private final Typeface boldTypeface;
-    private final Typeface regularTypeface;
 
     private Context context;
     private NotificationListPresenter notificationListPresenter;
@@ -58,16 +63,17 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     };
     private boolean isNeedEnableMarkButton = true;
 
+    private final Drawable placeholderUserIcon;
+
     public NotificationAdapter(Context context, NotificationListPresenter notificationListPresenter, NotificationCategory notificationCategory, FontsProvider fontsProvider) {
         this.context = context;
         this.notificationListPresenter = notificationListPresenter;
-        boldTypeface = TypefaceUtils.load(context.getAssets(), fontsProvider.provideFontPath(FontType.bold));
-        regularTypeface = TypefaceUtils.load(context.getAssets(), fontsProvider.provideFontPath(FontType.regular));
         if (notificationCategory != NotificationCategory.all) {
             headerCount = 0;
-        }else {
+        } else {
             headerCount = 1;
         }
+        this.placeholderUserIcon = ContextCompat.getDrawable(context, R.drawable.general_placeholder);
     }
 
     public int getNotificationsCount() {
@@ -199,6 +205,11 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         @BindView(R.id.notification_time)
         TextView notificationTime;
 
+        @BindView(R.id.notification_icon)
+        ImageView notificationIcon;
+
+        private final GenericRequestBuilder<Uri, InputStream, SVG, PictureDrawable> svgRequestBuilder =
+                GlideSvgRequestFactory.create(context, placeholderUserIcon);
 
         NotificationViewHolder(View itemView) {
             super(itemView);
@@ -235,6 +246,46 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             notificationTime.setText(timeForView);
 
             resolveViewedState(notification);
+            resolveNotificationIcon(notification);
+        }
+
+        private void resolveNotificationIcon(Notification notification) {
+            switch (notification.getType()) {
+                case learn:
+                    notificationIcon.setImageResource(R.drawable.ic_notification_type_learning);
+                    break;
+                case teach:
+                    notificationIcon.setImageResource(R.drawable.ic_notification_type_teaching);
+                    break;
+                case review:
+                    notificationIcon.setImageResource(R.drawable.ic_notification_type_review);
+                    break;
+                case other:
+                    notificationIcon.setImageResource(R.drawable.ic_notification_type_other);
+                    break;
+                case comments:
+                    setCommentNotificationIcon(notification);
+                    break;
+            }
+        }
+
+        private void setCommentNotificationIcon(Notification notification) {
+            final String userAvatarUrl = notification.getUserAvatarUrl();
+            if (userAvatarUrl != null) {
+                if (userAvatarUrl.endsWith(AppConstants.SVG_EXTENSION)) {
+                    final Uri avatarUri =  Uri.parse(userAvatarUrl);
+                    svgRequestBuilder
+                            .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                            .load(avatarUri)
+                            .into(notificationIcon);
+                } else {
+                    Glide.with(context)
+                            .load(userAvatarUrl)
+                            .asBitmap()
+                            .placeholder(placeholderUserIcon)
+                            .into(notificationIcon);
+                }
+            }
         }
 
         private void resolveViewedState(Notification notification) {
@@ -245,12 +296,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             }
 
             if (isViewed) {
-                CalligraphyUtils.applyFontToTextView(notificationBody, regularTypeface);
             } else {
-                CalligraphyUtils.applyFontToTextView(notificationBody, boldTypeface);
             }
-
-            checkImageView.setVisibility(isViewed ? View.GONE : View.VISIBLE);
         }
 
     }
