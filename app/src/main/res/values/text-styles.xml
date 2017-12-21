@@ -88,4 +88,14 @@
         <item name="android:layout_marginBottom">@dimen/onboarding_bottom_margin</item>
     </style>
 
+    <style name="LightRoundedButton">
+        <item name="android:textSize">@dimen/light_rounded_button_text_size</item>
+        <item name="android:background">@drawable/light_rounded_button_background</item>
+        <item name="android:layout_height">@dimen/min_ux_touchable_size</item>
+        <item name="android:clickable">true</item>
+        <item name="fontPath">fonts/Roboto-Regular.ttf</item>
+        <item name="android:gravity">center</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
 </resources>

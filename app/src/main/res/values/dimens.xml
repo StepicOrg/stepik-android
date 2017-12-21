@@ -170,4 +170,7 @@
     <dimen name="onboarding_side_margin">32dp</dimen>
     <dimen name="onboarding_bottom_margin">60dp</dimen>
     <dimen name="onboarding_top_margin">0dp</dimen>
+
+    <dimen name="light_rounded_button_text_size">16sp</dimen>
+    <dimen name="light_rounded_button_radius">7dp</dimen>
 </resources>
