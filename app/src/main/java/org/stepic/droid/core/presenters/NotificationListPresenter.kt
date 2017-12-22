@@ -17,6 +17,7 @@ import org.stepic.droid.notifications.StepikNotificationManager
 import org.stepic.droid.notifications.badges.NotificationsBadgesManager
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.notifications.model.NotificationType
+import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.not
 import org.stepic.droid.util.putIfAbsent
 import org.stepic.droid.util.substringOrNull
@@ -75,6 +76,7 @@ class NotificationListPresenter
                     }
                     mainHandler.post {
                         notificationList.addAll(notifications)
+                        resolveNotificationsDateGroup()
                         wasShown.set(true)
                         view?.onNeedShowNotifications(notificationList) ?: wasShown.set(false)
                     }
@@ -171,6 +173,7 @@ class NotificationListPresenter
                     }
                     mainHandler.post {
                         notificationList.addAll(notifications)
+                        resolveNotificationsDateGroup()
                         view?.onNeedShowNotifications(notificationList)
                     }
                 }
@@ -309,6 +312,28 @@ class NotificationListPresenter
                         }
                     }
                 }
+            }
+        }
+    }
+
+    private fun resolveNotificationsDateGroup() {
+        var groupId = -1
+        var groupDay = -1
+        var groupYear = -1
+        notificationList.forEach { notification ->
+            notification.time?.let { time ->
+                val date = DateTimeHelper.toCalendar(time)
+                date.timeZone = TimeZone.getDefault()
+
+                val day = date.get(Calendar.DAY_OF_YEAR)
+                val year = date.get(Calendar.YEAR)
+                if (day != groupDay || year != groupYear) {
+                    groupDay = day
+                    groupYear = year
+                    groupId++
+                }
+
+                notification.dateGroup = groupId
             }
         }
     }

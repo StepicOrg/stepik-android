@@ -18,11 +18,14 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.caverock.androidsvg.SVG;
 
+import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.base.App;
 import org.stepic.droid.core.presenters.NotificationListPresenter;
 import org.stepic.droid.model.NotificationCategory;
 import org.stepic.droid.notifications.model.Notification;
+import org.stepic.droid.ui.custom.StickyHeaderAdapter;
+import org.stepic.droid.ui.custom.StickyHeaderDecoration;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DateTimeHelper;
 import org.stepic.droid.util.resolvers.text.NotificationTextResolver;
@@ -37,11 +40,12 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import kotlin.text.StringsKt;
 import timber.log.Timber;
 
 import static org.stepic.droid.ui.util.ViewExtensionsKt.changeVisibility;
 
-public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.GenericViewHolder> {
+public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.GenericViewHolder> implements StickyHeaderAdapter<NotificationAdapter.DateHeaderViewHolder> {
 
     private static final int ITEM_VIEW_TYPE = 1;
     private static final int HEADER_VIEW_TYPE = 2;
@@ -174,6 +178,49 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         notifyItemChanged(0);
     }
 
+
+    @Override
+    public long getHeaderId(int position) {
+        if (position >= headerCount && position < getItemCount() - FOOTER_COUNT) {
+            return notifications.get(position - headerCount).getDateGroup();
+        }
+        return StickyHeaderDecoration.NO_HEADER_ID;
+    }
+
+    @NotNull
+    @Override
+    public DateHeaderViewHolder onCreateHeaderViewHolder(@NotNull ViewGroup parent) {
+        return new DateHeaderViewHolder(LayoutInflater.from(context).inflate(R.layout.notification_date_header, parent, false));
+    }
+
+    @Override
+    public void onBindHeaderViewHolder(@NotNull DateHeaderViewHolder viewHolder, int position) {
+        if (getHeaderId(position) == StickyHeaderDecoration.NO_HEADER_ID) {
+            changeVisibility(viewHolder.itemView, false);
+        } else {
+            Notification notification = notifications.get(position - headerCount);
+
+            String date = DateTimeHelper.INSTANCE.getPrintableOfIsoDate(notification.getTime(), AppConstants.NOTIFICATIONS_GROUP_DATE, TimeZone.getDefault());
+            String day = DateTimeHelper.INSTANCE.getPrintableOfIsoDate(notification.getTime(), AppConstants.NOTIFICATIONS_GROUP_DAY, TimeZone.getDefault());
+            viewHolder.sectionDate.setText(StringsKt.capitalize(date));
+            viewHolder.sectionDay.setText(StringsKt.capitalize(day));
+            changeVisibility(viewHolder.itemView, true);
+        }
+    }
+
+
+    public static final class DateHeaderViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.notification_section_date)
+        TextView sectionDate;
+
+        @BindView(R.id.notification_section_day)
+        TextView sectionDay;
+
+        public DateHeaderViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+        }
+    }
 
     abstract class GenericViewHolder extends RecyclerView.ViewHolder {
 

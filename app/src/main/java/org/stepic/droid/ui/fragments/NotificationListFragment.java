@@ -21,6 +21,7 @@ import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.model.NotificationCategory;
 import org.stepic.droid.ui.adapters.NotificationAdapter;
 import org.stepic.droid.ui.custom.StepikSwipeRefreshLayout;
+import org.stepic.droid.ui.custom.StickyHeaderDecoration;
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment;
 import org.stepic.droid.util.ColorUtil;
 import org.stepic.droid.util.ProgressHelper;
@@ -106,6 +107,7 @@ public class NotificationListFragment extends FragmentBase implements Notificati
 //        layoutManager.setRecycleChildrenOnDetach(true);
         notificationRecyclerView.setLayoutManager(layoutManager);
         notificationRecyclerView.setAdapter(adapter);
+        notificationRecyclerView.addItemDecoration(new StickyHeaderDecoration<>(adapter));
 
         initSwipeRefreshLayout();
 
