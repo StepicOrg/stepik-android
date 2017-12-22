@@ -24,6 +24,8 @@ public class AppConstants {
     public static final int MAX_QUALITY_INT = 720;
     public static final String KEY_LOAD_TYPE = "KEY_LOAD_TYPE";
     public static final String COMMENT_DATE_TIME_PATTERN = "dd.MM.yyyy HH:mm";
+    public static final String NOTIFICATIONS_GROUP_DATE = "dd MMMM";
+    public static final String NOTIFICATIONS_GROUP_DAY = "EEEE";
 
     public static final String WEB_URI_SEPARATOR = "/";
 

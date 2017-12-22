@@ -2,6 +2,9 @@ package org.stepic.droid.core.presenters
 
 import android.support.annotation.MainThread
 import android.support.annotation.WorkerThread
+import android.support.v4.util.ArraySet
+import android.support.v4.util.LongSparseArray
+import android.util.Patterns
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.Client
 import org.stepic.droid.concurrency.MainHandler
@@ -14,7 +17,10 @@ import org.stepic.droid.notifications.StepikNotificationManager
 import org.stepic.droid.notifications.badges.NotificationsBadgesManager
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.notifications.model.NotificationType
+import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.not
+import org.stepic.droid.util.putIfAbsent
+import org.stepic.droid.util.substringOrNull
 import org.stepic.droid.web.Api
 import timber.log.Timber
 import java.util.*
@@ -70,6 +76,7 @@ class NotificationListPresenter
                     }
                     mainHandler.post {
                         notificationList.addAll(notifications)
+                        resolveNotificationsDateGroup()
                         wasShown.set(true)
                         view?.onNeedShowNotifications(notificationList) ?: wasShown.set(false)
                     }
@@ -106,13 +113,44 @@ class NotificationListPresenter
                     it.htmlText?.isNotBlank() ?: false
                 }
 
-        notifications.forEach {
-            val notificationHtmlText = it.htmlText ?: ""
+        val userIdToNotificationsIndexes = LongSparseArray<MutableList<Int>>()  // userId -> notifications index where avatar should be set
+        val userIds = ArraySet<Long>()
+
+        notifications.forEachIndexed { index, notification ->
+            val notificationHtmlText = notification.htmlText ?: ""
             val fixedHtml = notificationHtmlText.replace("href=\"/", "href=\"$baseUrl/")
-            it.htmlText = fixedHtml
+            notification.htmlText = fixedHtml
+
+            if (notification.type == NotificationType.comments) {
+                extractUserAvatarUrl(notification)?.let { userId ->
+                    userIdToNotificationsIndexes.putIfAbsent(userId, ArrayList())
+                    userIdToNotificationsIndexes[userId].add(index)
+                    userIds.add(userId)
+                }
+            }
         }
+
+        if (userIds.isNotEmpty()) {
+            api.getUsers(userIds.toLongArray()).execute().body()?.users?.forEach {
+                val avatar = it.getAvatarPath()
+                userIdToNotificationsIndexes[it.id.toLong()].forEach { notificationIndex ->
+                    notifications[notificationIndex].userAvatarUrl = avatar
+                }
+            }
+        }
+
         Timber.d("after filter size is %d", notifications.size)
         return notifications
+    }
+
+    @WorkerThread
+    private fun extractUserAvatarUrl(notification: Notification): Long? {
+        val matcher = Regex(Patterns.WEB_URL.pattern()) // used kotlin Regex instead of android Pattern due to unstable work of Pattern on different Android versions
+        notification.htmlText?.let { matcher.find(it) } ?.groupValues?.firstOrNull()?.let { userUrl ->
+            val start = userUrl.lastIndexOf('/')
+            return userUrl.substringOrNull(start + 1)?.toLongOrNull()
+        }
+        return null
     }
 
     fun loadMore() {
@@ -135,6 +173,7 @@ class NotificationListPresenter
                     }
                     mainHandler.post {
                         notificationList.addAll(notifications)
+                        resolveNotificationsDateGroup()
                         view?.onNeedShowNotifications(notificationList)
                     }
                 }
@@ -273,6 +312,28 @@ class NotificationListPresenter
                         }
                     }
                 }
+            }
+        }
+    }
+
+    private fun resolveNotificationsDateGroup() {
+        var groupId = -1
+        var groupDay = -1
+        var groupYear = -1
+        notificationList.forEach { notification ->
+            notification.time?.let { time ->
+                val date = DateTimeHelper.toCalendar(time)
+                date.timeZone = TimeZone.getDefault()
+
+                val day = date.get(Calendar.DAY_OF_YEAR)
+                val year = date.get(Calendar.YEAR)
+                if (day != groupDay || year != groupYear) {
+                    groupDay = day
+                    groupYear = year
+                    groupId++
+                }
+
+                notification.dateGroup = groupId
             }
         }
     }
