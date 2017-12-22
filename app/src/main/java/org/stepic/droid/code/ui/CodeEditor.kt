@@ -21,6 +21,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.code.highlight.ParserContainer
 import org.stepic.droid.code.highlight.syntaxhighlight.ParseResult
@@ -54,6 +55,9 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     @Inject
     lateinit var codeAnalyzer: CodeAnalyzer
 
+    @Inject
+    lateinit var analytic: Analytic
+
     private val LINE_NUMBERS_MARGIN_PX = DpPixelsHelper.convertDpToPixel(LINE_NUMBERS_MARGIN_DP).toInt()
 
     private val highlightPublisher = PublishSubject.create<Editable>()
@@ -76,6 +80,8 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
         p.flags = p.flags or Paint.ANTI_ALIAS_FLAG
         p
     }
+
+    private var isAttached = false
 
     var lang = ""
         set(value) {
@@ -107,12 +113,24 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
+        isAttached = true
+        initListeners()
+        addTextChangedListener(this)
+    }
 
+    private fun initListeners() {
+        compositeDisposable.clear()
+
+        if (!isAttached) return
         compositeDisposable.add(
                 spanPublisher
                         .subscribeOn(Schedulers.computation())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe { updateHighlight(it) }
+                        .subscribe({ updateHighlight(it) }, {
+                            analytic.reportError(Analytic.Code.CODE_EDITOR_ERROR, it)
+                            spanPublisher.onNext(emptyList()) // to avoid cyclic error's call due to publish subject behavior
+                            initListeners()
+                        })
         )
 
         compositeDisposable.add(
@@ -122,7 +140,10 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
                             RxOptional(parserContainer.prettifyParser?.parse(lang, it.toString()))
                         }
                         .unwrapOptional()
-                        .subscribe(spanPublisher::onNext)
+                        .subscribe(spanPublisher::onNext) {
+                            analytic.reportError(Analytic.Code.CODE_EDITOR_ERROR, it)
+                            initListeners()
+                        }
         )
 
         compositeDisposable.add(
@@ -130,16 +151,19 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
                         .debounce(SCROLL_DEBOUNCE_MS, TimeUnit.MILLISECONDS)
                         .subscribeOn(Schedulers.computation())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe { spanPublisher.value?.let(this::updateHighlight) }
+                        .subscribe({ spanPublisher.value?.let(this::updateHighlight) }, {
+                            analytic.reportError(Analytic.Code.CODE_EDITOR_ERROR, it)
+                            initListeners()
+                        })
         )
 
-        addTextChangedListener(this)
         afterTextChanged(editableText)
     }
 
     override fun onDetachedFromWindow() {
+        isAttached = false
         removeTextChangedListener(this)
-        compositeDisposable.dispose()
+        compositeDisposable.clear()
         super.onDetachedFromWindow()
     }
 
