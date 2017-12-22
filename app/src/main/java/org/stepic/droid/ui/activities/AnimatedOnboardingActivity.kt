@@ -52,7 +52,7 @@ class AnimatedOnboardingActivity : FragmentActivityBase(), OnNextClickedListener
     private fun invokeAnimationOnFragment(position: Int) {
         val tag = "android:switcher:" + R.id.onboardingViewPager + ":" + position
         val fragment = supportFragmentManager.findFragmentByTag(tag)
-        (fragment as OnboardingFragment).startAnimation()
+        (fragment as? OnboardingFragment)?.startAnimation()
     }
 
     private fun initClose() {

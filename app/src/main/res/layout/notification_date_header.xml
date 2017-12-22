@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/notification_section_date"
+        android:textSize="16sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_margin="@dimen/guideline_standard_padding"
+        tools:text="5 October" />
+
+    <TextView
+        android:id="@+id/notification_section_day"
+        android:textSize="16sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        fontPath="fonts/Roboto-Light.ttf"
+        android:layout_gravity="end"
+        android:layout_margin="@dimen/guideline_standard_padding"
+        tools:ignore="MissingPrefix"
+        tools:text="Monday" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_gravity="bottom"
+        android:background="@color/silver"/>
+</FrameLayout>
