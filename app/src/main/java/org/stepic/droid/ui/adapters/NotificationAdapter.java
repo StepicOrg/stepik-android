@@ -285,6 +285,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                             .placeholder(placeholderUserIcon)
                             .into(notificationIcon);
                 }
+            } else {
+                notificationIcon.setImageDrawable(placeholderUserIcon);
             }
         }
 

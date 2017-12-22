@@ -31,20 +31,27 @@
             android:layout_below="@id/notification_time"
             android:layout_toLeftOf="@+id/check_view"
             android:layout_toStartOf="@+id/check_view">
-            <ImageView
-                android:id="@+id/notification_icon"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="@dimen/notification_icon_vertical_margin"
-                android:layout_marginBottom="@dimen/notification_icon_vertical_margin"
+
+            <org.stepic.droid.ui.custom.RoundedBorderMaskView
+                android:id="@+id/notification_icon_mask"
                 android:layout_width="@dimen/notification_icon_size"
                 android:layout_height="@dimen/notification_icon_size"
-                android:contentDescription="@string/notification_icon_content_description" />
+                app:borderRadius="@dimen/notification_icon_radius"
+                android:layout_marginTop="@dimen/notification_icon_vertical_margin"
+                android:layout_marginBottom="@dimen/notification_icon_vertical_margin"
+                android:layout_alignParentTop="true">
+                <ImageView
+                    android:id="@+id/notification_icon"
+                    android:layout_width="@dimen/notification_icon_size"
+                    android:layout_height="@dimen/notification_icon_size"
+                    android:contentDescription="@string/notification_icon_content_description" />
+            </org.stepic.droid.ui.custom.RoundedBorderMaskView>
 
             <TextView
                 android:layout_centerVertical="true"
                 android:id="@+id/notification_body"
-                android:layout_toRightOf="@id/notification_icon"
-                android:layout_toEndOf="@id/notification_icon"
+                android:layout_toRightOf="@id/notification_icon_mask"
+                android:layout_toEndOf="@id/notification_icon_mask"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/guideline_standard_padding"
