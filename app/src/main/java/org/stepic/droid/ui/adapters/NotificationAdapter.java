@@ -27,6 +27,7 @@ import org.stepic.droid.model.NotificationCategory;
 import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DateTimeHelper;
+import org.stepic.droid.util.resolvers.text.NotificationTextResolver;
 import org.stepic.droid.util.resolvers.text.TextResolver;
 import org.stepic.droid.util.svg.GlideSvgRequestFactory;
 
@@ -188,7 +189,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     public class NotificationViewHolder extends GenericViewHolder {
 
         @Inject
-        TextResolver textResolver;
+        NotificationTextResolver notificationTextResolver;
 
         @Inject
         Config config;
@@ -240,13 +241,21 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             int positionInList = position - headerCount;
             Notification notification = notifications.get(positionInList);
 
-            notificationBody.setText(textResolver.fromHtml(notification.getHtmlText()));
+            resolveNotificationText(notification);
 
             String timeForView = DateTimeHelper.INSTANCE.getPrintableOfIsoDate(notification.getTime(), AppConstants.COMMENT_DATE_TIME_PATTERN, TimeZone.getDefault());
             notificationTime.setText(timeForView);
 
             resolveViewedState(notification);
             resolveNotificationIcon(notification);
+        }
+
+        private void resolveNotificationText(Notification notification) {
+            if (notification.getNotificationText() == null) {
+                notification.setNotificationText(notificationTextResolver.resolveNotificationText(context, notification.getHtmlText()));
+            }
+
+            notificationBody.setText(notification.getNotificationText());
         }
 
         private void resolveNotificationIcon(Notification notification) {

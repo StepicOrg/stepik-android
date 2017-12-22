@@ -18,7 +18,8 @@ data class Notification(
         var htmlText: String? = null,
         var action: String? = null,
         var course_id: Long? = null,
-        var userAvatarUrl: String? = null
+        var userAvatarUrl: String? = null,
+        var notificationText: CharSequence? = null
 )
 
 enum class NotificationType(val channel: StepikNotificationChannel) {
