@@ -1,27 +1,37 @@
 package org.stepic.droid.ui.adapters;
 
 import android.content.Context;
-import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.PictureDrawable;
+import android.net.Uri;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.GenericRequestBuilder;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.caverock.androidsvg.SVG;
+
+import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.base.App;
-import org.stepic.droid.configuration.Config;
 import org.stepic.droid.core.presenters.NotificationListPresenter;
-import org.stepic.droid.fonts.FontType;
-import org.stepic.droid.fonts.FontsProvider;
 import org.stepic.droid.model.NotificationCategory;
 import org.stepic.droid.notifications.model.Notification;
+import org.stepic.droid.ui.custom.StickyHeaderAdapter;
+import org.stepic.droid.ui.custom.StickyHeaderDecoration;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DateTimeHelper;
-import org.stepic.droid.util.resolvers.text.TextResolver;
+import org.stepic.droid.util.resolvers.text.NotificationTextResolver;
+import org.stepic.droid.util.svg.GlideSvgRequestFactory;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
@@ -30,11 +40,12 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import kotlin.text.StringsKt;
 import timber.log.Timber;
-import uk.co.chrisjenx.calligraphy.CalligraphyUtils;
-import uk.co.chrisjenx.calligraphy.TypefaceUtils;
 
-public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.GenericViewHolder> {
+import static org.stepic.droid.ui.util.ViewExtensionsKt.changeVisibility;
+
+public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.GenericViewHolder> implements StickyHeaderAdapter<NotificationAdapter.DateHeaderViewHolder> {
 
     private static final int ITEM_VIEW_TYPE = 1;
     private static final int HEADER_VIEW_TYPE = 2;
@@ -43,8 +54,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     private final int headerCount;
 
-    private final Typeface boldTypeface;
-    private final Typeface regularTypeface;
 
     private Context context;
     private NotificationListPresenter notificationListPresenter;
@@ -58,16 +67,17 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     };
     private boolean isNeedEnableMarkButton = true;
 
-    public NotificationAdapter(Context context, NotificationListPresenter notificationListPresenter, NotificationCategory notificationCategory, FontsProvider fontsProvider) {
+    private final Drawable placeholderUserIcon;
+
+    public NotificationAdapter(Context context, NotificationListPresenter notificationListPresenter, NotificationCategory notificationCategory) {
         this.context = context;
         this.notificationListPresenter = notificationListPresenter;
-        boldTypeface = TypefaceUtils.load(context.getAssets(), fontsProvider.provideFontPath(FontType.bold));
-        regularTypeface = TypefaceUtils.load(context.getAssets(), fontsProvider.provideFontPath(FontType.regular));
         if (notificationCategory != NotificationCategory.all) {
             headerCount = 0;
-        }else {
+        } else {
             headerCount = 1;
         }
+        this.placeholderUserIcon = ContextCompat.getDrawable(context, R.drawable.general_placeholder);
     }
 
     public int getNotificationsCount() {
@@ -169,6 +179,49 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     }
 
 
+    @Override
+    public long getHeaderId(int position) {
+        if (position >= headerCount && position < getItemCount() - FOOTER_COUNT) {
+            return notifications.get(position - headerCount).getDateGroup();
+        }
+        return StickyHeaderDecoration.NO_HEADER_ID;
+    }
+
+    @NotNull
+    @Override
+    public DateHeaderViewHolder onCreateHeaderViewHolder(@NotNull ViewGroup parent) {
+        return new DateHeaderViewHolder(LayoutInflater.from(context).inflate(R.layout.notification_date_header, parent, false));
+    }
+
+    @Override
+    public void onBindHeaderViewHolder(@NotNull DateHeaderViewHolder viewHolder, int position) {
+        if (getHeaderId(position) == StickyHeaderDecoration.NO_HEADER_ID) {
+            changeVisibility(viewHolder.itemView, false);
+        } else {
+            Notification notification = notifications.get(position - headerCount);
+
+            String date = DateTimeHelper.INSTANCE.getPrintableOfIsoDate(notification.getTime(), AppConstants.NOTIFICATIONS_GROUP_DATE, TimeZone.getDefault());
+            String day = DateTimeHelper.INSTANCE.getPrintableOfIsoDate(notification.getTime(), AppConstants.NOTIFICATIONS_GROUP_DAY, TimeZone.getDefault());
+            viewHolder.sectionDate.setText(StringsKt.capitalize(date));
+            viewHolder.sectionDay.setText(StringsKt.capitalize(day));
+            changeVisibility(viewHolder.itemView, true);
+        }
+    }
+
+
+    public static final class DateHeaderViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.notification_section_date)
+        TextView sectionDate;
+
+        @BindView(R.id.notification_section_day)
+        TextView sectionDay;
+
+        public DateHeaderViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+        }
+    }
+
     abstract class GenericViewHolder extends RecyclerView.ViewHolder {
 
         public GenericViewHolder(View itemView) {
@@ -182,10 +235,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     public class NotificationViewHolder extends GenericViewHolder {
 
         @Inject
-        TextResolver textResolver;
-
-        @Inject
-        Config config;
+        NotificationTextResolver notificationTextResolver;
 
         @BindView(R.id.notification_body)
         TextView notificationBody;
@@ -193,12 +243,20 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         @BindView(R.id.notification_root)
         ViewGroup notificationRoot;
 
-        @BindView(R.id.check_view)
-        View checkImageView;
-
         @BindView(R.id.notification_time)
         TextView notificationTime;
 
+        @BindView(R.id.notification_icon)
+        ImageView notificationIcon;
+
+        @BindView(R.id.check_view_read)
+        View checkViewRead;
+
+        @BindView(R.id.check_view_unread)
+        View checkViewUnread;
+
+        private final GenericRequestBuilder<Uri, InputStream, SVG, PictureDrawable> svgRequestBuilder =
+                GlideSvgRequestFactory.create(context, placeholderUserIcon);
 
         NotificationViewHolder(View itemView) {
             super(itemView);
@@ -222,19 +280,69 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
             notificationRoot.setOnClickListener(rootClick);
             notificationBody.setOnClickListener(rootClick);
-            checkImageView.setOnClickListener(onlyCheckView);
+            checkViewUnread.setOnClickListener(onlyCheckView);
         }
 
         public void setData(int position) {
             int positionInList = position - headerCount;
             Notification notification = notifications.get(positionInList);
 
-            notificationBody.setText(textResolver.fromHtml(notification.getHtmlText()));
+            resolveNotificationText(notification);
 
             String timeForView = DateTimeHelper.INSTANCE.getPrintableOfIsoDate(notification.getTime(), AppConstants.COMMENT_DATE_TIME_PATTERN, TimeZone.getDefault());
             notificationTime.setText(timeForView);
 
             resolveViewedState(notification);
+            resolveNotificationIcon(notification);
+        }
+
+        private void resolveNotificationText(Notification notification) {
+            if (notification.getNotificationText() == null) {
+                notification.setNotificationText(notificationTextResolver.resolveNotificationText(context, notification.getHtmlText()));
+            }
+
+            notificationBody.setText(notification.getNotificationText());
+        }
+
+        private void resolveNotificationIcon(Notification notification) {
+            switch (notification.getType()) {
+                case learn:
+                    notificationIcon.setImageResource(R.drawable.ic_notification_type_learning);
+                    break;
+                case teach:
+                    notificationIcon.setImageResource(R.drawable.ic_notification_type_teaching);
+                    break;
+                case review:
+                    notificationIcon.setImageResource(R.drawable.ic_notification_type_review);
+                    break;
+                case other:
+                    notificationIcon.setImageResource(R.drawable.ic_notification_type_other);
+                    break;
+                case comments:
+                    setCommentNotificationIcon(notification);
+                    break;
+            }
+        }
+
+        private void setCommentNotificationIcon(Notification notification) {
+            final String userAvatarUrl = notification.getUserAvatarUrl();
+            if (userAvatarUrl != null) {
+                if (userAvatarUrl.endsWith(AppConstants.SVG_EXTENSION)) {
+                    final Uri avatarUri =  Uri.parse(userAvatarUrl);
+                    svgRequestBuilder
+                            .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                            .load(avatarUri)
+                            .into(notificationIcon);
+                } else {
+                    Glide.with(context)
+                            .load(userAvatarUrl)
+                            .asBitmap()
+                            .placeholder(placeholderUserIcon)
+                            .into(notificationIcon);
+                }
+            } else {
+                notificationIcon.setImageDrawable(placeholderUserIcon);
+            }
         }
 
         private void resolveViewedState(Notification notification) {
@@ -244,13 +352,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 isViewed = !unread;
             }
 
-            if (isViewed) {
-                CalligraphyUtils.applyFontToTextView(notificationBody, regularTypeface);
-            } else {
-                CalligraphyUtils.applyFontToTextView(notificationBody, boldTypeface);
-            }
-
-            checkImageView.setVisibility(isViewed ? View.GONE : View.VISIBLE);
+            changeVisibility(checkViewRead, isViewed);
+            changeVisibility(checkViewUnread, !isViewed);
         }
 
     }
@@ -258,7 +361,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     class HeaderViewHolder extends GenericViewHolder {
 
         @BindView(R.id.mark_all_as_read_button)
-        Button markAllAsViewed;
+        TextView markAllAsViewed;
 
         public HeaderViewHolder(View itemView) {
             super(itemView);

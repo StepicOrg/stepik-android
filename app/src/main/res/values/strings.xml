@@ -575,4 +575,6 @@
     <string name="onboarding_third_subtitle">Complete the assignments using your mobile device</string>
     <string name="onboarding_fourth_title">Complete</string>
     <string name="onboarding_fourth_subtitle">Set up reminders to study regularly and complete the courses faster</string>
+
+    <string name="notification_icon_content_description">Notification icon</string>
 </resources>
