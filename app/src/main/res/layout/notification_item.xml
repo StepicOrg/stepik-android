@@ -30,7 +30,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/notification_time"
             android:layout_toLeftOf="@+id/check_view"
-            android:layout_toStartOf="@+id/check_view">
+            android:layout_toStartOf="@+id/check_view"
+            android:layout_marginEnd="@dimen/half_padding"
+            android:layout_marginRight="@dimen/half_padding">
 
             <org.stepic.droid.ui.custom.RoundedBorderMaskView
                 android:id="@+id/notification_icon_mask"
@@ -56,8 +58,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/guideline_standard_padding"
                 android:layout_marginLeft="@dimen/guideline_standard_padding"
-                android:layout_marginEnd="@dimen/half_padding"
-                android:layout_marginRight="@dimen/half_padding"
                 fontPath="fonts/Roboto-Light.ttf"
                 android:clickable="false"
                 android:focusable="false"
@@ -72,8 +72,7 @@
             android:layout_height="32dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_gravity="center">
+            android:layout_centerVertical="true">
 
             <FrameLayout
                 android:id="@+id/check_view_unread"
