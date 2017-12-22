@@ -25,6 +25,7 @@ public interface Analytic {
         String CODE_FULLSCREEN_PRESSED = "code_fullscreen_pressed";
         String CODE_RESET_PRESSED = "code_reset_pressed";
         String CHOOSE_NULL = "code_choose_null";
+        String CODE_EDITOR_ERROR = "code_editor_error";
     }
 
     interface Search {
