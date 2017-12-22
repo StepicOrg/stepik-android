@@ -20,15 +20,12 @@ import com.caverock.androidsvg.SVG;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.App;
-import org.stepic.droid.configuration.Config;
 import org.stepic.droid.core.presenters.NotificationListPresenter;
-import org.stepic.droid.fonts.FontsProvider;
 import org.stepic.droid.model.NotificationCategory;
 import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DateTimeHelper;
 import org.stepic.droid.util.resolvers.text.NotificationTextResolver;
-import org.stepic.droid.util.resolvers.text.TextResolver;
 import org.stepic.droid.util.svg.GlideSvgRequestFactory;
 
 import java.io.InputStream;
@@ -41,6 +38,8 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
+
+import static org.stepic.droid.ui.util.ViewExtensionsKt.changeVisibility;
 
 public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.GenericViewHolder> {
 
@@ -66,7 +65,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     private final Drawable placeholderUserIcon;
 
-    public NotificationAdapter(Context context, NotificationListPresenter notificationListPresenter, NotificationCategory notificationCategory, FontsProvider fontsProvider) {
+    public NotificationAdapter(Context context, NotificationListPresenter notificationListPresenter, NotificationCategory notificationCategory) {
         this.context = context;
         this.notificationListPresenter = notificationListPresenter;
         if (notificationCategory != NotificationCategory.all) {
@@ -191,23 +190,23 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         @Inject
         NotificationTextResolver notificationTextResolver;
 
-        @Inject
-        Config config;
-
         @BindView(R.id.notification_body)
         TextView notificationBody;
 
         @BindView(R.id.notification_root)
         ViewGroup notificationRoot;
 
-        @BindView(R.id.check_view)
-        View checkImageView;
-
         @BindView(R.id.notification_time)
         TextView notificationTime;
 
         @BindView(R.id.notification_icon)
         ImageView notificationIcon;
+
+        @BindView(R.id.check_view_read)
+        View checkViewRead;
+
+        @BindView(R.id.check_view_unread)
+        View checkViewUnread;
 
         private final GenericRequestBuilder<Uri, InputStream, SVG, PictureDrawable> svgRequestBuilder =
                 GlideSvgRequestFactory.create(context, placeholderUserIcon);
@@ -234,7 +233,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
             notificationRoot.setOnClickListener(rootClick);
             notificationBody.setOnClickListener(rootClick);
-            checkImageView.setOnClickListener(onlyCheckView);
+            checkViewUnread.setOnClickListener(onlyCheckView);
         }
 
         public void setData(int position) {
@@ -306,9 +305,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 isViewed = !unread;
             }
 
-            if (isViewed) {
-            } else {
-            }
+            changeVisibility(checkViewRead, isViewed);
+            changeVisibility(checkViewUnread, !isViewed);
         }
 
     }
