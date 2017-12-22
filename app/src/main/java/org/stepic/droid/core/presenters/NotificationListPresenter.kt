@@ -143,15 +143,10 @@ class NotificationListPresenter
 
     @WorkerThread
     private fun extractUserAvatarUrl(notification: Notification): Long? {
-        val matcher = Patterns.WEB_URL.matcher(notification.htmlText)
-        if (matcher.find()) {
-            try {
-                val userUrl = matcher.group(1)
-                val start = userUrl.lastIndexOf('/')
-                return userUrl.substringOrNull(start + 1)?.toLongOrNull()
-            } catch (_: Exception) {
-                // no op, we don't want crash if comment text format is changed
-            }
+        val matcher = Regex(Patterns.WEB_URL.pattern()) // used kotlin Regex instead of android Pattern due to unstable work of Pattern on different Android versions
+        notification.htmlText?.let { matcher.find(it) } ?.groupValues?.firstOrNull()?.let { userUrl ->
+            val start = userUrl.lastIndexOf('/')
+            return userUrl.substringOrNull(start + 1)?.toLongOrNull()
         }
         return null
     }
