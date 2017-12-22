@@ -7,6 +7,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -108,6 +109,11 @@ public class NotificationListFragment extends FragmentBase implements Notificati
         notificationRecyclerView.setLayoutManager(layoutManager);
         notificationRecyclerView.setAdapter(adapter);
         notificationRecyclerView.addItemDecoration(new StickyHeaderDecoration<>(adapter));
+
+        final RecyclerView.ItemAnimator notificationsItemAnimator = notificationRecyclerView.getItemAnimator();
+        if (notificationsItemAnimator instanceof SimpleItemAnimator) {
+            ((SimpleItemAnimator) notificationsItemAnimator).setSupportsChangeAnimations(false);
+        }
 
         initSwipeRefreshLayout();
 
