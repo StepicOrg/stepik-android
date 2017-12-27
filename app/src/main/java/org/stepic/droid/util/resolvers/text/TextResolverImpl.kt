@@ -29,10 +29,15 @@ class TextResolverImpl
             val fromHtml = HtmlHelper.trimTrailingWhitespace(fromHtml(content))
             return TextResult(fromHtml)
         } else {
-            return TextResult(content, isNeedWebView = true)
+            return TextResult(prepareStepTextForWebView(content), isNeedWebView = true)
         }
 
     }
+
+    // Remove &nbsp; characters from html text in order to fit text in screen properly.
+    // Often this char is inserted in text by text editor without grammar reasons.
+    private fun prepareStepTextForWebView(content: String): String =
+            content.replace('\u00A0', ' ')
 
     override fun resolveCourseProperty(type: CoursePropertyResolver.Type, content: String?, context: Context): TextResult {
         if (content == null) {
