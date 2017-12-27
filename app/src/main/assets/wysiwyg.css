@@ -244,3 +244,7 @@
   .step-text__limit-value {
     margin-left: 1em;
   }
+
+  ::-webkit-scrollbar {
+    display: none;
+  }

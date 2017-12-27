@@ -190,13 +190,11 @@ public class HtmlHelper {
 
     static {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            HORIZONTAL_SCROLL_STYLE = "<style>\n" +
+            HORIZONTAL_SCROLL_STYLE =
+                    "<style>\n" +
                     "body > * {\n" +
                     "    width: 100%%;\n" +
                     "    overflow-x: scroll;\n" +
-                    "}\n" +
-                    "::-webkit-scrollbar { \n" +
-                    "    display: none; \n" +
                     "}\n" +
                     "</style>\n";
         } else {
