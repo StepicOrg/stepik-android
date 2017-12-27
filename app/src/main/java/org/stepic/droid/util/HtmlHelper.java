@@ -1,5 +1,6 @@
 package org.stepic.droid.util;
 
+import android.os.Build;
 import android.support.annotation.ColorInt;
 
 import org.jetbrains.annotations.NotNull;
@@ -184,6 +185,23 @@ public class HtmlHelper {
         return preBody + body + POST_BODY;
     }
 
+    public static final String HORIZONTAL_SCROLL_LISTENER = "scrollListener";
+    private static final String HORIZONTAL_SCROLL_STYLE;
+
+    static {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            HORIZONTAL_SCROLL_STYLE =
+                    "<style>\n" +
+                    "body > * {\n" +
+                    "    width: 100%%;\n" +
+                    "    overflow-x: scroll;\n" +
+                    "}\n" +
+                    "</style>\n";
+        } else {
+            HORIZONTAL_SCROLL_STYLE = "";
+        }
+    }
+
     //string with 2 format args
     private static final String PRE_BODY = "<html>\n" +
             "<head>\n" +
@@ -201,7 +219,17 @@ public class HtmlHelper {
             ", user-scalable=no" +
             ", target-densitydpi=medium-dpi" +
             "\" />" +
+            "<script type=\"text/javascript\">\n" +
+            "function measureScroll(x, y) {" +
+            "var elem = document.elementFromPoint(x, y);" +
+            "while(elem.parentElement.tagName !== 'BODY' && elem.parentElement.tagName !== 'HTML') {" +
+            "elem = elem.parentElement;" +
+            "}" +
+            HORIZONTAL_SCROLL_LISTENER + ".onScroll(elem.offsetWidth, elem.scrollWidth, elem.scrollLeft);" +
+            "}" +
+            "</script>\n" +
             "<link rel=\"stylesheet\" type=\"text/css\" href=\"wysiwyg.css\"/>" +
+            HORIZONTAL_SCROLL_STYLE +
             "<base href=\"%s\">" +
             "</head>\n"
             + "<body style='margin:0;padding:0;'>";
