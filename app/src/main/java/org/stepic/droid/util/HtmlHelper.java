@@ -197,8 +197,9 @@ public class HtmlHelper {
             HORIZONTAL_SCROLL_STYLE =
                     "<style>\n" +
                     "body > * {\n" +
-                    "    width: 100%%;\n" +
+                    "    max-width: 100%%;\n" +
                     "    overflow-x: scroll;\n" +
+                    "    vertical-align: middle;\n" +
                     "}\n" +
                     "</style>\n";
         } else {
