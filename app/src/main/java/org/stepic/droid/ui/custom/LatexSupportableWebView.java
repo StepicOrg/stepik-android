@@ -1,5 +1,6 @@
 package org.stepic.droid.ui.custom;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -11,6 +12,7 @@ import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
@@ -18,6 +20,7 @@ import org.stepic.droid.R;
 import org.stepic.droid.base.App;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.ui.util.AssetSupportWebViewClient;
+import org.stepic.droid.util.DpPixelsHelper;
 import org.stepic.droid.util.HtmlHelper;
 
 import java.util.Calendar;
@@ -65,6 +68,7 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
         init();
     }
 
+    @SuppressLint({"SetJavaScriptEnabled", "AddJavascriptInterface"})
     private void init() {
         App.Companion.component().inject(this);
         setBackgroundColor(Color.argb(1, 0, 0, 0));
@@ -77,6 +81,12 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
 
         setOnClickListener(this);
         setOnTouchListener(this);
+
+
+        WebSettings webSettings = getSettings();
+        webSettings.setDomStorageEnabled(true);
+        webSettings.setJavaScriptEnabled(true);
+        addJavascriptInterface(new OnScrollWebListener(), HtmlHelper.HORIZONTAL_SCROLL_LISTENER);
     }
 
     public void setTextIsSelectable(boolean isSelectable) {
@@ -105,9 +115,6 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
         String textString = text.toString();
 
         final String html;
-        WebSettings webSettings = getSettings();
-        webSettings.setDomStorageEnabled(true);
-        webSettings.setJavaScriptEnabled(true);
         if (fontPath != null) {
             html = HtmlHelper.buildPageWithCustomFont(text, fontPath, textColorHighlight, width, config.getBaseUrl());
         } else if (wantLaTeX || HtmlHelper.hasLaTeX(textString)) {
@@ -171,6 +178,11 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
             case MotionEvent.ACTION_DOWN:
                 startX = event.getX();
                 startY = event.getY();
+
+                final float dpx = DpPixelsHelper.convertPixelsToDp(event.getX(), getContext());
+                final float dpy = DpPixelsHelper.convertPixelsToDp(event.getY(), getContext());
+                evalScript("measureScroll(" + dpx + ", " + dpy + ")");
+
                 break;
             case MotionEvent.ACTION_MOVE:
                 float dx = startX - event.getX();
@@ -184,9 +196,25 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
                 getParent().requestDisallowInterceptTouchEvent(false);
+                scrollState.reset();
                 break;
         }
         return super.onTouchEvent(event);
+    }
+
+    @Override
+    public boolean canScrollHorizontally(int dx) {
+        return super.canScrollHorizontally(dx) ||
+                (dx < 0 && scrollState.canScrollLeft) ||
+                (dx > 0 && scrollState.canScrollRight);
+    }
+
+    private void evalScript(String code) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            evaluateJavascript(code, null);
+        } else {
+            loadUrl("javascript: " + code);
+        }
     }
 
     public void setOnWebViewClickListener(OnWebViewImageClicked listener) {
@@ -196,4 +224,25 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
     interface OnWebViewImageClicked {
         void onClick(String path);
     }
+
+    public final class OnScrollWebListener {
+        @JavascriptInterface
+        public void onScroll(float offsetWidth, float scrollWidth, float scrollLeft) {
+            scrollState.canScrollLeft = scrollLeft > 0;
+            scrollState.canScrollRight = offsetWidth + scrollLeft < scrollWidth;
+        }
+    }
+
+    private static class ScrollState {
+        private boolean canScrollLeft = false;
+        private boolean canScrollRight = false;
+
+        private void reset() {
+            canScrollLeft = false;
+            canScrollRight = false;
+        }
+    }
+
+    private final ScrollState scrollState = new ScrollState();
+
 }

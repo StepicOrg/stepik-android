@@ -7,6 +7,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.model.NotificationCategory;
 import org.stepic.droid.ui.adapters.NotificationAdapter;
 import org.stepic.droid.ui.custom.StepikSwipeRefreshLayout;
+import org.stepic.droid.ui.custom.StickyHeaderDecoration;
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment;
 import org.stepic.droid.util.ColorUtil;
 import org.stepic.droid.util.ProgressHelper;
@@ -76,7 +78,7 @@ public class NotificationListFragment extends FragmentBase implements Notificati
         setRetainInstance(true);
         int position = getArguments().getInt(categoryPositionKey);
         notificationCategory = NotificationCategory.values()[position];
-        adapter = new NotificationAdapter(getContext(), notificationListPresenter, notificationCategory, getFontsProvider());
+        adapter = new NotificationAdapter(getContext(), notificationListPresenter, notificationCategory);
     }
 
     @Override
@@ -106,6 +108,12 @@ public class NotificationListFragment extends FragmentBase implements Notificati
 //        layoutManager.setRecycleChildrenOnDetach(true);
         notificationRecyclerView.setLayoutManager(layoutManager);
         notificationRecyclerView.setAdapter(adapter);
+        notificationRecyclerView.addItemDecoration(new StickyHeaderDecoration<>(adapter));
+
+        final RecyclerView.ItemAnimator notificationsItemAnimator = notificationRecyclerView.getItemAnimator();
+        if (notificationsItemAnimator instanceof SimpleItemAnimator) {
+            ((SimpleItemAnimator) notificationsItemAnimator).setSupportsChangeAnimations(false);
+        }
 
         initSwipeRefreshLayout();
 

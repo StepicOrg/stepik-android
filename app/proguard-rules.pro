@@ -100,7 +100,13 @@
 -keep interface org.stepic.droid.configuration.** { *; }
 -dontwarn org.stepic.droid.configuration.**
 
-#BottomNavigationHelper uses reflection for changing this field (watch support updates for removing the reflection)
--keepclassmembers class android.support.design.internal.BottomNavigationMenuView {
-    boolean mShiftingMode;
+#keep javascript interfaces
+-keepattributes JavascriptInterface
+-keep public class org.stepic.droid.ui.custom.LatexSupportableWebView$OnScrollWebListener
+-keepclassmembers class org.stepic.droid.ui.custom.LatexSupportableWebView$OnScrollWebListener {
+    public *;
+}
+
+-keepclassmembers class * {
+    @android.webkit.JavascriptInterface <methods>;
 }

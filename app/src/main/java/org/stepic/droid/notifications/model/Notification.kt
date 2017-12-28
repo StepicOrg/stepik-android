@@ -17,7 +17,10 @@ data class Notification(
         @SerializedName("html_text")
         var htmlText: String? = null,
         var action: String? = null,
-        var course_id: Long? = null
+        var course_id: Long? = null,
+        var userAvatarUrl: String? = null,
+        var notificationText: CharSequence? = null,
+        var dateGroup: Int = 0
 )
 
 enum class NotificationType(val channel: StepikNotificationChannel) {
