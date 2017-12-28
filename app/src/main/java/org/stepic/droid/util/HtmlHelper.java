@@ -188,6 +188,10 @@ public class HtmlHelper {
     public static final String HORIZONTAL_SCROLL_LISTENER = "scrollListener";
     private static final String HORIZONTAL_SCROLL_STYLE;
 
+    // this block is needed to force render of WebView
+    private static final String MIN_RENDERED_BLOCK =
+            "<div style=\"height: 1px; overflow: hidden; width: 1px; background-color: rgba(0,0,0,0.001); pointer-events: none; user-select: none; -webkit-user-select: none;\"></div>";
+
     static {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             HORIZONTAL_SCROLL_STYLE =
@@ -200,6 +204,17 @@ public class HtmlHelper {
                     "</style>\n";
         } else {
             HORIZONTAL_SCROLL_STYLE = "";
+        }
+
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
+            POST_BODY =
+                    MIN_RENDERED_BLOCK +
+                    "</body>\n" +
+                    "</html>";
+        } else {
+            POST_BODY =
+                    "</body>\n" +
+                    "</html>";
         }
     }
 
@@ -265,8 +280,7 @@ public class HtmlHelper {
             + "\nimg { max-width: 100%%; }"
             + "</style>\n";
 
-    private static final String POST_BODY = "</body>\n" +
-            "</html>";
+    private static final String POST_BODY;
 
     private static final String MathJaxScript =
             "<script type=\"text/x-mathjax-config\">\n" +
