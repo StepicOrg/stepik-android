@@ -53,7 +53,7 @@ class LocalReminderImpl
 
                     //now we can plan alarm
 
-                    val now = DateTimeHelper.nowLocal()
+                    val now = DateTimeHelper.nowUtc()
                     val scheduleMillis: Long
                     if (millis != null && millis > 0L && millis > now) {
                         scheduleMillis = millis // after reboot we already scheduled.
@@ -69,7 +69,7 @@ class LocalReminderImpl
                         val calendar = Calendar.getInstance()
                         val nowHour = calendar.get(Calendar.HOUR_OF_DAY)
                         calendar.set(Calendar.HOUR_OF_DAY, 12)
-                        val nowAt12 = DateTimeHelper.calendarToLocalMillis(calendar)
+                        val nowAt12 = calendar.timeInMillis
                         scheduleMillis = when {
                             nowHour < 12 -> nowAt12 + AppConstants.MILLIS_IN_24HOURS * dayDiff
                             nowHour >= 19 -> nowAt12 + AppConstants.MILLIS_IN_24HOURS * (dayDiff + 1)
@@ -114,7 +114,7 @@ class LocalReminderImpl
                         //plan new alarm
                         val hour = sharedPreferenceHelper.timeNotificationCode
                         val now = DateTimeHelper.nowUtc()
-                        val calendar = Calendar.getInstance(TimeZone.getDefault())
+                        val calendar = Calendar.getInstance()
                         calendar.set(Calendar.HOUR_OF_DAY, hour)
                         calendar.set(Calendar.MINUTE, 0)
                         calendar.set(Calendar.SECOND, 0)
