@@ -113,14 +113,14 @@ class LocalReminderImpl
                     if (sharedPreferenceHelper.isStreakNotificationEnabled) {
                         //plan new alarm
                         val hour = sharedPreferenceHelper.timeNotificationCode
-                        val now = DateTimeHelper.nowLocal()
+                        val now = DateTimeHelper.nowUtc()
                         val calendar = Calendar.getInstance(TimeZone.getDefault())
                         calendar.set(Calendar.HOUR_OF_DAY, hour)
                         calendar.set(Calendar.MINUTE, 0)
                         calendar.set(Calendar.SECOND, 0)
                         calendar.set(Calendar.MILLISECOND, 0)
 
-                        var nextNotificationMillis = DateTimeHelper.calendarToLocalMillis(calendar)
+                        var nextNotificationMillis = calendar.timeInMillis
 
                         if (nextNotificationMillis < now) {
                             nextNotificationMillis += AppConstants.MILLIS_IN_24HOURS
