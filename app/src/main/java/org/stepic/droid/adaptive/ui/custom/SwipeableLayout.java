@@ -116,9 +116,9 @@ public final class SwipeableLayout extends FrameLayout {
 
                 intercepted =
                         intercepted ||
-                                isOwnEvent ||
-                                nestedScroll != null && !nestedScroll.canScrollVertically() && (ady > MIN_DELTA || adx > MIN_DELTA) ||
-                                adx > MIN_DELTA && adx > ady;// || Math.abs(dy) > MIN_DELTA;
+                        isOwnEvent ||
+                        nestedScroll != null && !nestedScroll.canScrollVertically() && (ady > MIN_DELTA || adx > MIN_DELTA) ||
+                        adx > MIN_DELTA && adx > ady;// || Math.abs(dy) > MIN_DELTA;
 
                 if (intercepted) {
                     elemX += dx;

@@ -406,4 +406,14 @@
         <item name="searchHintIcon">@null</item>
         <item name="android:iconifiedByDefault">false</item>
     </style>
+
+
+    <style name="Adaptive" />
+
+    <style name="Adaptive.ReactionStamp">
+        <item name="android:textSize">24sp</item>
+        <item name="android:gravity">center</item>
+        <item name="fontFamily">sans-serif-black</item>
+        <item name="android:fontFamily" tools:targetApi="jelly_bean">sans-serif-black</item>
+    </style>
 </resources>

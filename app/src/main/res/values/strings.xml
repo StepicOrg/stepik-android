@@ -577,4 +577,12 @@
     <string name="onboarding_fourth_subtitle">Set up reminders to study regularly and complete the courses faster</string>
 
     <string name="notification_icon_content_description">Notification icon</string>
+
+    <!--adaptive-->
+    <string name="adaptive_reaction_easy">EASY</string>
+    <string name="adaptive_reaction_hard">HARD</string>
+    <string name="adaptive_retry">Retry</string>
+    <string name="adaptive_correct">CORRECT</string>
+    <string name="adaptive_wrong">WRONG</string>
+    <string name="adaptive_attempt_button">Solve</string>
 </resources>

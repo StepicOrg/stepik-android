@@ -565,4 +565,12 @@
 
 
     <string name="notification_icon_content_description">Иконка уведомления</string>
+
+    <!--adaptive-->
+    <string name="adaptive_reaction_easy">ПРОСТО</string>
+    <string name="adaptive_reaction_hard">СЛОЖНО</string>
+    <string name="adaptive_retry">Новая попытка</string>
+    <string name="adaptive_correct">ВЕРНО</string>
+    <string name="adaptive_wrong">НЕВЕРНО</string>
+    <string name="adaptive_attempt_button">Решить</string>
 </resources>
