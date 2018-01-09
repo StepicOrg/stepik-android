@@ -40,6 +40,7 @@ import org.stepic.droid.model.Reply;
 import org.stepic.droid.model.ReplyWrapper;
 import org.stepic.droid.model.StepikFilter;
 import org.stepic.droid.model.Tag;
+import org.stepic.droid.model.adaptive.RecommendationReaction;
 import org.stepic.droid.model.comments.Comment;
 import org.stepic.droid.model.comments.Vote;
 import org.stepic.droid.model.comments.VoteValue;
@@ -52,6 +53,8 @@ import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DateTimeHelper;
 import org.stepic.droid.util.DeviceInfoUtil;
 import org.stepic.droid.util.RWLocks;
+import org.stepic.droid.web.model.adaptive.RecommendationReactionsRequest;
+import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
 
 import java.io.IOException;
 import java.net.HttpCookie;
@@ -87,7 +90,7 @@ import timber.log.Timber;
 public class ApiImpl implements Api {
     private final int TIMEOUT_IN_SECONDS = 10;
     private final StethoInterceptor stethoInterceptor = new StethoInterceptor();
-    private final String userAgentName = "User-Agent";
+    private static final String USER_AGENT_NAME = "User-Agent";
 
     private final Context context;
     private final SharedPreferenceHelper sharedPreference;
@@ -386,7 +389,7 @@ public class ApiImpl implements Api {
     }
 
     @Nullable
-    private final String tryGetCsrfFromOnePair(String keyValueCookie) {
+    private String tryGetCsrfFromOnePair(String keyValueCookie) {
         List<HttpCookie> cookieList = HttpCookie.parse(keyValueCookie);
         for (HttpCookie item : cookieList) {
             if (item.getName() != null && item.getName().equals(config.getCsrfTokenCookieName())) {
@@ -450,8 +453,18 @@ public class ApiImpl implements Api {
     }
 
     @Override
+    public Single<UnitMetaResponse> getUnits(long courseId, long lessonId) {
+        return loggedService.getUnits(courseId, lessonId);
+    }
+
+    @Override
     public Call<LessonStepicResponse> getLessons(long[] lessons) {
         return loggedService.getLessons(lessons);
+    }
+
+    @Override
+    public Single<LessonStepicResponse> getLessons(long lessonId) {
+        return loggedService.getLessons(lessonId);
     }
 
     @Override
@@ -462,6 +475,11 @@ public class ApiImpl implements Api {
     @Override
     public Single<StepResponse> getStepsReactive(long[] steps) {
         return loggedService.getStepsReactive(steps);
+    }
+
+    @Override
+    public Single<StepResponse> getStepsByLessonId(long lessonId) {
+        return loggedService.getStepsByLessonId(lessonId);
     }
 
     @Override
@@ -488,6 +506,11 @@ public class ApiImpl implements Api {
     @Override
     public Call<Void> postViewed(ViewAssignment stepAssignment) {
         return loggedService.postViewed(new ViewAssignmentWrapper(stepAssignment.getAssignment(), stepAssignment.getStep()));
+    }
+
+    @Override
+    public Completable postViewedReactive(ViewAssignment stepAssignment) {
+        return loggedService.postViewedReactive(new ViewAssignmentWrapper(stepAssignment.getAssignment(), stepAssignment.getStep()));
     }
 
     @Override
@@ -538,9 +561,19 @@ public class ApiImpl implements Api {
     }
 
     @Override
+    public Single<AttemptResponse> createNewAttemptReactive(long stepId) {
+        return loggedService.createNewAttemptReactive(new AttemptRequest(stepId));
+    }
+
+    @Override
     public Call<SubmissionResponse> createNewSubmission(Reply reply, long attemptId) {
         SubmissionRequest submissionRequest = new SubmissionRequest(reply, attemptId);
         return loggedService.createNewSubmission(submissionRequest);
+    }
+
+    @Override
+    public Completable createNewSubmissionReactive(Reply reply, long attemptId) {
+        return loggedService.createNewSubmissionReactive(new SubmissionRequest(reply, attemptId));
     }
 
     @Override
@@ -557,9 +590,26 @@ public class ApiImpl implements Api {
     }
 
     @Override
+    public Single<AttemptResponse> getExistingAttemptsReactive(long stepId) {
+        Profile profile = sharedPreference.getProfile();
+        long userId = 0;
+        //noinspection StatementWithEmptyBody
+        if (profile == null) {
+            //practically it is not happens (yandex metrica)
+        } else {
+            userId = profile.getId();
+        }
+        return loggedService.getExistingAttemptsReactive(stepId, userId);
+    }
+
+    @Override
     public Call<SubmissionResponse> getSubmissions(long attemptId) {
-        String order = "desc";
-        return loggedService.getExistingSubmissions(attemptId, order);
+        return loggedService.getExistingSubmissions(attemptId, "desc");
+    }
+
+    @Override
+    public Single<SubmissionResponse> getSubmissionsReactive(long attemptId) {
+        return loggedService.getExistingSubmissionsReactive(attemptId, "desc");
     }
 
     @Override
@@ -793,6 +843,16 @@ public class ApiImpl implements Api {
     }
 
     @Override
+    public Single<RecommendationsResponse> getNextRecommendations(long courseId, int count) {
+        return loggedService.getNextRecommendations(courseId, count);
+    }
+
+    @Override
+    public Completable createReaction(RecommendationReaction reaction) {
+        return loggedService.createRecommendationReaction(new RecommendationReactionsRequest(reaction));
+    }
+
+    @Override
     public Single<SearchResultResponse> getSearchResultsOfTag(int page, @NotNull Tag tag) {
         EnumSet<StepikFilter> enumSet = sharedPreference.getFilterForFeatured();
         String lang = enumSet.iterator().next().getLanguage();
@@ -872,7 +932,7 @@ public class ApiImpl implements Api {
         return chain
                 .request()
                 .newBuilder()
-                .header(userAgentName, userAgentProvider.provideUserAgent())
+                .header(USER_AGENT_NAME, userAgentProvider.provideUserAgent())
                 .build();
     }
 }
