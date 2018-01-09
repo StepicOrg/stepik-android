@@ -51,9 +51,8 @@ class StepikNotificationManagerImpl
     companion object {
         private const val NEW_USER_REMIND_NOTIFICATION_ID = 4L
         private const val REGISTRATION_REMIND_NOTIFICATION_ID = 5L
+        private const val STREAK_NOTIFICATION_ID = 3214L
     }
-
-    val notificationStreakId: Long = 3214L
 
     @WorkerThread
     override fun showLocalNotificationRemind() {
@@ -215,7 +214,7 @@ class StepikNotificationManagerImpl
         showSimpleNotification(stepikNotification = null,
                 justText = message,
                 taskBuilder = taskBuilder,
-                title = context.getString(R.string.time_to_learn_notification_title), id = notificationStreakId)
+                title = context.getString(R.string.time_to_learn_notification_title), id = STREAK_NOTIFICATION_ID)
     }
 
     private fun getDeleteIntentForStreaks(): PendingIntent {
@@ -246,7 +245,7 @@ class StepikNotificationManagerImpl
                 justText = message,
                 taskBuilder = taskBuilder,
                 title = context.getString(R.string.time_to_learn_notification_title),
-                deleteIntent = getDeleteIntentForStreaks(), id = notificationStreakId)
+                deleteIntent = getDeleteIntentForStreaks(), id = STREAK_NOTIFICATION_ID)
     }
 
     private fun getStreakNotificationTaskBuilder(notificationType: Analytic.Streak.NotificationType): TaskStackBuilder {
