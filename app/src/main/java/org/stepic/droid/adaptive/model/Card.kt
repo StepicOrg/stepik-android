@@ -8,6 +8,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import org.stepic.droid.base.App
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.model.Attempt
@@ -16,15 +17,9 @@ import org.stepic.droid.model.Step
 import org.stepic.droid.model.Unit
 import org.stepic.droid.web.Api
 import org.stepic.droid.web.ViewAssignment
+import javax.inject.Inject
 
 class Card(
-        private val api: Api,
-
-        @MainScheduler
-        private val mainScheduler: Scheduler,
-        @BackgroundScheduler
-        private val backgroundScheduler: Scheduler,
-
         private val courseId: Long,
         private val lessonId: Long,
 
@@ -32,6 +27,23 @@ class Card(
         private var step: Step? = null,
         private var attempt: Attempt? = null
 ) : Single<Card>() {
+    @Inject
+    lateinit var api: Api
+
+    @Inject
+    @field:MainScheduler
+    lateinit var mainScheduler: Scheduler
+
+    @Inject
+    @field:BackgroundScheduler
+    lateinit var backgroundScheduler: Scheduler
+
+    init {
+        App.componentManager()
+                .stepComponent(lessonId)
+                .inject(this)
+    }
+
     private var observer: SingleObserver<in Card>? = null
 
     private var error: Throwable? = null

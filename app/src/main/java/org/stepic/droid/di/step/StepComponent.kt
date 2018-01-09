@@ -1,6 +1,7 @@
 package org.stepic.droid.di.step
 
 import dagger.Subcomponent
+import org.stepic.droid.adaptive.model.Card
 import org.stepic.droid.base.StepBaseFragment
 import org.stepic.droid.di.comment.CommentsComponent
 import org.stepic.droid.di.step.code.CodeComponent
@@ -25,4 +26,6 @@ interface StepComponent {
     fun inject(videoStepFragment: VideoStepFragment)
 
     fun inject(stepAttemptFragment: StepAttemptFragment)
+
+    fun inject(card: Card)
 }
