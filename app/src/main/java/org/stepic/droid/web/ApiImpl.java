@@ -40,7 +40,7 @@ import org.stepic.droid.model.Reply;
 import org.stepic.droid.model.ReplyWrapper;
 import org.stepic.droid.model.StepikFilter;
 import org.stepic.droid.model.Tag;
-import org.stepic.droid.model.adaptive.RecommendationReaction;
+import org.stepic.droid.adaptive.model.RecommendationReaction;
 import org.stepic.droid.model.comments.Comment;
 import org.stepic.droid.model.comments.Vote;
 import org.stepic.droid.model.comments.VoteValue;

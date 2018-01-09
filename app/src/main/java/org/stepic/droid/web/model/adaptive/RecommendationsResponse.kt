@@ -1,5 +1,5 @@
 package org.stepic.droid.web.model.adaptive
 
-import org.stepic.droid.model.adaptive.Recommendation
+import org.stepic.droid.adaptive.model.Recommendation
 
 class RecommendationsResponse(val recommendations: List<Recommendation>?)
