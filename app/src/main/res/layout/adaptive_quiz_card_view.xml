@@ -163,7 +163,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
-                    <org.stepik.android.adaptive.ui.view.LatexSupportableWebView
+                    <org.stepic.droid.ui.custom.LatexSupportableWebView
                         android:id="@+id/question"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
@@ -174,7 +174,7 @@
                         android:layout_height="1dp"
                         android:background="@color/color_stroke"/>
 
-                    <org.stepik.android.adaptive.ui.view.ListContainer
+                    <org.stepic.droid.ui.custom.ListContainer
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/answers" />

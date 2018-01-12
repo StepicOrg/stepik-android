@@ -1,0 +1,121 @@
+package org.stepic.droid.core.presenters
+
+import io.reactivex.Scheduler
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
+import org.stepic.droid.adaptive.listeners.AdaptiveReactionListener
+import org.stepic.droid.adaptive.listeners.AnswerListener
+import org.stepic.droid.model.Submission
+import org.stepic.droid.adaptive.model.Card
+import org.stepic.droid.adaptive.model.Reaction
+import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.core.presenters.contracts.CardView
+import org.stepic.droid.di.qualifiers.BackgroundScheduler
+import org.stepic.droid.di.qualifiers.MainScheduler
+import org.stepic.droid.web.Api
+import org.stepic.droid.web.SubmissionResponse
+import retrofit2.HttpException
+import java.util.concurrent.TimeUnit
+import javax.inject.Inject
+
+class CardPresenter(val card: Card, private val listener: AdaptiveReactionListener?, private val answerListener: AnswerListener?) : PresenterBase<CardView>() {
+    @Inject
+    lateinit var api: Api
+
+    @Inject
+    @field:MainScheduler
+    lateinit var mainScheduler: Scheduler
+
+    @Inject
+    @field:BackgroundScheduler
+    lateinit var backgroundScheduler: Scheduler
+
+    @Inject
+    lateinit var analytic: Analytic
+
+    private var submission: Submission? = null
+    private var error: Throwable? = null
+
+    private var disposable: Disposable? = null
+
+    var isLoading = false
+        private set
+
+    override fun attachView(view: CardView) {
+        super.attachView(view)
+        view.setTitle(card.lesson?.title)
+        view.setQuestion(card.step?.block?.text)
+        view.setAnswerAdapter(card.adapter)
+
+        if (isLoading) view.onSubmissionLoading()
+        submission?.let { view.setSubmission(it, false) }
+        error?.let { onError(it) }
+    }
+
+    fun detachView() {
+        view?.let {
+            super.detachView(it)
+        }
+    }
+
+    fun createSubmission() {
+        if (disposable == null || disposable?.isDisposed != false) {
+            card.adapter.enabled = false
+            view?.onSubmissionLoading()
+            isLoading = true
+            error = null
+
+            val submission = Submission(card.adapter.getReply(), card.attempt?.id ?: 0)
+            disposable = api.createNewSubmissionReactive(submission)
+                    .andThen(api.getSubmissionsReactive(submission.attempt))
+                    .subscribeOn(backgroundScheduler)
+                    .observeOn(mainScheduler)
+                    .subscribe(this::onSubmissionLoaded, this::onError)
+
+            analytic.reportEvent(Analytic.Steps.SUBMISSION_CREATED)
+        }
+    }
+
+    fun retrySubmission() {
+        submission = null
+        card.adapter.enabled = true
+    }
+
+    private fun onSubmissionLoaded(submissionResponse: SubmissionResponse) {
+        submission = submissionResponse.submissions.firstOrNull()
+        submission?.let {
+            if (it.status == Submission.Status.EVALUATION) {
+                disposable =  api.getSubmissionsReactive(it.attempt)
+                        .delay(1, TimeUnit.SECONDS)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(this::onSubmissionLoaded, this::onError)
+            } else {
+                isLoading = false
+
+//                AnalyticMgr.getInstance().answerResult(card.step, it)
+                if (it.status == Submission.Status.CORRECT) {
+                    listener?.createReaction(card.lessonId, Reaction.SOLVED)
+                    answerListener?.onCorrectAnswer(it.id)
+                    card.onCorrect()
+                }
+                if (it.status == Submission.Status.WRONG) {
+                    answerListener?.onWrongAnswer()
+                }
+                view?.setSubmission(it, true)
+            }
+        }
+    }
+
+    private fun onError(error: Throwable) {
+        isLoading = false
+        this.error = error
+        card.adapter.enabled = true
+        if (error is HttpException) {
+            view?.onSubmissionRequestError()
+        } else {
+            view?.onSubmissionConnectivityError()
+        }
+    }
+}

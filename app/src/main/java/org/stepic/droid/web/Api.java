@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.NotificationCategory;
 import org.stepic.droid.model.Reply;
+import org.stepic.droid.model.Submission;
 import org.stepic.droid.model.Tag;
 import org.stepic.droid.adaptive.model.RecommendationReaction;
 import org.stepic.droid.model.comments.VoteValue;
@@ -91,7 +92,7 @@ public interface Api {
 
     Call<SubmissionResponse> createNewSubmission(Reply reply, long attemptId);
 
-    Completable createNewSubmissionReactive(Reply reply, long attemptId);
+    Completable createNewSubmissionReactive(Submission submission);
 
     Call<AttemptResponse> getExistingAttempts(long stepId);
 

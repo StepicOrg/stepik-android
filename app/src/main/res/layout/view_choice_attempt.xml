@@ -8,6 +8,4 @@
     android:gravity="bottom"
     android:orientation="vertical"
     tools:background="@color/correct_answer_background"
-    tools:layout_height="300dp">
-
-</org.stepic.droid.ui.custom.StepikRadioGroup>
+    tools:layout_height="300dp" />

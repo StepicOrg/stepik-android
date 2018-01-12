@@ -39,6 +39,7 @@ import org.stepic.droid.model.RegistrationUser;
 import org.stepic.droid.model.Reply;
 import org.stepic.droid.model.ReplyWrapper;
 import org.stepic.droid.model.StepikFilter;
+import org.stepic.droid.model.Submission;
 import org.stepic.droid.model.Tag;
 import org.stepic.droid.adaptive.model.RecommendationReaction;
 import org.stepic.droid.model.comments.Comment;
@@ -572,8 +573,8 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Completable createNewSubmissionReactive(Reply reply, long attemptId) {
-        return loggedService.createNewSubmissionReactive(new SubmissionRequest(reply, attemptId));
+    public Completable createNewSubmissionReactive(Submission submission) {
+        return loggedService.createNewSubmissionReactive(new SubmissionRequest(submission));
     }
 
     @Override

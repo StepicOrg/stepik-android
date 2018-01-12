@@ -15,17 +15,18 @@ import org.stepic.droid.model.Attempt
 import org.stepic.droid.model.Lesson
 import org.stepic.droid.model.Step
 import org.stepic.droid.model.Unit
+import org.stepic.droid.ui.adapters.AttemptAnswersAdapter
 import org.stepic.droid.web.Api
 import org.stepic.droid.web.ViewAssignment
 import javax.inject.Inject
 
 class Card(
         private val courseId: Long,
-        private val lessonId: Long,
+        val lessonId: Long,
 
-        private var lesson: Lesson? = null,
-        private var step: Step? = null,
-        private var attempt: Attempt? = null
+        var lesson: Lesson? = null,
+        var step: Step? = null,
+        var attempt: Attempt? = null
 ) : Single<Card>() {
     @Inject
     lateinit var api: Api
@@ -53,6 +54,8 @@ class Card(
     private var attemptDisposable: Disposable? = null
 
     private val compositeDisposable = CompositeDisposable()
+
+    val adapter = AttemptAnswersAdapter()
 
     var correct = false
         private set
@@ -113,7 +116,7 @@ class Card(
 
     private fun setAttempt(attempt: Attempt?) = attempt?.let {
         this.attempt = it
-//        adapter.setAttempt(attempt)
+        adapter.attempt  = attempt
         notifyDataChanged()
     }
 
@@ -139,7 +142,7 @@ class Card(
         attemptDisposable?.dispose()
         compositeDisposable.dispose()
         observer = null
-//        adapter.clear()
+        adapter.clear()
     }
 
     override fun subscribeActual(observer: SingleObserver<in Card>) {
