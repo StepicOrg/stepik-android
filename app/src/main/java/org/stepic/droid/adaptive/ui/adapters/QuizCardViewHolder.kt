@@ -8,7 +8,9 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import kotlinx.android.synthetic.main.adaptive_quiz_card_view.view.*
 import org.stepic.droid.R
+import org.stepic.droid.adaptive.model.Reaction
 import org.stepic.droid.adaptive.ui.animations.CardAnimations
+import org.stepic.droid.adaptive.ui.custom.SwipeableLayout
 import org.stepic.droid.adaptive.ui.custom.container.ContainerView
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.core.ScreenManager
@@ -38,6 +40,11 @@ class QuizCardViewHolder(
     private val scrollContainer = root.scroll
     private val container = root.container
 
+    private val hardReaction = root.reaction_hard
+    private val easyReaction = root.reaction_easy
+
+    val cardView = root.card
+
     private val choiceAdapter = StepikRadioGroupAdapter(root.answers, analytic)
 
     init {
@@ -66,6 +73,34 @@ class QuizCardViewHolder(
     fun bind(presenter: CardPresenter) {
         this.presenter = presenter
         presenter.attachView(this)
+    }
+
+    fun onTopCard() {
+        if (!hasSubmission) {
+            if (presenter?.isLoading == true) {
+                onSubmissionLoading()
+            } else {
+                actionButton.visibility = View.VISIBLE
+                choiceAdapter.setEnabled(true)
+            }
+        }
+
+        container.setSwipeListener(object : SwipeableLayout.SwipeListener() {
+            override fun onScroll(scrollProgress: Float) {
+                hardReaction.alpha = Math.max(2 * scrollProgress, 0f)
+                easyReaction.alpha = Math.max(2 * -scrollProgress, 0f)
+            }
+
+            override fun onSwipeLeft() {
+                easyReaction.alpha = 1f
+                presenter?.createReaction(Reaction.NEVER_AGAIN)
+            }
+
+            override fun onSwipeRight() {
+                hardReaction.alpha = 1f
+                presenter?.createReaction(Reaction.MAYBE_LATER)
+            }
+        })
     }
 
     private fun onCardLoaded() {

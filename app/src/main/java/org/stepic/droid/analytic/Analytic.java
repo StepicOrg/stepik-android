@@ -7,6 +7,14 @@ import org.jetbrains.annotations.Nullable;
 
 public interface Analytic {
 
+    interface Adaptive {
+        String REACTION_EASY = "reaction_easy";
+        String REACTION_HARD = "reaction_hard";
+
+        String REACTION_EASY_AFTER_CORRECT = "reaction_easy_after_correct_answer";
+        String REACTION_HARD_AFTER_CORRECT = "reaction_hard_after_correct_answer";
+    }
+
     interface Onboarding {
         String CLOSED = "onboarding_closed";
         String ACTION = "onboarding_action";

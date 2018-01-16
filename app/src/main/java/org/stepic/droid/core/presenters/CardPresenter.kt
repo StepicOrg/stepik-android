@@ -19,7 +19,11 @@ import retrofit2.HttpException
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class CardPresenter(val card: Card, private val listener: AdaptiveReactionListener?, private val answerListener: AnswerListener?) : PresenterBase<CardView>() {
+class CardPresenter(
+        val card: Card,
+        private val listener: AdaptiveReactionListener?,
+        private val answerListener: AnswerListener?
+) : PresenterBase<CardView>() {
     @Inject
     lateinit var api: Api
 
@@ -57,6 +61,31 @@ class CardPresenter(val card: Card, private val listener: AdaptiveReactionListen
         view?.let {
             super.detachView(it)
         }
+    }
+
+    fun destroy() {
+        card.recycle()
+        disposable?.dispose()
+    }
+
+    fun createReaction(reaction: Reaction) {
+        val lesson = card.lessonId
+        when(reaction) {
+            Reaction.NEVER_AGAIN -> {
+                if (card.correct) {
+                    analytic.reportEventValue(Analytic.Adaptive.REACTION_EASY_AFTER_CORRECT, lesson)
+                }
+                analytic.reportEventValue(Analytic.Adaptive.REACTION_EASY, lesson)
+            }
+
+            Reaction.MAYBE_LATER -> {
+                if (card.correct) {
+                    analytic.reportEventValue(Analytic.Adaptive.REACTION_HARD_AFTER_CORRECT, lesson)
+                }
+                analytic.reportEventValue(Analytic.Adaptive.REACTION_HARD, lesson)
+            }
+        }
+        listener?.createReaction(lesson, reaction)
     }
 
     fun createSubmission() {
