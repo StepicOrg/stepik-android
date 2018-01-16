@@ -9,6 +9,7 @@ import org.stepic.droid.ui.custom.StepikCheckBox
 import org.stepic.droid.ui.custom.StepikOptionView
 import org.stepic.droid.ui.custom.StepikRadioButton
 import org.stepic.droid.ui.custom.StepikRadioGroup
+import java.lang.Math.min
 
 
 class StepikRadioGroupAdapter(
@@ -53,14 +54,17 @@ class StepikRadioGroupAdapter(
 
     fun setSubmission(submission: Submission?) {
         submission?.reply?.choices?.let { choices ->
-            (0 until group.childCount).forEach {
-                if (it < choices.size) {
-                    (group.getChildAt(it) as StepikOptionView).isChecked = choices[it]
-                } else {
-                    analytic.reportEventWithName(Analytic.Error.CHOICES_ARE_SMALLER, submission.id.toString())
-                }
+            if (choices.size < group.childCount) {
+                analytic.reportEventWithName(Analytic.Error.CHOICES_ARE_SMALLER, submission.id.toString())
             }
+            setChoices(choices)
             // no need to set up actionButton state it will be done for us
+        }
+    }
+
+    fun setChoices(choices: List<Boolean>) {
+        (0 until min(group.childCount, choices.size)).forEach {
+            (group.getChildAt(it) as StepikOptionView).isChecked = choices[it]
         }
     }
 
