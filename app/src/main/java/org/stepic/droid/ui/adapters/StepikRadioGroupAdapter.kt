@@ -1,0 +1,85 @@
+package org.stepic.droid.ui.adapters
+
+import android.widget.Button
+import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.model.Attempt
+import org.stepic.droid.model.Reply
+import org.stepic.droid.model.Submission
+import org.stepic.droid.ui.custom.StepikCheckBox
+import org.stepic.droid.ui.custom.StepikOptionView
+import org.stepic.droid.ui.custom.StepikRadioButton
+import org.stepic.droid.ui.custom.StepikRadioGroup
+
+
+class StepikRadioGroupAdapter(
+        private val group: StepikRadioGroup,
+        private val analytic: Analytic
+) {
+
+    var actionButton: Button? = null
+        set(value) {
+            field = value
+            refreshActionButton()
+        }
+
+    private var isMultipleChoice = false
+
+    fun setAttempt(attempt: Attempt) {
+        attempt.dataset?.options?.let { options ->
+            if (options.isEmpty()) return
+            group.removeAllViews()
+
+            isMultipleChoice = attempt.dataset.is_multiple_choice
+            options.forEach {
+                val item = if (isMultipleChoice) {
+                    StepikCheckBox(group.context)
+                } else {
+                    StepikRadioButton(group.context)
+                }
+                item.setText(it)
+                group.addView(item)
+            }
+
+            if (!isMultipleChoice) {
+                group.setOnCheckedChangeListener { _, _ ->
+                    refreshActionButton()
+                    group.setOnCheckedChangeListener(null)
+                }
+            }
+
+            refreshActionButton()
+        }
+    }
+
+    fun setSubmission(submission: Submission?) {
+        submission?.reply?.choices?.let { choices ->
+            (0 until group.childCount).forEach {
+                if (it < choices.size) {
+                    (group.getChildAt(it) as StepikOptionView).isChecked = choices[it]
+                } else {
+                    analytic.reportEventWithName(Analytic.Error.CHOICES_ARE_SMALLER, submission.id.toString())
+                }
+            }
+            // no need to set up actionButton state it will be done for us
+        }
+    }
+
+    val reply: Reply
+        get() {
+            val selection = (0 until group.childCount)
+                    .map {
+                        (group.getChildAt(it) as StepikOptionView).isChecked
+                    }
+            return Reply.Builder().setChoices(selection).build()
+        }
+
+    fun setEnabled(isEnabled: Boolean) {
+        (0 until group.childCount).forEach { group.getChildAt(it).isEnabled = isEnabled }
+    }
+
+    private fun refreshActionButton() {
+        actionButton?.let {
+            it.isEnabled = isMultipleChoice || group.checkedRadioButtonId != -1
+        }
+    }
+}
