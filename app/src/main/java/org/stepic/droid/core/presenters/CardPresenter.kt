@@ -46,7 +46,7 @@ class CardPresenter(val card: Card, private val listener: AdaptiveReactionListen
         super.attachView(view)
         view.setTitle(card.lesson?.title)
         view.setQuestion(card.step?.block?.text)
-        view.setAnswerAdapter(card.adapter)
+        view.getRadioGroupAdapter().setAttempt(card.attempt)
 
         if (isLoading) view.onSubmissionLoading()
         submission?.let { view.setSubmission(it, false) }
@@ -61,12 +61,12 @@ class CardPresenter(val card: Card, private val listener: AdaptiveReactionListen
 
     fun createSubmission() {
         if (disposable == null || disposable?.isDisposed != false) {
-            card.adapter.enabled = false
+            view?.getRadioGroupAdapter()?.setEnabled(false)
             view?.onSubmissionLoading()
             isLoading = true
             error = null
 
-            val submission = Submission(card.adapter.getReply(), card.attempt?.id ?: 0)
+            val submission = Submission(view?.getRadioGroupAdapter()?.reply, card.attempt?.id ?: 0)
             disposable = api.createNewSubmissionReactive(submission)
                     .andThen(api.getSubmissionsReactive(submission.attempt))
                     .subscribeOn(backgroundScheduler)
@@ -79,7 +79,7 @@ class CardPresenter(val card: Card, private val listener: AdaptiveReactionListen
 
     fun retrySubmission() {
         submission = null
-        card.adapter.enabled = true
+        view?.getRadioGroupAdapter()?.setEnabled(true)
     }
 
     private fun onSubmissionLoaded(submissionResponse: SubmissionResponse) {
@@ -111,7 +111,7 @@ class CardPresenter(val card: Card, private val listener: AdaptiveReactionListen
     private fun onError(error: Throwable) {
         isLoading = false
         this.error = error
-        card.adapter.enabled = true
+        view?.getRadioGroupAdapter()?.setEnabled(true)
         if (error is HttpException) {
             view?.onSubmissionRequestError()
         } else {

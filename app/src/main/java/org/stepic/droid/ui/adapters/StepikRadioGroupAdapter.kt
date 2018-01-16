@@ -25,8 +25,8 @@ class StepikRadioGroupAdapter(
 
     private var isMultipleChoice = false
 
-    fun setAttempt(attempt: Attempt) {
-        attempt.dataset?.options?.let { options ->
+    fun setAttempt(attempt: Attempt?) {
+        attempt?.dataset?.options?.let { options ->
             if (options.isEmpty()) return
             group.removeAllViews()
 

@@ -1,7 +1,7 @@
 package org.stepic.droid.core.presenters.contracts
 
-import org.stepic.droid.model.Attempt
 import org.stepic.droid.model.Submission
+import org.stepic.droid.ui.adapters.StepikRadioGroupAdapter
 
 interface CardView {
     fun setSubmission(submission: Submission, animate: Boolean)
@@ -11,6 +11,6 @@ interface CardView {
 
     fun setTitle(title: String?)
     fun setQuestion(html: String?)
-    fun setAttempt(attempt: Attempt)
-    fun setChoices(choices: List<Boolean>)
+
+    fun getRadioGroupAdapter(): StepikRadioGroupAdapter
 }
