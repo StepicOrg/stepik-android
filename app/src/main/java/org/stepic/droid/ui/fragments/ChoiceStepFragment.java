@@ -21,7 +21,7 @@ public class ChoiceStepFragment extends StepAttemptFragment {
         attemptContainer.addView(choiceContainer);
         attemptContainer.setPadding(0, 0, 0, 0);
 
-        choiceAdapter = new StepikRadioGroupAdapter(choiceContainer, getAnalytic());
+        choiceAdapter = new StepikRadioGroupAdapter(choiceContainer);
         choiceAdapter.setActionButton(actionButton);
     }
 

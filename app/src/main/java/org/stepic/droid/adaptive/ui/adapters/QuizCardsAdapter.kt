@@ -9,18 +9,13 @@ import org.stepic.droid.adaptive.listeners.AdaptiveReactionListener
 import org.stepic.droid.adaptive.listeners.AnswerListener
 import org.stepic.droid.adaptive.model.Card
 import org.stepic.droid.adaptive.ui.custom.QuizCardsContainer
-import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.presenters.CardPresenter
 import java.util.ArrayList
 
 
 class QuizCardsAdapter(
         private val listener: AdaptiveReactionListener?,
-        private val answerListener: AnswerListener?,
-
-        private val screenManager: ScreenManager,
-        private val analytic: Analytic
+        private val answerListener: AnswerListener?
 ): QuizCardsContainer.CardsAdapter<QuizCardViewHolder>() {
 
     companion object {
@@ -49,10 +44,8 @@ class QuizCardsAdapter(
     fun isCardExists(lessonId: Long) =
             presenters.any { it.card.lessonId == lessonId }
 
-    override fun onCreateViewHolder(parent: ViewGroup) = QuizCardViewHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.adaptive_quiz_card_view, parent, false),
-            analytic,
-            screenManager)
+    override fun onCreateViewHolder(parent: ViewGroup) =
+            QuizCardViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.adaptive_quiz_card_view, parent, false))
 
     override fun getItemCount() =
             presenters.size

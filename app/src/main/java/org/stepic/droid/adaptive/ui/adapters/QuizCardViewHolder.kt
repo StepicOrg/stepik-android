@@ -12,17 +12,15 @@ import org.stepic.droid.adaptive.model.Reaction
 import org.stepic.droid.adaptive.ui.animations.CardAnimations
 import org.stepic.droid.adaptive.ui.custom.SwipeableLayout
 import org.stepic.droid.adaptive.ui.custom.container.ContainerView
-import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.presenters.CardPresenter
 import org.stepic.droid.core.presenters.contracts.CardView
 import org.stepic.droid.model.Submission
 import org.stepic.droid.ui.adapters.StepikRadioGroupAdapter
+import javax.inject.Inject
 
 class QuizCardViewHolder(
-        private val root: View,
-        analytic: Analytic,
-        private val screenManager: ScreenManager
+        private val root: View
 ): ContainerView.ViewHolder(root), CardView {
     private val curtain = root.curtain
     private val answersProgress = root.answersProgress
@@ -43,9 +41,12 @@ class QuizCardViewHolder(
     private val hardReaction = root.reaction_hard
     private val easyReaction = root.reaction_easy
 
-    val cardView = root.card
+    val cardView: android.support.v7.widget.CardView = root.card
 
-    private val choiceAdapter = StepikRadioGroupAdapter(root.answers, analytic)
+    private val choiceAdapter = StepikRadioGroupAdapter(root.answers)
+
+    @Inject
+    lateinit var screenManager: ScreenManager
 
     init {
         choiceAdapter.actionButton = actionButton

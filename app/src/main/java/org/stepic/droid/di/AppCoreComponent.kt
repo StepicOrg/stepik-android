@@ -90,6 +90,8 @@ interface AppCoreComponent {
 
     fun inject(someActivity: FragmentActivityBase)
 
+    fun inject(adapter: StepikRadioGroupAdapter)
+
     fun inject(adapter: CoursesAdapter)
 
     fun inject(adapter: Course)
