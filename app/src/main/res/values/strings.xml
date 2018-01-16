@@ -585,4 +585,6 @@
     <string name="adaptive_correct">CORRECT</string>
     <string name="adaptive_wrong">WRONG</string>
     <string name="adaptive_attempt_button">Solve</string>
+
+    <string name="request_error">Something went wrong</string>
 </resources>

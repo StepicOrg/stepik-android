@@ -85,7 +85,7 @@
                     android:layout_height="wrap_content"
                     style="@style/Widget.AppCompat.Button.Borderless"
                     android:text="@string/adaptive_retry"
-                    android:id="@+id/wrong_retry"
+                    android:id="@+id/wrongRetry"
                     android:visibility="gone"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true" />
@@ -198,7 +198,7 @@
                         android:layout_height="32dp"
                         android:layout_margin="16dp"
                         android:layout_gravity="center_horizontal"
-                        android:id="@+id/answers_progress" />
+                        android:id="@+id/answersProgress" />
 
                 </LinearLayout>
             </org.stepic.droid.adaptive.ui.custom.CardScrollView>
