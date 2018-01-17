@@ -338,6 +338,8 @@
 
         <activity android:name=".ui.activities.TagActivity" />
 
+        <activity android:name=".adaptive.ui.activities.AdaptiveCourseActivity" />
+
 
         <receiver
             android:name="org.stepic.droid.receivers.DownloadCompleteReceiver"

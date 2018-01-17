@@ -20,7 +20,7 @@ import org.stepic.droid.web.ViewAssignment
 import javax.inject.Inject
 
 class Card(
-        private val courseId: Long,
+        val courseId: Long,
         val lessonId: Long,
 
         var lesson: Lesson? = null,

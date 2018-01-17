@@ -10,6 +10,7 @@ import org.stepic.droid.model.Submission
 import org.stepic.droid.adaptive.model.Card
 import org.stepic.droid.adaptive.model.Reaction
 import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.base.App
 import org.stepic.droid.core.presenters.contracts.CardView
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
@@ -46,6 +47,12 @@ class CardPresenter(
     var isLoading = false
         private set
 
+    init {
+        App.componentManager()
+                .adaptiveCourseComponent(card.courseId)
+                .inject(this)
+    }
+
     override fun attachView(view: CardView) {
         super.attachView(view)
         view.setTitle(card.lesson?.title)
@@ -64,6 +71,8 @@ class CardPresenter(
     }
 
     fun destroy() {
+        App.componentManager()
+                .releaseAdaptiveCourseComponent(card.courseId)
         card.recycle()
         disposable?.dispose()
     }
