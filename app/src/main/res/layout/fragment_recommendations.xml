@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <!--<android.support.v7.widget.Toolbar-->
+            <!--android:id="@+id/toolbar"-->
+            <!--android:title=""-->
+
+            <!--android:contentInsetLeft="0dp"-->
+            <!--android:contentInsetStart="0dp"-->
+            <!--app:contentInsetLeft="0dp"-->
+            <!--app:contentInsetStart="0dp"-->
+            <!--android:contentInsetRight="0dp"-->
+            <!--android:contentInsetEnd="0dp"-->
+            <!--app:contentInsetRight="0dp"-->
+            <!--app:contentInsetEnd="0dp"-->
+
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="?attr/actionBarSize"-->
+            <!--android:background="?attr/selectableItemBackground">-->
+
+            <!--<FrameLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent">-->
+                <!--<LinearLayout-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_gravity="start|center_vertical"-->
+                    <!--android:layout_marginStart="16dp"-->
+                    <!--android:orientation="vertical">-->
+                    <!--<TextView-->
+                        <!--android:id="@+id/exp_level"-->
+                        <!--android:layout_gravity="start"-->
+                        <!--android:text="@string/exp_title"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:textColor="@color/colorGrayText"-->
+                        <!--style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"/>-->
+                    <!--<TextView-->
+                        <!--android:id="@+id/exp_level_next"-->
+                        <!--android:layout_gravity="start"-->
+                        <!--android:text="@string/exp_title"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:textSize="12sp"-->
+                        <!--android:textColor="@color/colorGrayText" />-->
+                <!--</LinearLayout>-->
+
+
+                <!--<FrameLayout-->
+                    <!--android:id="@+id/exp_bubble"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_gravity="end|center_vertical"-->
+                    <!--android:layout_marginEnd="@dimen/exp_bubble_margin">-->
+                    <!--<TextView-->
+                        <!--android:id="@+id/exp_counter"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:textStyle="bold"-->
+                        <!--android:background="@drawable/gray_circle"-->
+                        <!--android:gravity="center"/>-->
+                    <!--<TextView-->
+                        <!--android:id="@+id/exp_inc"-->
+                        <!--android:text="@string/exp_inc"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:textStyle="bold"-->
+                        <!--android:background="@drawable/green_circle"-->
+                        <!--android:textColor="@android:color/white"-->
+                        <!--android:alpha="0"-->
+                        <!--android:gravity="center" />-->
+                <!--</FrameLayout>-->
+
+                <!--<org.stepik.android.adaptive.ui.view.morphing.MorphingView-->
+                    <!--android:id="@+id/streak_success_container"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:alpha="0"-->
+                    <!--android:layout_gravity="end|center_vertical">-->
+                    <!--<TextView-->
+                        <!--android:id="@+id/streak_success"-->
+                        <!--android:textSize="18sp"-->
+                        <!--android:textStyle="bold"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:textColor="@android:color/white"-->
+                        <!--android:layout_gravity="center"-->
+                        <!--android:gravity="center" />-->
+                <!--</org.stepik.android.adaptive.ui.view.morphing.MorphingView>-->
+
+                <!--<TextView-->
+                    <!--android:id="@+id/streak_failed"-->
+                    <!--android:alpha="0"-->
+                    <!--android:text="@string/streak_failed"-->
+                    <!--android:textSize="18sp"-->
+                    <!--android:textStyle="bold"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:background="@color/colorWrong"-->
+                    <!--android:textColor="@android:color/white"-->
+                    <!--android:layout_gravity="center"-->
+                    <!--android:gravity="center" />-->
+            <!--</FrameLayout>-->
+
+        <!--</android.support.v7.widget.Toolbar>-->
+
+        <!--<me.zhanghai.android.materialprogressbar.MaterialProgressBar-->
+            <!--android:id="@+id/exp_progress"-->
+            <!--style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="2dp"-->
+            <!--app:mpb_progressStyle="horizontal"-->
+            <!--app:mpb_useIntrinsicPadding="false" />-->
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical"
+                android:id="@+id/progress">
+
+                <org.stepic.droid.ui.custom.AssetView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcAsset="loading_robot.gif"
+                    android:layout_gravity="center_horizontal"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_gravity="center_horizontal"
+                    android:id="@+id/loadingPlaceholder"/>
+            </LinearLayout>
+
+            <org.stepic.droid.adaptive.ui.custom.QuizCardsContainer
+                android:id="@+id/cardsContainer"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:orientation="vertical"
+                android:layout_gravity="center"
+                android:gravity="center_horizontal"
+                android:id="@+id/courseCompleted">
+
+                <!--<ImageView-->
+                    <!--android:layout_width="125dp"-->
+                    <!--android:layout_height="125dp"-->
+                    <!--android:src="@drawable/course_passed" />-->
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxWidth="256dp"
+                    android:gravity="center"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/adaptive_course_completed"
+                    android:id="@+id/course_completed_text"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:orientation="vertical"
+                android:layout_gravity="center"
+                android:gravity="center_horizontal"
+                android:id="@+id/error">
+
+                <ImageView
+                    android:layout_width="125dp"
+                    android:layout_height="125dp"
+                    android:src="@drawable/ic_no_wifi" />
+
+                <TextView
+                    android:id="@+id/errorMessage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:maxWidth="256dp"
+                    android:gravity="center"
+                    android:text="@string/request_error"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:text="@string/try_again"
+                    android:id="@+id/tryAgain" />
+            </LinearLayout>
+        </FrameLayout>
+    </LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

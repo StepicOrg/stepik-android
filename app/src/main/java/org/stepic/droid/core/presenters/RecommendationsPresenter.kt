@@ -53,9 +53,15 @@ constructor(
 
     private var isCourseCompleted = false
 
-    private val courseId = 0L
+    // todo: inject course id
+    private var courseId = 0L
 
-    init {
+//    init {
+//        createReaction(0, Reaction.INTERESTING)
+//    }
+
+    fun initCourse(courseId: Long) {
+        this.courseId = courseId
         createReaction(0, Reaction.INTERESTING)
     }
 
@@ -64,11 +70,13 @@ constructor(
 
         view.onLoading()
 
-        if (isCourseCompleted) {
-            view.onCourseCompleted()
-        } else {
-            resubscribe()
-            error?.let(this::onError)
+        when {
+            isCourseCompleted -> view.onCourseCompleted()
+            courseId == 0L -> view.onCourseNotSupported()
+            else -> {
+                resubscribe()
+                error?.let(this::onError)
+            }
         }
 
         view.onAdapter(adapter)

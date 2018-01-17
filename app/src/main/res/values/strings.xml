@@ -585,6 +585,7 @@
     <string name="adaptive_correct">CORRECT</string>
     <string name="adaptive_wrong">WRONG</string>
     <string name="adaptive_attempt_button">Solve</string>
+    <string name="adaptive_course_completed">Congratulations!\n\nYou have successfully completed the course!</string>
 
     <string name="request_error">Something went wrong</string>
 </resources>

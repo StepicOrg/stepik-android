@@ -5,4 +5,10 @@
         <item>@string/medium_quality</item>
         <item>@string/high_quality</item>
     </string-array>
+    <string-array name="recommendation_loading_placeholders">
+        <item>Applying your reaction…</item>
+        <item>Looking for next assignment…</item>
+        <item>Robots still working…</item>
+        <item>Making some math…</item>
+    </string-array>
 </resources>
