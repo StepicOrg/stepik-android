@@ -40,7 +40,7 @@ class Card(
 
     init {
         App.componentManager()
-                .stepComponent(lessonId)
+                .adaptiveCourseComponent(courseId)
                 .inject(this)
     }
 

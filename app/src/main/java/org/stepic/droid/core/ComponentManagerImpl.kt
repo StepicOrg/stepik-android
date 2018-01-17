@@ -1,6 +1,7 @@
 package org.stepic.droid.core
 
 import org.stepic.droid.di.AppCoreComponent
+import org.stepic.droid.di.adaptive.AdaptiveCourseComponent
 import org.stepic.droid.di.course_general.CourseGeneralComponent
 import org.stepic.droid.di.downloads.DownloadsComponent
 import org.stepic.droid.di.login.LoginComponent
@@ -66,6 +67,31 @@ class ComponentManagerImpl(private val appCoreComponent: AppCoreComponent) : Com
         stepComponentCountMap[stepId] = count - 1
     }
 
+
+    // Adaptive courses
+
+    private val adaptiveCourseComponentMap = HashMap<Long, AdaptiveCourseComponent>()
+    private val adaptiveCourseComponentCountMap = HashMap<Long, Int>()
+
+    override fun adaptiveCourseComponent(courseId: Long): AdaptiveCourseComponent {
+        val count = adaptiveCourseComponentCountMap[courseId] ?: 0
+        adaptiveCourseComponentCountMap[courseId] = count + 1
+        return adaptiveCourseComponentMap.getOrPut(courseId) {
+            appCoreComponent
+                    .adaptiveCourseComponentBuilder()
+                    .build()
+        }
+    }
+
+    @SuppressFBWarnings(value = "RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE", justification = "false positive")
+    override fun releaseAdaptiveCourseComponent(courseId: Long) {
+        val count: Int = stepComponentCountMap[courseId] ?: throw IllegalStateException("release adaptive course component, which is not allocated")
+        if (count == 1) {
+            //it is last
+            adaptiveCourseComponentMap.remove(courseId)
+        }
+        adaptiveCourseComponentCountMap[courseId] = count - 1
+    }
 
     // Login
 
