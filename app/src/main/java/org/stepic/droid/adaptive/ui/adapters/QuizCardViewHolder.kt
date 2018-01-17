@@ -12,6 +12,7 @@ import org.stepic.droid.adaptive.model.Reaction
 import org.stepic.droid.adaptive.ui.animations.CardAnimations
 import org.stepic.droid.adaptive.ui.custom.SwipeableLayout
 import org.stepic.droid.adaptive.ui.custom.container.ContainerView
+import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.presenters.CardPresenter
 import org.stepic.droid.core.presenters.contracts.CardView
@@ -49,6 +50,8 @@ class QuizCardViewHolder(
     lateinit var screenManager: ScreenManager
 
     init {
+        App.component().inject(this)
+
         choiceAdapter.actionButton = actionButton
 
         question.webViewClient = object : WebViewClient() {
