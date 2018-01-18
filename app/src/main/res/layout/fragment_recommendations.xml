@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout android:layout_width="match_parent"
+<android.support.design.widget.CoordinatorLayout xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -62,7 +63,9 @@
                         android:layout_height="match_parent"
                         android:textStyle="bold"
                         android:background="@drawable/gray_circle"
-                        android:gravity="center"/>
+                        fontPath="fonts/Roboto-Bold.ttf"
+                        android:gravity="center"
+                        tools:ignore="MissingPrefix" />
                     <TextView
                         android:id="@+id/exp_inc"
                         android:text="@string/adaptive_exp_inc"
@@ -70,9 +73,11 @@
                         android:layout_height="match_parent"
                         android:textStyle="bold"
                         android:background="@drawable/green_circle"
+                        fontPath="fonts/Roboto-Bold.ttf"
                         android:textColor="@android:color/white"
                         android:alpha="0"
-                        android:gravity="center" />
+                        android:gravity="center"
+                        tools:ignore="MissingPrefix" />
                 </FrameLayout>
 
                 <!--<org.stepik.android.adaptive.ui.view.morphing.MorphingView-->
@@ -109,10 +114,11 @@
         </android.support.v7.widget.Toolbar>
 
         <me.zhanghai.android.materialprogressbar.MaterialProgressBar
-            android:id="@+id/exp_progress"
+            android:id="@+id/expProgress"
             style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal"
             android:layout_width="match_parent"
             android:layout_height="2dp"
+            android:tint="@color/stepic_brand_primary"
             app:mpb_progressStyle="horizontal"
             app:mpb_useIntrinsicPadding="false" />
 
@@ -196,7 +202,7 @@
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/Widget.AppCompat.Button.Borderless"
+                    style="@style/Adaptive.BorderlessButton"
                     android:text="@string/try_again"
                     android:id="@+id/tryAgain" />
             </LinearLayout>

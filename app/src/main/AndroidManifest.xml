@@ -338,7 +338,9 @@
 
         <activity android:name=".ui.activities.TagActivity" />
 
-        <activity android:name=".adaptive.ui.activities.AdaptiveCourseActivity" />
+        <activity
+            android:name=".adaptive.ui.activities.AdaptiveCourseActivity"
+            android:theme="@style/Adaptive" />
 
 
         <receiver

@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
 
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
@@ -32,13 +33,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/adaptive_color_title"
-                    android:textStyle="bold"
+                    fontPath="fonts/Roboto-Bold.ttf"
                     android:textSize="18sp"
                     android:paddingTop="12dp"
                     android:paddingBottom="12dp"
                     android:paddingLeft="16dp"
                     android:paddingRight="16dp"
-                    android:gravity="start"/>
+                    android:gravity="start"
+                    tools:ignore="MissingPrefix" />
                 <include layout="@layout/view_stroke" />
             </LinearLayout>
 
@@ -52,7 +54,7 @@
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/Widget.AppCompat.Button.Borderless"
+                    style="@style/Adaptive.BorderlessButton"
                     android:text="@string/adaptive_attempt_button"
                     android:id="@+id/solve"
                     android:visibility="gone"
@@ -62,7 +64,7 @@
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/Widget.AppCompat.Button.Borderless"
+                    style="@style/Adaptive.BorderlessButton"
                     android:text="@string/submit"
                     android:gravity="start|center_vertical"
                     android:id="@+id/submit"
@@ -73,7 +75,7 @@
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/Widget.AppCompat.Button.Borderless"
+                    style="@style/Adaptive.BorderlessButton"
                     android:text="@string/next"
                     android:id="@+id/next"
                     android:visibility="gone"
@@ -83,7 +85,7 @@
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/Widget.AppCompat.Button.Borderless"
+                    style="@style/Adaptive.BorderlessButton"
                     android:text="@string/adaptive_retry"
                     android:id="@+id/wrongRetry"
                     android:visibility="gone"
@@ -165,6 +167,7 @@
                     android:orientation="vertical">
                     <org.stepic.droid.ui.custom.LatexSupportableWebView
                         android:id="@+id/question"
+                        android:layout_margin="16dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
 
