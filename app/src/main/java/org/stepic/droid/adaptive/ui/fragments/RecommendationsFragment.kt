@@ -1,6 +1,7 @@
 package org.stepic.droid.adaptive.ui.fragments
 
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -50,6 +51,11 @@ class RecommendationsFragment : FragmentBase(), RecommendationsView {
 
         tryAgain.setOnClickListener {
             recommendationsPresenter.retry()
+        }
+
+        (activity as? AppCompatActivity)?.let {
+            it.setSupportActionBar(toolbar)
+            it.supportActionBar?.setDisplayHomeAsUpEnabled(true)
         }
     }
 
