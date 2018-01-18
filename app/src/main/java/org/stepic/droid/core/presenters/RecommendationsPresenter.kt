@@ -107,8 +107,8 @@ constructor(
         } else {
             val size = cards.size
             recommendations
-                    .filter { !isCardExists(it.lessonId) }
-                    .forEach { cards.add(Card(courseId, it.lessonId)) }
+                    .filter { !isCardExists(it.lesson) }
+                    .forEach { cards.add(Card(courseId, it.lesson)) }
 
             if (size == 0) resubscribe()
         }

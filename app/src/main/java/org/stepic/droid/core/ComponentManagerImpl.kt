@@ -85,10 +85,11 @@ class ComponentManagerImpl(private val appCoreComponent: AppCoreComponent) : Com
 
     @SuppressFBWarnings(value = "RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE", justification = "false positive")
     override fun releaseAdaptiveCourseComponent(courseId: Long) {
-        val count: Int = stepComponentCountMap[courseId] ?: throw IllegalStateException("release adaptive course component, which is not allocated")
+        val count: Int = adaptiveCourseComponentCountMap[courseId] ?: throw IllegalStateException("release adaptive course component, which is not allocated")
         if (count == 1) {
             //it is last
             adaptiveCourseComponentMap.remove(courseId)
+            adaptiveCourseComponentCountMap.remove(courseId)
         }
         adaptiveCourseComponentCountMap[courseId] = count - 1
     }
