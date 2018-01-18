@@ -575,5 +575,11 @@
     <string name="adaptive_attempt_button">Решить</string>
     <string name="adaptive_course_completed">Поздравляем!\n\nВы успешно прошли курс!</string>
 
+    <string name="adaptive_exp_title">Уровень <b>%d</b></string>
+    <string name="adaptive_exp_level_title">Новый уровень!</string>
+    <string name="adaptive_exp_subtitle">%d опыта до нового уровня</string>
+
+    <string name="adaptive_streak_failed">Серия потеряна</string>
+
     <string name="request_error">Что-то пошло не так</string>
 </resources>

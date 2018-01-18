@@ -587,5 +587,13 @@
     <string name="adaptive_attempt_button">Solve</string>
     <string name="adaptive_course_completed">Congratulations!\n\nYou have successfully completed the course!</string>
 
+    <string name="adaptive_exp_title">Level <b>%d</b></string>
+    <string name="adaptive_exp_level_title">New level!</string>
+    <string name="adaptive_exp_inc" translatable="false">+%d</string>
+    <string name="adaptive_exp_current_progress" translatable="false">%d / %d</string>
+    <string name="adaptive_exp_subtitle">%d points until next level</string>
+
+    <string name="adaptive_streak_failed">Streak lost</string>
+
     <string name="request_error">Something went wrong</string>
 </resources>

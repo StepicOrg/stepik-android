@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="adaptive_streak_success">
+        <item quantity="one">Серия из %d ответа</item>
+        <item quantity="few">Серия из %d ответов</item>
+        <item quantity="many">Серия из %d ответов</item>
+        <item quantity="other">Серия из %d ответов</item>
+    </plurals>
+</resources>

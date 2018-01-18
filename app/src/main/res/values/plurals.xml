@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="adaptive_streak_success">
+        <item quantity="other">%d in a row</item>
+    </plurals>
+</resources>
