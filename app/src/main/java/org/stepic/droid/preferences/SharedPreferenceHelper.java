@@ -34,6 +34,7 @@ public class SharedPreferenceHelper {
     private static final String NEED_DROP_116 = "need_drop_116";
     private static final String DISCOUNTING_POLICY_DIALOG = "discounting_pol_dialog";
     private static final String KEEP_SCREEN_ON_STEPS = "keep_screen_on_steps";
+    private static final String IS_ADAPTIVE_MODE_ENABLED = "is_adaptive_mode_enabled";
     private static final String ROTATE_PREF = "rotate_pref";
     private static final String NOTIFICATION_LEARN_DISABLED = "notification_disabled_by_user";
     private static final String NOTIFICATION_COMMENT_DISABLED = "notification_comment_disabled";
@@ -381,6 +382,14 @@ public class SharedPreferenceHelper {
 
     public void setKeepScreenOnSteps(boolean isChecked) {
         put(PreferenceType.DEVICE_SPECIFIC, KEEP_SCREEN_ON_STEPS, isChecked);
+    }
+
+    public boolean isAdaptiveModeEnabled() {
+        return getBoolean(PreferenceType.DEVICE_SPECIFIC, IS_ADAPTIVE_MODE_ENABLED, true);
+    }
+
+    public void setAdaptiveModeEnabled(boolean isEnabled) {
+        put(PreferenceType.DEVICE_SPECIFIC, IS_ADAPTIVE_MODE_ENABLED, isEnabled);
     }
 
     public void setNeedToShowVideoQualityExplanation(boolean needToShowCalendarWidget) {

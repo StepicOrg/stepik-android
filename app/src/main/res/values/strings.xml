@@ -327,6 +327,7 @@
         to receive any points for this task. Are you sure?
     </string>
     <string name="keep_screen_on_title_settings">Keep the screen on, while solving steps</string>
+    <string name="adaptive_mode_settings">Adaptive courses</string>
     <string name="all_title">All</string>
     <string name="learning_title">Learning</string>
     <string name="reviews_title">Reviews</string>

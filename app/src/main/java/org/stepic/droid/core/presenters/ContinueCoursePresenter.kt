@@ -9,6 +9,7 @@ import org.stepic.droid.model.Course
 import org.stepic.droid.model.Section
 import org.stepic.droid.model.Step
 import org.stepic.droid.model.Unit
+import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.storage.repositories.Repository
 import org.stepic.droid.util.DbParseHelper
@@ -27,7 +28,8 @@ class ContinueCoursePresenter
         private val threadPoolExecutor: ThreadPoolExecutor,
         private val mainHandler: MainHandler,
         private val sectionRepository: Repository<Section>,
-        private val firebaseRemoteConfig: FirebaseRemoteConfig
+        private val firebaseRemoteConfig: FirebaseRemoteConfig,
+        private val userPreferences: UserPreferences
 ) : PresenterBase<ContinueCourseView>() {
 
     private val isHandling = AtomicBoolean(false)
@@ -113,10 +115,11 @@ class ContinueCoursePresenter
         }
     }
 
-    private fun isAdaptive(courseId: Long) = DbParseHelper
-            .parseStringToLongArray(firebaseRemoteConfig.getString(RemoteConfig.ADAPTIVE_COURSES),",")
-            ?.contains(courseId)
-            ?: false
+    private fun isAdaptive(courseId: Long) =
+            userPreferences.isAdaptiveModeEnabled &&
+            DbParseHelper.parseStringToLongArray(firebaseRemoteConfig.getString(RemoteConfig.ADAPTIVE_COURSES),",")
+                ?.contains(courseId)
+                ?: false
 
     private fun fetchUnit(unitId: Long): Unit {
         var unit = databaseFacade.getUnitById(unitId)
