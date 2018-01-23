@@ -4,19 +4,15 @@ import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.Single
 import io.reactivex.SingleObserver
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import org.stepic.droid.base.App
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.model.Attempt
 import org.stepic.droid.model.Lesson
 import org.stepic.droid.model.Step
-import org.stepic.droid.model.Unit
 import org.stepic.droid.web.Api
-import org.stepic.droid.web.ViewAssignment
 import javax.inject.Inject
 
 class Card(
@@ -62,8 +58,8 @@ class Card(
 
         if (stepSubscription == null || stepSubscription?.isDisposed == true && step == null) {
             stepSubscription = api.getStepsByLessonId(lessonId)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(backgroundScheduler)
+                    .observeOn(mainScheduler)
                     .subscribe({ setStep(it.steps?.firstOrNull()) }, { onError(it) })
         } else {
             setStep(step)
@@ -71,8 +67,8 @@ class Card(
 
         if (lessonDisposable == null || lessonDisposable?.isDisposed == true && lesson == null) {
             lessonDisposable = api.getLessons(lessonId)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(backgroundScheduler)
+                    .observeOn(mainScheduler)
                     .subscribe({ setLesson(it.lessons?.firstOrNull()) }, { onError(it) })
         }
     }
@@ -92,18 +88,7 @@ class Card(
                     .subscribe({ setAttempt(it) }, { onError(it) })
         }
 
-        compositeDisposable.add(api.getUnits(courseId, lessonId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.io())
-                .subscribe({ reportView(it.units?.firstOrNull(), newStep.id) }, {}))
         notifyDataChanged()
-    }
-
-    private fun reportView(unit: Unit?, stepId: Long) = unit?.assignments?.firstOrNull().let { assignmentId ->
-        compositeDisposable.add(api.postViewedReactive(ViewAssignment(assignmentId, stepId))
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.io())
-                .subscribe({}, {}))
     }
 
     private fun setLesson(lesson: Lesson?) = lesson?.let {

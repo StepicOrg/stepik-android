@@ -12,12 +12,16 @@ import org.stepic.droid.adaptive.model.Card
 import org.stepic.droid.adaptive.model.Reaction
 import org.stepic.droid.adaptive.model.RecommendationReaction
 import org.stepic.droid.adaptive.ui.adapters.QuizCardsAdapter
+import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.presenters.contracts.RecommendationsView
 import org.stepic.droid.di.adaptive.AdaptiveCourseScope
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
+import org.stepic.droid.model.PersistentLastStep
 import org.stepic.droid.preferences.SharedPreferenceHelper
+import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.web.Api
+import org.stepic.droid.web.ViewAssignment
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse
 import retrofit2.HttpException
 import java.util.*
@@ -32,8 +36,10 @@ constructor(
         private val backgroundScheduler: Scheduler,
         @MainScheduler
         private val mainScheduler: Scheduler,
-        private val sharedPreferenceHelper: SharedPreferenceHelper
-        ) : PresenterBase<RecommendationsView>(), AdaptiveReactionListener, AnswerListener {
+        private val sharedPreferenceHelper: SharedPreferenceHelper,
+        private val databaseFacade: DatabaseFacade,
+        private val screenManager: ScreenManager
+) : PresenterBase<RecommendationsView>(), AdaptiveReactionListener, AnswerListener {
 
     companion object {
         private const val CARDS_IN_CACHE = 6
@@ -145,6 +151,7 @@ constructor(
     }
 
     private fun onCardDataLoaded(card: Card) {
+        reportView(card)
         adapter.add(card)
         view?.onCardLoaded()
         cards.poll()
@@ -179,5 +186,19 @@ constructor(
             }
         }
         return responseObservable
+    }
+
+    private fun reportView(card: Card) {
+        compositeDisposable.add(api.getUnits(courseId, card.lessonId)
+                .subscribeOn(backgroundScheduler)
+                .observeOn(backgroundScheduler)
+                .subscribe({ response ->
+                    val unit = response.units?.firstOrNull()
+                    val stepId = card.step?.id ?: 0
+                    unit?.assignments?.firstOrNull()?.let { assignmentId ->
+                        screenManager.pushToViewedQueue(ViewAssignment(assignmentId, stepId))
+                        databaseFacade.updateLastStep(PersistentLastStep(courseId, stepId, unit.id))
+                    }
+                }, {}))
     }
 }
