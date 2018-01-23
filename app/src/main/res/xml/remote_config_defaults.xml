@@ -16,4 +16,8 @@
         <key>show_notifications_badges</key>
         <value>false</value>
     </entry>
+    <entry>
+        <key>adaptive_courses</key>
+        <value></value>
+    </entry>
 </defaultsMap>

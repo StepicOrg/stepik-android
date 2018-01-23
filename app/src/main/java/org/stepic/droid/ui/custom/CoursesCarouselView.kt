@@ -222,6 +222,11 @@ constructor(
         screenManager.continueCourse(activity, courseId, section, lessonId, unitId, stepPosition.toLong())
     }
 
+    override fun onOpenAdaptiveCourse(courseId: Long) {
+        ProgressHelper.dismiss(fragmentManager, continueLoadingTag)
+        screenManager.continueAdaptiveCourse(activity, courseId)
+    }
+
     override fun onAnyProblemWhileContinue(course: Course) {
         ProgressHelper.dismiss(fragmentManager, continueLoadingTag)
         screenManager.showSections(activity, course)
