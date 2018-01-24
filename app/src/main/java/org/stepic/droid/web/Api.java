@@ -7,10 +7,13 @@ import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.NotificationCategory;
 import org.stepic.droid.model.Reply;
+import org.stepic.droid.model.Submission;
 import org.stepic.droid.model.Tag;
+import org.stepic.droid.adaptive.model.RecommendationReaction;
 import org.stepic.droid.model.comments.VoteValue;
 import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.social.SocialManager;
+import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
 
 import io.reactivex.Completable;
 import io.reactivex.Single;
@@ -48,11 +51,17 @@ public interface Api {
      */
     Call<UnitMetaResponse> getUnits(long[] units);
 
+    Single<UnitMetaResponse> getUnits(long courseId, long lessonId);
+
     Call<LessonStepicResponse> getLessons(long[] lessons);
+
+    Single<LessonStepicResponse> getLessons(long lessonId);
 
     Call<StepResponse> getSteps(long[] steps);
 
     Single<StepResponse> getStepsReactive(long[] steps);
+
+    Single<StepResponse> getStepsByLessonId(long lessonId);
 
     @Nullable
     Call<Void> dropCourse(long courseId);
@@ -64,6 +73,8 @@ public interface Api {
     Call<AssignmentResponse> getAssignments(long[] assignmentsIds);
 
     Call<Void> postViewed(ViewAssignment stepAssignment);
+
+    Completable postViewedReactive(ViewAssignment stepAssignment);
 
     void loginWithSocial(FragmentActivity activity, ISocialType type);
 
@@ -77,11 +88,19 @@ public interface Api {
 
     Call<AttemptResponse> createNewAttempt(long stepId);
 
+    Single<AttemptResponse> createNewAttemptReactive(long stepId);
+
     Call<SubmissionResponse> createNewSubmission(Reply reply, long attemptId);
+
+    Completable createNewSubmissionReactive(Submission submission);
 
     Call<AttemptResponse> getExistingAttempts(long stepId);
 
+    Single<AttemptResponse> getExistingAttemptsReactive(long stepId);
+
     Call<SubmissionResponse> getSubmissions(long attemptId);
+
+    Single<SubmissionResponse> getSubmissionsReactive(long attemptId);
 
     Call<SubmissionResponse> getSubmissionForStep(long stepId);
 
@@ -142,4 +161,9 @@ public interface Api {
     Single<TagResponse> getFeaturedTags();
 
     Single<SearchResultResponse> getSearchResultsOfTag(int page, @NotNull Tag tag);
+
+
+    Single<RecommendationsResponse> getNextRecommendations(long courseId, int count);
+
+    Completable createReaction(RecommendationReaction reaction);
 }

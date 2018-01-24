@@ -27,11 +27,11 @@ public class StepikRadioButton extends StepikOptionView {
 
     @Override
     public int getCheckedDrawableForOption() {
-        return R.drawable.ic_radio_button_checked_white_24px;
+        return R.drawable.ic_radio_button_filled;
     }
 
     @Override
     public int getUncheckedDrawableForOption() {
-        return R.drawable.ic_radio_button_unchecked_white_24px;
+        return R.drawable.ic_radio_button;
     }
 }

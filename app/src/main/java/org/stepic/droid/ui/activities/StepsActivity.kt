@@ -23,7 +23,7 @@ class StepsActivity : SingleFragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         if (savedInstanceState == null) {
             val isNeedReverseAnimation = intent?.extras?.getBoolean(needReverseAnimationKey, false)
-            if (isNeedReverseAnimation ?: false) {
+            if (isNeedReverseAnimation == true) {
                 overridePendingTransition(R.anim.slide_in_from_start, R.anim.slide_out_to_end)
             } else {
                 overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start)

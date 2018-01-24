@@ -525,10 +525,14 @@ public class CourseDetailFragment extends FragmentBase implements
     }
 
     @Override
-    public void onSuccessJoin(@NotNull Course joinedCourse) {
+    public void onSuccessJoin(@NotNull Course joinedCourse, boolean isAdaptive) {
         if (course != null && joinedCourse.getCourseId() == course.getCourseId()) {
             joinedCourse.setEnrollment((int) joinedCourse.getCourseId());
-            getScreenManager().showSections(getActivity(), course, true);
+            if (isAdaptive) {
+                getScreenManager().continueAdaptiveCourse(getActivity(), course);
+            } else {
+                getScreenManager().showSections(getActivity(), course, true);
+            }
             finish();
         }
         ProgressHelper.dismiss(joinCourseSpinner);

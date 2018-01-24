@@ -221,7 +221,7 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
         this.listener = listener;
     }
 
-    interface OnWebViewImageClicked {
+    public interface OnWebViewImageClicked {
         void onClick(String path);
     }
 

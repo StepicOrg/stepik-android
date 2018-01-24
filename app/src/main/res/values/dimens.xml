@@ -177,4 +177,8 @@
     <dimen name="notification_icon_size">32dp</dimen>
     <dimen name="notification_icon_radius">4dp</dimen>
     <dimen name="notification_icon_vertical_margin">4dp</dimen>
+
+
+    <dimen name="adaptive_exp_bubble_corner_radius">24dp</dimen>
+    <dimen name="adaptive_exp_bubble_margin">16dp</dimen>
 </resources>

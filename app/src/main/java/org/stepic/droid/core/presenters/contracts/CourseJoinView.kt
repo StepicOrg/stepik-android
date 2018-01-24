@@ -7,7 +7,7 @@ interface CourseJoinView {
 
     fun setEnabledJoinButton(isEnabled: Boolean)
 
-    fun onFailJoin(code : Int)
+    fun onFailJoin(code: Int)
 
-    fun onSuccessJoin(course : Course)
+    fun onSuccessJoin(course: Course, isAdaptive: Boolean)
 }

@@ -18,6 +18,8 @@ import android.widget.Toast;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
+import org.stepic.droid.adaptive.ui.activities.AdaptiveCourseActivity;
+import org.stepic.droid.adaptive.ui.activities.AdaptiveOnboardingActivity;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.configuration.Config;
@@ -470,6 +472,23 @@ public class ScreenManagerImpl implements ScreenManager {
     public void openTermsOfServiceWeb(Activity activity) {
         String termsOfServiceUrl = config.getTermsOfServiceUrl();
         openInWeb(activity, termsOfServiceUrl);
+    }
+
+    @Override
+    public void continueAdaptiveCourse(Activity activity, Course course) {
+        TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(activity)
+                .addNextIntent(new Intent(activity, MainFeedActivity.class)
+                .setAction(AppConstants.INTERNAL_STEPIK_ACTION));
+
+        Intent adaptiveCourseIntent = new Intent(activity, AdaptiveCourseActivity.class);
+        adaptiveCourseIntent.putExtra(AppConstants.KEY_COURSE_BUNDLE, course);
+        taskStackBuilder.addNextIntent(adaptiveCourseIntent);
+
+        if (sharedPreferences.isFirstAdaptiveCourse()) {
+            taskStackBuilder.addNextIntent(new Intent(activity, AdaptiveOnboardingActivity.class));
+        }
+
+        taskStackBuilder.startActivities();
     }
 
     @Override

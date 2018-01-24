@@ -1,6 +1,7 @@
 package org.stepic.droid.core
 
 import android.support.annotation.MainThread
+import org.stepic.droid.di.adaptive.AdaptiveCourseComponent
 import org.stepic.droid.di.course_general.CourseGeneralComponent
 import org.stepic.droid.di.downloads.DownloadsComponent
 import org.stepic.droid.di.login.LoginComponent
@@ -43,4 +44,10 @@ interface ComponentManager {
 
     @MainThread
     fun releaseStepComponent(stepId: Long)
+
+    @MainThread
+    fun adaptiveCourseComponent(courseId: Long): AdaptiveCourseComponent
+
+    @MainThread
+    fun releaseAdaptiveCourseComponent(courseId: Long)
 }
