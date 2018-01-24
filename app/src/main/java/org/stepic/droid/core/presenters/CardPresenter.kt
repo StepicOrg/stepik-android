@@ -1,5 +1,6 @@
 package org.stepic.droid.core.presenters
 
+import android.os.Bundle
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -14,6 +15,7 @@ import org.stepic.droid.base.App
 import org.stepic.droid.core.presenters.contracts.CardView
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
+import org.stepic.droid.util.getStepType
 import org.stepic.droid.web.Api
 import org.stepic.droid.web.SubmissionResponse
 import retrofit2.HttpException
@@ -111,7 +113,9 @@ class CardPresenter(
                     .observeOn(mainScheduler)
                     .subscribe(this::onSubmissionLoaded, this::onError)
 
-            analytic.reportEvent(Analytic.Steps.SUBMISSION_CREATED)
+            val bundle = Bundle()
+            bundle.putString(Analytic.Steps.STEP_TYPE_KEY, card.step.getStepType())
+            analytic.reportEvent(Analytic.Steps.SUBMISSION_CREATED, bundle)
             analytic.reportEvent(Analytic.Adaptive.ADAPTIVE_SUBMISSION_CREATED)
         }
     }
@@ -133,13 +137,14 @@ class CardPresenter(
             } else {
                 isLoading = false
 
-//                AnalyticMgr.getInstance().answerResult(card.step, it)
                 if (it.status == Submission.Status.CORRECT) {
+                    analytic.reportEvent(Analytic.Steps.CORRECT_SUBMISSION_FILL, (card.step?.id ?: 0).toString())
                     listener?.createReaction(card.lessonId, Reaction.SOLVED)
                     answerListener?.onCorrectAnswer(it.id)
                     card.onCorrect()
                 }
                 if (it.status == Submission.Status.WRONG) {
+                    analytic.reportEvent(Analytic.Steps.WRONG_SUBMISSION_FILL, (card.step?.id ?: 0).toString())
                     answerListener?.onWrongAnswer()
                 }
                 view?.setSubmission(it, true)
