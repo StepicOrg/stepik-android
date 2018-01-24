@@ -112,6 +112,7 @@ class CardPresenter(
                     .subscribe(this::onSubmissionLoaded, this::onError)
 
             analytic.reportEvent(Analytic.Steps.SUBMISSION_CREATED)
+            analytic.reportEvent(Analytic.Adaptive.ADAPTIVE_SUBMISSION_CREATED)
         }
     }
 
