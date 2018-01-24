@@ -15,7 +15,7 @@ constructor(
 
     fun isAdaptive(courseId: Long) =
             userPreferences.isAdaptiveModeEnabled &&
-            DbParseHelper.parseStringToLongArray(firebaseRemoteConfig.getString(RemoteConfig.ADAPTIVE_COURSES),",")
+            DbParseHelper.parseStringToLongArray(firebaseRemoteConfig.getString(RemoteConfig.ADAPTIVE_COURSES), ",")
                     ?.contains(courseId)
                     ?: false
 

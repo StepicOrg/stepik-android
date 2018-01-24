@@ -54,8 +54,6 @@ public final class SwipeableLayout extends FrameLayout {
             }
         });
 
-//        this.listener = new SwipeListener();
-
         this.screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
         this.screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
 
@@ -127,13 +125,11 @@ public final class SwipeableLayout extends FrameLayout {
                     setTranslationX(elemX);
                     setTranslationY(elemY);
 
-//                    if (!Util.isLowAndroidVersion()) { // due to some lags on < 5.0
                     float rotation = ROTATION_ANGLE * 2 * (elemX - viewX) / getWidth();
                     if (touchPosition == TOUCH_BELOW) {
                         rotation = -rotation;
                     }
                     setRotation(rotation);
-//                    } // seems that webview bug disappeared :thinking_face:
 
                     for (SwipeListener l : listeners) {
                         l.onScroll(elemX / MIN_FLING_TRANSLATION / 2);
