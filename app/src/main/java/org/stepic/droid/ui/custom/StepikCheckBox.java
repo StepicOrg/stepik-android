@@ -20,11 +20,11 @@ public class StepikCheckBox extends StepikOptionView {
 
     @Override
     public int getCheckedDrawableForOption() {
-        return R.drawable.ic_check_box_white_24px;
+        return R.drawable.ic_check_box_filled;
     }
 
     @Override
     public int getUncheckedDrawableForOption() {
-        return R.drawable.ic_check_box_outline_blank_white_24px;
+        return R.drawable.ic_check_box;
     }
 }

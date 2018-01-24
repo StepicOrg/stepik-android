@@ -165,4 +165,7 @@
     <color name="adaptive_color_title">#333</color>
 
     <color name="color_stroke">#E4E4E4</color>
+
+
+    <color name="colorRadioButtonDefault">#CCCED1</color>
 </resources>
