@@ -7,7 +7,7 @@ import org.stepic.droid.util.AppConstants
 
 class AdaptiveCourseActivity : SingleFragmentActivity() {
     override fun createFragment() =
-            RecommendationsFragment.newInstance(intent.getLongExtra(AppConstants.KEY_COURSE_LONG_ID, 0))
+            RecommendationsFragment.newInstance(intent.getParcelableExtra(AppConstants.KEY_COURSE_BUNDLE))
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         if (item?.itemId == android.R.id.home) {

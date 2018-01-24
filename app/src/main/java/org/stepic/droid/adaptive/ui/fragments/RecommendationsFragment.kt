@@ -1,7 +1,6 @@
 package org.stepic.droid.adaptive.ui.fragments
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,14 +11,16 @@ import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.core.presenters.RecommendationsPresenter
 import org.stepic.droid.core.presenters.contracts.RecommendationsView
+import org.stepic.droid.model.Course
+import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.MathUtli
 import javax.inject.Inject
 
 class RecommendationsFragment : FragmentBase(), RecommendationsView {
     companion object {
-        fun newInstance(courseId: Long): RecommendationsFragment {
-            val args = Bundle().apply { putLong(AppConstants.COURSE_ID_KEY, courseId) }
+        fun newInstance(course: Course): RecommendationsFragment {
+            val args = Bundle().apply { putParcelable(AppConstants.KEY_COURSE_BUNDLE, course) }
             return RecommendationsFragment().apply { arguments = args }
         }
     }
@@ -27,19 +28,19 @@ class RecommendationsFragment : FragmentBase(), RecommendationsView {
     @Inject
     lateinit var recommendationsPresenter: RecommendationsPresenter
 
-    private var courseId: Long = 0
+    private var course: Course? = null
 
     private val loadingPlaceholders by lazy { resources.getStringArray(R.array.recommendation_loading_placeholders) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        courseId = arguments.getLong(AppConstants.COURSE_ID_KEY)
+        course = arguments.getParcelable(AppConstants.KEY_COURSE_BUNDLE)
         super.onCreate(savedInstanceState)
-        recommendationsPresenter.initCourse(courseId)
+        recommendationsPresenter.initCourse(course?.courseId ?: 0)
     }
 
     override fun injectComponent() {
         App.componentManager()
-                .adaptiveCourseComponent(courseId)
+                .adaptiveCourseComponent(course?.courseId ?: 0)
                 .inject(this)
     }
 
@@ -53,10 +54,12 @@ class RecommendationsFragment : FragmentBase(), RecommendationsView {
             recommendationsPresenter.retry()
         }
 
-        (activity as? AppCompatActivity)?.let {
-            it.setSupportActionBar(toolbar)
-            it.supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        }
+//        (activity as? AppCompatActivity)?.let {
+//            it.setSupportActionBar(toolbar)
+//            it.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+//        }
+
+        initCenteredToolbar(title = course?.title ?: "", showHomeButton = true)
     }
 
     override fun onAdapter(cardsAdapter: QuizCardsAdapter) {
@@ -112,7 +115,7 @@ class RecommendationsFragment : FragmentBase(), RecommendationsView {
 
     override fun onReleaseComponent() {
         App.componentManager()
-                .releaseAdaptiveCourseComponent(courseId)
+                .releaseAdaptiveCourseComponent(course?.courseId ?: 0)
     }
 
     override fun onDestroy() {

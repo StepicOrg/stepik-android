@@ -420,8 +420,6 @@
         <item name="colorPrimaryDark">@color/new_accent_color</item>
         <item name="colorAccent">@color/new_accent_color</item>
 
-        <item name="android:textSize">14sp</item>
-
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>

@@ -41,7 +41,7 @@ class ContinueCoursePresenter
                 try {
                     if (isAdaptive(course.courseId)) {
                         mainHandler.post {
-                            view?.onOpenAdaptiveCourse(course.courseId)
+                            view?.onOpenAdaptiveCourse(course)
                         }
                         return@execute
                     }

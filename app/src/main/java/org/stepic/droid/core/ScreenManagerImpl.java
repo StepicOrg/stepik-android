@@ -474,9 +474,9 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void continueAdaptiveCourse(Activity activity, long courseId) {
+    public void continueAdaptiveCourse(Activity activity, Course course) {
         Intent intent = new Intent(activity, AdaptiveCourseActivity.class);
-        intent.putExtra(AppConstants.KEY_COURSE_LONG_ID, courseId);
+        intent.putExtra(AppConstants.KEY_COURSE_BUNDLE, course);
         activity.startActivity(intent);
     }
 

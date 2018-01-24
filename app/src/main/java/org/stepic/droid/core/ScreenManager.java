@@ -122,7 +122,7 @@ public interface ScreenManager {
 
     void openTermsOfServiceWeb(Activity activity);
 
-    void continueAdaptiveCourse(Activity activity, long courseId);
+    void continueAdaptiveCourse(Activity activity, Course course);
 
     void continueCourse(Activity activity, long courseId, Section section, long lessonId, long unitId, long stepPosition);
 
