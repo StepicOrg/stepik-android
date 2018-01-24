@@ -10,9 +10,13 @@ object DbParseHelper {
         if (str == null) return null
 
         val strArray = str.split(separator)
-        val result = LongArray(strArray.size)
-        strArray.forEachIndexed { i, value -> result[i] = value.trim().toLong() }
-        return result
+        return try {
+            val result = LongArray(strArray.size)
+            strArray.forEachIndexed { i, value -> result[i] = value.trim().toLong() }
+            result
+        } catch (e: Exception) {
+            null
+        }
     }
 
     @JvmStatic
