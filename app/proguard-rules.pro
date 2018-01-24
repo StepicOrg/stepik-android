@@ -77,6 +77,9 @@
 -keep class org.stepic.droid.model.** { *; }
 -keep interface org.stepic.droid.model.** { *; }
 
+-keep class org.stepic.droid.adaptive.model.** { *; }
+-keep interface org.stepic.droid.adaptive.model.** { *; }
+
 -keep class org.stepic.droid.web.** { *; }
 -keep interface org.stepic.droid.web.** { *; }
 -dontwarn org.stepic.droid.web.**
