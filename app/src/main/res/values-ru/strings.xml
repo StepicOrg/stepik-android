@@ -577,6 +577,7 @@
     <string name="adaptive_wrong">НЕВЕРНО</string>
     <string name="adaptive_attempt_button">Решить</string>
     <string name="adaptive_course_completed">Поздравляем!\n\nВы успешно прошли курс!</string>
+    <string name="adaptive_course_not_supported">Этот курс недоступен в адаптивном режиме</string>
 
     <string name="adaptive_exp_title">Уровень <b>%d</b></string>
     <string name="adaptive_exp_level_title">Новый уровень!</string>

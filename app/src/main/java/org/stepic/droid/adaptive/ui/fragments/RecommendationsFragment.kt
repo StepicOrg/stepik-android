@@ -93,14 +93,20 @@ class RecommendationsFragment : FragmentBase(), RecommendationsView {
         onError()
     }
 
-    override fun onCourseCompleted() {
+    private fun onCourseState() {
         cardsContainer.visibility = View.GONE
         progress.visibility = View.GONE
-        courseCompleted.visibility = View.VISIBLE
+        courseState.visibility = View.VISIBLE
+    }
+
+    override fun onCourseCompleted() {
+        courseStateText.setText(R.string.adaptive_course_completed)
+        onCourseState()
     }
 
     override fun onCourseNotSupported() {
-        // show error if course is not adaptive or not in list of accepted courses
+        courseStateText.setText(R.string.adaptive_course_not_supported)
+        onCourseState()
     }
 
     override fun onStart() {

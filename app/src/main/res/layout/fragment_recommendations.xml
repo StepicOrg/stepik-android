@@ -162,7 +162,7 @@
                 android:orientation="vertical"
                 android:layout_gravity="center"
                 android:gravity="center_horizontal"
-                android:id="@+id/courseCompleted">
+                android:id="@+id/courseState">
 
                 <!--<ImageView-->
                     <!--android:layout_width="125dp"-->
@@ -176,7 +176,7 @@
                     android:gravity="center"
                     android:layout_marginTop="16dp"
                     android:text="@string/adaptive_course_completed"
-                    android:id="@+id/course_completed_text"/>
+                    android:id="@+id/courseStateText"/>
 
             </LinearLayout>
 
