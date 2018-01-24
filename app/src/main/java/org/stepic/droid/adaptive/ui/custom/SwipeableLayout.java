@@ -202,6 +202,7 @@ public final class SwipeableLayout extends FrameLayout {
     }
 
     public void swipeDown() {
+        setEnabled(false);
         for (SwipeListener l : listeners) {
             l.onSwipeDown();
         }
