@@ -90,8 +90,9 @@ class ComponentManagerImpl(private val appCoreComponent: AppCoreComponent) : Com
             //it is last
             adaptiveCourseComponentMap.remove(courseId)
             adaptiveCourseComponentCountMap.remove(courseId)
+        } else {
+            adaptiveCourseComponentCountMap[courseId] = count - 1
         }
-        adaptiveCourseComponentCountMap[courseId] = count - 1
     }
 
     // Login
