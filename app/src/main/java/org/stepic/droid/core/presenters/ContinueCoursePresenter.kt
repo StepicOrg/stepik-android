@@ -1,18 +1,15 @@
 package org.stepic.droid.core.presenters
 
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
 import org.stepic.droid.concurrency.MainHandler
-import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.core.presenters.contracts.ContinueCourseView
 import org.stepic.droid.di.course_list.CourseListScope
 import org.stepic.droid.model.Course
 import org.stepic.droid.model.Section
 import org.stepic.droid.model.Step
 import org.stepic.droid.model.Unit
-import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.storage.repositories.Repository
-import org.stepic.droid.util.DbParseHelper
 import org.stepic.droid.util.hasUserAccess
 import org.stepic.droid.util.hasUserAccessAndNotEmpty
 import org.stepic.droid.web.Api
@@ -28,8 +25,7 @@ class ContinueCoursePresenter
         private val threadPoolExecutor: ThreadPoolExecutor,
         private val mainHandler: MainHandler,
         private val sectionRepository: Repository<Section>,
-        private val firebaseRemoteConfig: FirebaseRemoteConfig,
-        private val userPreferences: UserPreferences
+        private val adaptiveCoursesResolver: AdaptiveCoursesResolver
 ) : PresenterBase<ContinueCourseView>() {
 
     private val isHandling = AtomicBoolean(false)
@@ -39,7 +35,7 @@ class ContinueCoursePresenter
             view?.onShowContinueCourseLoadingDialog()
             threadPoolExecutor.execute {
                 try {
-                    if (isAdaptive(course.courseId)) {
+                    if (adaptiveCoursesResolver.isAdaptive(course.courseId)) {
                         mainHandler.post {
                             view?.onOpenAdaptiveCourse(course)
                         }
@@ -114,12 +110,6 @@ class ContinueCoursePresenter
             }
         }
     }
-
-    private fun isAdaptive(courseId: Long) =
-            userPreferences.isAdaptiveModeEnabled &&
-            DbParseHelper.parseStringToLongArray(firebaseRemoteConfig.getString(RemoteConfig.ADAPTIVE_COURSES),",")
-                ?.contains(courseId)
-                ?: false
 
     private fun fetchUnit(unitId: Long): Unit {
         var unit = databaseFacade.getUnitById(unitId)
