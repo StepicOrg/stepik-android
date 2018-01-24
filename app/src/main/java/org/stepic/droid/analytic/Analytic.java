@@ -13,6 +13,8 @@ public interface Analytic {
 
         String REACTION_EASY_AFTER_CORRECT = "reaction_easy_after_correct_answer";
         String REACTION_HARD_AFTER_CORRECT = "reaction_hard_after_correct_answer";
+
+        String ADAPTIVE_MODE_DISABLED = "adaptive_mode_disabled";
     }
 
     interface Onboarding {
