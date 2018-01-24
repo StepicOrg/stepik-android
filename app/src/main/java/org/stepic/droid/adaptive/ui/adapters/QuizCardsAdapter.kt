@@ -13,7 +13,7 @@ import org.stepic.droid.core.presenters.CardPresenter
 import java.util.ArrayList
 
 
-class QuizCardsAdapter(
+open class QuizCardsAdapter(
         private val listener: AdaptiveReactionListener?,
         private val answerListener: AnswerListener?
 ): QuizCardsContainer.CardsAdapter<QuizCardViewHolder>() {

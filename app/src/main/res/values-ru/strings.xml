@@ -321,7 +321,7 @@
     </string>
     <string name="keep_screen_on_title_settings">Оставлять экран включенным во время решения задач
     </string>
-    <string name="adaptive_mode_settings">Адаптивные курсы</string>
+    <string name="adaptive_mode_settings">@string/adaptive_courses</string>
     <string name="all_title">Все</string>
     <string name="learning_title">Обучение</string>
     <string name="reviews_title">Рецензии</string>
@@ -568,6 +568,8 @@
     <string name="notification_icon_content_description">Иконка уведомления</string>
 
     <!--adaptive-->
+    <string name="adaptive_courses">Адаптивные курсы</string>
+
     <string name="adaptive_reaction_easy">ПРОСТО</string>
     <string name="adaptive_reaction_hard">СЛОЖНО</string>
     <string name="adaptive_retry">Новая попытка</string>
@@ -581,6 +583,37 @@
     <string name="adaptive_exp_subtitle">%d опыта до нового уровня</string>
 
     <string name="adaptive_streak_failed">Серия потеряна</string>
+
+    <string name="adaptive_onboarding_title">@string/adaptive_courses</string>
+
+    <string name="adaptive_onboarding_card_title_1">Добро пожаловать</string>
+    <string name="adaptive_onboarding_card_question_1"><![CDATA[
+        <p>Добро пожаловать на адаптивный курс. В этом курсе вопросы подбираются автоматически, адаптируясь к вашим ответам и реакциям. Давайте посмотрим как это работает.</p>
+    ]]></string>
+    <string name="adaptive_onboarding_card_title_2">Сложный вопрос</string>
+    <string name="adaptive_onboarding_card_question_2"><![CDATA[
+        <p>Представьте, что это сложный вопрос, на который вы не знаете ответа или не хотите сейчас отвечать. Вы можете отложить его, смахнув карточку с вопросом <b>вправо</b>.</p>
+        <p>Попробуйте сделать так с этой карточкой.</p>
+        <div class="center">
+            <div class="padding-box">
+                <img src="file:///android_asset/web/images/arrow_right.svg" />
+            </div>
+        </div>
+    ]]></string>
+    <string name="adaptive_onboarding_card_title_3">Простой вопрос</string>
+    <string name="adaptive_onboarding_card_question_3"><![CDATA[
+        <p>Теперь представьте, что это, наоборот, слишком простой вопрос, на который вам уже лень отвечать. Вы можете пропустить его, смахнув карточку <b>влево</b>. Больше вы <b>никогда</b> не увидите этот вопрос.</p>
+        <p>Попробуйте смахнуть эту карточку <b>влево</b>.</p>
+        <div class="center">
+            <div class="padding-box">
+                <img src="file:///android_asset/web/images/arrow_left.svg" />
+            </div>
+        </div>
+    ]]></string>
+    <string name="adaptive_onboarding_card_title_4">Настройки</string>
+    <string name="adaptive_onboarding_card_question_4"><![CDATA[
+        <p>При необходимости вы можете отключить адаптивные курсы в настройках (<b>Настройки</b> -> <b>Прочее</b> -> <b>Адаптивные курсы</b>) и продолжить обуение в привычном режиме.</p>
+    ]]></string>
 
     <string name="request_error">Что-то пошло не так</string>
 </resources>

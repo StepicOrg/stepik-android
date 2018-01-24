@@ -6,10 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.Button
 import kotlinx.android.synthetic.main.adaptive_quiz_card_view.view.*
 import org.stepic.droid.R
 import org.stepic.droid.adaptive.model.Reaction
 import org.stepic.droid.adaptive.ui.animations.CardAnimations
+import org.stepic.droid.adaptive.ui.custom.CardScrollView
 import org.stepic.droid.adaptive.ui.custom.SwipeableLayout
 import org.stepic.droid.adaptive.ui.custom.container.ContainerView
 import org.stepic.droid.base.App
@@ -18,6 +20,8 @@ import org.stepic.droid.core.presenters.CardPresenter
 import org.stepic.droid.core.presenters.contracts.CardView
 import org.stepic.droid.model.Submission
 import org.stepic.droid.ui.adapters.StepikRadioGroupAdapter
+import org.stepic.droid.ui.custom.LatexSupportableWebView
+import org.stepic.droid.ui.custom.StepikRadioGroup
 import javax.inject.Inject
 
 class QuizCardViewHolder(
@@ -26,25 +30,26 @@ class QuizCardViewHolder(
     private val curtain = root.curtain
     private val answersProgress = root.answersProgress
     private val titleView = root.title
-    private val question = root.question
+    val question: LatexSupportableWebView = root.question
+    val answers: StepikRadioGroup = root.answers
+    val separatorAnswers: View = root.separatorAnswers
 
-    private val nextButton = root.next
+    val actionButton: Button = root.submit
+    val nextButton: Button = root.next
     private val correctSign = root.correct
     private val wrongSign = root.wrong
     private val wrongButton = root.wrongRetry
     private val hint = root.hint
 
-    private val actionButton = root.submit
-
-    private val scrollContainer = root.scroll
-    private val container = root.container
+    val scrollContainer: CardScrollView = root.scroll
+    val container: SwipeableLayout = root.container
 
     private val hardReaction = root.reaction_hard
     private val easyReaction = root.reaction_easy
 
     val cardView: android.support.v7.widget.CardView = root.card
 
-    private val choiceAdapter = StepikRadioGroupAdapter(root.answers)
+    private val choiceAdapter = StepikRadioGroupAdapter(answers)
 
     @Inject
     lateinit var screenManager: ScreenManager

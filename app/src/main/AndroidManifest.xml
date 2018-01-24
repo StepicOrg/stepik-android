@@ -342,6 +342,10 @@
             android:name=".adaptive.ui.activities.AdaptiveCourseActivity"
             android:theme="@style/Adaptive" />
 
+        <activity
+            android:name=".adaptive.ui.activities.AdaptiveOnboardingActivity"
+            android:theme="@style/Adaptive" />
+
 
         <receiver
             android:name="org.stepic.droid.receivers.DownloadCompleteReceiver"

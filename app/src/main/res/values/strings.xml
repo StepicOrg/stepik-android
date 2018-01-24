@@ -327,7 +327,7 @@
         to receive any points for this task. Are you sure?
     </string>
     <string name="keep_screen_on_title_settings">Keep the screen on, while solving steps</string>
-    <string name="adaptive_mode_settings">Adaptive courses</string>
+    <string name="adaptive_mode_settings">@string/adaptive_courses</string>
     <string name="all_title">All</string>
     <string name="learning_title">Learning</string>
     <string name="reviews_title">Reviews</string>
@@ -580,6 +580,8 @@
     <string name="notification_icon_content_description">Notification icon</string>
 
     <!--adaptive-->
+    <string name="adaptive_courses">Adaptive courses</string>
+
     <string name="adaptive_reaction_easy">EASY</string>
     <string name="adaptive_reaction_hard">HARD</string>
     <string name="adaptive_retry">Retry</string>
@@ -595,6 +597,37 @@
     <string name="adaptive_exp_subtitle">%d points until next level</string>
 
     <string name="adaptive_streak_failed">Streak lost</string>
+
+    <string name="adaptive_onboarding_title">@string/adaptive_courses</string>
+
+    <string name="adaptive_onboarding_card_title_1">Welcome</string>
+    <string name="adaptive_onboarding_card_question_1"><![CDATA[
+        <p>Welcome to adaptive course. During this course you\'ll receive tasks depending on your answers and reactions. Let\'s look how is it work.</p>
+    ]]></string>
+    <string name="adaptive_onboarding_card_title_2">Hard question</string>
+    <string name="adaptive_onboarding_card_question_2"><![CDATA[
+        <p>Imagine that this card contains some hard question and you don\'t know answer. You can postpone hard question by swiping card to <b>right</b>.</p>
+        <p>Try to swipe this card to <b>right</b>.</p>
+        <div class="center">
+            <div class="padding-box">
+                <img src="file:///android_asset/web/images/arrow_right.svg" />
+            </div>
+        </div>
+    ]]></string>
+    <string name="adaptive_onboarding_card_title_3">Easy question</string>
+    <string name="adaptive_onboarding_card_question_3"><![CDATA[
+        <p>Now imagine that this card contains very easy question. You can skip it by swiping card to <b>left</b>. You\'ll <b>never</b> see it again.</p>
+        <p>Try to swipe this card to <b>left</b>.</p>
+        <div class="center">
+            <div class="padding-box">
+                <img src="file:///android_asset/web/images/arrow_left.svg" />
+            </div>
+        </div>
+    ]]></string>
+    <string name="adaptive_onboarding_card_title_4">Settings</string>
+    <string name="adaptive_onboarding_card_question_4"><![CDATA[
+        <p>You can disable adaptive courses in settings (<b>Settings</b> -> <b>Other</b> -> <b>Adaptive courses</b>) and continue studying in usual mode.</p>
+    ]]></string>
 
     <string name="request_error">Something went wrong</string>
 </resources>

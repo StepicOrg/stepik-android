@@ -35,6 +35,7 @@ public class SharedPreferenceHelper {
     private static final String DISCOUNTING_POLICY_DIALOG = "discounting_pol_dialog";
     private static final String KEEP_SCREEN_ON_STEPS = "keep_screen_on_steps";
     private static final String IS_ADAPTIVE_MODE_ENABLED = "is_adaptive_mode_enabled";
+    private static final String IS_FIRST_ADAPTIVE_COURSE = "is_first_adaptive_course";
     private static final String ROTATE_PREF = "rotate_pref";
     private static final String NOTIFICATION_LEARN_DISABLED = "notification_disabled_by_user";
     private static final String NOTIFICATION_COMMENT_DISABLED = "notification_comment_disabled";
@@ -362,6 +363,14 @@ public class SharedPreferenceHelper {
 
     public void afterOnboardingPassed() {
         put(PreferenceType.DEVICE_SPECIFIC, FIRST_TIME_LAUNCH, false);
+    }
+
+    public boolean isFirstAdaptiveCourse() {
+        return getBoolean(PreferenceType.DEVICE_SPECIFIC, IS_FIRST_ADAPTIVE_COURSE, true);
+    }
+
+    public void afterAdaptiveOnboardingPassed() {
+        put(PreferenceType.DEVICE_SPECIFIC, IS_FIRST_ADAPTIVE_COURSE, false);
     }
 
     public void setHasEverLogged() {

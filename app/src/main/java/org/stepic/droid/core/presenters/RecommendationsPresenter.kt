@@ -12,6 +12,7 @@ import org.stepic.droid.adaptive.model.Card
 import org.stepic.droid.adaptive.model.Reaction
 import org.stepic.droid.adaptive.model.RecommendationReaction
 import org.stepic.droid.adaptive.ui.adapters.QuizCardsAdapter
+import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.presenters.contracts.RecommendationsView
 import org.stepic.droid.di.adaptive.AdaptiveCourseScope
@@ -38,7 +39,8 @@ constructor(
         private val mainScheduler: Scheduler,
         private val sharedPreferenceHelper: SharedPreferenceHelper,
         private val databaseFacade: DatabaseFacade,
-        private val screenManager: ScreenManager
+        private val screenManager: ScreenManager,
+        private val adaptiveCoursesResolver: AdaptiveCoursesResolver
 ) : PresenterBase<RecommendationsView>(), AdaptiveReactionListener, AnswerListener {
 
     companion object {
@@ -59,12 +61,7 @@ constructor(
 
     private var isCourseCompleted = false
 
-    // todo: inject course id
     private var courseId = 0L
-
-//    init {
-//        createReaction(0, Reaction.INTERESTING)
-//    }
 
     fun initCourse(courseId: Long) {
         this.courseId = courseId
@@ -78,7 +75,7 @@ constructor(
 
         when {
             isCourseCompleted -> view.onCourseCompleted()
-            courseId == 0L -> view.onCourseNotSupported()
+            !adaptiveCoursesResolver.isAdaptive(courseId) -> view.onCourseNotSupported()
             else -> {
                 resubscribe()
                 error?.let(this::onError)
