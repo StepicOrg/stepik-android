@@ -316,6 +316,12 @@ public abstract class CourseListFragmentBase extends FragmentBase
     }
 
     @Override
+    public void onOpenAdaptiveCourse(@NotNull Course course) {
+        ProgressHelper.dismiss(getFragmentManager(), continueLoadingTag);
+        getScreenManager().continueAdaptiveCourse(getActivity(), course);
+    }
+
+    @Override
     public void onAnyProblemWhileContinue(@NotNull Course course) {
         ProgressHelper.dismiss(getFragmentManager(), continueLoadingTag);
         getScreenManager().showSections(getActivity(), course);

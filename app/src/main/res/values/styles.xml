@@ -406,4 +406,30 @@
         <item name="searchHintIcon">@null</item>
         <item name="android:iconifiedByDefault">false</item>
     </style>
+
+    <style name="Adaptive.BorderlessButton" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:foreground">@null</item>
+        <item name="android:textStyle">normal</item>
+        <item name="fontPath">fonts/Roboto-Medium.ttf</item>
+        <item name="android:textColor">@color/borderless_button_text_color</item>
+    </style>
+
+
+    <style name="Adaptive" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/new_primary_color</item>
+        <item name="colorPrimaryDark">@color/new_accent_color</item>
+        <item name="colorAccent">@color/new_accent_color</item>
+
+        <item name="android:windowBackground">@color/windowBackground</item>
+
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Adaptive.ReactionStamp">
+        <item name="android:textSize">24sp</item>
+        <item name="android:gravity">center</item>
+        <item name="fontFamily">sans-serif-black</item>
+        <item name="android:fontFamily" tools:targetApi="jelly_bean">sans-serif-black</item>
+    </style>
 </resources>

@@ -9,5 +9,7 @@ interface ContinueCourseView {
 
     fun onOpenStep(courseId: Long, section: Section, lessonId: Long, unitId: Long, stepPosition: Int)
 
+    fun onOpenAdaptiveCourse(course: Course)
+
     fun onAnyProblemWhileContinue(course: Course)
 }

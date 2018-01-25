@@ -2,8 +2,11 @@ package org.stepic.droid.web;
 
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.model.EnrollmentWrapper;
+import org.stepic.droid.web.model.adaptive.RecommendationReactionsRequest;
+import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
 
 import io.reactivex.Completable;
+import io.reactivex.Observable;
 import io.reactivex.Single;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -38,16 +41,38 @@ public interface StepicRestLoggedService {
     Single<CoursesMetaResponse> getPopularCourses(@Query("page") int page, @Query("language") String language);
 
     @GET("api/units")
-    Call<UnitMetaResponse> getUnits(@Query("ids[]") long[] units);
+    Call<UnitMetaResponse> getUnits(
+            @Query("ids[]") long[] units
+    );
+
+    @GET("api/units")
+    Single<UnitMetaResponse> getUnits(
+            @Query("course") final long courseId,
+            @Query("lesson") final long lessonId
+    );
 
     @GET("api/lessons")
     Call<LessonStepicResponse> getLessons(@Query("ids[]") long[] lessons);
 
-    @GET("api/steps")
-    Call<StepResponse> getSteps(@Query("ids[]") long[] steps);
+    @GET("api/lessons/{lesson}")
+    Single<LessonStepicResponse> getLessons(
+            @Path("lesson") final long lesson
+    );
 
     @GET("api/steps")
-    Single<StepResponse> getStepsReactive(@Query("ids[]") long[] steps);
+    Call<StepResponse> getSteps(
+            @Query("ids[]") long[] steps
+    );
+
+    @GET("api/steps")
+    Single<StepResponse> getStepsReactive(
+            @Query("ids[]") long[] steps
+    );
+
+    @GET("api/steps")
+    Single<StepResponse> getStepsByLessonId(
+            @Query("lesson") long lessonId
+    );
 
     @DELETE("api/enrollments/{id}")
     Call<Void> dropCourse(@Path("id") long courseId);
@@ -66,6 +91,10 @@ public interface StepicRestLoggedService {
     @POST("api/views")
     Call<Void> postViewed(@Body ViewAssignmentWrapper stepAssignment);
 
+    @Headers("Content-Type:application/json")
+    @POST("api/views")
+    Completable postViewedReactive(@Body ViewAssignmentWrapper stepAssignment);
+
     @GET("api/search-results?is_popular=true&is_public=true&type=course")
     Call<SearchResultResponse> getSearchResults(@Query("page") int page,
                                                 @Query(value = "query", encoded = true) String encodedQuery);
@@ -82,14 +111,36 @@ public interface StepicRestLoggedService {
     @POST("api/attempts")
     Call<AttemptResponse> createNewAttempt(@Body AttemptRequest attemptRequest);
 
+    @POST("api/attempts")
+    Single<AttemptResponse> createNewAttemptReactive(@Body AttemptRequest attemptRequest);
+
     @POST("api/submissions")
-    Call<SubmissionResponse> createNewSubmission(@Body SubmissionRequest submissionRequest);
+    Call<SubmissionResponse> createNewSubmission(
+            @Body SubmissionRequest submissionRequest
+    );
+
+    @POST("api/submissions")
+    Completable createNewSubmissionReactive(
+            @Body SubmissionRequest submissionRequest
+    );
 
     @GET("api/attempts")
     Call<AttemptResponse> getExistingAttempts(@Query("step") long stepId, @Query("user") long userId);
 
+    @GET("api/attempts")
+    Single<AttemptResponse> getExistingAttemptsReactive(@Query("step") long stepId, @Query("user") long userId);
+
     @GET("api/submissions")
-    Call<SubmissionResponse> getExistingSubmissions(@Query("attempt") long attemptId, @Query("order") String desc);
+    Call<SubmissionResponse> getExistingSubmissions(
+            @Query("attempt") long attemptId,
+            @Query("order") String order
+    );
+
+    @GET("api/submissions")
+    Single<SubmissionResponse> getExistingSubmissionsReactive(
+            @Query("attempt") final long attemptId,
+            @Query("order") final String order
+    );
 
     @GET("api/email-addresses")
     Call<EmailAddressResponse> getEmailAddresses(@Query("ids[]") long[] ids);
@@ -139,9 +190,6 @@ public interface StepicRestLoggedService {
     @GET("api/units")
     Call<UnitMetaResponse> getUnitByLessonId(@Query("lesson") long lessonId);
 
-    @GET("api/steps")
-    Call<StepResponse> geStepsByLessonId(@Query("lesson") long lessonId);
-
     @GET("api/submissions?order=desc")
     Call<SubmissionResponse> getExistingSubmissionsForStep(@Query("step") long stepId);
 
@@ -175,4 +223,15 @@ public interface StepicRestLoggedService {
 
     @GET("api/search-results?is_popular=true&is_public=true&type=course")
     Single<SearchResultResponse> getSearchResultsOfTag(@Query("page") int page, @Query("tag") int id, @Query("language") String lang);
+
+    @GET("api/recommendations")
+    Single<RecommendationsResponse> getNextRecommendations(
+            @Query("course") final long courseId,
+            @Query("count") final int count
+    );
+
+    @POST("api/recommendation-reactions")
+    Completable createRecommendationReaction(
+            @Body final RecommendationReactionsRequest reactionsRequest
+    );
 }

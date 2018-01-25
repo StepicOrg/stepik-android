@@ -218,6 +218,14 @@
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/keep_screen_on_title_settings"
                     android:text="@string/keep_screen_on_title_settings"/>
+
+                <org.stepic.droid.ui.custom.BetterSwitch
+                    android:id="@+id/fragmentSettingsAdaptiveMode"
+                    style="@style/SettingSwitch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/adaptive_mode_settings"
+                    android:text="@string/adaptive_mode_settings"/>
             </LinearLayout>
 
         </android.support.v7.widget.CardView>

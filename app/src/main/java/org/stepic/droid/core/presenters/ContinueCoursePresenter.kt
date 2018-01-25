@@ -1,5 +1,6 @@
 package org.stepic.droid.core.presenters
 
+import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.ContinueCourseView
 import org.stepic.droid.di.course_list.CourseListScope
@@ -23,7 +24,8 @@ class ContinueCoursePresenter
         private val api: Api,
         private val threadPoolExecutor: ThreadPoolExecutor,
         private val mainHandler: MainHandler,
-        private val sectionRepository: Repository<Section>
+        private val sectionRepository: Repository<Section>,
+        private val adaptiveCoursesResolver: AdaptiveCoursesResolver
 ) : PresenterBase<ContinueCourseView>() {
 
     private val isHandling = AtomicBoolean(false)
@@ -33,6 +35,13 @@ class ContinueCoursePresenter
             view?.onShowContinueCourseLoadingDialog()
             threadPoolExecutor.execute {
                 try {
+                    if (adaptiveCoursesResolver.isAdaptive(course.courseId)) {
+                        mainHandler.post {
+                            view?.onOpenAdaptiveCourse(course)
+                        }
+                        return@execute
+                    }
+
                     var unitId: Long
                     var stepId: Long
                     try {

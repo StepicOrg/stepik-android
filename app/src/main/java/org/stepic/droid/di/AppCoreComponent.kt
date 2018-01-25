@@ -3,10 +3,12 @@ package org.stepic.droid.di
 import android.content.Context
 import dagger.BindsInstance
 import dagger.Component
+import org.stepic.droid.adaptive.ui.adapters.QuizCardViewHolder
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.code.ui.CodeEditor
+import org.stepic.droid.di.adaptive.AdaptiveCourseComponent
 import org.stepic.droid.di.catalog.CatalogComponent
 import org.stepic.droid.di.certificates.CertificateComponent
 import org.stepic.droid.di.course_general.CourseGeneralComponent
@@ -88,7 +90,11 @@ interface AppCoreComponent {
 
     fun catalogComponentBuilder(): CatalogComponent.Builder
 
+    fun adaptiveCourseComponentBuilder(): AdaptiveCourseComponent.Builder
+
     fun inject(someActivity: FragmentActivityBase)
+
+    fun inject(adapter: StepikRadioGroupAdapter)
 
     fun inject(adapter: CoursesAdapter)
 
@@ -155,6 +161,8 @@ interface AppCoreComponent {
     fun inject(autoCompleteSearchView: AutoCompleteSearchView)
 
     fun inject(courseItemViewHolder: CourseItemViewHolder)
+
+    fun inject(quizCardViewHolder: QuizCardViewHolder)
 
     fun inject(notificationViewHolder: NotificationAdapter.NotificationViewHolder)
 

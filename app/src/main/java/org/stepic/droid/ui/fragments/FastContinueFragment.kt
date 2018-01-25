@@ -179,6 +179,12 @@ class FastContinueFragment : FragmentBase(),
         screenManager.continueCourse(activity, courseId, section, lessonId, unitId, stepPosition.toLong())
     }
 
+    override fun onOpenAdaptiveCourse(course: Course) {
+        ProgressHelper.dismiss(fragmentManager, CONTINUE_LOADING_TAG)
+        fastContinueAction.isEnabled = true
+        screenManager.continueAdaptiveCourse(activity, course)
+    }
+
     override fun onAnyProblemWhileContinue(course: Course) {
         ProgressHelper.dismiss(fragmentManager, CONTINUE_LOADING_TAG)
         fastContinueAction.isEnabled = true

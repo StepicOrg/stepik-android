@@ -302,6 +302,17 @@ public class UserPreferences {
         sharedPreferenceHelper.setKeepScreenOnSteps(isChecked);
     }
 
+    public boolean isAdaptiveModeEnabled() {
+        return sharedPreferenceHelper.isAdaptiveModeEnabled();
+    }
+
+    public void setAdaptiveModeEnabled(boolean isEnabled) {
+        sharedPreferenceHelper.setAdaptiveModeEnabled(isEnabled);
+        if (!isEnabled) {
+            analytic.reportEvent(Analytic.Adaptive.ADAPTIVE_MODE_DISABLED);
+        }
+    }
+
     public boolean isNotificationEnabled(NotificationType type) {
         return !sharedPreferenceHelper.isNotificationDisabled(type);
     }

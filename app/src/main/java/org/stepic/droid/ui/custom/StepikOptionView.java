@@ -51,10 +51,10 @@ public abstract class StepikOptionView extends FrameLayout implements Checkable 
         super(context, attrs, defStyleAttr);
 
         LayoutInflater.from(context).inflate(R.layout.stepic_compound_button, this, true);
-        optionIcon = (ImageView) findViewById(R.id.image_compound_button);
-        optionText = (LatexSupportableEnhancedFrameLayout) findViewById(R.id.text_compound_button);
-        progressBar = (ProgressBar) findViewById(R.id.loadProgressbar);
-        rippleEffectFrameLayout = (FrameLayout) findViewById(R.id.rippleFrameLayoutInOption);
+        optionIcon = findViewById(R.id.image_compound_button);
+        optionText = findViewById(R.id.text_compound_button);
+        progressBar = findViewById(R.id.loadProgressbar);
+        rippleEffectFrameLayout = findViewById(R.id.rippleFrameLayoutInOption);
 
         init();
     }
