@@ -11,7 +11,7 @@ import org.stepic.droid.util.KotlinUtil.setIfNot
 
 class MorphingView
 @JvmOverloads
-constructor(context: Context, attributeSet: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : FrameLayout(context, attributeSet, defStyleAttr, defStyleRes) {
+constructor(context: Context, attributeSet: AttributeSet? = null, defStyleAttr: Int = 0) : FrameLayout(context, attributeSet, defStyleAttr) {
 
     val drawableWrapper = GradientDrawableWrapper(GradientDrawable())
 
