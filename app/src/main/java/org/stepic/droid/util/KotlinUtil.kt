@@ -49,4 +49,10 @@ object KotlinUtil {
 
         return result
     }
+
+    inline fun <T> setIfNot(setter: (T) -> Unit, value: T, not: T) {
+        if (value != not) {
+            setter(value)
+        }
+    }
 }
