@@ -48,6 +48,7 @@ ext.versions = [
         circleImageView      : '2.1.0',
         ahbottomnavigation   : '2.1.0',
         circleIndicator      : '1.2.2@aar',
+        confetti             : '1.1.1',
 
         shortcutBadger       : '1.1.19@aar',
 
@@ -124,6 +125,7 @@ ext.libraries = [
         circleImageView      : "de.hdodenhof:circleimageview:$versions.circleImageView",
         ahbottomnavigation   : "com.aurelhubert:ahbottomnavigation:$versions.ahbottomnavigation",
         circleIndicator      : "me.relex:circleindicator:$versions.circleIndicator",
+        confetti             : "com.github.jinatonic.confetti:confetti:$versions.confetti",
 
         shortcutBadger       : "me.leolin:ShortcutBadger:$versions.shortcutBadger",
 
