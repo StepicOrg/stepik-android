@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <include
+        android:id="@+id/appBarLayout"
+        layout="@layout/view_centered_appbar" />
+
+    <org.stepic.droid.adaptive.ui.custom.QuizCardsContainer
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:id="@+id/cardsContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</android.support.design.widget.CoordinatorLayout>
