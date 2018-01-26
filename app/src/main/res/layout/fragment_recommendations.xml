@@ -1,130 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    android:layout_width="match_parent"
+<android.support.design.widget.CoordinatorLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:id="@+id/rootView"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <include
-            android:id="@+id/appBarLayout"
-            layout="@layout/view_centered_appbar"/>
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:title=""
 
-        <!--<android.support.v7.widget.Toolbar-->
-            <!--android:id="@+id/toolbar"-->
-            <!--android:title=""-->
+            android:contentInsetLeft="0dp"
+            android:contentInsetStart="0dp"
+            app:contentInsetLeft="0dp"
+            app:contentInsetStart="0dp"
+            android:contentInsetRight="0dp"
+            android:contentInsetEnd="0dp"
+            app:contentInsetRight="0dp"
+            app:contentInsetEnd="0dp"
 
-            <!--android:contentInsetLeft="0dp"-->
-            <!--android:contentInsetStart="0dp"-->
-            <!--app:contentInsetLeft="0dp"-->
-            <!--app:contentInsetStart="0dp"-->
-            <!--android:contentInsetRight="0dp"-->
-            <!--android:contentInsetEnd="0dp"-->
-            <!--app:contentInsetRight="0dp"-->
-            <!--app:contentInsetEnd="0dp"-->
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize">
 
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="?attr/actionBarSize">-->
-
-            <!--<FrameLayout-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="match_parent">-->
-                <!--<LinearLayout-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_gravity="center"-->
-                    <!--android:gravity="center_horizontal"-->
-                    <!--android:orientation="vertical"-->
-                    <!--android:layout_marginEnd="36dp"-->
-                    <!--android:layout_marginRight="36dp">-->
-                    <!--<TextView-->
-                        <!--android:id="@+id/exp_level"-->
-                        <!--android:text="@string/adaptive_exp_title"-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"/>-->
-                    <!--<TextView-->
-                        <!--android:id="@+id/exp_level_next"-->
-                        <!--android:text="@string/adaptive_exp_title"-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:textSize="12sp" />-->
-                <!--</LinearLayout>-->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:layout_marginEnd="36dp"
+                    android:layout_marginRight="36dp">
+                    <TextView
+                        android:id="@+id/expLevel"
+                        android:text="@string/adaptive_exp_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"/>
+                    <TextView
+                        android:id="@+id/expLevelNext"
+                        android:text="@string/adaptive_exp_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp" />
+                </LinearLayout>
 
 
-                <!--<FrameLayout-->
-                    <!--android:id="@+id/exp_bubble"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_gravity="end|center_vertical"-->
-                    <!--android:layout_marginEnd="@dimen/adaptive_exp_bubble_margin"-->
-                    <!--android:layout_marginRight="@dimen/adaptive_exp_bubble_margin">-->
-                    <!--<TextView-->
-                        <!--android:id="@+id/exp_counter"-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="match_parent"-->
-                        <!--android:textStyle="bold"-->
-                        <!--android:background="@drawable/gray_circle"-->
-                        <!--fontPath="fonts/Roboto-Bold.ttf"-->
-                        <!--android:gravity="center"-->
-                        <!--tools:ignore="MissingPrefix" />-->
-                    <!--<TextView-->
-                        <!--android:id="@+id/exp_inc"-->
-                        <!--android:text="@string/adaptive_exp_inc"-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="match_parent"-->
-                        <!--android:textStyle="bold"-->
-                        <!--android:background="@drawable/green_circle"-->
-                        <!--fontPath="fonts/Roboto-Bold.ttf"-->
-                        <!--android:textColor="@android:color/white"-->
-                        <!--android:alpha="0"-->
-                        <!--android:gravity="center"-->
-                        <!--tools:ignore="MissingPrefix" />-->
-                <!--</FrameLayout>-->
+                <FrameLayout
+                    android:id="@+id/expBubble"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end|center_vertical"
+                    android:layout_marginEnd="@dimen/adaptive_exp_bubble_margin"
+                    android:layout_marginRight="@dimen/adaptive_exp_bubble_margin">
+                    <TextView
+                        android:id="@+id/expCounter"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textStyle="bold"
+                        android:background="@drawable/gray_circle"
+                        fontPath="fonts/Roboto-Bold.ttf"
+                        android:gravity="center"
+                        tools:ignore="MissingPrefix" />
+                    <TextView
+                        android:id="@+id/expInc"
+                        android:text="@string/adaptive_exp_inc"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textStyle="bold"
+                        android:background="@drawable/green_circle"
+                        fontPath="fonts/Roboto-Bold.ttf"
+                        android:textColor="@android:color/white"
+                        android:alpha="0"
+                        android:gravity="center"
+                        tools:ignore="MissingPrefix" />
+                </FrameLayout>
 
-                <!--&lt;!&ndash;<org.stepik.android.adaptive.ui.view.morphing.MorphingView&ndash;&gt;-->
-                    <!--&lt;!&ndash;android:id="@+id/streak_success_container"&ndash;&gt;-->
-                    <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
-                    <!--&lt;!&ndash;android:layout_height="match_parent"&ndash;&gt;-->
-                    <!--&lt;!&ndash;android:alpha="0"&ndash;&gt;-->
-                    <!--&lt;!&ndash;android:layout_gravity="end|center_vertical">&ndash;&gt;-->
-                    <!--&lt;!&ndash;<TextView&ndash;&gt;-->
-                        <!--&lt;!&ndash;android:id="@+id/streak_success"&ndash;&gt;-->
-                        <!--&lt;!&ndash;android:textSize="18sp"&ndash;&gt;-->
-                        <!--&lt;!&ndash;android:textStyle="bold"&ndash;&gt;-->
-                        <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
-                        <!--&lt;!&ndash;android:layout_height="match_parent"&ndash;&gt;-->
-                        <!--&lt;!&ndash;android:textColor="@android:color/white"&ndash;&gt;-->
-                        <!--&lt;!&ndash;android:layout_gravity="center"&ndash;&gt;-->
-                        <!--&lt;!&ndash;android:gravity="center" />&ndash;&gt;-->
-                <!--&lt;!&ndash;</org.stepik.android.adaptive.ui.view.morphing.MorphingView>&ndash;&gt;-->
+                <org.stepic.droid.adaptive.ui.custom.morphing.MorphingView
+                    android:id="@+id/streakSuccessContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:alpha="0"
+                    android:layout_gravity="end|center_vertical">
+                    <TextView
+                        android:id="@+id/streakSuccess"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textColor="@android:color/white"
+                        android:layout_gravity="center"
+                        android:gravity="center" />
+                </org.stepic.droid.adaptive.ui.custom.morphing.MorphingView>
 
-                <!--&lt;!&ndash;<TextView&ndash;&gt;-->
-                    <!--&lt;!&ndash;android:id="@+id/streak_failed"&ndash;&gt;-->
-                    <!--&lt;!&ndash;android:alpha="0"&ndash;&gt;-->
-                    <!--&lt;!&ndash;android:text="@string/adaptive_streak_failed"&ndash;&gt;-->
-                    <!--&lt;!&ndash;android:textSize="18sp"&ndash;&gt;-->
-                    <!--&lt;!&ndash;android:textStyle="bold"&ndash;&gt;-->
-                    <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
-                    <!--&lt;!&ndash;android:layout_height="match_parent"&ndash;&gt;-->
-                    <!--&lt;!&ndash;android:background="@color/adaptive_color_wrong"&ndash;&gt;-->
-                    <!--&lt;!&ndash;android:textColor="@android:color/white"&ndash;&gt;-->
-                    <!--&lt;!&ndash;android:layout_gravity="center"&ndash;&gt;-->
-                    <!--&lt;!&ndash;android:gravity="center" />&ndash;&gt;-->
-            <!--</FrameLayout>-->
+                <TextView
+                    android:id="@+id/streakFailed"
+                    android:alpha="0"
+                    android:text="@string/adaptive_streak_failed"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/adaptive_color_wrong"
+                    android:textColor="@android:color/white"
+                    android:layout_gravity="center"
+                    android:gravity="center" />
+            </FrameLayout>
 
-        <!--</android.support.v7.widget.Toolbar>-->
+        </android.support.v7.widget.Toolbar>
 
-        <!--<me.zhanghai.android.materialprogressbar.MaterialProgressBar-->
-            <!--android:id="@+id/expProgress"-->
-            <!--style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="2dp"-->
-            <!--android:tint="@color/stepic_brand_primary"-->
-            <!--app:mpb_progressStyle="horizontal"-->
-            <!--app:mpb_useIntrinsicPadding="false" />-->
+        <me.zhanghai.android.materialprogressbar.MaterialProgressBar
+            android:id="@+id/expProgress"
+            style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:tint="@color/stepic_brand_primary"
+            app:mpb_progressStyle="horizontal"
+            app:mpb_useIntrinsicPadding="false" />
 
         <FrameLayout
             android:layout_width="match_parent"
