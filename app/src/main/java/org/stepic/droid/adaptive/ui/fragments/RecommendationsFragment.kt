@@ -46,7 +46,6 @@ class RecommendationsFragment : FragmentBase(), RecommendationsView {
     override fun onCreate(savedInstanceState: Bundle?) {
         course = arguments.getParcelable(AppConstants.KEY_COURSE_BUNDLE)
         super.onCreate(savedInstanceState)
-        recommendationsPresenter.initCourse(course?.courseId ?: 0)
     }
 
     override fun injectComponent() {

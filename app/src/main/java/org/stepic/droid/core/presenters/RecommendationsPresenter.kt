@@ -17,6 +17,7 @@ import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.presenters.contracts.RecommendationsView
 import org.stepic.droid.di.adaptive.AdaptiveCourseScope
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
+import org.stepic.droid.di.qualifiers.CourseId
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.model.PersistentLastStep
 import org.stepic.droid.preferences.SharedPreferenceHelper
@@ -32,6 +33,8 @@ import javax.inject.Inject
 class RecommendationsPresenter
 @Inject
 constructor(
+        @CourseId
+        private val courseId: Long,
         private val api: Api,
         @BackgroundScheduler
         private val backgroundScheduler: Scheduler,
@@ -61,10 +64,7 @@ constructor(
 
     private var isCourseCompleted = false
 
-    private var courseId = 0L
-
-    fun initCourse(courseId: Long) {
-        this.courseId = courseId
+    init {
         createReaction(0, Reaction.INTERESTING)
     }
 
