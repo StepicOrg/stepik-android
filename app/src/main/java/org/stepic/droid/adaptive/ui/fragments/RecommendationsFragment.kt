@@ -1,6 +1,7 @@
 package org.stepic.droid.adaptive.ui.fragments
 
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
@@ -67,7 +68,11 @@ class RecommendationsFragment : FragmentBase(), RecommendationsView {
         (activity as? AppCompatActivity)?.let {
             it.setSupportActionBar(toolbar)
             it.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+            it.title = ""
         }
+
+        streakSuccessContainer.nestedTextView = streakSuccess
+        streakSuccessContainer.setGradientDrawableParams(ContextCompat.getColor(context, R.color.adaptive_color_correct), 0f)
     }
 
     override fun onAdapter(cardsAdapter: QuizCardsAdapter) {
