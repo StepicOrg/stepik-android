@@ -5,4 +5,5 @@ object RemoteConfig {
     const val SHOW_STREAK_DIALOG_AFTER_LOGIN = "show_streak_dialog_after_login"
     const val SHOW_NOTIFICATIONS_BADGES = "show_notifications_badges"
     const val ADAPTIVE_COURSES = "adaptive_courses"
+    const val ADAPTIVE_BACKEND_URL = "adaptive_backend_url"
 }

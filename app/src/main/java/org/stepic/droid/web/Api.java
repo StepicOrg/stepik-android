@@ -13,6 +13,8 @@ import org.stepic.droid.adaptive.model.RecommendationReaction;
 import org.stepic.droid.model.comments.VoteValue;
 import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.social.SocialManager;
+import org.stepic.droid.web.model.adaptive.RatingResponse;
+import org.stepic.droid.web.model.adaptive.RatingRestoreResponse;
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
 
 import io.reactivex.Completable;
@@ -166,4 +168,10 @@ public interface Api {
     Single<RecommendationsResponse> getNextRecommendations(long courseId, int count);
 
     Completable createReaction(RecommendationReaction reaction);
+
+    Single<RatingResponse> getRating(long courseId, int count, int days);
+
+    Completable putRating(long courseId, long exp);
+
+    Single<RatingRestoreResponse> restoreRating(long courseId);
 }

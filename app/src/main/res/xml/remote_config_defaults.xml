@@ -20,4 +20,8 @@
         <key>adaptive_courses</key>
         <value></value>
     </entry>
+    <entry>
+        <key>adaptive_backend_url</key>
+        <value></value>
+    </entry>
 </defaultsMap>
