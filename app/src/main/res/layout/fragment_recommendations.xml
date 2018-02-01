@@ -113,7 +113,7 @@
             style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal"
             android:layout_width="match_parent"
             android:layout_height="2dp"
-            android:tint="@color/stepic_brand_primary"
+            android:tint="@color/adaptive_color_correct"
             app:mpb_progressStyle="horizontal"
             app:mpb_useIntrinsicPadding="false" />
 
