@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import org.stepic.droid.storage.structure.DatabaseInfo;
+import org.stepic.droid.storage.structure.DbStructureAdaptiveExp;
 import org.stepic.droid.storage.structure.DbStructureAssignment;
 import org.stepic.droid.storage.structure.DbStructureBlock;
 import org.stepic.droid.storage.structure.DbStructureCachedVideo;
@@ -93,6 +94,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         upgradeFrom28To29(db);
         upgradeFrom29To30(db);
         upgradeFrom30To31(db);
+        upgradeFrom31To32(db);
     }
 
 
@@ -259,6 +261,14 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         if (oldVersion < 31) {
             upgradeFrom30To31(db);
         }
+
+        if (oldVersion < 32) {
+            upgradeFrom31To32(db);
+        }
+    }
+
+    private void upgradeFrom31To32(SQLiteDatabase db) {
+        createAdaptiveExpTable(db);
     }
 
     private void upgradeFrom30To31(SQLiteDatabase db) {
@@ -737,6 +747,18 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         String sql = "CREATE TABLE " + DbStructureViewedNotificationsQueue.VIEWED_NOTIFICATIONS_QUEUE
                 + " ("
                 + DbStructureViewedNotificationsQueue.Column.NOTIFICATION_ID + WHITESPACE + LONG_TYPE + " PRIMARY KEY"
+                + ")";
+        db.execSQL(sql);
+    }
+
+    private void createAdaptiveExpTable(SQLiteDatabase db) {
+        String sql = "CREATE TABLE IF NOT EXISTS" + WHITESPACE + DbStructureAdaptiveExp.ADAPTIVE_EXP + WHITESPACE
+                + " ("
+                + DbStructureAdaptiveExp.Column.EXP + WHITESPACE + LONG_TYPE + ", "
+                + DbStructureAdaptiveExp.Column.COURSE_ID + WHITESPACE + LONG_TYPE + ", "
+                + DbStructureAdaptiveExp.Column.SUBMISSION_ID + WHITESPACE + LONG_TYPE + ", "
+                + DbStructureAdaptiveExp.Column.SOLVED_AT + WHITESPACE + DATETIME_TYPE + WHITESPACE + DEFAULT + WHITESPACE + "CURRENT_TIMESTAMP" + ", "
+                + "PRIMARY KEY (" + DbStructureAdaptiveExp.Column.COURSE_ID + ", " + DbStructureAdaptiveExp.Column.SUBMISSION_ID + ")"
                 + ")";
         db.execSQL(sql);
     }

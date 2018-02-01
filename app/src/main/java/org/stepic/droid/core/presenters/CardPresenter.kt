@@ -145,7 +145,7 @@ class CardPresenter(
                 }
                 if (it.status == Submission.Status.WRONG) {
                     analytic.reportEvent(Analytic.Steps.WRONG_SUBMISSION_FILL, (card.step?.id ?: 0).toString())
-                    answerListener?.onWrongAnswer()
+                    answerListener?.onWrongAnswer(it.id)
                 }
                 view?.setSubmission(it, true)
             }

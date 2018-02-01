@@ -110,6 +110,10 @@ abstract class StorageModule {
 
     @StorageSingleton
     @Binds
+    internal abstract fun provideAdaptiveExpDao(adaptiveExpDaoImpl: AdaptiveExpDaoImpl): AdaptiveExpDao
+
+    @StorageSingleton
+    @Binds
     internal abstract fun provideViewedNotificationsQueueDao(viewedNotificationsQueueDaoImpl: ViewedNotificationsQueueDaoImpl): IDao<ViewedNotification>
 
     @Module
