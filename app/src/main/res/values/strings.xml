@@ -630,5 +630,8 @@
         <p>You can disable adaptive courses in settings (<b>Settings</b> -> <b>Other</b> -> <b>Adaptive courses</b>) and continue studying in usual mode.</p>
     ]]></string>
 
+
+    <string name="adaptive_level_dialog_continue">Continue</string>
+
     <string name="request_error">Something went wrong</string>
 </resources>

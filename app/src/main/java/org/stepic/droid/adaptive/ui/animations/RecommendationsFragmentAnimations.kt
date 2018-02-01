@@ -29,7 +29,7 @@ constructor(
     private val confettiColors: IntArray = intArrayOf(
             Color.BLACK,
             ContextCompat.getColor(context, R.color.pressed_white),
-            ContextCompat.getColor(context, R.color.stepic_brand_primary)
+            ContextCompat.getColor(context, R.color.adaptive_color_correct)
     )
 
     fun playStreakBubbleAnimation(greenStreakBubble: View) {

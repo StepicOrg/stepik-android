@@ -432,4 +432,13 @@
         <item name="fontFamily">sans-serif-black</item>
         <item name="android:fontFamily" tools:targetApi="jelly_bean">sans-serif-black</item>
     </style>
+
+    <style name="AdaptiveLevelDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:windowAnimationStyle">@style/AdaptiveLevelDialogTheme.Window</item>
+    </style>
+
+    <style name="AdaptiveLevelDialogTheme.Window" parent="@android:style/Animation.Activity">
+        <item name="android:windowEnterAnimation">@anim/adaptive_dialog_in</item>
+        <item name="android:windowExitAnimation">@anim/adaptive_dialog_out</item>
+    </style>
 </resources>

@@ -10,6 +10,7 @@ import kotlinx.android.synthetic.main.fragment_recommendations.*
 import org.stepic.droid.R
 import org.stepic.droid.adaptive.ui.adapters.QuizCardsAdapter
 import org.stepic.droid.adaptive.ui.animations.RecommendationsFragmentAnimations
+import org.stepic.droid.adaptive.ui.dialogs.AdaptiveLevelDialog
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.core.presenters.RecommendationsPresenter
@@ -32,6 +33,8 @@ class RecommendationsFragment : FragmentBase(), RecommendationsView {
         } else {
             exp.toString()
         }
+
+        private const val LEVEL_DIALOG_TAG = "level_dialog"
     }
 
     @Inject
@@ -68,7 +71,7 @@ class RecommendationsFragment : FragmentBase(), RecommendationsView {
         (activity as? AppCompatActivity)?.let {
             it.setSupportActionBar(toolbar)
             it.supportActionBar?.setDisplayHomeAsUpEnabled(true)
-            it.title = ""
+            it.supportActionBar?.setDisplayShowTitleEnabled(false)
         }
 
         streakSuccessContainer.nestedTextView = streakSuccess
@@ -155,9 +158,8 @@ class RecommendationsFragment : FragmentBase(), RecommendationsView {
     override fun onStreakLost() =
             animations.playStreakFailedAnimation(streakFailed, expProgress)
 
-    override fun showNewLevelDialog(level: Long) {
-        
-    }
+    override fun showNewLevelDialog(level: Long) =
+            AdaptiveLevelDialog.newInstance(level).show(childFragmentManager, LEVEL_DIALOG_TAG)
 
     override fun onStart() {
         super.onStart()
