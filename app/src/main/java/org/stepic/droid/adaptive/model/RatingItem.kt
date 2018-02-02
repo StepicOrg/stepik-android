@@ -1,6 +1,6 @@
 package org.stepic.droid.adaptive.model
 
-class RatingItem(
+data class RatingItem(
         val rank: Int,
         val name: String?,
         val exp: Long,

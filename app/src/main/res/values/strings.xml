@@ -633,5 +633,11 @@
 
     <string name="adaptive_level_dialog_continue">Continue</string>
 
+    <string name="adaptive_stats_title">Stats</string>
+    <string name="adaptive_stats_total_exp">POINTS IN TOTAL</string>
+    <string name="adaptive_stats_last_7_days">LAST 7 DAYS</string>
+    <string name="adaptive_stats_level">LEVEL</string>
+    <string name="adaptive_stats_exp_for_a_week">points for a week</string>
+
     <string name="request_error">Something went wrong</string>
 </resources>

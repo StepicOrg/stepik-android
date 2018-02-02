@@ -5,6 +5,7 @@ import org.stepic.droid.web.model.adaptive.RatingResponse;
 import org.stepic.droid.web.model.adaptive.RatingRestoreResponse;
 
 import io.reactivex.Completable;
+import io.reactivex.Observable;
 import io.reactivex.Single;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -19,7 +20,7 @@ public interface RatingService {
     );
 
     @GET("rating")
-    Single<RatingResponse> getRating(
+    Observable<RatingResponse> getRating(
             @Query("course") final long courseId,
             @Query("count") final long count,
             @Query("days") final long days,

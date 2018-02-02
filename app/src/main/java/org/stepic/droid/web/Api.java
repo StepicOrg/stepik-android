@@ -18,6 +18,7 @@ import org.stepic.droid.web.model.adaptive.RatingRestoreResponse;
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
 
 import io.reactivex.Completable;
+import io.reactivex.Observable;
 import io.reactivex.Single;
 import retrofit2.Call;
 
@@ -169,7 +170,7 @@ public interface Api {
 
     Completable createReaction(RecommendationReaction reaction);
 
-    Single<RatingResponse> getRating(long courseId, int count, int days);
+    Observable<RatingResponse> getRating(long courseId, int count, int days);
 
     Completable putRating(long courseId, long exp);
 

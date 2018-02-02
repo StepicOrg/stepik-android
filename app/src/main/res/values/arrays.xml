@@ -11,4 +11,9 @@
         <item>Robots still working…</item>
         <item>Making some math…</item>
     </string-array>
+    <string-array name="adaptive_rating_periods">
+        <item>Last 24 hours</item>
+        <item>Last 7 days</item>
+        <item>All time</item>
+    </string-array>
 </resources>

@@ -163,6 +163,8 @@
     <color name="adaptive_color_correct">#75B875</color>
 
     <color name="adaptive_color_title">#333</color>
+    <color name="adaptive_color_yellow">#ffca1d</color>
+    <color name="adaptive_rank_separator">@color/new_accent_color</color>
 
     <color name="color_stroke">#E4E4E4</color>
 

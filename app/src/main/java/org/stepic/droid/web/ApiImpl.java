@@ -75,6 +75,7 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
 import io.reactivex.Completable;
+import io.reactivex.Observable;
 import io.reactivex.Single;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
@@ -847,7 +848,7 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Single<RatingResponse> getRating(long courseId, int count, int days) {
+    public Observable<RatingResponse> getRating(long courseId, int count, int days) {
         return ratingService.getRating(courseId, count, days, getCurrentUserId());
     }
 
