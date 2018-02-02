@@ -7,6 +7,7 @@ import io.reactivex.functions.BiFunction
 import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.adaptive.model.RatingItem
 import org.stepic.droid.adaptive.ui.adapters.AdaptiveRatingAdapter
+import org.stepic.droid.adaptive.util.RatingNamesGenerator
 import org.stepic.droid.core.presenters.contracts.AdaptiveRatingView
 import org.stepic.droid.di.adaptive.AdaptiveCourseScope
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
@@ -28,6 +29,7 @@ constructor(
         private val backgroundScheduler: Scheduler,
         @MainScheduler
         private val mainScheduler: Scheduler,
+        private val ratingNamesGenerator: RatingNamesGenerator,
 
         context: Context,
         sharedPreferenceHelper: SharedPreferenceHelper
@@ -74,7 +76,7 @@ constructor(
             data.mapIndexed { index, (rank, _, exp, user) ->
                 RatingItem(
                         if (rank == 0) index + 1 else rank,
-                        user.toString(),
+                        ratingNamesGenerator.getName(user),
                         exp,
                         user
                 )
