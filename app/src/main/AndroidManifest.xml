@@ -348,7 +348,7 @@
 
         <activity
             android:name=".adaptive.ui.activities.AdaptiveStatsActivity"
-            android:theme="@style/Adaptive" />
+            android:theme="@style/Adaptive.White" />
 
 
         <receiver

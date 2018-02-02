@@ -131,9 +131,8 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void showAdaptiveStats(Context context, long courseId, int page) {
+    public void showAdaptiveStats(Context context, long courseId) {
         Intent intent = new Intent(context, AdaptiveStatsActivity.class);
-        intent.putExtra(AdaptiveStatsActivity.PAGE_KEY, page);
         intent.putExtra(AppConstants.KEY_COURSE_LONG_ID, courseId);
         context.startActivity(intent);
     }

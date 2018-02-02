@@ -624,5 +624,9 @@
     <string name="adaptive_stats_level">УРОВЕНЬ</string>
     <string name="adaptive_stats_exp_for_a_week">опыта за неделю</string>
 
+    <string name="adaptive_progress">Прогресс</string>
+    <string name="adaptive_rating">Рейтинг</string>
+    <string name="adaptive_rating_you_placeholder"><b>Вы</b></string>
+
     <string name="request_error">Что-то пошло не так</string>
 </resources>

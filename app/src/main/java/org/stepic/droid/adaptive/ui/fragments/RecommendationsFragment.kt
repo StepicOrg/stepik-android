@@ -75,7 +75,7 @@ class RecommendationsFragment : FragmentBase(), RecommendationsView {
         }
 
         toolbar.setOnClickListener {
-            screenManager.showAdaptiveStats(context, course?.courseId ?: 0, 0)
+            screenManager.showAdaptiveStats(context, course?.courseId ?: 0)
         }
 
         streakSuccessContainer.nestedTextView = streakSuccess

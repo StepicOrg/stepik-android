@@ -47,7 +47,8 @@
         <FrameLayout
             android:padding="16dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@color/highlighted_elements_background">
 
             <android.support.v7.widget.AppCompatSpinner
                 android:id="@+id/spinner"

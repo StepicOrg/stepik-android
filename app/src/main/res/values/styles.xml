@@ -426,6 +426,10 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="Adaptive.White" parent="Adaptive">
+        <item name="android:windowBackground">@color/white</item>
+    </style>
+
     <style name="Adaptive.ReactionStamp">
         <item name="android:textSize">24sp</item>
         <item name="android:gravity">center</item>
