@@ -74,6 +74,10 @@ class RecommendationsFragment : FragmentBase(), RecommendationsView {
             it.supportActionBar?.setDisplayShowTitleEnabled(false)
         }
 
+        toolbar.setOnClickListener {
+            screenManager.showAdaptiveStats(context, course?.courseId ?: 0, 0)
+        }
+
         streakSuccessContainer.nestedTextView = streakSuccess
         streakSuccessContainer.setGradientDrawableParams(ContextCompat.getColor(context, R.color.adaptive_color_correct), 0f)
     }

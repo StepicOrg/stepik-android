@@ -20,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
 import org.stepic.droid.adaptive.ui.activities.AdaptiveCourseActivity;
 import org.stepic.droid.adaptive.ui.activities.AdaptiveOnboardingActivity;
+import org.stepic.droid.adaptive.ui.activities.AdaptiveStatsActivity;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.configuration.Config;
@@ -126,6 +127,14 @@ public class ScreenManagerImpl implements ScreenManager {
         analytic.reportEvent(Analytic.Interaction.USER_OPEN_IMAGE);
         Intent intent = new Intent(context, PhotoViewActivity.class);
         intent.putExtra(PhotoViewActivity.Companion.getPathKey(), path);
+        context.startActivity(intent);
+    }
+
+    @Override
+    public void showAdaptiveStats(Context context, long courseId, int page) {
+        Intent intent = new Intent(context, AdaptiveStatsActivity.class);
+        intent.putExtra(AdaptiveStatsActivity.PAGE_KEY, page);
+        intent.putExtra(AppConstants.KEY_COURSE_LONG_ID, courseId);
         context.startActivity(intent);
     }
 

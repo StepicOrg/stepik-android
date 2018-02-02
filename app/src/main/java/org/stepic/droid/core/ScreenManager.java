@@ -130,6 +130,8 @@ public interface ScreenManager {
 
     void openImage(Context context, String path);
 
+    void showAdaptiveStats(Context context, long courseId, int page);
+
 
     void showCoursesList(Activity activity, @NotNull CoursesCarouselInfo info, @Nullable CollectionDescriptionColors collectionDescriptionColors);
 
