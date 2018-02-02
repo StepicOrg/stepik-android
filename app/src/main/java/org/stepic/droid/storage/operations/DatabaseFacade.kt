@@ -508,4 +508,8 @@ class DatabaseFacade
     fun addLocalExpItem(exp: Long, submissionId: Long, courseId: Long) {
         adaptiveExpDao.insertOrReplace(LocalExpItem(exp, submissionId, courseId))
     }
+
+    fun getExpForLast7Days(courseId: Long) = adaptiveExpDao.getExpForLast7Days(courseId)
+
+    fun getExpForWeeks(courseId: Long) = adaptiveExpDao.getExpForWeeks(courseId)
 }
