@@ -1,6 +1,5 @@
 package org.stepic.droid.core.presenters
 
-import android.util.Log
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineDataSet
 import io.reactivex.Scheduler

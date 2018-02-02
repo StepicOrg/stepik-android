@@ -117,11 +117,27 @@ class AdaptiveWeeksAdapter : RecyclerView.Adapter<AdaptiveWeeksAdapter.StatsView
             val start: TextView = root.start
             val end: TextView = root.end
         }
+
         class StatsHeaderViewHolder(val root: View) : StatsViewHolder(root) {
             val chart: LineChart = root.chart
             val expTotal: TextView = root.expTotal
             val level: TextView = root.level
             val expThisWeek: TextView = root.expThisWeek
+
+            init {
+                chart.description.isEnabled = false
+                chart.setTouchEnabled(false)
+                chart.setScaleEnabled(false)
+                chart.setPinchZoom(false)
+                chart.setDrawGridBackground(false)
+                chart.isDragEnabled = false
+
+                chart.xAxis.isEnabled = false
+                chart.axisLeft.isEnabled = false
+                chart.axisRight.isEnabled = false
+
+                chart.legend.isEnabled = false
+            }
         }
     }
 }
