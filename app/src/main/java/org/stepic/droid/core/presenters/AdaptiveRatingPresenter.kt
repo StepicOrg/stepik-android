@@ -57,12 +57,14 @@ constructor(
     }
 
     private fun initRatingPeriods() {
+        val left = BiFunction<Any, Any, Any> { a, _ -> a}
+
         RATING_PERIODS.forEachIndexed { pos, period ->
             compositeDisposable.add(api.getRating(courseId, ITEMS_PER_PAGE, period)
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .doOnError(this::onError)
-                    .retryWhen { x -> x.zipWith(retrySubject, BiFunction<Throwable, Int, Throwable> { a, _ -> a }) }
+                    .retryWhen { x -> x.zipWith(retrySubject, left) }
                     .map { it.users }
                     .subscribe({
                         adapters[pos].set(prepareRatingItems(it))
