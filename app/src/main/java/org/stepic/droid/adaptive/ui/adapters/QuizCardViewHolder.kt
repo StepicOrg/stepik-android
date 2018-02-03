@@ -70,6 +70,7 @@ class QuizCardViewHolder(
         wrongButton.setOnClickListener {
             presenter?.let {
                 it.retrySubmission()
+                choiceAdapter.setEnabled(true)
                 resetSupplementalActions()
             }
         }
@@ -127,8 +128,10 @@ class QuizCardViewHolder(
 
     override fun setSubmission(submission: Submission, animate: Boolean) {
         resetSupplementalActions()
+        choiceAdapter.setSubmission(submission)
         when(submission.status) {
             Submission.Status.CORRECT -> {
+                choiceAdapter.setEnabled(false)
                 actionButton.visibility = View.GONE
                 hasSubmission = true
 
@@ -147,6 +150,7 @@ class QuizCardViewHolder(
             }
 
             Submission.Status.WRONG -> {
+                choiceAdapter.setEnabled(false)
                 wrongSign.visibility = View.VISIBLE
                 hasSubmission = true
 
@@ -171,12 +175,14 @@ class QuizCardViewHolder(
             Snackbar.make(root.parent as ViewGroup, errorMessage, Snackbar.LENGTH_SHORT).show()
         }
         container.isEnabled = true
+        choiceAdapter.setEnabled(true)
         resetSupplementalActions()
     }
 
     override fun onSubmissionLoading() {
         resetSupplementalActions()
         container.isEnabled = false
+        choiceAdapter.setEnabled(false)
         actionButton.visibility = View.GONE
         answersProgress.visibility = View.VISIBLE
 
