@@ -24,7 +24,7 @@ class AdaptiveWeeksAdapter : RecyclerView.Adapter<AdaptiveWeeksAdapter.StatsView
         private const val HEADER_VIEW_TYPE = 1
         private const val ITEM_VIEW_TYPE = 2
 
-        private const val DATE_FORMAT = "%1\$tdd %1\$tMMMM %1\$tyyyy"
+        private const val DATE_FORMAT = "%1\$td %1\$tB %1\$tY"
     }
 
     private val weeks = ArrayList<AdaptiveWeekProgress>()
@@ -41,7 +41,6 @@ class AdaptiveWeeksAdapter : RecyclerView.Adapter<AdaptiveWeeksAdapter.StatsView
         header.last7Days = last7Days
         notifyItemChanged(0)
     }
-
 
     override fun getItemViewType(position: Int) =
             if (position == 0)

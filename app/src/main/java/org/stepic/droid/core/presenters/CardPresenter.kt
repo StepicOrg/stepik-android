@@ -131,8 +131,8 @@ class CardPresenter(
             if (it.status == Submission.Status.EVALUATION) {
                 disposable =  api.getSubmissionsReactive(it.attempt)
                         .delay(1, TimeUnit.SECONDS)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeOn(backgroundScheduler)
+                        .observeOn(mainScheduler)
                         .subscribe(this::onSubmissionLoaded, this::onError)
             } else {
                 isLoading = false
