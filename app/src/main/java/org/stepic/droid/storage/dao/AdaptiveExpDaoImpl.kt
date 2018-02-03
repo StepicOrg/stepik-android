@@ -79,7 +79,7 @@ constructor(databaseOperations: DatabaseOperations) : DaoBase<LocalExpItem>(data
                 "FROM $dbName " +
                 "WHERE ${DbStructureAdaptiveExp.Column.SOLVED_AT} >= (SELECT DATETIME('now', '-7 day')) " +
                         "AND ${DbStructureAdaptiveExp.Column.SUBMISSION_ID} <> 0 " +
-                        "AND ${DbStructureAdaptiveExp.Column.COURSE_ID} = ?" +
+                        "AND ${DbStructureAdaptiveExp.Column.COURSE_ID} = ? " +
                 "GROUP BY $FIELD_DAY " +
                 "ORDER BY $FIELD_DAY"
 
@@ -117,7 +117,7 @@ constructor(databaseOperations: DatabaseOperations) : DaoBase<LocalExpItem>(data
                         "SUM(${DbStructureAdaptiveExp.Column.EXP}) as ${DbStructureAdaptiveExp.Column.EXP} " +
                 "FROM $dbName " +
                 "WHERE ${DbStructureAdaptiveExp.Column.SUBMISSION_ID} <> 0 " +
-                        "AND ${DbStructureAdaptiveExp.Column.COURSE_ID} = ?" +
+                        "AND ${DbStructureAdaptiveExp.Column.COURSE_ID} = ? " +
                 "GROUP BY $FIELD_WEEK " +
                 "ORDER BY $FIELD_WEEK DESC"
 

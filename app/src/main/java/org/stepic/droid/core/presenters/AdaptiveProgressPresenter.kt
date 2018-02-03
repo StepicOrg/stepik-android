@@ -8,14 +8,12 @@ import io.reactivex.disposables.CompositeDisposable
 import org.stepic.droid.adaptive.ui.adapters.AdaptiveWeeksAdapter
 import org.stepic.droid.adaptive.util.ExpHelper
 import org.stepic.droid.core.presenters.contracts.AdaptiveProgressView
-import org.stepic.droid.di.adaptive.AdaptiveCourseScope
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.CourseId
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.storage.operations.DatabaseFacade
 import javax.inject.Inject
 
-@AdaptiveCourseScope
 class AdaptiveProgressPresenter
 @Inject
 constructor (
