@@ -45,7 +45,9 @@ constructor(databaseOperations: DatabaseOperations) : DaoBase<LocalExpItem>(data
         val sqlPrefix = "SELECT * FROM $dbName WHERE ${DbStructureAdaptiveExp.Column.COURSE_ID} = ? "
 
         return if (submissionId == -1L) {
-            val sql = sqlPrefix + "ORDER BY ${DbStructureAdaptiveExp.Column.SOLVED_AT} DESC LIMIT 1"
+            val sql = sqlPrefix +
+                    "AND ${DbStructureAdaptiveExp.Column.SUBMISSION_ID} <> 0 " + // submission id = 0 only for syncing
+                    "ORDER BY ${DbStructureAdaptiveExp.Column.SOLVED_AT} DESC LIMIT 1"
             getAllWithQuery(sql, arrayOf(courseId.toString()))
         } else {
             val sql = sqlPrefix + "AND ${DbStructureAdaptiveExp.Column.SUBMISSION_ID} = ?"
@@ -127,10 +129,10 @@ constructor(databaseOperations: DatabaseOperations) : DaoBase<LocalExpItem>(data
                     val w = it.getLong(it.getColumnIndex(DbStructureAdaptiveExp.Column.SOLVED_AT)) * 1000
 
                     val start = DateTimeHelper.calendarFromLocalMillis(w)
-                    start.set(Calendar.DAY_OF_WEEK, 1)
+                    start.set(Calendar.DAY_OF_WEEK, start.firstDayOfWeek)
 
                     val end = DateTimeHelper.calendarFromLocalMillis(w)
-                    end.set(Calendar.DAY_OF_WEEK, 7)
+                    end.set(Calendar.DAY_OF_WEEK, (end.firstDayOfWeek + 6) % 7)
 
                     res.add(AdaptiveWeekProgress(start, end, it.getLong(it.getColumnIndex(DbStructureAdaptiveExp.Column.EXP))))
                 } while (it.moveToNext())
