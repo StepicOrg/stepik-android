@@ -111,6 +111,13 @@ constructor(
         changeExp(submissionId, isCorrect = true)
         view?.onStreak(streak)
         updateExp(showLevelDialog = true)
+
+        if (!sharedPreferenceHelper.isAdaptiveExpTooltipWasShown) {
+            view?.let{
+                it.showExpTooltip()
+                sharedPreferenceHelper.afterAdaptiveExpTooltipWasShown()
+            }
+        }
     }
 
     override fun onWrongAnswer(submissionId: Long) {

@@ -36,6 +36,7 @@ public class SharedPreferenceHelper {
     private static final String KEEP_SCREEN_ON_STEPS = "keep_screen_on_steps";
     private static final String IS_ADAPTIVE_MODE_ENABLED = "is_adaptive_mode_enabled";
     private static final String IS_FIRST_ADAPTIVE_COURSE = "is_first_adaptive_course";
+    private static final String IS_ADAPTIVE_EXP_TOOLTIP_WAS_SHOWN = "is_adaptive_exp_tooltip_was_shown";
     private static final String ROTATE_PREF = "rotate_pref";
     private static final String NOTIFICATION_LEARN_DISABLED = "notification_disabled_by_user";
     private static final String NOTIFICATION_COMMENT_DISABLED = "notification_comment_disabled";
@@ -371,6 +372,14 @@ public class SharedPreferenceHelper {
 
     public void afterAdaptiveOnboardingPassed() {
         put(PreferenceType.DEVICE_SPECIFIC, IS_FIRST_ADAPTIVE_COURSE, false);
+    }
+
+    public boolean isAdaptiveExpTooltipWasShown() {
+        return getBoolean(PreferenceType.DEVICE_SPECIFIC, IS_ADAPTIVE_EXP_TOOLTIP_WAS_SHOWN, false);
+    }
+
+    public void afterAdaptiveExpTooltipWasShown() {
+        put(PreferenceType.DEVICE_SPECIFIC, IS_ADAPTIVE_EXP_TOOLTIP_WAS_SHOWN, true);
     }
 
     public void setHasEverLogged() {

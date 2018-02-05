@@ -628,5 +628,7 @@
     <string name="adaptive_rating">Рейтинг</string>
     <string name="adaptive_rating_you_placeholder"><b>Вы</b></string>
 
+    <string name="adaptive_exp_tooltip_text">Нажав на тулбар, вы можете увидеть подробную статистику вашего обучения</string>
+
     <string name="request_error">Что-то пошло не так</string>
 </resources>

@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupWindow
 import kotlinx.android.synthetic.main.fragment_recommendations.*
 import org.stepic.droid.R
 import org.stepic.droid.adaptive.ui.adapters.QuizCardsAdapter
@@ -16,6 +17,7 @@ import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.core.presenters.RecommendationsPresenter
 import org.stepic.droid.core.presenters.contracts.RecommendationsView
 import org.stepic.droid.model.Course
+import org.stepic.droid.ui.util.PopupHelper
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.MathUtli
 import javax.inject.Inject
@@ -47,6 +49,8 @@ class RecommendationsFragment : FragmentBase(), RecommendationsView {
 
     private val loadingPlaceholders by lazy { resources.getStringArray(R.array.recommendation_loading_placeholders) }
 
+    private var expPopupWindow: PopupWindow? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         course = arguments.getParcelable(AppConstants.KEY_COURSE_BUNDLE)
         super.onCreate(savedInstanceState)
@@ -76,6 +80,12 @@ class RecommendationsFragment : FragmentBase(), RecommendationsView {
 
         toolbar.setOnClickListener {
             screenManager.showAdaptiveStats(context, course?.courseId ?: 0)
+
+            expPopupWindow?.let {
+                if (it.isShowing) {
+                    it.dismiss()
+                }
+            }
         }
 
         streakSuccessContainer.nestedTextView = streakSuccess
@@ -157,6 +167,10 @@ class RecommendationsFragment : FragmentBase(), RecommendationsView {
         } else {
             animations.playStreakBubbleAnimation(expInc)
         }
+    }
+
+    override fun showExpTooltip() {
+        expPopupWindow = PopupHelper.showPopupAnchoredToView(context, expBubble, getString(R.string.adaptive_exp_tooltip_text))
     }
 
     override fun onStreakLost() =

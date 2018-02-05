@@ -27,6 +27,7 @@ interface RecommendationsView {
 
 //    fun showDailyRewardDialog(progress: Long)
     fun showNewLevelDialog(level: Long)
+    fun showExpTooltip()
 //    fun showRateAppDialog()
 //    fun showStreakRestoreDialog(streak: Long)
 }
