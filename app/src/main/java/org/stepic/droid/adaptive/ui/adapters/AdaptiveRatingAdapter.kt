@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import android.support.v4.content.ContextCompat
 import android.support.v4.graphics.drawable.DrawableCompat
+import android.support.v7.content.res.AppCompatResources
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -36,16 +37,12 @@ class AdaptiveRatingAdapter (
 
     private val profileId = sharedPreferenceHelper.profile?.id ?: 0
 
-    private val leaderIconDrawable: Drawable by lazy {
-        val drawable = DrawableCompat.wrap(ContextCompat.getDrawable(context, R.drawable.ic_crown))
-        DrawableCompat.setTint(drawable, ContextCompat.getColor(context, R.color.adaptive_color_yellow))
-        return@lazy drawable
+    private val leaderIconDrawable: Drawable? = AppCompatResources.getDrawable(context, R.drawable.ic_crown)?.apply {
+        DrawableCompat.setTint(this, ContextCompat.getColor(context, R.color.adaptive_color_yellow))
     }
 
-    private val leaderIconDrawableSelected: Drawable by lazy {
-        val drawable = DrawableCompat.wrap(ContextCompat.getDrawable(context, R.drawable.ic_crown))
-        DrawableCompat.setTint(drawable, ContextCompat.getColor(context, android.R.color.white))
-        return@lazy drawable
+    private val leaderIconDrawableSelected: Drawable? = AppCompatResources.getDrawable(context, R.drawable.ic_crown)?.apply {
+        DrawableCompat.setTint(this, ContextCompat.getColor(context,  android.R.color.white))
     }
 
     private val items = ArrayList<RatingItem>()

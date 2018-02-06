@@ -1,6 +1,7 @@
 package org.stepic.droid.adaptive.ui.activities
 
 import android.os.Bundle
+import android.support.v7.app.AppCompatDelegate
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_adaptive_stats.*
 import org.stepic.droid.R
@@ -10,6 +11,12 @@ import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.AppConstants
 
 class AdaptiveStatsActivity : FragmentActivityBase() {
+    companion object {
+        init {
+            AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_adaptive_stats)
