@@ -9,7 +9,6 @@ import org.stepic.droid.adaptive.model.RatingItem
 import org.stepic.droid.adaptive.ui.adapters.AdaptiveRatingAdapter
 import org.stepic.droid.adaptive.util.RatingNamesGenerator
 import org.stepic.droid.core.presenters.contracts.AdaptiveRatingView
-import org.stepic.droid.di.adaptive.AdaptiveCourseScope
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.CourseId
 import org.stepic.droid.di.qualifiers.MainScheduler
@@ -18,7 +17,6 @@ import org.stepic.droid.web.Api
 import retrofit2.HttpException
 import javax.inject.Inject
 
-@AdaptiveCourseScope
 class AdaptiveRatingPresenter
 @Inject
 constructor(
