@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.BitmapImageViewTarget
 import kotlinx.android.synthetic.main.new_course_item.view.*
 import org.stepic.droid.R
+import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.configuration.Config
@@ -50,6 +51,8 @@ class CourseItemViewHolder(
     @Inject
     lateinit var config: Config
 
+    @Inject
+    lateinit var adaptiveCoursesResolver: AdaptiveCoursesResolver
 
     private val continueColor: Int by lazy {
         ColorUtil.getColorArgb(colorType.textColor, itemView.context)
@@ -148,7 +151,11 @@ class CourseItemViewHolder(
     private fun onClickCourse() = course?.let {
         analytic.reportEvent(Analytic.Interaction.CLICK_COURSE)
         if (it.enrollment != 0) {
-            screenManager.showSections(contextActivity, it)
+            if (adaptiveCoursesResolver.isAdaptive(it.courseId)) {
+                screenManager.continueAdaptiveCourse(contextActivity, it)
+            } else {
+                screenManager.showSections(contextActivity, it)
+            }
         } else {
             screenManager.showCourseDescription(contextActivity, it)
         }
