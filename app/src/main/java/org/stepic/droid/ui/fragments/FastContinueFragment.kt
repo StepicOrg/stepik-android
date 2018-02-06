@@ -91,20 +91,22 @@ class FastContinueFragment : FragmentBase(),
         droppingClient.subscribe(this)
         joiningListenerClient.subscribe(this)
         fastContinueAction.isEnabled = true
+    }
 
-
+    override fun onResume() {
+        super.onResume()
         fastContinuePresenter.attachView(this)
         fastContinuePresenter.onCreated()
     }
 
     override fun onPause() {
+        fastContinuePresenter.detachView(this)
         super.onPause()
         ProgressHelper.dismiss(fragmentManager, CONTINUE_LOADING_TAG)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        fastContinuePresenter.detachView(this)
         joiningListenerClient.unsubscribe(this)
         continueCoursePresenter.detachView(this)
         droppingClient.unsubscribe(this)
