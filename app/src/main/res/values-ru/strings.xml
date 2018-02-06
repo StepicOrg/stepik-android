@@ -581,7 +581,7 @@
 
     <string name="adaptive_exp_title">Уровень <b>%d</b></string>
     <string name="adaptive_exp_level_title">Новый уровень!</string>
-    <string name="adaptive_exp_subtitle">%d опыта до нового уровня</string>
+    <string name="adaptive_exp_subtitle">%s опыта до следующего</string>
 
     <string name="adaptive_streak_failed">Серия потеряна</string>
 
@@ -615,6 +615,20 @@
     <string name="adaptive_onboarding_card_question_4"><![CDATA[
         <p>При необходимости вы можете отключить адаптивные курсы в настройках (<b>Настройки</b> -> <b>Прочее</b> -> <b>Адаптивные курсы</b>) и продолжить обуение в привычном режиме.</p>
     ]]></string>
+
+    <string name="adaptive_level_dialog_continue">Продолжить</string>
+
+    <string name="adaptive_stats_title">Статистика</string>
+    <string name="adaptive_stats_total_exp">ВСЕГО ОПЫТА</string>
+    <string name="adaptive_stats_last_7_days">ПОСЛЕДНИЕ 7 ДНЕЙ</string>
+    <string name="adaptive_stats_level">УРОВЕНЬ</string>
+    <string name="adaptive_stats_exp_for_a_week">опыта за неделю</string>
+
+    <string name="adaptive_progress">Прогресс</string>
+    <string name="adaptive_rating">Рейтинг</string>
+    <string name="adaptive_rating_you_placeholder"><b>Вы</b></string>
+
+    <string name="adaptive_exp_tooltip_text">Нажав на панель с опытом, вы можете увидеть подробную статистику вашего обучения</string>
 
     <string name="request_error">Что-то пошло не так</string>
 </resources>

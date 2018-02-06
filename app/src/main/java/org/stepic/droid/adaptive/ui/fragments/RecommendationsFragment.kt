@@ -1,18 +1,23 @@
 package org.stepic.droid.adaptive.ui.fragments
 
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
+import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupWindow
 import kotlinx.android.synthetic.main.fragment_recommendations.*
 import org.stepic.droid.R
 import org.stepic.droid.adaptive.ui.adapters.QuizCardsAdapter
+import org.stepic.droid.adaptive.ui.animations.RecommendationsFragmentAnimations
+import org.stepic.droid.adaptive.ui.dialogs.AdaptiveLevelDialog
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.core.presenters.RecommendationsPresenter
 import org.stepic.droid.core.presenters.contracts.RecommendationsView
 import org.stepic.droid.model.Course
-import org.stepic.droid.ui.util.initCenteredToolbar
+import org.stepic.droid.ui.util.PopupHelper
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.MathUtli
 import javax.inject.Inject
@@ -23,19 +28,32 @@ class RecommendationsFragment : FragmentBase(), RecommendationsView {
             val args = Bundle().apply { putParcelable(AppConstants.KEY_COURSE_BUNDLE, course) }
             return RecommendationsFragment().apply { arguments = args }
         }
+
+        private const val MAX_UNFORMATTED_EXP = 1e6
+        private fun formatExp(exp: Long) = if (exp > MAX_UNFORMATTED_EXP) {
+            "${exp / 1000}K"
+        } else {
+            exp.toString()
+        }
+
+        private const val LEVEL_DIALOG_TAG = "level_dialog"
     }
 
     @Inject
     lateinit var recommendationsPresenter: RecommendationsPresenter
 
+    @Inject
+    lateinit var animations: RecommendationsFragmentAnimations
+
     private var course: Course? = null
 
     private val loadingPlaceholders by lazy { resources.getStringArray(R.array.recommendation_loading_placeholders) }
 
+    private var expPopupWindow: PopupWindow? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         course = arguments.getParcelable(AppConstants.KEY_COURSE_BUNDLE)
         super.onCreate(savedInstanceState)
-        recommendationsPresenter.initCourse(course?.courseId ?: 0)
     }
 
     override fun injectComponent() {
@@ -54,12 +72,24 @@ class RecommendationsFragment : FragmentBase(), RecommendationsView {
             recommendationsPresenter.retry()
         }
 
-//        (activity as? AppCompatActivity)?.let {
-//            it.setSupportActionBar(toolbar)
-//            it.supportActionBar?.setDisplayHomeAsUpEnabled(true)
-//        }
+        (activity as? AppCompatActivity)?.let {
+            it.setSupportActionBar(toolbar)
+            it.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+            it.supportActionBar?.setDisplayShowTitleEnabled(false)
+        }
 
-        initCenteredToolbar(title = course?.title ?: "", showHomeButton = true)
+        toolbar.setOnClickListener {
+            screenManager.showAdaptiveStats(context, course?.courseId ?: 0)
+
+            expPopupWindow?.let {
+                if (it.isShowing) {
+                    it.dismiss()
+                }
+            }
+        }
+
+        streakSuccessContainer.nestedTextView = streakSuccess
+        streakSuccessContainer.setGradientDrawableParams(ContextCompat.getColor(context, R.color.adaptive_color_correct), 0f)
     }
 
     override fun onAdapter(cardsAdapter: QuizCardsAdapter) {
@@ -108,6 +138,46 @@ class RecommendationsFragment : FragmentBase(), RecommendationsView {
         courseStateText.setText(R.string.adaptive_course_not_supported)
         onCourseState()
     }
+
+    override fun updateExp(exp: Long,
+                           currentLevelExp: Long,
+                           nextLevelExp: Long,
+
+                           level: Long) {
+        expProgress.progress = (exp - currentLevelExp).toInt()
+        expProgress.max = (nextLevelExp - currentLevelExp).toInt()
+
+        expCounter.text = formatExp(exp)
+        expLevel.text = getString(R.string.adaptive_exp_title, level)
+        expLevelNext.text = getString(R.string.adaptive_exp_subtitle, formatExp(nextLevelExp - exp))
+    }
+
+    override fun onStreak(streak: Long) {
+        expInc.text = getString(R.string.adaptive_exp_inc, streak)
+        streakSuccess.text = resources.getQuantityString(R.plurals.adaptive_streak_success, streak.toInt(), streak)
+
+        if (streak > 1) {
+            animations.playStreakSuccessAnimationSequence(
+                    root = rootView,
+                    streakSuccessContainer = streakSuccessContainer,
+                    expProgress = expProgress,
+                    expInc = expInc,
+                    expBubble = expBubble
+            )
+        } else {
+            animations.playStreakBubbleAnimation(expInc)
+        }
+    }
+
+    override fun showExpTooltip() {
+        expPopupWindow = PopupHelper.showPopupAnchoredToView(context, expBubble, getString(R.string.adaptive_exp_tooltip_text))
+    }
+
+    override fun onStreakLost() =
+            animations.playStreakFailedAnimation(streakFailed, expProgress)
+
+    override fun showNewLevelDialog(level: Long) =
+            AdaptiveLevelDialog.newInstance(level).show(childFragmentManager, LEVEL_DIALOG_TAG)
 
     override fun onStart() {
         super.onStart()

@@ -1,7 +1,9 @@
 package org.stepic.droid.core.presenters
 
+import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Scheduler
+import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.BiFunction
@@ -13,10 +15,12 @@ import org.stepic.droid.adaptive.model.Reaction
 import org.stepic.droid.adaptive.model.RecommendationReaction
 import org.stepic.droid.adaptive.ui.adapters.QuizCardsAdapter
 import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
+import org.stepic.droid.adaptive.util.ExpHelper
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.presenters.contracts.RecommendationsView
 import org.stepic.droid.di.adaptive.AdaptiveCourseScope
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
+import org.stepic.droid.di.qualifiers.CourseId
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.model.PersistentLastStep
 import org.stepic.droid.preferences.SharedPreferenceHelper
@@ -32,6 +36,8 @@ import javax.inject.Inject
 class RecommendationsPresenter
 @Inject
 constructor(
+        @CourseId
+        private val courseId: Long,
         private val api: Api,
         @BackgroundScheduler
         private val backgroundScheduler: Scheduler,
@@ -61,15 +67,17 @@ constructor(
 
     private var isCourseCompleted = false
 
-    private var courseId = 0L
+    private var exp: Long = 0
+    private var streak: Long = 0
 
-    fun initCourse(courseId: Long) {
-        this.courseId = courseId
+    init {
         createReaction(0, Reaction.INTERESTING)
+        fetchLocalExp()
     }
 
     override fun attachView(view: RecommendationsView) {
         super.attachView(view)
+        updateExp()
 
         view.onLoading()
 
@@ -85,9 +93,39 @@ constructor(
         view.onAdapter(adapter)
     }
 
+    private fun updateExp(showLevelDialog: Boolean = false) {
+        val level = ExpHelper.getCurrentLevel(exp)
+
+        val prev = ExpHelper.getNextLevelExp(level - 1)
+        val next = ExpHelper.getNextLevelExp(level)
+
+        view?.updateExp(exp, prev, next, level)
+
+        if (showLevelDialog && level != ExpHelper.getCurrentLevel(exp - streak)) {
+            view?.showNewLevelDialog(level)
+        }
+    }
+
     // methods for gamification
-    override fun onCorrectAnswer(submissionId: Long) {}
-    override fun onWrongAnswer() {}
+    override fun onCorrectAnswer(submissionId: Long) {
+        changeExp(submissionId, isCorrect = true)
+        view?.onStreak(streak)
+        updateExp(showLevelDialog = true)
+
+        if (!sharedPreferenceHelper.isAdaptiveExpTooltipWasShown) {
+            view?.let{
+                it.showExpTooltip()
+                sharedPreferenceHelper.afterAdaptiveExpTooltipWasShown()
+            }
+        }
+    }
+
+    override fun onWrongAnswer(submissionId: Long) {
+        if (streak > 1) {
+            view?.onStreakLost()
+        }
+        changeExp(submissionId, isCorrect = false)
+    }
 
     override fun createReaction(lessonId: Long, reaction: Reaction) {
         if (adapter.isEmptyOrContainsOnlySwipedCard(lessonId)) {
@@ -198,4 +236,56 @@ constructor(
                     }
                 }, {}))
     }
+
+    private fun fetchLocalExp() {
+        compositeDisposable.add(
+            Single.fromCallable { databaseFacade.getExpForCourse(courseId) to databaseFacade.getStreakForCourse(courseId) }
+                .subscribeOn(backgroundScheduler)
+                .observeOn(mainScheduler)
+                .subscribe({
+                    exp = it.first
+                    streak = it.second
+                    updateExp()
+                    fetchExpFromAPI()
+                }, {})
+        )
+    }
+
+    private fun fetchExpFromAPI() {
+        compositeDisposable.add(
+            api.restoreRating(courseId)
+                    .subscribeOn(backgroundScheduler)
+                    .map {
+                        databaseFacade.syncExp(courseId, it.exp)
+                    }
+                    .observeOn(mainScheduler)
+                    .subscribe({
+                        exp = it
+                        updateExp()
+                    }, {})
+        )
+    }
+
+    private fun changeExp(submissionId: Long, isCorrect: Boolean) {
+        if (isCorrect) {
+            streak++
+        } else { // reset streak on wrong answer
+            if (streak == 0L) { // no need to store that info again
+                return
+            } else {
+                streak = 0
+            }
+        }
+
+        exp += streak
+        compositeDisposable.add(
+            Completable.fromCallable { databaseFacade.addLocalExpItem(streak, submissionId, courseId) }
+                .andThen(syncRating())
+                .subscribeOn(backgroundScheduler)
+                .subscribe({}, {})
+        )
+    }
+
+    private fun syncRating() = Single.fromCallable { databaseFacade.getExpForCourse(courseId) }
+            .flatMap { localExp -> api.putRating(courseId, localExp).toSingle { localExp } }
 }

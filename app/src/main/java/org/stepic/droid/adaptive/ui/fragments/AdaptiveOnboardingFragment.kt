@@ -5,7 +5,7 @@ import android.support.annotation.StringRes
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.fragment_recommendations.*
+import kotlinx.android.synthetic.main.fragment_adaptive_onboarding.*
 import org.stepic.droid.R
 import org.stepic.droid.adaptive.model.Card
 import org.stepic.droid.adaptive.ui.adapters.OnboardingQuizCardsAdapter
@@ -27,7 +27,7 @@ class AdaptiveOnboardingFragment: FragmentBase() {
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-            inflater?.inflate(R.layout.fragment_recommendations, container, false)
+            inflater?.inflate(R.layout.fragment_adaptive_onboarding, container, false)
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

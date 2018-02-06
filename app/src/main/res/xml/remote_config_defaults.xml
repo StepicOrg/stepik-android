@@ -20,4 +20,8 @@
         <key>adaptive_courses</key>
         <value></value>
     </entry>
+    <entry>
+        <key>adaptive_backend_url</key>
+        <value>http://52.174.33.220</value>
+    </entry>
 </defaultsMap>

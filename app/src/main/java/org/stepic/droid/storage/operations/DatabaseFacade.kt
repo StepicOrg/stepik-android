@@ -1,6 +1,7 @@
 package org.stepic.droid.storage.operations
 
 import android.content.ContentValues
+import org.stepic.droid.adaptive.model.LocalExpItem
 import org.stepic.droid.di.qualifiers.EnrolledCoursesDaoQualifier
 import org.stepic.droid.di.qualifiers.FeaturedCoursesDaoQualifier
 import org.stepic.droid.di.storage.StorageSingleton
@@ -8,6 +9,7 @@ import org.stepic.droid.model.*
 import org.stepic.droid.model.Unit
 import org.stepic.droid.model.code.CodeSubmission
 import org.stepic.droid.notifications.model.Notification
+import org.stepic.droid.storage.dao.AdaptiveExpDao
 import org.stepic.droid.storage.dao.IDao
 import org.stepic.droid.storage.dao.SearchQueryDao
 import org.stepic.droid.storage.structure.*
@@ -23,6 +25,7 @@ class DatabaseFacade
         private val stepInfoOperation: StepInfoOperation,
         private val codeSubmissionDao: IDao<CodeSubmission>,
         private val searchQueryDao: SearchQueryDao,
+        private val adaptiveExpDao: AdaptiveExpDao,
         private val viewedNotificationsQueueDao: IDao<ViewedNotification>,
         private val sectionDao: IDao<Section>,
         private val unitDao: IDao<Unit>,
@@ -66,6 +69,7 @@ class DatabaseFacade
         assignmentDao.removeAll()
         codeSubmissionDao.removeAll()
         searchQueryDao.removeAll()
+        adaptiveExpDao.removeAll()
     }
 
     fun getCourseDao(table: Table) =
@@ -484,4 +488,28 @@ class DatabaseFacade
                 viewedNotification.notificationId.toString())
     }
 
+    fun syncExp(courseId: Long, apiExp: Long): Long {
+        val localExp = getExpForCourse(courseId)
+        val diff = apiExp - localExp
+        if (diff > 0) {
+            val syncRecord = adaptiveExpDao.getExpItem(courseId, 0)?.exp ?: 0
+            adaptiveExpDao.insertOrReplace(LocalExpItem(syncRecord + diff, 0, courseId))
+
+            return getExpForCourse(courseId)
+        }
+
+        return localExp
+    }
+
+    fun getExpForCourse(courseId: Long) = adaptiveExpDao.getExpForCourse(courseId)
+
+    fun getStreakForCourse(courseId: Long) = adaptiveExpDao.getExpItem(courseId)?.exp ?: 0
+
+    fun addLocalExpItem(exp: Long, submissionId: Long, courseId: Long) {
+        adaptiveExpDao.insertOrReplace(LocalExpItem(exp, submissionId, courseId))
+    }
+
+    fun getExpForLast7Days(courseId: Long) = adaptiveExpDao.getExpForLast7Days(courseId)
+
+    fun getExpForWeeks(courseId: Long) = adaptiveExpDao.getExpForWeeks(courseId)
 }

@@ -181,4 +181,6 @@
 
     <dimen name="adaptive_exp_bubble_corner_radius">24dp</dimen>
     <dimen name="adaptive_exp_bubble_margin">16dp</dimen>
+
+    <dimen name="spinner_arrow_margin">0dp</dimen>
 </resources>

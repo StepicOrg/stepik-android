@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.facebook.login.LoginManager;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.vk.sdk.VKSdk;
@@ -23,6 +24,7 @@ import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.configuration.Config;
+import org.stepic.droid.configuration.RemoteConfig;
 import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.StepikLogoutManager;
 import org.stepic.droid.di.AppSingleton;
@@ -54,6 +56,9 @@ import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DateTimeHelper;
 import org.stepic.droid.util.DeviceInfoUtil;
 import org.stepic.droid.util.RWLocks;
+import org.stepic.droid.web.model.adaptive.RatingRequest;
+import org.stepic.droid.web.model.adaptive.RatingResponse;
+import org.stepic.droid.web.model.adaptive.RatingRestoreResponse;
 import org.stepic.droid.web.model.adaptive.RecommendationReactionsRequest;
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
 
@@ -70,6 +75,7 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
 import io.reactivex.Completable;
+import io.reactivex.Observable;
 import io.reactivex.Single;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
@@ -101,10 +107,12 @@ public class ApiImpl implements Api {
     private final StepikLogoutManager stepikLogoutManager;
     private final ScreenManager screenManager;
     private final UserAgentProvider userAgentProvider;
+    private final FirebaseRemoteConfig firebaseRemoteConfig;
 
     private StepicRestLoggedService loggedService;
     private StepicRestOAuthService oAuthService;
     private StepicEmptyAuthService stepikEmptyAuthService;
+    private RatingService ratingService;
 
 
     @Inject
@@ -112,7 +120,8 @@ public class ApiImpl implements Api {
                    Config config, UserPreferences userPreferences,
                    Analytic analytic, StepikLogoutManager stepikLogoutManager,
                    ScreenManager screenManager,
-                   UserAgentProvider userAgentProvider) {
+                   UserAgentProvider userAgentProvider,
+                   FirebaseRemoteConfig firebaseRemoteConfig) {
         this.context = context;
         this.sharedPreference = sharedPreference;
         this.config = config;
@@ -121,9 +130,10 @@ public class ApiImpl implements Api {
         this.stepikLogoutManager = stepikLogoutManager;
         this.screenManager = screenManager;
         this.userAgentProvider = userAgentProvider;
+        this.firebaseRemoteConfig = firebaseRemoteConfig;
 
         makeOauthServiceWithNewAuthHeader(this.sharedPreference.isLastTokenSocial() ? TokenType.social : TokenType.loginPassword);
-        makeLoggedService();
+        makeLoggedServices();
 
         OkHttpClient.Builder okHttpClient = new OkHttpClient.Builder();
         setTimeout(okHttpClient, TIMEOUT_IN_SECONDS);
@@ -143,7 +153,12 @@ public class ApiImpl implements Api {
         }
     }
 
-    private void makeLoggedService() {
+    private void makeLoggedServices() {
+        loggedService = createLoggedService(StepicRestLoggedService.class, config.getBaseUrl());
+        ratingService = createLoggedService(RatingService.class, firebaseRemoteConfig.getString(RemoteConfig.ADAPTIVE_BACKEND_URL));
+    }
+
+    private <T> T createLoggedService(final Class<T> service, final String host) {
         OkHttpClient.Builder okHttpBuilder = new OkHttpClient.Builder();
         Interceptor interceptor = new Interceptor() {
             @Override
@@ -276,12 +291,12 @@ public class ApiImpl implements Api {
         setTimeout(okHttpBuilder, TIMEOUT_IN_SECONDS);
         OkHttpClient okHttpClient = okHttpBuilder.build();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(config.getBaseUrl())
+                .baseUrl(host)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(generateGsonFactory())
                 .client(okHttpClient)
                 .build();
-        loggedService = retrofit.create(StepicRestLoggedService.class);
+        return retrofit.create(service);
     }
 
     private void makeOauthServiceWithNewAuthHeader(final TokenType type) {
@@ -579,28 +594,12 @@ public class ApiImpl implements Api {
 
     @Override
     public Call<AttemptResponse> getExistingAttempts(long stepId) {
-        Profile profile = sharedPreference.getProfile();
-        long userId = 0;
-        //noinspection StatementWithEmptyBody
-        if (profile == null) {
-            //practically it is not happens (yandex metrica)
-        } else {
-            userId = profile.getId();
-        }
-        return loggedService.getExistingAttempts(stepId, userId);
+        return loggedService.getExistingAttempts(stepId, getCurrentUserId());
     }
 
     @Override
     public Single<AttemptResponse> getExistingAttemptsReactive(long stepId) {
-        Profile profile = sharedPreference.getProfile();
-        long userId = 0;
-        //noinspection StatementWithEmptyBody
-        if (profile == null) {
-            //practically it is not happens (yandex metrica)
-        } else {
-            userId = profile.getId();
-        }
-        return loggedService.getExistingAttemptsReactive(stepId, userId);
+        return loggedService.getExistingAttemptsReactive(stepId, getCurrentUserId());
     }
 
     @Override
@@ -699,12 +698,7 @@ public class ApiImpl implements Api {
 
     @Override
     public Call<DeviceResponse> getDevices() {
-        Profile profile = sharedPreference.getProfile();
-        long userId = 0;
-        if (profile != null) {
-            userId = profile.getId();
-        }
-        return loggedService.getDevices(userId);
+        return loggedService.getDevices(getCurrentUserId());
     }
 
     @Override
@@ -854,6 +848,21 @@ public class ApiImpl implements Api {
     }
 
     @Override
+    public Observable<RatingResponse> getRating(long courseId, int count, int days) {
+        return ratingService.getRating(courseId, count, days, getCurrentUserId());
+    }
+
+    @Override
+    public Completable putRating(long courseId, long exp) {
+        return ratingService.putRating(new RatingRequest(exp, courseId, getAccessToken()));
+    }
+
+    @Override
+    public Single<RatingRestoreResponse> restoreRating(long courseId) {
+        return ratingService.restoreRating(courseId, getAccessToken());
+    }
+
+    @Override
     public Single<SearchResultResponse> getSearchResultsOfTag(int page, @NotNull Tag tag) {
         EnumSet<StepikFilter> enumSet = sharedPreference.getFilterForFeatured();
         String lang = enumSet.iterator().next().getLanguage();
@@ -935,5 +944,26 @@ public class ApiImpl implements Api {
                 .newBuilder()
                 .header(USER_AGENT_NAME, userAgentProvider.provideUserAgent())
                 .build();
+    }
+
+    private long getCurrentUserId() {
+        Profile profile = sharedPreference.getProfile();
+        //noinspection StatementWithEmptyBody
+        if (profile == null) {
+            //practically it is not happens (yandex metrica)
+            return 0;
+        } else {
+            return profile.getId();
+        }
+    }
+
+    @Nullable
+    private String getAccessToken() {
+        final AuthenticationStepikResponse auth = sharedPreference.getAuthResponseFromStore();
+        if (auth == null) {
+            return null;
+        } else {
+            return auth.getAccessToken();
+        }
     }
 }

@@ -60,7 +60,7 @@ class StepikRadioGroupAdapter(private val group: StepikRadioGroup) {
     fun setSubmission(submission: Submission?) {
         submission?.reply?.choices?.let { choices ->
             if (choices.size < group.childCount) {
-                analytic.reportEventWithName(Analytic.Error.CHOICES_ARE_SMALLER, submission.id.toString())
+                analytic.reportEventWithName(Analytic.Error.CHOICES_ARE_SMALLER, submission.id?.toString())
             }
             setChoices(choices)
             // no need to set up actionButton state it will be done for us

@@ -95,4 +95,11 @@ class DateTimeHelperTest {
         val result = DateTimeHelper.getPrintableOfIsoDate(timeInComment, pattern, TimeZone.getTimeZone("UTC"))
         assertEquals("02.11.2017 00:43", result)
     }
+
+    @Test
+    fun calendarFromLocalMillis() {
+        val local = DateTimeHelper.nowLocal()
+        val calendar = DateTimeHelper.calendarFromLocalMillis(local)
+        assertEquals(DateTimeHelper.calendarToLocalMillis(calendar), local)
+    }
 }

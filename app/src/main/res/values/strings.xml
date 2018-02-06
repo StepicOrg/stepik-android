@@ -595,7 +595,7 @@
     <string name="adaptive_exp_level_title">New level!</string>
     <string name="adaptive_exp_inc" translatable="false">+%d</string>
     <string name="adaptive_exp_current_progress" translatable="false">%d / %d</string>
-    <string name="adaptive_exp_subtitle">%d points until next level</string>
+    <string name="adaptive_exp_subtitle">%s XP until next</string>
 
     <string name="adaptive_streak_failed">Streak lost</string>
 
@@ -629,6 +629,21 @@
     <string name="adaptive_onboarding_card_question_4"><![CDATA[
         <p>You can disable adaptive courses in settings (<b>Settings</b> -> <b>Other</b> -> <b>Adaptive courses</b>) and continue studying in usual mode.</p>
     ]]></string>
+
+
+    <string name="adaptive_level_dialog_continue">Continue</string>
+
+    <string name="adaptive_stats_title">Stats</string>
+    <string name="adaptive_stats_total_exp">POINTS IN TOTAL</string>
+    <string name="adaptive_stats_last_7_days">LAST 7 DAYS</string>
+    <string name="adaptive_stats_level">LEVEL</string>
+    <string name="adaptive_stats_exp_for_a_week">points for a week</string>
+
+    <string name="adaptive_progress">Progress</string>
+    <string name="adaptive_rating">Rating</string>
+    <string name="adaptive_rating_you_placeholder"><b>You</b></string>
+
+    <string name="adaptive_exp_tooltip_text">You can view your stats by pressing on toolbar</string>
 
     <string name="request_error">Something went wrong</string>
 </resources>

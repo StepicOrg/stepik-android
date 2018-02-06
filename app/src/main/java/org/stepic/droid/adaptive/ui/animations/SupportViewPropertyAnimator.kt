@@ -17,6 +17,10 @@ class SupportViewPropertyAnimator(private val view: View) {
         set.interpolator = interpolator
     }
 
+    fun setStartDelay(duration: Long) = apply {
+        set.startDelay = duration
+    }
+
     fun setDuration(duration: Long) = apply {
         set.duration = duration
     }
@@ -31,6 +35,10 @@ class SupportViewPropertyAnimator(private val view: View) {
 
     fun translationY(value: Float) = apply {
         animators.add(ObjectAnimator.ofFloat(view, View.TRANSLATION_Y, value))
+    }
+
+    fun alpha(value: Float) = apply {
+        animators.add(ObjectAnimator.ofFloat(view, View.ALPHA, value))
     }
 
     fun start() = set.apply {
