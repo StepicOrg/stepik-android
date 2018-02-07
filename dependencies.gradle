@@ -1,6 +1,6 @@
 ext.versions = [
-        code                 : 1980,
-        name                 : '1.51',
+        code                 : 1981,
+        name                 : '1.52',
 
         minSdk               : 15,
         targetSdk            : 25,
@@ -48,6 +48,8 @@ ext.versions = [
         circleImageView      : '2.1.0',
         ahbottomnavigation   : '2.1.0',
         circleIndicator      : '1.2.2@aar',
+        confetti             : '1.1.1',
+        MPAndroidChart       : 'v3.0.3',
 
         shortcutBadger       : '1.1.19@aar',
 
@@ -124,6 +126,8 @@ ext.libraries = [
         circleImageView      : "de.hdodenhof:circleimageview:$versions.circleImageView",
         ahbottomnavigation   : "com.aurelhubert:ahbottomnavigation:$versions.ahbottomnavigation",
         circleIndicator      : "me.relex:circleindicator:$versions.circleIndicator",
+        confetti             : "com.github.jinatonic.confetti:confetti:$versions.confetti",
+        MPAndroidChart       : "com.github.PhilJay:MPAndroidChart:$versions.MPAndroidChart",
 
         shortcutBadger       : "me.leolin:ShortcutBadger:$versions.shortcutBadger",
 

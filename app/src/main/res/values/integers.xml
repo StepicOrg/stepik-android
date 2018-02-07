@@ -11,4 +11,7 @@
 
     <integer name="onboarding_anim_duration">3000</integer>
     <integer name="onboarding_anim_half_duration">1500</integer>
+
+    <integer name="dialog_appear_animation_duration">300</integer>
+    <integer name="dialog_disappear_animation_duration">200</integer>
 </resources>

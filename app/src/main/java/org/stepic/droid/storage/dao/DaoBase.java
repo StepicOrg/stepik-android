@@ -101,6 +101,10 @@ public abstract class DaoBase<T> implements IDao<T> {
         });
     }
 
+    protected <U> U rawQuery(String query, @Nullable String[] whereArgs, ResultHandler<U> resultHandler) {
+        return databaseOperations.executeQuery(query, whereArgs, resultHandler);
+    }
+
     @Override
     public final boolean isInDb(@NotNull String column, @NotNull String columnValue) {
         String Query = "Select * from " + getDbName() + " where " + column + " = ?";

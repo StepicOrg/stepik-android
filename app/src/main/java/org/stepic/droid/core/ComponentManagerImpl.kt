@@ -79,6 +79,7 @@ class ComponentManagerImpl(private val appCoreComponent: AppCoreComponent) : Com
         return adaptiveCourseComponentMap.getOrPut(courseId) {
             appCoreComponent
                     .adaptiveCourseComponentBuilder()
+                    .courseId(courseId)
                     .build()
         }
     }

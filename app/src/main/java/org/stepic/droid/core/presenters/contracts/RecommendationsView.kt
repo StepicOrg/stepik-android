@@ -15,18 +15,19 @@ interface RecommendationsView {
     fun onCardLoaded()
 
     // Gamification
-//    fun updateExp(
-//            exp: Long,
-//            currentLevelExp: Long,
-//            nextLevelExp: Long,
-//
-//            level: Long)
-//    fun onStreak(streak: Long)
-//    fun onStreakLost()
+    fun updateExp(
+            exp: Long,
+            currentLevelExp: Long,
+            nextLevelExp: Long,
+
+            level: Long)
+    fun onStreak(streak: Long)
+    fun onStreakLost()
 //    fun onStreakRestored()
-//
+
 //    fun showDailyRewardDialog(progress: Long)
-//    fun showNewLevelDialog(level: Long)
+    fun showNewLevelDialog(level: Long)
+    fun showExpTooltip()
 //    fun showRateAppDialog()
 //    fun showStreakRestoreDialog(streak: Long)
 }

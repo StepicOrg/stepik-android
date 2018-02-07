@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <FrameLayout
+        android:id="@+id/adaptiveLevelDialogConfetti"
+        android:layout_width="match_parent"
+        android:layout_height="220dp" >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/adaptiveLevelDialogTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                fontPath="fonts/Roboto-Light.ttf"
+                android:textSize="96sp"
+                android:layout_gravity="center"
+                android:gravity="center_horizontal"
+                tools:ignore="MissingPrefix" />
+            <TextView
+                android:id="@+id/adaptiveLevelDialogText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                fontPath="fonts/Roboto-Light.ttf"
+                android:textSize="24sp"
+                android:text="@string/adaptive_exp_level_title"
+                android:layout_gravity="center"
+                android:gravity="center_horizontal"
+                tools:ignore="MissingPrefix" />
+        </LinearLayout>
+    </FrameLayout>
+    <include layout="@layout/view_stroke" />
+    <Button
+        android:id="@+id/continueButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/Adaptive.BorderlessButton"
+        android:textColor="@color/borderless_button_text_color"
+        android:text="@string/adaptive_level_dialog_continue" />
+</LinearLayout>

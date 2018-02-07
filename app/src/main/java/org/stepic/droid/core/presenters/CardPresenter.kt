@@ -2,9 +2,7 @@ package org.stepic.droid.core.presenters
 
 import android.os.Bundle
 import io.reactivex.Scheduler
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import org.stepic.droid.adaptive.listeners.AdaptiveReactionListener
 import org.stepic.droid.adaptive.listeners.AnswerListener
 import org.stepic.droid.model.Submission
@@ -68,6 +66,9 @@ class CardPresenter(
 
     fun detachView() {
         view?.let {
+            if (submission == null || submission?.status == Submission.Status.LOCAL) {
+                submission = Submission(it.getRadioGroupAdapter().reply, 0, Submission.Status.LOCAL) // cache current choices state
+            }
             super.detachView(it)
         }
     }
@@ -101,7 +102,6 @@ class CardPresenter(
 
     fun createSubmission() {
         if (disposable == null || disposable?.isDisposed != false) {
-            view?.getRadioGroupAdapter()?.setEnabled(false)
             view?.onSubmissionLoading()
             isLoading = true
             error = null
@@ -122,7 +122,6 @@ class CardPresenter(
 
     fun retrySubmission() {
         submission = null
-        view?.getRadioGroupAdapter()?.setEnabled(true)
     }
 
     private fun onSubmissionLoaded(submissionResponse: SubmissionResponse) {
@@ -131,8 +130,8 @@ class CardPresenter(
             if (it.status == Submission.Status.EVALUATION) {
                 disposable =  api.getSubmissionsReactive(it.attempt)
                         .delay(1, TimeUnit.SECONDS)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeOn(backgroundScheduler)
+                        .observeOn(mainScheduler)
                         .subscribe(this::onSubmissionLoaded, this::onError)
             } else {
                 isLoading = false
@@ -145,7 +144,7 @@ class CardPresenter(
                 }
                 if (it.status == Submission.Status.WRONG) {
                     analytic.reportEvent(Analytic.Steps.WRONG_SUBMISSION_FILL, (card.step?.id ?: 0).toString())
-                    answerListener?.onWrongAnswer()
+                    answerListener?.onWrongAnswer(it.id)
                 }
                 view?.setSubmission(it, true)
             }
@@ -155,7 +154,6 @@ class CardPresenter(
     private fun onError(error: Throwable) {
         isLoading = false
         this.error = error
-        view?.getRadioGroupAdapter()?.setEnabled(true)
         if (error is HttpException) {
             view?.onSubmissionRequestError()
         } else {

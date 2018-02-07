@@ -426,10 +426,23 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="Adaptive.White" parent="Adaptive">
+        <item name="android:windowBackground">@color/white</item>
+    </style>
+
     <style name="Adaptive.ReactionStamp">
         <item name="android:textSize">24sp</item>
         <item name="android:gravity">center</item>
         <item name="fontFamily">sans-serif-black</item>
         <item name="android:fontFamily" tools:targetApi="jelly_bean">sans-serif-black</item>
+    </style>
+
+    <style name="AdaptiveLevelDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:windowAnimationStyle">@style/AdaptiveLevelDialogTheme.Window</item>
+    </style>
+
+    <style name="AdaptiveLevelDialogTheme.Window" parent="@android:style/Animation.Activity">
+        <item name="android:windowEnterAnimation">@anim/adaptive_dialog_in</item>
+        <item name="android:windowExitAnimation">@anim/adaptive_dialog_out</item>
     </style>
 </resources>

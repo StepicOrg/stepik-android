@@ -70,6 +70,16 @@ object DateTimeHelper {
                 }
     }
 
+    fun calendarFromLocalMillis(millis: Long): Calendar {
+        val calendar = Calendar.getInstance()
+
+        calendar.timeInMillis = millis
+        val diff = millis - calendarToLocalMillis(calendar)
+        calendar.timeInMillis += diff
+
+        return calendar
+    }
+
     fun nowUtc(): Long = Calendar.getInstance().timeInMillis
 
     fun isAfterNowUtc(yourMillis: Long): Boolean = yourMillis > nowUtc()
