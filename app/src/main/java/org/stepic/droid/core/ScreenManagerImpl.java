@@ -162,7 +162,7 @@ public class ScreenManagerImpl implements ScreenManager {
         Intent launchIntent = new Intent(context, LaunchActivity.class);
         if (fromMainFeed) {
             launchIntent.putExtra(AppConstants.FROM_MAIN_FEED_FLAG, true);
-            launchIntent.putExtra(MainFeedActivity.Companion.getCurrentIndexKey(), index);
+            launchIntent.putExtra(MainFeedActivity.CURRENT_INDEX_KEY, index);
         }
         launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK); //app context -- new task
         context.startActivity(launchIntent);
@@ -211,7 +211,7 @@ public class ScreenManagerImpl implements ScreenManager {
         analytic.reportEvent(Analytic.Screens.SHOW_MAIN_FEED);
         Intent intent = new Intent(sourceActivity, MainFeedActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra(MainFeedActivity.Companion.getCurrentIndexKey(), indexOfMenu);
+        intent.putExtra(MainFeedActivity.CURRENT_INDEX_KEY, indexOfMenu);
         sourceActivity.startActivity(intent);
     }
 
@@ -305,7 +305,7 @@ public class ScreenManagerImpl implements ScreenManager {
         Intent intent = new Intent(context, MainFeedActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         Bundle bundle = new Bundle();
-        bundle.putInt(MainFeedActivity.Companion.getCurrentIndexKey(), index);
+        bundle.putInt(MainFeedActivity.CURRENT_INDEX_KEY, index);
         intent.putExtras(bundle);
         return intent;
     }
