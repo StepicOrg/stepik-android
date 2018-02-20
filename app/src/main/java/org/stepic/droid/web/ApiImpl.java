@@ -61,6 +61,7 @@ import org.stepic.droid.web.model.adaptive.RatingResponse;
 import org.stepic.droid.web.model.adaptive.RatingRestoreResponse;
 import org.stepic.droid.web.model.adaptive.RecommendationReactionsRequest;
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
+import org.stepic.droid.web.model.desk.DeskRequestWrapper;
 
 import java.io.IOException;
 import java.net.HttpCookie;
@@ -693,7 +694,14 @@ public class ApiImpl implements Api {
         String subject = context.getString(R.string.feedback_subject);
         String aboutSystem = DeviceInfoUtil.getInfosAboutDevice(context, "<br>");
         rawDescription = rawDescription + "<br><br>" + aboutSystem;
-        return tempService.sendFeedback(subject, email, aboutSystem, rawDescription);
+
+        Profile profile = sharedPreference.getProfile();
+        String name = "";
+        if (profile != null) {
+            name = profile.getFirst_name() + " " + profile.getLast_name();
+        }
+
+        return tempService.sendFeedback(new DeskRequestWrapper(name, email, subject, rawDescription));
     }
 
     @Override
