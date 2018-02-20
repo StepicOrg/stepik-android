@@ -85,6 +85,26 @@
             android:name="org.stepic.droid.ui.activities.MainFeedActivity"
             android:launchMode="singleTask"
             android:windowSoftInputMode="adjustPan">
+
+            <intent-filter
+                android:autoVerify="true"
+                tools:ignore="UnusedAttribute">
+
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="https" />
+                <data android:scheme="http" />
+                <data android:host="@string/host_name" />
+                <data android:host="@string/secondary_host_name" />
+
+                <data android:pathPattern="/catalog.*" />
+                <data android:pathPattern="/notifications.*" />
+
+            </intent-filter>
+
             <meta-data
                 android:name="android.app.default_searchable"
                 android:value=".ui.activities.CourseSearchResultActivity" />
