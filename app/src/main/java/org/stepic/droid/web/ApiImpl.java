@@ -96,7 +96,7 @@ import timber.log.Timber;
 
 @AppSingleton
 public class ApiImpl implements Api {
-    private final int TIMEOUT_IN_SECONDS = 10;
+    private final int TIMEOUT_IN_SECONDS = 60;
     private final StethoInterceptor stethoInterceptor = new StethoInterceptor();
     private static final String USER_AGENT_NAME = "User-Agent";
 
