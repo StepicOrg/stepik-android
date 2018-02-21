@@ -69,7 +69,7 @@
     <string name="explain_permission">Для сохранения и просмотра видео в режиме оффлайн Stepik
         должен иметь права записи файлов в память телефона.
     </string>
-    <string name="connectionProblems">Отсутствует подключение к Интернету</string>
+    <string name="connectionProblems">Невозможно установить соединение с сервером</string>
     <string name="video_quality">Качество видео для загрузки</string>
     <string name="video_quality_playing">Качество видео для просмотра</string>
     <string name="video_download_fail">Ошибка при загрузке видео: %s</string>
