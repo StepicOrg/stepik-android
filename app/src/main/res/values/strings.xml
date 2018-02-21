@@ -72,7 +72,7 @@
     <string name="you_not_enrolled">You are not enrolled</string>
     <string name="cancel">Cancel</string>
     <string name="failLogin">Login/password was incorrect</string>
-    <string name="connectionProblems">Internet connection was lost</string>
+    <string name="connectionProblems">Connection was lost</string>
     <string name="are_you_sure">Are you sure?</string>
     <string name="explain_permission">For caching the course and playing the video offline Stepik
         needs
