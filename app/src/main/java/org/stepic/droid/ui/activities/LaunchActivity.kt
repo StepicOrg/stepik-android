@@ -272,7 +272,7 @@ class LaunchActivity : SmartLockActivityBase(), LoginView {
 
     override fun onBackPressed() {
         val fromMainFeed = intent?.extras?.getBoolean(AppConstants.FROM_MAIN_FEED_FLAG) ?: false
-        val index = intent?.extras?.getInt(MainFeedActivity.currentIndexKey) ?: MainFeedActivity.defaultIndex
+        val index = intent?.extras?.getInt(MainFeedActivity.CURRENT_INDEX_KEY) ?: MainFeedActivity.defaultIndex
 
         if (fromMainFeed) {
             screenManager.showMainFeed(this, index)

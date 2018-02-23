@@ -139,10 +139,12 @@ class TextFeedbackFragment : FragmentBase(), TextFeedbackView {
 
     override fun onServerFail() {
         Toast.makeText(context, R.string.feedback_fail, Toast.LENGTH_LONG).show()
+        ProgressHelper.dismiss(progressDialog)
     }
 
     override fun onInternetProblems() {
         Toast.makeText(context, R.string.internet_problem, Toast.LENGTH_LONG).show()
+        ProgressHelper.dismiss(progressDialog)
     }
 
     override fun onFeedbackSent() {

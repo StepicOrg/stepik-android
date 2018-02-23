@@ -58,12 +58,15 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         TimeIntervalPickerDialogFragment.Callback {
 
     companion object {
-        val currentIndexKey = "currentIndexKey"
+        const val CURRENT_INDEX_KEY = "currentIndexKey"
 
         val reminderKey = "reminderKey"
         const val defaultIndex: Int = 0
         private val progressLogoutTag = "progressLogoutTag"
         private const val LOGGED_ACTION = "LOGGED_ACTION"
+
+        private const val CATALOG_DEEPLINK = "catalog"
+        private const val NOTIFICATIONS_DEEPLINK = "notifications"
 
         private const val MAX_NOTIFICATION_BADGE_COUNT = 99
 
@@ -108,9 +111,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         super.onNewIntent(intent)
         notificationClickedCheck(intent)
 
-        if (intent.hasExtra(currentIndexKey)) {
-            openFragment(intent)
-        }
+        openFragment(intent)
     }
 
     private fun notificationClickedCheck(intent: Intent) {
@@ -192,9 +193,23 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         }
     }
 
+    private fun getFragmentIndexFromIntent(intent: Intent?): Int {
+        if (intent == null) return -1
+
+        intent.data?.pathSegments?.let {
+            when {
+                it.contains(NOTIFICATIONS_DEEPLINK) -> return NOTIFICATIONS_INDEX
+                it.contains(CATALOG_DEEPLINK)       -> return CATALOG_INDEX
+                else -> {}
+            }
+        }
+
+        return intent.getIntExtra(CURRENT_INDEX_KEY, -1)
+    }
+
     private fun openFragment(launchIntent: Intent?) {
         setFragment(R.id.home)
-        val wantedIndex = launchIntent?.getIntExtra(currentIndexKey, -1) ?: -1
+        val wantedIndex = getFragmentIndexFromIntent(launchIntent)
         when (wantedIndex) {
             CATALOG_INDEX       -> navigationView.currentItem = navigationAdapter.getPositionByMenuId(R.id.catalog)
             CERTIFICATE_INDEX   -> navigationView.currentItem = navigationAdapter.getPositionByMenuId(R.id.certificates)
