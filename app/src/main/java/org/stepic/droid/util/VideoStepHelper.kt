@@ -14,9 +14,7 @@ fun CachedVideo?.transformToVideo(): Video? {
         videoUrl.quality = this.quality
         videoUrl.url = this.url
 
-        val list = ArrayList<VideoUrl>()
-        list.add(videoUrl)
-        realVideo.urls = list
+        realVideo.urls = listOf(videoUrl)
     }
     return realVideo
 }
