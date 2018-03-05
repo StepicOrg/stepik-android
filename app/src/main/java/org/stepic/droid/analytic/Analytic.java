@@ -258,6 +258,7 @@ public interface Analytic {
         String ILLEGAL_STATE_PREVIOUS_LESSON = "cant_show_previous_lesson";
         String FAIL_PUSH_STEP_VIEW = "fail_push_step_view";
         String DOWNLOAD_FAILED = "download_failed";
+        String DOWNLOADED_FILE_NOT_EXISTS = "downloaded_file_not_exists";
         String STREAK_ON_STEP_SOLVED = "streak_on_step_solved";
         String GOOGLE_SERVICES_TOO_OLD = "google_services_too_old";
         String FAIL_REFRESH_TOKEN_ONLINE = "fail_refresh_token_online";
