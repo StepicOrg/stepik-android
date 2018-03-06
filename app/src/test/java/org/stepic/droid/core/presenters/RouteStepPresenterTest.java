@@ -21,11 +21,13 @@ import org.stepic.droid.testUtils.generators.FakeSectionGenerator;
 import org.stepic.droid.testUtils.generators.FakeUnitGenerator;
 import org.stepic.droid.testUtils.generators.ListHelper;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadPoolExecutor;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -307,5 +309,115 @@ public class RouteStepPresenterTest {
         verify(routeStepView, never()).showPreviousLessonView();
 
         verify(routeStepView).showNextLessonView();
+    }
+
+    @Test
+    public void clickNextLesson_lastInSection() {
+        long stepId = 31;
+        long sectionId = 12;
+        long unitId = 48;
+        long lessonId = 48;
+        int unitPosition = 1;
+        long courseId = 221;
+
+        // first section
+        long stepIds0[] = ArrayHelper.INSTANCE.arrayOf(stepId);
+        long unitIds0[] = ArrayHelper.INSTANCE.arrayOf(unitId);
+
+        Lesson lesson0 = FakeLessonGenerator.INSTANCE.generate(stepIds0);
+        lesson0.setId(lessonId);
+        when(lessonRepository.getObject(lessonId)).thenReturn(lesson0);
+
+        Unit unit0 = FakeUnitGenerator.INSTANCE.generate(unitId, sectionId, unitPosition);
+        unit0.setLesson(lesson0.getId());
+        when(unitRepository.getObject(unitId)).thenReturn(unit0);
+
+        Section section0 = FakeSectionGenerator.INSTANCE.generate(sectionId, unitIds0, 1, courseId);
+        when(sectionRepository.getObject(sectionId)).thenReturn(section0);
+
+        // second section
+        long stepIds1[] = ArrayHelper.INSTANCE.arrayOf(stepId + 1);
+        long unitIds1[] = ArrayHelper.INSTANCE.arrayOf(unitId + 1);
+
+        Lesson lesson1 = FakeLessonGenerator.INSTANCE.generate(stepIds1);
+        lesson1.setId(lessonId + 1);
+        when(lessonRepository.getObject(lessonId + 1)).thenReturn(lesson1);
+
+        Unit unit1 = FakeUnitGenerator.INSTANCE.generate(unitId + 1, sectionId + 1, unitPosition);
+        unit1.setLesson(lesson1.getId());
+        when(unitRepository.getObject(unitId + 1)).thenReturn(unit1);
+
+        Section section1 = FakeSectionGenerator.INSTANCE.generate(sectionId + 1, unitIds1, 2, courseId);
+        when(sectionRepository.getObject(sectionId + 1)).thenReturn(section1);
+
+        long sectionIds[] = ArrayHelper.INSTANCE.arrayOf(sectionId, sectionId + 1);
+        Course course = FakeCourseGenerator.INSTANCE.generate(courseId, sectionIds);
+        course.setEnrollment(1);
+        when(courseRepository.getObject(courseId)).thenReturn(course);
+        when(sectionRepository.getObjects(ArrayHelper.INSTANCE.arrayOf(sectionId + 1))).thenReturn(Collections.singletonList(section1));
+
+        routeStepPresenter.attachView(routeStepView);
+        routeStepPresenter.clickNextLesson(unit0);
+        routeStepPresenter.detachView(routeStepView);
+
+        verify(routeStepView, times(1)).showLoading();
+        verify(routeStepView, times(1)).openNextLesson(unit1, lesson1, section1);
+        verify(routingPoster, times(1)).sectionChanged(section0, section1);
+        verify(routeStepView, never()).showCantGoNext();
+    }
+
+    @Test
+    public void clickPreviousLesson_firstInSection() {
+        long stepId = 31;
+        long sectionId = 12;
+        long unitId = 48;
+        long lessonId = 48;
+        int unitPosition = 1;
+        long courseId = 221;
+
+        // first section
+        long stepIds0[] = ArrayHelper.INSTANCE.arrayOf(stepId);
+        long unitIds0[] = ArrayHelper.INSTANCE.arrayOf(unitId);
+
+        Lesson lesson0 = FakeLessonGenerator.INSTANCE.generate(stepIds0);
+        lesson0.setId(lessonId);
+        when(lessonRepository.getObject(lessonId)).thenReturn(lesson0);
+
+        Unit unit0 = FakeUnitGenerator.INSTANCE.generate(unitId, sectionId, unitPosition);
+        unit0.setLesson(lesson0.getId());
+        when(unitRepository.getObject(unitId)).thenReturn(unit0);
+
+        Section section0 = FakeSectionGenerator.INSTANCE.generate(sectionId, unitIds0, 1, courseId);
+        when(sectionRepository.getObject(sectionId)).thenReturn(section0);
+
+        // second section
+        long stepIds1[] = ArrayHelper.INSTANCE.arrayOf(stepId + 1);
+        long unitIds1[] = ArrayHelper.INSTANCE.arrayOf(unitId + 1);
+
+        Lesson lesson1 = FakeLessonGenerator.INSTANCE.generate(stepIds1);
+        lesson1.setId(lessonId + 1);
+        when(lessonRepository.getObject(lessonId + 1)).thenReturn(lesson1);
+
+        Unit unit1 = FakeUnitGenerator.INSTANCE.generate(unitId + 1, sectionId + 1, unitPosition);
+        unit1.setLesson(lesson1.getId());
+        when(unitRepository.getObject(unitId + 1)).thenReturn(unit1);
+
+        Section section1 = FakeSectionGenerator.INSTANCE.generate(sectionId + 1, unitIds1, 2, courseId);
+        when(sectionRepository.getObject(sectionId + 1)).thenReturn(section1);
+
+        long sectionIds[] = ArrayHelper.INSTANCE.arrayOf(sectionId, sectionId + 1);
+        Course course = FakeCourseGenerator.INSTANCE.generate(courseId, sectionIds);
+        course.setEnrollment(1);
+        when(courseRepository.getObject(courseId)).thenReturn(course);
+        when(sectionRepository.getObjects(ArrayHelper.INSTANCE.arrayOf(sectionId))).thenReturn(Collections.singletonList(section0));
+
+        routeStepPresenter.attachView(routeStepView);
+        routeStepPresenter.clickPreviousLesson(unit1);
+        routeStepPresenter.detachView(routeStepView);
+
+        verify(routeStepView, times(1)).showLoading();
+        verify(routeStepView, times(1)).openPreviousLesson(unit0, lesson0, section0);
+        verify(routingPoster, times(1)).sectionChanged(section1, section0);
+        verify(routeStepView, never()).showCantGoPrevious();
     }
 }

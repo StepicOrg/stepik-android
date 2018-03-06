@@ -142,7 +142,7 @@ class RouteStepPresenter
             }
             RouteStepPresenter.Direction.next -> {
                 sectionIds
-                        ?.slice(currentSection.position..sectionIds.size)
+                        ?.slice(currentSection.position until sectionIds.size)
                         ?.toLongArray()
             }
         }
