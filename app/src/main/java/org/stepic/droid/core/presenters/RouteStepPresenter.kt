@@ -142,7 +142,7 @@ class RouteStepPresenter
             }
             RouteStepPresenter.Direction.next -> {
                 sectionIds
-                        ?.slice(currentSection.position..sectionIds.size)
+                        ?.slice(currentSection.position until sectionIds.size)
                         ?.toLongArray()
             }
         }
@@ -154,7 +154,7 @@ class RouteStepPresenter
                 direction = Direction.next,
                 unit = unit,
                 nextIndex = { index -> index + 1 },
-                onOpen = { nextUnit, nextLesson -> view?.openNextLesson(nextUnit, nextLesson) },
+                onOpen = { nextUnit, nextLesson, nextSection -> view?.openNextLesson(nextUnit, nextLesson, nextSection) },
                 onCantGoAnalytic = { unit -> analytic.reportError(Analytic.Error.ILLEGAL_STATE_NEXT_LESSON, IllegalStateRouteLessonException(unit.id)) },
                 onCantGoEvent = { view?.showCantGoNext() }
         )
@@ -166,7 +166,7 @@ class RouteStepPresenter
         clickLessonBase(direction = Direction.previous,
                 unit = unit,
                 nextIndex = { index -> index - 1 },
-                onOpen = { previousUnit, previousLesson -> view?.openPreviousLesson(previousUnit, previousLesson) },
+                onOpen = { previousUnit, previousLesson, previousSection -> view?.openPreviousLesson(previousUnit, previousLesson, previousSection) },
                 onCantGoAnalytic = { unit -> analytic.reportError(Analytic.Error.ILLEGAL_STATE_PREVIOUS_LESSON, IllegalStateRouteLessonException(unit.id)) },
                 onCantGoEvent = { view?.showCantGoPrevious() }
         )
@@ -176,7 +176,7 @@ class RouteStepPresenter
             direction: Direction,
             unit: Unit,
             nextIndex: (Int) -> Int,
-            onOpen: (Unit, Lesson) -> kotlin.Unit,
+            onOpen: (Unit, Lesson, Section) -> kotlin.Unit,
             onCantGoAnalytic: (Unit) -> kotlin.Unit,
             onCantGoEvent: () -> kotlin.Unit) {
         view?.showLoading()
@@ -197,11 +197,11 @@ class RouteStepPresenter
 
             nextUnitId?.let {
                 val nextUnit = unitRepository.getObject(it)
-                if (nextUnit != null) {
+                if (nextUnit != null && section != null) {
                     val nextLesson = lessonRepository.getObject(nextUnit.lesson)
                     if (nextLesson != null) {
                         mainHandler.post {
-                            onOpen.invoke(nextUnit, nextLesson)
+                            onOpen.invoke(nextUnit, nextLesson, section)
                         }
                         return@execute
                     }
@@ -226,7 +226,7 @@ class RouteStepPresenter
                                                     if (previousLesson != null) {
                                                         notifyAboutChangingSection(section, it)
                                                         mainHandler.post {
-                                                            onOpen(previousUnit, previousLesson)
+                                                            onOpen(previousUnit, previousLesson, it)
                                                         }
                                                         return@execute
                                                     }
@@ -247,7 +247,7 @@ class RouteStepPresenter
                                                     if (nextLesson != null) {
                                                         notifyAboutChangingSection(section, nextSection)
                                                         mainHandler.post {
-                                                            onOpen(nextUnit, nextLesson)
+                                                            onOpen(nextUnit, nextLesson, nextSection)
                                                         }
                                                         return@execute
                                                     }
