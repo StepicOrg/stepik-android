@@ -100,9 +100,9 @@ public class RouteStepPresenterTest {
         verify(unitRepository, never()).getObject(any(Long.class));
 
         verify(routeStepView, never()).showLoading();
-        verify(routeStepView, never()).openNextLesson(any(Unit.class), any(Lesson.class));
+        verify(routeStepView, never()).openNextLesson(any(Unit.class), any(Lesson.class), any(Section.class));
         verify(routeStepView, never()).showCantGoNext();
-        verify(routeStepView, never()).openPreviousLesson(any(Unit.class), any(Lesson.class));
+        verify(routeStepView, never()).openPreviousLesson(any(Unit.class), any(Lesson.class), any(Section.class));
         verify(routeStepView, never()).showNextLessonView();
         verify(routeStepView, never()).showPreviousLessonView();
         verify(routeStepView, never()).showCantGoPrevious();
@@ -142,9 +142,9 @@ public class RouteStepPresenterTest {
         verify(unitRepository, never()).getObject(any(Long.class));
 
         verify(routeStepView, never()).showLoading();
-        verify(routeStepView, never()).openNextLesson(any(Unit.class), any(Lesson.class));
+        verify(routeStepView, never()).openNextLesson(any(Unit.class), any(Lesson.class), any(Section.class));
         verify(routeStepView, never()).showCantGoNext();
-        verify(routeStepView, never()).openPreviousLesson(any(Unit.class), any(Lesson.class));
+        verify(routeStepView, never()).openPreviousLesson(any(Unit.class), any(Lesson.class), any(Section.class));
         verify(routeStepView, never()).showNextLessonView();
         verify(routeStepView, never()).showPreviousLessonView();
         verify(routeStepView, never()).showCantGoPrevious();
@@ -170,9 +170,9 @@ public class RouteStepPresenterTest {
         verify(unitRepository, never()).getObject(any(Long.class));
 
         verify(routeStepView, never()).showLoading();
-        verify(routeStepView, never()).openNextLesson(any(Unit.class), any(Lesson.class));
+        verify(routeStepView, never()).openNextLesson(any(Unit.class), any(Lesson.class), any(Section.class));
         verify(routeStepView, never()).showCantGoNext();
-        verify(routeStepView, never()).openPreviousLesson(any(Unit.class), any(Lesson.class));
+        verify(routeStepView, never()).openPreviousLesson(any(Unit.class), any(Lesson.class), any(Section.class));
         verify(routeStepView, never()).showNextLessonView();
         verify(routeStepView, never()).showPreviousLessonView();
         verify(routeStepView, never()).showCantGoPrevious();
@@ -199,9 +199,9 @@ public class RouteStepPresenterTest {
         verify(unitRepository, never()).getObject(any(Long.class));
 
         verify(routeStepView, never()).showLoading();
-        verify(routeStepView, never()).openNextLesson(any(Unit.class), any(Lesson.class));
+        verify(routeStepView, never()).openNextLesson(any(Unit.class), any(Lesson.class), any(Section.class));
         verify(routeStepView, never()).showCantGoNext();
-        verify(routeStepView, never()).openPreviousLesson(any(Unit.class), any(Lesson.class));
+        verify(routeStepView, never()).openPreviousLesson(any(Unit.class), any(Lesson.class), any(Section.class));
         verify(routeStepView, never()).showNextLessonView();
         verify(routeStepView, never()).showCantGoPrevious();
 
@@ -237,9 +237,9 @@ public class RouteStepPresenterTest {
         verify(unitRepository, never()).getObject(any(Long.class));
 
         verify(routeStepView, never()).showLoading();
-        verify(routeStepView, never()).openNextLesson(any(Unit.class), any(Lesson.class));
+        verify(routeStepView, never()).openNextLesson(any(Unit.class), any(Lesson.class), any(Section.class));
         verify(routeStepView, never()).showCantGoNext();
-        verify(routeStepView, never()).openPreviousLesson(any(Unit.class), any(Lesson.class));
+        verify(routeStepView, never()).openPreviousLesson(any(Unit.class), any(Lesson.class), any(Section.class));
         verify(routeStepView, never()).showNextLessonView();
         verify(routeStepView, never()).showCantGoPrevious();
         verify(routeStepView, never()).showPreviousLessonView();
@@ -267,9 +267,9 @@ public class RouteStepPresenterTest {
         verify(unitRepository, never()).getObject(any(Long.class));
 
         verify(routeStepView, never()).showLoading();
-        verify(routeStepView, never()).openNextLesson(any(Unit.class), any(Lesson.class));
+        verify(routeStepView, never()).openNextLesson(any(Unit.class), any(Lesson.class), any(Section.class));
         verify(routeStepView, never()).showCantGoNext();
-        verify(routeStepView, never()).openPreviousLesson(any(Unit.class), any(Lesson.class));
+        verify(routeStepView, never()).openPreviousLesson(any(Unit.class), any(Lesson.class), any(Section.class));
         verify(routeStepView, never()).showNextLessonView();
         verify(routeStepView, never()).showCantGoPrevious();
         verify(routeStepView, never()).showPreviousLessonView();
@@ -300,8 +300,8 @@ public class RouteStepPresenterTest {
         verify(unitRepository, never()).getObject(any(Long.class));
 
         verify(routeStepView, never()).showLoading();
-        verify(routeStepView, never()).openNextLesson(any(Unit.class), any(Lesson.class));
-        verify(routeStepView, never()).openPreviousLesson(any(Unit.class), any(Lesson.class));
+        verify(routeStepView, never()).openNextLesson(any(Unit.class), any(Lesson.class), any(Section.class));
+        verify(routeStepView, never()).openPreviousLesson(any(Unit.class), any(Lesson.class), any(Section.class));
         verify(routeStepView, never()).showCantGoNext();
         verify(routeStepView, never()).showCantGoPrevious();
         verify(routeStepView, never()).showPreviousLessonView();
