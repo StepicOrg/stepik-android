@@ -256,9 +256,9 @@ public abstract class StepBaseFragment extends FragmentBase
     }
 
     @Override
-    public final void openNextLesson(Unit nextUnit, Lesson nextLesson) {
+    public final void openNextLesson(Unit nextUnit, Lesson nextLesson, Section nextSection) {
         ProgressHelper.dismiss(getFragmentManager(), LOAD_DIALOG_TAG);
-        getScreenManager().showSteps(getActivity(), nextUnit, nextLesson, section);
+        getScreenManager().showSteps(getActivity(), nextUnit, nextLesson, nextSection);
         getActivity().finish();
     }
 
@@ -283,9 +283,9 @@ public abstract class StepBaseFragment extends FragmentBase
     }
 
     @Override
-    public void openPreviousLesson(Unit previousUnit, Lesson previousLesson) {
+    public void openPreviousLesson(Unit previousUnit, Lesson previousLesson, Section previousSection) {
         ProgressHelper.dismiss(getFragmentManager(), LOAD_DIALOG_TAG);
-        getScreenManager().showSteps(getActivity(), previousUnit, previousLesson, true, section);
+        getScreenManager().showSteps(getActivity(), previousUnit, previousLesson, true, previousSection);
         getActivity().finish();
     }
 
