@@ -117,10 +117,14 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                     final CachedVideo cachedVideo;
                     if (status == DownloadManager.STATUS_SUCCESSFUL) {
                         cachedVideo = prepareCachedVideo(downloadEntity);
+                    } else {
+                        cachedVideo = null;
+                    }
+
+                    if (cachedVideo != null) {
                         databaseFacade.addVideo(cachedVideo);
                         step.set_cached(true);
                     } else {
-                        cachedVideo = null;
                         step.set_cached(false);
                     }
 
@@ -129,19 +133,17 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                     storeStateManager.updateUnitLessonState(step.getLesson());
 
                     final Lesson lesson = databaseFacade.getLessonById(step.getLesson());
-                    if (lesson == null) {
-                        return;
-                    }
 
                     //Say to ui that step is cached now
                     mainHandler.post(new Function0<Unit>() {
                         @Override
                         public Unit invoke() {
-                            if (cachedVideo != null) {
+                            if (cachedVideo != null && lesson != null) {
                                 downloadsPoster.downloadComplete(stepId, lesson, cachedVideo);
                             } else {
                                 final Context context = App.Companion.getAppContext();
-                                Toast.makeText(context, context.getString(R.string.video_download_fail, lesson.getTitle()), Toast.LENGTH_SHORT).show();
+                                final String lessonTitle = lesson != null ? lesson.getTitle() : "";
+                                Toast.makeText(context, context.getString(R.string.video_download_fail, lessonTitle), Toast.LENGTH_SHORT).show();
                                 analytic.reportEvent(Analytic.Error.DOWNLOAD_FAILED);
                                 downloadsPoster.downloadFailed(referenceId);
                             }
@@ -164,6 +166,12 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
         File userDownloadFolder = userPreferences.getUserDownloadFolder();
         String loadedVideoFileName = videoId + AppConstants.VIDEO_EXTENSION;
         File downloadFolderAndFile = new File(userDownloadFolder, loadedVideoFileName);
+
+        if (!downloadFolderAndFile.exists()) {
+            analytic.reportEvent(Analytic.Error.DOWNLOADED_FILE_NOT_EXISTS);
+            return null;
+        }
+
         String path = Uri.fromFile(downloadFolderAndFile).getPath();
         String thumbnail = downloadEntity.getThumbnail();
         if (userPreferences.isSdChosen()) {
@@ -173,10 +181,11 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                     String loadedImageFileName = videoId + AppConstants.THUMBNAIL_POSTFIX_EXTENSION;
 
                     StorageUtil.moveFile(userDownloadFolder.getPath(), loadedVideoFileName, sdFile.getPath());
-                    StorageUtil.moveFile(userDownloadFolder.getPath(), loadedImageFileName, sdFile.getPath());
                     downloadFolderAndFile = new File(sdFile, loadedVideoFileName);
-                    final File thumbnailFile = new File(sdFile, loadedImageFileName);
                     path = Uri.fromFile(downloadFolderAndFile).getPath();
+
+                    StorageUtil.moveFile(userDownloadFolder.getPath(), loadedImageFileName, sdFile.getPath());
+                    final File thumbnailFile = new File(sdFile, loadedImageFileName);
                     thumbnail = Uri.fromFile(thumbnailFile).getPath();
                 } catch (Exception exception) {
                     analytic.reportError(Analytic.Error.FAIL_TO_MOVE, exception);

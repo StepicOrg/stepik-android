@@ -72,39 +72,30 @@ public class StorageUtil {
     }
 
     public static void moveFile(String inputPath, String inputFile, String outputPath) throws IOException {
-        inputPath+=File.separator;
-        outputPath+=File.separator;
+        inputPath += File.separator;
+        outputPath += File.separator;
 
-        InputStream in = null;
-        OutputStream out = null;
+        //create output directory if it doesn't exist
+        File dir = new File(outputPath);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
 
-            //create output directory if it doesn't exist
-            File dir = new File (outputPath);
-            if (!dir.exists())
-            {
-                dir.mkdirs();
-            }
+        InputStream in = new FileInputStream(inputPath + inputFile);
+        OutputStream out = new FileOutputStream(outputPath + inputFile);
 
+        byte[] buffer = new byte[1024];
+        int read;
+        while ((read = in.read(buffer)) != -1) {
+            out.write(buffer, 0, read);
+        }
+        in.close();
 
-            in = new FileInputStream(inputPath + inputFile);
-            out = new FileOutputStream(outputPath + inputFile);
+        // write the output file
+        out.flush();
+        out.close();
 
-            byte[] buffer = new byte[1024];
-            int read;
-            while ((read = in.read(buffer)) != -1) {
-                out.write(buffer, 0, read);
-            }
-            in.close();
-            in = null;
-
-            // write the output file
-            out.flush();
-            out.close();
-            out = null;
-
-            // delete the original file
-            new File(inputPath + inputFile).delete();
-
-
+        // delete the original file
+        new File(inputPath + inputFile).delete();
     }
 }
