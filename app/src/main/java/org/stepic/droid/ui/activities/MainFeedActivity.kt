@@ -182,7 +182,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         }
 
         if (savedInstanceState == null) {
-            openFragment(intent)
+            openFragment(intent, forceHome = true)
         }
 
         profileMainFeedPresenter.attachView(this)
@@ -207,8 +207,11 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         return intent.getIntExtra(CURRENT_INDEX_KEY, -1)
     }
 
-    private fun openFragment(launchIntent: Intent?) {
-        setFragment(R.id.home)
+    private fun openFragment(launchIntent: Intent?, forceHome: Boolean = false) {
+        if (forceHome) {
+            setFragment(R.id.home)
+        }
+
         val wantedIndex = getFragmentIndexFromIntent(launchIntent)
         when (wantedIndex) {
             CATALOG_INDEX       -> navigationView.currentItem = navigationAdapter.getPositionByMenuId(R.id.catalog)
