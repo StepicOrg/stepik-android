@@ -11,11 +11,13 @@ buildscript {
         jcenter()
         google()
         maven { url "https://jitpack.io" }
+        maven { url "https://maven.fabric.io/public" }
     }
     dependencies {
         classpath gradlePlugins.android
         classpath gradlePlugins.googleServices
         classpath gradlePlugins.kotlin
+        classpath gradlePlugins.fabric
     }
 }
 
@@ -23,9 +25,7 @@ allprojects {
     repositories {
         jcenter()
         google()
-        maven {
-            url "https://jitpack.io"
-        }
+        maven { url "https://jitpack.io" }
     }
 }
 
