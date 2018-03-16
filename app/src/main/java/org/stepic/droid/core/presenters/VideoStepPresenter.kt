@@ -4,12 +4,15 @@ import android.support.annotation.MainThread
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.core.presenters.contracts.VideoStepView
 import org.stepic.droid.model.Step
+import org.stepic.droid.util.VideoFileResolver
 import timber.log.Timber
 import javax.inject.Inject
 
 class VideoStepPresenter
 @Inject constructor(
-        private val analytic: Analytic) : PresenterBase<VideoStepView>() {
+        private val analytic: Analytic,
+        private val videoFileResolver: VideoFileResolver
+) : PresenterBase<VideoStepView>() {
 
 
     @MainThread
@@ -37,7 +40,7 @@ class VideoStepPresenter
                 view?.onInternetProblem()
             } else {
                 val videoId = it.cachedLocalVideo?.id ?: it.video?.id ?: 0L
-                view?.onNeedOpenVideo(videoId, it.cachedLocalVideo, it.video)
+                view?.onNeedOpenVideo(videoId, videoFileResolver.resolveVideoFile(it.cachedLocalVideo, step.id), it.video)
             }
         }
     }

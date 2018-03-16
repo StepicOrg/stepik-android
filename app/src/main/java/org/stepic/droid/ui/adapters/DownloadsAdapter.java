@@ -35,6 +35,7 @@ import org.stepic.droid.ui.listeners.OnClickLoadListener;
 import org.stepic.droid.ui.listeners.OnItemClickListener;
 import org.stepic.droid.util.FileUtil;
 import org.stepic.droid.util.ThumbnailParser;
+import org.stepic.droid.util.VideoFileResolver;
 import org.stepic.droid.util.VideoStepHelperKt;
 
 import java.io.File;
@@ -63,6 +64,9 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
     @Inject
     CleanManager cleanManager;
+
+    @Inject
+    VideoFileResolver videoFileResolver;
 
     @Inject
     DatabaseFacade databaseFacade;
@@ -146,16 +150,23 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
     public void onItemClick(int position) {
         //the position in oldList!
         if (position >= 0 && position < cachedVideoList.size()) {
-            final CachedVideo video = cachedVideoList.get(position);
-            File file = new File(video.getUrl());
-            if (video.getUrl() != null && file.exists()) {
+            final CachedVideo originalVideo = cachedVideoList.get(position);
+            final String originalPath = originalVideo.getUrl();
+
+            final CachedVideo video = videoFileResolver.resolveVideoFile(originalVideo);
+
+            if (video != null && video.getUrl() != null) {
+                if (!video.getUrl().equals(originalPath)) {
+                    notifyItemChanged(position + downloadingVideoList.size() + getTitleCount(downloadingVideoList) + getTitleCount(cachedVideoList));
+                }
+
                 screenManager.showVideo(sourceActivity, VideoStepHelperKt.transformToVideo(video), null);
             } else {
                 Toast.makeText(App.Companion.getAppContext(), R.string.sorry_moved, Toast.LENGTH_SHORT).show();
                 threadPoolExecutor.execute(new Runnable() {
                     @Override
                     public void run() {
-                        Step step = databaseFacade.getStepById(video.getStepId());
+                        Step step = databaseFacade.getStepById(originalVideo.getStepId());
                         cleanManager.removeStep(step);
                     }
                 });
