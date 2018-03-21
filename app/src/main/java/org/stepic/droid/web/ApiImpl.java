@@ -68,6 +68,7 @@ import java.net.HttpCookie;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Locale;
@@ -85,6 +86,7 @@ import okhttp3.Headers;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Protocol;
 import okhttp3.Request;
 import okhttp3.Response;
 import retrofit2.Call;
@@ -315,6 +317,7 @@ public class ApiImpl implements Api {
         setTimeout(okHttpBuilder, TIMEOUT_IN_SECONDS);
         okHttpBuilder.addNetworkInterceptor(interceptor);
         okHttpBuilder.addNetworkInterceptor(this.stethoInterceptor);
+        okHttpBuilder.protocols(Collections.singletonList(Protocol.HTTP_1_1));
         Retrofit notLogged = new Retrofit.Builder()
                 .baseUrl(config.getBaseUrl())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
