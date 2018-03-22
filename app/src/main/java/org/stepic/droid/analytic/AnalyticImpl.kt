@@ -2,8 +2,8 @@ package org.stepic.droid.analytic
 
 import android.content.Context
 import android.os.Bundle
+import com.crashlytics.android.Crashlytics
 import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.crash.FirebaseCrash
 import com.yandex.metrica.YandexMetrica
 import org.stepic.droid.di.AppSingleton
 import java.util.*
@@ -44,7 +44,7 @@ class AnalyticImpl
     }
 
     override fun reportError(message: String, throwable: Throwable) {
-        FirebaseCrash.report(throwable)
+        Crashlytics.logException(throwable)
         YandexMetrica.reportError(message, throwable)
     }
 

@@ -232,6 +232,8 @@ public interface Analytic {
         String QUALITY_MENU = "video_player_quality";
         String CANCEL_VIDEO_QUALITY = "video_player_quality_cancel";
         String NOW_PLAYING_WAS_NULL = "video_player_now_playing_null";
+
+        String VIDEO_FILE_RESTORED = "video_file_restored";
     }
 
     interface AppIndexing {
@@ -284,6 +286,7 @@ public interface Analytic {
         String COURSE_COLLECTION_EMPTY = "course_collection_empty";
         String FEEDBACK_BROKEN = "feedback_broken";
         String CANT_FIND_VIDEO_FILE_WITH_FILES_PROVIDER = "cant_find_video_file_with_file_provider";
+        String CANT_RESTORE_VIDEO_FILE = "cant_restore_video_file";
     }
 
     interface Web {

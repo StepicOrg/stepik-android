@@ -1,6 +1,6 @@
 ext.versions = [
-        code                 : 1983,
-        name                 : '1.54',
+        code                 : 1985,
+        name                 : '1.55',
 
         minSdk               : 15,
         targetSdk            : 25,
@@ -10,6 +10,7 @@ ext.versions = [
         androidGradlePlugin  : '3.0.0',
         kotlin               : '1.1.51',
         googleServicesVersion: '3.0.0',
+        fabric               : '1.25.1',
 
         dagger               : '2.10',
         butterKnife          : '8.8.1',
@@ -55,6 +56,7 @@ ext.versions = [
 
         stetho               : '1.4.2',
         leakCanary           : '1.5.1',
+        crashlytics          : '2.9.1@aar',
 
         junit                : '4.12',
         robolectric          : '3.1.2',
@@ -69,6 +71,7 @@ ext.gradlePlugins = [
         googleServices: "com.google.gms:google-services:$versions.googleServicesVersion",
         kotlin        : "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin",
         android       : "com.android.tools.build:gradle:$versions.androidGradlePlugin",
+        fabric        : "io.fabric.tools:gradle:$versions.fabric"
 ]
 
 ext.libraries = [
@@ -108,7 +111,6 @@ ext.libraries = [
         firebaseAppindexing  : "com.google.firebase:firebase-appindexing:$versions.firebase",
         googleauth           : "com.google.android.gms:play-services-auth:$versions.firebase",
         firebaseCore         : "com.google.firebase:firebase-core:$versions.firebase",
-        firebaseCrash        : "com.google.firebase:firebase-crash:$versions.firebase",
         firebaseConfig       : "com.google.firebase:firebase-config:$versions.firebase",
 
         facebookSdk          : "com.facebook.android:facebook-android-sdk:$versions.facebook",
@@ -134,6 +136,7 @@ ext.libraries = [
         // Developer Tools
         leakCanary           : "com.squareup.leakcanary:leakcanary-android:$versions.leakCanary",
         leakCanaryNoOp       : "com.squareup.leakcanary:leakcanary-android-no-op:$versions.leakCanary",
+        crashlytics          : "com.crashlytics.sdk.android:crashlytics:$versions.crashlytics",
 
         // Test dependencies
         junit                : "junit:junit:$versions.junit",
