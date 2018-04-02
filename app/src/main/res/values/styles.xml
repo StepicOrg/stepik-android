@@ -177,7 +177,6 @@
         <item name="android:padding">@dimen/padding_placeholders</item>
         <item name="android:lineSpacingMultiplier">1.15</item>
         <item name="android:gravity">center</item>
-        <item name="android:drawablePadding">@dimen/drawable_padding_placeholders</item>
         <item name="android:textColor">@color/stepic_weak_text</item>
     </style>
     
