@@ -631,4 +631,6 @@
     <string name="adaptive_exp_tooltip_text">Нажав на панель с опытом, вы можете увидеть подробную статистику вашего обучения</string>
 
     <string name="request_error">Что-то пошло не так</string>
+
+    <string name="placeholder_go_to_catalog">Перейти в Каталог</string>
 </resources>

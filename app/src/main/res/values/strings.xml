@@ -646,4 +646,6 @@
     <string name="adaptive_exp_tooltip_text">You can view your stats by pressing on toolbar</string>
 
     <string name="request_error">Something went wrong</string>
+
+    <string name="placeholder_go_to_catalog">Go to Catalog</string>
 </resources>
