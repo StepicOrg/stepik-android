@@ -3,32 +3,7 @@
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <LinearLayout
-        android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
-        android:id="@+id/error">
-
-        <TextView
-            android:id="@+id/errorMessage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:maxWidth="256dp"
-            android:gravity="center"
-            android:text="@string/request_error"
-            android:textColor="@color/stepic_regular_text"/>
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:textColor="@color/borderless_button_text_color"
-            android:text="@string/try_again"
-            android:id="@+id/tryAgain" />
-    </LinearLayout>
+    <include layout="@layout/error_no_connection_with_button" />
 
     <ProgressBar
         android:id="@+id/progress"
