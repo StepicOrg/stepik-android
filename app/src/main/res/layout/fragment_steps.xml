@@ -45,7 +45,7 @@
 
         <include layout="@layout/error_lesson_not_found"/>
 
-        <include layout="@layout/need_auth_placeholder"/>
+        <include layout="@layout/empty_login"/>
 
         <include layout="@layout/empty_steps"/>
 

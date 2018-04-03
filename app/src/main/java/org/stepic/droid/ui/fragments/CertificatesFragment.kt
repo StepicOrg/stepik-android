@@ -10,7 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.empty_certificates.*
 import kotlinx.android.synthetic.main.fragment_certificates.*
-import kotlinx.android.synthetic.main.need_auth_placeholder.*
+import kotlinx.android.synthetic.main.empty_login.*
 import kotlinx.android.synthetic.main.progress_bar_on_empty_screen.*
 import kotlinx.android.synthetic.main.report_problem_layout.*
 import org.stepic.droid.R

@@ -12,7 +12,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import kotlinx.android.synthetic.main.fragment_profile_new.*
 import kotlinx.android.synthetic.main.latex_supportabe_enhanced_view.view.*
-import kotlinx.android.synthetic.main.need_auth_placeholder.*
+import kotlinx.android.synthetic.main.empty_login.*
 import kotlinx.android.synthetic.main.view_notification_interval_chooser.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic

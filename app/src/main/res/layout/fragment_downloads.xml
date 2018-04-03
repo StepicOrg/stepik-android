@@ -27,6 +27,6 @@
             android:id="@+id/progress_bar"
             layout="@layout/progress_bar_on_empty_screen"/>
 
-        <include layout="@layout/need_auth_placeholder"/>
+        <include layout="@layout/empty_login"/>
     </FrameLayout>
 </LinearLayout>
