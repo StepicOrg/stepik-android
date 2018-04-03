@@ -1,21 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<org.stepic.droid.ui.custom.StepikSwipeRefreshLayout
+    android:id="@+id/notification_swipe_refresh"
+    android:background="@color/old_cover"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/old_cover">
-
-    <include layout="@layout/progress_bar_on_empty_screen"/>
-
-    <include layout="@layout/report_problem_layout"/>
-
-    <include layout="@layout/empty_notifications"/>
-
-    <org.stepic.droid.ui.custom.StepikSwipeRefreshLayout
-        android:id="@+id/notification_swipe_refresh"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
+        android:layout_height="match_parent"
+        android:measureAllChildren="true">
         <android.support.v7.widget.RecyclerView
             android:id="@+id/notification_recycler_view"
             android:layout_width="match_parent"
@@ -25,5 +18,11 @@
             android:overScrollMode="never"
             android:scrollbarStyle="outsideOverlay"
             android:scrollbars="vertical"/>
-    </org.stepic.droid.ui.custom.StepikSwipeRefreshLayout>
-</FrameLayout>
+
+        <include layout="@layout/progress_bar_on_empty_screen"/>
+
+        <include layout="@layout/report_problem_layout"/>
+
+        <include layout="@layout/empty_notifications"/>
+    </FrameLayout>
+</org.stepic.droid.ui.custom.StepikSwipeRefreshLayout>

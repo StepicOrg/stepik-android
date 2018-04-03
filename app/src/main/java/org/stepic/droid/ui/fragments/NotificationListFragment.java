@@ -11,6 +11,7 @@ import android.support.v7.widget.SimpleItemAnimator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
@@ -65,6 +66,9 @@ public class NotificationListFragment extends FragmentBase implements Notificati
 
     @BindView(R.id.empty_notifications)
     View emptyNotifications;
+
+    @BindView(R.id.goToCatalog)
+    Button goToCatalog;
 
     @BindView(R.id.notification_swipe_refresh)
     StepikSwipeRefreshLayout notificationSwipeRefresh;
@@ -140,6 +144,13 @@ public class NotificationListFragment extends FragmentBase implements Notificati
             }
         };
         notificationRecyclerView.addOnScrollListener(recyclerViewScrollListener);
+
+        goToCatalog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                screenManager.showCatalog(getContext());
+            }
+        });
 
         notificationListPresenter.attachView(this);
         notificationListPresenter.init(notificationCategory);
