@@ -133,6 +133,9 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
     @BindView(R.id.corrupted_lesson)
     View corruptedLesson;
 
+    @BindView(R.id.goToCatalog)
+    View goToCatalog;
+
     @BindView(R.id.authAction)
     View authActionView;
 
@@ -245,6 +248,12 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
                 getAnalytic().reportEvent(Analytic.Interaction.CLICK_AUTH_FROM_STEPS);
                 getScreenManager().showLaunchScreen(getActivity());
                 getActivity().finish();
+            }
+        });
+        goToCatalog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getScreenManager().showCatalog(getActivity());
             }
         });
     }

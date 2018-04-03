@@ -274,7 +274,7 @@
 
         <include
             android:id="@+id/profileEmptyUser"
-            layout="@layout/empty_users"
+            layout="@layout/error_user_not_found"
             tools:visibility="gone"/>
 
         <include
