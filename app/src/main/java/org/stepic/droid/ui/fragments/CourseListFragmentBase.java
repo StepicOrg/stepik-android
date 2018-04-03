@@ -180,13 +180,14 @@ public abstract class CourseListFragmentBase extends FragmentBase
             public void onClick(View v) {
                 Activity parent = getActivity();
                 if (parent == null || !(parent instanceof RootScreen)) {
-                    return;
+                    getScreenManager().showCatalog(getContext());
+                } else {
+                    getAnalytic().reportEvent(Analytic.Interaction.CLICK_FIND_COURSE_EMPTY_SCREEN);
+                    if (getSharedPreferenceHelper().getAuthResponseFromStore() == null) {
+                        getAnalytic().reportEvent(Analytic.Anonymous.BROWSE_COURSES_CENTER);
+                    }
+                    ((RootScreen) parent).showCatalog();
                 }
-                getAnalytic().reportEvent(Analytic.Interaction.CLICK_FIND_COURSE_EMPTY_SCREEN);
-                if (getSharedPreferenceHelper().getAuthResponseFromStore() == null) {
-                    getAnalytic().reportEvent(Analytic.Anonymous.BROWSE_COURSES_CENTER);
-                }
-                ((RootScreen) parent).showCatalog();
             }
         });
         joiningListenerClient.subscribe(this);
