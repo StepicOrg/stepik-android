@@ -25,6 +25,6 @@
         android:soundEffectsEnabled="true"/>
 
     <include layout="@layout/error_no_connection_with_button" />
-    <include layout="@layout/fail_to_parse_course"/>
+    <include layout="@layout/error_course_not_found" />
 
 </RelativeLayout>

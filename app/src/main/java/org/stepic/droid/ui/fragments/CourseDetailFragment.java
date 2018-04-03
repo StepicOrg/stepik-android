@@ -112,6 +112,9 @@ public class CourseDetailFragment extends FragmentBase implements
     @BindView(R.id.course_not_found)
     View courseNotFoundView;
 
+    @BindView(R.id.goToCatalog)
+    View goToCatalog;
+
     @BindDrawable(R.drawable.general_placeholder)
     Drawable coursePlaceholder;
 
@@ -218,7 +221,7 @@ public class CourseDetailFragment extends FragmentBase implements
         hideSoftKeypad();
         instructorAdapter = new InstructorAdapter(instructorsList, getActivity());
         instructorsCarousel.setAdapter(instructorAdapter);
-        courseNotFoundView.setOnClickListener(new View.OnClickListener() {
+        goToCatalog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (getSharedPreferenceHelper().getAuthResponseFromStore() != null) {
@@ -501,7 +504,7 @@ public class CourseDetailFragment extends FragmentBase implements
         courseFinderPresenter.detachView(this);
         courseDetailAnalyticPresenter.detachView(this);
         tryAgain.setOnClickListener(null);
-        courseNotFoundView.setOnClickListener(null);
+        goToCatalog.setOnClickListener(null);
         instructorAdapter = null;
         joinCourseView.setOnClickListener(null);
         continueCourseView.setOnClickListener(null);
