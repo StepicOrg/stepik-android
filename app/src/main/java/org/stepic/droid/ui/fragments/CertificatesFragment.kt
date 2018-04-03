@@ -72,6 +72,8 @@ class CertificatesFragment : FragmentBase(),
 
         authAction.setOnClickListener { screenManager.showLaunchScreen(activity) }
 
+        goToCatalog.setOnClickListener { screenManager.showCatalog(activity) }
+
         certificateSwipeRefresh.setOnRefreshListener(this)
 
         certificatePresenter.attachView(this)
