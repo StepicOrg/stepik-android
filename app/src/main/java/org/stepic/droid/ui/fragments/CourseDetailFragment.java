@@ -139,8 +139,11 @@ public class CourseDetailFragment extends FragmentBase implements
     @BindDrawable(R.drawable.video_placeholder_drawable)
     Drawable videoPlaceholder;
 
-    @BindView(R.id.reportProblem)
-    View reportInternetProblem;
+    @BindView(R.id.error)
+    View errorView;
+
+    @BindView(R.id.tryAgain)
+    View tryAgain;
 
     ImageView courseIcon;
 
@@ -242,7 +245,7 @@ public class CourseDetailFragment extends FragmentBase implements
                 tryToShowCourse();
             }
         };
-        reportInternetProblem.setOnClickListener(onClickReportListener);
+        tryAgain.setOnClickListener(onClickReportListener);
 
         header.setVisibility(View.GONE); //hide while we don't have the course
         footer.setVisibility(View.GONE);
@@ -277,7 +280,7 @@ public class CourseDetailFragment extends FragmentBase implements
 
 
     private void tryToShowCourse() {
-        reportInternetProblem.setVisibility(View.GONE); // now we try show -> it is not visible
+        errorView.setVisibility(View.GONE); // now we try show -> it is not visible
         course = getArguments().getParcelable(AppConstants.KEY_COURSE_BUNDLE);
         if (course == null) {
             //it is not from our activity
@@ -306,7 +309,7 @@ public class CourseDetailFragment extends FragmentBase implements
 
     public void initScreenByCourse() {
         //todo HIDE LOADING AND ERRORS
-        reportInternetProblem.setVisibility(View.GONE);
+        errorView.setVisibility(View.GONE);
         courseNotFoundView.setVisibility(View.GONE);
         //
         header.setVisibility(View.VISIBLE);
@@ -432,7 +435,7 @@ public class CourseDetailFragment extends FragmentBase implements
     public void onCourseUnavailable(long courseId) {
         if (course == null) {
             getAnalytic().reportEvent(Analytic.Interaction.COURSE_USER_TRY_FAIL, courseId + "");
-            reportInternetProblem.setVisibility(View.GONE);
+            errorView.setVisibility(View.GONE);
             courseNotFoundView.setVisibility(View.VISIBLE);
         }
     }
@@ -441,8 +444,8 @@ public class CourseDetailFragment extends FragmentBase implements
     public void onInternetFailWhenCourseIsTriedToLoad() {
         if (course == null) {
             courseNotFoundView.setVisibility(View.GONE);
-            reportInternetProblem.setVisibility(View.VISIBLE);
-            reportInternetProblem.setOnClickListener(onClickReportListener);
+            errorView.setVisibility(View.VISIBLE);
+            tryAgain.setOnClickListener(onClickReportListener);
         }
     }
 
@@ -497,7 +500,7 @@ public class CourseDetailFragment extends FragmentBase implements
         courseJoinerPresenter.detachView(this);
         courseFinderPresenter.detachView(this);
         courseDetailAnalyticPresenter.detachView(this);
-        reportInternetProblem.setOnClickListener(null);
+        tryAgain.setOnClickListener(null);
         courseNotFoundView.setOnClickListener(null);
         instructorAdapter = null;
         joinCourseView.setOnClickListener(null);

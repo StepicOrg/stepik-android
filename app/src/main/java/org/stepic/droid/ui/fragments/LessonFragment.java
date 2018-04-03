@@ -1,12 +1,10 @@
 package org.stepic.droid.ui.fragments;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.appindexing.Action;
@@ -127,9 +124,6 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
     @BindView(R.id.loadProgressbarOnEmptyScreen)
     ProgressBar progressBar;
 
-    @BindView(R.id.errorMessage)
-    TextView errorMessage;
-
     @BindView(R.id.error)
     View errorView;
 
@@ -189,8 +183,6 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        errorMessage.setText(R.string.internet_problem);
-        errorView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.new_cover));
 
         if (savedInstanceState != null) {
             isRestarted = true;

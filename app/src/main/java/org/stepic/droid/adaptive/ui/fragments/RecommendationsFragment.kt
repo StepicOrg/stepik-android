@@ -68,6 +68,7 @@ class RecommendationsFragment : FragmentBase(), RecommendationsView {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        error.setBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent))
 
         tryAgain.setOnClickListener {
             recommendationsPresenter.retry()
