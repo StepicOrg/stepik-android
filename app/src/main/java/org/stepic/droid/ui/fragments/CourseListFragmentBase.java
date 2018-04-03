@@ -91,6 +91,9 @@ public abstract class CourseListFragmentBase extends FragmentBase
     @BindView(R.id.empty_search)
     protected ViewGroup emptySearch;
 
+    @BindView(R.id.goToCatalog)
+    protected Button goToCatalog;
+
     protected List<Course> courses;
     protected CoursesAdapter coursesAdapter;
 
@@ -189,6 +192,13 @@ public abstract class CourseListFragmentBase extends FragmentBase
         joiningListenerClient.subscribe(this);
         continueCoursePresenter.attachView(this);
         droppingPresenter.attachView(this);
+
+        goToCatalog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                screenManager.showCatalog(getContext());
+            }
+        });
     }
 
     @Override
