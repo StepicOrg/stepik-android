@@ -244,7 +244,6 @@ public abstract class CourseListFragmentBase extends FragmentBase
         reportConnectionProblem.setVisibility(View.GONE);
 
         if (courses.isEmpty()) {
-            setBackgroundColorToRootView(R.color.new_cover);
             ProgressHelper.activate(swipeRefreshLayout);
             coursesAdapter.showLoadingFooter(false);
         } else if (swipeRefreshLayout != null && !swipeRefreshLayout.isRefreshing()) {
@@ -262,7 +261,6 @@ public abstract class CourseListFragmentBase extends FragmentBase
         ProgressHelper.dismiss(swipeRefreshLayout);
         reportConnectionProblem.setVisibility(View.GONE);
         if (courses.isEmpty()) {
-            setBackgroundColorToRootView(R.color.old_cover);
             showEmptyScreen(true);
             getLocalReminder().remindAboutApp();
         }
@@ -277,7 +275,6 @@ public abstract class CourseListFragmentBase extends FragmentBase
         if (courses == null || courses.isEmpty()) {
             //screen is clear due to error connection
             showEmptyScreen(false);
-            setBackgroundColorToRootView(R.color.old_cover);
             reportConnectionProblem.setVisibility(View.VISIBLE);
         }
     }
@@ -287,7 +284,6 @@ public abstract class CourseListFragmentBase extends FragmentBase
         ProgressHelper.dismiss(progressBarOnEmptyScreen);
         ProgressHelper.dismiss(swipeRefreshLayout);
         coursesAdapter.showLoadingFooter(false);
-        setBackgroundColorToRootView(R.color.new_cover);
         reportConnectionProblem.setVisibility(View.GONE);
         showEmptyScreen(false);
         List<Course> finalCourses;
@@ -346,10 +342,6 @@ public abstract class CourseListFragmentBase extends FragmentBase
     @Override
     public void onSuccessJoin(@Nullable Course joinedCourse) {
         updateEnrollment(joinedCourse, joinedCourse.getEnrollment());
-    }
-
-    protected final void setBackgroundColorToRootView(@ColorRes int colorRes) {
-        rootView.setBackgroundColor(ColorUtil.INSTANCE.getColorArgb(colorRes, getContext()));
     }
 
     @Override

@@ -137,7 +137,6 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     public void showEmptyScreen(boolean isShown) {
         if (isShown) {
             if (getCourseType() == Table.enrolled) {
-                setBackgroundColorToRootView(R.color.old_cover);
                 emptyCoursesView.setVisibility(View.VISIBLE);
                 if (getSharedPreferenceHelper().getAuthResponseFromStore() != null) { //// TODO: 23.12.16 optimize it and do on background thread
                     //logged
@@ -150,13 +149,11 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
                 }
                 emptySearch.setVisibility(View.GONE);
             } else {
-                setBackgroundColorToRootView(R.color.old_cover);
                 emptyCoursesView.setVisibility(View.GONE);
                 emptySearch.setVisibility(View.VISIBLE);
             }
             swipeRefreshLayout.setVisibility(View.GONE);
         } else {
-            setBackgroundColorToRootView(R.color.new_cover);
             emptySearch.setVisibility(View.GONE);
             emptyCoursesView.setVisibility(View.GONE);
             swipeRefreshLayout.setVisibility(View.VISIBLE);
