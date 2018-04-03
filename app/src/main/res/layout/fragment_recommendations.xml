@@ -172,7 +172,7 @@
 
             </LinearLayout>
 
-            <include layout="@layout/adaptive_error" />
+            <include layout="@layout/error_no_connection_with_button" />
         </FrameLayout>
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

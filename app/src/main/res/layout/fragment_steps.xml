@@ -41,7 +41,7 @@
 
         <include layout="@layout/drop_shadow_view"/>
 
-        <include layout="@layout/internet_fail_clickable"/>
+        <include layout="@layout/error_no_connection_with_button"/>
 
         <include layout="@layout/corrupted_lesson"/>
 
