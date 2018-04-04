@@ -34,7 +34,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="@string/fail_to_parse"
-        android:maxWidth="@dimen/placeholders_text_max_width"
         app:layout_constraintBottom_toTopOf="@+id/goToCatalog"
         app:layout_constraintStart_toStartOf="@+id/centerGuideline"
         app:layout_constraintTop_toTopOf="parent"

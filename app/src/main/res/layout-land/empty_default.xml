@@ -34,7 +34,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="@string/empty_try_later"
-        android:maxWidth="@dimen/placeholders_text_max_width"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/centerGuideline"
         app:layout_constraintTop_toTopOf="parent" />

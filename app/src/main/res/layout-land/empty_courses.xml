@@ -35,7 +35,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:maxWidth="@dimen/placeholders_text_max_width"
         android:text="@string/empty_courses"
         app:layout_constraintBottom_toTopOf="@+id/empty_courses_button"
         app:layout_constraintStart_toStartOf="@+id/centerGuideline"
