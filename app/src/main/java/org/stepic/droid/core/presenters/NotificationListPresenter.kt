@@ -92,6 +92,9 @@ class NotificationListPresenter
             }
             return false
         } else {
+            if (!isLoading) {
+                view?.onNeedShowNotifications(notificationList)
+            }
             //do nothing we loading or already loaded
             return true
         }

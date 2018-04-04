@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import kotlinx.android.synthetic.main.fragment_adaptive_rating.*
+import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import org.stepic.droid.R
 import org.stepic.droid.adaptive.ui.adapters.AdaptiveRatingAdapter
 import org.stepic.droid.base.App
@@ -47,7 +48,7 @@ class AdaptiveRatingFragment: FragmentBase(), AdaptiveRatingView {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        error.setBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent))
         recycler.layoutManager = LinearLayoutManager(context)
 
         val divider = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)

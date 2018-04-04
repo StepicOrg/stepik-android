@@ -19,7 +19,7 @@
         <include
             layout="@layout/empty_comments"/>
         <include
-            layout="@layout/report_problem_layout"/>
+            layout="@layout/error_no_connection"/>
 
 
         <org.stepic.droid.ui.custom.StepikSwipeRefreshLayout

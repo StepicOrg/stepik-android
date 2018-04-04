@@ -90,6 +90,9 @@ public class DownloadsFragment extends FragmentBase implements
     @BindView(R.id.authAction)
     Button authUserButton;
 
+    @BindView(R.id.goToCatalog)
+    Button goToCatalog;
+
     private DownloadsAdapter downloadAdapter;
     private List<CachedVideo> cachedVideoList;
     private ConcurrentHashMap<Long, Lesson> stepIdToLesson;
@@ -163,6 +166,13 @@ public class DownloadsFragment extends FragmentBase implements
             emptyDownloadView.setVisibility(View.GONE);
             ProgressHelper.activate(progressBar);
         }
+
+        goToCatalog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                screenManager.showCatalog(getContext());
+            }
+        });
 
         loadingProgressDialog = new LoadingProgressDialog(getContext());
         downloadsListenerClient.subscribe(this);

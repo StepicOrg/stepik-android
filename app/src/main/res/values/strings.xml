@@ -235,8 +235,7 @@
     <string name="done">Done</string>
     <string name="moving">Moving</string>
     <string name="go_to_learn">Continue</string>
-    <string name="fail_to_parse">Sorry, the course can not be found. Tap to find other courses!
-    </string>
+    <string name="fail_to_parse">Sorry, the course can not be found</string>
     <string name="authorization">Authorization</string>
     <string name="unauthorization_detail">To continue, you should be authorized. Do you want to do
         this now?
@@ -646,4 +645,6 @@
     <string name="adaptive_exp_tooltip_text">You can view your stats by pressing on toolbar</string>
 
     <string name="request_error">Something went wrong</string>
+
+    <string name="placeholder_go_to_catalog">Go to Catalog</string>
 </resources>

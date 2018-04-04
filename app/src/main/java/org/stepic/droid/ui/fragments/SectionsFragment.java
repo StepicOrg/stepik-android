@@ -139,6 +139,9 @@ public class SectionsFragment
     @BindView(R.id.course_not_found)
     View courseNotParsedView;
 
+    @BindView(R.id.goToCatalog)
+    View goToCatalog;
+
     @BindView(R.id.report_empty)
     protected View reportEmptyView;
 
@@ -506,7 +509,7 @@ public class SectionsFragment
         invitationPresenter.detachView(this);
         storeStateManager.removeSectionCallback(this);
         droppingListenerClient.unsubscribe(this);
-        courseNotParsedView.setOnClickListener(null);
+        goToCatalog.setOnClickListener(null);
         swipeRefreshLayout.setOnRefreshListener(null);
         localProgressManager.unsubscribe(this);
         downloadingPresenter.detachView(this);
@@ -592,7 +595,7 @@ public class SectionsFragment
         if (course == null) {
             ProgressHelper.dismiss(swipeRefreshLayout);
             ProgressHelper.dismiss(loadOnCenterProgressBar);
-            courseNotParsedView.setOnClickListener(new View.OnClickListener() {
+            goToCatalog.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (getSharedPreferenceHelper().getAuthResponseFromStore() != null) {

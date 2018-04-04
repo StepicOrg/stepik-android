@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import org.jetbrains.annotations.Contract;
 import org.stepic.droid.R;
 import org.stepic.droid.base.App;
 import org.stepic.droid.core.ScreenManager;
@@ -67,16 +68,19 @@ public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
     }
 
     @LayoutRes
+    @Contract(pure = true)
     protected int getViewRes() {
         return R.layout.latex_supportabe_enhanced_view;
     }
 
     @IdRes
+    @Contract(pure = true)
     protected int getTextViewId() {
         return R.id.textView;
     }
 
     @IdRes
+    @Contract(pure = true)
     protected int getWebViewId() {
         return R.id.webView;
     }

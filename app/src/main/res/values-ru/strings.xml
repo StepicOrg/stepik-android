@@ -217,8 +217,7 @@
     <string name="done">Готово</string>
     <string name="moving">Перенос</string>
     <string name="go_to_learn">Продолжить</string>
-    <string name="fail_to_parse">К сожалению, курс не найден. Нажмите, чтобы найти другие курсы!
-    </string>
+    <string name="fail_to_parse">К сожалению, курс не найден</string>
     <string name="authorization">Авторизация</string>
     <string name="unauthorization_detail">Для того, чтобы продолжить, необходимо войти или
         зарегистрироваться. Вы хотите сделать это сейчас?
@@ -631,4 +630,6 @@
     <string name="adaptive_exp_tooltip_text">Нажав на панель с опытом, вы можете увидеть подробную статистику вашего обучения</string>
 
     <string name="request_error">Что-то пошло не так</string>
+
+    <string name="placeholder_go_to_catalog">Перейти в Каталог</string>
 </resources>
