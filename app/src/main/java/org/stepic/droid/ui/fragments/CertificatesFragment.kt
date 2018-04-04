@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.empty_certificates.*
 import kotlinx.android.synthetic.main.fragment_certificates.*
 import kotlinx.android.synthetic.main.empty_login.*
 import kotlinx.android.synthetic.main.progress_bar_on_empty_screen.*
-import kotlinx.android.synthetic.main.report_problem_layout.*
+import kotlinx.android.synthetic.main.error_no_connection.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentBase

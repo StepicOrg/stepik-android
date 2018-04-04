@@ -36,9 +36,9 @@
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <include layout="@layout/report_problem_layout"/>
+            <include layout="@layout/error_no_connection"/>
 
-            <include layout="@layout/report_empty_layout"/>
+            <include layout="@layout/empty_default"/>
 
 
             <android.support.v7.widget.RecyclerView
