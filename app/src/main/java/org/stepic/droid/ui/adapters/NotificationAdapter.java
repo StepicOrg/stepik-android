@@ -87,6 +87,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     @Override
     public GenericViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Timber.d("createViewHolder of NotificationAdapter, viewType = %d", viewType);
+        final Context context = parent.getContext();
         if (viewType == HEADER_VIEW_TYPE) {
             View view = LayoutInflater.from(context).inflate(R.layout.notification_list_header_item, parent, false);
             return new HeaderViewHolder(view);
@@ -190,7 +191,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     @NotNull
     @Override
     public DateHeaderViewHolder onCreateHeaderViewHolder(@NotNull ViewGroup parent) {
-        return new DateHeaderViewHolder(LayoutInflater.from(context).inflate(R.layout.notification_date_header, parent, false));
+        return new DateHeaderViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.notification_date_header, parent, false));
     }
 
     @Override
@@ -334,7 +335,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                             .load(avatarUri)
                             .into(notificationIcon);
                 } else {
-                    Glide.with(context)
+                    Glide.with(context.getApplicationContext())
                             .load(userAvatarUrl)
                             .asBitmap()
                             .placeholder(placeholderUserIcon)

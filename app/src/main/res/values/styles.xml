@@ -173,11 +173,21 @@
 
     <style name="PlaceholderTextViewStyle">
         <item name="android:textSize">@dimen/text_size_placeholders</item>
+        <item name="fontPath">fonts/Roboto-Light.ttf</item>
         <item name="android:padding">@dimen/padding_placeholders</item>
         <item name="android:lineSpacingMultiplier">1.15</item>
         <item name="android:gravity">center</item>
-        <item name="android:drawablePadding">@dimen/drawable_padding_placeholders</item>
         <item name="android:textColor">@color/stepic_weak_text</item>
+    </style>
+    
+    <style name="PlaceholderButton">
+        <item name="android:textSize">14sp</item>
+        <item name="android:background">@drawable/placeholder_button_background_selector</item>
+        <item name="android:foreground">@null</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/new_accent_color</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:padding">@dimen/guideline_standard_padding</item>
     </style>
 
     <style name="previousNextTextViewStyle">

@@ -170,4 +170,7 @@
     <color name="highlighted_elements_background">#F1F1F1</color>
 
     <color name="colorRadioButtonDefault">#CCCED1</color>
+
+    <color name="placeholder_button_pressed_color">@color/light_rounded_pressed_color</color>
+    <color name="placeholder_button_stroke_color">#CDCDCD</color>
 </resources>

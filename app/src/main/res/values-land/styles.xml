@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="PlaceholderTextViewStyle">
+        <item name="android:textSize">@dimen/text_size_placeholders</item>
+        <item name="fontPath">fonts/Roboto-Light.ttf</item>
+        <item name="android:padding">@dimen/padding_placeholders</item>
+        <item name="android:lineSpacingMultiplier">1.15</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/stepic_weak_text</item>
+        <item name="android:maxWidth">@dimen/placeholders_text_max_width</item>
+    </style>
+</resources>

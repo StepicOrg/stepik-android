@@ -172,36 +172,7 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:orientation="vertical"
-                android:layout_gravity="center"
-                android:gravity="center_horizontal"
-                android:id="@+id/error">
-
-                <ImageView
-                    android:layout_width="125dp"
-                    android:layout_height="125dp"
-                    android:src="@drawable/ic_no_wifi" />
-
-                <TextView
-                    android:id="@+id/errorMessage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:maxWidth="256dp"
-                    android:gravity="center"
-                    android:text="@string/request_error"/>
-
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/Adaptive.BorderlessButton"
-                    android:text="@string/try_again"
-                    android:id="@+id/tryAgain" />
-            </LinearLayout>
+            <include layout="@layout/error_no_connection_with_button" />
         </FrameLayout>
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
+import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import kotlinx.android.synthetic.main.fragment_recommendations.*
 import org.stepic.droid.R
 import org.stepic.droid.adaptive.ui.adapters.QuizCardsAdapter
@@ -67,6 +68,7 @@ class RecommendationsFragment : FragmentBase(), RecommendationsView {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        error.setBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent))
 
         tryAgain.setOnClickListener {
             recommendationsPresenter.retry()

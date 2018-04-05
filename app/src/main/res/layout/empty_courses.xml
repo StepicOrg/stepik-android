@@ -1,53 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/empty_courses"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
     android:focusable="false"
     android:focusableInTouchMode="false"
+    android:id="@+id/empty_courses"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:visibility="gone"
     tools:visibility="visible">
 
-    <android.support.v4.widget.NestedScrollView
+    <ImageView
+        android:id="@+id/placeholderIcon"
+        android:layout_width="@dimen/placeholders_image_width"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_empty_search"
+        android:adjustViewBounds="true"
+        app:layout_constraintBottom_toTopOf="@+id/empty_courses_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <TextView
+        android:id="@+id/empty_courses_text"
+        style="@style/PlaceholderTextViewStyle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/padding_placeholders"
+        android:text="@string/empty_courses"
+        app:layout_constraintBottom_toTopOf="@+id/empty_courses_button"
+        app:layout_constraintTop_toBottomOf="@+id/placeholderIcon" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+    <android.support.v7.widget.AppCompatButton
+        style="@style/PlaceholderButton"
+        android:id="@+id/empty_courses_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/placeholder_go_to_catalog"
+        app:layout_constraintBottom_toTopOf="@+id/empty_courses_anonymous_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/empty_courses_text" />
 
-            <TextView
-                android:id="@+id/empty_courses_text"
-                style="@style/PlaceholderTextViewStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableTop="@drawable/ic_empty_courses_3"
-                android:text="@string/empty_courses"/>
-
-            <Button
-                android:id="@+id/empty_courses_button"
-                style="@style/StepicSmallMaterialButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/empty_courses_text"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="@dimen/guideline_standard_padding"
-                android:text="@string/catalog_title"/>
-
-            <Button
-                android:id="@+id/empty_courses_anonymous_button"
-                style="@style/StepicSmallMaterialButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/empty_courses_button"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="@dimen/guideline_standard_padding"
-                android:text="@string/auth_action_title"
-                android:visibility="gone"
-                tools:visibility="visible"/>
-        </RelativeLayout>
-    </android.support.v4.widget.NestedScrollView>
-</FrameLayout>
+    <android.support.v7.widget.AppCompatButton
+        style="@style/PlaceholderButton"
+        android:id="@+id/empty_courses_anonymous_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/auth_action_title"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/empty_courses_button"
+        android:visibility="gone"
+        tools:visibility="visible" />
+</android.support.constraint.ConstraintLayout>

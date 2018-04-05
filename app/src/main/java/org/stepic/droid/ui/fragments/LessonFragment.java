@@ -124,11 +124,17 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
     @BindView(R.id.loadProgressbarOnEmptyScreen)
     ProgressBar progressBar;
 
-    @BindView(R.id.reportProblem)
-    View reportProblem;
+    @BindView(R.id.error)
+    View errorView;
+
+    @BindView(R.id.tryAgain)
+    View tryAgain;
 
     @BindView(R.id.corrupted_lesson)
     View corruptedLesson;
+
+    @BindView(R.id.goToCatalog)
+    View goToCatalog;
 
     @BindView(R.id.authAction)
     View authActionView;
@@ -180,6 +186,7 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         if (savedInstanceState != null) {
             isRestarted = true;
         }
@@ -221,7 +228,7 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
 
     private void initIndependentUI() {
         viewPager.addOnPageChangeListener(pageChangeListener);
-        reportProblem.setOnClickListener(new View.OnClickListener() {
+        tryAgain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Section section = getArguments().getParcelable(AppConstants.KEY_SECTION_BUNDLE);
@@ -243,6 +250,12 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
                 getActivity().finish();
             }
         });
+        goToCatalog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getScreenManager().showCatalog(getActivity());
+            }
+        });
     }
 
     private void init(Lesson lesson) {
@@ -261,7 +274,7 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
         if (pageChangeListener != null) {
             viewPager.removeOnPageChangeListener(pageChangeListener);
         }
-        reportProblem.setOnClickListener(null);
+        tryAgain.setOnClickListener(null);
         super.onDestroyView();
     }
 
@@ -382,7 +395,7 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
     @Override
     public void onLessonCorrupted() {
         ProgressHelper.dismiss(progressBar);
-        reportProblem.setVisibility(View.GONE);
+        errorView.setVisibility(View.GONE);
         authView.setVisibility(View.GONE);
         emptySteps.setVisibility(View.GONE);
         showViewPager(false);
@@ -405,7 +418,7 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
         emptySteps.setVisibility(View.GONE);
         showViewPager(false);
         if (stepsPresenter.getStepList().isEmpty()) {
-            reportProblem.setVisibility(View.VISIBLE);
+            errorView.setVisibility(View.VISIBLE);
         } else {
             Toast.makeText(getActivity(), connectionProblemString, Toast.LENGTH_LONG).show();
         }
@@ -414,7 +427,7 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
     @Override
     public void showSteps(boolean fromPreviousLesson, long defaultStepPosition) {
         ProgressHelper.dismiss(progressBar);
-        reportProblem.setVisibility(View.GONE);
+        errorView.setVisibility(View.GONE);
         corruptedLesson.setVisibility(View.GONE);
         authView.setVisibility(View.GONE);
         emptySteps.setVisibility(View.GONE);
@@ -456,7 +469,7 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
     @Override
     public void onEmptySteps() {
         ProgressHelper.dismiss(progressBar);
-        reportProblem.setVisibility(View.GONE);
+        errorView.setVisibility(View.GONE);
         corruptedLesson.setVisibility(View.GONE);
         authView.setVisibility(View.GONE);
         emptySteps.setVisibility(View.VISIBLE);
@@ -468,7 +481,7 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
         if (stepsPresenter.getStepList().isEmpty()) {
             ProgressHelper.activate(progressBar);
         }
-        reportProblem.setVisibility(View.GONE);
+        errorView.setVisibility(View.GONE);
         corruptedLesson.setVisibility(View.GONE);
         authView.setVisibility(View.GONE);
         emptySteps.setVisibility(View.GONE);
@@ -478,7 +491,7 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
     @Override
     public void onUserNotAuth() {
         ProgressHelper.dismiss(progressBar);
-        reportProblem.setVisibility(View.GONE);
+        errorView.setVisibility(View.GONE);
         corruptedLesson.setVisibility(View.GONE);
         emptySteps.setVisibility(View.GONE);
         authView.setVisibility(View.VISIBLE);

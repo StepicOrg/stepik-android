@@ -2,7 +2,6 @@ package org.stepic.droid.ui.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -91,6 +90,9 @@ public abstract class CourseListFragmentBase extends FragmentBase
     @BindView(R.id.empty_search)
     protected ViewGroup emptySearch;
 
+    @BindView(R.id.goToCatalog)
+    protected Button goToCatalog;
+
     protected List<Course> courses;
     protected CoursesAdapter coursesAdapter;
 
@@ -177,18 +179,26 @@ public abstract class CourseListFragmentBase extends FragmentBase
             public void onClick(View v) {
                 Activity parent = getActivity();
                 if (parent == null || !(parent instanceof RootScreen)) {
-                    return;
+                    getScreenManager().showCatalog(getContext());
+                } else {
+                    getAnalytic().reportEvent(Analytic.Interaction.CLICK_FIND_COURSE_EMPTY_SCREEN);
+                    if (getSharedPreferenceHelper().getAuthResponseFromStore() == null) {
+                        getAnalytic().reportEvent(Analytic.Anonymous.BROWSE_COURSES_CENTER);
+                    }
+                    ((RootScreen) parent).showCatalog();
                 }
-                getAnalytic().reportEvent(Analytic.Interaction.CLICK_FIND_COURSE_EMPTY_SCREEN);
-                if (getSharedPreferenceHelper().getAuthResponseFromStore() == null) {
-                    getAnalytic().reportEvent(Analytic.Anonymous.BROWSE_COURSES_CENTER);
-                }
-                ((RootScreen) parent).showCatalog();
             }
         });
         joiningListenerClient.subscribe(this);
         continueCoursePresenter.attachView(this);
         droppingPresenter.attachView(this);
+
+        goToCatalog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                screenManager.showCatalog(getContext());
+            }
+        });
     }
 
     @Override
@@ -234,7 +244,6 @@ public abstract class CourseListFragmentBase extends FragmentBase
         reportConnectionProblem.setVisibility(View.GONE);
 
         if (courses.isEmpty()) {
-            setBackgroundColorToRootView(R.color.new_cover);
             ProgressHelper.activate(swipeRefreshLayout);
             coursesAdapter.showLoadingFooter(false);
         } else if (swipeRefreshLayout != null && !swipeRefreshLayout.isRefreshing()) {
@@ -252,7 +261,6 @@ public abstract class CourseListFragmentBase extends FragmentBase
         ProgressHelper.dismiss(swipeRefreshLayout);
         reportConnectionProblem.setVisibility(View.GONE);
         if (courses.isEmpty()) {
-            setBackgroundColorToRootView(R.color.old_cover);
             showEmptyScreen(true);
             getLocalReminder().remindAboutApp();
         }
@@ -267,7 +275,6 @@ public abstract class CourseListFragmentBase extends FragmentBase
         if (courses == null || courses.isEmpty()) {
             //screen is clear due to error connection
             showEmptyScreen(false);
-            setBackgroundColorToRootView(R.color.old_cover);
             reportConnectionProblem.setVisibility(View.VISIBLE);
         }
     }
@@ -277,7 +284,6 @@ public abstract class CourseListFragmentBase extends FragmentBase
         ProgressHelper.dismiss(progressBarOnEmptyScreen);
         ProgressHelper.dismiss(swipeRefreshLayout);
         coursesAdapter.showLoadingFooter(false);
-        setBackgroundColorToRootView(R.color.new_cover);
         reportConnectionProblem.setVisibility(View.GONE);
         showEmptyScreen(false);
         List<Course> finalCourses;
@@ -336,10 +342,6 @@ public abstract class CourseListFragmentBase extends FragmentBase
     @Override
     public void onSuccessJoin(@Nullable Course joinedCourse) {
         updateEnrollment(joinedCourse, joinedCourse.getEnrollment());
-    }
-
-    protected final void setBackgroundColorToRootView(@ColorRes int colorRes) {
-        rootView.setBackgroundColor(ColorUtil.INSTANCE.getColorArgb(colorRes, getContext()));
     }
 
     @Override

@@ -16,8 +16,8 @@ import android.view.*
 import android.widget.Toast
 import kotlinx.android.synthetic.main.empty_comments.*
 import kotlinx.android.synthetic.main.fragment_comments.*
-import kotlinx.android.synthetic.main.internet_fail_clickable.*
 import kotlinx.android.synthetic.main.progress_bar_on_empty_screen.*
+import kotlinx.android.synthetic.main.error_no_connection.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
