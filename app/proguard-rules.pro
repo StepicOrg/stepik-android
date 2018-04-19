@@ -117,6 +117,4 @@
 # appsee
 -keep class com.appsee.** { *; }
 -dontwarn com.appsee.**
--keep class android.support.** { *; }
--keep interface android.support.** { *; }
 -keepattributes SourceFile,LineNumberTable
