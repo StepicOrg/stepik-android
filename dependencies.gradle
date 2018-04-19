@@ -57,6 +57,7 @@ ext.versions = [
         stetho               : '1.4.2',
         leakCanary           : '1.5.1',
         crashlytics          : '2.9.1@aar',
+        appsee               : '2.4.1@aar',
 
         junit                : '4.12',
         robolectric          : '3.1.2',
@@ -137,6 +138,7 @@ ext.libraries = [
         leakCanary           : "com.squareup.leakcanary:leakcanary-android:$versions.leakCanary",
         leakCanaryNoOp       : "com.squareup.leakcanary:leakcanary-android-no-op:$versions.leakCanary",
         crashlytics          : "com.crashlytics.sdk.android:crashlytics:$versions.crashlytics",
+        appsee               : "com.appsee:appsee-android:$versions.appsee",
 
         // Test dependencies
         junit                : "junit:junit:$versions.junit",

@@ -113,3 +113,8 @@
 -keepclassmembers class * {
     @android.webkit.JavascriptInterface <methods>;
 }
+
+# appsee
+-keep class com.appsee.** { *; }
+-dontwarn com.appsee.**
+-keepattributes SourceFile,LineNumberTable

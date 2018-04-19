@@ -11,6 +11,7 @@
     <string name="app_name" translatable="false">Stepik</string>
     <integer name="com_vk_sdk_AppId" translatable="false">5628680</integer>
     <string name="facebook_app_id" translatable="false">171127739724012</string>
+    <string name="appsee_id" translatable="false">66bb9d8f3ad7428e9fdc7f2fe0d84988</string>
     <string name="host_name" translatable="false">stepik.org</string>
     <string name="secondary_host_name" translatable="false">stepic.org</string>
     <string name="yet_have_not_account">"Sign up with e-mail"</string>
