@@ -9,6 +9,7 @@ import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
+import com.appsee.Appsee
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.presenters.SplashPresenter
@@ -35,6 +36,7 @@ class SplashActivity : BackToExitActivityBase(), SplashView {
         defineShortcuts()
 
         splashPresenter.onSplashCreated()
+        Appsee.start()
     }
 
     private fun defineShortcuts() {

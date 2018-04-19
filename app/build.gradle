@@ -172,6 +172,9 @@ dependencies {
     implementation(libraries.crashlytics) {
         transitive = true
     }
+    implementation(libraries.appsee) {
+        transitive = true
+    }
 
     testImplementation libraries.junit
     testImplementation libraries.robolectric
