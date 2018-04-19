@@ -536,7 +536,7 @@
     <string name="step_preparing">Шаг еще не обработан. Нажмите, чтобы перезагрузить</string>
     <string name="language_of_courses">Язык курсов</string>
     <string name="course_collection_empty">Извините, эта подборка на каникулах</string>
-    <string name="internet_problem_catalog">Включите инетренет, чтобы увидеть наши подборки курсов</string>
+    <string name="internet_problem_catalog">Включите интернет, чтобы увидеть наши подборки курсов</string>
     <string name="course_rating">Рейтинг курса</string>
     <string name="trending_topics">Популярные темы</string>
     <string name="early_notification_description">Приложение поможет завершить курс и получить сертификат. Включите ежедневные уведомления, чтобы учиться чаще!</string>
