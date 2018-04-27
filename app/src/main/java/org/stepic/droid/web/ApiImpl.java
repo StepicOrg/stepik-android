@@ -22,6 +22,7 @@ import com.vk.sdk.VKSdk;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
+import org.stepic.droid.adaptive.model.RatingItem;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.configuration.RemoteConfig;
@@ -44,6 +45,7 @@ import org.stepic.droid.model.StepikFilter;
 import org.stepic.droid.model.Submission;
 import org.stepic.droid.model.Tag;
 import org.stepic.droid.adaptive.model.RecommendationReaction;
+import org.stepic.droid.model.User;
 import org.stepic.droid.model.comments.Comment;
 import org.stepic.droid.model.comments.Vote;
 import org.stepic.droid.model.comments.VoteValue;
@@ -79,6 +81,7 @@ import javax.inject.Inject;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
+import io.reactivex.functions.Function;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
 import okhttp3.Credentials;
@@ -454,6 +457,16 @@ public class ApiImpl implements Api {
     @Override
     public Call<UsersResponse> getUsers(long[] userIds) {
         return loggedService.getUsers(userIds);
+    }
+
+    @Override
+    public Single<List<User>> getUsersRx(long[] userIds) {
+        return loggedService.getUsersRx(userIds).map(new Function<UsersResponse, List<User>>() {
+            @Override
+            public List<User> apply(UsersResponse usersResponse) {
+                return usersResponse.getUsers();
+            }
+        });
     }
 
     @Override
@@ -859,8 +872,13 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Observable<RatingResponse> getRating(long courseId, int count, int days) {
-        return ratingService.getRating(courseId, count, days, getCurrentUserId());
+    public Single<List<RatingItem>> getRating(long courseId, int count, int days) {
+        return ratingService.getRating(courseId, count, days, getCurrentUserId()).map(new Function<RatingResponse, List<RatingItem>>() {
+            @Override
+            public List<RatingItem> apply(RatingResponse ratingResponse) {
+                return ratingResponse.getUsers();
+            }
+        });
     }
 
     @Override
