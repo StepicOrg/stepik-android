@@ -220,8 +220,8 @@ class CommentsFragment : FragmentBase(),
         }
 
         val commentUser: User? = comment.user?.let { commentManager.getUserById(it) }
-        if (commentUser?.first_name?.isNotBlank() ?: false || commentUser?.last_name?.isNotBlank() ?: false) {
-            val userNameText: String? = commentUser?.getFirstAndLastName()
+        if (commentUser?.first_name?.isNotBlank() == true || commentUser?.last_name?.isNotBlank() == true) {
+            val userNameText: String? = commentUser.getFirstAndLastName()
             val spannableUserName = SpannableString(userNameText)
             spannableUserName.setSpan(ForegroundColorSpan(ColorUtil.getColorArgb(R.color.black)), 0, spannableUserName.length, 0)
 
@@ -282,7 +282,7 @@ class CommentsFragment : FragmentBase(),
                 return true
             }
 
-            in linksStartIndexId..linksStartIndexId + firstLinkShift - 1 -> {
+            in linksStartIndexId until linksStartIndexId + firstLinkShift -> {
                 val index = item.itemId
                 clickLinkInComment(links[index - linksStartIndexId])
                 return true
@@ -372,7 +372,7 @@ class CommentsFragment : FragmentBase(),
 
         val comment = commentManager.getItemWithNeedUpdatingInfoByPosition(position).comment
         val voteId = comment.vote
-        val commentId = comment.id ?: return
+        val commentId = comment.id
         voteId?.let {
             val voteObject = Vote(voteId, voteValue)
             votePresenter.doVote(voteObject, commentId)
@@ -514,7 +514,7 @@ class CommentsFragment : FragmentBase(),
         val needInsertLocal: Comment? = needInsertOrUpdateLate
         if (needInsertLocal != null &&
                 (!commentManager.isCommentCached(needInsertLocal.id) || (needInsertLocal.parent != null && !commentManager.isCommentCached(needInsertLocal.parent)))) {
-            val longArr = listOf(needInsertLocal.id, needInsertLocal.parent).filterNotNull().toLongArray()
+            val longArr = listOfNotNull(needInsertLocal.id, needInsertLocal.parent).toLongArray()
             commentManager.loadCommentsByIds(longArr)
         } else {
             //we have only our comment.

@@ -10,7 +10,7 @@ import org.stepic.droid.model.UserRole
 data class Comment(
         var id: Long = 0,
         var parent: Long? = null,
-        val user: Int? = null,
+        val user: Long? = null,
         @SerializedName("user_role")
         val userRole: UserRole? = null,
         val time: String? = null,
@@ -51,7 +51,7 @@ data class Comment(
     constructor(source: Parcel) : this(
             source.readLong(),
             source.readValue(Long::class.java.classLoader) as Long?,
-            source.readValue(Int::class.java.classLoader) as Int?,
+            source.readValue(Long::class.java.classLoader) as Long?,
             source.readValue(Int::class.java.classLoader)?.let { UserRole.values()[it as Int] },
             source.readString(),
             source.readString()?:"",

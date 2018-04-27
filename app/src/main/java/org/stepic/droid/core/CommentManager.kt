@@ -33,7 +33,7 @@ class CommentManager @Inject constructor(
     private val parentCommentToSumOfCachedReplies: MutableMap<Long, Int> = HashMap()
     private val cachedCommentsSetMap: MutableMap<Long, Comment> = HashMap()
     private val cachedCommentsList: MutableList<Comment> = ArrayList()
-    private val userSetMap: MutableMap<Int, User> = HashMap() //userId -> User
+    private val userSetMap: MutableMap<Long, User> = HashMap() //userId -> User
     private val replyToPositionInParentMap: MutableMap<Long, Int> = HashMap()
     private val parentIdToPositionInDiscussionMap: MutableMap<Long, Int> = HashMap()
     private val repliesIdIsLoading: MutableSet<Long> = HashSet()
@@ -207,7 +207,7 @@ class CommentManager @Inject constructor(
         repliesIdIsLoading.add(commentId)
     }
 
-    fun getUserById(userId: Int) = userSetMap[userId]
+    fun getUserById(userId: Long) = userSetMap[userId]
 
     fun isNeedUpdateParentInReply(commentReply: Comment): Boolean {
         if (discussionOrderList.size > sumOfCachedParent) {
