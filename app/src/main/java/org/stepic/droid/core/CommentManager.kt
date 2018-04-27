@@ -28,7 +28,7 @@ class CommentManager @Inject constructor(
 
     private val maxOfParentInQuery = 10 // server supports 20, but we can change it
     private val maxOfRepliesInQuery = 20 // we can't change it
-    private var sumOfCachedParent: Int = 0;
+    private var sumOfCachedParent: Int = 0
     private var discussionProxyId: String? = null
     private val parentCommentToSumOfCachedReplies: MutableMap<Long, Int> = HashMap()
     private val cachedCommentsSetMap: MutableMap<Long, Comment> = HashMap()
@@ -58,7 +58,7 @@ class CommentManager @Inject constructor(
     fun loadExtraReplies(oneOfReplyComment: Comment) {
         val parentCommentId = oneOfReplyComment.parent
         val parentComment = cachedCommentsSetMap[parentCommentId]
-        if (parentComment != null && parentComment.replies != null) {
+        if (parentComment?.replies != null) {
             val countOfCachedReplies: Int = parentCommentToSumOfCachedReplies[parentCommentId] ?: return
 
             val sizeNeedLoad = Math.min(parentComment.replies.size, countOfCachedReplies + maxOfRepliesInQuery)
@@ -77,12 +77,12 @@ class CommentManager @Inject constructor(
         stepicResponse.users
                 ?.forEach {
                     if (it.id !in userSetMap) {
-                        userSetMap.put(it.id, it)
+                        userSetMap[it.id] = it
                     }
                 }
         stepicResponse.votes?.forEach {
             //updating info
-            voteMap.put(it.id, it)
+            voteMap[it.id] = it
         }
         //commentIdIsLoading = commentIdIsLoading.filterNot { cachedCommentsSetMap.containsKey(it) }.toHashSet()
         if (fromReply) {
@@ -94,19 +94,16 @@ class CommentManager @Inject constructor(
     }
 
     fun updateOnlyCommentsIfCachedSilent(comments: List<Comment>?) {
-        comments
-                ?.forEach {
-                    if (it.id != null) {
-                        val previousValue: Comment? = cachedCommentsSetMap.put(it.id, it)
-                        val parentId: Long? = it.parent
-                        if (parentId != null && (previousValue == null)) {
-                            //first time
-                            var numberOfCachedBefore: Int = parentCommentToSumOfCachedReplies[parentId] ?: 0
-                            numberOfCachedBefore++
-                            parentCommentToSumOfCachedReplies[parentId] = numberOfCachedBefore
-                        }
-                    }
-                }
+        comments?.forEach {
+            val previousValue: Comment? = cachedCommentsSetMap.put(it.id, it)
+            val parentId: Long? = it.parent
+            if (parentId != null && (previousValue == null)) {
+                //first time
+                var numberOfCachedBefore: Int = parentCommentToSumOfCachedReplies[parentId] ?: 0
+                numberOfCachedBefore++
+                parentCommentToSumOfCachedReplies[parentId] = numberOfCachedBefore
+            }
+        }
         sumOfCachedParent = cachedCommentsSetMap.filter { it.value.parent == null }.size
         if (sumOfCachedParent > discussionOrderList.size) {
             sumOfCachedParent = discussionOrderList.size
@@ -115,7 +112,7 @@ class CommentManager @Inject constructor(
         var i = 0
         var j = 0
         while (i < sumOfCachedParent) {
-            val parentCommentId = discussionOrderList.get(j)
+            val parentCommentId = discussionOrderList[j]
             j++
 
             val parentComment = cachedCommentsSetMap[parentCommentId] ?: break
@@ -124,20 +121,20 @@ class CommentManager @Inject constructor(
             if (parentComment.replies != null && !parentComment.replies.isEmpty()) {
                 var childIndex = 0
                 if (parentCommentToSumOfCachedReplies[parentComment.id] ?: 0 > parentComment.replyCount ?: 0) {
-                    parentCommentToSumOfCachedReplies.put(parentComment.id!!, parentComment.replyCount!!) //if we remove some reply
+                    parentCommentToSumOfCachedReplies[parentComment.id] = parentComment.replyCount!! //if we remove some reply
                 }
-                val cachedRepliesNumber = parentCommentToSumOfCachedReplies.get(parentComment.id) ?: 0
+                val cachedRepliesNumber = parentCommentToSumOfCachedReplies[parentComment.id] ?: 0
 
                 while (childIndex < cachedRepliesNumber/* && childIndex < parentComment.reply_count?:-1*/) {
                     val childComment: Comment? = cachedCommentsSetMap [parentComment.replies[childIndex]]
                     if (childComment != null) {
-                        replyToPositionInParentMap.put(childComment.id!!, childIndex)
+                        replyToPositionInParentMap[childComment.id] = childIndex
                         cachedCommentsList.add(childComment)
                         childIndex++
                     } else {
                         //reply childIndex not found
                         parentCommentToSumOfCachedReplies[parentCommentId] = childIndex
-                        for (indexForDelete in childIndex..parentComment.replies.size - 1) {
+                        for (indexForDelete in childIndex until parentComment.replies.size) {
                             cachedCommentsSetMap.remove(parentComment.replies[indexForDelete])
                         }
                         break
@@ -231,7 +228,7 @@ class CommentManager @Inject constructor(
         discussionOrderList.clear()
         discussionOrderList.addAll(list)
         while (i < list.size) {
-            parentIdToPositionInDiscussionMap.put(list[i], i)
+            parentIdToPositionInDiscussionMap[list[i]] = i
             i++
         }
     }
@@ -246,17 +243,13 @@ class CommentManager @Inject constructor(
         sumOfCachedParent = 0
     }
 
-    fun isCommentCached(commentId: Long?): Boolean {
-        if (commentId == null) {
-            return false
-        } else {
-            return cachedCommentsSetMap.containsKey(commentId)
-        }
+    fun isCommentCached(commentId: Long?): Boolean = if (commentId == null) {
+        false
+    } else {
+        cachedCommentsSetMap.containsKey(commentId)
     }
 
-    fun getVoteByVoteId(voteId: String): Vote? {
-        return voteMap[voteId]
-    }
+    fun getVoteByVoteId(voteId: String): Vote? = voteMap[voteId]
 
     fun resetAll(dP: DiscussionProxy? = null) {
         parentIdToPositionInDiscussionMap.clear()
