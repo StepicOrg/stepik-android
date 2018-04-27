@@ -4,18 +4,22 @@ import android.support.v4.app.FragmentActivity;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.stepic.droid.adaptive.model.RatingItem;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.NotificationCategory;
 import org.stepic.droid.model.Reply;
 import org.stepic.droid.model.Submission;
 import org.stepic.droid.model.Tag;
 import org.stepic.droid.adaptive.model.RecommendationReaction;
+import org.stepic.droid.model.User;
 import org.stepic.droid.model.comments.VoteValue;
 import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.web.model.adaptive.RatingResponse;
 import org.stepic.droid.web.model.adaptive.RatingRestoreResponse;
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
+
+import java.util.List;
 
 import io.reactivex.Completable;
 import io.reactivex.Observable;
@@ -44,6 +48,8 @@ public interface Api {
     Call<StepicProfileResponse> getUserProfile();
 
     Call<UsersResponse> getUsers(long[] userIds);
+
+    Single<List<User>> getUsersRx(long[] userIds);
 
     Call<Void> tryJoinCourse(@NotNull Course course);
 
@@ -170,7 +176,7 @@ public interface Api {
 
     Completable createReaction(RecommendationReaction reaction);
 
-    Observable<RatingResponse> getRating(long courseId, int count, int days);
+    Single<List<RatingItem>> getRating(long courseId, int count, int days);
 
     Completable putRating(long courseId, long exp);
 

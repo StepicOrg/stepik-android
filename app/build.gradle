@@ -117,6 +117,7 @@ dependencies {
 
     implementation libraries.rxAndroid
     implementation libraries.rxJava2
+    implementation libraries.rxKotlin
 
     implementation libraries.supportAppCompat
     implementation libraries.supportDesign

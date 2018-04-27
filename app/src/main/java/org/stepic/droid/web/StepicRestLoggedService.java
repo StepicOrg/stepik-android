@@ -6,7 +6,6 @@ import org.stepic.droid.web.model.adaptive.RecommendationReactionsRequest;
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
 
 import io.reactivex.Completable;
-import io.reactivex.Observable;
 import io.reactivex.Single;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -30,6 +29,9 @@ public interface StepicRestLoggedService {
 
     @GET("api/users")
     Call<UsersResponse> getUsers(@Query("ids[]") long[] userIds);
+
+    @GET("api/users")
+    Single<UsersResponse> getUsersRx(@Query("ids[]") long[] userIds);
 
     @GET("api/stepics/1")
     Call<StepicProfileResponse> getUserProfile();
