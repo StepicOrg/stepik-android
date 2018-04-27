@@ -9,6 +9,7 @@ import android.support.v4.app.DialogFragment
 import android.widget.NumberPicker
 import biz.kasual.materialnumberpicker.MaterialNumberPicker
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.Theme
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.preferences.SharedPreferenceHelper
@@ -20,8 +21,8 @@ import javax.inject.Inject
 @SuppressFBWarnings("RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE")
 class TimeIntervalPickerDialogFragment : DialogFragment() {
     companion object {
-        val resultIntervalCodeKey = "resultIntervalCodeKey"
-        private val chosenPositionKey = "chosenPositionKey"
+        const val RESULT_INTERVAL_CODE_KEY = "RESULT_INTERVAL_CODE_KEY"
+        private const val CHOSEN_POSITION_KEY = "CHOSEN_POSITION_KEY"
         fun newInstance(): TimeIntervalPickerDialogFragment =
                 TimeIntervalPickerDialogFragment()
     }
@@ -43,7 +44,7 @@ class TimeIntervalPickerDialogFragment : DialogFragment() {
 
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
-        outState?.putInt(chosenPositionKey, picker.value)
+        outState?.putInt(CHOSEN_POSITION_KEY, picker.value)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -51,7 +52,7 @@ class TimeIntervalPickerDialogFragment : DialogFragment() {
         picker.minValue = 0
         picker.maxValue = TimeIntervalUtil.values.size - 1
         picker.displayedValues = TimeIntervalUtil.values
-        picker.value = savedInstanceState?.getInt(chosenPositionKey) ?: sharedPreferences.timeNotificationCode
+        picker.value = savedInstanceState?.getInt(CHOSEN_POSITION_KEY) ?: sharedPreferences.timeNotificationCode
         picker.descendantFocusability = NumberPicker.FOCUS_BLOCK_DESCENDANTS
         picker.wrapSelectorWheel = false
         try {
@@ -60,7 +61,8 @@ class TimeIntervalPickerDialogFragment : DialogFragment() {
             Timber.e("reflection failed -> ignore")
         }
 
-        return MaterialDialog.Builder(activity)
+        return MaterialDialog.Builder(context)
+                .theme(Theme.LIGHT)
                 .title(R.string.choose_notification_time_interval)
                 .customView(picker, false)
                 .positiveText(R.string.ok)
@@ -68,7 +70,7 @@ class TimeIntervalPickerDialogFragment : DialogFragment() {
                 .onPositive { _, _ ->
                     //todo set result to Ok with position
                     val data = Intent()
-                    data.putExtra(resultIntervalCodeKey, picker.value)
+                    data.putExtra(RESULT_INTERVAL_CODE_KEY, picker.value)
                     targetFragment?.onActivityResult(targetRequestCode, Activity.RESULT_OK, data)
                     callback?.onTimeIntervalPicked(data)
                 }
