@@ -1,7 +1,7 @@
 package org.stepic.droid.web
 
 data class SocialAuthError(
-        var error: String?,
-        var email: String?,
-        var provider: String?
+        val error: String?,
+        val email: String?,
+        val provider: String?
 )
