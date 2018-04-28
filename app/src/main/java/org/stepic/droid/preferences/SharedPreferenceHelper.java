@@ -50,6 +50,7 @@ public class SharedPreferenceHelper {
     private static final String FILTER_ENGLISH_LANGUAGE = "english_lang";
     private static final String NOTIFICATIONS_COUNT = "notifications_count";
     private static final String IS_EVER_LOGGED = "is_ever_logged";
+    private static final String IS_CATALOG_FIRST_OPEN = "is_catalog_first_open";
 
     private final String ACCESS_TOKEN_TIMESTAMP = "access_token_timestamp";
     private final String AUTH_RESPONSE_JSON = "auth_response_json";
@@ -186,6 +187,12 @@ public class SharedPreferenceHelper {
 
     public long getRegistrationRemindTimestamp() {
         return getLong(PreferenceType.DEVICE_SPECIFIC, REGISTRATION_ALARM_TIMESTAMP);
+    }
+
+    public boolean isCatalogFirstOpen() {
+        final boolean isFirstTime = getBoolean(PreferenceType.DEVICE_SPECIFIC, IS_CATALOG_FIRST_OPEN, true);
+        put(PreferenceType.DEVICE_SPECIFIC, IS_CATALOG_FIRST_OPEN, false);
+        return isFirstTime;
     }
 
     public void clickEnrollNotification(long timestamp) {
