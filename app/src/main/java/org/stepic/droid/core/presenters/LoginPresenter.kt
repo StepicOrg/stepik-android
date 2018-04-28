@@ -2,7 +2,6 @@ package org.stepic.droid.core.presenters
 
 import android.support.annotation.MainThread
 import com.google.android.gms.auth.api.credentials.Credential
-import com.google.gson.Gson
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.LoginFailType
@@ -12,6 +11,7 @@ import org.stepic.droid.model.AuthData
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.social.SocialManager
 import org.stepic.droid.util.AppConstants
+import org.stepic.droid.util.toObject
 import org.stepic.droid.web.Api
 import org.stepic.droid.web.AuthenticationStepikResponse
 import org.stepic.droid.web.SocialAuthError
@@ -47,8 +47,8 @@ class LoginPresenter
 
     @MainThread
     private fun doRequest(callToServer: Call<AuthenticationStepikResponse>, authData: AuthData?, type: Type, credential: Credential? = null) {
-        fun onFail(loginFailType: LoginFailType) {
-            analytic.reportEventWithName(Analytic.Login.FAIL_LOGIN, loginFailType.toString())
+        fun onFail(loginFailType: LoginFailType, description: String? = null) {
+            analytic.reportEventWithName(Analytic.Login.FAIL_LOGIN, loginFailType.toString() + if (description != null) ": $description" else "")
             mainHandler.post {
                 view?.onFailLogin(loginFailType, credential)
             }
@@ -73,18 +73,18 @@ class LoginPresenter
                 } else if (response.code() == 429) {
                     onFail(LoginFailType.tooManyAttempts)
                 } else if (response.code() == 401 && type == Type.social) {
-                    val errorBody = response.errorBody()?.string()
+                    val rawErrorMessage = response.errorBody()?.string()
+                    val socialAuthError = rawErrorMessage?.toObject<SocialAuthError>()
 
-                    Gson().fromJson(errorBody, SocialAuthError::class.java).let {
-                        val email = it.email
-                        if (email != null && it.error == AppConstants.ERROR_SOCIAL_AUTH_WITH_EXISTING_EMAIL) {
-                            mainHandler.post {
-                                view?.onSocialLoginWithExistingEmail(email)
-                            }
+                    if (socialAuthError?.email != null && socialAuthError.error == AppConstants.ERROR_SOCIAL_AUTH_WITH_EXISTING_EMAIL) {
+                        mainHandler.post {
+                            view?.onSocialLoginWithExistingEmail(socialAuthError.email)
                         }
+                        onFail(LoginFailType.emailAlreadyUsed)
+                    } else {
+                        onFail(LoginFailType.emailAlreadyUsed, rawErrorMessage)
                     }
 
-                    onFail(LoginFailType.emailAlreadyUsed)
                 } else {
                     onFail(LoginFailType.emailPasswordInvalid)
                 }
