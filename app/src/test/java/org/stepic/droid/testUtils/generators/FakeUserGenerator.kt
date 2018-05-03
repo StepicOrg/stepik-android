@@ -12,7 +12,7 @@ object FakeUserGenerator {
                  shortBio: String = "",
                  details: String = ""
     ): User {
-        return User(id = id.toInt(),
+        return User(id = id,
                 avatar = avatar,
                 first_name = firstName,
                 last_name = lastName,

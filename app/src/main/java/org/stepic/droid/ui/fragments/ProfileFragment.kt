@@ -358,7 +358,7 @@ class ProfileFragment : FragmentBase(),
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == NOTIFICATION_INTERVAL_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
-                val intervalCode = data!!.getIntExtra(TimeIntervalPickerDialogFragment.resultIntervalCodeKey, TimeIntervalUtil.defaultTimeCode)
+                val intervalCode = data!!.getIntExtra(TimeIntervalPickerDialogFragment.RESULT_INTERVAL_CODE_KEY, TimeIntervalUtil.defaultTimeCode)
                 streakPresenter.setStreakTime(intervalCode)
                 analytic.reportEvent(Analytic.Streak.CHOOSE_INTERVAL_PROFILE, intervalCode.toString() + "")
             } else if (resultCode == Activity.RESULT_CANCELED) {

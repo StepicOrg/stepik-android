@@ -49,6 +49,8 @@ class CatalogFragment : FragmentBase(),
 
     private var searchMenuItem: MenuItem? = null
 
+    private var isFirstTime = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -61,6 +63,7 @@ class CatalogFragment : FragmentBase(),
                 .catalogComponentBuilder()
                 .build()
                 .inject(this)
+        isFirstTime = sharedPreferenceHelper.isCatalogFirstOpen
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -172,6 +175,14 @@ class CatalogFragment : FragmentBase(),
 
     override fun onFiltersChanged(filters: EnumSet<StepikFilter>) {
         updateFilters(filters)
+        resolveFiltersAnalytic(filters)
+    }
+
+    private fun resolveFiltersAnalytic(filters: EnumSet<StepikFilter>) {
+        analytic.reportEvent(Analytic.Interaction.LANG_WIDGET_LANG_CHANGED, Bundle().apply {
+            putString(Analytic.Interaction.LangWidgetLangChangedParams.TO_LANG, filters.firstOrNull()?.language)
+            putBoolean(Analytic.Interaction.LangWidgetLangChangedParams.IS_FIRST_LAUNCH, isFirstTime)
+        })
     }
 
     private fun updateFilters(filters: EnumSet<StepikFilter>) {

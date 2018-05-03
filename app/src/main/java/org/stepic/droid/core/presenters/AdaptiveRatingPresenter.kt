@@ -1,10 +1,14 @@
 package org.stepic.droid.core.presenters
 
 import android.content.Context
+import io.reactivex.BackpressureStrategy
 import io.reactivex.Scheduler
+import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.BiFunction
+import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.subjects.PublishSubject
+import io.reactivex.rxkotlin.zipWith
 import org.stepic.droid.adaptive.model.RatingItem
 import org.stepic.droid.adaptive.ui.adapters.AdaptiveRatingAdapter
 import org.stepic.droid.adaptive.util.RatingNamesGenerator
@@ -13,6 +17,7 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.CourseId
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.preferences.SharedPreferenceHelper
+import org.stepic.droid.util.addDisposable
 import org.stepic.droid.web.Api
 import retrofit2.HttpException
 import javax.inject.Inject
@@ -58,28 +63,34 @@ constructor(
         val left = BiFunction<Any, Any, Any> { a, _ -> a}
 
         RATING_PERIODS.forEachIndexed { pos, period ->
-            compositeDisposable.add(api.getRating(courseId, ITEMS_PER_PAGE, period)
+            compositeDisposable addDisposable resolveUsers(api.getRating(courseId, ITEMS_PER_PAGE, period))
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .doOnError(this::onError)
-                    .retryWhen { x -> x.zipWith(retrySubject, left) }
-                    .map { it.users }
-                    .subscribe({
-                        adapters[pos].set(prepareRatingItems(it))
+                    .retryWhen { x -> x.zipWith(retrySubject.toFlowable(BackpressureStrategy.BUFFER), left) }
+                    .subscribeBy(this::onError) {
+                        adapters[pos].set(it)
                         periodsLoaded++
                         onLoadComplete()
-                    }, this::onError))
+                    }
         }
     }
 
-    private fun prepareRatingItems(data: List<RatingItem>) =
-            data.mapIndexed { index, (rank, _, exp, user) ->
-                RatingItem(
-                        if (rank == 0) index + 1 else rank,
-                        ratingNamesGenerator.getName(user),
-                        exp,
-                        user
-                )
+    private fun resolveUsers(single: Single<List<RatingItem>>): Single<List<RatingItem>> =
+            single.flatMap {
+                val userIds = it.filter{ it.isNotFake }.map { it.user }.toLongArray()
+                if (userIds.isEmpty()) {
+                    Single.just(emptyList())
+                } else {
+                    api.getUsersRx(userIds)
+                }.zipWith(Single.just(it))
+            }.map { (users, items) ->
+                items.mapIndexed { index, item ->
+                    val user = users.find { it.id == item.user }
+                    val name = user?.fullName ?: ratingNamesGenerator.getName(item.user)
+
+                    item.copy(rank = if (item.rank == 0) index + 1 else item.rank, name = name)
+                }
             }
 
     fun changeRatingPeriod(pos: Int) {
