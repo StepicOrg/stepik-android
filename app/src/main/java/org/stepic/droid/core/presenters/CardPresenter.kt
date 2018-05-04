@@ -57,7 +57,7 @@ class CardPresenter(
         super.attachView(view)
         view.setTitle(card.lesson?.title)
         view.setQuestion(card.step?.block?.text)
-        view.getRadioGroupAdapter().setAttempt(card.attempt)
+        view.getQuizViewDelegate().setAttempt(card.attempt)
 
         if (isLoading) view.onSubmissionLoading()
         submission?.let { view.setSubmission(it, false) }
@@ -67,7 +67,7 @@ class CardPresenter(
     fun detachView() {
         view?.let {
             if (submission == null || submission?.status == Submission.Status.LOCAL) {
-                submission = Submission(it.getRadioGroupAdapter().reply, 0, Submission.Status.LOCAL) // cache current choices state
+                submission = Submission(it.getQuizViewDelegate().createReply(), 0, Submission.Status.LOCAL) // cache current choices state
             }
             super.detachView(it)
         }
@@ -106,7 +106,7 @@ class CardPresenter(
             isLoading = true
             error = null
 
-            val submission = Submission(view?.getRadioGroupAdapter()?.reply, card.attempt?.id ?: 0)
+            val submission = Submission(view?.getQuizViewDelegate()?.createReply(), card.attempt?.id ?: 0)
             disposable = api.createNewSubmissionReactive(submission)
                     .andThen(api.getSubmissionsReactive(submission.attempt))
                     .subscribeOn(backgroundScheduler)

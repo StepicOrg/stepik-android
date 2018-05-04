@@ -177,10 +177,10 @@
                         android:layout_height="1dp"
                         android:background="@color/color_stroke"/>
 
-                    <org.stepic.droid.ui.custom.StepikRadioGroup
+                    <FrameLayout
+                        android:id="@+id/quizViewContainer"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/answers" />
+                        android:layout_height="wrap_content" />
 
                     <TextView
                         android:layout_width="match_parent"
