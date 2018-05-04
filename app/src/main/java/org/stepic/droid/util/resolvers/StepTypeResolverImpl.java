@@ -13,7 +13,7 @@ import android.support.v4.content.ContextCompat;
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.base.StepBaseFragment;
-import org.stepic.droid.di.lesson.LessonScope;
+import org.stepic.droid.di.AppSingleton;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.ui.fragments.ChoiceStepFragment;
 import org.stepic.droid.ui.fragments.CodeStepFragment;
@@ -30,6 +30,11 @@ import org.stepic.droid.ui.fragments.StringStepFragment;
 import org.stepic.droid.ui.fragments.TableChoiceStepFragment;
 import org.stepic.droid.ui.fragments.TextStepFragment;
 import org.stepic.droid.ui.fragments.VideoStepFragment;
+import org.stepic.droid.ui.quiz.ChoiceQuizDelegate;
+import org.stepic.droid.ui.quiz.NotSupportedQuizDelegate;
+import org.stepic.droid.ui.quiz.NumberQuizDelegate;
+import org.stepic.droid.ui.quiz.QuizDelegate;
+import org.stepic.droid.ui.quiz.StringQuizDelegate;
 import org.stepic.droid.util.AppConstants;
 
 import java.util.HashMap;
@@ -39,7 +44,7 @@ import javax.inject.Inject;
 
 import timber.log.Timber;
 
-@LessonScope
+@AppSingleton
 public class StepTypeResolverImpl implements StepTypeResolver {
 
     private Map<String, Drawable> mapFromTypeToDrawable;
@@ -207,6 +212,29 @@ public class StepTypeResolverImpl implements StepTypeResolver {
                 return SqlStepFragment.Companion.newInstance();
             default:
                 return new NotSupportedYetStepFragment();
+        }
+    }
+
+    @NotNull
+    @Override
+    public QuizDelegate getQuizDelegate(Step step) {
+        QuizDelegate errorDelegate = new NotSupportedQuizDelegate();
+        if (step == null
+                || step.getBlock() == null
+                || step.getBlock().getName() == null
+                || step.getBlock().getName().equals(""))
+            return errorDelegate;
+
+        String type = step.getBlock().getName();
+        switch (type) {
+            case AppConstants.TYPE_CHOICE:
+                return new ChoiceQuizDelegate();
+            case AppConstants.TYPE_STRING:
+                return new StringQuizDelegate();
+            case AppConstants.TYPE_NUMBER:
+                return new NumberQuizDelegate();
+            default:
+                return errorDelegate;
         }
     }
 

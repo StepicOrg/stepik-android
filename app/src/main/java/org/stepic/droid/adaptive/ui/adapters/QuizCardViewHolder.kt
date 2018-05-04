@@ -18,10 +18,11 @@ import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.presenters.CardPresenter
 import org.stepic.droid.core.presenters.contracts.CardView
+import org.stepic.droid.model.Step
 import org.stepic.droid.model.Submission
 import org.stepic.droid.ui.custom.LatexSupportableWebView
-import org.stepic.droid.ui.quiz.ChoiceQuizViewDelegate
-import org.stepic.droid.ui.quiz.QuizViewDelegate
+import org.stepic.droid.ui.quiz.QuizDelegate
+import org.stepic.droid.util.resolvers.StepTypeResolver
 import javax.inject.Inject
 
 class QuizCardViewHolder(
@@ -49,18 +50,16 @@ class QuizCardViewHolder(
 
     val cardView: android.support.v7.widget.CardView = root.card
 
-    private val quizDelegate: QuizViewDelegate = ChoiceQuizViewDelegate()
+    private lateinit var quizDelegate: QuizDelegate
 
     @Inject
     lateinit var screenManager: ScreenManager
 
+    @Inject
+    lateinit var stepTypeResolver: StepTypeResolver
+
     init {
         App.component().inject(this)
-
-        val quizView = quizDelegate.onCreateView(quizViewContainer)
-        quizViewContainer.addView(quizView)
-        quizDelegate.onViewCreated(quizView)
-        quizDelegate.actionButton = actionButton
 
         question.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) = onCardLoaded()
@@ -119,6 +118,16 @@ class QuizCardViewHolder(
     private fun onCardLoaded() {
         curtain.visibility = View.GONE
         if (presenter?.isLoading != true) answersProgress.visibility = View.GONE
+    }
+
+    override fun setStep(step: Step?) {
+        quizViewContainer.removeAllViews()
+        quizDelegate = stepTypeResolver.getQuizDelegate(step)
+
+        val quizView = quizDelegate.onCreateView(quizViewContainer)
+        quizViewContainer.addView(quizView)
+        quizDelegate.onViewCreated(quizView)
+        quizDelegate.actionButton = actionButton
     }
 
     override fun setTitle(title: String?) {

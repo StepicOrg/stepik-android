@@ -55,6 +55,7 @@ class CardPresenter(
 
     override fun attachView(view: CardView) {
         super.attachView(view)
+        view.setStep(card.step)
         view.setTitle(card.lesson?.title)
         view.setQuestion(card.step?.block?.text)
         view.getQuizViewDelegate().setAttempt(card.attempt)

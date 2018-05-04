@@ -1,7 +1,8 @@
 package org.stepic.droid.core.presenters.contracts
 
+import org.stepic.droid.model.Step
 import org.stepic.droid.model.Submission
-import org.stepic.droid.ui.quiz.QuizViewDelegate
+import org.stepic.droid.ui.quiz.QuizDelegate
 
 interface CardView {
     fun setSubmission(submission: Submission, animate: Boolean)
@@ -11,6 +12,7 @@ interface CardView {
 
     fun setTitle(title: String?)
     fun setQuestion(html: String?)
+    fun setStep(step: Step?)
 
-    fun getQuizViewDelegate(): QuizViewDelegate
+    fun getQuizViewDelegate(): QuizDelegate
 }

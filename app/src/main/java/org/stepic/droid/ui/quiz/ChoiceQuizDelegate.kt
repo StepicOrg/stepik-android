@@ -10,7 +10,7 @@ import org.stepic.droid.model.Attempt
 import org.stepic.droid.model.Submission
 import org.stepic.droid.ui.adapters.StepikRadioGroupAdapter
 
-class ChoiceQuizViewDelegate: QuizViewDelegate() {
+class ChoiceQuizDelegate: QuizDelegate {
     private lateinit var choiceAdapter: StepikRadioGroupAdapter
 
     override var isEnabled: Boolean = false
