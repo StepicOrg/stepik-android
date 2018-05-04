@@ -1,6 +1,5 @@
 package org.stepic.droid.ui.quiz
 
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
@@ -12,9 +11,12 @@ import org.stepic.droid.model.Submission
 class NotSupportedQuizDelegate: QuizDelegate {
     override var isEnabled: Boolean = false
     override var actionButton: Button? = null
+        set(value) {
+            value?.setText(R.string.open_web_to_solve)
+            value?.setOnClickListener { }
+        }
 
-    override fun onCreateView(parent: ViewGroup): View =
-            LayoutInflater.from(parent.context).inflate(R.layout.fragment_unsupported, parent, false)
+    override fun onCreateView(parent: ViewGroup): View = View(parent.context)
 
     override fun setAttempt(attempt: Attempt?) {}
 
