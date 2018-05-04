@@ -124,9 +124,7 @@ class QuizCardViewHolder(
         quizViewContainer.removeAllViews()
         quizDelegate = stepTypeResolver.getQuizDelegate(step)
 
-        val quizView = quizDelegate.onCreateView(quizViewContainer)
-        quizViewContainer.addView(quizView)
-        quizDelegate.onViewCreated(quizView)
+        quizViewContainer.addView(quizDelegate.createView(quizViewContainer))
         quizDelegate.actionButton = actionButton
     }
 

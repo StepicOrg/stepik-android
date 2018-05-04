@@ -7,14 +7,16 @@ import org.stepic.droid.model.Attempt
 import org.stepic.droid.model.Reply
 import org.stepic.droid.model.Submission
 
-interface QuizDelegate {
-    var isEnabled: Boolean
-    var actionButton: Button?
+abstract class QuizDelegate {
+    abstract var isEnabled: Boolean
+    abstract var actionButton: Button?
 
-    fun onCreateView(parent: ViewGroup): View
-    fun onViewCreated(view: View) {}
+    abstract fun onCreateView(parent: ViewGroup): View
+    protected open fun onViewCreated(view: View) {}
+    fun createView(parent: ViewGroup) =
+        onCreateView(parent).also { onViewCreated(it) }
 
-    fun setAttempt(attempt: Attempt?)
-    fun setSubmission(submission: Submission?)
-    fun createReply(): Reply
+    abstract fun setAttempt(attempt: Attempt?)
+    abstract fun setSubmission(submission: Submission?)
+    abstract fun createReply(): Reply
 }
