@@ -9,5 +9,5 @@ interface CourseJoinView {
 
     fun onFailJoin(code: Int)
 
-    fun onSuccessJoin(course: Course, isAdaptive: Boolean)
+    fun onSuccessJoin(course: Course)
 }

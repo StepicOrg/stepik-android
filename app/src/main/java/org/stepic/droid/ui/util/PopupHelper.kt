@@ -51,7 +51,9 @@ object PopupHelper {
         }
 
         anchorView.post {
-            PopupWindowCompat.showAsDropDown(popupWindow, anchorView, 0, 0, Gravity.CENTER)
+            if (anchorView.windowToken != null) {
+                PopupWindowCompat.showAsDropDown(popupWindow, anchorView, 0, 0, Gravity.CENTER)
+            }
         }
 
         return popupWindow

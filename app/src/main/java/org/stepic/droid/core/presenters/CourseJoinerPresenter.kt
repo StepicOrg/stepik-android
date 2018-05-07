@@ -2,7 +2,6 @@ package org.stepic.droid.core.presenters
 
 import android.support.annotation.MainThread
 import android.support.annotation.WorkerThread
-import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.joining.contract.JoiningPoster
@@ -29,8 +28,8 @@ class CourseJoinerPresenter
         private val mainHandler: MainHandler,
         private val joiningPoster: JoiningPoster,
         private val database: DatabaseFacade,
-        private val analytic: Analytic,
-        private val adaptiveCoursesResolver: AdaptiveCoursesResolver) : PresenterBase<CourseJoinView>() {
+        private val analytic: Analytic
+) : PresenterBase<CourseJoinView>() {
 
     @MainThread
     fun joinCourse(course: Course) {
@@ -68,11 +67,10 @@ class CourseJoinerPresenter
     private fun handleSuccessResponse(course: Course) {
         course.enrollment = course.courseId.toInt()
 
-        val isAdaptive = adaptiveCoursesResolver.isAdaptive(course.courseId)
 
         mainHandler.post {
             joiningPoster.joinCourse(course)
-            view?.onSuccessJoin(course, isAdaptive)
+            view?.onSuccessJoin(course)
         }
 
         //update in database

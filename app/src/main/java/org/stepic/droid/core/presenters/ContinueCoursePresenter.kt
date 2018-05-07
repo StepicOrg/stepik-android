@@ -3,7 +3,6 @@ package org.stepic.droid.core.presenters
 import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.ContinueCourseView
-import org.stepic.droid.di.course_list.CourseListScope
 import org.stepic.droid.model.Course
 import org.stepic.droid.model.Section
 import org.stepic.droid.model.Step
@@ -17,7 +16,6 @@ import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
-@CourseListScope
 class ContinueCoursePresenter
 @Inject constructor(
         private val databaseFacade: DatabaseFacade,
