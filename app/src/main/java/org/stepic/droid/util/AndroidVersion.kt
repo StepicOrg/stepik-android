@@ -8,3 +8,8 @@ fun isNougatOrLater() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
 
 fun isJellyBeanOrLater() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN
 
+inline fun compatibilityModeForSDK15(action: () -> Unit) {
+    if (!isJellyBeanOrLater()) {
+        action()
+    }
+}
