@@ -10,7 +10,7 @@ import org.stepic.droid.model.Attempt
 import org.stepic.droid.model.Reply
 import org.stepic.droid.model.Submission
 
-open class StringQuizDelegate: QuizDelegate {
+open class StringQuizDelegate: QuizDelegate() {
     protected lateinit var answerField: EditText
 
     override var isEnabled: Boolean

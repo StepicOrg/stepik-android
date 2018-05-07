@@ -8,7 +8,7 @@ import org.stepic.droid.model.Attempt
 import org.stepic.droid.model.Reply
 import org.stepic.droid.model.Submission
 
-class NotSupportedQuizDelegate: QuizDelegate {
+class NotSupportedQuizDelegate: QuizDelegate() {
     override var isEnabled: Boolean = false
     override var actionButton: Button? = null
         set(value) {
