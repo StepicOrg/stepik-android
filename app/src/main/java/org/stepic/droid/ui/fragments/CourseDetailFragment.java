@@ -588,7 +588,7 @@ public class CourseDetailFragment extends FragmentBase implements
     @Override
     public void onOpenStep(long courseId, @NotNull Section section, long lessonId, long unitId, int stepPosition) {
         ProgressHelper.dismiss(joinCourseSpinner);
-        getScreenManager().continueCourse(getActivity(), courseId, section, lessonId, unitId, stepPosition);
+        getScreenManager().continueCourse(getActivity(), courseId, section, lessonId, unitId, stepPosition, true);
     }
 
     @Override
@@ -600,7 +600,7 @@ public class CourseDetailFragment extends FragmentBase implements
     @Override
     public void onAnyProblemWhileContinue(@NotNull Course course) {
         ProgressHelper.dismiss(joinCourseSpinner);
-        getScreenManager().showSections(getActivity(), course);
+        getScreenManager().showSections(getActivity(), course, true);
     }
 
     private void setThumbnail(String thumbnail) {
