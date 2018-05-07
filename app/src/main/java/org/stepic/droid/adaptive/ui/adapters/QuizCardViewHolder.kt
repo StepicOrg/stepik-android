@@ -65,7 +65,7 @@ class QuizCardViewHolder(
             override fun onPageFinished(view: WebView?, url: String?) = onCardLoaded()
         }
         question.setOnWebViewClickListener { screenManager.openImage(root.context, it) }
-        question.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
+        question.setLayerType(View.LAYER_TYPE_NONE, null)
 
         nextButton.setOnClickListener { container.swipeDown() }
         actionButton.setOnClickListener { presenter?.createSubmission() }
