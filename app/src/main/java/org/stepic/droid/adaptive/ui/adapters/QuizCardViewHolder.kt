@@ -1,5 +1,6 @@
 package org.stepic.droid.adaptive.ui.adapters
 
+import android.graphics.Color
 import android.support.annotation.StringRes
 import android.support.design.widget.Snackbar
 import android.view.View
@@ -22,6 +23,7 @@ import org.stepic.droid.model.Step
 import org.stepic.droid.model.Submission
 import org.stepic.droid.ui.custom.LatexSupportableWebView
 import org.stepic.droid.ui.quiz.QuizDelegate
+import org.stepic.droid.util.compatibilityModeForSDK15
 import org.stepic.droid.util.resolvers.StepTypeResolver
 import javax.inject.Inject
 
@@ -66,6 +68,10 @@ class QuizCardViewHolder(
         }
         question.setOnWebViewClickListener { screenManager.openImage(root.context, it) }
         question.setLayerType(View.LAYER_TYPE_NONE, null)
+
+        compatibilityModeForSDK15 {
+            question.setBackgroundColor(Color.WHITE)
+        }
 
         nextButton.setOnClickListener { container.swipeDown() }
         actionButton.setOnClickListener { presenter?.createSubmission() }
