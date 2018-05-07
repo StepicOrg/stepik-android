@@ -656,7 +656,7 @@ public class SectionsFragment
     }
 
     @Override
-    public void onSuccessJoin(@NotNull Course joinedCourse, boolean isAdaptive) {
+    public void onSuccessJoin(@NotNull Course joinedCourse) {
         if (course != null && joinedCourse.getCourseId() == course.getCourseId() && adapter != null) {
             course = joinedCourse;
             resolveJoinCourseView();

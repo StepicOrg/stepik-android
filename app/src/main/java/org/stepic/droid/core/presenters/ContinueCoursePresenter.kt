@@ -17,7 +17,6 @@ import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
-@CourseListScope
 class ContinueCoursePresenter
 @Inject constructor(
         private val databaseFacade: DatabaseFacade,
