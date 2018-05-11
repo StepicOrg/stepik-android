@@ -19,6 +19,7 @@ import org.stepic.droid.di.home.HomeComponent
 import org.stepic.droid.di.lesson.LessonComponent
 import org.stepic.droid.di.login.LoginComponent
 import org.stepic.droid.di.mainscreen.MainScreenComponent
+import org.stepic.droid.di.network.NetworkModule
 import org.stepic.droid.di.notifications.NotificationsComponent
 import org.stepic.droid.di.profile.ProfileComponent
 import org.stepic.droid.di.routing.RoutingComponent
@@ -41,7 +42,7 @@ import org.stepic.droid.ui.dialogs.*
 
 @AppSingleton
 @Component(dependencies = arrayOf(StorageComponent::class),
-        modules = arrayOf(
+        modules = [
                 AppCoreModule::class,
                 RepositoryModule::class,
                 AppStepModule::class,
@@ -49,8 +50,9 @@ import org.stepic.droid.ui.dialogs.*
                 GoogleModule::class,
                 FirebaseModule::class,
                 RecentActiveCourseModule::class,
-                NotificationsBadgesModule::class
-        ))
+                NotificationsBadgesModule::class,
+                NetworkModule::class
+        ])
 interface AppCoreComponent {
 
     @Component.Builder

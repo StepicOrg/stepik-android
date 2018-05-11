@@ -12,7 +12,6 @@ import android.webkit.CookieSyncManager;
 import android.widget.Toast;
 
 import com.facebook.login.LoginManager;
-import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.gson.Gson;
@@ -29,6 +28,7 @@ import org.stepic.droid.configuration.RemoteConfig;
 import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.StepikLogoutManager;
 import org.stepic.droid.di.AppSingleton;
+import org.stepic.droid.di.network.StethoInterceptor;
 import org.stepic.droid.jsonHelpers.adapters.CodeOptionsAdapterFactory;
 import org.stepic.droid.jsonHelpers.deserializers.DatasetDeserializer;
 import org.stepic.droid.jsonHelpers.deserializers.ReplyDeserializer;
@@ -79,7 +79,6 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
 import io.reactivex.Completable;
-import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.functions.Function;
 import kotlin.Unit;
@@ -102,7 +101,7 @@ import timber.log.Timber;
 @AppSingleton
 public class ApiImpl implements Api {
     private final int TIMEOUT_IN_SECONDS = 60;
-    private final StethoInterceptor stethoInterceptor = new StethoInterceptor();
+    private final Interceptor stethoInterceptor;
     private static final String USER_AGENT_NAME = "User-Agent";
 
     private final Context context;
@@ -127,7 +126,8 @@ public class ApiImpl implements Api {
                    Analytic analytic, StepikLogoutManager stepikLogoutManager,
                    ScreenManager screenManager,
                    UserAgentProvider userAgentProvider,
-                   FirebaseRemoteConfig firebaseRemoteConfig) {
+                   FirebaseRemoteConfig firebaseRemoteConfig,
+                   @StethoInterceptor Interceptor stethoInterceptor) {
         this.context = context;
         this.sharedPreference = sharedPreference;
         this.config = config;
@@ -137,6 +137,7 @@ public class ApiImpl implements Api {
         this.screenManager = screenManager;
         this.userAgentProvider = userAgentProvider;
         this.firebaseRemoteConfig = firebaseRemoteConfig;
+        this.stethoInterceptor = stethoInterceptor;
 
         makeOauthServiceWithNewAuthHeader(this.sharedPreference.isLastTokenSocial() ? TokenType.social : TokenType.loginPassword);
         makeLoggedServices();

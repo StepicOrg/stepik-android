@@ -73,9 +73,9 @@ class App : Application() {
 
     private fun init() {
         application = this
-        Stetho.initializeWithDefaults(this)
 
         if (BuildConfig.DEBUG) {
+            Stetho.initializeWithDefaults(this)
             Timber.plant(Timber.DebugTree())
         }
 
