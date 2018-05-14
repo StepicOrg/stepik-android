@@ -64,6 +64,7 @@ import org.stepic.droid.web.model.adaptive.RatingRestoreResponse;
 import org.stepic.droid.web.model.adaptive.RecommendationReactionsRequest;
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
 import org.stepic.droid.web.model.desk.DeskRequestWrapper;
+import org.stepic.droid.web.storage.RemoteStorageService;
 
 import java.io.IOException;
 import java.net.HttpCookie;
@@ -117,6 +118,7 @@ public class ApiImpl implements Api {
     private StepicRestLoggedService loggedService;
     private StepicRestOAuthService oAuthService;
     private StepicEmptyAuthService stepikEmptyAuthService;
+    private RemoteStorageService remoteStorageService;
     private RatingService ratingService;
 
 
@@ -162,6 +164,7 @@ public class ApiImpl implements Api {
 
     private void makeLoggedServices() {
         loggedService = createLoggedService(StepicRestLoggedService.class, config.getBaseUrl());
+        remoteStorageService = createLoggedService(RemoteStorageService.class, config.getBaseUrl());
         ratingService = createLoggedService(RatingService.class, firebaseRemoteConfig.getString(RemoteConfig.ADAPTIVE_BACKEND_URL));
     }
 
@@ -891,6 +894,8 @@ public class ApiImpl implements Api {
     public Single<RatingRestoreResponse> restoreRating(long courseId) {
         return ratingService.restoreRating(courseId, getAccessToken());
     }
+
+
 
     @Override
     public Single<SearchResultResponse> getSearchResultsOfTag(int page, @NotNull Tag tag) {
