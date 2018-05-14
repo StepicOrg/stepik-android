@@ -897,6 +897,7 @@ public class ApiImpl implements Api {
 
 
 
+
     @Override
     public Single<SearchResultResponse> getSearchResultsOfTag(int page, @NotNull Tag tag) {
         EnumSet<StepikFilter> enumSet = sharedPreference.getFilterForFeatured();
