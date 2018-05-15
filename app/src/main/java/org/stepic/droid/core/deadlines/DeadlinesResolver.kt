@@ -45,7 +45,7 @@ constructor(
     private fun getTimeToCompleteForSection(section: Section): Observable<Pair<Long, Long>> =
             section.units.asIterable().chunked(CHUNK_SIZE).toObservable().flatMap {
                 api.getUnitsRx(it.toLongArray()).toObservable()
-            }.concatMap {
+            }.flatMap {
                 val ids = it.units?.map { it.lesson }?.toLongArray()
                 api.getLessonsRx(ids).flatMapObservable {
                     it.lessons?.toObservable()
