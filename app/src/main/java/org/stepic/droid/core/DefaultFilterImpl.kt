@@ -2,7 +2,7 @@ package org.stepic.droid.core
 
 import android.content.Context
 import org.stepic.droid.model.StepikFilter
-import org.stepic.droid.util.getLocale
+import org.stepic.droid.util.defaultLocale
 import java.util.*
 import javax.inject.Inject
 
@@ -25,7 +25,7 @@ constructor(private val context: Context) : DefaultFilter {
             return isNeedRussianNotNull // do not change on language change, it is just helper for not russian speaker, choose performance.
         }
 
-        val locale: Locale = getLocale(context.resources)
+        val locale: Locale = context.resources.configuration.defaultLocale
 
         val newValue = locale.language == Locale("ru").language
         isNeedRussian = newValue
