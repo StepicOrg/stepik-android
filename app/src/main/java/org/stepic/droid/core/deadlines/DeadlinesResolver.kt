@@ -32,7 +32,7 @@ constructor(
                 api.getSectionsRx(it.courses.first().sections)
             }.flatMapObservable {
                 it.sections.toObservable()
-            }.flatMap(::getTimeToCompleteForSection).toList().map {
+            }.concatMapEager(::getTimeToCompleteForSection).toList().map {
                 val offset = Calendar.getInstance()
 
                 val deadlines = it.map { (sectionId, timeToComplete) ->
