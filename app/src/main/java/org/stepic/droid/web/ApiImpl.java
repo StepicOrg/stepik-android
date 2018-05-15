@@ -293,7 +293,6 @@ public class ApiImpl implements Api {
                 } finally {
                     RWLocks.AuthLock.readLock().unlock();
                 }
-
             }
         };
         okHttpBuilder.addNetworkInterceptor(interceptor);

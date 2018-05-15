@@ -5,16 +5,17 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.toObservable
+import org.stepic.droid.jsonHelpers.adapters.UTCDateAdapter
 import org.stepic.droid.model.Course
 import org.stepic.droid.model.StorageRecord
 import org.stepic.droid.model.deadlines.DeadlinesWrapper
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.toObject
 import org.stepic.droid.web.CoursesMetaResponse
 import org.stepic.droid.web.StepicRestLoggedService
 import org.stepic.droid.web.storage.RemoteStorageService
 import org.stepic.droid.web.storage.model.StorageRequest
+import java.util.*
 
 // todo 14.05.2018: inject this class after api refactor
 class DeadlinesRepositoryImpl(
@@ -23,7 +24,7 @@ class DeadlinesRepositoryImpl(
         private val sharedPreferenceHelper: SharedPreferenceHelper
 ): DeadlinesRepository {
     private val gson = GsonBuilder()
-            .setDateFormat(DateTimeHelper.ISO_PATTERN)
+            .registerTypeAdapter(Date::class.java, UTCDateAdapter())
             .create()
 
     override fun createDeadlinesForCourse(deadlines: DeadlinesWrapper): Completable =
