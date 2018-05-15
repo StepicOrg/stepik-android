@@ -2,6 +2,7 @@ package org.stepic.droid.model
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.google.gson.annotations.SerializedName
 
 import java.io.Serializable
 
@@ -32,13 +33,12 @@ class Lesson : Parcelable, Serializable {
     var is_loading: Boolean = false
     var cover_url: String? = null
 
-    constructor() {
-    }
+    @SerializedName("time_to_complete")
+    var timeToComplete: Long = 0
 
+    constructor()
 
-    override fun describeContents(): Int {
-        return 0
-    }
+    override fun describeContents(): Int = 0
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
         dest.writeLong(this.id)
@@ -95,16 +95,10 @@ class Lesson : Parcelable, Serializable {
     }
 
     companion object {
-
         @JvmField
         val CREATOR: Parcelable.Creator<Lesson> = object : Parcelable.Creator<Lesson> {
-            override fun createFromParcel(source: Parcel): Lesson {
-                return Lesson(source)
-            }
-
-            override fun newArray(size: Int): Array<Lesson?> {
-                return arrayOfNulls(size)
-            }
+            override fun createFromParcel(source: Parcel): Lesson = Lesson(source)
+            override fun newArray(size: Int): Array<Lesson?> = arrayOfNulls(size)
         }
     }
 }

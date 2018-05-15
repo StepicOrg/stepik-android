@@ -485,8 +485,18 @@ public class ApiImpl implements Api {
     }
 
     @Override
+    public Single<SectionsMetaResponse> getSectionsRx(long[] sectionsIds) {
+        return loggedService.getSectionsRx(sectionsIds);
+    }
+
+    @Override
     public Call<UnitMetaResponse> getUnits(long[] units) {
         return loggedService.getUnits(units);
+    }
+
+    @Override
+    public Single<UnitMetaResponse> getUnitsRx(long[] units) {
+        return loggedService.getUnitsRx(units);
     }
 
     @Override
@@ -500,8 +510,13 @@ public class ApiImpl implements Api {
     }
 
     @Override
+    public Single<LessonStepicResponse> getLessonsRx(long[] lessons) {
+        return loggedService.getLessonsRx(lessons);
+    }
+
+    @Override
     public Single<LessonStepicResponse> getLessons(long lessonId) {
-        return loggedService.getLessons(lessonId);
+        return getLessonsRx(new long[]{lessonId});
     }
 
     @Override

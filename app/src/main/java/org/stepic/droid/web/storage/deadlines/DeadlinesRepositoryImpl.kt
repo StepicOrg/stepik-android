@@ -1,6 +1,6 @@
 package org.stepic.droid.web.storage.deadlines
 
-import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -9,6 +9,7 @@ import org.stepic.droid.model.Course
 import org.stepic.droid.model.StorageRecord
 import org.stepic.droid.model.deadlines.DeadlinesWrapper
 import org.stepic.droid.preferences.SharedPreferenceHelper
+import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.toObject
 import org.stepic.droid.web.CoursesMetaResponse
 import org.stepic.droid.web.StepicRestLoggedService
@@ -21,7 +22,9 @@ class DeadlinesRepositoryImpl(
         private val remoteStorageService: RemoteStorageService,
         private val sharedPreferenceHelper: SharedPreferenceHelper
 ): DeadlinesRepository {
-    private val gson = Gson()
+    private val gson = GsonBuilder()
+            .setDateFormat(DateTimeHelper.ISO_PATTERN)
+            .create()
 
     override fun createDeadlinesForCourse(deadlines: DeadlinesWrapper): Completable =
             remoteStorageService.createStorageRecord(StorageRequest(createStorageRecord(deadlines)))

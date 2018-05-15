@@ -55,14 +55,20 @@ public interface Api {
 
     Call<SectionsMetaResponse> getSections(long[] sectionsIds);
 
+    Single<SectionsMetaResponse> getSectionsRx(long[] sectionsIds);
+
     /**
      * Max number of  units defined in AppConstants
      */
     Call<UnitMetaResponse> getUnits(long[] units);
 
+    Single<UnitMetaResponse> getUnitsRx(long[] units);
+
     Single<UnitMetaResponse> getUnits(long courseId, long lessonId);
 
     Call<LessonStepicResponse> getLessons(long[] lessons);
+
+    Single<LessonStepicResponse> getLessonsRx(long[] lessons);
 
     Single<LessonStepicResponse> getLessons(long lessonId);
 
