@@ -5,6 +5,7 @@ import org.stepic.droid.web.storage.model.StorageResponse
 
 import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.Single
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -25,13 +26,13 @@ interface RemoteStorageService {
     @POST("api/storage-records")
     fun createStorageRecord(
             @Body body: StorageRequest
-    ): Completable
+    ): Single<StorageResponse>
 
     @PUT("api/storage-records/{recordId}")
     fun setStorageRecord(
             @Path("recordId") recordId: Long,
             @Body body: StorageRequest
-    ): Completable
+    ): Single<StorageResponse>
 
     @DELETE("api/storage-records/{recordId}")
     fun removeStorageRecord(
