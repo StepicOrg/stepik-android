@@ -27,7 +27,7 @@ constructor(
         private const val MILLISECONDS_IN_WEEK = 7 * 24 * MILLISECONDS_IN_HOUR
     }
 
-    fun createDeadlinesForCourse(courseId: Long, hoursPerWeek: Long): Single<DeadlinesWrapper> =
+    fun calculateDeadlinesForCourse(courseId: Long, hoursPerWeek: Long): Single<DeadlinesWrapper> =
             api.getCoursesReactive(1, longArrayOf(courseId)).flatMap {
                 api.getSectionsRx(it.courses.first().sections)
             }.flatMapObservable {
