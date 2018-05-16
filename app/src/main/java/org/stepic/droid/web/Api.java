@@ -18,6 +18,7 @@ import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.web.model.adaptive.RatingResponse;
 import org.stepic.droid.web.model.adaptive.RatingRestoreResponse;
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
+import org.stepic.droid.web.storage.deadlines.DeadlinesRepository;
 
 import java.util.List;
 
@@ -32,6 +33,9 @@ public interface Api {
     enum TokenType {
         social, loginPassword
     }
+
+    @NotNull
+    DeadlinesRepository provideDeadlineRepository();
 
     Call<AuthenticationStepikResponse> authWithNativeCode(String code, SocialManager.SocialType type, @Nullable String email);
 

@@ -65,6 +65,8 @@ import org.stepic.droid.web.model.adaptive.RecommendationReactionsRequest;
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
 import org.stepic.droid.web.model.desk.DeskRequestWrapper;
 import org.stepic.droid.web.storage.RemoteStorageService;
+import org.stepic.droid.web.storage.deadlines.DeadlinesRepository;
+import org.stepic.droid.web.storage.deadlines.DeadlinesRepositoryImpl;
 
 import java.io.IOException;
 import java.net.HttpCookie;
@@ -121,6 +123,7 @@ public class ApiImpl implements Api {
     private RemoteStorageService remoteStorageService;
     private RatingService ratingService;
 
+    private DeadlinesRepository deadlinesRepository;
 
     @Inject
     public ApiImpl(Context context, SharedPreferenceHelper sharedPreference,
@@ -143,6 +146,7 @@ public class ApiImpl implements Api {
 
         makeOauthServiceWithNewAuthHeader(this.sharedPreference.isLastTokenSocial() ? TokenType.social : TokenType.loginPassword);
         makeLoggedServices();
+        makeRepositories();
 
         OkHttpClient.Builder okHttpClient = new OkHttpClient.Builder();
         setTimeout(okHttpClient, TIMEOUT_IN_SECONDS);
@@ -160,6 +164,10 @@ public class ApiImpl implements Api {
         } catch (Exception ex) {
             this.analytic.reportError(Analytic.Error.COOKIE_MANAGER_ERROR, ex);
         }
+    }
+
+    private void makeRepositories() {
+        deadlinesRepository = new DeadlinesRepositoryImpl(loggedService, remoteStorageService, sharedPreference);
     }
 
     private void makeLoggedServices() {
@@ -348,6 +356,12 @@ public class ApiImpl implements Api {
     private void setTimeout(OkHttpClient.Builder builder, int seconds) {
         builder.connectTimeout(seconds, TimeUnit.SECONDS);
         builder.readTimeout(seconds, TimeUnit.SECONDS);
+    }
+
+    @NotNull
+    @Override
+    public DeadlinesRepository provideDeadlineRepository() {
+        return deadlinesRepository;
     }
 
     @Override

@@ -2,6 +2,7 @@ package org.stepic.droid.web.storage.deadlines
 
 import com.google.gson.GsonBuilder
 import io.reactivex.Completable
+import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.toObservable
@@ -39,8 +40,15 @@ class DeadlinesRepositoryImpl(
 
     override fun removeDeadlinesForCourse(recordId: Long): Completable = remoteStorageService.removeStorageRecord(recordId)
 
-    override fun getDeadlinesForCourse(courseId: Long): Single<StorageRecord<DeadlinesWrapper>> =
-            getStorageRecordForCourse(courseId)
+    override fun getDeadlinesForCourse(courseId: Long): Maybe<StorageRecord<DeadlinesWrapper>> =
+            remoteStorageService.getStorageRecords(1, sharedPreferenceHelper.profile?.id ?: -1, getKind(courseId)).singleOrError()
+                    .flatMapMaybe {
+                        if (it.records.isNotEmpty()) {
+                            Maybe.just(it.records.first().unwrap<DeadlinesWrapper>(gson))
+                        } else {
+                            Maybe.empty()
+                        }
+                    }
 
     override fun fetchAllDeadlines(): Observable<StorageRecord<DeadlinesWrapper>> =
             getAllEnrolledCourses().flatMap {
@@ -65,10 +73,4 @@ class DeadlinesRepositoryImpl(
 
     private fun createStorageRequest(deadlines: DeadlinesWrapper, recordId: Long? = null) =
             StorageRequest(StorageRecordWrapped(recordId, kind = getKind(deadlines.course), data = gson.toJsonTree(deadlines)))
-
-    private fun getStorageRecordForCourse(courseId: Long): Single<StorageRecord<DeadlinesWrapper>> =
-            remoteStorageService.getStorageRecords(1, sharedPreferenceHelper.profile?.id ?: -1, getKind(courseId))
-                    .map { it.records.first().unwrap<DeadlinesWrapper>(gson) }
-                    .singleOrError()
-
 }

@@ -1,6 +1,7 @@
 package org.stepic.droid.web.storage.deadlines
 
 import io.reactivex.Completable
+import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Single
 import org.stepic.droid.model.deadlines.DeadlinesWrapper
@@ -12,7 +13,7 @@ interface DeadlinesRepository {
     fun updateDeadlinesForCourse(record: StorageRecord<DeadlinesWrapper>): Single<StorageRecord<DeadlinesWrapper>>
 
     fun removeDeadlinesForCourse(recordId: Long): Completable
-    fun getDeadlinesForCourse(courseId: Long): Single<StorageRecord<DeadlinesWrapper>>
+    fun getDeadlinesForCourse(courseId: Long): Maybe<StorageRecord<DeadlinesWrapper>>
 
     fun fetchAllDeadlines(): Observable<StorageRecord<DeadlinesWrapper>>
 
