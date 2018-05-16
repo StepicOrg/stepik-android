@@ -7,10 +7,9 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.toObservable
 import org.stepic.droid.jsonHelpers.adapters.UTCDateAdapter
 import org.stepic.droid.model.Course
-import org.stepic.droid.model.StorageRecord
+import org.stepic.droid.web.storage.model.StorageRecord
 import org.stepic.droid.model.deadlines.DeadlinesWrapper
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import org.stepic.droid.util.toObject
 import org.stepic.droid.web.CoursesMetaResponse
 import org.stepic.droid.web.StepicRestLoggedService
 import org.stepic.droid.web.storage.RemoteStorageService
@@ -42,7 +41,7 @@ class DeadlinesRepositoryImpl(
             }
 
     override fun getDeadlinesForCourse(courseId: Long): Single<DeadlinesWrapper> =
-            getStorageRecordForCourse(courseId).map { it.data.toObject<DeadlinesWrapper>(gson) }
+            getStorageRecordForCourse(courseId).map { it.data }
 
     override fun fetchAllDeadlines(): Observable<DeadlinesWrapper> =
             getAllEnrolledCourses().flatMap {
@@ -66,11 +65,11 @@ class DeadlinesRepositoryImpl(
     private fun getKind(courseId: Long) = "deadline_$courseId"
 
     private fun createStorageRecord(deadlines: DeadlinesWrapper, recordId: Long? = null) =
-            StorageRecord(recordId, kind = getKind(deadlines.course), data = gson.toJsonTree(deadlines))
+            StorageRecord(recordId, kind = getKind(deadlines.course), data = deadlines).wrap(gson)
 
-    private fun getStorageRecordForCourse(courseId: Long): Single<StorageRecord> =
+    private fun getStorageRecordForCourse(courseId: Long): Single<StorageRecord<DeadlinesWrapper>> =
             remoteStorageService.getStorageRecords(1, sharedPreferenceHelper.profile?.id ?: -1, getKind(courseId))
-                    .map { it.records.first() }
+                    .map { it.records.first().unwrap<DeadlinesWrapper>(gson) }
                     .singleOrError()
 
 }
