@@ -58,9 +58,10 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     private final static String SECTION_TITLE_DELIMETER = ". ";
 
     private static final int TYPE_SECTION_ITEM = 1;
-    private static final int TYPE_TITLE = 2;
+    private static final int TYPE_CALENDAR_HEADER = 2;
+    private static final int TYPE_DEADLINES_HEADER = 3;
 
-    public static final int PRE_SECTION_LIST_DELTA = 1;
+    public static final int PRE_SECTION_LIST_DELTA = 2;
 
     private int defaultHighlightPosition = -1;
 
@@ -126,24 +127,29 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
 
     @Override
     public GenericViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == TYPE_SECTION_ITEM) {
-            View v = LayoutInflater.from(activity).inflate(R.layout.section_item, parent, false);
-            return new SectionViewHolder(v);
-        } else if (viewType == TYPE_TITLE) {
-            View v = LayoutInflater.from(activity).inflate(R.layout.export_calendar_view, parent, false);
-            return new CalendarViewHolder(v);
-        } else {
-            return null;
+        LayoutInflater inflater = LayoutInflater.from(activity);
+        switch (viewType) {
+            case TYPE_CALENDAR_HEADER:
+                return new CalendarViewHolder(inflater.inflate(R.layout.export_calendar_view, parent, false));
+            case TYPE_DEADLINES_HEADER:
+                return new PersonalDeadlinesViewHolder(inflater.inflate(R.layout.header_personal_deadlines, parent, false));
+            case TYPE_SECTION_ITEM:
+                return new SectionViewHolder(inflater.inflate(R.layout.section_item, parent, false));
+            default:
+                throw new IllegalStateException("unknown viewType = " + viewType);
         }
     }
 
 
     @Override
     public int getItemViewType(int position) {
-        if (position == 0) {
-            return TYPE_TITLE;
-        } else {
-            return TYPE_SECTION_ITEM;
+        switch (position) {
+            case 0:
+                return TYPE_CALENDAR_HEADER;
+            case 1:
+                return TYPE_DEADLINES_HEADER;
+            default:
+                return TYPE_SECTION_ITEM;
         }
     }
 
@@ -610,6 +616,24 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
             ViewGroup.LayoutParams layoutParams = rootView.getLayoutParams();
             layoutParams.height = height;
             rootView.setLayoutParams(layoutParams);
+        }
+    }
+
+    class PersonalDeadlinesViewHolder extends GenericViewHolder {
+
+
+        public PersonalDeadlinesViewHolder(View itemView) {
+            super(itemView);
+        }
+
+        @Override
+        public void setDataOnView(int position) {
+
+        }
+
+        @Override
+        public void clearAnimation() {
+            itemView.clearAnimation();
         }
     }
 
