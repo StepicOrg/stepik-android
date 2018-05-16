@@ -13,7 +13,9 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.web.CoursesMetaResponse
 import org.stepic.droid.web.StepicRestLoggedService
 import org.stepic.droid.web.storage.RemoteStorageService
+import org.stepic.droid.web.storage.model.StorageRecordWrapped
 import org.stepic.droid.web.storage.model.StorageRequest
+import org.stepic.droid.web.storage.model.StorageResponse
 import java.util.*
 
 // todo 14.05.2018: inject this class after api refactor
@@ -26,24 +28,21 @@ class DeadlinesRepositoryImpl(
             .registerTypeAdapter(Date::class.java, UTCDateAdapter())
             .create()
 
-    override fun createDeadlinesForCourse(deadlines: DeadlinesWrapper): Completable =
-            remoteStorageService.createStorageRecord(StorageRequest(createStorageRecord(deadlines)))
+    private fun Single<StorageResponse>.unwrap() =
+            map { it.records.first().unwrap<DeadlinesWrapper>(gson) }
 
-    override fun updateDeadlinesForCourse(deadlines: DeadlinesWrapper): Completable =
-            getStorageRecordForCourse(deadlines.course).flatMapCompletable {
-                val recordId = it.id!! // we should fail if there no such record
-                remoteStorageService.setStorageRecord(recordId, StorageRequest(createStorageRecord(deadlines, recordId)))
-            }
+    override fun createDeadlinesForCourse(deadlines: DeadlinesWrapper): Single<StorageRecord<DeadlinesWrapper>> =
+            remoteStorageService.createStorageRecord(createStorageRequest(deadlines)).unwrap()
 
-    override fun removeDeadlinesForCourse(courseId: Long): Completable =
-            getStorageRecordForCourse(courseId).flatMapCompletable {
-                remoteStorageService.removeStorageRecord(it.id!!)
-            }
+    override fun updateDeadlinesForCourse(record: StorageRecord<DeadlinesWrapper>): Single<StorageRecord<DeadlinesWrapper>> =
+                remoteStorageService.setStorageRecord(record.id ?: 0, StorageRequest(record.wrap(gson))).unwrap()
 
-    override fun getDeadlinesForCourse(courseId: Long): Single<DeadlinesWrapper> =
-            getStorageRecordForCourse(courseId).map { it.data }
+    override fun removeDeadlinesForCourse(recordId: Long): Completable = remoteStorageService.removeStorageRecord(recordId)
 
-    override fun fetchAllDeadlines(): Observable<DeadlinesWrapper> =
+    override fun getDeadlinesForCourse(courseId: Long): Single<StorageRecord<DeadlinesWrapper>> =
+            getStorageRecordForCourse(courseId)
+
+    override fun fetchAllDeadlines(): Observable<StorageRecord<DeadlinesWrapper>> =
             getAllEnrolledCourses().flatMap {
                 getDeadlinesForCourse(it.courseId).toObservable()
             }
@@ -64,8 +63,8 @@ class DeadlinesRepositoryImpl(
 
     private fun getKind(courseId: Long) = "deadline_$courseId"
 
-    private fun createStorageRecord(deadlines: DeadlinesWrapper, recordId: Long? = null) =
-            StorageRecord(recordId, kind = getKind(deadlines.course), data = deadlines).wrap(gson)
+    private fun createStorageRequest(deadlines: DeadlinesWrapper, recordId: Long? = null) =
+            StorageRequest(StorageRecordWrapped(recordId, kind = getKind(deadlines.course), data = gson.toJsonTree(deadlines)))
 
     private fun getStorageRecordForCourse(courseId: Long): Single<StorageRecord<DeadlinesWrapper>> =
             remoteStorageService.getStorageRecords(1, sharedPreferenceHelper.profile?.id ?: -1, getKind(courseId))
