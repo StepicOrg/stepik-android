@@ -52,12 +52,14 @@ import org.stepic.droid.core.presenters.CourseFinderPresenter;
 import org.stepic.droid.core.presenters.CourseJoinerPresenter;
 import org.stepic.droid.core.presenters.DownloadingInteractionPresenter;
 import org.stepic.droid.core.presenters.InvitationPresenter;
+import org.stepic.droid.core.presenters.PersonalDeadlinesPresenter;
 import org.stepic.droid.core.presenters.SectionsPresenter;
 import org.stepic.droid.core.presenters.contracts.CalendarExportableView;
 import org.stepic.droid.core.presenters.contracts.CourseJoinView;
 import org.stepic.droid.core.presenters.contracts.DownloadingInteractionView;
 import org.stepic.droid.core.presenters.contracts.InvitationView;
 import org.stepic.droid.core.presenters.contracts.LoadCourseView;
+import org.stepic.droid.core.presenters.contracts.PersonalDeadlinesView;
 import org.stepic.droid.core.presenters.contracts.SectionsView;
 import org.stepic.droid.model.CalendarItem;
 import org.stepic.droid.model.Course;
@@ -109,7 +111,9 @@ public class SectionsFragment
         LocalProgressManager.SectionProgressListener,
         ChooseCalendarDialog.CallbackContract,
         DroppingListener,
-        StoreStateManager.SectionCallback, DownloadingView {
+        StoreStateManager.SectionCallback,
+        DownloadingView,
+        PersonalDeadlinesView {
 
     public static final String joinFlag = "joinFlag";
     private static final int INVITE_REQUEST_CODE = 324;
@@ -184,6 +188,9 @@ public class SectionsFragment
 
     @Inject
     SectionsPresenter sectionsPresenter;
+
+    @Inject
+    PersonalDeadlinesPresenter deadlinesPresenter;
 
     @Inject
     StepikNotificationManager stepikNotificationManager;
@@ -271,6 +278,7 @@ public class SectionsFragment
         courseFinderPresenter.attachView(this);
         courseJoinerPresenter.attachView(this);
         sectionsPresenter.attachView(this);
+        deadlinesPresenter.attachView(this);
         invitationPresenter.attachView(this);
         downloadingPresenter.attachView(this);
 
@@ -291,6 +299,7 @@ public class SectionsFragment
         resolveJoinCourseView();
         setUpToolbarWithCourse();
         sectionsPresenter.showSections(course, false);
+        deadlinesPresenter.fetchDeadlinesForCourse(course, false);
 
         if (course != null && course.getSlug() != null && !wasIndexed) {
             title = getString(R.string.syllabus_title) + ": " + course.getTitle();
@@ -506,6 +515,7 @@ public class SectionsFragment
         courseJoinerPresenter.detachView(this);
         courseFinderPresenter.detachView(this);
         sectionsPresenter.detachView(this);
+        deadlinesPresenter.detachView(this);
         invitationPresenter.detachView(this);
         storeStateManager.removeSectionCallback(this);
         droppingListenerClient.unsubscribe(this);
