@@ -12,6 +12,7 @@ import org.stepic.droid.di.qualifiers.FeaturedCoursesDaoQualifier
 import org.stepic.droid.model.*
 import org.stepic.droid.model.Unit
 import org.stepic.droid.model.code.CodeSubmission
+import org.stepic.droid.model.deadlines.DeadlineFlatItem
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.storage.DatabaseHelper
 import org.stepic.droid.storage.dao.*
@@ -115,6 +116,10 @@ abstract class StorageModule {
     @StorageSingleton
     @Binds
     internal abstract fun provideViewedNotificationsQueueDao(viewedNotificationsQueueDaoImpl: ViewedNotificationsQueueDaoImpl): IDao<ViewedNotification>
+
+    @StorageSingleton
+    @Binds
+    internal abstract fun providePersonalDeadlinesDao(personalDeadlinesDaoImpl: PersonalDeadlinesDaoImpl): IDao<DeadlineFlatItem>
 
     @Module
     companion object {

@@ -8,7 +8,7 @@ import org.stepic.droid.storage.structure.DbStructureDeadlines
 import java.util.*
 import javax.inject.Inject
 
-class PersonalDeadlinesDao
+class PersonalDeadlinesDaoImpl
 @Inject
 constructor(databaseOperations: DatabaseOperations): DaoBase<DeadlineFlatItem>(databaseOperations) {
     override fun getDbName() = DbStructureDeadlines.DEADLINES

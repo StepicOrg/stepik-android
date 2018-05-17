@@ -8,6 +8,7 @@ import org.stepic.droid.di.storage.StorageSingleton
 import org.stepic.droid.model.*
 import org.stepic.droid.model.Unit
 import org.stepic.droid.model.code.CodeSubmission
+import org.stepic.droid.model.deadlines.DeadlineFlatItem
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.storage.dao.AdaptiveExpDao
 import org.stepic.droid.storage.dao.IDao
@@ -46,7 +47,9 @@ class DatabaseFacade
         private val videoTimestampDao: IDao<VideoTimestamp>,
         private val lastStepDao: IDao<PersistentLastStep>,
         private val externalVideoUrlDao: IDao<DbVideoUrl>,
-        private val blockDao: IDao<BlockPersistentWrapper>) {
+        private val blockDao: IDao<BlockPersistentWrapper>,
+        private val personalDeadlinesDao: IDao<DeadlineFlatItem>
+) {
 
     fun dropDatabase() {
         sectionDao.removeAll()
@@ -70,6 +73,7 @@ class DatabaseFacade
         codeSubmissionDao.removeAll()
         searchQueryDao.removeAll()
         adaptiveExpDao.removeAll()
+        personalDeadlinesDao.removeAll()
     }
 
     fun getCourseDao(table: Table) =
