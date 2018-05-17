@@ -12,6 +12,9 @@ import org.stepic.droid.storage.operations.ResultHandler;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import kotlin.collections.CollectionsKt;
 
 public abstract class DaoBase<T> implements IDao<T> {
 
@@ -45,6 +48,14 @@ public abstract class DaoBase<T> implements IDao<T> {
     public final List<T> getAll(@NonNull String whereColumn, @NonNull String whereValue) {
         String query = "Select * from " + getDbName() + " where " + whereColumn + " = ?";
         return getAllWithQuery(query, new String[]{whereValue});
+    }
+
+    @NotNull
+    @Override
+    public List<T> getAll(@NotNull Map<String, String> whereArgs) {
+        final String query = "SELECT * FROM " + getDbName() + " WHERE ";
+        final String where = CollectionsKt.joinToString(whereArgs.keySet(), " = ? AND ", "", "", -1, "" , null) + " = ?";
+        return getAllWithQuery(query + where, whereArgs.values().toArray(new String[]{}));
     }
 
     @Override
