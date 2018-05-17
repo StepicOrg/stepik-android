@@ -127,6 +127,15 @@ public abstract class DaoBase<T> implements IDao<T> {
     }
 
     @Override
+    public void insertOrReplaceAll(@NotNull List<? extends T> persistentObjects) {
+        List<ContentValues> values = new ArrayList<>(persistentObjects.size());
+        for (T object: persistentObjects) {
+            values.add(getContentValues(object));
+        }
+        databaseOperations.executeReplaceAll(getDbName(), values);
+    }
+
+    @Override
     public void insertOrUpdate(T persistentObject) {
         insertOrUpdate(getDbName(), getContentValues(persistentObject), getDefaultPrimaryColumn(), getDefaultPrimaryValue(persistentObject));
     }

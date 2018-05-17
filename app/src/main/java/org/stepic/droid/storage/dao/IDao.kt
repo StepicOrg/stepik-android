@@ -6,6 +6,7 @@ interface IDao<T> {
     fun insertOrUpdate(persistentObject: T)
 
     fun insertOrReplace(persistentObject: T)
+    fun insertOrReplaceAll(persistentObjects: List<T>)
 
     fun isInDb(persistentObject: T): Boolean
 

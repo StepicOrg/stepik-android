@@ -69,6 +69,20 @@ constructor(private val database: SQLiteDatabase) : DatabaseOperations {
         }
     }
 
+    override fun executeReplaceAll(table: String, values: List<ContentValues>) {
+        try {
+            open()
+            database.beginTransaction()
+
+            values.forEach {
+                database.replace(table, null, it)
+            }
+        } finally {
+            database.endTransaction()
+            close()
+        }
+    }
+
     override fun executeDelete(table: String, whereClause: String?, whereArgs: Array<String>?) {
         try {
             open()
