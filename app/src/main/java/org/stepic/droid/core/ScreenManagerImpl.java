@@ -501,15 +501,25 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void continueCourse(Activity activity, long courseId, Section section, long lessonId, long unitId, long stepPosition) {
+        continueCourse(activity, courseId, section, lessonId, unitId, stepPosition, false);
+    }
+
+    @Override
+    public void continueCourse(Activity activity, long courseId, Section section, long lessonId, long unitId, long stepPosition, boolean joinedRightNow) {
         String testStepPath = StringUtil.getUriForStepByIds(config.getBaseUrl(), lessonId, unitId, stepPosition);
         String testSectionPath = StringUtil.getUriForCourse(config.getBaseUrl(), courseId + "");
+
+        Intent sectionsIntent = new Intent(activity, SectionActivity.class)
+                .setAction(AppConstants.INTERNAL_STEPIK_ACTION)
+                .setData(Uri.parse(testSectionPath));
+        if (joinedRightNow) {
+            sectionsIntent.putExtra(SectionsFragment.joinFlag, true);
+        }
 
         TaskStackBuilder.create(activity)
                 .addNextIntent(new Intent(activity, MainFeedActivity.class)
                         .setAction(AppConstants.INTERNAL_STEPIK_ACTION))
-                .addNextIntent(new Intent(activity, SectionActivity.class)
-                        .setAction(AppConstants.INTERNAL_STEPIK_ACTION)
-                        .setData(Uri.parse(testSectionPath)))
+                .addNextIntent(sectionsIntent)
                 .addNextIntent(getIntentForUnits(activity, section)
                         .setAction(AppConstants.INTERNAL_STEPIK_ACTION))
                 .addNextIntent(new Intent(activity, StepsActivity.class)
@@ -614,11 +624,8 @@ public class ScreenManagerImpl implements ScreenManager {
             showSections(sourceActivity, course);
         } else {
             analytic.reportEventWithIdName(Analytic.Screens.SHOW_SECTIONS_JOINED, course.getCourseId() + "", course.getTitle());
-            Intent intent = getSectionsIntent(sourceActivity, course);
-            Bundle bundle = intent.getExtras();
-            bundle.putBoolean(SectionsFragment.joinFlag, true);
-            intent.putExtras(bundle);
-            sourceActivity.startActivity(intent);
+            sourceActivity.startActivity(
+                    getSectionsIntent(sourceActivity, course).putExtra(SectionsFragment.joinFlag, true));
         }
     }
 

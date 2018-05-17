@@ -34,6 +34,7 @@ import org.stepic.droid.core.internetstate.contract.InternetEnabledPoster
 import org.stepic.droid.core.videomoves.VideosMovedPosterImpl
 import org.stepic.droid.core.videomoves.contract.VideosMovedListener
 import org.stepic.droid.core.videomoves.contract.VideosMovedPoster
+import org.stepic.droid.di.adaptive.AdaptiveCourseScope
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.fonts.FontsProvider
@@ -47,6 +48,8 @@ import org.stepic.droid.storage.*
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.connectivity.NetworkTypeDeterminer
 import org.stepic.droid.util.connectivity.NetworkTypeDeterminerImpl
+import org.stepic.droid.util.resolvers.StepTypeResolver
+import org.stepic.droid.util.resolvers.StepTypeResolverImpl
 import org.stepic.droid.util.resolvers.VideoResolver
 import org.stepic.droid.util.resolvers.VideoResolverImpl
 import org.stepic.droid.util.resolvers.text.TextResolver
@@ -200,6 +203,10 @@ abstract class AppCoreModule {
 
     @Binds
     abstract fun provideNetworkTypeDeterminer(networkTypeDeterminer: NetworkTypeDeterminerImpl): NetworkTypeDeterminer
+
+    @Binds
+    @AppSingleton
+    abstract fun bindStepTypeResolver(stepTypeResolver: StepTypeResolverImpl): StepTypeResolver
 
     @Module
     companion object {

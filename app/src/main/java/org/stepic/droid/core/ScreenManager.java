@@ -126,6 +126,8 @@ public interface ScreenManager {
 
     void continueCourse(Activity activity, long courseId, Section section, long lessonId, long unitId, long stepPosition);
 
+    void continueCourse(Activity activity, long courseId, Section section, long lessonId, long unitId, long stepPosition, boolean joinedRightNow);
+
     void showLaunchScreen(FragmentActivity activity, @NotNull Course course);
 
     void openImage(Context context, String path);

@@ -1,5 +1,6 @@
 package org.stepic.droid.adaptive.ui.adapters
 
+import android.graphics.Color
 import android.support.annotation.StringRes
 import android.support.design.widget.Snackbar
 import android.view.View
@@ -18,10 +19,12 @@ import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.presenters.CardPresenter
 import org.stepic.droid.core.presenters.contracts.CardView
+import org.stepic.droid.model.Step
 import org.stepic.droid.model.Submission
-import org.stepic.droid.ui.adapters.StepikRadioGroupAdapter
 import org.stepic.droid.ui.custom.LatexSupportableWebView
-import org.stepic.droid.ui.custom.StepikRadioGroup
+import org.stepic.droid.ui.quiz.QuizDelegate
+import org.stepic.droid.util.compatibilityModeForSDK15
+import org.stepic.droid.util.resolvers.StepTypeResolver
 import javax.inject.Inject
 
 class QuizCardViewHolder(
@@ -31,7 +34,7 @@ class QuizCardViewHolder(
     private val answersProgress = root.answersProgress
     private val titleView = root.title
     val question: LatexSupportableWebView = root.question
-    val answers: StepikRadioGroup = root.answers
+    val quizViewContainer: ViewGroup = root.quizViewContainer
     val separatorAnswers: View = root.separatorAnswers
 
     val actionButton: Button = root.submit
@@ -49,28 +52,33 @@ class QuizCardViewHolder(
 
     val cardView: android.support.v7.widget.CardView = root.card
 
-    private val choiceAdapter = StepikRadioGroupAdapter(answers)
+    private lateinit var quizDelegate: QuizDelegate
 
     @Inject
     lateinit var screenManager: ScreenManager
 
+    @Inject
+    lateinit var stepTypeResolver: StepTypeResolver
+
     init {
         App.component().inject(this)
-
-        choiceAdapter.actionButton = actionButton
 
         question.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) = onCardLoaded()
         }
         question.setOnWebViewClickListener { screenManager.openImage(root.context, it) }
-        question.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
+        question.setLayerType(View.LAYER_TYPE_NONE, null)
+
+        compatibilityModeForSDK15 {
+            question.setBackgroundColor(Color.WHITE)
+        }
 
         nextButton.setOnClickListener { container.swipeDown() }
         actionButton.setOnClickListener { presenter?.createSubmission() }
         wrongButton.setOnClickListener {
             presenter?.let {
                 it.retrySubmission()
-                choiceAdapter.setEnabled(true)
+                quizDelegate.isEnabled = true
                 resetSupplementalActions()
             }
         }
@@ -91,7 +99,7 @@ class QuizCardViewHolder(
                 onSubmissionLoading()
             } else {
                 actionButton.visibility = View.VISIBLE
-                choiceAdapter.setEnabled(true)
+                quizDelegate.isEnabled = true
             }
         }
 
@@ -118,6 +126,14 @@ class QuizCardViewHolder(
         if (presenter?.isLoading != true) answersProgress.visibility = View.GONE
     }
 
+    override fun setStep(step: Step?) {
+        quizViewContainer.removeAllViews()
+        quizDelegate = stepTypeResolver.getQuizDelegate(step)
+
+        quizViewContainer.addView(quizDelegate.createView(quizViewContainer))
+        quizDelegate.actionButton = actionButton
+    }
+
     override fun setTitle(title: String?) {
         title?.let { titleView.text = it }
     }
@@ -128,10 +144,10 @@ class QuizCardViewHolder(
 
     override fun setSubmission(submission: Submission, animate: Boolean) {
         resetSupplementalActions()
-        choiceAdapter.setSubmission(submission)
+        quizDelegate.setSubmission(submission)
         when(submission.status) {
             Submission.Status.CORRECT -> {
-                choiceAdapter.setEnabled(false)
+                quizDelegate.isEnabled = false
                 actionButton.visibility = View.GONE
                 hasSubmission = true
 
@@ -150,7 +166,7 @@ class QuizCardViewHolder(
             }
 
             Submission.Status.WRONG -> {
-                choiceAdapter.setEnabled(false)
+                quizDelegate.isEnabled = false
                 wrongSign.visibility = View.VISIBLE
                 hasSubmission = true
 
@@ -175,21 +191,21 @@ class QuizCardViewHolder(
             Snackbar.make(root.parent as ViewGroup, errorMessage, Snackbar.LENGTH_SHORT).show()
         }
         container.isEnabled = true
-        choiceAdapter.setEnabled(true)
+        quizDelegate.isEnabled = true
         resetSupplementalActions()
     }
 
     override fun onSubmissionLoading() {
         resetSupplementalActions()
         container.isEnabled = false
-        choiceAdapter.setEnabled(false)
+        quizDelegate.isEnabled = false
         actionButton.visibility = View.GONE
         answersProgress.visibility = View.VISIBLE
 
         scrollDown()
     }
 
-    override fun getRadioGroupAdapter() = choiceAdapter
+    override fun getQuizViewDelegate() = quizDelegate
 
     private fun scrollDown() {
         scrollContainer.post {
