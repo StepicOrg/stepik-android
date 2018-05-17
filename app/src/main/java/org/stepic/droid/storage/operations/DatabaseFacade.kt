@@ -8,10 +8,10 @@ import org.stepic.droid.di.storage.StorageSingleton
 import org.stepic.droid.model.*
 import org.stepic.droid.model.Unit
 import org.stepic.droid.model.code.CodeSubmission
-import org.stepic.droid.model.deadlines.DeadlineFlatItem
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.storage.dao.AdaptiveExpDao
 import org.stepic.droid.storage.dao.IDao
+import org.stepic.droid.storage.dao.PersonalDeadlinesDao
 import org.stepic.droid.storage.dao.SearchQueryDao
 import org.stepic.droid.storage.structure.*
 import org.stepic.droid.util.AppConstants
@@ -48,7 +48,7 @@ class DatabaseFacade
         private val lastStepDao: IDao<PersistentLastStep>,
         private val externalVideoUrlDao: IDao<DbVideoUrl>,
         private val blockDao: IDao<BlockPersistentWrapper>,
-        private val personalDeadlinesDao: IDao<DeadlineFlatItem>
+        private val personalDeadlinesDao: PersonalDeadlinesDao
 ) {
 
     fun dropDatabase() {

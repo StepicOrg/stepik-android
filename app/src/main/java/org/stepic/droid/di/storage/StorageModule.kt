@@ -16,10 +16,7 @@ import org.stepic.droid.model.deadlines.DeadlineFlatItem
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.storage.DatabaseHelper
 import org.stepic.droid.storage.dao.*
-import org.stepic.droid.storage.operations.DatabaseOperations
-import org.stepic.droid.storage.operations.DatabaseOperationsImpl
-import org.stepic.droid.storage.operations.StepInfoOperation
-import org.stepic.droid.storage.operations.StepInfoOperationImpl
+import org.stepic.droid.storage.operations.*
 import org.stepic.droid.storage.structure.DbStructureEnrolledAndFeaturedCourses
 import org.stepic.droid.web.ViewAssignment
 
@@ -119,7 +116,11 @@ abstract class StorageModule {
 
     @StorageSingleton
     @Binds
-    internal abstract fun providePersonalDeadlinesDao(personalDeadlinesDaoImpl: PersonalDeadlinesDaoImpl): IDao<DeadlineFlatItem>
+    internal abstract fun providePersonalDeadlinesDao(personalDeadlinesDaoImpl: PersonalDeadlinesDaoImpl): PersonalDeadlinesDao
+
+    @StorageSingleton
+    @Binds
+    internal abstract fun provideDeadlinesRecordOperations(deadlinesRecordOperationsImpl: DeadlinesRecordOperationsImpl): DeadlinesRecordOperations
 
     @Module
     companion object {

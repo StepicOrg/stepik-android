@@ -7,10 +7,11 @@ import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepic.droid.storage.structure.DbStructureDeadlines
 import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 class PersonalDeadlinesDaoImpl
 @Inject
-constructor(databaseOperations: DatabaseOperations): DaoBase<DeadlineFlatItem>(databaseOperations) {
+constructor(databaseOperations: DatabaseOperations): DaoBase<DeadlineFlatItem>(databaseOperations), PersonalDeadlinesDao {
     override fun getDbName() = DbStructureDeadlines.DEADLINES
 
     override fun getDefaultPrimaryColumn(): String = DbStructureDeadlines.Columns.RECORD_ID
@@ -31,4 +32,26 @@ constructor(databaseOperations: DatabaseOperations): DaoBase<DeadlineFlatItem>(d
             cursor.getLong(cursor.getColumnIndex(DbStructureDeadlines.Columns.SECTION_ID)),
             Date(cursor.getLong(cursor.getColumnIndex(DbStructureDeadlines.Columns.DEADLINE)))
     )
+
+    override fun getClosestDeadlineDate(): Date? =
+            rawQuery("SELECT ${DbStructureDeadlines.Columns.DEADLINE} FROM $dbName ORDER BY ${DbStructureDeadlines.Columns.DEADLINE} DECS LIMIT 1", null) {
+                return@rawQuery if (it.moveToFirst()) {
+                    Date(it.getLong(it.getColumnIndex(DbStructureDeadlines.Columns.DEADLINE)))
+                } else {
+                    null
+                }
+            }
+
+    override fun getDeadlinesForDate(date: Date, gap: Long): List<DeadlineFlatItem> =
+            rawQuery("SELECT * FROM $dbName WHERE ${DbStructureDeadlines.Columns.DEADLINE} BETWEEN ? AND ?", arrayOf("${date.time - gap}", "${date.time + gap}")) {
+                val res = ArrayList<DeadlineFlatItem>()
+
+                if (it.moveToFirst()) {
+                    do {
+                        res.add(parsePersistentObject(it))
+                    } while (it.moveToNext())
+                }
+
+                return@rawQuery res
+            }
 }
