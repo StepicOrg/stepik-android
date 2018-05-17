@@ -77,6 +77,7 @@ constructor(private val database: SQLiteDatabase) : DatabaseOperations {
             values.forEach {
                 database.replace(table, null, it)
             }
+            database.setTransactionSuccessful()
         } finally {
             database.endTransaction()
             close()
