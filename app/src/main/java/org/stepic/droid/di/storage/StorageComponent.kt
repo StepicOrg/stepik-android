@@ -3,6 +3,7 @@ package org.stepic.droid.di.storage
 import android.content.Context
 import dagger.BindsInstance
 import dagger.Component
+import org.stepic.droid.features.deadlines.storage.operations.DeadlinesRecordOperations
 import org.stepic.droid.storage.operations.DatabaseFacade
 
 @Component(modules = arrayOf(StorageModule::class))
@@ -18,4 +19,5 @@ interface StorageComponent {
     }
 
     val databaseFacade: DatabaseFacade
+    val deadlinesRecordOperations: DeadlinesRecordOperations
 }
