@@ -1,15 +1,16 @@
-package org.stepic.droid.core.presenters
+package org.stepic.droid.features.deadlines.presenters
 
 import android.util.Log
 import io.reactivex.Scheduler
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
-import org.stepic.droid.core.deadlines.DeadlinesResolver
-import org.stepic.droid.core.presenters.contracts.PersonalDeadlinesView
+import org.stepic.droid.core.presenters.PresenterBase
+import org.stepic.droid.features.deadlines.util.DeadlinesResolver
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.model.Course
 import org.stepic.droid.features.deadlines.model.DeadlinesWrapper
+import org.stepic.droid.features.deadlines.presenters.contracts.PersonalDeadlinesView
 import org.stepic.droid.util.addDisposable
 import org.stepic.droid.web.Api
 import org.stepic.droid.web.storage.model.StorageRecord

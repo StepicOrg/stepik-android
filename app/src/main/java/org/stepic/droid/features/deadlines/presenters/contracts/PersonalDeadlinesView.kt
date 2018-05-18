@@ -1,4 +1,4 @@
-package org.stepic.droid.core.presenters.contracts
+package org.stepic.droid.features.deadlines.presenters.contracts
 
 import org.stepic.droid.features.deadlines.model.DeadlinesWrapper
 import org.stepic.droid.web.storage.model.StorageRecord

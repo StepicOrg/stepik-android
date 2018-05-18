@@ -1,4 +1,4 @@
-package org.stepic.droid.core.deadlines
+package org.stepic.droid.features.deadlines.util
 
 import io.reactivex.Observable
 import io.reactivex.Single
