@@ -10,6 +10,7 @@ import org.stepic.droid.jsonHelpers.adapters.UTCDateAdapter
 import org.stepic.droid.model.Course
 import org.stepic.droid.web.storage.model.StorageRecord
 import org.stepic.droid.features.deadlines.model.DeadlinesWrapper
+import org.stepic.droid.features.deadlines.util.getKindOfRecord
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.web.CoursesMetaResponse
 import org.stepic.droid.web.StepicRestLoggedService
@@ -41,7 +42,7 @@ class DeadlinesRepositoryImpl(
     override fun removeDeadlinesForCourse(recordId: Long): Completable = remoteStorageService.removeStorageRecord(recordId)
 
     override fun getDeadlinesForCourse(courseId: Long): Maybe<StorageRecord<DeadlinesWrapper>> =
-            remoteStorageService.getStorageRecords(1, sharedPreferenceHelper.profile?.id ?: -1, getKind(courseId)).singleOrError()
+            remoteStorageService.getStorageRecords(1, sharedPreferenceHelper.profile?.id ?: -1, getKindOfRecord(courseId)).singleOrError()
                     .flatMapMaybe {
                         if (it.records.isNotEmpty()) {
                             Maybe.just(it.records.first().unwrap<DeadlinesWrapper>(gson))
@@ -69,8 +70,6 @@ class DeadlinesRepositoryImpl(
                 it.courses.toObservable()
             }
 
-    private fun getKind(courseId: Long) = "deadline_$courseId"
-
     private fun createStorageRequest(deadlines: DeadlinesWrapper, recordId: Long? = null) =
-            StorageRequest(StorageRecordWrapped(recordId, kind = getKind(deadlines.course), data = gson.toJsonTree(deadlines)))
+            StorageRequest(StorageRecordWrapped(recordId, kind = getKindOfRecord(deadlines.course), data = gson.toJsonTree(deadlines)))
 }

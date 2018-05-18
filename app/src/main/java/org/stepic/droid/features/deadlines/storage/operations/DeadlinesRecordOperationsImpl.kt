@@ -8,6 +8,7 @@ import org.stepic.droid.features.deadlines.model.DeadlineFlatItem
 import org.stepic.droid.features.deadlines.model.DeadlinesWrapper
 import org.stepic.droid.features.deadlines.storage.DbStructureDeadlines
 import org.stepic.droid.features.deadlines.storage.dao.PersonalDeadlinesDao
+import org.stepic.droid.features.deadlines.util.getKindOfRecord
 import org.stepic.droid.web.storage.model.StorageRecord
 import java.util.*
 import javax.inject.Inject
@@ -41,8 +42,8 @@ constructor(
             }
             emitter.onSuccess(StorageRecord(
                     id = recordId,
-                    kind = "",
-                    data = DeadlinesWrapper(items.first().courseId, deadlines)
+                    kind = getKindOfRecord(courseId),
+                    data = DeadlinesWrapper(courseId, deadlines)
             ))
         } else {
             emitter.onComplete()
