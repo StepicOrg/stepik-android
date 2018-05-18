@@ -14,6 +14,7 @@ import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.storage.operations.Table
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
+import org.stepic.droid.util.scheduleCompat
 import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.atomic.AtomicBoolean
@@ -85,7 +86,7 @@ class LocalReminderImpl
                     val pendingIntent = PendingIntent.getService(context, NewUserAlarmService.REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT)
                     alarmManager.cancel(pendingIntent)//timer should not be triggered
 
-                    scheduleCompat(scheduleMillis, AlarmManager.INTERVAL_HALF_HOUR, pendingIntent)
+                    alarmManager.scheduleCompat(scheduleMillis, AlarmManager.INTERVAL_HALF_HOUR, pendingIntent)
 
                     val dayType = if (!isFirstDayNotificationShown) {
                         SharedPreferenceHelper.NotificationDay.DAY_ONE
@@ -130,7 +131,7 @@ class LocalReminderImpl
                         val pendingIntent = PendingIntent.getService(context, StreakAlarmService.requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
 
-                        scheduleCompat(nextNotificationMillis, AlarmManager.INTERVAL_HOUR, pendingIntent)
+                        alarmManager.scheduleCompat(nextNotificationMillis, AlarmManager.INTERVAL_HOUR, pendingIntent)
                     }
                 } finally {
                     stateNotificationHandling.set(false)
@@ -185,25 +186,12 @@ class LocalReminderImpl
                 val pendingIntent = PendingIntent.getService(context, NewUserAlarmService.REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT)
                 alarmManager.cancel(pendingIntent)
 
-                scheduleCompat(scheduleMillis, AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent)
+                alarmManager.scheduleCompat(scheduleMillis, AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent)
 
                 sharedPreferenceHelper.saveRegistrationRemindTimestamp(scheduleMillis)
             } finally {
                 registrationRemindHandling.set(false)
             }
-        }
-    }
-
-    private fun scheduleCompat(scheduleMillis: Long, interval: Long, pendingIntent: PendingIntent) {
-        if (Build.VERSION.SDK_INT < 23) {
-            if (Build.VERSION.SDK_INT >= 19) {
-                alarmManager.setWindow(AlarmManager.RTC_WAKEUP, scheduleMillis, interval, pendingIntent)
-            } else {
-                alarmManager.set(AlarmManager.RTC_WAKEUP, scheduleMillis + interval / 2, pendingIntent)
-            }
-        } else {
-            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, scheduleMillis + interval / 2, pendingIntent)
-//            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, DateTime.now().millis + 15000, pendingIntent) //DEBUG PURPOSE ONLY
         }
     }
 }
