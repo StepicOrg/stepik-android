@@ -18,17 +18,17 @@ public class NotificationDaoImpl extends DaoBase<Notification> {
     }
 
     @Override
-    String getDbName() {
+    protected String getDbName() {
         return DbStructureNotification.NOTIFICATIONS_TEMP;
     }
 
     @Override
-    String getDefaultPrimaryColumn() {
+    protected String getDefaultPrimaryColumn() {
         return DbStructureNotification.Column.ID;
     }
 
     @Override
-    String getDefaultPrimaryValue(Notification persistentObject) {
+    protected String getDefaultPrimaryValue(Notification persistentObject) {
         if (persistentObject == null || persistentObject.getId() == null) {
             return "0";
         }
@@ -36,7 +36,7 @@ public class NotificationDaoImpl extends DaoBase<Notification> {
     }
 
     @Override
-    ContentValues getContentValues(Notification persistentObject) {
+    protected ContentValues getContentValues(Notification persistentObject) {
         ContentValues values = new ContentValues();
 
         values.put(DbStructureNotification.Column.ID, persistentObject.getId());
@@ -54,7 +54,7 @@ public class NotificationDaoImpl extends DaoBase<Notification> {
     }
 
     @Override
-    Notification parsePersistentObject(Cursor cursor) {
+    protected Notification parsePersistentObject(Cursor cursor) {
         Notification notification = new Notification();
 
         int columnIndexId = cursor.getColumnIndex(DbStructureNotification.Column.ID);

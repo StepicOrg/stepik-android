@@ -156,15 +156,15 @@ public abstract class DaoBase<T> implements IDao<T> {
         return isInDb(getDefaultPrimaryColumn(), getDefaultPrimaryValue(persistentObject));
     }
 
-    abstract String getDbName();
+    protected abstract String getDbName();
 
-    abstract String getDefaultPrimaryColumn();
+    protected abstract String getDefaultPrimaryColumn();
 
-    abstract String getDefaultPrimaryValue(T persistentObject);
+    protected abstract String getDefaultPrimaryValue(T persistentObject);
 
-    abstract ContentValues getContentValues(T persistentObject);
+    protected abstract ContentValues getContentValues(T persistentObject);
 
-    abstract T parsePersistentObject(Cursor cursor);
+    protected abstract T parsePersistentObject(Cursor cursor);
 
     @Override
     public void removeAll() {
