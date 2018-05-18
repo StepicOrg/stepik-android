@@ -45,9 +45,12 @@ class DeadlinesRepositoryImpl(
             remoteStorageService.setStorageRecord(record.id ?: 0, StorageRequest(record.wrap(gson))).unwrap()
                     .flatMap(deadlinesRecordOperations::saveDeadlineRecord)
 
-    override fun removeDeadlinesForCourse(recordId: Long): Completable =
+    override fun removeDeadlinesForCourseByRecordId(recordId: Long): Completable =
             remoteStorageService.removeStorageRecord(recordId) then
                     deadlinesRecordOperations.removeDeadlineRecord(recordId)
+
+    override fun removeDeadlinesForCourse(courseId: Long): Completable =
+            getDeadlinesForCourse(courseId).flatMapCompletable { removeDeadlinesForCourseByRecordId(it.id!!) }
 
     override fun getDeadlinesForCourse(courseId: Long): Maybe<StorageRecord<DeadlinesWrapper>> =
             remoteStorageService.getStorageRecords(1, sharedPreferenceHelper.profile?.id ?: -1, getKindOfRecord(courseId)).singleOrError()

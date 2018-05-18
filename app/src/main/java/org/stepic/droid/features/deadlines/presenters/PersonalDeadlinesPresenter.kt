@@ -85,7 +85,7 @@ constructor(
 
     fun removeDeadlines(record: StorageRecord<DeadlinesWrapper>) {
         state = PersonalDeadlinesView.State.Loading
-        compositeDisposable addDisposable deadlinesRepository.removeDeadlinesForCourse(record.id ?: 0)
+        compositeDisposable addDisposable deadlinesRepository.removeDeadlinesForCourseByRecordId(record.id ?: 0)
                 .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)
                 .subscribeBy(

@@ -6,7 +6,7 @@ import dagger.Component
 import org.stepic.droid.features.deadlines.storage.operations.DeadlinesRecordOperations
 import org.stepic.droid.storage.operations.DatabaseFacade
 
-@Component(modules = arrayOf(StorageModule::class))
+@Component(modules = [StorageModule::class])
 @StorageSingleton
 interface StorageComponent {
 

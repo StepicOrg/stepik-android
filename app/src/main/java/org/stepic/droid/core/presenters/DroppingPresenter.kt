@@ -24,8 +24,11 @@ constructor(
         private val databaseFacade: DatabaseFacade
 ) : PresenterBase<DroppingView>() {
 
+    private val deadlinesRepository = api.provideDeadlineRepository()
+
     fun dropCourse(course: Course) {
         threadPoolExecutor.execute {
+            deadlinesRepository.removeDeadlinesForCourse(course.courseId).blockingAwait()
             val dropCall = api.dropCourse(course.courseId)
             if (dropCall == null) {
                 mainHandler.post {
