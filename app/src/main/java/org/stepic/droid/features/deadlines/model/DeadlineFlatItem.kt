@@ -1,4 +1,4 @@
-package org.stepic.droid.model.deadlines
+package org.stepic.droid.features.deadlines.model
 
 import java.util.Date
 

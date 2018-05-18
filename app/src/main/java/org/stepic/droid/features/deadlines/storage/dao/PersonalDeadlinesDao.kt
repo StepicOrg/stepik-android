@@ -1,6 +1,7 @@
-package org.stepic.droid.storage.dao
+package org.stepic.droid.features.deadlines.storage.dao
 
-import org.stepic.droid.model.deadlines.DeadlineFlatItem
+import org.stepic.droid.features.deadlines.model.DeadlineFlatItem
+import org.stepic.droid.storage.dao.IDao
 import java.util.*
 
 interface PersonalDeadlinesDao: IDao<DeadlineFlatItem> {

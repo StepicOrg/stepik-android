@@ -1,6 +1,6 @@
 package org.stepic.droid.core.presenters.contracts
 
-import org.stepic.droid.model.deadlines.DeadlinesWrapper
+import org.stepic.droid.features.deadlines.model.DeadlinesWrapper
 import org.stepic.droid.web.storage.model.StorageRecord
 
 interface PersonalDeadlinesView {

@@ -1,4 +1,4 @@
-package org.stepic.droid.web.storage.deadlines
+package org.stepic.droid.features.deadlines.repository
 
 import com.google.gson.GsonBuilder
 import io.reactivex.Completable
@@ -9,7 +9,7 @@ import io.reactivex.rxkotlin.toObservable
 import org.stepic.droid.jsonHelpers.adapters.UTCDateAdapter
 import org.stepic.droid.model.Course
 import org.stepic.droid.web.storage.model.StorageRecord
-import org.stepic.droid.model.deadlines.DeadlinesWrapper
+import org.stepic.droid.features.deadlines.model.DeadlinesWrapper
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.web.CoursesMetaResponse
 import org.stepic.droid.web.StepicRestLoggedService

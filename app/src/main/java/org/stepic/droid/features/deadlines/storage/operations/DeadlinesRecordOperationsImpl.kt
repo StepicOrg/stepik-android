@@ -1,13 +1,13 @@
-package org.stepic.droid.storage.operations
+package org.stepic.droid.features.deadlines.storage.operations
 
 import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Single
-import org.stepic.droid.model.deadlines.Deadline
-import org.stepic.droid.model.deadlines.DeadlineFlatItem
-import org.stepic.droid.model.deadlines.DeadlinesWrapper
-import org.stepic.droid.storage.dao.PersonalDeadlinesDao
-import org.stepic.droid.storage.structure.DbStructureDeadlines
+import org.stepic.droid.features.deadlines.model.Deadline
+import org.stepic.droid.features.deadlines.model.DeadlineFlatItem
+import org.stepic.droid.features.deadlines.model.DeadlinesWrapper
+import org.stepic.droid.features.deadlines.storage.DbStructureDeadlines
+import org.stepic.droid.features.deadlines.storage.dao.PersonalDeadlinesDao
 import org.stepic.droid.web.storage.model.StorageRecord
 import java.util.*
 import javax.inject.Inject
@@ -20,7 +20,10 @@ constructor(
 ): DeadlinesRecordOperations {
     companion object {
         private fun StorageRecord<DeadlinesWrapper>.flatten(): List<DeadlineFlatItem> =
-                data.deadlines.map { DeadlineFlatItem(this.id ?: -1, this.data.course, it.section, it.deadline) }
+                data.deadlines.map {
+                    DeadlineFlatItem(this.id
+                            ?: -1, this.data.course, it.section, it.deadline)
+                }
 
         private const val DEFAULT_GAP = 60 * 60 * 1000L
     }

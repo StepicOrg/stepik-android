@@ -5,8 +5,8 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.toObservable
 import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.model.Section
-import org.stepic.droid.model.deadlines.Deadline
-import org.stepic.droid.model.deadlines.DeadlinesWrapper
+import org.stepic.droid.features.deadlines.model.Deadline
+import org.stepic.droid.features.deadlines.model.DeadlinesWrapper
 import org.stepic.droid.web.Api
 import java.util.*
 import javax.inject.Inject

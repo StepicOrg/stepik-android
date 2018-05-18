@@ -11,7 +11,7 @@ import org.stepic.droid.model.code.CodeSubmission
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.storage.dao.AdaptiveExpDao
 import org.stepic.droid.storage.dao.IDao
-import org.stepic.droid.storage.dao.PersonalDeadlinesDao
+import org.stepic.droid.features.deadlines.storage.dao.PersonalDeadlinesDao
 import org.stepic.droid.storage.dao.SearchQueryDao
 import org.stepic.droid.storage.structure.*
 import org.stepic.droid.util.AppConstants

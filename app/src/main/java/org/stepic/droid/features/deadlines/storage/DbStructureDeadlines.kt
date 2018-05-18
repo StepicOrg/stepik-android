@@ -1,4 +1,4 @@
-package org.stepic.droid.storage.structure
+package org.stepic.droid.features.deadlines.storage
 
 object DbStructureDeadlines {
     const val DEADLINES = "personal_deadlines"

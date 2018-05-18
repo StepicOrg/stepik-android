@@ -9,7 +9,7 @@ import org.stepic.droid.core.presenters.contracts.PersonalDeadlinesView
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.model.Course
-import org.stepic.droid.model.deadlines.DeadlinesWrapper
+import org.stepic.droid.features.deadlines.model.DeadlinesWrapper
 import org.stepic.droid.util.addDisposable
 import org.stepic.droid.web.Api
 import org.stepic.droid.web.storage.model.StorageRecord

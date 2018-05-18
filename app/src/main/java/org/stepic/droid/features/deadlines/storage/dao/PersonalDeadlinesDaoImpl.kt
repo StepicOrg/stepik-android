@@ -1,10 +1,11 @@
-package org.stepic.droid.storage.dao
+package org.stepic.droid.features.deadlines.storage.dao
 
 import android.content.ContentValues
 import android.database.Cursor
-import org.stepic.droid.model.deadlines.DeadlineFlatItem
+import org.stepic.droid.features.deadlines.model.DeadlineFlatItem
+import org.stepic.droid.features.deadlines.storage.DbStructureDeadlines
+import org.stepic.droid.storage.dao.DaoBase
 import org.stepic.droid.storage.operations.DatabaseOperations
-import org.stepic.droid.storage.structure.DbStructureDeadlines
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList

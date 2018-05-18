@@ -65,8 +65,8 @@ import org.stepic.droid.web.model.adaptive.RecommendationReactionsRequest;
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
 import org.stepic.droid.web.model.desk.DeskRequestWrapper;
 import org.stepic.droid.web.storage.RemoteStorageService;
-import org.stepic.droid.web.storage.deadlines.DeadlinesRepository;
-import org.stepic.droid.web.storage.deadlines.DeadlinesRepositoryImpl;
+import org.stepic.droid.features.deadlines.repository.DeadlinesRepository;
+import org.stepic.droid.features.deadlines.repository.DeadlinesRepositoryImpl;
 
 import java.io.IOException;
 import java.net.HttpCookie;
