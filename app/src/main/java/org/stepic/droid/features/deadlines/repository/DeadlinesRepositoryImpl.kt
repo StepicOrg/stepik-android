@@ -10,6 +10,7 @@ import org.stepic.droid.jsonHelpers.adapters.UTCDateAdapter
 import org.stepic.droid.model.Course
 import org.stepic.droid.web.storage.model.StorageRecord
 import org.stepic.droid.features.deadlines.model.DeadlinesWrapper
+import org.stepic.droid.features.deadlines.notifications.DeadlinesNotificationsManager
 import org.stepic.droid.features.deadlines.storage.operations.DeadlinesRecordOperations
 import org.stepic.droid.features.deadlines.util.getKindOfRecord
 import org.stepic.droid.preferences.SharedPreferenceHelper
@@ -27,7 +28,8 @@ class DeadlinesRepositoryImpl(
         private val loggedService: StepicRestLoggedService,
         private val remoteStorageService: RemoteStorageService,
         private val sharedPreferenceHelper: SharedPreferenceHelper,
-        private val deadlinesRecordOperations: DeadlinesRecordOperations
+        private val deadlinesRecordOperations: DeadlinesRecordOperations,
+        private val deadlinesNotificationsManager: DeadlinesNotificationsManager
 ): DeadlinesRepository {
     private val gson = GsonBuilder()
             .registerTypeAdapter(Date::class.java, UTCDateAdapter())
@@ -39,15 +41,21 @@ class DeadlinesRepositoryImpl(
     override fun createDeadlinesForCourse(deadlines: DeadlinesWrapper): Single<StorageRecord<DeadlinesWrapper>> =
             remoteStorageService
                     .createStorageRecord(createStorageRequest(deadlines)).unwrap()
-                    .flatMap(deadlinesRecordOperations::saveDeadlineRecord)
+                    .flatMap(deadlinesRecordOperations::saveDeadlineRecord).doOnSuccess {
+                        deadlinesNotificationsManager.scheduleDeadlinesNotifications()
+                    }
 
     override fun updateDeadlinesForCourse(record: StorageRecord<DeadlinesWrapper>): Single<StorageRecord<DeadlinesWrapper>> =
             remoteStorageService.setStorageRecord(record.id ?: 0, StorageRequest(record.wrap(gson))).unwrap()
-                    .flatMap(deadlinesRecordOperations::saveDeadlineRecord)
+                    .flatMap(deadlinesRecordOperations::saveDeadlineRecord).doOnSuccess {
+                        deadlinesNotificationsManager.scheduleDeadlinesNotifications()
+                    }
 
     override fun removeDeadlinesForCourseByRecordId(recordId: Long): Completable =
             remoteStorageService.removeStorageRecord(recordId) then
-                    deadlinesRecordOperations.removeDeadlineRecord(recordId)
+                    deadlinesRecordOperations.removeDeadlineRecord(recordId).doOnComplete {
+                        deadlinesNotificationsManager.scheduleDeadlinesNotifications()
+                    }
 
     override fun removeDeadlinesForCourse(courseId: Long): Completable =
             getDeadlinesForCourse(courseId).flatMapCompletable { removeDeadlinesForCourseByRecordId(it.id!!) }
@@ -68,6 +76,8 @@ class DeadlinesRepositoryImpl(
                 getDeadlinesForCourse(it.courseId).toObservable()
             }.flatMap {
                 deadlinesRecordOperations.saveDeadlineRecord(it).toObservable()
+            }.doOnComplete {
+                deadlinesNotificationsManager.scheduleDeadlinesNotifications()
             }
 
     private fun getEnrolledCourses(page: Int): Observable<CoursesMetaResponse> =

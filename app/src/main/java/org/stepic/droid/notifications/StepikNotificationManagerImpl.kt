@@ -18,6 +18,7 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.features.deadlines.model.DeadlineFlatItem
 import org.stepic.droid.model.Course
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.notifications.model.NotificationType
@@ -482,6 +483,39 @@ class StepikNotificationManagerImpl
             analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, stepikNotification.id?.toString() ?: "", stepikNotification.type.name)
             notificationManager.notify(courseId.toInt(), notification.build())
         }
+    }
+
+    override fun showPersonalDeadlineNotification(deadline: DeadlineFlatItem) {
+        val course = getCourse(deadline.courseId)
+        val largeIcon = getPictureByCourse(course)
+        val colorArgb = ColorUtil.getColorArgb(R.color.stepic_brand_primary)
+
+        val intent = Intent(context, SectionActivity::class.java)
+        intent.putExtra(AppConstants.KEY_COURSE_LONG_ID, deadline.courseId)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+
+        val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
+        taskBuilder.addParentStack(SectionActivity::class.java)
+        taskBuilder.addNextIntent(intent)
+
+        val title = context.getString(R.string.app_name)
+        val message = "Deadline for section ${deadline.sectionId} comes at ${deadline.deadline}"
+
+        val pendingIntent = taskBuilder.getPendingIntent(deadline.sectionId.toInt(), PendingIntent.FLAG_ONE_SHOT)
+        val notification = NotificationCompat.Builder(context, StepikNotificationChannel.user.channelId)
+                .setLargeIcon(largeIcon)
+                .setSmallIcon(R.drawable.ic_notification_icon_1)
+                .setContentTitle(title)
+                .setContentText(message)
+                .setColor(colorArgb)
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntent)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setDeleteIntent(getDeleteIntent(deadline.sectionId))
+                .setStyle(NotificationCompat.BigTextStyle().bigText(message))
+                .setNumber(1)
+
+        notificationManager.notify(deadline.sectionId.toInt(), notification.build())
     }
 
     private fun prepareNotificationIntent(intent: Intent, notificationId: Long) =
