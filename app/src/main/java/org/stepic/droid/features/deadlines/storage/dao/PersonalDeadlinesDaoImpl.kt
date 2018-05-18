@@ -15,10 +15,10 @@ class PersonalDeadlinesDaoImpl
 constructor(databaseOperations: DatabaseOperations): DaoBase<DeadlineFlatItem>(databaseOperations), PersonalDeadlinesDao {
     override fun getDbName() = DbStructureDeadlines.DEADLINES
 
-    override fun getDefaultPrimaryColumn(): String = DbStructureDeadlines.Columns.RECORD_ID
+    override fun getDefaultPrimaryColumn(): String = DbStructureDeadlines.Columns.SECTION_ID
 
     override fun getDefaultPrimaryValue(persistentObject: DeadlineFlatItem): String =
-            persistentObject.recordId.toString()
+            persistentObject.sectionId.toString()
 
     override fun getContentValues(persistentObject: DeadlineFlatItem) = ContentValues().apply {
         put(DbStructureDeadlines.Columns.RECORD_ID, persistentObject.recordId)
