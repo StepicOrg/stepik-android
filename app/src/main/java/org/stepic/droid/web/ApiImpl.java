@@ -29,6 +29,7 @@ import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.StepikLogoutManager;
 import org.stepic.droid.di.AppSingleton;
 import org.stepic.droid.di.network.StethoInterceptor;
+import org.stepic.droid.features.deadlines.storage.operations.DeadlinesRecordOperations;
 import org.stepic.droid.jsonHelpers.adapters.CodeOptionsAdapterFactory;
 import org.stepic.droid.jsonHelpers.deserializers.DatasetDeserializer;
 import org.stepic.droid.jsonHelpers.deserializers.ReplyDeserializer;
@@ -123,16 +124,20 @@ public class ApiImpl implements Api {
     private RemoteStorageService remoteStorageService;
     private RatingService ratingService;
 
-    private DeadlinesRepository deadlinesRepository;
+    private final DeadlinesRepository deadlinesRepository;
 
     @Inject
-    public ApiImpl(Context context, SharedPreferenceHelper sharedPreference,
-                   Config config, UserPreferences userPreferences,
-                   Analytic analytic, StepikLogoutManager stepikLogoutManager,
-                   ScreenManager screenManager,
-                   UserAgentProvider userAgentProvider,
-                   FirebaseRemoteConfig firebaseRemoteConfig,
-                   @StethoInterceptor Interceptor stethoInterceptor) {
+    public ApiImpl(
+            Context context, SharedPreferenceHelper sharedPreference,
+            Config config, UserPreferences userPreferences,
+            Analytic analytic, StepikLogoutManager stepikLogoutManager,
+            ScreenManager screenManager,
+            UserAgentProvider userAgentProvider,
+            FirebaseRemoteConfig firebaseRemoteConfig,
+            @StethoInterceptor Interceptor stethoInterceptor,
+
+            DeadlinesRecordOperations deadlinesRecordOperations
+    ) {
         this.context = context;
         this.sharedPreference = sharedPreference;
         this.config = config;
@@ -146,7 +151,8 @@ public class ApiImpl implements Api {
 
         makeOauthServiceWithNewAuthHeader(this.sharedPreference.isLastTokenSocial() ? TokenType.social : TokenType.loginPassword);
         makeLoggedServices();
-        makeRepositories();
+
+        deadlinesRepository = new DeadlinesRepositoryImpl(loggedService, remoteStorageService, sharedPreference, deadlinesRecordOperations);
 
         OkHttpClient.Builder okHttpClient = new OkHttpClient.Builder();
         setTimeout(okHttpClient, TIMEOUT_IN_SECONDS);
@@ -164,10 +170,6 @@ public class ApiImpl implements Api {
         } catch (Exception ex) {
             this.analytic.reportError(Analytic.Error.COOKIE_MANAGER_ERROR, ex);
         }
-    }
-
-    private void makeRepositories() {
-        deadlinesRepository = new DeadlinesRepositoryImpl(loggedService, remoteStorageService, sharedPreference);
     }
 
     private void makeLoggedServices() {
