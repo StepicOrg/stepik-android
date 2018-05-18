@@ -59,8 +59,8 @@ constructor(
         emitter.onSuccess(record)
     }
 
-    override fun removeDeadlineRecord(record: StorageRecord<DeadlinesWrapper>): Completable = Completable.fromCallable {
-        personalDeadlinesDao.remove(DbStructureDeadlines.Columns.RECORD_ID, record.id.toString())
+    override fun removeDeadlineRecord(recordId: Long): Completable = Completable.fromCallable {
+        personalDeadlinesDao.remove(DbStructureDeadlines.Columns.RECORD_ID, recordId.toString())
     }
 
     override fun removeAllDeadlineRecords(): Completable =

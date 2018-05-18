@@ -14,6 +14,6 @@ interface DeadlinesRecordOperations {
     fun getDeadlineRecordsForTimestamp(timestamp: Long): Single<List<DeadlineFlatItem>>
 
     fun saveDeadlineRecord(record: StorageRecord<DeadlinesWrapper>): Single<StorageRecord<DeadlinesWrapper>>
-    fun removeDeadlineRecord(record: StorageRecord<DeadlinesWrapper>): Completable
+    fun removeDeadlineRecord(recordId: Long): Completable
     fun removeAllDeadlineRecords(): Completable
 }
