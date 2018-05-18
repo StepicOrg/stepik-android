@@ -28,7 +28,6 @@ constructor(
 
     fun dropCourse(course: Course) {
         threadPoolExecutor.execute {
-            deadlinesRepository.removeDeadlinesForCourse(course.courseId).blockingAwait()
             val dropCall = api.dropCourse(course.courseId)
             if (dropCall == null) {
                 mainHandler.post {
@@ -37,6 +36,7 @@ constructor(
             } else {
                 try {
                     makeDropCall(dropCall, course)
+                    deadlinesRepository.removeDeadlinesForCourse(course.courseId).blockingAwait()
                 } catch (exception: Exception) {
                     mainHandler.post {
                         droppingPoster.failDropCourse(course)
