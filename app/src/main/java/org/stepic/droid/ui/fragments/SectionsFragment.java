@@ -52,6 +52,7 @@ import org.stepic.droid.core.presenters.CourseFinderPresenter;
 import org.stepic.droid.core.presenters.CourseJoinerPresenter;
 import org.stepic.droid.core.presenters.DownloadingInteractionPresenter;
 import org.stepic.droid.core.presenters.InvitationPresenter;
+import org.stepic.droid.features.deadlines.model.DeadlinesWrapper;
 import org.stepic.droid.features.deadlines.presenters.PersonalDeadlinesPresenter;
 import org.stepic.droid.core.presenters.SectionsPresenter;
 import org.stepic.droid.core.presenters.contracts.CalendarExportableView;
@@ -86,6 +87,7 @@ import org.stepic.droid.util.SnackbarExtensionKt;
 import org.stepic.droid.util.SnackbarShower;
 import org.stepic.droid.util.StepikLogicHelper;
 import org.stepic.droid.util.StringUtil;
+import org.stepic.droid.web.storage.model.StorageRecord;
 
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
@@ -382,6 +384,15 @@ public class SectionsFragment
             case R.id.menu_item_calendar:
                 getAnalytic().reportEventWithIdName(Analytic.Calendar.USER_CLICK_ADD_MENU, course.getCourseId() + "", course.getTitle());
                 calendarPresenter.addDeadlinesToCalendar(sectionList, null);
+                return true;
+            case R.id.menu_item_deadlines_create:
+                deadlinesPresenter.createDeadlinesForCourse(course, 3);
+                return true;
+            case R.id.menu_item_deadlines_edit:
+//                deadlinesPresenter.updateDeadlines();
+                return true;
+            case R.id.menu_item_deadlines_remove:
+                deadlinesPresenter.removeDeadlines();
                 return true;
             case android.R.id.home:
                 // Respond to the action bar's Up/Home button
@@ -976,5 +987,10 @@ public class SectionsFragment
         //change state for updating in adapter
         sectionIdToLoadingStateMap.put(id, portion);
         adapter.notifyItemChanged(position);
+    }
+
+    @Override
+    public void setDeadlines(@Nullable StorageRecord<DeadlinesWrapper> record) {
+        adapter.setDeadlinesRecord(record);
     }
 }
