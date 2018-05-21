@@ -20,6 +20,7 @@ import org.stepic.droid.configuration.Config
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.features.deadlines.model.DeadlineFlatItem
 import org.stepic.droid.model.Course
+import org.stepic.droid.model.Section
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.notifications.model.NotificationType
 import org.stepic.droid.notifications.model.StepikNotificationChannel
@@ -487,8 +488,11 @@ class StepikNotificationManagerImpl
 
     override fun showPersonalDeadlineNotification(deadline: DeadlineFlatItem) {
         val course = getCourse(deadline.courseId)
+        val section = getSection(deadline.sectionId)
         val largeIcon = getPictureByCourse(course)
         val colorArgb = ColorUtil.getColorArgb(R.color.stepic_brand_primary)
+
+        val hoursDiff = DateTimeHelper.hourMinutesOfMidnightDiffWithUtc(TimeZone.getTimeZone("UTC"), deadline.deadline)
 
         val intent = Intent(context, SectionActivity::class.java)
         intent.putExtra(AppConstants.KEY_COURSE_LONG_ID, deadline.courseId)
@@ -499,7 +503,7 @@ class StepikNotificationManagerImpl
         taskBuilder.addNextIntent(intent)
 
         val title = context.getString(R.string.app_name)
-        val message = "Deadline for section ${deadline.sectionId} comes at ${deadline.deadline}"
+        val message = context.getString(R.string.deadlines_notification, section?.title, course?.title, hoursDiff)
 
         val pendingIntent = taskBuilder.getPendingIntent(deadline.sectionId.toInt(), PendingIntent.FLAG_ONE_SHOT)
         val notification = NotificationCompat.Builder(context, StepikNotificationChannel.user.channelId)
@@ -578,9 +582,17 @@ class StepikNotificationManagerImpl
         if (courseId == null) return null
         var course: Course? = databaseFacade.getCourseById(courseId, Table.enrolled)
         if (course == null) {
-            course = api.getCourse(courseId).execute()?.body()?.courses?.get(0)
+            course = api.getCourse(courseId).execute()?.body()?.courses?.firstOrNull()
         }
         return course
+    }
+
+    private fun getSection(sectionId: Long): Section? {
+        var section: Section? = databaseFacade.getSectionById(sectionId)
+        if (section == null) {
+            section = api.getSections(longArrayOf(sectionId)).execute()?.body()?.sections?.firstOrNull()
+        }
+        return section
     }
 
     private fun getPictureByCourse(course: Course?): Bitmap {

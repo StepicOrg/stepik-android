@@ -637,4 +637,5 @@
     <string name="deadlines_menu_edit">Редактировать расписание</string>
     <string name="deadlines_menu_remove">Удалить расписание</string>
     <string name="deadlines_section">Дедлайн: %s</string>
+    <string name="deadlines_notification">Дедлайн по модулю %s в курсе %s наступает через %s</string>
 </resources>

@@ -652,4 +652,5 @@
     <string name="deadlines_menu_edit">Edit schedule</string>
     <string name="deadlines_menu_remove">Remove schedule</string>
     <string name="deadlines_section">Deadline: %s</string>
+    <string name="deadlines_notification">Deadline for section %s in course %s comes in %s</string>
 </resources>
