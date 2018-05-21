@@ -32,9 +32,6 @@ public interface Api {
         social, loginPassword
     }
 
-    @NotNull
-    DeadlinesRepository provideDeadlineRepository();
-
     Call<AuthenticationStepikResponse> authWithNativeCode(String code, SocialManager.SocialType type, @Nullable String email);
 
     Call<AuthenticationStepikResponse> authWithLoginPassword(String login, String password);

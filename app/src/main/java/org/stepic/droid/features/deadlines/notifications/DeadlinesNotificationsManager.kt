@@ -4,16 +4,13 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.support.v4.app.NotificationCompat
 import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
-import org.stepic.droid.features.deadlines.model.DeadlineFlatItem
 import org.stepic.droid.features.deadlines.storage.operations.DeadlinesRecordOperations
 import org.stepic.droid.notifications.StepikNotificationManager
-import org.stepic.droid.notifications.model.StepikNotificationChannel
 import org.stepic.droid.services.NewUserAlarmService
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.scheduleCompat

@@ -6,6 +6,7 @@ import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.toObservable
+import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.jsonHelpers.adapters.UTCDateAdapter
 import org.stepic.droid.model.Course
 import org.stepic.droid.web.storage.model.StorageRecord
@@ -22,11 +23,15 @@ import org.stepic.droid.web.storage.model.StorageRecordWrapped
 import org.stepic.droid.web.storage.model.StorageRequest
 import org.stepic.droid.web.storage.model.StorageResponse
 import java.util.*
+import javax.inject.Inject
 
-// todo 14.05.2018: inject this class after api refactor
-class DeadlinesRepositoryImpl(
+@AppSingleton
+class DeadlinesRepositoryImpl
+@Inject
+constructor(
         private val loggedService: StepicRestLoggedService,
         private val remoteStorageService: RemoteStorageService,
+
         private val sharedPreferenceHelper: SharedPreferenceHelper,
         private val deadlinesRecordOperations: DeadlinesRecordOperations,
         private val deadlinesNotificationsManager: DeadlinesNotificationsManager

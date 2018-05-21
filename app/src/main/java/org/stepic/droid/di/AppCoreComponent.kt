@@ -41,7 +41,7 @@ import org.stepic.droid.ui.custom_exo.PlaybackControlView
 import org.stepic.droid.ui.dialogs.*
 
 @AppSingleton
-@Component(dependencies = arrayOf(StorageComponent::class),
+@Component(dependencies = [StorageComponent::class],
         modules = [
                 AppCoreModule::class,
                 RepositoryModule::class,

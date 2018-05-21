@@ -29,7 +29,6 @@ import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.StepikLogoutManager;
 import org.stepic.droid.di.AppSingleton;
 import org.stepic.droid.di.network.StethoInterceptor;
-import org.stepic.droid.features.deadlines.storage.operations.DeadlinesRecordOperations;
 import org.stepic.droid.jsonHelpers.adapters.CodeOptionsAdapterFactory;
 import org.stepic.droid.jsonHelpers.deserializers.DatasetDeserializer;
 import org.stepic.droid.jsonHelpers.deserializers.ReplyDeserializer;
@@ -66,8 +65,6 @@ import org.stepic.droid.web.model.adaptive.RecommendationReactionsRequest;
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
 import org.stepic.droid.web.model.desk.DeskRequestWrapper;
 import org.stepic.droid.web.storage.RemoteStorageService;
-import org.stepic.droid.features.deadlines.repository.DeadlinesRepository;
-import org.stepic.droid.features.deadlines.repository.DeadlinesRepositoryImpl;
 
 import java.io.IOException;
 import java.net.HttpCookie;
@@ -124,8 +121,6 @@ public class ApiImpl implements Api {
     private RemoteStorageService remoteStorageService;
     private RatingService ratingService;
 
-    private final DeadlinesRepository deadlinesRepository;
-
     @Inject
     public ApiImpl(
             Context context, SharedPreferenceHelper sharedPreference,
@@ -134,9 +129,7 @@ public class ApiImpl implements Api {
             ScreenManager screenManager,
             UserAgentProvider userAgentProvider,
             FirebaseRemoteConfig firebaseRemoteConfig,
-            @StethoInterceptor Interceptor stethoInterceptor,
-
-            DeadlinesRecordOperations deadlinesRecordOperations
+            @StethoInterceptor Interceptor stethoInterceptor
     ) {
         this.context = context;
         this.sharedPreference = sharedPreference;
@@ -151,8 +144,6 @@ public class ApiImpl implements Api {
 
         makeOauthServiceWithNewAuthHeader(this.sharedPreference.isLastTokenSocial() ? TokenType.social : TokenType.loginPassword);
         makeLoggedServices();
-
-        deadlinesRepository = new DeadlinesRepositoryImpl(loggedService, remoteStorageService, sharedPreference, deadlinesRecordOperations);
 
         OkHttpClient.Builder okHttpClient = new OkHttpClient.Builder();
         setTimeout(okHttpClient, TIMEOUT_IN_SECONDS);
@@ -176,6 +167,14 @@ public class ApiImpl implements Api {
         loggedService = createLoggedService(StepicRestLoggedService.class, config.getBaseUrl());
         remoteStorageService = createLoggedService(RemoteStorageService.class, config.getBaseUrl());
         ratingService = createLoggedService(RatingService.class, firebaseRemoteConfig.getString(RemoteConfig.ADAPTIVE_BACKEND_URL));
+    }
+
+    public StepicRestLoggedService getLoggedService() {
+        return loggedService;
+    }
+
+    public RemoteStorageService getRemoteStorageService() {
+        return remoteStorageService;
     }
 
     private <T> T createLoggedService(final Class<T> service, final String host) {
@@ -358,12 +357,6 @@ public class ApiImpl implements Api {
     private void setTimeout(OkHttpClient.Builder builder, int seconds) {
         builder.connectTimeout(seconds, TimeUnit.SECONDS);
         builder.readTimeout(seconds, TimeUnit.SECONDS);
-    }
-
-    @NotNull
-    @Override
-    public DeadlinesRepository provideDeadlineRepository() {
-        return deadlinesRepository;
     }
 
     @Override

@@ -11,25 +11,22 @@ import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.model.Course
 import org.stepic.droid.features.deadlines.model.DeadlinesWrapper
 import org.stepic.droid.features.deadlines.presenters.contracts.PersonalDeadlinesView
+import org.stepic.droid.features.deadlines.repository.DeadlinesRepository
 import org.stepic.droid.util.addDisposable
-import org.stepic.droid.web.Api
 import org.stepic.droid.web.storage.model.StorageRecord
 import javax.inject.Inject
 
 class PersonalDeadlinesPresenter
 @Inject
 constructor(
-        api: Api,
-
         private val deadlinesResolver: DeadlinesResolver,
+        private val deadlinesRepository: DeadlinesRepository,
 
         @BackgroundScheduler
         private val backgroundScheduler: Scheduler,
         @MainScheduler
         private val mainScheduler: Scheduler
 ): PresenterBase<PersonalDeadlinesView>() {
-    private val deadlinesRepository = api.provideDeadlineRepository()
-
     private val compositeDisposable = CompositeDisposable()
 
     private var state: PersonalDeadlinesView.State = PersonalDeadlinesView.State.Idle
