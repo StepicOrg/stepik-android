@@ -489,10 +489,13 @@ class StepikNotificationManagerImpl
     override fun showPersonalDeadlineNotification(deadline: DeadlineFlatItem) {
         val course = getCourse(deadline.courseId)
         val section = getSection(deadline.sectionId)
+
+        if (course == null || section == null) return
+
         val largeIcon = getPictureByCourse(course)
         val colorArgb = ColorUtil.getColorArgb(R.color.stepic_brand_primary)
 
-        val hoursDiff = DateTimeHelper.hourMinutesOfMidnightDiffWithUtc(TimeZone.getTimeZone("UTC"), deadline.deadline)
+        val hoursDiff = (deadline.deadline.time - DateTimeHelper.nowUtc()) / AppConstants.MILLIS_IN_1HOUR
 
         val intent = Intent(context, SectionActivity::class.java)
         intent.putExtra(AppConstants.KEY_COURSE_LONG_ID, deadline.courseId)
@@ -503,7 +506,8 @@ class StepikNotificationManagerImpl
         taskBuilder.addNextIntent(intent)
 
         val title = context.getString(R.string.app_name)
-        val message = context.getString(R.string.deadlines_notification, section?.title, course?.title, hoursDiff)
+        val message = context.getString(R.string.deadlines_notification, section.title, course.title,
+                context.resources.getQuantityString(R.plurals.hours, hoursDiff.toInt(), hoursDiff))
 
         val pendingIntent = taskBuilder.getPendingIntent(deadline.sectionId.toInt(), PendingIntent.FLAG_ONE_SHOT)
         val notification = NotificationCompat.Builder(context, StepikNotificationChannel.user.channelId)
