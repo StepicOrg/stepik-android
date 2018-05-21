@@ -10,6 +10,7 @@ import org.stepic.droid.features.deadlines.model.DeadlinesWrapper
 import org.stepic.droid.features.deadlines.storage.DbStructureDeadlines
 import org.stepic.droid.features.deadlines.storage.dao.PersonalDeadlinesDao
 import org.stepic.droid.features.deadlines.util.getKindOfRecord
+import org.stepic.droid.util.AppConstants
 import org.stepic.droid.web.storage.model.StorageRecord
 import java.util.*
 import javax.inject.Inject
@@ -27,7 +28,7 @@ constructor(
                             ?: -1, this.data.course, it.section, it.deadline)
                 }
 
-        private const val DEFAULT_GAP = 60 * 60 * 1000L
+        private const val DEFAULT_GAP = AppConstants.MILLIS_IN_1HOUR
     }
 
     override fun getClosestDeadlineTimestamp(): Single<Long> = Single.create { emitter ->
@@ -51,8 +52,10 @@ constructor(
         }
     }
 
-    override fun getDeadlineRecordsForTimestamp(timestamp: Long): Single<List<DeadlineFlatItem>> = Single.fromCallable {
-        personalDeadlinesDao.getDeadlinesForDate(Date(timestamp), DEFAULT_GAP)
+    override fun getDeadlineRecordsForTimestamp(timestamps: LongArray): Single<List<DeadlineFlatItem>> = Single.fromCallable {
+        timestamps.map { timestamp ->
+            personalDeadlinesDao.getDeadlinesBetween(Date(timestamp - DEFAULT_GAP), Date(timestamp + DEFAULT_GAP))
+        }.flatten()
     }
 
     override fun saveDeadlineRecord(record: StorageRecord<DeadlinesWrapper>): Single<StorageRecord<DeadlinesWrapper>> = Single.create { emitter ->

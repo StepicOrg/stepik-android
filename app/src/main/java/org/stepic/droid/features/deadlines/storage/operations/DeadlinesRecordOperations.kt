@@ -11,7 +11,7 @@ interface DeadlinesRecordOperations {
     fun getClosestDeadlineTimestamp(): Single<Long>
 
     fun getDeadlineRecordForCourse(courseId: Long): Maybe<StorageRecord<DeadlinesWrapper>>
-    fun getDeadlineRecordsForTimestamp(timestamp: Long): Single<List<DeadlineFlatItem>>
+    fun getDeadlineRecordsForTimestamp(timestamps: LongArray): Single<List<DeadlineFlatItem>>
 
     fun saveDeadlineRecord(record: StorageRecord<DeadlinesWrapper>): Single<StorageRecord<DeadlinesWrapper>>
     fun removeDeadlineRecord(recordId: Long): Completable

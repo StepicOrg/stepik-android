@@ -6,5 +6,5 @@ import java.util.*
 
 interface PersonalDeadlinesDao: IDao<DeadlineFlatItem> {
     fun getClosestDeadlineDate(): Date?
-    fun getDeadlinesForDate(date: Date, gap: Long): List<DeadlineFlatItem>
+    fun getDeadlinesBetween(from: Date, to: Date): List<DeadlineFlatItem>
 }

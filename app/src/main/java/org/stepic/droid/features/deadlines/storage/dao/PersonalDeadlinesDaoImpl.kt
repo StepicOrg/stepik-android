@@ -6,6 +6,8 @@ import org.stepic.droid.features.deadlines.model.DeadlineFlatItem
 import org.stepic.droid.features.deadlines.storage.DbStructureDeadlines
 import org.stepic.droid.storage.dao.DaoBase
 import org.stepic.droid.storage.operations.DatabaseOperations
+import org.stepic.droid.util.dateFromSQLDatetime
+import org.stepic.droid.util.toSQLDatetime
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
@@ -24,27 +26,28 @@ constructor(databaseOperations: DatabaseOperations): DaoBase<DeadlineFlatItem>(d
         put(DbStructureDeadlines.Columns.RECORD_ID, persistentObject.recordId)
         put(DbStructureDeadlines.Columns.COURSE_ID, persistentObject.courseId)
         put(DbStructureDeadlines.Columns.SECTION_ID, persistentObject.sectionId)
-        put(DbStructureDeadlines.Columns.DEADLINE, persistentObject.deadline.time)
+        put(DbStructureDeadlines.Columns.DEADLINE, persistentObject.deadline.toSQLDatetime())
     }
 
     override fun parsePersistentObject(cursor: Cursor) = DeadlineFlatItem(
             cursor.getLong(cursor.getColumnIndex(DbStructureDeadlines.Columns.RECORD_ID)),
             cursor.getLong(cursor.getColumnIndex(DbStructureDeadlines.Columns.COURSE_ID)),
             cursor.getLong(cursor.getColumnIndex(DbStructureDeadlines.Columns.SECTION_ID)),
-            Date(cursor.getLong(cursor.getColumnIndex(DbStructureDeadlines.Columns.DEADLINE)))
+            dateFromSQLDatetime(cursor.getString(cursor.getColumnIndex(DbStructureDeadlines.Columns.DEADLINE)))
     )
 
     override fun getClosestDeadlineDate(): Date? =
-            rawQuery("SELECT ${DbStructureDeadlines.Columns.DEADLINE} FROM $dbName ORDER BY ${DbStructureDeadlines.Columns.DEADLINE} DECS LIMIT 1", null) {
+            rawQuery("SELECT * FROM $dbName WHERE ${DbStructureDeadlines.Columns.DEADLINE} > datetime('now') " +
+                    "ORDER BY ${DbStructureDeadlines.Columns.DEADLINE} LIMIT 1", null) {
                 return@rawQuery if (it.moveToFirst()) {
-                    Date(it.getLong(it.getColumnIndex(DbStructureDeadlines.Columns.DEADLINE)))
+                    parsePersistentObject(it).deadline
                 } else {
                     null
                 }
             }
 
-    override fun getDeadlinesForDate(date: Date, gap: Long): List<DeadlineFlatItem> =
-            rawQuery("SELECT * FROM $dbName WHERE ${DbStructureDeadlines.Columns.DEADLINE} BETWEEN ? AND ?", arrayOf("${date.time - gap}", "${date.time + gap}")) {
+    override fun getDeadlinesBetween(from: Date, to: Date): List<DeadlineFlatItem> =
+            rawQuery("SELECT * FROM $dbName WHERE ${DbStructureDeadlines.Columns.DEADLINE} BETWEEN ? AND ?", arrayOf(from.toSQLDatetime(), to.toSQLDatetime())) {
                 val res = ArrayList<DeadlineFlatItem>()
 
                 if (it.moveToFirst()) {
