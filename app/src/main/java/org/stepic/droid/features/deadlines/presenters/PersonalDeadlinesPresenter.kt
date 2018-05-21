@@ -1,6 +1,5 @@
 package org.stepic.droid.features.deadlines.presenters
 
-import android.util.Log
 import io.reactivex.Scheduler
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
@@ -80,9 +79,10 @@ constructor(
                 )
     }
 
-    fun removeDeadlines(record: StorageRecord<DeadlinesWrapper>) {
+    fun removeDeadlines() {
+        val recordId = (state as? PersonalDeadlinesView.State.Deadlines)?.record?.id ?: return
         state = PersonalDeadlinesView.State.Loading
-        compositeDisposable addDisposable deadlinesRepository.removeDeadlinesForCourseByRecordId(record.id ?: 0)
+        compositeDisposable addDisposable deadlinesRepository.removeDeadlinesForCourseByRecordId(recordId)
                 .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)
                 .subscribeBy(
@@ -92,7 +92,13 @@ constructor(
     }
 
     private fun setStateToView(state: PersonalDeadlinesView.State) {
-        Log.d(javaClass.canonicalName, state.toString())
+        when (state) {
+            is PersonalDeadlinesView.State.Deadlines ->
+                view?.setDeadlines(state.record)
+
+            is PersonalDeadlinesView.State.EmptyDeadlines ->
+                view?.setDeadlines(null)
+        }
     }
 
 }

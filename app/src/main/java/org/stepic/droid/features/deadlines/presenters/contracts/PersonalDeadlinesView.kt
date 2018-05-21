@@ -12,4 +12,5 @@ interface PersonalDeadlinesView {
         class Deadlines(val record: StorageRecord<DeadlinesWrapper>): State()
     }
 
+    fun setDeadlines(record: StorageRecord<DeadlinesWrapper>?)
 }

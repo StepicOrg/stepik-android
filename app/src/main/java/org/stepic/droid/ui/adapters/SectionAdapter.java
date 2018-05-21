@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
@@ -26,6 +27,8 @@ import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.downloadingstate.DownloadingPresenter;
 import org.stepic.droid.core.presenters.CalendarPresenter;
 import org.stepic.droid.core.presenters.DownloadingInteractionPresenter;
+import org.stepic.droid.features.deadlines.model.Deadline;
+import org.stepic.droid.features.deadlines.model.DeadlinesWrapper;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
@@ -41,11 +44,14 @@ import org.stepic.droid.ui.listeners.OnClickLoadListener;
 import org.stepic.droid.ui.listeners.OnItemClickListener;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ColorUtil;
+import org.stepic.droid.util.DateTimeHelper;
 import org.stepic.droid.util.SectionExtensionsKt;
 import org.stepic.droid.viewmodel.ProgressViewModel;
+import org.stepic.droid.web.storage.model.StorageRecord;
 
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.concurrent.ThreadPoolExecutor;
 
 import javax.inject.Inject;
@@ -53,6 +59,8 @@ import javax.inject.Inject;
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static org.stepic.droid.ui.util.ViewExtensionsKt.changeVisibility;
 
 public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericViewHolder> implements OnClickLoadListener, OnLoadPositionListener {
     private final static String SECTION_TITLE_DELIMETER = ". ";
@@ -98,6 +106,9 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     private Fragment fragment;
     private final DownloadingInteractionPresenter downloadingInteractionPresenter;
     private final int durationMillis = 3000;
+
+    @Nullable
+    private StorageRecord<DeadlinesWrapper> deadlinesRecord;
 
     public void setDefaultHighlightPosition(int defaultHighlightPosition) {
         this.defaultHighlightPosition = defaultHighlightPosition;
@@ -278,6 +289,19 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         this.needShowCalendarWidget = needShowCalendarWidget;
     }
 
+    public void setDeadlinesRecord(@Nullable StorageRecord<DeadlinesWrapper> deadlinesRecord) {
+        boolean needUpdate = this.deadlinesRecord != deadlinesRecord;
+        this.deadlinesRecord = deadlinesRecord;
+        if (needUpdate) {
+            notifyDataSetChanged();
+        }
+    }
+
+    @Nullable
+    public StorageRecord<DeadlinesWrapper> getDeadlinesRecord() {
+        return deadlinesRecord;
+    }
+
     @Override
     public void onNeedLoadPosition(int adapterPosition) {
         loadSection(adapterPosition);
@@ -415,6 +439,30 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
             int positionOfSection = section.getPosition();
             title = positionOfSection + SECTION_TITLE_DELIMETER + title;
             sectionTitle.setText(title);
+
+            // personal deadlines
+            boolean wasDeadlineSet = false;
+            if (deadlinesRecord != null) {
+                List<Deadline> deadlines = deadlinesRecord.getData().getDeadlines();
+                Deadline deadline = null;
+                if (deadlines.get(position).getSection() == sectionId) {
+                    deadline = deadlines.get(position);
+                } else {
+                    for (Deadline d : deadlines) {
+                        if (d.getSection() == sectionId) {
+                            deadline = d;
+                            break;
+                        }
+                    }
+                }
+
+                if (deadline != null) {
+                    hardDeadline.setText(itemView.getContext().getString(R.string.deadlines_section,
+                            DateTimeHelper.INSTANCE.getPrintableDate(deadline.getDeadline(), Section.Companion.getDatePattern(), TimeZone.getDefault())));
+                    wasDeadlineSet = true;
+                }
+            }
+            changeVisibility(hardDeadline, wasDeadlineSet);
 
 
             String formattedBeginDate = section.getFormattedBeginDate();

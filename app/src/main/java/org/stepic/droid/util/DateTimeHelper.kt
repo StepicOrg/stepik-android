@@ -46,6 +46,12 @@ object DateTimeHelper {
         return finalDateFormat.format(date)
     }
 
+    fun getPrintableDate(date: Date, pattern: String, timeZone: TimeZone): String {
+        val dateFormat = SimpleDateFormat(pattern, Locale.getDefault())
+        dateFormat.timeZone = timeZone
+        return dateFormat.format(date)
+    }
+
 
     fun isNeededUpdate(timestampStored: Long, deltaInMillis: Long = AppConstants.MILLIS_IN_24HOURS): Boolean {
         //delta is 24 hours by default

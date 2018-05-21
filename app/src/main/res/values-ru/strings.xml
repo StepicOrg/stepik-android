@@ -632,4 +632,9 @@
     <string name="request_error">Что-то пошло не так</string>
 
     <string name="placeholder_go_to_catalog">Перейти в Каталог</string>
+
+    <string name="deadlines_menu_create">Создать расписание</string>
+    <string name="deadlines_menu_edit">Редактировать расписание</string>
+    <string name="deadlines_menu_remove">Удалить расписание</string>
+    <string name="deadlines_section">Дедлайн: %s</string>
 </resources>
