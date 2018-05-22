@@ -350,6 +350,9 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         @BindView(R.id.hard_deadline)
         TextView hardDeadline;
 
+        @BindView(R.id.personal_deadline)
+        TextView personalDeadline;
+
         @BindString(R.string.hard_deadline_section)
         String hardDeadlineString;
         @BindString(R.string.soft_deadline_section)
@@ -440,31 +443,6 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
             title = positionOfSection + SECTION_TITLE_DELIMETER + title;
             sectionTitle.setText(title);
 
-            // personal deadlines
-            boolean wasDeadlineSet = false;
-            if (deadlinesRecord != null) {
-                List<Deadline> deadlines = deadlinesRecord.getData().getDeadlines();
-                Deadline deadline = null;
-                if (deadlines.get(position).getSection() == sectionId) {
-                    deadline = deadlines.get(position);
-                } else {
-                    for (Deadline d : deadlines) {
-                        if (d.getSection() == sectionId) {
-                            deadline = d;
-                            break;
-                        }
-                    }
-                }
-
-                if (deadline != null) {
-                    hardDeadline.setText(itemView.getContext().getString(R.string.deadlines_section,
-                            DateTimeHelper.INSTANCE.getPrintableDate(deadline.getDeadline(), Section.Companion.getDatePattern(), TimeZone.getDefault())));
-                    wasDeadlineSet = true;
-                }
-            }
-            changeVisibility(hardDeadline, wasDeadlineSet);
-
-
             String formattedBeginDate = section.getFormattedBeginDate();
             if (formattedBeginDate.equals("")) {
                 startDate.setText("");
@@ -491,6 +469,31 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                 hardDeadline.setText(hardDeadlineString + ": " + formattedHardDeadline);
                 hardDeadline.setVisibility(View.VISIBLE);
             }
+
+            // personal deadlines
+            boolean wasDeadlineSet = false;
+            if (deadlinesRecord != null) {
+                List<Deadline> deadlines = deadlinesRecord.getData().getDeadlines();
+                Deadline deadline = null;
+                if (deadlines.get(position).getSection() == sectionId) {
+                    deadline = deadlines.get(position);
+                } else {
+                    for (Deadline d : deadlines) {
+                        if (d.getSection() == sectionId) {
+                            deadline = d;
+                            break;
+                        }
+                    }
+                }
+
+                if (deadline != null) {
+                    personalDeadline.setText(itemView.getContext().getString(R.string.deadlines_section,
+                            DateTimeHelper.INSTANCE.getPrintableDate(deadline.getDeadline(), Section.Companion.getDatePattern(), TimeZone.getDefault())));
+                    wasDeadlineSet = true;
+                }
+            }
+            changeVisibility(personalDeadline, wasDeadlineSet);
+
 
             if (SectionExtensionsKt.hasUserAccess(section, course)) {
 

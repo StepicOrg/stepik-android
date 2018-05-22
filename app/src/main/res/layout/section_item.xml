@@ -79,6 +79,19 @@
                 android:textSize="@dimen/text_height"
                 tools:text="hard deadline date"/>
 
+            <TextView
+                android:id="@+id/personal_deadline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@id/section_title"
+                android:layout_alignLeft="@id/section_title"
+                android:layout_alignRight="@id/section_title"
+                android:layout_alignStart="@+id/section_title"
+                android:layout_below="@id/hard_deadline"
+                android:textColor="@color/stepic_weak_text"
+                android:textSize="@dimen/text_height"
+                tools:text="personal deadline date"/>
+
             <me.zhanghai.android.materialprogressbar.MaterialProgressBar
                 android:id="@+id/section_student_progress_score_bar"
                 style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal"
@@ -86,7 +99,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignLeft="@id/section_title"
                 android:layout_alignStart="@+id/section_title"
-                android:layout_below="@+id/hard_deadline"
+                android:layout_below="@+id/personal_deadline"
                 android:layout_marginTop="@dimen/guideline_left_right_padding_list_item"
                 android:layout_toLeftOf="@+id/section_text_score"
                 android:tint="@color/stepic_brand_primary"
