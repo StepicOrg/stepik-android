@@ -131,8 +131,8 @@ dependencies {
     implementation libraries.retrofitGsonConverter
     implementation libraries.retrofitRxJavaAdapter
     implementation libraries.jsoup
-    implementation libraries.stetho
-    implementation libraries.stethoOkHttp
+    debugImplementation libraries.stetho
+    debugImplementation libraries.stethoOkHttp
 
     implementation libraries.glide
 
