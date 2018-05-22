@@ -59,9 +59,10 @@ constructor(
 
         val time = timeToComplete * 1000 * TIME_MULTIPLIER / timePerWeek * MILLISECONDS_IN_WEEK
         calendar.timeInMillis += time.toLong()
-        calendar.add(Calendar.DATE, 1) // set time at 00:00 of the next day
-        calendar.set(Calendar.HOUR_OF_DAY, 0)
-        calendar.set(Calendar.MINUTE, 0)
-        return calendar.time
+        calendar.set(Calendar.HOUR_OF_DAY, 23)
+        calendar.set(Calendar.MINUTE, 59)
+        val date =  calendar.time
+        calendar.add(Calendar.MINUTE, 1) // set time at 00:00 of the next day
+        return date
     }
 }
