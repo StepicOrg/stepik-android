@@ -72,6 +72,7 @@ constructor(
     fun showDeadlinesNotifications() {
         val now = DateTimeHelper.nowUtc()
         deadlinesRecordOperations.getDeadlineRecordsForTimestamp(longArrayOf(now + OFFSET_12HOURS, now + OFFSET_36HOURS))
+                .map { it.sortedBy { it.deadline }.distinctBy { it.courseId } }
                 .observeOn(mainScheduler)
                 .subscribeOn(backgroundScheduler)
                 .subscribeBy(
