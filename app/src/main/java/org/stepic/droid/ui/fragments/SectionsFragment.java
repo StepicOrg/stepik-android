@@ -62,6 +62,7 @@ import org.stepic.droid.core.presenters.contracts.InvitationView;
 import org.stepic.droid.core.presenters.contracts.LoadCourseView;
 import org.stepic.droid.features.deadlines.presenters.contracts.PersonalDeadlinesView;
 import org.stepic.droid.core.presenters.contracts.SectionsView;
+import org.stepic.droid.features.deadlines.ui.dialogs.EditDeadlinesDialog;
 import org.stepic.droid.model.CalendarItem;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Progress;
@@ -389,7 +390,12 @@ public class SectionsFragment
                 deadlinesPresenter.createDeadlinesForCourse(course, 3);
                 return true;
             case R.id.menu_item_deadlines_edit:
-//                deadlinesPresenter.updateDeadlines();
+                final StorageRecord<DeadlinesWrapper> record = adapter.getDeadlinesRecord();
+                if (record != null) {
+                    EditDeadlinesDialog.Companion
+                            .newInstance(adapter.getSections(), record)
+                            .show(getChildFragmentManager(), EditDeadlinesDialog.TAG);
+                }
                 return true;
             case R.id.menu_item_deadlines_remove:
                 deadlinesPresenter.removeDeadlines();

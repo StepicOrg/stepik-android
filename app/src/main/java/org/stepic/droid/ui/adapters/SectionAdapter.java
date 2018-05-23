@@ -302,6 +302,10 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         return deadlinesRecord;
     }
 
+    public List<Section> getSections() {
+        return sections;
+    }
+
     @Override
     public void onNeedLoadPosition(int adapterPosition) {
         loadSection(adapterPosition);

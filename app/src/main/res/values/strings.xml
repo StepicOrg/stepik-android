@@ -71,6 +71,7 @@
     <string name="try_in_web_drop">Try dropping this course in the web version</string>
     <string name="you_not_enrolled">You are not enrolled</string>
     <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
     <string name="failLogin">Login/password was incorrect</string>
     <string name="connectionProblems">Connection was lost</string>
     <string name="are_you_sure">Are you sure?</string>
@@ -653,4 +654,5 @@
     <string name="deadlines_menu_remove">Remove schedule</string>
     <string name="deadlines_section">Deadline: %s</string>
     <string name="deadlines_notification">Deadline for section %s in course %s comes in %s</string>
+    <string name="deadlines_edit_title">Edit schedule</string>
 </resources>
