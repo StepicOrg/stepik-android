@@ -154,6 +154,9 @@ dependencies {
 
     implementation libraries.materialDialog
     implementation libraries.numberPicker
+    implementation (libraries.datePicker) {
+        exclude group: 'com.android.support'
+    }
     implementation libraries.photoView
     implementation libraries.advancedRecycler
     implementation libraries.recyclerAnimators

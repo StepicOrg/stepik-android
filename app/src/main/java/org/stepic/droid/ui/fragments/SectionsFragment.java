@@ -392,9 +392,9 @@ public class SectionsFragment
             case R.id.menu_item_deadlines_edit:
                 final StorageRecord<DeadlinesWrapper> record = adapter.getDeadlinesRecord();
                 if (record != null) {
-                    EditDeadlinesDialog.Companion
-                            .newInstance(adapter.getSections(), record)
-                            .show(getChildFragmentManager(), EditDeadlinesDialog.TAG);
+                    DialogFragment dialogFragment = EditDeadlinesDialog.Companion.newInstance(adapter.getSections(), record);
+                    dialogFragment.setTargetFragment(this, EditDeadlinesDialog.EDIT_DEADLINES_REQUEST_CODE);
+                    dialogFragment.show(getActivity().getSupportFragmentManager(), EditDeadlinesDialog.TAG);
                 }
                 return true;
             case R.id.menu_item_deadlines_remove:

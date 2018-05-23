@@ -5,14 +5,22 @@ import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
+import android.support.v4.content.ContextCompat
+import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.Theme
+import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment
 import org.stepic.droid.R
+import org.stepic.droid.features.deadlines.model.Deadline
 import org.stepic.droid.features.deadlines.model.DeadlinesWrapper
+import org.stepic.droid.features.deadlines.ui.adapters.EditDeadlinesAdapter
 import org.stepic.droid.model.Section
+import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.web.storage.model.StorageRecord
+import java.util.*
+import kotlin.collections.ArrayList
 
 class EditDeadlinesDialog: DialogFragment() {
     companion object {
@@ -23,30 +31,50 @@ class EditDeadlinesDialog: DialogFragment() {
 
         const val EDIT_DEADLINES_REQUEST_CODE = 3993
 
+        private const val DATE_PICKER_TAG = "date_picker"
+        private const val KEY_EDITED_SECTION_ID = "edited_section_id"
+
         fun newInstance(sections: List<Section>, deadlinesRecord: StorageRecord<DeadlinesWrapper>): EditDeadlinesDialog {
             val fragment = EditDeadlinesDialog()
             fragment.arguments = Bundle().apply {
                 putParcelableArrayList(KEY_SECTIONS, ArrayList(sections))
-                putParcelable(KEY_DEADLINES, deadlinesRecord.data)
+                putParcelableArrayList(KEY_DEADLINES, ArrayList(deadlinesRecord.data.deadlines))
             }
             return fragment
         }
     }
 
     private lateinit var sections: ArrayList<Section>
-    private lateinit var deadlinesWrapper: DeadlinesWrapper
+    private lateinit var deadlines: ArrayList<Deadline>
+
+    private lateinit var adapter: EditDeadlinesAdapter
+
+    private var editedSectionId = -1L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         sections = savedInstanceState?.getParcelableArrayList(KEY_SECTIONS) ?: arguments.getParcelableArrayList(KEY_SECTIONS)
-        deadlinesWrapper = savedInstanceState?.getParcelable(KEY_DEADLINES) ?: arguments.getParcelable(KEY_DEADLINES)
+        deadlines = savedInstanceState?.getParcelableArrayList(KEY_DEADLINES) ?: arguments.getParcelableArrayList(KEY_DEADLINES)
+
+        editedSectionId = savedInstanceState?.getLong(KEY_EDITED_SECTION_ID, -1) ?: -1
+        if (editedSectionId != -1L) {
+            restorePickerListener()
+        }
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val recyclerView = RecyclerView(context)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        
+        adapter = EditDeadlinesAdapter(sections, deadlines) {
+            showDatePickerForDeadline(it)
+        }
+        recyclerView.adapter = adapter
+
+        val divider = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
+        divider.setDrawable(ContextCompat.getDrawable(context, R.drawable.list_divider_h))
+        recyclerView.addItemDecoration(divider)
+
         return MaterialDialog.Builder(context)
                 .theme(Theme.LIGHT)
                 .title(R.string.deadlines_edit_title)
@@ -56,14 +84,54 @@ class EditDeadlinesDialog: DialogFragment() {
                 .onPositive { _, _ ->
                     saveResults()
                 }
-                .build()
+                .build().apply {
+                    isCancelable = false
+                    setCanceledOnTouchOutside(false)
+                }
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
         outState?.apply {
             putParcelableArrayList(KEY_SECTIONS, sections)
-            putParcelable(KEY_DEADLINES, deadlinesWrapper)
+            putParcelableArrayList(KEY_DEADLINES, deadlines)
+
+            putLong(KEY_EDITED_SECTION_ID, editedSectionId)
+        }
+    }
+
+    private fun showDatePickerForDeadline(deadline: Deadline) {
+        val calendar = DateTimeHelper.calendarFromLocalMillis(deadline.deadline.time)
+
+        editedSectionId = deadline.section
+        val pickerDialogFragment = CalendarDatePickerDialogFragment()
+                .setThemeCustom(R.style.AppTheme)
+                .setPreselectedDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH))
+        setDatePickerListener(pickerDialogFragment, deadline.section)
+        pickerDialogFragment.show(childFragmentManager, DATE_PICKER_TAG)
+    }
+
+    private fun restorePickerListener() {
+        val pickerDialogFragment = childFragmentManager.findFragmentByTag(DATE_PICKER_TAG) as? CalendarDatePickerDialogFragment
+        if (pickerDialogFragment != null) {
+            setDatePickerListener(pickerDialogFragment, editedSectionId)
+        } else {
+            editedSectionId = -1
+        }
+    }
+
+    private fun setDatePickerListener(pickerDialogFragment: CalendarDatePickerDialogFragment, sectionId: Long) {
+        pickerDialogFragment.setOnDateSetListener { _, year, monthOfYear, dayOfMonth ->
+            val calendar = Calendar.getInstance()
+            calendar.set(Calendar.YEAR, year)
+            calendar.set(Calendar.MONTH, monthOfYear)
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+            calendar.set(Calendar.HOUR_OF_DAY, 23)
+            calendar.set(Calendar.MINUTE, 59)
+            adapter.updateDeadline(Deadline(sectionId, calendar.time))
+            editedSectionId = -1
+        }.setOnDismissListener {
+            editedSectionId = -1
         }
     }
 
@@ -71,7 +139,7 @@ class EditDeadlinesDialog: DialogFragment() {
         targetFragment?.onActivityResult(
                 EDIT_DEADLINES_REQUEST_CODE,
                 Activity.RESULT_OK,
-                Intent().putExtra(KEY_DEADLINES, deadlinesWrapper)
+                Intent().putParcelableArrayListExtra(KEY_DEADLINES, deadlines)
         )
     }
 }

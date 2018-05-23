@@ -44,6 +44,7 @@ ext.versions = [
 
         materialDialog       : '2.0',
         numberPicker         : '1.2.1',
+        datePicker           : '3.1.0',
         photoView            : '1.3.1',
         advancedRecycler     : '0.11.0@aar',
         recyclerAnimators    : '2.1.0',
@@ -125,6 +126,7 @@ ext.libraries = [
         // Candidates for removal
         materialDialog       : "com.github.javiersantos:MaterialStyledDialogs:$versions.materialDialog",
         numberPicker         : "biz.kasual:materialnumberpicker:$versions.numberPicker",
+        datePicker           : "com.code-troopers.betterpickers:library:$versions.datePicker",
         photoView            : "com.github.chrisbanes:PhotoView:$versions.photoView",
         advancedRecycler     : "com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:$versions.advancedRecycler",
         recyclerAnimators    : "jp.wasabeef:recyclerview-animators:$versions.recyclerAnimators",
