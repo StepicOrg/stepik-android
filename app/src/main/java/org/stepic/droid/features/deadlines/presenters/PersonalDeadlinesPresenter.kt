@@ -10,6 +10,7 @@ import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.features.deadlines.model.Deadline
 import org.stepic.droid.model.Course
 import org.stepic.droid.features.deadlines.model.DeadlinesWrapper
+import org.stepic.droid.features.deadlines.model.LearningRate
 import org.stepic.droid.features.deadlines.presenters.contracts.PersonalDeadlinesView
 import org.stepic.droid.features.deadlines.repository.DeadlinesRepository
 import org.stepic.droid.util.addDisposable
@@ -55,10 +56,10 @@ constructor(
         }
     }
 
-    fun createDeadlinesForCourse(course: Course?, hoursPerWeek: Long) {
+    fun createDeadlinesForCourse(course: Course?, learningRate: LearningRate) {
         if (course == null || state != PersonalDeadlinesView.State.EmptyDeadlines) return
         state = PersonalDeadlinesView.State.Loading
-        compositeDisposable addDisposable deadlinesResolver.calculateDeadlinesForCourse(course.courseId, hoursPerWeek)
+        compositeDisposable addDisposable deadlinesResolver.calculateDeadlinesForCourse(course.courseId, learningRate)
                 .flatMap { deadlinesRepository.createDeadlinesForCourse(it) }
                 .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)

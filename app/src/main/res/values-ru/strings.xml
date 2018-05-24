@@ -62,6 +62,7 @@
     <string name="you_not_enrolled">Вы не записаны на данный курс</string>
     <string name="cancel">Отмена</string>
     <string name="save">Сохранить</string>
+    <string name="select">Выбрать</string>
     <string name="failLogin">E-mail адрес/пароль неверны</string>
     <string name="are_you_sure">Вы уверены?</string>
     <string name="deny">Отклонить</string>
@@ -640,4 +641,9 @@
     <string name="deadlines_section">Дедлайн: %s</string>
     <string name="deadlines_notification">Дедлайн по модулю %s в курсе %s наступает через %s</string>
     <string name="deadlines_edit_title">Редактирование расписания</string>
+    <string name="deadlines_create_title">Сколько времени вы планируете проводить за изучением этого курса?</string>
+
+    <string name="deadlines_learning_rate_hobby">Хобби</string>
+    <string name="deadlines_learning_rate_standard">Стандарт</string>
+    <string name="deadlines_learning_rate_extreme">Экстрим</string>
 </resources>

@@ -7,6 +7,7 @@ import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.model.Section
 import org.stepic.droid.features.deadlines.model.Deadline
 import org.stepic.droid.features.deadlines.model.DeadlinesWrapper
+import org.stepic.droid.features.deadlines.model.LearningRate
 import org.stepic.droid.web.Api
 import java.util.*
 import javax.inject.Inject
@@ -27,7 +28,7 @@ constructor(
         private const val MILLISECONDS_IN_WEEK = 7 * 24 * MILLISECONDS_IN_HOUR
     }
 
-    fun calculateDeadlinesForCourse(courseId: Long, hoursPerWeek: Long): Single<DeadlinesWrapper> =
+    fun calculateDeadlinesForCourse(courseId: Long, learningRate: LearningRate): Single<DeadlinesWrapper> =
             api.getCoursesReactive(1, longArrayOf(courseId)).flatMap {
                 api.getSectionsRx(it.courses.first().sections)
             }.flatMapObservable {
@@ -36,7 +37,7 @@ constructor(
                 val offset = Calendar.getInstance()
 
                 val deadlines = it.map { (sectionId, timeToComplete) ->
-                    val deadlineDate = getDeadlineDate(offset, timeToComplete, hoursPerWeek)
+                    val deadlineDate = getDeadlineDate(offset, timeToComplete, learningRate)
                     Deadline(sectionId, deadlineDate)
                 }
                 DeadlinesWrapper(courseId, deadlines)
@@ -54,8 +55,8 @@ constructor(
                 acc + if (lesson.timeToComplete == 0L) lesson.steps.size * DEFAULT_STEP_LENGTH_IN_SECONDS else lesson.timeToComplete
             }.map { section.id to it }.toObservable()
 
-    private fun getDeadlineDate(calendar: Calendar, timeToComplete: Long, hoursPerWeek: Long): Date {
-        val timePerWeek = hoursPerWeek * MILLISECONDS_IN_HOUR
+    private fun getDeadlineDate(calendar: Calendar, timeToComplete: Long, learningRate: LearningRate): Date {
+        val timePerWeek = learningRate.millisPerWeek
 
         val time = timeToComplete * 1000 * TIME_MULTIPLIER / timePerWeek * MILLISECONDS_IN_WEEK
         calendar.timeInMillis += time.toLong()
