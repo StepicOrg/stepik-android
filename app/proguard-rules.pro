@@ -1,4 +1,3 @@
--dontobfuscate
 -keepnames class * { @butterknife.BindDrawable *;}
 -keep class butterknife.** { *; }
 -dontwarn butterknife.internal.**

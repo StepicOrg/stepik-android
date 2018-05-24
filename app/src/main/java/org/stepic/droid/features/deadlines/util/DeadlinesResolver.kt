@@ -8,6 +8,7 @@ import org.stepic.droid.model.Section
 import org.stepic.droid.features.deadlines.model.Deadline
 import org.stepic.droid.features.deadlines.model.DeadlinesWrapper
 import org.stepic.droid.features.deadlines.model.LearningRate
+import org.stepic.droid.util.AppConstants
 import org.stepic.droid.web.Api
 import java.util.*
 import javax.inject.Inject
@@ -23,9 +24,6 @@ constructor(
 
         private const val DEFAULT_STEP_LENGTH_IN_SECONDS = 60L
         private const val TIME_MULTIPLIER = 1.3
-
-        private const val MILLISECONDS_IN_HOUR = 60 * 60 * 1000
-        private const val MILLISECONDS_IN_WEEK = 7 * 24 * MILLISECONDS_IN_HOUR
     }
 
     fun calculateDeadlinesForCourse(courseId: Long, learningRate: LearningRate): Single<DeadlinesWrapper> =
@@ -58,7 +56,7 @@ constructor(
     private fun getDeadlineDate(calendar: Calendar, timeToComplete: Long, learningRate: LearningRate): Date {
         val timePerWeek = learningRate.millisPerWeek
 
-        val time = timeToComplete * 1000 * TIME_MULTIPLIER / timePerWeek * MILLISECONDS_IN_WEEK
+        val time = timeToComplete * 1000 * TIME_MULTIPLIER / timePerWeek * AppConstants.MILLIS_IN_SEVEN_DAYS
         calendar.timeInMillis += time.toLong()
         calendar.set(Calendar.HOUR_OF_DAY, 23)
         calendar.set(Calendar.MINUTE, 59)
