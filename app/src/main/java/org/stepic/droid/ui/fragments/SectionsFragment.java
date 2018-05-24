@@ -52,6 +52,7 @@ import org.stepic.droid.core.presenters.CourseFinderPresenter;
 import org.stepic.droid.core.presenters.CourseJoinerPresenter;
 import org.stepic.droid.core.presenters.DownloadingInteractionPresenter;
 import org.stepic.droid.core.presenters.InvitationPresenter;
+import org.stepic.droid.features.deadlines.model.Deadline;
 import org.stepic.droid.features.deadlines.model.DeadlinesWrapper;
 import org.stepic.droid.features.deadlines.presenters.PersonalDeadlinesPresenter;
 import org.stepic.droid.core.presenters.SectionsPresenter;
@@ -900,6 +901,11 @@ public class SectionsFragment
             getAnalytic().reportEvent(Analytic.Interaction.ACCEPT_DELETING_SECTION);
             int position = data.getIntExtra(DeleteItemDialogFragment.deletePositionKey, -1);
             adapter.requestClickDeleteSilence(position);
+        }
+
+        if (requestCode == EditDeadlinesDialog.EDIT_DEADLINES_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            List<Deadline> deadlines = data.getParcelableArrayListExtra(EditDeadlinesDialog.KEY_DEADLINES);
+            deadlinesPresenter.updateDeadlines(deadlines);
         }
     }
 

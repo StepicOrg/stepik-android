@@ -3,7 +3,7 @@ package org.stepic.droid.web.storage.model
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 
-class StorageRecord<T>(
+data class StorageRecord<T>(
         val id: Long? = null,
         val user: Long? = null,
         val kind: String,

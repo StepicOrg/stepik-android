@@ -7,12 +7,12 @@ import org.stepic.droid.core.presenters.PresenterBase
 import org.stepic.droid.features.deadlines.util.DeadlinesResolver
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
+import org.stepic.droid.features.deadlines.model.Deadline
 import org.stepic.droid.model.Course
 import org.stepic.droid.features.deadlines.model.DeadlinesWrapper
 import org.stepic.droid.features.deadlines.presenters.contracts.PersonalDeadlinesView
 import org.stepic.droid.features.deadlines.repository.DeadlinesRepository
 import org.stepic.droid.util.addDisposable
-import org.stepic.droid.web.storage.model.StorageRecord
 import javax.inject.Inject
 
 class PersonalDeadlinesPresenter
@@ -68,9 +68,11 @@ constructor(
                 )
     }
 
-    fun updateDeadlines(record: StorageRecord<DeadlinesWrapper>) {
+    fun updateDeadlines(deadlines: List<Deadline>) {
+        val record = (state as? PersonalDeadlinesView.State.Deadlines)?.record ?: return
+        val newRecord = record.copy(data = DeadlinesWrapper(record.data.course, deadlines))
         state = PersonalDeadlinesView.State.Loading
-        compositeDisposable addDisposable deadlinesRepository.updateDeadlinesForCourse(record)
+        compositeDisposable addDisposable deadlinesRepository.updateDeadlinesForCourse(newRecord)
                 .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)
                 .subscribeBy(
