@@ -641,11 +641,11 @@
     <string name="deadlines_section">Дедлайн: %s</string>
     <string name="deadlines_notification">Дедлайн по модулю %s в курсе %s наступает через %s</string>
     <string name="deadlines_edit_title">Редактирование расписания</string>
-    <string name="deadlines_create_title">Сколько времени вы планируете проводить за изучением этого курса?</string>
+    <string name="deadlines_create_title">Выберите режим обучения</string>
 
     <string name="deadlines_learning_rate_hobby">Хобби</string>
     <string name="deadlines_learning_rate_standard">Стандарт</string>
     <string name="deadlines_learning_rate_extreme">Экстрим</string>
 
-    <string name="deadlines_learning_rate_time_template">%s/неделя</string>
+    <string name="deadlines_learning_rate_time_template">ч/нед</string>
 </resources>

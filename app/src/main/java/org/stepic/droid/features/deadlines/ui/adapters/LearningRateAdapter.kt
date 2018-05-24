@@ -26,10 +26,8 @@ class LearningRateAdapter(
         holder.title.setText(rate.title)
         holder.icon.setImageResource(rate.icon)
 
-        val context = holder.itemView.context
         val hours = rate.millisPerWeek / AppConstants.MILLIS_IN_1HOUR
-        holder.rate.text = context.getString(R.string.deadlines_learning_rate_time_template,
-                context.resources.getQuantityString(R.plurals.hours, hours.toInt(), hours))
+        holder.rate.text = hours.toString()
     }
 
     private fun onItemClicked(position: Int) {

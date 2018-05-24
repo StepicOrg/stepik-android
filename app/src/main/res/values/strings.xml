@@ -657,11 +657,11 @@
     <string name="deadlines_section">Deadline: %s</string>
     <string name="deadlines_notification">Deadline for section %s in course %s comes in %s</string>
     <string name="deadlines_edit_title">Edit schedule</string>
-    <string name="deadlines_create_title">Choose learning rate</string>
+    <string name="deadlines_create_title">Choose learning mode</string>
     
     <string name="deadlines_learning_rate_hobby">Hobby</string>
     <string name="deadlines_learning_rate_standard">Standard</string>
     <string name="deadlines_learning_rate_extreme">Extreme</string>
 
-    <string name="deadlines_learning_rate_time_template">%s/week</string>
+    <string name="deadlines_learning_rate_time_template">hrs/week</string>
 </resources>

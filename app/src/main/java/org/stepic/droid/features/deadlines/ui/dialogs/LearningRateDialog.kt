@@ -6,8 +6,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
 import android.support.v4.app.DialogFragment
+import android.support.v4.content.ContextCompat
+import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.Theme
 import org.stepic.droid.R
@@ -25,16 +26,18 @@ class LearningRateDialog: DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val recyclerView = RecyclerView(context)
-        recyclerView.adapter = LearningRateAdapter(LearningRate.values(), this::selectLearningRate)
-        recyclerView.layoutManager = LinearLayoutManager(context).apply { orientation = LinearLayoutManager.HORIZONTAL }
+        val adapter = LearningRateAdapter(LearningRate.values(), this::selectLearningRate)
 
-        return MaterialDialog.Builder(context)
+        val dialog = MaterialDialog.Builder(context)
                 .theme(Theme.LIGHT)
                 .title(R.string.deadlines_create_title)
-                .customView(recyclerView, false)
-                .negativeText(R.string.cancel)
+                .adapter(adapter, LinearLayoutManager(context))
                 .build()
+
+        val divider = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
+        divider.setDrawable(ContextCompat.getDrawable(context, R.drawable.list_divider_h))
+        dialog.recyclerView.addItemDecoration(divider)
+        return dialog
     }
 
     private fun selectLearningRate(learningRate: LearningRate) {
@@ -43,5 +46,6 @@ class LearningRateDialog: DialogFragment() {
                 Activity.RESULT_OK,
                 Intent().putExtra(KEY_LEARNING_RATE, learningRate as Parcelable)
         )
+        dismiss()
     }
 }
