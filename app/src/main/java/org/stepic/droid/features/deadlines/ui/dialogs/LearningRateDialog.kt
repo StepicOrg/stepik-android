@@ -6,10 +6,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
 import android.support.v4.app.DialogFragment
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.Theme
 import org.stepic.droid.R
 import org.stepic.droid.features.deadlines.model.LearningRate
+import org.stepic.droid.features.deadlines.ui.adapters.LearningRateAdapter
 
 class LearningRateDialog: DialogFragment() {
     companion object {
@@ -22,10 +25,14 @@ class LearningRateDialog: DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val recyclerView = RecyclerView(context)
+        recyclerView.adapter = LearningRateAdapter(LearningRate.values(), this::selectLearningRate)
+        recyclerView.layoutManager = LinearLayoutManager(context).apply { orientation = LinearLayoutManager.HORIZONTAL }
 
         return MaterialDialog.Builder(context)
                 .theme(Theme.LIGHT)
                 .title(R.string.deadlines_create_title)
+                .customView(recyclerView, false)
                 .negativeText(R.string.cancel)
                 .build()
     }

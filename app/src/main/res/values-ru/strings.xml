@@ -646,4 +646,6 @@
     <string name="deadlines_learning_rate_hobby">Хобби</string>
     <string name="deadlines_learning_rate_standard">Стандарт</string>
     <string name="deadlines_learning_rate_extreme">Экстрим</string>
+
+    <string name="deadlines_learning_rate_time_template">%s/неделя</string>
 </resources>

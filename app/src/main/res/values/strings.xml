@@ -662,4 +662,6 @@
     <string name="deadlines_learning_rate_hobby">Hobby</string>
     <string name="deadlines_learning_rate_standard">Standard</string>
     <string name="deadlines_learning_rate_extreme">Extreme</string>
+
+    <string name="deadlines_learning_rate_time_template">%s/week</string>
 </resources>
