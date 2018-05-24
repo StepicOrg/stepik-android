@@ -54,6 +54,7 @@ import org.stepic.droid.core.presenters.DownloadingInteractionPresenter;
 import org.stepic.droid.core.presenters.InvitationPresenter;
 import org.stepic.droid.features.deadlines.model.Deadline;
 import org.stepic.droid.features.deadlines.model.DeadlinesWrapper;
+import org.stepic.droid.features.deadlines.model.LearningRate;
 import org.stepic.droid.features.deadlines.presenters.PersonalDeadlinesPresenter;
 import org.stepic.droid.core.presenters.SectionsPresenter;
 import org.stepic.droid.core.presenters.contracts.CalendarExportableView;
@@ -64,6 +65,7 @@ import org.stepic.droid.core.presenters.contracts.LoadCourseView;
 import org.stepic.droid.features.deadlines.presenters.contracts.PersonalDeadlinesView;
 import org.stepic.droid.core.presenters.contracts.SectionsView;
 import org.stepic.droid.features.deadlines.ui.dialogs.EditDeadlinesDialog;
+import org.stepic.droid.features.deadlines.ui.dialogs.LearningRateDialog;
 import org.stepic.droid.model.CalendarItem;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Progress;
@@ -387,10 +389,13 @@ public class SectionsFragment
                 getAnalytic().reportEventWithIdName(Analytic.Calendar.USER_CLICK_ADD_MENU, course.getCourseId() + "", course.getTitle());
                 calendarPresenter.addDeadlinesToCalendar(sectionList, null);
                 return true;
-            case R.id.menu_item_deadlines_create:
-                deadlinesPresenter.createDeadlinesForCourse(course, 3);
+            case R.id.menu_item_deadlines_create: {
+                DialogFragment dialogFragment = LearningRateDialog.Companion.newInstance();
+                dialogFragment.setTargetFragment(this, LearningRateDialog.LEARNING_RATE_REQUEST_CODE);
+                dialogFragment.show(getActivity().getSupportFragmentManager(), LearningRateDialog.TAG);
                 return true;
-            case R.id.menu_item_deadlines_edit:
+            }
+            case R.id.menu_item_deadlines_edit: {
                 final StorageRecord<DeadlinesWrapper> record = adapter.getDeadlinesRecord();
                 if (record != null) {
                     DialogFragment dialogFragment = EditDeadlinesDialog.Companion.newInstance(adapter.getSections(), record);
@@ -398,6 +403,7 @@ public class SectionsFragment
                     dialogFragment.show(getActivity().getSupportFragmentManager(), EditDeadlinesDialog.TAG);
                 }
                 return true;
+            }
             case R.id.menu_item_deadlines_remove:
                 deadlinesPresenter.removeDeadlines();
                 return true;
@@ -907,6 +913,14 @@ public class SectionsFragment
             List<Deadline> deadlines = data.getParcelableArrayListExtra(EditDeadlinesDialog.KEY_DEADLINES);
             deadlinesPresenter.updateDeadlines(deadlines);
         }
+
+        if (requestCode == LearningRateDialog.LEARNING_RATE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            LearningRate learningRate = (LearningRate) data.getSerializableExtra(LearningRateDialog.KEY_LEARNING_RATE);
+            if (learningRate != null) {
+                deadlinesPresenter.createDeadlinesForCourse(course, learningRate);
+            }
+        }
+
     }
 
     @Override
