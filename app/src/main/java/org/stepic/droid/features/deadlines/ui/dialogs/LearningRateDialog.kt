@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
+import android.os.Parcelable
 import android.support.v4.app.DialogFragment
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.Theme
@@ -33,7 +34,7 @@ class LearningRateDialog: DialogFragment() {
         targetFragment?.onActivityResult(
                 LEARNING_RATE_REQUEST_CODE,
                 Activity.RESULT_OK,
-                Intent().putExtra(KEY_LEARNING_RATE, learningRate)
+                Intent().putExtra(KEY_LEARNING_RATE, learningRate as Parcelable)
         )
     }
 }

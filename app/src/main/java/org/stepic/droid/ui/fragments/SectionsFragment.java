@@ -915,7 +915,7 @@ public class SectionsFragment
         }
 
         if (requestCode == LearningRateDialog.LEARNING_RATE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            LearningRate learningRate = (LearningRate) data.getSerializableExtra(LearningRateDialog.KEY_LEARNING_RATE);
+            LearningRate learningRate = data.getParcelableExtra(LearningRateDialog.KEY_LEARNING_RATE);
             if (learningRate != null) {
                 deadlinesPresenter.createDeadlinesForCourse(course, learningRate);
             }
