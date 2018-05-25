@@ -501,6 +501,7 @@ public class SectionsFragment
         getAnalytic().reportEvent(Analytic.Interaction.REFRESH_SECTIONS);
         if (course != null) {
             sectionsPresenter.showSections(course, true);
+            deadlinesPresenter.fetchDeadlinesForCourse(course, true);
         } else {
             onNewIntent(getActivity().getIntent());
         }
@@ -1029,6 +1030,7 @@ public class SectionsFragment
 
     @Override
     public void setDeadlines(@Nullable StorageRecord<DeadlinesWrapper> record) {
+        ProgressHelper.dismiss(joinCourseProgressDialog);
         adapter.setNeedShowDeadlinesBanner(record == null);
         adapter.setDeadlinesRecord(record);
     }
@@ -1038,5 +1040,16 @@ public class SectionsFragment
         DialogFragment dialogFragment = LearningRateDialog.Companion.newInstance();
         dialogFragment.setTargetFragment(this, LearningRateDialog.LEARNING_RATE_REQUEST_CODE);
         dialogFragment.show(getActivity().getSupportFragmentManager(), LearningRateDialog.TAG);
+    }
+
+    @Override
+    public void showLoadingDialog() {
+        ProgressHelper.activate(joinCourseProgressDialog);
+    }
+
+    @Override
+    public void showPersonalDeadlinesError() {
+        ProgressHelper.dismiss(joinCourseProgressDialog);
+        Toast.makeText(getContext(), R.string.deadlines_fetching_error, Toast.LENGTH_SHORT).show();
     }
 }

@@ -667,4 +667,5 @@
 
     <string name="deadlines_banner_description">Constant learning is a key to success. Create personal schedule, so you\'ll never forget to study.</string>
     <string name="deadlines_banner_action">Create</string>
+    <string name="deadlines_fetching_error">An error was occurred while retrieving the schedule</string>
 </resources>

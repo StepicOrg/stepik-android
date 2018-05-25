@@ -7,6 +7,7 @@ interface PersonalDeadlinesView {
     sealed class State {
         object Idle: State()
         object Loading: State()
+        object BlockingLoading: State()
         object Error: State()
         object EmptyDeadlines: State()
         class Deadlines(val record: StorageRecord<DeadlinesWrapper>): State()
@@ -14,4 +15,6 @@ interface PersonalDeadlinesView {
 
     fun setDeadlines(record: StorageRecord<DeadlinesWrapper>?)
     fun showLearningRateDialog()
+    fun showLoadingDialog()
+    fun showPersonalDeadlinesError()
 }

@@ -48,13 +48,13 @@ constructor(
 
         courseId = course.courseId
 
-        if (state == PersonalDeadlinesView.State.Idle || force) {
+        if (state == PersonalDeadlinesView.State.Idle || (force && state != PersonalDeadlinesView.State.Loading)) {
             state = PersonalDeadlinesView.State.Loading
             compositeDisposable addDisposable deadlinesRepository.getDeadlinesForCourse(course.courseId)
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .subscribeBy(
-                            onError = { state = PersonalDeadlinesView.State.Error },
+                            onError = { onError(PersonalDeadlinesView.State.Idle) },
                             onComplete = { state = PersonalDeadlinesView.State.EmptyDeadlines },
                             onSuccess = { state = PersonalDeadlinesView.State.Deadlines(it) }
                     )
@@ -65,13 +65,16 @@ constructor(
 
     fun createDeadlinesForCourse(course: Course?, learningRate: LearningRate) {
         if (course == null || state != PersonalDeadlinesView.State.EmptyDeadlines) return
-        state = PersonalDeadlinesView.State.Loading
+
+        val oldState = state
+        state = PersonalDeadlinesView.State.BlockingLoading
+
         compositeDisposable addDisposable deadlinesResolver.calculateDeadlinesForCourse(course.courseId, learningRate)
                 .flatMap { deadlinesRepository.createDeadlinesForCourse(it) }
                 .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)
                 .subscribeBy(
-                        onError = { state = PersonalDeadlinesView.State.Error },
+                        onError = { onError(oldState) },
                         onSuccess = { state = PersonalDeadlinesView.State.Deadlines(it) }
                 )
     }
@@ -79,27 +82,38 @@ constructor(
     fun updateDeadlines(deadlines: List<Deadline>) {
         val record = (state as? PersonalDeadlinesView.State.Deadlines)?.record ?: return
         val newRecord = record.copy(data = DeadlinesWrapper(record.data.course, deadlines))
-        state = PersonalDeadlinesView.State.Loading
+
+        val oldState = state
+        state = PersonalDeadlinesView.State.BlockingLoading
+
         compositeDisposable addDisposable deadlinesRepository.updateDeadlinesForCourse(newRecord)
                 .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)
                 .subscribeBy(
-                        onError = { state = PersonalDeadlinesView.State.Error },
+                        onError = { onError(oldState) },
                         onSuccess = { state = PersonalDeadlinesView.State.Deadlines(it) }
                 )
     }
 
     fun removeDeadlines() {
         val recordId = (state as? PersonalDeadlinesView.State.Deadlines)?.record?.id ?: return
-        state = PersonalDeadlinesView.State.Loading
+
+        val oldState = state
+        state = PersonalDeadlinesView.State.BlockingLoading
+
         analytic.reportEvent(Analytic.Deadlines.PERSONAL_DEADLINE_DELETED)
         compositeDisposable addDisposable deadlinesRepository.removeDeadlinesForCourseByRecordId(recordId)
                 .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)
                 .subscribeBy(
-                        onError = { state = PersonalDeadlinesView.State.Error },
+                        onError = { onError(oldState) },
                         onComplete = { state = PersonalDeadlinesView.State.EmptyDeadlines }
                 )
+    }
+
+    private fun onError(oldState: PersonalDeadlinesView.State) {
+        state = PersonalDeadlinesView.State.Error
+        state = oldState
     }
 
     private fun setStateToView(state: PersonalDeadlinesView.State) {
@@ -109,6 +123,12 @@ constructor(
 
             is PersonalDeadlinesView.State.EmptyDeadlines ->
                 view?.setDeadlines(null)
+
+            is PersonalDeadlinesView.State.BlockingLoading ->
+                view?.showLoadingDialog()
+
+            is PersonalDeadlinesView.State.Error ->
+                view?.showPersonalDeadlinesError()
         }
     }
 
