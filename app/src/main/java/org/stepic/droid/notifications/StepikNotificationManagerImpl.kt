@@ -495,10 +495,11 @@ class StepikNotificationManagerImpl
         val largeIcon = getPictureByCourse(course)
         val colorArgb = ColorUtil.getColorArgb(R.color.stepic_brand_primary)
 
-        val hoursDiff = (deadline.deadline.time - DateTimeHelper.nowUtc()) / AppConstants.MILLIS_IN_1HOUR
+        val hoursDiff = (deadline.deadline.time - DateTimeHelper.nowUtc()) / AppConstants.MILLIS_IN_1HOUR + 1
 
         val intent = Intent(context, SectionActivity::class.java)
         intent.putExtra(AppConstants.KEY_COURSE_LONG_ID, deadline.courseId)
+        intent.putExtra(Analytic.Deadlines.Params.BEFORE_DEADLINE, hoursDiff)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
         val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)

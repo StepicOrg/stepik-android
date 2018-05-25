@@ -789,6 +789,13 @@ public class SectionsFragment
                     //cant parse -> continue
                 }
             }
+
+            long hoursDiff = intent.getLongExtra(Analytic.Deadlines.Params.BEFORE_DEADLINE, -1);
+            if (hoursDiff != -1) {
+                Bundle bundle = new Bundle(1);
+                bundle.putLong(Analytic.Deadlines.Params.BEFORE_DEADLINE, hoursDiff);
+                getAnalytic().reportEvent(Analytic.Deadlines.PERSONAL_DEADLINE_NOTIFICATION_OPENED, bundle);
+            }
         }
         if (course != null) {
             final long courseId = course.getCourseId();
