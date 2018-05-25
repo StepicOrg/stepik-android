@@ -2,6 +2,7 @@ package org.stepic.droid.features.deadlines.ui.dialogs
 
 import android.app.Activity
 import android.app.Dialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
@@ -12,8 +13,11 @@ import android.support.v7.widget.LinearLayoutManager
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.Theme
 import org.stepic.droid.R
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.features.deadlines.model.LearningRate
 import org.stepic.droid.features.deadlines.ui.adapters.LearningRateAdapter
+import org.stepic.droid.util.AppConstants
+import javax.inject.Inject
 
 class LearningRateDialog: DialogFragment() {
     companion object {
@@ -24,6 +28,9 @@ class LearningRateDialog: DialogFragment() {
 
         fun newInstance() = LearningRateDialog()
     }
+
+    @Inject
+    lateinit var analytic: Analytic
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val adapter = LearningRateAdapter(LearningRate.values(), this::selectLearningRate)
@@ -46,6 +53,14 @@ class LearningRateDialog: DialogFragment() {
                 Activity.RESULT_OK,
                 Intent().putExtra(KEY_LEARNING_RATE, learningRate as Parcelable)
         )
+        analytic.reportEvent(Analytic.Deadlines.PERSONAL_DEADLINE_MODE_CHOSEN, Bundle().apply {
+            putLong(Analytic.Deadlines.Params.HOURS, learningRate.millisPerWeek / AppConstants.MILLIS_IN_1HOUR)
+        })
         dismiss()
+    }
+
+    override fun onDismiss(dialog: DialogInterface?) {
+        super.onDismiss(dialog)
+        analytic.reportEvent(Analytic.Deadlines.PERSONAL_DEADLINE_MODE_CLOSED)
     }
 }

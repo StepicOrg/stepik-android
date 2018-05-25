@@ -26,6 +26,8 @@ import org.stepic.droid.di.routing.RoutingComponent
 import org.stepic.droid.di.splash.SplashComponent
 import org.stepic.droid.di.storage.StorageComponent
 import org.stepic.droid.di.video.VideoComponent
+import org.stepic.droid.features.deadlines.ui.dialogs.EditDeadlinesDialog
+import org.stepic.droid.features.deadlines.ui.dialogs.LearningRateDialog
 import org.stepic.droid.model.Course
 import org.stepic.droid.notifications.HackFcmListener
 import org.stepic.droid.notifications.HackerFcmInstanceId
@@ -194,4 +196,8 @@ interface AppCoreComponent {
     fun inject(placeholderTextView: PlaceholderTextView)
 
     fun inject(codeEditor: CodeEditor)
+
+
+    fun inject(editDeadlinesDialog: EditDeadlinesDialog)
+    fun inject(learningRateDialog: LearningRateDialog)
 }

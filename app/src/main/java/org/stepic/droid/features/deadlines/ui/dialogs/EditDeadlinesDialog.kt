@@ -13,6 +13,8 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.Theme
 import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment
 import org.stepic.droid.R
+import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.base.App
 import org.stepic.droid.features.deadlines.model.Deadline
 import org.stepic.droid.features.deadlines.model.DeadlinesWrapper
 import org.stepic.droid.features.deadlines.ui.adapters.EditDeadlinesAdapter
@@ -20,6 +22,7 @@ import org.stepic.droid.model.Section
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.web.storage.model.StorageRecord
 import java.util.*
+import javax.inject.Inject
 import kotlin.collections.ArrayList
 
 class EditDeadlinesDialog: DialogFragment() {
@@ -44,6 +47,9 @@ class EditDeadlinesDialog: DialogFragment() {
         }
     }
 
+    @Inject
+    lateinit var analytic: Analytic
+
     private lateinit var sections: ArrayList<Section>
     private lateinit var deadlines: ArrayList<Deadline>
 
@@ -52,6 +58,8 @@ class EditDeadlinesDialog: DialogFragment() {
     private var editedSectionId = -1L
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        App.component().inject(this)
+
         super.onCreate(savedInstanceState)
 
         sections = savedInstanceState?.getParcelableArrayList(KEY_SECTIONS) ?: arguments.getParcelableArrayList(KEY_SECTIONS)
@@ -101,6 +109,8 @@ class EditDeadlinesDialog: DialogFragment() {
     }
 
     private fun showDatePickerForDeadline(deadline: Deadline) {
+        analytic.reportEvent(Analytic.Deadlines.PERSONAL_DEADLINE_TIME_OPENED)
+
         val calendar = DateTimeHelper.calendarFromLocalMillis(deadline.deadline.time)
 
         editedSectionId = deadline.section
@@ -130,8 +140,10 @@ class EditDeadlinesDialog: DialogFragment() {
             calendar.set(Calendar.MINUTE, 59)
             adapter.updateDeadline(Deadline(sectionId, calendar.time))
             editedSectionId = -1
+            analytic.reportEvent(Analytic.Deadlines.PERSONAL_DEADLINE_TIME_SAVED)
         }.setOnDismissListener {
             editedSectionId = -1
+            analytic.reportEvent(Analytic.Deadlines.PERSONAL_DEADLINE_TIME_CLOSED)
         }
     }
 
