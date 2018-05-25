@@ -14,6 +14,7 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.Theme
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.base.App
 import org.stepic.droid.features.deadlines.model.LearningRate
 import org.stepic.droid.features.deadlines.ui.adapters.LearningRateAdapter
 import org.stepic.droid.util.AppConstants
@@ -31,6 +32,11 @@ class LearningRateDialog: DialogFragment() {
 
     @Inject
     lateinit var analytic: Analytic
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        App.component().inject(this)
+    }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val adapter = LearningRateAdapter(LearningRate.values(), this::selectLearningRate)
