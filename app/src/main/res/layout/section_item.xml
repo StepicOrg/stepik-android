@@ -13,7 +13,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/guideline_left_right_padding_list_item">
 
         <RelativeLayout
             android:id="@id/course_info_layout"
@@ -136,17 +137,16 @@
         </RelativeLayout>
 
         <TextView
-
             android:id="@+id/exam_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/start_exam_button"
             android:layout_marginTop="@dimen/guideline_left_right_padding_list_item"
             android:layout_toLeftOf="@+id/start_exam_button"
+            android:layout_toStartOf="@+id/start_exam_button"
             android:padding="@dimen/guideline_left_right_padding_list_item"
             android:text="@string/exam_module_title"
             android:textSize="@dimen/stepik_text_size_in_button"/>
-
 
         <Button
             android:id="@+id/start_exam_button"
@@ -154,20 +154,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_below="@+id/course_info_layout"
             android:text="@string/start_exam_action_title"
             android:textColor="@color/stepic_blue_ribbon"
-            android:textSize="@dimen/stepik_text_size_in_button"/>
-
-
-        <View
-            android:id="@+id/grey_bar"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_alignParentBottom="true"
-            android:layout_below="@id/start_exam_button"
-            android:layout_marginTop="@dimen/guideline_left_right_padding_list_item"
-            android:background="@color/silver"/>
+            android:textSize="@dimen/stepik_text_size_in_button"
+            android:layout_marginBottom="@dimen/guideline_left_right_padding_list_item" />
 
     </RelativeLayout>
 
