@@ -664,4 +664,7 @@
     <string name="deadlines_learning_rate_extreme">Extreme</string>
 
     <string name="deadlines_learning_rate_time_template">hrs/week</string>
+
+    <string name="deadlines_banner_description">Constant learning is a key to success. Create personal schedule, so you\'ll never forget to study.</string>
+    <string name="deadlines_banner_action">Create</string>
 </resources>
