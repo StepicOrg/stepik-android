@@ -22,7 +22,6 @@ fun View.changeVisibility(needShow: Boolean) {
     }
 }
 
-
 fun View.setHeight(height: Int) {
     layoutParams.height = height
     layoutParams = layoutParams

@@ -404,6 +404,8 @@ public class SectionsFragment
                     DialogFragment dialogFragment = EditDeadlinesDialog.Companion.newInstance(adapter.getSections(), record);
                     dialogFragment.setTargetFragment(this, EditDeadlinesDialog.EDIT_DEADLINES_REQUEST_CODE);
                     dialogFragment.show(getActivity().getSupportFragmentManager(), EditDeadlinesDialog.TAG);
+
+                    getAnalytic().reportEvent(Analytic.Deadlines.PERSONAL_DEADLINE_CHANGE_PRESSED);
                 }
                 return true;
             }
