@@ -1,8 +1,10 @@
 package org.stepic.droid.features.deadlines.presenters
 
+import android.os.Bundle
 import io.reactivex.Scheduler
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.core.presenters.PresenterBase
 import org.stepic.droid.features.deadlines.util.DeadlinesResolver
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
@@ -19,6 +21,7 @@ import javax.inject.Inject
 class PersonalDeadlinesPresenter
 @Inject
 constructor(
+        private val analytic: Analytic,
         private val deadlinesResolver: DeadlinesResolver,
         private val deadlinesRepository: DeadlinesRepository,
 
@@ -28,6 +31,8 @@ constructor(
         private val mainScheduler: Scheduler
 ): PresenterBase<PersonalDeadlinesView>() {
     private val compositeDisposable = CompositeDisposable()
+
+    private var courseId = -1L // only for analytics
 
     private var state: PersonalDeadlinesView.State = PersonalDeadlinesView.State.Idle
         set(value) {
@@ -40,6 +45,8 @@ constructor(
             state = PersonalDeadlinesView.State.EmptyDeadlines
             return
         }
+
+        courseId = course.courseId
 
         if (state == PersonalDeadlinesView.State.Idle || force) {
             state = PersonalDeadlinesView.State.Loading
@@ -85,6 +92,7 @@ constructor(
     fun removeDeadlines() {
         val recordId = (state as? PersonalDeadlinesView.State.Deadlines)?.record?.id ?: return
         state = PersonalDeadlinesView.State.Loading
+        analytic.reportEvent(Analytic.Deadlines.PERSONAL_DEADLINE_DELETED)
         compositeDisposable addDisposable deadlinesRepository.removeDeadlinesForCourseByRecordId(recordId)
                 .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)
@@ -105,10 +113,13 @@ constructor(
     }
 
     fun onClickCreateDeadlines() {
+        analytic.reportEvent(Analytic.Deadlines.PERSONAL_DEADLINES_WIDGET_CLICKED,
+                Bundle().apply { putLong(Analytic.Deadlines.Params.COURSE, courseId) })
         view?.showLearningRateDialog()
     }
 
     fun onClickHideDeadlinesBanner() {
-
+        analytic.reportEvent(Analytic.Deadlines.PERSONAL_DEADLINES_WIDGET_HIDDEN,
+                Bundle().apply { putLong(Analytic.Deadlines.Params.COURSE, courseId) })
     }
 }
