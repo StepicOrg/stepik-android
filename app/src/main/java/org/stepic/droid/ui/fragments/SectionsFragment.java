@@ -267,7 +267,8 @@ public class SectionsFragment
         linearLayoutManager = new LinearLayoutManager(getActivity());
         sectionsRecyclerView.setLayoutManager(linearLayoutManager);
         sectionList = new ArrayList<>();
-        adapter = new SectionAdapter(downloadingPresenter, sectionList, ((AppCompatActivity) getActivity()), calendarPresenter, sectionsPresenter.getProgressMap(), sectionIdToLoadingStateMap, this, downloadingInteractionPresenter);
+        adapter = new SectionAdapter(downloadingPresenter, sectionList, ((AppCompatActivity) getActivity()),
+                calendarPresenter, deadlinesPresenter, sectionsPresenter.getProgressMap(), sectionIdToLoadingStateMap, this, downloadingInteractionPresenter);
         sectionsRecyclerView.setAdapter(adapter);
 
         sectionsRecyclerView.setItemAnimator(new SlideInRightAnimator());
@@ -394,12 +395,9 @@ public class SectionsFragment
                 getAnalytic().reportEventWithIdName(Analytic.Calendar.USER_CLICK_ADD_MENU, course.getCourseId() + "", course.getTitle());
                 calendarPresenter.addDeadlinesToCalendar(sectionList, null);
                 return true;
-            case R.id.menu_item_deadlines_create: {
-                DialogFragment dialogFragment = LearningRateDialog.Companion.newInstance();
-                dialogFragment.setTargetFragment(this, LearningRateDialog.LEARNING_RATE_REQUEST_CODE);
-                dialogFragment.show(getActivity().getSupportFragmentManager(), LearningRateDialog.TAG);
+            case R.id.menu_item_deadlines_create:
+                deadlinesPresenter.onClickCreateDeadlines();
                 return true;
-            }
             case R.id.menu_item_deadlines_edit: {
                 final StorageRecord<DeadlinesWrapper> record = adapter.getDeadlinesRecord();
                 if (record != null) {
@@ -1022,6 +1020,14 @@ public class SectionsFragment
 
     @Override
     public void setDeadlines(@Nullable StorageRecord<DeadlinesWrapper> record) {
+        adapter.setNeedShowDeadlinesBanner(record == null);
         adapter.setDeadlinesRecord(record);
+    }
+
+    @Override
+    public void showLearningRateDialog() {
+        DialogFragment dialogFragment = LearningRateDialog.Companion.newInstance();
+        dialogFragment.setTargetFragment(this, LearningRateDialog.LEARNING_RATE_REQUEST_CODE);
+        dialogFragment.show(getActivity().getSupportFragmentManager(), LearningRateDialog.TAG);
     }
 }

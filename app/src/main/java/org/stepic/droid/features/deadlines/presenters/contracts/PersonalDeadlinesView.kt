@@ -13,4 +13,5 @@ interface PersonalDeadlinesView {
     }
 
     fun setDeadlines(record: StorageRecord<DeadlinesWrapper>?)
+    fun showLearningRateDialog()
 }

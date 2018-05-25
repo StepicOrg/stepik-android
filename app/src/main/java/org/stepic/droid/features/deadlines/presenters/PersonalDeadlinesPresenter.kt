@@ -104,4 +104,11 @@ constructor(
         }
     }
 
+    fun onClickCreateDeadlines() {
+        view?.showLearningRateDialog()
+    }
+
+    fun onClickHideDeadlinesBanner() {
+
+    }
 }
