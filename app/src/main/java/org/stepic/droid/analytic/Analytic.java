@@ -494,6 +494,32 @@ public interface Analytic {
         String NOT_ENROLLED = "course_detail_not_enrolled";
     }
 
+    interface Deadlines {
+        String PERSONAL_DEADLINES_WIDGET_SHOWN = "personal_deadlines_widget_shown";
+        String PERSONAL_DEADLINES_WIDGET_CLICKED = "personal_deadlines_widget_clicked";
+        String PERSONAL_DEADLINES_WIDGET_HIDDEN = "personal_deadlines_widget_hidden";
+
+        interface Params {
+            String COURSE = "course";
+            String HOURS = "hours";
+            String BEFORE_DEADLINE = "before_deadline";
+        }
+
+        String PERSONAL_DEADLINE_MODE_OPENED = "personal_deadline_mode_opened";
+        String PERSONAL_DEADLINE_MODE_CHOSEN = "personal_deadline_mode_chosen";
+        String PERSONAL_DEADLINE_MODE_CLOSED = "personal_deadline_mode_closed";
+
+        String PERSONAL_DEADLINE_CHANGE_PRESSED = "personal_deadline_change_pressed";
+
+        String PERSONAL_DEADLINE_TIME_OPENED = "personal_deadline_time_opened";
+        String PERSONAL_DEADLINE_TIME_CLOSED = "personal_deadline_time_closed";
+
+        String PERSONAL_DEADLINE_DELETED = "personal_deadline_deleted";
+        String PERSONAL_DEADLINE_TIME_SAVED = "personal_deadline_time_saved";
+
+        String PERSONAL_DEADLINE_NOTIFICATION_OPENED = "personal_deadline_notification_opened";
+    }
+
     void reportEvent(String eventName, Bundle bundle);
 
     void reportEvent(String eventName, String id);
