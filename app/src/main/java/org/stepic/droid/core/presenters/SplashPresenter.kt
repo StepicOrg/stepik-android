@@ -1,9 +1,10 @@
 package org.stepic.droid.core.presenters
 
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import io.reactivex.Observable
+import io.reactivex.Completable
 import io.reactivex.Scheduler
 import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.core.GoogleApiChecker
 import org.stepic.droid.core.StepikDevicePoster
@@ -11,6 +12,7 @@ import org.stepic.droid.core.presenters.contracts.SplashView
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.di.splash.SplashScope
+import org.stepic.droid.features.deadlines.repository.DeadlinesRepository
 import org.stepic.droid.notifications.LocalReminder
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
@@ -31,7 +33,9 @@ constructor(
         private val analytic: Analytic,
         private val stepikDevicePoster: StepikDevicePoster,
         private val databaseFacade: DatabaseFacade,
-        private val localReminder: LocalReminder
+        private val localReminder: LocalReminder,
+
+        private val deadlinesRepository: DeadlinesRepository
 ) : PresenterBase<SplashView>() {
 
     enum class Result {
@@ -41,15 +45,13 @@ constructor(
     private var disposable: Disposable? = null
 
     fun onSplashCreated() {
-        disposable = Observable
-                .fromCallable {
+        disposable = Completable.fromCallable {
                     checkRemoteConfigs()
                     countNumberOfLaunches()
                     registerDeviceToPushes()
                     executeLegacyOperations()
                     localReminder.remindAboutRegistration()
-                }
-                .map {
+                }.andThen(deadlinesRepository.syncDeadlines().onErrorComplete()).toSingle {
                     val isLogged = sharedPreferenceHelper.authResponseFromStore != null
                     val isOnboardingNotPassedYet = sharedPreferenceHelper.isOnboardingNotPassedYet
                     when {
@@ -60,7 +62,7 @@ constructor(
                 }
                 .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)
-                .subscribe {
+                .subscribeBy(onError = {}) {
                     when (it) {
                         SplashPresenter.Result.ONBOARDING -> view?.onShowOnboarding()
                         SplashPresenter.Result.LAUNCH -> view?.onShowLaunch()

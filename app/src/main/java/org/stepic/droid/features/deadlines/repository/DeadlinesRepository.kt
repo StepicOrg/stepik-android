@@ -16,6 +16,6 @@ interface DeadlinesRepository {
     fun removeDeadlinesForCourse(courseId: Long): Completable
     fun getDeadlinesForCourse(courseId: Long): Maybe<StorageRecord<DeadlinesWrapper>>
 
-    fun fetchAllDeadlines(): Observable<StorageRecord<DeadlinesWrapper>>
+    fun syncDeadlines(): Completable
 
 }

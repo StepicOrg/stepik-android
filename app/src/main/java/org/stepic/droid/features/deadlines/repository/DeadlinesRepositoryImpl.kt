@@ -75,7 +75,7 @@ constructor(
                         }
                     }
 
-    override fun fetchAllDeadlines(): Observable<StorageRecord<DeadlinesWrapper>> =
+    override fun syncDeadlines(): Completable =
             deadlinesRecordOperations.removeAllDeadlineRecords() then
             getAllEnrolledCourses().flatMap {
                 getDeadlinesForCourse(it.courseId).toObservable()
@@ -83,7 +83,7 @@ constructor(
                 deadlinesRecordOperations.saveDeadlineRecord(it).toObservable()
             }.doOnComplete {
                 deadlinesNotificationsManager.scheduleDeadlinesNotifications()
-            }
+            }.ignoreElements()
 
     private fun getEnrolledCourses(page: Int): Observable<CoursesMetaResponse> =
             loggedService.getEnrolledCourses(page).toObservable()
