@@ -396,7 +396,7 @@ public class SectionsFragment
                 calendarPresenter.addDeadlinesToCalendar(sectionList, null);
                 return true;
             case R.id.menu_item_deadlines_create:
-                deadlinesPresenter.onClickCreateDeadlines();
+                deadlinesPresenter.onClickCreateDeadlines(false);
                 return true;
             case R.id.menu_item_deadlines_edit: {
                 final StorageRecord<DeadlinesWrapper> record = adapter.getDeadlinesRecord();
@@ -1037,6 +1037,7 @@ public class SectionsFragment
 
     @Override
     public void showLearningRateDialog() {
+        getAnalytic().reportEvent(Analytic.Deadlines.PERSONAL_DEADLINE_MODE_OPENED);
         DialogFragment dialogFragment = LearningRateDialog.Companion.newInstance();
         dialogFragment.setTargetFragment(this, LearningRateDialog.LEARNING_RATE_REQUEST_CODE);
         dialogFragment.show(getActivity().getSupportFragmentManager(), LearningRateDialog.TAG);

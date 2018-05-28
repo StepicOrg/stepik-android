@@ -673,7 +673,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
             actionButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    personalDeadlinesPresenter.onClickCreateDeadlines();
+                    personalDeadlinesPresenter.onClickCreateDeadlines(true);
                 }
             });
 

@@ -132,9 +132,11 @@ constructor(
         }
     }
 
-    fun onClickCreateDeadlines() {
-        analytic.reportEvent(Analytic.Deadlines.PERSONAL_DEADLINES_WIDGET_CLICKED,
-                Bundle().apply { putLong(Analytic.Deadlines.Params.COURSE, courseId) })
+    fun onClickCreateDeadlines(fromWidget: Boolean = false) {
+        if (fromWidget) {
+            analytic.reportEvent(Analytic.Deadlines.PERSONAL_DEADLINES_WIDGET_CLICKED,
+                    Bundle().apply { putLong(Analytic.Deadlines.Params.COURSE, courseId) })
+        }
         view?.showLearningRateDialog()
     }
 
