@@ -370,23 +370,23 @@ class DatabaseFacade
 
     fun getLessonsByIds(lessonIds: LongArray): List<Lesson> {
         val stringIds = DbParseHelper.parseLongArrayToString(lessonIds, AppConstants.COMMA)
-        if (stringIds != null) {
-            return lessonDao
+        return if (stringIds != null) {
+            lessonDao
                     .getAllInRange(DbStructureLesson.Column.LESSON_ID, stringIds)
         } else {
-            return ArrayList<Lesson>()
+            emptyList()
         }
     }
 
     fun getCalendarSectionsByIds(ids: LongArray): Map<Long, CalendarSection> {
         val stringIds = DbParseHelper.parseLongArrayToString(ids, AppConstants.COMMA)
-        if (stringIds != null) {
-            return calendarSectionDao
+        return if (stringIds != null) {
+            calendarSectionDao
                     .getAllInRange(DbStructureCalendarSection.Column.SECTION_ID, stringIds)
                     .map { it.id to it }
                     .toMap()
         } else {
-            return HashMap<Long, CalendarSection>()
+            emptyMap()
         }
     }
 
