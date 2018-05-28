@@ -1044,6 +1044,11 @@ public class SectionsFragment
         getActivity().invalidateOptionsMenu();
 
         adapter.setNeedShowDeadlinesBanner(needShow && showBanner);
+        if (needShow && showBanner && course != null) {
+            Bundle bundle = new Bundle(1);
+            bundle.putLong(Analytic.Deadlines.Params.COURSE, course.getCourseId());
+            getAnalytic().reportEvent(Analytic.Deadlines.PERSONAL_DEADLINES_WIDGET_SHOWN);
+        }
     }
 
     @Override
