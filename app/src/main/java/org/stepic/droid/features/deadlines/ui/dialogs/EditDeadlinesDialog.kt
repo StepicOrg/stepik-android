@@ -140,7 +140,6 @@ class EditDeadlinesDialog: DialogFragment() {
             calendar.set(Calendar.MINUTE, 59)
             adapter.updateDeadline(Deadline(sectionId, calendar.time))
             editedSectionId = -1
-            analytic.reportEvent(Analytic.Deadlines.PERSONAL_DEADLINE_TIME_SAVED)
         }.setOnDismissListener {
             editedSectionId = -1
             analytic.reportEvent(Analytic.Deadlines.PERSONAL_DEADLINE_TIME_CLOSED)

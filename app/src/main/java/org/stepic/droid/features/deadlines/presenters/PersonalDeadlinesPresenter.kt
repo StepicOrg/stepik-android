@@ -86,6 +86,7 @@ constructor(
         val oldState = state
         state = PersonalDeadlinesView.State.BlockingLoading
 
+        analytic.reportEvent(Analytic.Deadlines.PERSONAL_DEADLINE_TIME_SAVED)
         compositeDisposable addDisposable deadlinesRepository.updateDeadlinesForCourse(newRecord)
                 .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)
