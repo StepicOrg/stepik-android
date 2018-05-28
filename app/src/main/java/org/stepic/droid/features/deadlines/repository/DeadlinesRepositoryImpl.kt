@@ -75,9 +75,9 @@ constructor(
                         }
                     }
 
-    override fun syncDeadlines(): Completable =
+    override fun syncDeadlines(enrolledCourses: List<Course>?): Completable =
             deadlinesRecordOperations.removeAllDeadlineRecords() then
-            getAllEnrolledCourses().flatMap {
+            (enrolledCourses?.toObservable() ?: getAllEnrolledCourses()).flatMap {
                 getDeadlinesForCourse(it.courseId).toObservable()
             }.flatMap {
                 deadlinesRecordOperations.saveDeadlineRecord(it).toObservable()

@@ -12,7 +12,6 @@ import org.stepic.droid.core.presenters.contracts.SplashView
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.di.splash.SplashScope
-import org.stepic.droid.features.deadlines.repository.DeadlinesRepository
 import org.stepic.droid.notifications.LocalReminder
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
@@ -33,9 +32,7 @@ constructor(
         private val analytic: Analytic,
         private val stepikDevicePoster: StepikDevicePoster,
         private val databaseFacade: DatabaseFacade,
-        private val localReminder: LocalReminder,
-
-        private val deadlinesRepository: DeadlinesRepository
+        private val localReminder: LocalReminder
 ) : PresenterBase<SplashView>() {
 
     enum class Result {
@@ -51,7 +48,7 @@ constructor(
                     registerDeviceToPushes()
                     executeLegacyOperations()
                     localReminder.remindAboutRegistration()
-                }.andThen(deadlinesRepository.syncDeadlines().onErrorComplete()).toSingle {
+                }.toSingle {
                     val isLogged = sharedPreferenceHelper.authResponseFromStore != null
                     val isOnboardingNotPassedYet = sharedPreferenceHelper.isOnboardingNotPassedYet
                     when {
