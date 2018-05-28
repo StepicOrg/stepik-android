@@ -5,6 +5,7 @@ import org.stepic.droid.adaptive.model.LocalExpItem
 import org.stepic.droid.di.qualifiers.EnrolledCoursesDaoQualifier
 import org.stepic.droid.di.qualifiers.FeaturedCoursesDaoQualifier
 import org.stepic.droid.di.storage.StorageSingleton
+import org.stepic.droid.features.deadlines.storage.dao.DeadlinesBannerDao
 import org.stepic.droid.model.*
 import org.stepic.droid.model.Unit
 import org.stepic.droid.model.code.CodeSubmission
@@ -48,7 +49,8 @@ class DatabaseFacade
         private val lastStepDao: IDao<PersistentLastStep>,
         private val externalVideoUrlDao: IDao<DbVideoUrl>,
         private val blockDao: IDao<BlockPersistentWrapper>,
-        private val personalDeadlinesDao: PersonalDeadlinesDao
+        private val personalDeadlinesDao: PersonalDeadlinesDao,
+        private val deadlinesBannerDao: DeadlinesBannerDao
 ) {
 
     fun dropDatabase() {
@@ -74,6 +76,7 @@ class DatabaseFacade
         searchQueryDao.removeAll()
         adaptiveExpDao.removeAll()
         personalDeadlinesDao.removeAll()
+        deadlinesBannerDao.removeAll()
     }
 
     fun getCourseDao(table: Table) =

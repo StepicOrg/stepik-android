@@ -181,6 +181,7 @@ public class SectionsFragment
 
     boolean firstLoad;
     boolean isNeedShowCalendarInMenu = false;
+    boolean isNeedShowDeadlinesInMenu = false;
 
     LoadingProgressDialog joinCourseProgressDialog;
     private DialogFragment unauthorizedDialog;
@@ -311,7 +312,6 @@ public class SectionsFragment
         resolveJoinCourseView();
         setUpToolbarWithCourse();
         sectionsPresenter.showSections(course, false);
-        deadlinesPresenter.fetchDeadlinesForCourse(course, false);
 
         if (course != null && course.getSlug() != null && !wasIndexed) {
             title = getString(R.string.syllabus_title) + ": " + course.getTitle();
@@ -447,6 +447,8 @@ public class SectionsFragment
         dismissLoadState();
 
         calendarPresenter.checkToShowCalendar(sectionList);
+        deadlinesPresenter.fetchDeadlinesForCourse(course, sections);
+
         if (wasEmpty) {
 
             if (modulePosition > 0 && modulePosition <= sections.size()) {
@@ -501,7 +503,6 @@ public class SectionsFragment
         getAnalytic().reportEvent(Analytic.Interaction.REFRESH_SECTIONS);
         if (course != null) {
             sectionsPresenter.showSections(course, true);
-            deadlinesPresenter.fetchDeadlinesForCourse(course, true);
         } else {
             onNewIntent(getActivity().getIntent());
         }
@@ -579,12 +580,15 @@ public class SectionsFragment
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.section_unit_menu, menu);
-        MenuItem menuItem = menu.findItem(R.id.menu_item_calendar);
-        if (isNeedShowCalendarInMenu) {
-            menuItem.setVisible(true);
-        } else {
-            menuItem.setVisible(false);
-        }
+
+        menu.findItem(R.id.menu_item_calendar).setVisible(isNeedShowCalendarInMenu);
+
+        boolean isNeedShowCreateDeadlines = isNeedShowDeadlinesInMenu && adapter != null && adapter.getDeadlinesRecord() == null;
+        boolean isNeedShowManageDeadlines = isNeedShowDeadlinesInMenu && adapter != null && adapter.getDeadlinesRecord() != null;
+
+        menu.findItem(R.id.menu_item_deadlines_create).setVisible(isNeedShowCreateDeadlines);
+        menu.findItem(R.id.menu_item_deadlines_edit).setVisible(isNeedShowManageDeadlines);
+        menu.findItem(R.id.menu_item_deadlines_remove).setVisible(isNeedShowManageDeadlines);
     }
 
     @Override
@@ -1031,8 +1035,15 @@ public class SectionsFragment
     @Override
     public void setDeadlines(@Nullable StorageRecord<DeadlinesWrapper> record) {
         ProgressHelper.dismiss(joinCourseProgressDialog);
-        adapter.setNeedShowDeadlinesBanner(record == null);
         adapter.setDeadlinesRecord(record);
+    }
+
+    @Override
+    public void setDeadlinesControls(boolean needShow, boolean showBanner) {
+        isNeedShowDeadlinesInMenu = needShow && !showBanner;
+        getActivity().invalidateOptionsMenu();
+
+        adapter.setNeedShowDeadlinesBanner(needShow && showBanner);
     }
 
     @Override

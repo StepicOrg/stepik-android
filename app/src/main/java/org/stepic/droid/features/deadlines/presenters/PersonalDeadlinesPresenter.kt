@@ -15,6 +15,7 @@ import org.stepic.droid.features.deadlines.model.DeadlinesWrapper
 import org.stepic.droid.features.deadlines.model.LearningRate
 import org.stepic.droid.features.deadlines.presenters.contracts.PersonalDeadlinesView
 import org.stepic.droid.features.deadlines.repository.DeadlinesRepository
+import org.stepic.droid.model.Section
 import org.stepic.droid.util.addDisposable
 import javax.inject.Inject
 
@@ -40,26 +41,41 @@ constructor(
             setStateToView(field)
         }
 
-    fun fetchDeadlinesForCourse(course: Course?, force: Boolean = false) {
+    private var shouldShowBanner = false
+
+    fun fetchDeadlinesForCourse(course: Course?, sections: List<Section>) {
         if (course == null) {
-            state = PersonalDeadlinesView.State.EmptyDeadlines
+            state = PersonalDeadlinesView.State.NoDeadlinesNeeded
             return
         }
 
         courseId = course.courseId
 
-        if (state == PersonalDeadlinesView.State.Idle || (force && state != PersonalDeadlinesView.State.Loading)) {
-            state = PersonalDeadlinesView.State.Loading
-            compositeDisposable addDisposable deadlinesRepository.getDeadlinesForCourse(course.courseId)
-                    .subscribeOn(backgroundScheduler)
-                    .observeOn(mainScheduler)
-                    .subscribeBy(
-                            onError = { onError(PersonalDeadlinesView.State.Idle) },
-                            onComplete = { state = PersonalDeadlinesView.State.EmptyDeadlines },
-                            onSuccess = { state = PersonalDeadlinesView.State.Deadlines(it) }
-                    )
-        } else {
-            setStateToView(state)
+        when {
+            sections.any { it.softDeadline != null || it.hardDeadline != null } -> // there are teacher's deadlines
+                state = PersonalDeadlinesView.State.NoDeadlinesNeeded
+
+            state == PersonalDeadlinesView.State.Idle -> {
+                state = PersonalDeadlinesView.State.BackgroundLoading
+                compositeDisposable addDisposable deadlinesRepository.getDeadlinesForCourse(course.courseId)
+                        .subscribeOn(backgroundScheduler)
+                        .observeOn(mainScheduler)
+                        .subscribeBy(
+                                onError = { onError(PersonalDeadlinesView.State.Idle) },
+                                onComplete = { state = PersonalDeadlinesView.State.EmptyDeadlines },
+                                onSuccess = { state = PersonalDeadlinesView.State.Deadlines(it) }
+                        )
+
+                compositeDisposable addDisposable deadlinesRepository.shouldShowDeadlinesBannerForCourse(courseId)
+                        .subscribeOn(backgroundScheduler)
+                        .observeOn(mainScheduler)
+                        .subscribe { shouldShow ->
+                            shouldShowBanner = shouldShow
+                            setStateToView(state)
+                        }
+            }
+
+            else -> setStateToView(state)
         }
     }
 
@@ -119,11 +135,21 @@ constructor(
 
     private fun setStateToView(state: PersonalDeadlinesView.State) {
         when (state) {
-            is PersonalDeadlinesView.State.Deadlines ->
+            is PersonalDeadlinesView.State.Deadlines -> {
                 view?.setDeadlines(state.record)
+                view?.setDeadlinesControls(true, false)
+            }
 
-            is PersonalDeadlinesView.State.EmptyDeadlines ->
+            is PersonalDeadlinesView.State.EmptyDeadlines -> {
                 view?.setDeadlines(null)
+                view?.setDeadlinesControls(true, shouldShowBanner)
+            }
+
+            is PersonalDeadlinesView.State.NoDeadlinesNeeded,
+            is PersonalDeadlinesView.State.BackgroundLoading -> {
+                view?.setDeadlines(null)
+                view?.setDeadlinesControls(false, false)
+            }
 
             is PersonalDeadlinesView.State.BlockingLoading ->
                 view?.showLoadingDialog()
@@ -144,5 +170,12 @@ constructor(
     fun onClickHideDeadlinesBanner() {
         analytic.reportEvent(Analytic.Deadlines.PERSONAL_DEADLINES_WIDGET_HIDDEN,
                 Bundle().apply { putLong(Analytic.Deadlines.Params.COURSE, courseId) })
+        shouldShowBanner = false
+        setStateToView(state)
+
+        compositeDisposable addDisposable deadlinesRepository.hideDeadlinesBannerForCourse(courseId)
+                .observeOn(backgroundScheduler)
+                .subscribeOn(backgroundScheduler)
+                .subscribe()
     }
 }

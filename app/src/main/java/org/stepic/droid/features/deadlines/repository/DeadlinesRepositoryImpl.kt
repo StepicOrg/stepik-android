@@ -12,7 +12,9 @@ import org.stepic.droid.model.Course
 import org.stepic.droid.web.storage.model.StorageRecord
 import org.stepic.droid.features.deadlines.model.DeadlinesWrapper
 import org.stepic.droid.features.deadlines.notifications.DeadlinesNotificationsManager
+import org.stepic.droid.features.deadlines.storage.dao.DeadlinesBannerDao
 import org.stepic.droid.features.deadlines.storage.operations.DeadlinesRecordOperations
+import org.stepic.droid.features.deadlines.storage.structure.DbStructureDeadlinesBanner
 import org.stepic.droid.features.deadlines.util.getKindOfRecord
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.then
@@ -34,7 +36,9 @@ constructor(
 
         private val sharedPreferenceHelper: SharedPreferenceHelper,
         private val deadlinesRecordOperations: DeadlinesRecordOperations,
-        private val deadlinesNotificationsManager: DeadlinesNotificationsManager
+        private val deadlinesNotificationsManager: DeadlinesNotificationsManager,
+
+        private val deadlinesBannerDao: DeadlinesBannerDao
 ): DeadlinesRepository {
     private val gson = GsonBuilder()
             .registerTypeAdapter(Date::class.java, UTCDateAdapter())
@@ -63,7 +67,10 @@ constructor(
                     }
 
     override fun removeDeadlinesForCourse(courseId: Long): Completable =
-            getDeadlinesForCourse(courseId).flatMapCompletable { removeDeadlinesForCourseByRecordId(it.id!!) }
+            getDeadlinesForCourse(courseId).flatMapCompletable {
+                deadlinesBannerDao.remove(DbStructureDeadlinesBanner.Columns.COURSE_ID, courseId.toString())
+                removeDeadlinesForCourseByRecordId(it.id!!)
+            }
 
     override fun getDeadlinesForCourse(courseId: Long): Maybe<StorageRecord<DeadlinesWrapper>> =
             remoteStorageService.getStorageRecords(1, sharedPreferenceHelper.profile?.id ?: -1, getKindOfRecord(courseId)).singleOrError()
@@ -101,4 +108,13 @@ constructor(
 
     private fun createStorageRequest(deadlines: DeadlinesWrapper, recordId: Long? = null) =
             StorageRequest(StorageRecordWrapped(recordId, kind = getKindOfRecord(deadlines.course), data = gson.toJsonTree(deadlines)))
+
+
+    override fun shouldShowDeadlinesBannerForCourse(courseId: Long): Single<Boolean> = Single.fromCallable {
+        !deadlinesBannerDao.isInDb(courseId)
+    }
+
+    override fun hideDeadlinesBannerForCourse(courseId: Long): Completable = Completable.fromAction {
+        deadlinesBannerDao.insertOrReplace(courseId)
+    }
 }

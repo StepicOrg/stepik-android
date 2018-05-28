@@ -3,7 +3,7 @@ package org.stepic.droid.features.deadlines.storage.dao
 import android.content.ContentValues
 import android.database.Cursor
 import org.stepic.droid.features.deadlines.model.DeadlineFlatItem
-import org.stepic.droid.features.deadlines.storage.DbStructureDeadlines
+import org.stepic.droid.features.deadlines.storage.structure.DbStructureDeadlines
 import org.stepic.droid.storage.dao.DaoBase
 import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepic.droid.util.dateFromSQLDatetime

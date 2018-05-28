@@ -18,4 +18,7 @@ interface DeadlinesRepository {
 
     fun syncDeadlines(enrolledCourses: List<Course>? = null): Completable
 
+    fun shouldShowDeadlinesBannerForCourse(courseId: Long): Single<Boolean>
+    fun hideDeadlinesBannerForCourse(courseId: Long): Completable
+
 }

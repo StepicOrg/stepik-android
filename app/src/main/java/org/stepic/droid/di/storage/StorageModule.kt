@@ -9,6 +9,8 @@ import dagger.Module
 import dagger.Provides
 import org.stepic.droid.di.qualifiers.EnrolledCoursesDaoQualifier
 import org.stepic.droid.di.qualifiers.FeaturedCoursesDaoQualifier
+import org.stepic.droid.features.deadlines.storage.dao.DeadlinesBannerDao
+import org.stepic.droid.features.deadlines.storage.dao.DeadlinesBannerDaoImpl
 import org.stepic.droid.features.deadlines.storage.operations.DeadlinesRecordOperations
 import org.stepic.droid.features.deadlines.storage.operations.DeadlinesRecordOperationsImpl
 import org.stepic.droid.features.deadlines.storage.dao.PersonalDeadlinesDao
@@ -124,6 +126,10 @@ abstract class StorageModule {
     @StorageSingleton
     @Binds
     internal abstract fun provideDeadlinesRecordOperations(deadlinesRecordOperationsImpl: DeadlinesRecordOperationsImpl): DeadlinesRecordOperations
+
+    @StorageSingleton
+    @Binds
+    internal abstract fun provideDeadlinesBannerDao(deadlinesBannerDaoImpl: DeadlinesBannerDaoImpl): DeadlinesBannerDao
 
     @Module
     companion object {

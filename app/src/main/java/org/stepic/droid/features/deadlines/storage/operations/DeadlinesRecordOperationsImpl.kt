@@ -7,7 +7,7 @@ import org.stepic.droid.di.storage.StorageSingleton
 import org.stepic.droid.features.deadlines.model.Deadline
 import org.stepic.droid.features.deadlines.model.DeadlineFlatItem
 import org.stepic.droid.features.deadlines.model.DeadlinesWrapper
-import org.stepic.droid.features.deadlines.storage.DbStructureDeadlines
+import org.stepic.droid.features.deadlines.storage.structure.DbStructureDeadlines
 import org.stepic.droid.features.deadlines.storage.dao.PersonalDeadlinesDao
 import org.stepic.droid.features.deadlines.util.getKindOfRecord
 import org.stepic.droid.util.AppConstants

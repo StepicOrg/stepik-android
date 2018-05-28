@@ -1,4 +1,4 @@
-package org.stepic.droid.features.deadlines.storage
+package org.stepic.droid.features.deadlines.storage.structure
 
 import android.database.sqlite.SQLiteDatabase
 
