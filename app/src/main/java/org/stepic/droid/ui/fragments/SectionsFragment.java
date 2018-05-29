@@ -398,17 +398,9 @@ public class SectionsFragment
             case R.id.menu_item_deadlines_create:
                 deadlinesPresenter.onClickCreateDeadlines(false);
                 return true;
-            case R.id.menu_item_deadlines_edit: {
-                final StorageRecord<DeadlinesWrapper> record = adapter.getDeadlinesRecord();
-                if (record != null) {
-                    DialogFragment dialogFragment = EditDeadlinesDialog.Companion.newInstance(adapter.getSections(), record);
-                    dialogFragment.setTargetFragment(this, EditDeadlinesDialog.EDIT_DEADLINES_REQUEST_CODE);
-                    dialogFragment.show(getActivity().getSupportFragmentManager(), EditDeadlinesDialog.TAG);
-
-                    getAnalytic().reportEvent(Analytic.Deadlines.PERSONAL_DEADLINE_CHANGE_PRESSED);
-                }
+            case R.id.menu_item_deadlines_edit:
+                showDeadlinesEditDialog();
                 return true;
-            }
             case R.id.menu_item_deadlines_remove:
                 deadlinesPresenter.removeDeadlines();
                 return true;
@@ -1048,6 +1040,16 @@ public class SectionsFragment
             Bundle bundle = new Bundle(1);
             bundle.putLong(Analytic.Deadlines.Params.COURSE, course.getCourseId());
             getAnalytic().reportEvent(Analytic.Deadlines.PERSONAL_DEADLINES_WIDGET_SHOWN);
+        }
+    }
+
+    private void showDeadlinesEditDialog() {
+        final StorageRecord<DeadlinesWrapper> record = adapter.getDeadlinesRecord();
+        if (record != null) {
+            getAnalytic().reportEvent(Analytic.Deadlines.PERSONAL_DEADLINE_CHANGE_PRESSED);
+            DialogFragment dialogFragment = EditDeadlinesDialog.Companion.newInstance(adapter.getSections(), record);
+            dialogFragment.setTargetFragment(this, EditDeadlinesDialog.EDIT_DEADLINES_REQUEST_CODE);
+            dialogFragment.show(getActivity().getSupportFragmentManager(), EditDeadlinesDialog.TAG);
         }
     }
 
