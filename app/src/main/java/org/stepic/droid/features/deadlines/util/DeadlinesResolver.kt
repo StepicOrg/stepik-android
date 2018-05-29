@@ -33,6 +33,9 @@ constructor(
                 it.sections.toObservable()
             }.concatMapEager(::getTimeToCompleteForSection).toList().map {
                 val offset = Calendar.getInstance()
+                offset.add(Calendar.HOUR_OF_DAY, 24)
+                offset.set(Calendar.HOUR_OF_DAY, 0)
+                offset.set(Calendar.MINUTE, 0)
 
                 val deadlines = it.map { (sectionId, timeToComplete) ->
                     val deadlineDate = getDeadlineDate(offset, timeToComplete, learningRate)
