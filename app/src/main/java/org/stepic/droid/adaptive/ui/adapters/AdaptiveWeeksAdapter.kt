@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.adaptive_header_stats.view.*
 import kotlinx.android.synthetic.main.adaptive_item_week.view.*
 import org.stepic.droid.R
 import org.stepic.droid.adaptive.model.AdaptiveWeekProgress
-import org.stepic.droid.util.getLocale
+import org.stepic.droid.util.defaultLocale
 import java.util.ArrayList
 
 class AdaptiveWeeksAdapter : RecyclerView.Adapter<AdaptiveWeeksAdapter.StatsViewHolder>() {
@@ -62,8 +62,8 @@ class AdaptiveWeeksAdapter : RecyclerView.Adapter<AdaptiveWeeksAdapter.StatsView
             when (it) {
                 is StatsViewHolder.WeekViewHolder -> {
                     it.total.text = weeks[p - 1].total.toString()
-                    it.start.text = String.format(getLocale(Resources.getSystem()), DATE_FORMAT, weeks[p - 1].start)
-                    it.end.text = String.format(getLocale(Resources.getSystem()), DATE_FORMAT, weeks[p - 1].end)
+                    it.start.text = String.format(Resources.getSystem().configuration.defaultLocale, DATE_FORMAT, weeks[p - 1].start)
+                    it.end.text = String.format(Resources.getSystem().configuration.defaultLocale, DATE_FORMAT, weeks[p - 1].end)
                 }
                 is StatsViewHolder.StatsHeaderViewHolder -> {
                     header.chartData?.let { dataSet ->

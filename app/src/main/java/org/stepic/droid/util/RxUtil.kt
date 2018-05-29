@@ -1,9 +1,6 @@
 package org.stepic.droid.util
 
-import io.reactivex.Flowable
-import io.reactivex.Maybe
-import io.reactivex.Observable
-import io.reactivex.Single
+import io.reactivex.*
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.BiFunction
@@ -30,6 +27,10 @@ fun <T, R> Single<T>.mapNotNull(transform: (T) -> R?): Maybe<R> =
         this.map { RxOptional(transform(it)) }.unwrapOptional()
 
 infix fun CompositeDisposable.addDisposable(d: Disposable) = this.add(d)
+
+infix fun Completable.then(completable: Completable): Completable = this.andThen(completable)
+infix fun <T> Completable.then(observable: Observable<T>): Observable<T> = this.andThen(observable)
+infix fun <T> Completable.then(single: Single<T>): Single<T> = this.andThen(single)
 
 class RetryWithDelay(private val retryDelayMillis: Int) : io.reactivex.functions.Function<Flowable<out Throwable>, Flowable<*>> {
 

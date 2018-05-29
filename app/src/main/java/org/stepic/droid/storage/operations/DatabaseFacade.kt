@@ -5,12 +5,14 @@ import org.stepic.droid.adaptive.model.LocalExpItem
 import org.stepic.droid.di.qualifiers.EnrolledCoursesDaoQualifier
 import org.stepic.droid.di.qualifiers.FeaturedCoursesDaoQualifier
 import org.stepic.droid.di.storage.StorageSingleton
+import org.stepic.droid.features.deadlines.storage.dao.DeadlinesBannerDao
 import org.stepic.droid.model.*
 import org.stepic.droid.model.Unit
 import org.stepic.droid.model.code.CodeSubmission
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.storage.dao.AdaptiveExpDao
 import org.stepic.droid.storage.dao.IDao
+import org.stepic.droid.features.deadlines.storage.dao.PersonalDeadlinesDao
 import org.stepic.droid.storage.dao.SearchQueryDao
 import org.stepic.droid.storage.structure.*
 import org.stepic.droid.util.AppConstants
@@ -46,7 +48,10 @@ class DatabaseFacade
         private val videoTimestampDao: IDao<VideoTimestamp>,
         private val lastStepDao: IDao<PersistentLastStep>,
         private val externalVideoUrlDao: IDao<DbVideoUrl>,
-        private val blockDao: IDao<BlockPersistentWrapper>) {
+        private val blockDao: IDao<BlockPersistentWrapper>,
+        private val personalDeadlinesDao: PersonalDeadlinesDao,
+        private val deadlinesBannerDao: DeadlinesBannerDao
+) {
 
     fun dropDatabase() {
         sectionDao.removeAll()
@@ -70,6 +75,8 @@ class DatabaseFacade
         codeSubmissionDao.removeAll()
         searchQueryDao.removeAll()
         adaptiveExpDao.removeAll()
+        personalDeadlinesDao.removeAll()
+        deadlinesBannerDao.removeAll()
     }
 
     fun getCourseDao(table: Table) =
@@ -366,23 +373,23 @@ class DatabaseFacade
 
     fun getLessonsByIds(lessonIds: LongArray): List<Lesson> {
         val stringIds = DbParseHelper.parseLongArrayToString(lessonIds, AppConstants.COMMA)
-        if (stringIds != null) {
-            return lessonDao
+        return if (stringIds != null) {
+            lessonDao
                     .getAllInRange(DbStructureLesson.Column.LESSON_ID, stringIds)
         } else {
-            return ArrayList<Lesson>()
+            emptyList()
         }
     }
 
     fun getCalendarSectionsByIds(ids: LongArray): Map<Long, CalendarSection> {
         val stringIds = DbParseHelper.parseLongArrayToString(ids, AppConstants.COMMA)
-        if (stringIds != null) {
-            return calendarSectionDao
+        return if (stringIds != null) {
+            calendarSectionDao
                     .getAllInRange(DbStructureCalendarSection.Column.SECTION_ID, stringIds)
                     .map { it.id to it }
                     .toMap()
         } else {
-            return HashMap<Long, CalendarSection>()
+            emptyMap()
         }
     }
 

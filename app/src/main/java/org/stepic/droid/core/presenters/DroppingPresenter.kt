@@ -5,6 +5,7 @@ import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.dropping.contract.DroppingPoster
 import org.stepic.droid.core.presenters.contracts.DroppingView
 import org.stepic.droid.di.course_list.CourseListScope
+import org.stepic.droid.features.deadlines.repository.DeadlinesRepository
 import org.stepic.droid.model.Course
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.storage.operations.Table
@@ -21,7 +22,9 @@ constructor(
         private val api: Api,
         private val threadPoolExecutor: ThreadPoolExecutor,
         private val mainHandler: MainHandler,
-        private val databaseFacade: DatabaseFacade
+        private val databaseFacade: DatabaseFacade,
+
+        private val deadlinesRepository: DeadlinesRepository
 ) : PresenterBase<DroppingView>() {
 
     fun dropCourse(course: Course) {
@@ -34,6 +37,7 @@ constructor(
             } else {
                 try {
                     makeDropCall(dropCall, course)
+                    deadlinesRepository.removeDeadlinesForCourse(course.courseId).blockingAwait()
                 } catch (exception: Exception) {
                     mainHandler.post {
                         droppingPoster.failDropCourse(course)

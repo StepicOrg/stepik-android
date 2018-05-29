@@ -15,14 +15,13 @@ import org.stepic.droid.model.User;
 import org.stepic.droid.model.comments.VoteValue;
 import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.social.SocialManager;
-import org.stepic.droid.web.model.adaptive.RatingResponse;
 import org.stepic.droid.web.model.adaptive.RatingRestoreResponse;
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
+import org.stepic.droid.features.deadlines.repository.DeadlinesRepository;
 
 import java.util.List;
 
 import io.reactivex.Completable;
-import io.reactivex.Observable;
 import io.reactivex.Single;
 import retrofit2.Call;
 
@@ -55,14 +54,20 @@ public interface Api {
 
     Call<SectionsMetaResponse> getSections(long[] sectionsIds);
 
+    Single<SectionsMetaResponse> getSectionsRx(long[] sectionsIds);
+
     /**
      * Max number of  units defined in AppConstants
      */
     Call<UnitMetaResponse> getUnits(long[] units);
 
+    Single<UnitMetaResponse> getUnitsRx(long[] units);
+
     Single<UnitMetaResponse> getUnits(long courseId, long lessonId);
 
     Call<LessonStepicResponse> getLessons(long[] lessons);
+
+    Single<LessonStepicResponse> getLessonsRx(long[] lessons);
 
     Single<LessonStepicResponse> getLessons(long lessonId);
 

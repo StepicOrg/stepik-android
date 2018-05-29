@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?selectableItemBackground"
+    android:paddingStart="?dialogPreferredPadding"
+    android:paddingLeft="?dialogPreferredPadding"
+    android:paddingEnd="?dialogPreferredPadding"
+    android:paddingRight="?dialogPreferredPadding"
+
+    android:paddingTop="16dp"
+    android:paddingBottom="16dp">
+
+    <TextView
+        android:id="@+id/sectionTitle"
+        android:textSize="16sp"
+        android:textColor="@color/stepik_dark_web"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/deadline"
+        android:textSize="12sp"
+        android:textColor="@color/stepic_blue_ribbon"
+        android:layout_marginTop="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

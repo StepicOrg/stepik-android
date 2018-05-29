@@ -12,7 +12,6 @@ import android.webkit.CookieSyncManager;
 import android.widget.Toast;
 
 import com.facebook.login.LoginManager;
-import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.gson.Gson;
@@ -29,6 +28,7 @@ import org.stepic.droid.configuration.RemoteConfig;
 import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.StepikLogoutManager;
 import org.stepic.droid.di.AppSingleton;
+import org.stepic.droid.di.network.StethoInterceptor;
 import org.stepic.droid.jsonHelpers.adapters.CodeOptionsAdapterFactory;
 import org.stepic.droid.jsonHelpers.deserializers.DatasetDeserializer;
 import org.stepic.droid.jsonHelpers.deserializers.ReplyDeserializer;
@@ -64,6 +64,7 @@ import org.stepic.droid.web.model.adaptive.RatingRestoreResponse;
 import org.stepic.droid.web.model.adaptive.RecommendationReactionsRequest;
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
 import org.stepic.droid.web.model.desk.DeskRequestWrapper;
+import org.stepic.droid.web.storage.RemoteStorageService;
 
 import java.io.IOException;
 import java.net.HttpCookie;
@@ -79,7 +80,6 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
 import io.reactivex.Completable;
-import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.functions.Function;
 import kotlin.Unit;
@@ -102,7 +102,7 @@ import timber.log.Timber;
 @AppSingleton
 public class ApiImpl implements Api {
     private final int TIMEOUT_IN_SECONDS = 60;
-    private final StethoInterceptor stethoInterceptor = new StethoInterceptor();
+    private final Interceptor stethoInterceptor;
     private static final String USER_AGENT_NAME = "User-Agent";
 
     private final Context context;
@@ -118,16 +118,19 @@ public class ApiImpl implements Api {
     private StepicRestLoggedService loggedService;
     private StepicRestOAuthService oAuthService;
     private StepicEmptyAuthService stepikEmptyAuthService;
+    private RemoteStorageService remoteStorageService;
     private RatingService ratingService;
 
-
     @Inject
-    public ApiImpl(Context context, SharedPreferenceHelper sharedPreference,
-                   Config config, UserPreferences userPreferences,
-                   Analytic analytic, StepikLogoutManager stepikLogoutManager,
-                   ScreenManager screenManager,
-                   UserAgentProvider userAgentProvider,
-                   FirebaseRemoteConfig firebaseRemoteConfig) {
+    public ApiImpl(
+            Context context, SharedPreferenceHelper sharedPreference,
+            Config config, UserPreferences userPreferences,
+            Analytic analytic, StepikLogoutManager stepikLogoutManager,
+            ScreenManager screenManager,
+            UserAgentProvider userAgentProvider,
+            FirebaseRemoteConfig firebaseRemoteConfig,
+            @StethoInterceptor Interceptor stethoInterceptor
+    ) {
         this.context = context;
         this.sharedPreference = sharedPreference;
         this.config = config;
@@ -137,6 +140,7 @@ public class ApiImpl implements Api {
         this.screenManager = screenManager;
         this.userAgentProvider = userAgentProvider;
         this.firebaseRemoteConfig = firebaseRemoteConfig;
+        this.stethoInterceptor = stethoInterceptor;
 
         makeOauthServiceWithNewAuthHeader(this.sharedPreference.isLastTokenSocial() ? TokenType.social : TokenType.loginPassword);
         makeLoggedServices();
@@ -161,7 +165,16 @@ public class ApiImpl implements Api {
 
     private void makeLoggedServices() {
         loggedService = createLoggedService(StepicRestLoggedService.class, config.getBaseUrl());
+        remoteStorageService = createLoggedService(RemoteStorageService.class, config.getBaseUrl());
         ratingService = createLoggedService(RatingService.class, firebaseRemoteConfig.getString(RemoteConfig.ADAPTIVE_BACKEND_URL));
+    }
+
+    public StepicRestLoggedService getLoggedService() {
+        return loggedService;
+    }
+
+    public RemoteStorageService getRemoteStorageService() {
+        return remoteStorageService;
     }
 
     private <T> T createLoggedService(final Class<T> service, final String host) {
@@ -289,7 +302,6 @@ public class ApiImpl implements Api {
                 } finally {
                     RWLocks.AuthLock.readLock().unlock();
                 }
-
             }
         };
         okHttpBuilder.addNetworkInterceptor(interceptor);
@@ -481,8 +493,18 @@ public class ApiImpl implements Api {
     }
 
     @Override
+    public Single<SectionsMetaResponse> getSectionsRx(long[] sectionsIds) {
+        return loggedService.getSectionsRx(sectionsIds);
+    }
+
+    @Override
     public Call<UnitMetaResponse> getUnits(long[] units) {
         return loggedService.getUnits(units);
+    }
+
+    @Override
+    public Single<UnitMetaResponse> getUnitsRx(long[] units) {
+        return loggedService.getUnitsRx(units);
     }
 
     @Override
@@ -496,8 +518,13 @@ public class ApiImpl implements Api {
     }
 
     @Override
+    public Single<LessonStepicResponse> getLessonsRx(long[] lessons) {
+        return loggedService.getLessonsRx(lessons);
+    }
+
+    @Override
     public Single<LessonStepicResponse> getLessons(long lessonId) {
-        return loggedService.getLessons(lessonId);
+        return getLessonsRx(new long[]{lessonId});
     }
 
     @Override
@@ -890,6 +917,9 @@ public class ApiImpl implements Api {
     public Single<RatingRestoreResponse> restoreRating(long courseId) {
         return ratingService.restoreRating(courseId, getAccessToken());
     }
+
+
+
 
     @Override
     public Single<SearchResultResponse> getSearchResultsOfTag(int page, @NotNull Tag tag) {

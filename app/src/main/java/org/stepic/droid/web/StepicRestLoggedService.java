@@ -23,6 +23,9 @@ public interface StepicRestLoggedService {
     @GET("api/sections")
     Call<SectionsMetaResponse> getSections(@Query("ids[]") long[] sectionIds);
 
+    @GET("api/sections")
+    Single<SectionsMetaResponse> getSectionsRx(@Query("ids[]") long[] sectionIds);
+
     @Headers("Content-Type:application/json")
     @POST("api/enrollments")
     Call<Void> joinCourse(@Body EnrollmentWrapper enrollmentCourse);
@@ -48,6 +51,11 @@ public interface StepicRestLoggedService {
     );
 
     @GET("api/units")
+    Single<UnitMetaResponse> getUnitsRx(
+            @Query("ids[]") long[] units
+    );
+
+    @GET("api/units")
     Single<UnitMetaResponse> getUnits(
             @Query("course") final long courseId,
             @Query("lesson") final long lessonId
@@ -56,10 +64,8 @@ public interface StepicRestLoggedService {
     @GET("api/lessons")
     Call<LessonStepicResponse> getLessons(@Query("ids[]") long[] lessons);
 
-    @GET("api/lessons/{lesson}")
-    Single<LessonStepicResponse> getLessons(
-            @Path("lesson") final long lesson
-    );
+    @GET("api/lessons")
+    Single<LessonStepicResponse> getLessonsRx(@Query("ids[]") long[] lessons);
 
     @GET("api/steps")
     Call<StepResponse> getSteps(

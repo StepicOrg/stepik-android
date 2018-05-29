@@ -10,6 +10,7 @@ interface DatabaseOperations {
     fun executeInsert(table: String, values: ContentValues?)
 
     fun executeReplace(table: String, values: ContentValues?)
+    fun executeReplaceAll(table: String, values: List<ContentValues>)
 
     fun executeDelete(table: String, whereClause: String?, whereArgs: Array<String>?)
 }

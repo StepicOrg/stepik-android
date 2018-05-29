@@ -8,9 +8,10 @@ ext.versions = [
         buildTools           : '26.0.2',
 
         androidGradlePlugin  : '3.0.0',
-        kotlin               : '1.1.51',
+        kotlin               : '1.2.41',
         googleServicesVersion: '3.0.0',
         fabric               : '1.25.1',
+        dexcount             : '0.8.2',
 
         dagger               : '2.10',
         butterKnife          : '8.8.1',
@@ -43,6 +44,7 @@ ext.versions = [
 
         materialDialog       : '2.0',
         numberPicker         : '1.2.1',
+        datePicker           : '3.1.0',
         photoView            : '1.3.1',
         advancedRecycler     : '0.11.0@aar',
         recyclerAnimators    : '2.1.0',
@@ -72,7 +74,8 @@ ext.gradlePlugins = [
         googleServices: "com.google.gms:google-services:$versions.googleServicesVersion",
         kotlin        : "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin",
         android       : "com.android.tools.build:gradle:$versions.androidGradlePlugin",
-        fabric        : "io.fabric.tools:gradle:$versions.fabric"
+        fabric        : "io.fabric.tools:gradle:$versions.fabric",
+        dexcount      : "com.getkeepsafe.dexcount:dexcount-gradle-plugin:$versions.dexcount"
 ]
 
 ext.libraries = [
@@ -123,6 +126,7 @@ ext.libraries = [
         // Candidates for removal
         materialDialog       : "com.github.javiersantos:MaterialStyledDialogs:$versions.materialDialog",
         numberPicker         : "biz.kasual:materialnumberpicker:$versions.numberPicker",
+        datePicker           : "com.code-troopers.betterpickers:library:$versions.datePicker",
         photoView            : "com.github.chrisbanes:PhotoView:$versions.photoView",
         advancedRecycler     : "com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:$versions.advancedRecycler",
         recyclerAnimators    : "jp.wasabeef:recyclerview-animators:$versions.recyclerAnimators",
