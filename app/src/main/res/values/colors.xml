@@ -166,6 +166,8 @@
     <color name="adaptive_color_yellow">#ffca1d</color>
     <color name="adaptive_rank_separator">@color/new_accent_color</color>
 
+    <color name="adaptive_course_marker">#EBF2FF</color>
+
     <color name="color_stroke">#E4E4E4</color>
     <color name="highlighted_elements_background">#F1F1F1</color>
 

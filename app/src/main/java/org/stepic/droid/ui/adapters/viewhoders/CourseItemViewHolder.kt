@@ -40,7 +40,8 @@ class CourseItemViewHolder(
         private val coursePlaceholder: Drawable,
         private val droppingPresenter: DroppingPresenter,
         private val continueCoursePresenter: ContinueCoursePresenter,
-        private val colorType: CoursesCarouselColorType) : RecyclerView.ViewHolder(view) {
+        private val colorType: CoursesCarouselColorType
+) : RecyclerView.ViewHolder(view) {
 
     @Inject
     lateinit var screenManager: ScreenManager
@@ -65,6 +66,7 @@ class CourseItemViewHolder(
     }
     private var imageViewTarget: BitmapImageViewTarget
 
+    private val adaptiveCourseMarker = view.adaptiveCourseMarker
     private val courseItemImage = view.courseItemImage
     private val courseWidgetButton = view.courseWidgetButton
     private val courseItemName = view.courseItemName
@@ -202,6 +204,9 @@ class CourseItemViewHolder(
         coursePropertiesContainer.changeVisibility(showContainer)
 
         courseItemMore.changeVisibility(showMore)
+
+        adaptiveCourseMarker.changeVisibility(adaptiveCoursesResolver.isAdaptive(course.courseId))
+
         this.course = course
     }
 
