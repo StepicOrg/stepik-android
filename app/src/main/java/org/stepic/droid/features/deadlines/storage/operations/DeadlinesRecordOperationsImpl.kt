@@ -7,6 +7,7 @@ import org.stepic.droid.di.storage.StorageSingleton
 import org.stepic.droid.features.deadlines.model.Deadline
 import org.stepic.droid.features.deadlines.model.DeadlineFlatItem
 import org.stepic.droid.features.deadlines.model.DeadlinesWrapper
+import org.stepic.droid.features.deadlines.storage.dao.DeadlinesBannerDao
 import org.stepic.droid.features.deadlines.storage.structure.DbStructureDeadlines
 import org.stepic.droid.features.deadlines.storage.dao.PersonalDeadlinesDao
 import org.stepic.droid.features.deadlines.util.getKindOfRecord
@@ -19,7 +20,8 @@ import javax.inject.Inject
 class DeadlinesRecordOperationsImpl
 @Inject
 constructor(
-        private val personalDeadlinesDao: PersonalDeadlinesDao
+        private val personalDeadlinesDao: PersonalDeadlinesDao,
+        private val deadlinesBannerDao: DeadlinesBannerDao
 ): DeadlinesRecordOperations {
     companion object {
         private fun StorageRecord<DeadlinesWrapper>.flatten(): List<DeadlineFlatItem> =
@@ -60,6 +62,7 @@ constructor(
 
     override fun saveDeadlineRecord(record: StorageRecord<DeadlinesWrapper>): Single<StorageRecord<DeadlinesWrapper>> = Single.create { emitter ->
         personalDeadlinesDao.insertOrReplaceAll(record.flatten())
+        deadlinesBannerDao.insertOrReplace(record.data.course)
         emitter.onSuccess(record)
     }
 

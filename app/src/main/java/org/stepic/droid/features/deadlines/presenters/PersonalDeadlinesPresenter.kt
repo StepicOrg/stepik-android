@@ -136,6 +136,7 @@ constructor(
     private fun setStateToView(state: PersonalDeadlinesView.State) {
         when (state) {
             is PersonalDeadlinesView.State.Deadlines -> {
+                shouldShowBanner = false
                 view?.setDeadlines(state.record)
                 view?.setDeadlinesControls(true, false)
             }
