@@ -646,6 +646,7 @@
     <string name="adaptive_rating_you_placeholder"><b>You</b></string>
 
     <string name="adaptive_exp_tooltip_text">You can view your stats by pressing on toolbar</string>
+    <string name="adaptive_course_marker">ADAPTIVE</string>
 
     <string name="request_error">Something went wrong</string>
 

@@ -630,6 +630,7 @@
     <string name="adaptive_rating_you_placeholder"><b>Вы</b></string>
 
     <string name="adaptive_exp_tooltip_text">Нажав на панель с опытом, вы можете увидеть подробную статистику вашего обучения</string>
+    <string name="adaptive_course_marker">АДАПТИВНЫЙ</string>
 
     <string name="request_error">Что-то пошло не так</string>
 

@@ -25,6 +25,28 @@
             tools:src="@drawable/general_placeholder"/>
 
         <TextView
+            android:id="@+id/adaptiveCourseMarker"
+            android:text="@string/adaptive_course_marker"
+            android:textSize="7.5sp"
+            android:textColor="@color/new_accent_color"
+            android:gravity="center"
+            fontPath="fonts/Roboto-Bold.ttf"
+            tools:ignore="MissingPrefix"
+            android:background="@drawable/gray_circle_small"
+            android:letterSpacing="0.1"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"
+            android:layout_marginEnd="6dp"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="6dp"
+            android:layout_marginStart="6dp"
+            app:layout_constraintBottom_toBottomOf="@+id/courseItemImage"
+            app:layout_constraintEnd_toEndOf="@+id/courseItemImage"
+            app:layout_constraintStart_toStartOf="@+id/courseItemImage" />
+
+        <TextView
             android:id="@+id/courseItemName"
             fontPath="fonts/Roboto-Regular.ttf"
             android:layout_width="0dp"
