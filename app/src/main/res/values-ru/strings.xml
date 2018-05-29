@@ -649,7 +649,7 @@
 
     <string name="deadlines_learning_rate_time_template">ч/нед</string>
 
-    <string name="deadlines_banner_description">Постоянное обучение это ключ к успеху. </string>
+    <string name="deadlines_banner_description">Постоянное обучение это ключ к успеху. Создайте персональное расписание, чтобы никогда не забывать о занятиях.</string>
     <string name="deadlines_banner_action">Создать</string>
     <string name="deadlines_fetching_error">При загрузке расписания произошла ошибка</string>
 </resources>
