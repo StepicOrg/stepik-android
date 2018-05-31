@@ -490,14 +490,11 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
             if (deadlinesRecord != null) {
                 List<Deadline> deadlines = deadlinesRecord.getData().getDeadlines();
                 Deadline deadline = null;
-                if (deadlines.get(position).getSection() == sectionId) {
-                    deadline = deadlines.get(position);
-                } else {
-                    for (Deadline d : deadlines) {
-                        if (d.getSection() == sectionId) {
-                            deadline = d;
-                            break;
-                        }
+
+                for (Deadline d : deadlines) {
+                    if (d.getSection() == sectionId) {
+                        deadline = d;
+                        break;
                     }
                 }
 
