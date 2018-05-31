@@ -12,6 +12,9 @@ import org.stepic.droid.storage.operations.ResultHandler;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import kotlin.collections.CollectionsKt;
 
 public abstract class DaoBase<T> implements IDao<T> {
 
@@ -45,6 +48,14 @@ public abstract class DaoBase<T> implements IDao<T> {
     public final List<T> getAll(@NonNull String whereColumn, @NonNull String whereValue) {
         String query = "Select * from " + getDbName() + " where " + whereColumn + " = ?";
         return getAllWithQuery(query, new String[]{whereValue});
+    }
+
+    @NotNull
+    @Override
+    public List<T> getAll(@NotNull Map<String, String> whereArgs) {
+        final String query = "SELECT * FROM " + getDbName() + " WHERE ";
+        final String where = CollectionsKt.joinToString(whereArgs.keySet(), " = ? AND ", "", "", -1, "" , null) + " = ?";
+        return getAllWithQuery(query + where, whereArgs.values().toArray(new String[]{}));
     }
 
     @Override
@@ -127,6 +138,15 @@ public abstract class DaoBase<T> implements IDao<T> {
     }
 
     @Override
+    public void insertOrReplaceAll(@NotNull List<? extends T> persistentObjects) {
+        List<ContentValues> values = new ArrayList<>(persistentObjects.size());
+        for (T object: persistentObjects) {
+            values.add(getContentValues(object));
+        }
+        databaseOperations.executeReplaceAll(getDbName(), values);
+    }
+
+    @Override
     public void insertOrUpdate(T persistentObject) {
         insertOrUpdate(getDbName(), getContentValues(persistentObject), getDefaultPrimaryColumn(), getDefaultPrimaryValue(persistentObject));
     }
@@ -136,15 +156,15 @@ public abstract class DaoBase<T> implements IDao<T> {
         return isInDb(getDefaultPrimaryColumn(), getDefaultPrimaryValue(persistentObject));
     }
 
-    abstract String getDbName();
+    protected abstract String getDbName();
 
-    abstract String getDefaultPrimaryColumn();
+    protected abstract String getDefaultPrimaryColumn();
 
-    abstract String getDefaultPrimaryValue(T persistentObject);
+    protected abstract String getDefaultPrimaryValue(T persistentObject);
 
-    abstract ContentValues getContentValues(T persistentObject);
+    protected abstract ContentValues getContentValues(T persistentObject);
 
-    abstract T parsePersistentObject(Cursor cursor);
+    protected abstract T parsePersistentObject(Cursor cursor);
 
     @Override
     public void removeAll() {

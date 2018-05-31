@@ -8,6 +8,7 @@ import org.stepic.droid.core.FirstCoursePoster
 import org.stepic.droid.core.earlystreak.contract.EarlyStreakPoster
 import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.di.course_list.CourseListScope
+import org.stepic.droid.features.deadlines.repository.DeadlinesRepository
 import org.stepic.droid.model.Course
 import org.stepic.droid.model.CourseReviewSummary
 import org.stepic.droid.model.Progress
@@ -33,7 +34,9 @@ class PersistentCourseListPresenter
         private val filterApplicator: FilterApplicator,
         private val sharedPreferenceHelper: SharedPreferenceHelper,
         private val earlyStreakPoster: EarlyStreakPoster,
-        private val firstCoursePoster: FirstCoursePoster
+        private val firstCoursePoster: FirstCoursePoster,
+
+        private val deadlinesRepository: DeadlinesRepository
 ) : PresenterBase<CoursesView>() {
 
     companion object {
@@ -107,6 +110,7 @@ class PersistentCourseListPresenter
                         allMyCourses.addAll(originalResponse.courses)
                         handleMeta(originalResponse)
                     }
+                    deadlinesRepository.syncDeadlines(allMyCourses).blockingAwait()
                     allMyCourses
                 }
             } catch (ex: Exception) {

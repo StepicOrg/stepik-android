@@ -5,7 +5,7 @@ import java.util.*
 
 object DateTimeHelper {
 
-    private val isoPattern = "yyyy-MM-dd'T'HH:mm:ssZ"
+    const val ISO_PATTERN = "yyyy-MM-dd'T'HH:mm:ssZ"
     private val millisecondsInHour = 1000 * 60 * 60
     private val millisecondsInMinute = 1000 * 60
     private val hoursInDay = 24
@@ -44,6 +44,12 @@ object DateTimeHelper {
         finalDateFormat.timeZone = timeZone
 
         return finalDateFormat.format(date)
+    }
+
+    fun getPrintableDate(date: Date, pattern: String, timeZone: TimeZone): String {
+        val dateFormat = SimpleDateFormat(pattern, Locale.getDefault())
+        dateFormat.timeZone = timeZone
+        return dateFormat.format(date)
     }
 
 
@@ -111,7 +117,7 @@ object DateTimeHelper {
         val stringBuilder = StringBuilder()
         stringBuilder.append(iso8601string.subSequence(0 until sizeOfIsoWithoutZ))
         stringBuilder.append("+0000")
-        val dateFormat = SimpleDateFormat(isoPattern, Locale.getDefault())
+        val dateFormat = SimpleDateFormat(ISO_PATTERN, Locale.getDefault())
         return dateFormat.parse(stringBuilder.toString())
     }
 

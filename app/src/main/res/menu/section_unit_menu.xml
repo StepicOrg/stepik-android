@@ -15,4 +15,18 @@
         android:id="@+id/menu_item_calendar"
         android:title="@string/add_to_the_calendar"
         app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/menu_item_deadlines_create"
+        android:title="@string/deadlines_menu_create"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_item_deadlines_edit"
+        android:title="@string/deadlines_menu_edit"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_item_deadlines_remove"
+        android:title="@string/deadlines_menu_remove"
+        app:showAsAction="never" />
+
 </menu>

@@ -1,6 +1,7 @@
 package org.stepic.droid.notifications
 
 import android.support.annotation.WorkerThread
+import org.stepic.droid.features.deadlines.model.DeadlineFlatItem
 import org.stepic.droid.notifications.model.Notification
 
 interface StepikNotificationManager {
@@ -20,4 +21,5 @@ interface StepikNotificationManager {
     @WorkerThread
     fun showRegistrationRemind()
 
+    fun showPersonalDeadlineNotification(deadline: DeadlineFlatItem)
 }

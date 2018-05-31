@@ -19,12 +19,15 @@ import org.stepic.droid.di.home.HomeComponent
 import org.stepic.droid.di.lesson.LessonComponent
 import org.stepic.droid.di.login.LoginComponent
 import org.stepic.droid.di.mainscreen.MainScreenComponent
+import org.stepic.droid.di.network.NetworkModule
 import org.stepic.droid.di.notifications.NotificationsComponent
 import org.stepic.droid.di.profile.ProfileComponent
 import org.stepic.droid.di.routing.RoutingComponent
 import org.stepic.droid.di.splash.SplashComponent
 import org.stepic.droid.di.storage.StorageComponent
 import org.stepic.droid.di.video.VideoComponent
+import org.stepic.droid.features.deadlines.ui.dialogs.EditDeadlinesDialog
+import org.stepic.droid.features.deadlines.ui.dialogs.LearningRateDialog
 import org.stepic.droid.model.Course
 import org.stepic.droid.notifications.HackFcmListener
 import org.stepic.droid.notifications.HackerFcmInstanceId
@@ -40,8 +43,8 @@ import org.stepic.droid.ui.custom_exo.PlaybackControlView
 import org.stepic.droid.ui.dialogs.*
 
 @AppSingleton
-@Component(dependencies = arrayOf(StorageComponent::class),
-        modules = arrayOf(
+@Component(dependencies = [StorageComponent::class],
+        modules = [
                 AppCoreModule::class,
                 RepositoryModule::class,
                 AppStepModule::class,
@@ -49,8 +52,9 @@ import org.stepic.droid.ui.dialogs.*
                 GoogleModule::class,
                 FirebaseModule::class,
                 RecentActiveCourseModule::class,
-                NotificationsBadgesModule::class
-        ))
+                NotificationsBadgesModule::class,
+                NetworkModule::class
+        ])
 interface AppCoreComponent {
 
     @Component.Builder
@@ -192,4 +196,8 @@ interface AppCoreComponent {
     fun inject(placeholderTextView: PlaceholderTextView)
 
     fun inject(codeEditor: CodeEditor)
+
+
+    fun inject(editDeadlinesDialog: EditDeadlinesDialog)
+    fun inject(learningRateDialog: LearningRateDialog)
 }

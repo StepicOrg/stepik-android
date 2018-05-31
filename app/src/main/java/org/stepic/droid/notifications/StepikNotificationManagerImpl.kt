@@ -18,7 +18,9 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.features.deadlines.model.DeadlineFlatItem
 import org.stepic.droid.model.Course
+import org.stepic.droid.model.Section
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.notifications.model.NotificationType
 import org.stepic.droid.notifications.model.StepikNotificationChannel
@@ -484,6 +486,47 @@ class StepikNotificationManagerImpl
         }
     }
 
+    override fun showPersonalDeadlineNotification(deadline: DeadlineFlatItem) {
+        val course = getCourse(deadline.courseId)
+        val section = getSection(deadline.sectionId)
+
+        if (course == null || section == null) return
+
+        val largeIcon = getPictureByCourse(course)
+        val colorArgb = ColorUtil.getColorArgb(R.color.stepic_brand_primary)
+
+        val hoursDiff = (deadline.deadline.time - DateTimeHelper.nowUtc()) / AppConstants.MILLIS_IN_1HOUR + 1
+
+        val intent = Intent(context, SectionActivity::class.java)
+        intent.putExtra(AppConstants.KEY_COURSE_LONG_ID, deadline.courseId)
+        intent.putExtra(Analytic.Deadlines.Params.BEFORE_DEADLINE, hoursDiff)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+
+        val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
+        taskBuilder.addParentStack(SectionActivity::class.java)
+        taskBuilder.addNextIntent(intent)
+
+        val title = context.getString(R.string.app_name)
+        val message = context.getString(R.string.deadlines_notification, section.title, course.title,
+                context.resources.getQuantityString(R.plurals.hours, hoursDiff.toInt(), hoursDiff))
+
+        val pendingIntent = taskBuilder.getPendingIntent(deadline.sectionId.toInt(), PendingIntent.FLAG_ONE_SHOT)
+        val notification = NotificationCompat.Builder(context, StepikNotificationChannel.user.channelId)
+                .setLargeIcon(largeIcon)
+                .setSmallIcon(R.drawable.ic_notification_icon_1)
+                .setContentTitle(title)
+                .setContentText(message)
+                .setColor(colorArgb)
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntent)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setDeleteIntent(getDeleteIntent(deadline.sectionId))
+                .setStyle(NotificationCompat.BigTextStyle().bigText(message))
+                .setNumber(1)
+
+        notificationManager.notify(deadline.sectionId.toInt(), notification.build())
+    }
+
     private fun prepareNotificationIntent(intent: Intent, notificationId: Long) =
             intent.apply {
                 action = AppConstants.OPEN_NOTIFICATION
@@ -544,9 +587,17 @@ class StepikNotificationManagerImpl
         if (courseId == null) return null
         var course: Course? = databaseFacade.getCourseById(courseId, Table.enrolled)
         if (course == null) {
-            course = api.getCourse(courseId).execute()?.body()?.courses?.get(0)
+            course = api.getCourse(courseId).execute()?.body()?.courses?.firstOrNull()
         }
         return course
+    }
+
+    private fun getSection(sectionId: Long): Section? {
+        var section: Section? = databaseFacade.getSectionById(sectionId)
+        if (section == null) {
+            section = api.getSections(longArrayOf(sectionId)).execute()?.body()?.sections?.firstOrNull()
+        }
+        return section
     }
 
     private fun getPictureByCourse(course: Course?): Bitmap {

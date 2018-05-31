@@ -4,7 +4,6 @@ import android.app.Application
 import android.content.Context
 import com.facebook.FacebookSdk
 import com.facebook.appevents.AppEventsLogger
-import com.facebook.stetho.Stetho
 import com.squareup.leakcanary.LeakCanary
 import com.squareup.leakcanary.RefWatcher
 import com.vk.sdk.VKSdk
@@ -21,6 +20,7 @@ import org.stepic.droid.fonts.FontType
 import org.stepic.droid.fonts.FontsProvider
 import org.stepic.droid.storage.InitialDownloadUpdater
 import org.stepic.droid.util.NotificationChannelInitializer
+import org.stepic.droid.util.StethoHelper
 import timber.log.Timber
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig
 import javax.inject.Inject
@@ -73,7 +73,8 @@ class App : Application() {
 
     private fun init() {
         application = this
-        Stetho.initializeWithDefaults(this)
+
+        StethoHelper.initStetho(this)
 
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())

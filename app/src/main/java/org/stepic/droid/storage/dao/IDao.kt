@@ -6,6 +6,7 @@ interface IDao<T> {
     fun insertOrUpdate(persistentObject: T)
 
     fun insertOrReplace(persistentObject: T)
+    fun insertOrReplaceAll(persistentObjects: List<T>)
 
     fun isInDb(persistentObject: T): Boolean
 
@@ -16,6 +17,7 @@ interface IDao<T> {
 //    fun insertOrUpdateAll(listOfPersistentObjects: List<T?>) //todo: Make insert ALL with supporting of inner fragments
 
     fun getAll(whereColumnName: String, whereValue: String): MutableList<T?>
+    fun getAll(whereArgs: Map<String, String>): List<T>
 
     fun get(whereColumnName: String, whereValue: String): T?
 

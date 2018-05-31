@@ -61,6 +61,8 @@
     <string name="try_in_web_drop">Попробуйте отписаться в web-версии</string>
     <string name="you_not_enrolled">Вы не записаны на данный курс</string>
     <string name="cancel">Отмена</string>
+    <string name="save">Сохранить</string>
+    <string name="select">Выбрать</string>
     <string name="failLogin">E-mail адрес/пароль неверны</string>
     <string name="are_you_sure">Вы уверены?</string>
     <string name="deny">Отклонить</string>
@@ -628,8 +630,27 @@
     <string name="adaptive_rating_you_placeholder"><b>Вы</b></string>
 
     <string name="adaptive_exp_tooltip_text">Нажав на панель с опытом, вы можете увидеть подробную статистику вашего обучения</string>
+    <string name="adaptive_course_marker">АДАПТИВНЫЙ</string>
 
     <string name="request_error">Что-то пошло не так</string>
 
     <string name="placeholder_go_to_catalog">Перейти в Каталог</string>
+
+    <string name="deadlines_menu_create">Создать расписание</string>
+    <string name="deadlines_menu_edit">Редактировать расписание</string>
+    <string name="deadlines_menu_remove">Удалить расписание</string>
+    <string name="deadlines_section">Дедлайн: %s</string>
+    <string name="deadlines_notification">Дедлайн по модулю %s в курсе %s наступает через %s</string>
+    <string name="deadlines_edit_title">Редактирование расписания</string>
+    <string name="deadlines_create_title">Выберите режим обучения</string>
+
+    <string name="deadlines_learning_rate_hobby">Хобби</string>
+    <string name="deadlines_learning_rate_standard">Стандарт</string>
+    <string name="deadlines_learning_rate_extreme">Экстрим</string>
+
+    <string name="deadlines_learning_rate_time_template">ч/нед</string>
+
+    <string name="deadlines_banner_description">Постоянное обучение это ключ к успеху. Создайте персональное расписание, чтобы никогда не забывать о занятиях.</string>
+    <string name="deadlines_banner_action">Создать</string>
+    <string name="deadlines_fetching_error">При загрузке расписания произошла ошибка</string>
 </resources>

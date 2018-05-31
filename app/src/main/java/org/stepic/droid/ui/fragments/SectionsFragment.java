@@ -11,8 +11,10 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -52,13 +54,20 @@ import org.stepic.droid.core.presenters.CourseFinderPresenter;
 import org.stepic.droid.core.presenters.CourseJoinerPresenter;
 import org.stepic.droid.core.presenters.DownloadingInteractionPresenter;
 import org.stepic.droid.core.presenters.InvitationPresenter;
+import org.stepic.droid.features.deadlines.model.Deadline;
+import org.stepic.droid.features.deadlines.model.DeadlinesWrapper;
+import org.stepic.droid.features.deadlines.model.LearningRate;
+import org.stepic.droid.features.deadlines.presenters.PersonalDeadlinesPresenter;
 import org.stepic.droid.core.presenters.SectionsPresenter;
 import org.stepic.droid.core.presenters.contracts.CalendarExportableView;
 import org.stepic.droid.core.presenters.contracts.CourseJoinView;
 import org.stepic.droid.core.presenters.contracts.DownloadingInteractionView;
 import org.stepic.droid.core.presenters.contracts.InvitationView;
 import org.stepic.droid.core.presenters.contracts.LoadCourseView;
+import org.stepic.droid.features.deadlines.presenters.contracts.PersonalDeadlinesView;
 import org.stepic.droid.core.presenters.contracts.SectionsView;
+import org.stepic.droid.features.deadlines.ui.dialogs.EditDeadlinesDialog;
+import org.stepic.droid.features.deadlines.ui.dialogs.LearningRateDialog;
 import org.stepic.droid.model.CalendarItem;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Progress;
@@ -84,6 +93,7 @@ import org.stepic.droid.util.SnackbarExtensionKt;
 import org.stepic.droid.util.SnackbarShower;
 import org.stepic.droid.util.StepikLogicHelper;
 import org.stepic.droid.util.StringUtil;
+import org.stepic.droid.web.storage.model.StorageRecord;
 
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
@@ -109,7 +119,9 @@ public class SectionsFragment
         LocalProgressManager.SectionProgressListener,
         ChooseCalendarDialog.CallbackContract,
         DroppingListener,
-        StoreStateManager.SectionCallback, DownloadingView {
+        StoreStateManager.SectionCallback,
+        DownloadingView,
+        PersonalDeadlinesView {
 
     public static final String joinFlag = "joinFlag";
     private static final int INVITE_REQUEST_CODE = 324;
@@ -169,6 +181,7 @@ public class SectionsFragment
 
     boolean firstLoad;
     boolean isNeedShowCalendarInMenu = false;
+    boolean isNeedShowDeadlinesInMenu = false;
 
     LoadingProgressDialog joinCourseProgressDialog;
     private DialogFragment unauthorizedDialog;
@@ -184,6 +197,9 @@ public class SectionsFragment
 
     @Inject
     SectionsPresenter sectionsPresenter;
+
+    @Inject
+    PersonalDeadlinesPresenter deadlinesPresenter;
 
     @Inject
     StepikNotificationManager stepikNotificationManager;
@@ -252,7 +268,8 @@ public class SectionsFragment
         linearLayoutManager = new LinearLayoutManager(getActivity());
         sectionsRecyclerView.setLayoutManager(linearLayoutManager);
         sectionList = new ArrayList<>();
-        adapter = new SectionAdapter(downloadingPresenter, sectionList, ((AppCompatActivity) getActivity()), calendarPresenter, sectionsPresenter.getProgressMap(), sectionIdToLoadingStateMap, this, downloadingInteractionPresenter);
+        adapter = new SectionAdapter(downloadingPresenter, sectionList, ((AppCompatActivity) getActivity()),
+                calendarPresenter, deadlinesPresenter, sectionsPresenter.getProgressMap(), sectionIdToLoadingStateMap, this, downloadingInteractionPresenter);
         sectionsRecyclerView.setAdapter(adapter);
 
         sectionsRecyclerView.setItemAnimator(new SlideInRightAnimator());
@@ -261,6 +278,9 @@ public class SectionsFragment
         sectionsRecyclerView.getItemAnimator().setMoveDuration(ANIMATION_DURATION);
         sectionsRecyclerView.getItemAnimator().setChangeDuration(0);
 
+        DividerItemDecoration divider = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
+        divider.setDrawable(ContextCompat.getDrawable(getContext(), R.drawable.list_divider_h));
+        sectionsRecyclerView.addItemDecoration(divider);
 
         joinCourseProgressDialog = new LoadingProgressDialog(getContext());
         ProgressHelper.activate(loadOnCenterProgressBar);
@@ -271,6 +291,7 @@ public class SectionsFragment
         courseFinderPresenter.attachView(this);
         courseJoinerPresenter.attachView(this);
         sectionsPresenter.attachView(this);
+        deadlinesPresenter.attachView(this);
         invitationPresenter.attachView(this);
         downloadingPresenter.attachView(this);
 
@@ -374,6 +395,15 @@ public class SectionsFragment
                 getAnalytic().reportEventWithIdName(Analytic.Calendar.USER_CLICK_ADD_MENU, course.getCourseId() + "", course.getTitle());
                 calendarPresenter.addDeadlinesToCalendar(sectionList, null);
                 return true;
+            case R.id.menu_item_deadlines_create:
+                deadlinesPresenter.onClickCreateDeadlines(false);
+                return true;
+            case R.id.menu_item_deadlines_edit:
+                showDeadlinesEditDialog();
+                return true;
+            case R.id.menu_item_deadlines_remove:
+                deadlinesPresenter.removeDeadlines();
+                return true;
             case android.R.id.home:
                 // Respond to the action bar's Up/Home button
                 getActivity().finish();
@@ -409,6 +439,8 @@ public class SectionsFragment
         dismissLoadState();
 
         calendarPresenter.checkToShowCalendar(sectionList);
+        deadlinesPresenter.fetchDeadlinesForCourse(course, sections);
+
         if (wasEmpty) {
 
             if (modulePosition > 0 && modulePosition <= sections.size()) {
@@ -506,6 +538,7 @@ public class SectionsFragment
         courseJoinerPresenter.detachView(this);
         courseFinderPresenter.detachView(this);
         sectionsPresenter.detachView(this);
+        deadlinesPresenter.detachView(this);
         invitationPresenter.detachView(this);
         storeStateManager.removeSectionCallback(this);
         droppingListenerClient.unsubscribe(this);
@@ -539,12 +572,15 @@ public class SectionsFragment
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.section_unit_menu, menu);
-        MenuItem menuItem = menu.findItem(R.id.menu_item_calendar);
-        if (isNeedShowCalendarInMenu) {
-            menuItem.setVisible(true);
-        } else {
-            menuItem.setVisible(false);
-        }
+
+        menu.findItem(R.id.menu_item_calendar).setVisible(isNeedShowCalendarInMenu);
+
+        boolean isNeedShowCreateDeadlines = isNeedShowDeadlinesInMenu && adapter != null && adapter.getDeadlinesRecord() == null;
+        boolean isNeedShowManageDeadlines = isNeedShowDeadlinesInMenu && adapter != null && adapter.getDeadlinesRecord() != null;
+
+        menu.findItem(R.id.menu_item_deadlines_create).setVisible(isNeedShowCreateDeadlines);
+        menu.findItem(R.id.menu_item_deadlines_edit).setVisible(isNeedShowManageDeadlines);
+        menu.findItem(R.id.menu_item_deadlines_remove).setVisible(isNeedShowManageDeadlines);
     }
 
     @Override
@@ -750,6 +786,13 @@ public class SectionsFragment
                     //cant parse -> continue
                 }
             }
+
+            long hoursDiff = intent.getLongExtra(Analytic.Deadlines.Params.BEFORE_DEADLINE, -1);
+            if (hoursDiff != -1) {
+                Bundle bundle = new Bundle(1);
+                bundle.putLong(Analytic.Deadlines.Params.BEFORE_DEADLINE, hoursDiff);
+                getAnalytic().reportEvent(Analytic.Deadlines.PERSONAL_DEADLINE_NOTIFICATION_OPENED, bundle);
+            }
         }
         if (course != null) {
             final long courseId = course.getCourseId();
@@ -874,6 +917,19 @@ public class SectionsFragment
             int position = data.getIntExtra(DeleteItemDialogFragment.deletePositionKey, -1);
             adapter.requestClickDeleteSilence(position);
         }
+
+        if (requestCode == EditDeadlinesDialog.EDIT_DEADLINES_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            List<Deadline> deadlines = data.getParcelableArrayListExtra(EditDeadlinesDialog.KEY_DEADLINES);
+            deadlinesPresenter.updateDeadlines(deadlines);
+        }
+
+        if (requestCode == LearningRateDialog.LEARNING_RATE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            LearningRate learningRate = data.getParcelableExtra(LearningRateDialog.KEY_LEARNING_RATE);
+            if (learningRate != null) {
+                deadlinesPresenter.createDeadlinesForCourse(course, learningRate);
+            }
+        }
+
     }
 
     @Override
@@ -966,5 +1022,53 @@ public class SectionsFragment
         //change state for updating in adapter
         sectionIdToLoadingStateMap.put(id, portion);
         adapter.notifyItemChanged(position);
+    }
+
+    @Override
+    public void setDeadlines(@Nullable StorageRecord<DeadlinesWrapper> record) {
+        ProgressHelper.dismiss(joinCourseProgressDialog);
+        adapter.setDeadlinesRecord(record);
+    }
+
+    @Override
+    public void setDeadlinesControls(boolean needShow, boolean showBanner) {
+        isNeedShowDeadlinesInMenu = needShow && !showBanner;
+        getActivity().invalidateOptionsMenu();
+
+        adapter.setNeedShowDeadlinesBanner(needShow && showBanner);
+        if (needShow && showBanner && course != null) {
+            Bundle bundle = new Bundle(1);
+            bundle.putLong(Analytic.Deadlines.Params.COURSE, course.getCourseId());
+            getAnalytic().reportEvent(Analytic.Deadlines.PERSONAL_DEADLINES_WIDGET_SHOWN);
+        }
+    }
+
+    private void showDeadlinesEditDialog() {
+        final StorageRecord<DeadlinesWrapper> record = adapter.getDeadlinesRecord();
+        if (record != null) {
+            getAnalytic().reportEvent(Analytic.Deadlines.PERSONAL_DEADLINE_CHANGE_PRESSED);
+            DialogFragment dialogFragment = EditDeadlinesDialog.Companion.newInstance(adapter.getSections(), record);
+            dialogFragment.setTargetFragment(this, EditDeadlinesDialog.EDIT_DEADLINES_REQUEST_CODE);
+            dialogFragment.show(getActivity().getSupportFragmentManager(), EditDeadlinesDialog.TAG);
+        }
+    }
+
+    @Override
+    public void showLearningRateDialog() {
+        getAnalytic().reportEvent(Analytic.Deadlines.PERSONAL_DEADLINE_MODE_OPENED);
+        DialogFragment dialogFragment = LearningRateDialog.Companion.newInstance();
+        dialogFragment.setTargetFragment(this, LearningRateDialog.LEARNING_RATE_REQUEST_CODE);
+        dialogFragment.show(getActivity().getSupportFragmentManager(), LearningRateDialog.TAG);
+    }
+
+    @Override
+    public void showLoadingDialog() {
+        ProgressHelper.activate(joinCourseProgressDialog);
+    }
+
+    @Override
+    public void showPersonalDeadlinesError() {
+        ProgressHelper.dismiss(joinCourseProgressDialog);
+        Toast.makeText(getContext(), R.string.deadlines_fetching_error, Toast.LENGTH_SHORT).show();
     }
 }

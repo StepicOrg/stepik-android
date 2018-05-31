@@ -10,7 +10,7 @@ import org.stepic.droid.core.presenters.CardPresenter
 import org.stepic.droid.di.qualifiers.CourseId
 
 @AdaptiveCourseScope
-@Subcomponent(modules = arrayOf(AdaptiveCourseModule::class))
+@Subcomponent(modules = [AdaptiveCourseModule::class])
 interface AdaptiveCourseComponent {
     @Subcomponent.Builder
     interface Builder {

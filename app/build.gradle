@@ -131,8 +131,8 @@ dependencies {
     implementation libraries.retrofitGsonConverter
     implementation libraries.retrofitRxJavaAdapter
     implementation libraries.jsoup
-    implementation libraries.stetho
-    implementation libraries.stethoOkHttp
+    debugImplementation libraries.stetho
+    debugImplementation libraries.stethoOkHttp
 
     implementation libraries.glide
 
@@ -154,6 +154,9 @@ dependencies {
 
     implementation libraries.materialDialog
     implementation libraries.numberPicker
+    implementation (libraries.datePicker) {
+        exclude group: 'com.android.support'
+    }
     implementation libraries.photoView
     implementation libraries.advancedRecycler
     implementation libraries.recyclerAnimators
@@ -196,3 +199,4 @@ dependencies {
 }
 
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.getkeepsafe.dexcount'

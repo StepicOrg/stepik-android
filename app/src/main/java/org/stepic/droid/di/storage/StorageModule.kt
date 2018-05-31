@@ -9,16 +9,19 @@ import dagger.Module
 import dagger.Provides
 import org.stepic.droid.di.qualifiers.EnrolledCoursesDaoQualifier
 import org.stepic.droid.di.qualifiers.FeaturedCoursesDaoQualifier
+import org.stepic.droid.features.deadlines.storage.dao.DeadlinesBannerDao
+import org.stepic.droid.features.deadlines.storage.dao.DeadlinesBannerDaoImpl
+import org.stepic.droid.features.deadlines.storage.operations.DeadlinesRecordOperations
+import org.stepic.droid.features.deadlines.storage.operations.DeadlinesRecordOperationsImpl
+import org.stepic.droid.features.deadlines.storage.dao.PersonalDeadlinesDao
+import org.stepic.droid.features.deadlines.storage.dao.PersonalDeadlinesDaoImpl
 import org.stepic.droid.model.*
 import org.stepic.droid.model.Unit
 import org.stepic.droid.model.code.CodeSubmission
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.storage.DatabaseHelper
 import org.stepic.droid.storage.dao.*
-import org.stepic.droid.storage.operations.DatabaseOperations
-import org.stepic.droid.storage.operations.DatabaseOperationsImpl
-import org.stepic.droid.storage.operations.StepInfoOperation
-import org.stepic.droid.storage.operations.StepInfoOperationImpl
+import org.stepic.droid.storage.operations.*
 import org.stepic.droid.storage.structure.DbStructureEnrolledAndFeaturedCourses
 import org.stepic.droid.web.ViewAssignment
 
@@ -115,6 +118,18 @@ abstract class StorageModule {
     @StorageSingleton
     @Binds
     internal abstract fun provideViewedNotificationsQueueDao(viewedNotificationsQueueDaoImpl: ViewedNotificationsQueueDaoImpl): IDao<ViewedNotification>
+
+    @StorageSingleton
+    @Binds
+    internal abstract fun providePersonalDeadlinesDao(personalDeadlinesDaoImpl: PersonalDeadlinesDaoImpl): PersonalDeadlinesDao
+
+    @StorageSingleton
+    @Binds
+    internal abstract fun provideDeadlinesRecordOperations(deadlinesRecordOperationsImpl: DeadlinesRecordOperationsImpl): DeadlinesRecordOperations
+
+    @StorageSingleton
+    @Binds
+    internal abstract fun provideDeadlinesBannerDao(deadlinesBannerDaoImpl: DeadlinesBannerDaoImpl): DeadlinesBannerDao
 
     @Module
     companion object {
