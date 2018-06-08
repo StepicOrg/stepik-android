@@ -499,6 +499,7 @@ class StepikNotificationManagerImpl
 
         val intent = Intent(context, SectionActivity::class.java)
         intent.putExtra(AppConstants.KEY_COURSE_LONG_ID, deadline.courseId)
+        intent.putExtra(AppConstants.KEY_MODULE_POSITION, course.sections?.indexOf(deadline.sectionId) ?: 0)
         intent.putExtra(Analytic.Deadlines.Params.BEFORE_DEADLINE, hoursDiff)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
