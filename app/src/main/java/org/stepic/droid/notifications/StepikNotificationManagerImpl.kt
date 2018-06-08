@@ -498,8 +498,7 @@ class StepikNotificationManagerImpl
         val hoursDiff = (deadline.deadline.time - DateTimeHelper.nowUtc()) / AppConstants.MILLIS_IN_1HOUR + 1
 
         val intent = Intent(context, SectionActivity::class.java)
-        intent.putExtra(AppConstants.KEY_COURSE_LONG_ID, deadline.courseId)
-        intent.putExtra(AppConstants.KEY_MODULE_POSITION, course.sections?.indexOf(deadline.sectionId) ?: 0)
+        intent.putExtra(AppConstants.KEY_COURSE_BUNDLE, course)
         intent.putExtra(Analytic.Deadlines.Params.BEFORE_DEADLINE, hoursDiff)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
