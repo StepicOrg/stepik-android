@@ -604,15 +604,20 @@ class StepikNotificationManagerImpl
     private fun getPictureByCourse(course: Course?): Bitmap {
         val cover = course?.cover
         val notificationPlaceholder = R.drawable.general_placeholder
-        if (cover == null) {
-            return getBitmap(R.drawable.general_placeholder)
+
+        return if (cover == null) {
+            getBitmap(notificationPlaceholder)
         } else {
-            return Glide.with(context)
-                    .load(configs.baseUrl + cover)
-                    .asBitmap()
-                    .placeholder(notificationPlaceholder)
-                    .into(200, 200)//pixels
-                    .get()
+            try { // in order to suppress gai exception
+                Glide.with(context)
+                        .load(configs.baseUrl + cover)
+                        .asBitmap()
+                        .placeholder(notificationPlaceholder)
+                        .into(200, 200)//pixels
+                        .get()
+            } catch (e: Exception) {
+                getBitmap(notificationPlaceholder)
+            }
         }
     }
 
