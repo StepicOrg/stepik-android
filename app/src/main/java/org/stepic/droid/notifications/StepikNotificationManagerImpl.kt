@@ -498,7 +498,7 @@ class StepikNotificationManagerImpl
         val hoursDiff = (deadline.deadline.time - DateTimeHelper.nowUtc()) / AppConstants.MILLIS_IN_1HOUR + 1
 
         val intent = Intent(context, SectionActivity::class.java)
-        intent.putExtra(AppConstants.KEY_COURSE_LONG_ID, deadline.courseId)
+        intent.putExtra(AppConstants.KEY_COURSE_BUNDLE, course)
         intent.putExtra(Analytic.Deadlines.Params.BEFORE_DEADLINE, hoursDiff)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
@@ -603,15 +603,20 @@ class StepikNotificationManagerImpl
     private fun getPictureByCourse(course: Course?): Bitmap {
         val cover = course?.cover
         val notificationPlaceholder = R.drawable.general_placeholder
-        if (cover == null) {
-            return getBitmap(R.drawable.general_placeholder)
+
+        return if (cover == null) {
+            getBitmap(notificationPlaceholder)
         } else {
-            return Glide.with(context)
-                    .load(configs.baseUrl + cover)
-                    .asBitmap()
-                    .placeholder(notificationPlaceholder)
-                    .into(200, 200)//pixels
-                    .get()
+            try { // in order to suppress gai exception
+                Glide.with(context)
+                        .load(configs.baseUrl + cover)
+                        .asBitmap()
+                        .placeholder(notificationPlaceholder)
+                        .into(200, 200)//pixels
+                        .get()
+            } catch (e: Exception) {
+                getBitmap(notificationPlaceholder)
+            }
         }
     }
 

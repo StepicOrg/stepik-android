@@ -75,12 +75,10 @@ constructor(
                 .map { it.sortedBy { it.deadline }.distinctBy { it.courseId } }
                 .subscribeOn(backgroundScheduler)
                 .observeOn(backgroundScheduler)
-                .subscribeBy(
-                        onError = {},
-                        onSuccess = { deadlines ->
-                            deadlines.forEach { stepikNotificationManager.showPersonalDeadlineNotification(it) }
-                            scheduleDeadlinesNotifications()
-                        }
-                )
+                .doOnSuccess { deadlines ->
+                    deadlines.forEach { stepikNotificationManager.showPersonalDeadlineNotification(it) }
+                }
+                .onErrorReturn { emptyList() }
+                .subscribe { _, _ -> scheduleDeadlinesNotifications() }
     }
 }
