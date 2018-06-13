@@ -58,7 +58,6 @@ class CatalogFragment : FragmentBase(),
 
     override fun injectComponent() {
         App
-                .Companion
                 .component()
                 .catalogComponentBuilder()
                 .build()
@@ -175,14 +174,6 @@ class CatalogFragment : FragmentBase(),
 
     override fun onFiltersChanged(filters: EnumSet<StepikFilter>) {
         updateFilters(filters)
-        resolveFiltersAnalytic(filters)
-    }
-
-    private fun resolveFiltersAnalytic(filters: EnumSet<StepikFilter>) {
-        analytic.reportEvent(Analytic.Interaction.LANG_WIDGET_LANG_CHANGED, Bundle().apply {
-            putString(Analytic.Interaction.LangWidgetLangChangedParams.TO_LANG, filters.firstOrNull()?.language)
-            putBoolean(Analytic.Interaction.LangWidgetLangChangedParams.IS_FIRST_LAUNCH, isFirstTime)
-        })
     }
 
     private fun updateFilters(filters: EnumSet<StepikFilter>) {
