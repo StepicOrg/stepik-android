@@ -55,6 +55,6 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
         super.onSizeChanged(width, height, oldWidth, oldHeight)
 
         backgroundPaint.shader = LinearGradient(width.toFloat(), height.toFloat(), 0f, 0f, backgroundColors, backgroundColorsPositions, Shader.TileMode.MIRROR)
-        arcRect = RectF(strokeWidth / 2, strokeWidth / 2, width - strokeWidth / 2, height - strokeWidth / 2)
+        arcRect.set(strokeWidth / 2, strokeWidth / 2, width - strokeWidth / 2, height - strokeWidth / 2)
     }
 }
