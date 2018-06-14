@@ -5,6 +5,7 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
 import org.stepic.droid.R
+import kotlin.properties.Delegates
 
 class AchievementCircleProgressView
 @JvmOverloads
@@ -15,8 +16,21 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 
     private var arcRect: RectF = RectF()
 
-    private val strokeWidth: Float
-    private val progressColor: Int
+    private val backgroundPaint = Paint().apply {
+        flags = flags or Paint.ANTI_ALIAS_FLAG
+        style = Paint.Style.STROKE
+    }
+
+    private val progressPaint = Paint().apply {
+        flags = flags or Paint.ANTI_ALIAS_FLAG
+        style = Paint.Style.STROKE
+    }
+
+    var strokeWidth: Float by Delegates.observable(0f) { _, _, newValue ->
+        backgroundPaint.strokeWidth = newValue
+        progressPaint.strokeWidth = newValue
+    }
+    var progressColor: Int by Delegates.observable(0) { _, _, newValue -> progressPaint.color = newValue }
 
     var progress: Float
 
@@ -29,20 +43,6 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
         } finally {
             attributes.recycle()
         }
-    }
-
-
-    private val backgroundPaint = Paint().apply {
-        flags = flags or Paint.ANTI_ALIAS_FLAG
-        style = Paint.Style.STROKE
-        strokeWidth = this@AchievementCircleProgressView.strokeWidth
-    }
-
-    private val progressPaint = Paint().apply {
-        flags = flags or Paint.ANTI_ALIAS_FLAG
-        style = Paint.Style.STROKE
-        strokeWidth = this@AchievementCircleProgressView.strokeWidth
-        color = progressColor
     }
 
     override fun onDraw(canvas: Canvas) {
