@@ -157,6 +157,8 @@ interface AppCoreComponent {
 
     fun inject(videoQualityDetailedDialog: VideoQualityDetailedDialog)
 
+    fun inject(coursesLangDialog: CoursesLangDialog)
+
     fun inject(latexSupportableEnhancedFrameLayout: LatexSupportableEnhancedFrameLayout)
 
     fun inject(latexSupportableWebView: LatexSupportableWebView)
