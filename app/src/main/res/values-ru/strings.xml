@@ -537,6 +537,8 @@
     <string name="hint_for_code">Введите код здесь…</string>
     <string name="step_preparing">Шаг еще не обработан. Нажмите, чтобы перезагрузить</string>
     <string name="language_of_courses">Язык курсов</string>
+    <string name="language_widget_hint">Это можно изменить в настройках</string>
+
     <string name="course_collection_empty">Извините, эта подборка на каникулах</string>
     <string name="internet_problem_catalog">Включите интернет, чтобы увидеть наши подборки курсов</string>
     <string name="course_rating">Рейтинг курса</string>

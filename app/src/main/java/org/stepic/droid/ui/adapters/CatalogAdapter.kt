@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.view_catalog_tags.view.*
 import kotlinx.android.synthetic.main.view_course_languages.view.*
 import org.stepic.droid.R
 import org.stepic.droid.model.*
+import org.stepic.droid.ui.util.setHeight
 import java.util.*
 
 class CatalogAdapter(
@@ -35,6 +36,8 @@ class CatalogAdapter(
     }
 
     private var filters: EnumSet<StepikFilter>? = null
+    private var needShowFilters = false
+
     private var tags = mutableListOf<Tag>()
     var isOfflineMode: Boolean = false
         private set
@@ -89,8 +92,9 @@ class CatalogAdapter(
         }
     }
 
-    fun showFilters(filtersFromPreferences: EnumSet<StepikFilter>) {
+    fun setFilters(filtersFromPreferences: EnumSet<StepikFilter>, needShow: Boolean) {
         filters = filtersFromPreferences
+        needShowFilters = needShow
         notifyItemChanged(LANGUAGE_INDEX)
     }
 
@@ -181,6 +185,7 @@ class CatalogAdapter(
 
         fun refreshLanguages() {
             val localFilters = filters ?: return
+            itemView.setHeight(if (needShowFilters) ViewGroup.LayoutParams.WRAP_CONTENT else 0)
             updateCheckableView(languageRu, localFilters.contains(StepikFilter.RUSSIAN))
             updateCheckableView(languageEn, localFilters.contains(StepikFilter.ENGLISH))
         }

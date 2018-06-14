@@ -27,11 +27,21 @@
         android:layout_toRightOf="@id/languageRu"
         android:text="@string/en_language_filter"/>
 
+    <TextView
+        android:id="@+id/languageHint"
+        android:text="@string/language_widget_hint"
+        android:textColor="@color/new_accent_color_alpha_30"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/languageRu"
+        android:layout_marginStart="@dimen/course_list_side_padding"
+        android:layout_marginLeft="@dimen/course_list_side_padding"
+        android:layout_marginBottom="20dp" />
 
     <include
         layout="@layout/view_horizontal_line"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_below="@id/languageRu"/>
+        android:layout_below="@id/languageHint"/>
 
 </RelativeLayout>
