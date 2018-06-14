@@ -50,7 +50,9 @@ public class SharedPreferenceHelper {
     private static final String FILTER_ENGLISH_LANGUAGE = "english_lang";
     private static final String NOTIFICATIONS_COUNT = "notifications_count";
     private static final String IS_EVER_LOGGED = "is_ever_logged";
-    private static final String IS_CATALOG_FIRST_OPEN = "is_catalog_first_open";
+
+    private static final String IS_LANG_WIDGET_WAS_SHOWN_AFTER_LOGIN = "is_lang_widget_was_shown_after_login";
+    private static final String NEED_SHOW_LANG_WIDGET = "need_show_lang_widget";
 
     private final String ACCESS_TOKEN_TIMESTAMP = "access_token_timestamp";
     private final String AUTH_RESPONSE_JSON = "auth_response_json";
@@ -189,10 +191,25 @@ public class SharedPreferenceHelper {
         return getLong(PreferenceType.DEVICE_SPECIFIC, REGISTRATION_ALARM_TIMESTAMP);
     }
 
-    public boolean isCatalogFirstOpen() {
-        final boolean isFirstTime = getBoolean(PreferenceType.DEVICE_SPECIFIC, IS_CATALOG_FIRST_OPEN, true);
-        put(PreferenceType.DEVICE_SPECIFIC, IS_CATALOG_FIRST_OPEN, false);
-        return isFirstTime;
+    /**
+     * Lang widget should be kept the whole session after first time catalog was opened after new login
+     */
+    public boolean isNeedShowLangWidget() {
+        boolean isLangWidgetWasShown = getBoolean(PreferenceType.LOGIN, IS_LANG_WIDGET_WAS_SHOWN_AFTER_LOGIN, false);
+        if (!isLangWidgetWasShown) {
+            put(PreferenceType.LOGIN, IS_LANG_WIDGET_WAS_SHOWN_AFTER_LOGIN, true);
+            put(PreferenceType.LOGIN, NEED_SHOW_LANG_WIDGET, true);
+        }
+
+        return getBoolean(PreferenceType.LOGIN, NEED_SHOW_LANG_WIDGET, true);
+    }
+
+    public void onSessionAfterLogin() {
+        put(PreferenceType.LOGIN, IS_LANG_WIDGET_WAS_SHOWN_AFTER_LOGIN, false);
+    }
+
+    public void onNewSession() {
+        put(PreferenceType.LOGIN, NEED_SHOW_LANG_WIDGET, false);
     }
 
     public void clickEnrollNotification(long timestamp) {

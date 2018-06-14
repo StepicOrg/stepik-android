@@ -49,7 +49,7 @@ class CatalogFragment : FragmentBase(),
 
     private var searchMenuItem: MenuItem? = null
 
-    private var isFirstTime = false
+    private var needShowLangWidget = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,7 +62,8 @@ class CatalogFragment : FragmentBase(),
                 .catalogComponentBuilder()
                 .build()
                 .inject(this)
-        isFirstTime = sharedPreferenceHelper.isCatalogFirstOpen
+
+        needShowLangWidget = sharedPreferenceHelper.isNeedShowLangWidget
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -178,7 +179,7 @@ class CatalogFragment : FragmentBase(),
 
     private fun updateFilters(filters: EnumSet<StepikFilter>) {
         val catalogAdapter = catalogRecyclerView.adapter as CatalogAdapter
-        catalogAdapter.showFilters(filters)
+        catalogAdapter.setFilters(filters, needShowLangWidget)
         catalogAdapter.refreshPopular()
 
         catalogPresenter.onNeedLoadCatalog(filters)
