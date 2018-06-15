@@ -94,4 +94,13 @@
         <attr name="strokeWidth" format="dimension" />
         <attr name="progress" format="float" />
     </declare-styleable>
+
+    <declare-styleable name="VectorRatingBar">
+        <attr name="progressIcon" format="reference" />
+        <attr name="secondaryIcon" format="reference" />
+        <attr name="backgroundIcon" format="reference" />
+
+        <attr name="total" format="integer" />
+        <attr name="progress" format="integer" />
+    </declare-styleable>
 </resources>
