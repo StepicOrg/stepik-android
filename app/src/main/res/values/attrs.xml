@@ -100,7 +100,7 @@
         <attr name="secondaryIcon" format="reference" />
         <attr name="backgroundIcon" format="reference" />
 
-        <attr name="total" format="integer" />
-        <attr name="progress" format="integer" />
+        <attr name="totalProgress" format="integer" />
+        <attr name="currentProgress" format="integer" />
     </declare-styleable>
 </resources>

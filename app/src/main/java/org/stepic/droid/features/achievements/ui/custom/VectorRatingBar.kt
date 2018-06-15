@@ -36,8 +36,8 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
             secondaryProgressRes = attributes.getResourceId(R.styleable.VectorRatingBar_secondaryIcon, android.R.drawable.star_on)
             progressRes = attributes.getResourceId(R.styleable.VectorRatingBar_progressIcon, android.R.drawable.star_off)
 
-            progress = attributes.getInteger(R.styleable.VectorRatingBar_progress, 0)
-            total = attributes.getInteger(R.styleable.VectorRatingBar_total, 0)
+            progress = attributes.getInteger(R.styleable.VectorRatingBar_currentProgress, 0)
+            total = attributes.getInteger(R.styleable.VectorRatingBar_totalProgress, 0)
         } finally {
             attributes.recycle()
         }
