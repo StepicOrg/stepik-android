@@ -27,6 +27,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 
     var progress: Int by Delegates.observable(0) { _, _, _ -> requestLayout() }
     var total: Int by Delegates.observable(0) { _, _, _ -> requestLayout() }
+    var gap: Float by Delegates.observable(0f) { _, _, _ -> requestLayout() }
 
     init {
         val attributes = context.obtainStyledAttributes(attrs, R.styleable.VectorRatingBar)
@@ -38,6 +39,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 
             progress = attributes.getInteger(R.styleable.VectorRatingBar_currentProgress, 0)
             total = attributes.getInteger(R.styleable.VectorRatingBar_totalProgress, 0)
+            gap = attributes.getDimension(R.styleable.VectorRatingBar_itemsGap, 0f)
         } finally {
             attributes.recycle()
         }
@@ -47,17 +49,17 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
         var offset = 0f
         for (i in 0 until min(progress, total)) {
             canvas.drawBitmap(progressBitmap, offset, 0f, null)
-            offset += progressBitmap.width
+            offset += progressBitmap.width + gap
         }
 
         if (progress < total) {
             canvas.drawBitmap(secondaryProgressBitmap, offset, 0f, null)
-            offset += secondaryProgressBitmap.width
+            offset += secondaryProgressBitmap.width + gap
         }
 
         for (i in progress + 1 until total) {
             canvas.drawBitmap(backgroundBitmap, offset, 0f, null)
-            offset += backgroundBitmap.width
+            offset += backgroundBitmap.width + gap
         }
     }
 
@@ -76,7 +78,8 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 
         val totalWidth = progressBitmap.width * min(total, progress) +
                 secondaryProgressBitmap.width * min(1, max(0, total - progress)) +
-                backgroundBitmap.width * max(0, total - progress - 1)
+                backgroundBitmap.width * max(0, total - progress - 1) +
+                (gap * (total - 1)).toInt()
 
         @SuppressLint("SwitchIntDef")
         val width = when(widthMode) {

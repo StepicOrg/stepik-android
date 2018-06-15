@@ -102,5 +102,7 @@
 
         <attr name="totalProgress" format="integer" />
         <attr name="currentProgress" format="integer" />
+
+        <attr name="itemsGap" format="dimension" />
     </declare-styleable>
 </resources>
