@@ -175,6 +175,56 @@
 
                 <include layout="@layout/view_notification_interval_chooser"/>
 
+                <LinearLayout
+                    android:id="@+id/achievementsContainer"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/left_right_margin_in_profile"
+                    android:layout_marginLeft="@dimen/left_right_margin_in_profile"
+                    android:layout_marginEnd="@dimen/left_right_margin_in_profile"
+                    android:layout_marginRight="@dimen/left_right_margin_in_profile"
+
+                    android:layout_marginTop="@dimen/guideline_standard_padding"
+                    android:layout_marginBottom="32dp">
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:text="@string/achievements_title"
+                            fontPath="fonts/Roboto-Light.ttf"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical|start"
+                            android:textSize="@dimen/text_header"
+                            tools:ignore="MissingPrefix" />
+
+                        <TextView
+                            android:id="@+id/viewAllAchievements"
+                            android:text="@string/view_all_courses"
+                            android:textColor="@color/view_all_course_list_color"
+                            android:background="?selectableItemBackgroundBorderless"
+                            fontPath="fonts/Roboto-Light.ttf"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical|end"
+                            android:textSize="@dimen/text_header"
+                            tools:ignore="MissingPrefix" />
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:id="@+id/achievementsTilesContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_horizontal"
+                        android:baselineAligned="false"
+                        android:layout_marginTop="32dp">
+                    </LinearLayout>
+
+                </LinearLayout>
+
                 <FrameLayout
                     android:id="@+id/shortBioInfoContainer"
                     android:layout_width="match_parent"
