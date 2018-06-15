@@ -8,7 +8,6 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import java.util.*
 import javax.inject.Inject
 
-@CatalogScope
 class FiltersPresenter
 @Inject
 constructor(

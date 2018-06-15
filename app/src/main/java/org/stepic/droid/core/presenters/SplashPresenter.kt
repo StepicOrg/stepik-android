@@ -48,6 +48,7 @@ constructor(
                     registerDeviceToPushes()
                     executeLegacyOperations()
                     localReminder.remindAboutRegistration()
+                    sharedPreferenceHelper.onNewSession()
                 }.toSingle {
                     val isLogged = sharedPreferenceHelper.authResponseFromStore != null
                     val isOnboardingNotPassedYet = sharedPreferenceHelper.isOnboardingNotPassedYet

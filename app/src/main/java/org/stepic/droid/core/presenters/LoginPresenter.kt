@@ -63,6 +63,7 @@ class LoginPresenter
                     if (authStepikResponse != null) {
                         sharedPreferenceHelper.storeAuthInfo(authStepikResponse)
                         analytic.reportEvent(Analytic.Interaction.SUCCESS_LOGIN)
+                        sharedPreferenceHelper.onSessionAfterLogin()
 
                         mainHandler.post { view?.onSuccessLogin(authData) }
                     } else {

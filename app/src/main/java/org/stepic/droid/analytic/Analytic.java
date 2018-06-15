@@ -174,12 +174,6 @@ public interface Analytic {
         String ACCEPT_DELETING_UNIT = "click_delete_unit_dialog";
         String ACCEPT_DELETING_SECTION = "click_delete_section_dialog";
         String SHOW_LAUNCH_SCREEN_AFTER_LOGOUT = "show_launch_screen_after_logout";
-
-        String LANG_WIDGET_LANG_CHANGED = "lang_widget_lang_changed";
-        interface LangWidgetLangChangedParams {
-            String TO_LANG = "to_lang";
-            String IS_FIRST_LAUNCH = "is_first_launch";
-        }
     }
 
     interface Course {

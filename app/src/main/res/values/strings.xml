@@ -551,6 +551,8 @@
     <string name="ru_language_filter" translatable="false">Ru</string>
     <string name="en_language_filter" translatable="false">En</string>
     <string name="language_of_courses">Language of courses</string>
+    <string name="language_widget_hint">This can be also changed in settings</string>
+
     <string name="course_collection_empty">Sorry, this collection is on vacation</string>
     <string name="internet_problem_catalog">Enable internet for see our Course Collections</string>
     <string name="trending_topics">Trending topics</string>

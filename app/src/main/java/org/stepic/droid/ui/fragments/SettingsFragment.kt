@@ -8,6 +8,7 @@ import kotlinx.android.synthetic.main.fragment_settings.*
 import org.stepic.droid.R
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.ui.dialogs.AllowMobileDataDialogFragment
+import org.stepic.droid.ui.dialogs.CoursesLangDialog
 import org.stepic.droid.ui.dialogs.VideoQualityDialog
 
 class SettingsFragment : FragmentBase(), AllowMobileDataDialogFragment.Callback {
@@ -90,6 +91,10 @@ class SettingsFragment : FragmentBase(), AllowMobileDataDialogFragment.Callback 
         }
 
         storageManagementButton.setOnClickListener { screenManager.showStorageManagement(activity) }
+
+        langWidgetActionButton.setOnClickListener {
+            CoursesLangDialog.newInstance().show(fragmentManager, null)
+        }
     }
 
     override fun onDestroyView() {
