@@ -17,7 +17,7 @@ constructor(
 ): AchievementsRepository {
     private fun getDistinctAchievementKindsOrderedByObtainDate(userId: Long, count: Int = -1): Observable<String> = Observable.create { emitter ->
         val kinds = HashSet<String>()
-        var hasNextPage = false
+        var hasNextPage = true
         var page = 1
 
         paginationLoop@ while (hasNextPage) {
@@ -56,7 +56,7 @@ constructor(
                 zip(Observable.just(it), achievementsService.getAchievementProgresses(user = userId, achievement = it.id).map { it.achievementsProgresses.first() }.toObservable())
             }.toList().map {
                 val sorted = it.sortedBy { (achievement, _) -> achievement.targetScore }
-                val firstCompleted = sorted.indexOfFirst { (_, progress) -> progress.obtainDate != null }
+                val firstCompleted = sorted.indexOfLast { (_, progress) -> progress.obtainDate != null }
                 val level = firstCompleted + 1
 
                 AchievementFlatItem(
