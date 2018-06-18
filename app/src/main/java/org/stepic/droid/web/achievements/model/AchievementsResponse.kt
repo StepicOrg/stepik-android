@@ -6,5 +6,5 @@ import org.stepic.droid.web.MetaResponseBase
 
 class AchievementsResponse(
         meta: Meta,
-        val achievements: List<Achievement>?
+        val achievements: List<Achievement>
 ): MetaResponseBase(meta)

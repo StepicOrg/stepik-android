@@ -58,6 +58,7 @@ import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DateTimeHelper;
 import org.stepic.droid.util.DeviceInfoUtil;
 import org.stepic.droid.util.RWLocks;
+import org.stepic.droid.web.achievements.AchievementsService;
 import org.stepic.droid.web.model.adaptive.RatingRequest;
 import org.stepic.droid.web.model.adaptive.RatingResponse;
 import org.stepic.droid.web.model.adaptive.RatingRestoreResponse;
@@ -120,6 +121,7 @@ public class ApiImpl implements Api {
     private StepicEmptyAuthService stepikEmptyAuthService;
     private RemoteStorageService remoteStorageService;
     private RatingService ratingService;
+    private AchievementsService achievementsService;
 
     @Inject
     public ApiImpl(
@@ -167,6 +169,7 @@ public class ApiImpl implements Api {
         loggedService = createLoggedService(StepicRestLoggedService.class, config.getBaseUrl());
         remoteStorageService = createLoggedService(RemoteStorageService.class, config.getBaseUrl());
         ratingService = createLoggedService(RatingService.class, firebaseRemoteConfig.getString(RemoteConfig.ADAPTIVE_BACKEND_URL));
+        achievementsService = createLoggedService(AchievementsService.class, config.getBaseUrl());
     }
 
     public StepicRestLoggedService getLoggedService() {
@@ -175,6 +178,10 @@ public class ApiImpl implements Api {
 
     public RemoteStorageService getRemoteStorageService() {
         return remoteStorageService;
+    }
+
+    public AchievementsService getAchievementsService() {
+        return achievementsService;
     }
 
     private <T> T createLoggedService(final Class<T> service, final String host) {

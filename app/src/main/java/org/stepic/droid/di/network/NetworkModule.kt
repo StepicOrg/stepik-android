@@ -8,6 +8,7 @@ import org.stepic.droid.features.deadlines.repository.DeadlinesRepository
 import org.stepic.droid.features.deadlines.repository.DeadlinesRepositoryImpl
 import org.stepic.droid.web.ApiImpl
 import org.stepic.droid.web.StepicRestLoggedService
+import org.stepic.droid.web.achievements.AchievementsService
 import org.stepic.droid.web.storage.RemoteStorageService
 
 @Module(includes = [NetworkUtilModule::class])
@@ -27,5 +28,10 @@ abstract class NetworkModule {
         @AppSingleton
         @JvmStatic
         fun provideRemoteStorageService(apiImpl: ApiImpl): RemoteStorageService = apiImpl.remoteStorageService
+
+        @Provides
+        @AppSingleton
+        @JvmStatic
+        fun provideAchievementsService(apiImpl: ApiImpl): AchievementsService = apiImpl.achievementsService
     }
 }

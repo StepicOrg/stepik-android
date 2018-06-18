@@ -9,5 +9,5 @@ class AchievementProgressesResponse(
         meta: Meta,
 
         @SerializedName("achievement-progresses")
-        val achievementsProgresses: List<AchievementProgress>?
+        val achievementsProgresses: List<AchievementProgress>
 ): MetaResponseBase(meta)

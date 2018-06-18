@@ -17,7 +17,6 @@ import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.web.model.adaptive.RatingRestoreResponse;
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
-import org.stepic.droid.features.deadlines.repository.DeadlinesRepository;
 
 import java.util.List;
 
