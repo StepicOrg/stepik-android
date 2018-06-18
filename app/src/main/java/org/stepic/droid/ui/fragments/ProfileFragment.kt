@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
+import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.view.*
 import com.bumptech.glide.Glide
@@ -22,6 +23,7 @@ import org.stepic.droid.core.ProfilePresenter
 import org.stepic.droid.core.presenters.StreakPresenter
 import org.stepic.droid.core.presenters.contracts.NotificationTimeView
 import org.stepic.droid.core.presenters.contracts.ProfileView
+import org.stepic.droid.features.achievements.ui.adapters.AchievementsTileAdapter
 import org.stepic.droid.fonts.FontType
 import org.stepic.droid.model.UserViewModel
 import org.stepic.droid.ui.activities.MainFeedActivity
@@ -113,6 +115,10 @@ class ProfileFragment : FragmentBase(),
 
         shortBioSecondText.textView.textSize = 14f
         shortBioSecondText.textView.setLineSpacing(0f, 1.6f)
+
+        achievementsTilesContainer.isNestedScrollingEnabled = false
+        achievementsTilesContainer.layoutManager = GridLayoutManager(context, 4)
+        achievementsTilesContainer.adapter = AchievementsTileAdapter()
     }
 
     override fun onDestroyView() {

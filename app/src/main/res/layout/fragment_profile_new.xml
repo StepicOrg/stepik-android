@@ -213,16 +213,11 @@
                             tools:ignore="MissingPrefix" />
                     </FrameLayout>
 
-                    <LinearLayout
+                    <android.support.v7.widget.RecyclerView
                         android:id="@+id/achievementsTilesContainer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_horizontal"
-                        android:baselineAligned="false"
-                        android:layout_marginTop="32dp">
-                    </LinearLayout>
-
+                        android:layout_marginTop="32dp" />
                 </LinearLayout>
 
                 <FrameLayout
