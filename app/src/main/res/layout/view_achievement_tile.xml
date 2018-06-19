@@ -17,7 +17,6 @@
             android:layout_height="64dp"
             android:layout_gravity="center"
             app:strokeWidth="1.5dp"
-            app:progress="0.14"
             app:progressColor="@color/stepic_brand_primary"/>
 
         <ImageView
