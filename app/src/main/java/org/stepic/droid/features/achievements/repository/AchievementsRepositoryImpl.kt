@@ -6,6 +6,7 @@ import io.reactivex.rxkotlin.Observables.zip
 import io.reactivex.rxkotlin.toObservable
 import org.stepic.droid.model.achievements.Achievement
 import org.stepic.droid.model.achievements.AchievementFlatItem
+import org.stepic.droid.model.achievements.EmptyAchievementProgressStub
 import org.stepic.droid.web.achievements.AchievementsService
 import javax.inject.Inject
 import kotlin.math.min
@@ -20,15 +21,35 @@ constructor(
         var hasNextPage = true
         var page = 1
 
-        paginationLoop@ while (hasNextPage) {
+        while (hasNextPage) {
             val response = achievementsService.getAchievementProgresses(user = userId, page = page, order = "-obtain_date").blockingGet()
 
-            for (progress in response.achievementsProgresses) {
-                if (!kinds.contains(progress.kind)) {
-                    kinds.add(progress.kind)
-                    emitter.onNext(progress.kind)
-                    if (count != -1 && kinds.size == count) {
-                        break@paginationLoop
+            response.achievementsProgresses.forEach {
+                if (!kinds.contains(it.kind)) {
+                    kinds.add(it.kind)
+                    emitter.onNext(it.kind)
+                    if (kinds.size == count) {
+                        return@create emitter.onComplete()
+                    }
+                }
+            }
+
+            hasNextPage = response.meta.has_next
+            page = response.meta.page + 1
+        }
+
+        hasNextPage = true
+        page = 1
+
+        while (hasNextPage && (count == -1 || kinds.size < count)) {
+            val response = achievementsService.getAchievements(page = page).firstOrError().blockingGet()
+
+            response.achievements.forEach {
+                if (!kinds.contains(it.kind)) {
+                    kinds.add(it.kind)
+                    emitter.onNext(it.kind)
+                    if (kinds.size == count) {
+                        return@create emitter.onComplete()
                     }
                 }
             }
@@ -53,7 +74,11 @@ constructor(
 
     private fun getAchievementWithProgressByKind(userId: Long, kind: String): Observable<AchievementFlatItem> =
             getAllAchievementsByKind(kind).flatMap {
-                zip(Observable.just(it), achievementsService.getAchievementProgresses(user = userId, achievement = it.id).map { it.achievementsProgresses.first() }.toObservable())
+                zip(
+                        Observable.just(it),
+                        achievementsService.getAchievementProgresses(user = userId, achievement = it.id)
+                                .map { it.achievementsProgresses.firstOrNull() ?: EmptyAchievementProgressStub }.toObservable()
+                )
             }.toList().map {
                 val sorted = it.sortedBy { (achievement, _) -> achievement.targetScore }
                 val firstCompleted = sorted.indexOfLast { (_, progress) -> progress.obtainDate != null }
