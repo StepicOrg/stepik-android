@@ -206,9 +206,9 @@
                             android:textColor="@color/view_all_course_list_color"
                             android:background="?selectableItemBackgroundBorderless"
                             fontPath="fonts/Roboto-Light.ttf"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:gravity="center_vertical|end"
+                            android:layout_gravity="center_vertical|end"
                             android:textSize="@dimen/text_header"
                             tools:ignore="MissingPrefix" />
                     </FrameLayout>
