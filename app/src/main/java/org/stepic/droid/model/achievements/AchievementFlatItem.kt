@@ -10,6 +10,8 @@ class AchievementFlatItem(
 ) {
     val iconId: Long? = null // currentLevelAchievement?.iconId
 
+    val isLocked = currentLevelAchievement == null
+
     val kind = nextLevelAchievement.kind
     val currentScore = nextLevelAchievementProgress.score
     val targetScore = nextLevelAchievement.targetScore

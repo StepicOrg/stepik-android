@@ -1,7 +1,6 @@
 package org.stepic.droid.features.achievements.ui.adapters
 
 import android.net.Uri
-import android.support.v7.content.res.AppCompatResources
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -11,16 +10,22 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import kotlinx.android.synthetic.main.view_achievement_tile.view.*
 import org.stepic.droid.R
+import org.stepic.droid.base.App
 import org.stepic.droid.features.achievements.ui.custom.AchievementCircleProgressView
 import org.stepic.droid.features.achievements.ui.custom.VectorRatingBar
+import org.stepic.droid.features.achievements.util.AchievementResourceResolver
 import org.stepic.droid.model.achievements.AchievementFlatItem
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.svg.GlideSvgRequestFactory
+import javax.inject.Inject
 
 class AchievementsTileAdapter: RecyclerView.Adapter<AchievementsTileAdapter.AchievementTileViewHolder>() {
-    companion object {
-        private const val EMPTY_ACHIEVEMENT_ICON_PATH = "file:///android_asset/images/vector/achievements/ic_empty_achievement.svg"
+    @Inject
+    lateinit var achievementResourceResolver: AchievementResourceResolver
+
+    init {
+        App.component().inject(this)
     }
 
     private val achievements = ArrayList<AchievementFlatItem>()
@@ -45,13 +50,8 @@ class AchievementsTileAdapter: RecyclerView.Adapter<AchievementsTileAdapter.Achi
 
             achievementLevelProgress.progress = item.currentScore.toFloat() / item.targetScore
 
-            if (item.isLocked) {
-                setAchievementIcon(EMPTY_ACHIEVEMENT_ICON_PATH)
-                achievementIcon.alpha = 0.4f
-            } else {
-                achievementIcon.alpha = 1f
-                // resolve image
-            }
+            setAchievementIcon(achievementResourceResolver.resolveAchievementIcon(item, achievementIcon))
+            achievementIcon.alpha = if (item.isLocked) 0.4f else 1f
 
             achievementLevelProgress.changeVisibility(!item.isLocked)
             achievementLevels.changeVisibility(!item.isLocked)
