@@ -1,7 +1,6 @@
 package org.stepic.droid.features.achievements.ui.adapters.holders
 
 import android.net.Uri
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
 import com.bumptech.glide.Glide
@@ -11,6 +10,7 @@ import org.stepic.droid.features.achievements.ui.custom.AchievementCircleProgres
 import org.stepic.droid.features.achievements.ui.custom.VectorRatingBar
 import org.stepic.droid.features.achievements.util.AchievementResourceResolver
 import org.stepic.droid.model.achievements.AchievementFlatItem
+import org.stepic.droid.ui.adapters.viewhoders.GenericViewHolder
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.svg.GlideSvgRequestFactory
@@ -18,7 +18,7 @@ import org.stepic.droid.util.svg.GlideSvgRequestFactory
 class AchievementTileViewHolder(
         root: View,
         private val achievementResourceResolver: AchievementResourceResolver
-): RecyclerView.ViewHolder(root) {
+): GenericViewHolder<AchievementFlatItem>(root) {
     val achievementLevels: VectorRatingBar = root.achievementLevels
     val achievementLevelProgress: AchievementCircleProgressView = root.achievementLevelProgress
     val achievementIcon: ImageView = root.achievementIcon
@@ -40,7 +40,7 @@ class AchievementTileViewHolder(
         }
     }
 
-    fun onBind(item: AchievementFlatItem) {
+    override fun onBind(item: AchievementFlatItem) {
         achievementLevels.progress = item.currentLevel
         achievementLevels.total = item.maxLevel
 
