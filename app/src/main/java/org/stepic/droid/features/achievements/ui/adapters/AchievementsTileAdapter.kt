@@ -64,7 +64,7 @@ class AchievementsTileAdapter: RecyclerView.Adapter<AchievementsTileAdapter.Achi
         val achievementIcon: ImageView = root.achievementIcon
 
         private val svgRequestBuilder = GlideSvgRequestFactory
-                .create(itemView.context, AppCompatResources.getDrawable(itemView.context, R.drawable.general_placeholder))
+                .create(itemView.context, null)
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
 
         fun setAchievementIcon(path: String) {
