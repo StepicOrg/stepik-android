@@ -19,9 +19,9 @@ class AchievementTileViewHolder(
         root: View,
         private val achievementResourceResolver: AchievementResourceResolver
 ): GenericViewHolder<AchievementFlatItem>(root) {
-    val achievementLevels: VectorRatingBar = root.achievementLevels
-    val achievementLevelProgress: AchievementCircleProgressView = root.achievementLevelProgress
-    val achievementIcon: ImageView = root.achievementIcon
+    private val achievementLevels: VectorRatingBar = root.achievementLevels
+    private val achievementLevelProgress: AchievementCircleProgressView = root.achievementLevelProgress
+    private val achievementIcon: ImageView = root.achievementIcon
 
     private val svgRequestBuilder = GlideSvgRequestFactory
             .create(itemView.context, null)

@@ -17,3 +17,5 @@ class AchievementProgress(
         @SerializedName("obtain_date")
         val obtainDate: Date?
 )
+
+val EmptyAchievementProgressStub = AchievementProgress(0, 0, 0, 0, String(), Date(0), Date(0), null)

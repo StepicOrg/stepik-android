@@ -26,6 +26,7 @@ import org.stepic.droid.di.routing.RoutingComponent
 import org.stepic.droid.di.splash.SplashComponent
 import org.stepic.droid.di.storage.StorageComponent
 import org.stepic.droid.di.video.VideoComponent
+import org.stepic.droid.features.achievements.ui.adapters.AchievementsAdapter
 import org.stepic.droid.features.achievements.ui.adapters.AchievementsTileAdapter
 import org.stepic.droid.features.deadlines.ui.dialogs.EditDeadlinesDialog
 import org.stepic.droid.features.deadlines.ui.dialogs.LearningRateDialog
@@ -206,4 +207,5 @@ interface AppCoreComponent {
 
 
     fun inject(achievementsTileAdapter: AchievementsTileAdapter)
+    fun inject(achievementsAdapter: AchievementsAdapter)
 }
