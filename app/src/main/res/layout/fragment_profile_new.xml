@@ -186,7 +186,9 @@
                     android:layout_marginRight="@dimen/left_right_margin_in_profile"
 
                     android:layout_marginTop="@dimen/guideline_standard_padding"
-                    android:layout_marginBottom="32dp">
+                    android:layout_marginBottom="32dp"
+
+                    android:visibility="gone">
 
                     <FrameLayout
                         android:layout_width="match_parent"

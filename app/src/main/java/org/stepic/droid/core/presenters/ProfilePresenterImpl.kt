@@ -19,7 +19,8 @@ class ProfilePresenterImpl
         analytic: Analytic,
         private val mainHandler: MainHandler,
         private val api: Api,
-        private val sharedPreferences: SharedPreferenceHelper) : ProfilePresenter(analytic) {
+        private val sharedPreferences: SharedPreferenceHelper
+) : ProfilePresenter(analytic) {
 
     private var isLoading: Boolean = false //main thread only
     private var userViewModel: UserViewModel? = null //both threads, but access only when isLoading = false, write isLoading = true.
@@ -109,6 +110,7 @@ class ProfilePresenterImpl
                     shortBio = stringOrEmpty(user.short_bio),
                     information = stringOrEmpty((user.details)),
                     isMyProfile = false,
+                    isPrivate = user.is_private,
                     id = userId)
             this.userViewModel = userViewModelLocal
 
@@ -163,6 +165,7 @@ class ProfilePresenterImpl
                 shortBio = stringOrEmpty(profile.short_bio),
                 information = stringOrEmpty((profile.details)),
                 isMyProfile = isMyProfile,
+                isPrivate = profile.is_private ?: false,
                 id = profile.id)
         this.userViewModel = userViewModelLocal
 

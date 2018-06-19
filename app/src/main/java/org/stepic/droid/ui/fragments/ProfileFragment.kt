@@ -23,15 +23,21 @@ import org.stepic.droid.core.ProfilePresenter
 import org.stepic.droid.core.presenters.StreakPresenter
 import org.stepic.droid.core.presenters.contracts.NotificationTimeView
 import org.stepic.droid.core.presenters.contracts.ProfileView
+import org.stepic.droid.features.achievements.presenters.AchievementsPresenter
+import org.stepic.droid.features.achievements.presenters.AchievementsView
+import org.stepic.droid.features.achievements.ui.activity.AchievementsListActivity
 import org.stepic.droid.features.achievements.ui.adapters.AchievementsTileAdapter
+import org.stepic.droid.features.achievements.ui.adapters.BaseAchievementsAdapter
 import org.stepic.droid.fonts.FontType
 import org.stepic.droid.model.UserViewModel
+import org.stepic.droid.model.achievements.AchievementFlatItem
 import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.ui.activities.contracts.CloseButtonInToolbar
 import org.stepic.droid.ui.adapters.ProfileSettingsAdapter
 import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment
 import org.stepic.droid.ui.util.StepikAnimUtils
 import org.stepic.droid.ui.util.TimeIntervalUtil
+import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
@@ -44,13 +50,17 @@ import javax.inject.Inject
 
 class ProfileFragment : FragmentBase(),
         ProfileView,
-        NotificationTimeView {
+        NotificationTimeView,
+        AchievementsView {
 
     @Inject
     lateinit var profilePresenter: ProfilePresenter
 
     @Inject
     lateinit var streakPresenter: StreakPresenter
+
+    @Inject
+    lateinit var achievementsPresenter: AchievementsPresenter
 
     private var userId: Long = 0
     private var localUserViewModel: UserViewModel? = null
@@ -87,9 +97,15 @@ class ProfileFragment : FragmentBase(),
         profileSettingsRecyclerView.adapter = ProfileSettingsAdapter(activity, profileSettingsList, screenManager, this, analytic)
         profileSettingsRecyclerView.isNestedScrollingEnabled = false
 
+        achievementsTilesContainer.layoutManager = GridLayoutManager(context, ACHIEVEMENTS_TO_DISPLAY)
+        achievementsTilesContainer.adapter = AchievementsTileAdapter()
+        achievementsTilesContainer.isNestedScrollingEnabled = false
+
         profilePresenter.attachView(this)
         streakPresenter.attachView(this)
+        achievementsPresenter.attachView(this)
         profilePresenter.initProfile(userId)
+
         profileImage.setOnClickListener { analytic.reportEvent(Analytic.Profile.CLICK_IMAGE) }
         val clickStreakValue = View.OnClickListener { analytic.reportEvent(Analytic.Profile.CLICK_STREAK_VALUE) }
         currentStreakValue.setOnClickListener(clickStreakValue)
@@ -116,9 +132,7 @@ class ProfileFragment : FragmentBase(),
         shortBioSecondText.textView.textSize = 14f
         shortBioSecondText.textView.setLineSpacing(0f, 1.6f)
 
-        achievementsTilesContainer.isNestedScrollingEnabled = false
-        achievementsTilesContainer.layoutManager = GridLayoutManager(context, 4)
-        achievementsTilesContainer.adapter = AchievementsTileAdapter()
+        viewAllAchievements.setOnClickListener { startActivity(Intent(context, AchievementsListActivity::class.java)) } // todo propagate userId
     }
 
     override fun onDestroyView() {
@@ -128,6 +142,7 @@ class ProfileFragment : FragmentBase(),
         maxStreakValue.setOnClickListener(null)
         profileImage.setOnClickListener(null)
         notificationIntervalChooserContainer.setOnClickListener(null)
+        achievementsPresenter.detachView(this)
         streakPresenter.detachView(this)
         profilePresenter.detachView(this)
         shortBioInfoContainer.setOnClickListener(null)
@@ -186,6 +201,10 @@ class ProfileFragment : FragmentBase(),
         initCenteredToolbar(R.string.profile_title, needCloseButton, getCloseIconDrawableRes())
     }
 
+    override fun showAchievements(achievements: List<AchievementFlatItem>) {
+        (achievementsTilesContainer.adapter as BaseAchievementsAdapter).addAchievements(achievements)
+        achievementsContainer.changeVisibility(true)
+    }
 
     /**
      * This method is invoked only for My Profile
@@ -236,6 +255,10 @@ class ProfileFragment : FragmentBase(),
             if (!shortBioArrowImageView.isExpanded()) {
                 changeStateOfUserInfo()
             }
+        }
+
+        if (!userViewModel.isPrivate) {
+            achievementsPresenter.showAchievementsForUser(userViewModel.id, ACHIEVEMENTS_TO_DISPLAY)
         }
 
         mainInfoRoot.visibility = View.VISIBLE
@@ -398,8 +421,10 @@ class ProfileFragment : FragmentBase(),
     }
 
     companion object {
-        private val USER_ID_KEY = "user_id_key"
-        private val NOTIFICATION_INTERVAL_REQUEST_CODE = 11
+        private const val USER_ID_KEY = "user_id_key"
+        private const val NOTIFICATION_INTERVAL_REQUEST_CODE = 11
+
+        private const val ACHIEVEMENTS_TO_DISPLAY = 4
 
         fun newInstance(): ProfileFragment = newInstance(0)
 

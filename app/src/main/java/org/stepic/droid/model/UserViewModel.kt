@@ -6,5 +6,6 @@ data class UserViewModel(
         val information: String,
         val imageLink: String?,
         val isMyProfile: Boolean,
+        val isPrivate: Boolean,
         val id : Long
 )
