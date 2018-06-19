@@ -132,7 +132,7 @@ class ProfileFragment : FragmentBase(),
         shortBioSecondText.textView.textSize = 14f
         shortBioSecondText.textView.setLineSpacing(0f, 1.6f)
 
-        viewAllAchievements.setOnClickListener { startActivity(Intent(context, AchievementsListActivity::class.java)) } // todo propagate userId
+        viewAllAchievements.setOnClickListener { screenManager.showAchievementsList(context, localUserViewModel?.id ?: 0) }
     }
 
     override fun onDestroyView() {
