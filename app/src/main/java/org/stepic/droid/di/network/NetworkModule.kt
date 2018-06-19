@@ -4,6 +4,8 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import org.stepic.droid.di.AppSingleton
+import org.stepic.droid.features.achievements.repository.AchievementsRepository
+import org.stepic.droid.features.achievements.repository.AchievementsRepositoryImpl
 import org.stepic.droid.features.deadlines.repository.DeadlinesRepository
 import org.stepic.droid.features.deadlines.repository.DeadlinesRepositoryImpl
 import org.stepic.droid.web.ApiImpl
@@ -16,6 +18,10 @@ abstract class NetworkModule {
     @Binds
     @AppSingleton
     abstract fun bindDeadlinesRepository(deadlinesRepositoryImpl: DeadlinesRepositoryImpl): DeadlinesRepository
+
+    @Binds
+    @AppSingleton
+    abstract fun bindAchievementsRepository(achievementsRepositoryImpl: AchievementsRepositoryImpl): AchievementsRepository
 
     @Module
     companion object {
