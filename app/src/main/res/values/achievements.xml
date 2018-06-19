@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="achievement_steps_solved_title">Quantity matters</string>
+    <string name="achievement_steps_solved_description">Solve %s correctly</string>
+
+    <string name="achievement_steps_solved_streak_title">Sapper</string>
+    <string name="achievement_steps_solved_streak_description">Correctly solve %s in a row</string>
+
+    <string name="achievement_steps_solved_choice_title">I choose</string>
+    <string name="achievement_steps_solved_choice_description">Solve %s with choice correctly</string>
+
+    <string name="achievement_steps_solved_code_title">Computer master</string>
+    <string name="achievement_steps_solved_code_description">Solve %s with code correctly</string>
+
+    <string name="achievement_steps_solved_number_title">One more achievement</string>
+    <string name="achievement_steps_solved_number_description">Solve %s with number correctly</string>
+
+    <string name="achievement_code_quizzes_solved_python_title">Snake tamer</string>
+    <string name="achievement_code_quizzes_solved_python_description">Use Python to solve %s correctly</string>
+
+    <string name="achievement_code_quizzes_solved_cpp_title">Developer.cpp</string>
+    <string name="achievement_code_quizzes_solved_cpp_description">Use C++ to solve %s correctly</string>
+
+    <string name="achievement_code_quizzes_solved_java_title">Some coffee?</string>
+    <string name="achievement_code_quizzes_solved_java_description">Use Java to solve %s correctly</string>
+
+    <string name="achievement_active_days_streak_title">Regular user</string>
+    <string name="achievement_active_days_streak_description">Solve at least one task at %s in a row</string>
+
+    <string name="achievement_certificates_regular_count_title">Graduate</string>
+    <string name="achievement_certificates_regular_count_description">Earn %s</string>
+
+    <string name="achievement_certificates_distinction_count_title">Distinct student</string>
+    <string name="achievement_certificates_distinction_count_description">Earn %s with distinction</string>
+
+    <string name="achievement_course_reviews_count_title">Critic</string>
+    <string name="achievement_course_reviews_count_description">Write %s</string>
+
+    <string name="achievement_unknown_title">Unknown achievement</string>
+    <string name="achievement_unknown_description">No one knows what is it</string>
+</resources>

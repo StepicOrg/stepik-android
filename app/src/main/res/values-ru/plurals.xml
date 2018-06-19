@@ -12,4 +12,34 @@
         <item quantity="many">%d часов</item>
         <item quantity="other">%d часов</item>
     </plurals>
+    <plurals name="day">
+        <item quantity="one">%d день</item>
+        <item quantity="few">%d дня</item>
+        <item quantity="many">%d дней</item>
+        <item quantity="other">%d дней</item>
+    </plurals>
+    <plurals name="task">
+        <item quantity="one">%d задание</item>
+        <item quantity="few">%d задания</item>
+        <item quantity="many">%d заданий</item>
+        <item quantity="other">%d заданий</item>
+    </plurals>
+    <plurals name="problem">
+        <item quantity="one">%d задача</item>
+        <item quantity="few">%d задачи</item>
+        <item quantity="many">%d задач</item>
+        <item quantity="other">%d задач</item>
+    </plurals>
+    <plurals name="certificate">
+        <item quantity="one">%d сертификат</item>
+        <item quantity="few">%d сертификата</item>
+        <item quantity="many">%d сертификатов</item>
+        <item quantity="other">%d сертификатов</item>
+    </plurals>
+    <plurals name="course_review">
+        <item quantity="one">%d отзыв о курсе</item>
+        <item quantity="few">%d отзыва о курсах</item>
+        <item quantity="many">%d отзывов о курсах</item>
+        <item quantity="other">%d отзывов о курсах</item>
+    </plurals>
 </resources>
