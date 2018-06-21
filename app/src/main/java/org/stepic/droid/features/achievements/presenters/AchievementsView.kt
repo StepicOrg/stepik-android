@@ -4,6 +4,8 @@ import org.stepic.droid.model.achievements.AchievementFlatItem
 
 interface AchievementsView {
     fun showAchievements(achievements: List<AchievementFlatItem>)
+    fun onLoadingError()
+    fun onLoading()
 
     sealed class State {
         object Idle: State()
