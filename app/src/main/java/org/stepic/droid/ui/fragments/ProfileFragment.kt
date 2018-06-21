@@ -205,6 +205,10 @@ class ProfileFragment : FragmentBase(),
         achievementsContainer.changeVisibility(true)
     }
 
+    override fun onLoadingError() {}
+
+    override fun onLoading() {}
+
     /**
      * This method is invoked only for My Profile
      */
