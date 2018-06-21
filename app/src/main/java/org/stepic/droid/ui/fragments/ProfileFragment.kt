@@ -25,7 +25,6 @@ import org.stepic.droid.core.presenters.contracts.NotificationTimeView
 import org.stepic.droid.core.presenters.contracts.ProfileView
 import org.stepic.droid.features.achievements.presenters.AchievementsPresenter
 import org.stepic.droid.features.achievements.presenters.AchievementsView
-import org.stepic.droid.features.achievements.ui.activity.AchievementsListActivity
 import org.stepic.droid.features.achievements.ui.adapters.AchievementsTileAdapter
 import org.stepic.droid.features.achievements.ui.adapters.BaseAchievementsAdapter
 import org.stepic.droid.fonts.FontType
@@ -202,7 +201,7 @@ class ProfileFragment : FragmentBase(),
     }
 
     override fun showAchievements(achievements: List<AchievementFlatItem>) {
-        (achievementsTilesContainer.adapter as BaseAchievementsAdapter).addAchievements(achievements)
+        (achievementsTilesContainer.adapter as BaseAchievementsAdapter).achievements = achievements
         achievementsContainer.changeVisibility(true)
     }
 

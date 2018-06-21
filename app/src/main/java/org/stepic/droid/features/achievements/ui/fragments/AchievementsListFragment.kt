@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import kotlinx.android.synthetic.main.fragment_achievements_list.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentBase
@@ -31,8 +32,6 @@ class AchievementsListFragment: FragmentBase(), AchievementsView {
     @Inject
     lateinit var achievementsPresenter: AchievementsPresenter
 
-    private lateinit var recycler: RecyclerView
-
     override fun injectComponent() {
         App
                 .component()
@@ -41,8 +40,12 @@ class AchievementsListFragment: FragmentBase(), AchievementsView {
                 .inject(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        recycler = RecyclerView(context)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+            inflater.inflate(R.layout.fragment_achievements_list, container, false)
+
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         recycler.layoutManager = LinearLayoutManager(context)
         recycler.adapter = AchievementsAdapter()
 
@@ -52,12 +55,10 @@ class AchievementsListFragment: FragmentBase(), AchievementsView {
 
         achievementsPresenter.attachView(this)
         achievementsPresenter.showAchievementsForUser(arguments?.getLong(USER_ID_KEY) ?: 0)
-
-        return recycler
     }
 
     override fun showAchievements(achievements: List<AchievementFlatItem>) {
-        (recycler.adapter as BaseAchievementsAdapter).addAchievements(achievements)
+        (recycler?.adapter as? BaseAchievementsAdapter)?.achievements = achievements
     }
 
     override fun onDestroyView() {
