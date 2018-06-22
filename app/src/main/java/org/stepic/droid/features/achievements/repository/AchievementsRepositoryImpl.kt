@@ -17,20 +17,17 @@ constructor(
         private val achievementsService: AchievementsService
 ): AchievementsRepository {
     private fun getDistinctAchievementKindsOrderedByObtainDate(userId: Long, count: Int = -1): Observable<String> = Observable.create { emitter ->
-        val kinds = HashSet<String>()
+        val kinds = LinkedHashSet<String>()
         var hasNextPage = true
         var page = 1
 
-        while (hasNextPage) {
+        paginationLoop@ while (hasNextPage) {
             val response = achievementsService.getAchievementProgresses(user = userId, page = page, order = "-obtain_date").blockingGet()
 
-            response.achievementsProgresses.forEach {
-                if (!kinds.contains(it.kind)) {
-                    kinds.add(it.kind)
-                    emitter.onNext(it.kind)
-                    if (kinds.size == count) {
-                        return@create emitter.onComplete()
-                    }
+            for (item in response.achievementsProgresses) {
+                kinds.add(item.kind)
+                if (kinds.size == count) {
+                    break@paginationLoop
                 }
             }
 
@@ -41,16 +38,13 @@ constructor(
         hasNextPage = true
         page = 1
 
-        while (hasNextPage && (count == -1 || kinds.size < count)) {
+        paginationLoop@ while (hasNextPage && (count == -1 || kinds.size < count)) {
             val response = achievementsService.getAchievements(page = page).firstOrError().blockingGet()
 
-            response.achievements.forEach {
-                if (!kinds.contains(it.kind)) {
-                    kinds.add(it.kind)
-                    emitter.onNext(it.kind)
-                    if (kinds.size == count) {
-                        return@create emitter.onComplete()
-                    }
+            for (item in response.achievements) {
+                kinds.add(item.kind)
+                if (kinds.size == count) {
+                    break@paginationLoop
                 }
             }
 
@@ -58,6 +52,7 @@ constructor(
             page = response.meta.page + 1
         }
 
+        kinds.forEach(emitter::onNext) // in order to handle errors in correct way
         emitter.onComplete()
     }
 
