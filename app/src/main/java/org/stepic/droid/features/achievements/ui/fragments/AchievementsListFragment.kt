@@ -18,6 +18,7 @@ import org.stepic.droid.features.achievements.ui.adapters.AchievementsAdapter
 import org.stepic.droid.features.achievements.ui.adapters.BaseAchievementsAdapter
 import org.stepic.droid.model.achievements.AchievementFlatItem
 import org.stepic.droid.ui.util.changeVisibility
+import org.stepic.droid.ui.util.initCenteredToolbar
 import javax.inject.Inject
 
 class AchievementsListFragment: FragmentBase(), AchievementsView {
@@ -47,6 +48,10 @@ class AchievementsListFragment: FragmentBase(), AchievementsView {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initPlaceholders()
+
+        initCenteredToolbar(R.string.achievements_title, showHomeButton = true)
+
         recycler.layoutManager = LinearLayoutManager(context)
         recycler.adapter = AchievementsAdapter()
 
@@ -58,6 +63,18 @@ class AchievementsListFragment: FragmentBase(), AchievementsView {
         fetchAchievements()
 
         tryAgain.setOnClickListener { fetchAchievements(true) }
+    }
+
+    private fun initPlaceholders() {
+        val itemHeight = context.resources.getDimension(R.dimen.achievement_tile_height)
+        val screenHeight = context.resources.displayMetrics.heightPixels
+
+        for (i in 0..(screenHeight / itemHeight).toInt() + 1) {
+            progress.addView(layoutInflater.inflate(R.layout.view_achievement_item_placeholder, progress, false))
+            val stroke = layoutInflater.inflate(R.layout.view_stroke, progress, false)
+            stroke.setBackgroundResource(R.drawable.list_divider_h)
+            progress.addView(stroke)
+        }
     }
 
     private fun fetchAchievements(force: Boolean = false) {
