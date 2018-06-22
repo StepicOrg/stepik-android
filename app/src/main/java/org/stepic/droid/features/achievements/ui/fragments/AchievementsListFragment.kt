@@ -16,6 +16,7 @@ import org.stepic.droid.features.achievements.presenters.AchievementsPresenter
 import org.stepic.droid.features.achievements.presenters.AchievementsView
 import org.stepic.droid.features.achievements.ui.adapters.AchievementsAdapter
 import org.stepic.droid.features.achievements.ui.adapters.BaseAchievementsAdapter
+import org.stepic.droid.features.achievements.ui.dialogs.AchievementDetailsDialog
 import org.stepic.droid.model.achievements.AchievementFlatItem
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.ui.util.initCenteredToolbar
@@ -54,7 +55,9 @@ class AchievementsListFragment: FragmentBase(), AchievementsView {
         initCenteredToolbar(R.string.achievements_title, showHomeButton = true)
 
         recycler.layoutManager = LinearLayoutManager(context)
-        recycler.adapter = AchievementsAdapter()
+        recycler.adapter = AchievementsAdapter().apply { onAchievementItemClick = {
+            AchievementDetailsDialog.newInstance(it).show(childFragmentManager, AchievementDetailsDialog.TAG)
+        }}
 
         val divider = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
         divider.setDrawable(ContextCompat.getDrawable(context, R.drawable.list_divider_h))
