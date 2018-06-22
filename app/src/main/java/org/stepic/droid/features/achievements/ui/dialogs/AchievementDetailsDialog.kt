@@ -1,21 +1,17 @@
 package org.stepic.droid.features.achievements.ui.dialogs
 
-import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import kotlinx.android.synthetic.main.dialog_achievement_details.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.features.achievements.util.AchievementResourceResolver
 import org.stepic.droid.model.achievements.AchievementFlatItem
-import org.stepic.droid.util.AppConstants
+import org.stepic.droid.ui.util.wrapWithGlide
 import org.stepic.droid.util.argument
-import org.stepic.droid.util.svg.GlideSvgRequestFactory
 import javax.inject.Inject
 
 class AchievementDetailsDialog: DialogFragment() {
@@ -28,14 +24,10 @@ class AchievementDetailsDialog: DialogFragment() {
 
     private var achievementItem by argument<AchievementFlatItem>()
 
-    private val svgRequestBuilder by lazy {
-        GlideSvgRequestFactory
-                .create(context, null)
-                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-    }
-
     @Inject
     lateinit var achievementResourceResolver: AchievementResourceResolver
+
+    private val achievementIconWrapper by lazy { achievementIcon.wrapWithGlide() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,19 +40,6 @@ class AchievementDetailsDialog: DialogFragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setAchievementIcon(achievementResourceResolver.resolveAchievementIcon(achievementItem, achievementIcon))
-    }
-
-    private fun setAchievementIcon(path: String) {
-        if (path.endsWith(AppConstants.SVG_EXTENSION)) {
-            svgRequestBuilder
-                    .load(Uri.parse(path))
-                    .into(achievementIcon)
-        } else {
-            Glide.with(context)
-                    .load(path)
-                    .asBitmap()
-                    .into(achievementIcon)
-        }
+        achievementIconWrapper.setImagePath(achievementResourceResolver.resolveAchievementIcon(achievementItem, achievementIcon))
     }
 }
