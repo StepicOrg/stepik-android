@@ -19,6 +19,7 @@ import org.stepic.droid.features.achievements.ui.adapters.BaseAchievementsAdapte
 import org.stepic.droid.model.achievements.AchievementFlatItem
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.ui.util.initCenteredToolbar
+import org.stepic.droid.ui.util.setHeight
 import javax.inject.Inject
 
 class AchievementsListFragment: FragmentBase(), AchievementsView {
@@ -69,10 +70,11 @@ class AchievementsListFragment: FragmentBase(), AchievementsView {
         val itemHeight = context.resources.getDimension(R.dimen.achievement_tile_height)
         val screenHeight = context.resources.displayMetrics.heightPixels
 
-        for (i in 0..(screenHeight / itemHeight).toInt() + 1) {
+        for (i in 0..(screenHeight / itemHeight).toInt()) {
             progress.addView(layoutInflater.inflate(R.layout.view_achievement_item_placeholder, progress, false))
             val stroke = layoutInflater.inflate(R.layout.view_stroke, progress, false)
             stroke.setBackgroundResource(R.drawable.list_divider_h)
+            stroke.setHeight(1)
             progress.addView(stroke)
         }
     }
