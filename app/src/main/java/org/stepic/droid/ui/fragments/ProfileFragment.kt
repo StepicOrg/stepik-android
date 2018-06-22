@@ -28,6 +28,7 @@ import org.stepic.droid.features.achievements.presenters.AchievementsPresenter
 import org.stepic.droid.features.achievements.presenters.AchievementsView
 import org.stepic.droid.features.achievements.ui.adapters.AchievementsTileAdapter
 import org.stepic.droid.features.achievements.ui.adapters.BaseAchievementsAdapter
+import org.stepic.droid.features.achievements.ui.dialogs.AchievementDetailsDialog
 import org.stepic.droid.fonts.FontType
 import org.stepic.droid.model.UserViewModel
 import org.stepic.droid.model.achievements.AchievementFlatItem
@@ -98,7 +99,9 @@ class ProfileFragment : FragmentBase(),
         profileSettingsRecyclerView.isNestedScrollingEnabled = false
 
         achievementsTilesContainer.layoutManager = GridLayoutManager(context, ACHIEVEMENTS_TO_DISPLAY)
-        achievementsTilesContainer.adapter = AchievementsTileAdapter()
+        achievementsTilesContainer.adapter = AchievementsTileAdapter().apply { onAchievementItemClick = {
+            AchievementDetailsDialog.newInstance(it).show(childFragmentManager, AchievementDetailsDialog.TAG)
+        }}
         achievementsTilesContainer.isNestedScrollingEnabled = false
 
         profilePresenter.attachView(this)
