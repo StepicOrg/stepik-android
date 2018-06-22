@@ -1,10 +1,9 @@
 package org.stepic.droid.features.achievements.ui.dialogs
 
+import android.app.Dialog
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import kotlinx.android.synthetic.main.dialog_achievement_details.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
@@ -41,5 +40,14 @@ class AchievementDetailsDialog: DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         achievementIconWrapper.setImagePath(achievementResourceResolver.resolveAchievementIcon(achievementItem, achievementIcon))
+        achievementTitle.text = achievementResourceResolver.resolveTitleForKind(achievementItem.kind)
+        achievementDescription.text = achievementResourceResolver.resolveDescription(achievementItem)
+
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+        dialog.window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
     }
 }
