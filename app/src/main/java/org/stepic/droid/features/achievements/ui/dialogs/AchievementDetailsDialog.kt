@@ -4,7 +4,10 @@ import android.app.Dialog
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.view.*
+import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.Theme
 import kotlinx.android.synthetic.main.dialog_achievement_details.*
+import kotlinx.android.synthetic.main.dialog_achievement_details.view.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.features.achievements.util.AchievementResourceResolver
@@ -26,28 +29,29 @@ class AchievementDetailsDialog: DialogFragment() {
     @Inject
     lateinit var achievementResourceResolver: AchievementResourceResolver
 
-    private val achievementIconWrapper by lazy { achievementIcon.wrapWithGlide() }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         App.component().inject(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-            inflater.inflate(R.layout.dialog_achievement_details, container, false)
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val view = LayoutInflater.from(context).inflate(R.layout.dialog_achievement_details, null, false)
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+        view.apply {
+            achievementTitle.text = achievementResourceResolver.resolveTitleForKind(achievementItem.kind)
+            achievementDescription.text = achievementResourceResolver.resolveDescription(achievementItem)
+            achievementIcon.apply {
+                wrapWithGlide().setImagePath(achievementResourceResolver.resolveAchievementIcon(achievementItem, this))
+            }
 
-        achievementIconWrapper.setImagePath(achievementResourceResolver.resolveAchievementIcon(achievementItem, achievementIcon))
-        achievementTitle.text = achievementResourceResolver.resolveTitleForKind(achievementItem.kind)
-        achievementDescription.text = achievementResourceResolver.resolveDescription(achievementItem)
+            achievementLevelProgress.progress = achievementItem.currentScore.toFloat() / achievementItem.targetScore
+            achievementLevels.progress = achievementItem.currentLevel
+            achievementLevels.total = achievementItem.maxLevel
+        }
 
-
-    }
-
-    override fun onStart() {
-        super.onStart()
-        dialog.window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        return MaterialDialog.Builder(context)
+                .theme(Theme.LIGHT)
+                .customView(view, false)
+                .build()
     }
 }
