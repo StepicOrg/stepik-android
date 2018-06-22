@@ -47,9 +47,11 @@ class AchievementTileViewHolder(
         achievementLevelProgress.progress = item.currentScore.toFloat() / item.targetScore
 
         setAchievementIcon(achievementResourceResolver.resolveAchievementIcon(item, achievementIcon))
-        achievementIcon.alpha = if (item.isLocked) 0.4f else 1f
 
-        achievementLevelProgress.changeVisibility(!item.isLocked)
+        val alpha = if (item.isLocked) 0.4f else 1f
+        achievementIcon.alpha = alpha
+        achievementLevelProgress.alpha = alpha
+
         achievementLevels.changeVisibility(!item.isLocked)
     }
 }
