@@ -11,7 +11,7 @@ class AchievementsTileAdapter: BaseAchievementsAdapter<AchievementTileViewHolder
         App.component().inject(this)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = AchievementTileViewHolder(
+    override fun createItemViewHolder(parent: ViewGroup, viewType: Int) = AchievementTileViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.view_achievement_tile, parent, false),
             achievementResourceResolver
     )
