@@ -8,21 +8,21 @@
     android:gravity="center_horizontal">
 
     <FrameLayout
-        android:layout_width="64dp"
-        android:layout_height="64dp">
+        android:layout_width="@dimen/achievement_tile_width"
+        android:layout_height="@dimen/achievement_tile_width">
 
         <org.stepic.droid.features.achievements.ui.custom.AchievementCircleProgressView
             android:id="@+id/achievementLevelProgress"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
+            android:layout_width="@dimen/achievement_tile_width"
+            android:layout_height="@dimen/achievement_tile_width"
             android:layout_gravity="center"
             app:strokeWidth="1.5dp"
             app:progressColor="@color/stepic_brand_primary"/>
 
         <ImageView
             android:id="@+id/achievementIcon"
-            android:layout_width="64dp"
-            android:layout_height="64dp" />
+            android:layout_width="@dimen/achievement_tile_width"
+            android:layout_height="@dimen/achievement_tile_width" />
     </FrameLayout>
 
     <org.stepic.droid.features.achievements.ui.custom.VectorRatingBar

@@ -220,6 +220,40 @@
                             tools:ignore="MissingPrefix" />
                     </FrameLayout>
 
+                    <LinearLayout
+                        android:id="@+id/achievementsLoadingPlaceholder"
+                        android:baselineAligned="false"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/guideline_standard_padding"
+                        android:orientation="horizontal">
+                        <include
+                            layout="@layout/view_achievement_tile_placeholder"
+                            android:layout_weight="1"
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/achievement_tile_height" />
+                        <include
+                            layout="@layout/view_achievement_tile_placeholder"
+                            android:layout_weight="1"
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/achievement_tile_height" />
+                        <include
+                            layout="@layout/view_achievement_tile_placeholder"
+                            android:layout_weight="1"
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/achievement_tile_height" />
+                        <include
+                            layout="@layout/view_achievement_tile_placeholder"
+                            android:layout_weight="1"
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/achievement_tile_height" />
+                    </LinearLayout>
+
+                    <include
+                        android:id="@+id/achievementsLoadingError"
+                        android:visibility="gone"
+                        layout="@layout/error_no_connection_with_button_small" />
+
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/achievementsTilesContainer"
                         android:layout_width="match_parent"

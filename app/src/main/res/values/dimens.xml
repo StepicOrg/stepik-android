@@ -186,4 +186,7 @@
     <dimen name="adaptive_course_marker_radius">10dp</dimen>
 
     <dimen name="spinner_arrow_margin">0dp</dimen>
+
+    <dimen name="achievement_tile_width">64dp</dimen>
+    <dimen name="achievement_tile_height">80dp</dimen>
 </resources>

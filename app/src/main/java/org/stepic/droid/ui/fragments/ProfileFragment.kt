@@ -14,6 +14,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import kotlinx.android.synthetic.main.fragment_profile_new.*
 import kotlinx.android.synthetic.main.latex_supportabe_enhanced_view.view.*
 import kotlinx.android.synthetic.main.empty_login.*
+import kotlinx.android.synthetic.main.error_no_connection_with_button_small.view.*
 import kotlinx.android.synthetic.main.view_notification_interval_chooser.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
@@ -131,6 +132,7 @@ class ProfileFragment : FragmentBase(),
         shortBioSecondText.textView.textSize = 14f
         shortBioSecondText.textView.setLineSpacing(0f, 1.6f)
 
+        achievementsLoadingError.tryAgain.setOnClickListener { achievementsPresenter.showAchievementsForUser(localUserViewModel?.id ?: 0, ACHIEVEMENTS_TO_DISPLAY, true) }
         viewAllAchievements.setOnClickListener { screenManager.showAchievementsList(context, localUserViewModel?.id ?: 0) }
     }
 
@@ -202,12 +204,25 @@ class ProfileFragment : FragmentBase(),
 
     override fun showAchievements(achievements: List<AchievementFlatItem>) {
         (achievementsTilesContainer.adapter as BaseAchievementsAdapter).achievements = achievements
+        achievementsLoadingPlaceholder.changeVisibility(false)
+        achievementsLoadingError.changeVisibility(false)
+        achievementsTilesContainer.changeVisibility(true)
         achievementsContainer.changeVisibility(true)
     }
 
-    override fun onLoadingError() {}
+    override fun onAchievementsLoadingError() {
+        achievementsContainer.changeVisibility(true)
+        achievementsLoadingPlaceholder.changeVisibility(false)
+        achievementsLoadingError.changeVisibility(true)
+        achievementsTilesContainer.changeVisibility(false)
+    }
 
-    override fun onLoading() {}
+    override fun onAchievementsLoading() {
+        achievementsContainer.changeVisibility(true)
+        achievementsLoadingPlaceholder.changeVisibility(true)
+        achievementsLoadingError.changeVisibility(false)
+        achievementsTilesContainer.changeVisibility(false)
+    }
 
     /**
      * This method is invoked only for My Profile

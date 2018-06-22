@@ -71,13 +71,13 @@ class AchievementsListFragment: FragmentBase(), AchievementsView {
         (recycler?.adapter as? BaseAchievementsAdapter)?.achievements = achievements
     }
 
-    override fun onLoadingError() {
+    override fun onAchievementsLoadingError() {
         recycler.changeVisibility(false)
         progress.changeVisibility(false)
         error.changeVisibility(true)
     }
 
-    override fun onLoading() {
+    override fun onAchievementsLoading() {
         recycler.changeVisibility(false)
         progress.changeVisibility(true)
         error.changeVisibility(false)

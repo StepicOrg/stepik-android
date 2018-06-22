@@ -47,10 +47,10 @@ constructor(
                 view?.showAchievements(newState.achievements)
 
             is AchievementsView.State.Loading ->
-                view?.onLoading()
+                view?.onAchievementsLoading()
 
             is AchievementsView.State.Error ->
-                view?.onLoadingError()
+                view?.onAchievementsLoadingError()
         }
     }
 }
