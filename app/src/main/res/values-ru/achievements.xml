@@ -4,7 +4,7 @@
     <string name="achievement_steps_solved_description">Решите правильно %s</string>
 
     <string name="achievement_steps_solved_streak_title">Сапёр</string>
-    <string name="achievement_steps_solved_streak_description">Решите правильно %s подряд></string>
+    <string name="achievement_steps_solved_streak_description">Решите правильно %s подряд</string>
 
     <string name="achievement_steps_solved_choice_title">Я выбираю</string>
     <string name="achievement_steps_solved_choice_description">Решите правильно %s с выбором ответа</string>

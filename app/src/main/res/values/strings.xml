@@ -677,4 +677,5 @@
     <string name="achievement_level">Level %d / %d</string>
     <string name="achievement_remaining_exp">%d for the next level</string>
     <string name="achievement_remaining_exp_locked">Not obtained yet</string>
+    <string name="achievement_share">I\'ve unlocked achievement «%s» at Stepik.org. Join and beat my record!</string>
 </resources>

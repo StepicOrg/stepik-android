@@ -661,4 +661,5 @@
     <string name="achievement_level">Уровень %d / %d</string>
     <string name="achievement_remaining_exp">%d до следующего уровня</string>
     <string name="achievement_remaining_exp_locked">Ещё не получено</string>
+    <string name="achievement_share">Я получил достижение «%s» на Stepik.org. Попробуй обогнать!</string>
 </resources>

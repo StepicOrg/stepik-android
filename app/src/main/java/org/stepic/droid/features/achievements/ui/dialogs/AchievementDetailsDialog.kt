@@ -1,6 +1,7 @@
 package org.stepic.droid.features.achievements.ui.dialogs
 
 import android.app.Dialog
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v4.content.ContextCompat
@@ -60,12 +61,28 @@ class AchievementDetailsDialog: DialogFragment() {
             achievementRest.changeVisibility(scoreDiff > 0)
         }
 
-        return MaterialDialog.Builder(context)
+        val builder = MaterialDialog.Builder(context)
                 .theme(Theme.LIGHT)
                 .customView(view, false)
+
+        if (!achievementItem.isLocked) {
+            builder
                 .positiveText(R.string.share_title)
-                .negativeText(R.string.cancel)
+                .negativeText(R.string.close_screen)
                 .negativeColor(ContextCompat.getColor(context, R.color.new_accent_color_opacity_50))
-                .build()
+                .onPositive { _, _ -> shareAchievement() }
+        }
+
+        return builder.build()
+    }
+
+    private fun shareAchievement() {
+        val intent = Intent(Intent.ACTION_SEND).apply {
+            putExtra(Intent.EXTRA_TEXT, getString(R.string.achievement_share, achievementResourceResolver.resolveTitleForKind(achievementItem.kind)))
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            type = "text/plain"
+        }
+
+        activity.startActivity(Intent.createChooser(intent, getString(R.string.share_title)))
     }
 }
