@@ -56,7 +56,6 @@
         android:layout_width="wrap_content"
 
         android:layout_height="wrap_content"
-        android:layout_marginBottom="48dp"
 
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
@@ -69,5 +68,43 @@
         android:textSize="16sp"
         tools:ignore="MissingPrefix"
         tools:text="Achievement description" />
+
+    <TextView
+        android:id="@+id/achievementLevel"
+        fontPath="fonts/Roboto-Light.ttf"
+        android:layout_width="wrap_content"
+
+        android:layout_height="wrap_content"
+
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        android:gravity="center"
+        android:textColor="@color/new_accent_color"
+        android:textSize="16sp"
+        tools:ignore="MissingPrefix"
+        tools:text="Level 5 / 6" />
+
+    <TextView
+        android:id="@+id/achievementRest"
+        fontPath="fonts/Roboto-Light.ttf"
+        android:layout_width="wrap_content"
+
+        android:layout_height="wrap_content"
+
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:textColor="@color/new_accent_color"
+        android:textSize="16sp"
+        tools:ignore="MissingPrefix"
+        tools:text="25 for the next level" />
 
 </LinearLayout>

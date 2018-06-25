@@ -3,15 +3,16 @@ package org.stepic.droid.features.achievements.ui.dialogs
 import android.app.Dialog
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
+import android.support.v4.content.ContextCompat
 import android.view.*
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.Theme
-import kotlinx.android.synthetic.main.dialog_achievement_details.*
 import kotlinx.android.synthetic.main.dialog_achievement_details.view.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.features.achievements.util.AchievementResourceResolver
 import org.stepic.droid.model.achievements.AchievementFlatItem
+import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.ui.util.wrapWithGlide
 import org.stepic.droid.util.argument
 import javax.inject.Inject
@@ -47,11 +48,24 @@ class AchievementDetailsDialog: DialogFragment() {
             achievementLevelProgress.progress = achievementItem.currentScore.toFloat() / achievementItem.targetScore
             achievementLevels.progress = achievementItem.currentLevel
             achievementLevels.total = achievementItem.maxLevel
+
+            achievementLevel.text = getString(R.string.achievement_level, achievementItem.currentLevel, achievementItem.maxLevel)
+
+            val scoreDiff = achievementItem.targetScore - achievementItem.currentScore
+            achievementRest.text = if (achievementItem.isLocked) {
+                getString(R.string.achievement_remaining_exp_locked)
+            } else {
+                getString(R.string.achievement_remaining_exp, scoreDiff)
+            }
+            achievementRest.changeVisibility(scoreDiff > 0)
         }
 
         return MaterialDialog.Builder(context)
                 .theme(Theme.LIGHT)
                 .customView(view, false)
+                .positiveText(R.string.share_title)
+                .negativeText(R.string.cancel)
+                .negativeColor(ContextCompat.getColor(context, R.color.new_accent_color_opacity_50))
                 .build()
     }
 }
