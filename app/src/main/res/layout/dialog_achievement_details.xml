@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
@@ -10,9 +12,6 @@
         android:id="@+id/achievementIconContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="48dp">
 
         <ImageView
@@ -36,9 +35,6 @@
         android:layout_marginTop="8dp"
         app:backgroundIcon="@drawable/ic_achievements_star_background"
         app:itemsGap="2dp"
-        app:layout_constraintTop_toBottomOf="@+id/achievementIconContainer"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:progressIcon="@drawable/ic_achievements_star_progress"
         app:secondaryIcon="@drawable/ic_achievements_star_secondary" />
 
@@ -51,9 +47,6 @@
         android:layout_marginTop="24dp"
         android:textColor="@color/new_accent_color"
         android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/achievementLevels"
         tools:ignore="MissingPrefix"
         tools:text="Achievement title" />
 
@@ -63,10 +56,6 @@
         android:layout_width="wrap_content"
 
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-
-        android:layout_alignParentRight="true"
-        android:layout_below="@id/achievementTitle"
         android:layout_marginBottom="48dp"
 
         android:layout_marginEnd="8dp"
@@ -78,11 +67,7 @@
         android:gravity="center"
         android:textColor="@color/new_accent_color"
         android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/achievementTitle"
         tools:ignore="MissingPrefix"
         tools:text="Achievement description" />
 
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>
