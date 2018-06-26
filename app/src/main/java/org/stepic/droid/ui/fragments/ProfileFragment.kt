@@ -9,6 +9,7 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.view.*
+import android.widget.LinearLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import kotlinx.android.synthetic.main.fragment_profile_new.*
@@ -58,7 +59,7 @@ class ProfileFragment : FragmentBase(),
     companion object {
         private const val NOTIFICATION_INTERVAL_REQUEST_CODE = 11
 
-        private const val ACHIEVEMENTS_TO_DISPLAY = 4
+        private const val MAX_ACHIEVEMENTS_TO_DISPLAY = 6
 
         fun newInstance(): ProfileFragment = newInstance(0)
 
@@ -81,6 +82,8 @@ class ProfileFragment : FragmentBase(),
     private var profileSettingsList: ArrayList<ProfileSettingsViewModel> = ArrayList()
     private var isShortInfoExpanded: Boolean = false
 
+    private var achievementsToDisplay: Int = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         analytic.reportEvent(Analytic.Profile.OPEN_SCREEN_OVERALL)
@@ -101,6 +104,7 @@ class ProfileFragment : FragmentBase(),
             = inflater?.inflate(R.layout.fragment_profile_new, container, false)
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        achievementsToDisplay =  context.resources.getInteger(R.integer.achievements_to_display)
         nullifyActivityBackground()
         super.onViewCreated(view, savedInstanceState)
         initToolbar()
@@ -110,11 +114,12 @@ class ProfileFragment : FragmentBase(),
         profileSettingsRecyclerView.adapter = ProfileSettingsAdapter(activity, profileSettingsList, screenManager, this, analytic)
         profileSettingsRecyclerView.isNestedScrollingEnabled = false
 
-        achievementsTilesContainer.layoutManager = GridLayoutManager(context, ACHIEVEMENTS_TO_DISPLAY)
+        achievementsTilesContainer.layoutManager = GridLayoutManager(context, achievementsToDisplay)
         achievementsTilesContainer.adapter = AchievementsTileAdapter().apply { onAchievementItemClick = {
             AchievementDetailsDialog.newInstance(it, localUserViewModel?.isMyProfile ?: false).show(childFragmentManager, AchievementDetailsDialog.TAG)
         }}
         achievementsTilesContainer.isNestedScrollingEnabled = false
+        initAchievementsPlaceholders()
 
         profilePresenter.attachView(this)
         streakPresenter.attachView(this)
@@ -147,7 +152,7 @@ class ProfileFragment : FragmentBase(),
         shortBioSecondText.textView.textSize = 14f
         shortBioSecondText.textView.setLineSpacing(0f, 1.6f)
 
-        achievementsLoadingError.tryAgain.setOnClickListener { achievementsPresenter.showAchievementsForUser(localUserViewModel?.id ?: 0, ACHIEVEMENTS_TO_DISPLAY, true) }
+        achievementsLoadingError.tryAgain.setOnClickListener { achievementsPresenter.showAchievementsForUser(localUserViewModel?.id ?: 0, MAX_ACHIEVEMENTS_TO_DISPLAY, true) }
         viewAllAchievements.setOnClickListener { screenManager.showAchievementsList(context, localUserViewModel?.id ?: 0, localUserViewModel?.isMyProfile ?: false) }
     }
 
@@ -217,8 +222,19 @@ class ProfileFragment : FragmentBase(),
         initCenteredToolbar(R.string.profile_title, needCloseButton, getCloseIconDrawableRes())
     }
 
+    private fun initAchievementsPlaceholders() {
+        for (i in 0 until achievementsToDisplay) {
+            val view = layoutInflater.inflate(R.layout.view_achievement_tile_placeholder, achievementsLoadingPlaceholder, false)
+            view.layoutParams = (view.layoutParams as LinearLayout.LayoutParams).apply {
+                weight = 1f
+                width = 0
+            }
+            achievementsLoadingPlaceholder.addView(view)
+        }
+    }
+
     override fun showAchievements(achievements: List<AchievementFlatItem>) {
-        (achievementsTilesContainer.adapter as BaseAchievementsAdapter).achievements = achievements
+        (achievementsTilesContainer.adapter as BaseAchievementsAdapter).achievements = achievements.take(achievementsToDisplay)
         achievementsLoadingPlaceholder.changeVisibility(false)
         achievementsLoadingError.changeVisibility(false)
         achievementsTilesContainer.changeVisibility(true)
@@ -291,7 +307,7 @@ class ProfileFragment : FragmentBase(),
         }
 
         if (!userViewModel.isPrivate) {
-            achievementsPresenter.showAchievementsForUser(userViewModel.id, ACHIEVEMENTS_TO_DISPLAY)
+            achievementsPresenter.showAchievementsForUser(userViewModel.id, MAX_ACHIEVEMENTS_TO_DISPLAY)
         }
 
         mainInfoRoot.visibility = View.VISIBLE
