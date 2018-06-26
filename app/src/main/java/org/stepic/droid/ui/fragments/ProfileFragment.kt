@@ -58,8 +58,8 @@ class ProfileFragment : FragmentBase(),
 
     companion object {
         private const val NOTIFICATION_INTERVAL_REQUEST_CODE = 11
-
         private const val MAX_ACHIEVEMENTS_TO_DISPLAY = 6
+        private const val DETAILED_INFO_CONTAINER_KEY = "detailedInfoContainerKey"
 
         fun newInstance(): ProfileFragment = newInstance(0)
 
@@ -183,18 +183,16 @@ class ProfileFragment : FragmentBase(),
         }
     }
 
-    private val detailedInfoContainerKey = "detailedInfoContainerKey"
-
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putBoolean(detailedInfoContainerKey, isShortInfoExpanded)
+        outState.putBoolean(DETAILED_INFO_CONTAINER_KEY, isShortInfoExpanded)
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
         savedInstanceState?.let {
-            isShortInfoExpanded = it.getBoolean(detailedInfoContainerKey)
-            restoreVisibility(detailedInfoContainer, it, detailedInfoContainerKey)
+            isShortInfoExpanded = it.getBoolean(DETAILED_INFO_CONTAINER_KEY)
+            restoreVisibility(detailedInfoContainer, it, DETAILED_INFO_CONTAINER_KEY)
         }
 
     }
