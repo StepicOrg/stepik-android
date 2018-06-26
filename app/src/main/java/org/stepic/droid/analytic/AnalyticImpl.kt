@@ -2,16 +2,27 @@ package org.stepic.droid.analytic
 
 import android.content.Context
 import android.os.Bundle
+import com.amplitude.api.Amplitude
 import com.crashlytics.android.Crashlytics
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.yandex.metrica.YandexMetrica
+import org.stepic.droid.base.App
+import org.stepic.droid.configuration.Config
 import org.stepic.droid.di.AppSingleton
 import java.util.*
 import javax.inject.Inject
 
 @AppSingleton
 class AnalyticImpl
-@Inject constructor(context: Context) : Analytic {
+@Inject constructor(
+        context: Context,
+        config: Config
+) : Analytic {
+    private val firebaseAnalytics: FirebaseAnalytics = FirebaseAnalytics.getInstance(context)
+    private val amplitude = Amplitude.getInstance()
+            .initialize(context, config.amplitudeApiKey)
+            .enableForegroundTracking(App.application)
+
     override fun reportEventValue(eventName: String, value: Long) {
         val bundle = Bundle()
         bundle.putLong(FirebaseAnalytics.Param.VALUE, value)
@@ -22,12 +33,10 @@ class AnalyticImpl
         firebaseAnalytics.setUserId(userId)
     }
 
-    private val firebaseAnalytics: FirebaseAnalytics = FirebaseAnalytics.getInstance(context)
-
     override fun reportEvent(eventName: String, bundle: Bundle?) {
         val map: HashMap<String, String> = HashMap()
         bundle?.keySet()?.forEach {
-            map.put(it, bundle.get(it).toString())
+            map[it] = bundle[it].toString()
         }
         if (map.isEmpty()) {
             YandexMetrica.reportEvent(eventName)
