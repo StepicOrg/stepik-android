@@ -140,4 +140,6 @@ public interface ScreenManager {
     void showListOfTag(Activity activity, @NotNull Tag tag);
 
     void showOnboarding(@NotNull Activity activity);
+
+    void showAchievementsList(Context context, long userId, boolean isMyProfile);
 }

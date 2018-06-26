@@ -6,13 +6,16 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
+import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.view.*
+import android.widget.LinearLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import kotlinx.android.synthetic.main.fragment_profile_new.*
 import kotlinx.android.synthetic.main.latex_supportabe_enhanced_view.view.*
 import kotlinx.android.synthetic.main.empty_login.*
+import kotlinx.android.synthetic.main.error_no_connection_with_button_small.view.*
 import kotlinx.android.synthetic.main.view_notification_interval_chooser.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
@@ -22,18 +25,26 @@ import org.stepic.droid.core.ProfilePresenter
 import org.stepic.droid.core.presenters.StreakPresenter
 import org.stepic.droid.core.presenters.contracts.NotificationTimeView
 import org.stepic.droid.core.presenters.contracts.ProfileView
+import org.stepic.droid.features.achievements.presenters.AchievementsPresenter
+import org.stepic.droid.features.achievements.presenters.AchievementsView
+import org.stepic.droid.features.achievements.ui.adapters.AchievementsTileAdapter
+import org.stepic.droid.features.achievements.ui.adapters.BaseAchievementsAdapter
+import org.stepic.droid.features.achievements.ui.dialogs.AchievementDetailsDialog
 import org.stepic.droid.fonts.FontType
 import org.stepic.droid.model.UserViewModel
+import org.stepic.droid.model.achievements.AchievementFlatItem
 import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.ui.activities.contracts.CloseButtonInToolbar
 import org.stepic.droid.ui.adapters.ProfileSettingsAdapter
 import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment
 import org.stepic.droid.ui.util.StepikAnimUtils
 import org.stepic.droid.ui.util.TimeIntervalUtil
+import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.ProfileSettingsHelper
+import org.stepic.droid.util.argument
 import org.stepic.droid.util.svg.GlideSvgRequestFactory
 import org.stepic.droid.viewmodel.ProfileSettingsViewModel
 import timber.log.Timber
@@ -42,7 +53,20 @@ import javax.inject.Inject
 
 class ProfileFragment : FragmentBase(),
         ProfileView,
-        NotificationTimeView {
+        NotificationTimeView,
+        AchievementsView {
+
+    companion object {
+        private const val NOTIFICATION_INTERVAL_REQUEST_CODE = 11
+        private const val MAX_ACHIEVEMENTS_TO_DISPLAY = 6
+        private const val DETAILED_INFO_CONTAINER_KEY = "detailedInfoContainerKey"
+
+        fun newInstance(): ProfileFragment = newInstance(0)
+
+        fun newInstance(userId: Long = 0) = ProfileFragment().apply {
+            this.userId = userId
+        }
+    }
 
     @Inject
     lateinit var profilePresenter: ProfilePresenter
@@ -50,14 +74,18 @@ class ProfileFragment : FragmentBase(),
     @Inject
     lateinit var streakPresenter: StreakPresenter
 
-    private var userId: Long = 0
+    @Inject
+    lateinit var achievementsPresenter: AchievementsPresenter
+
+    private var userId: Long by argument()
     private var localUserViewModel: UserViewModel? = null
     private var profileSettingsList: ArrayList<ProfileSettingsViewModel> = ArrayList()
     private var isShortInfoExpanded: Boolean = false
 
+    private var achievementsToDisplay: Int = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        userId = arguments.getLong(USER_ID_KEY)
         analytic.reportEvent(Analytic.Profile.OPEN_SCREEN_OVERALL)
         setHasOptionsMenu(true)
         profileSettingsList.clear()
@@ -76,6 +104,7 @@ class ProfileFragment : FragmentBase(),
             = inflater?.inflate(R.layout.fragment_profile_new, container, false)
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        achievementsToDisplay =  context.resources.getInteger(R.integer.achievements_to_display)
         nullifyActivityBackground()
         super.onViewCreated(view, savedInstanceState)
         initToolbar()
@@ -85,9 +114,18 @@ class ProfileFragment : FragmentBase(),
         profileSettingsRecyclerView.adapter = ProfileSettingsAdapter(activity, profileSettingsList, screenManager, this, analytic)
         profileSettingsRecyclerView.isNestedScrollingEnabled = false
 
+        achievementsTilesContainer.layoutManager = GridLayoutManager(context, achievementsToDisplay)
+        achievementsTilesContainer.adapter = AchievementsTileAdapter().apply { onAchievementItemClick = {
+            AchievementDetailsDialog.newInstance(it, localUserViewModel?.isMyProfile ?: false).show(childFragmentManager, AchievementDetailsDialog.TAG)
+        }}
+        achievementsTilesContainer.isNestedScrollingEnabled = false
+        initAchievementsPlaceholders()
+
         profilePresenter.attachView(this)
         streakPresenter.attachView(this)
+        achievementsPresenter.attachView(this)
         profilePresenter.initProfile(userId)
+
         profileImage.setOnClickListener { analytic.reportEvent(Analytic.Profile.CLICK_IMAGE) }
         val clickStreakValue = View.OnClickListener { analytic.reportEvent(Analytic.Profile.CLICK_STREAK_VALUE) }
         currentStreakValue.setOnClickListener(clickStreakValue)
@@ -113,6 +151,9 @@ class ProfileFragment : FragmentBase(),
 
         shortBioSecondText.textView.textSize = 14f
         shortBioSecondText.textView.setLineSpacing(0f, 1.6f)
+
+        achievementsLoadingError.tryAgain.setOnClickListener { achievementsPresenter.showAchievementsForUser(localUserViewModel?.id ?: 0, MAX_ACHIEVEMENTS_TO_DISPLAY, true) }
+        viewAllAchievements.setOnClickListener { screenManager.showAchievementsList(context, localUserViewModel?.id ?: 0, localUserViewModel?.isMyProfile ?: false) }
     }
 
     override fun onDestroyView() {
@@ -122,6 +163,7 @@ class ProfileFragment : FragmentBase(),
         maxStreakValue.setOnClickListener(null)
         profileImage.setOnClickListener(null)
         notificationIntervalChooserContainer.setOnClickListener(null)
+        achievementsPresenter.detachView(this)
         streakPresenter.detachView(this)
         profilePresenter.detachView(this)
         shortBioInfoContainer.setOnClickListener(null)
@@ -141,18 +183,16 @@ class ProfileFragment : FragmentBase(),
         }
     }
 
-    private val detailedInfoContainerKey = "detailedInfoContainerKey"
-
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putBoolean(detailedInfoContainerKey, isShortInfoExpanded)
+        outState.putBoolean(DETAILED_INFO_CONTAINER_KEY, isShortInfoExpanded)
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
         savedInstanceState?.let {
-            isShortInfoExpanded = it.getBoolean(detailedInfoContainerKey)
-            restoreVisibility(detailedInfoContainer, it, detailedInfoContainerKey)
+            isShortInfoExpanded = it.getBoolean(DETAILED_INFO_CONTAINER_KEY)
+            restoreVisibility(detailedInfoContainer, it, DETAILED_INFO_CONTAINER_KEY)
         }
 
     }
@@ -180,6 +220,38 @@ class ProfileFragment : FragmentBase(),
         initCenteredToolbar(R.string.profile_title, needCloseButton, getCloseIconDrawableRes())
     }
 
+    private fun initAchievementsPlaceholders() {
+        for (i in 0 until achievementsToDisplay) {
+            val view = layoutInflater.inflate(R.layout.view_achievement_tile_placeholder, achievementsLoadingPlaceholder, false)
+            view.layoutParams = (view.layoutParams as LinearLayout.LayoutParams).apply {
+                weight = 1f
+                width = 0
+            }
+            achievementsLoadingPlaceholder.addView(view)
+        }
+    }
+
+    override fun showAchievements(achievements: List<AchievementFlatItem>) {
+        (achievementsTilesContainer.adapter as BaseAchievementsAdapter).achievements = achievements.take(achievementsToDisplay)
+        achievementsLoadingPlaceholder.changeVisibility(false)
+        achievementsLoadingError.changeVisibility(false)
+        achievementsTilesContainer.changeVisibility(true)
+        achievementsContainer.changeVisibility(true)
+    }
+
+    override fun onAchievementsLoadingError() {
+        achievementsContainer.changeVisibility(true)
+        achievementsLoadingPlaceholder.changeVisibility(false)
+        achievementsLoadingError.changeVisibility(true)
+        achievementsTilesContainer.changeVisibility(false)
+    }
+
+    override fun onAchievementsLoading() {
+        achievementsContainer.changeVisibility(true)
+        achievementsLoadingPlaceholder.changeVisibility(true)
+        achievementsLoadingError.changeVisibility(false)
+        achievementsTilesContainer.changeVisibility(false)
+    }
 
     /**
      * This method is invoked only for My Profile
@@ -230,6 +302,10 @@ class ProfileFragment : FragmentBase(),
             if (!shortBioArrowImageView.isExpanded()) {
                 changeStateOfUserInfo()
             }
+        }
+
+        if (!userViewModel.isPrivate) {
+            achievementsPresenter.showAchievementsForUser(userViewModel.id, MAX_ACHIEVEMENTS_TO_DISPLAY)
         }
 
         mainInfoRoot.visibility = View.VISIBLE
@@ -388,21 +464,6 @@ class ProfileFragment : FragmentBase(),
         localUserViewModel?.let {
             val intent = shareHelper.getIntentForProfileSharing(it)
             startActivity(intent)
-        }
-    }
-
-    companion object {
-        private val USER_ID_KEY = "user_id_key"
-        private val NOTIFICATION_INTERVAL_REQUEST_CODE = 11
-
-        fun newInstance(): ProfileFragment = newInstance(0)
-
-        fun newInstance(userId: Long): ProfileFragment {
-            val args = Bundle()
-            args.putLong(USER_ID_KEY, userId)
-            val fragment = ProfileFragment()
-            fragment.arguments = args
-            return fragment
         }
     }
 

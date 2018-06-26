@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <FrameLayout
+        android:id="@+id/achievementIconContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginLeft="32dp"
+
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintBottom_toTopOf="@+id/achievementLevels"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed">
+
+        <ImageView
+            android:id="@+id/achievementIcon"
+            android:layout_width="128dp"
+            android:layout_height="128dp" />
+
+        <org.stepic.droid.features.achievements.ui.custom.AchievementCircleProgressView
+            android:id="@+id/achievementLevelProgress"
+            android:layout_width="128dp"
+            android:layout_height="128dp"
+            android:layout_gravity="center"
+            app:progressColor="@color/stepic_brand_primary"
+            app:strokeWidth="1.5dp" />
+    </FrameLayout>
+
+    <org.stepic.droid.features.achievements.ui.custom.VectorRatingBar
+        android:id="@+id/achievementLevels"
+        android:layout_width="wrap_content"
+        android:layout_height="16dp"
+        app:backgroundIcon="@drawable/ic_achievements_star_background"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="24dp"
+        app:itemsGap="2dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/achievementIconContainer"
+        app:layout_constraintStart_toStartOf="@+id/achievementIconContainer"
+        app:layout_constraintTop_toBottomOf="@+id/achievementIconContainer"
+        app:progressIcon="@drawable/ic_achievements_star_progress"
+        app:secondaryIcon="@drawable/ic_achievements_star_secondary" />
+
+    <TextView
+        android:id="@+id/achievementTitle"
+        fontPath="fonts/Roboto-Medium.ttf"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="24dp"
+        android:gravity="center"
+        android:textColor="@color/new_accent_color"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/achievementDescription"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/achievementIconContainer"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:ignore="MissingPrefix"
+        tools:text="Achievement title" />
+
+    <TextView
+        android:id="@+id/achievementDescription"
+        fontPath="fonts/Roboto-Light.ttf"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:textColor="@color/new_accent_color"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/achievementLevel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/achievementIconContainer"
+        app:layout_constraintTop_toBottomOf="@+id/achievementTitle"
+        tools:ignore="MissingPrefix"
+        tools:text="Achievement description" />
+
+    <TextView
+        android:id="@+id/achievementLevel"
+        fontPath="fonts/Roboto-Light.ttf"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:gravity="center"
+        android:textColor="@color/new_accent_color"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/achievementRest"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/achievementIconContainer"
+        app:layout_constraintTop_toBottomOf="@+id/achievementDescription"
+        tools:ignore="MissingPrefix"
+        tools:text="Level 5 / 6" />
+
+    <TextView
+        android:id="@+id/achievementRest"
+        fontPath="fonts/Roboto-Light.ttf"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:textColor="@color/new_accent_color"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/achievementIconContainer"
+        app:layout_constraintTop_toBottomOf="@+id/achievementLevel"
+        tools:ignore="MissingPrefix"
+        tools:text="25 for the next level" />
+
+</android.support.constraint.ConstraintLayout>

@@ -7,4 +7,24 @@
         <item quantity="one">%d hour</item>
         <item quantity="other">%d hours</item>
     </plurals>
+    <plurals name="day">
+        <item quantity="one">%d day</item>
+        <item quantity="other">%d days</item>
+    </plurals>
+    <plurals name="task">
+        <item quantity="one">%d task</item>
+        <item quantity="other">%d tasks</item>
+    </plurals>
+    <plurals name="problem">
+        <item quantity="one">%d problem</item>
+        <item quantity="other">%d problems</item>
+    </plurals>
+    <plurals name="certificate">
+        <item quantity="one">%d certificate</item>
+        <item quantity="other">%d certificates</item>
+    </plurals>
+    <plurals name="course_review">
+        <item quantity="one">%d course review</item>
+        <item quantity="other">%d course reviews</item>
+    </plurals>
 </resources>

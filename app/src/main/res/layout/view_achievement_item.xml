@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="?selectableItemBackground"
+
+    android:paddingStart="?dialogPreferredPadding"
+    android:paddingLeft="?dialogPreferredPadding"
+    android:paddingEnd="?dialogPreferredPadding"
+    android:paddingRight="?dialogPreferredPadding"
+    android:paddingTop="@dimen/guideline_standard_padding"
+    android:paddingBottom="@dimen/guideline_standard_padding">
+
+    <include
+        layout="@layout/view_achievement_tile"
+        android:id="@+id/achievementTile"
+        android:layout_height="wrap_content"
+        android:layout_width="64dp" />
+
+    <TextView
+        android:id="@+id/achievementTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_marginLeft="@dimen/guideline_standard_padding"
+        android:layout_marginStart="@dimen/guideline_standard_padding"
+
+        android:layout_toRightOf="@id/achievementTile"
+        android:layout_toEndOf="@id/achievementTile"
+
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+
+        android:textSize="16sp"
+        android:textColor="@color/new_accent_color"
+
+        fontPath="fonts/Roboto-Light.ttf"
+        tools:ignore="MissingPrefix"
+        tools:text="Achievement title" />
+
+    <TextView
+        android:id="@+id/achievementDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="@dimen/guideline_standard_padding"
+        android:layout_marginStart="@dimen/guideline_standard_padding"
+
+        android:layout_toRightOf="@id/achievementTile"
+        android:layout_toEndOf="@id/achievementTile"
+
+        android:layout_below="@id/achievementTitle"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+
+        android:textSize="12sp"
+        android:textColor="@color/new_accent_color"
+
+        fontPath="fonts/Roboto-Light.ttf"
+        tools:ignore="MissingPrefix"
+        tools:text="Achievement description"/>
+
+</RelativeLayout>

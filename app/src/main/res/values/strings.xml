@@ -671,4 +671,11 @@
     <string name="deadlines_banner_description">Constant learning is a key to success. Create personal schedule, so you\'ll never forget to study.</string>
     <string name="deadlines_banner_action">Create</string>
     <string name="deadlines_fetching_error">An error was occurred while retrieving the schedule</string>
+
+
+    <string name="achievements_title">Achievements</string>
+    <string name="achievement_level">Level %d / %d</string>
+    <string name="achievement_remaining_exp">%d for the next level</string>
+    <string name="achievement_remaining_exp_locked">Not obtained yet</string>
+    <string name="achievement_share">I\'ve unlocked achievement «%s» at Stepik.org. Join and beat my record!</string>
 </resources>

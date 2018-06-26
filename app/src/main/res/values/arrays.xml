@@ -16,4 +16,12 @@
         <item>Last 7 days</item>
         <item>All time</item>
     </string-array>
+
+    <array name="achievements_circle_progress_background_colors">
+        <item>#A9AEFF</item>
+        <item>#A99CFF</item>
+        <item>#A992FF</item>
+        <item>#ACA5FF</item>
+        <item>#ACECFE</item>
+    </array>
 </resources>

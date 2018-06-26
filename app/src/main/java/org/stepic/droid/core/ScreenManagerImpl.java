@@ -25,6 +25,7 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.di.AppSingleton;
+import org.stepic.droid.features.achievements.ui.activity.AchievementsListActivity;
 import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.model.CollectionDescriptionColors;
 import org.stepic.droid.model.Course;
@@ -76,6 +77,8 @@ import java.io.File;
 import java.net.URLEncoder;
 
 import javax.inject.Inject;
+
+import okhttp3.Interceptor;
 
 @AppSingleton
 public class ScreenManagerImpl implements ScreenManager {
@@ -698,4 +701,11 @@ public class ScreenManagerImpl implements ScreenManager {
         App.Companion.getAppContext().startService(loadIntent);
     }
 
+    @Override
+    public void showAchievementsList(Context context, long userId, boolean isMyProfile) {
+        Intent intent = new Intent(context, AchievementsListActivity.class);
+        intent.putExtra(AchievementsListActivity.USER_ID_KEY, userId);
+        intent.putExtra(AchievementsListActivity.IS_MY_PROFILE, isMyProfile);
+        context.startActivity(intent);
+    }
 }
