@@ -76,6 +76,13 @@ class AchievementDetailsDialog: DialogFragment() {
         return builder.build()
     }
 
+    override fun onStart() {
+        super.onStart()
+        dialog.window.attributes = dialog.window.attributes.apply {
+            width = context.resources.getDimension(R.dimen.achievement_details_dialog_width).toInt()
+        }
+    }
+
     private fun shareAchievement() {
         val intent = Intent(Intent.ACTION_SEND).apply {
             putExtra(Intent.EXTRA_TEXT, getString(R.string.achievement_share, achievementResourceResolver.resolveTitleForKind(achievementItem.kind)))

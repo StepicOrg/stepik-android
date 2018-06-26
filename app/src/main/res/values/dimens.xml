@@ -1,4 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <item name="match_parent" type="dimen">-1px</item>
+    <item name="wrap_content" type="dimen">-2px</item>
+
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="exo_media_button_height">52dp</dimen>
     <dimen name="play_pause_button_size">72dp</dimen>
@@ -188,5 +191,7 @@
     <dimen name="spinner_arrow_margin">0dp</dimen>
 
     <dimen name="achievement_tile_width">64dp</dimen>
+
     <dimen name="achievement_tile_height">80dp</dimen>
+    <dimen name="achievement_details_dialog_width">@dimen/wrap_content</dimen>
 </resources>
