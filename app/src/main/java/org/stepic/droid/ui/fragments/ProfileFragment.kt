@@ -43,6 +43,7 @@ import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.ProfileSettingsHelper
+import org.stepic.droid.util.argument
 import org.stepic.droid.util.svg.GlideSvgRequestFactory
 import org.stepic.droid.viewmodel.ProfileSettingsViewModel
 import timber.log.Timber
@@ -54,6 +55,18 @@ class ProfileFragment : FragmentBase(),
         NotificationTimeView,
         AchievementsView {
 
+    companion object {
+        private const val NOTIFICATION_INTERVAL_REQUEST_CODE = 11
+
+        private const val ACHIEVEMENTS_TO_DISPLAY = 4
+
+        fun newInstance(): ProfileFragment = newInstance(0)
+
+        fun newInstance(userId: Long = 0) = ProfileFragment().apply {
+            this.userId = userId
+        }
+    }
+
     @Inject
     lateinit var profilePresenter: ProfilePresenter
 
@@ -63,14 +76,13 @@ class ProfileFragment : FragmentBase(),
     @Inject
     lateinit var achievementsPresenter: AchievementsPresenter
 
-    private var userId: Long = 0
+    private var userId: Long by argument()
     private var localUserViewModel: UserViewModel? = null
     private var profileSettingsList: ArrayList<ProfileSettingsViewModel> = ArrayList()
     private var isShortInfoExpanded: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        userId = arguments.getLong(USER_ID_KEY)
         analytic.reportEvent(Analytic.Profile.OPEN_SCREEN_OVERALL)
         setHasOptionsMenu(true)
         profileSettingsList.clear()
@@ -438,23 +450,6 @@ class ProfileFragment : FragmentBase(),
         localUserViewModel?.let {
             val intent = shareHelper.getIntentForProfileSharing(it)
             startActivity(intent)
-        }
-    }
-
-    companion object {
-        private const val USER_ID_KEY = "user_id_key"
-        private const val NOTIFICATION_INTERVAL_REQUEST_CODE = 11
-
-        private const val ACHIEVEMENTS_TO_DISPLAY = 4
-
-        fun newInstance(): ProfileFragment = newInstance(0)
-
-        fun newInstance(userId: Long): ProfileFragment {
-            val args = Bundle()
-            args.putLong(USER_ID_KEY, userId)
-            val fragment = ProfileFragment()
-            fragment.arguments = args
-            return fragment
         }
     }
 
