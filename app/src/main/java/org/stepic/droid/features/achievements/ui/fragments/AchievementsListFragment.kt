@@ -85,15 +85,15 @@ class AchievementsListFragment: FragmentBase(), AchievementsView {
         }
     }
 
-    private fun fetchAchievements(force: Boolean = false) {
-        achievementsPresenter.showAchievementsForUser(userId, force = force)
+    private fun fetchAchievements(forceUpdate: Boolean = false) {
+        achievementsPresenter.showAchievementsForUser(userId, forceUpdate = forceUpdate)
     }
 
     override fun showAchievements(achievements: List<AchievementFlatItem>) {
         recycler.changeVisibility(true)
         progress.changeVisibility(false)
         error.changeVisibility(false)
-        (recycler?.adapter as? BaseAchievementsAdapter)?.achievements = achievements
+        (recycler.adapter as? BaseAchievementsAdapter)?.achievements = achievements
     }
 
     override fun onAchievementsLoadingError() {

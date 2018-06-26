@@ -25,8 +25,8 @@ constructor(
 
     private var state by Delegates.observable(AchievementsView.State.Idle as AchievementsView.State) { _, _, newState -> setViewState(newState) }
 
-    fun showAchievementsForUser(userId: Long, count: Int = -1, force: Boolean = false) {
-        if (state == AchievementsView.State.Idle || (force && state == AchievementsView.State.Error)) {
+    fun showAchievementsForUser(userId: Long, count: Int = -1, forceUpdate: Boolean = false) {
+        if (state == AchievementsView.State.Idle || (forceUpdate && state == AchievementsView.State.Error)) {
             state = AchievementsView.State.Loading
             compositeDisposable addDisposable achievementsRepository.getAchievements(userId, count)
                     .subscribeOn(backgroundScheduler)
