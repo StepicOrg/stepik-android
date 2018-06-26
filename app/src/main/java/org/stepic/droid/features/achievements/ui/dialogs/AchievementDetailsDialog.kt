@@ -22,11 +22,15 @@ class AchievementDetailsDialog: DialogFragment() {
     companion object {
         const val TAG = "achievement_details_dialog"
 
-        fun newInstance(achievementFlatItem: AchievementFlatItem): AchievementDetailsDialog =
-                AchievementDetailsDialog().apply { achievementItem = achievementFlatItem }
+        fun newInstance(achievementFlatItem: AchievementFlatItem, canShareAchievement: Boolean): AchievementDetailsDialog =
+                AchievementDetailsDialog().apply {
+                    achievementItem = achievementFlatItem
+                    canShare = canShareAchievement
+                }
     }
 
-    private var achievementItem by argument<AchievementFlatItem>()
+    private var achievementItem: AchievementFlatItem by argument()
+    private var canShare: Boolean by argument()
 
     @Inject
     lateinit var achievementResourceResolver: AchievementResourceResolver
@@ -65,7 +69,7 @@ class AchievementDetailsDialog: DialogFragment() {
                 .theme(Theme.LIGHT)
                 .customView(view, false)
 
-        if (!achievementItem.isLocked) {
+        if (canShare && !achievementItem.isLocked) {
             builder
                 .positiveText(R.string.share_title)
                 .negativeText(R.string.close_screen)

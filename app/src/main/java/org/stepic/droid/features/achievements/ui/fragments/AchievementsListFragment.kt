@@ -21,20 +21,23 @@ import org.stepic.droid.model.achievements.AchievementFlatItem
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.ui.util.setHeight
+import org.stepic.droid.util.argument
 import javax.inject.Inject
 
 class AchievementsListFragment: FragmentBase(), AchievementsView {
     companion object {
-        const val USER_ID_KEY = "user_id"
-
-        fun newInstance(userId: Long) =
+        fun newInstance(userId: Long, isMyProfile: Boolean) =
             AchievementsListFragment().apply {
-                arguments = Bundle(1).apply { putLong(USER_ID_KEY, userId) }
+                this.userId = userId
+                this.isMyProfile = isMyProfile
             }
     }
 
     @Inject
     lateinit var achievementsPresenter: AchievementsPresenter
+
+    private var userId: Long by argument()
+    private var isMyProfile: Boolean by argument()
 
     override fun injectComponent() {
         App
@@ -56,7 +59,7 @@ class AchievementsListFragment: FragmentBase(), AchievementsView {
 
         recycler.layoutManager = LinearLayoutManager(context)
         recycler.adapter = AchievementsAdapter().apply { onAchievementItemClick = {
-            AchievementDetailsDialog.newInstance(it).show(childFragmentManager, AchievementDetailsDialog.TAG)
+            AchievementDetailsDialog.newInstance(it, isMyProfile).show(childFragmentManager, AchievementDetailsDialog.TAG)
         }}
 
         val divider = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
@@ -83,7 +86,7 @@ class AchievementsListFragment: FragmentBase(), AchievementsView {
     }
 
     private fun fetchAchievements(force: Boolean = false) {
-        achievementsPresenter.showAchievementsForUser(arguments?.getLong(USER_ID_KEY) ?: 0, force = force)
+        achievementsPresenter.showAchievementsForUser(userId, force = force)
     }
 
     override fun showAchievements(achievements: List<AchievementFlatItem>) {

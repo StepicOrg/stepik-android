@@ -141,5 +141,5 @@ public interface ScreenManager {
 
     void showOnboarding(@NotNull Activity activity);
 
-    void showAchievementsList(Context context, long userId);
+    void showAchievementsList(Context context, long userId, boolean isMyProfile);
 }

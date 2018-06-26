@@ -5,8 +5,15 @@ import org.stepic.droid.base.SingleFragmentActivity
 import org.stepic.droid.features.achievements.ui.fragments.AchievementsListFragment
 
 class AchievementsListActivity: SingleFragmentActivity() {
-    override fun createFragment() = AchievementsListFragment
-            .newInstance(intent?.getLongExtra(AchievementsListFragment.USER_ID_KEY, 0) ?: 0)
+    companion object {
+        const val USER_ID_KEY = "user_id"
+        const val IS_MY_PROFILE = "is_my_profile"
+    }
+
+    override fun createFragment() = AchievementsListFragment.newInstance(
+            intent?.getLongExtra(USER_ID_KEY, 0) ?: 0,
+            intent?.getBooleanExtra(IS_MY_PROFILE, false) ?: false
+    )
 
     override fun applyTransitionPrev() {
         //no-op

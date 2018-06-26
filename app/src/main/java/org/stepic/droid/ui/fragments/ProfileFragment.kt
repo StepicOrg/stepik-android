@@ -100,7 +100,7 @@ class ProfileFragment : FragmentBase(),
 
         achievementsTilesContainer.layoutManager = GridLayoutManager(context, ACHIEVEMENTS_TO_DISPLAY)
         achievementsTilesContainer.adapter = AchievementsTileAdapter().apply { onAchievementItemClick = {
-            AchievementDetailsDialog.newInstance(it).show(childFragmentManager, AchievementDetailsDialog.TAG)
+            AchievementDetailsDialog.newInstance(it, localUserViewModel?.isMyProfile ?: false).show(childFragmentManager, AchievementDetailsDialog.TAG)
         }}
         achievementsTilesContainer.isNestedScrollingEnabled = false
 
@@ -136,7 +136,7 @@ class ProfileFragment : FragmentBase(),
         shortBioSecondText.textView.setLineSpacing(0f, 1.6f)
 
         achievementsLoadingError.tryAgain.setOnClickListener { achievementsPresenter.showAchievementsForUser(localUserViewModel?.id ?: 0, ACHIEVEMENTS_TO_DISPLAY, true) }
-        viewAllAchievements.setOnClickListener { screenManager.showAchievementsList(context, localUserViewModel?.id ?: 0) }
+        viewAllAchievements.setOnClickListener { screenManager.showAchievementsList(context, localUserViewModel?.id ?: 0, localUserViewModel?.isMyProfile ?: false) }
     }
 
     override fun onDestroyView() {
