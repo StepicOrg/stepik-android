@@ -1,8 +1,11 @@
 package org.stepic.droid.analytic
 
 import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
+import android.support.v4.app.NotificationManagerCompat
 import com.amplitude.api.Amplitude
+import com.amplitude.api.Identify
 import com.crashlytics.android.Crashlytics
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.yandex.metrica.YandexMetrica
@@ -23,14 +26,36 @@ class AnalyticImpl
             .initialize(context, config.amplitudeApiKey)
             .enableForegroundTracking(App.application)
 
+    init {
+        amplitude.identify(Identify()
+                .add(Analytic.Amplitude.Properties.APPLICATION_ID, context.packageName)
+                .add(Analytic.Amplitude.Properties.PUSH_PERMISSION, if (NotificationManagerCompat.from(context).areNotificationsEnabled()) "granted" else "not_granted")
+        )
+    }
+
+    // Amplitude properties
+    override fun setUserId(userId: String) {
+        firebaseAnalytics.setUserId(userId)
+        amplitude.identify(Identify().add(Analytic.Amplitude.Properties.USER_ID, userId))
+    }
+
+    override fun setCoursesCount(coursesCount: Int) =
+        amplitude.identify(Identify().add(Analytic.Amplitude.Properties.COURSES_COUNT, coursesCount))
+
+    override fun setSubmissionsCount(submissionsCount: Int) =
+        amplitude.identify(Identify().add(Analytic.Amplitude.Properties.SUBMISSIONS_MADE, submissionsCount))
+
+    override fun setScreenOrientation(orientation: Int) =
+        amplitude.identify(Identify().add(Analytic.Amplitude.Properties.COURSES_COUNT, if (orientation == Configuration.ORIENTATION_PORTRAIT) "portrait" else "landscape"))
+
+    override fun setStreaksNotificationsEnabled(isEnabled: Boolean) =
+        amplitude.identify(Identify().add(Analytic.Amplitude.Properties.STREAKS_NOTIFICATIONS_ENABLED, if (isEnabled) "enabled" else "disabled"))
+    // End of amplitude properties
+
     override fun reportEventValue(eventName: String, value: Long) {
         val bundle = Bundle()
         bundle.putLong(FirebaseAnalytics.Param.VALUE, value)
         reportEvent(eventName, bundle)
-    }
-
-    override fun setUserId(userId: String) {
-        firebaseAnalytics.setUserId(userId)
     }
 
     override fun reportEvent(eventName: String, bundle: Bundle?) {
