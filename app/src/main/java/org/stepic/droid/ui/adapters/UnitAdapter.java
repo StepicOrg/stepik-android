@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import org.stepic.droid.R;
+import org.stepic.droid.analytic.AmplitudeAnalytic;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.core.ScreenManager;
@@ -53,6 +54,8 @@ import javax.inject.Inject;
 import butterknife.BindDrawable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import kotlin.Pair;
+import kotlin.collections.MapsKt;
 
 public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder> implements OnItemClickListener, OnClickLoadListener, OnLoadPositionListener {
 
@@ -249,6 +252,8 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
             if (lesson.is_cached()) {
                 //delete
                 analytic.reportEvent(Analytic.Interaction.CLICK_DELETE_LESSON, unit.getId() + "");
+                analytic.reportAmplitudeEvent(AmplitudeAnalytic.Downloads.DELETED,
+                        MapsKt.mapOf(new Pair<String, Object>(AmplitudeAnalytic.Downloads.PARAM_CONTENT, AmplitudeAnalytic.Downloads.Values.LESSON)));
                 DeleteItemDialogFragment dialogFragment = DeleteItemDialogFragment.newInstance(position);
                 dialogFragment.setTargetFragment(fragment, UnitsFragment.DELETE_POSITION_REQUEST_CODE);
                 if (!dialogFragment.isAdded()) {
@@ -260,6 +265,8 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
                 if (lesson.is_loading()) {
                     //cancel loading
                     analytic.reportEvent(Analytic.Interaction.CLICK_CANCEL_LESSON, unit.getId() + "");
+                    analytic.reportAmplitudeEvent(AmplitudeAnalytic.Downloads.CANCELLED,
+                            MapsKt.mapOf(new Pair<String, Object>(AmplitudeAnalytic.Downloads.PARAM_CONTENT, AmplitudeAnalytic.Downloads.Values.LESSON)));
                     lesson.set_loading(false);
                     lesson.set_cached(false);
                     threadPoolExecutor.execute(new Runnable() {
@@ -300,6 +307,8 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
             final Unit unit = unitList.get(position);
             final Lesson lesson = lessonList.get(position);
             analytic.reportEvent(Analytic.Interaction.CLICK_CACHE_LESSON, unit.getId() + "");
+            analytic.reportAmplitudeEvent(AmplitudeAnalytic.Downloads.STARTED,
+                    MapsKt.mapOf(new Pair<String, Object>(AmplitudeAnalytic.Downloads.PARAM_CONTENT, AmplitudeAnalytic.Downloads.Values.LESSON)));
             lesson.set_cached(false);
             lesson.set_loading(true);
             downloadingPresenter.onStateChanged(lesson.getId(), lesson.is_loading());

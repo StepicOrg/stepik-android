@@ -14,6 +14,7 @@ import com.bumptech.glide.request.target.BitmapImageViewTarget
 import kotlinx.android.synthetic.main.new_course_item.view.*
 import org.stepic.droid.R
 import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
+import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.configuration.Config
@@ -166,6 +167,10 @@ class CourseItemViewHolder(
     private fun onClickWidgetButton(course: Course, enrolled: Boolean) {
         if (enrolled) {
             analytic.reportEvent(Analytic.Interaction.CLICK_CONTINUE_COURSE)
+            analytic.reportAmplitudeEvent(AmplitudeAnalytic.Course.CONTINUE_PRESSED, mapOf(
+                    AmplitudeAnalytic.Course.Params.COURSE to course.courseId,
+                    AmplitudeAnalytic.Course.Params.SOURCE to AmplitudeAnalytic.Course.Values.COURSE_WIDGET
+            ))
             continueCoursePresenter.continueCourse(course) //provide position?
         } else {
             screenManager.showCourseDescription(contextActivity, course, true)

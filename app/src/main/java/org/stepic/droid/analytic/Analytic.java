@@ -5,8 +5,9 @@ import android.os.Bundle;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public interface Analytic {
+import java.util.Map;
 
+public interface Analytic {
     interface Adaptive {
         String REACTION_EASY = "reaction_easy";
         String REACTION_HARD = "reaction_hard";
@@ -527,6 +528,13 @@ public interface Analytic {
     void reportError(String message, @NotNull Throwable throwable);
 
     void setUserId(@NotNull String userId);
+
+    void setCoursesCount(int coursesCount);
+    void setSubmissionsCount(long submissionsCount);
+    void setScreenOrientation(int orientation);
+    void setStreaksNotificationsEnabled(boolean isEnabled);
+    void reportAmplitudeEvent(@NotNull String eventName, @Nullable Map<String, Object> params);
+    void reportAmplitudeEvent(@NotNull String eventName);
 
     void reportEventValue(String eventName, long value);
 

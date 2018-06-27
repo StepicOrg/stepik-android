@@ -136,6 +136,7 @@ dependencies {
 
     implementation libraries.glide
 
+    implementation libraries.amplitude
     implementation libraries.appMetrica
 
     implementation libraries.calligraphy

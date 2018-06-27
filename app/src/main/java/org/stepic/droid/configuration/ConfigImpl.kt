@@ -46,6 +46,7 @@ private constructor() : Config {
     private val privacyPolicy: String? = null
     private val csrfCookieName: String? = null
     private val sessionCookieName: String? = null
+    private val amplitudeApiKey: String? = null
     private val isAppInStore: Boolean = false
 
     override fun getOAuthClientId(type: Api.TokenType) = when (type) {
@@ -90,4 +91,6 @@ private constructor() : Config {
     override fun getSessionCookieName() = sessionCookieName
 
     override fun isAppInStore() = isAppInStore
+
+    override fun getAmplitudeApiKey() = amplitudeApiKey
 }

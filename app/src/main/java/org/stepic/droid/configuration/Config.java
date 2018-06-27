@@ -37,5 +37,7 @@ public interface Config {
 
     String getSessionCookieName();
 
+    String getAmplitudeApiKey();
+
     boolean isAppInStore();
 }

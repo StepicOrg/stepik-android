@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.annotation.MainThread
 import android.support.annotation.WorkerThread
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.configuration.RemoteConfig
@@ -165,6 +166,18 @@ class StepAttemptPresenter
                                     sharedPreferenceHelper.incrementUserSolved()
                                 }
 
+                                if (fromPosting && submission != null) {
+                                    sharedPreferenceHelper.incrementSubmissionsCount()
+
+                                    val params = mutableMapOf(
+                                            AmplitudeAnalytic.Steps.Params.TYPE to step.getStepType(),
+                                            AmplitudeAnalytic.Steps.Params.STEP to step.id
+                                    )
+                                    submission.reply?.language?.let {
+                                        params[AmplitudeAnalytic.Steps.Params.LANGUAGE] = it
+                                    }
+                                    analytic.reportAmplitudeEvent(AmplitudeAnalytic.Steps.SUBMISSION_MADE, params)
+                                }
 
                                 val needShowStreakDialog =
                                         fromPosting
