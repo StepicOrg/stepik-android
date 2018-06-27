@@ -1,5 +1,6 @@
 package org.stepic.droid.core.presenters
 
+import com.amplitude.api.Amplitude
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Scheduler
@@ -16,6 +17,8 @@ import org.stepic.droid.adaptive.model.RecommendationReaction
 import org.stepic.droid.adaptive.ui.adapters.QuizCardsAdapter
 import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
 import org.stepic.droid.adaptive.util.ExpHelper
+import org.stepic.droid.analytic.AmplitudeAnalytic
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.presenters.contracts.RecommendationsView
 import org.stepic.droid.di.adaptive.AdaptiveCourseScope
@@ -25,6 +28,7 @@ import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.model.PersistentLastStep
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
+import org.stepic.droid.util.getStepType
 import org.stepic.droid.web.Api
 import org.stepic.droid.web.ViewAssignment
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse
@@ -46,7 +50,8 @@ constructor(
         private val sharedPreferenceHelper: SharedPreferenceHelper,
         private val databaseFacade: DatabaseFacade,
         private val screenManager: ScreenManager,
-        private val adaptiveCoursesResolver: AdaptiveCoursesResolver
+        private val adaptiveCoursesResolver: AdaptiveCoursesResolver,
+        private val analytic: Analytic
 ) : PresenterBase<RecommendationsView>(), AdaptiveReactionListener, AnswerListener {
 
     companion object {
@@ -224,6 +229,14 @@ constructor(
     }
 
     private fun reportView(card: Card) {
+        card.step?.let {
+            analytic.reportAmplitudeEvent(AmplitudeAnalytic.Steps.STEP_OPENED, mapOf(
+                    AmplitudeAnalytic.Steps.Params.TYPE to it.getStepType(),
+                    AmplitudeAnalytic.Steps.Params.NUMBER to it.position,
+                    AmplitudeAnalytic.Steps.Params.STEP to it.id
+            ))
+        }
+
         compositeDisposable.add(api.getUnits(courseId, card.lessonId)
                 .subscribeOn(backgroundScheduler)
                 .observeOn(backgroundScheduler)

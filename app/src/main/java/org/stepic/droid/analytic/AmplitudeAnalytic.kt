@@ -53,6 +53,13 @@ interface AmplitudeAnalytic {
     object Steps {
         const val SUBMISSION_MADE = "Submission made"
         const val STEP_OPENED = "Step opened"
+
+        object Params {
+            const val TYPE = "type"
+            const val LANGUAGE = "language"
+            const val NUMBER = "number"
+            const val STEP = "step"
+        }
     }
 
     object Downloads {
