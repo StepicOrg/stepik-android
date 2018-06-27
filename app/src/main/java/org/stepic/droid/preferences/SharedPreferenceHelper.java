@@ -256,6 +256,7 @@ public class SharedPreferenceHelper {
 
     public void setStreakNotificationEnabled(boolean value) {
         put(PreferenceType.LOGIN, STREAK_NOTIFICATION, value ? 1 : 0);
+        analytic.setStreaksNotificationsEnabled(value);
         resetNumberOfStreakNotifications();
     }
 
