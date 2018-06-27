@@ -1,6 +1,5 @@
 package org.stepic.droid.core.presenters
 
-import com.amplitude.api.Amplitude
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Scheduler
