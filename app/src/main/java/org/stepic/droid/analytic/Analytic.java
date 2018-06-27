@@ -1,25 +1,13 @@
 package org.stepic.droid.analytic;
 
-import android.content.res.Configuration;
 import android.os.Bundle;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Map;
+
 public interface Analytic {
-
-    interface Amplitude {
-        interface Properties {
-            String USER_ID = "user_id";
-            String SUBMISSIONS_MADE = "submissions_made";
-            String COURSES_COUNT = "courses_count";
-            String SCREEN_ORIENTATION = "screen_orientation";
-            String APPLICATION_ID = "application_id";
-            String PUSH_PERMISSION = "push_permission";
-            String STREAKS_NOTIFICATIONS_ENABLED = "streaks_notifications_enabled";
-        }
-    }
-
     interface Adaptive {
         String REACTION_EASY = "reaction_easy";
         String REACTION_HARD = "reaction_hard";
@@ -545,6 +533,8 @@ public interface Analytic {
     void setSubmissionsCount(long submissionsCount);
     void setScreenOrientation(int orientation);
     void setStreaksNotificationsEnabled(boolean isEnabled);
+    void reportAmplitudeEvent(@NotNull String eventName, @Nullable Map<String, Object> params);
+    void reportAmplitudeEvent(@NotNull String eventName);
 
     void reportEventValue(String eventName, long value);
 

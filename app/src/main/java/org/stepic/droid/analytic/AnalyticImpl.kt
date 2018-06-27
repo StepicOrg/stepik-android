@@ -2,6 +2,7 @@ package org.stepic.droid.analytic
 
 import android.content.Context
 import android.content.res.Configuration
+import android.content.res.Resources
 import android.os.Bundle
 import android.support.v4.app.NotificationManagerCompat
 import com.amplitude.api.Amplitude
@@ -9,6 +10,7 @@ import com.amplitude.api.Identify
 import com.crashlytics.android.Crashlytics
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.yandex.metrica.YandexMetrica
+import org.json.JSONObject
 import org.stepic.droid.base.App
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.di.AppSingleton
@@ -28,28 +30,42 @@ class AnalyticImpl
 
     init {
         amplitude.identify(Identify()
-                .add(Analytic.Amplitude.Properties.APPLICATION_ID, context.packageName)
-                .add(Analytic.Amplitude.Properties.PUSH_PERMISSION, if (NotificationManagerCompat.from(context).areNotificationsEnabled()) "granted" else "not_granted")
+                .set(AmplitudeAnalytic.Properties.APPLICATION_ID, context.packageName)
+                .set(AmplitudeAnalytic.Properties.PUSH_PERMISSION, if (NotificationManagerCompat.from(context).areNotificationsEnabled()) "granted" else "not_granted")
         )
     }
 
     // Amplitude properties
+    private fun syncAmplitudeProperties() {
+        setScreenOrientation(Resources.getSystem().configuration.orientation)
+    }
+
     override fun setUserId(userId: String) {
         firebaseAnalytics.setUserId(userId)
-        amplitude.identify(Identify().add(Analytic.Amplitude.Properties.USER_ID, userId))
+        amplitude.identify(Identify().set(AmplitudeAnalytic.Properties.USER_ID, userId))
     }
 
     override fun setCoursesCount(coursesCount: Int) =
-        amplitude.identify(Identify().add(Analytic.Amplitude.Properties.COURSES_COUNT, coursesCount))
+        amplitude.identify(Identify().set(AmplitudeAnalytic.Properties.COURSES_COUNT, coursesCount))
 
     override fun setSubmissionsCount(submissionsCount: Long) =
-        amplitude.identify(Identify().add(Analytic.Amplitude.Properties.SUBMISSIONS_MADE, submissionsCount))
+        amplitude.identify(Identify().set(AmplitudeAnalytic.Properties.SUBMISSIONS_MADE, submissionsCount))
 
     override fun setScreenOrientation(orientation: Int) =
-        amplitude.identify(Identify().add(Analytic.Amplitude.Properties.COURSES_COUNT, if (orientation == Configuration.ORIENTATION_PORTRAIT) "portrait" else "landscape"))
+        amplitude.identify(Identify().set(AmplitudeAnalytic.Properties.SCREEN_ORIENTATION, if (orientation == Configuration.ORIENTATION_PORTRAIT) "portrait" else "landscape"))
 
     override fun setStreaksNotificationsEnabled(isEnabled: Boolean) =
-        amplitude.identify(Identify().add(Analytic.Amplitude.Properties.STREAKS_NOTIFICATIONS_ENABLED, if (isEnabled) "enabled" else "disabled"))
+        amplitude.identify(Identify().set(AmplitudeAnalytic.Properties.STREAKS_NOTIFICATIONS_ENABLED, if (isEnabled) "enabled" else "disabled"))
+
+    override fun reportAmplitudeEvent(eventName: String) = reportAmplitudeEvent(eventName, null)
+    override fun reportAmplitudeEvent(eventName: String, params: MutableMap<String, Any>?) {
+        syncAmplitudeProperties()
+        val properties = JSONObject()
+        params?.forEach { k, v ->
+            properties.put(k, v)
+        }
+        amplitude.logEvent(eventName, properties)
+    }
     // End of amplitude properties
 
     override fun reportEventValue(eventName: String, value: Long) {
