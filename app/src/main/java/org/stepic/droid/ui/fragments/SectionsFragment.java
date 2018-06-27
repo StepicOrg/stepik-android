@@ -41,6 +41,7 @@ import com.google.firebase.appindexing.builders.Indexables;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
+import org.stepic.droid.analytic.AmplitudeAnalytic;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.base.Client;
@@ -105,6 +106,8 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
+import kotlin.Pair;
+import kotlin.collections.MapsKt;
 import timber.log.Timber;
 
 public class SectionsFragment
@@ -349,6 +352,10 @@ public class SectionsFragment
                 public void onClick(View v) {
                     if (course != null) {
                         getAnalytic().reportEvent(Analytic.Interaction.JOIN_COURSE);
+                        getAnalytic().reportAmplitudeEvent(AmplitudeAnalytic.Course.JOINED, MapsKt.mapOf(
+                                new Pair<String, Object>(AmplitudeAnalytic.Course.Params.COURSE, course.getCourseId()),
+                                new Pair<String, Object>(AmplitudeAnalytic.Course.Params.SOURCE, AmplitudeAnalytic.Course.Values.PREVIEW)
+                        ));
                         courseJoinerPresenter.joinCourse(course);
                     }
                 }

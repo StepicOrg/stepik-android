@@ -38,7 +38,15 @@ interface AmplitudeAnalytic {
 
         object Params {
             const val COURSE = "course"
+            const val SOURCE = "source"
+        }
 
+        object Values {
+            const val WIDGET = "widget"
+            const val PREVIEW = "preview"
+
+            const val COURSE_WIDGET = "course_widget"
+            const val HOME_WIDGET = "home_widget"
         }
     }
 
