@@ -66,6 +66,13 @@ interface AmplitudeAnalytic {
         const val STARTED = "Download started"
         const val CANCELLED = "Download cancelled"
         const val DELETED = "Download deleted"
+
+        const val PARAM_CONTENT = "content"
+
+        object Values {
+            const val SECTION = "section"
+            const val LESSON = "lesson"
+        }
     }
 
     object Search {
