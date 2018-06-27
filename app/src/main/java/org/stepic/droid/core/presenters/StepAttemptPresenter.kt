@@ -165,6 +165,9 @@ class StepAttemptPresenter
                                     sharedPreferenceHelper.incrementUserSolved()
                                 }
 
+                                if (fromPosting) {
+                                    sharedPreferenceHelper.incrementSubmissionsCount()
+                                }
 
                                 val needShowStreakDialog =
                                         fromPosting

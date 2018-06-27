@@ -54,6 +54,8 @@ public class SharedPreferenceHelper {
     private static final String IS_LANG_WIDGET_WAS_SHOWN_AFTER_LOGIN = "is_lang_widget_was_shown_after_login";
     private static final String NEED_SHOW_LANG_WIDGET = "need_show_lang_widget";
 
+    private static final String SUBMISSIONS_COUNT = "submissions_count";
+
     private final String ACCESS_TOKEN_TIMESTAMP = "access_token_timestamp";
     private final String AUTH_RESPONSE_JSON = "auth_response_json";
     private final String PROFILE_JSON = "profile_json";
@@ -173,6 +175,12 @@ public class SharedPreferenceHelper {
 
     public long numberOfSolved() {
         return getLong(PreferenceType.LOGIN, NUMBER_OF_STEPS_SOLVED, 0);
+    }
+
+    public void incrementSubmissionsCount() {
+        long submissionsCount = getLong(PreferenceType.LOGIN, SUBMISSIONS_COUNT, 0);
+        put(PreferenceType.LOGIN, SUBMISSIONS_COUNT, submissionsCount + 1);
+        analytic.setSubmissionsCount(submissionsCount + 1);
     }
 
     public void saveNewUserRemindTimestamp(long scheduleMillis) {

@@ -542,7 +542,7 @@ public interface Analytic {
     void setUserId(@NotNull String userId);
 
     void setCoursesCount(int coursesCount);
-    void setSubmissionsCount(int submissionsCount);
+    void setSubmissionsCount(long submissionsCount);
     void setScreenOrientation(int orientation);
     void setStreaksNotificationsEnabled(boolean isEnabled);
 

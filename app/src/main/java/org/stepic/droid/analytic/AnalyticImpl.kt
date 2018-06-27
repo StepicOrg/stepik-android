@@ -42,7 +42,7 @@ class AnalyticImpl
     override fun setCoursesCount(coursesCount: Int) =
         amplitude.identify(Identify().add(Analytic.Amplitude.Properties.COURSES_COUNT, coursesCount))
 
-    override fun setSubmissionsCount(submissionsCount: Int) =
+    override fun setSubmissionsCount(submissionsCount: Long) =
         amplitude.identify(Identify().add(Analytic.Amplitude.Properties.SUBMISSIONS_MADE, submissionsCount))
 
     override fun setScreenOrientation(orientation: Int) =
