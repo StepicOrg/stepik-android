@@ -178,8 +178,8 @@ public class SharedPreferenceHelper {
     }
 
     public void incrementSubmissionsCount() {
-        long submissionsCount = getLong(PreferenceType.LOGIN, SUBMISSIONS_COUNT, 0);
-        put(PreferenceType.LOGIN, SUBMISSIONS_COUNT, submissionsCount + 1);
+        long submissionsCount = getLong(PreferenceType.DEVICE_SPECIFIC, SUBMISSIONS_COUNT, 0);
+        put(PreferenceType.DEVICE_SPECIFIC, SUBMISSIONS_COUNT, submissionsCount + 1);
         analytic.setSubmissionsCount(submissionsCount + 1);
     }
 
