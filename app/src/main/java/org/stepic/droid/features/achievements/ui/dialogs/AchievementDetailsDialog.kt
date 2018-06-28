@@ -4,7 +4,6 @@ import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
-import android.support.v4.content.ContextCompat
 import android.view.*
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.Theme
@@ -73,7 +72,7 @@ class AchievementDetailsDialog: DialogFragment() {
             builder
                 .positiveText(R.string.share_title)
                 .negativeText(R.string.close_screen)
-                .negativeColor(ContextCompat.getColor(context, R.color.new_accent_color_opacity_50))
+                .negativeColorRes(R.color.new_accent_color_opacity_50)
                 .onPositive { _, _ -> shareAchievement() }
         }
 

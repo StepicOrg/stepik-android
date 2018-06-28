@@ -16,13 +16,13 @@
 
         <ImageView
             android:id="@+id/achievementIcon"
-            android:layout_width="164dp"
-            android:layout_height="164dp"/>
+            android:layout_width="128dp"
+            android:layout_height="128dp"/>
 
         <org.stepic.droid.features.achievements.ui.custom.AchievementCircleProgressView
             android:id="@+id/achievementLevelProgress"
-            android:layout_width="164dp"
-            android:layout_height="164dp"
+            android:layout_width="128dp"
+            android:layout_height="128dp"
             android:layout_gravity="center"
             app:strokeWidth="1.5dp"
             app:progressColor="@color/stepic_brand_primary"/>
@@ -31,7 +31,7 @@
     <org.stepic.droid.features.achievements.ui.custom.VectorRatingBar
         android:id="@+id/achievementLevels"
         android:layout_width="wrap_content"
-        android:layout_height="20dp"
+        android:layout_height="16dp"
         android:layout_marginTop="8dp"
         app:backgroundIcon="@drawable/ic_achievements_star_background"
         app:itemsGap="2dp"
@@ -69,43 +69,43 @@
         tools:ignore="MissingPrefix"
         tools:text="Achievement description" />
 
-    <TextView
-        android:id="@+id/achievementLevel"
-        fontPath="fonts/Roboto-Light.ttf"
+    <LinearLayout
         android:layout_width="wrap_content"
-
         android:layout_height="wrap_content"
-
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
+        android:orientation="vertical"
         android:layout_marginTop="24dp"
-        android:gravity="center"
-        android:textColor="@color/new_accent_color"
-        android:textSize="16sp"
-        tools:ignore="MissingPrefix"
-        tools:text="Level 5 / 6" />
-
-    <TextView
-        android:id="@+id/achievementRest"
-        fontPath="fonts/Roboto-Light.ttf"
-        android:layout_width="wrap_content"
-
-        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
 
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
 
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="24dp"
-        android:gravity="center"
-        android:textColor="@color/new_accent_color"
-        android:textSize="16sp"
-        tools:ignore="MissingPrefix"
-        tools:text="25 for the next level" />
 
+        android:gravity="center_horizontal">
+        <TextView
+            android:id="@+id/achievementLevel"
+            fontPath="fonts/Roboto-Light.ttf"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:gravity="center"
+            android:textColor="@color/new_accent_color"
+            android:textSize="16sp"
+            tools:ignore="MissingPrefix"
+            tools:text="Level 5 / 6" />
+
+        <TextView
+            android:id="@+id/achievementRest"
+            fontPath="fonts/Roboto-Light.ttf"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:gravity="center"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/new_accent_color"
+            android:textSize="16sp"
+            tools:ignore="MissingPrefix"
+            tools:text="25 for the next level" />
+    </LinearLayout>
 </LinearLayout>
