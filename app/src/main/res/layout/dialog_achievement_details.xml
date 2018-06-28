@@ -13,25 +13,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp">
-
-        <ImageView
-            android:id="@+id/achievementIcon"
-            android:layout_width="128dp"
-            android:layout_height="128dp"/>
-
         <org.stepic.droid.features.achievements.ui.custom.AchievementCircleProgressView
             android:id="@+id/achievementLevelProgress"
-            android:layout_width="128dp"
-            android:layout_height="128dp"
+            android:layout_width="164dp"
+            android:layout_height="164dp"
             android:layout_gravity="center"
             app:strokeWidth="1.5dp"
             app:progressColor="@color/stepic_brand_primary"/>
+
+        <ImageView
+            android:id="@+id/achievementIcon"
+            android:layout_width="164dp"
+            android:layout_height="164dp"/>
     </FrameLayout>
 
     <org.stepic.droid.features.achievements.ui.custom.VectorRatingBar
         android:id="@+id/achievementLevels"
         android:layout_width="wrap_content"
-        android:layout_height="16dp"
+        android:layout_height="20dp"
         android:layout_marginTop="8dp"
         app:backgroundIcon="@drawable/ic_achievements_star_background"
         app:itemsGap="2dp"

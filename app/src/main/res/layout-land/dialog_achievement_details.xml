@@ -19,12 +19,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed">
-
-        <ImageView
-            android:id="@+id/achievementIcon"
-            android:layout_width="128dp"
-            android:layout_height="128dp" />
-
         <org.stepic.droid.features.achievements.ui.custom.AchievementCircleProgressView
             android:id="@+id/achievementLevelProgress"
             android:layout_width="128dp"
@@ -32,6 +26,11 @@
             android:layout_gravity="center"
             app:progressColor="@color/stepic_brand_primary"
             app:strokeWidth="1.5dp" />
+
+        <ImageView
+            android:id="@+id/achievementIcon"
+            android:layout_width="128dp"
+            android:layout_height="128dp" />
     </FrameLayout>
 
     <org.stepic.droid.features.achievements.ui.custom.VectorRatingBar
