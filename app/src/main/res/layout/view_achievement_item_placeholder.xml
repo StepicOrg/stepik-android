@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+
+    android:paddingStart="?dialogPreferredPadding"
+    android:paddingLeft="?dialogPreferredPadding"
+    android:paddingEnd="?dialogPreferredPadding"
+    android:paddingRight="?dialogPreferredPadding"
+    android:paddingTop="@dimen/guideline_standard_padding"
+    android:paddingBottom="@dimen/guideline_standard_padding">
+
+    <include
+        android:id="@+id/achievementTile"
+        layout="@layout/view_achievement_tile_placeholder"
+        android:layout_width="64dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <org.stepic.droid.ui.custom.LoadingView
+        android:id="@+id/achievementTitle"
+        android:layout_width="@dimen/loading_view_course_title_width"
+        android:layout_height="8dp"
+
+        android:layout_marginLeft="@dimen/guideline_standard_padding"
+        android:layout_marginStart="@dimen/guideline_standard_padding"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/achievementTile"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintHorizontal_bias="0"/>
+
+    <org.stepic.droid.ui.custom.LoadingView
+        android:id="@+id/achievementDescription"
+        android:layout_width="@dimen/loading_view_course_title_second_width"
+        android:layout_height="8dp"
+        android:layout_marginLeft="@dimen/guideline_standard_padding"
+        android:layout_marginStart="@dimen/guideline_standard_padding"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/achievementTile"
+        app:layout_constraintTop_toBottomOf="@+id/achievementTitle"
+        app:layout_constraintHorizontal_bias="0" />
+
+</android.support.constraint.ConstraintLayout>

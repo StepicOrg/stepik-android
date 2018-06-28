@@ -14,10 +14,12 @@ import android.widget.ImageView
 import android.widget.TextView
 import kotlinx.android.synthetic.main.search_query_item.view.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.model.SearchQuery
 import org.stepic.droid.model.SearchQuerySource
+import org.stepic.droid.ui.custom.AutoCompleteSearchView
 import org.stepic.droid.ui.listeners.OnItemClickListener
 import javax.inject.Inject
 
@@ -50,7 +52,7 @@ class SearchQueriesAdapter(context: Context) : RecyclerView.Adapter<SearchQuerie
             filterItems()
         }
 
-    var searchView: SearchView? = null
+    var searchView: AutoCompleteSearchView? = null
 
     private val querySpan = ForegroundColorSpan(ContextCompat.getColor(context, R.color.search_view_suggestions_prefix_color))
 
@@ -72,6 +74,12 @@ class SearchQueriesAdapter(context: Context) : RecyclerView.Adapter<SearchQuerie
         }
         val (query, _) = items[position]
         analytic.reportEventValue(Analytic.Search.SEARCH_SUGGESTION_CLICKED, (query.length - constraint.length).toLong())
+        analytic.reportAmplitudeEvent(AmplitudeAnalytic.Search.SEARCHED, mapOf(
+                AmplitudeAnalytic.Search.Params.QUERY to constraint.toLowerCase(),
+                AmplitudeAnalytic.Search.Params.POSITION to position,
+                AmplitudeAnalytic.Search.Params.SUGGESTION to query.toString().toLowerCase()
+        ))
+        searchView?.searchSuggestionsPresenter?.onNeedSkipAmplitudeEvent() // todo: improve or remove
         searchView?.setQuery(query.toString(), true)
     }
 

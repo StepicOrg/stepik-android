@@ -655,4 +655,11 @@
     <string name="deadlines_banner_description">Постоянное обучение это ключ к успеху. Создайте персональное расписание, чтобы никогда не забывать о занятиях.</string>
     <string name="deadlines_banner_action">Создать</string>
     <string name="deadlines_fetching_error">При загрузке расписания произошла ошибка</string>
+
+
+    <string name="achievements_title">Достижения</string>
+    <string name="achievement_level">Уровень %d / %d</string>
+    <string name="achievement_remaining_exp">%d до следующего уровня</string>
+    <string name="achievement_remaining_exp_locked">Ещё не получено</string>
+    <string name="achievement_share">Я получил достижение «%s» на Stepik.org. Попробуй обогнать!</string>
 </resources>

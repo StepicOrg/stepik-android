@@ -14,6 +14,7 @@ import android.widget.FrameLayout
 import android.widget.Toast
 import kotlinx.android.synthetic.main.view_courses_carousel.view.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.Client
@@ -325,6 +326,7 @@ constructor(
     override fun onSuccessDropCourse(course: Course) {
         val courseId = course.courseId
         analytic.reportEvent(Analytic.Course.DROP_COURSE_SUCCESSFUL, courseId.toString())
+        analytic.reportAmplitudeEvent(AmplitudeAnalytic.Course.UNSUBSCRIBED, mapOf(AmplitudeAnalytic.Course.Params.COURSE to courseId))
         Toast.makeText(context, context.getString(R.string.you_dropped, course.title), Toast.LENGTH_LONG).show()
         val index = courses.indexOfFirst { it.courseId == course.courseId }
 

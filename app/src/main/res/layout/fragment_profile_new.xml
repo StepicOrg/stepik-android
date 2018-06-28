@@ -175,6 +175,71 @@
 
                 <include layout="@layout/view_notification_interval_chooser"/>
 
+                <LinearLayout
+                    android:id="@+id/achievementsContainer"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/guideline_standard_padding"
+                    android:layout_marginLeft="@dimen/guideline_standard_padding"
+                    android:layout_marginRight="@dimen/guideline_standard_padding"
+                    android:layout_marginStart="@dimen/guideline_standard_padding"
+                    android:layout_marginBottom="@dimen/guideline_standard_padding"
+
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:text="@string/achievements_title"
+                            fontPath="fonts/Roboto-Light.ttf"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical|start"
+                            android:textSize="@dimen/text_header"
+
+                            android:layout_margin="@dimen/guideline_standard_padding"
+
+                            tools:ignore="MissingPrefix" />
+
+                        <TextView
+                            android:id="@+id/viewAllAchievements"
+                            android:text="@string/view_all_courses"
+                            android:textColor="@color/view_all_course_list_color"
+                            android:background="?selectableItemBackgroundBorderless"
+                            fontPath="fonts/Roboto-Light.ttf"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical|end"
+
+                            android:padding="@dimen/guideline_standard_padding"
+
+                            android:textSize="@dimen/text_header"
+                            tools:ignore="MissingPrefix" />
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:id="@+id/achievementsLoadingPlaceholder"
+                        android:baselineAligned="false"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/guideline_standard_padding"
+                        android:orientation="horizontal" />
+
+                    <include
+                        android:id="@+id/achievementsLoadingError"
+                        android:visibility="gone"
+                        layout="@layout/error_no_connection_with_button_small" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/achievementsTilesContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/guideline_standard_padding" />
+                </LinearLayout>
+
                 <FrameLayout
                     android:id="@+id/shortBioInfoContainer"
                     android:layout_width="match_parent"

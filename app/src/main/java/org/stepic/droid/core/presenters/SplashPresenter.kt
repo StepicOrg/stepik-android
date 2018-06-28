@@ -5,6 +5,7 @@ import io.reactivex.Completable
 import io.reactivex.Scheduler
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.subscribeBy
+import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.core.GoogleApiChecker
 import org.stepic.droid.core.StepikDevicePoster
@@ -95,12 +96,14 @@ constructor(
         //after first increment it is 0, because of default value is -1.
         if (numberOfLaunches <= 0) {
             analytic.reportEvent(Analytic.System.FIRST_LAUNCH_AFTER_INSTALL)
+            analytic.reportAmplitudeEvent(AmplitudeAnalytic.Launch.FIRST_TIME)
         }
         if (numberOfLaunches < AppConstants.LAUNCHES_FOR_EXPERT_USER) {
             analytic.reportEvent(Analytic.Interaction.START_SPLASH, numberOfLaunches.toString() + "")
         } else {
             analytic.reportEvent(Analytic.Interaction.START_SPLASH_EXPERT, numberOfLaunches.toString() + "")
         }
+        analytic.reportAmplitudeEvent(AmplitudeAnalytic.Launch.SESSION_START)
     }
 
 

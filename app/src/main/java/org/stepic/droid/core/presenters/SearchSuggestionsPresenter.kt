@@ -4,6 +4,7 @@ import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
+import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.core.presenters.contracts.SearchSuggestionsView
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
@@ -34,6 +35,8 @@ class SearchSuggestionsPresenter
     private val compositeDisposable = CompositeDisposable()
     private val publisher = PublishSubject.create<String>()
 
+    private var needSkipAmplitudeEvent = false
+
     override fun attachView(view: SearchSuggestionsView) {
         super.attachView(view)
         initSearchView(view)
@@ -59,8 +62,17 @@ class SearchSuggestionsPresenter
         publisher.onNext(query)
     }
 
+    fun onNeedSkipAmplitudeEvent() {
+        needSkipAmplitudeEvent = true
+    }
+
     fun onQueryTextSubmit(query: String) {
         analytic.reportEventWithName(Analytic.Search.SEARCH_SUBMITTED, query)
+        if (needSkipAmplitudeEvent) {
+            needSkipAmplitudeEvent = false
+        } else {
+            analytic.reportAmplitudeEvent(AmplitudeAnalytic.Search.SEARCHED, mapOf(AmplitudeAnalytic.Search.Params.QUERY to query.toLowerCase()))
+        }
     }
 
     override fun detachView(view: SearchSuggestionsView) {

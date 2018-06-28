@@ -88,4 +88,21 @@
         <attr name="android:background"/>
         <attr name="android:gravity"/>
     </declare-styleable>
+
+    <declare-styleable name="AchievementCircleProgressView">
+        <attr name="progressColor" format="color" />
+        <attr name="strokeWidth" format="dimension" />
+        <attr name="progress" format="float" />
+    </declare-styleable>
+
+    <declare-styleable name="VectorRatingBar">
+        <attr name="progressIcon" format="reference" />
+        <attr name="secondaryIcon" format="reference" />
+        <attr name="backgroundIcon" format="reference" />
+
+        <attr name="totalProgress" format="integer" />
+        <attr name="currentProgress" format="integer" />
+
+        <attr name="itemsGap" format="dimension" />
+    </declare-styleable>
 </resources>

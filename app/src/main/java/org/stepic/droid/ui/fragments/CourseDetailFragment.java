@@ -33,6 +33,7 @@ import com.google.firebase.appindexing.builders.Indexables;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
+import org.stepic.droid.analytic.AmplitudeAnalytic;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.base.Client;
@@ -73,6 +74,8 @@ import javax.inject.Inject;
 import butterknife.BindDrawable;
 import butterknife.BindString;
 import butterknife.BindView;
+import kotlin.Pair;
+import kotlin.collections.MapsKt;
 
 public class CourseDetailFragment extends FragmentBase implements
         LoadCourseView,
@@ -365,7 +368,7 @@ public class CourseDetailFragment extends FragmentBase implements
         if (needInstaEnroll) {
             getAnalytic().reportEvent(Analytic.Anonymous.SUCCESS_LOGIN_AND_ENROLL);
             needInstaEnroll = false;
-            joinCourse();
+            joinCourse(true);
         }
     }
 
@@ -401,7 +404,7 @@ public class CourseDetailFragment extends FragmentBase implements
                 @Override
                 public void onClick(View v) {
                     getAnalytic().reportEvent(Analytic.Interaction.JOIN_COURSE);
-                    joinCourse();
+                    joinCourse(false);
                 }
             });
         }
@@ -531,9 +534,13 @@ public class CourseDetailFragment extends FragmentBase implements
         getActivity().finish();
     }
 
-    private void joinCourse() {
+    private void joinCourse(boolean isInstaEnroll) {
         if (course != null) {
             courseJoinerPresenter.joinCourse(course);
+            getAnalytic().reportAmplitudeEvent(AmplitudeAnalytic.Course.JOINED, MapsKt.mapOf(
+                    new Pair<String, Object>(AmplitudeAnalytic.Course.Params.COURSE, course.getCourseId()),
+                    new Pair<String, Object>(AmplitudeAnalytic.Course.Params.SOURCE, isInstaEnroll ? AmplitudeAnalytic.Course.Values.WIDGET : AmplitudeAnalytic.Course.Values.PREVIEW)
+            ));
         } else {
             getAnalytic().reportEvent(Analytic.Interaction.JOIN_COURSE_NULL);
         }

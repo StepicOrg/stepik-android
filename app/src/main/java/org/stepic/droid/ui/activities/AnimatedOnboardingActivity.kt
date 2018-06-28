@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.v4.view.ViewPager
 import kotlinx.android.synthetic.main.activity_onboarding.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.ui.activities.contracts.OnNextClickedListener
@@ -40,6 +41,7 @@ class AnimatedOnboardingActivity : FragmentActivityBase(), OnNextClickedListener
             override fun onPageSelected(position: Int) {
                 invokeAnimationOnFragment(position)
                 reportToAnalytic(Analytic.Onboarding.SCREEN_OPENED)
+                reportToAmplitude(AmplitudeAnalytic.Onboarding.SCREEN_OPENED)
             }
         }
         onboardingViewPager.addOnPageChangeListener(pageChangeListener)
@@ -64,6 +66,7 @@ class AnimatedOnboardingActivity : FragmentActivityBase(), OnNextClickedListener
 
     private fun onboardingClosed() {
         reportToAnalytic(Analytic.Onboarding.CLOSED)
+        reportToAmplitude(AmplitudeAnalytic.Onboarding.CLOSED)
         openLaunchScreen()
     }
 
@@ -84,8 +87,14 @@ class AnimatedOnboardingActivity : FragmentActivityBase(), OnNextClickedListener
         analytic.reportEvent(eventName, bundle)
     }
 
+    private fun reportToAmplitude(eventName: String) {
+        val analyticPosition = onboardingViewPager.currentItem + 1
+        analytic.reportAmplitudeEvent(eventName, mapOf(AmplitudeAnalytic.Onboarding.PARAM_SCREEN to analyticPosition))
+    }
+
     private fun onboardingComplete() {
         analytic.reportEvent(Analytic.Onboarding.COMPLETE)
+        analytic.reportAmplitudeEvent(AmplitudeAnalytic.Onboarding.COMPLETED)
         openLaunchScreen()
     }
 

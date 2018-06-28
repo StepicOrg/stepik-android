@@ -8,6 +8,7 @@ import org.stepic.droid.adaptive.listeners.AnswerListener
 import org.stepic.droid.model.Submission
 import org.stepic.droid.adaptive.model.Card
 import org.stepic.droid.adaptive.model.Reaction
+import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.presenters.contracts.CardView
@@ -147,6 +148,12 @@ class CardPresenter(
                     analytic.reportEvent(Analytic.Steps.WRONG_SUBMISSION_FILL, (card.step?.id ?: 0).toString())
                     answerListener?.onWrongAnswer(it.id)
                 }
+
+                analytic.reportAmplitudeEvent(AmplitudeAnalytic.Steps.SUBMISSION_MADE, mapOf(
+                        AmplitudeAnalytic.Steps.Params.TYPE to card.step.getStepType(),
+                        AmplitudeAnalytic.Steps.Params.STEP to (card.step?.id?.toString() ?: "0")
+                ))
+
                 view?.setSubmission(it, true)
             }
         }

@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
+import org.stepic.droid.analytic.AmplitudeAnalytic;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.core.ScreenManager;
@@ -61,6 +62,8 @@ import javax.inject.Inject;
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import kotlin.Pair;
+import kotlin.collections.MapsKt;
 
 import static org.stepic.droid.ui.util.ViewExtensionsKt.changeVisibility;
 
@@ -226,6 +229,8 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
 
             if (section.isCached()) {
                 analytic.reportEvent(Analytic.Interaction.CLICK_DELETE_SECTION, section.getId() + "");
+                analytic.reportAmplitudeEvent(AmplitudeAnalytic.Downloads.DELETED,
+                        MapsKt.mapOf(new Pair<String, Object>(AmplitudeAnalytic.Downloads.PARAM_CONTENT, AmplitudeAnalytic.Downloads.Values.SECTION)));
                 DeleteItemDialogFragment dialogFragment = DeleteItemDialogFragment.newInstance(sectionPosition);
                 dialogFragment.setTargetFragment(fragment, SectionsFragment.DELETE_POSITION_REQUEST_CODE);
                 if (!dialogFragment.isAdded()) {
@@ -237,6 +242,8 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                 if (section.isLoading()) {
                     //cancel loading
                     analytic.reportEvent(Analytic.Interaction.CLICK_CANCEL_SECTION, section.getId() + "");
+                    analytic.reportAmplitudeEvent(AmplitudeAnalytic.Downloads.CANCELLED,
+                            MapsKt.mapOf(new Pair<String, Object>(AmplitudeAnalytic.Downloads.PARAM_CONTENT, AmplitudeAnalytic.Downloads.Values.SECTION)));
                     section.setLoading(false);
                     section.setCached(false);
                     threadPoolExecutor.execute(new Runnable() {
@@ -277,6 +284,8 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         if (sectionPosition >= 0 && sectionPosition < sections.size()) {
             final Section section = sections.get(sectionPosition);
             analytic.reportEvent(Analytic.Interaction.CLICK_CACHE_SECTION, section.getId() + "");
+            analytic.reportAmplitudeEvent(AmplitudeAnalytic.Downloads.STARTED,
+                    MapsKt.mapOf(new Pair<String, Object>(AmplitudeAnalytic.Downloads.PARAM_CONTENT, AmplitudeAnalytic.Downloads.Values.SECTION)));
             section.setCached(false);
             section.setLoading(true);
             downloadingPresenter.onStateChanged(section.getId(), section.isLoading());

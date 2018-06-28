@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <FrameLayout
+        android:id="@+id/achievementIconContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp">
+        <org.stepic.droid.features.achievements.ui.custom.AchievementCircleProgressView
+            android:id="@+id/achievementLevelProgress"
+            android:layout_width="164dp"
+            android:layout_height="164dp"
+            android:layout_gravity="center"
+            app:strokeWidth="1.5dp"
+            app:progressColor="@color/stepic_brand_primary"/>
+
+        <ImageView
+            android:id="@+id/achievementIcon"
+            android:layout_width="164dp"
+            android:layout_height="164dp"/>
+    </FrameLayout>
+
+    <org.stepic.droid.features.achievements.ui.custom.VectorRatingBar
+        android:id="@+id/achievementLevels"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_marginTop="8dp"
+        app:backgroundIcon="@drawable/ic_achievements_star_background"
+        app:itemsGap="2dp"
+        app:progressIcon="@drawable/ic_achievements_star_progress"
+        app:secondaryIcon="@drawable/ic_achievements_star_secondary" />
+
+    <TextView
+        android:id="@+id/achievementTitle"
+        fontPath="fonts/Roboto-Medium.ttf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="24dp"
+        android:textColor="@color/new_accent_color"
+        android:textSize="20sp"
+        tools:ignore="MissingPrefix"
+        tools:text="Achievement title" />
+
+    <TextView
+        android:id="@+id/achievementDescription"
+        fontPath="fonts/Roboto-Light.ttf"
+        android:layout_width="wrap_content"
+
+        android:layout_height="wrap_content"
+
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:textColor="@color/new_accent_color"
+        android:textSize="16sp"
+        tools:ignore="MissingPrefix"
+        tools:text="Achievement description" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="24dp"
+
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+
+        android:gravity="center_horizontal">
+        <TextView
+            android:id="@+id/achievementLevel"
+            fontPath="fonts/Roboto-Light.ttf"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:gravity="center"
+            android:textColor="@color/new_accent_color"
+            android:textSize="16sp"
+            tools:ignore="MissingPrefix"
+            tools:text="Level 5 / 6" />
+
+        <TextView
+            android:id="@+id/achievementRest"
+            fontPath="fonts/Roboto-Light.ttf"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:gravity="center"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/new_accent_color"
+            android:textSize="16sp"
+            tools:ignore="MissingPrefix"
+            tools:text="25 for the next level" />
+    </LinearLayout>
+</LinearLayout>

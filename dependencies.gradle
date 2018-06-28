@@ -1,6 +1,6 @@
 ext.versions = [
-        code                 : 1992,
-        name                 : '1.61',
+        code                 : 1993,
+        name                 : '1.62',
 
         minSdk               : 15,
         targetSdk            : 25,
@@ -30,6 +30,7 @@ ext.versions = [
 
         glide                : '3.7.0',
 
+        amplitude            : '2.14.1',
         appMetrica           : '2.78',
 
         calligraphy          : '2.1.0',
@@ -107,6 +108,7 @@ ext.libraries = [
 
         glide                : "com.github.bumptech.glide:glide:$versions.glide",
 
+        amplitude            : "com.amplitude:android-sdk:$versions.amplitude",
         appMetrica           : "com.yandex.android:mobmetricalib:$versions.appMetrica",
 
         calligraphy          : "uk.co.chrisjenx:calligraphy:$versions.calligraphy",

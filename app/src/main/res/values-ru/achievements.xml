@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="achievement_steps_solved_title">Главное – количество</string>
+    <string name="achievement_steps_solved_description">Решите правильно %s</string>
+
+    <string name="achievement_steps_solved_streak_title">Сапёр</string>
+    <string name="achievement_steps_solved_streak_description">Решите правильно %s подряд</string>
+
+    <string name="achievement_steps_solved_choice_title">Я выбираю</string>
+    <string name="achievement_steps_solved_choice_description">Решите правильно %s с выбором ответа</string>
+
+    <string name="achievement_steps_solved_code_title">Компьютерный мастер</string>
+    <string name="achievement_steps_solved_code_description">Решите правильно %s с выбором ответа</string>
+
+    <string name="achievement_steps_solved_number_title">Ещё одно достижение</string>
+    <string name="achievement_steps_solved_number_description">Решите правильно %s с числами</string>
+
+    <string name="achievement_code_quizzes_solved_python_title">Укротитель змей</string>
+    <string name="achievement_code_quizzes_solved_python_description">Решите правильно %s на Python</string>
+
+    <string name="achievement_code_quizzes_solved_cpp_title">Developer.cpp</string>
+    <string name="achievement_code_quizzes_solved_cpp_description">Решите правильно %s на C++</string>
+
+    <string name="achievement_code_quizzes_solved_java_title">Немного кофе?</string>
+    <string name="achievement_code_quizzes_solved_java_description">Решите правильно %s на Java</string>
+
+    <string name="achievement_active_days_streak_title">Постоянный пользователь</string>
+    <string name="achievement_active_days_streak_description">Решайте как минимум одну задачу на протяжении %s</string>
+
+    <string name="achievement_certificates_regular_count_title">Выпускник</string>
+    <string name="achievement_certificates_regular_count_description">Получите %s</string>
+
+    <string name="achievement_certificates_distinction_count_title">Отличник</string>
+    <string name="achievement_certificates_distinction_count_description">Получите %s с отличием</string>
+
+    <string name="achievement_course_reviews_count_title">Критик</string>
+    <string name="achievement_course_reviews_count_description">Оставьте %s</string>
+
+    <string name="achievement_unknown_title">Неизвестное достижение</string>
+    <string name="achievement_unknown_description">Никто не знает, что это такое</string>
+</resources>

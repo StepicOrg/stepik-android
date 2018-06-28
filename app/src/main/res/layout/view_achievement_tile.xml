@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal">
+
+    <FrameLayout
+        android:layout_width="@dimen/achievement_tile_width"
+        android:layout_height="@dimen/achievement_tile_width">
+
+        <org.stepic.droid.features.achievements.ui.custom.AchievementCircleProgressView
+            android:id="@+id/achievementLevelProgress"
+            android:layout_width="@dimen/achievement_tile_width"
+            android:layout_height="@dimen/achievement_tile_width"
+            android:layout_gravity="center"
+            app:strokeWidth="1.5dp"
+            app:progressColor="@color/stepic_brand_primary"/>
+
+        <ImageView
+            android:id="@+id/achievementIcon"
+            android:layout_width="@dimen/achievement_tile_width"
+            android:layout_height="@dimen/achievement_tile_width" />
+    </FrameLayout>
+
+    <org.stepic.droid.features.achievements.ui.custom.VectorRatingBar
+        android:id="@+id/achievementLevels"
+        app:backgroundIcon="@drawable/ic_achievements_star_background"
+        app:secondaryIcon="@drawable/ic_achievements_star_secondary"
+        app:progressIcon="@drawable/ic_achievements_star_progress"
+        app:itemsGap="2dp"
+        android:layout_width="wrap_content"
+        android:layout_height="8dp"
+        android:layout_marginTop="8dp"/>
+
+</LinearLayout>

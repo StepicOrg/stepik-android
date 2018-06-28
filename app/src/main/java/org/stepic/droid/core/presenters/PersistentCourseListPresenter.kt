@@ -1,6 +1,7 @@
 package org.stepic.droid.core.presenters
 
 import android.support.annotation.WorkerThread
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.concurrency.SingleThreadExecutor
 import org.stepic.droid.core.FilterApplicator
@@ -36,7 +37,8 @@ class PersistentCourseListPresenter
         private val earlyStreakPoster: EarlyStreakPoster,
         private val firstCoursePoster: FirstCoursePoster,
 
-        private val deadlinesRepository: DeadlinesRepository
+        private val deadlinesRepository: DeadlinesRepository,
+        private val analytic: Analytic
 ) : PresenterBase<CoursesView>() {
 
     companion object {
@@ -111,6 +113,7 @@ class PersistentCourseListPresenter
                         handleMeta(originalResponse)
                     }
                     deadlinesRepository.syncDeadlines(allMyCourses).blockingAwait()
+                    analytic.setCoursesCount(allMyCourses.size)
                     allMyCourses
                 }
             } catch (ex: Exception) {

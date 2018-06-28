@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
+import org.stepic.droid.analytic.AmplitudeAnalytic;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.core.dropping.contract.DroppingListener;
 import org.stepic.droid.core.presenters.PersistentCourseListPresenter;
@@ -23,6 +24,9 @@ import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ContextMenuCourseUtil;
 
 import javax.inject.Inject;
+
+import kotlin.Pair;
+import kotlin.collections.MapsKt;
 
 public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase implements DroppingListener {
     @Inject
@@ -182,6 +186,9 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     public void onSuccessDropCourse(@NotNull Course droppedCourse) {
         long courseId = droppedCourse.getCourseId();
         getAnalytic().reportEvent(Analytic.Course.DROP_COURSE_SUCCESSFUL, courseId + "");
+        analytic.reportAmplitudeEvent(AmplitudeAnalytic.Course.UNSUBSCRIBED,
+                MapsKt.mapOf(new Pair<String, Object>(AmplitudeAnalytic.Course.Params.COURSE, courseId)));
+
         Toast.makeText(getContext(), getContext().getString(R.string.you_dropped, droppedCourse.getTitle()), Toast.LENGTH_LONG).show();
         if (getCourseType() == Table.enrolled) { //why here was e.getCourseType?
             courses.remove(droppedCourse);

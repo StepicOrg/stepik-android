@@ -94,11 +94,12 @@ public class ProfilePresenterTest {
         long profileId = 1889111;
         String imageLink = "https://stepik.org/users/23185159/e918ce43f1d870b3acfaf7021ef40b335c7486c6/avatar.svg";
         boolean isMyProfile = false;
+        boolean isPrivate = false;
         String shortBio = "My short bio";
         String details = " DetailedInfo";
 
         fakeUserFromApi = FakeUserGenerator.INSTANCE.generate(profileId, name, lastName, imageLink, shortBio, details);
-        fromApiUserViewModel = new UserViewModel(UserExtensionKt.getFirstAndLastName(fakeUserFromApi), shortBio, details, imageLink, isMyProfile, profileId);
+        fromApiUserViewModel = new UserViewModel(UserExtensionKt.getFirstAndLastName(fakeUserFromApi), shortBio, details, imageLink, isMyProfile, isPrivate, profileId);
     }
 
     private void generateLocalModels() {
@@ -107,11 +108,12 @@ public class ProfilePresenterTest {
         long profileId = 27222;
         String imageLink = null;
         boolean isMyProfile = true;
+        boolean isPrivate = false;
         String shortBio = "it is short bio";
         String details = " details";
 
         preferencesProfileModel = FakeProfileGenerator.INSTANCE.generate(profileId, name, lastName, imageLink, shortBio, details);
-        fromPreferencesUserViewModel = new UserViewModel(ProfileExtensionKt.getFirstAndLastName(preferencesProfileModel), shortBio, details, imageLink, isMyProfile, profileId);
+        fromPreferencesUserViewModel = new UserViewModel(ProfileExtensionKt.getFirstAndLastName(preferencesProfileModel), shortBio, details, imageLink, isMyProfile, isPrivate, profileId);
     }
 
     @Test
