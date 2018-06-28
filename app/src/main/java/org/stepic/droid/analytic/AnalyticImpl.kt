@@ -61,8 +61,10 @@ class AnalyticImpl
     override fun reportAmplitudeEvent(eventName: String, params: MutableMap<String, Any>?) {
         syncAmplitudeProperties()
         val properties = JSONObject()
-        params?.forEach { k, v ->
-            properties.put(k, v)
+        params?.let {
+            for ((k, v) in it.entries) {
+                properties.put(k, v)
+            }
         }
         amplitude.logEvent(eventName, properties)
     }
