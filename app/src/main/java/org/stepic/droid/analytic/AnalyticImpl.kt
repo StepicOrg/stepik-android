@@ -42,14 +42,14 @@ class AnalyticImpl
 
     override fun setUserId(userId: String) {
         firebaseAnalytics.setUserId(userId)
-        amplitude.identify(Identify().set(AmplitudeAnalytic.Properties.USER_ID, userId))
+        amplitude.identify(Identify().set(AmplitudeAnalytic.Properties.STEPIK_ID, userId))
     }
 
     override fun setCoursesCount(coursesCount: Int) =
         amplitude.identify(Identify().set(AmplitudeAnalytic.Properties.COURSES_COUNT, coursesCount))
 
     override fun setSubmissionsCount(submissionsCount: Long) =
-        amplitude.identify(Identify().set(AmplitudeAnalytic.Properties.SUBMISSIONS_MADE, submissionsCount))
+        amplitude.identify(Identify().set(AmplitudeAnalytic.Properties.SUBMISSIONS_COUNT, submissionsCount))
 
     override fun setScreenOrientation(orientation: Int) =
         amplitude.identify(Identify().set(AmplitudeAnalytic.Properties.SCREEN_ORIENTATION, if (orientation == Configuration.ORIENTATION_PORTRAIT) "portrait" else "landscape"))

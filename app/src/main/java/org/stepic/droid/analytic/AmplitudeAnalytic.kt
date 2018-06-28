@@ -2,8 +2,8 @@ package org.stepic.droid.analytic
 
 interface AmplitudeAnalytic {
     object Properties {
-            const val USER_ID = "user_id"
-            const val SUBMISSIONS_MADE = "submissions_made"
+            const val STEPIK_ID = "stepik_id"
+            const val SUBMISSIONS_COUNT = "submissions_count"
             const val COURSES_COUNT = "courses_count"
             const val SCREEN_ORIENTATION = "screen_orientation"
             const val APPLICATION_ID = "application_id"
