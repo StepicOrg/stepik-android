@@ -69,10 +69,10 @@ class LoginPresenter
                     } else {
                         analytic.reportEvent(Analytic.Error.UNPREDICTABLE_LOGIN_RESULT)
                         //successful result, but body is not correct
-                        onFail(LoginFailType.connectionProblem)
+                        onFail(LoginFailType.CONNECTION_PROBLEM)
                     }
                 } else if (response.code() == 429) {
-                    onFail(LoginFailType.tooManyAttempts)
+                    onFail(LoginFailType.TOO_MANY_ATTEMPTS)
                 } else if (response.code() == 401 && type == Type.social) {
                     val rawErrorMessage = response.errorBody()?.string()
                     val socialAuthError = rawErrorMessage?.toObject<SocialAuthError>()
@@ -82,19 +82,19 @@ class LoginPresenter
                             mainHandler.post {
                                 view?.onSocialLoginWithExistingEmail(socialAuthError.email ?: "")
                             }
-                            LoginFailType.emailAlreadyUsed
+                            LoginFailType.EMAIL_ALREADY_USED
                         }
 
-                        AppConstants.ERROR_SOCIAL_AUTH_WITHOUT_EMAIL -> LoginFailType.emailNotProvidedBySocial
-                        else -> LoginFailType.unknownError
+                        AppConstants.ERROR_SOCIAL_AUTH_WITHOUT_EMAIL -> LoginFailType.EMAIL_NOT_PROVIDED_BY_SOCIAL
+                        else -> LoginFailType.UNKNOWN_ERROR
                     }
 
                     onFail(failType)
                 } else {
-                    onFail(LoginFailType.emailPasswordInvalid)
+                    onFail(LoginFailType.EMAIL_PASSWORD_INVALID)
                 }
             } catch (ex: Exception) {
-                onFail(LoginFailType.connectionProblem)
+                onFail(LoginFailType.CONNECTION_PROBLEM)
             }
         }
     }

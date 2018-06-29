@@ -1,11 +1,11 @@
 package org.stepic.droid.core
 
 enum class LoginFailType {
-    connectionProblem,
-    tooManyAttempts,
-    emailAlreadyUsed,
-    emailPasswordInvalid,
+    CONNECTION_PROBLEM,
+    TOO_MANY_ATTEMPTS,
+    EMAIL_ALREADY_USED,
+    EMAIL_PASSWORD_INVALID,
 
-    emailNotProvidedBySocial,
-    unknownError
+    EMAIL_NOT_PROVIDED_BY_SOCIAL,
+    UNKNOWN_ERROR
 }
