@@ -69,28 +69,32 @@ class LoginPresenter
                     } else {
                         analytic.reportEvent(Analytic.Error.UNPREDICTABLE_LOGIN_RESULT)
                         //successful result, but body is not correct
-                        onFail(LoginFailType.connectionProblem)
+                        onFail(LoginFailType.CONNECTION_PROBLEM)
                     }
                 } else if (response.code() == 429) {
-                    onFail(LoginFailType.tooManyAttempts)
+                    onFail(LoginFailType.TOO_MANY_ATTEMPTS)
                 } else if (response.code() == 401 && type == Type.social) {
                     val rawErrorMessage = response.errorBody()?.string()
                     val socialAuthError = rawErrorMessage?.toObject<SocialAuthError>()
 
-                    if (socialAuthError?.email != null && socialAuthError.error == AppConstants.ERROR_SOCIAL_AUTH_WITH_EXISTING_EMAIL) {
-                        mainHandler.post {
-                            view?.onSocialLoginWithExistingEmail(socialAuthError.email)
+                    val failType = when(socialAuthError?.error) {
+                        AppConstants.ERROR_SOCIAL_AUTH_WITH_EXISTING_EMAIL -> {
+                            mainHandler.post {
+                                view?.onSocialLoginWithExistingEmail(socialAuthError.email ?: "")
+                            }
+                            LoginFailType.EMAIL_ALREADY_USED
                         }
-                        onFail(LoginFailType.emailAlreadyUsed)
-                    } else {
-                        onFail(LoginFailType.emailAlreadyUsed, rawErrorMessage)
+
+                        AppConstants.ERROR_SOCIAL_AUTH_WITHOUT_EMAIL -> LoginFailType.EMAIL_NOT_PROVIDED_BY_SOCIAL
+                        else -> LoginFailType.UNKNOWN_ERROR
                     }
 
+                    onFail(failType)
                 } else {
-                    onFail(LoginFailType.emailPasswordInvalid)
+                    onFail(LoginFailType.EMAIL_PASSWORD_INVALID)
                 }
             } catch (ex: Exception) {
-                onFail(LoginFailType.connectionProblem)
+                onFail(LoginFailType.CONNECTION_PROBLEM)
             }
         }
     }
