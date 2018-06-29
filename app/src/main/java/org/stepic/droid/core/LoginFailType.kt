@@ -4,5 +4,8 @@ enum class LoginFailType {
     connectionProblem,
     tooManyAttempts,
     emailAlreadyUsed,
-    emailPasswordInvalid
+    emailPasswordInvalid,
+
+    emailNotProvidedBySocial,
+    unknownError
 }

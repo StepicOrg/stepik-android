@@ -77,15 +77,19 @@ class LoginPresenter
                     val rawErrorMessage = response.errorBody()?.string()
                     val socialAuthError = rawErrorMessage?.toObject<SocialAuthError>()
 
-                    if (socialAuthError?.email != null && socialAuthError.error == AppConstants.ERROR_SOCIAL_AUTH_WITH_EXISTING_EMAIL) {
-                        mainHandler.post {
-                            view?.onSocialLoginWithExistingEmail(socialAuthError.email)
+                    val failType = when(socialAuthError?.error) {
+                        AppConstants.ERROR_SOCIAL_AUTH_WITH_EXISTING_EMAIL -> {
+                            mainHandler.post {
+                                view?.onSocialLoginWithExistingEmail(socialAuthError.email ?: "")
+                            }
+                            LoginFailType.emailAlreadyUsed
                         }
-                        onFail(LoginFailType.emailAlreadyUsed)
-                    } else {
-                        onFail(LoginFailType.emailAlreadyUsed, rawErrorMessage)
+
+                        AppConstants.ERROR_SOCIAL_AUTH_WITHOUT_EMAIL -> LoginFailType.emailNotProvidedBySocial
+                        else -> LoginFailType.unknownError
                     }
 
+                    onFail(failType)
                 } else {
                     onFail(LoginFailType.emailPasswordInvalid)
                 }

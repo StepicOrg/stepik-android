@@ -284,6 +284,8 @@
     <string name="empty_certificates">You don\'t have any certificates yet</string>
     <string name="are_you_sure_remove_comment_text">If you go back, your post will be lost</string>
     <string name="email_already_used">The e-mail is used for another account</string>
+    <string name="email_not_provided_by_social">Authorization error: email is not provided by social network</string>
+    <string name="unknown_auth_error">Authorization error</string>
     <string name="go_to_the_next_lesson">Next lesson</string>
     <string name="cant_show_next_step">Sorry, the next lesson is not available</string>
     <string name="cant_show_previous_step">Sorry, the previous lesson is not available</string>

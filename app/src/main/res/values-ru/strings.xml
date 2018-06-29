@@ -268,6 +268,8 @@
     <string name="are_you_sure_remove_comment_text">Если Вы выйдите, эта запись будет потеряна
     </string>
     <string name="email_already_used">Данный e-mail используется в другом аккаунте</string>
+    <string name="email_not_provided_by_social">Ошибка авторизации: в аккаунте социальной сети не указан email</string>
+    <string name="unknown_auth_error">Ошибка авторизации</string>
     <string name="go_to_the_next_lesson">Следующий урок</string>
     <string name="cant_show_next_step">Извините, следующий урок недоступен</string>
     <string name="previous_lesson">Предыдущий урок</string>
