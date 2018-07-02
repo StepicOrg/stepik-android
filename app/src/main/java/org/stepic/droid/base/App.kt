@@ -2,6 +2,7 @@ package org.stepic.droid.base
 
 import android.app.Application
 import android.content.Context
+import android.os.StrictMode
 import com.facebook.FacebookSdk
 import com.facebook.appevents.AppEventsLogger
 import com.squareup.leakcanary.LeakCanary
@@ -24,6 +25,10 @@ import org.stepic.droid.util.StethoHelper
 import timber.log.Timber
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig
 import javax.inject.Inject
+import android.os.StrictMode.VmPolicy
+import android.os.StrictMode.setThreadPolicy
+
+
 
 class App : Application() {
 
@@ -78,6 +83,19 @@ class App : Application() {
 
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
+
+            StrictMode.setThreadPolicy(StrictMode.ThreadPolicy.Builder()
+                    .detectDiskReads()
+                    .detectDiskWrites()
+                    .detectAll()
+                    .penaltyLog()
+                    .build())
+            StrictMode.setVmPolicy(StrictMode.VmPolicy.Builder()
+                    .detectLeakedSqlLiteObjects()
+                    .detectLeakedClosableObjects()
+                    .penaltyLog()
+                    .penaltyDeath()
+                    .build())
         }
 
         FacebookSdk.sdkInitialize(applicationContext)
