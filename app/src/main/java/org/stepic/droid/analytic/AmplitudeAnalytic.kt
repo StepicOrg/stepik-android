@@ -12,7 +12,7 @@ interface AmplitudeAnalytic {
     }
 
     object Launch {
-        const val FIRST_TIME = "First time"
+        const val FIRST_TIME = "Launch first time"
         const val SESSION_START = "Session start"
     }
 
