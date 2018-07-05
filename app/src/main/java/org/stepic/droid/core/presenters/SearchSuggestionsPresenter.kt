@@ -25,7 +25,7 @@ class SearchSuggestionsPresenter
         private val scheduler: Scheduler,
         @MainScheduler
         private val mainScheduler: Scheduler
-        ) : PresenterBase<SearchSuggestionsView>() {
+) : PresenterBase<SearchSuggestionsView>() {
 
     companion object {
         private const val AUTOCOMPLETE_DEBOUNCE_MS = 300L
@@ -34,8 +34,6 @@ class SearchSuggestionsPresenter
 
     private val compositeDisposable = CompositeDisposable()
     private val publisher = PublishSubject.create<String>()
-
-    private var needSkipAmplitudeEvent = false
 
     override fun attachView(view: SearchSuggestionsView) {
         super.attachView(view)
@@ -62,17 +60,9 @@ class SearchSuggestionsPresenter
         publisher.onNext(query)
     }
 
-    fun onNeedSkipAmplitudeEvent() {
-        needSkipAmplitudeEvent = true
-    }
-
     fun onQueryTextSubmit(query: String) {
         analytic.reportEventWithName(Analytic.Search.SEARCH_SUBMITTED, query)
-        if (needSkipAmplitudeEvent) {
-            needSkipAmplitudeEvent = false
-        } else {
-            analytic.reportAmplitudeEvent(AmplitudeAnalytic.Search.SEARCHED, mapOf(AmplitudeAnalytic.Search.Params.QUERY to query.toLowerCase()))
-        }
+        analytic.reportAmplitudeEvent(AmplitudeAnalytic.Search.SEARCHED, mapOf(AmplitudeAnalytic.Search.PARAM_SUGGESTION to query.toLowerCase()))
     }
 
     override fun detachView(view: SearchSuggestionsView) {
