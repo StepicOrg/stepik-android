@@ -47,8 +47,7 @@ class LoginPresenter
 
     @MainThread
     private fun doRequest(callToServer: Call<AuthenticationStepikResponse>, authData: AuthData?, type: Type, credential: Credential? = null) {
-        fun onFail(loginFailType: LoginFailType, description: String? = null) {
-            analytic.reportEventWithName(Analytic.Login.FAIL_LOGIN, loginFailType.toString() + if (description != null) ": $description" else "")
+        fun onFail(loginFailType: LoginFailType) {
             mainHandler.post {
                 view?.onFailLogin(loginFailType, credential)
             }
