@@ -25,9 +25,6 @@ import org.stepic.droid.util.StethoHelper
 import timber.log.Timber
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig
 import javax.inject.Inject
-import android.os.StrictMode.VmPolicy
-import android.os.StrictMode.setThreadPolicy
-
 
 
 class App : Application() {
@@ -38,17 +35,14 @@ class App : Application() {
         lateinit var refWatcher: RefWatcher
             private set
 
-        fun component(): AppCoreComponent {
-            return application.component
-        }
+        fun component(): AppCoreComponent =
+                application.component
 
-        fun getAppContext(): Context {
-            return application.applicationContext
-        }
+        fun getAppContext(): Context =
+                application.applicationContext
 
-        fun componentManager(): ComponentManager {
-            return application.componentManager
-        }
+        fun componentManager(): ComponentManager =
+                application.componentManager
     }
 
     private lateinit var component: AppCoreComponent
