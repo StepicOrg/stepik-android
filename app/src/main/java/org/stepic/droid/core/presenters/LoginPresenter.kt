@@ -1,7 +1,9 @@
 package org.stepic.droid.core.presenters
 
 import android.support.annotation.MainThread
+import android.support.annotation.WorkerThread
 import com.google.android.gms.auth.api.credentials.Credential
+import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.LoginFailType
@@ -28,28 +30,26 @@ class LoginPresenter
         private val threadPoolExecutor: ThreadPoolExecutor,
         private val mainHandler: MainHandler) : PresenterBase<LoginView>() {
 
-    fun login(rawLogin: String, rawPassword: String, credential: Credential? = null) {
+    fun login(rawLogin: String, rawPassword: String, credential: Credential? = null, isAfterRegistration: Boolean = false) {
         val login = rawLogin.trim()
-        doRequest(api.authWithLoginPassword(login, rawPassword), AuthData(login, rawPassword), Type.loginPassword, credential)
+        doRequest(api.authWithLoginPassword(login, rawPassword), AuthInfo(type = Type.LOGIN_PASSWORD, authData = AuthData(login, rawPassword), credential = credential, isAfterRegistration = isAfterRegistration))
     }
 
     fun loginWithCode(rawCode: String) {
         val code = rawCode.trim()
-        doRequest(api.authWithCode(code), null, Type.social)
+        doRequest(api.authWithCode(code), AuthInfo(type = Type.SOCIAL))
     }
 
     fun loginWithNativeProviderCode(nativeCode: String, type: SocialManager.SocialType, email: String? = null) {
         val code = nativeCode.trim()
-        doRequest(api.authWithNativeCode(code, type, email),
-                null,
-                Type.social)
+        doRequest(api.authWithNativeCode(code, type, email), AuthInfo(type = Type.SOCIAL, socialType = type))
     }
 
     @MainThread
-    private fun doRequest(callToServer: Call<AuthenticationStepikResponse>, authData: AuthData?, type: Type, credential: Credential? = null) {
+    private fun doRequest(callToServer: Call<AuthenticationStepikResponse>, authInfo: AuthInfo) {
         fun onFail(loginFailType: LoginFailType) {
             mainHandler.post {
-                view?.onFailLogin(loginFailType, credential)
+                view?.onFailLogin(loginFailType, authInfo.credential)
             }
         }
 
@@ -64,7 +64,8 @@ class LoginPresenter
                         analytic.reportEvent(Analytic.Interaction.SUCCESS_LOGIN)
                         sharedPreferenceHelper.onSessionAfterLogin()
 
-                        mainHandler.post { view?.onSuccessLogin(authData) }
+                        resolveAmplitudeAuthAnalytic(authInfo)
+                        mainHandler.post { view?.onSuccessLogin(authInfo.authData) }
                     } else {
                         analytic.reportEvent(Analytic.Error.UNPREDICTABLE_LOGIN_RESULT)
                         //successful result, but body is not correct
@@ -72,7 +73,7 @@ class LoginPresenter
                     }
                 } else if (response.code() == 429) {
                     onFail(LoginFailType.TOO_MANY_ATTEMPTS)
-                } else if (response.code() == 401 && type == Type.social) {
+                } else if (response.code() == 401 && authInfo.type == Type.SOCIAL) {
                     val rawErrorMessage = response.errorBody()?.string()
                     val socialAuthError = rawErrorMessage?.toObject<SocialAuthError>()
 
@@ -98,8 +99,31 @@ class LoginPresenter
         }
     }
 
-    private enum class Type {
-        social, loginPassword
+    @WorkerThread
+    private fun resolveAmplitudeAuthAnalytic(authInfo: AuthInfo) {
+        with(authInfo) {
+            when(type) {
+                Type.LOGIN_PASSWORD -> {
+                    val event = if(isAfterRegistration) AmplitudeAnalytic.Auth.REGISTERED else AmplitudeAnalytic.Auth.PARAM_SOURCE
+                    analytic.reportAmplitudeEvent(event, mapOf(AmplitudeAnalytic.Auth.PARAM_SOURCE to "email"))
+                }
+
+                Type.SOCIAL -> {
+
+                }
+            }
+        }
     }
 
+    private enum class Type {
+        SOCIAL, LOGIN_PASSWORD
+    }
+
+    private class AuthInfo(
+            val isAfterRegistration: Boolean = false,
+            val type: Type,
+            val socialType: SocialManager.SocialType? = null,
+            val authData: AuthData? = null,
+            val credential: Credential? = null
+    )
 }
