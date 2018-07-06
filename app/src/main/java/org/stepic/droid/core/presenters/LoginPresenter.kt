@@ -31,6 +31,9 @@ class LoginPresenter
         private val threadPoolExecutor: ThreadPoolExecutor,
         private val mainHandler: MainHandler
 ) : PresenterBase<LoginView>() {
+    companion object {
+        private const val MINUTES_TO_CONSIDER_REGISTRATION = 5
+    }
 
     fun login(rawLogin: String, rawPassword: String, credential: Credential? = null, isAfterRegistration: Boolean = false) {
         val login = rawLogin.trim()
@@ -107,7 +110,7 @@ class LoginPresenter
             when(type) {
                 Type.LOGIN_PASSWORD -> {
                     val event = if(isAfterRegistration) AmplitudeAnalytic.Auth.REGISTERED else AmplitudeAnalytic.Auth.LOGGED_ID
-                    analytic.reportAmplitudeEvent(event, mapOf(AmplitudeAnalytic.Auth.PARAM_SOURCE to "email"))
+                    analytic.reportAmplitudeEvent(event, mapOf(AmplitudeAnalytic.Auth.PARAM_SOURCE to AmplitudeAnalytic.Auth.VALUE_SOURCE_EMAIL))
                 }
 
                 Type.SOCIAL -> {
@@ -124,7 +127,7 @@ class LoginPresenter
                         }
 
                         user?.joinDate?.let {
-                            if (DateTimeHelper.nowUtc() - it.time < 5 * AppConstants.MILLIS_IN_1MINUTE) {
+                            if (DateTimeHelper.nowUtc() - it.time < MINUTES_TO_CONSIDER_REGISTRATION * AppConstants.MILLIS_IN_1MINUTE) {
                                 AmplitudeAnalytic.Auth.REGISTERED
                             } else {
                                 AmplitudeAnalytic.Auth.LOGGED_ID

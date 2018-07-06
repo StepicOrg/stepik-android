@@ -29,6 +29,7 @@ interface AmplitudeAnalytic {
         const val REGISTERED = "Registered"
 
         const val PARAM_SOURCE = "source"
+        const val VALUE_SOURCE_EMAIL = "email"
     }
 
     object Course {
