@@ -30,6 +30,7 @@ import org.stepic.droid.core.StepikLogoutManager;
 import org.stepic.droid.di.AppSingleton;
 import org.stepic.droid.di.network.StethoInterceptor;
 import org.stepic.droid.jsonHelpers.adapters.CodeOptionsAdapterFactory;
+import org.stepic.droid.jsonHelpers.adapters.UTCDateAdapter;
 import org.stepic.droid.jsonHelpers.deserializers.DatasetDeserializer;
 import org.stepic.droid.jsonHelpers.deserializers.ReplyDeserializer;
 import org.stepic.droid.jsonHelpers.serializers.ReplySerializer;
@@ -73,6 +74,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.util.Collections;
+import java.util.Date;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Locale;
@@ -357,6 +359,7 @@ public class ApiImpl implements Api {
                 .registerTypeAdapter(DatasetWrapper.class, new DatasetDeserializer())
                 .registerTypeAdapter(ReplyWrapper.class, new ReplyDeserializer())
                 .registerTypeAdapter(ReplyWrapper.class, new ReplySerializer())
+                .registerTypeAdapter(Date.class, new UTCDateAdapter())
                 .create();
         return GsonConverterFactory.create(gson);
     }
