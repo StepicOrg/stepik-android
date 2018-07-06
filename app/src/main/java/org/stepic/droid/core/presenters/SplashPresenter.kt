@@ -17,6 +17,7 @@ import org.stepic.droid.notifications.LocalReminder
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @SplashScope
@@ -44,8 +45,8 @@ constructor(
 
     fun onSplashCreated() {
         disposable = Completable.fromCallable {
-                    checkRemoteConfigs()
                     countNumberOfLaunches()
+                    checkRemoteConfigs()
                     registerDeviceToPushes()
                     executeLegacyOperations()
                     localReminder.remindAboutRegistration()
@@ -59,6 +60,7 @@ constructor(
                         else -> Result.LAUNCH
                     }
                 }
+                .delay(200, TimeUnit.MILLISECONDS)
                 .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)
                 .subscribeBy(onError = {}) {

@@ -32,11 +32,8 @@ class AnimatedOnboardingActivity : FragmentActivityBase(), OnNextClickedListener
         onboardingCircleIndicator.setViewPager(onboardingViewPager)
 
         val pageChangeListener: ViewPager.OnPageChangeListener = object : ViewPager.OnPageChangeListener {
-            override fun onPageScrollStateChanged(state: Int) {
-            }
-
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-            }
+            override fun onPageScrollStateChanged(state: Int) {}
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
 
             override fun onPageSelected(position: Int) {
                 invokeAnimationOnFragment(position)

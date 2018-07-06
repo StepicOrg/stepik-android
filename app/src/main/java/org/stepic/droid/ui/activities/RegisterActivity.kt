@@ -189,7 +189,8 @@ class RegisterActivity : SmartLockActivityBase(), LoginView {
                 override fun onResponse(call: Call<RegistrationResponse>, response: Response<RegistrationResponse>) {
                     if (response.isSuccessful) {
                         analytic.reportEvent(FirebaseAnalytics.Event.SIGN_UP)
-                        loginPresenter.login(email, password)
+
+                        loginPresenter.login(email, password, isAfterRegistration = true)
                     } else {
                         ProgressHelper.dismiss(progressBar)
                         response.errorBody()
