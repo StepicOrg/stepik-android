@@ -13,6 +13,7 @@ import org.stepic.droid.model.AuthData
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.social.SocialManager
 import org.stepic.droid.util.AppConstants
+import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.toObject
 import org.stepic.droid.web.Api
 import org.stepic.droid.web.AuthenticationStepikResponse
@@ -28,7 +29,8 @@ class LoginPresenter
         private val analytic: Analytic,
         private val sharedPreferenceHelper: SharedPreferenceHelper,
         private val threadPoolExecutor: ThreadPoolExecutor,
-        private val mainHandler: MainHandler) : PresenterBase<LoginView>() {
+        private val mainHandler: MainHandler
+) : PresenterBase<LoginView>() {
 
     fun login(rawLogin: String, rawPassword: String, credential: Credential? = null, isAfterRegistration: Boolean = false) {
         val login = rawLogin.trim()
@@ -104,12 +106,35 @@ class LoginPresenter
         with(authInfo) {
             when(type) {
                 Type.LOGIN_PASSWORD -> {
-                    val event = if(isAfterRegistration) AmplitudeAnalytic.Auth.REGISTERED else AmplitudeAnalytic.Auth.PARAM_SOURCE
+                    val event = if(isAfterRegistration) AmplitudeAnalytic.Auth.REGISTERED else AmplitudeAnalytic.Auth.LOGGED_ID
                     analytic.reportAmplitudeEvent(event, mapOf(AmplitudeAnalytic.Auth.PARAM_SOURCE to "email"))
                 }
 
                 Type.SOCIAL -> {
+                    if (authInfo.socialType == null) return
 
+                    val event: String = try {
+                        val request = api.userProfile.execute().body()
+
+                        val user = request?.getUser()
+                        val profile = request?.getProfile()
+
+                        if (profile != null) {
+                            sharedPreferenceHelper.storeProfile(profile)
+                        }
+
+                        user?.joinDate?.let {
+                            if (DateTimeHelper.nowUtc() - it.time < 5 * AppConstants.MILLIS_IN_1MINUTE) {
+                                AmplitudeAnalytic.Auth.REGISTERED
+                            } else {
+                                AmplitudeAnalytic.Auth.LOGGED_ID
+                            }
+                        } ?: AmplitudeAnalytic.Auth.LOGGED_ID
+                    } catch (_: Exception) {
+                        AmplitudeAnalytic.Auth.LOGGED_ID
+                    }
+
+                    analytic.reportAmplitudeEvent(event, mapOf(AmplitudeAnalytic.Auth.PARAM_SOURCE to authInfo.socialType.name))
                 }
             }
         }
