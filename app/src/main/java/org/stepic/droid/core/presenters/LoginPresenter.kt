@@ -11,6 +11,7 @@ import org.stepic.droid.core.presenters.contracts.LoginView
 import org.stepic.droid.di.login.LoginScope
 import org.stepic.droid.model.AuthData
 import org.stepic.droid.preferences.SharedPreferenceHelper
+import org.stepic.droid.social.ISocialType
 import org.stepic.droid.social.SocialManager
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
@@ -137,7 +138,7 @@ class LoginPresenter
                         AmplitudeAnalytic.Auth.LOGGED_ID
                     }
 
-                    analytic.reportAmplitudeEvent(event, mapOf(AmplitudeAnalytic.Auth.PARAM_SOURCE to authInfo.socialType.name))
+                    analytic.reportAmplitudeEvent(event, mapOf(AmplitudeAnalytic.Auth.PARAM_SOURCE to authInfo.socialType.identifier))
                 }
             }
         }
@@ -150,7 +151,7 @@ class LoginPresenter
     private class AuthInfo(
             val isAfterRegistration: Boolean = false,
             val type: Type,
-            val socialType: SocialManager.SocialType? = null,
+            val socialType: ISocialType? = null,
             val authData: AuthData? = null,
             val credential: Credential? = null
     )

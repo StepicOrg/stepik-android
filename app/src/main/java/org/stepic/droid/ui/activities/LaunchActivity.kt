@@ -19,6 +19,7 @@ import com.google.android.gms.auth.api.credentials.Credential
 import com.google.android.gms.common.api.GoogleApiClient
 import com.vk.sdk.VKAccessToken
 import com.vk.sdk.VKCallback
+import com.vk.sdk.VKScope
 import com.vk.sdk.VKSdk
 import com.vk.sdk.api.VKError
 import jp.wasabeef.recyclerview.animators.FadeInDownAnimator
@@ -32,6 +33,7 @@ import org.stepic.droid.core.presenters.LoginPresenter
 import org.stepic.droid.core.presenters.contracts.LoginView
 import org.stepic.droid.fonts.FontType
 import org.stepic.droid.model.AuthData
+import org.stepic.droid.social.ISocialType
 import org.stepic.droid.social.SocialManager
 import org.stepic.droid.ui.adapters.SocialAuthAdapter
 import org.stepic.droid.ui.dialogs.LoadingProgressDialog
@@ -162,7 +164,7 @@ class LaunchActivity : SmartLockActivityBase(), LoginView {
             socialListRecyclerView.itemAnimator.removeDuration = 0
         }
 
-        val adapter = SocialAuthAdapter(this, googleApiClient, state)
+        val adapter = SocialAuthAdapter(this::onSocialItemClicked, state)
         showMore.setOnClickListener {
             showMore.visibility = View.GONE
             showLess.visibility = View.VISIBLE
@@ -187,6 +189,30 @@ class LaunchActivity : SmartLockActivityBase(), LoginView {
         }
 
         socialListRecyclerView.adapter = adapter
+    }
+
+    private fun onSocialItemClicked(type: ISocialType) {
+        analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_IN_SOCIAL, type.identifier)
+        when(type) {
+            SocialManager.SocialType.google -> {
+                if (googleApiClient == null) {
+                    analytic.reportEvent(Analytic.Interaction.GOOGLE_SOCIAL_IS_NOT_ENABLED)
+                    Toast.makeText(this, R.string.google_services_late, Toast.LENGTH_SHORT).show()
+                } else {
+                    val signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient)
+                    startActivityForResult(signInIntent, AppConstants.REQUEST_CODE_GOOGLE_SIGN_IN)
+                }
+            }
+
+            SocialManager.SocialType.facebook ->
+                LoginManager.getInstance().logInWithReadPermissions(this, listOf("email"))
+
+            SocialManager.SocialType.vk ->
+                VKSdk.login(this, VKScope.EMAIL)
+
+            else ->
+                api.loginWithSocial(this, type)
+        }
     }
 
     override fun onDestroy() {
@@ -224,7 +250,7 @@ class LaunchActivity : SmartLockActivityBase(), LoginView {
         }
     }
 
-    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (VKSdk.onActivityResult(requestCode, resultCode, data, object : VKCallback<VKAccessToken> {
             override fun onResult(result: VKAccessToken) {
                 loginPresenter.loginWithNativeProviderCode(result.accessToken, SocialManager.SocialType.vk, result.email)
@@ -255,8 +281,7 @@ class LaunchActivity : SmartLockActivityBase(), LoginView {
                     return
                 }
 
-                loginPresenter.loginWithNativeProviderCode(authCode,
-                        SocialManager.SocialType.google)
+                loginPresenter.loginWithNativeProviderCode(authCode, SocialManager.SocialType.google)
             } else {
                 // check statusCode here https://developers.google.com/android/reference/com/google/android/gms/common/api/CommonStatusCodes
                 val statusCode = result?.status?.statusCode?.toString() ?: "was null"
