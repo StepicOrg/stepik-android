@@ -12,8 +12,11 @@ import org.jsoup.select.Elements;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.notifications.model.Notification;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
+import kotlin.collections.CollectionsKt;
 import timber.log.Timber;
 
 public class HtmlHelper {
@@ -54,6 +57,7 @@ public class HtmlHelper {
                 || text.contains("<h")
                 || text.contains("\\[")
                 || text.contains("<pre><code")
+                || text.contains("kotlin-runnable")
                 || text.contains("<img")
                 || text.contains("<iframe")
                 || text.contains("<audio");
@@ -62,6 +66,10 @@ public class HtmlHelper {
 
     public static boolean hasLaTeX(String textString) {
         return textString.contains("$") || textString.contains("\\[");
+    }
+
+    private static boolean hasKotlinRunnableSample(String text) {
+        return text.contains("kotlin-runnable");
     }
 
     /**
@@ -170,19 +178,26 @@ public class HtmlHelper {
         return fontStyle + selectionColorStyle;
     }
 
-    public static String buildMathPage(CharSequence body, @ColorInt int textColorHighlight, int widthPx, String baseUrl) {
-        String preBody = String.format(Locale.getDefault(), PRE_BODY, MathJaxScript, getStyle(null, textColorHighlight), widthPx, baseUrl);
+    private static String buildPage(CharSequence body, List<String> additionalScripts, String fontPath, @ColorInt int textColorHighlight, int widthPx, String baseUrl) {
+        if (hasKotlinRunnableSample(body.toString())) {
+            additionalScripts.add(KotlinRunnableSamplesScript);
+        }
+        String scripts = CollectionsKt.joinToString(additionalScripts, "", "", "", -1, "", null);
+        String preBody = String.format(Locale.getDefault(), PRE_BODY, scripts, getStyle(fontPath, textColorHighlight), widthPx, baseUrl);
+
         return preBody + body + POST_BODY;
+    }
+
+    public static String buildMathPage(CharSequence body, @ColorInt int textColorHighlight, int widthPx, String baseUrl) {
+        return buildPage(body, CollectionsKt.arrayListOf(MathJaxScript), null, textColorHighlight, widthPx, baseUrl);
     }
 
     public static String buildPageWithAdjustingTextAndImage(CharSequence body, @ColorInt int textColorHighlight, int widthPx, String baseUrl) {
-        String preBody = String.format(Locale.getDefault(), PRE_BODY, " ", getStyle(null, textColorHighlight), widthPx, baseUrl);
-        return preBody + body + POST_BODY;
+        return buildPage(body, new ArrayList<String>(), null, textColorHighlight, widthPx, baseUrl);
     }
 
     public static String buildPageWithCustomFont(CharSequence body, String fontPath, @ColorInt int textColorHighlight, int widthPx, String baseUrl) {
-        String preBody = String.format(Locale.getDefault(), PRE_BODY, " ", getStyle(fontPath, textColorHighlight), widthPx, baseUrl);
-        return preBody + body + POST_BODY;
+        return buildPage(body, new ArrayList<String>(), fontPath, textColorHighlight, widthPx, baseUrl);
     }
 
     public static final String HORIZONTAL_SCROLL_LISTENER = "scrollListener";
