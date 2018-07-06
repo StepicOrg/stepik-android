@@ -218,6 +218,9 @@ public class HtmlHelper {
         }
     }
 
+    private static final String KotlinRunnableSamplesScript =
+            "<script src=\"https://unpkg.com/kotlin-playground@1\" data-selector=\"kotlin-runnable\"></script>";
+
     //string with 2 format args
     private static final String PRE_BODY = "<html>\n" +
             "<head>\n" +
@@ -228,6 +231,7 @@ public class HtmlHelper {
 
             "%s" +
 
+            KotlinRunnableSamplesScript +
             "<meta name=\"viewport\" content=\"width=" +
 
             "%d" +
