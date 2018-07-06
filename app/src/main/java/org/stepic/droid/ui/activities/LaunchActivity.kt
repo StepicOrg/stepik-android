@@ -45,9 +45,9 @@ import javax.inject.Inject
 
 class LaunchActivity : SmartLockActivityBase(), LoginView {
     companion object {
-        private val TAG = "LaunchActivity"
-        val wasLogoutKey = "wasLogoutKey"
-        private val socialAdapterStateKey = "socialAdapterStateKey"
+        private const val TAG = "LaunchActivity"
+        const val WAS_LOGOUT_KEY = "wasLogoutKey"
+        private const val SOCIAL_ADAPTER_STATE_KEY = "socialAdapterStateKey"
     }
 
 
@@ -78,7 +78,7 @@ class LaunchActivity : SmartLockActivityBase(), LoginView {
             Toast.makeText(this@LaunchActivity, R.string.connectionProblems, Toast.LENGTH_SHORT).show()
         })
 
-        val recyclerState = savedInstanceState?.getSerializable(socialAdapterStateKey)
+        val recyclerState = savedInstanceState?.getSerializable(SOCIAL_ADAPTER_STATE_KEY)
         if (recyclerState is SocialAuthAdapter.State) {
             initSocialRecycler(recyclerState)
         } else {
@@ -131,7 +131,7 @@ class LaunchActivity : SmartLockActivityBase(), LoginView {
         if (checkPlayServices()) {
             googleApiClient?.registerConnectionCallbacks(object : GoogleApiClient.ConnectionCallbacks {
                 override fun onConnected(bundle: Bundle?) {
-                    val wasLogout = intent?.getBooleanExtra(wasLogoutKey, false) ?: false
+                    val wasLogout = intent?.getBooleanExtra(WAS_LOGOUT_KEY, false) ?: false
                     if (wasLogout) {
                         Auth.CredentialsApi.disableAutoSignIn(googleApiClient)
                     }
@@ -331,7 +331,7 @@ class LaunchActivity : SmartLockActivityBase(), LoginView {
     override fun onSaveInstanceState(outState: Bundle?) {
         val adapter = socialListRecyclerView.adapter
         if (adapter is SocialAuthAdapter) {
-            outState?.putSerializable(socialAdapterStateKey, adapter.state)
+            outState?.putSerializable(SOCIAL_ADAPTER_STATE_KEY, adapter.state)
         }
         super.onSaveInstanceState(outState)
     }
