@@ -7,4 +7,5 @@ data class StepicProfileResponse(private val users: List<User>? = null,
                                  private val profiles: List<Profile>? = null) {
 
     fun getProfile(): Profile? = profiles?.firstOrNull()
+    fun getUser(): User? = users?.firstOrNull()
 }
