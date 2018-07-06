@@ -36,6 +36,12 @@ class LoginPresenter
         private const val MINUTES_TO_CONSIDER_REGISTRATION = 5
     }
 
+    private var authSocialType: ISocialType? = null
+
+    fun onClickAuthWithSocialProviderWithoutSDK(type: ISocialType) {
+        authSocialType = type
+    }
+
     fun login(rawLogin: String, rawPassword: String, credential: Credential? = null, isAfterRegistration: Boolean = false) {
         val login = rawLogin.trim()
         doRequest(api.authWithLoginPassword(login, rawPassword), AuthInfo(type = Type.LOGIN_PASSWORD, authData = AuthData(login, rawPassword), credential = credential, isAfterRegistration = isAfterRegistration))
@@ -43,7 +49,7 @@ class LoginPresenter
 
     fun loginWithCode(rawCode: String) {
         val code = rawCode.trim()
-        doRequest(api.authWithCode(code), AuthInfo(type = Type.SOCIAL))
+        doRequest(api.authWithCode(code), AuthInfo(type = Type.SOCIAL, socialType = authSocialType))
     }
 
     fun loginWithNativeProviderCode(nativeCode: String, type: SocialManager.SocialType, email: String? = null) {

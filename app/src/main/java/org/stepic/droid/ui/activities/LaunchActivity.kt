@@ -210,8 +210,10 @@ class LaunchActivity : SmartLockActivityBase(), LoginView {
             SocialManager.SocialType.vk ->
                 VKSdk.login(this, VKScope.EMAIL)
 
-            else ->
+            else -> {
+                loginPresenter.onClickAuthWithSocialProviderWithoutSDK(type)
                 api.loginWithSocial(this, type)
+            }
         }
     }
 
