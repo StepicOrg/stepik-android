@@ -10,7 +10,7 @@
     <string name="achievement_steps_solved_choice_description">Решите правильно %s с выбором ответа</string>
 
     <string name="achievement_steps_solved_code_title">Компьютерный мастер</string>
-    <string name="achievement_steps_solved_code_description">Решите правильно %s с выбором ответа</string>
+    <string name="achievement_steps_solved_code_description">Решите правильно %s заданий на программирование</string>
 
     <string name="achievement_steps_solved_number_title">Ещё одно достижение</string>
     <string name="achievement_steps_solved_number_description">Решите правильно %s с числами</string>
