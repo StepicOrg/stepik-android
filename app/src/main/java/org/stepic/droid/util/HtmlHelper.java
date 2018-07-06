@@ -246,7 +246,6 @@ public class HtmlHelper {
 
             "%s" +
 
-            KotlinRunnableSamplesScript +
             "<meta name=\"viewport\" content=\"width=" +
 
             "%d" +
