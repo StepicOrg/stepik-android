@@ -62,7 +62,7 @@ public class SectionDaoImpl extends DaoBase<Section> {
         section.setProgress(cursor.getString(indexProgress));
 
         String canTestSection = cursor.getString(indexTestSection);
-        Actions actions = new Actions(false, false, canTestSection);
+        Actions actions = new Actions(false, false, canTestSection, null, null);
         section.setActions(actions);
 
         section.setExam(cursor.getInt(indexIsExam) > 0);

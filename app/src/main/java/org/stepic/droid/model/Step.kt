@@ -3,6 +3,7 @@ package org.stepic.droid.model
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import org.stepik.android.model.actions.Actions
 
 import java.io.Serializable
 
@@ -23,7 +24,7 @@ class Step : Parcelable, Serializable, IProgressable {
     var is_cached: Boolean = false
     var is_loading: Boolean = false
     var is_custom_passed: Boolean = false
-    var actions: ActionsContainer? = null
+    var actions: Actions? = null
     var discussions_count: Int = 0
     var discussion_proxy: String? = null
     @SerializedName("has_submissions_restrictions")
@@ -62,7 +63,7 @@ class Step : Parcelable, Serializable, IProgressable {
         this.discussions_count = input.readInt()
         this.discussion_proxy = input.readString()
         this.status = input.readParcelable(StepStatus::class.java.classLoader)
-        this.block = input.readParcelable<Block>(Block::class.java.classLoader)
+        this.block = input.readParcelable(Block::class.java.classLoader)
         this.progress = input.readString()
         this.subscriptions = input.createStringArray()
         this.viewed_by = input.readLong()
@@ -72,7 +73,7 @@ class Step : Parcelable, Serializable, IProgressable {
         this.is_cached = input.readByte().toInt() != 0
         this.is_loading = input.readByte().toInt() != 0
         this.is_custom_passed = input.readByte().toInt() != 0
-        this.actions = input.readParcelable<ActionsContainer>(ActionsContainer::class.java.classLoader)
+        this.actions = input.readParcelable(Actions::class.java.classLoader)
     }
 
     companion object {

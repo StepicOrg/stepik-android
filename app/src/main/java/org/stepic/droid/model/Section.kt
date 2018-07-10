@@ -4,6 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import org.stepic.droid.util.DateTimeHelper
+import org.stepik.android.model.actions.Actions
 import java.io.Serializable
 import java.util.*
 
@@ -31,7 +32,7 @@ data class Section(
         var createDate: String? = null,
         @SerializedName("update_date")
         var updateDate: String? = null,
-        var actions: org.stepik.android.model.actions.Actions? = null,
+        var actions: Actions? = null,
         @SerializedName("is_exam")
         var isExam: Boolean = false,
         @SerializedName("discounting_policy")
@@ -105,7 +106,7 @@ data class Section(
         updateDate = input.readString()
         isCached = input.readByte().toInt() != 0
         isLoading = input.readByte().toInt() != 0
-        actions = input.readParcelable(org.stepik.android.model.actions.Actions::class.java.classLoader)
+        actions = input.readParcelable(Actions::class.java.classLoader)
         discountingPolicy = getDiscountingPolicyTypeByParcel(input)
         isRequirementSatisfied = input.readByte().toInt() != 0
         requiredSection = input.readLong()

@@ -126,7 +126,7 @@ class StepAttemptPresenter
             if (onlyFromInternet || !tryRestoreState(step.id)) {
                 getExistingAttempts(step.id)
             }
-            if (step.actions?.do_review != null) {
+            if (step.actions?.doReview != null) {
                 mainHandler.post {
                     view?.onNeedShowPeerReview()
                 }

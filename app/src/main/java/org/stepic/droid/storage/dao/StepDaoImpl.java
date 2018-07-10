@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.support.annotation.NonNull;
 
 import org.jetbrains.annotations.Nullable;
-import org.stepic.droid.model.ActionsContainer;
 import org.stepic.droid.model.Assignment;
 import org.stepic.droid.model.BlockPersistentWrapper;
 import org.stepic.droid.model.Progress;
@@ -17,6 +16,7 @@ import org.stepic.droid.storage.structure.DbStructureBlock;
 import org.stepic.droid.storage.structure.DbStructureProgress;
 import org.stepic.droid.storage.structure.DbStructureStep;
 import org.stepic.droid.util.DbParseHelper;
+import org.stepik.android.model.actions.Actions;
 
 import java.util.List;
 
@@ -82,9 +82,8 @@ public class StepDaoImpl extends DaoBase<Step> {
 
         String review = cursor.getString(columnIndexPeerReview);
 
-        ActionsContainer actionsContainer = new ActionsContainer();
-        actionsContainer.setDo_review(review);
-        step.setActions(actionsContainer);
+        Actions actions = new Actions(false, false, null, review, null);
+        step.setActions(actions);
 
 //        step.setIs_custom_passed(isAssignmentByStepViewed(step.getId()));
         return step;
@@ -110,7 +109,7 @@ public class StepDaoImpl extends DaoBase<Step> {
         values.put(DbStructureStep.Column.MAX_SUBMISSION_COUNT, step.getMaxSubmissionCount());
 
         if (step.getActions() != null) {
-            values.put(DbStructureStep.Column.PEER_REVIEW, step.getActions().getDo_review());
+            values.put(DbStructureStep.Column.PEER_REVIEW, step.getActions().getDoReview());
         }
 
         return values;
