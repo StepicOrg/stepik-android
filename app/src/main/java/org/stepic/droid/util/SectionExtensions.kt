@@ -6,7 +6,7 @@ import org.stepic.droid.model.Section
 
 fun Section?.hasUserAccess(course: Course? = null) =
         this != null
-                && (this.isActive || this.actions?.test_section != null)
+                && (this.isActive || this.actions?.testSection != null)
                 && (course?.enrollment ?: 1) > 0
                 && !this.isExam
                 && this.isRequirementSatisfied

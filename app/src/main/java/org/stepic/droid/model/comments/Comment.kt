@@ -3,8 +3,9 @@ package org.stepic.droid.model.comments
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import org.stepic.droid.model.Actions
+
 import org.stepic.droid.model.UserRole
+import org.stepik.android.model.actions.Actions
 
 
 data class Comment(

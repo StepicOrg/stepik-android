@@ -3,7 +3,7 @@ package org.stepic.droid.storage.dao;
 import android.content.ContentValues;
 import android.database.Cursor;
 
-import org.stepic.droid.model.Actions;
+import org.stepik.android.model.actions.Actions;
 import org.stepic.droid.model.DiscountingPolicyType;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.storage.operations.DatabaseOperations;
@@ -62,8 +62,7 @@ public class SectionDaoImpl extends DaoBase<Section> {
         section.setProgress(cursor.getString(indexProgress));
 
         String canTestSection = cursor.getString(indexTestSection);
-        Actions actions = new Actions();
-        actions.setTest_section(canTestSection);
+        Actions actions = new Actions(false, false, canTestSection);
         section.setActions(actions);
 
         section.setExam(cursor.getInt(indexIsExam) > 0);
@@ -110,8 +109,8 @@ public class SectionDaoImpl extends DaoBase<Section> {
             values.put(DbStructureSections.Column.DISCOUNTING_POLICY, -1);
         }
 
-        if (section.getActions() != null && section.getActions().getTest_section() != null) {
-            values.put(DbStructureSections.Column.TEST_SECTION, section.getActions().getTest_section());
+        if (section.getActions() != null && section.getActions().getTestSection() != null) {
+            values.put(DbStructureSections.Column.TEST_SECTION, section.getActions().getTestSection());
         }
         values.put(DbStructureSections.Column.IS_REQUIREMENT_SATISFIED, section.isRequirementSatisfied());
         values.put(DbStructureSections.Column.REQUIRED_SECTION, section.getRequiredSection());

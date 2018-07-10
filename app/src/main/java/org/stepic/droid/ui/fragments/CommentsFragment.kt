@@ -230,7 +230,7 @@ class CommentsFragment : FragmentBase(),
         }
 
         if (userId > 0) {
-            if (comment.actions?.delete ?: false) {
+            if (comment.actions?.delete == true) {
                 val deleteText = getString(R.string.delete_label)
                 val spannableString = SpannableString(deleteText)
                 spannableString.setSpan(ForegroundColorSpan(ColorUtil.getColorArgb(R.color.feedback_bad_color)), 0, spannableString.length, 0)
