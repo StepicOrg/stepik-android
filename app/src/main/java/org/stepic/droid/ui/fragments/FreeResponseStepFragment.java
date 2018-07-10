@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import org.stepic.droid.R;
-import org.stepic.droid.model.Attempt;
+import org.stepik.android.model.learning.attempts.Attempt;
 import org.stepic.droid.model.Reply;
 import org.stepik.android.model.learning.submissions.Attachment;
 
@@ -39,7 +39,7 @@ public class FreeResponseStepFragment extends StepAttemptFragment {
     @Override
     protected Reply generateReply() {
         String answer = answerField.getText().toString();
-        if (attempt != null && attempt.getDataset() != null && attempt.getDataset().getIs_html_enabled() != null && attempt.getDataset().getIs_html_enabled()) {
+        if (attempt != null && attempt.getDataset() != null && attempt.getDataset().isHtmlEnabled()) {
             answer = getTextResolver().replaceWhitespaceToBr(answer);
         }
 
@@ -61,7 +61,7 @@ public class FreeResponseStepFragment extends StepAttemptFragment {
         if (reply == null) return;
 
         String text = reply.getText();
-        if (attempt != null && attempt.getDataset() != null && attempt.getDataset().getIs_html_enabled() != null && attempt.getDataset().getIs_html_enabled()) {
+        if (attempt != null && attempt.getDataset() != null && attempt.getDataset().isHtmlEnabled()) {
             //todo show as html in enhanced latexview
             answerField.setText(getTextResolver().fromHtml(text));
         } else {

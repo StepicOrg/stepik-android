@@ -1,6 +1,6 @@
 package org.stepic.droid.core.presenters.contracts
 
-import org.stepic.droid.model.Attempt
+import org.stepik.android.model.learning.attempts.Attempt
 import org.stepic.droid.model.DiscountingPolicyType
 import org.stepic.droid.model.Submission
 

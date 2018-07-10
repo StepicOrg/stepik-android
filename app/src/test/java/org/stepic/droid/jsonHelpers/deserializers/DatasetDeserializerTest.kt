@@ -3,8 +3,8 @@ package org.stepic.droid.jsonHelpers.deserializers
 import com.google.gson.Gson
 import org.junit.Assert.*
 import org.junit.Test
-import org.stepic.droid.model.DatasetWrapper
 import org.stepic.droid.testUtils.TestingGsonProvider
+import org.stepik.android.model.learning.attempts.DatasetWrapper
 
 
 class DatasetDeserializerTest {
@@ -27,7 +27,7 @@ class DatasetDeserializerTest {
 
         val datasetWrapper = gson.fromJson(json, DatasetWrapper::class.java)
 
-        assertEquals(str, datasetWrapper.dataset.someStringValueFromServer)
+        assertEquals(str, datasetWrapper.dataset?.someStringValueFromServer)
     }
 
     @Test
@@ -37,7 +37,7 @@ class DatasetDeserializerTest {
 
         val datasetWrapper = gson.fromJson(json, DatasetWrapper::class.java)
 
-        assertEquals(str, datasetWrapper.dataset.someStringValueFromServer)
+        assertEquals(str, datasetWrapper.dataset?.someStringValueFromServer)
     }
 
     @Test
@@ -45,8 +45,8 @@ class DatasetDeserializerTest {
         val json = """{"is_multiple_choice": false, "options": ["1", "2", "4", "3"]}"""
         val datasetWrapper = gson.fromJson(json, DatasetWrapper::class.java)
 
-        assertFalse(datasetWrapper.dataset.is_multiple_choice)
-        assertArrayEquals(arrayOf("1", "2", "4", "3"), datasetWrapper.dataset.options.toTypedArray())
+        assertFalse(datasetWrapper.dataset?.isMultipleChoice == true)
+        assertArrayEquals(arrayOf("1", "2", "4", "3"), datasetWrapper.dataset?.options?.toTypedArray())
     }
 
 

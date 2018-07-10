@@ -6,9 +6,9 @@ import android.support.v7.widget.RecyclerView;
 
 import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropManager;
 
-import org.stepic.droid.model.Attempt;
+import org.stepik.android.model.learning.attempts.Attempt;
+import org.stepik.android.model.learning.attempts.Pair;
 import org.stepic.droid.model.Option;
-import org.stepic.droid.model.Pair;
 import org.stepic.droid.model.Reply;
 import org.stepic.droid.ui.adapters.MatchingStepDraggableAdapter;
 import org.stepic.droid.ui.util.SimpleDividerItemDecoration;

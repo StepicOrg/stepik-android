@@ -1,6 +1,6 @@
 package org.stepic.droid.core
 
-import org.stepic.droid.model.Attempt
+import org.stepik.android.model.learning.attempts.Attempt
 import org.stepic.droid.model.LessonSession
 import org.stepic.droid.model.Submission
 

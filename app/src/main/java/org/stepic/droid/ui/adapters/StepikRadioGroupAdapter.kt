@@ -3,7 +3,7 @@ package org.stepic.droid.ui.adapters
 import android.widget.Button
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
-import org.stepic.droid.model.Attempt
+import org.stepik.android.model.learning.attempts.Attempt
 import org.stepic.droid.model.Reply
 import org.stepic.droid.model.Submission
 import org.stepic.droid.ui.custom.StepikCheckBox
@@ -31,12 +31,13 @@ class StepikRadioGroupAdapter(private val group: StepikRadioGroup) {
     private var isMultipleChoice = false
 
     fun setAttempt(attempt: Attempt?) {
-        attempt?.dataset?.options?.let { options ->
+        val dataset = attempt?.getDataset()
+        dataset?.options?.let { options ->
             if (options.isEmpty()) return
             group.removeAllViews()
             group.clearCheck()
 
-            isMultipleChoice = attempt.dataset.is_multiple_choice
+            isMultipleChoice = dataset.isMultipleChoice
             options.forEach {
                 val item = if (isMultipleChoice) {
                     StepikCheckBox(group.context)

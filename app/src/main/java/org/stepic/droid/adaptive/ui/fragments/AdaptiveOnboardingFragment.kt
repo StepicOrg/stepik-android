@@ -10,11 +10,11 @@ import org.stepic.droid.R
 import org.stepic.droid.adaptive.model.Card
 import org.stepic.droid.adaptive.ui.adapters.OnboardingQuizCardsAdapter
 import org.stepic.droid.base.FragmentBase
-import org.stepic.droid.model.Attempt
 import org.stepic.droid.model.Block
 import org.stepic.droid.model.Lesson
 import org.stepic.droid.model.Step
 import org.stepic.droid.ui.util.initCenteredToolbar
+import org.stepik.android.model.learning.attempts.Attempt
 
 class AdaptiveOnboardingFragment: FragmentBase() {
     private val adapter = OnboardingQuizCardsAdapter {

@@ -39,7 +39,7 @@ import org.stepic.droid.core.presenters.StreakPresenter;
 import org.stepic.droid.core.presenters.contracts.StepAttemptView;
 import org.stepic.droid.core.updatingstep.contract.UpdatingStepPoster;
 import org.stepic.droid.fonts.FontType;
-import org.stepic.droid.model.Attempt;
+import org.stepik.android.model.learning.attempts.Attempt;
 import org.stepic.droid.model.DiscountingPolicyType;
 import org.stepic.droid.model.LessonSession;
 import org.stepic.droid.model.Reply;

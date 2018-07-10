@@ -1,16 +1,11 @@
-package org.stepic.droid.model
+package org.stepik.android.model.learning.attempts
 
-import com.google.gson.annotations.Expose
-
-class FillBlankComponent {
-    var text: String? = null
-    var type: Type? = null
-    var options: List<String>? = null
-
-    @Expose
-    var defaultValue: String? = null
-
-
+class FillBlankComponent(
+        val text: String? = null,
+        val type: Type? = null,
+        val options: List<String>? = null,
+        var defaultValue: String? = null
+) {
     enum class Type {
         text,
         input,

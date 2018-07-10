@@ -9,10 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import org.stepic.droid.R;
-import org.stepic.droid.model.Attempt;
-import org.stepic.droid.model.FillBlankComponent;
+import org.stepik.android.model.learning.attempts.Attempt;
 import org.stepic.droid.model.Reply;
 import org.stepic.droid.ui.adapters.FillBlanksAdapter;
+import org.stepik.android.model.learning.attempts.FillBlankComponent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +39,7 @@ public class FillBlanksFragment extends StepAttemptFragment {
     @Override
     protected void showAttempt(Attempt attempt) {
         componentList.clear();
-        componentList.addAll(attempt.getDataset().getFillBlankComponents());
+        componentList.addAll(attempt.getDataset().getComponents());
         fillBlanksAdapter = new FillBlanksAdapter(componentList);
         recyclerContainer.setAdapter(fillBlanksAdapter);
     }

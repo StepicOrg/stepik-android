@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import org.stepic.droid.R;
-import org.stepic.droid.model.Attempt;
+import org.stepik.android.model.learning.attempts.Attempt;
 import org.stepic.droid.model.Reply;
 
 import butterknife.BindString;

@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import org.stepic.droid.R;
-import org.stepic.droid.model.Attempt;
+import org.stepik.android.model.learning.attempts.Attempt;
 import org.stepic.droid.model.Reply;
 
 public class StringStepFragment extends StepAttemptFragment {

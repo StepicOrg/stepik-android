@@ -14,9 +14,9 @@ import android.widget.Spinner;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
-import org.stepic.droid.model.FillBlankComponent;
 import org.stepic.droid.ui.custom.ProgressLatexView;
 import org.stepic.droid.ui.util.NothingSelectedSpinnerAdapter;
+import org.stepik.android.model.learning.attempts.FillBlankComponent;
 
 import java.util.ArrayList;
 import java.util.List;

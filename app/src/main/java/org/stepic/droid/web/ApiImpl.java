@@ -35,7 +35,6 @@ import org.stepic.droid.jsonHelpers.deserializers.DatasetDeserializer;
 import org.stepic.droid.jsonHelpers.deserializers.ReplyDeserializer;
 import org.stepic.droid.jsonHelpers.serializers.ReplySerializer;
 import org.stepic.droid.model.Course;
-import org.stepic.droid.model.DatasetWrapper;
 import org.stepic.droid.model.EnrollmentWrapper;
 import org.stepic.droid.model.NotificationCategory;
 import org.stepic.droid.model.Profile;
@@ -67,6 +66,7 @@ import org.stepic.droid.web.model.adaptive.RecommendationReactionsRequest;
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
 import org.stepic.droid.web.model.desk.DeskRequestWrapper;
 import org.stepic.droid.web.storage.RemoteStorageService;
+import org.stepik.android.model.learning.attempts.DatasetWrapper;
 
 import java.io.IOException;
 import java.net.HttpCookie;

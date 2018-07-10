@@ -9,7 +9,7 @@ import io.reactivex.disposables.Disposable
 import org.stepic.droid.base.App
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
-import org.stepic.droid.model.Attempt
+import org.stepik.android.model.learning.attempts.Attempt
 import org.stepic.droid.model.Lesson
 import org.stepic.droid.model.Step
 import org.stepic.droid.web.Api

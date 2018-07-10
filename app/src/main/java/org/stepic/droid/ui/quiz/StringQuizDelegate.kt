@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import org.stepic.droid.R
-import org.stepic.droid.model.Attempt
+import org.stepik.android.model.learning.attempts.Attempt
 import org.stepic.droid.model.Reply
 import org.stepic.droid.model.Submission
 

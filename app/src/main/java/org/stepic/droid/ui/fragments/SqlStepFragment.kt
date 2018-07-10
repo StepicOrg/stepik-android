@@ -10,7 +10,7 @@ import kotlinx.android.synthetic.main.view_code_editor.*
 import kotlinx.android.synthetic.main.view_code_editor_layout.*
 import kotlinx.android.synthetic.main.view_code_toolbar.*
 import org.stepic.droid.R
-import org.stepic.droid.model.Attempt
+import org.stepik.android.model.learning.attempts.Attempt
 import org.stepic.droid.model.Reply
 import org.stepic.droid.ui.adapters.CodeToolbarAdapter
 import org.stepic.droid.ui.util.listenKeyboardChanges

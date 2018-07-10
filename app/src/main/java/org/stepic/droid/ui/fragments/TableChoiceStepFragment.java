@@ -9,8 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import org.stepic.droid.R;
-import org.stepic.droid.model.Attempt;
-import org.stepic.droid.model.Dataset;
+import org.stepik.android.model.learning.attempts.Attempt;
+import org.stepik.android.model.learning.attempts.Dataset;
 import org.stepic.droid.model.Reply;
 import org.stepic.droid.model.TableChoiceAnswer;
 import org.stepic.droid.ui.adapters.TableChoiceAdapter;
@@ -51,10 +51,10 @@ public class TableChoiceStepFragment extends StepAttemptFragment {
     @Override
     protected void showAttempt(Attempt attempt) {
         Dataset dataset = attempt.getDataset();
-        List<String> rows = dataset.getTableRows();
-        List<String> columns = dataset.getTableColumns();
-        String description = dataset.getDescriptionTableQuiz();
-        boolean isCheckbox = dataset.isTableCheckbox();
+        List<String> rows = dataset.getRows();
+        List<String> columns = dataset.getColumns();
+        String description = dataset.getDescription();
+        boolean isCheckbox = dataset.isCheckbox();
 
         answerList = initAnswerListFromAttempt(rows, columns);
 
