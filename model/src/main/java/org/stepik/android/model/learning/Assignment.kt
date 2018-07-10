@@ -1,6 +1,7 @@
-package org.stepik.android.model
+package org.stepik.android.model.learning
 
 import com.google.gson.annotations.SerializedName
+import org.stepik.android.model.Progressable
 import java.util.*
 
 class Assignment(

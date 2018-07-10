@@ -24,6 +24,7 @@ import org.stepic.droid.storage.dao.*
 import org.stepic.droid.storage.operations.*
 import org.stepic.droid.storage.structure.DbStructureEnrolledAndFeaturedCourses
 import org.stepic.droid.web.ViewAssignment
+import org.stepik.android.model.learning.Assignment
 
 @Module
 abstract class StorageModule {
@@ -59,7 +60,7 @@ abstract class StorageModule {
     internal abstract fun provideProgressDao(progressDao: ProgressDaoImpl): IDao<Progress>
 
     @Binds
-    internal abstract fun provideAssignmentDao(assignmentDao: AssignmentDaoImpl): IDao<org.stepik.android.model.Assignment>
+    internal abstract fun provideAssignmentDao(assignmentDao: AssignmentDaoImpl): IDao<Assignment>
 
     @Binds
     internal abstract fun provideCertificateDao(certificateViewItemDao: CertificateViewItemDaoImpl): IDao<CertificateViewItem>
