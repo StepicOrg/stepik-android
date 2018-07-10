@@ -3,6 +3,7 @@ package org.stepic.droid.model;
 import com.google.gson.annotations.SerializedName;
 
 import org.jetbrains.annotations.NotNull;
+import org.stepik.android.model.learning.submissions.Attachment;
 
 import java.util.List;
 

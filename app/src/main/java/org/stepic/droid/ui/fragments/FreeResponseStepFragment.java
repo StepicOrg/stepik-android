@@ -8,9 +8,9 @@ import android.view.View;
 import android.widget.EditText;
 
 import org.stepic.droid.R;
-import org.stepic.droid.model.Attachment;
 import org.stepic.droid.model.Attempt;
 import org.stepic.droid.model.Reply;
+import org.stepik.android.model.learning.submissions.Attachment;
 
 import java.util.ArrayList;
 
