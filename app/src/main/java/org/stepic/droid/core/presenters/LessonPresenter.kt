@@ -239,7 +239,7 @@ class LessonPresenter
                 assignments?.filterNotNull()?.forEach {
                     databaseFacade.addAssignment(assignment = it)
                 }
-                progressIds = ProgressUtil.getAllProgresses(assignments)
+                progressIds = ProgressUtil.getProgresses(assignments)
             } else {
                 progressIds = ProgressUtil.getAllProgresses(stepListFromInternet)
             }

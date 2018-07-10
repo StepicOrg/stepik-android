@@ -10,7 +10,6 @@ import android.support.annotation.WorkerThread;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
-import org.stepic.droid.model.Assignment;
 import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.DownloadEntity;
 import org.stepic.droid.model.Lesson;
@@ -35,6 +34,7 @@ import org.stepic.droid.web.LessonStepicResponse;
 import org.stepic.droid.web.ProgressesResponse;
 import org.stepic.droid.web.StepResponse;
 import org.stepic.droid.web.UnitMetaResponse;
+import org.stepik.android.model.Assignment;
 
 import java.io.File;
 import java.io.IOException;
@@ -255,7 +255,7 @@ public class LoadService extends IntentService {
                         databaseFacade.addAssignment(item);
                     }
 
-                    String[] ids = ProgressUtil.INSTANCE.getAllProgresses(assignments);
+                    String[] ids = ProgressUtil.INSTANCE.getProgresses(assignments);
                     List<Progress> progresses = fetchProgresses(ids);
                     for (Progress item : progresses) {
                         databaseFacade.addProgress(item);

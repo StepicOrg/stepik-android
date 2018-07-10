@@ -2,13 +2,21 @@ package org.stepic.droid.util
 
 import org.stepic.droid.model.IProgressable
 import org.stepic.droid.model.Progress
+import org.stepik.android.model.Progressable
 
 object ProgressUtil {
     fun <T : IProgressable> getAllProgresses(objects: List<T>?): Array<String> {
         return objects
                 ?.mapNotNull { it.getProgressId() }
                 ?.toTypedArray()
-                ?: emptyArray<String>()
+                ?: emptyArray()
+    }
+
+    fun getProgresses(objects: List<Progressable>?): Array<String> {
+        return objects
+                ?.mapNotNull { it.progressId }
+                ?.toTypedArray()
+                ?: emptyArray()
     }
 
     fun getProgressPercent(progress: Progress?): Int? {

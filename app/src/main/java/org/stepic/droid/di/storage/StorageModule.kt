@@ -59,7 +59,7 @@ abstract class StorageModule {
     internal abstract fun provideProgressDao(progressDao: ProgressDaoImpl): IDao<Progress>
 
     @Binds
-    internal abstract fun provideAssignmentDao(assignmentDao: AssignmentDaoImpl): IDao<Assignment>
+    internal abstract fun provideAssignmentDao(assignmentDao: AssignmentDaoImpl): IDao<org.stepik.android.model.Assignment>
 
     @Binds
     internal abstract fun provideCertificateDao(certificateViewItemDao: CertificateViewItemDaoImpl): IDao<CertificateViewItem>

@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.support.annotation.NonNull;
 
 import org.jetbrains.annotations.Nullable;
-import org.stepic.droid.model.Assignment;
+import org.stepik.android.model.Assignment;
 import org.stepic.droid.model.BlockPersistentWrapper;
 import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Step;

@@ -32,7 +32,7 @@ class DatabaseFacade
         private val sectionDao: IDao<Section>,
         private val unitDao: IDao<Unit>,
         private val progressDao: IDao<Progress>,
-        private val assignmentDao: IDao<Assignment>,
+        private val assignmentDao: IDao<org.stepik.android.model.Assignment>,
         private val lessonDao: IDao<Lesson>,
         private val viewAssignmentDao: IDao<ViewAssignment>,
         private val downloadEntityDao: IDao<DownloadEntity>,
@@ -84,7 +84,7 @@ class DatabaseFacade
             else coursesEnrolledDao
 
 
-    fun addAssignment(assignment: Assignment?) = assignment?.let { assignmentDao.insertOrUpdate(assignment) }
+    fun addAssignment(assignment: org.stepik.android.model.Assignment?) = assignment?.let { assignmentDao.insertOrUpdate(assignment) }
 
     @Deprecated("because of step has 0..* assignments.")
     fun getAssignmentIdByStepId(stepId: Long): Long {
