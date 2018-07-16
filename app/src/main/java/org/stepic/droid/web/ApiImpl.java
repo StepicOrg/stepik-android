@@ -35,7 +35,6 @@ import org.stepic.droid.jsonHelpers.deserializers.DatasetDeserializer;
 import org.stepic.droid.jsonHelpers.deserializers.ReplyDeserializer;
 import org.stepic.droid.jsonHelpers.serializers.ReplySerializer;
 import org.stepic.droid.model.Course;
-import org.stepic.droid.model.EnrollmentWrapper;
 import org.stepic.droid.model.NotificationCategory;
 import org.stepic.droid.model.RegistrationUser;
 import org.stepic.droid.model.StepikFilter;
@@ -62,6 +61,7 @@ import org.stepic.droid.web.model.adaptive.RecommendationReactionsRequest;
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
 import org.stepic.droid.web.model.desk.DeskRequestWrapper;
 import org.stepic.droid.web.storage.RemoteStorageService;
+import org.stepik.android.model.learning.EnrollmentWrapper;
 import org.stepik.android.model.learning.replies.Reply;
 import org.stepik.android.model.learning.replies.ReplyWrapper;
 import org.stepik.android.model.user.Profile;
@@ -493,8 +493,7 @@ public class ApiImpl implements Api {
 
     @Override
     public Call<Void> tryJoinCourse(@NotNull Course course) {
-        EnrollmentWrapper enrollmentWrapper = new EnrollmentWrapper(course.getCourseId());
-        return loggedService.joinCourse(enrollmentWrapper);
+        return loggedService.joinCourse(new EnrollmentWrapper(course.getCourseId()));
     }
 
     @Override
