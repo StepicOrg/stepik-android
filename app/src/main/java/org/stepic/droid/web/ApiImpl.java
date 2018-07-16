@@ -45,7 +45,6 @@ import org.stepic.droid.model.StepikFilter;
 import org.stepic.droid.model.Submission;
 import org.stepic.droid.model.Tag;
 import org.stepic.droid.adaptive.model.RecommendationReaction;
-import org.stepic.droid.model.User;
 import org.stepic.droid.model.comments.Comment;
 import org.stepic.droid.model.comments.Vote;
 import org.stepic.droid.model.comments.VoteValue;
@@ -66,6 +65,7 @@ import org.stepic.droid.web.model.adaptive.RecommendationReactionsRequest;
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
 import org.stepic.droid.web.model.desk.DeskRequestWrapper;
 import org.stepic.droid.web.storage.RemoteStorageService;
+import org.stepik.android.model.User;
 import org.stepik.android.model.learning.attempts.DatasetWrapper;
 
 import java.io.IOException;

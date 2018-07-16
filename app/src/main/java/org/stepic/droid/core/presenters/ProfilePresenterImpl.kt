@@ -106,9 +106,9 @@ class ProfilePresenterImpl
                 isLoading = false
             }
         } else {
-            val userViewModelLocal = UserViewModel(fullName = user.getFirstAndLastName(),
-                    imageLink = user.getAvatarPath(),
-                    shortBio = stringOrEmpty(user.short_bio),
+            val userViewModelLocal = UserViewModel(fullName = user.fullName ?: "",
+                    imageLink = user.avatar,
+                    shortBio = stringOrEmpty(user.shortBio),
                     information = stringOrEmpty((user.details)),
                     isMyProfile = false,
                     isPrivate = user.isPrivate,
@@ -183,11 +183,7 @@ class ProfilePresenterImpl
 
     private fun stringOrEmpty(str: String?): String {
         val source = str ?: ""
-        if (source.isBlank()) {
-            return ""
-        } else {
-            return source
-        }
+        return if (source.isBlank()) "" else source
     }
 
 }

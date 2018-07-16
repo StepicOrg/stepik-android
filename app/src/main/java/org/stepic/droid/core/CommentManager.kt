@@ -3,13 +3,13 @@ package org.stepic.droid.core
 import org.stepic.droid.core.comments.contract.CommentsPoster
 import org.stepic.droid.di.comment.CommentsScope
 import org.stepic.droid.model.CommentAdapterItem
-import org.stepic.droid.model.User
 import org.stepic.droid.model.comments.Comment
 import org.stepic.droid.model.comments.DiscussionProxy
 import org.stepic.droid.model.comments.Vote
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.web.Api
 import org.stepic.droid.web.CommentsResponse
+import org.stepik.android.model.User
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

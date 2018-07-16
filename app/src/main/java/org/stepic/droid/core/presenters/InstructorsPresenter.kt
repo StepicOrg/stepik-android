@@ -5,7 +5,7 @@ import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.InstructorsView
 import org.stepic.droid.di.course.CourseAndSectionsScope
 import org.stepic.droid.model.Course
-import org.stepic.droid.model.User
+import org.stepik.android.model.User
 import org.stepic.droid.web.Api
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.atomic.AtomicBoolean

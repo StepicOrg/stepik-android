@@ -24,7 +24,7 @@ import org.stepic.droid.R;
 import org.stepic.droid.base.App;
 import org.stepic.droid.core.CommentManager;
 import org.stepic.droid.model.CommentAdapterItem;
-import org.stepic.droid.model.User;
+import org.stepik.android.model.User;
 import org.stepic.droid.model.comments.Comment;
 import org.stepic.droid.model.comments.Vote;
 import org.stepic.droid.model.comments.VoteValue;
@@ -337,7 +337,7 @@ public final class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.
             User user = getUser(comment);
             String userAvatar = "";
             if (user != null) {
-                userAvatar = user.getAvatarPath();
+                userAvatar = user.getAvatar();
                 if (userAvatar == null) {
                     userAvatar = "";
                 }
@@ -359,7 +359,7 @@ public final class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.
 
             if (user != null) {
                 userName.setVisibility(View.VISIBLE);
-                userName.setText(user.getFirst_name() + " " + user.getLast_name());
+                userName.setText(user.getFullName());
             } else {
                 userName.setVisibility(View.GONE);
             }

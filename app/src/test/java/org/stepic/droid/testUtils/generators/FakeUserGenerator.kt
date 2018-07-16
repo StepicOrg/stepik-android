@@ -1,6 +1,6 @@
 package org.stepic.droid.testUtils.generators
 
-import org.stepic.droid.model.User
+import org.stepik.android.model.User
 
 object FakeUserGenerator {
 
@@ -14,9 +14,8 @@ object FakeUserGenerator {
     ): User {
         return User(id = id,
                 avatar = avatar,
-                first_name = firstName,
-                last_name = lastName,
-                short_bio = shortBio,
+                fullName = "$firstName $lastName",
+                shortBio = shortBio,
                 details = details,
                 joinDate = null)
     }

@@ -22,9 +22,8 @@ import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.core.ScreenManager;
-import org.stepic.droid.model.User;
+import org.stepik.android.model.User;
 import org.stepic.droid.util.AppConstants;
-import org.stepic.droid.util.UserExtensionKt;
 import org.stepic.droid.util.svg.GlideSvgRequestFactory;
 
 import java.io.InputStream;
@@ -72,12 +71,11 @@ public class InstructorAdapter extends RecyclerView.Adapter<InstructorAdapter.In
     public void onBindViewHolder(InstructorViewHolder holder, int position) {
         User instructor = instructors.get(position);
 
-        String firstLastNameString = UserExtensionKt.getFirstAndLastName(instructor);
-        holder.firstLastName.setText(firstLastNameString);
-        holder.courseShortBio.setText(instructor.getShort_bio());
-        String svgAvatarPath = instructor.getAvatarPath();
+        holder.firstLastName.setText(instructor.getFullName());
+        holder.courseShortBio.setText(instructor.getShortBio());
+        String svgAvatarPath = instructor.getAvatar();
 
-        String userAvatar = instructor.getAvatarPath();
+        String userAvatar = instructor.getAvatar();
         if (userAvatar == null) {
             userAvatar = "";
         }

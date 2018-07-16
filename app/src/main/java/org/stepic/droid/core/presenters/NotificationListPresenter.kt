@@ -135,8 +135,8 @@ class NotificationListPresenter
 
         if (userIds.isNotEmpty()) {
             api.getUsers(userIds.toLongArray()).execute().body()?.users?.forEach {
-                val avatar = it.getAvatarPath()
-                userIdToNotificationsIndexes[it.id.toLong()].forEach { notificationIndex ->
+                val avatar = it.avatar
+                userIdToNotificationsIndexes[it.id].forEach { notificationIndex ->
                     notifications[notificationIndex].userAvatarUrl = avatar
                 }
             }

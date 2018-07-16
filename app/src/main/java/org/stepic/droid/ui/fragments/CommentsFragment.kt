@@ -30,7 +30,7 @@ import org.stepic.droid.core.presenters.DiscussionPresenter
 import org.stepic.droid.core.presenters.VotePresenter
 import org.stepic.droid.core.presenters.contracts.DiscussionView
 import org.stepic.droid.core.presenters.contracts.VoteView
-import org.stepic.droid.model.User
+import org.stepik.android.model.User
 import org.stepic.droid.model.comments.*
 import org.stepic.droid.ui.activities.NewCommentActivity
 import org.stepic.droid.ui.adapters.CommentsAdapter
@@ -220,8 +220,9 @@ class CommentsFragment : FragmentBase(),
         }
 
         val commentUser: User? = comment.user?.let { commentManager.getUserById(it) }
-        if (commentUser?.first_name?.isNotBlank() == true || commentUser?.last_name?.isNotBlank() == true) {
-            val userNameText: String? = commentUser.getFirstAndLastName()
+
+        val userNameText: String? = commentUser?.fullName
+        if (userNameText?.isNotBlank() == true) {
             val spannableUserName = SpannableString(userNameText)
             spannableUserName.setSpan(ForegroundColorSpan(ColorUtil.getColorArgb(R.color.black)), 0, spannableUserName.length, 0)
 
