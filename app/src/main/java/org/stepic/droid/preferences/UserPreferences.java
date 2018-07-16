@@ -9,11 +9,11 @@ import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.di.AppSingleton;
-import org.stepic.droid.model.EmailAddress;
 import org.stepic.droid.model.StorageOption;
 import org.stepic.droid.notifications.model.NotificationType;
 import org.stepic.droid.util.StorageUtil;
-import org.stepik.android.model.Profile;
+import org.stepik.android.model.user.EmailAddress;
+import org.stepik.android.model.user.Profile;
 
 import java.io.File;
 import java.io.IOException;
@@ -123,7 +123,7 @@ public class UserPreferences {
         //emails >1
         EmailAddress primary = null;
         for (EmailAddress item : emails) {
-            if (item != null && item.is_primary()) {
+            if (item != null && item.isPrimary()) {
                 primary = item;
                 break;
             }

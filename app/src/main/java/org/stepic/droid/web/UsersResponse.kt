@@ -1,7 +1,7 @@
 package org.stepic.droid.web
 
 import org.stepic.droid.model.Meta
-import org.stepik.android.model.User
+import org.stepik.android.model.user.User
 
 class UsersResponse(
         meta: Meta,

@@ -1,9 +1,11 @@
-package org.stepik.android.model
+package org.stepik.android.model.user
 
 import com.google.gson.annotations.SerializedName
+import java.util.Date
 
-data class Profile(
+data class User(
         val id: Long = 0,
+        val profile: Long = 0,
 
         @SerializedName("first_name")
         val firstName: String? = null,
@@ -20,9 +22,6 @@ data class Profile(
 
         @SerializedName("is_private")
         val isPrivate: Boolean = false,
-        @SerializedName("is_guest")
-        val isGuest: Boolean = false,
-
-        @SerializedName("email_addresses")
-        val emailAddresses: LongArray? = null
+        @SerializedName("join_date")
+        val joinDate: Date?
 )

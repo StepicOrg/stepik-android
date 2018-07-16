@@ -52,7 +52,7 @@ import org.stepic.droid.core.presenters.contracts.LoadCourseView;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.CourseProperty;
 import org.stepic.droid.model.Section;
-import org.stepik.android.model.User;
+import org.stepik.android.model.user.User;
 import org.stepic.droid.model.Video;
 import org.stepic.droid.ui.adapters.CoursePropertyAdapter;
 import org.stepic.droid.ui.adapters.InstructorAdapter;

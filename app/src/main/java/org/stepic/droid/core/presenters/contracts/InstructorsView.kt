@@ -1,6 +1,6 @@
 package org.stepic.droid.core.presenters.contracts
 
-import org.stepik.android.model.User
+import org.stepik.android.model.user.User
 
 interface InstructorsView {
 

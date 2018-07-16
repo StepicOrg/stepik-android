@@ -1,6 +1,6 @@
 package org.stepic.droid.testUtils.generators
 
-import org.stepik.android.model.User
+import org.stepik.android.model.user.User
 
 object FakeUserGenerator {
 

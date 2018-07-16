@@ -24,7 +24,7 @@ import org.stepic.droid.R;
 import org.stepic.droid.base.App;
 import org.stepic.droid.core.CommentManager;
 import org.stepic.droid.model.CommentAdapterItem;
-import org.stepik.android.model.User;
+import org.stepik.android.model.user.User;
 import org.stepic.droid.model.comments.Comment;
 import org.stepic.droid.model.comments.Vote;
 import org.stepic.droid.model.comments.VoteValue;

@@ -9,7 +9,7 @@ import org.stepic.droid.model.comments.Vote
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.web.Api
 import org.stepic.droid.web.CommentsResponse
-import org.stepik.android.model.User
+import org.stepik.android.model.user.User
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

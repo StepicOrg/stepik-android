@@ -1,7 +1,7 @@
 package org.stepic.droid.web
 
-import org.stepik.android.model.Profile
-import  org.stepik.android.model.User
+import org.stepik.android.model.user.Profile
+import  org.stepik.android.model.user.User
 
 data class StepicProfileResponse(
         private val users: List<User>? = null,

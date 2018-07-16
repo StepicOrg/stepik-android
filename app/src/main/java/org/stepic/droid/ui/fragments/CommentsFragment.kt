@@ -30,7 +30,7 @@ import org.stepic.droid.core.presenters.DiscussionPresenter
 import org.stepic.droid.core.presenters.VotePresenter
 import org.stepic.droid.core.presenters.contracts.DiscussionView
 import org.stepic.droid.core.presenters.contracts.VoteView
-import org.stepik.android.model.User
+import org.stepik.android.model.user.User
 import org.stepic.droid.model.comments.*
 import org.stepic.droid.ui.activities.NewCommentActivity
 import org.stepic.droid.ui.adapters.CommentsAdapter

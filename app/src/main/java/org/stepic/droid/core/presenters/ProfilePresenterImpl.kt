@@ -9,7 +9,7 @@ import org.stepic.droid.model.UserViewModel
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.StepikUtil
 import org.stepic.droid.web.Api
-import org.stepik.android.model.Profile
+import org.stepik.android.model.user.Profile
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
 

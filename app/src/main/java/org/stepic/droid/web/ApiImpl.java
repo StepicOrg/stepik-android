@@ -64,8 +64,8 @@ import org.stepic.droid.web.model.adaptive.RecommendationReactionsRequest;
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
 import org.stepic.droid.web.model.desk.DeskRequestWrapper;
 import org.stepic.droid.web.storage.RemoteStorageService;
-import org.stepik.android.model.Profile;
-import org.stepik.android.model.User;
+import org.stepik.android.model.user.Profile;
+import org.stepik.android.model.user.User;
 import org.stepik.android.model.learning.attempts.DatasetWrapper;
 
 import java.io.IOException;

@@ -22,7 +22,7 @@ import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.core.ScreenManager;
-import org.stepik.android.model.User;
+import org.stepik.android.model.user.User;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.svg.GlideSvgRequestFactory;
 
