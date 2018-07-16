@@ -1,6 +1,6 @@
 package org.stepic.droid.web
 
-import org.stepic.droid.model.Profile
+import org.stepik.android.model.Profile
 import  org.stepik.android.model.User
 
 data class StepicProfileResponse(

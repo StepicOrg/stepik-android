@@ -13,7 +13,6 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.core.DefaultFilter;
 import org.stepic.droid.di.AppSingleton;
 import org.stepic.droid.model.EmailAddress;
-import org.stepic.droid.model.Profile;
 import org.stepic.droid.model.StepikFilter;
 import org.stepic.droid.model.comments.DiscussionOrder;
 import org.stepic.droid.notifications.model.NotificationType;
@@ -22,6 +21,7 @@ import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DateTimeHelper;
 import org.stepic.droid.util.RWLocks;
 import org.stepic.droid.web.AuthenticationStepikResponse;
+import org.stepik.android.model.Profile;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -601,8 +601,7 @@ public class SharedPreferenceHelper {
             return null;
         }
         Gson gson = new GsonBuilder().create();
-        Profile result = gson.fromJson(json, Profile.class);
-        return result;
+        return gson.fromJson(json, Profile.class);
     }
 
     public void storeEmailAddresses(List<EmailAddress> emailAddresses) {
@@ -724,8 +723,7 @@ public class SharedPreferenceHelper {
     }
 
     public long getAccessTokenTimestamp() {
-        long timestamp = getLong(PreferenceType.LOGIN, ACCESS_TOKEN_TIMESTAMP);
-        return timestamp;
+        return getLong(PreferenceType.LOGIN, ACCESS_TOKEN_TIMESTAMP);
     }
 
     public boolean isMobileInternetAlsoAllowed() {

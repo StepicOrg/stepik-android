@@ -10,7 +10,7 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.core.ProfilePresenter;
 import org.stepic.droid.core.presenters.contracts.ProfileView;
-import org.stepic.droid.model.Profile;
+import org.stepik.android.model.Profile;
 import org.stepik.android.model.User;
 import org.stepic.droid.model.UserViewModel;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
@@ -112,7 +112,7 @@ public class ProfilePresenterTest {
         String details = " details";
 
         preferencesProfileModel = FakeProfileGenerator.INSTANCE.generate(profileId, name, lastName, imageLink, shortBio, details);
-        fromPreferencesUserViewModel = new UserViewModel(ProfileExtensionKt.getFirstAndLastName(preferencesProfileModel), shortBio, details, imageLink, isMyProfile, isPrivate, profileId);
+        fromPreferencesUserViewModel = new UserViewModel(name + " " + lastName, shortBio, details, imageLink, isMyProfile, isPrivate, profileId);
     }
 
     @Test

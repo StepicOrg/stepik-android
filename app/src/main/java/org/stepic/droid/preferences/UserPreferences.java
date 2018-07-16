@@ -10,10 +10,10 @@ import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.di.AppSingleton;
 import org.stepic.droid.model.EmailAddress;
-import org.stepic.droid.model.Profile;
 import org.stepic.droid.model.StorageOption;
 import org.stepic.droid.notifications.model.NotificationType;
 import org.stepic.droid.util.StorageUtil;
+import org.stepik.android.model.Profile;
 
 import java.io.File;
 import java.io.IOException;

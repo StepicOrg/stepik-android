@@ -1,6 +1,6 @@
 package org.stepic.droid.core.presenters.contracts
 
-import org.stepic.droid.model.Profile
+import org.stepik.android.model.Profile
 
 interface ProfileMainFeedView {
     fun showAnonymous()

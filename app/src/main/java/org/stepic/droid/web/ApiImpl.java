@@ -37,7 +37,6 @@ import org.stepic.droid.jsonHelpers.serializers.ReplySerializer;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.EnrollmentWrapper;
 import org.stepic.droid.model.NotificationCategory;
-import org.stepic.droid.model.Profile;
 import org.stepic.droid.model.RegistrationUser;
 import org.stepic.droid.model.Reply;
 import org.stepic.droid.model.ReplyWrapper;
@@ -65,6 +64,7 @@ import org.stepic.droid.web.model.adaptive.RecommendationReactionsRequest;
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
 import org.stepic.droid.web.model.desk.DeskRequestWrapper;
 import org.stepic.droid.web.storage.RemoteStorageService;
+import org.stepik.android.model.Profile;
 import org.stepik.android.model.User;
 import org.stepik.android.model.learning.attempts.DatasetWrapper;
 
@@ -751,7 +751,7 @@ public class ApiImpl implements Api {
         Profile profile = sharedPreference.getProfile();
         String name = "";
         if (profile != null) {
-            name = profile.getFirst_name() + " " + profile.getLast_name();
+            name = profile.getFullName();
         }
 
         return tempService.sendFeedback(new DeskRequestWrapper(name, email, subject, rawDescription));

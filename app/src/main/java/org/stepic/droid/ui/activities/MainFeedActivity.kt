@@ -29,7 +29,6 @@ import org.stepic.droid.core.presenters.StreakPresenter
 import org.stepic.droid.core.presenters.contracts.ProfileMainFeedView
 import org.stepic.droid.fonts.FontType
 import org.stepic.droid.model.Course
-import org.stepic.droid.model.Profile
 import org.stepic.droid.notifications.badges.NotificationsBadgesListener
 import org.stepic.droid.notifications.badges.NotificationsBadgesManager
 import org.stepic.droid.ui.activities.contracts.RootScreen
@@ -41,6 +40,7 @@ import org.stepic.droid.ui.util.TimeIntervalUtil
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.ProgressHelper
+import org.stepik.android.model.Profile
 import timber.log.Timber
 import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan
 import uk.co.chrisjenx.calligraphy.TypefaceUtils
