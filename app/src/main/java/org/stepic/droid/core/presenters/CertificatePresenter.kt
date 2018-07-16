@@ -8,13 +8,13 @@ import org.stepic.droid.configuration.Config
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.presenters.contracts.CertificateView
 import org.stepic.droid.di.certificates.CertificateScope
-import org.stepic.droid.model.Certificate
 import org.stepic.droid.model.CertificateViewItem
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.web.Api
 import org.stepic.droid.web.CertificateResponse
 import org.stepic.droid.web.CoursesMetaResponse
+import org.stepik.android.model.learning.certificates.Certificate
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -126,7 +126,7 @@ class CertificatePresenter
                                                         certificateRelatedToCourse?.type,
                                                         certificateRelatedToCourse?.url,
                                                         certificateRelatedToCourse?.grade,
-                                                        certificateRelatedToCourse?.issue_date
+                                                        certificateRelatedToCourse?.issueDate
                                                 )
                                             }.orEmpty()
                                     certificateViewItemList?.clear()

@@ -2,13 +2,16 @@ package org.stepic.droid.storage.dao
 
 import android.content.ContentValues
 import android.database.Cursor
-import org.stepic.droid.model.CertificateType
+import com.google.gson.JsonPrimitive
+import org.stepic.droid.jsonHelpers.adapters.UTCDateAdapter
 import org.stepic.droid.model.CertificateViewItem
 import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepic.droid.storage.structure.DbStructureCertificateViewItem
+import org.stepik.android.model.learning.certificates.CertificateType
 import javax.inject.Inject
 
 class CertificateViewItemDaoImpl @Inject constructor(databaseOperations: DatabaseOperations) : DaoBase<CertificateViewItem>(databaseOperations) {
+    private val dateAdapter = UTCDateAdapter()
 
     override fun getDbName() = DbStructureCertificateViewItem.CERTIFICATE_VIEW_ITEM
 
@@ -26,7 +29,7 @@ class CertificateViewItemDaoImpl @Inject constructor(databaseOperations: Databas
 
         contentValues.put(DbStructureCertificateViewItem.Column.FULL_PATH, persistentObject.fullPath)
         contentValues.put(DbStructureCertificateViewItem.Column.GRADE, persistentObject.grade)
-        contentValues.put(DbStructureCertificateViewItem.Column.ISSUE_DATE, persistentObject.issue_date)
+        contentValues.put(DbStructureCertificateViewItem.Column.ISSUE_DATE, persistentObject.issueDate?.let { dateAdapter.serialize(it, null, null).asString })
 
 
         return contentValues
@@ -54,7 +57,7 @@ class CertificateViewItemDaoImpl @Inject constructor(databaseOperations: Databas
                 type = certificateType,
                 fullPath = cursor.getString(indexFullPath),
                 grade = cursor.getString(indexGrade),
-                issue_date = cursor.getString(indexIssueDate)
+                issueDate = dateAdapter.deserialize(JsonPrimitive(cursor.getString(indexIssueDate)), null, null)
         )
         return certificateViewItem
 
@@ -62,10 +65,10 @@ class CertificateViewItemDaoImpl @Inject constructor(databaseOperations: Databas
 
     private fun getCertificateTypeByTypeId(typeId: Int): CertificateType? {
         val localValues = CertificateType.values()
-        if (typeId >= 0 && typeId < localValues.size) {
-            return localValues[typeId]
+        return if (typeId >= 0 && typeId < localValues.size) {
+            localValues[typeId]
         } else {
-            return null
+            null
         }
     }
 }

@@ -1,13 +1,13 @@
-package org.stepic.droid.model
+package org.stepik.android.model.learning.certificates
 
 import com.google.gson.annotations.SerializedName
 
 /*
 Add new in the end, because serialization depends on order.
  */
-enum class CertificateType() {
+enum class CertificateType {
     @SerializedName("regular")
-    regular,
+    REGULAR,
     @SerializedName("distinction")
-    distinction
+    DISTINCTION
 }

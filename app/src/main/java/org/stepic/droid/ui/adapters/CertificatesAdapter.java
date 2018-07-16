@@ -16,9 +16,9 @@ import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.base.App;
-import org.stepic.droid.model.CertificateType;
 import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.core.presenters.CertificatePresenter;
+import org.stepik.android.model.learning.certificates.CertificateType;
 
 import java.util.List;
 
@@ -112,9 +112,9 @@ public class CertificatesAdapter extends RecyclerView.Adapter<CertificatesAdapte
             certificateTitleView.setText(certificate.getTitle());
 
             String certificateDescriptionLocal = null;
-            if (certificate.getType() == CertificateType.distinction) {
+            if (certificate.getType() == CertificateType.DISTINCTION) {
                 certificateDescriptionLocal = String.format(certificateDistinctionString, certificate.getTitle());
-            } else if (certificate.getType() == CertificateType.regular) {
+            } else if (certificate.getType() == CertificateType.REGULAR) {
                 certificateDescriptionLocal = String.format(certificateRegularString, certificate.getTitle());
             }
 
