@@ -9,8 +9,8 @@ import com.h6ah4i.android.widget.advrecyclerview.decoration.SimpleListDividerDec
 import org.stepic.droid.R;
 import org.stepik.android.model.learning.attempts.Attempt;
 import org.stepic.droid.model.Option;
-import org.stepic.droid.model.Reply;
 import org.stepic.droid.ui.adapters.SortingStepDraggableAdapter;
+import org.stepik.android.model.learning.replies.Reply;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,7 +44,7 @@ public class SortingStepFragment extends DraggableStepFragment {
 
     @Override
     protected Reply generateReply() {
-        if (optionList == null) return new Reply.Builder().build();
+        if (optionList == null) return new Reply();
 
         List<Integer> ordering = new ArrayList<>(optionList.size());
         for (int i = 0; i < optionList.size(); i++) {

@@ -42,7 +42,6 @@ import org.stepic.droid.fonts.FontType;
 import org.stepik.android.model.learning.attempts.Attempt;
 import org.stepic.droid.model.DiscountingPolicyType;
 import org.stepic.droid.model.LessonSession;
-import org.stepic.droid.model.Reply;
 import org.stepic.droid.model.Submission;
 import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout;
 import org.stepic.droid.ui.dialogs.DiscountingPolicyDialogFragment;
@@ -57,6 +56,7 @@ import org.stepic.droid.util.RatingUtilKt;
 import org.stepic.droid.util.SnackbarExtensionKt;
 import org.stepic.droid.util.StepExtensionsKt;
 import org.stepic.droid.util.SubmissionExtensionsKt;
+import org.stepik.android.model.learning.replies.Reply;
 
 import javax.inject.Inject;
 

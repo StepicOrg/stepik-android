@@ -11,6 +11,7 @@ import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.core.LessonSessionManager
 import org.stepic.droid.core.presenters.contracts.StepAttemptView
 import org.stepic.droid.model.*
+import org.stepik.android.model.learning.replies.Reply
 import org.stepik.android.model.learning.attempts.Attempt
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.DateTimeHelper
@@ -32,11 +33,11 @@ class StepAttemptPresenter
         private val api: Api,
         private var firebaseRemoteConfig: FirebaseRemoteConfig,
         private val analytic: Analytic,
-        private val sharedPreferenceHelper: SharedPreferenceHelper) : PresenterBase<StepAttemptView>() {
-
+        private val sharedPreferenceHelper: SharedPreferenceHelper
+) : PresenterBase<StepAttemptView>() {
     companion object {
-        private val FIRST_DELAY = 1000L
-        private val MAX_RATE_TIMES = 5
+        private const val FIRST_DELAY = 1000L
+        private const val MAX_RATE_TIMES = 5
     }
 
     private val minNumberOfSolvedStepsForRate = 5

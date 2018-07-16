@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 import android.text.InputType;
 import android.view.View;
 
-import org.stepic.droid.model.Reply;
+import org.stepik.android.model.learning.replies.Reply;
 
 public class NumberStepFragment extends SingleLineSendStepFragment {
 

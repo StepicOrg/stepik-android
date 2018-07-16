@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import org.stepic.droid.R;
 import org.stepik.android.model.learning.attempts.Attempt;
-import org.stepic.droid.model.Reply;
+import org.stepik.android.model.learning.replies.Reply;
 
 import butterknife.BindString;
 
@@ -37,8 +37,7 @@ public class PyCharmStepFragment extends StepAttemptFragment {
 
     @Override
     protected Reply generateReply() {
-        return new Reply.Builder()
-                .build();
+        return new Reply();
     }
 
     @Override

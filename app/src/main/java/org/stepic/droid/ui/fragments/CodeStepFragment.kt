@@ -22,7 +22,6 @@ import org.stepic.droid.core.presenters.CodePresenter
 import org.stepic.droid.core.presenters.PreparingCodeStepPresenter
 import org.stepic.droid.core.presenters.contracts.CodeView
 import org.stepic.droid.core.presenters.contracts.PreparingCodeStepView
-import org.stepic.droid.model.Reply
 import org.stepic.droid.model.Step
 import org.stepic.droid.model.Submission
 import org.stepic.droid.model.code.extensionForLanguage
@@ -36,6 +35,7 @@ import org.stepic.droid.ui.util.stopListenKeyboardChanges
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.ProgressHelper
 import org.stepik.android.model.learning.attempts.Attempt
+import org.stepik.android.model.learning.replies.Reply
 import javax.inject.Inject
 
 class CodeStepFragment : StepAttemptFragment(),
@@ -273,12 +273,11 @@ class CodeStepFragment : StepAttemptFragment(),
         }
     }
 
-    override fun generateReply(): Reply {
-        return Reply.Builder()
-                .setLanguage(chosenProgrammingLanguageName)
-                .setCode(codeEditor.text.toString())
-                .build()
-    }
+    override fun generateReply(): Reply = Reply(
+            language = chosenProgrammingLanguageName,
+            code = codeEditor.text.toString()
+    )
+
 
     override fun blockUIBeforeSubmit(needBlock: Boolean) {
         codeEditor.isEnabled = !needBlock

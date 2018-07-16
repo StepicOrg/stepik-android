@@ -10,9 +10,9 @@ import android.view.View;
 
 import org.stepic.droid.R;
 import org.stepik.android.model.learning.attempts.Attempt;
-import org.stepic.droid.model.Reply;
 import org.stepic.droid.ui.adapters.FillBlanksAdapter;
 import org.stepik.android.model.learning.attempts.FillBlankComponent;
+import org.stepik.android.model.learning.replies.Reply;
 
 import java.util.ArrayList;
 import java.util.List;

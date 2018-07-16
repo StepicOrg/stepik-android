@@ -7,7 +7,6 @@ import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.adaptive.model.RatingItem;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.NotificationCategory;
-import org.stepic.droid.model.Reply;
 import org.stepic.droid.model.Submission;
 import org.stepic.droid.model.Tag;
 import org.stepic.droid.adaptive.model.RecommendationReaction;
@@ -16,6 +15,7 @@ import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.web.model.adaptive.RatingRestoreResponse;
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
+import org.stepik.android.model.learning.replies.Reply;
 import org.stepik.android.model.user.User;
 
 import java.util.List;

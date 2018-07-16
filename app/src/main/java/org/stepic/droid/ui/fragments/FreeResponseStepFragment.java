@@ -9,7 +9,7 @@ import android.widget.EditText;
 
 import org.stepic.droid.R;
 import org.stepik.android.model.learning.attempts.Attempt;
-import org.stepic.droid.model.Reply;
+import org.stepik.android.model.learning.replies.Reply;
 import org.stepik.android.model.learning.submissions.Attachment;
 
 import java.util.ArrayList;

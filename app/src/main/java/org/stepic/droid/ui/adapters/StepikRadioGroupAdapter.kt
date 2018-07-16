@@ -4,12 +4,12 @@ import android.widget.Button
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepik.android.model.learning.attempts.Attempt
-import org.stepic.droid.model.Reply
 import org.stepic.droid.model.Submission
 import org.stepic.droid.ui.custom.StepikCheckBox
 import org.stepic.droid.ui.custom.StepikOptionView
 import org.stepic.droid.ui.custom.StepikRadioButton
 import org.stepic.droid.ui.custom.StepikRadioGroup
+import org.stepik.android.model.learning.replies.Reply
 import java.lang.Math.min
 import javax.inject.Inject
 
@@ -81,7 +81,7 @@ class StepikRadioGroupAdapter(private val group: StepikRadioGroup) {
                     .map {
                         (group.getChildAt(it) as StepikOptionView).isChecked
                     }
-            return Reply.Builder().setChoices(selection).build()
+            return Reply(choices = selection)
         }
 
     fun setEnabled(isEnabled: Boolean) {

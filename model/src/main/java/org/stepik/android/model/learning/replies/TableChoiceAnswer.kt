@@ -1,4 +1,4 @@
-package org.stepik.android.model.learning.reply
+package org.stepik.android.model.learning.replies
 
 import com.google.gson.annotations.SerializedName
 

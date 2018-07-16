@@ -27,13 +27,15 @@ class LocalLessonSessionManagerImpl
 
         stepIdToLessonSession[stepId] = LessonSession(stepId, attempt, submission, numberOfSubmissionOnFirstPage)
 
-        if (submission.reply?.language != null && submission.reply?.code != null && submission.status == Submission.Status.LOCAL) {
+        val language = submission.reply?.language
+        val code = submission.reply?.code
+        if (language != null && code != null && submission.status == Submission.Status.LOCAL) {
             singleThreadExecutor.execute {
                 val codeSubmission = CodeSubmission(
                         stepId = stepId,
                         attemptId = attempt.id,
-                        code = submission.reply.code,
-                        language = submission.reply.language
+                        code = code,
+                        language = language
                 )
                 databaseFacade.addCodeSubmission(codeSubmission)
             }

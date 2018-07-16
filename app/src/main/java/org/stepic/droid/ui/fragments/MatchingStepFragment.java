@@ -9,9 +9,9 @@ import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropM
 import org.stepik.android.model.learning.attempts.Attempt;
 import org.stepik.android.model.learning.attempts.Pair;
 import org.stepic.droid.model.Option;
-import org.stepic.droid.model.Reply;
 import org.stepic.droid.ui.adapters.MatchingStepDraggableAdapter;
 import org.stepic.droid.ui.util.SimpleDividerItemDecoration;
+import org.stepik.android.model.learning.replies.Reply;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,7 +55,7 @@ public class MatchingStepFragment extends DraggableStepFragment {
 
     @Override
     protected Reply generateReply() {
-        if (optionList == null || optionList.size() < 2) return new Reply.Builder().build();
+        if (optionList == null || optionList.size() < 2) return new Reply();
 
         List<Integer> ordering = new ArrayList<>(optionList.size() / 2);
         for (int i = 1; i < optionList.size(); i += 2) {

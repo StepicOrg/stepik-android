@@ -5,9 +5,9 @@ import android.view.View;
 
 import org.stepic.droid.R;
 import org.stepik.android.model.learning.attempts.Attempt;
-import org.stepic.droid.model.Reply;
 import org.stepic.droid.ui.adapters.StepikRadioGroupAdapter;
 import org.stepic.droid.ui.custom.StepikRadioGroup;
+import org.stepik.android.model.learning.replies.Reply;
 
 public class ChoiceStepFragment extends StepAttemptFragment {
 
