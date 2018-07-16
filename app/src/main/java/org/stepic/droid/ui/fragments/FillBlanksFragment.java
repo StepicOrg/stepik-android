@@ -23,7 +23,7 @@ public class FillBlanksFragment extends StepAttemptFragment {
 
     private RecyclerView recyclerContainer;
     private final List<FillBlankComponent> componentList = new ArrayList<>();
-    FillBlanksAdapter fillBlanksAdapter;
+    private final FillBlanksAdapter fillBlanksAdapter = new FillBlanksAdapter(componentList);
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -40,17 +40,12 @@ public class FillBlanksFragment extends StepAttemptFragment {
     protected void showAttempt(Attempt attempt) {
         componentList.clear();
         componentList.addAll(attempt.getDataset().getComponents());
-        fillBlanksAdapter = new FillBlanksAdapter(componentList);
         recyclerContainer.setAdapter(fillBlanksAdapter);
     }
 
     @Override
     protected Reply generateReply() {
-        if (fillBlanksAdapter == null) {
-            throw new IllegalStateException("adapter cant be null on generating reply");
-        }
         // TODO: 23.01.17 make checking is all values is not null?
-
         List<String> blanks = new ArrayList<>();
         for (FillBlankComponent item : componentList) {
             if (item.getType().canSubmit()) {

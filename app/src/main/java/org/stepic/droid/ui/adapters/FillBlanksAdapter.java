@@ -23,6 +23,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import kotlin.collections.CollectionsKt;
 import timber.log.Timber;
 
 public class FillBlanksAdapter extends RecyclerView.Adapter<FillBlanksAdapter.FillBlankViewHolderBase> {
@@ -30,11 +31,18 @@ public class FillBlanksAdapter extends RecyclerView.Adapter<FillBlanksAdapter.Fi
     final static int INPUT_TYPE = 1;
     final static int SELECT_TYPE = 2;
 
-    private List<FillBlankComponent> componentList;
+    @NotNull
+    private List<FillBlankComponent> componentList = CollectionsKt.emptyList();
     private boolean isAllEnabled = true;
 
-    public FillBlanksAdapter(@NotNull List<FillBlankComponent> componentList) {
+    @NotNull
+    public List<FillBlankComponent> getComponentList() {
+        return componentList;
+    }
+
+    public void setComponentList(@NotNull List<FillBlankComponent> componentList) {
         this.componentList = componentList;
+        notifyDataSetChanged();
     }
 
     @Override
