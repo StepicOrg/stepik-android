@@ -1,11 +1,9 @@
 package org.stepic.droid.ui.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 
 import org.stepic.droid.R;
@@ -39,7 +37,7 @@ public class TableChoiceStepFragment extends StepAttemptFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        View tableQuizView = ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_table_quiz_layout, attemptContainer, false);
+        View tableQuizView = getLayoutInflater().inflate(R.layout.view_table_quiz_layout, attemptContainer, false);
         int dp8inPx = (int) DpPixelsHelper.convertDpToPixel(8f);
         attemptContainer.setPadding(0, dp8inPx, 0, dp8inPx);
         recyclerContainer = ButterKnife.findById(tableQuizView, R.id.recycler);
