@@ -32,7 +32,7 @@ import org.stepic.droid.core.ProgressHandler
 import org.stepic.droid.core.presenters.LoginPresenter
 import org.stepic.droid.core.presenters.contracts.LoginView
 import org.stepic.droid.fonts.FontType
-import org.stepic.droid.model.AuthData
+import org.stepic.droid.model.Credentials
 import org.stepic.droid.social.ISocialType
 import org.stepic.droid.social.SocialManager
 import org.stepic.droid.ui.adapters.SocialAuthAdapter
@@ -342,7 +342,7 @@ class LaunchActivity : SmartLockActivityBase(), LoginView {
         }
     }
 
-    override fun onSuccessLogin(authData: AuthData?) {
+    override fun onSuccessLogin(credentials: Credentials?) {
         progressHandler.dismiss()
         openMainFeed()
     }

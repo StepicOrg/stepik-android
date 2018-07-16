@@ -9,7 +9,7 @@ import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.LoginFailType
 import org.stepic.droid.core.presenters.contracts.LoginView
 import org.stepic.droid.di.login.LoginScope
-import org.stepic.droid.model.AuthData
+import org.stepic.droid.model.Credentials
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.social.ISocialType
 import org.stepic.droid.social.SocialManager
@@ -44,7 +44,7 @@ class LoginPresenter
 
     fun login(rawLogin: String, rawPassword: String, credential: Credential? = null, isAfterRegistration: Boolean = false) {
         val login = rawLogin.trim()
-        doRequest(api.authWithLoginPassword(login, rawPassword), AuthInfo(type = Type.LOGIN_PASSWORD, authData = AuthData(login, rawPassword), credential = credential, isAfterRegistration = isAfterRegistration))
+        doRequest(api.authWithLoginPassword(login, rawPassword), AuthInfo(type = Type.LOGIN_PASSWORD, credentials = Credentials(login, rawPassword), credential = credential, isAfterRegistration = isAfterRegistration))
     }
 
     fun loginWithCode(rawCode: String) {
@@ -77,7 +77,7 @@ class LoginPresenter
                         sharedPreferenceHelper.onSessionAfterLogin()
 
                         resolveAmplitudeAuthAnalytic(authInfo)
-                        mainHandler.post { view?.onSuccessLogin(authInfo.authData) }
+                        mainHandler.post { view?.onSuccessLogin(authInfo.credentials) }
                     } else {
                         analytic.reportEvent(Analytic.Error.UNPREDICTABLE_LOGIN_RESULT)
                         //successful result, but body is not correct
@@ -158,7 +158,7 @@ class LoginPresenter
             val isAfterRegistration: Boolean = false,
             val type: Type,
             val socialType: ISocialType? = null,
-            val authData: AuthData? = null,
+            val credentials: Credentials? = null,
             val credential: Credential? = null
     )
 }

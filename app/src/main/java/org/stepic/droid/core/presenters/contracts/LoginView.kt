@@ -2,7 +2,7 @@ package org.stepic.droid.core.presenters.contracts
 
 import com.google.android.gms.auth.api.credentials.Credential
 import org.stepic.droid.core.LoginFailType
-import org.stepic.droid.model.AuthData
+import org.stepic.droid.model.Credentials
 
 interface LoginView {
 
@@ -12,5 +12,5 @@ interface LoginView {
 
     fun onSocialLoginWithExistingEmail(email: String)
 
-    fun onSuccessLogin(authData : AuthData?)
+    fun onSuccessLogin(credentials : Credentials?)
 }
