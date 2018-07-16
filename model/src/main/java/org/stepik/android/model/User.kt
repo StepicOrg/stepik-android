@@ -7,6 +7,11 @@ data class User(
         val id: Long = 0,
         val profile: Long = 0,
 
+        @SerializedName("first_name")
+        val firstName: String? = null,
+        @SerializedName("last_name")
+        val lastName: String? = null,
+
         @SerializedName("full_name")
         val fullName: String? = null,
         @SerializedName("short_bio")

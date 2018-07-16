@@ -160,10 +160,10 @@ class ProfilePresenterImpl
     }
 
     private fun showProfileBase(profile: Profile, isMyProfile: Boolean) {
-        val userViewModelLocal = UserViewModel(fullName = profile.fullName ?: "",
+        val userViewModelLocal = UserViewModel(fullName = profile.fullName ?: "${profile.firstName} ${profile.lastName}",
                 imageLink = profile.avatar,
                 shortBio = stringOrEmpty(profile.shortBio),
-                information = stringOrEmpty((profile.details)),
+                information = stringOrEmpty(profile.details),
                 isMyProfile = isMyProfile,
                 isPrivate = profile.isPrivate,
                 id = profile.id)

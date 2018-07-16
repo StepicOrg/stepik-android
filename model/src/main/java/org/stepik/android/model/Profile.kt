@@ -5,6 +5,11 @@ import com.google.gson.annotations.SerializedName
 data class Profile(
         val id: Long = 0,
 
+        @SerializedName("first_name")
+        val firstName: String? = null,
+        @SerializedName("last_name")
+        val lastName: String? = null,
+
         @SerializedName("full_name")
         val fullName: String? = null,
         @SerializedName("short_bio")
