@@ -205,7 +205,7 @@ public class StepTypeResolverImpl implements StepTypeResolver {
             case AppConstants.TYPE_FILL_BLANKS:
                 return new FillBlanksFragment();
             case AppConstants.TYPE_TABLE:
-                return TableChoiceStepFragment.newInstance();
+                return TableChoiceStepFragment.Companion.newInstance();
             case AppConstants.TYPE_CODE:
                 return CodeStepFragment.Companion.newInstance();
             case AppConstants.TYPE_SQL:
