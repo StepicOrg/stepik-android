@@ -69,6 +69,15 @@ public class TableChoiceAdapter extends RecyclerView.Adapter<TableChoiceAdapter.
         display.getSize(size);
     }
 
+    public void setAnswers(List<TableChoiceAnswer> newAnswers) {
+        answers.clear();
+        answers.addAll(newAnswers);
+        notifyDataSetChanged();
+    }
+
+    public List<TableChoiceAnswer> getAnswers() {
+        return answers;
+    }
 
     @Override
     public GenericViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
