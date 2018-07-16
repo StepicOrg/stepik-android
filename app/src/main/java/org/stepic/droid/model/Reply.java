@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepik.android.model.learning.submissions.Attachment;
+import org.stepik.android.model.learning.reply.TableChoiceAnswer;
 
 import java.util.List;
 

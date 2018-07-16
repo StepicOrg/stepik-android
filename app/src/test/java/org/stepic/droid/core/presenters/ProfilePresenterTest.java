@@ -18,7 +18,6 @@ import org.stepic.droid.testUtils.ConcurrencyUtilForTest;
 import org.stepic.droid.testUtils.ResponseGeneratorKt;
 import org.stepic.droid.testUtils.generators.FakeProfileGenerator;
 import org.stepic.droid.testUtils.generators.FakeUserGenerator;
-import org.stepic.droid.util.ProfileExtensionKt;
 import org.stepic.droid.web.Api;
 import org.stepic.droid.web.UsersResponse;
 

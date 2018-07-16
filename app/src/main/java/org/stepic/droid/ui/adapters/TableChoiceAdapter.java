@@ -15,7 +15,7 @@ import android.widget.CompoundButton;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
-import org.stepic.droid.model.TableChoiceAnswer;
+import org.stepik.android.model.learning.reply.TableChoiceAnswer;
 import org.stepic.droid.ui.custom.ProgressLatexView;
 import org.stepic.droid.ui.listeners.CheckedChangeListenerWithPosition;
 
@@ -102,9 +102,9 @@ public class TableChoiceAdapter extends RecyclerView.Adapter<TableChoiceAdapter.
             holder.setData(headerText);
             //Column header is always default. (not even or odd)
         } else {
-            List<TableChoiceAnswer.Companion.Cell> oneRowAnswers = getOneRowAnswersFromPosition(position);
+            List<TableChoiceAnswer.Cell> oneRowAnswers = getOneRowAnswersFromPosition(position);
             int columnPosition = getColumnPosition(position);
-            TableChoiceAnswer.Companion.Cell cell = oneRowAnswers.get(columnPosition);
+            TableChoiceAnswer.Cell cell = oneRowAnswers.get(columnPosition);
             holder.setData(cell.getAnswer());
             holder.fillAsEven(isPositionEven(position));
         }
@@ -115,7 +115,7 @@ public class TableChoiceAdapter extends RecyclerView.Adapter<TableChoiceAdapter.
         return position / (rows.size() + 1) - 1;
     }
 
-    private List<TableChoiceAnswer.Companion.Cell> getOneRowAnswersFromPosition(int position) {
+    private List<TableChoiceAnswer.Cell> getOneRowAnswersFromPosition(int position) {
         int rowPosition = (position - 1) % (rows.size() + 1);
         TableChoiceAnswer tableChoiceAnswer = answers.get(rowPosition);
         return tableChoiceAnswer.getColumns();
@@ -128,7 +128,7 @@ public class TableChoiceAdapter extends RecyclerView.Adapter<TableChoiceAdapter.
 
     @Override
     public void onCheckedChanged(CompoundButton view, boolean isChecked, int position) {
-        List<TableChoiceAnswer.Companion.Cell> oneRowAnswers = getOneRowAnswersFromPosition(position);
+        List<TableChoiceAnswer.Cell> oneRowAnswers = getOneRowAnswersFromPosition(position);
         int columnPosition = getColumnPosition(position);
 
         int multiplier = rows.size() + 1;
@@ -139,7 +139,7 @@ public class TableChoiceAdapter extends RecyclerView.Adapter<TableChoiceAdapter.
         if (!isCheckbox && isChecked) {
             //radio button, check something -> uncheck others
             int i = 1;
-            for (TableChoiceAnswer.Companion.Cell eachCellInRow : oneRowAnswers) {
+            for (TableChoiceAnswer.Cell eachCellInRow : oneRowAnswers) {
                 if (eachCellInRow.getAnswer()) {
                     //if something is checked
                     int currentAdapterPosition = multiplier * i + remainder;
@@ -153,7 +153,7 @@ public class TableChoiceAdapter extends RecyclerView.Adapter<TableChoiceAdapter.
         }
 
         // change checked state
-        TableChoiceAnswer.Companion.Cell cell = oneRowAnswers.get(columnPosition);
+        TableChoiceAnswer.Cell cell = oneRowAnswers.get(columnPosition);
         cell.setAnswer(isChecked);
 
         if (!changed.isEmpty()) {

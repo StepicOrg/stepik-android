@@ -12,7 +12,7 @@ import com.google.gson.JsonParseException;
 
 import org.stepic.droid.model.Reply;
 import org.stepic.droid.model.ReplyWrapper;
-import org.stepic.droid.model.TableChoiceAnswer;
+import org.stepik.android.model.learning.reply.TableChoiceAnswer;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;

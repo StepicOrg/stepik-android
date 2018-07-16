@@ -10,7 +10,7 @@ import org.stepic.droid.R;
 import org.stepik.android.model.learning.attempts.Attempt;
 import org.stepik.android.model.learning.attempts.Dataset;
 import org.stepic.droid.model.Reply;
-import org.stepic.droid.model.TableChoiceAnswer;
+import org.stepik.android.model.learning.reply.TableChoiceAnswer;
 import org.stepic.droid.ui.adapters.TableChoiceAdapter;
 import org.stepic.droid.ui.decorators.GridDividerItemDecoration;
 import org.stepic.droid.util.DpPixelsHelper;
@@ -66,10 +66,10 @@ public class TableChoiceStepFragment extends StepAttemptFragment {
         // may be we should do it on background thread, but then we should rewrite logic of parent class, and do same actions for each quiz on background thread
         ArrayList<TableChoiceAnswer> result = new ArrayList<>(rows.size());
         for (String nameRow : rows) {
-            List<TableChoiceAnswer.Companion.Cell> oneRowAnswer = new ArrayList<>(columns.size());
+            List<TableChoiceAnswer.Cell> oneRowAnswer = new ArrayList<>(columns.size());
             //we should create new objects for each try –> it is generated in for cycle (but Strings is same objects)
             for (String nameColumn : columns) {
-                oneRowAnswer.add(new TableChoiceAnswer.Companion.Cell(nameColumn, false));
+                oneRowAnswer.add(new TableChoiceAnswer.Cell(nameColumn, false));
             }
             result.add(new TableChoiceAnswer(nameRow, oneRowAnswer));
         }
