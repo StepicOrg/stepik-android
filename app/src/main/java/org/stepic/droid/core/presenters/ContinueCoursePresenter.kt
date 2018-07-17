@@ -6,7 +6,7 @@ import org.stepic.droid.core.presenters.contracts.ContinueCourseView
 import org.stepik.android.model.structure.Course
 import org.stepic.droid.model.Section
 import org.stepic.droid.model.Step
-import org.stepic.droid.model.Unit
+import org.stepik.android.model.structure.Unit
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.storage.repositories.Repository
 import org.stepic.droid.util.hasUserAccess

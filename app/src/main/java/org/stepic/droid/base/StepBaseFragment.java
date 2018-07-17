@@ -20,7 +20,7 @@ import org.stepic.droid.core.presenters.contracts.RouteStepView;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
-import org.stepic.droid.model.Unit;
+import org.stepik.android.model.structure.Unit;
 import org.stepic.droid.storage.operations.DatabaseFacade;
 import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout;
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment;

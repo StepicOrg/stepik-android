@@ -38,7 +38,7 @@ import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.PersistentLastStep;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
-import org.stepic.droid.model.Unit;
+import org.stepik.android.model.structure.Unit;
 import org.stepic.droid.ui.adapters.StepFragmentAdapter;
 import org.stepic.droid.ui.listeners.NextMoveable;
 import org.stepic.droid.ui.util.ToolbarHelperKt;

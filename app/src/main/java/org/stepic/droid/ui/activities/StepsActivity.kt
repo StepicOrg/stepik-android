@@ -9,7 +9,7 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.SingleFragmentActivity
 import org.stepic.droid.model.Lesson
 import org.stepic.droid.model.Section
-import org.stepic.droid.model.Unit
+import org.stepik.android.model.structure.Unit
 import org.stepic.droid.ui.fragments.LessonFragment
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.HtmlHelper

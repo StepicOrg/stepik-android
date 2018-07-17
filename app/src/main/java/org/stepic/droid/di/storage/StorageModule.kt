@@ -16,7 +16,7 @@ import org.stepic.droid.features.deadlines.storage.operations.DeadlinesRecordOpe
 import org.stepic.droid.features.deadlines.storage.dao.PersonalDeadlinesDao
 import org.stepic.droid.features.deadlines.storage.dao.PersonalDeadlinesDaoImpl
 import org.stepic.droid.model.*
-import org.stepic.droid.model.Unit
+import org.stepik.android.model.structure.Unit
 import org.stepic.droid.model.code.CodeSubmission
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.storage.DatabaseHelper

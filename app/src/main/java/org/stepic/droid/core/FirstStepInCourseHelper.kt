@@ -3,7 +3,7 @@ package org.stepic.droid.core
 import org.stepik.android.model.structure.Course
 import org.stepic.droid.model.Lesson
 import org.stepic.droid.model.Section
-import org.stepic.droid.model.Unit
+import org.stepik.android.model.structure.Unit
 import org.stepic.droid.storage.repositories.Repository
 import org.stepic.droid.util.hasUserAccessAndNotEmpty
 import javax.inject.Inject

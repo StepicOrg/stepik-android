@@ -16,7 +16,7 @@ import org.stepic.droid.model.Lesson;
 import org.stepik.android.model.structure.Progress;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
-import org.stepic.droid.model.Unit;
+import org.stepik.android.model.structure.Unit;
 import org.stepik.android.model.structure.Video;
 import org.stepik.android.model.structure.VideoUrl;
 import org.stepic.droid.preferences.UserPreferences;
@@ -330,7 +330,7 @@ public class LoadService extends IntentService {
 
                 if (responseIsSuccess) {
                     long[] lessonsIds = StepikLogicHelper.fromUnitsToLessonIds(units);
-                    List<Progress> progresses = fetchProgresses(ProgressUtil.INSTANCE.getAllProgresses(units));
+                    List<Progress> progresses = fetchProgresses(ProgressUtil.INSTANCE.getProgresses(units));
                     for (Progress item : progresses) {
                         databaseFacade.addProgress(item);
                     }

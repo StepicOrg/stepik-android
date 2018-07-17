@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentStatePagerAdapter
 import org.stepic.droid.model.Lesson
 import org.stepic.droid.model.Section
 import org.stepic.droid.model.Step
-import org.stepic.droid.model.Unit
+import org.stepik.android.model.structure.Unit
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.resolvers.StepTypeResolver
 

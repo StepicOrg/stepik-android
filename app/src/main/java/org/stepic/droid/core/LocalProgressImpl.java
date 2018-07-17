@@ -8,7 +8,7 @@ import org.stepic.droid.concurrency.MainHandler;
 import org.stepik.android.model.structure.Progress;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
-import org.stepic.droid.model.Unit;
+import org.stepik.android.model.structure.Unit;
 import org.stepic.droid.storage.operations.DatabaseFacade;
 import org.stepic.droid.util.StringUtil;
 import org.stepic.droid.web.Api;

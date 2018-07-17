@@ -8,7 +8,7 @@ import android.support.v4.app.DialogFragment;
 
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Step;
-import org.stepic.droid.model.Unit;
+import org.stepik.android.model.structure.Unit;
 
 public class StepShareDialogFragment extends DialogFragment {
 

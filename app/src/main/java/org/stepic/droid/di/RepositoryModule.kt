@@ -3,7 +3,7 @@ package org.stepic.droid.di
 import dagger.Binds
 import dagger.Module
 import org.stepic.droid.model.*
-import org.stepic.droid.model.Unit
+import org.stepik.android.model.structure.Unit
 import org.stepic.droid.storage.repositories.Repository
 import org.stepic.droid.storage.repositories.course.CourseRepositoryImpl
 import org.stepic.droid.storage.repositories.lesson.LessonRepositoryImpl

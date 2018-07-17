@@ -2,7 +2,6 @@ package org.stepic.droid.storage.dao
 
 import android.content.ContentValues
 import android.database.Cursor
-import com.google.gson.JsonPrimitive
 import org.stepic.droid.jsonHelpers.adapters.UTCDateAdapter
 import org.stepic.droid.model.CertificateViewItem
 import org.stepic.droid.storage.operations.DatabaseOperations
@@ -29,7 +28,7 @@ class CertificateViewItemDaoImpl @Inject constructor(databaseOperations: Databas
 
         contentValues.put(DbStructureCertificateViewItem.Column.FULL_PATH, persistentObject.fullPath)
         contentValues.put(DbStructureCertificateViewItem.Column.GRADE, persistentObject.grade)
-        contentValues.put(DbStructureCertificateViewItem.Column.ISSUE_DATE, persistentObject.issueDate?.let { dateAdapter.serialize(it, null, null).asString })
+        contentValues.put(DbStructureCertificateViewItem.Column.ISSUE_DATE, dateAdapter.dateToString(persistentObject.issueDate))
 
 
         return contentValues
@@ -50,17 +49,15 @@ class CertificateViewItemDaoImpl @Inject constructor(databaseOperations: Databas
         val typeId = cursor.getInt(indexType)
         val certificateType = getCertificateTypeByTypeId(typeId)
 
-        val certificateViewItem = CertificateViewItem(
+        return CertificateViewItem(
                 certificateId = certificateId,
                 title = cursor.getString(indexTitle),
                 coverFullPath = cursor.getString(indexCoverFullPath),
                 type = certificateType,
                 fullPath = cursor.getString(indexFullPath),
                 grade = cursor.getString(indexGrade),
-                issueDate = dateAdapter.deserialize(JsonPrimitive(cursor.getString(indexIssueDate)), null, null)
+                issueDate = dateAdapter.stringToDate(cursor.getString(indexIssueDate))
         )
-        return certificateViewItem
-
     }
 
     private fun getCertificateTypeByTypeId(typeId: Int): CertificateType? {

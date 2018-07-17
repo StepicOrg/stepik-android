@@ -5,7 +5,7 @@ import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.model.CachedVideo;
 import org.stepik.android.model.structure.Course;
-import org.stepic.droid.model.Unit;
+import org.stepik.android.model.structure.Unit;
 
 import java.util.List;
 

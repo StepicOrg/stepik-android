@@ -5,6 +5,7 @@ import java.lang.reflect.Type
 import java.text.SimpleDateFormat
 import java.util.*
 import com.google.gson.JsonParseException
+import org.jetbrains.annotations.Contract
 import java.text.ParseException
 
 class UTCDateAdapter: JsonSerializer<Date>, JsonDeserializer<Date> {
@@ -29,4 +30,10 @@ class UTCDateAdapter: JsonSerializer<Date>, JsonDeserializer<Date> {
     } catch (e: ParseException) {
         throw JsonParseException(e)
     }
+
+    @Contract("null -> null; !null -> !null", pure = true)
+    fun dateToString(date: Date?): String? = date?.let { serialize(date, null, null).asString }
+
+    @Contract("null -> null; !null -> !null", pure = true)
+    fun stringToDate(date: String?): Date? = date?.let { deserialize(JsonPrimitive(date), null, null) }
 }

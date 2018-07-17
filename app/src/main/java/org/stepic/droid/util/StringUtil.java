@@ -11,7 +11,7 @@ import org.stepic.droid.configuration.Config;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
-import org.stepic.droid.model.Unit;
+import org.stepik.android.model.structure.Unit;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,6 +1,6 @@
 package org.stepic.droid.testUtils.generators
 
-import org.stepic.droid.model.Unit
+import org.stepik.android.model.structure.Unit
 
 object FakeUnitGenerator {
 

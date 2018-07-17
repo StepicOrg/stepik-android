@@ -39,7 +39,7 @@ import org.stepic.droid.core.routing.contract.RoutingListener;
 import org.stepic.droid.model.Lesson;
 import org.stepik.android.model.structure.Progress;
 import org.stepic.droid.model.Section;
-import org.stepic.droid.model.Unit;
+import org.stepik.android.model.structure.Unit;
 import org.stepic.droid.storage.StoreStateManager;
 import org.stepic.droid.ui.adapters.UnitAdapter;
 import org.stepic.droid.ui.custom.StepikSwipeRefreshLayout;
