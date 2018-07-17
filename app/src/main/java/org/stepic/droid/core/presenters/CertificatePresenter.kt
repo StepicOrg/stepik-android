@@ -114,7 +114,7 @@ class CertificatePresenter
                                             .body()
                                             ?.courses
                                             ?.mapNotNull {
-                                                val certificateRelatedToCourse = courseIdToCertificateMap[it.courseId]
+                                                val certificateRelatedToCourse = courseIdToCertificateMap[it.id]
                                                 var cover: String? = null
                                                 if (it.cover != null) {
                                                     cover = baseUrl + it.cover

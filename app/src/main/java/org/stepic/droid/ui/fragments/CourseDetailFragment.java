@@ -49,7 +49,7 @@ import org.stepic.droid.core.presenters.contracts.CourseDetailAnalyticView;
 import org.stepic.droid.core.presenters.contracts.CourseJoinView;
 import org.stepic.droid.core.presenters.contracts.InstructorsView;
 import org.stepic.droid.core.presenters.contracts.LoadCourseView;
-import org.stepic.droid.model.Course;
+import org.stepik.android.model.structure.Course;
 import org.stepic.droid.model.CourseProperty;
 import org.stepic.droid.model.Section;
 import org.stepik.android.model.user.User;
@@ -377,7 +377,7 @@ public class CourseDetailFragment extends FragmentBase implements
             wasIndexed = true;
             FirebaseAppIndex.getInstance().update(getIndexable());
             FirebaseUserActions.getInstance().start(getAction());
-            getAnalytic().reportEventWithIdName(Analytic.AppIndexing.COURSE_DETAIL, course.getCourseId() + "", course.getTitle());
+            getAnalytic().reportEventWithIdName(Analytic.AppIndexing.COURSE_DETAIL, course.getId() + "", course.getTitle());
         }
     }
 
@@ -538,7 +538,7 @@ public class CourseDetailFragment extends FragmentBase implements
         if (course != null) {
             courseJoinerPresenter.joinCourse(course);
             getAnalytic().reportAmplitudeEvent(AmplitudeAnalytic.Course.JOINED, MapsKt.mapOf(
-                    new Pair<String, Object>(AmplitudeAnalytic.Course.Params.COURSE, course.getCourseId()),
+                    new Pair<String, Object>(AmplitudeAnalytic.Course.Params.COURSE, course.getId()),
                     new Pair<String, Object>(AmplitudeAnalytic.Course.Params.SOURCE, isInstaEnroll ? AmplitudeAnalytic.Course.Values.WIDGET : AmplitudeAnalytic.Course.Values.PREVIEW)
             ));
         } else {
@@ -549,8 +549,8 @@ public class CourseDetailFragment extends FragmentBase implements
     @Override
     public void onSuccessJoin(@NotNull Course joinedCourse) {
         ProgressHelper.dismiss(joinCourseSpinner);
-        if (course != null && joinedCourse.getCourseId() == course.getCourseId()) {
-            joinedCourse.setEnrollment((int) joinedCourse.getCourseId());
+        if (course != null && joinedCourse.getId() == course.getId()) {
+            joinedCourse.setEnrollment((int) joinedCourse.getId());
             continueCoursePresenter.continueCourse(course);
         }
     }
@@ -633,7 +633,7 @@ public class CourseDetailFragment extends FragmentBase implements
             case R.id.menu_item_share:
                 if (shareIntentWithChooser != null) {
                     if (course != null && course.getTitle() != null) {
-                        getAnalytic().reportEventWithIdName(Analytic.Interaction.SHARE_COURSE, course.getCourseId() + "", course.getTitle());
+                        getAnalytic().reportEventWithIdName(Analytic.Interaction.SHARE_COURSE, course.getId() + "", course.getTitle());
                     }
                     startActivity(shareIntentWithChooser);
                 }
@@ -650,7 +650,7 @@ public class CourseDetailFragment extends FragmentBase implements
 
     @Override
     public void onSuccessDropCourse(@NotNull Course droppedCourse) {
-        if (course != null && droppedCourse.getCourseId() == course.getCourseId()) {
+        if (course != null && droppedCourse.getId() == course.getId()) {
             course.setEnrollment(0);
             resolveJoinView();
         }

@@ -1,6 +1,6 @@
 package org.stepic.droid.core;
 
-import org.stepic.droid.model.Course;
+import org.stepik.android.model.structure.Course;
 
 import java.util.List;
 

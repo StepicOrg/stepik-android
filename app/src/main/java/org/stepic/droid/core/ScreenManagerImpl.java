@@ -28,7 +28,7 @@ import org.stepic.droid.di.AppSingleton;
 import org.stepic.droid.features.achievements.ui.activity.AchievementsListActivity;
 import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.model.CollectionDescriptionColors;
-import org.stepic.droid.model.Course;
+import org.stepik.android.model.structure.Course;
 import org.stepic.droid.model.CoursesCarouselInfo;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
@@ -614,7 +614,7 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void showSections(Activity sourceActivity, @NotNull Course course) {
-        analytic.reportEventWithIdName(Analytic.Screens.SHOW_SECTIONS, course.getCourseId() + "", course.getTitle());
+        analytic.reportEventWithIdName(Analytic.Screens.SHOW_SECTIONS, course.getId() + "", course.getTitle());
         Intent intent = getSectionsIntent(sourceActivity, course);
         sourceActivity.startActivity(intent);
     }
@@ -624,7 +624,7 @@ public class ScreenManagerImpl implements ScreenManager {
         if (!joinedRightNow) {
             showSections(sourceActivity, course);
         } else {
-            analytic.reportEventWithIdName(Analytic.Screens.SHOW_SECTIONS_JOINED, course.getCourseId() + "", course.getTitle());
+            analytic.reportEventWithIdName(Analytic.Screens.SHOW_SECTIONS_JOINED, course.getId() + "", course.getTitle());
             sourceActivity.startActivity(
                     getSectionsIntent(sourceActivity, course).putExtra(SectionsFragment.joinFlag, true));
         }

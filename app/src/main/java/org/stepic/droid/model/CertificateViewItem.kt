@@ -7,7 +7,7 @@ import java.util.*
 
 class CertificateViewItem(
         val certificateId: Long?,
-        val title: String,
+        val title: String?,
         val coverFullPath: String?,
         val type: CertificateType?,
         val fullPath: String?,

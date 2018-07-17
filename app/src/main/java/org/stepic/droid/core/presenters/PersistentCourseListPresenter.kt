@@ -10,7 +10,7 @@ import org.stepic.droid.core.earlystreak.contract.EarlyStreakPoster
 import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.di.course_list.CourseListScope
 import org.stepic.droid.features.deadlines.repository.DeadlinesRepository
-import org.stepic.droid.model.Course
+import org.stepik.android.model.structure.Course
 import org.stepic.droid.model.CourseReviewSummary
 import org.stepik.android.model.structure.Progress
 import org.stepic.droid.preferences.SharedPreferenceHelper
@@ -118,7 +118,7 @@ class PersistentCourseListPresenter
                 }
             } catch (ex: Exception) {
                 null
-            }?.distinctBy { it.courseId }
+            }?.distinctBy { it.id }
 
             if (coursesFromInternet == null) {
                 mainHandler.post {
@@ -268,7 +268,7 @@ class PersistentCourseListPresenter
             val lastViewed2 = progress2?.lastViewed?.toLongOrNull()
 
             if (lastViewed1 == null && lastViewed2 == null) {
-                return@Comparator (course2.courseId - course1.courseId).toInt() // course2 - course1 (greater id is 1st)
+                return@Comparator (course2.id - course1.id).toInt() // course2 - course1 (greater id is 1st)
             }
 
             if (lastViewed1 == null) {

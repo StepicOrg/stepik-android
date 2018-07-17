@@ -8,7 +8,7 @@ import org.mockito.MockitoAnnotations;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.core.presenters.contracts.CoursesView;
-import org.stepic.droid.model.Course;
+import org.stepik.android.model.structure.Course;
 import org.stepic.droid.model.SearchResult;
 import org.stepic.droid.storage.operations.DatabaseFacade;
 import org.stepic.droid.testUtils.ConcurrencyUtilForTest;

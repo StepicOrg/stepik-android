@@ -7,7 +7,7 @@ import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.joining.contract.JoiningPoster
 import org.stepic.droid.core.presenters.contracts.CourseJoinView
 import org.stepic.droid.di.course.CourseAndSectionsScope
-import org.stepic.droid.model.Course
+import org.stepik.android.model.structure.Course
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.storage.operations.Table
@@ -65,7 +65,7 @@ class CourseJoinerPresenter
 
     @WorkerThread
     private fun handleSuccessResponse(course: Course) {
-        course.enrollment = course.courseId.toInt()
+        course.enrollment = course.id.toInt()
 
 
         mainHandler.post {
@@ -75,7 +75,7 @@ class CourseJoinerPresenter
 
         //update in database
         database.addCourse(course, Table.enrolled)
-        val isFeatured = database.getCourseById(course.courseId, Table.featured) != null
+        val isFeatured = database.getCourseById(course.id, Table.featured) != null
         if (isFeatured) {
             database.addCourse(course, Table.featured)
         }

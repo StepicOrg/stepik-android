@@ -1,6 +1,6 @@
 package org.stepic.droid.util
 
-import org.stepic.droid.model.Course
+import org.stepik.android.model.structure.Course
 import org.stepic.droid.model.Section
 
 

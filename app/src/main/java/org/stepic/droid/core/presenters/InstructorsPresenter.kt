@@ -4,7 +4,7 @@ import android.support.annotation.WorkerThread
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.InstructorsView
 import org.stepic.droid.di.course.CourseAndSectionsScope
-import org.stepic.droid.model.Course
+import org.stepik.android.model.structure.Course
 import org.stepik.android.model.user.User
 import org.stepic.droid.web.Api
 import java.util.concurrent.ThreadPoolExecutor
@@ -30,7 +30,7 @@ class InstructorsPresenter
             return
         }
 
-        if (course.courseId == cachedCourseId) {
+        if (course.id == cachedCourseId) {
             if (cachedInstructors.isEmpty()) {
                 view?.onHideInstructors()
             } else {
@@ -63,7 +63,7 @@ class InstructorsPresenter
                             .body()
                             ?.users ?: throw NullPointerException("instructors are null on server")
             mainHandler.post {
-                cachedCourseId = course.courseId
+                cachedCourseId = course.id
                 cachedInstructors.clear()
                 if (instructorList.isEmpty()) {
                     view?.onHideInstructors()

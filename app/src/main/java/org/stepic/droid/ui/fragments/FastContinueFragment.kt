@@ -23,7 +23,7 @@ import org.stepic.droid.core.presenters.FastContinuePresenter
 import org.stepic.droid.core.presenters.PersistentCourseListPresenter
 import org.stepic.droid.core.presenters.contracts.ContinueCourseView
 import org.stepic.droid.core.presenters.contracts.FastContinueView
-import org.stepic.droid.model.Course
+import org.stepik.android.model.structure.Course
 import org.stepic.droid.model.Section
 import org.stepic.droid.storage.operations.Table
 import org.stepic.droid.ui.activities.MainFeedActivity
@@ -141,7 +141,7 @@ class FastContinueFragment : FragmentBase(),
         fastContinueAction.setOnClickListener {
             analytic.reportEvent(Analytic.FastContinue.CONTINUE_CLICK)
             analytic.reportAmplitudeEvent(AmplitudeAnalytic.Course.CONTINUE_PRESSED, mapOf(
-                    AmplitudeAnalytic.Course.Params.COURSE to course.courseId,
+                    AmplitudeAnalytic.Course.Params.COURSE to course.id,
                     AmplitudeAnalytic.Course.Params.SOURCE to AmplitudeAnalytic.Course.Values.HOME_WIDGET
             ))
             continueCoursePresenter.continueCourse(course)

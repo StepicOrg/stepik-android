@@ -1,6 +1,6 @@
 package org.stepic.droid.util
 
-import org.stepic.droid.model.Course
+import org.stepik.android.model.structure.Course
 import org.stepic.droid.model.DownloadingVideoItem
 import java.text.DecimalFormat
 import java.util.*
@@ -12,7 +12,7 @@ object KotlinUtil {
     }
 
     fun filterIfNotUnique(list: List<Course>): List <Course> {
-        val result = list.distinctBy { it.courseId }
+        val result = list.distinctBy { it.id }
         return result
     }
 
@@ -27,14 +27,14 @@ object KotlinUtil {
 
     //oldList should be first, and after that newList, but if exists 2 elements with the same ID, get from newList at position of oldList
     private fun mergeTwoCourseList(oldList: List<Course>, newList: List<Course>): List<Course> {
-        val hashMap = newList.associateBy { it.courseId }
+        val hashMap = newList.associateBy { it.id }
         val usedFromNew = HashSet<Long>(newList.size)
         val result = ArrayList<Course>(newList.size + oldList.size)
         oldList.forEach {
-            val updatedCourse: Course? = hashMap[it.courseId]
+            val updatedCourse: Course? = hashMap[it.id]
             if (updatedCourse != null) {
                 result.add(updatedCourse)
-                usedFromNew.add(updatedCourse.courseId)
+                usedFromNew.add(updatedCourse.id)
             } else {
                 result.add(it)
             }
@@ -42,7 +42,7 @@ object KotlinUtil {
 
         //do not add used from new
         newList.forEach {
-            if (!usedFromNew.contains(it.courseId)) {
+            if (!usedFromNew.contains(it.id)) {
                 result.add(it)
             }
         }

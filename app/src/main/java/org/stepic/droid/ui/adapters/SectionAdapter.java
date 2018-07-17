@@ -31,7 +31,7 @@ import org.stepic.droid.core.presenters.DownloadingInteractionPresenter;
 import org.stepic.droid.features.deadlines.model.Deadline;
 import org.stepic.droid.features.deadlines.model.DeadlinesWrapper;
 import org.stepic.droid.features.deadlines.presenters.PersonalDeadlinesPresenter;
-import org.stepic.droid.model.Course;
+import org.stepik.android.model.structure.Course;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.storage.SectionDownloader;
@@ -639,7 +639,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
             addToCalendarButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    analytic.reportEventWithIdName(Analytic.Calendar.USER_CLICK_ADD_WIDGET, course.getCourseId() + "", course.getTitle());
+                    analytic.reportEventWithIdName(Analytic.Calendar.USER_CLICK_ADD_WIDGET, course.getId() + "", course.getTitle());
                     calendarPresenter.addDeadlinesToCalendar(SectionAdapter.this.sections, null);
                 }
             });
@@ -647,7 +647,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
             notNowButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    analytic.reportEventWithIdName(Analytic.Calendar.USER_CLICK_NOT_NOW, course.getCourseId() + "", course.getTitle());
+                    analytic.reportEventWithIdName(Analytic.Calendar.USER_CLICK_NOT_NOW, course.getId() + "", course.getTitle());
                     calendarPresenter.clickNotNow();
                 }
             });

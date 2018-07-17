@@ -34,7 +34,7 @@ import org.stepic.droid.jsonHelpers.adapters.UTCDateAdapter;
 import org.stepic.droid.jsonHelpers.deserializers.DatasetDeserializer;
 import org.stepic.droid.jsonHelpers.deserializers.ReplyDeserializer;
 import org.stepic.droid.jsonHelpers.serializers.ReplySerializer;
-import org.stepic.droid.model.Course;
+import org.stepik.android.model.structure.Course;
 import org.stepic.droid.model.NotificationCategory;
 import org.stepic.droid.model.RegistrationUser;
 import org.stepic.droid.model.StepikFilter;
@@ -493,7 +493,7 @@ public class ApiImpl implements Api {
 
     @Override
     public Call<Void> tryJoinCourse(@NotNull Course course) {
-        return loggedService.joinCourse(new EnrollmentWrapper(course.getCourseId()));
+        return loggedService.joinCourse(new EnrollmentWrapper(course.getId()));
     }
 
     @Override

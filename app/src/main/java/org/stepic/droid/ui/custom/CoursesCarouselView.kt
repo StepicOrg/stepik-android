@@ -41,6 +41,7 @@ import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.StepikUtil
 import org.stepic.droid.util.SuppressFBWarnings
+import org.stepik.android.model.structure.Course
 import java.util.*
 import javax.inject.Inject
 
@@ -324,11 +325,11 @@ constructor(
 
 
     override fun onSuccessDropCourse(course: Course) {
-        val courseId = course.courseId
+        val courseId = course.id
         analytic.reportEvent(Analytic.Course.DROP_COURSE_SUCCESSFUL, courseId.toString())
         analytic.reportAmplitudeEvent(AmplitudeAnalytic.Course.UNSUBSCRIBED, mapOf(AmplitudeAnalytic.Course.Params.COURSE to courseId))
         Toast.makeText(context, context.getString(R.string.you_dropped, course.title), Toast.LENGTH_LONG).show()
-        val index = courses.indexOfFirst { it.courseId == course.courseId }
+        val index = courses.indexOfFirst { it.id == course.id }
 
         if (index < 0) {
             //course is not in list
@@ -354,7 +355,7 @@ constructor(
     }
 
     override fun onFailDropCourse(course: Course) {
-        val courseId = course.courseId
+        val courseId = course.id
         analytic.reportEvent(Analytic.Course.DROP_COURSE_FAIL, courseId.toString())
         Toast.makeText(context, R.string.internet_problem, Toast.LENGTH_LONG).show()
 
@@ -387,7 +388,7 @@ constructor(
     }
 
     override fun onSuccessJoin(joinedCourse: Course) {
-        val courseIndex = courses.indexOfFirst { it.courseId == joinedCourse.courseId }
+        val courseIndex = courses.indexOfFirst { it.id == joinedCourse.id }
 
         if (courseIndex >= 0) {
             courses[courseIndex].enrollment = joinedCourse.enrollment

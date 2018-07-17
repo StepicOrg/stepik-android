@@ -9,7 +9,7 @@ import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.di.tags.TagScope
-import org.stepic.droid.model.Course
+import org.stepik.android.model.structure.Course
 import org.stepic.droid.util.resolvers.SearchResolver
 import org.stepic.droid.web.Api
 import org.stepik.android.model.Meta
@@ -108,8 +108,8 @@ constructor(
                 .associate { Pair(it.value, it.index) }
 
         return courses.sortedWith(Comparator { firstCourse, secondCourse ->
-            val firstPosition = idToPositionMap[firstCourse.courseId] ?: return@Comparator 0
-            val secondPosition = idToPositionMap[secondCourse.courseId] ?: return@Comparator 0
+            val firstPosition = idToPositionMap[firstCourse.id] ?: return@Comparator 0
+            val secondPosition = idToPositionMap[secondCourse.id] ?: return@Comparator 0
 
             return@Comparator (firstPosition - secondPosition)
         })

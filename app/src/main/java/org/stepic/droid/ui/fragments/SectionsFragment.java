@@ -70,7 +70,7 @@ import org.stepic.droid.core.presenters.contracts.SectionsView;
 import org.stepic.droid.features.deadlines.ui.dialogs.EditDeadlinesDialog;
 import org.stepic.droid.features.deadlines.ui.dialogs.LearningRateDialog;
 import org.stepic.droid.model.CalendarItem;
-import org.stepic.droid.model.Course;
+import org.stepik.android.model.structure.Course;
 import org.stepik.android.model.structure.Progress;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.notifications.StepikNotificationManager;
@@ -334,7 +334,7 @@ public class SectionsFragment
             wasIndexed = true;
             FirebaseAppIndex.getInstance().update(getIndexable());
             FirebaseUserActions.getInstance().start(getAction());
-            getAnalytic().reportEventWithIdName(Analytic.AppIndexing.COURSE_SYLLABUS, course.getCourseId() + "", course.getTitle());
+            getAnalytic().reportEventWithIdName(Analytic.AppIndexing.COURSE_SYLLABUS, course.getId() + "", course.getTitle());
         }
     }
 
@@ -353,7 +353,7 @@ public class SectionsFragment
                     if (course != null) {
                         getAnalytic().reportEvent(Analytic.Interaction.JOIN_COURSE);
                         getAnalytic().reportAmplitudeEvent(AmplitudeAnalytic.Course.JOINED, MapsKt.mapOf(
-                                new Pair<String, Object>(AmplitudeAnalytic.Course.Params.COURSE, course.getCourseId()),
+                                new Pair<String, Object>(AmplitudeAnalytic.Course.Params.COURSE, course.getId()),
                                 new Pair<String, Object>(AmplitudeAnalytic.Course.Params.SOURCE, AmplitudeAnalytic.Course.Values.PREVIEW)
                         ));
                         courseJoinerPresenter.joinCourse(course);
@@ -383,7 +383,7 @@ public class SectionsFragment
             case R.id.menu_item_share:
                 if (course != null) {
                     if (course.getTitle() != null) {
-                        getAnalytic().reportEventWithIdName(Analytic.Interaction.SHARE_COURSE_SECTION, course.getCourseId() + "", course.getTitle());
+                        getAnalytic().reportEventWithIdName(Analytic.Interaction.SHARE_COURSE_SECTION, course.getId() + "", course.getTitle());
                     }
                     Intent intent = shareHelper.getIntentForCourseSharing(course);
                     startActivity(intent);
@@ -399,7 +399,7 @@ public class SectionsFragment
                 return true;
 
             case R.id.menu_item_calendar:
-                getAnalytic().reportEventWithIdName(Analytic.Calendar.USER_CLICK_ADD_MENU, course.getCourseId() + "", course.getTitle());
+                getAnalytic().reportEventWithIdName(Analytic.Calendar.USER_CLICK_ADD_MENU, course.getId() + "", course.getTitle());
                 calendarPresenter.addDeadlinesToCalendar(sectionList, null);
                 return true;
             case R.id.menu_item_deadlines_create:
@@ -700,7 +700,7 @@ public class SectionsFragment
 
     @Override
     public void onSuccessJoin(@NotNull Course joinedCourse) {
-        if (course != null && joinedCourse.getCourseId() == course.getCourseId() && adapter != null) {
+        if (course != null && joinedCourse.getId() == course.getId() && adapter != null) {
             course = joinedCourse;
             resolveJoinCourseView();
             adapter.notifyDataSetChanged();
@@ -802,7 +802,7 @@ public class SectionsFragment
             }
         }
         if (course != null) {
-            final long courseId = course.getCourseId();
+            final long courseId = course.getId();
             postNotificationAsReadIfNeed(intent, courseId);
             initScreenByCourse();
         } else if (simpleCourseId > 0 && simpleModulePosition > 0) {
@@ -981,7 +981,7 @@ public class SectionsFragment
 
     @Override
     public void onSuccessDropCourse(@NotNull Course droppedCourse) {
-        if (course != null && droppedCourse.getCourseId() == course.getCourseId()) {
+        if (course != null && droppedCourse.getId() == course.getId()) {
             course.setEnrollment(0);
             resolveJoinCourseView();
         }
@@ -1004,7 +1004,7 @@ public class SectionsFragment
 
     @Override
     public void onProgressUpdated(@NotNull Progress newProgress, long courseId) {
-        if (course != null && course.getCourseId() == courseId) {
+        if (course != null && course.getId() == courseId) {
             sectionsPresenter.updateSectionProgress(newProgress);
         }
     }
@@ -1045,7 +1045,7 @@ public class SectionsFragment
         adapter.setNeedShowDeadlinesBanner(needShow && showBanner);
         if (needShow && showBanner && course != null) {
             Bundle bundle = new Bundle(1);
-            bundle.putLong(Analytic.Deadlines.Params.COURSE, course.getCourseId());
+            bundle.putLong(Analytic.Deadlines.Params.COURSE, course.getId());
             getAnalytic().reportEvent(Analytic.Deadlines.PERSONAL_DEADLINES_WIDGET_SHOWN);
         }
     }

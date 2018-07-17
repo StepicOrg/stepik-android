@@ -3,7 +3,7 @@ package org.stepic.droid.core.presenters
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.core.presenters.contracts.InvitationView
 import org.stepic.droid.di.course.CourseAndSectionsScope
-import org.stepic.droid.model.Course
+import org.stepik.android.model.structure.Course
 import javax.inject.Inject
 
 @CourseAndSectionsScope

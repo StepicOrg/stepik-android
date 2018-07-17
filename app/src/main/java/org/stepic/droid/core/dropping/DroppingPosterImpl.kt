@@ -3,7 +3,7 @@ package org.stepic.droid.core.dropping
 import org.stepic.droid.base.ListenerContainer
 import org.stepic.droid.core.dropping.contract.DroppingListener
 import org.stepic.droid.core.dropping.contract.DroppingPoster
-import org.stepic.droid.model.Course
+import org.stepik.android.model.structure.Course
 import javax.inject.Inject
 
 class DroppingPosterImpl

@@ -5,7 +5,7 @@ import android.support.v4.app.FragmentActivity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.adaptive.model.RatingItem;
-import org.stepic.droid.model.Course;
+import org.stepik.android.model.structure.Course;
 import org.stepic.droid.model.NotificationCategory;
 import org.stepic.droid.model.Submission;
 import org.stepic.droid.adaptive.model.RecommendationReaction;

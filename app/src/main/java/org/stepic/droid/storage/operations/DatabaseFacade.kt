@@ -19,6 +19,7 @@ import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DbParseHelper
 import org.stepic.droid.web.ViewAssignment
 import org.stepik.android.model.learning.Assignment
+import org.stepik.android.model.structure.Course
 import org.stepik.android.model.structure.Progress
 import org.stepik.android.model.structure.Video
 import java.util.*
@@ -225,14 +226,14 @@ class DatabaseFacade
     fun addCourse(course: Course, type: Table) = getCourseDao(type).insertOrUpdate(course)
 
     fun deleteCourse(course: Course, type: Table) {
-        getCourseDao(type).remove(DbStructureEnrolledAndFeaturedCourses.Column.COURSE_ID, course.courseId.toString())
+        getCourseDao(type).remove(DbStructureEnrolledAndFeaturedCourses.Column.COURSE_ID, course.id.toString())
     }
 
     fun addSection(section: Section) = sectionDao.insertOrUpdate(section)
 
     fun addStep(step: Step) = stepDao.insertOrUpdate(step)
 
-    fun getAllSectionsOfCourse(course: Course) = sectionDao.getAll(DbStructureSections.Column.COURSE, course.courseId.toString())
+    fun getAllSectionsOfCourse(course: Course) = sectionDao.getAll(DbStructureSections.Column.COURSE, course.id.toString())
 
     fun getAllUnitsOfSection(sectionId: Long) = unitDao.getAll(DbStructureUnit.Column.SECTION, sectionId.toString())
 

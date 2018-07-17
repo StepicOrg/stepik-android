@@ -3,6 +3,8 @@ package org.stepik.android.model.structure
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import org.stepik.android.model.readBoolean
+import org.stepik.android.model.writeBoolean
 
 data class Progress(
         val id: String? = null,
@@ -25,7 +27,7 @@ data class Progress(
         parcel.writeInt(cost)
         parcel.writeInt(nSteps)
         parcel.writeInt(nStepsPassed)
-        parcel.writeByte(if (isPassed) 1 else 0)
+        parcel.writeBoolean(isPassed)
     }
 
     override fun describeContents(): Int = 0
@@ -38,7 +40,7 @@ data class Progress(
                 parcel.readInt(),
                 parcel.readInt(),
                 parcel.readInt(),
-                parcel.readByte() != 0.toByte()
+                parcel.readBoolean()
         )
 
         override fun newArray(size: Int): Array<Progress?> = arrayOfNulls(size)

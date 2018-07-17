@@ -1,6 +1,6 @@
 package org.stepic.droid.util
 
-import org.stepic.droid.model.Course
+import org.stepik.android.model.structure.Course
 import org.stepic.droid.model.CourseReviewSummary
 import org.stepik.android.model.structure.Progress
 
@@ -14,7 +14,7 @@ object CourseUtil {
     }
 
      fun applyReviewsToCourses(reviews: List<CourseReviewSummary>?, courses: List<Course>) {
-        val courseMap = courses.associateBy { it.courseId }
+        val courseMap = courses.associateBy { it.id }
         reviews?.forEach { review ->
             courseMap[review.course]
                     ?.let {

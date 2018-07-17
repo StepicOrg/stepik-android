@@ -1,6 +1,6 @@
 package org.stepic.droid.testUtils.generators
 
-import org.stepic.droid.model.Course
+import org.stepik.android.model.structure.Course
 
 object FakeCourseGenerator {
     @JvmOverloads

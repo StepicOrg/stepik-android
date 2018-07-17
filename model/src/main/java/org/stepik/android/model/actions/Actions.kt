@@ -3,6 +3,8 @@ package org.stepik.android.model.actions
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import org.stepik.android.model.readBoolean
+import org.stepik.android.model.writeBoolean
 
 class Actions(
         val vote: Boolean = false,
@@ -13,8 +15,8 @@ class Actions(
         @SerializedName("edit_instructions") val editInstructions: String? = null
 ) : Parcelable {
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeByte(if (vote) 1 else 0)
-        parcel.writeByte(if (delete) 1 else 0)
+        parcel.writeBoolean(vote)
+        parcel.writeBoolean(delete)
         parcel.writeString(testSection)
         parcel.writeString(doReview)
         parcel.writeString(editInstructions)
@@ -24,8 +26,8 @@ class Actions(
 
     companion object CREATOR : Parcelable.Creator<Actions> {
         override fun createFromParcel(parcel: Parcel): Actions = Actions(
-                parcel.readByte() != 0.toByte(),
-                parcel.readByte() != 0.toByte(),
+                parcel.readBoolean(),
+                parcel.readBoolean(),
                 parcel.readString(),
                 parcel.readString(),
                 parcel.readString()

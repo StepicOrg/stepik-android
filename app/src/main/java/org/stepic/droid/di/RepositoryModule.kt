@@ -10,6 +10,7 @@ import org.stepic.droid.storage.repositories.lesson.LessonRepositoryImpl
 import org.stepic.droid.storage.repositories.section.SectionRepositoryImpl
 import org.stepic.droid.storage.repositories.step.StepRepositoryImpl
 import org.stepic.droid.storage.repositories.unit.UnitRepositoryImpl
+import org.stepik.android.model.structure.Course
 
 @Module
 interface RepositoryModule {

@@ -6,7 +6,7 @@ import org.stepic.droid.core.dropping.contract.DroppingPoster
 import org.stepic.droid.core.presenters.contracts.DroppingView
 import org.stepic.droid.di.course_list.CourseListScope
 import org.stepic.droid.features.deadlines.repository.DeadlinesRepository
-import org.stepic.droid.model.Course
+import org.stepik.android.model.structure.Course
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.storage.operations.Table
 import org.stepic.droid.web.Api
@@ -29,7 +29,7 @@ constructor(
 
     fun dropCourse(course: Course) {
         threadPoolExecutor.execute {
-            val dropCall = api.dropCourse(course.courseId)
+            val dropCall = api.dropCourse(course.id)
             if (dropCall == null) {
                 mainHandler.post {
                     view?.onUserHasNotPermissionsToDrop()
@@ -37,7 +37,7 @@ constructor(
             } else {
                 try {
                     makeDropCall(dropCall, course)
-                    deadlinesRepository.removeDeadlinesForCourse(course.courseId).blockingAwait()
+                    deadlinesRepository.removeDeadlinesForCourse(course.id).blockingAwait()
                 } catch (exception: Exception) {
                     mainHandler.post {
                         droppingPoster.failDropCourse(course)
@@ -65,7 +65,7 @@ constructor(
 
     @WorkerThread
     private fun rewriteEnrollmentInFeaturedIfNeeded(course: Course) {
-        if (databaseFacade.getCourseById(course.courseId, Table.featured) != null) {
+        if (databaseFacade.getCourseById(course.id, Table.featured) != null) {
             course.enrollment = 0
             databaseFacade.addCourse(course, Table.featured)
         }
