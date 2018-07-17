@@ -1,6 +1,7 @@
 package org.stepic.droid.core.presenters.contracts
 
-import org.stepic.droid.model.Tag
+import org.stepik.android.model.learning.Tag
+
 
 interface TagsView {
     fun onTagsFetched(tags: List<Tag>)

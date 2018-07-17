@@ -33,7 +33,6 @@ import org.stepic.droid.model.CoursesCarouselInfo;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
-import org.stepic.droid.model.Tag;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.model.Video;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
@@ -72,6 +71,7 @@ import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.GenericFileProvider;
 import org.stepic.droid.util.StringUtil;
 import org.stepic.droid.web.ViewAssignment;
+import org.stepik.android.model.learning.Tag;
 
 import java.io.File;
 import java.net.URLEncoder;

@@ -16,11 +16,11 @@ import org.stepic.droid.model.CoursesCarouselInfo;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
-import org.stepic.droid.model.Tag;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.model.Video;
 import org.stepic.droid.ui.fragments.CommentsFragment;
 import org.stepic.droid.web.ViewAssignment;
+import org.stepik.android.model.learning.Tag;
 
 public interface ScreenManager {
 

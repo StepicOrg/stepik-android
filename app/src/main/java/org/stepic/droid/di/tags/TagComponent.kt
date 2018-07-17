@@ -2,8 +2,8 @@ package org.stepic.droid.di.tags
 
 import dagger.BindsInstance
 import dagger.Subcomponent
-import org.stepic.droid.model.Tag
 import org.stepic.droid.ui.fragments.TagFragment
+import org.stepik.android.model.learning.Tag
 
 @TagScope
 @Subcomponent()

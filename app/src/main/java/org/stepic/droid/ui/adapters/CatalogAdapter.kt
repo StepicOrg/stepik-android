@@ -13,6 +13,7 @@ import kotlinx.android.synthetic.main.view_course_languages.view.*
 import org.stepic.droid.R
 import org.stepic.droid.model.*
 import org.stepic.droid.ui.util.setHeight
+import org.stepik.android.model.learning.Tag
 import java.util.*
 
 class CatalogAdapter(
