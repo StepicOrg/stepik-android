@@ -34,7 +34,7 @@ import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
-import org.stepic.droid.model.Video;
+import org.stepik.android.model.structure.Video;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.services.ViewPusher;

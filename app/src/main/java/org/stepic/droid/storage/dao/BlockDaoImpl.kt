@@ -12,6 +12,7 @@ import org.stepic.droid.storage.structure.DbStructureBlock
 import org.stepic.droid.storage.structure.DbStructureCachedVideo
 import org.stepic.droid.storage.structure.DbStructureVideoUrl
 import org.stepic.droid.util.transformToVideo
+import org.stepik.android.model.structure.Video
 import javax.inject.Inject
 
 class BlockDaoImpl @Inject
@@ -19,8 +20,8 @@ constructor(
         databaseOperations: DatabaseOperations,
         private val videoDao: IDao<CachedVideo>,
         private val gson: Gson,
-        private val videoUrlIDao: IDao<DbVideoUrl>)
-    : DaoBase<BlockPersistentWrapper>(databaseOperations) {
+        private val videoUrlIDao: IDao<DbVideoUrl>
+) : DaoBase<BlockPersistentWrapper>(databaseOperations) {
 
     public override fun parsePersistentObject(cursor: Cursor): BlockPersistentWrapper {
         val indexName = cursor.getColumnIndex(DbStructureBlock.Column.NAME)
@@ -42,10 +43,7 @@ constructor(
         val externalVideoId = cursor.getLong(indexExternalVideoId)
         val externalVideoDuration = cursor.getLong(indexExternalVideoDuration)
         if (externalThumbnail != null && externalVideoId > 0) {
-            val video = Video()
-            video.thumbnail = externalThumbnail
-            video.id = externalVideoId
-            video.duration = externalVideoDuration
+            val video = Video(externalVideoId, externalThumbnail, duration = externalVideoDuration)
             block.video = video
         }
 
@@ -121,7 +119,7 @@ constructor(
         if (blockWrapper?.block == null) {
             return
         }
-        val externalVideoId = blockWrapper.block.video?.id.toString() ?: return
+        val externalVideoId = blockWrapper.block.video?.id?.toString() ?: return
 
         val externalVideoUrls: MutableList<DbVideoUrl?> = videoUrlIDao.getAll(DbStructureVideoUrl.Column.videoId, externalVideoId)
 

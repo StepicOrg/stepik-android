@@ -1,6 +1,6 @@
 package org.stepic.droid.core.presenters.contracts
 
-import org.stepic.droid.model.Video
+import org.stepik.android.model.structure.Video
 
 interface VideoStepView {
 

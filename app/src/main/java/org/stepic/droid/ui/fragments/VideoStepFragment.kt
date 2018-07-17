@@ -21,7 +21,7 @@ import org.stepic.droid.core.presenters.VideoLengthPresenter
 import org.stepic.droid.core.presenters.VideoStepPresenter
 import org.stepic.droid.core.presenters.contracts.VideoLengthView
 import org.stepic.droid.core.presenters.contracts.VideoStepView
-import org.stepic.droid.model.Video
+import org.stepik.android.model.structure.Video
 import org.stepic.droid.util.ThumbnailParser
 import javax.inject.Inject
 

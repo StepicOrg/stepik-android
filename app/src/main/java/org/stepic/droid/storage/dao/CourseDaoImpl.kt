@@ -10,6 +10,8 @@ import org.stepic.droid.storage.structure.DbStructureCachedVideo
 import org.stepic.droid.storage.structure.DbStructureEnrolledAndFeaturedCourses
 import org.stepic.droid.storage.structure.DbStructureVideoUrl
 import org.stepic.droid.util.*
+import org.stepik.android.model.structure.Video
+import org.stepik.android.model.structure.VideoUrl
 import javax.inject.Inject
 
 class CourseDaoImpl @Inject
@@ -149,7 +151,7 @@ constructor(
 
             //add all urls for video
             val videoUrlList = video.urls
-            if (videoUrlList.isNotEmpty()) {
+            if (videoUrlList?.isNotEmpty() == true) {
                 externalVideoUrlIDao.remove(DbStructureVideoUrl.Column.videoId, video.id.toString())
                 videoUrlList.forEach { videoUrl ->
                     externalVideoUrlIDao.insertOrUpdate(videoUrl.toDbUrl(video.id))
@@ -162,21 +164,14 @@ constructor(
     private fun transformCachedVideoToRealVideo(cachedVideo: CachedVideo?, videoUrls: List<VideoUrl>?): Video? {
         var realVideo: Video? = null
         if (cachedVideo != null) {
-            realVideo = Video()
-            realVideo.id = cachedVideo.videoId
-            realVideo.thumbnail = cachedVideo.thumbnail
 
-            val resultUrls: List<VideoUrl>
-            if (videoUrls != null && !videoUrls.isEmpty()) {
-                resultUrls = videoUrls
+            val resultUrls = if (videoUrls?.isNotEmpty() == true) {
+                videoUrls
             } else {
-                val videoUrl = VideoUrl()
-                videoUrl.url = cachedVideo.url
-                videoUrl.quality = cachedVideo.quality
-                resultUrls = listOf(videoUrl)
+                listOf(VideoUrl(cachedVideo.url, cachedVideo.quality))
             }
 
-            realVideo.urls = resultUrls
+            realVideo = Video(id = cachedVideo.videoId, thumbnail = cachedVideo.thumbnail, urls = resultUrls)
         }
         return realVideo
     }

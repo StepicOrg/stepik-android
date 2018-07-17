@@ -53,7 +53,7 @@ import org.stepic.droid.model.Course;
 import org.stepic.droid.model.CourseProperty;
 import org.stepic.droid.model.Section;
 import org.stepik.android.model.user.User;
-import org.stepic.droid.model.Video;
+import org.stepik.android.model.structure.Video;
 import org.stepic.droid.ui.adapters.CoursePropertyAdapter;
 import org.stepic.droid.ui.adapters.InstructorAdapter;
 import org.stepic.droid.ui.dialogs.LoadingProgressDialog;

@@ -1,6 +1,6 @@
 package org.stepic.droid.util
 
-import org.stepic.droid.model.VideoUrl
+import org.stepik.android.model.structure.VideoUrl
 
 fun VideoUrl.greaterThanMaxQuality(): Boolean {
     try {

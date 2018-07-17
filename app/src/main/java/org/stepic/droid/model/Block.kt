@@ -5,6 +5,7 @@ import android.os.Parcelable
 
 import org.stepic.droid.base.App
 import org.stepic.droid.model.code.CodeOptions
+import org.stepik.android.model.structure.Video
 
 import java.io.Serializable
 

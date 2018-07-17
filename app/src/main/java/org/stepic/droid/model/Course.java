@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
 
 import org.jetbrains.annotations.Nullable;
+import org.stepik.android.model.structure.Video;
 
 public final class Course implements Parcelable {
     private long id;

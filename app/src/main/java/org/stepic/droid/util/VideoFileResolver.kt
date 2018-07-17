@@ -6,7 +6,7 @@ import io.reactivex.disposables.CompositeDisposable
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.model.CachedVideo
-import org.stepic.droid.model.Video
+import org.stepik.android.model.structure.Video
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.storage.operations.DatabaseFacade
 import java.io.File

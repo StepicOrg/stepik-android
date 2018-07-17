@@ -17,7 +17,7 @@ import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
-import org.stepic.droid.model.Video;
+import org.stepik.android.model.structure.Video;
 import org.stepic.droid.ui.fragments.CommentsFragment;
 import org.stepic.droid.web.ViewAssignment;
 import org.stepik.android.model.learning.Tag;

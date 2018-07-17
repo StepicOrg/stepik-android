@@ -1,7 +1,7 @@
 package org.stepic.droid.util.resolvers
 
 import android.support.annotation.AnyThread
-import org.stepic.droid.model.Video
+import org.stepik.android.model.structure.Video
 
 interface VideoResolver {
 

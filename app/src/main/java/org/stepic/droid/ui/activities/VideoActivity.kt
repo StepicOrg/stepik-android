@@ -5,7 +5,7 @@ import android.support.v4.app.Fragment
 import android.view.KeyEvent
 import org.stepic.droid.R
 import org.stepic.droid.base.SingleFragmentActivity
-import org.stepic.droid.model.Video
+import org.stepik.android.model.structure.Video
 import org.stepic.droid.ui.fragments.VideoExoFragment
 import org.stepic.droid.ui.listeners.KeyDispatchableFragment
 

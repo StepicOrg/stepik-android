@@ -6,8 +6,8 @@ import android.support.v7.app.AlertDialog
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
-import org.stepic.droid.model.Video
-import org.stepic.droid.model.VideoUrl
+import org.stepik.android.model.structure.Video
+import org.stepik.android.model.structure.VideoUrl
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.util.greaterThanMaxQuality
 import java.util.concurrent.ThreadPoolExecutor
@@ -53,8 +53,8 @@ class VideoQualityDialogInPlayer : VideoQualityDialogBase() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         init()
 
-        val externalVideo: Video? = arguments.getParcelable<Video>(externalVideoKey)
-        val cachedVideo: Video? = arguments.getParcelable<Video>(cachedVideoKey)
+        val externalVideo: Video? = arguments.getParcelable(externalVideoKey)
+        val cachedVideo: Video? = arguments.getParcelable(cachedVideoKey)
         val nowPlayingUrl = arguments.getString(nowPlayingKey)
 
         val listOfVideoUrl: MutableList<VideoUrl> =
@@ -74,7 +74,7 @@ class VideoQualityDialogInPlayer : VideoQualityDialogBase() {
                         ?.filter {
                             !it.greaterThanMaxQuality()
                         }
-                        ?.map { it.quality }
+                        ?.mapNotNull { it.quality }
                         ?.toMutableList()
                         ?: ArrayList()
 
