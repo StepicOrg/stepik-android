@@ -1,7 +1,7 @@
 package org.stepic.droid.web
 
 import org.stepik.android.model.learning.certificates.Certificate
-import org.stepic.droid.model.Meta
+import org.stepik.android.model.Meta
 
 data class CertificateResponse(
         val meta: Meta?,

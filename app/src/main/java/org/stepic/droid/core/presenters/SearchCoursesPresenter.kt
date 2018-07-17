@@ -59,7 +59,7 @@ class SearchCoursesPresenter
                     val searchResultResponseBody = response.body()!!
                     val searchResultList = searchResultResponseBody.searchResultList
                     val courseIdsForSearch = searchResolver.getCourseIdsFromSearchResults(searchResultList)
-                    hasNextPage.set(searchResultResponseBody.meta.has_next)
+                    hasNextPage.set(searchResultResponseBody.meta.hasNext)
                     currentPage.set(searchResultResponseBody.meta.page + 1)
 
                     if (courseIdsForSearch.isEmpty()) {

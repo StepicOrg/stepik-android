@@ -191,7 +191,7 @@ class PersistentCourseListPresenter
     }
 
     private fun handleMeta(response: CoursesMetaResponse) {
-        hasNextPage.set(response.meta.has_next)
+        hasNextPage.set(response.meta.hasNext)
         if (hasNextPage.get()) {
             currentPage.set(response.meta.page + 1) // page for next loading
         }

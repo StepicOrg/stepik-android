@@ -97,7 +97,7 @@ constructor(
 
     private fun getAllEnrolledCourses(): Observable<Course> =
             getEnrolledCourses(1).concatMap {
-                if (it.meta.has_next) {
+                if (it.meta.hasNext) {
                     Observable.just(it).concatWith(getEnrolledCourses(it.meta.page + 1))
                 } else {
                     Observable.just(it)

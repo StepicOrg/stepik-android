@@ -10,9 +10,9 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.di.tags.TagScope
 import org.stepic.droid.model.Course
-import org.stepic.droid.model.Meta
 import org.stepic.droid.util.resolvers.SearchResolver
 import org.stepic.droid.web.Api
+import org.stepik.android.model.Meta
 import org.stepik.android.model.learning.Tag
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -85,7 +85,7 @@ constructor(
     }
 
     private fun handleMeta(meta: Meta) {
-        hasNextPage.set(meta.has_next)
+        hasNextPage.set(meta.hasNext)
         currentPage.set(meta.page + 1)
     }
 

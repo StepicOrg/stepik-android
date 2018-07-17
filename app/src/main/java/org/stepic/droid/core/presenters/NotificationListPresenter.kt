@@ -104,7 +104,7 @@ class NotificationListPresenter
     private fun getNotificationFromOnePage(notificationCategory: NotificationCategory): Iterable<Notification> {
         Timber.d("loading from page %d", page.get())
         val notificationResponse = api.getNotifications(notificationCategory, page.get()).execute().body() ?: throw NullPointerException("notifications null body")
-        hasNextPage.set(notificationResponse.meta.has_next)
+        hasNextPage.set(notificationResponse.meta.hasNext)
         page.set(notificationResponse.meta.page + 1)
 
         val baseUrl = config.baseUrl

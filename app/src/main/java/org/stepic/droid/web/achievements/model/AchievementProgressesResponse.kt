@@ -1,9 +1,9 @@
 package org.stepic.droid.web.achievements.model
 
 import com.google.gson.annotations.SerializedName
-import org.stepic.droid.model.Meta
 import org.stepic.droid.model.achievements.AchievementProgress
 import org.stepic.droid.web.MetaResponseBase
+import org.stepik.android.model.Meta
 
 class AchievementProgressesResponse(
         meta: Meta,

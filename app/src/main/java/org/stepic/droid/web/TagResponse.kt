@@ -1,7 +1,7 @@
 package org.stepic.droid.web
 
-import org.stepic.droid.model.Meta
 import org.stepik.android.model.learning.Tag
+import org.stepik.android.model.Meta
 
 class TagResponse(
         meta: Meta,

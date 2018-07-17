@@ -9,7 +9,6 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.core.presenters.contracts.CoursesView;
 import org.stepic.droid.model.Course;
-import org.stepic.droid.model.Meta;
 import org.stepic.droid.model.SearchResult;
 import org.stepic.droid.storage.operations.DatabaseFacade;
 import org.stepic.droid.testUtils.ConcurrencyUtilForTest;
@@ -22,6 +21,7 @@ import org.stepic.droid.util.resolvers.SearchResolverImpl;
 import org.stepic.droid.web.Api;
 import org.stepic.droid.web.CoursesMetaResponse;
 import org.stepic.droid.web.SearchResultResponse;
+import org.stepik.android.model.Meta
 
 import java.io.IOException;
 import java.util.ArrayList;

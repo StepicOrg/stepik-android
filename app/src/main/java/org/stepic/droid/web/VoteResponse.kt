@@ -1,7 +1,7 @@
 package org.stepic.droid.web
 
-import org.stepic.droid.model.Meta
 import org.stepic.droid.model.comments.Vote
+import org.stepik.android.model.Meta
 
 class VoteResponse {
     val meta: Meta? = null

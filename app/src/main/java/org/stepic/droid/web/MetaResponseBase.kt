@@ -1,5 +1,5 @@
 package org.stepic.droid.web
 
-import org.stepic.droid.model.Meta
+import org.stepik.android.model.Meta
 
 abstract class MetaResponseBase(val meta: Meta)

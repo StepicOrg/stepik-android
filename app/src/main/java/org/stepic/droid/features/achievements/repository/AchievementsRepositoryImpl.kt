@@ -31,7 +31,7 @@ constructor(
                 }
             }
 
-            hasNextPage = response.meta.has_next
+            hasNextPage = response.meta.hasNext
             page = response.meta.page + 1
         }
 
@@ -48,7 +48,7 @@ constructor(
                 }
             }
 
-            hasNextPage = response.meta.has_next
+            hasNextPage = response.meta.hasNext
             page = response.meta.page + 1
         }
 
@@ -58,7 +58,7 @@ constructor(
 
     private fun getAllAchievementsByKind(kind: String): Observable<Achievement> =
             achievementsService.getAchievements(kind = kind, page = 1).concatMap {
-                if (it.meta.has_next) {
+                if (it.meta.hasNext) {
                     Observable.just(it).concatWith(achievementsService.getAchievements(kind = kind, page = it.meta.page + 1))
                 } else {
                     Observable.just(it)
