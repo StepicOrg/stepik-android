@@ -10,7 +10,7 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.model.Course
 import org.stepic.droid.model.CourseReviewSummary
-import org.stepic.droid.model.Progress
+import org.stepik.android.model.structure.Progress
 import org.stepic.droid.util.CourseUtil
 import org.stepic.droid.web.Api
 import javax.inject.Inject

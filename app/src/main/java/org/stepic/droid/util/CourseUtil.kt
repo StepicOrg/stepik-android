@@ -2,7 +2,7 @@ package org.stepic.droid.util
 
 import org.stepic.droid.model.Course
 import org.stepic.droid.model.CourseReviewSummary
-import org.stepic.droid.model.Progress
+import org.stepik.android.model.structure.Progress
 
 object CourseUtil {
      fun applyProgressesToCourses(progresses: Map<String?, Progress>, courses: List<Course>) {

@@ -12,7 +12,7 @@ import org.stepic.droid.di.course_list.CourseListScope
 import org.stepic.droid.features.deadlines.repository.DeadlinesRepository
 import org.stepic.droid.model.Course
 import org.stepic.droid.model.CourseReviewSummary
-import org.stepic.droid.model.Progress
+import org.stepik.android.model.structure.Progress
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.storage.operations.Table

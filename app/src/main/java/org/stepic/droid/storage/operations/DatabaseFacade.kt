@@ -19,6 +19,7 @@ import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DbParseHelper
 import org.stepic.droid.web.ViewAssignment
 import org.stepik.android.model.learning.Assignment
+import org.stepik.android.model.structure.Progress
 import org.stepik.android.model.structure.Video
 import java.util.*
 import javax.inject.Inject

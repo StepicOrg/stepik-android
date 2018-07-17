@@ -13,7 +13,7 @@ import org.stepic.droid.base.App;
 import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.DownloadEntity;
 import org.stepic.droid.model.Lesson;
-import org.stepic.droid.model.Progress;
+import org.stepik.android.model.structure.Progress;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;

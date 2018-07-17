@@ -6,7 +6,7 @@ import org.stepic.droid.core.presenters.contracts.UnitsView
 import org.stepic.droid.di.section.SectionScope
 import org.stepic.droid.exceptions.UnitStoredButLessonNotException
 import org.stepic.droid.model.Lesson
-import org.stepic.droid.model.Progress
+import org.stepik.android.model.structure.Progress
 import org.stepic.droid.model.Section
 import org.stepic.droid.model.Unit
 import org.stepic.droid.preferences.SharedPreferenceHelper

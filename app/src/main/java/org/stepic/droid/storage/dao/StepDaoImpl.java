@@ -7,7 +7,7 @@ import android.support.annotation.NonNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepik.android.model.learning.Assignment;
 import org.stepic.droid.model.BlockPersistentWrapper;
-import org.stepic.droid.model.Progress;
+import org.stepik.android.model.structure.Progress;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.StepStatus;
 import org.stepic.droid.storage.operations.DatabaseOperations;

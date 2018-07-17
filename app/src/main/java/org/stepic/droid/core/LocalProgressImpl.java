@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.base.ListenerContainer;
 import org.stepic.droid.concurrency.MainHandler;
-import org.stepic.droid.model.Progress;
+import org.stepik.android.model.structure.Progress;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;

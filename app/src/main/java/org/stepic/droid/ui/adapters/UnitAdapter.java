@@ -27,7 +27,7 @@ import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.downloadingstate.DownloadingPresenter;
 import org.stepic.droid.core.presenters.DownloadingInteractionPresenter;
 import org.stepic.droid.model.Lesson;
-import org.stepic.droid.model.Progress;
+import org.stepik.android.model.structure.Progress;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.preferences.SharedPreferenceHelper;

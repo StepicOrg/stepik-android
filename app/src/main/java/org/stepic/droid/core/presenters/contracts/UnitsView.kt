@@ -1,7 +1,7 @@
 package org.stepic.droid.core.presenters.contracts
 
 import org.stepic.droid.model.Lesson
-import org.stepic.droid.model.Progress
+import org.stepik.android.model.structure.Progress
 import org.stepic.droid.model.Unit
 
 interface UnitsView {

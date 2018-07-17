@@ -6,7 +6,7 @@ import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.SectionsView
 import org.stepic.droid.di.course.CourseAndSectionsScope
 import org.stepic.droid.model.Course
-import org.stepic.droid.model.Progress
+import org.stepik.android.model.structure.Progress
 import org.stepic.droid.model.Section
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.transformers.transformToViewModel

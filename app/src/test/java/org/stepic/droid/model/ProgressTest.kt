@@ -4,6 +4,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.stepic.droid.testUtils.assertThatObjectParcelable
+import org.stepik.android.model.structure.Progress
 
 @RunWith(RobolectricTestRunner::class)
 class ProgressTest {
