@@ -6,7 +6,7 @@ import org.stepic.droid.core.presenters.contracts.LessonView
 import org.stepic.droid.di.lesson.LessonScope
 import org.stepik.android.model.structure.Lesson
 import org.stepik.android.model.structure.Section
-import org.stepic.droid.model.Step
+import org.stepik.android.model.structure.Step
 import org.stepik.android.model.structure.Unit
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
@@ -137,7 +137,7 @@ class LessonPresenter
             var isStepsShown = false
             if (stepList.isNotEmpty() && it.steps?.size ?: -1 == stepList.size) {
                 stepList.forEach {
-                    it.is_custom_passed = databaseFacade.isStepPassed(it)
+                    it.isCustomPassed = databaseFacade.isStepPassed(it)
                 }
                 isStepsShown = true
                 //if we get steps from database -> progresses and assignments were stored
@@ -241,7 +241,7 @@ class LessonPresenter
                 }
                 progressIds = ProgressUtil.getProgresses(assignments)
             } else {
-                progressIds = ProgressUtil.getAllProgresses(stepListFromInternet)
+                progressIds = ProgressUtil.getProgresses(stepListFromInternet)
             }
 
 
@@ -252,7 +252,7 @@ class LessonPresenter
 
             //FIXME: Warning, it is mutable objects, which we show on LessonFragment and change here or not show, if we shown from database
             stepListFromInternet.forEach {
-                it.is_custom_passed = databaseFacade.isStepPassed(it)
+                it.isCustomPassed = databaseFacade.isStepPassed(it)
                 databaseFacade.addStep(it) // update step in db
             }
         } catch (exception: Exception) {

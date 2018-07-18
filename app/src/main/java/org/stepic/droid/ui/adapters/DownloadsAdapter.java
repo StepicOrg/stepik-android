@@ -23,7 +23,7 @@ import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.DownloadingVideoItem;
 import org.stepik.android.model.structure.Lesson;
-import org.stepic.droid.model.Step;
+import org.stepik.android.model.structure.Step;
 import org.stepic.droid.storage.CancelSniffer;
 import org.stepic.droid.storage.CleanManager;
 import org.stepic.droid.storage.IDownloadManager;

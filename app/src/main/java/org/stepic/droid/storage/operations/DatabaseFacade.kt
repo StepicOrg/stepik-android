@@ -189,14 +189,14 @@ class DatabaseFacade
 
     fun isStepCached(stepId: Long): Boolean {
         val dbStep = stepDao.get(DbStructureStep.Column.STEP_ID, stepId.toString())
-        return dbStep != null && dbStep.is_cached
+        return dbStep != null && dbStep.isCached
     }
 
     fun updateOnlyCachedLoadingStep(step: Step?) {
         step?.let {
             val cv = ContentValues()
-            cv.put(DbStructureStep.Column.IS_LOADING, step.is_loading)
-            cv.put(DbStructureStep.Column.IS_CACHED, step.is_cached)
+            cv.put(DbStructureStep.Column.IS_LOADING, step.isLoading)
+            cv.put(DbStructureStep.Column.IS_CACHED, step.isCached)
             stepDao.update(DbStructureStep.Column.STEP_ID, step.id.toString(), cv)
         }
     }

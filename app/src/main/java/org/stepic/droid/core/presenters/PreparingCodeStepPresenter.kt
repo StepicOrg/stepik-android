@@ -6,7 +6,7 @@ import org.stepic.droid.core.presenters.contracts.PreparingCodeStepView
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.di.step.code.CodeScope
-import org.stepic.droid.model.Step
+import org.stepik.android.model.structure.Step
 import org.stepic.droid.util.isCodeStepReady
 import org.stepic.droid.web.Api
 import javax.inject.Inject

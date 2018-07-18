@@ -18,7 +18,7 @@ import org.stepic.droid.configuration.Config;
 import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.ShareHelper;
 import org.stepik.android.model.structure.Lesson;
-import org.stepic.droid.model.Step;
+import org.stepik.android.model.structure.Step;
 import org.stepik.android.model.structure.Unit;
 import org.stepic.droid.util.DisplayUtils;
 import org.stepic.droid.util.StringUtil;

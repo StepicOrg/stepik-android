@@ -15,7 +15,7 @@ import org.stepic.droid.model.DownloadEntity;
 import org.stepik.android.model.structure.Lesson;
 import org.stepik.android.model.structure.Progress;
 import org.stepik.android.model.structure.Section;
-import org.stepic.droid.model.Step;
+import org.stepik.android.model.structure.Step;
 import org.stepik.android.model.structure.Unit;
 import org.stepik.android.model.structure.Video;
 import org.stepik.android.model.structure.VideoUrl;
@@ -230,8 +230,8 @@ public class LoadService extends IntentService {
             long fileId = video.getId();
             addDownload(uri, fileId, lesson.getTitle(), step, sectionId);
         } else {
-            step.set_loading(false);
-            step.set_cached(true);
+            step.setLoading(false);
+            step.setCached(true);
             databaseFacade.updateOnlyCachedLoadingStep(step);
             storeStateManager.updateUnitLessonState(step.getLesson());
         }
@@ -269,18 +269,18 @@ public class LoadService extends IntentService {
                         for (Step step : steps) {
                             databaseFacade.addStep(step);
                             boolean cached = databaseFacade.isStepCached(step);
-                            step.set_cached(cached);
+                            step.setCached(cached);
                         }
                         for (Step step : steps) {
-                            if (!step.is_cached()) {
-                                step.set_loading(true);
-                                step.set_cached(false);
+                            if (!step.isCached()) {
+                                step.setLoading(true);
+                                step.setCached(false);
                                 databaseFacade.updateOnlyCachedLoadingStep(step);
                             }
                         }
 
                         for (Step step : steps) {
-                            if (!step.is_cached()) {
+                            if (!step.isCached()) {
                                 addStep(step, lesson, sectionId);
                             }
                         }

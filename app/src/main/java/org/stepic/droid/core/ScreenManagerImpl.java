@@ -32,7 +32,7 @@ import org.stepik.android.model.structure.Course;
 import org.stepic.droid.model.CoursesCarouselInfo;
 import org.stepik.android.model.structure.Lesson;
 import org.stepik.android.model.structure.Section;
-import org.stepic.droid.model.Step;
+import org.stepik.android.model.structure.Step;
 import org.stepik.android.model.structure.Unit;
 import org.stepik.android.model.structure.Video;
 import org.stepic.droid.preferences.SharedPreferenceHelper;

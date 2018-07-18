@@ -8,7 +8,7 @@ import org.stepic.droid.base.App;
 import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.core.LocalProgressManager;
 import org.stepic.droid.core.updatingstep.contract.UpdatingStepPoster;
-import org.stepic.droid.model.Step;
+import org.stepik.android.model.structure.Step;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.storage.StoreStateManager;
 import org.stepic.droid.storage.operations.DatabaseFacade;
@@ -94,8 +94,8 @@ public class ViewPusher extends IntentService {
             if (assignmentId != null) {
                 database.markProgressAsPassed(assignmentId);
             } else {
-                if (step != null && step.getProgressId() != null) {
-                    database.markProgressAsPassedIfInDb(step.getProgressId());
+                if (step != null && step.getProgress() != null) {
+                    database.markProgressAsPassedIfInDb(step.getProgress());
                 }
             }
             unitProgressManager.checkUnitAsPassed(stepId);

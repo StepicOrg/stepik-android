@@ -4,7 +4,7 @@ import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.core.presenters.contracts.LessonTrackingView
 import org.stepic.droid.di.lesson.LessonScope
-import org.stepic.droid.model.Step
+import org.stepik.android.model.structure.Step
 import org.stepic.droid.util.getStepType
 import javax.inject.Inject
 

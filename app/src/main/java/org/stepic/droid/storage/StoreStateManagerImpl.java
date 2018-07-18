@@ -10,7 +10,7 @@ import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.di.AppSingleton;
 import org.stepik.android.model.structure.Lesson;
 import org.stepik.android.model.structure.Section;
-import org.stepic.droid.model.Step;
+import org.stepik.android.model.structure.Step;
 import org.stepik.android.model.structure.Unit;
 import org.stepic.droid.storage.operations.DatabaseFacade;
 
@@ -47,7 +47,7 @@ public class StoreStateManagerImpl implements StoreStateManager {
         List<Step> steps = databaseFacade.getStepsOfLesson(lessonId);
         boolean cached = true;
         for (Step step : steps) {
-            if (!step.is_cached()) {
+            if (!step.isCached()) {
                 cached = false;
                 break;
             }

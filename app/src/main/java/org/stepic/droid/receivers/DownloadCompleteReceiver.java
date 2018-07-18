@@ -17,7 +17,7 @@ import org.stepic.droid.core.downloads.contract.DownloadsPoster;
 import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.DownloadEntity;
 import org.stepik.android.model.structure.Lesson;
-import org.stepic.droid.model.Step;
+import org.stepik.android.model.structure.Step;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.storage.CancelSniffer;
 import org.stepic.droid.storage.StoreStateManager;
@@ -123,12 +123,12 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
 
                     if (cachedVideo != null) {
                         databaseFacade.addVideo(cachedVideo);
-                        step.set_cached(true);
+                        step.setCached(true);
                     } else {
-                        step.set_cached(false);
+                        step.setCached(false);
                     }
 
-                    step.set_loading(false);
+                    step.setLoading(false);
                     databaseFacade.updateOnlyCachedLoadingStep(step);
                     storeStateManager.updateUnitLessonState(step.getLesson());
 

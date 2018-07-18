@@ -1,6 +1,6 @@
 package org.stepic.droid.core.presenters.contracts
 
-import org.stepic.droid.model.Step
+import org.stepik.android.model.structure.Step
 import org.stepic.droid.model.Submission
 import org.stepic.droid.ui.quiz.QuizDelegate
 

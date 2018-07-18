@@ -235,7 +235,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
         if (attempt == null || attempt.getId() <= 0) return;
 
         if (section != null && section.getDiscountingPolicy() != DiscountingPolicyType.NoDiscount
-                && getUserPreferences().isShowDiscountingPolicyWarning() && !step.is_custom_passed()) {
+                && getUserPreferences().isShowDiscountingPolicyWarning() && !step.isCustomPassed()) {
             //showDialog
             DialogFragment dialogFragment = DiscountingPolicyDialogFragment.Companion.newInstance();
             if (!dialogFragment.isAdded()) {
@@ -438,7 +438,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
     }
 
     protected final void markLocalProgressAsViewed() {
-        if (!step.is_custom_passed()) {
+        if (!step.isCustomPassed()) {
             updatingStepPoster.updateStep(step.getId(), true);
             AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
                 long stepId = step.getId();

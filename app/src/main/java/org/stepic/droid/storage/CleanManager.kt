@@ -1,7 +1,7 @@
 package org.stepic.droid.storage
 
 import org.stepik.android.model.structure.Lesson
-import org.stepic.droid.model.Step
+import org.stepik.android.model.structure.Step
 
 interface CleanManager {
 

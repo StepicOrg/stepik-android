@@ -7,7 +7,7 @@ import org.stepic.droid.base.ListenerContainer;
 import org.stepic.droid.concurrency.MainHandler;
 import org.stepik.android.model.structure.Progress;
 import org.stepik.android.model.structure.Section;
-import org.stepic.droid.model.Step;
+import org.stepik.android.model.structure.Step;
 import org.stepik.android.model.structure.Unit;
 import org.stepic.droid.storage.operations.DatabaseFacade;
 import org.stepic.droid.util.StringUtil;
@@ -48,7 +48,7 @@ public class LocalProgressImpl implements LocalProgressManager {
         if (step == null) return;
         List<Step> stepList = databaseFacade.getStepsOfLesson(step.getLesson());
         for (Step stepItem : stepList) {
-            if (!stepItem.is_custom_passed()) return;
+            if (!stepItem.isCustomPassed()) return;
         }
 
         Unit unit = databaseFacade.getUnitByLessonId(step.getLesson());

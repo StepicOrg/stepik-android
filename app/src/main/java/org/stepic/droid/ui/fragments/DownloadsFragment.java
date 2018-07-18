@@ -29,7 +29,7 @@ import org.stepic.droid.model.DownloadEntity;
 import org.stepic.droid.model.DownloadReportItem;
 import org.stepic.droid.model.DownloadingVideoItem;
 import org.stepik.android.model.structure.Lesson;
-import org.stepic.droid.model.Step;
+import org.stepik.android.model.structure.Step;
 import org.stepic.droid.model.VideosAndMapToLesson;
 import org.stepic.droid.ui.adapters.DownloadsAdapter;
 import org.stepic.droid.ui.dialogs.CancelVideosDialog;

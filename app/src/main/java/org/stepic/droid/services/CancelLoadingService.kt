@@ -62,8 +62,8 @@ class CancelLoadingService : IntentService("cancel_loading") {
                 val step = databaseFacade.getStepById(stepId)
 
                 if (step != null) {
-                    step.is_cached = false
-                    step.is_loading = false
+                    step.isCached = false
+                    step.isLoading = false
                     databaseFacade.updateOnlyCachedLoadingStep(step)
                     storeStateManager.updateStepAfterDeleting(step)
 

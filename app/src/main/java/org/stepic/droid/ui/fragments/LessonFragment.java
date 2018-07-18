@@ -37,7 +37,7 @@ import org.stepic.droid.core.updatingstep.contract.UpdatingStepListener;
 import org.stepik.android.model.structure.Lesson;
 import org.stepic.droid.model.PersistentLastStep;
 import org.stepik.android.model.structure.Section;
-import org.stepic.droid.model.Step;
+import org.stepik.android.model.structure.Step;
 import org.stepik.android.model.structure.Unit;
 import org.stepic.droid.ui.adapters.StepFragmentAdapter;
 import org.stepic.droid.ui.listeners.NextMoveable;
@@ -293,8 +293,8 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
         if (stepsPresenter.getStepList().size() <= position) return;
         final Step step = stepsPresenter.getStepList().get(position);
 
-        if (StepHelper.isViewedStatePost(step) && !step.is_custom_passed()) {
-            step.set_custom_passed(true);
+        if (StepHelper.isViewedStatePost(step) && !step.isCustomPassed()) {
+            step.setCustomPassed(true);
             if (position <= tabLayout.getTabCount()) {
                 TabLayout.Tab tab = tabLayout.getTabAt(position);
                 if (tab != null) {
@@ -384,7 +384,7 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
 
                 Step step = stepsPresenter.getStepList().get(position);
                 getAnalytic().reportEvent(Analytic.Comments.OPEN_FROM_OPTION_MENU);
-                getScreenManager().openComments(getActivity(), step.getDiscussion_proxy(), step.getId());
+                getScreenManager().openComments(getActivity(), step.getDiscussionProxy(), step.getId());
                 break;
             default:
                 return super.onOptionsItemSelected(item);
@@ -461,7 +461,7 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
 
         if (discussionId > 0 && position >= 0 && position < stepsPresenter.getStepList().size()) {
             Step step = stepsPresenter.getStepList().get(position);
-            getScreenManager().openComments(getActivity(), step.getDiscussion_proxy(), step.getId());
+            getScreenManager().openComments(getActivity(), step.getDiscussionProxy(), step.getId());
             discussionId = -1;
         }
     }
@@ -638,9 +638,9 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
             }
         }
 
-        if (step != null && !step.is_custom_passed() && (StepHelper.isViewedStatePost(step) || isSuccessAttempt)) {
+        if (step != null && !step.isCustomPassed() && (StepHelper.isViewedStatePost(step) || isSuccessAttempt)) {
             // if not passed yet
-            step.set_custom_passed(true);
+            step.setCustomPassed(true);
             if (position >= 0 && position < tabLayout.getTabCount()) {
                 TabLayout.Tab tab = tabLayout.getTabAt(position);
                 if (tab != null) {

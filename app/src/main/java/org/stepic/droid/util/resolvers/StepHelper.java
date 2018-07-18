@@ -1,6 +1,6 @@
 package org.stepic.droid.util.resolvers;
 
-import org.stepic.droid.model.Step;
+import org.stepik.android.model.structure.Step;
 import org.stepic.droid.util.AppConstants;
 
 public class StepHelper {

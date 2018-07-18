@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Parcelable
 import org.stepik.android.model.structure.Lesson
-import org.stepic.droid.model.Step
+import org.stepik.android.model.structure.Step
 import org.stepic.droid.services.DeleteService
 import org.stepic.droid.services.LoadService
 import org.stepic.droid.util.AppConstants

@@ -5,7 +5,7 @@ import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.ContinueCourseView
 import org.stepik.android.model.structure.Course
 import org.stepik.android.model.structure.Section
-import org.stepic.droid.model.Step
+import org.stepik.android.model.structure.Step
 import org.stepik.android.model.structure.Unit
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.storage.repositories.Repository

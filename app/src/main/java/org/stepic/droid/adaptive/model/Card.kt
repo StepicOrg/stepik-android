@@ -11,7 +11,7 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.model.learning.attempts.Attempt
 import org.stepik.android.model.structure.Lesson
-import org.stepic.droid.model.Step
+import org.stepik.android.model.structure.Step
 import org.stepic.droid.web.Api
 import javax.inject.Inject
 

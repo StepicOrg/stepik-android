@@ -19,7 +19,7 @@ import org.stepic.droid.core.presenters.contracts.AnonymousView;
 import org.stepic.droid.core.presenters.contracts.RouteStepView;
 import org.stepik.android.model.structure.Lesson;
 import org.stepik.android.model.structure.Section;
-import org.stepic.droid.model.Step;
+import org.stepik.android.model.structure.Step;
 import org.stepik.android.model.structure.Unit;
 import org.stepic.droid.storage.operations.DatabaseFacade;
 import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout;
@@ -177,7 +177,7 @@ public abstract class StepBaseFragment extends FragmentBase
     }
 
     private void updateCommentState() {
-        if (step != null && step.getDiscussion_proxy() != null) {
+        if (step != null && step.getDiscussionProxy() != null) {
             showComment();
         } else {
             textForComment.setVisibility(View.GONE);
@@ -189,18 +189,18 @@ public abstract class StepBaseFragment extends FragmentBase
         textForComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int discussionCount = step.getDiscussions_count();
+                int discussionCount = step.getDiscussionsCount();
                 getAnalytic().reportEvent(Analytic.Comments.OPEN_FROM_STEP_UI);
 
                 if (discussionCount == 0) {
-                    getScreenManager().openComments(getActivity(), step.getDiscussion_proxy(), step.getId(), true); //show new form, but in back stack comment oldList is exist.
+                    getScreenManager().openComments(getActivity(), step.getDiscussionProxy(), step.getId(), true); //show new form, but in back stack comment oldList is exist.
                 } else {
-                    getScreenManager().openComments(getActivity(), step.getDiscussion_proxy(), step.getId());
+                    getScreenManager().openComments(getActivity(), step.getDiscussionProxy(), step.getId());
                 }
             }
         });
 
-        int discussionCount = step.getDiscussions_count();
+        int discussionCount = step.getDiscussionsCount();
         if (discussionCount > 0) {
             textForComment.setText(App.Companion.getAppContext().getResources().getQuantityString(R.plurals.open_comments, discussionCount, discussionCount));
         } else {
@@ -243,8 +243,8 @@ public abstract class StepBaseFragment extends FragmentBase
 
     public void onDiscussionWasUpdatedFromInternet(Step updatedStep) {
         if (updatedStep.getId() == step.getId()) {
-            step.setDiscussion_proxy(updatedStep.getDiscussion_proxy()); //fixme do it in immutable way
-            step.setDiscussions_count(updatedStep.getDiscussions_count());
+            step.setDiscussionProxy(updatedStep.getDiscussionProxy()); //fixme do it in immutable way
+            step.setDiscussionsCount(updatedStep.getDiscussionsCount());
             updateCommentState();
         }
     }
