@@ -4,10 +4,7 @@ import org.stepik.android.model.structure.Lesson
 
 object FakeLessonGenerator {
 
-    fun generate(stepIds: LongArray): Lesson {
-        val lesson = Lesson()
-        lesson.steps = stepIds
-        return lesson
-    }
+    @JvmOverloads
+    fun generate(id: Long = 0, stepIds: LongArray): Lesson = Lesson(id = id, steps = stepIds)
 
 }

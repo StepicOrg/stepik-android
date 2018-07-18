@@ -21,7 +21,7 @@ import org.stepic.droid.util.resolvers.SearchResolverImpl;
 import org.stepic.droid.web.Api;
 import org.stepic.droid.web.CoursesMetaResponse;
 import org.stepic.droid.web.SearchResultResponse;
-import org.stepik.android.model.Meta
+import org.stepik.android.model.Meta;
 
 import java.io.IOException;
 import java.util.ArrayList;

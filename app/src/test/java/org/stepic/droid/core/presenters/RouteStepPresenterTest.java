@@ -324,12 +324,10 @@ public class RouteStepPresenterTest {
         long stepIds0[] = ArrayHelper.INSTANCE.arrayOf(stepId);
         long unitIds0[] = ArrayHelper.INSTANCE.arrayOf(unitId);
 
-        Lesson lesson0 = FakeLessonGenerator.INSTANCE.generate(stepIds0);
-        lesson0.setId(lessonId);
+        Lesson lesson0 = FakeLessonGenerator.INSTANCE.generate(lessonId, stepIds0);
         when(lessonRepository.getObject(lessonId)).thenReturn(lesson0);
 
-        Unit unit0 = FakeUnitGenerator.INSTANCE.generate(unitId, sectionId, unitPosition);
-        unit0.setLesson(lesson0.getId());
+        Unit unit0 = FakeUnitGenerator.INSTANCE.generate(unitId, sectionId, unitPosition, lesson0.getId());
         when(unitRepository.getObject(unitId)).thenReturn(unit0);
 
         Section section0 = FakeSectionGenerator.INSTANCE.generate(sectionId, unitIds0, 1, courseId);
@@ -339,12 +337,10 @@ public class RouteStepPresenterTest {
         long stepIds1[] = ArrayHelper.INSTANCE.arrayOf(stepId + 1);
         long unitIds1[] = ArrayHelper.INSTANCE.arrayOf(unitId + 1);
 
-        Lesson lesson1 = FakeLessonGenerator.INSTANCE.generate(stepIds1);
-        lesson1.setId(lessonId + 1);
+        Lesson lesson1 = FakeLessonGenerator.INSTANCE.generate(lessonId + 1, stepIds1);
         when(lessonRepository.getObject(lessonId + 1)).thenReturn(lesson1);
 
-        Unit unit1 = FakeUnitGenerator.INSTANCE.generate(unitId + 1, sectionId + 1, unitPosition);
-        unit1.setLesson(lesson1.getId());
+        Unit unit1 = FakeUnitGenerator.INSTANCE.generate(unitId + 1, sectionId + 1, unitPosition, lesson1.getId());
         when(unitRepository.getObject(unitId + 1)).thenReturn(unit1);
 
         Section section1 = FakeSectionGenerator.INSTANCE.generate(sectionId + 1, unitIds1, 2, courseId);
@@ -379,12 +375,10 @@ public class RouteStepPresenterTest {
         long stepIds0[] = ArrayHelper.INSTANCE.arrayOf(stepId);
         long unitIds0[] = ArrayHelper.INSTANCE.arrayOf(unitId);
 
-        Lesson lesson0 = FakeLessonGenerator.INSTANCE.generate(stepIds0);
-        lesson0.setId(lessonId);
+        Lesson lesson0 = FakeLessonGenerator.INSTANCE.generate(lessonId, stepIds0);
         when(lessonRepository.getObject(lessonId)).thenReturn(lesson0);
 
-        Unit unit0 = FakeUnitGenerator.INSTANCE.generate(unitId, sectionId, unitPosition);
-        unit0.setLesson(lesson0.getId());
+        Unit unit0 = FakeUnitGenerator.INSTANCE.generate(unitId, sectionId, unitPosition, lesson0.getId());
         when(unitRepository.getObject(unitId)).thenReturn(unit0);
 
         Section section0 = FakeSectionGenerator.INSTANCE.generate(sectionId, unitIds0, 1, courseId);
@@ -394,12 +388,10 @@ public class RouteStepPresenterTest {
         long stepIds1[] = ArrayHelper.INSTANCE.arrayOf(stepId + 1);
         long unitIds1[] = ArrayHelper.INSTANCE.arrayOf(unitId + 1);
 
-        Lesson lesson1 = FakeLessonGenerator.INSTANCE.generate(stepIds1);
-        lesson1.setId(lessonId + 1);
+        Lesson lesson1 = FakeLessonGenerator.INSTANCE.generate(lessonId + 1, stepIds1);
         when(lessonRepository.getObject(lessonId + 1)).thenReturn(lesson1);
 
-        Unit unit1 = FakeUnitGenerator.INSTANCE.generate(unitId + 1, sectionId + 1, unitPosition);
-        unit1.setLesson(lesson1.getId());
+        Unit unit1 = FakeUnitGenerator.INSTANCE.generate(unitId + 1, sectionId + 1, unitPosition, lesson1.getId());
         when(unitRepository.getObject(unitId + 1)).thenReturn(unit1);
 
         Section section1 = FakeSectionGenerator.INSTANCE.generate(sectionId + 1, unitIds1, 2, courseId);
