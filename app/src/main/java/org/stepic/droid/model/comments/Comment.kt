@@ -5,7 +5,7 @@ import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 
 import org.stepic.droid.model.UserRole
-import org.stepik.android.model.actions.Actions
+import org.stepik.android.model.structure.Actions
 
 
 data class Comment(

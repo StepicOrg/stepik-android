@@ -3,7 +3,7 @@ package org.stepic.droid.model
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import org.stepik.android.model.actions.Actions
+import org.stepik.android.model.structure.Actions
 
 import java.io.Serializable
 

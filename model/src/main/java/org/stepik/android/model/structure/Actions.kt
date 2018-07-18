@@ -1,4 +1,4 @@
-package org.stepik.android.model.actions
+package org.stepik.android.model.structure
 
 import android.os.Parcel
 import android.os.Parcelable
@@ -9,10 +9,13 @@ import org.stepik.android.model.writeBoolean
 class Actions(
         val vote: Boolean = false,
         val delete: Boolean = false,
-        @SerializedName("test_section") val testSection: String? = null,
 
-        @SerializedName("do_review") val doReview: String? = null,
-        @SerializedName("edit_instructions") val editInstructions: String? = null
+        @SerializedName("test_section")
+        val testSection: String? = null,
+        @SerializedName("do_review")
+        val doReview: String? = null,
+        @SerializedName("edit_instructions")
+        val editInstructions: String? = null
 ) : Parcelable {
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeBoolean(vote)

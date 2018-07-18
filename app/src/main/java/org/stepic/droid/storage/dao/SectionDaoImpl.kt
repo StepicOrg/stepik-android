@@ -4,7 +4,7 @@ import android.content.ContentValues
 import android.database.Cursor
 import org.stepic.droid.jsonHelpers.adapters.UTCDateAdapter
 
-import org.stepik.android.model.actions.Actions
+import org.stepik.android.model.structure.Actions
 import org.stepik.android.model.structure.DiscountingPolicyType
 import org.stepik.android.model.structure.Section
 import org.stepic.droid.storage.operations.DatabaseOperations

@@ -4,7 +4,6 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import org.stepik.android.model.Progressable
-import org.stepik.android.model.actions.Actions
 import org.stepik.android.model.readBoolean
 import org.stepik.android.model.readParcelable
 import org.stepik.android.model.writeBoolean

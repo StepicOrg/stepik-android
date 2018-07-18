@@ -16,7 +16,7 @@ import org.stepic.droid.storage.structure.DbStructureBlock;
 import org.stepic.droid.storage.structure.DbStructureProgress;
 import org.stepic.droid.storage.structure.DbStructureStep;
 import org.stepic.droid.util.DbParseHelper;
-import org.stepik.android.model.actions.Actions;
+import org.stepik.android.model.structure.Actions;
 
 import java.util.List;
 
