@@ -10,7 +10,7 @@ import org.stepic.droid.R
 import org.stepic.droid.adaptive.model.Card
 import org.stepic.droid.adaptive.ui.adapters.OnboardingQuizCardsAdapter
 import org.stepic.droid.base.FragmentBase
-import org.stepic.droid.model.Block
+import org.stepik.android.model.structure.Block
 import org.stepik.android.model.structure.Lesson
 import org.stepic.droid.model.Step
 import org.stepic.droid.ui.util.initCenteredToolbar

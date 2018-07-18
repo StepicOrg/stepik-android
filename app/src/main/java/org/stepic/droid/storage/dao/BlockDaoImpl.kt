@@ -12,6 +12,7 @@ import org.stepic.droid.storage.structure.DbStructureBlock
 import org.stepic.droid.storage.structure.DbStructureCachedVideo
 import org.stepic.droid.storage.structure.DbStructureVideoUrl
 import org.stepic.droid.util.transformToVideo
+import org.stepik.android.model.structure.Block
 import org.stepik.android.model.structure.Video
 import javax.inject.Inject
 
@@ -28,12 +29,6 @@ constructor(
         val indexText = cursor.getColumnIndex(DbStructureBlock.Column.TEXT)
         val indexStep = cursor.getColumnIndex(DbStructureBlock.Column.STEP_ID)
 
-        val block = Block()
-        block.name = cursor.getString(indexName)
-        block.text = cursor.getString(indexText)
-
-        val blockPersistentWrapper = BlockPersistentWrapper(block, stepId = cursor.getLong(indexStep))
-
         //now get video related info:
         val indexExternalVideoThumbnail = cursor.getColumnIndex(DbStructureBlock.Column.EXTERNAL_THUMBNAIL)
         val indexExternalVideoId = cursor.getColumnIndex(DbStructureBlock.Column.EXTERNAL_VIDEO_ID)
@@ -42,19 +37,27 @@ constructor(
         val externalThumbnail = cursor.getString(indexExternalVideoThumbnail)
         val externalVideoId = cursor.getLong(indexExternalVideoId)
         val externalVideoDuration = cursor.getLong(indexExternalVideoDuration)
+
+        var video: Video? = null
         if (externalThumbnail != null && externalVideoId > 0) {
-            val video = Video(externalVideoId, externalThumbnail, duration = externalVideoDuration)
-            block.video = video
+            video = Video(externalVideoId, externalThumbnail, duration = externalVideoDuration)
         }
 
         val codeOptionsIndex = cursor.getColumnIndex(DbStructureBlock.Column.CODE_OPTIONS)
         val storedCodeOptionJson = cursor.getString(codeOptionsIndex)
+
+        var codeOptions: CodeOptions? = null
         if (storedCodeOptionJson != null) {
-            val codeOptions = gson.fromJson(storedCodeOptionJson, CodeOptions::class.java)
-            block.options = codeOptions
+            codeOptions = gson.fromJson(storedCodeOptionJson, CodeOptions::class.java)
         }
 
-        return blockPersistentWrapper
+        val block = Block(
+                name = cursor.getString(indexName),
+                text = cursor.getString(indexText),
+                video = video,
+                options = codeOptions
+        )
+        return BlockPersistentWrapper(block, stepId = cursor.getLong(indexStep))
     }
 
     public override fun getContentValues(blockWrapper: BlockPersistentWrapper): ContentValues {

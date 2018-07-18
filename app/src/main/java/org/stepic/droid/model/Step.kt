@@ -4,6 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import org.stepik.android.model.structure.Actions
+import org.stepik.android.model.structure.Block
 
 import java.io.Serializable
 

@@ -3,7 +3,7 @@ package org.stepic.droid.jsonHelpers.adapters
 import com.google.gson.Gson
 import org.junit.Assert.*
 import org.junit.Test
-import org.stepic.droid.model.Block
+import org.stepik.android.model.structure.Block
 import org.stepik.android.model.structure.code.CodeOptions
 import org.stepic.droid.testUtils.TestingGsonProvider
 
