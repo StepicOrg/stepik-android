@@ -14,7 +14,7 @@ object ProgressUtil {
 
     fun getProgresses(objects: List<Progressable>?): Array<String> {
         return objects
-                ?.mapNotNull { it.progressId }
+                ?.mapNotNull { it.progress }
                 ?.toTypedArray()
                 ?: emptyArray()
     }

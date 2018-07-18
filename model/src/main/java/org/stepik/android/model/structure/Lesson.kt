@@ -20,7 +20,7 @@ class Lesson(
         val isFeatured: Boolean = false,
         @SerializedName("is_prime")
         val isPrime: Boolean = false,
-        val progress: String? = null,
+        override val progress: String? = null,
         val owner: Int = 0,
         val subscriptions: Array<String>? = null,
 
@@ -54,9 +54,8 @@ class Lesson(
         var isLoading: Boolean = false,
 
         @SerializedName("time_to_complete")
-        val timeToComplete: Long = 0,
+        val timeToComplete: Long = 0
 
-        override val progressId: String? = progress
 ) : Parcelable, Serializable, Progressable {
 
     override fun describeContents(): Int = 0

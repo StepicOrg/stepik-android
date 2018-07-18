@@ -54,7 +54,7 @@ constructor(
         values.put(DbStructureUnit.Column.LESSON, unit.lesson)
         values.put(DbStructureUnit.Column.ASSIGNMENTS, DbParseHelper.parseLongArrayToString(unit.assignments))
         values.put(DbStructureUnit.Column.POSITION, unit.position)
-        values.put(DbStructureUnit.Column.PROGRESS, unit.progressId)
+        values.put(DbStructureUnit.Column.PROGRESS, unit.progress)
         values.put(DbStructureUnit.Column.BEGIN_DATE, dateAdapter.dateToString(unit.beginDate))
         values.put(DbStructureUnit.Column.END_DATE, dateAdapter.dateToString(unit.endDate))
         values.put(DbStructureUnit.Column.SOFT_DEADLINE, dateAdapter.dateToString(unit.softDeadline))
@@ -92,7 +92,7 @@ constructor(
     private fun determinePassed(unit: Unit?): Unit? {
         var isPassed = false
         if (unit != null) {
-            val progressId = unit.progressId
+            val progressId = unit.progress
             var progress: Progress? = null
             if (progressId != null) {
                 progress = progressDao.get(DbStructureProgress.Column.ID, progressId)

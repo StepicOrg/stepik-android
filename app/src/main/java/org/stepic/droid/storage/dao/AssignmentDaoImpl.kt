@@ -44,7 +44,7 @@ constructor(
         val values = ContentValues()
 
         values.put(DbStructureAssignment.Column.ASSIGNMENT_ID, assignment.id)
-        values.put(DbStructureAssignment.Column.PROGRESS, assignment.progressId)
+        values.put(DbStructureAssignment.Column.PROGRESS, assignment.progress)
         values.put(DbStructureAssignment.Column.STEP_ID, assignment.step)
         values.put(DbStructureAssignment.Column.UNIT_ID, assignment.unit)
         values.put(DbStructureAssignment.Column.CREATE_DATE, assignment.createDate?.let { dateAdapter.serialize(it, null, null).asString })

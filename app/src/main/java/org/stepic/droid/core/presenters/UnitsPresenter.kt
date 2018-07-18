@@ -60,7 +60,7 @@ constructor(
                     val fromCacheLessons = ArrayList<Lesson>()
                     val unitProgressMapLocal = HashMap<Long, Progress>()
                     for (unit in fromCacheUnits) {
-                        val progressId = unit.progressId
+                        val progressId = unit.progress
                         if (progressId != null) {
                             val progress = databaseFacade.getProgressById(progressId)
                             unit.is_viewed_custom = progress?.isPassed ?: false

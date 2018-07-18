@@ -156,8 +156,8 @@ public class StepDaoImpl extends DaoBase<Step> {
         }
 
         Assignment assignment = assignmentDao.get(DbStructureAssignment.Column.STEP_ID, step.getId() + "");
-        if (assignment != null && assignment.getProgressId() != null) {
-            Progress progress = progressDao.get(DbStructureProgress.Column.ID, assignment.getProgressId());
+        if (assignment != null && assignment.getProgress() != null) {
+            Progress progress = progressDao.get(DbStructureProgress.Column.ID, assignment.getProgress());
             if (progress != null) {
                 step.set_custom_passed(progress.isPassed());
             }

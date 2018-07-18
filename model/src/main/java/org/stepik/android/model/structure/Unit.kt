@@ -16,7 +16,7 @@ class Unit(
         val lesson: Long = 0,
         val assignments: LongArray? = null,
         val position: Int = 0,
-        val progress: String? = null,
+        override val progress: String? = null,
 
         @SerializedName("begin_date")
         val beginDate: Date? = null,
@@ -50,9 +50,7 @@ class Unit(
         val updateDate: Date? = null,
 
         @Deprecated("")
-        var is_viewed_custom: Boolean = false,
-
-        override val progressId: String? = progress
+        var is_viewed_custom: Boolean = false
 ) : Serializable, Parcelable, Progressable {
 
     override fun describeContents(): Int = 0

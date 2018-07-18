@@ -37,7 +37,7 @@ class Course(
         val totalUnits: Int = 0,
 
         var enrollment: Int = 0,
-        val progress: String? = null,
+        override val progress: String? = null,
         val owner: Long = 0,
 
         @SerializedName("is_contest")
@@ -81,8 +81,6 @@ class Course(
         @SerializedName("review_summary")
         val reviewSummary: Int = 0,
 
-        override val progressId: String? = progress,
-
         var progressObject: Progress? = null,
         var rating: Double = 0.0
 ): Progressable, Parcelable {
@@ -124,7 +122,6 @@ class Course(
         parcel.writeString(lastStepId)
         parcel.writeLong(learnersCount)
         parcel.writeInt(reviewSummary)
-        parcel.writeString(progressId)
         parcel.writeParcelable(progressObject, flags)
         parcel.writeDouble(rating)
     }
@@ -170,7 +167,6 @@ class Course(
                 parcel.readString(),
                 parcel.readLong(),
                 parcel.readInt(),
-                parcel.readString(),
                 parcel.readParcelable(),
                 parcel.readDouble()
         )
