@@ -4,7 +4,7 @@ import com.google.gson.Gson
 import org.junit.Assert.*
 import org.junit.Test
 import org.stepic.droid.model.Block
-import org.stepic.droid.model.code.CodeOptions
+import org.stepik.android.model.structure.code.CodeOptions
 import org.stepic.droid.testUtils.TestingGsonProvider
 
 class CodeOptionsAdapterFactoryTest {

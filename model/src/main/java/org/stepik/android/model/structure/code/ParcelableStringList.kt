@@ -1,10 +1,9 @@
-package org.stepic.droid.model.code
+package org.stepik.android.model.structure.code
 
 import android.os.Parcel
 import android.os.Parcelable
 
 class ParcelableStringList() : ArrayList<String>(), Parcelable {
-
     private constructor (parcel: Parcel) : this() {
         parcel.readList(this, String::class.java.classLoader)
     }
@@ -17,7 +16,6 @@ class ParcelableStringList() : ArrayList<String>(), Parcelable {
 
     companion object CREATOR : Parcelable.Creator<ParcelableStringList> {
         override fun createFromParcel(parcel: Parcel): ParcelableStringList = ParcelableStringList(parcel)
-
         override fun newArray(size: Int): Array<ParcelableStringList?> = arrayOfNulls(size)
     }
 }

@@ -6,7 +6,7 @@ import com.google.gson.Gson
 import org.stepic.droid.mappers.toDbUrl
 import org.stepic.droid.mappers.toVideoUrls
 import org.stepic.droid.model.*
-import org.stepic.droid.model.code.CodeOptions
+import org.stepik.android.model.structure.code.CodeOptions
 import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepic.droid.storage.structure.DbStructureBlock
 import org.stepic.droid.storage.structure.DbStructureCachedVideo

@@ -6,7 +6,7 @@ import com.google.gson.TypeAdapterFactory
 import com.google.gson.reflect.TypeToken
 import com.google.gson.stream.JsonReader
 import com.google.gson.stream.JsonWriter
-import org.stepic.droid.model.code.CodeOptions
+import org.stepik.android.model.structure.code.CodeOptions
 
 class CodeOptionsAdapterFactory : TypeAdapterFactory {
     override fun <T : Any?> create(gson: Gson, type: TypeToken<T>): TypeAdapter<T>? {
