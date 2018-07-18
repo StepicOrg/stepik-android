@@ -1,6 +1,6 @@
 package org.stepic.droid.mappers
 
-import org.stepic.droid.model.CourseCollection
+import org.stepik.android.model.structure.CourseCollection
 import org.stepic.droid.model.CoursesCarouselColorType
 import org.stepic.droid.model.CoursesCarouselInfo
 import javax.inject.Inject
@@ -14,7 +14,7 @@ constructor() : Mapper<CourseCollection, CoursesCarouselInfo> {
                 colorType = CoursesCarouselColorType.Light,
                 title = item.title,
                 table = null,
-                courseIds = item.courses,
+                courseIds = item.courses.toLongArray(),
                 description = item.description
         )
     }
