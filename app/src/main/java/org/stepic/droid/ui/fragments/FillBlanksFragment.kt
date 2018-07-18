@@ -7,7 +7,7 @@ import kotlinx.android.synthetic.main.view_fill_blanks.view.*
 import org.stepic.droid.R
 import org.stepic.droid.ui.adapters.FillBlanksAdapter
 import org.stepik.android.model.learning.attempts.Attempt
-import org.stepik.android.model.learning.replies.Reply
+import org.stepik.android.model.learning.Reply
 
 class FillBlanksFragment: StepAttemptFragment() {
     private val fillBlanksAdapter = FillBlanksAdapter()

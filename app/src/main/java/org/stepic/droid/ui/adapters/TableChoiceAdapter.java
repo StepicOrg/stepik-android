@@ -15,7 +15,7 @@ import android.widget.CompoundButton;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
-import org.stepik.android.model.learning.replies.TableChoiceAnswer;
+import org.stepik.android.model.learning.TableChoiceAnswer;
 import org.stepic.droid.ui.custom.ProgressLatexView;
 import org.stepic.droid.ui.listeners.CheckedChangeListenerWithPosition;
 

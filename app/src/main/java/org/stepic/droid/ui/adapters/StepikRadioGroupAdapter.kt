@@ -9,7 +9,7 @@ import org.stepic.droid.ui.custom.StepikCheckBox
 import org.stepic.droid.ui.custom.StepikOptionView
 import org.stepic.droid.ui.custom.StepikRadioButton
 import org.stepic.droid.ui.custom.StepikRadioGroup
-import org.stepik.android.model.learning.replies.Reply
+import org.stepik.android.model.learning.Reply
 import java.lang.Math.min
 import javax.inject.Inject
 

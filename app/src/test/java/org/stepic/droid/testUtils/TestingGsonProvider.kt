@@ -7,7 +7,7 @@ import org.stepic.droid.jsonHelpers.deserializers.DatasetDeserializer
 import org.stepic.droid.jsonHelpers.deserializers.ReplyDeserializer
 import org.stepic.droid.jsonHelpers.serializers.ReplySerializer
 import org.stepik.android.model.learning.attempts.DatasetWrapper
-import org.stepik.android.model.learning.replies.ReplyWrapper
+import org.stepik.android.model.learning.ReplyWrapper
 
 object TestingGsonProvider {
     val gson: Gson by lazy {

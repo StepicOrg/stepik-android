@@ -14,7 +14,7 @@ import org.stepik.android.model.learning.attempts.Attempt
 import org.stepic.droid.ui.adapters.CodeToolbarAdapter
 import org.stepic.droid.ui.util.listenKeyboardChanges
 import org.stepic.droid.ui.util.stopListenKeyboardChanges
-import org.stepik.android.model.learning.replies.Reply
+import org.stepik.android.model.learning.Reply
 
 class SqlStepFragment: StepAttemptFragment(), CodeToolbarAdapter.OnSymbolClickListener {
     companion object {

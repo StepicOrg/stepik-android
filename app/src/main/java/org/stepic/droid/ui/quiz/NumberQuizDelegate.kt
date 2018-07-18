@@ -3,7 +3,7 @@ package org.stepic.droid.ui.quiz
 import android.text.InputType
 import android.view.View
 import org.stepic.droid.model.Submission
-import org.stepik.android.model.learning.replies.Reply
+import org.stepik.android.model.learning.Reply
 
 class NumberQuizDelegate: StringQuizDelegate() {
     override fun onViewCreated(view: View) {

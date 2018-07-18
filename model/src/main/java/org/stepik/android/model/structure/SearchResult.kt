@@ -1,4 +1,4 @@
-package org.stepic.droid.model
+package org.stepik.android.model.structure
 
 import com.google.gson.annotations.SerializedName
 

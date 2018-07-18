@@ -1,4 +1,4 @@
-package org.stepik.android.model.learning.replies
+package org.stepik.android.model.learning
 
 import com.google.gson.annotations.SerializedName
 import org.stepik.android.model.learning.submissions.Attachment
@@ -19,3 +19,18 @@ class Reply(
         val blanks: List<String>? = null,
         var tableChoices: List<TableChoiceAnswer>? = null //this is not serialize by default, because  field 'choices' is already created by different type
 )
+
+
+class ReplyWrapper(val reply: Reply)
+
+
+data class TableChoiceAnswer(
+        @SerializedName("name_row")
+        val nameRow: String,
+        val columns: List<Cell>
+) {
+    data class Cell(
+            val name: String,
+            var answer: Boolean
+    )
+}

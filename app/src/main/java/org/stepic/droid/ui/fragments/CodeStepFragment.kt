@@ -35,7 +35,7 @@ import org.stepic.droid.ui.util.stopListenKeyboardChanges
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.ProgressHelper
 import org.stepik.android.model.learning.attempts.Attempt
-import org.stepik.android.model.learning.replies.Reply
+import org.stepik.android.model.learning.Reply
 import javax.inject.Inject
 
 class CodeStepFragment : StepAttemptFragment(),

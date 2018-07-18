@@ -1,7 +1,7 @@
 package org.stepic.droid.web
 
 import com.google.gson.annotations.SerializedName
-import org.stepic.droid.model.UserActivity
+import org.stepik.android.model.user.UserActivity
 import org.stepik.android.model.Meta
 
 data class UserActivityResponse(

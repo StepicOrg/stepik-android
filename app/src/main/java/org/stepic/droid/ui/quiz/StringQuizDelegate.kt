@@ -8,7 +8,7 @@ import android.widget.EditText
 import org.stepic.droid.R
 import org.stepik.android.model.learning.attempts.Attempt
 import org.stepic.droid.model.Submission
-import org.stepik.android.model.learning.replies.Reply
+import org.stepik.android.model.learning.Reply
 
 open class StringQuizDelegate: QuizDelegate() {
     protected lateinit var answerField: EditText

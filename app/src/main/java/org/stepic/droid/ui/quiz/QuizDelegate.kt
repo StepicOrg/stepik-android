@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import org.stepik.android.model.learning.attempts.Attempt
 import org.stepic.droid.model.Submission
-import org.stepik.android.model.learning.replies.Reply
+import org.stepik.android.model.learning.Reply
 
 abstract class QuizDelegate {
     abstract var isEnabled: Boolean

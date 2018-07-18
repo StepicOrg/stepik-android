@@ -9,7 +9,7 @@ import org.stepic.droid.R
 import org.stepic.droid.model.Option
 import org.stepic.droid.ui.adapters.SortingStepDraggableAdapter
 import org.stepik.android.model.learning.attempts.Attempt
-import org.stepik.android.model.learning.replies.Reply
+import org.stepik.android.model.learning.Reply
 
 class SortingStepFragment: DraggableStepFragment() {
 

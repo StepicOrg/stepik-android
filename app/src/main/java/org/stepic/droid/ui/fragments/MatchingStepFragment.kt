@@ -9,9 +9,8 @@ import org.stepic.droid.model.Option
 import org.stepic.droid.ui.adapters.MatchingStepDraggableAdapter
 import org.stepic.droid.ui.util.SimpleDividerItemDecoration
 import org.stepik.android.model.learning.attempts.Attempt
-import org.stepik.android.model.learning.replies.Reply
+import org.stepik.android.model.learning.Reply
 import java.util.ArrayList
-import java.util.HashMap
 
 class MatchingStepFragment: DraggableStepFragment() {
 

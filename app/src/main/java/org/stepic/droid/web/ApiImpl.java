@@ -36,7 +36,7 @@ import org.stepic.droid.jsonHelpers.deserializers.ReplyDeserializer;
 import org.stepic.droid.jsonHelpers.serializers.ReplySerializer;
 import org.stepik.android.model.structure.Course;
 import org.stepic.droid.model.NotificationCategory;
-import org.stepic.droid.model.RegistrationUser;
+import org.stepik.android.model.user.RegistrationCredentials;
 import org.stepic.droid.model.StepikFilter;
 import org.stepic.droid.model.Submission;
 import org.stepic.droid.adaptive.model.RecommendationReaction;
@@ -62,8 +62,8 @@ import org.stepic.droid.web.model.desk.DeskRequestWrapper;
 import org.stepic.droid.web.storage.RemoteStorageService;
 import org.stepik.android.model.structure.EnrollmentWrapper;
 import org.stepik.android.model.structure.Tag;
-import org.stepik.android.model.learning.replies.Reply;
-import org.stepik.android.model.learning.replies.ReplyWrapper;
+import org.stepik.android.model.learning.Reply;
+import org.stepik.android.model.learning.ReplyWrapper;
 import org.stepik.android.model.user.Profile;
 import org.stepik.android.model.user.User;
 import org.stepik.android.model.learning.attempts.DatasetWrapper;
@@ -430,7 +430,7 @@ public class ApiImpl implements Api {
                 .client(okHttpBuilder.build())
                 .build();
         StepicRestOAuthService tempService = notLogged.create(StepicRestOAuthService.class);
-        return tempService.createAccount(new UserRegistrationRequest(new RegistrationUser(firstName, lastName, email, password)));
+        return tempService.createAccount(new UserRegistrationRequest(new RegistrationCredentials(firstName, lastName, email, password)));
     }
 
     @Nullable

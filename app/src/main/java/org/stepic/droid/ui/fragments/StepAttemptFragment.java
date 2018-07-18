@@ -56,7 +56,7 @@ import org.stepic.droid.util.RatingUtilKt;
 import org.stepic.droid.util.SnackbarExtensionKt;
 import org.stepic.droid.util.StepExtensionsKt;
 import org.stepic.droid.util.SubmissionExtensionsKt;
-import org.stepik.android.model.learning.replies.Reply;
+import org.stepik.android.model.learning.Reply;
 
 import javax.inject.Inject;
 

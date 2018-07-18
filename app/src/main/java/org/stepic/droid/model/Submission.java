@@ -1,8 +1,8 @@
 package org.stepic.droid.model;
 
 import com.google.gson.annotations.SerializedName;
-import org.stepik.android.model.learning.replies.Reply;
-import org.stepik.android.model.learning.replies.ReplyWrapper;
+import org.stepik.android.model.learning.Reply;
+import org.stepik.android.model.learning.ReplyWrapper;
 import org.jetbrains.annotations.Nullable;
 
 public class Submission {

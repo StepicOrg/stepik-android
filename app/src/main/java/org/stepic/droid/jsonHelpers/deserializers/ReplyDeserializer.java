@@ -10,9 +10,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
-import org.stepik.android.model.learning.replies.Reply;
-import org.stepik.android.model.learning.replies.ReplyWrapper;
-import org.stepik.android.model.learning.replies.TableChoiceAnswer;
+import org.stepik.android.model.learning.Reply;
+import org.stepik.android.model.learning.ReplyWrapper;
+import org.stepik.android.model.learning.TableChoiceAnswer;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
