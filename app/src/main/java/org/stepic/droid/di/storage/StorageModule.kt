@@ -26,6 +26,7 @@ import org.stepic.droid.storage.structure.DbStructureEnrolledAndFeaturedCourses
 import org.stepic.droid.web.ViewAssignment
 import org.stepik.android.model.learning.Assignment
 import org.stepik.android.model.structure.Course
+import org.stepik.android.model.structure.Lesson
 import org.stepik.android.model.structure.Progress
 
 @Module

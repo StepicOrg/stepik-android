@@ -5,7 +5,7 @@ import org.stepic.droid.core.downloads.contract.DownloadsListener
 import org.stepic.droid.core.downloads.contract.DownloadsPoster
 import org.stepic.droid.model.CachedVideo
 import org.stepic.droid.model.DownloadingVideoItem
-import org.stepic.droid.model.Lesson
+import org.stepik.android.model.structure.Lesson
 import javax.inject.Inject
 
 class DownloadsPosterImpl

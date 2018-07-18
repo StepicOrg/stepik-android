@@ -8,7 +8,7 @@ import android.os.Handler
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.downloads.contract.DownloadsPoster
-import org.stepic.droid.model.Lesson
+import org.stepik.android.model.structure.Lesson
 import org.stepic.droid.model.Step
 import org.stepic.droid.storage.StoreStateManager
 import org.stepic.droid.storage.operations.DatabaseFacade

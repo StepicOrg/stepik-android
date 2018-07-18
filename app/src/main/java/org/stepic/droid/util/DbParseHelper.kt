@@ -37,16 +37,8 @@ object DbParseHelper {
 
     @JvmStatic
     @JvmOverloads
-    fun parseStringToStringArray(str: String?, separator: String = DEFAULT_SEPARATOR): Array<String?>? {
-        if (str == null) return null
-        val strArray = str.split(separator)
-        val result = arrayOfNulls<String>(strArray.size)
-        strArray.forEachIndexed { i, el ->
-            val trimmed = el.trim()
-            result[i] = trimmed
-        }
-        return result
-    }
+    fun parseStringToStringArray(str: String?, separator: String = DEFAULT_SEPARATOR): Array<String>? =
+            str?.split(separator)?.map(String::trim)?.toTypedArray()
 
 }
 

@@ -4,6 +4,7 @@ import android.content.Intent
 import org.stepic.droid.model.*
 import org.stepik.android.model.structure.Unit
 import org.stepik.android.model.structure.Course
+import org.stepik.android.model.structure.Lesson
 
 interface ShareHelper {
     fun getIntentForCourseSharing(course: Course): Intent

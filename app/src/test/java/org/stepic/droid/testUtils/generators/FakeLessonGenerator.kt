@@ -1,6 +1,6 @@
 package org.stepic.droid.testUtils.generators
 
-import org.stepic.droid.model.Lesson
+import org.stepik.android.model.structure.Lesson
 
 object FakeLessonGenerator {
 

@@ -7,7 +7,6 @@ import org.stepic.droid.di.qualifiers.FeaturedCoursesDaoQualifier
 import org.stepic.droid.di.storage.StorageSingleton
 import org.stepic.droid.features.deadlines.storage.dao.DeadlinesBannerDao
 import org.stepic.droid.model.*
-import org.stepik.android.model.structure.Unit
 import org.stepic.droid.model.code.CodeSubmission
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.storage.dao.AdaptiveExpDao
@@ -19,9 +18,8 @@ import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DbParseHelper
 import org.stepic.droid.web.ViewAssignment
 import org.stepik.android.model.learning.Assignment
-import org.stepik.android.model.structure.Course
-import org.stepik.android.model.structure.Progress
-import org.stepik.android.model.structure.Video
+import org.stepik.android.model.structure.*
+import org.stepik.android.model.structure.Unit
 import java.util.*
 import javax.inject.Inject
 
@@ -181,7 +179,7 @@ class DatabaseFacade
     fun isLessonCached(lesson: Lesson?): Boolean {
         val id = lesson?.id ?: return false
         val dbLesson = lessonDao.get(DbStructureLesson.Column.LESSON_ID, id.toString())
-        return dbLesson != null && dbLesson.is_cached
+        return dbLesson != null && dbLesson.isCached
     }
 
     fun isStepCached(step: Step?): Boolean {
@@ -206,8 +204,8 @@ class DatabaseFacade
     fun updateOnlyCachedLoadingLesson(lesson: Lesson?) {
         lesson?.let {
             val cv = ContentValues()
-            cv.put(DbStructureLesson.Column.IS_LOADING, lesson.is_loading)
-            cv.put(DbStructureLesson.Column.IS_CACHED, lesson.is_cached)
+            cv.put(DbStructureLesson.Column.IS_LOADING, lesson.isLoading)
+            cv.put(DbStructureLesson.Column.IS_CACHED, lesson.isCached)
             lessonDao.update(DbStructureLesson.Column.LESSON_ID, lesson.id.toString(), cv)
         }
     }

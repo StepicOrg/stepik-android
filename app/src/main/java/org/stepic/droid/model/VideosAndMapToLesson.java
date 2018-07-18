@@ -1,5 +1,7 @@
 package org.stepic.droid.model;
 
+import org.stepik.android.model.structure.Lesson;
+
 import java.util.List;
 import java.util.Map;
 

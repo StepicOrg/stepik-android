@@ -3,7 +3,7 @@ package org.stepic.droid.storage
 import android.content.Context
 import android.content.Intent
 import android.os.Parcelable
-import org.stepic.droid.model.Lesson
+import org.stepik.android.model.structure.Lesson
 import org.stepic.droid.model.Step
 import org.stepic.droid.services.DeleteService
 import org.stepic.droid.services.LoadService

@@ -4,7 +4,7 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.LessonView
 import org.stepic.droid.di.lesson.LessonScope
-import org.stepic.droid.model.Lesson
+import org.stepik.android.model.structure.Lesson
 import org.stepic.droid.model.Section
 import org.stepic.droid.model.Step
 import org.stepik.android.model.structure.Unit
@@ -78,7 +78,7 @@ class LessonPresenter
                     initUnitLessonWithIds(simpleLessonId, simpleUnitId)
                 }
 
-                if (!(lesson?.is_public ?: true)) {
+                if (lesson?.isPublic == false) {
                     //lesson is not public
                     val profileResponse = sharedPreferenceHelper.authResponseFromStore
                     if (profileResponse == null) {

@@ -5,7 +5,7 @@ import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.UnitsView
 import org.stepic.droid.di.section.SectionScope
 import org.stepic.droid.exceptions.UnitStoredButLessonNotException
-import org.stepic.droid.model.Lesson
+import org.stepik.android.model.structure.Lesson
 import org.stepik.android.model.structure.Progress
 import org.stepic.droid.model.Section
 import org.stepik.android.model.structure.Unit
@@ -186,8 +186,8 @@ constructor(
                         for (lessonItem in backgroundLessons) {
                             databaseFacade.addLesson(lessonItem)
                             val cachedLesson = cacheLessonMap[lessonItem.id]
-                            lessonItem.is_loading = cachedLesson?.is_loading ?: false
-                            lessonItem.is_cached = cachedLesson?.is_cached ?: false
+                            lessonItem.isLoading = cachedLesson?.isLoading ?: false
+                            lessonItem.isCached = cachedLesson?.isCached ?: false
                         }
 
 

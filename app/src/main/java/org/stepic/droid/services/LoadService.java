@@ -12,7 +12,7 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.DownloadEntity;
-import org.stepic.droid.model.Lesson;
+import org.stepik.android.model.structure.Lesson;
 import org.stepik.android.model.structure.Progress;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
@@ -246,7 +246,7 @@ public class LoadService extends IntentService {
         //make copies of objects.
         Lesson lesson = databaseFacade.getLessonById(lessonOut.getId());
 
-        if (lesson != null && !lesson.is_cached() && lesson.is_loading()) {
+        if (lesson != null && !lesson.isCached() && lesson.isLoading()) {
             try {
                 Unit unit = databaseFacade.getUnitByLessonId(lesson.getId());
                 if (unit != null) {
@@ -370,8 +370,8 @@ public class LoadService extends IntentService {
 
                             if (!databaseFacade.isLessonCached(lesson)) {
                                 //need to be load
-                                lesson.set_loading(true);
-                                lesson.set_cached(false);
+                                lesson.setLoading(true);
+                                lesson.setCached(false);
 
                                 databaseFacade.updateOnlyCachedLoadingLesson(lesson);
                             }

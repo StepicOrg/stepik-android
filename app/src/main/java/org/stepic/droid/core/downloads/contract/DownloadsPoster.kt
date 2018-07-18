@@ -2,7 +2,7 @@ package org.stepic.droid.core.downloads.contract
 
 import org.stepic.droid.model.CachedVideo
 import org.stepic.droid.model.DownloadingVideoItem
-import org.stepic.droid.model.Lesson
+import org.stepik.android.model.structure.Lesson
 
 interface DownloadsPoster {
     fun downloadComplete(stepId: Long, lesson: Lesson, video: CachedVideo)

@@ -16,7 +16,7 @@ import org.stepic.droid.concurrency.SingleThreadExecutor;
 import org.stepic.droid.core.downloads.contract.DownloadsPoster;
 import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.DownloadEntity;
-import org.stepic.droid.model.Lesson;
+import org.stepik.android.model.structure.Lesson;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.storage.CancelSniffer;

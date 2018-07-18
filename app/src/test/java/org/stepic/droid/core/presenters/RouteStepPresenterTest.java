@@ -9,7 +9,7 @@ import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.core.routing.contract.RoutingPoster;
 import org.stepic.droid.core.presenters.contracts.RouteStepView;
 import org.stepik.android.model.structure.Course;
-import org.stepic.droid.model.Lesson;
+import org.stepik.android.model.structure.Lesson;
 import org.stepic.droid.model.Section;
 import org.stepik.android.model.structure.Unit;
 import org.stepic.droid.storage.repositories.Repository;

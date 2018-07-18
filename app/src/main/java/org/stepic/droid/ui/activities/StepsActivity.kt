@@ -7,7 +7,7 @@ import android.view.MenuItem
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.SingleFragmentActivity
-import org.stepic.droid.model.Lesson
+import org.stepik.android.model.structure.Lesson
 import org.stepic.droid.model.Section
 import org.stepik.android.model.structure.Unit
 import org.stepic.droid.ui.fragments.LessonFragment
