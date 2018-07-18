@@ -18,7 +18,7 @@ import org.stepic.droid.R;
 import org.stepic.droid.base.App;
 import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.core.presenters.CertificatePresenter;
-import org.stepik.android.model.learning.certificates.CertificateType;
+import org.stepik.android.model.structure.Certificate;
 
 import java.util.List;
 
@@ -112,9 +112,9 @@ public class CertificatesAdapter extends RecyclerView.Adapter<CertificatesAdapte
             certificateTitleView.setText(certificate.getTitle());
 
             String certificateDescriptionLocal = null;
-            if (certificate.getType() == CertificateType.DISTINCTION) {
+            if (certificate.getType() == Certificate.Type.DISTINCTION) {
                 certificateDescriptionLocal = String.format(certificateDistinctionString, certificate.getTitle());
-            } else if (certificate.getType() == CertificateType.REGULAR) {
+            } else if (certificate.getType() == Certificate.Type.REGULAR) {
                 certificateDescriptionLocal = String.format(certificateRegularString, certificate.getTitle());
             }
 

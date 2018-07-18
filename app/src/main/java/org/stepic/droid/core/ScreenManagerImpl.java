@@ -71,7 +71,7 @@ import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.GenericFileProvider;
 import org.stepic.droid.util.StringUtil;
 import org.stepic.droid.web.ViewAssignment;
-import org.stepik.android.model.learning.Tag;
+import org.stepik.android.model.structure.Tag;
 
 import java.io.File;
 import java.net.URLEncoder;

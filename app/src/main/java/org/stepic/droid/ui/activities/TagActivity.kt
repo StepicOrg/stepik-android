@@ -6,7 +6,7 @@ import android.support.v4.app.Fragment
 import android.view.MenuItem
 import org.stepic.droid.base.SingleFragmentActivity
 import org.stepic.droid.ui.fragments.TagFragment
-import org.stepik.android.model.learning.Tag
+import org.stepik.android.model.structure.Tag
 
 class TagActivity : SingleFragmentActivity() {
 

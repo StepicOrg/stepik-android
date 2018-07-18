@@ -20,7 +20,7 @@ import org.stepik.android.model.structure.Unit;
 import org.stepik.android.model.structure.Video;
 import org.stepic.droid.ui.fragments.CommentsFragment;
 import org.stepic.droid.web.ViewAssignment;
-import org.stepik.android.model.learning.Tag;
+import org.stepik.android.model.structure.Tag;
 
 public interface ScreenManager {
 

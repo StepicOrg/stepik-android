@@ -22,7 +22,7 @@ import org.stepic.droid.model.StepikFilter
 import org.stepic.droid.ui.adapters.CatalogAdapter
 import org.stepic.droid.ui.custom.AutoCompleteSearchView
 import org.stepic.droid.ui.util.initCenteredToolbar
-import org.stepik.android.model.learning.Tag
+import org.stepik.android.model.structure.Tag
 import java.util.*
 import javax.inject.Inject
 

@@ -14,7 +14,7 @@ import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.web.model.adaptive.RatingRestoreResponse;
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
-import org.stepik.android.model.learning.Tag;
+import org.stepik.android.model.structure.Tag;
 import org.stepik.android.model.learning.replies.Reply;
 import org.stepik.android.model.user.User;
 

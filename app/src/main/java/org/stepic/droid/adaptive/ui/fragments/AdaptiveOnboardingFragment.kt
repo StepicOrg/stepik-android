@@ -46,8 +46,7 @@ class AdaptiveOnboardingFragment: FragmentBase() {
         val lesson = Lesson(title = getString(titleId))
 
         val step = Step()
-        val block = Block()
-        block.text = getString(questionId)
+        val block = Block(text = getString(questionId))
         step.block = block
 
         return Card(id, 0, lesson, step, Attempt())

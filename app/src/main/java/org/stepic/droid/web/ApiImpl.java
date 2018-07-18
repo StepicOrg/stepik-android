@@ -61,7 +61,7 @@ import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
 import org.stepic.droid.web.model.desk.DeskRequestWrapper;
 import org.stepic.droid.web.storage.RemoteStorageService;
 import org.stepik.android.model.structure.EnrollmentWrapper;
-import org.stepik.android.model.learning.Tag;
+import org.stepik.android.model.structure.Tag;
 import org.stepik.android.model.learning.replies.Reply;
 import org.stepik.android.model.learning.replies.ReplyWrapper;
 import org.stepik.android.model.user.Profile;

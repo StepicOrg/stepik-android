@@ -2,14 +2,14 @@ package org.stepic.droid.model
 
 import android.os.Parcel
 import android.os.Parcelable
-import org.stepik.android.model.learning.certificates.CertificateType
+import org.stepik.android.model.structure.Certificate
 import java.util.*
 
 class CertificateViewItem(
         val certificateId: Long?,
         val title: String?,
         val coverFullPath: String?,
-        val type: CertificateType?,
+        val type: Certificate.Type?,
         val fullPath: String?,
         val grade: String?,
         val issueDate : Date?
@@ -58,9 +58,9 @@ class CertificateViewItem(
             }
         }
 
-        private fun getCertificateTypeByParcel(input: Parcel): CertificateType? {
+        private fun getCertificateTypeByParcel(input: Parcel): Certificate.Type? {
             val temp = input.readInt()
-            val localValues = CertificateType.values()
+            val localValues = Certificate.Type.values()
             return if (temp >= 0 && temp < localValues.size) {
                 localValues[temp]
             } else {

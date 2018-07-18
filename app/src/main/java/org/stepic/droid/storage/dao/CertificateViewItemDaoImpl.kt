@@ -6,7 +6,7 @@ import org.stepic.droid.jsonHelpers.adapters.UTCDateAdapter
 import org.stepic.droid.model.CertificateViewItem
 import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepic.droid.storage.structure.DbStructureCertificateViewItem
-import org.stepik.android.model.learning.certificates.CertificateType
+import org.stepik.android.model.structure.Certificate
 import javax.inject.Inject
 
 class CertificateViewItemDaoImpl @Inject constructor(databaseOperations: DatabaseOperations) : DaoBase<CertificateViewItem>(databaseOperations) {
@@ -60,8 +60,8 @@ class CertificateViewItemDaoImpl @Inject constructor(databaseOperations: Databas
         )
     }
 
-    private fun getCertificateTypeByTypeId(typeId: Int): CertificateType? {
-        val localValues = CertificateType.values()
+    private fun getCertificateTypeByTypeId(typeId: Int): Certificate.Type? {
+        val localValues = Certificate.Type.values()
         return if (typeId >= 0 && typeId < localValues.size) {
             localValues[typeId]
         } else {
