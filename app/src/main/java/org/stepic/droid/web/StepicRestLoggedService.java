@@ -3,7 +3,7 @@ package org.stepic.droid.web;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.web.model.adaptive.RecommendationReactionsRequest;
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
-import org.stepik.android.model.learning.EnrollmentWrapper;
+import org.stepik.android.model.structure.EnrollmentWrapper;
 
 import io.reactivex.Completable;
 import io.reactivex.Single;
