@@ -18,6 +18,8 @@ import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.StepikUtil
 import org.stepic.droid.util.getStepType
 import org.stepic.droid.web.Api
+import org.stepik.android.model.structure.DiscountingPolicyType
+import org.stepik.android.model.structure.Section
 import java.util.*
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
@@ -66,19 +68,19 @@ class StepAttemptPresenter
 
     @MainThread
     fun handleDiscountingPolicy(numberOfSubmission: Int, section: Section?, step: Step) {
-        if (section?.discountingPolicy == null || section.discountingPolicy == DiscountingPolicyType.noDiscount || numberOfSubmission < 0 || step.is_custom_passed) {
+        if (section?.discountingPolicy == null || section.discountingPolicy == DiscountingPolicyType.NoDiscount || numberOfSubmission < 0 || step.is_custom_passed) {
             view?.onResultHandlingDiscountPolicy(needShow = false)
             return
         }
 
         section.discountingPolicy?.let {
             when (section.discountingPolicy) {
-                DiscountingPolicyType.inverse -> view?.onResultHandlingDiscountPolicy(
+                DiscountingPolicyType.Inverse -> view?.onResultHandlingDiscountPolicy(
                         needShow = true,
                         discountingPolicyType = it,
                         remainTries = Int.MAX_VALUE)
 
-                DiscountingPolicyType.firstOne, DiscountingPolicyType.firstThree -> view?.onResultHandlingDiscountPolicy(
+                DiscountingPolicyType.FirstOne, DiscountingPolicyType.FirstThree -> view?.onResultHandlingDiscountPolicy(
                         needShow = true,
                         discountingPolicyType = it,
                         remainTries = (it.numberOfTries() - numberOfSubmission))

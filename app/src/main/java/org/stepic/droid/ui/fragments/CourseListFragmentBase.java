@@ -30,7 +30,7 @@ import org.stepic.droid.core.presenters.contracts.CoursesView;
 import org.stepic.droid.core.presenters.contracts.DroppingView;
 import org.stepik.android.model.structure.Course;
 import org.stepic.droid.model.CoursesCarouselColorType;
-import org.stepic.droid.model.Section;
+import org.stepik.android.model.structure.Section;
 import org.stepic.droid.storage.operations.Table;
 import org.stepic.droid.ui.activities.contracts.RootScreen;
 import org.stepic.droid.ui.adapters.CoursesAdapter;

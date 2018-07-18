@@ -42,6 +42,7 @@ import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.StepikUtil
 import org.stepic.droid.util.SuppressFBWarnings
 import org.stepik.android.model.structure.Course
+import org.stepik.android.model.structure.Section
 import java.util.*
 import javax.inject.Inject
 

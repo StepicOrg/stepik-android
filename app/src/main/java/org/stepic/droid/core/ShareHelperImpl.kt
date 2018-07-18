@@ -12,6 +12,7 @@ import org.stepic.droid.util.StringUtil
 import org.stepic.droid.util.resolvers.text.TextResolver
 import org.stepik.android.model.structure.Course
 import org.stepik.android.model.structure.Lesson
+import org.stepik.android.model.structure.Section
 import javax.inject.Inject
 
 @AppSingleton

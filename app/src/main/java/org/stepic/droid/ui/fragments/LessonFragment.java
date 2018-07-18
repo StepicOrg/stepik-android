@@ -36,7 +36,7 @@ import org.stepic.droid.core.presenters.contracts.LessonView;
 import org.stepic.droid.core.updatingstep.contract.UpdatingStepListener;
 import org.stepik.android.model.structure.Lesson;
 import org.stepic.droid.model.PersistentLastStep;
-import org.stepic.droid.model.Section;
+import org.stepik.android.model.structure.Section;
 import org.stepic.droid.model.Step;
 import org.stepik.android.model.structure.Unit;
 import org.stepic.droid.ui.adapters.StepFragmentAdapter;

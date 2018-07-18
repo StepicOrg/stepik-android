@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 object DateTimeHelper {
+    const val DISPLAY_DATETIME_PATTERN = "dd MMMM yyyy HH:mm"
 
     const val ISO_PATTERN = "yyyy-MM-dd'T'HH:mm:ssZ"
     private val millisecondsInHour = 1000 * 60 * 60

@@ -9,7 +9,7 @@ import org.stepic.droid.base.ListenerContainer;
 import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.di.AppSingleton;
 import org.stepik.android.model.structure.Lesson;
-import org.stepic.droid.model.Section;
+import org.stepik.android.model.structure.Section;
 import org.stepic.droid.model.Step;
 import org.stepik.android.model.structure.Unit;
 import org.stepic.droid.storage.operations.DatabaseFacade;

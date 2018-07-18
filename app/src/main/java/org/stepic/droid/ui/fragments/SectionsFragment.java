@@ -72,7 +72,7 @@ import org.stepic.droid.features.deadlines.ui.dialogs.LearningRateDialog;
 import org.stepic.droid.model.CalendarItem;
 import org.stepik.android.model.structure.Course;
 import org.stepik.android.model.structure.Progress;
-import org.stepic.droid.model.Section;
+import org.stepik.android.model.structure.Section;
 import org.stepic.droid.notifications.StepikNotificationManager;
 import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.storage.StoreStateManager;

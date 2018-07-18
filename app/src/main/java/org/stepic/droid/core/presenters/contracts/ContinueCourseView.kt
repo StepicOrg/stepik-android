@@ -1,7 +1,7 @@
 package org.stepic.droid.core.presenters.contracts
 
 import org.stepik.android.model.structure.Course
-import org.stepic.droid.model.Section
+import org.stepik.android.model.structure.Section
 
 interface ContinueCourseView {
 

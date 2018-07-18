@@ -1,6 +1,6 @@
 package org.stepic.droid.testUtils.generators
 
-import org.stepic.droid.model.Section
+import org.stepik.android.model.structure.Section
 
 object FakeSectionGenerator {
     @JvmOverloads

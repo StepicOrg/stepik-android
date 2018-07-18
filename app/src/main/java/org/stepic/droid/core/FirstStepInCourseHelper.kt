@@ -2,7 +2,7 @@ package org.stepic.droid.core
 
 import org.stepik.android.model.structure.Course
 import org.stepik.android.model.structure.Lesson
-import org.stepic.droid.model.Section
+import org.stepik.android.model.structure.Section
 import org.stepik.android.model.structure.Unit
 import org.stepic.droid.storage.repositories.Repository
 import org.stepic.droid.util.hasUserAccessAndNotEmpty

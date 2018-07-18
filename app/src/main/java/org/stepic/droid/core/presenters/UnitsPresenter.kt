@@ -7,7 +7,7 @@ import org.stepic.droid.di.section.SectionScope
 import org.stepic.droid.exceptions.UnitStoredButLessonNotException
 import org.stepik.android.model.structure.Lesson
 import org.stepik.android.model.structure.Progress
-import org.stepic.droid.model.Section
+import org.stepik.android.model.structure.Section
 import org.stepik.android.model.structure.Unit
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants

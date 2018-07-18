@@ -1,7 +1,7 @@
 package org.stepic.droid.core.presenters.contracts
 
 import org.stepik.android.model.learning.attempts.Attempt
-import org.stepic.droid.model.DiscountingPolicyType
+import org.stepik.android.model.structure.DiscountingPolicyType
 import org.stepic.droid.model.Submission
 
 interface StepAttemptView {

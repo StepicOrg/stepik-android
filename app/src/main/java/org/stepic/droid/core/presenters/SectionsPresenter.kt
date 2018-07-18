@@ -7,7 +7,7 @@ import org.stepic.droid.core.presenters.contracts.SectionsView
 import org.stepic.droid.di.course.CourseAndSectionsScope
 import org.stepik.android.model.structure.Course
 import org.stepik.android.model.structure.Progress
-import org.stepic.droid.model.Section
+import org.stepik.android.model.structure.Section
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.transformers.transformToViewModel
 import org.stepic.droid.viewmodel.ProgressViewModel

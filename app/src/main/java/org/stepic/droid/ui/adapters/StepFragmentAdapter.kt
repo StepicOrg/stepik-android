@@ -6,7 +6,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
 import org.stepik.android.model.structure.Lesson
-import org.stepic.droid.model.Section
+import org.stepik.android.model.structure.Section
 import org.stepic.droid.model.Step
 import org.stepik.android.model.structure.Unit
 import org.stepic.droid.util.AppConstants

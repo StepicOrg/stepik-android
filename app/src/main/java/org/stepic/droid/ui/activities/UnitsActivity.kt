@@ -3,7 +3,7 @@ package org.stepic.droid.ui.activities
 import android.support.v4.app.Fragment
 import org.stepic.droid.R
 import org.stepic.droid.base.SingleFragmentActivity
-import org.stepic.droid.model.Section
+import org.stepik.android.model.structure.Section
 import org.stepic.droid.ui.fragments.UnitsFragment
 import org.stepic.droid.util.AppConstants
 

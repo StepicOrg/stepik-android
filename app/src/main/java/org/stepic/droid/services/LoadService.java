@@ -14,7 +14,7 @@ import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.DownloadEntity;
 import org.stepik.android.model.structure.Lesson;
 import org.stepik.android.model.structure.Progress;
-import org.stepic.droid.model.Section;
+import org.stepik.android.model.structure.Section;
 import org.stepic.droid.model.Step;
 import org.stepik.android.model.structure.Unit;
 import org.stepik.android.model.structure.Video;
@@ -94,7 +94,7 @@ public class LoadService extends IntentService {
         try {
             switch (type) {
                 case Section:
-                    Section section = (Section) intent.getSerializableExtra(AppConstants.KEY_SECTION_BUNDLE);
+                    Section section = intent.getParcelableExtra(AppConstants.KEY_SECTION_BUNDLE);
                     addSection(section);
                     break;
                 case Lesson:

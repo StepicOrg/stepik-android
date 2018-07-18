@@ -24,7 +24,7 @@ import org.stepic.droid.core.presenters.PersistentCourseListPresenter
 import org.stepic.droid.core.presenters.contracts.ContinueCourseView
 import org.stepic.droid.core.presenters.contracts.FastContinueView
 import org.stepik.android.model.structure.Course
-import org.stepic.droid.model.Section
+import org.stepik.android.model.structure.Section
 import org.stepic.droid.storage.operations.Table
 import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment

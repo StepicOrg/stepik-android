@@ -1,7 +1,7 @@
 package org.stepic.droid.storage;
 
 import org.stepik.android.model.structure.Lesson;
-import org.stepic.droid.model.Section;
+import org.stepik.android.model.structure.Section;
 
 public interface IDownloadManager {
 

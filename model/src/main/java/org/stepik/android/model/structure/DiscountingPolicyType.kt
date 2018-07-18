@@ -1,21 +1,21 @@
-package org.stepic.droid.model
+package org.stepik.android.model.structure
 
 import com.google.gson.annotations.SerializedName
 
 enum class DiscountingPolicyType {
     @SerializedName("no_discount")
-    noDiscount,
+    NoDiscount,
     @SerializedName("inverse")
-    inverse,
+    Inverse,
     @SerializedName("first_one")
-    firstOne,
+    FirstOne,
     @SerializedName("first_three")
-    firstThree;
+    FirstThree;
 
     fun numberOfTries(): Int =
             when (this) {
-                noDiscount, inverse -> Int.MAX_VALUE
-                firstOne -> 1
-                firstThree -> 3
+                NoDiscount, Inverse -> Int.MAX_VALUE
+                FirstOne -> 1
+                FirstThree -> 3
             }
 }

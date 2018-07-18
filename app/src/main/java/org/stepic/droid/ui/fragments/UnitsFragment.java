@@ -38,7 +38,7 @@ import org.stepic.droid.core.presenters.contracts.UnitsView;
 import org.stepic.droid.core.routing.contract.RoutingListener;
 import org.stepik.android.model.structure.Lesson;
 import org.stepik.android.model.structure.Progress;
-import org.stepic.droid.model.Section;
+import org.stepik.android.model.structure.Section;
 import org.stepik.android.model.structure.Unit;
 import org.stepic.droid.storage.StoreStateManager;
 import org.stepic.droid.ui.adapters.UnitAdapter;

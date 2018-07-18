@@ -11,6 +11,7 @@ import org.stepic.droid.model.code.CodeLimit
 import org.stepic.droid.testUtils.TestingGsonProvider
 import org.stepic.droid.testUtils.assertThatObjectParcelable
 import org.stepic.droid.testUtils.generators.FakeSectionGenerator
+import org.stepik.android.model.structure.Section
 
 @RunWith(RobolectricTestRunner::class)
 class SectionTest {

@@ -1,7 +1,7 @@
 package org.stepic.droid.core.presenters.contracts;
 
 import org.stepik.android.model.structure.Lesson;
-import org.stepic.droid.model.Section;
+import org.stepik.android.model.structure.Section;
 import org.stepik.android.model.structure.Unit;
 
 public interface LessonView {

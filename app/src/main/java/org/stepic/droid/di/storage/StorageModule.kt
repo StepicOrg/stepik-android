@@ -16,7 +16,6 @@ import org.stepic.droid.features.deadlines.storage.operations.DeadlinesRecordOpe
 import org.stepic.droid.features.deadlines.storage.dao.PersonalDeadlinesDao
 import org.stepic.droid.features.deadlines.storage.dao.PersonalDeadlinesDaoImpl
 import org.stepic.droid.model.*
-import org.stepik.android.model.structure.Unit
 import org.stepic.droid.model.code.CodeSubmission
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.storage.DatabaseHelper
@@ -25,9 +24,8 @@ import org.stepic.droid.storage.operations.*
 import org.stepic.droid.storage.structure.DbStructureEnrolledAndFeaturedCourses
 import org.stepic.droid.web.ViewAssignment
 import org.stepik.android.model.learning.Assignment
-import org.stepik.android.model.structure.Course
-import org.stepik.android.model.structure.Lesson
-import org.stepik.android.model.structure.Progress
+import org.stepik.android.model.structure.*
+import org.stepik.android.model.structure.Unit
 
 @Module
 abstract class StorageModule {

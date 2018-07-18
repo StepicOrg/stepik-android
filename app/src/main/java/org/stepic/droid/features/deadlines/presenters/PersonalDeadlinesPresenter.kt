@@ -15,7 +15,7 @@ import org.stepic.droid.features.deadlines.model.DeadlinesWrapper
 import org.stepic.droid.features.deadlines.model.LearningRate
 import org.stepic.droid.features.deadlines.presenters.contracts.PersonalDeadlinesView
 import org.stepic.droid.features.deadlines.repository.DeadlinesRepository
-import org.stepic.droid.model.Section
+import org.stepik.android.model.structure.Section
 import org.stepic.droid.util.addDisposable
 import javax.inject.Inject
 
