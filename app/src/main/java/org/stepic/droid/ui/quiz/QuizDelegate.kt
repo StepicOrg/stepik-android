@@ -4,7 +4,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import org.stepik.android.model.learning.attempts.Attempt
-import org.stepic.droid.model.Submission
+import org.stepik.android.model.learning.Submission
 import org.stepik.android.model.learning.Reply
 
 abstract class QuizDelegate {

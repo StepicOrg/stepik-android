@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import kotlinx.android.synthetic.main.view_choice_attempt.view.*
 import org.stepic.droid.R
-import org.stepic.droid.model.Submission
+import org.stepik.android.model.learning.Submission
 import org.stepic.droid.ui.adapters.StepikRadioGroupAdapter
 import org.stepik.android.model.learning.attempts.Attempt
 

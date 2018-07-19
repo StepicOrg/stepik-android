@@ -7,7 +7,7 @@ import android.widget.Button
 import android.widget.EditText
 import org.stepic.droid.R
 import org.stepik.android.model.learning.attempts.Attempt
-import org.stepic.droid.model.Submission
+import org.stepik.android.model.learning.Submission
 import org.stepik.android.model.learning.Reply
 
 open class StringQuizDelegate: QuizDelegate() {

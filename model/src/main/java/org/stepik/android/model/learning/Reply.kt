@@ -1,7 +1,6 @@
 package org.stepik.android.model.learning
 
 import com.google.gson.annotations.SerializedName
-import org.stepik.android.model.learning.submissions.Attachment
 
 class Reply(
         val choices: List<Boolean>? = null,
@@ -21,7 +20,7 @@ class Reply(
 )
 
 
-class ReplyWrapper(val reply: Reply)
+class ReplyWrapper(val reply: Reply?)
 
 
 data class TableChoiceAnswer(

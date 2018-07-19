@@ -20,7 +20,7 @@ import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.presenters.CardPresenter
 import org.stepic.droid.core.presenters.contracts.CardView
 import org.stepik.android.model.structure.Step
-import org.stepic.droid.model.Submission
+import org.stepik.android.model.learning.Submission
 import org.stepic.droid.ui.custom.LatexSupportableWebView
 import org.stepic.droid.ui.quiz.QuizDelegate
 import org.stepic.droid.util.compatibilityModeForSDK15
@@ -155,7 +155,7 @@ class QuizCardViewHolder(
                 nextButton.visibility = View.VISIBLE
                 container.isEnabled = true
 
-                if (submission.hint.isNotBlank()) {
+                if (submission.hint?.isNotBlank() == true) {
                     hint.text = submission.hint
                     hint.visibility = View.VISIBLE
                 }

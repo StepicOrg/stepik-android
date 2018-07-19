@@ -23,7 +23,7 @@ import org.stepic.droid.core.presenters.PreparingCodeStepPresenter
 import org.stepic.droid.core.presenters.contracts.CodeView
 import org.stepic.droid.core.presenters.contracts.PreparingCodeStepView
 import org.stepik.android.model.structure.Step
-import org.stepic.droid.model.Submission
+import org.stepik.android.model.learning.Submission
 import org.stepic.droid.model.code.extensionForLanguage
 import org.stepic.droid.ui.activities.CodePlaygroundActivity
 import org.stepic.droid.ui.adapters.CodeToolbarAdapter
@@ -294,15 +294,15 @@ class CodeStepFragment : StepAttemptFragment(),
             if (submission.status == Submission.Status.WRONG) {
                 actionButton.setText(R.string.send)
                 blockUIBeforeSubmit(false)
-                if (submission.reply.code != codeEditor.text.toString()) {
+                if (submission.reply?.code != codeEditor.text.toString()) {
                     hideWrongStatus()
                     resetBackgroundOfAttempt()
                     hideHint()
                 }
                 submission = null
             } else {
-                codeEditor.setText(submission.reply.code)
-                chosenProgrammingLanguageName = submission.reply.language
+                codeEditor.setText(submission.reply?.code)
+                chosenProgrammingLanguageName = submission.reply?.language
                 showLanguageChoosingView(false)
                 showCodeQuizEditor()
             }

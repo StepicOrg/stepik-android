@@ -8,13 +8,11 @@ object FakeSectionGenerator {
                  unitIds: LongArray = longArrayOf(),
                  position: Int = 1,
                  courseId: Long = 123,
-                 isActive : Boolean = true): Section {
-        val section = Section()
-        section.id = sectionId
-        section.position = position
-        section.units = unitIds
-        section.course = courseId
-        section.isActive = isActive
-        return section
-    }
+                 isActive : Boolean = true): Section = Section(
+                         id = sectionId,
+                         position = position,
+                         units = unitIds,
+                         course = courseId,
+                         isActive = isActive
+                 )
 }

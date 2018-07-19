@@ -1,4 +1,4 @@
-package org.stepik.android.model.learning.submissions
+package org.stepik.android.model.learning
 
 class Attachment(
         val name: String,

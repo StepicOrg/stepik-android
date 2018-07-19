@@ -4,7 +4,7 @@ import android.widget.Button
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepik.android.model.learning.attempts.Attempt
-import org.stepic.droid.model.Submission
+import org.stepik.android.model.learning.Submission
 import org.stepic.droid.ui.custom.StepikCheckBox
 import org.stepic.droid.ui.custom.StepikOptionView
 import org.stepic.droid.ui.custom.StepikRadioButton

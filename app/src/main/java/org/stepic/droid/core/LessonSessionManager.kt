@@ -2,7 +2,7 @@ package org.stepic.droid.core
 
 import org.stepik.android.model.learning.attempts.Attempt
 import org.stepic.droid.model.LessonSession
-import org.stepic.droid.model.Submission
+import org.stepik.android.model.learning.Submission
 
 interface LessonSessionManager {
 

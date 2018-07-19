@@ -38,7 +38,7 @@ import org.stepik.android.model.structure.Course;
 import org.stepic.droid.model.NotificationCategory;
 import org.stepik.android.model.user.RegistrationCredentials;
 import org.stepic.droid.model.StepikFilter;
-import org.stepic.droid.model.Submission;
+import org.stepik.android.model.learning.Submission;
 import org.stepic.droid.adaptive.model.RecommendationReaction;
 import org.stepic.droid.model.comments.Comment;
 import org.stepic.droid.model.comments.Vote;

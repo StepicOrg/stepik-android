@@ -7,7 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.adaptive.model.RatingItem;
 import org.stepik.android.model.structure.Course;
 import org.stepic.droid.model.NotificationCategory;
-import org.stepic.droid.model.Submission;
+import org.stepik.android.model.learning.Submission;
 import org.stepic.droid.adaptive.model.RecommendationReaction;
 import org.stepic.droid.model.comments.VoteValue;
 import org.stepic.droid.social.ISocialType;

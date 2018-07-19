@@ -42,7 +42,7 @@ import org.stepic.droid.fonts.FontType;
 import org.stepik.android.model.learning.attempts.Attempt;
 import org.stepik.android.model.structure.DiscountingPolicyType;
 import org.stepic.droid.model.LessonSession;
-import org.stepic.droid.model.Submission;
+import org.stepik.android.model.learning.Submission;
 import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout;
 import org.stepic.droid.ui.dialogs.DiscountingPolicyDialogFragment;
 import org.stepic.droid.ui.dialogs.RateAppDialogFragment;

@@ -4,7 +4,7 @@ import org.stepic.droid.concurrency.SingleThreadExecutor
 import org.stepic.droid.di.AppCoreModule
 import org.stepik.android.model.learning.attempts.Attempt
 import org.stepic.droid.model.LessonSession
-import org.stepic.droid.model.Submission
+import org.stepik.android.model.learning.Submission
 import org.stepic.droid.model.code.CodeSubmission
 import org.stepic.droid.storage.operations.DatabaseFacade
 import javax.inject.Inject
