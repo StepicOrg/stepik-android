@@ -32,7 +32,7 @@ import org.stepic.droid.features.achievements.ui.adapters.BaseAchievementsAdapte
 import org.stepic.droid.features.achievements.ui.dialogs.AchievementDetailsDialog
 import org.stepic.droid.fonts.FontType
 import org.stepic.droid.model.UserViewModel
-import org.stepic.droid.model.achievements.AchievementFlatItem
+import org.stepic.droid.model.AchievementFlatItem
 import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.ui.activities.contracts.CloseButtonInToolbar
 import org.stepic.droid.ui.adapters.ProfileSettingsAdapter

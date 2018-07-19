@@ -4,7 +4,7 @@ import android.view.View
 import android.widget.TextView
 import kotlinx.android.synthetic.main.view_achievement_item.view.*
 import org.stepic.droid.features.achievements.util.AchievementResourceResolver
-import org.stepic.droid.model.achievements.AchievementFlatItem
+import org.stepic.droid.model.AchievementFlatItem
 import org.stepic.droid.ui.adapters.viewhoders.GenericViewHolder
 
 class AchievementViewHolder(

@@ -1,4 +1,4 @@
-package org.stepic.droid.model.achievements
+package org.stepik.android.model.achievements
 
 import com.google.gson.annotations.SerializedName
 import java.util.*
@@ -16,6 +16,8 @@ class AchievementProgress(
         val updateDate: Date,
         @SerializedName("obtain_date")
         val obtainDate: Date?
-)
-
-val EmptyAchievementProgressStub = AchievementProgress(0, 0, 0, 0, String(), Date(0), Date(0), null)
+) {
+    companion object {
+        val EmptyStub = AchievementProgress(0, 0, 0, 0, "", Date(0), Date(0), null)
+    }
+}

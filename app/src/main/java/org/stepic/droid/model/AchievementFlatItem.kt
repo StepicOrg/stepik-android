@@ -1,7 +1,9 @@
-package org.stepic.droid.model.achievements
+package org.stepic.droid.model
 
 import android.os.Parcel
 import android.os.Parcelable
+import org.stepik.android.model.achievements.Achievement
+import org.stepik.android.model.achievements.AchievementProgress
 
 class AchievementFlatItem(
         val iconId: Long?,

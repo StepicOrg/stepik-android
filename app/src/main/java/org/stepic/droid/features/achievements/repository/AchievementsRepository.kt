@@ -1,7 +1,7 @@
 package org.stepic.droid.features.achievements.repository
 
 import io.reactivex.Single
-import org.stepic.droid.model.achievements.AchievementFlatItem
+import org.stepic.droid.model.AchievementFlatItem
 
 interface AchievementsRepository {
 

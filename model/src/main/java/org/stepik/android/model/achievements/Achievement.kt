@@ -1,4 +1,4 @@
-package org.stepic.droid.model.achievements
+package org.stepik.android.model.achievements
 
 import com.google.gson.annotations.SerializedName
 
