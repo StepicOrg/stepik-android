@@ -22,7 +22,7 @@ class SortingStepFragment: DraggableStepFragment() {
     override fun initAdapter(): RecyclerView.Adapter<*> = SortingStepDraggableAdapter(optionList)
 
     override fun initOptionListFromAttempt(attempt: Attempt) {
-        optionList = attempt.getDataset()?.options?.mapIndexed { i, option -> Option(option, i) } ?: return
+        optionList = attempt.dataset?.options?.mapIndexed { i, option -> Option(option, i) } ?: return
     }
 
     override fun generateReply(): Reply =

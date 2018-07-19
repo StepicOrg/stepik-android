@@ -39,7 +39,7 @@ class TableChoiceStepFragment: StepAttemptFragment() {
     }
 
     override fun showAttempt(attempt: Attempt) {
-        val dataset = attempt.getDataset() ?: return
+        val dataset = attempt.dataset ?: return
         val rows = dataset.rows ?: return
         val columns = dataset.columns ?: return
         val description = dataset.description ?: return

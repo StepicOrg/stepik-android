@@ -31,7 +31,7 @@ class StepikRadioGroupAdapter(private val group: StepikRadioGroup) {
     private var isMultipleChoice = false
 
     fun setAttempt(attempt: Attempt?) {
-        val dataset = attempt?.getDataset()
+        val dataset = attempt?.dataset
         dataset?.options?.let { options ->
             if (options.isEmpty()) return
             group.removeAllViews()

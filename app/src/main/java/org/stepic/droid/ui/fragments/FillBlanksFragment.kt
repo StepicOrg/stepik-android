@@ -26,7 +26,7 @@ class FillBlanksFragment: StepAttemptFragment() {
     }
 
     override fun showAttempt(attempt: Attempt) {
-        val components = attempt.getDataset()?.components ?: return
+        val components = attempt.dataset?.components ?: return
         fillBlanksAdapter.componentList = components
     }
 

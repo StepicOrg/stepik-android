@@ -24,7 +24,7 @@ class MatchingStepFragment: DraggableStepFragment() {
             MatchingStepDraggableAdapter(activity, optionList)
 
     override fun initOptionListFromAttempt(attempt: Attempt) {
-        val options = attempt.getDataset()?.pairs ?: return
+        val options = attempt.dataset?.pairs ?: return
         if (options.size >= 2) {
             optionList = ArrayList(options.size * 2)
             for (i in options.indices) {

@@ -24,7 +24,7 @@ class FreeResponseStepFragment: StepAttemptFragment() {
 
     override fun generateReply(): Reply {
         var answer = answerField.text.toString()
-        if (attempt?.getDataset()?.isHtmlEnabled == true) {
+        if (attempt?.dataset?.isHtmlEnabled == true) {
             answer = textResolver.replaceWhitespaceToBr(answer)
         }
 
@@ -39,7 +39,7 @@ class FreeResponseStepFragment: StepAttemptFragment() {
         val reply = submission.reply ?: return
 
         val text = reply.text
-        if (attempt?.getDataset()?.isHtmlEnabled == true) {
+        if (attempt?.dataset?.isHtmlEnabled == true) {
             //todo show as html in enhanced latexview
             answerField.setText(textResolver.fromHtml(text))
         } else {
