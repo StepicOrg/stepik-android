@@ -29,7 +29,12 @@ dependencies {
     implementation libraries.kotlinStd
     implementation libraries.gson
 
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    testImplementation libraries.junit
+    testImplementation libraries.robolectric
+    androidTestImplementation(libraries.supportTestRunner) {
+        exclude group: 'com.android.support'
+    }
+    androidTestImplementation(libraries.espressoCore) {
+        exclude group: 'com.android.support'
+    }
 }

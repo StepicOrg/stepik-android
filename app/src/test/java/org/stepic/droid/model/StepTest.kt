@@ -6,7 +6,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.stepic.droid.testUtils.TestingGsonProvider
-import org.stepic.droid.testUtils.assertThatObjectParcelable
+import org.stepik.android.model.util.assertThatObjectParcelable
 import org.stepic.droid.testUtils.generators.FakeStepGenerator
 import org.stepik.android.model.Step
 

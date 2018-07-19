@@ -5,7 +5,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.stepic.droid.testUtils.TestingGsonProvider
-import org.stepic.droid.testUtils.assertThatObjectParcelable
+import org.stepik.android.model.util.assertThatObjectParcelable
 import org.stepik.android.model.code.CodeLimit
 import org.stepik.android.model.code.CodeOptions
 import org.stepik.android.model.util.ParcelableStringList

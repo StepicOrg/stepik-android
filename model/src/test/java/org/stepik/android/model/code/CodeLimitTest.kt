@@ -1,9 +1,9 @@
-package org.stepic.droid.model.code
+package org.stepik.android.model.code
 
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import org.stepic.droid.testUtils.assertThatObjectParcelable
+import org.stepik.android.model.util.assertThatObjectParcelable
 import org.stepik.android.model.code.CodeLimit
 
 @RunWith(RobolectricTestRunner::class)
