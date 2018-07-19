@@ -114,7 +114,8 @@ constructor(
                         var pointer = 0
                         while (pointer < unitIds.size) {
                             val lastExclusive = Math.min(unitIds.size, pointer + AppConstants.DEFAULT_NUMBER_IDS_IN_QUERY)
-                            val subArrayForLoading = Arrays.copyOfRange(unitIds, pointer, lastExclusive)
+
+                            val subArrayForLoading = unitIds.subList(pointer, lastExclusive)
                             val units = api.getUnits(subArrayForLoading).execute()?.body()?.units
                             if (units == null) {
                                 throw Exception("units is not got")

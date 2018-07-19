@@ -506,7 +506,7 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Call<UnitMetaResponse> getUnits(long[] units) {
+    public Call<UnitMetaResponse> getUnits(List<Long> units) {
         return loggedService.getUnits(units);
     }
 

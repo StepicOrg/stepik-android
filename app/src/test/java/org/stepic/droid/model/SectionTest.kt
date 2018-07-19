@@ -34,7 +34,7 @@ class SectionTest {
     fun notEmptySectionParcelable() {
         val section = FakeSectionGenerator.generate(
                 sectionId = 233,
-                unitIds = longArrayOf(1, 2, 3),
+                unitIds = listOf(1, 2, 3),
                 position = 2)
         section.assertThatObjectParcelable<Section>()
     }

@@ -13,13 +13,14 @@ class UnitRepositoryImpl
     : Repository<Unit> {
 
     override fun getObjects(keys: LongArray): Iterable<Unit> {
-        var units = databaseFacade.getUnitsByIds(keys)
+        val keyList = keys.toList()
+        var units = databaseFacade.getUnitsByIds(keyList)
         if (units.size != keys.size) {
             units =
                     try {
-                        api.getUnits(keys).execute()?.body()?.units ?: ArrayList<Unit>()
+                        api.getUnits(keyList).execute()?.body()?.units ?: emptyList()
                     } catch (exception: Exception) {
-                        ArrayList<Unit>()
+                        emptyList()
                     }
         }
         units = units.sortedBy { it.position }
@@ -31,7 +32,7 @@ class UnitRepositoryImpl
         if (unit == null) {
             unit =
                     try {
-                        api.getUnits(longArrayOf(key)).execute()?.body()?.units?.firstOrNull()
+                        api.getUnits(listOf(key)).execute()?.body()?.units?.firstOrNull()
                     } catch (exception: Exception) {
                         null
                     }

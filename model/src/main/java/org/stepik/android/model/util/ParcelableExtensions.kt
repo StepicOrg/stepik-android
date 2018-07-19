@@ -9,10 +9,6 @@ fun Parcel.writeBoolean(value: Boolean) =
 fun Parcel.readBoolean(): Boolean =
         readByte() != 0.toByte()
 
-inline fun <reified T : Parcelable> Parcel.readParcelable(): T =
-        readParcelable(T::class.java.classLoader)
-
-
 
 private fun getParcelableWriter(flags: Int): Parcel.(Parcelable) -> Unit = { writeParcelable(it, flags) }
 private fun <T: Parcelable> getParcelableReader(classLoader: ClassLoader): Parcel.() -> T = { readParcelable(classLoader) }

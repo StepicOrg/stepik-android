@@ -4,7 +4,6 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import org.stepik.android.model.util.readBoolean
-import org.stepik.android.model.util.readParcelable
 import org.stepik.android.model.util.writeBoolean
 
 import java.util.Date
@@ -73,7 +72,7 @@ data class Step(
                 discussionsCount = parcel.readInt(),
                 discussionProxy = parcel.readString(),
                 status = Status.values().getOrNull(parcel.readInt()),
-                block = parcel.readParcelable(),
+                block = parcel.readParcelable(Block::class.java.classLoader),
                 progress = parcel.readString(),
                 subscriptions = parcel.createStringArrayList(),
                 viewedBy = parcel.readLong(),
@@ -83,7 +82,7 @@ data class Step(
                 isCached = parcel.readBoolean(),
                 isLoading = parcel.readBoolean(),
                 isCustomPassed = parcel.readBoolean(),
-                actions = parcel.readParcelable()
+                actions = parcel.readParcelable(Actions::class.java.classLoader)
         )
 
         override fun newArray(size: Int): Array<out Step?> = arrayOfNulls(size)

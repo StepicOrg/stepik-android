@@ -314,11 +314,11 @@ class LessonPresenter
             if (simpleUnitId >= 0) {
                 //get by lessonId
                 try {
-                    unit = api.getUnits(longArrayOf(simpleUnitId)).execute()?.body()?.units?.firstOrNull()
+                    unit = api.getUnits(listOf(simpleUnitId)).execute()?.body()?.units?.firstOrNull()
                 } catch (ignored: Exception) {
                     // unit can be null for lesson, which is not in Course
                 }
-                if (!(unit?.lesson?.equals(simpleLessonId) ?: false)) {
+                if (unit?.lesson != simpleLessonId) {
                     //if lesson is not equal unit.lesson or something null
                     loadUnitByLessonId(simpleLessonId)
                 }
@@ -326,7 +326,7 @@ class LessonPresenter
                 loadUnitByLessonId(simpleLessonId)
             }
 
-            if (!(unit?.lesson?.equals(simpleLessonId) ?: false)) {
+            if (unit?.lesson != simpleLessonId) {
                 unit = null
             }
         }

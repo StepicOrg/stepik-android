@@ -436,8 +436,8 @@ class DatabaseFacade
     fun getLocalLastStepByCourseId(courseId: Long) =
             lastStepDao.get(DbStructureLastStep.Column.COURSE_ID, courseId.toString())
 
-    fun getUnitsByIds(keys: LongArray): List<Unit> {
-        DbParseHelper.parseLongArrayToString(keys, AppConstants.COMMA)?.let {
+    fun getUnitsByIds(keys: List<Long>): List<Unit> {
+        DbParseHelper.parseLongListToString(keys, AppConstants.COMMA)?.let {
             return unitDao.getAllInRange(DbStructureUnit.Column.UNIT_ID, it)
         }
 

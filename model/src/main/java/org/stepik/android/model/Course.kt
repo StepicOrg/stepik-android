@@ -4,7 +4,6 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import org.stepik.android.model.util.readBoolean
-import org.stepik.android.model.util.readParcelable
 import org.stepik.android.model.util.writeBoolean
 
 class Course(
@@ -159,14 +158,14 @@ class Course(
                 parcel.readString(),
                 parcel.readString(),
                 parcel.readString(),
-                parcel.readParcelable(),
+                parcel.readParcelable(Video::class.java.classLoader),
                 parcel.readLong(),
                 parcel.readString(),
                 parcel.readString(),
                 parcel.readString(),
                 parcel.readLong(),
                 parcel.readInt(),
-                parcel.readParcelable(),
+                parcel.readParcelable(Progress::class.java.classLoader),
                 parcel.readDouble()
         )
 

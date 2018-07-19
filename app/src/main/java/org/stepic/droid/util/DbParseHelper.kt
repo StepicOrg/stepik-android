@@ -1,27 +1,36 @@
 package org.stepic.droid.util
 
+import kotlin.reflect.KFunction
+
 object DbParseHelper {
 
     private const val DEFAULT_SEPARATOR = "__,__"
 
     @JvmStatic
     @JvmOverloads
-    fun parseStringToLongArray(str: String?, separator: String = DEFAULT_SEPARATOR): LongArray? {
-        if (str == null) return null
+    fun parseStringToLongArray(str: String?, separator: String = DEFAULT_SEPARATOR): LongArray? =
+            parseStringToLongList(str, separator)?.toLongArray()
 
-        val strArray = str.split(separator)
-        return try {
-            val result = LongArray(strArray.size)
-            strArray.forEachIndexed { i, value -> result[i] = value.trim().toLong() }
-            result
-        } catch (e: Exception) {
-            null
-        }
-    }
+    @JvmStatic
+    @JvmOverloads
+    fun parseStringToLongList(str: String?, separator: String = DEFAULT_SEPARATOR): List<Long>? =
+            try {
+                str?.split(separator)?.map { it.trim().toLong() }
+            } catch (e: Exception) {
+                null
+            }
 
     @JvmStatic
     @JvmOverloads
     fun parseLongArrayToString(longArray: LongArray?, separator: String = DEFAULT_SEPARATOR): String? {
+        if (longArray == null || longArray.isEmpty()) return null
+
+        return longArray.joinToString(separator)
+    }
+
+    @JvmStatic
+    @JvmOverloads
+    fun parseLongListToString(longArray: List<Long>?, separator: String = DEFAULT_SEPARATOR): String? {
         if (longArray == null || longArray.isEmpty()) return null
 
         return longArray.joinToString(separator)
@@ -37,8 +46,14 @@ object DbParseHelper {
 
     @JvmStatic
     @JvmOverloads
+    fun parseStringToStringList(str: String?, separator: String = DEFAULT_SEPARATOR): List<String>? =
+            str?.split(separator)?.map(String::trim)
+
+
+    @JvmStatic
+    @JvmOverloads
     fun parseStringToStringArray(str: String?, separator: String = DEFAULT_SEPARATOR): Array<String>? =
-            str?.split(separator)?.map(String::trim)?.toTypedArray()
+            parseStringToStringList(str, separator)?.toTypedArray()
 
 }
 

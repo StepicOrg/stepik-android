@@ -5,7 +5,7 @@ import org.stepik.android.model.Section
 object FakeSectionGenerator {
     @JvmOverloads
     fun generate(sectionId: Long = 0,
-                 unitIds: LongArray = longArrayOf(),
+                 unitIds: List<Long> = emptyList(),
                  position: Int = 1,
                  courseId: Long = 123,
                  isActive : Boolean = true): Section = Section(

@@ -60,7 +60,7 @@ constructor(
                 viewedBy = cursor.getLong(columnIndexViewedBy),
                 passedBy = cursor.getLong(columnIndexPassedBy),
                 updateDate = dateAdapter.stringToDate(cursor.getString(columnIndexUpdateDate)),
-                subscriptions = DbParseHelper.parseStringToStringArray(cursor.getString(columnIndexSubscriptions))?.toList(),
+                subscriptions = DbParseHelper.parseStringToStringList(cursor.getString(columnIndexSubscriptions)),
                 position = cursor.getLong(columnIndexPosition),
                 isCached = cursor.getInt(columnIndexIsCached) > 0,
                 isLoading = cursor.getInt(columnIndexIsLoading) > 0,

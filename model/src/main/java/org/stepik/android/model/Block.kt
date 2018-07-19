@@ -4,7 +4,6 @@ import android.os.Parcel
 import android.os.Parcelable
 
 import org.stepik.android.model.code.CodeOptions
-import org.stepik.android.model.util.readParcelable
 
 import java.io.Serializable
 
@@ -32,9 +31,9 @@ class Block(
         override fun createFromParcel(parcel: Parcel): Block = Block(
                 parcel.readString(),
                 parcel.readString(),
-                parcel.readParcelable(),
-                parcel.readParcelable(),
-                parcel.readParcelable()
+                parcel.readParcelable(Video::class.java.classLoader),
+                parcel.readParcelable(Video::class.java.classLoader),
+                parcel.readParcelable(CodeOptions::class.java.classLoader)
         )
         override fun newArray(size: Int): Array<Block?> = arrayOfNulls(size)
     }

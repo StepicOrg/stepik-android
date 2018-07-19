@@ -5,6 +5,8 @@ import org.stepic.droid.web.model.adaptive.RecommendationReactionsRequest;
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
 import org.stepik.android.model.EnrollmentWrapper;
 
+import java.util.List;
+
 import io.reactivex.Completable;
 import io.reactivex.Single;
 import retrofit2.Call;
@@ -47,7 +49,7 @@ public interface StepicRestLoggedService {
 
     @GET("api/units")
     Call<UnitMetaResponse> getUnits(
-            @Query("ids[]") long[] units
+            @Query("ids[]") List<Long> units
     );
 
     @GET("api/units")

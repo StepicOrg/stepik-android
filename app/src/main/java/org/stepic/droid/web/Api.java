@@ -58,7 +58,7 @@ public interface Api {
     /**
      * Max number of  units defined in AppConstants
      */
-    Call<UnitMetaResponse> getUnits(long[] units);
+    Call<UnitMetaResponse> getUnits(List<Long> units);
 
     Single<UnitMetaResponse> getUnitsRx(long[] units);
 

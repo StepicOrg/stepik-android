@@ -42,7 +42,7 @@ constructor(
         val indexRequiredPercent = cursor.getColumnIndex(DbStructureSections.Column.REQUIRED_PERCENT)
 
         val actions = Actions(testSection = cursor.getString(indexTestSection))
-        val units = DbParseHelper.parseStringToLongArray(cursor.getString(columnIndexUnits))
+        val units = DbParseHelper.parseStringToLongList(cursor.getString(columnIndexUnits)) ?: emptyList()
         val typeId = cursor.getInt(indexDiscountingPolicy)
         val discountingPolicyType = DiscountingPolicyType.values().getOrNull(typeId)
 
@@ -58,7 +58,7 @@ constructor(
                 position = cursor.getInt(columnIndexPosition),
                 isCached = cursor.getInt(indexIsCached) > 0,
                 isLoading = cursor.getInt(indexIsLoading) > 0,
-                units = units ?: longArrayOf(),
+                units = units,
                 discountingPolicy = discountingPolicyType,
                 progress = cursor.getString(indexProgress),
 
@@ -86,7 +86,7 @@ constructor(
         values.put(DbStructureSections.Column.COURSE, section.course)
         values.put(DbStructureSections.Column.POSITION, section.position)
         values.put(DbStructureSections.Column.IS_EXAM, section.isExam)
-        values.put(DbStructureSections.Column.UNITS, DbParseHelper.parseLongArrayToString(section.units))
+        values.put(DbStructureSections.Column.UNITS, DbParseHelper.parseLongListToString(section.units))
         values.put(DbStructureSections.Column.PROGRESS, section.progress)
 
         values.put(DbStructureSections.Column.DISCOUNTING_POLICY, section.discountingPolicy?.ordinal ?: -1)

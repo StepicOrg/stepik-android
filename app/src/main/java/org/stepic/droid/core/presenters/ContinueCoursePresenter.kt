@@ -112,7 +112,7 @@ class ContinueCoursePresenter
     private fun fetchUnit(unitId: Long): Unit {
         var unit = databaseFacade.getUnitById(unitId)
         if (unit == null) {
-            unit = api.getUnits(longArrayOf(unitId)).execute().body()?.units?.first()
+            unit = api.getUnits(listOf(unitId)).execute().body()?.units?.first()
         }
         return unit!! //if null -> should throw Exception
     }

@@ -4,7 +4,6 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import org.stepik.android.model.util.readBoolean
-import org.stepik.android.model.util.readParcelable
 import org.stepik.android.model.util.writeBoolean
 
 import java.util.Date
@@ -12,7 +11,7 @@ import java.util.Date
 data class Section(
         val id: Long = 0,
         val course: Long = 0, // course id
-        val units: LongArray = longArrayOf(),
+        val units: List<Long> = emptyList(),
         val position: Int = 0,
         override val progress: String? = null,
         val title: String? = null,
@@ -56,7 +55,7 @@ data class Section(
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeLong(id)
         parcel.writeLong(course)
-        parcel.writeLongArray(units)
+        parcel.writeList(units)
         parcel.writeInt(position)
         parcel.writeString(progress)
         parcel.writeString(title)
@@ -85,7 +84,7 @@ data class Section(
         override fun createFromParcel(parcel: Parcel) = Section(
                 parcel.readLong(),
                 parcel.readLong(),
-                parcel.createLongArray(),
+                mutableListOf<Long>().apply { parcel.readList(this, Long::class.java.classLoader) },
                 parcel.readInt(),
                 parcel.readString(),
                 parcel.readString(),
@@ -98,7 +97,7 @@ data class Section(
                 parcel.readSerializable() as? Date,
                 parcel.readString(),
                 parcel.readBoolean(),
-                parcel.readParcelable(),
+                parcel.readParcelable(Actions::class.java.classLoader),
                 parcel.readBoolean(),
                 DiscountingPolicyType.values().getOrNull(parcel.readInt()),
                 parcel.readBoolean(),

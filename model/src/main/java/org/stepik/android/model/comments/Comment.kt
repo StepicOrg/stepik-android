@@ -7,7 +7,6 @@ import com.google.gson.annotations.SerializedName
 import org.stepik.android.model.UserRole
 import org.stepik.android.model.Actions
 import org.stepik.android.model.util.readBoolean
-import org.stepik.android.model.util.readParcelable
 import org.stepik.android.model.util.writeBoolean
 import java.util.Date
 
@@ -76,7 +75,7 @@ data class Comment(
                 parcel.readString(),
                 parcel.readValue(Boolean::class.java.classLoader) as Boolean?,
                 parcel.readValue(Boolean::class.java.classLoader) as Boolean?,
-                parcel.readParcelable(),
+                parcel.readParcelable(Actions::class.java.classLoader),
                 parcel.readLong(),
                 ArrayList<Long>().apply { parcel.readList(this, Long::class.java.classLoader) },
                 parcel.readValue(Int::class.java.classLoader) as Int?,

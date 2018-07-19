@@ -310,14 +310,14 @@ public class LoadService extends IntentService {
             try {
                 boolean responseIsSuccess = true;
                 final List<Unit> units = new ArrayList<>();
-                long[] unitIds = section.getUnits();
+                final List<Long> unitIds = section.getUnits();
                 if (unitIds == null) {
                     responseIsSuccess = false;
                 }
                 int pointer = 0;
-                while (responseIsSuccess && pointer < unitIds.length) {
-                    int lastExclusive = Math.min(unitIds.length, pointer + AppConstants.DEFAULT_NUMBER_IDS_IN_QUERY);
-                    long[] subArrayForLoading = Arrays.copyOfRange(unitIds, pointer, lastExclusive);
+                while (responseIsSuccess && pointer < unitIds.size()) {
+                    int lastExclusive = Math.min(unitIds.size(), pointer + AppConstants.DEFAULT_NUMBER_IDS_IN_QUERY);
+                    List<Long> subArrayForLoading = unitIds.subList(pointer, lastExclusive);
                     Response<UnitMetaResponse> unitResponse = api.getUnits(subArrayForLoading).execute();
                     if (!unitResponse.isSuccessful()) {
                         responseIsSuccess = false;
