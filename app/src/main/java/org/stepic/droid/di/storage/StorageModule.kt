@@ -23,7 +23,7 @@ import org.stepic.droid.storage.dao.*
 import org.stepic.droid.storage.operations.*
 import org.stepic.droid.storage.structure.DbStructureEnrolledAndFeaturedCourses
 import org.stepic.droid.web.ViewAssignment
-import org.stepik.android.model.learning.Assignment
+import org.stepik.android.model.structure.Assignment
 import org.stepik.android.model.structure.*
 import org.stepik.android.model.structure.Unit
 

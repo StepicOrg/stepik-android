@@ -3,7 +3,7 @@ package org.stepic.droid.storage.dao
 import android.content.ContentValues
 import android.database.Cursor
 import org.stepic.droid.jsonHelpers.adapters.UTCDateAdapter
-import org.stepik.android.model.learning.Assignment
+import org.stepik.android.model.structure.Assignment
 import org.stepic.droid.model.BlockPersistentWrapper
 import org.stepik.android.model.structure.Progress
 import org.stepik.android.model.structure.Step

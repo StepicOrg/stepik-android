@@ -34,7 +34,7 @@ import org.stepic.droid.web.LessonStepicResponse;
 import org.stepic.droid.web.ProgressesResponse;
 import org.stepic.droid.web.StepResponse;
 import org.stepic.droid.web.UnitMetaResponse;
-import org.stepik.android.model.learning.Assignment;
+import org.stepik.android.model.structure.Assignment;
 
 import java.io.File;
 import java.io.IOException;

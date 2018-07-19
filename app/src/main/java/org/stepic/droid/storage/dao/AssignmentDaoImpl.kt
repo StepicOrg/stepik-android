@@ -8,7 +8,7 @@ import com.google.gson.JsonPrimitive
 import org.stepic.droid.jsonHelpers.adapters.UTCDateAdapter
 import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepic.droid.storage.structure.DbStructureAssignment
-import org.stepik.android.model.learning.Assignment
+import org.stepik.android.model.structure.Assignment
 
 import javax.inject.Inject
 

@@ -1,17 +1,9 @@
 package org.stepic.droid.util
 
-import org.stepic.droid.model.IProgressable
 import org.stepik.android.model.structure.Progress
 import org.stepik.android.model.Progressable
 
 object ProgressUtil {
-    fun <T : IProgressable> getAllProgresses(objects: List<T>?): Array<String> {
-        return objects
-                ?.mapNotNull { it.getProgressId() }
-                ?.toTypedArray()
-                ?: emptyArray()
-    }
-
     fun getProgresses(objects: List<Progressable>?): Array<String> {
         return objects
                 ?.mapNotNull { it.progress }
