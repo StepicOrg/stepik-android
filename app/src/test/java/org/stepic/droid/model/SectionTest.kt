@@ -3,41 +3,16 @@ package org.stepic.droid.model
 import com.google.gson.Gson
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
-import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import org.stepik.android.model.code.CodeLimit
 import org.stepic.droid.testUtils.TestingGsonProvider
-import org.stepik.android.model.util.assertThatObjectParcelable
-import org.stepic.droid.testUtils.generators.FakeSectionGenerator
 import org.stepik.android.model.Section
 
 @RunWith(RobolectricTestRunner::class)
 class SectionTest {
 
     private val gson: Gson = TestingGsonProvider.gson
-
-    @Before
-    fun beforeEach() {
-
-    }
-
-    @Test
-    fun emptySectionParcelable() {
-        val section = Section()
-        section.assertThatObjectParcelable<CodeLimit>()
-    }
-
-
-    @Test
-    fun notEmptySectionParcelable() {
-        val section = FakeSectionGenerator.generate(
-                sectionId = 233,
-                unitIds = listOf(1, 2, 3),
-                position = 2)
-        section.assertThatObjectParcelable<Section>()
-    }
 
     @Test
     fun nullSectionRequirementJson() {

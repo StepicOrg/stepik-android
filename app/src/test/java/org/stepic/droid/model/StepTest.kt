@@ -6,8 +6,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.stepic.droid.testUtils.TestingGsonProvider
-import org.stepik.android.model.util.assertThatObjectParcelable
-import org.stepic.droid.testUtils.generators.FakeStepGenerator
 import org.stepik.android.model.Step
 
 @RunWith(RobolectricTestRunner::class)
@@ -52,12 +50,4 @@ class StepTest {
 
         assertNull(step.status)
     }
-
-    @Test
-    fun stepIsParcelable() {
-        val step = FakeStepGenerator.generate()
-        step.assertThatObjectParcelable<Step>()
-    }
-
-
 }
