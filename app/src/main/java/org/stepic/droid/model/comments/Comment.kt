@@ -4,7 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 
-import org.stepic.droid.model.UserRole
+import org.stepik.android.model.UserRole
 import org.stepik.android.model.Actions
 
 

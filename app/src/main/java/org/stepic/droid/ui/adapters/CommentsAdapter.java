@@ -20,10 +20,12 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.caverock.androidsvg.SVG;
 
+import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
 import org.stepic.droid.base.App;
 import org.stepic.droid.core.CommentManager;
 import org.stepic.droid.model.CommentAdapterItem;
+import org.stepik.android.model.UserRole;
 import org.stepik.android.model.user.User;
 import org.stepic.droid.model.comments.Comment;
 import org.stepic.droid.model.comments.Vote;
@@ -116,8 +118,6 @@ public final class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.
                 }
             }
         }
-
-
     }
 
     class ReplyViewHolder extends GenericViewHolder {
@@ -370,11 +370,24 @@ public final class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.
                 pinnedIndicator.setVisibility(View.GONE);
             }
 
-            if (comment.getUserRole() != null && comment.getUserRole().getResource() != null) {
-                userRole.setText(context.getString(comment.getUserRole().getResource()));
+            final String userRoleLabel = getStringForUserRole(comment.getUserRole());
+            if (userRoleLabel != null) {
+                userRole.setText(userRoleLabel);
                 userRole.setVisibility(View.VISIBLE);
             } else {
                 userRole.setVisibility(View.GONE);
+            }
+        }
+
+        @Nullable
+        private String getStringForUserRole(@Nullable UserRole role) {
+            if (role == null) {
+                return null;
+            } else switch (role) {
+                case STUDENT: return null;
+                case STUFF: return context.getString(R.string.staff_label);
+                case TEACHER: return context.getString(R.string.teacher_label);
+                default: return null;
             }
         }
 
