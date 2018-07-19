@@ -4,7 +4,7 @@ import android.support.annotation.WorkerThread
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.VoteView
 import org.stepic.droid.di.comment.CommentsScope
-import org.stepic.droid.model.comments.Vote
+import org.stepik.android.model.comments.Vote
 import org.stepic.droid.web.Api
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject

@@ -1,5 +1,5 @@
 package org.stepic.droid.web
 
-import org.stepic.droid.model.comments.Vote
+import org.stepik.android.model.comments.Vote
 
 class VoteRequest(var vote: Vote)

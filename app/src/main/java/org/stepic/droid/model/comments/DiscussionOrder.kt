@@ -2,6 +2,7 @@ package org.stepic.droid.model.comments
 
 import android.support.annotation.StringRes
 import org.stepic.droid.R
+import org.stepik.android.model.comments.DiscussionProxy
 
 enum class DiscussionOrder private constructor(val id: Int, @StringRes val stringResId : Int, val menuId : Int) {
     lastDiscussion(0, R.string.last_discussion, R.id.menu_item_last_discussion),
@@ -12,9 +13,9 @@ enum class DiscussionOrder private constructor(val id: Int, @StringRes val strin
     fun getOrder(dp: DiscussionProxy) =
             when (id) {
                 0 -> dp.discussions
-                1 -> dp.discussions_most_liked
-                2 -> dp.discussions_most_active
-                3 -> dp.discussions_recent_activity
+                1 -> dp.discussionsMostLiked
+                2 -> dp.discussionsMostActive
+                3 -> dp.discussionsRecentActivity
                 else -> dp.discussions }
 
     companion object {

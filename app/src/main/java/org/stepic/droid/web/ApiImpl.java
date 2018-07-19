@@ -40,9 +40,8 @@ import org.stepik.android.model.user.RegistrationCredentials;
 import org.stepic.droid.model.StepikFilter;
 import org.stepik.android.model.Submission;
 import org.stepic.droid.adaptive.model.RecommendationReaction;
-import org.stepic.droid.model.comments.Comment;
-import org.stepic.droid.model.comments.Vote;
-import org.stepic.droid.model.comments.VoteValue;
+import org.stepik.android.model.comments.Comment;
+import org.stepik.android.model.comments.Vote;
 import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
@@ -828,7 +827,7 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Call<VoteResponse> makeVote(String voteId, @Nullable VoteValue voteValue) {
+    public Call<VoteResponse> makeVote(String voteId, @Nullable Vote.Value voteValue) {
         Vote vote = new Vote(voteId, voteValue);
         VoteRequest request = new VoteRequest(vote);
         return loggedService.postVote(voteId, request);

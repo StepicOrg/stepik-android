@@ -9,7 +9,7 @@ import org.stepik.android.model.Course;
 import org.stepic.droid.model.NotificationCategory;
 import org.stepik.android.model.Submission;
 import org.stepic.droid.adaptive.model.RecommendationReaction;
-import org.stepic.droid.model.comments.VoteValue;
+import org.stepik.android.model.comments.Vote;
 import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.web.model.adaptive.RatingRestoreResponse;
@@ -147,7 +147,7 @@ public interface Api {
 
     Call<CommentsResponse> postComment(String text, long target /*for example, related step*/, @Nullable Long parent /*put if it is reply*/);
 
-    Call<VoteResponse> makeVote(String voteId, @Nullable VoteValue voteValue);
+    Call<VoteResponse> makeVote(String voteId, @Nullable Vote.Value voteValue);
 
     Call<CommentsResponse> deleteComment(long commentId);
 

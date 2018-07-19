@@ -1,8 +1,8 @@
 package org.stepic.droid.web
 
 import org.stepik.android.model.user.User
-import org.stepic.droid.model.comments.Comment
-import org.stepic.droid.model.comments.Vote
+import org.stepik.android.model.comments.Comment
+import org.stepik.android.model.comments.Vote
 import org.stepik.android.model.Meta
 
 data class CommentsResponse(

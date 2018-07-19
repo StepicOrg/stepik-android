@@ -27,9 +27,8 @@ import org.stepic.droid.core.CommentManager;
 import org.stepic.droid.model.CommentAdapterItem;
 import org.stepik.android.model.UserRole;
 import org.stepik.android.model.user.User;
-import org.stepic.droid.model.comments.Comment;
-import org.stepic.droid.model.comments.Vote;
-import org.stepic.droid.model.comments.VoteValue;
+import org.stepik.android.model.comments.Comment;
+import org.stepik.android.model.comments.Vote;
 import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ColorUtil;
@@ -283,7 +282,7 @@ public final class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.
         final void initialSetUp(CommentAdapterItem needUpdateAndComment) {
             final Comment comment = needUpdateAndComment.getComment();
 
-            if (comment.is_deleted() != null && comment.is_deleted()) {
+            if (comment.isDeleted() != null && comment.isDeleted()) {
                 commentClickableRoot.setBackgroundColor(ColorUtil.INSTANCE.getColorArgb(R.color.wrong_answer_background, context));
 
                 if (comment.getText() != null && !comment.getText().isEmpty()) {
@@ -300,22 +299,22 @@ public final class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.
                 commentTextEnhanced.setText(comment.getText());
             }
 
-            if (comment.getTime() != null && !comment.getTime().isEmpty()) {
-                commentTimeTextView.setText(DateTimeHelper.INSTANCE.getPrintableOfIsoDate(comment.getTime(), AppConstants.COMMENT_DATE_TIME_PATTERN, TimeZone.getDefault()));
+            if (comment.getTime() != null) {
+                commentTimeTextView.setText(DateTimeHelper.INSTANCE.getPrintableDate(comment.getTime(), AppConstants.COMMENT_DATE_TIME_PATTERN, TimeZone.getDefault()));
             } else {
                 commentTimeTextView.setText("");
             }
 
             int epicCount = 0;
-            if (comment.getEpic_count() != null) {
-                epicCount = comment.getEpic_count();
+            if (comment.getEpicCount() != null) {
+                epicCount = comment.getEpicCount();
             }
 
             String voteId = comment.getVote();
             if (voteId != null) {
                 likeRoot.setVisibility(View.VISIBLE);
 
-                if (comment.getEpic_count() != null) {
+                if (comment.getEpicCount() != null) {
                     likeCount.setText(String.format(Locale.getDefault(), "%d", epicCount));
                 } else {
                     likeCount.setText("");
@@ -324,9 +323,9 @@ public final class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.
                 Vote vote = commentManager.getVoteByVoteId(voteId);
                 if (vote == null) {
                     showEmptyLikeState();
-                } else if (vote.getValue() == null || vote.getValue().getValue() == null || vote.getValue().getValue().equals(VoteValue.dislike.getValue())) {
+                } else if (vote.getValue() == null || vote.getValue() == Vote.Value.DISLIKE) {
                     showEmptyLikeState();
-                } else if (vote.getValue().getValue().equals(VoteValue.like.getValue())) {
+                } else if (vote.getValue() == Vote.Value.LIKE) {
                     showLikedState();
                 }
             } else {

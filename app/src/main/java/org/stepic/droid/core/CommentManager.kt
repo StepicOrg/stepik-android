@@ -3,9 +3,9 @@ package org.stepic.droid.core
 import org.stepic.droid.core.comments.contract.CommentsPoster
 import org.stepic.droid.di.comment.CommentsScope
 import org.stepic.droid.model.CommentAdapterItem
-import org.stepic.droid.model.comments.Comment
-import org.stepic.droid.model.comments.DiscussionProxy
-import org.stepic.droid.model.comments.Vote
+import org.stepik.android.model.comments.Comment
+import org.stepik.android.model.comments.DiscussionProxy
+import org.stepik.android.model.comments.Vote
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.web.Api
 import org.stepic.droid.web.CommentsResponse
@@ -57,17 +57,18 @@ class CommentManager @Inject constructor(
 
     fun loadExtraReplies(oneOfReplyComment: Comment) {
         val parentCommentId = oneOfReplyComment.parent
-        val parentComment = cachedCommentsSetMap[parentCommentId]
-        if (parentComment?.replies != null) {
+        val parentCommentReplies = cachedCommentsSetMap[parentCommentId]?.replies
+
+        if (parentCommentReplies != null) {
             val countOfCachedReplies: Int = parentCommentToSumOfCachedReplies[parentCommentId] ?: return
 
-            val sizeNeedLoad = Math.min(parentComment.replies.size, countOfCachedReplies + maxOfRepliesInQuery)
+            val sizeNeedLoad = Math.min(parentCommentReplies.size, countOfCachedReplies + maxOfRepliesInQuery)
             if (sizeNeedLoad == countOfCachedReplies || sizeNeedLoad == 0) {
                 commentsPoster.commentsLoaded()
                 return
             }
 
-            val idsForLoading = parentComment.replies.subList(countOfCachedReplies, sizeNeedLoad).toLongArray()
+            val idsForLoading = parentCommentReplies.subList(countOfCachedReplies, sizeNeedLoad).toLongArray()
             loadCommentsByIds(idsForLoading, fromReply = true)
         }
     }
@@ -116,9 +117,10 @@ class CommentManager @Inject constructor(
             j++
 
             val parentComment = cachedCommentsSetMap[parentCommentId] ?: break
+            val parentCommentReplies = parentComment.replies
             cachedCommentsList.add(parentComment)
             i++
-            if (parentComment.replies != null && !parentComment.replies.isEmpty()) {
+            if (parentCommentReplies != null && !parentCommentReplies.isEmpty()) {
                 var childIndex = 0
                 if (parentCommentToSumOfCachedReplies[parentComment.id] ?: 0 > parentComment.replyCount ?: 0) {
                     parentCommentToSumOfCachedReplies[parentComment.id] = parentComment.replyCount!! //if we remove some reply
@@ -126,7 +128,7 @@ class CommentManager @Inject constructor(
                 val cachedRepliesNumber = parentCommentToSumOfCachedReplies[parentComment.id] ?: 0
 
                 while (childIndex < cachedRepliesNumber/* && childIndex < parentComment.reply_count?:-1*/) {
-                    val childComment: Comment? = cachedCommentsSetMap [parentComment.replies[childIndex]]
+                    val childComment: Comment? = cachedCommentsSetMap [parentCommentReplies[childIndex]]
                     if (childComment != null) {
                         replyToPositionInParentMap[childComment.id] = childIndex
                         cachedCommentsList.add(childComment)
@@ -134,8 +136,8 @@ class CommentManager @Inject constructor(
                     } else {
                         //reply childIndex not found
                         parentCommentToSumOfCachedReplies[parentCommentId] = childIndex
-                        for (indexForDelete in childIndex until parentComment.replies.size) {
-                            cachedCommentsSetMap.remove(parentComment.replies[indexForDelete])
+                        for (indexForDelete in childIndex until parentCommentReplies.size) {
+                            cachedCommentsSetMap.remove(parentCommentReplies[indexForDelete])
                         }
                         break
                     }

@@ -1,6 +1,6 @@
 package org.stepic.droid.web
 
-import org.stepic.droid.model.comments.Vote
+import org.stepik.android.model.comments.Vote
 import org.stepik.android.model.Meta
 
 class VoteResponse {

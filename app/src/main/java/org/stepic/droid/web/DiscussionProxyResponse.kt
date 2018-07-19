@@ -1,7 +1,7 @@
 package org.stepic.droid.web
 
 import com.google.gson.annotations.SerializedName
-import org.stepic.droid.model.comments.DiscussionProxy
+import org.stepik.android.model.comments.DiscussionProxy
 import org.stepik.android.model.Meta
 
 data class DiscussionProxyResponse(
