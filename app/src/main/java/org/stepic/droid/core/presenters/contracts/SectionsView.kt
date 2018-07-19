@@ -1,6 +1,6 @@
 package org.stepic.droid.core.presenters.contracts
 
-import org.stepik.android.model.structure.Section
+import org.stepik.android.model.Section
 
 interface SectionsView {
 

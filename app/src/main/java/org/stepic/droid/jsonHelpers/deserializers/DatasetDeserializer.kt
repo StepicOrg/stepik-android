@@ -6,8 +6,8 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonParseException
 
-import org.stepik.android.model.learning.attempts.Dataset
-import org.stepik.android.model.learning.attempts.DatasetWrapper
+import org.stepik.android.model.attempts.Dataset
+import org.stepik.android.model.attempts.DatasetWrapper
 
 import java.lang.reflect.Type
 

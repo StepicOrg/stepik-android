@@ -4,10 +4,10 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.LessonView
 import org.stepic.droid.di.lesson.LessonScope
-import org.stepik.android.model.structure.Lesson
-import org.stepik.android.model.structure.Section
-import org.stepik.android.model.structure.Step
-import org.stepik.android.model.structure.Unit
+import org.stepik.android.model.Lesson
+import org.stepik.android.model.Section
+import org.stepik.android.model.Step
+import org.stepik.android.model.Unit
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.ProgressUtil

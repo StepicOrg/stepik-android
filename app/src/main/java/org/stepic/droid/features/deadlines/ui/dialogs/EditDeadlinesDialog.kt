@@ -18,7 +18,7 @@ import org.stepic.droid.base.App
 import org.stepic.droid.features.deadlines.model.Deadline
 import org.stepic.droid.features.deadlines.model.DeadlinesWrapper
 import org.stepic.droid.features.deadlines.ui.adapters.EditDeadlinesAdapter
-import org.stepik.android.model.structure.Section
+import org.stepik.android.model.Section
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.web.storage.model.StorageRecord
 import java.util.*

@@ -1,6 +1,6 @@
 package org.stepic.droid.util
 
-import org.stepik.android.model.structure.Course
+import org.stepik.android.model.Course
 import org.stepic.droid.model.DownloadingVideoItem
 import java.text.DecimalFormat
 import java.util.*

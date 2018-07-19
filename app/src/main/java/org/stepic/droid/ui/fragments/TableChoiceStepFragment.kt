@@ -9,9 +9,9 @@ import org.stepic.droid.R
 import org.stepic.droid.ui.adapters.TableChoiceAdapter
 import org.stepic.droid.ui.decorators.GridDividerItemDecoration
 import org.stepic.droid.util.DpPixelsHelper
-import org.stepik.android.model.learning.attempts.Attempt
-import org.stepik.android.model.learning.Reply
-import org.stepik.android.model.learning.TableChoiceAnswer
+import org.stepik.android.model.attempts.Attempt
+import org.stepik.android.model.Reply
+import org.stepik.android.model.TableChoiceAnswer
 import java.util.ArrayList
 
 class TableChoiceStepFragment: StepAttemptFragment() {

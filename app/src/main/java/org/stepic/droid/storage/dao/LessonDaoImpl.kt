@@ -4,7 +4,7 @@ import android.content.ContentValues
 import android.database.Cursor
 import org.stepic.droid.jsonHelpers.adapters.UTCDateAdapter
 
-import org.stepik.android.model.structure.Lesson
+import org.stepik.android.model.Lesson
 import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepic.droid.storage.structure.DbStructureLesson
 import org.stepic.droid.util.DbParseHelper
@@ -39,7 +39,8 @@ constructor(databaseOperations: DatabaseOperations) : DaoBase<Lesson>(databaseOp
         return Lesson(
                 id = cursor.getLong(columnIndexLessonId),
                 title = cursor.getString(columnIndexTitle),
-                steps = DbParseHelper.parseStringToLongArray(cursor.getString(columnIndexSteps)) ?: longArrayOf(),
+                steps = DbParseHelper.parseStringToLongArray(cursor.getString(columnIndexSteps))
+                        ?: longArrayOf(),
                 isFeatured = cursor.getInt(columnIndexIsFeatured) > 0,
                 isPrime = cursor.getInt(columnIndexIsPrime) > 0,
                 progress = cursor.getString(columnIndexProgress),

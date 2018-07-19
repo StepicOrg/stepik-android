@@ -4,7 +4,7 @@ import android.support.annotation.WorkerThread
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.core.presenters.contracts.CourseDetailAnalyticView
 import org.stepic.droid.di.course.CourseAndSectionsScope
-import org.stepik.android.model.structure.Course
+import org.stepik.android.model.Course
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.atomic.AtomicBoolean

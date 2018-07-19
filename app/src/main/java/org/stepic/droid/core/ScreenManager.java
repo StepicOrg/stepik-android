@@ -11,16 +11,16 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.model.CollectionDescriptionColors;
-import org.stepik.android.model.structure.Course;
+import org.stepik.android.model.Course;
 import org.stepic.droid.model.CoursesCarouselInfo;
-import org.stepik.android.model.structure.Lesson;
-import org.stepik.android.model.structure.Section;
-import org.stepik.android.model.structure.Step;
-import org.stepik.android.model.structure.Unit;
-import org.stepik.android.model.structure.Video;
+import org.stepik.android.model.Lesson;
+import org.stepik.android.model.Section;
+import org.stepik.android.model.Step;
+import org.stepik.android.model.Unit;
+import org.stepik.android.model.Video;
 import org.stepic.droid.ui.fragments.CommentsFragment;
 import org.stepic.droid.web.ViewAssignment;
-import org.stepik.android.model.structure.Tag;
+import org.stepik.android.model.Tag;
 
 public interface ScreenManager {
 

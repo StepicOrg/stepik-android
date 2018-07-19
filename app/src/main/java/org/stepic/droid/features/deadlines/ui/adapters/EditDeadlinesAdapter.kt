@@ -8,7 +8,7 @@ import android.widget.TextView
 import kotlinx.android.synthetic.main.view_edit_deadlines_item.view.*
 import org.stepic.droid.R
 import org.stepic.droid.features.deadlines.model.Deadline
-import org.stepik.android.model.structure.Section
+import org.stepik.android.model.Section
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.util.DateTimeHelper
 import java.util.*

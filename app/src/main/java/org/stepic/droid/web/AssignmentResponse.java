@@ -1,6 +1,6 @@
 package org.stepic.droid.web;
 
-import org.stepik.android.model.structure.Assignment;
+import org.stepik.android.model.Assignment;
 import org.stepik.android.model.Meta;
 
 import java.util.List;

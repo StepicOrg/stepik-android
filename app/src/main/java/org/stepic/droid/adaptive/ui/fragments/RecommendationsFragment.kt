@@ -17,7 +17,7 @@ import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.core.presenters.RecommendationsPresenter
 import org.stepic.droid.core.presenters.contracts.RecommendationsView
-import org.stepik.android.model.structure.Course
+import org.stepik.android.model.Course
 import org.stepic.droid.ui.util.PopupHelper
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.MathUtli

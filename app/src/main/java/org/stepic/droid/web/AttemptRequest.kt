@@ -1,6 +1,6 @@
 package org.stepic.droid.web
 
-import org.stepik.android.model.learning.attempts.Attempt
+import org.stepik.android.model.attempts.Attempt
 
 class AttemptRequest(
         val attempt: Attempt

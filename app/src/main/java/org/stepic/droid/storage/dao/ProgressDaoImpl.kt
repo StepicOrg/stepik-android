@@ -2,7 +2,7 @@ package org.stepic.droid.storage.dao
 
 import android.content.ContentValues
 import android.database.Cursor
-import org.stepik.android.model.structure.Progress
+import org.stepik.android.model.Progress
 import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepic.droid.storage.structure.DbStructureProgress
 import javax.inject.Inject

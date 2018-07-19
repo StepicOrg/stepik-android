@@ -7,8 +7,8 @@ import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepic.droid.storage.structure.DbStructureProgress
 import org.stepic.droid.storage.structure.DbStructureUnit
 import org.stepic.droid.util.DbParseHelper
-import org.stepik.android.model.structure.Progress
-import org.stepik.android.model.structure.Unit
+import org.stepik.android.model.Progress
+import org.stepik.android.model.Unit
 import javax.inject.Inject
 
 class UnitDaoImpl
@@ -32,16 +32,16 @@ constructor(
         val columnIndexIsActive = cursor.getColumnIndex(DbStructureUnit.Column.IS_ACTIVE)
 
         return Unit(
-                id           = cursor.getLong(columnIndexUnitId),
-                section      = cursor.getLong(columnIndexSection),
-                lesson       = cursor.getLong(columnIndexLesson),
-                progress     = cursor.getString(columnIndexProgress),
-                assignments  = DbParseHelper.parseStringToLongArray(cursor.getString(columnIndexAssignments)),
-                beginDate    = dateAdapter.stringToDate(cursor.getString(columnIndexBeginDate)),
+                id = cursor.getLong(columnIndexUnitId),
+                section = cursor.getLong(columnIndexSection),
+                lesson = cursor.getLong(columnIndexLesson),
+                progress = cursor.getString(columnIndexProgress),
+                assignments = DbParseHelper.parseStringToLongArray(cursor.getString(columnIndexAssignments)),
+                beginDate = dateAdapter.stringToDate(cursor.getString(columnIndexBeginDate)),
                 softDeadline = dateAdapter.stringToDate(cursor.getString(columnIndexSoftDeadline)),
                 hardDeadline = dateAdapter.stringToDate(cursor.getString(columnIndexHardDeadline)),
-                position     = cursor.getInt(columnIndexPosition),
-                isActive     = cursor.getInt(columnIndexIsActive) > 0
+                position = cursor.getInt(columnIndexPosition),
+                isActive = cursor.getInt(columnIndexIsActive) > 0
         )
     }
 

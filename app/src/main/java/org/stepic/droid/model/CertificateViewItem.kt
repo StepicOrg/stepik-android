@@ -2,7 +2,7 @@ package org.stepic.droid.model
 
 import android.os.Parcel
 import android.os.Parcelable
-import org.stepik.android.model.structure.Certificate
+import org.stepik.android.model.Certificate
 import java.util.*
 
 class CertificateViewItem(

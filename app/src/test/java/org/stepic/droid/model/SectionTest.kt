@@ -7,11 +7,11 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import org.stepik.android.model.structure.code.CodeLimit
+import org.stepik.android.model.code.CodeLimit
 import org.stepic.droid.testUtils.TestingGsonProvider
 import org.stepic.droid.testUtils.assertThatObjectParcelable
 import org.stepic.droid.testUtils.generators.FakeSectionGenerator
-import org.stepik.android.model.structure.Section
+import org.stepik.android.model.Section
 
 @RunWith(RobolectricTestRunner::class)
 class SectionTest {

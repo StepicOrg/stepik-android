@@ -17,7 +17,7 @@ import org.stepic.droid.core.presenters.contracts.CalendarExportableView
 import org.stepic.droid.di.course.CourseAndSectionsScope
 import org.stepic.droid.model.CalendarItem
 import org.stepic.droid.model.CalendarSection
-import org.stepik.android.model.structure.Section
+import org.stepik.android.model.Section
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants

@@ -10,12 +10,12 @@ import org.stepic.droid.features.deadlines.util.DeadlinesResolver
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.features.deadlines.model.Deadline
-import org.stepik.android.model.structure.Course
+import org.stepik.android.model.Course
 import org.stepic.droid.features.deadlines.model.DeadlinesWrapper
 import org.stepic.droid.features.deadlines.model.LearningRate
 import org.stepic.droid.features.deadlines.presenters.contracts.PersonalDeadlinesView
 import org.stepic.droid.features.deadlines.repository.DeadlinesRepository
-import org.stepik.android.model.structure.Section
+import org.stepik.android.model.Section
 import org.stepic.droid.util.addDisposable
 import javax.inject.Inject
 

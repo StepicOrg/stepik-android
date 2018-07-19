@@ -6,14 +6,14 @@ import com.google.gson.Gson
 import org.stepic.droid.mappers.toDbUrl
 import org.stepic.droid.mappers.toVideoUrls
 import org.stepic.droid.model.*
-import org.stepik.android.model.structure.code.CodeOptions
+import org.stepik.android.model.code.CodeOptions
 import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepic.droid.storage.structure.DbStructureBlock
 import org.stepic.droid.storage.structure.DbStructureCachedVideo
 import org.stepic.droid.storage.structure.DbStructureVideoUrl
 import org.stepic.droid.util.transformToVideo
-import org.stepik.android.model.structure.Block
-import org.stepik.android.model.structure.Video
+import org.stepik.android.model.Block
+import org.stepik.android.model.Video
 import javax.inject.Inject
 
 class BlockDaoImpl @Inject

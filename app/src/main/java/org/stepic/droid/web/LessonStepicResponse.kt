@@ -1,6 +1,6 @@
 package org.stepic.droid.web
 
-import org.stepik.android.model.structure.Lesson
+import org.stepik.android.model.Lesson
 import org.stepik.android.model.Meta
 
 class LessonStepicResponse(

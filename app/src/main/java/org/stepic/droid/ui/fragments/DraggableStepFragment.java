@@ -13,7 +13,7 @@ import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropM
 import com.h6ah4i.android.widget.advrecyclerview.utils.WrapperAdapterUtils;
 
 import org.stepic.droid.R;
-import org.stepik.android.model.learning.attempts.Attempt;
+import org.stepik.android.model.attempts.Attempt;
 import org.stepic.droid.model.Option;
 import org.stepic.droid.util.DpPixelsHelper;
 

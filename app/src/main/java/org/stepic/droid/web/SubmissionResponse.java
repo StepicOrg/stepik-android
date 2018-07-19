@@ -1,6 +1,6 @@
 package org.stepic.droid.web;
 
-import org.stepik.android.model.learning.Submission;
+import org.stepik.android.model.Submission;
 
 import java.util.List;
 

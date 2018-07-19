@@ -7,7 +7,7 @@ import org.stepic.droid.core.presenters.TagListPresenter
 import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.storage.operations.Table
 import org.stepic.droid.ui.util.initCenteredToolbar
-import org.stepik.android.model.structure.Tag
+import org.stepik.android.model.Tag
 import javax.inject.Inject
 
 class TagFragment : CourseListFragmentBase(), CoursesView {

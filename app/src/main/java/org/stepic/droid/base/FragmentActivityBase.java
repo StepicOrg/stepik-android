@@ -23,7 +23,7 @@ import org.stepic.droid.configuration.Config;
 import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.ShareHelper;
 import org.stepic.droid.fonts.FontsProvider;
-import org.stepik.android.model.structure.Course;
+import org.stepik.android.model.Course;
 import org.stepic.droid.notifications.StepikNotificationManager;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;

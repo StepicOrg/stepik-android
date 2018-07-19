@@ -6,7 +6,7 @@ import org.stepic.droid.core.dropping.contract.DroppingPoster
 import org.stepic.droid.core.presenters.contracts.DroppingView
 import org.stepic.droid.di.course_list.CourseListScope
 import org.stepic.droid.features.deadlines.repository.DeadlinesRepository
-import org.stepik.android.model.structure.Course
+import org.stepik.android.model.Course
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.storage.operations.Table
 import org.stepic.droid.web.Api

@@ -4,7 +4,7 @@ import com.google.gson.Gson
 import org.junit.Assert.*
 import org.junit.Test
 import org.stepic.droid.testUtils.TestingGsonProvider
-import org.stepik.android.model.learning.attempts.DatasetWrapper
+import org.stepik.android.model.attempts.DatasetWrapper
 
 
 class DatasetDeserializerTest {

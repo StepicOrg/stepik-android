@@ -8,7 +8,7 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.toObservable
 import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.jsonHelpers.adapters.UTCDateAdapter
-import org.stepik.android.model.structure.Course
+import org.stepik.android.model.Course
 import org.stepic.droid.web.storage.model.StorageRecord
 import org.stepic.droid.features.deadlines.model.DeadlinesWrapper
 import org.stepic.droid.features.deadlines.notifications.DeadlinesNotificationsManager

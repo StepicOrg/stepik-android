@@ -1,6 +1,6 @@
 package org.stepic.droid.core.presenters.contracts
 
-import org.stepik.android.model.structure.Tag
+import org.stepik.android.model.Tag
 
 
 interface TagsView {

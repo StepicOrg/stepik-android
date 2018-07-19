@@ -39,10 +39,10 @@ import org.stepic.droid.core.presenters.StreakPresenter;
 import org.stepic.droid.core.presenters.contracts.StepAttemptView;
 import org.stepic.droid.core.updatingstep.contract.UpdatingStepPoster;
 import org.stepic.droid.fonts.FontType;
-import org.stepik.android.model.learning.attempts.Attempt;
-import org.stepik.android.model.structure.DiscountingPolicyType;
+import org.stepik.android.model.attempts.Attempt;
+import org.stepik.android.model.DiscountingPolicyType;
 import org.stepic.droid.model.LessonSession;
-import org.stepik.android.model.learning.Submission;
+import org.stepik.android.model.Submission;
 import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout;
 import org.stepic.droid.ui.dialogs.DiscountingPolicyDialogFragment;
 import org.stepic.droid.ui.dialogs.RateAppDialogFragment;
@@ -56,7 +56,7 @@ import org.stepic.droid.util.RatingUtilKt;
 import org.stepic.droid.util.SnackbarExtensionKt;
 import org.stepic.droid.util.StepExtensionsKt;
 import org.stepic.droid.util.SubmissionExtensionsKt;
-import org.stepik.android.model.learning.Reply;
+import org.stepik.android.model.Reply;
 
 import javax.inject.Inject;
 

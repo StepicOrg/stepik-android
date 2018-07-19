@@ -10,11 +10,11 @@ import kotlinx.android.synthetic.main.view_code_editor.*
 import kotlinx.android.synthetic.main.view_code_editor_layout.*
 import kotlinx.android.synthetic.main.view_code_toolbar.*
 import org.stepic.droid.R
-import org.stepik.android.model.learning.attempts.Attempt
+import org.stepik.android.model.attempts.Attempt
 import org.stepic.droid.ui.adapters.CodeToolbarAdapter
 import org.stepic.droid.ui.util.listenKeyboardChanges
 import org.stepic.droid.ui.util.stopListenKeyboardChanges
-import org.stepik.android.model.learning.Reply
+import org.stepik.android.model.Reply
 
 class SqlStepFragment: StepAttemptFragment(), CodeToolbarAdapter.OnSymbolClickListener {
     companion object {

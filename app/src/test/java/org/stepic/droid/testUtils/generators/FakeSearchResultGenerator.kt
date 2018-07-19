@@ -1,6 +1,6 @@
 package org.stepic.droid.testUtils.generators
 
-import org.stepik.android.model.structure.SearchResult
+import org.stepik.android.model.SearchResult
 
 object FakeSearchResultGenerator {
     @JvmOverloads

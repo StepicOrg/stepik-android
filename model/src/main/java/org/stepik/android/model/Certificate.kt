@@ -1,4 +1,4 @@
-package org.stepik.android.model.structure
+package org.stepik.android.model
 
 import com.google.gson.annotations.SerializedName
 import java.util.Date

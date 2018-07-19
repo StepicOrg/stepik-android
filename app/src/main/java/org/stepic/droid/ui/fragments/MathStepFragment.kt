@@ -1,6 +1,6 @@
 package org.stepic.droid.ui.fragments
 
-import org.stepik.android.model.learning.Reply
+import org.stepik.android.model.Reply
 
 class MathStepFragment : SingleLineSendStepFragment() {
 

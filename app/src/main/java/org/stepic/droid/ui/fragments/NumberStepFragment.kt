@@ -3,7 +3,7 @@ package org.stepic.droid.ui.fragments
 import android.os.Bundle
 import android.text.InputType
 import android.view.View
-import org.stepik.android.model.learning.Reply
+import org.stepik.android.model.Reply
 
 class NumberStepFragment: SingleLineSendStepFragment() {
 

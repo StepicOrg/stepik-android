@@ -31,7 +31,7 @@ import org.stepic.droid.features.achievements.ui.adapters.AchievementsTileAdapte
 import org.stepic.droid.features.achievements.ui.dialogs.AchievementDetailsDialog
 import org.stepic.droid.features.deadlines.ui.dialogs.EditDeadlinesDialog
 import org.stepic.droid.features.deadlines.ui.dialogs.LearningRateDialog
-import org.stepik.android.model.structure.Course
+import org.stepik.android.model.Course
 import org.stepic.droid.notifications.HackFcmListener
 import org.stepic.droid.notifications.HackerFcmInstanceId
 import org.stepic.droid.notifications.NotificationBroadcastReceiver

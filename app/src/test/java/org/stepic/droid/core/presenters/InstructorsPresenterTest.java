@@ -7,7 +7,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.core.presenters.contracts.InstructorsView;
-import org.stepik.android.model.structure.Course;
+import org.stepik.android.model.Course;
 import org.stepik.android.model.user.User;
 import org.stepic.droid.testUtils.ConcurrencyUtilForTest;
 import org.stepic.droid.testUtils.ResponseGeneratorKt;

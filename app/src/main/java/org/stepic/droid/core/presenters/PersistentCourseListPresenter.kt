@@ -10,9 +10,9 @@ import org.stepic.droid.core.earlystreak.contract.EarlyStreakPoster
 import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.di.course_list.CourseListScope
 import org.stepic.droid.features.deadlines.repository.DeadlinesRepository
-import org.stepik.android.model.structure.Course
+import org.stepik.android.model.Course
 import org.stepic.droid.model.CourseReviewSummary
-import org.stepik.android.model.structure.Progress
+import org.stepik.android.model.Progress
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.storage.operations.Table

@@ -1,12 +1,11 @@
-package org.stepik.android.model.structure
+package org.stepik.android.model
 
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import org.stepik.android.model.Progressable
-import org.stepik.android.model.readBoolean
-import org.stepik.android.model.readParcelable
-import org.stepik.android.model.writeBoolean
+import org.stepik.android.model.util.readBoolean
+import org.stepik.android.model.util.readParcelable
+import org.stepik.android.model.util.writeBoolean
 
 import java.util.Date
 

@@ -4,9 +4,9 @@ import android.content.ContentValues
 import android.database.Cursor
 import org.stepic.droid.jsonHelpers.adapters.UTCDateAdapter
 
-import org.stepik.android.model.structure.Actions
-import org.stepik.android.model.structure.DiscountingPolicyType
-import org.stepik.android.model.structure.Section
+import org.stepik.android.model.Actions
+import org.stepik.android.model.DiscountingPolicyType
+import org.stepik.android.model.Section
 import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepic.droid.storage.structure.DbStructureSections
 import org.stepic.droid.util.DbParseHelper

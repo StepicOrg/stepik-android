@@ -8,7 +8,7 @@ import org.robolectric.RobolectricTestRunner
 import org.stepic.droid.testUtils.TestingGsonProvider
 import org.stepic.droid.testUtils.assertThatObjectParcelable
 import org.stepic.droid.testUtils.generators.FakeStepGenerator
-import org.stepik.android.model.structure.Step
+import org.stepik.android.model.Step
 
 @RunWith(RobolectricTestRunner::class)
 class StepTest {

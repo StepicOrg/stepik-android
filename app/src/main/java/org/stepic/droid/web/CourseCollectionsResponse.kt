@@ -1,7 +1,7 @@
 package org.stepic.droid.web
 
 import com.google.gson.annotations.SerializedName
-import org.stepik.android.model.structure.CourseCollection
+import org.stepik.android.model.CourseCollection
 import org.stepik.android.model.Meta
 
 class CourseCollectionsResponse(

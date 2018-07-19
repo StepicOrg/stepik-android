@@ -1,12 +1,9 @@
-package org.stepik.android.model.structure.code
+package org.stepik.android.model.code
 
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import org.stepik.android.model.readMap
-import org.stepik.android.model.readMapCustomString
-import org.stepik.android.model.writeMap
-import org.stepik.android.model.writeMapCustomString
+import org.stepik.android.model.util.*
 
 data class CodeOptions(
         val limits: Map<String, CodeLimit>,
@@ -25,7 +22,7 @@ data class CodeOptions(
             parcel.readMap(Parcel::readString, Parcel::readString),
 
             parcel.readInt(),
-            mutableListOf<ParcelableStringList>().apply { parcel.readTypedList(this, ParcelableStringList.CREATOR) }
+            mutableListOf<ParcelableStringList>().apply { parcel.readTypedList(this, ParcelableStringList) }
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {

@@ -15,7 +15,7 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.code.util.CodeToolbarUtil
-import org.stepik.android.model.structure.code.CodeOptions
+import org.stepik.android.model.code.CodeOptions
 import org.stepic.droid.model.code.extensionForLanguage
 import org.stepic.droid.ui.activities.CodePlaygroundActivity
 import org.stepic.droid.ui.adapters.CodeToolbarAdapter

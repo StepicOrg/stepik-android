@@ -1,7 +1,7 @@
 package org.stepic.droid.mappers
 
 import org.stepic.droid.model.DbVideoUrl
-import org.stepik.android.model.structure.VideoUrl
+import org.stepik.android.model.VideoUrl
 
 fun VideoUrl.toDbUrl(videoId: Long) =
         DbVideoUrl(

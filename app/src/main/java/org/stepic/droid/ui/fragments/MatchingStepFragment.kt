@@ -8,8 +8,8 @@ import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropM
 import org.stepic.droid.model.Option
 import org.stepic.droid.ui.adapters.MatchingStepDraggableAdapter
 import org.stepic.droid.ui.util.SimpleDividerItemDecoration
-import org.stepik.android.model.learning.attempts.Attempt
-import org.stepik.android.model.learning.Reply
+import org.stepik.android.model.attempts.Attempt
+import org.stepik.android.model.Reply
 import java.util.ArrayList
 
 class MatchingStepFragment: DraggableStepFragment() {

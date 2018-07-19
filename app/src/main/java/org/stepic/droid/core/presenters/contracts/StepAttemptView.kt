@@ -1,8 +1,8 @@
 package org.stepic.droid.core.presenters.contracts
 
-import org.stepik.android.model.learning.attempts.Attempt
-import org.stepik.android.model.structure.DiscountingPolicyType
-import org.stepik.android.model.learning.Submission
+import org.stepik.android.model.attempts.Attempt
+import org.stepik.android.model.DiscountingPolicyType
+import org.stepik.android.model.Submission
 
 interface StepAttemptView {
     fun onResultHandlingDiscountPolicy(needShow: Boolean, discountingPolicyType: DiscountingPolicyType? = null, remainTries: Int = -1)

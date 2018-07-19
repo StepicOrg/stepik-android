@@ -9,8 +9,8 @@ import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.model.*
 import org.stepic.droid.util.StringUtil
 import org.stepic.droid.util.resolvers.text.TextResolver
-import org.stepik.android.model.structure.*
-import org.stepik.android.model.structure.Unit
+import org.stepik.android.model.*
+import org.stepik.android.model.Unit
 import javax.inject.Inject
 
 @AppSingleton

@@ -18,7 +18,7 @@ import org.stepic.droid.R;
 import org.stepic.droid.base.App;
 import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.core.presenters.CertificatePresenter;
-import org.stepik.android.model.structure.Certificate;
+import org.stepik.android.model.Certificate;
 
 import java.util.List;
 

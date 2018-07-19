@@ -5,10 +5,10 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
-import org.stepik.android.model.structure.Lesson
-import org.stepik.android.model.structure.Section
-import org.stepik.android.model.structure.Step
-import org.stepik.android.model.structure.Unit
+import org.stepik.android.model.Lesson
+import org.stepik.android.model.Section
+import org.stepik.android.model.Step
+import org.stepik.android.model.Unit
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.resolvers.StepTypeResolver
 

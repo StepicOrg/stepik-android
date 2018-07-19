@@ -3,13 +3,13 @@ package org.stepic.droid.ui.adapters
 import android.widget.Button
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
-import org.stepik.android.model.learning.attempts.Attempt
-import org.stepik.android.model.learning.Submission
+import org.stepik.android.model.attempts.Attempt
+import org.stepik.android.model.Submission
 import org.stepic.droid.ui.custom.StepikCheckBox
 import org.stepic.droid.ui.custom.StepikOptionView
 import org.stepic.droid.ui.custom.StepikRadioButton
 import org.stepic.droid.ui.custom.StepikRadioGroup
-import org.stepik.android.model.learning.Reply
+import org.stepik.android.model.Reply
 import java.lang.Math.min
 import javax.inject.Inject
 

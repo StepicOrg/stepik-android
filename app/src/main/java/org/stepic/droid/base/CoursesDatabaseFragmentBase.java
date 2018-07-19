@@ -16,7 +16,7 @@ import org.stepic.droid.analytic.AmplitudeAnalytic;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.core.dropping.contract.DroppingListener;
 import org.stepic.droid.core.presenters.PersistentCourseListPresenter;
-import org.stepik.android.model.structure.Course;
+import org.stepik.android.model.Course;
 import org.stepic.droid.storage.operations.Table;
 import org.stepic.droid.ui.fragments.CourseListFragmentBase;
 import org.stepic.droid.ui.util.ContextMenuRecyclerView;

@@ -3,7 +3,7 @@ package org.stepic.droid.core.routing
 import org.stepic.droid.base.ListenerContainer
 import org.stepic.droid.core.routing.contract.RoutingListener
 import org.stepic.droid.core.routing.contract.RoutingPoster
-import org.stepik.android.model.structure.Section
+import org.stepik.android.model.Section
 import javax.inject.Inject
 
 class RoutingPosterImpl

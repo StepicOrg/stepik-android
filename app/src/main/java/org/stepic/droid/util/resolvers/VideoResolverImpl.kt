@@ -2,8 +2,8 @@ package org.stepic.droid.util.resolvers
 
 import android.support.annotation.AnyThread
 import org.stepic.droid.analytic.Analytic
-import org.stepik.android.model.structure.Video
-import org.stepik.android.model.structure.VideoUrl
+import org.stepik.android.model.Video
+import org.stepik.android.model.VideoUrl
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.util.greaterThanMaxQuality
 import javax.inject.Inject

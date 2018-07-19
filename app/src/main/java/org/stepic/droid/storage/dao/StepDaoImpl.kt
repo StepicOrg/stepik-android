@@ -3,17 +3,17 @@ package org.stepic.droid.storage.dao
 import android.content.ContentValues
 import android.database.Cursor
 import org.stepic.droid.jsonHelpers.adapters.UTCDateAdapter
-import org.stepik.android.model.structure.Assignment
+import org.stepik.android.model.Assignment
 import org.stepic.droid.model.BlockPersistentWrapper
-import org.stepik.android.model.structure.Progress
-import org.stepik.android.model.structure.Step
+import org.stepik.android.model.Progress
+import org.stepik.android.model.Step
 import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepic.droid.storage.structure.DbStructureAssignment
 import org.stepic.droid.storage.structure.DbStructureBlock
 import org.stepic.droid.storage.structure.DbStructureProgress
 import org.stepic.droid.storage.structure.DbStructureStep
 import org.stepic.droid.util.DbParseHelper
-import org.stepik.android.model.structure.Actions
+import org.stepik.android.model.Actions
 
 import javax.inject.Inject
 

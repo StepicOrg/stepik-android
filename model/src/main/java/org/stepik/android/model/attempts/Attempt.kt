@@ -1,4 +1,4 @@
-package org.stepik.android.model.learning.attempts
+package org.stepik.android.model.attempts
 
 import com.google.gson.annotations.SerializedName
 

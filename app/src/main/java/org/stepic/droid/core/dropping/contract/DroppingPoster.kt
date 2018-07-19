@@ -1,7 +1,7 @@
 package org.stepic.droid.core.dropping.contract
 
 import android.support.annotation.MainThread
-import org.stepik.android.model.structure.Course
+import org.stepik.android.model.Course
 
 interface DroppingPoster {
 

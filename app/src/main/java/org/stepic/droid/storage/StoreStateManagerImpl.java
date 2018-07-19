@@ -8,10 +8,10 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.ListenerContainer;
 import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.di.AppSingleton;
-import org.stepik.android.model.structure.Lesson;
-import org.stepik.android.model.structure.Section;
-import org.stepik.android.model.structure.Step;
-import org.stepik.android.model.structure.Unit;
+import org.stepik.android.model.Lesson;
+import org.stepik.android.model.Section;
+import org.stepik.android.model.Step;
+import org.stepik.android.model.Unit;
 import org.stepic.droid.storage.operations.DatabaseFacade;
 
 import java.util.List;

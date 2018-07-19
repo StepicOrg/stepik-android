@@ -1,8 +1,8 @@
 package org.stepic.droid.util
 
 import org.stepic.droid.model.CachedVideo
-import org.stepik.android.model.structure.Video
-import org.stepik.android.model.structure.VideoUrl
+import org.stepik.android.model.Video
+import org.stepik.android.model.VideoUrl
 
 fun CachedVideo?.transformToVideo(): Video? {
     var realVideo: Video? = null

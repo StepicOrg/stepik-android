@@ -4,7 +4,7 @@ import android.support.annotation.WorkerThread
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.InstructorsView
 import org.stepic.droid.di.course.CourseAndSectionsScope
-import org.stepik.android.model.structure.Course
+import org.stepik.android.model.Course
 import org.stepik.android.model.user.User
 import org.stepic.droid.web.Api
 import java.util.concurrent.ThreadPoolExecutor

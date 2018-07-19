@@ -5,13 +5,11 @@ import android.os.Parcelable;
 
 import org.stepic.droid.base.App;
 import org.stepic.droid.di.AppSingleton;
-import org.stepik.android.model.structure.Lesson;
-import org.stepik.android.model.structure.Section;
+import org.stepik.android.model.Lesson;
+import org.stepik.android.model.Section;
 import org.stepic.droid.services.CancelLoadingService;
 import org.stepic.droid.services.LoadService;
 import org.stepic.droid.util.AppConstants;
-
-import java.io.Serializable;
 
 import javax.inject.Inject;
 

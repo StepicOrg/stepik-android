@@ -10,9 +10,9 @@ import org.stepic.droid.storage.structure.DbStructureCachedVideo
 import org.stepic.droid.storage.structure.DbStructureEnrolledAndFeaturedCourses
 import org.stepic.droid.storage.structure.DbStructureVideoUrl
 import org.stepic.droid.util.*
-import org.stepik.android.model.structure.Course
-import org.stepik.android.model.structure.Video
-import org.stepik.android.model.structure.VideoUrl
+import org.stepik.android.model.Course
+import org.stepik.android.model.Video
+import org.stepik.android.model.VideoUrl
 import javax.inject.Inject
 
 class CourseDaoImpl

@@ -1,10 +1,10 @@
-package org.stepik.android.model.structure
+package org.stepik.android.model
 
 import android.os.Parcel
 import android.os.Parcelable
 
-import org.stepik.android.model.readParcelable
-import org.stepik.android.model.structure.code.CodeOptions
+import org.stepik.android.model.code.CodeOptions
+import org.stepik.android.model.util.readParcelable
 
 import java.io.Serializable
 

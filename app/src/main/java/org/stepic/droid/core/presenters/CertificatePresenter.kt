@@ -14,7 +14,7 @@ import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.web.Api
 import org.stepic.droid.web.CertificateResponse
 import org.stepic.droid.web.CoursesMetaResponse
-import org.stepik.android.model.structure.Certificate
+import org.stepik.android.model.Certificate
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

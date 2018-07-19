@@ -3,7 +3,7 @@ package org.stepic.droid.core.presenters
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.VideoLengthResolver
 import org.stepic.droid.core.presenters.contracts.VideoLengthView
-import org.stepik.android.model.structure.Video
+import org.stepik.android.model.Video
 import org.stepic.droid.util.TimeUtil
 import org.stepic.droid.util.resolvers.VideoResolver
 import java.util.concurrent.ThreadPoolExecutor

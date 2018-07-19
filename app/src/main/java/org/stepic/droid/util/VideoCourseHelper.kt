@@ -1,7 +1,7 @@
 package org.stepic.droid.util
 
 import org.stepic.droid.model.CachedVideo
-import org.stepik.android.model.structure.Video
+import org.stepik.android.model.Video
 
 fun Video.transformToCachedVideo(): CachedVideo {
     val cachedVideo = CachedVideo()//it is cached, but not stored video.

@@ -3,7 +3,7 @@ package org.stepic.droid.core.presenters
 import android.support.annotation.MainThread
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.core.presenters.contracts.VideoStepView
-import org.stepik.android.model.structure.Step
+import org.stepik.android.model.Step
 import org.stepic.droid.util.VideoFileResolver
 import timber.log.Timber
 import javax.inject.Inject

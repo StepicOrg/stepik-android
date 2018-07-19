@@ -1,4 +1,4 @@
-package org.stepik.android.model.structure
+package org.stepik.android.model
 
 class Enrollment(val course: Long = 0)
 

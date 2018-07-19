@@ -1,7 +1,7 @@
 package org.stepic.droid.util
 
-import org.stepik.android.model.structure.Course
-import org.stepik.android.model.structure.Section
+import org.stepik.android.model.Course
+import org.stepik.android.model.Section
 
 
 fun Section?.hasUserAccess(course: Course? = null) =

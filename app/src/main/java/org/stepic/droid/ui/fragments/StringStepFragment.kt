@@ -4,8 +4,8 @@ import android.os.Bundle
 import android.view.View
 import android.widget.EditText
 import org.stepic.droid.R
-import org.stepik.android.model.learning.attempts.Attempt
-import org.stepik.android.model.learning.Reply
+import org.stepik.android.model.attempts.Attempt
+import org.stepik.android.model.Reply
 
 class StringStepFragment: StepAttemptFragment() {
 

@@ -1,6 +1,6 @@
 package org.stepic.droid.util
 
-import org.stepik.android.model.structure.Progress
+import org.stepik.android.model.Progress
 import org.stepik.android.model.Progressable
 
 object ProgressUtil {

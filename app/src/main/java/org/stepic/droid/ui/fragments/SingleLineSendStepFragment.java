@@ -11,7 +11,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import org.stepic.droid.R;
-import org.stepik.android.model.learning.attempts.Attempt;
+import org.stepik.android.model.attempts.Attempt;
 
 public abstract class SingleLineSendStepFragment extends StepAttemptFragment {
 

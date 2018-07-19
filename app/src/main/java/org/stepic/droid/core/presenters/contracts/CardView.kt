@@ -1,7 +1,7 @@
 package org.stepic.droid.core.presenters.contracts
 
-import org.stepik.android.model.structure.Step
-import org.stepik.android.model.learning.Submission
+import org.stepik.android.model.Step
+import org.stepik.android.model.Submission
 import org.stepic.droid.ui.quiz.QuizDelegate
 
 interface CardView {

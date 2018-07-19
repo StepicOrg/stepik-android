@@ -1,4 +1,4 @@
-package org.stepik.android.model.structure.code
+package org.stepik.android.model.util
 
 import android.os.Parcel
 import android.os.Parcelable

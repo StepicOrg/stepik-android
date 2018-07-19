@@ -1,6 +1,6 @@
 package org.stepic.droid.core
 
-import org.stepik.android.model.structure.Course
+import org.stepik.android.model.Course
 import org.stepic.droid.model.StepikFilter
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import javax.inject.Inject

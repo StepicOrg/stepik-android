@@ -17,9 +17,8 @@ import org.stepic.droid.storage.structure.*
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DbParseHelper
 import org.stepic.droid.web.ViewAssignment
-import org.stepik.android.model.structure.Assignment
-import org.stepik.android.model.structure.*
-import org.stepik.android.model.structure.Unit
+import org.stepik.android.model.*
+import org.stepik.android.model.Unit
 import java.util.*
 import javax.inject.Inject
 

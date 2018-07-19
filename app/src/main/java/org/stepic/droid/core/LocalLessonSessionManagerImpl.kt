@@ -2,9 +2,9 @@ package org.stepic.droid.core
 
 import org.stepic.droid.concurrency.SingleThreadExecutor
 import org.stepic.droid.di.AppCoreModule
-import org.stepik.android.model.learning.attempts.Attempt
+import org.stepik.android.model.attempts.Attempt
 import org.stepic.droid.model.LessonSession
-import org.stepik.android.model.learning.Submission
+import org.stepik.android.model.Submission
 import org.stepic.droid.model.code.CodeSubmission
 import org.stepic.droid.storage.operations.DatabaseFacade
 import javax.inject.Inject

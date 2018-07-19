@@ -1,6 +1,6 @@
 package org.stepic.droid.testUtils.generators
 
-import org.stepik.android.model.structure.Step
+import org.stepik.android.model.Step
 
 object FakeStepGenerator {
     @JvmOverloads

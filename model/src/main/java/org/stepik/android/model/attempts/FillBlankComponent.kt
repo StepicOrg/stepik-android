@@ -1,4 +1,4 @@
-package org.stepik.android.model.learning.attempts
+package org.stepik.android.model.attempts
 
 class FillBlankComponent(
         val text: String? = null,
@@ -13,9 +13,9 @@ class FillBlankComponent(
 
         fun canSubmit() =
                 when (this) {
-                    FillBlankComponent.Type.text -> false
-                    FillBlankComponent.Type.input -> true
-                    FillBlankComponent.Type.select -> true
+                    text -> false
+                    input -> true
+                    select -> true
                 }
     }
 }

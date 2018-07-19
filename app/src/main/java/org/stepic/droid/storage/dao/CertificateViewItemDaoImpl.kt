@@ -6,7 +6,7 @@ import org.stepic.droid.jsonHelpers.adapters.UTCDateAdapter
 import org.stepic.droid.model.CertificateViewItem
 import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepic.droid.storage.structure.DbStructureCertificateViewItem
-import org.stepik.android.model.structure.Certificate
+import org.stepik.android.model.Certificate
 import javax.inject.Inject
 
 class CertificateViewItemDaoImpl @Inject constructor(databaseOperations: DatabaseOperations) : DaoBase<CertificateViewItem>(databaseOperations) {

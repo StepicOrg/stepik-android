@@ -9,11 +9,11 @@ import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.di.tags.TagScope
-import org.stepik.android.model.structure.Course
+import org.stepik.android.model.Course
 import org.stepic.droid.util.resolvers.SearchResolver
 import org.stepic.droid.web.Api
 import org.stepik.android.model.Meta
-import org.stepik.android.model.structure.Tag
+import org.stepik.android.model.Tag
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
