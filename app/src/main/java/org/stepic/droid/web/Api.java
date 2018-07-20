@@ -4,11 +4,11 @@ import android.support.v4.app.FragmentActivity;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.stepic.droid.adaptive.model.RatingItem;
+import org.stepik.android.model.adaptive.RatingItem;
 import org.stepik.android.model.Course;
 import org.stepic.droid.model.NotificationCategory;
 import org.stepik.android.model.Submission;
-import org.stepic.droid.adaptive.model.RecommendationReaction;
+import org.stepik.android.model.adaptive.RecommendationReaction;
 import org.stepik.android.model.comments.Vote;
 import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.social.SocialManager;

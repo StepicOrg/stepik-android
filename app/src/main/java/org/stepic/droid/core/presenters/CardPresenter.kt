@@ -7,7 +7,7 @@ import org.stepic.droid.adaptive.listeners.AdaptiveReactionListener
 import org.stepic.droid.adaptive.listeners.AnswerListener
 import org.stepik.android.model.Submission
 import org.stepic.droid.adaptive.model.Card
-import org.stepic.droid.adaptive.model.Reaction
+import org.stepik.android.model.adaptive.Reaction
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App

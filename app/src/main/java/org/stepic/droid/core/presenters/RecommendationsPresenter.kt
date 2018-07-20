@@ -11,8 +11,8 @@ import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.adaptive.listeners.AdaptiveReactionListener
 import org.stepic.droid.adaptive.listeners.AnswerListener
 import org.stepic.droid.adaptive.model.Card
-import org.stepic.droid.adaptive.model.Reaction
-import org.stepic.droid.adaptive.model.RecommendationReaction
+import org.stepik.android.model.adaptive.Reaction
+import org.stepik.android.model.adaptive.RecommendationReaction
 import org.stepic.droid.adaptive.ui.adapters.QuizCardsAdapter
 import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
 import org.stepic.droid.adaptive.util.ExpHelper

@@ -10,7 +10,7 @@ import android.webkit.WebViewClient
 import android.widget.Button
 import kotlinx.android.synthetic.main.adaptive_quiz_card_view.view.*
 import org.stepic.droid.R
-import org.stepic.droid.adaptive.model.Reaction
+import org.stepik.android.model.adaptive.Reaction
 import org.stepic.droid.adaptive.ui.animations.CardAnimations
 import org.stepic.droid.adaptive.ui.custom.CardScrollView
 import org.stepic.droid.adaptive.ui.custom.SwipeableLayout

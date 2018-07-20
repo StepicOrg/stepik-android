@@ -1,6 +1,6 @@
 package org.stepic.droid.web.model.adaptive
 
-import org.stepic.droid.adaptive.model.RatingItem
+import org.stepik.android.model.adaptive.RatingItem
 
 class RatingResponse(
         val count: Long,

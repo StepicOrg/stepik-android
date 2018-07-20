@@ -1,4 +1,4 @@
-package org.stepic.droid.adaptive.model
+package org.stepik.android.model.adaptive
 
 import com.google.gson.annotations.SerializedName
 
@@ -8,4 +8,5 @@ data class RatingItem(
         val exp: Long,
         val user: Long,
         @SerializedName("is_not_fake")
-        val isNotFake: Boolean = false)
+        val isNotFake: Boolean = false
+)
