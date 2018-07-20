@@ -15,9 +15,9 @@ class UnitDaoImpl
 @Inject
 constructor(
         databaseOperations: DatabaseOperations,
-        private val progressDao: IDao<Progress>
+        private val progressDao: IDao<Progress>,
+        private val dateAdapter: UTCDateAdapter
 ) : DaoBase<Unit>(databaseOperations) {
-    private val dateAdapter = UTCDateAdapter()
 
     public override fun parsePersistentObject(cursor: Cursor): Unit {
         val columnIndexUnitId = cursor.getColumnIndex(DbStructureUnit.Column.UNIT_ID)

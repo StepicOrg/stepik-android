@@ -23,9 +23,9 @@ constructor(
         databaseOperations: DatabaseOperations,
         private val blockWrapperDao: IDao<BlockPersistentWrapper>,
         private val assignmentDao: IDao<Assignment>,
-        private val progressDao: IDao<Progress>
+        private val progressDao: IDao<Progress>,
+        private val dateAdapter: UTCDateAdapter
 ) : DaoBase<Step>(databaseOperations) {
-    private val dateAdapter = UTCDateAdapter()
 
     public override fun parsePersistentObject(cursor: Cursor): Step {
         val columnIndexCreateDate = cursor.getColumnIndex(DbStructureStep.Column.CREATE_DATE)

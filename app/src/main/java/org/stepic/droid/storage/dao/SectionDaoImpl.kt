@@ -16,9 +16,9 @@ import javax.inject.Inject
 class SectionDaoImpl
 @Inject
 constructor(
-        databaseOperations: DatabaseOperations
+        databaseOperations: DatabaseOperations,
+        private val dateAdapter: UTCDateAdapter
 ) : DaoBase<Section>(databaseOperations) {
-    private val dateAdapter = UTCDateAdapter()
 
     public override fun parsePersistentObject(cursor: Cursor): Section {
         val columnIndexId = cursor.getColumnIndex(DbStructureSections.Column.SECTION_ID)

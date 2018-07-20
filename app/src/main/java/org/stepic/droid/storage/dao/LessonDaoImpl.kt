@@ -11,10 +11,12 @@ import org.stepic.droid.util.DbParseHelper
 
 import javax.inject.Inject
 
-class LessonDaoImpl @Inject
-constructor(databaseOperations: DatabaseOperations) : DaoBase<Lesson>(databaseOperations) {
-    private val dateAdapter = UTCDateAdapter()
-
+class LessonDaoImpl
+@Inject
+constructor(
+        databaseOperations: DatabaseOperations,
+        private val dateAdapter: UTCDateAdapter
+) : DaoBase<Lesson>(databaseOperations) {
     public override fun parsePersistentObject(cursor: Cursor): Lesson {
         val columnIndexLessonId = cursor.getColumnIndex(DbStructureLesson.Column.LESSON_ID)
         val columnIndexSteps = cursor.getColumnIndex(DbStructureLesson.Column.STEPS)

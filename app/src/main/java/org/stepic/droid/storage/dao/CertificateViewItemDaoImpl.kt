@@ -9,8 +9,12 @@ import org.stepic.droid.storage.structure.DbStructureCertificateViewItem
 import org.stepik.android.model.Certificate
 import javax.inject.Inject
 
-class CertificateViewItemDaoImpl @Inject constructor(databaseOperations: DatabaseOperations) : DaoBase<CertificateViewItem>(databaseOperations) {
-    private val dateAdapter = UTCDateAdapter()
+class CertificateViewItemDaoImpl
+@Inject
+constructor(
+        databaseOperations: DatabaseOperations,
+        private val dateAdapter: UTCDateAdapter
+) : DaoBase<CertificateViewItem>(databaseOperations) {
 
     override fun getDbName() = DbStructureCertificateViewItem.CERTIFICATE_VIEW_ITEM
 

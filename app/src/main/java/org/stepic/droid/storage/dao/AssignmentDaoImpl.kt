@@ -15,9 +15,9 @@ import javax.inject.Inject
 class AssignmentDaoImpl
 @Inject
 constructor(
-        databaseOperations: DatabaseOperations
+        databaseOperations: DatabaseOperations,
+        private val dateAdapter: UTCDateAdapter
 ) : DaoBase<Assignment>(databaseOperations) {
-    private val dateAdapter = UTCDateAdapter()
 
     public override fun parsePersistentObject(cursor: Cursor): Assignment {
         val columnIndexAssignmentId = cursor.getColumnIndex(DbStructureAssignment.Column.ASSIGNMENT_ID)

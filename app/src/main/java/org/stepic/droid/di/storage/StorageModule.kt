@@ -15,6 +15,7 @@ import org.stepic.droid.features.deadlines.storage.operations.DeadlinesRecordOpe
 import org.stepic.droid.features.deadlines.storage.operations.DeadlinesRecordOperationsImpl
 import org.stepic.droid.features.deadlines.storage.dao.PersonalDeadlinesDao
 import org.stepic.droid.features.deadlines.storage.dao.PersonalDeadlinesDaoImpl
+import org.stepic.droid.jsonHelpers.adapters.UTCDateAdapter
 import org.stepic.droid.model.*
 import org.stepic.droid.model.code.CodeSubmission
 import org.stepic.droid.notifications.model.Notification
@@ -142,6 +143,11 @@ abstract class StorageModule {
                 GsonBuilder()
                         .enableComplexMapKeySerialization()
                         .create()
+
+        @StorageSingleton
+        @Provides
+        @JvmStatic
+        internal fun provideDateAdapter() = UTCDateAdapter()
 
         @StorageSingleton
         @Provides

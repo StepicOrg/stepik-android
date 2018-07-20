@@ -11,9 +11,9 @@ import javax.inject.Inject
 class CalendarSectionDaoImpl
 @Inject
 constructor(
-        databaseOperations: DatabaseOperations
+        databaseOperations: DatabaseOperations,
+        private val dateAdapter: UTCDateAdapter
 ) : DaoBase<CalendarSection>(databaseOperations) {
-    private val dateAdapter = UTCDateAdapter()
 
     public override fun getDbName(): String = DbStructureCalendarSection.CALENDAR_SECTION
 
