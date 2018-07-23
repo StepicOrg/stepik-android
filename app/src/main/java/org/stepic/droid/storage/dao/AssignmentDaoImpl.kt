@@ -3,8 +3,6 @@ package org.stepic.droid.storage.dao
 import android.content.ContentValues
 import android.database.Cursor
 
-import com.google.gson.JsonPrimitive
-
 import org.stepic.droid.jsonHelpers.adapters.UTCDateAdapter
 import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepic.droid.storage.structure.DbStructureAssignment
@@ -33,8 +31,8 @@ constructor(
                 cursor.getLong(columnIndexUnitId),
                 cursor.getString(columnIndexProgress),
 
-                dateAdapter.deserialize(JsonPrimitive(cursor.getString(columnIndexCreateDate)), null, null),
-                dateAdapter.deserialize(JsonPrimitive(cursor.getString(columnIndexUpdateDate)), null, null)
+                dateAdapter.stringToDate(cursor.getString(columnIndexCreateDate)),
+                dateAdapter.stringToDate(cursor.getString(columnIndexUpdateDate))
         )
     }
 
@@ -47,8 +45,8 @@ constructor(
         values.put(DbStructureAssignment.Column.PROGRESS, assignment.progress)
         values.put(DbStructureAssignment.Column.STEP_ID, assignment.step)
         values.put(DbStructureAssignment.Column.UNIT_ID, assignment.unit)
-        values.put(DbStructureAssignment.Column.CREATE_DATE, assignment.createDate?.let { dateAdapter.serialize(it, null, null).asString })
-        values.put(DbStructureAssignment.Column.UPDATE_DATE, assignment.updateDate?.let { dateAdapter.serialize(it, null, null).asString })
+        values.put(DbStructureAssignment.Column.CREATE_DATE, dateAdapter.dateToString(assignment.createDate))
+        values.put(DbStructureAssignment.Column.UPDATE_DATE, dateAdapter.dateToString(assignment.updateDate))
 
         return values
     }
