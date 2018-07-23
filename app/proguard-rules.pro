@@ -89,6 +89,10 @@
 -dontwarn org.stepic.droid.web.**
 -dontwarn org.stepic.droid.model.**
 
+-keep class org.stepik.android.model.** { *; }
+-keep interface org.stepik.android.model.** { *; }
+-keep public enum org.stepik.android.**{ *;}
+
 #Keep all enums
 -keep public enum org.stepic.droid.**{
     *;
