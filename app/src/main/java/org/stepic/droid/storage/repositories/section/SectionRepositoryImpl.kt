@@ -1,6 +1,6 @@
 package org.stepic.droid.storage.repositories.section
 
-import org.stepic.droid.model.Section
+import org.stepik.android.model.Section
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.storage.repositories.Repository
 import org.stepic.droid.web.Api

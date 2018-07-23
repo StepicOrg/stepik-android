@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.base.StepBaseFragment;
 import org.stepic.droid.di.AppSingleton;
-import org.stepic.droid.model.Step;
+import org.stepik.android.model.Step;
 import org.stepic.droid.ui.fragments.ChoiceStepFragment;
 import org.stepic.droid.ui.fragments.CodeStepFragment;
 import org.stepic.droid.ui.fragments.FillBlanksFragment;
@@ -205,7 +205,7 @@ public class StepTypeResolverImpl implements StepTypeResolver {
             case AppConstants.TYPE_FILL_BLANKS:
                 return new FillBlanksFragment();
             case AppConstants.TYPE_TABLE:
-                return TableChoiceStepFragment.newInstance();
+                return TableChoiceStepFragment.Companion.newInstance();
             case AppConstants.TYPE_CODE:
                 return CodeStepFragment.Companion.newInstance();
             case AppConstants.TYPE_SQL:

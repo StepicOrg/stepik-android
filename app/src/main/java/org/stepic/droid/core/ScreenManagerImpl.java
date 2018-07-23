@@ -28,14 +28,13 @@ import org.stepic.droid.di.AppSingleton;
 import org.stepic.droid.features.achievements.ui.activity.AchievementsListActivity;
 import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.model.CollectionDescriptionColors;
-import org.stepic.droid.model.Course;
+import org.stepik.android.model.Course;
 import org.stepic.droid.model.CoursesCarouselInfo;
-import org.stepic.droid.model.Lesson;
-import org.stepic.droid.model.Section;
-import org.stepic.droid.model.Step;
-import org.stepic.droid.model.Tag;
-import org.stepic.droid.model.Unit;
-import org.stepic.droid.model.Video;
+import org.stepik.android.model.Lesson;
+import org.stepik.android.model.Section;
+import org.stepik.android.model.Step;
+import org.stepik.android.model.Unit;
+import org.stepik.android.model.Video;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.services.ViewPusher;
@@ -72,6 +71,7 @@ import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.GenericFileProvider;
 import org.stepic.droid.util.StringUtil;
 import org.stepic.droid.web.ViewAssignment;
+import org.stepik.android.model.Tag;
 
 import java.io.File;
 import java.net.URLEncoder;
@@ -614,7 +614,7 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void showSections(Activity sourceActivity, @NotNull Course course) {
-        analytic.reportEventWithIdName(Analytic.Screens.SHOW_SECTIONS, course.getCourseId() + "", course.getTitle());
+        analytic.reportEventWithIdName(Analytic.Screens.SHOW_SECTIONS, course.getId() + "", course.getTitle());
         Intent intent = getSectionsIntent(sourceActivity, course);
         sourceActivity.startActivity(intent);
     }
@@ -624,7 +624,7 @@ public class ScreenManagerImpl implements ScreenManager {
         if (!joinedRightNow) {
             showSections(sourceActivity, course);
         } else {
-            analytic.reportEventWithIdName(Analytic.Screens.SHOW_SECTIONS_JOINED, course.getCourseId() + "", course.getTitle());
+            analytic.reportEventWithIdName(Analytic.Screens.SHOW_SECTIONS_JOINED, course.getId() + "", course.getTitle());
             sourceActivity.startActivity(
                     getSectionsIntent(sourceActivity, course).putExtra(SectionsFragment.joinFlag, true));
         }

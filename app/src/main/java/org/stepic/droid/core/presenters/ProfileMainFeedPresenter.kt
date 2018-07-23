@@ -5,9 +5,9 @@ import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.StepikLogoutManager
 import org.stepic.droid.core.presenters.contracts.ProfileMainFeedView
 import org.stepic.droid.di.mainscreen.MainScreenScope
-import org.stepic.droid.model.Profile
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.web.Api
+import org.stepik.android.model.user.Profile
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject

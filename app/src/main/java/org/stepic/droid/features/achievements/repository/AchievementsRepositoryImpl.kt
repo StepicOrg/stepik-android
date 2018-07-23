@@ -4,10 +4,10 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Observables.zip
 import io.reactivex.rxkotlin.toObservable
-import org.stepic.droid.model.achievements.Achievement
-import org.stepic.droid.model.achievements.AchievementFlatItem
-import org.stepic.droid.model.achievements.EmptyAchievementProgressStub
+import org.stepik.android.model.achievements.Achievement
+import org.stepic.droid.model.AchievementFlatItem
 import org.stepic.droid.web.achievements.AchievementsService
+import org.stepik.android.model.achievements.AchievementProgress
 import javax.inject.Inject
 import kotlin.math.min
 
@@ -31,7 +31,7 @@ constructor(
                 }
             }
 
-            hasNextPage = response.meta.has_next
+            hasNextPage = response.meta.hasNext
             page = response.meta.page + 1
         }
 
@@ -48,7 +48,7 @@ constructor(
                 }
             }
 
-            hasNextPage = response.meta.has_next
+            hasNextPage = response.meta.hasNext
             page = response.meta.page + 1
         }
 
@@ -58,7 +58,7 @@ constructor(
 
     private fun getAllAchievementsByKind(kind: String): Observable<Achievement> =
             achievementsService.getAchievements(kind = kind, page = 1).concatMap {
-                if (it.meta.has_next) {
+                if (it.meta.hasNext) {
                     Observable.just(it).concatWith(achievementsService.getAchievements(kind = kind, page = it.meta.page + 1))
                 } else {
                     Observable.just(it)
@@ -72,7 +72,7 @@ constructor(
                 zip(
                         Observable.just(it),
                         achievementsService.getAchievementProgresses(user = userId, achievement = it.id)
-                                .map { it.achievementsProgresses.firstOrNull() ?: EmptyAchievementProgressStub }.toObservable()
+                                .map { it.achievementsProgresses.firstOrNull() ?: AchievementProgress.EmptyStub }.toObservable()
                 )
             }.toList().map {
                 val sorted = it.sortedBy { (achievement, _) -> achievement.targetScore }
@@ -84,7 +84,7 @@ constructor(
                         sorted[min(level, sorted.size - 1)].first,
                         sorted[min(level, sorted.size - 1)].second,
                         currentLevel = level,
-                        maxLevel     = sorted.size
+                        maxLevel = sorted.size
                 )
             }.toObservable()
 

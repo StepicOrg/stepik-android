@@ -5,9 +5,8 @@ import java.lang.reflect.Type
 import java.text.SimpleDateFormat
 import java.util.*
 import com.google.gson.JsonParseException
-import java.text.DateFormat
+import org.jetbrains.annotations.Contract
 import java.text.ParseException
-
 
 class UTCDateAdapter: JsonSerializer<Date>, JsonDeserializer<Date> {
     companion object {
@@ -22,13 +21,19 @@ class UTCDateAdapter: JsonSerializer<Date>, JsonDeserializer<Date> {
     private val serializeDateFormat = createDateFormat(UTC_ISO_FORMAT)
     private val deserializeDateFormat = createDateFormat(UTC_ISO_FORMAT_SIMPLE)
 
-    override fun serialize(date: Date, typeOfSrc: Type, context: JsonSerializationContext?): JsonElement =
+    override fun serialize(date: Date, typeOfSrc: Type?, context: JsonSerializationContext?): JsonElement =
             JsonPrimitive(serializeDateFormat.format(date))
 
 
-    override fun deserialize(jsonElement: JsonElement, typeOfT: Type, context: JsonDeserializationContext): Date = try {
+    override fun deserialize(jsonElement: JsonElement, typeOfT: Type?, context: JsonDeserializationContext?): Date = try {
         deserializeDateFormat.parse(jsonElement.asString.take(UTC_ISO_FORMAT_SIMPLE.length))
     } catch (e: ParseException) {
         throw JsonParseException(e)
     }
+
+    @Contract("null -> null; !null -> !null", pure = true)
+    fun dateToString(date: Date?): String? = date?.let { serialize(date, null, null).asString }
+
+    @Contract("null -> null; !null -> !null", pure = true)
+    fun stringToDate(date: String?): Date? = date?.let { deserialize(JsonPrimitive(date), null, null) }
 }

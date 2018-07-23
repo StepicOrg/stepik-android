@@ -2,7 +2,7 @@ package org.stepic.droid.core
 
 import android.support.annotation.MainThread
 import android.support.annotation.WorkerThread
-import org.stepic.droid.model.Progress
+import org.stepik.android.model.Progress
 
 interface LocalProgressManager {
     /**

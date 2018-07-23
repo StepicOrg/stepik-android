@@ -1,9 +1,11 @@
 package org.stepic.droid.web;
 
 import org.jetbrains.annotations.Nullable;
-import org.stepic.droid.model.EnrollmentWrapper;
 import org.stepic.droid.web.model.adaptive.RecommendationReactionsRequest;
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
+import org.stepik.android.model.EnrollmentWrapper;
+
+import java.util.List;
 
 import io.reactivex.Completable;
 import io.reactivex.Single;
@@ -47,7 +49,7 @@ public interface StepicRestLoggedService {
 
     @GET("api/units")
     Call<UnitMetaResponse> getUnits(
-            @Query("ids[]") long[] units
+            @Query("ids[]") List<Long> units
     );
 
     @GET("api/units")

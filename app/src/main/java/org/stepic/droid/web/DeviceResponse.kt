@@ -1,7 +1,7 @@
 package org.stepic.droid.web
 
 import org.stepic.droid.model.Device
-import org.stepic.droid.model.Meta
+import org.stepik.android.model.Meta
 
 data class DeviceResponse(
         var meta: Meta?,

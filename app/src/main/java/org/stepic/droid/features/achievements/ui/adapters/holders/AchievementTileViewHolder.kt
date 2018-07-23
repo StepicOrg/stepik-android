@@ -5,7 +5,7 @@ import kotlinx.android.synthetic.main.view_achievement_tile.view.*
 import org.stepic.droid.features.achievements.ui.custom.AchievementCircleProgressView
 import org.stepic.droid.features.achievements.ui.custom.VectorRatingBar
 import org.stepic.droid.features.achievements.util.AchievementResourceResolver
-import org.stepic.droid.model.achievements.AchievementFlatItem
+import org.stepic.droid.model.AchievementFlatItem
 import org.stepic.droid.ui.adapters.viewhoders.GenericViewHolder
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.ui.util.wrapWithGlide

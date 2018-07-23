@@ -13,7 +13,7 @@ import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.core.LocalProgressManager;
 import org.stepic.droid.core.internetstate.contract.InternetEnabledPoster;
 import org.stepic.droid.core.updatingstep.contract.UpdatingStepPoster;
-import org.stepic.droid.model.Step;
+import org.stepik.android.model.Step;
 import org.stepic.droid.model.ViewedNotification;
 import org.stepic.droid.storage.StoreStateManager;
 import org.stepic.droid.storage.operations.DatabaseFacade;
@@ -125,8 +125,8 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
                             if (item.getAssignment() != null) {
                                 databaseFacade.markProgressAsPassed(item.getAssignment());
                             } else {
-                                if (step.getProgressId() != null) {
-                                    databaseFacade.markProgressAsPassedIfInDb(step.getProgressId());
+                                if (step.getProgress() != null) {
+                                    databaseFacade.markProgressAsPassedIfInDb(step.getProgress());
                                 }
                             }
                             unitProgressManager.checkUnitAsPassed(step.getId());

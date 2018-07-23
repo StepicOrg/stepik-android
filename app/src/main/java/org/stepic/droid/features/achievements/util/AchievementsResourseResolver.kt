@@ -4,7 +4,7 @@ import android.content.Context
 import android.widget.ImageView
 import org.stepic.droid.R
 import org.stepic.droid.di.AppSingleton
-import org.stepic.droid.model.achievements.AchievementFlatItem
+import org.stepic.droid.model.AchievementFlatItem
 import org.stepic.droid.util.liftM2
 import javax.inject.Inject
 

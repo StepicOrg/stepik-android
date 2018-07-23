@@ -8,10 +8,10 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.ListenerContainer;
 import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.di.AppSingleton;
-import org.stepic.droid.model.Lesson;
-import org.stepic.droid.model.Section;
-import org.stepic.droid.model.Step;
-import org.stepic.droid.model.Unit;
+import org.stepik.android.model.Lesson;
+import org.stepik.android.model.Section;
+import org.stepik.android.model.Step;
+import org.stepik.android.model.Unit;
 import org.stepic.droid.storage.operations.DatabaseFacade;
 
 import java.util.List;
@@ -47,7 +47,7 @@ public class StoreStateManagerImpl implements StoreStateManager {
         List<Step> steps = databaseFacade.getStepsOfLesson(lessonId);
         boolean cached = true;
         for (Step step : steps) {
-            if (!step.is_cached()) {
+            if (!step.isCached()) {
                 cached = false;
                 break;
             }
@@ -71,8 +71,8 @@ public class StoreStateManagerImpl implements StoreStateManager {
             return;
         }
 
-        lesson.set_loading(false);
-        lesson.set_cached(true);
+        lesson.setLoading(false);
+        lesson.setCached(true);
 
         databaseFacade.updateOnlyCachedLoadingLesson(lesson);
         mainHandler.post(new Function0<kotlin.Unit>() {
@@ -96,9 +96,9 @@ public class StoreStateManagerImpl implements StoreStateManager {
         final Lesson lesson = databaseFacade.getLessonById(lessonId);
         final Unit unit = databaseFacade.getUnitByLessonId(lessonId);
 
-        if (lesson != null && (lesson.is_cached() || lesson.is_loading())) {
-            lesson.set_loading(false);
-            lesson.set_cached(false);
+        if (lesson != null && (lesson.isCached() || lesson.isLoading())) {
+            lesson.setLoading(false);
+            lesson.setCached(false);
             databaseFacade.updateOnlyCachedLoadingLesson(lesson);
             mainHandler.post(new Function0<kotlin.Unit>() {
                 @Override
@@ -161,7 +161,7 @@ public class StoreStateManagerImpl implements StoreStateManager {
         boolean cached = true;
 
         for (Lesson lesson : lessonList) {
-            if (!lesson.is_cached()) {
+            if (!lesson.isCached()) {
                 cached = false;
                 break;
             }

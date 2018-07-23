@@ -1,7 +1,7 @@
 package org.stepic.droid.jsonHelpers.adapters
 
 import com.google.gson.GsonBuilder
-import junit.framework.Assert.assertEquals
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.stepic.droid.features.deadlines.model.DeadlinesWrapper
 import org.stepic.droid.util.toObject

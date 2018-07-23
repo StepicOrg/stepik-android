@@ -6,12 +6,14 @@ import com.google.gson.Gson
 import org.stepic.droid.mappers.toDbUrl
 import org.stepic.droid.mappers.toVideoUrls
 import org.stepic.droid.model.*
-import org.stepic.droid.model.code.CodeOptions
+import org.stepik.android.model.code.CodeOptions
 import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepic.droid.storage.structure.DbStructureBlock
 import org.stepic.droid.storage.structure.DbStructureCachedVideo
 import org.stepic.droid.storage.structure.DbStructureVideoUrl
 import org.stepic.droid.util.transformToVideo
+import org.stepik.android.model.Block
+import org.stepik.android.model.Video
 import javax.inject.Inject
 
 class BlockDaoImpl @Inject
@@ -19,19 +21,13 @@ constructor(
         databaseOperations: DatabaseOperations,
         private val videoDao: IDao<CachedVideo>,
         private val gson: Gson,
-        private val videoUrlIDao: IDao<DbVideoUrl>)
-    : DaoBase<BlockPersistentWrapper>(databaseOperations) {
+        private val videoUrlIDao: IDao<DbVideoUrl>
+) : DaoBase<BlockPersistentWrapper>(databaseOperations) {
 
     public override fun parsePersistentObject(cursor: Cursor): BlockPersistentWrapper {
         val indexName = cursor.getColumnIndex(DbStructureBlock.Column.NAME)
         val indexText = cursor.getColumnIndex(DbStructureBlock.Column.TEXT)
         val indexStep = cursor.getColumnIndex(DbStructureBlock.Column.STEP_ID)
-
-        val block = Block()
-        block.name = cursor.getString(indexName)
-        block.text = cursor.getString(indexText)
-
-        val blockPersistentWrapper = BlockPersistentWrapper(block, stepId = cursor.getLong(indexStep))
 
         //now get video related info:
         val indexExternalVideoThumbnail = cursor.getColumnIndex(DbStructureBlock.Column.EXTERNAL_THUMBNAIL)
@@ -41,22 +37,27 @@ constructor(
         val externalThumbnail = cursor.getString(indexExternalVideoThumbnail)
         val externalVideoId = cursor.getLong(indexExternalVideoId)
         val externalVideoDuration = cursor.getLong(indexExternalVideoDuration)
+
+        var video: Video? = null
         if (externalThumbnail != null && externalVideoId > 0) {
-            val video = Video()
-            video.thumbnail = externalThumbnail
-            video.id = externalVideoId
-            video.duration = externalVideoDuration
-            block.video = video
+            video = Video(externalVideoId, externalThumbnail, duration = externalVideoDuration)
         }
 
         val codeOptionsIndex = cursor.getColumnIndex(DbStructureBlock.Column.CODE_OPTIONS)
         val storedCodeOptionJson = cursor.getString(codeOptionsIndex)
+
+        var codeOptions: CodeOptions? = null
         if (storedCodeOptionJson != null) {
-            val codeOptions = gson.fromJson(storedCodeOptionJson, CodeOptions::class.java)
-            block.options = codeOptions
+            codeOptions = gson.fromJson(storedCodeOptionJson, CodeOptions::class.java)
         }
 
-        return blockPersistentWrapper
+        val block = Block(
+                name = cursor.getString(indexName),
+                text = cursor.getString(indexText),
+                video = video,
+                options = codeOptions
+        )
+        return BlockPersistentWrapper(block, stepId = cursor.getLong(indexStep))
     }
 
     public override fun getContentValues(blockWrapper: BlockPersistentWrapper): ContentValues {
@@ -121,7 +122,7 @@ constructor(
         if (blockWrapper?.block == null) {
             return
         }
-        val externalVideoId = blockWrapper.block.video?.id.toString() ?: return
+        val externalVideoId = blockWrapper.block.video?.id?.toString() ?: return
 
         val externalVideoUrls: MutableList<DbVideoUrl?> = videoUrlIDao.getAll(DbStructureVideoUrl.Column.videoId, externalVideoId)
 

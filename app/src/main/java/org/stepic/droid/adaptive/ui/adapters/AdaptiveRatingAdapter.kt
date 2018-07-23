@@ -13,7 +13,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import kotlinx.android.synthetic.main.adaptive_rating_item.view.*
 import org.stepic.droid.R
-import org.stepic.droid.adaptive.model.RatingItem
+import org.stepik.android.model.adaptive.RatingItem
 import org.stepic.droid.preferences.SharedPreferenceHelper
 
 class AdaptiveRatingAdapter (

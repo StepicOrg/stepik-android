@@ -10,12 +10,17 @@ import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.core.LessonSessionManager
 import org.stepic.droid.core.presenters.contracts.StepAttemptView
-import org.stepic.droid.model.*
+import org.stepik.android.model.Reply
+import org.stepik.android.model.attempts.Attempt
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.StepikUtil
 import org.stepic.droid.util.getStepType
 import org.stepic.droid.web.Api
+import org.stepik.android.model.Submission
+import org.stepik.android.model.DiscountingPolicyType
+import org.stepik.android.model.Section
+import org.stepik.android.model.Step
 import java.util.*
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
@@ -31,11 +36,11 @@ class StepAttemptPresenter
         private val api: Api,
         private var firebaseRemoteConfig: FirebaseRemoteConfig,
         private val analytic: Analytic,
-        private val sharedPreferenceHelper: SharedPreferenceHelper) : PresenterBase<StepAttemptView>() {
-
+        private val sharedPreferenceHelper: SharedPreferenceHelper
+) : PresenterBase<StepAttemptView>() {
     companion object {
-        private val FIRST_DELAY = 1000L
-        private val MAX_RATE_TIMES = 5
+        private const val FIRST_DELAY = 1000L
+        private const val MAX_RATE_TIMES = 5
     }
 
     private val minNumberOfSolvedStepsForRate = 5
@@ -64,19 +69,19 @@ class StepAttemptPresenter
 
     @MainThread
     fun handleDiscountingPolicy(numberOfSubmission: Int, section: Section?, step: Step) {
-        if (section?.discountingPolicy == null || section.discountingPolicy == DiscountingPolicyType.noDiscount || numberOfSubmission < 0 || step.is_custom_passed) {
+        if (section?.discountingPolicy == null || section.discountingPolicy == DiscountingPolicyType.NoDiscount || numberOfSubmission < 0 || step.isCustomPassed) {
             view?.onResultHandlingDiscountPolicy(needShow = false)
             return
         }
 
         section.discountingPolicy?.let {
             when (section.discountingPolicy) {
-                DiscountingPolicyType.inverse -> view?.onResultHandlingDiscountPolicy(
+                DiscountingPolicyType.Inverse -> view?.onResultHandlingDiscountPolicy(
                         needShow = true,
                         discountingPolicyType = it,
                         remainTries = Int.MAX_VALUE)
 
-                DiscountingPolicyType.firstOne, DiscountingPolicyType.firstThree -> view?.onResultHandlingDiscountPolicy(
+                DiscountingPolicyType.FirstOne, DiscountingPolicyType.FirstThree -> view?.onResultHandlingDiscountPolicy(
                         needShow = true,
                         discountingPolicyType = it,
                         remainTries = (it.numberOfTries() - numberOfSubmission))
@@ -126,7 +131,7 @@ class StepAttemptPresenter
             if (onlyFromInternet || !tryRestoreState(step.id)) {
                 getExistingAttempts(step.id)
             }
-            if (step.actions?.do_review != null) {
+            if (step.actions?.doReview != null) {
                 mainHandler.post {
                     view?.onNeedShowPeerReview()
                 }
@@ -160,7 +165,7 @@ class StepAttemptPresenter
                                     return@Runnable
                                 }
 
-                                val isCorrectSolution: Boolean = !step.is_custom_passed && submission?.status == Submission.Status.CORRECT
+                                val isCorrectSolution: Boolean = !step.isCustomPassed && submission?.status == Submission.Status.CORRECT
                                 if (isCorrectSolution) {
                                     sharedPreferenceHelper.trackWhenUserSolved()
                                     sharedPreferenceHelper.incrementUserSolved()

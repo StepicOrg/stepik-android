@@ -1,14 +1,13 @@
 package org.stepic.droid.testUtils.generators
 
-import org.stepic.droid.model.Course
+import org.stepik.android.model.Course
 
 object FakeCourseGenerator {
     @JvmOverloads
-    fun generate(courseId: Long = 0,
-                 sectionIds: LongArray? = null): Course {
-        val course = Course()
-        course.setId(courseId)
-        course.sections = sectionIds
-        return course
-    }
+    fun generate(
+            courseId: Long = 0,
+            sectionIds: LongArray? = null,
+            instructors: LongArray? = null
+    ): Course =
+            Course(id = courseId, sections = sectionIds, instructors = instructors)
 }

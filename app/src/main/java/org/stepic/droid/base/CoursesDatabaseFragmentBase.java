@@ -16,7 +16,7 @@ import org.stepic.droid.analytic.AmplitudeAnalytic;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.core.dropping.contract.DroppingListener;
 import org.stepic.droid.core.presenters.PersistentCourseListPresenter;
-import org.stepic.droid.model.Course;
+import org.stepik.android.model.Course;
 import org.stepic.droid.storage.operations.Table;
 import org.stepic.droid.ui.fragments.CourseListFragmentBase;
 import org.stepic.droid.ui.util.ContextMenuRecyclerView;
@@ -177,14 +177,14 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
     @Override
     public void onFailDropCourse(@NotNull Course droppedCourse) {
-        long courseId = droppedCourse.getCourseId();
+        long courseId = droppedCourse.getId();
         getAnalytic().reportEvent(Analytic.Course.DROP_COURSE_FAIL, courseId + "");
         Toast.makeText(getContext(), R.string.internet_problem, Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void onSuccessDropCourse(@NotNull Course droppedCourse) {
-        long courseId = droppedCourse.getCourseId();
+        long courseId = droppedCourse.getId();
         getAnalytic().reportEvent(Analytic.Course.DROP_COURSE_SUCCESSFUL, courseId + "");
         analytic.reportAmplitudeEvent(AmplitudeAnalytic.Course.UNSUBSCRIBED,
                 MapsKt.mapOf(new Pair<String, Object>(AmplitudeAnalytic.Course.Params.COURSE, courseId)));
@@ -197,7 +197,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
             int position = -1;
             for (int i = 0; i < courses.size(); i++) {
                 Course courseItem = courses.get(i);
-                if (courseItem.getCourseId() == droppedCourse.getCourseId()) {
+                if (courseItem.getId() == droppedCourse.getId()) {
                     courseItem.setEnrollment(0);
                     position = i;
                     break;

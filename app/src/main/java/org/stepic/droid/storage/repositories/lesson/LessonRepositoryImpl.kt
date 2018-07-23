@@ -1,6 +1,6 @@
 package org.stepic.droid.storage.repositories.lesson
 
-import org.stepic.droid.model.Lesson
+import org.stepik.android.model.Lesson
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.storage.repositories.Repository
 import org.stepic.droid.web.Api

@@ -1,6 +1,6 @@
 package org.stepic.droid.storage
 
-import org.stepic.droid.model.Step
+import org.stepik.android.model.Step
 
 //todo: do interface segregation: for units and for sections
 interface StoreStateManager {

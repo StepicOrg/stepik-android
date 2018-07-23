@@ -2,8 +2,8 @@ package org.stepic.droid.ui.quiz
 
 import android.text.InputType
 import android.view.View
-import org.stepic.droid.model.Reply
-import org.stepic.droid.model.Submission
+import org.stepik.android.model.Submission
+import org.stepik.android.model.Reply
 
 class NumberQuizDelegate: StringQuizDelegate() {
     override fun onViewCreated(view: View) {
@@ -15,7 +15,5 @@ class NumberQuizDelegate: StringQuizDelegate() {
         submission?.reply?.number?.let { answerField.setText(it) }
     }
 
-    override fun createReply() = Reply.Builder()
-            .setNumber(answerField.text.toString())
-            .build()
+    override fun createReply() = Reply(number = answerField.text.toString())
 }

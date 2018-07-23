@@ -10,12 +10,12 @@ import org.stepic.droid.features.deadlines.util.DeadlinesResolver
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.features.deadlines.model.Deadline
-import org.stepic.droid.model.Course
+import org.stepik.android.model.Course
 import org.stepic.droid.features.deadlines.model.DeadlinesWrapper
 import org.stepic.droid.features.deadlines.model.LearningRate
 import org.stepic.droid.features.deadlines.presenters.contracts.PersonalDeadlinesView
 import org.stepic.droid.features.deadlines.repository.DeadlinesRepository
-import org.stepic.droid.model.Section
+import org.stepik.android.model.Section
 import org.stepic.droid.util.addDisposable
 import javax.inject.Inject
 
@@ -49,7 +49,7 @@ constructor(
             return
         }
 
-        courseId = course.courseId
+        courseId = course.id
 
         when {
             sections.any { it.softDeadline != null || it.hardDeadline != null } -> // there are teacher's deadlines
@@ -57,7 +57,7 @@ constructor(
 
             state == PersonalDeadlinesView.State.Idle -> {
                 state = PersonalDeadlinesView.State.BackgroundLoading
-                compositeDisposable addDisposable deadlinesRepository.getDeadlinesForCourse(course.courseId)
+                compositeDisposable addDisposable deadlinesRepository.getDeadlinesForCourse(course.id)
                         .subscribeOn(backgroundScheduler)
                         .observeOn(mainScheduler)
                         .subscribeBy(
@@ -85,7 +85,7 @@ constructor(
         val oldState = state
         state = PersonalDeadlinesView.State.BlockingLoading
 
-        compositeDisposable addDisposable deadlinesResolver.calculateDeadlinesForCourse(course.courseId, learningRate)
+        compositeDisposable addDisposable deadlinesResolver.calculateDeadlinesForCourse(course.id, learningRate)
                 .flatMap { deadlinesRepository.createDeadlinesForCourse(it) }
                 .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)

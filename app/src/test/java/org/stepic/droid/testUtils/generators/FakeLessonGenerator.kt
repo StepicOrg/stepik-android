@@ -1,13 +1,10 @@
 package org.stepic.droid.testUtils.generators
 
-import org.stepic.droid.model.Lesson
+import org.stepik.android.model.Lesson
 
 object FakeLessonGenerator {
 
-    fun generate(stepIds: LongArray): Lesson {
-        val lesson = Lesson()
-        lesson.steps = stepIds
-        return lesson
-    }
+    @JvmOverloads
+    fun generate(id: Long = 0, stepIds: LongArray): Lesson = Lesson(id = id, steps = stepIds)
 
 }

@@ -1,9 +1,9 @@
 package org.stepic.droid.core
 
-import org.stepic.droid.model.Course
-import org.stepic.droid.model.Lesson
-import org.stepic.droid.model.Section
-import org.stepic.droid.model.Unit
+import org.stepik.android.model.Course
+import org.stepik.android.model.Lesson
+import org.stepik.android.model.Section
+import org.stepik.android.model.Unit
 import org.stepic.droid.storage.repositories.Repository
 import org.stepic.droid.util.hasUserAccessAndNotEmpty
 import javax.inject.Inject

@@ -9,11 +9,11 @@ import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.di.tags.TagScope
-import org.stepic.droid.model.Course
-import org.stepic.droid.model.Meta
-import org.stepic.droid.model.Tag
+import org.stepik.android.model.Course
 import org.stepic.droid.util.resolvers.SearchResolver
 import org.stepic.droid.web.Api
+import org.stepik.android.model.Meta
+import org.stepik.android.model.Tag
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
@@ -85,7 +85,7 @@ constructor(
     }
 
     private fun handleMeta(meta: Meta) {
-        hasNextPage.set(meta.has_next)
+        hasNextPage.set(meta.hasNext)
         currentPage.set(meta.page + 1)
     }
 
@@ -108,8 +108,8 @@ constructor(
                 .associate { Pair(it.value, it.index) }
 
         return courses.sortedWith(Comparator { firstCourse, secondCourse ->
-            val firstPosition = idToPositionMap[firstCourse.courseId] ?: return@Comparator 0
-            val secondPosition = idToPositionMap[secondCourse.courseId] ?: return@Comparator 0
+            val firstPosition = idToPositionMap[firstCourse.id] ?: return@Comparator 0
+            val secondPosition = idToPositionMap[secondCourse.id] ?: return@Comparator 0
 
             return@Comparator (firstPosition - secondPosition)
         })

@@ -1,6 +1,6 @@
 package org.stepic.droid.util.resolvers
 
-import org.stepic.droid.model.SearchResult
+import org.stepik.android.model.SearchResult
 import javax.inject.Inject
 
 class SearchResolverImpl @Inject constructor() : SearchResolver {

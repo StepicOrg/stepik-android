@@ -28,9 +28,9 @@ import org.stepic.droid.core.presenters.DroppingPresenter;
 import org.stepic.droid.core.presenters.contracts.ContinueCourseView;
 import org.stepic.droid.core.presenters.contracts.CoursesView;
 import org.stepic.droid.core.presenters.contracts.DroppingView;
-import org.stepic.droid.model.Course;
+import org.stepik.android.model.Course;
 import org.stepic.droid.model.CoursesCarouselColorType;
-import org.stepic.droid.model.Section;
+import org.stepik.android.model.Section;
 import org.stepic.droid.storage.operations.Table;
 import org.stepic.droid.ui.activities.contracts.RootScreen;
 import org.stepic.droid.ui.adapters.CoursesAdapter;
@@ -39,7 +39,6 @@ import org.stepic.droid.ui.custom.TouchDispatchableFrameLayout;
 import org.stepic.droid.ui.custom.WrapContentLinearLayoutManager;
 import org.stepic.droid.ui.decorators.VerticalSpacesDecoration;
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment;
-import org.stepic.droid.util.ColorUtil;
 import org.stepic.droid.util.KotlinUtil;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.StepikUtil;
@@ -221,8 +220,8 @@ public abstract class CourseListFragmentBase extends FragmentBase
         int position = -1;
         for (int i = 0; i < courses.size(); i++) {
             Course courseItem = courses.get(i);
-            if (courseItem.getCourseId() == courseForUpdate.getCourseId()) {
-                courseItem.setEnrollment((int) courseItem.getCourseId());
+            if (courseItem.getId() == courseForUpdate.getId()) {
+                courseItem.setEnrollment((int) courseItem.getId());
                 courseForUpdate = courseItem;
                 inList = true;
                 position = i;

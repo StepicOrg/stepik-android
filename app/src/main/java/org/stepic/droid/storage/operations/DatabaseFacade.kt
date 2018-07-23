@@ -7,7 +7,6 @@ import org.stepic.droid.di.qualifiers.FeaturedCoursesDaoQualifier
 import org.stepic.droid.di.storage.StorageSingleton
 import org.stepic.droid.features.deadlines.storage.dao.DeadlinesBannerDao
 import org.stepic.droid.model.*
-import org.stepic.droid.model.Unit
 import org.stepic.droid.model.code.CodeSubmission
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.storage.dao.AdaptiveExpDao
@@ -18,6 +17,8 @@ import org.stepic.droid.storage.structure.*
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DbParseHelper
 import org.stepic.droid.web.ViewAssignment
+import org.stepik.android.model.*
+import org.stepik.android.model.Unit
 import java.util.*
 import javax.inject.Inject
 
@@ -177,7 +178,7 @@ class DatabaseFacade
     fun isLessonCached(lesson: Lesson?): Boolean {
         val id = lesson?.id ?: return false
         val dbLesson = lessonDao.get(DbStructureLesson.Column.LESSON_ID, id.toString())
-        return dbLesson != null && dbLesson.is_cached
+        return dbLesson != null && dbLesson.isCached
     }
 
     fun isStepCached(step: Step?): Boolean {
@@ -187,14 +188,14 @@ class DatabaseFacade
 
     fun isStepCached(stepId: Long): Boolean {
         val dbStep = stepDao.get(DbStructureStep.Column.STEP_ID, stepId.toString())
-        return dbStep != null && dbStep.is_cached
+        return dbStep != null && dbStep.isCached
     }
 
     fun updateOnlyCachedLoadingStep(step: Step?) {
         step?.let {
             val cv = ContentValues()
-            cv.put(DbStructureStep.Column.IS_LOADING, step.is_loading)
-            cv.put(DbStructureStep.Column.IS_CACHED, step.is_cached)
+            cv.put(DbStructureStep.Column.IS_LOADING, step.isLoading)
+            cv.put(DbStructureStep.Column.IS_CACHED, step.isCached)
             stepDao.update(DbStructureStep.Column.STEP_ID, step.id.toString(), cv)
         }
     }
@@ -202,8 +203,8 @@ class DatabaseFacade
     fun updateOnlyCachedLoadingLesson(lesson: Lesson?) {
         lesson?.let {
             val cv = ContentValues()
-            cv.put(DbStructureLesson.Column.IS_LOADING, lesson.is_loading)
-            cv.put(DbStructureLesson.Column.IS_CACHED, lesson.is_cached)
+            cv.put(DbStructureLesson.Column.IS_LOADING, lesson.isLoading)
+            cv.put(DbStructureLesson.Column.IS_CACHED, lesson.isCached)
             lessonDao.update(DbStructureLesson.Column.LESSON_ID, lesson.id.toString(), cv)
         }
     }
@@ -222,14 +223,14 @@ class DatabaseFacade
     fun addCourse(course: Course, type: Table) = getCourseDao(type).insertOrUpdate(course)
 
     fun deleteCourse(course: Course, type: Table) {
-        getCourseDao(type).remove(DbStructureEnrolledAndFeaturedCourses.Column.COURSE_ID, course.courseId.toString())
+        getCourseDao(type).remove(DbStructureEnrolledAndFeaturedCourses.Column.COURSE_ID, course.id.toString())
     }
 
     fun addSection(section: Section) = sectionDao.insertOrUpdate(section)
 
     fun addStep(step: Step) = stepDao.insertOrUpdate(step)
 
-    fun getAllSectionsOfCourse(course: Course) = sectionDao.getAll(DbStructureSections.Column.COURSE, course.courseId.toString())
+    fun getAllSectionsOfCourse(course: Course) = sectionDao.getAll(DbStructureSections.Column.COURSE, course.id.toString())
 
     fun getAllUnitsOfSection(sectionId: Long) = unitDao.getAll(DbStructureUnit.Column.SECTION, sectionId.toString())
 
@@ -435,8 +436,8 @@ class DatabaseFacade
     fun getLocalLastStepByCourseId(courseId: Long) =
             lastStepDao.get(DbStructureLastStep.Column.COURSE_ID, courseId.toString())
 
-    fun getUnitsByIds(keys: LongArray): List<Unit> {
-        DbParseHelper.parseLongArrayToString(keys, AppConstants.COMMA)?.let {
+    fun getUnitsByIds(keys: List<Long>): List<Unit> {
+        DbParseHelper.parseLongListToString(keys, AppConstants.COMMA)?.let {
             return unitDao.getAllInRange(DbStructureUnit.Column.UNIT_ID, it)
         }
 

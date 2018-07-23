@@ -1,12 +1,12 @@
 package org.stepic.droid.util
 
-import org.stepic.droid.model.Course
-import org.stepic.droid.model.Section
+import org.stepik.android.model.Course
+import org.stepik.android.model.Section
 
 
 fun Section?.hasUserAccess(course: Course? = null) =
         this != null
-                && (this.isActive || this.actions?.test_section != null)
+                && (this.isActive || this.actions?.testSection != null)
                 && (course?.enrollment ?: 1) > 0
                 && !this.isExam
                 && this.isRequirementSatisfied

@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.Build;
 import android.support.annotation.ColorInt;
+import android.support.annotation.StringRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -19,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.AmplitudeAnalytic;
@@ -31,8 +33,8 @@ import org.stepic.droid.core.presenters.DownloadingInteractionPresenter;
 import org.stepic.droid.features.deadlines.model.Deadline;
 import org.stepic.droid.features.deadlines.model.DeadlinesWrapper;
 import org.stepic.droid.features.deadlines.presenters.PersonalDeadlinesPresenter;
-import org.stepic.droid.model.Course;
-import org.stepic.droid.model.Section;
+import org.stepik.android.model.Course;
+import org.stepik.android.model.Section;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.storage.SectionDownloader;
 import org.stepic.droid.storage.operations.DatabaseFacade;
@@ -52,6 +54,7 @@ import org.stepic.droid.util.SectionExtensionsKt;
 import org.stepic.droid.viewmodel.ProgressViewModel;
 import org.stepic.droid.web.storage.model.StorageRecord;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
@@ -59,7 +62,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 import javax.inject.Inject;
 
-import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import kotlin.Pair;
@@ -377,13 +379,6 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         @BindView(R.id.personal_deadline)
         TextView personalDeadline;
 
-        @BindString(R.string.hard_deadline_section)
-        String hardDeadlineString;
-        @BindString(R.string.soft_deadline_section)
-        String softDeadlineString;
-        @BindString(R.string.begin_date_section)
-        String beginDateString;
-
         @BindView(R.id.pre_load_iv)
         View preLoadIV;
 
@@ -467,32 +462,14 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
             title = positionOfSection + SECTION_TITLE_DELIMETER + title;
             sectionTitle.setText(title);
 
-            String formattedBeginDate = section.getFormattedBeginDate();
-            if (formattedBeginDate.equals("")) {
-                startDate.setText("");
-                startDate.setVisibility(View.GONE);
-            } else {
-                startDate.setText(beginDateString + " " + formattedBeginDate);
-                startDate.setVisibility(View.VISIBLE);
-            }
+            startDate.setText(getTimeWithLabelString(R.string.begin_date_section, section.getBeginDate()));
+            ViewExtensionsKt.changeVisibility(startDate, section.getBeginDate() != null);
 
-            String formattedSoftDeadline = section.getFormattedSoftDeadline();
-            if (formattedSoftDeadline.equals("")) {
-                softDeadline.setText("");
-                softDeadline.setVisibility(View.GONE);
-            } else {
-                softDeadline.setText(softDeadlineString + ": " + formattedSoftDeadline);
-                softDeadline.setVisibility(View.VISIBLE);
-            }
+            softDeadline.setText(getTimeWithLabelString(R.string.soft_deadline_section, section.getSoftDeadline()));
+            ViewExtensionsKt.changeVisibility(softDeadline, section.getSoftDeadline() != null);
 
-            String formattedHardDeadline = section.getFormattedHardDeadline();
-            if (formattedHardDeadline.equals("")) {
-                hardDeadline.setText("");
-                hardDeadline.setVisibility(View.GONE);
-            } else {
-                hardDeadline.setText(hardDeadlineString + ": " + formattedHardDeadline);
-                hardDeadline.setVisibility(View.VISIBLE);
-            }
+            softDeadline.setText(getTimeWithLabelString(R.string.hard_deadline_section, section.getHardDeadline()));
+            ViewExtensionsKt.changeVisibility(hardDeadline, section.getHardDeadline() != null);
 
             // personal deadlines
             boolean wasDeadlineSet = false;
@@ -508,8 +485,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                 }
 
                 if (deadline != null) {
-                    personalDeadline.setText(itemView.getContext().getString(R.string.deadlines_section,
-                            DateTimeHelper.INSTANCE.getPrintableDate(deadline.getDeadline(), Section.Companion.getDatePattern(), TimeZone.getDefault())));
+                    personalDeadline.setText(getTimeWithLabelString(R.string.deadlines_section, deadline.getDeadline()));
                     wasDeadlineSet = true;
                 }
             }
@@ -622,6 +598,16 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
             drawable.startTransition(durationMillis);
             defaultHighlightPosition = -1;
         }
+
+        @Contract(pure = true)
+        private String getTimeWithLabelString(@StringRes int labelResId, @Nullable Date date) {
+            if (date == null) {
+                return "";
+            } else {
+                return itemView.getContext().getString(labelResId,
+                        DateTimeHelper.INSTANCE.getPrintableDate(date, DateTimeHelper.DISPLAY_DATETIME_PATTERN, TimeZone.getDefault()));
+            }
+        }
     }
 
     class CalendarViewHolder extends GenericViewHolder {
@@ -639,7 +625,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
             addToCalendarButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    analytic.reportEventWithIdName(Analytic.Calendar.USER_CLICK_ADD_WIDGET, course.getCourseId() + "", course.getTitle());
+                    analytic.reportEventWithIdName(Analytic.Calendar.USER_CLICK_ADD_WIDGET, course.getId() + "", course.getTitle());
                     calendarPresenter.addDeadlinesToCalendar(SectionAdapter.this.sections, null);
                 }
             });
@@ -647,7 +633,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
             notNowButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    analytic.reportEventWithIdName(Analytic.Calendar.USER_CLICK_NOT_NOW, course.getCourseId() + "", course.getTitle());
+                    analytic.reportEventWithIdName(Analytic.Calendar.USER_CLICK_NOT_NOW, course.getId() + "", course.getTitle());
                     calendarPresenter.clickNotNow();
                 }
             });

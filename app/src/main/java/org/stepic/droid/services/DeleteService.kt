@@ -8,8 +8,8 @@ import android.os.Handler
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.downloads.contract.DownloadsPoster
-import org.stepic.droid.model.Lesson
-import org.stepic.droid.model.Step
+import org.stepik.android.model.Lesson
+import org.stepik.android.model.Step
 import org.stepic.droid.storage.StoreStateManager
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants
@@ -88,8 +88,8 @@ class DeleteService : IntentService("delete_service") {
             databaseFacade.deleteVideo(it)
         }
         step?.let {
-            step.is_cached = false
-            step.is_loading = false
+            step.isCached = false
+            step.isLoading = false
             databaseFacade.updateOnlyCachedLoadingStep(step)
 //            database.deleteStep(step) // remove steps FIXME: MAYBE NOT DELETE STEP?
             storeStateManager.updateStepAfterDeleting(step)

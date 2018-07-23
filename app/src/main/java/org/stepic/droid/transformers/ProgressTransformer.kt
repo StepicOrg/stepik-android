@@ -1,6 +1,6 @@
 package org.stepic.droid.transformers
 
-import org.stepic.droid.model.Progress
+import org.stepik.android.model.Progress
 import org.stepic.droid.util.AppConstants
 
 import org.stepic.droid.viewmodel.ProgressViewModel

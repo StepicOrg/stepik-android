@@ -2,7 +2,7 @@ package org.stepic.droid.util
 
 import android.support.annotation.MenuRes
 import org.stepic.droid.R
-import org.stepic.droid.model.Course
+import org.stepik.android.model.Course
 
 object ContextMenuCourseUtil {
     @MenuRes

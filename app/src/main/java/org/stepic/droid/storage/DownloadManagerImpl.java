@@ -5,13 +5,11 @@ import android.os.Parcelable;
 
 import org.stepic.droid.base.App;
 import org.stepic.droid.di.AppSingleton;
-import org.stepic.droid.model.Lesson;
-import org.stepic.droid.model.Section;
+import org.stepik.android.model.Lesson;
+import org.stepik.android.model.Section;
 import org.stepic.droid.services.CancelLoadingService;
 import org.stepic.droid.services.LoadService;
 import org.stepic.droid.util.AppConstants;
-
-import java.io.Serializable;
 
 import javax.inject.Inject;
 
@@ -27,7 +25,7 @@ public class DownloadManagerImpl implements IDownloadManager {
         Intent loadIntent = new Intent(App.Companion.getAppContext(), LoadService.class);
 
         loadIntent.putExtra(AppConstants.KEY_LOAD_TYPE, LoadService.LoadTypeKey.Section);
-        loadIntent.putExtra(AppConstants.KEY_SECTION_BUNDLE, (Serializable) section);
+        loadIntent.putExtra(AppConstants.KEY_SECTION_BUNDLE, section);
 
         App.Companion.getAppContext().startService(loadIntent);
     }

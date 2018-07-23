@@ -21,7 +21,7 @@ import org.stepic.droid.configuration.Config
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.presenters.ContinueCoursePresenter
 import org.stepic.droid.core.presenters.DroppingPresenter
-import org.stepic.droid.model.Course
+import org.stepik.android.model.Course
 import org.stepic.droid.model.CoursesCarouselColorType
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.ui.util.changeVisibility
@@ -154,7 +154,7 @@ class CourseItemViewHolder(
     private fun onClickCourse() = course?.let {
         analytic.reportEvent(Analytic.Interaction.CLICK_COURSE)
         if (it.enrollment != 0) {
-            if (adaptiveCoursesResolver.isAdaptive(it.courseId)) {
+            if (adaptiveCoursesResolver.isAdaptive(it.id)) {
                 screenManager.continueAdaptiveCourse(contextActivity, it)
             } else {
                 screenManager.showSections(contextActivity, it)
@@ -168,7 +168,7 @@ class CourseItemViewHolder(
         if (enrolled) {
             analytic.reportEvent(Analytic.Interaction.CLICK_CONTINUE_COURSE)
             analytic.reportAmplitudeEvent(AmplitudeAnalytic.Course.CONTINUE_PRESSED, mapOf(
-                    AmplitudeAnalytic.Course.Params.COURSE to course.courseId,
+                    AmplitudeAnalytic.Course.Params.COURSE to course.id,
                     AmplitudeAnalytic.Course.Params.SOURCE to AmplitudeAnalytic.Course.Values.COURSE_WIDGET
             ))
             continueCoursePresenter.continueCourse(course) //provide position?
@@ -210,7 +210,7 @@ class CourseItemViewHolder(
 
         courseItemMore.changeVisibility(showMore)
 
-        adaptiveCourseMarker.changeVisibility(adaptiveCoursesResolver.isAdaptive(course.courseId))
+        adaptiveCourseMarker.changeVisibility(adaptiveCoursesResolver.isAdaptive(course.id))
 
         this.course = course
     }

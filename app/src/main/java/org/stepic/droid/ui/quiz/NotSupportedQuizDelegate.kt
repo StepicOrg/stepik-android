@@ -4,9 +4,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import org.stepic.droid.R
-import org.stepic.droid.model.Attempt
-import org.stepic.droid.model.Reply
-import org.stepic.droid.model.Submission
+import org.stepik.android.model.attempts.Attempt
+import org.stepik.android.model.Submission
+import org.stepik.android.model.Reply
 
 class NotSupportedQuizDelegate: QuizDelegate() {
     override var isEnabled: Boolean = false
@@ -22,5 +22,5 @@ class NotSupportedQuizDelegate: QuizDelegate() {
 
     override fun setSubmission(submission: Submission?) {}
 
-    override fun createReply(): Reply = Reply.Builder().build()
+    override fun createReply() = Reply()
 }

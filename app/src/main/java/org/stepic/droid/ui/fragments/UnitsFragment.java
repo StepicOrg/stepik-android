@@ -36,10 +36,10 @@ import org.stepic.droid.core.presenters.contracts.DownloadingInteractionView;
 import org.stepic.droid.core.presenters.contracts.UnitsLearningProgressView;
 import org.stepic.droid.core.presenters.contracts.UnitsView;
 import org.stepic.droid.core.routing.contract.RoutingListener;
-import org.stepic.droid.model.Lesson;
-import org.stepic.droid.model.Progress;
-import org.stepic.droid.model.Section;
-import org.stepic.droid.model.Unit;
+import org.stepik.android.model.Lesson;
+import org.stepik.android.model.Progress;
+import org.stepik.android.model.Section;
+import org.stepik.android.model.Unit;
 import org.stepic.droid.storage.StoreStateManager;
 import org.stepic.droid.ui.adapters.UnitAdapter;
 import org.stepic.droid.ui.custom.StepikSwipeRefreshLayout;
@@ -228,7 +228,7 @@ public class UnitsFragment extends FragmentBase implements
         super.onStart();
         downloadingInteractionPresenter.attachView(this);
         for (Lesson lesson : lessonList) {
-            downloadingPresenter.onStateChanged(lesson.getId(), lesson.is_loading());
+            downloadingPresenter.onStateChanged(lesson.getId(), lesson.isLoading());
         }
     }
 
@@ -275,8 +275,8 @@ public class UnitsFragment extends FragmentBase implements
         }
         if (lesson == null || position == -1 || position >= lessonList.size()) return;
 
-        lesson.set_cached(isCached);
-        lesson.set_loading(isLoading);
+        lesson.setCached(isCached);
+        lesson.setLoading(isLoading);
         adapter.notifyItemChanged(position);
         downloadingPresenter.onStateChanged(lessonId, isLoading);
     }
@@ -347,7 +347,7 @@ public class UnitsFragment extends FragmentBase implements
         dismiss();
 
         for (Lesson lesson : this.lessonList) {
-            downloadingPresenter.onStateChanged(lesson.getId(), lesson.is_loading());
+            downloadingPresenter.onStateChanged(lesson.getId(), lesson.isLoading());
         }
     }
 

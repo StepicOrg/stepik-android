@@ -9,7 +9,7 @@ import io.reactivex.functions.BiFunction
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.rxkotlin.zipWith
-import org.stepic.droid.adaptive.model.RatingItem
+import org.stepik.android.model.adaptive.RatingItem
 import org.stepic.droid.adaptive.ui.adapters.AdaptiveRatingAdapter
 import org.stepic.droid.adaptive.util.RatingNamesGenerator
 import org.stepic.droid.core.presenters.contracts.AdaptiveRatingView

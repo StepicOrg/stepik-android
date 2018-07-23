@@ -17,7 +17,7 @@ import org.stepic.droid.core.presenters.contracts.CalendarExportableView
 import org.stepic.droid.di.course.CourseAndSectionsScope
 import org.stepic.droid.model.CalendarItem
 import org.stepic.droid.model.CalendarSection
-import org.stepic.droid.model.Section
+import org.stepik.android.model.Section
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants
@@ -29,14 +29,16 @@ import javax.inject.Inject
 
 @CourseAndSectionsScope
 class CalendarPresenter
-@Inject constructor(
+@Inject
+constructor(
         private val config: Config,
         private val mainHandler: MainHandler,
         private val context: Context,
         private val threadPool: ThreadPoolExecutor,
         private val database: DatabaseFacade,
         private val userPrefs: UserPreferences,
-        private val analytic: Analytic) : PresenterBase<CalendarExportableView>() {
+        private val analytic: Analytic
+) : PresenterBase<CalendarExportableView>() {
 
     /**
      * true, if any section in oldList have deadline (soft or hard) and the deadline is not happened
@@ -96,10 +98,10 @@ class CalendarPresenter
                         }
                     }
 
-                    val lastDeadline: String? = calendarSection.hardDeadline ?: calendarSection.softDeadline //2017-01-06T15:59:06Z format
+                    val lastDeadline: Date? = calendarSection.hardDeadline ?: calendarSection.softDeadline //2017-01-06T15:59:06Z format
                     var calendarDeadlinePlusMonthUtc = Long.MAX_VALUE
                     if (lastDeadline != null) {
-                        calendarDeadlinePlusMonthUtc = DateTimeHelper.toCalendar(lastDeadline).timeInMillis + AppConstants.MILLIS_IN_1MONTH
+                        calendarDeadlinePlusMonthUtc = lastDeadline.time + AppConstants.MILLIS_IN_1MONTH
                     }
 
                     if ((isDeadlineAfterDate(it.softDeadline, calendarDeadlinePlusMonthUtc) || isDeadlineAfterDate(it.softDeadline, calendarDeadlinePlusMonthUtc)) && isDeadlineGreaterThanNow) {
@@ -122,13 +124,12 @@ class CalendarPresenter
         }
     }
 
-    private fun isDeadlineAfterDate(deadline: String?, dateUtcMillis: Long): Boolean {
+    private fun isDeadlineAfterDate(deadline: Date?, dateUtcMillis: Long): Boolean {
         if (deadline == null) {
             return false
         }
 
-        val deadlineMillis = DateTimeHelper.toCalendar(deadline).timeInMillis //utc millis
-        return deadlineMillis - dateUtcMillis > 0
+        return deadline.time - dateUtcMillis > 0
     }
 
     fun clickNotNow() {
@@ -249,8 +250,8 @@ class CalendarPresenter
     }
 
     @WorkerThread
-    private fun addDeadlineEvent(section: Section, deadline: String, deadlineType: DeadlineType, calendarSection: CalendarSection?, calendarItem: CalendarItem) {
-        val dateEndInMillis = DateTimeHelper.toCalendar(deadline).timeInMillis //UTC
+    private fun addDeadlineEvent(section: Section, deadline: Date, deadlineType: DeadlineType, calendarSection: CalendarSection?, calendarItem: CalendarItem) {
+        val dateEndInMillis = deadline.time //UTC
         val dateStartInMillis = dateEndInMillis - AppConstants.MILLIS_IN_1HOUR
 
         val contentValues = ContentValues()

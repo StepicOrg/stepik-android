@@ -48,7 +48,7 @@ fun <T : Parcelable> Parcelable.assertThatObjectParcelable() {
                     "after serialization!\nOne of the possible problems -> " +
                     "incorrect implementation of equals()." +
                     "\nobject before = " + this +
-                    ", object after = " + objectFromParcelable)
+                    ",\nobject after = " + objectFromParcelable)
         }
     } finally {
         parcel.recycle()

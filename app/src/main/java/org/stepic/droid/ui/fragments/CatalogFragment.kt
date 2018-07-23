@@ -19,10 +19,10 @@ import org.stepic.droid.core.presenters.contracts.FiltersView
 import org.stepic.droid.core.presenters.contracts.TagsView
 import org.stepic.droid.model.CoursesCarouselInfo
 import org.stepic.droid.model.StepikFilter
-import org.stepic.droid.model.Tag
 import org.stepic.droid.ui.adapters.CatalogAdapter
 import org.stepic.droid.ui.custom.AutoCompleteSearchView
 import org.stepic.droid.ui.util.initCenteredToolbar
+import org.stepik.android.model.Tag
 import java.util.*
 import javax.inject.Inject
 

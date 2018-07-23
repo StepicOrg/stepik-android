@@ -18,7 +18,7 @@ import org.stepic.droid.base.App;
 import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.core.presenters.ContinueCoursePresenter;
 import org.stepic.droid.core.presenters.DroppingPresenter;
-import org.stepic.droid.model.Course;
+import org.stepik.android.model.Course;
 import org.stepic.droid.model.CoursesCarouselColorType;
 import org.stepic.droid.model.CoursesDescriptionContainer;
 import org.stepic.droid.ui.adapters.viewhoders.CourseItemViewHolder;

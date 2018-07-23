@@ -5,11 +5,10 @@ import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.UnitsView
 import org.stepic.droid.di.section.SectionScope
 import org.stepic.droid.exceptions.UnitStoredButLessonNotException
-import org.stepic.droid.model.Lesson
-import org.stepic.droid.model.Progress
-import org.stepic.droid.model.Section
-import org.stepic.droid.model.Unit
-import org.stepic.droid.preferences.SharedPreferenceHelper
+import org.stepik.android.model.Lesson
+import org.stepik.android.model.Progress
+import org.stepik.android.model.Section
+import org.stepik.android.model.Unit
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.ProgressUtil
@@ -23,13 +22,14 @@ import kotlin.collections.ArrayList
 
 @SectionScope
 class UnitsPresenter
-@Inject constructor(
+@Inject
+constructor(
         private val analytic: Analytic,
         private val threadPoolExecutor: ThreadPoolExecutor,
         private val mainHandler: MainHandler,
-        private val sharedPreferenceHelper: SharedPreferenceHelper,
         private val databaseFacade: DatabaseFacade,
-        private val api: Api) : PresenterBase<UnitsView>() {
+        private val api: Api
+) : PresenterBase<UnitsView>() {
 
     private val unitList: MutableList<Unit> = ArrayList()
     private val lessonList: MutableList<Lesson> = ArrayList()
@@ -60,7 +60,7 @@ class UnitsPresenter
                     val fromCacheLessons = ArrayList<Lesson>()
                     val unitProgressMapLocal = HashMap<Long, Progress>()
                     for (unit in fromCacheUnits) {
-                        val progressId = unit.getProgressId()
+                        val progressId = unit.progress
                         if (progressId != null) {
                             val progress = databaseFacade.getProgressById(progressId)
                             unit.is_viewed_custom = progress?.isPassed ?: false
@@ -114,7 +114,8 @@ class UnitsPresenter
                         var pointer = 0
                         while (pointer < unitIds.size) {
                             val lastExclusive = Math.min(unitIds.size, pointer + AppConstants.DEFAULT_NUMBER_IDS_IN_QUERY)
-                            val subArrayForLoading = Arrays.copyOfRange(unitIds, pointer, lastExclusive)
+
+                            val subArrayForLoading = unitIds.subList(pointer, lastExclusive)
                             val units = api.getUnits(subArrayForLoading).execute()?.body()?.units
                             if (units == null) {
                                 throw Exception("units is not got")
@@ -151,7 +152,7 @@ class UnitsPresenter
 
 
                         val backgroundProgress = ArrayList<Progress>()
-                        val progressIds = ProgressUtil.getAllProgresses(backgroundUnits)
+                        val progressIds = ProgressUtil.getProgresses(backgroundUnits)
                         pointer = 0
                         while (pointer < progressIds.size) {
                             val lastExclusive = Math.min(progressIds.size, pointer + AppConstants.DEFAULT_NUMBER_IDS_IN_QUERY)
@@ -186,8 +187,8 @@ class UnitsPresenter
                         for (lessonItem in backgroundLessons) {
                             databaseFacade.addLesson(lessonItem)
                             val cachedLesson = cacheLessonMap[lessonItem.id]
-                            lessonItem.is_loading = cachedLesson?.is_loading ?: false
-                            lessonItem.is_cached = cachedLesson?.is_cached ?: false
+                            lessonItem.isLoading = cachedLesson?.isLoading ?: false
+                            lessonItem.isCached = cachedLesson?.isCached ?: false
                         }
 
 

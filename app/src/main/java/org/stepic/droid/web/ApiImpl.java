@@ -21,7 +21,7 @@ import com.vk.sdk.VKSdk;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
-import org.stepic.droid.adaptive.model.RatingItem;
+import org.stepik.android.model.adaptive.RatingItem;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.configuration.RemoteConfig;
@@ -34,22 +34,14 @@ import org.stepic.droid.jsonHelpers.adapters.UTCDateAdapter;
 import org.stepic.droid.jsonHelpers.deserializers.DatasetDeserializer;
 import org.stepic.droid.jsonHelpers.deserializers.ReplyDeserializer;
 import org.stepic.droid.jsonHelpers.serializers.ReplySerializer;
-import org.stepic.droid.model.Course;
-import org.stepic.droid.model.DatasetWrapper;
-import org.stepic.droid.model.EnrollmentWrapper;
+import org.stepik.android.model.Course;
 import org.stepic.droid.model.NotificationCategory;
-import org.stepic.droid.model.Profile;
-import org.stepic.droid.model.RegistrationUser;
-import org.stepic.droid.model.Reply;
-import org.stepic.droid.model.ReplyWrapper;
+import org.stepik.android.model.user.RegistrationCredentials;
 import org.stepic.droid.model.StepikFilter;
-import org.stepic.droid.model.Submission;
-import org.stepic.droid.model.Tag;
-import org.stepic.droid.adaptive.model.RecommendationReaction;
-import org.stepic.droid.model.User;
-import org.stepic.droid.model.comments.Comment;
-import org.stepic.droid.model.comments.Vote;
-import org.stepic.droid.model.comments.VoteValue;
+import org.stepik.android.model.Submission;
+import org.stepik.android.model.adaptive.RecommendationReaction;
+import org.stepik.android.model.comments.Comment;
+import org.stepik.android.model.comments.Vote;
 import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
@@ -67,6 +59,13 @@ import org.stepic.droid.web.model.adaptive.RecommendationReactionsRequest;
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
 import org.stepic.droid.web.model.desk.DeskRequestWrapper;
 import org.stepic.droid.web.storage.RemoteStorageService;
+import org.stepik.android.model.EnrollmentWrapper;
+import org.stepik.android.model.Tag;
+import org.stepik.android.model.Reply;
+import org.stepik.android.model.ReplyWrapper;
+import org.stepik.android.model.user.Profile;
+import org.stepik.android.model.user.User;
+import org.stepik.android.model.attempts.DatasetWrapper;
 
 import java.io.IOException;
 import java.net.HttpCookie;
@@ -430,7 +429,7 @@ public class ApiImpl implements Api {
                 .client(okHttpBuilder.build())
                 .build();
         StepicRestOAuthService tempService = notLogged.create(StepicRestOAuthService.class);
-        return tempService.createAccount(new UserRegistrationRequest(new RegistrationUser(firstName, lastName, email, password)));
+        return tempService.createAccount(new UserRegistrationRequest(new RegistrationCredentials(firstName, lastName, email, password)));
     }
 
     @Nullable
@@ -493,8 +492,7 @@ public class ApiImpl implements Api {
 
     @Override
     public Call<Void> tryJoinCourse(@NotNull Course course) {
-        EnrollmentWrapper enrollmentWrapper = new EnrollmentWrapper(course.getCourseId());
-        return loggedService.joinCourse(enrollmentWrapper);
+        return loggedService.joinCourse(new EnrollmentWrapper(course.getId()));
     }
 
     @Override
@@ -508,7 +506,7 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Call<UnitMetaResponse> getUnits(long[] units) {
+    public Call<UnitMetaResponse> getUnits(List<Long> units) {
         return loggedService.getUnits(units);
     }
 
@@ -751,7 +749,7 @@ public class ApiImpl implements Api {
         Profile profile = sharedPreference.getProfile();
         String name = "";
         if (profile != null) {
-            name = profile.getFirst_name() + " " + profile.getLast_name();
+            name = profile.getFullName();
         }
 
         return tempService.sendFeedback(new DeskRequestWrapper(name, email, subject, rawDescription));
@@ -829,7 +827,7 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Call<VoteResponse> makeVote(String voteId, @Nullable VoteValue voteValue) {
+    public Call<VoteResponse> makeVote(String voteId, @Nullable Vote.Value voteValue) {
         Vote vote = new Vote(voteId, voteValue);
         VoteRequest request = new VoteRequest(vote);
         return loggedService.postVote(voteId, request);

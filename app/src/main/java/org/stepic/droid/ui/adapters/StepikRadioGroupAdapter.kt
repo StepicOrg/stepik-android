@@ -3,13 +3,13 @@ package org.stepic.droid.ui.adapters
 import android.widget.Button
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
-import org.stepic.droid.model.Attempt
-import org.stepic.droid.model.Reply
-import org.stepic.droid.model.Submission
+import org.stepik.android.model.attempts.Attempt
+import org.stepik.android.model.Submission
 import org.stepic.droid.ui.custom.StepikCheckBox
 import org.stepic.droid.ui.custom.StepikOptionView
 import org.stepic.droid.ui.custom.StepikRadioButton
 import org.stepic.droid.ui.custom.StepikRadioGroup
+import org.stepik.android.model.Reply
 import java.lang.Math.min
 import javax.inject.Inject
 
@@ -31,12 +31,13 @@ class StepikRadioGroupAdapter(private val group: StepikRadioGroup) {
     private var isMultipleChoice = false
 
     fun setAttempt(attempt: Attempt?) {
-        attempt?.dataset?.options?.let { options ->
+        val dataset = attempt?.dataset
+        dataset?.options?.let { options ->
             if (options.isEmpty()) return
             group.removeAllViews()
             group.clearCheck()
 
-            isMultipleChoice = attempt.dataset.is_multiple_choice
+            isMultipleChoice = dataset.isMultipleChoice
             options.forEach {
                 val item = if (isMultipleChoice) {
                     StepikCheckBox(group.context)
@@ -80,7 +81,7 @@ class StepikRadioGroupAdapter(private val group: StepikRadioGroup) {
                     .map {
                         (group.getChildAt(it) as StepikOptionView).isChecked
                     }
-            return Reply.Builder().setChoices(selection).build()
+            return Reply(choices = selection)
         }
 
     fun setEnabled(isEnabled: Boolean) {

@@ -5,7 +5,7 @@ import android.content.Intent
 import android.support.v4.app.Fragment
 import android.view.MenuItem
 import org.stepic.droid.base.SingleFragmentActivity
-import org.stepic.droid.model.code.CodeOptions
+import org.stepik.android.model.code.CodeOptions
 import org.stepic.droid.ui.fragments.CodePlaygroundFragment
 import org.stepic.droid.ui.util.BackButtonHandler
 import org.stepic.droid.ui.util.OnBackClickListener

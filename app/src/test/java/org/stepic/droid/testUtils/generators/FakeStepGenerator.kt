@@ -1,15 +1,10 @@
 package org.stepic.droid.testUtils.generators
 
-import org.stepic.droid.model.Step
-import org.stepic.droid.model.StepStatus
+import org.stepik.android.model.Step
 
 object FakeStepGenerator {
     @JvmOverloads
     fun generate(stepId: Long = 0,
-                 status: StepStatus = StepStatus.READY): Step {
-        val step = Step()
-        step.id = stepId
-        step.status = status
-        return step
-    }
+                 status: Step.Status = Step.Status.READY): Step =
+            Step(id = stepId, status = status)
 }

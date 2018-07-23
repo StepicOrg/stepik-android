@@ -2,9 +2,9 @@ package org.stepic.droid.core
 
 import org.stepic.droid.concurrency.SingleThreadExecutor
 import org.stepic.droid.di.AppCoreModule
-import org.stepic.droid.model.Attempt
+import org.stepik.android.model.attempts.Attempt
 import org.stepic.droid.model.LessonSession
-import org.stepic.droid.model.Submission
+import org.stepik.android.model.Submission
 import org.stepic.droid.model.code.CodeSubmission
 import org.stepic.droid.storage.operations.DatabaseFacade
 import javax.inject.Inject
@@ -25,15 +25,17 @@ class LocalLessonSessionManagerImpl
             return
         }
 
-        stepIdToLessonSession.put(stepId, LessonSession(stepId, attempt, submission, numberOfSubmissionOnFirstPage))
+        stepIdToLessonSession[stepId] = LessonSession(stepId, attempt, submission, numberOfSubmissionOnFirstPage)
 
-        if (submission.reply?.language != null && submission.reply?.code != null && submission.status == Submission.Status.LOCAL) {
+        val language = submission.reply?.language
+        val code = submission.reply?.code
+        if (language != null && code != null && submission.status == Submission.Status.LOCAL) {
             singleThreadExecutor.execute {
                 val codeSubmission = CodeSubmission(
                         stepId = stepId,
                         attemptId = attempt.id,
-                        code = submission.reply.code,
-                        language = submission.reply.language
+                        code = code,
+                        language = language
                 )
                 databaseFacade.addCodeSubmission(codeSubmission)
             }

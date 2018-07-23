@@ -2,14 +2,14 @@ package org.stepic.droid.di
 
 import dagger.Binds
 import dagger.Module
-import org.stepic.droid.model.*
-import org.stepic.droid.model.Unit
 import org.stepic.droid.storage.repositories.Repository
 import org.stepic.droid.storage.repositories.course.CourseRepositoryImpl
 import org.stepic.droid.storage.repositories.lesson.LessonRepositoryImpl
 import org.stepic.droid.storage.repositories.section.SectionRepositoryImpl
 import org.stepic.droid.storage.repositories.step.StepRepositoryImpl
 import org.stepic.droid.storage.repositories.unit.UnitRepositoryImpl
+import org.stepik.android.model.*
+import org.stepik.android.model.Unit
 
 @Module
 interface RepositoryModule {

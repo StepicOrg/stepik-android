@@ -1,6 +1,6 @@
 package org.stepic.droid.mappers
 
-import org.stepic.droid.model.CourseCollection
+import org.stepik.android.model.CourseCollection
 import org.stepic.droid.model.CoursesCarouselColorType
 import org.stepic.droid.model.CoursesCarouselInfo
 import javax.inject.Inject

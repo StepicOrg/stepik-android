@@ -26,10 +26,10 @@ import org.stepic.droid.base.App;
 import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.downloadingstate.DownloadingPresenter;
 import org.stepic.droid.core.presenters.DownloadingInteractionPresenter;
-import org.stepic.droid.model.Lesson;
-import org.stepic.droid.model.Progress;
-import org.stepic.droid.model.Section;
-import org.stepic.droid.model.Unit;
+import org.stepik.android.model.Lesson;
+import org.stepik.android.model.Progress;
+import org.stepik.android.model.Section;
+import org.stepik.android.model.Unit;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.storage.LessonDownloader;
 import org.stepic.droid.storage.operations.DatabaseFacade;
@@ -145,7 +145,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
         holder.unitTitle.setText(titleBuilder.toString());
 
         Glide.with(App.Companion.getAppContext())
-                .load(lesson.getCover_url())
+                .load(lesson.getCoverUrl())
                 .placeholder(holder.lessonPlaceholderDrawable)
                 .into(holder.lessonIcon);
 
@@ -172,7 +172,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
             holder.viewedItem.setVisibility(View.INVISIBLE);
         }
 
-        if (lesson.is_cached()) {
+        if (lesson.isCached()) {
             //cached
             holder.preLoadIV.setVisibility(View.GONE);
             holder.whenLoad.setVisibility(View.INVISIBLE);
@@ -180,7 +180,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
 
             holder.whenLoad.setProgressPortion(0, false);
         } else {
-            if (lesson.is_loading()) {
+            if (lesson.isLoading()) {
 
                 holder.preLoadIV.setVisibility(View.GONE);
                 holder.whenLoad.setVisibility(View.VISIBLE);
@@ -249,7 +249,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
             }
 
 
-            if (lesson.is_cached()) {
+            if (lesson.isCached()) {
                 //delete
                 analytic.reportEvent(Analytic.Interaction.CLICK_DELETE_LESSON, unit.getId() + "");
                 analytic.reportAmplitudeEvent(AmplitudeAnalytic.Downloads.DELETED,
@@ -262,13 +262,13 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
                     ft.commitAllowingStateLoss();
                 }
             } else {
-                if (lesson.is_loading()) {
+                if (lesson.isLoading()) {
                     //cancel loading
                     analytic.reportEvent(Analytic.Interaction.CLICK_CANCEL_LESSON, unit.getId() + "");
                     analytic.reportAmplitudeEvent(AmplitudeAnalytic.Downloads.CANCELLED,
                             MapsKt.mapOf(new Pair<String, Object>(AmplitudeAnalytic.Downloads.PARAM_CONTENT, AmplitudeAnalytic.Downloads.Values.LESSON)));
-                    lesson.set_loading(false);
-                    lesson.set_cached(false);
+                    lesson.setLoading(false);
+                    lesson.setCached(false);
                     threadPoolExecutor.execute(new Runnable() {
                         @Override
                         public void run() {
@@ -309,9 +309,9 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
             analytic.reportEvent(Analytic.Interaction.CLICK_CACHE_LESSON, unit.getId() + "");
             analytic.reportAmplitudeEvent(AmplitudeAnalytic.Downloads.STARTED,
                     MapsKt.mapOf(new Pair<String, Object>(AmplitudeAnalytic.Downloads.PARAM_CONTENT, AmplitudeAnalytic.Downloads.Values.LESSON)));
-            lesson.set_cached(false);
-            lesson.set_loading(true);
-            downloadingPresenter.onStateChanged(lesson.getId(), lesson.is_loading());
+            lesson.setCached(false);
+            lesson.setLoading(true);
+            downloadingPresenter.onStateChanged(lesson.getId(), lesson.isLoading());
             threadPoolExecutor.execute(new Runnable() {
                 @Override
                 public void run() {
@@ -336,8 +336,8 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
     }
 
     private void onClickDelete(final Lesson lesson, int position) {
-        lesson.set_loading(false);
-        lesson.set_cached(false);
+        lesson.setLoading(false);
+        lesson.setCached(false);
         threadPoolExecutor.execute(new Runnable() {
             @Override
             public void run() {

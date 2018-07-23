@@ -2,8 +2,8 @@ package org.stepic.droid.util.resolvers
 
 import android.support.annotation.AnyThread
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.model.Video
-import org.stepic.droid.model.VideoUrl
+import org.stepik.android.model.Video
+import org.stepik.android.model.VideoUrl
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.util.greaterThanMaxQuality
 import javax.inject.Inject
@@ -17,15 +17,14 @@ class VideoResolverImpl
 
     @AnyThread
     override fun resolveVideoUrl(video: Video?, isForPlaying: Boolean): String? {
-        if (video == null || video.urls?.isEmpty() ?: true) {
-            return null
+        val urls = video?.urls ?: return null
+        if (urls.isEmpty()) return null
+
+        if (urls.size == 1) {
+            return urls[0].url
         }
 
-        if (video.urls.size == 1) {
-            return video.urls[0].url
-        }
-
-        return resolveFromWeb(video.urls, isForPlaying)
+        return resolveFromWeb(urls, isForPlaying)
     }
 
     private fun resolveFromWeb(urlList: List<VideoUrl>, isForPlaying: Boolean): String? {
