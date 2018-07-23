@@ -4,6 +4,8 @@ import android.os.Parcel
 import android.os.Parcelable
 import org.stepik.android.model.achievements.Achievement
 import org.stepik.android.model.achievements.AchievementProgress
+import org.stepik.android.model.util.readBoolean
+import org.stepik.android.model.util.writeBoolean
 
 class AchievementFlatItem(
         val iconId: Long?,
@@ -18,7 +20,7 @@ class AchievementFlatItem(
 ) : Parcelable {
     constructor(parcel: Parcel): this(
             parcel.readValue(Long::class.java.classLoader) as? Long,
-            parcel.readByte() != 0.toByte(),
+            parcel.readBoolean(),
             parcel.readString(),
             parcel.readInt(),
             parcel.readInt(),
@@ -45,7 +47,7 @@ class AchievementFlatItem(
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeValue(iconId)
-        parcel.writeByte(if (isLocked) 1 else 0)
+        parcel.writeBoolean(isLocked)
         parcel.writeString(kind)
         parcel.writeInt(currentScore)
         parcel.writeInt(targetScore)

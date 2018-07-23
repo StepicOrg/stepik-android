@@ -49,14 +49,8 @@ class CertificateViewItem(
             }
         }
 
-        private fun getCertificateIdByParcel(input: Parcel): Long? {
-            val fromParcel = input.readLong()
-            return if (fromParcel == 0L) {
-                null
-            } else {
-                fromParcel
-            }
-        }
+        private fun getCertificateIdByParcel(input: Parcel): Long? =
+                input.readLong().takeIf { it != 0L }
 
         private fun getCertificateTypeByParcel(input: Parcel): Certificate.Type? {
             val temp = input.readInt()
