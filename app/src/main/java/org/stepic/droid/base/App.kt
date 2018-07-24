@@ -3,6 +3,7 @@ package org.stepic.droid.base
 import android.app.Application
 import android.content.Context
 import android.os.StrictMode
+import com.appsflyer.AppsFlyerLib
 import com.facebook.FacebookSdk
 import com.facebook.appevents.AppEventsLogger
 import com.squareup.leakcanary.LeakCanary

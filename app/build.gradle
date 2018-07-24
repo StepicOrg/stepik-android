@@ -139,6 +139,8 @@ dependencies {
 
     implementation libraries.amplitude
     implementation libraries.appMetrica
+    implementation libraries.appsflyer
+    implementation libraries.installreferrer
 
     implementation libraries.calligraphy
     implementation libraries.lottie

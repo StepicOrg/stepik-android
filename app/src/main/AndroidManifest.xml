@@ -404,6 +404,12 @@
             </intent-filter>
         </receiver>
 
+        <receiver android:name="com.appsflyer.SingleInstallBroadcastReceiver" android:exported="true">
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
+
         <receiver
             android:name=".receivers.BootCompletedReceiver"
             android:enabled="true"
