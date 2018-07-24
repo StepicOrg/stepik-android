@@ -74,6 +74,9 @@
 -keep class com.yandex.metrica.* { *; }
 -dontwarn com.yandex.metrica.*
 
+#Install Referrer
+-dontwarn com.android.installreferrer
+
 #Keep POJO
 -keep class org.stepic.droid.model.** { *; }
 -keep interface org.stepic.droid.model.** { *; }
