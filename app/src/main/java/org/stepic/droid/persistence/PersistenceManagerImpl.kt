@@ -21,13 +21,13 @@ constructor(
     private val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
     private val downloadProgressResolver = DownloadProgressResolver(downloadManager)
 
-    override fun subscribeForSections(vararg sectionsIds: Long): Observable<ProgressItem> =
-            sectionsIds.toObservable().flatMap(::subscribeForSection)
+    override fun getSectionsProgress(vararg sectionsIds: Long): Observable<ProgressItem> =
+            sectionsIds.toObservable().flatMap(::getSectionProgress)
 
-    private fun subscribeForSection(sectionId: Long) =
-            subscribeForItem(sectionId, persistentItemDao.getItemsBySectionId(sectionId))
+    private fun getSectionProgress(sectionId: Long) =
+            getItemProgress(sectionId, persistentItemDao.getItemsBySectionId(sectionId))
 
-    private fun subscribeForItem(itemId: Long, persistentObservable: Observable<List<PersistentItem>>) = persistentObservable.flatMap { items ->
+    private fun getItemProgress(itemId: Long, persistentObservable: Observable<List<PersistentItem>>) = persistentObservable.flatMap { items ->
         val ids = items.filter {
             it.status == PersistentItem.Status.PENDING
                     || it.status == PersistentItem.Status.FILE_TRANSFER
@@ -67,11 +67,11 @@ constructor(
         ProgressItem(itemId, state, progress)
     }.distinctUntilChanged() // in order to decrease number of events
 
-    override fun subscribeForLessons(vararg lessonsIds: Long): Observable<ProgressItem> =
-            lessonsIds.toObservable().flatMap(::subscribeForLesson)
+    override fun getLessonsProgress(vararg lessonsIds: Long): Observable<ProgressItem> =
+            lessonsIds.toObservable().flatMap(::getLessonProgress)
 
-    private fun subscribeForLesson(lessonId: Long) =
-            subscribeForItem(lessonId, persistentItemDao.getItemsByLessonId(lessonId))
+    private fun getLessonProgress(lessonId: Long) =
+            getItemProgress(lessonId, persistentItemDao.getItemsByLessonId(lessonId))
 
     override fun cacheSection(sectionId: Long): Observable<ProgressItem> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -81,7 +81,7 @@ constructor(
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun onDowloadCompleted(downloadId: Long, localPath: String) {
+    override fun onDownloadCompleted(downloadId: Long, localPath: String) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

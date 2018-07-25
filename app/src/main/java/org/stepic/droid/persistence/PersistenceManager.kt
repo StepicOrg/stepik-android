@@ -6,13 +6,13 @@ import org.stepic.droid.persistence.model.ProgressItem
 
 interface PersistenceManager {
 
-    fun subscribeForSections(vararg sectionsIds: Long): Observable<ProgressItem>
-    fun subscribeForLessons(vararg lessonsIds: Long): Observable<ProgressItem>
+    fun getSectionsProgress(vararg sectionsIds: Long): Observable<ProgressItem>
+    fun getLessonsProgress(vararg lessonsIds: Long): Observable<ProgressItem>
 
     fun cacheSection(sectionId: Long): Observable<ProgressItem>
     fun cacheLesson(lessonId: Long): Observable<ProgressItem>
 
-    fun onDowloadCompleted(downloadId: Long, localPath: String)
+    fun onDownloadCompleted(downloadId: Long, localPath: String)
 
     fun resolvePath(originalPath: String): Maybe<String>
 
