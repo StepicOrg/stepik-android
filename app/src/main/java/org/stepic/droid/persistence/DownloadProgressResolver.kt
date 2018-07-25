@@ -3,11 +3,16 @@ package org.stepic.droid.persistence
 import android.app.DownloadManager
 import io.reactivex.Completable
 import io.reactivex.Observable
+import org.stepic.droid.persistence.model.DownloadItem
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.locks.ReentrantReadWriteLock
 import kotlin.concurrent.read
 import kotlin.concurrent.write
 
+/**
+ * Purpose of this class is to optimize download progress queries
+ * by uniting all required downloadIds in one query for all subscribers
+ */
 internal class DownloadProgressResolver(
         private val downloadManager: DownloadManager
 ) {
@@ -22,7 +27,7 @@ internal class DownloadProgressResolver(
         progressListenerObservable.toList().toObservable()
     }.share() // request every PROGRESS_UPDATE_INTERVAL_MS milliseconds requested progresses only one time
 
-    private val progressListenerObservable = Observable.create<Pair<Long, Float>> { emitter ->
+    private val progressListenerObservable = Observable.create<DownloadItem> { emitter ->
         rwLock.read {
             downloadManager.query(DownloadManager.Query().setFilterById(*progresses.keys.toLongArray())).use { cursor ->
                 while (cursor.moveToNext()) {
@@ -30,14 +35,14 @@ internal class DownloadProgressResolver(
                     val bytesTotal = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES))
                     val bytesDownloaded = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR))
 
-                    emitter.onNext(id to (bytesDownloaded.toFloat() / bytesTotal))
+                    emitter.onNext(DownloadItem(id, bytesDownloaded, bytesTotal))
                 }
             }
         }
         emitter.onComplete()
     }
 
-    fun getProgresses(vararg ids: Long): Observable<List<Pair<Long, Float>>> =
+    fun getProgresses(vararg ids: Long): Observable<List<DownloadItem>> =
             Completable.create { // add current ids to refCount map
                 rwLock.write {
                     ids.forEach { id -> progresses[id] = progresses[id]?.inc() ?: 1 }
@@ -54,6 +59,6 @@ internal class DownloadProgressResolver(
                     }
                 }
             }.map {
-                it.filter { (downloadId, _) -> downloadId in ids }
+                it.filter { it.id in ids }
             } // filter only requested ids
 }
