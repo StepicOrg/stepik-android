@@ -6,9 +6,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 
-import org.stepic.droid.model.Lesson;
-import org.stepic.droid.model.Step;
-import org.stepic.droid.model.Unit;
+import org.stepik.android.model.Lesson;
+import org.stepik.android.model.Step;
+import org.stepik.android.model.Unit;
 
 public class StepShareDialogFragment extends DialogFragment {
 

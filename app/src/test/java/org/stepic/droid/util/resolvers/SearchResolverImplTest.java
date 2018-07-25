@@ -2,7 +2,7 @@ package org.stepic.droid.util.resolvers;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.stepic.droid.model.SearchResult;
+import org.stepik.android.model.SearchResult;
 import org.stepic.droid.testUtils.generators.FakeSearchResultGenerator;
 
 import java.util.ArrayList;

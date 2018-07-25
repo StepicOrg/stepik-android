@@ -10,16 +10,14 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.core.ProfilePresenter;
 import org.stepic.droid.core.presenters.contracts.ProfileView;
-import org.stepic.droid.model.Profile;
-import org.stepic.droid.model.User;
+import org.stepik.android.model.user.Profile;
+import org.stepik.android.model.user.User;
 import org.stepic.droid.model.UserViewModel;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.testUtils.ConcurrencyUtilForTest;
 import org.stepic.droid.testUtils.ResponseGeneratorKt;
 import org.stepic.droid.testUtils.generators.FakeProfileGenerator;
 import org.stepic.droid.testUtils.generators.FakeUserGenerator;
-import org.stepic.droid.util.ProfileExtensionKt;
-import org.stepic.droid.util.UserExtensionKt;
 import org.stepic.droid.web.Api;
 import org.stepic.droid.web.UsersResponse;
 
@@ -99,7 +97,7 @@ public class ProfilePresenterTest {
         String details = " DetailedInfo";
 
         fakeUserFromApi = FakeUserGenerator.INSTANCE.generate(profileId, name, lastName, imageLink, shortBio, details);
-        fromApiUserViewModel = new UserViewModel(UserExtensionKt.getFirstAndLastName(fakeUserFromApi), shortBio, details, imageLink, isMyProfile, isPrivate, profileId);
+        fromApiUserViewModel = new UserViewModel(name + " " + lastName, shortBio, details, imageLink, isMyProfile, isPrivate, profileId);
     }
 
     private void generateLocalModels() {
@@ -113,7 +111,7 @@ public class ProfilePresenterTest {
         String details = " details";
 
         preferencesProfileModel = FakeProfileGenerator.INSTANCE.generate(profileId, name, lastName, imageLink, shortBio, details);
-        fromPreferencesUserViewModel = new UserViewModel(ProfileExtensionKt.getFirstAndLastName(preferencesProfileModel), shortBio, details, imageLink, isMyProfile, isPrivate, profileId);
+        fromPreferencesUserViewModel = new UserViewModel(name + " " + lastName, shortBio, details, imageLink, isMyProfile, isPrivate, profileId);
     }
 
     @Test

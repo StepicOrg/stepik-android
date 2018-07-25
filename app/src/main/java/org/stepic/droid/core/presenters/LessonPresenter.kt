@@ -4,10 +4,10 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.LessonView
 import org.stepic.droid.di.lesson.LessonScope
-import org.stepic.droid.model.Lesson
-import org.stepic.droid.model.Section
-import org.stepic.droid.model.Step
-import org.stepic.droid.model.Unit
+import org.stepik.android.model.Lesson
+import org.stepik.android.model.Section
+import org.stepik.android.model.Step
+import org.stepik.android.model.Unit
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.ProgressUtil
@@ -78,7 +78,7 @@ class LessonPresenter
                     initUnitLessonWithIds(simpleLessonId, simpleUnitId)
                 }
 
-                if (!(lesson?.is_public ?: true)) {
+                if (lesson?.isPublic == false) {
                     //lesson is not public
                     val profileResponse = sharedPreferenceHelper.authResponseFromStore
                     if (profileResponse == null) {
@@ -137,7 +137,7 @@ class LessonPresenter
             var isStepsShown = false
             if (stepList.isNotEmpty() && it.steps?.size ?: -1 == stepList.size) {
                 stepList.forEach {
-                    it.is_custom_passed = databaseFacade.isStepPassed(it)
+                    it.isCustomPassed = databaseFacade.isStepPassed(it)
                 }
                 isStepsShown = true
                 //if we get steps from database -> progresses and assignments were stored
@@ -239,9 +239,9 @@ class LessonPresenter
                 assignments?.filterNotNull()?.forEach {
                     databaseFacade.addAssignment(assignment = it)
                 }
-                progressIds = ProgressUtil.getAllProgresses(assignments)
+                progressIds = ProgressUtil.getProgresses(assignments)
             } else {
-                progressIds = ProgressUtil.getAllProgresses(stepListFromInternet)
+                progressIds = ProgressUtil.getProgresses(stepListFromInternet)
             }
 
 
@@ -252,7 +252,7 @@ class LessonPresenter
 
             //FIXME: Warning, it is mutable objects, which we show on LessonFragment and change here or not show, if we shown from database
             stepListFromInternet.forEach {
-                it.is_custom_passed = databaseFacade.isStepPassed(it)
+                it.isCustomPassed = databaseFacade.isStepPassed(it)
                 databaseFacade.addStep(it) // update step in db
             }
         } catch (exception: Exception) {
@@ -314,11 +314,11 @@ class LessonPresenter
             if (simpleUnitId >= 0) {
                 //get by lessonId
                 try {
-                    unit = api.getUnits(longArrayOf(simpleUnitId)).execute()?.body()?.units?.firstOrNull()
+                    unit = api.getUnits(listOf(simpleUnitId)).execute()?.body()?.units?.firstOrNull()
                 } catch (ignored: Exception) {
                     // unit can be null for lesson, which is not in Course
                 }
-                if (!(unit?.lesson?.equals(simpleLessonId) ?: false)) {
+                if (unit?.lesson != simpleLessonId) {
                     //if lesson is not equal unit.lesson or something null
                     loadUnitByLessonId(simpleLessonId)
                 }
@@ -326,7 +326,7 @@ class LessonPresenter
                 loadUnitByLessonId(simpleLessonId)
             }
 
-            if (!(unit?.lesson?.equals(simpleLessonId) ?: false)) {
+            if (unit?.lesson != simpleLessonId) {
                 unit = null
             }
         }

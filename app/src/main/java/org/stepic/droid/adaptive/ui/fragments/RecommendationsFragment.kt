@@ -17,7 +17,7 @@ import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.core.presenters.RecommendationsPresenter
 import org.stepic.droid.core.presenters.contracts.RecommendationsView
-import org.stepic.droid.model.Course
+import org.stepik.android.model.Course
 import org.stepic.droid.ui.util.PopupHelper
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.MathUtli
@@ -59,7 +59,7 @@ class RecommendationsFragment : FragmentBase(), RecommendationsView {
 
     override fun injectComponent() {
         App.componentManager()
-                .adaptiveCourseComponent(course?.courseId ?: 0)
+                .adaptiveCourseComponent(course?.id ?: 0)
                 .inject(this)
     }
 
@@ -81,7 +81,7 @@ class RecommendationsFragment : FragmentBase(), RecommendationsView {
         }
 
         toolbar.setOnClickListener {
-            screenManager.showAdaptiveStats(context, course?.courseId ?: 0)
+            screenManager.showAdaptiveStats(context, course?.id ?: 0)
 
             expPopupWindow?.let {
                 if (it.isShowing) {
@@ -193,7 +193,7 @@ class RecommendationsFragment : FragmentBase(), RecommendationsView {
 
     override fun onReleaseComponent() {
         App.componentManager()
-                .releaseAdaptiveCourseComponent(course?.courseId ?: 0)
+                .releaseAdaptiveCourseComponent(course?.id ?: 0)
     }
 
     override fun onDestroy() {

@@ -1,6 +1,6 @@
 package org.stepic.droid.testUtils.generators
 
-import org.stepic.droid.model.Unit
+import org.stepik.android.model.Unit
 
 object FakeUnitGenerator {
 
@@ -8,11 +8,7 @@ object FakeUnitGenerator {
     fun generate(
             unitId : Long = 0L,
             sectionId: Long = 0L,
-            position : Int = 1): Unit {
-        val unit = Unit()
-        unit.id = unitId
-        unit.section = sectionId
-        unit.position = position
-        return unit
-    }
+            position : Int = 1,
+            lessonId: Long = 0
+    ): Unit = Unit(id = unitId, section = sectionId, position = position, lesson = lessonId)
 }

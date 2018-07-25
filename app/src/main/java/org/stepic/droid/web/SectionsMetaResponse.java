@@ -1,7 +1,7 @@
 package org.stepic.droid.web;
 
-import org.stepic.droid.model.Meta;
-import org.stepic.droid.model.Section;
+import org.stepik.android.model.Section;
+import org.stepik.android.model.Meta;
 
 import java.util.List;
 

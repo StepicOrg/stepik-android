@@ -1,6 +1,6 @@
 package org.stepic.droid.features.achievements.presenters
 
-import org.stepic.droid.model.achievements.AchievementFlatItem
+import org.stepic.droid.model.AchievementFlatItem
 
 interface AchievementsView {
     fun showAchievements(achievements: List<AchievementFlatItem>)

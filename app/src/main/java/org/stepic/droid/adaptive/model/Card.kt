@@ -9,9 +9,9 @@ import io.reactivex.disposables.Disposable
 import org.stepic.droid.base.App
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
-import org.stepic.droid.model.Attempt
-import org.stepic.droid.model.Lesson
-import org.stepic.droid.model.Step
+import org.stepik.android.model.attempts.Attempt
+import org.stepik.android.model.Lesson
+import org.stepik.android.model.Step
 import org.stepic.droid.web.Api
 import javax.inject.Inject
 

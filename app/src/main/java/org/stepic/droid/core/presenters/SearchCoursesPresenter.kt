@@ -4,7 +4,7 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.di.course_list.CourseListScope
-import org.stepic.droid.model.Course
+import org.stepik.android.model.Course
 import org.stepic.droid.model.SearchQuery
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.resolvers.SearchResolver
@@ -59,7 +59,7 @@ class SearchCoursesPresenter
                     val searchResultResponseBody = response.body()!!
                     val searchResultList = searchResultResponseBody.searchResultList
                     val courseIdsForSearch = searchResolver.getCourseIdsFromSearchResults(searchResultList)
-                    hasNextPage.set(searchResultResponseBody.meta.has_next)
+                    hasNextPage.set(searchResultResponseBody.meta.hasNext)
                     currentPage.set(searchResultResponseBody.meta.page + 1)
 
                     if (courseIdsForSearch.isEmpty()) {
@@ -75,7 +75,7 @@ class SearchCoursesPresenter
                             var forInsert: Course? = null
                             for (searchId in courseIdsForSearch) {
                                 for (cachedCourse in courses) {
-                                    if (cachedCourse.courseId == searchId) {
+                                    if (cachedCourse.id == searchId) {
                                         forInsert = cachedCourse
                                         break
                                     }

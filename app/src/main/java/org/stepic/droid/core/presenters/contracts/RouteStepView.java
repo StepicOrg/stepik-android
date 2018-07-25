@@ -1,8 +1,8 @@
 package org.stepic.droid.core.presenters.contracts;
 
-import org.stepic.droid.model.Lesson;
-import org.stepic.droid.model.Section;
-import org.stepic.droid.model.Unit;
+import org.stepik.android.model.Lesson;
+import org.stepik.android.model.Section;
+import org.stepik.android.model.Unit;
 
 public interface RouteStepView {
     void showNextLessonView();

@@ -14,7 +14,7 @@ import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListe
 import com.google.android.gms.common.api.Scope
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.FragmentActivityBase
-import org.stepic.droid.model.AuthData
+import org.stepic.droid.model.Credentials
 import timber.log.Timber
 
 abstract class SmartLockActivityBase : FragmentActivityBase() {
@@ -86,10 +86,10 @@ abstract class SmartLockActivityBase : FragmentActivityBase() {
         }
     }
 
-    protected fun requestToSaveCredentials(authData: AuthData) {
+    protected fun requestToSaveCredentials(credentials: Credentials) {
         val credential = Credential
-                .Builder(authData.login)
-                .setPassword(authData.password)
+                .Builder(credentials.login)
+                .setPassword(credentials.password)
                 .build()
 
         Auth.CredentialsApi.save(googleApiClient, credential)

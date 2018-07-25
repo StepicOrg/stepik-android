@@ -1,6 +1,6 @@
 package org.stepic.droid.core.dropping.contract
 
-import org.stepic.droid.model.Course
+import org.stepik.android.model.Course
 
 interface DroppingListener {
 

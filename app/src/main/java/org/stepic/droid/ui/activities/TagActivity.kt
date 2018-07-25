@@ -5,8 +5,8 @@ import android.content.Intent
 import android.support.v4.app.Fragment
 import android.view.MenuItem
 import org.stepic.droid.base.SingleFragmentActivity
-import org.stepic.droid.model.Tag
 import org.stepic.droid.ui.fragments.TagFragment
+import org.stepik.android.model.Tag
 
 class TagActivity : SingleFragmentActivity() {
 

@@ -5,9 +5,9 @@ import android.support.annotation.WorkerThread
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.SectionsView
 import org.stepic.droid.di.course.CourseAndSectionsScope
-import org.stepic.droid.model.Course
-import org.stepic.droid.model.Progress
-import org.stepic.droid.model.Section
+import org.stepik.android.model.Course
+import org.stepik.android.model.Progress
+import org.stepik.android.model.Section
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.transformers.transformToViewModel
 import org.stepic.droid.viewmodel.ProgressViewModel
@@ -37,7 +37,7 @@ class SectionsPresenter
             return
         }
 
-        if (sectionList.isNotEmpty() && !isRefreshing && cachedCourseId == course.courseId) {
+        if (sectionList.isNotEmpty() && !isRefreshing && cachedCourseId == course.id) {
             view?.onNeedShowSections(sectionList)
             return
         }
@@ -71,7 +71,7 @@ class SectionsPresenter
                             progressMap.putAll(progressMapLocal)
                             sectionList.clear()
                             sectionList.addAll(sectionsFromCache)
-                            cachedCourseId = course.courseId
+                            cachedCourseId = course.id
                             view?.onNeedShowSections(sectionList)
                         }
                     }
@@ -91,7 +91,7 @@ class SectionsPresenter
                                     .getAllSectionsOfCourse(course)
                                     .filterNotNull()
                                     .associateBy { it.id }
-                            databaseFacade.removeSectionsOfCourse(course.courseId)
+                            databaseFacade.removeSectionsOfCourse(course.id)
                             sections.forEach {
                                 val cachedSection: Section? = cachedSections[it.id]
                                 if (cachedSection != null) {
@@ -109,7 +109,7 @@ class SectionsPresenter
                                 progressMap.putAll(progressMapOnBackground)
                                 sectionList.clear()
                                 sectionList.addAll(sections)
-                                cachedCourseId = course.courseId
+                                cachedCourseId = course.id
                                 if (sectionList.isEmpty()) {
                                     view?.onEmptySections()
                                 } else {

@@ -8,7 +8,7 @@ import android.widget.TextView
 import kotlinx.android.synthetic.main.view_edit_deadlines_item.view.*
 import org.stepic.droid.R
 import org.stepic.droid.features.deadlines.model.Deadline
-import org.stepic.droid.model.Section
+import org.stepik.android.model.Section
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.util.DateTimeHelper
 import java.util.*
@@ -31,7 +31,7 @@ class EditDeadlinesAdapter(
         val deadline = getDeadlineForPositionOrNull(position)
         if (deadline != null) {
             holder.deadline.text = holder.itemView.context.getString(R.string.deadlines_section,
-                    DateTimeHelper.getPrintableDate(deadline.deadline, Section.datePattern, TimeZone.getDefault()))
+                    DateTimeHelper.getPrintableDate(deadline.deadline, DateTimeHelper.DISPLAY_DATETIME_PATTERN, TimeZone.getDefault()))
             holder.deadline.changeVisibility(true)
         } else {
             holder.deadline.changeVisibility(false)

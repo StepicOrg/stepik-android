@@ -6,10 +6,10 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.RouteStepView
 import org.stepic.droid.core.routing.contract.RoutingPoster
-import org.stepic.droid.model.Course
-import org.stepic.droid.model.Lesson
-import org.stepic.droid.model.Section
-import org.stepic.droid.model.Unit
+import org.stepik.android.model.Course
+import org.stepik.android.model.Lesson
+import org.stepik.android.model.Section
+import org.stepik.android.model.Unit
 import org.stepic.droid.storage.repositories.Repository
 import org.stepic.droid.util.hasUserAccessAndNotEmpty
 import timber.log.Timber

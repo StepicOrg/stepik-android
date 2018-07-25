@@ -8,7 +8,7 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.toObservable
 import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.jsonHelpers.adapters.UTCDateAdapter
-import org.stepic.droid.model.Course
+import org.stepik.android.model.Course
 import org.stepic.droid.web.storage.model.StorageRecord
 import org.stepic.droid.features.deadlines.model.DeadlinesWrapper
 import org.stepic.droid.features.deadlines.notifications.DeadlinesNotificationsManager
@@ -85,7 +85,7 @@ constructor(
     override fun syncDeadlines(enrolledCourses: List<Course>?): Completable =
             deadlinesRecordOperations.removeAllDeadlineRecords() then
             (enrolledCourses?.toObservable() ?: getAllEnrolledCourses()).flatMap {
-                getDeadlinesForCourse(it.courseId).toObservable()
+                getDeadlinesForCourse(it.id).toObservable()
             }.flatMap {
                 deadlinesRecordOperations.saveDeadlineRecord(it).toObservable()
             }.doOnComplete {
@@ -97,7 +97,7 @@ constructor(
 
     private fun getAllEnrolledCourses(): Observable<Course> =
             getEnrolledCourses(1).concatMap {
-                if (it.meta.has_next) {
+                if (it.meta.hasNext) {
                     Observable.just(it).concatWith(getEnrolledCourses(it.meta.page + 1))
                 } else {
                     Observable.just(it)

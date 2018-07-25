@@ -5,12 +5,11 @@ import android.support.annotation.WorkerThread
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.ProfilePresenter
-import org.stepic.droid.model.Profile
 import org.stepic.droid.model.UserViewModel
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.StepikUtil
-import org.stepic.droid.util.getFirstAndLastName
 import org.stepic.droid.web.Api
+import org.stepik.android.model.user.Profile
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
 
@@ -69,9 +68,9 @@ class ProfilePresenterImpl
                     view?.onProfileNotFound()
                     isLoading = false
                 }
-            } else if (profile != null && (profileId == 0L || profile.id == profileId) && !profile.is_guest) {
+            } else if (profile != null && (profileId == 0L || profile.id == profileId) && !profile.isGuest) {
                 showLocalProfile(profile)
-            } else if (profileId == 0L && (profile != null && profile.is_guest || profile == null)) {
+            } else if (profileId == 0L && (profile != null && profile.isGuest || profile == null)) {
                 try {
                     val realProfile = api.userProfile.execute().body()?.getProfile() ?: throw IllegalStateException("profile can't be null on API here")
                     sharedPreferences.storeProfile(realProfile)
@@ -106,9 +105,9 @@ class ProfilePresenterImpl
                 isLoading = false
             }
         } else {
-            val userViewModelLocal = UserViewModel(fullName = user.getFirstAndLastName(),
-                    imageLink = user.getAvatarPath(),
-                    shortBio = stringOrEmpty(user.short_bio),
+            val userViewModelLocal = UserViewModel(fullName = user.fullName ?: "",
+                    imageLink = user.avatar,
+                    shortBio = stringOrEmpty(user.shortBio),
                     information = stringOrEmpty((user.details)),
                     isMyProfile = false,
                     isPrivate = user.isPrivate,
@@ -161,18 +160,18 @@ class ProfilePresenterImpl
     }
 
     private fun showProfileBase(profile: Profile, isMyProfile: Boolean) {
-        val userViewModelLocal = UserViewModel(fullName = profile.getFirstAndLastName(),
-                imageLink = profile.getAvatarPath(),
-                shortBio = stringOrEmpty(profile.short_bio),
-                information = stringOrEmpty((profile.details)),
+        val userViewModelLocal = UserViewModel(fullName = profile.fullName ?: "${profile.firstName} ${profile.lastName}",
+                imageLink = profile.avatar,
+                shortBio = stringOrEmpty(profile.shortBio),
+                information = stringOrEmpty(profile.details),
                 isMyProfile = isMyProfile,
-                isPrivate = profile.is_private ?: false,
+                isPrivate = profile.isPrivate,
                 id = profile.id)
         this.userViewModel = userViewModelLocal
 
 
         mainHandler.post {
-            if (profile.is_guest) {
+            if (profile.isGuest) {
                 view?.onUserNotAuth()
             } else {
                 view?.showNameImageShortBio(userViewModelLocal)
@@ -183,11 +182,7 @@ class ProfilePresenterImpl
 
     private fun stringOrEmpty(str: String?): String {
         val source = str ?: ""
-        if (source.isBlank()) {
-            return ""
-        } else {
-            return source
-        }
+        return if (source.isBlank()) "" else source
     }
 
 }

@@ -30,7 +30,7 @@ import org.stepic.droid.core.presenters.DiscussionPresenter
 import org.stepic.droid.core.presenters.VotePresenter
 import org.stepic.droid.core.presenters.contracts.DiscussionView
 import org.stepic.droid.core.presenters.contracts.VoteView
-import org.stepic.droid.model.User
+import org.stepik.android.model.user.User
 import org.stepic.droid.model.comments.*
 import org.stepic.droid.ui.activities.NewCommentActivity
 import org.stepic.droid.ui.adapters.CommentsAdapter
@@ -38,6 +38,9 @@ import org.stepic.droid.ui.dialogs.DeleteCommentDialogFragment
 import org.stepic.droid.ui.util.ContextMenuRecyclerView
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.*
+import org.stepik.android.model.comments.Comment
+import org.stepik.android.model.comments.DiscussionProxy
+import org.stepik.android.model.comments.Vote
 import java.util.*
 import javax.inject.Inject
 
@@ -206,10 +209,12 @@ class CommentsFragment : FragmentBase(),
 
         if (userId > 0) {
             menu?.add(Menu.NONE, copyTextMenuId, Menu.NONE, R.string.copy_text_label)
-            if (comment.user != null && comment.user.toLong() != userId && comment.vote != null) {
+            val commentUser = comment.user
+            val commentVote = comment.vote
+            if (commentUser != null && commentUser.toLong() != userId && commentVote != null) {
                 //it is not current user and vote is available
-                val vote = commentManager.getVoteByVoteId(comment.vote)
-                if (vote?.value != null && vote.value == VoteValue.like) {
+                val vote = commentManager.getVoteByVoteId(commentVote)
+                if (vote?.value != null && vote.value == Vote.Value.LIKE) {
                     //if we have like -> show suggest for unlike
                     menu?.add(Menu.NONE, unLikeMenuId, Menu.NONE, R.string.unlike_label)
                 } else {
@@ -220,8 +225,9 @@ class CommentsFragment : FragmentBase(),
         }
 
         val commentUser: User? = comment.user?.let { commentManager.getUserById(it) }
-        if (commentUser?.first_name?.isNotBlank() == true || commentUser?.last_name?.isNotBlank() == true) {
-            val userNameText: String? = commentUser.getFirstAndLastName()
+
+        val userNameText: String? = commentUser?.fullName
+        if (userNameText?.isNotBlank() == true) {
             val spannableUserName = SpannableString(userNameText)
             spannableUserName.setSpan(ForegroundColorSpan(ColorUtil.getColorArgb(R.color.black)), 0, spannableUserName.length, 0)
 
@@ -230,7 +236,7 @@ class CommentsFragment : FragmentBase(),
         }
 
         if (userId > 0) {
-            if (comment.actions?.delete ?: false) {
+            if (comment.actions?.delete == true) {
                 val deleteText = getString(R.string.delete_label)
                 val spannableString = SpannableString(deleteText)
                 spannableString.setSpan(ForegroundColorSpan(ColorUtil.getColorArgb(R.color.feedback_bad_color)), 0, spannableString.length, 0)
@@ -295,12 +301,8 @@ class CommentsFragment : FragmentBase(),
     private fun openUserProfile(position: Int) {
         if (position < 0 && position >= commentManager.getSize()) return
 
-        val comment = commentManager.getItemWithNeedUpdatingInfoByPosition(position).comment
-        if (comment.user == null) {
-            //do nothing more
-            return
-        }
-        val userId = commentManager.getUserById(comment.user)?.id
+        val commentUser = commentManager.getItemWithNeedUpdatingInfoByPosition(position).comment.user ?: return
+        val userId = commentManager.getUserById(commentUser)?.id
         if (userId != null) {
             analytic.reportEvent(Analytic.Profile.CLICK_USER_IN_COMMENT)
             screenManager.openProfile(activity, userId.toLong())
@@ -352,7 +354,7 @@ class CommentsFragment : FragmentBase(),
     }
 
     private fun likeComment(position: Int) {
-        vote(position, VoteValue.like)
+        vote(position, Vote.Value.LIKE)
     }
 
     private fun unlikeComment(position: Int) {
@@ -360,10 +362,10 @@ class CommentsFragment : FragmentBase(),
     }
 
     private fun abuseComment(position: Int) {
-        vote(position, VoteValue.dislike)
+        vote(position, Vote.Value.DISLIKE)
     }
 
-    private fun vote(position: Int, voteValue: VoteValue?) {
+    private fun vote(position: Int, voteValue: Vote.Value?) {
         if (sharedPreferenceHelper.authResponseFromStore == null) {
             Toast.makeText(context, R.string.anonymous_like_mark_comment, Toast.LENGTH_SHORT).show()
             return

@@ -10,11 +10,11 @@ import org.stepic.droid.R
 import org.stepic.droid.adaptive.model.Card
 import org.stepic.droid.adaptive.ui.adapters.OnboardingQuizCardsAdapter
 import org.stepic.droid.base.FragmentBase
-import org.stepic.droid.model.Attempt
-import org.stepic.droid.model.Block
-import org.stepic.droid.model.Lesson
-import org.stepic.droid.model.Step
+import org.stepik.android.model.Block
+import org.stepik.android.model.Lesson
+import org.stepik.android.model.Step
 import org.stepic.droid.ui.util.initCenteredToolbar
+import org.stepik.android.model.attempts.Attempt
 
 class AdaptiveOnboardingFragment: FragmentBase() {
     private val adapter = OnboardingQuizCardsAdapter {
@@ -42,14 +42,11 @@ class AdaptiveOnboardingFragment: FragmentBase() {
         adapter.add(createMockCard(-4, R.string.adaptive_onboarding_card_title_4, R.string.adaptive_onboarding_card_question_4))
     }
 
-    private fun createMockCard(id: Long, @StringRes title_id: Int, @StringRes question_id: Int) : Card {
-        val lesson = Lesson()
-        lesson.title = getString(title_id)
+    private fun createMockCard(id: Long, @StringRes titleId: Int, @StringRes questionId: Int) : Card {
+        val lesson = Lesson(title = getString(titleId))
 
-        val step = Step()
-        val block = Block()
-        block.text = getString(question_id)
-        step.block = block
+        val block = Block(text = getString(questionId))
+        val step = Step(block = block)
 
         return Card(id, 0, lesson, step, Attempt())
     }

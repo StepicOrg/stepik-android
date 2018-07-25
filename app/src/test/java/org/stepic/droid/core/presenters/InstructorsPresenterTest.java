@@ -7,8 +7,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.core.presenters.contracts.InstructorsView;
-import org.stepic.droid.model.Course;
-import org.stepic.droid.model.User;
+import org.stepik.android.model.Course;
+import org.stepik.android.model.user.User;
 import org.stepic.droid.testUtils.ConcurrencyUtilForTest;
 import org.stepic.droid.testUtils.ResponseGeneratorKt;
 import org.stepic.droid.testUtils.generators.FakeCourseGenerator;
@@ -80,8 +80,7 @@ public class InstructorsPresenterTest {
 
     @Test
     public void emptyInstructors_hideInstructors() {
-        Course course = FakeCourseGenerator.INSTANCE.generate(67);
-        course.setInstructors(new long[0]);
+        Course course = FakeCourseGenerator.INSTANCE.generate(67, null, new long[0]);
 
         instructorsPresenter.attachView(instructorsView);
         instructorsPresenter.fetchInstructors(course);
@@ -95,11 +94,10 @@ public class InstructorsPresenterTest {
     @Test
     public void oneInstructor_instructorsLoaded() {
         //setup
-        Course course = FakeCourseGenerator.INSTANCE.generate(67);
         long userId = 1112234;
         long[] instructors = new long[1];
         instructors[0] = userId;
-        course.setInstructors(instructors);
+        Course course = FakeCourseGenerator.INSTANCE.generate(67, null, instructors);
 
         User instructor = FakeUserGenerator.INSTANCE.generate(userId);
         List<User> instructorList = new ArrayList<>();
@@ -124,11 +122,10 @@ public class InstructorsPresenterTest {
 
     @Test
     public void noInternet_failInstructors() {
-        Course course = FakeCourseGenerator.INSTANCE.generate(67);
         long userId = 1112234;
         long[] instructors = new long[1];
         instructors[0] = userId;
-        course.setInstructors(instructors);
+        Course course = FakeCourseGenerator.INSTANCE.generate(67, null, instructors);
         when(api.getUsers(any(long[].class)))
                 .thenThrow(RuntimeException.class); //throw exception on getting from api instead of executing for simplify testing
 
@@ -144,11 +141,10 @@ public class InstructorsPresenterTest {
 
     @Test
     public void multiplyFetchingSameCourse_showCachedData() {
-        Course course = FakeCourseGenerator.INSTANCE.generate(67);
         long userId = 1112234;
         long[] instructors = new long[1];
         instructors[0] = userId;
-        course.setInstructors(instructors);
+        Course course = FakeCourseGenerator.INSTANCE.generate(67, null, instructors);
 
         User instructor = FakeUserGenerator.INSTANCE.generate(userId);
         List<User> instructorList = new ArrayList<>();

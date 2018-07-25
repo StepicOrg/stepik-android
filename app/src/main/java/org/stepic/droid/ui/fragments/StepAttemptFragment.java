@@ -39,11 +39,10 @@ import org.stepic.droid.core.presenters.StreakPresenter;
 import org.stepic.droid.core.presenters.contracts.StepAttemptView;
 import org.stepic.droid.core.updatingstep.contract.UpdatingStepPoster;
 import org.stepic.droid.fonts.FontType;
-import org.stepic.droid.model.Attempt;
-import org.stepic.droid.model.DiscountingPolicyType;
+import org.stepik.android.model.attempts.Attempt;
+import org.stepik.android.model.DiscountingPolicyType;
 import org.stepic.droid.model.LessonSession;
-import org.stepic.droid.model.Reply;
-import org.stepic.droid.model.Submission;
+import org.stepik.android.model.Submission;
 import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout;
 import org.stepic.droid.ui.dialogs.DiscountingPolicyDialogFragment;
 import org.stepic.droid.ui.dialogs.RateAppDialogFragment;
@@ -57,6 +56,7 @@ import org.stepic.droid.util.RatingUtilKt;
 import org.stepic.droid.util.SnackbarExtensionKt;
 import org.stepic.droid.util.StepExtensionsKt;
 import org.stepic.droid.util.SubmissionExtensionsKt;
+import org.stepik.android.model.Reply;
 
 import javax.inject.Inject;
 
@@ -234,8 +234,8 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
     private void makeSubmission() {
         if (attempt == null || attempt.getId() <= 0) return;
 
-        if (section != null && section.getDiscountingPolicy() != DiscountingPolicyType.noDiscount
-                && getUserPreferences().isShowDiscountingPolicyWarning() && !step.is_custom_passed()) {
+        if (section != null && section.getDiscountingPolicy() != DiscountingPolicyType.NoDiscount
+                && getUserPreferences().isShowDiscountingPolicyWarning() && !step.isCustomPassed()) {
             //showDialog
             DialogFragment dialogFragment = DiscountingPolicyDialogFragment.Companion.newInstance();
             if (!dialogFragment.isAdded()) {
@@ -438,7 +438,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
     }
 
     protected final void markLocalProgressAsViewed() {
-        if (!step.is_custom_passed()) {
+        if (!step.isCustomPassed()) {
             updatingStepPoster.updateStep(step.getId(), true);
             AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
                 long stepId = step.getId();
@@ -525,9 +525,9 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
         }
 
         String warningText;
-        if (discountingPolicyType == DiscountingPolicyType.inverse) {
+        if (discountingPolicyType == DiscountingPolicyType.Inverse) {
             warningText = getString(R.string.discount_policy_inverse_title);
-        } else if (discountingPolicyType == DiscountingPolicyType.firstOne || discountingPolicyType == DiscountingPolicyType.firstThree) {
+        } else if (discountingPolicyType == DiscountingPolicyType.FirstOne || discountingPolicyType == DiscountingPolicyType.FirstThree) {
             if (remainTries > 0) {
                 warningText = getResources().getQuantityString(R.plurals.discount_policy_first_n, remainTries, remainTries);
             } else {

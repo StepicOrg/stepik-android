@@ -1,5 +1,5 @@
 package org.stepic.droid.web
 
-import org.stepic.droid.model.RegistrationUser
+import org.stepik.android.model.user.RegistrationCredentials
 
-data class UserRegistrationRequest(var user: RegistrationUser)
+data class UserRegistrationRequest(val user: RegistrationCredentials)

@@ -6,9 +6,9 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import org.stepic.droid.R
-import org.stepic.droid.model.Attempt
-import org.stepic.droid.model.Reply
-import org.stepic.droid.model.Submission
+import org.stepik.android.model.attempts.Attempt
+import org.stepik.android.model.Submission
+import org.stepik.android.model.Reply
 
 open class StringQuizDelegate: QuizDelegate() {
     protected lateinit var answerField: EditText
@@ -36,7 +36,5 @@ open class StringQuizDelegate: QuizDelegate() {
         submission?.reply?.text?.let { answerField.setText(it) }
     }
 
-    override fun createReply() = Reply.Builder()
-            .setText(answerField.text.toString())
-            .build()
+    override fun createReply() = Reply(text = answerField.text.toString())
 }

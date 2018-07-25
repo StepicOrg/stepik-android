@@ -2,7 +2,8 @@ package org.stepic.droid.core
 
 import android.content.Intent
 import org.stepic.droid.model.*
-import org.stepic.droid.model.Unit
+import org.stepik.android.model.*
+import org.stepik.android.model.Unit
 
 interface ShareHelper {
     fun getIntentForCourseSharing(course: Course): Intent

@@ -1,6 +1,6 @@
 package org.stepic.droid.core.presenters.contracts
 
-import org.stepic.droid.model.comments.DiscussionProxy
+import org.stepik.android.model.comments.DiscussionProxy
 
 interface DiscussionView {
 

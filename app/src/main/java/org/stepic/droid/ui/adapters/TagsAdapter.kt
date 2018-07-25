@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.tag_item.view.*
 import org.stepic.droid.R
-import org.stepic.droid.model.Tag
 import org.stepic.droid.ui.listeners.OnItemClickListener
+import org.stepik.android.model.Tag
 
 class TagsAdapter(private val onTagClicked: (Tag) -> Unit) : RecyclerView.Adapter<TagsAdapter.TagViewHolder>() {
 

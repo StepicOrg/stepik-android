@@ -5,8 +5,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
-import org.stepic.droid.model.Reply;
-import org.stepic.droid.model.ReplyWrapper;
+import org.stepik.android.model.Reply;
+import org.stepik.android.model.ReplyWrapper;
 
 import java.lang.reflect.Type;
 

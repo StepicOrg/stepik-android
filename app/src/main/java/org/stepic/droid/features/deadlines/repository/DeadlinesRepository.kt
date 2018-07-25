@@ -4,7 +4,7 @@ import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Single
 import org.stepic.droid.features.deadlines.model.DeadlinesWrapper
-import org.stepic.droid.model.Course
+import org.stepik.android.model.Course
 import org.stepic.droid.web.storage.model.StorageRecord
 
 interface DeadlinesRepository {

@@ -8,9 +8,9 @@ import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.di.course_list.CourseListScope
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
-import org.stepic.droid.model.Course
+import org.stepik.android.model.Course
 import org.stepic.droid.model.CourseReviewSummary
-import org.stepic.droid.model.Progress
+import org.stepik.android.model.Progress
 import org.stepic.droid.util.CourseUtil
 import org.stepic.droid.web.Api
 import javax.inject.Inject
@@ -53,7 +53,7 @@ constructor(
                             })
                 }
                 .map {
-                    val coursesMap = it.associateBy { it.courseId }
+                    val coursesMap = it.associateBy { it.id }
                     courseIds
                             .asIterable()
                             .mapNotNull {

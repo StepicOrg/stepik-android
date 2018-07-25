@@ -20,7 +20,7 @@ import org.stepic.droid.core.ProgressHandler
 import org.stepic.droid.core.presenters.LoginPresenter
 import org.stepic.droid.core.presenters.contracts.LoginView
 import org.stepic.droid.fonts.FontType
-import org.stepic.droid.model.AuthData
+import org.stepic.droid.model.Credentials
 import org.stepic.droid.ui.dialogs.LoadingProgressDialog
 import org.stepic.droid.ui.util.setOnKeyboardOpenListener
 import org.stepic.droid.util.AppConstants
@@ -214,13 +214,13 @@ class LoginActivity : SmartLockActivityBase(), LoginView {
         progressHandler.dismiss()
     }
 
-    override fun onSuccessLogin(authData: AuthData?) {
+    override fun onSuccessLogin(credentials: Credentials?) {
         progressHandler.dismiss()
-        if (authData == null || !checkPlayServices() || !(googleApiClient?.isConnected ?: false)) {
+        if (credentials == null || !checkPlayServices() || !(googleApiClient?.isConnected ?: false)) {
             openMainFeed()
         } else {
             //only if we have not null data (we can apply smart lock && google api client is connected and available
-            requestToSaveCredentials(authData)
+            requestToSaveCredentials(credentials)
         }
     }
 

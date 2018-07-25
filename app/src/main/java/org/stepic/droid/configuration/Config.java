@@ -39,5 +39,7 @@ public interface Config {
 
     String getAmplitudeApiKey();
 
+    String getAppsFlyerApiKey();
+
     boolean isAppInStore();
 }

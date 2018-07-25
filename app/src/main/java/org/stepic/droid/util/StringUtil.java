@@ -8,10 +8,10 @@ import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
 import org.stepic.droid.base.App;
 import org.stepic.droid.configuration.Config;
-import org.stepic.droid.model.Lesson;
-import org.stepic.droid.model.Section;
-import org.stepic.droid.model.Step;
-import org.stepic.droid.model.Unit;
+import org.stepik.android.model.Lesson;
+import org.stepik.android.model.Section;
+import org.stepik.android.model.Step;
+import org.stepik.android.model.Unit;
 
 import java.util.ArrayList;
 import java.util.List;

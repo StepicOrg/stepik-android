@@ -1,14 +1,13 @@
 package org.stepic.droid.ui.fragments;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 
 import org.stepic.droid.R;
-import org.stepic.droid.model.Attempt;
-import org.stepic.droid.model.Reply;
+import org.stepik.android.model.attempts.Attempt;
 import org.stepic.droid.ui.adapters.StepikRadioGroupAdapter;
 import org.stepic.droid.ui.custom.StepikRadioGroup;
+import org.stepik.android.model.Reply;
 
 public class ChoiceStepFragment extends StepAttemptFragment {
 
@@ -17,7 +16,7 @@ public class ChoiceStepFragment extends StepAttemptFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        StepikRadioGroup choiceContainer = (StepikRadioGroup) LayoutInflater.from(getContext()).inflate(R.layout.view_choice_attempt, attemptContainer, false);
+        StepikRadioGroup choiceContainer = (StepikRadioGroup) getLayoutInflater().inflate(R.layout.view_choice_attempt, attemptContainer, false);
         attemptContainer.addView(choiceContainer);
         attemptContainer.setPadding(0, 0, 0, 0);
 

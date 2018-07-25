@@ -5,9 +5,9 @@ import io.reactivex.Scheduler
 import io.reactivex.disposables.Disposable
 import org.stepic.droid.adaptive.listeners.AdaptiveReactionListener
 import org.stepic.droid.adaptive.listeners.AnswerListener
-import org.stepic.droid.model.Submission
+import org.stepik.android.model.Submission
 import org.stepic.droid.adaptive.model.Card
-import org.stepic.droid.adaptive.model.Reaction
+import org.stepik.android.model.adaptive.Reaction
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
@@ -69,7 +69,9 @@ class CardPresenter(
     fun detachView() {
         view?.let {
             if (submission == null || submission?.status == Submission.Status.LOCAL) {
-                submission = Submission(it.getQuizViewDelegate().createReply(), 0, Submission.Status.LOCAL) // cache current choices state
+                submission = Submission(
+                        reply = it.getQuizViewDelegate().createReply(),
+                        status = Submission.Status.LOCAL) // cache current choices state
             }
             super.detachView(it)
         }
@@ -108,7 +110,9 @@ class CardPresenter(
             isLoading = true
             error = null
 
-            val submission = Submission(view?.getQuizViewDelegate()?.createReply(), card.attempt?.id ?: 0)
+            val submission = Submission(
+                    reply = view?.getQuizViewDelegate()?.createReply(),
+                    attempt = card.attempt?.id ?: 0)
             disposable = api.createNewSubmissionReactive(submission)
                     .andThen(api.getSubmissionsReactive(submission.attempt))
                     .subscribeOn(backgroundScheduler)

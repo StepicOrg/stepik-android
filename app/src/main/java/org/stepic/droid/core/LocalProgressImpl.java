@@ -5,10 +5,10 @@ import android.support.annotation.NonNull;
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.base.ListenerContainer;
 import org.stepic.droid.concurrency.MainHandler;
-import org.stepic.droid.model.Progress;
-import org.stepic.droid.model.Section;
-import org.stepic.droid.model.Step;
-import org.stepic.droid.model.Unit;
+import org.stepik.android.model.Progress;
+import org.stepik.android.model.Section;
+import org.stepik.android.model.Step;
+import org.stepik.android.model.Unit;
 import org.stepic.droid.storage.operations.DatabaseFacade;
 import org.stepic.droid.util.StringUtil;
 import org.stepic.droid.web.Api;
@@ -48,7 +48,7 @@ public class LocalProgressImpl implements LocalProgressManager {
         if (step == null) return;
         List<Step> stepList = databaseFacade.getStepsOfLesson(step.getLesson());
         for (Step stepItem : stepList) {
-            if (!stepItem.is_custom_passed()) return;
+            if (!stepItem.isCustomPassed()) return;
         }
 
         Unit unit = databaseFacade.getUnitByLessonId(step.getLesson());
@@ -56,8 +56,8 @@ public class LocalProgressImpl implements LocalProgressManager {
 
 //        unit.set_viewed_custom(true);
 //        mDatabaseFacade.addUnit(unit); //// TODO: 26.01.16 progress is not saved
-        if (unit.getProgressId() != null) {
-            databaseFacade.markProgressAsPassedIfInDb(unit.getProgressId());
+        if (unit.getProgress() != null) {
+            databaseFacade.markProgressAsPassedIfInDb(unit.getProgress());
         }
 
         final long unitId = unit.getId();
@@ -80,7 +80,7 @@ public class LocalProgressImpl implements LocalProgressManager {
         if (unit == null) return;
         Progress updatedUnitProgress;
         try {
-            updatedUnitProgress = api.getProgresses(new String[]{unit.getProgressId()}).execute().body().getProgresses().get(0);
+            updatedUnitProgress = api.getProgresses(new String[]{unit.getProgress()}).execute().body().getProgresses().get(0);
         } catch (Exception e) {
             //if we have no progress of unit or progress is null -> do nothing
             return;

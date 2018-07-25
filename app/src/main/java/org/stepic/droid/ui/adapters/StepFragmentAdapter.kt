@@ -5,10 +5,10 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
-import org.stepic.droid.model.Lesson
-import org.stepic.droid.model.Section
-import org.stepic.droid.model.Step
-import org.stepic.droid.model.Unit
+import org.stepik.android.model.Lesson
+import org.stepik.android.model.Section
+import org.stepik.android.model.Step
+import org.stepik.android.model.Unit
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.resolvers.StepTypeResolver
 
@@ -54,6 +54,6 @@ class StepFragmentAdapter(fm: FragmentManager, val stepList: List<Step?>, val st
     fun getTabDrawable(position: Int): Drawable? {
         if (position >= stepList.size) return null
         val step = stepList[position]
-        return stepTypeResolver.getDrawableForType(step?.block?.name, step?.is_custom_passed ?: false, step?.actions?.do_review != null)
+        return stepTypeResolver.getDrawableForType(step?.block?.name, step?.isCustomPassed ?: false, step?.actions?.doReview != null)
     }
 }

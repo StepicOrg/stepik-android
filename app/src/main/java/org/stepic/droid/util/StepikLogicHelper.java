@@ -4,8 +4,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.model.CachedVideo;
-import org.stepic.droid.model.Course;
-import org.stepic.droid.model.Unit;
+import org.stepik.android.model.Course;
+import org.stepik.android.model.Unit;
 
 import java.util.List;
 

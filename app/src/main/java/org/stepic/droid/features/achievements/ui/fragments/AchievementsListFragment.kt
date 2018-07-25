@@ -17,7 +17,7 @@ import org.stepic.droid.features.achievements.presenters.AchievementsView
 import org.stepic.droid.features.achievements.ui.adapters.AchievementsAdapter
 import org.stepic.droid.features.achievements.ui.adapters.BaseAchievementsAdapter
 import org.stepic.droid.features.achievements.ui.dialogs.AchievementDetailsDialog
-import org.stepic.droid.model.achievements.AchievementFlatItem
+import org.stepic.droid.model.AchievementFlatItem
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.ui.util.setHeight

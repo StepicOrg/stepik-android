@@ -8,10 +8,10 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.core.routing.contract.RoutingPoster;
 import org.stepic.droid.core.presenters.contracts.RouteStepView;
-import org.stepic.droid.model.Course;
-import org.stepic.droid.model.Lesson;
-import org.stepic.droid.model.Section;
-import org.stepic.droid.model.Unit;
+import org.stepik.android.model.Course;
+import org.stepik.android.model.Lesson;
+import org.stepik.android.model.Section;
+import org.stepik.android.model.Unit;
 import org.stepic.droid.storage.repositories.Repository;
 import org.stepic.droid.testUtils.ConcurrencyUtilForTest;
 import org.stepic.droid.testUtils.generators.ArrayHelper;
@@ -24,6 +24,8 @@ import org.stepic.droid.testUtils.generators.ListHelper;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadPoolExecutor;
+
+import kotlin.collections.CollectionsKt;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
@@ -87,7 +89,7 @@ public class RouteStepPresenterTest {
         long unitId = 48;
 
         long stepIds[] = ArrayHelper.INSTANCE.arrayOf(stepId);
-        long unitIds[] = ArrayHelper.INSTANCE.arrayOf(unitId);
+        List<Long> unitIds = CollectionsKt.listOf(unitId);
         Lesson lesson = FakeLessonGenerator.INSTANCE.generate(stepIds);
         Unit unit = FakeUnitGenerator.INSTANCE.generate(unitId, sectionId);
         Section section = FakeSectionGenerator.INSTANCE.generate(sectionId, unitIds, 1);
@@ -119,8 +121,8 @@ public class RouteStepPresenterTest {
         long courseId = 67;
 
         long stepIds[] = ArrayHelper.INSTANCE.arrayOf(stepId);
-        long unitIds[] = ArrayHelper.INSTANCE.arrayOf(unitId);
-        long unitIdsSecond[] = ArrayHelper.INSTANCE.arrayOf(unitId - 20);
+        List<Long> unitIds = CollectionsKt.listOf(unitId);
+        List<Long> unitIdsSecond = CollectionsKt.listOf(unitId - 20);
         long expectedSectionIds[] = ArrayHelper.INSTANCE.arrayOf(sectionId - 1);
         Lesson lesson = FakeLessonGenerator.INSTANCE.generate(stepIds);
 
@@ -219,7 +221,7 @@ public class RouteStepPresenterTest {
         long courseId = 221;
 
         long stepIds[] = ArrayHelper.INSTANCE.arrayOf(stepId - 2, stepId - 1, stepId);
-        long unitIds[] = ArrayHelper.INSTANCE.arrayOf(unitId - 2, unitId - 1, unitId);
+        List<Long> unitIds = CollectionsKt.listOf(unitId - 2, unitId - 1, unitId);
         long sectionIds[] = ArrayHelper.INSTANCE.arrayOf(sectionId - 2, sectionId - 1, sectionId);
 
         Lesson lesson = FakeLessonGenerator.INSTANCE.generate(stepIds);
@@ -285,7 +287,7 @@ public class RouteStepPresenterTest {
         int unitPosition = 2;
 
         long stepIds[] = ArrayHelper.INSTANCE.arrayOf(stepId - 2, stepId - 1, stepId);
-        long unitIds[] = ArrayHelper.INSTANCE.arrayOf(unitId - 2, unitId - 1, unitId, unitId + 1);
+        List<Long> unitIds = CollectionsKt.listOf(unitId - 2, unitId - 1, unitId, unitId + 1);
 
         Lesson lesson = FakeLessonGenerator.INSTANCE.generate(stepIds);
         Unit unit = FakeUnitGenerator.INSTANCE.generate(unitId, sectionId, unitPosition);
@@ -322,14 +324,12 @@ public class RouteStepPresenterTest {
 
         // first section
         long stepIds0[] = ArrayHelper.INSTANCE.arrayOf(stepId);
-        long unitIds0[] = ArrayHelper.INSTANCE.arrayOf(unitId);
+        List<Long> unitIds0 = CollectionsKt.listOf(unitId);
 
-        Lesson lesson0 = FakeLessonGenerator.INSTANCE.generate(stepIds0);
-        lesson0.setId(lessonId);
+        Lesson lesson0 = FakeLessonGenerator.INSTANCE.generate(lessonId, stepIds0);
         when(lessonRepository.getObject(lessonId)).thenReturn(lesson0);
 
-        Unit unit0 = FakeUnitGenerator.INSTANCE.generate(unitId, sectionId, unitPosition);
-        unit0.setLesson(lesson0.getId());
+        Unit unit0 = FakeUnitGenerator.INSTANCE.generate(unitId, sectionId, unitPosition, lesson0.getId());
         when(unitRepository.getObject(unitId)).thenReturn(unit0);
 
         Section section0 = FakeSectionGenerator.INSTANCE.generate(sectionId, unitIds0, 1, courseId);
@@ -337,14 +337,12 @@ public class RouteStepPresenterTest {
 
         // second section
         long stepIds1[] = ArrayHelper.INSTANCE.arrayOf(stepId + 1);
-        long unitIds1[] = ArrayHelper.INSTANCE.arrayOf(unitId + 1);
+        List<Long> unitIds1 = CollectionsKt.listOf(unitId + 1);
 
-        Lesson lesson1 = FakeLessonGenerator.INSTANCE.generate(stepIds1);
-        lesson1.setId(lessonId + 1);
+        Lesson lesson1 = FakeLessonGenerator.INSTANCE.generate(lessonId + 1, stepIds1);
         when(lessonRepository.getObject(lessonId + 1)).thenReturn(lesson1);
 
-        Unit unit1 = FakeUnitGenerator.INSTANCE.generate(unitId + 1, sectionId + 1, unitPosition);
-        unit1.setLesson(lesson1.getId());
+        Unit unit1 = FakeUnitGenerator.INSTANCE.generate(unitId + 1, sectionId + 1, unitPosition, lesson1.getId());
         when(unitRepository.getObject(unitId + 1)).thenReturn(unit1);
 
         Section section1 = FakeSectionGenerator.INSTANCE.generate(sectionId + 1, unitIds1, 2, courseId);
@@ -377,14 +375,12 @@ public class RouteStepPresenterTest {
 
         // first section
         long stepIds0[] = ArrayHelper.INSTANCE.arrayOf(stepId);
-        long unitIds0[] = ArrayHelper.INSTANCE.arrayOf(unitId);
+        List<Long> unitIds0 = CollectionsKt.listOf(unitId);
 
-        Lesson lesson0 = FakeLessonGenerator.INSTANCE.generate(stepIds0);
-        lesson0.setId(lessonId);
+        Lesson lesson0 = FakeLessonGenerator.INSTANCE.generate(lessonId, stepIds0);
         when(lessonRepository.getObject(lessonId)).thenReturn(lesson0);
 
-        Unit unit0 = FakeUnitGenerator.INSTANCE.generate(unitId, sectionId, unitPosition);
-        unit0.setLesson(lesson0.getId());
+        Unit unit0 = FakeUnitGenerator.INSTANCE.generate(unitId, sectionId, unitPosition, lesson0.getId());
         when(unitRepository.getObject(unitId)).thenReturn(unit0);
 
         Section section0 = FakeSectionGenerator.INSTANCE.generate(sectionId, unitIds0, 1, courseId);
@@ -392,14 +388,12 @@ public class RouteStepPresenterTest {
 
         // second section
         long stepIds1[] = ArrayHelper.INSTANCE.arrayOf(stepId + 1);
-        long unitIds1[] = ArrayHelper.INSTANCE.arrayOf(unitId + 1);
+        List<Long> unitIds1 = CollectionsKt.listOf(unitId + 1);
 
-        Lesson lesson1 = FakeLessonGenerator.INSTANCE.generate(stepIds1);
-        lesson1.setId(lessonId + 1);
+        Lesson lesson1 = FakeLessonGenerator.INSTANCE.generate(lessonId + 1, stepIds1);
         when(lessonRepository.getObject(lessonId + 1)).thenReturn(lesson1);
 
-        Unit unit1 = FakeUnitGenerator.INSTANCE.generate(unitId + 1, sectionId + 1, unitPosition);
-        unit1.setLesson(lesson1.getId());
+        Unit unit1 = FakeUnitGenerator.INSTANCE.generate(unitId + 1, sectionId + 1, unitPosition, lesson1.getId());
         when(unitRepository.getObject(unitId + 1)).thenReturn(unit1);
 
         Section section1 = FakeSectionGenerator.INSTANCE.generate(sectionId + 1, unitIds1, 2, courseId);

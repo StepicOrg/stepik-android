@@ -1,8 +1,9 @@
 package org.stepic.droid.web
 
-import org.stepic.droid.model.Certificate
-import org.stepic.droid.model.Meta
+import org.stepik.android.model.Certificate
+import org.stepik.android.model.Meta
 
 data class CertificateResponse(
         val meta: Meta?,
-        val certificates: List<Certificate>)
+        val certificates: List<Certificate>
+)

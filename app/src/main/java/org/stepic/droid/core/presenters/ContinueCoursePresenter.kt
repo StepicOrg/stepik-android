@@ -3,10 +3,10 @@ package org.stepic.droid.core.presenters
 import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.ContinueCourseView
-import org.stepic.droid.model.Course
-import org.stepic.droid.model.Section
-import org.stepic.droid.model.Step
-import org.stepic.droid.model.Unit
+import org.stepik.android.model.Course
+import org.stepik.android.model.Section
+import org.stepik.android.model.Step
+import org.stepik.android.model.Unit
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.storage.repositories.Repository
 import org.stepic.droid.util.hasUserAccess
@@ -33,7 +33,7 @@ class ContinueCoursePresenter
             view?.onShowContinueCourseLoadingDialog()
             threadPoolExecutor.execute {
                 try {
-                    if (adaptiveCoursesResolver.isAdaptive(course.courseId)) {
+                    if (adaptiveCoursesResolver.isAdaptive(course.id)) {
                         mainHandler.post {
                             view?.onOpenAdaptiveCourse(course)
                         }
@@ -47,7 +47,7 @@ class ContinueCoursePresenter
                         unitId = lastStep.unit!! //it can be null
                         stepId = lastStep.step!!// it can be null -> we should fetch 1st step
                     } catch (exception: Exception) {
-                        val persistentLastStep = databaseFacade.getLocalLastStepByCourseId(courseId = course.courseId)
+                        val persistentLastStep = databaseFacade.getLocalLastStepByCourseId(courseId = course.id)
                         if (persistentLastStep == null) {
                             // fetch data
                             val sectionIds = course.sections
@@ -63,7 +63,7 @@ class ContinueCoursePresenter
                             val lessonId = unit.lesson
                             // if server return Null on last step and local is not exist
                             mainHandler.post {
-                                view?.onOpenStep(courseId = course.courseId,
+                                view?.onOpenStep(courseId = course.id,
                                         section = section,
                                         lessonId = lessonId,
                                         unitId = unit.id,
@@ -91,7 +91,7 @@ class ContinueCoursePresenter
                     val stepPosition = step.position.toInt()
 
                     mainHandler.post {
-                        view?.onOpenStep(courseId = course.courseId,
+                        view?.onOpenStep(courseId = course.id,
                                 section = section,
                                 lessonId = lessonId,
                                 unitId = unitId,
@@ -112,7 +112,7 @@ class ContinueCoursePresenter
     private fun fetchUnit(unitId: Long): Unit {
         var unit = databaseFacade.getUnitById(unitId)
         if (unit == null) {
-            unit = api.getUnits(longArrayOf(unitId)).execute().body()?.units?.first()
+            unit = api.getUnits(listOf(unitId)).execute().body()?.units?.first()
         }
         return unit!! //if null -> should throw Exception
     }

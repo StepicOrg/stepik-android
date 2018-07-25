@@ -7,7 +7,7 @@ import android.support.v7.app.AlertDialog
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
-import org.stepic.droid.model.comments.Comment
+import org.stepik.android.model.comments.Comment
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.web.Api
 import org.stepic.droid.web.CommentsResponse

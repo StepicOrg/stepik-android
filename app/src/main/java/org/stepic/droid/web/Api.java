@@ -4,19 +4,19 @@ import android.support.v4.app.FragmentActivity;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.stepic.droid.adaptive.model.RatingItem;
-import org.stepic.droid.model.Course;
+import org.stepik.android.model.adaptive.RatingItem;
+import org.stepik.android.model.Course;
 import org.stepic.droid.model.NotificationCategory;
-import org.stepic.droid.model.Reply;
-import org.stepic.droid.model.Submission;
-import org.stepic.droid.model.Tag;
-import org.stepic.droid.adaptive.model.RecommendationReaction;
-import org.stepic.droid.model.User;
-import org.stepic.droid.model.comments.VoteValue;
+import org.stepik.android.model.Submission;
+import org.stepik.android.model.adaptive.RecommendationReaction;
+import org.stepik.android.model.comments.Vote;
 import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.web.model.adaptive.RatingRestoreResponse;
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
+import org.stepik.android.model.Tag;
+import org.stepik.android.model.Reply;
+import org.stepik.android.model.user.User;
 
 import java.util.List;
 
@@ -58,7 +58,7 @@ public interface Api {
     /**
      * Max number of  units defined in AppConstants
      */
-    Call<UnitMetaResponse> getUnits(long[] units);
+    Call<UnitMetaResponse> getUnits(List<Long> units);
 
     Single<UnitMetaResponse> getUnitsRx(long[] units);
 
@@ -147,7 +147,7 @@ public interface Api {
 
     Call<CommentsResponse> postComment(String text, long target /*for example, related step*/, @Nullable Long parent /*put if it is reply*/);
 
-    Call<VoteResponse> makeVote(String voteId, @Nullable VoteValue voteValue);
+    Call<VoteResponse> makeVote(String voteId, @Nullable Vote.Value voteValue);
 
     Call<CommentsResponse> deleteComment(long commentId);
 

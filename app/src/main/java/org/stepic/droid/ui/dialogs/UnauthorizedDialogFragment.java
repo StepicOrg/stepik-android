@@ -11,7 +11,7 @@ import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.core.ScreenManager;
-import org.stepic.droid.model.Course;
+import org.stepik.android.model.Course;
 
 import javax.inject.Inject;
 

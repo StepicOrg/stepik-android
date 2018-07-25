@@ -36,8 +36,8 @@ import org.stepic.droid.core.MyExoPhoneStateListener
 import org.stepic.droid.core.internetstate.contract.InternetEnabledListener
 import org.stepic.droid.core.presenters.VideoWithTimestampPresenter
 import org.stepic.droid.core.presenters.contracts.VideoWithTimestampView
-import org.stepic.droid.model.Video
-import org.stepic.droid.model.VideoUrl
+import org.stepik.android.model.Video
+import org.stepik.android.model.VideoUrl
 import org.stepic.droid.preferences.VideoPlaybackRate
 import org.stepic.droid.receivers.HeadPhoneReceiver
 import org.stepic.droid.ui.custom_exo.NavigationBarUtil

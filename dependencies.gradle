@@ -1,6 +1,6 @@
 ext.versions = [
-        code                 : 1994,
-        name                 : '1.63',
+        code                 : 1995,
+        name                 : '1.64',
 
         minSdk               : 15,
         targetSdk            : 26,
@@ -32,6 +32,8 @@ ext.versions = [
 
         amplitude            : '2.14.1',
         appMetrica           : '2.78',
+        appsflyer            : '4.8.13@aar',
+        installreferrer      : '1.0',
 
         calligraphy          : '2.1.0',
         lottie               : '2.3.1',
@@ -110,6 +112,8 @@ ext.libraries = [
 
         amplitude            : "com.amplitude:android-sdk:$versions.amplitude",
         appMetrica           : "com.yandex.android:mobmetricalib:$versions.appMetrica",
+        appsflyer            : "com.appsflyer:af-android-sdk:$versions.appsflyer",
+        installreferrer      : "com.android.installreferrer:installreferrer:$versions.installreferrer",
 
         calligraphy          : "uk.co.chrisjenx:calligraphy:$versions.calligraphy",
         lottie               : "com.airbnb.android:lottie:$versions.lottie",

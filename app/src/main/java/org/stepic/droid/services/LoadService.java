@@ -10,16 +10,15 @@ import android.support.annotation.WorkerThread;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
-import org.stepic.droid.model.Assignment;
 import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.DownloadEntity;
-import org.stepic.droid.model.Lesson;
-import org.stepic.droid.model.Progress;
-import org.stepic.droid.model.Section;
-import org.stepic.droid.model.Step;
-import org.stepic.droid.model.Unit;
-import org.stepic.droid.model.Video;
-import org.stepic.droid.model.VideoUrl;
+import org.stepik.android.model.Lesson;
+import org.stepik.android.model.Progress;
+import org.stepik.android.model.Section;
+import org.stepik.android.model.Step;
+import org.stepik.android.model.Unit;
+import org.stepik.android.model.Video;
+import org.stepik.android.model.VideoUrl;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.storage.CancelSniffer;
 import org.stepic.droid.storage.StoreStateManager;
@@ -35,6 +34,7 @@ import org.stepic.droid.web.LessonStepicResponse;
 import org.stepic.droid.web.ProgressesResponse;
 import org.stepic.droid.web.StepResponse;
 import org.stepic.droid.web.UnitMetaResponse;
+import org.stepik.android.model.Assignment;
 
 import java.io.File;
 import java.io.IOException;
@@ -94,7 +94,7 @@ public class LoadService extends IntentService {
         try {
             switch (type) {
                 case Section:
-                    Section section = (Section) intent.getSerializableExtra(AppConstants.KEY_SECTION_BUNDLE);
+                    Section section = intent.getParcelableExtra(AppConstants.KEY_SECTION_BUNDLE);
                     addSection(section);
                     break;
                 case Lesson:
@@ -230,8 +230,8 @@ public class LoadService extends IntentService {
             long fileId = video.getId();
             addDownload(uri, fileId, lesson.getTitle(), step, sectionId);
         } else {
-            step.set_loading(false);
-            step.set_cached(true);
+            step.setLoading(false);
+            step.setCached(true);
             databaseFacade.updateOnlyCachedLoadingStep(step);
             storeStateManager.updateUnitLessonState(step.getLesson());
         }
@@ -246,7 +246,7 @@ public class LoadService extends IntentService {
         //make copies of objects.
         Lesson lesson = databaseFacade.getLessonById(lessonOut.getId());
 
-        if (lesson != null && !lesson.is_cached() && lesson.is_loading()) {
+        if (lesson != null && !lesson.isCached() && lesson.isLoading()) {
             try {
                 Unit unit = databaseFacade.getUnitByLessonId(lesson.getId());
                 if (unit != null) {
@@ -255,7 +255,7 @@ public class LoadService extends IntentService {
                         databaseFacade.addAssignment(item);
                     }
 
-                    String[] ids = ProgressUtil.INSTANCE.getAllProgresses(assignments);
+                    String[] ids = ProgressUtil.INSTANCE.getProgresses(assignments);
                     List<Progress> progresses = fetchProgresses(ids);
                     for (Progress item : progresses) {
                         databaseFacade.addProgress(item);
@@ -269,18 +269,18 @@ public class LoadService extends IntentService {
                         for (Step step : steps) {
                             databaseFacade.addStep(step);
                             boolean cached = databaseFacade.isStepCached(step);
-                            step.set_cached(cached);
+                            step.setCached(cached);
                         }
                         for (Step step : steps) {
-                            if (!step.is_cached()) {
-                                step.set_loading(true);
-                                step.set_cached(false);
+                            if (!step.isCached()) {
+                                step.setLoading(true);
+                                step.setCached(false);
                                 databaseFacade.updateOnlyCachedLoadingStep(step);
                             }
                         }
 
                         for (Step step : steps) {
-                            if (!step.is_cached()) {
+                            if (!step.isCached()) {
                                 addStep(step, lesson, sectionId);
                             }
                         }
@@ -310,14 +310,14 @@ public class LoadService extends IntentService {
             try {
                 boolean responseIsSuccess = true;
                 final List<Unit> units = new ArrayList<>();
-                long[] unitIds = section.getUnits();
+                final List<Long> unitIds = section.getUnits();
                 if (unitIds == null) {
                     responseIsSuccess = false;
                 }
                 int pointer = 0;
-                while (responseIsSuccess && pointer < unitIds.length) {
-                    int lastExclusive = Math.min(unitIds.length, pointer + AppConstants.DEFAULT_NUMBER_IDS_IN_QUERY);
-                    long[] subArrayForLoading = Arrays.copyOfRange(unitIds, pointer, lastExclusive);
+                while (responseIsSuccess && pointer < unitIds.size()) {
+                    int lastExclusive = Math.min(unitIds.size(), pointer + AppConstants.DEFAULT_NUMBER_IDS_IN_QUERY);
+                    List<Long> subArrayForLoading = unitIds.subList(pointer, lastExclusive);
                     Response<UnitMetaResponse> unitResponse = api.getUnits(subArrayForLoading).execute();
                     if (!unitResponse.isSuccessful()) {
                         responseIsSuccess = false;
@@ -330,7 +330,7 @@ public class LoadService extends IntentService {
 
                 if (responseIsSuccess) {
                     long[] lessonsIds = StepikLogicHelper.fromUnitsToLessonIds(units);
-                    List<Progress> progresses = fetchProgresses(ProgressUtil.INSTANCE.getAllProgresses(units));
+                    List<Progress> progresses = fetchProgresses(ProgressUtil.INSTANCE.getProgresses(units));
                     for (Progress item : progresses) {
                         databaseFacade.addProgress(item);
                     }
@@ -370,8 +370,8 @@ public class LoadService extends IntentService {
 
                             if (!databaseFacade.isLessonCached(lesson)) {
                                 //need to be load
-                                lesson.set_loading(true);
-                                lesson.set_cached(false);
+                                lesson.setLoading(true);
+                                lesson.setCached(false);
 
                                 databaseFacade.updateOnlyCachedLoadingLesson(lesson);
                             }
