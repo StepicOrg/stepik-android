@@ -1,14 +1,14 @@
 ext.versions = [
-        code                 : 1993,
-        name                 : '1.62',
+        code                 : 1994,
+        name                 : '1.63',
 
         minSdk               : 15,
-        targetSdk            : 25,
+        targetSdk            : 26,
         compileSdk           : 26,
         buildTools           : '26.0.2',
 
         androidGradlePlugin  : '3.0.0',
-        kotlin               : '1.2.41',
+        kotlin               : '1.2.51',
         googleServicesVersion: '3.0.0',
         fabric               : '1.25.1',
         dexcount             : '0.8.2',

@@ -11,7 +11,7 @@ class UTCDateAdapterTest {
     @Test
     fun deserializationTest() {
         val gson = GsonBuilder().registerTypeAdapter(Date::class.java, UTCDateAdapter()).create()
-        val deadlines = """{"course":67,"deadlines":[{"section":123,"deadline":"2012-04-23T18:25:43.511Z"}]}"""
+        val deadlines = """{"course":67,"deadlines":[{"section":123,"deadline":"2012-04-23T18:25:43.000Z"}]}"""
 
         val wrapper = deadlines.toObject<DeadlinesWrapper>(gson)
         assertEquals(gson.toJson(wrapper), deadlines)

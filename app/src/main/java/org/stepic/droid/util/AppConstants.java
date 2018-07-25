@@ -11,6 +11,7 @@ public class AppConstants {
     public static final String VIDEO_EXTENSION = ".mp4";
 
     public static final String ERROR_SOCIAL_AUTH_WITH_EXISTING_EMAIL = "social_signup_with_existing_email";
+    public static final String ERROR_SOCIAL_AUTH_WITHOUT_EMAIL = "social_signup_without_email";
 
     public static final String KEY_EMAIL_BUNDLE = "email";
     public static final String KEY_COURSE_BUNDLE = "course";

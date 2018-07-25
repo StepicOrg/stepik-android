@@ -12,7 +12,7 @@ interface AmplitudeAnalytic {
     }
 
     object Launch {
-        const val FIRST_TIME = "First time"
+        const val FIRST_TIME = "Launch first time"
         const val SESSION_START = "Session start"
     }
 
@@ -29,6 +29,7 @@ interface AmplitudeAnalytic {
         const val REGISTERED = "Registered"
 
         const val PARAM_SOURCE = "source"
+        const val VALUE_SOURCE_EMAIL = "email"
     }
 
     object Course {
@@ -78,10 +79,6 @@ interface AmplitudeAnalytic {
     object Search {
         const val SEARCHED = "Course searched"
 
-        object Params {
-            const val QUERY = "query"
-            const val SUGGESTION = "suggestion"
-            const val POSITION = "position"
-        }
+        const val PARAM_SUGGESTION = "suggestion"
     }
 }

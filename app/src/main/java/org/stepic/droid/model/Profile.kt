@@ -27,8 +27,5 @@ data class Profile(
         @SerializedName("email_addresses")
         var emailAddresses: LongArray? = null
 ) : Serializable {
-    fun getAvatarPath(): String? {
-        return avatar;
-    }
-
+    fun getAvatarPath(): String? = avatar
 }

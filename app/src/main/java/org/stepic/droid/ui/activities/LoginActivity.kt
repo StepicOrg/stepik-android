@@ -206,7 +206,7 @@ class LoginActivity : SmartLockActivityBase(), LoginView {
         loginErrorMessage.text = getMessageFor(type)
         loginErrorMessage.visibility = View.VISIBLE
 
-        if (type == LoginFailType.emailAlreadyUsed || type == LoginFailType.emailPasswordInvalid) {
+        if (type == LoginFailType.EMAIL_ALREADY_USED || type == LoginFailType.EMAIL_PASSWORD_INVALID) {
             loginForm.isEnabled = false
             loginButton.isEnabled = false
         }

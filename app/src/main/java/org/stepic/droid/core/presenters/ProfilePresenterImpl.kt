@@ -1,6 +1,7 @@
 package org.stepic.droid.core.presenters
 
 import android.support.annotation.WorkerThread
+
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.ProfilePresenter
@@ -110,7 +111,7 @@ class ProfilePresenterImpl
                     shortBio = stringOrEmpty(user.short_bio),
                     information = stringOrEmpty((user.details)),
                     isMyProfile = false,
-                    isPrivate = user.is_private,
+                    isPrivate = user.isPrivate,
                     id = userId)
             this.userViewModel = userViewModelLocal
 

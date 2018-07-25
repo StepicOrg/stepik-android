@@ -166,7 +166,7 @@ public class CombinePrefixPattern {
         });
         List<List<Integer>> consolidatedRanges = new ArrayList<List<Integer>>();
 //        List<Integer> lastRange = Arrays.asList(new Integer[]{0, 0});
-        List<Integer> lastRange = new ArrayList<Integer>(Arrays.asList(new Integer[]{0, 0}));
+        List<Integer> lastRange = new ArrayList<>(Arrays.asList(0, 0));
         for (int i = 0; i < ranges.size(); ++i) {
             List<Integer> range = ranges.get(i);
             if (lastRange.get(1) != null && range.get(0) <= lastRange.get(1) + 1) {

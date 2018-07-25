@@ -74,7 +74,6 @@
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
     <string name="select">Select</string>
-    <string name="failLogin">Login/password was incorrect</string>
     <string name="connectionProblems">Connection was lost</string>
     <string name="are_you_sure">Are you sure?</string>
     <string name="explain_permission">For caching the course and playing the video offline Stepik
@@ -283,7 +282,12 @@
     <string name="add_to_linkedin">Add to LinkedIn</string>
     <string name="empty_certificates">You don\'t have any certificates yet</string>
     <string name="are_you_sure_remove_comment_text">If you go back, your post will be lost</string>
-    <string name="email_already_used">The e-mail is used for another account</string>
+
+    <string name="auth_error_invalid_credentials">Login/password was incorrect</string>
+    <string name="auth_error_email_already_used">The e-mail is used for another account</string>
+    <string name="auth_error_email_not_provided_by_social">Authorization error: email is not provided by social network</string>
+    <string name="auth_error_unknown">Authorization error</string>
+
     <string name="go_to_the_next_lesson">Next lesson</string>
     <string name="cant_show_next_step">Sorry, the next lesson is not available</string>
     <string name="cant_show_previous_step">Sorry, the previous lesson is not available</string>
