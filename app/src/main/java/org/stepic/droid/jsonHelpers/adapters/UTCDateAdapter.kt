@@ -12,6 +12,7 @@ class UTCDateAdapter: JsonSerializer<Date>, JsonDeserializer<Date> {
     companion object {
         private const val UTC_ISO_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
         private const val UTC_ISO_FORMAT_SIMPLE = "yyyy-MM-dd'T'HH:mm:ss"
+        private const val UTC_ISO_FORMAT_SIMPLE_LENGTH = UTC_ISO_FORMAT_SIMPLE.length - 2 // exclude 2 single quotes around T
 
         private fun createDateFormat(pattern: String) = SimpleDateFormat(pattern, Locale.getDefault()).apply {
             timeZone = TimeZone.getTimeZone("UTC")
@@ -26,7 +27,7 @@ class UTCDateAdapter: JsonSerializer<Date>, JsonDeserializer<Date> {
 
 
     override fun deserialize(jsonElement: JsonElement, typeOfT: Type?, context: JsonDeserializationContext?): Date = try {
-        deserializeDateFormat.parse(jsonElement.asString.take(UTC_ISO_FORMAT_SIMPLE.length))
+        deserializeDateFormat.parse(jsonElement.asString.take(UTC_ISO_FORMAT_SIMPLE_LENGTH))
     } catch (e: ParseException) {
         throw JsonParseException(e)
     }
