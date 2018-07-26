@@ -8,7 +8,6 @@ import org.stepik.android.model.util.readDate
 import org.stepik.android.model.util.writeBoolean
 import org.stepik.android.model.util.writeDate
 
-import java.io.Serializable
 import java.util.*
 
 class Lesson(
@@ -57,7 +56,7 @@ class Lesson(
         @SerializedName("time_to_complete")
         val timeToComplete: Long = 0
 
-) : Parcelable, Serializable, Progressable {
+) : Parcelable, Progressable {
 
     override fun describeContents(): Int = 0
 

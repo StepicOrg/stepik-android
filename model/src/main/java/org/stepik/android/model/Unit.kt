@@ -8,7 +8,6 @@ import org.stepik.android.model.util.readDate
 import org.stepik.android.model.util.writeBoolean
 import org.stepik.android.model.util.writeDate
 
-import java.io.Serializable
 import java.util.Date
 
 class Unit(
@@ -52,7 +51,7 @@ class Unit(
 
         @Deprecated("")
         var is_viewed_custom: Boolean = false
-) : Serializable, Parcelable, Progressable {
+) : Parcelable, Progressable {
 
     override fun describeContents(): Int = 0
 
