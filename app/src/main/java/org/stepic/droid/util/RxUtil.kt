@@ -32,6 +32,8 @@ infix fun Completable.then(completable: Completable): Completable = this.andThen
 infix fun <T> Completable.then(observable: Observable<T>): Observable<T> = this.andThen(observable)
 infix fun <T> Completable.then(single: Single<T>): Single<T> = this.andThen(single)
 
+infix fun <T> Observable<T>.merge(observable: Observable<T>): Observable<T> = Observable.merge(this, observable)
+
 class RetryWithDelay(private val retryDelayMillis: Int) : io.reactivex.functions.Function<Flowable<out Throwable>, Flowable<*>> {
 
     override fun apply(attempts: Flowable<out Throwable>): Flowable<*> =

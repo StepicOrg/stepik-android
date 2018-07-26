@@ -1,6 +1,6 @@
 package org.stepic.droid.persistence.model
 
-class PersistentItem(
+data class PersistentItem(
         val originalPath: String,
         val localPath: String,
 

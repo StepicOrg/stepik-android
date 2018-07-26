@@ -1,11 +1,10 @@
 package org.stepic.droid.persistence.model
 
-data class ProgressItem(
-        val id: Long, // id of lesson, section, course etc
-        val state: State,
-        val progress: Float // progress if state == PENDING
+sealed class ProgressItem(
+        open val id: Long // id of lesson, section, course etc
 ) {
-    enum class State {
-        NOT_CACHED, CACHED, PENDING, IN_PROGRESS
-    }
+    class NotCached(override val id: Long): ProgressItem(id)
+    class Cached(override val id: Long): ProgressItem(id)
+    class Pending(override val id: Long): ProgressItem(id)
+    class InProgress(override val id: Long, val progress: Float): ProgressItem(id)
 }
