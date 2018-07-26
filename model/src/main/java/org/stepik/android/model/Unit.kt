@@ -4,9 +4,10 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import org.stepik.android.model.util.readBoolean
+import org.stepik.android.model.util.readDate
 import org.stepik.android.model.util.writeBoolean
+import org.stepik.android.model.util.writeDate
 
-import java.io.Serializable
 import java.util.Date
 
 class Unit(
@@ -50,7 +51,7 @@ class Unit(
 
         @Deprecated("")
         var is_viewed_custom: Boolean = false
-) : Serializable, Parcelable, Progressable {
+) : Parcelable, Progressable {
 
     override fun describeContents(): Int = 0
 
@@ -61,10 +62,10 @@ class Unit(
         dest.writeLongArray(this.assignments)
         dest.writeInt(this.position)
         dest.writeString(this.progress)
-        dest.writeSerializable(this.beginDate)
-        dest.writeSerializable(this.endDate)
-        dest.writeSerializable(this.softDeadline)
-        dest.writeSerializable(this.hardDeadline)
+        dest.writeDate(this.beginDate)
+        dest.writeDate(this.endDate)
+        dest.writeDate(this.softDeadline)
+        dest.writeDate(this.hardDeadline)
         dest.writeString(this.gradingPolicy)
         dest.writeString(this.beginDateSource)
         dest.writeString(this.endDateSource)
@@ -72,8 +73,8 @@ class Unit(
         dest.writeString(this.hardDeadlineSource)
         dest.writeString(this.gradingPolicySource)
         dest.writeBoolean(isActive)
-        dest.writeSerializable(this.createDate)
-        dest.writeSerializable(this.updateDate)
+        dest.writeDate(this.createDate)
+        dest.writeDate(this.updateDate)
         dest.writeBoolean(is_viewed_custom)
     }
 
@@ -85,10 +86,10 @@ class Unit(
                 parcel.createLongArray(),
                 parcel.readInt(),
                 parcel.readString(),
-                parcel.readSerializable() as? Date,
-                parcel.readSerializable() as? Date,
-                parcel.readSerializable() as? Date,
-                parcel.readSerializable() as? Date,
+                parcel.readDate(),
+                parcel.readDate(),
+                parcel.readDate(),
+                parcel.readDate(),
                 parcel.readString(),
                 parcel.readString(),
                 parcel.readString(),
@@ -96,8 +97,8 @@ class Unit(
                 parcel.readString(),
                 parcel.readString(),
                 parcel.readBoolean(),
-                parcel.readSerializable() as? Date,
-                parcel.readSerializable() as? Date,
+                parcel.readDate(),
+                parcel.readDate(),
                 parcel.readBoolean()
         )
 

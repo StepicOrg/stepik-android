@@ -35,7 +35,7 @@ public class DownloadManagerImpl implements IDownloadManager {
         Intent loadIntent = new Intent(App.Companion.getAppContext(), LoadService.class);
 
         loadIntent.putExtra(AppConstants.KEY_LOAD_TYPE, LoadService.LoadTypeKey.Lesson);
-        loadIntent.putExtra(AppConstants.KEY_LESSON_BUNDLE, (Parcelable) lesson);
+        loadIntent.putExtra(AppConstants.KEY_LESSON_BUNDLE, lesson);
 
         App.Companion.getAppContext().startService(loadIntent);
 

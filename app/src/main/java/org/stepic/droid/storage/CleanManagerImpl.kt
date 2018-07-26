@@ -8,7 +8,6 @@ import org.stepik.android.model.Step
 import org.stepic.droid.services.DeleteService
 import org.stepic.droid.services.LoadService
 import org.stepic.droid.util.AppConstants
-import java.io.Serializable
 import javax.inject.Inject
 
 class CleanManagerImpl @Inject constructor(private val context: Context) : CleanManager {
@@ -31,7 +30,7 @@ class CleanManagerImpl @Inject constructor(private val context: Context) : Clean
         val loadIntent = Intent(context, DeleteService::class.java)
 
         loadIntent.putExtra(AppConstants.KEY_LOAD_TYPE, LoadService.LoadTypeKey.Lesson)
-        loadIntent.putExtra(AppConstants.KEY_LESSON_BUNDLE, lesson as Parcelable)
+        loadIntent.putExtra(AppConstants.KEY_LESSON_BUNDLE, lesson)
 
         context.startService(loadIntent)
 
@@ -45,7 +44,7 @@ class CleanManagerImpl @Inject constructor(private val context: Context) : Clean
         val loadIntent = Intent(context, DeleteService::class.java)
 
         loadIntent.putExtra(AppConstants.KEY_LOAD_TYPE, LoadService.LoadTypeKey.Step)
-        loadIntent.putExtra(AppConstants.KEY_STEP_BUNDLE, step as Serializable)
+        loadIntent.putExtra(AppConstants.KEY_STEP_BUNDLE, step)
 
         context.startService(loadIntent)
     }

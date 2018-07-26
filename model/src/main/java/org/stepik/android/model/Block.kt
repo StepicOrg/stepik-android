@@ -5,8 +5,6 @@ import android.os.Parcelable
 
 import org.stepik.android.model.code.CodeOptions
 
-import java.io.Serializable
-
 //more fields look at stepik.org/api/steps/14671
 class Block(
         val name: String? = null,
@@ -16,7 +14,7 @@ class Block(
         var cachedLocalVideo: Video? = null,
 
         val options: CodeOptions? = null
-) : Parcelable, Serializable {
+) : Parcelable {
     override fun describeContents(): Int = 0
 
     override fun writeToParcel(dest: Parcel, flags: Int) {

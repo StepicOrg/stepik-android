@@ -16,4 +16,13 @@ class UTCDateAdapterTest {
         val wrapper = deadlines.toObject<DeadlinesWrapper>(gson)
         assertEquals(gson.toJson(wrapper), deadlines)
     }
+
+    @Test
+    fun dateDeserializationTest() {
+        val dateString = "2018-04-04T09:08:09.000Z"
+        val dateAdapter = UTCDateAdapter()
+
+        val date = dateAdapter.stringToDate(dateString)
+        assertEquals(1522832889000, date?.time)
+    }
 }

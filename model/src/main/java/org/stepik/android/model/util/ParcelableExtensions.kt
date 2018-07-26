@@ -2,6 +2,7 @@ package org.stepik.android.model.util
 
 import android.os.Parcel
 import android.os.Parcelable
+import java.util.*
 
 fun Parcel.writeBoolean(value: Boolean) =
         writeByte(if (value) 1 else 0)
@@ -43,3 +44,12 @@ fun <K : Parcelable, V : Parcelable> Parcel.readMapCustom(classLoaderKey: ClassL
 
 fun <V : Parcelable> Parcel.readMapCustomString(classLoaderValue: ClassLoader): Map<String, V> =
         readMap(Parcel::readString, getParcelableReader(classLoaderValue))
+
+
+internal const val NO_VALUE = -1L
+
+fun Parcel.writeDate(value: Date?) =
+        writeLong(value?.time ?: NO_VALUE)
+
+fun Parcel.readDate(): Date? =
+        readLong().takeIf { it != NO_VALUE }?.let(::Date)

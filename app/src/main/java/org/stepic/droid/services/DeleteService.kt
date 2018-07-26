@@ -57,7 +57,7 @@ class DeleteService : IntentService("delete_service") {
                     removeFromDisk(lesson)
                 }
                 LoadService.LoadTypeKey.Step -> {
-                    val step = intent.getSerializableExtra(AppConstants.KEY_STEP_BUNDLE) as? Step
+                    val step = intent.getParcelableExtra<Step>(AppConstants.KEY_STEP_BUNDLE)
                     removeFromDisk(step)
                 }
             }
