@@ -4,7 +4,9 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import org.stepik.android.model.util.readBoolean
+import org.stepik.android.model.util.readDate
 import org.stepik.android.model.util.writeBoolean
+import org.stepik.android.model.util.writeDate
 
 import java.io.Serializable
 import java.util.*
@@ -77,8 +79,8 @@ class Lesson(
         dest.writeBoolean(isPublic)
         dest.writeString(this.title)
         dest.writeString(this.slug)
-        dest.writeSerializable(this.createDate)
-        dest.writeSerializable(this.updateDate)
+        dest.writeDate(this.createDate)
+        dest.writeDate(this.updateDate)
         dest.writeString(this.learnersGroup)
         dest.writeString(this.teacherGroup)
         dest.writeString(this.coverUrl)
@@ -105,8 +107,8 @@ class Lesson(
                 parcel.readBoolean(),
                 parcel.readString(),
                 parcel.readString(),
-                parcel.readSerializable() as? Date,
-                parcel.readSerializable() as? Date,
+                parcel.readDate(),
+                parcel.readDate(),
                 parcel.readString(),
                 parcel.readString(),
                 parcel.readString(),

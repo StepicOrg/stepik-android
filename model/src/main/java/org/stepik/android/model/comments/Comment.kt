@@ -7,7 +7,9 @@ import com.google.gson.annotations.SerializedName
 import org.stepik.android.model.UserRole
 import org.stepik.android.model.Actions
 import org.stepik.android.model.util.readBoolean
+import org.stepik.android.model.util.readDate
 import org.stepik.android.model.util.writeBoolean
+import org.stepik.android.model.util.writeDate
 import java.util.Date
 
 data class Comment(
@@ -67,7 +69,7 @@ data class Comment(
                 parcel.readValue(Long::class.java.classLoader) as Long?,
                 parcel.readValue(Long::class.java.classLoader) as Long?,
                 UserRole.values().getOrNull(parcel.readInt()),
-                parcel.readSerializable() as? Date,
+                parcel.readDate(),
                 parcel.readString() ?: "",
                 parcel.readValue(Int::class.java.classLoader) as Int?,
                 parcel.readValue(Boolean::class.java.classLoader) as Boolean?,
@@ -98,7 +100,7 @@ data class Comment(
         dest.writeValue(parent)
         dest.writeValue(user)
         dest.writeInt(userRole?.ordinal ?: -1)
-        dest.writeSerializable(time)
+        dest.writeDate(time)
         dest.writeString(text)
         dest.writeValue(replyCount)
         dest.writeValue(isDeleted)
