@@ -4,6 +4,7 @@ import io.reactivex.*
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.BiFunction
+import io.reactivex.rxkotlin.zipWith
 import java.util.concurrent.TimeUnit
 
 
@@ -33,6 +34,7 @@ infix fun <T> Completable.then(observable: Observable<T>): Observable<T> = this.
 infix fun <T> Completable.then(single: Single<T>): Single<T> = this.andThen(single)
 
 infix fun <T> Observable<T>.merge(observable: Observable<T>): Observable<T> = Observable.merge(this, observable)
+infix fun <X, Y> Observable<X>.zip(observable: Observable<Y>): Observable<Pair<X, Y>> = this.zipWith(observable)
 
 class RetryWithDelay(private val retryDelayMillis: Int) : io.reactivex.functions.Function<Flowable<out Throwable>, Flowable<*>> {
 

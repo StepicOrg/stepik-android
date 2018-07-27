@@ -17,6 +17,7 @@ import org.stepic.droid.persistence.storage.PersistentItemDao
 import org.stepic.droid.persistence.storage.structure.DBStructurePersistentItem
 import org.stepic.droid.storage.repositories.Repository
 import org.stepic.droid.util.merge
+import org.stepic.droid.util.zip
 import org.stepik.android.model.Lesson
 import org.stepik.android.model.Section
 import org.stepik.android.model.Unit
@@ -48,35 +49,38 @@ constructor(
     private val observableUpdateTick = Observable.interval(PROGRESS_UPDATE_INTERVAL_MS, TimeUnit.MILLISECONDS).map { kotlin.Unit }.share()
     private val itemsUpdatesSubject = PublishSubject.create<ItemUpdateEvent>()
 
+    private fun getItemUpdateObservable(itemId: Long, itemType: ItemUpdateEvent.Type) =
+            (itemsUpdatesSubject.filter { it.type == itemType && it.id == itemId }.map { kotlin.Unit } merge observableUpdateTick)
+
     override fun getSectionsProgress(vararg sectionsIds: Long): Observable<ProgressItem> =
-            getItemsProgress(sectionsIds, ItemUpdateEvent.Type.SECTION, persistentItemDao::getItemsBySectionId)
+            getItemsProgress(sectionsIds, ItemUpdateEvent.Type.SECTION)
 
     override fun getUnitsProgress(vararg unitsIds: Long): Observable<ProgressItem> =
-            getItemsProgress(unitsIds, ItemUpdateEvent.Type.UNIT, persistentItemDao::getItemsByUnitId)
+            getItemsProgress(unitsIds, ItemUpdateEvent.Type.UNIT)
 
 
-    private inline fun getItemsProgress(
+    private val ItemUpdateEvent.Type.column
+            get() = when(this) {
+                ItemUpdateEvent.Type.UNIT    -> DBStructurePersistentItem.Columns.UNIT
+                ItemUpdateEvent.Type.SECTION -> DBStructurePersistentItem.Columns.SECTION
+            }
+
+
+    private fun getItemsProgress(
             itemsIds: LongArray,
-            itemsType: ItemUpdateEvent.Type,
-            crossinline persistentSelector: (Long) -> Observable<List<PersistentItem>>
-    ) = itemsIds.toObservable().flatMap { getItemProgress(it, itemsType, persistentSelector(it)) }
+            itemsType: ItemUpdateEvent.Type
+    ) = itemsIds.toObservable().flatMap { getItemProgress(it, itemsType, persistentItemDao.getItems(mapOf(itemsType.column to it.toString()))) }
 
     private fun getItemProgress(itemId: Long, itemType: ItemUpdateEvent.Type, persistentObservable: Observable<List<PersistentItem>>) =
-            (itemsUpdatesSubject.filter { it.type == itemType && it.id == itemId }.map { kotlin.Unit } merge observableUpdateTick) // listen for updates
+            getItemUpdateObservable(itemId, itemType) // listen for updates
                     .flatMap { persistentObservable } // fetch from DB
-                    .flatMap { items -> // fetch progresses
-                        val ids = items.filter {
-                            it.status == PersistentItem.Status.PENDING
-                                    || it.status == PersistentItem.Status.FILE_TRANSFER
-                                    || it.status == PersistentItem.Status.COMPLETED
-                        }.map { it.downloadId }.toLongArray()
-
-                        downloadItemDao.get(*ids)
-                    }.map { // count progresses
-                        countItemProgress(itemId, it)
+                    .flatMap { items ->               // fetch progresses
+                        Observable.just(items) zip downloadItemDao.get(*items.map { it.downloadId }.toLongArray())
+                    }.map { (persistentItems, downloadItems) -> // count progresses
+                        countItemProgress(itemId, persistentItems, downloadItems)
                     }.distinctUntilChanged() // exclude repetitive events
 
-    private fun countItemProgress(itemId: Long, downloadItems: List<DownloadItem>): ProgressItem {
+    private fun countItemProgress(itemId: Long, persistentItems: List<PersistentItem>, downloadItems: List<DownloadItem>): ProgressItem {
         var downloaded = 0
         var total = 0
 
@@ -107,9 +111,6 @@ constructor(
     override fun addCacheSectionTask(sectionId: Long): Completable = TODO()
     override fun addCacheUnitTask(unitId: Long): Completable = TODO()
 
-    private fun getDownloadableContentFromStep(step: Step): List<String> =
-            step.block?.video?.urls?.firstOrNull()?.url?.let(::listOf) ?: emptyList()
-
     override fun onDownloadCompleted(downloadId: Long, localPath: String): Completable = Completable.fromCallable {
         val item = persistentItemDao.get(DBStructurePersistentItem.Columns.DOWNLOAD_ID, downloadId.toString())
         if (item != null) {
@@ -118,7 +119,9 @@ constructor(
     }
 
     override fun resolvePath(originalPath: String): Maybe<String> =
-            persistentItemDao.getItemByPath(originalPath).flatMap {
+            persistentItemDao.getItem(mapOf(DBStructurePersistentItem.Columns.ORIGINAL_PATH to originalPath)).filter {
+                it.status == PersistentItem.Status.COMPLETED
+            }.flatMap {
                 if (File(it.localPath).exists()) {
                     Maybe.just(it.localPath)
                 } else {

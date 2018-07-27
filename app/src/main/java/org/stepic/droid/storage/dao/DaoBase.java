@@ -73,7 +73,25 @@ public abstract class DaoBase<T> implements IDao<T> {
                 return null;
             }
         });
+    }
 
+    @Override
+    @Nullable
+    public T get(@NotNull Map<String, String> whereArgs) {
+        final String selector = "SELECT * FROM " + getDbName() + " WHERE ";
+        final String where = CollectionsKt.joinToString(whereArgs.keySet(), " = ? AND ", "", "", -1, "" , null) + " = ?";
+        final String query = selector + where + " LIMIT 1";
+
+        return databaseOperations.executeQuery(query, whereArgs.values().toArray(new String[]{}), new ResultHandler<T>() {
+            @Override
+            public T handle(Cursor cursor) throws SQLException {
+                if (cursor.moveToNext()) {
+                    return parsePersistentObject(cursor);
+                } else {
+                    return null;
+                }
+            }
+        });
     }
 
     @Override

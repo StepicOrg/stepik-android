@@ -20,6 +20,7 @@ interface IDao<T> {
     fun getAll(whereArgs: Map<String, String>): List<T>
 
     fun get(whereColumnName: String, whereValue: String): T?
+    fun get(whereArgs: Map<String, String>): T?
 
     fun update(whereColumn: String, whereValue: String, contentValues: ContentValues)
 

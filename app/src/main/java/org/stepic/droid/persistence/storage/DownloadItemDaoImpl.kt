@@ -12,16 +12,20 @@ class DownloadItemDaoImpl
 constructor(
         private val downloadManager: DownloadManager
 ): DownloadItemDao {
-    override fun get(vararg ids: Long): Observable<List<DownloadItem>> = Observable.create<DownloadItem> { emitter ->
-        downloadManager.query(DownloadManager.Query().setFilterById(*ids)).use { cursor ->
-            while (cursor.moveToNext()) {
-                val id = cursor.getLong(cursor.getColumnIndex(DownloadManager.COLUMN_ID))
-                val bytesTotal = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES))
-                val bytesDownloaded = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR))
+    override fun get(vararg ids: Long): Observable<List<DownloadItem>> = if (ids.isEmpty()) {
+        Observable.just(emptyList())
+    } else {
+        Observable.create<DownloadItem> { emitter ->
+            downloadManager.query(DownloadManager.Query().setFilterById(*ids)).use { cursor ->
+                while (cursor.moveToNext()) {
+                    val id = cursor.getLong(cursor.getColumnIndex(DownloadManager.COLUMN_ID))
+                    val bytesTotal = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES))
+                    val bytesDownloaded = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR))
 
-                emitter.onNext(DownloadItem(id, bytesDownloaded, bytesTotal))
+                    emitter.onNext(DownloadItem(id, bytesDownloaded, bytesTotal))
+                }
             }
-        }
-        emitter.onComplete()
-    }.toList().toObservable()
+            emitter.onComplete()
+        }.toList().toObservable()
+    }
 }
