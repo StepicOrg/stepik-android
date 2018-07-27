@@ -12,7 +12,7 @@ interface IDao<T> {
 
     fun isInDb(whereColumn: String, value: String): Boolean
 
-    fun getAll(): List<T?>
+    fun getAll(): List<T>
 
 //    fun insertOrUpdateAll(listOfPersistentObjects: List<T?>) //todo: Make insert ALL with supporting of inner fragments
 

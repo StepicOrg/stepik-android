@@ -1,4 +1,4 @@
-package org.stepic.droid.persistence.storage
+package org.stepic.droid.persistence.storage.dao
 
 import android.content.ContentValues
 import android.database.Cursor
@@ -50,7 +50,7 @@ constructor(
     )
 
     override fun getItems(selector: Map<String, String>): Observable<List<PersistentItem>> =
-            Observable.fromCallable { getAll(selector) }
+            Observable.fromCallable { if (selector.isEmpty()) getAll() else getAll(selector) }
 
     override fun getItem(selector: Map<String, String>): Maybe<PersistentItem> = Maybe.create { emitter ->
         get(selector)?.let(emitter::onSuccess) ?: emitter.onComplete()

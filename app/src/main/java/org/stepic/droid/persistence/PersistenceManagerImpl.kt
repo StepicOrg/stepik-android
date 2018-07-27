@@ -12,8 +12,8 @@ import org.stepic.droid.persistence.model.DownloadItem
 import org.stepic.droid.persistence.model.ItemUpdateEvent
 import org.stepic.droid.persistence.model.PersistentItem
 import org.stepic.droid.persistence.model.ProgressItem
-import org.stepic.droid.persistence.storage.DownloadItemDao
-import org.stepic.droid.persistence.storage.PersistentItemDao
+import org.stepic.droid.persistence.storage.dao.DownloadItemDao
+import org.stepic.droid.persistence.storage.dao.PersistentItemDao
 import org.stepic.droid.persistence.storage.structure.DBStructurePersistentItem
 import org.stepic.droid.storage.repositories.Repository
 import org.stepic.droid.util.merge
@@ -74,7 +74,7 @@ constructor(
     private fun getItemProgress(itemId: Long, itemType: ItemUpdateEvent.Type, persistentObservable: Observable<List<PersistentItem>>) =
             getItemUpdateObservable(itemId, itemType) // listen for updates
                     .flatMap { persistentObservable } // fetch from DB
-                    .flatMap { items ->               // fetch progresses
+                    .flatMap { items ->               // fetch progresses from system Download Manager
                         Observable.just(items) zip downloadItemDao.get(*items.map { it.downloadId }.toLongArray())
                     }.map { (persistentItems, downloadItems) -> // count progresses
                         countItemProgress(itemId, persistentItems, downloadItems)

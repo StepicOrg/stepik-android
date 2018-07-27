@@ -1,4 +1,4 @@
-package org.stepic.droid.persistence.storage
+package org.stepic.droid.persistence.storage.dao
 
 import android.app.DownloadManager
 import io.reactivex.Observable
