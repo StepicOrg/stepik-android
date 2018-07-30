@@ -18,3 +18,8 @@ data class PersistentItem(
         DOWNLOAD_ERROR, TRANSFER_ERROR
     }
 }
+
+val PersistentItem.Status.isCorrect: Boolean
+        get() = this == PersistentItem.Status.PENDING ||
+                this == PersistentItem.Status.FILE_TRANSFER ||
+                this == PersistentItem.Status.COMPLETED
