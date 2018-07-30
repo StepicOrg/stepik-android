@@ -14,12 +14,12 @@ data class PersistentItem(
         val step: Long
 ) {
     enum class Status {
-        PENDING, FILE_TRANSFER, COMPLETED, CANCELLED,
+        IN_PROGRESS, FILE_TRANSFER, COMPLETED, CANCELLED,
         DOWNLOAD_ERROR, TRANSFER_ERROR
     }
 }
 
 val PersistentItem.Status.isCorrect: Boolean
-        get() = this == PersistentItem.Status.PENDING ||
+        get() = this == PersistentItem.Status.IN_PROGRESS ||
                 this == PersistentItem.Status.FILE_TRANSFER ||
                 this == PersistentItem.Status.COMPLETED

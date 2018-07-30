@@ -3,8 +3,14 @@ package org.stepic.droid.persistence.repository
 import org.stepic.droid.persistence.model.SystemDownload
 import org.stepic.droid.persistence.model.PersistentItem
 import org.stepic.droid.persistence.model.DownloadProgress
-import org.stepic.droid.persistence.model.isCorrect
 
+/**
+ * Download progress priority:
+ * in progress - if any is in progress
+ * pending - if all is pending
+ * not_cached - if any not completed
+ * cached - if all is completed
+ */
 internal fun countItemProgress(persistentItems: List<PersistentItem>, systemDownloadItems: List<SystemDownload>): DownloadProgress.Status {
     var downloaded = 0
     var total = 0
@@ -16,7 +22,7 @@ internal fun countItemProgress(persistentItems: List<PersistentItem>, systemDown
         }
     }
 
-    val downloadNotCompleteSuccessful = persistentItems.any { !it.status.isCorrect }
+    val notAllDownloadsCompleted = persistentItems.any { it.status != PersistentItem.Status.COMPLETED }
 
     return when {
         total == 0 ->
@@ -27,7 +33,7 @@ internal fun countItemProgress(persistentItems: List<PersistentItem>, systemDown
             }
 
         downloaded == total ->
-            if (downloadNotCompleteSuccessful) {
+            if (notAllDownloadsCompleted) {
                 DownloadProgress.Status.NotCached
             } else {
                 DownloadProgress.Status.Cached
