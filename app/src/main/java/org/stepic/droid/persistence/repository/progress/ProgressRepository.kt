@@ -1,4 +1,4 @@
-package org.stepic.droid.persistence.repository
+package org.stepic.droid.persistence.repository.progress
 
 import io.reactivex.Observable
 import org.stepic.droid.persistence.model.DownloadProgress
