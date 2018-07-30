@@ -13,18 +13,17 @@ import javax.inject.Inject
 class DownloadsRepositoryImpl
 @Inject
 constructor(
-        updatesObservable: Observable<PersistentItem>,
-        intervalProgressUpdates: Observable<kotlin.Unit>,
+        private val updatesObservable: Observable<PersistentItem>,
+        private val intervalUpdatesObservable: Observable<kotlin.Unit>,
 
         private val systemDownloadsDao: SystemDownloadsDao,
         private val persistentItemDao: PersistentItemDao
 ): DownloadsRepository {
-    private val updatesObservable = updatesObservable.map { kotlin.Unit } merge intervalProgressUpdates
-
-    override fun getDownloadsObservable(): Observable<DownloadItem> =
-            updatesObservable
-                    .flatMap { getAllPersistentItems() }
-                    .flatMap(this::fetchProgressesForCorrectItems)
+    override fun getDownloads(): Observable<DownloadItem> =
+            intervalUpdatesObservable
+                    .flatMap { getAllPersistentItems() }    // get all downloads with interval
+                    .merge(updatesObservable.map(::listOf)) // get some instant updates on item changes
+                    .flatMap(::fetchProgressesForCorrectItems)
 
     private fun getAllPersistentItems() =
             persistentItemDao.getItems(emptyMap())

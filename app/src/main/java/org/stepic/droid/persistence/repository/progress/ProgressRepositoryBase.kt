@@ -18,6 +18,11 @@ abstract class ProgressRepositoryBase(
         private val systemDownloadsDao: SystemDownloadsDao,
         private val persistentItemDao: PersistentItemDao
 ): ProgressRepository {
+    private companion object {
+        private fun List<PersistentItem>.getDownloadIdsOfCorrectItems() =
+                this.filter { it.status.isCorrect }.map{ it.downloadId }.toLongArray()
+    }
+
     override fun getProgress(vararg ids: Long): Observable<DownloadProgress> =
             ids.toObservable().flatMap(::getItemProgress)
 
@@ -33,10 +38,10 @@ abstract class ProgressRepositoryBase(
             persistentItemDao.getItems(mapOf(persistentItemKeyFieldColumn to itemId.toString()))
 
     private fun fetchSystemDownloads(items: List<PersistentItem>) =
-            Observable.just(items) zip systemDownloadsDao.get(*items.filter { it.status.isCorrect }.map { it.downloadId }.toLongArray())
+            Observable.just(items) zip systemDownloadsDao.get(*items.getDownloadIdsOfCorrectItems())
 
     private fun getItemUpdateObservable(itemId: Long) =
-            updatesObservable.filter { it.keyFieldValue == itemId }.map { kotlin.Unit } merge intervalUpdatesObservable
+            updatesObservable.filter { it.keyFieldValue == itemId }.map { kotlin.Unit } merge intervalUpdatesObservable // ?? debounce
 
     protected abstract val PersistentItem.keyFieldValue: Long
     protected abstract val persistentItemKeyFieldColumn: String
