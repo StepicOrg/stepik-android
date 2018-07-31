@@ -19,6 +19,8 @@ import org.stepic.droid.jsonHelpers.adapters.UTCDateAdapter
 import org.stepic.droid.model.*
 import org.stepic.droid.model.code.CodeSubmission
 import org.stepic.droid.notifications.model.Notification
+import org.stepic.droid.persistence.storage.dao.PersistentItemDao
+import org.stepic.droid.persistence.storage.dao.PersistentItemDaoImpl
 import org.stepic.droid.storage.DatabaseHelper
 import org.stepic.droid.storage.dao.*
 import org.stepic.droid.storage.operations.*
@@ -132,6 +134,10 @@ abstract class StorageModule {
     @StorageSingleton
     @Binds
     internal abstract fun provideDeadlinesBannerDao(deadlinesBannerDaoImpl: DeadlinesBannerDaoImpl): DeadlinesBannerDao
+
+    @StorageSingleton
+    @Binds
+    internal abstract fun providePersistentItemDao(persistentItemDaoImpl: PersistentItemDaoImpl): PersistentItemDao
 
     @Module
     companion object {
