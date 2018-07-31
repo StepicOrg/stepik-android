@@ -4,6 +4,7 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.toObservable
 import org.stepic.droid.persistence.di.PersistenceScope
 import org.stepic.droid.persistence.model.*
+import org.stepic.droid.persistence.repository.progress.countItemProgress
 import org.stepic.droid.persistence.storage.dao.SystemDownloadsDao
 import org.stepic.droid.persistence.storage.dao.PersistentItemDao
 import org.stepic.droid.util.merge

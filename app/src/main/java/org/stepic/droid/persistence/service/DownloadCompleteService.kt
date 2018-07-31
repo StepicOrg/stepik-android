@@ -19,7 +19,7 @@ import java.io.File
 import java.io.IOException
 import javax.inject.Inject
 
-class DownloadUpdatesService: IntentService("download_updates_service") {
+class DownloadCompleteService: IntentService("download_updates_service") {
     @Inject
     lateinit var systemDownloadsDao: SystemDownloadsDao
 

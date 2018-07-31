@@ -5,7 +5,6 @@ import io.reactivex.rxkotlin.toObservable
 import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepic.droid.persistence.model.PersistentItem
 import org.stepic.droid.persistence.model.isCorrect
-import org.stepic.droid.persistence.repository.countItemProgress
 import org.stepic.droid.persistence.storage.dao.PersistentItemDao
 import org.stepic.droid.persistence.storage.dao.SystemDownloadsDao
 import org.stepic.droid.util.merge

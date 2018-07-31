@@ -1,7 +1,7 @@
 package org.stepic.droid.persistence.di
 
 import dagger.Subcomponent
-import org.stepic.droid.persistence.service.DownloadUpdatesService
+import org.stepic.droid.persistence.service.DownloadCompleteService
 
 @PersistenceScope
 @Subcomponent(modules = [PersistenceModule::class])
@@ -11,5 +11,5 @@ interface PersistenceComponent {
         fun build(): PersistenceComponent
     }
 
-    fun inject(updatesService: DownloadUpdatesService)
+    fun inject(downloadCompleteService: DownloadCompleteService)
 }

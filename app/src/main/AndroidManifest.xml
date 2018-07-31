@@ -439,7 +439,7 @@
             </intent-filter>
         </service>
 
-        <service android:name=".persistence.service.DownloadUpdatesService" />
+        <service android:name=".persistence.service.DownloadCompleteService" />
         <receiver
             android:name=".persistence.service.DownloadCompleteReceiver"
             android:exported="true">
