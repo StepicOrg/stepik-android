@@ -10,6 +10,7 @@ import org.stepic.droid.persistence.storage.structure.DBStructurePersistentItem
 import org.stepic.droid.storage.dao.DaoBase
 import org.stepic.droid.storage.dao.IDao
 import org.stepic.droid.storage.operations.DatabaseOperations
+import org.stepic.droid.util.getBoolean
 import javax.inject.Inject
 
 @StorageSingleton
@@ -25,7 +26,10 @@ constructor(
 
     override fun getContentValues(persistentObject: PersistentItem) = ContentValues().apply {
         put(DBStructurePersistentItem.Columns.ORIGINAL_PATH, persistentObject.originalPath)
-        put(DBStructurePersistentItem.Columns.LOCAL_PATH, persistentObject.localPath)
+        put(DBStructurePersistentItem.Columns.LOCAL_FILE_NAME, persistentObject.localFileName)
+        put(DBStructurePersistentItem.Columns.LOCAL_FILE_DIR, persistentObject.localFileDir)
+        put(DBStructurePersistentItem.Columns.IS_IN_APP_INTERNAL_DIR, if (persistentObject.isInAppInternalDir) 1 else 0)
+
         put(DBStructurePersistentItem.Columns.DOWNLOAD_ID, persistentObject.downloadId)
         put(DBStructurePersistentItem.Columns.STATUS, persistentObject.status.name)
 
@@ -37,8 +41,11 @@ constructor(
     }
 
     override fun parsePersistentObject(cursor: Cursor) = PersistentItem(
-            originalPath = cursor.getString(cursor.getColumnIndex(DBStructurePersistentItem.Columns.ORIGINAL_PATH)),
-            localPath    = cursor.getString(cursor.getColumnIndex(DBStructurePersistentItem.Columns.LOCAL_PATH)),
+            originalPath  = cursor.getString(cursor.getColumnIndex(DBStructurePersistentItem.Columns.ORIGINAL_PATH)),
+            localFileName = cursor.getString(cursor.getColumnIndex(DBStructurePersistentItem.Columns.LOCAL_FILE_NAME)),
+            localFileDir  = cursor.getString(cursor.getColumnIndex(DBStructurePersistentItem.Columns.LOCAL_FILE_DIR)),
+            isInAppInternalDir = cursor.getBoolean(DBStructurePersistentItem.Columns.IS_IN_APP_INTERNAL_DIR),
+
             downloadId   = cursor.getLong(cursor.getColumnIndex(DBStructurePersistentItem.Columns.DOWNLOAD_ID)),
             status       = PersistentItem.Status.valueOf(cursor.getString(cursor.getColumnIndex(DBStructurePersistentItem.Columns.STATUS))),
 
