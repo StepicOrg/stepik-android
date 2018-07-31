@@ -6,5 +6,5 @@ import org.stepic.droid.persistence.model.DownloadTask
 
 interface DownloadTaskManager {
     fun addTask(task: DownloadTask, configuration: DownloadConfiguration): Completable
-    fun removeTask(task: DownloadTask): Completable
+    fun removeTask(downloadId: Long): Completable
 }
