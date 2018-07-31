@@ -1,9 +1,10 @@
 package org.stepic.droid.persistence.downloads.adapters
 
-import io.reactivex.Completable
+import io.reactivex.Observable
 import org.stepic.droid.persistence.model.DownloadConfiguration
+import org.stepic.droid.persistence.model.DownloadTask
 
-interface DownloadTaskAdapter {
-    fun createTask(vararg ids: Long, configuration: DownloadConfiguration): Completable
-    fun removeTask(id: Long): Completable
+interface DownloadTaskAdapter<T> {
+    fun convertToTask(vararg ids: Long, configuration: DownloadConfiguration): Observable<DownloadTask>
+    fun convertToTask(vararg items: T, configuration: DownloadConfiguration): Observable<DownloadTask>
 }
