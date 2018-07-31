@@ -1,4 +1,4 @@
-package org.stepic.droid.persistence
+package org.stepic.droid.persistence.downloads
 
 import io.reactivex.Completable
 import org.stepic.droid.persistence.model.DownloadConfiguration

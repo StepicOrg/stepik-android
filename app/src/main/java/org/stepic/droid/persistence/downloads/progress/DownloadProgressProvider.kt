@@ -1,8 +1,8 @@
-package org.stepic.droid.persistence.repository.progress
+package org.stepic.droid.persistence.downloads.progress
 
 import io.reactivex.Observable
 import org.stepic.droid.persistence.model.DownloadProgress
 
-interface ProgressRepository {
+interface DownloadProgressProvider {
     fun getProgress(vararg ids: Long): Observable<DownloadProgress>
 }

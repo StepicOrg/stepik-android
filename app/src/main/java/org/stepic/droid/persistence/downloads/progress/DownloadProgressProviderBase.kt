@@ -1,4 +1,4 @@
-package org.stepic.droid.persistence.repository.progress
+package org.stepic.droid.persistence.downloads.progress
 
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.toObservable
@@ -10,13 +10,13 @@ import org.stepic.droid.persistence.storage.dao.SystemDownloadsDao
 import org.stepic.droid.util.merge
 import org.stepic.droid.util.zip
 
-abstract class ProgressRepositoryBase(
+abstract class DownloadProgressProviderBase(
         private val updatesObservable: Observable<PersistentItem>,
         private val intervalUpdatesObservable: Observable<kotlin.Unit>,
 
         private val systemDownloadsDao: SystemDownloadsDao,
         private val persistentItemDao: PersistentItemDao
-): ProgressRepository {
+): DownloadProgressProvider {
     private companion object {
         private fun List<PersistentItem>.getDownloadIdsOfCorrectItems() =
                 this.filter { it.status.isCorrect }.map{ it.downloadId }.toLongArray()

@@ -1,4 +1,4 @@
-package org.stepic.droid.persistence.repository.progress
+package org.stepic.droid.persistence.downloads.progress
 
 import org.stepic.droid.persistence.model.SystemDownloadRecord
 import org.stepic.droid.persistence.model.PersistentItem
