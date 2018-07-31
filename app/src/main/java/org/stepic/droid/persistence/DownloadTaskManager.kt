@@ -4,7 +4,7 @@ import io.reactivex.Completable
 import org.stepic.droid.persistence.model.DownloadConfiguration
 import org.stepic.droid.persistence.model.PersistentItem
 
-interface DonwloadTaskManager {
+interface DownloadTaskManager {
     fun addTask(persistentItem: PersistentItem, configuration: DownloadConfiguration): Completable
 
     fun updateTask(persistentItem: PersistentItem): Completable

@@ -515,6 +515,15 @@ public interface Analytic {
         String PERSONAL_DEADLINE_NOTIFICATION_OPENED = "personal_deadline_notification_opened";
     }
 
+    interface DownloaderV2 {
+        String RECEIVE_BAD_DOWNLOAD_STATUS = "downloader_v2_bad_download_status";
+
+        interface Params {
+            String DOWNLOAD_STATUS = "status";
+        }
+
+    }
+
     void reportEvent(String eventName, Bundle bundle);
 
     void reportEvent(String eventName, String id);

@@ -439,6 +439,15 @@
             </intent-filter>
         </service>
 
+        <service android:name=".persistence.service.DownloadUpdatesService" />
+        <receiver
+            android:name=".persistence.service.DownloadCompleteReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
+            </intent-filter>
+        </receiver>
+
         <provider
             android:name=".util.GenericFileProvider"
             android:authorities="${applicationId}.my.package.name.provider"

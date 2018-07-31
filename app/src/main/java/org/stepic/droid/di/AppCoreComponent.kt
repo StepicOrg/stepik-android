@@ -35,6 +35,7 @@ import org.stepik.android.model.Course
 import org.stepic.droid.notifications.HackFcmListener
 import org.stepic.droid.notifications.HackerFcmInstanceId
 import org.stepic.droid.notifications.NotificationBroadcastReceiver
+import org.stepic.droid.persistence.di.PersistenceComponent
 import org.stepic.droid.receivers.BootCompletedReceiver
 import org.stepic.droid.receivers.DownloadClickReceiver
 import org.stepic.droid.receivers.InternetConnectionEnabledReceiver
@@ -75,6 +76,8 @@ interface AppCoreComponent {
     fun feedbackComponentBuilder(): FeedbackComponent.Builder
 
     fun downloadsComponentBuilder(): DownloadsComponent.Builder
+
+    fun persistenceComponentBuilder(): PersistenceComponent.Builder
 
     fun loginComponentBuilder(): LoginComponent.Builder
 

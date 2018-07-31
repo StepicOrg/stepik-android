@@ -1,6 +1,6 @@
 package org.stepic.droid.persistence.repository
 
-import org.stepic.droid.persistence.model.SystemDownload
+import org.stepic.droid.persistence.model.SystemDownloadRecord
 import org.stepic.droid.persistence.model.PersistentItem
 import org.stepic.droid.persistence.model.DownloadProgress
 
@@ -11,11 +11,11 @@ import org.stepic.droid.persistence.model.DownloadProgress
  * not_cached - if any not completed
  * cached - if all is completed
  */
-internal fun countItemProgress(persistentItems: List<PersistentItem>, systemDownloadItems: List<SystemDownload>): DownloadProgress.Status {
+internal fun countItemProgress(persistentItems: List<PersistentItem>, downloadRecords: List<SystemDownloadRecord>): DownloadProgress.Status {
     var downloaded = 0
     var total = 0
 
-    systemDownloadItems.forEach { item ->
+    downloadRecords.forEach { item ->
         if (item.bytesTotal > 0) {
             downloaded += item.bytesDownloaded
             total += item.bytesTotal
@@ -26,7 +26,7 @@ internal fun countItemProgress(persistentItems: List<PersistentItem>, systemDown
 
     return when {
         total == 0 ->
-            if (systemDownloadItems.isEmpty()) {
+            if (downloadRecords.isEmpty()) {
                 DownloadProgress.Status.NotCached
             } else {
                 DownloadProgress.Status.Pending

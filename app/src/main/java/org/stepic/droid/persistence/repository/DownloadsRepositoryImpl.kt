@@ -2,14 +2,14 @@ package org.stepic.droid.persistence.repository
 
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.toObservable
-import org.stepic.droid.di.AppSingleton
+import org.stepic.droid.persistence.di.PersistenceScope
 import org.stepic.droid.persistence.model.*
 import org.stepic.droid.persistence.storage.dao.SystemDownloadsDao
 import org.stepic.droid.persistence.storage.dao.PersistentItemDao
 import org.stepic.droid.util.merge
 import javax.inject.Inject
 
-@AppSingleton
+@PersistenceScope
 class DownloadsRepositoryImpl
 @Inject
 constructor(
@@ -37,7 +37,7 @@ constructor(
         }
     }
 
-    private fun countProgressForPersistentItems(persistentItems: List<PersistentItem>, systemDownloadItems: List<SystemDownload>) =
+    private fun countProgressForPersistentItems(persistentItems: List<PersistentItem>, systemDownloadItems: List<SystemDownloadRecord>) =
             persistentItems.mapNotNull { persistentItem ->
                 val downloadItem = systemDownloadItems.find { persistentItem.downloadId == it.id } ?: return@mapNotNull null
                 val progressItem = DownloadProgress(downloadItem.id, countItemProgress(emptyList(), listOf(downloadItem)))

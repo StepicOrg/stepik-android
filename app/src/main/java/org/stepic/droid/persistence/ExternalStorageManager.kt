@@ -4,12 +4,13 @@ import android.content.Context
 import android.os.Environment
 import android.support.v4.content.ContextCompat
 import org.stepic.droid.di.AppSingleton
+import org.stepic.droid.persistence.di.PersistenceScope
 import org.stepic.droid.persistence.model.StorageLocation
 import org.stepic.droid.preferences.UserPreferences
 import java.io.File
 import javax.inject.Inject
 
-@AppSingleton
+@PersistenceScope
 class ExternalStorageManager
 @Inject
 constructor(
@@ -31,6 +32,11 @@ constructor(
 
         if (locations.isEmpty()) throw ExternalStorageNotAvailable()
         return locations.toList()
+    }
+
+    @Throws(ExternalStorageNotAvailable::class)
+    fun getSelectedStorageLocation(): StorageLocation {
+        return TODO()
     }
 
     private fun resolveDownloadsFilesDir(): File? = context.filesDir?.let {
