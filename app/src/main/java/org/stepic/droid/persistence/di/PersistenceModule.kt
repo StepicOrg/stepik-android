@@ -7,10 +7,16 @@ import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.persistence.model.PersistentItem
+import org.stepic.droid.persistence.repository.DownloadsRepository
+import org.stepic.droid.persistence.repository.DownloadsRepositoryImpl
 import org.stepic.droid.persistence.storage.dao.SystemDownloadsDao
 import org.stepic.droid.persistence.storage.dao.SystemDownloadsDaoImpl
 
-@Module
+@Module(includes = [
+    DownloadInteractorsModule::class,
+    DownloadTaskAdapterModule::class,
+    ProgressProvidersModule::class
+])
 abstract class PersistenceModule {
 
     @Binds
@@ -24,6 +30,9 @@ abstract class PersistenceModule {
     @Binds
     @PersistenceScope
     abstract fun bindSystemDonwloadsDao(systemDownloadsDaoImpl: SystemDownloadsDaoImpl): SystemDownloadsDao
+
+    @Binds
+    abstract fun bindDownloadsRepository(downloadsRepositoryImpl: DownloadsRepositoryImpl): DownloadsRepository
 
     @Module
     companion object {
