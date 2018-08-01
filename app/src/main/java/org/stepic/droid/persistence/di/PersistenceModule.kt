@@ -6,6 +6,8 @@ import dagger.Provides
 import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.subjects.PublishSubject
+import org.stepic.droid.persistence.files.ExternalStorageManager
+import org.stepic.droid.persistence.files.ExternalStorageManagerImpl
 import org.stepic.droid.persistence.model.PersistentItem
 import org.stepic.droid.persistence.repository.DownloadsRepository
 import org.stepic.droid.persistence.repository.DownloadsRepositoryImpl
@@ -32,7 +34,12 @@ abstract class PersistenceModule {
     abstract fun bindSystemDonwloadsDao(systemDownloadsDaoImpl: SystemDownloadsDaoImpl): SystemDownloadsDao
 
     @Binds
+    @PersistenceScope
     abstract fun bindDownloadsRepository(downloadsRepositoryImpl: DownloadsRepositoryImpl): DownloadsRepository
+
+    @Binds
+    @PersistenceScope
+    abstract fun bindExternalStorageManager(externalStorageManagerImpl: ExternalStorageManagerImpl): ExternalStorageManager
 
     @Module
     companion object {

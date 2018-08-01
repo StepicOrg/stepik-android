@@ -1,24 +1,24 @@
-package org.stepic.droid.persistence
+package org.stepic.droid.persistence.files
 
 import android.content.Context
 import android.os.Environment
 import android.support.v4.content.ContextCompat
-import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.persistence.di.PersistenceScope
+import org.stepic.droid.persistence.model.PersistentItem
 import org.stepic.droid.persistence.model.StorageLocation
 import org.stepic.droid.preferences.UserPreferences
 import java.io.File
 import javax.inject.Inject
 
 @PersistenceScope
-class ExternalStorageManager
+class ExternalStorageManagerImpl
 @Inject
 constructor(
         private val context: Context,
         private val userPreferences: UserPreferences
-) {
+): ExternalStorageManager {
     @Throws(ExternalStorageNotAvailable::class)
-    fun getAvailableStorageLocations(): List<StorageLocation> {
+    override fun getAvailableStorageLocations(): List<StorageLocation> {
         val locations = mutableSetOf<StorageLocation>()
 
         context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
@@ -35,7 +35,7 @@ constructor(
     }
 
     @Throws(ExternalStorageNotAvailable::class)
-    fun getSelectedStorageLocation(): StorageLocation {
+    override fun getSelectedStorageLocation(): StorageLocation {
         return TODO()
     }
 
@@ -49,6 +49,20 @@ constructor(
         }
         return@let it
     }
+
+    override fun resolvePathForPersistentItem(item: PersistentItem): String? {
+        if (item.status != PersistentItem.Status.COMPLETED) return null
+
+        val file = if (item.isInAppInternalDir) {
+            resolveDownloadsFilesDir()?.absolutePath?.let { File(it, item.localFileName) }
+        } else {
+            File(item.localFileDir, item.localFileName)
+        }
+
+        return file?.takeIf(File::exists)?.canonicalPath
+    }
+
+
 
     class ExternalStorageNotAvailable: IllegalStateException("External storage not available")
 }

@@ -8,7 +8,7 @@ import android.os.Bundle
 import io.reactivex.Observer
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
-import org.stepic.droid.persistence.ExternalStorageManager
+import org.stepic.droid.persistence.files.ExternalStorageManager
 import org.stepic.droid.persistence.model.PersistentItem
 import org.stepic.droid.persistence.model.StorageLocation
 import org.stepic.droid.persistence.model.SystemDownloadRecord
