@@ -3,8 +3,7 @@ package org.stepik.android.model
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import org.stepik.android.model.util.readBoolean
-import org.stepik.android.model.util.writeBoolean
+import org.stepik.android.model.util.*
 
 import java.util.Date
 
@@ -48,41 +47,49 @@ data class Step(
         dest.writeLong(this.id)
         dest.writeLong(this.lesson)
         dest.writeLong(this.position)
-        dest.writeInt(this.discussionsCount)
-        dest.writeString(this.discussionProxy)
         dest.writeInt(this.status?.ordinal ?: -1)
         dest.writeParcelable(this.block, 0)
         dest.writeString(this.progress)
-        dest.writeList(this.subscriptions)
+        dest.writeStringList(this.subscriptions)
+
         dest.writeLong(this.viewedBy)
         dest.writeLong(this.passedBy)
-        dest.writeSerializable(this.createDate)
-        dest.writeSerializable(this.updateDate)
+
+        dest.writeDate(this.createDate)
+        dest.writeDate(this.updateDate)
+
         dest.writeBoolean(isCached)
         dest.writeBoolean(isLoading)
         dest.writeBoolean(isCustomPassed)
         dest.writeParcelable(this.actions, flags)
+
+        dest.writeInt(this.discussionsCount)
+        dest.writeString(this.discussionProxy)
     }
 
     companion object CREATOR : Parcelable.Creator<Step> {
-        override fun createFromParcel(parcel: Parcel): Step? = Step(
-                id = parcel.readLong(),
-                lesson = parcel.readLong(),
-                position = parcel.readLong(),
-                discussionsCount = parcel.readInt(),
-                discussionProxy = parcel.readString(),
-                status = Status.values().getOrNull(parcel.readInt()),
-                block = parcel.readParcelable(Block::class.java.classLoader),
-                progress = parcel.readString(),
-                subscriptions = parcel.createStringArrayList(),
-                viewedBy = parcel.readLong(),
-                passedBy = parcel.readLong(),
-                createDate = parcel.readSerializable() as? Date,
-                updateDate = parcel.readSerializable() as? Date,
-                isCached = parcel.readBoolean(),
-                isLoading = parcel.readBoolean(),
-                isCustomPassed = parcel.readBoolean(),
-                actions = parcel.readParcelable(Actions::class.java.classLoader)
+        override fun createFromParcel(parcel: Parcel): Step = Step(
+                parcel.readLong(),
+                parcel.readLong(),
+                parcel.readLong(),
+                Status.values().getOrNull(parcel.readInt()),
+                parcel.readParcelable(Block::class.java.classLoader),
+                parcel.readString(),
+                parcel.createStringArrayList(),
+
+                parcel.readLong(),
+                parcel.readLong(),
+
+                parcel.readDate(),
+                parcel.readDate(),
+
+                parcel.readBoolean(),
+                parcel.readBoolean(),
+                parcel.readBoolean(),
+                parcel.readParcelable(Actions::class.java.classLoader),
+
+                parcel.readInt(),
+                parcel.readString()
         )
 
         override fun newArray(size: Int): Array<out Step?> = arrayOfNulls(size)

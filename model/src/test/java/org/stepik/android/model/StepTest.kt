@@ -15,8 +15,14 @@ class StepTest {
     }
 
     @Test
-    fun stepWithDateParcelable() {
-        val step = Step(id = 0, status = Step.Status.READY, updateDate = Date(), createDate = Date())
+    fun stepWithDateIsParcelable() {
+        val step = Step(id = 0, status = Step.Status.READY, createDate = Date())
+        step.assertThatObjectParcelable<Step>()
+    }
+
+    @Test
+    fun stepWithSubscriptionsIsParcelable() {
+        val step = Step(id = 0, status = Step.Status.READY, createDate = Date(), subscriptions = listOf("a", "b"))
         step.assertThatObjectParcelable<Step>()
     }
 }

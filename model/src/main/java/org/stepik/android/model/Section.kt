@@ -4,7 +4,9 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import org.stepik.android.model.util.readBoolean
+import org.stepik.android.model.util.readDate
 import org.stepik.android.model.util.writeBoolean
+import org.stepik.android.model.util.writeDate
 
 import java.util.Date
 
@@ -60,12 +62,12 @@ data class Section(
         parcel.writeString(progress)
         parcel.writeString(title)
         parcel.writeString(slug)
-        parcel.writeSerializable(beginDate)
-        parcel.writeSerializable(endDate)
-        parcel.writeSerializable(softDeadline)
-        parcel.writeSerializable(hardDeadline)
-        parcel.writeSerializable(createDate)
-        parcel.writeSerializable(updateDate)
+        parcel.writeDate(beginDate)
+        parcel.writeDate(endDate)
+        parcel.writeDate(softDeadline)
+        parcel.writeDate(hardDeadline)
+        parcel.writeDate(createDate)
+        parcel.writeDate(updateDate)
         parcel.writeString(gradingPolicy)
         parcel.writeBoolean(isActive)
         parcel.writeParcelable(actions, flags)
@@ -89,12 +91,12 @@ data class Section(
                 parcel.readString(),
                 parcel.readString(),
                 parcel.readString(),
-                parcel.readSerializable() as? Date,
-                parcel.readSerializable() as? Date,
-                parcel.readSerializable() as? Date,
-                parcel.readSerializable() as? Date,
-                parcel.readSerializable() as? Date,
-                parcel.readSerializable() as? Date,
+                parcel.readDate(),
+                parcel.readDate(),
+                parcel.readDate(),
+                parcel.readDate(),
+                parcel.readDate(),
+                parcel.readDate(),
                 parcel.readString(),
                 parcel.readBoolean(),
                 parcel.readParcelable(Actions::class.java.classLoader),
