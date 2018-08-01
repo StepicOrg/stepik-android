@@ -17,9 +17,11 @@ class SectionRepositoryImpl
         if (sections.size != keys.size) {
             sections =
                     try {
-                        api.getSections(keys).execute()?.body()?.sections ?: ArrayList<Section>()
+                        api.getSections(keys).execute()?.body()?.sections?.also {
+                            it.forEach(databaseFacade::addSection)
+                        } ?: emptyList()
                     } catch (exception: Exception) {
-                        ArrayList<Section>()
+                        emptyList()
                     }
         }
         sections = sections.sortedBy { it.position }
@@ -32,7 +34,11 @@ class SectionRepositoryImpl
         if (section == null) {
             section =
                     try {
-                        api.getSections(longArrayOf(key)).execute()?.body()?.sections?.firstOrNull()
+                        api.getSections(longArrayOf(key)).execute()
+                                ?.body()
+                                ?.sections
+                                ?.firstOrNull()
+                                ?.also(databaseFacade::addSection)
                     } catch (exception: Exception) {
                         null
                     }

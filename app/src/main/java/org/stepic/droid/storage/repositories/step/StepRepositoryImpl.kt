@@ -16,9 +16,11 @@ class StepRepositoryImpl @Inject constructor(
         if (steps.size != keys.size) {
             steps =
                     try {
-                        api.getSteps(keys).execute()?.body()?.steps ?: ArrayList<Step>()
+                        api.getSteps(keys).execute()?.body()?.steps?.also {
+                            it.forEach(databaseFacade::addStep)
+                        } ?: emptyList()
                     } catch (exception: Exception) {
-                        ArrayList<Step>()
+                        emptyList()
                     }
         }
         steps = steps.sortedBy { it.position }
@@ -30,7 +32,11 @@ class StepRepositoryImpl @Inject constructor(
         if (step == null) {
             step =
                     try {
-                        api.getSteps(longArrayOf(key)).execute()?.body()?.steps?.firstOrNull()
+                        api.getSteps(longArrayOf(key)).execute()
+                                ?.body()
+                                ?.steps
+                                ?.firstOrNull()
+                                ?.also(databaseFacade::addStep)
                     } catch (exception: Exception) {
                         null
                     }
