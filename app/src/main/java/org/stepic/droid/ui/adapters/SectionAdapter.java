@@ -477,7 +477,8 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                 List<Deadline> deadlines = deadlinesRecord.getData().getDeadlines();
                 Deadline deadline = null;
 
-                for (Deadline d : deadlines) {
+                // todo: investigate why it can be null
+                if (deadlines != null) for (Deadline d : deadlines) {
                     if (d.getSection() == sectionId) {
                         deadline = d;
                         break;

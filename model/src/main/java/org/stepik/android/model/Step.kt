@@ -50,7 +50,7 @@ data class Step(
         dest.writeInt(this.status?.ordinal ?: -1)
         dest.writeParcelable(this.block, 0)
         dest.writeString(this.progress)
-        dest.writeList(this.subscriptions)
+        dest.writeStringList(this.subscriptions)
 
         dest.writeLong(this.viewedBy)
         dest.writeLong(this.passedBy)
