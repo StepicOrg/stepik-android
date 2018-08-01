@@ -6,6 +6,7 @@ import org.stepic.droid.persistence.model.PersistentItem
 import org.stepic.droid.persistence.storage.dao.PersistentItemDao
 import org.stepic.droid.persistence.storage.dao.SystemDownloadsDao
 import org.stepic.droid.persistence.storage.structure.DBStructurePersistentItem
+import org.stepik.android.model.Section
 import javax.inject.Inject
 
 @PersistenceScope
@@ -17,9 +18,11 @@ constructor(
 
         systemDownloadsDao: SystemDownloadsDao,
         persistentItemDao: PersistentItemDao
-): DownloadProgressProviderBase(updatesObservable, intervalUpdatesObservable, systemDownloadsDao, persistentItemDao), DownloadProgressProvider {
+): DownloadProgressProviderBase<Section>(updatesObservable, intervalUpdatesObservable, systemDownloadsDao, persistentItemDao), DownloadProgressProvider<Section> {
+    override fun Section.getId(): Long = id
+
     override val PersistentItem.keyFieldValue: Long
-        get() = section
+        get() = task.section
 
     override val persistentItemKeyFieldColumn =
             DBStructurePersistentItem.Columns.SECTION

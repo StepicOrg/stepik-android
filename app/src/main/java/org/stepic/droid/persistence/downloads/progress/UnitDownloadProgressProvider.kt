@@ -6,6 +6,7 @@ import org.stepic.droid.persistence.model.PersistentItem
 import org.stepic.droid.persistence.storage.dao.PersistentItemDao
 import org.stepic.droid.persistence.storage.dao.SystemDownloadsDao
 import org.stepic.droid.persistence.storage.structure.DBStructurePersistentItem
+import org.stepik.android.model.Unit
 import javax.inject.Inject
 
 @PersistenceScope
@@ -13,13 +14,15 @@ class UnitDownloadProgressProvider
 @Inject
 constructor(
         updatesObservable: Observable<PersistentItem>,
-        intervalUpdatesObservable: Observable<Unit>,
+        intervalUpdatesObservable: Observable<kotlin.Unit>,
 
         systemDownloadsDao: SystemDownloadsDao,
         persistentItemDao: PersistentItemDao
-): DownloadProgressProviderBase(updatesObservable, intervalUpdatesObservable, systemDownloadsDao, persistentItemDao), DownloadProgressProvider {
+): DownloadProgressProviderBase<Unit>(updatesObservable, intervalUpdatesObservable, systemDownloadsDao, persistentItemDao), DownloadProgressProvider<Unit> {
+    override fun Unit.getId(): Long = id
+
     override val PersistentItem.keyFieldValue: Long
-        get() = unit
+        get() = task.unit
 
     override val persistentItemKeyFieldColumn =
             DBStructurePersistentItem.Columns.UNIT

@@ -10,17 +10,20 @@ import org.stepic.droid.persistence.storage.dao.SystemDownloadsDao
 import org.stepic.droid.util.merge
 import org.stepic.droid.util.zip
 
-abstract class DownloadProgressProviderBase(
+abstract class DownloadProgressProviderBase<T>(
         private val updatesObservable: Observable<PersistentItem>,
         private val intervalUpdatesObservable: Observable<kotlin.Unit>,
 
         private val systemDownloadsDao: SystemDownloadsDao,
         private val persistentItemDao: PersistentItemDao
-): DownloadProgressProvider {
+): DownloadProgressProvider<T> {
     private companion object {
         private fun List<PersistentItem>.getDownloadIdsOfCorrectItems() =
                 this.filter { it.status.isCorrect }.map{ it.downloadId }.toLongArray()
     }
+
+    override fun getProgress(vararg items: T): Observable<DownloadProgress> =
+            getProgress(*items.map { it.getId() }.toLongArray())
 
     override fun getProgress(vararg ids: Long): Observable<DownloadProgress> =
             ids.toObservable().flatMap(::getItemProgress)
@@ -42,6 +45,7 @@ abstract class DownloadProgressProviderBase(
     private fun getItemUpdateObservable(itemId: Long) =
             updatesObservable.filter { it.keyFieldValue == itemId }.map { kotlin.Unit } merge intervalUpdatesObservable // ?? debounce
 
+    protected abstract fun T.getId(): Long
     protected abstract val PersistentItem.keyFieldValue: Long
     protected abstract val persistentItemKeyFieldColumn: String
 }

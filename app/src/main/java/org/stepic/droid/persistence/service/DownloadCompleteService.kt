@@ -70,7 +70,7 @@ class DownloadCompleteService: IntentService("download_updates_service") {
 
     private fun moveDownloadedFile(downloadRecord: SystemDownloadRecord, persistentItem: PersistentItem) {
         try {
-            val targetFileName = "${downloadRecord.id}_${persistentItem.step}_${System.nanoTime()}" // in order to generate unique file name if downloadId will be the same
+            val targetFileName = "${downloadRecord.id}_${persistentItem.task.step}_${System.nanoTime()}" // in order to generate unique file name if downloadId will be the same
 
             val targetDir = externalStorageManager.getSelectedStorageLocation()
             val targetFile = File(targetDir.path, targetFileName)
