@@ -19,4 +19,10 @@ class StepTest {
         val step = Step(id = 0, status = Step.Status.READY, createDate = Date())
         step.assertThatObjectParcelable<Step>()
     }
+
+    @Test
+    fun stepWithSubscriptionsIsParcelable() {
+        val step = Step(id = 0, status = Step.Status.READY, createDate = Date(), subscriptions = listOf("a", "b"))
+        step.assertThatObjectParcelable<Step>()
+    }
 }
