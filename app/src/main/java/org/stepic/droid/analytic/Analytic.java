@@ -285,7 +285,6 @@ public interface Analytic {
         String TEMPLATE_WAS_NULL = "error_code_template_null";
         String COURSE_COLLECTION_EMPTY = "course_collection_empty";
         String FEEDBACK_BROKEN = "feedback_broken";
-        String CANT_FIND_VIDEO_FILE_WITH_FILES_PROVIDER = "cant_find_video_file_with_file_provider";
         String CANT_RESTORE_VIDEO_FILE = "cant_restore_video_file";
     }
 

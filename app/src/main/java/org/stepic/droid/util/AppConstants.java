@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
 public class AppConstants {
 
     public static final String FILE_SCHEME_PREFIX = "file://";
-    public static final String FILE_PROVIDER_AUTHORITY = ".my.package.name.provider";
+    public static final String FILE_PROVIDER_AUTHORITY = ".provider";
     public static final String SVG_EXTENSION = ".svg";
     public static final String VIDEO_EXTENSION = ".mp4";
 

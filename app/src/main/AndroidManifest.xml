@@ -449,13 +449,13 @@
         </receiver>
 
         <provider
-            android:name=".util.GenericFileProvider"
-            android:authorities="${applicationId}.my.package.name.provider"
+            android:name=".persistence.providers.GenericFileProvider"
+            android:authorities="${applicationId}.provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths" />
+                android:resource="@xml/provider_paths"/>
         </provider>
 
         <uses-library
