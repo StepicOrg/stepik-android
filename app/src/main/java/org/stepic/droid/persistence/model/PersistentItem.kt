@@ -1,9 +1,9 @@
 package org.stepic.droid.persistence.model
 
 data class PersistentItem(
-        val localFileName: String,
+        val localFileName: String = "",
 
-        val localFileDir: String,
+        val localFileDir: String = "",
         val isInAppInternalDir: Boolean = false,
         val downloadId: Long,
 
