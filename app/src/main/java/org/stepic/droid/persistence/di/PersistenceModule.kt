@@ -15,6 +15,7 @@ import org.stepic.droid.persistence.storage.dao.SystemDownloadsDao
 import org.stepic.droid.persistence.storage.dao.SystemDownloadsDaoImpl
 
 @Module(includes = [
+    ContentModule::class,
     DownloadInteractorsModule::class,
     DownloadTaskAdapterModule::class,
     ProgressProvidersModule::class

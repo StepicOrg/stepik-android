@@ -246,7 +246,6 @@ public interface Analytic {
     interface Error {
         String CALLBACK_SOCIAL = "callback_from_social_login";
         String NOT_PLAYER = "NotPlayer";
-        String VIDEO_RESOLVER_FAILED = "video resolver is failed";
         String CANT_UPDATE_TOKEN = "cant update token";
         String NOTIFICATION_ERROR_PARSE = "notification error parse";
         String DELETE_SERVICE_ERROR = "DeleteService nullptr";

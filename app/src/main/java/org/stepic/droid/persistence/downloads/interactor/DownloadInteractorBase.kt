@@ -1,9 +1,11 @@
 package org.stepic.droid.persistence.downloads.interactor
 
 import io.reactivex.Completable
+import io.reactivex.rxkotlin.toObservable
 import org.stepic.droid.persistence.downloads.DownloadTaskManager
 import org.stepic.droid.persistence.downloads.adapters.DownloadTaskAdapter
 import org.stepic.droid.persistence.model.DownloadConfiguration
+import org.stepic.droid.persistence.model.PersistentItem
 import org.stepic.droid.persistence.storage.dao.PersistentItemDao
 
 abstract class DownloadInteractorBase<T>(
@@ -25,9 +27,12 @@ abstract class DownloadInteractorBase<T>(
             removeTask(item.keyFieldValue)
 
     override fun removeTask(id: Long): Completable =
-            persistentItemDao.getItem(mapOf(keyFieldColumn to id.toString())).flatMapCompletable {
-                downloadTaskManager.removeTask(it.downloadId)
-            }
+            persistentItemDao
+                    .getItems(mapOf(keyFieldColumn to id.toString()))
+                    .flatMap(List<PersistentItem>::toObservable)
+                    .flatMapCompletable {
+                        downloadTaskManager.removeTask(it.downloadId)
+                    }
 
     protected abstract val T.keyFieldValue: Long
     protected abstract val keyFieldColumn: String
