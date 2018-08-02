@@ -1,5 +1,7 @@
 package org.stepic.droid.persistence.storage.structure
 
+import android.database.sqlite.SQLiteDatabase
+
 object DBStructurePersistentItem {
     const val PERSISTENT_ITEMS = "persistent_items"
 
@@ -17,5 +19,27 @@ object DBStructurePersistentItem {
         const val LESSON = "lesson"
         const val UNIT = "unit"
         const val STEP = "step"
+    }
+
+    fun createTable(db: SQLiteDatabase) {
+        val sql = """
+            CREATE TABLE IF NOT EXISTS $PERSISTENT_ITEMS (
+                ${Columns.ORIGINAL_PATH} TEXT,
+                ${Columns.LOCAL_FILE_NAME} TEXT,
+                ${Columns.LOCAL_FILE_DIR} TEXT,
+                ${Columns.IS_IN_APP_INTERNAL_DIR} INTEGER,
+
+                ${Columns.DOWNLOAD_ID} LONG,
+                ${Columns.STATUS} TEXT,
+
+                ${Columns.COURSE} LONG,
+                ${Columns.SECTION} LONG,
+                ${Columns.LESSON} LONG,
+                ${Columns.UNIT} LONG,
+                ${Columns.STEP} LONG,
+
+                PRIMARY KEY(${Columns.STEP}, ${Columns.ORIGINAL_PATH})
+            )""".trimIndent()
+        db.execSQL(sql)
     }
 }

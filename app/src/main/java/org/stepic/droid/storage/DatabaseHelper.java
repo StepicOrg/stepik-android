@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import org.stepic.droid.features.deadlines.storage.structure.DbStructureDeadlines;
 import org.stepic.droid.features.deadlines.storage.structure.DbStructureDeadlinesBanner;
+import org.stepic.droid.persistence.storage.structure.DBStructurePersistentItem;
 import org.stepic.droid.storage.structure.DatabaseInfo;
 import org.stepic.droid.storage.structure.DbStructureAdaptiveExp;
 import org.stepic.droid.storage.structure.DbStructureAssignment;
@@ -98,6 +99,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         upgradeFrom30To31(db);
         upgradeFrom31To32(db);
         upgradeFrom32To33(db);
+        upgradeFrom33To34(db);
     }
 
 
@@ -272,6 +274,14 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         if (oldVersion < 33) {
             upgradeFrom32To33(db);
         }
+
+        if (oldVersion < 34) {
+            upgradeFrom33To34(db);
+        }
+    }
+
+    private void upgradeFrom33To34(SQLiteDatabase db) {
+        DBStructurePersistentItem.INSTANCE.createTable(db);
     }
 
     private void upgradeFrom32To33(SQLiteDatabase db) {
