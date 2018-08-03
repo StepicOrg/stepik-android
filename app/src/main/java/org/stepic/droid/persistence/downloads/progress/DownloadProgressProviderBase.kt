@@ -30,8 +30,8 @@ abstract class DownloadProgressProviderBase<T>(
 
     private fun getItemProgress(itemId: Long) =
             getItemUpdateObservable(itemId)                      // listen for updates
-                    .flatMap { getPersistentObservable(itemId) } // fetch from DB
-                    .flatMap(::fetchSystemDownloads)
+                    .concatMapEager { getPersistentObservable(itemId) } // fetch from DB
+                    .concatMapEager(::fetchSystemDownloads)
                     .map { (persistentItems, downloadItems) ->   // count progresses
                         DownloadProgress(itemId, countItemProgress(persistentItems, downloadItems))
                     }.distinctUntilChanged()                     // exclude repetitive events
