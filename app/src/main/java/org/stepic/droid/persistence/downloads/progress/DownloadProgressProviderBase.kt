@@ -7,7 +7,7 @@ import org.stepic.droid.persistence.model.PersistentItem
 import org.stepic.droid.persistence.model.isCorrect
 import org.stepic.droid.persistence.storage.dao.PersistentItemDao
 import org.stepic.droid.persistence.storage.dao.SystemDownloadsDao
-import org.stepic.droid.util.merge
+import org.stepic.droid.util.plus
 import org.stepic.droid.util.zip
 
 abstract class DownloadProgressProviderBase<T>(
@@ -43,7 +43,9 @@ abstract class DownloadProgressProviderBase<T>(
             Observable.just(items) zip systemDownloadsDao.get(*items.getDownloadIdsOfCorrectItems())
 
     private fun getItemUpdateObservable(itemId: Long) =
-            updatesObservable.filter { it.keyFieldValue == itemId }.map { kotlin.Unit } merge intervalUpdatesObservable // ?? debounce
+            updatesObservable.filter { it.keyFieldValue == itemId }.map { kotlin.Unit } + // ?? debounce
+                    intervalUpdatesObservable +
+                    Observable.just(kotlin.Unit)
 
     protected abstract fun T.getId(): Long
     protected abstract val PersistentItem.keyFieldValue: Long
