@@ -9,7 +9,6 @@ import org.stepic.droid.di.mainscreen.MainScreenComponent
 import org.stepic.droid.di.routing.RoutingComponent
 import org.stepic.droid.di.splash.SplashComponent
 import org.stepic.droid.di.step.StepComponent
-import org.stepic.droid.persistence.di.PersistenceComponent
 
 // TODO: 16.03.17 make more generic solution, for every component handling
 interface ComponentManager {
@@ -39,8 +38,6 @@ interface ComponentManager {
 
     @MainThread
     fun downloadsComponent(): DownloadsComponent
-
-    val persistenceComponent: PersistenceComponent
 
     @MainThread
     fun stepComponent(stepId: Long): StepComponent

@@ -35,7 +35,8 @@ import org.stepik.android.model.Course
 import org.stepic.droid.notifications.HackFcmListener
 import org.stepic.droid.notifications.HackerFcmInstanceId
 import org.stepic.droid.notifications.NotificationBroadcastReceiver
-import org.stepic.droid.persistence.di.PersistenceComponent
+import org.stepic.droid.persistence.di.PersistenceModule
+import org.stepic.droid.persistence.service.DownloadCompleteService
 import org.stepic.droid.receivers.BootCompletedReceiver
 import org.stepic.droid.receivers.DownloadClickReceiver
 import org.stepic.droid.receivers.InternetConnectionEnabledReceiver
@@ -55,6 +56,7 @@ import org.stepic.droid.ui.dialogs.*
                 AppFiltersModule::class,
                 GoogleModule::class,
                 FirebaseModule::class,
+                PersistenceModule::class,
                 RecentActiveCourseModule::class,
                 NotificationsBadgesModule::class,
                 NetworkModule::class
@@ -76,8 +78,6 @@ interface AppCoreComponent {
     fun feedbackComponentBuilder(): FeedbackComponent.Builder
 
     fun downloadsComponentBuilder(): DownloadsComponent.Builder
-
-    fun persistenceComponentBuilder(): PersistenceComponent.Builder
 
     fun loginComponentBuilder(): LoginComponent.Builder
 
@@ -213,4 +213,7 @@ interface AppCoreComponent {
     fun inject(achievementsTileAdapter: AchievementsTileAdapter)
     fun inject(achievementsAdapter: AchievementsAdapter)
     fun inject(achievementDetailsDialog: AchievementDetailsDialog)
+
+
+    fun inject(downloadCompleteService: DownloadCompleteService)
 }

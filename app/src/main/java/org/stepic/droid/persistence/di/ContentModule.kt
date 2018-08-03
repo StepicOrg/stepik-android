@@ -12,7 +12,6 @@ import org.stepic.droid.persistence.content.processors.VideoStepContentProcessor
 interface ContentModule {
 
     @Binds
-    @PersistenceScope
     @IntoSet
     fun bindVideoStepContentProcessor(videoStepContentProcessor: VideoStepContentProcessor): StepContentProcessor
 

@@ -1,5 +1,7 @@
 package org.stepic.droid.persistence.di
 
+import android.app.DownloadManager
+import android.content.Context
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -15,6 +17,7 @@ import org.stepic.droid.persistence.repository.DownloadsRepository
 import org.stepic.droid.persistence.repository.DownloadsRepositoryImpl
 import org.stepic.droid.persistence.storage.dao.SystemDownloadsDao
 import org.stepic.droid.persistence.storage.dao.SystemDownloadsDaoImpl
+import java.util.concurrent.TimeUnit
 
 @Module(includes = [
     ContentModule::class,
@@ -56,11 +59,17 @@ abstract class PersistenceModule {
         fun provideUpdatesPublishSubject(): PublishSubject<PersistentItem> =
                 PublishSubject.create()
 
-//        @Provides // todo: remove from AppCoreModule
-//        @JvmStatic
-//        @PersistenceScope
-//        fun provideDownloadManager(context: Context): DownloadManager =
-//                context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+        @Provides
+        @JvmStatic
+        @PersistenceScope
+        fun provideIntervalUpdatesObservable(): Observable<kotlin.Unit> =
+                Observable.interval(500, TimeUnit.MILLISECONDS).map { kotlin.Unit }.share()
+
+        @Provides
+        @JvmStatic
+        @PersistenceScope
+        fun provideDownloadManager(context: Context): DownloadManager =
+                context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
     }
 
 }

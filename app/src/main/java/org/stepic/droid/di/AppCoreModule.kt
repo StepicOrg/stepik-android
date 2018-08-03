@@ -34,13 +34,11 @@ import org.stepic.droid.core.internetstate.contract.InternetEnabledPoster
 import org.stepic.droid.core.videomoves.VideosMovedPosterImpl
 import org.stepic.droid.core.videomoves.contract.VideosMovedListener
 import org.stepic.droid.core.videomoves.contract.VideosMovedPoster
-import org.stepic.droid.di.adaptive.AdaptiveCourseScope
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.fonts.FontsProvider
 import org.stepic.droid.fonts.FontsProviderImpl
 import org.stepic.droid.notifications.*
-import org.stepic.droid.notifications.badges.NotificationsBadgesLogoutPoster
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.social.SocialManager
@@ -234,12 +232,6 @@ abstract class AppCoreModule {
         @JvmStatic
         internal fun provideUserPrefs(context: Context, helper: SharedPreferenceHelper, analytic: Analytic): UserPreferences {
             return UserPreferences(context, helper, analytic)
-        }
-
-        @Provides
-        @JvmStatic
-        internal fun provideSystemDownloadManager(context: Context): DownloadManager {
-            return context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
         }
 
         @Provides

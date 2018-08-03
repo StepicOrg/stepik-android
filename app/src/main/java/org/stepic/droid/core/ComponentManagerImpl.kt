@@ -9,7 +9,6 @@ import org.stepic.droid.di.mainscreen.MainScreenComponent
 import org.stepic.droid.di.routing.RoutingComponent
 import org.stepic.droid.di.splash.SplashComponent
 import org.stepic.droid.di.step.StepComponent
-import org.stepic.droid.persistence.di.PersistenceComponent
 import org.stepic.droid.util.SuppressFBWarnings
 import timber.log.Timber
 
@@ -41,13 +40,6 @@ class ComponentManagerImpl(private val appCoreComponent: AppCoreComponent) : Com
 
     override fun downloadsComponent(): DownloadsComponent = downloadsComponent
 
-
-    // Persistence
-    override val persistenceComponent: PersistenceComponent by lazy {
-        appCoreComponent
-                .persistenceComponentBuilder()
-                .build()
-    }
 
     // Step
 

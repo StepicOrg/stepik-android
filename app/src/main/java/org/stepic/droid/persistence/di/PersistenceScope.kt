@@ -1,7 +1,5 @@
 package org.stepic.droid.persistence.di
 
-import javax.inject.Scope
+import org.stepic.droid.di.AppSingleton
 
-@Scope
-@Retention(AnnotationRetention.RUNTIME)
-annotation class PersistenceScope
+typealias PersistenceScope = AppSingleton

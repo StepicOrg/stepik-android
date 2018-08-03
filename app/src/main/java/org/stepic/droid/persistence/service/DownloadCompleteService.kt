@@ -37,9 +37,7 @@ class DownloadCompleteService: IntentService("download_updates_service") {
 
     override fun onCreate() {
         super.onCreate()
-        App.componentManager()
-                .persistenceComponent
-                .inject(this)
+        App.component().inject(this)
     }
 
     override fun onHandleIntent(intent: Intent) {

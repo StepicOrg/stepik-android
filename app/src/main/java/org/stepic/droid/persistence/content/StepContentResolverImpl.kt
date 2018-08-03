@@ -16,7 +16,7 @@ import javax.inject.Inject
 class StepContentResolverImpl
 @Inject
 constructor(
-        private val processors: Set<StepContentProcessor>,
+        private val processors: Set<@JvmSuppressWildcards StepContentProcessor>,
 
         private val persistentItemDao: PersistentItemDao,
         private val externalStorageManager: ExternalStorageManager
