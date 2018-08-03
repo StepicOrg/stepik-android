@@ -1,10 +1,11 @@
 package org.stepic.droid.persistence.service
 
 import android.app.DownloadManager
-import android.app.IntentService
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.support.v4.app.JobIntentService
 import io.reactivex.Observer
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
@@ -19,7 +20,15 @@ import java.io.File
 import java.io.IOException
 import javax.inject.Inject
 
-class DownloadCompleteService: IntentService("download_updates_service") {
+class DownloadCompleteService: JobIntentService() {
+    companion object {
+        private const val JOB_ID = 2000
+
+        fun enqueueWork(context: Context, intent: Intent) {
+            enqueueWork(context, DownloadCompleteService::class.java, JOB_ID, intent)
+        }
+    }
+
     @Inject
     lateinit var systemDownloadsDao: SystemDownloadsDao
 
@@ -40,7 +49,7 @@ class DownloadCompleteService: IntentService("download_updates_service") {
         App.component().inject(this)
     }
 
-    override fun onHandleIntent(intent: Intent) {
+    override fun onHandleWork(intent: Intent) {
         val downloadId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
                 .takeIf { it != -1L } ?: return
 
