@@ -9,6 +9,7 @@ import org.stepic.droid.persistence.storage.dao.PersistentItemDao
 import org.stepic.droid.persistence.storage.dao.SystemDownloadsDao
 import org.stepic.droid.util.plus
 import org.stepic.droid.util.zip
+import java.util.concurrent.TimeUnit
 
 abstract class DownloadProgressProviderBase<T>(
         private val updatesObservable: Observable<PersistentItem>,
@@ -20,6 +21,8 @@ abstract class DownloadProgressProviderBase<T>(
     private companion object {
         private fun List<PersistentItem>.getDownloadIdsOfCorrectItems() =
                 this.filter { it.status.isCorrect }.map{ it.downloadId }.toLongArray()
+
+        private const val UPDATES_DEBOUNCE_MS = 100L
     }
 
     override fun getProgress(vararg items: T): Observable<DownloadProgress> =
@@ -43,7 +46,7 @@ abstract class DownloadProgressProviderBase<T>(
             Observable.just(items) zip systemDownloadsDao.get(*items.getDownloadIdsOfCorrectItems())
 
     private fun getItemUpdateObservable(itemId: Long) =
-            updatesObservable.filter { it.keyFieldValue == itemId }.map { kotlin.Unit } + // ?? debounce
+            updatesObservable.filter { it.keyFieldValue == itemId }.map { kotlin.Unit }.debounce(UPDATES_DEBOUNCE_MS, TimeUnit.MILLISECONDS) +
                     intervalUpdatesObservable +
                     Observable.just(kotlin.Unit)
 

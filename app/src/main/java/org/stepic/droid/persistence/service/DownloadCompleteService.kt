@@ -9,6 +9,7 @@ import android.support.v4.app.JobIntentService
 import io.reactivex.Observer
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
+import org.stepic.droid.persistence.di.FSLock
 import org.stepic.droid.persistence.files.ExternalStorageManager
 import org.stepic.droid.persistence.model.PersistentItem
 import org.stepic.droid.persistence.model.StorageLocation
@@ -47,6 +48,7 @@ class DownloadCompleteService: JobIntentService() {
     lateinit var analytic: Analytic
 
     @Inject
+    @field:FSLock
     lateinit var fsLock: ReentrantLock
 
     override fun onCreate() {
