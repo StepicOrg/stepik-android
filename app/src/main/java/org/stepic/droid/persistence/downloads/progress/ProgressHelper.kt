@@ -14,13 +14,11 @@ import org.stepic.droid.persistence.model.DownloadProgress
 internal fun countItemProgress(persistentItems: List<PersistentItem>, downloadRecords: List<SystemDownloadRecord>): DownloadProgress.Status {
     if (persistentItems.isEmpty()) return DownloadProgress.Status.NotCached
 
-    var downloaded = 0
-    var total = 0
-
-    downloadRecords.forEach { item ->
+    val progress = downloadRecords.sumByDouble { item ->
         if (item.bytesTotal > 0) {
-            downloaded += item.bytesDownloaded
-            total += item.bytesTotal
+            item.bytesDownloaded.toDouble() / item.bytesTotal
+        } else {
+            0.0
         }
     }
 
@@ -29,10 +27,10 @@ internal fun countItemProgress(persistentItems: List<PersistentItem>, downloadRe
     var hasUndownloadedItems = false
     persistentItems.forEach { item ->
         when(item.status) {
-            PersistentItem.Status.IN_PROGRESS -> return if (total <= 0) {
+            PersistentItem.Status.IN_PROGRESS -> return if (progress == 0.0) {
                 DownloadProgress.Status.Pending
             } else {
-                DownloadProgress.Status.InProgress(downloaded.toFloat() / total)
+                DownloadProgress.Status.InProgress(progress.toFloat() / persistentItems.size)
             }
 
             PersistentItem.Status.COMPLETED ->
