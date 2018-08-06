@@ -18,7 +18,9 @@ import org.stepic.droid.persistence.storage.dao.SystemDownloadsDao
 import org.stepic.droid.persistence.storage.structure.DBStructurePersistentItem
 import java.io.File
 import java.io.IOException
+import java.util.concurrent.locks.ReentrantLock
 import javax.inject.Inject
+import kotlin.concurrent.withLock
 
 class DownloadCompleteService: JobIntentService() {
     companion object {
@@ -44,12 +46,15 @@ class DownloadCompleteService: JobIntentService() {
     @Inject
     lateinit var analytic: Analytic
 
+    @Inject
+    lateinit var fsLock: ReentrantLock
+
     override fun onCreate() {
         super.onCreate()
         App.component().inject(this)
     }
 
-    override fun onHandleWork(intent: Intent) {
+    override fun onHandleWork(intent: Intent) = fsLock.withLock {
         val downloadId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
                 .takeIf { it != -1L } ?: return
 

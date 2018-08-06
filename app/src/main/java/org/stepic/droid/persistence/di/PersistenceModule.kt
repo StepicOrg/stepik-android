@@ -18,6 +18,7 @@ import org.stepic.droid.persistence.repository.DownloadsRepositoryImpl
 import org.stepic.droid.persistence.storage.dao.SystemDownloadsDao
 import org.stepic.droid.persistence.storage.dao.SystemDownloadsDaoImpl
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.locks.ReentrantLock
 
 @Module(includes = [
     ContentModule::class,
@@ -70,6 +71,13 @@ abstract class PersistenceModule {
         @PersistenceScope
         fun provideDownloadManager(context: Context): DownloadManager =
                 context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+
+        @Provides
+        @JvmStatic
+        @FSLock
+        @PersistenceScope
+        fun provideFSLock(): ReentrantLock =
+                ReentrantLock()
     }
 
 }
