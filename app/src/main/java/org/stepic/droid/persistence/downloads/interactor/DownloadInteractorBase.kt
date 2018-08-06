@@ -42,7 +42,7 @@ abstract class DownloadInteractorBase<T>(
                 if (item.task.originalPath in paths && item.status.isCorrect) {
                     alreadyDownloadedPaths.add(item.task.originalPath)
                 } else {
-                    downloadTaskManager.removeTask(item.downloadId).blockingAwait()
+                    downloadTaskManager.removeTask(item.downloadId, item.task).blockingAwait()
                 }
             }
         }
@@ -58,7 +58,7 @@ abstract class DownloadInteractorBase<T>(
                     .getItems(mapOf(keyFieldColumn to id.toString()))
                     .flatMap(List<PersistentItem>::toObservable)
                     .flatMapCompletable {
-                        downloadTaskManager.removeTask(it.downloadId)
+                        downloadTaskManager.removeTask(it.downloadId, it.task)
                     }
 
     protected abstract val T.keyFieldValue: Long

@@ -47,18 +47,21 @@ constructor(
         updatesObserver.onNext(persistentItem)
     }
 
-    override fun removeTask(downloadId: Long): Completable = Completable.fromAction {
+    override fun removeTask(downloadId: Long, task: DownloadTask): Completable = Completable.fromAction {
         fsLock.withLock {
             downloadManager.remove(downloadId)
 
-            val item = persistentItemDao.get(mapOf(DBStructurePersistentItem.Columns.DOWNLOAD_ID to downloadId.toString())) ?: return@fromAction
+            val item = persistentItemDao.get(mapOf(
+                    DBStructurePersistentItem.Columns.STEP to task.step.toString(),
+                    DBStructurePersistentItem.Columns.ORIGINAL_PATH to task.originalPath
+            )) ?: return@fromAction
 
-            if (item.status == PersistentItem.Status.COMPLETED) {
-                externalStorageManager.resolvePathForPersistentItem(item)?.let {
-                    val file = File(it)
-                    if (file.exists() && !file.delete()) {
-                        throw IOException("Can't remove file: $it")
-                    }
+            persistentItemDao.insertOrUpdate(item.copy(status = PersistentItem.Status.FILE_TRANSFER))
+
+            externalStorageManager.resolvePathForPersistentItem(item)?.let {
+                val file = File(it)
+                if (file.exists() && !file.delete()) {
+                    throw IOException("Can't remove file: $it")
                 }
             }
 

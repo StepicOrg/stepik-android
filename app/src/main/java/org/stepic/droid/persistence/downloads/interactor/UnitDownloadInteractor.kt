@@ -16,5 +16,5 @@ constructor(
 ): DownloadInteractorBase<Unit>(downloadTaskAdapter, downloadTaskManager, persistentItemDao) {
     override val Unit.keyFieldValue: Long
         get() = id
-    override val keyFieldColumn: String = DBStructurePersistentItem.Columns.SECTION
+    override val keyFieldColumn: String = DBStructurePersistentItem.Columns.UNIT
 }
