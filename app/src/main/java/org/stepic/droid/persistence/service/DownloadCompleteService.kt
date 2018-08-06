@@ -51,6 +51,9 @@ class DownloadCompleteService: JobIntentService() {
     @field:FSLock
     lateinit var fsLock: ReentrantLock
 
+    @Inject
+    lateinit var downloadManager: DownloadManager
+
     override fun onCreate() {
         super.onCreate()
         App.component().inject(this)
@@ -112,6 +115,8 @@ class DownloadCompleteService: JobIntentService() {
             updatePersistentItem(newPersistentItem.copy(
                     status = PersistentItem.Status.COMPLETED
             ))
+
+            downloadManager.remove(downloadRecord.id)
         } catch (_: Exception) {
             updatePersistentItem(persistentItem.copy(
                     status = PersistentItem.Status.TRANSFER_ERROR
