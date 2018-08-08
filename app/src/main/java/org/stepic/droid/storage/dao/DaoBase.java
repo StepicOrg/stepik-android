@@ -134,6 +134,10 @@ public abstract class DaoBase<T> implements IDao<T> {
         return databaseOperations.executeQuery(query, whereArgs, resultHandler);
     }
 
+    protected void executeSql(@NotNull String query, @Nullable Object[] args) {
+        databaseOperations.executeSql(query, args);
+    }
+
     @Override
     public final boolean isInDb(@NotNull String column, @NotNull String columnValue) {
         String Query = "Select * from " + getDbName() + " where " + column + " = ?";
