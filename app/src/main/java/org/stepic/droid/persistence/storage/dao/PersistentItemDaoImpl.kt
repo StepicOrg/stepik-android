@@ -7,6 +7,7 @@ import io.reactivex.Observable
 import org.stepic.droid.di.storage.StorageSingleton
 import org.stepic.droid.persistence.model.DownloadTask
 import org.stepic.droid.persistence.model.PersistentItem
+import org.stepic.droid.persistence.model.Structure
 import org.stepic.droid.persistence.storage.structure.DBStructurePersistentItem
 import org.stepic.droid.storage.dao.DaoBase
 import org.stepic.droid.storage.dao.IDao
@@ -34,11 +35,11 @@ constructor(
         put(DBStructurePersistentItem.Columns.DOWNLOAD_ID, persistentObject.downloadId)
         put(DBStructurePersistentItem.Columns.STATUS, persistentObject.status.name)
 
-        put(DBStructurePersistentItem.Columns.COURSE, persistentObject.task.course)
-        put(DBStructurePersistentItem.Columns.SECTION, persistentObject.task.section)
-        put(DBStructurePersistentItem.Columns.UNIT, persistentObject.task.unit)
-        put(DBStructurePersistentItem.Columns.LESSON, persistentObject.task.lesson)
-        put(DBStructurePersistentItem.Columns.STEP, persistentObject.task.step)
+        put(DBStructurePersistentItem.Columns.COURSE, persistentObject.task.structure.course)
+        put(DBStructurePersistentItem.Columns.SECTION, persistentObject.task.structure.section)
+        put(DBStructurePersistentItem.Columns.UNIT, persistentObject.task.structure.unit)
+        put(DBStructurePersistentItem.Columns.LESSON, persistentObject.task.structure.lesson)
+        put(DBStructurePersistentItem.Columns.STEP, persistentObject.task.structure.step)
     }
 
     override fun parsePersistentObject(cursor: Cursor) = PersistentItem(
@@ -51,11 +52,13 @@ constructor(
 
             task = DownloadTask(
                     originalPath  = cursor.getString(cursor.getColumnIndex(DBStructurePersistentItem.Columns.ORIGINAL_PATH)),
-                    course       = cursor.getLong(cursor.getColumnIndex(DBStructurePersistentItem.Columns.COURSE)),
-                    section      = cursor.getLong(cursor.getColumnIndex(DBStructurePersistentItem.Columns.SECTION)),
-                    unit         = cursor.getLong(cursor.getColumnIndex(DBStructurePersistentItem.Columns.UNIT)),
-                    lesson       = cursor.getLong(cursor.getColumnIndex(DBStructurePersistentItem.Columns.LESSON)),
-                    step         = cursor.getLong(cursor.getColumnIndex(DBStructurePersistentItem.Columns.STEP))
+                    structure     = Structure(
+                            course  = cursor.getLong(cursor.getColumnIndex(DBStructurePersistentItem.Columns.COURSE)),
+                            section = cursor.getLong(cursor.getColumnIndex(DBStructurePersistentItem.Columns.SECTION)),
+                            unit    = cursor.getLong(cursor.getColumnIndex(DBStructurePersistentItem.Columns.UNIT)),
+                            lesson  = cursor.getLong(cursor.getColumnIndex(DBStructurePersistentItem.Columns.LESSON)),
+                            step    = cursor.getLong(cursor.getColumnIndex(DBStructurePersistentItem.Columns.STEP))
+                    )
             )
     )
 

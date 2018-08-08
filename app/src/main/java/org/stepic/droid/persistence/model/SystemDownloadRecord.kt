@@ -1,6 +1,6 @@
 package org.stepic.droid.persistence.model
 
-class SystemDownloadRecord(
+data class SystemDownloadRecord(
         val id: Long,
         val bytesDownloaded: Int,
         val bytesTotal: Int,
