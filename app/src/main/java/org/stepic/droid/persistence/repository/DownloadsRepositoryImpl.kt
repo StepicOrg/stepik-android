@@ -41,7 +41,7 @@ constructor(
     private fun countProgressForPersistentItems(persistentItems: List<PersistentItem>, systemDownloadItems: List<SystemDownloadRecord>) =
             persistentItems.mapNotNull { persistentItem ->
                 val downloadItem = systemDownloadItems.find { persistentItem.downloadId == it.id } ?: return@mapNotNull null
-                val progressItem = DownloadProgress(downloadItem.id, countItemProgress(emptyList(), listOf(downloadItem)))
+                val progressItem = DownloadProgress(downloadItem.id, countItemProgress(listOf(persistentItem), listOf(downloadItem), PersistentState.State.CACHED))
                 DownloadItem(persistentItem, progressItem)
             }.toObservable()
 }

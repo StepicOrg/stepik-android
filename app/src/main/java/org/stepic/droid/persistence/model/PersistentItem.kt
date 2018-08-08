@@ -16,6 +16,10 @@ data class PersistentItem(
     }
 }
 
+val PersistentItem.Status.isTerminal: Boolean
+        get() = this != PersistentItem.Status.IN_PROGRESS &&
+                this != PersistentItem.Status.FILE_TRANSFER
+
 val PersistentItem.Status.isCorrect: Boolean
         get() = this == PersistentItem.Status.IN_PROGRESS ||
                 this == PersistentItem.Status.FILE_TRANSFER ||

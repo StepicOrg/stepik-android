@@ -15,6 +15,10 @@ import org.stepic.droid.persistence.files.ExternalStorageManagerImpl
 import org.stepic.droid.persistence.model.PersistentItem
 import org.stepic.droid.persistence.repository.DownloadsRepository
 import org.stepic.droid.persistence.repository.DownloadsRepositoryImpl
+import org.stepic.droid.persistence.storage.PersistentItemObserver
+import org.stepic.droid.persistence.storage.PersistentItemObserverImpl
+import org.stepic.droid.persistence.storage.PersistentStateManager
+import org.stepic.droid.persistence.storage.PersistentStateManagerImpl
 import org.stepic.droid.persistence.storage.dao.SystemDownloadsDao
 import org.stepic.droid.persistence.storage.dao.SystemDownloadsDaoImpl
 import java.util.concurrent.TimeUnit
@@ -23,7 +27,7 @@ import java.util.concurrent.locks.ReentrantLock
 @Module(includes = [
     ContentModule::class,
     DownloadInteractorsModule::class,
-    DownloadTaskAdapterModule::class,
+    StructureResolversModule::class,
     ProgressProvidersModule::class
 ])
 abstract class PersistenceModule {
@@ -51,6 +55,14 @@ abstract class PersistenceModule {
     @Binds
     @PersistenceScope
     abstract fun bindDownloadTaskManager(downloadTaskManagerImpl: DownloadTaskManagerImpl): DownloadTaskManager
+
+    @Binds
+    @PersistenceScope
+    abstract fun bindPersistentStateManager(persistentStateManagerImpl: PersistentStateManagerImpl): PersistentStateManager
+
+    @Binds
+    @PersistenceScope
+    abstract fun bindPersistentItemObserver(persistentItemObserverImpl: PersistentItemObserverImpl): PersistentItemObserver
 
     @Module
     companion object {

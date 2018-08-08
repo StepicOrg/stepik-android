@@ -3,6 +3,8 @@ package org.stepic.droid.persistence.downloads.progress
 import io.reactivex.Observable
 import org.stepic.droid.persistence.di.PersistenceScope
 import org.stepic.droid.persistence.model.PersistentItem
+import org.stepic.droid.persistence.model.PersistentState
+import org.stepic.droid.persistence.storage.PersistentStateManager
 import org.stepic.droid.persistence.storage.dao.PersistentItemDao
 import org.stepic.droid.persistence.storage.dao.SystemDownloadsDao
 import org.stepic.droid.persistence.storage.structure.DBStructurePersistentItem
@@ -17,13 +19,17 @@ constructor(
         intervalUpdatesObservable: Observable<kotlin.Unit>,
 
         systemDownloadsDao: SystemDownloadsDao,
-        persistentItemDao: PersistentItemDao
-): DownloadProgressProviderBase<Unit>(updatesObservable, intervalUpdatesObservable, systemDownloadsDao, persistentItemDao), DownloadProgressProvider<Unit> {
+        persistentItemDao: PersistentItemDao,
+        persistentStateManager: PersistentStateManager
+): DownloadProgressProviderBase<Unit>(updatesObservable, intervalUpdatesObservable, systemDownloadsDao, persistentItemDao, persistentStateManager), DownloadProgressProvider<Unit> {
     override fun Unit.getId(): Long = id
 
     override val PersistentItem.keyFieldValue: Long
-        get() = task.unit
+        get() = task.structure.unit
 
     override val persistentItemKeyFieldColumn =
             DBStructurePersistentItem.Columns.UNIT
+
+    override val persistentStateType: PersistentState.Type =
+            PersistentState.Type.UNIT
 }

@@ -2,9 +2,8 @@ package org.stepic.droid.persistence.downloads.progress
 
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.toObservable
-import org.stepic.droid.persistence.model.DownloadProgress
-import org.stepic.droid.persistence.model.PersistentItem
-import org.stepic.droid.persistence.model.isCorrect
+import org.stepic.droid.persistence.model.*
+import org.stepic.droid.persistence.storage.PersistentStateManager
 import org.stepic.droid.persistence.storage.dao.PersistentItemDao
 import org.stepic.droid.persistence.storage.dao.SystemDownloadsDao
 import org.stepic.droid.util.plus
@@ -16,7 +15,8 @@ abstract class DownloadProgressProviderBase<T>(
         private val intervalUpdatesObservable: Observable<kotlin.Unit>,
 
         private val systemDownloadsDao: SystemDownloadsDao,
-        private val persistentItemDao: PersistentItemDao
+        private val persistentItemDao: PersistentItemDao,
+        private val persistentStateManager: PersistentStateManager
 ): DownloadProgressProvider<T> {
     private companion object {
         private fun List<PersistentItem>.getDownloadIdsOfCorrectItems() =
@@ -33,11 +33,22 @@ abstract class DownloadProgressProviderBase<T>(
 
     private fun getItemProgress(itemId: Long) =
             getItemUpdateObservable(itemId)                      // listen for updates
-                    .concatMapEager { getPersistentObservable(itemId) } // fetch from DB
-                    .concatMapEager(::fetchSystemDownloads)
-                    .map { (persistentItems, downloadItems) ->   // count progresses
-                        DownloadProgress(itemId, countItemProgress(persistentItems, downloadItems))
-                    }.distinctUntilChanged()                     // exclude repetitive events
+                    .concatMap { getItemProgressFromDB(itemId) } // fetch from DB
+                    //.distinctUntilChanged()                      // exclude repetitive events
+
+    private fun getItemProgressFromDB(itemId: Long) =
+            Observable.fromCallable {
+                persistentStateManager.getState(itemId, persistentStateType)
+            }.flatMap { state ->
+                when (state) {
+                    PersistentState.State.IN_PROGRESS -> Observable.just(DownloadProgress(itemId, DownloadProgress.Status.Pending))
+                    else -> getPersistentObservable(itemId)
+                            .concatMap(::fetchSystemDownloads)
+                            .map { (persistentItems, downloadItems) ->   // count progresses
+                                DownloadProgress(itemId, countItemProgress(persistentItems, downloadItems, state))
+                            }
+                }
+            }
 
     private fun getPersistentObservable(itemId: Long) =
             persistentItemDao.getItems(mapOf(persistentItemKeyFieldColumn to itemId.toString()))
@@ -53,4 +64,5 @@ abstract class DownloadProgressProviderBase<T>(
     protected abstract fun T.getId(): Long
     protected abstract val PersistentItem.keyFieldValue: Long
     protected abstract val persistentItemKeyFieldColumn: String
+    protected abstract val persistentStateType: PersistentState.Type
 }
