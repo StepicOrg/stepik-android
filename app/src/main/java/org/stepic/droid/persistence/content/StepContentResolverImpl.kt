@@ -7,6 +7,7 @@ import org.stepic.droid.persistence.files.ExternalStorageManager
 import org.stepic.droid.persistence.model.DownloadConfiguration
 import org.stepic.droid.persistence.model.PersistentItem
 import org.stepic.droid.persistence.model.StepPersistentWrapper
+import org.stepic.droid.persistence.storage.PersistentItemObserver
 import org.stepic.droid.persistence.storage.dao.PersistentItemDao
 import org.stepic.droid.persistence.storage.structure.DBStructurePersistentItem
 import org.stepik.android.model.Step
@@ -19,6 +20,7 @@ constructor(
         private val processors: Set<@JvmSuppressWildcards StepContentProcessor>,
 
         private val persistentItemDao: PersistentItemDao,
+        private val persistentItemObserver: PersistentItemObserver,
         private val externalStorageManager: ExternalStorageManager
 ): StepContentResolver {
     override fun getDownloadableContentFromStep(step: Step, configuration: DownloadConfiguration): Set<String> =
@@ -45,8 +47,7 @@ constructor(
             val localPath = externalStorageManager.resolvePathForPersistentItem(item)
 
             if (localPath == null) {
-                // todo: delete by step_id + original_path
-                persistentItemDao.remove(DBStructurePersistentItem.Columns.ORIGINAL_PATH, originalPath)
+                persistentItemObserver.update(item.copy(status = PersistentItem.Status.CANCELLED))
             } else {
                 map[originalPath] = localPath
             }

@@ -3,15 +3,13 @@ package org.stepic.droid.persistence.downloads
 import android.app.DownloadManager
 import android.net.Uri
 import io.reactivex.Completable
-import io.reactivex.Observer
 import org.stepic.droid.persistence.di.FSLock
 import org.stepic.droid.persistence.di.PersistenceScope
 import org.stepic.droid.persistence.files.ExternalStorageManager
 import org.stepic.droid.persistence.model.DownloadConfiguration
 import org.stepic.droid.persistence.model.DownloadTask
 import org.stepic.droid.persistence.model.PersistentItem
-import org.stepic.droid.persistence.storage.dao.PersistentItemDao
-import org.stepic.droid.persistence.storage.structure.DBStructurePersistentItem
+import org.stepic.droid.persistence.storage.PersistentItemObserver
 import java.io.File
 import java.io.IOException
 import java.util.concurrent.locks.ReentrantLock
@@ -23,8 +21,7 @@ class DownloadTaskManagerImpl
 @Inject
 constructor(
         private val downloadManager: DownloadManager,
-        private val updatesObserver: Observer<PersistentItem>,
-        private val persistentItemDao: PersistentItemDao,
+        private val persistentItemObserver: PersistentItemObserver,
         private val externalStorageManager: ExternalStorageManager,
 
         @FSLock
@@ -38,35 +35,30 @@ constructor(
 
         val downloadId = downloadManager.enqueue(request)
 
-        val persistentItem = PersistentItem(
+        persistentItemObserver.update(PersistentItem(
                 task = task,
                 downloadId = downloadId,
                 status = PersistentItem.Status.IN_PROGRESS
-        )
-        persistentItemDao.insertOrReplace(persistentItem)
-        updatesObserver.onNext(persistentItem)
+        ))
     }
 
-    override fun removeTask(downloadId: Long, task: DownloadTask): Completable = Completable.fromAction {
+    override fun removeTasks(items: List<PersistentItem>): Completable = Completable.fromAction {
         fsLock.withLock {
-            downloadManager.remove(downloadId)
-
-            val item = persistentItemDao.get(mapOf(
-                    DBStructurePersistentItem.Columns.STEP to task.step.toString(),
-                    DBStructurePersistentItem.Columns.ORIGINAL_PATH to task.originalPath
-            )) ?: return@fromAction
-
-            persistentItemDao.insertOrUpdate(item.copy(status = PersistentItem.Status.FILE_TRANSFER))
-
-            externalStorageManager.resolvePathForPersistentItem(item)?.let {
-                val file = File(it)
-                if (file.exists() && !file.delete()) {
-                    throw IOException("Can't remove file: $it")
-                }
+            items.forEach {
+                persistentItemObserver.update(it.copy(status = PersistentItem.Status.FILE_TRANSFER))
             }
 
-            persistentItemDao.remove(DBStructurePersistentItem.Columns.DOWNLOAD_ID, downloadId.toString())
-            updatesObserver.onNext(item.copy(status = PersistentItem.Status.CANCELLED))
+            items.forEach { item ->
+                downloadManager.remove(item.downloadId)
+                externalStorageManager.resolvePathForPersistentItem(item)?.let {
+                    val file = File(it)
+                    if (file.exists() && !file.delete()) {
+                        throw IOException("Can't remove file: $it")
+                    }
+                }
+
+                persistentItemObserver.update(item.copy(status = PersistentItem.Status.CANCELLED))
+            }
         }
     }
 }
