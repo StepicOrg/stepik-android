@@ -443,6 +443,11 @@
             </intent-filter>
         </receiver>
 
+        <service
+            android:name=".persistence.service.FileTransferService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:exported="true" />
+
         <provider
             android:name=".persistence.providers.GenericFileProvider"
             android:authorities="${applicationId}.provider"

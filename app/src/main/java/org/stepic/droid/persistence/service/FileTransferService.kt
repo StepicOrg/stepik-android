@@ -1,0 +1,91 @@
+package org.stepic.droid.persistence.service
+
+import android.content.Context
+import android.content.Intent
+import android.support.v4.app.JobIntentService
+import org.stepic.droid.base.App
+import org.stepic.droid.persistence.di.FSLock
+import org.stepic.droid.persistence.files.ExternalStorageManager
+import org.stepic.droid.persistence.model.PersistentItem
+import org.stepic.droid.persistence.model.PersistentState
+import org.stepic.droid.persistence.model.StorageLocation
+import org.stepic.droid.persistence.storage.PersistentItemObserver
+import org.stepic.droid.persistence.storage.PersistentStateManager
+import org.stepic.droid.persistence.storage.dao.PersistentItemDao
+import org.stepic.droid.persistence.storage.structure.DBStructurePersistentItem
+import java.io.File
+import java.util.concurrent.locks.ReentrantLock
+import javax.inject.Inject
+import kotlin.concurrent.withLock
+
+class FileTransferService: JobIntentService() {
+    companion object {
+        private const val JOB_ID = 2001
+
+        fun enqueueWork(context: Context) {
+            enqueueWork(context, FileTransferService::class.java, JOB_ID, Intent())
+        }
+    }
+
+    @Inject
+    @field:FSLock
+    lateinit var fsLock: ReentrantLock
+
+    @Inject
+    lateinit var persistentItemObserver: PersistentItemObserver
+
+    @Inject
+    lateinit var persistentItemDao: PersistentItemDao
+
+    @Inject
+    lateinit var persistentStateManager: PersistentStateManager
+
+    @Inject
+    lateinit var externalStorageManager: ExternalStorageManager
+
+    override fun onCreate() {
+        super.onCreate()
+        App.component().inject(this)
+    }
+
+    override fun onHandleWork(intent: Intent) = fsLock.withLock {
+        val storage = externalStorageManager.getSelectedStorageLocation()
+        val items = persistentItemDao.getAll(mapOf(DBStructurePersistentItem.Columns.STATUS to PersistentItem.Status.COMPLETED.name))
+
+        items.groupBy { it.task.structure.step }.forEach { _, downloads ->
+            val structure = downloads.first().task.structure
+            persistentStateManager.invalidateStructure(structure, PersistentState.State.IN_PROGRESS)
+
+            downloads.forEach {
+                moveFile(it, storage)
+            }
+
+            persistentStateManager.invalidateStructure(structure, PersistentState.State.CACHED)
+        }
+    }
+
+    private fun moveFile(persistentItem: PersistentItem, storage: StorageLocation) {
+        try {
+            persistentItemObserver.update(persistentItem.copy(status = PersistentItem.Status.FILE_TRANSFER))
+
+            val path = externalStorageManager.resolvePathForPersistentItem(persistentItem)
+                    ?: return persistentItemObserver.update(persistentItem.copy(status = PersistentItem.Status.CANCELLED))
+            val file = File(path)
+
+            val targetFile = File(storage.path, persistentItem.localFileName)
+
+            if (file.canonicalPath != targetFile.canonicalPath) {
+                file.copyTo(targetFile, overwrite = true)
+                file.delete()
+            }
+
+            persistentItemObserver.update(persistentItem.copy(
+                    status = PersistentItem.Status.COMPLETED,
+                    localFileDir = storage.path.canonicalPath,
+                    isInAppInternalDir = storage.type == StorageLocation.Type.APP_INTERNAL
+            ))
+        } catch (_: Exception) {
+            persistentItemObserver.update(persistentItem.copy(status = PersistentItem.Status.COMPLETED)) // means we are not moved file but it OK
+        }
+    }
+}

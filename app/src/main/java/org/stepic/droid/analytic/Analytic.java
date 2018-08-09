@@ -515,6 +515,7 @@ public interface Analytic {
 
     interface DownloaderV2 {
         String RECEIVE_BAD_DOWNLOAD_STATUS = "downloader_v2_bad_download_status";
+        String FILE_NOT_FOND = "downloader_v2_file_not_fond";
 
         interface Params {
             String DOWNLOAD_STATUS = "status";

@@ -6,6 +6,7 @@ import org.stepic.droid.persistence.model.StorageLocation
 interface ExternalStorageManager {
     fun getAvailableStorageLocations(): List<StorageLocation>
     fun getSelectedStorageLocation(): StorageLocation
+    fun setStorageLocation(storage: StorageLocation)
 
     /**
      * Returns local canonical path to file in item

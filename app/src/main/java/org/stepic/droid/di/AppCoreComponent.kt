@@ -37,6 +37,7 @@ import org.stepic.droid.notifications.HackerFcmInstanceId
 import org.stepic.droid.notifications.NotificationBroadcastReceiver
 import org.stepic.droid.persistence.di.PersistenceModule
 import org.stepic.droid.persistence.service.DownloadCompleteService
+import org.stepic.droid.persistence.service.FileTransferService
 import org.stepic.droid.receivers.BootCompletedReceiver
 import org.stepic.droid.receivers.DownloadClickReceiver
 import org.stepic.droid.receivers.InternetConnectionEnabledReceiver
@@ -216,4 +217,5 @@ interface AppCoreComponent {
 
 
     fun inject(downloadCompleteService: DownloadCompleteService)
+    fun inject(fileTransgerService: FileTransferService)
 }
