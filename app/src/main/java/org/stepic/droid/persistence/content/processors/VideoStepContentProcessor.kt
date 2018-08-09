@@ -30,10 +30,10 @@ constructor(): StepContentProcessor {
         val thumbnail = video.thumbnail?.let { links[it] ?: it } ?: return stepWrapper
 
         val urls = video.urls?.mapNotNull {
-            val url = it.url?.let { links[it] ?: it } ?: return@mapNotNull null
+            val url = it.url?.let(links::get) ?: return@mapNotNull null
             val quality = it.quality ?: return@mapNotNull null
             VideoUrl(url, quality)
-        } ?: return stepWrapper
+        }?.takeIf(List<VideoUrl>::isNotEmpty) ?: return stepWrapper
 
         val cachedVideo = Video(
                 id = video.id,

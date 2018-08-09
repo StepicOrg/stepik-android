@@ -35,7 +35,6 @@ import org.stepic.droid.ui.listeners.OnClickLoadListener;
 import org.stepic.droid.ui.listeners.OnItemClickListener;
 import org.stepic.droid.util.FileUtil;
 import org.stepic.droid.util.ThumbnailParser;
-import org.stepic.droid.util.VideoFileResolver;
 import org.stepic.droid.util.VideoStepHelperKt;
 
 import java.io.File;
@@ -64,9 +63,6 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
     @Inject
     CleanManager cleanManager;
-
-    @Inject
-    VideoFileResolver videoFileResolver;
 
     @Inject
     DatabaseFacade databaseFacade;
@@ -153,7 +149,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
             final CachedVideo originalVideo = cachedVideoList.get(position);
             final String originalPath = originalVideo.getUrl();
 
-            final CachedVideo video = videoFileResolver.resolveVideoFile(originalVideo);
+            final CachedVideo video = null; //videoFileResolver.resolveVideoFile(originalVideo);
 
             if (video != null && video.getUrl() != null) {
                 if (!video.getUrl().equals(originalPath)) {

@@ -20,11 +20,13 @@ import javax.inject.Inject
 
 @CourseAndSectionsScope
 class SectionsPresenter
-@Inject constructor(
+@Inject
+constructor(
         private val threadPoolExecutor: ThreadPoolExecutor,
         private val mainHandler: MainHandler,
         private val api: Api,
-        private val databaseFacade: DatabaseFacade) : PresenterBase<SectionsView>() {
+        private val databaseFacade: DatabaseFacade
+) : PresenterBase<SectionsView>() {
 
     private val sectionList: MutableList<Section> = ArrayList()
     private val isLoading: AtomicBoolean = AtomicBoolean(false)

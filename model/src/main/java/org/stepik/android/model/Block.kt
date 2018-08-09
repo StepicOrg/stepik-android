@@ -11,8 +11,6 @@ class Block(
         val text: String? = null,
         val video: Video? = null, //always external video
 
-        var cachedLocalVideo: Video? = null,
-
         val options: CodeOptions? = null
 ) : Parcelable {
     override fun describeContents(): Int = 0
@@ -21,7 +19,6 @@ class Block(
         dest.writeString(this.name)
         dest.writeString(this.text)
         dest.writeParcelable(this.video, flags)
-        dest.writeParcelable(this.cachedLocalVideo, flags)
         dest.writeParcelable(this.options, flags)
     }
 
@@ -29,7 +26,6 @@ class Block(
         override fun createFromParcel(parcel: Parcel): Block = Block(
                 parcel.readString(),
                 parcel.readString(),
-                parcel.readParcelable(Video::class.java.classLoader),
                 parcel.readParcelable(Video::class.java.classLoader),
                 parcel.readParcelable(CodeOptions::class.java.classLoader)
         )
