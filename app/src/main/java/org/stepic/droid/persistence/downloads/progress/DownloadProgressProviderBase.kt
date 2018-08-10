@@ -1,14 +1,14 @@
 package org.stepic.droid.persistence.downloads.progress
 
+import io.reactivex.BackpressureStrategy
+import io.reactivex.Flowable
 import io.reactivex.Observable
-import io.reactivex.rxkotlin.toObservable
+import io.reactivex.rxkotlin.toFlowable
 import org.stepic.droid.persistence.model.*
 import org.stepic.droid.persistence.storage.PersistentStateManager
 import org.stepic.droid.persistence.storage.dao.PersistentItemDao
 import org.stepic.droid.persistence.storage.dao.SystemDownloadsDao
-import org.stepic.droid.util.plus
 import org.stepic.droid.util.zip
-import java.util.concurrent.TimeUnit
 
 abstract class DownloadProgressProviderBase<T>(
         private val updatesObservable: Observable<PersistentItem>,
@@ -20,33 +20,35 @@ abstract class DownloadProgressProviderBase<T>(
 ): DownloadProgressProvider<T> {
     private companion object {
         private fun List<PersistentItem>.getDownloadIdsOfCorrectItems() =
-                this.filter { it.status.isCorrect }.map{ it.downloadId }.toLongArray()
-
-        private const val UPDATES_DEBOUNCE_MS = 100L
+                this.filter { it.status.isCorrect }.map { it.downloadId }.toLongArray()
     }
 
-    override fun getProgress(vararg items: T): Observable<DownloadProgress> =
+    override fun getProgress(vararg items: T): Flowable<DownloadProgress> =
             getProgress(*items.map { it.getId() }.toLongArray())
 
-    override fun getProgress(vararg ids: Long): Observable<DownloadProgress> =
-            ids.toObservable().flatMap(::getItemProgress)
+    override fun getProgress(vararg ids: Long): Flowable<DownloadProgress> =
+            ids.toFlowable().flatMap(::getItemProgress)
 
-    private fun getItemProgress(itemId: Long) =
-            getItemUpdateObservable(itemId)                      // listen for updates
-                    .concatMap { getItemProgressFromDB(itemId) } // fetch from DB
-                    //.distinctUntilChanged()                      // exclude repetitive events
+    private fun getItemProgress(itemId: Long) = getItemUpdateObservable(itemId)
+            .switchMap { _ ->
+                intervalUpdatesObservable.startWith(kotlin.Unit)
+                        .concatMap { getItemProgressFromDB(itemId) }
+                        .takeUntil { it.status == DownloadProgress.Status.Cached || it.status == DownloadProgress.Status.NotCached }
+            }.toFlowable(BackpressureStrategy.LATEST)
 
     private fun getItemProgressFromDB(itemId: Long) =
             Observable.fromCallable {
                 persistentStateManager.getState(itemId, persistentStateType)
-            }.flatMap { state ->
+            }.concatMap { state ->
                 when (state) {
-                    PersistentState.State.IN_PROGRESS -> Observable.just(DownloadProgress(itemId, DownloadProgress.Status.Pending))
-                    else -> getPersistentObservable(itemId)
-                            .concatMap(::fetchSystemDownloads)
-                            .map { (persistentItems, downloadItems) ->   // count progresses
-                                DownloadProgress(itemId, countItemProgress(persistentItems, downloadItems, state))
-                            }
+                    PersistentState.State.IN_PROGRESS ->
+                        Observable.just(DownloadProgress(itemId, DownloadProgress.Status.Pending))
+                    else ->
+                        getPersistentObservable(itemId)
+                                .concatMap(::fetchSystemDownloads)
+                                .map { (persistentItems, downloadItems) ->   // count progresses
+                                    DownloadProgress(itemId, countItemProgress(persistentItems, downloadItems, state))
+                                }
                 }
             }
 
@@ -57,9 +59,7 @@ abstract class DownloadProgressProviderBase<T>(
             Observable.just(items) zip systemDownloadsDao.get(*items.getDownloadIdsOfCorrectItems())
 
     private fun getItemUpdateObservable(itemId: Long) =
-            updatesObservable.filter { it.keyFieldValue == itemId }.map { kotlin.Unit }.debounce(UPDATES_DEBOUNCE_MS, TimeUnit.MILLISECONDS) +
-                    intervalUpdatesObservable +
-                    Observable.just(kotlin.Unit)
+            updatesObservable.filter { it.keyFieldValue == itemId }.map { kotlin.Unit }.startWith(kotlin.Unit)
 
     protected abstract fun T.getId(): Long
     protected abstract val PersistentItem.keyFieldValue: Long

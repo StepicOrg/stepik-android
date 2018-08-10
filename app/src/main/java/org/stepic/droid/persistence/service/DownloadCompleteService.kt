@@ -4,7 +4,6 @@ import android.app.DownloadManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Bundle
 import android.support.v4.app.JobIntentService
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
@@ -71,17 +70,14 @@ class DownloadCompleteService: JobIntentService() {
             download == null -> // download was cancelled with system UI
                 persistentItemObserver.update(persistentItem.copy(status = PersistentItem.Status.CANCELLED))
 
-            persistentItem.status != PersistentItem.Status.IN_PROGRESS -> { // download was cancelled but we still receive this message
-                downloadManager.remove(downloadId)
-                Unit
-            }
-
-            download.status == DownloadManager.STATUS_SUCCESSFUL -> // ok
+            download.status == DownloadManager.STATUS_SUCCESSFUL && persistentItem.status == PersistentItem.Status.IN_PROGRESS -> // ok
                 moveDownloadedFile(download, persistentItem)
 
-            else ->
-                analytic.reportEvent(Analytic.DownloaderV2.RECEIVE_BAD_DOWNLOAD_STATUS,
-                        Bundle(1).apply { putInt(Analytic.DownloaderV2.Params.DOWNLOAD_STATUS, download.status) })
+            else -> {
+                downloadManager.remove(downloadId)
+                analytic.reportEventWithName(Analytic.DownloaderV2.RECEIVE_BAD_DOWNLOAD_STATUS,
+                        "system status = ${download.status} / status = ${persistentItem.status}")
+            }
         }
     }
 
