@@ -74,11 +74,11 @@ abstract class DownloadInteractorBase<T>(
 
     override fun removeTask(id: Long): Completable =
             structureResolver.resolveStructure(id)
-                    .doOnNext { persistentStateManager.invalidateStructure(it, PersistentState.State.IN_PROGRESS) }
                     .flatMapCompletable { structure ->
+                        persistentStateManager.invalidateStructure(structure, PersistentState.State.IN_PROGRESS)
                         persistentItemDao
                                 .getItems(mapOf(keyFieldColumn to id.toString()))
-                                .flatMapCompletable(downloadTaskManager::removeTasks)
+                                .concatMapCompletable(downloadTaskManager::removeTasks)
                                 .doOnComplete {
                                     persistentStateManager.invalidateStructure(structure, PersistentState.State.NOT_CACHED)
                                 }.doOnError {

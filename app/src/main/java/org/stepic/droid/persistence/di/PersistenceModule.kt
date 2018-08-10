@@ -76,7 +76,7 @@ abstract class PersistenceModule {
         @JvmStatic
         @PersistenceScope
         fun provideIntervalUpdatesObservable(): Observable<kotlin.Unit> =
-                Observable.interval(500, TimeUnit.MILLISECONDS).map { kotlin.Unit }.share()
+                Observable.interval(1000, TimeUnit.MILLISECONDS).map { kotlin.Unit }.share()
 
         @Provides
         @JvmStatic
