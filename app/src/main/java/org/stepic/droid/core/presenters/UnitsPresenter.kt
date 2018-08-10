@@ -214,11 +214,7 @@ constructor(
 
                         for (lessonItem in backgroundLessons) {
                             databaseFacade.addLesson(lessonItem)
-                            val cachedLesson = cacheLessonMap[lessonItem.id]
-                            lessonItem.isLoading = cachedLesson?.isLoading ?: false
-                            lessonItem.isCached = cachedLesson?.isCached ?: false
                         }
-
 
                         unitList.clear()
                         unitList.addAll(backgroundUnits)

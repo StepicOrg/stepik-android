@@ -122,8 +122,6 @@ interface AppCoreComponent {
 
     fun inject(dialogFragment: VideoQualityDialog)
 
-    fun inject(loadService: LoadService)
-
     fun inject(viewPusher: ViewPusher)
 
     fun inject(internetConnectionEnabledReceiver: InternetConnectionEnabledReceiver)
@@ -137,8 +135,6 @@ interface AppCoreComponent {
     fun inject(coursePropertyAdapter: CoursePropertyAdapter)
 
     fun inject(remindPasswordDialogFragment: RemindPasswordDialogFragment)
-
-    fun inject(service: CancelLoadingService)
 
     fun inject(downloadClickReceiver: DownloadClickReceiver)
 

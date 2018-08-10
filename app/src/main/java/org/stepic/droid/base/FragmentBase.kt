@@ -20,8 +20,6 @@ import org.stepic.droid.fonts.FontsProvider
 import org.stepic.droid.notifications.LocalReminder
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.preferences.UserPreferences
-import org.stepic.droid.storage.CancelSniffer
-import org.stepic.droid.storage.IDownloadManager
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.ui.util.CloseIconHolder
 import org.stepic.droid.util.resolvers.CoursePropertyResolver
@@ -69,9 +67,6 @@ open class FragmentBase : Fragment() {
     lateinit var localProgressManager: LocalProgressManager
 
     @Inject
-    lateinit var downloadManager: IDownloadManager
-
-    @Inject
     lateinit var sharedPreferenceHelper: SharedPreferenceHelper
 
     @Inject
@@ -88,9 +83,6 @@ open class FragmentBase : Fragment() {
 
     @Inject
     lateinit var systemDownloadManager: DownloadManager
-
-    @Inject
-    lateinit var cancelSniffer: CancelSniffer
 
     @Inject
     lateinit var exoPhoneListener: MyExoPhoneStateListener

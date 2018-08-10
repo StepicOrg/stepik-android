@@ -10,7 +10,6 @@ import org.stepic.droid.core.LocalProgressManager;
 import org.stepic.droid.core.updatingstep.contract.UpdatingStepPoster;
 import org.stepik.android.model.Step;
 import org.stepic.droid.preferences.UserPreferences;
-import org.stepic.droid.storage.StoreStateManager;
 import org.stepic.droid.storage.operations.DatabaseFacade;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.resolvers.StepHelper;
@@ -38,8 +37,6 @@ public class ViewPusher extends IntentService {
     Api api;
     @Inject
     DatabaseFacade database;
-    @Inject
-    StoreStateManager storeStateManager;
 
     @Inject
     LocalProgressManager unitProgressManager;

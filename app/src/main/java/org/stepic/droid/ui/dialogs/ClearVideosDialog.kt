@@ -9,7 +9,6 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.preferences.UserPreferences
-import org.stepic.droid.storage.CleanManager
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.DbParseHelper
 import org.stepic.droid.util.FileUtil
@@ -28,9 +27,6 @@ class ClearVideosDialog : DialogFragment() {
 
     @Inject
     lateinit var databaseFacade: DatabaseFacade
-
-    @Inject
-    lateinit var cleanManager: CleanManager
 
     @Inject
     lateinit var threadPoolExecutor: ThreadPoolExecutor

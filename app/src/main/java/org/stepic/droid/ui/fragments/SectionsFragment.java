@@ -47,8 +47,6 @@ import org.stepic.droid.base.App;
 import org.stepic.droid.base.Client;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.core.LocalProgressManager;
-import org.stepic.droid.core.downloadingstate.DownloadingPresenter;
-import org.stepic.droid.core.downloadingstate.DownloadingView;
 import org.stepic.droid.core.dropping.contract.DroppingListener;
 import org.stepic.droid.core.presenters.CalendarPresenter;
 import org.stepic.droid.core.presenters.CourseFinderPresenter;
@@ -70,12 +68,12 @@ import org.stepic.droid.core.presenters.contracts.SectionsView;
 import org.stepic.droid.features.deadlines.ui.dialogs.EditDeadlinesDialog;
 import org.stepic.droid.features.deadlines.ui.dialogs.LearningRateDialog;
 import org.stepic.droid.model.CalendarItem;
+import org.stepic.droid.persistence.model.DownloadProgress;
 import org.stepik.android.model.Course;
 import org.stepik.android.model.Progress;
 import org.stepik.android.model.Section;
 import org.stepic.droid.notifications.StepikNotificationManager;
 import org.stepic.droid.notifications.model.Notification;
-import org.stepic.droid.storage.StoreStateManager;
 import org.stepic.droid.ui.adapters.SectionAdapter;
 import org.stepic.droid.ui.custom.StepikSwipeRefreshLayout;
 import org.stepic.droid.ui.dialogs.ChooseCalendarDialog;
@@ -98,9 +96,7 @@ import org.stepic.droid.web.storage.model.StorageRecord;
 
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -122,8 +118,6 @@ public class SectionsFragment
         LocalProgressManager.SectionProgressListener,
         ChooseCalendarDialog.CallbackContract,
         DroppingListener,
-        StoreStateManager.SectionCallback,
-        DownloadingView,
         PersonalDeadlinesView {
 
     public static final String joinFlag = "joinFlag";
@@ -211,21 +205,14 @@ public class SectionsFragment
     InvitationPresenter invitationPresenter;
 
     @Inject
-    DownloadingPresenter downloadingPresenter;
-
-    @Inject
     DownloadingInteractionPresenter downloadingInteractionPresenter;
 
     @Inject
     Client<DroppingListener> droppingListenerClient;
 
-    @Inject
-    StoreStateManager storeStateManager;
-
     private boolean wasIndexed;
     private Uri urlInWeb;
     private String title;
-    private Map<Long, Float> sectionIdToLoadingStateMap = new HashMap<>();
 
     LinearLayoutManager linearLayoutManager;
 
@@ -271,8 +258,8 @@ public class SectionsFragment
         linearLayoutManager = new LinearLayoutManager(getActivity());
         sectionsRecyclerView.setLayoutManager(linearLayoutManager);
         sectionList = new ArrayList<>();
-        adapter = new SectionAdapter(downloadingPresenter, sectionList, ((AppCompatActivity) getActivity()),
-                calendarPresenter, deadlinesPresenter, sectionsPresenter.getProgressMap(), sectionIdToLoadingStateMap, this, downloadingInteractionPresenter);
+        adapter = new SectionAdapter(sectionList, ((AppCompatActivity) getActivity()),
+                calendarPresenter, deadlinesPresenter, sectionsPresenter.getProgressMap(), this, downloadingInteractionPresenter);
         sectionsRecyclerView.setAdapter(adapter);
 
         sectionsRecyclerView.setItemAnimator(new SlideInRightAnimator());
@@ -287,7 +274,6 @@ public class SectionsFragment
 
         joinCourseProgressDialog = new LoadingProgressDialog(getContext());
         ProgressHelper.activate(loadOnCenterProgressBar);
-        storeStateManager.addSectionCallback(this);
         localProgressManager.subscribe(this);
         droppingListenerClient.subscribe(this);
         calendarPresenter.attachView(this);
@@ -296,7 +282,6 @@ public class SectionsFragment
         sectionsPresenter.attachView(this);
         deadlinesPresenter.attachView(this);
         invitationPresenter.attachView(this);
-        downloadingPresenter.attachView(this);
 
         ToolbarHelperKt.initCenteredToolbar(this, R.string.syllabus_title, true);
         onNewIntent(getActivity().getIntent());
@@ -471,10 +456,6 @@ public class SectionsFragment
             linearLayoutManager.scrollToPositionWithOffset(scrollTo, 0);
             afterUpdateModulePosition = -1;
         }
-
-        for (Section section : sectionList) {
-            downloadingPresenter.onStateChanged(section.getId(), section.isLoading());
-        }
     }
 
     @Override
@@ -512,9 +493,6 @@ public class SectionsFragment
         super.onStart();
         reportIndexToGoogle();
         downloadingInteractionPresenter.attachView(this);
-        for (Section section : sectionList) {
-            downloadingPresenter.onStateChanged(section.getId(), section.isLoading());
-        }
     }
 
     @Override
@@ -547,34 +525,12 @@ public class SectionsFragment
         sectionsPresenter.detachView(this);
         deadlinesPresenter.detachView(this);
         invitationPresenter.detachView(this);
-        storeStateManager.removeSectionCallback(this);
         droppingListenerClient.unsubscribe(this);
         goToCatalog.setOnClickListener(null);
         swipeRefreshLayout.setOnRefreshListener(null);
         localProgressManager.unsubscribe(this);
-        downloadingPresenter.detachView(this);
         super.onDestroyView();
     }
-
-    private void updateState(long sectionId, boolean isCached, boolean isLoading) {
-        int position = -1;
-        Section section = null;
-        for (int i = 0; i < sectionList.size(); i++) {
-            if (sectionList.get(i).getId() == sectionId) {
-                position = i;
-                section = sectionList.get(i);
-                break;
-            }
-        }
-        if (section == null || position == -1 || position >= sectionList.size()) return;
-
-        //now we have not null section and correct position at oldList
-        section.setCached(isCached);
-        section.setLoading(isLoading);
-        downloadingPresenter.onStateChanged(sectionId, isLoading);
-        adapter.notifyItemChanged(position + SectionAdapter.PRE_SECTION_LIST_DELTA);
-    }
-
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -993,42 +949,10 @@ public class SectionsFragment
     }
 
     @Override
-    public void onSectionCached(long sectionId) {
-        updateState(sectionId, true, false);
-    }
-
-    @Override
-    public void onSectionNotCached(long sectionId) {
-        updateState(sectionId, false, false);
-    }
-
-    @Override
     public void onProgressUpdated(@NotNull Progress newProgress, long courseId) {
         if (course != null && course.getId() == courseId) {
             sectionsPresenter.updateSectionProgress(newProgress);
         }
-    }
-
-    @Override
-    public void onNewProgressValue(long id, float portion) {
-        Timber.d("new progress value for " + id + " = " + portion);
-        int position = -1;
-        for (int i = 0; i < sectionList.size(); i++) {
-            Section section = sectionList.get(i);
-            if (section.getId() == id) {
-                position = i;
-            }
-        }
-
-        if (position < 0) {
-            return;
-        }
-
-        position += SectionAdapter.PRE_SECTION_LIST_DELTA;
-
-        //change state for updating in adapter
-        sectionIdToLoadingStateMap.put(id, portion);
-        adapter.notifyItemChanged(position);
     }
 
     @Override
@@ -1077,5 +1001,10 @@ public class SectionsFragment
     public void showPersonalDeadlinesError() {
         ProgressHelper.dismiss(joinCourseProgressDialog);
         Toast.makeText(getContext(), R.string.deadlines_fetching_error, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showDownloadProgress(@NotNull DownloadProgress progress) {
+        adapter.setItemDownloadProgress(progress);
     }
 }

@@ -15,7 +15,6 @@ import org.stepic.droid.core.internetstate.contract.InternetEnabledPoster;
 import org.stepic.droid.core.updatingstep.contract.UpdatingStepPoster;
 import org.stepik.android.model.Step;
 import org.stepic.droid.model.ViewedNotification;
-import org.stepic.droid.storage.StoreStateManager;
 import org.stepic.droid.storage.operations.DatabaseFacade;
 import org.stepic.droid.util.resolvers.StepHelper;
 import org.stepic.droid.web.Api;
@@ -39,9 +38,6 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
 
     @Inject
     DatabaseFacade databaseFacade;
-
-    @Inject
-    StoreStateManager storeStateManager;
 
     @Inject
     Analytic analytic;

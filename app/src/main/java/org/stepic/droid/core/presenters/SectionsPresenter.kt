@@ -95,13 +95,7 @@ constructor(
                                     .associateBy { it.id }
                             databaseFacade.removeSectionsOfCourse(course.id)
                             sections.forEach {
-                                val cachedSection: Section? = cachedSections[it.id]
-                                if (cachedSection != null) {
-                                    it.isCached = cachedSection.isCached
-                                    it.isLoading = cachedSection.isLoading
-                                }
                                 databaseFacade.addSection(it)
-                                databaseFacade.updateOnlyCachedLoadingSection(it)
                             }
 
                             val progressMapOnBackground = fetchProgresses(sections)// we already shown cached sections, now show from Internet
@@ -151,7 +145,7 @@ constructor(
                 val progressId = progress.id
                 if (position >= 0 && progressViewModel != null && progressId != null) {
                     mainHandler.post {
-                        progressMap.put(progressId, progressViewModel)
+                        progressMap[progressId] = progressViewModel
                         view?.updatePosition(position)
                     }
                 }
@@ -162,25 +156,17 @@ constructor(
     }
 
     @WorkerThread
-    private fun fetchProgresses(sectionList: List<Section>): Map<String, ProgressViewModel> {
-        try {
-            val progressIds
-                    = sectionList
-                    .map { it.progress }
-                    .filterNotNull()
-                    .toTypedArray()
-            val progresses = api.getProgresses(progressIds).execute().body()!!.progresses
-            val progressIdToProgressViewModel = progresses.mapNotNull { it.transformToViewModel() }.associateBy { it.progressId }
-            threadPoolExecutor.execute {
-                //save to database
-                progresses.filterNotNull().forEach { databaseFacade.addProgress(it) }
-            }
-            return progressIdToProgressViewModel
-        } catch (exception: Exception) {
-            Timber.d("cant show progresses")
-            return emptyMap()
+    private fun fetchProgresses(sectionList: List<Section>): Map<String, ProgressViewModel> = try {
+        val progressIds = sectionList.mapNotNull { it.progress }.toTypedArray()
+        val progresses = api.getProgresses(progressIds).execute().body()!!.progresses
+        val progressIdToProgressViewModel = progresses.mapNotNull { it.transformToViewModel() }.associateBy { it.progressId }
+        threadPoolExecutor.execute {
+            //save to database
+            progresses.filterNotNull().forEach { databaseFacade.addProgress(it) }
         }
-
+        progressIdToProgressViewModel
+    } catch (exception: Exception) {
+        Timber.d("cant show progresses")
+        emptyMap()
     }
-
 }

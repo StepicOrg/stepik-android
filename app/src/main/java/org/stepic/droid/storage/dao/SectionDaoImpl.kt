@@ -31,8 +31,6 @@ constructor(
         val columnIndexCourseId = cursor.getColumnIndex(DbStructureSections.Column.COURSE)
         val columnIndexPosition = cursor.getColumnIndex(DbStructureSections.Column.POSITION)
         val columnIndexUnits = cursor.getColumnIndex(DbStructureSections.Column.UNITS)
-        val indexIsCached = cursor.getColumnIndex(DbStructureSections.Column.IS_CACHED)
-        val indexIsLoading = cursor.getColumnIndex(DbStructureSections.Column.IS_LOADING)
         val indexTestSection = cursor.getColumnIndex(DbStructureSections.Column.TEST_SECTION)
         val indexDiscountingPolicy = cursor.getColumnIndex(DbStructureSections.Column.DISCOUNTING_POLICY)
         val indexIsExam = cursor.getColumnIndex(DbStructureSections.Column.IS_EXAM)
@@ -56,8 +54,6 @@ constructor(
                 hardDeadline = dateAdapter.stringToDate(cursor.getString(columnIndexHardDeadline)),
                 course = cursor.getLong(columnIndexCourseId),
                 position = cursor.getInt(columnIndexPosition),
-                isCached = cursor.getInt(indexIsCached) > 0,
-                isLoading = cursor.getInt(indexIsLoading) > 0,
                 units = units,
                 discountingPolicy = discountingPolicyType,
                 progress = cursor.getString(indexProgress),

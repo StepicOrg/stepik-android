@@ -175,49 +175,6 @@ class DatabaseFacade
         }
     }
 
-    fun isLessonCached(lesson: Lesson?): Boolean {
-        val id = lesson?.id ?: return false
-        val dbLesson = lessonDao.get(DbStructureLesson.Column.LESSON_ID, id.toString())
-        return dbLesson != null && dbLesson.isCached
-    }
-
-    fun isStepCached(step: Step?): Boolean {
-        val id = step?.id ?: return false
-        return isStepCached(id)
-    }
-
-    fun isStepCached(stepId: Long): Boolean {
-        val dbStep = stepDao.get(DbStructureStep.Column.STEP_ID, stepId.toString())
-        return dbStep != null && dbStep.isCached
-    }
-
-    fun updateOnlyCachedLoadingStep(step: Step?) {
-        step?.let {
-            val cv = ContentValues()
-            cv.put(DbStructureStep.Column.IS_LOADING, step.isLoading)
-            cv.put(DbStructureStep.Column.IS_CACHED, step.isCached)
-            stepDao.update(DbStructureStep.Column.STEP_ID, step.id.toString(), cv)
-        }
-    }
-
-    fun updateOnlyCachedLoadingLesson(lesson: Lesson?) {
-        lesson?.let {
-            val cv = ContentValues()
-            cv.put(DbStructureLesson.Column.IS_LOADING, lesson.isLoading)
-            cv.put(DbStructureLesson.Column.IS_CACHED, lesson.isCached)
-            lessonDao.update(DbStructureLesson.Column.LESSON_ID, lesson.id.toString(), cv)
-        }
-    }
-
-    fun updateOnlyCachedLoadingSection(section: Section?) {
-        section?.let {
-            val cv = ContentValues()
-            cv.put(DbStructureSections.Column.IS_LOADING, section.isLoading)
-            cv.put(DbStructureSections.Column.IS_CACHED, section.isCached)
-            sectionDao.update(DbStructureSections.Column.SECTION_ID, section.id.toString(), cv)
-        }
-    }
-
     fun getAllCourses(type: Table) = getCourseDao(type).getAll()
 
     fun addCourse(course: Course, type: Table) = getCourseDao(type).insertOrUpdate(course)
@@ -247,19 +204,6 @@ class DatabaseFacade
 
     fun addVideo(cachedVideo: CachedVideo?) = cachedVideo?.let { cachedVideoDao.insertOrUpdate(cachedVideo) }
 
-    fun deleteDownloadEntityByDownloadId(downloadId: Long) =
-            downloadEntityDao.remove(DbStructureSharedDownloads.Column.DOWNLOAD_ID, downloadId.toString())
-
-    fun isExistDownloadEntityByVideoId(videoId: Long) =
-            downloadEntityDao.isInDb(DbStructureSharedDownloads.Column.VIDEO_ID, videoId.toString())
-
-    fun deleteVideo(video: Video) =
-            deleteVideo(video.id)
-
-    fun deleteVideo(videoId: Long) =
-            cachedVideoDao.remove(DbStructureCachedVideo.Column.VIDEO_ID, videoId.toString())
-
-    fun deleteVideoByUrl(path: String?) = path?.let { cachedVideoDao.remove(DbStructureCachedVideo.Column.URL, path) }
 
     fun deleteStep(step: Step?) {
         val stepId = step?.id ?: return

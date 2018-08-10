@@ -23,7 +23,6 @@ import org.stepic.droid.base.App;
 import org.stepic.droid.base.Client;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.core.LessonSessionManager;
-import org.stepic.droid.core.downloadingstate.DownloadingPresenter;
 import org.stepic.droid.core.presenters.DownloadingInteractionPresenter;
 import org.stepic.droid.core.presenters.UnitsLearningProgressPresenter;
 import org.stepic.droid.core.presenters.UnitsPresenter;
@@ -102,9 +101,6 @@ public class UnitsFragment extends FragmentBase implements
 
     @Inject
     LessonSessionManager lessonManager;
-
-    @Inject
-    DownloadingPresenter downloadingPresenter;
 
     @Inject
     DownloadingInteractionPresenter downloadingInteractionPresenter;
@@ -275,10 +271,6 @@ public class UnitsFragment extends FragmentBase implements
         adapter.notifyDataSetChanged();
 
         dismiss();
-
-        for (Lesson lesson : adapter.getLessons()) {
-            downloadingPresenter.onStateChanged(lesson.getId(), lesson.isLoading());
-        }
     }
 
     @Override

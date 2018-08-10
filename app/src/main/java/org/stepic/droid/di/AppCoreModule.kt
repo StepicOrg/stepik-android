@@ -80,14 +80,6 @@ abstract class AppCoreModule {
 
     @Binds
     @AppSingleton
-    abstract fun provideStoreStateManagerLessonCallbackContainer(container: ListenerContainerImpl<StoreStateManager.LessonCallback>): ListenerContainer<StoreStateManager.LessonCallback>
-
-    @Binds
-    @AppSingleton
-    abstract fun provideStoreStateManagerSectionCallbackContainer(container: ListenerContainerImpl<StoreStateManager.SectionCallback>): ListenerContainer<StoreStateManager.SectionCallback>
-
-    @Binds
-    @AppSingleton
     abstract fun provideInternetEnabledPoster(internetEnabledPoster: InternetEnabledPosterImpl): InternetEnabledPoster
 
     @Binds
@@ -123,18 +115,6 @@ abstract class AppCoreModule {
     @AppSingleton
     internal abstract fun provideVideoResolver(videoResolver: VideoResolverImpl): VideoResolver
 
-    @Binds
-    @AppSingleton
-    internal abstract fun provideDownloadManger(downloadManager: DownloadManagerImpl): IDownloadManager
-
-    @AppSingleton
-    @Binds
-    internal abstract fun provideStoreManager(storeStateManager: StoreStateManagerImpl): StoreStateManager
-
-    @AppSingleton
-    @Binds
-    internal abstract fun provideCleanManager(cleanManager: CleanManagerImpl): CleanManager
-
     @AppSingleton
     @Binds
     internal abstract fun provideLessonSessionManager(localLessonSessionManager: LocalLessonSessionManagerImpl): LessonSessionManager
@@ -142,10 +122,6 @@ abstract class AppCoreModule {
     @AppSingleton
     @Binds
     internal abstract fun provideProgressManager(localProgress: LocalProgressImpl): LocalProgressManager
-
-    @Binds
-    @AppSingleton
-    internal abstract fun provideCancelSniffer(cancelSniffer: ConcurrentCancelSniffer): CancelSniffer
 
     @AppSingleton
     @Binds
@@ -178,14 +154,6 @@ abstract class AppCoreModule {
     @Binds
     @AppSingleton
     internal abstract fun provideTextResolver(textResolver: TextResolverImpl): TextResolver
-
-    @Binds
-    @AppSingleton
-    internal abstract fun provideLessonDownloader(lessonDownloader: LessonDownloaderImpl): LessonDownloader
-
-    @Binds
-    @AppSingleton
-    internal abstract fun provideSectionDownloader(sectionDownloader: SectionDownloaderImpl): SectionDownloader
 
     @Binds
     @AppSingleton
@@ -274,16 +242,6 @@ abstract class AppCoreModule {
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(OkHttpClient())
                     .build()
-        }
-
-        @Provides
-        @JvmStatic
-        @AppSingleton
-        internal fun provideDownloadUpdaterAfterRestart(threadPoolExecutor: ThreadPoolExecutor,
-                                                        systemDownloadManager: DownloadManager,
-                                                        storeStateManager: StoreStateManager,
-                                                        databaseFacade: DatabaseFacade): InitialDownloadUpdater {
-            return InitialDownloadUpdater(threadPoolExecutor, systemDownloadManager, storeStateManager, databaseFacade)
         }
 
         @Provides

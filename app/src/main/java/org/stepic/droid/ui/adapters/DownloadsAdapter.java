@@ -24,9 +24,6 @@ import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.DownloadingVideoItem;
 import org.stepik.android.model.Lesson;
 import org.stepik.android.model.Step;
-import org.stepic.droid.storage.CancelSniffer;
-import org.stepic.droid.storage.CleanManager;
-import org.stepic.droid.storage.IDownloadManager;
 import org.stepic.droid.storage.operations.DatabaseFacade;
 import org.stepic.droid.ui.custom.progressbutton.ProgressWheel;
 import org.stepic.droid.ui.fragments.DownloadsFragment;
@@ -62,9 +59,6 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
     final private List<DownloadingVideoItem> downloadingVideoList;
 
     @Inject
-    CleanManager cleanManager;
-
-    @Inject
     DatabaseFacade databaseFacade;
 
     @Inject
@@ -72,12 +66,6 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
     @Inject
     ThreadPoolExecutor threadPoolExecutor;
-
-    @Inject
-    CancelSniffer cancelSniffer;
-
-    @Inject
-    IDownloadManager downloadManager;
 
     @NotNull
     private Drawable placeholder;
