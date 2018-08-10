@@ -1,15 +1,11 @@
 package org.stepic.droid.ui.fragments;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -28,7 +24,6 @@ import org.stepic.droid.base.Client;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.core.LessonSessionManager;
 import org.stepic.droid.core.downloadingstate.DownloadingPresenter;
-import org.stepic.droid.core.downloadingstate.DownloadingView;
 import org.stepic.droid.core.presenters.DownloadingInteractionPresenter;
 import org.stepic.droid.core.presenters.UnitsLearningProgressPresenter;
 import org.stepic.droid.core.presenters.UnitsPresenter;
@@ -36,21 +31,19 @@ import org.stepic.droid.core.presenters.contracts.DownloadingInteractionView;
 import org.stepic.droid.core.presenters.contracts.UnitsLearningProgressView;
 import org.stepic.droid.core.presenters.contracts.UnitsView;
 import org.stepic.droid.core.routing.contract.RoutingListener;
+import org.stepic.droid.persistence.model.DownloadProgress;
+import org.stepic.droid.ui.dialogs.VideoQualityDetailedDialog;
 import org.stepik.android.model.Lesson;
 import org.stepik.android.model.Progress;
 import org.stepik.android.model.Section;
 import org.stepik.android.model.Unit;
-import org.stepic.droid.storage.StoreStateManager;
 import org.stepic.droid.ui.adapters.UnitAdapter;
 import org.stepic.droid.ui.custom.StepikSwipeRefreshLayout;
 import org.stepic.droid.ui.dialogs.DeleteItemDialogFragment;
 import org.stepic.droid.ui.util.ToolbarHelperKt;
-import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.SnackbarShower;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -63,11 +56,9 @@ import timber.log.Timber;
 public class UnitsFragment extends FragmentBase implements
         SwipeRefreshLayout.OnRefreshListener,
         UnitsView,
-        DownloadingView,
         DownloadingInteractionView,
         UnitsLearningProgressView,
-        RoutingListener,
-        StoreStateManager.LessonCallback {
+        RoutingListener {
 
     private static final int ANIMATION_DURATION = 0;
     public static final int DELETE_POSITION_REQUEST_CODE = 165;
@@ -121,15 +112,7 @@ public class UnitsFragment extends FragmentBase implements
     @Inject
     Client<RoutingListener> routingClient;
 
-    @Inject
-    StoreStateManager storeStateManager;
-
     private UnitAdapter adapter;
-
-    private List<Unit> unitList;
-    private List<Lesson> lessonList;
-    private Map<Long, Progress> progressMap;
-    private Map<Long, Float> lessonIdToLoadingStateMap;
 
     @Override
     protected void injectComponent() {
@@ -147,7 +130,6 @@ public class UnitsFragment extends FragmentBase implements
         setRetainInstance(true);
         setHasOptionsMenu(true);
         section = getArguments().getParcelable(SECTION_KEY);
-        lessonIdToLoadingStateMap = new HashMap<>();
     }
 
     @Override
@@ -178,18 +160,7 @@ public class UnitsFragment extends FragmentBase implements
         ToolbarHelperKt.initCenteredToolbar(this, R.string.units_lessons_title, true);
 
         unitsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        unitList = new ArrayList<>();
-        lessonList = new ArrayList<>();
-        progressMap = new HashMap<>();
-        adapter = new UnitAdapter(section,
-                downloadingPresenter,
-                unitList,
-                lessonList,
-                progressMap,
-                (AppCompatActivity) getActivity(),
-                lessonIdToLoadingStateMap,
-                this,
-                downloadingInteractionPresenter);
+        adapter = new UnitAdapter(section, this, unitsPresenter);
 
         unitsRecyclerView.setAdapter(adapter);
         unitsRecyclerView.setItemAnimator(new SlideInRightAnimator());
@@ -200,8 +171,6 @@ public class UnitsFragment extends FragmentBase implements
 
         ProgressHelper.activate(progressBar);
 
-        storeStateManager.addLessonCallback(this);
-        downloadingPresenter.attachView(this);
         unitsPresenter.attachView(this);
         unitsLearningProgressPresenter.attachView(this);
         getLocalProgressManager().subscribe(unitsLearningProgressPresenter);
@@ -211,12 +180,10 @@ public class UnitsFragment extends FragmentBase implements
 
     @Override
     public void onDestroyView() {
-        downloadingPresenter.detachView(this);
         routingClient.unsubscribe(this);
         getLocalProgressManager().unsubscribe(unitsLearningProgressPresenter);
         unitsLearningProgressPresenter.detachView(this);
         unitsPresenter.detachView(this);
-        storeStateManager.removeLessonCallback(this);
 
         lessonManager.reset();
 
@@ -227,9 +194,6 @@ public class UnitsFragment extends FragmentBase implements
     public void onStart() {
         super.onStart();
         downloadingInteractionPresenter.attachView(this);
-        for (Lesson lesson : lessonList) {
-            downloadingPresenter.onStateChanged(lesson.getId(), lesson.isLoading());
-        }
     }
 
     @Override
@@ -245,54 +209,18 @@ public class UnitsFragment extends FragmentBase implements
         unitsPresenter.showUnits(section, true);
     }
 
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if (requestCode == AppConstants.REQUEST_EXTERNAL_STORAGE && permissions.length > 0) {
-            String permissionExternalStorage = permissions[0];
-            if (permissionExternalStorage == null) return;
-
-            if (permissionExternalStorage.equals(Manifest.permission.WRITE_EXTERNAL_STORAGE) &&
-                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                int position = getSharedPreferenceHelper().getTempPosition();
-                if (adapter != null) {
-                    adapter.requestClickLoad(position);
-                }
-            }
-        }
-    }
-
-    private void updateState(long lessonId, boolean isCached, boolean isLoading) {
-        int position = -1;
-        Lesson lesson = null;
-        for (int i = 0; i < lessonList.size(); i++) {
-            if (lessonList.get(i).getId() == lessonId) {
-                position = i;
-                lesson = lessonList.get(i);
-                break;
-            }
-        }
-        if (lesson == null || position == -1 || position >= lessonList.size()) return;
-
-        lesson.setCached(isCached);
-        lesson.setLoading(isLoading);
-        adapter.notifyItemChanged(position);
-        downloadingPresenter.onStateChanged(lessonId, isLoading);
-    }
-
     @org.jetbrains.annotations.Nullable
     private Pair<Unit, Integer> getUnitOnScreenAndPositionById(long unitId) {
         int position = -1;
         Unit unit = null;
-        for (int i = 0; i < unitList.size(); i++) {
-            if (unitList.get(i).getId() == unitId) {
+        for (int i = 0; i < adapter.getUnits().size(); i++) {
+            if (adapter.getUnits().get(i).getId() == unitId) {
                 position = i;
-                unit = unitList.get(i);
+                unit = adapter.getUnits().get(i);
                 break;
             }
         }
-        if (unit == null || position == -1 || position >= unitList.size()) return null;
+        if (unit == null || position == -1 || position >= adapter.getUnits().size()) return null;
         return new Pair<>(unit, position);
     }
 
@@ -333,20 +261,22 @@ public class UnitsFragment extends FragmentBase implements
         reportEmpty.setVisibility(View.GONE);
         reportConnectionProblem.setVisibility(View.GONE);
 
-        this.lessonList.clear();
-        this.lessonList.addAll(lessonList);
+        adapter.getLessons().clear();
+        adapter.getLessons().addAll(lessonList);
 
-        this.unitList.clear();
-        this.unitList.addAll(unitList);
+        adapter.getUnits().clear();
+        adapter.getUnits().addAll(unitList);
 
-        this.progressMap.clear();
-        this.progressMap.putAll(progressMap);
+        adapter.getUnitProgressMap().clear();
+        for (Map.Entry<Long, Progress> pair: progressMap.entrySet()) {
+            adapter.getUnitProgressMap().append(pair.getKey(), pair.getValue());
+        }
 
         adapter.notifyDataSetChanged();
 
         dismiss();
 
-        for (Lesson lesson : this.lessonList) {
+        for (Lesson lesson : adapter.getLessons()) {
             downloadingPresenter.onStateChanged(lesson.getId(), lesson.isLoading());
         }
     }
@@ -355,7 +285,7 @@ public class UnitsFragment extends FragmentBase implements
     public void onLoading() {
         reportEmpty.setVisibility(View.GONE);
         reportConnectionProblem.setVisibility(View.GONE);
-        if (unitList.isEmpty()) {
+        if (adapter.getItemCount() == 0) {
             ProgressHelper.activate(progressBar);
         }
     }
@@ -363,7 +293,7 @@ public class UnitsFragment extends FragmentBase implements
     @Override
     public void onConnectionProblem() {
         dismiss();
-        if (unitList.isEmpty()) {
+        if (adapter.getItemCount() == 0) {
             reportEmpty.setVisibility(View.GONE);
             reportConnectionProblem.setVisibility(View.VISIBLE);
         }
@@ -375,13 +305,30 @@ public class UnitsFragment extends FragmentBase implements
         if (adapter != null && requestCode == DELETE_POSITION_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             getAnalytic().reportEvent(Analytic.Interaction.ACCEPT_DELETING_UNIT);
             int position = data.getIntExtra(DeleteItemDialogFragment.deletePositionKey, -1);
-            adapter.requestClickDeleteSilence(position);
+            unitsPresenter.removeDownloadTask(adapter.getUnits().get(position));
+        }
+
+        if (requestCode == VideoQualityDetailedDialog.VIDEO_QUALITY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            int position = data.getIntExtra(VideoQualityDetailedDialog.POSITION_KEY, -1);
+            determineNetworkTypeAndLoad(position);
         }
     }
 
     @Override
+    public void determineNetworkTypeAndLoad(int position) {
+        downloadingInteractionPresenter.checkOnLoading(position);
+    }
+
+    @Override
     public void onLoadingAccepted(int position) {
-        adapter.loadAfterDetermineNetworkState(position);
+        unitsPresenter.addDownloadTask(adapter.getUnits().get(position));
+    }
+
+    @Override
+    public void showOnRemoveDownloadDialog(int position) {
+        DeleteItemDialogFragment dialogFragment = DeleteItemDialogFragment.newInstance(position);
+        dialogFragment.setTargetFragment(this, UnitsFragment.DELETE_POSITION_REQUEST_CODE);
+        dialogFragment.show(getFragmentManager(), DeleteItemDialogFragment.TAG);
     }
 
     @Override
@@ -408,7 +355,7 @@ public class UnitsFragment extends FragmentBase implements
             public void onClick(View v) {
                 getAnalytic().reportEvent(Analytic.Downloading.CLICK_RETRY_UNITS);
                 if (adapter != null) {
-                    adapter.requestClickLoad(position);
+                    adapter.onItemDownloadClicked(position);
                 }
             }
         });
@@ -421,7 +368,7 @@ public class UnitsFragment extends FragmentBase implements
 
         int position = unitPairPosition.second;
 
-        Progress progress = progressMap.get(unitId);
+        Progress progress = adapter.getUnitProgressMap().get(unitId);
         if (progress != null) {
             progress.setScore(newScore + "");
         }
@@ -444,38 +391,26 @@ public class UnitsFragment extends FragmentBase implements
     public void onSectionChanged(@NotNull Section oldSection, @NotNull Section newSection) {
         if (section != null && oldSection.getId() == section.getId()) {
             section = newSection;
-            adapter.setSection(section);
+            adapter.setParentSection(section);
             unitsPresenter.showUnits(newSection, true);
         }
     }
 
     @Override
-    public void onLessonCached(long lessonId) {
-        updateState(lessonId, true, false);
+    public void showDownloadProgress(@NotNull DownloadProgress progress) {
+        if (adapter != null) {
+            adapter.setItemDownloadProgress(progress);
+        }
+    }
+
+    public void openSteps(@NotNull Unit unit, @NotNull Lesson lesson, @org.jetbrains.annotations.Nullable Section parentSection) {
+        screenManager.showSteps(getActivity(), unit, lesson, parentSection);
     }
 
     @Override
-    public void onLessonNotCached(long lessonId) {
-        updateState(lessonId, false, false);
-    }
-
-    @Override
-    public void onNewProgressValue(long id, float portion) {
-        int position = -1;
-        for (int i = 0; i < lessonList.size(); i++) {
-            Lesson lesson = lessonList.get(i);
-            if (lesson.getId() == id) {
-                position = i;
-            }
-        }
-
-        if (position < 0) {
-            return;
-        }
-
-        //change state for updating in adapter
-        lessonIdToLoadingStateMap.put(id, portion);
-
-        adapter.notifyItemChanged(position);
+    public void showVideoQualityDialog(int position) {
+        VideoQualityDetailedDialog dialogFragment = VideoQualityDetailedDialog.Companion.newInstance(position);
+        dialogFragment.setTargetFragment(this, VideoQualityDetailedDialog.VIDEO_QUALITY_REQUEST_CODE);
+        dialogFragment.show(getFragmentManager(), VideoQualityDetailedDialog.TAG);
     }
 }

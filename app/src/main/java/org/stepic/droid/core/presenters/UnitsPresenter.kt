@@ -1,10 +1,22 @@
 package org.stepic.droid.core.presenters
 
+import io.reactivex.Scheduler
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.UnitsView
+import org.stepic.droid.di.qualifiers.BackgroundScheduler
+import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.di.section.SectionScope
 import org.stepic.droid.exceptions.UnitStoredButLessonNotException
+import org.stepic.droid.persistence.downloads.interactor.DownloadInteractor
+import org.stepic.droid.persistence.downloads.progress.DownloadProgressProvider
+import org.stepic.droid.persistence.model.DownloadConfiguration
+import org.stepic.droid.persistence.model.DownloadProgress
+import org.stepic.droid.preferences.SharedPreferenceHelper
+import org.stepic.droid.preferences.UserPreferences
 import org.stepik.android.model.Lesson
 import org.stepik.android.model.Progress
 import org.stepik.android.model.Section
@@ -13,6 +25,7 @@ import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.ProgressUtil
 import org.stepic.droid.util.StepikLogicHelper
+import org.stepic.droid.util.addDisposable
 import org.stepic.droid.web.Api
 import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
@@ -28,13 +41,28 @@ constructor(
         private val threadPoolExecutor: ThreadPoolExecutor,
         private val mainHandler: MainHandler,
         private val databaseFacade: DatabaseFacade,
-        private val api: Api
+        private val api: Api,
+
+        private val sharedPreferenceHelper: SharedPreferenceHelper,
+        private val userPreferences: UserPreferences,
+
+        @BackgroundScheduler
+        private val backgroundScheduler: Scheduler,
+        @MainScheduler
+        private val mainScheduler: Scheduler,
+        private val unitDownloadInteractor: DownloadInteractor<Unit>,
+        private val unitDownloadProgressProvider: DownloadProgressProvider<Unit>
 ) : PresenterBase<UnitsView>() {
 
     private val unitList: MutableList<Unit> = ArrayList()
     private val lessonList: MutableList<Lesson> = ArrayList()
     private val isLoading: AtomicBoolean = AtomicBoolean(false)
     private val progressMap: HashMap<Long, Progress> = HashMap()
+
+    private val pendingUnits = mutableSetOf<Long>()
+
+    private val compositeDisposable = CompositeDisposable()
+    private var progressDisposable: Disposable? = null
 
     fun showUnits(section: Section?, isRefreshing: Boolean) {
         if (section == null) {
@@ -43,7 +71,7 @@ constructor(
         }
 
         if (unitList.isNotEmpty() && lessonList.isNotEmpty() && !isRefreshing) {
-            view?.onNeedShowUnits(unitList, lessonList, progressMap)
+            setDataToView(unitList, lessonList, progressMap)
         }
 
         if (!isLoading.compareAndSet(/* expect */ false, true)) return //if false -> set true and return true, if true -> return false
@@ -96,7 +124,7 @@ constructor(
                     cacheUnitMap.putAll(unitList.associateBy(Unit::id))
                     if (!isRefreshing) {
                         mainHandler.post {
-                            view?.onNeedShowUnits(unitList, lessonList, progressMap)
+                            setDataToView(unitList, lessonList, progressMap)
                         }
                     }
                 }
@@ -199,7 +227,7 @@ constructor(
                         lessonList.addAll(backgroundLessons)
 
                         mainHandler.post {
-                            view?.onNeedShowUnits(unitList, lessonList, progressMap)
+                            setDataToView(unitList, lessonList, progressMap)
                         }
 
                     } catch (exception: Exception) {
@@ -217,6 +245,79 @@ constructor(
 
     }
 
+    private fun setDataToView(units: List<Unit>, lessons: List<Lesson>, progressMap: Map<Long, Progress>) {
+        view?.onNeedShowUnits(units, lessons, progressMap)
+        subscribeForUnitsProgress(units)
+    }
+
+    private fun subscribeForUnitsProgress(units: List<Unit>) {
+        progressDisposable?.dispose()
+        progressDisposable = unitDownloadProgressProvider
+                .getProgress(*units.toTypedArray())
+                .subscribeOn(backgroundScheduler)
+                .observeOn(mainScheduler)
+                .subscribeBy({ it.printStackTrace() }) {
+                    if (it.id !in pendingUnits || it.status !is DownloadProgress.Status.InProgress) {
+                        view?.showDownloadProgress(it)
+                    }
+                }
+    }
+
+    fun addDownloadTask(pos: Int) {
+        if (sharedPreferenceHelper.isNeedToShowVideoQualityExplanation) {
+            view?.showVideoQualityDialog(pos)
+        } else {
+            view?.determineNetworkTypeAndLoad(pos)
+        }
+    }
+
+    fun addDownloadTask(unit: Unit) {
+        if (unit.id in pendingUnits) return
+
+        val allowedNetworkTypes = if (userPreferences.isNetworkMobileAllowed) {
+            EnumSet.of(DownloadConfiguration.NetworkType.WIFI, DownloadConfiguration.NetworkType.MOBILE)
+        } else {
+            EnumSet.of(DownloadConfiguration.NetworkType.WIFI)
+        }
+
+        pendingUnits.add(unit.id)
+        view?.showDownloadProgress(DownloadProgress(unit.id, DownloadProgress.Status.Pending))
+        compositeDisposable addDisposable unitDownloadInteractor
+                .addTask(unit, configuration = DownloadConfiguration(
+                        allowedNetworkTypes,
+                        userPreferences.qualityVideo
+                ))
+                .subscribeOn(backgroundScheduler)
+                .observeOn(mainScheduler)
+                .subscribeBy({
+                    it.printStackTrace()
+                    pendingUnits.remove(unit.id)
+                }) {
+                    pendingUnits.remove(unit.id)
+                }
+    }
+
+    fun removeDownloadTask(pos: Int) {
+        view?.showOnRemoveDownloadDialog(pos)
+    }
+
+    fun removeDownloadTask(unit: Unit) {
+        if (unit.id in pendingUnits) return
+
+        pendingUnits.add(unit.id)
+        view?.showDownloadProgress(DownloadProgress(unit.id, DownloadProgress.Status.Pending))
+        compositeDisposable addDisposable unitDownloadInteractor
+                .removeTask(unit)
+                .subscribeOn(backgroundScheduler)
+                .observeOn(mainScheduler)
+                .subscribeBy({
+                    it.printStackTrace()
+                    pendingUnits.remove(unit.id)
+                }) {
+                    pendingUnits.remove(unit.id)
+                }
+    }
+
     private fun sortUnitsByPosition(fromCacheUnits: List<Unit>) {
         Collections.sort<Unit>(fromCacheUnits, Comparator { lhs, rhs ->
             if (lhs == null || rhs == null) {
@@ -228,4 +329,8 @@ constructor(
         })
     }
 
+    override fun detachView(view: UnitsView) {
+        progressDisposable?.dispose()
+        super.detachView(view)
+    }
 }
