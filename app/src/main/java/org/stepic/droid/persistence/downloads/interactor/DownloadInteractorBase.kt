@@ -74,8 +74,14 @@ abstract class DownloadInteractorBase<T>(
 
     override fun removeTask(id: Long): Completable =
             structureResolver.resolveStructure(id)
+                    .toList()
+                    .doOnSuccess { // in order to get rid of blinking on delete operation
+                        it.forEach { structure ->
+                            persistentStateManager.invalidateStructure(structure, PersistentState.State.IN_PROGRESS)
+                        }
+                    }
+                    .flatMapObservable(List<Structure>::toObservable)
                     .flatMapCompletable { structure ->
-                        persistentStateManager.invalidateStructure(structure, PersistentState.State.IN_PROGRESS)
                         persistentItemDao
                                 .getItems(mapOf(keyFieldColumn to id.toString()))
                                 .concatMapCompletable(downloadTaskManager::removeTasks)
