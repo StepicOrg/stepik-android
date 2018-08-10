@@ -40,6 +40,8 @@ abstract class DownloadInteractorBase<T>(
                             persistentStateManager.invalidateStructure(structure, PersistentState.State.CACHED)
                         }.doOnError {
                             persistentStateManager.invalidateStructure(structure, PersistentState.State.NOT_CACHED)
+                        }.doOnDispose {
+                            persistentStateManager.invalidateStructure(structure, PersistentState.State.NOT_CACHED)
                         }
             }
 
@@ -88,6 +90,8 @@ abstract class DownloadInteractorBase<T>(
                                 .doOnComplete {
                                     persistentStateManager.invalidateStructure(structure, PersistentState.State.NOT_CACHED)
                                 }.doOnError {
+                                    persistentStateManager.invalidateStructure(structure, PersistentState.State.NOT_CACHED)
+                                }.doOnDispose {
                                     persistentStateManager.invalidateStructure(structure, PersistentState.State.NOT_CACHED)
                                 }
                     }
