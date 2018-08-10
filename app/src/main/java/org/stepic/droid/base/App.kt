@@ -3,7 +3,6 @@ package org.stepic.droid.base
 import android.app.Application
 import android.content.Context
 import android.os.StrictMode
-import com.appsflyer.AppsFlyerLib
 import com.facebook.FacebookSdk
 import com.facebook.appevents.AppEventsLogger
 import com.squareup.leakcanary.LeakCanary
@@ -20,6 +19,7 @@ import org.stepic.droid.di.DaggerAppCoreComponent
 import org.stepic.droid.di.storage.DaggerStorageComponent
 import org.stepic.droid.fonts.FontType
 import org.stepic.droid.fonts.FontsProvider
+import org.stepic.droid.persistence.downloads.DownloadsSyncronizer
 import org.stepic.droid.storage.InitialDownloadUpdater
 import org.stepic.droid.util.NotificationChannelInitializer
 import org.stepic.droid.util.StethoHelper
@@ -51,6 +51,9 @@ class App : Application() {
 
     @Inject
     lateinit var downloadUpdater: InitialDownloadUpdater
+
+    @Inject
+    lateinit var downloadsSyncronizer: DownloadsSyncronizer
 
     @Inject
     lateinit var fontsProvider: FontsProvider
