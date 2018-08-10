@@ -7,14 +7,13 @@ import org.stepic.droid.persistence.model.*
 import org.stepic.droid.persistence.downloads.progress.countItemProgress
 import org.stepic.droid.persistence.storage.dao.SystemDownloadsDao
 import org.stepic.droid.persistence.storage.dao.PersistentItemDao
-import org.stepic.droid.util.merge
 import javax.inject.Inject
 
 @PersistenceScope
 class DownloadsRepositoryImpl
 @Inject
 constructor(
-        private val updatesObservable: Observable<PersistentItem>,
+        private val updatesObservable: Observable<Structure>,
         private val intervalUpdatesObservable: Observable<kotlin.Unit>,
 
         private val systemDownloadsDao: SystemDownloadsDao,
@@ -23,7 +22,6 @@ constructor(
     override fun getDownloads(): Observable<DownloadItem> =
             intervalUpdatesObservable
                     .flatMap { getAllPersistentItems() }    // get all downloads with interval
-                    .merge(updatesObservable.map(::listOf)) // get some instant updates on item changes
                     .flatMap(::fetchProgressesForCorrectItems)
 
     private fun getAllPersistentItems() =

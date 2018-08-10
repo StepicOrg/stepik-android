@@ -1,5 +1,6 @@
 package org.stepic.droid.persistence.storage
 
+import io.reactivex.Observer
 import org.stepic.droid.persistence.di.PersistenceScope
 import org.stepic.droid.persistence.model.PersistentState
 import org.stepic.droid.persistence.model.Structure
@@ -17,7 +18,8 @@ class PersistentStateManagerImpl
 @Inject
 constructor(
         private val persistentStateDao: IDao<PersistentState>,
-        private val databaseFacade: DatabaseFacade
+        private val databaseFacade: DatabaseFacade,
+        private val updatesObserver: Observer<Structure>
 ): PersistentStateManager {
     companion object {
         private fun concatStates(stateA: PersistentState.State, stateB: PersistentState.State) = when {
@@ -40,6 +42,7 @@ constructor(
         invalidate(structure.unit, PersistentState.Type.UNIT)
         invalidate(structure.section, PersistentState.Type.SECTION)
         invalidate(structure.course, PersistentState.Type.COURSE)
+        updatesObserver.onNext(structure)
     }
 
     private fun invalidate(id: Long, type: PersistentState.Type) {

@@ -12,7 +12,7 @@ import org.stepic.droid.persistence.downloads.DownloadTaskManager
 import org.stepic.droid.persistence.downloads.DownloadTaskManagerImpl
 import org.stepic.droid.persistence.files.ExternalStorageManager
 import org.stepic.droid.persistence.files.ExternalStorageManagerImpl
-import org.stepic.droid.persistence.model.PersistentItem
+import org.stepic.droid.persistence.model.Structure
 import org.stepic.droid.persistence.repository.DownloadsRepository
 import org.stepic.droid.persistence.repository.DownloadsRepositoryImpl
 import org.stepic.droid.persistence.storage.PersistentItemObserver
@@ -34,11 +34,11 @@ abstract class PersistenceModule {
 
     @Binds
     @PersistenceScope
-    abstract fun bindUpdatesObservable(subject: PublishSubject<PersistentItem>): Observable<PersistentItem>
+    abstract fun bindUpdatesObservable(subject: PublishSubject<Structure>): Observable<Structure>
 
     @Binds
     @PersistenceScope
-    abstract fun bindUpdatesObserver(subject: PublishSubject<PersistentItem>): Observer<PersistentItem>
+    abstract fun bindUpdatesObserver(subject: PublishSubject<Structure>): Observer<Structure>
 
     @Binds
     @PersistenceScope
@@ -69,14 +69,14 @@ abstract class PersistenceModule {
         @Provides
         @JvmStatic
         @PersistenceScope
-        fun provideUpdatesPublishSubject(): PublishSubject<PersistentItem> =
+        fun provideUpdatesPublishSubject(): PublishSubject<Structure> =
                 PublishSubject.create()
 
         @Provides
         @JvmStatic
         @PersistenceScope
         fun provideIntervalUpdatesObservable(): Observable<kotlin.Unit> =
-                Observable.interval(1000, TimeUnit.MILLISECONDS).map { kotlin.Unit }.share()
+                Observable.interval(1000, TimeUnit.MILLISECONDS).map { kotlin.Unit }
 
         @Provides
         @JvmStatic

@@ -7,6 +7,7 @@ import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.persistence.di.PersistenceScope
 import org.stepic.droid.persistence.model.PersistentItem
+import org.stepic.droid.persistence.model.Structure
 import org.stepic.droid.persistence.model.SystemDownloadRecord
 import org.stepic.droid.persistence.storage.PersistentItemObserver
 import org.stepic.droid.persistence.storage.dao.PersistentItemDao
@@ -23,7 +24,7 @@ constructor(
         private val systemDownloadsDao: SystemDownloadsDao,
 
         private val intervalUpdatesObservable: Observable<Unit>,
-        private val updatesObservable: Observable<PersistentItem>,
+        private val updatesObservable: Observable<Structure>,
 
         private val persistentItemObserver: PersistentItemObserver,
 

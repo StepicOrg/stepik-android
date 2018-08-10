@@ -11,7 +11,7 @@ import org.stepic.droid.persistence.storage.dao.SystemDownloadsDao
 import org.stepic.droid.util.zip
 
 abstract class DownloadProgressProviderBase<T>(
-        private val updatesObservable: Observable<PersistentItem>,
+        private val updatesObservable: Observable<Structure>,
         private val intervalUpdatesObservable: Observable<kotlin.Unit>,
 
         private val systemDownloadsDao: SystemDownloadsDao,
@@ -62,7 +62,7 @@ abstract class DownloadProgressProviderBase<T>(
             updatesObservable.filter { it.keyFieldValue == itemId }.map { kotlin.Unit }.startWith(kotlin.Unit)
 
     protected abstract fun T.getId(): Long
-    protected abstract val PersistentItem.keyFieldValue: Long
+    protected abstract val Structure.keyFieldValue: Long
     protected abstract val persistentItemKeyFieldColumn: String
     protected abstract val persistentStateType: PersistentState.Type
 }
