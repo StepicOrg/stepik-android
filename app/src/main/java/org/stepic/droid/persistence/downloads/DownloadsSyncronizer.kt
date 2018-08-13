@@ -1,6 +1,7 @@
 package org.stepic.droid.persistence.downloads
 
 import android.app.DownloadManager
+import android.content.Context
 import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.subscribeBy
@@ -9,6 +10,7 @@ import org.stepic.droid.persistence.di.PersistenceScope
 import org.stepic.droid.persistence.model.PersistentItem
 import org.stepic.droid.persistence.model.Structure
 import org.stepic.droid.persistence.model.SystemDownloadRecord
+import org.stepic.droid.persistence.service.DownloadCompleteService
 import org.stepic.droid.persistence.storage.PersistentItemObserver
 import org.stepic.droid.persistence.storage.dao.PersistentItemDao
 import org.stepic.droid.persistence.storage.dao.SystemDownloadsDao
@@ -20,6 +22,7 @@ import javax.inject.Inject
 class DownloadsSyncronizer
 @Inject
 constructor(
+        private val context: Context,
         private val persistentItemDao: PersistentItemDao,
         private val systemDownloadsDao: SystemDownloadsDao,
 
@@ -52,10 +55,15 @@ constructor(
     }
 
     private fun syncPersistentItems(items: List<PersistentItem>, records: List<SystemDownloadRecord>) {
-        records.filter { it.status == DownloadManager.STATUS_FAILED }.forEach { record ->
-            items.find { it.downloadId == record.id }
-                    ?.copy(status = PersistentItem.Status.DOWNLOAD_ERROR)
-                    ?.let(persistentItemObserver::update)
+        items.forEach { item ->
+            val record = records.find { item.downloadId == it.id } ?: return@forEach
+            when (record.status) {
+                DownloadManager.STATUS_FAILED ->
+                    persistentItemObserver.update(item.copy(status = PersistentItem.Status.DOWNLOAD_ERROR))
+
+                DownloadManager.STATUS_SUCCESSFUL -> // redeliver completed download
+                    DownloadCompleteService.enqueueWork(context, item.downloadId)
+            }
         }
     }
 }

@@ -65,10 +65,10 @@ internal fun countItemProgress(
             DownloadProgress.Status.InProgress(progress.toFloat() / persistentItems.size)
         }
 
-        hasItemsInTransfer ->
+        hasItemsInTransfer || itemState == PersistentState.State.IN_PROGRESS ->
             DownloadProgress.Status.Pending
 
-        hasUndownloadedItems ->
+        hasUndownloadedItems || itemState == PersistentState.State.NOT_CACHED ->
             DownloadProgress.Status.NotCached
 
         else ->

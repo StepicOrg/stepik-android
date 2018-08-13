@@ -27,19 +27,21 @@ constructor(
         @FSLock
         private val fsLock: ReentrantLock
 ): DownloadTaskManager {
-    override fun addTask(task: DownloadTask, configuration: DownloadConfiguration): Completable = Completable.fromCallable {
-        val request = DownloadManager.Request(Uri.parse(task.originalPath))
-                .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
-                .setAllowedNetworkTypes(configuration.allowedNetworkTypes.map(DownloadConfiguration.NetworkType::systemNetworkType).reduce(Int::or))
-                .setTitle("Downloading") // todo add title
+    override fun addTask(task: DownloadTask, configuration: DownloadConfiguration): Completable = Completable.fromAction {
+        fsLock.withLock { // in order to prevent receiving broadcast before persistentItem was added
+            val request = DownloadManager.Request(Uri.parse(task.originalPath))
+                    .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
+                    .setAllowedNetworkTypes(configuration.allowedNetworkTypes.map(DownloadConfiguration.NetworkType::systemNetworkType).reduce(Int::or))
+                    .setTitle("Downloading") // todo add title
 
-        val downloadId = downloadManager.enqueue(request)
+            val downloadId = downloadManager.enqueue(request)
 
-        persistentItemObserver.update(PersistentItem(
-                task = task,
-                downloadId = downloadId,
-                status = PersistentItem.Status.IN_PROGRESS
-        ))
+            persistentItemObserver.update(PersistentItem(
+                    task = task,
+                    downloadId = downloadId,
+                    status = PersistentItem.Status.IN_PROGRESS
+            ))
+        }
     }
 
     override fun removeTasks(items: List<PersistentItem>): Completable = Completable.fromAction {

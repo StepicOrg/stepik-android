@@ -10,9 +10,6 @@ class DownloadCompleteReceiver: BroadcastReceiver() {
         val downloadId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
                 .takeIf { it != -1L } ?: return
 
-        val serviceIntent = Intent()
-                .putExtra(DownloadManager.EXTRA_DOWNLOAD_ID, downloadId)
-
-        DownloadCompleteService.enqueueWork(context, serviceIntent)
+        DownloadCompleteService.enqueueWork(context, downloadId)
     }
 }

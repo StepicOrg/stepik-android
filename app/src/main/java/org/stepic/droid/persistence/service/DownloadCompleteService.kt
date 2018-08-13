@@ -26,8 +26,9 @@ class DownloadCompleteService: JobIntentService() {
     companion object {
         private const val JOB_ID = 2000
 
-        fun enqueueWork(context: Context, intent: Intent) {
-            enqueueWork(context, DownloadCompleteService::class.java, JOB_ID, intent)
+        fun enqueueWork(context: Context, downloadId: Long) {
+            enqueueWork(context, DownloadCompleteService::class.java, JOB_ID,
+                    Intent().putExtra(DownloadManager.EXTRA_DOWNLOAD_ID, downloadId))
         }
     }
 
@@ -63,8 +64,10 @@ class DownloadCompleteService: JobIntentService() {
                 .takeIf { it != -1L } ?: return
 
         val download = systemDownloadsDao.get(downloadId).blockingFirst().firstOrNull()
-        val persistentItem = persistentItemDao.get(mapOf(DBStructurePersistentItem.Columns.DOWNLOAD_ID to downloadId.toString()))
-                ?: return
+        val persistentItem = persistentItemDao.get(mapOf(
+                DBStructurePersistentItem.Columns.DOWNLOAD_ID to downloadId.toString(),
+                DBStructurePersistentItem.Columns.STATUS      to PersistentItem.Status.IN_PROGRESS.name // move file only one time
+        )) ?: return
 
         when {
             download == null -> // download was cancelled with system UI

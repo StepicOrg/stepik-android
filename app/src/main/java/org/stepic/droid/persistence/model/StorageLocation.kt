@@ -20,6 +20,7 @@ class StorageLocation(
 
         other as StorageLocation
 
+        if (type == Type.APP_INTERNAL && other == Type.APP_INTERNAL) return true
         if (path.canonicalPath != other.path.canonicalPath) return false
 
         return true
