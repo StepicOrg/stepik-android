@@ -87,11 +87,7 @@ abstract class DownloadInteractorBase<T>(
                         persistentItemDao
                                 .getItems(mapOf(keyFieldColumn to id.toString()))
                                 .concatMapCompletable(downloadTaskManager::removeTasks)
-                                .doOnComplete {
-                                    persistentStateManager.invalidateStructure(structure, PersistentState.State.NOT_CACHED)
-                                }.doOnError {
-                                    persistentStateManager.invalidateStructure(structure, PersistentState.State.NOT_CACHED)
-                                }.doOnDispose {
+                                .doFinally {
                                     persistentStateManager.invalidateStructure(structure, PersistentState.State.NOT_CACHED)
                                 }
                     }
