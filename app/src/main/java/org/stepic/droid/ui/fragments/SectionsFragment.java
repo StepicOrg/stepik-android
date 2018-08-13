@@ -69,6 +69,7 @@ import org.stepic.droid.features.deadlines.ui.dialogs.EditDeadlinesDialog;
 import org.stepic.droid.features.deadlines.ui.dialogs.LearningRateDialog;
 import org.stepic.droid.model.CalendarItem;
 import org.stepic.droid.persistence.model.DownloadProgress;
+import org.stepic.droid.ui.dialogs.VideoQualityDetailedDialog;
 import org.stepik.android.model.Course;
 import org.stepik.android.model.Progress;
 import org.stepik.android.model.Section;
@@ -259,7 +260,7 @@ public class SectionsFragment
         sectionsRecyclerView.setLayoutManager(linearLayoutManager);
         sectionList = new ArrayList<>();
         adapter = new SectionAdapter(sectionList, ((AppCompatActivity) getActivity()),
-                calendarPresenter, deadlinesPresenter, sectionsPresenter.getProgressMap(), this, downloadingInteractionPresenter);
+                calendarPresenter, deadlinesPresenter, sectionsPresenter.getProgressMap(), this, downloadingInteractionPresenter, sectionsPresenter);
         sectionsRecyclerView.setAdapter(adapter);
 
         sectionsRecyclerView.setItemAnimator(new SlideInRightAnimator());
@@ -893,6 +894,10 @@ public class SectionsFragment
             }
         }
 
+        if (requestCode == VideoQualityDetailedDialog.VIDEO_QUALITY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            int position = data.getIntExtra(VideoQualityDetailedDialog.POSITION_KEY, -1);
+            adapter.loadSection(position);
+        }
     }
 
     @Override

@@ -1,5 +1,6 @@
 package org.stepic.droid.core.presenters.contracts
 
+import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepik.android.model.Section
 
 interface SectionsView {
@@ -14,4 +15,5 @@ interface SectionsView {
 
     fun updatePosition(position: Int)
 
+    fun showDownloadProgress(progress: DownloadProgress)
 }

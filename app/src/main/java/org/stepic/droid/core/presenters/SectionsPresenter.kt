@@ -169,4 +169,12 @@ constructor(
         Timber.d("cant show progresses")
         emptyMap()
     }
+
+    fun addDownloadTask(section: Section) {
+
+    }
+
+    fun removeDownloadTask(section: Section) {
+
+    }
 }

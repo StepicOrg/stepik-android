@@ -48,8 +48,6 @@ class VideoQualityDetailedDialog : VideoQualityDialogBase() {
     @Inject
     lateinit var sharedPreferencesHelper: SharedPreferenceHelper
 
-    private var onLoadPositionListener: OnLoadPositionListener? = null
-
     private var position by argument<Int>()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -95,15 +93,10 @@ class VideoQualityDetailedDialog : VideoQualityDialogBase() {
     override fun onDismiss(dialog: DialogInterface?) {
         super.onDismiss(dialog)
         Timber.d("onDismiss")
-        onLoadPositionListener = null
 
     }
 
     override fun injectDependencies() {
         App.component().inject(this)
-    }
-
-    fun setOnLoadPositionListener(onLoadPositionListener: OnLoadPositionListener) {
-        this.onLoadPositionListener = onLoadPositionListener
     }
 }
