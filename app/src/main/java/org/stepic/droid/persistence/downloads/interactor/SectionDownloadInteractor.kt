@@ -2,6 +2,7 @@ package org.stepic.droid.persistence.downloads.interactor
 
 import org.stepic.droid.persistence.content.StepContentResolver
 import org.stepic.droid.persistence.downloads.DownloadTaskManager
+import org.stepic.droid.persistence.downloads.resolvers.DownloadTitleResolver
 import org.stepic.droid.persistence.downloads.resolvers.structure.StructureResolver
 import org.stepic.droid.persistence.storage.PersistentStateManager
 import org.stepic.droid.persistence.storage.dao.PersistentItemDao
@@ -20,9 +21,14 @@ constructor(
 
         persistentStateManager: PersistentStateManager,
 
+        downloadTitleResolver: DownloadTitleResolver,
+
         stepContentResolver: StepContentResolver,
         stepRepository: Repository<Step>
-): DownloadInteractorBase<Section>(structureResolver, downloadTaskManager, persistentItemDao, persistentStateManager, stepContentResolver, stepRepository) {
+): DownloadInteractorBase<Section>(
+        structureResolver, downloadTaskManager, persistentItemDao,
+        persistentStateManager, downloadTitleResolver,
+        stepContentResolver, stepRepository) {
     override val Section.keyFieldValue: Long
         get() = id
     override val keyFieldColumn: String = DBStructurePersistentItem.Columns.SECTION

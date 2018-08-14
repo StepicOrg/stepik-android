@@ -7,7 +7,7 @@ import org.stepic.droid.persistence.di.FSLock
 import org.stepic.droid.persistence.di.PersistenceScope
 import org.stepic.droid.persistence.files.ExternalStorageManager
 import org.stepic.droid.persistence.model.DownloadConfiguration
-import org.stepic.droid.persistence.model.DownloadTask
+import org.stepic.droid.persistence.model.DownloadRequest
 import org.stepic.droid.persistence.model.PersistentItem
 import org.stepic.droid.persistence.storage.PersistentItemObserver
 import java.io.File
@@ -27,17 +27,22 @@ constructor(
         @FSLock
         private val fsLock: ReentrantLock
 ): DownloadTaskManager {
-    override fun addTask(task: DownloadTask, configuration: DownloadConfiguration): Completable = Completable.fromAction {
+    override fun addTask(request: DownloadRequest): Completable = Completable.fromAction {
         fsLock.withLock { // in order to prevent receiving broadcast before persistentItem was added
-            val request = DownloadManager.Request(Uri.parse(task.originalPath))
+            val systemRequest = DownloadManager.Request(Uri.parse(request.task.originalPath))
                     .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
-                    .setAllowedNetworkTypes(configuration.allowedNetworkTypes.map(DownloadConfiguration.NetworkType::systemNetworkType).reduce(Int::or))
-                    .setTitle("Downloading") // todo add title
+                    .setAllowedNetworkTypes(request
+                            .configuration
+                            .allowedNetworkTypes
+                            .map(DownloadConfiguration.NetworkType::systemNetworkType)
+                            .reduce(Int::or)
+                    )
+                    .setTitle("${request.title} - ${System.nanoTime().toString().takeLast(5)}")
 
-            val downloadId = downloadManager.enqueue(request)
+            val downloadId = downloadManager.enqueue(systemRequest)
 
             persistentItemObserver.update(PersistentItem(
-                    task = task,
+                    task = request.task,
                     downloadId = downloadId,
                     status = PersistentItem.Status.IN_PROGRESS
             ))

@@ -5,6 +5,7 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.toObservable
 import org.stepic.droid.persistence.content.StepContentResolver
 import org.stepic.droid.persistence.downloads.DownloadTaskManager
+import org.stepic.droid.persistence.downloads.resolvers.DownloadTitleResolver
 import org.stepic.droid.persistence.downloads.resolvers.structure.StructureResolver
 import org.stepic.droid.persistence.model.*
 import org.stepic.droid.persistence.storage.PersistentStateManager
@@ -20,6 +21,8 @@ abstract class DownloadInteractorBase<T>(
 
         private val persistentStateManager: PersistentStateManager,
 
+        private val downloadTitleResolver: DownloadTitleResolver,
+
         private val stepContentResolver: StepContentResolver,
         private val stepRepository: Repository<Step>
 ): DownloadInteractor<T> {
@@ -33,10 +36,8 @@ abstract class DownloadInteractorBase<T>(
             .doOnNext { persistentStateManager.invalidateStructure(it, PersistentState.State.IN_PROGRESS) }
             .flatMapCompletable { structure ->
                 resolveStructureContent(structure, configuration)
-                        .flatMap(List<DownloadTask>::toObservable)
-                        .flatMapCompletable {
-                            downloadTaskManager.addTask(it, configuration)
-                        }.doOnComplete {
+                        .flatMapCompletable(downloadTaskManager::addTask)
+                        .doOnComplete {
                             persistentStateManager.invalidateStructure(structure, PersistentState.State.CACHED)
                         }.doOnError {
                             persistentStateManager.invalidateStructure(structure, PersistentState.State.NOT_CACHED)
@@ -45,13 +46,17 @@ abstract class DownloadInteractorBase<T>(
                         }
             }
 
-    private fun resolveStructureContent(structure: Structure, configuration: DownloadConfiguration): Observable<List<DownloadTask>> =
+    private fun resolveStructureContent(structure: Structure, configuration: DownloadConfiguration): Observable<DownloadRequest> =
             Observable.fromCallable {
                 val step = stepRepository.getObject(structure.step)!! // without maps to reduce overhead
                 val paths = stepContentResolver.getDownloadableContentFromStep(step, configuration)
                 val pathsFiltered = cleanUpPreviousTasks(structure.step, paths)
                 return@fromCallable pathsFiltered.map { DownloadTask(it, structure) }
             }
+            .flatMap(List<DownloadTask>::toObservable)
+            .flatMap({
+                downloadTitleResolver.resolveTitle(it.structure).toObservable()
+            }, {a, b -> DownloadRequest(a, b, configuration)})
 
     private fun cleanUpPreviousTasks(stepId: Long, paths: Iterable<String>): Iterable<String> {
         val alreadyDownloadedPaths = mutableSetOf<String>()
