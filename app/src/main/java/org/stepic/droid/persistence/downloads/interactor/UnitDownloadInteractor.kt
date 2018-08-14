@@ -2,7 +2,7 @@ package org.stepic.droid.persistence.downloads.interactor
 
 import org.stepic.droid.persistence.content.StepContentResolver
 import org.stepic.droid.persistence.downloads.DownloadTaskManager
-import org.stepic.droid.persistence.downloads.adapters.StructureResolver
+import org.stepic.droid.persistence.downloads.resolvers.structure.StructureResolver
 import org.stepic.droid.persistence.storage.PersistentStateManager
 import org.stepic.droid.persistence.storage.dao.PersistentItemDao
 import org.stepic.droid.persistence.storage.structure.DBStructurePersistentItem

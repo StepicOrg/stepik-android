@@ -1,13 +1,14 @@
-package org.stepic.droid.persistence.downloads.adapters
+package org.stepic.droid.persistence.downloads.resolvers.structure
 
 import io.reactivex.Observable
 import org.stepic.droid.persistence.model.Structure
-import org.stepik.android.model.Unit
 
-interface UnitStructureResolver: StructureResolver<Unit> {
+interface StepStructureResolver {
     fun resolveStructure(
             courseId: Long,
             sectionId: Long,
-            vararg unitIds: Long
+            unitId: Long,
+            lessonId: Long,
+            vararg stepIds: Long
     ): Observable<Structure>
 }

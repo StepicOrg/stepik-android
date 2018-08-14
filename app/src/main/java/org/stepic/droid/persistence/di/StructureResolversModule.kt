@@ -2,7 +2,7 @@ package org.stepic.droid.persistence.di
 
 import dagger.Binds
 import dagger.Module
-import org.stepic.droid.persistence.downloads.adapters.*
+import org.stepic.droid.persistence.downloads.resolvers.structure.*
 import org.stepik.android.model.Section
 import org.stepik.android.model.Unit
 

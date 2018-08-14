@@ -1,4 +1,4 @@
-package org.stepic.droid.persistence.downloads.adapters
+package org.stepic.droid.persistence.downloads.resolvers.structure
 
 import io.reactivex.Observable
 import org.stepic.droid.persistence.model.Structure
