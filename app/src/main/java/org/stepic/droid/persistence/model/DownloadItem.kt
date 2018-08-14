@@ -8,5 +8,5 @@ data class DownloadItem(
         val video: Video,
         val bytesDownloaded: Long,
         val bytesTotal: Long,
-        val progress: DownloadProgress
+        val status: DownloadProgress.Status
 )
