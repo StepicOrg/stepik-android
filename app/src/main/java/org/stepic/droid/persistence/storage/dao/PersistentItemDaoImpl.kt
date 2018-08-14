@@ -46,13 +46,13 @@ constructor(
             localFileName = cursor.getString(cursor.getColumnIndex(DBStructurePersistentItem.Columns.LOCAL_FILE_NAME)),
             localFileDir  = cursor.getString(cursor.getColumnIndex(DBStructurePersistentItem.Columns.LOCAL_FILE_DIR)),
             isInAppInternalDir = cursor.getBoolean(DBStructurePersistentItem.Columns.IS_IN_APP_INTERNAL_DIR),
-            downloadId   = cursor.getLong(cursor.getColumnIndex(DBStructurePersistentItem.Columns.DOWNLOAD_ID)),
+            downloadId    = cursor.getLong(cursor.getColumnIndex(DBStructurePersistentItem.Columns.DOWNLOAD_ID)),
 
-            status       = PersistentItem.Status.valueOf(cursor.getString(cursor.getColumnIndex(DBStructurePersistentItem.Columns.STATUS))),
+            status        = PersistentItem.Status.valueOf(cursor.getString(cursor.getColumnIndex(DBStructurePersistentItem.Columns.STATUS))),
 
             task = DownloadTask(
-                    originalPath  = cursor.getString(cursor.getColumnIndex(DBStructurePersistentItem.Columns.ORIGINAL_PATH)),
-                    structure     = Structure(
+                    originalPath = cursor.getString(cursor.getColumnIndex(DBStructurePersistentItem.Columns.ORIGINAL_PATH)),
+                    structure    = Structure(
                             course  = cursor.getLong(cursor.getColumnIndex(DBStructurePersistentItem.Columns.COURSE)),
                             section = cursor.getLong(cursor.getColumnIndex(DBStructurePersistentItem.Columns.SECTION)),
                             unit    = cursor.getLong(cursor.getColumnIndex(DBStructurePersistentItem.Columns.UNIT)),

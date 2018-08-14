@@ -230,7 +230,6 @@ constructor(
                 .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)
                 .subscribeBy({
-                    it.printStackTrace()
                     pendingSections.remove(section.id)
                 }) {
                     pendingSections.remove(section.id)
