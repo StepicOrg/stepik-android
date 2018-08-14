@@ -10,6 +10,8 @@ import io.reactivex.Observer
 import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.persistence.downloads.DownloadTaskManager
 import org.stepic.droid.persistence.downloads.DownloadTaskManagerImpl
+import org.stepic.droid.persistence.downloads.resolvers.DownloadTitleResolver
+import org.stepic.droid.persistence.downloads.resolvers.DownloadTitleResolverImpl
 import org.stepic.droid.persistence.files.ExternalStorageManager
 import org.stepic.droid.persistence.files.ExternalStorageManagerImpl
 import org.stepic.droid.persistence.model.Structure
@@ -64,8 +66,14 @@ abstract class PersistenceModule {
     @PersistenceScope
     abstract fun bindPersistentItemObserver(persistentItemObserverImpl: PersistentItemObserverImpl): PersistentItemObserver
 
+    @Binds
+    @PersistenceScope
+    abstract fun bindDownloadTitleResolver(downloadTitleResolverImpl: DownloadTitleResolverImpl): DownloadTitleResolver
+
     @Module
     companion object {
+        private const val UPDATE_INTERVAL_MS = 1000L
+
         @Provides
         @JvmStatic
         @PersistenceScope
@@ -76,7 +84,7 @@ abstract class PersistenceModule {
         @JvmStatic
         @PersistenceScope
         fun provideIntervalUpdatesObservable(): Observable<kotlin.Unit> =
-                Observable.interval(1000, TimeUnit.MILLISECONDS).map { kotlin.Unit }
+                Observable.interval(UPDATE_INTERVAL_MS, TimeUnit.MILLISECONDS).map { kotlin.Unit }
 
         @Provides
         @JvmStatic
