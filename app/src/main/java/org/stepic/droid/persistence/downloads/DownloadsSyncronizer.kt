@@ -31,6 +31,8 @@ constructor(
 
         private val persistentItemObserver: PersistentItemObserver,
 
+        private val downloadErrorPoster: DownloadErrorPoster,
+
         @BackgroundScheduler
         private val scheduler: Scheduler
 ) {
@@ -58,8 +60,10 @@ constructor(
         items.forEach { item ->
             val record = records.find { item.downloadId == it.id } ?: return@forEach
             when (record.status) {
-                DownloadManager.STATUS_FAILED ->
+                DownloadManager.STATUS_FAILED -> {
                     persistentItemObserver.update(item.copy(status = PersistentItem.Status.DOWNLOAD_ERROR))
+                    downloadErrorPoster.onError(record)
+                }
 
                 DownloadManager.STATUS_SUCCESSFUL -> // redeliver completed download
                     DownloadCompleteService.enqueueWork(context, item.downloadId)

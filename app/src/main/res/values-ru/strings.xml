@@ -77,7 +77,10 @@
     <string name="connectionProblems">Невозможно установить соединение с сервером</string>
     <string name="video_quality">Качество видео для загрузки</string>
     <string name="video_quality_playing">Качество видео для просмотра</string>
-    <string name="video_download_fail">Ошибка при загрузке видео %s</string>
+
+    <string name="download_error">Ошибка при загрузке видео %s</string>
+    <string name="download_error_insufficient_storage">: недостаточно свободного места</string>
+
     <string name="sync_problem">Возникли проблемы с синхронизацией данных, пожалуйста, повторите
         попытку позже
     </string>
