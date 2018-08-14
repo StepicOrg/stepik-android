@@ -46,7 +46,11 @@ constructor(
     private fun resolveStep(stepId: Long, items: List<PersistentItem>): Observable<DownloadItem> = Observable
             .fromCallable { stepRepository.getObject(stepId) }
             .flatMap { step ->
-                zip(downloadTitleResolver.resolveTitle(step.lesson, step.id).toObservable(), getStepVideo(step), getStorageRecords(items))
+                zip(
+                        downloadTitleResolver.resolveTitle(step.lesson, step.id).toObservable(),
+                        getStepVideo(step),
+                        getStorageRecords(items)
+                )
             }.map { (title, video, records) ->
                 resolveDownloadItem(stepId, title, video, items, records)
             }

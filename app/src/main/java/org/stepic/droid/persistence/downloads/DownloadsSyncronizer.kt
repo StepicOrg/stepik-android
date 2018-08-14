@@ -14,7 +14,6 @@ import org.stepic.droid.persistence.service.DownloadCompleteService
 import org.stepic.droid.persistence.storage.PersistentItemObserver
 import org.stepic.droid.persistence.storage.dao.PersistentItemDao
 import org.stepic.droid.persistence.storage.dao.SystemDownloadsDao
-import org.stepic.droid.persistence.storage.structure.DBStructurePersistentItem
 import org.stepic.droid.util.zip
 import javax.inject.Inject
 
@@ -44,7 +43,7 @@ constructor(
         updatesObservable.map { kotlin.Unit }.startWith(kotlin.Unit)
                 .switchMap { _ ->
                     intervalUpdatesObservable.startWith(kotlin.Unit).concatMap {
-                        persistentItemDao.getItems(mapOf(DBStructurePersistentItem.Columns.STATUS to PersistentItem.Status.IN_PROGRESS.name))
+                        persistentItemDao.getItemsByStatus(PersistentItem.Status.IN_PROGRESS)
                     }.takeWhile(List<PersistentItem>::isNotEmpty).concatMap {
                         Observable.just(it) zip systemDownloadsDao.get(*it.map(PersistentItem::downloadId).toLongArray())
                     }.map { (items, records) ->
