@@ -33,7 +33,13 @@ constructor(
 ): DownloadsRepository {
     override fun getDownloads(): Observable<DownloadItem> = (
                 intervalUpdatesObservable.startWith(kotlin.Unit)
-                    .flatMap { persistentItemDao.getItems(emptyMap()) } // get all downloads with interval
+                    .flatMap {
+                        (
+                                persistentItemDao.getItemsByStatus(PersistentItem.Status.COMPLETED) +
+                                persistentItemDao.getItemsByStatus(PersistentItem.Status.IN_PROGRESS) +
+                                persistentItemDao.getItemsByStatus(PersistentItem.Status.FILE_TRANSFER)
+                        ).reduce { a, b -> a + b }.toObservable()
+                    } // get all downloads with interval
                     .flatMap {
                         it.groupBy { item -> item.task.structure.step }.map { (a, b) -> a to b }.toObservable()
                     }

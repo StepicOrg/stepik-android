@@ -1,5 +1,8 @@
 package org.stepic.droid.util
 
+import kotlin.math.log
+import kotlin.math.pow
+
 object TextUtil {
     fun getIndexOfFirstSpace(text: CharSequence): Int = getIndexOfNWhitespace(text, 1)
 
@@ -21,5 +24,14 @@ object TextUtil {
             }
         }
         return text.length
+    }
+
+    @JvmStatic
+    fun formatBytes(bytes: Long): String {
+        val unit = 1024
+        if (bytes < unit) return "$bytes B"
+        val exp = log(bytes.toFloat(), unit.toFloat()).toInt()
+        val letter = "kMGTPE"[exp - 1]
+        return "%.1f %sB".format(bytes / unit.toDouble().pow(exp), letter)
     }
 }
