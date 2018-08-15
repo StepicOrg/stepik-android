@@ -8,12 +8,15 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepic.droid.persistence.repository.DownloadsRepository
+import org.stepic.droid.preferences.SharedPreferenceHelper
 import javax.inject.Inject
 
 class DownloadsPresenter
 @Inject
 constructor(
         private val downloadsRepository: DownloadsRepository,
+
+        private val sharedPreferenceHelper: SharedPreferenceHelper,
 
         @BackgroundScheduler
         private val backgroundScheduler: Scheduler,
@@ -30,7 +33,7 @@ constructor(
                 .subscribeBy(onError = { subscribeForDownloads() }) {
                     when(it.status) {
                         is DownloadProgress.Status.Cached ->
-                            view?.addCompletedDonwload(it)
+                            view?.addCompletedDownload(it)
 
                         is DownloadProgress.Status.NotCached ->
                             view?.removeDownload(it)
@@ -38,12 +41,18 @@ constructor(
                         else ->
                             view?.addActiveDownload(it)
                     }
+                    view?.invalidateEmptyDownloads()
                 }
     }
 
     override fun attachView(view: DownloadsView) {
         super.attachView(view)
-        subscribeForDownloads()
+        if (sharedPreferenceHelper.authResponseFromStore == null) {
+            view.showEmptyAuth()
+        } else {
+            view.invalidateEmptyDownloads()
+            subscribeForDownloads()
+        }
     }
 
     override fun detachView(view: DownloadsView) {

@@ -3,6 +3,7 @@ package org.stepic.droid.ui.fragments
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import jp.wasabeef.recyclerview.animators.SlideInRightAnimator
@@ -17,11 +18,14 @@ import org.stepic.droid.core.presenters.contracts.DownloadsView
 import org.stepic.droid.persistence.model.DownloadItem
 import org.stepic.droid.ui.adapters.DownloadsAdapter
 import org.stepic.droid.ui.util.changeVisibility
+import org.stepic.droid.ui.util.hideAllChildren
 import org.stepic.droid.ui.util.initCenteredToolbar
 import javax.inject.Inject
 
 class DownloadsFragment: FragmentBase(), DownloadsView {
     companion object {
+        fun newInstance() = DownloadsFragment()
+
         private const val ANIMATION_DURATION = 10L
     }
 
@@ -36,7 +40,7 @@ class DownloadsFragment: FragmentBase(), DownloadsView {
                 .downloadsComponent()
                 .inject(this)
 
-        downloadsAdapter = DownloadsAdapter(downloadsPresenter)
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -49,29 +53,59 @@ class DownloadsFragment: FragmentBase(), DownloadsView {
         needAuthView.changeVisibility(false)
         authAction.setOnClickListener { screenManager.showLaunchScreen(context) }
 
+        downloadsAdapter = DownloadsAdapter(downloadsPresenter)
+
         with(list_of_downloads) {
             layoutManager = LinearLayoutManager(context)
-            itemAnimator = SlideInRightAnimator()
+//            itemAnimator = SlideInRightAnimator()
             adapter = downloadsAdapter
 
-            with(itemAnimator) {
-                removeDuration = ANIMATION_DURATION
-                addDuration = ANIMATION_DURATION
-                moveDuration = ANIMATION_DURATION
-            }
+//            with(itemAnimator) {
+//                removeDuration = ANIMATION_DURATION
+//                addDuration = ANIMATION_DURATION
+//                moveDuration = ANIMATION_DURATION
+//            }
         }
 
         goToCatalog.setOnClickListener { screenManager.showCatalog(context) }
+
+        container.hideAllChildren()
     }
 
     override fun addActiveDownload(downloadItem: DownloadItem) =
             downloadsAdapter.addActiveDownload(downloadItem)
 
-    override fun addCompletedDonwload(downloadItem: DownloadItem) =
+    override fun addCompletedDownload(downloadItem: DownloadItem) =
             downloadsAdapter.addCompletedDownload(downloadItem)
 
     override fun removeDownload(downloadItem: DownloadItem) =
             downloadsAdapter.removeDownload(downloadItem)
+
+    override fun showEmptyAuth() {
+        needAuthView.changeVisibility(true)
+    }
+
+    override fun invalidateEmptyDownloads() {
+        if (downloadsAdapter.itemCount == 0) {
+            if (empty_downloading.visibility != View.VISIBLE) {
+                container.hideAllChildren()
+                empty_downloading.changeVisibility(true)
+            }
+        } else {
+            if (list_of_downloads.visibility != View.VISIBLE) {
+                container.hideAllChildren()
+                list_of_downloads.changeVisibility(true)
+            }
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean =
+            if (item?.itemId == android.R.id.home) {
+                activity?.onBackPressed()
+                true
+            } else {
+                super.onOptionsItemSelected(item)
+            }
 
     override fun onStart() {
         super.onStart()
