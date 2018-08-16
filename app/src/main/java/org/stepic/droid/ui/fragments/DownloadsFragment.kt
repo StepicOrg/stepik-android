@@ -20,6 +20,7 @@ import org.stepic.droid.ui.adapters.DownloadsAdapter
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.ui.util.hideAllChildren
 import org.stepic.droid.ui.util.initCenteredToolbar
+import org.stepik.android.model.Video
 import javax.inject.Inject
 
 class DownloadsFragment: FragmentBase(), DownloadsView {
@@ -41,6 +42,7 @@ class DownloadsFragment: FragmentBase(), DownloadsView {
                 .inject(this)
 
         setHasOptionsMenu(true)
+        downloadsAdapter = DownloadsAdapter(downloadsPresenter)
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -53,22 +55,19 @@ class DownloadsFragment: FragmentBase(), DownloadsView {
         needAuthView.changeVisibility(false)
         authAction.setOnClickListener { screenManager.showLaunchScreen(context) }
 
-        downloadsAdapter = DownloadsAdapter(downloadsPresenter)
-
         with(list_of_downloads) {
             layoutManager = LinearLayoutManager(context)
-//            itemAnimator = SlideInRightAnimator()
+            itemAnimator = SlideInRightAnimator()
             adapter = downloadsAdapter
 
-//            with(itemAnimator) {
-//                removeDuration = ANIMATION_DURATION
-//                addDuration = ANIMATION_DURATION
-//                moveDuration = ANIMATION_DURATION
-//            }
+            with(itemAnimator) {
+                removeDuration = ANIMATION_DURATION
+                addDuration = ANIMATION_DURATION
+                moveDuration = ANIMATION_DURATION
+            }
         }
 
         goToCatalog.setOnClickListener { screenManager.showCatalog(context) }
-
         container.hideAllChildren()
     }
 
@@ -106,6 +105,10 @@ class DownloadsFragment: FragmentBase(), DownloadsView {
             } else {
                 super.onOptionsItemSelected(item)
             }
+
+    override fun showVideo(video: Video) {
+        screenManager.showVideo(activity, video, null)
+    }
 
     override fun onStart() {
         super.onStart()

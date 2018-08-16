@@ -49,7 +49,7 @@ class DownloadsAdapter(
         var index = activeDownloads.binarySearch(item)
         if (index > -1) {
             val oldItem = activeDownloads[index]
-            if (!oldItem.isCompletltyEquals(item)) {
+            if (!oldItem.isCompletelyEquals(item)) {
                 activeDownloads[index] = item
                 notifyItemChanged(index + getTitleSize(activeDownloads.size))
             }
@@ -141,6 +141,9 @@ class DownloadsAdapter(
         // presenter.removeDownloads(listOf(download))
     }
 
+    private fun onItemClicked(download: DownloadItem) {
+        downloadsPresenter.showVideo(download.video)
+    }
 
     abstract class DownloadsViewHolder(view: View): RecyclerView.ViewHolder(view) {
         abstract fun bind(position: Int)
@@ -204,6 +207,7 @@ class DownloadsAdapter(
 
         init {
             deleteIcon.setOnClickListener { onRemoveDownloadClicked(getItem(adapterPosition)) }
+            view.setOnClickListener { onItemClicked(getItem(adapterPosition)) }
         }
 
         private fun getItem(position: Int) =

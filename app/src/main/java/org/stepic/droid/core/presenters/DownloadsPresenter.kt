@@ -9,6 +9,7 @@ import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepic.droid.persistence.repository.DownloadsRepository
 import org.stepic.droid.preferences.SharedPreferenceHelper
+import org.stepik.android.model.Video
 import javax.inject.Inject
 
 class DownloadsPresenter
@@ -43,6 +44,10 @@ constructor(
                     }
                     view?.invalidateEmptyDownloads()
                 }
+    }
+
+    fun showVideo(video: Video) {
+        view?.showVideo(video)
     }
 
     override fun attachView(view: DownloadsView) {
