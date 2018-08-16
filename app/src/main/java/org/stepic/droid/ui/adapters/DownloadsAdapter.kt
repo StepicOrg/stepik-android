@@ -67,7 +67,7 @@ class DownloadsAdapter(
     fun removeDownload(item: DownloadItem) {
         var index = activeDownloads.binarySearch(item)
         if (index > -1) {
-            removeFromDownloads(completedDownloads, 0, index)
+            removeFromDownloads(activeDownloads, 0, index)
             return
         }
 
