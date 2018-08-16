@@ -4,7 +4,7 @@ import io.reactivex.Completable
 import org.stepic.droid.persistence.downloads.resolvers.structure.StructureResolver
 import org.stepic.droid.persistence.model.*
 
-abstract class DownloadInteractorBase<T>(
+class DownloadInteractorBase<T>(
         private val structureResolver: StructureResolver<T>,
         private val downloadTasksHelper: DownloadTaskHelper
 ): DownloadInteractor<T> {

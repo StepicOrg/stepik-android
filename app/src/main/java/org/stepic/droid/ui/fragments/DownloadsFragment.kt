@@ -57,14 +57,7 @@ class DownloadsFragment: FragmentBase(), DownloadsView {
 
         with(list_of_downloads) {
             layoutManager = LinearLayoutManager(context)
-            itemAnimator = SlideInRightAnimator()
             adapter = downloadsAdapter
-
-            with(itemAnimator) {
-                removeDuration = ANIMATION_DURATION
-                addDuration = ANIMATION_DURATION
-                moveDuration = ANIMATION_DURATION
-            }
         }
 
         goToCatalog.setOnClickListener { screenManager.showCatalog(context) }

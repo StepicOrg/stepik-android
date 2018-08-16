@@ -134,11 +134,11 @@ class DownloadsAdapter(
         holder.bind(position)
 
     private fun onRemoveAllDownloadsClicked(downloads: List<DownloadItem>) {
-        // presenter.removeDownloads(downloads)
+         downloadsPresenter.removeDownloads(downloads)
     }
 
     private fun onRemoveDownloadClicked(download: DownloadItem) {
-        // presenter.removeDownloads(listOf(download))
+        downloadsPresenter.removeDownloads(listOf(download))
     }
 
     private fun onItemClicked(download: DownloadItem) {

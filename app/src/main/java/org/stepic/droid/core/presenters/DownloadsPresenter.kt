@@ -1,14 +1,18 @@
 package org.stepic.droid.core.presenters
 
 import io.reactivex.Scheduler
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.core.presenters.contracts.DownloadsView
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
+import org.stepic.droid.persistence.downloads.interactor.RemovalDownloadsInteractor
+import org.stepic.droid.persistence.model.DownloadItem
 import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepic.droid.persistence.repository.DownloadsRepository
 import org.stepic.droid.preferences.SharedPreferenceHelper
+import org.stepic.droid.util.addDisposable
 import org.stepik.android.model.Video
 import javax.inject.Inject
 
@@ -18,6 +22,7 @@ constructor(
         private val downloadsRepository: DownloadsRepository,
 
         private val sharedPreferenceHelper: SharedPreferenceHelper,
+        private val removalDownloadsInteractor: RemovalDownloadsInteractor,
 
         @BackgroundScheduler
         private val backgroundScheduler: Scheduler,
@@ -25,6 +30,8 @@ constructor(
         private val mainScheduler: Scheduler
 ): PresenterBase<DownloadsView>() {
     private var disposable: Disposable? = null
+
+    private val compositeDisposable = CompositeDisposable()
 
     private fun subscribeForDownloads() {
         disposable?.dispose()
@@ -48,6 +55,16 @@ constructor(
 
     fun showVideo(video: Video) {
         view?.showVideo(video)
+    }
+
+    fun removeDownloads(downloads: List<DownloadItem>) {
+        compositeDisposable addDisposable removalDownloadsInteractor
+                .removeDownloads(downloads)
+                .subscribeOn(backgroundScheduler)
+                .observeOn(mainScheduler)
+                .subscribeBy(onError = { /* todo handle error */ }) {
+                    // todo remove progress
+                }
     }
 
     override fun attachView(view: DownloadsView) {
