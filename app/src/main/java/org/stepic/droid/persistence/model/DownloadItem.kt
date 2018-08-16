@@ -3,7 +3,7 @@ package org.stepic.droid.persistence.model
 import org.stepik.android.model.Video
 
 data class DownloadItem(
-        val step: Long,
+        val structure: Structure,
         val title: String,
         val video: Video,
         val bytesDownloaded: Long,
@@ -16,7 +16,7 @@ data class DownloadItem(
 
         other as DownloadItem
 
-        if (step != other.step) return false
+        if (structure.step != other.structure.step) return false
 
         return true
     }
@@ -24,7 +24,7 @@ data class DownloadItem(
     fun isCompletelyEquals(other: DownloadItem): Boolean {
         if (this === other) return true
 
-        if (step != other.step) return false
+        if (structure.step != other.structure.step) return false
         if (title != other.title) return false
         if (video != other.video) return false
         if (bytesDownloaded != other.bytesDownloaded) return false
@@ -34,8 +34,8 @@ data class DownloadItem(
         return true
     }
 
-    override fun hashCode(): Int = step.hashCode()
+    override fun hashCode(): Int = structure.step.hashCode()
 
     override fun compareTo(other: DownloadItem) =
-            step.compareTo(other.step)
+            structure.step.compareTo(other.structure.step)
 }

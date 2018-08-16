@@ -73,7 +73,7 @@ constructor(
     }
 
 
-    override fun removeTasks(structureObservable: Observable<Structure>, persistentItemsObservable: Observable<List<PersistentItem>>): Completable =
+    override fun removeTasks(structureObservable: Observable<Structure>): Completable =
             structureObservable
                     .toList()
                     .doOnSuccess { // in order to get rid of blinking on delete operation
@@ -83,7 +83,7 @@ constructor(
                     }
                     .flatMapObservable(List<Structure>::toObservable)
                     .flatMapCompletable { structure ->
-                        persistentItemsObservable
+                        persistentItemDao.getItemsByStep(structure.step) // as step is smallest atom
                                 .concatMapCompletable(downloadTaskManager::removeTasks)
                                 .doFinally {
                                     persistentStateManager.invalidateStructure(structure, PersistentState.State.NOT_CACHED)

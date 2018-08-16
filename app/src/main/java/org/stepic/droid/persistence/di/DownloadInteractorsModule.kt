@@ -1,18 +1,28 @@
 package org.stepic.droid.persistence.di
 
-import dagger.Binds
 import dagger.Module
-import org.stepic.droid.persistence.downloads.interactor.DownloadInteractor
-import org.stepic.droid.persistence.downloads.interactor.SectionDownloadInteractor
-import org.stepic.droid.persistence.downloads.interactor.UnitDownloadInteractor
+import dagger.Provides
+import org.stepic.droid.persistence.downloads.interactor.*
+import org.stepic.droid.persistence.downloads.resolvers.structure.StructureResolver
 import org.stepik.android.model.Section
 import org.stepik.android.model.Unit
 
 @Module
-interface DownloadInteractorsModule {
-    @Binds
-    fun bindUnitDownloadInteractor(unitDownloadInteractor: UnitDownloadInteractor): DownloadInteractor<Unit>
+abstract class DownloadInteractorsModule {
 
-    @Binds
-    fun bindSectionDownloadInteractor(sectionDownloadInteractor: SectionDownloadInteractor): DownloadInteractor<Section>
+    @Module
+    companion object {
+        @JvmStatic
+        @Provides
+        @PersistenceScope
+        fun provideSectionDownloadInteractor(structureResolver: StructureResolver<Section>, downloadTasksHelper: DownloadTaskHelper): DownloadInteractor<Section> =
+                DownloadInteractorBase(structureResolver, downloadTasksHelper)
+
+        @JvmStatic
+        @Provides
+        @PersistenceScope
+        fun provideUnitDownloadInteractor(structureResolver: StructureResolver<Unit>, downloadTasksHelper: DownloadTaskHelper): DownloadInteractor<Unit> =
+                DownloadInteractorBase(structureResolver, downloadTasksHelper)
+    }
+    
 }

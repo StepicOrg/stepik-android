@@ -43,23 +43,23 @@ constructor(
                         ).reduce { a, b -> a + b }.toObservable()
                     } // get all downloads with interval
                     .flatMap {
-                        it.groupBy { item -> item.task.structure.step }.map { (a, b) -> a to b }.toObservable()
+                        it.groupBy { item -> item.task.structure }.map { (a, b) -> a to b }.toObservable()
                     }
                 +
                 updatesObservable
-                    .flatMap { structure -> persistentItemDao.getItemsByStep(structure.step).map { structure.step to it } }
+                    .flatMap { structure -> persistentItemDao.getItemsByStep(structure.step).map { structure to it } }
             )
-            .map { (stepId, items) ->
-                return@map if (persistentStateManager.getState(stepId, PersistentState.Type.STEP) == PersistentState.State.CACHED) {
-                    stepId to items
+            .map { (structure, items) ->
+                return@map if (persistentStateManager.getState(structure.step, PersistentState.Type.STEP) == PersistentState.State.CACHED) {
+                    structure to items
                 } else {
-                    stepId to emptyList()
+                    structure to emptyList()
                 }
             }
-            .flatMap { (stepId, items) -> resolveStep(stepId, items) }
+            .flatMap { (structure, items) -> resolveStep(structure, items) }
 
-    private fun resolveStep(stepId: Long, items: List<PersistentItem>): Observable<DownloadItem> = Observable
-            .fromCallable { stepRepository.getObject(stepId) }
+    private fun resolveStep(structure: Structure, items: List<PersistentItem>): Observable<DownloadItem> = Observable
+            .fromCallable { stepRepository.getObject(structure.step) }
             .flatMap { step ->
                 zip(
                         downloadTitleResolver.resolveTitle(step.lesson, step.id).toObservable(),
@@ -67,7 +67,7 @@ constructor(
                         getStorageRecords(items)
                 )
             }.map { (title, video, records) ->
-                resolveDownloadItem(stepId, title, video, items, records)
+                resolveDownloadItem(structure, title, video, items, records)
             }
 
     private fun getStorageRecords(items: List<PersistentItem>) = Observable
@@ -77,7 +77,7 @@ constructor(
     private fun getStepVideo(step: Step) =
             step.block?.video?.let { Observable.just(it) } ?: Observable.empty<Video>()
 
-    private fun resolveDownloadItem(stepId: Long, title: String, video: Video, items: List<PersistentItem>, records: List<SystemDownloadRecord>): DownloadItem {
+    private fun resolveDownloadItem(structure: Structure, title: String, video: Video, items: List<PersistentItem>, records: List<SystemDownloadRecord>): DownloadItem {
         var bytesDownloaded = 0L
         var bytesTotal = 0L
 
@@ -139,7 +139,7 @@ constructor(
             }
         }
 
-        return DownloadItem(stepId, title, stepVideo, bytesDownloaded, bytesTotal, status)
+        return DownloadItem(structure, title, stepVideo, bytesDownloaded, bytesTotal, status)
     }
 
     private fun injectVideo(video: Video, linksMap: Map<String, String>): Video {

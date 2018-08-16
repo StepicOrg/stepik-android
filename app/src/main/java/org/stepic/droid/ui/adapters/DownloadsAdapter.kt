@@ -170,8 +170,8 @@ class DownloadsAdapter(
         override fun bind(position: Int) {
             val item = activeDownloads[position - 1]
 
-            val needAnimation = stepId == item.step
-            stepId = item.step
+            val needAnimation = stepId == item.structure.step
+            stepId = item.structure.step
 
             val thumbnail = item.video.thumbnail
             Glide.with(itemView.context)
