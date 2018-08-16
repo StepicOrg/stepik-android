@@ -21,6 +21,19 @@ data class DownloadItem(
         return true
     }
 
+    fun isCompletltyEquals(other: DownloadItem): Boolean {
+        if (this === other) return true
+
+        if (step != other.step) return false
+        if (title != other.title) return false
+        if (video != other.video) return false
+        if (bytesDownloaded != other.bytesDownloaded) return false
+        if (bytesTotal != other.bytesTotal) return false
+        if (status != other.status) return false
+
+        return true
+    }
+
     override fun hashCode(): Int = step.hashCode()
 
     override fun compareTo(other: DownloadItem) =

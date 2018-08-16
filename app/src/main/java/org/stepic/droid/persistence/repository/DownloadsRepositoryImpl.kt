@@ -7,6 +7,7 @@ import org.stepic.droid.persistence.di.PersistenceScope
 import org.stepic.droid.persistence.downloads.resolvers.DownloadTitleResolver
 import org.stepic.droid.persistence.files.ExternalStorageManager
 import org.stepic.droid.persistence.model.*
+import org.stepic.droid.persistence.storage.PersistentStateManager
 import org.stepic.droid.persistence.storage.dao.SystemDownloadsDao
 import org.stepic.droid.persistence.storage.dao.PersistentItemDao
 import org.stepic.droid.storage.repositories.Repository
@@ -26,6 +27,7 @@ constructor(
 
         private val systemDownloadsDao: SystemDownloadsDao,
         private val persistentItemDao: PersistentItemDao,
+        private val persistentStateManager: PersistentStateManager,
         private val stepRepository: Repository<Step>,
 
         private val downloadTitleResolver: DownloadTitleResolver,
@@ -47,6 +49,13 @@ constructor(
                 updatesObservable
                     .flatMap { structure -> persistentItemDao.getItemsByStep(structure.step).map { structure.step to it } }
             )
+            .map { (stepId, items) ->
+                return@map if (persistentStateManager.getState(stepId, PersistentState.Type.STEP) == PersistentState.State.CACHED) {
+                    stepId to items
+                } else {
+                    stepId to emptyList()
+                }
+            }
             .flatMap { (stepId, items) -> resolveStep(stepId, items) }
 
     private fun resolveStep(stepId: Long, items: List<PersistentItem>): Observable<DownloadItem> = Observable

@@ -28,8 +28,8 @@ constructor(
     private fun subscribeForDownloads() {
         disposable?.dispose()
         disposable = downloadsRepository.getDownloads()
-                .observeOn(backgroundScheduler)
-                .subscribeOn(mainScheduler)
+                .subscribeOn(backgroundScheduler)
+                .observeOn(mainScheduler)
                 .subscribeBy(onError = { subscribeForDownloads() }) {
                     when(it.status) {
                         is DownloadProgress.Status.Cached ->

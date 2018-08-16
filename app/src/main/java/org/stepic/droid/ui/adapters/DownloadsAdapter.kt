@@ -16,7 +16,6 @@ import kotlinx.android.synthetic.main.load_imageview.view.*
 import org.stepic.droid.R
 import org.stepic.droid.core.presenters.DownloadsPresenter
 import org.stepic.droid.persistence.model.DownloadItem
-import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.ui.util.hideAllChildren
 import org.stepic.droid.util.TextUtil.formatBytes
@@ -48,16 +47,19 @@ class DownloadsAdapter(
 
     fun addActiveDownload(item: DownloadItem) {
         var index = activeDownloads.binarySearch(item)
-        if (index != -1) {
-            activeDownloads[index] = item
-            notifyItemChanged(index + getTitleSize(activeDownloads.size))
+        if (index > -1) {
+            val oldItem = activeDownloads[index]
+            if (!oldItem.isCompletltyEquals(item)) {
+                activeDownloads[index] = item
+                notifyItemChanged(index + getTitleSize(activeDownloads.size))
+            }
             return
         } else {
             addToDownloads(activeDownloads, 0, item, -index - 1)
         }
 
         index = completedDownloads.binarySearch(item)
-        if (index != -1) {
+        if (index > -1) {
             removeFromDownloads(completedDownloads, activeDownloads.size + getTitleSize(activeDownloads.size), index)
         }
     }
@@ -179,10 +181,10 @@ class DownloadsAdapter(
             progressText.text = "${formatBytes(item.bytesDownloaded)} / ${formatBytes(item.bytesTotal)}"
 
             loadButton.hideAllChildren()
-            val progress = when(item.status) {
-                is DownloadProgress.Status.InProgress -> item.status.progress
-                is DownloadProgress.Status.Cached -> 1f
-                else -> 0f
+            val progress = if (item.bytesTotal == 0L) {
+                0f
+            } else {
+                item.bytesDownloaded.toFloat() / item.bytesTotal
             }
 
             progressWheel.changeVisibility(true)
