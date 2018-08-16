@@ -21,7 +21,7 @@ data class DownloadItem(
         return true
     }
 
-    fun isCompletltyEquals(other: DownloadItem): Boolean {
+    fun isCompletelyEquals(other: DownloadItem): Boolean {
         if (this === other) return true
 
         if (step != other.step) return false
