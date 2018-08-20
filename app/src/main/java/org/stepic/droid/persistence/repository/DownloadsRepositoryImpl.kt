@@ -34,29 +34,35 @@ constructor(
         private val externalStorageManager: ExternalStorageManager
 ): DownloadsRepository {
     override fun getDownloads(): Observable<DownloadItem> = (
-                intervalUpdatesObservable.startWith(kotlin.Unit)
-                    .flatMap {
-                        (
-                                persistentItemDao.getItemsByStatus(PersistentItem.Status.COMPLETED) +
-                                persistentItemDao.getItemsByStatus(PersistentItem.Status.IN_PROGRESS) +
-                                persistentItemDao.getItemsByStatus(PersistentItem.Status.FILE_TRANSFER)
-                        ).reduce { a, b -> a + b }.toObservable()
-                    } // get all downloads with interval
-                    .flatMap {
-                        it.groupBy { item -> item.task.structure }.map { (a, b) -> a to b }.toObservable()
-                    }
-                +
+                getCorrectItems()
+                        .flatMap { it.groupBy { item -> item.task.structure }.map { (a, b) -> a to b }.toObservable() } +
                 updatesObservable
-                    .flatMap { structure -> persistentItemDao.getItemsByStep(structure.step).map { structure to it } }
+                        .flatMap { structure -> persistentItemDao.getItemsByStep(structure.step).map { structure to it } }
             )
             .map { (structure, items) ->
-                return@map if (persistentStateManager.getState(structure.step, PersistentState.Type.STEP) == PersistentState.State.CACHED) {
-                    structure to items
+                structure to if (persistentStateManager.getState(structure.step, PersistentState.Type.STEP) == PersistentState.State.CACHED) {
+                    items
                 } else {
-                    structure to emptyList()
+                    emptyList()
                 }
             }
-            .flatMap { (structure, items) -> resolveStep(structure, items) }
+            .flatMap { (structure, items) -> getDownloadItem(structure, items) }
+
+    private fun getCorrectItems() = (
+                persistentItemDao.getItemsByStatus(PersistentItem.Status.COMPLETED) +
+                persistentItemDao.getItemsByStatus(PersistentItem.Status.IN_PROGRESS) +
+                persistentItemDao.getItemsByStatus(PersistentItem.Status.FILE_TRANSFER)
+            )
+            .reduce { a, b -> a + b }
+            .toObservable()
+
+    private fun getDownloadItem(structure: Structure, items: List<PersistentItem>): Observable<DownloadItem> = (
+                resolveStep(structure, items) +
+                intervalUpdatesObservable
+                        .switchMap { _ -> persistentItemDao.getItemsByStep(structure.step) }
+                        .switchMap { resolveStep(structure, it) }
+            )
+            .takeUntil { it.status !is DownloadProgress.Status.InProgress }
 
     private fun resolveStep(structure: Structure, items: List<PersistentItem>): Observable<DownloadItem> = Observable
             .fromCallable { stepRepository.getObject(structure.step) }
