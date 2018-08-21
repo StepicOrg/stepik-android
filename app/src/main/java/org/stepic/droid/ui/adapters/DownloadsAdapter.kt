@@ -30,8 +30,8 @@ class DownloadsAdapter(
         private const val TITLE_VIEW_TYPE = 3
     }
 
-    private val activeDownloads = mutableListOf<DownloadItem>()
-    private val completedDownloads = mutableListOf<DownloadItem>()
+    val activeDownloads = mutableListOf<DownloadItem>()
+    val completedDownloads = mutableListOf<DownloadItem>()
 
     fun addCompletedDownload(item: DownloadItem) {
         var index = completedDownloads.binarySearch(item)
@@ -132,10 +132,6 @@ class DownloadsAdapter(
 
     override fun onBindViewHolder(holder: DownloadsViewHolder, position: Int) =
         holder.bind(position)
-
-    private fun onRemoveAllDownloadsClicked(downloads: List<DownloadItem>) {
-         downloadsPresenter.removeDownloads(downloads)
-    }
 
     private fun onRemoveDownloadClicked(download: DownloadItem) {
         downloadsPresenter.removeDownloads(listOf(download))
@@ -238,11 +234,11 @@ class DownloadsAdapter(
 
         init {
             headerButton.setOnClickListener {
-                onRemoveAllDownloadsClicked(if (adapterPosition == 0 && activeDownloads.isNotEmpty()) {
-                    activeDownloads
+                if (adapterPosition == 0 && activeDownloads.isNotEmpty()) {
+                    downloadsPresenter.onCancelAllDownloadsClicked()
                 } else {
-                    completedDownloads
-                })
+                    downloadsPresenter.onRemoveAllDownloadsClicked()
+                }
             }
         }
 

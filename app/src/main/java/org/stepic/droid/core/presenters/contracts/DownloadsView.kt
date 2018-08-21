@@ -12,4 +12,11 @@ interface DownloadsView {
     fun invalidateEmptyDownloads()
 
     fun showVideo(video: Video)
+
+    fun askToCancelAllVideos()
+    fun askToRemoveAllCachedVideos()
+
+    fun showLoading()
+    fun hideLoading()
+    fun onCantRemoveVideo()
 }

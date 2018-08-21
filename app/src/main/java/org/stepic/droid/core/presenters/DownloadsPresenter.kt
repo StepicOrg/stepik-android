@@ -57,13 +57,25 @@ constructor(
         view?.showVideo(video)
     }
 
+    fun onCancelAllDownloadsClicked() {
+        view?.askToCancelAllVideos()
+    }
+
+    fun onRemoveAllDownloadsClicked() {
+        view?.askToRemoveAllCachedVideos()
+    }
+
     fun removeDownloads(downloads: List<DownloadItem>) {
+        view?.showLoading()
         compositeDisposable addDisposable removalDownloadsInteractor
                 .removeDownloads(downloads)
                 .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)
-                .subscribeBy(onError = { /* todo handle error */ }) {
-                    // todo remove progress
+                .subscribeBy(onError = {
+                    view?.hideLoading()
+                    view?.onCantRemoveVideo()
+                }) {
+                    view?.hideLoading()
                 }
     }
 

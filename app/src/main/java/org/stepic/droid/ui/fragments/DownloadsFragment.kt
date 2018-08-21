@@ -1,12 +1,14 @@
 package org.stepic.droid.ui.fragments
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import jp.wasabeef.recyclerview.animators.SlideInRightAnimator
 import kotlinx.android.synthetic.main.empty_downloading.*
 import kotlinx.android.synthetic.main.empty_login.*
 import kotlinx.android.synthetic.main.fragment_downloads.*
@@ -17,23 +19,29 @@ import org.stepic.droid.core.presenters.DownloadsPresenter
 import org.stepic.droid.core.presenters.contracts.DownloadsView
 import org.stepic.droid.persistence.model.DownloadItem
 import org.stepic.droid.ui.adapters.DownloadsAdapter
+import org.stepic.droid.ui.dialogs.CancelVideosDialog
+import org.stepic.droid.ui.dialogs.ClearVideosDialog
+import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.ui.util.hideAllChildren
 import org.stepic.droid.ui.util.initCenteredToolbar
+import org.stepic.droid.util.ProgressHelper
 import org.stepik.android.model.Video
 import javax.inject.Inject
 
 class DownloadsFragment: FragmentBase(), DownloadsView {
     companion object {
         fun newInstance() = DownloadsFragment()
-
-        private const val ANIMATION_DURATION = 10L
     }
 
     @Inject
     lateinit var downloadsPresenter: DownloadsPresenter
 
     private lateinit var downloadsAdapter: DownloadsAdapter
+
+    private val loadingProgressDialog by lazy {
+        LoadingProgressDialogFragment.newInstance()
+    }
 
     override fun injectComponent() {
         App
@@ -111,5 +119,42 @@ class DownloadsFragment: FragmentBase(), DownloadsView {
     override fun onStop() {
         downloadsPresenter.detachView(this)
         super.onStop()
+    }
+
+    override fun askToCancelAllVideos() {
+        val dialog = CancelVideosDialog.newInstance()
+        dialog.setTargetFragment(this@DownloadsFragment, CancelVideosDialog.REQUEST_CODE)
+        dialog.show(fragmentManager, CancelVideosDialog.TAG)
+    }
+
+    override fun askToRemoveAllCachedVideos() {
+        val dialog = ClearVideosDialog.newInstance()
+        dialog.setTargetFragment(this@DownloadsFragment, ClearVideosDialog.REQUEST_CODE)
+        dialog.show(fragmentManager, ClearVideosDialog.TAG)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) = when {
+        requestCode == CancelVideosDialog.REQUEST_CODE && resultCode == Activity.RESULT_OK ->
+            downloadsPresenter.removeDownloads(downloadsAdapter.activeDownloads)
+
+        requestCode == ClearVideosDialog.REQUEST_CODE && resultCode == Activity.RESULT_OK ->
+            downloadsPresenter.removeDownloads(downloadsAdapter.completedDownloads)
+
+        else ->
+            super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    override fun showLoading() {
+        ProgressHelper.activate(loadingProgressDialog, fragmentManager, LoadingProgressDialogFragment.TAG)
+    }
+
+    override fun hideLoading() {
+        ProgressHelper.dismiss(fragmentManager, LoadingProgressDialogFragment.TAG)
+    }
+
+    override fun onCantRemoveVideo() {
+        view?.let {
+            Snackbar.make(it, R.string.downloads_view_cant_remove, Snackbar.LENGTH_SHORT).show()
+        }
     }
 }
