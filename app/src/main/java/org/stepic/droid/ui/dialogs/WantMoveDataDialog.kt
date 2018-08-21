@@ -111,9 +111,8 @@ class WantMoveDataDialog : DialogFragment() {
     }
 
     companion object {
-        fun newInstance(): DialogFragment {
-            return WantMoveDataDialog()
-        }
+        fun newInstance(): DialogFragment =
+                WantMoveDataDialog()
     }
 
     interface Callback {

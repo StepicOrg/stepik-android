@@ -47,6 +47,7 @@ import org.stepic.droid.ui.adapters.viewhoders.CourseItemViewHolder
 import org.stepic.droid.ui.custom.*
 import org.stepic.droid.ui.custom_exo.PlaybackControlView
 import org.stepic.droid.ui.dialogs.*
+import org.stepic.droid.ui.fragments.StoreManagementFragment
 
 @AppSingleton
 @Component(dependencies = [StorageComponent::class],
@@ -121,6 +122,8 @@ interface AppCoreComponent {
     fun inject(dialogFragment: LogoutAreYouSureDialog)
 
     fun inject(dialogFragment: VideoQualityDialog)
+
+    fun inject(fragment: StoreManagementFragment)
 
     fun inject(viewPusher: ViewPusher)
 

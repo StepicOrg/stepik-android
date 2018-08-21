@@ -10,8 +10,10 @@ import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
-import org.stepic.droid.model.StorageOption;
+import org.stepic.droid.persistence.files.ExternalStorageManager;
+import org.stepic.droid.persistence.model.StorageLocation;
 import org.stepic.droid.preferences.UserPreferences;
+import org.stepic.droid.util.TextUtil;
 
 import java.util.List;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -29,18 +31,23 @@ public class ChooseStorageDialog extends DialogFragment {
     @Inject
     Analytic analytic;
 
+    @Inject
+    ExternalStorageManager externalStorageManager;
+
     @NotNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         App.Companion.component().inject(this);
 
-        //fixme get From User Prefs
-        final List<StorageOption> storageOptions = userPreferences.getStorageOptionList();
+
+        final List<StorageLocation> storageOptions = externalStorageManager.getAvailableStorageLocations();
+        final StorageLocation currentStorageLocation = externalStorageManager.getSelectedStorageLocation();
+
         String[] headers = new String[storageOptions.size()];
         int indexChosen = -1; //// FIXME: 08.06.16 change to 0
         for (int i = 0; i < headers.length; i++) {
-            headers[i] = storageOptions.get(i).getPresentableInfo();
-            if (storageOptions.get(i).isChosen()) {
+            headers[i] = TextUtil.formatBytes(storageOptions.get(i).getFreeSpaceBytes()) + " / " + TextUtil.formatBytes(storageOptions.get(i).getTotalSpaceBytes());
+            if (storageOptions.get(i).equals(currentStorageLocation)) {
                 indexChosen = i;
             }
         }
@@ -78,8 +85,7 @@ public class ChooseStorageDialog extends DialogFragment {
     }
 
     public static ChooseStorageDialog newInstance() {
-        ChooseStorageDialog fragment = new ChooseStorageDialog();
-        return fragment;
+        return new ChooseStorageDialog();
     }
 
 }

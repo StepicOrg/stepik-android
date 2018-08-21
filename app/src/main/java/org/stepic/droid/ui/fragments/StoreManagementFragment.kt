@@ -1,43 +1,42 @@
 package org.stepic.droid.ui.fragments
 
-import android.Manifest
-import android.content.pm.PackageManager
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.Toast
+import kotlinx.android.synthetic.main.fragment_space_management.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentBase
+import org.stepic.droid.core.presenters.StoreManagementPresenter
+import org.stepic.droid.core.presenters.contracts.StoreManagementView
+import org.stepic.droid.persistence.model.StorageLocation
 import org.stepic.droid.ui.dialogs.*
 import org.stepic.droid.util.*
+import javax.inject.Inject
 
-class StoreManagementFragment : FragmentBase(), WantMoveDataDialog.Callback, ClearVideosDialog.Callback {
+class StoreManagementFragment : FragmentBase(), StoreManagementView, WantMoveDataDialog.Callback {
     companion object {
         fun newInstance(): Fragment = StoreManagementFragment()
 
         private const val LOADING_TAG = "loading_store_management"
     }
 
-    private lateinit var clearCacheButton: View
-    private lateinit var clearCacheLabel: TextView
     private var mClearCacheDialogFragment: DialogFragment? = null
     private var loadingProgressDialogFragment: DialogFragment? = null
 
-    private lateinit var notMountExplanation: View
-    private lateinit var mountExplanation: View
-    private lateinit var chooseStorageButton: View
-    private lateinit var userStorageInfo: TextView
+    @Inject
+    lateinit var storeManagementPresenter: StoreManagementPresenter
 
-    private var kb: String? = null
-    private var mb: String? = null
-    private var gb: String? = null
-    private var empty: String? = null
+    override fun injectComponent() {
+        App.component().inject(this)
+    }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?)
             = inflater?.inflate(R.layout.fragment_space_management, container, false)
@@ -45,55 +44,18 @@ class StoreManagementFragment : FragmentBase(), WantMoveDataDialog.Callback, Cle
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         nullifyActivityBackground()
-        view?.let {
-            initResStrings()
-            initClearCacheFeature(it)
-            initAccordingToStoreState(it)
-            if (savedInstanceState == null) {
-                checkForPermissions()
-            }
-        }
+        initClearCacheFeature()
+        hideAllStorageInfo()
     }
 
-    private fun initAccordingToStoreState(view: View) {
-        notMountExplanation = view.findViewById(R.id.notMountExplanation)
-        mountExplanation = view.findViewById(R.id.mountExplanation)
-        chooseStorageButton = view.findViewById(R.id.choose_storage_button)
-        userStorageInfo = view.findViewById(R.id.user_storage_info)
+    override fun onStart() {
+        super.onStart()
+        storeManagementPresenter.attachView(this)
+    }
 
-        fun hideAllStorageInfo() {
-            notMountExplanation.visibility = View.GONE
-            mountExplanation.visibility = View.GONE
-            chooseStorageButton.visibility = View.GONE
-        }
-
-        val storageState = StorageUtil.getSDState(context)
-        if (storageState == null) {
-            hideAllStorageInfo()
-        } else {
-            when (storageState) {
-                StorageUtil.SDState.sdcardMounted -> {
-                    notMountExplanation.visibility = View.GONE
-                    mountExplanation.visibility = View.VISIBLE
-                    chooseStorageButton.visibility = View.VISIBLE
-                    val chooseStorageDialog = ChooseStorageDialog.newInstance()
-                    chooseStorageDialog.setTargetFragment(this, 0)
-                    chooseStorageButton.setOnClickListener {
-                        if (!chooseStorageDialog.isAdded) {
-                            chooseStorageDialog.show(fragmentManager, null)
-                        }
-                    }
-                    //TODO: ADD user_storage_info from user prefs IN userStorageInfo!
-                }
-                StorageUtil.SDState.sdCardNotMounted -> {
-                    notMountExplanation.visibility = View.VISIBLE
-                    mountExplanation.visibility = View.GONE
-                    chooseStorageButton.visibility = View.GONE
-                }
-                else -> //restricted and not available
-                    hideAllStorageInfo()
-            }
-        }
+    override fun onStop() {
+        storeManagementPresenter.detachView(this)
+        super.onStop()
     }
 
     override fun onDestroyView() {
@@ -102,110 +64,95 @@ class StoreManagementFragment : FragmentBase(), WantMoveDataDialog.Callback, Cle
         super.onDestroyView()
     }
 
-    private fun initResStrings() {
-        kb = context?.getString(R.string.kb)
-        mb = context?.getString(R.string.mb)
-        gb = context?.getString(R.string.gb)
-        empty = context?.getString(R.string.empty)
+    private fun hideAllStorageInfo() {
+        notMountExplanation.visibility = View.GONE
+        mountExplanation.visibility = View.GONE
+        chooseStorageButton.visibility = View.GONE
     }
 
-    private fun initClearCacheFeature(v: View) {
-        clearCacheButton = v.findViewById(R.id.clear_cache_button)
-        clearCacheLabel = v.findViewById(R.id.clear_cache_label)
+    override fun setStorageOptions(options: List<StorageLocation>) {
+        when {
+            options.size > 1 -> {
+                notMountExplanation.visibility = View.GONE
+                mountExplanation.visibility = View.VISIBLE
+                chooseStorageButton.visibility = View.VISIBLE
+                val chooseStorageDialog = ChooseStorageDialog.newInstance()
+                chooseStorageDialog.setTargetFragment(this, 0)
+                chooseStorageButton.setOnClickListener {
+                    if (!chooseStorageDialog.isAdded) {
+                        chooseStorageDialog.show(fragmentManager, null)
+                    }
+                }
+            }
+
+            options.size == 1 -> {
+                notMountExplanation.visibility = View.VISIBLE
+                mountExplanation.visibility = View.GONE
+                chooseStorageButton.visibility = View.GONE
+            }
+
+            else ->
+                hideAllStorageInfo()
+        }
+    }
+
+    private fun initClearCacheFeature() {
         mClearCacheDialogFragment = ClearVideosDialog.newInstance()
-        mClearCacheDialogFragment?.setTargetFragment(this, 0)
-        setUpClearCacheButton()
-    }
+        mClearCacheDialogFragment?.setTargetFragment(this, ClearVideosDialog.REQUEST_CODE)
 
-    private fun setUpClearCacheButton() {
         clearCacheButton.setOnClickListener {
             analytic.reportEvent(Analytic.Interaction.CLICK_CLEAR_CACHE)
 
             if (mClearCacheDialogFragment?.isAdded != true) {
-                mClearCacheDialogFragment?.show(fragmentManager, null)
+                mClearCacheDialogFragment?.show(fragmentManager, ClearVideosDialog.TAG)
             }
         }
+        clearCacheButton.isEnabled = false
+    }
 
-        val clearCacheStringBuilder = StringBuilder()
-        var size = FileUtil.getFileOrFolderSizeInKb(userPreferences.userDownloadFolder)
-        size += FileUtil.getFileOrFolderSizeInKb(userPreferences.sdCardDownloadFolder)
-        if (size > 0) {
+    override fun setUpClearCacheButton(cacheSize: Long) {
+        if (cacheSize > 0) {
             clearCacheButton.isEnabled = true
-            if (size > 1024) {
-                size /= 1024
-                if (size > 1024) {
-                    val part = size % 1024
-                    size /= 1024
-                    val sizeInGb: Double = size + (part.toDouble() / 1024f)
-                    Double.toString()
-                    clearCacheStringBuilder.append(KotlinUtil.getNiceFormatOfDouble(sizeInGb))
-                    clearCacheStringBuilder.append(gb)
-                } else {
-                    clearCacheStringBuilder.append(size)
-                    clearCacheStringBuilder.append(mb)
-                }
-            } else {
-                clearCacheStringBuilder.append(size)
-                clearCacheStringBuilder.append(kb)
-            }
-            clearCacheLabel.text = clearCacheStringBuilder.toString()
+            clearCacheLabel.text = TextUtil.formatBytes(cacheSize)
         } else {
             clearCacheButton.isEnabled = false
-            clearCacheLabel.text = empty
+            clearCacheLabel.setText(R.string.empty)
         }
 
     }
 
     override fun onStartLoading(isMove: Boolean) {
-        if (isMove) {
-            loadingProgressDialogFragment = MovingProgressDialogFragment.newInstance()
+        loadingProgressDialogFragment = if (isMove) {
+            MovingProgressDialogFragment.newInstance()
         } else {
-            loadingProgressDialogFragment = LoadingProgressDialogFragment.newInstance()
+            LoadingProgressDialogFragment.newInstance()
         }
         ProgressHelper.activate(loadingProgressDialogFragment, fragmentManager, LOADING_TAG)
     }
 
     override fun onFinishLoading() {
-        setUpClearCacheButton()
         ProgressHelper.dismiss(fragmentManager, LOADING_TAG)
     }
 
-    override fun onStartLoading() {
-        onStartLoading(false)
-    }
-
-    override fun onClearAllWithoutAnimation(stepIds: LongArray?) {
-        // no op
-    }
-
     override fun onFailToMove() {
-        context?.let {
+        context.let {
             Toast.makeText(context, R.string.fail_move, Toast.LENGTH_SHORT).show()
         }
     }
 
-    private fun checkForPermissions() {
-        val permissionCheck = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-            if (shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                val dialog = ExplainExternalStoragePermissionDialog.newInstance()
-                dialog.setTargetFragment(this, 0)
-                if (!dialog.isAdded) {
-                    dialog.show(activity.supportFragmentManager, null) // supportFragmentManager instead of child support manager to use targetFragment in dialog
-                }
-            } else {
-                requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), AppConstants.REQUEST_EXTERNAL_STORAGE)
-            }
-        }
+    override fun showLoading() {
+        ProgressHelper.activate(loadingProgressDialogFragment, fragmentManager, LOADING_TAG)
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    override fun hideLoading() {
+        ProgressHelper.dismiss(fragmentManager, LOADING_TAG)
+    }
 
-        if (requestCode == AppConstants.REQUEST_EXTERNAL_STORAGE) {
-            if (grantResults.getOrNull(0) == PackageManager.PERMISSION_GRANTED) {
-                setUpClearCacheButton()
-            }
-        }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) = when {
+        requestCode == ClearVideosDialog.REQUEST_CODE && resultCode == Activity.RESULT_OK ->
+            storeManagementPresenter.removeAllDownloads()
+
+        else ->
+            super.onActivityResult(requestCode, resultCode, data)
     }
 }

@@ -23,15 +23,8 @@
 
 package org.stepic.droid.util;
 
-import android.annotation.TargetApi;
-import android.content.ContentResolver;
 import android.content.res.AssetManager;
-import android.net.Uri;
-import android.os.Build;
-import android.provider.MediaStore;
 import android.text.TextUtils;
-
-import org.stepic.droid.base.App;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -154,21 +147,6 @@ public class FileUtils {
             return false;
         }
         return ret;
-    }
-
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public static boolean deleteFile(String path) {
-        boolean deleted = false;
-        path = Uri.decode(Strings.removeFileProtocol(path));
-        //Delete from Android Medialib, for consistency with device MTP storing and other apps listing content:// media
-        ContentResolver cr = App.Companion.getAppContext().getContentResolver();
-        String[] selectionArgs = {path};
-        deleted = cr.delete(MediaStore.Files.getContentUri("external"),
-                MediaStore.Files.FileColumns.DATA + "=?", selectionArgs) > 0;
-        File file = new File(path);
-        if (file.exists())
-            deleted |= file.delete();
-        return deleted;
     }
 
 
