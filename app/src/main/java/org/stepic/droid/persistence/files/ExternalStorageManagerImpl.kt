@@ -40,10 +40,8 @@ constructor(
     private fun resolveDownloadsFilesDir(): File? = context.filesDir?.let {
         File(it, Environment.DIRECTORY_DOWNLOADS)
     }?.let {
-        if (!it.exists()) {
-            if (!it.mkdir()) {
-                return@let null
-            }
+        if (!it.exists() && !it.mkdir()) {
+            return@let null
         }
         return@let it
     }

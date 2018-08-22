@@ -14,7 +14,7 @@ class PersistentStateDaoImpl
 @Inject
 constructor(
         databaseOperations: DatabaseOperations
-): DaoBase<PersistentState>(databaseOperations) {
+): DaoBase<PersistentState>(databaseOperations), PersistentStateDao {
     override fun getDbName() = DBStructurePersistentState.TABLE_NAME
 
     override fun getDefaultPrimaryColumn() = DBStructurePersistentState.Columns.ID // actually ID + TYPE
@@ -30,5 +30,10 @@ constructor(
             id = cursor.getLong(cursor.getColumnIndex(DBStructurePersistentState.Columns.ID)),
             type = PersistentState.Type.valueOf(cursor.getString(cursor.getColumnIndex(DBStructurePersistentState.Columns.TYPE))),
             state = PersistentState.State.valueOf(cursor.getString(cursor.getColumnIndex(DBStructurePersistentState.Columns.STATE)))
+    )
+
+    override fun resetInProgressItems(): Unit = executeSql(
+            "UPDATE $dbName SET ${DBStructurePersistentState.Columns.STATE} = ? WHERE ${DBStructurePersistentState.Columns.STATE} = ?",
+            arrayOf(PersistentState.State.NOT_CACHED.name, PersistentState.State.IN_PROGRESS.name)
     )
 }

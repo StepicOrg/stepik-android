@@ -4,8 +4,8 @@ import io.reactivex.Observer
 import org.stepic.droid.persistence.di.PersistenceScope
 import org.stepic.droid.persistence.model.PersistentState
 import org.stepic.droid.persistence.model.Structure
+import org.stepic.droid.persistence.storage.dao.PersistentStateDao
 import org.stepic.droid.persistence.storage.structure.DBStructurePersistentState
-import org.stepic.droid.storage.dao.IDao
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.storage.operations.Table
 import java.util.concurrent.locks.ReentrantReadWriteLock
@@ -17,7 +17,7 @@ import kotlin.concurrent.write
 class PersistentStateManagerImpl
 @Inject
 constructor(
-        private val persistentStateDao: IDao<PersistentState>,
+        private val persistentStateDao: PersistentStateDao,
         private val databaseFacade: DatabaseFacade,
         private val updatesObserver: Observer<Structure>
 ): PersistentStateManager {
@@ -86,4 +86,8 @@ constructor(
 
     override fun getState(id: Long, type: PersistentState.Type): PersistentState.State =
             lock.read { getStateLockFree(id, type) }
+
+    override fun resetInProgressItems() = lock.write {
+        persistentStateDao.resetInProgressItems()
+    }
 }

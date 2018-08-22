@@ -13,7 +13,6 @@ import org.stepic.droid.persistence.model.StorageLocation
 import org.stepic.droid.persistence.storage.PersistentItemObserver
 import org.stepic.droid.persistence.storage.PersistentStateManager
 import org.stepic.droid.persistence.storage.dao.PersistentItemDao
-import org.stepic.droid.persistence.storage.structure.DBStructurePersistentItem
 import java.io.File
 import java.util.concurrent.locks.ReentrantLock
 import javax.inject.Inject
@@ -58,7 +57,7 @@ class FileTransferService: JobIntentService() {
 
     override fun onHandleWork(intent: Intent) = fsLock.withLock {
         val storage = externalStorageManager.getSelectedStorageLocation()
-        val items = persistentItemDao.getAll(mapOf(DBStructurePersistentItem.Columns.STATUS to PersistentItem.Status.COMPLETED.name))
+        val items = persistentItemDao.getItemsByStatus(PersistentItem.Status.COMPLETED).blockingFirst()
 
         items.groupBy { it.task.structure.step }.forEach { _, downloads ->
             val structure = downloads.first().task.structure
