@@ -36,11 +36,6 @@ abstract class StorageModule {
 
     @StorageSingleton
     @Binds
-    internal abstract fun bindsProgressPublishingOperation(
-            stepInfoOperationImpl: StepInfoOperationImpl): StepInfoOperation
-
-    @StorageSingleton
-    @Binds
     internal abstract fun bindsOperations(databaseOperationsImpl: DatabaseOperationsImpl): DatabaseOperations
 
     @StorageSingleton

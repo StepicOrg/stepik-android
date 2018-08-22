@@ -25,7 +25,6 @@ import javax.inject.Inject
 @StorageSingleton
 class DatabaseFacade
 @Inject constructor(
-        private val stepInfoOperation: StepInfoOperation,
         private val codeSubmissionDao: IDao<CodeSubmission>,
         private val searchQueryDao: SearchQueryDao,
         private val adaptiveExpDao: AdaptiveExpDao,
@@ -123,15 +122,12 @@ class DatabaseFacade
 
     fun getStepsById(stepIds: List<Long>): List<Step> = getStepsById(stepIds.toLongArray())
 
-    fun getPublishProgressStepInfoByIds(stepIds: List<Long>): List<StepInfo> = stepInfoOperation.getStepInfo(stepIds)
-
     fun getStepsById(stepIds: LongArray): List<Step> {
         val stringIds = DbParseHelper.parseLongArrayToString(stepIds, AppConstants.COMMA)
         return if (stringIds != null) {
-            stepDao
-                    .getAllInRange(DbStructureStep.Column.STEP_ID, stringIds)
+            stepDao.getAllInRange(DbStructureStep.Column.STEP_ID, stringIds)
         } else {
-            ArrayList<Step>()
+            emptyList()
         }
     }
 
