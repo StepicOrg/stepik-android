@@ -156,7 +156,7 @@ public class UnitsFragment extends FragmentBase implements
         ToolbarHelperKt.initCenteredToolbar(this, R.string.units_lessons_title, true);
 
         unitsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new UnitAdapter(section, this, unitsPresenter);
+        adapter = new UnitAdapter(section, getAnalytic(), this, unitsPresenter);
 
         unitsRecyclerView.setAdapter(adapter);
         unitsRecyclerView.setItemAnimator(new SlideInRightAnimator());

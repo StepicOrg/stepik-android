@@ -13,6 +13,8 @@ import kotlinx.android.synthetic.main.load_imageview.view.*
 import kotlinx.android.synthetic.main.unit_item.view.*
 import kotlinx.android.synthetic.main.view_download_progress_determinate.view.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.AmplitudeAnalytic
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.presenters.UnitsPresenter
 import org.stepic.droid.persistence.model.DownloadProgress
@@ -29,6 +31,7 @@ import org.stepik.android.model.Unit
 class UnitAdapter(
         var parentSection: Section,
 
+        private val analytic: Analytic,
         private val unitsFragment: UnitsFragment,
         private val unitsPresenter: UnitsPresenter
 ): RecyclerView.Adapter<UnitAdapter.UnitViewHolder>() {
@@ -139,14 +142,26 @@ class UnitAdapter(
             preLoadIV.setOnClickListener {
                 onItemDownloadClicked(adapterPosition)
                 whenLoad.setProgressPortion(0f, false)
+
+                analytic.reportEvent(Analytic.Interaction.CLICK_CACHE_LESSON, units[adapterPosition].id.toString())
+                analytic.reportAmplitudeEvent(AmplitudeAnalytic.Downloads.STARTED,
+                        mapOf(AmplitudeAnalytic.Downloads.PARAM_CONTENT to AmplitudeAnalytic.Downloads.Values.LESSON))
             }
 
             whenLoad.setOnClickListener {
                 onItemRemoveClicked(adapterPosition)
+
+                analytic.reportEvent(Analytic.Interaction.CLICK_CANCEL_LESSON, units[adapterPosition].id.toString())
+                analytic.reportAmplitudeEvent(AmplitudeAnalytic.Downloads.CANCELLED,
+                        mapOf(AmplitudeAnalytic.Downloads.PARAM_CONTENT to AmplitudeAnalytic.Downloads.Values.LESSON))
             }
 
             afterLoad.setOnClickListener {
                 onItemRemoveClicked(adapterPosition)
+
+                analytic.reportEvent(Analytic.Interaction.CLICK_DELETE_LESSON, units[adapterPosition].id.toString())
+                analytic.reportAmplitudeEvent(AmplitudeAnalytic.Downloads.DELETED,
+                        mapOf(AmplitudeAnalytic.Downloads.PARAM_CONTENT to AmplitudeAnalytic.Downloads.Values.LESSON))
             }
         }
     }
