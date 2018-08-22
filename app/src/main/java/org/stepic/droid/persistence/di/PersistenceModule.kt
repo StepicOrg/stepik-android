@@ -10,8 +10,10 @@ import io.reactivex.Observer
 import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.persistence.downloads.DownloadTaskManager
 import org.stepic.droid.persistence.downloads.DownloadTaskManagerImpl
-import org.stepic.droid.persistence.downloads.interactor.DownloadTaskHelper
-import org.stepic.droid.persistence.downloads.interactor.DownloadTaskHelperImpl
+import org.stepic.droid.persistence.downloads.helpers.AddDownloadTaskHelper
+import org.stepic.droid.persistence.downloads.helpers.AddDownloadTaskHelperImpl
+import org.stepic.droid.persistence.downloads.helpers.RemoveDownloadTaskHelper
+import org.stepic.droid.persistence.downloads.helpers.RemoveDownloadTaskHelperImpl
 import org.stepic.droid.persistence.downloads.resolvers.DownloadTitleResolver
 import org.stepic.droid.persistence.downloads.resolvers.DownloadTitleResolverImpl
 import org.stepic.droid.persistence.files.ExternalStorageManager
@@ -75,7 +77,11 @@ abstract class PersistenceModule {
 
     @Binds
     @PersistenceScope
-    abstract fun bindDownloadTasksHelper(downloadTasksHelperImpl: DownloadTaskHelperImpl): DownloadTaskHelper
+    abstract fun bindAddDownloadTasksHelper(addDownloadTasksHelperImpl: AddDownloadTaskHelperImpl): AddDownloadTaskHelper
+
+    @Binds
+    @PersistenceScope
+    abstract fun bindRemoveDownloadTasksHelper(removeDownloadTasksHelperImpl: RemoveDownloadTaskHelperImpl): RemoveDownloadTaskHelper
 
     @Module
     companion object {

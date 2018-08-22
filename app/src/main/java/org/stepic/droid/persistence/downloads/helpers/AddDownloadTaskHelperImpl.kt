@@ -1,4 +1,4 @@
-package org.stepic.droid.persistence.downloads.interactor
+package org.stepic.droid.persistence.downloads.helpers
 
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -16,7 +16,7 @@ import org.stepik.android.model.Step
 import javax.inject.Inject
 
 @PersistenceScope
-class DownloadTaskHelperImpl
+class AddDownloadTaskHelperImpl
 @Inject
 constructor(
         private val downloadTaskManager: DownloadTaskManager,
@@ -27,7 +27,7 @@ constructor(
         private val downloadTitleResolver: DownloadTitleResolver,
 
         private val persistentItemDao: PersistentItemDao
-) : DownloadTaskHelper {
+) : AddDownloadTaskHelper {
     override fun addTasks(structureObservable: Observable<Structure>, configuration: DownloadConfiguration): Completable = structureObservable
             .doOnNext { persistentStateManager.invalidateStructure(it, PersistentState.State.IN_PROGRESS) }
             .flatMapCompletable { structure ->
@@ -71,22 +71,4 @@ constructor(
         downloadTaskManager.removeTasks(itemsToRemove).blockingAwait()
         return paths.filter { !alreadyDownloadedPaths.contains(it) }
     }
-
-
-    override fun removeTasks(structureObservable: Observable<Structure>): Completable =
-            structureObservable
-                    .toList()
-                    .doOnSuccess { // in order to get rid of blinking on delete operation
-                        it.forEach { structure ->
-                            persistentStateManager.invalidateStructure(structure, PersistentState.State.IN_PROGRESS)
-                        }
-                    }
-                    .flatMapObservable(List<Structure>::toObservable)
-                    .flatMapCompletable { structure ->
-                        persistentItemDao.getItemsByStep(structure.step) // as step is smallest atom
-                                .concatMapCompletable(downloadTaskManager::removeTasks)
-                                .doFinally {
-                                    persistentStateManager.invalidateStructure(structure, PersistentState.State.NOT_CACHED)
-                                }
-                    }
 }

@@ -4,7 +4,7 @@ import dagger.Subcomponent
 import org.stepic.droid.ui.fragments.DownloadsFragment
 
 @DownloadsScope
-@Subcomponent(modules = [DownloadsModule::class])
+@Subcomponent
 interface DownloadsComponent {
 
     @Subcomponent.Builder
