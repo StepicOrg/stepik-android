@@ -50,12 +50,17 @@ constructor(
 
     @Throws(ExternalStorageNotAvailable::class)
     override fun getSelectedStorageLocation(): StorageLocation {
-        return getAvailableStorageLocations()[0] // todo fetch prefs
+        val locations = getAvailableStorageLocations()
+        val selectedLocation = userPreferences.storageLocation
+        return if (selectedLocation == null || locations.indexOf(selectedLocation) < 0) {
+            locations[0]
+        } else {
+            selectedLocation
+        }
     }
 
     override fun setStorageLocation(storage: StorageLocation) {
-        // set storage
-
+        userPreferences.storageLocation = storage
         FileTransferService.enqueueWork(context) // move files
     }
 
