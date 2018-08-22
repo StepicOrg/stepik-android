@@ -1,7 +1,6 @@
 package org.stepic.droid.util.resolvers
 
 import android.support.annotation.AnyThread
-import org.stepic.droid.analytic.Analytic
 import org.stepik.android.model.Video
 import org.stepik.android.model.VideoUrl
 import org.stepic.droid.preferences.UserPreferences
@@ -9,10 +8,8 @@ import javax.inject.Inject
 
 class VideoResolverImpl
 @Inject constructor(
-        private val userPreferences: UserPreferences,
-        private val analytic: Analytic)
-    : VideoResolver {
-
+        private val userPreferences: UserPreferences
+) : VideoResolver {
 
     @AnyThread
     override fun resolveVideoUrl(video: Video?, isForPlaying: Boolean): String? {

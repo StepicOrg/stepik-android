@@ -20,29 +20,9 @@
 
 package org.stepic.droid.util;
 
-import android.annotation.TargetApi;
-import android.content.Context;
-import android.os.Build.VERSION;
-import android.os.Build.VERSION_CODES;
 import android.os.Environment;
-import android.telephony.TelephonyManager;
-import android.view.InputDevice;
-import android.view.MotionEvent;
-
 import org.stepic.droid.base.App;
-
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
-import java.util.StringTokenizer;
 
 public class AndroidDevices {
     public final static String TAG = "VLC/UiTools/AndroidDevices";
@@ -62,109 +42,7 @@ public class AndroidDevices {
         isTv = App.Companion.getAppContext().getPackageManager().hasSystemFeature("android.software.leanback");
     }
 
-    public static boolean hasExternalStorage() {
-        return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
-    }
-
     public static boolean hasNavBar() {
         return hasNavBar;
     }
-
-    /**
-     * hasCombBar test if device has Combined Bar : only for tablet with Honeycomb or ICS
-     */
-    public static boolean hasCombBar() {
-        return (!AndroidDevices.isPhone()
-                && ((VERSION.SDK_INT >= VERSION_CODES.HONEYCOMB) &&
-                (VERSION.SDK_INT <= VERSION_CODES.JELLY_BEAN)));
-    }
-
-    public static boolean isPhone() {
-        TelephonyManager manager = (TelephonyManager) App.Companion.getAppContext().getSystemService(Context.TELEPHONY_SERVICE);
-        return manager.getPhoneType() != TelephonyManager.PHONE_TYPE_NONE;
-    }
-
-    public static boolean hasTsp() {
-        return hasTsp;
-    }
-
-    public static boolean isAndroidTv() {
-        return isTv;
-    }
-
-    public static ArrayList<String> getStorageDirectories() {
-        BufferedReader bufReader = null;
-        ArrayList<String> list = new ArrayList<String>();
-        list.add(EXTERNAL_PUBLIC_DIRECTORY);
-
-        List<String> typeWL = Arrays.asList("vfat", "exfat", "sdcardfs", "fuse", "ntfs", "fat32", "ext3", "ext4", "esdfs");
-        List<String> typeBL = Arrays.asList("tmpfs");
-        String[] mountWL = {"/mnt", "/Removable", "/storage"};
-        String[] mountBL = {
-                "/mnt/secure",
-                "/mnt/shell",
-                "/mnt/asec",
-                "/mnt/obb",
-                "/mnt/media_rw/extSdCard",
-                "/mnt/media_rw/sdcard",
-                "/storage/emulated"};
-        String[] deviceWL = {
-                "/dev/block/vold",
-                "/dev/fuse",
-                "/mnt/media_rw"};
-
-        try {
-            InputStream inputStream = new FileInputStream("/proc/mounts");
-            bufReader = new BufferedReader(new InputStreamReader(inputStream, Charset.defaultCharset()));
-            String line;
-            while ((line = bufReader.readLine()) != null) {
-
-                StringTokenizer tokens = new StringTokenizer(line, " ");
-                String device = tokens.nextToken();
-                String mountpoint = tokens.nextToken();
-                String type = tokens.nextToken();
-
-                // skip if already in oldList or if type/mountpoint is blacklisted
-                if (list.contains(mountpoint) || typeBL.contains(type) || Strings.startsWith(mountBL, mountpoint))
-                    continue;
-
-                // check that device is in whitelist, and either type or mountpoint is in a whitelist
-                if (Strings.startsWith(deviceWL, device) && (typeWL.contains(type) || Strings.startsWith(mountWL, mountpoint))) {
-                    int position = Strings.containsName(list, FileUtils.getFileNameFromPath(mountpoint));
-                    if (position > -1)
-                        list.remove(position);
-                    list.add(mountpoint);
-                }
-            }
-        } catch (FileNotFoundException e) {
-        } catch (IOException e) {
-        } finally {
-            Util.close(bufReader);
-        }
-        return list;
-    }
-
-
-    @TargetApi(VERSION_CODES.HONEYCOMB_MR1)
-    public static float getCenteredAxis(MotionEvent event,
-                                        InputDevice device, int axis) {
-        final InputDevice.MotionRange range =
-                device.getMotionRange(axis, event.getSource());
-
-        // A joystick at rest does not always report an absolute position of
-        // (0,0). Use the getFlat() method to determine the range of values
-        // bounding the joystick axis center.
-        if (range != null) {
-            final float flat = range.getFlat();
-            final float value = event.getAxisValue(axis);
-
-            // Ignore axis values that are within the 'flat' region of the
-            // joystick axis center.
-            if (Math.abs(value) > flat) {
-                return value;
-            }
-        }
-        return 0;
-    }
-
 }

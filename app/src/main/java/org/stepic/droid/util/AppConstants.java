@@ -5,10 +5,8 @@ import org.jetbrains.annotations.Nullable;
 
 public class AppConstants {
 
-    public static final String FILE_SCHEME_PREFIX = "file://";
     public static final String FILE_PROVIDER_AUTHORITY = ".provider";
     public static final String SVG_EXTENSION = ".svg";
-    public static final String VIDEO_EXTENSION = ".mp4";
 
     public static final String ERROR_SOCIAL_AUTH_WITH_EXISTING_EMAIL = "social_signup_with_existing_email";
     public static final String ERROR_SOCIAL_AUTH_WITHOUT_EMAIL = "social_signup_without_email";
@@ -23,7 +21,6 @@ public class AppConstants {
     public static final String DEFAULT_QUALITY = "360";
     public static final String MAX_QUALITY = "720";
     public static final int MAX_QUALITY_INT = 720;
-    public static final String KEY_LOAD_TYPE = "KEY_LOAD_TYPE";
     public static final String COMMENT_DATE_TIME_PATTERN = "dd.MM.yyyy HH:mm";
     public static final String NOTIFICATIONS_GROUP_DATE = "dd MMMM";
     public static final String NOTIFICATIONS_GROUP_DAY = "EEEE";
@@ -60,7 +57,6 @@ public class AppConstants {
     public static final String ENROLLMENT_KEY = "is_enrolled";
 
     public static final int REQUEST_CODE_DETAIL = 1;
-    public static final String THUMBNAIL_POSTFIX_EXTENSION = ".png";
     public static final String DELIMITER_TEXT_SCORE = "/";
     public static final String NOTIFICATION_CANCELED = "notification_canceled";
 

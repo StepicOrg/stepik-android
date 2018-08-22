@@ -52,7 +52,7 @@ constructor(
     override fun getSelectedStorageLocation(): StorageLocation {
         val locations = getAvailableStorageLocations()
         val selectedLocation = userPreferences.storageLocation
-        return if (selectedLocation == null || locations.indexOf(selectedLocation) < 0) {
+        return if (selectedLocation == null || selectedLocation !in locations) {
             locations[0]
         } else {
             selectedLocation
