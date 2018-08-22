@@ -28,17 +28,17 @@ constructor(
 ) : PresenterBase<StoreManagementView>() {
     private val compositeDisposable = CompositeDisposable()
 
-    private val optionsObservable = Single.fromCallable(externalStorageManager::getAvailableStorageLocations)
-            .cache()
-            .subscribeOn(backgroundScheduler)
-            .observeOn(mainScheduler)
-
     override fun attachView(view: StoreManagementView) {
         super.attachView(view)
         fetchStorage()
     }
 
     private fun fetchStorage() {
+        val optionsObservable = Single.fromCallable(externalStorageManager::getAvailableStorageLocations)
+                .cache()
+                .subscribeOn(backgroundScheduler)
+                .observeOn(mainScheduler)
+
         compositeDisposable addDisposable optionsObservable
                 .subscribeBy(onError = {
                     view?.setStorageOptions(emptyList())
@@ -61,6 +61,7 @@ constructor(
                 .removeAllDownloads()
                 .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)
+                .doFinally { fetchStorage() }
                 .subscribeBy(onError = {
                     view?.hideLoading()
                 }) {

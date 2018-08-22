@@ -17,7 +17,6 @@ import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.core.presenters.StoreManagementPresenter
 import org.stepic.droid.core.presenters.contracts.StoreManagementView
 import org.stepic.droid.persistence.model.StorageLocation
-import org.stepic.droid.persistence.service.FileTransferService
 import org.stepic.droid.ui.dialogs.*
 import org.stepic.droid.util.*
 import javax.inject.Inject
