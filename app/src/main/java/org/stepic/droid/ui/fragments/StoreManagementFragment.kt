@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_space_management.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
@@ -119,10 +118,6 @@ class StoreManagementFragment : FragmentBase(), StoreManagementView {
             clearCacheLabel.setText(R.string.empty)
         }
 
-    }
-
-    private fun onFailToMove() {
-        Toast.makeText(context, R.string.fail_move, Toast.LENGTH_SHORT).show()
     }
 
     override fun showLoading(isMove: Boolean) {

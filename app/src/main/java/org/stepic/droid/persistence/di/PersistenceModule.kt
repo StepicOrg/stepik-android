@@ -19,6 +19,7 @@ import org.stepic.droid.persistence.files.ExternalStorageManagerImpl
 import org.stepic.droid.persistence.model.Structure
 import org.stepic.droid.persistence.repository.DownloadsRepository
 import org.stepic.droid.persistence.repository.DownloadsRepositoryImpl
+import org.stepic.droid.persistence.service.FileTransferService
 import org.stepic.droid.persistence.storage.PersistentItemObserver
 import org.stepic.droid.persistence.storage.PersistentItemObserverImpl
 import org.stepic.droid.persistence.storage.PersistentStateManager
@@ -79,6 +80,12 @@ abstract class PersistenceModule {
     @Module
     companion object {
         private const val UPDATE_INTERVAL_MS = 1000L
+
+        @Provides
+        @JvmStatic
+        @PersistenceScope
+        fun provideFileTransferEventSubject(): PublishSubject<FileTransferService.Event> =
+                PublishSubject.create()
 
         @Provides
         @JvmStatic

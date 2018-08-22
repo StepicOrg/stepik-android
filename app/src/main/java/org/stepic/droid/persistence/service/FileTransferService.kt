@@ -3,6 +3,7 @@ package org.stepic.droid.persistence.service
 import android.content.Context
 import android.content.Intent
 import android.support.v4.app.JobIntentService
+import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.base.App
 import org.stepic.droid.persistence.di.FSLock
 import org.stepic.droid.persistence.files.ExternalStorageManager
@@ -19,6 +20,10 @@ import javax.inject.Inject
 import kotlin.concurrent.withLock
 
 class FileTransferService: JobIntentService() {
+    sealed class Event {
+        object TransferCompleted: Event()
+    }
+
     companion object {
         private const val JOB_ID = 2001
 
@@ -43,6 +48,9 @@ class FileTransferService: JobIntentService() {
     @Inject
     lateinit var externalStorageManager: ExternalStorageManager
 
+    @Inject
+    lateinit var fileTransferEventSubject: PublishSubject<Event>
+
     override fun onCreate() {
         super.onCreate()
         App.component().inject(this)
@@ -62,6 +70,8 @@ class FileTransferService: JobIntentService() {
 
             persistentStateManager.invalidateStructure(structure, PersistentState.State.CACHED)
         }
+
+        fileTransferEventSubject.onNext(Event.TransferCompleted)
     }
 
     private fun moveFile(persistentItem: PersistentItem, storage: StorageLocation) {
