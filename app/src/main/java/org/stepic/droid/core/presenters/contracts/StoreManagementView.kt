@@ -6,6 +6,6 @@ interface StoreManagementView {
     fun setStorageOptions(options: List<StorageLocation>)
     fun setUpClearCacheButton(cacheSize: Long)
 
-    fun showLoading()
+    fun showLoading(isMove: Boolean = false)
     fun hideLoading()
 }

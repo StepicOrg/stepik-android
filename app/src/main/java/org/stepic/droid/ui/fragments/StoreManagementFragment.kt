@@ -17,11 +17,12 @@ import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.core.presenters.StoreManagementPresenter
 import org.stepic.droid.core.presenters.contracts.StoreManagementView
 import org.stepic.droid.persistence.model.StorageLocation
+import org.stepic.droid.persistence.service.FileTransferService
 import org.stepic.droid.ui.dialogs.*
 import org.stepic.droid.util.*
 import javax.inject.Inject
 
-class StoreManagementFragment : FragmentBase(), StoreManagementView, WantMoveDataDialog.Callback {
+class StoreManagementFragment : FragmentBase(), StoreManagementView {
     companion object {
         fun newInstance(): Fragment = StoreManagementFragment()
 
@@ -121,26 +122,16 @@ class StoreManagementFragment : FragmentBase(), StoreManagementView, WantMoveDat
 
     }
 
-    override fun onStartLoading(isMove: Boolean) {
+    private fun onFailToMove() {
+        Toast.makeText(context, R.string.fail_move, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun showLoading(isMove: Boolean) {
         loadingProgressDialogFragment = if (isMove) {
             MovingProgressDialogFragment.newInstance()
         } else {
             LoadingProgressDialogFragment.newInstance()
         }
-        ProgressHelper.activate(loadingProgressDialogFragment, fragmentManager, LOADING_TAG)
-    }
-
-    override fun onFinishLoading() {
-        ProgressHelper.dismiss(fragmentManager, LOADING_TAG)
-    }
-
-    override fun onFailToMove() {
-        context.let {
-            Toast.makeText(context, R.string.fail_move, Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    override fun showLoading() {
         ProgressHelper.activate(loadingProgressDialogFragment, fragmentManager, LOADING_TAG)
     }
 
@@ -151,6 +142,10 @@ class StoreManagementFragment : FragmentBase(), StoreManagementView, WantMoveDat
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) = when {
         requestCode == ClearVideosDialog.REQUEST_CODE && resultCode == Activity.RESULT_OK ->
             storeManagementPresenter.removeAllDownloads()
+
+        requestCode == WantMoveDataDialog.REQUEST_CODE && resultCode == Activity.RESULT_OK ->
+            data?.getParcelableExtra<StorageLocation>(WantMoveDataDialog.EXTRA_LOCATION)
+                    ?.let(storeManagementPresenter::changeStorageLocation) ?: Unit
 
         else ->
             super.onActivityResult(requestCode, resultCode, data)

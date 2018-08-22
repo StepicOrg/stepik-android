@@ -9,6 +9,7 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.persistence.downloads.interactor.RemovalDownloadsInteractor
 import org.stepic.droid.persistence.files.ExternalStorageManager
+import org.stepic.droid.persistence.model.StorageLocation
 import org.stepic.droid.util.addDisposable
 import org.stepic.droid.util.size
 import javax.inject.Inject
@@ -25,8 +26,12 @@ constructor(
         @MainScheduler
         private val mainScheduler: Scheduler
 ) : PresenterBase<StoreManagementView>() {
-
     private val compositeDisposable = CompositeDisposable()
+
+    private val optionsObservable = Single.fromCallable(externalStorageManager::getAvailableStorageLocations)
+            .cache()
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
 
     override fun attachView(view: StoreManagementView) {
         super.attachView(view)
@@ -34,19 +39,18 @@ constructor(
     }
 
     private fun fetchStorage() {
-        val options = Single.fromCallable(externalStorageManager::getAvailableStorageLocations)
-                .cache()
-                .subscribeOn(backgroundScheduler)
-                .observeOn(mainScheduler)
-
-        compositeDisposable addDisposable options
-                .subscribeBy(onError = { view?.setStorageOptions(emptyList()) }) {
+        compositeDisposable addDisposable optionsObservable
+                .subscribeBy(onError = {
+                    view?.setStorageOptions(emptyList())
+                }) {
                     view?.setStorageOptions(it)
                 }
 
-        compositeDisposable addDisposable options
+        compositeDisposable addDisposable optionsObservable
                 .map { it.map { location -> location.path.size() }.sum() }
-                .subscribeBy(onError = { view?.setUpClearCacheButton(0) }) {
+                .subscribeBy(onError = {
+                    view?.setUpClearCacheButton(0)
+                }) {
                     view?.setUpClearCacheButton(it)
                 }
     }
@@ -57,9 +61,16 @@ constructor(
                 .removeAllDownloads()
                 .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)
-                .subscribeBy(onError = {}) {
+                .subscribeBy(onError = {
+                    view?.hideLoading()
+                }) {
                     view?.hideLoading()
                 }
+    }
+
+    fun changeStorageLocation(storage: StorageLocation) {
+        view?.showLoading(true)
+        externalStorageManager.setStorageLocation(storage)
     }
 
     override fun detachView(view: StoreManagementView) {
