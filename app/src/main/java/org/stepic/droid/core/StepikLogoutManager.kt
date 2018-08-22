@@ -1,15 +1,13 @@
 package org.stepic.droid.core
 
-import android.app.DownloadManager
 import android.os.Build
 import android.webkit.CookieManager
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.notifications.badges.NotificationsBadgesLogoutPoster
-import org.stepic.droid.persistence.files.ExternalStorageManager
+import org.stepic.droid.persistence.downloads.interactor.RemovalDownloadsInteractor
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
-import org.stepic.droid.util.FileUtil
 import org.stepic.droid.util.RWLocks
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
@@ -20,25 +18,16 @@ class StepikLogoutManager
 constructor(
         private val threadPoolExecutor: ThreadPoolExecutor,
         private val mainHandler: MainHandler,
-        private val externalStorageManager: ExternalStorageManager,
-        private val systemDownloadManager: DownloadManager,
         private val sharedPreferenceHelper: SharedPreferenceHelper,
         private val databaseFacade: DatabaseFacade,
-        private val notificationsBadgesLogoutPoster: NotificationsBadgesLogoutPoster
+        private val notificationsBadgesLogoutPoster: NotificationsBadgesLogoutPoster,
+        private val removalDownloadsInteractor: RemovalDownloadsInteractor
 ) {
 
     fun logout(afterClearData: () -> Unit) {
         threadPoolExecutor.execute {
             removeCookiesCompat()
-            val directoryForClean = externalStorageManager.getSelectedStorageLocation().path
-            val downloadEntities = databaseFacade.getAllDownloadEntities()
-            downloadEntities.forEach {
-                it?.downloadId?.let {
-                    downloadId ->
-                    systemDownloadManager.remove(downloadId)
-                }
-            }
-            FileUtil.cleanDirectory(directoryForClean)
+            removalDownloadsInteractor.removeAllDownloads().blockingAwait()
             try {
                 RWLocks.ClearEnrollmentsLock.writeLock().lock()
                 sharedPreferenceHelper.deleteAuthInfo()
