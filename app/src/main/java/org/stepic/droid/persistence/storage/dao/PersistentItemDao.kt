@@ -13,6 +13,11 @@ interface PersistentItemDao: IDao<PersistentItem> {
     fun getItems(selector: Map<String, String>): Observable<List<PersistentItem>>
     fun getItem(selector: Map<String, String>): Maybe<PersistentItem>
 
+    /**
+     * @see PersistentItem.Status::isCorrect
+     */
+    fun getAllCorrectItems(): Observable<List<PersistentItem>>
+
     fun getItemsByStep(step: Long) =
             getItems(mapOf(DBStructurePersistentItem.Columns.STEP to step.toString()))
 

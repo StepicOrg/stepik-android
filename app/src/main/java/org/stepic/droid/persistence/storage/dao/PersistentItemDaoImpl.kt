@@ -8,6 +8,7 @@ import org.stepic.droid.di.storage.StorageSingleton
 import org.stepic.droid.persistence.model.DownloadTask
 import org.stepic.droid.persistence.model.PersistentItem
 import org.stepic.droid.persistence.model.Structure
+import org.stepic.droid.persistence.model.isCorrect
 import org.stepic.droid.persistence.storage.structure.DBStructurePersistentItem
 import org.stepic.droid.storage.dao.DaoBase
 import org.stepic.droid.storage.dao.IDao
@@ -67,5 +68,10 @@ constructor(
 
     override fun getItem(selector: Map<String, String>): Maybe<PersistentItem> = Maybe.create { emitter ->
         get(selector)?.let(emitter::onSuccess) ?: emitter.onComplete()
+    }
+
+    override fun getAllCorrectItems(): Observable<List<PersistentItem>> = Observable.fromCallable {
+        val statuses = PersistentItem.Status.values().filter(PersistentItem.Status::isCorrect).joinToString { "'${it.name}'" }
+        getAllInRange(DBStructurePersistentItem.Columns.STATUS, statuses)
     }
 }

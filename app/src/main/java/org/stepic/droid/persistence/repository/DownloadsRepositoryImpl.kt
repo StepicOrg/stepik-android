@@ -34,7 +34,7 @@ constructor(
         private val externalStorageManager: ExternalStorageManager
 ): DownloadsRepository {
     override fun getDownloads(): Observable<DownloadItem> = (
-                getCorrectItems()
+                persistentItemDao.getAllCorrectItems()
                         .flatMap { it.groupBy { item -> item.task.structure }.map { (a, b) -> a to b }.toObservable() } +
                 updatesObservable
                         .flatMap { structure -> persistentItemDao.getItemsByStep(structure.step).map { structure to it } }
@@ -47,14 +47,6 @@ constructor(
                 }
             }
             .flatMap { (structure, items) -> getDownloadItem(structure, items) }
-
-    private fun getCorrectItems() = (
-                persistentItemDao.getItemsByStatus(PersistentItem.Status.COMPLETED) +
-                persistentItemDao.getItemsByStatus(PersistentItem.Status.IN_PROGRESS) +
-                persistentItemDao.getItemsByStatus(PersistentItem.Status.FILE_TRANSFER)
-            )
-            .reduce { a, b -> a + b }
-            .toObservable()
 
     private fun getDownloadItem(structure: Structure, items: List<PersistentItem>): Observable<DownloadItem> = (
                 resolveStep(structure, items) +
