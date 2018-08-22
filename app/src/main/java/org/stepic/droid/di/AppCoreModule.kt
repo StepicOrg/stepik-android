@@ -1,7 +1,6 @@
 package org.stepic.droid.di
 
 import android.app.AlarmManager
-import android.app.DownloadManager
 import android.app.NotificationManager
 import android.content.Context
 import android.net.ConnectivityManager
@@ -31,9 +30,6 @@ import org.stepic.droid.core.*
 import org.stepic.droid.core.internetstate.InternetEnabledPosterImpl
 import org.stepic.droid.core.internetstate.contract.InternetEnabledListener
 import org.stepic.droid.core.internetstate.contract.InternetEnabledPoster
-import org.stepic.droid.core.videomoves.VideosMovedPosterImpl
-import org.stepic.droid.core.videomoves.contract.VideosMovedListener
-import org.stepic.droid.core.videomoves.contract.VideosMovedPoster
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.fonts.FontsProvider
@@ -42,8 +38,6 @@ import org.stepic.droid.notifications.*
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.social.SocialManager
-import org.stepic.droid.storage.*
-import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.connectivity.NetworkTypeDeterminer
 import org.stepic.droid.util.connectivity.NetworkTypeDeterminerImpl
 import org.stepic.droid.util.resolvers.StepTypeResolver
@@ -89,19 +83,6 @@ abstract class AppCoreModule {
     @Binds
     @AppSingleton
     abstract fun provideInternetEnabledClient(container: ClientImpl<InternetEnabledListener>): Client<InternetEnabledListener>
-
-
-    @Binds
-    @AppSingleton
-    abstract fun provideVideoMovedPoster(videosMovedPoster: VideosMovedPosterImpl): VideosMovedPoster
-
-    @Binds
-    @AppSingleton
-    abstract fun provideVideoMovedListenerContainer(container: ListenerContainerImpl<VideosMovedListener>): ListenerContainer<VideosMovedListener>
-
-    @Binds
-    @AppSingleton
-    abstract fun provideVideoMovedClient(container: ClientImpl<VideosMovedListener>): Client<VideosMovedListener>
 
     @Binds
     @AppSingleton
@@ -198,8 +179,8 @@ abstract class AppCoreModule {
         @Provides
         @AppSingleton
         @JvmStatic
-        internal fun provideUserPrefs(context: Context, helper: SharedPreferenceHelper, analytic: Analytic): UserPreferences {
-            return UserPreferences(context, helper, analytic)
+        internal fun provideUserPrefs(helper: SharedPreferenceHelper, analytic: Analytic): UserPreferences {
+            return UserPreferences(helper, analytic)
         }
 
         @Provides
