@@ -198,6 +198,10 @@ constructor(
 
     private fun showSections(sectionList: MutableList<Section>) {
         view?.onNeedShowSections(sectionList)
+        subscribeForSectionsProgress()
+    }
+
+    fun subscribeForSectionsProgress() {
         progressDisposable?.dispose()
         progressDisposable = sectionDownloadProgressProvider
                 .getProgress(*sectionList.toTypedArray())

@@ -281,6 +281,7 @@ public class SectionsFragment
         courseFinderPresenter.attachView(this);
         courseJoinerPresenter.attachView(this);
         sectionsPresenter.attachView(this);
+        sectionsPresenter.subscribeForSectionsProgress(); // workaround due to strange sections code
         deadlinesPresenter.attachView(this);
         invitationPresenter.attachView(this);
 
