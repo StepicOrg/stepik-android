@@ -44,7 +44,7 @@ object MigrationFrom33To34 : Migration {
                 "REPLACE INTO ${DBStructurePersistentState.TABLE_NAME} " +
                 "SELECT ${DbStructureUnit.UNITS}.${DbStructureUnit.Column.UNIT_ID}, ?, ? FROM ${DbStructureUnit.UNITS} " +
                 "JOIN ${DbStructureLesson.LESSONS} " +
-                        "ON ${DbStructureUnit.UNITS}.${DbStructureUnit.Column.LESSON} = ${DbStructureLesson.LESSONS}.${DbStructureLesson.Column.LESSON_ID}" +
+                        "ON ${DbStructureUnit.UNITS}.${DbStructureUnit.Column.LESSON} = ${DbStructureLesson.LESSONS}.${DbStructureLesson.Column.LESSON_ID} " +
                 "WHERE ${DbStructureLesson.LESSONS}.${DbStructureLesson.Column.IS_CACHED} = 1"
 
         db.execSQL(sql, arrayOf(PersistentState.Type.UNIT.name, PersistentState.State.CACHED))
