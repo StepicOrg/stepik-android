@@ -74,10 +74,6 @@ abstract class StorageModule {
 
     @StorageSingleton
     @Binds
-    internal abstract fun provideDownloadEntity(downloadEntityDao: DownloadEntityDaoImpl): IDao<DownloadEntity>
-
-    @StorageSingleton
-    @Binds
     internal abstract fun provideCalendarSection(calendarSectionDao: CalendarSectionDaoImpl): IDao<CalendarSection>
 
     @StorageSingleton
