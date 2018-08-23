@@ -5,7 +5,10 @@ import io.reactivex.rxkotlin.toObservable
 import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.persistence.model.Structure
 import org.stepic.droid.storage.repositories.Repository
+import org.stepic.droid.storage.repositories.assignment.AssignmentRepository
+import org.stepic.droid.storage.repositories.progress.ProgressRepository
 import org.stepic.droid.util.compose
+import org.stepic.droid.util.then
 import org.stepik.android.model.Lesson
 import org.stepik.android.model.Section
 import org.stepik.android.model.Unit
@@ -19,6 +22,9 @@ constructor(
         private val unitRepository: Repository<Unit>,
         private val lessonRepository: Repository<Lesson>,
 
+        private val assignmentRepository: AssignmentRepository,
+        private val progressRepository: ProgressRepository,
+
         private val stepStructureResolver: StepStructureResolver
 ): UnitStructureResolver {
     override fun resolveStructure(vararg ids: Long): Observable<Structure> =
@@ -29,17 +35,19 @@ constructor(
     override fun resolveStructure(vararg items: Unit): Observable<Structure> =
             items.toObservable().flatMap { unit ->
                 val section = sectionRepository.getObject(unit.section)!!
-                convertToPersistentItems(section.course, section.id, unit)
+                resolveStructure(section.course, section.id, unit)
             }
 
     override fun resolveStructure(courseId: Long, sectionId: Long, vararg unitIds: Long): Observable<Structure> =
             Observable.just(unitIds)
                     .map(unitRepository::getObjects)
-                    .flatMap { convertToPersistentItems(courseId, sectionId, *it.toList().toTypedArray()) }
+                    .flatMap { resolveStructure(courseId, sectionId, *it.toList().toTypedArray()) }
 
-    private fun convertToPersistentItems(courseId: Long, sectionId: Long, vararg units: Unit): Observable<Structure> =
+    private fun resolveStructure(courseId: Long, sectionId: Long, vararg units: Unit): Observable<Structure> =
             units.toObservable().flatMap { unit ->
                 val lesson = lessonRepository.getObject(unit.lesson)!!
-                stepStructureResolver.resolveStructure(courseId, sectionId, unit.id, lesson.id, *lesson.steps)
+                assignmentRepository.syncAssignments(*unit.assignments ?: longArrayOf()) then
+                        progressRepository.syncProgresses(unit, lesson) then
+                        stepStructureResolver.resolveStructure(courseId, sectionId, unit.id, lesson.id, *lesson.steps)
             }
 }

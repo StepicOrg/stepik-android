@@ -5,7 +5,8 @@ import io.reactivex.rxkotlin.toObservable
 import org.stepic.droid.persistence.di.PersistenceScope
 import org.stepic.droid.persistence.model.Structure
 import org.stepic.droid.storage.repositories.Repository
-import org.stepic.droid.util.compose
+import org.stepic.droid.storage.repositories.progress.ProgressRepository
+import org.stepic.droid.util.then
 import org.stepik.android.model.Step
 import javax.inject.Inject
 
@@ -13,7 +14,8 @@ import javax.inject.Inject
 class StepStructureResolverImpl
 @Inject
 constructor(
-        private val stepRepository: Repository<Step>
+        private val stepRepository: Repository<Step>,
+        private val progressRepository: ProgressRepository
 ): StepStructureResolver {
     override fun resolveStructure(
             courseId: Long,
@@ -23,6 +25,7 @@ constructor(
             vararg stepIds: Long
     ): Observable<Structure> = Observable
             .just(stepIds)
-            .flatMap(Iterable<Step>::toObservable compose stepRepository::getObjects)
+            .map(stepRepository::getObjects)
+            .flatMap { progressRepository.syncProgresses(*it.toList().toTypedArray()) then it.toObservable() }
             .map { Structure(courseId, sectionId, unitId, lessonId, it.id) }
 }
