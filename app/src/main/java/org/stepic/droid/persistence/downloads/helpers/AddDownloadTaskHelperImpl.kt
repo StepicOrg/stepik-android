@@ -69,6 +69,6 @@ constructor(
         }
 
         downloadTaskManager.removeTasks(itemsToRemove, shouldRemoveFromDb = true).blockingAwait()
-        return paths.filter { !alreadyDownloadedPaths.contains(it) }
+        return paths.filterNot(alreadyDownloadedPaths::contains)
     }
 }
