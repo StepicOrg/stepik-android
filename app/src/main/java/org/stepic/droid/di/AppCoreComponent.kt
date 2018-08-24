@@ -35,6 +35,9 @@ import org.stepik.android.model.Course
 import org.stepic.droid.notifications.HackFcmListener
 import org.stepic.droid.notifications.HackerFcmInstanceId
 import org.stepic.droid.notifications.NotificationBroadcastReceiver
+import org.stepic.droid.persistence.di.PersistenceModule
+import org.stepic.droid.persistence.service.DownloadCompleteService
+import org.stepic.droid.persistence.service.FileTransferService
 import org.stepic.droid.receivers.BootCompletedReceiver
 import org.stepic.droid.receivers.DownloadClickReceiver
 import org.stepic.droid.receivers.InternetConnectionEnabledReceiver
@@ -44,6 +47,7 @@ import org.stepic.droid.ui.adapters.viewhoders.CourseItemViewHolder
 import org.stepic.droid.ui.custom.*
 import org.stepic.droid.ui.custom_exo.PlaybackControlView
 import org.stepic.droid.ui.dialogs.*
+import org.stepic.droid.ui.fragments.StoreManagementFragment
 
 @AppSingleton
 @Component(dependencies = [StorageComponent::class],
@@ -54,6 +58,7 @@ import org.stepic.droid.ui.dialogs.*
                 AppFiltersModule::class,
                 GoogleModule::class,
                 FirebaseModule::class,
+                PersistenceModule::class,
                 RecentActiveCourseModule::class,
                 NotificationsBadgesModule::class,
                 NetworkModule::class
@@ -118,7 +123,7 @@ interface AppCoreComponent {
 
     fun inject(dialogFragment: VideoQualityDialog)
 
-    fun inject(loadService: LoadService)
+    fun inject(fragment: StoreManagementFragment)
 
     fun inject(viewPusher: ViewPusher)
 
@@ -133,8 +138,6 @@ interface AppCoreComponent {
     fun inject(coursePropertyAdapter: CoursePropertyAdapter)
 
     fun inject(remindPasswordDialogFragment: RemindPasswordDialogFragment)
-
-    fun inject(service: CancelLoadingService)
 
     fun inject(downloadClickReceiver: DownloadClickReceiver)
 
@@ -210,4 +213,8 @@ interface AppCoreComponent {
     fun inject(achievementsTileAdapter: AchievementsTileAdapter)
     fun inject(achievementsAdapter: AchievementsAdapter)
     fun inject(achievementDetailsDialog: AchievementDetailsDialog)
+
+
+    fun inject(downloadCompleteService: DownloadCompleteService)
+    fun inject(fileTransgerService: FileTransferService)
 }

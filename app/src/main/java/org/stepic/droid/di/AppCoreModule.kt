@@ -1,7 +1,6 @@
 package org.stepic.droid.di
 
 import android.app.AlarmManager
-import android.app.DownloadManager
 import android.app.NotificationManager
 import android.content.Context
 import android.net.ConnectivityManager
@@ -31,21 +30,14 @@ import org.stepic.droid.core.*
 import org.stepic.droid.core.internetstate.InternetEnabledPosterImpl
 import org.stepic.droid.core.internetstate.contract.InternetEnabledListener
 import org.stepic.droid.core.internetstate.contract.InternetEnabledPoster
-import org.stepic.droid.core.videomoves.VideosMovedPosterImpl
-import org.stepic.droid.core.videomoves.contract.VideosMovedListener
-import org.stepic.droid.core.videomoves.contract.VideosMovedPoster
-import org.stepic.droid.di.adaptive.AdaptiveCourseScope
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.fonts.FontsProvider
 import org.stepic.droid.fonts.FontsProviderImpl
 import org.stepic.droid.notifications.*
-import org.stepic.droid.notifications.badges.NotificationsBadgesLogoutPoster
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.social.SocialManager
-import org.stepic.droid.storage.*
-import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.connectivity.NetworkTypeDeterminer
 import org.stepic.droid.util.connectivity.NetworkTypeDeterminerImpl
 import org.stepic.droid.util.resolvers.StepTypeResolver
@@ -82,14 +74,6 @@ abstract class AppCoreModule {
 
     @Binds
     @AppSingleton
-    abstract fun provideStoreStateManagerLessonCallbackContainer(container: ListenerContainerImpl<StoreStateManager.LessonCallback>): ListenerContainer<StoreStateManager.LessonCallback>
-
-    @Binds
-    @AppSingleton
-    abstract fun provideStoreStateManagerSectionCallbackContainer(container: ListenerContainerImpl<StoreStateManager.SectionCallback>): ListenerContainer<StoreStateManager.SectionCallback>
-
-    @Binds
-    @AppSingleton
     abstract fun provideInternetEnabledPoster(internetEnabledPoster: InternetEnabledPosterImpl): InternetEnabledPoster
 
     @Binds
@@ -99,19 +83,6 @@ abstract class AppCoreModule {
     @Binds
     @AppSingleton
     abstract fun provideInternetEnabledClient(container: ClientImpl<InternetEnabledListener>): Client<InternetEnabledListener>
-
-
-    @Binds
-    @AppSingleton
-    abstract fun provideVideoMovedPoster(videosMovedPoster: VideosMovedPosterImpl): VideosMovedPoster
-
-    @Binds
-    @AppSingleton
-    abstract fun provideVideoMovedListenerContainer(container: ListenerContainerImpl<VideosMovedListener>): ListenerContainer<VideosMovedListener>
-
-    @Binds
-    @AppSingleton
-    abstract fun provideVideoMovedClient(container: ClientImpl<VideosMovedListener>): Client<VideosMovedListener>
 
     @Binds
     @AppSingleton
@@ -125,18 +96,6 @@ abstract class AppCoreModule {
     @AppSingleton
     internal abstract fun provideVideoResolver(videoResolver: VideoResolverImpl): VideoResolver
 
-    @Binds
-    @AppSingleton
-    internal abstract fun provideDownloadManger(downloadManager: DownloadManagerImpl): IDownloadManager
-
-    @AppSingleton
-    @Binds
-    internal abstract fun provideStoreManager(storeStateManager: StoreStateManagerImpl): StoreStateManager
-
-    @AppSingleton
-    @Binds
-    internal abstract fun provideCleanManager(cleanManager: CleanManagerImpl): CleanManager
-
     @AppSingleton
     @Binds
     internal abstract fun provideLessonSessionManager(localLessonSessionManager: LocalLessonSessionManagerImpl): LessonSessionManager
@@ -144,10 +103,6 @@ abstract class AppCoreModule {
     @AppSingleton
     @Binds
     internal abstract fun provideProgressManager(localProgress: LocalProgressImpl): LocalProgressManager
-
-    @Binds
-    @AppSingleton
-    internal abstract fun provideCancelSniffer(cancelSniffer: ConcurrentCancelSniffer): CancelSniffer
 
     @AppSingleton
     @Binds
@@ -180,14 +135,6 @@ abstract class AppCoreModule {
     @Binds
     @AppSingleton
     internal abstract fun provideTextResolver(textResolver: TextResolverImpl): TextResolver
-
-    @Binds
-    @AppSingleton
-    internal abstract fun provideLessonDownloader(lessonDownloader: LessonDownloaderImpl): LessonDownloader
-
-    @Binds
-    @AppSingleton
-    internal abstract fun provideSectionDownloader(sectionDownloader: SectionDownloaderImpl): SectionDownloader
 
     @Binds
     @AppSingleton
@@ -232,14 +179,8 @@ abstract class AppCoreModule {
         @Provides
         @AppSingleton
         @JvmStatic
-        internal fun provideUserPrefs(context: Context, helper: SharedPreferenceHelper, analytic: Analytic): UserPreferences {
-            return UserPreferences(context, helper, analytic)
-        }
-
-        @Provides
-        @JvmStatic
-        internal fun provideSystemDownloadManager(context: Context): DownloadManager {
-            return context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+        internal fun provideUserPrefs(helper: SharedPreferenceHelper, analytic: Analytic): UserPreferences {
+            return UserPreferences(helper, analytic)
         }
 
         @Provides
@@ -282,16 +223,6 @@ abstract class AppCoreModule {
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(OkHttpClient())
                     .build()
-        }
-
-        @Provides
-        @JvmStatic
-        @AppSingleton
-        internal fun provideDownloadUpdaterAfterRestart(threadPoolExecutor: ThreadPoolExecutor,
-                                                        systemDownloadManager: DownloadManager,
-                                                        storeStateManager: StoreStateManager,
-                                                        databaseFacade: DatabaseFacade): InitialDownloadUpdater {
-            return InitialDownloadUpdater(threadPoolExecutor, systemDownloadManager, storeStateManager, databaseFacade)
         }
 
         @Provides

@@ -2,14 +2,26 @@ package org.stepic.droid.core.presenters
 
 import android.support.annotation.MainThread
 import android.support.annotation.WorkerThread
+import io.reactivex.Scheduler
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.SectionsView
 import org.stepic.droid.di.course.CourseAndSectionsScope
+import org.stepic.droid.di.qualifiers.BackgroundScheduler
+import org.stepic.droid.di.qualifiers.MainScheduler
+import org.stepic.droid.persistence.downloads.interactor.DownloadInteractor
+import org.stepic.droid.persistence.downloads.progress.DownloadProgressProvider
+import org.stepic.droid.persistence.model.DownloadConfiguration
+import org.stepic.droid.persistence.model.DownloadProgress
+import org.stepic.droid.preferences.UserPreferences
 import org.stepik.android.model.Course
 import org.stepik.android.model.Progress
 import org.stepik.android.model.Section
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.transformers.transformToViewModel
+import org.stepic.droid.util.addDisposable
 import org.stepic.droid.viewmodel.ProgressViewModel
 import org.stepic.droid.web.Api
 import timber.log.Timber
@@ -20,16 +32,32 @@ import javax.inject.Inject
 
 @CourseAndSectionsScope
 class SectionsPresenter
-@Inject constructor(
+@Inject
+constructor(
         private val threadPoolExecutor: ThreadPoolExecutor,
         private val mainHandler: MainHandler,
         private val api: Api,
-        private val databaseFacade: DatabaseFacade) : PresenterBase<SectionsView>() {
+        private val databaseFacade: DatabaseFacade,
+
+        private val sectionDownloadInteractor: DownloadInteractor<Section>,
+        private val sectionDownloadProgressProvider: DownloadProgressProvider<Section>,
+        private val userPreferences: UserPreferences,
+
+        @BackgroundScheduler
+        private val backgroundScheduler: Scheduler,
+        @MainScheduler
+        private val mainScheduler: Scheduler
+) : PresenterBase<SectionsView>() {
 
     private val sectionList: MutableList<Section> = ArrayList()
     private val isLoading: AtomicBoolean = AtomicBoolean(false)
     private var cachedCourseId = 0L
     val progressMap: HashMap<String, ProgressViewModel> = HashMap()
+
+    private val compositeDisposable = CompositeDisposable()
+    private var progressDisposable: Disposable? = null
+
+    private val pendingSections = mutableSetOf<Long>()
 
     fun showSections(course: Course?, isRefreshing: Boolean) {
         if (course == null) {
@@ -72,7 +100,7 @@ class SectionsPresenter
                             sectionList.clear()
                             sectionList.addAll(sectionsFromCache)
                             cachedCourseId = course.id
-                            view?.onNeedShowSections(sectionList)
+                            showSections(sectionList)
                         }
                     }
                 }
@@ -93,13 +121,7 @@ class SectionsPresenter
                                     .associateBy { it.id }
                             databaseFacade.removeSectionsOfCourse(course.id)
                             sections.forEach {
-                                val cachedSection: Section? = cachedSections[it.id]
-                                if (cachedSection != null) {
-                                    it.isCached = cachedSection.isCached
-                                    it.isLoading = cachedSection.isLoading
-                                }
                                 databaseFacade.addSection(it)
-                                databaseFacade.updateOnlyCachedLoadingSection(it)
                             }
 
                             val progressMapOnBackground = fetchProgresses(sections)// we already shown cached sections, now show from Internet
@@ -113,7 +135,7 @@ class SectionsPresenter
                                 if (sectionList.isEmpty()) {
                                     view?.onEmptySections()
                                 } else {
-                                    view?.onNeedShowSections(sectionList)
+                                    showSections(sectionList)
                                 }
                             }
                         } else {
@@ -149,7 +171,7 @@ class SectionsPresenter
                 val progressId = progress.id
                 if (position >= 0 && progressViewModel != null && progressId != null) {
                     mainHandler.post {
-                        progressMap.put(progressId, progressViewModel)
+                        progressMap[progressId] = progressViewModel
                         view?.updatePosition(position)
                     }
                 }
@@ -160,25 +182,83 @@ class SectionsPresenter
     }
 
     @WorkerThread
-    private fun fetchProgresses(sectionList: List<Section>): Map<String, ProgressViewModel> {
-        try {
-            val progressIds
-                    = sectionList
-                    .map { it.progress }
-                    .filterNotNull()
-                    .toTypedArray()
-            val progresses = api.getProgresses(progressIds).execute().body()!!.progresses
-            val progressIdToProgressViewModel = progresses.mapNotNull { it.transformToViewModel() }.associateBy { it.progressId }
-            threadPoolExecutor.execute {
-                //save to database
-                progresses.filterNotNull().forEach { databaseFacade.addProgress(it) }
-            }
-            return progressIdToProgressViewModel
-        } catch (exception: Exception) {
-            Timber.d("cant show progresses")
-            return emptyMap()
+    private fun fetchProgresses(sectionList: List<Section>): Map<String, ProgressViewModel> = try {
+        val progressIds = sectionList.mapNotNull { it.progress }.toTypedArray()
+        val progresses = api.getProgresses(progressIds).execute().body()!!.progresses
+        val progressIdToProgressViewModel = progresses.mapNotNull { it.transformToViewModel() }.associateBy { it.progressId }
+        threadPoolExecutor.execute {
+            //save to database
+            progresses.filterNotNull().forEach { databaseFacade.addProgress(it) }
         }
-
+        progressIdToProgressViewModel
+    } catch (exception: Exception) {
+        Timber.d("cant show progresses")
+        emptyMap()
     }
 
+    private fun showSections(sectionList: MutableList<Section>) {
+        view?.onNeedShowSections(sectionList)
+        subscribeForSectionsProgress()
+    }
+
+    fun subscribeForSectionsProgress() {
+        progressDisposable?.dispose()
+        progressDisposable = sectionDownloadProgressProvider
+                .getProgress(*sectionList.toTypedArray())
+                .subscribeOn(backgroundScheduler)
+                .observeOn(mainScheduler)
+                .subscribeBy({ it.printStackTrace() }) {
+                    if (it.id !in pendingSections || it.status !is DownloadProgress.Status.InProgress) {
+                        view?.showDownloadProgress(it)
+                    }
+                }
+    }
+
+    fun addDownloadTask(section: Section) {
+        if (section.id in pendingSections) return
+
+        val allowedNetworkTypes = if (userPreferences.isNetworkMobileAllowed) {
+            EnumSet.of(DownloadConfiguration.NetworkType.WIFI, DownloadConfiguration.NetworkType.MOBILE)
+        } else {
+            EnumSet.of(DownloadConfiguration.NetworkType.WIFI)
+        }
+
+        pendingSections.add(section.id)
+        view?.showDownloadProgress(DownloadProgress(section.id, DownloadProgress.Status.Pending))
+
+        compositeDisposable addDisposable sectionDownloadInteractor
+                .addTask(section, configuration = DownloadConfiguration(
+                        allowedNetworkTypes,
+                        userPreferences.qualityVideo
+                ))
+                .subscribeOn(backgroundScheduler)
+                .observeOn(mainScheduler)
+                .subscribeBy({
+                    pendingSections.remove(section.id)
+                }) {
+                    pendingSections.remove(section.id)
+                }
+    }
+
+    fun removeDownloadTask(section: Section) {
+        if (section.id in pendingSections) return
+
+        pendingSections.add(section.id)
+        view?.showDownloadProgress(DownloadProgress(section.id, DownloadProgress.Status.Pending))
+        compositeDisposable addDisposable sectionDownloadInteractor
+                .removeTask(section)
+                .subscribeOn(backgroundScheduler)
+                .observeOn(mainScheduler)
+                .subscribeBy({
+                    it.printStackTrace()
+                    pendingSections.remove(section.id)
+                }) {
+                    pendingSections.remove(section.id)
+                }
+    }
+
+    override fun detachView(view: SectionsView) {
+        progressDisposable?.dispose()
+        super.detachView(view)
+    }
 }

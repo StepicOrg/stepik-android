@@ -291,7 +291,7 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
             return;
         }
         if (stepsPresenter.getStepList().size() <= position) return;
-        final Step step = stepsPresenter.getStepList().get(position);
+        final Step step = stepsPresenter.getStepList().get(position).getStep();
 
         if (StepHelper.isViewedStatePost(step) && !step.isCustomPassed()) {
             step.setCustomPassed(true);
@@ -382,7 +382,7 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
                     return super.onOptionsItemSelected(item);
                 }
 
-                Step step = stepsPresenter.getStepList().get(position);
+                Step step = stepsPresenter.getStepList().get(position).getStep();
                 getAnalytic().reportEvent(Analytic.Comments.OPEN_FROM_OPTION_MENU);
                 getScreenManager().openComments(getActivity(), step.getDiscussionProxy(), step.getId());
                 break;
@@ -460,7 +460,7 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
         tabLayout.setVisibility(View.VISIBLE);
 
         if (discussionId > 0 && position >= 0 && position < stepsPresenter.getStepList().size()) {
-            Step step = stepsPresenter.getStepList().get(position);
+            Step step = stepsPresenter.getStepList().get(position).getStep();
             getScreenManager().openComments(getActivity(), step.getDiscussionProxy(), step.getId());
             discussionId = -1;
         }
@@ -547,10 +547,10 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
 
         int stepListSize = stepsPresenter.getStepList().size();
         if (previousGoogleIndexedPosition >= 0 && previousGoogleIndexedPosition < stepListSize) {
-            stopIndexStep(stepsPresenter.getStepList().get(previousGoogleIndexedPosition));
+            stopIndexStep(stepsPresenter.getStepList().get(previousGoogleIndexedPosition).getStep());
         }
         if (position >= 0 && position < stepListSize) {
-            indexStep(stepsPresenter.getStepList().get(position));
+            indexStep(stepsPresenter.getStepList().get(position).getStep());
         }
         previousGoogleIndexedPosition = position;
     }
@@ -602,7 +602,7 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
             //when user press back from comments
             int selectedPosition = viewPager.getCurrentItem();
             if (selectedPosition >= 0 && selectedPosition < stepsPresenter.getStepList().size()) {
-                indexStep(stepsPresenter.getStepList().get(selectedPosition));
+                indexStep(stepsPresenter.getStepList().get(selectedPosition).getStep());
             }
         }
     }
@@ -613,7 +613,7 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
         if (viewPager != null) {
             int selectedPosition = viewPager.getCurrentItem();
             if (selectedPosition >= 0 && selectedPosition < stepsPresenter.getStepList().size()) {
-                stopIndexStep(stepsPresenter.getStepList().get(selectedPosition));
+                stopIndexStep(stepsPresenter.getStepList().get(selectedPosition).getStep());
             }
         }
         stepToTitleMap.clear();
@@ -630,7 +630,7 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
         Step step = null;
         int position = -1;
         for (int i = 0; i < stepsPresenter.getStepList().size(); i++) {
-            Step stepInList = stepsPresenter.getStepList().get(i);
+            Step stepInList = stepsPresenter.getStepList().get(i).getStep();
             if (stepInList.getId() == stepId) {
                 position = i;
                 step = stepInList;

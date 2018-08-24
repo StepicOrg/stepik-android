@@ -373,15 +373,6 @@
         <activity
             android:name=".features.achievements.ui.activity.AchievementsListActivity" />
 
-
-        <receiver
-            android:name="org.stepic.droid.receivers.DownloadCompleteReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
-            </intent-filter>
-        </receiver>
-
         <receiver
             android:name="org.stepic.droid.receivers.DownloadClickReceiver"
             android:exported="true">
@@ -423,10 +414,7 @@
 
         <service android:name="org.stepic.droid.services.NewUserAlarmService" />
         <service android:name="org.stepic.droid.services.StreakAlarmService" />
-        <service android:name="org.stepic.droid.services.LoadService" />
-        <service android:name="org.stepic.droid.services.DeleteService" />
         <service android:name="org.stepic.droid.services.ViewPusher" />
-        <service android:name="org.stepic.droid.services.CancelLoadingService" />
 
         <service android:name=".notifications.StepicFcmListenerService">
             <intent-filter>
@@ -439,14 +427,32 @@
             </intent-filter>
         </service>
 
+        <service
+            android:name=".persistence.service.DownloadCompleteService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:exported="true" />
+
+        <receiver
+            android:name=".persistence.service.DownloadCompleteReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".persistence.service.FileTransferService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:exported="true" />
+
         <provider
-            android:name=".util.GenericFileProvider"
-            android:authorities="${applicationId}.my.package.name.provider"
+            android:name=".persistence.providers.GenericFileProvider"
+            android:authorities="${applicationId}.provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths" />
+                android:resource="@xml/provider_paths"/>
         </provider>
 
         <uses-library

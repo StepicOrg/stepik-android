@@ -48,11 +48,7 @@ data class Section(
         @SerializedName("required_section")
         val requiredSection: Long = 0, //id of required section
         @SerializedName("required_percent")
-        val requiredPercent: Int = 0,
-
-        // todo: remove this after downloads refactoring
-        var isCached: Boolean = false,
-        var isLoading: Boolean = false
+        val requiredPercent: Int = 0
 ) : Parcelable, Progressable {
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeLong(id)
@@ -76,8 +72,6 @@ data class Section(
         parcel.writeBoolean(isRequirementSatisfied)
         parcel.writeLong(requiredSection)
         parcel.writeInt(requiredPercent)
-        parcel.writeBoolean(isCached)
-        parcel.writeBoolean(isLoading)
     }
 
     override fun describeContents(): Int = 0
@@ -104,9 +98,7 @@ data class Section(
                 DiscountingPolicyType.values().getOrNull(parcel.readInt()),
                 parcel.readBoolean(),
                 parcel.readLong(),
-                parcel.readInt(),
-                parcel.readBoolean(),
-                parcel.readBoolean()
+                parcel.readInt()
         )
 
         override fun newArray(size: Int): Array<Section?> = arrayOfNulls(size)

@@ -18,7 +18,9 @@ class UnitRepositoryImpl
         if (units.size != keys.size) {
             units =
                     try {
-                        api.getUnits(keyList).execute()?.body()?.units ?: emptyList()
+                        api.getUnits(keyList).execute()?.body()?.units?.also {
+                            it.forEach(databaseFacade::addUnit)
+                        } ?: emptyList()
                     } catch (exception: Exception) {
                         emptyList()
                     }
@@ -32,7 +34,11 @@ class UnitRepositoryImpl
         if (unit == null) {
             unit =
                     try {
-                        api.getUnits(listOf(key)).execute()?.body()?.units?.firstOrNull()
+                        api.getUnits(listOf(key)).execute()
+                                ?.body()
+                                ?.units
+                                ?.firstOrNull()
+                                ?.also(databaseFacade::addUnit)
                     } catch (exception: Exception) {
                         null
                     }

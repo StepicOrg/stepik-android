@@ -17,7 +17,11 @@ class LessonRepositoryImpl
         if (lesson == null) {
             lesson =
                     try {
-                        api.getLessons(longArrayOf(key)).execute()?.body()?.lessons?.firstOrNull()
+                        api.getLessons(longArrayOf(key)).execute()
+                                ?.body()
+                                ?.lessons
+                                ?.firstOrNull()
+                                ?.also(databaseFacade::addLesson)
                     } catch (exception: Exception) {
                         null
                     }
@@ -25,9 +29,13 @@ class LessonRepositoryImpl
         return lesson
     }
 
-    override fun getObjects(keys: LongArray): Iterable<Lesson> {
-        TODO()
-    }
+    override fun getObjects(keys: LongArray): Iterable<Lesson> =
+           databaseFacade.getLessonsByIds(keys).takeIf { it.size == keys.size } ?:
+                   try {
+                       api.getLessons(keys).execute().body()?.lessons?.also { it.forEach(databaseFacade::addLesson) } ?: emptyList()
+                   } catch (_: Exception) {
+                       emptyList<Lesson>()
+                   }
 
 }
 

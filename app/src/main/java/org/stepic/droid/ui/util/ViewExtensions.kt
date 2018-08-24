@@ -2,6 +2,7 @@ package org.stepic.droid.ui.util
 
 import android.os.Build
 import android.view.View
+import android.view.ViewGroup
 import android.view.ViewTreeObserver
 
 
@@ -25,4 +26,10 @@ fun View.changeVisibility(needShow: Boolean) {
 fun View.setHeight(height: Int) {
     layoutParams.height = height
     layoutParams = layoutParams
+}
+
+fun ViewGroup.hideAllChildren() {
+    for (i in 0 until childCount) {
+        getChildAt(i).changeVisibility(false)
+    }
 }

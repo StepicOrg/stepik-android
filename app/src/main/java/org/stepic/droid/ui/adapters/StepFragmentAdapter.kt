@@ -5,14 +5,14 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
+import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepik.android.model.Lesson
 import org.stepik.android.model.Section
-import org.stepik.android.model.Step
 import org.stepik.android.model.Unit
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.resolvers.StepTypeResolver
 
-class StepFragmentAdapter(fm: FragmentManager, val stepList: List<Step?>, val stepTypeResolver: StepTypeResolver) : FragmentStatePagerAdapter(fm) {
+class StepFragmentAdapter(fm: FragmentManager, val stepList: List<StepPersistentWrapper?>, val stepTypeResolver: StepTypeResolver) : FragmentStatePagerAdapter(fm) {
 
     private var lesson: Lesson? = null
     private var unit: Unit? = null
@@ -36,10 +36,10 @@ class StepFragmentAdapter(fm: FragmentManager, val stepList: List<Step?>, val st
     }
 
     override fun getItem(position: Int): Fragment {
-        val step = stepList[position]
-        val fragment = stepTypeResolver.getFragment(step)
+        val stepWrapper = stepList[position]
+        val fragment = stepTypeResolver.getFragment(stepWrapper?.step)
         val args = Bundle()
-        args.putParcelable(AppConstants.KEY_STEP_BUNDLE, step)
+        args.putParcelable(AppConstants.KEY_STEP_BUNDLE, stepWrapper)
         args.putParcelable(AppConstants.KEY_LESSON_BUNDLE, lesson)
         args.putParcelable(AppConstants.KEY_UNIT_BUNDLE, unit)
         args.putParcelable(AppConstants.KEY_SECTION_BUNDLE, section)
@@ -53,7 +53,7 @@ class StepFragmentAdapter(fm: FragmentManager, val stepList: List<Step?>, val st
 
     fun getTabDrawable(position: Int): Drawable? {
         if (position >= stepList.size) return null
-        val step = stepList[position]
+        val step = stepList[position]?.step
         return stepTypeResolver.getDrawableForType(step?.block?.name, step?.isCustomPassed ?: false, step?.actions?.doReview != null)
     }
 }

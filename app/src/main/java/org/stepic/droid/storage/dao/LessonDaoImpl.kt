@@ -34,8 +34,6 @@ constructor(
         val columnIndexCreateDate = cursor.getColumnIndex(DbStructureLesson.Column.CREATE_DATE)
         val columnIndexLearnersGroup = cursor.getColumnIndex(DbStructureLesson.Column.LEARNERS_GROUP)
         val columnIndexTeacherGroup = cursor.getColumnIndex(DbStructureLesson.Column.TEACHER_GROUP)
-        val indexIsCached = cursor.getColumnIndex(DbStructureLesson.Column.IS_CACHED)
-        val indexIsLoading = cursor.getColumnIndex(DbStructureLesson.Column.IS_LOADING)
         val indexCoverURL = cursor.getColumnIndex(DbStructureLesson.Column.COVER_URL)
 
         return Lesson(
@@ -56,8 +54,6 @@ constructor(
                 createDate = dateAdapter.stringToDate(cursor.getString(columnIndexCreateDate)),
                 learnersGroup = cursor.getString(columnIndexLearnersGroup),
                 teacherGroup = cursor.getString(columnIndexTeacherGroup),
-                isCached = cursor.getInt(indexIsCached) > 0,
-                isLoading = cursor.getInt(indexIsLoading) > 0,
                 coverUrl = cursor.getString(indexCoverURL)
         )
     }

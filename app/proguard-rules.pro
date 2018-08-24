@@ -99,6 +99,11 @@
 -keep interface org.stepik.android.model.** { *; }
 -keep public enum org.stepik.android.**{ *;}
 
+#Keep Parcelable
+-keepclassmembers class * implements android.os.Parcelable {
+    static ** CREATOR;
+}
+
 #Keep all enums
 -keep public enum org.stepic.droid.**{
     *;

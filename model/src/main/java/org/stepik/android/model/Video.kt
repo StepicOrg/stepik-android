@@ -3,7 +3,7 @@ package org.stepik.android.model
 import android.os.Parcel
 import android.os.Parcelable
 
-class Video(
+data class Video(
         val id: Long = 0,
         val thumbnail: String? = null,
         var urls: List<VideoUrl>? = null,
@@ -31,7 +31,7 @@ class Video(
 }
 
 
-class VideoUrl(
+data class VideoUrl(
         val url: String?,
         val quality: String?
 ) : Parcelable {

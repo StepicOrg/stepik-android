@@ -26,9 +26,6 @@ data class Step(
         @SerializedName("update_date")
         val updateDate: Date? = null,
 
-        // todo remove after downloads refactoring
-        var isCached: Boolean = false,
-        var isLoading: Boolean = false,
         var isCustomPassed: Boolean = false,
         val actions: Actions? = null,
 
@@ -58,8 +55,6 @@ data class Step(
         dest.writeDate(this.createDate)
         dest.writeDate(this.updateDate)
 
-        dest.writeBoolean(isCached)
-        dest.writeBoolean(isLoading)
         dest.writeBoolean(isCustomPassed)
         dest.writeParcelable(this.actions, flags)
 
@@ -83,8 +78,6 @@ data class Step(
                 parcel.readDate(),
                 parcel.readDate(),
 
-                parcel.readBoolean(),
-                parcel.readBoolean(),
                 parcel.readBoolean(),
                 parcel.readParcelable(Actions::class.java.classLoader),
 

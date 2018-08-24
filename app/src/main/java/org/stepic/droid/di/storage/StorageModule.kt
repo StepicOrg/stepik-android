@@ -19,6 +19,10 @@ import org.stepic.droid.jsonHelpers.adapters.UTCDateAdapter
 import org.stepic.droid.model.*
 import org.stepic.droid.model.code.CodeSubmission
 import org.stepic.droid.notifications.model.Notification
+import org.stepic.droid.persistence.storage.dao.PersistentItemDao
+import org.stepic.droid.persistence.storage.dao.PersistentItemDaoImpl
+import org.stepic.droid.persistence.storage.dao.PersistentStateDao
+import org.stepic.droid.persistence.storage.dao.PersistentStateDaoImpl
 import org.stepic.droid.storage.DatabaseHelper
 import org.stepic.droid.storage.dao.*
 import org.stepic.droid.storage.operations.*
@@ -29,11 +33,6 @@ import org.stepik.android.model.Unit
 
 @Module
 abstract class StorageModule {
-
-    @StorageSingleton
-    @Binds
-    internal abstract fun bindsProgressPublishingOperation(
-            stepInfoOperationImpl: StepInfoOperationImpl): StepInfoOperation
 
     @StorageSingleton
     @Binds
@@ -72,10 +71,6 @@ abstract class StorageModule {
     @StorageSingleton
     @Binds
     internal abstract fun provideViewAssignment(viewAssignmentDao: ViewAssignmentDaoImpl): IDao<ViewAssignment>
-
-    @StorageSingleton
-    @Binds
-    internal abstract fun provideDownloadEntity(downloadEntityDao: DownloadEntityDaoImpl): IDao<DownloadEntity>
 
     @StorageSingleton
     @Binds
@@ -132,6 +127,14 @@ abstract class StorageModule {
     @StorageSingleton
     @Binds
     internal abstract fun provideDeadlinesBannerDao(deadlinesBannerDaoImpl: DeadlinesBannerDaoImpl): DeadlinesBannerDao
+
+    @StorageSingleton
+    @Binds
+    internal abstract fun providePersistentItemDao(persistentItemDaoImpl: PersistentItemDaoImpl): PersistentItemDao
+
+    @StorageSingleton
+    @Binds
+    internal abstract fun providePersistentStateDao(persistentStateDaoImpl: PersistentStateDaoImpl): PersistentStateDao
 
     @Module
     companion object {

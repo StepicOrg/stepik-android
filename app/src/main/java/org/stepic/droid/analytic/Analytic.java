@@ -246,7 +246,6 @@ public interface Analytic {
     interface Error {
         String CALLBACK_SOCIAL = "callback_from_social_login";
         String NOT_PLAYER = "NotPlayer";
-        String VIDEO_RESOLVER_FAILED = "video resolver is failed";
         String CANT_UPDATE_TOKEN = "cant update token";
         String NOTIFICATION_ERROR_PARSE = "notification error parse";
         String DELETE_SERVICE_ERROR = "DeleteService nullptr";
@@ -286,7 +285,6 @@ public interface Analytic {
         String TEMPLATE_WAS_NULL = "error_code_template_null";
         String COURSE_COLLECTION_EMPTY = "course_collection_empty";
         String FEEDBACK_BROKEN = "feedback_broken";
-        String CANT_FIND_VIDEO_FILE_WITH_FILES_PROVIDER = "cant_find_video_file_with_file_provider";
         String CANT_RESTORE_VIDEO_FILE = "cant_restore_video_file";
     }
 
@@ -513,6 +511,16 @@ public interface Analytic {
         String PERSONAL_DEADLINE_TIME_SAVED = "personal_deadline_time_saved";
 
         String PERSONAL_DEADLINE_NOTIFICATION_OPENED = "personal_deadline_notification_opened";
+    }
+
+    interface DownloaderV2 {
+        String RECEIVE_BAD_DOWNLOAD_STATUS = "downloader_v2_bad_download_status";
+        String FILE_NOT_FOND = "downloader_v2_file_not_fond";
+
+        interface Params {
+            String DOWNLOAD_STATUS = "status";
+        }
+
     }
 
     void reportEvent(String eventName, Bundle bundle);

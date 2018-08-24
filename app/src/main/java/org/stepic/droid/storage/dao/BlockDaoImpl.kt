@@ -9,17 +9,15 @@ import org.stepic.droid.model.*
 import org.stepik.android.model.code.CodeOptions
 import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepic.droid.storage.structure.DbStructureBlock
-import org.stepic.droid.storage.structure.DbStructureCachedVideo
 import org.stepic.droid.storage.structure.DbStructureVideoUrl
-import org.stepic.droid.util.transformToVideo
 import org.stepik.android.model.Block
 import org.stepik.android.model.Video
 import javax.inject.Inject
 
-class BlockDaoImpl @Inject
+class BlockDaoImpl
+@Inject
 constructor(
         databaseOperations: DatabaseOperations,
-        private val videoDao: IDao<CachedVideo>,
         private val gson: Gson,
         private val videoUrlIDao: IDao<DbVideoUrl>
 ) : DaoBase<BlockPersistentWrapper>(databaseOperations) {
@@ -90,7 +88,6 @@ constructor(
 
     override fun get(whereColumnName: String, whereValue: String): BlockPersistentWrapper? {
         val blockWrapper = super.get(whereColumnName, whereValue)
-        addCachedVideoToBlockWrapper(blockWrapper)
         addExternalVideoToBlockWrapper(blockWrapper)
         return blockWrapper
     }
@@ -98,24 +95,9 @@ constructor(
     override fun getAllWithQuery(query: String, whereArgs: Array<String>?): List<BlockPersistentWrapper> {
         val blockWrapperList = super.getAllWithQuery(query, whereArgs)
         for (blockWrapperItem in blockWrapperList) {
-            addCachedVideoToBlockWrapper(blockWrapperItem)
             addExternalVideoToBlockWrapper(blockWrapperItem)
         }
         return blockWrapperList
-    }
-
-    private fun addCachedVideoToBlockWrapper(blockWrapper: BlockPersistentWrapper?) {
-        if (blockWrapper?.block == null) {
-            return
-        }
-        val cachedVideo = videoDao.get(DbStructureCachedVideo.Column.STEP_ID, blockWrapper.stepId.toString() + "")
-        blockWrapper.block.cachedLocalVideo = cachedVideo?.transformToVideo() // not local video is saved only with stepId = -1
-
-        val durationOfExternalVideo = blockWrapper.block.video?.duration ?: 0
-        if (durationOfExternalVideo > 0) {
-            //set it from external, because the cached video does not have this property
-            blockWrapper.block.cachedLocalVideo?.duration = durationOfExternalVideo
-        }
     }
 
     private fun addExternalVideoToBlockWrapper(blockWrapper: BlockPersistentWrapper?) {

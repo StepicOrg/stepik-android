@@ -12,6 +12,7 @@ import android.support.v7.app.AlertDialog;
 import org.stepic.droid.R;
 
 public class DeleteItemDialogFragment extends DialogFragment {
+    public final static String TAG = "DeleteItemDialogFragment";
     public final static String deletePositionKey = "deletePositionKey";
 
     public static DeleteItemDialogFragment newInstance(int position) {

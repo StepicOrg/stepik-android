@@ -7,12 +7,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import org.stepic.droid.R;
-import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.ui.listeners.OnItemClickListener;
-import org.stepic.droid.web.Api;
 
 import java.util.List;
 
@@ -24,16 +22,8 @@ import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 
 public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.SocialViewHolder> implements OnItemClickListener {
-
     @Inject
     SocialManager socialManager;
-
-    @Inject
-    Api api;
-
-    @Inject
-    Analytic analytic;
-
 
     private List<? extends ISocialType> socialList;
     private Function1<ISocialType, Unit> onSocialItemClick;
