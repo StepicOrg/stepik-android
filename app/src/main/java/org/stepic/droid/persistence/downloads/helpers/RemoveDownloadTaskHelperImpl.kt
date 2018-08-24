@@ -30,7 +30,7 @@ constructor(
                     .flatMapObservable(List<Structure>::toObservable)
                     .flatMapCompletable { structure ->
                         persistentItemDao.getItemsByStep(structure.step) // as step is smallest atom
-                                .concatMapCompletable(downloadTaskManager::removeTasks)
+                                .concatMapCompletable { downloadTaskManager.removeTasks(it) }
                                 .doFinally {
                                     persistentStateManager.invalidateStructure(structure, PersistentState.State.NOT_CACHED)
                                 }

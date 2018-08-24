@@ -27,6 +27,7 @@ interface IDao<T> {
     fun getAllInRange(whereColumn: String, commaSeparatedIds: String): List<T>
 
     fun remove(whereColumn: String, whereValue: String)
+    fun remove(whereArgs: Map<String, String>)
 
     fun removeAll()
 }

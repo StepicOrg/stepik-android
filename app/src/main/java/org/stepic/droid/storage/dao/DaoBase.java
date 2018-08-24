@@ -105,6 +105,12 @@ public abstract class DaoBase<T> implements IDao<T> {
         databaseOperations.executeDelete(getDbName(), whereClause, new String[]{whereValue});
     }
 
+    @Override
+    public void remove(@NotNull Map<String, String> whereArgs) {
+        final String where = CollectionsKt.joinToString(whereArgs.keySet(), " = ? AND ", "", "", -1, "" , null) + " = ?";
+        databaseOperations.executeDelete(getDbName(), where, whereArgs.values().toArray(new String[]{}));
+    }
+
     @NotNull
     @Override
     public final List<T> getAllInRange(@NonNull String whereColumn, @NonNull String commaSeparatedIds) {

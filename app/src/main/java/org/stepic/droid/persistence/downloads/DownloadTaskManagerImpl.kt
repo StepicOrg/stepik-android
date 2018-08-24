@@ -49,7 +49,7 @@ constructor(
         }
     }
 
-    override fun removeTasks(items: List<PersistentItem>): Completable = Completable.fromAction {
+    override fun removeTasks(items: List<PersistentItem>, shouldRemoveFromDb: Boolean): Completable = Completable.fromAction {
         fsLock.withLock {
             items.forEach {
                 persistentItemObserver.update(it.copy(status = PersistentItem.Status.FILE_TRANSFER))
@@ -64,7 +64,11 @@ constructor(
                     }
                 }
 
-                persistentItemObserver.update(item.copy(status = PersistentItem.Status.CANCELLED))
+                if (shouldRemoveFromDb) {
+                    persistentItemObserver.remove(item)
+                } else {
+                    persistentItemObserver.update(item.copy(status = PersistentItem.Status.CANCELLED))
+                }
             }
         }
     }

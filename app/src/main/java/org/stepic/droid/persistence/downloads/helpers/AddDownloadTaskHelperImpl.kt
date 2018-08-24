@@ -68,7 +68,7 @@ constructor(
             }
         }
 
-        downloadTaskManager.removeTasks(itemsToRemove).blockingAwait()
+        downloadTaskManager.removeTasks(itemsToRemove, shouldRemoveFromDb = true).blockingAwait()
         return paths.filter { !alreadyDownloadedPaths.contains(it) }
     }
 }
