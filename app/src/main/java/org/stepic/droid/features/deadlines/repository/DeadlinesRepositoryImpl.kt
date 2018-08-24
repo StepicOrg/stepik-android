@@ -74,12 +74,12 @@ constructor(
 
     override fun getDeadlinesForCourse(courseId: Long): Maybe<StorageRecord<DeadlinesWrapper>> =
             remoteStorageService.getStorageRecords(1, sharedPreferenceHelper.profile?.id ?: -1, getKindOfRecord(courseId)).singleOrError()
-                    .flatMapMaybe {
-                        if (it.records.isNotEmpty()) {
-                            Maybe.just(it.records.first().unwrap<DeadlinesWrapper>(gson))
-                        } else {
-                            Maybe.empty()
-                        }
+                    .flatMapMaybe { response ->
+                        response.records.firstOrNull()
+                                ?.unwrap<DeadlinesWrapper>(gson)
+                                ?.takeIf { it.data.deadlines != null } // in order to fix problems with users with obfuscated deadlines
+                                ?.let { Maybe.just(it) }
+                                ?: Maybe.empty()
                     }
 
     override fun syncDeadlines(enrolledCourses: List<Course>?): Completable =
