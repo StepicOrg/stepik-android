@@ -14,18 +14,11 @@ import org.stepic.droid.ui.dialogs.VideoQualityDialog
 class SettingsFragment : FragmentBase(), AllowMobileDataDialogFragment.Callback {
 
     companion object {
-        fun newInstance(): SettingsFragment {
-            return SettingsFragment()
-        }
+        fun newInstance(): SettingsFragment = SettingsFragment()
     }
 
-    val kb: String by lazy { getString(R.string.kb) }
-
-    val mb: String by lazy { getString(R.string.mb) }
-
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater?.inflate(R.layout.fragment_settings, container, false)
-    }
+    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+            inflater?.inflate(R.layout.fragment_settings, container, false)
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -71,7 +64,6 @@ class SettingsFragment : FragmentBase(), AllowMobileDataDialogFragment.Callback 
                         dialogFragment.show(fragmentManager, null)
                     }
                 }
-
             }
         }
 

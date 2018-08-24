@@ -73,7 +73,25 @@ public abstract class DaoBase<T> implements IDao<T> {
                 return null;
             }
         });
+    }
 
+    @Override
+    @Nullable
+    public T get(@NotNull Map<String, String> whereArgs) {
+        final String selector = "SELECT * FROM " + getDbName() + " WHERE ";
+        final String where = CollectionsKt.joinToString(whereArgs.keySet(), " = ? AND ", "", "", -1, "" , null) + " = ?";
+        final String query = selector + where + " LIMIT 1";
+
+        return databaseOperations.executeQuery(query, whereArgs.values().toArray(new String[]{}), new ResultHandler<T>() {
+            @Override
+            public T handle(Cursor cursor) throws SQLException {
+                if (cursor.moveToNext()) {
+                    return parsePersistentObject(cursor);
+                } else {
+                    return null;
+                }
+            }
+        });
     }
 
     @Override
@@ -85,6 +103,12 @@ public abstract class DaoBase<T> implements IDao<T> {
     public void remove(@NonNull String whereColumn, @NonNull String whereValue) {
         String whereClause = whereColumn + " =?";
         databaseOperations.executeDelete(getDbName(), whereClause, new String[]{whereValue});
+    }
+
+    @Override
+    public void remove(@NotNull Map<String, String> whereArgs) {
+        final String where = CollectionsKt.joinToString(whereArgs.keySet(), " = ? AND ", "", "", -1, "" , null) + " = ?";
+        databaseOperations.executeDelete(getDbName(), where, whereArgs.values().toArray(new String[]{}));
     }
 
     @NotNull
@@ -114,6 +138,10 @@ public abstract class DaoBase<T> implements IDao<T> {
 
     protected <U> U rawQuery(String query, @Nullable String[] whereArgs, ResultHandler<U> resultHandler) {
         return databaseOperations.executeQuery(query, whereArgs, resultHandler);
+    }
+
+    protected void executeSql(@NotNull String query, @Nullable Object[] args) {
+        databaseOperations.executeSql(query, args);
     }
 
     @Override

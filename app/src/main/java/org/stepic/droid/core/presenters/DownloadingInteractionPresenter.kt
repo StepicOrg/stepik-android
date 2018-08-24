@@ -11,12 +11,13 @@ import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
 class DownloadingInteractionPresenter
-@Inject constructor(
+@Inject
+constructor(
         private val threadPoolExecutor: ThreadPoolExecutor,
         private val mainHandler: MainHandler,
         private val userPreferences: UserPreferences,
-        private val networkTypeDeterminer: NetworkTypeDeterminer)
-    : PresenterBase<DownloadingInteractionView>() {
+        private val networkTypeDeterminer: NetworkTypeDeterminer
+) : PresenterBase<DownloadingInteractionView>() {
 
     private val isHandling = AtomicBoolean(false)
 

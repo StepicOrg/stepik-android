@@ -49,10 +49,6 @@ class Lesson(
         @SerializedName("cover_url")
         val coverUrl: String? = null,
 
-        // todo: remove this after downloads refactoring
-        var isCached: Boolean = false,
-        var isLoading: Boolean = false,
-
         @SerializedName("time_to_complete")
         val timeToComplete: Long = 0
 
@@ -83,8 +79,6 @@ class Lesson(
         dest.writeString(this.learnersGroup)
         dest.writeString(this.teacherGroup)
         dest.writeString(this.coverUrl)
-        dest.writeBoolean(isCached)
-        dest.writeBoolean(isLoading)
     }
 
     companion object CREATOR : Parcelable.Creator<Lesson> {
@@ -110,9 +104,7 @@ class Lesson(
                 parcel.readDate(),
                 parcel.readString(),
                 parcel.readString(),
-                parcel.readString(),
-                parcel.readBoolean(),
-                parcel.readBoolean()
+                parcel.readString()
         )
 
         override fun newArray(size: Int): Array<Lesson?> = arrayOfNulls(size)

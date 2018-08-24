@@ -15,6 +15,7 @@ import org.stepic.droid.di.AppSingleton;
 import org.stepic.droid.model.StepikFilter;
 import org.stepic.droid.model.comments.DiscussionOrder;
 import org.stepic.droid.notifications.model.NotificationType;
+import org.stepic.droid.persistence.model.StorageLocation;
 import org.stepic.droid.ui.util.TimeIntervalUtil;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DateTimeHelper;
@@ -23,6 +24,7 @@ import org.stepic.droid.web.AuthenticationStepikResponse;
 import org.stepik.android.model.user.EmailAddress;
 import org.stepik.android.model.user.Profile;
 
+import java.io.File;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -55,6 +57,9 @@ public class SharedPreferenceHelper {
     private static final String NEED_SHOW_LANG_WIDGET = "need_show_lang_widget";
 
     private static final String SUBMISSIONS_COUNT = "submissions_count";
+
+    private static final String STORAGE_LOCATION_PATH = "storage_location_path";
+    private static final String STORAGE_LOCATION_TYPE = "storage_location_type";
 
     private final String ACCESS_TOKEN_TIMESTAMP = "access_token_timestamp";
     private final String AUTH_RESPONSE_JSON = "auth_response_json";
@@ -323,6 +328,21 @@ public class SharedPreferenceHelper {
 
     public void setSDChosen(boolean isSdChosen) {
         put(PreferenceType.DEVICE_SPECIFIC, SD_CHOSEN, isSdChosen);
+    }
+
+    @Nullable
+    public StorageLocation getStorageLocation() {
+        final String path = getString(PreferenceType.DEVICE_SPECIFIC, STORAGE_LOCATION_PATH);
+        if (path == null) return null;
+
+        final File file = new File(path);
+        final StorageLocation.Type type = StorageLocation.Type.valueOf(getString(PreferenceType.DEVICE_SPECIFIC, STORAGE_LOCATION_TYPE));
+        return new StorageLocation(file, file.getFreeSpace(), file.getTotalSpace(), type);
+    }
+
+    public void setStorageLocation(StorageLocation storageLocation) {
+        put(PreferenceType.DEVICE_SPECIFIC, STORAGE_LOCATION_PATH, storageLocation.getPath().getAbsolutePath());
+        put(PreferenceType.DEVICE_SPECIFIC, STORAGE_LOCATION_TYPE, storageLocation.getType().name());
     }
 
     public boolean isNotificationVibrationDisabled() {

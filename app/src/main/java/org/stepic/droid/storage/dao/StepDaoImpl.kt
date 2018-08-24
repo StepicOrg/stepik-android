@@ -38,8 +38,6 @@ constructor(
         val columnIndexUpdateDate = cursor.getColumnIndex(DbStructureStep.Column.UPDATE_DATE)
         val columnIndexSubscriptions = cursor.getColumnIndex(DbStructureStep.Column.SUBSCRIPTIONS)
         val columnIndexPosition = cursor.getColumnIndex(DbStructureStep.Column.POSITION)
-        val columnIndexIsCached = cursor.getColumnIndex(DbStructureStep.Column.IS_CACHED)
-        val columnIndexIsLoading = cursor.getColumnIndex(DbStructureStep.Column.IS_LOADING)
         val columnIndexDiscussionCount = cursor.getColumnIndex(DbStructureStep.Column.DISCUSSION_COUNT)
         val columnIndexDiscussionId = cursor.getColumnIndex(DbStructureStep.Column.DISCUSSION_ID)
         val columnIndexPeerReview = cursor.getColumnIndex(DbStructureStep.Column.PEER_REVIEW)
@@ -62,8 +60,6 @@ constructor(
                 updateDate = dateAdapter.stringToDate(cursor.getString(columnIndexUpdateDate)),
                 subscriptions = DbParseHelper.parseStringToStringList(cursor.getString(columnIndexSubscriptions)),
                 position = cursor.getLong(columnIndexPosition),
-                isCached = cursor.getInt(columnIndexIsCached) > 0,
-                isLoading = cursor.getInt(columnIndexIsLoading) > 0,
                 hasSubmissionRestriction = cursor.getInt(indexHasSubmissionRestriction) > 0,
                 maxSubmissionCount = cursor.getInt(indexMaxSubmission),
                 actions = Actions(false, false, null, review, null)

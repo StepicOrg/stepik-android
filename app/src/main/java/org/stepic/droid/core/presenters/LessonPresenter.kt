@@ -4,6 +4,8 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.LessonView
 import org.stepic.droid.di.lesson.LessonScope
+import org.stepic.droid.persistence.content.StepContentResolver
+import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepik.android.model.Lesson
 import org.stepik.android.model.Section
 import org.stepik.android.model.Step
@@ -22,13 +24,17 @@ import javax.inject.Inject
 
 @LessonScope
 class LessonPresenter
-@Inject constructor(
+@Inject
+constructor(
         private val threadPoolExecutor: ThreadPoolExecutor,
         private val mainHandler: MainHandler,
         private val databaseFacade: DatabaseFacade,
         private val api: Api,
         private val sharedPreferenceHelper: SharedPreferenceHelper,
-        private val analytic: Analytic) : PresenterBase<LessonView>() {
+        private val analytic: Analytic,
+
+        private val stepContentResolver: StepContentResolver
+) : PresenterBase<LessonView>() {
 
     private var lesson: Lesson? = null
 
@@ -38,7 +44,7 @@ class LessonPresenter
 
     private var section: Section? = null
 
-    val stepList = ArrayList<Step>()
+    val stepList = ArrayList<StepPersistentWrapper>()
 
 
     @JvmOverloads
@@ -136,14 +142,15 @@ class LessonPresenter
 
             var isStepsShown = false
             if (stepList.isNotEmpty() && it.steps?.size ?: -1 == stepList.size) {
-                stepList.forEach {
-                    it.isCustomPassed = databaseFacade.isStepPassed(it)
+                val steps = stepList.map { step ->
+                    step.isCustomPassed = databaseFacade.isStepPassed(step)
+                    stepContentResolver.resolvePersistentContent(step).blockingFirst()
                 }
                 isStepsShown = true
                 //if we get steps from database -> progresses and assignments were stored
                 mainHandler.post {
                     this.stepList.clear()
-                    this.stepList.addAll(stepList)
+                    this.stepList.addAll(steps)
                     view?.showSteps(fromPreviousLesson, defaultStepPositionStartWithOne)
                 }
             }
@@ -175,7 +182,7 @@ class LessonPresenter
                 }
                 return
             } else {
-                val stepListFromInternet = response.body()?.steps
+                val stepListFromInternet = response.body()?.steps?.map { step -> stepContentResolver.resolvePersistentContent(step).blockingFirst() }
                 if (stepListFromInternet == null || stepListFromInternet.isEmpty()) {
                     if (!isStepsShown) {
                         if (it.steps?.isEmpty() ?: true) {
@@ -231,7 +238,7 @@ class LessonPresenter
 
     }
 
-    private fun updateAssignmentsAndProgresses(stepListFromInternet: List<Step>, unit: Unit?) {
+    private fun updateAssignmentsAndProgresses(stepListFromInternet: List<StepPersistentWrapper>, unit: Unit?) {
         try {
             val progressIds: Array<out String?>
             if (unit != null) {
@@ -252,8 +259,8 @@ class LessonPresenter
 
             //FIXME: Warning, it is mutable objects, which we show on LessonFragment and change here or not show, if we shown from database
             stepListFromInternet.forEach {
-                it.isCustomPassed = databaseFacade.isStepPassed(it)
-                databaseFacade.addStep(it) // update step in db
+                it.step.isCustomPassed = databaseFacade.isStepPassed(it.step)
+                databaseFacade.addStep(it.step) // update step in db
             }
         } catch (exception: Exception) {
             //we already show steps, and we don't need onConnectionError

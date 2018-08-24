@@ -42,6 +42,15 @@ constructor(private val database: SQLiteDatabase) : DatabaseOperations {
     }
 
 
+    override fun executeSql(sqlQuery: String, args: Array<Any>) {
+        try {
+            open()
+            database.execSQL(sqlQuery, args)
+        } finally {
+            close()
+        }
+    }
+
     override fun executeUpdate(table: String, values: ContentValues?, whereClause: String?, whereArgs: Array<String>?) {
         try {
             open()

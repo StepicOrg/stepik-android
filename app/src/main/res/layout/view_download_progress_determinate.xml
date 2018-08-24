@@ -7,6 +7,10 @@
         android:id="@+id/when_load_view"
         android:layout_width="@dimen/loading_size"
         android:layout_height="@dimen/loading_size"
+
+        android:padding="@dimen/loading_padding"
+        android:foreground="@drawable/circle_foreground"
+
         android:layout_gravity="center"
         android:indeterminate="false"
         android:indeterminateOnly="false"

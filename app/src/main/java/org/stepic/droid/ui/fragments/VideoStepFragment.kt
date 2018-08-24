@@ -42,9 +42,8 @@ class VideoStepFragment : StepBaseFragment(),
                 .inject(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater?.inflate(R.layout.fragment_video_step, container, false)
-    }
+    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+            inflater?.inflate(R.layout.fragment_video_step, container, false)
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -53,11 +52,11 @@ class VideoStepFragment : StepBaseFragment(),
         videoStepPresenter.attachView(this)
         videoLengthPresenter.attachView(this)
 
-        videoStepPresenter.initVideo(step)
+        videoStepPresenter.initVideo(stepWrapper)
 
         playerLayout.setOnClickListener {
             playerLayout?.isClickable = false
-            videoStepPresenter.playVideo(step)
+            videoStepPresenter.playVideo(stepWrapper)
         }
     }
 

@@ -3,7 +3,6 @@ package org.stepic.droid.util;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.configuration.Config;
-import org.stepic.droid.model.CachedVideo;
 import org.stepik.android.model.Course;
 import org.stepik.android.model.Unit;
 
@@ -19,17 +18,6 @@ public class StepikLogicHelper {
             }
         }
         return lessonsIds;
-    }
-
-    public static long[] fromVideosToStepIds(List<CachedVideo> cachedVideos) {
-        long[] stepIds = new long[cachedVideos.size()];
-        for (int i = 0; i < cachedVideos.size(); i++) {
-            CachedVideo video = cachedVideos.get(i);
-            if (video != null) {
-                stepIds[i] = video.getStepId();
-            }
-        }
-        return stepIds;
     }
 
     @NotNull

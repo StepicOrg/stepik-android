@@ -90,7 +90,10 @@
     <string name="allow_question">Allow?</string>
     <string name="video_quality">Video quality of downloading</string>
     <string name="video_quality_playing">Video quality of playing</string>
-    <string name="video_download_fail">An error occurred while downloading video %s</string>
+
+    <string name="download_error">An error occurred while downloading video %s</string>
+    <string name="download_error_insufficient_storage">: insufficient storage</string>
+
     <string name="sync_problem">There was a problem syncing the data, please try again later
     </string>
     <string name="empty_courses">Looks like you haven\'t enrolled in any courses yet</string>
@@ -686,4 +689,7 @@
     <string name="achievement_remaining_exp">%d for the next level</string>
     <string name="achievement_remaining_exp_locked">Not obtained yet</string>
     <string name="achievement_share">I\'ve unlocked achievement «%s» at Stepik.org. Join and beat my record!</string>
+
+
+    <string name="downloads_view_cant_remove">Can\'t remove item</string>
 </resources>

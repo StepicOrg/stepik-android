@@ -1,17 +1,14 @@
 package org.stepic.droid.ui.adapters;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.StringRes;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.util.LongSparseArray;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -27,27 +24,23 @@ import org.stepic.droid.analytic.AmplitudeAnalytic;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.core.ScreenManager;
-import org.stepic.droid.core.downloadingstate.DownloadingPresenter;
 import org.stepic.droid.core.presenters.CalendarPresenter;
 import org.stepic.droid.core.presenters.DownloadingInteractionPresenter;
+import org.stepic.droid.core.presenters.SectionsPresenter;
 import org.stepic.droid.features.deadlines.model.Deadline;
 import org.stepic.droid.features.deadlines.model.DeadlinesWrapper;
 import org.stepic.droid.features.deadlines.presenters.PersonalDeadlinesPresenter;
+import org.stepic.droid.persistence.model.DownloadProgress;
 import org.stepik.android.model.Course;
 import org.stepik.android.model.Section;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
-import org.stepic.droid.storage.SectionDownloader;
 import org.stepic.droid.storage.operations.DatabaseFacade;
 import org.stepic.droid.ui.custom.progressbutton.ProgressWheel;
 import org.stepic.droid.ui.dialogs.DeleteItemDialogFragment;
-import org.stepic.droid.ui.dialogs.ExplainExternalStoragePermissionDialog;
-import org.stepic.droid.ui.dialogs.OnLoadPositionListener;
 import org.stepic.droid.ui.dialogs.VideoQualityDetailedDialog;
 import org.stepic.droid.ui.fragments.SectionsFragment;
-import org.stepic.droid.ui.listeners.OnClickLoadListener;
 import org.stepic.droid.ui.listeners.OnItemClickListener;
 import org.stepic.droid.ui.util.ViewExtensionsKt;
-import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ColorUtil;
 import org.stepic.droid.util.DateTimeHelper;
 import org.stepic.droid.util.SectionExtensionsKt;
@@ -69,7 +62,7 @@ import kotlin.collections.MapsKt;
 
 import static org.stepic.droid.ui.util.ViewExtensionsKt.changeVisibility;
 
-public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericViewHolder> implements OnClickLoadListener, OnLoadPositionListener {
+public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericViewHolder> {
     private final static String SECTION_TITLE_DELIMETER = ". ";
 
     private static final int TYPE_SECTION_ITEM = 1;
@@ -93,13 +86,9 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     ThreadPoolExecutor threadPoolExecutor;
 
     @Inject
-    SectionDownloader sectionDownloader;
-
-    @Inject
     SharedPreferenceHelper sharedPreferenceHelper;
 
 
-    private final DownloadingPresenter downloadingPresenter;
     private final PersonalDeadlinesPresenter personalDeadlinesPresenter;
     private List<Section> sections;
     private AppCompatActivity activity;
@@ -111,10 +100,12 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     @ColorInt
     private int defaultColor;
     private Map<String, ProgressViewModel> progressMap;
-    private Map<Long, Float> sectionIdToLoadingStateMap;
     private Fragment fragment;
     private final DownloadingInteractionPresenter downloadingInteractionPresenter;
     private final int durationMillis = 3000;
+    private final SectionsPresenter sectionsPresenter;
+
+    private final LongSparseArray<DownloadProgress.Status> downloadProgresses = new LongSparseArray<>();
 
     @Nullable
     private StorageRecord<DeadlinesWrapper> deadlinesRecord;
@@ -123,16 +114,14 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         this.defaultHighlightPosition = defaultHighlightPosition;
     }
 
-    public SectionAdapter(DownloadingPresenter downloadingPresenter,
-                          List<Section> sections,
+    public SectionAdapter(List<Section> sections,
                           AppCompatActivity activity,
                           CalendarPresenter calendarPresenter,
                           PersonalDeadlinesPresenter personalDeadlinesPresenter,
                           Map<String, ProgressViewModel> progressMap,
-                          Map<Long, Float> sectionIdToLoadingStateMap,
                           Fragment fragment,
-                          DownloadingInteractionPresenter downloadingInteractionPresenter) {
-        this.downloadingPresenter = downloadingPresenter;
+                          DownloadingInteractionPresenter downloadingInteractionPresenter,
+                          SectionsPresenter sectionsPresenter) {
         this.sections = sections;
         this.activity = activity;
         this.calendarPresenter = calendarPresenter;
@@ -140,9 +129,9 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         highlightDrawable = ContextCompat.getDrawable(activity, R.drawable.section_background);
         defaultColor = ColorUtil.INSTANCE.getColorArgb(R.color.white, activity);
         this.progressMap = progressMap;
-        this.sectionIdToLoadingStateMap = sectionIdToLoadingStateMap;
         this.fragment = fragment;
         this.downloadingInteractionPresenter = downloadingInteractionPresenter;
+        this.sectionsPresenter = sectionsPresenter;
         App.Companion.component().inject(this);
     }
 
@@ -188,93 +177,14 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
 
 
     public void requestClickLoad(int position) {
-        onClickLoad(position);
+        onItemDownloadClicked(position);
     }
 
     public void setCourse(Course course) {
         this.course = course;
     }
 
-    @Override
-    public void onClickLoad(int adapterPosition) {
-        int sectionPosition = adapterPosition - PRE_SECTION_LIST_DELTA;
-        if (sectionPosition >= 0 && sectionPosition < sections.size()) {
-            final Section section = sections.get(sectionPosition);
-
-            int permissionCheck = ContextCompat.checkSelfPermission(App.Companion.getAppContext(),
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-            if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-                sharedPreferenceHelper.storeTempPosition(adapterPosition);
-                if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-
-                    // Show an explanation to the user *asynchronously* -- don't block
-                    // this thread waiting for the user's response! After the user
-                    // sees the explanation, try again to request the permission.
-
-                    DialogFragment dialog = ExplainExternalStoragePermissionDialog.newInstance();
-                    if (!dialog.isAdded()) {
-                        dialog.show(activity.getSupportFragmentManager(), null);
-                    }
-
-                } else {
-                    // No explanation needed, we can request the permission.
-
-                    ActivityCompat.requestPermissions(activity,
-                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                            AppConstants.REQUEST_EXTERNAL_STORAGE);
-
-                }
-                return;
-            }
-
-            if (section.isCached()) {
-                analytic.reportEvent(Analytic.Interaction.CLICK_DELETE_SECTION, section.getId() + "");
-                analytic.reportAmplitudeEvent(AmplitudeAnalytic.Downloads.DELETED,
-                        MapsKt.mapOf(new Pair<String, Object>(AmplitudeAnalytic.Downloads.PARAM_CONTENT, AmplitudeAnalytic.Downloads.Values.SECTION)));
-                DeleteItemDialogFragment dialogFragment = DeleteItemDialogFragment.newInstance(sectionPosition);
-                dialogFragment.setTargetFragment(fragment, SectionsFragment.DELETE_POSITION_REQUEST_CODE);
-                if (!dialogFragment.isAdded()) {
-                    FragmentTransaction ft = activity.getSupportFragmentManager().beginTransaction();
-                    ft.add(dialogFragment, null);
-                    ft.commitAllowingStateLoss();
-                }
-            } else {
-                if (section.isLoading()) {
-                    //cancel loading
-                    analytic.reportEvent(Analytic.Interaction.CLICK_CANCEL_SECTION, section.getId() + "");
-                    analytic.reportAmplitudeEvent(AmplitudeAnalytic.Downloads.CANCELLED,
-                            MapsKt.mapOf(new Pair<String, Object>(AmplitudeAnalytic.Downloads.PARAM_CONTENT, AmplitudeAnalytic.Downloads.Values.SECTION)));
-                    section.setLoading(false);
-                    section.setCached(false);
-                    threadPoolExecutor.execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            databaseFacade.updateOnlyCachedLoadingSection(section);
-                            sectionDownloader.cancelSectionLoading(section.getId());
-                        }
-                    });
-                    downloadingPresenter.onStateChanged(section.getId(), false);
-                    notifyItemChanged(adapterPosition);
-                } else {
-                    if (sharedPreferenceHelper.isNeedToShowVideoQualityExplanation()) {
-                        VideoQualityDetailedDialog dialogFragment = VideoQualityDetailedDialog.Companion.newInstance(adapterPosition);
-                        dialogFragment.setOnLoadPositionListener(this);
-                        if (!dialogFragment.isAdded()) {
-                            FragmentTransaction ft = activity.getSupportFragmentManager().beginTransaction();
-                            ft.add(dialogFragment, null);
-                            ft.commitAllowingStateLoss();
-                        }
-                    } else {
-                        loadSection(adapterPosition);
-                    }
-                }
-            }
-        }
-    }
-
-    private void loadSection(int adapterPosition) {
+    public void loadSection(int adapterPosition) {
         int sectionPosition = adapterPosition - PRE_SECTION_LIST_DELTA;
         if (sectionPosition >= 0 && sectionPosition < sections.size()) {
             downloadingInteractionPresenter.checkOnLoading(adapterPosition);
@@ -288,17 +198,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
             analytic.reportEvent(Analytic.Interaction.CLICK_CACHE_SECTION, section.getId() + "");
             analytic.reportAmplitudeEvent(AmplitudeAnalytic.Downloads.STARTED,
                     MapsKt.mapOf(new Pair<String, Object>(AmplitudeAnalytic.Downloads.PARAM_CONTENT, AmplitudeAnalytic.Downloads.Values.SECTION)));
-            section.setCached(false);
-            section.setLoading(true);
-            downloadingPresenter.onStateChanged(section.getId(), section.isLoading());
-            threadPoolExecutor.execute(new Runnable() {
-                @Override
-                public void run() {
-                    databaseFacade.updateOnlyCachedLoadingSection(section);
-                    sectionDownloader.downloadSection(section.getId());
-                }
-            });
-            notifyItemChanged(adapterPosition);
+            sectionsPresenter.addDownloadTask(section);
         }
     }
 
@@ -328,11 +228,6 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         return sections;
     }
 
-    @Override
-    public void onNeedLoadPosition(int adapterPosition) {
-        loadSection(adapterPosition);
-    }
-
     private void onClickStartExam(int adapterPosition) {
         int position = adapterPosition - PRE_SECTION_LIST_DELTA;
         if (position >= 0 && position < sections.size()) {
@@ -345,17 +240,62 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     public void requestClickDeleteSilence(int position) {
         if (position >= 0 && position < sections.size()) {
             final Section section = sections.get(position);
-            section.setLoading(false);
-            section.setCached(false);
-            threadPoolExecutor.execute(new Runnable() {
-                @Override
-                public void run() {
-                    databaseFacade.updateOnlyCachedLoadingSection(section);
-                    sectionDownloader.deleteWholeSection(section.getId());
+            sectionsPresenter.removeDownloadTask(section);
+        }
+    }
+
+    private void onItemDownloadClicked(int adapterPosition) {
+        if (sharedPreferenceHelper.isNeedToShowVideoQualityExplanation()) {
+            VideoQualityDetailedDialog dialogFragment = VideoQualityDetailedDialog.Companion.newInstance(adapterPosition);
+            dialogFragment.setTargetFragment(fragment, VideoQualityDetailedDialog.VIDEO_QUALITY_REQUEST_CODE);
+            if (!dialogFragment.isAdded()) {
+                FragmentTransaction ft = activity.getSupportFragmentManager().beginTransaction();
+                ft.add(dialogFragment, null);
+                ft.commitAllowingStateLoss();
+            }
+        } else {
+            loadSection(adapterPosition);
+        }
+    }
+
+    private void onItemRemoveClicked(int adapterPosition) {
+        int sectionPosition = adapterPosition - PRE_SECTION_LIST_DELTA;
+        if (sectionPosition >= 0 && sectionPosition < sections.size()) {
+            final Section section = sections.get(sectionPosition);
+            DownloadProgress.Status downloadProgressStatus = downloadProgresses.get(section.getId());
+            if (downloadProgressStatus == DownloadProgress.Status.Cached.INSTANCE) {
+                analytic.reportEvent(Analytic.Interaction.CLICK_DELETE_SECTION, section.getId() + "");
+                analytic.reportAmplitudeEvent(AmplitudeAnalytic.Downloads.DELETED,
+                        MapsKt.mapOf(new Pair<String, Object>(AmplitudeAnalytic.Downloads.PARAM_CONTENT, AmplitudeAnalytic.Downloads.Values.SECTION)));
+                DeleteItemDialogFragment dialogFragment = DeleteItemDialogFragment.newInstance(sectionPosition);
+                dialogFragment.setTargetFragment(fragment, SectionsFragment.DELETE_POSITION_REQUEST_CODE);
+                if (!dialogFragment.isAdded()) {
+                    FragmentTransaction ft = activity.getSupportFragmentManager().beginTransaction();
+                    ft.add(dialogFragment, null);
+                    ft.commitAllowingStateLoss();
                 }
-            });
-            int adapterPosition = position + PRE_SECTION_LIST_DELTA;
-            notifyItemChanged(adapterPosition);
+            } else {
+                //cancel loading
+                analytic.reportEvent(Analytic.Interaction.CLICK_CANCEL_SECTION, section.getId() + "");
+                analytic.reportAmplitudeEvent(AmplitudeAnalytic.Downloads.CANCELLED,
+                        MapsKt.mapOf(new Pair<String, Object>(AmplitudeAnalytic.Downloads.PARAM_CONTENT, AmplitudeAnalytic.Downloads.Values.SECTION)));
+                sectionsPresenter.removeDownloadTask(section);
+            }
+        }
+    }
+
+    public void setItemDownloadProgress(DownloadProgress progress) {
+        downloadProgresses.put(progress.getId(), progress.getStatus());
+        int pos = -1;
+        for (int i = 0; i < sections.size(); i++) {
+            if (sections.get(i).getId() == progress.getId()) {
+                pos = i;
+                break;
+            }
+        }
+
+        if (pos != -1) {
+            notifyItemChanged(pos + PRE_SECTION_LIST_DELTA);
         }
     }
 
@@ -389,7 +329,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         View afterLoad;
 
         @BindView(R.id.load_button)
-        View loadButton;
+        ViewGroup loadButton;
 
         @BindView(R.id.exam_title)
         View examTitle;
@@ -403,6 +343,9 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
 
         @BindView(R.id.section_student_progress_score_bar)
         ProgressBar progressScore;
+
+        @BindView(R.id.loadStateUndefined)
+        View loadStateUndefined;
 
         private long oldSectionId = -1;
 
@@ -418,10 +361,25 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
 
             });
 
-            loadButton.setOnClickListener(new View.OnClickListener() {
+            preLoadIV.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onClickLoad(getAdapterPosition());
+                    whenLoad.setProgressPortion(0f, false);
+                    onItemDownloadClicked(getAdapterPosition());
+                }
+            });
+
+            whenLoad.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onItemRemoveClicked(getAdapterPosition());
+                }
+            });
+
+            afterLoad.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onItemRemoveClicked(getAdapterPosition());
                 }
             });
 
@@ -503,34 +461,18 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                 cv.setFocusableInTouchMode(false);
 
                 loadButton.setVisibility(View.VISIBLE);
-                if (section.isCached()) {
-                    //cached
-                    preLoadIV.setVisibility(View.GONE);
-                    whenLoad.setVisibility(View.INVISIBLE);
-                    afterLoad.setVisibility(View.VISIBLE); //can
 
-                    whenLoad.setProgressPortion(0, false);
+                ViewExtensionsKt.hideAllChildren(loadButton);
+                DownloadProgress.Status downloadProgressStatus = downloadProgresses.get(sectionId);
+                if (downloadProgressStatus == DownloadProgress.Status.Cached.INSTANCE) {
+                    afterLoad.setVisibility(View.VISIBLE);
+                } else if (downloadProgressStatus == DownloadProgress.Status.NotCached.INSTANCE) {
+                    preLoadIV.setVisibility(View.VISIBLE);
+                } else if (downloadProgressStatus instanceof DownloadProgress.Status.InProgress) {
+                    whenLoad.setVisibility(View.VISIBLE);
+                    whenLoad.setProgressPortion(((DownloadProgress.Status.InProgress) downloadProgressStatus).getProgress(), needAnimation);
                 } else {
-                    if (section.isLoading()) {
-
-                        preLoadIV.setVisibility(View.GONE);
-                        whenLoad.setVisibility(View.VISIBLE);
-                        afterLoad.setVisibility(View.GONE);
-
-                        Float sectionLoadingState = sectionIdToLoadingStateMap.get(section.getId());
-                        if (sectionLoadingState != null) {
-                            whenLoad.setProgressPortion(sectionLoadingState, needAnimation);
-                        }
-
-                    } else {
-                        //not cached not loading
-                        preLoadIV.setVisibility(View.VISIBLE);
-                        whenLoad.setVisibility(View.INVISIBLE);
-                        afterLoad.setVisibility(View.GONE);
-
-                        whenLoad.setProgressPortion(0, false);
-                    }
-
+                    loadStateUndefined.setVisibility(View.VISIBLE);
                 }
             } else {
                 //Not active section or not enrollment

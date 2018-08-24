@@ -17,6 +17,7 @@ import org.stepic.droid.core.presenters.AnonymousPresenter;
 import org.stepic.droid.core.presenters.RouteStepPresenter;
 import org.stepic.droid.core.presenters.contracts.AnonymousView;
 import org.stepic.droid.core.presenters.contracts.RouteStepView;
+import org.stepic.droid.persistence.model.StepPersistentWrapper;
 import org.stepik.android.model.Lesson;
 import org.stepik.android.model.Section;
 import org.stepik.android.model.Step;
@@ -71,6 +72,7 @@ public abstract class StepBaseFragment extends FragmentBase
     @BindView(R.id.previous_lesson_view)
     protected View previousLessonView;
 
+    protected StepPersistentWrapper stepWrapper;
     protected Step step;
     protected Lesson lesson;
     protected Section section;
@@ -112,7 +114,8 @@ public abstract class StepBaseFragment extends FragmentBase
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        step = getArguments().getParcelable(AppConstants.KEY_STEP_BUNDLE);
+        stepWrapper = getArguments().getParcelable(AppConstants.KEY_STEP_BUNDLE);
+        step = stepWrapper.getStep();
         lesson = getArguments().getParcelable(AppConstants.KEY_LESSON_BUNDLE);
         unit = getArguments().getParcelable(AppConstants.KEY_UNIT_BUNDLE);
         section = getArguments().getParcelable(AppConstants.KEY_SECTION_BUNDLE);

@@ -20,9 +20,9 @@ class VideoQualityDialogInPlayer : VideoQualityDialogBase() {
     }
 
     companion object {
-        private val externalVideoKey = "externalVideoKey"
-        private val cachedVideoKey = "cachedVideoKey"
-        private val nowPlayingKey = "nowPlaying"
+        private const val externalVideoKey = "externalVideoKey"
+        private const val cachedVideoKey = "cachedVideoKey"
+        private const val nowPlayingKey = "nowPlaying"
 
 
         fun newInstance(externalVideo: Video?, cachedVideo: Video?, nowPlayingUrl: String): VideoQualityDialogInPlayer {
@@ -94,21 +94,19 @@ class VideoQualityDialogInPlayer : VideoQualityDialogBase() {
                 .setNegativeButton(R.string.cancel) { _, _ ->
                     analytic.reportEvent(Analytic.Video.CANCEL_VIDEO_QUALITY)
                 }
-                .setSingleChoiceItems(listOfPresentedQuality.toTypedArray(),
-                        position,
-                        { dialog, which ->
-                            val urlQuality = listOfVideoUrl[which]
-                            (targetFragment as Callback).onQualityChanged(newUrlQuality = urlQuality)
-                            dialog.dismiss()
+                .setSingleChoiceItems(listOfPresentedQuality.toTypedArray(), position) { dialog, which ->
+                    val urlQuality = listOfVideoUrl[which]
+                    (targetFragment as Callback).onQualityChanged(newUrlQuality = urlQuality)
+                    dialog.dismiss()
 
-                            val qualityForPlaying = listOfPresentedQuality[which]
-                            threadPoolExecutor.execute {
-                                val toSave = findNearest(qualityForPlaying, qualityToPositionMap.keys)
-                                if (toSave != null) {
-                                    userPreferences.saveVideoQualityForPlaying(toSave)
-                                }
-                            }
-                        })
+                    val qualityForPlaying = listOfPresentedQuality[which]
+                    threadPoolExecutor.execute {
+                        val toSave = findNearest(qualityForPlaying, qualityToPositionMap.keys)
+                        if (toSave != null) {
+                            userPreferences.saveVideoQualityForPlaying(toSave)
+                        }
+                    }
+                }
 
         return builder.create()
     }
@@ -138,7 +136,5 @@ class VideoQualityDialogInPlayer : VideoQualityDialogBase() {
             analytic.reportError(Analytic.Error.CANT_PARSE_QUALITY, exception)
             return null
         }
-
     }
-
 }

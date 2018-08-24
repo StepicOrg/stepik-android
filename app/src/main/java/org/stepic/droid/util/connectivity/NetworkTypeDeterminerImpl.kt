@@ -12,17 +12,15 @@ class NetworkTypeDeterminerImpl
     override fun determineNetworkType(): NetworkType {
         val activeNetwork: NetworkInfo? = connectivityManager.activeNetworkInfo
 
-        if (activeNetwork?.isConnected ?: false) {
-            val networkType = activeNetwork?.type
-
-            return when (networkType) {
+        return if (activeNetwork?.isConnected == true) {
+            when (activeNetwork.type) {
                 ConnectivityManager.TYPE_WIFI -> NetworkType.wifi
                 ConnectivityManager.TYPE_MOBILE -> NetworkType.onlyMobile
                 else -> NetworkType.none
             }
 
         } else {
-            return NetworkType.none
+            NetworkType.none
         }
     }
 }
