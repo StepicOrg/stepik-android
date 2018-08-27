@@ -73,8 +73,12 @@ class DownloadCompleteService: JobIntentService() {
             download == null -> // download was cancelled with system UI
                 persistentItemObserver.update(persistentItem.copy(status = PersistentItem.Status.CANCELLED))
 
-            download.status == DownloadManager.STATUS_SUCCESSFUL && persistentItem.status == PersistentItem.Status.IN_PROGRESS -> // ok
+            download.status == DownloadManager.STATUS_SUCCESSFUL -> // ok
                 moveDownloadedFile(download, persistentItem)
+
+            download.status == DownloadManager.STATUS_FAILED -> {
+                // ignore to catch in DownloadsSyncronizer
+            }
 
             else -> {
                 downloadManager.remove(downloadId)
