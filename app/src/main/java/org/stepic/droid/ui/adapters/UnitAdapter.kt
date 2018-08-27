@@ -29,7 +29,7 @@ import org.stepik.android.model.Section
 import org.stepik.android.model.Unit
 
 class UnitAdapter(
-        var parentSection: Section,
+        var parentSection: Section?,
 
         private val analytic: Analytic,
         private val unitsFragment: UnitsFragment,
@@ -51,7 +51,8 @@ class UnitAdapter(
         val unit = units[position]
 
         holder.apply {
-            unitTitle.text = "${parentSection.position}.${unit.position} ${lesson.title}"
+            val title = "${parentSection?.position?.toString()?.plus(".") ?: ""}${unit.position} ${lesson.title}"
+            unitTitle.text = title
 
             Glide.with(App.getAppContext())
                     .load(lesson.coverUrl)
@@ -108,15 +109,21 @@ class UnitAdapter(
     }
 
     private fun onItemClicked(pos: Int) {
-        unitsFragment.openSteps(units[pos], lessons[pos], parentSection)
+        if (pos in units.indices) {
+            unitsFragment.openSteps(units[pos], lessons[pos], parentSection)
+        }
     }
 
     fun onItemDownloadClicked(pos: Int) {
-        unitsPresenter.addDownloadTask(pos)
+        if (pos in units.indices) {
+            unitsPresenter.addDownloadTask(pos)
+        }
     }
 
     fun onItemRemoveClicked(pos: Int) {
-        unitsPresenter.removeDownloadTask(pos)
+        if (pos in units.indices) {
+            unitsPresenter.removeDownloadTask(pos)
+        }
     }
 
     inner class UnitViewHolder(root: View): RecyclerView.ViewHolder(root) {
