@@ -60,7 +60,8 @@ class StoriesAdapter(private val onStoryClicked: (Story, Int) -> Unit) : Recycle
         private val title = root.storyTitle
         private val activeStoryMarker = root.activeStoryMarker
 
-        private val coverTarget = RoundedBitmapImageViewTarget(1f, cover)
+        private val coverTarget = RoundedBitmapImageViewTarget(
+                root.context.resources.getDimension(R.dimen.stories_default_corner_radius), cover)
 
         init {
             root.setOnClickListener {

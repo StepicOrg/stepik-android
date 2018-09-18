@@ -21,5 +21,5 @@ class StoriesActivityDelegate(
             activity.intent.extras ?: Bundle.EMPTY
 
     override val storyPartDelegates: List<StoryPartViewDelegate> =
-            listOf()
+            listOf(PlainTextWithButtonStoryPartDelegate(activity))
 }
