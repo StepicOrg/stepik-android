@@ -19,11 +19,20 @@ constructor(
         private val api: Api,
         private val viewedStoryTemplateDao: IDao<ViewedStoryTemplate>
 ) : StoryTemplatesRepository {
+    companion object {
+        const val STORY_TEMPLATES_VERSION = 1
+    }
+
     override fun getStoryTemplates(): Single<List<StoryTemplate>> =
             getStoryTemplatesByPage(1)
                     .concatMap { it.storyTemplates.toObservable() }
                     .toList()
-                    .map { it.sortedBy(StoryTemplate::position) }
+                    .map {
+                        it.asSequence()
+                                .filter { template -> template.version <= STORY_TEMPLATES_VERSION }
+                                .sortedBy(StoryTemplate::position)
+                                .toList()
+                    }
 
     private fun getStoryTemplatesByPage(page: Int): Observable<StoryTemplatesResponse> =
             api.getStoryTemplates(page)

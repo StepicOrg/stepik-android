@@ -1,5 +1,7 @@
 package org.stepik.android.model
 
+import android.os.Parcel
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 
 data class StoryTemplate(
@@ -38,7 +40,28 @@ data class StoryTemplate(
 
             @SerializedName("title")
             val title: String
-    )
+    ) : Parcelable {
+        override fun writeToParcel(parcel: Parcel, flags: Int) {
+            parcel.writeString(backgroundStyle)
+            parcel.writeString(text)
+            parcel.writeString(textColor)
+            parcel.writeString(title)
+        }
+
+        override fun describeContents(): Int = 0
+
+        companion object CREATOR : Parcelable.Creator<Text> {
+            override fun createFromParcel(parcel: Parcel) = Text(
+                    parcel.readString(),
+                    parcel.readString(),
+                    parcel.readString(),
+                    parcel.readString()
+            )
+
+            override fun newArray(size: Int) =
+                    arrayOfNulls<Text?>(size)
+        }
+    }
 
     data class Button(
             @SerializedName("background_color")
@@ -52,5 +75,26 @@ data class StoryTemplate(
 
             @SerializedName("url")
             val url: String
-    )
+    ) : Parcelable {
+        override fun writeToParcel(parcel: Parcel, flags: Int) {
+            parcel.writeString(backgroundColor)
+            parcel.writeString(textColor)
+            parcel.writeString(title)
+            parcel.writeString(url)
+        }
+
+        override fun describeContents(): Int = 0
+
+        companion object CREATOR : Parcelable.Creator<Button> {
+            override fun createFromParcel(parcel: Parcel) = Button(
+                    parcel.readString(),
+                    parcel.readString(),
+                    parcel.readString(),
+                    parcel.readString()
+            )
+
+            override fun newArray(size: Int) =
+                    arrayOfNulls<Button?>(size)
+        }
+    }
 }
