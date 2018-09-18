@@ -2,6 +2,7 @@ package org.stepic.droid.web;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,6 +22,8 @@ import com.vk.sdk.VKSdk;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
+import org.stepic.droid.util.CompatibilityExtensionsKt;
+import org.stepic.droid.web.model.story_templates.StoryTemplatesResponse;
 import org.stepik.android.model.adaptive.RatingItem;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.configuration.Config;
@@ -82,6 +85,7 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
 import io.reactivex.Completable;
+import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.functions.Function;
 import kotlin.Unit;
@@ -927,7 +931,11 @@ public class ApiImpl implements Api {
     }
 
 
-
+    @Override
+    public Observable<StoryTemplatesResponse> getStoryTemplates(int page) {
+        final Locale locale = CompatibilityExtensionsKt.getDefaultLocale(Resources.getSystem().getConfiguration());
+        return loggedService.getStoryTemplate(page, false, locale.getLanguage());
+    }
 
     @Override
     public Single<SearchResultResponse> getSearchResultsOfTag(int page, @NotNull Tag tag) {

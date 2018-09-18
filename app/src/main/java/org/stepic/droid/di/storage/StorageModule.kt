@@ -15,6 +15,8 @@ import org.stepic.droid.features.deadlines.storage.operations.DeadlinesRecordOpe
 import org.stepic.droid.features.deadlines.storage.operations.DeadlinesRecordOperationsImpl
 import org.stepic.droid.features.deadlines.storage.dao.PersonalDeadlinesDao
 import org.stepic.droid.features.deadlines.storage.dao.PersonalDeadlinesDaoImpl
+import org.stepic.droid.features.stories.model.ViewedStoryTemplate
+import org.stepic.droid.features.stories.storage.dao.ViewedStoryTemplatesDaoImpl
 import org.stepic.droid.jsonHelpers.adapters.UTCDateAdapter
 import org.stepic.droid.model.*
 import org.stepic.droid.model.code.CodeSubmission
@@ -135,6 +137,10 @@ abstract class StorageModule {
     @StorageSingleton
     @Binds
     internal abstract fun providePersistentStateDao(persistentStateDaoImpl: PersistentStateDaoImpl): PersistentStateDao
+
+    @StorageSingleton
+    @Binds
+    internal abstract fun provideViewedStoryTemplatesDao(viewedStoryTemplatesDaoImpl: ViewedStoryTemplatesDaoImpl): IDao<ViewedStoryTemplate>
 
     @Module
     companion object {
