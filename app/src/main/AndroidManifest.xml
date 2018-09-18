@@ -373,6 +373,10 @@
         <activity
             android:name=".features.achievements.ui.activity.AchievementsListActivity" />
 
+        <activity
+            android:name=".features.stories.ui.activity.StoriesActivity"
+            android:theme="@style/StoryActivityTheme" />
+
         <receiver
             android:name="org.stepic.droid.receivers.DownloadClickReceiver"
             android:exported="true">
