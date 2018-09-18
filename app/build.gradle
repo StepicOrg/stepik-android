@@ -172,6 +172,7 @@ dependencies {
     implementation libraries.MPAndroidChart
 
     implementation libraries.shortcutBadger
+    implementation libraries.StoriesKit
 
     debugImplementation libraries.leakCanary
     releaseImplementation libraries.leakCanaryNoOp
