@@ -19,12 +19,17 @@ import org.stepic.droid.core.presenters.contracts.FiltersView
 import org.stepic.droid.core.presenters.contracts.TagsView
 import org.stepic.droid.features.stories.presentation.StoriesPresenter
 import org.stepic.droid.features.stories.presentation.StoriesView
+import org.stepic.droid.features.stories.ui.activity.StoriesActivity
+import org.stepic.droid.features.stories.ui.adapter.StoriesAdapter
 import org.stepic.droid.model.CoursesCarouselInfo
 import org.stepic.droid.model.StepikFilter
 import org.stepic.droid.ui.adapters.CatalogAdapter
 import org.stepic.droid.ui.custom.AutoCompleteSearchView
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepik.android.model.Tag
+import ru.nobird.android.stories.transition.SharedTransitionIntentBuilder
+import ru.nobird.android.stories.transition.SharedTransitionsManager
+import ru.nobird.android.stories.ui.delegate.SharedTransitionContainerDelegate
 import java.util.*
 import javax.inject.Inject
 
@@ -33,6 +38,8 @@ class CatalogFragment : FragmentBase(),
 
     companion object {
         fun newInstance(): FragmentBase = CatalogFragment()
+
+        private const val CATALOG_STORIES_KEY = "catalog_stories"
     }
 
     @Inject
@@ -113,7 +120,7 @@ class CatalogFragment : FragmentBase(),
                     tagsPresenter.onNeedShowTags()
                 },
                 { tag -> onTagClicked(tag) },
-                { _, _ -> }
+                { _, position -> showStories(position) }
         )
     }
 
@@ -206,5 +213,53 @@ class CatalogFragment : FragmentBase(),
     override fun setState(state: StoriesView.State) {
         val catalogAdapter = catalogRecyclerView.adapter as CatalogAdapter
         catalogAdapter.storiesState = state
+    }
+
+    private fun showStories(position: Int) {
+        val storiesViewHolder = catalogRecyclerView.findViewHolderForAdapterPosition(CatalogAdapter.STORIES_INDEX)
+                as? CatalogAdapter.StoriesViewHolder
+                ?: return
+
+        val stories = storiesViewHolder.storiesAdapter.stories
+
+        context.startActivity(SharedTransitionIntentBuilder.createIntent(
+                context, StoriesActivity::class.java, CATALOG_STORIES_KEY, position, stories
+        ))
+    }
+
+    override fun onStart() {
+        super.onStart()
+        SharedTransitionsManager.registerTransitionDelegate(CATALOG_STORIES_KEY, object : SharedTransitionContainerDelegate {
+            override fun getSharedView(position: Int): View {
+                val storiesViewHolder = catalogRecyclerView.findViewHolderForAdapterPosition(CatalogAdapter.STORIES_INDEX)
+                        as? CatalogAdapter.StoriesViewHolder
+                        ?: return View(context) // todo return null
+
+                val storyViewHolder = storiesViewHolder.recycler.findViewHolderForAdapterPosition(position)
+                        as? StoriesAdapter.StoryViewHolder
+                        ?: return View(context) // todo return null
+
+                return storyViewHolder.itemView
+            }
+
+            override fun onPositionChanged(position: Int) {
+                val storiesViewHolder = catalogRecyclerView.findViewHolderForAdapterPosition(CatalogAdapter.STORIES_INDEX)
+                        as? CatalogAdapter.StoriesViewHolder
+                        ?: return
+
+                storiesViewHolder.recycler.layoutManager?.scrollToPosition(position)
+                storiesViewHolder.storiesAdapter.selected = position
+
+                if (position != -1) {
+                    val story = storiesViewHolder.storiesAdapter.stories[position]
+                    storiesPresenter.onStoryViewed(story.id)
+                }
+            }
+        })
+    }
+
+    override fun onStop() {
+        SharedTransitionsManager.unregisterTransitionDelegate(CATALOG_STORIES_KEY)
+        super.onStop()
     }
 }

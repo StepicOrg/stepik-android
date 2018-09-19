@@ -18,10 +18,10 @@
         android:padding="8dp"
         android:orientation="horizontal">
 
-        <include layout="@layout/view_story_placeholder" />
-        <include layout="@layout/view_story_placeholder" />
-        <include layout="@layout/view_story_placeholder" />
-        <include layout="@layout/view_story_placeholder" />
+        <include layout="@layout/view_story_item_placeholder" />
+        <include layout="@layout/view_story_item_placeholder" />
+        <include layout="@layout/view_story_item_placeholder" />
+        <include layout="@layout/view_story_item_placeholder" />
 
     </LinearLayout>
 

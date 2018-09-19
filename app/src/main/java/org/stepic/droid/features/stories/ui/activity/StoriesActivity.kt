@@ -1,7 +1,6 @@
 package org.stepic.droid.features.stories.ui.activity
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import org.stepic.droid.R
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.features.stories.ui.delegate.StoriesActivityDelegate

@@ -41,7 +41,7 @@ class CatalogAdapter(
         private const val PRE_CAROUSEL_COUNT = 3
         private const val POST_CAROUSEL_COUNT = 1
 
-        private const val STORIES_INDEX = 0
+        const val STORIES_INDEX = 0
         private const val LANGUAGE_INDEX = 1
         private const val TAGS_INDEX = 2
     }
@@ -306,9 +306,9 @@ class CatalogAdapter(
             root: View,
             onStoryClicked: (Story, Int) -> Unit
     ) : RecyclerView.ViewHolder(root) {
-        private val storiesAdapter = StoriesAdapter(onStoryClicked)
-        private val recycler = root.storiesRecycler
         private val loadingPlaceholder = root.storiesContainerLoadingPlaceholder
+        val storiesAdapter = StoriesAdapter(onStoryClicked)
+        val recycler = root.storiesRecycler
 
         init {
             recycler.adapter = storiesAdapter

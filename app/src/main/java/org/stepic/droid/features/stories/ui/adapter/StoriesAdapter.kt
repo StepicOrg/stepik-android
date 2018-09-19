@@ -7,11 +7,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
-import kotlinx.android.synthetic.main.view_story.view.*
+import kotlinx.android.synthetic.main.view_story_item.view.*
 import org.stepic.droid.R
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.ui.util.changeVisibility
 import ru.nobird.android.stories.model.Story
+import kotlin.properties.Delegates
 
 class StoriesAdapter(private val onStoryClicked: (Story, Int) -> Unit) : RecyclerView.Adapter<StoriesAdapter.StoryViewHolder>() {
     var stories: List<Story> = emptyList()
@@ -19,6 +20,11 @@ class StoriesAdapter(private val onStoryClicked: (Story, Int) -> Unit) : Recycle
 
     var viewedStoryIds: Set<Long> = emptySet()
         private set
+
+    var selected: Int by Delegates.observable(-1) { _, old, new ->
+        notifyItemChanged(old)
+        notifyItemChanged(new)
+    }
 
     fun setData(stories: List<Story>, viewedStoryIds: Set<Long>) {
         var updateNeeded = false
@@ -47,7 +53,7 @@ class StoriesAdapter(private val onStoryClicked: (Story, Int) -> Unit) : Recycle
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = StoryViewHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.view_story, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.view_story_item, parent, false)
     )
 
 
@@ -92,6 +98,12 @@ class StoriesAdapter(private val onStoryClicked: (Story, Int) -> Unit) : Recycle
                     .into(coverTarget)
 
             activeStoryMarker.changeVisibility(!viewedStoryIds.contains(story.id))
+
+            itemView.visibility = if (position == selected) {
+                View.INVISIBLE
+            } else {
+                View.VISIBLE
+            }
         }
     }
 }
