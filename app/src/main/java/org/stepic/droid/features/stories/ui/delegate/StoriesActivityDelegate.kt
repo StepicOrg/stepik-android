@@ -4,12 +4,14 @@ import android.os.Bundle
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_stories.*
+import org.stepic.droid.analytic.Analytic
 import ru.nobird.android.stories.ui.custom.DismissableLayout
 import ru.nobird.android.stories.ui.delegate.StoriesActivityDelegateBase
 import ru.nobird.android.stories.ui.delegate.StoryPartViewDelegate
 
 class StoriesActivityDelegate(
-        activity: AppCompatActivity
+        activity: AppCompatActivity,
+        analytic: Analytic
 ) : StoriesActivityDelegateBase(activity) {
     override val dismissableLayout: DismissableLayout =
             activity.content
@@ -21,5 +23,5 @@ class StoriesActivityDelegate(
             activity.intent.extras ?: Bundle.EMPTY
 
     override val storyPartDelegates: List<StoryPartViewDelegate> =
-            listOf(PlainTextWithButtonStoryPartDelegate(activity))
+            listOf(PlainTextWithButtonStoryPartDelegate(analytic, activity))
 }

@@ -2,6 +2,7 @@ package org.stepic.droid.features.stories.ui.activity
 
 import android.os.Bundle
 import org.stepic.droid.R
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.features.stories.ui.delegate.StoriesActivityDelegate
 
@@ -11,7 +12,7 @@ class StoriesActivity : FragmentActivityBase() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_stories)
-        storiesDelegate = StoriesActivityDelegate(this)
+        storiesDelegate = StoriesActivityDelegate(this, analytic)
         storiesDelegate.onCreate(savedInstanceState)
     }
 

@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.view_story_plain_text_with_button.view.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.features.stories.model.PlainTextWithButtonStoryPart
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepik.android.model.StoryTemplate
@@ -21,7 +22,10 @@ import ru.nobird.android.stories.model.StoryPart
 import ru.nobird.android.stories.ui.custom.StoryView
 import ru.nobird.android.stories.ui.delegate.StoryPartViewDelegate
 
-class PlainTextWithButtonStoryPartDelegate(private val context: Context) : StoryPartViewDelegate() {
+class PlainTextWithButtonStoryPartDelegate(
+        private val analytic: Analytic,
+        private val context: Context
+) : StoryPartViewDelegate() {
     companion object {
         private const val DARK_BACKGROUND_STYLE = "dark"
 
