@@ -10,17 +10,24 @@ import kotlinx.android.synthetic.main.catalog_item.view.*
 import kotlinx.android.synthetic.main.view_catalog_no_internet_clickable.view.*
 import kotlinx.android.synthetic.main.view_catalog_tags.view.*
 import kotlinx.android.synthetic.main.view_course_languages.view.*
+import kotlinx.android.synthetic.main.view_stories_container.view.*
 import org.stepic.droid.R
+import org.stepic.droid.features.stories.presentation.StoriesView
+import org.stepic.droid.features.stories.ui.adapter.StoriesAdapter
 import org.stepic.droid.model.*
+import org.stepic.droid.ui.util.changeVisibility
+import org.stepic.droid.ui.util.hideAllChildren
 import org.stepic.droid.ui.util.setHeight
 import org.stepik.android.model.Tag
+import ru.nobird.android.stories.model.Story
 import java.util.*
 
 class CatalogAdapter(
         private val courseListItems: List<CoursesCarouselInfo>,
         private val onFiltersChanged: (EnumSet<StepikFilter>) -> Unit,
         private val onRetry: () -> Unit,
-        private val onTagClicked: (Tag) -> Unit
+        private val onTagClicked: (Tag) -> Unit,
+        private val onStoryClicked: (Story, Int) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
@@ -29,11 +36,14 @@ class CatalogAdapter(
         private const val POPULAR_TYPE = 2
         private const val OFFLINE_TYPE = 3
         private const val TAGS_TYPE = 4
+        private const val STORIES_TYPE = 5
 
-        private const val PRE_CAROUSEL_COUNT = 2
+        private const val PRE_CAROUSEL_COUNT = 3
         private const val POST_CAROUSEL_COUNT = 1
-        private const val LANGUAGE_INDEX = 0
-        private const val TAGS_INDEX = 1
+
+        private const val STORIES_INDEX = 0
+        private const val LANGUAGE_INDEX = 1
+        private const val TAGS_INDEX = 2
     }
 
     private var filters: EnumSet<StepikFilter>? = null
@@ -42,6 +52,12 @@ class CatalogAdapter(
     private var tags = mutableListOf<Tag>()
     var isOfflineMode: Boolean = false
         private set
+
+    var storiesState: StoriesView.State = StoriesView.State.Idle
+        set(value) {
+            field = value
+            notifyItemChanged(STORIES_INDEX)
+        }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -61,6 +77,10 @@ class CatalogAdapter(
             TAGS_TYPE -> {
                 val view = layoutInflater.inflate(R.layout.view_catalog_tags, parent, false)
                 TagsViewHolder(view, onTagClicked)
+            }
+            STORIES_TYPE -> {
+                val view = layoutInflater.inflate(R.layout.view_stories_container, parent, false)
+                StoriesViewHolder(view, onStoryClicked)
             }
             else -> throw IllegalStateException("CatalogAdapter viewType = $viewType is unsupported")
         }
@@ -89,6 +109,10 @@ class CatalogAdapter(
             TAGS_TYPE -> {
                 holder as TagsViewHolder
                 holder.bindTags(tags)
+            }
+            STORIES_TYPE -> {
+                holder as StoriesViewHolder
+                holder.bindState(storiesState)
             }
         }
     }
@@ -136,14 +160,16 @@ class CatalogAdapter(
 
     private fun getItemViewTypeInOfflineMode(adapterPosition: Int): Int =
             when (adapterPosition) {
+                STORIES_INDEX  -> STORIES_TYPE
                 LANGUAGE_INDEX -> LANGUAGES_TYPE
-                1 -> OFFLINE_TYPE
-                2 -> POPULAR_TYPE
+                LANGUAGE_INDEX + 1 -> OFFLINE_TYPE
+                LANGUAGE_INDEX + 2 -> POPULAR_TYPE
                 else -> throw IllegalStateException("Catalog recycler type is not identified in offline mode")
             }
 
     private fun getItemViewTypeInOnlineMode(adapterPosition: Int): Int =
             when (adapterPosition) {
+                STORIES_INDEX -> STORIES_TYPE
                 LANGUAGE_INDEX -> LANGUAGES_TYPE
                 TAGS_INDEX -> TAGS_TYPE
                 in PRE_CAROUSEL_COUNT until PRE_CAROUSEL_COUNT + courseListItems.size -> CAROUSEL_TYPE
@@ -273,6 +299,42 @@ class CatalogAdapter(
     fun onTagNotLoaded() {
         if (this.tags.isEmpty()) {
             notifyItemChanged(TAGS_INDEX)
+        }
+    }
+
+    class StoriesViewHolder(
+            root: View,
+            onStoryClicked: (Story, Int) -> Unit
+    ) : RecyclerView.ViewHolder(root) {
+        private val storiesAdapter = StoriesAdapter(onStoryClicked)
+        private val recycler = root.storiesRecycler
+        private val loadingPlaceholder = root.storiesContainerLoadingPlaceholder
+
+        init {
+            recycler.adapter = storiesAdapter
+            recycler.layoutManager = LinearLayoutManager(root.context, LinearLayoutManager.HORIZONTAL, false)
+        }
+
+        fun bindState(state: StoriesView.State) = when(state) {
+            is StoriesView.State.Idle,
+            is StoriesView.State.Empty -> {
+                itemView.setHeight(0)
+                recycler.changeVisibility(false)
+                loadingPlaceholder.changeVisibility(false)
+            }
+
+            is StoriesView.State.Loading -> {
+                itemView.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT)
+                recycler.changeVisibility(false)
+                loadingPlaceholder.changeVisibility(true)
+            }
+
+            is StoriesView.State.Success -> {
+                itemView.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT)
+                storiesAdapter.setData(state.stories, state.viewedStoriesIds)
+                recycler.changeVisibility(true)
+                loadingPlaceholder.changeVisibility(false)
+            }
         }
     }
 }

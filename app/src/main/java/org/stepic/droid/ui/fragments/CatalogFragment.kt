@@ -17,6 +17,8 @@ import org.stepic.droid.core.presenters.TagsPresenter
 import org.stepic.droid.core.presenters.contracts.CatalogView
 import org.stepic.droid.core.presenters.contracts.FiltersView
 import org.stepic.droid.core.presenters.contracts.TagsView
+import org.stepic.droid.features.stories.presentation.StoriesPresenter
+import org.stepic.droid.features.stories.presentation.StoriesView
 import org.stepic.droid.model.CoursesCarouselInfo
 import org.stepic.droid.model.StepikFilter
 import org.stepic.droid.ui.adapters.CatalogAdapter
@@ -27,7 +29,7 @@ import java.util.*
 import javax.inject.Inject
 
 class CatalogFragment : FragmentBase(),
-        CatalogView, FiltersView, FiltersListener, TagsView {
+        CatalogView, FiltersView, FiltersListener, TagsView, StoriesView {
 
     companion object {
         fun newInstance(): FragmentBase = CatalogFragment()
@@ -44,6 +46,9 @@ class CatalogFragment : FragmentBase(),
 
     @Inject
     lateinit var tagsPresenter: TagsPresenter
+
+    @Inject
+    lateinit var storiesPresenter: StoriesPresenter
 
     private val courseCarouselInfoList = mutableListOf<CoursesCarouselInfo>()
 
@@ -79,6 +84,7 @@ class CatalogFragment : FragmentBase(),
         filtersClient.subscribe(this)
         filtersPresenter.attachView(this)
         catalogPresenter.attachView(this)
+        storiesPresenter.attachView(this)
         filtersPresenter.onNeedFilters()
         tagsPresenter.onNeedShowTags()
     }
@@ -88,6 +94,7 @@ class CatalogFragment : FragmentBase(),
         tagsPresenter.detachView(this)
         filtersClient.unsubscribe(this)
         catalogPresenter.detachView(this)
+        storiesPresenter.detachView(this)
         filtersPresenter.detachView(this)
     }
 
@@ -105,7 +112,8 @@ class CatalogFragment : FragmentBase(),
                     filtersPresenter.onNeedFilters()
                     tagsPresenter.onNeedShowTags()
                 },
-                { tag -> onTagClicked(tag) }
+                { tag -> onTagClicked(tag) },
+                { _, _ -> }
         )
     }
 
@@ -195,5 +203,8 @@ class CatalogFragment : FragmentBase(),
         catalogAdapter.onTagNotLoaded()
     }
 
-
+    override fun setState(state: StoriesView.State) {
+        val catalogAdapter = catalogRecyclerView.adapter as CatalogAdapter
+        catalogAdapter.storiesState = state
+    }
 }

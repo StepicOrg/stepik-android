@@ -247,6 +247,7 @@ public interface StepicRestLoggedService {
             @Body final RecommendationReactionsRequest reactionsRequest
     );
 
+    @GET("api/story-templates")
     Observable<StoryTemplatesResponse> getStoryTemplate(
             @Query("page") final int page,
             @Query("is_published") final boolean isPublished,
