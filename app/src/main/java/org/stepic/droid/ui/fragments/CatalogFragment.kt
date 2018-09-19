@@ -230,16 +230,16 @@ class CatalogFragment : FragmentBase(),
     override fun onStart() {
         super.onStart()
         SharedTransitionsManager.registerTransitionDelegate(CATALOG_STORIES_KEY, object : SharedTransitionContainerDelegate {
-            override fun getSharedView(position: Int): View {
+            override fun getSharedView(position: Int): View? {
                 val storiesViewHolder = catalogRecyclerView.findViewHolderForAdapterPosition(CatalogAdapter.STORIES_INDEX)
                         as? CatalogAdapter.StoriesViewHolder
-                        ?: return View(context) // todo return null
+                        ?: return null
 
                 val storyViewHolder = storiesViewHolder.recycler.findViewHolderForAdapterPosition(position)
                         as? StoriesAdapter.StoryViewHolder
-                        ?: return View(context) // todo return null
+                        ?: return null
 
-                return storyViewHolder.itemView
+                return storyViewHolder.cover
             }
 
             override fun onPositionChanged(position: Int) {

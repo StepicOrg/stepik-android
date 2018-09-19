@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.view_story_item.view.*
 import org.stepic.droid.R
@@ -64,11 +65,12 @@ class StoriesAdapter(private val onStoryClicked: (Story, Int) -> Unit) : Recycle
     }
 
     inner class StoryViewHolder(root: View) : RecyclerView.ViewHolder(root) {
+        val cover: ImageView = root.storyCover
         private val title = root.storyTitle
         private val activeStoryMarker = root.activeStoryMarker
 
         private val coverTarget = RoundedBitmapImageViewTarget(
-                root.context.resources.getDimension(R.dimen.stories_default_corner_radius), root.storyCover)
+                root.context.resources.getDimension(R.dimen.stories_default_corner_radius), cover)
 
         private val coursePlaceholderDrawable by lazy {
             val resources = root.context.resources

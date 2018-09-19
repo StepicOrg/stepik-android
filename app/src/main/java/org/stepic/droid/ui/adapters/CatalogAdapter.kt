@@ -311,6 +311,7 @@ class CatalogAdapter(
         val recycler = root.storiesRecycler
 
         init {
+            recycler.itemAnimator = null
             recycler.adapter = storiesAdapter
             recycler.layoutManager = LinearLayoutManager(root.context, LinearLayoutManager.HORIZONTAL, false)
         }

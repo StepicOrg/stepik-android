@@ -19,4 +19,8 @@ class StoriesActivity : FragmentActivityBase() {
         storiesDelegate.onPause()
         super.onPause()
     }
+
+    override fun onBackPressed() {
+        storiesDelegate.finish()
+    }
 }
