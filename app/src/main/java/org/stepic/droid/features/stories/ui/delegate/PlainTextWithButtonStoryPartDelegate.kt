@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Build
 import android.support.annotation.ColorInt
 import android.support.annotation.DrawableRes
+import android.support.v4.widget.CircularProgressDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,6 +28,14 @@ class PlainTextWithButtonStoryPartDelegate(private val context: Context) : Story
         private const val COLOR_MASK = 0xFF000000.toInt()
     }
 
+    private val progressDrawable = CircularProgressDrawable(context).apply {
+        alpha = 0x77
+        strokeWidth = 5f
+        centerRadius = 30f
+        setColorSchemeColors(0xFFFFFF)
+        start()
+    }
+
     override fun isForViewType(part: StoryPart): Boolean =
             part is PlainTextWithButtonStoryPart
 
@@ -36,7 +45,7 @@ class PlainTextWithButtonStoryPartDelegate(private val context: Context) : Story
 
                 Glide.with(context)
                         .load(part.cover)
-                        .asBitmap()
+                        .placeholder(progressDrawable)
                         .into(this.storyCover)
 
                 setUpText(this, part.text)
