@@ -10,6 +10,7 @@ import android.support.annotation.DrawableRes
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.view_story_plain_text_with_button.view.*
 import org.stepic.droid.R
 import org.stepic.droid.features.stories.model.PlainTextWithButtonStoryPart
@@ -22,6 +23,8 @@ import ru.nobird.android.stories.ui.delegate.StoryPartViewDelegate
 class PlainTextWithButtonStoryPartDelegate(private val context: Context) : StoryPartViewDelegate() {
     companion object {
         private const val DARK_BACKGROUND_STYLE = "dark"
+
+        private const val COLOR_MASK = 0xFF000000.toInt()
     }
 
     override fun isForViewType(part: StoryPart): Boolean =
@@ -30,6 +33,11 @@ class PlainTextWithButtonStoryPartDelegate(private val context: Context) : Story
     override fun onBindView(storyView: StoryView, container: ViewGroup, position: Int, part: StoryPart): View =
             LayoutInflater.from(container.context).inflate(R.layout.view_story_plain_text_with_button, container, false).apply {
                 part as PlainTextWithButtonStoryPart
+
+                Glide.with(context)
+                        .load(part.cover)
+                        .asBitmap()
+                        .into(this.storyCover)
 
                 setUpText(this, part.text)
                 setUpButton(this, part.button)
@@ -48,7 +56,7 @@ class PlainTextWithButtonStoryPartDelegate(private val context: Context) : Story
             val storyTitle = view.storyTitle
             val storyText = view.storyText
 
-            @ColorInt val textColor = text.textColor.toInt(16)
+            @ColorInt val textColor = COLOR_MASK or text.textColor.toInt(16)
 
             storyTitle.setTextColor(textColor)
             storyText.setTextColor(textColor)
@@ -66,7 +74,7 @@ class PlainTextWithButtonStoryPartDelegate(private val context: Context) : Story
         val storyButton = view.storyButton
         if (button != null) {
             val backgroundDrawable = GradientDrawable()
-            backgroundDrawable.setColor(button.backgroundColor.toInt(16))
+            backgroundDrawable.setColor(COLOR_MASK or button.backgroundColor.toInt(16))
             backgroundDrawable.cornerRadius = view.context.resources.getDimension(R.dimen.stories_default_corner_radius)
 
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
@@ -76,7 +84,7 @@ class PlainTextWithButtonStoryPartDelegate(private val context: Context) : Story
                 storyButton.background = backgroundDrawable
             }
 
-            storyButton.setTextColor(button.textColor.toInt(16))
+            storyButton.setTextColor(COLOR_MASK or button.textColor.toInt(16))
 
             storyButton.text = button.title
             storyButton.setOnClickListener {
