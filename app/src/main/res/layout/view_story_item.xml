@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="4dp"
+        android:foreground="@drawable/story_view_tint_foreground"
         android:contentDescription="@null" />
 
     <View

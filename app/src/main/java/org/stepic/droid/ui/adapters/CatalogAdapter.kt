@@ -16,7 +16,6 @@ import org.stepic.droid.features.stories.presentation.StoriesView
 import org.stepic.droid.features.stories.ui.adapter.StoriesAdapter
 import org.stepic.droid.model.*
 import org.stepic.droid.ui.util.changeVisibility
-import org.stepic.droid.ui.util.hideAllChildren
 import org.stepic.droid.ui.util.setHeight
 import org.stepik.android.model.Tag
 import ru.nobird.android.stories.model.Story
@@ -307,7 +306,7 @@ class CatalogAdapter(
             onStoryClicked: (Story, Int) -> Unit
     ) : RecyclerView.ViewHolder(root) {
         private val loadingPlaceholder = root.storiesContainerLoadingPlaceholder
-        val storiesAdapter = StoriesAdapter(onStoryClicked)
+        val storiesAdapter = StoriesAdapter(root.context, onStoryClicked)
         val recycler = root.storiesRecycler
 
         init {

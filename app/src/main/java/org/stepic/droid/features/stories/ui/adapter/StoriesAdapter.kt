@@ -1,7 +1,10 @@
 package org.stepic.droid.features.stories.ui.adapter
 
-import android.graphics.BitmapFactory
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
+import android.support.v7.content.res.AppCompatResources
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -15,7 +18,26 @@ import org.stepic.droid.ui.util.changeVisibility
 import ru.nobird.android.stories.model.Story
 import kotlin.properties.Delegates
 
-class StoriesAdapter(private val onStoryClicked: (Story, Int) -> Unit) : RecyclerView.Adapter<StoriesAdapter.StoryViewHolder>() {
+class StoriesAdapter(
+        private val context: Context,
+        private val onStoryClicked: (Story, Int) -> Unit
+) : RecyclerView.Adapter<StoriesAdapter.StoryViewHolder>() {
+    private val coursePlaceholderDrawable by lazy {
+        val resources = context.resources
+        val size = resources.getDimension(R.dimen.stories_size).toInt()
+
+        val drawable = AppCompatResources.getDrawable(context, R.drawable.ic_general_placeholder_dark)!!
+
+        val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        drawable.setBounds(0, 0, canvas.width, canvas.height)
+        drawable.draw(canvas)
+
+        val circularBitmapDrawable = RoundedBitmapDrawableFactory.create(resources, bitmap)
+        circularBitmapDrawable.cornerRadius = resources.getDimension(R.dimen.stories_default_corner_radius)
+        return@lazy circularBitmapDrawable
+    }
+
     var stories: List<Story> = emptyList()
         private set
 
@@ -57,7 +79,6 @@ class StoriesAdapter(private val onStoryClicked: (Story, Int) -> Unit) : Recycle
             LayoutInflater.from(parent.context).inflate(R.layout.view_story_item, parent, false)
     )
 
-
     override fun getItemCount() = stories.size
 
     override fun onBindViewHolder(holder: StoryViewHolder, position: Int) {
@@ -71,14 +92,6 @@ class StoriesAdapter(private val onStoryClicked: (Story, Int) -> Unit) : Recycle
 
         private val coverTarget = RoundedBitmapImageViewTarget(
                 root.context.resources.getDimension(R.dimen.stories_default_corner_radius), cover)
-
-        private val coursePlaceholderDrawable by lazy {
-            val resources = root.context.resources
-            val coursePlaceholderBitmap = BitmapFactory.decodeResource(resources, R.drawable.general_placeholder)
-            val circularBitmapDrawable = RoundedBitmapDrawableFactory.create(resources, coursePlaceholderBitmap)
-            circularBitmapDrawable.cornerRadius = resources.getDimension(R.dimen.stories_default_corner_radius)
-            return@lazy circularBitmapDrawable
-        }
 
         init {
             root.setOnClickListener {
