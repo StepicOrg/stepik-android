@@ -61,6 +61,7 @@ class StoriesAdapter(
                 this.viewedStoryIds = viewedStoryIds
             } else {
                 val diff = viewedStoryIds - this.viewedStoryIds
+                this.viewedStoryIds = viewedStoryIds
                 diff.forEach { storyId ->
                     val index = stories.indexOfFirst { it.id == storyId }
                     if (index != -1) {
