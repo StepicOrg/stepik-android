@@ -174,6 +174,7 @@ dependencies {
     implementation libraries.shortcutBadger
     implementation (libraries.StoriesKit) {
         exclude group: 'com.android.support'
+        changing = true
     }
 
     debugImplementation libraries.leakCanary
