@@ -4,7 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 
-data class StoryTemplate(
+class StoryTemplate(
         val id: Long,
         val cover: String,
         val title: String,
@@ -18,7 +18,7 @@ data class StoryTemplate(
         val position: Int,
         val version: Int
 ) {
-    data class Part(
+    class Part(
             val duration: Long,
             val image: String,
             val position: Int,
@@ -28,7 +28,7 @@ data class StoryTemplate(
             val text: Text?
     )
 
-    data class Text(
+    class Text(
             @SerializedName("background_style")
             val backgroundStyle: String,
 
@@ -63,7 +63,7 @@ data class StoryTemplate(
         }
     }
 
-    data class Button(
+    class Button(
             @SerializedName("background_color")
             val backgroundColor: String,
 

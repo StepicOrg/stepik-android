@@ -50,7 +50,7 @@ constructor(
                 viewedStoryTemplateDao
                         .getAll()
                         .asSequence()
-                        .map(ViewedStoryTemplate::storyTemplateId)
+                        .map { it.storyTemplateId }
                         .toSet()
         )
     }
