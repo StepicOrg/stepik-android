@@ -6,6 +6,7 @@ import android.support.v7.widget.SearchView
 import android.view.*
 import kotlinx.android.synthetic.main.fragment_catalog.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.Client
@@ -253,6 +254,9 @@ class CatalogFragment : FragmentBase(),
                 if (position != -1) {
                     val story = storiesViewHolder.storiesAdapter.stories[position]
                     storiesPresenter.onStoryViewed(story.id)
+                    analytic.reportAmplitudeEvent(AmplitudeAnalytic.Stories.STORY_OPENED, mapOf(
+                            AmplitudeAnalytic.Stories.Values.STORY_ID to story.id
+                    ))
                 }
             }
         })

@@ -14,10 +14,12 @@ import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.view_story_plain_text_with_button.view.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.features.stories.model.PlainTextWithButtonStoryPart
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepik.android.model.StoryTemplate
+import ru.nobird.android.stories.model.Story
 import ru.nobird.android.stories.model.StoryPart
 import ru.nobird.android.stories.ui.custom.StoryView
 import ru.nobird.android.stories.ui.delegate.StoryPartViewDelegate
@@ -52,8 +54,16 @@ class PlainTextWithButtonStoryPartDelegate(
                         .placeholder(progressDrawable)
                         .into(this.storyCover)
 
+                val story = storyView.adapter?.story
+                if (story != null) {
+                    analytic.reportAmplitudeEvent(AmplitudeAnalytic.Stories.STORY_PART_OPENED, mapOf(
+                            AmplitudeAnalytic.Stories.Values.STORY_ID to story.id,
+                            AmplitudeAnalytic.Stories.Values.POSITION to position
+                    ))
+                }
+
                 setUpText(this, part.text)
-                setUpButton(this, part.button)
+                setUpButton(story, this, part.button, position)
             }
 
     private fun setUpText(view: View, text: StoryTemplate.Text?) {
@@ -83,7 +93,7 @@ class PlainTextWithButtonStoryPartDelegate(
         }
     }
 
-    private fun setUpButton(view: View, button: StoryTemplate.Button?) {
+    private fun setUpButton(story: Story?, view: View, button: StoryTemplate.Button?, position: Int) {
         val storyButton = view.storyButton
         if (button != null) {
             val backgroundDrawable = GradientDrawable()
@@ -103,6 +113,13 @@ class PlainTextWithButtonStoryPartDelegate(
             storyButton.setOnClickListener {
                 val uri = Uri.parse(button.url)
                 context.startActivity(Intent(Intent.ACTION_VIEW, uri))
+
+                if (story != null) {
+                    analytic.reportAmplitudeEvent(AmplitudeAnalytic.Stories.BUTTON_PRESSED, mapOf(
+                            AmplitudeAnalytic.Stories.Values.STORY_ID to story.id,
+                            AmplitudeAnalytic.Stories.Values.POSITION to position
+                    ))
+                }
             }
 
             storyButton.changeVisibility(true)
