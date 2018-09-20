@@ -934,7 +934,7 @@ public class ApiImpl implements Api {
     @Override
     public Observable<StoryTemplatesResponse> getStoryTemplates(int page) {
         final Locale locale = CompatibilityExtensionsKt.getDefaultLocale(Resources.getSystem().getConfiguration());
-        return loggedService.getStoryTemplate(page, false, locale.getLanguage());
+        return loggedService.getStoryTemplate(page, true, locale.getLanguage());
     }
 
     @Override
