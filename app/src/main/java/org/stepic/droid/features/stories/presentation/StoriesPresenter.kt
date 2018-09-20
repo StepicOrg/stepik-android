@@ -46,7 +46,11 @@ constructor(
                         .subscribeBy({
                             state = StoriesView.State.Empty
                         }) { (stories, viewedIds) ->
-                            state = StoriesView.State.Success(stories, viewedIds)
+                            state = if (stories.isNotEmpty()) {
+                                StoriesView.State.Success(stories, viewedIds)
+                            } else {
+                                StoriesView.State.Empty
+                            }
                         }
     }
 
