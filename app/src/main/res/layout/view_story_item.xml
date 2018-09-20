@@ -28,6 +28,7 @@
         android:layout_gravity="bottom|start"
         android:textColor="@color/white"
         android:gravity="start"
+        android:textSize="12sp"
         android:layout_margin="12dp" />
 
 </FrameLayout>
