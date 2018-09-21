@@ -4,6 +4,7 @@ import android.support.v4.app.FragmentActivity;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.stepic.droid.web.model.story_templates.StoryTemplatesResponse;
 import org.stepik.android.model.adaptive.RatingItem;
 import org.stepik.android.model.Course;
 import org.stepic.droid.model.NotificationCategory;
@@ -21,6 +22,7 @@ import org.stepik.android.model.user.User;
 import java.util.List;
 
 import io.reactivex.Completable;
+import io.reactivex.Observable;
 import io.reactivex.Single;
 import retrofit2.Call;
 
@@ -185,4 +187,6 @@ public interface Api {
     Completable putRating(long courseId, long exp);
 
     Single<RatingRestoreResponse> restoreRating(long courseId);
+
+    Observable<StoryTemplatesResponse> getStoryTemplates(int page);
 }

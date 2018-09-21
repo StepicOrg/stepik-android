@@ -5,7 +5,7 @@ import org.stepik.android.model.comments.Comment
 import org.stepik.android.model.comments.Vote
 import org.stepik.android.model.Meta
 
-data class CommentsResponse(
+class CommentsResponse(
         val detail: String?, // "You do not have permission to perform this action.", null if OK
         val target: List<String>?, // ["Invalid pk '10205111' - object does not exist."], null if OK
         val meta: Meta?, // not null, if OK

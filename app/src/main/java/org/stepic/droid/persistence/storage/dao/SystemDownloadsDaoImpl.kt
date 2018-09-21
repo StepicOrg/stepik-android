@@ -16,7 +16,7 @@ constructor(
         Observable.just(emptyList())
     } else {
         Observable.create<SystemDownloadRecord> { emitter ->
-            downloadManager.query(DownloadManager.Query().setFilterById(*ids)).use { cursor ->
+            downloadManager.query(DownloadManager.Query().setFilterById(*ids))?.use { cursor ->
                 while (cursor.moveToNext()) {
                     emitter.onNext(SystemDownloadRecord(
                             id = cursor.getLong(cursor.getColumnIndex(DownloadManager.COLUMN_ID)),

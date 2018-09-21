@@ -12,6 +12,7 @@ import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.storage.dao.AdaptiveExpDao
 import org.stepic.droid.storage.dao.IDao
 import org.stepic.droid.features.deadlines.storage.dao.PersonalDeadlinesDao
+import org.stepic.droid.features.stories.model.ViewedStoryTemplate
 import org.stepic.droid.storage.dao.SearchQueryDao
 import org.stepic.droid.storage.structure.*
 import org.stepic.droid.util.AppConstants
@@ -48,7 +49,8 @@ class DatabaseFacade
         private val externalVideoUrlDao: IDao<DbVideoUrl>,
         private val blockDao: IDao<BlockPersistentWrapper>,
         private val personalDeadlinesDao: PersonalDeadlinesDao,
-        private val deadlinesBannerDao: DeadlinesBannerDao
+        private val deadlinesBannerDao: DeadlinesBannerDao,
+        private val viewedStoryTemplatesDao: IDao<ViewedStoryTemplate>
 ) {
 
     fun dropDatabase() {
@@ -73,6 +75,7 @@ class DatabaseFacade
         adaptiveExpDao.removeAll()
         personalDeadlinesDao.removeAll()
         deadlinesBannerDao.removeAll()
+        viewedStoryTemplatesDao.removeAll()
     }
 
     fun getCourseDao(table: Table) =

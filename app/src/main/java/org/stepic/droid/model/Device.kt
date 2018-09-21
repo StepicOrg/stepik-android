@@ -2,7 +2,7 @@ package org.stepic.droid.model
 
 import com.google.gson.annotations.SerializedName
 
-data class Device(
+class Device(
         var id: Long = 0,
         var registration_id: String? = null,
         var user: Long = 0,
