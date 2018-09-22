@@ -12,6 +12,7 @@ buildscript {
         google()
         maven { url "https://jitpack.io" }
         maven { url "https://maven.fabric.io/public" }
+        maven { url "https://dl.bintray.com/eadm/ru.nobird.android" }
     }
     dependencies {
         classpath gradlePlugins.android
@@ -27,7 +28,12 @@ allprojects {
         jcenter()
         google()
         maven { url "https://jitpack.io" }
+        maven { url "https://dl.bintray.com/eadm/ru.nobird.android" }
     }
+}
+
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
 }
 
 task clean(type: Delete) {

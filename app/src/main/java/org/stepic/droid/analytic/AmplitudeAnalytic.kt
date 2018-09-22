@@ -81,4 +81,23 @@ interface AmplitudeAnalytic {
 
         const val PARAM_SUGGESTION = "suggestion"
     }
+
+    object Stories {
+        const val STORY_OPENED = "Story opened"
+        const val STORY_PART_OPENED = "Story part opened"
+        const val BUTTON_PRESSED = "Button pressed"
+        const val STORY_CLOSED = "Story closed"
+
+        object Values {
+            const val STORY_ID = "id"
+            const val POSITION = "position"
+            const val CLOSE_TYPE = "type"
+
+            object CloseTypes {
+                const val AUTO = "automatic"
+                const val SWIPE = "swipe"
+                const val CROSS = "cross"
+            }
+        }
+    }
 }

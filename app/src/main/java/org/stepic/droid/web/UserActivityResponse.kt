@@ -4,7 +4,8 @@ import com.google.gson.annotations.SerializedName
 import org.stepik.android.model.user.UserActivity
 import org.stepik.android.model.Meta
 
-data class UserActivityResponse(
+class UserActivityResponse(
         val meta: Meta?,
         @SerializedName("user-activities")
-        val userActivities: List<UserActivity>)
+        val userActivities: List<UserActivity>
+)

@@ -3,11 +3,13 @@ package org.stepic.droid.web;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.web.model.adaptive.RecommendationReactionsRequest;
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
+import org.stepic.droid.web.model.story_templates.StoryTemplatesResponse;
 import org.stepik.android.model.EnrollmentWrapper;
 
 import java.util.List;
 
 import io.reactivex.Completable;
+import io.reactivex.Observable;
 import io.reactivex.Single;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -243,5 +245,12 @@ public interface StepicRestLoggedService {
     @POST("api/recommendation-reactions")
     Completable createRecommendationReaction(
             @Body final RecommendationReactionsRequest reactionsRequest
+    );
+
+    @GET("api/story-templates")
+    Observable<StoryTemplatesResponse> getStoryTemplate(
+            @Query("page") final int page,
+            @Query("is_published") final boolean isPublished,
+            @Query("language") final String language
     );
 }

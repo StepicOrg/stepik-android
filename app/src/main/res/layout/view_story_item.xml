@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/stories_size"
+    android:layout_height="@dimen/stories_size"
+    android:layout_margin="8dp"
+    android:foreground="@drawable/story_view_foreground">
+
+    <ImageView
+        android:id="@+id/storyCover"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="4dp"
+        android:contentDescription="@null" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/story_view_tint_foreground"
+        android:layout_margin="4dp" />
+
+    <View
+        android:id="@+id/activeStoryMarker"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/active_story_marker"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/storyTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:textColor="@color/white"
+        android:gravity="start"
+        android:textSize="12sp"
+        android:layout_margin="12dp" />
+
+</FrameLayout>

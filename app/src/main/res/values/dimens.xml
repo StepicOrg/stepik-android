@@ -195,4 +195,7 @@
 
     <dimen name="achievement_tile_height">80dp</dimen>
     <dimen name="achievement_details_dialog_width">@dimen/wrap_content</dimen>
+
+    <dimen name="stories_default_corner_radius">16dp</dimen>
+    <dimen name="stories_size">96dp</dimen>
 </resources>
