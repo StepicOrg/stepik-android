@@ -32,6 +32,10 @@ allprojects {
     }
 }
 
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
+
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
