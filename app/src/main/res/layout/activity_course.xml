@@ -15,7 +15,16 @@
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/courseCollapsingToolbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/courseCover"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:contentDescription="@null"
+                android:scaleType="centerCrop"
+                app:layout_collapseMode="parallax"
+                app:layout_collapseParallaxMultiplier="0.5" />
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/courseToolbar"
