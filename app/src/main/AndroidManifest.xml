@@ -377,6 +377,7 @@
             android:name=".features.stories.ui.activity.StoriesActivity"
             android:theme="@style/StoryActivityTheme"
             android:screenOrientation="portrait" />
+        <activity android:name=".features.course.ui.activity.CourseActivity" />
 
         <receiver
             android:name="org.stepic.droid.receivers.DownloadClickReceiver"

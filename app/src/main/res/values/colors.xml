@@ -175,4 +175,7 @@
 
     <color name="placeholder_button_pressed_color">@color/light_rounded_pressed_color</color>
     <color name="placeholder_button_stroke_color">#CDCDCD</color>
+
+    <!-- course -->
+    <color name="course_appbar_separator">#9b9b9b</color>
 </resources>
