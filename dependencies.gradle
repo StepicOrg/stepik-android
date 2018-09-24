@@ -29,6 +29,7 @@ ext.versions = [
         jsoup                : '1.8.3',
 
         glide                : '3.7.0',
+        glideTransformations : '2.0.2',
 
         amplitude            : '2.14.1',
         appMetrica           : '2.78',
@@ -110,6 +111,7 @@ ext.libraries = [
         stethoOkHttp         : "com.facebook.stetho:stetho-okhttp3:$versions.stetho",
 
         glide                : "com.github.bumptech.glide:glide:$versions.glide",
+        glideTransformations : "jp.wasabeef:glide-transformations:$versions.glideTransformations",
 
         amplitude            : "com.amplitude:android-sdk:$versions.amplitude",
         appMetrica           : "com.yandex.android:mobmetricalib:$versions.appMetrica",
