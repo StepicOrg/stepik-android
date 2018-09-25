@@ -18,7 +18,7 @@
             android:id="@+id/courseCollapsingToolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
             <ImageView
                 android:id="@+id/courseCover"
@@ -91,7 +91,6 @@
                 android:id="@+id/courseToolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?actionBarSize"
-                theme="@android:style/ThemeOverlay.Material.Dark.ActionBar"
                 app:layout_collapseMode="pin" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
