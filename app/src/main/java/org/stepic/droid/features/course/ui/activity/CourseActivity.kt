@@ -1,8 +1,8 @@
 package org.stepic.droid.features.course.ui.activity
 
 import android.os.Bundle
-import android.util.Log
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import jp.wasabeef.glide.transformations.BlurTransformation
 import kotlinx.android.synthetic.main.activity_course.*
 import org.stepic.droid.R
@@ -29,8 +29,7 @@ class CourseActivity : FragmentActivityBase() {
 
         Glide.with(this)
                 .load(config.baseUrl + course.cover)
-                .bitmapTransform(BlurTransformation(this, 15))
-                .centerCrop()
+                .bitmapTransform(CenterCrop(this), BlurTransformation(this))
                 .into(courseCover)
     }
 }
