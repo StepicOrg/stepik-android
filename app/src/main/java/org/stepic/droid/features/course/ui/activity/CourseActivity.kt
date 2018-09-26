@@ -1,6 +1,8 @@
 package org.stepic.droid.features.course.ui.activity
 
+import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
 import android.support.v7.widget.AppCompatDrawableManager
 import android.view.Menu
 import android.view.MenuItem
@@ -24,6 +26,13 @@ class CourseActivity : FragmentActivityBase() {
         RoundedBitmapImageViewTarget(resources.getDimension(R.dimen.course_image_radius), courseCoverSmall)
     }
 
+    private val courseCoverSmallPlaceHolder by lazy {
+        val coursePlaceholderBitmap = BitmapFactory.decodeResource(resources, R.drawable.general_placeholder)
+        val circularBitmapDrawable = RoundedBitmapDrawableFactory.create(resources, coursePlaceholderBitmap)
+        circularBitmapDrawable.cornerRadius = resources.getDimension(R.dimen.course_image_radius)
+        circularBitmapDrawable
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_course)
@@ -39,12 +48,14 @@ class CourseActivity : FragmentActivityBase() {
 
         Glide.with(this)
                 .load(config.baseUrl + course.cover)
+                .placeholder(R.drawable.general_placeholder)
                 .bitmapTransform(CenterCrop(this), BlurTransformation(this))
                 .into(courseCover)
 
         Glide.with(this)
                 .load(config.baseUrl + course.cover)
                 .asBitmap()
+                .placeholder(courseCoverSmallPlaceHolder)
                 .centerCrop()
                 .into(courseCoverSmallTarget)
 
