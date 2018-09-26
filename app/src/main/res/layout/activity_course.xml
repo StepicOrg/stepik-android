@@ -9,8 +9,6 @@
         android:id="@+id/courseAppBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/StepikTheme.Dark"
-        theme="@style/StepikTheme.Dark"
         android:elevation="0dp"
         app:elevation="0dp">
 
@@ -60,18 +58,19 @@
                 <LinearLayout
                     android:id="@+id/courseInfo"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/course_info_height_expanded"
                     android:orientation="horizontal"
                     android:layout_marginLeft="?actionBarSize"
                     android:layout_marginRight="?actionBarSize"
                     android:layout_marginTop="16dp"
-                    android:layout_marginBottom="16dp"
+                    android:layout_marginBottom="@dimen/course_info_margin_expanded"
                     android:gravity="center">
 
                     <ImageView
                         android:id="@+id/courseCoverSmall"
                         android:layout_width="36dp"
                         android:layout_height="36dp"
+                        android:scaleType="centerCrop"
                         android:contentDescription="@null"/>
 
                     <TextView

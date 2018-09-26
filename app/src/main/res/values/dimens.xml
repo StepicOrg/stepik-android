@@ -198,4 +198,8 @@
 
     <dimen name="stories_default_corner_radius">16dp</dimen>
     <dimen name="stories_size">96dp</dimen>
+
+
+    <dimen name="course_info_height_expanded">36dp</dimen>
+    <dimen name="course_info_margin_expanded">16dp</dimen>
 </resources>

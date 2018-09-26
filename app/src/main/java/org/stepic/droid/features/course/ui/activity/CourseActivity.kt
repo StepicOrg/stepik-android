@@ -48,13 +48,16 @@ class CourseActivity : FragmentActivityBase() {
 
         courseTitle.text = course.title
 
+        val courseInfoHeightExpanded = resources.getDimension(R.dimen.course_info_height_expanded)
+        val courseInfoMarginExpanded = resources.getDimension(R.dimen.course_info_margin_expanded)
+
         courseAppBar.addOnOffsetChangedListener { _, verticalOffset ->
             val ratio = Math.abs(verticalOffset).toFloat() / (courseCollapsingToolbar.height - courseToolbar.height)
 
             courseCover.alpha = 1f - ratio
             courseInfo.layoutParams = (courseInfo.layoutParams as LinearLayout.LayoutParams).apply {
-                bottomMargin = (32 - 32 * ratio).toInt()
-                height = (72 + (92 - 72) * ratio).toInt()
+                bottomMargin = (courseInfoMarginExpanded * (1 - ratio)).toInt()
+                height = (courseInfoHeightExpanded + (courseToolbar.height - courseInfoHeightExpanded) * ratio).toInt()
             }
         }
     }
