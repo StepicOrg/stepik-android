@@ -11,6 +11,7 @@ import kotlinx.android.synthetic.main.activity_course.*
 import org.stepic.droid.R
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
+import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.AppConstants
 import org.stepik.android.model.Course
 
@@ -48,6 +49,19 @@ class CourseActivity : FragmentActivityBase() {
 
         courseTitle.text = course.title
 
+        courseRating.total = 5
+        courseRating.progress = 3
+
+        courseProgress.progress = .77f
+        courseProgressText.text = "77%"
+
+
+        courseLearnersCount.text = course.learnersCount.toString()
+
+        initCollapsingAnimation()
+    }
+
+    private fun initCollapsingAnimation() {
         val courseInfoHeightExpanded = resources.getDimension(R.dimen.course_info_height_expanded)
         val courseInfoMarginExpanded = resources.getDimension(R.dimen.course_info_margin_expanded)
 

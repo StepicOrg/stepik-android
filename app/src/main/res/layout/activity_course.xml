@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/courseAppBar"
@@ -51,7 +51,62 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginTop="16dp">
+                    android:layout_marginTop="16dp"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center">
+
+                    <org.stepic.droid.features.achievements.ui.custom.VectorRatingBar
+                        android:id="@+id/courseRating"
+                        app:backgroundIcon="@drawable/ic_progress_star_white"
+                        app:secondaryIcon="@drawable/ic_progress_star_white"
+                        app:progressIcon="@drawable/ic_progress_star_green_filled"
+                        app:itemsGap="2dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="10dp"
+
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"/>
+
+                    <TextView
+                        android:id="@+id/courseLearnersCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+
+                        android:drawableStart="@drawable/ic_learners"
+                        android:drawableLeft="@drawable/ic_learners"
+                        android:drawableTint="@color/white"
+                        android:drawablePadding="4dp"
+
+                        android:textSize="12sp"
+                        android:textColor="@color/white"
+                        fontPath="fonts/Roboto-Light.ttf"
+                        tools:text="999K"
+                        tools:ignore="MissingPrefix" />
+
+                    <org.stepic.droid.ui.custom.CircleProgressView
+                        android:id="@+id/courseProgress"
+                        android:layout_width="11dp"
+                        android:layout_height="11dp"
+                        android:layout_marginLeft="8dp"
+                        app:progressBackgroundColor="@color/white"
+                        app:progressBarStroke="@dimen/course_item_progress_bar_size"/>
+
+                    <TextView
+                        android:id="@+id/courseProgressText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:layout_marginLeft="4dp"
+                        android:layout_marginRight="8dp"
+
+                        android:textSize="12sp"
+                        android:textColor="@color/white"
+                        fontPath="fonts/Roboto-Light.ttf"
+                        tools:ignore="MissingPrefix"
+                        tools:text="77%"/>
 
                 </LinearLayout>
 
