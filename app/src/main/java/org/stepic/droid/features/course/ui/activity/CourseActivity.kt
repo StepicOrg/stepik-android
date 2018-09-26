@@ -5,16 +5,14 @@ import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
 import android.support.v7.widget.AppCompatDrawableManager
-import android.view.Menu
 import android.view.MenuItem
-import android.view.ViewGroup
 import android.widget.LinearLayout
-import android.widget.TabHost
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import jp.wasabeef.glide.transformations.BlurTransformation
 import kotlinx.android.synthetic.main.activity_course.*
+import kotlinx.android.synthetic.main.header_course.*
 import org.stepic.droid.R
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.features.course.ui.adapter.CoursePagerAdapter
@@ -131,11 +129,6 @@ class CourseActivity : FragmentActivityBase() {
                 height = (courseInfoHeightExpanded + (courseToolbar.height - courseInfoHeightExpanded) * ratio).toInt()
             }
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.share_menu, menu)
-        return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?) =
