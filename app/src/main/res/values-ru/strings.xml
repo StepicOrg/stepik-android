@@ -677,5 +677,9 @@
 
     <string name="downloads_view_cant_remove">Невозможно удалить загрузку</string>
 
+    <!-- Course -->
     <string name="course_verified">Проверенный</string>
+    <string name="course_tab_info">Инфо</string>
+    <string name="course_tab_reviews">Отзывы</string>
+    <string name="course_tab_modules">Модули</string>
 </resources>

@@ -309,8 +309,7 @@
     <style name="CourseWidgetPropertyTextView.15" parent="android:Widget.Holo.Light.TextView">
         <item name="android:textSize">@dimen/course_item_property_text_size</item>
         <item name="android:layout_marginLeft">@dimen/course_item_property_text_image_margin</item>
-        <item name="android:layout_marginRight">@dimen/course_item_property_between_items_margin
-        </item>
+        <item name="android:layout_marginRight">@dimen/course_item_property_between_items_margin</item>
         <item name="fontPath">fonts/Roboto-Light.ttf</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -463,5 +462,11 @@
 
         <item name="bpBodySelectedTextColor">@color/new_accent_color</item>
         <item name="bpBodyUnselectedTextColor">@color/text_color</item>
+    </style>
+
+    <style name="CourseTabAppearance">
+        <item name="fontPath">fonts/Roboto-Light.ttf</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/new_accent_color</item>
     </style>
 </resources>

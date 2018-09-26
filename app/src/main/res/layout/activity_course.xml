@@ -168,7 +168,15 @@
         <android.support.design.widget.TabLayout
             android:id="@+id/courseTabs"
             android:layout_width="match_parent"
-            android:layout_height="?actionBarSize" />
+            android:layout_height="?actionBarSize"
+            android:background="@color/course_tabbar_color"
+            app:tabMode="scrollable"
+            app:tabIndicatorColor="@color/new_accent_color"
+            app:tabIndicatorHeight="2dp"
+            app:tabSelectedTextColor="@color/new_accent_color"
+            app:tabTextAppearance="@style/CourseTabAppearance"
+            app:tabPaddingStart="24dp"
+            app:tabPaddingEnd="24dp" />
 
         <View
             android:layout_width="match_parent"
@@ -177,19 +185,10 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <!--<android.support.v4.view.ViewPager-->
-        <!--android:id="@+id/coursePager"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--app:layout_behavior="@string/appbar_scrolling_view_behavior" />-->
-
-    <android.support.v4.widget.NestedScrollView
+    <android.support.v4.view.ViewPager
+        android:id="@+id/coursePager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-        <android.support.v7.widget.LinearLayoutCompat
-            android:layout_width="match_parent"
-            android:layout_height="20000dp" />
-    </android.support.v4.widget.NestedScrollView>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 </android.support.design.widget.CoordinatorLayout>
