@@ -1,6 +1,7 @@
 package org.stepic.droid.features.course.ui.activity
 
 import android.os.Bundle
+import android.support.v7.widget.AppCompatDrawableManager
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.LinearLayout
@@ -59,6 +60,11 @@ class CourseActivity : FragmentActivityBase() {
         courseLearnersCount.text = course.learnersCount.toString()
 
         initCollapsingAnimation()
+    }
+
+    private fun initVerified() {
+        val verifiedDrawable = AppCompatDrawableManager.get().getDrawable(this, R.drawable.ic_verified)
+        courseVerified.setCompoundDrawablesWithIntrinsicBounds(verifiedDrawable, null, null, null)
     }
 
     private fun initCollapsingAnimation() {

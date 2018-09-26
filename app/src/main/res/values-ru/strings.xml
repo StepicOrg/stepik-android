@@ -676,4 +676,6 @@
 
 
     <string name="downloads_view_cant_remove">Невозможно удалить загрузку</string>
+
+    <string name="course_verified">Проверенный</string>
 </resources>

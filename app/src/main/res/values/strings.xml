@@ -692,4 +692,6 @@
 
 
     <string name="downloads_view_cant_remove">Can\'t remove item</string>
+
+    <string name="course_verified">Verified</string>
 </resources>

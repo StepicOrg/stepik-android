@@ -53,7 +53,7 @@
                     android:orientation="horizontal"
                     android:layout_marginTop="16dp"
                     android:layout_gravity="center_horizontal"
-                    android:gravity="center">
+                    android:gravity="center_vertical">
 
                     <org.stepic.droid.features.achievements.ui.custom.VectorRatingBar
                         android:id="@+id/courseRating"
@@ -62,23 +62,23 @@
                         app:progressIcon="@drawable/ic_progress_star_green_filled"
                         app:itemsGap="2dp"
                         android:layout_width="wrap_content"
-                        android:layout_height="10dp"
+                        android:layout_height="11dp"
 
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginRight="8dp"/>
+                        android:layout_marginLeft="6dp"
+                        android:layout_marginRight="6dp"/>
 
                     <TextView
                         android:id="@+id/courseLearnersCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
 
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginRight="8dp"
+                        android:layout_marginLeft="6dp"
+                        android:layout_marginRight="6dp"
 
                         android:drawableStart="@drawable/ic_learners"
                         android:drawableLeft="@drawable/ic_learners"
                         android:drawableTint="@color/white"
-                        android:drawablePadding="4dp"
+                        android:drawablePadding="2dp"
 
                         android:textSize="12sp"
                         android:textColor="@color/white"
@@ -88,9 +88,9 @@
 
                     <org.stepic.droid.ui.custom.CircleProgressView
                         android:id="@+id/courseProgress"
-                        android:layout_width="11dp"
-                        android:layout_height="11dp"
-                        android:layout_marginLeft="8dp"
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:layout_marginLeft="6dp"
                         app:progressBackgroundColor="@color/white"
                         app:progressBarStroke="@dimen/course_item_progress_bar_size"/>
 
@@ -98,15 +98,31 @@
                         android:id="@+id/courseProgressText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:gravity="center"
 
-                        android:layout_marginLeft="4dp"
-                        android:layout_marginRight="8dp"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginRight="6dp"
 
                         android:textSize="12sp"
                         android:textColor="@color/white"
                         fontPath="fonts/Roboto-Light.ttf"
                         tools:ignore="MissingPrefix"
                         tools:text="77%"/>
+
+                    <TextView
+                        android:id="@+id/courseVerified"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:layout_marginLeft="6dp"
+                        android:layout_marginRight="6dp"
+                        android:drawablePadding="4dp"
+
+                        android:text="@string/course_verified"
+                        android:textSize="12sp"
+                        android:textColor="@color/white"
+                        fontPath="fonts/Roboto-Light.ttf"
+                        tools:ignore="MissingPrefix" />
 
                 </LinearLayout>
 
