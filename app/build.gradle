@@ -136,6 +136,7 @@ dependencies {
     debugImplementation libraries.stethoOkHttp
 
     implementation libraries.glide
+    implementation libraries.glideTransformations
 
     implementation libraries.amplitude
     implementation libraries.appMetrica

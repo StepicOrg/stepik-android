@@ -3,15 +3,15 @@
     <item android:state_pressed="true">
         <shape
             android:shape="rectangle">
-            <corners android:radius="@dimen/fast_continue_action_radius"/>
-            <solid android:color="@color/pressed_white"/>
+            <corners android:radius="@dimen/header_action_radius"/>
+            <solid android:color="@color/stepic_brand_primary_dark"/>
         </shape>
     </item>
     <item>
         <shape
             android:shape="rectangle">
-            <corners android:radius="@dimen/fast_continue_action_radius"/>
-            <solid android:color="@color/white"/>
+            <corners android:radius="@dimen/header_action_radius"/>
+            <solid android:color="@color/stepic_brand_primary"/>
         </shape>
     </item>
 </selector>

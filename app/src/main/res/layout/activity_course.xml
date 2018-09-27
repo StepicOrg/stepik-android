@@ -9,28 +9,46 @@
         android:id="@+id/courseAppBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:theme="@style/StepikTheme.DarkActionBar"
         android:elevation="0dp"
         app:elevation="0dp">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/courseCollapsingToolbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
+
+            <ImageView
+                android:id="@+id/courseCover"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@null"
+                app:layout_collapseMode="parallax"
+                app:layout_collapseParallaxMultiplier="0.5" />
+
+            <include layout="@layout/header_course" />
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/courseToolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?actionBarSize"
-                app:layout_collapseMode="pin">
-
-            </android.support.v7.widget.Toolbar>
+                app:layout_collapseMode="pin" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
         <android.support.design.widget.TabLayout
             android:id="@+id/courseTabs"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="?actionBarSize"
+            android:background="@color/course_tabbar_color"
+            app:tabMode="scrollable"
+            app:tabIndicatorColor="@color/new_accent_color"
+            app:tabIndicatorHeight="2dp"
+            app:tabSelectedTextColor="@color/new_accent_color"
+            app:tabTextAppearance="@style/CourseTabAppearance"
+            app:tabPaddingStart="24dp"
+            app:tabPaddingEnd="24dp" />
 
         <View
             android:layout_width="match_parent"
@@ -41,8 +59,8 @@
 
     <android.support.v4.view.ViewPager
         android:id="@+id/coursePager"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 </android.support.design.widget.CoordinatorLayout>

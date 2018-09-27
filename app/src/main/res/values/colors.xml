@@ -177,5 +177,6 @@
     <color name="placeholder_button_stroke_color">#CDCDCD</color>
 
     <!-- course -->
-    <color name="course_appbar_separator">#9b9b9b</color>
+    <color name="course_appbar_separator">#cccccc</color>
+    <color name="course_tabbar_color">#F6F6F6</color>
 </resources>

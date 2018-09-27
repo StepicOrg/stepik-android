@@ -692,4 +692,10 @@
 
 
     <string name="downloads_view_cant_remove">Can\'t remove item</string>
+
+    <!-- Course -->
+    <string name="course_verified">Verified</string>
+    <string name="course_tab_info">Info</string>
+    <string name="course_tab_reviews">Reviews</string>
+    <string name="course_tab_modules">Modules</string>
 </resources>
