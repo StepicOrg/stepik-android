@@ -1,5 +1,6 @@
 package org.stepic.droid.features.course.ui.adapter.course_info
 
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -7,9 +8,11 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import kotlinx.android.synthetic.main.view_course_info_block.view.*
+import kotlinx.android.synthetic.main.view_course_info_instructors_block.view.*
 import kotlinx.android.synthetic.main.view_course_info_text_block.view.*
 import org.stepic.droid.R
 import org.stepic.droid.features.course.ui.model.course_info.CourseInfoBlock
+import org.stepic.droid.features.course.ui.model.course_info.CourseInfoInstructorsBlock
 import org.stepic.droid.features.course.ui.model.course_info.CourseInfoTextBlock
 import org.stepic.droid.features.course.ui.model.course_info.CourseInfoType
 import java.lang.IllegalStateException
@@ -41,7 +44,10 @@ class CourseInfoBlockAdapter : RecyclerView.Adapter<CourseInfoBlockAdapter.Cours
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): CourseInfoViewHolder<CourseInfoBlock> =
             when(viewType) {
-                VIEW_TYPE_INSTRUCTORS_BLOCK -> TODO()
+                VIEW_TYPE_INSTRUCTORS_BLOCK ->
+                    CourseInfoInstructorsBlockViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.view_course_info_instructors_block, parent, false))
+                            as CourseInfoViewHolder<CourseInfoBlock>
+
                 VIEW_TYPE_TEXT_BLOCK ->
                     CourseInfoTextBlockViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.view_course_info_text_block, parent, false))
                             as CourseInfoViewHolder<CourseInfoBlock>
@@ -63,11 +69,29 @@ class CourseInfoBlockAdapter : RecyclerView.Adapter<CourseInfoBlockAdapter.Cours
             }
 
             VIEW_TYPE_INSTRUCTORS_BLOCK -> {
-
+                holder as CourseInfoInstructorsBlockViewHolder
+                block as CourseInfoInstructorsBlock
+                holder.onBind(block)
             }
         }
     }
 
+    class CourseInfoInstructorsBlockViewHolder(root: View) : CourseInfoViewHolder<CourseInfoInstructorsBlock>(root) {
+        private val adapter = CourseInfoInstructorsAdapter()
+
+        init {
+            root.blockInstructors.let {
+                it.adapter = adapter
+                it.layoutManager = LinearLayoutManager(root.context)
+            }
+        }
+
+        override fun onBind(data: CourseInfoInstructorsBlock) {
+            super.onBind(data)
+
+            adapter.instructors = data.instructors
+        }
+    }
 
     class CourseInfoTextBlockViewHolder(root: View) : CourseInfoViewHolder<CourseInfoTextBlock>(root) {
         private val blockMessage = root.blockMessage
