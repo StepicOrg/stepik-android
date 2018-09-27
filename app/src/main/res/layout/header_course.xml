@@ -14,13 +14,13 @@
         android:id="@+id/courseAction"
         style="@style/CourseWidgetView"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/fast_continue_action_height"
+        android:layout_height="@dimen/header_action_height"
         android:minWidth="200dp"
-        android:background="@drawable/fast_continue_action_background"
+        android:background="@drawable/header_action_background_white"
         android:paddingEnd="@dimen/guideline_standard_padding"
         android:paddingStart="@dimen/guideline_standard_padding"
         android:text="@string/continue_learning"
-        android:textSize="@dimen/fast_continue_action_text_size"
+        android:textSize="@dimen/header_action_text_size"
         android:layout_marginTop="?actionBarSize" />
 
     <LinearLayout
