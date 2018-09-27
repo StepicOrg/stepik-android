@@ -12,7 +12,9 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/courseInfoRecycler"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:padding="@dimen/course_info_block_margin"
+            android:clipToPadding="false" />
 
     </android.support.v4.widget.NestedScrollView>
 
