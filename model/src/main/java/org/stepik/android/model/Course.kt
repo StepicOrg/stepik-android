@@ -79,6 +79,9 @@ class Course(
         @SerializedName("review_summary")
         val reviewSummary: Int = 0,
 
+        @SerializedName("time_to_complete")
+        val timeToComplete: Long? = null,
+
         var progressObject: Progress? = null,
         var rating: Double = 0.0
 ): Progressable, Parcelable {
@@ -120,6 +123,7 @@ class Course(
         parcel.writeString(lastStepId)
         parcel.writeLong(learnersCount)
         parcel.writeInt(reviewSummary)
+        parcel.writeValue(timeToComplete)
         parcel.writeParcelable(progressObject, flags)
         parcel.writeDouble(rating)
     }
@@ -165,6 +169,7 @@ class Course(
                 parcel.readString(),
                 parcel.readLong(),
                 parcel.readInt(),
+                parcel.readValue(Long::class.java.classLoader) as Long?,
                 parcel.readParcelable(Progress::class.java.classLoader),
                 parcel.readDouble()
         )

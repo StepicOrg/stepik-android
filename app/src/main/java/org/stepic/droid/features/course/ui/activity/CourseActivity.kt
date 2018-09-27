@@ -84,7 +84,7 @@ class CourseActivity : FragmentActivityBase() {
         val lightFont = TypefaceUtils.load(assets, fontsProvider.provideFontPath(FontType.light))
         val regularFont = TypefaceUtils.load(assets, fontsProvider.provideFontPath(FontType.regular))
 
-        coursePager.adapter = CoursePagerAdapter(this, supportFragmentManager)
+        coursePager.adapter = CoursePagerAdapter(course, this, supportFragmentManager)
         courseTabs.setupWithViewPager(coursePager)
         courseTabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab?) {}

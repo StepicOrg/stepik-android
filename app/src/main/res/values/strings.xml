@@ -698,4 +698,13 @@
     <string name="course_tab_info">Info</string>
     <string name="course_tab_reviews">Reviews</string>
     <string name="course_tab_modules">Modules</string>
+
+    <string name="course_info_about">About</string>
+    <string name="course_info_requirements">Requirements</string>
+    <string name="course_info_target_audience">Target audience</string>
+    <string name="course_info_instructors">Instructors</string>
+    <string name="course_info_time_to_complete">Expected time to complete</string>
+    <string name="course_info_language">Language</string>
+    <string name="course_info_certificate">Certificate</string>
+    <string name="course_info_certificate_detail">Certificate details</string>
 </resources>
