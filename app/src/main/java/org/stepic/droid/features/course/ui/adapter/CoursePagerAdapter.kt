@@ -5,13 +5,14 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import org.stepic.droid.R
+import org.stepic.droid.features.course.ui.fragment.CourseInfoFragment
 
 class CoursePagerAdapter(
         context: Context,
         fragmentManager: FragmentManager
 ) : FragmentPagerAdapter(fragmentManager) {
     private val fragments = listOf(
-            ::Fragment to context.getString(R.string.course_tab_info),
+            CourseInfoFragment.Companion::newInstance to context.getString(R.string.course_tab_info),
             ::Fragment to context.getString(R.string.course_tab_reviews),
             ::Fragment to context.getString(R.string.course_tab_modules)
     )
