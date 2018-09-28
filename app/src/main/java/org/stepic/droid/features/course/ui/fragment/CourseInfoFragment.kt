@@ -2,6 +2,7 @@ package org.stepic.droid.features.course.ui.fragment
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.view.ViewCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -40,6 +41,7 @@ class CourseInfoFragment : Fragment() {
 
         courseInfoRecycler.layoutManager = LinearLayoutManager(context)
         courseInfoRecycler.adapter = adapter
+        ViewCompat.setNestedScrollingEnabled(courseInfoRecycler, false)
 
         setCourseInfo(course)
     }
