@@ -395,7 +395,7 @@ class StepikNotificationManagerImpl
             val title = context.getString(R.string.get_license_message)
             val justText: String = textResolver.fromHtml(rawMessageHtml).toString()
 
-            val intent = getLicenseIntent(notification = stepikNotification)
+            val intent = getLicenseIntent(notification = stepikNotification) ?: return
 
             val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
             taskBuilder.addNextIntent(intent)

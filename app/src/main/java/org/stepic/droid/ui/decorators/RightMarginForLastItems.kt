@@ -8,7 +8,7 @@ class RightMarginForLastItems(private val rightRecyclerPadding: Int, private val
     private var oldAdapterCount = -1
     private var lastIndex = -1
 
-    override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State?) {
+    override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
         val adapterPosition = parent.getChildAdapterPosition(view)
         if (adapterPosition >= getLastColumnStartIndex(parent)) {
             outRect.right = -rightRecyclerPadding
@@ -19,7 +19,7 @@ class RightMarginForLastItems(private val rightRecyclerPadding: Int, private val
      * Return start index of the last column
      */
     private fun getLastColumnStartIndex(parent: RecyclerView): Int {
-        val actualAdapterCount = parent.adapter.itemCount
+        val actualAdapterCount = parent.adapter?.itemCount ?: 0
         if (oldAdapterCount != actualAdapterCount) {
             //if adapter count is not actual -> make first init
             var multiplier = actualAdapterCount / rowNumber

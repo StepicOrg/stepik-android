@@ -22,8 +22,9 @@ class AdaptiveStatsActivity : FragmentActivityBase() {
         setContentView(R.layout.activity_adaptive_stats)
         initCenteredToolbar(R.string.adaptive_stats_title, true)
 
-        pager.adapter = AdaptiveStatsViewPagerAdapter(supportFragmentManager, this, intent.getLongExtra(AppConstants.KEY_COURSE_LONG_ID, 0))
-        pager.offscreenPageLimit = pager.adapter.count
+        val adapter = AdaptiveStatsViewPagerAdapter(supportFragmentManager, this, intent.getLongExtra(AppConstants.KEY_COURSE_LONG_ID, 0))
+        pager.adapter = adapter
+        pager.offscreenPageLimit = adapter.count
         tabLayout.setupWithViewPager(pager)
     }
 

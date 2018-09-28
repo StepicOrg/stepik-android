@@ -30,7 +30,7 @@ class WantMoveDataDialog : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         App.component().inject(this)
 
-        val builder = AlertDialog.Builder(activity)
+        val builder = AlertDialog.Builder(requireContext())
         builder.setTitle(R.string.title_confirmation)
                 .setMessage(R.string.move_data_explanation)
                 .setPositiveButton(R.string.yes) { _, _ ->

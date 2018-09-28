@@ -80,10 +80,10 @@ class FastContinueFragment : FragmentBase(),
                 .inject(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View?
-            = inflater?.inflate(R.layout.fragment_fast_continue, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
+            = inflater.inflate(R.layout.fragment_fast_continue, container, false)
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         courseCoverImageViewTarget = RoundedBitmapImageViewTarget(resources.getDimension(R.dimen.course_image_radius), fastContinueCourseCover)
@@ -115,20 +115,20 @@ class FastContinueFragment : FragmentBase(),
 
     override fun onAnonymous() {
         analytic.reportEvent(Analytic.FastContinue.AUTH_SHOWN)
-        showPlaceholder(R.string.placeholder_login, { _ ->
+        showPlaceholder(R.string.placeholder_login) { _ ->
             analytic.reportEvent(Analytic.FastContinue.AUTH_CLICK)
             screenManager.showLaunchScreen(context, true, MainFeedActivity.HOME_INDEX)
-        })
+        }
     }
 
     override fun onEmptyCourse() {
         // tbh: courses might be not empty, but not active
         // we can show suggestion for enroll, but not write, that you have zero courses
         analytic.reportEvent(Analytic.FastContinue.EMPTY_COURSES_SHOWN)
-        showPlaceholder(R.string.placeholder_explore_courses, { _ ->
+        showPlaceholder(R.string.placeholder_explore_courses) { _ ->
             analytic.reportEvent(Analytic.FastContinue.EMPTY_COURSES_CLICK)
             screenManager.showCatalog(context)
-        })
+        }
     }
 
     override fun onShowCourse(course: Course) {

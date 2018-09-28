@@ -160,8 +160,9 @@ class LaunchActivity : SmartLockActivityBase(), LoginView {
         socialListRecyclerView.layoutManager = GridLayoutManager(this, 3)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            socialListRecyclerView.itemAnimator = FadeInDownAnimator()
-            socialListRecyclerView.itemAnimator.removeDuration = 0
+            socialListRecyclerView.itemAnimator = FadeInDownAnimator().apply {
+                removeDuration = 0
+            }
         }
 
         val adapter = SocialAuthAdapter(this::onSocialItemClicked, state)
@@ -231,7 +232,7 @@ class LaunchActivity : SmartLockActivityBase(), LoginView {
 
     private fun redirectFromSocial(intent: Intent) {
         try {
-            val code = intent.data.getQueryParameter("code")
+            val code = intent.data?.getQueryParameter("code") ?: ""
             loginPresenter.loginWithCode(code)
         } catch (t: Throwable) {
             analytic.reportError(Analytic.Error.CALLBACK_SOCIAL, t)

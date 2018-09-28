@@ -9,6 +9,7 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepik.android.model.comments.Comment
 import org.stepic.droid.util.ProgressHelper
+import org.stepic.droid.util.argument
 import org.stepic.droid.web.Api
 import org.stepic.droid.web.CommentsResponse
 import retrofit2.Call
@@ -33,22 +34,20 @@ class DeleteCommentDialogFragment : DialogFragment() {
     lateinit var analytic: Analytic
 
     companion object {
-        private val COMMENT_ID_KEY = "comment_id_key"
-
-        fun newInstance(commentId: Long): DialogFragment {
-            val args = Bundle()
-            args.putLong(COMMENT_ID_KEY, commentId)
-            val fragment = DeleteCommentDialogFragment()
-            fragment.arguments = args
-            return fragment
-        }
+        fun newInstance(commentId: Long): DialogFragment =
+                DeleteCommentDialogFragment().also {
+                    it.commentId = commentId
+                }
     }
 
+    private var commentId by argument<Long>()
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val context = requireContext()
+
         App.component().inject(this)
         val loadingProgressDialog = LoadingProgressDialog(context)
-        val commentId = arguments.getLong(COMMENT_ID_KEY)
-        val builder = AlertDialog.Builder(activity)
+        val builder = AlertDialog.Builder(context)
         builder
                 .setTitle(R.string.title_confirmation)
                 .setMessage(R.string.delete_comment_detail)
@@ -59,7 +58,7 @@ class DeleteCommentDialogFragment : DialogFragment() {
 
                         override fun onResponse(call: Call<CommentsResponse>?, response: Response<CommentsResponse>?) {
                             ProgressHelper.dismiss(loadingProgressDialog)
-                            if (response?.isSuccessful ?: false) {
+                            if (response?.isSuccessful != true) {
                                 val comment = response?.body()?.comments?.firstOrNull()
                                 comment?.let {
                                     (targetFragment as DialogCallback).onCommentWasDeleted(it)

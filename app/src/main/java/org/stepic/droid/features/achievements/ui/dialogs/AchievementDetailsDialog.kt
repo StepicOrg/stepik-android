@@ -64,7 +64,7 @@ class AchievementDetailsDialog: DialogFragment() {
             achievementRest.changeVisibility(scoreDiff > 0)
         }
 
-        val builder = MaterialDialog.Builder(context)
+        val builder = MaterialDialog.Builder(requireContext())
                 .theme(Theme.LIGHT)
                 .customView(view, false)
 
@@ -81,8 +81,9 @@ class AchievementDetailsDialog: DialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        dialog.window.attributes = dialog.window.attributes.apply {
-            width = context.resources.getDimension(R.dimen.achievement_details_dialog_width).toInt()
+
+        dialog?.window?.attributes = dialog?.window?.attributes?.apply {
+            width = resources.getDimension(R.dimen.achievement_details_dialog_width).toInt()
         }
     }
 
@@ -93,6 +94,6 @@ class AchievementDetailsDialog: DialogFragment() {
             type = "text/plain"
         }
 
-        activity.startActivity(Intent.createChooser(intent, getString(R.string.share_title)))
+        activity?.startActivity(Intent.createChooser(intent, getString(R.string.share_title)))
     }
 }

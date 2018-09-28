@@ -13,7 +13,7 @@ class PopularCoursesFragment : CoursesDatabaseFragmentBase() {
         fun newInstance(): PopularCoursesFragment = PopularCoursesFragment()
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         this.initCenteredToolbar(R.string.popular_courses_title, false)
     }

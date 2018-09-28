@@ -1,7 +1,6 @@
 package org.stepic.droid.ui.fragments
 
 import android.app.Activity
-import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -29,16 +28,16 @@ import retrofit2.Response
 class NewCommentFragment : FragmentBase(), OnBackClickListener {
 
     companion object {
-        private val discardTextRequestCode = 913
-        private val targetKey = "targetKey"
-        private val parentKey = "parentKey"
+        private const val DISCARD_TEXT_REQUEST_CODE = 913
+        private const val TARGET_KEY = "targetKey"
+        private const val PARENT_KEY = "parentKey"
 
         fun newInstance(target: Long, parent: Long?): Fragment {
             val args = Bundle()
             if (parent != null) {
-                args.putLong(parentKey, parent)
+                args.putLong(PARENT_KEY, parent)
             }
-            args.putLong(targetKey, target)
+            args.putLong(TARGET_KEY, target)
             val fragment = NewCommentFragment()
             fragment.arguments = args
             return fragment
@@ -69,13 +68,13 @@ class NewCommentFragment : FragmentBase(), OnBackClickListener {
         retainInstance = true
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?)
-            = inflater?.inflate(R.layout.new_comment_fragment, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
+            = inflater.inflate(R.layout.new_comment_fragment, container, false)
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        target = arguments.getLong(NewCommentFragment.targetKey)
-        parent = arguments.getLong(NewCommentFragment.parentKey)
+        target = arguments?.getLong(TARGET_KEY)
+        parent = arguments?.getLong(PARENT_KEY)
         if (parent == 0L) {
             parent = null
         }
@@ -85,7 +84,7 @@ class NewCommentFragment : FragmentBase(), OnBackClickListener {
     }
 
     private fun initProgressDialog() {
-        loadingProgressDialog = LoadingProgressDialog(context)
+        loadingProgressDialog = LoadingProgressDialog(requireContext())
     }
 
     override fun onResume() {
@@ -103,7 +102,7 @@ class NewCommentFragment : FragmentBase(), OnBackClickListener {
     }
 
     private fun showSoftKeypad(editTextView: View) {
-        val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.showSoftInput(editTextView, InputMethodManager.SHOW_IMPLICIT)
     }
 
@@ -180,9 +179,9 @@ class NewCommentFragment : FragmentBase(), OnBackClickListener {
     }
 
     override fun onBackClick(): Boolean {
-        if (inputCommentForm.text?.isNotBlank() ?: false) {
+        if (inputCommentForm.text?.isNotBlank() != true) {
             val dialog = DiscardTextDialogFragment.newInstance()
-            dialog.setTargetFragment(this, discardTextRequestCode)
+            dialog.setTargetFragment(this, DISCARD_TEXT_REQUEST_CODE)
             if (!dialog.isAdded) {
                 analytic.reportEvent(Analytic.Comments.SHOW_CONFIRM_DISCARD_TEXT_DIALOG)
                 dialog.show(fragmentManager, null)
@@ -194,7 +193,7 @@ class NewCommentFragment : FragmentBase(), OnBackClickListener {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode == Activity.RESULT_OK && requestCode == discardTextRequestCode) {
+        if (resultCode == Activity.RESULT_OK && requestCode == DISCARD_TEXT_REQUEST_CODE) {
             analytic.reportEvent(Analytic.Comments.SHOW_CONFIRM_DISCARD_TEXT_DIALOG_SUCCESS)
             activity?.finish()
         }

@@ -14,6 +14,6 @@ class LoadingProgressDialogFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         isCancelable = false
-        return LoadingProgressDialog(context)
+        return LoadingProgressDialog(requireContext())
     }
 }

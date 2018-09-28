@@ -26,10 +26,10 @@ class AdaptiveOnboardingFragment: FragmentBase() {
         initOnboardingCards()
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-            inflater?.inflate(R.layout.fragment_adaptive_onboarding, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+            inflater.inflate(R.layout.fragment_adaptive_onboarding, container, false)
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         cardsContainer.setAdapter(adapter)
         initCenteredToolbar(R.string.adaptive_onboarding_title, showHomeButton = true, homeIndicatorRes = getCloseIconDrawableRes())

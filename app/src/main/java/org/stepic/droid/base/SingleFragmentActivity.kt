@@ -17,8 +17,9 @@ abstract class SingleFragmentActivity : FragmentActivityBase() {
         val fm = supportFragmentManager
         fragment = fm.findFragmentById(R.id.fragmentContainer)
 
+
         if (fragment == null) {
-            fragment = createFragment()
+            val fragment = createFragment().also { this.fragment = it }
             fm.beginTransaction()
                     .add(R.id.fragmentContainer, fragment)
 //                    .addToBackStack(fragment?.javaClass?.simpleName?:"default")

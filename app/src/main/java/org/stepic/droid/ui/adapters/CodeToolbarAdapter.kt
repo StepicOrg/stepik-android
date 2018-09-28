@@ -65,12 +65,12 @@ class CodeToolbarAdapter(private val context: Context) : RecyclerView.Adapter<Re
         notifyDataChanged(items.size - symbols.size, old, new)
     }
 
-    override fun onAttachedToRecyclerView(recyclerView: RecyclerView?) {
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
         this.recyclerView = recyclerView
     }
 
-    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView?) {
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
         this.recyclerView = null
         super.onDetachedFromRecyclerView(recyclerView)
     }

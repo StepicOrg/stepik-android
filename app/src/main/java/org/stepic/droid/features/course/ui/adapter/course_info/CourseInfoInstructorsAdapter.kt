@@ -19,8 +19,8 @@ class CourseInfoInstructorsAdapter : RecyclerView.Adapter<CourseInfoInstructorsA
             notifyDataSetChanged()
         }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): InstructorViewHolder =
-            InstructorViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.view_course_info_intstructor_item, parent, false))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): InstructorViewHolder =
+            InstructorViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.view_course_info_intstructor_item, parent, false))
 
     override fun getItemCount(): Int =
             instructors.size

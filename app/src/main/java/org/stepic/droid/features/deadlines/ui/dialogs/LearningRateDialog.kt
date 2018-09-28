@@ -39,6 +39,7 @@ class LearningRateDialog: DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val context = requireContext()
         val adapter = LearningRateAdapter(LearningRate.values(), this::selectLearningRate)
 
         val dialog = MaterialDialog.Builder(context)
@@ -48,7 +49,7 @@ class LearningRateDialog: DialogFragment() {
                 .build()
 
         val divider = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
-        divider.setDrawable(ContextCompat.getDrawable(context, R.drawable.list_divider_h))
+        divider.setDrawable(ContextCompat.getDrawable(context, R.drawable.list_divider_h)!!)
         dialog.recyclerView.addItemDecoration(divider)
         return dialog
     }

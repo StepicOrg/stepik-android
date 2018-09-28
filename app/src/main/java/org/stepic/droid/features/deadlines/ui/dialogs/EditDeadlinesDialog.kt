@@ -62,8 +62,8 @@ class EditDeadlinesDialog: DialogFragment() {
 
         super.onCreate(savedInstanceState)
 
-        sections = savedInstanceState?.getParcelableArrayList(KEY_SECTIONS) ?: arguments.getParcelableArrayList(KEY_SECTIONS)
-        deadlines = savedInstanceState?.getParcelableArrayList(KEY_DEADLINES) ?: arguments.getParcelableArrayList(KEY_DEADLINES)
+        sections = savedInstanceState?.getParcelableArrayList(KEY_SECTIONS) ?: arguments?.getParcelableArrayList(KEY_SECTIONS)!!
+        deadlines = savedInstanceState?.getParcelableArrayList(KEY_DEADLINES) ?: arguments?.getParcelableArrayList(KEY_DEADLINES)!!
 
         editedSectionId = savedInstanceState?.getLong(KEY_EDITED_SECTION_ID, -1) ?: -1
         if (editedSectionId != -1L) {
@@ -72,6 +72,8 @@ class EditDeadlinesDialog: DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val context = requireContext()
+
         val recyclerView = RecyclerView(context)
         recyclerView.layoutManager = LinearLayoutManager(context)
         adapter = EditDeadlinesAdapter(sections, deadlines) {
@@ -80,7 +82,7 @@ class EditDeadlinesDialog: DialogFragment() {
         recyclerView.adapter = adapter
 
         val divider = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
-        divider.setDrawable(ContextCompat.getDrawable(context, R.drawable.list_divider_h))
+        divider.setDrawable(ContextCompat.getDrawable(context, R.drawable.list_divider_h)!!)
         recyclerView.addItemDecoration(divider)
 
         return MaterialDialog.Builder(context)
@@ -98,9 +100,9 @@ class EditDeadlinesDialog: DialogFragment() {
                 }
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState?.apply {
+        outState.apply {
             putParcelableArrayList(KEY_SECTIONS, sections)
             putParcelableArrayList(KEY_DEADLINES, deadlines)
 

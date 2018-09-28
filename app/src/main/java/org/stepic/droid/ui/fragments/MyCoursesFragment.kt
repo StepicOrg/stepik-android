@@ -17,7 +17,7 @@ class MyCoursesFragment : CoursesDatabaseFragmentBase() {
     @NotNull
     override fun getCourseType() = Table.enrolled
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         this.initCenteredToolbar(R.string.my_courses_title)
     }

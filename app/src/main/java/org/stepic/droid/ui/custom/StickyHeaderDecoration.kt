@@ -23,7 +23,7 @@ class StickyHeaderDecoration <VH : RecyclerView.ViewHolder>
     /**
      * {@inheritDoc}
      */
-    override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State?) {
+    override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
         val position = parent.getChildAdapterPosition(view)
         var headerHeight = 0
 
@@ -104,7 +104,7 @@ class StickyHeaderDecoration <VH : RecyclerView.ViewHolder>
     /**
      * {@inheritDoc}
      */
-    override fun onDrawOver(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State?) {
+    override fun onDrawOver(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State) {
         val count = parent.childCount
         var previousHeaderId: Long = -1
 

@@ -79,11 +79,11 @@ class CatalogFragment : FragmentBase(),
         needShowLangWidget = sharedPreferenceHelper.isNeedShowLangWidget
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-            inflater?.inflate(R.layout.fragment_catalog, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+            inflater.inflate(R.layout.fragment_catalog, container, false)
 
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initCenteredToolbar(R.string.catalog_title, showHomeButton = false)
         initMainRecycler()
@@ -156,7 +156,7 @@ class CatalogFragment : FragmentBase(),
         searchView?.let {
             it.initSuggestions(catalogContainer)
             it.setCloseIconDrawableRes(getCloseIconDrawableRes())
-            it.setSearchable(activity)
+            it.setSearchable(requireActivity())
 
             it.suggestionsOnTouchListener = View.OnTouchListener { _, _ ->
                 hideSoftKeypad()
@@ -223,8 +223,8 @@ class CatalogFragment : FragmentBase(),
 
         val stories = storiesViewHolder.storiesAdapter.stories
 
-        context.startActivity(SharedTransitionIntentBuilder.createIntent(
-                context, StoriesActivity::class.java, CATALOG_STORIES_KEY, position, stories
+        requireContext().startActivity(SharedTransitionIntentBuilder.createIntent(
+                requireContext(), StoriesActivity::class.java, CATALOG_STORIES_KEY, position, stories
         ))
     }
 

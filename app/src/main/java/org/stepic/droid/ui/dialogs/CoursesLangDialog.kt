@@ -3,8 +3,6 @@ package org.stepic.droid.ui.dialogs
 import android.app.Dialog
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.Theme
@@ -46,7 +44,7 @@ class CoursesLangDialog: DialogFragment(), FiltersView {
                 getString(R.string.language_en_filter)
         )
 
-        return MaterialDialog.Builder(context)
+        return MaterialDialog.Builder(requireContext())
                 .theme(Theme.LIGHT)
                 .title(R.string.language_of_courses)
                 .adapter(adapter, LinearLayoutManager(context))
