@@ -14,7 +14,7 @@ import org.stepik.android.model.Reply
 class SortingStepFragment: DraggableStepFragment() {
 
     override fun getItemDecoration(): RecyclerView.ItemDecoration =
-            SimpleListDividerDecorator(ContextCompat.getDrawable(context, R.drawable.list_divider_h), true)
+            SimpleListDividerDecorator(ContextCompat.getDrawable(requireContext(), R.drawable.list_divider_h), true)
 
     override fun initLayoutManager(): RecyclerView.LayoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)

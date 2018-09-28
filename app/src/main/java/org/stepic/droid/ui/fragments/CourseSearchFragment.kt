@@ -50,8 +50,8 @@ class CourseSearchFragment: CourseListFragmentBase() {
         setHasOptionsMenu(true)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-        searchQuery = arguments.getString(QUERY_KEY)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        searchQuery = arguments?.getString(QUERY_KEY)
         super.onViewCreated(view, savedInstanceState)
         initCenteredToolbar(R.string.search_title, true)
         emptySearch.isClickable = false
@@ -86,7 +86,7 @@ class CourseSearchFragment: CourseListFragmentBase() {
         val searchView = searchMenuItem.actionView as AutoCompleteSearchView
 
         searchView.setCloseIconDrawableRes(getCloseIconDrawableRes())
-        searchView.setSearchable(activity)
+        searchView.setSearchable(requireActivity())
         searchView.initSuggestions(rootView)
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -109,7 +109,7 @@ class CourseSearchFragment: CourseListFragmentBase() {
             override fun onMenuItemActionExpand(item: MenuItem): Boolean = true
 
             override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
-                activity.finish()
+                activity?.finish()
                 return true
             }
         })

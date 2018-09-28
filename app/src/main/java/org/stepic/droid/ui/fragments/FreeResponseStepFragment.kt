@@ -11,7 +11,7 @@ class FreeResponseStepFragment: StepAttemptFragment() {
 
     lateinit var answerField: EditText
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         answerField = layoutInflater.inflate(R.layout.view_free_answer_attempt, attemptContainer, false) as EditText
         attemptContainer.addView(answerField)

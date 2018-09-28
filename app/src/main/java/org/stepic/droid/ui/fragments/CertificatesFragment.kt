@@ -29,15 +29,18 @@ import javax.inject.Inject
 class CertificatesFragment : FragmentBase(),
         CertificateView,
         SwipeRefreshLayout.OnRefreshListener {
+    companion object {
+        fun newInstance(): Fragment = CertificatesFragment()
+    }
 
     private var adapter: CertificatesAdapter? = null
 
     private val oldCoverColor: Int by lazy {
-        ColorUtil.getColorArgb(R.color.old_cover, context)
+        ColorUtil.getColorArgb(R.color.old_cover, requireContext())
     }
 
     private val newCoverColor: Int by lazy {
-        ColorUtil.getColorArgb(R.color.new_cover, context)
+        ColorUtil.getColorArgb(R.color.new_cover, requireContext())
     }
 
     @Inject
@@ -57,16 +60,16 @@ class CertificatesFragment : FragmentBase(),
         setHasOptionsMenu(true)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?) =
-            inflater?.inflate(R.layout.fragment_certificates, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
+            inflater.inflate(R.layout.fragment_certificates, container, false)
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         nullifyActivityBackground()
         super.onViewCreated(view, savedInstanceState)
 
         initCenteredToolbar(R.string.certificates_title, false)
 
-        adapter = CertificatesAdapter(certificatePresenter, activity)
+        adapter = CertificatesAdapter(certificatePresenter, requireActivity())
         certificateRecyclerView.layoutManager = LinearLayoutManager(context)
         certificateRecyclerView.adapter = adapter
 
@@ -167,13 +170,9 @@ class CertificatesFragment : FragmentBase(),
     override fun onOptionsItemSelected(item: MenuItem?): Boolean =
             when (item?.itemId) {
                 android.R.id.home -> {
-                    activity.finish()
+                    activity?.finish()
                     true
                 }
                 else -> super.onOptionsItemSelected(item)
             }
-
-    companion object {
-        fun newInstance(): Fragment = CertificatesFragment()
-    }
 }

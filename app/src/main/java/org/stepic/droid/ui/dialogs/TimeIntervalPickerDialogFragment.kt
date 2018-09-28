@@ -42,9 +42,9 @@ class TimeIntervalPickerDialogFragment : DialogFragment() {
         App.component().inject(this)
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState?.putInt(CHOSEN_POSITION_KEY, picker.value)
+        outState.putInt(CHOSEN_POSITION_KEY, picker.value)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -61,7 +61,7 @@ class TimeIntervalPickerDialogFragment : DialogFragment() {
             Timber.e("reflection failed -> ignore")
         }
 
-        return MaterialDialog.Builder(context)
+        return MaterialDialog.Builder(requireContext())
                 .theme(Theme.LIGHT)
                 .title(R.string.choose_notification_time_interval)
                 .customView(picker, false)

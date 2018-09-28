@@ -22,7 +22,7 @@ class OnboardingFragment : FragmentBase() {
 
     private var onboardingType: OnboardingType by argument()
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initScreen(onboardingType)
     }

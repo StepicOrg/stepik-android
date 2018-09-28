@@ -12,7 +12,7 @@ import org.stepik.android.model.Reply
 class FillBlanksFragment: StepAttemptFragment() {
     private val fillBlanksAdapter = FillBlanksAdapter()
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val fillBlanksView = layoutInflater.inflate(R.layout.view_fill_blanks, attemptContainer, false)
 

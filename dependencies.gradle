@@ -20,7 +20,7 @@ ext.versions = [
         rxAndroid            : '2.0.1',
         rxKotlin             : '2.2.0',
 
-        supportLibs          : '26.1.0',
+        supportLibs          : '28.0.0',
         constraintLayout     : '1.0.2',
         exoPlayer            : 'r2.5.3',
 

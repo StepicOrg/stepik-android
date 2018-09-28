@@ -17,7 +17,7 @@ class ClearVideosDialog : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog = AlertDialog
-            .Builder(context)
+            .Builder(requireContext())
             .setTitle(R.string.title_confirmation)
             .setMessage(R.string.clear_videos)
             .setPositiveButton(R.string.yes) { _, _ ->

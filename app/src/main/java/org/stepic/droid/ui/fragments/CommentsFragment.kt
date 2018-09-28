@@ -52,10 +52,6 @@ class CommentsFragment : FragmentBase(),
         DeleteCommentDialogFragment.DialogCallback,
         VoteView {
     companion object {
-        private val discussionIdKey = "dis_id_key"
-        private val stepIdKey = "stepId"
-        private val needInstaOpenKey = "needInstaOpenKey"
-
         private val replyMenuId = 100
         private val likeMenuId = 101
         private val unLikeMenuId = 102
@@ -68,24 +64,18 @@ class CommentsFragment : FragmentBase(),
         var firstLinkShift = 0
 
 
-        fun newInstance(discussionId: String, stepId: Long, needInstaOpen: Boolean): Fragment {
-            val args = Bundle()
-            args.putString(discussionIdKey, discussionId)
-            args.putLong(stepIdKey, stepId)
-            args.putBoolean(needInstaOpenKey, needInstaOpen)
-            val fragment = CommentsFragment()
-            fragment.arguments = args
-            return fragment
-        }
+        fun newInstance(discussionId: String, stepId: Long, needInstaOpen: Boolean): Fragment =
+                CommentsFragment().also {
+                    it.discussionId = discussionId
+                    it.stepId = stepId
+                    it.needInstaOpen = needInstaOpen
+                }
     }
 
     @Inject
     lateinit var commentManager: CommentManager
 
     lateinit var commentAdapter: CommentsAdapter
-
-    lateinit var discussionId: String
-    var stepId: Long? = null
 
     var needInsertOrUpdateLate: Comment? = null
     val links = ArrayList<String>()
@@ -102,12 +92,15 @@ class CommentsFragment : FragmentBase(),
     @Inject
     lateinit var commentCountPoster: CommentCountPoster
 
+    private var discussionId: String by argument()
+    private var stepId: Long by argument()
+    private var needInstaOpen: Boolean by argument()
+
 
     override fun injectComponent() {
-        stepId = arguments.getLong(stepIdKey)
         App
                 .componentManager()
-                .stepComponent(stepId!!)
+                .stepComponent(stepId)
                 .commentsComponentBuilder()
                 .build()
                 .inject(this)
@@ -117,7 +110,7 @@ class CommentsFragment : FragmentBase(),
         super.onReleaseComponent()
         App
                 .componentManager()
-                .releaseStepComponent(stepId!!)
+                .releaseStepComponent(stepId)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -126,12 +119,11 @@ class CommentsFragment : FragmentBase(),
     }
 
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?)
-            = inflater?.inflate(R.layout.fragment_comments, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
+            inflater.inflate(R.layout.fragment_comments, container, false)
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        discussionId = arguments.getString(discussionIdKey)
         setHasOptionsMenu(true)
         initToolbar()
         initSwipeRefreshLayout()
@@ -144,10 +136,9 @@ class CommentsFragment : FragmentBase(),
 
 
         //open form requested from caller
-        val needInstaOpenForm = arguments.getBoolean(needInstaOpenKey)
-        if (needInstaOpenForm) {
+        if (needInstaOpen) {
             screenManager.openNewCommentForm(this, stepId, null)
-            arguments.putBoolean(needInstaOpenKey, false)
+            needInstaOpen = false
         }
 
         showEmptyProgressOnCenter()
@@ -168,9 +159,7 @@ class CommentsFragment : FragmentBase(),
 
     private fun initAddCommentButton() {
         addNewCommentButton.setOnClickListener {
-            stepId?.let {
-                screenManager.openNewCommentForm(this, it, null)
-            }
+            screenManager.openNewCommentForm(this, stepId, null)
         }
     }
 
@@ -325,7 +314,7 @@ class CommentsFragment : FragmentBase(),
                 ClipData.newPlainText(label, plainText)
             }
 
-            val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            val clipboardManager = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             clipboardManager.primaryClip = clipData
 
             Toast.makeText(context, R.string.done, Toast.LENGTH_SHORT).show()
@@ -337,7 +326,7 @@ class CommentsFragment : FragmentBase(),
         val comment: Comment? = commentManager.getItemWithNeedUpdatingInfoByPosition(position).comment
         val commentId = comment?.id
         commentId?.let {
-            val dialog = DeleteCommentDialogFragment.Companion.newInstance(it)
+            val dialog = DeleteCommentDialogFragment.newInstance(it)
             dialog.setTargetFragment(this, 0)
             if (!dialog.isAdded) {
                 dialog.show(fragmentManager, null)

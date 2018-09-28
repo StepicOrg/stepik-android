@@ -33,11 +33,11 @@ class HomeFragment : FragmentBase(), HomeStreakView {
                 .inject(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-            inflater?.inflate(R.layout.fragment_home, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+            inflater.inflate(R.layout.fragment_home, container, false)
 
     @SuppressLint("CommitTransaction")
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         nullifyActivityBackground()
         super.onViewCreated(view, savedInstanceState)
         initCenteredToolbar(R.string.home_title)

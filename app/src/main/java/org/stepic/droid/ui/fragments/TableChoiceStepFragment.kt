@@ -25,7 +25,7 @@ class TableChoiceStepFragment: StepAttemptFragment() {
     private lateinit var gridLayoutManager: GridLayoutManager
     private lateinit var adapter: TableChoiceAdapter
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val tableQuizView = layoutInflater.inflate(R.layout.view_table_quiz_layout, attemptContainer, false)
         val dp8inPx = DpPixelsHelper.convertDpToPixel(8f).toInt()

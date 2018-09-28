@@ -37,13 +37,13 @@ class CourseCollectionFragment : CourseListFragmentBase() {
                 .inject(this)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initCenteredToolbar(getTitle())
         courseCollectionPresenter.attachView(this)
-        courseCollectionPresenter.onShowCollections(arguments.getLongArray(COURSE_IDS))
+        courseCollectionPresenter.onShowCollections(arguments?.getLongArray(COURSE_IDS) ?: longArrayOf())
 
-        val descriptionContainer = arguments.getParcelable<CoursesDescriptionContainer?>(DESCRIPTION_CONTAINER)
+        val descriptionContainer = arguments?.getParcelable<CoursesDescriptionContainer?>(DESCRIPTION_CONTAINER)
 
         descriptionContainer?.let {
             coursesAdapter.setDescriptionContainer(it)
@@ -56,7 +56,7 @@ class CourseCollectionFragment : CourseListFragmentBase() {
     }
 
     override fun onRefresh() {
-        courseCollectionPresenter.onShowCollections(arguments.getLongArray(COURSE_IDS))
+        courseCollectionPresenter.onShowCollections(arguments?.getLongArray(COURSE_IDS) ?: longArrayOf())
     }
 
     override fun getCourseType(): Table? = null
@@ -69,5 +69,5 @@ class CourseCollectionFragment : CourseListFragmentBase() {
 
     }
 
-    fun getTitle(): String = arguments.getString(TITLE_KEY)
+    fun getTitle(): String = arguments?.getString(TITLE_KEY) ?: ""
 }

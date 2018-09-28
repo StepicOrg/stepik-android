@@ -6,7 +6,7 @@ import android.view.View
 
 class LeftSpacesDecoration(private val spacePx: Int) : RecyclerView.ItemDecoration() {
 
-    override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State?) {
+    override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
         outRect.left = spacePx
     }
 }

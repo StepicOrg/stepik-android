@@ -98,7 +98,8 @@ open class FragmentBase : Fragment() {
     protected open fun onReleaseComponent() {}
 
     protected fun hideSoftKeypad() {
-        val view = this.activity.currentFocus
+        val activity = requireActivity()
+        val view = activity.currentFocus
         if (view != null) {
             val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(view.windowToken, 0)
@@ -111,9 +112,9 @@ open class FragmentBase : Fragment() {
         injectComponent()
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        unbinder = ButterKnife.bind(this, view!!)
+        unbinder = ButterKnife.bind(this, view)
     }
 
     override fun onDestroyView() {

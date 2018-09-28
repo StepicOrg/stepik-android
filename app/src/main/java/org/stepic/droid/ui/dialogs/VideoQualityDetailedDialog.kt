@@ -58,7 +58,7 @@ class VideoQualityDetailedDialog : VideoQualityDialogBase() {
 
         var chosenOptionPosition = qualityToPositionMap[userPreferences.qualityVideo]!!
 
-        val builder = AlertDialog.Builder(activity)
+        val builder = AlertDialog.Builder(requireContext())
         builder
                 .setTitle(R.string.video_quality)
                 .setView(explanationView)

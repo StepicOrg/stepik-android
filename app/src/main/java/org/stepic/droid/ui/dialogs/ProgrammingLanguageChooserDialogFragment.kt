@@ -26,9 +26,9 @@ class ProgrammingLanguageChooserDialogFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val picker = MaterialNumberPicker(context)
-        picker.initForCodeLanguages(arguments.getStringArray(LANGUAGES_KEY))
+        picker.initForCodeLanguages(arguments?.getStringArray(LANGUAGES_KEY)!!)
 
-        return MaterialDialog.Builder(activity)
+        return MaterialDialog.Builder(requireContext())
                 .title(R.string.choose_language)
                 .customView(picker, false)
                 .positiveText(R.string.choose_action)

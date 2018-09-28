@@ -50,8 +50,9 @@ class AchievementsListFragment: FragmentBase(), AchievementsView {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
             inflater.inflate(R.layout.fragment_achievements_list, container, false)
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val context = requireContext()
 
         initPlaceholders()
 
@@ -63,7 +64,7 @@ class AchievementsListFragment: FragmentBase(), AchievementsView {
         }}
 
         val divider = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
-        divider.setDrawable(ContextCompat.getDrawable(context, R.drawable.list_divider_h))
+        divider.setDrawable(ContextCompat.getDrawable(context, R.drawable.list_divider_h)!!)
         recycler.addItemDecoration(divider)
 
         achievementsPresenter.attachView(this)
@@ -73,8 +74,8 @@ class AchievementsListFragment: FragmentBase(), AchievementsView {
     }
 
     private fun initPlaceholders() {
-        val itemHeight = context.resources.getDimension(R.dimen.achievement_tile_height)
-        val screenHeight = context.resources.displayMetrics.heightPixels
+        val itemHeight = resources.getDimension(R.dimen.achievement_tile_height)
+        val screenHeight = resources.displayMetrics.heightPixels
 
         for (i in 0..(screenHeight / itemHeight).toInt()) {
             progress.addView(layoutInflater.inflate(R.layout.view_achievement_item_placeholder, progress, false))

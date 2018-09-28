@@ -195,7 +195,7 @@ constructor(
         coursesRecycler.addItemDecoration(VerticalSpacesInGridDecoration(verticalSpaceBetweenItems / 2, ROW_COUNT)) //warning: verticalSpaceBetweenItems/2 – workaround for some bug, decoration will set this param twice
         coursesRecycler.addItemDecoration(LeftSpacesDecoration(leftSpacePx))
         coursesRecycler.addItemDecoration(RightMarginForLastItems(resources.getDimensionPixelSize(R.dimen.home_right_recycler_padding_without_extra), ROW_COUNT))
-        coursesRecycler.itemAnimator.changeDuration = 0
+        coursesRecycler.itemAnimator?.changeDuration = 0
         val snapHelper = CoursesSnapHelper(ROW_COUNT)
         snapHelper.attachToRecyclerView(coursesRecycler)
     }
@@ -274,23 +274,23 @@ constructor(
         if (info.table == Table.enrolled) {
             analytic.reportEvent(Analytic.CoursesCarousel.EMPTY_ENROLLED_SHOWN)
         }
-        showPlaceholder(getEmptyStringRes(info.table), {
+        showPlaceholder(getEmptyStringRes(info.table)) {
             if (info.table == Table.enrolled) {
                 analytic.reportEvent(Analytic.CoursesCarousel.EMPTY_ENROLLED_CLICK)
                 screenManager.showCatalog(context)
             }
-        })
+        }
     }
 
     override fun showConnectionProblem() {
         if (courses.isEmpty()) {
             analytic.reportEvent(Analytic.CoursesCarousel.NO_INTERNET_SHOWN)
-            showPlaceholder(R.string.internet_problem, { _ ->
+            showPlaceholder(R.string.internet_problem) { _ ->
                 analytic.reportEvent(Analytic.CoursesCarousel.NO_INTERNET_CLICK)
                 if (StepikUtil.isInternetAvailable()) {
                     downloadData()
                 }
-            })
+            }
         }
     }
 
@@ -306,7 +306,7 @@ constructor(
         coursesViewAll.visibility = View.VISIBLE
         this.courses.clear()
         this.courses.addAll(courses)
-        coursesRecycler.adapter.notifyDataSetChanged()
+        coursesRecycler.adapter?.notifyDataSetChanged()
         updateOnCourseCountChanged()
     }
 
@@ -339,15 +339,15 @@ constructor(
 
         if (info.table == Table.enrolled) {
             courses.removeAt(index)
-            coursesRecycler.adapter.notifyItemRemoved(index)
+            coursesRecycler.adapter?.notifyItemRemoved(index)
             if (courses.size == ROW_COUNT) {
                 // update 1st column for adjusting size
-                coursesRecycler.adapter.notifyDataSetChanged()
+                coursesRecycler.adapter?.notifyDataSetChanged()
             }
             updateOnCourseCountChanged()
         } else {
             courses[index].enrollment = 0
-            coursesRecycler.adapter.notifyItemChanged(index)
+            coursesRecycler.adapter?.notifyItemChanged(index)
         }
 
         if (courses.isEmpty()) {
@@ -393,14 +393,14 @@ constructor(
 
         if (courseIndex >= 0) {
             courses[courseIndex].enrollment = joinedCourse.enrollment
-            coursesRecycler.adapter.notifyItemChanged(courseIndex)
+            coursesRecycler.adapter?.notifyItemChanged(courseIndex)
         } else if (info.table == Table.enrolled) {
             //insert at 0 index is more complex than just add, but order will be right
             if (courses.isEmpty()) {
                 showCourses(mutableListOf(joinedCourse))
             } else {
                 courses.add(0, joinedCourse)
-                coursesRecycler.adapter.notifyDataSetChanged()
+                coursesRecycler.adapter?.notifyDataSetChanged()
                 updateOnCourseCountChanged()
             }
         }

@@ -1,11 +1,9 @@
 package org.stepic.droid.ui.fragments
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
@@ -76,12 +74,12 @@ class CodeStepFragment : StepAttemptFragment(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        codeToolbarAdapter = CodeToolbarAdapter(context)
+        codeToolbarAdapter = CodeToolbarAdapter(requireContext())
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val viewGroup = (this.activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(R.layout.view_code_quiz, attemptContainer, false) as ViewGroup
+        val viewGroup = layoutInflater.inflate(R.layout.view_code_quiz, attemptContainer, false) as ViewGroup
         attemptContainer.addView(viewGroup)
 
         codeToolbarView.adapter = codeToolbarAdapter
@@ -118,7 +116,7 @@ class CodeStepFragment : StepAttemptFragment(),
             chosenProgrammingLanguageName?.let { lang ->
                 if (submission?.status != Submission.Status.CORRECT) {
                     val intent = CodePlaygroundActivity.intentForLaunch(
-                            activity,
+                            requireActivity(),
                             codeEditor.text.toString(),
                             lang,
                             step?.block?.options ?: throw IllegalStateException("can't find code options in code quiz"))

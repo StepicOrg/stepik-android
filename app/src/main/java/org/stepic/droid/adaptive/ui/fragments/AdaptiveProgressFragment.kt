@@ -14,27 +14,22 @@ import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.core.presenters.AdaptiveProgressPresenter
 import org.stepic.droid.core.presenters.contracts.AdaptiveProgressView
-import org.stepic.droid.util.AppConstants
+import org.stepic.droid.util.argument
 import javax.inject.Inject
 
 class AdaptiveProgressFragment : FragmentBase(), AdaptiveProgressView {
     companion object {
-        fun newInstance(courseId: Long) = AdaptiveProgressFragment().apply {
-            arguments = Bundle(1).apply { putLong(AppConstants.KEY_COURSE_LONG_ID, courseId) }
+        fun newInstance(courseId: Long) = AdaptiveProgressFragment().also {
+            it.courseId = courseId
         }
     }
 
-    private var courseId = 0L
+    private var courseId by argument<Long>()
 
     @Inject
     lateinit var adaptiveProgressPresenter: AdaptiveProgressPresenter
 
     private lateinit var recycler: RecyclerView
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        courseId = arguments.getLong(AppConstants.KEY_COURSE_LONG_ID, 0)
-        super.onCreate(savedInstanceState)
-    }
 
     override fun injectComponent() {
         App.componentManager()
@@ -42,12 +37,14 @@ class AdaptiveProgressFragment : FragmentBase(), AdaptiveProgressView {
                 .inject(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val context = requireContext()
+
         recycler = RecyclerView(context)
         recycler.layoutManager = LinearLayoutManager(context)
 
         val divider = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
-        divider.setDrawable(ContextCompat.getDrawable(context, R.drawable.list_divider_h))
+        divider.setDrawable(ContextCompat.getDrawable(context, R.drawable.list_divider_h)!!)
         recycler.addItemDecoration(divider)
 
         return recycler

@@ -127,7 +127,7 @@ class NotificationListPresenter
             if (notification.type == NotificationType.comments) {
                 extractUserAvatarUrl(notification)?.let { userId ->
                     userIdToNotificationsIndexes.putIfAbsent(userId, ArrayList())
-                    userIdToNotificationsIndexes[userId].add(index)
+                    userIdToNotificationsIndexes[userId]?.add(index)
                     userIds.add(userId)
                 }
             }
@@ -136,7 +136,7 @@ class NotificationListPresenter
         if (userIds.isNotEmpty()) {
             api.getUsers(userIds.toLongArray()).execute().body()?.users?.forEach {
                 val avatar = it.avatar
-                userIdToNotificationsIndexes[it.id].forEach { notificationIndex ->
+                userIdToNotificationsIndexes[it.id]?.forEach { notificationIndex ->
                     notifications[notificationIndex].userAvatarUrl = avatar
                 }
             }

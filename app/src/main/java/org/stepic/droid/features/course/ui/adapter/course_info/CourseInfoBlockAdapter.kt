@@ -17,7 +17,7 @@ import org.stepic.droid.features.course.ui.model.course_info.CourseInfoTextBlock
 import org.stepic.droid.features.course.ui.model.course_info.CourseInfoType
 import java.lang.IllegalStateException
 
-class CourseInfoBlockAdapter : RecyclerView.Adapter<CourseInfoBlockAdapter.CourseInfoViewHolder<CourseInfoBlock>>() {
+class CourseInfoBlockAdapter : RecyclerView.Adapter<CourseInfoBlockAdapter.CourseInfoViewHolder<out CourseInfoBlock>>() {
     companion object {
         private const val VIEW_TYPE_TEXT_BLOCK = 1
         private const val VIEW_TYPE_INSTRUCTORS_BLOCK = 2
@@ -42,15 +42,13 @@ class CourseInfoBlockAdapter : RecyclerView.Adapter<CourseInfoBlockAdapter.Cours
                     VIEW_TYPE_TEXT_BLOCK
             }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): CourseInfoViewHolder<CourseInfoBlock> =
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CourseInfoViewHolder<out CourseInfoBlock> =
             when(viewType) {
                 VIEW_TYPE_INSTRUCTORS_BLOCK ->
-                    CourseInfoInstructorsBlockViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.view_course_info_instructors_block, parent, false))
-                            as CourseInfoViewHolder<CourseInfoBlock>
+                    CourseInfoInstructorsBlockViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.view_course_info_instructors_block, parent, false))
 
                 VIEW_TYPE_TEXT_BLOCK ->
-                    CourseInfoTextBlockViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.view_course_info_text_block, parent, false))
-                            as CourseInfoViewHolder<CourseInfoBlock>
+                    CourseInfoTextBlockViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.view_course_info_text_block, parent, false))
 
                 else -> throw IllegalStateException("Unknown viewType = $viewType")
             }
@@ -59,7 +57,7 @@ class CourseInfoBlockAdapter : RecyclerView.Adapter<CourseInfoBlockAdapter.Cours
     override fun getItemCount() =
             blocks.size
 
-    override fun onBindViewHolder(holder: CourseInfoViewHolder<CourseInfoBlock>, position: Int) {
+    override fun onBindViewHolder(holder: CourseInfoViewHolder<out CourseInfoBlock>, position: Int) {
         val block = blocks[position]
         when(getItemViewType(position)) {
             VIEW_TYPE_TEXT_BLOCK -> {

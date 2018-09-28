@@ -2,6 +2,7 @@ package org.stepic.droid.features.course.ui.activity
 
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.support.design.widget.AppBarLayout
 import android.support.design.widget.TabLayout
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
 import android.support.v7.widget.AppCompatDrawableManager
@@ -120,7 +121,7 @@ class CourseActivity : FragmentActivityBase() {
         val courseInfoHeightExpanded = resources.getDimension(R.dimen.course_info_height_expanded)
         val courseInfoMarginExpanded = resources.getDimension(R.dimen.course_info_margin_expanded)
 
-        courseAppBar.addOnOffsetChangedListener { _, verticalOffset ->
+        courseAppBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
             val ratio = Math.abs(verticalOffset).toFloat() / (courseCollapsingToolbar.height - courseToolbar.height)
 
             courseCover.alpha = 1f - ratio
@@ -128,7 +129,7 @@ class CourseActivity : FragmentActivityBase() {
                 bottomMargin = (courseInfoMarginExpanded * (1 - ratio)).toInt()
                 height = (courseInfoHeightExpanded + (courseToolbar.height - courseInfoHeightExpanded) * ratio).toInt()
             }
-        }
+        })
     }
 
     override fun onOptionsItemSelected(item: MenuItem?) =
