@@ -2,14 +2,18 @@ package org.stepic.droid.features.course.ui.fragment
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewCompat
 import android.support.v7.widget.LinearLayoutManager
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.error_course_not_found.*
 import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import kotlinx.android.synthetic.main.fragment_course_info.*
+import kotlinx.android.synthetic.main.view_course_info_organization.*
 import org.stepic.droid.R
 import org.stepic.droid.features.course.ui.adapter.course_info.CourseInfoBlockAdapter
 import org.stepic.droid.features.course.ui.model.course_info.CourseInfoInstructorsBlock
@@ -47,6 +51,10 @@ class CourseInfoFragment : Fragment() {
     }
 
     fun setCourseInfo(course: Course) {
+        organizationTitle.text = SpannableString("by Yandex").apply {
+            setSpan(ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.course_info_organization_span)), 3, 9, SpannableString.SPAN_INCLUSIVE_INCLUSIVE)
+        }
+
         adapter.setData(listOf(
                 CourseInfoTextBlock(CourseInfoType.ABOUT, course.description ?: ""),
                 CourseInfoTextBlock(CourseInfoType.REQUIREMENTS, course.requirements ?: ""),
