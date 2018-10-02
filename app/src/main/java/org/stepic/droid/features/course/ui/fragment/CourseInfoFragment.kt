@@ -10,10 +10,12 @@ import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.error_course_not_found.*
 import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import kotlinx.android.synthetic.main.fragment_course_info.*
 import kotlinx.android.synthetic.main.view_course_info_organization.*
+import kotlinx.android.synthetic.main.view_course_info_video.*
 import org.stepic.droid.R
 import org.stepic.droid.features.course.ui.adapter.course_info.CourseInfoBlockAdapter
 import org.stepic.droid.features.course.ui.model.course_info.CourseInfoInstructorsBlock
@@ -22,6 +24,7 @@ import org.stepic.droid.features.course.ui.model.course_info.CourseInfoType
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.util.argument
 import org.stepik.android.model.Course
+import org.stepik.android.model.Video
 import org.stepik.android.model.user.User
 
 class CourseInfoFragment : Fragment() {
@@ -55,6 +58,8 @@ class CourseInfoFragment : Fragment() {
             setSpan(ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.course_info_organization_span)), 3, 9, SpannableString.SPAN_INCLUSIVE_INCLUSIVE)
         }
 
+        setCourseVideo(course.introVideo)
+
         adapter.setData(listOf(
                 CourseInfoTextBlock(CourseInfoType.ABOUT, course.description ?: ""),
                 CourseInfoTextBlock(CourseInfoType.REQUIREMENTS, course.requirements ?: ""),
@@ -65,5 +70,21 @@ class CourseInfoFragment : Fragment() {
 
                 CourseInfoInstructorsBlock(listOf(User(fullName = "Artyom Burylov", joinDate = null, avatar = "https://stepik.org/media/users/26533986/avatar.png?1523307138", shortBio = """Kotlin backend developer, online education enthusiast. I graduated from PNRPU with a BSc in Computer Science (2014) and MSc in Software Engineering (2016). During the learning, I took an active part in scientific conferences and educational events.""")))
         ))
+    }
+
+    private fun setCourseVideo(video: Video?) {
+        if (video != null) {
+            Glide.with(requireActivity())
+                    .load(video.thumbnail)
+                    .placeholder(R.drawable.general_placeholder)
+                    .into(videoThumbnail)
+            videoThumbnail.changeVisibility(true)
+
+            courseInfoVideoBlock.setOnClickListener {
+                // open video
+            }
+        } else {
+            videoThumbnail.changeVisibility(false)
+        }
     }
 }

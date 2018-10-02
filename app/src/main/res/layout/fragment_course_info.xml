@@ -23,6 +23,10 @@
                 android:background="@color/course_appbar_separator"
                 android:alpha="0.5" />
 
+            <include
+                android:id="@+id/courseInfoVideoBlock"
+                layout="@layout/view_course_info_video" />
+
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/courseInfoRecycler"
                 android:layout_width="match_parent"
