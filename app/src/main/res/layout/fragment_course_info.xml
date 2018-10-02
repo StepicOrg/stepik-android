@@ -25,7 +25,8 @@
 
             <include
                 android:id="@+id/courseInfoVideoBlock"
-                layout="@layout/view_course_info_video" />
+                layout="@layout/view_course_info_video"
+                android:visibility="gone" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/courseInfoRecycler"

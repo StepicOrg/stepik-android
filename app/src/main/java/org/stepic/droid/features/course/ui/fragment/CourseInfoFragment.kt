@@ -78,13 +78,12 @@ class CourseInfoFragment : Fragment() {
                     .load(video.thumbnail)
                     .placeholder(R.drawable.general_placeholder)
                     .into(videoThumbnail)
-            videoThumbnail.changeVisibility(true)
-
             courseInfoVideoBlock.setOnClickListener {
                 // open video
             }
+            courseInfoVideoBlock.changeVisibility(true)
         } else {
-            videoThumbnail.changeVisibility(false)
+            courseInfoVideoBlock.changeVisibility(false)
         }
     }
 }
