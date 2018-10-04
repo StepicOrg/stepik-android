@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.support.design.widget.AppBarLayout
 import android.support.design.widget.TabLayout
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
-import android.support.v7.widget.AppCompatDrawableManager
+import android.support.v7.content.res.AppCompatResources
 import android.view.MenuItem
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -113,7 +113,7 @@ class CourseActivity : FragmentActivityBase() {
     }
 
     private fun initVerified() {
-        val verifiedDrawable = AppCompatDrawableManager.get().getDrawable(this, R.drawable.ic_verified)
+        val verifiedDrawable = AppCompatResources.getDrawable(this, R.drawable.ic_verified)
         courseVerified.setCompoundDrawablesWithIntrinsicBounds(verifiedDrawable, null, null, null)
     }
 
