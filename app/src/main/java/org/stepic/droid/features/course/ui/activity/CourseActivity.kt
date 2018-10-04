@@ -7,7 +7,6 @@ import android.support.design.widget.TabLayout
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
 import android.support.v7.content.res.AppCompatResources
 import android.view.MenuItem
-import android.widget.LinearLayout
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
@@ -123,12 +122,10 @@ class CourseActivity : FragmentActivityBase() {
 
         courseAppBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
             val ratio = Math.abs(verticalOffset).toFloat() / (courseCollapsingToolbar.height - courseToolbar.height)
+            val targetTranslation = courseInfoMarginExpanded - (courseToolbar.height - courseInfoHeightExpanded) / 2
 
             courseCover.alpha = 1f - ratio
-            courseInfo.layoutParams = (courseInfo.layoutParams as LinearLayout.LayoutParams).apply {
-                bottomMargin = (courseInfoMarginExpanded * (1 - ratio)).toInt()
-                height = (courseInfoHeightExpanded + (courseToolbar.height - courseInfoHeightExpanded) * ratio).toInt()
-            }
+            courseInfo.translationY = ratio * targetTranslation
         })
     }
 
