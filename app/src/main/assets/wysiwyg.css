@@ -248,3 +248,8 @@
   ::-webkit-scrollbar {
     display: none;
   }
+
+/* fix kotlin playground height */
+  .CodeMirror-scroll {
+    height: auto;
+  }
