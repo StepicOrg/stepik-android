@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.stepic.droid.ui.custom.control_bar.ControlBarView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/controlBar"
+    android:layout_width="match_parent"
+    android:layout_height="?actionBarSize" />
