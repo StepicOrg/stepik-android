@@ -1,9 +1,9 @@
 package org.stepic.droid.features.course.ui.adapter.course_content
 
 import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
-import org.stepic.droid.ui.custom.adapter_delegates.RecyclerViewDelegateAdapter
+import org.stepic.droid.ui.custom.adapter_delegates.DelegateAdapter
 
-class CourseContentAdapter : RecyclerViewDelegateAdapter<CourseContentAdapterItem, DelegateViewHolder<CourseContentAdapterItem>>() {
+class CourseContentAdapter : DelegateAdapter<CourseContentAdapterItem, DelegateViewHolder<CourseContentAdapterItem>>() {
     init {
         addDelegate(CourseContentControlBarDelegate(this))
     }

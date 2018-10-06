@@ -5,10 +5,10 @@ import android.view.ViewGroup
 import org.stepic.droid.R
 import org.stepic.droid.ui.custom.adapter_delegates.AdapterDelegate
 import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
-import org.stepic.droid.ui.custom.adapter_delegates.RecyclerViewDelegateAdapter
+import org.stepic.droid.ui.custom.adapter_delegates.DelegateAdapter
 
 class CourseContentControlBarDelegate(
-        adapter: RecyclerViewDelegateAdapter<CourseContentAdapterItem, DelegateViewHolder<CourseContentAdapterItem>>
+        adapter: DelegateAdapter<CourseContentAdapterItem, DelegateViewHolder<CourseContentAdapterItem>>
 ) : AdapterDelegate<CourseContentAdapterItem, DelegateViewHolder<CourseContentAdapterItem>>(adapter) {
 
     override fun onCreateViewHolder(parent: ViewGroup) =

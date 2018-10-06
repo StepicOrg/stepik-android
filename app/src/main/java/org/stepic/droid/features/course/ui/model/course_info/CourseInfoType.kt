@@ -11,6 +11,8 @@ enum class CourseInfoType(
         @DrawableRes val icon: Int,
         @StringRes val title: Int
 ) {
+    ORGANIZATION(R.drawable.ic_course_info_instructors, -1),
+    VIDEO(-1, -1),
     ABOUT(R.drawable.ic_course_info_about, R.string.course_info_about),
     REQUIREMENTS(R.drawable.ic_course_info_requirements, R.string.course_info_requirements),
     TARGET_AUDIENCE(R.drawable.ic_course_info_target_audience, R.string.course_info_target_audience),

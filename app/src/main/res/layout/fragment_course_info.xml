@@ -4,38 +4,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v4.widget.NestedScrollView
-        android:id="@+id/courseInfoContent"
+
+            <!--<View-->
+                <!--android:id="@+id/courseInfoOrganizationSeparator"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="1dp"-->
+                <!--android:background="@color/course_appbar_separator"-->
+                <!--android:alpha="0.5" />-->
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/courseInfoRecycler"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <android.support.v7.widget.LinearLayoutCompat
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <include
-                android:id="@+id/courseInfoOrganization"
-                layout="@layout/view_course_info_organization" />
-
-            <View
-                android:id="@+id/courseInfoOrganizationSeparator"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/course_appbar_separator"
-                android:alpha="0.5" />
-
-            <include
-                android:id="@+id/courseInfoVideoBlock"
-                layout="@layout/view_course_info_video"
-                android:visibility="gone" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/courseInfoRecycler"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/course_info_block_margin"
-                android:clipToPadding="false" />
-        </android.support.v7.widget.LinearLayoutCompat>
-    </android.support.v4.widget.NestedScrollView>
+        android:layout_height="wrap_content"
+        android:padding="@dimen/course_info_block_margin"
+        android:clipToPadding="false" />
 
     <include layout="@layout/error_no_connection_with_button"
         android:layout_width="match_parent"

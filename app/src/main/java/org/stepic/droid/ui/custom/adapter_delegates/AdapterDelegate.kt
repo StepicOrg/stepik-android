@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 
 abstract class AdapterDelegate<D, VH : DelegateViewHolder<D>>(
-        private val adapter: RecyclerViewDelegateAdapter<D, VH>
+        private val adapter: DelegateAdapter<D, VH>
 ) {
     protected fun getItemAtPosition(position: Int): D =
             adapter.getItemAtPosition(position)

@@ -682,7 +682,8 @@
     <string name="course_tab_info">Инфо</string>
     <string name="course_tab_reviews">Отзывы</string>
     <string name="course_tab_modules">Модули</string>
-    
+
+    <string name="course_info_organization_prefix">от %s</string>
     <string name="course_info_about">О курсе</string>
     <string name="course_info_requirements">Требования</string>
     <string name="course_info_target_audience">Целевая аудитория</string>

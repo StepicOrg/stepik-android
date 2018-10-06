@@ -699,6 +699,7 @@
     <string name="course_tab_reviews">Reviews</string>
     <string name="course_tab_modules">Modules</string>
 
+    <string name="course_info_organization_prefix">by %s</string>
     <string name="course_info_about">About</string>
     <string name="course_info_requirements">Requirements</string>
     <string name="course_info_target_audience">Target audience</string>
