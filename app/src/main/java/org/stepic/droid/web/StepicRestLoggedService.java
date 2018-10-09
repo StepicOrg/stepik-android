@@ -5,6 +5,7 @@ import org.stepic.droid.web.model.adaptive.RecommendationReactionsRequest;
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
 import org.stepic.droid.web.model.story_templates.StoryTemplatesResponse;
 import org.stepik.android.model.EnrollmentWrapper;
+import org.stepik.android.model.UserCourses;
 
 import java.util.List;
 
@@ -45,6 +46,9 @@ public interface StepicRestLoggedService {
 
     @GET("api/courses?enrolled=true")
     Single<CoursesMetaResponse> getEnrolledCourses(@Query("page") int page);
+
+    @GET("api/user-courses")
+    Single<UserCourses> getUserCourses(@Query("page") int page);
 
     @GET("api/courses?exclude_ended=true&is_public=true&order=-activity")
     Single<CoursesMetaResponse> getPopularCourses(@Query("page") int page, @Query("language") String language);

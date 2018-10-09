@@ -10,9 +10,7 @@ import org.stepic.droid.core.earlystreak.contract.EarlyStreakPoster
 import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.di.course_list.CourseListScope
 import org.stepic.droid.features.deadlines.repository.DeadlinesRepository
-import org.stepik.android.model.Course
 import org.stepic.droid.model.CourseReviewSummary
-import org.stepik.android.model.Progress
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.storage.operations.Table
@@ -21,6 +19,8 @@ import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.RWLocks
 import org.stepic.droid.web.Api
 import org.stepic.droid.web.CoursesMetaResponse
+import org.stepik.android.model.Course
+import org.stepik.android.model.Progress
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
@@ -108,7 +108,10 @@ class PersistentCourseListPresenter
                 } else {
                     val allMyCourses = arrayListOf<Course>()
                     while (hasNextPage.get()) {
-                        val originalResponse = api.getEnrolledCourses(currentPage.get()).blockingGet()
+                        val originalResponse = api.getUserCourses(currentPage.get())
+                                .map { it.userCourse.map { userCourse -> userCourse.course } }
+                                .flatMap { api.getCoursesReactive(currentPage.get(), it.toLongArray()) }
+                                .blockingGet()
                         allMyCourses.addAll(originalResponse.courses)
                         handleMeta(originalResponse)
                     }

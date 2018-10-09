@@ -24,6 +24,7 @@ import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
 import org.stepic.droid.util.CompatibilityExtensionsKt;
 import org.stepic.droid.web.model.story_templates.StoryTemplatesResponse;
+import org.stepik.android.model.UserCourses;
 import org.stepik.android.model.adaptive.RatingItem;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.configuration.Config;
@@ -464,8 +465,8 @@ public class ApiImpl implements Api {
         return csrftoken;
     }
 
-    public Single<CoursesMetaResponse> getEnrolledCourses(int page) {
-        return loggedService.getEnrolledCourses(page);
+    public Single<UserCourses> getUserCourses(int page) {
+        return loggedService.getUserCourses(page);
     }
 
     public Single<CoursesMetaResponse> getPopularCourses(int page) {
