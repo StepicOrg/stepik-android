@@ -5,7 +5,7 @@ import org.stepic.droid.util.isNotOrdered
 /**
  * Class for fast search strings with common prefix
  */
-class AutocompleteDictionary(private val dict: Array<String>, needSort: Boolean = true) {
+class AutocompleteDictionary(private val dict: Array<String>, needSort: Boolean = true, val isCaseSensitive : Boolean = true ) {
     companion object {
         /**
          * Returns next in chars string.
