@@ -1,6 +1,8 @@
 package org.stepic.droid.core.presenters
 
 import android.support.annotation.WorkerThread
+import io.reactivex.Single
+import io.reactivex.rxkotlin.zipWith
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.concurrency.SingleThreadExecutor
@@ -109,8 +111,14 @@ class PersistentCourseListPresenter
                     val allMyCourses = arrayListOf<Course>()
                     while (hasNextPage.get()) {
                         val originalResponse = api.getUserCourses(currentPage.get())
-                                .map { it.userCourse.map { userCourse -> userCourse.course } }
-                                .flatMap { api.getCoursesReactive(currentPage.get(), it.toLongArray()) }
+                                .map { courses -> courses.userCourse.map { it.course } }
+                                .flatMap { list -> api.getCoursesReactive(currentPage.get(), list.toLongArray())
+                                        .zipWith(Single.just(list)) }
+                                .map { (courses, userCourses) ->
+                                    val orderedId = userCourses.asSequence().withIndex().associate { it.value to it.index }
+                                    courses.courses.sortBy { orderedId[it.id] }
+                                    courses
+                                }
                                 .blockingGet()
                         allMyCourses.addAll(originalResponse.courses)
                         handleMeta(originalResponse)
@@ -228,9 +236,8 @@ class PersistentCourseListPresenter
                 Table.enrolled -> {
                     val progressMap = getProgressesFromDb(courses)
                     CourseUtil.applyProgressesToCourses(progressMap, courses)
-                    val sortedCourses = sortByLastAction(courses, progressMap)
-                    postLastActive(sortedCourses.firstOrNull(), progressMap)
-                    sortedCourses
+                    postLastActive(courses.firstOrNull(), progressMap)
+                    courses
                 }
                 Table.featured -> {
                     filterApplicator.filterCourses(courses)
@@ -259,31 +266,6 @@ class PersistentCourseListPresenter
         currentPage.set(1)
         hasNextPage.set(true)
         downloadData(courseType, isRefreshing = true)
-    }
-
-    @WorkerThread
-    private fun sortByLastAction(courses: List<Course>, idProgressesMap: Map<String?, Progress>): MutableList<Course> {
-        return courses.sortedWith(Comparator { course1, course2 ->
-            val progress1: Progress? = idProgressesMap[course1.progress]
-            val progress2: Progress? = idProgressesMap[course2.progress]
-
-            val lastViewed1 = progress1?.lastViewed?.toLongOrNull()
-            val lastViewed2 = progress2?.lastViewed?.toLongOrNull()
-
-            if (lastViewed1 == null && lastViewed2 == null) {
-                return@Comparator (course2.id - course1.id).toInt() // course2 - course1 (greater id is 1st)
-            }
-
-            if (lastViewed1 == null) {
-                return@Comparator 1 // 1st after 2nd
-            }
-
-            if (lastViewed2 == null) {
-                return@Comparator -1 //1st before 2nd. 2nd to end
-            }
-
-            return@Comparator (lastViewed2 - lastViewed1).toInt()
-        }).toMutableList()
     }
 
     @WorkerThread
