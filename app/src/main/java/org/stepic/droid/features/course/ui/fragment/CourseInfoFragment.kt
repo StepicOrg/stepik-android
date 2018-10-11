@@ -61,5 +61,7 @@ class CourseInfoFragment : Fragment() {
         course.introVideo?.let {
             courseInfoItems.add(CourseInfoItem.VideoBlock(it))
         }
+
+        adapter.setData(courseInfoItems)
     }
 }
