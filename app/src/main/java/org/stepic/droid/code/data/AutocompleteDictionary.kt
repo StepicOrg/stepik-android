@@ -5,7 +5,11 @@ import org.stepic.droid.util.isNotOrdered
 /**
  * Class for fast search strings with common prefix
  */
-class AutocompleteDictionary(private val dict: Array<String>, needSort: Boolean = true, private val isCaseSensitive : Boolean = true) {
+class AutocompleteDictionary(
+        private val dict: Array<String>,
+        needSort: Boolean = true,
+        private val isCaseSensitive : Boolean = true
+) {
     companion object {
         /**
          * Returns next in chars string.
@@ -48,9 +52,9 @@ class AutocompleteDictionary(private val dict: Array<String>, needSort: Boolean 
     }
 
     fun getAutocompleteForPrefix(prefix: String): List<String> {
-        val comparator = Comparator { s1: String, s2: String -> s1.compareTo(s2, ignoreCase = !isCaseSensitive) }
-        val start = dict.binarySearch(prefix, comparator = comparator).let { getBinarySearchPosition(it) }
-        val end = dict.binarySearch(incrementString(prefix), comparator = comparator).let { getBinarySearchPosition(it) }
+        val comparator = Comparator<String> { s1, s2 -> s1.compareTo(s2, ignoreCase = !isCaseSensitive) }
+        val start = dict.binarySearch(prefix, comparator).let(::getBinarySearchPosition)
+        val end = dict.binarySearch(incrementString(prefix), comparator).let(::getBinarySearchPosition)
         return dict.slice(start until end)
     }
 }
