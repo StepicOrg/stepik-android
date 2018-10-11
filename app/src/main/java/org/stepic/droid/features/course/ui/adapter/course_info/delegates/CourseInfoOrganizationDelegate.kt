@@ -26,10 +26,13 @@ class CourseInfoOrganizationDelegate(
 
         override fun onBind(data: CourseInfoItem) {
             data as CourseInfoItem.OrganizationBlock
-            val titleSpan = SpannableString(data.organizationTitle).apply {
-                setSpan(titleColorSpan, 0, length, SpannableString.SPAN_INCLUSIVE_INCLUSIVE)
+
+            val title = itemView.context.getString(R.string.course_info_organization_prefix, data.organizationTitle)
+            val titleSpan = SpannableString(title).apply {
+                setSpan(titleColorSpan, length - data.organizationTitle.length, length, SpannableString.SPAN_INCLUSIVE_INCLUSIVE)
             }
-            organizationTitle.text = itemView.context.getString(R.string.course_info_organization_prefix, titleSpan)
+
+            organizationTitle.text = titleSpan
         }
     }
 }
