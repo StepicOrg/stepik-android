@@ -1,8 +1,6 @@
 package org.stepic.droid.core.presenters
 
 import android.support.annotation.WorkerThread
-import io.reactivex.Single
-import io.reactivex.rxkotlin.zipWith
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.concurrency.SingleThreadExecutor
@@ -23,6 +21,7 @@ import org.stepic.droid.web.Api
 import org.stepic.droid.web.CoursesMetaResponse
 import org.stepik.android.model.Course
 import org.stepik.android.model.Progress
+import org.stepik.android.model.UserCourse
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
@@ -110,18 +109,20 @@ class PersistentCourseListPresenter
                 } else {
                     val allMyCourses = arrayListOf<Course>()
                     while (hasNextPage.get()) {
-                        val originalResponse = api.getUserCourses(currentPage.get())
-                                .map { courses -> courses.userCourse.map { it.course } }
-                                .flatMap { list -> api.getCoursesReactive(currentPage.get(), list.toLongArray())
-                                        .zipWith(Single.just(list)) }
-                                .map { (courses, userCourses) ->
-                                    val orderedId = userCourses.asSequence().withIndex().associate { it.value to it.index }
-                                    courses.courses.sortBy { orderedId[it.id] }
-                                    courses
-                                }
+                        val page = currentPage.get()
+                        val coursesOrder = api.getUserCourses(page)
                                 .blockingGet()
-                        allMyCourses.addAll(originalResponse.courses)
-                        handleMeta(originalResponse)
+                                .userCourse
+                                .map(UserCourse::course)
+
+                        val coursesResponse = api.getCoursesReactive(page, coursesOrder.toLongArray())
+                                .blockingGet()
+                        val courses = coursesResponse
+                                .courses
+                                .sortedBy { coursesOrder.indexOf(it.id) }
+
+                        allMyCourses.addAll(courses)
+                        handleMeta(coursesResponse)
                     }
                     deadlinesRepository.syncDeadlines(allMyCourses).blockingAwait()
                     analytic.setCoursesCount(allMyCourses.size)
