@@ -19,7 +19,7 @@ constructor(context: Context) {
             "php"  to AutocompleteDictionary(context.resources.getStringArray(R.array.autocomplete_words_php)),
             "py"   to AutocompleteDictionary(context.resources.getStringArray(R.array.autocomplete_words_py)),
             "rb"   to AutocompleteDictionary(context.resources.getStringArray(R.array.autocomplete_words_rb)),
-            "sql"  to AutocompleteDictionary(context.resources.getStringArray(R.array.autocomplete_words_sql))
+            "sql"  to AutocompleteDictionary(context.resources.getStringArray(R.array.autocomplete_words_sql), isCaseSensitive = false)
     )
 
     fun getAutoCompleteForLangAndPrefix(lang: String, prefix: String): List<String> =

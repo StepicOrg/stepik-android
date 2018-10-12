@@ -10,6 +10,7 @@ import kotlinx.android.synthetic.main.view_code_editor.*
 import kotlinx.android.synthetic.main.view_code_editor_layout.*
 import kotlinx.android.synthetic.main.view_code_toolbar.*
 import org.stepic.droid.R
+import org.stepic.droid.code.util.CodeToolbarUtil
 import org.stepik.android.model.attempts.Attempt
 import org.stepic.droid.ui.adapters.CodeToolbarAdapter
 import org.stepic.droid.ui.util.listenKeyboardChanges
@@ -74,8 +75,8 @@ class SqlStepFragment: StepAttemptFragment(), CodeToolbarAdapter.OnSymbolClickLi
         codeToolbarAdapter = null
     }
 
-    override fun onSymbolClick(symbol: String) {
-        codeEditor.insertText(symbol)
+    override fun onSymbolClick(symbol: String, offset: Int) {
+        codeEditor.insertText(CodeToolbarUtil.mapToolbarSymbolToPrintable(symbol, codeEditor.indentSize), offset)
     }
 
     override fun showAttempt(attempt: Attempt?) {
