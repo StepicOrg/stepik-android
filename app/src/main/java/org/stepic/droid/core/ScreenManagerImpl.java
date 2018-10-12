@@ -27,6 +27,7 @@ import org.stepic.droid.base.App;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.di.AppSingleton;
 import org.stepic.droid.features.achievements.ui.activity.AchievementsListActivity;
+import org.stepic.droid.features.course.ui.activity.CourseActivity;
 import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.model.CollectionDescriptionColors;
 import org.stepik.android.model.Course;
@@ -237,7 +238,7 @@ public class ScreenManagerImpl implements ScreenManager {
 
     private Intent getIntentForDescription(Context context, @NotNull Course course) {
         analytic.reportEvent(Analytic.Screens.SHOW_COURSE_DESCRIPTION);
-        Intent intent = new Intent(context, CourseDetailActivity.class);
+        Intent intent = new Intent(context, CourseActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         Bundle bundle = new Bundle();
