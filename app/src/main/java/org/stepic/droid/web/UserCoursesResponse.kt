@@ -1,8 +1,10 @@
-package org.stepik.android.model
+package org.stepic.droid.web
 
 import com.google.gson.annotations.SerializedName
+import org.stepik.android.model.Meta
+import org.stepik.android.model.UserCourse
 
-class UserCourses(
+class UserCoursesResponse(
         val meta: Meta,
         @SerializedName("user-courses")
         val userCourse: List<UserCourse>

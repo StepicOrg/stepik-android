@@ -5,7 +5,6 @@ import android.support.v4.app.FragmentActivity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.web.model.story_templates.StoryTemplatesResponse;
-import org.stepik.android.model.UserCourses;
 import org.stepik.android.model.adaptive.RatingItem;
 import org.stepik.android.model.Course;
 import org.stepic.droid.model.NotificationCategory;
@@ -42,7 +41,7 @@ public interface Api {
 
     Call<RegistrationResponse> signUp(String firstName, String secondName, String email, String password);
 
-    Single<UserCourses> getUserCourses(int page);
+    Single<UserCoursesResponse> getUserCourses(int page);
 
     Single<CoursesMetaResponse> getPopularCourses(int page);
 
