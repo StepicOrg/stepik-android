@@ -12,4 +12,9 @@
         <attr name="menu" format="reference" />
         <attr name="item_layout" format="reference" />
     </declare-styleable>
+
+    <declare-styleable name="VerticalProgressBar">
+        <attr name="progressBackgroundColor" format="color"/>
+        <attr name="progressForegroundColor" format="color"/>
+    </declare-styleable>
 </resources>

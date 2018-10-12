@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/lessonIcon"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="@dimen/course_content_item_margin"
+        android:layout_marginLeft="@dimen/course_content_item_margin"
+        android:layout_marginTop="@dimen/course_content_item_margin"
+        android:contentDescription="@null"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/lessonTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/course_content_item_inner_margin"
+        android:layout_marginLeft="@dimen/course_content_item_inner_margin"
+        android:layout_marginTop="@dimen/course_content_item_margin"
+        android:layout_marginEnd="@dimen/course_content_item_margin"
+        android:layout_marginRight="@dimen/course_content_item_margin"
+        android:lineSpacingExtra="3sp"
+        android:textColor="@color/new_accent_color"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/lessonIcon"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="1.2 Second Lesson More Detailed and Interesting Name" />
+
+    <TextView
+        android:id="@+id/lessonTextProgress"
+        fontPath="fonts/Roboto-Light.ttf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/course_content_item_inner_margin"
+        android:layout_marginLeft="@dimen/course_content_item_inner_margin"
+        android:layout_marginTop="@dimen/course_content_item_inner_margin"
+        android:layout_marginBottom="@dimen/course_content_item_margin"
+        android:lineSpacingExtra="4sp"
+        android:textColor="#535366"
+        android:textSize="12sp"
+        android:textStyle="normal"
+        app:layout_constraintStart_toEndOf="@+id/lessonIcon"
+        app:layout_constraintTop_toBottomOf="@+id/lessonTitle"
+        tools:ignore="missingPrefix"
+        tools:text="6/10" />
+
+    <org.stepic.droid.ui.custom.vertical_progress_bar.VerticalProgressBar
+        android:id="@+id/lessonProgress"
+        android:layout_width="2dp"
+        android:layout_height="0dp"
+        app:progressBackgroundColor="@android:color/transparent"
+        app:progressForegroundColor="@color/stepic_brand_primary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</android.support.constraint.ConstraintLayout>
