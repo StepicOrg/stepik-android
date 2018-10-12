@@ -75,7 +75,7 @@ class SqlStepFragment: StepAttemptFragment(), CodeToolbarAdapter.OnSymbolClickLi
         codeToolbarAdapter = null
     }
 
-    override fun onSymbolClick(symbol: String, offset : Int) {
+    override fun onSymbolClick(symbol: String, offset: Int) {
         codeEditor.insertText(CodeToolbarUtil.mapToolbarSymbolToPrintable(symbol, codeEditor.indentSize), offset)
     }
 

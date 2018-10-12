@@ -444,7 +444,7 @@ class CodeStepFragment : StepAttemptFragment(),
     private fun isOneLanguageAvailable(): Boolean =
             step?.block?.options?.codeTemplates?.size == 1
 
-    override fun onSymbolClick(symbol: String, offset : Int) {
+    override fun onSymbolClick(symbol: String, offset: Int) {
         CodeToolbarUtil.reportSelectedSymbol(analytic, chosenProgrammingLanguageName, symbol)
         codeEditor.insertText(CodeToolbarUtil.mapToolbarSymbolToPrintable(symbol, codeEditor.indentSize), offset)
     }

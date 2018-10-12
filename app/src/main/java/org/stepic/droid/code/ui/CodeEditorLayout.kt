@@ -63,7 +63,8 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
         text?.let { codeEditor.setText(it) }
     }
 
-    fun insertText(text: String, offset : Int) = codeEditor.insertText(text, offset)
+    fun insertText(text: String, offset: Int) =
+            codeEditor.insertText(text, offset)
 
     override fun setEnabled(enabled: Boolean) {
         super.setEnabled(enabled)
