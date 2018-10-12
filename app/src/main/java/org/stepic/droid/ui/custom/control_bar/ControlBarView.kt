@@ -31,7 +31,10 @@ constructor(
             val menuInflater = MenuInflater(context)
             @MenuRes
             val menuRes = typedArray.getResourceId(R.styleable.ControlBarView_menu, 0)
-            menuInflater.inflate(menuRes, menu)
+
+            if (menuRes != 0) {
+                menuInflater.inflate(menuRes, menu)
+            }
 
             itemLayoutRes = typedArray.getResourceId(R.styleable.ControlBarView_item_layout, 0)
         } finally {
