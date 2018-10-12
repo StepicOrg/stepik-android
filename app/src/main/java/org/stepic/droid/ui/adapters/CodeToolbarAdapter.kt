@@ -23,7 +23,7 @@ class CodeToolbarAdapter(private val context: Context) : RecyclerView.Adapter<Re
     }
 
     interface OnSymbolClickListener {
-        fun onSymbolClick(symbol: String, offset : Int)
+        fun onSymbolClick(symbol: String, offset: Int = 0)
     }
 
     private val autocompletePrefixBackgroundSpan by lazy {
@@ -48,8 +48,11 @@ class CodeToolbarAdapter(private val context: Context) : RecyclerView.Adapter<Re
     private val onItemClickListener: OnItemClickListener = object : OnItemClickListener {
         override fun onItemClick(position: Int) {
             items[position]?.toString()?.let { word ->
-                if (autocomplete.prefix.isNotEmpty() && word.startsWith(autocomplete.prefix, ignoreCase = true))
-                 onSymbolClickListener?.onSymbolClick("$word ", autocomplete.prefix.length)
+                if (autocomplete.prefix.isNotEmpty() && word.startsWith(autocomplete.prefix, ignoreCase = true)) {
+                    onSymbolClickListener?.onSymbolClick("$word ", autocomplete.prefix.length)
+                } else {
+                    onSymbolClickListener?.onSymbolClick(word)
+                }
             }
         }
     }
