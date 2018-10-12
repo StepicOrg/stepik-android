@@ -74,8 +74,8 @@ class SqlStepFragment: StepAttemptFragment(), CodeToolbarAdapter.OnSymbolClickLi
         codeToolbarAdapter = null
     }
 
-    override fun onSymbolClick(symbol: String) {
-        codeEditor.insertText(symbol)
+    override fun onSymbolClick(symbol: String, offset : Int) {
+        codeEditor.insertText(symbol, offset)
     }
 
     override fun showAttempt(attempt: Attempt?) {
