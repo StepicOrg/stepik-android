@@ -2,7 +2,6 @@ package org.stepic.droid.features.course.ui.fragment
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v4.view.ViewCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +11,9 @@ import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import kotlinx.android.synthetic.main.fragment_course_info.*
 import org.stepic.droid.R
 import org.stepic.droid.features.course.ui.adapter.course_info.CourseInfoAdapter
+import org.stepic.droid.features.course.ui.adapter.course_info.decorators.CourseInfoBlockOffsetDecorator
+import org.stepic.droid.features.course.ui.adapter.course_info.delegates.CourseInfoInstructorsDelegate
+import org.stepic.droid.features.course.ui.adapter.course_info.delegates.CourseInfoTextBlockDelegate
 import org.stepic.droid.features.course.ui.model.course_info.CourseInfoItem
 import org.stepic.droid.features.course.ui.model.course_info.CourseInfoType
 import org.stepic.droid.ui.util.changeVisibility
@@ -40,7 +42,12 @@ class CourseInfoFragment : Fragment() {
 
         courseInfoRecycler.layoutManager = LinearLayoutManager(context)
         courseInfoRecycler.adapter = adapter
-        ViewCompat.setNestedScrollingEnabled(courseInfoRecycler, false)
+
+        courseInfoRecycler.addItemDecoration(
+                CourseInfoBlockOffsetDecorator(resources.getDimension(R.dimen.course_info_block_margin).toInt(), intArrayOf(
+                        adapter.delegates.indexOfFirst { it is CourseInfoTextBlockDelegate },
+                        adapter.delegates.indexOfFirst { it is CourseInfoInstructorsDelegate }
+                )))
 
         setCourseInfo(course)
     }

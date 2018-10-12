@@ -4,19 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
-            <!--<View-->
-                <!--android:id="@+id/courseInfoOrganizationSeparator"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="1dp"-->
-                <!--android:background="@color/course_appbar_separator"-->
-                <!--android:alpha="0.5" />-->
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/courseInfoRecycler"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/course_info_block_margin"
+        android:layout_height="match_parent"
         android:clipToPadding="false" />
 
     <include layout="@layout/error_no_connection_with_button"

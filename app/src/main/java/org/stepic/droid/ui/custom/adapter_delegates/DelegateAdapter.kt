@@ -4,7 +4,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 
 abstract class DelegateAdapter<D, VH : DelegateViewHolder<D>> : RecyclerView.Adapter<VH>() {
-    private val delegates = mutableListOf<AdapterDelegate<D, VH>>()
+    val delegates = mutableListOf<AdapterDelegate<D, VH>>()
 
     fun addDelegate(delegate: AdapterDelegate<D, VH>) =
             delegates.add(delegate)
