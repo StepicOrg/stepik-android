@@ -13,6 +13,7 @@ import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.TextView
 import org.stepic.droid.R
+import kotlin.math.max
 
 class ControlBarView
 @JvmOverloads
@@ -54,13 +55,46 @@ constructor(
             val view = inflater.inflate(itemLayoutRes, this, false)
 
             view.findViewById<TextView>(android.R.id.text1).text = item.title
-            view.findViewById<ImageView>(android.R.id.icon).setImageDrawable(item.icon)
 
+            with(view.findViewById<ImageView>(android.R.id.icon)) {
+                setImageDrawable(item.icon)
+                visibility = if (item.icon != null) VISIBLE else GONE
+            }
+
+            view.id = item.itemId
             addView(view)
         }
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        val widthMode = MeasureSpec.getMode(widthMeasureSpec)
+        val widthSize = MeasureSpec.getSize(widthMeasureSpec)
+
+        val heightMode = MeasureSpec.getMode(heightMeasureSpec)
+        val heightSize = MeasureSpec.getSize(heightMeasureSpec)
+
+        var width = 0
+        var height = 0
+
+        for (i in 0 until childCount) {
+            val child = getChildAt(i)
+            measureChild(child, widthMeasureSpec, heightMeasureSpec)
         
+            width += child.measuredWidth
+            height = max(height, child.measuredHeight)
+        }
+
+        width += paddingLeft + paddingRight
+        height += paddingTop + paddingBottom
+
+        if (widthMode == MeasureSpec.EXACTLY) {
+            width = widthSize
+        }
+
+        if (heightMode == MeasureSpec.EXACTLY) {
+            height = heightSize
+        }
+
+        setMeasuredDimension(width, height)
     }
 }
