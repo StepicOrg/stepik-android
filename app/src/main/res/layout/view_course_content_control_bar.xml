@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <org.stepic.droid.ui.custom.control_bar.ControlBarView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/controlBar"
     android:layout_width="match_parent"
-    android:layout_height="?actionBarSize" />
+    android:layout_height="?actionBarSize"
+    android:paddingLeft="12dp"
+    android:paddingRight="12dp"
+    app:menu="@menu/course_content_control_menu"
+    app:item_layout="@layout/view_course_content_control_bar_item" />
