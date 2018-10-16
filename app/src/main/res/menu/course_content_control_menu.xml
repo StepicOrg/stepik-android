@@ -4,4 +4,22 @@
         android:id="@+id/course_schedule"
         android:title="Schedule"
         android:icon="@drawable/ic_course_schedule" />
+    <item
+        android:title="Schedule"
+        android:icon="@drawable/ic_course_schedule" />
+    <item
+        android:title="Schedule"
+        android:icon="@drawable/ic_course_schedule" />
+    <item
+        android:title="Schedule"
+        android:icon="@drawable/ic_course_schedule" />
+    <item
+        android:title="Schedule"
+        android:icon="@drawable/ic_course_schedule" />
+    <item
+        android:title="Schedule"
+        android:icon="@drawable/ic_course_schedule" />
+    <item
+        android:title="Schedule"
+        android:icon="@drawable/ic_course_schedule" />
 </menu>
