@@ -9,7 +9,11 @@ import org.stepik.android.model.Unit
 sealed class CourseContentItem {
     object ControlBar : CourseContentItem()
 
-    class SectionItem() : CourseContentItem()
+    class SectionItem(
+            val section: Section,
+            val progress: Progress,
+            val downloadProgress: DownloadProgress
+    ) : CourseContentItem()
 
     class LessonItem(
             val section: Section,

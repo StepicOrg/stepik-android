@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/sectionPosition"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="16dp"
+        android:gravity="center"
+
+        android:layout_marginStart="@dimen/course_content_item_margin"
+        android:layout_marginLeft="@dimen/course_content_item_margin"
+        android:layout_marginTop="@dimen/course_content_item_margin"
+
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/new_accent_color"
+
+        android:textSize="16sp"
+
+        tools:text="1" />
+
+    <TextView
+        android:id="@+id/sectionTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/course_content_item_inner_margin"
+        android:layout_marginLeft="@dimen/course_content_item_inner_margin"
+        android:layout_marginTop="@dimen/course_content_item_margin"
+        android:layout_marginEnd="@dimen/course_content_item_margin"
+        android:layout_marginRight="@dimen/course_content_item_margin"
+        android:lineSpacingExtra="2sp"
+        android:textSize="14sp"
+        android:gravity="start"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/sectionPosition"
+        app:layout_constraintTop_toTopOf="parent"
+
+        tools:text="Introduction to JavaScript" />
+
+    <org.stepic.droid.ui.custom.vertical_progress_bar.VerticalProgressBar
+        android:id="@+id/sectionProgress"
+        android:layout_width="2dp"
+        android:layout_height="0dp"
+        app:progressBackgroundColor="@android:color/transparent"
+        app:progressForegroundColor="@color/stepic_brand_primary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</android.support.constraint.ConstraintLayout>

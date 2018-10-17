@@ -4,6 +4,7 @@ import android.support.v4.util.LongSparseArray
 import org.stepic.droid.features.course.ui.adapter.course_content.delegates.control_bar.CourseContentControlBarDelegate
 import org.stepic.droid.features.course.ui.adapter.course_content.delegates.lesson.CourseContentLessonClickListener
 import org.stepic.droid.features.course.ui.adapter.course_content.delegates.lesson.CourseContentLessonDelegate
+import org.stepic.droid.features.course.ui.adapter.course_content.delegates.section.CourseContentSectionDelegate
 import org.stepic.droid.features.course.ui.model.course_content.CourseContentItem
 import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
 import org.stepic.droid.ui.custom.adapter_delegates.DelegateAdapter
@@ -20,6 +21,7 @@ class CourseContentAdapter(
 
     init {
         addDelegate(CourseContentControlBarDelegate(this))
+        addDelegate(CourseContentSectionDelegate(this))
         addDelegate(CourseContentLessonDelegate(this, lessonClickListener))
     }
 
