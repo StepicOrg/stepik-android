@@ -18,8 +18,8 @@ import org.stepic.droid.util.CourseUtil
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.RWLocks
 import org.stepic.droid.web.Api
-import org.stepic.droid.web.CoursesMetaResponse
 import org.stepik.android.model.Course
+import org.stepik.android.model.Meta
 import org.stepik.android.model.Progress
 import org.stepik.android.model.UserCourse
 import java.util.concurrent.atomic.AtomicBoolean
@@ -104,7 +104,7 @@ class PersistentCourseListPresenter
             val coursesFromInternet: List<Course>? = try {
                 if (courseType == Table.featured) {
                     val response = api.getPopularCourses(currentPage.get()).blockingGet()
-                    handleMeta(response)
+                    handleMeta(response.meta)
                     response.courses
                 } else {
                     val allMyCourses = arrayListOf<Course>()
@@ -112,17 +112,17 @@ class PersistentCourseListPresenter
                         val page = currentPage.get()
                         val coursesOrder = api.getUserCourses(page)
                                 .blockingGet()
+                                .apply { handleMeta(meta) }
                                 .userCourse
                                 .map(UserCourse::course)
 
-                        val coursesResponse = api.getCoursesReactive(page, coursesOrder.toLongArray())
+                        val coursesResponse = api.getCoursesReactive(1, coursesOrder.toLongArray())
                                 .blockingGet()
                         val courses = coursesResponse
                                 .courses
                                 .sortedBy { coursesOrder.indexOf(it.id) }
-
+                        
                         allMyCourses.addAll(courses)
-                        handleMeta(coursesResponse)
                     }
                     deadlinesRepository.syncDeadlines(allMyCourses).blockingAwait()
                     analytic.setCoursesCount(allMyCourses.size)
@@ -202,10 +202,10 @@ class PersistentCourseListPresenter
         }
     }
 
-    private fun handleMeta(response: CoursesMetaResponse) {
-        hasNextPage.set(response.meta.hasNext)
+    private fun handleMeta(meta: Meta) {
+        hasNextPage.set(meta.hasNext)
         if (hasNextPage.get()) {
-            currentPage.set(response.meta.page + 1) // page for next loading
+            currentPage.set(meta.page + 1) // page for next loading
         }
     }
 
