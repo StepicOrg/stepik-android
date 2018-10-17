@@ -1,41 +1,23 @@
 package org.stepic.droid.features.course.ui.activity
 
-import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.support.design.widget.AppBarLayout
 import android.support.design.widget.TabLayout
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
-import android.support.v7.content.res.AppCompatResources
 import android.view.MenuItem
 import android.widget.TextView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.CenterCrop
-import jp.wasabeef.glide.transformations.BlurTransformation
 import kotlinx.android.synthetic.main.activity_course.*
-import kotlinx.android.synthetic.main.header_course.*
 import org.stepic.droid.R
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.features.course.ui.adapter.CoursePagerAdapter
+import org.stepic.droid.features.course.ui.delegates.CourseHeaderDelegate
 import org.stepic.droid.fonts.FontType
-import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.util.AppConstants
 import org.stepik.android.model.Course
 import uk.co.chrisjenx.calligraphy.TypefaceUtils
 
 class CourseActivity : FragmentActivityBase() {
-
     private val course by lazy { intent.getParcelableExtra<Course>(AppConstants.KEY_COURSE_BUNDLE) }
 
-    private val courseCoverSmallTarget by lazy {
-        RoundedBitmapImageViewTarget(resources.getDimension(R.dimen.course_image_radius), courseCoverSmall)
-    }
-
-    private val courseCoverSmallPlaceHolder by lazy {
-        val coursePlaceholderBitmap = BitmapFactory.decodeResource(resources, R.drawable.general_placeholder)
-        val circularBitmapDrawable = RoundedBitmapDrawableFactory.create(resources, coursePlaceholderBitmap)
-        circularBitmapDrawable.cornerRadius = resources.getDimension(R.dimen.course_image_radius)
-        circularBitmapDrawable
-    }
+    private lateinit var courseHeaderDelegate: CourseHeaderDelegate
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,33 +32,9 @@ class CourseActivity : FragmentActivityBase() {
             setDisplayHomeAsUpEnabled(true)
         }
 
-        Glide.with(this)
-                .load(config.baseUrl + course.cover)
-                .placeholder(R.drawable.general_placeholder)
-                .bitmapTransform(CenterCrop(this), BlurTransformation(this))
-                .into(courseCover)
+        courseHeaderDelegate = CourseHeaderDelegate(this, config)
+        courseHeaderDelegate.setCourse(course)
 
-        Glide.with(this)
-                .load(config.baseUrl + course.cover)
-                .asBitmap()
-                .placeholder(courseCoverSmallPlaceHolder)
-                .centerCrop()
-                .into(courseCoverSmallTarget)
-
-        courseTitle.text = course.title
-
-        courseRating.total = 5
-        courseRating.progress = 3
-
-        courseProgress.progress = .77f
-        courseProgressText.text = "77%"
-
-
-        courseLearnersCount.text = course.learnersCount.toString()
-
-
-        initVerified()
-        initCollapsingAnimation()
         initViewPager()
     }
 
@@ -109,24 +67,6 @@ class CourseActivity : FragmentActivityBase() {
         (courseTabs.getTabAt(courseTabs.selectedTabPosition)?.customView as? TextView)?.let {
             it.typeface = regularFont
         }
-    }
-
-    private fun initVerified() {
-        val verifiedDrawable = AppCompatResources.getDrawable(this, R.drawable.ic_verified)
-        courseVerified.setCompoundDrawablesWithIntrinsicBounds(verifiedDrawable, null, null, null)
-    }
-
-    private fun initCollapsingAnimation() {
-        val courseInfoHeightExpanded = resources.getDimension(R.dimen.course_info_height_expanded)
-        val courseInfoMarginExpanded = resources.getDimension(R.dimen.course_info_margin_expanded)
-
-        courseAppBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
-            val ratio = Math.abs(verticalOffset).toFloat() / (courseCollapsingToolbar.height - courseToolbar.height)
-            val targetTranslation = courseInfoMarginExpanded - (courseToolbar.height - courseInfoHeightExpanded) / 2
-
-            courseCover.alpha = 1f - ratio
-            courseInfo.translationY = ratio * targetTranslation
-        })
     }
 
     override fun onOptionsItemSelected(item: MenuItem?) =
