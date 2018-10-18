@@ -22,6 +22,7 @@
         android:layout_marginEnd="@dimen/placeholders_image_margin"
         android:layout_marginRight="@dimen/placeholders_image_margin"
         android:src="@drawable/ic_empty"
+        android:contentDescription="@string/empty_user_title"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/centerGuideline"
         app:layout_constraintTop_toTopOf="parent" />

@@ -30,7 +30,8 @@
         <ImageView
             android:id="@+id/achievementIcon"
             android:layout_width="128dp"
-            android:layout_height="128dp" />
+            android:layout_height="128dp"
+            android:contentDescription="@null" />
     </FrameLayout>
 
     <org.stepic.droid.features.achievements.ui.custom.VectorRatingBar
