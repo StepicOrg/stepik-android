@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:src="@drawable/ic_empty"
         android:adjustViewBounds="true"
-        android:contentDescription="@null"
+        android:contentDescription="@string/empty_steps_title"
         app:layout_constraintBottom_toTopOf="@+id/placeholderMessage"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
