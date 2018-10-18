@@ -10,9 +10,7 @@ import org.stepic.droid.core.earlystreak.contract.EarlyStreakPoster
 import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.di.course_list.CourseListScope
 import org.stepic.droid.features.deadlines.repository.DeadlinesRepository
-import org.stepik.android.model.Course
 import org.stepic.droid.model.CourseReviewSummary
-import org.stepik.android.model.Progress
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.storage.operations.Table
@@ -20,7 +18,10 @@ import org.stepic.droid.util.CourseUtil
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.RWLocks
 import org.stepic.droid.web.Api
-import org.stepic.droid.web.CoursesMetaResponse
+import org.stepik.android.model.Course
+import org.stepik.android.model.Meta
+import org.stepik.android.model.Progress
+import org.stepik.android.model.UserCourse
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
@@ -103,14 +104,25 @@ class PersistentCourseListPresenter
             val coursesFromInternet: List<Course>? = try {
                 if (courseType == Table.featured) {
                     val response = api.getPopularCourses(currentPage.get()).blockingGet()
-                    handleMeta(response)
+                    handleMeta(response.meta)
                     response.courses
                 } else {
                     val allMyCourses = arrayListOf<Course>()
                     while (hasNextPage.get()) {
-                        val originalResponse = api.getEnrolledCourses(currentPage.get()).blockingGet()
-                        allMyCourses.addAll(originalResponse.courses)
-                        handleMeta(originalResponse)
+                        val page = currentPage.get()
+                        val coursesOrder = api.getUserCourses(page)
+                                .blockingGet()
+                                .apply { handleMeta(meta) }
+                                .userCourse
+                                .map(UserCourse::course)
+
+                        val coursesResponse = api.getCoursesReactive(1, coursesOrder.toLongArray())
+                                .blockingGet()
+                        val courses = coursesResponse
+                                .courses
+                                .sortedBy { coursesOrder.indexOf(it.id) }
+                        
+                        allMyCourses.addAll(courses)
                     }
                     deadlinesRepository.syncDeadlines(allMyCourses).blockingAwait()
                     analytic.setCoursesCount(allMyCourses.size)
@@ -190,10 +202,10 @@ class PersistentCourseListPresenter
         }
     }
 
-    private fun handleMeta(response: CoursesMetaResponse) {
-        hasNextPage.set(response.meta.hasNext)
+    private fun handleMeta(meta: Meta) {
+        hasNextPage.set(meta.hasNext)
         if (hasNextPage.get()) {
-            currentPage.set(response.meta.page + 1) // page for next loading
+            currentPage.set(meta.page + 1) // page for next loading
         }
     }
 
@@ -225,9 +237,8 @@ class PersistentCourseListPresenter
                 Table.enrolled -> {
                     val progressMap = getProgressesFromDb(courses)
                     CourseUtil.applyProgressesToCourses(progressMap, courses)
-                    val sortedCourses = sortByLastAction(courses, progressMap)
-                    postLastActive(sortedCourses.firstOrNull(), progressMap)
-                    sortedCourses
+                    postLastActive(courses.firstOrNull(), progressMap)
+                    courses
                 }
                 Table.featured -> {
                     filterApplicator.filterCourses(courses)
@@ -256,31 +267,6 @@ class PersistentCourseListPresenter
         currentPage.set(1)
         hasNextPage.set(true)
         downloadData(courseType, isRefreshing = true)
-    }
-
-    @WorkerThread
-    private fun sortByLastAction(courses: List<Course>, idProgressesMap: Map<String?, Progress>): MutableList<Course> {
-        return courses.sortedWith(Comparator { course1, course2 ->
-            val progress1: Progress? = idProgressesMap[course1.progress]
-            val progress2: Progress? = idProgressesMap[course2.progress]
-
-            val lastViewed1 = progress1?.lastViewed?.toLongOrNull()
-            val lastViewed2 = progress2?.lastViewed?.toLongOrNull()
-
-            if (lastViewed1 == null && lastViewed2 == null) {
-                return@Comparator (course2.id - course1.id).toInt() // course2 - course1 (greater id is 1st)
-            }
-
-            if (lastViewed1 == null) {
-                return@Comparator 1 // 1st after 2nd
-            }
-
-            if (lastViewed2 == null) {
-                return@Comparator -1 //1st before 2nd. 2nd to end
-            }
-
-            return@Comparator (lastViewed2 - lastViewed1).toInt()
-        }).toMutableList()
     }
 
     @WorkerThread

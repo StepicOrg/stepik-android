@@ -41,7 +41,7 @@ public interface Api {
 
     Call<RegistrationResponse> signUp(String firstName, String secondName, String email, String password);
 
-    Single<CoursesMetaResponse> getEnrolledCourses(int page);
+    Single<UserCoursesResponse> getUserCourses(int page);
 
     Single<CoursesMetaResponse> getPopularCourses(int page);
 

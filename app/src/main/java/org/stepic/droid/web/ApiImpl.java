@@ -464,8 +464,8 @@ public class ApiImpl implements Api {
         return csrftoken;
     }
 
-    public Single<CoursesMetaResponse> getEnrolledCourses(int page) {
-        return loggedService.getEnrolledCourses(page);
+    public Single<UserCoursesResponse> getUserCourses(int page) {
+        return loggedService.getUserCourses(page);
     }
 
     public Single<CoursesMetaResponse> getPopularCourses(int page) {
