@@ -74,14 +74,16 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="32dp"
+                            android:layout_marginStart="32dp"
                             android:layout_marginTop="14dp"
-                            android:gravity="left|start"
+                            android:gravity="start"
                             android:textColor="@color/new_accent_color"
                             android:textSize="@dimen/text_header"
                             android:visibility="invisible"
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/profileName"
                             tools:ignore="MissingPrefix"
+                            tools:visibility="visible"
                             tools:text="77 days"/>
 
                         <TextView
@@ -92,13 +94,14 @@
                             android:layout_marginLeft="0dp"
                             android:layout_marginStart="0dp"
                             android:layout_marginTop="0dp"
-                            android:gravity="left|start"
+                            android:gravity="start"
                             android:text="@string/current_streak"
                             android:textColor="@color/new_accent_color"
                             android:textSize="12sp"
                             android:visibility="invisible"
                             app:layout_constraintLeft_toLeftOf="@+id/currentStreakValue"
                             app:layout_constraintTop_toBottomOf="@+id/currentStreakValue"
+                            tools:visibility="visible"
                             tools:ignore="MissingPrefix"/>
 
                         <TextView
@@ -107,12 +110,14 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginRight="32dp"
-                            android:gravity="right"
+                            android:layout_marginEnd="32dp"
+                            android:gravity="end"
                             android:textColor="@color/new_accent_color"
                             android:textSize="16sp"
                             android:visibility="invisible"
                             app:layout_constraintBaseline_toBaselineOf="@+id/currentStreakValue"
                             app:layout_constraintRight_toRightOf="parent"
+                            tools:visibility="visible"
                             tools:ignore="MissingPrefix"
                             tools:text="365 days"/>
 
@@ -122,13 +127,15 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginRight="0dp"
-                            android:gravity="right"
+                            android:layout_marginEnd="0dp"
+                            android:gravity="end"
                             android:text="@string/max_streak"
                             android:textColor="@color/new_accent_color"
                             android:textSize="12sp"
                             android:visibility="invisible"
                             app:layout_constraintBaseline_toBaselineOf="@+id/currentStreakSuffix"
                             app:layout_constraintRight_toRightOf="@+id/maxStreakValue"
+                            tools:visibility="visible"
                             tools:ignore="MissingPrefix"/>
 
 
@@ -142,10 +149,12 @@
                             android:layout_marginTop="8dp"
                             android:src="@drawable/ic_lightning"
                             android:visibility="invisible"
+                            android:contentDescription="@null"
                             app:layout_constraintBottom_toBottomOf="@+id/currentStreakSuffix"
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintTop_toTopOf="@+id/currentStreakValue"/>
+                            app:layout_constraintTop_toTopOf="@+id/currentStreakValue"
+                            tools:visibility="visible" />
 
 
                     </android.support.constraint.ConstraintLayout>
