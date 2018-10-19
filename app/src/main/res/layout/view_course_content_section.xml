@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/course_content_section_background">
 
     <TextView
         android:id="@+id/sectionPosition"
@@ -41,12 +42,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/sectionPosition"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBaseline_toBaselineOf="@id/sectionPosition"
 
         tools:text="Introduction to JavaScript" />
 
     <org.stepic.droid.ui.custom.vertical_progress_bar.VerticalProgressBar
         android:id="@+id/sectionProgress"
-        android:layout_width="2dp"
+        android:layout_width="3dp"
         android:layout_height="0dp"
         app:progressBackgroundColor="@android:color/transparent"
         app:progressForegroundColor="@color/stepic_brand_primary"

@@ -55,7 +55,7 @@
 
     <org.stepic.droid.ui.custom.vertical_progress_bar.VerticalProgressBar
         android:id="@+id/lessonProgress"
-        android:layout_width="2dp"
+        android:layout_width="3dp"
         android:layout_height="0dp"
         app:progressBackgroundColor="@android:color/transparent"
         app:progressForegroundColor="@color/stepic_brand_primary"
