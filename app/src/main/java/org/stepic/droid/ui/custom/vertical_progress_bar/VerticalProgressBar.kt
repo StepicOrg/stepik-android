@@ -39,7 +39,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     }
 
     override fun onDraw(canvas: Canvas) {
-        val offset = height * (1f - progress).toInt()
+        val offset = ((1f - progress) * height).toInt()
 
         paint.color = progressBackgroundColor
         rect.set(0, 0, width, offset)
