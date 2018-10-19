@@ -15,9 +15,11 @@ import org.stepic.droid.R
 import org.stepic.droid.features.course.ui.adapter.course_content.CourseContentAdapter
 import org.stepic.droid.features.course.ui.adapter.course_content.delegates.lesson.CourseContentLessonClickListener
 import org.stepic.droid.features.course.ui.model.course_content.CourseContentItem
+import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.util.argument
-import org.stepik.android.model.Course
+import org.stepik.android.model.*
+import org.stepik.android.model.Unit
 
 class CourseContentFragment : Fragment() {
     companion object {
@@ -27,6 +29,7 @@ class CourseContentFragment : Fragment() {
                 }
     }
 
+    private lateinit var contentAdapter: CourseContentAdapter
     private var course by argument<Course>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -34,16 +37,32 @@ class CourseContentFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         with(courseContentRecycler) {
-            adapter = CourseContentAdapter(object : CourseContentLessonClickListener {
+            contentAdapter = CourseContentAdapter(object : CourseContentLessonClickListener {
                 override fun onItemClicked(item: CourseContentItem.LessonItem) {}
                 override fun onItemDownloadClicked(item: CourseContentItem.LessonItem) {}
                 override fun onItemRemoveClicked(item: CourseContentItem.LessonItem) {}
             })
+            adapter = contentAdapter
             layoutManager = LinearLayoutManager(context)
 
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL).apply {
                 setDrawable(ColorDrawable(ContextCompat.getColor(context, R.color.course_content_separator)))
             })
         }
+
+        contentAdapter.setData(listOf(
+                CourseContentItem.SectionItem(
+                        Section(title = "Introduction to JavaScript"),
+                        Progress(nSteps = 70, nStepsPassed = 23),
+                        DownloadProgress(0, DownloadProgress.Status.NotCached)
+                ),
+                CourseContentItem.LessonItem(
+                        Section(title = "Introduction to JavaScript"),
+                        Unit(),
+                        Lesson(title = "First lesson with short name", coverUrl = "https://i.vimeocdn.com/video/568468317_180x180.jpg?r=pad"),
+                        Progress(nSteps = 10, nStepsPassed = 8),
+                        DownloadProgress(0, DownloadProgress.Status.NotCached)
+                )
+        ))
     }
 }
