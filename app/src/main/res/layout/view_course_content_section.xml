@@ -46,6 +46,25 @@
 
         tools:text="Introduction to JavaScript" />
 
+    <TextView
+        android:id="@+id/sectionTextProgress"
+        fontPath="fonts/Roboto-Light.ttf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/course_content_item_inner_margin"
+        android:layout_marginStart="@dimen/course_content_item_inner_margin"
+        android:layout_marginLeft="@dimen/course_content_item_inner_margin"
+        android:layout_marginBottom="@dimen/course_content_item_margin"
+        android:lineSpacingExtra="4sp"
+        android:textColor="#535366"
+        android:textSize="12sp"
+        android:textStyle="normal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/sectionPosition"
+        app:layout_constraintTop_toBottomOf="@+id/sectionTitle"
+        tools:ignore="missingPrefix"
+        tools:text="6/10" />
+
     <org.stepic.droid.ui.custom.vertical_progress_bar.VerticalProgressBar
         android:id="@+id/sectionProgress"
         android:layout_width="3dp"

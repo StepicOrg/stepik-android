@@ -52,17 +52,19 @@ class CourseContentFragment : Fragment() {
 
         contentAdapter.setData(listOf(
                 CourseContentItem.SectionItem(
-                        Section(title = "Introduction to JavaScript"),
+                        Section(title = "Introduction to JavaScript", position = 1),
                         Progress(nSteps = 70, nStepsPassed = 23),
                         DownloadProgress(0, DownloadProgress.Status.NotCached)
                 ),
-                CourseContentItem.LessonItem(
-                        Section(title = "Introduction to JavaScript"),
-                        Unit(),
-                        Lesson(title = "First lesson with short name", coverUrl = "https://i.vimeocdn.com/video/568468317_180x180.jpg?r=pad"),
-                        Progress(nSteps = 10, nStepsPassed = 8),
-                        DownloadProgress(0, DownloadProgress.Status.NotCached)
-                )
+                *Array(5) {
+                    CourseContentItem.LessonItem(
+                            Section(title = "Introduction to JavaScript", position = 1),
+                            Unit(position = it + 1),
+                            Lesson(title = "First lesson with short name", coverUrl = "https://i.vimeocdn.com/video/568468317_180x180.jpg?r=pad"),
+                            Progress(nSteps = 10, nStepsPassed = 8),
+                            DownloadProgress(0, DownloadProgress.Status.NotCached)
+                    )
+                }
         ))
     }
 }

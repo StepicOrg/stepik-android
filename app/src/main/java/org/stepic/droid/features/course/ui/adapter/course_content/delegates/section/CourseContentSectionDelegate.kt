@@ -23,12 +23,15 @@ class CourseContentSectionDelegate(
         private val sectionTitle    = root.sectionTitle
         private val sectionPosition = root.sectionPosition
         private val sectionProgress = root.sectionProgress
+        private val sectionTextProgress = root.sectionTextProgress
 
         override fun onBind(data: CourseContentItem) {
             with(data as CourseContentItem.SectionItem) {
                 sectionTitle.text = section.title
-                sectionPosition.text = section.position.plus(1).toString()
+                sectionPosition.text = section.position.toString()
                 sectionProgress.progress = progress.nStepsPassed.toFloat() / progress.nSteps.toFloat()
+                sectionTextProgress.text = context.resources.getString(R.string.course_content_text_progress,
+                        progress.nStepsPassed, progress.nSteps)
             }
         }
     }
