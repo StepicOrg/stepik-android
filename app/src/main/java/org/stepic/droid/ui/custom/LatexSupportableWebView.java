@@ -82,6 +82,8 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
         setOnClickListener(this);
         setOnTouchListener(this);
 
+        setFocusable(true);
+        setFocusableInTouchMode(true);
 
         WebSettings webSettings = getSettings();
         webSettings.setDomStorageEnabled(true);

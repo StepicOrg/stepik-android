@@ -2,7 +2,9 @@ package org.stepic.droid.base
 
 import android.app.Application
 import android.content.Context
+import android.os.Build
 import android.os.StrictMode
+import android.webkit.WebView
 import com.facebook.FacebookSdk
 import com.facebook.appevents.AppEventsLogger
 import com.squareup.leakcanary.LeakCanary
@@ -90,6 +92,10 @@ class App : Application() {
                     .penaltyLog()
                     .penaltyDeath()
                     .build())
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                WebView.setWebContentsDebuggingEnabled(true)
+            }
         }
 
         FacebookSdk.sdkInitialize(applicationContext)
