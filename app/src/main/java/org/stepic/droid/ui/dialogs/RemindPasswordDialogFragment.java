@@ -9,12 +9,15 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -80,6 +83,8 @@ public class RemindPasswordDialogFragment extends DialogFragment {
             @Override
             public void onShow(DialogInterface dialog) {
                 Button b = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                b.setTextColor(getResources().getColorStateList(R.color.restore_password_dialog_button_color));
+                setButtonState(b);
                 b.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -164,6 +169,28 @@ public class RemindPasswordDialogFragment extends DialogFragment {
                     if (context != null) {
                         Toast.makeText(context, R.string.connectionProblems, Toast.LENGTH_SHORT).show();
                     }
+                }
+            });
+        }
+    }
+    private void setButtonState(final Button button) {
+        button.setEnabled(false);
+        EditText email = emailTextWrapper.getEditText();
+        if (email != null) {
+            email.addTextChangedListener(new TextWatcher() {
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    button.setEnabled(!(s.toString().trim().length() == 0));
+                }
+
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count,
+                                              int after) {
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
                 }
             });
         }
