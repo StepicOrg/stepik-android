@@ -27,7 +27,7 @@ class CourseContentSectionDelegate(
         override fun onBind(data: CourseContentItem) {
             with(data as CourseContentItem.SectionItem) {
                 sectionTitle.text = section.title
-                sectionPosition.text = section.position.toString()
+                sectionPosition.text = section.position.plus(1).toString()
                 sectionProgress.progress = progress.nStepsPassed.toFloat() / progress.nSteps.toFloat()
             }
         }

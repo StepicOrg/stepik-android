@@ -49,7 +49,7 @@ class CourseContentLessonDelegate(
         override fun onBind(data: CourseContentItem) {
             with(data as CourseContentItem.LessonItem) {
                 lessonTitle.text = context.resources.getString(R.string.course_content_lesson_title,
-                        section.position, unit.position, lesson.title)
+                        section.position + 1, unit.position + 1, lesson.title)
 
                 lessonTextProgress.text = context.resources.getString(R.string.course_content_lesson_text_progress,
                         progress.nStepsPassed, progress.nSteps)
