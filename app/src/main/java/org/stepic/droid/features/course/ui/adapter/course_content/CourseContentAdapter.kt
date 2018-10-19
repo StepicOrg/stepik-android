@@ -2,8 +2,8 @@ package org.stepic.droid.features.course.ui.adapter.course_content
 
 import android.support.v7.util.DiffUtil
 import org.stepic.droid.features.course.ui.adapter.course_content.delegates.control_bar.CourseContentControlBarDelegate
-import org.stepic.droid.features.course.ui.adapter.course_content.delegates.lesson.CourseContentLessonClickListener
-import org.stepic.droid.features.course.ui.adapter.course_content.delegates.lesson.CourseContentLessonDelegate
+import org.stepic.droid.features.course.ui.adapter.course_content.delegates.unit.CourseContentUnitClickListener
+import org.stepic.droid.features.course.ui.adapter.course_content.delegates.unit.CourseContentUnitDelegate
 import org.stepic.droid.features.course.ui.adapter.course_content.delegates.section.CourseContentSectionDelegate
 import org.stepic.droid.features.course.ui.model.course_content.CourseContentItem
 import org.stepic.droid.persistence.model.DownloadProgress
@@ -12,7 +12,7 @@ import org.stepic.droid.ui.custom.adapter_delegates.DelegateAdapter
 import org.stepik.android.model.Progress
 
 class CourseContentAdapter(
-        lessonClickListener: CourseContentLessonClickListener
+        unitClickListener: CourseContentUnitClickListener
 ) : DelegateAdapter<CourseContentItem, DelegateViewHolder<CourseContentItem>>() {
     private val headers = listOf(CourseContentItem.ControlBar)
 
@@ -25,7 +25,7 @@ class CourseContentAdapter(
     init {
         addDelegate(CourseContentControlBarDelegate(this))
         addDelegate(CourseContentSectionDelegate(this))
-        addDelegate(CourseContentLessonDelegate(this, lessonClickListener))
+        addDelegate(CourseContentUnitDelegate(this, unitClickListener))
     }
 
     fun updateSectionDownloadProgress(downloadProgress: DownloadProgress) {
@@ -45,16 +45,16 @@ class CourseContentAdapter(
     }
 
     fun updateUnitDonwloadProgress(downloadProgress: DownloadProgress) {
-        val unitPosition = items.indexOfFirst { it is CourseContentItem.LessonItem && it.unit.id == downloadProgress.id }
-        val unitItem = items.getOrNull(unitPosition) as? CourseContentItem.LessonItem ?: return
+        val unitPosition = items.indexOfFirst { it is CourseContentItem.UnitItem && it.unit.id == downloadProgress.id }
+        val unitItem = items.getOrNull(unitPosition) as? CourseContentItem.UnitItem ?: return
 
         items[unitPosition] = unitItem.copy(downloadProgress = downloadProgress)
         notifyItemChanged(unitPosition)
     }
 
     fun updateUnitProgress(progress: Progress) {
-        val unitPosition = items.indexOfFirst { it is CourseContentItem.LessonItem && it.progress.id == progress.id }
-        val unitItem = items.getOrNull(unitPosition) as? CourseContentItem.LessonItem ?: return
+        val unitPosition = items.indexOfFirst { it is CourseContentItem.UnitItem && it.progress.id == progress.id }
+        val unitItem = items.getOrNull(unitPosition) as? CourseContentItem.UnitItem ?: return
 
         items[unitPosition] = unitItem.copy(progress = progress)
         notifyItemChanged(unitPosition)

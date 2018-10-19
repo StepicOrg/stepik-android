@@ -9,14 +9,12 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import kotlinx.android.synthetic.main.fragment_course_content.*
 import org.stepic.droid.R
 import org.stepic.droid.features.course.ui.adapter.course_content.CourseContentAdapter
-import org.stepic.droid.features.course.ui.adapter.course_content.delegates.lesson.CourseContentLessonClickListener
+import org.stepic.droid.features.course.ui.adapter.course_content.delegates.unit.CourseContentUnitClickListener
 import org.stepic.droid.features.course.ui.model.course_content.CourseContentItem
 import org.stepic.droid.persistence.model.DownloadProgress
-import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.util.argument
 import org.stepik.android.model.*
 import org.stepik.android.model.Unit
@@ -37,10 +35,10 @@ class CourseContentFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         with(courseContentRecycler) {
-            contentAdapter = CourseContentAdapter(object : CourseContentLessonClickListener {
-                override fun onItemClicked(item: CourseContentItem.LessonItem) {}
-                override fun onItemDownloadClicked(item: CourseContentItem.LessonItem) {}
-                override fun onItemRemoveClicked(item: CourseContentItem.LessonItem) {}
+            contentAdapter = CourseContentAdapter(object : CourseContentUnitClickListener {
+                override fun onItemClicked(item: CourseContentItem.UnitItem) {}
+                override fun onItemDownloadClicked(item: CourseContentItem.UnitItem) {}
+                override fun onItemRemoveClicked(item: CourseContentItem.UnitItem) {}
             })
             adapter = contentAdapter
             layoutManager = LinearLayoutManager(context)
@@ -57,10 +55,10 @@ class CourseContentFragment : Fragment() {
                         DownloadProgress(0, DownloadProgress.Status.NotCached)
                 ),
                 *Array(5) {
-                    CourseContentItem.LessonItem(
+                    CourseContentItem.UnitItem(
                             Section(title = "Introduction to JavaScript", position = 1),
                             Unit(position = it + 1),
-                            Lesson(title = "First lesson with short name", coverUrl = "https://i.vimeocdn.com/video/568468317_180x180.jpg?r=pad"),
+                            Lesson(title = "First lesson with short name", coverUrl = "https://i.vimeocdn.com/video/507126040_180x180.jpg"),
                             Progress(nSteps = 10, nStepsPassed = 8),
                             DownloadProgress(0, DownloadProgress.Status.NotCached)
                     )

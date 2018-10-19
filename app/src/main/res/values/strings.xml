@@ -709,6 +709,6 @@
     <string name="course_info_certificate">Certificate</string>
     <string name="course_info_certificate_detail">Certificate details</string>
     
-    <string name="course_content_lesson_title" translatable="false">%d.%d %s</string>
+    <string name="course_content_unit_title" translatable="false">%d.%d %s</string>
     <string name="course_content_text_progress" translatable="false">%d/%d</string>
 </resources>
