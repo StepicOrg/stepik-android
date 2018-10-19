@@ -49,6 +49,7 @@
         android:textStyle="normal"
         app:layout_constraintStart_toEndOf="@+id/lessonIcon"
         app:layout_constraintTop_toBottomOf="@+id/lessonTitle"
+        app:layout_constraintBottom_toBottomOf="parent"
         tools:ignore="missingPrefix"
         tools:text="6/10" />
 
