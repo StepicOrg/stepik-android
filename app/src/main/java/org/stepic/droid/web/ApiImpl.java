@@ -596,13 +596,15 @@ public class ApiImpl implements Api {
 
     @Override
     public Call<SearchResultResponse> getSearchResultsCourses(int page, String rawQuery) {
+        EnumSet<StepikFilter> enumSet = sharedPreference.getFilterForFeatured();
+        String lang = enumSet.iterator().next().getLanguage();
         String encodedQuery = URLEncoder.encode(rawQuery);
 
         Bundle bundle = new Bundle();
         bundle.putString(FirebaseAnalytics.Param.SEARCH_TERM, rawQuery);
         analytic.reportEvent(FirebaseAnalytics.Event.SEARCH, bundle);
 
-        return loggedService.getSearchResults(page, encodedQuery);
+        return loggedService.getSearchResults(page, encodedQuery, lang);
     }
 
     @Override

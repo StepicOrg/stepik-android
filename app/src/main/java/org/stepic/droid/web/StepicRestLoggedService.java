@@ -111,8 +111,11 @@ public interface StepicRestLoggedService {
     Completable postViewedReactive(@Body ViewAssignmentWrapper stepAssignment);
 
     @GET("api/search-results?is_popular=true&is_public=true&type=course")
-    Call<SearchResultResponse> getSearchResults(@Query("page") int page,
-                                                @Query(value = "query", encoded = true) String encodedQuery);
+    Call<SearchResultResponse> getSearchResults(
+            @Query("page") int page,
+            @Query(value = "query", encoded = true) String encodedQuery,
+            @Query("language") String lang
+    );
 
     @GET("api/queries")
     Single<QueriesResponse> getSearchQueries(@Query("query") String query);
