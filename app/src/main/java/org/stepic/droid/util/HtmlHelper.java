@@ -236,6 +236,23 @@ public class HtmlHelper {
     private static final String KotlinRunnableSamplesScript =
             "<script src=\"https://unpkg.com/kotlin-playground@1\" data-selector=\"kotlin-runnable\"></script>";
 
+    private static final String KOTLIN_PLAYGROUND_SCROLL_RULE =
+            "elem.className !== 'CodeMirror-scroll' && elem.className !== 'code-output'";
+
+    private static final String DEFAULT_SCROLL_RULE =
+            "elem.parentElement.tagName !== 'BODY' && elem.parentElement.tagName !== 'HTML'";
+
+    private static final String HORIZONTAL_SCROLL_SCRIPT =
+            "<script type=\"text/javascript\">\n" +
+                "function measureScroll(x, y) {" +
+                    "var elem = document.elementFromPoint(x, y);" +
+                    "while(" + DEFAULT_SCROLL_RULE + " && " + KOTLIN_PLAYGROUND_SCROLL_RULE + ") {" +
+                        "elem = elem.parentElement;" +
+                     "}" +
+                    HORIZONTAL_SCROLL_LISTENER + ".onScroll(elem.offsetWidth, elem.scrollWidth, elem.scrollLeft);" +
+                "}" +
+            "</script>\n";
+
     //string with 2 format args
     private static final String PRE_BODY = "<html>\n" +
             "<head>\n" +
@@ -253,16 +270,8 @@ public class HtmlHelper {
             ", user-scalable=no" +
             ", target-densitydpi=medium-dpi" +
             "\" />" +
-            "<script type=\"text/javascript\">\n" +
-            "function measureScroll(x, y) {" +
-            "var elem = document.elementFromPoint(x, y);" +
-            "while(elem.parentElement.tagName !== 'BODY' && elem.parentElement.tagName !== 'HTML') {" +
-            "elem = elem.parentElement;" +
-            "}" +
-            HORIZONTAL_SCROLL_LISTENER + ".onScroll(elem.offsetWidth, elem.scrollWidth, elem.scrollLeft);" +
-            "}" +
-            "</script>\n" +
             "<link rel=\"stylesheet\" type=\"text/css\" href=\"wysiwyg.css\"/>" +
+            HORIZONTAL_SCROLL_SCRIPT +
             HORIZONTAL_SCROLL_STYLE +
             "<base href=\"%s\">" +
             "</head>\n"
