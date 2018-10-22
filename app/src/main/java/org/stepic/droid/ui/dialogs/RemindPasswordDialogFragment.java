@@ -82,7 +82,6 @@ public class RemindPasswordDialogFragment extends DialogFragment {
             @Override
             public void onShow(DialogInterface dialog) {
                 Button b = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-                b.setTextColor(getResources().getColorStateList(R.color.restore_password_dialog_button_color));
                 setButtonState(b);
                 b.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -184,13 +183,10 @@ public class RemindPasswordDialogFragment extends DialogFragment {
                 }
 
                 @Override
-                public void beforeTextChanged(CharSequence s, int start, int count,
-                                              int after) {
-                }
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
                 @Override
-                public void afterTextChanged(Editable s) {
-                }
+                public void afterTextChanged(Editable s) {}
             });
         }
     }

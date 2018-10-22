@@ -116,7 +116,7 @@
         <item name="colorPrimaryDark">@color/transparent_black_30</item>
         <item name="android:windowBackground">@color/login_launch_registration_background</item>
         <item name="android:colorBackground">@color/login_launch_registration_background</item>
-        <item name="android:textColor">@color/text_color</item>
+        <item name="android:textColor">@color/restore_password_dialog_button_color</item>
         <item name="android:statusBarColor" tools:targetApi="lollipop">@color/new_accent_color
         </item>
 
