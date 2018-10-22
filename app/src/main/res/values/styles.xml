@@ -28,7 +28,7 @@
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
 
         <item name="colorSwitchThumbNormal">#D8D8D8</item>
-        <item name="android:colorForeground">@color/text_color</item>
+        <item name="android:colorForeground">#c7c7c7</item>
 
         <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
         <item name="android:actionOverflowButtonStyle">@style/OverflowMenuButton</item>
