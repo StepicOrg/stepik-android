@@ -216,6 +216,9 @@ public class HtmlHelper {
                     "    overflow-x: scroll;\n" +
                     "    vertical-align: middle;\n" +
                     "}\n" +
+                    "body > .no-scroll {\n" +
+                    "    overflow: visible !important;\n" +
+                    "}" +
                     "</style>\n";
         } else {
             HORIZONTAL_SCROLL_STYLE = "";
@@ -234,7 +237,16 @@ public class HtmlHelper {
     }
 
     private static final String KotlinRunnableSamplesScript =
-            "<script src=\"https://unpkg.com/kotlin-playground@1\" data-selector=\"kotlin-runnable\"></script>";
+            "<script src=\"https://unpkg.com/kotlin-playground@1\"></script>" +
+            "<script>\n" +
+            "document.addEventListener('DOMContentLoaded', function() {\n" +
+            "    KotlinPlayground('kotlin-runnable', { \n" +
+            "        callback: function(targetNode, mountNode) {\n" +
+            "            mountNode.classList.add('no-scroll');\n" + // disable overflow for pg divs in order to disable overflow and show expand button
+            "        }\n" +
+            "    });\n" +
+            "});\n" +
+            "</script>";
 
     private static final String KOTLIN_PLAYGROUND_SCROLL_RULE =
             "elem.className !== 'CodeMirror-scroll' && elem.className !== 'code-output'";
