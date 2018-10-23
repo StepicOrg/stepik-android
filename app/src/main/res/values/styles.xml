@@ -126,7 +126,7 @@
         </item>
     </style>
 
-    <style name="StepikTheme.15.LoginDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+    <style name="StepikTheme.LoginDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="android:textColor">@color/restore_password_dialog_button_color</item>
     </style>
 
