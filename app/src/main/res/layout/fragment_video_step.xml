@@ -17,8 +17,6 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <include layout="@layout/step_text_header"/>
-
         <include
             android:id="@+id/playerLayout"
             layout="@layout/player_placeholder"
