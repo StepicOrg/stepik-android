@@ -18,12 +18,12 @@ import org.stepic.droid.core.presenters.RouteStepPresenter;
 import org.stepic.droid.core.presenters.contracts.AnonymousView;
 import org.stepic.droid.core.presenters.contracts.RouteStepView;
 import org.stepic.droid.persistence.model.StepPersistentWrapper;
+import org.stepic.droid.ui.custom.StepTextWrapper;
 import org.stepik.android.model.Lesson;
 import org.stepik.android.model.Section;
 import org.stepik.android.model.Step;
 import org.stepik.android.model.Unit;
 import org.stepic.droid.storage.operations.DatabaseFacade;
-import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout;
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment;
 import org.stepic.droid.ui.dialogs.StepShareDialogFragment;
 import org.stepic.droid.util.AppConstants;
@@ -44,9 +44,6 @@ public abstract class StepBaseFragment extends FragmentBase
         implements RouteStepView,
         AnonymousView,
         CommentCountListener {
-
-    @BindView(R.id.text_header_enhanced)
-    protected LatexSupportableEnhancedFrameLayout headerWvEnhanced;
 
     @BindView(R.id.open_comments_text)
     protected TextView textForComment;
@@ -86,6 +83,8 @@ public abstract class StepBaseFragment extends FragmentBase
     private final static String NEXT_LESSON_VISIBILITY_KEY = "visibility_next_lesson";
     private final static String PREVIOUS_LESSON_VISIBILITY_KEY = "visibility_previous_lesson";
 
+    @Inject
+    protected StepTextWrapper stepTextWrapper;
 
     @Inject
     protected RouteStepPresenter routeStepPresenter;
@@ -127,19 +126,7 @@ public abstract class StepBaseFragment extends FragmentBase
         super.onActivityCreated(savedInstanceState);
 
         setHasOptionsMenu(true);
-
-        if (step != null &&
-                step.getBlock() != null &&
-                step.getBlock().getText() != null &&
-                !step.getBlock().getText().isEmpty()) {
-
-            headerWvEnhanced.setText(step.getBlock().getText());
-            headerWvEnhanced.setVisibility(View.VISIBLE);
-            headerWvEnhanced.setTextIsSelectable(true);
-
-        } else {
-            headerWvEnhanced.setVisibility(View.GONE);
-        }
+        stepTextWrapper.bind(step);
 
         updateCommentState();
 
@@ -168,9 +155,13 @@ public abstract class StepBaseFragment extends FragmentBase
 
     }
 
+    protected abstract void attachStepTextWrapper();
+    protected abstract void detachStepTextWrapper();
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        attachStepTextWrapper();
         authLineText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -234,6 +225,7 @@ public abstract class StepBaseFragment extends FragmentBase
 
     @Override
     public void onDestroyView() {
+        detachStepTextWrapper();
         authLineText.setOnClickListener(null);
         textForComment.setOnClickListener(null);
         routeStepPresenter.detachView(this);

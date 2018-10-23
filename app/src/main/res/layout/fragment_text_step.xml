@@ -9,12 +9,10 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <LinearLayout
+        android:id="@+id/stepContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-
-        <include
-            layout="@layout/step_text_header"/>
 
         <include layout="@layout/open_comment_view"/>
 

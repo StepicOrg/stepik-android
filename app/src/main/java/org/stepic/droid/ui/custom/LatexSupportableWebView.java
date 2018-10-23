@@ -7,9 +7,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.JavascriptInterface;
@@ -109,10 +107,7 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
     }
 
     public void setText(CharSequence text, boolean wantLaTeX, String fontPath) {
-
-        DisplayMetrics displaymetrics = new DisplayMetrics();
-        ((AppCompatActivity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-        int width = displaymetrics.widthPixels;
+        final int width = getResources().getDisplayMetrics().widthPixels;
 
         String textString = text.toString();
 

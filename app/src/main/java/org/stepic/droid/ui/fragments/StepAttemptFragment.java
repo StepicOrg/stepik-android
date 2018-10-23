@@ -248,6 +248,16 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
 
     }
 
+    @Override
+    protected void attachStepTextWrapper() {
+        stepTextWrapper.attach(rootView, true);
+    }
+
+    @Override
+    protected void detachStepTextWrapper() {
+        stepTextWrapper.detach(rootView);
+    }
+
     private void makeSubmissionDirectly() {
         showActionButtonLoadState(true);
         blockUIBeforeSubmit(true);
