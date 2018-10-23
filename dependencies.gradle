@@ -52,7 +52,7 @@ ext.versions = [
         photoView            : '1.3.1',
         advancedRecycler     : '0.11.0@aar',
         recyclerAnimators    : '2.1.0',
-        materialProgress     : '1.1.6',
+        materialProgress     : '1.4.2',
         circleImageView      : '2.1.0',
         ahbottomnavigation   : '2.1.0',
         circleIndicator      : '1.2.2@aar',

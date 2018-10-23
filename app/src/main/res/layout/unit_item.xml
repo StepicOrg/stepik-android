@@ -76,7 +76,7 @@
                 style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:tint="@color/stepic_brand_primary"
+                app:mpb_progressTint="@color/stepic_brand_primary"
                 android:layout_toLeftOf="@+id/text_score"/>
 
             <TextView

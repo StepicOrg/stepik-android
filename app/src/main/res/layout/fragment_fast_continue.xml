@@ -123,11 +123,11 @@
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="0dp"
                 android:layout_marginLeft="0dp"
-                android:tint="@color/stepic_brand_primary"
                 android:max="100"
+                app:mpb_progressTint="@color/stepic_brand_primary"
                 app:mpb_progressStyle="horizontal"
                 app:mpb_useIntrinsicPadding="false"
-                app:mpb_showTrack="false"
+                app:mpb_showProgressBackground="false"
                 style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal.NoPadding" />
         </android.support.constraint.ConstraintLayout>
     </org.stepic.droid.ui.custom.RoundedBorderMaskView>
