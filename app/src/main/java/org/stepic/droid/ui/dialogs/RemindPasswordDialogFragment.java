@@ -30,6 +30,7 @@ import javax.inject.Inject;
 
 import butterknife.BindString;
 import butterknife.ButterKnife;
+import kotlin.text.StringsKt;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -82,7 +83,7 @@ public class RemindPasswordDialogFragment extends DialogFragment {
             @Override
             public void onShow(DialogInterface dialog) {
                 Button b = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-                setButtonState(b);
+                bindEmailChangeToButton(b);
                 b.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -171,7 +172,7 @@ public class RemindPasswordDialogFragment extends DialogFragment {
             });
         }
     }
-    private void setButtonState(final Button button) {
+    private void bindEmailChangeToButton(final Button button) {
         EditText email = emailTextWrapper.getEditText();
         if (email != null) {
             setSubmitButtonState(button, email.getText().toString());
@@ -191,7 +192,7 @@ public class RemindPasswordDialogFragment extends DialogFragment {
     }
 
     private void setSubmitButtonState(final Button button, String text) {
-        button.setEnabled(!(text.trim().length() == 0));
+        button.setEnabled(!StringsKt.isBlank(text));
     }
 
     @Override
