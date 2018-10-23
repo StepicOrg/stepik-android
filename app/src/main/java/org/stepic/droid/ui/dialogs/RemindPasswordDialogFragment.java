@@ -67,7 +67,7 @@ public class RemindPasswordDialogFragment extends DialogFragment {
         progressLogin = new LoadingProgressDialog(getContext());
 
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.StepikTheme_15_LoginDialog);
         builder.setTitle(R.string.remind_password)
                 .setView(v)
                 .setPositiveButton(R.string.send, new DialogInterface.OnClickListener() {
@@ -172,14 +172,13 @@ public class RemindPasswordDialogFragment extends DialogFragment {
         }
     }
     private void setButtonState(final Button button) {
-        button.setEnabled(false);
         EditText email = emailTextWrapper.getEditText();
         if (email != null) {
+            setSubmitButtonState(button, email.getText().toString());
             email.addTextChangedListener(new TextWatcher() {
-
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    button.setEnabled(!(s.toString().trim().length() == 0));
+                    setSubmitButtonState(button, s.toString());
                 }
 
                 @Override
@@ -189,6 +188,10 @@ public class RemindPasswordDialogFragment extends DialogFragment {
                 public void afterTextChanged(Editable s) {}
             });
         }
+    }
+
+    private void setSubmitButtonState(final Button button, String text) {
+        button.setEnabled(!(text.trim().length() == 0));
     }
 
     @Override
