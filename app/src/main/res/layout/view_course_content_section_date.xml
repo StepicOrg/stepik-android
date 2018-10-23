@@ -7,7 +7,7 @@
     android:layout_height="wrap_content">
 
     <View
-        android:id="@+id/dot"
+        android:id="@+id/dateDot"
         android:layout_width="8dp"
         android:layout_height="8dp"
         android:background="@drawable/ic_course_content_date_dot"
@@ -25,10 +25,10 @@
         app:mpb_progressTint="@color/new_accent_color"
         app:mpb_progressBackgroundTint="@color/course_content_section_date_disabled"
 
-        app:layout_constraintBottom_toBottomOf="@+id/dot"
+        app:layout_constraintBottom_toBottomOf="@+id/dateDot"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/dot"
-        app:layout_constraintTop_toTopOf="@+id/dot"
+        app:layout_constraintStart_toEndOf="@+id/dateDot"
+        app:layout_constraintTop_toTopOf="@+id/dateDot"
 
         tools:progress="30"
         tools:max="100" />
@@ -46,7 +46,7 @@
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dot"
+        app:layout_constraintTop_toBottomOf="@+id/dateDot"
         app:layout_constraintHorizontal_bias="0"
         tools:ignore="missingPrefix"
         tools:text="Start date" />
