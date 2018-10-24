@@ -3,6 +3,7 @@ package org.stepic.droid.features.course.ui.adapter.course_content.delegates.sec
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import kotlinx.android.synthetic.main.view_course_content_section.view.*
 import org.stepic.droid.R
 import org.stepic.droid.features.course.ui.model.course_content.CourseContentItem
@@ -36,6 +37,16 @@ class CourseContentSectionDelegate(
                 adapter = sectionTimeLineAdapter
                 layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
                 StartSnapHelper().attachToRecyclerView(this)
+
+                this@ViewHolder.sectionTitle.viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
+                    override fun onPreDraw(): Boolean {
+                        setPadding(this@ViewHolder.sectionTitle.left, paddingTop, paddingRight, paddingBottom)
+                        layoutManager?.scrollToPosition(0)
+
+                        this@ViewHolder.sectionTitle.viewTreeObserver.removeOnPreDrawListener(this)
+                        return true
+                    }
+                })
             }
         }
 
