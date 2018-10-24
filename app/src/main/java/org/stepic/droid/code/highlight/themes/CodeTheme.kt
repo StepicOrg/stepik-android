@@ -4,7 +4,7 @@ import android.support.annotation.ColorInt
 import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.R
 
-data class CodeTheme (
+class CodeTheme (
         val name: String,
         val syntax: CodeSyntax,
         @ColorInt val background: Int,
