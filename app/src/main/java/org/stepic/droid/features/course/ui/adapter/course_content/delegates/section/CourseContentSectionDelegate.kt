@@ -6,6 +6,8 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import kotlinx.android.synthetic.main.view_course_content_section.view.*
 import org.stepic.droid.R
+import org.stepic.droid.features.course.ui.adapter.course_content.CourseContentTimelineAdapter
+import org.stepic.droid.features.course.ui.adapter.course_content.decorators.CourseContentTimelineDecorator
 import org.stepic.droid.features.course.ui.model.course_content.CourseContentItem
 import org.stepic.droid.features.course.ui.model.course_content.CourseContentSectionDate
 import org.stepic.droid.ui.custom.adapter_delegates.AdapterDelegate
@@ -37,6 +39,7 @@ class CourseContentSectionDelegate(
                 adapter = sectionTimeLineAdapter
                 layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
                 StartSnapHelper().attachToRecyclerView(this)
+                addItemDecoration(CourseContentTimelineDecorator())
 
                 this@ViewHolder.sectionTitle.viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
                     override fun onPreDraw(): Boolean {
