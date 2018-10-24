@@ -29,6 +29,13 @@ class Lesson(
         @SerializedName("passed_by")
         val passedBy: Int = 0,
 
+        @SerializedName("epic_count")
+        val epicCount: Int = 0,
+        @SerializedName("abuse_count")
+        val abuseCount: Int = 0,
+        @SerializedName("vote_delta")
+        val voteDelta: Int = 0,
+
         val dependencies: Array<String>? = null,
         val followers: Array<String>? = null,
         val language: String? = null,
@@ -68,6 +75,9 @@ class Lesson(
         dest.writeStringArray(this.subscriptions)
         dest.writeInt(this.viewedBy)
         dest.writeInt(this.passedBy)
+        dest.writeInt(this.epicCount)
+        dest.writeInt(this.abuseCount)
+        dest.writeInt(this.voteDelta)
         dest.writeStringArray(this.dependencies)
         dest.writeStringArray(this.followers)
         dest.writeString(this.language)
@@ -92,6 +102,9 @@ class Lesson(
                 parcel.readString(),
                 parcel.readInt(),
                 parcel.createStringArray(),
+                parcel.readInt(),
+                parcel.readInt(),
+                parcel.readInt(),
                 parcel.readInt(),
                 parcel.readInt(),
                 parcel.createStringArray(),

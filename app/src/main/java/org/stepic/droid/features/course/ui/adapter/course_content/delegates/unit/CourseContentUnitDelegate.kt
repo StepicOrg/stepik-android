@@ -1,6 +1,7 @@
 package org.stepic.droid.features.course.ui.adapter.course_content.delegates.unit
 
 import android.graphics.BitmapFactory
+import android.support.annotation.DrawableRes
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
 import android.view.View
 import android.view.ViewGroup
@@ -29,6 +30,10 @@ class CourseContentUnitDelegate(
         private val unitTitle = root.unitTitle
         private val unitTextProgress = root.unitTextProgress
         private val unitProgress = root.unitProgress
+
+        private val unitViewCount = root.unitViewCount
+        private val unitRating = root.unitRating
+        private val unitRatingIcon = root.unitRatingIcon
 
         private val unitIconTarget = RoundedBitmapImageViewTarget(
                 context.resources.getDimension(R.dimen.course_image_radius), unitIcon)
@@ -62,6 +67,18 @@ class CourseContentUnitDelegate(
                         .placeholder(unitIconPlaceholder)
                         .centerCrop()
                         .into(unitIconTarget)
+
+                unitViewCount.text = lesson.passedBy.toString()
+
+                @DrawableRes
+                val unitRatingDrawableRes = if (lesson.voteDelta < 0) {
+                    R.drawable.ic_course_content_dislike
+                } else {
+                    R.drawable.ic_course_content_like
+                }
+
+                unitRatingIcon.setImageResource(unitRatingDrawableRes)
+                unitRating.text = Math.abs(lesson.voteDelta).toString()
             }
         }
     }

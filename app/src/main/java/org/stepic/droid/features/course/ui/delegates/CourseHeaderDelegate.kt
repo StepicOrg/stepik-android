@@ -4,7 +4,6 @@ import android.app.Activity
 import android.graphics.BitmapFactory
 import android.support.design.widget.AppBarLayout
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
-import android.support.v7.content.res.AppCompatResources
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import jp.wasabeef.glide.transformations.BlurTransformation
@@ -13,6 +12,7 @@ import kotlinx.android.synthetic.main.header_course.*
 import org.stepic.droid.R
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
+import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepik.android.model.Course
 
 class CourseHeaderDelegate(
@@ -50,8 +50,7 @@ class CourseHeaderDelegate(
     }
 
     private fun initVerified() = with(courseActivity) {
-        val verifiedDrawable = AppCompatResources.getDrawable(this, R.drawable.ic_verified)
-        courseVerified.setCompoundDrawablesWithIntrinsicBounds(verifiedDrawable, null, null, null)
+        courseVerified.setCompoundDrawables(start = R.drawable.ic_verified)
     }
 
     fun setCourse(course: Course) = with(courseActivity) {

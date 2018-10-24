@@ -35,6 +35,82 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="1.2 Second Lesson More Detailed and Interesting Name" />
 
+    <ImageView
+        android:id="@+id/unitViewCountIcon"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:contentDescription="@null"
+        app:srcCompat="@drawable/ic_course_info_target_audience"
+
+        android:layout_marginStart="@dimen/course_content_item_inner_margin"
+        android:layout_marginLeft="@dimen/course_content_item_inner_margin"
+        android:layout_marginTop="@dimen/course_content_item_inner_margin"
+        android:layout_marginBottom="@dimen/course_content_item_margin"
+
+        app:layout_constraintStart_toEndOf="@+id/unitIcon"
+        app:layout_constraintTop_toBottomOf="@+id/unitTitle"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <TextView
+        android:id="@+id/unitViewCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:lineSpacingExtra="4sp"
+        android:textColor="@color/new_accent_color"
+        android:textSize="12sp"
+
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="@dimen/course_content_item_inner_margin"
+        android:layout_marginBottom="@dimen/course_content_item_margin"
+
+        app:layout_constraintStart_toEndOf="@+id/unitViewCountIcon"
+        app:layout_constraintTop_toBottomOf="@+id/unitTitle"
+        app:layout_constraintBottom_toBottomOf="parent"
+
+        fontPath="fonts/Roboto-Light.ttf"
+        tools:ignore="missingPrefix"
+        tools:text="718k" />
+
+    <ImageView
+        android:id="@+id/unitRatingIcon"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:contentDescription="@null"
+        app:srcCompat="@drawable/ic_course_content_like"
+
+        android:layout_marginStart="@dimen/course_content_item_inner_margin"
+        android:layout_marginLeft="@dimen/course_content_item_inner_margin"
+        android:layout_marginTop="@dimen/course_content_item_inner_margin"
+        android:layout_marginBottom="@dimen/course_content_item_margin"
+
+        app:layout_constraintStart_toEndOf="@+id/unitViewCount"
+        app:layout_constraintTop_toBottomOf="@+id/unitTitle"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <TextView
+        android:id="@+id/unitRating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:lineSpacingExtra="4sp"
+        android:textColor="@color/new_accent_color"
+        android:textSize="12sp"
+
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="@dimen/course_content_item_inner_margin"
+        android:layout_marginBottom="@dimen/course_content_item_margin"
+
+        app:layout_constraintStart_toEndOf="@+id/unitRatingIcon"
+        app:layout_constraintTop_toBottomOf="@+id/unitTitle"
+        app:layout_constraintBottom_toBottomOf="parent"
+
+        fontPath="fonts/Roboto-Light.ttf"
+        tools:ignore="missingPrefix"
+        tools:text="999" />
+
     <TextView
         android:id="@+id/unitTextProgress"
         fontPath="fonts/Roboto-Light.ttf"
@@ -45,10 +121,9 @@
         android:layout_marginTop="@dimen/course_content_item_inner_margin"
         android:layout_marginBottom="@dimen/course_content_item_margin"
         android:lineSpacingExtra="4sp"
-        android:textColor="#535366"
+        android:textColor="@color/new_accent_color"
         android:textSize="12sp"
-        android:textStyle="normal"
-        app:layout_constraintStart_toEndOf="@+id/unitIcon"
+        app:layout_constraintStart_toEndOf="@+id/unitRating"
         app:layout_constraintTop_toBottomOf="@+id/unitTitle"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:ignore="missingPrefix"
