@@ -5,12 +5,12 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.view_course_content_section.view.*
 import org.stepic.droid.R
-import org.stepic.droid.features.course.ui.adapter.course_content.CourseContentDateAdapter
 import org.stepic.droid.features.course.ui.model.course_content.CourseContentItem
 import org.stepic.droid.features.course.ui.model.course_content.CourseContentSectionDate
 import org.stepic.droid.ui.custom.adapter_delegates.AdapterDelegate
 import org.stepic.droid.ui.custom.adapter_delegates.DelegateAdapter
 import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
+import org.stepic.droid.ui.util.StartSnapHelper
 import java.util.*
 
 class CourseContentSectionDelegate(
@@ -35,6 +35,7 @@ class CourseContentSectionDelegate(
             with(root.sectionTimeline) {
                 adapter = sectionTimeLineAdapter
                 layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+                StartSnapHelper().attachToRecyclerView(this)
             }
         }
 
@@ -48,10 +49,10 @@ class CourseContentSectionDelegate(
 
                 // todo flatten structure
                 sectionTimeLineAdapter.dates = listOf(
-                        CourseContentSectionDate(R.string.course_content_timeline_begin_date, section.createDate ?: Date()),
-                        CourseContentSectionDate(R.string.course_content_timeline_soft_deadline, section.hardDeadline ?: Date()),
-                        CourseContentSectionDate(R.string.course_content_timeline_hard_deadline, section.hardDeadline ?: Date()),
-                        CourseContentSectionDate(R.string.course_content_timeline_end_date, section.hardDeadline ?: Date())
+                        CourseContentSectionDate(R.string.course_content_timeline_begin_date, section.createDate ?: Date().apply { time -= 100000 }),
+                        CourseContentSectionDate(R.string.course_content_timeline_soft_deadline, section.hardDeadline ?: Date().apply { time -= 10000 }),
+                        CourseContentSectionDate(R.string.course_content_timeline_hard_deadline, section.hardDeadline ?: Date().apply { time += 10000 }),
+                        CourseContentSectionDate(R.string.course_content_timeline_end_date, section.hardDeadline ?: Date().apply { time += 100000 })
                 )
             }
         }

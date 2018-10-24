@@ -1,4 +1,4 @@
-package org.stepic.droid.features.course.ui.adapter.course_content
+package org.stepic.droid.features.course.ui.adapter.course_content.delegates.section
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -19,6 +19,8 @@ class CourseContentDateAdapter : RecyclerView.Adapter<DelegateViewHolder<CourseC
             notifyDataSetChanged()
         }
 
+    var now: Date = Date()
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
             ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.view_course_content_section_date, parent, false))
 
@@ -35,10 +37,17 @@ class CourseContentDateAdapter : RecyclerView.Adapter<DelegateViewHolder<CourseC
         private val dateValue = root.dateValue
 
         override fun onBind(data: CourseContentSectionDate) {
-            dateProgress.changeVisibility(adapterPosition < itemCount - 1)
-
             dateTitle.setText(data.titleRes)
             dateValue.text = DateTimeHelper.getPrintableDate(data.date, DateTimeHelper.DISPLAY_DATETIME_PATTERN, TimeZone.getDefault())
+
+            val isNotLastItem = adapterPosition < itemCount - 1
+            dateProgress.changeVisibility(isNotLastItem)
+            if (isNotLastItem) {
+                dateProgress.max = (dates[adapterPosition + 1].date.time - data.date.time).toInt()
+                dateProgress.progress = (now.time - data.date.time).toInt()
+            }
+
+            dateDot.isEnabled = now >= data.date
         }
     }
 }
