@@ -54,16 +54,33 @@
         android:layout_marginTop="@dimen/course_content_item_inner_margin"
         android:layout_marginStart="@dimen/course_content_item_inner_margin"
         android:layout_marginLeft="@dimen/course_content_item_inner_margin"
-        android:layout_marginBottom="@dimen/course_content_item_margin"
         android:lineSpacingExtra="4sp"
         android:textColor="#535366"
         android:textSize="12sp"
         android:textStyle="normal"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/sectionPosition"
         app:layout_constraintTop_toBottomOf="@+id/sectionTitle"
         tools:ignore="missingPrefix"
         tools:text="6/10" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/sectionTimeline"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/course_content_item_inner_margin"
+        android:layout_marginStart="@dimen/course_content_item_inner_margin"
+        android:layout_marginLeft="@dimen/course_content_item_inner_margin"
+        android:layout_marginBottom="@dimen/course_content_item_margin"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/sectionPosition"
+        app:layout_constraintTop_toBottomOf="@+id/sectionTextProgress"
+        app:layout_constraintBottom_toBottomOf="parent"
+
+        tools:layoutManager="android.support.v7.widget.LinearLayoutManager"
+        tools:orientation="horizontal"
+        tools:listitem="@layout/view_course_content_section_date" />
 
     <org.stepic.droid.ui.custom.vertical_progress_bar.VerticalProgressBar
         android:id="@+id/sectionProgress"
