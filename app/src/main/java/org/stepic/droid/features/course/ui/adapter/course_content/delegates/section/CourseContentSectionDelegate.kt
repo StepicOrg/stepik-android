@@ -29,7 +29,7 @@ class CourseContentSectionDelegate(
         private val sectionProgress = root.sectionProgress
         private val sectionTextProgress = root.sectionTextProgress
 
-        private val sectionTimeLineAdapter = CourseContentDateAdapter()
+        private val sectionTimeLineAdapter = CourseContentTimelineAdapter()
 
         init {
             with(root.sectionTimeline) {

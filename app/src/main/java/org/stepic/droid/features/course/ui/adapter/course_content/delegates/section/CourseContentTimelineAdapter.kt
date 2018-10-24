@@ -12,7 +12,7 @@ import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.util.DateTimeHelper
 import java.util.*
 
-class CourseContentDateAdapter : RecyclerView.Adapter<DelegateViewHolder<CourseContentSectionDate>>() {
+class CourseContentTimelineAdapter : RecyclerView.Adapter<DelegateViewHolder<CourseContentSectionDate>>() {
     var dates: List<CourseContentSectionDate> = emptyList()
         set(value) {
             field = value.sortedBy { it.date }
