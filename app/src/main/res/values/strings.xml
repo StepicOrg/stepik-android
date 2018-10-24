@@ -711,4 +711,10 @@
     
     <string name="course_content_unit_title" translatable="false">%d.%d %s</string>
     <string name="course_content_text_progress" translatable="false">%d/%d</string>
+
+    <string name="course_content_timeline_begin_date">Begin date</string>
+    <string name="course_content_timeline_end_date">End date</string>
+    <string name="course_content_timeline_soft_deadline">Soft deadline</string>
+    <string name="course_content_timeline_hard_deadline">Hard deadline</string>
+    <string name="course_content_timeline_deadline">Deadline</string>
 </resources>
