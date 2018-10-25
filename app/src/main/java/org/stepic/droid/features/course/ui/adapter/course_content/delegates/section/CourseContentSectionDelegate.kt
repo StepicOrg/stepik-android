@@ -30,7 +30,8 @@ class CourseContentSectionDelegate(
         private val sectionTitle    = root.sectionTitle
         private val sectionPosition = root.sectionPosition
         private val sectionProgress = root.sectionProgress
-        private val sectionTextProgress = root.sectionTextProgress
+        private val sectionTextProgress   = root.sectionTextProgress
+        private val sectionDownloadStatus = root.sectionDownloadStatus
 
         private val sectionTimeLineAdapter = CourseContentTimelineAdapter()
 
@@ -60,6 +61,7 @@ class CourseContentSectionDelegate(
                 sectionProgress.progress = progress.nStepsPassed.toFloat() / progress.nSteps.toFloat()
                 sectionTextProgress.text = context.resources.getString(R.string.course_content_text_progress,
                         progress.nStepsPassed, progress.nSteps)
+                sectionDownloadStatus.status = downloadProgress.status
 
                 // todo flatten structure
                 sectionTimeLineAdapter.dates = listOf(

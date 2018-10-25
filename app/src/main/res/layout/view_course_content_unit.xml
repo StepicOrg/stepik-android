@@ -25,12 +25,12 @@
         android:layout_marginStart="@dimen/course_content_item_inner_margin"
         android:layout_marginLeft="@dimen/course_content_item_inner_margin"
         android:layout_marginTop="@dimen/course_content_item_margin"
-        android:layout_marginEnd="@dimen/course_content_item_margin"
-        android:layout_marginRight="@dimen/course_content_item_margin"
+        android:layout_marginEnd="@dimen/course_content_item_inner_margin"
+        android:layout_marginRight="@dimen/course_content_item_inner_margin"
         android:lineSpacingExtra="3sp"
         android:textColor="@color/new_accent_color"
         android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/unitDownloadStatus"
         app:layout_constraintStart_toEndOf="@+id/unitIcon"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="1.2 Second Lesson More Detailed and Interesting Name" />
@@ -128,6 +128,20 @@
         app:layout_constraintBottom_toBottomOf="parent"
         tools:ignore="missingPrefix"
         tools:text="6/10" />
+
+    <org.stepic.droid.features.course.ui.custom.DownloadStatusView
+        android:id="@+id/unitDownloadStatus"
+        android:background="@drawable/circle_selector"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:padding="12dp"
+
+        android:layout_marginEnd="@dimen/course_content_item_inner_margin"
+        android:layout_marginRight="@dimen/course_content_item_inner_margin"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <org.stepic.droid.ui.custom.vertical_progress_bar.VerticalProgressBar
         android:id="@+id/unitProgress"

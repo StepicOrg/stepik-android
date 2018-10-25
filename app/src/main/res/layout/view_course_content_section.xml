@@ -34,16 +34,16 @@
         android:layout_marginStart="@dimen/course_content_item_inner_margin"
         android:layout_marginLeft="@dimen/course_content_item_inner_margin"
         android:layout_marginTop="@dimen/course_content_item_margin"
-        android:layout_marginEnd="@dimen/course_content_item_margin"
-        android:layout_marginRight="@dimen/course_content_item_margin"
+        android:layout_marginEnd="@dimen/course_content_item_inner_margin"
+        android:layout_marginRight="@dimen/course_content_item_inner_margin"
+        android:gravity="start"
         android:lineSpacingExtra="2sp"
         android:textSize="14sp"
-        android:gravity="start"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/sectionPosition"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBaseline_toBaselineOf="@id/sectionPosition"
+        app:layout_constraintEnd_toStartOf="@+id/sectionDownloadStatus"
+        app:layout_constraintStart_toEndOf="@+id/sectionPosition"
 
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="Introduction to JavaScript" />
 
     <TextView
@@ -63,6 +63,20 @@
         tools:ignore="missingPrefix"
         tools:text="6/10" />
 
+    <org.stepic.droid.features.course.ui.custom.DownloadStatusView
+        android:id="@+id/sectionDownloadStatus"
+        android:background="@drawable/circle_selector"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:padding="12dp"
+
+        android:layout_marginEnd="@dimen/course_content_item_inner_margin"
+        android:layout_marginRight="@dimen/course_content_item_inner_margin"
+
+        app:layout_constraintBottom_toBottomOf="@+id/sectionTextProgress"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/sectionTitle" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/sectionTimeline"
         android:layout_width="0dp"
@@ -76,6 +90,7 @@
         app:layout_constraintTop_toBottomOf="@+id/sectionTextProgress"
         app:layout_constraintBottom_toBottomOf="parent"
 
+        tools:paddingStart="52dp"
         tools:layoutManager="android.support.v7.widget.LinearLayoutManager"
         tools:orientation="horizontal"
         tools:listitem="@layout/view_course_content_section_date" />

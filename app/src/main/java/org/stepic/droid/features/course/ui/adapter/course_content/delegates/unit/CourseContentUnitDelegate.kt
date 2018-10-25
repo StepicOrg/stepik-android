@@ -35,6 +35,8 @@ class CourseContentUnitDelegate(
         private val unitRating = root.unitRating
         private val unitRatingIcon = root.unitRatingIcon
 
+        private val unitDownloadStatus = root.unitDownloadStatus
+
         private val unitIconTarget = RoundedBitmapImageViewTarget(
                 context.resources.getDimension(R.dimen.course_image_radius), unitIcon)
 
@@ -60,6 +62,8 @@ class CourseContentUnitDelegate(
                         progress.nStepsPassed, progress.nSteps)
 
                 unitProgress.progress = progress.nStepsPassed.toFloat() / progress.nSteps
+
+                unitDownloadStatus.status = downloadProgress.status
 
                 Glide.with(unitIcon.context)
                         .load(lesson.coverUrl)

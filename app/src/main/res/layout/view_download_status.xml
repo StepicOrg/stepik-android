@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/statusCached"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@null"
+        app:srcCompat="@drawable/ic_download_remove"
+        android:visibility="visible" />
+
+    <me.zhanghai.android.materialprogressbar.MaterialProgressBar
+        android:id="@+id/statusPending"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:indeterminate="true"
+        app:mpb_useIntrinsicPadding="false"
+        style="@style/Widget.MaterialProgressBar.ProgressBar.Small.NoPadding"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/statusNotCached"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@null"
+        app:srcCompat="@drawable/ic_download"
+        android:visibility="gone" />
+
+    <FrameLayout
+        android:id="@+id/statusInProgress"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@null"
+            android:layout_margin="4dp"
+            app:srcCompat="@drawable/ic_download_cancel" />
+
+    </FrameLayout>
+
+</merge>
