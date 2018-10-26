@@ -32,7 +32,7 @@ class CourseContentAdapter(
         val sectionPosition = items.indexOfFirst { it is CourseContentItem.SectionItem && it.section.id == downloadProgress.id }
         val sectionItem = items.getOrNull(sectionPosition) as? CourseContentItem.SectionItem ?: return
 
-        items[sectionPosition] = sectionItem.copy(downloadProgress = downloadProgress)
+        items[sectionPosition] = sectionItem.copy(downloadStatus = downloadProgress.status)
         notifyItemChanged(sectionPosition)
     }
 
@@ -48,7 +48,7 @@ class CourseContentAdapter(
         val unitPosition = items.indexOfFirst { it is CourseContentItem.UnitItem && it.unit.id == downloadProgress.id }
         val unitItem = items.getOrNull(unitPosition) as? CourseContentItem.UnitItem ?: return
 
-        items[unitPosition] = unitItem.copy(downloadProgress = downloadProgress)
+        items[unitPosition] = unitItem.copy(downloadStatus = downloadProgress.status)
         notifyItemChanged(unitPosition)
     }
 

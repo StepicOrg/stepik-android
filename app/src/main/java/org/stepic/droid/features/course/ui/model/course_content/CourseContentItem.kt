@@ -11,8 +11,8 @@ sealed class CourseContentItem {
 
     data class SectionItem(
             val section: Section,
-            val progress: Progress,
-            val downloadProgress: DownloadProgress
+            var progress: Progress,
+            val downloadStatus: DownloadProgress.Status
     ) : CourseContentItem()
 
     data class UnitItem(
@@ -20,6 +20,6 @@ sealed class CourseContentItem {
             val unit: Unit,
             val lesson: Lesson,
             val progress: Progress,
-            val downloadProgress: DownloadProgress
+            val downloadStatus: DownloadProgress.Status
     ) : CourseContentItem()
 }

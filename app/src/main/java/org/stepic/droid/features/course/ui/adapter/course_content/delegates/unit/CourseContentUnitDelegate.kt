@@ -63,7 +63,7 @@ class CourseContentUnitDelegate(
 
                 unitProgress.progress = progress.nStepsPassed.toFloat() / progress.nSteps
 
-                unitDownloadStatus.status = downloadProgress.status
+                unitDownloadStatus.status = downloadStatus
 
                 Glide.with(unitIcon.context)
                         .load(lesson.coverUrl)

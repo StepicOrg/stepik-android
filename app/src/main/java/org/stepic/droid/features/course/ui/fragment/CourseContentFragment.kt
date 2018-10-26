@@ -52,7 +52,7 @@ class CourseContentFragment : Fragment() {
                 CourseContentItem.SectionItem(
                         Section(title = "Introduction to JavaScript", position = 1),
                         Progress(nSteps = 70, nStepsPassed = 23),
-                        DownloadProgress(0, DownloadProgress.Status.Cached)
+                        DownloadProgress.Status.Cached
                 ),
                 *Array(5) {
                     CourseContentItem.UnitItem(
@@ -60,7 +60,7 @@ class CourseContentFragment : Fragment() {
                             Unit(position = it + 1),
                             Lesson(title = "First lesson with short name", coverUrl = "https://i.vimeocdn.com/video/507126040_180x180.jpg"),
                             Progress(nSteps = 10, nStepsPassed = 8),
-                            DownloadProgress(0, DownloadProgress.Status.InProgress(0.43f))
+                            DownloadProgress.Status.InProgress(0.43f)
                     )
                 }
         ))
