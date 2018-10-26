@@ -5,12 +5,12 @@ ext.versions = [
         minSdk               : 15,
         targetSdk            : 26,
         compileSdk           : 28,
-        buildTools           : '28.0.0',
+        buildTools           : '28.0.2',
 
-        androidGradlePlugin  : '3.0.0',
+        androidGradlePlugin  : '3.2.0',
         kotlin               : '1.2.51',
         googleServicesVersion: '3.0.0',
-        fabric               : '1.25.1',
+        fabric               : '1.25.4',
         dexcount             : '0.8.2',
 
         dagger               : '2.10',
@@ -64,7 +64,7 @@ ext.versions = [
 
         stetho               : '1.4.2',
         leakCanary           : '1.5.1',
-        crashlytics          : '2.9.1@aar',
+        crashlytics          : '2.9.5@aar',
 
         junit                : '4.12',
         robolectric          : '3.1.2',

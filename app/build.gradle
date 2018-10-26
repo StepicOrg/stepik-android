@@ -173,10 +173,7 @@ dependencies {
     implementation libraries.MPAndroidChart
 
     implementation libraries.shortcutBadger
-    implementation (libraries.StoriesKit) {
-        exclude group: 'com.android.support'
-        changing = true
-    }
+    implementation libraries.StoriesKit
 
     debugImplementation libraries.leakCanary
     releaseImplementation libraries.leakCanaryNoOp
