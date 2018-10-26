@@ -717,4 +717,8 @@
     <string name="course_content_timeline_soft_deadline">Soft deadline</string>
     <string name="course_content_timeline_hard_deadline">Hard deadline</string>
     <string name="course_content_timeline_deadline">Deadline</string>
+
+    <string name="course_control_schedule">Schedule</string>
+    <string name="course_control_filter">Filter by</string>
+    <string name="course_control_download_all">Download all</string>
 </resources>

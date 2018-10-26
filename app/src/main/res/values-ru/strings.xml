@@ -698,4 +698,8 @@
     <string name="course_content_timeline_soft_deadline">Мягкий дедлайн</string>
     <string name="course_content_timeline_hard_deadline">Жесткий дедлайн</string>
     <string name="course_content_timeline_deadline">Дедлайн</string>
+
+    <string name="course_control_schedule">Расписание</string>
+    <string name="course_control_filter">Фильтр</string>
+    <string name="course_control_download_all">Скачать все</string>
 </resources>
