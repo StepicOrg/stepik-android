@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         android:contentDescription="@null"
         app:srcCompat="@drawable/ic_download_remove"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
     <me.zhanghai.android.materialprogressbar.MaterialProgressBar
         android:id="@+id/statusPending"
@@ -17,7 +17,7 @@
         android:layout_height="match_parent"
         android:indeterminate="true"
         app:mpb_useIntrinsicPadding="false"
-        style="@style/Widget.MaterialProgressBar.ProgressBar.Small.NoPadding"
+        style="@style/Widget.MaterialProgressBar.ProgressBar.NoPadding"
         android:visibility="gone" />
 
     <ImageView
@@ -33,6 +33,20 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone">
+
+        <me.zhanghai.android.materialprogressbar.MaterialProgressBar
+            android:id="@+id/statusProgress"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:mpb_useIntrinsicPadding="false"
+            app:mpb_progressTint="@color/new_accent_color"
+            app:mpb_progressBackgroundTint="@color/course_content_section_date_disabled"
+            app:mpb_showProgressBackground="true"
+            android:indeterminate="false"
+            android:indeterminateOnly="false"
+            style="@style/Widget.MaterialProgressBar.ProgressBar.NoPadding"
+            android:max="100"
+            android:progress="63" />
 
         <ImageView
             android:layout_width="match_parent"
