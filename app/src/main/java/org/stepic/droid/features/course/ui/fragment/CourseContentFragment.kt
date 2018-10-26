@@ -1,6 +1,5 @@
 package org.stepic.droid.features.course.ui.fragment
 
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
@@ -44,7 +43,7 @@ class CourseContentFragment : Fragment() {
             layoutManager = LinearLayoutManager(context)
 
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL).apply {
-                setDrawable(ColorDrawable(ContextCompat.getColor(context, R.color.course_content_separator)))
+                ContextCompat.getDrawable(context, R.drawable.list_divider_h)?.let(::setDrawable)
             })
         }
 
