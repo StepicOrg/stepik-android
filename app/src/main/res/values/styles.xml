@@ -420,6 +420,7 @@
 
     <style name="AutoCompleteTextViewStyle" parent="Widget.AppCompat.Light.AutoCompleteTextView">
         <item name="android:textColor">@color/text_color</item>
+        <item name="android:textColorHighlight">@color/text_color_highlight</item>
     </style>
 
     <style name="Adaptive.BorderlessButton" parent="Widget.AppCompat.Button.Borderless">
