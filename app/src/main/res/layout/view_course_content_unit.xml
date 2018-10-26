@@ -25,8 +25,8 @@
         android:layout_marginStart="@dimen/course_content_item_inner_margin"
         android:layout_marginLeft="@dimen/course_content_item_inner_margin"
         android:layout_marginTop="@dimen/course_content_item_margin"
-        android:layout_marginEnd="@dimen/course_content_item_inner_margin"
-        android:layout_marginRight="@dimen/course_content_item_inner_margin"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:lineSpacingExtra="3sp"
         android:textColor="@color/new_accent_color"
         android:textSize="14sp"
@@ -132,12 +132,12 @@
     <org.stepic.droid.features.course.ui.custom.DownloadStatusView
         android:id="@+id/unitDownloadStatus"
         android:background="@drawable/circle_selector"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:padding="12dp"
+        android:layout_width="@dimen/course_content_download_status_size"
+        android:layout_height="@dimen/course_content_download_status_size"
+        android:padding="@dimen/course_content_download_status_padding"
 
-        android:layout_marginEnd="@dimen/course_content_item_inner_margin"
-        android:layout_marginRight="@dimen/course_content_item_inner_margin"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
 
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
