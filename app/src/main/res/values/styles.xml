@@ -126,7 +126,7 @@
     </style>
 
     <style name="StepikTheme.LoginDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="colorAccent">@color/new_accent_color</item>
+        <item name="android:textColor">@color/restore_password_dialog_button_color</item>
     </style>
 
     <style name="AppTheme.VideoPlayer" parent="AppTheme.VideoPlayer.7" />
