@@ -47,7 +47,6 @@ class VideoStepFragment : StepBaseFragment(),
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        headerWvEnhanced.visibility = View.GONE
 
         videoStepPresenter.attachView(this)
         videoLengthPresenter.attachView(this)
@@ -59,6 +58,9 @@ class VideoStepFragment : StepBaseFragment(),
             videoStepPresenter.playVideo(stepWrapper)
         }
     }
+
+    override fun attachStepTextWrapper() {} // no need in step text wrapper
+    override fun detachStepTextWrapper() {}
 
     override fun onDestroyView() {
         videoLengthPresenter.detachView(this)
