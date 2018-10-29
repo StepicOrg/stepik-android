@@ -40,6 +40,7 @@
         <item name="editTextStyle">@style/StepikTheme.EditTextStyle</item>
 
         <item name="searchViewStyle">@style/SearchViewStyle</item>
+        <item name="autoCompleteTextViewStyle">@style/AutoCompleteTextViewStyle</item>
     </style>
 
     <style name="OverflowMenuButton" parent="@android:style/Widget.Holo.ActionButton.Overflow">
@@ -415,6 +416,11 @@
         <item name="searchIcon">@null</item>
         <item name="searchHintIcon">@null</item>
         <item name="android:iconifiedByDefault">false</item>
+    </style>
+
+    <style name="AutoCompleteTextViewStyle" parent="Widget.AppCompat.Light.AutoCompleteTextView">
+        <item name="android:textColor">@color/text_color</item>
+        <item name="android:textColorHighlight">@color/text_color_highlight</item>
     </style>
 
     <style name="Adaptive.BorderlessButton" parent="Widget.AppCompat.Button.Borderless">
