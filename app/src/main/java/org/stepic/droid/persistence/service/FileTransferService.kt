@@ -59,7 +59,7 @@ class FileTransferService: JobIntentService() {
         val storage = externalStorageManager.getSelectedStorageLocation()
         val items = persistentItemDao.getItemsByStatus(PersistentItem.Status.COMPLETED).blockingFirst()
 
-        items.groupBy { it.task.structure.step }.forEach { _, downloads ->
+        items.groupBy { it.task.structure.step }.entries.forEach { (_, downloads) ->
             val structure = downloads.first().task.structure
             persistentStateManager.invalidateStructure(structure, PersistentState.State.IN_PROGRESS)
 

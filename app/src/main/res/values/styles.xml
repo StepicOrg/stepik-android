@@ -40,6 +40,7 @@
         <item name="editTextStyle">@style/StepikTheme.EditTextStyle</item>
 
         <item name="searchViewStyle">@style/SearchViewStyle</item>
+        <item name="autoCompleteTextViewStyle">@style/AutoCompleteTextViewStyle</item>
     </style>
 
     <style name="OverflowMenuButton" parent="@android:style/Widget.Holo.ActionButton.Overflow">
@@ -117,13 +118,15 @@
         <item name="android:windowBackground">@color/login_launch_registration_background</item>
         <item name="android:colorBackground">@color/login_launch_registration_background</item>
         <item name="android:textColor">@color/text_color</item>
-        <item name="android:statusBarColor" tools:targetApi="lollipop">@color/new_accent_color
-        </item>
-
+        <item name="android:statusBarColor" tools:targetApi="lollipop">@color/new_accent_color</item>
         <item name="colorControlActivated">@color/new_accent_color</item>
-        <item name="android:colorControlActivated" tools:targetApi="lollipop">
-            @color/new_accent_color
-        </item>
+        <item name="android:colorControlActivated" tools:targetApi="lollipop">@color/new_accent_color</item>
+        <item name="alertDialogTheme">@style/StepikTheme.LoginDialog</item>
+        <item name="android:textColorHighlight">@color/drawer_item_highlighting_pressed</item>
+    </style>
+
+    <style name="StepikTheme.LoginDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:textColor">@color/restore_password_dialog_button_color</item>
     </style>
 
     <style name="AppTheme.VideoPlayer" parent="AppTheme.VideoPlayer.7" />
@@ -268,7 +271,6 @@
         <item name="android:maxLines">1</item>
         <item name="android:background">@android:color/transparent</item>
         <item name="android:textCursorDrawable">@null</item>
-        <item name="android:textColorHighlight">@color/drawer_item_highlighting_pressed</item>
     </style>
 
     <style name="BorderLessTextButton">
@@ -415,6 +417,11 @@
         <item name="searchIcon">@null</item>
         <item name="searchHintIcon">@null</item>
         <item name="android:iconifiedByDefault">false</item>
+    </style>
+
+    <style name="AutoCompleteTextViewStyle" parent="Widget.AppCompat.Light.AutoCompleteTextView">
+        <item name="android:textColor">@color/text_color</item>
+        <item name="android:textColorHighlight">@color/text_color_highlight</item>
     </style>
 
     <style name="Adaptive.BorderlessButton" parent="Widget.AppCompat.Button.Borderless">
