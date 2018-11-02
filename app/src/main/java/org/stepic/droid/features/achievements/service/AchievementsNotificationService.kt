@@ -11,13 +11,13 @@ import android.support.v4.app.NotificationCompat
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.base.App
 import org.stepic.droid.features.achievements.repository.AchievementsRepository
 import org.stepic.droid.features.achievements.ui.activity.AchievementsListActivity
 import org.stepic.droid.features.achievements.util.AchievementResourceResolver
 import org.stepic.droid.model.AchievementFlatItem
 import org.stepic.droid.model.AchievementNotification
 import org.stepic.droid.notifications.model.StepikNotificationChannel
-import org.stepic.droid.persistence.service.FileTransferService
 import org.stepic.droid.ui.util.toBitmap
 import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.svg.GlideSvgRequestFactory
@@ -32,7 +32,7 @@ class AchievementsNotificationService : JobIntentService() {
         private const val JOB_ID = 2002
 
         fun enqueueWork(context: Context, rawMessage: String?) {
-            enqueueWork(context, FileTransferService::class.java, JOB_ID, Intent().putExtra(EXTRA_RAW_MESSAGE, rawMessage))
+            enqueueWork(context, AchievementsNotificationService::class.java, JOB_ID, Intent().putExtra(EXTRA_RAW_MESSAGE, rawMessage))
         }
     }
 
@@ -47,6 +47,10 @@ class AchievementsNotificationService : JobIntentService() {
 
     @Inject
     internal lateinit var achievementResourceResolver: AchievementResourceResolver
+
+    init {
+        App.component().inject(this)
+    }
 
     override fun onHandleWork(intent: Intent) {
         try {
@@ -78,7 +82,7 @@ class AchievementsNotificationService : JobIntentService() {
                     .build()
 
             notificationManager.notify(NOTIFICATION_TAG, achievementNotification.achievement, notification)
-        } catch (_: Exception) {}
+        } catch (e: Exception) {}
     }
 
     private fun getAchievementImageBitmap(achievement: AchievementFlatItem): Bitmap {
