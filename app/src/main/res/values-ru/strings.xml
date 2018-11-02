@@ -673,6 +673,7 @@
     <string name="achievement_remaining_exp">%d до следующего уровня</string>
     <string name="achievement_remaining_exp_locked">Ещё не получено</string>
     <string name="achievement_share">Я получил достижение «%s» на Stepik.org. Попробуй обогнать!</string>
+    <string name="achievement_notification_message">Поздравляем! Вы получили новый уровень достижения %s, проверьте свой профиль.</string>
 
 
     <string name="downloads_view_cant_remove">Невозможно удалить загрузку</string>
