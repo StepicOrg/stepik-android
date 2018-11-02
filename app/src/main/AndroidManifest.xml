@@ -461,7 +461,7 @@
         </provider>
 
         <service
-            android:name=".features.achievements.service.AchievementsPushNotificationService"
+            android:name=".features.achievements.service.AchievementsNotificationService"
             android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="true" />
 

@@ -24,7 +24,7 @@ import org.stepic.droid.util.svg.GlideSvgRequestFactory
 import org.stepic.droid.util.toObject
 import javax.inject.Inject
 
-class AchievementsPushNotificationService : JobIntentService() {
+class AchievementsNotificationService : JobIntentService() {
     companion object {
         private const val NOTIFICATION_TAG = "achievement"
 

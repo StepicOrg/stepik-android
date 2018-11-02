@@ -61,7 +61,8 @@ import org.stepic.droid.ui.fragments.StoreManagementFragment
                 PersistenceModule::class,
                 RecentActiveCourseModule::class,
                 NotificationsBadgesModule::class,
-                NetworkModule::class
+                NetworkModule::class,
+                RemoteMessageHandlersModule::class
         ])
 interface AppCoreComponent {
 
