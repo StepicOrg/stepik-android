@@ -6,6 +6,7 @@ import com.google.gson.Gson
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.notifications.badges.NotificationsBadgesManager
+import org.stepic.droid.notifications.handlers.RemoteMessageHandler
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.notifications.model.NotificationStatuses
 import org.stepic.droid.preferences.SharedPreferenceHelper
@@ -14,8 +15,8 @@ import javax.inject.Inject
 
 class StepicFcmListenerService : FirebaseMessagingService() {
     companion object {
-        private const val NOTIFICATION_TYPE = "notifications"
-        private const val NOTIFICATION_STATUSES_TYPE ="notification-statuses"
+        private const val NOTIFICATION_TYPE = "notifications" // todo: refactor in message handlers
+        private const val NOTIFICATION_STATUSES_TYPE = "notification-statuses"
     }
 
     private val hacker = HackFcmListener()
@@ -31,9 +32,11 @@ class StepicFcmListenerService : FirebaseMessagingService() {
                 }
 
                 val rawMessageObject = data["object"]
-                when (data["type"]) {
+                val messageType = data["type"]
+                when (messageType) {
                     NOTIFICATION_TYPE -> processNotification(rawMessageObject)
                     NOTIFICATION_STATUSES_TYPE -> processNotificationStatuses(rawMessageObject)
+                    else -> hacker.handlers[messageType]?.handleMessage(this, rawMessageObject)
                 }
             }
         } catch (e: IOException) {
@@ -71,6 +74,9 @@ class HackFcmListener {
 
     @Inject
     lateinit var notificationsBadgesManager: NotificationsBadgesManager
+
+    @Inject
+    internal lateinit var handlers: Map<String, @JvmSuppressWildcards RemoteMessageHandler>
 
     init {
         App.component().inject(this)
