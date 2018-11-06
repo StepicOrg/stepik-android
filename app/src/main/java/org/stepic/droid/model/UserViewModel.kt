@@ -1,6 +1,6 @@
 package org.stepic.droid.model
 
-class UserViewModel(
+data class UserViewModel(
         val fullName: String,
         val shortBio: String,
         val information: String,
