@@ -8,15 +8,10 @@ import org.stepic.droid.notifications.handlers.AchievementsRemoteMessageHandler
 import org.stepic.droid.notifications.handlers.RemoteMessageHandler
 
 @Module
-abstract class RemoteMessageHandlersModule {
-
-    @Module
-    companion object {
-        @Provides
-        @IntoMap
-        @StringKey(AchievementsRemoteMessageHandler.MESSAGE_TYPE)
-        @JvmStatic
-        fun provideAchievementsRemoteMessageHandler(): RemoteMessageHandler =
-                AchievementsRemoteMessageHandler()
-    }
+class RemoteMessageHandlersModule {
+    @Provides
+    @IntoMap
+    @StringKey(AchievementsRemoteMessageHandler.MESSAGE_TYPE)
+    internal fun provideAchievementsRemoteMessageHandler(): RemoteMessageHandler =
+            AchievementsRemoteMessageHandler()
 }

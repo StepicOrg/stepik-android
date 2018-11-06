@@ -64,7 +64,7 @@ class AchievementsNotificationService : JobIntentService() {
             val notificationIntent = AchievementsListActivity
                     .createIntent(this, achievementNotification.user, isMyProfile = true)
 
-            val pendingInject = PendingIntent
+            val pendingIntent = PendingIntent
                     .getActivity(this, 0, notificationIntent, 0)
 
             val largeIcon = getAchievementImageBitmap(achievement)
@@ -75,7 +75,7 @@ class AchievementsNotificationService : JobIntentService() {
                             achievementResourceResolver.resolveTitleForKind(achievement.kind)))
                     .setSmallIcon(R.drawable.ic_notification_icon_1)
                     .setLargeIcon(largeIcon)
-                    .setContentIntent(pendingInject)
+                    .setContentIntent(pendingIntent)
                     .setColor(ColorUtil.getColorArgb(R.color.stepic_brand_primary))
                     .setAutoCancel(true)
                     .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
