@@ -699,6 +699,7 @@
     <string name="course_tab_reviews">Reviews</string>
     <string name="course_tab_modules">Modules</string>
 
+    <string name="course_info_organization_prefix">by %s</string>
     <string name="course_info_about">About</string>
     <string name="course_info_requirements">Requirements</string>
     <string name="course_info_target_audience">Target audience</string>
@@ -707,4 +708,17 @@
     <string name="course_info_language">Language</string>
     <string name="course_info_certificate">Certificate</string>
     <string name="course_info_certificate_detail">Certificate details</string>
+    
+    <string name="course_content_unit_title" translatable="false">%d.%d %s</string>
+    <string name="course_content_text_progress" translatable="false">%d/%d</string>
+
+    <string name="course_content_timeline_begin_date">Begin date</string>
+    <string name="course_content_timeline_end_date">End date</string>
+    <string name="course_content_timeline_soft_deadline">Soft deadline</string>
+    <string name="course_content_timeline_hard_deadline">Hard deadline</string>
+    <string name="course_content_timeline_deadline">Deadline</string>
+
+    <string name="course_control_schedule">Schedule</string>
+    <string name="course_control_filter">Filter by</string>
+    <string name="course_control_download_all">Download all</string>
 </resources>

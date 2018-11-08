@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/course_control_schedule"
+        android:title="@string/course_control_schedule"
+        android:icon="@drawable/ic_course_schedule" />
+    <item
+        android:id="@+id/course_control_download_all"
+        android:title="@string/course_control_download_all"
+        android:icon="@drawable/ic_download" />
+    <item
+        android:id="@+id/course_control_filter"
+        android:title="@string/course_control_filter"
+        android:icon="@drawable/ic_filter" />
+</menu>

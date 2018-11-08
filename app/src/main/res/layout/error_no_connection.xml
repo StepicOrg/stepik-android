@@ -17,6 +17,7 @@
         android:layout_height="wrap_content"
         android:src="@drawable/ic_no_wifi"
         android:adjustViewBounds="true"
+        android:contentDescription="@string/internet_problem"
         app:layout_constraintBottom_toTopOf="@+id/placeholderMessage"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -27,6 +27,7 @@ constructor(
         val columnIndexSubscriptions = cursor.getColumnIndex(DbStructureLesson.Column.SUBSCRIPTIONS)
         val columnIndexViewedBy = cursor.getColumnIndex(DbStructureLesson.Column.VIEWED_BY)
         val columnIndexPassedBy = cursor.getColumnIndex(DbStructureLesson.Column.PASSED_BY)
+        val columnIndexVoteDelta = cursor.getColumnIndex(DbStructureLesson.Column.VOTE_DELTA)
         val columnIndexDependencies = cursor.getColumnIndex(DbStructureLesson.Column.DEPENDENCIES)
         val columnIndexIsPublic = cursor.getColumnIndex(DbStructureLesson.Column.IS_PUBLIC)
         val columnIndexTitle = cursor.getColumnIndex(DbStructureLesson.Column.TITLE)
@@ -48,6 +49,7 @@ constructor(
                 subscriptions = DbParseHelper.parseStringToStringArray(cursor.getString(columnIndexSubscriptions)),
                 viewedBy = cursor.getInt(columnIndexViewedBy),
                 passedBy = cursor.getInt(columnIndexPassedBy),
+                voteDelta = cursor.getLong(columnIndexVoteDelta),
                 dependencies = DbParseHelper.parseStringToStringArray(cursor.getString(columnIndexDependencies)),
                 isPublic = cursor.getInt(columnIndexIsPublic) > 0,
                 slug = cursor.getString(columnIndexSlug),
@@ -72,6 +74,7 @@ constructor(
         values.put(DbStructureLesson.Column.SUBSCRIPTIONS, DbParseHelper.parseStringArrayToString(lesson.subscriptions))
         values.put(DbStructureLesson.Column.VIEWED_BY, lesson.viewedBy)
         values.put(DbStructureLesson.Column.PASSED_BY, lesson.passedBy)
+        values.put(DbStructureLesson.Column.VOTE_DELTA, lesson.voteDelta)
         values.put(DbStructureLesson.Column.DEPENDENCIES, DbParseHelper.parseStringArrayToString(lesson.dependencies))
         values.put(DbStructureLesson.Column.IS_PUBLIC, lesson.isPublic)
         values.put(DbStructureLesson.Column.TITLE, lesson.title)

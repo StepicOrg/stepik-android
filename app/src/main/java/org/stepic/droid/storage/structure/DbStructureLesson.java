@@ -26,6 +26,7 @@ public final class DbStructureLesson {
         public static final String IS_CACHED = "is_cached";
         public static final String IS_LOADING = "is_loading";
         public static final String COVER_URL = "cover_url";
+        public static final String VOTE_DELTA = "vote_delta";
 
     }
 

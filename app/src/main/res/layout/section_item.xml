@@ -103,8 +103,8 @@
                 android:layout_below="@+id/personal_deadline"
                 android:layout_marginTop="@dimen/guideline_left_right_padding_list_item"
                 android:layout_toLeftOf="@+id/section_text_score"
-                android:tint="@color/stepic_brand_primary"
                 android:visibility="gone"
+                app:mpb_progressTint="@color/stepic_brand_primary"
                 app:mpb_progressStyle="horizontal"
                 tools:visibility="visible"/>
 

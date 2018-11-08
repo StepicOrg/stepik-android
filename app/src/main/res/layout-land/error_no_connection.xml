@@ -25,6 +25,7 @@
         android:src="@drawable/ic_no_wifi"
         android:layout_marginEnd="36dp"
         android:layout_marginRight="36dp"
+        android:contentDescription="@string/internet_problem"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/centerGuideline"
         app:layout_constraintHorizontal_chainStyle="packed"

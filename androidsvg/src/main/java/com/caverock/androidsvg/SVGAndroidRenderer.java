@@ -637,7 +637,7 @@ public class SVGAndroidRenderer {
             return false;
 
         // Custom version of statePush() that also saves the layer
-        canvas.saveLayerAlpha(null, clamp255(state.style.opacity), Canvas.HAS_ALPHA_LAYER_SAVE_FLAG);
+        canvas.saveLayerAlpha(null, clamp255(state.style.opacity), Canvas.ALL_SAVE_FLAG);
 
         // Save style state
         stateStack.push(state);
@@ -3377,7 +3377,7 @@ public class SVGAndroidRenderer {
     // destroy the clip region we are trying to build.
     private void clipStatePush() {
         // Save matrix and clip
-        canvas.save(Canvas.MATRIX_SAVE_FLAG);
+        canvas.save();
         // Save style state
         stateStack.push(state);
         state = (RendererState) state.clone();

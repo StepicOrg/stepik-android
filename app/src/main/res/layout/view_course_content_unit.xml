@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?selectableItemBackground">
+
+    <ImageView
+        android:id="@+id/unitIcon"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="@dimen/course_content_item_margin"
+        android:layout_marginLeft="@dimen/course_content_item_margin"
+        android:layout_marginTop="@dimen/course_content_item_margin"
+        android:contentDescription="@null"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/unitTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/course_content_item_inner_margin"
+        android:layout_marginLeft="@dimen/course_content_item_inner_margin"
+        android:layout_marginTop="@dimen/course_content_item_margin"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:lineSpacingExtra="3sp"
+        android:textColor="@color/new_accent_color"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toStartOf="@+id/unitDownloadStatus"
+        app:layout_constraintStart_toEndOf="@+id/unitIcon"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="1.2 Second Lesson More Detailed and Interesting Name" />
+
+    <ImageView
+        android:id="@+id/unitViewCountIcon"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:contentDescription="@null"
+        app:srcCompat="@drawable/ic_course_info_target_audience"
+
+        android:layout_marginStart="@dimen/course_content_item_inner_margin"
+        android:layout_marginLeft="@dimen/course_content_item_inner_margin"
+        android:layout_marginTop="@dimen/course_content_item_inner_margin"
+        android:layout_marginBottom="@dimen/course_content_item_margin"
+
+        app:layout_constraintStart_toEndOf="@+id/unitIcon"
+        app:layout_constraintTop_toBottomOf="@+id/unitTitle"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <TextView
+        android:id="@+id/unitViewCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:lineSpacingExtra="4sp"
+        android:textColor="@color/new_accent_color"
+        android:textSize="12sp"
+
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="@dimen/course_content_item_inner_margin"
+        android:layout_marginBottom="@dimen/course_content_item_margin"
+
+        app:layout_constraintStart_toEndOf="@+id/unitViewCountIcon"
+        app:layout_constraintTop_toBottomOf="@+id/unitTitle"
+        app:layout_constraintBottom_toBottomOf="parent"
+
+        fontPath="fonts/Roboto-Light.ttf"
+        tools:ignore="missingPrefix"
+        tools:text="718k" />
+
+    <ImageView
+        android:id="@+id/unitRatingIcon"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:contentDescription="@null"
+        app:srcCompat="@drawable/ic_course_content_like"
+
+        android:layout_marginStart="@dimen/course_content_item_inner_margin"
+        android:layout_marginLeft="@dimen/course_content_item_inner_margin"
+        android:layout_marginTop="@dimen/course_content_item_inner_margin"
+        android:layout_marginBottom="@dimen/course_content_item_margin"
+
+        app:layout_constraintStart_toEndOf="@+id/unitViewCount"
+        app:layout_constraintTop_toBottomOf="@+id/unitTitle"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <TextView
+        android:id="@+id/unitRating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:lineSpacingExtra="4sp"
+        android:textColor="@color/new_accent_color"
+        android:textSize="12sp"
+
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="@dimen/course_content_item_inner_margin"
+        android:layout_marginBottom="@dimen/course_content_item_margin"
+
+        app:layout_constraintStart_toEndOf="@+id/unitRatingIcon"
+        app:layout_constraintTop_toBottomOf="@+id/unitTitle"
+        app:layout_constraintBottom_toBottomOf="parent"
+
+        fontPath="fonts/Roboto-Light.ttf"
+        tools:ignore="missingPrefix"
+        tools:text="999" />
+
+    <TextView
+        android:id="@+id/unitTextProgress"
+        fontPath="fonts/Roboto-Light.ttf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/course_content_item_inner_margin"
+        android:layout_marginLeft="@dimen/course_content_item_inner_margin"
+        android:layout_marginTop="@dimen/course_content_item_inner_margin"
+        android:layout_marginBottom="@dimen/course_content_item_margin"
+        android:lineSpacingExtra="4sp"
+        android:textColor="@color/new_accent_color"
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@+id/unitRating"
+        app:layout_constraintTop_toBottomOf="@+id/unitTitle"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:ignore="missingPrefix"
+        tools:text="6/10" />
+
+    <org.stepic.droid.features.course.ui.custom.DownloadStatusView
+        android:id="@+id/unitDownloadStatus"
+        android:background="@drawable/circle_selector"
+        android:layout_width="@dimen/course_content_download_status_size"
+        android:layout_height="@dimen/course_content_download_status_size"
+        android:padding="@dimen/course_content_download_status_padding"
+
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <org.stepic.droid.ui.custom.vertical_progress_bar.VerticalProgressBar
+        android:id="@+id/unitProgress"
+        android:layout_width="3dp"
+        android:layout_height="0dp"
+        app:progressBackgroundColor="@android:color/transparent"
+        app:progressForegroundColor="@color/stepic_brand_primary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</android.support.constraint.ConstraintLayout>

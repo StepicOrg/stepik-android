@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import org.stepic.droid.R
+import org.stepic.droid.features.course.ui.fragment.CourseContentFragment
 import org.stepic.droid.features.course.ui.fragment.CourseInfoFragment
 import org.stepik.android.model.Course
 
@@ -16,7 +17,7 @@ class CoursePagerAdapter(
     private val fragments = listOf(
             { CourseInfoFragment.newInstance(course) } to context.getString(R.string.course_tab_info),
             ::Fragment to context.getString(R.string.course_tab_reviews),
-            ::Fragment to context.getString(R.string.course_tab_modules)
+            { CourseContentFragment.newInstance(course) } to context.getString(R.string.course_tab_modules)
     )
 
     override fun getItem(position: Int): Fragment =

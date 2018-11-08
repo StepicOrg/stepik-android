@@ -16,6 +16,7 @@
     android:layout_height="wrap_content"
     android:src="@drawable/ic_empty_notifications"
     android:adjustViewBounds="true"
+    android:contentDescription="@string/empty_notification_title"
     app:layout_constraintBottom_toTopOf="@+id/placeholderMessage"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
@@ -43,4 +44,5 @@
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@+id/placeholderMessage" />
+
 </android.support.constraint.ConstraintLayout>

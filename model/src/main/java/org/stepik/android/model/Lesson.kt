@@ -29,6 +29,9 @@ class Lesson(
         @SerializedName("passed_by")
         val passedBy: Int = 0,
 
+        @SerializedName("vote_delta")
+        val voteDelta: Long = 0,
+
         val dependencies: Array<String>? = null,
         val followers: Array<String>? = null,
         val language: String? = null,
@@ -68,6 +71,7 @@ class Lesson(
         dest.writeStringArray(this.subscriptions)
         dest.writeInt(this.viewedBy)
         dest.writeInt(this.passedBy)
+        dest.writeLong(this.voteDelta)
         dest.writeStringArray(this.dependencies)
         dest.writeStringArray(this.followers)
         dest.writeString(this.language)
@@ -84,7 +88,7 @@ class Lesson(
     companion object CREATOR : Parcelable.Creator<Lesson> {
         override fun createFromParcel(parcel: Parcel): Lesson = Lesson(
                 parcel.readLong(),
-                parcel.createLongArray(),
+                parcel.createLongArray() ?: longArrayOf(),
                 parcel.createIntArray(),
                 parcel.createStringArray(),
                 parcel.readBoolean(),
@@ -94,6 +98,7 @@ class Lesson(
                 parcel.createStringArray(),
                 parcel.readInt(),
                 parcel.readInt(),
+                parcel.readLong(),
                 parcel.createStringArray(),
                 parcel.createStringArray(),
                 parcel.readString(),

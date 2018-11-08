@@ -682,7 +682,8 @@
     <string name="course_tab_info">Инфо</string>
     <string name="course_tab_reviews">Отзывы</string>
     <string name="course_tab_modules">Модули</string>
-    
+
+    <string name="course_info_organization_prefix">от %s</string>
     <string name="course_info_about">О курсе</string>
     <string name="course_info_requirements">Требования</string>
     <string name="course_info_target_audience">Целевая аудитория</string>
@@ -691,4 +692,14 @@
     <string name="course_info_language">Язык</string>
     <string name="course_info_certificate">Сертификат</string>
     <string name="course_info_certificate_detail">Подробнее о сертификате</string>
+
+    <string name="course_content_timeline_begin_date">Дата начала</string>
+    <string name="course_content_timeline_end_date">Дата закрытия</string>
+    <string name="course_content_timeline_soft_deadline">Мягкий дедлайн</string>
+    <string name="course_content_timeline_hard_deadline">Жесткий дедлайн</string>
+    <string name="course_content_timeline_deadline">Дедлайн</string>
+
+    <string name="course_control_schedule">Расписание</string>
+    <string name="course_control_filter">Фильтр</string>
+    <string name="course_control_download_all">Скачать все</string>
 </resources>

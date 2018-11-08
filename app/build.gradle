@@ -21,6 +21,8 @@ android {
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
+
+        multiDexEnabled true
     }
 
 
@@ -158,6 +160,7 @@ dependencies {
     implementation libraries.timber
 
     implementation libraries.materialDialog
+    implementation libraries.materialDialogCore
     implementation libraries.numberPicker
     implementation (libraries.datePicker) {
         exclude group: 'com.android.support'
@@ -173,10 +176,7 @@ dependencies {
     implementation libraries.MPAndroidChart
 
     implementation libraries.shortcutBadger
-    implementation (libraries.StoriesKit) {
-        exclude group: 'com.android.support'
-        changing = true
-    }
+    implementation libraries.StoriesKit
 
     debugImplementation libraries.leakCanary
     releaseImplementation libraries.leakCanaryNoOp
