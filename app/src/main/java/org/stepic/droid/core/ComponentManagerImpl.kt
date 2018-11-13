@@ -10,6 +10,7 @@ import org.stepic.droid.di.routing.RoutingComponent
 import org.stepic.droid.di.splash.SplashComponent
 import org.stepic.droid.di.step.StepComponent
 import org.stepic.droid.util.SuppressFBWarnings
+import org.stepik.android.view.injection.course.CourseComponent
 import timber.log.Timber
 
 class ComponentManagerImpl(private val appCoreComponent: AppCoreComponent) : ComponentManager {
@@ -96,6 +97,20 @@ class ComponentManagerImpl(private val appCoreComponent: AppCoreComponent) : Com
             adaptiveCourseComponentCountMap[courseId] = count - 1
         }
     }
+
+    // Course
+
+    private val _courseComponentMap = hashMapOf<Long, ComponentHolder<CourseComponent>>()
+
+    override fun courseComponent(courseId: Long): CourseComponent =
+            _courseComponentMap.getOrPut(courseId, ::ComponentHolder).get {
+                appCoreComponent.courseComponentBuilder().build()
+            }
+
+    override fun releaseCourseComponent(courseId: Long) =
+            _courseComponentMap[courseId]
+                    ?.release()
+                    ?: throw IllegalStateException("release course = $courseId component, which is not allocated")
 
     // Login
 

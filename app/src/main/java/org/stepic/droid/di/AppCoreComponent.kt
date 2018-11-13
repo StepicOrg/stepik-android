@@ -48,6 +48,7 @@ import org.stepic.droid.ui.custom.*
 import org.stepic.droid.ui.custom_exo.PlaybackControlView
 import org.stepic.droid.ui.dialogs.*
 import org.stepic.droid.ui.fragments.StoreManagementFragment
+import org.stepik.android.view.injection.course.CourseComponent
 
 @AppSingleton
 @Component(dependencies = [StorageComponent::class],
@@ -104,6 +105,8 @@ interface AppCoreComponent {
     fun catalogComponentBuilder(): CatalogComponent.Builder
 
     fun adaptiveCourseComponentBuilder(): AdaptiveCourseComponent.Builder
+
+    fun courseComponentBuilder(): CourseComponent.Builder
 
     fun inject(someActivity: FragmentActivityBase)
 
