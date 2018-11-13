@@ -129,6 +129,9 @@ dependencies {
     implementation libraries.constraintLayout
     implementation libraries.exoPlayer
 
+    implementation libraries.archExtensions
+    implementation libraries.archViewModel
+
     implementation libraries.gson
     implementation libraries.retrofit
     implementation libraries.retrofitGsonConverter
