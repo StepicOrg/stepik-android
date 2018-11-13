@@ -12,16 +12,19 @@ import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.features.course.ui.adapter.CoursePagerAdapter
 import org.stepic.droid.features.course.ui.delegates.CourseHeaderDelegate
 import org.stepic.droid.fonts.FontType
-import org.stepic.droid.util.AppConstants
 import org.stepik.android.model.Course
+import org.stepik.android.presentation.course.CoursePresenter
+import org.stepik.android.presentation.course.CourseView
 import uk.co.chrisjenx.calligraphy.TypefaceUtils
 
-class CourseActivity : FragmentActivityBase() {
+class CourseActivity : FragmentActivityBase(), CourseView {
     companion object {
         private const val EXTRA_COURSE = "course"
         private const val EXTRA_COURSE_ID = "course_id"
 
         private const val EXTRA_AUTO_ENROLL = "auto_enroll"
+
+        private const val NO_ID = -1L
 
         fun createIntent(context: Context, course: Course, autoEnroll: Boolean = false): Intent =
             Intent(context, CourseActivity::class.java)
@@ -33,8 +36,8 @@ class CourseActivity : FragmentActivityBase() {
                         .putExtra(EXTRA_COURSE_ID, courseId)
     }
 
-    private val course by lazy { intent.getParcelableExtra<Course>(AppConstants.KEY_COURSE_BUNDLE) }
-
+    private var courseId: Long = NO_ID
+    private lateinit var coursePresenter: CoursePresenter
     private lateinit var courseHeaderDelegate: CourseHeaderDelegate
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,16 +54,40 @@ class CourseActivity : FragmentActivityBase() {
         }
 
         courseHeaderDelegate = CourseHeaderDelegate(this, config)
-        courseHeaderDelegate.setCourse(course)
+
+        val course: Course? = savedInstanceState
+                ?.getParcelable(EXTRA_COURSE)
+                ?: intent.getParcelableExtra(EXTRA_COURSE)
+
+        courseId = intent.getLongExtra(EXTRA_COURSE_ID, NO_ID)
+                .takeIf { it != NO_ID }
+                ?: course?.id
+                ?: NO_ID
 
         initViewPager()
+
+        if (course != null) {
+            coursePresenter.onCourse(course)
+        } else {
+            coursePresenter.onCourseId(courseId)
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        coursePresenter.attachView(this)
+    }
+
+    override fun onStop() {
+        coursePresenter.detachView(this)
+        super.onStop()
     }
 
     private fun initViewPager() {
         val lightFont = TypefaceUtils.load(assets, fontsProvider.provideFontPath(FontType.light))
         val regularFont = TypefaceUtils.load(assets, fontsProvider.provideFontPath(FontType.regular))
 
-        coursePager.adapter = CoursePagerAdapter(course, this, supportFragmentManager)
+        coursePager.adapter = CoursePagerAdapter(courseId, this, supportFragmentManager)
         courseTabs.setupWithViewPager(coursePager)
         courseTabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab?) {}
@@ -97,5 +124,21 @@ class CourseActivity : FragmentActivityBase() {
 
     override fun applyTransitionPrev() {
         //no-op
+    }
+
+    override fun setState(state: CourseView.State) {
+        when(state) {
+            is CourseView.State.CourseLoaded ->
+                courseHeaderDelegate.setCourse(state.course)
+
+            is CourseView.State.EnrollmentProgress ->
+                courseHeaderDelegate.setCourse(state.course)
+
+            else -> TODO()
+        }
+    }
+
+    override fun showEnrollmentError() {
+        TODO()
     }
 }

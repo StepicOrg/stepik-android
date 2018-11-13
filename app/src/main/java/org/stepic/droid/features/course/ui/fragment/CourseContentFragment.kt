@@ -20,14 +20,14 @@ import org.stepik.android.model.Unit
 
 class CourseContentFragment : Fragment() {
     companion object {
-        fun newInstance(course: Course) =
+        fun newInstance(courseId: Long) =
                 CourseContentFragment().apply {
-                    this.course = course
+                    this.courseId = courseId
                 }
     }
 
     private lateinit var contentAdapter: CourseContentAdapter
-    private var course by argument<Course>()
+    private var courseId: Long by argument()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
             inflater.inflate(R.layout.fragment_course_content, container, false)

@@ -23,13 +23,13 @@ import org.stepik.android.model.user.User
 
 class CourseInfoFragment : Fragment() {
     companion object {
-        fun newInstance(course: Course): Fragment =
+        fun newInstance(courseId: Long): Fragment =
                 CourseInfoFragment().apply {
-                    this.course = course
+                    this.courseId = courseId
                 }
     }
 
-    private var course by argument<Course>()
+    private var courseId: Long by argument()
 
     private val adapter = CourseInfoAdapter()
 
@@ -49,7 +49,7 @@ class CourseInfoFragment : Fragment() {
                         adapter.delegates.indexOfFirst { it is CourseInfoInstructorsDelegate }
                 )))
 
-        setCourseInfo(course)
+//        setCourseInfo(course)
     }
 
     private fun setCourseInfo(course: Course) {
