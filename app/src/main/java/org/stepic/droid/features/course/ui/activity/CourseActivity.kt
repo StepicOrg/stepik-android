@@ -1,5 +1,7 @@
 package org.stepic.droid.features.course.ui.activity
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.view.MenuItem
@@ -15,6 +17,22 @@ import org.stepik.android.model.Course
 import uk.co.chrisjenx.calligraphy.TypefaceUtils
 
 class CourseActivity : FragmentActivityBase() {
+    companion object {
+        private const val EXTRA_COURSE = "course"
+        private const val EXTRA_COURSE_ID = "course_id"
+
+        private const val EXTRA_AUTO_ENROLL = "auto_enroll"
+
+        fun createIntent(context: Context, course: Course, autoEnroll: Boolean = false): Intent =
+            Intent(context, CourseActivity::class.java)
+                    .putExtra(EXTRA_COURSE, course)
+                    .putExtra(EXTRA_AUTO_ENROLL, autoEnroll)
+
+        fun createIntent(context: Context, courseId: Int): Intent =
+                Intent(context, CourseActivity::class.java)
+                        .putExtra(EXTRA_COURSE_ID, courseId)
+    }
+
     private val course by lazy { intent.getParcelableExtra<Course>(AppConstants.KEY_COURSE_BUNDLE) }
 
     private lateinit var courseHeaderDelegate: CourseHeaderDelegate
