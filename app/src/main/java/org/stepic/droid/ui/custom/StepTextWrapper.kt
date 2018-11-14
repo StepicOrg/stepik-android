@@ -1,6 +1,5 @@
 package org.stepic.droid.ui.custom
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,16 +9,14 @@ import javax.inject.Inject
 
 class StepTextWrapper
 @Inject
-constructor(
-        private val context: Context
-) {
+constructor() {
     private var latexLayout: LatexSupportableEnhancedFrameLayout? = null
 
     private var stepText: String? = null
 
     fun attach(parent: ViewGroup, attachToTop: Boolean = true) {
         if (latexLayout == null) {
-            latexLayout = LayoutInflater.from(context).inflate(R.layout.step_text_header, parent, false)
+            latexLayout = LayoutInflater.from(parent.context).inflate(R.layout.step_text_header, parent, false)
                     as LatexSupportableEnhancedFrameLayout
         }
 
