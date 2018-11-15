@@ -18,7 +18,7 @@ import org.stepic.droid.util.defaultLocale
 import java.util.ArrayList
 
 class AdaptiveWeeksAdapter : RecyclerView.Adapter<AdaptiveWeeksAdapter.StatsViewHolder>() {
-    data class Header(var total: Long = 0, var level: Long = 0, var last7Days: Long = 0, var chartData: LineDataSet? = null)
+    class Header(var total: Long = 0, var level: Long = 0, var last7Days: Long = 0, var chartData: LineDataSet? = null)
 
     private companion object {
         private const val HEADER_VIEW_TYPE = 1

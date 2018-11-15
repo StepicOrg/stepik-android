@@ -8,7 +8,7 @@ import org.stepik.android.model.util.readBoolean
 import org.stepik.android.model.util.writeBoolean
 
 class AchievementFlatItem(
-        val iconId: Long?,
+        val uploadcareUUID: String?,
 
         val isLocked: Boolean,
         val kind: String,
@@ -19,7 +19,7 @@ class AchievementFlatItem(
         val maxLevel: Int
 ) : Parcelable {
     constructor(parcel: Parcel): this(
-            parcel.readValue(Long::class.java.classLoader) as? Long,
+            parcel.readString(),
             parcel.readBoolean(),
             parcel.readString(),
             parcel.readInt(),
@@ -36,7 +36,7 @@ class AchievementFlatItem(
             currentLevel: Int,
             maxLevel: Int
     ): this(
-            null,
+            currentLevelAchievement?.uploadcareUUID,
             currentLevelAchievement == null,
             nextLevelAchievement.kind,
             nextLevelAchievementProgress.score,
@@ -46,7 +46,7 @@ class AchievementFlatItem(
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeValue(iconId)
+        parcel.writeString(uploadcareUUID)
         parcel.writeBoolean(isLocked)
         parcel.writeString(kind)
         parcel.writeInt(currentScore)

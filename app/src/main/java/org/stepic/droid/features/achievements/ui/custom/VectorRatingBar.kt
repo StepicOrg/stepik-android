@@ -9,6 +9,7 @@ import android.support.v7.content.res.AppCompatResources
 import android.util.AttributeSet
 import android.view.View
 import org.stepic.droid.R
+import org.stepic.droid.ui.util.toBitmap
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.properties.Delegates
@@ -102,11 +103,6 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 
         val targetWidth = (drawable.intrinsicWidth * (targetHeight.toFloat() / drawable.intrinsicHeight)).toInt()
 
-        val bitmap = Bitmap.createBitmap(targetWidth, targetHeight, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(bitmap)
-
-        drawable.setBounds(0, 0, canvas.width, canvas.height)
-        drawable.draw(canvas)
-        return bitmap
+        return drawable.toBitmap(targetWidth, targetHeight)
     }
 }

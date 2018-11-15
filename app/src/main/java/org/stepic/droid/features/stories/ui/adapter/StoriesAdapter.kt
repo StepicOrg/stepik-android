@@ -15,6 +15,7 @@ import kotlinx.android.synthetic.main.view_story_item.view.*
 import org.stepic.droid.R
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.ui.util.changeVisibility
+import org.stepic.droid.ui.util.toBitmap
 import ru.nobird.android.stories.model.Story
 import kotlin.properties.Delegates
 
@@ -27,11 +28,7 @@ class StoriesAdapter(
         val size = resources.getDimension(R.dimen.stories_size).toInt()
 
         val drawable = AppCompatResources.getDrawable(context, R.drawable.ic_general_placeholder_dark)!!
-
-        val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(bitmap)
-        drawable.setBounds(0, 0, canvas.width, canvas.height)
-        drawable.draw(canvas)
+        val bitmap = drawable.toBitmap(size, size)
 
         val circularBitmapDrawable = RoundedBitmapDrawableFactory.create(resources, bitmap)
         circularBitmapDrawable.cornerRadius = resources.getDimension(R.dimen.stories_default_corner_radius)
