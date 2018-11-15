@@ -1,6 +1,5 @@
 package org.stepic.droid.ui.custom
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,16 +9,14 @@ import javax.inject.Inject
 
 class StepTextWrapper
 @Inject
-constructor(
-        private val context: Context
-) {
-    private lateinit var latexLayout: LatexSupportableEnhancedFrameLayout
+constructor() {
+    private var latexLayout: LatexSupportableEnhancedFrameLayout? = null
 
     private var stepText: String? = null
 
     fun attach(parent: ViewGroup, attachToTop: Boolean = true) {
-        if (!this::latexLayout.isInitialized) {
-            latexLayout = LayoutInflater.from(context).inflate(R.layout.step_text_header, parent, false)
+        if (latexLayout == null) {
+            latexLayout = LayoutInflater.from(parent.context).inflate(R.layout.step_text_header, parent, false)
                     as LatexSupportableEnhancedFrameLayout
         }
 
@@ -35,16 +32,18 @@ constructor(
         if (text == stepText) return
         stepText = text
 
+        val layout = latexLayout ?: return
+
         if (text != null) {
-            latexLayout.setText(text)
-            latexLayout.setTextIsSelectable(true)
-            latexLayout.visibility = View.VISIBLE
+            layout.setText(text)
+            layout.setTextIsSelectable(true)
+            layout.visibility = View.VISIBLE
         } else {
-            latexLayout.visibility = View.GONE
+            layout.visibility = View.GONE
         }
     }
 
     fun detach(parent: ViewGroup) {
-        parent.removeView(latexLayout)
+        latexLayout?.let(parent::removeView)
     }
 }
