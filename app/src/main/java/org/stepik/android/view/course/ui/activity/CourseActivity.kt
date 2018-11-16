@@ -1,5 +1,7 @@
 package org.stepik.android.view.course.ui.activity
 
+import android.arch.lifecycle.ViewModelProvider
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -8,6 +10,7 @@ import android.view.MenuItem
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_course.*
 import org.stepic.droid.R
+import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepik.android.view.course.ui.adapter.CoursePagerAdapter
 import org.stepik.android.view.course.ui.delegates.CourseHeaderDelegate
@@ -16,6 +19,7 @@ import org.stepik.android.model.Course
 import org.stepik.android.presentation.course.CoursePresenter
 import org.stepik.android.presentation.course.CourseView
 import uk.co.chrisjenx.calligraphy.TypefaceUtils
+import javax.inject.Inject
 
 class CourseActivity : FragmentActivityBase(), CourseView {
     companion object {
@@ -32,13 +36,16 @@ class CourseActivity : FragmentActivityBase(), CourseView {
                     .putExtra(EXTRA_AUTO_ENROLL, autoEnroll)
 
         fun createIntent(context: Context, courseId: Int): Intent =
-                Intent(context, CourseActivity::class.java)
-                        .putExtra(EXTRA_COURSE_ID, courseId)
+            Intent(context, CourseActivity::class.java)
+                    .putExtra(EXTRA_COURSE_ID, courseId)
     }
 
     private var courseId: Long = NO_ID
     private lateinit var coursePresenter: CoursePresenter
     private lateinit var courseHeaderDelegate: CourseHeaderDelegate
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,6 +71,9 @@ class CourseActivity : FragmentActivityBase(), CourseView {
                 ?: course?.id
                 ?: NO_ID
 
+        injectComponent(courseId)
+        coursePresenter = ViewModelProviders.of(this, viewModelFactory).get(CoursePresenter::class.java)
+
         initViewPager()
 
         if (course != null) {
@@ -71,6 +81,17 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         } else {
             coursePresenter.onCourseId(courseId)
         }
+    }
+
+    private fun injectComponent(courseId: Long) {
+        App.componentManager()
+            .courseComponent(courseId)
+            .inject(this)
+    }
+
+    private fun releaseComponent(courseId: Long) {
+        App.componentManager()
+            .releaseCourseComponent(courseId)
     }
 
     override fun onStart() {
@@ -140,5 +161,10 @@ class CourseActivity : FragmentActivityBase(), CourseView {
 
     override fun showEnrollmentError() {
         TODO()
+    }
+
+    override fun onDestroy() {
+        releaseComponent(courseId)
+        super.onDestroy()
     }
 }

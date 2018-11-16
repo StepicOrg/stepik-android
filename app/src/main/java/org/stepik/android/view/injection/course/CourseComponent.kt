@@ -6,7 +6,7 @@ import org.stepik.android.view.course_content.ui.fragment.CourseContentFragment
 import org.stepik.android.view.course_info.ui.fragment.CourseInfoFragment
 
 @CourseScope
-@Subcomponent
+@Subcomponent(modules = [CourseModule::class])
 interface CourseComponent {
 
     @Subcomponent.Builder
