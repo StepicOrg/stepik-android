@@ -44,10 +44,9 @@ class CourseInfoFragment : Fragment() {
         courseInfoRecycler.adapter = adapter
 
         courseInfoRecycler.addItemDecoration(
-            CourseInfoBlockOffsetDecorator(resources.getDimension(R.dimen.course_info_block_margin).toInt(),
-                intArrayOf(
-                    adapter.delegates.indexOfFirst { it is CourseInfoTextBlockDelegate },
-                    adapter.delegates.indexOfFirst { it is CourseInfoInstructorsDelegate }
+                CourseInfoBlockOffsetDecorator(resources.getDimension(R.dimen.course_info_block_margin).toInt(), intArrayOf(
+                        adapter.delegates.indexOfFirst { it is CourseInfoTextBlockDelegate },
+                        adapter.delegates.indexOfFirst { it is CourseInfoInstructorsDelegate }
                 )))
 
 //        setCourseInfo(course)

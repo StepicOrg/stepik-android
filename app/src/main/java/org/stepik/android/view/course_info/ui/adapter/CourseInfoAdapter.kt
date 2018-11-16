@@ -20,27 +20,10 @@ class CourseInfoAdapter : DelegateAdapter<CourseInfoItem, CourseInfoAdapter.View
         }
 
     init {
-        addDelegate(
-            CourseInfoTextBlockDelegate(
-                this
-            )
-        )
-        addDelegate(
-            CourseInfoInstructorsDelegate(
-                this
-            )
-        )
-        addDelegate(
-            CourseInfoVideoBlockDelegate(
-                this,
-                null
-            )
-        )
-        addDelegate(
-            CourseInfoOrganizationDelegate(
-                this
-            )
-        )
+        addDelegate(CourseInfoTextBlockDelegate(this))
+        addDelegate(CourseInfoInstructorsDelegate(this))
+        addDelegate(CourseInfoVideoBlockDelegate(this, null))
+        addDelegate(CourseInfoOrganizationDelegate(this))
     }
 
     fun setData(unsortedBlocks: List<CourseInfoItem>) {

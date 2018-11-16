@@ -11,8 +11,8 @@ import org.stepic.droid.ui.custom.adapter_delegates.AdapterDelegate
 import org.stepik.android.model.Video
 
 class CourseInfoVideoBlockDelegate(
-    adapter: CourseInfoAdapter,
-    private val onVideoClicked: ((Video) -> Unit)?
+        adapter: CourseInfoAdapter,
+        private val onVideoClicked: ((Video) -> Unit)?
 ) : AdapterDelegate<CourseInfoItem, CourseInfoAdapter.ViewHolder>(adapter) {
     override fun onCreateViewHolder(parent: ViewGroup) =
             ViewHolder(createView(parent, R.layout.view_course_info_video))

@@ -33,8 +33,8 @@ sealed class CourseInfoItem(
 
     sealed class WithTitle(type: CourseInfoType) : CourseInfoItem(type) {
         class TextBlock(
-            type: CourseInfoType,
-            val text: String
+                type: CourseInfoType,
+                val text: String
         ) : WithTitle(type)
 
         class InstructorsBlock(

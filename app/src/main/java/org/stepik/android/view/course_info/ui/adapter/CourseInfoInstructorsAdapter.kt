@@ -20,13 +20,7 @@ class CourseInfoInstructorsAdapter : RecyclerView.Adapter<CourseInfoInstructorsA
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): InstructorViewHolder =
-        InstructorViewHolder(
-            LayoutInflater.from(parent.context).inflate(
-                R.layout.view_course_info_intstructor_item,
-                parent,
-                false
-            )
-        )
+            InstructorViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.view_course_info_intstructor_item, parent, false))
 
     override fun getItemCount(): Int =
             instructors.size

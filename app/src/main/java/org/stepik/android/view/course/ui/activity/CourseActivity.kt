@@ -53,17 +53,13 @@ class CourseActivity : FragmentActivityBase(), CourseView {
             setDisplayHomeAsUpEnabled(true)
         }
 
-        courseHeaderDelegate =
-                CourseHeaderDelegate(this, config)
+        courseHeaderDelegate = CourseHeaderDelegate(this, config)
 
         val course: Course? = savedInstanceState
                 ?.getParcelable(EXTRA_COURSE)
                 ?: intent.getParcelableExtra(EXTRA_COURSE)
 
-        courseId = intent.getLongExtra(
-            EXTRA_COURSE_ID,
-            NO_ID
-        )
+        courseId = intent.getLongExtra(EXTRA_COURSE_ID, NO_ID)
                 .takeIf { it != NO_ID }
                 ?: course?.id
                 ?: NO_ID
@@ -91,11 +87,7 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         val lightFont = TypefaceUtils.load(assets, fontsProvider.provideFontPath(FontType.light))
         val regularFont = TypefaceUtils.load(assets, fontsProvider.provideFontPath(FontType.regular))
 
-        coursePager.adapter = CoursePagerAdapter(
-            courseId,
-            this,
-            supportFragmentManager
-        )
+        coursePager.adapter = CoursePagerAdapter(courseId, this, supportFragmentManager)
         courseTabs.setupWithViewPager(coursePager)
         courseTabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab?) {}

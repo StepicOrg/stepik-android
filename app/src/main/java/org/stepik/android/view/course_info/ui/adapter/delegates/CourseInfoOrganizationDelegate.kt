@@ -15,9 +15,7 @@ class CourseInfoOrganizationDelegate(
         adapter: CourseInfoAdapter
 ) : AdapterDelegate<CourseInfoItem, CourseInfoAdapter.ViewHolder>(adapter) {
     override fun onCreateViewHolder(parent: ViewGroup) =
-        ViewHolder(
-            createView(parent, R.layout.view_course_info_organization)
-        )
+            ViewHolder(createView(parent, R.layout.view_course_info_organization))
 
     override fun isForViewType(position: Int): Boolean =
             getItemAtPosition(position) is CourseInfoItem.OrganizationBlock

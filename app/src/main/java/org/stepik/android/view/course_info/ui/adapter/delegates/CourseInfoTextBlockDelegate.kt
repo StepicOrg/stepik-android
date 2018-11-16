@@ -12,9 +12,7 @@ class CourseInfoTextBlockDelegate(
         adapter: CourseInfoAdapter
 ) : AdapterDelegate<CourseInfoItem, CourseInfoAdapter.ViewHolder>(adapter) {
     override fun onCreateViewHolder(parent: ViewGroup) =
-        ViewHolder(
-            createView(parent, R.layout.view_course_info_text_block)
-        )
+            ViewHolder(createView(parent, R.layout.view_course_info_text_block))
 
     override fun isForViewType(position: Int): Boolean =
             getItemAtPosition(position) is CourseInfoItem.WithTitle.TextBlock

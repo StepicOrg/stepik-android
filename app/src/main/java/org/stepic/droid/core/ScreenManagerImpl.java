@@ -238,12 +238,9 @@ public class ScreenManagerImpl implements ScreenManager {
 
     private Intent getIntentForDescription(Context context, @NotNull Course course) {
         analytic.reportEvent(Analytic.Screens.SHOW_COURSE_DESCRIPTION);
-        Intent intent = new Intent(context, CourseActivity.class);
+        Intent intent = CourseActivity.Companion.createIntent(context, course, false);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(AppConstants.KEY_COURSE_BUNDLE, course);
-        intent.putExtras(bundle);
         if (!(context instanceof Activity)) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         }
