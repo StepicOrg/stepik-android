@@ -104,7 +104,7 @@ class ComponentManagerImpl(private val appCoreComponent: AppCoreComponent) : Com
 
     override fun courseComponent(courseId: Long): CourseComponent =
             _courseComponentMap.getOrPut(courseId, ::ComponentHolder).get {
-                appCoreComponent.courseComponentBuilder().build()
+                appCoreComponent.courseComponentBuilder().courseId(courseId).build()
             }
 
     override fun releaseCourseComponent(courseId: Long) =

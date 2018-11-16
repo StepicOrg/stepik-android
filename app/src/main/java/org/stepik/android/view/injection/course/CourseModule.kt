@@ -4,13 +4,23 @@ import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import dagger.Binds
 import dagger.Module
+import dagger.Provides
 import dagger.multibindings.IntoMap
+import io.reactivex.Observable
+import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.PublishSubject
+import org.stepic.droid.di.qualifiers.CourseId
+import org.stepik.android.cache.course.source.CourseCacheDataSourceImpl
+import org.stepik.android.cache.course.source.EnrollmentCacheDataSourceImpl
 import org.stepik.android.data.course.repository.CourseRepositoryImpl
 import org.stepik.android.data.course.repository.EnrollmentRepositoryImpl
+import org.stepik.android.data.course.source.CourseCacheDataSource
 import org.stepik.android.data.course.source.CourseRemoteDataSource
+import org.stepik.android.data.course.source.EnrollmentCacheDataSource
 import org.stepik.android.data.course.source.EnrollmentRemoteDataSource
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.course.repository.EnrollmentRepository
+import org.stepik.android.model.Course
 import org.stepik.android.presentation.base.injection.DaggerViewModelFactory
 import org.stepik.android.presentation.base.injection.ViewModelKey
 import org.stepik.android.presentation.course.CoursePresenter
@@ -19,7 +29,6 @@ import org.stepik.android.remote.course.source.EnrollmentRemoteDataSourceImpl
 
 @Module
 abstract class CourseModule {
-
     /**
      * DATA LAYER
      */
@@ -29,7 +38,11 @@ abstract class CourseModule {
 
     @Binds
     internal abstract fun bindCourseRemoteDataSource(
-        courseRemoteDataSourceImpl: CourseRemoteDataSourceImpl) : CourseRemoteDataSource
+        courseRemoteDataSourceImpl: CourseRemoteDataSourceImpl): CourseRemoteDataSource
+
+    @Binds
+    internal abstract fun bindCourseCacheDataSource(
+        courseCacheDataSourceImpl: CourseCacheDataSourceImpl): CourseCacheDataSource
 
     @Binds
     internal abstract fun bindEnrollmentRepository(
@@ -37,8 +50,11 @@ abstract class CourseModule {
 
     @Binds
     internal abstract fun bindEnrollmentRemoteDataSource(
-        enrollmentRemoteDataSourceImpl: EnrollmentRemoteDataSourceImpl) : EnrollmentRemoteDataSource
+        enrollmentRemoteDataSourceImpl: EnrollmentRemoteDataSourceImpl): EnrollmentRemoteDataSource
 
+    @Binds
+    internal abstract fun bindEnrollmentCacheDataSource(
+        enrollmentCacheDataSourceImpl: EnrollmentCacheDataSourceImpl): EnrollmentCacheDataSource
 
     /**
      * PRESENTATION LAYER
@@ -48,9 +64,28 @@ abstract class CourseModule {
     @ViewModelKey(CoursePresenter::class)
     internal abstract fun bindCoursePresenter(coursePresenter: CoursePresenter): ViewModel
 
-
     @Binds
     @CourseScope
     internal abstract fun bindViewModelFactory(daggerViewModelFactory: DaggerViewModelFactory): ViewModelProvider.Factory
 
+    @Module
+    companion object {
+        @Provides
+        @JvmStatic
+        @CourseScope
+        internal fun provideCourseBehaviorSubject(): BehaviorSubject<Course> =
+            BehaviorSubject.create()
+
+        @Provides
+        @JvmStatic
+        @CourseScope
+        internal fun provideCourseEnrollmentSubject(): PublishSubject<Pair<Long, Boolean>> =
+            PublishSubject.create()
+
+        @Provides
+        @JvmStatic
+        @CourseScope
+        internal fun provideCourseEnrollmentLocalSubject(@CourseId courseId: Long, enrollmentSubject: PublishSubject<Pair<Long, Boolean>>): Observable<Boolean> =
+            enrollmentSubject.filter { (id, _) -> id == courseId }.map { (_, isEnrolled) -> isEnrolled }
+    }
 }
