@@ -9,15 +9,19 @@ import android.support.design.widget.TabLayout
 import android.view.MenuItem
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_course.*
+import kotlinx.android.synthetic.main.header_course.*
+import kotlinx.android.synthetic.main.header_course_placeholder.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepik.android.view.course.ui.adapter.CoursePagerAdapter
 import org.stepik.android.view.course.ui.delegates.CourseHeaderDelegate
 import org.stepic.droid.fonts.FontType
+import org.stepic.droid.ui.util.changeVisibility
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course.CoursePresenter
 import org.stepik.android.presentation.course.CourseView
+import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import uk.co.chrisjenx.calligraphy.TypefaceUtils
 import javax.inject.Inject
 
@@ -43,6 +47,8 @@ class CourseActivity : FragmentActivityBase(), CourseView {
     private var courseId: Long = NO_ID
     private lateinit var coursePresenter: CoursePresenter
     private lateinit var courseHeaderDelegate: CourseHeaderDelegate
+
+    private val viewStateDelegate = ViewStateDelegate<CourseView.State>()
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -81,6 +87,13 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         } else {
             coursePresenter.onCourseId(courseId)
         }
+
+        viewStateDelegate.addState<CourseView.State.EmptyCourse>(courseEmpty)
+        viewStateDelegate.addState<CourseView.State.NetworkError>(errorNoConnection)
+        viewStateDelegate.addState<CourseView.State.CourseLoaded>(courseHeader, courseTabs, coursePager)
+        viewStateDelegate.addState<CourseView.State.EnrollmentProgress>(courseHeader, courseTabs, coursePager)
+        viewStateDelegate.addState<CourseView.State.Loading>(courseHeaderPlaceholder)
+        viewStateDelegate.addState<CourseView.State.Idle>(courseHeaderPlaceholder)
     }
 
     private fun injectComponent(courseId: Long) {
@@ -148,6 +161,7 @@ class CourseActivity : FragmentActivityBase(), CourseView {
     }
 
     override fun setState(state: CourseView.State) {
+        viewStateDelegate.switchState(state)
         when(state) {
             is CourseView.State.CourseLoaded ->
                 courseHeaderDelegate.setCourse(state.course)
@@ -155,7 +169,10 @@ class CourseActivity : FragmentActivityBase(), CourseView {
             is CourseView.State.EnrollmentProgress ->
                 courseHeaderDelegate.setCourse(state.course)
 
-            else -> TODO()
+            is CourseView.State.EmptyCourse -> {
+                coursePager.changeVisibility(false)
+                courseTabs.changeVisibility(false)
+            }
         }
     }
 

@@ -20,6 +20,7 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
             <ImageView
+                android:visibility="gone"
                 android:id="@+id/courseCover"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -28,6 +29,7 @@
                 app:layout_collapseParallaxMultiplier="0.5" />
 
             <include layout="@layout/header_course" />
+            <include layout="@layout/header_course_placeholder" />
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/courseToolbar"
@@ -62,5 +64,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <include
+        android:id="@+id/courseEmpty"
+        layout="@layout/empty_default" />
+
+    <include
+        android:id="@+id/errorNoConnection"
+        layout="@layout/error_no_connection_with_button" />
 
 </android.support.design.widget.CoordinatorLayout>
