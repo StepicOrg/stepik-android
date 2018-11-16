@@ -116,16 +116,19 @@
     <dimen name="course_list_between_items_padding">30dp</dimen>
     <dimen name="course_list_bottom_padding">14dp</dimen>
     <dimen name="extraPaddingRightCourseItem">8dp</dimen>
+
     <dimen name="fast_continue_widget">@dimen/course_widget_radius</dimen>
     <dimen name="fast_continue_widget_height">160dp</dimen>
-    <dimen name="fast_continue_action_radius">33dp</dimen>
-    <dimen name="fast_continue_action_text_size">16sp</dimen>
-    <dimen name="fast_continue_action_horizontal_margin">60dp</dimen>
-    <dimen name="fast_continue_action_height">42dp</dimen>
     <dimen name="fast_continue_course_image_size">40dp</dimen>
     <dimen name="fast_continue_inner_content_margin">20dp</dimen>
     <dimen name="fast_continue_info_margin">10dp</dimen>
     <dimen name="fast_continue_course_progress_size">3dp</dimen>
+
+    <dimen name="header_action_radius">33dp</dimen>
+    <dimen name="header_action_text_size">16sp</dimen>
+    <dimen name="header_action_horizontal_margin">60dp</dimen>
+    <dimen name="header_action_height">42dp</dimen>
+
     <dimen name="course_carousel_title">20sp</dimen>
     <dimen name="course_carousel_title_top_padding">20dp</dimen>
     <dimen name="course_carousel_title_bottom_padding">0dp</dimen>
@@ -200,4 +203,16 @@
     <dimen name="stories_size">96dp</dimen>
 
     <dimen name="notification_large_icon_size">64dp</dimen>
+    <!-- Course info -->
+    <dimen name="course_info_height_expanded">36dp</dimen>
+    <dimen name="course_info_margin_expanded">16dp</dimen>
+
+    <dimen name="course_info_block_text_margin">36dp</dimen>
+    <dimen name="course_info_block_margin">12dp</dimen>
+
+    <dimen name="course_content_item_margin">24dp</dimen>
+    <dimen name="course_content_item_inner_margin">12dp</dimen>
+
+    <dimen name="course_content_download_status_size">48dp</dimen>
+    <dimen name="course_content_download_status_padding">14dp</dimen>
 </resources>

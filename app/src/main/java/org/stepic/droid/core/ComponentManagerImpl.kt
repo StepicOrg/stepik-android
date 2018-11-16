@@ -58,7 +58,7 @@ class ComponentManagerImpl(private val appCoreComponent: AppCoreComponent) : Com
         }
     }
 
-    @SuppressFBWarnings(value = "RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE", justification = "false positive")
+    @SuppressFBWarnings(value = ["RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE"], justification = "false positive")
     override fun releaseStepComponent(stepId: Long) {
         releaseRoutingComponent()
         val count: Int = stepComponentCountMap[stepId] ?: throw IllegalStateException("release step component, which is not allocated")
@@ -86,7 +86,7 @@ class ComponentManagerImpl(private val appCoreComponent: AppCoreComponent) : Com
         }
     }
 
-    @SuppressFBWarnings(value = "RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE", justification = "false positive")
+    @SuppressFBWarnings(value = ["RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE"], justification = "false positive")
     override fun releaseAdaptiveCourseComponent(courseId: Long) {
         val count: Int = adaptiveCourseComponentCountMap[courseId] ?: throw IllegalStateException("release adaptive course component, which is not allocated")
         if (count == 1) {
