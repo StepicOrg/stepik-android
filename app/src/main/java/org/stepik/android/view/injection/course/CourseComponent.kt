@@ -1,9 +1,9 @@
 package org.stepik.android.view.injection.course
 
 import dagger.Subcomponent
-import org.stepic.droid.features.course.ui.activity.CourseActivity
-import org.stepic.droid.features.course.ui.fragment.CourseContentFragment
-import org.stepic.droid.features.course.ui.fragment.CourseInfoFragment
+import org.stepik.android.view.course.ui.activity.CourseActivity
+import org.stepik.android.view.course_content.ui.fragment.CourseContentFragment
+import org.stepik.android.view.course_info.ui.fragment.CourseInfoFragment
 
 @CourseScope
 @Subcomponent

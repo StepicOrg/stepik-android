@@ -129,7 +129,7 @@
         tools:ignore="missingPrefix"
         tools:text="6/10" />
 
-    <org.stepic.droid.features.course.ui.custom.DownloadStatusView
+    <org.stepik.android.view.course_content.ui.view.DownloadStatusView
         android:id="@+id/unitDownloadStatus"
         android:background="@drawable/circle_selector"
         android:layout_width="@dimen/course_content_download_status_size"

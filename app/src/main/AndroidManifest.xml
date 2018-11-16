@@ -379,7 +379,7 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".features.course.ui.activity.CourseActivity" />
+            android:name="org.stepik.android.view.course.ui.activity.CourseActivity" />
 
         <receiver
             android:name="org.stepic.droid.receivers.DownloadClickReceiver"
