@@ -691,9 +691,7 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void showAchievementsList(Context context, long userId, boolean isMyProfile) {
-        Intent intent = new Intent(context, AchievementsListActivity.class);
-        intent.putExtra(AchievementsListActivity.USER_ID_KEY, userId);
-        intent.putExtra(AchievementsListActivity.IS_MY_PROFILE, isMyProfile);
+        Intent intent = AchievementsListActivity.Companion.createIntent(context, userId, isMyProfile);
         context.startActivity(intent);
     }
 }

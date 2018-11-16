@@ -8,8 +8,8 @@ buildscript {
     apply from: 'dependencies.gradle'
 
     repositories {
-        jcenter()
         google()
+        jcenter()
         maven { url "https://jitpack.io" }
         maven { url "https://maven.fabric.io/public" }
         maven { url "https://dl.bintray.com/eadm/ru.nobird.android" }
@@ -25,8 +25,8 @@ buildscript {
 
 allprojects {
     repositories {
-        jcenter()
         google()
+        jcenter()
         maven { url "https://jitpack.io" }
         maven { url "https://dl.bintray.com/eadm/ru.nobird.android" }
     }

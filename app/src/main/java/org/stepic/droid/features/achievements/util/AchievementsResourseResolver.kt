@@ -82,10 +82,11 @@ constructor(
                 context.getString(description, context.resources.getQuantityString(plural, achievementFlatItem.targetScore, achievementFlatItem.targetScore))
             } ?: context.getString(R.string.achievement_unknown_description)
 
-    fun resolveAchievementIcon(achievementFlatItem: AchievementFlatItem, targetImageView: ImageView) = if (achievementFlatItem.isLocked || achievementFlatItem.currentLevel == 0) {
-        "file:///android_asset/images/vector/achievements/ic_empty_achievement.svg"
-    } else {
-        "file:///android_asset/images/vector/achievements/${achievementFlatItem.kind}/${achievementFlatItem.currentLevel}.svg"
-//        "${achievementFlatItem.iconId ?: ""}/${targetImageView.width}x${targetImageView.height}" // todo: update after backend support
-    }
+    fun resolveAchievementIcon(achievementFlatItem: AchievementFlatItem, targetImageView: ImageView? = null) =
+            if (achievementFlatItem.isLocked || achievementFlatItem.currentLevel == 0) {
+                "file:///android_asset/images/vector/achievements/ic_empty_achievement.svg"
+            } else {
+                "file:///android_asset/images/vector/achievements/${achievementFlatItem.kind}/${achievementFlatItem.currentLevel}.svg"
+        //        "${achievementFlatItem.iconId ?: ""}/${targetImageView.width}x${targetImageView.height}" // todo: update after backend support
+            }
 }

@@ -26,6 +26,7 @@ import org.stepic.droid.di.routing.RoutingComponent
 import org.stepic.droid.di.splash.SplashComponent
 import org.stepic.droid.di.storage.StorageComponent
 import org.stepic.droid.di.video.VideoComponent
+import org.stepic.droid.features.achievements.service.AchievementsNotificationService
 import org.stepic.droid.features.achievements.ui.adapters.AchievementsAdapter
 import org.stepic.droid.features.achievements.ui.adapters.AchievementsTileAdapter
 import org.stepic.droid.features.achievements.ui.dialogs.AchievementDetailsDialog
@@ -62,7 +63,8 @@ import org.stepik.android.view.injection.course.CourseComponent
                 PersistenceModule::class,
                 RecentActiveCourseModule::class,
                 NotificationsBadgesModule::class,
-                NetworkModule::class
+                NetworkModule::class,
+                RemoteMessageHandlersModule::class
         ])
 interface AppCoreComponent {
 
@@ -219,5 +221,7 @@ interface AppCoreComponent {
 
 
     fun inject(downloadCompleteService: DownloadCompleteService)
-    fun inject(fileTransgerService: FileTransferService)
+    fun inject(fileTransferService: FileTransferService)
+
+    fun inject(achievementsNotificationService: AchievementsNotificationService)
 }

@@ -7,5 +7,8 @@ class Achievement(
     val kind: String,
 
     @SerializedName("target_score")
-    val targetScore: Int
+    val targetScore: Int,
+
+    @SerializedName("icon_uploadcare_uuid")
+    val uploadcareUUID: String
 )
