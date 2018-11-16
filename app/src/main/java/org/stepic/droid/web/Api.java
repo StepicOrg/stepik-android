@@ -51,7 +51,12 @@ public interface Api {
 
     Single<List<User>> getUsersRx(long[] userIds);
 
-    Call<Void> tryJoinCourse(@NotNull Course course);
+    Completable joinCourse(long courseId);
+
+    Completable dropCourse(long courseId);
+
+    @Nullable
+    Call<Void> dropCourse(@NotNull Course course);
 
     Call<SectionsMetaResponse> getSections(long[] sectionsIds);
 
@@ -77,9 +82,6 @@ public interface Api {
     Single<StepResponse> getStepsReactive(long[] steps);
 
     Single<StepResponse> getStepsByLessonId(long lessonId);
-
-    @Nullable
-    Call<Void> dropCourse(long courseId);
 
     Call<ProgressesResponse> getProgresses(String[] progresses);
 

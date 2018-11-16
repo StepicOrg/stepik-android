@@ -495,8 +495,8 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Call<Void> tryJoinCourse(@NotNull Course course) {
-        return loggedService.joinCourse(new EnrollmentWrapper(course.getId()));
+    public Completable joinCourse(long courseId) {
+        return loggedService.joinCourse(new EnrollmentWrapper(courseId));
     }
 
     @Override
@@ -555,9 +555,14 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Call<Void> dropCourse(long courseId) {
+    public Completable dropCourse(long courseId) {
         if (!config.isUserCanDropCourse()) return null;
         return loggedService.dropCourse(courseId);
+    }
+
+    @Override
+    public Call<Void> dropCourse(@NotNull Course course) {
+        return loggedService.dropCourseLegacy(course.getId());
     }
 
     @Override

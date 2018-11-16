@@ -31,36 +31,37 @@ class CourseJoinerPresenter
         private val analytic: Analytic
 ) : PresenterBase<CourseJoinView>() {
 
+    // todo remove
     @MainThread
     fun joinCourse(course: Course) {
-        val response = sharedPreferenceHelper.authResponseFromStore
-        if (response != null) {
-            view?.showProgress()
-            view?.setEnabledJoinButton(false)
-            threadPoolExecutor.execute {
-                try {
-                    val tryJoinCourseResponse = api.tryJoinCourse(course).execute()
-                    if (tryJoinCourseResponse.isSuccessful) {
-                        handleSuccessResponse(course)
-                    } else {
-                        mainHandler.post {
-                            view?.onFailJoin(tryJoinCourseResponse.code())
-                        }
-                    }
-                } catch (exception: Exception) {
-                    //no internet
-                    if (exception !is IOException) {
-                        analytic.reportError(Analytic.Error.JOIN_FAILED, exception)
-                    }
-                    mainHandler.post {
-                        view?.onFailJoin(0)
-                    }
-                }
-            }
-        } else {
-            analytic.reportEvent(Analytic.Anonymous.JOIN_COURSE)
-            view?.onFailJoin(HttpURLConnection.HTTP_UNAUTHORIZED)
-        }
+//        val response = sharedPreferenceHelper.authResponseFromStore
+//        if (response != null) {
+//            view?.showProgress()
+//            view?.setEnabledJoinButton(false)
+//            threadPoolExecutor.execute {
+//                try {
+//                    val tryJoinCourseResponse = api.tryJoinCourse(course).execute()
+//                    if (tryJoinCourseResponse.isSuccessful) {
+//                        handleSuccessResponse(course)
+//                    } else {
+//                        mainHandler.post {
+//                            view?.onFailJoin(tryJoinCourseResponse.code())
+//                        }
+//                    }
+//                } catch (exception: Exception) {
+//                    //no internet
+//                    if (exception !is IOException) {
+//                        analytic.reportError(Analytic.Error.JOIN_FAILED, exception)
+//                    }
+//                    mainHandler.post {
+//                        view?.onFailJoin(0)
+//                    }
+//                }
+//            }
+//        } else {
+//            analytic.reportEvent(Analytic.Anonymous.JOIN_COURSE)
+//            view?.onFailJoin(HttpURLConnection.HTTP_UNAUTHORIZED)
+//        }
     }
 
     @WorkerThread

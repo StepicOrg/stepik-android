@@ -32,7 +32,10 @@ public interface StepicRestLoggedService {
 
     @Headers("Content-Type:application/json")
     @POST("api/enrollments")
-    Call<Void> joinCourse(@Body EnrollmentWrapper enrollmentCourse);
+    Completable joinCourse(@Body EnrollmentWrapper enrollmentCourse);
+
+    @DELETE("api/enrollments/{id}")
+    Completable dropCourse(@Path("id") long courseId);
 
     @GET("api/users")
     Call<UsersResponse> getUsers(@Query("ids[]") long[] userIds);
@@ -90,7 +93,7 @@ public interface StepicRestLoggedService {
     );
 
     @DELETE("api/enrollments/{id}")
-    Call<Void> dropCourse(@Path("id") long courseId);
+    Call<Void> dropCourseLegacy(@Path("id") long courseId);
 
     @GET("api/progresses")
     Call<ProgressesResponse> getProgresses(@Query("ids[]") String[] progresses);

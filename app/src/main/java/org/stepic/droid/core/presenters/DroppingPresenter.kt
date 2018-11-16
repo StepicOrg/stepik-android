@@ -29,7 +29,7 @@ constructor(
 
     fun dropCourse(course: Course) {
         threadPoolExecutor.execute {
-            val dropCall = api.dropCourse(course.id)
+            val dropCall = api.dropCourse(course)
             if (dropCall == null) {
                 mainHandler.post {
                     view?.onUserHasNotPermissionsToDrop()
