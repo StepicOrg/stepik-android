@@ -7,10 +7,13 @@ import org.stepik.android.model.util.readBoolean
 import org.stepik.android.model.util.writeBoolean
 
 data class Progress(
+        @SerializedName("id")
         val id: String? = null,
         @SerializedName("last_viewed")
         val lastViewed: String? = null, //in SECONDS
+        @SerializedName("score")
         var score: String? = null,
+        @SerializedName("cost")
         val cost: Int = 0,
         @SerializedName("n_steps")
         val nSteps: Int = 0,

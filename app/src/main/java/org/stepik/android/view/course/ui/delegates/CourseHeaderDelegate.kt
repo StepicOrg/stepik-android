@@ -73,12 +73,19 @@ class CourseHeaderDelegate(
 
         courseRating.total = 5
         courseRating.progress = courseHeaderData.review.roundToInt()
+        courseRating.changeVisibility(courseHeaderData.review > 0)
 
-        courseProgress.progress = courseHeaderData.progress / 100f
-        courseProgressText.text = getString(R.string.percent_symbol, courseHeaderData.progress)
+
+        val isNeedShowProgress = courseHeaderData.progress != null
+        courseProgress.changeVisibility(isNeedShowProgress)
+        courseProgressText.changeVisibility(isNeedShowProgress)
+
+        if (courseHeaderData.progress != null) { // kotlin can't smart cast with isNeedShowProgress
+            courseProgress.progress = courseHeaderData.progress / 100f
+            courseProgressText.text = getString(R.string.percent_symbol, courseHeaderData.progress)
+        }
 
         courseLearnersCount.text = courseHeaderData.learnersCount.toString()
-
         courseFeatured.changeVisibility(courseHeaderData.isFeatured)
     }
 }
