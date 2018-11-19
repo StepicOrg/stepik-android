@@ -1,6 +1,6 @@
 package org.stepik.android.presentation.course
 
-import org.stepik.android.model.Course
+import org.stepik.android.domain.course.model.CourseHeaderData
 
 interface CourseView {
     sealed class State {
@@ -9,8 +9,8 @@ interface CourseView {
         object Loading : State()
         object Idle : State()
 
-        class CourseLoaded(val course: Course) : State()
-        class EnrollmentProgress(val course: Course) : State()
+        class CourseLoaded(val courseHeaderData: CourseHeaderData) : State()
+        class EnrollmentProgress(val courseHeaderData: CourseHeaderData) : State()
     }
 
     fun setState(state: State)

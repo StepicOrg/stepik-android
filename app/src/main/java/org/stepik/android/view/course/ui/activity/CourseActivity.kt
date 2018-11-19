@@ -68,9 +68,7 @@ class CourseActivity : FragmentActivityBase(), CourseView {
 
         courseHeaderDelegate = CourseHeaderDelegate(this, config)
 
-        val course: Course? = savedInstanceState
-                ?.getParcelable(EXTRA_COURSE)
-                ?: intent.getParcelableExtra(EXTRA_COURSE)
+        val course: Course? = intent.getParcelableExtra(EXTRA_COURSE)
 
         courseId = intent.getLongExtra(EXTRA_COURSE_ID, NO_ID)
                 .takeIf { it != NO_ID }
@@ -164,10 +162,10 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         viewStateDelegate.switchState(state)
         when(state) {
             is CourseView.State.CourseLoaded ->
-                courseHeaderDelegate.setCourse(state.course)
+                courseHeaderDelegate.setCourse(state.courseHeaderData)
 
             is CourseView.State.EnrollmentProgress ->
-                courseHeaderDelegate.setCourse(state.course)
+                courseHeaderDelegate.setCourse(state.courseHeaderData)
 
             is CourseView.State.EmptyCourse -> {
                 coursePager.changeVisibility(false)

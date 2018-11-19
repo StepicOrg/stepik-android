@@ -12,8 +12,10 @@ import kotlinx.android.synthetic.main.header_course.*
 import org.stepic.droid.R
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
+import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.ui.util.setCompoundDrawables
-import org.stepik.android.model.Course
+import org.stepik.android.domain.course.model.CourseHeaderData
+import kotlin.math.roundToInt
 
 class CourseHeaderDelegate(
         private val courseActivity: Activity,
@@ -53,28 +55,30 @@ class CourseHeaderDelegate(
         courseVerified.setCompoundDrawables(start = R.drawable.ic_verified)
     }
 
-    fun setCourse(course: Course) = with(courseActivity) {
+    fun setCourse(courseHeaderData: CourseHeaderData) = with(courseActivity) {
         Glide.with(this)
-                .load(config.baseUrl + course.cover)
+                .load(config.baseUrl + courseHeaderData.cover)
                 .placeholder(R.drawable.general_placeholder)
                 .bitmapTransform(CenterCrop(this), BlurTransformation(this))
                 .into(courseCover)
 
         Glide.with(this)
-                .load(config.baseUrl + course.cover)
+                .load(config.baseUrl + courseHeaderData.cover)
                 .asBitmap()
                 .placeholder(courseCoverSmallPlaceHolder)
                 .centerCrop()
                 .into(courseCoverSmallTarget)
 
-        courseTitle.text = course.title
+        courseTitle.text = courseHeaderData.title
 
         courseRating.total = 5
-        courseRating.progress = 3
+        courseRating.progress = courseHeaderData.review.roundToInt()
 
-        courseProgress.progress = .77f
-        courseProgressText.text = "77%"
+        courseProgress.progress = courseHeaderData.progress / 100f
+        courseProgressText.text = getString(R.string.percent_symbol, courseHeaderData.progress)
 
-        courseLearnersCount.text = course.learnersCount.toString()
+        courseLearnersCount.text = courseHeaderData.learnersCount.toString()
+
+        courseVerified.changeVisibility(courseHeaderData.isVerified)
     }
 }

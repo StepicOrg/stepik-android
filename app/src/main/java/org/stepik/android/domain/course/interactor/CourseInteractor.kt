@@ -1,11 +1,10 @@
 package org.stepik.android.domain.course.interactor
 
-import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.subjects.BehaviorSubject
-import io.reactivex.subjects.PublishSubject
+import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.repository.CourseRepository
-import org.stepik.android.domain.course.repository.EnrollmentRepository
+import org.stepik.android.domain.course.repository.CourseReviewRepository
 import org.stepik.android.model.Course
 import org.stepik.android.view.injection.course.CourseScope
 import javax.inject.Inject
@@ -15,28 +14,30 @@ class CourseInteractor
 @Inject
 constructor(
         private val courseRepository: CourseRepository,
-        private val enrollmentRepository: EnrollmentRepository,
-
-        private val coursePublishSubject: BehaviorSubject<Course>,
-
-        private val enrollmentSubject: PublishSubject<Pair<Long, Boolean>>
+        private val courseReviewRepository: CourseReviewRepository,
+        private val coursePublishSubject: BehaviorSubject<Course>
 ) {
-    fun getCourse(courseId: Long): Maybe<Course> =
+    fun getCourseHeaderData(courseId: Long): Maybe<CourseHeaderData> =
             courseRepository
-                    .getCourse(courseId) // get course from api
-                    .doOnSuccess(::notifyCourse) // send loaded course to ancestors
+                .getCourse(courseId)
+                .flatMap(::getCourseHeaderData)
 
-    fun notifyCourse(course: Course) =
-            coursePublishSubject.onNext(course)
+    fun getCourseHeaderData(course: Course): Maybe<CourseHeaderData> =
+            courseReviewRepository
+                .getCourseReview(course.reviewSummary)
+                .doOnSuccess { coursePublishSubject.onNext(course) }
+                .map { courseReview ->
+                    CourseHeaderData(
+                        courseId = course.id,
+                        title = course.title ?: "",
+                        cover = course.cover ?: "",
+                        learnersCount = course.learnersCount,
 
-    fun enrollCourse(courseId: Long): Completable =
-            enrollmentRepository
-                    .addEnrollment(courseId)
-                    .doOnComplete { enrollmentSubject.onNext(courseId to true) } // notify everyone about changes
-
-    fun dropCourse(courseId: Long): Completable =
-            enrollmentRepository
-                    .removeEnrollment(courseId)
-                    .doOnComplete { enrollmentSubject.onNext(courseId to false) } // notify everyone about changes
-
+                        review = courseReview.average,
+                        progress = 0,
+                        isVerified = false,
+                        isEnrolled = course.enrollment != 0
+                    )
+                }
+                .toMaybe()
 }

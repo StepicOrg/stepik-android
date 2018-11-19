@@ -13,18 +13,18 @@ import org.stepic.droid.di.qualifiers.CourseId
 import org.stepik.android.cache.course.source.CourseCacheDataSourceImpl
 import org.stepik.android.cache.course.source.EnrollmentCacheDataSourceImpl
 import org.stepik.android.data.course.repository.CourseRepositoryImpl
+import org.stepik.android.data.course.repository.CourseReviewRepositoryImpl
 import org.stepik.android.data.course.repository.EnrollmentRepositoryImpl
-import org.stepik.android.data.course.source.CourseCacheDataSource
-import org.stepik.android.data.course.source.CourseRemoteDataSource
-import org.stepik.android.data.course.source.EnrollmentCacheDataSource
-import org.stepik.android.data.course.source.EnrollmentRemoteDataSource
+import org.stepik.android.data.course.source.*
 import org.stepik.android.domain.course.repository.CourseRepository
+import org.stepik.android.domain.course.repository.CourseReviewRepository
 import org.stepik.android.domain.course.repository.EnrollmentRepository
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.base.injection.DaggerViewModelFactory
 import org.stepik.android.presentation.base.injection.ViewModelKey
 import org.stepik.android.presentation.course.CoursePresenter
 import org.stepik.android.remote.course.source.CourseRemoteDataSourceImpl
+import org.stepik.android.remote.course.source.CourseReviewRemoteDataSourceImpl
 import org.stepik.android.remote.course.source.EnrollmentRemoteDataSourceImpl
 
 @Module
@@ -55,6 +55,14 @@ abstract class CourseModule {
     @Binds
     internal abstract fun bindEnrollmentCacheDataSource(
         enrollmentCacheDataSourceImpl: EnrollmentCacheDataSourceImpl): EnrollmentCacheDataSource
+
+    @Binds
+    internal abstract fun bindCourseReviewRepository(
+        courseReviewRepositoryImpl: CourseReviewRepositoryImpl): CourseReviewRepository
+
+    @Binds
+    internal abstract fun bindCourseReviewRemoteDataSource(
+        courseReviewRemoteDataSourceImpl: CourseReviewRemoteDataSourceImpl): CourseReviewRemoteDataSource
 
     /**
      * PRESENTATION LAYER

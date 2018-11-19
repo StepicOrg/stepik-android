@@ -13,5 +13,6 @@ constructor(
     private val api: Api
 ) : CourseReviewRemoteDataSource {
     override fun getCourseReviews(vararg courseReviewIds: Long): Single<List<CourseReviewSummary>> =
-            api.getCourseReviews(courseReviewIds).map(CourseReviewResponse::courseReviewSummaries)
+            api.getCourseReviews(courseReviewIds)
+                .map(CourseReviewResponse::courseReviewSummaries)
 }
