@@ -237,7 +237,7 @@ public interface StepicRestLoggedService {
     Single<CourseCollectionsResponse> getCourseLists(@Query("language") String language);
 
     @GET("api/course-review-summaries")
-    Single<CourseReviewResponse> getCourseReviews(@Query("ids[]") int[] reviewSummaryIds);
+    Single<CourseReviewResponse> getCourseReviews(@Query("ids[]") long[] reviewSummaryIds);
 
     @GET("api/tags?is_featured=true")
     Single<TagResponse> getFeaturedTags();

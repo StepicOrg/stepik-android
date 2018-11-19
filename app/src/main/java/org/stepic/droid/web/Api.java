@@ -173,7 +173,7 @@ public interface Api {
 
     Single<CourseCollectionsResponse> getCourseCollections(String language);
 
-    Single<CourseReviewResponse> getCourseReviews(int[] reviewSummaryIds);
+    Single<CourseReviewResponse> getCourseReviews(long[] reviewSummaryIds);
 
     Single<TagResponse> getFeaturedTags();
 

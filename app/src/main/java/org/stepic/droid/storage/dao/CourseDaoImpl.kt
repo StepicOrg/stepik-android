@@ -61,7 +61,7 @@ constructor(
                 learnersCount = cursor.getLong(DbStructureEnrolledAndFeaturedCourses.Column.LEARNERS_COUNT),
                 progress = cursor.getString(DbStructureEnrolledAndFeaturedCourses.Column.PROGRESS),
                 rating = cursor.getDouble(DbStructureEnrolledAndFeaturedCourses.Column.AVERAGE_RATING),
-                reviewSummary = cursor.getInt(DbStructureEnrolledAndFeaturedCourses.Column.REVIEW_SUMMARY),
+                reviewSummary = cursor.getLong(DbStructureEnrolledAndFeaturedCourses.Column.REVIEW_SUMMARY),
 
                 isActive = isActive
         )

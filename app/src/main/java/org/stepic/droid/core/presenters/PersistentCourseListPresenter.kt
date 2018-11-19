@@ -153,7 +153,7 @@ class PersistentCourseListPresenter
                 }
             }
 
-            val reviewSummaryIds = coursesFromInternet.map { it.reviewSummary }.toIntArray()
+            val reviewSummaryIds = coursesFromInternet.map { it.reviewSummary }.toLongArray()
             val reviews: List<CourseReviewSummary>? = try {
                 api.getCourseReviews(reviewSummaryIds).blockingGet().courseReviewSummaries
             } catch (exception: Exception) {
