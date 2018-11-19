@@ -10,7 +10,6 @@ interface CourseView {
         object Idle : State()
 
         class CourseLoaded(val courseHeaderData: CourseHeaderData) : State()
-        class EnrollmentProgress(val courseHeaderData: CourseHeaderData) : State()
     }
 
     fun setState(state: State)

@@ -52,7 +52,7 @@ class CourseHeaderDelegate(
     }
 
     private fun initVerified() = with(courseActivity) {
-        courseVerified.setCompoundDrawables(start = R.drawable.ic_verified)
+        courseFeatured.setCompoundDrawables(start = R.drawable.ic_verified)
     }
 
     fun setCourse(courseHeaderData: CourseHeaderData) = with(courseActivity) {
@@ -79,6 +79,6 @@ class CourseHeaderDelegate(
 
         courseLearnersCount.text = courseHeaderData.learnersCount.toString()
 
-        courseVerified.changeVisibility(courseHeaderData.isVerified)
+        courseFeatured.changeVisibility(courseHeaderData.isFeatured)
     }
 }

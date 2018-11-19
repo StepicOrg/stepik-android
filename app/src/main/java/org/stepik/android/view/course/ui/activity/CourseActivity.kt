@@ -17,7 +17,6 @@ import org.stepic.droid.base.FragmentActivityBase
 import org.stepik.android.view.course.ui.adapter.CoursePagerAdapter
 import org.stepik.android.view.course.ui.delegates.CourseHeaderDelegate
 import org.stepic.droid.fonts.FontType
-import org.stepic.droid.ui.util.changeVisibility
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course.CoursePresenter
 import org.stepik.android.presentation.course.CourseView
@@ -78,7 +77,7 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         injectComponent(courseId)
         coursePresenter = ViewModelProviders.of(this, viewModelFactory).get(CoursePresenter::class.java)
 
-        initViewPager()
+        initViewPager(courseId)
 
         if (course != null) {
             coursePresenter.onCourse(course)
@@ -89,7 +88,6 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         viewStateDelegate.addState<CourseView.State.EmptyCourse>(courseEmpty)
         viewStateDelegate.addState<CourseView.State.NetworkError>(errorNoConnection)
         viewStateDelegate.addState<CourseView.State.CourseLoaded>(courseHeader, courseTabs, coursePager)
-        viewStateDelegate.addState<CourseView.State.EnrollmentProgress>(courseHeader, courseTabs, coursePager)
         viewStateDelegate.addState<CourseView.State.Loading>(courseHeaderPlaceholder)
         viewStateDelegate.addState<CourseView.State.Idle>(courseHeaderPlaceholder)
     }
@@ -115,7 +113,7 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         super.onStop()
     }
 
-    private fun initViewPager() {
+    private fun initViewPager(courseId: Long) {
         val lightFont = TypefaceUtils.load(assets, fontsProvider.provideFontPath(FontType.light))
         val regularFont = TypefaceUtils.load(assets, fontsProvider.provideFontPath(FontType.regular))
 
@@ -163,14 +161,6 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         when(state) {
             is CourseView.State.CourseLoaded ->
                 courseHeaderDelegate.setCourse(state.courseHeaderData)
-
-            is CourseView.State.EnrollmentProgress ->
-                courseHeaderDelegate.setCourse(state.courseHeaderData)
-
-            is CourseView.State.EmptyCourse -> {
-                coursePager.changeVisibility(false)
-                courseTabs.changeVisibility(false)
-            }
         }
     }
 

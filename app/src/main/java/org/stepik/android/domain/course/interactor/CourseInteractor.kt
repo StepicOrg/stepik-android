@@ -3,6 +3,7 @@ package org.stepik.android.domain.course.interactor
 import io.reactivex.Maybe
 import io.reactivex.subjects.BehaviorSubject
 import org.stepik.android.domain.course.model.CourseHeaderData
+import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.course.repository.CourseReviewRepository
 import org.stepik.android.model.Course
@@ -35,8 +36,8 @@ constructor(
 
                         review = courseReview.average,
                         progress = 0,
-                        isVerified = false,
-                        isEnrolled = course.enrollment != 0
+                        isFeatured = course.isFeatured,
+                        enrollmentState = if (course.enrollment > 0) EnrollmentState.ENROLLED else EnrollmentState.NOT_ENROLLED
                     )
                 }
                 .toMaybe()

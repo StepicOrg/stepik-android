@@ -16,6 +16,7 @@ import org.stepik.android.data.course.repository.CourseRepositoryImpl
 import org.stepik.android.data.course.repository.CourseReviewRepositoryImpl
 import org.stepik.android.data.course.repository.EnrollmentRepositoryImpl
 import org.stepik.android.data.course.source.*
+import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.course.repository.CourseReviewRepository
 import org.stepik.android.domain.course.repository.EnrollmentRepository
@@ -87,13 +88,7 @@ abstract class CourseModule {
         @Provides
         @JvmStatic
         @CourseScope
-        internal fun provideCourseEnrollmentSubject(): PublishSubject<Pair<Long, Boolean>> =
+        internal fun provideCourseEnrollmentSubject(): PublishSubject<Pair<Long, EnrollmentState>> =
             PublishSubject.create()
-
-        @Provides
-        @JvmStatic
-        @CourseScope
-        internal fun provideCourseEnrollmentLocalSubject(@CourseId courseId: Long, enrollmentSubject: PublishSubject<Pair<Long, Boolean>>): Observable<Boolean> =
-            enrollmentSubject.filter { (id, _) -> id == courseId }.map { (_, isEnrolled) -> isEnrolled }
     }
 }

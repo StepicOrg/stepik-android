@@ -11,8 +11,8 @@ data class CourseHeaderData(
 
     val review: Double,
     val progress: Int,
-    val isVerified: Boolean,
-    val isEnrolled: Boolean
+    val isFeatured: Boolean,
+    val enrollmentState: EnrollmentState
 ) : Parcelable {
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeLong(courseId)
@@ -21,8 +21,8 @@ data class CourseHeaderData(
         parcel.writeLong(learnersCount)
         parcel.writeDouble(review)
         parcel.writeInt(progress)
-        parcel.writeByte(if (isVerified) 1 else 0)
-        parcel.writeByte(if (isEnrolled) 1 else 0)
+        parcel.writeByte(if (isFeatured) 1 else 0)
+        parcel.writeInt(enrollmentState.ordinal)
     }
 
     override fun describeContents(): Int = 0
@@ -37,7 +37,7 @@ data class CourseHeaderData(
                 parcel.readDouble(),
                 parcel.readInt(),
                 parcel.readByte() != 0.toByte(),
-                parcel.readByte() != 0.toByte()
+                EnrollmentState.values()[parcel.readInt()]
             )
 
         override fun newArray(size: Int): Array<CourseHeaderData?> =
