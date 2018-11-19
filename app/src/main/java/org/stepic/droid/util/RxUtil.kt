@@ -72,3 +72,6 @@ fun <T> Single<List<T>>.maybeFirst(): Maybe<T> =
 
 inline fun <T> Maybe<T>.doOnSuccess(crossinline completableSource: (T) -> Completable): Maybe<T> =
         flatMap { completableSource(it).andThen(Maybe.just(it)) }
+
+inline fun <T> Single<T>.doOnSuccess(crossinline completableSource: (T) -> Completable): Single<T> =
+    flatMap { completableSource(it).andThen(Single.just(it)) }
