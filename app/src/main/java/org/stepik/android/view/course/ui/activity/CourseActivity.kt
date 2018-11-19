@@ -39,7 +39,7 @@ class CourseActivity : FragmentActivityBase(), CourseView {
                     .putExtra(EXTRA_COURSE, course)
                     .putExtra(EXTRA_AUTO_ENROLL, autoEnroll)
 
-        fun createIntent(context: Context, courseId: Int): Intent =
+        fun createIntent(context: Context, courseId: Long): Intent =
             Intent(context, CourseActivity::class.java)
                     .putExtra(EXTRA_COURSE_ID, courseId)
     }
