@@ -1,13 +1,13 @@
 package org.stepik.android.presentation.base
 
 import android.arch.lifecycle.ViewModel
+import android.os.Bundle
 import android.support.annotation.CallSuper
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 import org.stepic.droid.core.presenters.PresenterContract
 
 abstract class PresenterBase<V> : PresenterContract<V>, ViewModel() {
-    private val compositeDisposable = CompositeDisposable()
+    protected val compositeDisposable = CompositeDisposable()
 
     @Volatile
     var view: V? = null
@@ -18,7 +18,7 @@ abstract class PresenterBase<V> : PresenterContract<V>, ViewModel() {
         val previousView = this.view
 
         if (previousView != null) {
-            throw IllegalStateException("Previous view is not detached! previousView = " + previousView)
+            throw IllegalStateException("Previous view is not detached! previousView = $previousView")
         }
 
         this.view = view
@@ -35,12 +35,11 @@ abstract class PresenterBase<V> : PresenterContract<V>, ViewModel() {
         }
     }
 
-    protected fun addDisposable(disposable: Disposable) {
-        compositeDisposable.add(disposable)
-    }
-
     @CallSuper
     override fun onCleared() {
         compositeDisposable.dispose()
     }
+
+    open fun onSaveInstanceState(outState: Bundle) {}
+    open fun onRestoreInstanceState(savedInstanceState: Bundle) {}
 }

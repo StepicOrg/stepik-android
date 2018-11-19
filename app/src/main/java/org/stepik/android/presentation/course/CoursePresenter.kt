@@ -1,16 +1,16 @@
 package org.stepik.android.presentation.course
 
-import io.reactivex.Maybe
-import io.reactivex.Observable
-import io.reactivex.Scheduler
-import io.reactivex.functions.Consumer
-import io.reactivex.internal.functions.Functions.EMPTY_ACTION
+import android.os.Bundle
+import io.reactivex.*
+import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.course.interactor.CourseEnrollmentInteractor
 import org.stepik.android.domain.course.interactor.CourseInteractor
 import org.stepik.android.domain.course.model.CourseHeaderData
+import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.base.PresenterBase
 import javax.inject.Inject
@@ -18,16 +18,20 @@ import javax.inject.Inject
 class CoursePresenter
 @Inject
 constructor(
-        private val courseInteractor: CourseInteractor,
-        private val courseEnrollmentInteractor: CourseEnrollmentInteractor,
+    private val courseInteractor: CourseInteractor,
+    private val courseEnrollmentInteractor: CourseEnrollmentInteractor,
 
-        enrollmentObservable: Observable<Boolean>,
+    enrollmentObservable: PublishSubject<Pair<Long, EnrollmentState>>,
 
-        @BackgroundScheduler
-        private val backgroundScheduler: Scheduler,
-        @MainScheduler
-        private val mainScheduler: Scheduler
+    @BackgroundScheduler
+    private val backgroundScheduler: Scheduler,
+    @MainScheduler
+    private val mainScheduler: Scheduler
 ) : PresenterBase<CourseView>() {
+    companion object {
+        private const val KEY_COURSE_HEADER_DATA = "course_header_data"
+    }
+
     private var state: CourseView.State = CourseView.State.Idle
         set(value) {
             field = value
@@ -35,15 +39,22 @@ constructor(
         }
 
     init {
-        addDisposable(enrollmentObservable
-                .subscribeOn(backgroundScheduler)
-                .observeOn(mainScheduler)
-                .subscribe(::updateEnrollment))
+        compositeDisposable += enrollmentObservable
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribe(::updateEnrollment)
     }
 
     override fun attachView(view: CourseView) {
         super.attachView(view)
         view.setState(state)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        if (state != CourseView.State.Idle) return
+        val data = savedInstanceState.getParcelable(KEY_COURSE_HEADER_DATA)
+                as? CourseHeaderData ?: return
+        state = CourseView.State.CourseLoaded(data)
     }
 
     fun onCourseId(courseId: Long) {
@@ -55,58 +66,52 @@ constructor(
     }
 
     private fun observeCourseData(courseDataObservable: Maybe<CourseHeaderData>) {
+        if (state != CourseView.State.Idle) return
         state = CourseView.State.Loading
-        addDisposable(courseDataObservable
+        compositeDisposable += courseDataObservable
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
                 onComplete = { state = CourseView.State.EmptyCourse },
                 onSuccess  = { state = CourseView.State.CourseLoaded(it) },
                 onError    = { state = CourseView.State.NetworkError }
-            ))
+            )
     }
 
     fun enrollCourse() {
-        val oldState = state
-        if (oldState is CourseView.State.CourseLoaded) {
-            state = CourseView.State.EnrollmentProgress(oldState.courseHeaderData)
-            addDisposable(courseEnrollmentInteractor
-                    .enrollCourse(oldState.courseHeaderData.courseId)
-                    .observeOn(mainScheduler)
-                    .subscribeOn(backgroundScheduler)
-                    .subscribe(EMPTY_ACTION, Consumer {
-                        view?.showEnrollmentError()
-                        state = CourseView.State.CourseLoaded(oldState.courseHeaderData)
-                    }))
-        }
+        toggleEnrollment(CourseEnrollmentInteractor::enrollCourse)
     }
 
     fun dropCourse() {
+        toggleEnrollment(CourseEnrollmentInteractor::dropCourse)
+    }
+
+    private inline fun toggleEnrollment(enrollmentAction: CourseEnrollmentInteractor.(Long) -> Completable) {
         val oldState = state
         if (oldState is CourseView.State.CourseLoaded) {
-            state = CourseView.State.EnrollmentProgress(oldState.courseHeaderData)
-            addDisposable(courseEnrollmentInteractor
-                    .dropCourse(oldState.courseHeaderData.courseId)
-                    .observeOn(mainScheduler)
-                    .subscribeOn(backgroundScheduler)
-                    .subscribe(EMPTY_ACTION, Consumer {
+            state = CourseView.State.CourseLoaded(oldState.courseHeaderData.copy(enrollmentState = EnrollmentState.PENDING))
+            compositeDisposable += courseEnrollmentInteractor
+                .enrollmentAction(oldState.courseHeaderData.courseId)
+                .observeOn(mainScheduler)
+                .subscribeOn(backgroundScheduler)
+                .subscribeBy(
+                    onError = {
                         view?.showEnrollmentError()
-                        state = CourseView.State.CourseLoaded(oldState.courseHeaderData)
-                    }))
+                        state = CourseView.State.CourseLoaded(oldState.courseHeaderData) // roll back data
+                    }
+                )
         }
     }
 
-    private fun updateEnrollment(isEnrolled: Boolean) {
-        val courseHeaderData = when(val oldState = state) {
-            is CourseView.State.CourseLoaded ->
-                oldState.courseHeaderData
-            is CourseView.State.EnrollmentProgress ->
-                oldState.courseHeaderData
-            else -> null
+    private fun updateEnrollment(enrollment: Pair<Long, EnrollmentState>) {
+        val (courseId, enrollmentState) = enrollment
+        val oldState = state
+        if (oldState is CourseView.State.CourseLoaded && oldState.courseHeaderData.courseId == courseId) {
+            state = CourseView.State.CourseLoaded(oldState.courseHeaderData.copy(enrollmentState = enrollmentState))
         }
+    }
 
-        if (courseHeaderData != null) {
-            state = CourseView.State.CourseLoaded(courseHeaderData.copy(isEnrolled = isEnrolled))
-        }
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putParcelable(KEY_COURSE_HEADER_DATA, (state as? CourseView.State.CourseLoaded)?.courseHeaderData)
     }
 }

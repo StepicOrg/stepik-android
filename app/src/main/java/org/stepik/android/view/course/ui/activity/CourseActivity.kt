@@ -79,6 +79,7 @@ class CourseActivity : FragmentActivityBase(), CourseView {
 
         initViewPager(courseId)
 
+        savedInstanceState?.let(coursePresenter::onRestoreInstanceState)
         if (course != null) {
             coursePresenter.onCourse(course)
         } else {
@@ -166,6 +167,11 @@ class CourseActivity : FragmentActivityBase(), CourseView {
 
     override fun showEnrollmentError() {
         TODO()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        coursePresenter.onSaveInstanceState(outState)
+        super.onSaveInstanceState(outState)
     }
 
     override fun onDestroy() {
