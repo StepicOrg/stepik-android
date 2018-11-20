@@ -50,6 +50,9 @@ constructor(
         view.setState(state)
     }
 
+    /**
+     * Data initialization variants
+     */
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         if (state != CourseView.State.Idle) return
         val data = savedInstanceState.getParcelable(KEY_COURSE_HEADER_DATA)
@@ -58,17 +61,21 @@ constructor(
     }
 
     fun onCourseId(courseId: Long) {
-        observeCourseData(courseInteractor.getCourseHeaderData(courseId))
+        processCourseData(courseInteractor.getCourseHeaderData(courseId))
     }
 
     fun onCourse(course: Course) {
-        observeCourseData(courseInteractor.getCourseHeaderData(course))
+        processCourseData(courseInteractor.getCourseHeaderData(course))
     }
 
-    private fun observeCourseData(courseDataObservable: Maybe<CourseHeaderData>) {
+    private fun processCourseData(courseDataSource: Maybe<CourseHeaderData>) {
         if (state != CourseView.State.Idle) return
         state = CourseView.State.Loading
-        compositeDisposable += courseDataObservable
+        observeCourseData(courseDataSource)
+    }
+
+    private fun observeCourseData(courseDataSource: Maybe<CourseHeaderData>) {
+        compositeDisposable += courseDataSource
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
@@ -78,6 +85,9 @@ constructor(
             )
     }
 
+    /**
+     * ENROLLMENT
+     */
     fun enrollCourse() {
         toggleEnrollment(CourseEnrollmentInteractor::enrollCourse)
     }
@@ -93,6 +103,11 @@ constructor(
             ?: return
 
         state = CourseView.State.CourseLoaded(headerData.copy(enrollmentState = EnrollmentState.PENDING))
+
+//        observeCourseData(
+//            courseEnrollmentInteractor.enrollmentAction(headerData.courseId)
+//                .then(courseInteractor.getCourseHeaderData(headerData.courseId, canUseCache = false))
+//        )
         compositeDisposable += courseEnrollmentInteractor
             .enrollmentAction(headerData.courseId)
             .observeOn(mainScheduler)
@@ -106,11 +121,18 @@ constructor(
     }
 
     private fun updateEnrollment(enrollment: Pair<Long, EnrollmentState>) {
-        val (courseId, enrollmentState) = enrollment
-        val oldState = state
-        if (oldState is CourseView.State.CourseLoaded && oldState.courseHeaderData.courseId == courseId) {
-            state = CourseView.State.CourseLoaded(oldState.courseHeaderData.copy(enrollmentState = enrollmentState))
-        }
+        val courseId = enrollment.first
+            .takeIf { (state as? CourseView.State.CourseLoaded)?.courseHeaderData?.courseId == it }
+            ?: return
+
+        observeCourseData(courseInteractor.getCourseHeaderData(courseId, canUseCache = false))
+    }
+
+    /**
+     * Continue learning
+     */
+    fun continueLearning() {
+
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
