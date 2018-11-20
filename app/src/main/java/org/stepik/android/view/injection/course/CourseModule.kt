@@ -9,14 +9,12 @@ import dagger.multibindings.IntoMap
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
-import org.stepic.droid.di.qualifiers.CourseId
 import org.stepik.android.cache.course.source.CourseCacheDataSourceImpl
 import org.stepik.android.cache.course.source.EnrollmentCacheDataSourceImpl
 import org.stepik.android.data.course.repository.CourseRepositoryImpl
 import org.stepik.android.data.course.repository.CourseReviewRepositoryImpl
 import org.stepik.android.data.course.repository.EnrollmentRepositoryImpl
 import org.stepik.android.data.course.source.*
-import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.course.repository.CourseReviewRepository
 import org.stepik.android.domain.course.repository.EnrollmentRepository
@@ -58,6 +56,13 @@ abstract class CourseModule {
         enrollmentCacheDataSourceImpl: EnrollmentCacheDataSourceImpl): EnrollmentCacheDataSource
 
     @Binds
+    @CourseScope
+    @EnrollmentCourseUpdates
+    internal abstract fun bindEnrollmentsUpdatesObservables(
+        @EnrollmentCourseUpdates
+        publisher: PublishSubject<Long>): Observable<Long>
+
+    @Binds
     internal abstract fun bindCourseReviewRepository(
         courseReviewRepositoryImpl: CourseReviewRepositoryImpl): CourseReviewRepository
 
@@ -88,7 +93,8 @@ abstract class CourseModule {
         @Provides
         @JvmStatic
         @CourseScope
-        internal fun provideCourseEnrollmentSubject(): PublishSubject<Pair<Long, EnrollmentState>> =
+        @EnrollmentCourseUpdates
+        internal fun provideCourseEnrollmentSubject(): PublishSubject<Long> =
             PublishSubject.create()
     }
 }

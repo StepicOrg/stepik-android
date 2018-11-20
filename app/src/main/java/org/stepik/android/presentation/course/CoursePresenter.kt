@@ -4,8 +4,8 @@ import android.os.Bundle
 import io.reactivex.*
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
-import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
+import org.stepic.droid.di.qualifiers.CourseId
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.course.interactor.CourseEnrollmentInteractor
 import org.stepik.android.domain.course.interactor.CourseInteractor
@@ -13,15 +13,20 @@ import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.base.PresenterBase
+import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
 import javax.inject.Inject
 
 class CoursePresenter
 @Inject
 constructor(
+    @CourseId
+    private val courseId: Long,
+
     private val courseInteractor: CourseInteractor,
     private val courseEnrollmentInteractor: CourseEnrollmentInteractor,
 
-    enrollmentObservable: PublishSubject<Pair<Long, EnrollmentState>>,
+    @EnrollmentCourseUpdates
+    private val enrollmentUpdatesObservable: Observable<Long>,
 
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
@@ -39,10 +44,7 @@ constructor(
         }
 
     init {
-        compositeDisposable += enrollmentObservable
-            .subscribeOn(backgroundScheduler)
-            .observeOn(mainScheduler)
-            .subscribe(::updateEnrollment)
+        subscriberForEnrollmentUpdates()
     }
 
     override fun attachView(view: CourseView) {
@@ -61,20 +63,16 @@ constructor(
     }
 
     fun onCourseId(courseId: Long) {
-        processCourseData(courseInteractor.getCourseHeaderData(courseId))
+        observeCourseData(courseInteractor.getCourseHeaderData(courseId))
     }
 
     fun onCourse(course: Course) {
-        processCourseData(courseInteractor.getCourseHeaderData(course))
-    }
-
-    private fun processCourseData(courseDataSource: Maybe<CourseHeaderData>) {
-        if (state != CourseView.State.Idle) return
-        state = CourseView.State.Loading
-        observeCourseData(courseDataSource)
+        observeCourseData(courseInteractor.getCourseHeaderData(course))
     }
 
     private fun observeCourseData(courseDataSource: Maybe<CourseHeaderData>) {
+        if (state != CourseView.State.Idle) return
+        state = CourseView.State.Loading
         compositeDisposable += courseDataSource
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
@@ -103,11 +101,6 @@ constructor(
             ?: return
 
         state = CourseView.State.CourseLoaded(headerData.copy(enrollmentState = EnrollmentState.PENDING))
-
-//        observeCourseData(
-//            courseEnrollmentInteractor.enrollmentAction(headerData.courseId)
-//                .then(courseInteractor.getCourseHeaderData(headerData.courseId, canUseCache = false))
-//        )
         compositeDisposable += courseEnrollmentInteractor
             .enrollmentAction(headerData.courseId)
             .observeOn(mainScheduler)
@@ -120,12 +113,16 @@ constructor(
             )
     }
 
-    private fun updateEnrollment(enrollment: Pair<Long, EnrollmentState>) {
-        val courseId = enrollment.first
-            .takeIf { (state as? CourseView.State.CourseLoaded)?.courseHeaderData?.courseId == it }
-            ?: return
-
-        observeCourseData(courseInteractor.getCourseHeaderData(courseId, canUseCache = false))
+    private fun subscriberForEnrollmentUpdates() {
+        compositeDisposable += enrollmentUpdatesObservable
+            .filter { it == courseId }
+            .concatMap { courseInteractor.getCourseHeaderData(it, canUseCache = false).toObservable() }
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onNext  = { state = CourseView.State.CourseLoaded(it) },
+                onError = { state = CourseView.State.NetworkError; subscriberForEnrollmentUpdates() }
+            )
     }
 
     /**
