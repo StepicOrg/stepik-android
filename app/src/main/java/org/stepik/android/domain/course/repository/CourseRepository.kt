@@ -4,5 +4,5 @@ import io.reactivex.Maybe
 import org.stepik.android.model.Course
 
 interface CourseRepository {
-    fun getCourse(courseId: Long): Maybe<Course>
+    fun getCourse(courseId: Long, canUseCache: Boolean = true): Maybe<Course>
 }

@@ -23,9 +23,9 @@ constructor(
         private val progressRepository: ProgressRepository,
         private val coursePublishSubject: BehaviorSubject<Course>
 ) {
-    fun getCourseHeaderData(courseId: Long): Maybe<CourseHeaderData> =
+    fun getCourseHeaderData(courseId: Long, canUseCache: Boolean = true): Maybe<CourseHeaderData> =
             courseRepository
-                .getCourse(courseId)
+                .getCourse(courseId, canUseCache)
                 .flatMap(::getCourseHeaderData)
 
     fun getCourseHeaderData(course: Course): Maybe<CourseHeaderData> =

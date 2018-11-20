@@ -16,9 +16,17 @@ constructor(
         private val courseCacheDataSource: CourseCacheDataSource
 ) : CourseRepository {
 
-    override fun getCourse(courseId: Long): Maybe<Course> =
-            courseCacheDataSource.getCourses(courseId).maybeFirst()
-                    .switchIfEmpty(courseRemoteDataSource.getCourses(courseId).maybeFirst())
-                    .doOnSuccess(courseCacheDataSource::saveCourse)
+    override fun getCourse(courseId: Long, canUseCache: Boolean): Maybe<Course> {
+        val remoteSource = courseRemoteDataSource.getCourses(courseId).maybeFirst()
+            .doOnSuccess(courseCacheDataSource::saveCourse)
+
+        val cacheSource = courseCacheDataSource.getCourses(courseId).maybeFirst()
+
+        return if (canUseCache) {
+            cacheSource.switchIfEmpty(remoteSource)
+        } else {
+            remoteSource
+        }
+    }
 
 }

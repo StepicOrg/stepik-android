@@ -12,6 +12,6 @@ constructor(
     private val api: Api
 ) : CourseRemoteDataSource {
     override fun getCourses(vararg ids: Long): Single<List<Course>> =
-        api.getCoursesReactive(0, ids)
+        api.getCoursesReactive(1, ids)
             .map { it.courses?.filterNotNull() ?: emptyList() }
 }
