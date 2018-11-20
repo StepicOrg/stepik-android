@@ -4,6 +4,8 @@ import android.app.Activity
 import android.graphics.BitmapFactory
 import android.support.design.widget.AppBarLayout
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
+import android.view.Menu
+import android.view.MenuItem
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import jp.wasabeef.glide.transformations.BlurTransformation
@@ -15,12 +17,21 @@ import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepik.android.domain.course.model.CourseHeaderData
+import org.stepik.android.domain.course.model.EnrollmentState
+import org.stepik.android.presentation.course.CoursePresenter
 import kotlin.math.roundToInt
 
 class CourseHeaderDelegate(
         private val courseActivity: Activity,
-        private val config: Config
+        private val config: Config,
+        private val coursePresenter: CoursePresenter
 ) {
+    var courseHeaderData: CourseHeaderData? = null
+        set(value) {
+            field = value
+            value?.let(::setCourseData)
+        }
+
     private val courseCoverSmallTarget by lazy {
         RoundedBitmapImageViewTarget(courseActivity.resources.getDimension(R.dimen.course_image_radius), courseActivity.courseCoverSmall)
     }
@@ -33,9 +44,12 @@ class CourseHeaderDelegate(
         circularBitmapDrawable
     }
 
+    private var dropCourseMenuItem: MenuItem? = null
+
     init {
         initCollapsingAnimation()
         initVerified()
+        initActions()
     }
 
     private fun initCollapsingAnimation() = with(courseActivity) {
@@ -55,7 +69,12 @@ class CourseHeaderDelegate(
         courseFeatured.setCompoundDrawables(start = R.drawable.ic_verified)
     }
 
-    fun setCourse(courseHeaderData: CourseHeaderData) = with(courseActivity) {
+    private fun initActions() = with(courseActivity) {
+        courseEnrollAction.setOnClickListener { coursePresenter.enrollCourse() }
+        courseContinueAction.setOnClickListener { coursePresenter.continueLearning() }
+    }
+
+    private fun setCourseData(courseHeaderData: CourseHeaderData) = with(courseActivity) {
         Glide.with(this)
                 .load(config.baseUrl + courseHeaderData.cover)
                 .placeholder(R.drawable.general_placeholder)
@@ -87,5 +106,26 @@ class CourseHeaderDelegate(
 
         courseLearnersCount.text = courseHeaderData.learnersCount.toString()
         courseFeatured.changeVisibility(courseHeaderData.isFeatured)
+
+        with(courseHeaderData.enrollmentState) {
+            courseEnrollAction.changeVisibility(this == EnrollmentState.NOT_ENROLLED)
+            courseEnrollmentProgress.changeVisibility(this == EnrollmentState.PENDING)
+            courseContinueAction.changeVisibility(this == EnrollmentState.ENROLLED)
+
+            dropCourseMenuItem?.isVisible = this == EnrollmentState.ENROLLED
+        }
     }
+
+    fun onOptionsMenuCreated(menu: Menu) {
+        dropCourseMenuItem = menu.findItem(R.id.drop_course)
+        dropCourseMenuItem?.isVisible = courseHeaderData?.enrollmentState == EnrollmentState.ENROLLED
+    }
+
+    fun onOptionsItemSelected(item: MenuItem): Boolean =
+        if (item.itemId == R.id.drop_course) {
+            coursePresenter.dropCourse()
+            true
+        } else {
+            false
+        }
 }

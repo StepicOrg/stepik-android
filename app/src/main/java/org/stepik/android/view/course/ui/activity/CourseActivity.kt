@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.TabLayout
+import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_course.*
@@ -65,8 +66,6 @@ class CourseActivity : FragmentActivityBase(), CourseView {
             setDisplayHomeAsUpEnabled(true)
         }
 
-        courseHeaderDelegate = CourseHeaderDelegate(this, config)
-
         val course: Course? = intent.getParcelableExtra(EXTRA_COURSE)
 
         courseId = intent.getLongExtra(EXTRA_COURSE_ID, NO_ID)
@@ -76,6 +75,7 @@ class CourseActivity : FragmentActivityBase(), CourseView {
 
         injectComponent(courseId)
         coursePresenter = ViewModelProviders.of(this, viewModelFactory).get(CoursePresenter::class.java)
+        courseHeaderDelegate = CourseHeaderDelegate(this, config, coursePresenter)
 
         initViewPager(courseId)
 
@@ -145,12 +145,18 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?) =
-            if (item?.itemId == android.R.id.home) {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.course_activity_menu, menu)
+        courseHeaderDelegate.onOptionsMenuCreated(menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem) =
+            if (item.itemId == android.R.id.home) {
                 onBackPressed()
                 true
             } else {
-                super.onOptionsItemSelected(item)
+                courseHeaderDelegate.onOptionsItemSelected(item) || super.onOptionsItemSelected(item)
             }
 
     override fun applyTransitionPrev() {
@@ -161,7 +167,7 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         viewStateDelegate.switchState(state)
         when(state) {
             is CourseView.State.CourseLoaded -> {
-                courseHeaderDelegate.setCourse(state.courseHeaderData)
+                courseHeaderDelegate.courseHeaderData = state.courseHeaderData
 
                 if (intent.getBooleanExtra(EXTRA_AUTO_ENROLL, false)) {
                     intent.removeExtra(EXTRA_AUTO_ENROLL)
