@@ -87,20 +87,22 @@ constructor(
     }
 
     private inline fun toggleEnrollment(enrollmentAction: CourseEnrollmentInteractor.(Long) -> Completable) {
-        val oldState = state
-        if (oldState is CourseView.State.CourseLoaded) {
-            state = CourseView.State.CourseLoaded(oldState.courseHeaderData.copy(enrollmentState = EnrollmentState.PENDING))
-            compositeDisposable += courseEnrollmentInteractor
-                .enrollmentAction(oldState.courseHeaderData.courseId)
-                .observeOn(mainScheduler)
-                .subscribeOn(backgroundScheduler)
-                .subscribeBy(
-                    onError = {
-                        view?.showEnrollmentError()
-                        state = CourseView.State.CourseLoaded(oldState.courseHeaderData) // roll back data
-                    }
-                )
-        }
+        val headerData = (state as? CourseView.State.CourseLoaded)
+            ?.courseHeaderData
+            ?.takeIf { it.enrollmentState != EnrollmentState.PENDING }
+            ?: return
+
+        state = CourseView.State.CourseLoaded(headerData.copy(enrollmentState = EnrollmentState.PENDING))
+        compositeDisposable += courseEnrollmentInteractor
+            .enrollmentAction(headerData.courseId)
+            .observeOn(mainScheduler)
+            .subscribeOn(backgroundScheduler)
+            .subscribeBy(
+                onError = {
+                    view?.showEnrollmentError()
+                    state = CourseView.State.CourseLoaded(headerData) // roll back data
+                }
+            )
     }
 
     private fun updateEnrollment(enrollment: Pair<Long, EnrollmentState>) {

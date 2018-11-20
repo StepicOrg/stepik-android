@@ -160,8 +160,14 @@ class CourseActivity : FragmentActivityBase(), CourseView {
     override fun setState(state: CourseView.State) {
         viewStateDelegate.switchState(state)
         when(state) {
-            is CourseView.State.CourseLoaded ->
+            is CourseView.State.CourseLoaded -> {
                 courseHeaderDelegate.setCourse(state.courseHeaderData)
+
+                if (intent.getBooleanExtra(EXTRA_AUTO_ENROLL, false)) {
+                    intent.removeExtra(EXTRA_AUTO_ENROLL)
+                    coursePresenter.enrollCourse()
+                }
+            }
         }
     }
 
