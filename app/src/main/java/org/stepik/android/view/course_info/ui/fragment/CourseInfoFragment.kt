@@ -8,8 +8,6 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.error_course_not_found.*
-import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import kotlinx.android.synthetic.main.fragment_course_info.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
@@ -17,11 +15,11 @@ import org.stepik.android.view.course_info.ui.adapter.CourseInfoAdapter
 import org.stepik.android.view.course_info.ui.adapter.decorators.CourseInfoBlockOffsetDecorator
 import org.stepik.android.view.course_info.ui.adapter.delegates.CourseInfoInstructorsDelegate
 import org.stepik.android.view.course_info.ui.adapter.delegates.CourseInfoTextBlockDelegate
-import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.util.argument
 import org.stepik.android.presentation.course_info.CourseInfoPresenter
 import org.stepik.android.presentation.course_info.CourseInfoView
 import org.stepik.android.view.course_info.mapper.toSortedItems
+import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import javax.inject.Inject
 
 class CourseInfoFragment : Fragment(), CourseInfoView {
@@ -39,6 +37,8 @@ class CourseInfoFragment : Fragment(), CourseInfoView {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private lateinit var viewStateDelegate: ViewStateDelegate<CourseInfoView.State>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,9 +63,6 @@ class CourseInfoFragment : Fragment(), CourseInfoView {
             inflater.inflate(R.layout.fragment_course_info, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        course_not_found.changeVisibility(false)
-        error.changeVisibility(false)
-
         courseInfoRecycler.layoutManager = LinearLayoutManager(context)
         courseInfoRecycler.adapter = adapter
 
@@ -75,6 +72,10 @@ class CourseInfoFragment : Fragment(), CourseInfoView {
                         adapter.delegates.indexOfFirst { it is CourseInfoInstructorsDelegate }
                 )))
 
+        viewStateDelegate = ViewStateDelegate()
+        viewStateDelegate.addState<CourseInfoView.State.Loading>(courseInfoLoadingPlaceholder)
+        viewStateDelegate.addState<CourseInfoView.State.NetworkError>(courseInfoNetworkError)
+        viewStateDelegate.addState<CourseInfoView.State.CourseInfoLoaded>(courseInfoRecycler)
     }
 
     override fun onStart() {
@@ -88,6 +89,7 @@ class CourseInfoFragment : Fragment(), CourseInfoView {
     }
 
     override fun setState(state: CourseInfoView.State) {
+        viewStateDelegate.switchState(state)
         if (state is CourseInfoView.State.CourseInfoLoaded) {
             adapter.setSortedData(state.courseInfoData.toSortedItems(requireContext()))
         }

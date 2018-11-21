@@ -89,8 +89,8 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         viewStateDelegate.addState<CourseView.State.EmptyCourse>(courseEmpty)
         viewStateDelegate.addState<CourseView.State.NetworkError>(errorNoConnection)
         viewStateDelegate.addState<CourseView.State.CourseLoaded>(courseHeader, courseTabs, coursePager)
-        viewStateDelegate.addState<CourseView.State.Loading>(courseHeaderPlaceholder)
-        viewStateDelegate.addState<CourseView.State.Idle>(courseHeaderPlaceholder)
+        viewStateDelegate.addState<CourseView.State.Loading>(courseHeaderPlaceholder, courseTabs, coursePager)
+        viewStateDelegate.addState<CourseView.State.Idle>(courseHeaderPlaceholder, courseTabs, coursePager)
     }
 
     private fun injectComponent(courseId: Long) {
