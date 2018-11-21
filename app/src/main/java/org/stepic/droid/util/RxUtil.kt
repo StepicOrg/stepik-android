@@ -34,6 +34,7 @@ infix fun <T> Completable.then(observable: Observable<T>): Observable<T> = this.
 infix fun <T> Completable.then(single: Single<T>): Single<T> = this.andThen(single)
 
 infix fun <T> Observable<T>.merge(observable: Observable<T>): Observable<T> = Observable.merge(this, observable)
+infix fun <T> Observable<T>.concat(observable: Observable<T>): Observable<T> = Observable.concat(this, observable)
 operator fun <T> Observable<T>.plus(observable: Observable<T>): Observable<T> = merge(observable)
 
 infix fun <X, Y> Observable<X>.zip(observable: Observable<Y>): Observable<Pair<X, Y>> = this.zipWith(observable)
