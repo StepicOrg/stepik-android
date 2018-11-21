@@ -26,8 +26,8 @@ class CourseInfoAdapter : DelegateAdapter<CourseInfoItem, CourseInfoAdapter.View
         addDelegate(CourseInfoOrganizationDelegate(this))
     }
 
-    fun setData(unsortedBlocks: List<CourseInfoItem>) {
-        blocks = unsortedBlocks.sorted()
+    fun setSortedData(sortedBlocks: List<CourseInfoItem>) {
+        blocks = sortedBlocks
     }
 
     override fun getItemCount(): Int =

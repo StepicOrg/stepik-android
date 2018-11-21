@@ -38,7 +38,7 @@ sealed class CourseInfoItem(
         ) : WithTitle(type)
 
         class InstructorsBlock(
-                val instructors: List<User>
+                val instructors: List<User?>
         ) : WithTitle(CourseInfoType.INSTRUCTORS)
     }
 }

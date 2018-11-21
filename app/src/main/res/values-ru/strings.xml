@@ -694,6 +694,9 @@
     <string name="course_info_certificate">Сертификат</string>
     <string name="course_info_certificate_detail">Подробнее о сертификате</string>
 
+    <string name="course_info_certificate_regular">Условие получения сертификата: %s</string>
+    <string name="course_info_certificate_distinction">С отличием: %s</string>
+
     <string name="course_content_timeline_begin_date">Дата начала</string>
     <string name="course_content_timeline_end_date">Дата закрытия</string>
     <string name="course_content_timeline_soft_deadline">Мягкий дедлайн</string>
