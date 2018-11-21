@@ -2,12 +2,17 @@ package org.stepik.android.model
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.google.gson.annotations.SerializedName
 
 data class Video(
-        val id: Long = 0,
-        val thumbnail: String? = null,
-        var urls: List<VideoUrl>? = null,
-        var duration: Long = 0
+    @SerializedName("id")
+    val id: Long = 0,
+    @SerializedName("thumbnail")
+    val thumbnail: String? = null,
+    @SerializedName("urls")
+    var urls: List<VideoUrl>? = null,
+    @SerializedName("duration")
+    val duration: Long = 0
 ) : Parcelable {
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeLong(id)
@@ -19,21 +24,25 @@ data class Video(
     override fun describeContents(): Int = 0
 
     companion object CREATOR : Parcelable.Creator<Video> {
-        override fun createFromParcel(parcel: Parcel) = Video(
+        override fun createFromParcel(parcel: Parcel) =
+            Video(
                 parcel.readLong(),
                 parcel.readString(),
                 parcel.createTypedArrayList(VideoUrl),
                 parcel.readLong()
-        )
+            )
 
-        override fun newArray(size: Int): Array<Video?> = arrayOfNulls(size)
+        override fun newArray(size: Int): Array<Video?> =
+            arrayOfNulls(size)
     }
 }
 
 
 data class VideoUrl(
-        val url: String?,
-        val quality: String?
+    @SerializedName("url")
+    val url: String?,
+    @SerializedName("quality")
+    val quality: String?
 ) : Parcelable {
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(url)
@@ -44,8 +53,9 @@ data class VideoUrl(
 
     companion object CREATOR : Parcelable.Creator<VideoUrl> {
         override fun createFromParcel(parcel: Parcel) =
-                VideoUrl(parcel.readString(), parcel.readString())
+            VideoUrl(parcel.readString(), parcel.readString())
 
-        override fun newArray(size: Int): Array<VideoUrl?> = arrayOfNulls(size)
+        override fun newArray(size: Int): Array<VideoUrl?> =
+            arrayOfNulls(size)
     }
 }
