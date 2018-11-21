@@ -12,5 +12,5 @@ constructor(
     private val api: Api
 ) : UserRemoteDataSource {
     override fun getUsers(vararg userIds: Long): Single<List<User>> =
-        api.getUsersRx(userIds)
+        if (userIds.isEmpty()) Single.just(emptyList()) else api.getUsersRx(userIds)
 }

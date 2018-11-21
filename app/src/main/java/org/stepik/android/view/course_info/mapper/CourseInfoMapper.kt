@@ -46,7 +46,7 @@ fun CourseInfoData.toSortedItems(context: Context): List<CourseInfoItem> {
 
         if (certificate.distinctionThreshold > 0) {
             val distinctionPoints = context.resources.getQuantityString(R.plurals.points, certificate.distinctionThreshold, certificate.distinctionThreshold)
-            val distinctionCondition = context.getString(R.string.course_info_certificate_regular, distinctionPoints)
+            val distinctionCondition = context.getString(R.string.course_info_certificate_distinction, distinctionPoints)
             certificateConditions.add(distinctionCondition)
         }
 

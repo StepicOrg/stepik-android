@@ -17,14 +17,11 @@ import org.stepik.android.view.course_info.ui.adapter.CourseInfoAdapter
 import org.stepik.android.view.course_info.ui.adapter.decorators.CourseInfoBlockOffsetDecorator
 import org.stepik.android.view.course_info.ui.adapter.delegates.CourseInfoInstructorsDelegate
 import org.stepik.android.view.course_info.ui.adapter.delegates.CourseInfoTextBlockDelegate
-import org.stepik.android.view.course_info.model.CourseInfoItem
-import org.stepik.android.view.course_info.model.CourseInfoType
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.util.argument
-import org.stepik.android.model.Course
-import org.stepik.android.model.user.User
 import org.stepik.android.presentation.course_info.CourseInfoPresenter
 import org.stepik.android.presentation.course_info.CourseInfoView
+import org.stepik.android.view.course_info.mapper.toSortedItems
 import javax.inject.Inject
 
 class CourseInfoFragment : Fragment(), CourseInfoView {
@@ -48,6 +45,7 @@ class CourseInfoFragment : Fragment(), CourseInfoView {
         injectComponent(courseId)
 
         courseInfoPresenter = ViewModelProviders.of(this, viewModelFactory).get(CourseInfoPresenter::class.java)
+        savedInstanceState?.let(courseInfoPresenter::onRestoreInstanceState)
     }
 
     private fun injectComponent(courseId: Long) {
@@ -59,16 +57,6 @@ class CourseInfoFragment : Fragment(), CourseInfoView {
     private fun releaseComponent(courseId: Long) {
         App.componentManager()
             .releaseCourseComponent(courseId)
-    }
-
-    override fun onStart() {
-        super.onStart()
-        courseInfoPresenter.attachView(this)
-    }
-
-    override fun onStop() {
-        courseInfoPresenter.detachView(this)
-        super.onStop()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
@@ -87,27 +75,27 @@ class CourseInfoFragment : Fragment(), CourseInfoView {
                         adapter.delegates.indexOfFirst { it is CourseInfoInstructorsDelegate }
                 )))
 
-//        setCourseInfo(course)
     }
 
-    private fun setCourseInfo(course: Course) {
-        val courseInfoItems = mutableListOf(
-                CourseInfoItem.OrganizationBlock("Yandex"),
-                CourseInfoItem.WithTitle.TextBlock(CourseInfoType.ABOUT, course.description ?: ""),
-                CourseInfoItem.WithTitle.TextBlock(CourseInfoType.REQUIREMENTS, course.requirements ?: ""),
-                CourseInfoItem.WithTitle.TextBlock(CourseInfoType.TARGET_AUDIENCE, course.targetAudience ?: ""),
-                CourseInfoItem.WithTitle.TextBlock(CourseInfoType.TIME_TO_COMPLETE, course.timeToComplete.toString()),
-                CourseInfoItem.WithTitle.TextBlock(CourseInfoType.LANGUAGE, course.language ?: ""),
-                CourseInfoItem.WithTitle.TextBlock(CourseInfoType.CERTIFICATE, course.certificate ?: ""),
+    override fun onStart() {
+        super.onStart()
+        courseInfoPresenter.attachView(this)
+    }
 
-                CourseInfoItem.WithTitle.InstructorsBlock(listOf(User(fullName = "Artyom Burylov", joinDate = null, avatar = "https://stepik.org/media/users/26533986/avatar.png?1523307138", shortBio = """Kotlin backend developer, online education enthusiast. I graduated from PNRPU with a BSc in Computer Science (2014) and MSc in Software Engineering (2016). During the learning, I took an active part in scientific conferences and educational events.""")))
-        )
+    override fun onStop() {
+        courseInfoPresenter.detachView(this)
+        super.onStop()
+    }
 
-        course.introVideo?.let {
-            courseInfoItems.add(CourseInfoItem.VideoBlock(it))
+    override fun setState(state: CourseInfoView.State) {
+        if (state is CourseInfoView.State.CourseInfoLoaded) {
+            adapter.setSortedData(state.courseInfoData.toSortedItems(requireContext()))
         }
+    }
 
-        adapter.setSortedData(courseInfoItems)
+    override fun onSaveInstanceState(outState: Bundle) {
+        courseInfoPresenter.onSaveInstanceState(outState)
+        super.onSaveInstanceState(outState)
     }
 
     override fun onDestroy() {

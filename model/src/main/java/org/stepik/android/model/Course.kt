@@ -36,6 +36,7 @@ class Course(
 
         var enrollment: Int = 0,
         override val progress: String? = null,
+        @SerializedName("owner")
         val owner: Long = 0,
 
         @SerializedName("is_contest")
@@ -49,8 +50,14 @@ class Course(
         @SerializedName("is_public")
         val isPublic: Boolean = false,
 
+        @SerializedName("certificate_distinction_threshold")
+        val certificateDistinctionThreshold: Int = 0,
+        @SerializedName("certificate_regular_threshold")
+        val certificateRegularThreshold: Int = 0,
         @SerializedName("certificate_link")
         val certificateLink: String? = null,
+        @SerializedName("is_certificate_auto_issued")
+        val isCertificateAutoIssued: Boolean = false,
 
         // todo: convert dates to Date
         @SerializedName("last_deadline")
@@ -111,7 +118,10 @@ class Course(
         parcel.writeBoolean(isSpoc)
         parcel.writeBoolean(isActive)
         parcel.writeBoolean(isPublic)
+        parcel.writeInt(certificateDistinctionThreshold)
+        parcel.writeInt(certificateRegularThreshold)
         parcel.writeString(certificateLink)
+        parcel.writeBoolean(isCertificateAutoIssued)
         parcel.writeString(lastDeadline)
         parcel.writeString(beginDate)
         parcel.writeString(endDate)
@@ -157,7 +167,10 @@ class Course(
                 parcel.readBoolean(),
                 parcel.readBoolean(),
                 parcel.readBoolean(),
+                parcel.readInt(),
+                parcel.readInt(),
                 parcel.readString(),
+                parcel.readBoolean(),
                 parcel.readString(),
                 parcel.readString(),
                 parcel.readString(),
