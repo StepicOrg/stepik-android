@@ -10,17 +10,19 @@ import org.stepik.android.domain.progress.repository.ProgressRepository
 import org.stepik.android.remote.progress.ProgressRemoteDataSourceImpl
 
 @Module
-abstract class ProgressModule {
-
+abstract class ProgressDataModule {
     @Binds
     internal abstract fun bindProgressRepository(
-        progressRepositoryImpl: ProgressRepositoryImpl): ProgressRepository
+        progressRepositoryImpl: ProgressRepositoryImpl
+    ): ProgressRepository
 
     @Binds
     internal abstract fun bindProgressRemoteDataSource(
-        progressRemoteDataSourceImpl: ProgressRemoteDataSourceImpl): ProgressRemoteDataSource
+        progressRemoteDataSourceImpl: ProgressRemoteDataSourceImpl
+    ): ProgressRemoteDataSource
 
     @Binds
     internal abstract fun bindProgressCacheDataSource(
-        progressCacheDataSourceImpl: ProgressCacheDataSourceImpl): ProgressCacheDataSource
+        progressCacheDataSourceImpl: ProgressCacheDataSourceImpl
+    ): ProgressCacheDataSource
 }
