@@ -23,13 +23,13 @@ data class CourseInfoData(
 ) : Parcelable {
     data class Certificate(
         val title: String,
-        val distinctionThreshold: Long,
-        val regularThreshold: Long
+        val distinctionThreshold: Int,
+        val regularThreshold: Int
     ) : Parcelable {
         override fun writeToParcel(parcel: Parcel, flags: Int) {
             parcel.writeString(title)
-            parcel.writeLong(distinctionThreshold)
-            parcel.writeLong(regularThreshold)
+            parcel.writeInt(distinctionThreshold)
+            parcel.writeInt(regularThreshold)
         }
 
         override fun describeContents(): Int = 0
@@ -38,8 +38,8 @@ data class CourseInfoData(
             override fun createFromParcel(parcel: Parcel) =
                 Certificate(
                     parcel.readString()!!,
-                    parcel.readLong(),
-                    parcel.readLong()
+                    parcel.readInt(),
+                    parcel.readInt()
                 )
 
             override fun newArray(size: Int): Array<Certificate?> =
