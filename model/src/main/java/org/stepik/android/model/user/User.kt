@@ -32,6 +32,9 @@ data class User(
 
         @SerializedName("is_private")
         val isPrivate: Boolean = false,
+        @SerializedName("is_organization")
+        val isOrganization: Boolean = false,
+
         @SerializedName("join_date")
         val joinDate: Date?
 ) : Parcelable {
@@ -45,6 +48,7 @@ data class User(
         parcel.writeString(details)
         parcel.writeString(avatar)
         parcel.writeBoolean(isPrivate)
+        parcel.writeBoolean(isOrganization)
         parcel.writeDate(joinDate)
     }
 
@@ -61,6 +65,7 @@ data class User(
                 parcel.readString(),
                 parcel.readString(),
                 parcel.readString(),
+                parcel.readBoolean(),
                 parcel.readBoolean(),
                 parcel.readDate()
             )

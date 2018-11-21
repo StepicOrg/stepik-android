@@ -35,7 +35,7 @@ constructor(
 
     private fun mapToCourseInfoData(course: Course, instructors: List<User>? = null, organization: User? = null) =
         CourseInfoData(
-            organization   = organization?.fullName,
+            organization   = organization?.takeIf(User::isOrganization)?.fullName,
             video          = course.introVideo,
             about          = course.description?.takeIf(String::isNotBlank),
             requirements   = course.requirements?.takeIf(String::isNotBlank),
