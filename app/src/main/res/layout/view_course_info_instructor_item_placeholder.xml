@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/course_info_block_margin">
+
+    <org.stepic.droid.ui.custom.LoadingView
+        android:id="@+id/instructorIcon"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:contentDescription="@null" />
+
+    <org.stepic.droid.ui.custom.LoadingView
+        android:id="@+id/instructorTitle"
+        android:layout_width="0dp"
+        android:layout_height="8dp"
+
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:maxWidth="320dp"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintBottom_toBottomOf="@+id/instructorIcon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/instructorIcon"
+        app:layout_constraintTop_toTopOf="@+id/instructorIcon" />
+
+    <org.stepic.droid.ui.custom.LoadingView
+        android:id="@+id/instructorDescription"
+        android:layout_width="0dp"
+        android:layout_height="8dp"
+
+        android:layout_marginTop="12dp"
+        android:textColor="@color/new_accent_color"
+        android:maxWidth="368dp"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/instructorIcon" />
+
+</android.support.constraint.ConstraintLayout>

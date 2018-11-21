@@ -9,28 +9,50 @@ import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.view_course_info_instructor_item.view.*
 import org.stepic.droid.R
+import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepik.android.model.user.User
 
-class CourseInfoInstructorsAdapter : RecyclerView.Adapter<CourseInfoInstructorsAdapter.InstructorViewHolder>() {
+class CourseInfoInstructorsAdapter : RecyclerView.Adapter<DelegateViewHolder<User?>>() {
+    companion object {
+        private const val INSTRUCTOR_VIEW_TYPE = 1
+        private const val PLACEHOLDER_VIEW_TYPE = 2
+    }
+
     var instructors: List<User?> = emptyList()
         set(value) {
             field = value
             notifyDataSetChanged()
         }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): InstructorViewHolder =
-            InstructorViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.view_course_info_instructor_item, parent, false))
+    override fun getItemViewType(position: Int): Int =
+        if (instructors[position] != null) {
+            INSTRUCTOR_VIEW_TYPE
+        } else {
+            PLACEHOLDER_VIEW_TYPE
+        }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DelegateViewHolder<User?> {
+        val inflater = LayoutInflater.from(parent.context)
+        return when (viewType) {
+            INSTRUCTOR_VIEW_TYPE ->
+                InstructorViewHolder(inflater.inflate(R.layout.view_course_info_instructor_item, parent, false))
+            PLACEHOLDER_VIEW_TYPE ->
+                InstructorViewHolderPlaceholder(inflater.inflate(R.layout.view_course_info_instructor_item_placeholder, parent, false))
+            else ->
+                throw IllegalStateException("viewType = $viewType is unsupported")
+        }
+    }
 
     override fun getItemCount(): Int =
             instructors.size
 
-    override fun onBindViewHolder(holder: InstructorViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: DelegateViewHolder<User?>, position: Int) {
         holder.bind(instructors[position])
     }
 
-    class InstructorViewHolder(root: View) : RecyclerView.ViewHolder(root) {
+    class InstructorViewHolder(root: View) : DelegateViewHolder<User?>(root) {
         private val instructorIcon = root.instructorIcon
         private val instructorTitle = root.instructorTitle
         private val instructorDescription = root.instructorDescription
@@ -47,19 +69,21 @@ class CourseInfoInstructorsAdapter : RecyclerView.Adapter<CourseInfoInstructorsA
             RoundedBitmapImageViewTarget(root.context.resources.getDimension(R.dimen.course_image_radius), instructorIcon)
         }
 
-        fun bind(instructor: User?) {
-            if (instructor != null) {
+        override fun onBind(data: User?) {
+            if (data != null) {
                 Glide.with(itemView.context)
-                    .load(instructor.avatar)
+                    .load(data.avatar)
                     .asBitmap()
                     .placeholder(instructorIconPlaceholder)
                     .centerCrop()
                     .into(instructorIconTarget)
 
-                instructorTitle.text = instructor.fullName
-                instructorDescription.text = instructor.shortBio
-                instructorDescription.changeVisibility(!instructor.shortBio.isNullOrBlank())
+                instructorTitle.text = data.fullName
+                instructorDescription.text = data.shortBio
+                instructorDescription.changeVisibility(!data.shortBio.isNullOrBlank())
             }
         }
     }
+
+    class InstructorViewHolderPlaceholder(root: View) : DelegateViewHolder<User?>(root)
 }
