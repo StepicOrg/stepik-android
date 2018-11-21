@@ -7,9 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
-import kotlinx.android.synthetic.main.view_course_info_intstructor_item.view.*
+import kotlinx.android.synthetic.main.view_course_info_instructor_item.view.*
 import org.stepic.droid.R
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
+import org.stepic.droid.ui.util.changeVisibility
 import org.stepik.android.model.user.User
 
 class CourseInfoInstructorsAdapter : RecyclerView.Adapter<CourseInfoInstructorsAdapter.InstructorViewHolder>() {
@@ -20,7 +21,7 @@ class CourseInfoInstructorsAdapter : RecyclerView.Adapter<CourseInfoInstructorsA
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): InstructorViewHolder =
-            InstructorViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.view_course_info_intstructor_item, parent, false))
+            InstructorViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.view_course_info_instructor_item, parent, false))
 
     override fun getItemCount(): Int =
             instructors.size
@@ -57,6 +58,7 @@ class CourseInfoInstructorsAdapter : RecyclerView.Adapter<CourseInfoInstructorsA
 
                 instructorTitle.text = instructor.fullName
                 instructorDescription.text = instructor.shortBio
+                instructorDescription.changeVisibility(!instructor.shortBio.isNullOrBlank())
             }
         }
     }
