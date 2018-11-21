@@ -13,7 +13,7 @@ import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepik.android.model.user.User
 
 class CourseInfoInstructorsAdapter : RecyclerView.Adapter<CourseInfoInstructorsAdapter.InstructorViewHolder>() {
-    var instructors: List<User> = emptyList()
+    var instructors: List<User?> = emptyList()
         set(value) {
             field = value
             notifyDataSetChanged()
@@ -46,16 +46,18 @@ class CourseInfoInstructorsAdapter : RecyclerView.Adapter<CourseInfoInstructorsA
             RoundedBitmapImageViewTarget(root.context.resources.getDimension(R.dimen.course_image_radius), instructorIcon)
         }
 
-        fun bind(instructor: User) {
-            Glide.with(itemView.context)
+        fun bind(instructor: User?) {
+            if (instructor != null) {
+                Glide.with(itemView.context)
                     .load(instructor.avatar)
                     .asBitmap()
                     .placeholder(instructorIconPlaceholder)
                     .centerCrop()
                     .into(instructorIconTarget)
 
-            instructorTitle.text = instructor.fullName
-            instructorDescription.text = instructor.shortBio
+                instructorTitle.text = instructor.fullName
+                instructorDescription.text = instructor.shortBio
+            }
         }
     }
 }
