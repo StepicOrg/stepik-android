@@ -10,12 +10,6 @@
         android:layout_height="match_parent"
         android:clipToPadding="false" />
 
-    <include
-        layout="@layout/error_no_connection_with_button"
-        android:id="@+id/courseInfoNetworkError"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
     <LinearLayout
         android:id="@+id/courseInfoLoadingPlaceholder"
         android:layout_width="match_parent"

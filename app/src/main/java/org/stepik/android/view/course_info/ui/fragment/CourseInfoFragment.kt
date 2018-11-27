@@ -74,7 +74,6 @@ class CourseInfoFragment : Fragment(), CourseInfoView {
 
         viewStateDelegate = ViewStateDelegate()
         viewStateDelegate.addState<CourseInfoView.State.Loading>(courseInfoLoadingPlaceholder)
-        viewStateDelegate.addState<CourseInfoView.State.NetworkError>(courseInfoNetworkError)
         viewStateDelegate.addState<CourseInfoView.State.CourseInfoLoaded>(courseInfoRecycler)
     }
 

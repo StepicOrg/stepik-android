@@ -47,7 +47,6 @@ constructor(
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
-                onError = { state = CourseInfoView.State.NetworkError },
                 onNext  = { state = CourseInfoView.State.CourseInfoLoaded(it) }
             )
     }

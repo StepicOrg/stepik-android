@@ -7,7 +7,6 @@ interface CourseInfoView {
     sealed class State {
         object Idle : State()
         object Loading : State()
-        object NetworkError : State()
 
         class CourseInfoLoaded(val courseInfoData: CourseInfoData) : State()
     }

@@ -17,7 +17,7 @@ constructor(
     private val userRepository: UserRepository
 ) {
     fun getCourseInfoData(): Observable<CourseInfoData> =
-            courseObservableSource.concatMap(::getCourseInfoUsers)
+            courseObservableSource.take(1).flatMap(::getCourseInfoUsers)
 
     private fun getCourseInfoUsers(course: Course): Observable<CourseInfoData> {
         val emptySource = Observable.just(mapToCourseInfoData(course))
@@ -30,6 +30,9 @@ constructor(
                     .toObservable()
                     .map { (instructors, owners) ->
                         mapToCourseInfoData(course, instructors, owners.firstOrNull())
+                    }
+                    .onErrorReturn {
+                        mapToCourseInfoData(course, null, null) // fallback on network error
                     }
     }
 
