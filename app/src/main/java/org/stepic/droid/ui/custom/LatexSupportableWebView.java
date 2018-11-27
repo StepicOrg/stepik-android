@@ -33,6 +33,8 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
     private long startClickTime;
     OnWebViewImageClicked listener;
 
+    private float textSize = 14f;
+
     @ColorInt
     private int textColorHighlight;
 
@@ -97,6 +99,20 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
         }
     }
 
+    /*
+     * @return text size of content in SP
+     */
+    public float getTextSize() {
+        return textSize;
+    }
+
+    /**
+     * Set text size of content
+     * @param textSize - text size of content in SP
+     */
+    public void setTextSize(float textSize) {
+        this.textSize = textSize;
+    }
 
     public void setText(CharSequence text) {
         setText(text, false); //by default we do not want latex -> try to optimize
@@ -113,7 +129,7 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
 
         final String html;
         if (fontPath != null) {
-            html = HtmlHelper.buildPageWithCustomFont(text, fontPath, textColorHighlight, width, config.getBaseUrl());
+            html = HtmlHelper.buildPageWithCustomFont(text, textSize, fontPath, textColorHighlight, width, config.getBaseUrl());
         } else if (wantLaTeX || HtmlHelper.hasLaTeX(textString)) {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
                 setWebViewClient(new AssetSupportWebViewClient());

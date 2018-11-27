@@ -92,6 +92,11 @@ public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
         webView = findViewById(getWebViewId());
     }
 
+    public void setTextSize(float textSize) {
+        textView.setTextSize(textSize);
+        webView.setTextSize(textSize);
+    }
+
     public void setTextIsSelectable(boolean isSelectable) {
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR2) { // selection in WebView works incorrect on API <= 18, so its disabled
             textView.setTextIsSelectable(isSelectable);
