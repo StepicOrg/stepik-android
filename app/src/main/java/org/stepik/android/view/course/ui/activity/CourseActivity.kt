@@ -11,6 +11,7 @@ import android.view.MenuItem
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_course.*
 import kotlinx.android.synthetic.main.error_course_not_found.*
+import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import kotlinx.android.synthetic.main.header_course.*
 import kotlinx.android.synthetic.main.header_course_placeholder.*
 import org.stepic.droid.R
@@ -81,18 +82,25 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         initViewPager(courseId)
 
         savedInstanceState?.let(coursePresenter::onRestoreInstanceState)
-        if (course != null) {
-            coursePresenter.onCourse(course)
-        } else {
-            coursePresenter.onCourseId(courseId)
-        }
+        setDataToPresenter()
 
         viewStateDelegate.addState<CourseView.State.EmptyCourse>(courseEmpty)
         viewStateDelegate.addState<CourseView.State.NetworkError>(errorNoConnection)
         viewStateDelegate.addState<CourseView.State.CourseLoaded>(courseHeader, courseTabs, coursePager)
         viewStateDelegate.addState<CourseView.State.Loading>(courseHeaderPlaceholder, courseTabs, coursePager)
         viewStateDelegate.addState<CourseView.State.Idle>(courseHeaderPlaceholder, courseTabs, coursePager)
+
+        tryAgain.setOnClickListener { setDataToPresenter(forceUpdate = true) }
         goToCatalog.setOnClickListener { screenManager.showCatalog(this) }
+    }
+
+    private fun setDataToPresenter(forceUpdate: Boolean = false) {
+        val course: Course? = intent.getParcelableExtra(EXTRA_COURSE)
+        if (course != null) {
+            coursePresenter.onCourse(course, forceUpdate)
+        } else {
+            coursePresenter.onCourseId(courseId, forceUpdate)
+        }
     }
 
     private fun injectComponent(courseId: Long) {

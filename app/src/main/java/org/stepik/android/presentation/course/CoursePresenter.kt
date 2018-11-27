@@ -59,19 +59,21 @@ constructor(
         if (state != CourseView.State.Idle) return
         val data = savedInstanceState.getParcelable(KEY_COURSE_HEADER_DATA)
                 as? CourseHeaderData ?: return
-        state = CourseView.State.CourseLoaded(data)
+        state = CourseView.State.CourseLoaded(data) // todo set course to subject
     }
 
-    fun onCourseId(courseId: Long) {
-        observeCourseData(courseInteractor.getCourseHeaderData(courseId))
+    fun onCourseId(courseId: Long, forceUpdate: Boolean = false) {
+        observeCourseData(courseInteractor.getCourseHeaderData(courseId), forceUpdate)
     }
 
-    fun onCourse(course: Course) {
-        observeCourseData(courseInteractor.getCourseHeaderData(course))
+    fun onCourse(course: Course, forceUpdate: Boolean = false) {
+        observeCourseData(courseInteractor.getCourseHeaderData(course), forceUpdate)
     }
 
-    private fun observeCourseData(courseDataSource: Maybe<CourseHeaderData>) {
-        if (state != CourseView.State.Idle) return
+    private fun observeCourseData(courseDataSource: Maybe<CourseHeaderData>, forceUpdate: Boolean) {
+        if (state != CourseView.State.Idle
+            && !(state == CourseView.State.NetworkError && forceUpdate)) return
+
         state = CourseView.State.Loading
         compositeDisposable += courseDataSource
             .observeOn(mainScheduler)
