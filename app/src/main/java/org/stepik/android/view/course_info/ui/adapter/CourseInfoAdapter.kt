@@ -12,9 +12,12 @@ import org.stepik.android.view.course_info.ui.adapter.delegates.CourseInfoVideoB
 import org.stepik.android.view.course_info.model.CourseInfoItem
 import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
 import org.stepic.droid.ui.custom.adapter_delegates.DelegateAdapter
+import org.stepik.android.model.Video
 
 class CourseInfoAdapter(
-    fontsProvider: FontsProvider
+    fontsProvider: FontsProvider,
+
+    onVideoClicked: ((Video) -> Unit)? = null
 ) : DelegateAdapter<CourseInfoItem, CourseInfoAdapter.ViewHolder>() {
     private var blocks : List<CourseInfoItem> = emptyList()
         set(value) {
@@ -25,7 +28,7 @@ class CourseInfoAdapter(
     init {
         addDelegate(CourseInfoTextBlockDelegate(this, fontsProvider))
         addDelegate(CourseInfoInstructorsDelegate(this))
-        addDelegate(CourseInfoVideoBlockDelegate(this, null))
+        addDelegate(CourseInfoVideoBlockDelegate(this, onVideoClicked))
         addDelegate(CourseInfoOrganizationDelegate(this))
     }
 

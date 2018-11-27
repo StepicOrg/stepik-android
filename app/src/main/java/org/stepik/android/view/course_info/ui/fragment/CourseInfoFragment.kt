@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_course_info.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
+import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.fonts.FontsProvider
 import org.stepik.android.view.course_info.ui.adapter.CourseInfoAdapter
 import org.stepik.android.view.course_info.ui.adapter.decorators.CourseInfoBlockOffsetDecorator
@@ -37,9 +38,12 @@ class CourseInfoFragment : Fragment(), CourseInfoView {
     @Inject
     lateinit var fontsProvider: FontsProvider
 
+    @Inject
+    lateinit var screenManager: ScreenManager
+
     private var courseId: Long by argument()
 
-    private lateinit var adapter: CourseInfoAdapter
+    private lateinit var courseInfoAdapter: CourseInfoAdapter
     private lateinit var courseInfoPresenter: CourseInfoPresenter
 
     private lateinit var viewStateDelegate: ViewStateDelegate<CourseInfoView.State>
@@ -50,7 +54,14 @@ class CourseInfoFragment : Fragment(), CourseInfoView {
 
         courseInfoPresenter = ViewModelProviders.of(this, viewModelFactory).get(CourseInfoPresenter::class.java)
         savedInstanceState?.let(courseInfoPresenter::onRestoreInstanceState)
-        adapter = CourseInfoAdapter(fontsProvider)
+
+        courseInfoAdapter = CourseInfoAdapter(
+            fontsProvider = fontsProvider,
+
+            onVideoClicked = { video ->
+                screenManager.showVideo(activity, null, video)
+            }
+        )
     }
 
     private fun injectComponent(courseId: Long) {
@@ -69,12 +80,12 @@ class CourseInfoFragment : Fragment(), CourseInfoView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         courseInfoRecycler.layoutManager = LinearLayoutManager(context)
-        courseInfoRecycler.adapter = adapter
+        courseInfoRecycler.adapter = courseInfoAdapter
 
         courseInfoRecycler.addItemDecoration(
                 CourseInfoBlockOffsetDecorator(resources.getDimension(R.dimen.course_info_block_margin).toInt(), intArrayOf(
-                        adapter.delegates.indexOfFirst { it is CourseInfoTextBlockDelegate },
-                        adapter.delegates.indexOfFirst { it is CourseInfoInstructorsDelegate }
+                        courseInfoAdapter.delegates.indexOfFirst { it is CourseInfoTextBlockDelegate },
+                        courseInfoAdapter.delegates.indexOfFirst { it is CourseInfoInstructorsDelegate }
                 )))
 
         viewStateDelegate = ViewStateDelegate()
@@ -95,7 +106,7 @@ class CourseInfoFragment : Fragment(), CourseInfoView {
     override fun setState(state: CourseInfoView.State) {
         viewStateDelegate.switchState(state)
         if (state is CourseInfoView.State.CourseInfoLoaded) {
-            adapter.setSortedData(state.courseInfoData.toSortedItems(requireContext()))
+            courseInfoAdapter.setSortedData(state.courseInfoData.toSortedItems(requireContext()))
         }
     }
 
