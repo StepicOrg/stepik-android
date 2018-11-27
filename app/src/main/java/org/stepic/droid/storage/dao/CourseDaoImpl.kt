@@ -165,11 +165,17 @@ constructor(
         var realVideo: Video? = null
         if (cachedVideo != null) {
 
-            val resultUrls = if (videoUrls?.isNotEmpty() == true) {
-                videoUrls
-            } else {
-                listOf(VideoUrl(cachedVideo.url, cachedVideo.quality))
-            }
+            val resultUrls =
+                when {
+                    videoUrls?.isNotEmpty() == true ->
+                        videoUrls
+
+                    cachedVideo.url != null && cachedVideo.quality != null ->
+                        listOf(VideoUrl(cachedVideo.url, cachedVideo.quality))
+
+                    else ->
+                        emptyList()
+                }
 
             realVideo = Video(id = cachedVideo.videoId, thumbnail = cachedVideo.thumbnail, urls = resultUrls)
         }
