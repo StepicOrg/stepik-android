@@ -14,7 +14,9 @@ import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepik.android.model.user.User
 
-class CourseInfoInstructorsAdapter : RecyclerView.Adapter<DelegateViewHolder<User?>>() {
+class CourseInfoInstructorsAdapter(
+    private val onInstructorClicked: ((User) -> Unit)? = null
+) : RecyclerView.Adapter<DelegateViewHolder<User?>>() {
     companion object {
         private const val INSTRUCTOR_VIEW_TYPE = 1
         private const val PLACEHOLDER_VIEW_TYPE = 2
@@ -52,7 +54,7 @@ class CourseInfoInstructorsAdapter : RecyclerView.Adapter<DelegateViewHolder<Use
         holder.bind(instructors[position])
     }
 
-    class InstructorViewHolder(root: View) : DelegateViewHolder<User?>(root) {
+    inner class InstructorViewHolder(root: View) : DelegateViewHolder<User?>(root) {
         private val instructorIcon = root.instructorIcon
         private val instructorTitle = root.instructorTitle
         private val instructorDescription = root.instructorDescription
@@ -67,6 +69,12 @@ class CourseInfoInstructorsAdapter : RecyclerView.Adapter<DelegateViewHolder<Use
 
         private val instructorIconTarget by lazy {
             RoundedBitmapImageViewTarget(root.context.resources.getDimension(R.dimen.course_image_radius), instructorIcon)
+        }
+
+        init {
+            if (onInstructorClicked != null) {
+                root.setOnClickListener { itemData?.let(onInstructorClicked) }
+            }
         }
 
         override fun onBind(data: User?) {
