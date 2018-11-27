@@ -32,7 +32,7 @@ constructor(
                         mapToCourseInfoData(course, instructors, owners.firstOrNull())
                     }
                     .onErrorReturn {
-                        mapToCourseInfoData(course, null, null) // fallback on network error
+                        mapToCourseInfoData(course, instructors = emptyList()) // fallback on network error
                     }
     }
 
@@ -44,7 +44,7 @@ constructor(
             requirements   = course.requirements?.takeIf(String::isNotBlank),
             targetAudience = course.targetAudience?.takeIf(String::isNotBlank),
             timeToComplete = course.timeToComplete ?: 0,
-            instructors    = instructors?.takeIf { it.isNotEmpty() } ?: course.instructors?.map { null },
+            instructors    = (instructors ?: course.instructors?.map { null })?.takeIf { it.isNotEmpty() },
             language       = course.language,
             certificate    = course.certificate
                 ?.takeIf { course.isCertificateAutoIssued }

@@ -4,6 +4,7 @@ import io.reactivex.Maybe
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.subjects.BehaviorSubject
+import org.stepic.droid.model.CourseReviewSummary
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.domain.course.repository.CourseRepository
@@ -30,7 +31,7 @@ constructor(
 
     fun getCourseHeaderData(course: Course): Maybe<CourseHeaderData> =
             zip(
-                courseReviewRepository.getCourseReview(course.reviewSummary),
+                courseReviewRepository.getCourseReview(course.reviewSummary).map(CourseReviewSummary::average).onErrorReturnItem(0.0),
                 course.progress?.let(progressRepository::getProgress) ?: Single.just(Unit) // coroutines will handle it better
             )
                 .doOnSuccess { coursePublishSubject.onNext(course) }
@@ -41,7 +42,7 @@ constructor(
                         cover = course.cover ?: "",
                         learnersCount = course.learnersCount,
 
-                        review = courseReview.average,
+                        review = courseReview,
                         progress = (courseProgress as? Progress)?.let { (it.nStepsPassed * 100 / it.nSteps).coerceIn(0..100) },
                         isFeatured = course.isFeatured,
                         enrollmentState = if (course.enrollment > 0) EnrollmentState.ENROLLED else EnrollmentState.NOT_ENROLLED
