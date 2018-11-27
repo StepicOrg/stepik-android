@@ -14,6 +14,7 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import jp.wasabeef.glide.transformations.BlurTransformation
 import kotlinx.android.synthetic.main.activity_course.*
 import kotlinx.android.synthetic.main.header_course.*
+import kotlinx.android.synthetic.main.header_course_placeholder.*
 import org.stepic.droid.R
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
@@ -65,6 +66,7 @@ class CourseHeaderDelegate(
 
             courseCover.alpha = 1f - ratio
             courseInfo.translationY = ratio * targetTranslation
+            courseInfoPlaceholder.translationY = ratio * targetTranslation
         })
     }
 
