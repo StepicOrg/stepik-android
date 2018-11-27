@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_course_info.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
+import org.stepic.droid.fonts.FontsProvider
 import org.stepik.android.view.course_info.ui.adapter.CourseInfoAdapter
 import org.stepik.android.view.course_info.ui.adapter.decorators.CourseInfoBlockOffsetDecorator
 import org.stepik.android.view.course_info.ui.adapter.delegates.CourseInfoInstructorsDelegate
@@ -30,13 +31,16 @@ class CourseInfoFragment : Fragment(), CourseInfoView {
                 }
     }
 
-    private var courseId: Long by argument()
-    private val adapter = CourseInfoAdapter()
-
-    private lateinit var courseInfoPresenter: CourseInfoPresenter
-
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    lateinit var fontsProvider: FontsProvider
+
+    private var courseId: Long by argument()
+
+    private lateinit var adapter: CourseInfoAdapter
+    private lateinit var courseInfoPresenter: CourseInfoPresenter
 
     private lateinit var viewStateDelegate: ViewStateDelegate<CourseInfoView.State>
 
@@ -46,6 +50,7 @@ class CourseInfoFragment : Fragment(), CourseInfoView {
 
         courseInfoPresenter = ViewModelProviders.of(this, viewModelFactory).get(CourseInfoPresenter::class.java)
         savedInstanceState?.let(courseInfoPresenter::onRestoreInstanceState)
+        adapter = CourseInfoAdapter(fontsProvider)
     }
 
     private fun injectComponent(courseId: Long) {

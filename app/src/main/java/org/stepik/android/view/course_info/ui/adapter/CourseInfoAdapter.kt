@@ -4,6 +4,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import kotlinx.android.synthetic.main.view_course_info_block.view.*
+import org.stepic.droid.fonts.FontsProvider
 import org.stepik.android.view.course_info.ui.adapter.delegates.CourseInfoInstructorsDelegate
 import org.stepik.android.view.course_info.ui.adapter.delegates.CourseInfoOrganizationDelegate
 import org.stepik.android.view.course_info.ui.adapter.delegates.CourseInfoTextBlockDelegate
@@ -12,7 +13,9 @@ import org.stepik.android.view.course_info.model.CourseInfoItem
 import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
 import org.stepic.droid.ui.custom.adapter_delegates.DelegateAdapter
 
-class CourseInfoAdapter : DelegateAdapter<CourseInfoItem, CourseInfoAdapter.ViewHolder>() {
+class CourseInfoAdapter(
+    fontsProvider: FontsProvider
+) : DelegateAdapter<CourseInfoItem, CourseInfoAdapter.ViewHolder>() {
     private var blocks : List<CourseInfoItem> = emptyList()
         set(value) {
             field = value
@@ -20,7 +23,7 @@ class CourseInfoAdapter : DelegateAdapter<CourseInfoItem, CourseInfoAdapter.View
         }
 
     init {
-        addDelegate(CourseInfoTextBlockDelegate(this))
+        addDelegate(CourseInfoTextBlockDelegate(this, fontsProvider))
         addDelegate(CourseInfoInstructorsDelegate(this))
         addDelegate(CourseInfoVideoBlockDelegate(this, null))
         addDelegate(CourseInfoOrganizationDelegate(this))
