@@ -3,7 +3,10 @@ package org.stepik.android.view.course.ui.delegates
 import android.app.Activity
 import android.graphics.BitmapFactory
 import android.support.design.widget.AppBarLayout
+import android.support.v4.content.ContextCompat
+import android.support.v4.graphics.drawable.DrawableCompat
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
+import android.support.v7.content.res.AppCompatResources
 import android.view.Menu
 import android.view.MenuItem
 import com.bumptech.glide.Glide
@@ -48,7 +51,7 @@ class CourseHeaderDelegate(
 
     init {
         initCollapsingAnimation()
-        initVerified()
+        initCompoundDrawables()
         initActions()
     }
 
@@ -65,8 +68,13 @@ class CourseHeaderDelegate(
         })
     }
 
-    private fun initVerified() = with(courseActivity) {
+    private fun initCompoundDrawables() = with(courseActivity) {
         courseFeatured.setCompoundDrawables(start = R.drawable.ic_verified)
+
+        val learnersCountDrawable = AppCompatResources.getDrawable(this, R.drawable.ic_learners)
+            ?: return@with
+        DrawableCompat.setTint(learnersCountDrawable, ContextCompat.getColor(this,  android.R.color.white))
+        courseLearnersCount.setCompoundDrawablesWithIntrinsicBounds(learnersCountDrawable, null, null, null)
     }
 
     private fun initActions() = with(courseActivity) {

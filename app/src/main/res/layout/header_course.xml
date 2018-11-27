@@ -77,9 +77,6 @@
             android:layout_marginLeft="6dp"
             android:layout_marginRight="6dp"
 
-            android:drawableStart="@drawable/ic_learners"
-            android:drawableLeft="@drawable/ic_learners"
-            android:drawableTint="@color/white"
             android:drawablePadding="2dp"
 
             android:textSize="12sp"
@@ -93,6 +90,7 @@
             android:layout_width="12dp"
             android:layout_height="12dp"
             android:layout_marginLeft="6dp"
+            android:layout_marginStart="6dp"
             app:progressBackgroundColor="@color/white"
             app:progressBarStroke="@dimen/course_item_progress_bar_size"/>
 
@@ -103,7 +101,9 @@
             android:gravity="center"
 
             android:layout_marginLeft="2dp"
+            android:layout_marginStart="2dp"
             android:layout_marginRight="6dp"
+            android:layout_marginEnd="6dp"
 
             android:textSize="12sp"
             android:textColor="@color/white"
