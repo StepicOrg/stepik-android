@@ -10,6 +10,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_course.*
+import kotlinx.android.synthetic.main.error_course_not_found.*
 import kotlinx.android.synthetic.main.header_course.*
 import kotlinx.android.synthetic.main.header_course_placeholder.*
 import org.stepic.droid.R
@@ -91,6 +92,7 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         viewStateDelegate.addState<CourseView.State.CourseLoaded>(courseHeader, courseTabs, coursePager)
         viewStateDelegate.addState<CourseView.State.Loading>(courseHeaderPlaceholder, courseTabs, coursePager)
         viewStateDelegate.addState<CourseView.State.Idle>(courseHeaderPlaceholder, courseTabs, coursePager)
+        goToCatalog.setOnClickListener { screenManager.showCatalog(this) }
     }
 
     private fun injectComponent(courseId: Long) {
