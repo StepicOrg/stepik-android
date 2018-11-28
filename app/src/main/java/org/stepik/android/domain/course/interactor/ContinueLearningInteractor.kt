@@ -2,11 +2,14 @@ package org.stepik.android.domain.course.interactor
 
 import io.reactivex.Maybe
 import io.reactivex.Single
+import io.reactivex.rxkotlin.toObservable
+import org.stepic.droid.util.hasUserAccessAndNotEmpty
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.domain.last_step.repository.LastStepRepository
 import org.stepik.android.domain.section.repository.SectionRepository
 import org.stepik.android.domain.unit.repository.UnitRepository
 import org.stepik.android.model.Course
+import org.stepik.android.model.Section
 import javax.inject.Inject
 
 class ContinueLearningInteractor
@@ -22,7 +25,7 @@ constructor(
             .switchIfEmpty(resolveCourseFirstStep(course))
 
     private fun resolveCourseFirstStep(course: Course): Single<LastStep> =
-        (course.sections?.firstOrNull()?.let(sectionRepository::getSection) ?: Maybe.empty())
+        getFirstAvailableSection(course)
             .flatMap { section ->
                 unitRepository.getUnit(section.units.first())
             }
@@ -35,4 +38,12 @@ constructor(
                 )
             }
             .toSingle()
+
+    private fun getFirstAvailableSection(course: Course): Maybe<Section> =
+        course.sections
+            ?.toObservable()
+            ?.flatMapMaybe(sectionRepository::getSection)
+            ?.filter { it.hasUserAccessAndNotEmpty(course) }
+            ?.firstElement()
+            ?: Maybe.empty()
 }
