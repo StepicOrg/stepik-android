@@ -2,7 +2,7 @@ package org.stepik.android.domain.course.interactor
 
 import io.reactivex.Maybe
 import io.reactivex.Single
-import org.stepik.android.domain.course.model.CourseLastStep
+import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.domain.last_step.repository.LastStepRepository
 import org.stepik.android.domain.section.repository.SectionRepository
 import org.stepik.android.domain.unit.repository.UnitRepository
@@ -16,27 +16,23 @@ constructor(
     private val sectionRepository: SectionRepository,
     private val unitRepository: UnitRepository
 ) {
-    fun getLastStepForCourse(course: Course): Single<CourseLastStep> =
-        lastStepRepository.getLastStep(course.lastStepId ?: "")
-            .map { lastStep ->
-                CourseLastStep(
-                    courseId = course.id,
-                    unitId = lastStep.unit,
-                    lessonId = lastStep.lesson,
-                    stepId = lastStep.step
+    fun getLastStepForCourse(course: Course): Single<LastStep> =
+        lastStepRepository
+            .getLastStep(course.lastStepId ?: "")
+            .switchIfEmpty(resolveCourseFirstStep(course))
+
+    private fun resolveCourseFirstStep(course: Course): Single<LastStep> =
+        (course.sections?.firstOrNull()?.let(sectionRepository::getSection) ?: Maybe.empty())
+            .flatMap { section ->
+                unitRepository.getUnit(section.units.first())
+            }
+            .map { unit ->
+                LastStep(
+                    id = "",
+                    unit = unit.id,
+                    lesson = unit.lesson,
+                    step = -1
                 )
-            }.switchIfEmpty(
-                (course.sections?.firstOrNull()?.let(sectionRepository::getSection) ?: Maybe.empty())
-                    .flatMap { section ->
-                        unitRepository.getUnit(section.units.first())
-                    }
-                    .map { unit ->
-                        CourseLastStep(
-                            courseId = course.id,
-                            unitId = unit.id,
-                            lessonId = unit.lesson,
-                            stepId = -1
-                        )
-                    }
-            ).toSingle()
+            }
+            .toSingle()
 }
