@@ -10,6 +10,8 @@ class RemoteLastStep(
     val id: String,
     @SerializedName("unit")
     val unit: Long?,
+    @SerializedName("lesson")
+    val lesson: Long?,
     @SerializedName("step")
     val step: Long?
 )

@@ -8,6 +8,7 @@ object DbStructureLastStep {
     object Columns {
         const val ID = "id"
         const val UNIT_ID = "unit_id"
+        const val LESSON_ID = "lesson_id"
         const val STEP_ID = "step_id"
     }
 
@@ -16,6 +17,7 @@ object DbStructureLastStep {
             CREATE TABLE IF NOT EXISTS $TABLE_NAME (
                 ${Columns.ID} TEXT PRIMARY KEY,
                 ${Columns.UNIT_ID} LONG,
+                ${Columns.LESSON_ID} LONG,
                 ${Columns.STEP_ID} LONG
             )
         """.trimIndent())

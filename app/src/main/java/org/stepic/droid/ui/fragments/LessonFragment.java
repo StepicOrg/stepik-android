@@ -323,7 +323,7 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
                             if (section != null && section.getCourse() > 0) {
                                 Course course = getDatabaseFacade().getCourseById(section.getCourse(), Table.enrolled);
                                 if (course != null && course.getLastStepId() != null) {
-                                    LastStep lastStep = new LastStep(course.getLastStepId(), stepId, unit.getId());
+                                    LastStep lastStep = new LastStep(course.getLastStepId(), unit.getId(), unit.getLesson(), stepId);
                                     getDatabaseFacade().updateLastStep(lastStep);
                                 }
                             }

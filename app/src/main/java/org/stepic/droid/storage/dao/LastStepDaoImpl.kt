@@ -21,6 +21,7 @@ constructor(
         val contentValues = ContentValues()
         contentValues.put(DbStructureLastStep.Columns.ID, persistentObject.id)
         contentValues.put(DbStructureLastStep.Columns.UNIT_ID, persistentObject.unit)
+        contentValues.put(DbStructureLastStep.Columns.LESSON_ID, persistentObject.lesson)
         contentValues.put(DbStructureLastStep.Columns.STEP_ID, persistentObject.step)
         return contentValues
     }
@@ -29,15 +30,18 @@ constructor(
             with(cursor) {
                 val indexId = getColumnIndex(DbStructureLastStep.Columns.ID)
                 val indexUnitId = getColumnIndex(DbStructureLastStep.Columns.UNIT_ID)
+                val indexLessonId = getColumnIndex(DbStructureLastStep.Columns.LESSON_ID)
                 val indexStepId = getColumnIndex(DbStructureLastStep.Columns.STEP_ID)
 
                 val id = getString(indexId)
                 val unitId = getLong(indexUnitId)
+                val lessonId = getLong(indexLessonId)
                 val stepId = getLong(indexStepId)
 
                 return LastStep(
                     id = id,
                     unit = unitId,
+                    lesson = lessonId,
                     step = stepId
                 )
             }

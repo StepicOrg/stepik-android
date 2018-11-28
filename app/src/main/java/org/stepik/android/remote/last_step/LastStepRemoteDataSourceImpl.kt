@@ -20,8 +20,9 @@ constructor(
                 ?.firstOrNull()
                 ?.let {
                     it.unit ?: return@let null
+                    it.lesson ?: return@let null
                     it.step ?: return@let null
-                    LastStep(id = it.id, unit = it.unit, step = it.step)
+                    LastStep(id = it.id, unit = it.unit, lesson = it.lesson, step = it.step)
                 }
                 ?.let(emitter::onSuccess)
                 ?: emitter.onComplete()

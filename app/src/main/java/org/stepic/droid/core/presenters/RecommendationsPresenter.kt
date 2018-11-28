@@ -246,7 +246,7 @@ constructor(
                     unit?.assignments?.firstOrNull()?.let { assignmentId ->
                         screenManager.pushToViewedQueue(ViewAssignment(assignmentId, stepId))
                         databaseFacade.getCourseById(courseId, Table.enrolled)?.lastStepId?.let {
-                            databaseFacade.updateLastStep(LastStep(it, stepId, unit.id))
+                            databaseFacade.updateLastStep(LastStep(it, unit.id, unit.lesson, stepId))
                         }
                     }
                 }, {}))
