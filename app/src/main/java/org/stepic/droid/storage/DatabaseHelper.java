@@ -9,6 +9,7 @@ import org.stepic.droid.features.deadlines.storage.structure.DbStructureDeadline
 import org.stepic.droid.storage.migration.MigrationFrom33To34;
 import org.stepic.droid.storage.migration.MigrationFrom34To35;
 import org.stepic.droid.storage.migration.MigrationFrom35To36;
+import org.stepic.droid.storage.migration.MigrationFrom36To37;
 import org.stepic.droid.storage.structure.DatabaseInfo;
 import org.stepic.droid.storage.structure.DbStructureAdaptiveExp;
 import org.stepic.droid.storage.structure.DbStructureAssignment;
@@ -18,7 +19,7 @@ import org.stepic.droid.storage.structure.DbStructureCalendarSection;
 import org.stepic.droid.storage.structure.DbStructureCertificateViewItem;
 import org.stepic.droid.storage.structure.DbStructureCodeSubmission;
 import org.stepic.droid.storage.structure.DbStructureEnrolledAndFeaturedCourses;
-import org.stepic.droid.storage.structure.DbStructureLastStep;
+import org.stepic.droid.storage.structure.DbStructureLastStepOld;
 import org.stepic.droid.storage.structure.DbStructureLesson;
 import org.stepic.droid.storage.structure.DbStructureNotification;
 import org.stepic.droid.storage.structure.DbStructureProgress;
@@ -104,6 +105,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         upgradeFrom33To34(db);
         upgradeFrom34To35(db);
         upgradeFrom35To36(db);
+        upgradeFrom36To37(db);
     }
 
 
@@ -290,6 +292,14 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         if (oldVersion < 36) {
             upgradeFrom35To36(db);
         }
+
+        if (oldVersion < 37) {
+            upgradeFrom36To37(db);
+        }
+    }
+
+    private void upgradeFrom36To37(SQLiteDatabase db) {
+        MigrationFrom36To37.INSTANCE.migrate(db);
     }
 
     private void upgradeFrom35To36(SQLiteDatabase db) {
@@ -729,11 +739,11 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     private void createLastStepTable(SQLiteDatabase db) {
-        String sql = "CREATE TABLE " + DbStructureLastStep.LAST_STEPS
+        String sql = "CREATE TABLE " + DbStructureLastStepOld.LAST_STEPS
                 + " ("
-                + DbStructureLastStep.Column.COURSE_ID + WHITESPACE + LONG_TYPE + ", "
-                + DbStructureLastStep.Column.UNIT_ID + WHITESPACE + LONG_TYPE + ", "
-                + DbStructureLastStep.Column.STEP_ID + WHITESPACE + LONG_TYPE
+                + DbStructureLastStepOld.Column.COURSE_ID + WHITESPACE + LONG_TYPE + ", "
+                + DbStructureLastStepOld.Column.UNIT_ID + WHITESPACE + LONG_TYPE + ", "
+                + DbStructureLastStepOld.Column.STEP_ID + WHITESPACE + LONG_TYPE
                 + ")";
         db.execSQL(sql);
     }

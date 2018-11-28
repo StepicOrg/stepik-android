@@ -24,13 +24,14 @@ import org.stepic.droid.di.adaptive.AdaptiveCourseScope
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.CourseId
 import org.stepic.droid.di.qualifiers.MainScheduler
-import org.stepic.droid.model.PersistentLastStep
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
+import org.stepic.droid.storage.operations.Table
 import org.stepic.droid.util.getStepType
 import org.stepic.droid.web.Api
 import org.stepic.droid.web.ViewAssignment
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse
+import org.stepik.android.domain.last_step.model.LastStep
 import retrofit2.HttpException
 import java.util.*
 import javax.inject.Inject
@@ -244,7 +245,9 @@ constructor(
                     val stepId = card.step?.id ?: 0
                     unit?.assignments?.firstOrNull()?.let { assignmentId ->
                         screenManager.pushToViewedQueue(ViewAssignment(assignmentId, stepId))
-                        databaseFacade.updateLastStep(PersistentLastStep(courseId, stepId, unit.id))
+                        databaseFacade.getCourseById(courseId, Table.enrolled)?.lastStepId?.let {
+                            databaseFacade.updateLastStep(LastStep(it, stepId, unit.id))
+                        }
                     }
                 }, {}))
     }

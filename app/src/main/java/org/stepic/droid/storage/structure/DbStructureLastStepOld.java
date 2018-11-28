@@ -1,6 +1,7 @@
 package org.stepic.droid.storage.structure;
 
-public final class DbStructureLastStep {
+@Deprecated
+public final class DbStructureLastStepOld {
     public static final String LAST_STEPS = "last_steps";
 
     public static final class Column {

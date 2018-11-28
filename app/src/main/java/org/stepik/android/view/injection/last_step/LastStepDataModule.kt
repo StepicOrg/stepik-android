@@ -2,7 +2,9 @@ package org.stepik.android.view.injection.last_step
 
 import dagger.Binds
 import dagger.Module
+import org.stepik.android.cache.last_step.LastStepCacheDataSourceImpl
 import org.stepik.android.data.last_step.repository.LastStepRepositoryImpl
+import org.stepik.android.data.last_step.source.LastStepCacheDataSource
 import org.stepik.android.data.last_step.source.LastStepRemoteDataSource
 import org.stepik.android.domain.last_step.repository.LastStepRepository
 import org.stepik.android.remote.last_step.LastStepRemoteDataSourceImpl
@@ -19,8 +21,8 @@ abstract class LastStepDataModule {
         lastStepRemoteDataSourceImpl: LastStepRemoteDataSourceImpl
     ): LastStepRemoteDataSource
 
-//    @Binds
-//    internal abstract fun bindProgressCacheDataSource(
-//        progressCacheDataSourceImpl: ProgressCacheDataSourceImpl
-//    ): ProgressCacheDataSource
+    @Binds
+    internal abstract fun bindProgressCacheDataSource(
+        lastStepCacheDataSourceImpl: LastStepCacheDataSourceImpl
+    ): LastStepCacheDataSource
 }

@@ -30,6 +30,7 @@ import org.stepic.droid.storage.dao.*
 import org.stepic.droid.storage.operations.*
 import org.stepic.droid.storage.structure.DbStructureEnrolledAndFeaturedCourses
 import org.stepic.droid.web.ViewAssignment
+import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.*
 import org.stepik.android.model.Unit
 
@@ -100,7 +101,7 @@ abstract class StorageModule {
 
     @Binds
     @StorageSingleton
-    internal abstract fun provideLastStepDao(persistentLastStepDao: PersistentLastStepDaoImpl): IDao<PersistentLastStep>
+    internal abstract fun provideLastStepDao(lastStepDao: LastStepDaoImpl): IDao<LastStep>
 
     @Binds
     @StorageSingleton

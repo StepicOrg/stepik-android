@@ -47,7 +47,7 @@ class ContinueCoursePresenter
                         unitId = lastStep.unit!! //it can be null
                         stepId = lastStep.step!!// it can be null -> we should fetch 1st step
                     } catch (exception: Exception) {
-                        val persistentLastStep = databaseFacade.getLocalLastStepByCourseId(courseId = course.id)
+                        val persistentLastStep = databaseFacade.getLocalLastStepById(lastStepId = course.lastStepId)
                         if (persistentLastStep == null) {
                             // fetch data
                             val sectionIds = course.sections
@@ -71,8 +71,8 @@ class ContinueCoursePresenter
                             }
                             return@execute
                         }
-                        unitId = persistentLastStep.unitId
-                        stepId = persistentLastStep.stepId
+                        unitId = persistentLastStep.unit
+                        stepId = persistentLastStep.step
                     }
 
 

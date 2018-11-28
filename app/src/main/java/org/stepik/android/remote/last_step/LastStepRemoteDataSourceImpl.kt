@@ -12,18 +12,18 @@ constructor(
    private val api: Api
 ) : LastStepRemoteDataSource {
     override fun getLastStep(id: String): Maybe<LastStep> =
-            Maybe.create { emitter ->
-                api.getLastStepResponse(id)
-                    .execute()
-                    .body()
-                    ?.lastSteps
-                    ?.firstOrNull()
-                    ?.let {
-                        it.unit ?: return@let null
-                        it.step ?: return@let null
-                        LastStep(id = it.id, unit = it.unit, step = it.step)
-                    }
-                    ?.let(emitter::onSuccess)
-                    ?: emitter.onComplete()
-            }
+        Maybe.create { emitter ->
+            api.getLastStepResponse(id)
+                .execute()
+                .body()
+                ?.lastSteps
+                ?.firstOrNull()
+                ?.let {
+                    it.unit ?: return@let null
+                    it.step ?: return@let null
+                    LastStep(id = it.id, unit = it.unit, step = it.step)
+                }
+                ?.let(emitter::onSuccess)
+                ?: emitter.onComplete()
+        }
 }

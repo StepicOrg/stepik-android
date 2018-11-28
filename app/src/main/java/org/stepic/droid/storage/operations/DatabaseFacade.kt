@@ -18,6 +18,7 @@ import org.stepic.droid.storage.structure.*
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DbParseHelper
 import org.stepic.droid.web.ViewAssignment
+import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.*
 import org.stepik.android.model.Unit
 import java.util.*
@@ -45,7 +46,7 @@ class DatabaseFacade
         private val calendarSectionDao: IDao<CalendarSection>,
         private val certificateViewItemDao: IDao<CertificateViewItem>,
         private val videoTimestampDao: IDao<VideoTimestamp>,
-        private val lastStepDao: IDao<PersistentLastStep>,
+        private val lastStepDao: IDao<LastStep>,
         private val externalVideoUrlDao: IDao<DbVideoUrl>,
         private val blockDao: IDao<BlockPersistentWrapper>,
         private val personalDeadlinesDao: PersonalDeadlinesDao,
@@ -283,12 +284,12 @@ class DatabaseFacade
     fun getVideoTimestamp(videoId: Long): VideoTimestamp? =
             videoTimestampDao.get(DbStructureVideoTimestamp.Column.VIDEO_ID, videoId.toString())
 
-    fun updateLastStep(persistentLastStep: PersistentLastStep) {
-        lastStepDao.insertOrUpdate(persistentLastStep)
+    fun updateLastStep(lastStep: LastStep) {
+        lastStepDao.insertOrUpdate(lastStep)
     }
 
-    fun getLocalLastStepByCourseId(courseId: Long) =
-            lastStepDao.get(DbStructureLastStep.Column.COURSE_ID, courseId.toString())
+    fun getLocalLastStepById(lastStepId: String?): LastStep? =
+            lastStepId?.let { lastStepDao.get(DbStructureLastStep.Columns.ID, it) }
 
     fun getUnitsByIds(keys: List<Long>): List<Unit> {
         DbParseHelper.parseLongListToString(keys, AppConstants.COMMA)?.let {
