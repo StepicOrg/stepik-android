@@ -5,7 +5,9 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout
+import android.support.v4.content.ContextCompat
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
@@ -20,6 +22,7 @@ import org.stepic.droid.base.FragmentActivityBase
 import org.stepik.android.view.course.ui.adapter.CoursePagerAdapter
 import org.stepik.android.view.course.ui.delegates.CourseHeaderDelegate
 import org.stepic.droid.fonts.FontType
+import org.stepic.droid.util.setTextColor
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course.CoursePresenter
@@ -189,11 +192,17 @@ class CourseActivity : FragmentActivityBase(), CourseView {
     }
 
     override fun showEnrollmentError() {
-        TODO()
+        Snackbar
+            .make(coursePager, R.string.course_error_enroll, Snackbar.LENGTH_SHORT)
+            .setTextColor(ContextCompat.getColor(this, R.color.white))
+            .show()
     }
 
     override fun showContinueLearningError() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        Snackbar
+            .make(coursePager, R.string.course_error_continue_learning, Snackbar.LENGTH_SHORT)
+            .setTextColor(ContextCompat.getColor(this, R.color.white))
+            .show()
     }
 
     override fun continueCourse(lastStep: LastStep) {
