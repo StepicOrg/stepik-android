@@ -4,6 +4,7 @@ import android.os.Bundle
 import io.reactivex.*
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
+import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.CourseId
 import org.stepic.droid.di.qualifiers.MainScheduler
@@ -26,6 +27,8 @@ constructor(
     private val courseInteractor: CourseInteractor,
     private val courseEnrollmentInteractor: CourseEnrollmentInteractor,
     private val continueLearningInteractor: ContinueLearningInteractor,
+
+    private val adaptiveCoursesResolver: AdaptiveCoursesResolver,
 
     @EnrollmentCourseUpdates
     private val enrollmentUpdatesObservable: Observable<Long>,
@@ -62,7 +65,7 @@ constructor(
         val data = savedInstanceState.getParcelable(KEY_COURSE_HEADER_DATA)
                 as? CourseHeaderData ?: return
         courseInteractor.restoreCourse(data.course)
-        state = CourseView.State.CourseLoaded(data) // todo set course to subject
+        state = CourseView.State.CourseLoaded(data)
     }
 
     fun onCourseId(courseId: Long, forceUpdate: Boolean = false) {
@@ -139,14 +142,18 @@ constructor(
             ?.course
             ?: return
 
-        compositeDisposable += continueLearningInteractor
-            .getLastStepForCourse(course)
-            .subscribeOn(backgroundScheduler)
-            .observeOn(mainScheduler)
-            .subscribeBy(
-                onSuccess = { view?.openStep(it) },
-                onError   = { view?.showContinueLearningError() }
-            )
+        if (adaptiveCoursesResolver.isAdaptive(course.id)) {
+            view?.continueAdaptiveCourse(course)
+        } else {
+            compositeDisposable += continueLearningInteractor
+                .getLastStepForCourse(course)
+                .subscribeOn(backgroundScheduler)
+                .observeOn(mainScheduler)
+                .subscribeBy(
+                    onSuccess = { view?.continueCourse(it) },
+                    onError   = { view?.showContinueLearningError() }
+                )
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

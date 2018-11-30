@@ -20,6 +20,7 @@ import org.stepic.droid.base.FragmentActivityBase
 import org.stepik.android.view.course.ui.adapter.CoursePagerAdapter
 import org.stepik.android.view.course.ui.delegates.CourseHeaderDelegate
 import org.stepic.droid.fonts.FontType
+import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course.CoursePresenter
 import org.stepik.android.presentation.course.CourseView
@@ -189,6 +190,18 @@ class CourseActivity : FragmentActivityBase(), CourseView {
 
     override fun showEnrollmentError() {
         TODO()
+    }
+
+    override fun showContinueLearningError() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun continueCourse(lastStep: LastStep) {
+        screenManager.continueCourse(this, lastStep.unit, lastStep.lesson, lastStep.step, false)
+    }
+
+    override fun continueAdaptiveCourse(course: Course) {
+        screenManager.continueAdaptiveCourse(this, course)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

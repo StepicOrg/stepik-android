@@ -517,6 +517,15 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
+    public void continueCourse(Activity activity, long unitId, long lessonId, long stepId, boolean joinedRightNow) {
+        String testStepPath = StringUtil.getUriForStepByIds(config.getBaseUrl(), lessonId, unitId, stepId);
+        Intent intent = new Intent(activity, StepsActivity.class)
+                .setAction(AppConstants.INTERNAL_STEPIK_ACTION)
+                .setData(Uri.parse(testStepPath));
+        activity.startActivity(intent);
+    }
+
+    @Override
     public void openInWeb(Activity context, String path) {
         analytic.reportEventWithName(Analytic.Screens.OPEN_LINK_IN_WEB, path);
         final Intent intent = getOpenInWebIntent(path);
