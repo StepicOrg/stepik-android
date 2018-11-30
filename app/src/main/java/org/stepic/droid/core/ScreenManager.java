@@ -128,7 +128,7 @@ public interface ScreenManager {
 
     void continueCourse(Activity activity, long courseId, Section section, long lessonId, long unitId, long stepPosition, boolean joinedRightNow);
 
-    void continueCourse(Activity activity, long unitId, long lessonId, long stepId, boolean joinedRightNow);
+    void continueCourse(Activity activity, long unitId, long lessonId, long stepId);
 
     void showLaunchScreen(FragmentActivity activity, @NotNull Course course);
 

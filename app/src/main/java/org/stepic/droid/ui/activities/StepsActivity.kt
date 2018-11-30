@@ -18,6 +18,8 @@ class StepsActivity : SingleFragmentActivity() {
 
     companion object {
         const val needReverseAnimationKey = "needReverseAnimation"
+
+        const val EXTRA_IS_STEP_ID_WAS_PASSED = "is_step_id_passed"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,7 +46,6 @@ class StepsActivity : SingleFragmentActivity() {
         val unit: Unit? = extras?.getParcelable<Unit>(AppConstants.KEY_UNIT_BUNDLE) // UNit can be null
         val lesson = extras?.getParcelable<Lesson>(AppConstants.KEY_LESSON_BUNDLE) //Lesson can be null in intent and if url is broken
         val fromPrevious: Boolean = extras?.getBoolean(needReverseAnimationKey, false) ?: false
-
         val dataUri = intent?.data
 
         if (lesson == null && dataUri != null) {
@@ -60,7 +61,11 @@ class StepsActivity : SingleFragmentActivity() {
             val simpleStepPosition: Long = getStepPosition(dataUri)
             val simpleUnitId: Long = getUnitSimpleId(dataUri)
             val discussionSampleId = getDiscussionSampleId(dataUri)
-            return LessonFragment.newInstance(simpleUnitId, simpleLessonId, simpleStepPosition, discussionSampleId)
+
+
+            val isStepIdWasPassed: Boolean = extras?.getBoolean(EXTRA_IS_STEP_ID_WAS_PASSED, false) ?: false
+
+            return LessonFragment.newInstance(simpleUnitId, simpleLessonId, simpleStepPosition, discussionSampleId, isStepIdWasPassed)
 
         } else {
             return LessonFragment.newInstance(unit, lesson, fromPrevious, section)
