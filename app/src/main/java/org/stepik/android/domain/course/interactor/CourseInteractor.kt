@@ -38,6 +38,7 @@ constructor(
                 .map { (courseReview, courseProgress) ->
                     CourseHeaderData(
                         courseId = course.id,
+                        course = course,
                         title = course.title ?: "",
                         cover = course.cover ?: "",
                         learnersCount = course.learnersCount,
@@ -49,4 +50,7 @@ constructor(
                     )
                 }
                 .toMaybe()
+
+    fun restoreCourse(course: Course) =
+            coursePublishSubject.onNext(course)
 }

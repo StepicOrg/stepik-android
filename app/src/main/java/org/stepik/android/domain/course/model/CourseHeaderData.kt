@@ -2,11 +2,13 @@ package org.stepik.android.domain.course.model
 
 import android.os.Parcel
 import android.os.Parcelable
+import org.stepik.android.model.Course
 import org.stepik.android.model.util.readBoolean
 import org.stepik.android.model.util.writeBoolean
 
 data class CourseHeaderData(
     val courseId: Long,
+    val course: Course,
     val title: String,
     val cover: String,
     val learnersCount: Long,
@@ -18,6 +20,7 @@ data class CourseHeaderData(
 ) : Parcelable {
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeLong(courseId)
+        parcel.writeParcelable(course, flags)
         parcel.writeString(title)
         parcel.writeString(cover)
         parcel.writeLong(learnersCount)
@@ -33,6 +36,7 @@ data class CourseHeaderData(
         override fun createFromParcel(parcel: Parcel): CourseHeaderData =
             CourseHeaderData(
                 parcel.readLong(),
+                parcel.readParcelable(Course::class.java.classLoader)!!,
                 parcel.readString()!!,
                 parcel.readString()!!,
                 parcel.readLong(),

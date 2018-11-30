@@ -25,7 +25,6 @@ constructor(
 
     private val courseInteractor: CourseInteractor,
     private val courseEnrollmentInteractor: CourseEnrollmentInteractor,
-
     private val continueLearningInteractor: ContinueLearningInteractor,
 
     @EnrollmentCourseUpdates
@@ -62,6 +61,7 @@ constructor(
         if (state != CourseView.State.Idle) return
         val data = savedInstanceState.getParcelable(KEY_COURSE_HEADER_DATA)
                 as? CourseHeaderData ?: return
+        courseInteractor.restoreCourse(data.course)
         state = CourseView.State.CourseLoaded(data) // todo set course to subject
     }
 
@@ -134,7 +134,19 @@ constructor(
      * Continue learning
      */
     fun continueLearning() {
+        val course = (state as? CourseView.State.CourseLoaded)
+            ?.courseHeaderData
+            ?.course
+            ?: return
 
+        compositeDisposable += continueLearningInteractor
+            .getLastStepForCourse(course)
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onSuccess = { view?.openStep(it) },
+                onError   = { view?.showContinueLearningError() }
+            )
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
