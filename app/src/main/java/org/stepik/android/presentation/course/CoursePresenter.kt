@@ -7,6 +7,7 @@ import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.CourseId
 import org.stepic.droid.di.qualifiers.MainScheduler
+import org.stepik.android.domain.course.interactor.ContinueLearningInteractor
 import org.stepik.android.domain.course.interactor.CourseEnrollmentInteractor
 import org.stepik.android.domain.course.interactor.CourseInteractor
 import org.stepik.android.domain.course.model.CourseHeaderData
@@ -24,6 +25,8 @@ constructor(
 
     private val courseInteractor: CourseInteractor,
     private val courseEnrollmentInteractor: CourseEnrollmentInteractor,
+
+    private val continueLearningInteractor: ContinueLearningInteractor,
 
     @EnrollmentCourseUpdates
     private val enrollmentUpdatesObservable: Observable<Long>,

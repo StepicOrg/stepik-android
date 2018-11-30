@@ -42,7 +42,7 @@ constructor(
     private fun getFirstAvailableSection(course: Course): Maybe<Section> =
         course.sections
             ?.toObservable()
-            ?.flatMapMaybe(sectionRepository::getSection)
+            ?.flatMapMaybe { sectionRepository.getSection(it) }
             ?.filter { it.hasUserAccessAndNotEmpty(course) }
             ?.firstElement()
             ?: Maybe.empty()
