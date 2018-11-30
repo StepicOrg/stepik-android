@@ -6,6 +6,8 @@ import android.view.View
 import org.stepic.droid.R
 
 object SnackbarShower {
+    private const val duration5Sec = 5000
+
     fun showInternetRetrySnackbar(rootView: View, context: Context, listener: View.OnClickListener) {
         Snackbar.make(rootView, R.string.internet_problem_short, duration5Sec)
                 .setAction(R.string.retry_internet, listener)

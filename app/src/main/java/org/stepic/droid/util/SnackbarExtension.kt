@@ -9,5 +9,3 @@ fun Snackbar.setTextColor(@ColorInt textColor: Int): Snackbar =
         view.findViewById<TextView>(android.support.design.R.id.snackbar_text)
             .setTextColor(textColor)
     }
-
-val duration5Sec = 5000
