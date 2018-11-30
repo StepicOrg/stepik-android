@@ -27,7 +27,7 @@ class CourseInfoTextBlockDelegate(
         private val blockMessage = root.blockMessage
 
         init {
-            blockMessage.setTextSize(12f)
+            blockMessage.setTextSize(14f)
             blockMessage.textView.setLineSpacing(0f, 1.33f)
         }
 
