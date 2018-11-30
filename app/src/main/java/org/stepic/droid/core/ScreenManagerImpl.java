@@ -647,7 +647,7 @@ public class ScreenManagerImpl implements ScreenManager {
         bundle.putParcelable(AppConstants.KEY_LESSON_BUNDLE, lesson);
         bundle.putParcelable(AppConstants.KEY_SECTION_BUNDLE, section);
         if (backAnimation) {
-            bundle.putBoolean(StepsActivity.Companion.getNeedReverseAnimationKey(), true);
+            bundle.putBoolean(StepsActivity.needReverseAnimationKey, true);
         }
         intent.putExtras(bundle);
         sourceActivity.startActivity(intent);

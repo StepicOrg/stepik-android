@@ -17,7 +17,7 @@ import org.stepic.droid.util.HtmlHelper
 class StepsActivity : SingleFragmentActivity() {
 
     companion object {
-        val needReverseAnimationKey = "needReverseAnimation"
+        const val needReverseAnimationKey = "needReverseAnimation"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,8 +49,8 @@ class StepsActivity : SingleFragmentActivity() {
 
         if (lesson == null && dataUri != null) {
             if (action != null && action != AppConstants.INTERNAL_STEPIK_ACTION) {
-                analytic.reportEvent(Analytic.DeepLink.USER_OPEN_STEPS_LINK);
-                analytic.reportEvent(Analytic.DeepLink.USER_OPEN_LINK_GENERAL);
+                analytic.reportEvent(Analytic.DeepLink.USER_OPEN_STEPS_LINK)
+                analytic.reportEvent(Analytic.DeepLink.USER_OPEN_LINK_GENERAL)
                 if (sharedPreferenceHelper.authResponseFromStore == null) {
                     analytic.reportEvent(Analytic.DeepLink.ANONYMOUS_OPEN_STEPS_LINK)
                 }
@@ -68,12 +68,12 @@ class StepsActivity : SingleFragmentActivity() {
     }
 
     private fun getDiscussionSampleId(dataUri: Uri): Long {
-        val rawQuery = dataUri.getQueryParameter("discussion");
+        val rawQuery = dataUri.getQueryParameter("discussion")
         return parseLong(rawQuery)
     }
 
     private fun getUnitSimpleId(dataUri: Uri): Long {
-        val rawQuery = dataUri.getQueryParameter("unit");
+        val rawQuery = dataUri.getQueryParameter("unit")
         return parseLong(rawQuery)
     }
 
