@@ -112,24 +112,6 @@
 
         <activity android:name=".ui.activities.CourseDetailActivity">
 
-            <intent-filter
-                android:autoVerify="true"
-                tools:ignore="UnusedAttribute">
-
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="https" />
-                <data android:scheme="http" />
-                <data android:host="@string/host_name" />
-                <data android:host="@string/secondary_host_name" />
-
-                <data android:pathPattern="/course/.*/" />
-                <data android:pathPattern="/course/.*/course_app" />
-
-            </intent-filter>
         </activity>
 
         <activity
@@ -379,7 +361,28 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name="org.stepik.android.view.course.ui.activity.CourseActivity" />
+            android:name="org.stepik.android.view.course.ui.activity.CourseActivity">
+
+            <intent-filter
+                android:autoVerify="true"
+                tools:ignore="UnusedAttribute">
+
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="https" />
+                <data android:scheme="http" />
+                <data android:host="@string/host_name" />
+                <data android:host="@string/secondary_host_name" />
+
+                <data android:pathPattern="/course/.*/" />
+                <data android:pathPattern="/course/.*/course_app" />
+
+            </intent-filter>
+
+        </activity>
 
         <receiver
             android:name="org.stepic.droid.receivers.DownloadClickReceiver"

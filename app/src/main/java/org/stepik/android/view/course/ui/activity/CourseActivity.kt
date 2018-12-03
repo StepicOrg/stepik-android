@@ -31,6 +31,7 @@ import org.stepik.android.model.Course
 import org.stepik.android.presentation.course.CoursePresenter
 import org.stepik.android.presentation.course.CourseView
 import org.stepik.android.presentation.course.model.EnrollmentError
+import org.stepik.android.view.course.routing.getCourseIdFromDeepLink
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import uk.co.chrisjenx.calligraphy.TypefaceUtils
 import javax.inject.Inject
@@ -84,6 +85,7 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         courseId = intent.getLongExtra(EXTRA_COURSE_ID, NO_ID)
                 .takeIf { it != NO_ID }
                 ?: course?.id
+                ?: intent.getCourseIdFromDeepLink()
                 ?: NO_ID
 
         injectComponent(courseId)

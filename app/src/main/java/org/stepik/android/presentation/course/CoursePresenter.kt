@@ -94,7 +94,7 @@ constructor(
     }
 
     /**
-     * ENROLLMENT
+     * Enrollment
      */
     fun enrollCourse() {
         toggleEnrollment(CourseEnrollmentInteractor::enrollCourse)
