@@ -24,7 +24,9 @@ import org.stepic.droid.base.FragmentActivityBase
 import org.stepik.android.view.course.ui.adapter.CoursePagerAdapter
 import org.stepik.android.view.course.ui.delegates.CourseHeaderDelegate
 import org.stepic.droid.fonts.FontType
+import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.dialogs.UnauthorizedDialogFragment
+import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.setTextColor
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
@@ -61,8 +63,11 @@ class CourseActivity : FragmentActivityBase(), CourseView {
     private lateinit var courseHeaderDelegate: CourseHeaderDelegate
 
     private var unauthorizedDialogFragment: DialogFragment? = null
+    private val progressDialogFragment: DialogFragment =
+        LoadingProgressDialogFragment.newInstance()
 
-    private val viewStateDelegate = ViewStateDelegate<CourseView.State>()
+    private val viewStateDelegate =
+        ViewStateDelegate<CourseView.State>()
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -100,6 +105,7 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         viewStateDelegate.addState<CourseView.State.EmptyCourse>(courseEmpty)
         viewStateDelegate.addState<CourseView.State.NetworkError>(errorNoConnection)
         viewStateDelegate.addState<CourseView.State.CourseLoaded>(courseHeader, courseTabs, coursePager)
+        viewStateDelegate.addState<CourseView.State.BlockingLoading>(courseHeader, courseTabs, coursePager)
         viewStateDelegate.addState<CourseView.State.Loading>(courseHeaderPlaceholder, courseTabs, coursePager)
         viewStateDelegate.addState<CourseView.State.Idle>(courseHeaderPlaceholder, courseTabs, coursePager)
 
@@ -196,6 +202,13 @@ class CourseActivity : FragmentActivityBase(), CourseView {
                     intent.removeExtra(EXTRA_AUTO_ENROLL)
                     coursePresenter.enrollCourse()
                 }
+
+                ProgressHelper.dismiss(supportFragmentManager, LoadingProgressDialogFragment.TAG)
+            }
+
+            is CourseView.State.BlockingLoading -> {
+                courseHeaderDelegate.courseHeaderData = state.courseHeaderData
+                ProgressHelper.activate(progressDialogFragment, supportFragmentManager, LoadingProgressDialogFragment.TAG)
             }
         }
     }

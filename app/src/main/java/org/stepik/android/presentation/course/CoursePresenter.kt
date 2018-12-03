@@ -110,7 +110,7 @@ constructor(
             ?.takeIf { it.enrollmentState != EnrollmentState.PENDING }
             ?: return
 
-        state = CourseView.State.CourseLoaded(headerData.copy(enrollmentState = EnrollmentState.PENDING))
+        state = CourseView.State.BlockingLoading(headerData.copy(enrollmentState = EnrollmentState.PENDING))
         compositeDisposable += courseEnrollmentInteractor
             .enrollmentAction(headerData.courseId)
             .observeOn(mainScheduler)
@@ -144,21 +144,29 @@ constructor(
      * Continue learning
      */
     fun continueLearning() {
-        val course = (state as? CourseView.State.CourseLoaded)
+        val headerData = (state as? CourseView.State.CourseLoaded)
             ?.courseHeaderData
-            ?.course
             ?: return
+
+        val course = headerData.course
 
         if (adaptiveCoursesResolver.isAdaptive(course.id)) {
             view?.continueAdaptiveCourse(course)
         } else {
+            state = CourseView.State.BlockingLoading(headerData.copy(enrollmentState = EnrollmentState.PENDING))
             compositeDisposable += continueLearningInteractor
                 .getLastStepForCourse(course)
                 .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)
                 .subscribeBy(
-                    onSuccess = { view?.continueCourse(it) },
-                    onError   = { view?.showContinueLearningError() }
+                    onSuccess = {
+                        state = CourseView.State.CourseLoaded(headerData)
+                        view?.continueCourse(it)
+                    },
+                    onError = {
+                        state = CourseView.State.CourseLoaded(headerData)
+                        view?.showContinueLearningError()
+                    }
                 )
         }
     }

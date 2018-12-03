@@ -13,6 +13,7 @@ interface CourseView {
         object EmptyCourse : State()
 
         class CourseLoaded(val courseHeaderData: CourseHeaderData) : State()
+        class BlockingLoading(val courseHeaderData: CourseHeaderData) : State()
     }
 
     fun setState(state: State)
