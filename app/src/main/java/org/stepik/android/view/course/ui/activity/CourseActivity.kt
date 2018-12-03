@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.support.annotation.StringRes
 import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout
+import android.support.v4.app.DialogFragment
 import android.support.v4.content.ContextCompat
 import android.view.Menu
 import android.view.MenuItem
@@ -23,6 +24,7 @@ import org.stepic.droid.base.FragmentActivityBase
 import org.stepik.android.view.course.ui.adapter.CoursePagerAdapter
 import org.stepik.android.view.course.ui.delegates.CourseHeaderDelegate
 import org.stepic.droid.fonts.FontType
+import org.stepic.droid.ui.dialogs.UnauthorizedDialogFragment
 import org.stepic.droid.util.setTextColor
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
@@ -37,10 +39,11 @@ class CourseActivity : FragmentActivityBase(), CourseView {
     companion object {
         private const val EXTRA_COURSE = "course"
         private const val EXTRA_COURSE_ID = "course_id"
-
         private const val EXTRA_AUTO_ENROLL = "auto_enroll"
 
         private const val NO_ID = -1L
+
+        private const val UNAUTHORIZED_DIALOG_TAG = "unauthorized_dialog"
 
         fun createIntent(context: Context, course: Course, autoEnroll: Boolean = false): Intent =
             Intent(context, CourseActivity::class.java)
@@ -55,6 +58,8 @@ class CourseActivity : FragmentActivityBase(), CourseView {
     private var courseId: Long = NO_ID
     private lateinit var coursePresenter: CoursePresenter
     private lateinit var courseHeaderDelegate: CourseHeaderDelegate
+
+    private var unauthorizedDialogFragment: DialogFragment? = null
 
     private val viewStateDelegate = ViewStateDelegate<CourseView.State>()
 
@@ -193,12 +198,19 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         }
     }
 
+    override fun showEmptyAuthDialog(course: Course) {
+        if (unauthorizedDialogFragment?.isAdded != true) {
+            unauthorizedDialogFragment = UnauthorizedDialogFragment.newInstance(course)
+            unauthorizedDialogFragment?.show(supportFragmentManager, UNAUTHORIZED_DIALOG_TAG)
+        }
+    }
+
     override fun showEnrollmentError(errorType: EnrollmentError) {
         @StringRes
         val errorMessage =
             when(errorType) {
                 EnrollmentError.NO_CONNECTION ->
-                    R.string.join_course_exception
+                    R.string.course_error_enroll
                 EnrollmentError.FORBIDDEN ->
                     R.string.join_course_web_exception
                 EnrollmentError.UNAUTHORIZED ->

@@ -16,6 +16,7 @@ import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.base.PresenterBase
 import org.stepik.android.presentation.course.mapper.toEnrollmentError
+import org.stepik.android.presentation.course.model.EnrollmentError
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
 import javax.inject.Inject
 
@@ -116,7 +117,12 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
                 onError = {
-                    view?.showEnrollmentError(it.toEnrollmentError())
+                    val errorType = it.toEnrollmentError()
+                    if (errorType == EnrollmentError.UNAUTHORIZED) {
+                        view?.showEmptyAuthDialog(headerData.course)
+                    } else {
+                        view?.showEnrollmentError(errorType)
+                    }
                     state = CourseView.State.CourseLoaded(headerData) // roll back data
                 }
             )

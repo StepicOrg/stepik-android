@@ -17,6 +17,7 @@ interface CourseView {
 
     fun setState(state: State)
 
+    fun showEmptyAuthDialog(course: Course)
     fun showEnrollmentError(errorType: EnrollmentError)
     fun showContinueLearningError()
 
