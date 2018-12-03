@@ -3,10 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="?selectableItemBackground"
+    android:background="@drawable/selectable_item_rounded_background"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/course_info_block_margin">
+    android:padding="@dimen/course_info_instructor_item_padding">
 
     <ImageView
         android:id="@+id/instructorIcon"
