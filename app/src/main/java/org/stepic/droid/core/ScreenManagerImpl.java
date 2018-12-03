@@ -44,7 +44,6 @@ import org.stepic.droid.ui.activities.AboutAppActivity;
 import org.stepic.droid.ui.activities.AnimatedOnboardingActivity;
 import org.stepic.droid.ui.activities.CertificatesActivity;
 import org.stepic.droid.ui.activities.CommentsActivity;
-import org.stepic.droid.ui.activities.CourseDetailActivity;
 import org.stepic.droid.ui.activities.CourseListActivity;
 import org.stepic.droid.ui.activities.DownloadsActivity;
 import org.stepic.droid.ui.activities.FeedbackActivity;
@@ -219,26 +218,25 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void showCourseDescription(Fragment sourceFragment, @NotNull Course course) {
-        Intent intent = getIntentForDescription(sourceFragment.getActivity(), course);
+        Intent intent = getIntentForDescription(sourceFragment.getActivity(), course, false);
         sourceFragment.startActivityForResult(intent, AppConstants.REQUEST_CODE_DETAIL);
     }
 
     @Override
     public void showCourseDescription(Context context, @NotNull Course course) {
-        Intent intent = getIntentForDescription(context, course);
+        Intent intent = getIntentForDescription(context, course, false);
         context.startActivity(intent);
     }
 
     @Override
-    public void showCourseDescription(Activity sourceActivity, @NotNull Course course, boolean instaEnroll) {
-        Intent intent = getIntentForDescription(sourceActivity, course);
-        intent.putExtra(CourseDetailActivity.INSTA_ENROLL_KEY, instaEnroll);
+    public void showCourseDescription(Activity sourceActivity, @NotNull Course course, boolean autoEnroll) {
+        Intent intent = getIntentForDescription(sourceActivity, course, autoEnroll);
         sourceActivity.startActivity(intent);
     }
 
-    private Intent getIntentForDescription(Context context, @NotNull Course course) {
+    private Intent getIntentForDescription(Context context, @NotNull Course course, boolean autoEnroll) {
         analytic.reportEvent(Analytic.Screens.SHOW_COURSE_DESCRIPTION);
-        Intent intent = CourseActivity.Companion.createIntent(context, course, false);
+        Intent intent = CourseActivity.Companion.createIntent(context, course, autoEnroll);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         if (!(context instanceof Activity)) {
