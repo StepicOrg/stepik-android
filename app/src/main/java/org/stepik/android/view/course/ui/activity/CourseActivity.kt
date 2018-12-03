@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.annotation.StringRes
 import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout
 import android.support.v4.content.ContextCompat
@@ -27,6 +28,7 @@ import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course.CoursePresenter
 import org.stepik.android.presentation.course.CourseView
+import org.stepik.android.presentation.course.model.EnrollmentError
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import uk.co.chrisjenx.calligraphy.TypefaceUtils
 import javax.inject.Inject
@@ -191,9 +193,20 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         }
     }
 
-    override fun showEnrollmentError() {
+    override fun showEnrollmentError(errorType: EnrollmentError) {
+        @StringRes
+        val errorMessage =
+            when(errorType) {
+                EnrollmentError.NO_CONNECTION ->
+                    R.string.join_course_exception
+                EnrollmentError.FORBIDDEN ->
+                    R.string.join_course_web_exception
+                EnrollmentError.UNAUTHORIZED ->
+                    R.string.unauthorization_detail
+            }
+
         Snackbar
-            .make(coursePager, R.string.course_error_enroll, Snackbar.LENGTH_SHORT)
+            .make(coursePager, errorMessage, Snackbar.LENGTH_SHORT)
             .setTextColor(ContextCompat.getColor(this, R.color.white))
             .show()
     }

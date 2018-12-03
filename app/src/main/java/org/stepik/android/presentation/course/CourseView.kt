@@ -3,6 +3,7 @@ package org.stepik.android.presentation.course
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
+import org.stepik.android.presentation.course.model.EnrollmentError
 
 interface CourseView {
     sealed class State {
@@ -16,7 +17,7 @@ interface CourseView {
 
     fun setState(state: State)
 
-    fun showEnrollmentError()
+    fun showEnrollmentError(errorType: EnrollmentError)
     fun showContinueLearningError()
 
     fun continueCourse(lastStep: LastStep)
