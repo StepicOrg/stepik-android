@@ -27,9 +27,18 @@ constructor(
     fun getCourseHeaderData(courseId: Long, canUseCache: Boolean = true): Maybe<CourseHeaderData> =
             courseRepository
                 .getCourse(courseId, canUseCache)
-                .flatMap(::getCourseHeaderData)
+                .flatMap(::obtainCourseHeaderData)
 
+    /**
+     * Trying to fetch DB data in first place as course object passed with intent could be obsolete
+     */
     fun getCourseHeaderData(course: Course): Maybe<CourseHeaderData> =
+        courseRepository
+            .getCourse(course.id)
+            .onErrorReturnItem(course)
+            .flatMap(::obtainCourseHeaderData)
+
+    private fun obtainCourseHeaderData(course: Course): Maybe<CourseHeaderData> =
             zip(
                 courseReviewRepository.getCourseReview(course.reviewSummary).map(CourseReviewSummary::average).onErrorReturnItem(0.0),
                 course.progress?.let(progressRepository::getProgress) ?: Single.just(Unit) // coroutines will handle it better
