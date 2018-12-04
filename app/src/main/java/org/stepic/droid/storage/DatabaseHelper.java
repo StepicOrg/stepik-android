@@ -386,7 +386,6 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         alterColumn(db, DbStructureEnrolledAndFeaturedCourses.ENROLLED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.LAST_STEP_ID, TEXT_TYPE);
         alterColumn(db, DbStructureEnrolledAndFeaturedCourses.FEATURED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.LAST_STEP_ID, TEXT_TYPE);
 
-        createLastStepTable(db);
         alterColumn(db, DbStructureEnrolledAndFeaturedCourses.ENROLLED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.IS_ACTIVE, BOOLEAN_TYPE);
         alterColumn(db, DbStructureEnrolledAndFeaturedCourses.FEATURED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.IS_ACTIVE, BOOLEAN_TYPE);
     }
@@ -734,16 +733,6 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
                 + " ("
                 + DbStructureVideoTimestamp.Column.VIDEO_ID + WHITESPACE + LONG_TYPE + ", "
                 + DbStructureVideoTimestamp.Column.TIMESTAMP + WHITESPACE + LONG_TYPE
-                + ")";
-        db.execSQL(sql);
-    }
-
-    private void createLastStepTable(SQLiteDatabase db) {
-        String sql = "CREATE TABLE " + DbStructureLastStepOld.LAST_STEPS
-                + " ("
-                + DbStructureLastStepOld.Column.COURSE_ID + WHITESPACE + LONG_TYPE + ", "
-                + DbStructureLastStepOld.Column.UNIT_ID + WHITESPACE + LONG_TYPE + ", "
-                + DbStructureLastStepOld.Column.STEP_ID + WHITESPACE + LONG_TYPE
                 + ")";
         db.execSQL(sql);
     }

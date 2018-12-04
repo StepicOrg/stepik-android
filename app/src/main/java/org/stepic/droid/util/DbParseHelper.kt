@@ -1,7 +1,5 @@
 package org.stepic.droid.util
 
-import kotlin.reflect.KFunction
-
 object DbParseHelper {
 
     private const val DEFAULT_SEPARATOR = "__,__"
