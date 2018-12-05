@@ -44,6 +44,7 @@ constructor(
                         cursor.moveToFirst()
                         while (!cursor.isAfterLast) {
                             objects.add(cursor.getLong(DbStructureCourseList.Columns.COURSE_ID))
+                            cursor.moveToNext()
                         }
                         objects.joinToString(",")
                     }
