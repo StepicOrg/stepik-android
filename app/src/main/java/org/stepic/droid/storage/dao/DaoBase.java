@@ -214,6 +214,7 @@ public abstract class DaoBase<T> implements IDao<T> {
     protected abstract T parsePersistentObject(Cursor cursor);
 
     protected T populateNestedObjects(T persistentObject) { return persistentObject; }
+    @SuppressWarnings("PMD.EmptyMethodInAbstractClassShouldBeAbstract")
     protected void storeNestedObjects(T persistentObject) {}
 
     @Override
