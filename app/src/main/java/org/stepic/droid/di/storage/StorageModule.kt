@@ -150,6 +150,10 @@ abstract class StorageModule {
 
     @StorageSingleton
     @Binds
+    internal abstract fun bindCourseDao(courseDaoImpl: CourseDaoImpl): IDao<Course>
+
+    @StorageSingleton
+    @Binds
     internal abstract fun bindVideoDao(videoDaoImpl: VideoDaoImpl): VideoDao
 
     @StorageSingleton
