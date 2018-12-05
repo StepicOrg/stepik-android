@@ -84,10 +84,6 @@ abstract class StorageModule {
 
     @StorageSingleton
     @Binds
-    internal abstract fun provideCachedVideo(persistentVideoDao: PersistentVideoDaoImpl): IDao<CachedVideo>
-
-    @StorageSingleton
-    @Binds
     internal abstract fun provideBlockWrapper(blockDao: BlockDaoImpl): IDao<BlockPersistentWrapper>
 
     @StorageSingleton

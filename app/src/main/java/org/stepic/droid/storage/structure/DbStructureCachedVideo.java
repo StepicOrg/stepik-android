@@ -1,5 +1,6 @@
 package org.stepic.droid.storage.structure;
 
+@Deprecated
 public final class DbStructureCachedVideo {
     public static final String CACHED_VIDEO = "cached_video";
 
