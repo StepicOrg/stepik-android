@@ -16,7 +16,7 @@ constructor(
     private val videoEntityDao: IDao<VideoEntity>,
     private val videoUrlEntityDao: IDao<VideoUrlEntity>
 ) : VideoDao {
-    override fun getVideo(videoId: Long): Video? {
+    override fun get(videoId: Long): Video? {
         val videoEntity = videoEntityDao
             .get(mapOf(VideoDbScheme.Columns.ID to videoId.toString()))
             ?: return null
@@ -29,11 +29,17 @@ constructor(
             .takeUnless { it.urls.isNullOrEmpty() }
     }
 
-    override fun saveVideo(video: Video) {
+    override fun replace(video: Video) {
         val (videoEntity, videoUrlEntities) =
                 videoEntityMapper.videoToEntity(video)
 
+        videoUrlEntityDao.remove(mapOf(VideoUrlDbScheme.Columns.VIDEO_ID to videoEntity.id.toString()))
         videoEntityDao.insertOrReplace(videoEntity)
         videoUrlEntityDao.insertOrReplaceAll(videoUrlEntities)
+    }
+
+    override fun remove(videoId: Long) {
+        videoUrlEntityDao.remove(mapOf(VideoUrlDbScheme.Columns.VIDEO_ID to videoId.toString()))
+        videoEntityDao.remove(mapOf(VideoUrlDbScheme.Columns.VIDEO_ID to videoId.toString()))
     }
 }

@@ -10,7 +10,7 @@ import org.stepik.android.cache.video.model.VideoEntity
 import org.stepik.android.cache.video.structure.VideoDbScheme
 import javax.inject.Inject
 
-class VIdeoEntityDaoImpl
+class VideoEntityDaoImpl
 @Inject
 constructor(
     databaseOperations: DatabaseOperations
