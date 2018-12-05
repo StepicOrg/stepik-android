@@ -63,7 +63,7 @@ object DbStructureCourse {
     fun createTable(db: SQLiteDatabase) {
         db.execSQL("""
             CREATE TABLE IF NOT EXISTS ${DbStructureCourse.TABLE_NAME} (
-                ${DbStructureCourse.Columns.ID} LONG,
+                ${DbStructureCourse.Columns.ID} LONG PRIMARY KEY,
                 ${DbStructureCourse.Columns.TITLE} TEXT,
                 ${DbStructureCourse.Columns.DESCRIPTION} TEXT,
                 ${DbStructureCourse.Columns.COVER} TEXT,
