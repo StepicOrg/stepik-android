@@ -19,7 +19,6 @@ import org.stepic.droid.storage.structure.DbStructureCalendarSection;
 import org.stepic.droid.storage.structure.DbStructureCertificateViewItem;
 import org.stepic.droid.storage.structure.DbStructureCodeSubmission;
 import org.stepic.droid.storage.structure.DbStructureEnrolledAndFeaturedCourses;
-import org.stepic.droid.storage.structure.DbStructureLastStepOld;
 import org.stepic.droid.storage.structure.DbStructureLesson;
 import org.stepic.droid.storage.structure.DbStructureNotification;
 import org.stepic.droid.storage.structure.DbStructureProgress;
@@ -369,7 +368,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     private void upgradeFrom21To22(SQLiteDatabase db) {
-        createVideoUrlTable(db, DbStructureVideoUrl.INSTANCE.getExternalVideosName());
+        createVideoUrlTable(db, DbStructureVideoUrl.externalVideosName);
         alterColumn(db, DbStructureBlock.BLOCKS, DbStructureBlock.Column.EXTERNAL_THUMBNAIL, TEXT_TYPE);
         alterColumn(db, DbStructureBlock.BLOCKS, DbStructureBlock.Column.EXTERNAL_VIDEO_ID, LONG_TYPE);
     }
@@ -740,9 +739,9 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
     private void createVideoUrlTable(SQLiteDatabase db, String name) {
         String sql = "CREATE TABLE " + name
                 + " ("
-                + DbStructureVideoUrl.Column.INSTANCE.getVideoId() + WHITESPACE + LONG_TYPE + ", "
-                + DbStructureVideoUrl.Column.INSTANCE.getQuality() + WHITESPACE + TEXT_TYPE + ", "
-                + DbStructureVideoUrl.Column.INSTANCE.getUrl() + WHITESPACE + TEXT_TYPE
+                + DbStructureVideoUrl.Column.videoId + WHITESPACE + LONG_TYPE + ", "
+                + DbStructureVideoUrl.Column.quality + WHITESPACE + TEXT_TYPE + ", "
+                + DbStructureVideoUrl.Column.url + WHITESPACE + TEXT_TYPE
                 + ")";
         db.execSQL(sql);
     }

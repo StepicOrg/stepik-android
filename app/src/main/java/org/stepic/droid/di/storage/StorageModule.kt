@@ -30,6 +30,7 @@ import org.stepic.droid.web.ViewAssignment
 import org.stepik.android.cache.video.dao.VideoEntityDaoImpl
 import org.stepik.android.cache.video.dao.VideoDao
 import org.stepik.android.cache.video.dao.VideoDaoImpl
+import org.stepik.android.cache.video.dao.VideoUrlEntityDaoImpl
 import org.stepik.android.cache.video.model.VideoEntity
 import org.stepik.android.cache.video.model.VideoUrlEntity
 import org.stepik.android.domain.last_step.model.LastStep
@@ -163,7 +164,7 @@ abstract class StorageModule {
 
     @StorageSingleton
     @Binds
-    internal abstract fun bindVideoUrlEntityDao(videoUrlEntityDaoImpl: VideoEntityDaoImpl): IDao<VideoUrlEntity>
+    internal abstract fun bindVideoUrlEntityDao(videoUrlEntityDaoImpl: VideoUrlEntityDaoImpl): IDao<VideoUrlEntity>
 
     @Module
     companion object {

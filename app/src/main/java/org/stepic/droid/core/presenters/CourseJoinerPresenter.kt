@@ -27,34 +27,34 @@ class CourseJoinerPresenter
         private val mainHandler: MainHandler,
         private val joiningPoster: JoiningPoster,
         private val database: DatabaseFacade,
-        private val analytic: Analytic,
-        private val courseEnrollmentInteractor: CourseEnrollmentInteractor
+        private val analytic: Analytic //,
+//        private val courseEnrollmentInteractor: CourseEnrollmentInteractor
 ) : PresenterBase<CourseJoinView>() {
 
     @MainThread
     fun joinCourse(course: Course) {
-        view?.showProgress()
-        view?.setEnabledJoinButton(false)
-        threadPoolExecutor.execute {
-            try {
-                courseEnrollmentInteractor.enrollCourse(course.id).blockingAwait()
-                handleSuccessResponse(course)
-            } catch (exception: Exception) {
-                //no internet
-                if (exception !is IOException) {
-                    analytic.reportError(Analytic.Error.JOIN_FAILED, exception)
-                }
-                val errorCode = (exception as? HttpException)?.code() ?: 0
-                mainHandler.post {
-                    view?.onFailJoin(errorCode)
-                }
-            }
-        }
+//        view?.showProgress()
+//        view?.setEnabledJoinButton(false)
+//        threadPoolExecutor.execute {
+//            try {
+//                courseEnrollmentInteractor.enrollCourse(course.id).blockingAwait()
+//                handleSuccessResponse(course)
+//            } catch (exception: Exception) {
+//                //no internet
+//                if (exception !is IOException) {
+//                    analytic.reportError(Analytic.Error.JOIN_FAILED, exception)
+//                }
+//                val errorCode = (exception as? HttpException)?.code() ?: 0
+//                mainHandler.post {
+//                    view?.onFailJoin(errorCode)
+//                }
+//            }
+//        }
     }
 
     @WorkerThread
     private fun handleSuccessResponse(course: Course) {
-        course.enrollment = course.id.toInt()
+        course.enrollment = course.id
 
         mainHandler.post {
             joiningPoster.joinCourse(course)
