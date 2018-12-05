@@ -210,7 +210,7 @@ class DatabaseFacade
         return isProgressViewed(progressId)
     }
 
-    fun getAllNotificationsOfCourse(courseId: Long): MutableList<Notification?> {
+    fun getAllNotificationsOfCourse(courseId: Long): List<Notification?> {
         return notificationDao.getAll(DbStructureNotification.Column.COURSE_ID, courseId.toString())
     }
 

@@ -409,7 +409,7 @@ class StepikNotificationManagerImpl
                 return
             }
             stepikNotification.course_id = courseId
-            val notificationOfCourseList: MutableList<Notification?> = databaseFacade.getAllNotificationsOfCourse(courseId)
+            val notificationOfCourseList: MutableList<Notification?> = databaseFacade.getAllNotificationsOfCourse(courseId).toMutableList()
             val relatedCourse = getCourse(courseId)
             val isNeedAdd = notificationOfCourseList.none { it?.id == stepikNotification.id }
 

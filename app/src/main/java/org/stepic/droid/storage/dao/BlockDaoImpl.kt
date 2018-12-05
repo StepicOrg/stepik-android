@@ -106,7 +106,7 @@ constructor(
         }
         val externalVideoId = blockWrapper.block.video?.id?.toString() ?: return
 
-        val externalVideoUrls: MutableList<DbVideoUrl?> = videoUrlIDao.getAll(DbStructureVideoUrl.Column.videoId, externalVideoId)
+        val externalVideoUrls: List<DbVideoUrl?> = videoUrlIDao.getAll(DbStructureVideoUrl.Column.videoId, externalVideoId)
 
         blockWrapper.block.video?.urls = externalVideoUrls.toVideoUrls()
     }
