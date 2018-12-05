@@ -4,7 +4,6 @@ import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.LoadCourseView
 import org.stepic.droid.di.course.CourseAndSectionsScope
 import org.stepic.droid.storage.operations.DatabaseFacade
-import org.stepic.droid.storage.operations.Table
 import org.stepic.droid.web.Api
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
@@ -19,12 +18,7 @@ class CourseFinderPresenter
 
     fun findCourseById(courseId: Long) {
         threadPoolExecutor.execute {
-            var course = databaseFacade.getCourseById(courseId, Table.enrolled)
-            if (course == null) {
-                course = databaseFacade.getCourseById(courseId, Table.featured)
-            }
-
-            val finalCourse = course
+            val finalCourse = databaseFacade.getCourseById(courseId)
             if (finalCourse != null) {
                 mainHandler.post {
                     view?.onCourseFound(finalCourse)

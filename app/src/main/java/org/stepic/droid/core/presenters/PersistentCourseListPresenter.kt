@@ -13,7 +13,7 @@ import org.stepic.droid.features.deadlines.repository.DeadlinesRepository
 import org.stepic.droid.model.CourseReviewSummary
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
-import org.stepic.droid.storage.operations.Table
+import org.stepic.droid.storage.structure.DbStructureCourseList
 import org.stepic.droid.util.CourseUtil
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.RWLocks
@@ -67,11 +67,11 @@ class PersistentCourseListPresenter
      * 3) Save to db
      * 4) show from cache (all states)
      */
-    fun downloadData(courseType: Table) {
+    fun downloadData(courseType: DbStructureCourseList.Type) {
         downloadData(courseType, isRefreshing = false)
     }
 
-    private fun downloadData(courseType: Table, isRefreshing: Boolean, isLoadMore: Boolean = false) {
+    private fun downloadData(courseType: DbStructureCourseList.Type, isRefreshing: Boolean, isLoadMore: Boolean = false) {
         if (currentNumberOfTasks >= MAX_CURRENT_NUMBER_OF_TASKS) {
             return
         }
@@ -88,7 +88,7 @@ class PersistentCourseListPresenter
     }
 
     @WorkerThread
-    private fun downloadDataPlain(isRefreshing: Boolean, isLoadMore: Boolean, courseType: Table) {
+    private fun downloadDataPlain(isRefreshing: Boolean, isLoadMore: Boolean, courseType: DbStructureCourseList.Type) {
         if (!isLoadMore) {
             mainHandler.post {
                 view?.showLoading()
@@ -102,7 +102,7 @@ class PersistentCourseListPresenter
 
         while (hasNextPage.get()) {
             val coursesFromInternet: List<Course>? = try {
-                if (courseType == Table.featured) {
+                if (courseType == DbStructureCourseList.Type.FEATURED) {
                     val response = api.getPopularCourses(currentPage.get()).blockingGet()
                     handleMeta(response.meta)
                     response.courses
@@ -140,7 +140,7 @@ class PersistentCourseListPresenter
                 break
             }
 
-            if (courseType == Table.enrolled) {
+            if (courseType == DbStructureCourseList.Type.ENROLLED) {
                 val progressIds = coursesFromInternet.map { it.progress }.toTypedArray()
                 val progresses: List<Progress>? = try {
                     api.getProgresses(progressIds).execute().body()?.progresses
@@ -165,24 +165,22 @@ class PersistentCourseListPresenter
             try {
                 //this lock need for not saving enrolled courses to database after user click logout
                 RWLocks.ClearEnrollmentsLock.writeLock().lock()
-                if (sharedPreferenceHelper.authResponseFromStore != null || courseType == Table.featured) {
+                if (sharedPreferenceHelper.authResponseFromStore != null || courseType == DbStructureCourseList.Type.FEATURED) {
                     if (isRefreshing) {
-                        if (courseType == Table.featured && currentPage.get() == 2) {
+                        if (courseType == DbStructureCourseList.Type.FEATURED && currentPage.get() == 2) {
                             databaseFacade.dropFeaturedCourses()
-                        } else if (courseType == Table.enrolled) {
+                        } else if (courseType == DbStructureCourseList.Type.ENROLLED) {
                             databaseFacade.dropEnrolledCourses()
                         }
                     }
 
-                    coursesFromInternet.forEach {
-                        databaseFacade.addCourse(it, courseType)
-                    }
+                    databaseFacade.addCourseList(courseType, coursesFromInternet)
                 }
             } finally {
                 RWLocks.ClearEnrollmentsLock.writeLock().unlock()
             }
 
-            val allCourses = databaseFacade.getAllCourses(courseType).filterNotNull().toMutableList()
+            val allCourses = databaseFacade.getAllCourses(courseType).toMutableList()
 
             val coursesForShow: List<Course> = handleCoursesWithType(allCourses, courseType)
             if (coursesForShow.size < MIN_COURSES_ON_SCREEN && hasNextPage.get()) {
@@ -210,8 +208,8 @@ class PersistentCourseListPresenter
     }
 
     @WorkerThread
-    private fun showFromDatabase(courseType: Table) {
-        val coursesBeforeLoading = databaseFacade.getAllCourses(courseType).filterNotNull()
+    private fun showFromDatabase(courseType: DbStructureCourseList.Type) {
+        val coursesBeforeLoading = databaseFacade.getAllCourses(courseType)
         val coursesForShow = handleCoursesWithType(coursesBeforeLoading, courseType)
 
         if (coursesForShow.isNotEmpty()) {
@@ -222,8 +220,8 @@ class PersistentCourseListPresenter
         }
     }
 
-    private fun postFirstCourse(courseType: Table, coursesForShow: List<Course>) {
-        if (courseType != Table.enrolled) {
+    private fun postFirstCourse(courseType: DbStructureCourseList.Type, coursesForShow: List<Course>) {
+        if (courseType != DbStructureCourseList.Type.ENROLLED) {
             return
         }
         val course = coursesForShow.find {
@@ -232,15 +230,15 @@ class PersistentCourseListPresenter
         firstCoursePoster.postFirstCourse(course)
     }
 
-    private fun handleCoursesWithType(courses: List<Course>, courseType: Table?): List<Course> =
+    private fun handleCoursesWithType(courses: List<Course>, courseType: DbStructureCourseList.Type?): List<Course> =
             when (courseType) {
-                Table.enrolled -> {
+                DbStructureCourseList.Type.ENROLLED -> {
                     val progressMap = getProgressesFromDb(courses)
                     CourseUtil.applyProgressesToCourses(progressMap, courses)
                     postLastActive(courses.firstOrNull(), progressMap)
                     courses
                 }
-                Table.featured -> {
+                DbStructureCourseList.Type.FEATURED -> {
                     filterApplicator.filterCourses(courses)
                 }
                 null -> courses
@@ -260,7 +258,7 @@ class PersistentCourseListPresenter
     private fun isViewedDuringLast7Days(lastViewed: Long): Boolean =
             DateTimeHelper.isAfterNowUtc(lastViewed * MILLIS_IN_SECOND + SEVEN_DAYS_MILLIS)
 
-    fun refreshData(courseType: Table) {
+    fun refreshData(courseType: DbStructureCourseList.Type) {
         if (currentNumberOfTasks >= MAX_CURRENT_NUMBER_OF_TASKS) {
             return
         }
@@ -278,7 +276,7 @@ class PersistentCourseListPresenter
     }
 
 
-    fun loadMore(courseType: Table) {
+    fun loadMore(courseType: DbStructureCourseList.Type) {
         downloadData(courseType, isRefreshing = false, isLoadMore = true)
     }
 }
