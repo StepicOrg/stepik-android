@@ -102,10 +102,6 @@ abstract class StorageModule {
     @StorageSingleton
     internal abstract fun provideLastStepDao(lastStepDao: LastStepDaoImpl): IDao<LastStep>
 
-    @Binds
-    @StorageSingleton
-    internal abstract fun provideExternalVideoUrlDao(videoUrlDao: VideoUrlDaoImpl): IDao<DbVideoUrl>
-
     @StorageSingleton
     @Binds
     internal abstract fun provideSearchQueryDao(searchQueryDaoImpl: SearchQueryDaoImpl): SearchQueryDao

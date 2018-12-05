@@ -44,7 +44,6 @@ class DatabaseFacade
         private val certificateViewItemDao: IDao<CertificateViewItem>,
         private val videoTimestampDao: IDao<VideoTimestamp>,
         private val lastStepDao: IDao<LastStep>,
-        private val externalVideoUrlDao: IDao<DbVideoUrl>,
         private val blockDao: IDao<BlockPersistentWrapper>,
         private val personalDeadlinesDao: PersonalDeadlinesDao,
         private val deadlinesBannerDao: DeadlinesBannerDao,
@@ -66,7 +65,6 @@ class DatabaseFacade
         lastStepDao.removeAll()
         blockDao.removeAll()
         videoTimestampDao.removeAll()
-        externalVideoUrlDao.removeAll()
         assignmentDao.removeAll()
         codeSubmissionDao.removeAll()
         searchQueryDao.removeAll()
@@ -298,21 +296,7 @@ class DatabaseFacade
             return sectionDao.getAllInRange(DbStructureSections.Column.SECTION_ID, it)
         }
 
-        return ArrayList<Section>()
-    }
-
-    fun insertOrUpdateExternalVideoList(videoId: Long, videoUrlList: List<DbVideoUrl>) {
-        //remove all related with this video and write new
-        externalVideoUrlDao.remove(DbStructureVideoUrl.Column.videoId, videoId.toString())
-        videoUrlList.forEach {
-            externalVideoUrlDao.insertOrUpdate(it)
-        }
-    }
-
-    fun getExternalVideoUrls(videoId: Long): List<DbVideoUrl> {
-        return externalVideoUrlDao
-                .getAll(DbStructureVideoUrl.Column.videoId, videoId.toString())
-                .filterNotNull()
+        return emptyList()
     }
 
     fun getCodeSubmission(attemptId: Long): CodeSubmission? =

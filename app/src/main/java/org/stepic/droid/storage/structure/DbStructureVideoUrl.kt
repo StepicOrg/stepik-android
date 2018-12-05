@@ -1,5 +1,6 @@
 package org.stepic.droid.storage.structure
 
+@Deprecated("Use VideoDao instead")
 object DbStructureVideoUrl {
     const val externalVideosName = "externalVideoUrls"
 
