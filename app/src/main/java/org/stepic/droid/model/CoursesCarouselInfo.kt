@@ -2,13 +2,12 @@ package org.stepic.droid.model
 
 import android.os.Parcel
 import android.os.Parcelable
-import org.stepic.droid.storage.structure.DbStructureCourseList
 import java.util.*
 
 data class CoursesCarouselInfo(
     val colorType: CoursesCarouselColorType,
     val title: String,
-    val courseListType: DbStructureCourseList.Type?, //if null -> see courseIds:LongArray
+    val courseListType: CourseListType?, //if null -> see courseIds:LongArray
     val courseIds: LongArray?,
     val description: String = ""
 ) : Parcelable {
@@ -16,7 +15,7 @@ data class CoursesCarouselInfo(
     private constructor(source: Parcel) : this(
         source.readParcelable<CoursesCarouselColorType>(CoursesCarouselColorType::class.java.classLoader)!!,
         source.readString()!!,
-        DbStructureCourseList.Type.values().getOrNull(source.readInt()),
+        CourseListType.values().getOrNull(source.readInt()),
         source.createLongArray(),
         source.readString()!!
     )

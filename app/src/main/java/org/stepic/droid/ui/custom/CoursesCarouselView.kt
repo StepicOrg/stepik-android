@@ -30,7 +30,6 @@ import org.stepic.droid.core.presenters.contracts.ContinueCourseView
 import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.core.presenters.contracts.DroppingView
 import org.stepic.droid.model.*
-import org.stepic.droid.storage.structure.DbStructureCourseList
 import org.stepic.droid.ui.adapters.CoursesAdapter
 import org.stepic.droid.ui.decorators.LeftSpacesDecoration
 import org.stepic.droid.ui.decorators.RightMarginForLastItems
@@ -207,7 +206,7 @@ constructor(
         coursesViewAll.setTextColor(ColorUtil.getColorArgb(info.colorType.viewAllColorRes, context))
         showDescription(info.description)
 
-        val showMore = info.courseListType == DbStructureCourseList.Type.ENROLLED
+        val showMore = info.courseListType == CourseListType.ENROLLED
         coursesRecycler.adapter = CoursesAdapter(context as FragmentActivity, courses, continueCoursePresenter, droppingPresenter, false, showMore, info.colorType)
     }
 
@@ -254,12 +253,12 @@ constructor(
 
     override fun showEmptyCourses() {
         @StringRes
-        fun getEmptyStringRes(table: DbStructureCourseList.Type?): Int =
-                when (table) {
-                    DbStructureCourseList.Type.ENROLLED -> {
+        fun getEmptyStringRes(courseListType: CourseListType?): Int =
+                when (courseListType) {
+                    CourseListType.ENROLLED -> {
                         R.string.courses_carousel_my_courses_empty
                     }
-                    DbStructureCourseList.Type.FEATURED -> {
+                    CourseListType.FEATURED -> {
                         analytic.reportEvent(Analytic.Error.FEATURED_EMPTY)
                         R.string.empty_courses_popular
                     }
@@ -271,11 +270,11 @@ constructor(
 
 
 
-        if (info.courseListType == DbStructureCourseList.Type.ENROLLED) {
+        if (info.courseListType == CourseListType.ENROLLED) {
             analytic.reportEvent(Analytic.CoursesCarousel.EMPTY_ENROLLED_SHOWN)
         }
         showPlaceholder(getEmptyStringRes(info.courseListType)) {
-            if (info.courseListType == DbStructureCourseList.Type.ENROLLED) {
+            if (info.courseListType == CourseListType.ENROLLED) {
                 analytic.reportEvent(Analytic.CoursesCarousel.EMPTY_ENROLLED_CLICK)
                 screenManager.showCatalog(context)
             }
@@ -337,7 +336,7 @@ constructor(
             return
         }
 
-        if (info.courseListType == DbStructureCourseList.Type.ENROLLED) {
+        if (info.courseListType == CourseListType.ENROLLED) {
             courses.removeAt(index)
             coursesRecycler.adapter?.notifyItemRemoved(index)
             if (courses.size == ROW_COUNT) {
@@ -394,7 +393,7 @@ constructor(
         if (courseIndex >= 0) {
             courses[courseIndex].enrollment = joinedCourse.enrollment
             coursesRecycler.adapter?.notifyItemChanged(courseIndex)
-        } else if (info.courseListType == DbStructureCourseList.Type.ENROLLED) {
+        } else if (info.courseListType == CourseListType.ENROLLED) {
             //insert at 0 index is more complex than just add, but order will be right
             if (courses.isEmpty()) {
                 showCourses(mutableListOf(joinedCourse))
@@ -422,7 +421,7 @@ constructor(
     }
 
     private fun updateCourseCount() {
-        if (info.courseListType == DbStructureCourseList.Type.FEATURED || courses.isEmpty()) {
+        if (info.courseListType == CourseListType.FEATURED || courses.isEmpty()) {
             coursesCarouselCount.visibility = View.GONE
         } else {
             coursesCarouselCount.visibility = View.VISIBLE
@@ -487,8 +486,8 @@ constructor(
     }
 
     override fun onFiltersChanged(filters: EnumSet<StepikFilter>) {
-        if (info.courseListType == DbStructureCourseList.Type.FEATURED) {
-            courseListPresenter.refreshData(DbStructureCourseList.Type.FEATURED)
+        if (info.courseListType == CourseListType.FEATURED) {
+            courseListPresenter.refreshData(CourseListType.FEATURED)
         }
     }
 

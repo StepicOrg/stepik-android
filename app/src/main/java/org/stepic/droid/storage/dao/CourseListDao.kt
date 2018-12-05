@@ -1,12 +1,12 @@
 package org.stepic.droid.storage.dao
 
-import org.stepic.droid.storage.structure.DbStructureCourseList
+import org.stepic.droid.model.CourseListType
 import org.stepik.android.model.Course
 
 interface CourseListDao {
-    fun addCourseList(courseListType: DbStructureCourseList.Type, courses: List<Course>)
-    fun getCourseList(courseListType: DbStructureCourseList.Type): List<Course>
-    fun removeCourseList(courseListType: DbStructureCourseList.Type)
-    fun removeCourseFromList(courseListType: DbStructureCourseList.Type, courseId: Long)
+    fun addCourseList(courseListType: CourseListType, courses: List<Course>)
+    fun getCourseList(courseListType: CourseListType): List<Course>
+    fun removeCourseList(courseListType: CourseListType)
+    fun removeCourseFromList(courseListType: CourseListType, courseId: Long)
     fun removeAll()
 }

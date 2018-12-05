@@ -1,6 +1,7 @@
 package org.stepic.droid.storage.dao
 
 import android.content.ContentValues
+import org.stepic.droid.model.CourseListType
 import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepic.droid.storage.operations.ResultHandler
 import org.stepic.droid.storage.structure.DbStructureCourse
@@ -15,7 +16,7 @@ constructor(
     private val databaseOperations: DatabaseOperations,
     private val courseDao: IDao<Course>
 ) : CourseListDao {
-    override fun addCourseList(courseListType: DbStructureCourseList.Type, courses: List<Course>) {
+    override fun addCourseList(courseListType: CourseListType, courses: List<Course>) {
         courseDao.insertOrReplaceAll(courses)
 
         val contentValues =
@@ -28,7 +29,7 @@ constructor(
         databaseOperations.executeReplaceAll(DbStructureCourseList.TABLE_NAME, contentValues)
     }
 
-    override fun getCourseList(courseListType: DbStructureCourseList.Type): List<Course> {
+    override fun getCourseList(courseListType: CourseListType): List<Course> {
         val ids =
             databaseOperations.executeQuery<String>(
                 "SELECT ${DbStructureCourseList.Columns.COURSE_ID} " +
@@ -52,12 +53,12 @@ constructor(
         return courseDao.getAllInRange(DbStructureCourse.Columns.ID, ids)
     }
 
-    override fun removeCourseList(courseListType: DbStructureCourseList.Type) {
+    override fun removeCourseList(courseListType: CourseListType) {
         databaseOperations.executeDelete(DbStructureCourseList.TABLE_NAME,
             DbStructureCourseList.Columns.TYPE + " = ?", arrayOf(courseListType.name))
     }
 
-    override fun removeCourseFromList(courseListType: DbStructureCourseList.Type, courseId: Long) {
+    override fun removeCourseFromList(courseListType: CourseListType, courseId: Long) {
         databaseOperations.executeDelete(DbStructureCourseList.TABLE_NAME,
             "${DbStructureCourseList.Columns.TYPE} = ? AND ${DbStructureCourseList.Columns.COURSE_ID} = ", arrayOf(courseListType.name, courseId.toString()))
     }

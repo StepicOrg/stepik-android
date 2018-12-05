@@ -28,7 +28,7 @@ import org.stepic.droid.core.presenters.DroppingPresenter;
 import org.stepic.droid.core.presenters.contracts.ContinueCourseView;
 import org.stepic.droid.core.presenters.contracts.CoursesView;
 import org.stepic.droid.core.presenters.contracts.DroppingView;
-import org.stepic.droid.storage.structure.DbStructureCourseList;
+import org.stepic.droid.model.CourseListType;
 import org.stepik.android.model.Course;
 import org.stepic.droid.model.CoursesCarouselColorType;
 import org.stepik.android.model.Section;
@@ -138,7 +138,7 @@ public abstract class CourseListFragmentBase extends FragmentBase
         swipeRefreshLayout.setOnRefreshListener(this);
 
         if (courses == null) courses = new ArrayList<>();
-        boolean showMore = getCourseType() == DbStructureCourseList.Type.ENROLLED;
+        boolean showMore = getCourseType() == CourseListType.ENROLLED;
         coursesAdapter = new CoursesAdapter(getActivity(), courses, continueCoursePresenter, droppingPresenter, true, showMore, CoursesCarouselColorType.Light);
         listOfCoursesView.setAdapter(coursesAdapter);
         layoutManager = new WrapContentLinearLayoutManager(getContext());
@@ -213,7 +213,7 @@ public abstract class CourseListFragmentBase extends FragmentBase
     }
 
     @Nullable
-    protected abstract DbStructureCourseList.Type getCourseType();
+    protected abstract CourseListType getCourseType();
 
     public final void updateEnrollment(Course courseForUpdate, long enrollment) {
         boolean inList = false;
@@ -228,7 +228,7 @@ public abstract class CourseListFragmentBase extends FragmentBase
                 break;
             }
         }
-        if (getCourseType() == DbStructureCourseList.Type.ENROLLED && !inList) {
+        if (getCourseType() == CourseListType.ENROLLED && !inList) {
             courses.add(courseForUpdate);
             coursesAdapter.notifyDataSetChanged();
         } else if (inList) {

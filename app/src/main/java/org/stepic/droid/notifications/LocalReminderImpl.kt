@@ -6,11 +6,11 @@ import android.content.Context
 import android.content.Intent
 import android.support.annotation.MainThread
 import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.model.CourseListType
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.services.NewUserAlarmService
 import org.stepic.droid.services.StreakAlarmService
 import org.stepic.droid.storage.operations.DatabaseFacade
-import org.stepic.droid.storage.structure.DbStructureCourseList
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.scheduleCompat
@@ -45,7 +45,7 @@ class LocalReminderImpl
                     }
                     if (sharedPreferenceHelper.authResponseFromStore == null
                             || sharedPreferenceHelper.isStreakNotificationEnabled
-                            || databaseFacade.getAllCourses(DbStructureCourseList.Type.ENROLLED).isNotEmpty()
+                            || databaseFacade.getAllCourses(CourseListType.ENROLLED).isNotEmpty()
                             || sharedPreferenceHelper.anyStepIsSolved()) {
                         return@execute
                     }

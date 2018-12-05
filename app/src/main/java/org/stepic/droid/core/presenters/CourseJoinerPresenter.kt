@@ -7,10 +7,10 @@ import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.joining.contract.JoiningPoster
 import org.stepic.droid.core.presenters.contracts.CourseJoinView
 import org.stepic.droid.di.course.CourseAndSectionsScope
+import org.stepic.droid.model.CourseListType
 import org.stepik.android.model.Course
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
-import org.stepic.droid.storage.structure.DbStructureCourseList
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.domain.course.interactor.CourseEnrollmentInteractor
@@ -62,7 +62,7 @@ class CourseJoinerPresenter
         }
 
         //update in database
-        database.addCourseList(DbStructureCourseList.Type.ENROLLED, listOf(course))
+        database.addCourseList(CourseListType.ENROLLED, listOf(course))
         val enrollNotificationClickMillis: Long? = sharedPreferenceHelper.lastClickEnrollNotification
         enrollNotificationClickMillis?.let {
             val wasClickedPlus30Min = it + 30 * AppConstants.MILLIS_IN_1MINUTE

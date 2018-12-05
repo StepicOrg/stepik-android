@@ -3,10 +3,6 @@ package org.stepic.droid.storage.structure
 import android.database.sqlite.SQLiteDatabase
 
 object DbStructureCourseList {
-    enum class Type {
-        FEATURED, ENROLLED
-    }
-
     const val TABLE_NAME = "course_list"
 
     object Columns {

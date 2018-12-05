@@ -6,9 +6,9 @@ import org.stepic.droid.core.dropping.contract.DroppingPoster
 import org.stepic.droid.core.presenters.contracts.DroppingView
 import org.stepic.droid.di.course_list.CourseListScope
 import org.stepic.droid.features.deadlines.repository.DeadlinesRepository
+import org.stepic.droid.model.CourseListType
 import org.stepik.android.model.Course
 import org.stepic.droid.storage.operations.DatabaseFacade
-import org.stepic.droid.storage.structure.DbStructureCourseList
 import org.stepic.droid.web.Api
 import retrofit2.Call
 import java.util.concurrent.ThreadPoolExecutor
@@ -52,7 +52,7 @@ constructor(
         val dropResponse = dropCall.execute()
         if (dropResponse.isSuccessful) {
             databaseFacade.addCourse(course)
-            databaseFacade.deleteCourseFromList(DbStructureCourseList.Type.ENROLLED, course.id)
+            databaseFacade.deleteCourseFromList(CourseListType.ENROLLED, course.id)
             mainHandler.post {
                 droppingPoster.successDropCourse(course)
             }

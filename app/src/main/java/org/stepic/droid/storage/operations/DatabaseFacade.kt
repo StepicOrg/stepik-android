@@ -125,15 +125,15 @@ class DatabaseFacade
 
     fun getUnitById(unitId: Long) = unitDao.get(DbStructureUnit.Column.UNIT_ID, unitId.toString())
 
-    fun getAllCourses(courseListType: DbStructureCourseList.Type) =
+    fun getAllCourses(courseListType: CourseListType) =
         courseListDao.getCourseList(courseListType)
 
     fun addCourse(course: Course) = courseDao.insertOrReplace(course)
 
-    fun addCourseList(courseListType: DbStructureCourseList.Type, courses: List<Course>) =
+    fun addCourseList(courseListType: CourseListType, courses: List<Course>) =
         courseListDao.addCourseList(courseListType, courses)
 
-    fun deleteCourseFromList(courseListType: DbStructureCourseList.Type, courseId: Long) =
+    fun deleteCourseFromList(courseListType: CourseListType, courseId: Long) =
         courseListDao.removeCourseFromList(courseListType, courseId)
 
     fun addSection(section: Section) = sectionDao.insertOrUpdate(section)
@@ -214,11 +214,11 @@ class DatabaseFacade
     }
 
     fun dropEnrolledCourses() {
-        courseListDao.removeCourseList(DbStructureCourseList.Type.ENROLLED)
+        courseListDao.removeCourseList(CourseListType.ENROLLED)
     }
 
     fun dropFeaturedCourses() {
-        courseListDao.removeCourseList(DbStructureCourseList.Type.FEATURED)
+        courseListDao.removeCourseList(CourseListType.FEATURED)
     }
 
     fun getLessonsByIds(lessonIds: LongArray): List<Lesson> {

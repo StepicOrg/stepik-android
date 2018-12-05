@@ -4,8 +4,8 @@ import android.os.Bundle
 import android.view.View
 import org.stepic.droid.base.App
 import org.stepic.droid.core.presenters.CourseCollectionPresenter
+import org.stepic.droid.model.CourseListType
 import org.stepic.droid.model.CoursesDescriptionContainer
-import org.stepic.droid.storage.structure.DbStructureCourseList
 import org.stepic.droid.ui.util.initCenteredToolbar
 import javax.inject.Inject
 
@@ -59,7 +59,7 @@ class CourseCollectionFragment : CourseListFragmentBase() {
         courseCollectionPresenter.onShowCollections(arguments?.getLongArray(COURSE_IDS) ?: longArrayOf())
     }
 
-    override fun getCourseType(): DbStructureCourseList.Type? = null
+    override fun getCourseType(): CourseListType? = null
 
     override fun onNeedDownloadNextPage() {
         //no op

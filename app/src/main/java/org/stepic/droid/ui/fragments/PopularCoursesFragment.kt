@@ -5,7 +5,7 @@ import android.view.View
 import org.jetbrains.annotations.NotNull
 import org.stepic.droid.R
 import org.stepic.droid.base.CoursesDatabaseFragmentBase
-import org.stepic.droid.storage.structure.DbStructureCourseList
+import org.stepic.droid.model.CourseListType
 import org.stepic.droid.ui.util.initCenteredToolbar
 
 class PopularCoursesFragment : CoursesDatabaseFragmentBase() {
@@ -19,6 +19,6 @@ class PopularCoursesFragment : CoursesDatabaseFragmentBase() {
     }
 
     @NotNull
-    override fun getCourseType(): DbStructureCourseList.Type =
-        DbStructureCourseList.Type.ENROLLED
+    override fun getCourseType(): CourseListType =
+        CourseListType.ENROLLED
 }
