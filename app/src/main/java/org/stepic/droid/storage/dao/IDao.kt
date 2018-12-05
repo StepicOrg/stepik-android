@@ -25,6 +25,7 @@ interface IDao<T> {
     fun update(whereColumn: String, whereValue: String, contentValues: ContentValues)
 
     fun getAllInRange(whereColumn: String, commaSeparatedIds: String): List<T>
+    fun getAllWithQuery(query: String, whereArgs: Array<String>?): List<T>
 
     fun remove(whereColumn: String, whereValue: String)
     fun remove(whereArgs: Map<String, String>)

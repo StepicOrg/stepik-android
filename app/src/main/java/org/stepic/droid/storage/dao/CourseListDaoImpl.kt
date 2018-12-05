@@ -3,10 +3,8 @@ package org.stepic.droid.storage.dao
 import android.content.ContentValues
 import org.stepic.droid.model.CourseListType
 import org.stepic.droid.storage.operations.DatabaseOperations
-import org.stepic.droid.storage.operations.ResultHandler
 import org.stepic.droid.storage.structure.DbStructureCourse
 import org.stepic.droid.storage.structure.DbStructureCourseList
-import org.stepic.droid.util.getLong
 import org.stepik.android.model.Course
 import javax.inject.Inject
 
@@ -29,30 +27,17 @@ constructor(
         databaseOperations.executeReplaceAll(DbStructureCourseList.TABLE_NAME, contentValues)
     }
 
-    override fun getCourseList(courseListType: CourseListType): List<Course> {
-        val ids =
-            databaseOperations.executeQuery<String>(
-                "SELECT ${DbStructureCourseList.Columns.COURSE_ID} " +
-                        "FROM ${DbStructureCourseList.TABLE_NAME} " +
-                        "WHERE ${DbStructureCourseList.Columns.TYPE} = ?",
-                arrayOf(courseListType.name) ,
-                ResultHandler { cursor ->
-                    if (cursor.count <= 0) {
-                        ""
-                    } else {
-                        val objects = ArrayList<Long>(cursor.count)
-                        cursor.moveToFirst()
-                        while (!cursor.isAfterLast) {
-                            objects.add(cursor.getLong(DbStructureCourseList.Columns.COURSE_ID))
-                            cursor.moveToNext()
-                        }
-                        objects.joinToString(",")
-                    }
-                }
-            )
-
-        return courseDao.getAllInRange(DbStructureCourse.Columns.ID, ids)
-    }
+    override fun getCourseList(courseListType: CourseListType): List<Course> =
+        courseDao.getAllWithQuery(
+            """
+                SELECT *
+                FROM ${DbStructureCourseList.TABLE_NAME}
+                JOIN ${DbStructureCourse.TABLE_NAME} ON ${DbStructureCourse.TABLE_NAME}.${DbStructureCourse.Columns.ID} = ${DbStructureCourseList.TABLE_NAME}.${DbStructureCourseList.Columns.COURSE_ID}
+                WHERE ${DbStructureCourseList.Columns.TYPE} = ?
+                ORDER BY ${DbStructureCourseList.TABLE_NAME}.ROWID
+            """.trimIndent(),
+            arrayOf(courseListType.name)
+        )
 
     override fun removeCourseList(courseListType: CourseListType) {
         databaseOperations.executeDelete(DbStructureCourseList.TABLE_NAME,

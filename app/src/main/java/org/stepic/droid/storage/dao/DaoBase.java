@@ -126,7 +126,9 @@ public abstract class DaoBase<T> implements IDao<T> {
         return getAllWithQuery(query, null);
     }
 
-    protected List<T> getAllWithQuery(String query, @Nullable String[] whereArgs) {
+    @NotNull
+    @Override
+    public List<T> getAllWithQuery(@NotNull String query, @Nullable String[] whereArgs) {
         List<T> objects = databaseOperations.executeQuery(query, whereArgs, new ResultHandler<List<T>>() {
             @Override
             public List<T> handle(Cursor cursor) throws SQLException {
