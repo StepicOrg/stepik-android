@@ -1,6 +1,8 @@
 package org.stepic.droid.storage.migration
 
 import android.database.sqlite.SQLiteDatabase
+import org.stepic.droid.storage.structure.DbStructureCourse
+import org.stepic.droid.storage.structure.DbStructureCourseList
 import org.stepic.droid.storage.structure.DbStructureLastStep
 
 object MigrationFrom36To37 : Migration {
@@ -15,6 +17,7 @@ object MigrationFrom36To37 : Migration {
     }
 
     private fun migrateCourses(db: SQLiteDatabase) {
-
+        DbStructureCourse.createTable(db)
+        DbStructureCourseList.createTable(db)
     }
 }

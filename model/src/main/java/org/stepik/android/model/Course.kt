@@ -48,10 +48,10 @@ class Course(
         val certificateCoverOrg: String? = null,
 
         @SerializedName("total_units")
-        val totalUnits: Int = 0,
+        val totalUnits: Long = 0,
 
         @SerializedName("enrollment")
-        var enrollment: Int = 0,
+        var enrollment: Long = 0,
         @SerializedName("progress")
         override val progress: String? = null,
         @SerializedName("owner")
@@ -121,8 +121,8 @@ class Course(
         parcel.writeString(targetAudience)
         parcel.writeString(certificateFooter)
         parcel.writeString(certificateCoverOrg)
-        parcel.writeInt(totalUnits)
-        parcel.writeInt(enrollment)
+        parcel.writeLong(totalUnits)
+        parcel.writeLong(enrollment)
         parcel.writeString(progress)
         parcel.writeLong(owner)
         parcel.writeBoolean(isContest)
@@ -170,8 +170,8 @@ class Course(
                 parcel.readString(),
                 parcel.readString(),
                 parcel.readString(),
-                parcel.readInt(),
-                parcel.readInt(),
+                parcel.readLong(),
+                parcel.readLong(),
                 parcel.readString(),
                 parcel.readLong(),
                 parcel.readBoolean(),
