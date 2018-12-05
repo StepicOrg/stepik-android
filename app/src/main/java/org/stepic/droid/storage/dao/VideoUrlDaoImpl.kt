@@ -33,9 +33,10 @@ class VideoUrlDaoImpl @Inject constructor(databaseOperations: DatabaseOperations
         val quality = cursor.getString(indexQuality)
 
         return DbVideoUrl(
-                videoId = videoId,
-                url = url,
-                quality = quality)
+            videoId = videoId,
+            url = url,
+            quality = quality
+        )
     }
 
 }
