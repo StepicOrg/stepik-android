@@ -30,7 +30,7 @@ import org.stepic.droid.core.presenters.contracts.ContinueCourseView
 import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.core.presenters.contracts.DroppingView
 import org.stepic.droid.model.*
-import org.stepic.droid.storage.operations.Table
+import org.stepic.droid.storage.structure.DbStructureCourseList
 import org.stepic.droid.ui.adapters.CoursesAdapter
 import org.stepic.droid.ui.decorators.LeftSpacesDecoration
 import org.stepic.droid.ui.decorators.RightMarginForLastItems
@@ -207,7 +207,7 @@ constructor(
         coursesViewAll.setTextColor(ColorUtil.getColorArgb(info.colorType.viewAllColorRes, context))
         showDescription(info.description)
 
-        val showMore = info.table == Table.enrolled
+        val showMore = info.courseListType == DbStructureCourseList.Type.ENROLLED
         coursesRecycler.adapter = CoursesAdapter(context as FragmentActivity, courses, continueCoursePresenter, droppingPresenter, false, showMore, info.colorType)
     }
 
@@ -254,12 +254,12 @@ constructor(
 
     override fun showEmptyCourses() {
         @StringRes
-        fun getEmptyStringRes(table: Table?): Int =
+        fun getEmptyStringRes(table: DbStructureCourseList.Type?): Int =
                 when (table) {
-                    Table.enrolled -> {
+                    DbStructureCourseList.Type.ENROLLED -> {
                         R.string.courses_carousel_my_courses_empty
                     }
-                    Table.featured -> {
+                    DbStructureCourseList.Type.FEATURED -> {
                         analytic.reportEvent(Analytic.Error.FEATURED_EMPTY)
                         R.string.empty_courses_popular
                     }
@@ -271,11 +271,11 @@ constructor(
 
 
 
-        if (info.table == Table.enrolled) {
+        if (info.courseListType == DbStructureCourseList.Type.ENROLLED) {
             analytic.reportEvent(Analytic.CoursesCarousel.EMPTY_ENROLLED_SHOWN)
         }
-        showPlaceholder(getEmptyStringRes(info.table)) {
-            if (info.table == Table.enrolled) {
+        showPlaceholder(getEmptyStringRes(info.courseListType)) {
+            if (info.courseListType == DbStructureCourseList.Type.ENROLLED) {
                 analytic.reportEvent(Analytic.CoursesCarousel.EMPTY_ENROLLED_CLICK)
                 screenManager.showCatalog(context)
             }
@@ -337,7 +337,7 @@ constructor(
             return
         }
 
-        if (info.table == Table.enrolled) {
+        if (info.courseListType == DbStructureCourseList.Type.ENROLLED) {
             courses.removeAt(index)
             coursesRecycler.adapter?.notifyItemRemoved(index)
             if (courses.size == ROW_COUNT) {
@@ -365,19 +365,19 @@ constructor(
     private fun getCarouselTitle(info: CoursesCarouselInfo): String = info.title
 
     private fun restoreState() {
-        if (info.table != null) {
+        if (info.courseListType != null) {
             courseListPresenter.restoreState()
-        } else if (info.table == null) {
+        } else if (info.courseListType == null) {
             // no-op
         }
     }
 
     private fun downloadData() {
-        info.table?.let {
+        info.courseListType?.let {
             courseListPresenter.refreshData(it)
         }
 
-        if (info.table == null) {
+        if (info.courseListType == null) {
             info.courseIds?.let {
                 courseCollectionPresenter.onShowCollections(it)
             }
@@ -394,7 +394,7 @@ constructor(
         if (courseIndex >= 0) {
             courses[courseIndex].enrollment = joinedCourse.enrollment
             coursesRecycler.adapter?.notifyItemChanged(courseIndex)
-        } else if (info.table == Table.enrolled) {
+        } else if (info.courseListType == DbStructureCourseList.Type.ENROLLED) {
             //insert at 0 index is more complex than just add, but order will be right
             if (courses.isEmpty()) {
                 showCourses(mutableListOf(joinedCourse))
@@ -422,7 +422,7 @@ constructor(
     }
 
     private fun updateCourseCount() {
-        if (info.table == Table.featured || courses.isEmpty()) {
+        if (info.courseListType == DbStructureCourseList.Type.FEATURED || courses.isEmpty()) {
             coursesCarouselCount.visibility = View.GONE
         } else {
             coursesCarouselCount.visibility = View.VISIBLE
@@ -457,7 +457,7 @@ constructor(
         constructor(superState: Parcelable) : super(superState)
 
         private constructor(input: Parcel) : super(input) {
-            this.info = input.readParcelable<CoursesCarouselInfo>(CoursesCarouselInfo::class.java.classLoader)
+            this.info = input.readParcelable(CoursesCarouselInfo::class.java.classLoader)
         }
 
         override fun writeToParcel(out: Parcel, flags: Int) {
@@ -487,8 +487,8 @@ constructor(
     }
 
     override fun onFiltersChanged(filters: EnumSet<StepikFilter>) {
-        if (info.table == Table.featured) {
-            courseListPresenter.refreshData(Table.featured)
+        if (info.courseListType == DbStructureCourseList.Type.FEATURED) {
+            courseListPresenter.refreshData(DbStructureCourseList.Type.FEATURED)
         }
     }
 

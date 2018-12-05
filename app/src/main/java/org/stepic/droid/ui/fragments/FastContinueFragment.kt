@@ -23,9 +23,9 @@ import org.stepic.droid.core.presenters.FastContinuePresenter
 import org.stepic.droid.core.presenters.PersistentCourseListPresenter
 import org.stepic.droid.core.presenters.contracts.ContinueCourseView
 import org.stepic.droid.core.presenters.contracts.FastContinueView
+import org.stepic.droid.storage.structure.DbStructureCourseList
 import org.stepik.android.model.Course
 import org.stepik.android.model.Section
-import org.stepic.droid.storage.operations.Table
 import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
@@ -201,7 +201,7 @@ class FastContinueFragment : FragmentBase(),
     //Client<DroppingListener>
     override fun onSuccessDropCourse(course: Course) {
         //reload the last course
-        courseListPresenter.refreshData(Table.enrolled)
+        courseListPresenter.refreshData(DbStructureCourseList.Type.ENROLLED)
     }
 
     override fun onFailDropCourse(course: Course) {

@@ -34,7 +34,6 @@ import org.stepic.droid.core.presenters.StepsTrackingPresenter;
 import org.stepic.droid.core.presenters.contracts.LessonTrackingView;
 import org.stepic.droid.core.presenters.contracts.LessonView;
 import org.stepic.droid.core.updatingstep.contract.UpdatingStepListener;
-import org.stepic.droid.storage.operations.Table;
 import org.stepik.android.domain.last_step.model.LastStep;
 import org.stepik.android.model.Course;
 import org.stepik.android.model.Lesson;
@@ -327,7 +326,7 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
                         if (unit != null && unit.getSection() > 0) {
                             Section section = getDatabaseFacade().getSectionById(unit.getSection());
                             if (section != null && section.getCourse() > 0) {
-                                Course course = getDatabaseFacade().getCourseById(section.getCourse(), Table.enrolled);
+                                Course course = getDatabaseFacade().getCourseById(section.getCourse());
                                 if (course != null && course.getLastStepId() != null) {
                                     LastStep lastStep = new LastStep(course.getLastStepId(), unit.getId(), unit.getLesson(), stepId);
                                     getDatabaseFacade().updateLastStep(lastStep);

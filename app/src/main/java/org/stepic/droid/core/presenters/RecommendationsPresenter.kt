@@ -26,7 +26,6 @@ import org.stepic.droid.di.qualifiers.CourseId
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
-import org.stepic.droid.storage.operations.Table
 import org.stepic.droid.util.getStepType
 import org.stepic.droid.web.Api
 import org.stepic.droid.web.ViewAssignment
@@ -245,7 +244,7 @@ constructor(
                     val stepId = card.step?.id ?: 0
                     unit?.assignments?.firstOrNull()?.let { assignmentId ->
                         screenManager.pushToViewedQueue(ViewAssignment(assignmentId, stepId))
-                        databaseFacade.getCourseById(courseId, Table.enrolled)?.lastStepId?.let {
+                        databaseFacade.getCourseById(courseId)?.lastStepId?.let {
                             databaseFacade.updateLastStep(LastStep(it, unit.id, unit.lesson, stepId))
                         }
                     }

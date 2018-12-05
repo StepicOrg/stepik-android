@@ -27,7 +27,7 @@ import org.stepic.droid.notifications.model.StepikNotificationChannel
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.storage.operations.DatabaseFacade
-import org.stepic.droid.storage.operations.Table
+import org.stepic.droid.storage.structure.DbStructureCourseList
 import org.stepic.droid.ui.activities.*
 import org.stepic.droid.util.*
 import org.stepic.droid.util.resolvers.text.TextResolver
@@ -60,7 +60,7 @@ class StepikNotificationManagerImpl
     override fun showLocalNotificationRemind() {
         Timber.d("Learn everyday, free courses")
         if (sharedPreferenceHelper.authResponseFromStore == null ||
-                databaseFacade.getAllCourses(Table.enrolled).isNotEmpty() ||
+                databaseFacade.getAllCourses(DbStructureCourseList.Type.ENROLLED).isNotEmpty() ||
                 sharedPreferenceHelper.anyStepIsSolved() || sharedPreferenceHelper.isStreakNotificationEnabled) {
             analytic.reportEvent(Analytic.Notification.REMIND_HIDDEN)
             return
@@ -585,7 +585,7 @@ class StepikNotificationManagerImpl
 
     private fun getCourse(courseId: Long?): Course? {
         if (courseId == null) return null
-        var course: Course? = databaseFacade.getCourseById(courseId, Table.enrolled)
+        var course: Course? = databaseFacade.getCourseById(courseId)
         if (course == null) {
             course = api.getCourse(courseId).execute()?.body()?.courses?.firstOrNull()
         }

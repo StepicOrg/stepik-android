@@ -4,14 +4,13 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.support.annotation.MainThread
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.services.NewUserAlarmService
 import org.stepic.droid.services.StreakAlarmService
 import org.stepic.droid.storage.operations.DatabaseFacade
-import org.stepic.droid.storage.operations.Table
+import org.stepic.droid.storage.structure.DbStructureCourseList
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.scheduleCompat
@@ -46,7 +45,7 @@ class LocalReminderImpl
                     }
                     if (sharedPreferenceHelper.authResponseFromStore == null
                             || sharedPreferenceHelper.isStreakNotificationEnabled
-                            || databaseFacade.getAllCourses(Table.enrolled).isNotEmpty()
+                            || databaseFacade.getAllCourses(DbStructureCourseList.Type.ENROLLED).isNotEmpty()
                             || sharedPreferenceHelper.anyStepIsSolved()) {
                         return@execute
                     }

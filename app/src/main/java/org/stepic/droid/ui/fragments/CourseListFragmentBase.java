@@ -28,10 +28,10 @@ import org.stepic.droid.core.presenters.DroppingPresenter;
 import org.stepic.droid.core.presenters.contracts.ContinueCourseView;
 import org.stepic.droid.core.presenters.contracts.CoursesView;
 import org.stepic.droid.core.presenters.contracts.DroppingView;
+import org.stepic.droid.storage.structure.DbStructureCourseList;
 import org.stepik.android.model.Course;
 import org.stepic.droid.model.CoursesCarouselColorType;
 import org.stepik.android.model.Section;
-import org.stepic.droid.storage.operations.Table;
 import org.stepic.droid.ui.activities.contracts.RootScreen;
 import org.stepic.droid.ui.adapters.CoursesAdapter;
 import org.stepic.droid.ui.custom.StepikSwipeRefreshLayout;
@@ -138,7 +138,7 @@ public abstract class CourseListFragmentBase extends FragmentBase
         swipeRefreshLayout.setOnRefreshListener(this);
 
         if (courses == null) courses = new ArrayList<>();
-        boolean showMore = getCourseType() == Table.enrolled;
+        boolean showMore = getCourseType() == DbStructureCourseList.Type.ENROLLED;
         coursesAdapter = new CoursesAdapter(getActivity(), courses, continueCoursePresenter, droppingPresenter, true, showMore, CoursesCarouselColorType.Light);
         listOfCoursesView.setAdapter(coursesAdapter);
         layoutManager = new WrapContentLinearLayoutManager(getContext());
@@ -213,7 +213,7 @@ public abstract class CourseListFragmentBase extends FragmentBase
     }
 
     @Nullable
-    protected abstract Table getCourseType();
+    protected abstract DbStructureCourseList.Type getCourseType();
 
     public final void updateEnrollment(Course courseForUpdate, long enrollment) {
         boolean inList = false;
@@ -228,7 +228,7 @@ public abstract class CourseListFragmentBase extends FragmentBase
                 break;
             }
         }
-        if (getCourseType() == Table.enrolled && !inList) {
+        if (getCourseType() == DbStructureCourseList.Type.ENROLLED && !inList) {
             courses.add(courseForUpdate);
             coursesAdapter.notifyDataSetChanged();
         } else if (inList) {

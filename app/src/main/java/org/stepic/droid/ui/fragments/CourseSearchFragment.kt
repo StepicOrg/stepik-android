@@ -10,7 +10,7 @@ import android.view.View
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.presenters.SearchCoursesPresenter
-import org.stepic.droid.storage.operations.Table
+import org.stepic.droid.storage.structure.DbStructureCourseList
 import org.stepic.droid.ui.custom.AutoCompleteSearchView
 import org.stepic.droid.ui.util.initCenteredToolbar
 import javax.inject.Inject
@@ -68,7 +68,7 @@ class CourseSearchFragment: CourseListFragmentBase() {
         super.onDestroyView()
     }
 
-    override fun getCourseType(): Table? = null
+    override fun getCourseType(): DbStructureCourseList.Type? = null
 
     public override fun showEmptyScreen(isShown: Boolean) {
         if (isShown) {

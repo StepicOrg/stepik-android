@@ -5,7 +5,7 @@ import android.view.View
 import org.stepic.droid.base.App
 import org.stepic.droid.core.presenters.TagListPresenter
 import org.stepic.droid.core.presenters.contracts.CoursesView
-import org.stepic.droid.storage.operations.Table
+import org.stepic.droid.storage.structure.DbStructureCourseList
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.argument
 import org.stepik.android.model.Tag
@@ -54,7 +54,7 @@ class TagFragment : CourseListFragmentBase(), CoursesView {
         tagListPresenter.refreshData()
     }
 
-    override fun getCourseType(): Table? = null
+    override fun getCourseType(): DbStructureCourseList.Type? = null
 
     override fun onNeedDownloadNextPage() {
         tagListPresenter.downloadData()
