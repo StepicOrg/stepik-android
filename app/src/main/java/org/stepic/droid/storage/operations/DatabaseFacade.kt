@@ -2,8 +2,6 @@ package org.stepic.droid.storage.operations
 
 import android.content.ContentValues
 import org.stepic.droid.adaptive.model.LocalExpItem
-import org.stepic.droid.di.qualifiers.EnrolledCoursesDaoQualifier
-import org.stepic.droid.di.qualifiers.FeaturedCoursesDaoQualifier
 import org.stepic.droid.di.storage.StorageSingleton
 import org.stepic.droid.features.deadlines.storage.dao.DeadlinesBannerDao
 import org.stepic.droid.model.*
@@ -13,6 +11,7 @@ import org.stepic.droid.storage.dao.AdaptiveExpDao
 import org.stepic.droid.storage.dao.IDao
 import org.stepic.droid.features.deadlines.storage.dao.PersonalDeadlinesDao
 import org.stepic.droid.features.stories.model.ViewedStoryTemplate
+import org.stepic.droid.storage.dao.CourseListDao
 import org.stepic.droid.storage.dao.SearchQueryDao
 import org.stepic.droid.storage.structure.*
 import org.stepic.droid.util.AppConstants
@@ -38,10 +37,8 @@ class DatabaseFacade
         private val lessonDao: IDao<Lesson>,
         private val viewAssignmentDao: IDao<ViewAssignment>,
         private val stepDao: IDao<Step>,
-        @EnrolledCoursesDaoQualifier
-        private val coursesEnrolledDao: IDao<Course>,
-        @FeaturedCoursesDaoQualifier
-        private val coursesFeaturedDao: IDao<Course>,
+        private val courseDao: IDao<Course>,
+        private val courseListDao: CourseListDao,
         private val notificationDao: IDao<Notification>,
         private val calendarSectionDao: IDao<CalendarSection>,
         private val certificateViewItemDao: IDao<CertificateViewItem>,
@@ -62,8 +59,8 @@ class DatabaseFacade
         viewAssignmentDao.removeAll()
         viewedNotificationsQueueDao.removeAll()
         stepDao.removeAll()
-        coursesEnrolledDao.removeAll()
-        coursesFeaturedDao.removeAll()
+        courseDao.removeAll()
+        courseListDao.removeAll()
         notificationDao.removeAll()
         certificateViewItemDao.removeAll()
         lastStepDao.removeAll()
@@ -78,11 +75,6 @@ class DatabaseFacade
         deadlinesBannerDao.removeAll()
         viewedStoryTemplatesDao.removeAll()
     }
-
-    fun getCourseDao(table: Table) =
-            if (table == Table.featured) coursesFeaturedDao
-            else coursesEnrolledDao
-
 
     fun addAssignment(assignment: Assignment?) = assignment?.let { assignmentDao.insertOrUpdate(assignment) }
 
@@ -109,7 +101,7 @@ class DatabaseFacade
 
     fun getSectionById(sectionId: Long) = sectionDao.get(DbStructureSections.Column.SECTION_ID, sectionId.toString())
 
-    fun getCourseById(courseId: Long, type: Table) = getCourseDao(type).get(DbStructureEnrolledAndFeaturedCourses.Column.COURSE_ID, courseId.toString())
+    fun getCourseById(courseId: Long) = courseDao.get(DbStructureCourse.Columns.ID, courseId.toString())
 
     fun getProgressById(progressId: String) = progressDao.get(DbStructureProgress.Column.ID, progressId)
 
@@ -133,13 +125,16 @@ class DatabaseFacade
 
     fun getUnitById(unitId: Long) = unitDao.get(DbStructureUnit.Column.UNIT_ID, unitId.toString())
 
-    fun getAllCourses(type: Table) = getCourseDao(type).getAll()
+    fun getAllCourses(courseListType: DbStructureCourseList.Type) =
+        courseListDao.getCourseList(courseListType)
 
-    fun addCourse(course: Course, type: Table) = getCourseDao(type).insertOrUpdate(course)
+    fun addCourse(course: Course) = courseDao.insertOrReplace(course)
 
-    fun deleteCourse(course: Course, type: Table) {
-        getCourseDao(type).remove(DbStructureEnrolledAndFeaturedCourses.Column.COURSE_ID, course.id.toString())
-    }
+    fun addCourseList(courseListType: DbStructureCourseList.Type, courses: List<Course>) =
+        courseListDao.addCourseList(courseListType, courses)
+
+    fun deleteCourseFromList(courseListType: DbStructureCourseList.Type, courseId: Long) =
+        courseListDao.removeCourseFromList(courseListType, courseId)
 
     fun addSection(section: Section) = sectionDao.insertOrUpdate(section)
 
@@ -215,16 +210,15 @@ class DatabaseFacade
     }
 
     fun dropOnlyCourseTable() {
-        coursesEnrolledDao.removeAll()
-        coursesFeaturedDao.removeAll()
+        courseDao.removeAll()
     }
 
     fun dropEnrolledCourses() {
-        coursesEnrolledDao.removeAll()
+        courseListDao.removeCourseList(DbStructureCourseList.Type.ENROLLED)
     }
 
     fun dropFeaturedCourses() {
-        coursesFeaturedDao.removeAll()
+        courseListDao.removeCourseList(DbStructureCourseList.Type.FEATURED)
     }
 
     fun getLessonsByIds(lessonIds: LongArray): List<Lesson> {
