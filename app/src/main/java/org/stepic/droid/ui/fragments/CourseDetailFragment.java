@@ -3,7 +3,6 @@ package org.stepic.droid.ui.fragments;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,19 +18,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
-import com.google.firebase.appindexing.Action;
-import com.google.firebase.appindexing.FirebaseAppIndex;
-import com.google.firebase.appindexing.FirebaseUserActions;
-import com.google.firebase.appindexing.Indexable;
-import com.google.firebase.appindexing.builders.Actions;
-import com.google.firebase.appindexing.builders.Indexables;
 
-import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
-import org.stepic.droid.analytic.AmplitudeAnalytic;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.FragmentBase;
-import org.stepic.droid.core.dropping.contract.DroppingListener;
 import org.stepik.android.model.Course;
 import org.stepic.droid.model.CourseProperty;
 import org.stepik.android.model.user.User;
@@ -48,8 +38,6 @@ import java.util.List;
 import butterknife.BindDrawable;
 import butterknife.BindString;
 import butterknife.BindView;
-import kotlin.Pair;
-import kotlin.collections.MapsKt;
 
 public class CourseDetailFragment extends FragmentBase {
 
@@ -111,19 +99,11 @@ public class CourseDetailFragment extends FragmentBase {
 
     View player;
 
-    //App indexing:
-    private Uri urlInWeb;
-    private String titleString;
-
 
     private List<CourseProperty> coursePropertyList;
     private Course course;
     private List<User> instructorsList;
     private InstructorAdapter instructorAdapter;
-
-    public Action getAction() {
-        return Actions.newView(titleString, urlInWeb.toString());
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -214,62 +194,10 @@ public class CourseDetailFragment extends FragmentBase {
         course = getArguments().getParcelable(AppConstants.KEY_COURSE_BUNDLE);
     }
 
-    private void reportIndexToGoogle() {
-        if (course != null && !wasIndexed && course.getSlug() != null) {
-            wasIndexed = true;
-            FirebaseAppIndex.getInstance().update(getIndexable());
-            FirebaseUserActions.getInstance().start(getAction());
-            getAnalytic().reportEventWithIdName(Analytic.AppIndexing.COURSE_DETAIL, course.getId() + "", course.getTitle());
-        }
-    }
-
-    private Indexable getIndexable() {
-        return Indexables.newSimple(titleString, urlInWeb.toString());
-    }
-
-    private void resolveJoinView() {
-        if (course.getEnrollment() != 0) {
-            joinCourseView.setVisibility(View.GONE);
-            continueCourseView.setVisibility(View.VISIBLE);
-            continueCourseView.setEnabled(true);
-            continueCourseView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    getScreenManager().showSections(getActivity(), course);
-                }
-            });
-        } else {
-            continueCourseView.setVisibility(View.GONE);
-            joinCourseView.setVisibility(View.VISIBLE);
-            joinCourseView.setEnabled(true);
-            joinCourseView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    getAnalytic().reportEvent(Analytic.Interaction.JOIN_COURSE);
-                    joinCourse(false);
-                }
-            });
-        }
-    }
-
-    boolean wasIndexed = false;
-
     @Override
     public void onStart() {
         super.onStart();
         tryToShowCourse();
-        reportIndexToGoogle();
-    }
-
-    @Override
-    public void onStop() {
-
-        if (wasIndexed) {
-            FirebaseUserActions.getInstance().end(getAction());
-        }
-        wasIndexed = false;
-        super.onStop();
-
     }
 
     @Override
@@ -291,17 +219,6 @@ public class CourseDetailFragment extends FragmentBase {
             getActivity().setResult(Activity.RESULT_OK, intent);
         }
         getActivity().finish();
-    }
-
-    private void joinCourse(boolean isInstaEnroll) {
-        if (course != null) {
-            getAnalytic().reportAmplitudeEvent(AmplitudeAnalytic.Course.JOINED, MapsKt.mapOf(
-                    new Pair<String, Object>(AmplitudeAnalytic.Course.Params.COURSE, course.getId()),
-                    new Pair<String, Object>(AmplitudeAnalytic.Course.Params.SOURCE, isInstaEnroll ? AmplitudeAnalytic.Course.Values.WIDGET : AmplitudeAnalytic.Course.Values.PREVIEW)
-            ));
-        } else {
-            getAnalytic().reportEvent(Analytic.Interaction.JOIN_COURSE_NULL);
-        }
     }
 
     @Override
