@@ -8,19 +8,12 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
-
-import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 
 import org.stepic.droid.R;
-import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.FragmentBase;
 import org.stepik.android.model.Course;
 import org.stepic.droid.model.CourseProperty;
@@ -41,15 +34,10 @@ import butterknife.BindView;
 
 public class CourseDetailFragment extends FragmentBase {
 
-    private static String instaEnrollKey = "instaEnrollKey";
     private View.OnClickListener onClickReportListener;
     private View header;
     private View footer;
     private DialogFragment unauthorizedDialog;
-    private Intent shareIntentWithChooser;
-    private GlideDrawableImageViewTarget courseTargetFigSupported;
-    private boolean needInstaEnroll;
-
 
     @BindView(R.id.root_view)
     View rootView;
@@ -62,8 +50,6 @@ public class CourseDetailFragment extends FragmentBase {
 
     @BindDrawable(R.drawable.general_placeholder)
     Drawable coursePlaceholder;
-
-    private TextView courseNameView;
 
     private RecyclerView instructorsCarousel;
 
@@ -110,7 +96,6 @@ public class CourseDetailFragment extends FragmentBase {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         instructorsList = new ArrayList<>();
-        needInstaEnroll = getArguments().getBoolean(instaEnrollKey); //if not exist -> false
     }
 
     @Override
@@ -177,9 +162,7 @@ public class CourseDetailFragment extends FragmentBase {
         continueCourseView = header.findViewById(R.id.go_to_learn);
         thumbnail = header.findViewById(R.id.playerThumbnail);
         player = header.findViewById(R.id.playerLayout);
-        courseTargetFigSupported = new GlideDrawableImageViewTarget(courseIcon);
         player.setVisibility(View.GONE);
-        courseNameView = header.findViewById(R.id.course_name);
     }
 
     private void initFooter(LayoutInflater layoutInflater) {
@@ -219,34 +202,5 @@ public class CourseDetailFragment extends FragmentBase {
             getActivity().setResult(Activity.RESULT_OK, intent);
         }
         getActivity().finish();
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if (course != null) {
-            inflater.inflate(R.menu.share_menu, menu);
-            createIntentForSharing();
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_item_share:
-                if (shareIntentWithChooser != null) {
-                    if (course != null && course.getTitle() != null) {
-                        getAnalytic().reportEventWithIdName(Analytic.Interaction.SHARE_COURSE, course.getId() + "", course.getTitle());
-                    }
-                    startActivity(shareIntentWithChooser);
-                }
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void createIntentForSharing() {
-        if (course == null) return;
-
-        shareIntentWithChooser = getShareHelper().getIntentForCourseSharing(course);
     }
 }
