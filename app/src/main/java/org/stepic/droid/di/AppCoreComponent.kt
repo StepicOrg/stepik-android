@@ -140,8 +140,6 @@ interface AppCoreComponent {
 
     fun inject(clearVideosDialog: ClearVideosDialog)
 
-    fun inject(coursePropertyAdapter: CoursePropertyAdapter)
-
     fun inject(remindPasswordDialogFragment: RemindPasswordDialogFragment)
 
     fun inject(downloadClickReceiver: DownloadClickReceiver)
