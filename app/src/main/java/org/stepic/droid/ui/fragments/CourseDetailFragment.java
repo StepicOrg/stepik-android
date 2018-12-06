@@ -17,9 +17,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.google.firebase.appindexing.Action;
 import com.google.firebase.appindexing.FirebaseAppIndex;
@@ -35,8 +33,6 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.Client;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.core.dropping.contract.DroppingListener;
-import org.stepic.droid.core.presenters.CourseJoinerPresenter;
-import org.stepic.droid.core.presenters.contracts.CourseJoinView;
 import org.stepik.android.model.Course;
 import org.stepic.droid.model.CourseProperty;
 import org.stepik.android.model.user.User;
@@ -46,10 +42,7 @@ import org.stepic.droid.ui.dialogs.LoadingProgressDialog;
 import org.stepic.droid.ui.dialogs.UnauthorizedDialogFragment;
 import org.stepic.droid.ui.util.ToolbarHelperKt;
 import org.stepic.droid.util.AppConstants;
-import org.stepic.droid.util.ProgressHelper;
-import org.stepic.droid.util.ThumbnailParser;
 
-import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,7 +55,6 @@ import kotlin.Pair;
 import kotlin.collections.MapsKt;
 
 public class CourseDetailFragment extends FragmentBase implements
-        CourseJoinView,
         DroppingListener {
 
     private static String instaEnrollKey = "instaEnrollKey";
@@ -138,9 +130,6 @@ public class CourseDetailFragment extends FragmentBase implements
     }
 
     @Inject
-    CourseJoinerPresenter courseJoinerPresenter;
-
-    @Inject
     Client<DroppingListener> courseDroppingListener;
 
     @Override
@@ -203,7 +192,6 @@ public class CourseDetailFragment extends FragmentBase implements
         header.setVisibility(View.GONE); //hide while we don't have the course
         footer.setVisibility(View.GONE);
 
-        courseJoinerPresenter.attachView(this);
         courseDroppingListener.subscribe(this);
         //COURSE RELATED IN ON START
     }
@@ -295,7 +283,6 @@ public class CourseDetailFragment extends FragmentBase implements
     @Override
     public void onDestroyView() {
         courseDroppingListener.unsubscribe(this);
-        courseJoinerPresenter.detachView(this);
         tryAgain.setOnClickListener(null);
         goToCatalog.setOnClickListener(null);
         instructorAdapter = null;
@@ -317,7 +304,6 @@ public class CourseDetailFragment extends FragmentBase implements
 
     private void joinCourse(boolean isInstaEnroll) {
         if (course != null) {
-            courseJoinerPresenter.joinCourse(course);
             getAnalytic().reportAmplitudeEvent(AmplitudeAnalytic.Course.JOINED, MapsKt.mapOf(
                     new Pair<String, Object>(AmplitudeAnalytic.Course.Params.COURSE, course.getId()),
                     new Pair<String, Object>(AmplitudeAnalytic.Course.Params.SOURCE, isInstaEnroll ? AmplitudeAnalytic.Course.Values.WIDGET : AmplitudeAnalytic.Course.Values.PREVIEW)
@@ -325,55 +311,6 @@ public class CourseDetailFragment extends FragmentBase implements
         } else {
             getAnalytic().reportEvent(Analytic.Interaction.JOIN_COURSE_NULL);
         }
-    }
-
-    @Override
-    public void onSuccessJoin(@NotNull Course joinedCourse) {
-        ProgressHelper.dismiss(joinCourseSpinner);
-        if (course != null && joinedCourse.getId() == course.getId()) {
-            joinedCourse.setEnrollment((int) joinedCourse.getId());
-        }
-    }
-
-    @Override
-    public void showProgress() {
-        ProgressHelper.activate(joinCourseSpinner);
-    }
-
-    @Override
-    public void setEnabledJoinButton(boolean isEnabled) {
-        joinCourseView.setEnabled(isEnabled);
-    }
-
-    @Override
-    public void onFailJoin(int code) {
-        if (course != null) {
-            if (code == HttpURLConnection.HTTP_FORBIDDEN) {
-                Toast.makeText(getActivity(), joinCourseWebException, Toast.LENGTH_LONG).show();
-            } else if (code == HttpURLConnection.HTTP_UNAUTHORIZED) {
-                //UNAUTHORIZED
-                //it is just for safety, we should detect no account before send request
-                unauthorizedDialog = UnauthorizedDialogFragment.newInstance(course);
-                if (!unauthorizedDialog.isAdded()) {
-                    unauthorizedDialog.show(getFragmentManager(), null);
-                }
-            } else {
-                Toast.makeText(getActivity(), joinCourseException,
-                        Toast.LENGTH_LONG).show();
-            }
-            ProgressHelper.dismiss(joinCourseSpinner);
-            joinCourseView.setEnabled(true);
-        }
-
-    }
-
-    private void setThumbnail(String thumbnail) {
-        Uri uri = ThumbnailParser.getUriForThumbnail(thumbnail);
-        Glide.with(getActivity())
-                .load(uri)
-                .placeholder(videoPlaceholder)
-                .error(videoPlaceholder)
-                .into(this.thumbnail);
     }
 
     @Override
