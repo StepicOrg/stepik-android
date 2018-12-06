@@ -19,6 +19,7 @@ import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import kotlinx.android.synthetic.main.header_course.*
 import kotlinx.android.synthetic.main.header_course_placeholder.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
@@ -102,7 +103,7 @@ class CourseActivity : FragmentActivityBase(), CourseView {
 
         injectComponent(courseId)
         coursePresenter = ViewModelProviders.of(this, viewModelFactory).get(CoursePresenter::class.java)
-        courseHeaderDelegate = CourseHeaderDelegate(this, config, coursePresenter)
+        courseHeaderDelegate = CourseHeaderDelegate(this, analytic, config, coursePresenter)
 
         initViewPager(courseId)
         initViewStateDelegate()
@@ -211,6 +212,11 @@ class CourseActivity : FragmentActivityBase(), CourseView {
                 if (intent.getBooleanExtra(EXTRA_AUTO_ENROLL, false)) {
                     intent.removeExtra(EXTRA_AUTO_ENROLL)
                     coursePresenter.enrollCourse()
+
+                    analytic.reportAmplitudeEvent(AmplitudeAnalytic.Course.JOINED, mapOf(
+                        AmplitudeAnalytic.Course.Params.COURSE to state.courseHeaderData.courseId,
+                        AmplitudeAnalytic.Course.Params.SOURCE to AmplitudeAnalytic.Course.Values.WIDGET
+                    ))
                 }
 
                 ProgressHelper.dismiss(supportFragmentManager, LoadingProgressDialogFragment.TAG)

@@ -16,6 +16,8 @@ import kotlinx.android.synthetic.main.activity_course.*
 import kotlinx.android.synthetic.main.header_course.*
 import kotlinx.android.synthetic.main.header_course_placeholder.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.AmplitudeAnalytic
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.ui.util.changeVisibility
@@ -27,6 +29,7 @@ import kotlin.math.roundToInt
 
 class CourseHeaderDelegate(
         private val courseActivity: Activity,
+        private val analytic: Analytic,
         private val config: Config,
         private val coursePresenter: CoursePresenter
 ) {
@@ -80,8 +83,26 @@ class CourseHeaderDelegate(
     }
 
     private fun initActions() = with(courseActivity) {
-        courseEnrollAction.setOnClickListener { coursePresenter.enrollCourse() }
-        courseContinueAction.setOnClickListener { coursePresenter.continueLearning() }
+        courseEnrollAction.setOnClickListener {
+            coursePresenter.enrollCourse()
+
+            courseHeaderData?.let { headerData ->
+                analytic.reportAmplitudeEvent(AmplitudeAnalytic.Course.JOINED, mapOf(
+                    AmplitudeAnalytic.Course.Params.COURSE to headerData.courseId,
+                    AmplitudeAnalytic.Course.Params.SOURCE to AmplitudeAnalytic.Course.Values.PREVIEW
+                ))
+            }
+        }
+        courseContinueAction.setOnClickListener {
+            coursePresenter.continueLearning()
+
+            courseHeaderData?.let { headerData ->
+                analytic.reportAmplitudeEvent(AmplitudeAnalytic.Course.CONTINUE_PRESSED, mapOf(
+                    AmplitudeAnalytic.Course.Params.COURSE to headerData.courseId,
+                    AmplitudeAnalytic.Course.Params.SOURCE to AmplitudeAnalytic.Course.Values.COURSE_WIDGET // TODO change source
+                ))
+            }
+        }
     }
 
     private fun setCourseData(courseHeaderData: CourseHeaderData) = with(courseActivity) {
@@ -134,6 +155,12 @@ class CourseHeaderDelegate(
     fun onOptionsItemSelected(item: MenuItem): Boolean =
         if (item.itemId == R.id.drop_course) {
             coursePresenter.dropCourse()
+
+            courseHeaderData?.let { headerData ->
+                analytic.reportAmplitudeEvent(AmplitudeAnalytic.Course.UNSUBSCRIBED, mapOf(
+                    AmplitudeAnalytic.Course.Params.COURSE to headerData.courseId
+                ))
+            }
             true
         } else {
             false
