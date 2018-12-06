@@ -19,6 +19,7 @@ import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import kotlinx.android.synthetic.main.header_course.*
 import kotlinx.android.synthetic.main.header_course_placeholder.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepik.android.view.course.ui.adapter.CoursePagerAdapter
@@ -86,11 +87,17 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         }
 
         val course: Course? = intent.getParcelableExtra(EXTRA_COURSE)
+        val deepLinkCourseId = intent.getCourseIdFromDeepLink()
+
+        if (savedInstanceState == null && deepLinkCourseId != null) {
+            analytic.reportEvent(Analytic.DeepLink.USER_OPEN_COURSE_DETAIL_LINK, deepLinkCourseId.toString())
+            analytic.reportEvent(Analytic.DeepLink.USER_OPEN_LINK_GENERAL)
+        }
 
         courseId = intent.getLongExtra(EXTRA_COURSE_ID, NO_ID)
                 .takeIf { it != NO_ID }
                 ?: course?.id
-                ?: intent.getCourseIdFromDeepLink()
+                ?: deepLinkCourseId
                 ?: NO_ID
 
         injectComponent(courseId)
