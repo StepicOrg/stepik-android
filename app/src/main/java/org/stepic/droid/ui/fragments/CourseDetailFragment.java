@@ -2,21 +2,18 @@ package org.stepic.droid.ui.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -43,7 +40,6 @@ import org.stepic.droid.core.presenters.contracts.CourseJoinView;
 import org.stepik.android.model.Course;
 import org.stepic.droid.model.CourseProperty;
 import org.stepik.android.model.user.User;
-import org.stepik.android.model.Video;
 import org.stepic.droid.ui.adapters.CoursePropertyAdapter;
 import org.stepic.droid.ui.adapters.InstructorAdapter;
 import org.stepic.droid.ui.dialogs.LoadingProgressDialog;
@@ -283,28 +279,6 @@ public class CourseDetailFragment extends FragmentBase implements
         super.onStart();
         tryToShowCourse();
         reportIndexToGoogle();
-    }
-
-    private void setUpIntroVideo() {
-        Video newTypeVideo = course.getIntroVideo();
-        if (newTypeVideo != null && newTypeVideo.getUrls() != null && !newTypeVideo.getUrls().isEmpty()) {
-            showNewStyleVideo(newTypeVideo);
-        }
-    }
-
-    private void showNewStyleVideo(@NotNull final Video video) {
-        if (video.getThumbnail() == null || video.getThumbnail().equals("")) {
-            player.setVisibility(View.GONE);
-        } else {
-            setThumbnail(video.getThumbnail());
-            player.setVisibility(View.VISIBLE);
-            player.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    getScreenManager().showVideo(getActivity(), null, video);
-                }
-            });
-        }
     }
 
     @Override
