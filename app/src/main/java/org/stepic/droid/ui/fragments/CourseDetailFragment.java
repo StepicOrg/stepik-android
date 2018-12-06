@@ -8,14 +8,12 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ListView;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentBase;
 import org.stepik.android.model.Course;
 import org.stepic.droid.model.CourseProperty;
-import org.stepik.android.model.user.User;
 import org.stepic.droid.ui.adapters.CoursePropertyAdapter;
 import org.stepic.droid.ui.dialogs.LoadingProgressDialog;
 import org.stepic.droid.ui.dialogs.UnauthorizedDialogFragment;
@@ -32,7 +30,6 @@ import butterknife.BindView;
 public class CourseDetailFragment extends FragmentBase {
 
     private View.OnClickListener onClickReportListener;
-    private View header;
     private DialogFragment unauthorizedDialog;
 
     @BindView(R.id.root_view)
@@ -73,22 +70,13 @@ public class CourseDetailFragment extends FragmentBase {
     @BindView(R.id.tryAgain)
     View tryAgain;
 
-    ImageView courseIcon;
-
-    ImageView thumbnail;
-
-    View player;
-
-
     private List<CourseProperty> coursePropertyList;
     private Course course;
-    private List<User> instructorsList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        instructorsList = new ArrayList<>();
     }
 
     @Override
@@ -103,8 +91,6 @@ public class CourseDetailFragment extends FragmentBase {
         //VIEW:
         coursePropertyList = new ArrayList<>();
         joinCourseSpinner = new LoadingProgressDialog(getActivity());
-        LayoutInflater layoutInflater = getLayoutInflater();
-        initHeader(layoutInflater);
 
         coursePropertyListView.setAdapter(new CoursePropertyAdapter(getActivity(), coursePropertyList));
         hideSoftKeypad();
@@ -133,23 +119,8 @@ public class CourseDetailFragment extends FragmentBase {
         };
         tryAgain.setOnClickListener(onClickReportListener);
 
-        header.setVisibility(View.GONE); //hide while we don't have the course
-
         //COURSE RELATED IN ON START
     }
-
-    private void initHeader(LayoutInflater layoutInflater) {
-        header = layoutInflater.inflate(R.layout.fragment_course_detailed_header, coursePropertyListView, false);
-        coursePropertyListView.addHeaderView(header);
-
-        courseIcon = header.findViewById(R.id.courseIcon);
-        joinCourseView = header.findViewById(R.id.join_course_layout);
-        continueCourseView = header.findViewById(R.id.go_to_learn);
-        thumbnail = header.findViewById(R.id.playerThumbnail);
-        player = header.findViewById(R.id.playerLayout);
-        player.setVisibility(View.GONE);
-    }
-
 
     private void tryToShowCourse() {
         errorView.setVisibility(View.GONE); // now we try show -> it is not visible
