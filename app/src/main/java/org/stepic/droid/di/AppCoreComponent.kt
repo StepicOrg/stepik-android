@@ -188,8 +188,6 @@ interface AppCoreComponent {
 
     fun inject(app: App)
 
-    fun inject(instructorAdapter: InstructorAdapter)
-
     fun inject(searchQueriesAdapter: SearchQueriesAdapter)
 
     fun inject(newUserAlarmService: NewUserAlarmService)

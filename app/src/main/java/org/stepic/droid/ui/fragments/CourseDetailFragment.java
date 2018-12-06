@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +17,6 @@ import org.stepik.android.model.Course;
 import org.stepic.droid.model.CourseProperty;
 import org.stepik.android.model.user.User;
 import org.stepic.droid.ui.adapters.CoursePropertyAdapter;
-import org.stepic.droid.ui.adapters.InstructorAdapter;
 import org.stepic.droid.ui.dialogs.LoadingProgressDialog;
 import org.stepic.droid.ui.dialogs.UnauthorizedDialogFragment;
 import org.stepic.droid.ui.util.ToolbarHelperKt;
@@ -36,7 +33,6 @@ public class CourseDetailFragment extends FragmentBase {
 
     private View.OnClickListener onClickReportListener;
     private View header;
-    private View footer;
     private DialogFragment unauthorizedDialog;
 
     @BindView(R.id.root_view)
@@ -50,8 +46,6 @@ public class CourseDetailFragment extends FragmentBase {
 
     @BindDrawable(R.drawable.general_placeholder)
     Drawable coursePlaceholder;
-
-    private RecyclerView instructorsCarousel;
 
     View joinCourseView;
     View continueCourseView;
@@ -89,7 +83,6 @@ public class CourseDetailFragment extends FragmentBase {
     private List<CourseProperty> coursePropertyList;
     private Course course;
     private List<User> instructorsList;
-    private InstructorAdapter instructorAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -112,12 +105,9 @@ public class CourseDetailFragment extends FragmentBase {
         joinCourseSpinner = new LoadingProgressDialog(getActivity());
         LayoutInflater layoutInflater = getLayoutInflater();
         initHeader(layoutInflater);
-        initFooter(layoutInflater);
 
         coursePropertyListView.setAdapter(new CoursePropertyAdapter(getActivity(), coursePropertyList));
         hideSoftKeypad();
-        instructorAdapter = new InstructorAdapter(instructorsList, getActivity());
-        instructorsCarousel.setAdapter(instructorAdapter);
         goToCatalog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -133,10 +123,6 @@ public class CourseDetailFragment extends FragmentBase {
             }
         });
 
-        RecyclerView.LayoutManager layoutManager =
-                new LinearLayoutManager(getActivity(),
-                        LinearLayoutManager.HORIZONTAL, false);
-        instructorsCarousel.setLayoutManager(layoutManager);
         ToolbarHelperKt.initCenteredToolbar(this, R.string.course_info_title, true);
         onClickReportListener = new View.OnClickListener() {
             @Override
@@ -148,7 +134,6 @@ public class CourseDetailFragment extends FragmentBase {
         tryAgain.setOnClickListener(onClickReportListener);
 
         header.setVisibility(View.GONE); //hide while we don't have the course
-        footer.setVisibility(View.GONE);
 
         //COURSE RELATED IN ON START
     }
@@ -163,12 +148,6 @@ public class CourseDetailFragment extends FragmentBase {
         thumbnail = header.findViewById(R.id.playerThumbnail);
         player = header.findViewById(R.id.playerLayout);
         player.setVisibility(View.GONE);
-    }
-
-    private void initFooter(LayoutInflater layoutInflater) {
-        footer = layoutInflater.inflate(R.layout.fragment_course_detailed_footer, coursePropertyListView, false);
-        coursePropertyListView.addFooterView(footer);
-        instructorsCarousel = footer.findViewById(R.id.instructors_carousel);
     }
 
 
@@ -187,7 +166,6 @@ public class CourseDetailFragment extends FragmentBase {
     public void onDestroyView() {
         tryAgain.setOnClickListener(null);
         goToCatalog.setOnClickListener(null);
-        instructorAdapter = null;
         joinCourseView.setOnClickListener(null);
         continueCourseView.setOnClickListener(null);
         super.onDestroyView();
