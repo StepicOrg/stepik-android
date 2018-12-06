@@ -1,16 +1,17 @@
 package org.stepic.droid.util.resolvers.text
 
-import android.content.Context
 import android.os.Build
 import android.text.Html
 import android.text.Spanned
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.util.HtmlHelper
-import org.stepic.droid.util.resolvers.CoursePropertyResolver
 import javax.inject.Inject
 
 class TextResolverImpl
-@Inject constructor(config: Config) : TextResolver {
+@Inject
+constructor(
+    config: Config
+) : TextResolver {
 
     private val baseUrl: String = config.baseUrl
 
@@ -38,30 +39,6 @@ class TextResolverImpl
     // Often this char is inserted in text by text editor without grammar reasons.
     private fun prepareStepTextForWebView(content: String): String =
             content.replace('\u00A0', ' ')
-
-    override fun resolveCourseProperty(type: CoursePropertyResolver.Type, content: String?, context: Context): TextResult {
-        if (content == null) {
-            return TextResult("")
-        }
-
-        if (type == CoursePropertyResolver.Type.summary ||
-                type == CoursePropertyResolver.Type.requirements ||
-                type == CoursePropertyResolver.Type.description) {
-            //it can be html text
-
-            if (HtmlHelper.isForWebView(content)) {
-                return TextResult(content,
-                        isNeedWebView = true)
-            } else {
-                val fromHtml: CharSequence = fromHtml(content).trim()
-                return TextResult(fromHtml,
-                        isNeedWebView = false)
-            }
-
-        } else {
-            return TextResult(content.trim())
-        }
-    }
 
     @Suppress("DEPRECATION")
     override fun fromHtml(content: String?): CharSequence {

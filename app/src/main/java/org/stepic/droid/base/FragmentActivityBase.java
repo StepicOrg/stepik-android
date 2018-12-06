@@ -31,7 +31,6 @@ import org.stepic.droid.services.NotificationsViewPusher;
 import org.stepic.droid.storage.operations.DatabaseFacade;
 import org.stepic.droid.ui.util.CloseIconHolder;
 import org.stepic.droid.util.AppConstants;
-import org.stepic.droid.util.resolvers.CoursePropertyResolver;
 import org.stepic.droid.util.resolvers.text.TextResolver;
 import org.stepic.droid.web.Api;
 
@@ -72,9 +71,6 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
 
     @Inject
     protected SharedPreferenceHelper sharedPreferenceHelper;
-
-    @Inject
-    protected CoursePropertyResolver coursePropertyResolver;
 
     @Inject
     protected DatabaseFacade databaseFacade;
