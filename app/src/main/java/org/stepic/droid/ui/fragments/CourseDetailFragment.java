@@ -40,11 +40,9 @@ import org.stepic.droid.base.Client;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.core.dropping.contract.DroppingListener;
 import org.stepic.droid.core.presenters.ContinueCoursePresenter;
-import org.stepic.droid.core.presenters.CourseDetailAnalyticPresenter;
 import org.stepic.droid.core.presenters.CourseFinderPresenter;
 import org.stepic.droid.core.presenters.CourseJoinerPresenter;
 import org.stepic.droid.core.presenters.contracts.ContinueCourseView;
-import org.stepic.droid.core.presenters.contracts.CourseDetailAnalyticView;
 import org.stepic.droid.core.presenters.contracts.CourseJoinView;
 import org.stepic.droid.core.presenters.contracts.LoadCourseView;
 import org.stepik.android.model.Course;
@@ -78,7 +76,6 @@ import kotlin.collections.MapsKt;
 public class CourseDetailFragment extends FragmentBase implements
         LoadCourseView,
         CourseJoinView,
-        CourseDetailAnalyticView,
         ContinueCourseView,
         DroppingListener {
 
@@ -164,9 +161,6 @@ public class CourseDetailFragment extends FragmentBase implements
     ContinueCoursePresenter continueCoursePresenter;
 
     @Inject
-    CourseDetailAnalyticPresenter courseDetailAnalyticPresenter;
-
-    @Inject
     Client<DroppingListener> courseDroppingListener;
 
     @Override
@@ -232,7 +226,6 @@ public class CourseDetailFragment extends FragmentBase implements
         courseFinderPresenter.attachView(this);
         courseJoinerPresenter.attachView(this);
         continueCoursePresenter.attachView(this);
-        courseDetailAnalyticPresenter.attachView(this);
         courseDroppingListener.subscribe(this);
         //COURSE RELATED IN ON START
     }
@@ -292,10 +285,6 @@ public class CourseDetailFragment extends FragmentBase implements
         courseNotFoundView.setVisibility(View.GONE);
         //
         header.setVisibility(View.VISIBLE);
-
-        if (course != null) {
-            courseDetailAnalyticPresenter.onCourseDetailOpened(course);
-        }
 
         titleString = course.getTitle();
         if (course.getSlug() != null && !wasIndexed) {
@@ -469,7 +458,6 @@ public class CourseDetailFragment extends FragmentBase implements
         courseJoinerPresenter.detachView(this);
         courseFinderPresenter.detachView(this);
         continueCoursePresenter.detachView(this);
-        courseDetailAnalyticPresenter.detachView(this);
         tryAgain.setOnClickListener(null);
         goToCatalog.setOnClickListener(null);
         instructorAdapter = null;
