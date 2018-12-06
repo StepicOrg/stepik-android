@@ -110,10 +110,6 @@
                 android:value=".ui.activities.CourseSearchResultActivity" />
         </activity>
 
-        <activity android:name=".ui.activities.CourseDetailActivity">
-
-        </activity>
-
         <activity
             android:name=".ui.activities.SectionActivity"
             android:parentActivityName=".ui.activities.MainFeedActivity">
