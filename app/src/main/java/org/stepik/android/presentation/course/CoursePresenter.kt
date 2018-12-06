@@ -135,7 +135,7 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onNext  = { state = CourseView.State.CourseLoaded(it) },
+                onNext  = { state = CourseView.State.CourseLoaded(it); continueLearning() },
                 onError = { state = CourseView.State.NetworkError; subscriberForEnrollmentUpdates() }
             )
     }
@@ -146,6 +146,7 @@ constructor(
     fun continueLearning() {
         val headerData = (state as? CourseView.State.CourseLoaded)
             ?.courseHeaderData
+            ?.takeIf { it.enrollmentState == EnrollmentState.ENROLLED }
             ?: return
 
         val course = headerData.course
