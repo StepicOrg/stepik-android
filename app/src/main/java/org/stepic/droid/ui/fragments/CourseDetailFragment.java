@@ -39,15 +39,12 @@ import org.stepic.droid.base.App;
 import org.stepic.droid.base.Client;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.core.dropping.contract.DroppingListener;
-import org.stepic.droid.core.presenters.ContinueCoursePresenter;
 import org.stepic.droid.core.presenters.CourseFinderPresenter;
 import org.stepic.droid.core.presenters.CourseJoinerPresenter;
-import org.stepic.droid.core.presenters.contracts.ContinueCourseView;
 import org.stepic.droid.core.presenters.contracts.CourseJoinView;
 import org.stepic.droid.core.presenters.contracts.LoadCourseView;
 import org.stepik.android.model.Course;
 import org.stepic.droid.model.CourseProperty;
-import org.stepik.android.model.Section;
 import org.stepik.android.model.user.User;
 import org.stepik.android.model.Video;
 import org.stepic.droid.ui.adapters.CoursePropertyAdapter;
@@ -76,7 +73,6 @@ import kotlin.collections.MapsKt;
 public class CourseDetailFragment extends FragmentBase implements
         LoadCourseView,
         CourseJoinView,
-        ContinueCourseView,
         DroppingListener {
 
     private static String instaEnrollKey = "instaEnrollKey";
@@ -158,9 +154,6 @@ public class CourseDetailFragment extends FragmentBase implements
     CourseJoinerPresenter courseJoinerPresenter;
 
     @Inject
-    ContinueCoursePresenter continueCoursePresenter;
-
-    @Inject
     Client<DroppingListener> courseDroppingListener;
 
     @Override
@@ -225,7 +218,6 @@ public class CourseDetailFragment extends FragmentBase implements
 
         courseFinderPresenter.attachView(this);
         courseJoinerPresenter.attachView(this);
-        continueCoursePresenter.attachView(this);
         courseDroppingListener.subscribe(this);
         //COURSE RELATED IN ON START
     }
@@ -457,7 +449,6 @@ public class CourseDetailFragment extends FragmentBase implements
         courseDroppingListener.unsubscribe(this);
         courseJoinerPresenter.detachView(this);
         courseFinderPresenter.detachView(this);
-        continueCoursePresenter.detachView(this);
         tryAgain.setOnClickListener(null);
         goToCatalog.setOnClickListener(null);
         instructorAdapter = null;
@@ -494,7 +485,6 @@ public class CourseDetailFragment extends FragmentBase implements
         ProgressHelper.dismiss(joinCourseSpinner);
         if (course != null && joinedCourse.getId() == course.getId()) {
             joinedCourse.setEnrollment((int) joinedCourse.getId());
-            continueCoursePresenter.continueCourse(course);
         }
     }
 
@@ -528,29 +518,6 @@ public class CourseDetailFragment extends FragmentBase implements
             joinCourseView.setEnabled(true);
         }
 
-    }
-
-    @Override
-    public void onShowContinueCourseLoadingDialog() {
-        ProgressHelper.activate(joinCourseSpinner);
-    }
-
-    @Override
-    public void onOpenStep(long courseId, @NotNull Section section, long lessonId, long unitId, int stepPosition) {
-        ProgressHelper.dismiss(joinCourseSpinner);
-        getScreenManager().continueCourse(getActivity(), courseId, section, lessonId, unitId, stepPosition, true);
-    }
-
-    @Override
-    public void onOpenAdaptiveCourse(@NotNull Course course) {
-        ProgressHelper.dismiss(joinCourseSpinner);
-        getScreenManager().continueAdaptiveCourse(getActivity(), course);
-    }
-
-    @Override
-    public void onAnyProblemWhileContinue(@NotNull Course course) {
-        ProgressHelper.dismiss(joinCourseSpinner);
-        getScreenManager().showSections(getActivity(), course, true);
     }
 
     private void setThumbnail(String thumbnail) {
