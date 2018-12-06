@@ -43,11 +43,9 @@ import org.stepic.droid.core.presenters.ContinueCoursePresenter;
 import org.stepic.droid.core.presenters.CourseDetailAnalyticPresenter;
 import org.stepic.droid.core.presenters.CourseFinderPresenter;
 import org.stepic.droid.core.presenters.CourseJoinerPresenter;
-import org.stepic.droid.core.presenters.InstructorsPresenter;
 import org.stepic.droid.core.presenters.contracts.ContinueCourseView;
 import org.stepic.droid.core.presenters.contracts.CourseDetailAnalyticView;
 import org.stepic.droid.core.presenters.contracts.CourseJoinView;
-import org.stepic.droid.core.presenters.contracts.InstructorsView;
 import org.stepic.droid.core.presenters.contracts.LoadCourseView;
 import org.stepik.android.model.Course;
 import org.stepic.droid.model.CourseProperty;
@@ -82,8 +80,7 @@ public class CourseDetailFragment extends FragmentBase implements
         CourseJoinView,
         CourseDetailAnalyticView,
         ContinueCourseView,
-        DroppingListener,
-        InstructorsView {
+        DroppingListener {
 
     private static String instaEnrollKey = "instaEnrollKey";
     private View.OnClickListener onClickReportListener;
@@ -93,24 +90,6 @@ public class CourseDetailFragment extends FragmentBase implements
     private Intent shareIntentWithChooser;
     private GlideDrawableImageViewTarget courseTargetFigSupported;
     private boolean needInstaEnroll;
-
-    public static CourseDetailFragment newInstance(Course course, boolean instaEnroll) {
-        Bundle args = new Bundle();
-        args.putParcelable(AppConstants.KEY_COURSE_BUNDLE, course);
-        args.putBoolean(instaEnrollKey, instaEnroll);
-        CourseDetailFragment fragment = new CourseDetailFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    //can be -1 if address is incorrect
-    public static CourseDetailFragment newInstance(long courseId) {
-        Bundle args = new Bundle();
-        args.putLong(AppConstants.KEY_COURSE_LONG_ID, courseId);
-        CourseDetailFragment fragment = new CourseDetailFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
 
 
     @BindView(R.id.root_view)
@@ -190,19 +169,6 @@ public class CourseDetailFragment extends FragmentBase implements
     @Inject
     Client<DroppingListener> courseDroppingListener;
 
-    @Inject
-    InstructorsPresenter instructorsPresenter;
-
-    @Override
-    protected void injectComponent() {
-        App.Companion
-                .componentManager()
-                .courseGeneralComponent()
-                .courseComponentBuilder()
-                .build()
-                .inject(this);
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -267,7 +233,6 @@ public class CourseDetailFragment extends FragmentBase implements
         courseJoinerPresenter.attachView(this);
         continueCoursePresenter.attachView(this);
         courseDetailAnalyticPresenter.attachView(this);
-        instructorsPresenter.attachView(this);
         courseDroppingListener.subscribe(this);
         //COURSE RELATED IN ON START
     }
@@ -355,11 +320,6 @@ public class CourseDetailFragment extends FragmentBase implements
                 .into(courseTargetFigSupported);
 
         resolveJoinView();
-        if (instructorsList.isEmpty()) {
-            fetchInstructors();
-        } else {
-            showCurrentInstructors();
-        }
         Activity activity = getActivity();
         if (activity != null) {
             activity.invalidateOptionsMenu();
@@ -417,10 +377,6 @@ public class CourseDetailFragment extends FragmentBase implements
         super.onStart();
         tryToShowCourse();
         reportIndexToGoogle();
-    }
-
-    private void fetchInstructors() {
-        instructorsPresenter.fetchInstructors(course);
     }
 
     private void setUpIntroVideo() {
@@ -510,7 +466,6 @@ public class CourseDetailFragment extends FragmentBase implements
     @Override
     public void onDestroyView() {
         courseDroppingListener.unsubscribe(this);
-        instructorsPresenter.detachView(this);
         courseJoinerPresenter.detachView(this);
         courseFinderPresenter.detachView(this);
         continueCoursePresenter.detachView(this);
@@ -659,28 +614,5 @@ public class CourseDetailFragment extends FragmentBase implements
     @Override
     public void onFailDropCourse(@NotNull Course course) {
         //do nothing
-    }
-
-    @Override
-    public void onLoadingInstructors() {
-        //not react now
-    }
-
-    @Override
-    public void onFailLoadInstructors() {
-        footer.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void onInstructorsLoaded(@NotNull List<User> users) {
-        instructorsList.clear();
-        instructorsList.addAll(users);
-
-        showCurrentInstructors();
-    }
-
-    @Override
-    public void onHideInstructors() {
-        footer.setVisibility(View.GONE);
     }
 }
