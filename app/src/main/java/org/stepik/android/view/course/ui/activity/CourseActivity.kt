@@ -105,16 +105,10 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         courseHeaderDelegate = CourseHeaderDelegate(this, config, coursePresenter)
 
         initViewPager(courseId)
+        initViewStateDelegate()
 
         savedInstanceState?.let(coursePresenter::onRestoreInstanceState)
         setDataToPresenter()
-
-        viewStateDelegate.addState<CourseView.State.EmptyCourse>(courseEmpty)
-        viewStateDelegate.addState<CourseView.State.NetworkError>(errorNoConnection)
-        viewStateDelegate.addState<CourseView.State.CourseLoaded>(courseHeader, courseTabs, coursePager)
-        viewStateDelegate.addState<CourseView.State.BlockingLoading>(courseHeader, courseTabs, coursePager)
-        viewStateDelegate.addState<CourseView.State.Loading>(courseHeaderPlaceholder, courseTabs, coursePager)
-        viewStateDelegate.addState<CourseView.State.Idle>(courseHeaderPlaceholder, courseTabs, coursePager)
 
         tryAgain.setOnClickListener { setDataToPresenter(forceUpdate = true) }
         goToCatalog.setOnClickListener { screenManager.showCatalog(this) }
@@ -179,6 +173,15 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         (courseTabs.getTabAt(courseTabs.selectedTabPosition)?.customView as? TextView)?.let {
             it.typeface = regularFont
         }
+    }
+
+    private fun initViewStateDelegate() {
+        viewStateDelegate.addState<CourseView.State.EmptyCourse>(courseEmpty)
+        viewStateDelegate.addState<CourseView.State.NetworkError>(errorNoConnection)
+        viewStateDelegate.addState<CourseView.State.CourseLoaded>(courseHeader, courseTabs, coursePager)
+        viewStateDelegate.addState<CourseView.State.BlockingLoading>(courseHeader, courseTabs, coursePager)
+        viewStateDelegate.addState<CourseView.State.Loading>(courseHeaderPlaceholder, courseTabs, coursePager)
+        viewStateDelegate.addState<CourseView.State.Idle>(courseHeaderPlaceholder, courseTabs, coursePager)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
