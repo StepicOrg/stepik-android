@@ -20,5 +20,5 @@ class PopularCoursesFragment : CoursesDatabaseFragmentBase() {
 
     @NotNull
     override fun getCourseType(): CourseListType =
-        CourseListType.ENROLLED
+        CourseListType.FEATURED
 }
