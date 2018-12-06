@@ -35,14 +35,11 @@ import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.AmplitudeAnalytic;
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.base.App;
 import org.stepic.droid.base.Client;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.core.dropping.contract.DroppingListener;
-import org.stepic.droid.core.presenters.CourseFinderPresenter;
 import org.stepic.droid.core.presenters.CourseJoinerPresenter;
 import org.stepic.droid.core.presenters.contracts.CourseJoinView;
-import org.stepic.droid.core.presenters.contracts.LoadCourseView;
 import org.stepik.android.model.Course;
 import org.stepic.droid.model.CourseProperty;
 import org.stepik.android.model.user.User;
@@ -54,8 +51,6 @@ import org.stepic.droid.ui.dialogs.UnauthorizedDialogFragment;
 import org.stepic.droid.ui.util.ToolbarHelperKt;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
-import org.stepic.droid.util.StepikLogicHelper;
-import org.stepic.droid.util.StringUtil;
 import org.stepic.droid.util.ThumbnailParser;
 
 import java.net.HttpURLConnection;
@@ -71,7 +66,6 @@ import kotlin.Pair;
 import kotlin.collections.MapsKt;
 
 public class CourseDetailFragment extends FragmentBase implements
-        LoadCourseView,
         CourseJoinView,
         DroppingListener {
 
@@ -148,9 +142,6 @@ public class CourseDetailFragment extends FragmentBase implements
     }
 
     @Inject
-    CourseFinderPresenter courseFinderPresenter;
-
-    @Inject
     CourseJoinerPresenter courseJoinerPresenter;
 
     @Inject
@@ -216,7 +207,6 @@ public class CourseDetailFragment extends FragmentBase implements
         header.setVisibility(View.GONE); //hide while we don't have the course
         footer.setVisibility(View.GONE);
 
-        courseFinderPresenter.attachView(this);
         courseJoinerPresenter.attachView(this);
         courseDroppingListener.subscribe(this);
         //COURSE RELATED IN ON START
@@ -246,71 +236,6 @@ public class CourseDetailFragment extends FragmentBase implements
     private void tryToShowCourse() {
         errorView.setVisibility(View.GONE); // now we try show -> it is not visible
         course = getArguments().getParcelable(AppConstants.KEY_COURSE_BUNDLE);
-        if (course == null) {
-            //it is not from our activity
-            long courseId = getArguments().getLong(AppConstants.KEY_COURSE_LONG_ID);
-            if (courseId < 0) {
-                onCourseUnavailable(-1);
-            } else {
-                //todo SHOW LOADING.
-                courseFinderPresenter.findCourseById(courseId);
-            }
-
-        } else {
-            initScreenByCourse();//ok if course is not null;
-        }
-    }
-
-    @Override
-    public void onCourseFound(@NotNull Course foundCourse) {
-        if (course == null) {
-            course = foundCourse;
-            Bundle args = getArguments();
-            args.putParcelable(AppConstants.KEY_COURSE_BUNDLE, course);
-            initScreenByCourse();
-        }
-    }
-
-    public void initScreenByCourse() {
-        //todo HIDE LOADING AND ERRORS
-        errorView.setVisibility(View.GONE);
-        courseNotFoundView.setVisibility(View.GONE);
-        //
-        header.setVisibility(View.VISIBLE);
-
-        titleString = course.getTitle();
-        if (course.getSlug() != null && !wasIndexed) {
-            urlInWeb = Uri.parse(StringUtil.getUriForCourse(getConfig().getBaseUrl(), course.getSlug()));
-            reportIndexToGoogle();
-        }
-
-
-        coursePropertyList.clear();
-        coursePropertyList.addAll(getCoursePropertyResolver().getSortedPropertyList(course));
-        if (course.getTitle() != null && !course.getTitle().equals("")) {
-            courseNameView.setText(course.getTitle());
-        } else {
-            courseNameView.setVisibility(View.GONE);
-        }
-
-        setUpIntroVideo();
-
-        Glide.with(App.Companion.getAppContext())
-                .load(StepikLogicHelper.getPathForCourseOrEmpty(course, getConfig()))
-                .placeholder(coursePlaceholder)
-                .into(courseTargetFigSupported);
-
-        resolveJoinView();
-        Activity activity = getActivity();
-        if (activity != null) {
-            activity.invalidateOptionsMenu();
-        }
-
-        if (needInstaEnroll) {
-            getAnalytic().reportEvent(Analytic.Anonymous.SUCCESS_LOGIN_AND_ENROLL);
-            needInstaEnroll = false;
-            joinCourse(true);
-        }
     }
 
     private void reportIndexToGoogle() {
@@ -383,57 +308,6 @@ public class CourseDetailFragment extends FragmentBase implements
     }
 
     @Override
-    public void onCourseUnavailable(long courseId) {
-        if (course == null) {
-            getAnalytic().reportEvent(Analytic.Interaction.COURSE_USER_TRY_FAIL, courseId + "");
-            errorView.setVisibility(View.GONE);
-            courseNotFoundView.setVisibility(View.VISIBLE);
-        }
-    }
-
-    @Override
-    public void onInternetFailWhenCourseIsTriedToLoad() {
-        if (course == null) {
-            courseNotFoundView.setVisibility(View.GONE);
-            errorView.setVisibility(View.VISIBLE);
-            tryAgain.setOnClickListener(onClickReportListener);
-        }
-    }
-
-    private void showCurrentInstructors() {
-        footer.setVisibility(View.VISIBLE);
-        instructorAdapter.notifyDataSetChanged();
-
-        instructorsCarousel.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-            @Override
-            public boolean onPreDraw() {
-                centeringRecycler(this);
-                return true;
-            }
-        });
-    }
-
-
-    private void centeringRecycler(ViewTreeObserver.OnPreDrawListener listener) {
-        Display display = getActivity().getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int widthOfScreen = size.x;
-
-        int widthOfAllItems = instructorsCarousel.getMeasuredWidth();
-        if (widthOfAllItems != 0) {
-            instructorsCarousel.getViewTreeObserver().removeOnPreDrawListener(listener);
-        }
-        if (widthOfScreen > widthOfAllItems) {
-            int padding = (widthOfScreen - widthOfAllItems) / 2;
-            instructorsCarousel.setPadding(padding, 0, padding, 0);
-        } else {
-            instructorsCarousel.setPadding(0, 0, 0, 0);
-        }
-    }
-
-
-    @Override
     public void onStop() {
 
         if (wasIndexed) {
@@ -448,7 +322,6 @@ public class CourseDetailFragment extends FragmentBase implements
     public void onDestroyView() {
         courseDroppingListener.unsubscribe(this);
         courseJoinerPresenter.detachView(this);
-        courseFinderPresenter.detachView(this);
         tryAgain.setOnClickListener(null);
         goToCatalog.setOnClickListener(null);
         instructorAdapter = null;
