@@ -30,7 +30,6 @@ import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.AmplitudeAnalytic;
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.base.Client;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.core.dropping.contract.DroppingListener;
 import org.stepik.android.model.Course;
@@ -46,16 +45,13 @@ import org.stepic.droid.util.AppConstants;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import butterknife.BindDrawable;
 import butterknife.BindString;
 import butterknife.BindView;
 import kotlin.Pair;
 import kotlin.collections.MapsKt;
 
-public class CourseDetailFragment extends FragmentBase implements
-        DroppingListener {
+public class CourseDetailFragment extends FragmentBase {
 
     private static String instaEnrollKey = "instaEnrollKey";
     private View.OnClickListener onClickReportListener;
@@ -129,9 +125,6 @@ public class CourseDetailFragment extends FragmentBase implements
         return Actions.newView(titleString, urlInWeb.toString());
     }
 
-    @Inject
-    Client<DroppingListener> courseDroppingListener;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -192,7 +185,6 @@ public class CourseDetailFragment extends FragmentBase implements
         header.setVisibility(View.GONE); //hide while we don't have the course
         footer.setVisibility(View.GONE);
 
-        courseDroppingListener.subscribe(this);
         //COURSE RELATED IN ON START
     }
 
@@ -282,7 +274,6 @@ public class CourseDetailFragment extends FragmentBase implements
 
     @Override
     public void onDestroyView() {
-        courseDroppingListener.unsubscribe(this);
         tryAgain.setOnClickListener(null);
         goToCatalog.setOnClickListener(null);
         instructorAdapter = null;
@@ -340,18 +331,5 @@ public class CourseDetailFragment extends FragmentBase implements
         if (course == null) return;
 
         shareIntentWithChooser = getShareHelper().getIntentForCourseSharing(course);
-    }
-
-    @Override
-    public void onSuccessDropCourse(@NotNull Course droppedCourse) {
-        if (course != null && droppedCourse.getId() == course.getId()) {
-            course.setEnrollment(0);
-            resolveJoinView();
-        }
-    }
-
-    @Override
-    public void onFailDropCourse(@NotNull Course course) {
-        //do nothing
     }
 }
