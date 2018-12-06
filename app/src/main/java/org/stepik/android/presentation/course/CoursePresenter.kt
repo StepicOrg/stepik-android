@@ -10,6 +10,7 @@ import org.stepic.droid.di.qualifiers.CourseId
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.course.interactor.ContinueLearningInteractor
 import org.stepik.android.domain.course.interactor.CourseEnrollmentInteractor
+import org.stepik.android.domain.course.interactor.CourseIndexingInteractor
 import org.stepik.android.domain.course.interactor.CourseInteractor
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.model.EnrollmentState
@@ -29,6 +30,7 @@ constructor(
     private val courseInteractor: CourseInteractor,
     private val courseEnrollmentInteractor: CourseEnrollmentInteractor,
     private val continueLearningInteractor: ContinueLearningInteractor,
+    private val courseIndexingInteractor: CourseIndexingInteractor,
 
     private val adaptiveCoursesResolver: AdaptiveCoursesResolver,
 
@@ -48,6 +50,7 @@ constructor(
         set(value) {
             field = value
             view?.setState(value)
+            startIndexing()
         }
 
     init {
@@ -57,6 +60,12 @@ constructor(
     override fun attachView(view: CourseView) {
         super.attachView(view)
         view.setState(state)
+        startIndexing()
+    }
+
+    override fun detachView(view: CourseView) {
+        super.detachView(view)
+        endIndexing()
     }
 
     /**
@@ -170,6 +179,21 @@ constructor(
                     }
                 )
         }
+    }
+
+    /**
+     * Indexing
+     */
+    private fun startIndexing() {
+        (state as? CourseView.State.CourseLoaded)
+            ?.takeIf { view != null }
+            ?.courseHeaderData
+            ?.course
+            ?.let(courseIndexingInteractor::startIndexing)
+    }
+
+    private fun endIndexing() {
+        courseIndexingInteractor.endIndexing()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
