@@ -19,7 +19,7 @@ class CourseInfoAdapter(
     fontsProvider: FontsProvider,
 
     onVideoClicked: ((Video) -> Unit)? = null,
-    onInstructorClicked: ((User) -> Unit)? = null
+    onUserClicked: ((User) -> Unit)? = null
 ) : DelegateAdapter<CourseInfoItem, CourseInfoAdapter.ViewHolder>() {
     private var blocks : List<CourseInfoItem> = emptyList()
         set(value) {
@@ -29,9 +29,9 @@ class CourseInfoAdapter(
 
     init {
         addDelegate(CourseInfoTextBlockDelegate(this, fontsProvider))
-        addDelegate(CourseInfoInstructorsDelegate(this, onInstructorClicked))
+        addDelegate(CourseInfoInstructorsDelegate(this, onUserClicked))
         addDelegate(CourseInfoVideoBlockDelegate(this, onVideoClicked))
-        addDelegate(CourseInfoOrganizationDelegate(this))
+        addDelegate(CourseInfoOrganizationDelegate(this, onUserClicked))
     }
 
     fun setSortedData(sortedBlocks: List<CourseInfoItem>) {

@@ -11,7 +11,7 @@ import org.stepik.android.model.user.User
  * null items in instructor block means that users not loaded yet
  */
 data class CourseInfoData(
-    val organization: String? = null,
+    val organization: User? = null,
     val video: Video? = null,
     val about: String? = null,
     val requirements: String? = null,
@@ -48,7 +48,7 @@ data class CourseInfoData(
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(organization)
+        parcel.writeParcelable(organization, flags)
         parcel.writeParcelable(video, flags)
         parcel.writeString(about)
         parcel.writeString(requirements)
@@ -64,7 +64,7 @@ data class CourseInfoData(
     companion object CREATOR : Parcelable.Creator<CourseInfoData> {
         override fun createFromParcel(parcel: Parcel) =
             CourseInfoData(
-                parcel.readString(),
+                parcel.readParcelable(User::class.java.classLoader),
                 parcel.readParcelable(Video::class.java.classLoader),
                 parcel.readString(),
                 parcel.readString(),

@@ -24,7 +24,7 @@ sealed class CourseInfoItem(
 
 
     class OrganizationBlock(
-            val organizationTitle: String
+            val organization: User
     ) : CourseInfoItem(CourseInfoType.ORGANIZATION)
 
     class VideoBlock(
