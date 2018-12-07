@@ -22,9 +22,6 @@
             android:focusableInTouchMode="true"
             android:orientation="vertical">
 
-            <include
-                layout="@layout/step_text_header"/>
-
             <TextView
                 android:id="@+id/discounting_policy_textview"
                 android:layout_width="match_parent"

@@ -13,7 +13,7 @@ constructor() : Mapper<CourseCollection, CoursesCarouselInfo> {
         return CoursesCarouselInfo(
                 colorType = CoursesCarouselColorType.Light,
                 title = item.title,
-                table = null,
+                courseListType = null,
                 courseIds = item.courses,
                 description = item.description
         )

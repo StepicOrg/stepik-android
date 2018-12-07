@@ -19,6 +19,7 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.features.deadlines.model.DeadlineFlatItem
+import org.stepic.droid.model.CourseListType
 import org.stepik.android.model.Course
 import org.stepik.android.model.Section
 import org.stepic.droid.notifications.model.Notification
@@ -27,7 +28,6 @@ import org.stepic.droid.notifications.model.StepikNotificationChannel
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.storage.operations.DatabaseFacade
-import org.stepic.droid.storage.operations.Table
 import org.stepic.droid.ui.activities.*
 import org.stepic.droid.util.*
 import org.stepic.droid.util.resolvers.text.TextResolver
@@ -60,7 +60,7 @@ class StepikNotificationManagerImpl
     override fun showLocalNotificationRemind() {
         Timber.d("Learn everyday, free courses")
         if (sharedPreferenceHelper.authResponseFromStore == null ||
-                databaseFacade.getAllCourses(Table.enrolled).isNotEmpty() ||
+                databaseFacade.getAllCourses(CourseListType.ENROLLED).isNotEmpty() ||
                 sharedPreferenceHelper.anyStepIsSolved() || sharedPreferenceHelper.isStreakNotificationEnabled) {
             analytic.reportEvent(Analytic.Notification.REMIND_HIDDEN)
             return
@@ -409,7 +409,7 @@ class StepikNotificationManagerImpl
                 return
             }
             stepikNotification.course_id = courseId
-            val notificationOfCourseList: MutableList<Notification?> = databaseFacade.getAllNotificationsOfCourse(courseId)
+            val notificationOfCourseList: MutableList<Notification?> = databaseFacade.getAllNotificationsOfCourse(courseId).toMutableList()
             val relatedCourse = getCourse(courseId)
             val isNeedAdd = notificationOfCourseList.none { it?.id == stepikNotification.id }
 
@@ -585,7 +585,7 @@ class StepikNotificationManagerImpl
 
     private fun getCourse(courseId: Long?): Course? {
         if (courseId == null) return null
-        var course: Course? = databaseFacade.getCourseById(courseId, Table.enrolled)
+        var course: Course? = databaseFacade.getCourseById(courseId)
         if (course == null) {
             course = api.getCourse(courseId).execute()?.body()?.courses?.firstOrNull()
         }

@@ -7,9 +7,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.JavascriptInterface;
@@ -34,6 +32,8 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
     private static final int MAX_CLICK_DURATION = 200;
     private long startClickTime;
     OnWebViewImageClicked listener;
+
+    private float textSize = 14f;
 
     @ColorInt
     private int textColorHighlight;
@@ -82,6 +82,8 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
         setOnClickListener(this);
         setOnTouchListener(this);
 
+        setFocusable(true);
+        setFocusableInTouchMode(true);
 
         WebSettings webSettings = getSettings();
         webSettings.setDomStorageEnabled(true);
@@ -97,6 +99,20 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
         }
     }
 
+    /*
+     * @return text size of content in SP
+     */
+    public float getTextSize() {
+        return textSize;
+    }
+
+    /**
+     * Set text size of content
+     * @param textSize - text size of content in SP
+     */
+    public void setTextSize(float textSize) {
+        this.textSize = textSize;
+    }
 
     public void setText(CharSequence text) {
         setText(text, false); //by default we do not want latex -> try to optimize
@@ -107,16 +123,13 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
     }
 
     public void setText(CharSequence text, boolean wantLaTeX, String fontPath) {
-
-        DisplayMetrics displaymetrics = new DisplayMetrics();
-        ((AppCompatActivity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-        int width = displaymetrics.widthPixels;
+        final int width = getResources().getDisplayMetrics().widthPixels;
 
         String textString = text.toString();
 
         final String html;
         if (fontPath != null) {
-            html = HtmlHelper.buildPageWithCustomFont(text, fontPath, textColorHighlight, width, config.getBaseUrl());
+            html = HtmlHelper.buildPageWithCustomFont(text, textSize, fontPath, textColorHighlight, width, config.getBaseUrl());
         } else if (wantLaTeX || HtmlHelper.hasLaTeX(textString)) {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
                 setWebViewClient(new AssetSupportWebViewClient());

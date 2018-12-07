@@ -495,8 +495,8 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Call<Void> tryJoinCourse(@NotNull Course course) {
-        return loggedService.joinCourse(new EnrollmentWrapper(course.getId()));
+    public Completable joinCourse(long courseId) {
+        return loggedService.joinCourse(new EnrollmentWrapper(courseId));
     }
 
     @Override
@@ -555,9 +555,14 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Call<Void> dropCourse(long courseId) {
+    public Completable dropCourse(long courseId) {
         if (!config.isUserCanDropCourse()) return null;
         return loggedService.dropCourse(courseId);
+    }
+
+    @Override
+    public Call<Void> dropCourse(@NotNull Course course) {
+        return loggedService.dropCourseLegacy(course.getId());
     }
 
     @Override
@@ -596,13 +601,15 @@ public class ApiImpl implements Api {
 
     @Override
     public Call<SearchResultResponse> getSearchResultsCourses(int page, String rawQuery) {
+        EnumSet<StepikFilter> enumSet = sharedPreference.getFilterForFeatured();
+        String lang = enumSet.iterator().next().getLanguage();
         String encodedQuery = URLEncoder.encode(rawQuery);
 
         Bundle bundle = new Bundle();
         bundle.putString(FirebaseAnalytics.Param.SEARCH_TERM, rawQuery);
         analytic.reportEvent(FirebaseAnalytics.Event.SEARCH, bundle);
 
-        return loggedService.getSearchResults(page, encodedQuery);
+        return loggedService.getSearchResults(page, encodedQuery, lang);
     }
 
     @Override
@@ -891,7 +898,7 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Single<CourseReviewResponse> getCourseReviews(int[] courseIds) {
+    public Single<CourseReviewResponse> getCourseReviews(long[] courseIds) {
         return loggedService.getCourseReviews(courseIds);
     }
 

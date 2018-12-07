@@ -166,38 +166,38 @@ public class HtmlHelper {
     }
 
 
-    private static String getStyle(@Nullable String fontPath, @ColorInt int textColorHighlight) {
+    private static String getStyle(float fontSize, @Nullable String fontPath, @ColorInt int textColorHighlight) {
         final String fontStyle;
         if (fontPath  == null) {
-            fontStyle = DefaultFontStyle;
+            fontStyle = String.format(Locale.getDefault(), DefaultFontStyle, fontSize);
         } else {
-            fontStyle = String.format(Locale.getDefault(), CustomFontStyle, fontPath);
+            fontStyle = String.format(Locale.getDefault(), CustomFontStyle, fontPath, fontSize);
         }
 
         final String selectionColorStyle = String.format(Locale.getDefault(), SelectionColorStyle, 0xFFFFFF & textColorHighlight);
         return fontStyle + selectionColorStyle;
     }
 
-    private static String buildPage(CharSequence body, List<String> additionalScripts, String fontPath, @ColorInt int textColorHighlight, int widthPx, String baseUrl) {
+    private static String buildPage(CharSequence body, List<String> additionalScripts, float fontSize, String fontPath, @ColorInt int textColorHighlight, int widthPx, String baseUrl) {
         if (hasKotlinRunnableSample(body.toString())) {
             additionalScripts.add(KotlinRunnableSamplesScript);
         }
         String scripts = CollectionsKt.joinToString(additionalScripts, "", "", "", -1, "", null);
-        String preBody = String.format(Locale.getDefault(), PRE_BODY, scripts, getStyle(fontPath, textColorHighlight), widthPx, baseUrl);
+        String preBody = String.format(Locale.getDefault(), PRE_BODY, scripts, getStyle(fontSize, fontPath, textColorHighlight), widthPx, baseUrl);
 
         return preBody + body + POST_BODY;
     }
 
     public static String buildMathPage(CharSequence body, @ColorInt int textColorHighlight, int widthPx, String baseUrl) {
-        return buildPage(body, CollectionsKt.arrayListOf(MathJaxScript), null, textColorHighlight, widthPx, baseUrl);
+        return buildPage(body, CollectionsKt.arrayListOf(MathJaxScript), DefaultFontSize, null, textColorHighlight, widthPx, baseUrl);
     }
 
     public static String buildPageWithAdjustingTextAndImage(CharSequence body, @ColorInt int textColorHighlight, int widthPx, String baseUrl) {
-        return buildPage(body, new ArrayList<String>(), null, textColorHighlight, widthPx, baseUrl);
+        return buildPage(body, CollectionsKt.<String>emptyList(), DefaultFontSize, null, textColorHighlight, widthPx, baseUrl);
     }
 
-    public static String buildPageWithCustomFont(CharSequence body, String fontPath, @ColorInt int textColorHighlight, int widthPx, String baseUrl) {
-        return buildPage(body, new ArrayList<String>(), fontPath, textColorHighlight, widthPx, baseUrl);
+    public static String buildPageWithCustomFont(CharSequence body, float fontSize, String fontPath, @ColorInt int textColorHighlight, int widthPx, String baseUrl) {
+        return buildPage(body, CollectionsKt.<String>emptyList(), fontSize, fontPath, textColorHighlight, widthPx, baseUrl);
     }
 
     public static final String HORIZONTAL_SCROLL_LISTENER = "scrollListener";
@@ -216,6 +216,9 @@ public class HtmlHelper {
                     "    overflow-x: scroll;\n" +
                     "    vertical-align: middle;\n" +
                     "}\n" +
+                    "body > .no-scroll {\n" +
+                    "    overflow: visible !important;\n" +
+                    "}" +
                     "</style>\n";
         } else {
             HORIZONTAL_SCROLL_STYLE = "";
@@ -234,7 +237,33 @@ public class HtmlHelper {
     }
 
     private static final String KotlinRunnableSamplesScript =
-            "<script src=\"https://unpkg.com/kotlin-playground@1\" data-selector=\"kotlin-runnable\"></script>";
+            "<script src=\"https://unpkg.com/kotlin-playground@1\"></script>" +
+            "<script>\n" +
+            "document.addEventListener('DOMContentLoaded', function() {\n" +
+            "    KotlinPlayground('kotlin-runnable', { \n" +
+            "        callback: function(targetNode, mountNode) {\n" +
+            "            mountNode.classList.add('no-scroll');\n" + // disable overflow for pg divs in order to disable overflow and show expand button
+            "        }\n" +
+            "    });\n" +
+            "});\n" +
+            "</script>";
+
+    private static final String KOTLIN_PLAYGROUND_SCROLL_RULE =
+            "elem.className !== 'CodeMirror-scroll' && elem.className !== 'code-output'";
+
+    private static final String DEFAULT_SCROLL_RULE =
+            "elem.parentElement.tagName !== 'BODY' && elem.parentElement.tagName !== 'HTML'";
+
+    private static final String HORIZONTAL_SCROLL_SCRIPT =
+            "<script type=\"text/javascript\">\n" +
+                "function measureScroll(x, y) {" +
+                    "var elem = document.elementFromPoint(x, y);" +
+                    "while(" + DEFAULT_SCROLL_RULE + " && " + KOTLIN_PLAYGROUND_SCROLL_RULE + ") {" +
+                        "elem = elem.parentElement;" +
+                     "}" +
+                    HORIZONTAL_SCROLL_LISTENER + ".onScroll(elem.offsetWidth, elem.scrollWidth, elem.scrollLeft);" +
+                "}" +
+            "</script>\n";
 
     //string with 2 format args
     private static final String PRE_BODY = "<html>\n" +
@@ -253,16 +282,8 @@ public class HtmlHelper {
             ", user-scalable=no" +
             ", target-densitydpi=medium-dpi" +
             "\" />" +
-            "<script type=\"text/javascript\">\n" +
-            "function measureScroll(x, y) {" +
-            "var elem = document.elementFromPoint(x, y);" +
-            "while(elem.parentElement.tagName !== 'BODY' && elem.parentElement.tagName !== 'HTML') {" +
-            "elem = elem.parentElement;" +
-            "}" +
-            HORIZONTAL_SCROLL_LISTENER + ".onScroll(elem.offsetWidth, elem.scrollWidth, elem.scrollLeft);" +
-            "}" +
-            "</script>\n" +
             "<link rel=\"stylesheet\" type=\"text/css\" href=\"wysiwyg.css\"/>" +
+            HORIZONTAL_SCROLL_SCRIPT +
             HORIZONTAL_SCROLL_STYLE +
             "<base href=\"%s\">" +
             "</head>\n"
@@ -273,10 +294,12 @@ public class HtmlHelper {
             + "::selection { background: #%06X; }\n"
             + "</style>";
 
+    private static final float DefaultFontSize = 14f;
+
     private static final String DefaultFontStyle =
             "<style>\n"
             + "\nhtml{-webkit-text-size-adjust: 100%%;}"
-            + "\nbody{font-size: 12pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;}"
+            + "\nbody{font-size: %fpt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;}"
             + "\nh1{font-size: 20pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;text-align: center;}"
             + "\nh2{font-size: 17pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;text-align: center;}"
             + "\nh3{font-size: 14pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;text-align: center;}"
@@ -291,7 +314,7 @@ public class HtmlHelper {
             "    src: url(\"%s\")\n" +
             "}"
             + "\nhtml{-webkit-text-size-adjust: 100%%;}"
-            + "\nbody{font-size: 14px; font-family:'Roboto', Helvetica, sans-serif; line-height:1.6em;}"
+            + "\nbody{font-size: %fpx; font-family:'Roboto', Helvetica, sans-serif; line-height:1.6em;}"
             + "\nh1{font-size: 22px; font-family:'Roboto', Helvetica, sans-serif; line-height:1.6em;text-align: center;}"
             + "\nh2{font-size: 19px; font-family:'Roboto', Helvetica, sans-serif; line-height:1.6em;text-align: center;}"
             + "\nh3{font-size: 16px; font-family:'Roboto', Helvetica, sans-serif; line-height:1.6em;text-align: center;}"

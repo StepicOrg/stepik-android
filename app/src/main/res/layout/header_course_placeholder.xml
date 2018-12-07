@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/courseHeaderPlaceholder"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+
+    android:background="@color/fast_continue_learning_opacity"
+    android:gravity="center_horizontal"
+    app:layout_collapseMode="pin">
+
+    <org.stepic.droid.ui.custom.LoadingView
+        android:layout_width="200dp"
+        android:layout_height="@dimen/header_action_height"
+        android:alpha="@dimen/loading_view_dark_alpha"
+        android:layerType="software"
+        app:radius="@dimen/header_action_radius"
+        android:paddingEnd="@dimen/guideline_standard_padding"
+        android:paddingStart="@dimen/guideline_standard_padding"
+        android:layout_marginTop="?actionBarSize" />
+
+    <org.stepic.droid.ui.custom.LoadingView
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:alpha="@dimen/loading_view_dark_alpha"
+        android:layerType="software"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="?actionBarSize"
+        android:layout_marginEnd="?actionBarSize"
+        android:layout_gravity="center_horizontal" />
+
+    <LinearLayout
+        android:id="@+id/courseInfoPlaceholder"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/course_info_height_expanded"
+        android:alpha="@dimen/loading_view_dark_alpha"
+        android:layerType="software"
+        android:orientation="horizontal"
+        android:layout_marginLeft="?actionBarSize"
+        android:layout_marginRight="?actionBarSize"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="@dimen/course_info_margin_expanded"
+        android:gravity="center">
+
+        <org.stepic.droid.ui.custom.LoadingView
+            android:layout_width="36dp"
+            android:layout_height="36dp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp">
+
+
+            <org.stepic.droid.ui.custom.LoadingView
+                android:layout_width="match_parent"
+                android:layout_height="8dp" />
+
+            <org.stepic.droid.ui.custom.LoadingView
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                android:layout_marginTop="8dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

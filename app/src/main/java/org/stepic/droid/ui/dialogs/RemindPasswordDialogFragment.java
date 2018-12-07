@@ -2,19 +2,21 @@ package org.stepic.droid.ui.dialogs;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +30,7 @@ import javax.inject.Inject;
 
 import butterknife.BindString;
 import butterknife.ButterKnife;
+import kotlin.text.StringsKt;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -80,6 +83,7 @@ public class RemindPasswordDialogFragment extends DialogFragment {
             @Override
             public void onShow(DialogInterface dialog) {
                 Button b = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                bindEmailChangeToButton(b);
                 b.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -167,6 +171,28 @@ public class RemindPasswordDialogFragment extends DialogFragment {
                 }
             });
         }
+    }
+    private void bindEmailChangeToButton(final Button button) {
+        EditText email = emailTextWrapper.getEditText();
+        if (email != null) {
+            setSubmitButtonState(button, email.getText().toString());
+            email.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    setSubmitButtonState(button, s.toString());
+                }
+
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+                @Override
+                public void afterTextChanged(Editable s) {}
+            });
+        }
+    }
+
+    private void setSubmitButtonState(final Button button, String text) {
+        button.setEnabled(!StringsKt.isBlank(text));
     }
 
     @Override

@@ -110,28 +110,6 @@
                 android:value=".ui.activities.CourseSearchResultActivity" />
         </activity>
 
-        <activity android:name=".ui.activities.CourseDetailActivity">
-
-            <intent-filter
-                android:autoVerify="true"
-                tools:ignore="UnusedAttribute">
-
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="https" />
-                <data android:scheme="http" />
-                <data android:host="@string/host_name" />
-                <data android:host="@string/secondary_host_name" />
-
-                <data android:pathPattern="/course/.*/" />
-                <data android:pathPattern="/course/.*/course_app" />
-
-            </intent-filter>
-        </activity>
-
         <activity
             android:name=".ui.activities.SectionActivity"
             android:parentActivityName=".ui.activities.MainFeedActivity">
@@ -379,7 +357,28 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".features.course.ui.activity.CourseActivity" />
+            android:name="org.stepik.android.view.course.ui.activity.CourseActivity">
+
+            <intent-filter
+                android:autoVerify="true"
+                tools:ignore="UnusedAttribute">
+
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="https" />
+                <data android:scheme="http" />
+                <data android:host="@string/host_name" />
+                <data android:host="@string/secondary_host_name" />
+
+                <data android:pathPattern="/course/.*/" />
+                <data android:pathPattern="/course/.*/course_app" />
+
+            </intent-filter>
+
+        </activity>
 
         <receiver
             android:name="org.stepic.droid.receivers.DownloadClickReceiver"
@@ -462,6 +461,11 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths"/>
         </provider>
+
+        <service
+            android:name=".features.achievements.service.AchievementsNotificationService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:exported="true" />
 
         <uses-library
             android:name="com.sec.android.app.multiwindow"

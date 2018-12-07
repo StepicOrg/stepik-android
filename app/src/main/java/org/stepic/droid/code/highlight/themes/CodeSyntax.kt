@@ -3,20 +3,20 @@ package org.stepic.droid.code.highlight.themes
 import android.support.annotation.ColorInt
 import org.stepic.droid.code.highlight.prettify.parser.Prettify.*
 
-data class CodeSyntax(
+class CodeSyntax(
         @ColorInt val plain: Int,
-        @ColorInt val string: Int = plain,
-        @ColorInt val keyword: Int = plain,
-        @ColorInt val comment: Int = plain,
-        @ColorInt val type: Int = plain,
-        @ColorInt val literal: Int = plain,
-        @ColorInt val punctuation: Int = plain,
-        @ColorInt val tag: Int = plain,
-        @ColorInt val declaration: Int = plain,
-        @ColorInt val source: Int = plain,
-        @ColorInt val attributeName: Int = plain,
-        @ColorInt val attributeValue: Int = plain,
-        @ColorInt val nocode: Int = plain
+        @ColorInt string: Int = plain,
+        @ColorInt keyword: Int = plain,
+        @ColorInt comment: Int = plain,
+        @ColorInt type: Int = plain,
+        @ColorInt literal: Int = plain,
+        @ColorInt punctuation: Int = plain,
+        @ColorInt tag: Int = plain,
+        @ColorInt declaration: Int = plain,
+        @ColorInt source: Int = plain,
+        @ColorInt attributeName: Int = plain,
+        @ColorInt attributeValue: Int = plain,
+        @ColorInt nocode: Int = plain
 ) {
 
     fun shouldBePainted(prType: String) = colorMap[prType] != plain

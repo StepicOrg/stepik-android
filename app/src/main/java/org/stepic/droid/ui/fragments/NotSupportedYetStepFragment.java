@@ -17,6 +17,9 @@ public class NotSupportedYetStepFragment extends StepBaseFragment {
     @BindView(R.id.open_web)
     Button openWebBtn;
 
+    @BindView(R.id.stepContainer)
+    ViewGroup stepContainer;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -34,4 +37,13 @@ public class NotSupportedYetStepFragment extends StepBaseFragment {
         });
     }
 
+    @Override
+    protected void attachStepTextWrapper() {
+        stepTextWrapper.attach(stepContainer, true);
+    }
+
+    @Override
+    protected void detachStepTextWrapper() {
+        stepTextWrapper.detach(stepContainer);
+    }
 }

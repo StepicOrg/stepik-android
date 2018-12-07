@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/course_info_block_margin">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <org.stepic.droid.ui.custom.LoadingView
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_gravity="start|center_vertical" />
+
+        <org.stepic.droid.ui.custom.LoadingView
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:layout_marginStart="@dimen/course_info_block_text_margin"
+            android:layout_marginLeft="@dimen/course_info_block_text_margin"
+            android:layout_gravity="start|center_vertical" />
+
+    </FrameLayout>
+
+    <org.stepic.droid.ui.custom.LoadingView
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+
+        android:layout_marginTop="@dimen/course_info_block_margin"
+        android:layout_marginStart="@dimen/course_info_block_text_margin"
+        android:layout_marginLeft="@dimen/course_info_block_text_margin" />
+
+    <org.stepic.droid.ui.custom.LoadingView
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+
+        android:layout_marginTop="@dimen/course_info_block_margin"
+        android:layout_marginStart="@dimen/course_info_block_text_margin"
+        android:layout_marginLeft="@dimen/course_info_block_text_margin" />
+
+</LinearLayout>

@@ -7,15 +7,15 @@ import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.joining.contract.JoiningPoster
 import org.stepic.droid.core.presenters.contracts.CourseJoinView
 import org.stepic.droid.di.course.CourseAndSectionsScope
+import org.stepic.droid.model.CourseListType
 import org.stepik.android.model.Course
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
-import org.stepic.droid.storage.operations.Table
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
-import org.stepic.droid.web.Api
+import org.stepik.android.domain.course.interactor.CourseEnrollmentInteractor
+import retrofit2.HttpException
 import java.io.IOException
-import java.net.HttpURLConnection
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
 
@@ -23,50 +23,38 @@ import javax.inject.Inject
 class CourseJoinerPresenter
 @Inject constructor(
         private val sharedPreferenceHelper: SharedPreferenceHelper,
-        private val api: Api,
         private val threadPoolExecutor: ThreadPoolExecutor,
         private val mainHandler: MainHandler,
         private val joiningPoster: JoiningPoster,
         private val database: DatabaseFacade,
-        private val analytic: Analytic
+        private val analytic: Analytic //,
+//        private val courseEnrollmentInteractor: CourseEnrollmentInteractor
 ) : PresenterBase<CourseJoinView>() {
 
     @MainThread
     fun joinCourse(course: Course) {
-        val response = sharedPreferenceHelper.authResponseFromStore
-        if (response != null) {
-            view?.showProgress()
-            view?.setEnabledJoinButton(false)
-            threadPoolExecutor.execute {
-                try {
-                    val tryJoinCourseResponse = api.tryJoinCourse(course).execute()
-                    if (tryJoinCourseResponse.isSuccessful) {
-                        handleSuccessResponse(course)
-                    } else {
-                        mainHandler.post {
-                            view?.onFailJoin(tryJoinCourseResponse.code())
-                        }
-                    }
-                } catch (exception: Exception) {
-                    //no internet
-                    if (exception !is IOException) {
-                        analytic.reportError(Analytic.Error.JOIN_FAILED, exception)
-                    }
-                    mainHandler.post {
-                        view?.onFailJoin(0)
-                    }
-                }
-            }
-        } else {
-            analytic.reportEvent(Analytic.Anonymous.JOIN_COURSE)
-            view?.onFailJoin(HttpURLConnection.HTTP_UNAUTHORIZED)
-        }
+//        view?.showProgress()
+//        view?.setEnabledJoinButton(false)
+//        threadPoolExecutor.execute {
+//            try {
+//                courseEnrollmentInteractor.enrollCourse(course.id).blockingAwait()
+//                handleSuccessResponse(course)
+//            } catch (exception: Exception) {
+//                //no internet
+//                if (exception !is IOException) {
+//                    analytic.reportError(Analytic.Error.JOIN_FAILED, exception)
+//                }
+//                val errorCode = (exception as? HttpException)?.code() ?: 0
+//                mainHandler.post {
+//                    view?.onFailJoin(errorCode)
+//                }
+//            }
+//        }
     }
 
     @WorkerThread
     private fun handleSuccessResponse(course: Course) {
-        course.enrollment = course.id.toInt()
-
+        course.enrollment = course.id
 
         mainHandler.post {
             joiningPoster.joinCourse(course)
@@ -74,11 +62,7 @@ class CourseJoinerPresenter
         }
 
         //update in database
-        database.addCourse(course, Table.enrolled)
-        val isFeatured = database.getCourseById(course.id, Table.featured) != null
-        if (isFeatured) {
-            database.addCourse(course, Table.featured)
-        }
+        database.addCourseList(CourseListType.ENROLLED, listOf(course))
         val enrollNotificationClickMillis: Long? = sharedPreferenceHelper.lastClickEnrollNotification
         enrollNotificationClickMillis?.let {
             val wasClickedPlus30Min = it + 30 * AppConstants.MILLIS_IN_1MINUTE

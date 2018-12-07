@@ -3,13 +3,11 @@ package org.stepic.droid.storage.dao
 import android.content.ContentValues
 import android.database.Cursor
 import com.google.gson.Gson
-import org.stepic.droid.mappers.toDbUrl
-import org.stepic.droid.mappers.toVideoUrls
 import org.stepic.droid.model.*
 import org.stepik.android.model.code.CodeOptions
 import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepic.droid.storage.structure.DbStructureBlock
-import org.stepic.droid.storage.structure.DbStructureVideoUrl
+import org.stepik.android.cache.video.dao.VideoDao
 import org.stepik.android.model.Block
 import org.stepik.android.model.Video
 import javax.inject.Inject
@@ -19,7 +17,7 @@ class BlockDaoImpl
 constructor(
         databaseOperations: DatabaseOperations,
         private val gson: Gson,
-        private val videoUrlIDao: IDao<DbVideoUrl>
+        private val videoDao: VideoDao
 ) : DaoBase<BlockPersistentWrapper>(databaseOperations) {
 
     public override fun parsePersistentObject(cursor: Cursor): BlockPersistentWrapper {
@@ -86,48 +84,12 @@ constructor(
 
     public override fun getDefaultPrimaryValue(persistentObject: BlockPersistentWrapper) = persistentObject.stepId.toString()
 
-    override fun get(whereColumnName: String, whereValue: String): BlockPersistentWrapper? {
-        val blockWrapper = super.get(whereColumnName, whereValue)
-        addExternalVideoToBlockWrapper(blockWrapper)
-        return blockWrapper
-    }
-
-    override fun getAllWithQuery(query: String, whereArgs: Array<String>?): List<BlockPersistentWrapper> {
-        val blockWrapperList = super.getAllWithQuery(query, whereArgs)
-        for (blockWrapperItem in blockWrapperList) {
-            addExternalVideoToBlockWrapper(blockWrapperItem)
-        }
-        return blockWrapperList
-    }
-
-    private fun addExternalVideoToBlockWrapper(blockWrapper: BlockPersistentWrapper?) {
-        if (blockWrapper?.block == null) {
-            return
-        }
-        val externalVideoId = blockWrapper.block.video?.id?.toString() ?: return
-
-        val externalVideoUrls: MutableList<DbVideoUrl?> = videoUrlIDao.getAll(DbStructureVideoUrl.Column.videoId, externalVideoId)
-
-        blockWrapper.block.video?.urls = externalVideoUrls.toVideoUrls()
-    }
-
-    override fun insertOrUpdate(persistentObject: BlockPersistentWrapper?) {
-        super.insertOrUpdate(persistentObject)
-        if (persistentObject == null) {
-            return
+    override fun populateNestedObjects(persistentObject: BlockPersistentWrapper): BlockPersistentWrapper =
+        persistentObject.apply {
+            block.video = videoDao.get(block.video?.id ?: -1)
         }
 
-        //add all external video urls to database
-        persistentObject.block.video?.let { externalVideo ->
-            val list = ArrayList<DbVideoUrl>()
-            externalVideo.urls?.forEach {
-                val dbExternalUrl = it.toDbUrl(externalVideo.id)
-                list.add(dbExternalUrl)
-            }
-            videoUrlIDao.remove(DbStructureVideoUrl.Column.videoId, externalVideo.id.toString())
-            list.forEach {
-                videoUrlIDao.insertOrUpdate(it)
-            }
-        }
+    override fun storeNestedObjects(persistentObject: BlockPersistentWrapper) {
+        persistentObject.block.video?.let(videoDao::replace)
     }
 }

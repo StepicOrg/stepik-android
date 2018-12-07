@@ -16,8 +16,8 @@ import org.stepic.droid.analytic.AmplitudeAnalytic;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.core.dropping.contract.DroppingListener;
 import org.stepic.droid.core.presenters.PersistentCourseListPresenter;
+import org.stepic.droid.model.CourseListType;
 import org.stepik.android.model.Course;
-import org.stepic.droid.storage.operations.Table;
 import org.stepic.droid.ui.fragments.CourseListFragmentBase;
 import org.stepic.droid.ui.util.ContextMenuRecyclerView;
 import org.stepic.droid.util.AppConstants;
@@ -86,7 +86,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
             return;
         }
         int position = info.position;
-        if (position >= courses.size() && position < 0) {
+        if (position >= courses.size() || position < 0) {
             return; // the context will not be displayed
         }
 
@@ -140,7 +140,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     @Override
     public void showEmptyScreen(boolean isShown) {
         if (isShown) {
-            if (getCourseType() == Table.enrolled) {
+            if (getCourseType() == CourseListType.ENROLLED) {
                 emptyCoursesView.setVisibility(View.VISIBLE);
                 if (getSharedPreferenceHelper().getAuthResponseFromStore() != null) { //// TODO: 23.12.16 optimize it and do on background thread
                     //logged
@@ -190,10 +190,10 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
                 MapsKt.mapOf(new Pair<String, Object>(AmplitudeAnalytic.Course.Params.COURSE, courseId)));
 
         Toast.makeText(getContext(), getContext().getString(R.string.you_dropped, droppedCourse.getTitle()), Toast.LENGTH_LONG).show();
-        if (getCourseType() == Table.enrolled) { //why here was e.getCourseType?
+        if (getCourseType() == CourseListType.ENROLLED) { //why here was e.getCourseType?
             courses.remove(droppedCourse);
             coursesAdapter.notifyDataSetChanged();
-        } else if (getCourseType() == Table.featured) {
+        } else if (getCourseType() == CourseListType.FEATURED) {
             int position = -1;
             for (int i = 0; i < courses.size(); i++) {
                 Course courseItem = courses.get(i);
@@ -217,5 +217,5 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
     @NotNull
     @Override
-    protected abstract Table getCourseType();
+    protected abstract CourseListType getCourseType();
 }

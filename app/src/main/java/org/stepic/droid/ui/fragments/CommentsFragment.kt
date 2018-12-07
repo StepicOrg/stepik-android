@@ -44,7 +44,7 @@ import org.stepik.android.model.comments.Vote
 import java.util.*
 import javax.inject.Inject
 
-@SuppressFBWarnings(value = "RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE", justification = "false positive: commentManager is not null")
+@SuppressFBWarnings(value = ["RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE"], justification = "false positive: commentManager is not null")
 class CommentsFragment : FragmentBase(),
         SwipeRefreshLayout.OnRefreshListener,
         DiscussionView,

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -13,8 +13,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
-        android:layout_marginStart="@dimen/course_info_block_text_margin"
-        android:layout_marginLeft="@dimen/course_info_block_text_margin"
-        android:textColor="@color/new_accent_color" />
+        android:layout_marginStart="@dimen/course_info_instructor_block_offset"
+        android:layout_marginLeft="@dimen/course_info_instructor_block_offset"
+        android:paddingStart="@dimen/course_info_instructor_item_padding"
+        android:paddingLeft="@dimen/course_info_instructor_item_padding"
+        android:paddingTop="@dimen/course_info_instructor_item_padding"
+
+        android:textColor="@color/new_accent_color"
+        tools:listitem="@layout/view_course_info_instructor_item" />
 
 </LinearLayout>

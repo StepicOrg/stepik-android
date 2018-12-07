@@ -27,7 +27,7 @@ import org.stepic.droid.base.App;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.di.AppSingleton;
 import org.stepic.droid.features.achievements.ui.activity.AchievementsListActivity;
-import org.stepic.droid.features.course.ui.activity.CourseActivity;
+import org.stepik.android.view.course.ui.activity.CourseActivity;
 import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.model.CollectionDescriptionColors;
 import org.stepik.android.model.Course;
@@ -44,7 +44,6 @@ import org.stepic.droid.ui.activities.AboutAppActivity;
 import org.stepic.droid.ui.activities.AnimatedOnboardingActivity;
 import org.stepic.droid.ui.activities.CertificatesActivity;
 import org.stepic.droid.ui.activities.CommentsActivity;
-import org.stepic.droid.ui.activities.CourseDetailActivity;
 import org.stepic.droid.ui.activities.CourseListActivity;
 import org.stepic.droid.ui.activities.DownloadsActivity;
 import org.stepic.droid.ui.activities.FeedbackActivity;
@@ -219,31 +218,27 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void showCourseDescription(Fragment sourceFragment, @NotNull Course course) {
-        Intent intent = getIntentForDescription(sourceFragment.getActivity(), course);
+        Intent intent = getIntentForDescription(sourceFragment.getActivity(), course, false);
         sourceFragment.startActivityForResult(intent, AppConstants.REQUEST_CODE_DETAIL);
     }
 
     @Override
     public void showCourseDescription(Context context, @NotNull Course course) {
-        Intent intent = getIntentForDescription(context, course);
+        Intent intent = getIntentForDescription(context, course, false);
         context.startActivity(intent);
     }
 
     @Override
-    public void showCourseDescription(Activity sourceActivity, @NotNull Course course, boolean instaEnroll) {
-        Intent intent = getIntentForDescription(sourceActivity, course);
-        intent.putExtra(CourseDetailActivity.INSTA_ENROLL_KEY, instaEnroll);
+    public void showCourseDescription(Activity sourceActivity, @NotNull Course course, boolean autoEnroll) {
+        Intent intent = getIntentForDescription(sourceActivity, course, autoEnroll);
         sourceActivity.startActivity(intent);
     }
 
-    private Intent getIntentForDescription(Context context, @NotNull Course course) {
+    private Intent getIntentForDescription(Context context, @NotNull Course course, boolean autoEnroll) {
         analytic.reportEvent(Analytic.Screens.SHOW_COURSE_DESCRIPTION);
-        Intent intent = new Intent(context, CourseActivity.class);
+        Intent intent = CourseActivity.Companion.createIntent(context, course, autoEnroll);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(AppConstants.KEY_COURSE_BUNDLE, course);
-        intent.putExtras(bundle);
         if (!(context instanceof Activity)) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         }
@@ -520,6 +515,16 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
+    public void continueCourse(Activity activity, long unitId, long lessonId, long stepId) {
+        String testStepPath = StringUtil.getUriForStepByIds(config.getBaseUrl(), lessonId, unitId, stepId);
+        Intent intent = new Intent(activity, StepsActivity.class)
+                .setAction(AppConstants.INTERNAL_STEPIK_ACTION)
+                .putExtra(StepsActivity.EXTRA_IS_STEP_ID_WAS_PASSED, true)
+                .setData(Uri.parse(testStepPath));
+        activity.startActivity(intent);
+    }
+
+    @Override
     public void openInWeb(Activity context, String path) {
         analytic.reportEventWithName(Analytic.Screens.OPEN_LINK_IN_WEB, path);
         final Intent intent = getOpenInWebIntent(path);
@@ -650,7 +655,7 @@ public class ScreenManagerImpl implements ScreenManager {
         bundle.putParcelable(AppConstants.KEY_LESSON_BUNDLE, lesson);
         bundle.putParcelable(AppConstants.KEY_SECTION_BUNDLE, section);
         if (backAnimation) {
-            bundle.putBoolean(StepsActivity.Companion.getNeedReverseAnimationKey(), true);
+            bundle.putBoolean(StepsActivity.needReverseAnimationKey, true);
         }
         intent.putExtras(bundle);
         sourceActivity.startActivity(intent);
@@ -691,9 +696,7 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void showAchievementsList(Context context, long userId, boolean isMyProfile) {
-        Intent intent = new Intent(context, AchievementsListActivity.class);
-        intent.putExtra(AchievementsListActivity.USER_ID_KEY, userId);
-        intent.putExtra(AchievementsListActivity.IS_MY_PROFILE, isMyProfile);
+        Intent intent = AchievementsListActivity.Companion.createIntent(context, userId, isMyProfile);
         context.startActivity(intent);
     }
 }

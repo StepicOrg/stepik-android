@@ -7,19 +7,35 @@ import org.stepik.android.model.util.readBoolean
 import org.stepik.android.model.util.writeBoolean
 
 class Course(
+        @SerializedName("id")
         val id: Long,
+        @SerializedName("title")
         val title: String? = null,
+        @SerializedName("description")
         val description: String? = null,
+        @SerializedName("cover")
         val cover: String? = null,
 
+        @SerializedName("certificate")
         val certificate: String? = null,
+        @SerializedName("requirements")
         val requirements: String? = null,
+        @SerializedName("summary")
         val summary: String? = null,
+        @SerializedName("workload")
         val workload: String? = null,
+        @SerializedName("intro")
         val intro: String? = null,
+        @SerializedName("intro_video")
+        var introVideo: Video? = null,
+        @SerializedName("language")
         val language: String? = null,
 
+        @SerializedName("authors")
+        val authors: LongArray? = null,
+        @SerializedName("instructors")
         val instructors: LongArray? = null,
+        @SerializedName("sections")
         val sections: LongArray? = null,
 
         @SerializedName("course_format")
@@ -32,27 +48,33 @@ class Course(
         val certificateCoverOrg: String? = null,
 
         @SerializedName("total_units")
-        val totalUnits: Int = 0,
+        val totalUnits: Long = 0,
 
-        var enrollment: Int = 0,
+        @SerializedName("enrollment")
+        var enrollment: Long = 0,
+        @SerializedName("progress")
         override val progress: String? = null,
+        @SerializedName("owner")
         val owner: Long = 0,
 
         @SerializedName("is_contest")
         val isContest: Boolean = false,
         @SerializedName("is_featured")
         val isFeatured: Boolean = false,
-        @SerializedName("is_spoc")
-        val isSpoc: Boolean = false,
         @SerializedName("is_active")
         val isActive: Boolean = false,
         @SerializedName("is_public")
         val isPublic: Boolean = false,
 
+        @SerializedName("certificate_distinction_threshold")
+        val certificateDistinctionThreshold: Int = 0,
+        @SerializedName("certificate_regular_threshold")
+        val certificateRegularThreshold: Int = 0,
         @SerializedName("certificate_link")
         val certificateLink: String? = null,
+        @SerializedName("is_certificate_auto_issued")
+        val isCertificateAutoIssued: Boolean = false,
 
-        // todo: convert dates to Date
         @SerializedName("last_deadline")
         val lastDeadline: String? = null,
         @SerializedName("begin_date")
@@ -60,12 +82,8 @@ class Course(
         @SerializedName("end_date")
         val endDate: String? = null,
 
+        @SerializedName("slug")
         val slug: String? = null,
-
-        @SerializedName("intro_video")
-        var introVideo: Video? = null,
-        @SerializedName("intro_video_id")
-        val introVideoId: Long = 0,
 
         @SerializedName("schedule_link")
         val scheduleLink: String? = null,
@@ -77,7 +95,7 @@ class Course(
         @SerializedName("learners_count")
         val learnersCount: Long = 0,
         @SerializedName("review_summary")
-        val reviewSummary: Int = 0,
+        val reviewSummary: Long = 0,
 
         @SerializedName("time_to_complete")
         val timeToComplete: Long? = null,
@@ -90,40 +108,55 @@ class Course(
         parcel.writeString(title)
         parcel.writeString(description)
         parcel.writeString(cover)
+
         parcel.writeString(certificate)
         parcel.writeString(requirements)
         parcel.writeString(summary)
         parcel.writeString(workload)
         parcel.writeString(intro)
+        parcel.writeParcelable(introVideo, flags)
         parcel.writeString(language)
+
+        parcel.writeLongArray(authors)
         parcel.writeLongArray(instructors)
         parcel.writeLongArray(sections)
+
         parcel.writeString(courseFormat)
         parcel.writeString(targetAudience)
         parcel.writeString(certificateFooter)
         parcel.writeString(certificateCoverOrg)
-        parcel.writeInt(totalUnits)
-        parcel.writeInt(enrollment)
+
+        parcel.writeLong(totalUnits)
+
+        parcel.writeLong(enrollment)
         parcel.writeString(progress)
         parcel.writeLong(owner)
+
         parcel.writeBoolean(isContest)
         parcel.writeBoolean(isFeatured)
-        parcel.writeBoolean(isSpoc)
         parcel.writeBoolean(isActive)
         parcel.writeBoolean(isPublic)
+
+        parcel.writeInt(certificateDistinctionThreshold)
+        parcel.writeInt(certificateRegularThreshold)
         parcel.writeString(certificateLink)
+        parcel.writeBoolean(isCertificateAutoIssued)
+
         parcel.writeString(lastDeadline)
         parcel.writeString(beginDate)
         parcel.writeString(endDate)
+
         parcel.writeString(slug)
-        parcel.writeParcelable(introVideo, flags)
-        parcel.writeLong(introVideoId)
+
         parcel.writeString(scheduleLink)
         parcel.writeString(scheduleLongLink)
+
         parcel.writeString(lastStepId)
         parcel.writeLong(learnersCount)
-        parcel.writeInt(reviewSummary)
+        parcel.writeLong(reviewSummary)
+
         parcel.writeValue(timeToComplete)
+
         parcel.writeParcelable(progressObject, flags)
         parcel.writeDouble(rating)
     }
@@ -141,34 +174,36 @@ class Course(
                 parcel.readString(),
                 parcel.readString(),
                 parcel.readString(),
-                parcel.readString(),
-                parcel.createLongArray(),
-                parcel.createLongArray(),
-                parcel.readString(),
-                parcel.readString(),
-                parcel.readString(),
-                parcel.readString(),
-                parcel.readInt(),
-                parcel.readInt(),
-                parcel.readString(),
-                parcel.readLong(),
-                parcel.readBoolean(),
-                parcel.readBoolean(),
-                parcel.readBoolean(),
-                parcel.readBoolean(),
-                parcel.readBoolean(),
-                parcel.readString(),
-                parcel.readString(),
-                parcel.readString(),
-                parcel.readString(),
-                parcel.readString(),
                 parcel.readParcelable(Video::class.java.classLoader),
+                parcel.readString(),
+                parcel.createLongArray(),
+                parcel.createLongArray(),
+                parcel.createLongArray(),
+                parcel.readString(),
+                parcel.readString(),
+                parcel.readString(),
+                parcel.readString(),
+                parcel.readLong(),
                 parcel.readLong(),
                 parcel.readString(),
-                parcel.readString(),
-                parcel.readString(),
                 parcel.readLong(),
+                parcel.readBoolean(),
+                parcel.readBoolean(),
+                parcel.readBoolean(),
+                parcel.readBoolean(),
                 parcel.readInt(),
+                parcel.readInt(),
+                parcel.readString(),
+                parcel.readBoolean(),
+                parcel.readString(),
+                parcel.readString(),
+                parcel.readString(),
+                parcel.readString(),
+                parcel.readString(),
+                parcel.readString(),
+                parcel.readString(),
+                parcel.readLong(),
+                parcel.readLong(),
                 parcel.readValue(Long::class.java.classLoader) as Long?,
                 parcel.readParcelable(Progress::class.java.classLoader),
                 parcel.readDouble()

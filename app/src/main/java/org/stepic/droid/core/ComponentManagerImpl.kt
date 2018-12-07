@@ -10,6 +10,7 @@ import org.stepic.droid.di.routing.RoutingComponent
 import org.stepic.droid.di.splash.SplashComponent
 import org.stepic.droid.di.step.StepComponent
 import org.stepic.droid.util.SuppressFBWarnings
+import org.stepik.android.view.injection.course.CourseComponent
 import timber.log.Timber
 
 class ComponentManagerImpl(private val appCoreComponent: AppCoreComponent) : ComponentManager {
@@ -57,7 +58,7 @@ class ComponentManagerImpl(private val appCoreComponent: AppCoreComponent) : Com
         }
     }
 
-    @SuppressFBWarnings(value = "RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE", justification = "false positive")
+    @SuppressFBWarnings(value = ["RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE"], justification = "false positive")
     override fun releaseStepComponent(stepId: Long) {
         releaseRoutingComponent()
         val count: Int = stepComponentCountMap[stepId] ?: throw IllegalStateException("release step component, which is not allocated")
@@ -85,7 +86,7 @@ class ComponentManagerImpl(private val appCoreComponent: AppCoreComponent) : Com
         }
     }
 
-    @SuppressFBWarnings(value = "RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE", justification = "false positive")
+    @SuppressFBWarnings(value = ["RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE"], justification = "false positive")
     override fun releaseAdaptiveCourseComponent(courseId: Long) {
         val count: Int = adaptiveCourseComponentCountMap[courseId] ?: throw IllegalStateException("release adaptive course component, which is not allocated")
         if (count == 1) {
@@ -96,6 +97,20 @@ class ComponentManagerImpl(private val appCoreComponent: AppCoreComponent) : Com
             adaptiveCourseComponentCountMap[courseId] = count - 1
         }
     }
+
+    // Course
+
+    private val _courseComponentMap = hashMapOf<Long, ComponentHolder<CourseComponent>>()
+
+    override fun courseComponent(courseId: Long): CourseComponent =
+            _courseComponentMap.getOrPut(courseId, ::ComponentHolder).get {
+                appCoreComponent.courseComponentBuilder().courseId(courseId).build()
+            }
+
+    override fun releaseCourseComponent(courseId: Long) =
+            _courseComponentMap[courseId]
+                    ?.release()
+                    ?: throw IllegalStateException("release course = $courseId component, which is not allocated")
 
     // Login
 

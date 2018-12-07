@@ -10,13 +10,17 @@
         android:layout_height="match_parent"
         android:clipToPadding="false" />
 
-    <include layout="@layout/error_no_connection_with_button"
+    <LinearLayout
+        android:id="@+id/courseInfoLoadingPlaceholder"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <include
-        layout="@layout/error_course_not_found"
-        android:layout_marginTop="48dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/course_info_block_margin"
+        android:orientation="vertical">
+
+        <include layout="@layout/view_course_info_text_block_placeholder" />
+        <include layout="@layout/view_course_info_text_block_placeholder" />
+        <include layout="@layout/view_course_info_text_block_placeholder" />
+
+    </LinearLayout>
 
 </FrameLayout>

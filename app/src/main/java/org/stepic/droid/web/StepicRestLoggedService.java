@@ -32,7 +32,10 @@ public interface StepicRestLoggedService {
 
     @Headers("Content-Type:application/json")
     @POST("api/enrollments")
-    Call<Void> joinCourse(@Body EnrollmentWrapper enrollmentCourse);
+    Completable joinCourse(@Body EnrollmentWrapper enrollmentCourse);
+
+    @DELETE("api/enrollments/{id}")
+    Completable dropCourse(@Path("id") long courseId);
 
     @GET("api/users")
     Call<UsersResponse> getUsers(@Query("ids[]") long[] userIds);
@@ -90,7 +93,7 @@ public interface StepicRestLoggedService {
     );
 
     @DELETE("api/enrollments/{id}")
-    Call<Void> dropCourse(@Path("id") long courseId);
+    Call<Void> dropCourseLegacy(@Path("id") long courseId);
 
     @GET("api/progresses")
     Call<ProgressesResponse> getProgresses(@Query("ids[]") String[] progresses);
@@ -111,8 +114,11 @@ public interface StepicRestLoggedService {
     Completable postViewedReactive(@Body ViewAssignmentWrapper stepAssignment);
 
     @GET("api/search-results?is_popular=true&is_public=true&type=course")
-    Call<SearchResultResponse> getSearchResults(@Query("page") int page,
-                                                @Query(value = "query", encoded = true) String encodedQuery);
+    Call<SearchResultResponse> getSearchResults(
+            @Query("page") int page,
+            @Query(value = "query", encoded = true) String encodedQuery,
+            @Query("language") String lang
+    );
 
     @GET("api/queries")
     Single<QueriesResponse> getSearchQueries(@Query("query") String query);
@@ -231,7 +237,7 @@ public interface StepicRestLoggedService {
     Single<CourseCollectionsResponse> getCourseLists(@Query("language") String language);
 
     @GET("api/course-review-summaries")
-    Single<CourseReviewResponse> getCourseReviews(@Query("ids[]") int[] reviewSummaryIds);
+    Single<CourseReviewResponse> getCourseReviews(@Query("ids[]") long[] reviewSummaryIds);
 
     @GET("api/tags?is_featured=true")
     Single<TagResponse> getFeaturedTags();

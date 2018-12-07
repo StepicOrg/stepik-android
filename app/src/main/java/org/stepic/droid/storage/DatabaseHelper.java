@@ -9,6 +9,7 @@ import org.stepic.droid.features.deadlines.storage.structure.DbStructureDeadline
 import org.stepic.droid.storage.migration.MigrationFrom33To34;
 import org.stepic.droid.storage.migration.MigrationFrom34To35;
 import org.stepic.droid.storage.migration.MigrationFrom35To36;
+import org.stepic.droid.storage.migration.MigrationFrom36To37;
 import org.stepic.droid.storage.structure.DatabaseInfo;
 import org.stepic.droid.storage.structure.DbStructureAdaptiveExp;
 import org.stepic.droid.storage.structure.DbStructureAssignment;
@@ -18,7 +19,6 @@ import org.stepic.droid.storage.structure.DbStructureCalendarSection;
 import org.stepic.droid.storage.structure.DbStructureCertificateViewItem;
 import org.stepic.droid.storage.structure.DbStructureCodeSubmission;
 import org.stepic.droid.storage.structure.DbStructureEnrolledAndFeaturedCourses;
-import org.stepic.droid.storage.structure.DbStructureLastStep;
 import org.stepic.droid.storage.structure.DbStructureLesson;
 import org.stepic.droid.storage.structure.DbStructureNotification;
 import org.stepic.droid.storage.structure.DbStructureProgress;
@@ -104,6 +104,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         upgradeFrom33To34(db);
         upgradeFrom34To35(db);
         upgradeFrom35To36(db);
+        upgradeFrom36To37(db);
     }
 
 
@@ -290,6 +291,14 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         if (oldVersion < 36) {
             upgradeFrom35To36(db);
         }
+
+        if (oldVersion < 37) {
+            upgradeFrom36To37(db);
+        }
+    }
+
+    private void upgradeFrom36To37(SQLiteDatabase db) {
+        MigrationFrom36To37.INSTANCE.migrate(db);
     }
 
     private void upgradeFrom35To36(SQLiteDatabase db) {
@@ -359,7 +368,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     private void upgradeFrom21To22(SQLiteDatabase db) {
-        createVideoUrlTable(db, DbStructureVideoUrl.INSTANCE.getExternalVideosName());
+        createVideoUrlTable(db, DbStructureVideoUrl.externalVideosName);
         alterColumn(db, DbStructureBlock.BLOCKS, DbStructureBlock.Column.EXTERNAL_THUMBNAIL, TEXT_TYPE);
         alterColumn(db, DbStructureBlock.BLOCKS, DbStructureBlock.Column.EXTERNAL_VIDEO_ID, LONG_TYPE);
     }
@@ -376,7 +385,6 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         alterColumn(db, DbStructureEnrolledAndFeaturedCourses.ENROLLED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.LAST_STEP_ID, TEXT_TYPE);
         alterColumn(db, DbStructureEnrolledAndFeaturedCourses.FEATURED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.LAST_STEP_ID, TEXT_TYPE);
 
-        createLastStepTable(db);
         alterColumn(db, DbStructureEnrolledAndFeaturedCourses.ENROLLED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.IS_ACTIVE, BOOLEAN_TYPE);
         alterColumn(db, DbStructureEnrolledAndFeaturedCourses.FEATURED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.IS_ACTIVE, BOOLEAN_TYPE);
     }
@@ -728,22 +736,12 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(sql);
     }
 
-    private void createLastStepTable(SQLiteDatabase db) {
-        String sql = "CREATE TABLE " + DbStructureLastStep.LAST_STEPS
-                + " ("
-                + DbStructureLastStep.Column.COURSE_ID + WHITESPACE + LONG_TYPE + ", "
-                + DbStructureLastStep.Column.UNIT_ID + WHITESPACE + LONG_TYPE + ", "
-                + DbStructureLastStep.Column.STEP_ID + WHITESPACE + LONG_TYPE
-                + ")";
-        db.execSQL(sql);
-    }
-
     private void createVideoUrlTable(SQLiteDatabase db, String name) {
         String sql = "CREATE TABLE " + name
                 + " ("
-                + DbStructureVideoUrl.Column.INSTANCE.getVideoId() + WHITESPACE + LONG_TYPE + ", "
-                + DbStructureVideoUrl.Column.INSTANCE.getQuality() + WHITESPACE + TEXT_TYPE + ", "
-                + DbStructureVideoUrl.Column.INSTANCE.getUrl() + WHITESPACE + TEXT_TYPE
+                + DbStructureVideoUrl.Column.videoId + WHITESPACE + LONG_TYPE + ", "
+                + DbStructureVideoUrl.Column.quality + WHITESPACE + TEXT_TYPE + ", "
+                + DbStructureVideoUrl.Column.url + WHITESPACE + TEXT_TYPE
                 + ")";
         db.execSQL(sql);
     }

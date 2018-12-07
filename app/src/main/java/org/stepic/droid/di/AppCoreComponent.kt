@@ -26,6 +26,7 @@ import org.stepic.droid.di.routing.RoutingComponent
 import org.stepic.droid.di.splash.SplashComponent
 import org.stepic.droid.di.storage.StorageComponent
 import org.stepic.droid.di.video.VideoComponent
+import org.stepic.droid.features.achievements.service.AchievementsNotificationService
 import org.stepic.droid.features.achievements.ui.adapters.AchievementsAdapter
 import org.stepic.droid.features.achievements.ui.adapters.AchievementsTileAdapter
 import org.stepic.droid.features.achievements.ui.dialogs.AchievementDetailsDialog
@@ -48,6 +49,7 @@ import org.stepic.droid.ui.custom.*
 import org.stepic.droid.ui.custom_exo.PlaybackControlView
 import org.stepic.droid.ui.dialogs.*
 import org.stepic.droid.ui.fragments.StoreManagementFragment
+import org.stepik.android.view.injection.course.CourseComponent
 
 @AppSingleton
 @Component(dependencies = [StorageComponent::class],
@@ -61,7 +63,8 @@ import org.stepic.droid.ui.fragments.StoreManagementFragment
                 PersistenceModule::class,
                 RecentActiveCourseModule::class,
                 NotificationsBadgesModule::class,
-                NetworkModule::class
+                NetworkModule::class,
+                RemoteMessageHandlersModule::class
         ])
 interface AppCoreComponent {
 
@@ -105,6 +108,8 @@ interface AppCoreComponent {
 
     fun adaptiveCourseComponentBuilder(): AdaptiveCourseComponent.Builder
 
+    fun courseComponentBuilder(): CourseComponent.Builder
+
     fun inject(someActivity: FragmentActivityBase)
 
     fun inject(adapter: StepikRadioGroupAdapter)
@@ -134,8 +139,6 @@ interface AppCoreComponent {
     fun inject(downloadsAdapter: DownloadsAdapter)
 
     fun inject(clearVideosDialog: ClearVideosDialog)
-
-    fun inject(coursePropertyAdapter: CoursePropertyAdapter)
 
     fun inject(remindPasswordDialogFragment: RemindPasswordDialogFragment)
 
@@ -183,8 +186,6 @@ interface AppCoreComponent {
 
     fun inject(app: App)
 
-    fun inject(instructorAdapter: InstructorAdapter)
-
     fun inject(searchQueriesAdapter: SearchQueriesAdapter)
 
     fun inject(newUserAlarmService: NewUserAlarmService)
@@ -216,5 +217,7 @@ interface AppCoreComponent {
 
 
     fun inject(downloadCompleteService: DownloadCompleteService)
-    fun inject(fileTransgerService: FileTransferService)
+    fun inject(fileTransferService: FileTransferService)
+
+    fun inject(achievementsNotificationService: AchievementsNotificationService)
 }

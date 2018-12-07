@@ -155,6 +155,7 @@
     <dimen name="loading_view_course_title_width">150dp</dimen>
     <dimen name="loading_view_course_title_second_width">100dp</dimen>
     <dimen name="loading_view_course_detail_width">50dp</dimen>
+    <dimen name="loading_view_dark_alpha">0.7</dimen>
 
     <dimen name="code_text_size_default">14sp</dimen>
     <dimen name="embedded_code_editor_height">150dp</dimen>
@@ -202,12 +203,18 @@
     <dimen name="stories_default_corner_radius">16dp</dimen>
     <dimen name="stories_size">96dp</dimen>
 
+    <dimen name="notification_large_icon_size">64dp</dimen>
+
+
     <!-- Course info -->
     <dimen name="course_info_height_expanded">36dp</dimen>
     <dimen name="course_info_margin_expanded">16dp</dimen>
 
     <dimen name="course_info_block_text_margin">36dp</dimen>
     <dimen name="course_info_block_margin">12dp</dimen>
+
+    <dimen name="course_info_instructor_block_offset">24dp</dimen>
+    <dimen name="course_info_instructor_item_padding">6dp</dimen>
 
     <dimen name="course_content_item_margin">24dp</dimen>
     <dimen name="course_content_item_inner_margin">12dp</dimen>

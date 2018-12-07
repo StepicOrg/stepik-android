@@ -22,7 +22,6 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.ui.util.CloseIconHolder
-import org.stepic.droid.util.resolvers.CoursePropertyResolver
 import org.stepic.droid.util.resolvers.text.TextResolver
 import org.stepic.droid.web.Api
 import java.util.concurrent.ThreadPoolExecutor
@@ -71,9 +70,6 @@ open class FragmentBase : Fragment() {
 
     @Inject
     lateinit var userPreferences: UserPreferences
-
-    @Inject
-    lateinit var coursePropertyResolver: CoursePropertyResolver
 
     @Inject
     lateinit var mainHandler: MainHandler

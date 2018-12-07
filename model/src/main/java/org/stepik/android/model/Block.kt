@@ -9,7 +9,7 @@ import org.stepik.android.model.code.CodeOptions
 class Block(
         val name: String? = null,
         val text: String? = null,
-        val video: Video? = null, //always external video
+        var video: Video? = null, //always external video
 
         val options: CodeOptions? = null
 ) : Parcelable {

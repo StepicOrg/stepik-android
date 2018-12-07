@@ -75,7 +75,7 @@ class QuizCardViewHolder(
 
         nextButton.setOnClickListener { container.swipeDown() }
         actionButton.setOnClickListener { presenter?.createSubmission() }
-        wrongButton.setOnClickListener {
+        wrongButton.setOnClickListener { _ ->
             presenter?.let {
                 it.retrySubmission()
                 quizDelegate.isEnabled = true

@@ -30,9 +30,11 @@ public class SvgSoftwareLayerSetter implements RequestListener<Uri, PictureDrawa
 
     @Override
     public boolean onResourceReady(PictureDrawable resource, Uri model, Target<PictureDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-        ImageView view = ((ImageViewTarget<?>) target).getView();
-        if (Build.VERSION_CODES.HONEYCOMB <= Build.VERSION.SDK_INT) {
-            view.setLayerType(ImageView.LAYER_TYPE_SOFTWARE, null);
+        if (target instanceof ImageViewTarget<?>) {
+            ImageView view = ((ImageViewTarget<?>) target).getView();
+            if (Build.VERSION_CODES.HONEYCOMB <= Build.VERSION.SDK_INT) {
+                view.setLayerType(ImageView.LAYER_TYPE_SOFTWARE, null);
+            }
         }
         return false;
     }
