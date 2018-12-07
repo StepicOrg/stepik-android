@@ -1,9 +1,9 @@
 package org.stepic.droid.base
 
-import android.app.Application
 import android.content.Context
 import android.os.Build
 import android.os.StrictMode
+import android.support.multidex.MultiDexApplication
 import android.webkit.WebView
 import com.facebook.FacebookSdk
 import com.facebook.appevents.AppEventsLogger
@@ -29,7 +29,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig
 import javax.inject.Inject
 
 
-class App : Application() {
+class App : MultiDexApplication() {
 
     companion object {
         lateinit var application: App
