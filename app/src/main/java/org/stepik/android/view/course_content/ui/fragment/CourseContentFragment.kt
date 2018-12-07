@@ -1,5 +1,7 @@
 package org.stepik.android.view.course_content.ui.fragment
 
+import android.arch.lifecycle.ViewModelProvider
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
@@ -10,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_course_content.*
 import org.stepic.droid.R
+import org.stepic.droid.base.App
 import org.stepik.android.view.course_content.ui.adapter.CourseContentAdapter
 import org.stepik.android.view.course_content.ui.adapter.delegates.unit.CourseContentUnitClickListener
 import org.stepik.android.view.course_content.model.CourseContentItem
@@ -17,8 +20,11 @@ import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepic.droid.util.argument
 import org.stepik.android.model.*
 import org.stepik.android.model.Unit
+import org.stepik.android.presentation.course_content.CourseContentPresenter
+import org.stepik.android.presentation.course_content.CourseContentView
+import javax.inject.Inject
 
-class CourseContentFragment : Fragment() {
+class CourseContentFragment : Fragment(), CourseContentView {
     companion object {
         fun newInstance(courseId: Long) =
                 CourseContentFragment().apply {
@@ -28,6 +34,31 @@ class CourseContentFragment : Fragment() {
 
     private lateinit var contentAdapter: CourseContentAdapter
     private var courseId: Long by argument()
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private lateinit var courseContentPresenter: CourseContentPresenter
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        injectComponent(courseId)
+
+        courseContentPresenter = ViewModelProviders.of(this, viewModelFactory).get(courseContentPresenter::class.java)
+        savedInstanceState?.let(courseContentPresenter::onRestoreInstanceState)
+    }
+
+    private fun injectComponent(courseId: Long) {
+        App.componentManager()
+            .courseComponent(courseId)
+            .inject(this)
+    }
+
+    private fun releaseComponent(courseId: Long) {
+        App.componentManager()
+            .releaseCourseComponent(courseId)
+    }
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
             inflater.inflate(R.layout.fragment_course_content, container, false)
@@ -65,5 +96,10 @@ class CourseContentFragment : Fragment() {
                     )
                 }
         ))
+    }
+
+    override fun onDestroy() {
+        releaseComponent(courseId)
+        super.onDestroy()
     }
 }
