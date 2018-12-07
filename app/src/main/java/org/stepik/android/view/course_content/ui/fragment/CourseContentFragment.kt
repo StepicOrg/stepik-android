@@ -44,7 +44,7 @@ class CourseContentFragment : Fragment(), CourseContentView {
         super.onCreate(savedInstanceState)
         injectComponent(courseId)
 
-        courseContentPresenter = ViewModelProviders.of(this, viewModelFactory).get(courseContentPresenter::class.java)
+        courseContentPresenter = ViewModelProviders.of(this, viewModelFactory).get(CourseContentPresenter::class.java)
         savedInstanceState?.let(courseContentPresenter::onRestoreInstanceState)
     }
 
