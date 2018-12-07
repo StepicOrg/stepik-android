@@ -99,7 +99,7 @@ class CourseHeaderDelegate(
             courseHeaderData?.let { headerData ->
                 analytic.reportAmplitudeEvent(AmplitudeAnalytic.Course.CONTINUE_PRESSED, mapOf(
                     AmplitudeAnalytic.Course.Params.COURSE to headerData.courseId,
-                    AmplitudeAnalytic.Course.Params.SOURCE to AmplitudeAnalytic.Course.Values.COURSE_WIDGET // TODO change source
+                    AmplitudeAnalytic.Course.Params.SOURCE to AmplitudeAnalytic.Course.Values.COURSE_SCREEN
                 ))
             }
         }

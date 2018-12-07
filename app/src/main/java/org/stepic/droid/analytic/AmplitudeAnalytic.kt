@@ -48,6 +48,7 @@ interface AmplitudeAnalytic {
 
             const val COURSE_WIDGET = "course_widget"
             const val HOME_WIDGET = "home_widget"
+            const val COURSE_SCREEN = "course_screen"
         }
     }
 
@@ -85,7 +86,7 @@ interface AmplitudeAnalytic {
     object Stories {
         const val STORY_OPENED = "Story opened"
         const val STORY_PART_OPENED = "Story part opened"
-        const val BUTTON_PRESSED = "Button pressed"
+        const val BUTTON_PRESSED = "Story button pressed"
         const val STORY_CLOSED = "Story closed"
 
         object Values {
