@@ -75,7 +75,7 @@ ext.versions = [
 
         junit                : '4.12',
         robolectric          : '3.1.2',
-        mockito              : '2.7.21',
+        mockito              : '2.23.4',
         mockitoKt            : '2.0.0',
         joda                 : '2.8',
         hamcrest             : '1.3',
