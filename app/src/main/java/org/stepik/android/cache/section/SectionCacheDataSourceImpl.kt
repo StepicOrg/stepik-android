@@ -15,7 +15,10 @@ constructor(
 ) : SectionCacheDataSource {
     override fun getSection(sectionId: Long): Maybe<Section> =
         Maybe.create { emitter ->
-            databaseFacade.getSectionById(sectionId)?.let(emitter::onSuccess) ?: emitter.onComplete()
+            databaseFacade
+                .getSectionById(sectionId)
+                ?.let(emitter::onSuccess)
+                ?: emitter.onComplete()
         }
 
     override fun getSections(vararg sectionIds: Long): Single<List<Section>> =

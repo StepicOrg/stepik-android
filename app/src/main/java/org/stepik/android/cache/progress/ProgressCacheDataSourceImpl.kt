@@ -14,7 +14,10 @@ constructor(
 ) : ProgressCacheDataSource {
     override fun getProgress(progressId: String): Maybe<Progress> =
         Maybe.create { emitter ->
-            databaseFacade.getProgressById(progressId)?.let(emitter::onSuccess) ?: emitter.onComplete()
+            databaseFacade
+                .getProgressById(progressId)
+                ?.let(emitter::onSuccess)
+                ?: emitter.onComplete()
         }
 
     override fun saveProgress(progress: Progress): Completable =
