@@ -44,14 +44,13 @@ class SectionRepositoryTest {
     }
 
     @Test
-    fun sectionRemoteFallbackToCache() {
+    fun sectionRemoteFallbackToCacheTest() {
         val sectionRepository = SectionRepositoryImpl(sectionCacheDataSource, sectionRemoteDataSource)
 
         val sectionId = 312L
         val section = Section(id = sectionId)
 
         whenever(sectionCacheDataSource.getSection(sectionId)) doReturn Maybe.just(section)
-        whenever(sectionCacheDataSource.saveSection(section)) doReturn Completable.complete()
         whenever(sectionRemoteDataSource.getSection(sectionId)) doReturn Maybe.error(IOException(""))
 
         sectionRepository
@@ -63,7 +62,7 @@ class SectionRepositoryTest {
     }
 
     @Test
-    fun sectionEmptyCacheSwitchToRemote() {
+    fun sectionEmptyCacheSwitchToRemoteTest() {
         val sectionRepository = SectionRepositoryImpl(sectionCacheDataSource, sectionRemoteDataSource)
 
         val sectionId = 312L
