@@ -32,7 +32,6 @@ class SectionRepositoryTest {
         val section = Section(id = sectionId)
 
         whenever(sectionCacheDataSource.getSection(sectionId)) doReturn Maybe.just(section)
-        whenever(sectionCacheDataSource.saveSection(section)) doReturn Completable.complete()
         whenever(sectionRemoteDataSource.getSection(sectionId)) doReturn Maybe.empty()
 
         sectionRepository
