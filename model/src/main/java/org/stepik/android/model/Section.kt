@@ -11,12 +11,19 @@ import org.stepik.android.model.util.writeDate
 import java.util.Date
 
 data class Section(
+        @SerializedName("id")
         val id: Long = 0,
+        @SerializedName("course")
         val course: Long = 0, // course id
+        @SerializedName("units")
         val units: List<Long> = emptyList(),
+        @SerializedName("position")
         val position: Int = 0,
+        @SerializedName("progress")
         override val progress: String? = null,
+        @SerializedName("title")
         val title: String? = null,
+        @SerializedName("slug")
         val slug: String? = null,
 
         @SerializedName("begin_date")
