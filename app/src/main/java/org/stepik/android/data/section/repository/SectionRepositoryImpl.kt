@@ -56,11 +56,10 @@ constructor(
                         .getSections(*ids)
                         .doOnSuccess(sectionCacheDataSource::saveSections)
                         .map { remoteSections -> cachedSections + remoteSections }
-                        .map { sections -> sections.sortedBy { sectionIds.indexOf(it.id) } }
                 }
 
             else ->
                 throw IllegalArgumentException("Unsupported source type = $primarySourceType")
-        }
+        }.map { sections -> sections.sortedBy { sectionIds.indexOf(it.id) } }
     }
 }

@@ -19,6 +19,10 @@ constructor(
             .maybeFirst()
 
     override fun getUnits(vararg unitIds: Long): Single<List<Unit>> =
-        api.getUnitsRx(unitIds)
-            .map(UnitMetaResponse::units)
+        if (unitIds.isEmpty()) {
+            Single.just(emptyList())
+        } else {
+            api.getUnitsRx(unitIds)
+                .map(UnitMetaResponse::units)
+        }
 }

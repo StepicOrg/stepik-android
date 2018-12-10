@@ -133,7 +133,11 @@ class DatabaseFacade
     fun deleteCourseFromList(courseListType: CourseListType, courseId: Long) =
         courseListDao.removeCourseFromList(courseListType, courseId)
 
-    fun addSection(section: Section) = sectionDao.insertOrUpdate(section)
+    fun addSection(section: Section) =
+        sectionDao.insertOrUpdate(section)
+
+    fun addSections(sections: List<Section>) =
+        sectionDao.insertOrReplaceAll(sections)
 
     fun addStep(step: Step) = stepDao.insertOrUpdate(step)
 
@@ -147,7 +151,11 @@ class DatabaseFacade
         lessonDao.get(DbStructureLesson.Column.LESSON_ID, it.lesson.toString())
     }
 
-    fun addUnit(unit: Unit) = unitDao.insertOrUpdate(unit)
+    fun addUnit(unit: Unit) =
+        unitDao.insertOrUpdate(unit)
+
+    fun addUnits(units: List<Unit>) =
+        unitDao.insertOrReplaceAll(units)
 
     fun addLesson(lesson: Lesson) = lessonDao.insertOrUpdate(lesson)
 
