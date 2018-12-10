@@ -12,7 +12,7 @@ class CourseContentItemMapper
 @Inject
 constructor() {
     fun mapSectionWithEmptyUnits(section: Section, progress: Progress?): List<CourseContentItem> =
-        listOf(CourseContentItem.SectionItem(section, mapSectionDates(section), progress, DownloadProgress.Status.Pending)) +
+        listOf(CourseContentItem.SectionItem(section, mapSectionDates(section), progress, DownloadProgress.Status.NotCached)) +
                 section.units.map(CourseContentItem::UnitItemPlaceholder)
 
     private fun mapSectionDates(section: Section): List<CourseContentSectionDate> =

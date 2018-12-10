@@ -16,10 +16,7 @@ import org.stepic.droid.base.App
 import org.stepik.android.view.course_content.ui.adapter.CourseContentAdapter
 import org.stepik.android.view.course_content.ui.adapter.delegates.unit.CourseContentUnitClickListener
 import org.stepik.android.view.course_content.model.CourseContentItem
-import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepic.droid.util.argument
-import org.stepik.android.model.*
-import org.stepik.android.model.Unit
 import org.stepik.android.presentation.course_content.CourseContentPresenter
 import org.stepik.android.presentation.course_content.CourseContentView
 import javax.inject.Inject

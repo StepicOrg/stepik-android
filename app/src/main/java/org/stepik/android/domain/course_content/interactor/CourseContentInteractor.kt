@@ -1,9 +1,7 @@
 package org.stepik.android.domain.course_content.interactor
 
-import io.reactivex.Maybe
 import io.reactivex.Observable
-import io.reactivex.rxkotlin.Maybes.zip
-import io.reactivex.rxkotlin.toObservable
+import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.subjects.BehaviorSubject
 import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepic.droid.util.concat
@@ -14,8 +12,8 @@ import org.stepik.android.domain.progress.repository.ProgressRepository
 import org.stepik.android.domain.section.repository.SectionRepository
 import org.stepik.android.domain.unit.repository.UnitRepository
 import org.stepik.android.model.Course
-import org.stepik.android.model.Progress
 import org.stepik.android.model.Section
+import org.stepik.android.model.Unit
 import org.stepik.android.view.course_content.mapper.CourseContentItemMapper
 import org.stepik.android.view.course_content.model.CourseContentItem
 import javax.inject.Inject
@@ -36,6 +34,9 @@ constructor(
         courseObservableSource
             .switchMap(::getSectionsOfCourse)
             .flatMap(::populateSectionsProgresses)
+            .flatMap { items ->
+                Observable.just(items) concat loadUnits(items)
+            }
 
     private fun getSectionsOfCourse(course: Course): Observable<List<Section>> =
         sectionRepository
@@ -54,6 +55,45 @@ constructor(
             }
             .toObservable()
 
+    private fun loadUnits(items: List<CourseContentItem>): Observable<List<CourseContentItem>> =
+        Observable // todo remove tmp
+            .just(items.filterIsInstance<CourseContentItem.UnitItemPlaceholder>())
+            .map { it.map(CourseContentItem.UnitItemPlaceholder::unitId) }
+            .flatMap(::getUnits)
+            .flatMap { units ->
+                val sections = items
+                    .filterIsInstance<CourseContentItem.SectionItem>()
+                    .map(CourseContentItem.SectionItem::section)
 
+                populateUnits(sections, units)
+            }
+            .map { unitItems ->
+                items.map { item ->
+                    (item as? CourseContentItem.UnitItemPlaceholder)
+                        ?.let { unitItems.find { unitItem -> it.unitId == unitItem.unit.id } }
+                        ?: item
+                }
+            }
+
+    private fun getUnits(unitIds: List<Long>): Observable<List<Unit>> =
+        unitRepository
+            .getUnits(*unitIds.toLongArray(), primarySourceType = DataSourceType.REMOTE)
+            .toObservable()
+
+
+    private fun populateUnits(sections: List<Section>, units: List<Unit>): Observable<List<CourseContentItem.UnitItem>> =
+        zip(
+            progressRepository.getProgresses(*units.getProgresses()),
+            lessonRepository.getLessons(*units.map(Unit::lesson).toLongArray(), primarySourceType = DataSourceType.REMOTE)
+        )
+            .toObservable()
+            .map { (progresses, lessons) ->
+                units.mapNotNull { unit ->
+                    val section = sections.find { it.id == unit.section } ?: return@mapNotNull null
+                    val lesson = lessons.find { it.id == unit.lesson } ?: return@mapNotNull null
+                    val progress = progresses.find { it.id == unit.progress }
+                    CourseContentItem.UnitItem(section, unit, lesson, progress, DownloadProgress.Status.NotCached)
+                }
+            }
 
 }
