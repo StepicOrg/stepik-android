@@ -3,7 +3,6 @@ package org.stepik.android.domain.course_content.interactor
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.subjects.BehaviorSubject
-import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepic.droid.util.concat
 import org.stepic.droid.util.getProgresses
 import org.stepik.android.domain.base.DataSourceType
@@ -88,12 +87,7 @@ constructor(
         )
             .toObservable()
             .map { (progresses, lessons) ->
-                units.mapNotNull { unit ->
-                    val section = sections.find { it.id == unit.section } ?: return@mapNotNull null
-                    val lesson = lessons.find { it.id == unit.lesson } ?: return@mapNotNull null
-                    val progress = progresses.find { it.id == unit.progress }
-                    CourseContentItem.UnitItem(section, unit, lesson, progress, DownloadProgress.Status.NotCached)
-                }
+                courseContentItemMapper.mapUnits(units, sections, progresses, lessons)
             }
 
 }
