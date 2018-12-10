@@ -11,15 +11,20 @@ sealed class CourseContentItem {
 
     data class SectionItem(
             val section: Section,
-            var progress: Progress,
+            val dates: List<CourseContentSectionDate>,
+            val progress: Progress?,
             val downloadStatus: DownloadProgress.Status
+    ) : CourseContentItem()
+
+    class UnitItemPlaceholder(
+        val unitId: Long
     ) : CourseContentItem()
 
     data class UnitItem(
             val section: Section,
             val unit: Unit,
             val lesson: Lesson,
-            val progress: Progress,
+            val progress: Progress?,
             val downloadStatus: DownloadProgress.Status
     ) : CourseContentItem()
 }

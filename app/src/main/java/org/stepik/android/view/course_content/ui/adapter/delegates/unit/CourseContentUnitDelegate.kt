@@ -58,10 +58,16 @@ class CourseContentUnitDelegate(
                 unitTitle.text = context.resources.getString(R.string.course_content_unit_title,
                         section.position, unit.position, lesson.title)
 
-                unitTextProgress.text = context.resources.getString(R.string.course_content_text_progress,
+                if (progress != null) {
+                    unitTextProgress.text = context.resources.getString(R.string.course_content_text_progress,
                         progress.nStepsPassed, progress.nSteps)
 
-                unitProgress.progress = progress.nStepsPassed.toFloat() / progress.nSteps
+                    unitProgress.progress = progress.nStepsPassed.toFloat() / progress.nSteps
+                    unitTextProgress.visibility = View.VISIBLE
+                } else {
+                    unitProgress.progress = 0f
+                    unitTextProgress.visibility = View.GONE
+                }
 
                 unitDownloadStatus.status = downloadStatus
 

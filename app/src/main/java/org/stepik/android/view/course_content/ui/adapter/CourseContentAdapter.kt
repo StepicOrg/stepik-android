@@ -44,7 +44,7 @@ class CourseContentAdapter(
     }
 
     fun updateSectionProgress(progress: Progress) {
-        val sectionPosition = items.indexOfFirst { it is CourseContentItem.SectionItem && it.progress.id == progress.id }
+        val sectionPosition = items.indexOfFirst { it is CourseContentItem.SectionItem && it.progress?.id == progress.id }
         val sectionItem = items.getOrNull(sectionPosition) as? CourseContentItem.SectionItem ?: return
 
         items[sectionPosition] = sectionItem.copy(progress = progress)
@@ -60,7 +60,7 @@ class CourseContentAdapter(
     }
 
     fun updateUnitProgress(progress: Progress) {
-        val unitPosition = items.indexOfFirst { it is CourseContentItem.UnitItem && it.progress.id == progress.id }
+        val unitPosition = items.indexOfFirst { it is CourseContentItem.UnitItem && it.progress?.id == progress.id }
         val unitItem = items.getOrNull(unitPosition) as? CourseContentItem.UnitItem ?: return
 
         items[unitPosition] = unitItem.copy(progress = progress)

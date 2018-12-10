@@ -59,10 +59,16 @@ class CourseContentSectionDelegate(
             with(data as CourseContentItem.SectionItem) {
                 sectionTitle.text = section.title
                 sectionPosition.text = section.position.toString()
-                sectionProgress.progress = progress.nStepsPassed.toFloat() / progress.nSteps.toFloat()
-                sectionTextProgress.text = context.resources.getString(R.string.course_content_text_progress,
+
+                if (progress != null) {
+                    sectionProgress.progress = progress.nStepsPassed.toFloat() / progress.nSteps.toFloat()
+                    sectionTextProgress.text = context.resources.getString(R.string.course_content_text_progress,
                         progress.nStepsPassed, progress.nSteps)
-                sectionDownloadStatus.status = downloadStatus
+                    sectionTextProgress.visibility = View.VISIBLE
+                } else {
+                    sectionProgress.progress = 0f
+                    sectionTextProgress.visibility = View.GONE
+                }
 
                 // todo flatten structure
                 sectionTimeLineAdapter.dates = listOf(
