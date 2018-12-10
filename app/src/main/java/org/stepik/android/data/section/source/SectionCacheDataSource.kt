@@ -10,4 +10,5 @@ interface SectionCacheDataSource {
     fun getSections(vararg sectionIds: Long): Single<List<Section>>
 
     fun saveSection(section: Section): Completable
+    fun saveSections(sections: List<Section>): Completable
 }

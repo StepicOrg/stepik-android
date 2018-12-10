@@ -1,6 +1,7 @@
 package org.stepik.android.data.section.repository
 
 import io.reactivex.Maybe
+import io.reactivex.Single
 import org.stepic.droid.util.doOnSuccess
 import org.stepik.android.data.section.source.SectionCacheDataSource
 import org.stepik.android.data.section.source.SectionRemoteDataSource
@@ -36,4 +37,30 @@ constructor(
         }
     }
 
+    override fun getSections(vararg sectionIds: Long, primarySourceType: DataSourceType): Single<List<Section>> {
+        val remoteSource = sectionRemoteDataSource
+            .getSections(*sectionIds)
+            .doOnSuccess(sectionCacheDataSource::saveSections)
+
+        val cacheSource = sectionCacheDataSource
+            .getSections(*sectionIds)
+
+        return when(primarySourceType) {
+            DataSourceType.REMOTE ->
+                remoteSource.onErrorResumeNext(cacheSource)
+
+            DataSourceType.CACHE ->
+                cacheSource.flatMap { cachedSections ->
+                    val ids = (sectionIds.toList() - cachedSections.map(Section::id)).toLongArray()
+                    sectionRemoteDataSource
+                        .getSections(*ids)
+                        .doOnSuccess(sectionCacheDataSource::saveSections)
+                        .map { remoteSections -> cachedSections + remoteSections }
+                        .map { sections -> sections.sortedBy { sectionIds.indexOf(it.id) } }
+                }
+
+            else ->
+                throw IllegalArgumentException("Unsupported source type = $primarySourceType")
+        }
+    }
 }

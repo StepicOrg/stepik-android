@@ -30,4 +30,9 @@ constructor(
         Completable.fromAction {
             databaseFacade.addSection(section)
         }
+
+    override fun saveSections(sections: List<Section>): Completable =
+        Completable.fromAction {
+            sections.forEach(databaseFacade::addSection)
+        }
 }

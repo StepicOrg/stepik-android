@@ -19,6 +19,10 @@ constructor(
             .maybeFirst()
 
     override fun getSections(vararg sectionIds: Long): Single<List<Section>> =
-        api.getSectionsRx(sectionIds)
-            .map(SectionsMetaResponse::getSections)
+        if (sectionIds.isEmpty()) {
+            Single.just(emptyList())
+        } else {
+            api.getSectionsRx(sectionIds)
+                .map(SectionsMetaResponse::getSections)
+        }
 }
