@@ -71,9 +71,12 @@ class CourseContentAdapter(
         this.items = items.toMutableList()
     }
 
+    fun getData(): List<CourseContentItem> =
+        items
+
     override fun getItemAtPosition(position: Int): CourseContentItem =
             headers.getOrNull(position) ?: items[position - headers.size]
 
     override fun getItemCount(): Int =
-            headers.size + items.size
+        if (items.isNotEmpty()) headers.size + items.size else 0
 }
