@@ -10,6 +10,7 @@ import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
 import org.stepic.droid.ui.custom.adapter_delegates.DelegateAdapter
 import org.stepik.android.model.Progress
+import org.stepik.android.view.course_content.ui.adapter.delegates.unit.CourseContentUnitPlaceholderDelegate
 
 class CourseContentAdapter(
         unitClickListener: CourseContentUnitClickListener
@@ -28,22 +29,10 @@ class CourseContentAdapter(
         }
 
     init {
-        addDelegate(
-            CourseContentControlBarDelegate(
-                this
-            )
-        )
-        addDelegate(
-            CourseContentSectionDelegate(
-                this
-            )
-        )
-        addDelegate(
-            CourseContentUnitDelegate(
-                this,
-                unitClickListener
-            )
-        )
+        addDelegate(CourseContentControlBarDelegate(this))
+        addDelegate(CourseContentSectionDelegate(this))
+        addDelegate(CourseContentUnitDelegate(this, unitClickListener))
+        addDelegate(CourseContentUnitPlaceholderDelegate(this))
     }
 
     fun updateSectionDownloadProgress(downloadProgress: DownloadProgress) {
