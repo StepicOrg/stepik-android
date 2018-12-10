@@ -1,6 +1,6 @@
 package org.stepik.android.data.lesson.repository
 
-import io.reactivex.Maybe
+import io.reactivex.Single
 import org.stepic.droid.util.doOnSuccess
 import org.stepik.android.data.lesson.source.LessonCacheDataSource
 import org.stepik.android.data.lesson.source.LessonRemoteDataSource
@@ -15,25 +15,29 @@ constructor(
     private val lessonRemoteDataSource: LessonRemoteDataSource,
     private val lessonCacheDataSource: LessonCacheDataSource
 ) : LessonRepository {
-
-    override fun getLesson(lessonId: Long, primarySourceType: DataSourceType): Maybe<Lesson> {
+    override fun getLessons(vararg lessonIds: Long, primarySourceType: DataSourceType): Single<List<Lesson>> {
         val remoteSource = lessonRemoteDataSource
-            .getLesson(lessonId)
-            .doOnSuccess(lessonCacheDataSource::saveLesson)
+            .getLessons(*lessonIds)
+            .doOnSuccess(lessonCacheDataSource::saveLessons)
 
         val cacheSource = lessonCacheDataSource
-            .getLesson(lessonId)
+            .getLessons(*lessonIds)
 
         return when(primarySourceType) {
             DataSourceType.REMOTE ->
                 remoteSource.onErrorResumeNext(cacheSource)
 
             DataSourceType.CACHE ->
-                cacheSource.switchIfEmpty(remoteSource)
+                cacheSource.flatMap { cachedLessons ->
+                    val ids = (lessonIds.toList() - cachedLessons.map(Lesson::id)).toLongArray()
+                    lessonRemoteDataSource
+                        .getLessons(*ids)
+                        .doOnSuccess(lessonCacheDataSource::saveLessons)
+                        .map { remoteLessons -> cachedLessons + remoteLessons }
+                }
 
             else ->
                 throw IllegalArgumentException("Unsupported source type = $primarySourceType")
-        }
+        }.map { lessons -> lessons.sortedBy { lessonIds.indexOf(it.id) } }
     }
-
 }

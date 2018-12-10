@@ -157,7 +157,11 @@ class DatabaseFacade
     fun addUnits(units: List<Unit>) =
         unitDao.insertOrReplaceAll(units)
 
-    fun addLesson(lesson: Lesson) = lessonDao.insertOrUpdate(lesson)
+    fun addLesson(lesson: Lesson) =
+        lessonDao.insertOrUpdate(lesson)
+
+    fun addLessons(lessons: List<Lesson>) =
+        lessonDao.insertOrReplaceAll(lessons)
 
     fun addToQueueViewedState(viewState: ViewAssignment) = viewAssignmentDao.insertOrUpdate(viewState)
 
