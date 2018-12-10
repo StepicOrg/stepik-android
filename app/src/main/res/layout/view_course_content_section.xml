@@ -82,13 +82,12 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/course_content_item_inner_margin"
-        android:layout_marginBottom="@dimen/course_content_item_margin"
         android:clipChildren="false"
         android:clipToPadding="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sectionTextProgress"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottomMargin"
 
         tools:paddingStart="52dp"
         tools:layoutManager="android.support.v7.widget.LinearLayoutManager"
@@ -104,5 +103,11 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Space
+        android:id="@+id/bottomMargin"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/course_content_item_margin"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
