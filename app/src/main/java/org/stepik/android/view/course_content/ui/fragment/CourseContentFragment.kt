@@ -79,23 +79,40 @@ class CourseContentFragment : Fragment(), CourseContentView {
                 ContextCompat.getDrawable(context, R.drawable.list_divider_h)?.let(::setDrawable)
             })
         }
+//
+//        contentAdapter.setData(listOf(
+//                CourseContentItem.SectionItem(
+//                        Section(title = "Introduction to JavaScript", position = 1),
+//                        Progress(nSteps = 70, nStepsPassed = 23),
+//                        DownloadProgress.Status.Cached
+//                ),
+//                *Array(5) {
+//                    CourseContentItem.UnitItem(
+//                            Section(title = "Introduction to JavaScript", position = 1),
+//                            Unit(position = it + 1),
+//                            Lesson(title = "First lesson with short name", coverUrl = "https://i.vimeocdn.com/video/507126040_180x180.jpg"),
+//                            Progress(nSteps = 10, nStepsPassed = 8),
+//                            DownloadProgress.Status.InProgress(0.43f)
+//                    )
+//                }
+//        ))
+    }
 
-        contentAdapter.setData(listOf(
-                CourseContentItem.SectionItem(
-                        Section(title = "Introduction to JavaScript", position = 1),
-                        Progress(nSteps = 70, nStepsPassed = 23),
-                        DownloadProgress.Status.Cached
-                ),
-                *Array(5) {
-                    CourseContentItem.UnitItem(
-                            Section(title = "Introduction to JavaScript", position = 1),
-                            Unit(position = it + 1),
-                            Lesson(title = "First lesson with short name", coverUrl = "https://i.vimeocdn.com/video/507126040_180x180.jpg"),
-                            Progress(nSteps = 10, nStepsPassed = 8),
-                            DownloadProgress.Status.InProgress(0.43f)
-                    )
-                }
-        ))
+
+
+    override fun onStart() {
+        super.onStart()
+        courseContentPresenter.attachView(this)
+    }
+
+    override fun onStop() {
+        courseContentPresenter.detachView(this)
+        super.onStop()
+    }
+
+
+    override fun setCourseContent(items: List<CourseContentItem>) {
+        contentAdapter.setData(items)
     }
 
     override fun onDestroy() {
