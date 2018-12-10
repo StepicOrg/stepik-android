@@ -20,7 +20,6 @@ import org.stepic.droid.web.ViewAssignment
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.*
 import org.stepik.android.model.Unit
-import java.util.*
 import javax.inject.Inject
 
 @StorageSingleton
@@ -184,7 +183,11 @@ class DatabaseFacade
         }
     }
 
-    fun addProgress(progress: Progress) = progressDao.insertOrUpdate(progress)
+    fun addProgress(progress: Progress) =
+        progressDao.insertOrUpdate(progress)
+
+    fun addProgresses(progresses: List<Progress>) =
+        progressDao.insertOrReplaceAll(progresses)
 
     fun isProgressViewed(progressId: String?): Boolean {
         if (progressId == null) return false

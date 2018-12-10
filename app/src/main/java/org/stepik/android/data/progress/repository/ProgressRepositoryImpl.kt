@@ -15,7 +15,14 @@ constructor(
     private val progressCacheDataSource: ProgressCacheDataSource
 ) : ProgressRepository {
     override fun getProgress(progressId: String): Single<Progress> =
-            progressRemoteDataSource.getProgress(progressId)
-                .doOnSuccess(progressCacheDataSource::saveProgress)
-                .onErrorResumeNext(progressCacheDataSource.getProgress(progressId).toSingle())
+        progressRemoteDataSource
+            .getProgress(progressId)
+            .doOnSuccess(progressCacheDataSource::saveProgress)
+            .onErrorResumeNext(progressCacheDataSource.getProgress(progressId).toSingle())
+
+    override fun getProgresses(vararg progressIds: String): Single<List<Progress>> =
+        progressRemoteDataSource
+            .getProgresses(*progressIds)
+            .doOnSuccess(progressCacheDataSource::saveProgresses)
+            .onErrorResumeNext(progressCacheDataSource.getProgresses(*progressIds))
 }
