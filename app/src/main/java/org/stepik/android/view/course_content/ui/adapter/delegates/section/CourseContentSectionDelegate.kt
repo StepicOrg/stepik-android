@@ -9,12 +9,11 @@ import org.stepic.droid.R
 import org.stepik.android.view.course_content.ui.adapter.CourseContentTimelineAdapter
 import org.stepik.android.view.course_content.ui.adapter.decorators.CourseContentTimelineDecorator
 import org.stepik.android.view.course_content.model.CourseContentItem
-import org.stepik.android.view.course_content.model.CourseContentSectionDate
 import org.stepic.droid.ui.custom.adapter_delegates.AdapterDelegate
 import org.stepic.droid.ui.custom.adapter_delegates.DelegateAdapter
 import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
 import org.stepic.droid.ui.util.StartSnapHelper
-import java.util.*
+import org.stepic.droid.ui.util.changeVisibility
 
 class CourseContentSectionDelegate(
         adapter: DelegateAdapter<CourseContentItem, DelegateViewHolder<CourseContentItem>>
@@ -29,6 +28,7 @@ class CourseContentSectionDelegate(
     inner class ViewHolder(root: View) : DelegateViewHolder<CourseContentItem>(root) {
         private val sectionTitle    = root.sectionTitle
         private val sectionPosition = root.sectionPosition
+        private val sectionTimeline = root.sectionTimeline
         private val sectionProgress = root.sectionProgress
         private val sectionTextProgress   = root.sectionTextProgress
         private val sectionDownloadStatus = root.sectionDownloadStatus
@@ -37,7 +37,7 @@ class CourseContentSectionDelegate(
             CourseContentTimelineAdapter()
 
         init {
-            with(root.sectionTimeline) {
+            with(sectionTimeline) {
                 adapter = sectionTimeLineAdapter
                 layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
                 StartSnapHelper().attachToRecyclerView(this)
@@ -70,21 +70,9 @@ class CourseContentSectionDelegate(
                     sectionTextProgress.visibility = View.GONE
                 }
 
-                // todo flatten structure
-                sectionTimeLineAdapter.dates = listOf(
-                    CourseContentSectionDate(
-                        R.string.course_content_timeline_begin_date,
-                        section.createDate ?: Date().apply { time -= 100000 }),
-                    CourseContentSectionDate(
-                        R.string.course_content_timeline_soft_deadline,
-                        section.hardDeadline ?: Date().apply { time -= 10000 }),
-                    CourseContentSectionDate(
-                        R.string.course_content_timeline_hard_deadline,
-                        section.hardDeadline ?: Date().apply { time += 10000 }),
-                    CourseContentSectionDate(
-                        R.string.course_content_timeline_end_date,
-                        section.hardDeadline ?: Date().apply { time += 100000 })
-                )
+                sectionDownloadStatus.status = downloadStatus
+                sectionTimeLineAdapter.dates = dates
+                sectionTimeline.changeVisibility(dates.isNotEmpty())
             }
         }
     }
