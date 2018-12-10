@@ -27,3 +27,7 @@ object ProgressUtil {
         }
     }
 }
+
+@JvmName("progressableList_getProgresses")
+fun List<Progressable>.getProgresses(): Array<String> =
+    ProgressUtil.getProgresses(this)
