@@ -19,7 +19,7 @@ constructor() {
                 mapSectionWithEmptyUnits(section, progresses.find { it.id == section.progress })
             }
 
-    fun mapSectionWithEmptyUnits(section: Section, progress: Progress?): List<CourseContentItem> =
+    private fun mapSectionWithEmptyUnits(section: Section, progress: Progress?): List<CourseContentItem> =
         listOf(CourseContentItem.SectionItem(section, mapSectionDates(section), progress, DownloadProgress.Status.NotCached)) +
                 section.units.map(CourseContentItem::UnitItemPlaceholder)
 

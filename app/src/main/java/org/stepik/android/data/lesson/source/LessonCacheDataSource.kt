@@ -8,11 +8,9 @@ import org.stepik.android.model.Lesson
 
 interface LessonCacheDataSource {
     fun getLesson(lessonId: Long): Maybe<Lesson> =
-        getLessons(lessonId)
-            .maybeFirst()
+        getLessons(lessonId).maybeFirst()
 
     fun getLessons(vararg lessonIds: Long): Single<List<Lesson>>
-
 
     fun saveLesson(lesson: Lesson): Completable =
         saveLessons(listOf(lesson))

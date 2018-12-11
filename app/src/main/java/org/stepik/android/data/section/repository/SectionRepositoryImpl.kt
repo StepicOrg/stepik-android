@@ -1,6 +1,5 @@
 package org.stepik.android.data.section.repository
 
-import io.reactivex.Maybe
 import io.reactivex.Single
 import org.stepic.droid.util.doOnSuccess
 import org.stepik.android.data.section.source.SectionCacheDataSource
@@ -16,27 +15,6 @@ constructor(
     private val sectionCacheDataSource: SectionCacheDataSource,
     private val sectionRemoteDataSource: SectionRemoteDataSource
 ) : SectionRepository {
-
-    override fun getSection(sectionId: Long, primarySourceType: DataSourceType): Maybe<Section> {
-        val remoteSource = sectionRemoteDataSource
-            .getSection(sectionId)
-            .doOnSuccess(sectionCacheDataSource::saveSection)
-
-        val cacheSource = sectionCacheDataSource
-            .getSection(sectionId)
-
-        return when(primarySourceType) {
-            DataSourceType.REMOTE ->
-                remoteSource.onErrorResumeNext(cacheSource)
-
-            DataSourceType.CACHE ->
-                cacheSource.switchIfEmpty(remoteSource)
-
-            else ->
-                throw IllegalArgumentException("Unsupported source type = $primarySourceType")
-        }
-    }
-
     override fun getSections(vararg sectionIds: Long, primarySourceType: DataSourceType): Single<List<Section>> {
         val remoteSource = sectionRemoteDataSource
             .getSections(*sectionIds)

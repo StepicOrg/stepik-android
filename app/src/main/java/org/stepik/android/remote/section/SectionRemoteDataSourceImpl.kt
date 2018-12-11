@@ -1,8 +1,6 @@
 package org.stepik.android.remote.section
 
-import io.reactivex.Maybe
 import io.reactivex.Single
-import org.stepic.droid.util.maybeFirst
 import org.stepic.droid.web.Api
 import org.stepic.droid.web.SectionsMetaResponse
 import org.stepik.android.data.section.source.SectionRemoteDataSource
@@ -14,10 +12,6 @@ class SectionRemoteDataSourceImpl
 constructor(
     private val api: Api
 ) : SectionRemoteDataSource {
-    override fun getSection(sectionId: Long): Maybe<Section> =
-        getSections(sectionId)
-            .maybeFirst()
-
     override fun getSections(vararg sectionIds: Long): Single<List<Section>> =
         if (sectionIds.isEmpty()) {
             Single.just(emptyList())

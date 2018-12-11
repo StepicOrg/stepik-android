@@ -1,8 +1,6 @@
 package org.stepik.android.remote.unit
 
-import io.reactivex.Maybe
 import io.reactivex.Single
-import org.stepic.droid.util.maybeFirst
 import org.stepic.droid.web.Api
 import org.stepic.droid.web.UnitMetaResponse
 import org.stepik.android.data.unit.source.UnitRemoteDataSource
@@ -14,10 +12,6 @@ class UnitRemoteDataSourceImpl
 constructor(
     private val api: Api
 ) : UnitRemoteDataSource {
-    override fun getUnit(unitId: Long): Maybe<Unit> =
-        getUnits(unitId)
-            .maybeFirst()
-
     override fun getUnits(vararg unitIds: Long): Single<List<Unit>> =
         if (unitIds.isEmpty()) {
             Single.just(emptyList())

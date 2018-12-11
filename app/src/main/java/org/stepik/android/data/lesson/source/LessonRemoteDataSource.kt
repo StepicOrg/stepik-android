@@ -7,8 +7,7 @@ import org.stepik.android.model.Lesson
 
 interface LessonRemoteDataSource {
     fun getLesson(lessonId: Long): Maybe<Lesson> =
-        getLessons(lessonId)
-            .maybeFirst()
+        getLessons(lessonId).maybeFirst()
 
     fun getLessons(vararg lessonIds: Long): Single<List<Lesson>>
 }

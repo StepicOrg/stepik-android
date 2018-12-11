@@ -8,8 +8,7 @@ import org.stepik.android.model.Lesson
 
 interface LessonRepository {
     fun getLesson(lessonId: Long, primarySourceType: DataSourceType = DataSourceType.CACHE): Maybe<Lesson> =
-        getLessons(lessonId, primarySourceType = primarySourceType)
-            .maybeFirst()
+        getLessons(lessonId, primarySourceType = primarySourceType).maybeFirst()
 
     fun getLessons(vararg lessonIds: Long, primarySourceType: DataSourceType = DataSourceType.CACHE): Single<List<Lesson>>
 }
