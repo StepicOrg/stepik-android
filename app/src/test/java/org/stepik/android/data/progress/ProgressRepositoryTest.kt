@@ -9,7 +9,7 @@ import io.reactivex.Single
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.runners.MockitoJUnitRunner
+import org.mockito.junit.MockitoJUnitRunner
 import org.stepik.android.data.progress.repository.ProgressRepositoryImpl
 import org.stepik.android.data.progress.source.ProgressCacheDataSource
 import org.stepik.android.data.progress.source.ProgressRemoteDataSource
