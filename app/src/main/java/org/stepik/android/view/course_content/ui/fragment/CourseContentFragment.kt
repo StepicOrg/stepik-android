@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import kotlinx.android.synthetic.main.fragment_course_content.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
@@ -19,6 +20,7 @@ import org.stepik.android.view.course_content.model.CourseContentItem
 import org.stepic.droid.util.argument
 import org.stepik.android.presentation.course_content.CourseContentPresenter
 import org.stepik.android.presentation.course_content.CourseContentView
+import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import javax.inject.Inject
 
 class CourseContentFragment : Fragment(), CourseContentView {
@@ -29,13 +31,15 @@ class CourseContentFragment : Fragment(), CourseContentView {
                 }
     }
 
-    private lateinit var contentAdapter: CourseContentAdapter
-    private var courseId: Long by argument()
-
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
+    private lateinit var contentAdapter: CourseContentAdapter
+    private var courseId: Long by argument()
+
     private lateinit var courseContentPresenter: CourseContentPresenter
+
+    private lateinit var viewStateDelegate: ViewStateDelegate<CourseContentView.State>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,6 +80,12 @@ class CourseContentFragment : Fragment(), CourseContentView {
                 ContextCompat.getDrawable(context, R.drawable.list_divider_h)?.let(::setDrawable)
             })
         }
+
+        viewStateDelegate = ViewStateDelegate()
+        viewStateDelegate.addState<CourseContentView.State.Idle>(courseContentPlaceholder)
+        viewStateDelegate.addState<CourseContentView.State.Loading>(courseContentPlaceholder)
+        viewStateDelegate.addState<CourseContentView.State.CourseContentLoaded>(courseContentRecycler)
+        viewStateDelegate.addState<CourseContentView.State.NetworkError>(error)
     }
 
     override fun onStart() {
@@ -88,9 +98,11 @@ class CourseContentFragment : Fragment(), CourseContentView {
         super.onStop()
     }
 
-
-    override fun setCourseContent(items: List<CourseContentItem>) {
-        contentAdapter.setData(items)
+    override fun setState(state: CourseContentView.State) {
+        viewStateDelegate.switchState(state)
+        if (state is CourseContentView.State.CourseContentLoaded) {
+            contentAdapter.setData(state.courseContent)
+        }
     }
 
     override fun onDestroy() {

@@ -19,17 +19,33 @@ constructor(
     @MainScheduler
     private val mainScheduler: Scheduler
 ) : PresenterBase<CourseContentView>() {
+    private var state: CourseContentView.State = CourseContentView.State.Idle
+        set(value) {
+            field = value
+            view?.setState(value)
+        }
+
+    init {
+        fetchCourseContent()
+    }
 
     override fun attachView(view: CourseContentView) {
         super.attachView(view)
+        view.setState(state)
+    }
 
+    private fun fetchCourseContent(forceUpdate: Boolean = false) {
+        if (state != CourseContentView.State.Idle
+            && !(state == CourseContentView.State.NetworkError && forceUpdate)) return
+
+        state = CourseContentView.State.Loading
         compositeDisposable += courseContentInteractor
             .getCourseContent()
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onNext  = { view.setCourseContent(it) },
-                onError = { it.printStackTrace() }
+                onNext  = { state = CourseContentView.State.CourseContentLoaded(it) },
+                onError = { state = CourseContentView.State.NetworkError }
             )
     }
 }
