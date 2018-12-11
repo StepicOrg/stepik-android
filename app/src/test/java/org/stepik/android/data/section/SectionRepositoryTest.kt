@@ -52,7 +52,6 @@ class SectionRepositoryTest {
         val section = Section(id = sectionId)
 
         whenever(sectionCacheDataSource.getSections(sectionId)) doReturn Single.just(listOf(section))
-        whenever(sectionCacheDataSource.saveSections(any())) doReturn Completable.complete()
         whenever(sectionRemoteDataSource.getSections(sectionId)) doReturn Single.error(IOException(""))
 
         sectionRepository
