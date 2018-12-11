@@ -1,9 +1,9 @@
 package org.stepik.android.domain.course_content.interactor
 
 import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.subjects.BehaviorSubject
-import org.stepic.droid.util.concat
 import org.stepic.droid.util.getProgresses
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.lesson.repository.LessonRepository
@@ -30,33 +30,30 @@ constructor(
 ) {
     fun getCourseContent(): Observable<List<CourseContentItem>> =
         courseObservableSource
-            .switchMap(::getSectionsOfCourse)
-            .flatMap(::populateSectionsProgresses)
-            .flatMap { items ->
-                Observable.just(items) concat loadUnits(items)
+            .switchMap { course ->
+                getSectionsOfCourse(course)
+                    .flatMap(::populateSections)
+                    .flatMapObservable { items ->
+                        Single
+                            .concat(Single.just(items), loadUnits(items))
+                            .toObservable()
+                    }
             }
 
-    private fun getSectionsOfCourse(course: Course): Observable<List<Section>> =
+    private fun getSectionsOfCourse(course: Course): Single<List<Section>> =
         sectionRepository
             .getSections(*course.sections ?: longArrayOf(), primarySourceType = DataSourceType.REMOTE)
-            .toObservable()
 
-    private fun populateSectionsProgresses(sections: List<Section>): Observable<List<CourseContentItem>> =
+    private fun populateSections(sections: List<Section>): Single<List<CourseContentItem>> =
         progressRepository
             .getProgresses(*sections.getProgresses())
             .map { progresses ->
-                sections
-                    .flatMap { section ->
-                        courseContentItemMapper
-                            .mapSectionWithEmptyUnits(section, progresses.find { it.id == section.progress })
-                    }
+                courseContentItemMapper.mapSectionsWithEmptyUnits(sections, progresses)
             }
-            .toObservable()
 
-    private fun loadUnits(items: List<CourseContentItem>): Observable<List<CourseContentItem>> =
-        Observable
-            .just(items.filterIsInstance<CourseContentItem.UnitItemPlaceholder>())
-            .map { it.map(CourseContentItem.UnitItemPlaceholder::unitId) }
+    private fun loadUnits(items: List<CourseContentItem>): Single<List<CourseContentItem>> =
+        Single
+            .just(courseContentItemMapper.getUnitPlaceholdersIds(items))
             .flatMap(::getUnits)
             .flatMap { units ->
                 val sections = items
@@ -66,25 +63,18 @@ constructor(
                 populateUnits(sections, units)
             }
             .map { unitItems ->
-                items.map { item ->
-                    (item as? CourseContentItem.UnitItemPlaceholder)
-                        ?.let { unitItems.find { unitItem -> it.unitId == unitItem.unit.id } }
-                        ?: item
-                }
+                courseContentItemMapper.replaceUnitPlaceholders(items, unitItems)
             }
 
-    private fun getUnits(unitIds: List<Long>): Observable<List<Unit>> =
+    private fun getUnits(unitIds: LongArray): Single<List<Unit>> =
         unitRepository
-            .getUnits(*unitIds.toLongArray(), primarySourceType = DataSourceType.REMOTE)
-            .toObservable()
+            .getUnits(*unitIds, primarySourceType = DataSourceType.REMOTE)
 
-
-    private fun populateUnits(sections: List<Section>, units: List<Unit>): Observable<List<CourseContentItem.UnitItem>> =
+    private fun populateUnits(sections: List<Section>, units: List<Unit>): Single<List<CourseContentItem.UnitItem>> =
         zip(
             progressRepository.getProgresses(*units.getProgresses()),
             lessonRepository.getLessons(*units.map(Unit::lesson).toLongArray(), primarySourceType = DataSourceType.REMOTE)
         )
-            .toObservable()
             .map { (progresses, lessons) ->
                 courseContentItemMapper.mapUnits(units, sections, progresses, lessons)
             }
