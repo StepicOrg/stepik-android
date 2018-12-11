@@ -6,12 +6,15 @@ import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
+import org.stepic.droid.persistence.downloads.interactor.DownloadInteractor
 import org.stepic.droid.persistence.downloads.progress.DownloadProgressProvider
+import org.stepic.droid.persistence.model.DownloadConfiguration
 import org.stepik.android.domain.course_content.interactor.CourseContentInteractor
 import org.stepik.android.model.Section
 import org.stepik.android.model.Unit
 import org.stepik.android.presentation.base.PresenterBase
 import org.stepik.android.view.course_content.model.CourseContentItem
+import java.util.*
 import javax.inject.Inject
 
 class CourseContentPresenter
@@ -20,7 +23,10 @@ constructor(
     private val courseContentInteractor: CourseContentInteractor,
 
     private val sectionDownloadProgressProvider: DownloadProgressProvider<Section>,
+    private val sectionDownloadInteractor: DownloadInteractor<Section>,
+
     private val unitDownloadProgressProvider: DownloadProgressProvider<Unit>,
+    private val unitDownloadInteractor: DownloadInteractor<Unit>,
 
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
@@ -115,6 +121,49 @@ constructor(
             .subscribeBy(
                 onError = { it.printStackTrace() },
                 onNext  = { view?.updateUnitDownloadProgress(it) }
+            )
+    }
+
+    /**
+     * Download tasks
+     */
+    fun addUnitDownloadTask(unit: Unit) {
+        compositeDisposable += unitDownloadInteractor
+            .addTask(unit, configuration = DownloadConfiguration(EnumSet.allOf(DownloadConfiguration.NetworkType::class.java), "720"))
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onError = {}
+            )
+    }
+
+    fun removeUnitDownloadTask(unit: Unit) {
+        compositeDisposable += unitDownloadInteractor
+            .removeTask(unit)
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onError = {}
+            )
+    }
+
+    fun addSectionDownloadTask(section: Section) {
+        compositeDisposable += sectionDownloadInteractor
+            .addTask(section, configuration = DownloadConfiguration(EnumSet.allOf(DownloadConfiguration.NetworkType::class.java), "720"))
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onError = {}
+            )
+    }
+
+    fun removeSectionDownloadTask(section: Section) {
+        compositeDisposable += sectionDownloadInteractor
+            .removeTask(section)
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onError = {}
             )
     }
 

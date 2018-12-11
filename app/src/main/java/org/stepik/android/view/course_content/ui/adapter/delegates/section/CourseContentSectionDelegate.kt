@@ -18,8 +18,9 @@ import org.stepic.droid.ui.util.StartSnapHelper
 import org.stepic.droid.ui.util.changeVisibility
 
 class CourseContentSectionDelegate(
-        adapter: DelegateAdapter<CourseContentItem, DelegateViewHolder<CourseContentItem>>,
-        private val sectionDownloadStatuses: LongSparseArray<DownloadProgress.Status>
+    adapter: DelegateAdapter<CourseContentItem, DelegateViewHolder<CourseContentItem>>,
+    private val sectionClickListener: CourseContentSectionClickListener,
+    private val sectionDownloadStatuses: LongSparseArray<DownloadProgress.Status>
 ) : AdapterDelegate<CourseContentItem, DelegateViewHolder<CourseContentItem>>(adapter) {
 
     override fun onCreateViewHolder(parent: ViewGroup) =
@@ -55,6 +56,18 @@ class CourseContentSectionDelegate(
                         return true
                     }
                 })
+            }
+
+            sectionDownloadStatus.setOnClickListener {
+                val item = (itemData as? CourseContentItem.SectionItem) ?: return@setOnClickListener
+                when(sectionDownloadStatus.status) {
+                    DownloadProgress.Status.NotCached ->
+                        sectionClickListener.onItemDownloadClicked(item)
+
+                    DownloadProgress.Status.Cached,
+                    is DownloadProgress.Status.InProgress ->
+                        sectionClickListener.onItemRemoveClicked(item)
+                }
             }
         }
 

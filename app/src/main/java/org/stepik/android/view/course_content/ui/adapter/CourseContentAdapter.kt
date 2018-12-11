@@ -10,10 +10,12 @@ import org.stepik.android.view.course_content.model.CourseContentItem
 import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
 import org.stepic.droid.ui.custom.adapter_delegates.DelegateAdapter
+import org.stepik.android.view.course_content.ui.adapter.delegates.section.CourseContentSectionClickListener
 import org.stepik.android.view.course_content.ui.adapter.delegates.unit.CourseContentUnitPlaceholderDelegate
 
 class CourseContentAdapter(
-        unitClickListener: CourseContentUnitClickListener
+    sectionClickListener: CourseContentSectionClickListener,
+    unitClickListener: CourseContentUnitClickListener
 ) : DelegateAdapter<CourseContentItem, DelegateViewHolder<CourseContentItem>>() {
     private val headers = listOf(CourseContentItem.ControlBar)
 
@@ -33,7 +35,7 @@ class CourseContentAdapter(
 
     init {
         addDelegate(CourseContentControlBarDelegate(this))
-        addDelegate(CourseContentSectionDelegate(this, sectionDownloadStatuses))
+        addDelegate(CourseContentSectionDelegate(this, sectionClickListener, sectionDownloadStatuses))
         addDelegate(CourseContentUnitDelegate(this, unitClickListener, unitDownloadStatuses))
         addDelegate(CourseContentUnitPlaceholderDelegate(this))
     }

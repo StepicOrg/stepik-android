@@ -56,6 +56,18 @@ class CourseContentUnitDelegate(
             root.setOnClickListener {
                 (itemData as? CourseContentItem.UnitItem)?.let(unitClickListener::onItemClicked)
             }
+
+            unitDownloadStatus.setOnClickListener {
+                val item = (itemData as? CourseContentItem.UnitItem) ?: return@setOnClickListener
+                when(unitDownloadStatus.status) {
+                    DownloadProgress.Status.NotCached ->
+                        unitClickListener.onItemDownloadClicked(item)
+
+                    DownloadProgress.Status.Cached,
+                    is DownloadProgress.Status.InProgress ->
+                        unitClickListener.onItemRemoveClicked(item)
+                }
+            }
         }
 
         override fun onBind(data: CourseContentItem) {
