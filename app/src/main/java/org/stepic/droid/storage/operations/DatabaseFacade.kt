@@ -125,7 +125,11 @@ class DatabaseFacade
     fun getAllCourses(courseListType: CourseListType) =
         courseListDao.getCourseList(courseListType)
 
-    fun addCourse(course: Course) = courseDao.insertOrReplace(course)
+    fun addCourse(course: Course) =
+        courseDao.insertOrReplace(course)
+
+    fun deleteCourse(courseId: Long) =
+        courseDao.remove(DbStructureCourse.Columns.ID, courseId.toString())
 
     fun addCourseList(courseListType: CourseListType, courses: List<Course>) =
         courseListDao.addCourseList(courseListType, courses)

@@ -51,7 +51,7 @@ constructor(
     private fun makeDropCall(dropCall: Call<Void>, course: Course) {
         val dropResponse = dropCall.execute()
         if (dropResponse.isSuccessful) {
-            databaseFacade.addCourse(course)
+            databaseFacade.deleteCourse(course.id)
             databaseFacade.deleteCourseFromList(CourseListType.ENROLLED, course.id)
             mainHandler.post {
                 droppingPoster.successDropCourse(course)
