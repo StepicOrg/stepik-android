@@ -41,7 +41,7 @@ class CourseContentAdapter(
     fun updateSectionDownloadProgress(downloadProgress: DownloadProgress) {
         val sectionPosition = items
             .indexOfFirst { it is CourseContentItem.SectionItem && it.section.id == downloadProgress.id }
-            .takeIf { it > 0 }
+            .takeIf { it >= 0 }
             ?: return
 
         sectionDownloadStatuses.append(downloadProgress.id, downloadProgress.status)
@@ -51,7 +51,7 @@ class CourseContentAdapter(
     fun updateUnitDownloadProgress(downloadProgress: DownloadProgress) {
         val unitPosition = items
             .indexOfFirst { it is CourseContentItem.UnitItem && it.unit.id == downloadProgress.id }
-            .takeIf { it > 0 }
+            .takeIf { it >= 0 }
             ?: return
 
         unitDownloadStatuses.append(downloadProgress.id, downloadProgress.status)
