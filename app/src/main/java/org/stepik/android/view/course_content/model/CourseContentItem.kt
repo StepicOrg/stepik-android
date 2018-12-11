@@ -1,6 +1,5 @@
 package org.stepik.android.view.course_content.model
 
-import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepik.android.model.Lesson
 import org.stepik.android.model.Progress
 import org.stepik.android.model.Section
@@ -13,7 +12,6 @@ sealed class CourseContentItem {
             val section: Section,
             val dates: List<CourseContentSectionDate>,
             val progress: Progress?,
-            val downloadStatus: DownloadProgress.Status,
             val isEnabled: Boolean
     ) : CourseContentItem()
 
@@ -26,7 +24,6 @@ sealed class CourseContentItem {
             val unit: Unit,
             val lesson: Lesson,
             val progress: Progress?,
-            val downloadStatus: DownloadProgress.Status,
             val isEnabled: Boolean
     ) : CourseContentItem()
 }

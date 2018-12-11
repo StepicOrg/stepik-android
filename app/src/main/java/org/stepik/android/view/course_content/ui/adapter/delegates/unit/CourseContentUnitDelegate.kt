@@ -3,11 +3,13 @@ package org.stepik.android.view.course_content.ui.adapter.delegates.unit
 import android.graphics.BitmapFactory
 import android.support.annotation.DrawableRes
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
+import android.support.v4.util.LongSparseArray
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.view_course_content_unit.view.*
 import org.stepic.droid.R
+import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepik.android.view.course_content.model.CourseContentItem
 import org.stepic.droid.ui.custom.adapter_delegates.AdapterDelegate
 import org.stepic.droid.ui.custom.adapter_delegates.DelegateAdapter
@@ -17,7 +19,8 @@ import org.stepic.droid.ui.util.changeVisibility
 
 class CourseContentUnitDelegate(
     adapter: DelegateAdapter<CourseContentItem, DelegateViewHolder<CourseContentItem>>,
-    private val unitClickListener: CourseContentUnitClickListener
+    private val unitClickListener: CourseContentUnitClickListener,
+    private val unitDownloadStatuses: LongSparseArray<DownloadProgress.Status>
 ) : AdapterDelegate<CourseContentItem, DelegateViewHolder<CourseContentItem>>(adapter) {
 
     override fun onCreateViewHolder(parent: ViewGroup) =
@@ -71,7 +74,7 @@ class CourseContentUnitDelegate(
                     unitTextProgress.visibility = View.GONE
                 }
 
-                unitDownloadStatus.status = downloadStatus
+                unitDownloadStatus.status = unitDownloadStatuses[data.unit.id] ?: DownloadProgress.Status.Pending
 
                 Glide.with(unitIcon.context)
                         .load(lesson.coverUrl)

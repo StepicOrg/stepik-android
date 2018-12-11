@@ -1,5 +1,6 @@
 package org.stepik.android.presentation.course_content
 
+import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepik.android.view.course_content.model.CourseContentItem
 
 interface CourseContentView {
@@ -12,4 +13,7 @@ interface CourseContentView {
     }
 
     fun setState(state: State)
+
+    fun updateSectionDownloadProgress(downloadProgress: DownloadProgress)
+    fun updateUnitDownloadProgress(downloadProgress: DownloadProgress)
 }

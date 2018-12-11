@@ -15,6 +15,7 @@ import kotlinx.android.synthetic.main.fragment_course_content.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepik.android.view.course_content.ui.adapter.CourseContentAdapter
 import org.stepik.android.view.course_content.ui.adapter.delegates.unit.CourseContentUnitClickListener
 import org.stepik.android.view.course_content.model.CourseContentItem
@@ -27,9 +28,9 @@ import javax.inject.Inject
 class CourseContentFragment : Fragment(), CourseContentView {
     companion object {
         fun newInstance(courseId: Long) =
-                CourseContentFragment().apply {
-                    this.courseId = courseId
-                }
+            CourseContentFragment().apply {
+                this.courseId = courseId
+            }
     }
 
     @Inject
@@ -71,14 +72,16 @@ class CourseContentFragment : Fragment(), CourseContentView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         with(courseContentRecycler) {
             contentAdapter =
-                    CourseContentAdapter(object :
-                        CourseContentUnitClickListener {
+                CourseContentAdapter(
+                    unitClickListener = object : CourseContentUnitClickListener {
                         override fun onItemClicked(item: CourseContentItem.UnitItem) {
                             screenManager.showSteps(activity, item.unit, item.lesson, item.section)
                         }
                         override fun onItemDownloadClicked(item: CourseContentItem.UnitItem) {}
                         override fun onItemRemoveClicked(item: CourseContentItem.UnitItem) {}
-                    })
+                    }
+                )
+
             adapter = contentAdapter
             layoutManager = LinearLayoutManager(context)
 
@@ -107,8 +110,16 @@ class CourseContentFragment : Fragment(), CourseContentView {
     override fun setState(state: CourseContentView.State) {
         viewStateDelegate.switchState(state)
         if (state is CourseContentView.State.CourseContentLoaded) {
-            contentAdapter.setData(state.courseContent)
+            contentAdapter.items = state.courseContent
         }
+    }
+
+    override fun updateSectionDownloadProgress(downloadProgress: DownloadProgress) {
+        contentAdapter.updateSectionDownloadProgress(downloadProgress)
+    }
+
+    override fun updateUnitDownloadProgress(downloadProgress: DownloadProgress) {
+        contentAdapter.updateUnitDownloadProgress(downloadProgress)
     }
 
     override fun onDestroy() {

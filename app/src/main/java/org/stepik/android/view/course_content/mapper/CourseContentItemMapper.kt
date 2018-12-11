@@ -1,7 +1,6 @@
 package org.stepik.android.view.course_content.mapper
 
 import org.stepic.droid.R
-import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepic.droid.util.hasUserAccess
 import org.stepik.android.model.*
 import org.stepik.android.model.Unit
@@ -19,7 +18,7 @@ constructor() {
             }
 
     private fun mapSectionWithEmptyUnits(course: Course, section: Section, progress: Progress?): List<CourseContentItem> =
-        listOf(CourseContentItem.SectionItem(section, mapSectionDates(section), progress, DownloadProgress.Status.NotCached, section.hasUserAccess(course))) +
+        listOf(CourseContentItem.SectionItem(section, mapSectionDates(section), progress, section.hasUserAccess(course))) +
                 section.units.map(CourseContentItem::UnitItemPlaceholder)
 
     private fun mapSectionDates(section: Section): List<CourseContentSectionDate> =
@@ -35,7 +34,7 @@ constructor() {
             val sectionItem = sectionItems.find { it.section.id == unit.section } ?: return@mapNotNull null
             val lesson = lessons.find { it.id == unit.lesson } ?: return@mapNotNull null
             val progress = progresses.find { it.id == unit.progress }
-            CourseContentItem.UnitItem(sectionItem.section, unit, lesson, progress, DownloadProgress.Status.NotCached, sectionItem.isEnabled)
+            CourseContentItem.UnitItem(sectionItem.section, unit, lesson, progress, sectionItem.isEnabled)
         }
 
     fun replaceUnitPlaceholders(items: List<CourseContentItem>, unitItems: List<CourseContentItem.UnitItem>): List<CourseContentItem> =

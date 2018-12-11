@@ -1,11 +1,13 @@
 package org.stepik.android.view.course_content.ui.adapter.delegates.section
 
+import android.support.v4.util.LongSparseArray
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import kotlinx.android.synthetic.main.view_course_content_section.view.*
 import org.stepic.droid.R
+import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepik.android.view.course_content.ui.adapter.CourseContentTimelineAdapter
 import org.stepik.android.view.course_content.ui.adapter.decorators.CourseContentTimelineDecorator
 import org.stepik.android.view.course_content.model.CourseContentItem
@@ -16,7 +18,8 @@ import org.stepic.droid.ui.util.StartSnapHelper
 import org.stepic.droid.ui.util.changeVisibility
 
 class CourseContentSectionDelegate(
-        adapter: DelegateAdapter<CourseContentItem, DelegateViewHolder<CourseContentItem>>
+        adapter: DelegateAdapter<CourseContentItem, DelegateViewHolder<CourseContentItem>>,
+        private val sectionDownloadStatuses: LongSparseArray<DownloadProgress.Status>
 ) : AdapterDelegate<CourseContentItem, DelegateViewHolder<CourseContentItem>>(adapter) {
 
     override fun onCreateViewHolder(parent: ViewGroup) =
@@ -70,7 +73,7 @@ class CourseContentSectionDelegate(
                     sectionTextProgress.visibility = View.GONE
                 }
 
-                sectionDownloadStatus.status = downloadStatus
+                sectionDownloadStatus.status = sectionDownloadStatuses[data.section.id] ?: DownloadProgress.Status.Pending
                 sectionTimeLineAdapter.dates = dates
                 sectionTimeline.changeVisibility(dates.isNotEmpty())
 
