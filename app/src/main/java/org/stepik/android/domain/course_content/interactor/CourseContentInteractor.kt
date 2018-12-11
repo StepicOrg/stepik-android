@@ -28,7 +28,6 @@ constructor(
 
     private val courseContentItemMapper: CourseContentItemMapper
 ) {
-
     fun getCourseContent(): Observable<List<CourseContentItem>> =
         courseObservableSource
             .switchMap(::getSectionsOfCourse)
@@ -55,7 +54,7 @@ constructor(
             .toObservable()
 
     private fun loadUnits(items: List<CourseContentItem>): Observable<List<CourseContentItem>> =
-        Observable // todo remove tmp
+        Observable
             .just(items.filterIsInstance<CourseContentItem.UnitItemPlaceholder>())
             .map { it.map(CourseContentItem.UnitItemPlaceholder::unitId) }
             .flatMap(::getUnits)
