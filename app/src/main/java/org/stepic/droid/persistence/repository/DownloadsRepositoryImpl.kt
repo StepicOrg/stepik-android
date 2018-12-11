@@ -51,7 +51,7 @@ constructor(
     private fun getDownloadItem(structure: Structure, items: List<PersistentItem>): Observable<DownloadItem> = (
                 resolveStep(structure, items) +
                 intervalUpdatesObservable
-                        .switchMap { _ -> persistentItemDao.getItemsByStep(structure.step) }
+                        .switchMap { persistentItemDao.getItemsByStep(structure.step) }
                         .switchMap { resolveStep(structure, it) }
             )
             .takeUntil { it.status !is DownloadProgress.Status.InProgress }

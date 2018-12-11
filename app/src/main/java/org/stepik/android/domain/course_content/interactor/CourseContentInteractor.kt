@@ -72,8 +72,10 @@ constructor(
 
     private fun populateUnits(sections: List<Section>, units: List<Unit>): Single<List<CourseContentItem.UnitItem>> =
         zip(
-            progressRepository.getProgresses(*units.getProgresses()),
-            lessonRepository.getLessons(*units.map(Unit::lesson).toLongArray(), primarySourceType = DataSourceType.REMOTE)
+            progressRepository
+                .getProgresses(*units.getProgresses()),
+            lessonRepository
+                .getLessons(*units.map(Unit::lesson).toLongArray(), primarySourceType = DataSourceType.REMOTE)
         )
             .map { (progresses, lessons) ->
                 courseContentItemMapper.mapUnits(units, sections, progresses, lessons)
