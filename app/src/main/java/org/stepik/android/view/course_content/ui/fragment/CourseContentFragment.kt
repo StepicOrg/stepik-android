@@ -14,6 +14,7 @@ import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import kotlinx.android.synthetic.main.fragment_course_content.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
+import org.stepic.droid.core.ScreenManager
 import org.stepik.android.view.course_content.ui.adapter.CourseContentAdapter
 import org.stepik.android.view.course_content.ui.adapter.delegates.unit.CourseContentUnitClickListener
 import org.stepik.android.view.course_content.model.CourseContentItem
@@ -32,7 +33,10 @@ class CourseContentFragment : Fragment(), CourseContentView {
     }
 
     @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
+    internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    internal lateinit var screenManager: ScreenManager
 
     private lateinit var contentAdapter: CourseContentAdapter
     private var courseId: Long by argument()
@@ -69,7 +73,9 @@ class CourseContentFragment : Fragment(), CourseContentView {
             contentAdapter =
                     CourseContentAdapter(object :
                         CourseContentUnitClickListener {
-                        override fun onItemClicked(item: CourseContentItem.UnitItem) {}
+                        override fun onItemClicked(item: CourseContentItem.UnitItem) {
+                            screenManager.showSteps(activity, item.unit, item.lesson, item.section)
+                        }
                         override fun onItemDownloadClicked(item: CourseContentItem.UnitItem) {}
                         override fun onItemRemoveClicked(item: CourseContentItem.UnitItem) {}
                     })
