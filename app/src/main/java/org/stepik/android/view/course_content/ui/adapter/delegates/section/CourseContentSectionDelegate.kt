@@ -73,6 +73,14 @@ class CourseContentSectionDelegate(
                 sectionDownloadStatus.status = downloadStatus
                 sectionTimeLineAdapter.dates = dates
                 sectionTimeline.changeVisibility(dates.isNotEmpty())
+
+                sectionDownloadStatus.changeVisibility(isEnabled)
+                itemView.isEnabled = isEnabled
+
+                val alpha = if (isEnabled) 1f else 0.4f
+                sectionTitle.alpha = alpha
+                sectionPosition.alpha = alpha
+                sectionTimeline.alpha = alpha
             }
         }
     }

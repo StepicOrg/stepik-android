@@ -13,7 +13,8 @@ sealed class CourseContentItem {
             val section: Section,
             val dates: List<CourseContentSectionDate>,
             val progress: Progress?,
-            val downloadStatus: DownloadProgress.Status
+            val downloadStatus: DownloadProgress.Status,
+            val isEnabled: Boolean
     ) : CourseContentItem()
 
     class UnitItemPlaceholder(
@@ -25,6 +26,7 @@ sealed class CourseContentItem {
             val unit: Unit,
             val lesson: Lesson,
             val progress: Progress?,
-            val downloadStatus: DownloadProgress.Status
+            val downloadStatus: DownloadProgress.Status,
+            val isEnabled: Boolean
     ) : CourseContentItem()
 }

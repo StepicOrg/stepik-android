@@ -19,7 +19,7 @@ class CourseContentTimelineAdapter : RecyclerView.Adapter<DelegateViewHolder<Cou
             notifyDataSetChanged()
         }
 
-    var now: Date = Date()
+    val now: Date = Date()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
             ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.view_course_content_section_date, parent, false))

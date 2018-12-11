@@ -32,7 +32,7 @@ constructor(
         courseObservableSource
             .switchMap { course ->
                 getSectionsOfCourse(course)
-                    .flatMap(::populateSections)
+                    .flatMap { populateSections(course, it) }
                     .flatMapObservable { items ->
                         Single
                             .concat(Single.just(items), loadUnits(items))
@@ -44,11 +44,11 @@ constructor(
         sectionRepository
             .getSections(*course.sections ?: longArrayOf(), primarySourceType = DataSourceType.REMOTE)
 
-    private fun populateSections(sections: List<Section>): Single<List<CourseContentItem>> =
+    private fun populateSections(course: Course, sections: List<Section>): Single<List<CourseContentItem>> =
         progressRepository
             .getProgresses(*sections.getProgresses())
             .map { progresses ->
-                courseContentItemMapper.mapSectionsWithEmptyUnits(sections, progresses)
+                courseContentItemMapper.mapSectionsWithEmptyUnits(course, sections, progresses)
             }
 
     private fun loadUnits(items: List<CourseContentItem>): Single<List<CourseContentItem>> =
@@ -56,11 +56,10 @@ constructor(
             .just(courseContentItemMapper.getUnitPlaceholdersIds(items))
             .flatMap(::getUnits)
             .flatMap { units ->
-                val sections = items
+                val sectionItems = items
                     .filterIsInstance<CourseContentItem.SectionItem>()
-                    .map(CourseContentItem.SectionItem::section)
 
-                populateUnits(sections, units)
+                populateUnits(sectionItems, units)
             }
             .map { unitItems ->
                 courseContentItemMapper.replaceUnitPlaceholders(items, unitItems)
@@ -70,7 +69,7 @@ constructor(
         unitRepository
             .getUnits(*unitIds, primarySourceType = DataSourceType.REMOTE)
 
-    private fun populateUnits(sections: List<Section>, units: List<Unit>): Single<List<CourseContentItem.UnitItem>> =
+    private fun populateUnits(sectionItems: List<CourseContentItem.SectionItem>, units: List<Unit>): Single<List<CourseContentItem.UnitItem>> =
         zip(
             progressRepository
                 .getProgresses(*units.getProgresses()),
@@ -78,7 +77,7 @@ constructor(
                 .getLessons(*units.map(Unit::lesson).toLongArray(), primarySourceType = DataSourceType.REMOTE)
         )
             .map { (progresses, lessons) ->
-                courseContentItemMapper.mapUnits(units, sections, progresses, lessons)
+                courseContentItemMapper.mapUnits(sectionItems, units, lessons, progresses)
             }
 
 }

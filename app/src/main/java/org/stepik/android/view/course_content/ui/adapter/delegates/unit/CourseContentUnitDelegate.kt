@@ -13,6 +13,7 @@ import org.stepic.droid.ui.custom.adapter_delegates.AdapterDelegate
 import org.stepic.droid.ui.custom.adapter_delegates.DelegateAdapter
 import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
+import org.stepic.droid.ui.util.changeVisibility
 
 class CourseContentUnitDelegate(
     adapter: DelegateAdapter<CourseContentItem, DelegateViewHolder<CourseContentItem>>,
@@ -32,6 +33,7 @@ class CourseContentUnitDelegate(
         private val unitProgress = root.unitProgress
 
         private val unitViewCount = root.unitViewCount
+        private val unitViewCountIcon = root.unitViewCountIcon
         private val unitRating = root.unitRating
         private val unitRatingIcon = root.unitRatingIcon
 
@@ -89,6 +91,16 @@ class CourseContentUnitDelegate(
 
                 unitRatingIcon.setImageResource(unitRatingDrawableRes)
                 unitRating.text = Math.abs(lesson.voteDelta).toString()
+
+                unitDownloadStatus.changeVisibility(isEnabled)
+                itemView.isEnabled = isEnabled
+
+                val alpha = if (isEnabled) 1f else 0.4f
+                unitTitle.alpha = alpha
+                unitRatingIcon.alpha = alpha
+                unitRating.alpha = alpha
+                unitViewCount.alpha = alpha
+                unitViewCountIcon.alpha = alpha
             }
         }
     }
