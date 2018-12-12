@@ -24,12 +24,9 @@ class CourseContentAdapter(
 
     var items: List<CourseContentItem> = emptyList()
         set(value) {
-            DiffUtil.calculateDiff(
-                CourseContentDiffCallback(
-                    field,
-                    value
-                )
-            ).dispatchUpdatesTo(this)
+            DiffUtil
+                .calculateDiff(CourseContentDiffCallback(field, value))
+                .dispatchUpdatesTo(this)
             field = value
         }
 
@@ -42,8 +39,9 @@ class CourseContentAdapter(
 
     fun updateSectionDownloadProgress(downloadProgress: DownloadProgress) {
         val sectionPosition = items
-            .indexOfFirst { it is CourseContentItem.SectionItem && it.section.id == downloadProgress.id }
-            .takeIf { it >= 0 }
+            .takeIf { sectionDownloadStatuses[downloadProgress.id] != downloadProgress.status }
+            ?.indexOfFirst { it is CourseContentItem.SectionItem && it.section.id == downloadProgress.id }
+            ?.takeIf { it >= 0 }
             ?: return
 
         sectionDownloadStatuses.append(downloadProgress.id, downloadProgress.status)
@@ -52,8 +50,9 @@ class CourseContentAdapter(
 
     fun updateUnitDownloadProgress(downloadProgress: DownloadProgress) {
         val unitPosition = items
-            .indexOfFirst { it is CourseContentItem.UnitItem && it.unit.id == downloadProgress.id }
-            .takeIf { it >= 0 }
+            .takeIf { unitDownloadStatuses[downloadProgress.id] != downloadProgress.status }
+            ?.indexOfFirst { it is CourseContentItem.UnitItem && it.unit.id == downloadProgress.id }
+            ?.takeIf { it >= 0 }
             ?: return
 
         unitDownloadStatuses.append(downloadProgress.id, downloadProgress.status)

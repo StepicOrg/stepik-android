@@ -9,6 +9,7 @@ import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.persistence.downloads.interactor.DownloadInteractor
 import org.stepic.droid.persistence.downloads.progress.DownloadProgressProvider
 import org.stepic.droid.persistence.model.DownloadConfiguration
+import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepik.android.domain.course_content.interactor.CourseContentInteractor
 import org.stepik.android.model.Section
 import org.stepik.android.model.Unit
@@ -40,6 +41,9 @@ constructor(
         }
 
     private val downloadsDisposable = CompositeDisposable()
+
+    private val pendingUnits = mutableSetOf<Long>()
+    private val pendingSections = mutableSetOf<Long>()
 
     init {
         compositeDisposable += downloadsDisposable
@@ -128,42 +132,62 @@ constructor(
      * Download tasks
      */
     fun addUnitDownloadTask(unit: Unit) {
+        if (unit.id in pendingUnits) return
+        pendingUnits.add(unit.id)
+        view?.updateUnitDownloadProgress(DownloadProgress(unit.id, DownloadProgress.Status.Pending))
+
         compositeDisposable += unitDownloadInteractor
             .addTask(unit, configuration = DownloadConfiguration(EnumSet.allOf(DownloadConfiguration.NetworkType::class.java), "720"))
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onError = {}
+                onComplete = { pendingUnits.remove(unit.id) },
+                onError    = { pendingUnits.remove(unit.id) }
             )
     }
 
     fun removeUnitDownloadTask(unit: Unit) {
+        if (unit.id in pendingUnits) return
+        pendingUnits.add(unit.id)
+        view?.updateUnitDownloadProgress(DownloadProgress(unit.id, DownloadProgress.Status.Pending))
+
         compositeDisposable += unitDownloadInteractor
             .removeTask(unit)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onError = {}
+                onComplete = { pendingUnits.remove(unit.id) },
+                onError    = { pendingUnits.remove(unit.id) }
             )
     }
 
     fun addSectionDownloadTask(section: Section) {
+        if (section.id in pendingSections) return
+        pendingSections.add(section.id)
+        view?.updateSectionDownloadProgress(DownloadProgress(section.id, DownloadProgress.Status.Pending))
+
         compositeDisposable += sectionDownloadInteractor
             .addTask(section, configuration = DownloadConfiguration(EnumSet.allOf(DownloadConfiguration.NetworkType::class.java), "720"))
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onError = {}
+                onComplete = { pendingSections.remove(section.id) },
+                onError    = { pendingSections.remove(section.id) }
             )
     }
 
     fun removeSectionDownloadTask(section: Section) {
+        if (section.id in pendingSections) return
+        pendingSections.add(section.id)
+        view?.updateSectionDownloadProgress(DownloadProgress(section.id, DownloadProgress.Status.Pending))
+
         compositeDisposable += sectionDownloadInteractor
             .removeTask(section)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onError = {}
+                onComplete = { pendingSections.remove(section.id) },
+                onError    = { pendingSections.remove(section.id) }
             )
     }
 

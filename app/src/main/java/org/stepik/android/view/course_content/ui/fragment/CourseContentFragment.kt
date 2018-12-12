@@ -100,6 +100,7 @@ class CourseContentFragment : Fragment(), CourseContentView {
 
             adapter = contentAdapter
             layoutManager = LinearLayoutManager(context)
+            itemAnimator = null
 
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL).apply {
                 ContextCompat.getDrawable(context, R.drawable.list_divider_h)?.let(::setDrawable)
