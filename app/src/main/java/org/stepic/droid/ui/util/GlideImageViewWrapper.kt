@@ -1,5 +1,6 @@
 package org.stepic.droid.ui.util
 
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.widget.ImageView
 import com.bumptech.glide.Glide
@@ -16,16 +17,18 @@ class GlideImageViewWrapper(
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
     }
 
-    fun setImagePath(path: String) {
+    fun setImagePath(path: String, placeholder: Drawable? = null) {
         if (path.endsWith(AppConstants.SVG_EXTENSION)) {
             svgRequestBuilder
-                    .load(Uri.parse(path))
-                    .into(imageView)
+                .load(Uri.parse(path))
+                .placeholder(placeholder)
+                .into(imageView)
         } else {
             Glide.with(imageView.context)
-                    .load(path)
-                    .asBitmap()
-                    .into(imageView)
+                .load(path)
+                .asBitmap()
+                .placeholder(placeholder)
+                .into(imageView)
         }
     }
 }

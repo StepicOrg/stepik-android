@@ -6,12 +6,11 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.view_course_info_instructor_item.view.*
 import org.stepic.droid.R
 import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
-import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.ui.util.changeVisibility
+import org.stepic.droid.ui.util.wrapWithGlide
 import org.stepik.android.model.user.User
 
 class CourseInfoInstructorsAdapter(
@@ -67,9 +66,7 @@ class CourseInfoInstructorsAdapter(
             circularBitmapDrawable
         }
 
-        private val instructorIconTarget by lazy {
-            RoundedBitmapImageViewTarget(root.context.resources.getDimension(R.dimen.course_image_radius), instructorIcon)
-        }
+        private val instructorIconWrapper = instructorIcon.wrapWithGlide()
 
         init {
             if (onInstructorClicked != null) {
@@ -79,12 +76,11 @@ class CourseInfoInstructorsAdapter(
 
         override fun onBind(data: User?) {
             if (data != null) {
-                Glide.with(itemView.context)
-                    .load(data.avatar)
-                    .asBitmap()
-                    .placeholder(instructorIconPlaceholder)
-                    .centerCrop()
-                    .into(instructorIconTarget)
+                instructorIconWrapper
+                    .setImagePath(
+                        path = data.avatar ?: "",
+                        placeholder = instructorIconPlaceholder
+                    )
 
                 instructorTitle.text = data.fullName
                 instructorDescription.text = data.shortBio

@@ -215,6 +215,7 @@
 
     <dimen name="course_info_instructor_block_offset">24dp</dimen>
     <dimen name="course_info_instructor_item_padding">6dp</dimen>
+    <dimen name="course_info_instructor_icon_size">32dp</dimen>
 
     <dimen name="course_content_item_margin">24dp</dimen>
     <dimen name="course_content_item_inner_margin">12dp</dimen>

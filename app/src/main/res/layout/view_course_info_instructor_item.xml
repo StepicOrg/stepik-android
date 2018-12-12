@@ -8,11 +8,17 @@
     android:layout_height="wrap_content"
     android:padding="@dimen/course_info_instructor_item_padding">
 
-    <ImageView
-        android:id="@+id/instructorIcon"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:contentDescription="@null" />
+    <org.stepic.droid.ui.custom.RoundedBorderMaskView
+        android:id="@+id/instructorIconMask"
+        android:layout_width="@dimen/course_info_instructor_icon_size"
+        android:layout_height="@dimen/course_info_instructor_icon_size"
+        app:borderRadius="@dimen/course_widget_radius">
+        <ImageView
+            android:id="@+id/instructorIcon"
+            android:layout_width="@dimen/course_info_instructor_icon_size"
+            android:layout_height="@dimen/course_info_instructor_icon_size"
+            android:contentDescription="@null" />
+    </org.stepic.droid.ui.custom.RoundedBorderMaskView>
 
     <TextView
         android:id="@+id/instructorTitle"
@@ -24,10 +30,10 @@
         android:layout_marginLeft="16dp"
         android:gravity="start|center_vertical"
         android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="@+id/instructorIcon"
+        app:layout_constraintBottom_toBottomOf="@+id/instructorIconMask"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/instructorIcon"
-        app:layout_constraintTop_toTopOf="@+id/instructorIcon"
+        app:layout_constraintStart_toEndOf="@+id/instructorIconMask"
+        app:layout_constraintTop_toTopOf="@+id/instructorIconMask"
         tools:ignore="missingPrefix" />
 
     <TextView
@@ -43,7 +49,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/instructorIcon"
+        app:layout_constraintTop_toBottomOf="@+id/instructorIconMask"
         tools:ignore="missingPrefix" />
 
 </android.support.constraint.ConstraintLayout>
