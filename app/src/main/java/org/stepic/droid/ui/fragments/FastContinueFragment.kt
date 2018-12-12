@@ -24,9 +24,7 @@ import org.stepic.droid.core.presenters.PersistentCourseListPresenter
 import org.stepic.droid.core.presenters.contracts.ContinueCourseView
 import org.stepic.droid.core.presenters.contracts.FastContinueView
 import org.stepic.droid.model.CourseListType
-import org.stepic.droid.model.RemoteLastStep
 import org.stepik.android.model.Course
-import org.stepik.android.model.Section
 import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget

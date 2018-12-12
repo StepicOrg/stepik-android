@@ -54,7 +54,7 @@ constructor(
 
                     review = courseReview,
                     progress = (courseProgress as? Progress)?.let { (it.nStepsPassed * 100 / it.nSteps).coerceIn(0..100) },
-                    isFeatured = course.isFeatured,
+                    readiness = course.readiness,
                     enrollmentState = if (course.enrollment > 0) EnrollmentState.ENROLLED else EnrollmentState.NOT_ENROLLED
                 )
             }

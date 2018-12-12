@@ -33,6 +33,7 @@ object DbStructureCourse {
         const val ENROLLMENT = "enrollment"
         const val PROGRESS = "progress"
         const val OWNER = "owner"
+        const val READINESS = "readiness"
 
         const val IS_CONTEST = "is_contest"
         const val IS_FEATURED = "is_featured"
@@ -85,6 +86,7 @@ object DbStructureCourse {
                 ${DbStructureCourse.Columns.ENROLLMENT} LONG,
                 ${DbStructureCourse.Columns.PROGRESS} TEXT,
                 ${DbStructureCourse.Columns.OWNER} LONG,
+                ${DbStructureCourse.Columns.READINESS} REAL,
                 ${DbStructureCourse.Columns.IS_CONTEST} INTEGER,
                 ${DbStructureCourse.Columns.IS_FEATURED} INTEGER,
                 ${DbStructureCourse.Columns.IS_ACTIVE} INTEGER,

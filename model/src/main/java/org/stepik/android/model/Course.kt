@@ -57,6 +57,9 @@ class Course(
         @SerializedName("owner")
         val owner: Long = 0,
 
+        @SerializedName("readiness")
+        val readiness: Double = 0.0,
+
         @SerializedName("is_contest")
         val isContest: Boolean = false,
         @SerializedName("is_featured")
@@ -132,6 +135,8 @@ class Course(
         parcel.writeString(progress)
         parcel.writeLong(owner)
 
+        parcel.writeDouble(readiness)
+
         parcel.writeBoolean(isContest)
         parcel.writeBoolean(isFeatured)
         parcel.writeBoolean(isActive)
@@ -187,6 +192,7 @@ class Course(
                 parcel.readLong(),
                 parcel.readString(),
                 parcel.readLong(),
+                parcel.readDouble(),
                 parcel.readBoolean(),
                 parcel.readBoolean(),
                 parcel.readBoolean(),
