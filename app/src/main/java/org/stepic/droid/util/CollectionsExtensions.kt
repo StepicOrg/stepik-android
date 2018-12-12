@@ -18,3 +18,20 @@ fun <E> LongSparseArray<E>.putIfAbsent(key: Long, default: E) {
         this.put(key, default)
     }
 }
+
+
+inline fun <T> List<T>.mapToLongArray(transform: (T) -> Long): LongArray {
+    val array = LongArray(this.size)
+    forEachIndexed { index, t ->
+        array[index] = transform(t)
+    }
+    return array
+}
+
+inline fun <T> Array<T>.mapToLongArray(transform: (T) -> Long): LongArray {
+    val array = LongArray(this.size)
+    forEachIndexed { index, t ->
+        array[index] = transform(t)
+    }
+    return array
+}
