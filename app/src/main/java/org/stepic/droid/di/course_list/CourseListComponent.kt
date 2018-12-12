@@ -8,9 +8,18 @@ import org.stepic.droid.ui.fragments.CourseCollectionFragment
 import org.stepic.droid.ui.fragments.CourseListFragmentBase
 import org.stepic.droid.ui.fragments.CourseSearchFragment
 import org.stepic.droid.ui.fragments.FastContinueFragment
+import org.stepik.android.view.injection.last_step.LastStepDataModule
+import org.stepik.android.view.injection.section.SectionDataModule
+import org.stepik.android.view.injection.unit.UnitDataModule
 
 @CourseListScope
-@Subcomponent(modules = arrayOf(CourseListModule::class))
+@Subcomponent(modules = [
+    CourseListModule::class,
+
+    SectionDataModule::class,
+    UnitDataModule::class,
+    LastStepDataModule::class
+])
 interface CourseListComponent {
 
     @Subcomponent.Builder

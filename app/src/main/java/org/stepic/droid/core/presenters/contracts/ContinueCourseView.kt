@@ -1,5 +1,6 @@
 package org.stepic.droid.core.presenters.contracts
 
+import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
 import org.stepik.android.model.Section
 
@@ -7,7 +8,7 @@ interface ContinueCourseView {
 
     fun onShowContinueCourseLoadingDialog()
 
-    fun onOpenStep(courseId: Long, section: Section, lessonId: Long, unitId: Long, stepPosition: Int)
+    fun onOpenStep(courseId: Long, lastStep: LastStep)
 
     fun onOpenAdaptiveCourse(course: Course)
 
