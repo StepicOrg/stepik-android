@@ -1,4 +1,4 @@
-package org.stepic.droid.features.deadlines.ui.dialogs
+package org.stepik.android.view.personal_deadlines.ui.dialogs
 
 import android.app.Activity
 import android.app.Dialog
@@ -17,7 +17,7 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.features.deadlines.model.Deadline
 import org.stepic.droid.features.deadlines.model.DeadlinesWrapper
-import org.stepic.droid.features.deadlines.ui.adapters.EditDeadlinesAdapter
+import org.stepik.android.view.personal_deadlines.ui.adapters.EditDeadlinesAdapter
 import org.stepik.android.model.Section
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.web.storage.model.StorageRecord
@@ -39,7 +39,7 @@ class EditDeadlinesDialog: DialogFragment() {
 
         fun newInstance(sections: List<Section>, deadlinesRecord: StorageRecord<DeadlinesWrapper>): EditDeadlinesDialog {
             val fragment = EditDeadlinesDialog()
-            fragment.arguments = Bundle().apply {
+            fragment.arguments = Bundle(2).apply {
                 putParcelableArrayList(KEY_SECTIONS, ArrayList(sections))
                 putParcelableArrayList(KEY_DEADLINES, ArrayList(deadlinesRecord.data.deadlines))
             }

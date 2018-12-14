@@ -5,7 +5,7 @@ import org.stepic.droid.di.AppSingleton
 import org.stepik.android.model.Section
 import org.stepic.droid.features.deadlines.model.Deadline
 import org.stepic.droid.features.deadlines.model.DeadlinesWrapper
-import org.stepic.droid.features.deadlines.model.LearningRate
+import org.stepik.android.domain.personal_deadlines.model.LearningRate
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.mapToLongArray
 import org.stepik.android.domain.course.repository.CourseRepository

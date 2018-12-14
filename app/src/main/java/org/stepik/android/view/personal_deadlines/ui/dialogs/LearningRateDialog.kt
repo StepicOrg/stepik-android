@@ -1,4 +1,4 @@
-package org.stepic.droid.features.deadlines.ui.dialogs
+package org.stepik.android.view.personal_deadlines.ui.dialogs
 
 import android.app.Activity
 import android.app.Dialog
@@ -15,8 +15,8 @@ import com.afollestad.materialdialogs.Theme
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
-import org.stepic.droid.features.deadlines.model.LearningRate
-import org.stepic.droid.features.deadlines.ui.adapters.LearningRateAdapter
+import org.stepik.android.domain.personal_deadlines.model.LearningRate
+import org.stepik.android.view.personal_deadlines.ui.adapters.LearningRateAdapter
 import org.stepic.droid.util.AppConstants
 import javax.inject.Inject
 

@@ -1,4 +1,4 @@
-package org.stepic.droid.features.deadlines.model
+package org.stepik.android.domain.personal_deadlines.model
 
 import android.os.Parcel
 import android.os.Parcelable
@@ -35,7 +35,10 @@ enum class LearningRate(
     override fun describeContents() = 0
 
     companion object CREATOR : Parcelable.Creator<LearningRate> {
-        override fun createFromParcel(parcel: Parcel): LearningRate = LearningRate.values()[parcel.readInt()]
-        override fun newArray(size: Int): Array<LearningRate?> = arrayOfNulls(size)
+        override fun createFromParcel(parcel: Parcel): LearningRate =
+            LearningRate.values()[parcel.readInt()]
+
+        override fun newArray(size: Int): Array<LearningRate?> =
+            arrayOfNulls(size)
     }
 }

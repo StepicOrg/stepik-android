@@ -1,4 +1,4 @@
-package org.stepic.droid.features.deadlines.ui.adapters
+package org.stepik.android.view.personal_deadlines.ui.adapters
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater

@@ -1,4 +1,4 @@
-package org.stepic.droid.features.deadlines.ui.adapters
+package org.stepik.android.view.personal_deadlines.ui.adapters
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -8,12 +8,12 @@ import android.widget.ImageView
 import android.widget.TextView
 import kotlinx.android.synthetic.main.view_learning_rate.view.*
 import org.stepic.droid.R
-import org.stepic.droid.features.deadlines.model.LearningRate
+import org.stepik.android.domain.personal_deadlines.model.LearningRate
 import org.stepic.droid.util.AppConstants
 
 class LearningRateAdapter(
-        private val rates: Array<LearningRate>,
-        private val onRateClicked: (LearningRate) -> Unit
+    private val rates: Array<LearningRate>,
+    private val onRateClicked: (LearningRate) -> Unit
 ): RecyclerView.Adapter<LearningRateAdapter.LearningRateViewHolder>() {
     override fun getItemCount(): Int = rates.size
 
