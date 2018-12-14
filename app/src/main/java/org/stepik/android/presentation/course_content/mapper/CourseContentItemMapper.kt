@@ -1,4 +1,4 @@
-package org.stepik.android.view.course_content.mapper
+package org.stepik.android.presentation.course_content.mapper
 
 import org.stepic.droid.R
 import org.stepic.droid.util.hasUserAccess

@@ -13,7 +13,7 @@ import org.stepik.android.domain.unit.repository.UnitRepository
 import org.stepik.android.model.Course
 import org.stepik.android.model.Section
 import org.stepik.android.model.Unit
-import org.stepik.android.view.course_content.mapper.CourseContentItemMapper
+import org.stepik.android.presentation.course_content.mapper.CourseContentItemMapper
 import org.stepik.android.view.course_content.model.CourseContentItem
 import javax.inject.Inject
 
