@@ -1,7 +1,7 @@
 package org.stepik.android.data.unit.repository
 
 import io.reactivex.Single
-import org.stepic.droid.util.doOnSuccess
+import org.stepic.droid.util.doCompletableOnSuccess
 import org.stepik.android.data.unit.source.UnitCacheDataSource
 import org.stepik.android.data.unit.source.UnitRemoteDataSource
 import org.stepik.android.domain.base.DataSourceType
@@ -18,7 +18,7 @@ constructor(
     override fun getUnits(vararg unitIds: Long, primarySourceType: DataSourceType): Single<List<Unit>> {
         val remoteSource = unitRemoteDataSource
             .getUnits(*unitIds)
-            .doOnSuccess(unitCacheDataSource::saveUnits)
+            .doCompletableOnSuccess(unitCacheDataSource::saveUnits)
 
         val cacheSource = unitCacheDataSource
             .getUnits(*unitIds)
@@ -32,7 +32,7 @@ constructor(
                     val ids = (unitIds.toList() - cachedSections.map(Unit::id)).toLongArray()
                     unitRemoteDataSource
                         .getUnits(*ids)
-                        .doOnSuccess(unitCacheDataSource::saveUnits)
+                        .doCompletableOnSuccess(unitCacheDataSource::saveUnits)
                         .map { remoteSections -> cachedSections + remoteSections }
                 }
 

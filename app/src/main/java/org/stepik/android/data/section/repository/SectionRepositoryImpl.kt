@@ -1,7 +1,7 @@
 package org.stepik.android.data.section.repository
 
 import io.reactivex.Single
-import org.stepic.droid.util.doOnSuccess
+import org.stepic.droid.util.doCompletableOnSuccess
 import org.stepik.android.data.section.source.SectionCacheDataSource
 import org.stepik.android.data.section.source.SectionRemoteDataSource
 import org.stepik.android.domain.base.DataSourceType
@@ -18,7 +18,7 @@ constructor(
     override fun getSections(vararg sectionIds: Long, primarySourceType: DataSourceType): Single<List<Section>> {
         val remoteSource = sectionRemoteDataSource
             .getSections(*sectionIds)
-            .doOnSuccess(sectionCacheDataSource::saveSections)
+            .doCompletableOnSuccess(sectionCacheDataSource::saveSections)
 
         val cacheSource = sectionCacheDataSource
             .getSections(*sectionIds)
@@ -32,7 +32,7 @@ constructor(
                     val ids = (sectionIds.toList() - cachedSections.map(Section::id)).toLongArray()
                     sectionRemoteDataSource
                         .getSections(*ids)
-                        .doOnSuccess(sectionCacheDataSource::saveSections)
+                        .doCompletableOnSuccess(sectionCacheDataSource::saveSections)
                         .map { remoteSections -> cachedSections + remoteSections }
                 }
 

@@ -1,7 +1,7 @@
 package org.stepik.android.data.course.repository
 
 import io.reactivex.Maybe
-import org.stepic.droid.util.doOnSuccess
+import org.stepic.droid.util.doCompletableOnSuccess
 import org.stepic.droid.util.maybeFirst
 import org.stepik.android.data.course.source.CourseCacheDataSource
 import org.stepik.android.data.course.source.CourseRemoteDataSource
@@ -18,7 +18,7 @@ constructor(
 
     override fun getCourse(courseId: Long, canUseCache: Boolean): Maybe<Course> {
         val remoteSource = courseRemoteDataSource.getCourses(courseId).maybeFirst()
-            .doOnSuccess(courseCacheDataSource::saveCourse)
+            .doCompletableOnSuccess(courseCacheDataSource::saveCourse)
 
         val cacheSource = courseCacheDataSource.getCourses(courseId).maybeFirst()
 
