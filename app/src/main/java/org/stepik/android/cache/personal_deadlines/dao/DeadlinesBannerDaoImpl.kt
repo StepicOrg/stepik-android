@@ -9,21 +9,23 @@ import javax.inject.Inject
 
 class DeadlinesBannerDaoImpl
 @Inject
-constructor(databaseOperations: DatabaseOperations): DaoBase<Long>(databaseOperations),
-    DeadlinesBannerDao {
+constructor(
+    databaseOperations: DatabaseOperations
+) : DaoBase<Long>(databaseOperations), DeadlinesBannerDao {
     override fun getDbName() =
-            DbStructureDeadlinesBanner.DEADLINES_BANNER
+        DbStructureDeadlinesBanner.DEADLINES_BANNER
 
     override fun getDefaultPrimaryColumn() =
-            DbStructureDeadlinesBanner.Columns.COURSE_ID
+        DbStructureDeadlinesBanner.Columns.COURSE_ID
 
     override fun getDefaultPrimaryValue(persistentObject: Long) =
-            persistentObject.toString()
+        persistentObject.toString()
 
-    override fun getContentValues(persistentObject: Long): ContentValues = ContentValues().apply {
-        put(DbStructureDeadlinesBanner.Columns.COURSE_ID, persistentObject)
-    }
+    override fun getContentValues(persistentObject: Long): ContentValues =
+        ContentValues().apply {
+            put(DbStructureDeadlinesBanner.Columns.COURSE_ID, persistentObject)
+        }
 
     override fun parsePersistentObject(cursor: Cursor) =
-            cursor.getLong(cursor.getColumnIndex(DbStructureDeadlinesBanner.Columns.COURSE_ID))
+        cursor.getLong(cursor.getColumnIndex(DbStructureDeadlinesBanner.Columns.COURSE_ID))
 }

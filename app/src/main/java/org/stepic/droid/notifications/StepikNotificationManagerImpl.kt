@@ -18,7 +18,7 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.core.ScreenManager
-import org.stepic.droid.features.deadlines.model.DeadlineFlatItem
+import org.stepik.android.cache.personal_deadlines.model.DeadlineEntity
 import org.stepic.droid.model.CourseListType
 import org.stepik.android.model.Course
 import org.stepik.android.model.Section
@@ -486,7 +486,7 @@ class StepikNotificationManagerImpl
         }
     }
 
-    override fun showPersonalDeadlineNotification(deadline: DeadlineFlatItem) {
+    override fun showPersonalDeadlineNotification(deadline: DeadlineEntity) {
         val course = getCourse(deadline.courseId)
         val section = getSection(deadline.sectionId)
 

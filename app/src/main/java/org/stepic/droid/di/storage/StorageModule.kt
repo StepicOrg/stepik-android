@@ -7,12 +7,10 @@ import com.google.gson.GsonBuilder
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
-import org.stepic.droid.features.deadlines.storage.dao.DeadlinesBannerDao
-import org.stepic.droid.features.deadlines.storage.dao.DeadlinesBannerDaoImpl
-import org.stepic.droid.features.deadlines.storage.operations.DeadlinesRecordOperations
-import org.stepic.droid.features.deadlines.storage.operations.DeadlinesRecordOperationsImpl
-import org.stepic.droid.features.deadlines.storage.dao.PersonalDeadlinesDao
-import org.stepic.droid.features.deadlines.storage.dao.PersonalDeadlinesDaoImpl
+import org.stepik.android.cache.personal_deadlines.dao.DeadlinesBannerDao
+import org.stepik.android.cache.personal_deadlines.dao.DeadlinesBannerDaoImpl
+import org.stepik.android.cache.personal_deadlines.dao.PersonalDeadlinesDao
+import org.stepik.android.cache.personal_deadlines.dao.PersonalDeadlinesDaoImpl
 import org.stepic.droid.features.stories.model.ViewedStoryTemplate
 import org.stepic.droid.features.stories.storage.dao.ViewedStoryTemplatesDaoImpl
 import org.stepic.droid.jsonHelpers.adapters.UTCDateAdapter
@@ -117,10 +115,6 @@ abstract class StorageModule {
     @StorageSingleton
     @Binds
     internal abstract fun providePersonalDeadlinesDao(personalDeadlinesDaoImpl: PersonalDeadlinesDaoImpl): PersonalDeadlinesDao
-
-    @StorageSingleton
-    @Binds
-    internal abstract fun provideDeadlinesRecordOperations(deadlinesRecordOperationsImpl: DeadlinesRecordOperationsImpl): DeadlinesRecordOperations
 
     @StorageSingleton
     @Binds

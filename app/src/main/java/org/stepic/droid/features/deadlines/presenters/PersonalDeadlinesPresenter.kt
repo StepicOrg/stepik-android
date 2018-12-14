@@ -14,7 +14,7 @@ import org.stepik.android.model.Course
 import org.stepic.droid.features.deadlines.model.DeadlinesWrapper
 import org.stepic.droid.features.deadlines.model.LearningRate
 import org.stepic.droid.features.deadlines.presenters.contracts.PersonalDeadlinesView
-import org.stepic.droid.features.deadlines.repository.DeadlinesRepository
+import org.stepik.android.domain.personal_deadlines.repository.DeadlinesRepository
 import org.stepik.android.model.Section
 import org.stepic.droid.util.addDisposable
 import javax.inject.Inject
@@ -22,13 +22,13 @@ import javax.inject.Inject
 class PersonalDeadlinesPresenter
 @Inject
 constructor(
-        private val analytic: Analytic,
-        private val deadlinesResolver: DeadlinesResolver,
-        private val deadlinesRepository: DeadlinesRepository,
+    private val analytic: Analytic,
+    private val deadlinesResolver: DeadlinesResolver,
+    private val deadlinesRepository: DeadlinesRepository,
 
-        @BackgroundScheduler
+    @BackgroundScheduler
         private val backgroundScheduler: Scheduler,
-        @MainScheduler
+    @MainScheduler
         private val mainScheduler: Scheduler
 ): PresenterBase<PersonalDeadlinesView>() {
     private val compositeDisposable = CompositeDisposable()
@@ -57,7 +57,7 @@ constructor(
 
             state == PersonalDeadlinesView.State.Idle -> {
                 state = PersonalDeadlinesView.State.BackgroundLoading
-                compositeDisposable addDisposable deadlinesRepository.getDeadlinesForCourse(course.id)
+                compositeDisposable addDisposable deadlinesRepository.getDeadlineRecordByCourseId(course.id)
                         .subscribeOn(backgroundScheduler)
                         .observeOn(mainScheduler)
                         .subscribeBy(
@@ -86,7 +86,7 @@ constructor(
         state = PersonalDeadlinesView.State.BlockingLoading
 
         compositeDisposable addDisposable deadlinesResolver.calculateDeadlinesForCourse(course.id, learningRate)
-                .flatMap { deadlinesRepository.createDeadlinesForCourse(it) }
+                .flatMap { deadlinesRepository.createDeadlineRecord(it) }
                 .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)
                 .subscribeBy(
@@ -103,7 +103,7 @@ constructor(
         state = PersonalDeadlinesView.State.BlockingLoading
 
         analytic.reportEvent(Analytic.Deadlines.PERSONAL_DEADLINE_TIME_SAVED)
-        compositeDisposable addDisposable deadlinesRepository.updateDeadlinesForCourse(newRecord)
+        compositeDisposable addDisposable deadlinesRepository.updateDeadlineRecord(newRecord)
                 .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)
                 .subscribeBy(
@@ -119,7 +119,7 @@ constructor(
         state = PersonalDeadlinesView.State.BlockingLoading
 
         analytic.reportEvent(Analytic.Deadlines.PERSONAL_DEADLINE_DELETED)
-        compositeDisposable addDisposable deadlinesRepository.removeDeadlinesForCourseByRecordId(recordId)
+        compositeDisposable addDisposable deadlinesRepository.removeDeadlineRecord(recordId)
                 .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)
                 .subscribeBy(

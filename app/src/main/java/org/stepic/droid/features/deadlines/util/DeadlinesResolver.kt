@@ -1,15 +1,19 @@
 package org.stepic.droid.features.deadlines.util
 
-import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.rxkotlin.toObservable
 import org.stepic.droid.di.AppSingleton
 import org.stepik.android.model.Section
 import org.stepic.droid.features.deadlines.model.Deadline
 import org.stepic.droid.features.deadlines.model.DeadlinesWrapper
 import org.stepic.droid.features.deadlines.model.LearningRate
 import org.stepic.droid.util.AppConstants
-import org.stepic.droid.web.Api
+import org.stepic.droid.util.mapToLongArray
+import org.stepik.android.domain.course.repository.CourseRepository
+import org.stepik.android.domain.lesson.repository.LessonRepository
+import org.stepik.android.domain.section.repository.SectionRepository
+import org.stepik.android.domain.unit.repository.UnitRepository
+import org.stepik.android.model.Lesson
+import org.stepik.android.model.Unit
 import java.util.*
 import javax.inject.Inject
 
@@ -17,21 +21,41 @@ import javax.inject.Inject
 class DeadlinesResolver
 @Inject
 constructor(
-        private val api: Api
+        private val courseRepository: CourseRepository,
+        private val sectionRepository: SectionRepository,
+        private val unitRepository: UnitRepository,
+        private val lessonRepository: LessonRepository
 ) {
     companion object {
-        private const val CHUNK_SIZE = 100
-
         private const val DEFAULT_STEP_LENGTH_IN_SECONDS = 60L
         private const val TIME_MULTIPLIER = 1.3
     }
 
     fun calculateDeadlinesForCourse(courseId: Long, learningRate: LearningRate): Single<DeadlinesWrapper> =
-            api.getCoursesReactive(1, longArrayOf(courseId)).flatMap {
-                api.getSectionsRx(it.courses.first().sections)
-            }.flatMapObservable {
-                it.sections.toObservable()
-            }.concatMapEager(::getTimeToCompleteForSection).toList().map {
+        courseRepository.getCourse(courseId)
+            .flatMapSingle { course ->
+                sectionRepository.getSections(*course.sections ?: longArrayOf())
+            }
+            .flatMap { sections ->
+                val unitIds = sections
+                    .flatMap(Section::units)
+                    .fold(longArrayOf(), LongArray::plus)
+
+                unitRepository
+                    .getUnits(*unitIds)
+                    .map { units -> sections to units }
+            }
+            .flatMap { (sections, units) ->
+                val lessonIds = units.mapToLongArray(Unit::lesson)
+                lessonRepository
+                    .getLessons(*lessonIds)
+                    .map { lessons ->
+                        sections.map { section ->
+                            getTimeToCompleteForSection(section, units, lessons)
+                        }
+                    }
+            }
+            .map {
                 val offset = Calendar.getInstance()
                 offset.add(Calendar.HOUR_OF_DAY, 24)
                 offset.set(Calendar.HOUR_OF_DAY, 0)
@@ -44,17 +68,27 @@ constructor(
                 DeadlinesWrapper(courseId, deadlines)
             }
 
-    private fun getTimeToCompleteForSection(section: Section): Observable<Pair<Long, Long>> =
-            section.units.asIterable().chunked(CHUNK_SIZE).toObservable().flatMap {
-                api.getUnitsRx(it.toLongArray()).toObservable()
-            }.flatMap {
-                val ids = it.units?.map { it.lesson }?.toLongArray()
-                api.getLessonsRx(ids).flatMapObservable {
-                    it.lessons?.toObservable()
-                }
-            }.reduce(0L) { acc, lesson ->
-                acc + if (lesson.timeToComplete == 0L) lesson.steps.size * DEFAULT_STEP_LENGTH_IN_SECONDS else lesson.timeToComplete
-            }.map { section.id to it }.toObservable()
+    private fun getTimeToCompleteForSection(section: Section, units: List<Unit>, lessons: List<Lesson>): Pair<Long, Long> =
+        section
+            .units
+            .fold(0L) { acc, unitId ->
+                val unit = units.find { it.id == unitId }
+
+                val timeToComplete: Long = lessons
+                    .find { it.id == unit?.lesson }
+                    ?.let { lesson ->
+                        lesson
+                            .timeToComplete
+                            .takeIf { it != 0L }
+                            ?: lesson.steps.size * DEFAULT_STEP_LENGTH_IN_SECONDS
+                    }
+                    ?: 0L
+
+                acc + timeToComplete
+            }
+            .let {
+                section.id to it
+            }
 
     private fun getDeadlineDate(calendar: Calendar, timeToComplete: Long, learningRate: LearningRate): Date {
         val timePerWeek = learningRate.millisPerWeek

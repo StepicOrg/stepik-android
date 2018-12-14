@@ -9,7 +9,6 @@ import org.stepic.droid.core.FirstCoursePoster
 import org.stepic.droid.core.earlystreak.contract.EarlyStreakPoster
 import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.di.course_list.CourseListScope
-import org.stepic.droid.features.deadlines.repository.DeadlinesRepository
 import org.stepic.droid.model.CourseListType
 import org.stepic.droid.model.CourseReviewSummary
 import org.stepic.droid.preferences.SharedPreferenceHelper
@@ -18,6 +17,7 @@ import org.stepic.droid.util.CourseUtil
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.RWLocks
 import org.stepic.droid.web.Api
+import org.stepik.android.domain.personal_deadlines.interactor.DeadlinesInteractor
 import org.stepik.android.model.Course
 import org.stepik.android.model.Meta
 import org.stepik.android.model.Progress
@@ -29,17 +29,17 @@ import javax.inject.Inject
 @CourseListScope
 class PersistentCourseListPresenter
 @Inject constructor(
-        private val databaseFacade: DatabaseFacade,
-        private val singleThreadExecutor: SingleThreadExecutor,
-        private val mainHandler: MainHandler,
-        private val api: Api,
-        private val filterApplicator: FilterApplicator,
-        private val sharedPreferenceHelper: SharedPreferenceHelper,
-        private val earlyStreakPoster: EarlyStreakPoster,
-        private val firstCoursePoster: FirstCoursePoster,
+    private val databaseFacade: DatabaseFacade,
+    private val singleThreadExecutor: SingleThreadExecutor,
+    private val mainHandler: MainHandler,
+    private val api: Api,
+    private val filterApplicator: FilterApplicator,
+    private val sharedPreferenceHelper: SharedPreferenceHelper,
+    private val earlyStreakPoster: EarlyStreakPoster,
+    private val firstCoursePoster: FirstCoursePoster,
 
-        private val deadlinesRepository: DeadlinesRepository,
-        private val analytic: Analytic
+    private val deadlinesInteractor: DeadlinesInteractor,
+    private val analytic: Analytic
 ) : PresenterBase<CoursesView>() {
 
     companion object {
@@ -124,7 +124,7 @@ class PersistentCourseListPresenter
                         
                         allMyCourses.addAll(courses)
                     }
-                    deadlinesRepository.syncDeadlines(allMyCourses).blockingAwait()
+                    deadlinesInteractor.syncDeadlines().blockingAwait()
                     analytic.setCoursesCount(allMyCourses.size)
                     allMyCourses
                 }

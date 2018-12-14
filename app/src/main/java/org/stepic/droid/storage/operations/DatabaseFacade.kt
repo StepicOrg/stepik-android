@@ -3,13 +3,13 @@ package org.stepic.droid.storage.operations
 import android.content.ContentValues
 import org.stepic.droid.adaptive.model.LocalExpItem
 import org.stepic.droid.di.storage.StorageSingleton
-import org.stepic.droid.features.deadlines.storage.dao.DeadlinesBannerDao
+import org.stepik.android.cache.personal_deadlines.dao.DeadlinesBannerDao
 import org.stepic.droid.model.*
 import org.stepic.droid.model.code.CodeSubmission
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.storage.dao.AdaptiveExpDao
 import org.stepic.droid.storage.dao.IDao
-import org.stepic.droid.features.deadlines.storage.dao.PersonalDeadlinesDao
+import org.stepik.android.cache.personal_deadlines.dao.PersonalDeadlinesDao
 import org.stepic.droid.features.stories.model.ViewedStoryTemplate
 import org.stepic.droid.storage.dao.CourseListDao
 import org.stepic.droid.storage.dao.SearchQueryDao
@@ -25,28 +25,28 @@ import javax.inject.Inject
 @StorageSingleton
 class DatabaseFacade
 @Inject constructor(
-        private val codeSubmissionDao: IDao<CodeSubmission>,
-        private val searchQueryDao: SearchQueryDao,
-        private val adaptiveExpDao: AdaptiveExpDao,
-        private val viewedNotificationsQueueDao: IDao<ViewedNotification>,
-        private val sectionDao: IDao<Section>,
-        private val unitDao: IDao<Unit>,
-        private val progressDao: IDao<Progress>,
-        private val assignmentDao: IDao<Assignment>,
-        private val lessonDao: IDao<Lesson>,
-        private val viewAssignmentDao: IDao<ViewAssignment>,
-        private val stepDao: IDao<Step>,
-        private val courseDao: IDao<Course>,
-        private val courseListDao: CourseListDao,
-        private val notificationDao: IDao<Notification>,
-        private val calendarSectionDao: IDao<CalendarSection>,
-        private val certificateViewItemDao: IDao<CertificateViewItem>,
-        private val videoTimestampDao: IDao<VideoTimestamp>,
-        private val lastStepDao: IDao<LastStep>,
-        private val blockDao: IDao<BlockPersistentWrapper>,
-        private val personalDeadlinesDao: PersonalDeadlinesDao,
-        private val deadlinesBannerDao: DeadlinesBannerDao,
-        private val viewedStoryTemplatesDao: IDao<ViewedStoryTemplate>
+    private val codeSubmissionDao: IDao<CodeSubmission>,
+    private val searchQueryDao: SearchQueryDao,
+    private val adaptiveExpDao: AdaptiveExpDao,
+    private val viewedNotificationsQueueDao: IDao<ViewedNotification>,
+    private val sectionDao: IDao<Section>,
+    private val unitDao: IDao<Unit>,
+    private val progressDao: IDao<Progress>,
+    private val assignmentDao: IDao<Assignment>,
+    private val lessonDao: IDao<Lesson>,
+    private val viewAssignmentDao: IDao<ViewAssignment>,
+    private val stepDao: IDao<Step>,
+    private val courseDao: IDao<Course>,
+    private val courseListDao: CourseListDao,
+    private val notificationDao: IDao<Notification>,
+    private val calendarSectionDao: IDao<CalendarSection>,
+    private val certificateViewItemDao: IDao<CertificateViewItem>,
+    private val videoTimestampDao: IDao<VideoTimestamp>,
+    private val lastStepDao: IDao<LastStep>,
+    private val blockDao: IDao<BlockPersistentWrapper>,
+    private val personalDeadlinesDao: PersonalDeadlinesDao,
+    private val deadlinesBannerDao: DeadlinesBannerDao,
+    private val viewedStoryTemplatesDao: IDao<ViewedStoryTemplate>
 ) {
 
     fun dropDatabase() {

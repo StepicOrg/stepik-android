@@ -9,7 +9,7 @@ import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
-import org.stepic.droid.features.deadlines.storage.operations.DeadlinesRecordOperations
+import org.stepik.android.data.personal_deadlines.source.DeadlinesCacheDataSource
 import org.stepic.droid.notifications.StepikNotificationManager
 import org.stepic.droid.services.NewUserAlarmService
 import org.stepic.droid.util.AppConstants
@@ -21,14 +21,14 @@ import javax.inject.Inject
 class DeadlinesNotificationsManager
 @Inject
 constructor(
-        private val context: Context,
-        private val alarmManager: AlarmManager,
-        private val deadlinesRecordOperations: DeadlinesRecordOperations,
-        private val stepikNotificationManager: StepikNotificationManager,
+    private val context: Context,
+    private val alarmManager: AlarmManager,
+    private val deadlinesRecordOperations: DeadlinesCacheDataSource,
+    private val stepikNotificationManager: StepikNotificationManager,
 
-        @BackgroundScheduler
+    @BackgroundScheduler
         private val backgroundScheduler: Scheduler,
-        @MainScheduler
+    @MainScheduler
         private val mainScheduler: Scheduler
 ) {
     companion object {

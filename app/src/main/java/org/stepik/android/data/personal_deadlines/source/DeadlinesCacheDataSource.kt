@@ -10,10 +10,11 @@ import org.stepic.droid.web.storage.model.StorageRecord
 interface DeadlinesCacheDataSource {
     fun getClosestDeadlineTimestamp(): Single<Long>
 
-    fun getDeadlineRecordForCourse(courseId: Long): Maybe<StorageRecord<DeadlinesWrapper>>
     fun getDeadlineRecordsForTimestamp(timestamps: LongArray): Single<List<DeadlineEntity>>
+    fun getDeadlineRecordByCourseId(courseId: Long): Maybe<StorageRecord<DeadlinesWrapper>>
 
-    fun saveDeadlineRecord(record: StorageRecord<DeadlinesWrapper>): Single<StorageRecord<DeadlinesWrapper>>
+    fun saveDeadlineRecord(record: StorageRecord<DeadlinesWrapper>): Completable
+
     fun removeDeadlineRecord(recordId: Long): Completable
     fun removeAllDeadlineRecords(): Completable
 }
