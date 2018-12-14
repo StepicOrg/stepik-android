@@ -17,12 +17,12 @@ abstract class LessonDataModule {
     ): LessonRepository
 
     @Binds
-    internal abstract fun bindUnitCacheDataSource(
+    internal abstract fun bindLessonCacheDataSource(
         lessonCacheDataSourceImpl: LessonCacheDataSourceImpl
     ): LessonCacheDataSource
 
     @Binds
-    internal abstract fun bindUnitRemoteDataSource(
+    internal abstract fun bindLessonRemoteDataSource(
         lessonRemoteDataSourceImpl: LessonRemoteDataSourceImpl
     ): LessonRemoteDataSource
 }
