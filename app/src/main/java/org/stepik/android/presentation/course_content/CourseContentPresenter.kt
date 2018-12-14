@@ -5,15 +5,22 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
+import org.stepic.droid.di.qualifiers.CourseId
 import org.stepic.droid.di.qualifiers.MainScheduler
+import org.stepic.droid.features.deadlines.model.Deadline
+import org.stepic.droid.features.deadlines.model.DeadlinesWrapper
 import org.stepic.droid.persistence.downloads.interactor.DownloadInteractor
 import org.stepic.droid.persistence.downloads.progress.DownloadProgressProvider
 import org.stepic.droid.persistence.model.DownloadConfiguration
 import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepik.android.domain.course_content.interactor.CourseContentInteractor
+import org.stepik.android.domain.personal_deadlines.interactor.DeadlinesInteractor
+import org.stepik.android.domain.personal_deadlines.model.LearningRate
 import org.stepik.android.model.Section
 import org.stepik.android.model.Unit
 import org.stepik.android.presentation.base.PresenterBase
+import org.stepik.android.presentation.course_content.mapper.PersonalDeadlinesStateMapper
+import org.stepik.android.presentation.personal_deadlines.model.PersonalDeadlinesState
 import org.stepik.android.view.course_content.model.CourseContentItem
 import java.util.*
 import javax.inject.Inject
@@ -21,6 +28,9 @@ import javax.inject.Inject
 class CourseContentPresenter
 @Inject
 constructor(
+    @CourseId
+    private val courseId: Long,
+
     private val courseContentInteractor: CourseContentInteractor,
 
     private val sectionDownloadProgressProvider: DownloadProgressProvider<Section>,
@@ -28,6 +38,9 @@ constructor(
 
     private val unitDownloadProgressProvider: DownloadProgressProvider<Unit>,
     private val unitDownloadInteractor: DownloadInteractor<Unit>,
+
+    private val deadlinesInteractor: DeadlinesInteractor,
+    private val personalDeadlinesStateMapper: PersonalDeadlinesStateMapper,
 
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
@@ -69,8 +82,14 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onNext  = { state = CourseContentView.State.CourseContentLoaded(it); resolveDownloadProgressSubscription() },
-                onError = { state = CourseContentView.State.NetworkError }
+                onNext = { courseContent ->
+                    state = CourseContentView.State.CourseContentLoaded(PersonalDeadlinesState.Idle, courseContent)
+                    resolveDownloadProgressSubscription()
+                    fetchPersonalDeadlines()
+                },
+                onError = {
+                    state = CourseContentView.State.NetworkError
+                }
             )
     }
 
@@ -188,6 +207,104 @@ constructor(
             .subscribeBy(
                 onComplete = { pendingSections.remove(section.id) },
                 onError    = { pendingSections.remove(section.id) }
+            )
+    }
+
+    /*
+     * Personal deadlines
+     */
+    private fun fetchPersonalDeadlines() {
+        if (state !is CourseContentView.State.CourseContentLoaded) return
+
+        compositeDisposable += deadlinesInteractor
+            .getPersonalDeadlineByCourseId(courseId)
+            .map { personalDeadlinesStateMapper.mergeCourseContentStateWithPersonalDeadlines(state, it) }
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onComplete = { state = personalDeadlinesStateMapper.mergeCourseContentStateWithPersonalDeadlines(state, null) },
+                onSuccess  = { state = it },
+                onError    = { view?.showPersonalDeadlinesError() }
+            )
+    }
+
+    fun createPersonalDeadlines(learningRate: LearningRate) {
+        val oldState =
+            (state as? CourseContentView.State.CourseContentLoaded)
+            ?.takeIf { it.personalDeadlinesState == PersonalDeadlinesState.EmptyDeadlines }
+            ?: return
+
+        compositeDisposable += deadlinesInteractor
+            .createPersonalDeadlines(courseId, learningRate)
+            .map { personalDeadlinesStateMapper.mergeCourseContentStateWithPersonalDeadlines(state, it) }
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onSuccess = { state = it },
+                onError   = { view?.showPersonalDeadlinesError() }
+            )
+    }
+
+    fun updatePersonalDeadlines(deadlines: List<Deadline>) {
+        val oldState =
+            (state as? CourseContentView.State.CourseContentLoaded)
+            ?: return
+
+        val record =
+            (oldState.personalDeadlinesState as? PersonalDeadlinesState.Deadlines)
+            ?.record
+            ?: return
+
+        val newRecord = record.copy(data = DeadlinesWrapper(record.data.course, deadlines))
+
+        compositeDisposable += deadlinesInteractor
+            .updatePersonalDeadlines(newRecord)
+            .map { personalDeadlinesStateMapper.mergeCourseContentStateWithPersonalDeadlines(state, it) }
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onSuccess = { state = it },
+                onError   = { view?.showPersonalDeadlinesError() }
+            )
+    }
+
+    fun removeDeadlines() {
+        val oldState =
+            (state as? CourseContentView.State.CourseContentLoaded)
+            ?: return
+
+        val recordId =
+            (oldState.personalDeadlinesState as? PersonalDeadlinesState.Deadlines)
+            ?.record
+            ?.id
+            ?: return
+
+        compositeDisposable += deadlinesInteractor
+            .removePersonalDeadline(recordId)
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onComplete = { state = personalDeadlinesStateMapper.mergeCourseContentStateWithPersonalDeadlines(state, null) },
+                onError    = { view?.showPersonalDeadlinesError() }
+            )
+    }
+
+    private fun fetchPersonalDeadlinesBanner() {
+        (state as? CourseContentView.State.CourseContentLoaded)
+            ?.takeIf { it.personalDeadlinesState == PersonalDeadlinesState.EmptyDeadlines }
+            ?: return
+
+        compositeDisposable += deadlinesInteractor
+            .shouldShowDeadlinesBannerForCourse(courseId)
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onSuccess = { shouldShowDeadlinesBanner ->
+                    if (shouldShowDeadlinesBanner) {
+                        view?.showPersonalDeadlinesError()
+                    }
+                },
+                onError   = { view?.showPersonalDeadlinesError() }
             )
     }
 

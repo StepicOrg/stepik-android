@@ -1,6 +1,7 @@
 package org.stepik.android.presentation.course_content
 
 import org.stepic.droid.persistence.model.DownloadProgress
+import org.stepik.android.presentation.personal_deadlines.model.PersonalDeadlinesState
 import org.stepik.android.view.course_content.model.CourseContentItem
 
 interface CourseContentView {
@@ -8,7 +9,10 @@ interface CourseContentView {
         object Idle : State()
         object Loading : State()
 
-        class CourseContentLoaded(val courseContent: List<CourseContentItem>) : State()
+        data class CourseContentLoaded(
+            val personalDeadlinesState: PersonalDeadlinesState,
+            val courseContent: List<CourseContentItem>
+        ) : State()
         object NetworkError : State()
     }
 
@@ -16,4 +20,7 @@ interface CourseContentView {
 
     fun updateSectionDownloadProgress(downloadProgress: DownloadProgress)
     fun updateUnitDownloadProgress(downloadProgress: DownloadProgress)
+
+    fun showPersonalDeadlinesBanner()
+    fun showPersonalDeadlinesError()
 }
