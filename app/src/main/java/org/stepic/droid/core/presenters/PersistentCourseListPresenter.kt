@@ -124,7 +124,7 @@ class PersistentCourseListPresenter
                         
                         allMyCourses.addAll(courses)
                     }
-                    deadlinesInteractor.syncDeadlines().blockingAwait()
+                    deadlinesInteractor.syncPersonalDeadlines().blockingAwait()
                     analytic.setCoursesCount(allMyCourses.size)
                     allMyCourses
                 }
