@@ -2,11 +2,14 @@ package org.stepic.droid.features.deadlines.model
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.google.gson.annotations.SerializedName
 import java.util.Date
 
 class Deadline(
-        val section: Long,
-        val deadline: Date
+    @SerializedName("section")
+    val section: Long,
+    @SerializedName("deadline")
+    val deadline: Date
 ): Parcelable {
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeLong(section)
