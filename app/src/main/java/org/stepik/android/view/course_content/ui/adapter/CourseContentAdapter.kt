@@ -25,7 +25,7 @@ class CourseContentAdapter(
     var items: List<CourseContentItem> = emptyList()
         set(value) {
             DiffUtil
-                .calculateDiff(CourseContentDiffCallback(field, value))
+                .calculateDiff(CourseContentDiffCallback(headers + field, headers + value))
                 .dispatchUpdatesTo(this)
             field = value
         }
