@@ -6,5 +6,5 @@ import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.model.Course
 
 interface CourseListRepository {
-    fun getCourseList(courseListType: CourseListType, primaryDataSourceType: DataSourceType = DataSourceType.CACHE): Single<List<Course>>
+    fun getCourseList(courseListType: CourseListType, primarySourceType: DataSourceType = DataSourceType.CACHE): Single<List<Course>>
 }

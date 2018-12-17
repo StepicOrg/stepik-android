@@ -12,8 +12,8 @@ import javax.inject.Inject
 class CourseRepositoryImpl
 @Inject
 constructor(
-        private val courseRemoteDataSource: CourseRemoteDataSource,
-        private val courseCacheDataSource: CourseCacheDataSource
+    private val courseRemoteDataSource: CourseRemoteDataSource,
+    private val courseCacheDataSource: CourseCacheDataSource
 ) : CourseRepository {
 
     override fun getCourse(courseId: Long, canUseCache: Boolean): Maybe<Course> {
