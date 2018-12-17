@@ -4,15 +4,18 @@ import org.stepik.android.model.Lesson
 import org.stepik.android.model.Progress
 import org.stepik.android.model.Section
 import org.stepik.android.model.Unit
+import org.stepik.android.presentation.personal_deadlines.model.PersonalDeadlinesState
 
 sealed class CourseContentItem {
-    object ControlBar : CourseContentItem()
+    data class ControlBar(
+        val personalDeadlinesState: PersonalDeadlinesState
+    ) : CourseContentItem()
 
     data class SectionItem(
-            val section: Section,
-            val dates: List<CourseContentSectionDate>,
-            val progress: Progress?,
-            val isEnabled: Boolean
+        val section: Section,
+        val dates: List<CourseContentSectionDate>,
+        val progress: Progress?,
+        val isEnabled: Boolean
     ) : CourseContentItem()
 
     class UnitItemPlaceholder(
@@ -20,10 +23,10 @@ sealed class CourseContentItem {
     ) : CourseContentItem()
 
     data class UnitItem(
-            val section: Section,
-            val unit: Unit,
-            val lesson: Lesson,
-            val progress: Progress?,
-            val isEnabled: Boolean
+        val section: Section,
+        val unit: Unit,
+        val lesson: Lesson,
+        val progress: Progress?,
+        val isEnabled: Boolean
     ) : CourseContentItem()
 }

@@ -128,6 +128,7 @@ class CourseContentFragment : Fragment(), CourseContentView {
         viewStateDelegate.switchState(state)
         if (state is CourseContentView.State.CourseContentLoaded) {
             contentAdapter.items = state.courseContent
+            contentAdapter.updateControlBar(state.personalDeadlinesState)
         }
     }
 

@@ -6,8 +6,10 @@ import org.stepic.droid.di.qualifiers.CourseId
 import org.stepik.android.view.course.ui.activity.CourseActivity
 import org.stepik.android.view.course_content.ui.fragment.CourseContentFragment
 import org.stepik.android.view.course_info.ui.fragment.CourseInfoFragment
+import org.stepik.android.view.injection.course_list.CourseListDataModule
 import org.stepik.android.view.injection.last_step.LastStepDataModule
 import org.stepik.android.view.injection.lesson.LessonDataModule
+import org.stepik.android.view.injection.personal_deadlines.PersonalDeadlinesDataModule
 import org.stepik.android.view.injection.progress.ProgressDataModule
 import org.stepik.android.view.injection.section.SectionDataModule
 import org.stepik.android.view.injection.unit.UnitDataModule
@@ -16,13 +18,17 @@ import org.stepik.android.view.injection.user.UserDataModule
 @CourseScope
 @Subcomponent(modules = [
     CourseModule::class,
+    CourseDataModule::class,
     SectionDataModule::class,
     UnitDataModule::class,
     LessonDataModule::class,
 
     LastStepDataModule::class,
     ProgressDataModule::class,
-    UserDataModule::class
+    UserDataModule::class,
+
+    CourseListDataModule::class, // TODO split deadlines interactor and move syncDeadlines
+    PersonalDeadlinesDataModule::class
 ])
 interface CourseComponent {
     @Subcomponent.Builder

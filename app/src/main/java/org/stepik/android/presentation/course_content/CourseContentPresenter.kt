@@ -19,7 +19,7 @@ import org.stepik.android.domain.personal_deadlines.model.LearningRate
 import org.stepik.android.model.Section
 import org.stepik.android.model.Unit
 import org.stepik.android.presentation.base.PresenterBase
-import org.stepik.android.presentation.course_content.mapper.PersonalDeadlinesStateMapper
+import org.stepik.android.presentation.course_content.mapper.CourseContentStateMapper
 import org.stepik.android.presentation.personal_deadlines.model.PersonalDeadlinesState
 import org.stepik.android.view.course_content.model.CourseContentItem
 import java.util.*
@@ -40,7 +40,7 @@ constructor(
     private val unitDownloadInteractor: DownloadInteractor<Unit>,
 
     private val deadlinesInteractor: DeadlinesInteractor,
-    private val personalDeadlinesStateMapper: PersonalDeadlinesStateMapper,
+    private val stateMapper: CourseContentStateMapper,
 
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
@@ -85,16 +85,7 @@ constructor(
             .observeOn(mainScheduler)
             .subscribeBy(
                 onNext = { (course, courseContent) ->
-                    val personalDeadlinesState =
-                        if (course.enrollment == 0L) {
-                            PersonalDeadlinesState.NoDeadlinesNeeded
-                        } else {
-                            (state as? CourseContentView.State.CourseContentLoaded)
-                                ?.personalDeadlinesState
-                                ?: PersonalDeadlinesState.Idle
-                        }
-
-                    state = CourseContentView.State.CourseContentLoaded(course, personalDeadlinesState, courseContent)
+                    state = stateMapper.mergeStateWithCourseContent(state, course, courseContent)
                     resolveDownloadProgressSubscription()
                     fetchPersonalDeadlines()
                 },
@@ -142,7 +133,7 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onError = { it.printStackTrace() },
+                onError = { it.printStackTrace(); resolveDownloadProgressSubscription() }, // resub on error
                 onNext  = { view?.updateSectionDownloadProgress(it) }
             )
     }
@@ -153,7 +144,7 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onError = { it.printStackTrace() },
+                onError = { it.printStackTrace(); resolveDownloadProgressSubscription() }, // resub on error
                 onNext  = { view?.updateUnitDownloadProgress(it) }
             )
     }
@@ -163,7 +154,7 @@ constructor(
      */
     fun addUnitDownloadTask(unit: Unit) {
         if (unit.id in pendingUnits) return
-        pendingUnits.add(unit.id)
+        pendingUnits += unit.id
         view?.updateUnitDownloadProgress(DownloadProgress(unit.id, DownloadProgress.Status.Pending))
 
         // TODO ASK SETTINGS
@@ -171,25 +162,25 @@ constructor(
             .addTask(unit, configuration = DownloadConfiguration(EnumSet.allOf(DownloadConfiguration.NetworkType::class.java), "720"))
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
-            .subscribeBy(
-                onComplete = { pendingUnits.remove(unit.id) },
-                onError    = { pendingUnits.remove(unit.id) }
-            )
+            .doFinally { pendingUnits -= unit.id }
+            .subscribeBy {
+                // onError
+            }
     }
 
     fun removeUnitDownloadTask(unit: Unit) {
         if (unit.id in pendingUnits) return
-        pendingUnits.add(unit.id)
+        pendingUnits += unit.id
         view?.updateUnitDownloadProgress(DownloadProgress(unit.id, DownloadProgress.Status.Pending))
 
         compositeDisposable += unitDownloadInteractor
             .removeTask(unit)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
-            .subscribeBy(
-                onComplete = { pendingUnits.remove(unit.id) },
-                onError    = { pendingUnits.remove(unit.id) }
-            )
+            .doFinally { pendingUnits -= unit.id }
+            .subscribeBy {
+                // onError
+            }
     }
 
     fun addSectionDownloadTask(section: Section) {
@@ -201,42 +192,44 @@ constructor(
             .addTask(section, configuration = DownloadConfiguration(EnumSet.allOf(DownloadConfiguration.NetworkType::class.java), "720"))
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
-            .subscribeBy(
-                onComplete = { pendingSections.remove(section.id) },
-                onError    = { pendingSections.remove(section.id) }
-            )
+            .doFinally { pendingSections -= section.id }
+            .subscribeBy {
+                // onError
+            }
     }
 
     fun removeSectionDownloadTask(section: Section) {
         if (section.id in pendingSections) return
-        pendingSections.add(section.id)
+        pendingSections += section.id
         view?.updateSectionDownloadProgress(DownloadProgress(section.id, DownloadProgress.Status.Pending))
 
         compositeDisposable += sectionDownloadInteractor
             .removeTask(section)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
-            .subscribeBy(
-                onComplete = { pendingSections.remove(section.id) },
-                onError    = { pendingSections.remove(section.id) }
-            )
+            .doFinally { pendingSections -= section.id }
+            .subscribeBy {
+                // onError
+            }
     }
 
     /*
      * Personal deadlines
      */
     private fun fetchPersonalDeadlines() {
-        if (state !is CourseContentView.State.CourseContentLoaded) return
+        (state as? CourseContentView.State.CourseContentLoaded)
+            ?.takeIf { it.personalDeadlinesState == PersonalDeadlinesState.Idle }
+            ?: return
+
         deadlinesDisposable.clear()
 
         deadlinesDisposable += deadlinesInteractor
             .getPersonalDeadlineByCourseId(courseId)
-            .map { personalDeadlinesStateMapper.mergeCourseContentStateWithPersonalDeadlines(state, it) }
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onComplete = { state = personalDeadlinesStateMapper.mergeCourseContentStateWithPersonalDeadlines(state, null); fetchPersonalDeadlines() },
-                onSuccess  = { state = it },
+                onComplete = { state = stateMapper.mergeStateWithPersonalDeadlines(state, null); fetchPersonalDeadlinesBanner() },
+                onSuccess  = { state = stateMapper.mergeStateWithPersonalDeadlines(state, it) },
                 onError    = { it.printStackTrace(); view?.showPersonalDeadlinesError() }
             )
     }
@@ -249,7 +242,7 @@ constructor(
 
         deadlinesDisposable += deadlinesInteractor
             .createPersonalDeadlines(courseId, learningRate)
-            .map { personalDeadlinesStateMapper.mergeCourseContentStateWithPersonalDeadlines(state, it) }
+            .map { stateMapper.mergeStateWithPersonalDeadlines(state, it) }
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
@@ -272,7 +265,7 @@ constructor(
 
         deadlinesDisposable += deadlinesInteractor
             .updatePersonalDeadlines(newRecord)
-            .map { personalDeadlinesStateMapper.mergeCourseContentStateWithPersonalDeadlines(state, it) }
+            .map { stateMapper.mergeStateWithPersonalDeadlines(state, it) }
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
@@ -297,7 +290,7 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onComplete = { state = personalDeadlinesStateMapper.mergeCourseContentStateWithPersonalDeadlines(state, null) },
+                onComplete = { state = stateMapper.mergeStateWithPersonalDeadlines(state, null) },
                 onError    = { view?.showPersonalDeadlinesError() }
             )
     }

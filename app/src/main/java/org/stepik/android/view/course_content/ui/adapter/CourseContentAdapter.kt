@@ -10,6 +10,7 @@ import org.stepik.android.view.course_content.model.CourseContentItem
 import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
 import org.stepic.droid.ui.custom.adapter_delegates.DelegateAdapter
+import org.stepik.android.presentation.personal_deadlines.model.PersonalDeadlinesState
 import org.stepik.android.view.course_content.ui.adapter.delegates.section.CourseContentSectionClickListener
 import org.stepik.android.view.course_content.ui.adapter.delegates.unit.CourseContentUnitPlaceholderDelegate
 
@@ -17,7 +18,7 @@ class CourseContentAdapter(
     sectionClickListener: CourseContentSectionClickListener,
     unitClickListener: CourseContentUnitClickListener
 ) : DelegateAdapter<CourseContentItem, DelegateViewHolder<CourseContentItem>>() {
-    private val headers = listOf(CourseContentItem.ControlBar)
+    private val headers = mutableListOf(CourseContentItem.ControlBar(PersonalDeadlinesState.Idle))
 
     private val sectionDownloadStatuses = LongSparseArray<DownloadProgress.Status>()
     private val unitDownloadStatuses = LongSparseArray<DownloadProgress.Status>()
@@ -57,6 +58,11 @@ class CourseContentAdapter(
 
         unitDownloadStatuses.append(downloadProgress.id, downloadProgress.status)
         notifyItemChanged(unitPosition + headers.size)
+    }
+
+    fun updateControlBar(personalDeadlinesState: PersonalDeadlinesState) {
+        headers[0] = CourseContentItem.ControlBar(personalDeadlinesState)
+        notifyItemChanged(0)
     }
 
     override fun getItemAtPosition(position: Int): CourseContentItem =
