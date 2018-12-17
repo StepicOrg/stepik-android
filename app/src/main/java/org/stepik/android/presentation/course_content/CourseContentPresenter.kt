@@ -89,7 +89,9 @@ constructor(
                         if (course.enrollment == 0L) {
                             PersonalDeadlinesState.NoDeadlinesNeeded
                         } else {
-                            PersonalDeadlinesState.Idle
+                            (state as? CourseContentView.State.CourseContentLoaded)
+                                ?.personalDeadlinesState
+                                ?: PersonalDeadlinesState.Idle
                         }
 
                     state = CourseContentView.State.CourseContentLoaded(course, personalDeadlinesState, courseContent)
