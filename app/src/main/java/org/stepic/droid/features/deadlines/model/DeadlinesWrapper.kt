@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName
 class DeadlinesWrapper(
     @SerializedName("course")
     val course: Long,
-    @SerializedName("DeadlinesWrapper")
+    @SerializedName("deadlines")
     val deadlines: List<Deadline>
 ): Parcelable {
     override fun writeToParcel(parcel: Parcel, flags: Int) {
