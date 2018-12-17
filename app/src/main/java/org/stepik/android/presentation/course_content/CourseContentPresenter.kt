@@ -85,17 +85,12 @@ constructor(
             .observeOn(mainScheduler)
             .subscribeBy(
                 onNext = { (course, courseContent) ->
-                    val emptyDeadlinesState =
+                    val personalDeadlinesState =
                         if (course.enrollment == 0L) {
                             PersonalDeadlinesState.NoDeadlinesNeeded
                         } else {
                             PersonalDeadlinesState.Idle
                         }
-
-                    val personalDeadlinesState =
-                        (state as? CourseContentView.State.CourseContentLoaded)
-                        ?.personalDeadlinesState
-                        ?: emptyDeadlinesState
 
                     state = CourseContentView.State.CourseContentLoaded(course, personalDeadlinesState, courseContent)
                     resolveDownloadProgressSubscription()
