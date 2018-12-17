@@ -3,7 +3,6 @@ package org.stepik.android.data.personal_deadlines.repository
 import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Single
-import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.web.storage.model.StorageRecord
 import org.stepic.droid.features.deadlines.model.DeadlinesWrapper
 import org.stepik.android.data.personal_deadlines.source.DeadlinesCacheDataSource
@@ -13,7 +12,6 @@ import org.stepik.android.data.personal_deadlines.source.DeadlinesRemoteDataSour
 import org.stepik.android.domain.personal_deadlines.repository.DeadlinesRepository
 import javax.inject.Inject
 
-@AppSingleton
 class DeadlinesRepositoryImpl
 @Inject
 constructor(

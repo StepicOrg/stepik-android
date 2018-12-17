@@ -1,7 +1,6 @@
 package org.stepic.droid.features.deadlines.util
 
 import io.reactivex.Single
-import org.stepic.droid.di.AppSingleton
 import org.stepik.android.model.Section
 import org.stepic.droid.features.deadlines.model.Deadline
 import org.stepic.droid.features.deadlines.model.DeadlinesWrapper
@@ -17,14 +16,13 @@ import org.stepik.android.model.Unit
 import java.util.*
 import javax.inject.Inject
 
-@AppSingleton
 class DeadlinesResolver
 @Inject
 constructor(
-        private val courseRepository: CourseRepository,
-        private val sectionRepository: SectionRepository,
-        private val unitRepository: UnitRepository,
-        private val lessonRepository: LessonRepository
+    private val courseRepository: CourseRepository,
+    private val sectionRepository: SectionRepository,
+    private val unitRepository: UnitRepository,
+    private val lessonRepository: LessonRepository
 ) {
     companion object {
         private const val DEFAULT_STEP_LENGTH_IN_SECONDS = 60L
