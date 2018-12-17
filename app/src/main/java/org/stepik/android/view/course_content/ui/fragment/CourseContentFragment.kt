@@ -139,6 +139,14 @@ class CourseContentFragment : Fragment(), CourseContentView {
         contentAdapter.updateUnitDownloadProgress(downloadProgress)
     }
 
+    override fun showPersonalDeadlinesBanner() {
+
+    }
+
+    override fun showPersonalDeadlinesError() {
+
+    }
+
     override fun onDestroy() {
         releaseComponent(courseId)
         super.onDestroy()

@@ -54,12 +54,14 @@ constructor(
         }
 
     private val downloadsDisposable = CompositeDisposable()
+    private val deadlinesDisposable = CompositeDisposable()
 
     private val pendingUnits = mutableSetOf<Long>()
     private val pendingSections = mutableSetOf<Long>()
 
     init {
         compositeDisposable += downloadsDisposable
+        compositeDisposable += deadlinesDisposable
         fetchCourseContent()
     }
 
@@ -82,8 +84,20 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onNext = { courseContent ->
-                    state = CourseContentView.State.CourseContentLoaded(PersonalDeadlinesState.Idle, courseContent)
+                onNext = { (course, courseContent) ->
+                    val emptyDeadlinesState =
+                        if (course.enrollment == 0L) {
+                            PersonalDeadlinesState.NoDeadlinesNeeded
+                        } else {
+                            PersonalDeadlinesState.Idle
+                        }
+
+                    val personalDeadlinesState =
+                        (state as? CourseContentView.State.CourseContentLoaded)
+                        ?.personalDeadlinesState
+                        ?: emptyDeadlinesState
+
+                    state = CourseContentView.State.CourseContentLoaded(course, personalDeadlinesState, courseContent)
                     resolveDownloadProgressSubscription()
                     fetchPersonalDeadlines()
                 },
@@ -155,6 +169,7 @@ constructor(
         pendingUnits.add(unit.id)
         view?.updateUnitDownloadProgress(DownloadProgress(unit.id, DownloadProgress.Status.Pending))
 
+        // TODO ASK SETTINGS
         compositeDisposable += unitDownloadInteractor
             .addTask(unit, configuration = DownloadConfiguration(EnumSet.allOf(DownloadConfiguration.NetworkType::class.java), "720"))
             .subscribeOn(backgroundScheduler)
@@ -215,16 +230,17 @@ constructor(
      */
     private fun fetchPersonalDeadlines() {
         if (state !is CourseContentView.State.CourseContentLoaded) return
+        deadlinesDisposable.clear()
 
-        compositeDisposable += deadlinesInteractor
+        deadlinesDisposable += deadlinesInteractor
             .getPersonalDeadlineByCourseId(courseId)
             .map { personalDeadlinesStateMapper.mergeCourseContentStateWithPersonalDeadlines(state, it) }
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onComplete = { state = personalDeadlinesStateMapper.mergeCourseContentStateWithPersonalDeadlines(state, null) },
+                onComplete = { state = personalDeadlinesStateMapper.mergeCourseContentStateWithPersonalDeadlines(state, null); fetchPersonalDeadlines() },
                 onSuccess  = { state = it },
-                onError    = { view?.showPersonalDeadlinesError() }
+                onError    = { it.printStackTrace(); view?.showPersonalDeadlinesError() }
             )
     }
 
@@ -234,7 +250,7 @@ constructor(
             ?.takeIf { it.personalDeadlinesState == PersonalDeadlinesState.EmptyDeadlines }
             ?: return
 
-        compositeDisposable += deadlinesInteractor
+        deadlinesDisposable += deadlinesInteractor
             .createPersonalDeadlines(courseId, learningRate)
             .map { personalDeadlinesStateMapper.mergeCourseContentStateWithPersonalDeadlines(state, it) }
             .subscribeOn(backgroundScheduler)
@@ -257,7 +273,7 @@ constructor(
 
         val newRecord = record.copy(data = DeadlinesWrapper(record.data.course, deadlines))
 
-        compositeDisposable += deadlinesInteractor
+        deadlinesDisposable += deadlinesInteractor
             .updatePersonalDeadlines(newRecord)
             .map { personalDeadlinesStateMapper.mergeCourseContentStateWithPersonalDeadlines(state, it) }
             .subscribeOn(backgroundScheduler)
@@ -279,7 +295,7 @@ constructor(
             ?.id
             ?: return
 
-        compositeDisposable += deadlinesInteractor
+        deadlinesDisposable += deadlinesInteractor
             .removePersonalDeadline(recordId)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
@@ -294,7 +310,7 @@ constructor(
             ?.takeIf { it.personalDeadlinesState == PersonalDeadlinesState.EmptyDeadlines }
             ?: return
 
-        compositeDisposable += deadlinesInteractor
+        deadlinesDisposable += deadlinesInteractor
             .shouldShowDeadlinesBannerForCourse(courseId)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
