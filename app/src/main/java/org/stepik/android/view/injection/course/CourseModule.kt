@@ -34,30 +34,6 @@ abstract class CourseModule {
      * DATA LAYER
      */
     @Binds
-    internal abstract fun bindCourseRepository(
-        courseRepositoryImpl: CourseRepositoryImpl): CourseRepository
-
-    @Binds
-    internal abstract fun bindCourseRemoteDataSource(
-        courseRemoteDataSourceImpl: CourseRemoteDataSourceImpl): CourseRemoteDataSource
-
-    @Binds
-    internal abstract fun bindCourseCacheDataSource(
-        courseCacheDataSourceImpl: CourseCacheDataSourceImpl): CourseCacheDataSource
-
-    @Binds
-    internal abstract fun bindEnrollmentRepository(
-        enrollmentRepositoryImpl: EnrollmentRepositoryImpl): EnrollmentRepository
-
-    @Binds
-    internal abstract fun bindEnrollmentRemoteDataSource(
-        enrollmentRemoteDataSourceImpl: EnrollmentRemoteDataSourceImpl): EnrollmentRemoteDataSource
-
-    @Binds
-    internal abstract fun bindEnrollmentCacheDataSource(
-        enrollmentCacheDataSourceImpl: EnrollmentCacheDataSourceImpl): EnrollmentCacheDataSource
-
-    @Binds
     @CourseScope
     @EnrollmentCourseUpdates
     internal abstract fun bindEnrollmentsUpdatesObservables(
