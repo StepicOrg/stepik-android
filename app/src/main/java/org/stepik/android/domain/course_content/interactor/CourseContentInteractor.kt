@@ -28,14 +28,14 @@ constructor(
 
     private val courseContentItemMapper: CourseContentItemMapper
 ) {
-    fun getCourseContent(): Observable<List<CourseContentItem>> =
+    fun getCourseContent(): Observable<Pair<Course, List<CourseContentItem>>> =
         courseObservableSource
             .switchMap { course ->
                 getSectionsOfCourse(course)
                     .flatMap { populateSections(course, it) }
                     .flatMapObservable { items ->
                         Single
-                            .concat(Single.just(items), loadUnits(items))
+                            .concat(Single.just(course to items), loadUnits(course, items))
                             .toObservable()
                     }
             }
@@ -51,7 +51,7 @@ constructor(
                 courseContentItemMapper.mapSectionsWithEmptyUnits(course, sections, progresses)
             }
 
-    private fun loadUnits(items: List<CourseContentItem>): Single<List<CourseContentItem>> =
+    private fun loadUnits(course: Course, items: List<CourseContentItem>): Single<Pair<Course, List<CourseContentItem>>> =
         Single
             .just(courseContentItemMapper.getUnitPlaceholdersIds(items))
             .flatMap(::getUnits)
@@ -62,7 +62,7 @@ constructor(
                 populateUnits(sectionItems, units)
             }
             .map { unitItems ->
-                courseContentItemMapper.replaceUnitPlaceholders(items, unitItems)
+                course to courseContentItemMapper.replaceUnitPlaceholders(items, unitItems)
             }
 
     private fun getUnits(unitIds: LongArray): Single<List<Unit>> =
