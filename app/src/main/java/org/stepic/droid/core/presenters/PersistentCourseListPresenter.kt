@@ -17,7 +17,7 @@ import org.stepic.droid.util.CourseUtil
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.RWLocks
 import org.stepic.droid.web.Api
-import org.stepik.android.domain.personal_deadlines.interactor.DeadlinesInteractor
+import org.stepik.android.domain.personal_deadlines.interactor.DeadlinesSynchronizationInteractor
 import org.stepik.android.model.Course
 import org.stepik.android.model.Meta
 import org.stepik.android.model.Progress
@@ -38,7 +38,7 @@ class PersistentCourseListPresenter
     private val earlyStreakPoster: EarlyStreakPoster,
     private val firstCoursePoster: FirstCoursePoster,
 
-    private val deadlinesInteractor: DeadlinesInteractor,
+    private val deadlinesSynchronizationInteractor: DeadlinesSynchronizationInteractor,
     private val analytic: Analytic
 ) : PresenterBase<CoursesView>() {
 
@@ -124,7 +124,7 @@ class PersistentCourseListPresenter
                         
                         allMyCourses.addAll(courses)
                     }
-                    deadlinesInteractor.syncPersonalDeadlines().blockingAwait()
+                    deadlinesSynchronizationInteractor.syncPersonalDeadlines().blockingAwait()
                     analytic.setCoursesCount(allMyCourses.size)
                     allMyCourses
                 }

@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.subscribeBy
-import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.data.personal_deadlines.source.DeadlinesCacheDataSource
@@ -15,21 +14,21 @@ import org.stepic.droid.services.NewUserAlarmService
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.scheduleCompat
+import org.stepik.android.cache.personal_deadlines.model.DeadlineEntity
 import javax.inject.Inject
 
-@AppSingleton
 class DeadlinesNotificationsManager
 @Inject
 constructor(
     private val context: Context,
     private val alarmManager: AlarmManager,
-    private val deadlinesRecordOperations: DeadlinesCacheDataSource,
+    private val deadlinesCacheDataSource: DeadlinesCacheDataSource,
     private val stepikNotificationManager: StepikNotificationManager,
 
     @BackgroundScheduler
-        private val backgroundScheduler: Scheduler,
+    private val backgroundScheduler: Scheduler,
     @MainScheduler
-        private val mainScheduler: Scheduler
+    private val mainScheduler: Scheduler
 ) {
     companion object {
         const val SHOW_DEADLINES_NOTIFICATION = "show_deadlines_notification"
@@ -40,13 +39,13 @@ constructor(
 
     fun scheduleDeadlinesNotifications() {
         val now = DateTimeHelper.nowUtc()
-        deadlinesRecordOperations.getClosestDeadlineTimestamp()
-                .subscribeOn(backgroundScheduler)
-                .observeOn(mainScheduler)
-                .subscribeBy(
-                        onError = { scheduleDeadlinesNotificationAt(now,0) },
-                        onSuccess = { scheduleDeadlinesNotificationAt(now, it) }
-                )
+        deadlinesCacheDataSource.getClosestDeadlineTimestamp()
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onError   = { scheduleDeadlinesNotificationAt(now,0) },
+                onSuccess = { scheduleDeadlinesNotificationAt(now, it) }
+            )
     }
 
     private fun scheduleDeadlinesNotificationAt(now: Long, closestDeadline: Long) {
@@ -71,14 +70,17 @@ constructor(
 
     fun showDeadlinesNotifications() {
         val now = DateTimeHelper.nowUtc()
-        deadlinesRecordOperations.getDeadlineRecordsForTimestamp(longArrayOf(now + OFFSET_12HOURS, now + OFFSET_36HOURS))
-                .map { it.sortedBy { it.deadline }.distinctBy { it.courseId } }
-                .subscribeOn(backgroundScheduler)
-                .observeOn(backgroundScheduler)
-                .doOnSuccess { deadlines ->
-                    deadlines.forEach { stepikNotificationManager.showPersonalDeadlineNotification(it) }
-                }
-                .onErrorReturn { emptyList() }
-                .subscribe { _, _ -> scheduleDeadlinesNotifications() }
+        deadlinesCacheDataSource.getDeadlineRecordsForTimestamp(longArrayOf(now + OFFSET_12HOURS, now + OFFSET_36HOURS))
+            .map { it.sortedBy(DeadlineEntity::deadline).distinctBy(DeadlineEntity::courseId) }
+            .subscribeOn(backgroundScheduler)
+            .observeOn(backgroundScheduler)
+            .doOnSuccess { deadlines ->
+                deadlines.forEach { stepikNotificationManager.showPersonalDeadlineNotification(it) }
+            }
+            .doFinally {
+                scheduleDeadlinesNotifications()
+            }
+            .onErrorReturn { emptyList() }
+            .subscribeBy()
     }
 }
