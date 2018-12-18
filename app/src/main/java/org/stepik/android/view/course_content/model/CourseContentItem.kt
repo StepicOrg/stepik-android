@@ -8,6 +8,7 @@ import org.stepik.android.presentation.personal_deadlines.model.PersonalDeadline
 
 sealed class CourseContentItem {
     data class ControlBar(
+        val isEnabled: Boolean,
         val personalDeadlinesState: PersonalDeadlinesState
     ) : CourseContentItem()
 

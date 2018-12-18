@@ -128,7 +128,7 @@ class CourseContentFragment : Fragment(), CourseContentView {
         viewStateDelegate.switchState(state)
         if (state is CourseContentView.State.CourseContentLoaded) {
             contentAdapter.items = state.courseContent
-            contentAdapter.updateControlBar(state.personalDeadlinesState)
+            contentAdapter.setControlBar(CourseContentItem.ControlBar(state.course.enrollment > 0, state.personalDeadlinesState))
         }
     }
 

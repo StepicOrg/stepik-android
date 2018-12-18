@@ -18,7 +18,7 @@ class CourseContentAdapter(
     sectionClickListener: CourseContentSectionClickListener,
     unitClickListener: CourseContentUnitClickListener
 ) : DelegateAdapter<CourseContentItem, DelegateViewHolder<CourseContentItem>>() {
-    private val headers = mutableListOf(CourseContentItem.ControlBar(PersonalDeadlinesState.Idle))
+    private val headers = mutableListOf(CourseContentItem.ControlBar(false, PersonalDeadlinesState.Idle))
 
     private val sectionDownloadStatuses = LongSparseArray<DownloadProgress.Status>()
     private val unitDownloadStatuses = LongSparseArray<DownloadProgress.Status>()
@@ -60,8 +60,8 @@ class CourseContentAdapter(
         notifyItemChanged(unitPosition + headers.size)
     }
 
-    fun updateControlBar(personalDeadlinesState: PersonalDeadlinesState) {
-        headers[0] = CourseContentItem.ControlBar(personalDeadlinesState)
+    fun setControlBar(controlBar: CourseContentItem.ControlBar) {
+        headers[0] = controlBar
         notifyItemChanged(0)
     }
 
