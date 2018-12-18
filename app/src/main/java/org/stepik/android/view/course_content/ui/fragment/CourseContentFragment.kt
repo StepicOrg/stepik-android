@@ -1,7 +1,9 @@
 package org.stepik.android.view.course_content.ui.fragment
 
+import android.app.Activity
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
@@ -15,6 +17,7 @@ import kotlinx.android.synthetic.main.fragment_course_content.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.features.deadlines.model.Deadline
 import org.stepic.droid.features.deadlines.model.DeadlinesWrapper
 import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepik.android.view.course_content.ui.adapter.CourseContentAdapter
@@ -22,10 +25,13 @@ import org.stepik.android.view.course_content.ui.adapter.delegates.unit.CourseCo
 import org.stepik.android.view.course_content.model.CourseContentItem
 import org.stepic.droid.util.argument
 import org.stepic.droid.web.storage.model.StorageRecord
+import org.stepik.android.domain.personal_deadlines.model.LearningRate
 import org.stepik.android.presentation.course_content.CourseContentPresenter
 import org.stepik.android.presentation.course_content.CourseContentView
 import org.stepik.android.view.course_content.ui.adapter.delegates.control_bar.CourseContentControlBarClickListener
 import org.stepik.android.view.course_content.ui.adapter.delegates.section.CourseContentSectionClickListener
+import org.stepik.android.view.personal_deadlines.ui.dialogs.EditDeadlinesDialog
+import org.stepik.android.view.personal_deadlines.ui.dialogs.LearningRateDialog
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import javax.inject.Inject
 
@@ -101,12 +107,11 @@ class CourseContentFragment : Fragment(), CourseContentView {
                     },
                     controlBarClickListener = object : CourseContentControlBarClickListener {
                         override fun onCreateScheduleClicked() {
-//                            courseContentPresenter?
-                            // show dialog
+                            showPersonalDeadlinesLearningRateDialog()
                         }
 
                         override fun onChangeScheduleClicked(record: StorageRecord<DeadlinesWrapper>) {
-                            // show dialog
+                            showPersonalDeadlinesEditDialog(record)
                         }
 
                         override fun onRemoveScheduleClicked(record: StorageRecord<DeadlinesWrapper>) {
@@ -163,6 +168,55 @@ class CourseContentFragment : Fragment(), CourseContentView {
 
     override fun showPersonalDeadlinesError() {
 
+    }
+
+    /**
+     * Personal deadlines
+     */
+    private fun showPersonalDeadlinesLearningRateDialog() {
+        val supportFragmentManager = activity
+            ?.supportFragmentManager
+            ?.takeIf { it.findFragmentByTag(LearningRateDialog.TAG) == null }
+            ?: return
+
+        val dialog = LearningRateDialog.newInstance()
+        dialog.setTargetFragment(this, LearningRateDialog.LEARNING_RATE_REQUEST_CODE)
+        dialog.show(supportFragmentManager, LearningRateDialog.TAG)
+    }
+
+    private fun showPersonalDeadlinesEditDialog(record: StorageRecord<DeadlinesWrapper>) {
+        val supportFragmentManager = activity
+            ?.supportFragmentManager
+            ?.takeIf { it.findFragmentByTag(EditDeadlinesDialog.TAG) == null }
+            ?: return
+
+        val sections = contentAdapter
+            .items
+            .mapNotNull { item ->
+                (item as? CourseContentItem.SectionItem)
+                    ?.section
+            }
+
+        val dialog = EditDeadlinesDialog.newInstance(sections, record)
+        dialog.setTargetFragment(this, EditDeadlinesDialog.EDIT_DEADLINES_REQUEST_CODE)
+        dialog.show(supportFragmentManager, EditDeadlinesDialog.TAG)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when(requestCode) {
+            LearningRateDialog.LEARNING_RATE_REQUEST_CODE ->
+                data?.takeIf { resultCode == Activity.RESULT_OK }
+                    ?.getParcelableExtra<LearningRate>(LearningRateDialog.KEY_LEARNING_RATE)
+                    ?.let(courseContentPresenter::createPersonalDeadlines)
+
+            EditDeadlinesDialog.EDIT_DEADLINES_REQUEST_CODE ->
+                data?.takeIf { resultCode == Activity.RESULT_OK }
+                    ?.getParcelableArrayListExtra<Deadline>(EditDeadlinesDialog.KEY_DEADLINES)
+                    ?.let(courseContentPresenter::updatePersonalDeadlines)
+
+            else ->
+                super.onActivityResult(requestCode, resultCode, data)
+        }
     }
 
     override fun onDestroy() {
