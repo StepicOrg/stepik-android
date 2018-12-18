@@ -19,6 +19,7 @@ interface CourseContentView {
     }
 
     fun setState(state: State)
+    fun setBlockingLoading(isLoading: Boolean)
 
     fun updateSectionDownloadProgress(downloadProgress: DownloadProgress)
     fun updateUnitDownloadProgress(downloadProgress: DownloadProgress)

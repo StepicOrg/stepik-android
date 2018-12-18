@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.DividerItemDecoration
@@ -20,6 +21,8 @@ import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.features.deadlines.model.Deadline
 import org.stepic.droid.features.deadlines.model.DeadlinesWrapper
 import org.stepic.droid.persistence.model.DownloadProgress
+import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
+import org.stepic.droid.util.ProgressHelper
 import org.stepik.android.view.course_content.ui.adapter.CourseContentAdapter
 import org.stepik.android.view.course_content.ui.adapter.delegates.unit.CourseContentUnitClickListener
 import org.stepik.android.view.course_content.model.CourseContentItem
@@ -55,6 +58,9 @@ class CourseContentFragment : Fragment(), CourseContentView {
     private lateinit var courseContentPresenter: CourseContentPresenter
 
     private lateinit var viewStateDelegate: ViewStateDelegate<CourseContentView.State>
+
+    private val progressDialogFragment: DialogFragment =
+        LoadingProgressDialogFragment.newInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -154,6 +160,17 @@ class CourseContentFragment : Fragment(), CourseContentView {
         }
     }
 
+    override fun setBlockingLoading(isLoading: Boolean) {
+        if (isLoading) {
+            ProgressHelper.activate(progressDialogFragment, activity?.supportFragmentManager, LoadingProgressDialogFragment.TAG)
+        } else {
+            ProgressHelper.dismiss(activity?.supportFragmentManager, LoadingProgressDialogFragment.TAG)
+        }
+    }
+
+    /**
+     * Downloads
+     */
     override fun updateSectionDownloadProgress(downloadProgress: DownloadProgress) {
         contentAdapter.updateSectionDownloadProgress(downloadProgress)
     }
@@ -162,6 +179,9 @@ class CourseContentFragment : Fragment(), CourseContentView {
         contentAdapter.updateUnitDownloadProgress(downloadProgress)
     }
 
+    /**
+     * Personal deadlines
+     */
     override fun showPersonalDeadlinesBanner() {
 
     }
@@ -170,9 +190,6 @@ class CourseContentFragment : Fragment(), CourseContentView {
 
     }
 
-    /**
-     * Personal deadlines
-     */
     private fun showPersonalDeadlinesLearningRateDialog() {
         val supportFragmentManager = activity
             ?.supportFragmentManager

@@ -53,6 +53,12 @@ constructor(
             view?.setState(value)
         }
 
+    private var isBlockingLoading: Boolean = false
+        set(value) {
+            field = value
+            view?.setBlockingLoading(value)
+        }
+
     private val downloadsDisposable = CompositeDisposable()
     private val deadlinesDisposable = CompositeDisposable()
 
@@ -68,6 +74,7 @@ constructor(
     override fun attachView(view: CourseContentView) {
         super.attachView(view)
         view.setState(state)
+        view.setBlockingLoading(isBlockingLoading)
         resolveDownloadProgressSubscription()
     }
 
@@ -240,11 +247,13 @@ constructor(
             ?.takeIf { it.personalDeadlinesState == PersonalDeadlinesState.EmptyDeadlines }
             ?: return
 
+        isBlockingLoading = true
         deadlinesDisposable += deadlinesInteractor
             .createPersonalDeadlines(courseId, learningRate)
             .map { stateMapper.mergeStateWithPersonalDeadlines(state, it) }
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
+            .doFinally { isBlockingLoading = false }
             .subscribeBy(
                 onSuccess = { state = it },
                 onError   = { view?.showPersonalDeadlinesError() }
@@ -263,11 +272,13 @@ constructor(
 
         val newRecord = record.copy(data = DeadlinesWrapper(record.data.course, deadlines))
 
+        isBlockingLoading = true
         deadlinesDisposable += deadlinesInteractor
             .updatePersonalDeadlines(newRecord)
             .map { stateMapper.mergeStateWithPersonalDeadlines(state, it) }
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
+            .doFinally { isBlockingLoading = false }
             .subscribeBy(
                 onSuccess = { state = it },
                 onError   = { view?.showPersonalDeadlinesError() }
@@ -285,10 +296,12 @@ constructor(
             ?.id
             ?: return
 
+        isBlockingLoading = true
         deadlinesDisposable += deadlinesInteractor
             .removePersonalDeadline(recordId)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
+            .doFinally { isBlockingLoading = false }
             .subscribeBy(
                 onComplete = { state = stateMapper.mergeStateWithPersonalDeadlines(state, null) },
                 onError    = { view?.showPersonalDeadlinesError() }
