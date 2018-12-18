@@ -35,10 +35,7 @@ constructor(
     override fun removeDeadlineRecordByCourseId(courseId: Long): Completable =
         deadlinesRemoteDataSource
             .getDeadlineRecordByCourseId(courseId)
-            .flatMapCompletable { record ->
-                deadlinesCacheDataSource.removeDeadlineRecord(record.data.course) then
-                        deadlinesRemoteDataSource.removeDeadlineRecord(record.data.course)
-            }
+            .flatMapCompletable { removeDeadlineRecord(it.id!!) }
 
     override fun removeAllCachedDeadlineRecords(): Completable =
         deadlinesCacheDataSource.removeAllDeadlineRecords()

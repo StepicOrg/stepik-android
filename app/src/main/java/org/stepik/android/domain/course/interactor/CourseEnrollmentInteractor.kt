@@ -6,6 +6,7 @@ import okhttp3.ResponseBody
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.then
 import org.stepik.android.domain.course.repository.EnrollmentRepository
+import org.stepik.android.domain.personal_deadlines.repository.DeadlinesRepository
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
 import retrofit2.HttpException
 import retrofit2.Response
@@ -17,6 +18,8 @@ class CourseEnrollmentInteractor
 constructor(
     private val enrollmentRepository: EnrollmentRepository,
     private val sharedPreferenceHelper: SharedPreferenceHelper,
+
+    private val deadlinesRepository: DeadlinesRepository,
     @EnrollmentCourseUpdates
     private val enrollmentSubject: PublishSubject<Long>
 ) {
@@ -44,5 +47,6 @@ constructor(
         requireAuthorization then
         enrollmentRepository
             .removeEnrollment(courseId)
+            .andThen(deadlinesRepository.removeDeadlineRecordByCourseId(courseId).onErrorComplete())
             .doOnComplete { enrollmentSubject.onNext(courseId) } // notify everyone about changes
 }
