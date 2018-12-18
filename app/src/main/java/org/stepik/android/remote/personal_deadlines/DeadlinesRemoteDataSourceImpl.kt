@@ -38,5 +38,10 @@ constructor(
         remoteStorageService
             .getStorageRecords(1, sharedPreferenceHelper.profile?.id ?: -1, getKindOfRecord(courseId))
             .firstElement()
-            .map(deadlinesMapper::mapToStorageRecord)
+            .flatMap { response ->
+                deadlinesMapper
+                    .mapToStorageRecord(response)
+                    ?.let { Maybe.just(it) }
+                    ?: Maybe.empty()
+            }
 }
