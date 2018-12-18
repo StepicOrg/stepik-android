@@ -320,7 +320,7 @@ constructor(
             .subscribeBy(
                 onSuccess = { shouldShowDeadlinesBanner ->
                     if (shouldShowDeadlinesBanner) {
-                        view?.showPersonalDeadlinesError()
+                        view?.showPersonalDeadlinesBanner()
                     }
                 },
                 onError   = { view?.showPersonalDeadlinesError() }
