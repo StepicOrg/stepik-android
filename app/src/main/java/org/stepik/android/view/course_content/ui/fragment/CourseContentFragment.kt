@@ -18,8 +18,8 @@ import kotlinx.android.synthetic.main.fragment_course_content.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
-import org.stepic.droid.features.deadlines.model.Deadline
-import org.stepic.droid.features.deadlines.model.DeadlinesWrapper
+import org.stepik.android.domain.personal_deadlines.model.Deadline
+import org.stepik.android.domain.personal_deadlines.model.DeadlinesWrapper
 import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.util.ProgressHelper

@@ -3,10 +3,10 @@ package org.stepik.android.domain.personal_deadlines.interactor
 import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Single
-import org.stepic.droid.features.deadlines.model.DeadlinesWrapper
+import org.stepik.android.domain.personal_deadlines.model.DeadlinesWrapper
 import org.stepic.droid.features.deadlines.notifications.DeadlinesNotificationsManager
 import org.stepik.android.domain.personal_deadlines.model.LearningRate
-import org.stepic.droid.features.deadlines.util.DeadlinesResolver
+import org.stepik.android.domain.personal_deadlines.resolver.DeadlinesResolverImpl
 import org.stepic.droid.model.CourseListType
 import org.stepic.droid.util.doCompletableOnSuccess
 import org.stepic.droid.web.storage.model.StorageRecord

@@ -1,9 +1,9 @@
-package org.stepic.droid.features.deadlines.util
+package org.stepik.android.domain.personal_deadlines.resolver
 
 import io.reactivex.Single
 import org.stepik.android.model.Section
-import org.stepic.droid.features.deadlines.model.Deadline
-import org.stepic.droid.features.deadlines.model.DeadlinesWrapper
+import org.stepik.android.domain.personal_deadlines.model.Deadline
+import org.stepik.android.domain.personal_deadlines.model.DeadlinesWrapper
 import org.stepik.android.domain.personal_deadlines.model.LearningRate
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.mapToLongArray
@@ -16,20 +16,20 @@ import org.stepik.android.model.Unit
 import java.util.*
 import javax.inject.Inject
 
-class DeadlinesResolver
+class DeadlinesResolverImpl
 @Inject
 constructor(
     private val courseRepository: CourseRepository,
     private val sectionRepository: SectionRepository,
     private val unitRepository: UnitRepository,
     private val lessonRepository: LessonRepository
-) {
+) : DeadlinesResolver {
     companion object {
         private const val DEFAULT_STEP_LENGTH_IN_SECONDS = 60L
         private const val TIME_MULTIPLIER = 1.3
     }
 
-    fun calculateDeadlinesForCourse(courseId: Long, learningRate: LearningRate): Single<DeadlinesWrapper> =
+    override fun calculateDeadlinesForCourse(courseId: Long, learningRate: LearningRate): Single<DeadlinesWrapper> =
         courseRepository.getCourse(courseId)
             .flatMapSingle { course ->
                 sectionRepository.getSections(*course.sections ?: longArrayOf())

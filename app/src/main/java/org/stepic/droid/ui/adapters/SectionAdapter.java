@@ -27,8 +27,6 @@ import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.presenters.CalendarPresenter;
 import org.stepic.droid.core.presenters.DownloadingInteractionPresenter;
 import org.stepic.droid.core.presenters.SectionsPresenter;
-import org.stepic.droid.features.deadlines.model.Deadline;
-import org.stepic.droid.features.deadlines.model.DeadlinesWrapper;
 import org.stepic.droid.persistence.model.DownloadProgress;
 import org.stepik.android.model.Course;
 import org.stepik.android.model.Section;
@@ -44,7 +42,6 @@ import org.stepic.droid.util.ColorUtil;
 import org.stepic.droid.util.DateTimeHelper;
 import org.stepic.droid.util.SectionExtensionsKt;
 import org.stepic.droid.viewmodel.ProgressViewModel;
-import org.stepic.droid.web.storage.model.StorageRecord;
 
 import java.util.Date;
 import java.util.List;
@@ -58,8 +55,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import kotlin.Pair;
 import kotlin.collections.MapsKt;
-
-import static org.stepic.droid.ui.util.ViewExtensionsKt.changeVisibility;
 
 public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericViewHolder> {
     private final static String SECTION_TITLE_DELIMETER = ". ";
@@ -102,9 +97,6 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     private final SectionsPresenter sectionsPresenter;
 
     private final LongSparseArray<DownloadProgress.Status> downloadProgresses = new LongSparseArray<>();
-
-    @Nullable
-    private StorageRecord<DeadlinesWrapper> deadlinesRecord;
 
     public void setDefaultHighlightPosition(int defaultHighlightPosition) {
         this.defaultHighlightPosition = defaultHighlightPosition;
@@ -194,19 +186,6 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
 
     public void setNeedShowCalendarWidget(boolean needShowCalendarWidget) {
         this.needShowCalendarWidget = needShowCalendarWidget;
-    }
-
-    public void setDeadlinesRecord(@Nullable StorageRecord<DeadlinesWrapper> deadlinesRecord) {
-        boolean needUpdate = this.deadlinesRecord != deadlinesRecord;
-        this.deadlinesRecord = deadlinesRecord;
-        if (needUpdate) {
-            notifyDataSetChanged();
-        }
-    }
-
-    @Nullable
-    public StorageRecord<DeadlinesWrapper> getDeadlinesRecord() {
-        return deadlinesRecord;
     }
 
     public List<Section> getSections() {
@@ -413,27 +392,6 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
 
             softDeadline.setText(getTimeWithLabelString(R.string.hard_deadline_section, section.getHardDeadline()));
             ViewExtensionsKt.changeVisibility(hardDeadline, section.getHardDeadline() != null);
-
-            // personal deadlines
-            boolean wasDeadlineSet = false;
-            if (deadlinesRecord != null) {
-                List<Deadline> deadlines = deadlinesRecord.getData().getDeadlines();
-                Deadline deadline = null;
-
-                for (Deadline d : deadlines) {
-                    if (d.getSection() == sectionId) {
-                        deadline = d;
-                        break;
-                    }
-                }
-
-                if (deadline != null) {
-                    personalDeadline.setText(getTimeWithLabelString(R.string.deadlines_section, deadline.getDeadline()));
-                    wasDeadlineSet = true;
-                }
-            }
-            changeVisibility(personalDeadline, wasDeadlineSet);
-
 
             if (SectionExtensionsKt.hasUserAccess(section, course)) {
 

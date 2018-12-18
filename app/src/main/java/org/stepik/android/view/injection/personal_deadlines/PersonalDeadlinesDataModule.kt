@@ -11,6 +11,8 @@ import org.stepik.android.data.personal_deadlines.source.DeadlinesCacheDataSourc
 import org.stepik.android.data.personal_deadlines.source.DeadlinesRemoteDataSource
 import org.stepik.android.domain.personal_deadlines.repository.DeadlinesBannerRepository
 import org.stepik.android.domain.personal_deadlines.repository.DeadlinesRepository
+import org.stepik.android.domain.personal_deadlines.resolver.DeadlinesResolver
+import org.stepik.android.domain.personal_deadlines.resolver.DeadlinesResolverImpl
 import org.stepik.android.remote.personal_deadlines.DeadlinesRemoteDataSourceImpl
 
 @Module
@@ -29,6 +31,11 @@ abstract class PersonalDeadlinesDataModule {
     internal abstract fun bindDeadlinesCacheDataSource(
         deadlinesCacheDataSourceImpl: DeadlinesCacheDataSourceImpl
     ): DeadlinesCacheDataSource
+
+    @Binds
+    internal abstract fun bindDeadlinesResolver(
+        deadlinesResolverImpl: DeadlinesResolverImpl
+    ): DeadlinesResolver
 
 
     @Binds

@@ -1,6 +1,6 @@
 package org.stepik.android.view.course_content.ui.adapter.delegates.control_bar
 
-import org.stepic.droid.features.deadlines.model.DeadlinesWrapper
+import org.stepik.android.domain.personal_deadlines.model.DeadlinesWrapper
 import org.stepic.droid.web.storage.model.StorageRecord
 
 interface CourseContentControlBarClickListener {

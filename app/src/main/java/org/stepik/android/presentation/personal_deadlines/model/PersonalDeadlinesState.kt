@@ -1,6 +1,6 @@
 package org.stepik.android.presentation.personal_deadlines.model
 
-import org.stepic.droid.features.deadlines.model.DeadlinesWrapper
+import org.stepik.android.domain.personal_deadlines.model.DeadlinesWrapper
 import org.stepic.droid.web.storage.model.StorageRecord
 
 sealed class PersonalDeadlinesState {

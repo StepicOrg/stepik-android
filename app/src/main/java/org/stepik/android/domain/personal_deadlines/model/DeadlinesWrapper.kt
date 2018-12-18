@@ -1,4 +1,4 @@
-package org.stepic.droid.features.deadlines.model
+package org.stepik.android.domain.personal_deadlines.model
 
 import android.os.Parcel
 import android.os.Parcelable
@@ -17,10 +17,11 @@ class DeadlinesWrapper(
 
     override fun describeContents(): Int = 0
     companion object CREATOR : Parcelable.Creator<DeadlinesWrapper> {
-        override fun createFromParcel(parcel: Parcel) = DeadlinesWrapper(
+        override fun createFromParcel(parcel: Parcel) =
+            DeadlinesWrapper(
                 parcel.readLong(),
                 parcel.createTypedArrayList(Deadline)!!
-        )
+            )
 
         override fun newArray(size: Int): Array<DeadlinesWrapper?> = arrayOfNulls(size)
     }

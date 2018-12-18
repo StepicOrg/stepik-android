@@ -3,7 +3,7 @@ package org.stepik.android.domain.personal_deadlines.repository
 import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Single
-import org.stepic.droid.features.deadlines.model.DeadlinesWrapper
+import org.stepik.android.domain.personal_deadlines.model.DeadlinesWrapper
 import org.stepic.droid.web.storage.model.StorageRecord
 
 interface DeadlinesRepository {

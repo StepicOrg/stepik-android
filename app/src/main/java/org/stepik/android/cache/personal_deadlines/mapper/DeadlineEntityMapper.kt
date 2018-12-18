@@ -1,6 +1,6 @@
 package org.stepik.android.cache.personal_deadlines.mapper
 
-import org.stepic.droid.features.deadlines.model.DeadlinesWrapper
+import org.stepik.android.domain.personal_deadlines.model.DeadlinesWrapper
 import org.stepic.droid.web.storage.model.StorageRecord
 import org.stepik.android.cache.personal_deadlines.model.DeadlineEntity
 import javax.inject.Inject
