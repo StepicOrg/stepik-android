@@ -29,7 +29,6 @@ import org.stepic.droid.core.presenters.DownloadingInteractionPresenter;
 import org.stepic.droid.core.presenters.SectionsPresenter;
 import org.stepic.droid.features.deadlines.model.Deadline;
 import org.stepic.droid.features.deadlines.model.DeadlinesWrapper;
-import org.stepic.droid.features.deadlines.presenters.PersonalDeadlinesPresenter;
 import org.stepic.droid.persistence.model.DownloadProgress;
 import org.stepik.android.model.Course;
 import org.stepik.android.model.Section;
@@ -67,7 +66,6 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
 
     private static final int TYPE_SECTION_ITEM = 1;
     private static final int TYPE_CALENDAR_HEADER = 2;
-    private static final int TYPE_DEADLINES_HEADER = 3;
 
     public static final int PRE_SECTION_LIST_DELTA = 2;
 
@@ -89,13 +87,11 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     SharedPreferenceHelper sharedPreferenceHelper;
 
 
-    private final PersonalDeadlinesPresenter personalDeadlinesPresenter;
     private List<Section> sections;
     private AppCompatActivity activity;
     private CalendarPresenter calendarPresenter;
     private Course course;
     private boolean needShowCalendarWidget;
-    private boolean needShowDeadlinesBanner;
     private Drawable highlightDrawable;
     @ColorInt
     private int defaultColor;
@@ -117,7 +113,6 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     public SectionAdapter(List<Section> sections,
                           AppCompatActivity activity,
                           CalendarPresenter calendarPresenter,
-                          PersonalDeadlinesPresenter personalDeadlinesPresenter,
                           Map<String, ProgressViewModel> progressMap,
                           Fragment fragment,
                           DownloadingInteractionPresenter downloadingInteractionPresenter,
@@ -125,7 +120,6 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         this.sections = sections;
         this.activity = activity;
         this.calendarPresenter = calendarPresenter;
-        this.personalDeadlinesPresenter = personalDeadlinesPresenter;
         highlightDrawable = ContextCompat.getDrawable(activity, R.drawable.section_background);
         defaultColor = ColorUtil.INSTANCE.getColorArgb(R.color.white, activity);
         this.progressMap = progressMap;
@@ -142,8 +136,6 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         switch (viewType) {
             case TYPE_CALENDAR_HEADER:
                 return new CalendarViewHolder(inflater.inflate(R.layout.export_calendar_view, parent, false));
-            case TYPE_DEADLINES_HEADER:
-                return new PersonalDeadlinesViewHolder(inflater.inflate(R.layout.header_personal_deadlines, parent, false));
             case TYPE_SECTION_ITEM:
                 return new SectionViewHolder(inflater.inflate(R.layout.section_item, parent, false));
             default:
@@ -157,8 +149,6 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         switch (position) {
             case 0:
                 return TYPE_CALENDAR_HEADER;
-            case 1:
-                return TYPE_DEADLINES_HEADER;
             default:
                 return TYPE_SECTION_ITEM;
         }
@@ -217,11 +207,6 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     @Nullable
     public StorageRecord<DeadlinesWrapper> getDeadlinesRecord() {
         return deadlinesRecord;
-    }
-
-    public void setNeedShowDeadlinesBanner(boolean needShowDeadlinesBanner) {
-        this.needShowDeadlinesBanner = needShowDeadlinesBanner;
-        notifyItemChanged(1);
     }
 
     public List<Section> getSections() {
@@ -585,43 +570,6 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         @Override
         public void setDataOnView(int position) {
             final int height = needShowCalendarWidget ? ViewGroup.LayoutParams.WRAP_CONTENT : 0;
-            ViewExtensionsKt.setHeight(itemView, height);
-        }
-
-        @Override
-        public void clearAnimation() {
-            itemView.clearAnimation();
-        }
-    }
-
-    class PersonalDeadlinesViewHolder extends GenericViewHolder {
-
-        @BindView(R.id.action)
-        View actionButton;
-
-        @BindView(R.id.not_now_button)
-        View notNowButton;
-
-        public PersonalDeadlinesViewHolder(View itemView) {
-            super(itemView);
-            actionButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    personalDeadlinesPresenter.onClickCreateDeadlines(true);
-                }
-            });
-
-            notNowButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    personalDeadlinesPresenter.onClickHideDeadlinesBanner();
-                }
-            });
-        }
-
-        @Override
-        public void setDataOnView(int position) {
-            final int height = needShowDeadlinesBanner ? ViewGroup.LayoutParams.WRAP_CONTENT : 0;
             ViewExtensionsKt.setHeight(itemView, height);
         }
 
