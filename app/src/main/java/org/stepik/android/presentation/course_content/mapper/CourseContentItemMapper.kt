@@ -1,16 +1,16 @@
 package org.stepik.android.presentation.course_content.mapper
 
-import org.stepic.droid.R
 import org.stepic.droid.util.hasUserAccess
 import org.stepik.android.model.*
 import org.stepik.android.model.Unit
 import org.stepik.android.view.course_content.model.CourseContentItem
-import org.stepik.android.view.course_content.model.CourseContentSectionDate
 import javax.inject.Inject
 
 class CourseContentItemMapper
 @Inject
-constructor() {
+constructor(
+    private val sectionDatesMapper: CourseContentSectionDatesMapper
+) {
     fun mapSectionsWithEmptyUnits(course: Course, sections: List<Section>, progresses: List<Progress>): List<CourseContentItem> =
         sections
             .flatMap { section ->
@@ -18,16 +18,8 @@ constructor() {
             }
 
     private fun mapSectionWithEmptyUnits(course: Course, section: Section, progress: Progress?): List<CourseContentItem> =
-        listOf(CourseContentItem.SectionItem(section, mapSectionDates(section), progress, section.hasUserAccess(course))) +
+        listOf(CourseContentItem.SectionItem(section, sectionDatesMapper.mapSectionDates(section), progress, section.hasUserAccess(course))) +
                 section.units.map(CourseContentItem::UnitItemPlaceholder)
-
-    private fun mapSectionDates(section: Section): List<CourseContentSectionDate> =
-        listOfNotNull(
-            section.beginDate?.let    { CourseContentSectionDate(R.string.course_content_timeline_begin_date, it) },
-            section.softDeadline?.let { CourseContentSectionDate(R.string.course_content_timeline_soft_deadline, it) },
-            section.hardDeadline?.let { CourseContentSectionDate(R.string.course_content_timeline_hard_deadline, it) },
-            section.endDate?.let      { CourseContentSectionDate(R.string.course_content_timeline_end_date, it) }
-        )
 
     fun mapUnits(sectionItems: List<CourseContentItem.SectionItem>, units: List<Unit>, lessons: List<Lesson>, progresses: List<Progress>): List<CourseContentItem.UnitItem> =
         units.mapNotNull { unit ->

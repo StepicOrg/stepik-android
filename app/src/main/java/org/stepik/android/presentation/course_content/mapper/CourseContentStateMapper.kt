@@ -12,7 +12,9 @@ import javax.inject.Inject
 
 class CourseContentStateMapper
 @Inject
-constructor() {
+constructor(
+    private val sectionDatesMapper: CourseContentSectionDatesMapper
+) {
     fun mergeStateWithCourseContent(state: CourseContentView.State, course: Course, courseContent: List<CourseContentItem>): CourseContentView.State {
         val personalDeadlinesState =
             if (course.enrollment == 0L) {
@@ -48,29 +50,28 @@ constructor() {
             }
             ?: return state.copy(personalDeadlinesState = PersonalDeadlinesState.NoDeadlinesNeeded)
 
-        deadlinesRecord
-            ?: return state.copy(personalDeadlinesState = PersonalDeadlinesState.EmptyDeadlines)
+        val personalDeadlinesState = deadlinesRecord
+            ?.let(PersonalDeadlinesState::Deadlines)
+            ?: PersonalDeadlinesState.EmptyDeadlines
 
         val courseContent = applyDeadlinesToCourseContent(state.courseContent, deadlinesRecord)
 
-        return state.copy(personalDeadlinesState = PersonalDeadlinesState.Deadlines(deadlinesRecord), courseContent = courseContent)
+        return state.copy(personalDeadlinesState = personalDeadlinesState, courseContent = courseContent)
     }
 
-    private fun applyDeadlinesToCourseContent(courseContent: List<CourseContentItem>, deadlinesRecord: StorageRecord<DeadlinesWrapper>): List<CourseContentItem> =
+    private fun applyDeadlinesToCourseContent(courseContent: List<CourseContentItem>, deadlinesRecord: StorageRecord<DeadlinesWrapper>?): List<CourseContentItem> =
         courseContent
             .map { item ->
                 if (item is CourseContentItem.SectionItem) {
-                    deadlinesRecord
-                        .data
-                        .deadlines
-                        .find { it.section == item.section.id }
+                    val dates = deadlinesRecord
+                        ?.data
+                        ?.deadlines
+                        ?.find { it.section == item.section.id }
                         ?.let { deadline ->
-                            val dates = (item.dates + CourseContentSectionDate(R.string.course_content_timeline_deadline, deadline.deadline))
-                                .sortedBy { it.date }
-
-                            item.copy(dates = dates)
+                            listOf(CourseContentSectionDate(R.string.course_content_timeline_deadline, deadline.deadline))
                         }
-                        ?: item
+                        ?: sectionDatesMapper.mapSectionDates(item.section)
+                    item.copy(dates = dates)
                 } else {
                     item
                 }
