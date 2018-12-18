@@ -25,10 +25,8 @@ object PopupHelper {
     }
 
 
-    fun showPopupAnchoredToView(context: Context, anchorView: View?, popupText: String): PopupWindow? {
-        if (anchorView == null) {
-            return null
-        }
+    fun showPopupAnchoredToView(context: Context, anchorView: View?, popupText: String, cancelableOnTouchOutside: Boolean = false): PopupWindow? {
+        anchorView ?: return null
 
         val inflater = context.getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val popupView = inflater.inflate(R.layout.popup_window, null)
@@ -45,6 +43,7 @@ object PopupHelper {
 
         val popupWindow = PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
         popupWindow.animationStyle = R.style.PopupAnimations
+        popupWindow.isOutsideTouchable = cancelableOnTouchOutside
 
         popupView.setOnClickListener {
             popupWindow.dismiss()

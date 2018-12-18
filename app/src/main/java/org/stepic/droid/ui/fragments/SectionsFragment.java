@@ -866,7 +866,7 @@ public class SectionsFragment
 
                 if (shareView != null) {
                     inviteFriendsPopupWindow =
-                            PopupHelper.INSTANCE.showPopupAnchoredToView(getContext(), shareView, getString(R.string.invite_friends_description));
+                            PopupHelper.INSTANCE.showPopupAnchoredToView(getContext(), shareView, getString(R.string.invite_friends_description), false);
                 } else {
                     getAnalytic().reportEvent(Analytic.Interaction.INVITE_DIALOG_BROKEN);
                 }
