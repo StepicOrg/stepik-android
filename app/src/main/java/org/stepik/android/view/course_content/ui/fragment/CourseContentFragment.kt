@@ -15,13 +15,16 @@ import kotlinx.android.synthetic.main.fragment_course_content.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.features.deadlines.model.DeadlinesWrapper
 import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepik.android.view.course_content.ui.adapter.CourseContentAdapter
 import org.stepik.android.view.course_content.ui.adapter.delegates.unit.CourseContentUnitClickListener
 import org.stepik.android.view.course_content.model.CourseContentItem
 import org.stepic.droid.util.argument
+import org.stepic.droid.web.storage.model.StorageRecord
 import org.stepik.android.presentation.course_content.CourseContentPresenter
 import org.stepik.android.presentation.course_content.CourseContentView
+import org.stepik.android.view.course_content.ui.adapter.delegates.control_bar.CourseContentControlBarClickListener
 import org.stepik.android.view.course_content.ui.adapter.delegates.section.CourseContentSectionClickListener
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import javax.inject.Inject
@@ -94,6 +97,20 @@ class CourseContentFragment : Fragment(), CourseContentView {
 
                         override fun onItemRemoveClicked(item: CourseContentItem.UnitItem) {
                             courseContentPresenter.removeUnitDownloadTask(item.unit)
+                        }
+                    },
+                    controlBarClickListener = object : CourseContentControlBarClickListener {
+                        override fun onCreateScheduleClicked() {
+//                            courseContentPresenter?
+                            // show dialog
+                        }
+
+                        override fun onChangeScheduleClicked(record: StorageRecord<DeadlinesWrapper>) {
+                            // show dialog
+                        }
+
+                        override fun onRemoveScheduleClicked(record: StorageRecord<DeadlinesWrapper>) {
+                            courseContentPresenter.removeDeadlines()
                         }
                     }
                 )

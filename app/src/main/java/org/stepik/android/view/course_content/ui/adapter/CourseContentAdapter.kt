@@ -11,12 +11,14 @@ import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
 import org.stepic.droid.ui.custom.adapter_delegates.DelegateAdapter
 import org.stepik.android.presentation.personal_deadlines.model.PersonalDeadlinesState
+import org.stepik.android.view.course_content.ui.adapter.delegates.control_bar.CourseContentControlBarClickListener
 import org.stepik.android.view.course_content.ui.adapter.delegates.section.CourseContentSectionClickListener
 import org.stepik.android.view.course_content.ui.adapter.delegates.unit.CourseContentUnitPlaceholderDelegate
 
 class CourseContentAdapter(
     sectionClickListener: CourseContentSectionClickListener,
-    unitClickListener: CourseContentUnitClickListener
+    unitClickListener: CourseContentUnitClickListener,
+    controlBarClickListener: CourseContentControlBarClickListener
 ) : DelegateAdapter<CourseContentItem, DelegateViewHolder<CourseContentItem>>() {
     private val headers = mutableListOf(CourseContentItem.ControlBar(false, PersonalDeadlinesState.Idle))
 
@@ -32,7 +34,7 @@ class CourseContentAdapter(
         }
 
     init {
-        addDelegate(CourseContentControlBarDelegate(this))
+        addDelegate(CourseContentControlBarDelegate(this, controlBarClickListener))
         addDelegate(CourseContentSectionDelegate(this, sectionClickListener, sectionDownloadStatuses))
         addDelegate(CourseContentUnitDelegate(this, unitClickListener, unitDownloadStatuses))
         addDelegate(CourseContentUnitPlaceholderDelegate(this))
