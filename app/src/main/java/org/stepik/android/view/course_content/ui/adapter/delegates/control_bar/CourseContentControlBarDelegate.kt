@@ -26,6 +26,8 @@ class CourseContentControlBarDelegate(
     inner class ViewHolder(root: View) : DelegateViewHolder<CourseContentItem>(root) {
         private val controlBar = root.controlBar
 
+        private val controlBarHeight: Int
+
         init {
             controlBar.onClickListener = { id ->
                 val data = (itemData as? CourseContentItem.ControlBar)
@@ -39,6 +41,13 @@ class CourseContentControlBarDelegate(
                     true
                 }
             }
+
+            val attrs = context.theme.obtainStyledAttributes(intArrayOf(android.R.attr.actionBarSize))
+            try {
+                controlBarHeight = attrs.getDimension(0, 0F).toInt()
+            } finally {
+                attrs.recycle()
+            }
         }
 
         override fun onBind(data: CourseContentItem) {
@@ -51,7 +60,7 @@ class CourseContentControlBarDelegate(
                 }
 
             controlBar.changeItemVisibility(R.id.course_control_schedule, isScheduleVisible)
-            controlBar.setHeight(if (data.isEnabled) ViewGroup.LayoutParams.WRAP_CONTENT else 0)
+            controlBar.setHeight(if (data.isEnabled) controlBarHeight else 0)
         }
 
         private fun handleScheduleClick(data: CourseContentItem.ControlBar) {
