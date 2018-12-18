@@ -50,6 +50,7 @@ import org.stepic.droid.ui.custom_exo.PlaybackControlView
 import org.stepic.droid.ui.dialogs.*
 import org.stepic.droid.ui.fragments.StoreManagementFragment
 import org.stepik.android.view.injection.course.CourseComponent
+import org.stepik.android.view.injection.personal_deadlines.PersonalDeadlinesDataModule
 
 @AppSingleton
 @Component(dependencies = [StorageComponent::class],
@@ -64,7 +65,9 @@ import org.stepik.android.view.injection.course.CourseComponent
                 RecentActiveCourseModule::class,
                 NotificationsBadgesModule::class,
                 NetworkModule::class,
-                RemoteMessageHandlersModule::class
+                RemoteMessageHandlersModule::class,
+
+                PersonalDeadlinesDataModule::class
         ])
 interface AppCoreComponent {
 

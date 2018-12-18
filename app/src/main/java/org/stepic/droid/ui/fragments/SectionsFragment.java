@@ -515,13 +515,6 @@ public class SectionsFragment
         inflater.inflate(R.menu.section_unit_menu, menu);
 
         menu.findItem(R.id.menu_item_calendar).setVisible(isNeedShowCalendarInMenu);
-
-        boolean isNeedShowCreateDeadlines = isNeedShowDeadlinesInMenu && adapter != null && adapter.getDeadlinesRecord() == null;
-        boolean isNeedShowManageDeadlines = isNeedShowDeadlinesInMenu && adapter != null && adapter.getDeadlinesRecord() != null;
-
-        menu.findItem(R.id.menu_item_deadlines_create).setVisible(isNeedShowCreateDeadlines);
-        menu.findItem(R.id.menu_item_deadlines_edit).setVisible(isNeedShowManageDeadlines);
-        menu.findItem(R.id.menu_item_deadlines_remove).setVisible(isNeedShowManageDeadlines);
     }
 
     @Override
