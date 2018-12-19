@@ -31,7 +31,6 @@ import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.PopupHelper
 import org.stepic.droid.util.ProgressHelper
 import org.stepik.android.view.course_content.ui.adapter.CourseContentAdapter
-import org.stepik.android.view.course_content.ui.adapter.delegates.unit.CourseContentUnitClickListener
 import org.stepik.android.view.course_content.model.CourseContentItem
 import org.stepic.droid.util.argument
 import org.stepic.droid.util.setTextColor
@@ -40,7 +39,8 @@ import org.stepik.android.domain.personal_deadlines.model.LearningRate
 import org.stepik.android.presentation.course_content.CourseContentPresenter
 import org.stepik.android.presentation.course_content.CourseContentView
 import org.stepik.android.view.course_content.ui.adapter.delegates.control_bar.CourseContentControlBarClickListener
-import org.stepik.android.view.course_content.ui.adapter.delegates.section.CourseContentSectionClickListener
+import org.stepik.android.view.course_content.ui.fragment.listener.CourseContentSectionClickListenerImpl
+import org.stepik.android.view.course_content.ui.fragment.listener.CourseContentUnitClickListenerImpl
 import org.stepik.android.view.personal_deadlines.ui.dialogs.EditDeadlinesDialog
 import org.stepik.android.view.personal_deadlines.ui.dialogs.LearningRateDialog
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
@@ -109,23 +109,8 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
         with(courseContentRecycler) {
             contentAdapter =
                 CourseContentAdapter(
-                    sectionClickListener = object : CourseContentSectionClickListener {
-                        override fun onItemDownloadClicked(item: CourseContentItem.SectionItem) =
-                            courseContentPresenter.addSectionDownloadTask(item.section)
-
-                        override fun onItemRemoveClicked(item: CourseContentItem.SectionItem) =
-                            courseContentPresenter.removeSectionDownloadTask(item.section)
-                    },
-                    unitClickListener = object : CourseContentUnitClickListener {
-                        override fun onItemClicked(item: CourseContentItem.UnitItem) =
-                            screenManager.showSteps(activity, item.unit, item.lesson, item.section)
-
-                        override fun onItemDownloadClicked(item: CourseContentItem.UnitItem) =
-                            courseContentPresenter.addUnitDownloadTask(item.unit)
-
-                        override fun onItemRemoveClicked(item: CourseContentItem.UnitItem) =
-                            courseContentPresenter.removeUnitDownloadTask(item.unit)
-                    },
+                    sectionClickListener    = CourseContentSectionClickListenerImpl(courseContentPresenter),
+                    unitClickListener       = CourseContentUnitClickListenerImpl(activity, courseContentPresenter, screenManager),
                     controlBarClickListener = object : CourseContentControlBarClickListener {
                         override fun onCreateScheduleClicked() =
                             showPersonalDeadlinesLearningRateDialog()
