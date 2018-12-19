@@ -2,14 +2,20 @@ package org.stepic.droid.storage.migration
 
 import android.database.sqlite.SQLiteDatabase
 import org.stepic.droid.storage.structure.*
+import org.stepik.android.cache.user.structure.DbStructureUser
 import org.stepik.android.cache.video.structure.VideoDbScheme
 import org.stepik.android.cache.video.structure.VideoUrlDbScheme
 
 object MigrationFrom36To37 : Migration {
     override fun migrate(db: SQLiteDatabase) {
+        migrateUser(db)
         migrateLastStep(db)
         migrateCourses(db)
         migrateBlockVideos(db)
+    }
+
+    private fun migrateUser(db: SQLiteDatabase) {
+        DbStructureUser.createTable(db)
     }
 
     private fun migrateLastStep(db: SQLiteDatabase) {
