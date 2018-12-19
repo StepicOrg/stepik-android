@@ -5,6 +5,7 @@ import io.reactivex.Maybe
 import io.reactivex.Single
 import org.stepik.android.domain.personal_deadlines.model.DeadlinesWrapper
 import org.stepic.droid.features.deadlines.notifications.DeadlinesNotificationsManager
+import org.stepic.droid.util.doCompletableOnSuccess
 import org.stepik.android.domain.personal_deadlines.model.LearningRate
 import org.stepic.droid.web.storage.model.StorageRecord
 import org.stepik.android.domain.personal_deadlines.repository.DeadlinesBannerRepository
