@@ -5,6 +5,7 @@ import android.database.Cursor
 import org.stepic.droid.storage.dao.DaoBase
 import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepic.droid.util.getBoolean
+import org.stepic.droid.util.getDate
 import org.stepic.droid.util.getLong
 import org.stepic.droid.util.getString
 import org.stepik.android.cache.user.structure.DbStructureUser
@@ -56,7 +57,7 @@ constructor(
             avatar      = cursor.getString(DbStructureUser.Columns.AVATAR),
             isPrivate   = cursor.getBoolean(DbStructureUser.Columns.IS_PRIVATE),
             isOrganization = cursor.getBoolean(DbStructureUser.Columns.IS_ORGANIZATION),
-            joinDate    = cursor.getLong(DbStructureUser.Columns.JOIN_DATE).takeIf { it >= 0 }?.let(::Date)
+            joinDate    = cursor.getDate(DbStructureUser.Columns.JOIN_DATE)
         )
 
 

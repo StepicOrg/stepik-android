@@ -5,12 +5,8 @@ import android.database.Cursor
 
 import org.stepik.android.model.Lesson
 import org.stepic.droid.storage.operations.DatabaseOperations
-import org.stepic.droid.util.DbParseHelper
-import org.stepic.droid.util.getBoolean
-import org.stepic.droid.util.getLong
-import org.stepic.droid.util.getString
+import org.stepic.droid.util.*
 import org.stepik.android.cache.lesson.structure.DbStructureLesson
-import java.util.*
 
 import javax.inject.Inject
 
@@ -44,8 +40,8 @@ constructor(
             voteDelta = cursor.getLong(DbStructureLesson.Columns.VOTE_DELTA),
             language = cursor.getString(DbStructureLesson.Columns.LANGUAGE),
             isPublic = cursor.getBoolean(DbStructureLesson.Columns.IS_PUBLIC),
-            createDate = cursor.getLong(DbStructureLesson.Columns.CREATE_DATE).takeIf { it >= 0 }?.let(::Date),
-            updateDate = cursor.getLong(DbStructureLesson.Columns.UPDATE_DATE).takeIf { it >= 0 }?.let(::Date),
+            createDate = cursor.getDate(DbStructureLesson.Columns.CREATE_DATE),
+            updateDate = cursor.getDate(DbStructureLesson.Columns.UPDATE_DATE),
             learnersGroup = cursor.getString(DbStructureLesson.Columns.LEARNERS_GROUP),
             teachersGroup = cursor.getString(DbStructureLesson.Columns.TEACHERS_GROUP),
             timeToComplete = cursor.getLong(DbStructureLesson.Columns.TIME_TO_COMPLETE)
