@@ -3,6 +3,7 @@ package org.stepic.droid.storage.migration
 import android.database.sqlite.SQLiteDatabase
 import org.stepic.droid.storage.structure.*
 import org.stepik.android.cache.lesson.structure.DbStructureLesson
+import org.stepik.android.cache.section.structure.DbStructureSection
 import org.stepik.android.cache.unit.structure.DbStructureUnit
 import org.stepik.android.cache.user.structure.DbStructureUser
 import org.stepik.android.cache.video.structure.VideoDbScheme
@@ -16,6 +17,7 @@ object MigrationFrom36To37 : Migration {
         migrateBlockVideos(db)
         migrateLessons(db)
         migrateUnits(db)
+        migrateSections(db)
     }
 
     private fun migrateUser(db: SQLiteDatabase) {
@@ -112,6 +114,37 @@ object MigrationFrom36To37 : Migration {
                 -1,
                 -1
             FROM ${org.stepic.droid.storage.structure.DbStructureUnit.UNITS}
+        """.trimIndent())
+    }
+
+    private fun migrateSections(db: SQLiteDatabase) {
+        DbStructureSection.createTable(db)
+
+        db.execSQL("""
+            INSERT INTO ${DbStructureSection.TABLE_NAME}
+            SELECT
+                ${DbStructureSections.Column.SECTION_ID},
+                ${DbStructureSections.Column.COURSE},
+                ${DbStructureSections.Column.UNITS},
+                ${DbStructureSections.Column.POSITION},
+                ${DbStructureSections.Column.PROGRESS},
+                ${DbStructureSections.Column.TITLE},
+                ${DbStructureSections.Column.SLUG},
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
+                ${DbStructureSections.Column.GRADING_POLICY},
+                ${DbStructureSections.Column.IS_ACTIVE},
+                ${DbStructureSections.Column.TEST_SECTION},
+                ${DbStructureSections.Column.IS_EXAM},
+                ${DbStructureSections.Column.DISCOUNTING_POLICY},
+                ${DbStructureSections.Column.IS_REQUIREMENT_SATISFIED},
+                ${DbStructureSections.Column.REQUIRED_SECTION},
+                ${DbStructureSections.Column.REQUIRED_PERCENT}
+            FROM ${DbStructureSections.SECTIONS}
         """.trimIndent())
     }
 }
