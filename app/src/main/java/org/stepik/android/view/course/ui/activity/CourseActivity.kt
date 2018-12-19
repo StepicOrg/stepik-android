@@ -35,8 +35,10 @@ import org.stepik.android.model.Course
 import org.stepik.android.presentation.course.CoursePresenter
 import org.stepik.android.presentation.course.CourseView
 import org.stepik.android.presentation.course.model.EnrollmentError
+import org.stepik.android.view.course.listener.CourseFragmentPageChangeListener
 import org.stepik.android.view.course.routing.getCourseIdFromDeepLink
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
+import org.stepik.android.view.ui.listener.FragmentViewPagerScrollStateListener
 import uk.co.chrisjenx.calligraphy.TypefaceUtils
 import javax.inject.Inject
 
@@ -149,7 +151,10 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         val lightFont = TypefaceUtils.load(assets, fontsProvider.provideFontPath(FontType.light))
         val regularFont = TypefaceUtils.load(assets, fontsProvider.provideFontPath(FontType.regular))
 
-        coursePager.adapter = CoursePagerAdapter(courseId, this, supportFragmentManager)
+        val coursePagerAdapter = CoursePagerAdapter(courseId, this, supportFragmentManager)
+        coursePager.adapter = coursePagerAdapter
+        coursePager.addOnPageChangeListener(CourseFragmentPageChangeListener(coursePager, coursePagerAdapter))
+
         courseTabs.setupWithViewPager(coursePager)
         courseTabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab?) {}
