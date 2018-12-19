@@ -75,8 +75,6 @@ class UnitAdapter(
             textScore.changeVisibility(needShowLearningProgress)
             progressScore.changeVisibility(needShowLearningProgress)
 
-            viewedItem.changeVisibility(unit.is_viewed_custom)
-
             // download progress
             loadButton.hideAllChildren()
             val downloadProgressStatus: DownloadProgress.Status? = downloadProgresses[unit.id]

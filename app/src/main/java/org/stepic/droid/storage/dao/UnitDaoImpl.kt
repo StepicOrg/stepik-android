@@ -4,10 +4,8 @@ import android.content.ContentValues
 import android.database.Cursor
 import org.stepic.droid.jsonHelpers.adapters.UTCDateAdapter
 import org.stepic.droid.storage.operations.DatabaseOperations
-import org.stepic.droid.storage.structure.DbStructureProgress
 import org.stepic.droid.storage.structure.DbStructureUnit
 import org.stepic.droid.util.DbParseHelper
-import org.stepik.android.model.Progress
 import org.stepik.android.model.Unit
 import javax.inject.Inject
 
@@ -15,9 +13,14 @@ class UnitDaoImpl
 @Inject
 constructor(
         databaseOperations: DatabaseOperations,
-        private val progressDao: IDao<Progress>,
         private val dateAdapter: UTCDateAdapter
 ) : DaoBase<Unit>(databaseOperations) {
+    public override fun getDbName() = DbStructureUnit.UNITS
+
+    public override fun getDefaultPrimaryColumn() = DbStructureUnit.Column.UNIT_ID
+
+    public override fun getDefaultPrimaryValue(persistentObject: Unit): String =
+        persistentObject.id.toString()
 
     public override fun parsePersistentObject(cursor: Cursor): Unit {
         val columnIndexUnitId = cursor.getColumnIndex(DbStructureUnit.Column.UNIT_ID)
@@ -45,8 +48,6 @@ constructor(
         )
     }
 
-    public override fun getDbName() = DbStructureUnit.UNITS
-
     public override fun getContentValues(unit: Unit): ContentValues {
         val values = ContentValues()
         values.put(DbStructureUnit.Column.UNIT_ID, unit.id)
@@ -69,39 +70,5 @@ constructor(
         values.put(DbStructureUnit.Column.CREATE_DATE, dateAdapter.dateToString(unit.createDate))
         values.put(DbStructureUnit.Column.UPDATE_DATE, dateAdapter.dateToString(unit.updateDate))
         return values
-    }
-
-    public override fun getDefaultPrimaryColumn() = DbStructureUnit.Column.UNIT_ID
-
-    public override fun getDefaultPrimaryValue(persistentObject: Unit): String =
-            persistentObject.id.toString()
-
-    override fun get(whereColumnName: String, whereValue: String): Unit? {
-        val unit = super.get(whereColumnName, whereValue)
-        return determinePassed(unit)
-    }
-
-    override fun getAllWithQuery(query: String, whereArgs: Array<String>?): List<Unit> {
-        val unitList = super.getAllWithQuery(query, whereArgs)
-        for (unitItem in unitList) {
-            determinePassed(unitItem)
-        }
-        return unitList
-    }
-
-    private fun determinePassed(unit: Unit?): Unit? {
-        var isPassed = false
-        if (unit != null) {
-            val progressId = unit.progress
-            var progress: Progress? = null
-            if (progressId != null) {
-                progress = progressDao.get(DbStructureProgress.Column.ID, progressId)
-            }
-            if (progress != null)
-                isPassed = progress.isPassed
-            unit.is_viewed_custom = isPassed
-        }
-
-        return unit
     }
 }

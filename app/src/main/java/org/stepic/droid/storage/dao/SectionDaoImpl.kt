@@ -19,6 +19,14 @@ constructor(
         databaseOperations: DatabaseOperations,
         private val dateAdapter: UTCDateAdapter
 ) : DaoBase<Section>(databaseOperations) {
+    public override fun getDbName(): String =
+        DbStructureSections.SECTIONS
+
+    public override fun getDefaultPrimaryColumn(): String =
+        DbStructureSections.Column.SECTION_ID
+
+    public override fun getDefaultPrimaryValue(persistentObject: Section): String =
+        persistentObject.id.toString()
 
     public override fun parsePersistentObject(cursor: Cursor): Section {
         val columnIndexId = cursor.getColumnIndex(DbStructureSections.Column.SECTION_ID)
@@ -45,29 +53,27 @@ constructor(
         val discountingPolicyType = DiscountingPolicyType.values().getOrNull(typeId)
 
         return Section(
-                id = cursor.getLong(columnIndexId),
-                title = cursor.getString(columnIndexTitle),
-                slug = cursor.getString(columnIndexSlug),
-                isActive = cursor.getInt(columnIndexIsActive) > 0,
-                beginDate = dateAdapter.stringToDate(cursor.getString(columnIndexBeginDate)),
-                softDeadline = dateAdapter.stringToDate(cursor.getString(columnIndexSoftDeadline)),
-                hardDeadline = dateAdapter.stringToDate(cursor.getString(columnIndexHardDeadline)),
-                course = cursor.getLong(columnIndexCourseId),
-                position = cursor.getInt(columnIndexPosition),
-                units = units,
-                discountingPolicy = discountingPolicyType,
-                progress = cursor.getString(indexProgress),
+            id = cursor.getLong(columnIndexId),
+            title = cursor.getString(columnIndexTitle),
+            slug = cursor.getString(columnIndexSlug),
+            isActive = cursor.getInt(columnIndexIsActive) > 0,
+            beginDate = dateAdapter.stringToDate(cursor.getString(columnIndexBeginDate)),
+            softDeadline = dateAdapter.stringToDate(cursor.getString(columnIndexSoftDeadline)),
+            hardDeadline = dateAdapter.stringToDate(cursor.getString(columnIndexHardDeadline)),
+            course = cursor.getLong(columnIndexCourseId),
+            position = cursor.getInt(columnIndexPosition),
+            units = units,
+            discountingPolicy = discountingPolicyType,
+            progress = cursor.getString(indexProgress),
 
-                actions = actions,
+            actions = actions,
 
-                isExam = cursor.getInt(indexIsExam) > 0,
-                isRequirementSatisfied = cursor.getInt(indexIsRequirementSatisfied) > 0,
-                requiredSection = cursor.getLong(indexRequiredSection),
-                requiredPercent = cursor.getInt(indexRequiredPercent)
+            isExam = cursor.getInt(indexIsExam) > 0,
+            isRequirementSatisfied = cursor.getInt(indexIsRequirementSatisfied) > 0,
+            requiredSection = cursor.getLong(indexRequiredSection),
+            requiredPercent = cursor.getInt(indexRequiredPercent)
         )
     }
-
-    public override fun getDbName(): String = DbStructureSections.SECTIONS
 
     public override fun getContentValues(section: Section): ContentValues {
         val values = ContentValues()
@@ -95,10 +101,4 @@ constructor(
 
         return values
     }
-
-
-    public override fun getDefaultPrimaryColumn(): String = DbStructureSections.Column.SECTION_ID
-
-    public override fun getDefaultPrimaryValue(persistentObject: Section): String =
-            persistentObject.id.toString()
 }

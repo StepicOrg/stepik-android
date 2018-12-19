@@ -375,7 +375,6 @@ public class UnitsFragment extends FragmentBase implements
         Unit unit = unitPairPosition.first;
         int position = unitPairPosition.second;
 
-        unit.set_viewed_custom(true);
         adapter.notifyItemChanged(position);
     }
 

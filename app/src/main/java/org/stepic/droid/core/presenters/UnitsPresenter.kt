@@ -91,7 +91,6 @@ constructor(
                         val progressId = unit.progress
                         if (progressId != null) {
                             val progress = databaseFacade.getProgressById(progressId)
-                            unit.is_viewed_custom = progress?.isPassed ?: false
                             if (progress != null) {
                                 unitProgressMapLocal.put(unit.id, progress)
                             }
@@ -208,7 +207,6 @@ constructor(
                         }
 
                         for (unitItem in backgroundUnits) {
-                            unitItem.is_viewed_custom = progressMap[unitItem.id]?.isPassed ?: false
                             databaseFacade.addUnit(unitItem)
                         }
 
