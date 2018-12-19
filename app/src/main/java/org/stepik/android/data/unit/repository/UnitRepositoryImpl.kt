@@ -28,16 +28,16 @@ constructor(
                 remoteSource.onErrorResumeNext(cacheSource)
 
             DataSourceType.CACHE ->
-                cacheSource.flatMap { cachedSections ->
-                    val ids = (unitIds.toList() - cachedSections.map(Unit::id)).toLongArray()
+                cacheSource.flatMap { cachedUnits ->
+                    val ids = (unitIds.toList() - cachedUnits.map(Unit::id)).toLongArray()
                     unitRemoteDataSource
                         .getUnits(*ids)
                         .doCompletableOnSuccess(unitCacheDataSource::saveUnits)
-                        .map { remoteSections -> cachedSections + remoteSections }
+                        .map { remoteUnits -> cachedUnits + remoteUnits }
                 }
 
             else ->
                 throw IllegalArgumentException("Unsupported source type = $primarySourceType")
-        }.map { sections -> sections.sortedBy { unitIds.indexOf(it.id) } }
+        }.map { units -> units.sortedBy { unitIds.indexOf(it.id) } }
     }
 }
