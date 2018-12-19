@@ -2,6 +2,7 @@ package org.stepic.droid.storage.migration
 
 import android.database.sqlite.SQLiteDatabase
 import org.stepic.droid.storage.structure.*
+import org.stepik.android.cache.lesson.structure.DbStructureLesson
 import org.stepik.android.cache.user.structure.DbStructureUser
 import org.stepik.android.cache.video.structure.VideoDbScheme
 import org.stepik.android.cache.video.structure.VideoUrlDbScheme
@@ -12,6 +13,7 @@ object MigrationFrom36To37 : Migration {
         migrateLastStep(db)
         migrateCourses(db)
         migrateBlockVideos(db)
+        migrateLessons(db)
     }
 
     private fun migrateUser(db: SQLiteDatabase) {
@@ -50,6 +52,35 @@ object MigrationFrom36To37 : Migration {
                 ${DbStructureBlock.Column.EXTERNAL_VIDEO_DURATION}
             FROM ${DbStructureBlock.BLOCKS}
             WHERE ${DbStructureBlock.BLOCKS}.${DbStructureBlock.Column.EXTERNAL_VIDEO_ID} > 0
+        """.trimIndent())
+    }
+
+    private fun migrateLessons(db: SQLiteDatabase) {
+        DbStructureLesson.createTable(db)
+
+        db.execSQL("""
+            INSERT INTO ${DbStructureLesson.TABLE_NAME}
+            SELECT
+                ${org.stepic.droid.storage.structure.DbStructureLesson.Column.LESSON_ID},
+                ${org.stepic.droid.storage.structure.DbStructureLesson.Column.TITLE},
+                ${org.stepic.droid.storage.structure.DbStructureLesson.Column.SLUG},
+                ${org.stepic.droid.storage.structure.DbStructureLesson.Column.COVER_URL},
+                ${org.stepic.droid.storage.structure.DbStructureLesson.Column.STEPS},
+                ${org.stepic.droid.storage.structure.DbStructureLesson.Column.IS_FEATURED},
+                ${org.stepic.droid.storage.structure.DbStructureLesson.Column.PROGRESS},
+                ${org.stepic.droid.storage.structure.DbStructureLesson.Column.OWNER},
+                ${org.stepic.droid.storage.structure.DbStructureLesson.Column.SUBSCRIPTIONS},
+                ${org.stepic.droid.storage.structure.DbStructureLesson.Column.VIEWED_BY},
+                ${org.stepic.droid.storage.structure.DbStructureLesson.Column.PASSED_BY},
+                ${org.stepic.droid.storage.structure.DbStructureLesson.Column.VOTE_DELTA},
+                NULL,
+                ${org.stepic.droid.storage.structure.DbStructureLesson.Column.IS_PUBLIC},
+                -1,
+                -1,
+                ${org.stepic.droid.storage.structure.DbStructureLesson.Column.LEARNERS_GROUP},
+                ${org.stepic.droid.storage.structure.DbStructureLesson.Column.TEACHER_GROUP},
+                0
+            FROM ${org.stepic.droid.storage.structure.DbStructureLesson.LESSONS}
         """.trimIndent())
     }
 }

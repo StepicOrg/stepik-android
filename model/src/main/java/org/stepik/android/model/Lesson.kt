@@ -28,14 +28,14 @@ class Lesson(
     @SerializedName("progress")
     override val progress: String? = null,
     @SerializedName("owner")
-    val owner: Int = 0,
+    val owner: Long = 0,
     @SerializedName("subscriptions")
     val subscriptions: Array<String>? = null,
 
     @SerializedName("viewed_by")
-    val viewedBy: Int = 0,
+    val viewedBy: Long = 0,
     @SerializedName("passed_by")
-    val passedBy: Int = 0,
+    val passedBy: Long = 0,
 
     @SerializedName("vote_delta")
     val voteDelta: Long = 0,
@@ -70,10 +70,10 @@ class Lesson(
         dest.writeLongArray(this.steps)
         dest.writeBoolean(isFeatured)
         dest.writeString(this.progress)
-        dest.writeInt(this.owner)
+        dest.writeLong(this.owner)
         dest.writeStringArray(this.subscriptions)
-        dest.writeInt(this.viewedBy)
-        dest.writeInt(this.passedBy)
+        dest.writeLong(this.viewedBy)
+        dest.writeLong(this.passedBy)
         dest.writeLong(this.voteDelta)
         dest.writeString(this.language)
         dest.writeBoolean(isPublic)
@@ -93,10 +93,10 @@ class Lesson(
                 parcel.createLongArray() ?: longArrayOf(),
                 parcel.readBoolean(),
                 parcel.readString(),
-                parcel.readInt(),
+                parcel.readLong(),
                 parcel.createStringArray(),
-                parcel.readInt(),
-                parcel.readInt(),
+                parcel.readLong(),
+                parcel.readLong(),
                 parcel.readLong(),
                 parcel.readString(),
                 parcel.readBoolean(),
