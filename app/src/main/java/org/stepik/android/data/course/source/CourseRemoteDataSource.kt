@@ -4,5 +4,5 @@ import io.reactivex.Single
 import org.stepik.android.model.Course
 
 interface CourseRemoteDataSource {
-    fun getCourses(vararg ids: Long): Single<List<Course>>
+    fun getCourses(vararg courseIds: Long): Single<List<Course>>
 }

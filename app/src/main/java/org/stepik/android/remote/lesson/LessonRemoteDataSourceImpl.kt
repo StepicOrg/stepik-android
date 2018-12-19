@@ -1,10 +1,12 @@
 package org.stepik.android.remote.lesson
 
 import io.reactivex.Single
+import io.reactivex.functions.Function
 import org.stepic.droid.web.Api
 import org.stepic.droid.web.LessonStepicResponse
 import org.stepik.android.data.lesson.source.LessonRemoteDataSource
 import org.stepik.android.model.Lesson
+import org.stepik.android.remote.base.chunkedSingleMap
 import javax.inject.Inject
 
 class LessonRemoteDataSourceImpl
@@ -12,7 +14,13 @@ class LessonRemoteDataSourceImpl
 constructor(
     private val api: Api
 ) : LessonRemoteDataSource {
+    private val lessonResponseMapper =
+        Function<LessonStepicResponse, List<Lesson>>(LessonStepicResponse::lessons)
+
     override fun getLessons(vararg lessonIds: Long): Single<List<Lesson>> =
-        api.getLessonsRx(lessonIds)
-            .map(LessonStepicResponse::lessons)
+        lessonIds
+            .chunkedSingleMap { ids ->
+                api.getLessonsRx(ids)
+                    .map(lessonResponseMapper)
+            }
 }

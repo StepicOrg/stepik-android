@@ -634,6 +634,11 @@ public class ApiImpl implements Api {
     }
 
     @Override
+    public Single<CoursesMetaResponse> getCoursesReactive(@NotNull long[] ids) {
+        return loggedService.getCoursesReactive(ids);
+    }
+
+    @Override
     public Call<AttemptResponse> createNewAttempt(long stepId) {
         AttemptRequest attemptRequest = new AttemptRequest(stepId);
         return loggedService.createNewAttempt(attemptRequest);
