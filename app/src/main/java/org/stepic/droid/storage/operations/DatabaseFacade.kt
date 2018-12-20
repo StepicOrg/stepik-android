@@ -17,6 +17,9 @@ import org.stepic.droid.storage.structure.*
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DbParseHelper
 import org.stepic.droid.web.ViewAssignment
+import org.stepik.android.cache.section.structure.DbStructureSection
+import org.stepik.android.cache.unit.structure.DbStructureUnit
+import org.stepik.android.cache.lesson.structure.DbStructureLesson
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.*
 import org.stepik.android.model.Unit
@@ -78,7 +81,7 @@ class DatabaseFacade
     @Deprecated("because of step has 0..* assignments.")
     fun getAssignmentIdByStepId(stepId: Long): Long {
         val assignment = assignmentDao.get(DbStructureAssignment.Column.STEP_ID, stepId.toString())
-        return assignment?.id ?: -1;
+        return assignment?.id ?: -1
     }
 
     fun getStepById(stepId: Long) = stepDao.get(DbStructureStep.Column.STEP_ID, stepId.toString())
@@ -94,9 +97,9 @@ class DatabaseFacade
         }
     }
 
-    fun getLessonById(lessonId: Long) = lessonDao.get(DbStructureLesson.Column.LESSON_ID, lessonId.toString())
+    fun getLessonById(lessonId: Long) = lessonDao.get(DbStructureLesson.Columns.ID, lessonId.toString())
 
-    fun getSectionById(sectionId: Long) = sectionDao.get(DbStructureSections.Column.SECTION_ID, sectionId.toString())
+    fun getSectionById(sectionId: Long) = sectionDao.get(DbStructureSection.Columns.ID, sectionId.toString())
 
     fun getCourseById(courseId: Long) = courseDao.get(DbStructureCourse.Columns.ID, courseId.toString())
 
@@ -118,9 +121,9 @@ class DatabaseFacade
     }
 
     @Deprecated("Lesson can have a lot of units", ReplaceWith("try to get unit from section"))
-    fun getUnitByLessonId(lessonId: Long) = unitDao.get(DbStructureUnit.Column.LESSON, lessonId.toString())
+    fun getUnitByLessonId(lessonId: Long) = unitDao.get(DbStructureUnit.Columns.LESSON, lessonId.toString())
 
-    fun getUnitById(unitId: Long) = unitDao.get(DbStructureUnit.Column.UNIT_ID, unitId.toString())
+    fun getUnitById(unitId: Long) = unitDao.get(DbStructureUnit.Columns.ID, unitId.toString())
 
     fun getAllCourses(courseListType: CourseListType) =
         courseListDao.getCourseList(courseListType)
@@ -145,14 +148,14 @@ class DatabaseFacade
 
     fun addStep(step: Step) = stepDao.insertOrUpdate(step)
 
-    fun getAllSectionsOfCourse(course: Course) = sectionDao.getAll(DbStructureSections.Column.COURSE, course.id.toString())
+    fun getAllSectionsOfCourse(course: Course) = sectionDao.getAll(DbStructureSection.Columns.COURSE, course.id.toString())
 
-    fun getAllUnitsOfSection(sectionId: Long) = unitDao.getAll(DbStructureUnit.Column.SECTION, sectionId.toString())
+    fun getAllUnitsOfSection(sectionId: Long) = unitDao.getAll(DbStructureUnit.Columns.SECTION, sectionId.toString())
 
     fun getStepsOfLesson(lessonId: Long) = stepDao.getAll(DbStructureStep.Column.LESSON_ID, lessonId.toString())
 
     fun getLessonOfUnit(unit: Unit?): Lesson? = unit?.let {
-        lessonDao.get(DbStructureLesson.Column.LESSON_ID, it.lesson.toString())
+        lessonDao.get(DbStructureLesson.Columns.ID, it.lesson.toString())
     }
 
     fun addUnit(unit: Unit) =
@@ -242,7 +245,7 @@ class DatabaseFacade
         val stringIds = DbParseHelper.parseLongArrayToString(lessonIds, AppConstants.COMMA)
         return if (stringIds != null) {
             lessonDao
-                    .getAllInRange(DbStructureLesson.Column.LESSON_ID, stringIds)
+                    .getAllInRange(DbStructureLesson.Columns.ID, stringIds)
         } else {
             emptyList()
         }
@@ -285,7 +288,7 @@ class DatabaseFacade
     }
 
     fun removeSectionsOfCourse(courseId: Long) {
-        sectionDao.remove(DbStructureSections.Column.COURSE, courseId.toString());
+        sectionDao.remove(DbStructureSection.Columns.COURSE, courseId.toString())
     }
 
     fun addTimestamp(videoTimestamp: VideoTimestamp) {
@@ -304,7 +307,7 @@ class DatabaseFacade
 
     fun getUnitsByIds(keys: List<Long>): List<Unit> {
         DbParseHelper.parseLongListToString(keys, AppConstants.COMMA)?.let {
-            return unitDao.getAllInRange(DbStructureUnit.Column.UNIT_ID, it)
+            return unitDao.getAllInRange(DbStructureUnit.Columns.ID, it)
         }
 
         return emptyList()
@@ -312,7 +315,7 @@ class DatabaseFacade
 
     fun getSectionsByIds(keys: LongArray): List<Section> {
         DbParseHelper.parseLongArrayToString(keys, AppConstants.COMMA)?.let {
-            return sectionDao.getAllInRange(DbStructureSections.Column.SECTION_ID, it)
+            return sectionDao.getAllInRange(DbStructureSection.Columns.ID, it)
         }
 
         return emptyList()

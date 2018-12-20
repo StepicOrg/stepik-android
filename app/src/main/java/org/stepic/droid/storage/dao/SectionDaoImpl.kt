@@ -7,7 +7,6 @@ import org.stepik.android.model.Actions
 import org.stepik.android.model.DiscountingPolicyType
 import org.stepik.android.model.Section
 import org.stepic.droid.storage.operations.DatabaseOperations
-import org.stepic.droid.storage.structure.DbStructureSections
 import org.stepic.droid.util.*
 import org.stepik.android.cache.section.structure.DbStructureSection
 
@@ -19,10 +18,10 @@ constructor(
     databaseOperations: DatabaseOperations
 ) : DaoBase<Section>(databaseOperations) {
     public override fun getDbName(): String =
-        DbStructureSections.SECTIONS
+        DbStructureSection.TABLE_NAME
 
     public override fun getDefaultPrimaryColumn(): String =
-        DbStructureSections.Column.SECTION_ID
+        DbStructureSection.Columns.ID
 
     public override fun getDefaultPrimaryValue(persistentObject: Section): String =
         persistentObject.id.toString()
