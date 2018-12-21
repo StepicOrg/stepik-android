@@ -37,6 +37,12 @@ class CourseContentControlBarDelegate(
                     when(id) {
                         R.id.course_control_schedule ->
                             handleScheduleClick(data)
+
+                        R.id.course_control_download_all -> {
+                            if (data.course != null) {
+                                controlBarClickListener.onDownloadAllClicked(data.course)
+                            }
+                        }
                     }
                     true
                 }
@@ -60,6 +66,7 @@ class CourseContentControlBarDelegate(
                 }
 
             controlBar.changeItemVisibility(R.id.course_control_schedule, isScheduleVisible)
+            controlBar.changeItemVisibility(R.id.course_control_download_all, data.course != null)
             controlBar.setHeight(if (data.isEnabled) controlBarHeight else 0)
         }
 

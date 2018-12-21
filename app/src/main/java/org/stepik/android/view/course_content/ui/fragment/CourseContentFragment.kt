@@ -128,6 +128,9 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
 
                         override fun onRemoveScheduleClicked(record: StorageRecord<DeadlinesWrapper>) =
                             courseContentPresenter.removeDeadlines()
+
+                        override fun onDownloadAllClicked(course: Course) =
+                            courseContentPresenter.addCourseDownloadTask(course)
                     }
                 )
 
@@ -179,7 +182,7 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
         viewStateDelegate.switchState(state)
         if (state is CourseContentView.State.CourseContentLoaded) {
             contentAdapter.items = state.courseContent
-            contentAdapter.setControlBar(CourseContentItem.ControlBar(state.course.enrollment > 0, state.personalDeadlinesState))
+            contentAdapter.setControlBar(CourseContentItem.ControlBar(state.course.enrollment > 0, state.personalDeadlinesState, state.course))
         }
     }
 
@@ -306,7 +309,10 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
                         ?: return
 
                     val course: Course? = intent
-                        .getParcelableExtra(VideoQualityDetailedDialog.COURSE_KEY) // todo add course load task
+                        .getParcelableExtra(VideoQualityDetailedDialog.COURSE_KEY)
+                    if (course != null) {
+                        return courseContentPresenter.addCourseDownloadTask(course, videoQuality)
+                    }
 
                     val section: Section? = intent
                         .getParcelableExtra(VideoQualityDetailedDialog.SECTION_KEY)

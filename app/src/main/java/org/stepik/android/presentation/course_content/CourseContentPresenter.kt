@@ -19,6 +19,7 @@ import org.stepik.android.domain.network.exception.NetworkRequirementsNotSatisfi
 import org.stepik.android.domain.personal_deadlines.interactor.DeadlinesInteractor
 import org.stepik.android.domain.personal_deadlines.model.LearningRate
 import org.stepik.android.domain.settings.interactor.VideoQualityInteractor
+import org.stepik.android.model.Course
 import org.stepik.android.model.Section
 import org.stepik.android.model.Unit
 import org.stepik.android.presentation.base.PresenterBase
@@ -177,6 +178,19 @@ constructor(
     /**
      * Download tasks
      */
+    fun addCourseDownloadTask(course: Course, videoQuality: String? = null) {
+        val quality = videoQuality
+            ?: videoQualityInteractor.getVideoQuality()
+            ?: return view?.showVideoQualityDialog(course = course) ?: kotlin.Unit
+
+        (state as? CourseContentView.State.CourseContentLoaded)
+            ?.courseContent
+            ?.filterIsInstance<CourseContentItem.SectionItem>()
+            ?.forEach { sectionItem ->
+                addSectionDownloadTask(sectionItem.section, quality)
+            }
+    }
+
     fun addUnitDownloadTask(unit: Unit, videoQuality: String? = null) {
         if (unit.id in pendingUnits) return
 
