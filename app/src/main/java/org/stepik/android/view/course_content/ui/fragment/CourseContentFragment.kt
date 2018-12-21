@@ -29,6 +29,7 @@ import org.stepik.android.domain.personal_deadlines.model.Deadline
 import org.stepik.android.domain.personal_deadlines.model.DeadlinesWrapper
 import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
+import org.stepic.droid.ui.dialogs.VideoQualityDetailedDialog
 import org.stepic.droid.ui.util.PopupHelper
 import org.stepic.droid.util.ProgressHelper
 import org.stepik.android.view.course_content.ui.adapter.CourseContentAdapter
@@ -37,6 +38,9 @@ import org.stepic.droid.util.argument
 import org.stepic.droid.util.setTextColor
 import org.stepic.droid.web.storage.model.StorageRecord
 import org.stepik.android.domain.personal_deadlines.model.LearningRate
+import org.stepik.android.model.Course
+import org.stepik.android.model.Section
+import org.stepik.android.model.Unit
 import org.stepik.android.presentation.course_content.CourseContentPresenter
 import org.stepik.android.presentation.course_content.CourseContentView
 import org.stepik.android.view.course_content.ui.adapter.delegates.control_bar.CourseContentControlBarClickListener
@@ -213,6 +217,17 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
             .show()
     }
 
+    override fun showVideoQualityDialog(course: Course?, section: Section?, unit: Unit?) {
+        val supportFragmentManager = activity
+            ?.supportFragmentManager
+            ?.takeIf { it.findFragmentByTag(VideoQualityDetailedDialog.TAG) == null }
+            ?: return
+
+        val dialog = VideoQualityDetailedDialog.newInstance(course, section, unit)
+        dialog.setTargetFragment(this, VideoQualityDetailedDialog.VIDEO_QUALITY_REQUEST_CODE)
+        dialog.show(supportFragmentManager, VideoQualityDetailedDialog.TAG)
+    }
+
     /**
      * Personal deadlines
      */
@@ -283,6 +298,28 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
                 data?.takeIf { resultCode == Activity.RESULT_OK }
                     ?.getParcelableArrayListExtra<Deadline>(EditDeadlinesDialog.KEY_DEADLINES)
                     ?.let(courseContentPresenter::updatePersonalDeadlines)
+
+            VideoQualityDetailedDialog.VIDEO_QUALITY_REQUEST_CODE ->
+                data?.let { intent ->
+                    val videoQuality = intent
+                        .getStringExtra(VideoQualityDetailedDialog.VIDEO_QUALITY)
+                        ?: return
+
+                    val course: Course? = intent
+                        .getParcelableExtra(VideoQualityDetailedDialog.COURSE_KEY) // todo add course load task
+
+                    val section: Section? = intent
+                        .getParcelableExtra(VideoQualityDetailedDialog.SECTION_KEY)
+                    if (section != null) {
+                        return courseContentPresenter.addSectionDownloadTask(section, videoQuality)
+                    }
+
+                    val unit: Unit? = intent
+                        .getParcelableExtra(VideoQualityDetailedDialog.UNIT_KEY)
+                    if (unit != null) {
+                        return courseContentPresenter.addUnitDownloadTask(unit, videoQuality)
+                    }
+                }
 
             else ->
                 super.onActivityResult(requestCode, resultCode, data)

@@ -852,10 +852,10 @@ public class SectionsFragment
             adapter.requestClickDeleteSilence(position);
         }
 
-        if (requestCode == VideoQualityDetailedDialog.VIDEO_QUALITY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            int position = data.getIntExtra(VideoQualityDetailedDialog.POSITION_KEY, -1);
-            adapter.loadSection(position);
-        }
+//        if (requestCode == VideoQualityDetailedDialog.VIDEO_QUALITY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+//            int position = data.getIntExtra(VideoQualityDetailedDialog.POSITION_KEY, -1);
+//            adapter.loadSection(position);
+//        }
     }
 
     @Override

@@ -300,10 +300,10 @@ public class UnitsFragment extends FragmentBase implements
             unitsPresenter.removeDownloadTask(adapter.getUnits().get(position));
         }
 
-        if (requestCode == VideoQualityDetailedDialog.VIDEO_QUALITY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            int position = data.getIntExtra(VideoQualityDetailedDialog.POSITION_KEY, -1);
-            determineNetworkTypeAndLoad(position);
-        }
+//        if (requestCode == VideoQualityDetailedDialog.VIDEO_QUALITY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+//            int position = data.getIntExtra(VideoQualityDetailedDialog.POSITION_KEY, -1);
+//            determineNetworkTypeAndLoad(position);
+//        }
     }
 
     @Override
@@ -400,8 +400,8 @@ public class UnitsFragment extends FragmentBase implements
 
     @Override
     public void showVideoQualityDialog(int position) {
-        VideoQualityDetailedDialog dialogFragment = VideoQualityDetailedDialog.Companion.newInstance(position);
-        dialogFragment.setTargetFragment(this, VideoQualityDetailedDialog.VIDEO_QUALITY_REQUEST_CODE);
-        dialogFragment.show(getFragmentManager(), VideoQualityDetailedDialog.TAG);
+//        VideoQualityDetailedDialog dialogFragment = VideoQualityDetailedDialog.Companion.newInstance(position);
+//        dialogFragment.setTargetFragment(this, VideoQualityDetailedDialog.VIDEO_QUALITY_REQUEST_CODE);
+//        dialogFragment.show(getFragmentManager(), VideoQualityDetailedDialog.TAG);
     }
 }

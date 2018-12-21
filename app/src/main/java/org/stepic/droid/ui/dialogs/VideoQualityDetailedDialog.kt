@@ -14,21 +14,32 @@ import org.stepic.droid.base.App
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.preferences.UserPreferences
-import org.stepic.droid.util.argument
+import org.stepik.android.model.Course
+import org.stepik.android.model.Section
+import org.stepik.android.model.Unit
 import timber.log.Timber
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
 
 class VideoQualityDetailedDialog : VideoQualityDialogBase() {
-
     companion object {
         const val TAG = "VideoQualityDetailedDialog"
         const val VIDEO_QUALITY_REQUEST_CODE = 9048
-        const val POSITION_KEY = "position"
 
-        fun newInstance(position: Int): VideoQualityDetailedDialog {
+        const val UNIT_KEY = "unit"
+        const val SECTION_KEY = "section"
+        const val COURSE_KEY = "course"
+
+        const val VIDEO_QUALITY = "video_quality"
+
+        fun newInstance(course: Course? = null, section: Section? = null, unit: Unit? = null): VideoQualityDetailedDialog {
             val dialog = VideoQualityDetailedDialog()
-            dialog.position = position
+            dialog.arguments = Bundle(1)
+                .apply {
+                    course?.let { putParcelable(COURSE_KEY, it) }
+                    section?.let { putParcelable(SECTION_KEY, it) }
+                    unit?.let { putParcelable(UNIT_KEY, it) }
+                }
             return dialog
         }
     }
@@ -47,8 +58,6 @@ class VideoQualityDetailedDialog : VideoQualityDialogBase() {
 
     @Inject
     lateinit var sharedPreferencesHelper: SharedPreferenceHelper
-
-    private var position by argument<Int>()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         init()
@@ -75,8 +84,17 @@ class VideoQualityDetailedDialog : VideoQualityDialogBase() {
                     threadPoolExecutor.execute {
                         userPreferences.storeQualityVideo(qualityString)
                         mainHandler.post {
-                            targetFragment?.onActivityResult(VIDEO_QUALITY_REQUEST_CODE, Activity.RESULT_OK,
-                                    Intent().putExtra(POSITION_KEY, position))
+                            val args = arguments
+                                ?: return@post
+
+                            targetFragment
+                                ?.onActivityResult(
+                                    VIDEO_QUALITY_REQUEST_CODE,
+                                    Activity.RESULT_OK,
+                                    Intent()
+                                        .putExtras(args)
+                                        .putExtra(VIDEO_QUALITY, qualityString)
+                                )
                         }
                     }
 

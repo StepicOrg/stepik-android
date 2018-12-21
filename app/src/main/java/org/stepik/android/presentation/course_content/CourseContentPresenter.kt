@@ -18,6 +18,7 @@ import org.stepik.android.domain.course_content.interactor.CourseContentInteract
 import org.stepik.android.domain.network.exception.NetworkRequirementsNotSatisfiedException
 import org.stepik.android.domain.personal_deadlines.interactor.DeadlinesInteractor
 import org.stepik.android.domain.personal_deadlines.model.LearningRate
+import org.stepik.android.domain.settings.interactor.VideoQualityInteractor
 import org.stepik.android.model.Section
 import org.stepik.android.model.Unit
 import org.stepik.android.presentation.base.PresenterBase
@@ -39,6 +40,8 @@ constructor(
 
     private val unitDownloadProgressProvider: DownloadProgressProvider<Unit>,
     private val unitDownloadInteractor: DownloadInteractor<Unit>,
+
+    private val videoQualityInteractor: VideoQualityInteractor,
 
     private val deadlinesInteractor: DeadlinesInteractor,
     private val stateMapper: CourseContentStateMapper,
@@ -174,13 +177,18 @@ constructor(
     /**
      * Download tasks
      */
-    fun addUnitDownloadTask(unit: Unit) {
+    fun addUnitDownloadTask(unit: Unit, videoQuality: String? = null) {
         if (unit.id in pendingUnits) return
+
+        val quality = videoQuality
+            ?: videoQualityInteractor.getVideoQuality()
+            ?: return view?.showVideoQualityDialog(unit = unit) ?: kotlin.Unit
+
         pendingUnits += unit.id
         view?.updateUnitDownloadProgress(DownloadProgress(unit.id, DownloadProgress.Status.Pending))
 
         compositeDisposable += unitDownloadInteractor
-            .addTask(unit, configuration = DownloadConfiguration(videoQuality = "720"))
+            .addTask(unit, configuration = DownloadConfiguration(videoQuality = quality))
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .doFinally {
@@ -212,13 +220,18 @@ constructor(
             .subscribeBy (onError = emptyOnErrorStub)
     }
 
-    fun addSectionDownloadTask(section: Section) {
+    fun addSectionDownloadTask(section: Section, videoQuality: String? = null) {
         if (section.id in pendingSections) return
+
+        val quality = videoQuality
+            ?: videoQualityInteractor.getVideoQuality()
+            ?: return view?.showVideoQualityDialog(section = section) ?: kotlin.Unit
+
         pendingSections.add(section.id)
         view?.updateSectionDownloadProgress(DownloadProgress(section.id, DownloadProgress.Status.Pending))
 
         compositeDisposable += sectionDownloadInteractor
-            .addTask(section, configuration = DownloadConfiguration(videoQuality = "720"))
+            .addTask(section, configuration = DownloadConfiguration(videoQuality = quality))
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .doFinally {

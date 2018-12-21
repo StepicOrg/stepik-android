@@ -210,13 +210,13 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
 
     private void onItemDownloadClicked(int adapterPosition) {
         if (sharedPreferenceHelper.isNeedToShowVideoQualityExplanation()) {
-            VideoQualityDetailedDialog dialogFragment = VideoQualityDetailedDialog.Companion.newInstance(adapterPosition);
-            dialogFragment.setTargetFragment(fragment, VideoQualityDetailedDialog.VIDEO_QUALITY_REQUEST_CODE);
-            if (!dialogFragment.isAdded()) {
-                FragmentTransaction ft = activity.getSupportFragmentManager().beginTransaction();
-                ft.add(dialogFragment, null);
-                ft.commitAllowingStateLoss();
-            }
+//            VideoQualityDetailedDialog dialogFragment = VideoQualityDetailedDialog.Companion.newInstance(adapterPosition);
+//            dialogFragment.setTargetFragment(fragment, VideoQualityDetailedDialog.VIDEO_QUALITY_REQUEST_CODE);
+//            if (!dialogFragment.isAdded()) {
+//                FragmentTransaction ft = activity.getSupportFragmentManager().beginTransaction();
+//                ft.add(dialogFragment, null);
+//                ft.commitAllowingStateLoss();
+//            }
         } else {
             loadSection(adapterPosition);
         }

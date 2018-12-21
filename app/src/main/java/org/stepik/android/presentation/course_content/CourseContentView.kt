@@ -2,6 +2,8 @@ package org.stepik.android.presentation.course_content
 
 import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepik.android.model.Course
+import org.stepik.android.model.Section
+import org.stepik.android.model.Unit
 import org.stepik.android.presentation.personal_deadlines.model.PersonalDeadlinesState
 import org.stepik.android.view.course_content.model.CourseContentItem
 
@@ -24,6 +26,7 @@ interface CourseContentView {
     fun updateSectionDownloadProgress(downloadProgress: DownloadProgress)
     fun updateUnitDownloadProgress(downloadProgress: DownloadProgress)
     fun showChangeDownloadNetworkType()
+    fun showVideoQualityDialog(course: Course? = null, section: Section? = null, unit: Unit? = null)
 
     fun showPersonalDeadlinesBanner()
     fun showPersonalDeadlinesError()
