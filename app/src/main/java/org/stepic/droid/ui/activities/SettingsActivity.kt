@@ -29,11 +29,11 @@ open class SettingsActivity : SingleFragmentActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             android.R.id.home -> {
-                if (sharedPreferenceHelper.getAuthResponseFromStore() == null) {
-                    finish();
-                    return true
+                return if (sharedPreferenceHelper.authResponseFromStore == null) {
+                    finish()
+                    true
                 } else {
-                    return super.onOptionsItemSelected(item)
+                    super.onOptionsItemSelected(item)
                 }
             }
         }

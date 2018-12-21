@@ -76,3 +76,6 @@ inline fun <T> Maybe<T>.doCompletableOnSuccess(crossinline completableSource: (T
 
 inline fun <T> Single<T>.doCompletableOnSuccess(crossinline completableSource: (T) -> Completable): Single<T> =
     flatMap { completableSource(it).andThen(Single.just(it)) }
+
+
+val emptyOnErrorStub: (Throwable) -> Unit = {}

@@ -23,6 +23,7 @@ interface CourseContentView {
 
     fun updateSectionDownloadProgress(downloadProgress: DownloadProgress)
     fun updateUnitDownloadProgress(downloadProgress: DownloadProgress)
+    fun showChangeDownloadNetworkType()
 
     fun showPersonalDeadlinesBanner()
     fun showPersonalDeadlinesError()

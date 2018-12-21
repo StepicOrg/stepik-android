@@ -13,7 +13,9 @@ import org.stepic.droid.persistence.downloads.interactor.DownloadInteractor
 import org.stepic.droid.persistence.downloads.progress.DownloadProgressProvider
 import org.stepic.droid.persistence.model.DownloadConfiguration
 import org.stepic.droid.persistence.model.DownloadProgress
+import org.stepic.droid.util.emptyOnErrorStub
 import org.stepik.android.domain.course_content.interactor.CourseContentInteractor
+import org.stepik.android.domain.network.exception.NetworkRequirementsNotSatisfiedException
 import org.stepik.android.domain.personal_deadlines.interactor.DeadlinesInteractor
 import org.stepik.android.domain.personal_deadlines.model.LearningRate
 import org.stepik.android.model.Section
@@ -22,7 +24,6 @@ import org.stepik.android.presentation.base.PresenterBase
 import org.stepik.android.presentation.course_content.mapper.CourseContentStateMapper
 import org.stepik.android.presentation.personal_deadlines.model.PersonalDeadlinesState
 import org.stepik.android.view.course_content.model.CourseContentItem
-import java.util.*
 import javax.inject.Inject
 
 class CourseContentPresenter
@@ -122,7 +123,7 @@ constructor(
             }
             .toLongArray()
 
-        subscribeForSectionsProgress(sectionIds)
+        subscribeForSectionsProgress(*sectionIds)
 
         val unitIds = items
             .mapNotNull {
@@ -131,25 +132,39 @@ constructor(
             }
             .toLongArray()
 
-        subscribeForUnitsProgress(unitIds)
+        subscribeForUnitsProgress(*unitIds)
     }
 
-    private fun subscribeForSectionsProgress(sectionIds: LongArray) {
+    private fun subscribeForSectionsProgress(vararg sectionIds: Long, limit: Long = -1) {
         downloadsDisposable += sectionDownloadProgressProvider
             .getProgress(*sectionIds)
+            .let { stream ->
+                limit
+                    .takeUnless { it < 0 }
+                    ?.let(stream::take)
+                    ?: stream
+            }
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
+            .filter { it.id !in pendingSections }
             .subscribeBy(
                 onError = { it.printStackTrace(); resolveDownloadProgressSubscription() }, // resub on error
                 onNext  = { view?.updateSectionDownloadProgress(it) }
             )
     }
 
-    private fun subscribeForUnitsProgress(unitIds: LongArray) {
+    private fun subscribeForUnitsProgress(vararg unitIds: Long, limit: Long = -1) {
         downloadsDisposable += unitDownloadProgressProvider
             .getProgress(*unitIds)
+            .let { stream ->
+                limit
+                    .takeUnless { it < 0 }
+                    ?.let(stream::take)
+                    ?: stream
+            }
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
+            .filter { it.id !in pendingUnits }
             .subscribeBy(
                 onError = { it.printStackTrace(); resolveDownloadProgressSubscription() }, // resub on error
                 onNext  = { view?.updateUnitDownloadProgress(it) }
@@ -164,15 +179,21 @@ constructor(
         pendingUnits += unit.id
         view?.updateUnitDownloadProgress(DownloadProgress(unit.id, DownloadProgress.Status.Pending))
 
-        // TODO ASK SETTINGS
         compositeDisposable += unitDownloadInteractor
-            .addTask(unit, configuration = DownloadConfiguration(EnumSet.allOf(DownloadConfiguration.NetworkType::class.java), "720"))
+            .addTask(unit, configuration = DownloadConfiguration(videoQuality = "720"))
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
-            .doFinally { pendingUnits -= unit.id }
-            .subscribeBy {
-                // onError
+            .doFinally {
+                pendingUnits -= unit.id
+                subscribeForUnitsProgress(unit.id, limit = 1)
             }
+            .subscribeBy(
+                onError = {
+                    if (it is NetworkRequirementsNotSatisfiedException) {
+                        view?.showChangeDownloadNetworkType()
+                    }
+                }
+            )
     }
 
     fun removeUnitDownloadTask(unit: Unit) {
@@ -184,10 +205,11 @@ constructor(
             .removeTask(unit)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
-            .doFinally { pendingUnits -= unit.id }
-            .subscribeBy {
-                // onError
+            .doFinally {
+                pendingUnits -= unit.id
+                subscribeForUnitsProgress(unit.id, limit = 1)
             }
+            .subscribeBy (onError = emptyOnErrorStub)
     }
 
     fun addSectionDownloadTask(section: Section) {
@@ -196,13 +218,20 @@ constructor(
         view?.updateSectionDownloadProgress(DownloadProgress(section.id, DownloadProgress.Status.Pending))
 
         compositeDisposable += sectionDownloadInteractor
-            .addTask(section, configuration = DownloadConfiguration(EnumSet.allOf(DownloadConfiguration.NetworkType::class.java), "720"))
+            .addTask(section, configuration = DownloadConfiguration(videoQuality = "720"))
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
-            .doFinally { pendingSections -= section.id }
-            .subscribeBy {
-                // onError
+            .doFinally {
+                pendingSections -= section.id
+                subscribeForSectionsProgress(section.id, limit = 1)
             }
+            .subscribeBy(
+                onError = {
+                    if (it is NetworkRequirementsNotSatisfiedException) {
+                        view?.showChangeDownloadNetworkType()
+                    }
+                }
+            )
     }
 
     fun removeSectionDownloadTask(section: Section) {
@@ -214,10 +243,11 @@ constructor(
             .removeTask(section)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
-            .doFinally { pendingSections -= section.id }
-            .subscribeBy {
-                // onError
+            .doFinally {
+                pendingSections -= section.id
+                subscribeForSectionsProgress(section.id, limit = 1)
             }
+            .subscribeBy (onError = emptyOnErrorStub)
     }
 
     /*
@@ -250,12 +280,11 @@ constructor(
         isBlockingLoading = true
         deadlinesDisposable += deadlinesInteractor
             .createPersonalDeadlines(courseId, learningRate)
-            .map { stateMapper.mergeStateWithPersonalDeadlines(state, it) }
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .doFinally { isBlockingLoading = false }
             .subscribeBy(
-                onSuccess = { state = it },
+                onSuccess = { state = stateMapper.mergeStateWithPersonalDeadlines(state, it) },
                 onError   = { view?.showPersonalDeadlinesError() }
             )
     }
@@ -275,12 +304,11 @@ constructor(
         isBlockingLoading = true
         deadlinesDisposable += deadlinesInteractor
             .updatePersonalDeadlines(newRecord)
-            .map { stateMapper.mergeStateWithPersonalDeadlines(state, it) }
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .doFinally { isBlockingLoading = false }
             .subscribeBy(
-                onSuccess = { state = it },
+                onSuccess = { state = stateMapper.mergeStateWithPersonalDeadlines(state, it) },
                 onError   = { view?.showPersonalDeadlinesError() }
             )
     }

@@ -22,6 +22,7 @@ import io.reactivex.subjects.BehaviorSubject
 import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import kotlinx.android.synthetic.main.fragment_course_content.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepik.android.domain.personal_deadlines.model.Deadline
@@ -63,6 +64,9 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
 
     @Inject
     internal lateinit var screenManager: ScreenManager
+
+    @Inject
+    internal lateinit var analytic: Analytic
 
     private lateinit var contentAdapter: CourseContentAdapter
     private var courseId: Long by argument()
@@ -192,6 +196,21 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
 
     override fun updateUnitDownloadProgress(downloadProgress: DownloadProgress) {
         contentAdapter.updateUnitDownloadProgress(downloadProgress)
+    }
+
+    override fun showChangeDownloadNetworkType() {
+        val view = view
+            ?: return
+
+        Snackbar
+            .make(view, R.string.allow_mobile_snack, Snackbar.LENGTH_LONG)
+            .setAction(R.string.settings_title) {
+                analytic.reportEvent(Analytic.Downloading.CLICK_SETTINGS_SECTIONS)
+                screenManager.showSettings(activity)
+            }
+            .setActionTextColor(ContextCompat.getColor(view.context, R.color.snack_action_color))
+            .setTextColor(ContextCompat.getColor(view.context, R.color.white))
+            .show()
     }
 
     /**

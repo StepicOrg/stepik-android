@@ -285,14 +285,7 @@
             android:theme="@style/AppTheme.PhotoView" />
 
         <activity
-            android:name=".ui.activities.SettingsActivity"
-            android:launchMode="singleTop"
-            android:parentActivityName=".ui.activities.MainFeedActivity">
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activities.MainFeedActivity" />
-        </activity>
+            android:name=".ui.activities.SettingsActivity" />
 
         <activity
             android:name=".ui.activities.NotificationSettingsActivity"

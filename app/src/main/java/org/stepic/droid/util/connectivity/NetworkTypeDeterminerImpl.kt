@@ -5,8 +5,9 @@ import android.net.NetworkInfo
 import javax.inject.Inject
 
 class NetworkTypeDeterminerImpl
-@Inject constructor(
-        private val connectivityManager: ConnectivityManager
+@Inject
+constructor(
+    private val connectivityManager: ConnectivityManager
 ) : NetworkTypeDeterminer {
 
     override fun determineNetworkType(): NetworkType {
