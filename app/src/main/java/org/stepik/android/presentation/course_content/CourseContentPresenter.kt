@@ -299,8 +299,7 @@ constructor(
     }
 
     fun createPersonalDeadlines(learningRate: LearningRate) {
-        val oldState =
-            (state as? CourseContentView.State.CourseContentLoaded)
+        (state as? CourseContentView.State.CourseContentLoaded)
             ?.takeIf { it.personalDeadlinesState == PersonalDeadlinesState.EmptyDeadlines }
             ?: return
 
