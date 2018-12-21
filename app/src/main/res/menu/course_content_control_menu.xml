@@ -8,8 +8,8 @@
         android:id="@+id/course_control_download_all"
         android:title="@string/course_control_download_all"
         android:icon="@drawable/ic_download" />
-    <item
-        android:id="@+id/course_control_filter"
-        android:title="@string/course_control_filter"
-        android:icon="@drawable/ic_filter" />
+    <!--<item-->
+        <!--android:id="@+id/course_control_filter"-->
+        <!--android:title="@string/course_control_filter"-->
+        <!--android:icon="@drawable/ic_filter" />-->
 </menu>
