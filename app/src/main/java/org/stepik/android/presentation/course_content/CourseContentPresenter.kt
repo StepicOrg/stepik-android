@@ -346,8 +346,8 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onSuccess = { shouldShowDeadlinesBanner ->
-                    if (shouldShowDeadlinesBanner) {
+                onSuccess = { wasDeadlinesBannerShown ->
+                    if (!wasDeadlinesBannerShown) {
                         view?.showPersonalDeadlinesBanner()
                     }
                 },
