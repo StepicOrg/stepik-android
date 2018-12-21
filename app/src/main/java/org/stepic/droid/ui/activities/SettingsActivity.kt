@@ -26,19 +26,15 @@ open class SettingsActivity : SingleFragmentActivity() {
                 homeIndicator = closeIconDrawableRes)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean =
         when (item?.itemId) {
             android.R.id.home -> {
-                return if (sharedPreferenceHelper.authResponseFromStore == null) {
-                    finish()
-                    true
-                } else {
-                    super.onOptionsItemSelected(item)
-                }
+                finish()
+                true
             }
+            else ->
+                super.onOptionsItemSelected(item)
         }
-        return super.onOptionsItemSelected(item)
-    }
 
     override fun finish() {
         super.finish()
