@@ -288,12 +288,6 @@
         <item name="android:textColor">@color/launchTextColor</item>
     </style>
 
-    <style name="PrivacyPolicyTextStyle">
-        <item name="android:textSize">@dimen/launch_not_button_text_size</item>
-        <item name="android:textColorLink">@color/stepic_brand_primary</item>
-        <item name="android:textColor">@color/launchTextColor</item>
-    </style>
-
     <style name="CourseWidgetView" parent="android:Widget.Holo.Light.TextView">
         <item name="android:textSize">@dimen/course_item_button_text_size</item>
         <item name="android:layout_width">wrap_content</item>
@@ -365,12 +359,6 @@
         <item name="android:layout_gravity">center_vertical</item>
     </style>
 
-
-    <style name="ExoMediaButton">
-        <item name="android:background">@null</item>
-        <item name="android:layout_width">@dimen/exo_media_button_width</item>
-        <item name="android:layout_height">@dimen/exo_media_button_height</item>
-    </style>
 
     <style name="RateItemTextView">
         <item name="android:background">?attr/selectableItemBackground</item>

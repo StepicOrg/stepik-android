@@ -3,7 +3,6 @@
     <item name="wrap_content" type="dimen">-2px</item>
 
     <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="exo_media_button_height">52dp</dimen>
     <dimen name="play_pause_button_size">72dp</dimen>
     <dimen name="custom_peek_height">500dp</dimen>
     <dimen name="card_corner_radius_guideline">2dp</dimen>
@@ -15,15 +14,12 @@
     <dimen name="guideline_tab_indicator_height">2dp</dimen>
     <dimen name="padding_tab_bar">12dp</dimen>
     <dimen name="height_of_social">@dimen/min_ux_touchable_size</dimen>
-    <dimen name="space_for_text">8dp</dimen>
     <dimen name="min_max_width_for_tablets">316dp</dimen>
     <dimen name="auth_elements_width">-1px</dimen>
     <dimen name="half_padding">8dp</dimen>
     <dimen name="padding_text_in_cv">16dp</dimen>
     <dimen name="padding_left_right_list_item">16dp</dimen>
-    <dimen name="padding_bot_top_cv">24dp</dimen>
     <dimen name="text_size_title">24sp</dimen>
-    <dimen name="guide_top_bot_padding">4dp</dimen>
     <dimen name="min_ux_touchable_size">48dp</dimen>
     <dimen name="code_toolbar_height">@dimen/min_ux_touchable_size</dimen>
     <dimen name="padding_registration_left_right">36dp</dimen>
@@ -34,7 +30,6 @@
     <dimen name="feedback_textsize">16sp</dimen>
     <dimen name="button_padding">6dp</dimen>
     <dimen name="seekbar_video_margin">8dp</dimen>
-    <dimen name="control_item_margin">2dp</dimen>
     <dimen name="thumb_size">18dp</dimen>
     <dimen name="height_of_small_button">36dp</dimen>
     <dimen name="margin_leftRight_comment_depend_on_reply_margin">8dp</dimen>
@@ -54,18 +49,14 @@
     <dimen name="text_size_placeholders">16sp</dimen>
     <dimen name="placeholders_image_width">180dp</dimen>
     <dimen name="padding_placeholders">16dp</dimen>
-    <dimen name="drawable_padding_placeholders">40dp</dimen>
 
     <dimen name="video_height">200dp</dimen>
     <dimen name="guideline_standard_padding">16dp</dimen>
     <dimen name="card_bottom_margin">10dp</dimen>
     <dimen name="stepik_text_size_in_button">14sp</dimen>
     <dimen name="left_padding_tablayout_scrollable">60dp</dimen>
-    <dimen name="login_button_border">2dp</dimen>
     <dimen name="login_button_radius">32dp</dimen>
     <dimen name="launch_button_text_size">18sp</dimen>
-    <dimen name="launch_not_button_text_size">15sp</dimen>
-    <dimen name="continue_course_button_text_size">13sp</dimen>
     <dimen name="onePx">1px</dimen>
     <dimen name="fill_blanks_input_text_size">16sp</dimen>
     <dimen name="sort_image_view_height">24dp</dimen>
@@ -79,9 +70,6 @@
     <dimen name="progress_clickable_size">56dp</dimen>
     <dimen name="table_cell_fixed_height">96dp</dimen>
 
-    <dimen name="text_size_default">16sp</dimen>
-
-    <dimen name="exo_media_button_width">71dp</dimen>
     <dimen name="rewind_size">48dp</dimen>
     <dimen name="margin_rewind">56dp</dimen>
 
@@ -117,8 +105,6 @@
     <dimen name="course_list_bottom_padding">14dp</dimen>
     <dimen name="extraPaddingRightCourseItem">8dp</dimen>
 
-    <dimen name="fast_continue_widget">@dimen/course_widget_radius</dimen>
-    <dimen name="fast_continue_widget_height">160dp</dimen>
     <dimen name="fast_continue_course_image_size">40dp</dimen>
     <dimen name="fast_continue_inner_content_margin">20dp</dimen>
     <dimen name="fast_continue_info_margin">10dp</dimen>
