@@ -49,7 +49,6 @@ import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.core.LocalProgressManager;
 import org.stepic.droid.core.dropping.contract.DroppingListener;
 import org.stepic.droid.core.presenters.CalendarPresenter;
-import org.stepic.droid.core.presenters.CourseFinderPresenter;
 import org.stepic.droid.core.presenters.CourseJoinerPresenter;
 import org.stepic.droid.core.presenters.DownloadingInteractionPresenter;
 import org.stepic.droid.core.presenters.InvitationPresenter;
@@ -58,11 +57,9 @@ import org.stepic.droid.core.presenters.contracts.CalendarExportableView;
 import org.stepic.droid.core.presenters.contracts.CourseJoinView;
 import org.stepic.droid.core.presenters.contracts.DownloadingInteractionView;
 import org.stepic.droid.core.presenters.contracts.InvitationView;
-import org.stepic.droid.core.presenters.contracts.LoadCourseView;
 import org.stepic.droid.core.presenters.contracts.SectionsView;
 import org.stepic.droid.model.CalendarItem;
 import org.stepic.droid.persistence.model.DownloadProgress;
-import org.stepic.droid.ui.dialogs.VideoQualityDetailedDialog;
 import org.stepik.android.model.Course;
 import org.stepik.android.model.Progress;
 import org.stepik.android.model.Section;
@@ -176,9 +173,6 @@ public class SectionsFragment
     private DialogFragment unauthorizedDialog;
 
     @Inject
-    CourseFinderPresenter courseFinderPresenter;
-
-    @Inject
     CourseJoinerPresenter courseJoinerPresenter;
 
     @Inject
@@ -266,7 +260,6 @@ public class SectionsFragment
         localProgressManager.subscribe(this);
         droppingListenerClient.subscribe(this);
         calendarPresenter.attachView(this);
-        courseFinderPresenter.attachView(this);
         courseJoinerPresenter.attachView(this);
         sectionsPresenter.attachView(this);
         sectionsPresenter.subscribeForSectionsProgress(); // workaround due to strange sections code
@@ -500,7 +493,6 @@ public class SectionsFragment
     public void onDestroyView() {
         calendarPresenter.detachView(this);
         courseJoinerPresenter.detachView(this);
-        courseFinderPresenter.detachView(this);
         sectionsPresenter.detachView(this);
         invitationPresenter.detachView(this);
         droppingListenerClient.unsubscribe(this);
@@ -543,54 +535,6 @@ public class SectionsFragment
                     grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 calendarPresenter.addDeadlinesToCalendar(sectionList, null);
             }
-        }
-    }
-
-    @Override
-    public void onCourseFound(@NonNull Course foundCourse) {
-        if (course == null) {
-            course = foundCourse;
-            Bundle args = getActivity().getIntent().getExtras();
-            if (args == null) {
-                args = new Bundle();
-            }
-            args.putParcelable(AppConstants.KEY_COURSE_BUNDLE, course);
-            getActivity().getIntent().putExtras(args);
-            initScreenByCourse();
-        }
-    }
-
-    @Override
-    public void onCourseUnavailable(long courseId) {
-        if (course == null) {
-            ProgressHelper.dismiss(swipeRefreshLayout);
-            ProgressHelper.dismiss(loadOnCenterProgressBar);
-            goToCatalog.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (getSharedPreferenceHelper().getAuthResponseFromStore() != null) {
-                        getScreenManager().showCatalog(getActivity());
-                        getActivity().finish();
-                    } else {
-                        unauthorizedDialog = UnauthorizedDialogFragment.newInstance(course);
-                        if (!unauthorizedDialog.isAdded()) {
-                            unauthorizedDialog.show(getFragmentManager(), null);
-                        }
-                    }
-                }
-            });
-            courseNotParsedView.setVisibility(View.VISIBLE);
-            reportConnectionProblem.setVisibility(View.GONE);
-        }
-    }
-
-    @Override
-    public void onInternetFailWhenCourseIsTriedToLoad() {
-        if (course == null) {
-            ProgressHelper.dismiss(swipeRefreshLayout);
-            ProgressHelper.dismiss(loadOnCenterProgressBar);
-            courseNotParsedView.setVisibility(View.GONE);
-            reportConnectionProblem.setVisibility(View.VISIBLE);
         }
     }
 
@@ -734,7 +678,6 @@ public class SectionsFragment
             initScreenByCourse();
         } else if (simpleCourseId > 0 && simpleModulePosition > 0) {
             modulePosition = simpleModulePosition;
-            courseFinderPresenter.findCourseById(simpleCourseId);
             postNotificationAsReadIfNeed(intent, simpleCourseId);
         } else {
             Uri fullUri = intent.getData();
@@ -765,15 +708,6 @@ public class SectionsFragment
                         getAnalytic().reportEvent(Analytic.DeepLink.USER_OPEN_LINK_GENERAL);
                     }
                 }
-
-                if (simpleCourseId < 0) {
-                    onCourseUnavailable(-1);
-                } else {
-                    courseFinderPresenter.findCourseById(simpleCourseId);
-                    postNotificationAsReadIfNeed(intent, simpleCourseId);
-                }
-            } else {
-                onCourseUnavailable(-1);
             }
         }
 
