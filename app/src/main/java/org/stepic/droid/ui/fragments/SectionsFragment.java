@@ -49,12 +49,10 @@ import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.core.LocalProgressManager;
 import org.stepic.droid.core.dropping.contract.DroppingListener;
 import org.stepic.droid.core.presenters.CalendarPresenter;
-import org.stepic.droid.core.presenters.CourseJoinerPresenter;
 import org.stepic.droid.core.presenters.DownloadingInteractionPresenter;
 import org.stepic.droid.core.presenters.InvitationPresenter;
 import org.stepic.droid.core.presenters.SectionsPresenter;
 import org.stepic.droid.core.presenters.contracts.CalendarExportableView;
-import org.stepic.droid.core.presenters.contracts.CourseJoinView;
 import org.stepic.droid.core.presenters.contracts.DownloadingInteractionView;
 import org.stepic.droid.core.presenters.contracts.InvitationView;
 import org.stepic.droid.core.presenters.contracts.SectionsView;
@@ -71,7 +69,6 @@ import org.stepic.droid.ui.dialogs.ChooseCalendarDialog;
 import org.stepic.droid.ui.dialogs.DeleteItemDialogFragment;
 import org.stepic.droid.ui.dialogs.ExplainCalendarPermissionDialog;
 import org.stepic.droid.ui.dialogs.LoadingProgressDialog;
-import org.stepic.droid.ui.dialogs.UnauthorizedDialogFragment;
 import org.stepic.droid.ui.util.PopupHelper;
 import org.stepic.droid.ui.util.ToolbarHelperKt;
 import org.stepic.droid.util.AppConstants;
@@ -100,7 +97,6 @@ public class SectionsFragment
         extends FragmentBase
         implements SwipeRefreshLayout.OnRefreshListener,
         ActivityCompat.OnRequestPermissionsResultCallback,
-        LoadCourseView, CourseJoinView,
         CalendarExportableView,
         SectionsView,
         InvitationView,
@@ -167,13 +163,9 @@ public class SectionsFragment
 
     boolean firstLoad;
     boolean isNeedShowCalendarInMenu = false;
-    boolean isNeedShowDeadlinesInMenu = false;
 
     LoadingProgressDialog joinCourseProgressDialog;
     private DialogFragment unauthorizedDialog;
-
-    @Inject
-    CourseJoinerPresenter courseJoinerPresenter;
 
     @Inject
     CalendarPresenter calendarPresenter;
@@ -260,7 +252,6 @@ public class SectionsFragment
         localProgressManager.subscribe(this);
         droppingListenerClient.subscribe(this);
         calendarPresenter.attachView(this);
-        courseJoinerPresenter.attachView(this);
         sectionsPresenter.attachView(this);
         sectionsPresenter.subscribeForSectionsProgress(); // workaround due to strange sections code
         invitationPresenter.attachView(this);
@@ -323,7 +314,6 @@ public class SectionsFragment
                                 new Pair<String, Object>(AmplitudeAnalytic.Course.Params.COURSE, course.getId()),
                                 new Pair<String, Object>(AmplitudeAnalytic.Course.Params.SOURCE, AmplitudeAnalytic.Course.Values.PREVIEW)
                         ));
-                        courseJoinerPresenter.joinCourse(course);
                     }
                 }
             });
@@ -492,7 +482,6 @@ public class SectionsFragment
     @Override
     public void onDestroyView() {
         calendarPresenter.detachView(this);
-        courseJoinerPresenter.detachView(this);
         sectionsPresenter.detachView(this);
         invitationPresenter.detachView(this);
         droppingListenerClient.unsubscribe(this);
@@ -535,50 +524,6 @@ public class SectionsFragment
                     grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 calendarPresenter.addDeadlinesToCalendar(sectionList, null);
             }
-        }
-    }
-
-    @Override
-    public void showProgress() {
-        ProgressHelper.activate(joinCourseProgressDialog);
-    }
-
-    @Override
-    public void setEnabledJoinButton(boolean isEnabled) {
-        joinCourseButton.setEnabled(isEnabled);
-    }
-
-    @Override
-    public void onFailJoin(int code) {
-        if (course != null) {
-            if (code == HttpURLConnection.HTTP_FORBIDDEN) {
-                Toast.makeText(getContext(), getString(R.string.join_course_web_exception), Toast.LENGTH_LONG).show();
-            } else if (code == HttpURLConnection.HTTP_UNAUTHORIZED) {
-                //UNAUTHORIZED
-                //it is just for safety, we should detect no account before send request
-                unauthorizedDialog = UnauthorizedDialogFragment.newInstance(course);
-                if (!unauthorizedDialog.isAdded()) {
-                    unauthorizedDialog.show(getFragmentManager(), null);
-                }
-            } else {
-                Toast.makeText(getContext(), getString(R.string.join_course_exception),
-                        Toast.LENGTH_SHORT).show();
-            }
-        }
-        ProgressHelper.dismiss(joinCourseProgressDialog);
-        setEnabledJoinButton(true);
-    }
-
-    @Override
-    public void onSuccessJoin(@NotNull Course joinedCourse) {
-        if (course != null && joinedCourse.getId() == course.getId() && adapter != null) {
-            course = joinedCourse;
-            resolveJoinCourseView();
-            adapter.notifyDataSetChanged();
-        }
-        ProgressHelper.dismiss(joinCourseProgressDialog);
-        if (course != null) {
-            showShareCourseWithFriendDialog(course);
         }
     }
 
