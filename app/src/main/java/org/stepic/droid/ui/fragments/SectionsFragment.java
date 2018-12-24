@@ -1,16 +1,11 @@
 package org.stepic.droid.ui.fragments;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -24,7 +19,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -45,11 +39,8 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.core.LocalProgressManager;
-import org.stepic.droid.core.presenters.CalendarPresenter;
 import org.stepic.droid.core.presenters.SectionsPresenter;
-import org.stepic.droid.core.presenters.contracts.CalendarExportableView;
 import org.stepic.droid.core.presenters.contracts.SectionsView;
-import org.stepic.droid.model.CalendarItem;
 import org.stepic.droid.persistence.model.DownloadProgress;
 import org.stepik.android.model.Course;
 import org.stepik.android.model.Progress;
@@ -58,18 +49,13 @@ import org.stepic.droid.notifications.StepikNotificationManager;
 import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.ui.adapters.SectionAdapter;
 import org.stepic.droid.ui.custom.StepikSwipeRefreshLayout;
-import org.stepic.droid.ui.dialogs.ChooseCalendarDialog;
 import org.stepic.droid.ui.dialogs.DeleteItemDialogFragment;
-import org.stepic.droid.ui.dialogs.ExplainCalendarPermissionDialog;
 import org.stepic.droid.ui.dialogs.LoadingProgressDialog;
 import org.stepic.droid.ui.util.ToolbarHelperKt;
 import org.stepic.droid.util.AppConstants;
-import org.stepic.droid.util.ColorUtil;
 import org.stepic.droid.util.HtmlHelper;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.SectionExtensionsKt;
-import org.stepic.droid.util.SnackbarExtensionKt;
-import org.stepic.droid.util.SnackbarShower;
 import org.stepic.droid.util.StepikLogicHelper;
 import org.stepic.droid.util.StringUtil;
 
@@ -88,10 +74,8 @@ public class SectionsFragment
         extends FragmentBase
         implements SwipeRefreshLayout.OnRefreshListener,
         ActivityCompat.OnRequestPermissionsResultCallback,
-        CalendarExportableView,
         SectionsView,
-        LocalProgressManager.SectionProgressListener,
-        ChooseCalendarDialog.CallbackContract {
+        LocalProgressManager.SectionProgressListener {
 
     public static final String joinFlag = "joinFlag";
     private static final int INVITE_REQUEST_CODE = 324;
@@ -155,9 +139,6 @@ public class SectionsFragment
     LoadingProgressDialog joinCourseProgressDialog;
 
     @Inject
-    CalendarPresenter calendarPresenter;
-
-    @Inject
     SectionsPresenter sectionsPresenter;
 
     @Inject
@@ -172,8 +153,6 @@ public class SectionsFragment
     private int afterUpdateModulePosition = -1;
     private int modulePosition;
     private boolean isAfterJoining;
-
-    private PopupWindow inviteFriendsPopupWindow;
 
     @Override
     protected void injectComponent() {
@@ -211,8 +190,7 @@ public class SectionsFragment
         linearLayoutManager = new LinearLayoutManager(getActivity());
         sectionsRecyclerView.setLayoutManager(linearLayoutManager);
         sectionList = new ArrayList<>();
-        adapter = new SectionAdapter(sectionList, ((AppCompatActivity) getActivity()),
-                calendarPresenter, sectionsPresenter.getProgressMap(), this, sectionsPresenter);
+        adapter = new SectionAdapter(sectionList, ((AppCompatActivity) getActivity()), sectionsPresenter.getProgressMap(), this, sectionsPresenter);
         sectionsRecyclerView.setAdapter(adapter);
 
         sectionsRecyclerView.setItemAnimator(new SlideInRightAnimator());
@@ -228,7 +206,6 @@ public class SectionsFragment
         joinCourseProgressDialog = new LoadingProgressDialog(getContext());
         ProgressHelper.activate(loadOnCenterProgressBar);
         localProgressManager.subscribe(this);
-        calendarPresenter.attachView(this);
         sectionsPresenter.attachView(this);
         sectionsPresenter.subscribeForSectionsProgress(); // workaround due to strange sections code
 
@@ -312,28 +289,7 @@ public class SectionsFragment
                 }
                 return true;
 
-            case R.id.menu_item_share:
-                if (course != null) {
-                    if (course.getTitle() != null) {
-                        getAnalytic().reportEventWithIdName(Analytic.Interaction.SHARE_COURSE_SECTION, course.getId() + "", course.getTitle());
-                    }
-                    Intent intent = shareHelper.getIntentForCourseSharing(course);
-                    startActivity(intent);
 
-                    if (inviteFriendsPopupWindow != null && inviteFriendsPopupWindow.isShowing()) {
-                        inviteFriendsPopupWindow.dismiss();
-                        getAnalytic().reportEventWithName(
-                                Analytic.Interaction.INVITE_DIALOG_DISMISSED,
-                                Analytic.Interaction.InviteDialogDismissType.SHARE);
-                    }
-                }
-
-                return true;
-
-            case R.id.menu_item_calendar:
-                getAnalytic().reportEventWithIdName(Analytic.Calendar.USER_CLICK_ADD_MENU, course.getId() + "", course.getTitle());
-                calendarPresenter.addDeadlinesToCalendar(sectionList, null);
-                return true;
             case android.R.id.home:
                 // Respond to the action bar's Up/Home button
                 getActivity().finish();
@@ -367,8 +323,6 @@ public class SectionsFragment
         dismissReportView();
         sectionsRecyclerView.setVisibility(View.VISIBLE);
         dismissLoadState();
-
-        calendarPresenter.checkToShowCalendar(sectionList);
 
         if (wasEmpty) {
 
@@ -439,13 +393,6 @@ public class SectionsFragment
         }
         wasIndexed = false;
         ProgressHelper.dismiss(swipeRefreshLayout);
-
-        if (inviteFriendsPopupWindow != null && inviteFriendsPopupWindow.isShowing()) {
-            inviteFriendsPopupWindow.dismiss();
-            getAnalytic().reportEventWithName(
-                    Analytic.Interaction.INVITE_DIALOG_DISMISSED,
-                    Analytic.Interaction.InviteDialogDismissType.LEAVE);
-        }
     }
 
     public Action getAction() {
@@ -454,7 +401,6 @@ public class SectionsFragment
 
     @Override
     public void onDestroyView() {
-        calendarPresenter.detachView(this);
         sectionsPresenter.detachView(this);
         goToCatalog.setOnClickListener(null);
         swipeRefreshLayout.setOnRefreshListener(null);
@@ -468,92 +414,6 @@ public class SectionsFragment
 
         menu.findItem(R.id.menu_item_calendar).setVisible(isNeedShowCalendarInMenu);
     }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if (requestCode == AppConstants.REQUEST_EXTERNAL_STORAGE && permissions.length > 0) {
-            String permissionExternalStorage = permissions[0];
-            if (permissionExternalStorage == null) return;
-
-            if (permissionExternalStorage.equals(Manifest.permission.WRITE_EXTERNAL_STORAGE) &&
-                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                int position = getSharedPreferenceHelper().getTempPosition();
-                if (adapter != null) {
-                    adapter.requestClickLoad(position);
-                }
-            }
-        }
-
-        if (requestCode == AppConstants.REQUEST_CALENDAR_PERMISSION) {
-            String permissionExternalStorage = permissions[0];
-            if (permissionExternalStorage == null) return;
-
-            if (permissionExternalStorage.equals(Manifest.permission.WRITE_CALENDAR) &&
-                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                calendarPresenter.addDeadlinesToCalendar(sectionList, null);
-            }
-        }
-    }
-
-    @Override
-    public void permissionNotGranted() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
-                Manifest.permission.WRITE_CALENDAR)) {
-
-            DialogFragment dialog = ExplainCalendarPermissionDialog.newInstance();
-            if (!dialog.isAdded()) {
-                dialog.show(this.getFragmentManager(), null);
-            }
-
-        } else {
-            // No explanation needed, we can request the permission.
-            ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{Manifest.permission.WRITE_CALENDAR},
-                    AppConstants.REQUEST_CALENDAR_PERMISSION);
-        }
-    }
-
-    @Override
-    public void successExported() {
-        adapter.setNeedShowCalendarWidget(false);
-        adapter.notifyItemChanged(0);
-        SnackbarExtensionKt.setTextColor(Snackbar.make(rootView, R.string.calendar_added_message, Snackbar.LENGTH_SHORT), ColorUtil.INSTANCE.getColorArgb(R.color.white, getContext())).show();
-    }
-
-    @Override
-    public void onShouldBeShownCalendar(boolean needShow) {
-        adapter.setNeedShowCalendarWidget(needShow);
-        adapter.notifyItemChanged(0);
-    }
-
-    @Override
-    public void onShouldBeShownCalendarInMenu() {
-        if (!isNeedShowCalendarInMenu) {
-            isNeedShowCalendarInMenu = true;
-            getActivity().invalidateOptionsMenu();
-        }
-    }
-
-    @Override
-    public void onNeedToChooseCalendar(@NotNull ArrayList<CalendarItem> primariesCalendars) {
-        ChooseCalendarDialog chooseCalendarDialog = ChooseCalendarDialog.Companion.newInstance(primariesCalendars);
-        chooseCalendarDialog.setTargetFragment(this, 0); //alternative to onActivityResult
-        if (!chooseCalendarDialog.isAdded()) {
-            chooseCalendarDialog.show(getFragmentManager(), null);
-        }
-    }
-
-    @Override
-    public void onUserDoesntHaveCalendar() {
-        getUserPreferences().setNeedToShowCalendarWidget(false);
-        adapter.setNeedShowCalendarWidget(false);
-        adapter.notifyItemChanged(0);
-        SnackbarExtensionKt.setTextColor(Snackbar.make(rootView, R.string.user_not_have_calendar, Snackbar.LENGTH_LONG), ColorUtil.INSTANCE.getColorArgb(R.color.white, getContext())).show();
-    }
-
 
     public void onNewIntent(Intent intent) {
         long simpleCourseId = -1;
@@ -649,13 +509,6 @@ public class SectionsFragment
     }
 
     @Override
-    public void hideCalendarAfterNotNow() {
-        adapter.setNeedShowCalendarWidget(false);
-        adapter.notifyItemChanged(0);
-        SnackbarExtensionKt.setTextColor(Snackbar.make(rootView, R.string.after_hide_calendar_message, Snackbar.LENGTH_LONG), ColorUtil.INSTANCE.getColorArgb(R.color.white, getContext())).show();
-    }
-
-    @Override
     public void updatePosition(int position) {
         if (position >= 0 && sectionList.size() > position && adapter != null) {
             try {
@@ -679,11 +532,6 @@ public class SectionsFragment
 //            int position = data.getIntExtra(VideoQualityDetailedDialog.POSITION_KEY, -1);
 //            adapter.loadSection(position);
 //        }
-    }
-
-    @Override
-    public void onCalendarChosen(@NotNull CalendarItem calendarItem) {
-        calendarPresenter.addDeadlinesToCalendar(sectionList, calendarItem);
     }
 
     @Override
