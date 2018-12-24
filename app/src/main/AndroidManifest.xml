@@ -111,31 +111,6 @@
         </activity>
 
         <activity
-            android:name=".ui.activities.SectionActivity"
-            android:parentActivityName=".ui.activities.MainFeedActivity">
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activities.MainFeedActivity" />
-
-            <intent-filter
-                android:autoVerify="true"
-                tools:ignore="UnusedAttribute">
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="https" />
-                <data android:scheme="http" />
-                <data android:host="@string/host_name" />
-                <data android:host="@string/secondary_host_name" />
-                <data android:pathPattern="/course/.*/syllabus" />
-            </intent-filter>
-
-        </activity>
-
-        <activity
             android:name=".ui.activities.StepsActivity"
             android:parentActivityName=".ui.activities.UnitsActivity"
             android:windowSoftInputMode="adjustResize">
@@ -368,7 +343,7 @@
 
                 <data android:pathPattern="/course/.*/" />
                 <data android:pathPattern="/course/.*/course_app" />
-
+                <data android:pathPattern="/course/.*/syllabus" />
             </intent-filter>
 
         </activity>

@@ -55,7 +55,6 @@ import org.stepic.droid.ui.activities.NotificationSettingsActivity;
 import org.stepic.droid.ui.activities.PhotoViewActivity;
 import org.stepic.droid.ui.activities.ProfileActivity;
 import org.stepic.droid.ui.activities.RegisterActivity;
-import org.stepic.droid.ui.activities.SectionActivity;
 import org.stepic.droid.ui.activities.SettingsActivity;
 import org.stepic.droid.ui.activities.SplashActivity;
 import org.stepic.droid.ui.activities.StepsActivity;
@@ -494,16 +493,14 @@ public class ScreenManagerImpl implements ScreenManager {
         String testStepPath = StringUtil.getUriForStepByIds(config.getBaseUrl(), lessonId, unitId, stepPosition);
         String testSectionPath = StringUtil.getUriForCourse(config.getBaseUrl(), courseId + "");
 
-        Intent sectionsIntent = new Intent(activity, SectionActivity.class)
+        Intent courseIntent = new Intent(activity, CourseActivity.class)
                 .setAction(AppConstants.INTERNAL_STEPIK_ACTION)
                 .setData(Uri.parse(testSectionPath));
-        if (joinedRightNow) {
-        }
 
         TaskStackBuilder.create(activity)
                 .addNextIntent(new Intent(activity, MainFeedActivity.class)
                         .setAction(AppConstants.INTERNAL_STEPIK_ACTION))
-                .addNextIntent(sectionsIntent)
+                .addNextIntent(courseIntent)
                 .addNextIntent(getIntentForUnits(activity, section)
                         .setAction(AppConstants.INTERNAL_STEPIK_ACTION))
                 .addNextIntent(new Intent(activity, StepsActivity.class)
@@ -595,20 +592,10 @@ public class ScreenManagerImpl implements ScreenManager {
         }
     }
 
-    private Intent getSectionsIntent(Activity sourceActivity, @NotNull Course course) {
-        Intent intent = new Intent(sourceActivity, SectionActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(AppConstants.KEY_COURSE_BUNDLE, course);
-        intent.putExtras(bundle);
-        return intent;
-    }
-
     @Override
     public void showSections(Activity sourceActivity, @NotNull Course course) {
         analytic.reportEventWithIdName(Analytic.Screens.SHOW_SECTIONS, course.getId() + "", course.getTitle());
-        Intent intent = getSectionsIntent(sourceActivity, course);
+        Intent intent = CourseActivity.Companion.createIntent(sourceActivity, course, false);
         sourceActivity.startActivity(intent);
     }
 

@@ -26,4 +26,20 @@ class CourseDeepLinkHandlerTest {
         Assert.assertEquals(432L, intent.getCourseIdFromDeepLink())
     }
 
+    @Test
+    fun syllabusDeepLinkTest() {
+        val intent = Intent()
+        intent.data = Uri.parse("https://stepik.org/course/Школьная-физика-Тепловые-и-электромагнитные-явления-432/syllabus")
+
+        Assert.assertEquals(432L, intent.getCourseIdFromDeepLink())
+    }
+
+    @Test
+    fun syllabusTabDeepLinkTest() {
+        val intent = Intent()
+        intent.data = Uri.parse("https://stepik.org/course/Школьная-физика-Тепловые-и-электромагнитные-явления-432/syllabus")
+
+        Assert.assertEquals(CourseScreenTab.SYLLABUS, intent.getCourseTabFromDeepLink())
+    }
+
 }

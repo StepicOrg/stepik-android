@@ -32,24 +32,28 @@ import org.stepic.droid.ui.activities.*
 import org.stepic.droid.util.*
 import org.stepic.droid.util.resolvers.text.TextResolver
 import org.stepic.droid.web.Api
+import org.stepik.android.view.course.ui.activity.CourseActivity
 import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 
 
 class StepikNotificationManagerImpl
-@Inject constructor(private val sharedPreferenceHelper: SharedPreferenceHelper,
-                    private val api: Api,
-                    private val configs: Config,
-                    private val userPreferences: UserPreferences,
-                    private val databaseFacade: DatabaseFacade,
-                    private val analytic: Analytic,
-                    private val textResolver: TextResolver,
-                    private val screenManager: ScreenManager,
-                    private val context: Context,
-                    private val localReminder: LocalReminder,
-                    private val notificationManager: NotificationManager,
-                    private val notificationTimeChecker: NotificationTimeChecker) : StepikNotificationManager {
+@Inject
+constructor(
+    private val sharedPreferenceHelper: SharedPreferenceHelper,
+    private val api: Api,
+    private val configs: Config,
+    private val userPreferences: UserPreferences,
+    private val databaseFacade: DatabaseFacade,
+    private val analytic: Analytic,
+    private val textResolver: TextResolver,
+    private val screenManager: ScreenManager,
+    private val context: Context,
+    private val localReminder: LocalReminder,
+    private val notificationManager: NotificationManager,
+    private val notificationTimeChecker: NotificationTimeChecker
+) : StepikNotificationManager {
     companion object {
         private const val NEW_USER_REMIND_NOTIFICATION_ID = 4L
         private const val REGISTRATION_REMIND_NOTIFICATION_ID = 5L
@@ -300,7 +304,7 @@ class StepikNotificationManagerImpl
         }
 
         val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
-        taskBuilder.addParentStack(SectionActivity::class.java)
+        taskBuilder.addParentStack(CourseActivity::class.java)
         taskBuilder.addNextIntent(prepareNotificationIntent(intent, id))
 
         analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, id.toString(), stepikNotification.type?.name)
@@ -320,7 +324,7 @@ class StepikNotificationManagerImpl
             }
 
             val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
-            taskBuilder.addParentStack(SectionActivity::class.java)
+            taskBuilder.addParentStack(CourseActivity::class.java)
             taskBuilder.addNextIntent(prepareNotificationIntent(intent, id))
 
             showSimpleNotification(stepikNotification, justText, taskBuilder, title, id = id)
@@ -410,7 +414,7 @@ class StepikNotificationManagerImpl
             }
             stepikNotification.courseId = courseId
             val notificationOfCourseList: MutableList<Notification?> = databaseFacade.getAllNotificationsOfCourse(courseId).toMutableList()
-            val relatedCourse = getCourse(courseId)
+            val relatedCourse = getCourse(courseId) ?: return
             val isNeedAdd = notificationOfCourseList.none { it?.id == stepikNotification.id }
 
             if (isNeedAdd) {
@@ -421,21 +425,18 @@ class StepikNotificationManagerImpl
             val largeIcon = getPictureByCourse(relatedCourse)
             val colorArgb = ColorUtil.getColorArgb(R.color.stepic_brand_primary)
 
-            val intent = Intent(context, SectionActivity::class.java)
-            val bundle = Bundle()
             val modulePosition = HtmlHelper.parseModulePositionFromNotification(stepikNotification.htmlText)
-            if (courseId >= 0 && modulePosition != null && modulePosition >= 0) {
-                bundle.putLong(AppConstants.KEY_COURSE_LONG_ID, courseId)
-                bundle.putInt(AppConstants.KEY_MODULE_POSITION, modulePosition)
-            } else {
-                bundle.putParcelable(AppConstants.KEY_COURSE_BUNDLE, relatedCourse)
-            }
-            intent.putExtras(bundle)
+            val intent =
+                if (courseId >= 0 && modulePosition != null && modulePosition >= 0) {
+                    CourseActivity.createIntent(context, courseId)
+                } else {
+                    CourseActivity.createIntent(context, relatedCourse)
+                }
             intent.action = AppConstants.OPEN_NOTIFICATION_FOR_CHECK_COURSE
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
             val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
-            taskBuilder.addParentStack(SectionActivity::class.java)
+            taskBuilder.addParentStack(CourseActivity::class.java)
             taskBuilder.addNextIntent(intent)
 
             val pendingIntent = taskBuilder.getPendingIntent(courseId.toInt(), PendingIntent.FLAG_ONE_SHOT)
@@ -443,16 +444,17 @@ class StepikNotificationManagerImpl
             val title = context.getString(R.string.app_name)
             val justText: String = textResolver.fromHtml(rawMessageHtml).toString()
 
-            val notification = NotificationCompat.Builder(context, stepikNotification.type.channel.channelId)
-                    .setLargeIcon(largeIcon)
-                    .setSmallIcon(R.drawable.ic_notification_icon_1) // 1 is better
-                    .setContentTitle(title)
-                    .setContentText(justText)
-                    .setColor(colorArgb)
-                    .setAutoCancel(true)
-                    .setContentIntent(pendingIntent)
-                    .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                    .setDeleteIntent(getDeleteIntent(courseId))
+            val notification = NotificationCompat
+                .Builder(context, stepikNotification.type.channel.channelId)
+                .setLargeIcon(largeIcon)
+                .setSmallIcon(R.drawable.ic_notification_icon_1) // 1 is better
+                .setContentTitle(title)
+                .setContentText(justText)
+                .setColor(colorArgb)
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntent)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setDeleteIntent(getDeleteIntent(courseId))
 
 
             val numberOfNotification = notificationOfCourseList.size
@@ -497,13 +499,12 @@ class StepikNotificationManagerImpl
 
         val hoursDiff = (deadline.deadline.time - DateTimeHelper.nowUtc()) / AppConstants.MILLIS_IN_1HOUR + 1
 
-        val intent = Intent(context, SectionActivity::class.java)
-        intent.putExtra(AppConstants.KEY_COURSE_BUNDLE, course)
+        val intent = CourseActivity.createIntent(context, course)
         intent.putExtra(Analytic.Deadlines.Params.BEFORE_DEADLINE, hoursDiff)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
         val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
-        taskBuilder.addParentStack(SectionActivity::class.java)
+        taskBuilder.addParentStack(CourseActivity::class.java)
         taskBuilder.addNextIntent(intent)
 
         val title = context.getString(R.string.app_name)
@@ -658,7 +659,7 @@ class StepikNotificationManagerImpl
 
     private fun getDefaultIntent(notification: Notification): Intent? {
         val data = HtmlHelper.parseNLinkInText(notification.htmlText ?: "", configs.baseUrl, 1) ?: return null
-        val intent = Intent(context, SectionActivity::class.java)
+        val intent = Intent(context, CourseActivity::class.java)
         intent.data = Uri.parse(data)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         return intent
@@ -715,11 +716,7 @@ class StepikNotificationManagerImpl
             val modulePosition = HtmlHelper.parseModulePositionFromNotification(notification.htmlText)
 
             if (courseId != null && courseId >= 0 && modulePosition != null && modulePosition >= 0) {
-                val intent: Intent = Intent(context, SectionActivity::class.java)
-                val bundle = Bundle()
-                bundle.putLong(AppConstants.KEY_COURSE_LONG_ID, courseId)
-                bundle.putInt(AppConstants.KEY_MODULE_POSITION, modulePosition)
-                intent.putExtras(bundle)
+                val intent = CourseActivity.createIntent(context, courseId) // Intent(context, SectionActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 context.startActivity(intent)
                 return true
@@ -743,7 +740,7 @@ class StepikNotificationManagerImpl
             val identifier = url.pathSegments[0]
             val intent: Intent
             if (identifier == "course") {
-                intent = Intent(context, SectionActivity::class.java)
+                intent = Intent(context, CourseActivity::class.java)
             } else if (identifier == "lesson") {
                 intent = Intent(context, StepsActivity::class.java)
             } else {
