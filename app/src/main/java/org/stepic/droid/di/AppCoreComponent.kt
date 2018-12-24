@@ -163,8 +163,6 @@ interface AppCoreComponent {
 
     fun inject(certificateShareDialog: CertificateShareDialog)
 
-    fun inject(sectionAdapter: SectionAdapter)
-
     fun inject(stepShareDialog: StepShareDialog)
 
     fun inject(videoQualityDetailedDialog: VideoQualityDetailedDialog)

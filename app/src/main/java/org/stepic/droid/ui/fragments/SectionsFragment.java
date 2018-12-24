@@ -1,16 +1,9 @@
 package org.stepic.droid.ui.fragments;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -38,28 +31,17 @@ import org.stepic.droid.analytic.AmplitudeAnalytic;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.base.FragmentBase;
-import org.stepic.droid.core.LocalProgressManager;
 import org.stepic.droid.core.presenters.SectionsPresenter;
-import org.stepic.droid.core.presenters.contracts.SectionsView;
-import org.stepic.droid.persistence.model.DownloadProgress;
 import org.stepik.android.model.Course;
-import org.stepik.android.model.Progress;
-import org.stepik.android.model.Section;
 import org.stepic.droid.notifications.StepikNotificationManager;
-import org.stepic.droid.notifications.model.Notification;
-import org.stepic.droid.ui.adapters.SectionAdapter;
 import org.stepic.droid.ui.custom.StepikSwipeRefreshLayout;
-import org.stepic.droid.ui.dialogs.DeleteItemDialogFragment;
-import org.stepic.droid.ui.dialogs.LoadingProgressDialog;
 import org.stepic.droid.ui.util.ToolbarHelperKt;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.HtmlHelper;
 import org.stepic.droid.util.ProgressHelper;
-import org.stepic.droid.util.SectionExtensionsKt;
 import org.stepic.droid.util.StepikLogicHelper;
 import org.stepic.droid.util.StringUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -68,14 +50,10 @@ import butterknife.BindView;
 import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
 import kotlin.Pair;
 import kotlin.collections.MapsKt;
-import timber.log.Timber;
 
 public class SectionsFragment
         extends FragmentBase
-        implements SwipeRefreshLayout.OnRefreshListener,
-        ActivityCompat.OnRequestPermissionsResultCallback,
-        SectionsView,
-        LocalProgressManager.SectionProgressListener {
+        implements SwipeRefreshLayout.OnRefreshListener {
 
     public static final String joinFlag = "joinFlag";
     private static final int INVITE_REQUEST_CODE = 324;
@@ -130,13 +108,9 @@ public class SectionsFragment
 
     @Nullable
     private Course course;
-    private SectionAdapter adapter;
-    private List<Section> sectionList;
 
     boolean firstLoad;
     boolean isNeedShowCalendarInMenu = false;
-
-    LoadingProgressDialog joinCourseProgressDialog;
 
     @Inject
     SectionsPresenter sectionsPresenter;
@@ -147,8 +121,6 @@ public class SectionsFragment
     private boolean wasIndexed;
     private Uri urlInWeb;
     private String title;
-
-    LinearLayoutManager linearLayoutManager;
 
     private int afterUpdateModulePosition = -1;
     private int modulePosition;
@@ -187,11 +159,6 @@ public class SectionsFragment
         swipeRefreshLayout.setOnRefreshListener(this);
 
         sectionsRecyclerView.setVisibility(View.GONE);
-        linearLayoutManager = new LinearLayoutManager(getActivity());
-        sectionsRecyclerView.setLayoutManager(linearLayoutManager);
-        sectionList = new ArrayList<>();
-        adapter = new SectionAdapter(sectionList, ((AppCompatActivity) getActivity()), sectionsPresenter.getProgressMap(), this, sectionsPresenter);
-        sectionsRecyclerView.setAdapter(adapter);
 
         sectionsRecyclerView.setItemAnimator(new SlideInRightAnimator());
         sectionsRecyclerView.getItemAnimator().setRemoveDuration(ANIMATION_DURATION);
@@ -199,15 +166,7 @@ public class SectionsFragment
         sectionsRecyclerView.getItemAnimator().setMoveDuration(ANIMATION_DURATION);
         sectionsRecyclerView.getItemAnimator().setChangeDuration(0);
 
-        DividerItemDecoration divider = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
-        divider.setDrawable(ContextCompat.getDrawable(getContext(), R.drawable.list_divider_h));
-        sectionsRecyclerView.addItemDecoration(divider);
-
-        joinCourseProgressDialog = new LoadingProgressDialog(getContext());
         ProgressHelper.activate(loadOnCenterProgressBar);
-        localProgressManager.subscribe(this);
-        sectionsPresenter.attachView(this);
-        sectionsPresenter.subscribeForSectionsProgress(); // workaround due to strange sections code
 
         ToolbarHelperKt.initCenteredToolbar(this, R.string.syllabus_title, true);
         onNewIntent(getActivity().getIntent());
@@ -222,7 +181,6 @@ public class SectionsFragment
     public void initScreenByCourse() {
         reportConnectionProblem.setVisibility(View.GONE);
         courseNotParsedView.setVisibility(View.GONE);
-        adapter.setCourse(course);
         resolveJoinCourseView();
         setUpToolbarWithCourse();
         sectionsPresenter.showSections(course, false);
@@ -298,77 +256,6 @@ public class SectionsFragment
         return super.onOptionsItemSelected(item);
     }
 
-
-    @Override
-    public void onEmptySections() {
-        if (sectionList.isEmpty()) {
-            dismissLoadState();
-            reportEmptyView.setVisibility(View.VISIBLE);
-        }
-    }
-
-    @Override
-    public void onConnectionProblem() {
-        dismissLoadState();
-        if (sectionList.isEmpty()) {
-            reportConnectionProblem.setVisibility(View.VISIBLE);
-        }
-    }
-
-    @Override
-    public void onNeedShowSections(@NotNull List<Section> sections) {
-        boolean wasEmpty = sectionList.isEmpty();
-        sectionList.clear();
-        sectionList.addAll(sections);
-        dismissReportView();
-        sectionsRecyclerView.setVisibility(View.VISIBLE);
-        dismissLoadState();
-
-        if (wasEmpty) {
-
-            if (modulePosition > 0 && modulePosition <= sections.size()) {
-                Section section = sections.get(modulePosition - 1);
-
-                boolean userHasAccess = SectionExtensionsKt.hasUserAccess(section, course);
-                if (userHasAccess) {
-                    getScreenManager().showUnitsForSection(SectionsFragment.this.getActivity(), sections.get(modulePosition - 1));
-                } else {
-                    adapter.setDefaultHighlightPosition(modulePosition - 1);
-                    int scrollTo = modulePosition + SectionAdapter.PRE_SECTION_LIST_DELTA - 1;
-                    linearLayoutManager.scrollToPositionWithOffset(scrollTo, 0);
-                    afterUpdateModulePosition = modulePosition;
-                }
-                modulePosition = -1;
-            }
-        } else {
-            adapter.notifyDataSetChanged();
-            adapter.setDefaultHighlightPosition(afterUpdateModulePosition - 1);
-            int scrollTo = afterUpdateModulePosition + SectionAdapter.PRE_SECTION_LIST_DELTA - 1;
-            linearLayoutManager.scrollToPositionWithOffset(scrollTo, 0);
-            afterUpdateModulePosition = -1;
-        }
-    }
-
-    @Override
-    public void onLoading() {
-        reportEmptyView.setVisibility(View.GONE);
-        reportConnectionProblem.setVisibility(View.GONE);
-        if (sectionList.isEmpty()) {
-            ProgressHelper.activate(loadOnCenterProgressBar);
-        }
-    }
-
-    private void dismissLoadState() {
-        ProgressHelper.dismiss(loadOnCenterProgressBar);
-        ProgressHelper.dismiss(swipeRefreshLayout);
-    }
-
-    private void dismissReportView() {
-        if (sectionList != null && sectionList.size() != 0) {
-            reportConnectionProblem.setVisibility(View.GONE);
-        }
-    }
-
     @Override
     public void onRefresh() {
         getAnalytic().reportEvent(Analytic.Interaction.REFRESH_SECTIONS);
@@ -401,10 +288,8 @@ public class SectionsFragment
 
     @Override
     public void onDestroyView() {
-        sectionsPresenter.detachView(this);
         goToCatalog.setOnClickListener(null);
         swipeRefreshLayout.setOnRefreshListener(null);
-        localProgressManager.unsubscribe(this);
         super.onDestroyView();
     }
 
@@ -444,11 +329,9 @@ public class SectionsFragment
         }
         if (course != null) {
             final long courseId = course.getId();
-            postNotificationAsReadIfNeed(intent, courseId);
             initScreenByCourse();
         } else if (simpleCourseId > 0 && simpleModulePosition > 0) {
             modulePosition = simpleModulePosition;
-            postNotificationAsReadIfNeed(intent, simpleCourseId);
         } else {
             Uri fullUri = intent.getData();
             List<String> pathSegments = fullUri.getPathSegments();
@@ -481,68 +364,5 @@ public class SectionsFragment
             }
         }
 
-    }
-
-    private void postNotificationAsReadIfNeed(Intent intent, final long courseId) {
-        if (intent.getAction() != null && intent.getAction().equals(AppConstants.OPEN_NOTIFICATION_FOR_CHECK_COURSE)) {
-            getAnalytic().reportEvent(Analytic.Notification.OPEN_NOTIFICATION);
-            getAnalytic().reportEvent(Analytic.Notification.OPEN_NOTIFICATION_SYLLABUS, courseId + "");
-            AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
-                @Override
-                protected Void doInBackground(Void... params) {
-                    List<Notification> notifications = getDatabaseFacade().getAllNotificationsOfCourse(courseId);
-                    stepikNotificationManager.discardAllShownNotificationsRelatedToCourse(courseId);
-                    for (Notification notificationItem : notifications) {
-                        if (notificationItem != null && notificationItem.getId() != null) {
-                            try {
-                                getApi().setReadStatusForNotification(notificationItem.getId(), true).execute();
-                            } catch (Exception e) {
-                                getAnalytic().reportError(Analytic.Error.NOTIFICATION_NOT_POSTED_ON_CLICK, e);
-                            }
-                        }
-                    }
-                    return null;
-                }
-            };
-            task.executeOnExecutor(getThreadPoolExecutor());
-        }
-    }
-
-    @Override
-    public void updatePosition(int position) {
-        if (position >= 0 && sectionList.size() > position && adapter != null) {
-            try {
-                adapter.notifyItemChanged(position + SectionAdapter.PRE_SECTION_LIST_DELTA);
-            } catch (Exception exception) {
-                Timber.d(exception);
-            }
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (adapter != null && requestCode == DELETE_POSITION_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            getAnalytic().reportEvent(Analytic.Interaction.ACCEPT_DELETING_SECTION);
-            int position = data.getIntExtra(DeleteItemDialogFragment.deletePositionKey, -1);
-            adapter.requestClickDeleteSilence(position);
-        }
-
-//        if (requestCode == VideoQualityDetailedDialog.VIDEO_QUALITY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-//            int position = data.getIntExtra(VideoQualityDetailedDialog.POSITION_KEY, -1);
-//            adapter.loadSection(position);
-//        }
-    }
-
-    @Override
-    public void onProgressUpdated(@NotNull Progress newProgress, long courseId) {
-        if (course != null && course.getId() == courseId) {
-            sectionsPresenter.updateSectionProgress(newProgress);
-        }
-    }
-
-    @Override
-    public void showDownloadProgress(@NotNull DownloadProgress progress) {
-        adapter.setItemDownloadProgress(progress);
     }
 }
