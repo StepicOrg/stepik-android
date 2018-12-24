@@ -27,7 +27,6 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
@@ -50,11 +49,9 @@ import org.stepic.droid.core.LocalProgressManager;
 import org.stepic.droid.core.dropping.contract.DroppingListener;
 import org.stepic.droid.core.presenters.CalendarPresenter;
 import org.stepic.droid.core.presenters.DownloadingInteractionPresenter;
-import org.stepic.droid.core.presenters.InvitationPresenter;
 import org.stepic.droid.core.presenters.SectionsPresenter;
 import org.stepic.droid.core.presenters.contracts.CalendarExportableView;
 import org.stepic.droid.core.presenters.contracts.DownloadingInteractionView;
-import org.stepic.droid.core.presenters.contracts.InvitationView;
 import org.stepic.droid.core.presenters.contracts.SectionsView;
 import org.stepic.droid.model.CalendarItem;
 import org.stepic.droid.persistence.model.DownloadProgress;
@@ -69,7 +66,6 @@ import org.stepic.droid.ui.dialogs.ChooseCalendarDialog;
 import org.stepic.droid.ui.dialogs.DeleteItemDialogFragment;
 import org.stepic.droid.ui.dialogs.ExplainCalendarPermissionDialog;
 import org.stepic.droid.ui.dialogs.LoadingProgressDialog;
-import org.stepic.droid.ui.util.PopupHelper;
 import org.stepic.droid.ui.util.ToolbarHelperKt;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ColorUtil;
@@ -81,7 +77,6 @@ import org.stepic.droid.util.SnackbarShower;
 import org.stepic.droid.util.StepikLogicHelper;
 import org.stepic.droid.util.StringUtil;
 
-import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -99,7 +94,6 @@ public class SectionsFragment
         ActivityCompat.OnRequestPermissionsResultCallback,
         CalendarExportableView,
         SectionsView,
-        InvitationView,
         DownloadingInteractionView,
         LocalProgressManager.SectionProgressListener,
         ChooseCalendarDialog.CallbackContract,
@@ -177,9 +171,6 @@ public class SectionsFragment
     StepikNotificationManager stepikNotificationManager;
 
     @Inject
-    InvitationPresenter invitationPresenter;
-
-    @Inject
     DownloadingInteractionPresenter downloadingInteractionPresenter;
 
     @Inject
@@ -254,7 +245,6 @@ public class SectionsFragment
         calendarPresenter.attachView(this);
         sectionsPresenter.attachView(this);
         sectionsPresenter.subscribeForSectionsProgress(); // workaround due to strange sections code
-        invitationPresenter.attachView(this);
 
         ToolbarHelperKt.initCenteredToolbar(this, R.string.syllabus_title, true);
         onNewIntent(getActivity().getIntent());
@@ -282,7 +272,6 @@ public class SectionsFragment
 
         if (isAfterJoining && course != null) {
             isAfterJoining = false;
-            showShareCourseWithFriendDialog(course);
         }
 
     }
@@ -483,7 +472,6 @@ public class SectionsFragment
     public void onDestroyView() {
         calendarPresenter.detachView(this);
         sectionsPresenter.detachView(this);
-        invitationPresenter.detachView(this);
         droppingListenerClient.unsubscribe(this);
         goToCatalog.setOnClickListener(null);
         swipeRefreshLayout.setOnRefreshListener(null);
@@ -526,12 +514,6 @@ public class SectionsFragment
             }
         }
     }
-
-    public void showShareCourseWithFriendDialog(@NotNull final Course courseForSharing) {
-        isAfterJoining = false;
-        invitationPresenter.needShowInvitationDialog(courseForSharing);
-    }
-
 
     @Override
     public void permissionNotGranted() {
@@ -699,27 +681,6 @@ public class SectionsFragment
                 Timber.d(exception);
             }
         }
-    }
-
-    @Override
-    public void onShowInvitationDialog(@NotNull final Course courseForSharing) {
-        rootView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                @Nullable
-                View shareView = null;
-                if (rootView != null) {
-                    shareView = rootView.findViewById(R.id.menu_item_share);
-                }
-
-                if (shareView != null) {
-                    inviteFriendsPopupWindow =
-                            PopupHelper.INSTANCE.showPopupAnchoredToView(getContext(), shareView, getString(R.string.invite_friends_description), false);
-                } else {
-                    getAnalytic().reportEvent(Analytic.Interaction.INVITE_DIALOG_BROKEN);
-                }
-            }
-        }, INVITE_FRIEND_POPUP_DELAY);
     }
 
     @Override
