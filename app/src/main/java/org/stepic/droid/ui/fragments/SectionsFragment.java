@@ -46,10 +46,8 @@ import org.stepic.droid.base.App;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.core.LocalProgressManager;
 import org.stepic.droid.core.presenters.CalendarPresenter;
-import org.stepic.droid.core.presenters.DownloadingInteractionPresenter;
 import org.stepic.droid.core.presenters.SectionsPresenter;
 import org.stepic.droid.core.presenters.contracts.CalendarExportableView;
-import org.stepic.droid.core.presenters.contracts.DownloadingInteractionView;
 import org.stepic.droid.core.presenters.contracts.SectionsView;
 import org.stepic.droid.model.CalendarItem;
 import org.stepic.droid.persistence.model.DownloadProgress;
@@ -92,7 +90,6 @@ public class SectionsFragment
         ActivityCompat.OnRequestPermissionsResultCallback,
         CalendarExportableView,
         SectionsView,
-        DownloadingInteractionView,
         LocalProgressManager.SectionProgressListener,
         ChooseCalendarDialog.CallbackContract {
 
@@ -166,9 +163,6 @@ public class SectionsFragment
     @Inject
     StepikNotificationManager stepikNotificationManager;
 
-    @Inject
-    DownloadingInteractionPresenter downloadingInteractionPresenter;
-
     private boolean wasIndexed;
     private Uri urlInWeb;
     private String title;
@@ -218,7 +212,7 @@ public class SectionsFragment
         sectionsRecyclerView.setLayoutManager(linearLayoutManager);
         sectionList = new ArrayList<>();
         adapter = new SectionAdapter(sectionList, ((AppCompatActivity) getActivity()),
-                calendarPresenter, sectionsPresenter.getProgressMap(), this, downloadingInteractionPresenter, sectionsPresenter);
+                calendarPresenter, sectionsPresenter.getProgressMap(), this, sectionsPresenter);
         sectionsRecyclerView.setAdapter(adapter);
 
         sectionsRecyclerView.setItemAnimator(new SlideInRightAnimator());
@@ -435,12 +429,10 @@ public class SectionsFragment
     public void onStart() {
         super.onStart();
         reportIndexToGoogle();
-        downloadingInteractionPresenter.attachView(this);
     }
 
     @Override
     public void onStop() {
-        downloadingInteractionPresenter.detachView(this);
         super.onStop();
         if (wasIndexed) {
             FirebaseUserActions.getInstance().end(getAction());
@@ -687,41 +679,6 @@ public class SectionsFragment
 //            int position = data.getIntExtra(VideoQualityDetailedDialog.POSITION_KEY, -1);
 //            adapter.loadSection(position);
 //        }
-    }
-
-    @Override
-    public void onLoadingAccepted(int position) {
-        adapter.loadAfterDetermineNetworkState(position);
-    }
-
-    @Override
-    public void onShowPreferenceSuggestion() {
-        getAnalytic().reportEvent(Analytic.Downloading.SHOW_SNACK_PREFS_SECTIONS);
-        SnackbarShower.INSTANCE.showTurnOnDownloadingInSettings(rootView, getContext(), new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    getAnalytic().reportEvent(Analytic.Downloading.CLICK_SETTINGS_SECTIONS);
-                    getScreenManager().showSettings(getActivity());
-                } catch (NullPointerException nullPointerException) {
-                    Timber.e(nullPointerException);
-                }
-            }
-        });
-    }
-
-    @Override
-    public void onShowInternetIsNotAvailableRetry(final int position) {
-        getAnalytic().reportEvent(Analytic.Downloading.SHOW_SNACK_INTERNET_SECTIONS);
-        SnackbarShower.INSTANCE.showInternetRetrySnackbar(rootView, getContext(), new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getAnalytic().reportEvent(Analytic.Downloading.CLICK_RETRY_SECTIONS);
-                if (adapter != null) {
-                    adapter.requestClickLoad(position);
-                }
-            }
-        });
     }
 
     @Override
