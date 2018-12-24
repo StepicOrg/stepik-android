@@ -5,7 +5,7 @@ import org.stepic.droid.di.section.SectionComponent
 import org.stepic.droid.di.step.StepComponent
 
 @RoutingScope
-@Subcomponent(modules = arrayOf(RoutingModule::class))
+@Subcomponent
 interface RoutingComponent {
 
     @Subcomponent.Builder

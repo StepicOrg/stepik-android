@@ -20,7 +20,6 @@ import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
-import org.stepic.droid.base.Client;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.core.LessonSessionManager;
 import org.stepic.droid.core.presenters.DownloadingInteractionPresenter;
@@ -29,9 +28,7 @@ import org.stepic.droid.core.presenters.UnitsPresenter;
 import org.stepic.droid.core.presenters.contracts.DownloadingInteractionView;
 import org.stepic.droid.core.presenters.contracts.UnitsLearningProgressView;
 import org.stepic.droid.core.presenters.contracts.UnitsView;
-import org.stepic.droid.core.routing.contract.RoutingListener;
 import org.stepic.droid.persistence.model.DownloadProgress;
-import org.stepic.droid.ui.dialogs.VideoQualityDetailedDialog;
 import org.stepik.android.model.Lesson;
 import org.stepik.android.model.Progress;
 import org.stepik.android.model.Section;
@@ -56,8 +53,7 @@ public class UnitsFragment extends FragmentBase implements
         SwipeRefreshLayout.OnRefreshListener,
         UnitsView,
         DownloadingInteractionView,
-        UnitsLearningProgressView,
-        RoutingListener {
+        UnitsLearningProgressView {
 
     private static final int ANIMATION_DURATION = 0;
     public static final int DELETE_POSITION_REQUEST_CODE = 165;
@@ -104,9 +100,6 @@ public class UnitsFragment extends FragmentBase implements
 
     @Inject
     DownloadingInteractionPresenter downloadingInteractionPresenter;
-
-    @Inject
-    Client<RoutingListener> routingClient;
 
     private UnitAdapter adapter;
 
@@ -170,13 +163,11 @@ public class UnitsFragment extends FragmentBase implements
         unitsPresenter.attachView(this);
         unitsLearningProgressPresenter.attachView(this);
         getLocalProgressManager().subscribe(unitsLearningProgressPresenter);
-        routingClient.subscribe(this);
         unitsPresenter.showUnits(section, false);
     }
 
     @Override
     public void onDestroyView() {
-        routingClient.unsubscribe(this);
         getLocalProgressManager().unsubscribe(unitsLearningProgressPresenter);
         unitsLearningProgressPresenter.detachView(this);
         unitsPresenter.detachView(this);
@@ -376,15 +367,6 @@ public class UnitsFragment extends FragmentBase implements
         int position = unitPairPosition.second;
 
         adapter.notifyItemChanged(position);
-    }
-
-    @Override
-    public void onSectionChanged(@NotNull Section oldSection, @NotNull Section newSection) {
-        if (section != null && oldSection.getId() == section.getId()) {
-            section = newSection;
-            adapter.setParentSection(section);
-            unitsPresenter.showUnits(newSection, true);
-        }
     }
 
     @Override
