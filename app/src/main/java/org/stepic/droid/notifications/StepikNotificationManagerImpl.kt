@@ -408,7 +408,7 @@ class StepikNotificationManagerImpl
                 analytic.reportEvent(Analytic.Notification.CANT_PARSE_COURSE_ID, stepikNotification.id.toString())
                 return
             }
-            stepikNotification.course_id = courseId
+            stepikNotification.courseId = courseId
             val notificationOfCourseList: MutableList<Notification?> = databaseFacade.getAllNotificationsOfCourse(courseId).toMutableList()
             val relatedCourse = getCourse(courseId)
             val isNeedAdd = notificationOfCourseList.none { it?.id == stepikNotification.id }

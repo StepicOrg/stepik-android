@@ -8,12 +8,14 @@ import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.CourseId
 import org.stepic.droid.di.qualifiers.MainScheduler
+import org.stepic.droid.util.emptyOnErrorStub
 import org.stepik.android.domain.course.interactor.ContinueLearningInteractor
 import org.stepik.android.domain.course.interactor.CourseEnrollmentInteractor
 import org.stepik.android.domain.course.interactor.CourseIndexingInteractor
 import org.stepik.android.domain.course.interactor.CourseInteractor
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.model.EnrollmentState
+import org.stepik.android.domain.notification.interactor.CourseNotificationInteractor
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.base.PresenterBase
 import org.stepik.android.presentation.course.mapper.toEnrollmentError
@@ -31,6 +33,8 @@ constructor(
     private val courseEnrollmentInteractor: CourseEnrollmentInteractor,
     private val continueLearningInteractor: ContinueLearningInteractor,
     private val courseIndexingInteractor: CourseIndexingInteractor,
+
+    private val courseNotificationInteractor: CourseNotificationInteractor,
 
     private val adaptiveCoursesResolver: AdaptiveCoursesResolver,
 
@@ -97,9 +101,17 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
                 onComplete = { state = CourseView.State.EmptyCourse },
-                onSuccess  = { state = CourseView.State.CourseLoaded(it) },
+                onSuccess  = { state = CourseView.State.CourseLoaded(it); postCourseViewedNotification(it.courseId) },
                 onError    = { state = CourseView.State.NetworkError }
             )
+    }
+
+    private fun postCourseViewedNotification(courseId: Long) {
+        compositeDisposable += courseNotificationInteractor
+            .markCourseNotificationsAsRead(courseId)
+            .observeOn(mainScheduler)
+            .subscribeOn(backgroundScheduler)
+            .subscribeBy(onError = emptyOnErrorStub)
     }
 
     /**

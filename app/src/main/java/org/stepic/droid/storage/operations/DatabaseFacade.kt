@@ -225,9 +225,10 @@ class DatabaseFacade
         return isProgressViewed(progressId)
     }
 
-    fun getAllNotificationsOfCourse(courseId: Long): List<Notification?> {
-        return notificationDao.getAll(DbStructureNotification.Column.COURSE_ID, courseId.toString())
-    }
+    fun getAllNotificationsOfCourse(courseId: Long): List<Notification> =
+        notificationDao
+            .getAll(DbStructureNotification.Column.COURSE_ID, courseId.toString())
+            .filterNotNull()
 
     fun dropOnlyCourseTable() {
         courseDao.removeAll()
