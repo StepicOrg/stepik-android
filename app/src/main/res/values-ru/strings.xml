@@ -1,48 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <string name="yet_have_not_account">Регистрация с e-mail</string>
     <string name="stepik_free_courses_title">Stepik.org: бесплатные курсы</string>
     <string name="local_remind_message">Мы заметили, что Вы до сих пор не выбрали ни одного курса
         для изучения. Не откладывайте, запишитесь на подходящий бесплатный курс прямо сейчас!
     </string>
-    <string name="available_courses_title">Доступные курсы</string>
-    <string name="begin_date">Начало</string>
-    <string name="best_lessons_title">Лучшие уроки</string>
-    <string name="by_creating_you_agree">Создавая аккаунт, я соглашаюсь с</string>
-    <string name="create_my_account">Создать аккаунт</string>
-    <string name="drawer_closed">закрыть меню</string>
-    <string name="drawer_open">открыть меню</string>
-    <string name="first_name">Имя</string>
     <string name="logout_title">Выход</string>
     <string name="home_title">Главная</string>
-    <string name="or_sign_up_with_email">или зарегистрироваться через e-mail</string>
     <string name="password_hint">Пароль</string>
     <string name="remind_password">Вспомнить пароль</string>
-    <string name="second_name">Фамилия</string>
     <string name="settings_title">Настройки</string>
     <string name="sign_in">Войти</string>
     <string name="sign_up">Регистрация</string>
-    <string name="terms">Правилами</string>
     <string name="tap_to_see_more">развернуть…</string>
-    <string name="summary">О курсе</string>
-    <string name="course">Курс</string>
-    <string name="join_course">Поступить</string>
-    <string name="join_course_exception">Проверьте интернет-соединение.</string>
     <string name="loading">Загрузка</string>
 
     <string name="soft_deadline">Мягкий дедлайн</string>
     <string name="hard_deadline">Жесткий дедлайн</string>
-    <string name="begin_date_section">Дата начала: %s</string>
-    <string name="soft_deadline_section">Мягкий дедлайн: %s</string>
-    <string name="hard_deadline_section">Жесткий дедлайн: %s</string>
 
-    <string name="syllabus_title">Содержание</string>
     <string name="units_lessons_title">Уроки</string>
     <string name="steps_title">Шаги</string>
-    <string name="not_available_lesson">Урок недоступен сейчас</string>
     <string name="not_video_player_error">Пожалуйста, установите видеоплеер</string>
-    <string name="description_download">Кеширование Stepik урока</string>
     <string name="video_title">Видео</string>
     <string name="clear_cache_title">Очистить кэш</string>
     <string name="wi_fi_setting">Загружать только по Wi-Fi</string>
@@ -58,8 +36,6 @@
     <string name="drop_course">Покинуть курс</string>
     <string name="about_course">О курсе</string>
     <string name="you_dropped">Вы покинули %s</string>
-    <string name="try_in_web_drop">Попробуйте отписаться в web-версии</string>
-    <string name="you_not_enrolled">Вы не записаны на данный курс</string>
     <string name="cancel">Отмена</string>
     <string name="save">Сохранить</string>
     <string name="select">Выбрать</string>
@@ -83,18 +59,14 @@
     <string name="empty_courses">Похоже, что Вы не записаны ни на один курс</string>
     <string name="empty_courses_anonymous">Посмотрите курсы или войдите, чтобы записаться на них
     </string>
-    <string name="cache_cleared">Кэш успешно очищен!</string>
     <string name="join_course_web_exception">Попробуйте записаться на курс в веб версии</string>
     <string name="downloads">Загрузки</string>
-    <string name="or_sign_in_social">Или войдите с помощью</string>
     <string name="loading_message">Пожалуйста, подождите…</string>
     <string name="kb">КБ</string>
     <string name="mb">МБ</string>
     <string name="gb">ГБ</string>
-    <string name="clear">Очистить</string>
     <string name="clear_videos">Вы уверены, что хотите удалить все закешированные видео?</string>
     <string name="empty_downloading">Нет загруженных видео</string>
-    <string name="version">Версия</string>
     <string name="find_courses_hint">Поиск курсов</string>
     <string name="search_title">Поиск</string>
     <string name="empty_search">Курсы не найдены</string>
@@ -109,17 +81,12 @@
     <string name="hint_for_type_answer">Введите ответ здесь…</string>
     <string name="py_message">
         <![CDATA[Пожалуйста, откройте эту задачу в <a href="https://www.jetbrains.com/pycharm-educational/">PyCharm Educational Edition</a>]]></string>
-    <string name="terms_message_login">
-        <![CDATA[Входя в приложение, Вы соглашаетесь с <a href="https://stepik.org/page/terms/?from_mobile_app=true">Условиями использования</a> и <a href="https://stepik.org/page/privacy/?from_mobile_app=true">Политикой конфиденциальности</a>]]></string>
-    <string name="terms_message_launch">
-        <![CDATA[<a href="https://stepik.org/page/terms/?from_mobile_app=true">Условия использования</a> и <a href="https://stepik.org/page/privacy/?from_mobile_app=true">Политика конфиденциальности</a>]]></string>
     <string name="terms_message_register">
         <![CDATA[Регистрируясь, Вы соглашаетесь с <a href="https://stepik.org/page/terms/?from_mobile_app=true">Условиями использования</a> и <a href="https://stepik.org/page/privacy/?from_mobile_app=true">Политикой конфиденциальности</a>]]></string>
     <string name="review_warning">Это задание с рецензией. Нажмите, чтобы закончить задание в web и
         получить баллы.
     </string>
     <string name="password_too_short">Минимальное количество символов в пароле: 6.</string>
-    <string name="reset_password">Сбросить пароль</string>
     <string name="send">Отправить</string>
     <string name="email_sent">Мы отправили вам письмо.</string>
     <string name="email_wrong">Нет пользователя с таким e-mail.</string>
@@ -131,9 +98,6 @@
         воспроизводится.
     </string>
     <string name="feedback_title">Оставить отзыв</string>
-    <string name="feedback_hint">Напишите нам…</string>
-    <string name="feedback_description">Напишите нам свое предложение, замечание или идею</string>
-    <string name="feedback_contacts_description">Контакты для обратной связи:</string>
     <string name="email_incorrect">Введен некоррентный e-mail</string>
     <string name="feedback_subject">Отзыв об Android приложении Stepik.org</string>
     <string name="feedback_sent">Сообщение отправлено</string>
@@ -162,19 +126,10 @@
     <string name="open_comments_zero">Нет комментариев. Оставьте первый.</string>
     <string name="empty_try_later">Сейчас здесь пусто, попробуйте позже.</string>
     <string name="sound_title">Звук</string>
-    <string name="update_available_title">Доступна новая версия приложения</string>
-    <string name="update_now">Обновить</string>
-    <string name="update_later">Позже</string>
-    <string name="instructors">Преподаватели</string>
-    <string name="download_pending">Скачивается…</string>
-    <string name="delimiter_for_download">" из "</string>
     <string name="downloading_title">Скачивается…</string>
     <string name="downloading_cancel_all">Отменить все</string>
     <string name="cached_title">Загружено</string>
     <string name="remove_all">Удалить все</string>
-    <string name="cancel_videos_explanation">Отмена загрузки видео времязатратня операция. Вы
-        уверены?
-    </string>
     <string name="hint_for_idea">Напишите замечание или идею</string>
     <string name="feedback_from">От</string>
     <string name="comments_title">Комментарии</string>
@@ -209,14 +164,11 @@
     <string name="move_data_explanation">Все ранее загруженные видео будут перенесены, новые видео
         будут сохраняться в выбранное место. Операция может занять несколько минут. Вы уверены?
     </string>
-    <string name="sorry_moved">Извините, файл удален или перемещен</string>
-    <string name="fail_move">Извините, произошла ошибка, когда файлы перемещались</string>
     <string name="like_label">Нравится</string>
     <string name="unlike_label">Больше не нравится</string>
     <string name="report_label">Пожаловаться</string>
     <string name="done">Готово</string>
     <string name="moving">Перенос</string>
-    <string name="go_to_learn">Продолжить</string>
     <string name="fail_to_parse">К сожалению, курс не найден</string>
     <string name="authorization">Авторизация</string>
     <string name="unauthorization_detail">Для того, чтобы продолжить, необходимо войти или
@@ -277,13 +229,6 @@
     <string name="cant_show_previous_step">Извините, предыдущий урок недоступен</string>
     <string name="language_en_filter">Английский</string>
     <string name="language_ru_filter">Русский</string>
-    <string name="course_language_title">Язык курса</string>
-    <string name="timing_active_title">Активные</string>
-    <string name="timing_upcoming_title">Ближайшие</string>
-    <string name="timing_title">Время проведения</string>
-    <string name="timing_past_title">Прошедшие</string>
-    <string name="save_filter_title">Применять этот фильтр всегда</string>
-    <string name="accept">Принять</string>
     <string name="lesson_not_found_or_not_access">Урок не существует или у Вас нет прав на его
         просмотр
     </string>
@@ -294,9 +239,6 @@
     <string name="low_quality">Низкое</string>
     <string name="medium_quality">Среднее</string>
     <string name="high_quality">Высокое</string>
-    <string name="video_quality_explanation">Видео высокого качества занимают больше места и могут
-        загружаться медленнее
-    </string>
     <string name="do_not_ask_me_again">Больше не спрашивать</string>
     <string name="discount_policy_inverse_title">После каждого неправильного решения баллы, которые
         можно получить за задание, будут уменьшены
@@ -334,25 +276,19 @@
     <string name="mark_all_as_read">Отметить все как прочитанное</string>
     <string name="empty_notification_title">Пока уведомлений нет</string>
     <string name="not_now">Не сейчас</string>
-    <string name="after_hide_calendar_message">Добавить дедлайны в календарь можно в верхнем меню
-    </string>
     <string name="received_review_title">Получена рецензия</string>
     <string name="new_message_title">Новое сообщение</string>
     <string name="get_certifcate_title">Получен сертификат</string>
     <string name="get_license_message">Получена лицензия</string>
     <string name="added_to_group_title">Добавление в группу</string>
     <string name="notification_comment_list">Комментарии и ответы</string>
-    <string name="exam_module_title">Это экзамен, пройдите его в браузере</string>
-    <string name="start_exam_action_title">Открыть</string>
     <string name="restriction_submission_enough">Нельзя отправить решение, так как количество
         попыток было превышено
     </string>
     <string name="too_many_attempts">Слишком много неверных попыток. Попробуйте позже</string>
     <string name="profile_title">Профиль</string>
     <string name="current_streak">Текущий рекорд</string>
-    <string name="solving_without_break">@string/current_streak</string>
     <string name="max_streak">Мой рекорд</string>
-    <string name="about_me">Обо мне</string>
     <string name="short_bio">Краткая биография</string>
     <string name="user_info">Информация</string>
     <plurals name="day_number">
@@ -424,10 +360,8 @@
     <string name="terms_of_service_title">Условия использования</string>
     <string name="privacy_policy_title">Политика конфиденциальности</string>
     <string name="invite_friends_description">Поделитесь ссылкой с друзьями, чтобы проходить курс вместе!</string>
-    <string name="take_course_with_fiends">Проходите курс с друзьями</string>
     <string name="sign_in_with_password">Войти с e-mail</string>
     <string name="sign_in_with_password_suffix">" с e-mail"</string>
-    <string name="or_continue_social">Или продолжить с</string>
     <string name="content_course_logo">Логотип курса</string>
     <string name="continue_course_title">Учиться</string>
     <string name="auth_inline_message">Войдите, чтобы мы запомнили Ваши успехи</string>
@@ -537,7 +471,6 @@
     <string name="code_quiz_limits">&lt;b>Временное ограничение:&lt;/b> %1$s\n&lt;b>Ограничение памяти:&lt;/b> %2$s MB</string>
     <string name="sample_input">&lt;b>Пример входных данных %d:&lt;/b></string>
     <string name="sample_output">&lt;b>Пример выходных данных %d:&lt;/b></string>
-    <string name="hint_for_code">Введите код здесь…</string>
     <string name="step_preparing">Шаг еще не обработан. Нажмите, чтобы перезагрузить</string>
     <string name="language_of_courses">Язык курсов</string>
     <string name="language_widget_hint">Это можно изменить в настройках</string>

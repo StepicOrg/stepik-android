@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<org.stepic.droid.ui.custom.CircleProgressView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/when_load_view"
-    android:layout_width="@dimen/course_item_progress_size"
-    android:layout_height="@dimen/course_item_progress_size"
-    android:layout_gravity="center"/>
