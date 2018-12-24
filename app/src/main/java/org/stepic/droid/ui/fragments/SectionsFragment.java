@@ -43,10 +43,8 @@ import org.stepic.droid.R;
 import org.stepic.droid.analytic.AmplitudeAnalytic;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
-import org.stepic.droid.base.Client;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.core.LocalProgressManager;
-import org.stepic.droid.core.dropping.contract.DroppingListener;
 import org.stepic.droid.core.presenters.CalendarPresenter;
 import org.stepic.droid.core.presenters.DownloadingInteractionPresenter;
 import org.stepic.droid.core.presenters.SectionsPresenter;
@@ -96,8 +94,7 @@ public class SectionsFragment
         SectionsView,
         DownloadingInteractionView,
         LocalProgressManager.SectionProgressListener,
-        ChooseCalendarDialog.CallbackContract,
-        DroppingListener {
+        ChooseCalendarDialog.CallbackContract {
 
     public static final String joinFlag = "joinFlag";
     private static final int INVITE_REQUEST_CODE = 324;
@@ -159,7 +156,6 @@ public class SectionsFragment
     boolean isNeedShowCalendarInMenu = false;
 
     LoadingProgressDialog joinCourseProgressDialog;
-    private DialogFragment unauthorizedDialog;
 
     @Inject
     CalendarPresenter calendarPresenter;
@@ -172,9 +168,6 @@ public class SectionsFragment
 
     @Inject
     DownloadingInteractionPresenter downloadingInteractionPresenter;
-
-    @Inject
-    Client<DroppingListener> droppingListenerClient;
 
     private boolean wasIndexed;
     private Uri urlInWeb;
@@ -241,7 +234,6 @@ public class SectionsFragment
         joinCourseProgressDialog = new LoadingProgressDialog(getContext());
         ProgressHelper.activate(loadOnCenterProgressBar);
         localProgressManager.subscribe(this);
-        droppingListenerClient.subscribe(this);
         calendarPresenter.attachView(this);
         sectionsPresenter.attachView(this);
         sectionsPresenter.subscribeForSectionsProgress(); // workaround due to strange sections code
@@ -472,7 +464,6 @@ public class SectionsFragment
     public void onDestroyView() {
         calendarPresenter.detachView(this);
         sectionsPresenter.detachView(this);
-        droppingListenerClient.unsubscribe(this);
         goToCatalog.setOnClickListener(null);
         swipeRefreshLayout.setOnRefreshListener(null);
         localProgressManager.unsubscribe(this);
@@ -736,19 +727,6 @@ public class SectionsFragment
     @Override
     public void onCalendarChosen(@NotNull CalendarItem calendarItem) {
         calendarPresenter.addDeadlinesToCalendar(sectionList, calendarItem);
-    }
-
-    @Override
-    public void onSuccessDropCourse(@NotNull Course droppedCourse) {
-        if (course != null && droppedCourse.getId() == course.getId()) {
-            course.setEnrollment(0);
-            resolveJoinCourseView();
-        }
-    }
-
-    @Override
-    public void onFailDropCourse(@NotNull Course course) {
-        //do nothing
     }
 
     @Override
