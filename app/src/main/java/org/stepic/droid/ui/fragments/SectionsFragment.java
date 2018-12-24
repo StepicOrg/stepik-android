@@ -18,11 +18,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.google.firebase.appindexing.Action;
-import com.google.firebase.appindexing.FirebaseAppIndex;
 import com.google.firebase.appindexing.FirebaseUserActions;
-import com.google.firebase.appindexing.Indexable;
 import com.google.firebase.appindexing.builders.Actions;
-import com.google.firebase.appindexing.builders.Indexables;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,7 +28,6 @@ import org.stepic.droid.analytic.AmplitudeAnalytic;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.base.FragmentBase;
-import org.stepic.droid.core.presenters.SectionsPresenter;
 import org.stepik.android.model.Course;
 import org.stepic.droid.notifications.StepikNotificationManager;
 import org.stepic.droid.ui.custom.StepikSwipeRefreshLayout;
@@ -56,11 +52,8 @@ public class SectionsFragment
         implements SwipeRefreshLayout.OnRefreshListener {
 
     public static final String joinFlag = "joinFlag";
-    private static final int INVITE_REQUEST_CODE = 324;
     private static final int ANIMATION_DURATION = 0;
-    public static final int DELETE_POSITION_REQUEST_CODE = 177;
 
-    private final static long INVITE_FRIEND_POPUP_DELAY = 500;
 
     @NotNull
     public static SectionsFragment newInstance() {
@@ -111,9 +104,6 @@ public class SectionsFragment
 
     boolean firstLoad;
     boolean isNeedShowCalendarInMenu = false;
-
-    @Inject
-    SectionsPresenter sectionsPresenter;
 
     @Inject
     StepikNotificationManager stepikNotificationManager;
@@ -183,31 +173,16 @@ public class SectionsFragment
         courseNotParsedView.setVisibility(View.GONE);
         resolveJoinCourseView();
         setUpToolbarWithCourse();
-        sectionsPresenter.showSections(course, false);
 
         if (course != null && course.getSlug() != null && !wasIndexed) {
             title = getString(R.string.syllabus_title) + ": " + course.getTitle();
             urlInWeb = Uri.parse(StringUtil.getUriForSyllabus(getConfig().getBaseUrl(), course.getSlug()));
-            reportIndexToGoogle();
         }
 
         if (isAfterJoining && course != null) {
             isAfterJoining = false;
         }
 
-    }
-
-    private void reportIndexToGoogle() {
-        if (course != null && !wasIndexed && course.getSlug() != null) {
-            wasIndexed = true;
-            FirebaseAppIndex.getInstance().update(getIndexable());
-            FirebaseUserActions.getInstance().start(getAction());
-            getAnalytic().reportEventWithIdName(Analytic.AppIndexing.COURSE_SYLLABUS, course.getId() + "", course.getTitle());
-        }
-    }
-
-    private Indexable getIndexable() {
-        return Indexables.newSimple(title, urlInWeb.toString());
     }
 
     public void resolveJoinCourseView() {
@@ -260,16 +235,9 @@ public class SectionsFragment
     public void onRefresh() {
         getAnalytic().reportEvent(Analytic.Interaction.REFRESH_SECTIONS);
         if (course != null) {
-            sectionsPresenter.showSections(course, true);
         } else {
             onNewIntent(getActivity().getIntent());
         }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        reportIndexToGoogle();
     }
 
     @Override
