@@ -148,8 +148,6 @@ class DatabaseFacade
 
     fun addStep(step: Step) = stepDao.insertOrUpdate(step)
 
-    fun getAllSectionsOfCourse(course: Course) = sectionDao.getAll(DbStructureSection.Columns.COURSE, course.id.toString())
-
     fun getAllUnitsOfSection(sectionId: Long) = unitDao.getAll(DbStructureUnit.Columns.SECTION, sectionId.toString())
 
     fun getStepsOfLesson(lessonId: Long) = stepDao.getAll(DbStructureStep.Column.LESSON_ID, lessonId.toString())

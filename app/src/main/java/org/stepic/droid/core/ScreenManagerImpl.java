@@ -66,7 +66,6 @@ import org.stepic.droid.ui.activities.UnitsActivity;
 import org.stepic.droid.ui.activities.VideoActivity;
 import org.stepic.droid.ui.dialogs.RemindPasswordDialogFragment;
 import org.stepic.droid.ui.fragments.CommentsFragment;
-import org.stepic.droid.ui.fragments.SectionsFragment;
 import org.stepic.droid.util.AndroidVersionKt;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.StringUtil;
@@ -499,7 +498,6 @@ public class ScreenManagerImpl implements ScreenManager {
                 .setAction(AppConstants.INTERNAL_STEPIK_ACTION)
                 .setData(Uri.parse(testSectionPath));
         if (joinedRightNow) {
-            sectionsIntent.putExtra(SectionsFragment.joinFlag, true);
         }
 
         TaskStackBuilder.create(activity)
@@ -620,8 +618,6 @@ public class ScreenManagerImpl implements ScreenManager {
             showSections(sourceActivity, course);
         } else {
             analytic.reportEventWithIdName(Analytic.Screens.SHOW_SECTIONS_JOINED, course.getId() + "", course.getTitle());
-            sourceActivity.startActivity(
-                    getSectionsIntent(sourceActivity, course).putExtra(SectionsFragment.joinFlag, true));
         }
     }
 
