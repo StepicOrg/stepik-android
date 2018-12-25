@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:foreground="?selectableItemBackground"
     android:background="@color/course_content_section_background">
 
     <TextView
@@ -63,6 +64,26 @@
         tools:ignore="missingPrefix"
         tools:text="6/10" />
 
+    <TextView
+        android:id="@+id/sectionExamDescription"
+        fontPath="fonts/Roboto-Light.ttf"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/course_content_item_inner_margin"
+        android:layout_marginStart="@dimen/course_content_item_inner_margin"
+        android:layout_marginLeft="@dimen/course_content_item_inner_margin"
+        android:layout_marginEnd="@dimen/course_content_item_inner_margin"
+        android:layout_marginRight="@dimen/course_content_item_inner_margin"
+        android:lineSpacingExtra="4sp"
+        android:textColor="@color/new_accent_color"
+        android:text="@string/course_content_section_exam_description"
+        android:textSize="12sp"
+        android:textStyle="normal"
+        app:layout_constraintEnd_toStartOf="@id/sectionDownloadStatus"
+        app:layout_constraintStart_toEndOf="@+id/sectionPosition"
+        app:layout_constraintTop_toBottomOf="@+id/sectionTextProgress"
+        tools:ignore="missingPrefix" />
+
     <org.stepik.android.view.course_content.ui.view.DownloadStatusView
         android:id="@+id/sectionDownloadStatus"
         android:background="@drawable/circle_selector"
@@ -73,7 +94,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
 
-        app:layout_constraintBottom_toBottomOf="@+id/sectionTextProgress"
+        app:layout_constraintBottom_toBottomOf="@+id/sectionExamDescription"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/sectionTitle" />
 
@@ -86,7 +107,7 @@
         android:clipToPadding="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sectionTextProgress"
+        app:layout_constraintTop_toBottomOf="@+id/sectionExamDescription"
         app:layout_constraintBottom_toTopOf="@id/bottomMargin"
 
         tools:paddingStart="52dp"

@@ -34,8 +34,9 @@ class CourseContentSectionDelegate(
         private val sectionPosition = root.sectionPosition
         private val sectionTimeline = root.sectionTimeline
         private val sectionProgress = root.sectionProgress
-        private val sectionTextProgress   = root.sectionTextProgress
-        private val sectionDownloadStatus = root.sectionDownloadStatus
+        private val sectionTextProgress    = root.sectionTextProgress
+        private val sectionDownloadStatus  = root.sectionDownloadStatus
+        private val sectionExamDescription = root.sectionExamDescription
 
         private val sectionTimeLineAdapter =
             CourseContentTimelineAdapter()
@@ -69,6 +70,11 @@ class CourseContentSectionDelegate(
                         sectionClickListener.onItemRemoveClicked(item)
                 }
             }
+
+            root.setOnClickListener {
+                val item = (itemData as? CourseContentItem.SectionItem) ?: return@setOnClickListener
+                sectionClickListener.onItemClicked(item)
+            }
         }
 
         override fun onBind(data: CourseContentItem) {
@@ -91,12 +97,14 @@ class CourseContentSectionDelegate(
                 sectionTimeline.changeVisibility(dates.isNotEmpty())
 
                 sectionDownloadStatus.changeVisibility(isEnabled)
-                itemView.isEnabled = isEnabled
+                itemView.isEnabled = section.isExam
 
                 val alpha = if (isEnabled) 1f else 0.4f
                 sectionTitle.alpha = alpha
                 sectionPosition.alpha = alpha
                 sectionTimeline.alpha = alpha
+
+                sectionExamDescription.changeVisibility(section.isExam)
             }
         }
     }

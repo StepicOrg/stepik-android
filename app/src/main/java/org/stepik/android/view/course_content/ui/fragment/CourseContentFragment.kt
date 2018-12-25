@@ -117,7 +117,7 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
         with(courseContentRecycler) {
             contentAdapter =
                 CourseContentAdapter(
-                    sectionClickListener    = CourseContentSectionClickListenerImpl(courseContentPresenter),
+                    sectionClickListener    = CourseContentSectionClickListenerImpl(context, courseContentPresenter, screenManager),
                     unitClickListener       = CourseContentUnitClickListenerImpl(activity, courseContentPresenter, screenManager),
                     controlBarClickListener = object : CourseContentControlBarClickListener {
                         override fun onCreateScheduleClicked() =
