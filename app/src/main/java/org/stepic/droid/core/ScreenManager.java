@@ -54,10 +54,6 @@ public interface ScreenManager {
 
     void showSections(Activity sourceActivity, @NotNull Course course);
 
-    void showSections(Activity sourceActivity, @NotNull Course course, boolean joinedRightNow);
-
-    void showUnitsForSection(Activity sourceActivity, @NotNull Section section);
-
     void showSteps(Activity sourceActivity, Unit unit, Lesson lesson, @Nullable Section section);
 
     void showSteps(Activity sourceActivity, Unit unit, Lesson lesson, boolean backAnimation, @Nullable Section section);
@@ -123,10 +119,6 @@ public interface ScreenManager {
     void openTermsOfServiceWeb(Activity activity);
 
     void continueAdaptiveCourse(Activity activity, Course course);
-
-    void continueCourse(Activity activity, long courseId, Section section, long lessonId, long unitId, long stepPosition);
-
-    void continueCourse(Activity activity, long courseId, Section section, long lessonId, long unitId, long stepPosition, boolean joinedRightNow);
 
     void continueCourse(Activity activity, long unitId, long lessonId, long stepId);
 

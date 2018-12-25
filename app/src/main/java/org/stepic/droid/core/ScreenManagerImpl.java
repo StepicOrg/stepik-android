@@ -61,7 +61,6 @@ import org.stepic.droid.ui.activities.StepsActivity;
 import org.stepic.droid.ui.activities.StoreManagementActivity;
 import org.stepic.droid.ui.activities.TagActivity;
 import org.stepic.droid.ui.activities.TextFeedbackActivity;
-import org.stepic.droid.ui.activities.UnitsActivity;
 import org.stepic.droid.ui.activities.VideoActivity;
 import org.stepic.droid.ui.dialogs.RemindPasswordDialogFragment;
 import org.stepic.droid.ui.fragments.CommentsFragment;
@@ -484,32 +483,6 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void continueCourse(Activity activity, long courseId, Section section, long lessonId, long unitId, long stepPosition) {
-        continueCourse(activity, courseId, section, lessonId, unitId, stepPosition, false);
-    }
-
-    @Override
-    public void continueCourse(Activity activity, long courseId, Section section, long lessonId, long unitId, long stepPosition, boolean joinedRightNow) {
-        String testStepPath = StringUtil.getUriForStepByIds(config.getBaseUrl(), lessonId, unitId, stepPosition);
-        String testSectionPath = StringUtil.getUriForCourse(config.getBaseUrl(), courseId + "");
-
-        Intent courseIntent = new Intent(activity, CourseActivity.class)
-                .setAction(AppConstants.INTERNAL_STEPIK_ACTION)
-                .setData(Uri.parse(testSectionPath));
-
-        TaskStackBuilder.create(activity)
-                .addNextIntent(new Intent(activity, MainFeedActivity.class)
-                        .setAction(AppConstants.INTERNAL_STEPIK_ACTION))
-                .addNextIntent(courseIntent)
-                .addNextIntent(getIntentForUnits(activity, section)
-                        .setAction(AppConstants.INTERNAL_STEPIK_ACTION))
-                .addNextIntent(new Intent(activity, StepsActivity.class)
-                        .setAction(AppConstants.INTERNAL_STEPIK_ACTION)
-                        .setData(Uri.parse(testStepPath)))
-                .startActivities();
-    }
-
-    @Override
     public void continueCourse(Activity activity, long unitId, long lessonId, long stepId) {
         String testStepPath = StringUtil.getUriForStepByIds(config.getBaseUrl(), lessonId, unitId, stepId);
         Intent intent = new Intent(activity, StepsActivity.class)
@@ -597,31 +570,6 @@ public class ScreenManagerImpl implements ScreenManager {
         analytic.reportEventWithIdName(Analytic.Screens.SHOW_SECTIONS, course.getId() + "", course.getTitle());
         Intent intent = CourseActivity.Companion.createIntent(sourceActivity, course, false);
         sourceActivity.startActivity(intent);
-    }
-
-    @Override
-    public void showSections(Activity sourceActivity, @NotNull Course course, boolean joinedRightNow) {
-        if (!joinedRightNow) {
-            showSections(sourceActivity, course);
-        } else {
-            analytic.reportEventWithIdName(Analytic.Screens.SHOW_SECTIONS_JOINED, course.getId() + "", course.getTitle());
-        }
-    }
-
-    @Override
-    public void showUnitsForSection(Activity sourceActivity, @NotNull Section section) {
-        analytic.reportEvent(Analytic.Screens.SHOW_UNITS, section.getId() + "");
-        Intent intent = getIntentForUnits(sourceActivity, section);
-        sourceActivity.startActivity(intent);
-        sourceActivity.overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
-    }
-
-    private Intent getIntentForUnits(Activity activity, @NotNull Section section) {
-        Intent intent = new Intent(activity, UnitsActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(AppConstants.KEY_SECTION_BUNDLE, section);
-        intent.putExtras(bundle);
-        return intent;
     }
 
     @Override

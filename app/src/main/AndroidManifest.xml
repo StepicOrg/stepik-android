@@ -112,13 +112,8 @@
 
         <activity
             android:name=".ui.activities.StepsActivity"
-            android:parentActivityName=".ui.activities.UnitsActivity"
             android:windowSoftInputMode="adjustResize">
             <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activities.UnitsActivity" />
-
             <intent-filter
                 android:autoVerify="true"
                 tools:ignore="UnusedAttribute">
@@ -176,9 +171,7 @@
 
         </activity>
 
-        <activity android:name=".ui.activities.UnitsActivity" />
-
-        <activity
+         <activity
             android:name=".ui.activities.CourseSearchResultActivity"
             android:launchMode="singleTop">
             <intent-filter>

@@ -38,10 +38,6 @@ public class StringUtil {
                 AppConstants.WEB_URI_SEPARATOR;
     }
 
-    public static String getUriForSyllabus(String baseUrl, String slug) {
-        return getUriForCourse(baseUrl, slug) + AppConstants.APP_INDEXING_SYLLABUS_MANIFEST;
-    }
-
     public static String getDynamicLinkForCourse(Config config, String slug) {
         String firebaseDomain = config.getFirebaseDomain();
         if (firebaseDomain == null) {
