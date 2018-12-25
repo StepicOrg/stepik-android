@@ -9,8 +9,6 @@ interface UnitsView {
 
     fun onEmptyUnits()
 
-    fun onNeedShowUnits(unitList: List<Unit>, lessonList: List<Lesson>, progressMap: Map<Long, Progress>) // it is not mutable!
-
     fun onLoading()
 
     fun onConnectionProblem()

@@ -1,44 +1,23 @@
 package org.stepic.droid.ui.fragments;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.util.Pair;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ProgressBar;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
-import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.core.presenters.UnitsLearningProgressPresenter;
 import org.stepic.droid.core.presenters.UnitsPresenter;
 import org.stepic.droid.core.presenters.contracts.UnitsLearningProgressView;
 import org.stepic.droid.core.presenters.contracts.UnitsView;
 import org.stepic.droid.persistence.model.DownloadProgress;
-import org.stepik.android.model.Lesson;
-import org.stepik.android.model.Progress;
 import org.stepik.android.model.Section;
-import org.stepik.android.model.Unit;
-import org.stepic.droid.ui.custom.StepikSwipeRefreshLayout;
-import org.stepic.droid.ui.dialogs.DeleteItemDialogFragment;
 import org.stepic.droid.ui.util.ToolbarHelperKt;
-import org.stepic.droid.util.ProgressHelper;
-
-import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
-import butterknife.BindView;
-
 public class UnitsFragment extends FragmentBase implements
-        SwipeRefreshLayout.OnRefreshListener,
         UnitsView,
         UnitsLearningProgressView {
 
@@ -56,24 +35,6 @@ public class UnitsFragment extends FragmentBase implements
     }
 
 
-    @BindView(R.id.swipe_refresh_layout_units)
-    StepikSwipeRefreshLayout swipeRefreshLayout;
-
-    @BindView(R.id.units_recycler_view)
-    RecyclerView unitsRecyclerView;
-
-    @BindView(R.id.loadProgressbarOnEmptyScreen)
-    ProgressBar progressBar;
-
-    @BindView(R.id.reportProblem)
-    protected View reportConnectionProblem;
-
-    @BindView(R.id.report_empty)
-    protected View reportEmpty;
-
-    @BindView(R.id.rootViewUnits)
-    protected View rootView;
-
     private Section section;
 
     @Inject
@@ -83,29 +44,13 @@ public class UnitsFragment extends FragmentBase implements
     UnitsLearningProgressPresenter unitsLearningProgressPresenter;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setRetainInstance(true);
-        setHasOptionsMenu(true);
-        section = getArguments().getParcelable(SECTION_KEY);
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_units, container, false);
-    }
-
-    @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         hideSoftKeypad();
-        swipeRefreshLayout.setOnRefreshListener(this);
 
         ToolbarHelperKt.initCenteredToolbar(this, R.string.units_lessons_title, true);
 
 
-        ProgressHelper.activate(progressBar);
 
         unitsPresenter.attachView(this);
         unitsLearningProgressPresenter.attachView(this);
@@ -123,70 +68,15 @@ public class UnitsFragment extends FragmentBase implements
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        ProgressHelper.dismiss(swipeRefreshLayout);
-    }
-
-    @Override
-    public void onRefresh() {
-        getAnalytic().reportEvent(Analytic.Interaction.REFRESH_UNITS);
-        unitsPresenter.showUnits(section, true);
-    }
-
-    @org.jetbrains.annotations.Nullable
-    private Pair<Unit, Integer> getUnitOnScreenAndPositionById(long unitId) {
-        int position = -1;
-        Unit unit = null;
-
-        return new Pair<>(unit, position);
-    }
-
-    private void dismiss() {
-        ProgressHelper.dismiss(progressBar);
-        ProgressHelper.dismiss(swipeRefreshLayout);
-    }
-
-    @Override
     public void onEmptyUnits() {
-        reportConnectionProblem.setVisibility(View.GONE);
-        dismiss();
-        reportEmpty.setVisibility(View.VISIBLE);
-    }
-
-    public void onNeedShowUnits(@NotNull List<Unit> unitList, @NotNull List<Lesson> lessonList, @NotNull Map<Long, Progress> progressMap) {
-        reportEmpty.setVisibility(View.GONE);
-        reportConnectionProblem.setVisibility(View.GONE);
-
-
-
-        dismiss();
     }
 
     @Override
     public void onLoading() {
-        reportEmpty.setVisibility(View.GONE);
-        reportConnectionProblem.setVisibility(View.GONE);
     }
 
     @Override
     public void onConnectionProblem() {
-        dismiss();
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-//        if (adapter != null && requestCode == DELETE_POSITION_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-//            getAnalytic().reportEvent(Analytic.Interaction.ACCEPT_DELETING_UNIT);
-//            int position = data.getIntExtra(DeleteItemDialogFragment.deletePositionKey, -1);
-//            unitsPresenter.removeDownloadTask(adapter.getUnits().get(position));
-//        }
-
-//        if (requestCode == VideoQualityDetailedDialog.VIDEO_QUALITY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-//            int position = data.getIntExtra(VideoQualityDetailedDialog.POSITION_KEY, -1);
-//            determineNetworkTypeAndLoad(position);
-//        }
     }
 
     @Override
@@ -195,37 +85,21 @@ public class UnitsFragment extends FragmentBase implements
 
     @Override
     public void showOnRemoveDownloadDialog(int position) {
-        DeleteItemDialogFragment dialogFragment = DeleteItemDialogFragment.newInstance(position);
-        dialogFragment.setTargetFragment(this, UnitsFragment.DELETE_POSITION_REQUEST_CODE);
-        dialogFragment.show(getFragmentManager(), DeleteItemDialogFragment.TAG);
     }
 
     @Override
     public void setNewScore(long unitId, double newScore) {
-        Pair<Unit, Integer> unitPairPosition = getUnitOnScreenAndPositionById(unitId);
-        if (unitPairPosition == null) return;
-
     }
 
     @Override
     public void setUnitPassed(long unitId) {
-        Pair<Unit, Integer> unitPairPosition = getUnitOnScreenAndPositionById(unitId);
-        if (unitPairPosition == null) return;
-        Unit unit = unitPairPosition.first;
     }
 
     @Override
     public void showDownloadProgress(@NotNull DownloadProgress progress) {
     }
 
-    public void openSteps(@NotNull Unit unit, @NotNull Lesson lesson, @org.jetbrains.annotations.Nullable Section parentSection) {
-        screenManager.showSteps(getActivity(), unit, lesson, parentSection);
-    }
-
     @Override
     public void showVideoQualityDialog(int position) {
-//        VideoQualityDetailedDialog dialogFragment = VideoQualityDetailedDialog.Companion.newInstance(position);
-//        dialogFragment.setTargetFragment(this, VideoQualityDetailedDialog.VIDEO_QUALITY_REQUEST_CODE);
-//        dialogFragment.show(getFragmentManager(), VideoQualityDetailedDialog.TAG);
     }
 }
