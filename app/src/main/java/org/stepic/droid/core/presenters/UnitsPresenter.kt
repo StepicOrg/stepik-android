@@ -9,7 +9,6 @@ import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.UnitsView
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
-import org.stepic.droid.di.section.SectionScope
 import org.stepic.droid.exceptions.UnitStoredButLessonNotException
 import org.stepic.droid.persistence.downloads.interactor.DownloadInteractor
 import org.stepic.droid.persistence.downloads.progress.DownloadProgressProvider
@@ -33,7 +32,6 @@ import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 import kotlin.collections.ArrayList
 
-@SectionScope
 class UnitsPresenter
 @Inject
 constructor(
