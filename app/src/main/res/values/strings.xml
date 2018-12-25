@@ -29,7 +29,6 @@
     <string name="soft_deadline">Soft deadline</string>
     <string name="hard_deadline">Hard deadline</string>
 
-    <string name="units_lessons_title">Lessons</string>
     <string name="steps_title">Steps</string>
     <string name="video_title">Video</string>
     <string name="wi_fi_setting">Wi-Fi only download</string>
@@ -50,7 +49,6 @@
     <string name="you_dropped">"You dropped %s"</string>
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
-    <string name="select">Select</string>
     <string name="connectionProblems">Connection was lost</string>
     <string name="are_you_sure">Are you sure?</string>
     <string name="explain_permission">For caching the course and playing the video offline Stepik

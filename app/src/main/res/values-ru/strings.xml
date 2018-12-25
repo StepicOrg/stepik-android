@@ -18,7 +18,6 @@
     <string name="soft_deadline">Мягкий дедлайн</string>
     <string name="hard_deadline">Жесткий дедлайн</string>
 
-    <string name="units_lessons_title">Уроки</string>
     <string name="steps_title">Шаги</string>
     <string name="not_video_player_error">Пожалуйста, установите видеоплеер</string>
     <string name="video_title">Видео</string>
@@ -38,7 +37,6 @@
     <string name="you_dropped">Вы покинули %s</string>
     <string name="cancel">Отмена</string>
     <string name="save">Сохранить</string>
-    <string name="select">Выбрать</string>
     <string name="are_you_sure">Вы уверены?</string>
     <string name="deny">Отклонить</string>
     <string name="allow">Разрешить</string>
