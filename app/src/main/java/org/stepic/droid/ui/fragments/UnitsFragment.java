@@ -9,9 +9,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
@@ -19,7 +16,6 @@ import android.widget.ProgressBar;
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.base.App;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.core.presenters.UnitsLearningProgressPresenter;
 import org.stepic.droid.core.presenters.UnitsPresenter;
@@ -106,12 +102,6 @@ public class UnitsFragment extends FragmentBase implements
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.share_menu, menu);
-    }
-
-    @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         hideSoftKeypad();
@@ -168,30 +158,9 @@ public class UnitsFragment extends FragmentBase implements
         return new Pair<>(unit, position);
     }
 
-    private void shareSection() {
-        if (section != null) {
-            Intent intent = getShareHelper().getIntentForSectionSharing(section);
-            startActivity(intent);
-        }
-    }
-
     private void dismiss() {
         ProgressHelper.dismiss(progressBar);
         ProgressHelper.dismiss(swipeRefreshLayout);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_item_share:
-                shareSection();
-                return true;
-            case android.R.id.home:
-                // Respond to the action bar's Up/Home button
-                getActivity().finish();
-                return true;
-        }
-        return false;
     }
 
     @Override
