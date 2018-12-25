@@ -125,8 +125,6 @@ interface AppCoreComponent {
 
     fun inject(dialogFragment: DiscountingPolicyDialogFragment)
 
-    fun inject(adapter: UnitAdapter)
-
     fun inject(dialogFragment: LogoutAreYouSureDialog)
 
     fun inject(dialogFragment: VideoQualityDialog)

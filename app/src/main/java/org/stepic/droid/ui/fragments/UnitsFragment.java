@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +25,6 @@ import org.stepik.android.model.Lesson;
 import org.stepik.android.model.Progress;
 import org.stepik.android.model.Section;
 import org.stepik.android.model.Unit;
-import org.stepic.droid.ui.adapters.UnitAdapter;
 import org.stepic.droid.ui.custom.StepikSwipeRefreshLayout;
 import org.stepic.droid.ui.dialogs.DeleteItemDialogFragment;
 import org.stepic.droid.ui.util.ToolbarHelperKt;
@@ -84,9 +82,6 @@ public class UnitsFragment extends FragmentBase implements
     @Inject
     UnitsLearningProgressPresenter unitsLearningProgressPresenter;
 
-    private UnitAdapter adapter;
-
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,10 +104,6 @@ public class UnitsFragment extends FragmentBase implements
 
         ToolbarHelperKt.initCenteredToolbar(this, R.string.units_lessons_title, true);
 
-        unitsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new UnitAdapter(section, getAnalytic(), this, unitsPresenter);
-
-        unitsRecyclerView.setAdapter(adapter);
 
         ProgressHelper.activate(progressBar);
 
@@ -147,14 +138,7 @@ public class UnitsFragment extends FragmentBase implements
     private Pair<Unit, Integer> getUnitOnScreenAndPositionById(long unitId) {
         int position = -1;
         Unit unit = null;
-        for (int i = 0; i < adapter.getUnits().size(); i++) {
-            if (adapter.getUnits().get(i).getId() == unitId) {
-                position = i;
-                unit = adapter.getUnits().get(i);
-                break;
-            }
-        }
-        if (unit == null || position == -1 || position >= adapter.getUnits().size()) return null;
+
         return new Pair<>(unit, position);
     }
 
@@ -174,18 +158,7 @@ public class UnitsFragment extends FragmentBase implements
         reportEmpty.setVisibility(View.GONE);
         reportConnectionProblem.setVisibility(View.GONE);
 
-        adapter.getLessons().clear();
-        adapter.getLessons().addAll(lessonList);
 
-        adapter.getUnits().clear();
-        adapter.getUnits().addAll(unitList);
-
-        adapter.getUnitProgressMap().clear();
-        for (Map.Entry<Long, Progress> pair: progressMap.entrySet()) {
-            adapter.getUnitProgressMap().append(pair.getKey(), pair.getValue());
-        }
-
-        adapter.notifyDataSetChanged();
 
         dismiss();
     }
@@ -194,28 +167,21 @@ public class UnitsFragment extends FragmentBase implements
     public void onLoading() {
         reportEmpty.setVisibility(View.GONE);
         reportConnectionProblem.setVisibility(View.GONE);
-        if (adapter.getItemCount() == 0) {
-            ProgressHelper.activate(progressBar);
-        }
     }
 
     @Override
     public void onConnectionProblem() {
         dismiss();
-        if (adapter.getItemCount() == 0) {
-            reportEmpty.setVisibility(View.GONE);
-            reportConnectionProblem.setVisibility(View.VISIBLE);
-        }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (adapter != null && requestCode == DELETE_POSITION_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            getAnalytic().reportEvent(Analytic.Interaction.ACCEPT_DELETING_UNIT);
-            int position = data.getIntExtra(DeleteItemDialogFragment.deletePositionKey, -1);
-            unitsPresenter.removeDownloadTask(adapter.getUnits().get(position));
-        }
+//        if (adapter != null && requestCode == DELETE_POSITION_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+//            getAnalytic().reportEvent(Analytic.Interaction.ACCEPT_DELETING_UNIT);
+//            int position = data.getIntExtra(DeleteItemDialogFragment.deletePositionKey, -1);
+//            unitsPresenter.removeDownloadTask(adapter.getUnits().get(position));
+//        }
 
 //        if (requestCode == VideoQualityDetailedDialog.VIDEO_QUALITY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
 //            int position = data.getIntExtra(VideoQualityDetailedDialog.POSITION_KEY, -1);
@@ -239,14 +205,6 @@ public class UnitsFragment extends FragmentBase implements
         Pair<Unit, Integer> unitPairPosition = getUnitOnScreenAndPositionById(unitId);
         if (unitPairPosition == null) return;
 
-        int position = unitPairPosition.second;
-
-        Progress progress = adapter.getUnitProgressMap().get(unitId);
-        if (progress != null) {
-            progress.setScore(newScore + "");
-        }
-
-        adapter.notifyItemChanged(position);
     }
 
     @Override
@@ -254,16 +212,10 @@ public class UnitsFragment extends FragmentBase implements
         Pair<Unit, Integer> unitPairPosition = getUnitOnScreenAndPositionById(unitId);
         if (unitPairPosition == null) return;
         Unit unit = unitPairPosition.first;
-        int position = unitPairPosition.second;
-
-        adapter.notifyItemChanged(position);
     }
 
     @Override
     public void showDownloadProgress(@NotNull DownloadProgress progress) {
-        if (adapter != null) {
-            adapter.setItemDownloadProgress(progress);
-        }
     }
 
     public void openSteps(@NotNull Unit unit, @NotNull Lesson lesson, @org.jetbrains.annotations.Nullable Section parentSection) {
