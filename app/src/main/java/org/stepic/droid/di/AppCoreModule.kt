@@ -38,8 +38,6 @@ import org.stepic.droid.notifications.*
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.social.SocialManager
-import org.stepic.droid.util.connectivity.NetworkTypeDeterminer
-import org.stepic.droid.util.connectivity.NetworkTypeDeterminerImpl
 import org.stepic.droid.util.resolvers.StepTypeResolver
 import org.stepic.droid.util.resolvers.StepTypeResolverImpl
 import org.stepic.droid.util.resolvers.VideoResolver
@@ -147,9 +145,6 @@ abstract class AppCoreModule {
     @Binds
     @AppSingleton
     internal abstract fun provideFontProvider(fontsProvider: FontsProviderImpl): FontsProvider
-
-    @Binds
-    abstract fun provideNetworkTypeDeterminer(networkTypeDeterminer: NetworkTypeDeterminerImpl): NetworkTypeDeterminer
 
     @Binds
     @AppSingleton

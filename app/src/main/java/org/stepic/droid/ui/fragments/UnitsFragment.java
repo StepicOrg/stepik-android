@@ -21,11 +21,8 @@ import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.base.FragmentBase;
-import org.stepic.droid.core.LessonSessionManager;
-import org.stepic.droid.core.presenters.DownloadingInteractionPresenter;
 import org.stepic.droid.core.presenters.UnitsLearningProgressPresenter;
 import org.stepic.droid.core.presenters.UnitsPresenter;
-import org.stepic.droid.core.presenters.contracts.DownloadingInteractionView;
 import org.stepic.droid.core.presenters.contracts.UnitsLearningProgressView;
 import org.stepic.droid.core.presenters.contracts.UnitsView;
 import org.stepic.droid.persistence.model.DownloadProgress;
@@ -38,7 +35,6 @@ import org.stepic.droid.ui.custom.StepikSwipeRefreshLayout;
 import org.stepic.droid.ui.dialogs.DeleteItemDialogFragment;
 import org.stepic.droid.ui.util.ToolbarHelperKt;
 import org.stepic.droid.util.ProgressHelper;
-import org.stepic.droid.util.SnackbarShower;
 
 import java.util.List;
 import java.util.Map;
@@ -46,13 +42,10 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import butterknife.BindView;
-import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
-import timber.log.Timber;
 
 public class UnitsFragment extends FragmentBase implements
         SwipeRefreshLayout.OnRefreshListener,
         UnitsView,
-        DownloadingInteractionView,
         UnitsLearningProgressView {
 
     private static final int ANIMATION_DURATION = 0;
@@ -94,12 +87,6 @@ public class UnitsFragment extends FragmentBase implements
 
     @Inject
     UnitsLearningProgressPresenter unitsLearningProgressPresenter;
-
-    @Inject
-    LessonSessionManager lessonManager;
-
-    @Inject
-    DownloadingInteractionPresenter downloadingInteractionPresenter;
 
     private UnitAdapter adapter;
 
@@ -152,11 +139,6 @@ public class UnitsFragment extends FragmentBase implements
         adapter = new UnitAdapter(section, getAnalytic(), this, unitsPresenter);
 
         unitsRecyclerView.setAdapter(adapter);
-        unitsRecyclerView.setItemAnimator(new SlideInRightAnimator());
-        unitsRecyclerView.getItemAnimator().setRemoveDuration(ANIMATION_DURATION);
-        unitsRecyclerView.getItemAnimator().setAddDuration(ANIMATION_DURATION);
-        unitsRecyclerView.getItemAnimator().setMoveDuration(ANIMATION_DURATION);
-
 
         ProgressHelper.activate(progressBar);
 
@@ -172,20 +154,11 @@ public class UnitsFragment extends FragmentBase implements
         unitsLearningProgressPresenter.detachView(this);
         unitsPresenter.detachView(this);
 
-        lessonManager.reset();
-
         super.onDestroyView();
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        downloadingInteractionPresenter.attachView(this);
-    }
-
-    @Override
     public void onStop() {
-        downloadingInteractionPresenter.detachView(this);
         super.onStop();
         ProgressHelper.dismiss(swipeRefreshLayout);
     }
@@ -299,12 +272,6 @@ public class UnitsFragment extends FragmentBase implements
 
     @Override
     public void determineNetworkTypeAndLoad(int position) {
-        downloadingInteractionPresenter.checkOnLoading(position);
-    }
-
-    @Override
-    public void onLoadingAccepted(int position) {
-        unitsPresenter.addDownloadTask(adapter.getUnits().get(position));
     }
 
     @Override
@@ -312,36 +279,6 @@ public class UnitsFragment extends FragmentBase implements
         DeleteItemDialogFragment dialogFragment = DeleteItemDialogFragment.newInstance(position);
         dialogFragment.setTargetFragment(this, UnitsFragment.DELETE_POSITION_REQUEST_CODE);
         dialogFragment.show(getFragmentManager(), DeleteItemDialogFragment.TAG);
-    }
-
-    @Override
-    public void onShowPreferenceSuggestion() {
-        getAnalytic().reportEvent(Analytic.Downloading.SHOW_SNACK_PREFS_UNITS);
-        SnackbarShower.INSTANCE.showTurnOnDownloadingInSettings(rootView, getContext(), new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    getAnalytic().reportEvent(Analytic.Downloading.CLICK_SETTINGS_UNITS);
-                    getScreenManager().showSettings(getActivity());
-                } catch (NullPointerException nullPointerException) {
-                    Timber.e(nullPointerException);
-                }
-            }
-        });
-    }
-
-    @Override
-    public void onShowInternetIsNotAvailableRetry(final int position) {
-        getAnalytic().reportEvent(Analytic.Downloading.SHOW_SNACK_INTERNET_UNITS);
-        SnackbarShower.INSTANCE.showInternetRetrySnackbar(rootView, getContext(), new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getAnalytic().reportEvent(Analytic.Downloading.CLICK_RETRY_UNITS);
-                if (adapter != null) {
-                    adapter.onItemDownloadClicked(position);
-                }
-            }
-        });
     }
 
     @Override
