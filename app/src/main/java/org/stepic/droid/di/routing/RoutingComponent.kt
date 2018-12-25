@@ -1,7 +1,6 @@
 package org.stepic.droid.di.routing
 
 import dagger.Subcomponent
-import org.stepic.droid.di.section.SectionComponent
 import org.stepic.droid.di.step.StepComponent
 
 @RoutingScope
@@ -14,8 +13,6 @@ interface RoutingComponent {
     }
 
     fun stepComponentBuilder(): StepComponent.Builder
-
-    fun sectionComponentBuilder(): SectionComponent.Builder
 
     //without injection, it is middle-man component
 }

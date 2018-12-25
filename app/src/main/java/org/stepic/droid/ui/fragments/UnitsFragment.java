@@ -90,15 +90,6 @@ public class UnitsFragment extends FragmentBase implements
 
     private UnitAdapter adapter;
 
-    @Override
-    protected void injectComponent() {
-        App.Companion
-                .componentManager()
-                .routingComponent()
-                .sectionComponentBuilder()
-                .build()
-                .inject(this);
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -106,13 +97,6 @@ public class UnitsFragment extends FragmentBase implements
         setRetainInstance(true);
         setHasOptionsMenu(true);
         section = getArguments().getParcelable(SECTION_KEY);
-    }
-
-    @Override
-    protected void onReleaseComponent() {
-        App.Companion
-                .componentManager()
-                .releaseRoutingComponent();
     }
 
     @Nullable
