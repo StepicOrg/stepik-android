@@ -32,6 +32,7 @@ import org.stepic.droid.ui.activities.*
 import org.stepic.droid.util.*
 import org.stepic.droid.util.resolvers.text.TextResolver
 import org.stepic.droid.web.Api
+import org.stepik.android.view.course.routing.CourseScreenTab
 import org.stepik.android.view.course.ui.activity.CourseActivity
 import timber.log.Timber
 import java.util.*
@@ -428,9 +429,9 @@ constructor(
             val modulePosition = HtmlHelper.parseModulePositionFromNotification(stepikNotification.htmlText)
             val intent =
                 if (courseId >= 0 && modulePosition != null && modulePosition >= 0) {
-                    CourseActivity.createIntent(context, courseId)
+                    CourseActivity.createIntent(context, courseId, tab = CourseScreenTab.SYLLABUS)
                 } else {
-                    CourseActivity.createIntent(context, relatedCourse)
+                    CourseActivity.createIntent(context, relatedCourse, tab = CourseScreenTab.SYLLABUS)
                 }
             intent.action = AppConstants.OPEN_NOTIFICATION_FOR_CHECK_COURSE
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -716,7 +717,7 @@ constructor(
             val modulePosition = HtmlHelper.parseModulePositionFromNotification(notification.htmlText)
 
             if (courseId != null && courseId >= 0 && modulePosition != null && modulePosition >= 0) {
-                val intent = CourseActivity.createIntent(context, courseId) // Intent(context, SectionActivity::class.java)
+                val intent = CourseActivity.createIntent(context, courseId, tab = CourseScreenTab.SYLLABUS) // Intent(context, SectionActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 context.startActivity(intent)
                 return true
@@ -738,14 +739,15 @@ constructor(
         try {
             val url = Uri.parse(link)
             val identifier = url.pathSegments[0]
-            val intent: Intent
-            if (identifier == "course") {
-                intent = Intent(context, CourseActivity::class.java)
-            } else if (identifier == "lesson") {
-                intent = Intent(context, StepsActivity::class.java)
-            } else {
-                return null
-            }
+            val intent: Intent =
+                when(identifier){
+                    "course" ->
+                        Intent(context, CourseActivity::class.java)
+                    "lesson" ->
+                        Intent(context, StepsActivity::class.java)
+                    else ->
+                        return null
+                }
             intent.data = url
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             return intent

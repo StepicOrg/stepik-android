@@ -60,9 +60,10 @@ class CourseActivity : FragmentActivityBase(), CourseView {
                 .putExtra(EXTRA_AUTO_ENROLL, autoEnroll)
                 .putExtra(EXTRA_TAB, tab.ordinal)
 
-        fun createIntent(context: Context, courseId: Long): Intent =
+        fun createIntent(context: Context, courseId: Long, tab: CourseScreenTab = CourseScreenTab.INFO): Intent =
             Intent(context, CourseActivity::class.java)
                 .putExtra(EXTRA_COURSE_ID, courseId)
+                .putExtra(EXTRA_TAB, tab.ordinal)
     }
 
     private var courseId: Long = NO_ID
