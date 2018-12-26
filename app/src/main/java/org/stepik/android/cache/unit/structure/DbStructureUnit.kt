@@ -30,7 +30,7 @@ object DbStructureUnit {
     fun createTable(db: SQLiteDatabase) {
         db.execSQL("""
             CREATE TABLE IF NOT EXISTS $TABLE_NAME (
-                ${DbStructureUnit.Columns.ID} LONG,
+                ${DbStructureUnit.Columns.ID} LONG PRIMARY KEY,
                 ${DbStructureUnit.Columns.SECTION} LONG,
                 ${DbStructureUnit.Columns.LESSON} LONG,
                 ${DbStructureUnit.Columns.ASSIGNMENTS} TEXT,
