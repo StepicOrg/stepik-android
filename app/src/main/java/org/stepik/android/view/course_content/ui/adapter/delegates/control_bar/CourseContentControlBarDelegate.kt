@@ -21,7 +21,7 @@ class CourseContentControlBarDelegate(
         ViewHolder(createView(parent, R.layout.view_course_content_control_bar))
 
     override fun isForViewType(position: Int): Boolean =
-            getItemAtPosition(position) is CourseContentItem.ControlBar
+        getItemAtPosition(position) is CourseContentItem.ControlBar
 
     inner class ViewHolder(root: View) : DelegateViewHolder<CourseContentItem>(root) {
         private val controlBar = root.controlBar

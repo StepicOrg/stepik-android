@@ -80,7 +80,9 @@ class CourseHeaderDelegate(
     private fun initCompoundDrawables() = with(courseActivity) {
         courseFeatured.setCompoundDrawables(start = R.drawable.ic_verified)
 
-        val learnersCountDrawable = AppCompatResources.getDrawable(this, R.drawable.ic_learners)
+        val learnersCountDrawable = AppCompatResources
+            .getDrawable(this, R.drawable.ic_learners)
+            ?.let(DrawableCompat::wrap)
             ?: return@with
         DrawableCompat.setTint(learnersCountDrawable, ContextCompat.getColor(this,  android.R.color.white))
         courseLearnersCount.setCompoundDrawablesWithIntrinsicBounds(learnersCountDrawable, null, null, null)
