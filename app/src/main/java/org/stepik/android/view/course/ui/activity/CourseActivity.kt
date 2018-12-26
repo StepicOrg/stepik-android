@@ -10,6 +10,7 @@ import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout
 import android.support.v4.app.DialogFragment
 import android.support.v4.content.ContextCompat
+import android.support.v7.app.AppCompatDelegate
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
@@ -64,6 +65,10 @@ class CourseActivity : FragmentActivityBase(), CourseView {
             Intent(context, CourseActivity::class.java)
                 .putExtra(EXTRA_COURSE_ID, courseId)
                 .putExtra(EXTRA_TAB, tab.ordinal)
+
+        init {
+            AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
+        }
     }
 
     private var courseId: Long = NO_ID
