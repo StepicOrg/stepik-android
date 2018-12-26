@@ -296,6 +296,10 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         screenManager.continueAdaptiveCourse(this, course)
     }
 
+    override fun shareCourse(course: Course) {
+        startActivity(shareHelper.getIntentForCourseSharing(course))
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         coursePresenter.onSaveInstanceState(outState)
         super.onSaveInstanceState(outState)

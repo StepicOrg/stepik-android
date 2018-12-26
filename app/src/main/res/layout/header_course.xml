@@ -135,6 +135,8 @@
         android:orientation="horizontal"
         android:layout_marginLeft="?actionBarSize"
         android:layout_marginRight="?actionBarSize"
+        android:paddingEnd="?actionBarSize"
+        android:paddingRight="?actionBarSize"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="@dimen/course_info_margin_expanded"
         android:gravity="center">

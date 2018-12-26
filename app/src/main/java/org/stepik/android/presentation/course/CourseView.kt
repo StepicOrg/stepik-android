@@ -24,4 +24,6 @@ interface CourseView {
 
     fun continueCourse(lastStep: LastStep)
     fun continueAdaptiveCourse(course: Course)
+
+    fun shareCourse(course: Course)
 }

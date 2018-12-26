@@ -208,6 +208,18 @@ constructor(
         courseIndexingInteractor.endIndexing()
     }
 
+    /**
+     * Sharing
+     */
+    fun shareCourse() {
+        val course = (state as? CourseView.State.CourseLoaded)
+            ?.courseHeaderData
+            ?.course
+            ?: return
+
+        view?.shareCourse(course)
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putParcelable(KEY_COURSE_HEADER_DATA, (state as? CourseView.State.CourseLoaded)?.courseHeaderData)
     }

@@ -56,6 +56,7 @@ class CourseHeaderDelegate(
     }
 
     private var dropCourseMenuItem: MenuItem? = null
+    private var shareCourseMenuItem: MenuItem? = null
 
     init {
         initCollapsingAnimation()
@@ -151,24 +152,43 @@ class CourseHeaderDelegate(
 
             dropCourseMenuItem?.isVisible = this == EnrollmentState.ENROLLED
         }
+
+        shareCourseMenuItem?.isVisible = true
     }
 
     fun onOptionsMenuCreated(menu: Menu) {
         dropCourseMenuItem = menu.findItem(R.id.drop_course)
         dropCourseMenuItem?.isVisible = courseHeaderData?.enrollmentState == EnrollmentState.ENROLLED
+
+        shareCourseMenuItem = menu.findItem(R.id.share_course)
+        shareCourseMenuItem?.let { menuItem ->
+            val drawable = DrawableCompat.wrap(menuItem.icon)
+            DrawableCompat.setTint(drawable, ContextCompat.getColor(courseActivity, R.color.white))
+            menuItem.icon = drawable
+
+            menuItem.isVisible = courseHeaderData != null
+        }
     }
 
     fun onOptionsItemSelected(item: MenuItem): Boolean =
-        if (item.itemId == R.id.drop_course) {
-            coursePresenter.dropCourse()
+        when(item.itemId) {
+            R.id.drop_course -> {
+                coursePresenter.dropCourse()
 
-            courseHeaderData?.let { headerData ->
-                analytic.reportAmplitudeEvent(AmplitudeAnalytic.Course.UNSUBSCRIBED, mapOf(
-                    AmplitudeAnalytic.Course.Params.COURSE to headerData.courseId
-                ))
+                courseHeaderData?.let { headerData ->
+                    analytic.reportAmplitudeEvent(
+                        AmplitudeAnalytic.Course.UNSUBSCRIBED, mapOf(
+                            AmplitudeAnalytic.Course.Params.COURSE to headerData.courseId
+                        )
+                    )
+                }
+                true
             }
-            true
-        } else {
-            false
+            R.id.share_course -> {
+                coursePresenter.shareCourse()
+                true
+            }
+            else ->
+                false
         }
 }

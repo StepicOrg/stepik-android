@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/drop_course"
         android:title="@string/drop_course"/>
+    <item
+        android:id="@+id/share_course"
+        android:title="@string/share_title"
+        android:icon="@drawable/ic_share_dark"
+        app:showAsAction="ifRoom" />
 </menu>
