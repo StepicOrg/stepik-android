@@ -63,7 +63,13 @@ constructor(
             lastStepId      = cursor.getString(DbStructureCourse.Columns.LAST_STEP),
             learnersCount   = cursor.getLong(DbStructureCourse.Columns.LEARNERS_COUNT),
             reviewSummary   = cursor.getLong(DbStructureCourse.Columns.REVIEW_SUMMARY),
-            timeToComplete  = cursor.getLong(DbStructureCourse.Columns.TIME_TO_COMPLETE)
+            timeToComplete  = cursor.getLong(DbStructureCourse.Columns.TIME_TO_COMPLETE),
+
+            isPaid          = cursor.getBoolean(DbStructureCourse.Columns.IS_PAID),
+            price           = cursor.getString(DbStructureCourse.Columns.PRICE),
+            currencyCode    = cursor.getString(DbStructureCourse.Columns.CURRENCY_CODE),
+            displayPrice    = cursor.getString(DbStructureCourse.Columns.DISPLAY_PRICE),
+            priceTier       = cursor.getString(DbStructureCourse.Columns.PRICE_TIER)
         )
 
     public override fun getContentValues(course: Course): ContentValues {
@@ -110,6 +116,12 @@ constructor(
         values.put(DbStructureCourse.Columns.LEARNERS_COUNT, course.learnersCount)
         values.put(DbStructureCourse.Columns.REVIEW_SUMMARY, course.reviewSummary)
         values.put(DbStructureCourse.Columns.TIME_TO_COMPLETE, course.timeToComplete)
+
+        values.put(DbStructureCourse.Columns.TIME_TO_COMPLETE, course.isPaid)
+        values.put(DbStructureCourse.Columns.TIME_TO_COMPLETE, course.price)
+        values.put(DbStructureCourse.Columns.TIME_TO_COMPLETE, course.currencyCode)
+        values.put(DbStructureCourse.Columns.TIME_TO_COMPLETE, course.displayPrice)
+        values.put(DbStructureCourse.Columns.TIME_TO_COMPLETE, course.priceTier)
 
         return values
     }

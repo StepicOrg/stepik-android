@@ -59,6 +59,12 @@ object DbStructureCourse {
         const val REVIEW_SUMMARY = "review_summary"
 
         const val TIME_TO_COMPLETE = "time_to_complete"
+
+        const val IS_PAID = "is_paid"
+        const val PRICE = "price"
+        const val CURRENCY_CODE = "currency_code"
+        const val DISPLAY_PRICE = "display_price"
+        const val PRICE_TIER = "price_tier"
     }
 
     fun createTable(db: SQLiteDatabase) {
@@ -104,7 +110,13 @@ object DbStructureCourse {
                 ${DbStructureCourse.Columns.LAST_STEP} TEXT,
                 ${DbStructureCourse.Columns.LEARNERS_COUNT} LONG,
                 ${DbStructureCourse.Columns.REVIEW_SUMMARY} LONG,
-                ${DbStructureCourse.Columns.TIME_TO_COMPLETE} LONG
+                ${DbStructureCourse.Columns.TIME_TO_COMPLETE} LONG,
+
+                ${DbStructureCourse.Columns.IS_PAID} INTEGER,
+                ${DbStructureCourse.Columns.PRICE} TEXT,
+                ${DbStructureCourse.Columns.CURRENCY_CODE} TEXT,
+                ${DbStructureCourse.Columns.DISPLAY_PRICE} TEXT,
+                ${DbStructureCourse.Columns.PRICE_TIER} TEXT
             )
         """.trimIndent())
     }
