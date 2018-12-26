@@ -36,9 +36,10 @@ import org.stepik.android.presentation.course.CoursePresenter
 import org.stepik.android.presentation.course.CourseView
 import org.stepik.android.presentation.course.model.EnrollmentError
 import org.stepik.android.view.course.listener.CourseFragmentPageChangeListener
+import org.stepik.android.view.course.routing.CourseScreenTab
 import org.stepik.android.view.course.routing.getCourseIdFromDeepLink
+import org.stepik.android.view.course.routing.getCourseTabFromDeepLink
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
-import org.stepik.android.view.ui.listener.FragmentViewPagerScrollStateListener
 import uk.co.chrisjenx.calligraphy.TypefaceUtils
 import javax.inject.Inject
 
@@ -47,19 +48,21 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         private const val EXTRA_COURSE = "course"
         private const val EXTRA_COURSE_ID = "course_id"
         private const val EXTRA_AUTO_ENROLL = "auto_enroll"
+        private const val EXTRA_TAB = "tab"
 
         private const val NO_ID = -1L
 
         private const val UNAUTHORIZED_DIALOG_TAG = "unauthorized_dialog"
 
-        fun createIntent(context: Context, course: Course, autoEnroll: Boolean = false): Intent =
+        fun createIntent(context: Context, course: Course, autoEnroll: Boolean = false, tab: CourseScreenTab = CourseScreenTab.INFO): Intent =
             Intent(context, CourseActivity::class.java)
-                    .putExtra(EXTRA_COURSE, course)
-                    .putExtra(EXTRA_AUTO_ENROLL, autoEnroll)
+                .putExtra(EXTRA_COURSE, course)
+                .putExtra(EXTRA_AUTO_ENROLL, autoEnroll)
+                .putExtra(EXTRA_TAB, tab.ordinal)
 
         fun createIntent(context: Context, courseId: Long): Intent =
             Intent(context, CourseActivity::class.java)
-                    .putExtra(EXTRA_COURSE_ID, courseId)
+                .putExtra(EXTRA_COURSE_ID, courseId)
     }
 
     private var courseId: Long = NO_ID
@@ -110,7 +113,20 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         initViewPager(courseId)
         initViewStateDelegate()
 
-        savedInstanceState?.let(coursePresenter::onRestoreInstanceState)
+        if (savedInstanceState == null) {
+            val tab = CourseScreenTab
+                .values()
+                .getOrNull(intent.getIntExtra(EXTRA_TAB, 0))
+                ?: intent.getCourseTabFromDeepLink()
+
+            coursePager.currentItem =
+                when(tab) {
+                    CourseScreenTab.SYLLABUS -> 1
+                    else -> 0
+                }
+        } else {
+            coursePresenter.onRestoreInstanceState(savedInstanceState)
+        }
         setDataToPresenter()
 
         tryAgain.setOnClickListener { setDataToPresenter(forceUpdate = true) }

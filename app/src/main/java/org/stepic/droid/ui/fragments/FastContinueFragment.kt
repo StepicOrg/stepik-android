@@ -195,7 +195,7 @@ class FastContinueFragment : FragmentBase(),
     override fun onAnyProblemWhileContinue(course: Course) {
         ProgressHelper.dismiss(fragmentManager, CONTINUE_LOADING_TAG)
         fastContinueAction.isEnabled = true
-        screenManager.showSections(activity, course)
+        screenManager.showCourseModules(activity, course)
     }
 
     //Client<DroppingListener>

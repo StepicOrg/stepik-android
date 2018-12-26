@@ -9,7 +9,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.provider.Settings;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.FileProvider;
@@ -27,6 +26,7 @@ import org.stepic.droid.base.App;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.di.AppSingleton;
 import org.stepic.droid.features.achievements.ui.activity.AchievementsListActivity;
+import org.stepik.android.view.course.routing.CourseScreenTab;
 import org.stepik.android.view.course.ui.activity.CourseActivity;
 import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.model.CollectionDescriptionColors;
@@ -214,26 +214,29 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void showCourseDescription(Fragment sourceFragment, @NotNull Course course) {
-        Intent intent = getIntentForDescription(sourceFragment.getActivity(), course, false);
-        sourceFragment.startActivityForResult(intent, AppConstants.REQUEST_CODE_DETAIL);
+    public void showCourseDescription(Context context, @NotNull Course course) {
+        showCourseDescription(context, course, false);
     }
 
     @Override
-    public void showCourseDescription(Context context, @NotNull Course course) {
-        Intent intent = getIntentForDescription(context, course, false);
+    public void showCourseDescription(Context context, @NotNull Course course, boolean autoEnroll) {
+        showCourseScreen(context, course, autoEnroll, CourseScreenTab.INFO);
+    }
+
+    @Override
+    public void showCourseModules(Context context, @NotNull Course course) {
+        showCourseScreen(context, course, false, CourseScreenTab.SYLLABUS);
+    }
+
+    @Override
+    public void showCourseScreen(Context context, @NotNull Course course, boolean autoEnroll, CourseScreenTab tab) {
+        Intent intent = getIntentForDescription(context, course, autoEnroll, tab);
         context.startActivity(intent);
     }
 
-    @Override
-    public void showCourseDescription(Activity sourceActivity, @NotNull Course course, boolean autoEnroll) {
-        Intent intent = getIntentForDescription(sourceActivity, course, autoEnroll);
-        sourceActivity.startActivity(intent);
-    }
-
-    private Intent getIntentForDescription(Context context, @NotNull Course course, boolean autoEnroll) {
+    private Intent getIntentForDescription(Context context, @NotNull Course course, boolean autoEnroll, CourseScreenTab tab) {
         analytic.reportEvent(Analytic.Screens.SHOW_COURSE_DESCRIPTION);
-        Intent intent = CourseActivity.Companion.createIntent(context, course, autoEnroll);
+        Intent intent = CourseActivity.Companion.createIntent(context, course, autoEnroll, tab);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         if (!(context instanceof Activity)) {
@@ -563,13 +566,6 @@ public class ScreenManagerImpl implements ScreenManager {
         } else {
             Toast.makeText(commentsFragment.getContext(), R.string.anonymous_write_comment, Toast.LENGTH_SHORT).show();
         }
-    }
-
-    @Override
-    public void showSections(Activity sourceActivity, @NotNull Course course) {
-        analytic.reportEventWithIdName(Analytic.Screens.SHOW_SECTIONS, course.getId() + "", course.getTitle());
-        Intent intent = CourseActivity.Companion.createIntent(sourceActivity, course, false);
-        sourceActivity.startActivity(intent);
     }
 
     @Override

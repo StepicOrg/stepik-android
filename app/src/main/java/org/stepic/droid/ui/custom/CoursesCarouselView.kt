@@ -42,7 +42,6 @@ import org.stepic.droid.util.StepikUtil
 import org.stepic.droid.util.SuppressFBWarnings
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
-import org.stepik.android.model.Section
 import java.util.*
 import javax.inject.Inject
 
@@ -232,7 +231,7 @@ constructor(
 
     override fun onAnyProblemWhileContinue(course: Course) {
         ProgressHelper.dismiss(fragmentManager, continueLoadingTag)
-        screenManager.showSections(activity, course)
+        screenManager.showCourseModules(activity, course)
     }
 
     override fun onShowContinueCourseLoadingDialog() {

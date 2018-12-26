@@ -32,7 +32,6 @@ import org.stepic.droid.model.CourseListType;
 import org.stepik.android.domain.last_step.model.LastStep;
 import org.stepik.android.model.Course;
 import org.stepic.droid.model.CoursesCarouselColorType;
-import org.stepik.android.model.Section;
 import org.stepic.droid.ui.activities.contracts.RootScreen;
 import org.stepic.droid.ui.adapters.CoursesAdapter;
 import org.stepic.droid.ui.custom.StepikSwipeRefreshLayout;
@@ -330,7 +329,7 @@ public abstract class CourseListFragmentBase extends FragmentBase
     @Override
     public void onAnyProblemWhileContinue(@NotNull Course course) {
         ProgressHelper.dismiss(getFragmentManager(), continueLoadingTag);
-        getScreenManager().showSections(getActivity(), course);
+        getScreenManager().showCourseModules(getActivity(), course);
     }
 
     @Override

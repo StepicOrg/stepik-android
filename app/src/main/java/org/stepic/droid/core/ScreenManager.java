@@ -21,6 +21,7 @@ import org.stepik.android.model.Video;
 import org.stepic.droid.ui.fragments.CommentsFragment;
 import org.stepic.droid.web.ViewAssignment;
 import org.stepik.android.model.Tag;
+import org.stepik.android.view.course.routing.CourseScreenTab;
 
 public interface ScreenManager {
 
@@ -42,8 +43,6 @@ public interface ScreenManager {
 
     void showMainFeed(Context sourceActivity, int indexOfMenu);
 
-    void showCourseDescription(Fragment sourceActivity, @NotNull Course course);
-
     void showPdfInBrowserByGoogleDocs(Activity activity, String fullPath);
 
     void openComments(Activity context, String discussionProxyId, long stepId);
@@ -52,7 +51,6 @@ public interface ScreenManager {
 
     void openNewCommentForm(CommentsFragment commentsFragment, Long target, @Nullable Long parent);
 
-    void showSections(Activity sourceActivity, @NotNull Course course);
 
     void showSteps(Activity sourceActivity, Unit unit, Lesson lesson, @Nullable Section section);
 
@@ -65,8 +63,9 @@ public interface ScreenManager {
     void pushToViewedQueue(ViewAssignment viewAssignmentWrapper);
 
     void showCourseDescription(Context context, @NotNull Course course);
-
-    void showCourseDescription(Activity sourceActivity, @NotNull Course course, boolean instaEnroll);
+    void showCourseDescription(Context context, @NotNull Course course, boolean autoEnroll);
+    void showCourseModules(Context context, @NotNull Course course);
+    void showCourseScreen(Context context, @NotNull Course course, boolean autoEnroll, CourseScreenTab tab);
 
     void showTextFeedback(Activity sourceActivity);
 
