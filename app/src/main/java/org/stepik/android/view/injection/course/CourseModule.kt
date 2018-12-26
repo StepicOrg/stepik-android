@@ -7,8 +7,10 @@ import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntoMap
 import io.reactivex.Observable
+import io.reactivex.Scheduler
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
+import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepik.android.cache.course.source.CourseCacheDataSourceImpl
 import org.stepik.android.cache.course.source.EnrollmentCacheDataSourceImpl
 import org.stepik.android.data.course.repository.CourseRepositoryImpl
@@ -77,6 +79,12 @@ abstract class CourseModule {
         @CourseScope
         internal fun provideCourseBehaviorSubject(): BehaviorSubject<Course> =
             BehaviorSubject.create()
+
+        @Provides
+        @JvmStatic
+        @CourseScope
+        internal fun provideCourseObservableSource(courseSubject: BehaviorSubject<Course>, @BackgroundScheduler scheduler: Scheduler): Observable<Course> =
+            courseSubject.observeOn(scheduler)
 
         @Provides
         @JvmStatic

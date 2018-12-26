@@ -3,7 +3,6 @@ package org.stepik.android.domain.course_content.interactor
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
-import io.reactivex.subjects.BehaviorSubject
 import org.stepic.droid.util.getProgresses
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.lesson.repository.LessonRepository
@@ -20,7 +19,7 @@ import javax.inject.Inject
 class CourseContentInteractor
 @Inject
 constructor(
-    private val courseObservableSource: BehaviorSubject<Course>,
+    private val courseObservableSource: Observable<Course>,
     private val sectionRepository: SectionRepository,
     private val unitRepository: UnitRepository,
     private val lessonRepository: LessonRepository,
