@@ -113,7 +113,7 @@ class CourseItemViewHolder(
         courseWidgetInfo.setOnClickListener {
             course?.let {
                 if (isEnrolled(it)) {
-                    screenManager.showSections(contextActivity, it)
+                    screenManager.showCourseModules(contextActivity, it)
                 } else {
                     screenManager.showCourseDescription(contextActivity, it, false)
                 }
@@ -157,7 +157,7 @@ class CourseItemViewHolder(
             if (adaptiveCoursesResolver.isAdaptive(it.id)) {
                 screenManager.continueAdaptiveCourse(contextActivity, it)
             } else {
-                screenManager.showSections(contextActivity, it)
+                screenManager.showCourseModules(contextActivity, it)
             }
         } else {
             screenManager.showCourseDescription(contextActivity, it)

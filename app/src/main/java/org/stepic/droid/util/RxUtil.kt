@@ -71,8 +71,11 @@ fun <T> Iterable<T>.toMaybe(): Maybe<T> =
 fun <T> Single<List<T>>.maybeFirst(): Maybe<T> =
         flatMapMaybe { it.toMaybe() }
 
-inline fun <T> Maybe<T>.doOnSuccess(crossinline completableSource: (T) -> Completable): Maybe<T> =
+inline fun <T> Maybe<T>.doCompletableOnSuccess(crossinline completableSource: (T) -> Completable): Maybe<T> =
         flatMap { completableSource(it).andThen(Maybe.just(it)) }
 
-inline fun <T> Single<T>.doOnSuccess(crossinline completableSource: (T) -> Completable): Single<T> =
+inline fun <T> Single<T>.doCompletableOnSuccess(crossinline completableSource: (T) -> Completable): Single<T> =
     flatMap { completableSource(it).andThen(Single.just(it)) }
+
+
+val emptyOnErrorStub: (Throwable) -> Unit = {}

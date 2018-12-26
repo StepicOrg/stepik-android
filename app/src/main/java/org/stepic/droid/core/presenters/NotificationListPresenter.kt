@@ -228,7 +228,7 @@ class NotificationListPresenter
         val position: Int = notificationMapIdToPosition[notificationId] ?: return
         if (position >= 0 && position < notificationList.size) {
             val notificationInList = notificationList[position]
-            if (notificationInList.is_unread ?: false) {
+            if (notificationInList.isUnread ?: false) {
                 view?.markNotificationAsRead(position, notificationId)
             }
         }
@@ -249,7 +249,7 @@ class NotificationListPresenter
                     if (response.isSuccessful) {
                         notificationsBadgesManager.syncCounter()
                         notificationList.forEach {
-                            it.is_unread = false
+                            it.isUnread = false
                         }
                         mainHandler.post {
                             onMarkCategoryRead(notificationCategoryLocal)
@@ -285,7 +285,7 @@ class NotificationListPresenter
         threadPoolExecutor.execute {
             val listForNotificationForUI = notificationList
                     .filter {
-                        it.is_unread ?: false
+                        it.isUnread ?: false
                     }
                     .filter {
                         if (category == NotificationCategory.all) {

@@ -7,12 +7,10 @@ import com.google.gson.GsonBuilder
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
-import org.stepic.droid.features.deadlines.storage.dao.DeadlinesBannerDao
-import org.stepic.droid.features.deadlines.storage.dao.DeadlinesBannerDaoImpl
-import org.stepic.droid.features.deadlines.storage.operations.DeadlinesRecordOperations
-import org.stepic.droid.features.deadlines.storage.operations.DeadlinesRecordOperationsImpl
-import org.stepic.droid.features.deadlines.storage.dao.PersonalDeadlinesDao
-import org.stepic.droid.features.deadlines.storage.dao.PersonalDeadlinesDaoImpl
+import org.stepik.android.cache.personal_deadlines.dao.DeadlinesBannerDao
+import org.stepik.android.cache.personal_deadlines.dao.DeadlinesBannerDaoImpl
+import org.stepik.android.cache.personal_deadlines.dao.PersonalDeadlinesDao
+import org.stepik.android.cache.personal_deadlines.dao.PersonalDeadlinesDaoImpl
 import org.stepic.droid.features.stories.model.ViewedStoryTemplate
 import org.stepic.droid.features.stories.storage.dao.ViewedStoryTemplatesDaoImpl
 import org.stepic.droid.jsonHelpers.adapters.UTCDateAdapter
@@ -27,6 +25,7 @@ import org.stepic.droid.storage.DatabaseHelper
 import org.stepic.droid.storage.dao.*
 import org.stepic.droid.storage.operations.*
 import org.stepic.droid.web.ViewAssignment
+import org.stepik.android.cache.user.dao.UserDaoImpl
 import org.stepik.android.cache.video.dao.VideoEntityDaoImpl
 import org.stepik.android.cache.video.dao.VideoDao
 import org.stepik.android.cache.video.dao.VideoDaoImpl
@@ -36,6 +35,7 @@ import org.stepik.android.cache.video.model.VideoUrlEntity
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.*
 import org.stepik.android.model.Unit
+import org.stepik.android.model.user.User
 
 @Module
 abstract class StorageModule {
@@ -120,10 +120,6 @@ abstract class StorageModule {
 
     @StorageSingleton
     @Binds
-    internal abstract fun provideDeadlinesRecordOperations(deadlinesRecordOperationsImpl: DeadlinesRecordOperationsImpl): DeadlinesRecordOperations
-
-    @StorageSingleton
-    @Binds
     internal abstract fun provideDeadlinesBannerDao(deadlinesBannerDaoImpl: DeadlinesBannerDaoImpl): DeadlinesBannerDao
 
     @StorageSingleton
@@ -157,6 +153,10 @@ abstract class StorageModule {
     @StorageSingleton
     @Binds
     internal abstract fun bindVideoUrlEntityDao(videoUrlEntityDaoImpl: VideoUrlEntityDaoImpl): IDao<VideoUrlEntity>
+
+    @StorageSingleton
+    @Binds
+    internal abstract fun bindUserDao(userDaoImpl: UserDaoImpl): IDao<User>
 
     @Module
     companion object {

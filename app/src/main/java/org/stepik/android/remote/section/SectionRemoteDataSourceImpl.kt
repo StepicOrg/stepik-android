@@ -1,12 +1,12 @@
 package org.stepik.android.remote.section
 
-import io.reactivex.Maybe
 import io.reactivex.Single
-import org.stepic.droid.util.maybeFirst
+import io.reactivex.functions.Function
 import org.stepic.droid.web.Api
 import org.stepic.droid.web.SectionsMetaResponse
 import org.stepik.android.data.section.source.SectionRemoteDataSource
 import org.stepik.android.model.Section
+import org.stepik.android.remote.base.chunkedSingleMap
 import javax.inject.Inject
 
 class SectionRemoteDataSourceImpl
@@ -14,11 +14,13 @@ class SectionRemoteDataSourceImpl
 constructor(
     private val api: Api
 ) : SectionRemoteDataSource {
-    override fun getSection(sectionId: Long): Maybe<Section> =
-        getSections(sectionId)
-            .maybeFirst()
+    private val sectionResponseMapper =
+        Function<SectionsMetaResponse, List<Section>>(SectionsMetaResponse::getSections)
 
     override fun getSections(vararg sectionIds: Long): Single<List<Section>> =
-        api.getSectionsRx(sectionIds)
-            .map(SectionsMetaResponse::getSections)
+        sectionIds
+            .chunkedSingleMap { ids ->
+                api.getSectionsRx(ids)
+                    .map(sectionResponseMapper)
+            }
 }

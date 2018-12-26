@@ -2,14 +2,26 @@ package org.stepic.droid.storage.migration
 
 import android.database.sqlite.SQLiteDatabase
 import org.stepic.droid.storage.structure.*
+import org.stepik.android.cache.lesson.structure.DbStructureLesson
+import org.stepik.android.cache.section.structure.DbStructureSection
+import org.stepik.android.cache.unit.structure.DbStructureUnit
+import org.stepik.android.cache.user.structure.DbStructureUser
 import org.stepik.android.cache.video.structure.VideoDbScheme
 import org.stepik.android.cache.video.structure.VideoUrlDbScheme
 
 object MigrationFrom36To37 : Migration {
     override fun migrate(db: SQLiteDatabase) {
+        migrateUser(db)
         migrateLastStep(db)
         migrateCourses(db)
         migrateBlockVideos(db)
+        migrateLessons(db)
+        migrateUnits(db)
+        migrateSections(db)
+    }
+
+    private fun migrateUser(db: SQLiteDatabase) {
+        DbStructureUser.createTable(db)
     }
 
     private fun migrateLastStep(db: SQLiteDatabase) {
@@ -44,6 +56,95 @@ object MigrationFrom36To37 : Migration {
                 ${DbStructureBlock.Column.EXTERNAL_VIDEO_DURATION}
             FROM ${DbStructureBlock.BLOCKS}
             WHERE ${DbStructureBlock.BLOCKS}.${DbStructureBlock.Column.EXTERNAL_VIDEO_ID} > 0
+        """.trimIndent())
+    }
+
+    private fun migrateLessons(db: SQLiteDatabase) {
+        DbStructureLesson.createTable(db)
+
+        db.execSQL("""
+            INSERT INTO ${DbStructureLesson.TABLE_NAME}
+            SELECT
+                ${org.stepic.droid.storage.structure.DbStructureLesson.Column.LESSON_ID},
+                ${org.stepic.droid.storage.structure.DbStructureLesson.Column.TITLE},
+                ${org.stepic.droid.storage.structure.DbStructureLesson.Column.SLUG},
+                ${org.stepic.droid.storage.structure.DbStructureLesson.Column.COVER_URL},
+                ${org.stepic.droid.storage.structure.DbStructureLesson.Column.STEPS},
+                ${org.stepic.droid.storage.structure.DbStructureLesson.Column.IS_FEATURED},
+                ${org.stepic.droid.storage.structure.DbStructureLesson.Column.PROGRESS},
+                ${org.stepic.droid.storage.structure.DbStructureLesson.Column.OWNER},
+                ${org.stepic.droid.storage.structure.DbStructureLesson.Column.SUBSCRIPTIONS},
+                ${org.stepic.droid.storage.structure.DbStructureLesson.Column.VIEWED_BY},
+                ${org.stepic.droid.storage.structure.DbStructureLesson.Column.PASSED_BY},
+                ${org.stepic.droid.storage.structure.DbStructureLesson.Column.VOTE_DELTA},
+                NULL,
+                ${org.stepic.droid.storage.structure.DbStructureLesson.Column.IS_PUBLIC},
+                -1,
+                -1,
+                ${org.stepic.droid.storage.structure.DbStructureLesson.Column.LEARNERS_GROUP},
+                ${org.stepic.droid.storage.structure.DbStructureLesson.Column.TEACHER_GROUP},
+                0
+            FROM ${org.stepic.droid.storage.structure.DbStructureLesson.LESSONS}
+        """.trimIndent())
+    }
+
+    private fun migrateUnits(db: SQLiteDatabase) {
+        DbStructureUnit.createTable(db)
+
+        db.execSQL("""
+            INSERT INTO ${DbStructureUnit.TABLE_NAME}
+            SELECT
+                ${org.stepic.droid.storage.structure.DbStructureUnit.Column.UNIT_ID},
+                ${org.stepic.droid.storage.structure.DbStructureUnit.Column.SECTION},
+                ${org.stepic.droid.storage.structure.DbStructureUnit.Column.LESSON},
+                ${org.stepic.droid.storage.structure.DbStructureUnit.Column.ASSIGNMENTS},
+                ${org.stepic.droid.storage.structure.DbStructureUnit.Column.POSITION},
+                ${org.stepic.droid.storage.structure.DbStructureUnit.Column.PROGRESS},
+                -1,
+                -1,
+                -1,
+                -1,
+                ${org.stepic.droid.storage.structure.DbStructureUnit.Column.GRADING_POLICY},
+                ${org.stepic.droid.storage.structure.DbStructureUnit.Column.BEGIN_DATE_SOURCE},
+                ${org.stepic.droid.storage.structure.DbStructureUnit.Column.END_DATE_SOURCE},
+                ${org.stepic.droid.storage.structure.DbStructureUnit.Column.SOFT_DEADLINE_SOURCE},
+                ${org.stepic.droid.storage.structure.DbStructureUnit.Column.HARD_DEADLINE_SOURCE},
+                ${org.stepic.droid.storage.structure.DbStructureUnit.Column.GRADING_POLICY_SOURCE},
+                ${org.stepic.droid.storage.structure.DbStructureUnit.Column.IS_ACTIVE},
+                -1,
+                -1
+            FROM ${org.stepic.droid.storage.structure.DbStructureUnit.UNITS}
+        """.trimIndent())
+    }
+
+    private fun migrateSections(db: SQLiteDatabase) {
+        DbStructureSection.createTable(db)
+
+        db.execSQL("""
+            INSERT INTO ${DbStructureSection.TABLE_NAME}
+            SELECT
+                ${DbStructureSections.Column.SECTION_ID},
+                ${DbStructureSections.Column.COURSE},
+                ${DbStructureSections.Column.UNITS},
+                ${DbStructureSections.Column.POSITION},
+                ${DbStructureSections.Column.PROGRESS},
+                ${DbStructureSections.Column.TITLE},
+                ${DbStructureSections.Column.SLUG},
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
+                ${DbStructureSections.Column.GRADING_POLICY},
+                ${DbStructureSections.Column.IS_ACTIVE},
+                ${DbStructureSections.Column.TEST_SECTION},
+                ${DbStructureSections.Column.IS_EXAM},
+                ${DbStructureSections.Column.DISCOUNTING_POLICY},
+                ${DbStructureSections.Column.IS_REQUIREMENT_SATISFIED},
+                ${DbStructureSections.Column.REQUIRED_SECTION},
+                ${DbStructureSections.Column.REQUIRED_PERCENT}
+            FROM ${DbStructureSections.SECTIONS}
         """.trimIndent())
     }
 }

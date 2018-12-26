@@ -28,6 +28,10 @@ class CourseContentDiffCallback(
                     newItem is CourseContentItem.UnitItem ->
                 oldItem.lesson.id == newItem.lesson.id
 
+            oldItem is CourseContentItem.UnitItemPlaceholder &&
+                    newItem is CourseContentItem.UnitItemPlaceholder ->
+                oldItem.unitId == newItem.unitId
+
             else ->
                 false
         }
@@ -40,19 +44,9 @@ class CourseContentDiffCallback(
         if (oldItem == newItem) return true
 
         return when {
-            oldItem is CourseContentItem.SectionItem &&
-                    newItem is CourseContentItem.SectionItem ->
-                oldItem.section == newItem.section &&
-                        oldItem.progress == newItem.progress &&
-                        oldItem.downloadStatus == newItem.downloadStatus
-
-            oldItem is CourseContentItem.UnitItem &&
-                    newItem is CourseContentItem.UnitItem ->
-                oldItem.lesson.id == newItem.lesson.id &&
-                        oldItem.unit.id == newItem.unit.id &&
-                        oldItem.section == newItem.section &&
-                        oldItem.progress == newItem.progress &&
-                        oldItem.downloadStatus == newItem.downloadStatus
+            oldItem is CourseContentItem.UnitItemPlaceholder &&
+                    newItem is CourseContentItem.UnitItemPlaceholder ->
+                oldItem.unitId == newItem.unitId
 
             else ->
                 false

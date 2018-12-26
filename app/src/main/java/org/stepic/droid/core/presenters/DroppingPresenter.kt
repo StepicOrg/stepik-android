@@ -5,7 +5,7 @@ import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.dropping.contract.DroppingPoster
 import org.stepic.droid.core.presenters.contracts.DroppingView
 import org.stepic.droid.di.course_list.CourseListScope
-import org.stepic.droid.features.deadlines.repository.DeadlinesRepository
+import org.stepik.android.domain.personal_deadlines.repository.DeadlinesRepository
 import org.stepic.droid.model.CourseListType
 import org.stepik.android.model.Course
 import org.stepic.droid.storage.operations.DatabaseFacade
@@ -37,7 +37,7 @@ constructor(
             } else {
                 try {
                     makeDropCall(dropCall, course)
-                    deadlinesRepository.removeDeadlinesForCourse(course.id).blockingAwait()
+                    deadlinesRepository.removeDeadlineRecordByCourseId(course.id).blockingAwait()
                 } catch (exception: Exception) {
                     mainHandler.post {
                         droppingPoster.failDropCourse(course)
@@ -51,7 +51,7 @@ constructor(
     private fun makeDropCall(dropCall: Call<Void>, course: Course) {
         val dropResponse = dropCall.execute()
         if (dropResponse.isSuccessful) {
-            databaseFacade.addCourse(course)
+            databaseFacade.deleteCourse(course.id)
             databaseFacade.deleteCourseFromList(CourseListType.ENROLLED, course.id)
             mainHandler.post {
                 droppingPoster.successDropCourse(course)

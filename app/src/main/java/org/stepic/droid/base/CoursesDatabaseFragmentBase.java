@@ -122,7 +122,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     private void showInfo(int position) {
         getAnalytic().reportEvent(Analytic.Interaction.SHOW_DETAILED_INFO_CLICK);
         Course course = courses.get(position);
-        getScreenManager().showCourseDescription(this, course);
+        getScreenManager().showCourseDescription(getContext(), course);
     }
 
     @Override

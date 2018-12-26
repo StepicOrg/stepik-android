@@ -103,6 +103,8 @@ public interface Api {
 
     Single<CoursesMetaResponse> getCoursesReactive(int page, @NotNull long[] ids);
 
+    Single<CoursesMetaResponse> getCoursesReactive(@NotNull long[] ids);
+
     Call<AttemptResponse> createNewAttempt(long stepId);
 
     Single<AttemptResponse> createNewAttemptReactive(long stepId);

@@ -7,8 +7,11 @@ import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepic.droid.storage.structure.DbStructureProgress
 import javax.inject.Inject
 
-class ProgressDaoImpl @Inject
-constructor(databaseOperations: DatabaseOperations) : DaoBase<Progress>(databaseOperations) {
+class ProgressDaoImpl
+@Inject
+constructor(
+    databaseOperations: DatabaseOperations
+) : DaoBase<Progress>(databaseOperations) {
 
     public override fun parsePersistentObject(cursor: Cursor): Progress {
         val indexId = cursor.getColumnIndex(DbStructureProgress.Column.ID)
@@ -19,13 +22,15 @@ constructor(databaseOperations: DatabaseOperations) : DaoBase<Progress>(database
         val indexNSteps = cursor.getColumnIndex(DbStructureProgress.Column.N_STEPS)
         val indexNStepsPassed = cursor.getColumnIndex(DbStructureProgress.Column.N_STEPS_PASSED)
 
-        return Progress(id = cursor.getString(indexId),
-                cost = cursor.getInt(indexCost),
-                score = cursor.getString(indexScore),
-                isPassed = cursor.getInt(indexIsPassed) > 0,
-                lastViewed = cursor.getString(indexLastViewed),
-                nStepsPassed = cursor.getInt(indexNStepsPassed),
-                nSteps = cursor.getInt(indexNSteps))
+        return Progress(
+            id      = cursor.getString(indexId),
+            cost    = cursor.getInt(indexCost),
+            score   = cursor.getString(indexScore),
+            isPassed     = cursor.getInt(indexIsPassed) > 0,
+            lastViewed   = cursor.getString(indexLastViewed),
+            nStepsPassed = cursor.getInt(indexNStepsPassed),
+            nSteps       = cursor.getInt(indexNSteps)
+        )
     }
 
     public override fun getDbName(): String = DbStructureProgress.PROGRESS

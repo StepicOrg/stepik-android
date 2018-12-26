@@ -634,6 +634,11 @@ public class ApiImpl implements Api {
     }
 
     @Override
+    public Single<CoursesMetaResponse> getCoursesReactive(@NotNull long[] ids) {
+        return loggedService.getCoursesReactive(ids);
+    }
+
+    @Override
     public Call<AttemptResponse> createNewAttempt(long stepId) {
         AttemptRequest attemptRequest = new AttemptRequest(stepId);
         return loggedService.createNewAttempt(attemptRequest);
@@ -799,14 +804,14 @@ public class ApiImpl implements Api {
     @Override
     public Call<Void> setReadStatusForNotification(long notificationId, boolean isRead) {
         Notification notification = new Notification();
-        notification.set_unread(!isRead);
+        notification.setUnread(!isRead);
         return loggedService.putNotification(notificationId, new NotificationRequest(notification));
     }
 
     @Override
     public Completable setReadStatusForNotificationReactive(long notificationId, boolean isRead) {
         Notification notification = new Notification();
-        notification.set_unread(!isRead);
+        notification.setUnread(!isRead);
         return loggedService.putNotificationReactive(notificationId, new NotificationRequest(notification));
     }
 

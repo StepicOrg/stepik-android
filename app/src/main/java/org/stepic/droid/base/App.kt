@@ -94,6 +94,7 @@ class App : MultiDexApplication() {
                     .build())
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                WebView.setDataDirectorySuffix("web")
                 WebView.setWebContentsDebuggingEnabled(true)
             }
         }

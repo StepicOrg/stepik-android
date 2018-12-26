@@ -45,6 +45,7 @@ constructor(
             enrollment  = cursor.getLong(DbStructureCourse.Columns.ENROLLMENT),
             progress    = cursor.getString(DbStructureCourse.Columns.PROGRESS),
             owner       = cursor.getLong(DbStructureCourse.Columns.OWNER),
+            readiness   = cursor.getDouble(DbStructureCourse.Columns.READINESS),
             isContest   = cursor.getBoolean(DbStructureCourse.Columns.IS_CONTEST),
             isFeatured  = cursor.getBoolean(DbStructureCourse.Columns.IS_FEATURED),
             isActive    = cursor.getBoolean(DbStructureCourse.Columns.IS_ACTIVE),
@@ -90,6 +91,7 @@ constructor(
         values.put(DbStructureCourse.Columns.ENROLLMENT, course.enrollment)
         values.put(DbStructureCourse.Columns.PROGRESS, course.progress)
         values.put(DbStructureCourse.Columns.OWNER, course.owner)
+        values.put(DbStructureCourse.Columns.READINESS, course.readiness)
         values.put(DbStructureCourse.Columns.IS_CONTEST, course.isContest)
         values.put(DbStructureCourse.Columns.IS_FEATURED, course.isFeatured)
         values.put(DbStructureCourse.Columns.IS_ACTIVE, course.isActive)

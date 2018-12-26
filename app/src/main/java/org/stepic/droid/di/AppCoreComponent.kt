@@ -30,8 +30,8 @@ import org.stepic.droid.features.achievements.service.AchievementsNotificationSe
 import org.stepic.droid.features.achievements.ui.adapters.AchievementsAdapter
 import org.stepic.droid.features.achievements.ui.adapters.AchievementsTileAdapter
 import org.stepic.droid.features.achievements.ui.dialogs.AchievementDetailsDialog
-import org.stepic.droid.features.deadlines.ui.dialogs.EditDeadlinesDialog
-import org.stepic.droid.features.deadlines.ui.dialogs.LearningRateDialog
+import org.stepik.android.view.personal_deadlines.ui.dialogs.EditDeadlinesDialog
+import org.stepik.android.view.personal_deadlines.ui.dialogs.LearningRateDialog
 import org.stepik.android.model.Course
 import org.stepic.droid.notifications.HackFcmListener
 import org.stepic.droid.notifications.HackerFcmInstanceId
@@ -50,6 +50,7 @@ import org.stepic.droid.ui.custom_exo.PlaybackControlView
 import org.stepic.droid.ui.dialogs.*
 import org.stepic.droid.ui.fragments.StoreManagementFragment
 import org.stepik.android.view.injection.course.CourseComponent
+import org.stepik.android.view.injection.personal_deadlines.PersonalDeadlinesDataModule
 
 @AppSingleton
 @Component(dependencies = [StorageComponent::class],
@@ -64,7 +65,9 @@ import org.stepik.android.view.injection.course.CourseComponent
                 RecentActiveCourseModule::class,
                 NotificationsBadgesModule::class,
                 NetworkModule::class,
-                RemoteMessageHandlersModule::class
+                RemoteMessageHandlersModule::class,
+
+                PersonalDeadlinesDataModule::class
         ])
 interface AppCoreComponent {
 
@@ -122,8 +125,6 @@ interface AppCoreComponent {
 
     fun inject(dialogFragment: DiscountingPolicyDialogFragment)
 
-    fun inject(adapter: UnitAdapter)
-
     fun inject(dialogFragment: LogoutAreYouSureDialog)
 
     fun inject(dialogFragment: VideoQualityDialog)
@@ -159,8 +160,6 @@ interface AppCoreComponent {
     fun inject(dialogFragment: DeleteCommentDialogFragment)
 
     fun inject(certificateShareDialog: CertificateShareDialog)
-
-    fun inject(sectionAdapter: SectionAdapter)
 
     fun inject(stepShareDialog: StepShareDialog)
 

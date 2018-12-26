@@ -6,5 +6,5 @@ import org.stepik.android.model.user.User
 
 interface UserCacheDataSource {
     fun getUsers(vararg userIds: Long): Single<List<User>>
-    fun saveUser(user: User): Completable
+    fun saveUsers(users: List<User>): Completable
 }

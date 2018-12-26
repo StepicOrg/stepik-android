@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_enabled="false" android:drawable="@color/disabled_button_color"/> <!-- disabled -->
-    <item android:drawable="@color/stepic_blue_ribbon"/> <!-- default -->
-</selector>

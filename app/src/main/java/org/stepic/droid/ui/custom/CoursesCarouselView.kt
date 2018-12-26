@@ -40,8 +40,8 @@ import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.StepikUtil
 import org.stepic.droid.util.SuppressFBWarnings
+import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
-import org.stepik.android.model.Section
 import java.util.*
 import javax.inject.Inject
 
@@ -219,9 +219,9 @@ constructor(
         }
     }
 
-    override fun onOpenStep(courseId: Long, section: Section, lessonId: Long, unitId: Long, stepPosition: Int) {
+    override fun onOpenStep(courseId: Long, lastStep: LastStep) {
         ProgressHelper.dismiss(fragmentManager, continueLoadingTag)
-        screenManager.continueCourse(activity, courseId, section, lessonId, unitId, stepPosition.toLong())
+        screenManager.continueCourse(activity, lastStep.unit, lastStep.lesson, lastStep.step)
     }
 
     override fun onOpenAdaptiveCourse(course: Course) {
@@ -231,7 +231,7 @@ constructor(
 
     override fun onAnyProblemWhileContinue(course: Course) {
         ProgressHelper.dismiss(fragmentManager, continueLoadingTag)
-        screenManager.showSections(activity, course)
+        screenManager.showCourseModules(activity, course)
     }
 
     override fun onShowContinueCourseLoadingDialog() {

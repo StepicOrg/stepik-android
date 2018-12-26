@@ -5,7 +5,9 @@ import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.support.annotation.DrawableRes
+import android.support.annotation.LayoutRes
 import android.support.v7.content.res.AppCompatResources
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
@@ -64,3 +66,6 @@ fun Drawable.toBitmap(width: Int = intrinsicWidth, height: Int = intrinsicHeight
     draw(canvas)
     return bitmap
 }
+
+fun ViewGroup.inflate(@LayoutRes resId: Int, attachToRoot: Boolean = false): View =
+    LayoutInflater.from(this.context).inflate(resId, this, attachToRoot)

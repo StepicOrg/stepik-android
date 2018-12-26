@@ -22,6 +22,7 @@ import org.stepik.android.model.Course
 import org.stepik.android.presentation.base.injection.DaggerViewModelFactory
 import org.stepik.android.presentation.base.injection.ViewModelKey
 import org.stepik.android.presentation.course.CoursePresenter
+import org.stepik.android.presentation.course_content.CourseContentPresenter
 import org.stepik.android.presentation.course_info.CourseInfoPresenter
 import org.stepik.android.remote.course.source.CourseRemoteDataSourceImpl
 import org.stepik.android.remote.course.source.CourseReviewRemoteDataSourceImpl
@@ -32,30 +33,6 @@ abstract class CourseModule {
     /**
      * DATA LAYER
      */
-    @Binds
-    internal abstract fun bindCourseRepository(
-        courseRepositoryImpl: CourseRepositoryImpl): CourseRepository
-
-    @Binds
-    internal abstract fun bindCourseRemoteDataSource(
-        courseRemoteDataSourceImpl: CourseRemoteDataSourceImpl): CourseRemoteDataSource
-
-    @Binds
-    internal abstract fun bindCourseCacheDataSource(
-        courseCacheDataSourceImpl: CourseCacheDataSourceImpl): CourseCacheDataSource
-
-    @Binds
-    internal abstract fun bindEnrollmentRepository(
-        enrollmentRepositoryImpl: EnrollmentRepositoryImpl): EnrollmentRepository
-
-    @Binds
-    internal abstract fun bindEnrollmentRemoteDataSource(
-        enrollmentRemoteDataSourceImpl: EnrollmentRemoteDataSourceImpl): EnrollmentRemoteDataSource
-
-    @Binds
-    internal abstract fun bindEnrollmentCacheDataSource(
-        enrollmentCacheDataSourceImpl: EnrollmentCacheDataSourceImpl): EnrollmentCacheDataSource
-
     @Binds
     @CourseScope
     @EnrollmentCourseUpdates
@@ -83,6 +60,11 @@ abstract class CourseModule {
     @IntoMap
     @ViewModelKey(CourseInfoPresenter::class)
     internal abstract fun bindCourseInfoPresenter(courseInfoPresenter: CourseInfoPresenter): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(CourseContentPresenter::class)
+    internal abstract fun bindCourseContentPrsenter(courseContentPresenter: CourseContentPresenter): ViewModel
 
     @Binds
     @CourseScope

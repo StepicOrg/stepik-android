@@ -29,9 +29,9 @@ import org.stepic.droid.core.presenters.contracts.ContinueCourseView;
 import org.stepic.droid.core.presenters.contracts.CoursesView;
 import org.stepic.droid.core.presenters.contracts.DroppingView;
 import org.stepic.droid.model.CourseListType;
+import org.stepik.android.domain.last_step.model.LastStep;
 import org.stepik.android.model.Course;
 import org.stepic.droid.model.CoursesCarouselColorType;
-import org.stepik.android.model.Section;
 import org.stepic.droid.ui.activities.contracts.RootScreen;
 import org.stepic.droid.ui.adapters.CoursesAdapter;
 import org.stepic.droid.ui.custom.StepikSwipeRefreshLayout;
@@ -315,9 +315,9 @@ public abstract class CourseListFragmentBase extends FragmentBase
     }
 
     @Override
-    public void onOpenStep(long courseId, @NotNull Section section, long lessonId, long unitId, int stepPosition) {
+    public void onOpenStep(long courseId, LastStep lastStep) {
         ProgressHelper.dismiss(getFragmentManager(), continueLoadingTag);
-        getScreenManager().continueCourse(getActivity(), courseId, section, lessonId, unitId, stepPosition);
+        getScreenManager().continueCourse(getActivity(), lastStep.getUnit(), lastStep.getLesson(), lastStep.getStep());
     }
 
     @Override
@@ -329,7 +329,7 @@ public abstract class CourseListFragmentBase extends FragmentBase
     @Override
     public void onAnyProblemWhileContinue(@NotNull Course course) {
         ProgressHelper.dismiss(getFragmentManager(), continueLoadingTag);
-        getScreenManager().showSections(getActivity(), course);
+        getScreenManager().showCourseModules(getActivity(), course);
     }
 
     @Override

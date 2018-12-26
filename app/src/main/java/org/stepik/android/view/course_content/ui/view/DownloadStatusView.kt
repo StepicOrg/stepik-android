@@ -13,7 +13,7 @@ import org.stepic.droid.ui.util.hideAllChildren
 
 class DownloadStatusView
 @JvmOverloads
-constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : FrameLayout(context, attrs, defStyleAttr), View.OnClickListener {
+constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : FrameLayout(context, attrs, defStyleAttr) {
     var status: DownloadProgress.Status = DownloadProgress.Status.Pending
         set(value) {
             field = value
@@ -35,8 +35,6 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
         statusInProgress = view.statusInProgress
 
         statusProgress   = view.statusProgress
-
-        setOnClickListener(this)
     }
 
     private fun invalidateStatus() {
@@ -60,9 +58,5 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
                 statusInProgress
             }
         }.visibility = View.VISIBLE
-    }
-
-    override fun onClick(view: View) {
-
     }
 }

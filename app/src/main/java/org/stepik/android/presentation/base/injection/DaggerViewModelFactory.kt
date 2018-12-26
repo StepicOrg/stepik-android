@@ -5,7 +5,6 @@ import android.arch.lifecycle.ViewModelProvider
 import javax.inject.Inject
 import javax.inject.Provider
 
-
 class DaggerViewModelFactory
 @Inject
 constructor(

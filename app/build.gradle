@@ -193,6 +193,7 @@ dependencies {
     testImplementation libraries.junit
     testImplementation libraries.robolectric
     testImplementation libraries.mockitoCore
+    testImplementation libraries.mockitoKt
     testImplementation libraries.jodaTime
     testImplementation libraries.hamcrest
 

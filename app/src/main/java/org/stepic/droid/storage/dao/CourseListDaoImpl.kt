@@ -46,7 +46,7 @@ constructor(
 
     override fun removeCourseFromList(courseListType: CourseListType, courseId: Long) {
         databaseOperations.executeDelete(DbStructureCourseList.TABLE_NAME,
-            "${DbStructureCourseList.Columns.TYPE} = ? AND ${DbStructureCourseList.Columns.COURSE_ID} = ", arrayOf(courseListType.name, courseId.toString()))
+            "${DbStructureCourseList.Columns.TYPE} = ? AND ${DbStructureCourseList.Columns.COURSE_ID} = ?", arrayOf(courseListType.name, courseId.toString()))
     }
 
     override fun removeAll() {

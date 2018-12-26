@@ -25,9 +25,9 @@ constructor(
         private val coursePublishSubject: BehaviorSubject<Course>
 ) {
     fun getCourseHeaderData(courseId: Long, canUseCache: Boolean = true): Maybe<CourseHeaderData> =
-            courseRepository
-                .getCourse(courseId, canUseCache)
-                .flatMap(::obtainCourseHeaderData)
+        courseRepository
+            .getCourse(courseId, canUseCache)
+            .flatMap(::obtainCourseHeaderData)
 
     /**
      * Trying to fetch DB data in first place as course object passed with intent could be obsolete
@@ -39,27 +39,27 @@ constructor(
             .flatMap(::obtainCourseHeaderData)
 
     private fun obtainCourseHeaderData(course: Course): Maybe<CourseHeaderData> =
-            zip(
-                courseReviewRepository.getCourseReview(course.reviewSummary).map(CourseReviewSummary::average).onErrorReturnItem(0.0),
-                course.progress?.let(progressRepository::getProgress) ?: Single.just(Unit) // coroutines will handle it better
-            )
-                .doOnSuccess { coursePublishSubject.onNext(course) }
-                .map { (courseReview, courseProgress) ->
-                    CourseHeaderData(
-                        courseId = course.id,
-                        course = course,
-                        title = course.title ?: "",
-                        cover = course.cover ?: "",
-                        learnersCount = course.learnersCount,
+        zip(
+            courseReviewRepository.getCourseReview(course.reviewSummary).map(CourseReviewSummary::average).onErrorReturnItem(0.0),
+            course.progress?.let(progressRepository::getProgress) ?: Single.just(Unit) // coroutines will handle it better
+        )
+            .doOnSuccess { coursePublishSubject.onNext(course) }
+            .map { (courseReview, courseProgress) ->
+                CourseHeaderData(
+                    courseId = course.id,
+                    course = course,
+                    title = course.title ?: "",
+                    cover = course.cover ?: "",
+                    learnersCount = course.learnersCount,
 
-                        review = courseReview,
-                        progress = (courseProgress as? Progress)?.let { (it.nStepsPassed * 100 / it.nSteps).coerceIn(0..100) },
-                        isFeatured = course.isFeatured,
-                        enrollmentState = if (course.enrollment > 0) EnrollmentState.ENROLLED else EnrollmentState.NOT_ENROLLED
-                    )
-                }
-                .toMaybe()
+                    review = courseReview,
+                    progress = (courseProgress as? Progress)?.let { (it.nStepsPassed * 100 / it.nSteps).coerceIn(0..100) },
+                    readiness = course.readiness,
+                    enrollmentState = if (course.enrollment > 0) EnrollmentState.ENROLLED else EnrollmentState.NOT_ENROLLED
+                )
+            }
+            .toMaybe()
 
     fun restoreCourse(course: Course) =
-            coursePublishSubject.onNext(course)
+        coursePublishSubject.onNext(course)
 }

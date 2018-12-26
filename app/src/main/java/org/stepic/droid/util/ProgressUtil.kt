@@ -4,7 +4,7 @@ import org.stepik.android.model.Progress
 import org.stepik.android.model.Progressable
 
 object ProgressUtil {
-    fun getProgresses(objects: List<Progressable>?): Array<String> {
+    fun getProgresses(objects: Iterable<Progressable>?): Array<String> {
         return objects
                 ?.mapNotNull { it.progress }
                 ?.toTypedArray()
@@ -27,3 +27,7 @@ object ProgressUtil {
         }
     }
 }
+
+@JvmName("progressableIterable_getProgresses")
+fun Iterable<Progressable>.getProgresses(): Array<String> =
+    ProgressUtil.getProgresses(this)

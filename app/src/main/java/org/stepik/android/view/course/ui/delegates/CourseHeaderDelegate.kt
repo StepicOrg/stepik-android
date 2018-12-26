@@ -33,6 +33,10 @@ class CourseHeaderDelegate(
         private val config: Config,
         private val coursePresenter: CoursePresenter
 ) {
+    companion object {
+        private const val MIN_FEATURED_READINESS = 0.9
+    }
+
     var courseHeaderData: CourseHeaderData? = null
         set(value) {
             field = value
@@ -136,7 +140,7 @@ class CourseHeaderDelegate(
         }
 
         courseLearnersCount.text = courseHeaderData.learnersCount.toString()
-        courseFeatured.changeVisibility(courseHeaderData.isFeatured)
+        courseFeatured.changeVisibility(courseHeaderData.readiness > MIN_FEATURED_READINESS)
 
         with(courseHeaderData.enrollmentState) {
             courseEnrollAction.changeVisibility(this == EnrollmentState.NOT_ENROLLED)

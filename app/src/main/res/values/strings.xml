@@ -13,45 +13,23 @@
     <string name="facebook_app_id" translatable="false">171127739724012</string>
     <string name="host_name" translatable="false">stepik.org</string>
     <string name="secondary_host_name" translatable="false">stepic.org</string>
-    <string name="yet_have_not_account">"Sign up with e-mail"</string>
-    <string name="or_sign_up_with_email">or sign up with e-mail</string>
     <string name="sign_up">Sign up</string>
-    <string name="create_my_account">Create an account</string>
-    <string name="by_creating_you_agree">By creating a Stepik account, you agree to the</string>
-    <string name="terms">Terms</string>
     <string name="email" translatable="false">E-mail</string>
     <string name="remind_password">Forgot password?</string>
     <string name="sign_in">Sign In</string>
     <string name="not_video_player_error">Please, install player for video playing</string>
-    <string name="first_name">First name</string>
-    <string name="second_name">Second name</string>
     <string name="password_hint">Password</string>
     <string name="home_title">Home</string>
-    <string name="best_lessons_title">Best lessons</string>
-    <string name="drawer_open">open drawer</string>
-    <string name="drawer_closed">close drawer</string>
-    <string name="available_courses_title">Available courses</string>
     <string name="settings_title">Settings</string>
     <string name="logout_title">Logout</string>
-    <string name="begin_date">Begin</string>
     <string name="tap_to_see_more">more…</string>
-    <string name="summary">About</string>
-    <string name="join_course">Join course</string>
-    <string name="join_course_exception">Check your internet connection.</string>
     <string name="loading">Loading</string>
     <string name="section_title_with_number" translatable="false">%d. %s</string>
 
     <string name="soft_deadline">Soft deadline</string>
     <string name="hard_deadline">Hard deadline</string>
-    <string name="begin_date_section">Start date: %s</string>
-    <string name="soft_deadline_section">Soft deadline: %s</string>
-    <string name="hard_deadline_section">Hard deadline: %s</string>
 
-    <string name="syllabus_title">Syllabus</string>
-    <string name="units_lessons_title">Lessons</string>
     <string name="steps_title">Steps</string>
-    <string name="not_available_lesson">Lesson is not available now</string>
-    <string name="description_download">Caching Stepik\'s video</string>
     <string name="video_title">Video</string>
     <string name="wi_fi_setting">Wi-Fi only download</string>
     <string name="clear_cache_title">Clear cache</string>
@@ -69,11 +47,8 @@
     <string name="drop_course">Drop the course</string>
     <string name="about_course">About the course</string>
     <string name="you_dropped">"You dropped %s"</string>
-    <string name="try_in_web_drop">Try dropping this course in the web version</string>
-    <string name="you_not_enrolled">You are not enrolled</string>
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
-    <string name="select">Select</string>
     <string name="connectionProblems">Connection was lost</string>
     <string name="are_you_sure">Are you sure?</string>
     <string name="explain_permission">For caching the course and playing the video offline Stepik
@@ -96,19 +71,15 @@
     <string name="empty_courses_anonymous">Browse the courses without authorization or sign in to
         enroll
     </string>
-    <string name="cache_cleared">Cache is cleared successfully!</string>
     <string name="join_course_web_exception">Try to join the course in web</string>
     <string name="downloads">Downloads</string>
-    <string name="or_sign_in_social">Or sign in with</string>
     <string name="loading_message">Please wait…</string>
     <string name="kb">KB</string>
     <string name="mb">MB</string>
     <string name="gb">GB</string>
     <string name="empty">Empty</string>
-    <string name="clear">Clear</string>
     <string name="clear_videos">Are you sure you want to delete all cached videos?</string>
     <string name="empty_downloading">No downloaded videos</string>
-    <string name="version">Version</string>
     <string name="find_courses_hint">Search courses</string>
     <string name="search_title">Search</string>
     <string name="empty_search">Courses not found</string>
@@ -128,7 +99,6 @@
         the points.
     </string>
     <string name="password_too_short">Password must be a minimum of 6 characters.</string>
-    <string name="reset_password">Reset password</string>
     <string name="send">Send</string>
     <string name="email_sent">We have sent you an e-mail.</string>
     <string name="email_wrong">The e-mail address is not assigned to any user account.</string>
@@ -141,9 +111,6 @@
         video playback issues.
     </string>
     <string name="feedback_title">Give feedback</string>
-    <string name="feedback_hint">Give feedback…</string>
-    <string name="feedback_description">Send us your suggestions, comments or idea</string>
-    <string name="feedback_contacts_description">Contacts for feedback:</string>
     <string name="email_incorrect">E-mail is incorrect</string>
     <string name="feedback_subject">Feedback for the Stepik Android app</string>
     <string name="feedback_sent">Feedback is sent</string>
@@ -166,12 +133,6 @@
     <string name="vibration_title">Vibration</string>
     <string name="empty_try_later">For now it\'s empty, try again later.</string>
     <string name="sound_title">Sound</string>
-    <string name="update_available_title">New version is available</string>
-    <string name="update_now">Update</string>
-    <string name="update_later">Later</string>
-    <string name="instructors">Instructors</string>
-    <string name="delimiter_for_download">/</string>
-    <string name="download_pending">Download pending…</string>
     <string name="downloading_title">Downloading…</string>
     <string name="downloading_cancel_all">Cancel all</string>
     <string name="percent_symbol" translatable="false">%d%%</string>
@@ -179,9 +140,6 @@
     <string name="remove_all">Remove all</string>
     <string name="hint_for_idea">Type your suggestions, comments or ideas</string>
     <string name="feedback_from">From</string>
-    <string name="cancel_videos_explanation">Cancelling the uploading will take a while. Are you
-        sure?
-    </string>
     <string name="comments_title">Comments</string>
     <string name="load_more">more</string>
     <string name="load_more_reply">Load more</string>
@@ -228,14 +186,11 @@
         you
         sure?
     </string>
-    <string name="sorry_moved">Sorry, this file was moved or deleted</string>
-    <string name="fail_move">Sorry, an error has occurred, when files were being moved</string>
     <string name="like_label">Like</string>
     <string name="unlike_label">Unlike</string>
     <string name="report_label">Report</string>
     <string name="done">Done</string>
     <string name="moving">Moving</string>
-    <string name="go_to_learn">Continue</string>
     <string name="fail_to_parse">Sorry, the course can not be found</string>
     <string name="authorization">Authorization</string>
     <string name="unauthorization_detail">To continue, you should be authorized. Do you want to do
@@ -245,7 +200,6 @@
     <string name="delete_comment_detail">Delete this comment?</string>
     <string name="fail_delete_comment">Sorry, you cannot delete this comment</string>
     <string name="share_title">Share</string>
-    <string name="course">Course</string>
     <string name="staff_label">Stepik.org Team</string>
     <string name="teacher_label">Course Staff</string>
 
@@ -293,13 +247,6 @@
     <string name="previous_lesson">Previous lesson</string>
     <string name="language_ru_filter">Russian</string>
     <string name="language_en_filter">English</string>
-    <string name="course_language_title">Language of the course</string>
-    <string name="timing_title">Timing</string>
-    <string name="timing_upcoming_title">Upcoming</string>
-    <string name="timing_active_title">Active</string>
-    <string name="timing_past_title">Past</string>
-    <string name="save_filter_title">Always apply the filters</string>
-    <string name="accept">Accept</string>
     <string name="lesson_not_found_or_not_access">The lesson does not exist or you don\'t have the
         permission
     </string>
@@ -310,10 +257,6 @@
     <string name="low_quality">Low</string>
     <string name="medium_quality">Medium</string>
     <string name="high_quality">High</string>
-    <string name="video_quality_explanation">High quality video takes more space and can take a
-        while
-        to load
-    </string>
     <string name="do_not_ask_me_again">Do not ask me again</string>
     <string name="discount_policy_inverse_title">After every wrong submission your maximum points
         will be reduced
@@ -341,17 +284,12 @@
     <string name="mark_all_as_read">Mark all as read</string>
     <string name="empty_notification_title">You don\'t have any notifications yet</string>
     <string name="not_now">Not now</string>
-    <string name="after_hide_calendar_message">You can add deadlines in the top menu</string>
     <string name="received_review_title">Received review</string>
     <string name="new_message_title">New message</string>
     <string name="get_certifcate_title">New certificate</string>
     <string name="get_license_message">New license</string>
     <string name="added_to_group_title">Adding to group</string>
     <string name="notification_comment_list">Comments and replies</string>
-    <string name="exam_module_title">It is an exam module, you can only solve it in the web
-        version
-    </string>
-    <string name="start_exam_action_title">Open</string>
     <string name="restriction_submission_enough">The step cannot be submitted, because the number of
         possible
         attempts has been exceeded
@@ -359,9 +297,7 @@
     <string name="too_many_attempts">Too many attempts. Please try later</string>
     <string name="profile_title">Profile</string>
     <string name="current_streak">Current streak</string>
-    <string name="solving_without_break">Solving without break</string>
     <string name="max_streak">Max streak</string>
-    <string name="about_me">About me</string>
     <string name="short_bio">Short biography</string>
     <string name="user_info">Info</string>
     <string name="empty_user_title">User is not found</string>
@@ -418,20 +354,14 @@
         will not send them. Click to enable again
     </string>
     <string name="streak_updated_timezone">Streaks are updated at %s</string>
-    <string name="terms_message_login">
-        <![CDATA[By signing in, you agree to our <a href="https://stepik.org/page/terms/?from_mobile_app=true">Terms of Service</a> and <a href="https://stepik.org/page/privacy/?from_mobile_app=true">Privacy Policy</a>]]></string>
-    <string name="terms_message_launch">
-        <![CDATA[<a href="https://stepik.org/page/terms/?from_mobile_app=true">Terms of Service</a> and <a href="https://stepik.org/page/privacy/?from_mobile_app=true">Privacy Policy</a>]]></string>
     <string name="terms_message_register">
         <![CDATA[By signing up, you agree to our <a href="https://stepik.org/page/terms/?from_mobile_app=true">Terms</a> and <a href="https://stepik.org/page/privacy/?from_mobile_app=true">Privacy Policy</a>]]></string>
     <string name="about_app_title">About</string>
     <string name="terms_of_service_title">Terms of Service</string>
     <string name="privacy_policy_title">Privacy Policy</string>
-    <string name="take_course_with_fiends">Take a course together with friends!</string>
     <string name="invite_friends_description">Share link with your friends to take this course together!</string>
     <string name="sign_in_with_password">Sign in with e-mail</string>
     <string name="sign_in_with_password_suffix">" with e-mail"</string>
-    <string name="or_continue_social">Or continue with</string>
     <string name="content_course_logo">Course logo</string>
     <string name="continue_course_title">Continue</string>
     <string name="auth_inline_message">To save your progress please sign in first</string>
@@ -546,7 +476,6 @@
     <string name="code_quiz_limits">&lt;b>Time limit:&lt;/b> %1$s\n&lt;b>Memory limit:&lt;/b>%2$s MB</string>
     <string name="sample_input">&lt;b>Sample input %d:&lt;/b></string>
     <string name="sample_output">&lt;b>Sample output %d:&lt;/b></string>
-    <string name="hint_for_code">Type code here…</string>
     <string name="step_preparing">Step is not prepared yet. Tap to reload</string>
     <string name="course_rating">Course rating</string>
     <string name="course_rating_value" translatable="false">%.1f</string>
@@ -724,6 +653,8 @@
     <string name="course_content_timeline_soft_deadline">Soft deadline</string>
     <string name="course_content_timeline_hard_deadline">Hard deadline</string>
     <string name="course_content_timeline_deadline">Deadline</string>
+
+    <string name="course_content_section_exam_description">This is an exam module, you can only solve it in the web version. Press to open it in the web browser.</string>
 
     <string name="course_control_schedule">Schedule</string>
     <string name="course_control_filter">Filter by</string>

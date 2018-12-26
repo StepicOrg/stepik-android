@@ -4,8 +4,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import org.stepic.droid.features.deadlines.storage.structure.DbStructureDeadlines;
-import org.stepic.droid.features.deadlines.storage.structure.DbStructureDeadlinesBanner;
+import org.stepik.android.cache.personal_deadlines.structure.DbStructureDeadlines;
+import org.stepik.android.cache.personal_deadlines.structure.DbStructureDeadlinesBanner;
 import org.stepic.droid.storage.migration.MigrationFrom33To34;
 import org.stepic.droid.storage.migration.MigrationFrom34To35;
 import org.stepic.droid.storage.migration.MigrationFrom35To36;

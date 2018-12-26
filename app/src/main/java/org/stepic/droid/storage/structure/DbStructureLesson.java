@@ -1,5 +1,6 @@
 package org.stepic.droid.storage.structure;
 
+@Deprecated
 public final class DbStructureLesson {
     public static final String LESSONS = "lessons";
 

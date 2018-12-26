@@ -25,7 +25,6 @@ import org.stepic.droid.core.presenters.contracts.ContinueCourseView
 import org.stepic.droid.core.presenters.contracts.FastContinueView
 import org.stepic.droid.model.CourseListType
 import org.stepik.android.model.Course
-import org.stepik.android.model.Section
 import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
@@ -33,6 +32,7 @@ import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.ProgressUtil
 import org.stepic.droid.util.StepikLogicHelper
+import org.stepik.android.domain.last_step.model.LastStep
 import javax.inject.Inject
 
 class FastContinueFragment : FragmentBase(),
@@ -180,10 +180,10 @@ class FastContinueFragment : FragmentBase(),
         }
     }
 
-    override fun onOpenStep(courseId: Long, section: Section, lessonId: Long, unitId: Long, stepPosition: Int) {
+    override fun onOpenStep(courseId: Long, lastStep: LastStep) {
         ProgressHelper.dismiss(fragmentManager, CONTINUE_LOADING_TAG)
         fastContinueAction.isEnabled = true
-        screenManager.continueCourse(activity, courseId, section, lessonId, unitId, stepPosition.toLong())
+        screenManager.continueCourse(activity, lastStep.unit, lastStep.lesson, lastStep.step)
     }
 
     override fun onOpenAdaptiveCourse(course: Course) {
@@ -195,7 +195,7 @@ class FastContinueFragment : FragmentBase(),
     override fun onAnyProblemWhileContinue(course: Course) {
         ProgressHelper.dismiss(fragmentManager, CONTINUE_LOADING_TAG)
         fastContinueAction.isEnabled = true
-        screenManager.showSections(activity, course)
+        screenManager.showCourseModules(activity, course)
     }
 
     //Client<DroppingListener>

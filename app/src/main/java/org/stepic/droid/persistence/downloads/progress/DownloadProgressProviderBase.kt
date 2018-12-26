@@ -30,7 +30,7 @@ abstract class DownloadProgressProviderBase<T>(
             ids.toFlowable().flatMap(::getItemProgress)
 
     private fun getItemProgress(itemId: Long) = getItemUpdateObservable(itemId)
-            .switchMap { _ ->
+            .switchMap {
                 intervalUpdatesObservable.startWith(kotlin.Unit)
                         .concatMap { getItemProgressFromDB(itemId) }
                         .takeUntil { it.status == DownloadProgress.Status.Cached || it.status == DownloadProgress.Status.NotCached }

@@ -1,7 +1,7 @@
 package org.stepik.android.data.section.repository
 
-import io.reactivex.Maybe
-import org.stepic.droid.util.doOnSuccess
+import io.reactivex.Single
+import org.stepic.droid.util.doCompletableOnSuccess
 import org.stepik.android.data.section.source.SectionCacheDataSource
 import org.stepik.android.data.section.source.SectionRemoteDataSource
 import org.stepik.android.domain.base.DataSourceType
@@ -15,25 +15,29 @@ constructor(
     private val sectionCacheDataSource: SectionCacheDataSource,
     private val sectionRemoteDataSource: SectionRemoteDataSource
 ) : SectionRepository {
-
-    override fun getSection(sectionId: Long, primarySourceType: DataSourceType): Maybe<Section> {
+    override fun getSections(vararg sectionIds: Long, primarySourceType: DataSourceType): Single<List<Section>> {
         val remoteSource = sectionRemoteDataSource
-            .getSection(sectionId)
-            .doOnSuccess(sectionCacheDataSource::saveSection)
+            .getSections(*sectionIds)
+            .doCompletableOnSuccess(sectionCacheDataSource::saveSections)
 
         val cacheSource = sectionCacheDataSource
-            .getSection(sectionId)
+            .getSections(*sectionIds)
 
         return when(primarySourceType) {
             DataSourceType.REMOTE ->
                 remoteSource.onErrorResumeNext(cacheSource)
 
             DataSourceType.CACHE ->
-                cacheSource.switchIfEmpty(remoteSource)
+                cacheSource.flatMap { cachedSections ->
+                    val ids = (sectionIds.toList() - cachedSections.map(Section::id)).toLongArray()
+                    sectionRemoteDataSource
+                        .getSections(*ids)
+                        .doCompletableOnSuccess(sectionCacheDataSource::saveSections)
+                        .map { remoteSections -> cachedSections + remoteSections }
+                }
 
             else ->
                 throw IllegalArgumentException("Unsupported source type = $primarySourceType")
-        }
+        }.map { sections -> sections.sortedBy { sectionIds.indexOf(it.id) } }
     }
-
 }

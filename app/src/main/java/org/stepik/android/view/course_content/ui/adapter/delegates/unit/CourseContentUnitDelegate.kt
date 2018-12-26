@@ -3,20 +3,24 @@ package org.stepik.android.view.course_content.ui.adapter.delegates.unit
 import android.graphics.BitmapFactory
 import android.support.annotation.DrawableRes
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
+import android.support.v4.util.LongSparseArray
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.view_course_content_unit.view.*
 import org.stepic.droid.R
+import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepik.android.view.course_content.model.CourseContentItem
 import org.stepic.droid.ui.custom.adapter_delegates.AdapterDelegate
 import org.stepic.droid.ui.custom.adapter_delegates.DelegateAdapter
 import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
+import org.stepic.droid.ui.util.changeVisibility
 
 class CourseContentUnitDelegate(
     adapter: DelegateAdapter<CourseContentItem, DelegateViewHolder<CourseContentItem>>,
-    private val unitClickListener: CourseContentUnitClickListener
+    private val unitClickListener: CourseContentUnitClickListener,
+    private val unitDownloadStatuses: LongSparseArray<DownloadProgress.Status>
 ) : AdapterDelegate<CourseContentItem, DelegateViewHolder<CourseContentItem>>(adapter) {
 
     override fun onCreateViewHolder(parent: ViewGroup) =
@@ -32,6 +36,7 @@ class CourseContentUnitDelegate(
         private val unitProgress = root.unitProgress
 
         private val unitViewCount = root.unitViewCount
+        private val unitViewCountIcon = root.unitViewCountIcon
         private val unitRating = root.unitRating
         private val unitRatingIcon = root.unitRatingIcon
 
@@ -51,6 +56,18 @@ class CourseContentUnitDelegate(
             root.setOnClickListener {
                 (itemData as? CourseContentItem.UnitItem)?.let(unitClickListener::onItemClicked)
             }
+
+            unitDownloadStatus.setOnClickListener {
+                val item = (itemData as? CourseContentItem.UnitItem) ?: return@setOnClickListener
+                when(unitDownloadStatus.status) {
+                    DownloadProgress.Status.NotCached ->
+                        unitClickListener.onItemDownloadClicked(item)
+
+                    DownloadProgress.Status.Cached,
+                    is DownloadProgress.Status.InProgress ->
+                        unitClickListener.onItemRemoveClicked(item)
+                }
+            }
         }
 
         override fun onBind(data: CourseContentItem) {
@@ -58,12 +75,18 @@ class CourseContentUnitDelegate(
                 unitTitle.text = context.resources.getString(R.string.course_content_unit_title,
                         section.position, unit.position, lesson.title)
 
-                unitTextProgress.text = context.resources.getString(R.string.course_content_text_progress,
+                if (progress != null) {
+                    unitTextProgress.text = context.resources.getString(R.string.course_content_text_progress,
                         progress.nStepsPassed, progress.nSteps)
 
-                unitProgress.progress = progress.nStepsPassed.toFloat() / progress.nSteps
+                    unitProgress.progress = progress.nStepsPassed.toFloat() / progress.nSteps
+                    unitTextProgress.visibility = View.VISIBLE
+                } else {
+                    unitProgress.progress = 0f
+                    unitTextProgress.visibility = View.GONE
+                }
 
-                unitDownloadStatus.status = downloadStatus
+                unitDownloadStatus.status = unitDownloadStatuses[data.unit.id] ?: DownloadProgress.Status.Pending
 
                 Glide.with(unitIcon.context)
                         .load(lesson.coverUrl)
@@ -83,6 +106,16 @@ class CourseContentUnitDelegate(
 
                 unitRatingIcon.setImageResource(unitRatingDrawableRes)
                 unitRating.text = Math.abs(lesson.voteDelta).toString()
+
+                unitDownloadStatus.changeVisibility(isEnabled)
+                itemView.isEnabled = isEnabled
+
+                val alpha = if (isEnabled) 1f else 0.4f
+                unitTitle.alpha = alpha
+                unitRatingIcon.alpha = alpha
+                unitRating.alpha = alpha
+                unitViewCount.alpha = alpha
+                unitViewCountIcon.alpha = alpha
             }
         }
     }

@@ -2,10 +2,10 @@ package org.stepic.droid.ui.custom.control_bar
 
 import android.content.Context
 import android.support.annotation.AttrRes
+import android.support.annotation.IdRes
 import android.support.annotation.LayoutRes
 import android.support.annotation.MenuRes
 import android.util.AttributeSet
-import android.util.Log
 import android.view.*
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -16,11 +16,7 @@ import kotlin.math.max
 
 class ControlBarView
 @JvmOverloads
-constructor(
-        context: Context,
-        attrs: AttributeSet? = null,
-        @AttrRes defStyleAttr: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr), View.OnClickListener, PopupMenu.OnMenuItemClickListener {
+constructor(context: Context, attrs: AttributeSet? = null, @AttrRes defStyleAttr: Int = 0) : FrameLayout(context, attrs, defStyleAttr), View.OnClickListener, PopupMenu.OnMenuItemClickListener {
     private val inflater = LayoutInflater.from(context)
     private val menu: Menu =
             PopupMenu(context, null).menu
@@ -30,6 +26,10 @@ constructor(
 
     private lateinit var actionMore: View
     private lateinit var popupMenu: PopupMenu
+
+    private val invisibleItemIds = mutableSetOf<Int>()
+
+    var onClickListener: ((Int) -> Boolean)? = null
 
     init {
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.ControlBarView)
@@ -60,6 +60,9 @@ constructor(
     private fun initChildren() {
         for (i in 0 until menu.size()) {
             val item = menu.getItem(i)
+
+            if (item.itemId in invisibleItemIds) continue // skip invisible item
+
             val view = inflater.inflate(itemLayoutRes, this, false)
 
             view.findViewById<TextView>(android.R.id.text1).text = item.title
@@ -166,11 +169,20 @@ constructor(
     }
 
     override fun onClick(view: View) {
-        Log.d(javaClass.canonicalName, "on view click $view")
+        onClickListener?.invoke(view.id)
     }
 
-    override fun onMenuItemClick(item: MenuItem): Boolean {
-        Log.d(javaClass.canonicalName, "on view click $item")
-        return true
+    override fun onMenuItemClick(item: MenuItem): Boolean =
+        onClickListener
+            ?.invoke(item.itemId)
+            ?: false
+
+    fun changeItemVisibility(@IdRes id: Int, isVisible: Boolean) {
+        if (isVisible) {
+            invisibleItemIds -= id
+        } else {
+            invisibleItemIds += id
+        }
+        invalidateMenu()
     }
 }

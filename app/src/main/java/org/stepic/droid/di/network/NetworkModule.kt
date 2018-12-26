@@ -6,8 +6,6 @@ import dagger.Provides
 import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.features.achievements.repository.AchievementsRepository
 import org.stepic.droid.features.achievements.repository.AchievementsRepositoryImpl
-import org.stepic.droid.features.deadlines.repository.DeadlinesRepository
-import org.stepic.droid.features.deadlines.repository.DeadlinesRepositoryImpl
 import org.stepic.droid.features.stories.repository.StoryTemplatesRepository
 import org.stepic.droid.features.stories.repository.StoryTemplatesRepositoryImpl
 import org.stepic.droid.web.ApiImpl
@@ -17,10 +15,6 @@ import org.stepic.droid.web.storage.RemoteStorageService
 
 @Module(includes = [NetworkUtilModule::class])
 abstract class NetworkModule {
-    @Binds
-    @AppSingleton
-    abstract fun bindDeadlinesRepository(deadlinesRepositoryImpl: DeadlinesRepositoryImpl): DeadlinesRepository
-
     @Binds
     @AppSingleton
     abstract fun bindAchievementsRepository(achievementsRepositoryImpl: AchievementsRepositoryImpl): AchievementsRepository

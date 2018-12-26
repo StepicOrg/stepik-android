@@ -19,7 +19,7 @@ class CourseContentTimelineAdapter : RecyclerView.Adapter<DelegateViewHolder<Cou
             notifyDataSetChanged()
         }
 
-    var now: Date = Date()
+    val now: Date = Date()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
             ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.view_course_content_section_date, parent, false))
@@ -43,8 +43,10 @@ class CourseContentTimelineAdapter : RecyclerView.Adapter<DelegateViewHolder<Cou
             val isNotLastItem = adapterPosition < itemCount - 1
             dateProgress.changeVisibility(isNotLastItem)
             if (isNotLastItem) {
-                dateProgress.max = (dates[adapterPosition + 1].date.time - data.date.time).toInt()
-                dateProgress.progress = (now.time - data.date.time).toInt()
+                val total = (dates[adapterPosition + 1].date.time - data.date.time)
+                val progress = (now.time - data.date.time) * 100 / total
+                dateProgress.max = 100
+                dateProgress.progress = progress.toInt()
             }
 
             dateDot.isEnabled = now >= data.date

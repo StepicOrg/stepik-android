@@ -9,7 +9,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.provider.Settings;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.FileProvider;
@@ -27,6 +26,7 @@ import org.stepic.droid.base.App;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.di.AppSingleton;
 import org.stepic.droid.features.achievements.ui.activity.AchievementsListActivity;
+import org.stepik.android.view.course.routing.CourseScreenTab;
 import org.stepik.android.view.course.ui.activity.CourseActivity;
 import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.model.CollectionDescriptionColors;
@@ -55,18 +55,15 @@ import org.stepic.droid.ui.activities.NotificationSettingsActivity;
 import org.stepic.droid.ui.activities.PhotoViewActivity;
 import org.stepic.droid.ui.activities.ProfileActivity;
 import org.stepic.droid.ui.activities.RegisterActivity;
-import org.stepic.droid.ui.activities.SectionActivity;
 import org.stepic.droid.ui.activities.SettingsActivity;
 import org.stepic.droid.ui.activities.SplashActivity;
 import org.stepic.droid.ui.activities.StepsActivity;
 import org.stepic.droid.ui.activities.StoreManagementActivity;
 import org.stepic.droid.ui.activities.TagActivity;
 import org.stepic.droid.ui.activities.TextFeedbackActivity;
-import org.stepic.droid.ui.activities.UnitsActivity;
 import org.stepic.droid.ui.activities.VideoActivity;
 import org.stepic.droid.ui.dialogs.RemindPasswordDialogFragment;
 import org.stepic.droid.ui.fragments.CommentsFragment;
-import org.stepic.droid.ui.fragments.SectionsFragment;
 import org.stepic.droid.util.AndroidVersionKt;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.StringUtil;
@@ -217,26 +214,29 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void showCourseDescription(Fragment sourceFragment, @NotNull Course course) {
-        Intent intent = getIntentForDescription(sourceFragment.getActivity(), course, false);
-        sourceFragment.startActivityForResult(intent, AppConstants.REQUEST_CODE_DETAIL);
+    public void showCourseDescription(Context context, @NotNull Course course) {
+        showCourseDescription(context, course, false);
     }
 
     @Override
-    public void showCourseDescription(Context context, @NotNull Course course) {
-        Intent intent = getIntentForDescription(context, course, false);
+    public void showCourseDescription(Context context, @NotNull Course course, boolean autoEnroll) {
+        showCourseScreen(context, course, autoEnroll, CourseScreenTab.INFO);
+    }
+
+    @Override
+    public void showCourseModules(Context context, @NotNull Course course) {
+        showCourseScreen(context, course, false, CourseScreenTab.SYLLABUS);
+    }
+
+    @Override
+    public void showCourseScreen(Context context, @NotNull Course course, boolean autoEnroll, CourseScreenTab tab) {
+        Intent intent = getIntentForDescription(context, course, autoEnroll, tab);
         context.startActivity(intent);
     }
 
-    @Override
-    public void showCourseDescription(Activity sourceActivity, @NotNull Course course, boolean autoEnroll) {
-        Intent intent = getIntentForDescription(sourceActivity, course, autoEnroll);
-        sourceActivity.startActivity(intent);
-    }
-
-    private Intent getIntentForDescription(Context context, @NotNull Course course, boolean autoEnroll) {
+    private Intent getIntentForDescription(Context context, @NotNull Course course, boolean autoEnroll, CourseScreenTab tab) {
         analytic.reportEvent(Analytic.Screens.SHOW_COURSE_DESCRIPTION);
-        Intent intent = CourseActivity.Companion.createIntent(context, course, autoEnroll);
+        Intent intent = CourseActivity.Companion.createIntent(context, course, autoEnroll, tab);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         if (!(context instanceof Activity)) {
@@ -486,35 +486,6 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void continueCourse(Activity activity, long courseId, Section section, long lessonId, long unitId, long stepPosition) {
-        continueCourse(activity, courseId, section, lessonId, unitId, stepPosition, false);
-    }
-
-    @Override
-    public void continueCourse(Activity activity, long courseId, Section section, long lessonId, long unitId, long stepPosition, boolean joinedRightNow) {
-        String testStepPath = StringUtil.getUriForStepByIds(config.getBaseUrl(), lessonId, unitId, stepPosition);
-        String testSectionPath = StringUtil.getUriForCourse(config.getBaseUrl(), courseId + "");
-
-        Intent sectionsIntent = new Intent(activity, SectionActivity.class)
-                .setAction(AppConstants.INTERNAL_STEPIK_ACTION)
-                .setData(Uri.parse(testSectionPath));
-        if (joinedRightNow) {
-            sectionsIntent.putExtra(SectionsFragment.joinFlag, true);
-        }
-
-        TaskStackBuilder.create(activity)
-                .addNextIntent(new Intent(activity, MainFeedActivity.class)
-                        .setAction(AppConstants.INTERNAL_STEPIK_ACTION))
-                .addNextIntent(sectionsIntent)
-                .addNextIntent(getIntentForUnits(activity, section)
-                        .setAction(AppConstants.INTERNAL_STEPIK_ACTION))
-                .addNextIntent(new Intent(activity, StepsActivity.class)
-                        .setAction(AppConstants.INTERNAL_STEPIK_ACTION)
-                        .setData(Uri.parse(testStepPath)))
-                .startActivities();
-    }
-
-    @Override
     public void continueCourse(Activity activity, long unitId, long lessonId, long stepId) {
         String testStepPath = StringUtil.getUriForStepByIds(config.getBaseUrl(), lessonId, unitId, stepId);
         Intent intent = new Intent(activity, StepsActivity.class)
@@ -595,50 +566,6 @@ public class ScreenManagerImpl implements ScreenManager {
         } else {
             Toast.makeText(commentsFragment.getContext(), R.string.anonymous_write_comment, Toast.LENGTH_SHORT).show();
         }
-    }
-
-    private Intent getSectionsIntent(Activity sourceActivity, @NotNull Course course) {
-        Intent intent = new Intent(sourceActivity, SectionActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(AppConstants.KEY_COURSE_BUNDLE, course);
-        intent.putExtras(bundle);
-        return intent;
-    }
-
-    @Override
-    public void showSections(Activity sourceActivity, @NotNull Course course) {
-        analytic.reportEventWithIdName(Analytic.Screens.SHOW_SECTIONS, course.getId() + "", course.getTitle());
-        Intent intent = getSectionsIntent(sourceActivity, course);
-        sourceActivity.startActivity(intent);
-    }
-
-    @Override
-    public void showSections(Activity sourceActivity, @NotNull Course course, boolean joinedRightNow) {
-        if (!joinedRightNow) {
-            showSections(sourceActivity, course);
-        } else {
-            analytic.reportEventWithIdName(Analytic.Screens.SHOW_SECTIONS_JOINED, course.getId() + "", course.getTitle());
-            sourceActivity.startActivity(
-                    getSectionsIntent(sourceActivity, course).putExtra(SectionsFragment.joinFlag, true));
-        }
-    }
-
-    @Override
-    public void showUnitsForSection(Activity sourceActivity, @NotNull Section section) {
-        analytic.reportEvent(Analytic.Screens.SHOW_UNITS, section.getId() + "");
-        Intent intent = getIntentForUnits(sourceActivity, section);
-        sourceActivity.startActivity(intent);
-        sourceActivity.overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
-    }
-
-    private Intent getIntentForUnits(Activity activity, @NotNull Section section) {
-        Intent intent = new Intent(activity, UnitsActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(AppConstants.KEY_SECTION_BUNDLE, section);
-        intent.putExtras(bundle);
-        return intent;
     }
 
     @Override

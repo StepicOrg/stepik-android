@@ -1,7 +1,7 @@
 package org.stepik.android.data.last_step.repository
 
 import io.reactivex.Maybe
-import org.stepic.droid.util.doOnSuccess
+import org.stepic.droid.util.doCompletableOnSuccess
 import org.stepik.android.data.last_step.source.LastStepCacheDataSource
 import org.stepik.android.data.last_step.source.LastStepRemoteDataSource
 import org.stepik.android.domain.last_step.model.LastStep
@@ -17,6 +17,6 @@ constructor(
     override fun getLastStep(id: String): Maybe<LastStep> =
             lastStepRemoteDataSource
                 .getLastStep(id)
-                .doOnSuccess(lastStepCacheDataSource::saveLastStep)
+                .doCompletableOnSuccess(lastStepCacheDataSource::saveLastStep)
                 .switchIfEmpty(lastStepCacheDataSource.getLastStep(id))
 }

@@ -3,8 +3,6 @@ package org.stepik.android.domain.course.model
 import android.os.Parcel
 import android.os.Parcelable
 import org.stepik.android.model.Course
-import org.stepik.android.model.util.readBoolean
-import org.stepik.android.model.util.writeBoolean
 
 data class CourseHeaderData(
     val courseId: Long,
@@ -15,7 +13,7 @@ data class CourseHeaderData(
 
     val review: Double,
     val progress: Int?,
-    val isFeatured: Boolean,
+    val readiness: Double,
     val enrollmentState: EnrollmentState
 ) : Parcelable {
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -26,7 +24,7 @@ data class CourseHeaderData(
         parcel.writeLong(learnersCount)
         parcel.writeDouble(review)
         parcel.writeValue(progress)
-        parcel.writeBoolean(isFeatured)
+        parcel.writeDouble(readiness)
         parcel.writeInt(enrollmentState.ordinal)
     }
 
@@ -42,7 +40,7 @@ data class CourseHeaderData(
                 parcel.readLong(),
                 parcel.readDouble(),
                 parcel.readValue(Int::class.java.classLoader) as Int?,
-                parcel.readBoolean(),
+                parcel.readDouble(),
                 EnrollmentState.values()[parcel.readInt()]
             )
 

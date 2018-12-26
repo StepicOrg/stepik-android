@@ -129,6 +129,9 @@ public interface StepicRestLoggedService {
     @GET("api/courses")
     Single<CoursesMetaResponse> getCoursesReactive(@Query("page") int page, @Query("ids[]") long[] courseIds);
 
+    @GET("api/courses")
+    Single<CoursesMetaResponse> getCoursesReactive(@Query("ids[]") long[] courseIds);
+
     @POST("api/attempts")
     Call<AttemptResponse> createNewAttempt(@Body AttemptRequest attemptRequest);
 
