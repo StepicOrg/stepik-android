@@ -169,9 +169,9 @@ public class HtmlHelper {
     private static String getStyle(float fontSize, @Nullable String fontPath, @ColorInt int textColorHighlight) {
         final String fontStyle;
         if (fontPath  == null) {
-            fontStyle = String.format(Locale.getDefault(), DefaultFontStyle, fontSize);
+            fontStyle = String.format(Locale.US, DefaultFontStyle, fontSize); // US locale to format floats with '.' instead of ','
         } else {
-            fontStyle = String.format(Locale.getDefault(), CustomFontStyle, fontPath, fontSize);
+            fontStyle = String.format(Locale.US, CustomFontStyle, fontPath, fontSize);
         }
 
         final String selectionColorStyle = String.format(Locale.getDefault(), SelectionColorStyle, 0xFFFFFF & textColorHighlight);
@@ -299,7 +299,7 @@ public class HtmlHelper {
     private static final String DefaultFontStyle =
             "<style>\n"
             + "\nhtml{-webkit-text-size-adjust: 100%%;}"
-            + "\nbody{font-size: %fpt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;}"
+            + "\nbody{font-size: %.1fpt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;}"
             + "\nh1{font-size: 20pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;text-align: center;}"
             + "\nh2{font-size: 17pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;text-align: center;}"
             + "\nh3{font-size: 14pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;text-align: center;}"
@@ -314,7 +314,7 @@ public class HtmlHelper {
             "    src: url(\"%s\")\n" +
             "}"
             + "\nhtml{-webkit-text-size-adjust: 100%%;}"
-            + "\nbody{font-size: %fpx; font-family:'Roboto', Helvetica, sans-serif; line-height:1.6em;}"
+            + "\nbody{font-size: %.1fpx; font-family:'Roboto', Helvetica, sans-serif; line-height:1.6em;}"
             + "\nh1{font-size: 22px; font-family:'Roboto', Helvetica, sans-serif; line-height:1.6em;text-align: center;}"
             + "\nh2{font-size: 19px; font-family:'Roboto', Helvetica, sans-serif; line-height:1.6em;text-align: center;}"
             + "\nh3{font-size: 16px; font-family:'Roboto', Helvetica, sans-serif; line-height:1.6em;text-align: center;}"
