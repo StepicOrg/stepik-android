@@ -357,7 +357,6 @@
     <string name="about_app_title">О приложении</string>
     <string name="terms_of_service_title">Условия использования</string>
     <string name="privacy_policy_title">Политика конфиденциальности</string>
-    <string name="invite_friends_description">Поделитесь ссылкой с друзьями, чтобы проходить курс вместе!</string>
     <string name="sign_in_with_password">Войти с e-mail</string>
     <string name="sign_in_with_password_suffix">" с e-mail"</string>
     <string name="content_course_logo">Логотип курса</string>
@@ -603,6 +602,8 @@
 
     <!-- Course -->
     <string name="course_verified">Проверенный</string>
+    <string name="course_share_description">Поделитесь ссылкой с друзьями, чтобы проходить курс вместе!</string>
+
     <string name="course_tab_info">Инфо</string>
     <string name="course_tab_reviews">Отзывы</string>
     <string name="course_tab_modules">Модули</string>

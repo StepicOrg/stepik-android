@@ -9,6 +9,7 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
 import android.support.v7.content.res.AppCompatResources
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.LinearLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
@@ -20,10 +21,7 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.configuration.Config
-import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
-import org.stepic.droid.ui.util.changeVisibility
-import org.stepic.droid.ui.util.doOnPreDraw
-import org.stepic.droid.ui.util.setCompoundDrawables
+import org.stepic.droid.ui.util.*
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.presentation.course.CoursePresenter
@@ -165,6 +163,22 @@ class CourseHeaderDelegate(
                     rightMargin = offset
                 }
         }
+    }
+
+    fun showCourseShareTooltip() {
+        val menuItemView = courseActivity
+            .courseToolbar
+            .findViewById<View>(R.id.share_course)
+            ?: return
+
+        PopupHelper
+            .showPopupAnchoredToView(
+                courseActivity,
+                menuItemView,
+                courseActivity.getString(R.string.course_share_description),
+                theme = PopupHelper.PopupTheme.LIGHT,
+                cancelableOnTouchOutside = true
+            )
     }
 
     fun onOptionsMenuCreated(menu: Menu) {

@@ -26,4 +26,5 @@ interface CourseView {
     fun continueAdaptiveCourse(course: Course)
 
     fun shareCourse(course: Course)
+    fun showCourseShareTooltip()
 }

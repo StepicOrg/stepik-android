@@ -156,9 +156,15 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onNext  = { state = CourseView.State.CourseLoaded(it); continueLearning() },
+                onNext  = { state = CourseView.State.CourseLoaded(it); continueLearning(); resolveCourseShareTooltip(it) },
                 onError = { state = CourseView.State.NetworkError; subscriberForEnrollmentUpdates() }
             )
+    }
+
+    private fun resolveCourseShareTooltip(courseHeaderData: CourseHeaderData) {
+        if (courseHeaderData.enrollmentState == EnrollmentState.ENROLLED) {
+            view?.showCourseShareTooltip()
+        }
     }
 
     /**

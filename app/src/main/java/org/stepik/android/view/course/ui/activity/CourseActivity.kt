@@ -300,6 +300,10 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         startActivity(shareHelper.getIntentForCourseSharing(course))
     }
 
+    override fun showCourseShareTooltip() {
+        courseHeaderDelegate.showCourseShareTooltip()
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         coursePresenter.onSaveInstanceState(outState)
         super.onSaveInstanceState(outState)
