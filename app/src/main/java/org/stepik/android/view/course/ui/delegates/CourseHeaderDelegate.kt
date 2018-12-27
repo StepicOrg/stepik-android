@@ -9,6 +9,7 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
 import android.support.v7.content.res.AppCompatResources
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.LinearLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import jp.wasabeef.glide.transformations.BlurTransformation
@@ -21,6 +22,7 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.ui.util.changeVisibility
+import org.stepic.droid.ui.util.doOnPreDraw
 import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.model.EnrollmentState
@@ -28,10 +30,10 @@ import org.stepik.android.presentation.course.CoursePresenter
 import kotlin.math.roundToInt
 
 class CourseHeaderDelegate(
-        private val courseActivity: Activity,
-        private val analytic: Analytic,
-        private val config: Config,
-        private val coursePresenter: CoursePresenter
+    private val courseActivity: Activity,
+    private val analytic: Analytic,
+    private val config: Config,
+    private val coursePresenter: CoursePresenter
 ) {
     companion object {
         private const val MIN_FEATURED_READINESS = 0.9
@@ -154,6 +156,15 @@ class CourseHeaderDelegate(
         }
 
         shareCourseMenuItem?.isVisible = true
+
+        courseToolbarConstraint.doOnPreDraw {
+            val offset = maxOf(courseToolbar.height, courseToolbar.width - courseToolbarConstraint.right)
+            courseInfo.layoutParams = (courseInfo.layoutParams as LinearLayout.LayoutParams)
+                .apply {
+                    leftMargin = offset
+                    rightMargin = offset
+                }
+        }
     }
 
     fun onOptionsMenuCreated(menu: Menu) {

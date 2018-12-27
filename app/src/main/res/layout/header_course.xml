@@ -130,16 +130,13 @@
 
     <LinearLayout
         android:id="@+id/courseInfo"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="@dimen/course_info_height_expanded"
         android:orientation="horizontal"
-        android:layout_marginLeft="?actionBarSize"
-        android:layout_marginRight="?actionBarSize"
-        android:paddingEnd="?actionBarSize"
-        android:paddingRight="?actionBarSize"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="@dimen/course_info_margin_expanded"
-        android:gravity="center">
+        android:gravity="center"
+        android:layout_gravity="center">
 
         <ImageView
             android:id="@+id/courseCoverSmall"
@@ -150,10 +147,12 @@
 
         <TextView
             android:id="@+id/courseTitle"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
+            android:maxLines="2"
+            android:ellipsize="end"
             android:textColor="@color/white"
             android:textSize="14sp" />
 

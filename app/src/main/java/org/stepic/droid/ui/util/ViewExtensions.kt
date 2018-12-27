@@ -69,3 +69,20 @@ fun Drawable.toBitmap(width: Int = intrinsicWidth, height: Int = intrinsicHeight
 
 fun ViewGroup.inflate(@LayoutRes resId: Int, attachToRoot: Boolean = false): View =
     LayoutInflater.from(this.context).inflate(resId, this, attachToRoot)
+
+/**
+ * Performs the given action when the view tree is about to be drawn.
+ */
+inline fun View.doOnPreDraw(crossinline action: (view: View) -> Unit) {
+    val vto = viewTreeObserver
+    vto.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
+        override fun onPreDraw(): Boolean {
+            action(this@doOnPreDraw)
+            when {
+                vto.isAlive -> vto.removeOnPreDrawListener(this)
+                else -> viewTreeObserver.removeOnPreDrawListener(this)
+            }
+            return true
+        }
+    })
+}
