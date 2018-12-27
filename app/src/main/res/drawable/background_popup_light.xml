@@ -3,7 +3,7 @@
     <item>
         <shape android:shape="rectangle">
             <corners android:radius="@dimen/popup_border_radius" />
-            <solid android:color="@color/popup_background_color_dark" />
+            <solid android:color="@color/popup_background_color_light" />
         </shape>
     </item>
 </selector>

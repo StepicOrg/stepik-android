@@ -169,6 +169,9 @@
     <color name="placeholder_button_pressed_color">@color/light_rounded_pressed_color</color>
     <color name="placeholder_button_stroke_color">#CDCDCD</color>
 
+    <color name="popup_background_color_light">#FF54A2FF</color>
+    <color name="popup_background_color_dark">@color/new_accent_color</color>
+
     <!-- course -->
     <color name="course_appbar_separator">#cccccc</color>
     <color name="course_tabbar_color">#F6F6F6</color>
