@@ -214,9 +214,8 @@ class CourseActivity : FragmentActivityBase(), CourseView {
             tab?.customView = layoutInflater.inflate(R.layout.view_course_tab, null)
         }
 
-        (courseTabs.getTabAt(courseTabs.selectedTabPosition)?.customView as? TextView)?.let {
-            it.typeface = regularFont
-        }
+        (courseTabs.getTabAt(courseTabs.selectedTabPosition)?.customView as? TextView)
+            ?.typeface = regularFont
     }
 
     private fun initViewStateDelegate() {
