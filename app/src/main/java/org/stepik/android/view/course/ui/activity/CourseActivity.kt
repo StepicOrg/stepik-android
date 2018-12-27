@@ -10,6 +10,7 @@ import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout
 import android.support.v4.app.DialogFragment
 import android.support.v4.content.ContextCompat
+import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatDelegate
 import android.view.Menu
 import android.view.MenuItem
@@ -82,6 +83,11 @@ class CourseActivity : FragmentActivityBase(), CourseView {
     private val viewStateDelegate =
         ViewStateDelegate<CourseView.State>()
 
+    private var viewPagerScrollState: Int =
+        ViewPager.SCROLL_STATE_IDLE
+
+    private var isInSwipeableViewState = false
+
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -107,10 +113,10 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         }
 
         courseId = intent.getLongExtra(EXTRA_COURSE_ID, NO_ID)
-                .takeIf { it != NO_ID }
-                ?: course?.id
-                ?: deepLinkCourseId
-                ?: NO_ID
+            .takeIf { it != NO_ID }
+            ?: course?.id
+            ?: deepLinkCourseId
+            ?: NO_ID
 
         injectComponent(courseId)
         coursePresenter = ViewModelProviders.of(this, viewModelFactory).get(CoursePresenter::class.java)
@@ -135,6 +141,7 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         }
         setDataToPresenter()
 
+        courseSwipeRefresh.setOnRefreshListener { setDataToPresenter(forceUpdate = true) }
         tryAgain.setOnClickListener { setDataToPresenter(forceUpdate = true) }
         goToCatalog.setOnClickListener { screenManager.showCatalog(this) }
     }
@@ -176,6 +183,15 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         val coursePagerAdapter = CoursePagerAdapter(courseId, this, supportFragmentManager)
         coursePager.adapter = coursePagerAdapter
         coursePager.addOnPageChangeListener(CourseFragmentPageChangeListener(coursePager, coursePagerAdapter))
+        coursePager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrollStateChanged(scrollState: Int) {
+                viewPagerScrollState = scrollState
+                resolveSwipeRefreshState()
+            }
+
+            override fun onPageScrolled(p0: Int, p1: Float, p2: Int) {}
+            override fun onPageSelected(p0: Int) {}
+        })
 
         courseTabs.setupWithViewPager(coursePager)
         courseTabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
@@ -230,8 +246,17 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         //no-op
     }
 
+    private fun resolveSwipeRefreshState() {
+        courseSwipeRefresh.isEnabled =
+                viewPagerScrollState == ViewPager.SCROLL_STATE_IDLE
+                && isInSwipeableViewState
+    }
+
     override fun setState(state: CourseView.State) {
-        viewStateDelegate.switchState(state)
+        courseSwipeRefresh.isRefreshing = false
+        isInSwipeableViewState = (state is CourseView.State.CourseLoaded || state is CourseView.State.NetworkError)
+        resolveSwipeRefreshState()
+
         when(state) {
             is CourseView.State.CourseLoaded -> {
                 courseHeaderDelegate.courseHeaderData = state.courseHeaderData
@@ -254,6 +279,7 @@ class CourseActivity : FragmentActivityBase(), CourseView {
                 ProgressHelper.activate(progressDialogFragment, supportFragmentManager, LoadingProgressDialogFragment.TAG)
             }
         }
+        viewStateDelegate.switchState(state)
     }
 
     override fun showEmptyAuthDialog(course: Course) {

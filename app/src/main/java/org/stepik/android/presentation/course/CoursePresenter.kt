@@ -93,7 +93,7 @@ constructor(
 
     private fun observeCourseData(courseDataSource: Maybe<CourseHeaderData>, forceUpdate: Boolean) {
         if (state != CourseView.State.Idle
-            && !(state == CourseView.State.NetworkError && forceUpdate)) return
+            && !((state == CourseView.State.NetworkError || state is CourseView.State.CourseLoaded) && forceUpdate)) return
 
         state = CourseView.State.Loading
         compositeDisposable += courseDataSource

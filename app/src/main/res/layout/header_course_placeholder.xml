@@ -5,7 +5,7 @@
     android:id="@+id/courseHeaderPlaceholder"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
 
     android:background="@color/fast_continue_learning_opacity"
     android:gravity="center_horizontal"
@@ -26,7 +26,7 @@
         android:layout_height="8dp"
         android:alpha="@dimen/loading_view_dark_alpha"
         android:layerType="software"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="20dp"
         android:layout_marginStart="?actionBarSize"
         android:layout_marginEnd="?actionBarSize"
         android:layout_gravity="center_horizontal" />
@@ -40,7 +40,7 @@
         android:orientation="horizontal"
         android:layout_marginLeft="?actionBarSize"
         android:layout_marginRight="?actionBarSize"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="20dp"
         android:layout_marginBottom="@dimen/course_info_margin_expanded"
         android:gravity="center">
 
