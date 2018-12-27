@@ -7,6 +7,8 @@ import org.stepik.android.domain.course_info.model.CourseInfoData
 import org.stepik.android.view.course_info.model.CourseInfoItem
 import org.stepik.android.view.course_info.model.CourseInfoType
 
+private const val NEW_LINE = "<br/>"
+
 fun CourseInfoData.toSortedItems(context: Context): List<CourseInfoItem> {
     val items = arrayListOf<CourseInfoItem>()
 
@@ -50,7 +52,7 @@ fun CourseInfoData.toSortedItems(context: Context): List<CourseInfoItem> {
             certificateConditions.add(distinctionCondition)
         }
 
-        items.addTextItem(CourseInfoType.CERTIFICATE_DETAILS, certificateConditions.joinToString("\n"))
+        items.addTextItem(CourseInfoType.CERTIFICATE_DETAILS, certificateConditions.joinToString(NEW_LINE))
     }
 
     return items
