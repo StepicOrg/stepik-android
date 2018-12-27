@@ -86,7 +86,7 @@ constructor(
     /**
      * Content
      */
-    private fun fetchCourseContent(forceUpdate: Boolean = false) {
+    fun fetchCourseContent(forceUpdate: Boolean = false) {
         if (state != CourseContentView.State.Idle
             && !(state == CourseContentView.State.NetworkError && forceUpdate)) return
 

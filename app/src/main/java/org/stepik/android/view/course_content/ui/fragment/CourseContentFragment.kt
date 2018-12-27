@@ -154,6 +154,8 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
             })
         }
 
+        tryAgain.setOnClickListener { courseContentPresenter.fetchCourseContent(forceUpdate = true) }
+
         viewStateDelegate = ViewStateDelegate()
         viewStateDelegate.addState<CourseContentView.State.Idle>(courseContentPlaceholder)
         viewStateDelegate.addState<CourseContentView.State.Loading>(courseContentPlaceholder)
