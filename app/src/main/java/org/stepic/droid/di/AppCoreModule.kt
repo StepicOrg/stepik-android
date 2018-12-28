@@ -64,14 +64,6 @@ abstract class AppCoreModule {
 
     @Binds
     @AppSingleton
-    abstract fun provideLocalProgressManagerSectionProgressListenerContainer(container: ListenerContainerImpl<LocalProgressManager.SectionProgressListener>): ListenerContainer<LocalProgressManager.SectionProgressListener>
-
-    @Binds
-    @AppSingleton
-    abstract fun provideLocalProgressManagerUnitProgressListenerContainer(container: ListenerContainerImpl<LocalProgressManager.UnitProgressListener>): ListenerContainer<LocalProgressManager.UnitProgressListener>
-
-    @Binds
-    @AppSingleton
     abstract fun provideInternetEnabledPoster(internetEnabledPoster: InternetEnabledPosterImpl): InternetEnabledPoster
 
     @Binds
@@ -97,10 +89,6 @@ abstract class AppCoreModule {
     @AppSingleton
     @Binds
     internal abstract fun provideLessonSessionManager(localLessonSessionManager: LocalLessonSessionManagerImpl): LessonSessionManager
-
-    @AppSingleton
-    @Binds
-    internal abstract fun provideProgressManager(localProgress: LocalProgressImpl): LocalProgressManager
 
     @AppSingleton
     @Binds

@@ -1,5 +1,6 @@
 package org.stepik.android.presentation.course_content
 
+import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
@@ -20,6 +21,7 @@ import org.stepik.android.domain.personal_deadlines.interactor.DeadlinesInteract
 import org.stepik.android.domain.personal_deadlines.model.LearningRate
 import org.stepik.android.domain.settings.interactor.VideoQualityInteractor
 import org.stepik.android.model.Course
+import org.stepik.android.model.Progress
 import org.stepik.android.model.Section
 import org.stepik.android.model.Unit
 import org.stepik.android.presentation.base.PresenterBase
@@ -46,6 +48,8 @@ constructor(
 
     private val deadlinesInteractor: DeadlinesInteractor,
     private val stateMapper: CourseContentStateMapper,
+
+    private val progressObservable: Observable<Progress>,
 
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
@@ -74,6 +78,7 @@ constructor(
         compositeDisposable += downloadsDisposable
         compositeDisposable += deadlinesDisposable
         fetchCourseContent()
+        subscribeForProgressesUpdates()
     }
 
     override fun attachView(view: CourseContentView) {
@@ -378,6 +383,24 @@ constructor(
                     }
                 },
                 onError   = { view?.showPersonalDeadlinesError() }
+            )
+    }
+
+    /**
+     * Progresses
+     */
+    private fun subscribeForProgressesUpdates() {
+        compositeDisposable += progressObservable
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onNext = { progress ->
+                    val newState = stateMapper.mergeStateWithProgress(state, progress)
+                    if (state !== newState) { // compare by reference
+                        state = newState
+                    }
+                },
+                onError = emptyOnErrorStub
             )
     }
 

@@ -24,6 +24,7 @@ import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.ui.util.CloseIconHolder
 import org.stepic.droid.util.resolvers.text.TextResolver
 import org.stepic.droid.web.Api
+import org.stepik.android.domain.progress.interactor.LocalProgressInteractor
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
 
@@ -63,7 +64,7 @@ open class FragmentBase : Fragment() {
     lateinit var screenManager: ScreenManager
 
     @Inject
-    lateinit var localProgressManager: LocalProgressManager
+    lateinit var localProgressInteractor: LocalProgressInteractor
 
     @Inject
     lateinit var sharedPreferenceHelper: SharedPreferenceHelper

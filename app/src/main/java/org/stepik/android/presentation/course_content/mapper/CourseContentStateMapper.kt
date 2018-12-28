@@ -4,6 +4,7 @@ import org.stepic.droid.R
 import org.stepik.android.domain.personal_deadlines.model.DeadlinesWrapper
 import org.stepic.droid.web.storage.model.StorageRecord
 import org.stepik.android.model.Course
+import org.stepik.android.model.Progress
 import org.stepik.android.presentation.course_content.CourseContentView
 import org.stepik.android.presentation.personal_deadlines.model.PersonalDeadlinesState
 import org.stepik.android.view.course_content.model.CourseContentItem
@@ -76,4 +77,37 @@ constructor(
                     item
                 }
             }
+
+    fun mergeStateWithProgress(state: CourseContentView.State, progress: Progress): CourseContentView.State {
+        if (state !is CourseContentView.State.CourseContentLoaded
+            || state.courseContent.all { !isItemContainsProgress(it, progress) }) return state
+
+        return state.copy(courseContent = state.courseContent.map { updateItemProgress(it, progress) })
+    }
+
+    private fun isItemContainsProgress(item: CourseContentItem, progress: Progress): Boolean =
+        when(item) {
+            is CourseContentItem.SectionItem ->
+                item.progress?.id == progress.id
+
+            is CourseContentItem.UnitItem ->
+                item.progress?.id == progress.id
+
+            else ->
+                false
+        }
+
+    private fun updateItemProgress(item: CourseContentItem, progress: Progress): CourseContentItem =
+        when(item) {
+            is CourseContentItem.SectionItem ->
+                item.takeIf { it.progress?.id == progress.id }
+                    ?.copy(progress = progress)
+
+            is CourseContentItem.UnitItem ->
+                item.takeIf { it.progress?.id == progress.id }
+                    ?.copy(progress = progress)
+
+            else ->
+                null
+        } ?: item
 }

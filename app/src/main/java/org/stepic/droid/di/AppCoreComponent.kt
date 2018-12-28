@@ -52,6 +52,7 @@ import org.stepic.droid.ui.dialogs.*
 import org.stepic.droid.ui.fragments.StoreManagementFragment
 import org.stepik.android.view.injection.course.CourseComponent
 import org.stepik.android.view.injection.personal_deadlines.PersonalDeadlinesDataModule
+import org.stepik.android.view.injection.progress.ProgressBusModule
 
 @AppSingleton
 @Component(
@@ -72,6 +73,7 @@ import org.stepik.android.view.injection.personal_deadlines.PersonalDeadlinesDat
         RemoteMessageHandlersModule::class,
 
         CourseEnrollmentBusModule::class,
+        ProgressBusModule::class,
         PersonalDeadlinesDataModule::class
     ]
 )
