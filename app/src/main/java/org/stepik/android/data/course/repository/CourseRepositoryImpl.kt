@@ -1,5 +1,6 @@
 package org.stepik.android.data.course.repository
 
+import io.reactivex.Completable
 import io.reactivex.Maybe
 import org.stepic.droid.util.doCompletableOnSuccess
 import org.stepic.droid.util.maybeFirst
@@ -29,4 +30,6 @@ constructor(
         }
     }
 
+    override fun removeCourse(courseId: Long): Completable =
+        courseCacheDataSource.removeCourse(courseId)
 }

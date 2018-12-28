@@ -137,6 +137,9 @@ class DatabaseFacade
     fun addCourseList(courseListType: CourseListType, courses: List<Course>) =
         courseListDao.addCourseList(courseListType, courses)
 
+    fun addCourseToList(courseListType: CourseListType, courseId: Long) =
+        courseListDao.addCourseToList(courseListType, courseId)
+
     fun deleteCourseFromList(courseListType: CourseListType, courseId: Long) =
         courseListDao.removeCourseFromList(courseListType, courseId)
 

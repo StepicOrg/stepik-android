@@ -221,7 +221,7 @@ public abstract class CourseListFragmentBase extends FragmentBase
         for (int i = 0; i < courses.size(); i++) {
             Course courseItem = courses.get(i);
             if (courseItem.getId() == courseForUpdate.getId()) {
-                courseItem.setEnrollment((int) courseItem.getId());
+                courseItem.setEnrollment(courseItem.getId());
                 courseForUpdate = courseItem;
                 inList = true;
                 position = i;

@@ -1,5 +1,6 @@
 package org.stepik.android.data.course_list.repository
 
+import io.reactivex.Completable
 import io.reactivex.Single
 import org.stepic.droid.model.CourseListType
 import org.stepik.android.data.course_list.source.CourseListCacheDataSource
@@ -20,4 +21,10 @@ constructor(
 
         return courseListCacheDataSource.getCourseList(courseListType)
     }
+
+    override fun addCourseToList(courseListType: CourseListType, courseId: Long): Completable =
+        courseListCacheDataSource.addCourseToList(courseListType, courseId)
+
+    override fun removeCourseFromList(courseListType: CourseListType, courseId: Long): Completable =
+        courseListCacheDataSource.removeCourseFromList(courseListType, courseId)
 }

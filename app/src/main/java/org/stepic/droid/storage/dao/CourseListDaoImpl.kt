@@ -19,13 +19,21 @@ constructor(
 
         val contentValues =
             courses.map {
-                ContentValues(2).apply {
-                    put(DbStructureCourseList.Columns.COURSE_ID, it.id)
-                    put(DbStructureCourseList.Columns.TYPE, courseListType.name)
-                }
+                createContentValues(courseListType, it.id)
             }
         databaseOperations.executeReplaceAll(DbStructureCourseList.TABLE_NAME, contentValues)
     }
+
+    override fun addCourseToList(courseListType: CourseListType, courseId: Long) {
+        databaseOperations.executeReplace(DbStructureCourseList.TABLE_NAME, createContentValues(courseListType, courseId))
+    }
+
+    private fun createContentValues(courseListType: CourseListType, courseId: Long): ContentValues =
+        ContentValues(2)
+            .apply {
+                put(DbStructureCourseList.Columns.COURSE_ID, courseId)
+                put(DbStructureCourseList.Columns.TYPE, courseListType.name)
+            }
 
     override fun getCourseList(courseListType: CourseListType): List<Course> =
         courseDao.getAllWithQuery(

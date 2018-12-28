@@ -3,9 +3,11 @@ package org.stepik.android.domain.course.interactor
 import io.reactivex.Completable
 import io.reactivex.subjects.PublishSubject
 import okhttp3.ResponseBody
+import org.stepic.droid.model.CourseListType
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.then
 import org.stepik.android.domain.course.repository.EnrollmentRepository
+import org.stepik.android.domain.course_list.repository.CourseListRepository
 import org.stepik.android.domain.personal_deadlines.repository.DeadlinesRepository
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
 import retrofit2.HttpException
@@ -19,6 +21,7 @@ constructor(
     private val enrollmentRepository: EnrollmentRepository,
     private val sharedPreferenceHelper: SharedPreferenceHelper,
 
+    private val courseListRepository: CourseListRepository,
     private val deadlinesRepository: DeadlinesRepository,
     @EnrollmentCourseUpdates
     private val enrollmentSubject: PublishSubject<Long>
@@ -41,6 +44,7 @@ constructor(
         requireAuthorization then
         enrollmentRepository
             .addEnrollment(courseId)
+            .andThen(courseListRepository.addCourseToList(CourseListType.ENROLLED, courseId))
             .doOnComplete { enrollmentSubject.onNext(courseId) } // notify everyone about changes
 
     fun dropCourse(courseId: Long): Completable =
@@ -48,5 +52,6 @@ constructor(
         enrollmentRepository
             .removeEnrollment(courseId)
             .andThen(deadlinesRepository.removeDeadlineRecordByCourseId(courseId).onErrorComplete())
+            .andThen(courseListRepository.removeCourseFromList(CourseListType.ENROLLED, courseId))
             .doOnComplete { enrollmentSubject.onNext(courseId) } // notify everyone about changes
 }
