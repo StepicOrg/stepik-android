@@ -5,5 +5,5 @@ import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.model.user.User
 
 interface UserRepository {
-    fun getUsers(vararg userIds: Long, primarySourceType: DataSourceType = DataSourceType.REMOTE): Single<List<User>>
+    fun getUsers(vararg userIds: Long, primarySourceType: DataSourceType = DataSourceType.CACHE): Single<List<User>>
 }
