@@ -39,7 +39,7 @@ constructor(
     private val adaptiveCoursesResolver: AdaptiveCoursesResolver,
 
     @EnrollmentCourseUpdates
-    private val enrollmentUpdatesObservable: Observable<Long>,
+    private val enrollmentUpdatesObservable: Observable<Course>,
 
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
@@ -125,7 +125,7 @@ constructor(
         toggleEnrollment(CourseEnrollmentInteractor::dropCourse)
     }
 
-    private inline fun toggleEnrollment(enrollmentAction: CourseEnrollmentInteractor.(Long) -> Completable) {
+    private inline fun toggleEnrollment(enrollmentAction: CourseEnrollmentInteractor.(Long) -> Single<Course>) {
         val headerData = (state as? CourseView.State.CourseLoaded)
             ?.courseHeaderData
             ?.takeIf { it.enrollmentState != EnrollmentState.PENDING }
@@ -151,8 +151,8 @@ constructor(
 
     private fun subscriberForEnrollmentUpdates() {
         compositeDisposable += enrollmentUpdatesObservable
-            .filter { it == courseId }
-            .concatMap { courseInteractor.getCourseHeaderData(it, canUseCache = false).toObservable() }
+            .filter { it.id == courseId }
+            .concatMap { courseInteractor.getCourseHeaderData(it).toObservable() }
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(

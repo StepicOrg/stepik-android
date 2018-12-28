@@ -36,13 +36,6 @@ abstract class CourseModule {
      * DATA LAYER
      */
     @Binds
-    @CourseScope
-    @EnrollmentCourseUpdates
-    internal abstract fun bindEnrollmentsUpdatesObservables(
-        @EnrollmentCourseUpdates
-        publisher: PublishSubject<Long>): Observable<Long>
-
-    @Binds
     internal abstract fun bindCourseReviewRepository(
         courseReviewRepositoryImpl: CourseReviewRepositoryImpl): CourseReviewRepository
 
@@ -90,7 +83,17 @@ abstract class CourseModule {
         @JvmStatic
         @CourseScope
         @EnrollmentCourseUpdates
-        internal fun provideCourseEnrollmentSubject(): PublishSubject<Long> =
+        internal fun provideCourseEnrollmentSubject(): PublishSubject<Course> =
             PublishSubject.create()
+
+        @Provides
+        @JvmStatic
+        @CourseScope
+        @EnrollmentCourseUpdates
+        internal fun bindEnrollmentsUpdatesObservables(
+            @EnrollmentCourseUpdates publisher: PublishSubject<Course>,
+            @BackgroundScheduler scheduler: Scheduler
+        ): Observable<Course> =
+            publisher.observeOn(scheduler)
     }
 }
