@@ -16,8 +16,10 @@ import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.CourseUtil
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.RWLocks
+import org.stepic.droid.util.getProgresses
 import org.stepic.droid.web.Api
 import org.stepik.android.domain.personal_deadlines.interactor.DeadlinesSynchronizationInteractor
+import org.stepik.android.domain.progress.repository.ProgressRepository
 import org.stepik.android.model.Course
 import org.stepik.android.model.Meta
 import org.stepik.android.model.Progress
@@ -28,11 +30,14 @@ import javax.inject.Inject
 
 @CourseListScope
 class PersistentCourseListPresenter
-@Inject constructor(
+@Inject
+constructor(
     private val databaseFacade: DatabaseFacade,
     private val singleThreadExecutor: SingleThreadExecutor,
     private val mainHandler: MainHandler,
     private val api: Api,
+
+    private val progressRepository: ProgressRepository,
     private val filterApplicator: FilterApplicator,
     private val sharedPreferenceHelper: SharedPreferenceHelper,
     private val earlyStreakPoster: EarlyStreakPoster,
@@ -141,16 +146,10 @@ class PersistentCourseListPresenter
             }
 
             if (courseType == CourseListType.ENROLLED) {
-                val progressIds = coursesFromInternet.map { it.progress }.toTypedArray()
-                val progresses: List<Progress>? = try {
-                    api.getProgresses(progressIds).execute().body()?.progresses
-                } catch (exception: Exception) {
-                    //ok show without progresses
-                    null
-                }
-                progresses?.forEach {
-                    databaseFacade.addProgress(progress = it)
-                }
+                progressRepository
+                    .getProgresses(*coursesFromInternet.getProgresses())
+                    .toCompletable()
+                    .blockingAwait()
             }
 
             val reviewSummaryIds = coursesFromInternet.map { it.reviewSummary }.toLongArray()

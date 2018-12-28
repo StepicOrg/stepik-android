@@ -18,6 +18,7 @@ object MigrationFrom36To37 : Migration {
         migrateLessons(db)
         migrateUnits(db)
         migrateSections(db)
+        migrateProgress(db)
     }
 
     private fun migrateUser(db: SQLiteDatabase) {
@@ -146,5 +147,27 @@ object MigrationFrom36To37 : Migration {
                 ${DbStructureSections.Column.REQUIRED_PERCENT}
             FROM ${DbStructureSections.SECTIONS}
         """.trimIndent())
+    }
+
+    private fun migrateProgress(db: SQLiteDatabase) {
+        val tmpTable = "progress_migration_37"
+        db.execSQL("ALTER TABLE ${DbStructureProgress.TABLE_NAME} RENAME TO $tmpTable")
+
+        DbStructureProgress.createTable(db)
+
+        db.execSQL("""
+            REPLACE INTO ${DbStructureProgress.TABLE_NAME}
+            SELECT
+                ${DbStructureProgress.Columns.ID},
+                ${DbStructureProgress.Columns.LAST_VIEWED},
+                ${DbStructureProgress.Columns.SCORE},
+                ${DbStructureProgress.Columns.COST},
+                ${DbStructureProgress.Columns.N_STEPS},
+                ${DbStructureProgress.Columns.N_STEPS_PASSED},
+                ${DbStructureProgress.Columns.IS_PASSED}
+            FROM $tmpTable
+        """.trimIndent())
+
+        db.execSQL("DROP TABLE $tmpTable")
     }
 }

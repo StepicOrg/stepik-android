@@ -103,7 +103,7 @@ class DatabaseFacade
 
     fun getCourseById(courseId: Long) = courseDao.get(DbStructureCourse.Columns.ID, courseId.toString())
 
-    fun getProgressById(progressId: String) = progressDao.get(DbStructureProgress.Column.ID, progressId)
+    fun getProgressById(progressId: String) = progressDao.get(DbStructureProgress.Columns.ID, progressId)
 
     fun getProgresses(progressIds: List<String>): List<Progress> {
         //todo change implementation of getAllInRange and escape internally
@@ -116,7 +116,7 @@ class DatabaseFacade
         return if (range == null) {
             emptyList()
         } else {
-            progressDao.getAllInRange(DbStructureProgress.Column.ID, range)
+            progressDao.getAllInRange(DbStructureProgress.Columns.ID, range)
         }
     }
 
@@ -195,11 +195,11 @@ class DatabaseFacade
     }
 
     fun markProgressAsPassedIfInDb(progressId: String) {
-        val inDb = progressDao.isInDb(DbStructureProgress.Column.ID, progressId)
+        val inDb = progressDao.isInDb(DbStructureProgress.Columns.ID, progressId)
         if (inDb) {
             val values = ContentValues()
-            values.put(DbStructureProgress.Column.IS_PASSED, true)
-            progressDao.update(DbStructureProgress.Column.ID, progressId, values)
+            values.put(DbStructureProgress.Columns.IS_PASSED, true)
+            progressDao.update(DbStructureProgress.Columns.ID, progressId, values)
         }
     }
 
@@ -211,7 +211,7 @@ class DatabaseFacade
 
     fun isProgressViewed(progressId: String?): Boolean {
         if (progressId == null) return false
-        val progress = progressDao.get(DbStructureProgress.Column.ID, progressId)
+        val progress = progressDao.get(DbStructureProgress.Columns.ID, progressId)
         return progress?.isPassed ?: false
     }
 

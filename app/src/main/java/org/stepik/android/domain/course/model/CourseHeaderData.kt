@@ -12,7 +12,7 @@ data class CourseHeaderData(
     val learnersCount: Long,
 
     val review: Double,
-    val progress: Int?,
+    val progress: Long?,
     val readiness: Double,
     val enrollmentState: EnrollmentState
 ) : Parcelable {
@@ -39,7 +39,7 @@ data class CourseHeaderData(
                 parcel.readString()!!,
                 parcel.readLong(),
                 parcel.readDouble(),
-                parcel.readValue(Int::class.java.classLoader) as Int?,
+                parcel.readValue(Long::class.java.classLoader) as Long?,
                 parcel.readDouble(),
                 EnrollmentState.values()[parcel.readInt()]
             )

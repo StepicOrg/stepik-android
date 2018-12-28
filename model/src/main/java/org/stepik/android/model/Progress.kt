@@ -14,11 +14,11 @@ data class Progress(
         @SerializedName("score")
         var score: String? = null,
         @SerializedName("cost")
-        val cost: Int = 0,
+        val cost: Long = 0,
         @SerializedName("n_steps")
-        val nSteps: Int = 0,
+        val nSteps: Long = 0,
         @SerializedName("n_steps_passed")
-        val nStepsPassed: Int = 0,
+        val nStepsPassed: Long = 0,
         @SerializedName("is_passed")
         val isPassed: Boolean = false
 ) : Parcelable {
@@ -27,9 +27,9 @@ data class Progress(
         parcel.writeString(id)
         parcel.writeString(lastViewed)
         parcel.writeString(score)
-        parcel.writeInt(cost)
-        parcel.writeInt(nSteps)
-        parcel.writeInt(nStepsPassed)
+        parcel.writeLong(cost)
+        parcel.writeLong(nSteps)
+        parcel.writeLong(nStepsPassed)
         parcel.writeBoolean(isPassed)
     }
 
@@ -40,9 +40,9 @@ data class Progress(
                 parcel.readString(),
                 parcel.readString(),
                 parcel.readString(),
-                parcel.readInt(),
-                parcel.readInt(),
-                parcel.readInt(),
+                parcel.readLong(),
+                parcel.readLong(),
+                parcel.readLong(),
                 parcel.readBoolean()
         )
 

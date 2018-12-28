@@ -66,7 +66,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
 
         //from version 2:
         createAssignment(db, DbStructureAssignment.ASSIGNMENTS);
-        createProgress(db, DbStructureProgress.PROGRESS);
+        createProgress(db, DbStructureProgress.TABLE_NAME);
         createViewQueue(db, DbStructureViewQueue.VIEW_QUEUE);
 
 
@@ -113,7 +113,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         if (oldVersion < 2) {
 //            update from 1 to 2
             createAssignment(db, DbStructureAssignment.ASSIGNMENTS);
-            createProgress(db, DbStructureProgress.PROGRESS);
+            createProgress(db, DbStructureProgress.TABLE_NAME);
             createViewQueue(db, DbStructureViewQueue.VIEW_QUEUE);
         }
 
@@ -133,13 +133,13 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
             //http://stackoverflow.com/questions/21199398/sqlite-alter-a-tables-column-type
 
             String tempTableName = "tmp2to3";
-            String renameTableQuery = "ALTER TABLE " + DbStructureProgress.PROGRESS + " RENAME TO "
+                String renameTableQuery = "ALTER TABLE " + DbStructureProgress.TABLE_NAME + " RENAME TO "
                     + tempTableName;
             db.execSQL(renameTableQuery);
 
-            createProgress(db, DbStructureProgress.PROGRESS);
+            createProgress(db, DbStructureProgress.TABLE_NAME);
 
-            String[] allFields = DbStructureProgress.getUsedColumns();
+            String[] allFields = DbStructureProgress.INSTANCE.getUsedColumns();
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < allFields.length; i++) {
                 sb.append(allFields[i]);
@@ -148,7 +148,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
                 }
             }
             String fields_correct = sb.toString();
-            String insertValues = "INSERT INTO " + DbStructureProgress.PROGRESS + "("
+            String insertValues = "INSERT INTO " + DbStructureProgress.TABLE_NAME + "("
                     + fields_correct +
                     ")" +
                     "   SELECT " +
@@ -662,13 +662,13 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
     private void createProgress(SQLiteDatabase db, String name) {
         String sql = "CREATE TABLE " + name
                 + " ("
-                + DbStructureProgress.Column.IS_PASSED + " BOOLEAN, "
-                + DbStructureProgress.Column.ID + " TEXT, "
-                + DbStructureProgress.Column.LAST_VIEWED + " TEXT, "
-                + DbStructureProgress.Column.SCORE + " TEXT, "
-                + DbStructureProgress.Column.COST + " INTEGER, "
-                + DbStructureProgress.Column.N_STEPS + " INTEGER, "
-                + DbStructureProgress.Column.N_STEPS_PASSED + " INTEGER "
+                + DbStructureProgress.Columns.IS_PASSED + " BOOLEAN, "
+                + DbStructureProgress.Columns.ID + " TEXT, "
+                + DbStructureProgress.Columns.LAST_VIEWED + " TEXT, "
+                + DbStructureProgress.Columns.SCORE + " TEXT, "
+                + DbStructureProgress.Columns.COST + " INTEGER, "
+                + DbStructureProgress.Columns.N_STEPS + " INTEGER, "
+                + DbStructureProgress.Columns.N_STEPS_PASSED + " INTEGER "
                 + ")";
         db.execSQL(sql);
     }

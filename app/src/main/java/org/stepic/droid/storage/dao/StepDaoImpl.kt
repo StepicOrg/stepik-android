@@ -109,13 +109,13 @@ constructor(
 
         val assignment = assignmentDao.get(DbStructureAssignment.Column.STEP_ID, step.id.toString())
         if (assignment?.progress != null) {
-            val progress = progressDao.get(DbStructureProgress.Column.ID, assignment.progress!!)
+            val progress = progressDao.get(DbStructureProgress.Columns.ID, assignment.progress!!)
             if (progress != null) {
                 step.isCustomPassed = progress.isPassed
             }
         } else {
             if (step.progress != null) {
-                val progress = progressDao.get(DbStructureProgress.Column.ID, step.progress!!)
+                val progress = progressDao.get(DbStructureProgress.Columns.ID, step.progress!!)
                 if (progress != null) {
                     step.isCustomPassed = progress.isPassed
                 }

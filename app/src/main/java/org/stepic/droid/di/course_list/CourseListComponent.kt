@@ -12,6 +12,7 @@ import org.stepik.android.view.injection.course.CourseDataModule
 import org.stepik.android.view.injection.course_list.CourseListDataModule
 import org.stepik.android.view.injection.last_step.LastStepDataModule
 import org.stepik.android.view.injection.personal_deadlines.PersonalDeadlinesDataModule
+import org.stepik.android.view.injection.progress.ProgressDataModule
 import org.stepik.android.view.injection.section.SectionDataModule
 import org.stepik.android.view.injection.unit.UnitDataModule
 
@@ -22,6 +23,7 @@ import org.stepik.android.view.injection.unit.UnitDataModule
     SectionDataModule::class,
     UnitDataModule::class,
     LastStepDataModule::class,
+    ProgressDataModule::class,
 
     CourseListDataModule::class,
     PersonalDeadlinesDataModule::class

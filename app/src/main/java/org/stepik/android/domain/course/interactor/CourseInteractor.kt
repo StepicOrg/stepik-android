@@ -53,7 +53,7 @@ constructor(
                     learnersCount = course.learnersCount,
 
                     review = courseReview,
-                    progress = (courseProgress as? Progress)?.let { (it.nStepsPassed * 100 / it.nSteps).coerceIn(0..100) },
+                    progress = (courseProgress as? Progress)?.let { (it.nStepsPassed * 100 / it.nSteps).coerceIn(0L..100L) },
                     readiness = course.readiness,
                     enrollmentState = if (course.enrollment > 0) EnrollmentState.ENROLLED else EnrollmentState.NOT_ENROLLED
                 )
