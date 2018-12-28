@@ -1,9 +1,7 @@
 package org.stepic.droid.base;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
 import android.view.ContextMenu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,7 +18,6 @@ import org.stepic.droid.model.CourseListType;
 import org.stepik.android.model.Course;
 import org.stepic.droid.ui.fragments.CourseListFragmentBase;
 import org.stepic.droid.ui.util.ContextMenuRecyclerView;
-import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ContextMenuCourseUtil;
 
 import javax.inject.Inject;
@@ -126,18 +123,6 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == FragmentActivity.RESULT_OK && requestCode == AppConstants.REQUEST_CODE_DETAIL) {
-            Course course = data.getParcelableExtra(AppConstants.COURSE_ID_KEY);
-            int enrollment = data.getIntExtra(AppConstants.ENROLLMENT_KEY, 0);
-            if (course != null && enrollment != 0) {
-                updateEnrollment(course, enrollment);
-            }
-        }
-    }
-
-    @Override
     public void showEmptyScreen(boolean isShown) {
         if (isShown) {
             if (getCourseType() == CourseListType.ENROLLED) {
@@ -213,7 +198,6 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
             showEmptyScreen(true);
         }
     }
-
 
     @NotNull
     @Override

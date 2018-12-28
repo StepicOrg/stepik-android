@@ -4,6 +4,8 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import okhttp3.ResponseBody
+import org.stepic.droid.core.dropping.contract.DroppingPoster
+import org.stepic.droid.core.joining.contract.JoiningPoster
 import org.stepic.droid.model.CourseListType
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.then
@@ -26,6 +28,10 @@ constructor(
 
     private val courseRepository: CourseRepository,
     private val courseListRepository: CourseListRepository,
+
+    private val joiningPoster: JoiningPoster,
+    private val droppingPoster: DroppingPoster,
+
     private val deadlinesRepository: DeadlinesRepository,
     @EnrollmentCourseUpdates
     private val enrollmentSubject: PublishSubject<Course>
@@ -50,6 +56,7 @@ constructor(
             .addEnrollment(courseId)
             .andThen(courseListRepository.addCourseToList(CourseListType.ENROLLED, courseId))
             .andThen(courseRepository.getCourse(courseId, canUseCache = false).toSingle())
+            .doOnSuccess(joiningPoster::joinCourse) // interop with old code
             .doOnSuccess(enrollmentSubject::onNext) // notify everyone about changes
 
     fun dropCourse(courseId: Long): Single<Course> =
@@ -59,5 +66,6 @@ constructor(
             .andThen(deadlinesRepository.removeDeadlineRecordByCourseId(courseId).onErrorComplete())
             .andThen(courseListRepository.removeCourseFromList(CourseListType.ENROLLED, courseId))
             .andThen(courseRepository.getCourse(courseId, canUseCache = false).toSingle())
+            .doOnSuccess(droppingPoster::successDropCourse) // interop with old code
             .doOnSuccess(enrollmentSubject::onNext) // notify everyone about changes
 }

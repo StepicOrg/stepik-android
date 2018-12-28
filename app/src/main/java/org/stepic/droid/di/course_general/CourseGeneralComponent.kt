@@ -5,9 +5,7 @@ import org.stepic.droid.di.course_list.CourseGeneralScope
 import org.stepic.droid.di.course_list.CourseListComponent
 
 @CourseGeneralScope
-@Subcomponent(modules = [
-    CourseGeneralModule::class
-])
+@Subcomponent
 interface CourseGeneralComponent {
 
     @Subcomponent.Builder

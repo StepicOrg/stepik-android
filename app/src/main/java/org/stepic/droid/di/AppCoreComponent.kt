@@ -12,6 +12,7 @@ import org.stepic.droid.code.ui.CodeEditor
 import org.stepic.droid.di.adaptive.AdaptiveCourseComponent
 import org.stepic.droid.di.catalog.CatalogComponent
 import org.stepic.droid.di.certificates.CertificateComponent
+import org.stepic.droid.di.course_general.CourseEnrollmentBusModule
 import org.stepic.droid.di.course_general.CourseGeneralComponent
 import org.stepic.droid.di.downloads.DownloadsComponent
 import org.stepic.droid.di.feedback.FeedbackComponent
@@ -53,22 +54,27 @@ import org.stepik.android.view.injection.course.CourseComponent
 import org.stepik.android.view.injection.personal_deadlines.PersonalDeadlinesDataModule
 
 @AppSingleton
-@Component(dependencies = [StorageComponent::class],
-        modules = [
-                AppCoreModule::class,
-                RepositoryModule::class,
-                AppStepModule::class,
-                AppFiltersModule::class,
-                GoogleModule::class,
-                FirebaseModule::class,
-                PersistenceModule::class,
-                RecentActiveCourseModule::class,
-                NotificationsBadgesModule::class,
-                NetworkModule::class,
-                RemoteMessageHandlersModule::class,
+@Component(
+    dependencies = [
+        StorageComponent::class
+    ],
+    modules = [
+        AppCoreModule::class,
+        RepositoryModule::class,
+        AppStepModule::class,
+        AppFiltersModule::class,
+        GoogleModule::class,
+        FirebaseModule::class,
+        PersistenceModule::class,
+        RecentActiveCourseModule::class,
+        NotificationsBadgesModule::class,
+        NetworkModule::class,
+        RemoteMessageHandlersModule::class,
 
-                PersonalDeadlinesDataModule::class
-        ])
+        CourseEnrollmentBusModule::class,
+        PersonalDeadlinesDataModule::class
+    ]
+)
 interface AppCoreComponent {
 
     @Component.Builder

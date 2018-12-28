@@ -12,34 +12,34 @@ import org.stepic.droid.core.dropping.contract.DroppingPoster
 import org.stepic.droid.core.joining.JoiningPosterImpl
 import org.stepic.droid.core.joining.contract.JoiningListener
 import org.stepic.droid.core.joining.contract.JoiningPoster
-import org.stepic.droid.di.course_list.CourseGeneralScope
+import org.stepic.droid.di.AppSingleton
 
 @Module
-interface CourseGeneralModule {
+interface CourseEnrollmentBusModule {
 
     @Binds
-    @CourseGeneralScope
+    @AppSingleton
     fun bindsClient(clientImpl: ClientImpl<DroppingListener>): Client<DroppingListener>
 
     @Binds
-    @CourseGeneralScope
+    @AppSingleton
     fun bindContainer(listenerContainer: ListenerContainerImpl<DroppingListener>): ListenerContainer<DroppingListener>
 
     @Binds
-    @CourseGeneralScope
+    @AppSingleton
     fun bindsPoster(posterImpl: DroppingPosterImpl): DroppingPoster
 
 
     @Binds
-    @CourseGeneralScope
+    @AppSingleton
     fun bindsJoinClient(clientImpl: ClientImpl<JoiningListener>): Client<JoiningListener>
 
     @Binds
-    @CourseGeneralScope
+    @AppSingleton
     fun bindJoinContainer(listenerContainer: ListenerContainerImpl<JoiningListener>): ListenerContainer<JoiningListener>
 
     @Binds
-    @CourseGeneralScope
+    @AppSingleton
     fun bindsJoinPoster(posterImpl: JoiningPosterImpl): JoiningPoster
 
 }
