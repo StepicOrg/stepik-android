@@ -162,6 +162,12 @@ class CourseHeaderDelegate(
                     leftMargin = offset
                     rightMargin = offset
                 }
+
+            courseInfoPlaceholder.layoutParams = (courseInfoPlaceholder.layoutParams as LinearLayout.LayoutParams)
+                .apply {
+                    leftMargin = offset
+                    rightMargin = offset
+                }
         }
     }
 
