@@ -19,10 +19,10 @@ import javax.inject.Inject
 class CourseInteractor
 @Inject
 constructor(
-        private val courseRepository: CourseRepository,
-        private val courseReviewRepository: CourseReviewRepository,
-        private val progressRepository: ProgressRepository,
-        private val coursePublishSubject: BehaviorSubject<Course>
+    private val courseRepository: CourseRepository,
+    private val courseReviewRepository: CourseReviewRepository,
+    private val progressRepository: ProgressRepository,
+    private val coursePublishSubject: BehaviorSubject<Course>
 ) {
     fun getCourseHeaderData(courseId: Long, canUseCache: Boolean = true): Maybe<CourseHeaderData> =
         courseRepository
