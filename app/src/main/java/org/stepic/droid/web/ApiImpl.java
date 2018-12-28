@@ -861,8 +861,8 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Call<UnitMetaResponse> getUnitByLessonId(long lessonId) {
-        return loggedService.getUnitByLessonId(lessonId);
+    public Single<UnitMetaResponse> getUnitsByLessonId(long lessonId) {
+        return loggedService.getUnitsByLessonId(lessonId);
     }
 
     @Override

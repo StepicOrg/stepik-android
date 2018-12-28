@@ -12,6 +12,8 @@ interface UnitCacheDataSource {
 
     fun getUnits(vararg unitIds: Long): Single<List<Unit>>
 
+    fun getUnitsByLessonId(lessonId: Long): Single<List<Unit>>
+
     fun saveUnit(unit: Unit): Completable =
         saveUnits(listOf(unit))
 

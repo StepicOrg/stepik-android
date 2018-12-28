@@ -120,10 +120,11 @@ class DatabaseFacade
         }
     }
 
-    @Deprecated("Lesson can have a lot of units", ReplaceWith("try to get unit from section"))
-    fun getUnitByLessonId(lessonId: Long) = unitDao.get(DbStructureUnit.Columns.LESSON, lessonId.toString())
+    fun getUnitsByLessonId(lessonId: Long): List<Unit> =
+        unitDao.getAll(DbStructureUnit.Columns.LESSON, lessonId.toString())
 
-    fun getUnitById(unitId: Long) = unitDao.get(DbStructureUnit.Columns.ID, unitId.toString())
+    fun getUnitById(unitId: Long) =
+        unitDao.get(DbStructureUnit.Columns.ID, unitId.toString())
 
     fun getAllCourses(courseListType: CourseListType) =
         courseListDao.getCourseList(courseListType)

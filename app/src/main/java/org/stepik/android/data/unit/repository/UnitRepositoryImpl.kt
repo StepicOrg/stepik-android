@@ -40,4 +40,26 @@ constructor(
                 throw IllegalArgumentException("Unsupported source type = $primarySourceType")
         }.map { units -> units.sortedBy { unitIds.indexOf(it.id) } }
     }
+
+    override fun getUnitsByLessonId(lessonId: Long, primarySourceType: DataSourceType): Single<List<Unit>> {
+        val remoteSource = unitRemoteDataSource
+            .getUnitsByLessonId(lessonId)
+            .doCompletableOnSuccess(unitCacheDataSource::saveUnits)
+
+        val cacheSource = unitCacheDataSource
+            .getUnitsByLessonId(lessonId)
+
+        return when(primarySourceType) {
+            DataSourceType.REMOTE ->
+                remoteSource.onErrorResumeNext(cacheSource)
+
+            DataSourceType.CACHE ->
+                cacheSource
+                    .filter(List<Unit>::isNotEmpty)
+                    .switchIfEmpty(remoteSource)
+
+            else ->
+                throw IllegalArgumentException("Unsupported source type = $primarySourceType")
+        }
+    }
 }

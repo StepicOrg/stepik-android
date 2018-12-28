@@ -159,7 +159,7 @@ public interface Api {
 
     Call<CertificateResponse> getCertificates();
 
-    Call<UnitMetaResponse> getUnitByLessonId(long lessonId);
+    Single<UnitMetaResponse> getUnitsByLessonId(long lessonId);
 
     Call<NotificationResponse> getNotifications(NotificationCategory notificationCategory, int page);
 

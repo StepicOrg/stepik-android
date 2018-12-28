@@ -11,4 +11,6 @@ interface UnitRepository {
         getUnits(unitId, primarySourceType = primarySourceType).maybeFirst()
 
     fun getUnits(vararg unitIds: Long, primarySourceType: DataSourceType = DataSourceType.CACHE): Single<List<Unit>>
+
+    fun getUnitsByLessonId(lessonId: Long, primarySourceType: DataSourceType = DataSourceType.CACHE): Single<List<Unit>>
 }

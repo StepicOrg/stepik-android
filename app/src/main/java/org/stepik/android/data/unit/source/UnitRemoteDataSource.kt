@@ -10,4 +10,6 @@ interface UnitRemoteDataSource {
         getUnits(unitId).maybeFirst()
 
     fun getUnits(vararg unitIds: Long): Single<List<Unit>>
+
+    fun getUnitsByLessonId(lessonId: Long): Single<List<Unit>>
 }

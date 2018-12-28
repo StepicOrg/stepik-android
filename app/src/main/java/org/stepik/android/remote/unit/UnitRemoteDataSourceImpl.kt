@@ -23,4 +23,8 @@ constructor(
                 api.getUnitsRx(ids)
                     .map(unitResponseMapper)
             }
+
+    override fun getUnitsByLessonId(lessonId: Long): Single<List<Unit>> =
+        api.getUnitsByLessonId(lessonId)
+            .map(unitResponseMapper)
 }

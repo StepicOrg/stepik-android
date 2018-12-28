@@ -212,7 +212,7 @@ public interface StepicRestLoggedService {
     Call<CertificateResponse> getCertificates(@Query("user") long userId);
 
     @GET("api/units")
-    Call<UnitMetaResponse> getUnitByLessonId(@Query("lesson") long lessonId);
+    Single<UnitMetaResponse> getUnitsByLessonId(@Query("lesson") long lessonId);
 
     @GET("api/submissions?order=desc")
     Call<SubmissionResponse> getExistingSubmissionsForStep(@Query("step") long stepId);

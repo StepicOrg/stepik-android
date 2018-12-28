@@ -21,4 +21,9 @@ constructor(
         Completable.fromAction {
             databaseFacade.addUnits(units)
         }
+
+    override fun getUnitsByLessonId(lessonId: Long): Single<List<Unit>> =
+        Single.fromCallable {
+            databaseFacade.getUnitsByLessonId(lessonId)
+        }
 }

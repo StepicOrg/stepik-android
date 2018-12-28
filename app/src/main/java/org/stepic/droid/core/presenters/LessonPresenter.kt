@@ -16,6 +16,7 @@ import org.stepic.droid.util.ProgressUtil
 import org.stepic.droid.web.Api
 import org.stepic.droid.web.LessonStepicResponse
 import org.stepic.droid.web.StepResponse
+import org.stepik.android.domain.unit.repository.UnitRepository
 import retrofit2.Response
 import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
@@ -32,6 +33,7 @@ constructor(
         private val api: Api,
         private val sharedPreferenceHelper: SharedPreferenceHelper,
         private val analytic: Analytic,
+        private val unitRepository: UnitRepository,
 
         private val stepContentResolver: StepContentResolver
 ) : PresenterBase<LessonView>() {
@@ -370,7 +372,10 @@ constructor(
 
     private fun loadUnitByLessonId(simpleLessonId: Long) {
         try {
-            unit = api.getUnitByLessonId(simpleLessonId).execute()?.body()?.units?.firstOrNull()
+            unit = unitRepository
+                .getUnitsByLessonId(simpleLessonId)
+                .blockingGet()
+                .firstOrNull()
         } catch (ignored: Exception) {
             // unit can be null for lesson, which is not in Course
         }
