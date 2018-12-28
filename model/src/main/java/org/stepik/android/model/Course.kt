@@ -92,6 +92,8 @@ class Course(
     val scheduleLink: String? = null,
     @SerializedName("schedule_long_link")
     val scheduleLongLink: String? = null,
+    @SerializedName("schedule_type")
+    val scheduleType: String? = null,
 
     @SerializedName("last_step")
     val lastStepId: String? = null,
@@ -169,6 +171,7 @@ class Course(
 
         parcel.writeString(scheduleLink)
         parcel.writeString(scheduleLongLink)
+        parcel.writeString(scheduleType)
 
         parcel.writeString(lastStepId)
         parcel.writeLong(learnersCount)
@@ -189,6 +192,9 @@ class Course(
     override fun describeContents(): Int = 0
 
     companion object CREATOR : Parcelable.Creator<Course> {
+        const val SCHEDULE_TYPE_ENDED = "ended"
+        const val SCHEDULE_TYPE_UPCOMMING = "upcoming"
+
         override fun createFromParcel(parcel: Parcel): Course =
             Course(
                 parcel.readLong(),
@@ -222,6 +228,7 @@ class Course(
                 parcel.readInt(),
                 parcel.readString(),
                 parcel.readBoolean(),
+                parcel.readString(),
                 parcel.readString(),
                 parcel.readString(),
                 parcel.readString(),

@@ -1,9 +1,12 @@
 package org.stepik.android.domain.course.interactor
 
+import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Single
 import io.reactivex.rxkotlin.toObservable
+import org.stepic.droid.util.canContinue
 import org.stepic.droid.util.hasUserAccessAndNotEmpty
+import org.stepic.droid.util.then
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.domain.last_step.repository.LastStepRepository
 import org.stepik.android.domain.section.repository.SectionRepository
@@ -20,9 +23,18 @@ constructor(
     private val unitRepository: UnitRepository
 ) {
     fun getLastStepForCourse(course: Course): Single<LastStep> =
+        requireAbilityToContinueCourse(course) then
         lastStepRepository
             .getLastStep(course.lastStepId ?: "")
             .switchIfEmpty(resolveCourseFirstStep(course))
+
+    private fun requireAbilityToContinueCourse(course: Course): Completable =
+        Completable
+            .fromAction {
+                if (!course.canContinue) {
+                    throw IllegalStateException("Can continues course with id = ${course.id}")
+                }
+            }
 
     private fun resolveCourseFirstStep(course: Course): Single<LastStep> =
         getFirstAvailableSection(course)

@@ -53,6 +53,7 @@ object DbStructureCourse {
 
         const val SCHEDULE_LINK = "schedule_link"
         const val SCHEDULE_LONG_LINK = "schedule_long_link"
+        const val SCHEDULE_TYPE = "schedule_type"
 
         const val LAST_STEP = "last_step"
         const val LEARNERS_COUNT = "learners_count"
@@ -107,6 +108,7 @@ object DbStructureCourse {
                 ${DbStructureCourse.Columns.SLUG} TEXT,
                 ${DbStructureCourse.Columns.SCHEDULE_LINK} TEXT,
                 ${DbStructureCourse.Columns.SCHEDULE_LONG_LINK} TEXT,
+                ${DbStructureCourse.Columns.SCHEDULE_TYPE} TEXT,
                 ${DbStructureCourse.Columns.LAST_STEP} TEXT,
                 ${DbStructureCourse.Columns.LEARNERS_COUNT} LONG,
                 ${DbStructureCourse.Columns.REVIEW_SUMMARY} LONG,

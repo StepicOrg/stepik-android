@@ -58,8 +58,11 @@ constructor(
             beginDate       = cursor.getString(DbStructureCourse.Columns.BEGIN_DATE),
             endDate         = cursor.getString(DbStructureCourse.Columns.END_DATE),
             slug            = cursor.getString(DbStructureCourse.Columns.SLUG),
+
             scheduleLink    = cursor.getString(DbStructureCourse.Columns.SCHEDULE_LINK),
             scheduleLongLink    = cursor.getString(DbStructureCourse.Columns.SCHEDULE_LONG_LINK),
+            scheduleType    = cursor.getString(DbStructureCourse.Columns.SCHEDULE_TYPE),
+
             lastStepId      = cursor.getString(DbStructureCourse.Columns.LAST_STEP),
             learnersCount   = cursor.getLong(DbStructureCourse.Columns.LEARNERS_COUNT),
             reviewSummary   = cursor.getLong(DbStructureCourse.Columns.REVIEW_SUMMARY),
@@ -110,18 +113,21 @@ constructor(
         values.put(DbStructureCourse.Columns.BEGIN_DATE, course.beginDate)
         values.put(DbStructureCourse.Columns.END_DATE, course.endDate)
         values.put(DbStructureCourse.Columns.SLUG, course.slug)
+
         values.put(DbStructureCourse.Columns.SCHEDULE_LINK, course.scheduleLink)
         values.put(DbStructureCourse.Columns.SCHEDULE_LONG_LINK, course.scheduleLongLink)
+        values.put(DbStructureCourse.Columns.SCHEDULE_TYPE, course.scheduleType)
+
         values.put(DbStructureCourse.Columns.LAST_STEP, course.lastStepId)
         values.put(DbStructureCourse.Columns.LEARNERS_COUNT, course.learnersCount)
         values.put(DbStructureCourse.Columns.REVIEW_SUMMARY, course.reviewSummary)
         values.put(DbStructureCourse.Columns.TIME_TO_COMPLETE, course.timeToComplete)
 
-        values.put(DbStructureCourse.Columns.TIME_TO_COMPLETE, course.isPaid)
-        values.put(DbStructureCourse.Columns.TIME_TO_COMPLETE, course.price)
-        values.put(DbStructureCourse.Columns.TIME_TO_COMPLETE, course.currencyCode)
-        values.put(DbStructureCourse.Columns.TIME_TO_COMPLETE, course.displayPrice)
-        values.put(DbStructureCourse.Columns.TIME_TO_COMPLETE, course.priceTier)
+        values.put(DbStructureCourse.Columns.IS_PAID, course.isPaid)
+        values.put(DbStructureCourse.Columns.PRICE, course.price)
+        values.put(DbStructureCourse.Columns.CURRENCY_CODE, course.currencyCode)
+        values.put(DbStructureCourse.Columns.DISPLAY_PRICE, course.displayPrice)
+        values.put(DbStructureCourse.Columns.PRICE_TIER, course.priceTier)
 
         return values
     }
