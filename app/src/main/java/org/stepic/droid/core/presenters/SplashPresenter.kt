@@ -3,8 +3,10 @@ package org.stepic.droid.core.presenters
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import io.reactivex.Completable
 import io.reactivex.Scheduler
+import io.reactivex.Single
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.subscribeBy
+import org.json.JSONObject
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.core.GoogleApiChecker
@@ -17,6 +19,10 @@ import org.stepic.droid.notifications.LocalReminder
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants
+import org.stepic.droid.util.emptyOnErrorStub
+import org.stepik.android.view.routing.deeplink.BranchDeepLinkParser
+import org.stepik.android.view.routing.deeplink.BranchRoute
+import java.lang.IllegalArgumentException
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -34,15 +40,20 @@ constructor(
         private val analytic: Analytic,
         private val stepikDevicePoster: StepikDevicePoster,
         private val databaseFacade: DatabaseFacade,
-        private val localReminder: LocalReminder
+        private val localReminder: LocalReminder,
+
+        private val branchDeepLinkParsers: Set<@JvmSuppressWildcards BranchDeepLinkParser>
 ) : PresenterBase<SplashView>() {
-    enum class Result {
-        ONBOARDING, LAUNCH, HOME
+    sealed class SplashRoute {
+        object Onboarding : SplashRoute()
+        object Launch : SplashRoute()
+        object Home : SplashRoute()
+        class DeepLink(val route: BranchRoute) : SplashRoute()
     }
 
     private var disposable: Disposable? = null
 
-    fun onSplashCreated() {
+    fun onSplashCreated(referringParams: JSONObject? = null) {
         disposable = Completable
             .fromCallable {
                 countNumberOfLaunches()
@@ -51,30 +62,51 @@ constructor(
                 executeLegacyOperations()
                 localReminder.remindAboutRegistration()
                 sharedPreferenceHelper.onNewSession()
-            }.toSingle {
-                val isLogged = sharedPreferenceHelper.authResponseFromStore != null
-                val isOnboardingNotPassedYet = sharedPreferenceHelper.isOnboardingNotPassedYet
-                when {
-                    isOnboardingNotPassedYet -> Result.ONBOARDING
-                    isLogged -> Result.HOME
-                    else -> Result.LAUNCH
-                }
             }
-            .delay(200, TimeUnit.MILLISECONDS)
+            .andThen(resolveSplashRoute(referringParams))
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onError = {},
+                onError = emptyOnErrorStub,
                 onSuccess = {
                     when (it) {
-                        SplashPresenter.Result.ONBOARDING -> view?.onShowOnboarding()
-                        SplashPresenter.Result.LAUNCH -> view?.onShowLaunch()
-                        SplashPresenter.Result.HOME -> view?.onShowHome()
+                        SplashRoute.Onboarding  -> view?.onShowOnboarding()
+                        SplashRoute.Launch      -> view?.onShowLaunch()
+                        SplashRoute.Home        -> view?.onShowHome()
+                        is SplashRoute.DeepLink -> view?.onDeepLinkRoute(it.route)
                         else -> throw IllegalStateException("It is not reachable")
                     }
                 }
             )
     }
+
+    private fun resolveSplashRoute(referringParams: JSONObject?): Single<SplashRoute> = // todo move to interactor
+        resolveBranchRoute(referringParams)
+            .map { SplashRoute.DeepLink(it) as SplashRoute }
+            .onErrorReturn {
+                val isLogged = sharedPreferenceHelper.authResponseFromStore != null
+                val isOnboardingNotPassedYet = sharedPreferenceHelper.isOnboardingNotPassedYet
+                when {
+                    isOnboardingNotPassedYet -> SplashRoute.Onboarding
+                    isLogged -> SplashRoute.Home
+                    else -> SplashRoute.Launch
+                }
+            }
+
+    private fun resolveBranchRoute(referringParams: JSONObject?): Single<BranchRoute> =
+        if (referringParams == null) {
+            Single.error(IllegalArgumentException("Params shouldn't be null"))
+        } else {
+            Single.fromCallable {
+                branchDeepLinkParsers.forEach { parser ->
+                    val route = parser.parseBranchDeepLink(referringParams)
+                    if (route != null) {
+                        return@fromCallable route
+                    }
+                }
+                return@fromCallable null
+            }
+        }
 
     override fun detachView(view: SplashView) {
         super.detachView(view)

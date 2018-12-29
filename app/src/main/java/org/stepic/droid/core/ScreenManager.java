@@ -22,6 +22,7 @@ import org.stepic.droid.ui.fragments.CommentsFragment;
 import org.stepic.droid.web.ViewAssignment;
 import org.stepik.android.model.Tag;
 import org.stepik.android.view.course.routing.CourseScreenTab;
+import org.stepik.android.view.routing.deeplink.BranchRoute;
 
 public interface ScreenManager {
 
@@ -62,6 +63,7 @@ public interface ScreenManager {
 
     void pushToViewedQueue(ViewAssignment viewAssignmentWrapper);
 
+    void showCourseDescription(Context context, long courseId);
     void showCourseDescription(Context context, @NotNull Course course);
     void showCourseDescription(Context context, @NotNull Course course, boolean autoEnroll);
     void showCourseModules(Context context, @NotNull Course course);
@@ -135,4 +137,6 @@ public interface ScreenManager {
     void showOnboarding(@NotNull Activity activity);
 
     void showAchievementsList(Context context, long userId, boolean isMyProfile);
+
+    void openDeepLink(Context context, BranchRoute route);
 }

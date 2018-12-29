@@ -1,5 +1,7 @@
 package org.stepic.droid.core.presenters.contracts
 
+import org.stepik.android.view.routing.deeplink.BranchRoute
+
 interface SplashView {
 
     fun onShowLaunch()
@@ -7,4 +9,6 @@ interface SplashView {
     fun onShowHome()
 
     fun onShowOnboarding()
+
+    fun onDeepLinkRoute(route: BranchRoute)
 }
