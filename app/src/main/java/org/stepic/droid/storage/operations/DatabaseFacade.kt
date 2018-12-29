@@ -27,7 +27,8 @@ import javax.inject.Inject
 
 @StorageSingleton
 class DatabaseFacade
-@Inject constructor(
+@Inject
+constructor(
     private val codeSubmissionDao: IDao<CodeSubmission>,
     private val searchQueryDao: SearchQueryDao,
     private val adaptiveExpDao: AdaptiveExpDao,
@@ -152,13 +153,7 @@ class DatabaseFacade
 
     fun addStep(step: Step) = stepDao.insertOrUpdate(step)
 
-    fun getAllUnitsOfSection(sectionId: Long) = unitDao.getAll(DbStructureUnit.Columns.SECTION, sectionId.toString())
-
     fun getStepsOfLesson(lessonId: Long) = stepDao.getAll(DbStructureStep.Column.LESSON_ID, lessonId.toString())
-
-    fun getLessonOfUnit(unit: Unit?): Lesson? = unit?.let {
-        lessonDao.get(DbStructureLesson.Columns.ID, it.lesson.toString())
-    }
 
     fun addUnit(unit: Unit) =
         unitDao.insertOrUpdate(unit)
@@ -230,7 +225,6 @@ class DatabaseFacade
     fun getAllNotificationsOfCourse(courseId: Long): List<Notification> =
         notificationDao
             .getAll(DbStructureNotification.Column.COURSE_ID, courseId.toString())
-            .filterNotNull()
 
     fun dropOnlyCourseTable() {
         courseDao.removeAll()
@@ -288,10 +282,6 @@ class DatabaseFacade
         } else {
             return list
         }
-    }
-
-    fun removeSectionsOfCourse(courseId: Long) {
-        sectionDao.remove(DbStructureSection.Columns.COURSE, courseId.toString())
     }
 
     fun addTimestamp(videoTimestamp: VideoTimestamp) {
