@@ -16,6 +16,13 @@ interface AmplitudeAnalytic {
         const val SESSION_START = "Session start"
     }
 
+    object Branch {
+        const val LINK_OPENED = "Branch Link Opened"
+
+        const val PARAM_CAMPAIGN = "campaign"
+        const val IS_FIRST_SESSION = "is_first_session"
+    }
+
     object Onboarding {
         const val SCREEN_OPENED = "Onboarding screen opened"
         const val CLOSED = "Onboarding closed"

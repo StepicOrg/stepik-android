@@ -9,7 +9,13 @@ import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
+import io.branch.referral.Branch
+import io.branch.referral.BranchError
+import org.json.JSONObject
 import org.stepic.droid.R
+import org.stepic.droid.analytic.AmplitudeAnalytic
+import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.analytic.BranchParams
 import org.stepic.droid.base.App
 import org.stepic.droid.core.presenters.SplashPresenter
 import org.stepic.droid.core.presenters.contracts.SplashView
@@ -21,7 +27,10 @@ import javax.inject.Inject
 class SplashActivity : BackToExitActivityBase(), SplashView {
 
     @Inject
-    lateinit var splashPresenter: SplashPresenter
+    internal lateinit var splashPresenter: SplashPresenter
+
+    @Inject
+    internal lateinit var analytics: Analytic
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,6 +72,23 @@ class SplashActivity : BackToExitActivityBase(), SplashView {
                 .setIcon(Icon.createWithResource(this, iconRes))
                 .setIntent(catalogIntent)
                 .build()
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        this.intent = intent
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Branch.getInstance().initSession({ referringParams: JSONObject, error: BranchError? ->
+            if (error == null && referringParams.has(BranchParams.FIELD_CAMPAIGN)) {
+                analytics.reportAmplitudeEvent(AmplitudeAnalytic.Branch.LINK_OPENED, mapOf(
+                    AmplitudeAnalytic.Branch.PARAM_CAMPAIGN to referringParams[BranchParams.FIELD_CAMPAIGN],
+                    AmplitudeAnalytic.Branch.IS_FIRST_SESSION to referringParams.optBoolean(BranchParams.IS_FIRST_SESSION, false)
+                ))
+            }
+        }, intent?.data, this)
     }
 
     override fun onDestroy() {
