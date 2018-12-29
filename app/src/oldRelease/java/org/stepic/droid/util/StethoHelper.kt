@@ -5,9 +5,9 @@ import okhttp3.Interceptor
 
 object StethoHelper {
     fun initStetho(app: Application) {
-        // no op
+        Stetho.initializeWithDefaults(app)
     }
 
     fun getInterceptor(): Interceptor =
-            Interceptor { it.proceed(it.request()) }
+        StethoInterceptor()
 }
