@@ -36,6 +36,7 @@ ext.versions = [
 
         amplitude            : '2.14.1',
         appMetrica           : '2.78',
+        branch               : '2.+',
         installreferrer      : '1.0',
 
         calligraphy          : '2.1.0',
@@ -128,6 +129,7 @@ ext.libraries = [
 
         amplitude            : "com.amplitude:android-sdk:$versions.amplitude",
         appMetrica           : "com.yandex.android:mobmetricalib:$versions.appMetrica",
+        branch               : "io.branch.sdk.android:library:$versions.branch",
         installreferrer      : "com.android.installreferrer:installreferrer:$versions.installreferrer",
 
         calligraphy          : "uk.co.chrisjenx:calligraphy:$versions.calligraphy",

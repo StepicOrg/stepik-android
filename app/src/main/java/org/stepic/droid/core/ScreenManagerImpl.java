@@ -69,9 +69,12 @@ import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.StringUtil;
 import org.stepic.droid.web.ViewAssignment;
 import org.stepik.android.model.Tag;
+import org.stepik.android.view.routing.deeplink.BranchDeepLinkRouter;
+import org.stepik.android.view.routing.deeplink.BranchRoute;
 
 import java.io.File;
 import java.net.URLEncoder;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -81,13 +84,15 @@ public class ScreenManagerImpl implements ScreenManager {
     private final Config config;
     private final UserPreferences userPreferences;
     private final Analytic analytic;
+    private final Set<BranchDeepLinkRouter> deepLinkRouters;
 
     @Inject
-    public ScreenManagerImpl(Config config, UserPreferences userPreferences, Analytic analytic, SharedPreferenceHelper sharedPreferences) {
+    public ScreenManagerImpl(Config config, UserPreferences userPreferences, Analytic analytic, SharedPreferenceHelper sharedPreferences, Set<BranchDeepLinkRouter> deepLinkRouters) {
         this.config = config;
         this.userPreferences = userPreferences;
         this.analytic = analytic;
         this.sharedPreferences = sharedPreferences;
+        this.deepLinkRouters = deepLinkRouters;
     }
 
     @Override
@@ -211,6 +216,12 @@ public class ScreenManagerImpl implements ScreenManager {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(MainFeedActivity.CURRENT_INDEX_KEY, indexOfMenu);
         sourceActivity.startActivity(intent);
+    }
+
+    @Override
+    public void showCourseDescription(Context context, long courseId) {
+        Intent intent = CourseActivity.Companion.createIntent(context, courseId, CourseScreenTab.INFO);
+        context.startActivity(intent);
     }
 
     @Override
@@ -625,5 +636,14 @@ public class ScreenManagerImpl implements ScreenManager {
     public void showAchievementsList(Context context, long userId, boolean isMyProfile) {
         Intent intent = AchievementsListActivity.Companion.createIntent(context, userId, isMyProfile);
         context.startActivity(intent);
+    }
+
+    @Override
+    public void openDeepLink(Context context, BranchRoute route) {
+        for (BranchDeepLinkRouter router : deepLinkRouters) {
+            if (router.handleBranchRoute(this, context, route)) {
+                return;
+            }
+        }
     }
 }

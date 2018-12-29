@@ -146,6 +146,7 @@ dependencies {
 
     implementation libraries.amplitude
     implementation libraries.appMetrica
+    implementation libraries.branch
     implementation libraries.installreferrer
 
     implementation libraries.calligraphy

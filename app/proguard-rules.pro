@@ -79,6 +79,9 @@
 -keep public class com.google.android.gms.* { public *; }
 -dontwarn com.google.android.gms.**
 
+#Branch
+-dontwarn com.google.firebase.appindexing.**
+
 #Keep POJO
 -keep class org.stepic.droid.model.** { *; }
 -keep interface org.stepic.droid.model.** { *; }
