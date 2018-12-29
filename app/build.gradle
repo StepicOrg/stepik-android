@@ -140,6 +140,8 @@ dependencies {
     implementation libraries.jsoup
     debugImplementation libraries.stetho
     debugImplementation libraries.stethoOkHttp
+    oldReleaseImplementation libraries.stetho
+    oldReleaseImplementation libraries.stethoOkHttp
 
     implementation libraries.glide
     implementation libraries.glideTransformations
