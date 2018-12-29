@@ -76,7 +76,6 @@
 
 #Install Referrer
 -dontwarn com.android.installreferrer
--keep class com.appsflyer.** { *; }
 -keep public class com.google.android.gms.* { public *; }
 -dontwarn com.google.android.gms.**
 
