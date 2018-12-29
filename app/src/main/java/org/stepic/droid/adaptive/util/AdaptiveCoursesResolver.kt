@@ -19,9 +19,13 @@ constructor(
 
     fun isAdaptive(courseId: Long) =
             userPreferences.isAdaptiveModeEnabled &&
-            firebaseRemoteConfig.getString(RemoteConfig.ADAPTIVE_COURSES).split(",").map { parseAdaptiveCourse(it) }.any {
-                courseId == it.first && BuildConfig.VERSION_CODE >= it.second
-            }
+            firebaseRemoteConfig
+                .getString(RemoteConfig.ADAPTIVE_COURSES)
+                .split(",")
+                .map(::parseAdaptiveCourse)
+                .any {
+                    courseId == it.first && BuildConfig.VERSION_CODE >= it.second
+                }
 
     private fun parseAdaptiveCourse(course: String): Pair<Long, Long> {
         val courseId = course.substringBefore(COURSE_DELIMITER, course).toLongOrNull() ?: 0L

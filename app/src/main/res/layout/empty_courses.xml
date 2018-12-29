@@ -17,6 +17,7 @@
         android:layout_height="wrap_content"
         android:src="@drawable/ic_empty_search"
         android:adjustViewBounds="true"
+        android:contentDescription="@string/empty_courses"
         app:layout_constraintBottom_toTopOf="@+id/empty_courses_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -57,4 +58,5 @@
         app:layout_constraintTop_toBottomOf="@+id/empty_courses_button"
         android:visibility="gone"
         tools:visibility="visible" />
+
 </android.support.constraint.ConstraintLayout>

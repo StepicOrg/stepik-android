@@ -6,8 +6,8 @@ import android.content.Intent;
 
 import org.stepic.droid.base.App;
 import org.stepic.droid.concurrency.MainHandler;
-import org.stepic.droid.core.LocalProgressManager;
 import org.stepic.droid.core.updatingstep.contract.UpdatingStepPoster;
+import org.stepik.android.domain.progress.interactor.LocalProgressInteractor;
 import org.stepik.android.model.Step;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.storage.operations.DatabaseFacade;
@@ -39,7 +39,7 @@ public class ViewPusher extends IntentService {
     DatabaseFacade database;
 
     @Inject
-    LocalProgressManager unitProgressManager;
+    LocalProgressInteractor localProgressInteractor;
 
     @Inject
     MainHandler mainHandler;
@@ -85,17 +85,19 @@ public class ViewPusher extends IntentService {
         }
 
         Step step = database.getStepById(stepId);
+        if (step != null) {
+            try {
+                localProgressInteractor.updateStepProgress(step).blockingAwait();
+            } catch (Exception e) {
+                // no op
+            }
+        }
 
         //check in db as passed if it can be passed by view
         if (StepHelper.isViewedStatePost(step)) {
             if (assignmentId != null) {
                 database.markProgressAsPassed(assignmentId);
-            } else {
-                if (step != null && step.getProgress() != null) {
-                    database.markProgressAsPassedIfInDb(step.getProgress());
-                }
             }
-            unitProgressManager.checkUnitAsPassed(stepId);
         }
         // Get a handler that can be used to post to the main thread
 

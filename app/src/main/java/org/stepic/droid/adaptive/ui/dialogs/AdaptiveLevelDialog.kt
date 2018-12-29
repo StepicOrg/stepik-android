@@ -14,20 +14,16 @@ import kotlinx.android.synthetic.main.dialog_adaptive_level.view.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.di.qualifiers.MainScheduler
+import org.stepic.droid.util.argument
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class AdaptiveLevelDialog : DialogFragment() {
     companion object {
-        private const val LEVEL_KEY = "level"
-
-        fun newInstance(level: Long) : AdaptiveLevelDialog {
-            val dialog = AdaptiveLevelDialog()
-            val args = Bundle()
-            args.putLong(LEVEL_KEY, level)
-            dialog.arguments = args
-            return dialog
-        }
+        fun newInstance(level: Long) =
+                AdaptiveLevelDialog().also {
+                    it.level = level
+                }
     }
 
     @Inject
@@ -36,15 +32,17 @@ class AdaptiveLevelDialog : DialogFragment() {
 
     private lateinit var expLevelDialogConfetti: ViewGroup
 
+    private var level by argument<Long>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         App.component().inject(this)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val alertDialogBuilder = AlertDialog.Builder(context, R.style.AdaptiveLevelDialogTheme)
-        val root = activity.layoutInflater.inflate(R.layout.dialog_adaptive_level, null, false)
-        root.adaptiveLevelDialogTitle.text = arguments.getLong(LEVEL_KEY).toString()
+        val alertDialogBuilder = AlertDialog.Builder(requireContext(), R.style.AdaptiveLevelDialogTheme)
+        val root = requireActivity().layoutInflater.inflate(R.layout.dialog_adaptive_level, null, false)
+        root.adaptiveLevelDialogTitle.text = level.toString()
 
         root.continueButton.setOnClickListener { dismiss() }
 
@@ -56,6 +54,8 @@ class AdaptiveLevelDialog : DialogFragment() {
 
     override fun onResume() {
         super.onResume()
+        val context = requireContext()
+
         Completable
                 .timer(0, TimeUnit.MICROSECONDS) // js like work around
                 .observeOn(mainScheduler).subscribe {

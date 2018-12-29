@@ -16,6 +16,7 @@ import org.stepic.droid.util.ProgressUtil
 import org.stepic.droid.web.Api
 import org.stepic.droid.web.LessonStepicResponse
 import org.stepic.droid.web.StepResponse
+import org.stepik.android.domain.unit.repository.UnitRepository
 import retrofit2.Response
 import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
@@ -32,6 +33,7 @@ constructor(
         private val api: Api,
         private val sharedPreferenceHelper: SharedPreferenceHelper,
         private val analytic: Analytic,
+        private val unitRepository: UnitRepository,
 
         private val stepContentResolver: StepContentResolver
 ) : PresenterBase<LessonView>() {
@@ -53,6 +55,7 @@ constructor(
              simpleLessonId: Long = -1,
              simpleUnitId: Long = -1,
              defaultStepPositionStartWithOne: Long = -1,
+             isStepIdWasPassed: Boolean = false,
              fromPreviousLesson: Boolean = false,
              section: Section? = null) {
 
@@ -62,14 +65,20 @@ constructor(
                 if (isLoading.compareAndSet(false, true)) {
                     threadPoolExecutor.execute {
                         try {
-                            loadSteps(defaultStepPositionStartWithOne, fromPreviousLesson)
+                            loadSteps(defaultStepPositionStartWithOne, isStepIdWasPassed, fromPreviousLesson)
                         } finally {
                             isLoading.set(false)
                         }
                     }
                 }
             } else {
-                view?.showSteps(fromPreviousLesson, defaultStepPositionStartWithOne)
+                val position =
+                    if (isStepIdWasPassed) {
+                        this.stepList.indexOfFirst { wrapper -> wrapper.step.id == defaultStepPositionStartWithOne } + 1L
+                    } else {
+                        defaultStepPositionStartWithOne
+                    }
+                view?.showSteps(fromPreviousLesson, position)
             }
             return
         }
@@ -119,7 +128,7 @@ constructor(
                     view?.onLessonUnitPrepared(lesson, unit, this.section)
                 }
 
-                loadSteps(defaultStepPositionStartWithOne, fromPreviousLesson)
+                loadSteps(defaultStepPositionStartWithOne, isStepIdWasPassed, fromPreviousLesson)
 
             } finally {
                 isLoading.set(false)
@@ -127,7 +136,7 @@ constructor(
         }
     }
 
-    private fun loadSteps(defaultStepPositionStartWithOne: Long, fromPreviousLesson: Boolean) {
+    private fun loadSteps(defaultStepPositionStartWithOne: Long, isStepIdWasPassed: Boolean, fromPreviousLesson: Boolean) {
         lesson?.let {
             val stepList: MutableList<Step> = databaseFacade.getStepsOfLesson(it.id).filterNotNull().toMutableList()
             stepList.sortWith(Comparator { lhs, rhs ->
@@ -148,10 +157,17 @@ constructor(
                 }
                 isStepsShown = true
                 //if we get steps from database -> progresses and assignments were stored
+
+                val position =
+                    if (isStepIdWasPassed) {
+                        steps.indexOfFirst { wrapper -> wrapper.step.id == defaultStepPositionStartWithOne } + 1L
+                    } else {
+                        defaultStepPositionStartWithOne
+                    }
                 mainHandler.post {
                     this.stepList.clear()
                     this.stepList.addAll(steps)
-                    view?.showSteps(fromPreviousLesson, defaultStepPositionStartWithOne)
+                    view?.showSteps(fromPreviousLesson, position)
                 }
             }
 
@@ -205,10 +221,16 @@ constructor(
                     updateAssignmentsAndProgresses(stepListFromInternet, unit)
                     //only after getting progresses and assignments we can get steps
                     if (!isStepsShown) {
+                        val position =
+                            if (isStepIdWasPassed) {
+                                stepListFromInternet.indexOfFirst { wrapper -> wrapper.step.id == defaultStepPositionStartWithOne } + 1L
+                            } else {
+                                defaultStepPositionStartWithOne
+                            }
                         mainHandler.post {
                             this.stepList.clear()
                             this.stepList.addAll(stepListFromInternet)
-                            view?.showSteps(fromPreviousLesson, defaultStepPositionStartWithOne)
+                            view?.showSteps(fromPreviousLesson, position)
                         }
                     }
                 }
@@ -216,20 +238,29 @@ constructor(
         }
     }
 
-    fun refreshWhenOnConnectionProblem(outLesson: Lesson?, outUnit: Unit?, simpleLessonId: Long, simpleUnitId: Long, defaultStepPositionStartWithOne: Long = -1, fromPreviousLesson: Boolean = false, section: Section?) {
+    fun refreshWhenOnConnectionProblem(
+        outLesson: Lesson?,
+        outUnit: Unit?,
+        simpleLessonId: Long,
+        simpleUnitId: Long,
+        defaultStepPositionStartWithOne: Long = -1,
+        isStepIdWasPassed: Boolean = false,
+        fromPreviousLesson: Boolean = false,
+        section: Section?
+    ) {
         if (isLoading.get()) {
             return
         }
 
         if (lesson == null) {
-            init(outLesson, outUnit, simpleLessonId, simpleUnitId, defaultStepPositionStartWithOne, fromPreviousLesson, section)
+            init(outLesson, outUnit, simpleLessonId, simpleUnitId, defaultStepPositionStartWithOne, isStepIdWasPassed, fromPreviousLesson, section)
 
         } else {
             isLoading.set(true)
             view?.onLoading()
             threadPoolExecutor.execute {
                 try {
-                    loadSteps(defaultStepPositionStartWithOne, fromPreviousLesson)
+                    loadSteps(defaultStepPositionStartWithOne, isStepIdWasPassed, fromPreviousLesson)
                 } finally {
                     isLoading.set(false)
                 }
@@ -341,7 +372,10 @@ constructor(
 
     private fun loadUnitByLessonId(simpleLessonId: Long) {
         try {
-            unit = api.getUnitByLessonId(simpleLessonId).execute()?.body()?.units?.firstOrNull()
+            unit = unitRepository
+                .getUnitsByLessonId(simpleLessonId)
+                .blockingGet()
+                .firstOrNull()
         } catch (ignored: Exception) {
             // unit can be null for lesson, which is not in Course
         }

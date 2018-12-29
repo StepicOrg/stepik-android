@@ -1,31 +1,27 @@
 package org.stepic.droid.core.presenters
 
 import android.support.annotation.MainThread
-import android.support.annotation.WorkerThread
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.RouteStepView
-import org.stepic.droid.core.routing.contract.RoutingPoster
 import org.stepik.android.model.Course
 import org.stepik.android.model.Lesson
 import org.stepik.android.model.Section
 import org.stepik.android.model.Unit
 import org.stepic.droid.storage.repositories.Repository
 import org.stepic.droid.util.hasUserAccessAndNotEmpty
-import timber.log.Timber
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
 
 class RouteStepPresenter
 @Inject constructor(
-        private val threadPoolExecutor: ThreadPoolExecutor,
-        private val mainHandler: MainHandler,
-        private val analytic: Analytic,
-        private val courseRepository: Repository<Course>,
-        private val sectionRepository: Repository<Section>,
-        private val unitRepository: Repository<Unit>,
-        private val lessonRepository: Repository<Lesson>,
-        private val routingPoster: RoutingPoster
+    private val threadPoolExecutor: ThreadPoolExecutor,
+    private val mainHandler: MainHandler,
+    private val analytic: Analytic,
+    private val courseRepository: Repository<Course>,
+    private val sectionRepository: Repository<Section>,
+    private val unitRepository: Repository<Unit>,
+    private val lessonRepository: Repository<Lesson>
 ) : PresenterBase<RouteStepView>() {
 
     /**
@@ -224,7 +220,6 @@ class RouteStepPresenter
                                                 if (previousUnit != null) {
                                                     val previousLesson = lessonRepository.getObject(previousUnit.lesson)
                                                     if (previousLesson != null) {
-                                                        notifyAboutChangingSection(section, it)
                                                         mainHandler.post {
                                                             onOpen(previousUnit, previousLesson, it)
                                                         }
@@ -245,7 +240,6 @@ class RouteStepPresenter
                                                 nextUnit?.lesson?.let { lessonId ->
                                                     val nextLesson = lessonRepository.getObject(lessonId)
                                                     if (nextLesson != null) {
-                                                        notifyAboutChangingSection(section, nextSection)
                                                         mainHandler.post {
                                                             onOpen(nextUnit, nextLesson, nextSection)
                                                         }
@@ -272,13 +266,6 @@ class RouteStepPresenter
                 onCantGoEvent.invoke()
             }
         }
-    }
-
-    @WorkerThread
-    private fun notifyAboutChangingSection(oldSection: Section, newSection: Section) {
-        //show on unitsFragment, which has oldSection, newSection.
-        routingPoster.sectionChanged(oldSection, newSection)
-        Timber.d("changing ${oldSection.title} to ${newSection.title}")
     }
 
     inner class IllegalStateRouteLessonException(unitId: Long) : IllegalStateException("Next or previous lesson is shouldn't be shown, lessonId = $unitId")

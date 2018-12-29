@@ -9,15 +9,17 @@ import org.stepic.droid.core.FirstCoursePoster
 import org.stepic.droid.core.earlystreak.contract.EarlyStreakPoster
 import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.di.course_list.CourseListScope
-import org.stepic.droid.features.deadlines.repository.DeadlinesRepository
+import org.stepic.droid.model.CourseListType
 import org.stepic.droid.model.CourseReviewSummary
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
-import org.stepic.droid.storage.operations.Table
 import org.stepic.droid.util.CourseUtil
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.RWLocks
+import org.stepic.droid.util.getProgresses
 import org.stepic.droid.web.Api
+import org.stepik.android.domain.personal_deadlines.interactor.DeadlinesSynchronizationInteractor
+import org.stepik.android.domain.progress.repository.ProgressRepository
 import org.stepik.android.model.Course
 import org.stepik.android.model.Meta
 import org.stepik.android.model.Progress
@@ -28,18 +30,21 @@ import javax.inject.Inject
 
 @CourseListScope
 class PersistentCourseListPresenter
-@Inject constructor(
-        private val databaseFacade: DatabaseFacade,
-        private val singleThreadExecutor: SingleThreadExecutor,
-        private val mainHandler: MainHandler,
-        private val api: Api,
-        private val filterApplicator: FilterApplicator,
-        private val sharedPreferenceHelper: SharedPreferenceHelper,
-        private val earlyStreakPoster: EarlyStreakPoster,
-        private val firstCoursePoster: FirstCoursePoster,
+@Inject
+constructor(
+    private val databaseFacade: DatabaseFacade,
+    private val singleThreadExecutor: SingleThreadExecutor,
+    private val mainHandler: MainHandler,
+    private val api: Api,
 
-        private val deadlinesRepository: DeadlinesRepository,
-        private val analytic: Analytic
+    private val progressRepository: ProgressRepository,
+    private val filterApplicator: FilterApplicator,
+    private val sharedPreferenceHelper: SharedPreferenceHelper,
+    private val earlyStreakPoster: EarlyStreakPoster,
+    private val firstCoursePoster: FirstCoursePoster,
+
+    private val deadlinesSynchronizationInteractor: DeadlinesSynchronizationInteractor,
+    private val analytic: Analytic
 ) : PresenterBase<CoursesView>() {
 
     companion object {
@@ -67,11 +72,11 @@ class PersistentCourseListPresenter
      * 3) Save to db
      * 4) show from cache (all states)
      */
-    fun downloadData(courseType: Table) {
+    fun downloadData(courseType: CourseListType) {
         downloadData(courseType, isRefreshing = false)
     }
 
-    private fun downloadData(courseType: Table, isRefreshing: Boolean, isLoadMore: Boolean = false) {
+    private fun downloadData(courseType: CourseListType, isRefreshing: Boolean, isLoadMore: Boolean = false) {
         if (currentNumberOfTasks >= MAX_CURRENT_NUMBER_OF_TASKS) {
             return
         }
@@ -88,7 +93,7 @@ class PersistentCourseListPresenter
     }
 
     @WorkerThread
-    private fun downloadDataPlain(isRefreshing: Boolean, isLoadMore: Boolean, courseType: Table) {
+    private fun downloadDataPlain(isRefreshing: Boolean, isLoadMore: Boolean, courseType: CourseListType) {
         if (!isLoadMore) {
             mainHandler.post {
                 view?.showLoading()
@@ -102,7 +107,7 @@ class PersistentCourseListPresenter
 
         while (hasNextPage.get()) {
             val coursesFromInternet: List<Course>? = try {
-                if (courseType == Table.featured) {
+                if (courseType == CourseListType.FEATURED) {
                     val response = api.getPopularCourses(currentPage.get()).blockingGet()
                     handleMeta(response.meta)
                     response.courses
@@ -124,7 +129,7 @@ class PersistentCourseListPresenter
                         
                         allMyCourses.addAll(courses)
                     }
-                    deadlinesRepository.syncDeadlines(allMyCourses).blockingAwait()
+                    deadlinesSynchronizationInteractor.syncPersonalDeadlines().blockingAwait()
                     analytic.setCoursesCount(allMyCourses.size)
                     allMyCourses
                 }
@@ -140,20 +145,14 @@ class PersistentCourseListPresenter
                 break
             }
 
-            if (courseType == Table.enrolled) {
-                val progressIds = coursesFromInternet.map { it.progress }.toTypedArray()
-                val progresses: List<Progress>? = try {
-                    api.getProgresses(progressIds).execute().body()?.progresses
-                } catch (exception: Exception) {
-                    //ok show without progresses
-                    null
-                }
-                progresses?.forEach {
-                    databaseFacade.addProgress(progress = it)
-                }
+            if (courseType == CourseListType.ENROLLED) {
+                progressRepository
+                    .getProgresses(*coursesFromInternet.getProgresses())
+                    .toCompletable()
+                    .blockingAwait()
             }
 
-            val reviewSummaryIds = coursesFromInternet.map { it.reviewSummary }.toIntArray()
+            val reviewSummaryIds = coursesFromInternet.map { it.reviewSummary }.toLongArray()
             val reviews: List<CourseReviewSummary>? = try {
                 api.getCourseReviews(reviewSummaryIds).blockingGet().courseReviewSummaries
             } catch (exception: Exception) {
@@ -165,24 +164,22 @@ class PersistentCourseListPresenter
             try {
                 //this lock need for not saving enrolled courses to database after user click logout
                 RWLocks.ClearEnrollmentsLock.writeLock().lock()
-                if (sharedPreferenceHelper.authResponseFromStore != null || courseType == Table.featured) {
+                if (sharedPreferenceHelper.authResponseFromStore != null || courseType == CourseListType.FEATURED) {
                     if (isRefreshing) {
-                        if (courseType == Table.featured && currentPage.get() == 2) {
+                        if (courseType == CourseListType.FEATURED && currentPage.get() == 2) {
                             databaseFacade.dropFeaturedCourses()
-                        } else if (courseType == Table.enrolled) {
+                        } else if (courseType == CourseListType.ENROLLED) {
                             databaseFacade.dropEnrolledCourses()
                         }
                     }
 
-                    coursesFromInternet.forEach {
-                        databaseFacade.addCourse(it, courseType)
-                    }
+                    databaseFacade.addCourseList(courseType, coursesFromInternet)
                 }
             } finally {
                 RWLocks.ClearEnrollmentsLock.writeLock().unlock()
             }
 
-            val allCourses = databaseFacade.getAllCourses(courseType).filterNotNull().toMutableList()
+            val allCourses = databaseFacade.getAllCourses(courseType).toMutableList()
 
             val coursesForShow: List<Course> = handleCoursesWithType(allCourses, courseType)
             if (coursesForShow.size < MIN_COURSES_ON_SCREEN && hasNextPage.get()) {
@@ -210,8 +207,8 @@ class PersistentCourseListPresenter
     }
 
     @WorkerThread
-    private fun showFromDatabase(courseType: Table) {
-        val coursesBeforeLoading = databaseFacade.getAllCourses(courseType).filterNotNull()
+    private fun showFromDatabase(courseType: CourseListType) {
+        val coursesBeforeLoading = databaseFacade.getAllCourses(courseType)
         val coursesForShow = handleCoursesWithType(coursesBeforeLoading, courseType)
 
         if (coursesForShow.isNotEmpty()) {
@@ -222,8 +219,8 @@ class PersistentCourseListPresenter
         }
     }
 
-    private fun postFirstCourse(courseType: Table, coursesForShow: List<Course>) {
-        if (courseType != Table.enrolled) {
+    private fun postFirstCourse(courseType: CourseListType, coursesForShow: List<Course>) {
+        if (courseType != CourseListType.ENROLLED) {
             return
         }
         val course = coursesForShow.find {
@@ -232,15 +229,15 @@ class PersistentCourseListPresenter
         firstCoursePoster.postFirstCourse(course)
     }
 
-    private fun handleCoursesWithType(courses: List<Course>, courseType: Table?): List<Course> =
+    private fun handleCoursesWithType(courses: List<Course>, courseType: CourseListType?): List<Course> =
             when (courseType) {
-                Table.enrolled -> {
+                CourseListType.ENROLLED -> {
                     val progressMap = getProgressesFromDb(courses)
                     CourseUtil.applyProgressesToCourses(progressMap, courses)
                     postLastActive(courses.firstOrNull(), progressMap)
                     courses
                 }
-                Table.featured -> {
+                CourseListType.FEATURED -> {
                     filterApplicator.filterCourses(courses)
                 }
                 null -> courses
@@ -260,7 +257,7 @@ class PersistentCourseListPresenter
     private fun isViewedDuringLast7Days(lastViewed: Long): Boolean =
             DateTimeHelper.isAfterNowUtc(lastViewed * MILLIS_IN_SECOND + SEVEN_DAYS_MILLIS)
 
-    fun refreshData(courseType: Table) {
+    fun refreshData(courseType: CourseListType) {
         if (currentNumberOfTasks >= MAX_CURRENT_NUMBER_OF_TASKS) {
             return
         }
@@ -278,7 +275,7 @@ class PersistentCourseListPresenter
     }
 
 
-    fun loadMore(courseType: Table) {
+    fun loadMore(courseType: CourseListType) {
         downloadData(courseType, isRefreshing = false, isLoadMore = true)
     }
 }

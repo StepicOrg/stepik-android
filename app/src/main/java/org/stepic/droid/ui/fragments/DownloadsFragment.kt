@@ -53,10 +53,10 @@ class DownloadsFragment: FragmentBase(), DownloadsView {
         downloadsAdapter = DownloadsAdapter(downloadsPresenter)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-            inflater?.inflate(R.layout.fragment_downloads, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+            inflater.inflate(R.layout.fragment_downloads, container, false)
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         nullifyActivityBackground()
         initCenteredToolbar(R.string.downloads, true)
 

@@ -7,4 +7,9 @@
     <declare-styleable name="RoundedBorderMaskView">
         <attr name="borderRadius" format="dimension" />
     </declare-styleable>
+
+    <declare-styleable name="ControlBarView">
+        <attr name="menu" format="reference" />
+        <attr name="item_layout" format="reference" />
+    </declare-styleable>
 </resources>

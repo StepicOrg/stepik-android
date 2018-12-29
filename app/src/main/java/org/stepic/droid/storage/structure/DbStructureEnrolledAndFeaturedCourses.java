@@ -1,5 +1,6 @@
 package org.stepic.droid.storage.structure;
 
+@Deprecated
 public final class DbStructureEnrolledAndFeaturedCourses {
     public static final String ENROLLED_COURSES = "courses";
     public static final String FEATURED_COURSES = "featured_courses";

@@ -12,6 +12,7 @@ import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.util.greaterThanMaxQuality
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
+import kotlin.IllegalStateException
 
 class VideoQualityDialogInPlayer : VideoQualityDialogBase() {
 
@@ -51,6 +52,8 @@ class VideoQualityDialogInPlayer : VideoQualityDialogBase() {
 
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val arguments = arguments ?: throw IllegalStateException("Arguments must be set")
+
         init()
 
         val externalVideo: Video? = arguments.getParcelable(externalVideoKey)
@@ -60,6 +63,7 @@ class VideoQualityDialogInPlayer : VideoQualityDialogBase() {
         val listOfVideoUrl: MutableList<VideoUrl> =
                 externalVideo
                         ?.urls
+                        ?.asSequence()
                         ?.filter {
                             !it.greaterThanMaxQuality()
                         }
@@ -71,6 +75,7 @@ class VideoQualityDialogInPlayer : VideoQualityDialogBase() {
         val listOfPresentedQuality: MutableList<String> =
                 externalVideo
                         ?.urls
+                        ?.asSequence()
                         ?.filter {
                             !it.greaterThanMaxQuality()
                         }
@@ -85,10 +90,11 @@ class VideoQualityDialogInPlayer : VideoQualityDialogBase() {
 
 
         val position: Int = listOfVideoUrl
+                .asSequence()
                 .map { it.url }
                 .indexOf(nowPlayingUrl)
 
-        val builder = AlertDialog.Builder(activity)
+        val builder = AlertDialog.Builder(requireContext())
         builder
                 .setTitle(R.string.video_quality_playing)
                 .setNegativeButton(R.string.cancel) { _, _ ->

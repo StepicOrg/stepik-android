@@ -5,8 +5,8 @@ import io.reactivex.rxkotlin.toObservable
 import org.stepic.droid.persistence.di.PersistenceScope
 import org.stepic.droid.persistence.model.Structure
 import org.stepic.droid.storage.repositories.Repository
-import org.stepic.droid.storage.repositories.progress.ProgressRepository
-import org.stepic.droid.util.then
+import org.stepic.droid.util.getProgresses
+import org.stepik.android.domain.progress.repository.ProgressRepository
 import org.stepik.android.model.Step
 import javax.inject.Inject
 
@@ -26,6 +26,16 @@ constructor(
     ): Observable<Structure> = Observable
             .just(stepIds)
             .map(stepRepository::getObjects)
-            .flatMap { progressRepository.syncProgresses(*it.toList().toTypedArray()) then it.toObservable() }
-            .map { Structure(courseId, sectionId, unitId, lessonId, it.id) }
+            .flatMap { steps ->
+                val observables = steps
+                    .map { step ->
+                        Structure(courseId, sectionId, unitId, lessonId, step.id)
+                    }
+                    .toObservable()
+
+                progressRepository
+                    .getProgresses(*steps.getProgresses())
+                    .toCompletable()
+                    .andThen(observables)
+            }
 }

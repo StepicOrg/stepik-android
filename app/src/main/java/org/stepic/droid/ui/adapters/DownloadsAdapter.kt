@@ -108,7 +108,7 @@ class DownloadsAdapter(
             ACTIVE_DOWNLOAD_VIEW_TYPE
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int) = LayoutInflater.from(parent?.context).let {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = LayoutInflater.from(parent.context).let {
         when(viewType) {
             ACTIVE_DOWNLOAD_VIEW_TYPE ->
                 ActiveDownloadViewHolder(it.inflate(R.layout.downloading_video_item, parent, false))

@@ -10,9 +10,9 @@ import android.support.annotation.WorkerThread;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.concurrency.MainHandler;
-import org.stepic.droid.core.LocalProgressManager;
 import org.stepic.droid.core.internetstate.contract.InternetEnabledPoster;
 import org.stepic.droid.core.updatingstep.contract.UpdatingStepPoster;
+import org.stepik.android.domain.progress.interactor.LocalProgressInteractor;
 import org.stepik.android.model.Step;
 import org.stepic.droid.model.ViewedNotification;
 import org.stepic.droid.storage.operations.DatabaseFacade;
@@ -46,7 +46,7 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
     ThreadPoolExecutor threadPoolExecutor;
 
     @Inject
-    LocalProgressManager unitProgressManager;
+    LocalProgressInteractor localProgressInteractor;
 
     @Inject
     MainHandler mainHandler;
@@ -125,7 +125,7 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
                                     databaseFacade.markProgressAsPassedIfInDb(step.getProgress());
                                 }
                             }
-                            unitProgressManager.checkUnitAsPassed(step.getId());
+                            localProgressInteractor.updateStepProgress(step).blockingAwait();
                         }
                         // Get a handler that can be used to post to the main thread
 

@@ -5,6 +5,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.BiFunction
 import io.reactivex.rxkotlin.zipWith
+import java.lang.IllegalStateException
 import java.util.concurrent.TimeUnit
 
 
@@ -34,6 +35,7 @@ infix fun <T> Completable.then(observable: Observable<T>): Observable<T> = this.
 infix fun <T> Completable.then(single: Single<T>): Single<T> = this.andThen(single)
 
 infix fun <T> Observable<T>.merge(observable: Observable<T>): Observable<T> = Observable.merge(this, observable)
+infix fun <T> Observable<T>.concat(observable: Observable<T>): Observable<T> = Observable.concat(this, observable)
 operator fun <T> Observable<T>.plus(observable: Observable<T>): Observable<T> = merge(observable)
 
 infix fun <X, Y> Observable<X>.zip(observable: Observable<Y>): Observable<Pair<X, Y>> = this.zipWith(observable)
@@ -62,3 +64,30 @@ class RetryExponential(private val maxAttempts: Int)
             }
 
 }
+
+
+fun <T> Iterable<T>.toMaybe(): Maybe<T> =
+        firstOrNull()?.let { Maybe.just(it) } ?: Maybe.empty()
+
+fun <T> Single<List<T>>.maybeFirst(): Maybe<T> =
+        flatMapMaybe { it.toMaybe() }
+
+inline fun <T> Maybe<T>.doCompletableOnSuccess(crossinline completableSource: (T) -> Completable): Maybe<T> =
+        flatMap { completableSource(it).andThen(Maybe.just(it)) }
+
+inline fun <T> Single<T>.doCompletableOnSuccess(crossinline completableSource: (T) -> Completable): Single<T> =
+    flatMap { completableSource(it).andThen(Single.just(it)) }
+
+fun <T> Single<List<T>>.requireNonEmpty(): Single<List<T>> =
+    map { list ->
+        list.takeIf(List<T>::isNotEmpty)
+            ?: throw IllegalStateException("List shouldn't be empty")
+    }
+
+fun <T> Single<List<T>>.requireSize(size: Int): Single<List<T>> =
+    map { list ->
+        list.takeIf { it.size == size }
+            ?: throw IllegalStateException("Expected list size = $size, actual = ${list.size}")
+    }
+
+val emptyOnErrorStub: (Throwable) -> Unit = {}

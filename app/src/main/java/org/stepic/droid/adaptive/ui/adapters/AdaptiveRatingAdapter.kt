@@ -56,10 +56,10 @@ class AdaptiveRatingAdapter (
 
     override fun getItemCount() = items.size
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int) =
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
             when(viewType) {
-                RATING_ITEM_VIEW_TYPE -> RatingViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.adaptive_rating_item, parent, false))
-                SEPARATOR_VIEW_TYPE -> SeparatorViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.adaptive_ranks_separator, parent, false))
+                RATING_ITEM_VIEW_TYPE -> RatingViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.adaptive_rating_item, parent, false))
+                SEPARATOR_VIEW_TYPE -> SeparatorViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.adaptive_ranks_separator, parent, false))
                 else -> throw IllegalStateException("Unknown view type $viewType")
             }
 

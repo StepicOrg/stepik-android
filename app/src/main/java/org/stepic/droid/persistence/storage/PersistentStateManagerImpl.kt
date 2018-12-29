@@ -7,7 +7,6 @@ import org.stepic.droid.persistence.model.Structure
 import org.stepic.droid.persistence.storage.dao.PersistentStateDao
 import org.stepic.droid.persistence.storage.structure.DBStructurePersistentState
 import org.stepic.droid.storage.operations.DatabaseFacade
-import org.stepic.droid.storage.operations.Table
 import java.util.concurrent.locks.ReentrantReadWriteLock
 import javax.inject.Inject
 import kotlin.concurrent.read
@@ -71,7 +70,7 @@ constructor(
             }
 
             PersistentState.Type.COURSE -> {
-                val course = databaseFacade.getCourseById(id, Table.enrolled) ?: return
+                val course = databaseFacade.getCourseById(id) ?: return
                 val sections = course.sections ?: return
 
                 val state = sections.map { getState(it, PersistentState.Type.SECTION) }.reduce(::concatStates)

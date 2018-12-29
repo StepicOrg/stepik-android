@@ -3,7 +3,7 @@ package org.stepic.droid.core.presenters
 import io.reactivex.Scheduler
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.functions.Function3
+import io.reactivex.rxkotlin.Singles.zip
 import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.di.course_list.CourseListScope
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
@@ -13,6 +13,9 @@ import org.stepic.droid.model.CourseReviewSummary
 import org.stepik.android.model.Progress
 import org.stepic.droid.util.CourseUtil
 import org.stepic.droid.web.Api
+import org.stepic.droid.web.CourseReviewResponse
+import org.stepic.droid.web.CoursesMetaResponse
+import org.stepic.droid.web.ProgressesResponse
 import javax.inject.Inject
 
 @CourseListScope
@@ -28,7 +31,7 @@ constructor(
 
     companion object {
         //collections are small (less than 10 courses), so pagination is not needed
-        private val DEFAULT_PAGE = 1
+        private const val DEFAULT_PAGE = 1
     }
 
     private val compositeDisposable = CompositeDisposable()
@@ -37,28 +40,22 @@ constructor(
         view?.showLoading()
         val disposable = api
                 .getCoursesReactive(DEFAULT_PAGE, courseIds)
-                .map { it.courses }
+                .map(CoursesMetaResponse::getCourses)
                 .flatMap {
-                    val progressIds = it.map { it.progress }.toTypedArray()
-                    val reviewIds = it.map { it.reviewSummary }.toIntArray()
+                    val progressIds = it.map(Course::progress).toTypedArray()
+                    val reviewIds = it.map(Course::reviewSummary).toLongArray()
 
-                    Single.zip(
-                            Single.just(it),
-                            getProgressesSingle(progressIds),
-                            getReviewsSingle(reviewIds),
-                            Function3<List<Course>, Map<String?, Progress>, List<CourseReviewSummary>, List<Course>> { courses, progressMap, reviews ->
-                                CourseUtil.applyProgressesToCourses(progressMap, courses)
-                                CourseUtil.applyReviewsToCourses(reviews, courses)
-                                courses
-                            })
+                    zip(Single.just(it), getProgressesSingle(progressIds), getReviewsSingle(reviewIds)) { courses, progressMap, reviews ->
+                        CourseUtil.applyProgressesToCourses(progressMap, courses)
+                        CourseUtil.applyReviewsToCourses(reviews, courses)
+                        courses
+                    }
                 }
                 .map {
-                    val coursesMap = it.associateBy { it.id }
+                    val coursesMap = it.associateBy(Course::id)
                     courseIds
                             .asIterable()
-                            .mapNotNull {
-                                coursesMap[it]
-                            }
+                            .mapNotNull(coursesMap::get)
                 }
                 .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)
@@ -71,21 +68,17 @@ constructor(
         compositeDisposable.add(disposable)
     }
 
-    private fun getReviewsSingle(reviewIds: IntArray): Single<List<CourseReviewSummary>> {
+    private fun getReviewsSingle(reviewIds: LongArray): Single<List<CourseReviewSummary>> {
         return api.getCourseReviews(reviewIds)
-                .map {
-                    it.courseReviewSummaries
-                }
+                .map(CourseReviewResponse::courseReviewSummaries)
                 .subscribeOn(backgroundScheduler)
     }
 
 
     private fun getProgressesSingle(progressIds: Array<String?>): Single<Map<String?, Progress>> {
         return api.getProgressesReactive(progressIds)
-                .map {
-                    it.progresses
-                }
-                .map { it.associateBy { it.id } }
+                .map(ProgressesResponse::getProgresses)
+                .map { it.associateBy(Progress::id) }
                 .subscribeOn(backgroundScheduler)
     }
 

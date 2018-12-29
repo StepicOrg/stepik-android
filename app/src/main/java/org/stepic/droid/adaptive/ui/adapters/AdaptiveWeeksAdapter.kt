@@ -57,48 +57,46 @@ class AdaptiveWeeksAdapter : RecyclerView.Adapter<AdaptiveWeeksAdapter.StatsView
         }
     }
 
-    override fun onBindViewHolder(holder: StatsViewHolder?, p: Int) {
-        holder?.let {
-            when (it) {
-                is StatsViewHolder.WeekViewHolder -> {
-                    it.total.text = weeks[p - 1].total.toString()
-                    it.start.text = String.format(Resources.getSystem().configuration.defaultLocale, DATE_FORMAT, weeks[p - 1].start)
-                    it.end.text = String.format(Resources.getSystem().configuration.defaultLocale, DATE_FORMAT, weeks[p - 1].end)
-                }
-                is StatsViewHolder.StatsHeaderViewHolder -> {
-                    header.chartData?.let { dataSet ->
-                        dataSet.color = ContextCompat.getColor(it.root.context, R.color.new_accent_color)
-                        dataSet.setDrawCircles(false)
-                        dataSet.mode = LineDataSet.Mode.HORIZONTAL_BEZIER
-                        dataSet.cubicIntensity = 0.2f
-                        dataSet.fillColor = dataSet.color
-                        dataSet.fillAlpha = 100
-                        dataSet.setDrawValues(true)
-                        dataSet.setValueFormatter { v, _, _, _ -> v.toLong().toString() }
-                        dataSet.valueTextSize = 12f
-                        dataSet.setDrawHorizontalHighlightIndicator(false)
+    override fun onBindViewHolder(holder: StatsViewHolder, p: Int) {
+        when (holder) {
+            is StatsViewHolder.WeekViewHolder -> {
+                holder.total.text = weeks[p - 1].total.toString()
+                holder.start.text = String.format(Resources.getSystem().configuration.defaultLocale, DATE_FORMAT, weeks[p - 1].start)
+                holder.end.text = String.format(Resources.getSystem().configuration.defaultLocale, DATE_FORMAT, weeks[p - 1].end)
+            }
+            is StatsViewHolder.StatsHeaderViewHolder -> {
+                header.chartData?.let { dataSet ->
+                    dataSet.color = ContextCompat.getColor(holder.root.context, R.color.new_accent_color)
+                    dataSet.setDrawCircles(false)
+                    dataSet.mode = LineDataSet.Mode.HORIZONTAL_BEZIER
+                    dataSet.cubicIntensity = 0.2f
+                    dataSet.fillColor = dataSet.color
+                    dataSet.fillAlpha = 100
+                    dataSet.setDrawValues(true)
+                    dataSet.setValueFormatter { v, _, _, _ -> v.toLong().toString() }
+                    dataSet.valueTextSize = 12f
+                    dataSet.setDrawHorizontalHighlightIndicator(false)
 
-                        dataSet.setDrawCircles(true)
-                        dataSet.setCircleColor(dataSet.color)
+                    dataSet.setDrawCircles(true)
+                    dataSet.setCircleColor(dataSet.color)
 
-                        it.chart.data = LineData(dataSet)
-                        it.chart.data.isHighlightEnabled = true
+                    holder.chart.data = LineData(dataSet)
+                    holder.chart.data.isHighlightEnabled = true
 
-                        if (dataSet.entryCount > 0) {
-                            it.chart.animateY(1400)
-                            it.chart.invalidate()
-                            it.chart.visibility = View.VISIBLE
-                        } else {
-                            it.chart.visibility = View.GONE
-                        }
+                    if (dataSet.entryCount > 0) {
+                        holder.chart.animateY(1400)
+                        holder.chart.invalidate()
+                        holder.chart.visibility = View.VISIBLE
+                    } else {
+                        holder.chart.visibility = View.GONE
                     }
-
-                    it.chart.visibility = if (header.chartData == null) View.INVISIBLE else View.VISIBLE
-
-                    it.expTotal.text = header.total.toString()
-                    it.level.text = header.level.toString()
-                    it.expThisWeek.text = header.last7Days.toString()
                 }
+
+                holder.chart.visibility = if (header.chartData == null) View.INVISIBLE else View.VISIBLE
+
+                holder.expTotal.text = header.total.toString()
+                holder.level.text = header.level.toString()
+                holder.expThisWeek.text = header.last7Days.toString()
             }
         }
     }

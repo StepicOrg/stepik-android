@@ -23,9 +23,8 @@ import org.stepic.droid.core.presenters.FastContinuePresenter
 import org.stepic.droid.core.presenters.PersistentCourseListPresenter
 import org.stepic.droid.core.presenters.contracts.ContinueCourseView
 import org.stepic.droid.core.presenters.contracts.FastContinueView
+import org.stepic.droid.model.CourseListType
 import org.stepik.android.model.Course
-import org.stepik.android.model.Section
-import org.stepic.droid.storage.operations.Table
 import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
@@ -33,6 +32,7 @@ import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.ProgressUtil
 import org.stepic.droid.util.StepikLogicHelper
+import org.stepik.android.domain.last_step.model.LastStep
 import javax.inject.Inject
 
 class FastContinueFragment : FragmentBase(),
@@ -80,10 +80,10 @@ class FastContinueFragment : FragmentBase(),
                 .inject(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View?
-            = inflater?.inflate(R.layout.fragment_fast_continue, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
+            = inflater.inflate(R.layout.fragment_fast_continue, container, false)
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         courseCoverImageViewTarget = RoundedBitmapImageViewTarget(resources.getDimension(R.dimen.course_image_radius), fastContinueCourseCover)
@@ -115,20 +115,20 @@ class FastContinueFragment : FragmentBase(),
 
     override fun onAnonymous() {
         analytic.reportEvent(Analytic.FastContinue.AUTH_SHOWN)
-        showPlaceholder(R.string.placeholder_login, { _ ->
+        showPlaceholder(R.string.placeholder_login) { _ ->
             analytic.reportEvent(Analytic.FastContinue.AUTH_CLICK)
             screenManager.showLaunchScreen(context, true, MainFeedActivity.HOME_INDEX)
-        })
+        }
     }
 
     override fun onEmptyCourse() {
         // tbh: courses might be not empty, but not active
         // we can show suggestion for enroll, but not write, that you have zero courses
         analytic.reportEvent(Analytic.FastContinue.EMPTY_COURSES_SHOWN)
-        showPlaceholder(R.string.placeholder_explore_courses, { _ ->
+        showPlaceholder(R.string.placeholder_explore_courses) { _ ->
             analytic.reportEvent(Analytic.FastContinue.EMPTY_COURSES_CLICK)
             screenManager.showCatalog(context)
-        })
+        }
     }
 
     override fun onShowCourse(course: Course) {
@@ -180,10 +180,10 @@ class FastContinueFragment : FragmentBase(),
         }
     }
 
-    override fun onOpenStep(courseId: Long, section: Section, lessonId: Long, unitId: Long, stepPosition: Int) {
+    override fun onOpenStep(courseId: Long, lastStep: LastStep) {
         ProgressHelper.dismiss(fragmentManager, CONTINUE_LOADING_TAG)
         fastContinueAction.isEnabled = true
-        screenManager.continueCourse(activity, courseId, section, lessonId, unitId, stepPosition.toLong())
+        screenManager.continueCourse(activity, lastStep.unit, lastStep.lesson, lastStep.step)
     }
 
     override fun onOpenAdaptiveCourse(course: Course) {
@@ -195,13 +195,13 @@ class FastContinueFragment : FragmentBase(),
     override fun onAnyProblemWhileContinue(course: Course) {
         ProgressHelper.dismiss(fragmentManager, CONTINUE_LOADING_TAG)
         fastContinueAction.isEnabled = true
-        screenManager.showSections(activity, course)
+        screenManager.showCourseModules(activity, course)
     }
 
     //Client<DroppingListener>
     override fun onSuccessDropCourse(course: Course) {
         //reload the last course
-        courseListPresenter.refreshData(Table.enrolled)
+        courseListPresenter.refreshData(CourseListType.ENROLLED)
     }
 
     override fun onFailDropCourse(course: Course) {

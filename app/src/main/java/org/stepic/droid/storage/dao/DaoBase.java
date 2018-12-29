@@ -62,7 +62,7 @@ public abstract class DaoBase<T> implements IDao<T> {
     @Nullable
     public T get(@NonNull String whereColumnName, @NonNull String whereValue) {
         String query = "Select * from " + getDbName() + " where " + whereColumnName + " = ?";
-        return databaseOperations.executeQuery(query, new String[]{whereValue}, new ResultHandler<T>() {
+        T persistentObject = databaseOperations.executeQuery(query, new String[]{whereValue}, new ResultHandler<T>() {
             @Override
             public T handle(Cursor cursor) throws SQLException {
                 cursor.moveToFirst();
@@ -73,6 +73,10 @@ public abstract class DaoBase<T> implements IDao<T> {
                 return null;
             }
         });
+        if (persistentObject != null) {
+            persistentObject = populateNestedObjects(persistentObject);
+        }
+        return persistentObject;
     }
 
     @Override
@@ -82,7 +86,7 @@ public abstract class DaoBase<T> implements IDao<T> {
         final String where = CollectionsKt.joinToString(whereArgs.keySet(), " = ? AND ", "", "", -1, "" , null) + " = ?";
         final String query = selector + where + " LIMIT 1";
 
-        return databaseOperations.executeQuery(query, whereArgs.values().toArray(new String[]{}), new ResultHandler<T>() {
+        T persistentObject =  databaseOperations.executeQuery(query, whereArgs.values().toArray(new String[]{}), new ResultHandler<T>() {
             @Override
             public T handle(Cursor cursor) throws SQLException {
                 if (cursor.moveToNext()) {
@@ -92,6 +96,10 @@ public abstract class DaoBase<T> implements IDao<T> {
                 }
             }
         });
+        if (persistentObject != null) {
+            persistentObject = populateNestedObjects(persistentObject);
+        }
+        return persistentObject;
     }
 
     @Override
@@ -118,8 +126,10 @@ public abstract class DaoBase<T> implements IDao<T> {
         return getAllWithQuery(query, null);
     }
 
-    protected List<T> getAllWithQuery(String query, @Nullable String[] whereArgs) {
-        return databaseOperations.executeQuery(query, whereArgs, new ResultHandler<List<T>>() {
+    @NotNull
+    @Override
+    public List<T> getAllWithQuery(@NotNull String query, @Nullable String[] whereArgs) {
+        List<T> objects = databaseOperations.executeQuery(query, whereArgs, new ResultHandler<List<T>>() {
             @Override
             public List<T> handle(Cursor cursor) throws SQLException {
                 List<T> listOfPersistentObjects = new ArrayList<>();
@@ -134,6 +144,10 @@ public abstract class DaoBase<T> implements IDao<T> {
                 return listOfPersistentObjects;
             }
         });
+        for (int i = 0; i < objects.size(); i++) {
+            objects.set(i, populateNestedObjects(objects.get(i)));
+        }
+        return objects;
     }
 
     protected <U> U rawQuery(String query, @Nullable String[] whereArgs, ResultHandler<U> resultHandler) {
@@ -163,6 +177,7 @@ public abstract class DaoBase<T> implements IDao<T> {
     @Override
     public void insertOrReplace(T persistentObject) {
         databaseOperations.executeReplace(getDbName(), getContentValues(persistentObject));
+        storeNestedObjects(persistentObject);
     }
 
     @Override
@@ -172,11 +187,15 @@ public abstract class DaoBase<T> implements IDao<T> {
             values.add(getContentValues(object));
         }
         databaseOperations.executeReplaceAll(getDbName(), values);
+        for (T object: persistentObjects) {
+            storeNestedObjects(object);
+        }
     }
 
     @Override
     public void insertOrUpdate(T persistentObject) {
         insertOrUpdate(getDbName(), getContentValues(persistentObject), getDefaultPrimaryColumn(), getDefaultPrimaryValue(persistentObject));
+        storeNestedObjects(persistentObject);
     }
 
     @Override
@@ -193,6 +212,10 @@ public abstract class DaoBase<T> implements IDao<T> {
     protected abstract ContentValues getContentValues(T persistentObject);
 
     protected abstract T parsePersistentObject(Cursor cursor);
+
+    protected T populateNestedObjects(T persistentObject) { return persistentObject; }
+    @SuppressWarnings("PMD.EmptyMethodInAbstractClassShouldBeAbstract")
+    protected void storeNestedObjects(T persistentObject) {}
 
     @Override
     public void removeAll() {

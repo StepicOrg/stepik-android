@@ -6,8 +6,17 @@ import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v7.app.AlertDialog
 import org.stepic.droid.R
+import java.lang.IllegalStateException
 
 class LogoutAreYouSureDialog : DialogFragment() {
+    companion object {
+        fun newInstance(): LogoutAreYouSureDialog =
+                LogoutAreYouSureDialog()
+
+        interface OnLogoutSuccessListener {
+            fun onLogout()
+        }
+    }
 
     var listener: OnLogoutSuccessListener? = null
 
@@ -21,26 +30,13 @@ class LogoutAreYouSureDialog : DialogFragment() {
         listener = null
     }
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-
-        val builder = AlertDialog.Builder(activity)
-        builder.setTitle(R.string.title_confirmation)
-                .setMessage(R.string.are_you_sure_logout)
-                .setPositiveButton(R.string.yes) { _, _ ->
-                    listener?.onLogout()
-                }
-                .setNegativeButton(R.string.no, null)
-
-        return builder.create()
-    }
-
-    companion object {
-        fun newInstance(): LogoutAreYouSureDialog {
-            return LogoutAreYouSureDialog()
-        }
-
-        interface OnLogoutSuccessListener {
-            fun onLogout()
-        }
-    }
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
+            AlertDialog.Builder(requireContext())
+                    .setTitle(R.string.title_confirmation)
+                    .setMessage(R.string.are_you_sure_logout)
+                    .setPositiveButton(R.string.yes) { _, _ ->
+                        listener?.onLogout()
+                    }
+                    .setNegativeButton(R.string.no, null)
+                    .create()
 }

@@ -15,15 +15,14 @@ class ChangeCodeLanguageDialog : DialogFragment() {
         fun onChangeLanguage()
     }
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(activity)
-        builder.setTitle(R.string.reset_code_dialog_title)
-                .setMessage(R.string.change_code_dialog_explanation)
-                .setPositiveButton(R.string.yes) { _, _ ->
-                    (parentFragment as Callback).onChangeLanguage()
-                }
-                .setNegativeButton(R.string.cancel, null)
-        return builder.create()
-    }
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
+            AlertDialog.Builder(requireContext())
+                    .setTitle(R.string.reset_code_dialog_title)
+                    .setMessage(R.string.change_code_dialog_explanation)
+                    .setPositiveButton(R.string.yes) { _, _ ->
+                        (parentFragment as Callback).onChangeLanguage()
+                    }
+                    .setNegativeButton(R.string.cancel, null)
+                    .create()
 }
 

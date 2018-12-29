@@ -39,6 +39,7 @@ import org.stepic.droid.core.presenters.StreakPresenter;
 import org.stepic.droid.core.presenters.contracts.StepAttemptView;
 import org.stepic.droid.core.updatingstep.contract.UpdatingStepPoster;
 import org.stepic.droid.fonts.FontType;
+import org.stepik.android.model.Step;
 import org.stepik.android.model.attempts.Attempt;
 import org.stepik.android.model.DiscountingPolicyType;
 import org.stepic.droid.model.LessonSession;
@@ -451,14 +452,15 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
         if (!step.isCustomPassed()) {
             updatingStepPoster.updateStep(step.getId(), true);
             AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
-                long stepId = step.getId();
+                private final Step step = StepAttemptFragment.this.step;
 
                 protected Void doInBackground(Void... params) {
-                    long assignmentId = getDatabaseFacade().getAssignmentIdByStepId(stepId);
+                    long assignmentId = getDatabaseFacade().getAssignmentIdByStepId(this.step.getId());
                     getDatabaseFacade().markProgressAsPassed(assignmentId);
-                    getLocalProgressManager().checkUnitAsPassed(stepId);
-                    if (unit != null) {
-                        getLocalProgressManager().updateUnitProgress(unit.getId()); //// FIXME: 05.09.16 update lesson progress
+                    try {
+                        localProgressInteractor.updateStepProgress(this.step).blockingAwait();
+                    } catch (Exception e) {
+                        // no op
                     }
                     return null;
                 }

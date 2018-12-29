@@ -53,7 +53,7 @@ class RecommendationsFragment : FragmentBase(), RecommendationsView {
     private var expPopupWindow: PopupWindow? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        course = arguments.getParcelable(AppConstants.KEY_COURSE_BUNDLE)
+        course = arguments?.getParcelable(AppConstants.KEY_COURSE_BUNDLE)
         super.onCreate(savedInstanceState)
     }
 
@@ -63,11 +63,14 @@ class RecommendationsFragment : FragmentBase(), RecommendationsView {
                 .inject(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-            inflater?.inflate(R.layout.fragment_recommendations, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+            inflater.inflate(R.layout.fragment_recommendations, container, false)
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val context = requireContext()
+
         error.setBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent))
 
         tryAgain.setOnClickListener {
@@ -83,9 +86,9 @@ class RecommendationsFragment : FragmentBase(), RecommendationsView {
         toolbar.setOnClickListener {
             screenManager.showAdaptiveStats(context, course?.id ?: 0)
 
-            expPopupWindow?.let {
-                if (it.isShowing) {
-                    it.dismiss()
+            expPopupWindow?.let { popup ->
+                if (popup.isShowing) {
+                    popup.dismiss()
                 }
             }
         }
@@ -172,7 +175,7 @@ class RecommendationsFragment : FragmentBase(), RecommendationsView {
     }
 
     override fun showExpTooltip() {
-        expPopupWindow = PopupHelper.showPopupAnchoredToView(context, expBubble, getString(R.string.adaptive_exp_tooltip_text))
+        expPopupWindow = PopupHelper.showPopupAnchoredToView(requireContext(), expBubble, getString(R.string.adaptive_exp_tooltip_text))
     }
 
     override fun onStreakLost() =

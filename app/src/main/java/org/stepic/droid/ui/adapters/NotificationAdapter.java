@@ -135,7 +135,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         int positionInList = adapterPosition - headerCount;
         if (positionInList >= 0 && positionInList < notifications.size()) {
             Notification notification = notifications.get(positionInList);
-            Boolean unread = notification.is_unread();
+            Boolean unread = notification.isUnread();
             if (unread == null || unread) {
                 Long id = notification.getId();
                 if (id != null) {
@@ -143,7 +143,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 } else {
                     notificationListPresenter.notificationIdIsNull();
                 }
-                notification.set_unread(false);
+                notification.setUnread(false);
                 notifyItemChanged(adapterPosition);
             }
 
@@ -161,9 +161,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             Notification notification = notifications.get(position);
             Long notificationId = notification.getId();
             if (notificationId != null && notificationId == id) {
-                Boolean unread = notification.is_unread();
+                Boolean unread = notification.isUnread();
                 if (unread != null && unread != newValue) {
-                    notification.set_unread(newValue);
+                    notification.setUnread(newValue);
                     notifyItemChanged(position + headerCount);
                 }
             }
@@ -348,7 +348,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
         private void resolveViewedState(Notification notification) {
             boolean isViewed = true;
-            Boolean unread = notification.is_unread();
+            Boolean unread = notification.isUnread();
             if (unread != null) {
                 isViewed = !unread;
             }

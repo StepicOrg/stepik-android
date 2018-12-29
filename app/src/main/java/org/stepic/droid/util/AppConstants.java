@@ -54,9 +54,7 @@ public class AppConstants {
     public static final int REQUEST_EXTERNAL_STORAGE = 13;
     public static final String KEY_ASSIGNMENT_BUNDLE = "key_assignment";
     public static final String COURSE_ID_KEY = "course_id";
-    public static final String ENROLLMENT_KEY = "is_enrolled";
 
-    public static final int REQUEST_CODE_DETAIL = 1;
     public static final String DELIMITER_TEXT_SCORE = "/";
     public static final String NOTIFICATION_CANCELED = "notification_canceled";
 

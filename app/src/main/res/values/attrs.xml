@@ -11,12 +11,20 @@
         <attr name="squareColor" format="color"/>
     </declare-styleable>
 
+
+    <attr name="progressBackgroundColor" format="color"/>
+    <attr name="progressForegroundColor" format="color"/>
+
     <declare-styleable name="CircleProgressView">
-        <attr name="progressBackgroundColor" format="color"/>
-        <attr name="progressForegroundColor" format="color"/>
+        <attr name="progressBackgroundColor" />
+        <attr name="progressForegroundColor" />
         <attr name="progressBarStroke" format="dimension"/>
     </declare-styleable>
 
+    <declare-styleable name="VerticalProgressBar">
+        <attr name="progressBackgroundColor" />
+        <attr name="progressForegroundColor" />
+    </declare-styleable>
 
     <!-- Must be kept in sync with AspectRatioFrameLayout -->
     <attr name="resize_mode" format="enum">

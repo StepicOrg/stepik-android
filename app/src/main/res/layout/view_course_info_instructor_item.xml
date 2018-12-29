@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/selectable_item_rounded_background"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/course_info_instructor_item_padding">
+
+    <org.stepic.droid.ui.custom.RoundedBorderMaskView
+        android:id="@+id/instructorIconMask"
+        android:layout_width="@dimen/course_info_instructor_icon_size"
+        android:layout_height="@dimen/course_info_instructor_icon_size"
+        app:borderRadius="@dimen/course_widget_radius">
+        <ImageView
+            android:id="@+id/instructorIcon"
+            android:layout_width="@dimen/course_info_instructor_icon_size"
+            android:layout_height="@dimen/course_info_instructor_icon_size"
+            android:contentDescription="@null" />
+    </org.stepic.droid.ui.custom.RoundedBorderMaskView>
+
+    <TextView
+        android:id="@+id/instructorTitle"
+        fontPath="fonts/Roboto-Medium.ttf"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:gravity="start|center_vertical"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/instructorIconMask"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/instructorIconMask"
+        app:layout_constraintTop_toTopOf="@+id/instructorIconMask"
+        tools:ignore="missingPrefix" />
+
+    <TextView
+        android:id="@+id/instructorDescription"
+        fontPath="fonts/Roboto-Light.ttf"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="12dp"
+        android:lineSpacingExtra="4sp"
+        android:textColor="@color/new_accent_color"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/instructorIconMask"
+        tools:ignore="missingPrefix" />
+
+</android.support.constraint.ConstraintLayout>

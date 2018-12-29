@@ -38,8 +38,6 @@ import org.stepic.droid.notifications.*
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.social.SocialManager
-import org.stepic.droid.util.connectivity.NetworkTypeDeterminer
-import org.stepic.droid.util.connectivity.NetworkTypeDeterminerImpl
 import org.stepic.droid.util.resolvers.StepTypeResolver
 import org.stepic.droid.util.resolvers.StepTypeResolverImpl
 import org.stepic.droid.util.resolvers.VideoResolver
@@ -63,14 +61,6 @@ abstract class AppCoreModule {
     @Binds
     @AppSingleton
     abstract fun bindStepikDevicePoster(stepikDevicePosterImpl: StepikDevicePosterImpl): StepikDevicePoster
-
-    @Binds
-    @AppSingleton
-    abstract fun provideLocalProgressManagerSectionProgressListenerContainer(container: ListenerContainerImpl<LocalProgressManager.SectionProgressListener>): ListenerContainer<LocalProgressManager.SectionProgressListener>
-
-    @Binds
-    @AppSingleton
-    abstract fun provideLocalProgressManagerUnitProgressListenerContainer(container: ListenerContainerImpl<LocalProgressManager.UnitProgressListener>): ListenerContainer<LocalProgressManager.UnitProgressListener>
 
     @Binds
     @AppSingleton
@@ -99,10 +89,6 @@ abstract class AppCoreModule {
     @AppSingleton
     @Binds
     internal abstract fun provideLessonSessionManager(localLessonSessionManager: LocalLessonSessionManagerImpl): LessonSessionManager
-
-    @AppSingleton
-    @Binds
-    internal abstract fun provideProgressManager(localProgress: LocalProgressImpl): LocalProgressManager
 
     @AppSingleton
     @Binds
@@ -147,9 +133,6 @@ abstract class AppCoreModule {
     @Binds
     @AppSingleton
     internal abstract fun provideFontProvider(fontsProvider: FontsProviderImpl): FontsProvider
-
-    @Binds
-    abstract fun provideNetworkTypeDeterminer(networkTypeDeterminer: NetworkTypeDeterminerImpl): NetworkTypeDeterminer
 
     @Binds
     @AppSingleton

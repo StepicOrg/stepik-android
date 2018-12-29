@@ -25,6 +25,7 @@ import org.stepic.droid.ui.dialogs.ResetCodeDialogFragment
 import org.stepic.droid.ui.util.*
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.ColorUtil
+import org.stepic.droid.util.argument
 
 class CodePlaygroundFragment : FragmentBase(),
         OnBackClickListener,
@@ -33,19 +34,14 @@ class CodePlaygroundFragment : FragmentBase(),
         ChangeCodeLanguageDialog.Callback,
         CodeToolbarAdapter.OnSymbolClickListener {
     companion object {
-        private const val CODE_KEY = "code_key"
-        private const val LANG_KEY = "lang_key"
-        private const val CODE_OPTIONS_KEY = "code_options_key"
         private const val ANALYTIC_SCREEN_TYPE: String = "fullscreen"
-        fun newInstance(code: String, lang: String, codeOptions: CodeOptions): CodePlaygroundFragment {
-            val args = Bundle()
-            args.putString(CODE_KEY, code)
-            args.putString(LANG_KEY, lang)
-            args.putParcelable(CODE_OPTIONS_KEY, codeOptions)
-            val fragment = CodePlaygroundFragment()
-            fragment.arguments = args
-            return fragment
-        }
+
+        fun newInstance(code: String, lang: String, codeOptions: CodeOptions) =
+                CodePlaygroundFragment().also {
+                    it.code = code
+                    it.lang = lang
+                    it.codeOptions = codeOptions
+                }
 
     }
 
@@ -53,6 +49,10 @@ class CodePlaygroundFragment : FragmentBase(),
     private var codeToolbarAdapter: CodeToolbarAdapter? = null
     private var onGlobalLayoutListener: ViewTreeObserver.OnGlobalLayoutListener? = null
     private var wasReset: Boolean = false
+
+    private var code: String by argument()
+    private var lang: String by argument()
+    private var codeOptions: CodeOptions by argument()
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -66,25 +66,24 @@ class CodePlaygroundFragment : FragmentBase(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        currentLanguage = arguments.getString(LANG_KEY)
-        codeToolbarAdapter = CodeToolbarAdapter(context)
+        codeToolbarAdapter = CodeToolbarAdapter(requireContext())
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-            inflater?.inflate(R.layout.fragment_code_playground, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+            inflater.inflate(R.layout.fragment_code_playground, container, false)
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initCenteredToolbar(R.string.code_playground_title, true)
 
         codeToolbarView.adapter = codeToolbarAdapter
         codeToolbarAdapter?.onSymbolClickListener = this
         codeToolbarView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        codeToolbarAdapter?.setLanguage(arguments.getString(LANG_KEY))
+        codeToolbarAdapter?.setLanguage(lang)
         codeEditor.codeToolbarAdapter = codeToolbarAdapter
 
         if (savedInstanceState == null) {
-            codeEditor.setText(arguments.getString(CODE_KEY))
+            codeEditor.setText(code)
         }
         currentLanguage?.let {
             codeEditor.lang = extensionForLanguage(it)
@@ -155,8 +154,7 @@ class CodePlaygroundFragment : FragmentBase(),
     override fun onReset() {
         currentLanguage?.let { lang ->
             wasReset = true
-            val template = arguments.getParcelable<CodeOptions>(CODE_OPTIONS_KEY)?.codeTemplates?.get(lang)
-            codeEditor.setText(template)
+            codeEditor.setText(codeOptions.codeTemplates[lang])
         }
     }
 
@@ -164,7 +162,7 @@ class CodePlaygroundFragment : FragmentBase(),
         wasReset = true
         currentLanguage = programmingLanguage
         codeToolbarAdapter?.setLanguage(programmingLanguage)
-        codeEditor.setText(arguments.getParcelable<CodeOptions>(CODE_OPTIONS_KEY).codeTemplates[programmingLanguage])
+        codeEditor.setText(codeOptions.codeTemplates[programmingLanguage])
         codeEditor.lang = extensionForLanguage(programmingLanguage)
     }
 
@@ -188,17 +186,12 @@ class CodePlaygroundFragment : FragmentBase(),
     }
 
     private fun showLanguageChoosingDialog() {
-        arguments.getParcelable<CodeOptions>(CODE_OPTIONS_KEY)
-                ?.limits
-                ?.keys
-                ?.sorted()
-                ?.toTypedArray()
-                ?.let {
-                    val dialog = ProgrammingLanguageChooserDialogFragment.newInstance(it)
-                    if (!dialog.isAdded) {
-                        dialog.show(childFragmentManager, null)
-                    }
-                }
+        val languages = codeOptions.limits.keys.sorted().toTypedArray()
+
+        val dialog = ProgrammingLanguageChooserDialogFragment.newInstance(languages)
+        if (!dialog.isAdded) {
+            dialog.show(childFragmentManager, null)
+        }
     }
 
 }

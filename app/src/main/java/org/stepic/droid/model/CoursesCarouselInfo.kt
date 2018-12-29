@@ -2,23 +2,22 @@ package org.stepic.droid.model
 
 import android.os.Parcel
 import android.os.Parcelable
-import org.stepic.droid.storage.operations.Table
 import java.util.*
 
 data class CoursesCarouselInfo(
-        val colorType: CoursesCarouselColorType,
-        val title: String,
-        val table: Table?, //if null -> see courseIds:LongArray
-        val courseIds: LongArray?,
-        val description: String = ""
+    val colorType: CoursesCarouselColorType,
+    val title: String,
+    val courseListType: CourseListType?, //if null -> see courseIds:LongArray
+    val courseIds: LongArray?,
+    val description: String = ""
 ) : Parcelable {
 
     private constructor(source: Parcel) : this(
-            source.readParcelable<CoursesCarouselColorType>(CoursesCarouselColorType::class.java.classLoader),
-            source.readString(),
-            source.readParcelable<Table>(Table::class.java.classLoader),
-            source.createLongArray(),
-            source.readString()
+        source.readParcelable<CoursesCarouselColorType>(CoursesCarouselColorType::class.java.classLoader)!!,
+        source.readString()!!,
+        CourseListType.values().getOrNull(source.readInt()),
+        source.createLongArray(),
+        source.readString()!!
     )
 
     override fun describeContents() = 0
@@ -26,7 +25,7 @@ data class CoursesCarouselInfo(
     override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
         writeParcelable(colorType, flags)
         writeString(title)
-        writeParcelable(table, flags)
+        writeInt(courseListType?.ordinal ?: -1)
         writeLongArray(courseIds)
         writeString(description)
     }
@@ -48,7 +47,7 @@ data class CoursesCarouselInfo(
 
         if (colorType != other.colorType) return false
         if (title != other.title) return false
-        if (table != other.table) return false
+        if (courseListType != other.courseListType) return false
         if (!Arrays.equals(courseIds, other.courseIds)) return false
 
         return true
@@ -57,7 +56,7 @@ data class CoursesCarouselInfo(
     override fun hashCode(): Int {
         var result = colorType.hashCode()
         result = 31 * result + title.hashCode()
-        result = 31 * result + (table?.hashCode() ?: 0)
+        result = 31 * result + (courseListType?.hashCode() ?: 0)
         result = 31 * result + (courseIds?.let { Arrays.hashCode(it) } ?: 0)
         return result
     }

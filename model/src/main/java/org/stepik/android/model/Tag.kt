@@ -17,7 +17,7 @@ data class Tag(
     companion object CREATOR : Parcelable.Creator<Tag> {
         override fun createFromParcel(parcel: Parcel) = Tag(
                 parcel.readInt(),
-                parcel.readString()
+                parcel.readString()!!
         )
 
         override fun newArray(size: Int): Array<Tag?> = arrayOfNulls(size)
