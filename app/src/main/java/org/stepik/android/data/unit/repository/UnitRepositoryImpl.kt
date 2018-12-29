@@ -2,6 +2,7 @@ package org.stepik.android.data.unit.repository
 
 import io.reactivex.Single
 import org.stepic.droid.util.doCompletableOnSuccess
+import org.stepic.droid.util.requireSize
 import org.stepik.android.data.unit.source.UnitCacheDataSource
 import org.stepik.android.data.unit.source.UnitRemoteDataSource
 import org.stepik.android.domain.base.DataSourceType
@@ -25,7 +26,7 @@ constructor(
 
         return when(primarySourceType) {
             DataSourceType.REMOTE ->
-                remoteSource.onErrorResumeNext(cacheSource)
+                remoteSource.onErrorResumeNext(cacheSource.requireSize(unitIds.size))
 
             DataSourceType.CACHE ->
                 cacheSource.flatMap { cachedUnits ->

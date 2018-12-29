@@ -4,6 +4,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
 import org.stepic.droid.util.getProgresses
+import org.stepic.droid.util.mapToLongArray
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.lesson.repository.LessonRepository
 import org.stepik.android.domain.progress.repository.ProgressRepository
@@ -73,7 +74,7 @@ constructor(
             progressRepository
                 .getProgresses(*units.getProgresses()),
             lessonRepository
-                .getLessons(*units.map(Unit::lesson).toLongArray(), primarySourceType = DataSourceType.REMOTE)
+                .getLessons(*units.mapToLongArray(Unit::lesson), primarySourceType = DataSourceType.REMOTE)
         )
             .map { (progresses, lessons) ->
                 courseContentItemMapper.mapUnits(sectionItems, units, lessons, progresses)
