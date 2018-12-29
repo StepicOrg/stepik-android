@@ -20,9 +20,9 @@ import org.stepic.droid.base.App
 import org.stepic.droid.core.presenters.SplashPresenter
 import org.stepic.droid.core.presenters.contracts.SplashView
 import org.stepic.droid.util.AppConstants
+import org.stepik.android.view.routing.deeplink.BranchRoute
 import java.util.*
 import javax.inject.Inject
-
 
 class SplashActivity : BackToExitActivityBase(), SplashView {
 
@@ -36,14 +36,12 @@ class SplashActivity : BackToExitActivityBase(), SplashView {
         super.onCreate(savedInstanceState)
         App.componentManager().splashComponent().inject(this)
         splashPresenter.attachView(this)
-        if (!isTaskRoot) {
-            finish()
-            return
-        }
+//        if (!isTaskRoot) {
+//            finish()
+//            return
+//        }
 
         defineShortcuts()
-
-        splashPresenter.onSplashCreated()
     }
 
     private fun defineShortcuts() {
@@ -81,13 +79,15 @@ class SplashActivity : BackToExitActivityBase(), SplashView {
 
     override fun onStart() {
         super.onStart()
-        Branch.getInstance().initSession({ referringParams: JSONObject, error: BranchError? ->
-            if (error == null && referringParams.has(BranchParams.FIELD_CAMPAIGN)) {
+        Branch.getInstance().initSession({ referringParams: JSONObject?, error: BranchError? ->
+            if (error == null && referringParams != null && referringParams.has(BranchParams.FIELD_CAMPAIGN)) {
                 analytics.reportAmplitudeEvent(AmplitudeAnalytic.Branch.LINK_OPENED, mapOf(
                     AmplitudeAnalytic.Branch.PARAM_CAMPAIGN to referringParams[BranchParams.FIELD_CAMPAIGN],
                     AmplitudeAnalytic.Branch.IS_FIRST_SESSION to referringParams.optBoolean(BranchParams.IS_FIRST_SESSION, false)
                 ))
             }
+
+            splashPresenter.onSplashCreated(referringParams)
         }, intent?.data, this)
     }
 
@@ -111,6 +111,11 @@ class SplashActivity : BackToExitActivityBase(), SplashView {
 
     override fun onShowOnboarding() {
         screenManager.showOnboarding(this)
+        finish()
+    }
+
+    override fun onDeepLinkRoute(route: BranchRoute) {
+        screenManager.openDeepLink(this, route)
         finish()
     }
 }
