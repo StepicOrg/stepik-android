@@ -3,6 +3,7 @@ package org.stepik.android.domain.course_content.interactor
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
+import org.stepic.droid.util.concat
 import org.stepic.droid.util.getProgresses
 import org.stepic.droid.util.mapToLongArray
 import org.stepik.android.domain.base.DataSourceType
@@ -28,16 +29,23 @@ constructor(
 
     private val courseContentItemMapper: CourseContentItemMapper
 ) {
-    fun getCourseContent(): Observable<Pair<Course, List<CourseContentItem>>> =
+    fun getCourseContent(shouldSkipStoredValue: Boolean = false): Observable<Pair<Course, List<CourseContentItem>>> =
         courseObservableSource
+            .skip(if (shouldSkipStoredValue) 1 else 0)
             .switchMap { course ->
-                getSectionsOfCourse(course)
-                    .flatMap { populateSections(course, it) }
-                    .flatMapObservable { items ->
-                        Single
-                            .concat(Single.just(course to items), loadUnits(course, items))
-                            .toObservable()
-                    }
+                getEmptySections(course) concat getContent(course)
+            }
+
+    private fun getEmptySections(course: Course): Observable<Pair<Course, List<CourseContentItem>>> =
+        Observable.just(course to emptyList())
+
+    private fun getContent(course: Course): Observable<Pair<Course, List<CourseContentItem>>> =
+        getSectionsOfCourse(course)
+            .flatMap { populateSections(course, it) }
+            .flatMapObservable { items ->
+                Single
+                    .concat(Single.just(course to items), loadUnits(course, items))
+                    .toObservable()
             }
 
     private fun getSectionsOfCourse(course: Course): Single<List<Section>> =

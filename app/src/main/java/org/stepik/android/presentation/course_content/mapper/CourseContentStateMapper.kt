@@ -17,6 +17,10 @@ constructor(
     private val sectionDatesMapper: CourseContentSectionDatesMapper
 ) {
     fun mergeStateWithCourseContent(state: CourseContentView.State, course: Course, courseContent: List<CourseContentItem>): CourseContentView.State {
+        if (course.sections?.size != 0 && courseContent.isEmpty()) {
+            return CourseContentView.State.Loading
+        }
+
         val personalDeadlinesState =
             if (course.enrollment == 0L) {
                 PersonalDeadlinesState.NoDeadlinesNeeded

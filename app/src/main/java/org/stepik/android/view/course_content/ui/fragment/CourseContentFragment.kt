@@ -19,7 +19,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables.zip
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.subjects.BehaviorSubject
-import kotlinx.android.synthetic.main.error_no_connection_with_button.*
+import kotlinx.android.synthetic.main.error_no_connection.*
 import kotlinx.android.synthetic.main.fragment_course_content.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
@@ -154,13 +154,11 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
             })
         }
 
-        tryAgain.setOnClickListener { courseContentPresenter.fetchCourseContent(forceUpdate = true) }
-
         viewStateDelegate = ViewStateDelegate()
         viewStateDelegate.addState<CourseContentView.State.Idle>(courseContentPlaceholder)
         viewStateDelegate.addState<CourseContentView.State.Loading>(courseContentPlaceholder)
         viewStateDelegate.addState<CourseContentView.State.CourseContentLoaded>(courseContentRecycler)
-        viewStateDelegate.addState<CourseContentView.State.NetworkError>(error)
+        viewStateDelegate.addState<CourseContentView.State.NetworkError>(reportProblem)
     }
 
     override fun onStart() {

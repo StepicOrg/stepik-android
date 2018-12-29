@@ -27,6 +27,7 @@ constructor(
     fun getCourseHeaderData(courseId: Long, canUseCache: Boolean = true): Maybe<CourseHeaderData> =
         courseRepository
             .getCourse(courseId, canUseCache)
+            .doOnSuccess(coursePublishSubject::onNext)
             .flatMap(::obtainCourseHeaderData)
 
     /**
@@ -36,6 +37,7 @@ constructor(
         courseRepository
             .getCourse(course.id)
             .onErrorReturnItem(course)
+            .doOnSuccess(coursePublishSubject::onNext)
             .flatMap(::obtainCourseHeaderData)
 
     private fun obtainCourseHeaderData(course: Course): Maybe<CourseHeaderData> =
@@ -43,7 +45,6 @@ constructor(
             courseReviewRepository.getCourseReview(course.reviewSummary).map(CourseReviewSummary::average).onErrorReturnItem(0.0),
             course.progress?.let(progressRepository::getProgress) ?: Single.just(Unit) // coroutines will handle it better
         )
-            .doOnSuccess { coursePublishSubject.onNext(course) }
             .map { (courseReview, courseProgress) ->
                 CourseHeaderData(
                     courseId = course.id,

@@ -91,13 +91,16 @@ constructor(
     /**
      * Content
      */
-    fun fetchCourseContent(forceUpdate: Boolean = false) {
-        if (state != CourseContentView.State.Idle
-            && !(state == CourseContentView.State.NetworkError && forceUpdate)) return
+    private fun fetchCourseContent() {
+        if (state != CourseContentView.State.Idle) return
 
         state = CourseContentView.State.Loading
+        subscribeForCourseContent()
+    }
+
+    private fun subscribeForCourseContent(shouldSkipStoredValue: Boolean = false) {
         compositeDisposable += courseContentInteractor
-            .getCourseContent()
+            .getCourseContent(shouldSkipStoredValue)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
@@ -108,6 +111,7 @@ constructor(
                 },
                 onError = {
                     state = CourseContentView.State.NetworkError
+                    subscribeForCourseContent(shouldSkipStoredValue = true)
                 }
             )
     }
@@ -236,7 +240,7 @@ constructor(
                 pendingUnits -= unit.id
                 subscribeForUnitsProgress(unit.id, limit = 1)
             }
-            .subscribeBy (onError = emptyOnErrorStub)
+            .subscribeBy(onError = emptyOnErrorStub)
     }
 
     fun addSectionDownloadTask(section: Section, videoQuality: String? = null) {
@@ -279,7 +283,7 @@ constructor(
                 pendingSections -= section.id
                 subscribeForSectionsProgress(section.id, limit = 1)
             }
-            .subscribeBy (onError = emptyOnErrorStub)
+            .subscribeBy(onError = emptyOnErrorStub)
     }
 
     /*
