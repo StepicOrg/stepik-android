@@ -36,7 +36,6 @@ constructor(
         private val databaseFacade: DatabaseFacade,
         private val localReminder: LocalReminder
 ) : PresenterBase<SplashView>() {
-
     enum class Result {
         ONBOARDING, LAUNCH, HOME
     }
@@ -44,26 +43,29 @@ constructor(
     private var disposable: Disposable? = null
 
     fun onSplashCreated() {
-        disposable = Completable.fromCallable {
-                    countNumberOfLaunches()
-                    checkRemoteConfigs()
-                    registerDeviceToPushes()
-                    executeLegacyOperations()
-                    localReminder.remindAboutRegistration()
-                    sharedPreferenceHelper.onNewSession()
-                }.toSingle {
-                    val isLogged = sharedPreferenceHelper.authResponseFromStore != null
-                    val isOnboardingNotPassedYet = sharedPreferenceHelper.isOnboardingNotPassedYet
-                    when {
-                        isOnboardingNotPassedYet -> Result.ONBOARDING
-                        isLogged -> Result.HOME
-                        else -> Result.LAUNCH
-                    }
+        disposable = Completable
+            .fromCallable {
+                countNumberOfLaunches()
+                checkRemoteConfigs()
+                registerDeviceToPushes()
+                executeLegacyOperations()
+                localReminder.remindAboutRegistration()
+                sharedPreferenceHelper.onNewSession()
+            }.toSingle {
+                val isLogged = sharedPreferenceHelper.authResponseFromStore != null
+                val isOnboardingNotPassedYet = sharedPreferenceHelper.isOnboardingNotPassedYet
+                when {
+                    isOnboardingNotPassedYet -> Result.ONBOARDING
+                    isLogged -> Result.HOME
+                    else -> Result.LAUNCH
                 }
-                .delay(200, TimeUnit.MILLISECONDS)
-                .subscribeOn(backgroundScheduler)
-                .observeOn(mainScheduler)
-                .subscribeBy(onError = {}) {
+            }
+            .delay(200, TimeUnit.MILLISECONDS)
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onError = {},
+                onSuccess = {
                     when (it) {
                         SplashPresenter.Result.ONBOARDING -> view?.onShowOnboarding()
                         SplashPresenter.Result.LAUNCH -> view?.onShowLaunch()
@@ -71,8 +73,8 @@ constructor(
                         else -> throw IllegalStateException("It is not reachable")
                     }
                 }
+            )
     }
-
 
     override fun detachView(view: SplashView) {
         super.detachView(view)
@@ -129,5 +131,4 @@ constructor(
             sharedPreferenceHelper.afterNeedDropCoursesIn114()
         }
     }
-
 }
