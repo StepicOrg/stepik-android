@@ -143,7 +143,10 @@ class CourseActivity : FragmentActivityBase(), CourseView {
 
         courseSwipeRefresh.setOnRefreshListener { setDataToPresenter(forceUpdate = true) }
         tryAgain.setOnClickListener { setDataToPresenter(forceUpdate = true) }
-        goToCatalog.setOnClickListener { screenManager.showCatalog(this) }
+        goToCatalog.setOnClickListener {
+            screenManager.showCatalog(this)
+            finish()
+        }
     }
 
     private fun setDataToPresenter(forceUpdate: Boolean = false) {
