@@ -19,9 +19,10 @@ import javax.inject.Inject
 
 @AppSingleton
 class AnalyticImpl
-@Inject constructor(
-        context: Context,
-        config: Config
+@Inject
+constructor(
+    context: Context,
+    config: Config
 ) : Analytic {
     private val firebaseAnalytics: FirebaseAnalytics = FirebaseAnalytics.getInstance(context)
     private val amplitude = Amplitude.getInstance()
