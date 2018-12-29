@@ -7,8 +7,6 @@ import android.os.Bundle
 import android.support.v4.app.NotificationManagerCompat
 import com.amplitude.api.Amplitude
 import com.amplitude.api.Identify
-import com.appsflyer.AppsFlyerConversionListener
-import com.appsflyer.AppsFlyerLib
 import com.crashlytics.android.Crashlytics
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.yandex.metrica.YandexMetrica
@@ -35,9 +33,6 @@ class AnalyticImpl
                 .set(AmplitudeAnalytic.Properties.APPLICATION_ID, context.packageName)
                 .set(AmplitudeAnalytic.Properties.PUSH_PERMISSION, if (NotificationManagerCompat.from(context).areNotificationsEnabled()) "granted" else "not_granted")
         )
-
-        AppsFlyerLib.getInstance().init(config.appsFlyerApiKey, null, context.applicationContext)
-        AppsFlyerLib.getInstance().startTracking(App.application)
     }
 
     // Amplitude properties
