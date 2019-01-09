@@ -16,7 +16,6 @@ import okhttp3.OkHttpClient
 import org.stepic.droid.BuildConfig
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.analytic.AnalyticImpl
 import org.stepic.droid.base.Client
 import org.stepic.droid.base.ClientImpl
 import org.stepic.droid.base.ListenerContainer
@@ -101,10 +100,6 @@ abstract class AppCoreModule {
     @AppSingleton
     @Binds
     internal abstract fun provideNotificationManager(notificationManager: StepikNotificationManagerImpl): StepikNotificationManager
-
-    @Binds
-    @AppSingleton
-    internal abstract fun provideAnalytic(analytic: AnalyticImpl): Analytic
 
     @Binds
     @AppSingleton

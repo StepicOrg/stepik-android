@@ -69,6 +69,9 @@ constructor(
         }
         amplitude.logEvent(eventName, properties)
     }
+
+    override fun setUserProperty(name: String, value: String) =
+        amplitude.identify(Identify().set(name, value))
     // End of amplitude properties
 
     override fun reportEventValue(eventName: String, value: Long) {
