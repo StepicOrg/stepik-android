@@ -25,10 +25,10 @@ import org.stepic.droid.fonts.FontsProvider
 import org.stepic.droid.persistence.downloads.DownloadsSyncronizer
 import org.stepic.droid.util.NotificationChannelInitializer
 import org.stepic.droid.util.StethoHelper
+import org.stepic.droid.util.isMainProcess
 import timber.log.Timber
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig
 import javax.inject.Inject
-
 
 class App : MultiDexApplication() {
 
@@ -64,6 +64,8 @@ class App : MultiDexApplication() {
 
     override fun onCreate() {
         super.onCreate()
+        if (!isMainProcess) return
+
         if (LeakCanary.isInAnalyzerProcess(this)) {
             // This process is dedicated to LeakCanary for heap analysis.
             // You should not init your app in this process.
