@@ -14,6 +14,7 @@ import com.yandex.metrica.YandexMetrica
 import io.branch.referral.Branch
 import org.stepic.droid.BuildConfig
 import org.stepic.droid.R
+import org.stepic.droid.analytic.experiments.SplitTestsHolder
 import org.stepic.droid.code.highlight.ParserContainer
 import org.stepic.droid.core.ComponentManager
 import org.stepic.droid.core.ComponentManagerImpl
@@ -52,15 +53,21 @@ class App : MultiDexApplication() {
     private lateinit var componentManager: ComponentManager
 
     @Inject
-    lateinit var downloadsSyncronizer: DownloadsSyncronizer
+    internal lateinit var downloadsSyncronizer: DownloadsSyncronizer
 
     @Inject
-    lateinit var fontsProvider: FontsProvider
+    internal lateinit var fontsProvider: FontsProvider
+
+    /**
+     * Init split tests on app start
+     */
+    @Inject
+    internal lateinit var splitTestsHolder: SplitTestsHolder
 
 
     //don't use this field, it is just for init ASAP in background thread
     @Inject
-    lateinit var codeParserContainer: ParserContainer
+    internal lateinit var codeParserContainer: ParserContainer
 
     override fun onCreate() {
         super.onCreate()

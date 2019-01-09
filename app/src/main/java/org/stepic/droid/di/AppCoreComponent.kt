@@ -10,6 +10,7 @@ import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.code.ui.CodeEditor
 import org.stepic.droid.di.adaptive.AdaptiveCourseComponent
+import org.stepic.droid.di.analytic.AnalyticModule
 import org.stepic.droid.di.catalog.CatalogComponent
 import org.stepic.droid.di.certificates.CertificateComponent
 import org.stepic.droid.di.course_general.CourseEnrollmentBusModule
@@ -63,6 +64,7 @@ import org.stepik.android.view.injection.progress.ProgressBusModule
     modules = [
         AppCoreModule::class,
         RepositoryModule::class,
+        AnalyticModule::class,
         AppStepModule::class,
         AppFiltersModule::class,
         GoogleModule::class,

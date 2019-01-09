@@ -544,6 +544,8 @@ public interface Analytic {
     void reportAmplitudeEvent(@NotNull String eventName, @Nullable Map<String, Object> params);
     void reportAmplitudeEvent(@NotNull String eventName);
 
+    void setUserProperty(@NotNull String name, @NotNull String value);
+
     void reportEventValue(String eventName, long value);
 
 }

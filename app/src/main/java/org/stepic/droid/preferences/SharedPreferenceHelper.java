@@ -752,6 +752,15 @@ public class SharedPreferenceHelper {
         put(PreferenceType.WIFI, WIFI_KEY, isOnlyWifi);
     }
 
+    @Nullable
+    public String getSplitTestGroup(@NotNull String testName) {
+        return getString(PreferenceType.DEVICE_SPECIFIC, testName);
+    }
+
+    public void saveSplitTestGroup(@NotNull String testName, @NotNull String groupName) {
+        put(PreferenceType.DEVICE_SPECIFIC, testName, groupName);
+    }
+
     private void put(PreferenceType type, String key, String value) {
         SharedPreferences.Editor editor = context.getSharedPreferences(type.getStoreName(), Context.MODE_PRIVATE).edit();
         editor.putString(key, value).apply();
