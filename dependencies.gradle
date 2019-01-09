@@ -48,6 +48,8 @@ ext.versions = [
         firebaseConfig       : '16.1.2',
         firebaseMessaging    : '17.3.4',
 
+        checkout             : '1.2.1',
+
         facebook             : '4.17.0',
         vk                   : '1.6.5',
 
@@ -140,6 +142,8 @@ ext.libraries = [
         firebaseCore         : "com.google.firebase:firebase-core:$versions.firebaseCore",
         firebaseConfig       : "com.google.firebase:firebase-config:$versions.firebaseConfig",
         firebaseMessaging    : "com.google.firebase:firebase-messaging:$versions.firebaseMessaging",
+
+        checkout             : "org.solovyev.android:checkout:$versions.checkout",
 
         facebookSdk          : "com.facebook.android:facebook-android-sdk:$versions.facebook",
         vkSdk                : "com.vk:androidsdk:$versions.vk",
