@@ -2,6 +2,7 @@ package org.stepik.android.view.course.ui.delegates
 
 import android.app.Activity
 import android.graphics.BitmapFactory
+import android.graphics.PorterDuff
 import android.support.design.widget.AppBarLayout
 import android.support.v4.content.ContextCompat
 import android.support.v4.graphics.drawable.DrawableCompat
@@ -193,9 +194,9 @@ class CourseHeaderDelegate(
 
         shareCourseMenuItem = menu.findItem(R.id.share_course)
         shareCourseMenuItem?.let { menuItem ->
-            val drawable = DrawableCompat.wrap(menuItem.icon)
-            DrawableCompat.setTint(drawable, ContextCompat.getColor(courseActivity, R.color.white))
-            menuItem.icon = drawable
+            menuItem.icon
+                ?.mutate()
+                ?.setColorFilter(ContextCompat.getColor(courseActivity, R.color.white), PorterDuff.Mode.SRC_IN)
 
             menuItem.isVisible = courseHeaderData != null
         }

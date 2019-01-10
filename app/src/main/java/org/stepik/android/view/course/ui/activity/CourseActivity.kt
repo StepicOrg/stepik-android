@@ -128,7 +128,7 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         if (savedInstanceState == null) {
             val tab = CourseScreenTab
                 .values()
-                .getOrNull(intent.getIntExtra(EXTRA_TAB, 0))
+                .getOrNull(intent.getIntExtra(EXTRA_TAB, -1))
                 ?: intent.getCourseTabFromDeepLink()
 
             coursePager.currentItem =
