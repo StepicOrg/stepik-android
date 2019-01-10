@@ -42,4 +42,12 @@ class CourseDeepLinkHandlerTest {
         Assert.assertEquals(CourseScreenTab.SYLLABUS, intent.getCourseTabFromDeepLink())
     }
 
+    @Test
+    fun syllabusTabShortDeepLinkTest() {
+        val intent = Intent()
+        intent.data = Uri.parse("https://stepik.org/course/51237/syllabus")
+
+        Assert.assertEquals(CourseScreenTab.SYLLABUS, intent.getCourseTabFromDeepLink())
+    }
+
 }
