@@ -35,3 +35,7 @@ inline fun <T> Array<T>.mapToLongArray(transform: (T) -> Long): LongArray {
     }
     return array
 }
+
+
+fun LongArray?.isNullOrEmpty(): Boolean =
+    this == null || this.isEmpty()

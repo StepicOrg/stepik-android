@@ -91,6 +91,7 @@ class VideoExoFragment : FragmentBase(),
             if (activity != null) {
                 Toast.makeText(activity, R.string.no_connection, Toast.LENGTH_SHORT).show()
             }
+            analytic.reportError(Analytic.Video.CONNECTION_ERROR, error)
         } else if (error != null) {
             analytic.reportError(Analytic.Video.ERROR, error)
         }

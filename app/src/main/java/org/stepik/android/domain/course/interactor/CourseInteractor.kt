@@ -5,6 +5,7 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.subjects.BehaviorSubject
 import org.stepic.droid.model.CourseReviewSummary
+import org.stepic.droid.util.safeDiv
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.domain.course.repository.CourseRepository
@@ -54,7 +55,7 @@ constructor(
                     learnersCount = course.learnersCount,
 
                     review = courseReview,
-                    progress = (courseProgress as? Progress)?.let { (it.nStepsPassed * 100 / it.nSteps).coerceIn(0L..100L) },
+                    progress = (courseProgress as? Progress)?.let { (it.nStepsPassed * 100 safeDiv it.nSteps).coerceIn(0L..100L) },
                     readiness = course.readiness,
                     enrollmentState = if (course.enrollment > 0) EnrollmentState.ENROLLED else EnrollmentState.NOT_ENROLLED
                 )

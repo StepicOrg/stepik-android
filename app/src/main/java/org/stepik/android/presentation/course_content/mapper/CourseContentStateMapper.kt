@@ -1,6 +1,7 @@
 package org.stepik.android.presentation.course_content.mapper
 
 import org.stepic.droid.R
+import org.stepic.droid.util.isNullOrEmpty
 import org.stepik.android.domain.personal_deadlines.model.DeadlinesWrapper
 import org.stepic.droid.web.storage.model.StorageRecord
 import org.stepik.android.model.Course
@@ -17,8 +18,12 @@ constructor(
     private val sectionDatesMapper: CourseContentSectionDatesMapper
 ) {
     fun mergeStateWithCourseContent(state: CourseContentView.State, course: Course, courseContent: List<CourseContentItem>): CourseContentView.State {
-        if (course.sections?.size != 0 && courseContent.isEmpty()) {
-            return CourseContentView.State.Loading
+        if (courseContent.isEmpty()) {
+            return if (course.sections.isNullOrEmpty()) {
+                CourseContentView.State.EmptyContent
+            } else {
+                CourseContentView.State.Loading
+            }
         }
 
         val personalDeadlinesState =
