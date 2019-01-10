@@ -6,7 +6,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.concurrency.MainHandler;
-import org.stepic.droid.core.routing.contract.RoutingPoster;
 import org.stepic.droid.core.presenters.contracts.RouteStepView;
 import org.stepik.android.model.Course;
 import org.stepik.android.model.Lesson;
@@ -61,9 +60,6 @@ public class RouteStepPresenterTest {
     @Mock
     private Repository<Lesson> lessonRepository;
 
-    @Mock
-    private RoutingPoster routingPoster;
-
     @Before
     public void beforeEachTest() {
         MockitoAnnotations.initMocks(this);
@@ -78,8 +74,7 @@ public class RouteStepPresenterTest {
                 courseRepository,
                 sectionRepository,
                 unitRepository,
-                lessonRepository,
-                routingPoster);
+                lessonRepository);
     }
 
     @Test
@@ -360,7 +355,6 @@ public class RouteStepPresenterTest {
 
         verify(routeStepView, times(1)).showLoading();
         verify(routeStepView, times(1)).openNextLesson(unit1, lesson1, section1);
-        verify(routingPoster, times(1)).sectionChanged(section0, section1);
         verify(routeStepView, never()).showCantGoNext();
     }
 
@@ -411,7 +405,6 @@ public class RouteStepPresenterTest {
 
         verify(routeStepView, times(1)).showLoading();
         verify(routeStepView, times(1)).openPreviousLesson(unit0, lesson0, section0);
-        verify(routingPoster, times(1)).sectionChanged(section1, section0);
         verify(routeStepView, never()).showCantGoPrevious();
     }
 }

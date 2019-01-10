@@ -9,6 +9,7 @@ import org.stepic.droid.di.mainscreen.MainScreenComponent
 import org.stepic.droid.di.routing.RoutingComponent
 import org.stepic.droid.di.splash.SplashComponent
 import org.stepic.droid.di.step.StepComponent
+import org.stepik.android.view.injection.course.CourseComponent
 
 // TODO: 16.03.17 make more generic solution, for every component handling
 interface ComponentManager {
@@ -50,4 +51,11 @@ interface ComponentManager {
 
     @MainThread
     fun releaseAdaptiveCourseComponent(courseId: Long)
+
+
+    @MainThread
+    fun courseComponent(courseId: Long): CourseComponent
+
+    @MainThread
+    fun releaseCourseComponent(courseId: Long)
 }

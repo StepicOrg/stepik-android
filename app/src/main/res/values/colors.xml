@@ -11,8 +11,6 @@
     <color name="stepic_regular_text">#5E5E5E</color>
     <color name="stepic_weak_text">#A5A5A5</color>
     <color name="black">#000000</color>
-    <color name="drawer_background">@color/white</color>
-    <color name="drawer_item_highlighting">#eeeeee</color>
     <color name="drawer_item_highlighting_pressed">#EDEDED</color>
     <color name="table_header">#F0F0F0</color>
     <color name="table_even_row">#F6F9FC</color>
@@ -27,7 +25,6 @@
     <color name="old_cover">#EEEEEE</color>
     <color name="warning_light_yellow">#FFFAE9</color>
     <color name="warning_comment_highlight_yellow">#FFF4B3</color>
-    <color name="streak_default_color">#48A245</color>
 
     <color name="default_color_of_link">#0077CC</color>
     <color name="windowBackground">#eeeeee</color>
@@ -40,21 +37,16 @@
 
 
     <color name="transparent_black_30">#4D000000</color>
-    <color name="shadow_on_video_content">#25000000</color>
 
     <color name="overscroll_color">#19A5A5A5</color>
-    <color name="default_option_color">#F9FAFB</color>
     <color name="material_grey">#ff757575</color>
     <color name="snack_action_color">#EAA833</color>
     <color name="launchTextColor">#757575</color>
-    <color name="launchButtonsBorder">#EEEEEE</color>
     <color name="black_alpha_40">#66000000</color>
     <color name="sorting_chooser">#EEEEEE</color>
     <color name="background_time_thumbnail">#B20F1015</color>
     <color name="text_color_time_thumbnail">#C8C8C9</color>
     <color name="stepik_dark_web">#222222</color>
-    <color name="stepik_dark_darcula">#3C3F41</color>
-    <color name="stepik_dark_darcula_content">#2B2B2B</color>
 
     <color name="exo_edit_mode_background_color">#FFF4F3F0</color>
 
@@ -76,7 +68,6 @@
     <color name="new_border_color">@color/new_primary_color</color>>
     <color name="new_logout_color">@color/new_red_color</color>>
     <color name="arrow_color">@color/new_accent_color</color>>
-    <color name="bottom_menu_color">@color/new_accent_color</color>
     <color name="new_background_white">#FFFFFF</color>
 
     <!--Tab text color, based on accent color-->
@@ -177,4 +168,14 @@
 
     <color name="placeholder_button_pressed_color">@color/light_rounded_pressed_color</color>
     <color name="placeholder_button_stroke_color">#CDCDCD</color>
+
+    <color name="popup_background_color_light">#FF54A2FF</color>
+    <color name="popup_background_color_dark">@color/new_accent_color</color>
+
+    <!-- course -->
+    <color name="course_appbar_separator">#cccccc</color>
+    <color name="course_tabbar_color">#F6F6F6</color>
+    <color name="course_info_organization_span">#4a90e2</color>
+    <color name="course_content_section_background">#F6F6F6</color>
+    <color name="course_content_section_date_disabled">#B4B4B4</color>
 </resources>

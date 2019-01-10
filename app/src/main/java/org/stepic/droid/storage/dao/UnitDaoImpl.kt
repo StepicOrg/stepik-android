@@ -2,106 +2,68 @@ package org.stepic.droid.storage.dao
 
 import android.content.ContentValues
 import android.database.Cursor
-import org.stepic.droid.jsonHelpers.adapters.UTCDateAdapter
 import org.stepic.droid.storage.operations.DatabaseOperations
-import org.stepic.droid.storage.structure.DbStructureProgress
-import org.stepic.droid.storage.structure.DbStructureUnit
-import org.stepic.droid.util.DbParseHelper
-import org.stepik.android.model.Progress
+import org.stepic.droid.util.*
+import org.stepik.android.cache.unit.structure.DbStructureUnit
 import org.stepik.android.model.Unit
 import javax.inject.Inject
 
 class UnitDaoImpl
 @Inject
 constructor(
-        databaseOperations: DatabaseOperations,
-        private val progressDao: IDao<Progress>,
-        private val dateAdapter: UTCDateAdapter
+    databaseOperations: DatabaseOperations
 ) : DaoBase<Unit>(databaseOperations) {
+    public override fun getDbName() = DbStructureUnit.TABLE_NAME
 
-    public override fun parsePersistentObject(cursor: Cursor): Unit {
-        val columnIndexUnitId = cursor.getColumnIndex(DbStructureUnit.Column.UNIT_ID)
-        val columnIndexSection = cursor.getColumnIndex(DbStructureUnit.Column.SECTION)
-        val columnIndexLesson = cursor.getColumnIndex(DbStructureUnit.Column.LESSON)
-        val columnIndexAssignments = cursor.getColumnIndex(DbStructureUnit.Column.ASSIGNMENTS)
-        val columnIndexPosition = cursor.getColumnIndex(DbStructureUnit.Column.POSITION)
-        val columnIndexProgress = cursor.getColumnIndex(DbStructureUnit.Column.PROGRESS)
-        val columnIndexBeginDate = cursor.getColumnIndex(DbStructureUnit.Column.BEGIN_DATE)
-        val columnIndexSoftDeadline = cursor.getColumnIndex(DbStructureUnit.Column.SOFT_DEADLINE)
-        val columnIndexHardDeadline = cursor.getColumnIndex(DbStructureUnit.Column.HARD_DEADLINE)
-        val columnIndexIsActive = cursor.getColumnIndex(DbStructureUnit.Column.IS_ACTIVE)
+    public override fun getDefaultPrimaryColumn() = DbStructureUnit.Columns.ID
 
-        return Unit(
-                id = cursor.getLong(columnIndexUnitId),
-                section = cursor.getLong(columnIndexSection),
-                lesson = cursor.getLong(columnIndexLesson),
-                progress = cursor.getString(columnIndexProgress),
-                assignments = DbParseHelper.parseStringToLongArray(cursor.getString(columnIndexAssignments)),
-                beginDate = dateAdapter.stringToDate(cursor.getString(columnIndexBeginDate)),
-                softDeadline = dateAdapter.stringToDate(cursor.getString(columnIndexSoftDeadline)),
-                hardDeadline = dateAdapter.stringToDate(cursor.getString(columnIndexHardDeadline)),
-                position = cursor.getInt(columnIndexPosition),
-                isActive = cursor.getInt(columnIndexIsActive) > 0
+    public override fun getDefaultPrimaryValue(persistentObject: Unit): String =
+        persistentObject.id.toString()
+
+    public override fun parsePersistentObject(cursor: Cursor): Unit =
+        Unit(
+            id = cursor.getLong(DbStructureUnit.Columns.ID),
+            section = cursor.getLong(DbStructureUnit.Columns.SECTION),
+            lesson = cursor.getLong(DbStructureUnit.Columns.LESSON),
+            assignments = DbParseHelper.parseStringToLongArray(cursor.getString(DbStructureUnit.Columns.ASSIGNMENTS)),
+            position = cursor.getInt(DbStructureUnit.Columns.POSITION),
+            progress = cursor.getString(DbStructureUnit.Columns.PROGRESS),
+            beginDate = cursor.getDate(DbStructureUnit.Columns.BEGIN_DATE),
+            endDate = cursor.getDate(DbStructureUnit.Columns.END_DATE),
+            softDeadline = cursor.getDate(DbStructureUnit.Columns.SOFT_DEADLINE),
+            hardDeadline = cursor.getDate(DbStructureUnit.Columns.HARD_DEADLINE),
+            gradingPolicy = cursor.getString(DbStructureUnit.Columns.GRADING_POLICY),
+            beginDateSource = cursor.getString(DbStructureUnit.Columns.BEGIN_DATE_SOURCE),
+            endDateSource = cursor.getString(DbStructureUnit.Columns.END_DATE_SOURCE),
+            softDeadlineSource = cursor.getString(DbStructureUnit.Columns.SOFT_DEADLINE_SOURCE),
+            hardDeadlineSource = cursor.getString(DbStructureUnit.Columns.HARD_DEADLINE_SOURCE),
+            gradingPolicySource = cursor.getString(DbStructureUnit.Columns.GRADING_POLICY_SOURCE),
+            isActive = cursor.getBoolean(DbStructureUnit.Columns.IS_ACTIVE),
+            createDate = cursor.getDate(DbStructureUnit.Columns.CREATE_DATE),
+            updateDate = cursor.getDate(DbStructureUnit.Columns.UPDATE_DATE)
         )
-    }
-
-    public override fun getDbName() = DbStructureUnit.UNITS
 
     public override fun getContentValues(unit: Unit): ContentValues {
         val values = ContentValues()
-        values.put(DbStructureUnit.Column.UNIT_ID, unit.id)
-        values.put(DbStructureUnit.Column.SECTION, unit.section)
-        values.put(DbStructureUnit.Column.LESSON, unit.lesson)
-        values.put(DbStructureUnit.Column.ASSIGNMENTS, DbParseHelper.parseLongArrayToString(unit.assignments))
-        values.put(DbStructureUnit.Column.POSITION, unit.position)
-        values.put(DbStructureUnit.Column.PROGRESS, unit.progress)
-        values.put(DbStructureUnit.Column.BEGIN_DATE, dateAdapter.dateToString(unit.beginDate))
-        values.put(DbStructureUnit.Column.END_DATE, dateAdapter.dateToString(unit.endDate))
-        values.put(DbStructureUnit.Column.SOFT_DEADLINE, dateAdapter.dateToString(unit.softDeadline))
-        values.put(DbStructureUnit.Column.HARD_DEADLINE, dateAdapter.dateToString(unit.hardDeadline))
-        values.put(DbStructureUnit.Column.GRADING_POLICY, unit.gradingPolicy)
-        values.put(DbStructureUnit.Column.BEGIN_DATE_SOURCE, unit.beginDateSource)
-        values.put(DbStructureUnit.Column.END_DATE_SOURCE, unit.endDateSource)
-        values.put(DbStructureUnit.Column.SOFT_DEADLINE_SOURCE, unit.softDeadlineSource)
-        values.put(DbStructureUnit.Column.HARD_DEADLINE_SOURCE, unit.hardDeadlineSource)
-        values.put(DbStructureUnit.Column.GRADING_POLICY_SOURCE, unit.gradingPolicySource)
-        values.put(DbStructureUnit.Column.IS_ACTIVE, unit.isActive)
-        values.put(DbStructureUnit.Column.CREATE_DATE, dateAdapter.dateToString(unit.createDate))
-        values.put(DbStructureUnit.Column.UPDATE_DATE, dateAdapter.dateToString(unit.updateDate))
+        values.put(DbStructureUnit.Columns.ID, unit.id)
+        values.put(DbStructureUnit.Columns.SECTION, unit.section)
+        values.put(DbStructureUnit.Columns.LESSON, unit.lesson)
+        values.put(DbStructureUnit.Columns.ASSIGNMENTS, DbParseHelper.parseLongArrayToString(unit.assignments))
+        values.put(DbStructureUnit.Columns.POSITION, unit.position)
+        values.put(DbStructureUnit.Columns.PROGRESS, unit.progress)
+        values.put(DbStructureUnit.Columns.BEGIN_DATE, unit.beginDate?.time ?: -1)
+        values.put(DbStructureUnit.Columns.END_DATE, unit.endDate?.time ?: -1)
+        values.put(DbStructureUnit.Columns.SOFT_DEADLINE, unit.softDeadline?.time ?: -1)
+        values.put(DbStructureUnit.Columns.HARD_DEADLINE, unit.hardDeadline?.time ?: -1)
+        values.put(DbStructureUnit.Columns.GRADING_POLICY, unit.gradingPolicy)
+        values.put(DbStructureUnit.Columns.BEGIN_DATE_SOURCE, unit.beginDateSource)
+        values.put(DbStructureUnit.Columns.END_DATE_SOURCE, unit.endDateSource)
+        values.put(DbStructureUnit.Columns.SOFT_DEADLINE_SOURCE, unit.softDeadlineSource)
+        values.put(DbStructureUnit.Columns.HARD_DEADLINE_SOURCE, unit.hardDeadlineSource)
+        values.put(DbStructureUnit.Columns.GRADING_POLICY_SOURCE, unit.gradingPolicySource)
+        values.put(DbStructureUnit.Columns.IS_ACTIVE, unit.isActive)
+        values.put(DbStructureUnit.Columns.CREATE_DATE, unit.createDate?.time ?: -1)
+        values.put(DbStructureUnit.Columns.UPDATE_DATE, unit.updateDate?.time ?: -1)
         return values
-    }
-
-    public override fun getDefaultPrimaryColumn() = DbStructureUnit.Column.UNIT_ID
-
-    public override fun getDefaultPrimaryValue(persistentObject: Unit): String =
-            persistentObject.id.toString()
-
-    override fun get(whereColumnName: String, whereValue: String): Unit? {
-        val unit = super.get(whereColumnName, whereValue)
-        return determinePassed(unit)
-    }
-
-    override fun getAllWithQuery(query: String, whereArgs: Array<String>?): List<Unit> {
-        val unitList = super.getAllWithQuery(query, whereArgs)
-        for (unitItem in unitList) {
-            determinePassed(unitItem)
-        }
-        return unitList
-    }
-
-    private fun determinePassed(unit: Unit?): Unit? {
-        var isPassed = false
-        if (unit != null) {
-            val progressId = unit.progress
-            var progress: Progress? = null
-            if (progressId != null) {
-                progress = progressDao.get(DbStructureProgress.Column.ID, progressId)
-            }
-            if (progress != null)
-                isPassed = progress.isPassed
-            unit.is_viewed_custom = isPassed
-        }
-
-        return unit
     }
 }

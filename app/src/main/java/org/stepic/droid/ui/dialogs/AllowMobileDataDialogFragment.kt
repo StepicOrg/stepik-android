@@ -8,31 +8,24 @@ import android.support.v7.app.AlertDialog
 import org.stepic.droid.R
 
 class AllowMobileDataDialogFragment : DialogFragment() {
-
     companion object {
-
-        fun newInstance(): AllowMobileDataDialogFragment {
-            val fragment = AllowMobileDataDialogFragment()
-            return fragment
-        }
+        fun newInstance(): AllowMobileDataDialogFragment =
+                AllowMobileDataDialogFragment()
     }
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-
-        val builder = AlertDialog.Builder(activity)
-        builder.setTitle(R.string.allow_mobile_download_title)
-                .setMessage(R.string.allow_mobile_message)
-                .setPositiveButton(R.string.yes) { dialog, which ->
-                    //mobile allowed
-                    (targetFragment as Callback).onMobileDataStateChanged(true)
-                }
-                .setNegativeButton(R.string.no) { dialog, which ->
-                    //only wifi allowed
-                    (targetFragment as Callback).onMobileDataStateChanged(false)
-                }
-
-        return builder.create()
-    }
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
+            AlertDialog.Builder(requireContext())
+                    .setTitle(R.string.allow_mobile_download_title)
+                    .setMessage(R.string.allow_mobile_message)
+                    .setPositiveButton(R.string.yes) { _, _ ->
+                        //mobile allowed
+                        (targetFragment as Callback).onMobileDataStateChanged(true)
+                    }
+                    .setNegativeButton(R.string.no) { _, _ ->
+                        //only wifi allowed
+                        (targetFragment as Callback).onMobileDataStateChanged(false)
+                    }
+                    .create()
 
     override fun onCancel(dialog: DialogInterface?) {
         super.onCancel(dialog)

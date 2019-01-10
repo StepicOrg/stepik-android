@@ -1,5 +1,6 @@
 package org.stepic.droid.storage.structure;
 
+@Deprecated
 public final class DbStructureUnit {
     public static final String UNITS = "units";
 

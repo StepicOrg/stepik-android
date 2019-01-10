@@ -16,12 +16,13 @@ class AboutAppFragment : FragmentBase() {
         fun newInstance() = AboutAppFragment()
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater?.inflate(R.layout.fragment_about_app, container, false)
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+            inflater.inflate(R.layout.fragment_about_app, container, false)
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-        activity.window.decorView.setBackgroundColor(ColorUtil.getColorArgb(R.color.old_cover, context))
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val activity = requireActivity()
+
+        activity.window.decorView.setBackgroundColor(ColorUtil.getColorArgb(R.color.old_cover, activity))
         super.onViewCreated(view, savedInstanceState)
 
         privacyPolicyView.setOnClickListener {

@@ -32,7 +32,10 @@ public interface StepicRestLoggedService {
 
     @Headers("Content-Type:application/json")
     @POST("api/enrollments")
-    Call<Void> joinCourse(@Body EnrollmentWrapper enrollmentCourse);
+    Completable joinCourse(@Body EnrollmentWrapper enrollmentCourse);
+
+    @DELETE("api/enrollments/{id}")
+    Completable dropCourse(@Path("id") long courseId);
 
     @GET("api/users")
     Call<UsersResponse> getUsers(@Query("ids[]") long[] userIds);
@@ -90,7 +93,7 @@ public interface StepicRestLoggedService {
     );
 
     @DELETE("api/enrollments/{id}")
-    Call<Void> dropCourse(@Path("id") long courseId);
+    Call<Void> dropCourseLegacy(@Path("id") long courseId);
 
     @GET("api/progresses")
     Call<ProgressesResponse> getProgresses(@Query("ids[]") String[] progresses);
@@ -125,6 +128,9 @@ public interface StepicRestLoggedService {
 
     @GET("api/courses")
     Single<CoursesMetaResponse> getCoursesReactive(@Query("page") int page, @Query("ids[]") long[] courseIds);
+
+    @GET("api/courses")
+    Single<CoursesMetaResponse> getCoursesReactive(@Query("ids[]") long[] courseIds);
 
     @POST("api/attempts")
     Call<AttemptResponse> createNewAttempt(@Body AttemptRequest attemptRequest);
@@ -206,7 +212,7 @@ public interface StepicRestLoggedService {
     Call<CertificateResponse> getCertificates(@Query("user") long userId);
 
     @GET("api/units")
-    Call<UnitMetaResponse> getUnitByLessonId(@Query("lesson") long lessonId);
+    Single<UnitMetaResponse> getUnitsByLessonId(@Query("lesson") long lessonId);
 
     @GET("api/submissions?order=desc")
     Call<SubmissionResponse> getExistingSubmissionsForStep(@Query("step") long stepId);
@@ -234,7 +240,7 @@ public interface StepicRestLoggedService {
     Single<CourseCollectionsResponse> getCourseLists(@Query("language") String language);
 
     @GET("api/course-review-summaries")
-    Single<CourseReviewResponse> getCourseReviews(@Query("ids[]") int[] reviewSummaryIds);
+    Single<CourseReviewResponse> getCourseReviews(@Query("ids[]") long[] reviewSummaryIds);
 
     @GET("api/tags?is_featured=true")
     Single<TagResponse> getFeaturedTags();

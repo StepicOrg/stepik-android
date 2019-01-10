@@ -51,7 +51,12 @@ public interface Api {
 
     Single<List<User>> getUsersRx(long[] userIds);
 
-    Call<Void> tryJoinCourse(@NotNull Course course);
+    Completable joinCourse(long courseId);
+
+    Completable dropCourse(long courseId);
+
+    @Nullable
+    Call<Void> dropCourse(@NotNull Course course);
 
     Call<SectionsMetaResponse> getSections(long[] sectionsIds);
 
@@ -78,9 +83,6 @@ public interface Api {
 
     Single<StepResponse> getStepsByLessonId(long lessonId);
 
-    @Nullable
-    Call<Void> dropCourse(long courseId);
-
     Call<ProgressesResponse> getProgresses(String[] progresses);
 
     Single<ProgressesResponse> getProgressesReactive(String[] progresses);
@@ -100,6 +102,8 @@ public interface Api {
     Call<CoursesMetaResponse> getCourses(int page, long[] ids);
 
     Single<CoursesMetaResponse> getCoursesReactive(int page, @NotNull long[] ids);
+
+    Single<CoursesMetaResponse> getCoursesReactive(@NotNull long[] ids);
 
     Call<AttemptResponse> createNewAttempt(long stepId);
 
@@ -155,7 +159,7 @@ public interface Api {
 
     Call<CertificateResponse> getCertificates();
 
-    Call<UnitMetaResponse> getUnitByLessonId(long lessonId);
+    Single<UnitMetaResponse> getUnitsByLessonId(long lessonId);
 
     Call<NotificationResponse> getNotifications(NotificationCategory notificationCategory, int page);
 
@@ -171,7 +175,7 @@ public interface Api {
 
     Single<CourseCollectionsResponse> getCourseCollections(String language);
 
-    Single<CourseReviewResponse> getCourseReviews(int[] reviewSummaryIds);
+    Single<CourseReviewResponse> getCourseReviews(long[] reviewSummaryIds);
 
     Single<TagResponse> getFeaturedTags();
 

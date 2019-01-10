@@ -30,7 +30,6 @@ import org.stepic.droid.core.presenters.contracts.ContinueCourseView
 import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.core.presenters.contracts.DroppingView
 import org.stepic.droid.model.*
-import org.stepic.droid.storage.operations.Table
 import org.stepic.droid.ui.adapters.CoursesAdapter
 import org.stepic.droid.ui.decorators.LeftSpacesDecoration
 import org.stepic.droid.ui.decorators.RightMarginForLastItems
@@ -41,8 +40,8 @@ import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.StepikUtil
 import org.stepic.droid.util.SuppressFBWarnings
+import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
-import org.stepik.android.model.Section
 import java.util.*
 import javax.inject.Inject
 
@@ -195,7 +194,7 @@ constructor(
         coursesRecycler.addItemDecoration(VerticalSpacesInGridDecoration(verticalSpaceBetweenItems / 2, ROW_COUNT)) //warning: verticalSpaceBetweenItems/2 – workaround for some bug, decoration will set this param twice
         coursesRecycler.addItemDecoration(LeftSpacesDecoration(leftSpacePx))
         coursesRecycler.addItemDecoration(RightMarginForLastItems(resources.getDimensionPixelSize(R.dimen.home_right_recycler_padding_without_extra), ROW_COUNT))
-        coursesRecycler.itemAnimator.changeDuration = 0
+        coursesRecycler.itemAnimator?.changeDuration = 0
         val snapHelper = CoursesSnapHelper(ROW_COUNT)
         snapHelper.attachToRecyclerView(coursesRecycler)
     }
@@ -207,7 +206,7 @@ constructor(
         coursesViewAll.setTextColor(ColorUtil.getColorArgb(info.colorType.viewAllColorRes, context))
         showDescription(info.description)
 
-        val showMore = info.table == Table.enrolled
+        val showMore = info.courseListType == CourseListType.ENROLLED
         coursesRecycler.adapter = CoursesAdapter(context as FragmentActivity, courses, continueCoursePresenter, droppingPresenter, false, showMore, info.colorType)
     }
 
@@ -220,9 +219,9 @@ constructor(
         }
     }
 
-    override fun onOpenStep(courseId: Long, section: Section, lessonId: Long, unitId: Long, stepPosition: Int) {
+    override fun onOpenStep(courseId: Long, lastStep: LastStep) {
         ProgressHelper.dismiss(fragmentManager, continueLoadingTag)
-        screenManager.continueCourse(activity, courseId, section, lessonId, unitId, stepPosition.toLong())
+        screenManager.continueCourse(activity, lastStep.unit, lastStep.lesson, lastStep.step)
     }
 
     override fun onOpenAdaptiveCourse(course: Course) {
@@ -232,7 +231,7 @@ constructor(
 
     override fun onAnyProblemWhileContinue(course: Course) {
         ProgressHelper.dismiss(fragmentManager, continueLoadingTag)
-        screenManager.showSections(activity, course)
+        screenManager.showCourseModules(activity, course)
     }
 
     override fun onShowContinueCourseLoadingDialog() {
@@ -254,12 +253,12 @@ constructor(
 
     override fun showEmptyCourses() {
         @StringRes
-        fun getEmptyStringRes(table: Table?): Int =
-                when (table) {
-                    Table.enrolled -> {
+        fun getEmptyStringRes(courseListType: CourseListType?): Int =
+                when (courseListType) {
+                    CourseListType.ENROLLED -> {
                         R.string.courses_carousel_my_courses_empty
                     }
-                    Table.featured -> {
+                    CourseListType.FEATURED -> {
                         analytic.reportEvent(Analytic.Error.FEATURED_EMPTY)
                         R.string.empty_courses_popular
                     }
@@ -271,26 +270,26 @@ constructor(
 
 
 
-        if (info.table == Table.enrolled) {
+        if (info.courseListType == CourseListType.ENROLLED) {
             analytic.reportEvent(Analytic.CoursesCarousel.EMPTY_ENROLLED_SHOWN)
         }
-        showPlaceholder(getEmptyStringRes(info.table), {
-            if (info.table == Table.enrolled) {
+        showPlaceholder(getEmptyStringRes(info.courseListType)) {
+            if (info.courseListType == CourseListType.ENROLLED) {
                 analytic.reportEvent(Analytic.CoursesCarousel.EMPTY_ENROLLED_CLICK)
                 screenManager.showCatalog(context)
             }
-        })
+        }
     }
 
     override fun showConnectionProblem() {
         if (courses.isEmpty()) {
             analytic.reportEvent(Analytic.CoursesCarousel.NO_INTERNET_SHOWN)
-            showPlaceholder(R.string.internet_problem, { _ ->
+            showPlaceholder(R.string.internet_problem) { _ ->
                 analytic.reportEvent(Analytic.CoursesCarousel.NO_INTERNET_CLICK)
                 if (StepikUtil.isInternetAvailable()) {
                     downloadData()
                 }
-            })
+            }
         }
     }
 
@@ -306,7 +305,7 @@ constructor(
         coursesViewAll.visibility = View.VISIBLE
         this.courses.clear()
         this.courses.addAll(courses)
-        coursesRecycler.adapter.notifyDataSetChanged()
+        coursesRecycler.adapter?.notifyDataSetChanged()
         updateOnCourseCountChanged()
     }
 
@@ -337,17 +336,17 @@ constructor(
             return
         }
 
-        if (info.table == Table.enrolled) {
+        if (info.courseListType == CourseListType.ENROLLED) {
             courses.removeAt(index)
-            coursesRecycler.adapter.notifyItemRemoved(index)
+            coursesRecycler.adapter?.notifyItemRemoved(index)
             if (courses.size == ROW_COUNT) {
                 // update 1st column for adjusting size
-                coursesRecycler.adapter.notifyDataSetChanged()
+                coursesRecycler.adapter?.notifyDataSetChanged()
             }
             updateOnCourseCountChanged()
         } else {
             courses[index].enrollment = 0
-            coursesRecycler.adapter.notifyItemChanged(index)
+            coursesRecycler.adapter?.notifyItemChanged(index)
         }
 
         if (courses.isEmpty()) {
@@ -365,19 +364,19 @@ constructor(
     private fun getCarouselTitle(info: CoursesCarouselInfo): String = info.title
 
     private fun restoreState() {
-        if (info.table != null) {
+        if (info.courseListType != null) {
             courseListPresenter.restoreState()
-        } else if (info.table == null) {
+        } else if (info.courseListType == null) {
             // no-op
         }
     }
 
     private fun downloadData() {
-        info.table?.let {
+        info.courseListType?.let {
             courseListPresenter.refreshData(it)
         }
 
-        if (info.table == null) {
+        if (info.courseListType == null) {
             info.courseIds?.let {
                 courseCollectionPresenter.onShowCollections(it)
             }
@@ -393,14 +392,14 @@ constructor(
 
         if (courseIndex >= 0) {
             courses[courseIndex].enrollment = joinedCourse.enrollment
-            coursesRecycler.adapter.notifyItemChanged(courseIndex)
-        } else if (info.table == Table.enrolled) {
+            coursesRecycler.adapter?.notifyItemChanged(courseIndex)
+        } else if (info.courseListType == CourseListType.ENROLLED) {
             //insert at 0 index is more complex than just add, but order will be right
             if (courses.isEmpty()) {
                 showCourses(mutableListOf(joinedCourse))
             } else {
                 courses.add(0, joinedCourse)
-                coursesRecycler.adapter.notifyDataSetChanged()
+                coursesRecycler.adapter?.notifyDataSetChanged()
                 updateOnCourseCountChanged()
             }
         }
@@ -422,7 +421,7 @@ constructor(
     }
 
     private fun updateCourseCount() {
-        if (info.table == Table.featured || courses.isEmpty()) {
+        if (info.courseListType == CourseListType.FEATURED || courses.isEmpty()) {
             coursesCarouselCount.visibility = View.GONE
         } else {
             coursesCarouselCount.visibility = View.VISIBLE
@@ -457,7 +456,7 @@ constructor(
         constructor(superState: Parcelable) : super(superState)
 
         private constructor(input: Parcel) : super(input) {
-            this.info = input.readParcelable<CoursesCarouselInfo>(CoursesCarouselInfo::class.java.classLoader)
+            this.info = input.readParcelable(CoursesCarouselInfo::class.java.classLoader)
         }
 
         override fun writeToParcel(out: Parcel, flags: Int) {
@@ -487,8 +486,8 @@ constructor(
     }
 
     override fun onFiltersChanged(filters: EnumSet<StepikFilter>) {
-        if (info.table == Table.featured) {
-            courseListPresenter.refreshData(Table.featured)
+        if (info.courseListType == CourseListType.FEATURED) {
+            courseListPresenter.refreshData(CourseListType.FEATURED)
         }
     }
 

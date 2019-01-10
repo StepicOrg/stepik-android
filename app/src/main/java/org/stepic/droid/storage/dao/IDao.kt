@@ -16,7 +16,7 @@ interface IDao<T> {
 
 //    fun insertOrUpdateAll(listOfPersistentObjects: List<T?>) //todo: Make insert ALL with supporting of inner fragments
 
-    fun getAll(whereColumnName: String, whereValue: String): MutableList<T?>
+    fun getAll(whereColumnName: String, whereValue: String): List<T>
     fun getAll(whereArgs: Map<String, String>): List<T>
 
     fun get(whereColumnName: String, whereValue: String): T?
@@ -25,6 +25,7 @@ interface IDao<T> {
     fun update(whereColumn: String, whereValue: String, contentValues: ContentValues)
 
     fun getAllInRange(whereColumn: String, commaSeparatedIds: String): List<T>
+    fun getAllWithQuery(query: String, whereArgs: Array<String>?): List<T>
 
     fun remove(whereColumn: String, whereValue: String)
     fun remove(whereArgs: Map<String, String>)

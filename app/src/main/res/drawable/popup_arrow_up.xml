@@ -7,8 +7,8 @@
             android:pivotX="-40%"
             android:pivotY="87%" >
             <shape android:shape="rectangle">
-                <stroke android:color="@color/new_accent_color" android:width="10dp"/>
-                <solid android:color="@color/new_accent_color" />
+                <stroke android:color="@color/popup_background_color_dark" android:width="10dp"/>
+                <solid android:color="@color/popup_background_color_dark" />
             </shape>
         </rotate>
     </item>

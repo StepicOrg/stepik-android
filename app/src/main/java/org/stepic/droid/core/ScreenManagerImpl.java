@@ -9,7 +9,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.provider.Settings;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.FileProvider;
@@ -27,6 +26,8 @@ import org.stepic.droid.base.App;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.di.AppSingleton;
 import org.stepic.droid.features.achievements.ui.activity.AchievementsListActivity;
+import org.stepik.android.view.course.routing.CourseScreenTab;
+import org.stepik.android.view.course.ui.activity.CourseActivity;
 import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.model.CollectionDescriptionColors;
 import org.stepik.android.model.Course;
@@ -43,7 +44,6 @@ import org.stepic.droid.ui.activities.AboutAppActivity;
 import org.stepic.droid.ui.activities.AnimatedOnboardingActivity;
 import org.stepic.droid.ui.activities.CertificatesActivity;
 import org.stepic.droid.ui.activities.CommentsActivity;
-import org.stepic.droid.ui.activities.CourseDetailActivity;
 import org.stepic.droid.ui.activities.CourseListActivity;
 import org.stepic.droid.ui.activities.DownloadsActivity;
 import org.stepic.droid.ui.activities.FeedbackActivity;
@@ -55,26 +55,26 @@ import org.stepic.droid.ui.activities.NotificationSettingsActivity;
 import org.stepic.droid.ui.activities.PhotoViewActivity;
 import org.stepic.droid.ui.activities.ProfileActivity;
 import org.stepic.droid.ui.activities.RegisterActivity;
-import org.stepic.droid.ui.activities.SectionActivity;
 import org.stepic.droid.ui.activities.SettingsActivity;
 import org.stepic.droid.ui.activities.SplashActivity;
 import org.stepic.droid.ui.activities.StepsActivity;
 import org.stepic.droid.ui.activities.StoreManagementActivity;
 import org.stepic.droid.ui.activities.TagActivity;
 import org.stepic.droid.ui.activities.TextFeedbackActivity;
-import org.stepic.droid.ui.activities.UnitsActivity;
 import org.stepic.droid.ui.activities.VideoActivity;
 import org.stepic.droid.ui.dialogs.RemindPasswordDialogFragment;
 import org.stepic.droid.ui.fragments.CommentsFragment;
-import org.stepic.droid.ui.fragments.SectionsFragment;
 import org.stepic.droid.util.AndroidVersionKt;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.StringUtil;
 import org.stepic.droid.web.ViewAssignment;
 import org.stepik.android.model.Tag;
+import org.stepik.android.view.routing.deeplink.BranchDeepLinkRouter;
+import org.stepik.android.view.routing.deeplink.BranchRoute;
 
 import java.io.File;
 import java.net.URLEncoder;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -84,13 +84,15 @@ public class ScreenManagerImpl implements ScreenManager {
     private final Config config;
     private final UserPreferences userPreferences;
     private final Analytic analytic;
+    private final Set<BranchDeepLinkRouter> deepLinkRouters;
 
     @Inject
-    public ScreenManagerImpl(Config config, UserPreferences userPreferences, Analytic analytic, SharedPreferenceHelper sharedPreferences) {
+    public ScreenManagerImpl(Config config, UserPreferences userPreferences, Analytic analytic, SharedPreferenceHelper sharedPreferences, Set<BranchDeepLinkRouter> deepLinkRouters) {
         this.config = config;
         this.userPreferences = userPreferences;
         this.analytic = analytic;
         this.sharedPreferences = sharedPreferences;
+        this.deepLinkRouters = deepLinkRouters;
     }
 
     @Override
@@ -217,32 +219,37 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void showCourseDescription(Fragment sourceFragment, @NotNull Course course) {
-        Intent intent = getIntentForDescription(sourceFragment.getActivity(), course);
-        sourceFragment.startActivityForResult(intent, AppConstants.REQUEST_CODE_DETAIL);
-    }
-
-    @Override
-    public void showCourseDescription(Context context, @NotNull Course course) {
-        Intent intent = getIntentForDescription(context, course);
+    public void showCourseDescription(Context context, long courseId) {
+        Intent intent = CourseActivity.Companion.createIntent(context, courseId, CourseScreenTab.INFO);
         context.startActivity(intent);
     }
 
     @Override
-    public void showCourseDescription(Activity sourceActivity, @NotNull Course course, boolean instaEnroll) {
-        Intent intent = getIntentForDescription(sourceActivity, course);
-        intent.putExtra(CourseDetailActivity.INSTA_ENROLL_KEY, instaEnroll);
-        sourceActivity.startActivity(intent);
+    public void showCourseDescription(Context context, @NotNull Course course) {
+        showCourseDescription(context, course, false);
     }
 
-    private Intent getIntentForDescription(Context context, @NotNull Course course) {
+    @Override
+    public void showCourseDescription(Context context, @NotNull Course course, boolean autoEnroll) {
+        showCourseScreen(context, course, autoEnroll, CourseScreenTab.INFO);
+    }
+
+    @Override
+    public void showCourseModules(Context context, @NotNull Course course) {
+        showCourseScreen(context, course, false, CourseScreenTab.SYLLABUS);
+    }
+
+    @Override
+    public void showCourseScreen(Context context, @NotNull Course course, boolean autoEnroll, CourseScreenTab tab) {
+        Intent intent = getIntentForDescription(context, course, autoEnroll, tab);
+        context.startActivity(intent);
+    }
+
+    private Intent getIntentForDescription(Context context, @NotNull Course course, boolean autoEnroll, CourseScreenTab tab) {
         analytic.reportEvent(Analytic.Screens.SHOW_COURSE_DESCRIPTION);
-        Intent intent = new Intent(context, CourseDetailActivity.class);
+        Intent intent = CourseActivity.Companion.createIntent(context, course, autoEnroll, tab);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(AppConstants.KEY_COURSE_BUNDLE, course);
-        intent.putExtras(bundle);
         if (!(context instanceof Activity)) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         }
@@ -490,32 +497,13 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void continueCourse(Activity activity, long courseId, Section section, long lessonId, long unitId, long stepPosition) {
-        continueCourse(activity, courseId, section, lessonId, unitId, stepPosition, false);
-    }
-
-    @Override
-    public void continueCourse(Activity activity, long courseId, Section section, long lessonId, long unitId, long stepPosition, boolean joinedRightNow) {
-        String testStepPath = StringUtil.getUriForStepByIds(config.getBaseUrl(), lessonId, unitId, stepPosition);
-        String testSectionPath = StringUtil.getUriForCourse(config.getBaseUrl(), courseId + "");
-
-        Intent sectionsIntent = new Intent(activity, SectionActivity.class)
+    public void continueCourse(Activity activity, long unitId, long lessonId, long stepId) {
+        String testStepPath = StringUtil.getUriForStepByIds(config.getBaseUrl(), lessonId, unitId, stepId);
+        Intent intent = new Intent(activity, StepsActivity.class)
                 .setAction(AppConstants.INTERNAL_STEPIK_ACTION)
-                .setData(Uri.parse(testSectionPath));
-        if (joinedRightNow) {
-            sectionsIntent.putExtra(SectionsFragment.joinFlag, true);
-        }
-
-        TaskStackBuilder.create(activity)
-                .addNextIntent(new Intent(activity, MainFeedActivity.class)
-                        .setAction(AppConstants.INTERNAL_STEPIK_ACTION))
-                .addNextIntent(sectionsIntent)
-                .addNextIntent(getIntentForUnits(activity, section)
-                        .setAction(AppConstants.INTERNAL_STEPIK_ACTION))
-                .addNextIntent(new Intent(activity, StepsActivity.class)
-                        .setAction(AppConstants.INTERNAL_STEPIK_ACTION)
-                        .setData(Uri.parse(testStepPath)))
-                .startActivities();
+                .putExtra(StepsActivity.EXTRA_IS_STEP_ID_WAS_PASSED, true)
+                .setData(Uri.parse(testStepPath));
+        activity.startActivity(intent);
     }
 
     @Override
@@ -591,50 +579,6 @@ public class ScreenManagerImpl implements ScreenManager {
         }
     }
 
-    private Intent getSectionsIntent(Activity sourceActivity, @NotNull Course course) {
-        Intent intent = new Intent(sourceActivity, SectionActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(AppConstants.KEY_COURSE_BUNDLE, course);
-        intent.putExtras(bundle);
-        return intent;
-    }
-
-    @Override
-    public void showSections(Activity sourceActivity, @NotNull Course course) {
-        analytic.reportEventWithIdName(Analytic.Screens.SHOW_SECTIONS, course.getId() + "", course.getTitle());
-        Intent intent = getSectionsIntent(sourceActivity, course);
-        sourceActivity.startActivity(intent);
-    }
-
-    @Override
-    public void showSections(Activity sourceActivity, @NotNull Course course, boolean joinedRightNow) {
-        if (!joinedRightNow) {
-            showSections(sourceActivity, course);
-        } else {
-            analytic.reportEventWithIdName(Analytic.Screens.SHOW_SECTIONS_JOINED, course.getId() + "", course.getTitle());
-            sourceActivity.startActivity(
-                    getSectionsIntent(sourceActivity, course).putExtra(SectionsFragment.joinFlag, true));
-        }
-    }
-
-    @Override
-    public void showUnitsForSection(Activity sourceActivity, @NotNull Section section) {
-        analytic.reportEvent(Analytic.Screens.SHOW_UNITS, section.getId() + "");
-        Intent intent = getIntentForUnits(sourceActivity, section);
-        sourceActivity.startActivity(intent);
-        sourceActivity.overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
-    }
-
-    private Intent getIntentForUnits(Activity activity, @NotNull Section section) {
-        Intent intent = new Intent(activity, UnitsActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(AppConstants.KEY_SECTION_BUNDLE, section);
-        intent.putExtras(bundle);
-        return intent;
-    }
-
     @Override
     public void showSteps(Activity sourceActivity, Unit unit, Lesson lesson, @Nullable Section section) {
         showSteps(sourceActivity, unit, lesson, false, section);
@@ -649,7 +593,7 @@ public class ScreenManagerImpl implements ScreenManager {
         bundle.putParcelable(AppConstants.KEY_LESSON_BUNDLE, lesson);
         bundle.putParcelable(AppConstants.KEY_SECTION_BUNDLE, section);
         if (backAnimation) {
-            bundle.putBoolean(StepsActivity.Companion.getNeedReverseAnimationKey(), true);
+            bundle.putBoolean(StepsActivity.needReverseAnimationKey, true);
         }
         intent.putExtras(bundle);
         sourceActivity.startActivity(intent);
@@ -692,5 +636,14 @@ public class ScreenManagerImpl implements ScreenManager {
     public void showAchievementsList(Context context, long userId, boolean isMyProfile) {
         Intent intent = AchievementsListActivity.Companion.createIntent(context, userId, isMyProfile);
         context.startActivity(intent);
+    }
+
+    @Override
+    public void openDeepLink(Context context, BranchRoute route) {
+        for (BranchDeepLinkRouter router : deepLinkRouters) {
+            if (router.handleBranchRoute(this, context, route)) {
+                return;
+            }
+        }
     }
 }

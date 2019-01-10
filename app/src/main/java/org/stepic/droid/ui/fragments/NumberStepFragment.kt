@@ -7,7 +7,7 @@ import org.stepik.android.model.Reply
 
 class NumberStepFragment: SingleLineSendStepFragment() {
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         answerField.setRawInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL)
     }

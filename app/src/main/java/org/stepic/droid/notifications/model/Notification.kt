@@ -2,25 +2,31 @@ package org.stepic.droid.notifications.model
 
 import com.google.gson.annotations.SerializedName
 
-data class Notification(
-        var id: Long? = null,
-        @SerializedName("is_unread")
-        var is_unread: Boolean? = null,
-        @SerializedName("is_muted")
-        var isMuted: Boolean? = null,
-        @SerializedName("is_favorite")
-        var isFavourite: Boolean? = null,
-        var time: String? = null,
-        var type: NotificationType = NotificationType.other,
-        var level: String? = null,
-        var priority: String? = null,
-        @SerializedName("html_text")
-        var htmlText: String? = null,
-        var action: String? = null,
-        var course_id: Long? = null,
-        var userAvatarUrl: String? = null,
-        var notificationText: CharSequence? = null,
-        var dateGroup: Int = 0
+class Notification(
+    val id: Long? = 0,
+    @SerializedName("is_unread")
+    var isUnread: Boolean? = null,
+    @SerializedName("is_muted")
+    val isMuted: Boolean? = null,
+    @SerializedName("is_favorite")
+    val isFavourite: Boolean? = null,
+    @SerializedName("time")
+    val time: String? = null,
+    @SerializedName("type")
+    val type: NotificationType = NotificationType.other,
+    @SerializedName("level")
+    val level: String? = null,
+    @SerializedName("priority")
+    val priority: String? = null,
+    @SerializedName("html_text")
+    var htmlText: String? = null,
+    @SerializedName("action")
+    val action: String? = null,
+
+    var courseId: Long? = null,
+    var userAvatarUrl: String? = null,
+    var notificationText: CharSequence? = null,
+    var dateGroup: Int = 0
 )
 
 enum class NotificationType(val channel: StepikNotificationChannel) {

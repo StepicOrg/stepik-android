@@ -229,6 +229,7 @@ public interface Analytic {
         String PLAYER_CREATED = "video_player_created";
         String PLAY = "video_player_play";
         String PAUSE = "video_player_pause";
+        String CONNECTION_ERROR = "video_player_connection_error";
         String ERROR = "video_player_error";
         String QUALITY_MENU = "video_player_quality";
         String CANCEL_VIDEO_QUALITY = "video_player_quality_cancel";
@@ -543,6 +544,8 @@ public interface Analytic {
     void setStreaksNotificationsEnabled(boolean isEnabled);
     void reportAmplitudeEvent(@NotNull String eventName, @Nullable Map<String, Object> params);
     void reportAmplitudeEvent(@NotNull String eventName);
+
+    void setUserProperty(@NotNull String name, @NotNull String value);
 
     void reportEventValue(String eventName, long value);
 

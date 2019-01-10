@@ -26,11 +26,10 @@ import javax.inject.Inject
 class RateAppDialogFragment : DialogFragment() {
 
     companion object {
-        private val ratingKey = "ratingKey"
+        private const val ratingKey = "ratingKey"
 
-        fun newInstance(): RateAppDialogFragment {
-            return RateAppDialogFragment()
-        }
+        fun newInstance(): RateAppDialogFragment =
+                RateAppDialogFragment()
 
         /**
          * This callback should be implemented by targeted fragment
@@ -48,7 +47,8 @@ class RateAppDialogFragment : DialogFragment() {
     lateinit var fontsProvider: FontsProvider
     @Inject
     lateinit var analytic: Analytic
-    lateinit var boldTypeface: Typeface
+
+    private lateinit var boldTypeface: Typeface
 
     init {
         App.component().inject(this)
@@ -59,14 +59,10 @@ class RateAppDialogFragment : DialogFragment() {
         boldTypeface = TypefaceUtils.load(context.assets, fontsProvider.provideFontPath(FontType.bold))
     }
 
-    override fun onCreateView(inflater: LayoutInflater,
-                              container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        val v = inflater.inflate(R.layout.dialog_rate_app, container, false)
-        return v
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+            inflater.inflate(R.layout.dialog_rate_app, container, false)
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         isCancelable = false
@@ -89,7 +85,7 @@ class RateAppDialogFragment : DialogFragment() {
             }
         }
 
-        rateDialogRatingBar.setOnRatingBarChangeListener { ratingBar, rating, fromUser ->
+        rateDialogRatingBar.setOnRatingBarChangeListener { _, rating, fromUser ->
             if (!fromUser) {
                 return@setOnRatingBarChangeListener
             }
@@ -113,7 +109,7 @@ class RateAppDialogFragment : DialogFragment() {
         } else {
             rateDialogHint.visibility = View.VISIBLE
             rateDialogTitle.setText(R.string.rate_dialog_thanks)
-            if (rating > 0 && rating <= 4) {
+            if (rating in 1..4) {
                 rateDialogHint.setText(R.string.rate_dialog_hint_negative)
                 rateDialogPositive.setTextAndColor(R.string.rate_dialog_support, R.color.rate_dialog_support)
             } else if (RatingUtil.isExcellent(rating)) {
@@ -126,9 +122,9 @@ class RateAppDialogFragment : DialogFragment() {
         }
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState?.putInt(ratingKey, rateDialogRatingBar.rating.toInt())
+        outState.putInt(ratingKey, rateDialogRatingBar.rating.toInt())
     }
 
     private fun TextView.setTextAndColor(@StringRes stringRes: Int,

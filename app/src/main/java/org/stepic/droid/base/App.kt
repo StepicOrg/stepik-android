@@ -1,9 +1,9 @@
 package org.stepic.droid.base
 
-import android.app.Application
 import android.content.Context
 import android.os.Build
 import android.os.StrictMode
+import android.support.multidex.MultiDexApplication
 import android.webkit.WebView
 import com.facebook.FacebookSdk
 import com.facebook.appevents.AppEventsLogger
@@ -11,8 +11,10 @@ import com.squareup.leakcanary.LeakCanary
 import com.squareup.leakcanary.RefWatcher
 import com.vk.sdk.VKSdk
 import com.yandex.metrica.YandexMetrica
+import io.branch.referral.Branch
 import org.stepic.droid.BuildConfig
 import org.stepic.droid.R
+import org.stepic.droid.analytic.experiments.SplitTestsHolder
 import org.stepic.droid.code.highlight.ParserContainer
 import org.stepic.droid.core.ComponentManager
 import org.stepic.droid.core.ComponentManagerImpl
@@ -24,12 +26,12 @@ import org.stepic.droid.fonts.FontsProvider
 import org.stepic.droid.persistence.downloads.DownloadsSyncronizer
 import org.stepic.droid.util.NotificationChannelInitializer
 import org.stepic.droid.util.StethoHelper
+import org.stepic.droid.util.isMainProcess
 import timber.log.Timber
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig
 import javax.inject.Inject
 
-
-class App : Application() {
+class App : MultiDexApplication() {
 
     companion object {
         lateinit var application: App
@@ -51,18 +53,26 @@ class App : Application() {
     private lateinit var componentManager: ComponentManager
 
     @Inject
-    lateinit var downloadsSyncronizer: DownloadsSyncronizer
+    internal lateinit var downloadsSyncronizer: DownloadsSyncronizer
 
     @Inject
-    lateinit var fontsProvider: FontsProvider
+    internal lateinit var fontsProvider: FontsProvider
+
+    /**
+     * Init split tests on app start
+     */
+    @Inject
+    internal lateinit var splitTestsHolder: SplitTestsHolder
 
 
     //don't use this field, it is just for init ASAP in background thread
     @Inject
-    lateinit var codeParserContainer: ParserContainer
+    internal lateinit var codeParserContainer: ParserContainer
 
     override fun onCreate() {
         super.onCreate()
+        if (!isMainProcess) return
+
         if (LeakCanary.isInAnalyzerProcess(this)) {
             // This process is dedicated to LeakCanary for heap analysis.
             // You should not init your app in this process.
@@ -94,6 +104,9 @@ class App : Application() {
                     .build())
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    WebView.setDataDirectorySuffix("web")
+                }
                 WebView.setWebContentsDebuggingEnabled(true)
             }
         }
@@ -124,6 +137,8 @@ class App : Application() {
         // init AppMetrica SDK
         YandexMetrica.activate(applicationContext, "fd479031-bdf4-419e-8d8f-6895aab23502")
         YandexMetrica.enableActivityAutoTracking(this)
+
+        Branch.getAutoInstance(this)
         initChannels()
     }
 

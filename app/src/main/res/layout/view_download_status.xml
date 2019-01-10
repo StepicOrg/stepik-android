@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/statusCached"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@null"
+        app:srcCompat="@drawable/ic_download_remove"
+        android:visibility="gone" />
+
+    <me.zhanghai.android.materialprogressbar.MaterialProgressBar
+        android:id="@+id/statusPending"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:indeterminate="true"
+        app:mpb_useIntrinsicPadding="false"
+        style="@style/Widget.MaterialProgressBar.ProgressBar.NoPadding"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/statusNotCached"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@null"
+        app:srcCompat="@drawable/ic_download"
+        android:visibility="gone" />
+
+    <FrameLayout
+        android:id="@+id/statusInProgress"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <me.zhanghai.android.materialprogressbar.MaterialProgressBar
+            android:id="@+id/statusProgress"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:mpb_useIntrinsicPadding="false"
+            app:mpb_progressTint="@color/new_accent_color"
+            app:mpb_progressBackgroundTint="@color/course_content_section_date_disabled"
+            app:mpb_showProgressBackground="true"
+            android:indeterminate="false"
+            android:indeterminateOnly="false"
+            style="@style/Widget.MaterialProgressBar.ProgressBar.NoPadding"
+            android:max="100"
+            android:progress="63" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@null"
+            android:layout_margin="6dp"
+            app:srcCompat="@drawable/ic_download_cancel" />
+
+    </FrameLayout>
+
+</merge>

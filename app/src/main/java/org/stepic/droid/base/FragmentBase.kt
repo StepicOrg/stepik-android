@@ -22,9 +22,9 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.ui.util.CloseIconHolder
-import org.stepic.droid.util.resolvers.CoursePropertyResolver
 import org.stepic.droid.util.resolvers.text.TextResolver
 import org.stepic.droid.web.Api
+import org.stepik.android.domain.progress.interactor.LocalProgressInteractor
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
 
@@ -64,16 +64,13 @@ open class FragmentBase : Fragment() {
     lateinit var screenManager: ScreenManager
 
     @Inject
-    lateinit var localProgressManager: LocalProgressManager
+    lateinit var localProgressInteractor: LocalProgressInteractor
 
     @Inject
     lateinit var sharedPreferenceHelper: SharedPreferenceHelper
 
     @Inject
     lateinit var userPreferences: UserPreferences
-
-    @Inject
-    lateinit var coursePropertyResolver: CoursePropertyResolver
 
     @Inject
     lateinit var mainHandler: MainHandler
@@ -98,7 +95,8 @@ open class FragmentBase : Fragment() {
     protected open fun onReleaseComponent() {}
 
     protected fun hideSoftKeypad() {
-        val view = this.activity.currentFocus
+        val activity = requireActivity()
+        val view = activity.currentFocus
         if (view != null) {
             val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(view.windowToken, 0)
@@ -111,9 +109,9 @@ open class FragmentBase : Fragment() {
         injectComponent()
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        unbinder = ButterKnife.bind(this, view!!)
+        unbinder = ButterKnife.bind(this, view)
     }
 
     override fun onDestroyView() {

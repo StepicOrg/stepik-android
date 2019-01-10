@@ -1,5 +1,6 @@
 package org.stepic.droid.storage.structure
 
+@Deprecated("Use cache.DbStructureSection")
 object DbStructureSections {
     const val SECTIONS = "sections"
 

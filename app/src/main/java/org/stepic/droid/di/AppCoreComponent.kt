@@ -10,8 +10,10 @@ import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.code.ui.CodeEditor
 import org.stepic.droid.di.adaptive.AdaptiveCourseComponent
+import org.stepic.droid.di.analytic.AnalyticModule
 import org.stepic.droid.di.catalog.CatalogComponent
 import org.stepic.droid.di.certificates.CertificateComponent
+import org.stepic.droid.di.course_general.CourseEnrollmentBusModule
 import org.stepic.droid.di.course_general.CourseGeneralComponent
 import org.stepic.droid.di.downloads.DownloadsComponent
 import org.stepic.droid.di.feedback.FeedbackComponent
@@ -30,8 +32,8 @@ import org.stepic.droid.features.achievements.service.AchievementsNotificationSe
 import org.stepic.droid.features.achievements.ui.adapters.AchievementsAdapter
 import org.stepic.droid.features.achievements.ui.adapters.AchievementsTileAdapter
 import org.stepic.droid.features.achievements.ui.dialogs.AchievementDetailsDialog
-import org.stepic.droid.features.deadlines.ui.dialogs.EditDeadlinesDialog
-import org.stepic.droid.features.deadlines.ui.dialogs.LearningRateDialog
+import org.stepik.android.view.personal_deadlines.ui.dialogs.EditDeadlinesDialog
+import org.stepik.android.view.personal_deadlines.ui.dialogs.LearningRateDialog
 import org.stepik.android.model.Course
 import org.stepic.droid.notifications.HackFcmListener
 import org.stepic.droid.notifications.HackerFcmInstanceId
@@ -49,22 +51,37 @@ import org.stepic.droid.ui.custom.*
 import org.stepic.droid.ui.custom_exo.PlaybackControlView
 import org.stepic.droid.ui.dialogs.*
 import org.stepic.droid.ui.fragments.StoreManagementFragment
+import org.stepik.android.view.injection.course.CourseComponent
+import org.stepik.android.view.injection.course.CourseRoutingModule
+import org.stepik.android.view.injection.personal_deadlines.PersonalDeadlinesDataModule
+import org.stepik.android.view.injection.progress.ProgressBusModule
 
 @AppSingleton
-@Component(dependencies = [StorageComponent::class],
-        modules = [
-                AppCoreModule::class,
-                RepositoryModule::class,
-                AppStepModule::class,
-                AppFiltersModule::class,
-                GoogleModule::class,
-                FirebaseModule::class,
-                PersistenceModule::class,
-                RecentActiveCourseModule::class,
-                NotificationsBadgesModule::class,
-                NetworkModule::class,
-                RemoteMessageHandlersModule::class
-        ])
+@Component(
+    dependencies = [
+        StorageComponent::class
+    ],
+    modules = [
+        AppCoreModule::class,
+        RepositoryModule::class,
+        AnalyticModule::class,
+        AppStepModule::class,
+        AppFiltersModule::class,
+        GoogleModule::class,
+        FirebaseModule::class,
+        PersistenceModule::class,
+        RecentActiveCourseModule::class,
+        NotificationsBadgesModule::class,
+        NetworkModule::class,
+        RemoteMessageHandlersModule::class,
+
+        CourseEnrollmentBusModule::class, // todo unite it in BusModule::class
+        ProgressBusModule::class,
+        PersonalDeadlinesDataModule::class,
+
+        CourseRoutingModule::class // todo unite it in RoutingModule::class
+    ]
+)
 interface AppCoreComponent {
 
     @Component.Builder
@@ -107,6 +124,8 @@ interface AppCoreComponent {
 
     fun adaptiveCourseComponentBuilder(): AdaptiveCourseComponent.Builder
 
+    fun courseComponentBuilder(): CourseComponent.Builder
+
     fun inject(someActivity: FragmentActivityBase)
 
     fun inject(adapter: StepikRadioGroupAdapter)
@@ -118,8 +137,6 @@ interface AppCoreComponent {
     fun inject(baseFragment: FragmentBase)
 
     fun inject(dialogFragment: DiscountingPolicyDialogFragment)
-
-    fun inject(adapter: UnitAdapter)
 
     fun inject(dialogFragment: LogoutAreYouSureDialog)
 
@@ -136,8 +153,6 @@ interface AppCoreComponent {
     fun inject(downloadsAdapter: DownloadsAdapter)
 
     fun inject(clearVideosDialog: ClearVideosDialog)
-
-    fun inject(coursePropertyAdapter: CoursePropertyAdapter)
 
     fun inject(remindPasswordDialogFragment: RemindPasswordDialogFragment)
 
@@ -158,8 +173,6 @@ interface AppCoreComponent {
     fun inject(dialogFragment: DeleteCommentDialogFragment)
 
     fun inject(certificateShareDialog: CertificateShareDialog)
-
-    fun inject(sectionAdapter: SectionAdapter)
 
     fun inject(stepShareDialog: StepShareDialog)
 
@@ -184,8 +197,6 @@ interface AppCoreComponent {
     fun inject(notificationViewHolder: NotificationAdapter.NotificationViewHolder)
 
     fun inject(app: App)
-
-    fun inject(instructorAdapter: InstructorAdapter)
 
     fun inject(searchQueriesAdapter: SearchQueriesAdapter)
 

@@ -16,7 +16,7 @@ class CancelVideosDialog : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog = AlertDialog
-            .Builder(activity)
+            .Builder(requireContext())
             .setTitle(R.string.title_confirmation)
             .setMessage(R.string.are_you_sure)
             .setPositiveButton(R.string.yes) { _, _ ->

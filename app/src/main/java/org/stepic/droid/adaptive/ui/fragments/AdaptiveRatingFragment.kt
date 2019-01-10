@@ -17,25 +17,20 @@ import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.core.presenters.AdaptiveRatingPresenter
 import org.stepic.droid.core.presenters.contracts.AdaptiveRatingView
-import org.stepic.droid.util.AppConstants
+import org.stepic.droid.util.argument
 import javax.inject.Inject
 
 class AdaptiveRatingFragment: FragmentBase(), AdaptiveRatingView {
     companion object {
-        fun newInstance(courseId: Long) = AdaptiveRatingFragment().apply {
-            arguments = Bundle(1).apply { putLong(AppConstants.KEY_COURSE_LONG_ID, courseId) }
+        fun newInstance(courseId: Long) = AdaptiveRatingFragment().also {
+            it.courseId = courseId
         }
     }
 
     @Inject
     lateinit var adaptiveRatingPresenter: AdaptiveRatingPresenter
 
-    private var courseId = 0L
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        courseId = arguments.getLong(AppConstants.KEY_COURSE_LONG_ID, 0)
-        super.onCreate(savedInstanceState)
-    }
+    private var courseId by argument<Long>()
 
     override fun injectComponent() {
         App.componentManager()
@@ -43,16 +38,18 @@ class AdaptiveRatingFragment: FragmentBase(), AdaptiveRatingView {
                 .inject(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-            inflater?.inflate(R.layout.fragment_adaptive_rating, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+            inflater.inflate(R.layout.fragment_adaptive_rating, container, false)
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val context = requireContext()
+
         super.onViewCreated(view, savedInstanceState)
         error.setBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent))
         recycler.layoutManager = LinearLayoutManager(context)
 
         val divider = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
-        divider.setDrawable(ContextCompat.getDrawable(context, R.drawable.list_divider_h))
+        divider.setDrawable(ContextCompat.getDrawable(context, R.drawable.list_divider_h)!!)
         recycler.addItemDecoration(divider)
 
         val spinnerAdapter = ArrayAdapter<CharSequence>(context, R.layout.adaptive_item_rating_period, context.resources.getStringArray(R.array.adaptive_rating_periods))

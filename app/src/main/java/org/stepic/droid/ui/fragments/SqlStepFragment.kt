@@ -28,10 +28,10 @@ class SqlStepFragment: StepAttemptFragment(), CodeToolbarAdapter.OnSymbolClickLi
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        codeToolbarAdapter = CodeToolbarAdapter(context)
+        codeToolbarAdapter = CodeToolbarAdapter(requireContext())
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val viewGroup = layoutInflater.inflate(R.layout.view_sql_quiz, attemptContainer, false) as ViewGroup
         attemptContainer.addView(viewGroup)

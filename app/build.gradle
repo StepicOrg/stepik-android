@@ -21,6 +21,8 @@ android {
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
+
+        multiDexEnabled true
     }
 
 
@@ -124,8 +126,12 @@ dependencies {
     implementation libraries.supportDesign
     implementation libraries.supportRecyclerView
     implementation libraries.supportCardView
+    implementation libraries.multidex
     implementation libraries.constraintLayout
     implementation libraries.exoPlayer
+
+    implementation libraries.archExtensions
+    implementation libraries.archViewModel
 
     implementation libraries.gson
     implementation libraries.retrofit
@@ -134,12 +140,15 @@ dependencies {
     implementation libraries.jsoup
     debugImplementation libraries.stetho
     debugImplementation libraries.stethoOkHttp
+    oldReleaseImplementation libraries.stetho
+    oldReleaseImplementation libraries.stethoOkHttp
 
     implementation libraries.glide
+    implementation libraries.glideTransformations
 
     implementation libraries.amplitude
     implementation libraries.appMetrica
-    implementation libraries.appsflyer
+    implementation libraries.branch
     implementation libraries.installreferrer
 
     implementation libraries.calligraphy
@@ -157,6 +166,7 @@ dependencies {
     implementation libraries.timber
 
     implementation libraries.materialDialog
+    implementation libraries.materialDialogCore
     implementation libraries.numberPicker
     implementation (libraries.datePicker) {
         exclude group: 'com.android.support'
@@ -172,10 +182,7 @@ dependencies {
     implementation libraries.MPAndroidChart
 
     implementation libraries.shortcutBadger
-    implementation (libraries.StoriesKit) {
-        exclude group: 'com.android.support'
-        changing = true
-    }
+    implementation libraries.StoriesKit
 
     debugImplementation libraries.leakCanary
     releaseImplementation libraries.leakCanaryNoOp
@@ -188,6 +195,7 @@ dependencies {
     testImplementation libraries.junit
     testImplementation libraries.robolectric
     testImplementation libraries.mockitoCore
+    testImplementation libraries.mockitoKt
     testImplementation libraries.jodaTime
     testImplementation libraries.hamcrest
 

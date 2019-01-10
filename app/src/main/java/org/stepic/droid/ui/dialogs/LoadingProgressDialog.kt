@@ -13,8 +13,8 @@ import org.stepic.droid.R
 class LoadingProgressDialog
 @JvmOverloads
 constructor(
-        context: Context,
-        @StringRes private val titleRes: Int = R.string.loading
+    context: Context,
+    @StringRes private val titleRes: Int = R.string.loading
 ) : Dialog(context) {
 
     override fun onCreate(savedInstanceState: Bundle?) {

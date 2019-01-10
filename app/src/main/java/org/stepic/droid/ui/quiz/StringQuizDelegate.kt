@@ -1,11 +1,11 @@
 package org.stepic.droid.ui.quiz
 
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import org.stepic.droid.R
+import org.stepic.droid.ui.util.inflate
 import org.stepik.android.model.attempts.Attempt
 import org.stepik.android.model.Submission
 import org.stepik.android.model.Reply
@@ -22,7 +22,7 @@ open class StringQuizDelegate: QuizDelegate() {
     override var actionButton: Button? = null
 
     override fun onCreateView(parent: ViewGroup): View =
-            LayoutInflater.from(parent.context).inflate(R.layout.view_free_answer_attempt, parent, false)
+        parent.inflate(R.layout.view_free_answer_attempt)
 
     override fun onViewCreated(view: View) {
         answerField = view as EditText

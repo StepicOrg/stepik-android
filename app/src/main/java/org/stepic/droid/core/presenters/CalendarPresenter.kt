@@ -14,7 +14,6 @@ import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.core.DeadlineType
 import org.stepic.droid.core.presenters.contracts.CalendarExportableView
-import org.stepic.droid.di.course.CourseAndSectionsScope
 import org.stepic.droid.model.CalendarItem
 import org.stepic.droid.model.CalendarSection
 import org.stepik.android.model.Section
@@ -27,7 +26,6 @@ import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
 
-@CourseAndSectionsScope
 class CalendarPresenter
 @Inject
 constructor(

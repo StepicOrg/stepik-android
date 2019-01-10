@@ -34,8 +34,9 @@ import org.stepic.droid.core.presenters.StepsTrackingPresenter;
 import org.stepic.droid.core.presenters.contracts.LessonTrackingView;
 import org.stepic.droid.core.presenters.contracts.LessonView;
 import org.stepic.droid.core.updatingstep.contract.UpdatingStepListener;
+import org.stepik.android.domain.last_step.model.LastStep;
+import org.stepik.android.model.Course;
 import org.stepik.android.model.Lesson;
-import org.stepic.droid.model.PersistentLastStep;
 import org.stepik.android.model.Section;
 import org.stepik.android.model.Step;
 import org.stepik.android.model.Unit;
@@ -64,6 +65,7 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
     private static final String SIMPLE_LESSON_ID_KEY = "simpleLessonId";
     private static final String SIMPLE_STEP_POSITION_KEY = "simpleStepPosition";
     private static final String SIMPLE_DISCUSSION_ID_KEY = "simpleDiscussionPos";
+    private static final String IS_STEP_ID_WAS_PASSED_KEY = "isStepIdWasPassed";
     private boolean fromPreviousLesson;
     private long discussionId = -1;
     private Lesson lesson;
@@ -101,12 +103,13 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
         return fragment;
     }
 
-    public static LessonFragment newInstance(long simpleUnitId, long simpleLessonId, long simpleStepPosition, long discussionSampleId) {
+    public static LessonFragment newInstance(long simpleUnitId, long simpleLessonId, long simpleStepPosition, long discussionSampleId, boolean isStepIdWasPassed) {
         Bundle args = new Bundle();
         args.putLong(SIMPLE_UNIT_ID_KEY, simpleUnitId);
         args.putLong(SIMPLE_LESSON_ID_KEY, simpleLessonId);
         args.putLong(SIMPLE_STEP_POSITION_KEY, simpleStepPosition);
         args.putLong(SIMPLE_DISCUSSION_ID_KEY, discussionSampleId);
+        args.putBoolean(IS_STEP_ID_WAS_PASSED_KEY, isStepIdWasPassed);
         LessonFragment fragment = new LessonFragment();
         fragment.setArguments(args);
         return fragment;
@@ -212,7 +215,9 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
             long unitId = getArguments().getLong(SIMPLE_UNIT_ID_KEY);
             long defaultStepPos = getArguments().getLong(SIMPLE_STEP_POSITION_KEY);
             long lessonId = getArguments().getLong(SIMPLE_LESSON_ID_KEY);
-            stepsPresenter.init(lesson, unit, lessonId, unitId, defaultStepPos, fromPreviousLesson, section);
+            boolean isStepIdWasPassed = getArguments().getBoolean(IS_STEP_ID_WAS_PASSED_KEY, false);
+
+            stepsPresenter.init(lesson, unit, lessonId, unitId, defaultStepPos, isStepIdWasPassed, fromPreviousLesson, section);
             fromPreviousLesson = false;
         } else {
             if (stepsPresenter.getStepList().isEmpty()) {
@@ -237,8 +242,10 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
                 long unitId = getArguments().getLong(SIMPLE_UNIT_ID_KEY);
                 long defaultStepPos = getArguments().getLong(SIMPLE_STEP_POSITION_KEY);
                 long lessonId = getArguments().getLong(SIMPLE_LESSON_ID_KEY);
+
+                boolean isStepIdWasPassed = getArguments().getBoolean(IS_STEP_ID_WAS_PASSED_KEY, false);
                 fromPreviousLesson = getArguments().getBoolean(FROM_PREVIOUS_KEY);
-                stepsPresenter.refreshWhenOnConnectionProblem(lesson, unit, lessonId, unitId, defaultStepPos, fromPreviousLesson, section);
+                stepsPresenter.refreshWhenOnConnectionProblem(lesson, unit, lessonId, unitId, defaultStepPos, isStepIdWasPassed, fromPreviousLesson, section);
                 fromPreviousLesson = false;
             }
         });
@@ -319,8 +326,11 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
                         if (unit != null && unit.getSection() > 0) {
                             Section section = getDatabaseFacade().getSectionById(unit.getSection());
                             if (section != null && section.getCourse() > 0) {
-                                PersistentLastStep persistentLastStep = new PersistentLastStep(section.getCourse(), stepId, unit.getId());
-                                getDatabaseFacade().updateLastStep(persistentLastStep);
+                                Course course = getDatabaseFacade().getCourseById(section.getCourse());
+                                if (course != null && course.getLastStepId() != null) {
+                                    LastStep lastStep = new LastStep(course.getLastStepId(), unit.getId(), unit.getLesson(), stepId);
+                                    getDatabaseFacade().updateLastStep(lastStep);
+                                }
                             }
                         }
                     } catch (Exception exception) {

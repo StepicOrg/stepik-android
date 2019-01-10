@@ -19,6 +19,7 @@
     <uses-permission
         android:name="android.permission.READ_PHONE_STATE"
         android:maxSdkVersion="22" />
+    <uses-permission android:name="com.android.vending.BILLING" />
 
     <application
         android:name=".base.App"
@@ -35,6 +36,7 @@
         <activity
             android:name="org.stepic.droid.ui.activities.SplashActivity"
             android:noHistory="true"
+            android:launchMode="singleTask"
             android:theme="@style/AppTheme.BrandedLaunch" />
 
         <activity-alias
@@ -45,6 +47,22 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
+            </intent-filter>
+
+            <!-- Branch URI scheme -->
+            <intent-filter>
+                <data android:scheme="stepik" android:host="open" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+
+            <!-- Branch App Links -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https" android:host="stepik.app.link" />
             </intent-filter>
         </activity-alias>
 
@@ -110,62 +128,10 @@
                 android:value=".ui.activities.CourseSearchResultActivity" />
         </activity>
 
-        <activity android:name=".ui.activities.CourseDetailActivity">
-
-            <intent-filter
-                android:autoVerify="true"
-                tools:ignore="UnusedAttribute">
-
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="https" />
-                <data android:scheme="http" />
-                <data android:host="@string/host_name" />
-                <data android:host="@string/secondary_host_name" />
-
-                <data android:pathPattern="/course/.*/" />
-                <data android:pathPattern="/course/.*/course_app" />
-
-            </intent-filter>
-        </activity>
-
-        <activity
-            android:name=".ui.activities.SectionActivity"
-            android:parentActivityName=".ui.activities.MainFeedActivity">
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activities.MainFeedActivity" />
-
-            <intent-filter
-                android:autoVerify="true"
-                tools:ignore="UnusedAttribute">
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="https" />
-                <data android:scheme="http" />
-                <data android:host="@string/host_name" />
-                <data android:host="@string/secondary_host_name" />
-                <data android:pathPattern="/course/.*/syllabus" />
-            </intent-filter>
-
-        </activity>
-
         <activity
             android:name=".ui.activities.StepsActivity"
-            android:parentActivityName=".ui.activities.UnitsActivity"
             android:windowSoftInputMode="adjustResize">
             <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activities.UnitsActivity" />
-
             <intent-filter
                 android:autoVerify="true"
                 tools:ignore="UnusedAttribute">
@@ -223,9 +189,7 @@
 
         </activity>
 
-        <activity android:name=".ui.activities.UnitsActivity" />
-
-        <activity
+         <activity
             android:name=".ui.activities.CourseSearchResultActivity"
             android:launchMode="singleTop">
             <intent-filter>
@@ -307,14 +271,7 @@
             android:theme="@style/AppTheme.PhotoView" />
 
         <activity
-            android:name=".ui.activities.SettingsActivity"
-            android:launchMode="singleTop"
-            android:parentActivityName=".ui.activities.MainFeedActivity">
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activities.MainFeedActivity" />
-        </activity>
+            android:name=".ui.activities.SettingsActivity" />
 
         <activity
             android:name=".ui.activities.NotificationSettingsActivity"
@@ -378,6 +335,30 @@
             android:theme="@style/StoryActivityTheme"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name="org.stepik.android.view.course.ui.activity.CourseActivity">
+
+            <intent-filter
+                android:autoVerify="true"
+                tools:ignore="UnusedAttribute">
+
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="https" />
+                <data android:scheme="http" />
+                <data android:host="@string/host_name" />
+                <data android:host="@string/secondary_host_name" />
+
+                <data android:pathPattern="/course/.*/" />
+                <data android:pathPattern="/course/.*/course_app" />
+                <data android:pathPattern="/course/.*/syllabus" />
+            </intent-filter>
+
+        </activity>
+
         <receiver
             android:name="org.stepic.droid.receivers.DownloadClickReceiver"
             android:exported="true">
@@ -397,12 +378,6 @@
         <receiver android:name=".notifications.NotificationBroadcastReceiver">
             <intent-filter>
                 <action android:name="notification_cancelled" />
-            </intent-filter>
-        </receiver>
-
-        <receiver android:name="com.appsflyer.SingleInstallBroadcastReceiver" android:exported="true">
-            <intent-filter>
-                <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
 
@@ -465,6 +440,13 @@
             android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="true" />
 
+        <!-- Branch install referrer tracking -->
+        <receiver android:name="io.branch.referral.InstallListener" android:exported="true">
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
+
         <uses-library
             android:name="com.sec.android.app.multiwindow"
             android:required="false" />
@@ -494,6 +476,13 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
+
+        <!-- Branch init -->
+        <meta-data android:name="io.branch.sdk.BranchKey" android:value="key_live_ekt7qHLldFSKQyO2DT3NYellwFfko55Q" />
+        <meta-data android:name="io.branch.sdk.BranchKey.test" android:value="key_test_gjtWCOSjnAMKMtV9qJ4YyeelFzced092" />
+
+        <!-- Branch testing (TestMode "true" to simulate fresh installs on dev environment) -->
+        <meta-data android:name="io.branch.sdk.TestMode" android:value="false" />
 
     </application>
 </manifest>

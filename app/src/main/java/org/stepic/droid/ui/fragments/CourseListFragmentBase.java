@@ -28,10 +28,10 @@ import org.stepic.droid.core.presenters.DroppingPresenter;
 import org.stepic.droid.core.presenters.contracts.ContinueCourseView;
 import org.stepic.droid.core.presenters.contracts.CoursesView;
 import org.stepic.droid.core.presenters.contracts.DroppingView;
+import org.stepic.droid.model.CourseListType;
+import org.stepik.android.domain.last_step.model.LastStep;
 import org.stepik.android.model.Course;
 import org.stepic.droid.model.CoursesCarouselColorType;
-import org.stepik.android.model.Section;
-import org.stepic.droid.storage.operations.Table;
 import org.stepic.droid.ui.activities.contracts.RootScreen;
 import org.stepic.droid.ui.adapters.CoursesAdapter;
 import org.stepic.droid.ui.custom.StepikSwipeRefreshLayout;
@@ -138,7 +138,7 @@ public abstract class CourseListFragmentBase extends FragmentBase
         swipeRefreshLayout.setOnRefreshListener(this);
 
         if (courses == null) courses = new ArrayList<>();
-        boolean showMore = getCourseType() == Table.enrolled;
+        boolean showMore = getCourseType() == CourseListType.ENROLLED;
         coursesAdapter = new CoursesAdapter(getActivity(), courses, continueCoursePresenter, droppingPresenter, true, showMore, CoursesCarouselColorType.Light);
         listOfCoursesView.setAdapter(coursesAdapter);
         layoutManager = new WrapContentLinearLayoutManager(getContext());
@@ -213,7 +213,7 @@ public abstract class CourseListFragmentBase extends FragmentBase
     }
 
     @Nullable
-    protected abstract Table getCourseType();
+    protected abstract CourseListType getCourseType();
 
     public final void updateEnrollment(Course courseForUpdate, long enrollment) {
         boolean inList = false;
@@ -221,14 +221,14 @@ public abstract class CourseListFragmentBase extends FragmentBase
         for (int i = 0; i < courses.size(); i++) {
             Course courseItem = courses.get(i);
             if (courseItem.getId() == courseForUpdate.getId()) {
-                courseItem.setEnrollment((int) courseItem.getId());
+                courseItem.setEnrollment(courseItem.getId());
                 courseForUpdate = courseItem;
                 inList = true;
                 position = i;
                 break;
             }
         }
-        if (getCourseType() == Table.enrolled && !inList) {
+        if (getCourseType() == CourseListType.ENROLLED && !inList) {
             courses.add(courseForUpdate);
             coursesAdapter.notifyDataSetChanged();
         } else if (inList) {
@@ -315,9 +315,9 @@ public abstract class CourseListFragmentBase extends FragmentBase
     }
 
     @Override
-    public void onOpenStep(long courseId, @NotNull Section section, long lessonId, long unitId, int stepPosition) {
+    public void onOpenStep(long courseId, LastStep lastStep) {
         ProgressHelper.dismiss(getFragmentManager(), continueLoadingTag);
-        getScreenManager().continueCourse(getActivity(), courseId, section, lessonId, unitId, stepPosition);
+        getScreenManager().continueCourse(getActivity(), lastStep.getUnit(), lastStep.getLesson(), lastStep.getStep());
     }
 
     @Override
@@ -329,7 +329,7 @@ public abstract class CourseListFragmentBase extends FragmentBase
     @Override
     public void onAnyProblemWhileContinue(@NotNull Course course) {
         ProgressHelper.dismiss(getFragmentManager(), continueLoadingTag);
-        getScreenManager().showSections(getActivity(), course);
+        getScreenManager().showCourseModules(getActivity(), course);
     }
 
     @Override

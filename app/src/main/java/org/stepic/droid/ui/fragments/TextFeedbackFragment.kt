@@ -38,25 +38,22 @@ class TextFeedbackFragment : FragmentBase(), TextFeedbackView {
                 .inject(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?)
-            = inflater?.inflate(R.layout.fragment_text_feedback, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
+            inflater.inflate(R.layout.fragment_text_feedback, container, false)
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
-        view?.let {
-            initToolbar()
-            initTextFields()
-            initScrollView(view)
+        initToolbar()
+        initTextFields()
+        initScrollView(view)
 
-            if (feedbackContactsEditText.text.isEmpty()) {
-                feedbackContactsEditText.requestFocus()
-            } else {
-                feedbackFormEditText.requestFocus()
-            }
-            progressDialog = LoadingProgressDialog(context)
+        if (feedbackContactsEditText.text.isEmpty()) {
+            feedbackContactsEditText.requestFocus()
+        } else {
+            feedbackFormEditText.requestFocus()
         }
-
+        progressDialog = LoadingProgressDialog(requireContext())
     }
 
     override fun onStart() {
@@ -101,7 +98,7 @@ class TextFeedbackFragment : FragmentBase(), TextFeedbackView {
     }
 
     private fun showSoftKeypad(editTextView: View) {
-        val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.showSoftInput(editTextView, InputMethodManager.SHOW_IMPLICIT)
     }
 
@@ -149,7 +146,7 @@ class TextFeedbackFragment : FragmentBase(), TextFeedbackView {
 
     override fun onFeedbackSent() {
         Toast.makeText(context, R.string.feedback_sent, Toast.LENGTH_SHORT).show()
-        activity.setResult(Activity.RESULT_OK)
+        activity?.setResult(Activity.RESULT_OK)
         activity?.finish()
     }
 

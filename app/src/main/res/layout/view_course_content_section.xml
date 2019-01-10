@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:foreground="?selectableItemBackground"
+    android:background="@color/course_content_section_background">
+
+    <TextView
+        android:id="@+id/sectionPosition"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="16dp"
+        android:gravity="center"
+
+        android:layout_marginStart="@dimen/course_content_item_margin"
+        android:layout_marginLeft="@dimen/course_content_item_margin"
+        android:layout_marginTop="@dimen/course_content_item_margin"
+
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/new_accent_color"
+
+        android:textSize="16sp"
+
+        tools:text="1" />
+
+    <TextView
+        android:id="@+id/sectionTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/course_content_item_inner_margin"
+        android:layout_marginLeft="@dimen/course_content_item_inner_margin"
+        android:layout_marginTop="@dimen/course_content_item_margin"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:gravity="start"
+        android:lineSpacingExtra="2sp"
+        android:textSize="14sp"
+        app:layout_constraintBaseline_toBaselineOf="@id/sectionPosition"
+        app:layout_constraintEnd_toStartOf="@+id/sectionDownloadStatus"
+        app:layout_constraintStart_toEndOf="@+id/sectionPosition"
+
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Introduction to JavaScript" />
+
+    <TextView
+        android:id="@+id/sectionTextProgress"
+        fontPath="fonts/Roboto-Light.ttf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/course_content_item_inner_margin"
+        android:layout_marginStart="@dimen/course_content_item_inner_margin"
+        android:layout_marginLeft="@dimen/course_content_item_inner_margin"
+        android:lineSpacingExtra="4sp"
+        android:textColor="@color/new_accent_color"
+        android:textSize="12sp"
+        android:textStyle="normal"
+        app:layout_constraintStart_toEndOf="@+id/sectionPosition"
+        app:layout_constraintTop_toBottomOf="@+id/sectionTitle"
+        tools:ignore="missingPrefix"
+        tools:text="6/10" />
+
+    <TextView
+        android:id="@+id/sectionExamDescription"
+        fontPath="fonts/Roboto-Light.ttf"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/course_content_item_inner_margin"
+        android:layout_marginStart="@dimen/course_content_item_inner_margin"
+        android:layout_marginLeft="@dimen/course_content_item_inner_margin"
+        android:layout_marginEnd="@dimen/course_content_item_inner_margin"
+        android:layout_marginRight="@dimen/course_content_item_inner_margin"
+        android:lineSpacingExtra="4sp"
+        android:textColor="@color/new_accent_color"
+        android:text="@string/course_content_section_exam_description"
+        android:textSize="12sp"
+        android:textStyle="normal"
+        app:layout_constraintEnd_toStartOf="@id/sectionDownloadStatus"
+        app:layout_constraintStart_toEndOf="@+id/sectionPosition"
+        app:layout_constraintTop_toBottomOf="@+id/sectionTextProgress"
+        tools:ignore="missingPrefix" />
+
+    <org.stepik.android.view.course_content.ui.view.DownloadStatusView
+        android:id="@+id/sectionDownloadStatus"
+        android:background="@drawable/circle_selector"
+        android:layout_width="@dimen/course_content_download_status_size"
+        android:layout_height="@dimen/course_content_download_status_size"
+        android:padding="@dimen/course_content_download_status_padding"
+
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+
+        app:layout_constraintBottom_toBottomOf="@+id/sectionExamDescription"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/sectionTitle" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/sectionTimeline"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/course_content_item_inner_margin"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sectionExamDescription"
+        app:layout_constraintBottom_toTopOf="@id/bottomMargin"
+
+        tools:paddingStart="52dp"
+        tools:layoutManager="android.support.v7.widget.LinearLayoutManager"
+        tools:orientation="horizontal"
+        tools:listitem="@layout/view_course_content_section_date" />
+
+    <org.stepic.droid.ui.custom.vertical_progress_bar.VerticalProgressBar
+        android:id="@+id/sectionProgress"
+        android:layout_width="3dp"
+        android:layout_height="0dp"
+        app:progressBackgroundColor="@android:color/transparent"
+        app:progressForegroundColor="@color/stepic_brand_primary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Space
+        android:id="@+id/bottomMargin"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/course_content_item_margin"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</android.support.constraint.ConstraintLayout>

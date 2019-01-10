@@ -91,6 +91,7 @@ class VideoExoFragment : FragmentBase(),
             if (activity != null) {
                 Toast.makeText(activity, R.string.no_connection, Toast.LENGTH_SHORT).show()
             }
+            analytic.reportError(Analytic.Video.CONNECTION_ERROR, error)
         } else if (error != null) {
             analytic.reportError(Analytic.Video.ERROR, error)
         }
@@ -160,10 +161,10 @@ class VideoExoFragment : FragmentBase(),
         autoPlay = true
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-            inflater?.inflate(R.layout.fragment_exo_video, container, false) as ViewGroup
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+            inflater.inflate(R.layout.fragment_exo_video, container, false) as ViewGroup
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         videoPlayerView.setControllerVisibilityListener { visibility ->
             if (visibility == View.VISIBLE) {
@@ -194,7 +195,7 @@ class VideoExoFragment : FragmentBase(),
         super.onActivityCreated(savedInstanceState)
         val intentFilter = IntentFilter()
         intentFilter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY)
-        activity.registerReceiver(headPhoneReceiver, intentFilter)
+        requireActivity().registerReceiver(headPhoneReceiver, intentFilter)
         headPhoneReceiver.listener = this
     }
 
@@ -207,14 +208,14 @@ class VideoExoFragment : FragmentBase(),
         internetEnabledClient.subscribe(this)
         exoPhoneListener.subscribe(this)
 
-        val telephonyManager = context.getSystemService(TELEPHONY_SERVICE) as TelephonyManager
+        val telephonyManager = requireContext().getSystemService(TELEPHONY_SERVICE) as TelephonyManager
         telephonyManager.listen(exoPhoneListener, PhoneStateListener.LISTEN_CALL_STATE)
     }
 
     override fun onStop() {
         super.onStop()
 
-        val telephonyManager = context.getSystemService(TELEPHONY_SERVICE) as TelephonyManager
+        val telephonyManager = requireContext().getSystemService(TELEPHONY_SERVICE) as TelephonyManager
         telephonyManager.listen(exoPhoneListener, PhoneStateListener.LISTEN_NONE)
         exoPhoneListener.unsubscribe()
         internetEnabledClient.unsubscribe(this)
@@ -232,8 +233,8 @@ class VideoExoFragment : FragmentBase(),
     private fun createPlayer(): Long? {
         videoPlayerView?.hideController()
 
-        val cachedVideo: Video? = arguments.getParcelable(CACHED_VIDEO_KEY)
-        val externalVideo: Video? = arguments.getParcelable(EXTERNAL_VIDEO_KEY)
+        val cachedVideo: Video? = arguments?.getParcelable(CACHED_VIDEO_KEY)
+        val externalVideo: Video? = arguments?.getParcelable(EXTERNAL_VIDEO_KEY)
 
         val video = cachedVideo ?: externalVideo
 
@@ -384,8 +385,8 @@ class VideoExoFragment : FragmentBase(),
                 }
                 R.id.video_quality -> {
                     analytic.reportEvent(Analytic.Video.QUALITY_MENU)
-                    val cachedVideo: Video? = arguments.getParcelable(CACHED_VIDEO_KEY)
-                    val externalVideo: Video? = arguments.getParcelable(EXTERNAL_VIDEO_KEY)
+                    val cachedVideo: Video? = arguments?.getParcelable(CACHED_VIDEO_KEY)
+                    val externalVideo: Video? = arguments?.getParcelable(EXTERNAL_VIDEO_KEY)
                     val nowPlaying = videoUrl
 
                     if (nowPlaying != null) {

@@ -14,7 +14,7 @@ abstract class VideoQualityDialogBase : DialogFragment() {
         }
     }
 
-    abstract fun injectDependencies();
+    abstract fun injectDependencies()
 
     private fun initMaps() {
         qualityToPositionMap.put("270", 0)

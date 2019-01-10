@@ -1,16 +1,16 @@
 package org.stepic.droid.persistence.downloads.resolvers.structure
 
 import io.reactivex.Observable
-import io.reactivex.rxkotlin.toObservable
 import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.persistence.model.Structure
-import org.stepic.droid.storage.repositories.Repository
 import org.stepic.droid.storage.repositories.assignment.AssignmentRepository
-import org.stepic.droid.storage.repositories.progress.ProgressRepository
-import org.stepic.droid.util.compose
+import org.stepic.droid.util.getProgresses
+import org.stepic.droid.util.mapToLongArray
 import org.stepic.droid.util.then
-import org.stepik.android.model.Lesson
-import org.stepik.android.model.Section
+import org.stepik.android.domain.lesson.repository.LessonRepository
+import org.stepik.android.domain.progress.repository.ProgressRepository
+import org.stepik.android.domain.section.repository.SectionRepository
+import org.stepik.android.domain.unit.repository.UnitRepository
 import org.stepik.android.model.Unit
 import javax.inject.Inject
 
@@ -18,36 +18,56 @@ import javax.inject.Inject
 class UnitStructureResolverImpl
 @Inject
 constructor(
-        private val sectionRepository: Repository<Section>,
-        private val unitRepository: Repository<Unit>,
-        private val lessonRepository: Repository<Lesson>,
+    private val sectionRepository: SectionRepository,
+    private val unitRepository: UnitRepository,
+    private val lessonRepository: LessonRepository,
 
-        private val assignmentRepository: AssignmentRepository,
-        private val progressRepository: ProgressRepository,
+    private val assignmentRepository: AssignmentRepository,
+    private val progressRepository: ProgressRepository,
 
-        private val stepStructureResolver: StepStructureResolver
+    private val stepStructureResolver: StepStructureResolver
 ): UnitStructureResolver {
     override fun resolveStructure(vararg ids: Long): Observable<Structure> =
-            Observable.just(ids)
-                    .map(List<Unit>::toTypedArray compose Iterable<Unit>::toList compose unitRepository::getObjects)
-                    .flatMap(::resolveStructure)
+        unitRepository
+            .getUnits(*ids)
+            .flatMapObservable { units ->
+                resolveStructure(*units.toTypedArray())
+            }
 
     override fun resolveStructure(vararg items: Unit): Observable<Structure> =
-            items.toObservable().flatMap { unit ->
-                val section = sectionRepository.getObject(unit.section)!!
-                resolveStructure(section.course, section.id, unit)
+        sectionRepository
+            .getSections(*items.mapToLongArray(Unit::section))
+            .flatMapObservable { sections ->
+                val observables =
+                    items.mapNotNull { unit ->
+                        sections
+                            .find { it.id == unit.section }
+                            ?.let { resolveStructure(it.course, it.id, unit) }
+                    }
+                Observable.concat(observables)
             }
 
     override fun resolveStructure(courseId: Long, sectionId: Long, vararg unitIds: Long): Observable<Structure> =
-            Observable.just(unitIds)
-                    .map(unitRepository::getObjects)
-                    .flatMap { resolveStructure(courseId, sectionId, *it.toList().toTypedArray()) }
+        unitRepository
+            .getUnits(*unitIds)
+            .flatMapObservable { units ->
+                resolveStructure(courseId, sectionId, *units.toTypedArray())
+            }
 
     private fun resolveStructure(courseId: Long, sectionId: Long, vararg units: Unit): Observable<Structure> =
-            units.toObservable().flatMap { unit ->
-                val lesson = lessonRepository.getObject(unit.lesson)!!
-                assignmentRepository.syncAssignments(*unit.assignments ?: longArrayOf()) then
-                        progressRepository.syncProgresses(unit, lesson) then
-                        stepStructureResolver.resolveStructure(courseId, sectionId, unit.id, lesson.id, *lesson.steps)
+        lessonRepository.getLessons(*units.mapToLongArray(Unit::lesson))
+            .flatMapObservable { lessons ->
+                val assignmentIds = units.mapNotNull { it.assignments }.fold(longArrayOf(), LongArray::plus)
+                val progresses = units.asIterable().getProgresses() + lessons.getProgresses()
+
+                val observables =
+                    units.mapNotNull { unit ->
+                        lessons
+                            .find { it.id == unit.lesson }
+                            ?.let { stepStructureResolver.resolveStructure(courseId, sectionId, unit.id, it.id, *it.steps) }
+                    }
+                assignmentRepository.syncAssignments(*assignmentIds) then
+                        progressRepository.getProgresses(*progresses).toCompletable() then
+                        Observable.concat(observables)
             }
 }

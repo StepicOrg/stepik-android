@@ -71,7 +71,7 @@ class AnimatedOnboardingActivity : FragmentActivityBase(), OnNextClickedListener
         reportToAnalytic(Analytic.Onboarding.ACTION)
         val current = onboardingViewPager.currentItem
         val next = current + 1
-        if (next < onboardingViewPager.adapter.count) {
+        if (next < onboardingViewPager.adapter!!.count) {
             onboardingViewPager.setCurrentItem(next, true)
         } else {
             onboardingComplete()

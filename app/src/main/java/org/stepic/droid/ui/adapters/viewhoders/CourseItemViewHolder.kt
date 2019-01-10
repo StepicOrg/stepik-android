@@ -113,7 +113,7 @@ class CourseItemViewHolder(
         courseWidgetInfo.setOnClickListener {
             course?.let {
                 if (isEnrolled(it)) {
-                    screenManager.showSections(contextActivity, it)
+                    screenManager.showCourseModules(contextActivity, it)
                 } else {
                     screenManager.showCourseDescription(contextActivity, it, false)
                 }
@@ -153,11 +153,11 @@ class CourseItemViewHolder(
 
     private fun onClickCourse() = course?.let {
         analytic.reportEvent(Analytic.Interaction.CLICK_COURSE)
-        if (it.enrollment != 0) {
+        if (it.enrollment != 0L) {
             if (adaptiveCoursesResolver.isAdaptive(it.id)) {
                 screenManager.continueAdaptiveCourse(contextActivity, it)
             } else {
-                screenManager.showSections(contextActivity, it)
+                screenManager.showCourseModules(contextActivity, it)
             }
         } else {
             screenManager.showCourseDescription(contextActivity, it)
@@ -247,7 +247,7 @@ class CourseItemViewHolder(
     }
 
     private fun isEnrolled(course: Course?): Boolean =
-            course != null && course.enrollment != 0
+            course != null && course.enrollment != 0L
 
     private fun showJoinButton() {
         courseWidgetButton.applyToButton(joinTitle, joinColor, colorType.joinResource)

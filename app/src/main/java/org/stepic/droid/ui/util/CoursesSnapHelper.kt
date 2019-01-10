@@ -82,21 +82,21 @@ class CoursesSnapHelper(private val rowCount: Int) : SnapHelper() {
         }
     }
 
-    private fun getNextView(currentPosition: Int, layoutManager: RecyclerView.LayoutManager): View {
+    private fun getNextView(currentPosition: Int, layoutManager: RecyclerView.LayoutManager): View? {
         val lastPosition = layoutManager.itemCount - 1
         val currentPositionPlusRowCount = currentPosition + rowCount
         val nextPosition = Math.min(lastPosition, currentPositionPlusRowCount)
         return layoutManager.findViewByPosition(nextPosition)
     }
 
-    private fun getPreviousView(currentPosition: Int, layoutManager: RecyclerView.LayoutManager): View {
+    private fun getPreviousView(currentPosition: Int, layoutManager: RecyclerView.LayoutManager): View? {
         val previousPosition = Math.max(0, currentPosition)
         return layoutManager.findViewByPosition(previousPosition)
     }
 
     override fun createScroller(layoutManager: RecyclerView.LayoutManager): RecyclerView.SmoothScroller? {
         return object : LinearSmoothScroller(recyclerView?.context) {
-            override fun onTargetFound(targetView: View, state: RecyclerView.State?, action: RecyclerView.SmoothScroller.Action) {
+            override fun onTargetFound(targetView: View, state: RecyclerView.State, action: RecyclerView.SmoothScroller.Action) {
                 val snapDistances = calculateDistanceToFinalSnap(layoutManager, targetView)
                 val dx = snapDistances[0]
                 val dy = snapDistances[1]

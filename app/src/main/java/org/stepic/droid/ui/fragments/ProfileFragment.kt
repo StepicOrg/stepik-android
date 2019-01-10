@@ -100,18 +100,18 @@ class ProfileFragment : FragmentBase(),
                 .inject(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?)
-            = inflater?.inflate(R.layout.fragment_profile_new, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+            inflater.inflate(R.layout.fragment_profile_new, container, false)
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-        achievementsToDisplay =  context.resources.getInteger(R.integer.achievements_to_display)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        achievementsToDisplay = resources.getInteger(R.integer.achievements_to_display)
         nullifyActivityBackground()
         super.onViewCreated(view, savedInstanceState)
         initToolbar()
         initTimezone()
 
         profileSettingsRecyclerView.layoutManager = LinearLayoutManager(context)
-        profileSettingsRecyclerView.adapter = ProfileSettingsAdapter(activity, profileSettingsList, screenManager, this, analytic)
+        profileSettingsRecyclerView.adapter = ProfileSettingsAdapter(requireActivity(), profileSettingsList, screenManager, this, analytic)
         profileSettingsRecyclerView.isNestedScrollingEnabled = false
 
         achievementsTilesContainer.layoutManager = GridLayoutManager(context, achievementsToDisplay)
@@ -289,7 +289,7 @@ class ProfileFragment : FragmentBase(),
         contentRoot.visibility = View.VISIBLE
 
         localUserViewModel = userViewModel
-        activity.invalidateOptionsMenu()
+        activity?.invalidateOptionsMenu()
         if (userViewModel.isMyProfile) {
             streakPresenter.tryShowNotificationSetting()
 
@@ -324,7 +324,7 @@ class ProfileFragment : FragmentBase(),
 
 
         profileName.text = builder.toString()
-        val userPlaceholder = ContextCompat.getDrawable(context, R.drawable.general_placeholder)
+        val userPlaceholder = ContextCompat.getDrawable(requireContext(), R.drawable.general_placeholder)
         if (userViewModel.imageLink != null && userViewModel.imageLink.endsWith(AppConstants.SVG_EXTENSION)) {
             val svgRequestBuilder = GlideSvgRequestFactory.create(context, userPlaceholder)
             val uri = Uri.parse(userViewModel.imageLink)

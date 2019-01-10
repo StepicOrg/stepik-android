@@ -495,8 +495,8 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Call<Void> tryJoinCourse(@NotNull Course course) {
-        return loggedService.joinCourse(new EnrollmentWrapper(course.getId()));
+    public Completable joinCourse(long courseId) {
+        return loggedService.joinCourse(new EnrollmentWrapper(courseId));
     }
 
     @Override
@@ -555,9 +555,14 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Call<Void> dropCourse(long courseId) {
+    public Completable dropCourse(long courseId) {
         if (!config.isUserCanDropCourse()) return null;
         return loggedService.dropCourse(courseId);
+    }
+
+    @Override
+    public Call<Void> dropCourse(@NotNull Course course) {
+        return loggedService.dropCourseLegacy(course.getId());
     }
 
     @Override
@@ -626,6 +631,11 @@ public class ApiImpl implements Api {
             ids = new long[]{0};
         }
         return loggedService.getCoursesReactive(page, ids);
+    }
+
+    @Override
+    public Single<CoursesMetaResponse> getCoursesReactive(@NotNull long[] ids) {
+        return loggedService.getCoursesReactive(ids);
     }
 
     @Override
@@ -794,14 +804,14 @@ public class ApiImpl implements Api {
     @Override
     public Call<Void> setReadStatusForNotification(long notificationId, boolean isRead) {
         Notification notification = new Notification();
-        notification.set_unread(!isRead);
+        notification.setUnread(!isRead);
         return loggedService.putNotification(notificationId, new NotificationRequest(notification));
     }
 
     @Override
     public Completable setReadStatusForNotificationReactive(long notificationId, boolean isRead) {
         Notification notification = new Notification();
-        notification.set_unread(!isRead);
+        notification.setUnread(!isRead);
         return loggedService.putNotificationReactive(notificationId, new NotificationRequest(notification));
     }
 
@@ -851,8 +861,8 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Call<UnitMetaResponse> getUnitByLessonId(long lessonId) {
-        return loggedService.getUnitByLessonId(lessonId);
+    public Single<UnitMetaResponse> getUnitsByLessonId(long lessonId) {
+        return loggedService.getUnitsByLessonId(lessonId);
     }
 
     @Override
@@ -893,7 +903,7 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Single<CourseReviewResponse> getCourseReviews(int[] courseIds) {
+    public Single<CourseReviewResponse> getCourseReviews(long[] courseIds) {
         return loggedService.getCourseReviews(courseIds);
     }
 

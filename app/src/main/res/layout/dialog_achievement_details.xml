@@ -24,7 +24,8 @@
         <ImageView
             android:id="@+id/achievementIcon"
             android:layout_width="164dp"
-            android:layout_height="164dp"/>
+            android:layout_height="164dp"
+            android:contentDescription="@null" />
     </FrameLayout>
 
     <org.stepic.droid.features.achievements.ui.custom.VectorRatingBar
@@ -32,10 +33,10 @@
         android:layout_width="wrap_content"
         android:layout_height="20dp"
         android:layout_marginTop="8dp"
-        app:backgroundIcon="@drawable/ic_achievements_star_background"
+        app:backgroundIcon="@drawable/ic_progress_star_white_filled"
         app:itemsGap="2dp"
-        app:progressIcon="@drawable/ic_achievements_star_progress"
-        app:secondaryIcon="@drawable/ic_achievements_star_secondary" />
+        app:progressIcon="@drawable/ic_progress_star_green_filled"
+        app:secondaryIcon="@drawable/ic_progress_star_green" />
 
     <TextView
         android:id="@+id/achievementTitle"

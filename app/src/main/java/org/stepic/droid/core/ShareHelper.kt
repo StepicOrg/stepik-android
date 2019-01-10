@@ -14,5 +14,5 @@ interface ShareHelper {
 
     fun getIntentForSectionSharing(section: Section): Intent
 
-    fun getIntentForProfileSharing (userViewModel: UserViewModel) : Intent
+    fun getIntentForProfileSharing(userViewModel: UserViewModel): Intent
 }

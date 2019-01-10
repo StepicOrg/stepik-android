@@ -43,7 +43,7 @@ class ChooseStorageDialog: DialogFragment() {
         val youWantMoveDataDialog = WantMoveDataDialog.newInstance()
         youWantMoveDataDialog.setTargetFragment(targetFragment, WantMoveDataDialog.REQUEST_CODE)
 
-        return AlertDialog.Builder(context)
+        return AlertDialog.Builder(requireContext())
                 .setTitle(R.string.choose_storage_title)
                 .setNegativeButton(R.string.cancel) { _, _ -> analytic.reportEvent(Analytic.Interaction.CANCEL_CHOOSE_STORE_CLICK) }
                 .setSingleChoiceItems(headers, indexChosen) { _, which ->

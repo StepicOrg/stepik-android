@@ -42,4 +42,10 @@
         <item quantity="many">%d отзывов о курсах</item>
         <item quantity="other">%d отзывов о курсах</item>
     </plurals>
+    <plurals name="points">
+        <item quantity="one">%d былл</item>
+        <item quantity="few">%d балла</item>
+        <item quantity="many">%d баллов</item>
+        <item quantity="other">%d баллов</item>
+    </plurals>
 </resources>

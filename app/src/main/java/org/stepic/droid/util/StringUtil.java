@@ -30,20 +30,12 @@ public class StringUtil {
     }
 
     public static String getUriForCourse(String baseUrl, String slug) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(baseUrl);
-        stringBuilder.append(AppConstants.WEB_URI_SEPARATOR);
-        stringBuilder.append("course");
-        stringBuilder.append(AppConstants.WEB_URI_SEPARATOR);
-        stringBuilder.append(slug);
-        stringBuilder.append(AppConstants.WEB_URI_SEPARATOR);
-        return stringBuilder.toString();
-    }
-
-    public static String getUriForSyllabus(String baseUrl, String slug) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(getUriForCourse(baseUrl, slug)).append(AppConstants.APP_INDEXING_SYLLABUS_MANIFEST);
-        return stringBuilder.toString();
+        return baseUrl +
+                AppConstants.WEB_URI_SEPARATOR +
+                "course" +
+                AppConstants.WEB_URI_SEPARATOR +
+                slug +
+                AppConstants.WEB_URI_SEPARATOR;
     }
 
     public static String getDynamicLinkForCourse(Config config, String slug) {

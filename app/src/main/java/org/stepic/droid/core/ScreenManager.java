@@ -21,6 +21,8 @@ import org.stepik.android.model.Video;
 import org.stepic.droid.ui.fragments.CommentsFragment;
 import org.stepic.droid.web.ViewAssignment;
 import org.stepik.android.model.Tag;
+import org.stepik.android.view.course.routing.CourseScreenTab;
+import org.stepik.android.view.routing.deeplink.BranchRoute;
 
 public interface ScreenManager {
 
@@ -42,8 +44,6 @@ public interface ScreenManager {
 
     void showMainFeed(Context sourceActivity, int indexOfMenu);
 
-    void showCourseDescription(Fragment sourceActivity, @NotNull Course course);
-
     void showPdfInBrowserByGoogleDocs(Activity activity, String fullPath);
 
     void openComments(Activity context, String discussionProxyId, long stepId);
@@ -52,11 +52,6 @@ public interface ScreenManager {
 
     void openNewCommentForm(CommentsFragment commentsFragment, Long target, @Nullable Long parent);
 
-    void showSections(Activity sourceActivity, @NotNull Course course);
-
-    void showSections(Activity sourceActivity, @NotNull Course course, boolean joinedRightNow);
-
-    void showUnitsForSection(Activity sourceActivity, @NotNull Section section);
 
     void showSteps(Activity sourceActivity, Unit unit, Lesson lesson, @Nullable Section section);
 
@@ -68,9 +63,11 @@ public interface ScreenManager {
 
     void pushToViewedQueue(ViewAssignment viewAssignmentWrapper);
 
+    void showCourseDescription(Context context, long courseId);
     void showCourseDescription(Context context, @NotNull Course course);
-
-    void showCourseDescription(Activity sourceActivity, @NotNull Course course, boolean instaEnroll);
+    void showCourseDescription(Context context, @NotNull Course course, boolean autoEnroll);
+    void showCourseModules(Context context, @NotNull Course course);
+    void showCourseScreen(Context context, @NotNull Course course, boolean autoEnroll, CourseScreenTab tab);
 
     void showTextFeedback(Activity sourceActivity);
 
@@ -124,9 +121,7 @@ public interface ScreenManager {
 
     void continueAdaptiveCourse(Activity activity, Course course);
 
-    void continueCourse(Activity activity, long courseId, Section section, long lessonId, long unitId, long stepPosition);
-
-    void continueCourse(Activity activity, long courseId, Section section, long lessonId, long unitId, long stepPosition, boolean joinedRightNow);
+    void continueCourse(Activity activity, long unitId, long lessonId, long stepId);
 
     void showLaunchScreen(FragmentActivity activity, @NotNull Course course);
 
@@ -142,4 +137,6 @@ public interface ScreenManager {
     void showOnboarding(@NotNull Activity activity);
 
     void showAchievementsList(Context context, long userId, boolean isMyProfile);
+
+    void openDeepLink(Context context, BranchRoute route);
 }

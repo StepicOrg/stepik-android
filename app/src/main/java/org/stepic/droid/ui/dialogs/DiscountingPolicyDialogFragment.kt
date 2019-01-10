@@ -17,10 +17,8 @@ import javax.inject.Inject
 class DiscountingPolicyDialogFragment : DialogFragment() {
 
     companion object {
-        fun newInstance(): DialogFragment {
-            val dialog = DiscountingPolicyDialogFragment()
-            return dialog
-        }
+        fun newInstance(): DialogFragment =
+                DiscountingPolicyDialogFragment()
     }
 
 
@@ -40,7 +38,7 @@ class DiscountingPolicyDialogFragment : DialogFragment() {
         val explanationView = layoutInflater.inflate(R.layout.not_ask_again_view, null)
         val checkbox = explanationView.findViewById<CheckBox>(R.id.do_not_ask_checkbox)
 
-        val builder = AlertDialog.Builder(activity)
+        val builder = AlertDialog.Builder(requireContext())
         builder
                 .setTitle(R.string.title_confirmation)
                 .setView(explanationView)
@@ -49,14 +47,14 @@ class DiscountingPolicyDialogFragment : DialogFragment() {
                     _, _ ->
                     analytic.reportEvent(Analytic.Interaction.NO_DISCOUNTING_DIALOG)
                 }
-                .setPositiveButton(R.string.yes, { _, _ ->
+                .setPositiveButton(R.string.yes) { _, _ ->
                     analytic.reportEvent(Analytic.Interaction.YES_DISCOUNTING_DIALOG)
-                    targetFragment.onActivityResult(targetRequestCode, Activity.RESULT_OK, null)
+                    targetFragment?.onActivityResult(targetRequestCode, Activity.RESULT_OK, null)
                     val isNeedExplanation = !checkbox.isChecked
                     threadPoolExecutor.execute {
                         userPreferences.isShowDiscountingPolicyWarning = isNeedExplanation
                     }
-                })
+                }
 
 
         return builder.create()

@@ -2,103 +2,80 @@ package org.stepic.droid.storage.dao
 
 import android.content.ContentValues
 import android.database.Cursor
-import org.stepic.droid.jsonHelpers.adapters.UTCDateAdapter
 
 import org.stepik.android.model.Actions
 import org.stepik.android.model.DiscountingPolicyType
 import org.stepik.android.model.Section
 import org.stepic.droid.storage.operations.DatabaseOperations
-import org.stepic.droid.storage.structure.DbStructureSections
-import org.stepic.droid.util.DbParseHelper
+import org.stepic.droid.util.*
+import org.stepik.android.cache.section.structure.DbStructureSection
 
 import javax.inject.Inject
 
 class SectionDaoImpl
 @Inject
 constructor(
-        databaseOperations: DatabaseOperations,
-        private val dateAdapter: UTCDateAdapter
+    databaseOperations: DatabaseOperations
 ) : DaoBase<Section>(databaseOperations) {
+    public override fun getDbName(): String =
+        DbStructureSection.TABLE_NAME
 
-    public override fun parsePersistentObject(cursor: Cursor): Section {
-        val columnIndexId = cursor.getColumnIndex(DbStructureSections.Column.SECTION_ID)
-        val columnIndexTitle = cursor.getColumnIndex(DbStructureSections.Column.TITLE)
-        val columnIndexSlug = cursor.getColumnIndex(DbStructureSections.Column.SLUG)
-        val columnIndexIsActive = cursor.getColumnIndex(DbStructureSections.Column.IS_ACTIVE)
-        val columnIndexBeginDate = cursor.getColumnIndex(DbStructureSections.Column.BEGIN_DATE)
-        val columnIndexSoftDeadline = cursor.getColumnIndex(DbStructureSections.Column.SOFT_DEADLINE)
-        val columnIndexHardDeadline = cursor.getColumnIndex(DbStructureSections.Column.HARD_DEADLINE)
-        val columnIndexCourseId = cursor.getColumnIndex(DbStructureSections.Column.COURSE)
-        val columnIndexPosition = cursor.getColumnIndex(DbStructureSections.Column.POSITION)
-        val columnIndexUnits = cursor.getColumnIndex(DbStructureSections.Column.UNITS)
-        val indexTestSection = cursor.getColumnIndex(DbStructureSections.Column.TEST_SECTION)
-        val indexDiscountingPolicy = cursor.getColumnIndex(DbStructureSections.Column.DISCOUNTING_POLICY)
-        val indexIsExam = cursor.getColumnIndex(DbStructureSections.Column.IS_EXAM)
-        val indexProgress = cursor.getColumnIndex(DbStructureSections.Column.PROGRESS)
-        val indexIsRequirementSatisfied = cursor.getColumnIndex(DbStructureSections.Column.IS_REQUIREMENT_SATISFIED)
-        val indexRequiredSection = cursor.getColumnIndex(DbStructureSections.Column.REQUIRED_SECTION)
-        val indexRequiredPercent = cursor.getColumnIndex(DbStructureSections.Column.REQUIRED_PERCENT)
+    public override fun getDefaultPrimaryColumn(): String =
+        DbStructureSection.Columns.ID
 
-        val actions = Actions(testSection = cursor.getString(indexTestSection))
-        val units = DbParseHelper.parseStringToLongList(cursor.getString(columnIndexUnits)) ?: emptyList()
-        val typeId = cursor.getInt(indexDiscountingPolicy)
-        val discountingPolicyType = DiscountingPolicyType.values().getOrNull(typeId)
+    public override fun getDefaultPrimaryValue(persistentObject: Section): String =
+        persistentObject.id.toString()
 
-        return Section(
-                id = cursor.getLong(columnIndexId),
-                title = cursor.getString(columnIndexTitle),
-                slug = cursor.getString(columnIndexSlug),
-                isActive = cursor.getInt(columnIndexIsActive) > 0,
-                beginDate = dateAdapter.stringToDate(cursor.getString(columnIndexBeginDate)),
-                softDeadline = dateAdapter.stringToDate(cursor.getString(columnIndexSoftDeadline)),
-                hardDeadline = dateAdapter.stringToDate(cursor.getString(columnIndexHardDeadline)),
-                course = cursor.getLong(columnIndexCourseId),
-                position = cursor.getInt(columnIndexPosition),
-                units = units,
-                discountingPolicy = discountingPolicyType,
-                progress = cursor.getString(indexProgress),
-
-                actions = actions,
-
-                isExam = cursor.getInt(indexIsExam) > 0,
-                isRequirementSatisfied = cursor.getInt(indexIsRequirementSatisfied) > 0,
-                requiredSection = cursor.getLong(indexRequiredSection),
-                requiredPercent = cursor.getInt(indexRequiredPercent)
+    public override fun parsePersistentObject(cursor: Cursor): Section =
+        Section(
+            id = cursor.getLong(DbStructureSection.Columns.ID),
+            course = cursor.getLong(DbStructureSection.Columns.COURSE),
+            units = DbParseHelper.parseStringToLongList(cursor.getString(DbStructureSection.Columns.UNITS)) ?: emptyList(),
+            position = cursor.getInt(DbStructureSection.Columns.POSITION),
+            progress = cursor.getString(DbStructureSection.Columns.PROGRESS),
+            title = cursor.getString(DbStructureSection.Columns.TITLE),
+            slug = cursor.getString(DbStructureSection.Columns.SLUG),
+            beginDate = cursor.getDate(DbStructureSection.Columns.BEGIN_DATE),
+            endDate = cursor.getDate(DbStructureSection.Columns.END_DATE),
+            softDeadline = cursor.getDate(DbStructureSection.Columns.SOFT_DEADLINE),
+            hardDeadline = cursor.getDate(DbStructureSection.Columns.HARD_DEADLINE),
+            createDate = cursor.getDate(DbStructureSection.Columns.CREATE_DATE),
+            updateDate = cursor.getDate(DbStructureSection.Columns.UPDATE_DATE),
+            gradingPolicy = cursor.getString(DbStructureSection.Columns.GRADING_POLICY),
+            isActive = cursor.getBoolean(DbStructureSection.Columns.IS_ACTIVE),
+            actions = Actions(testSection = cursor.getString(DbStructureSection.Columns.ACTIONS_TEST_SECTION)),
+            isExam = cursor.getBoolean(DbStructureSection.Columns.IS_EXAM),
+            discountingPolicy = DiscountingPolicyType.values().getOrNull(cursor.getInt(DbStructureSection.Columns.DISCOUNTING_POLICY)),
+            isRequirementSatisfied = cursor.getBoolean(DbStructureSection.Columns.IS_REQUIREMENT_SATISFIED),
+            requiredSection = cursor.getLong(DbStructureSection.Columns.REQUIRED_SECTION),
+            requiredPercent = cursor.getInt(DbStructureSection.Columns.REQUIRED_PERCENT)
         )
-    }
-
-    public override fun getDbName(): String = DbStructureSections.SECTIONS
 
     public override fun getContentValues(section: Section): ContentValues {
         val values = ContentValues()
 
-        values.put(DbStructureSections.Column.SECTION_ID, section.id)
-        values.put(DbStructureSections.Column.TITLE, section.title)
-        values.put(DbStructureSections.Column.SLUG, section.slug)
-        values.put(DbStructureSections.Column.IS_ACTIVE, section.isActive)
-        values.put(DbStructureSections.Column.BEGIN_DATE, dateAdapter.dateToString(section.beginDate))
-        values.put(DbStructureSections.Column.SOFT_DEADLINE, dateAdapter.dateToString(section.softDeadline))
-        values.put(DbStructureSections.Column.HARD_DEADLINE, dateAdapter.dateToString(section.hardDeadline))
-        values.put(DbStructureSections.Column.COURSE, section.course)
-        values.put(DbStructureSections.Column.POSITION, section.position)
-        values.put(DbStructureSections.Column.IS_EXAM, section.isExam)
-        values.put(DbStructureSections.Column.UNITS, DbParseHelper.parseLongListToString(section.units))
-        values.put(DbStructureSections.Column.PROGRESS, section.progress)
-
-        values.put(DbStructureSections.Column.DISCOUNTING_POLICY, section.discountingPolicy?.ordinal ?: -1)
-
-        values.put(DbStructureSections.Column.TEST_SECTION, section.actions?.testSection)
-
-        values.put(DbStructureSections.Column.IS_REQUIREMENT_SATISFIED, section.isRequirementSatisfied)
-        values.put(DbStructureSections.Column.REQUIRED_SECTION, section.requiredSection)
-        values.put(DbStructureSections.Column.REQUIRED_PERCENT, section.requiredPercent)
+        values.put(DbStructureSection.Columns.ID, section.id)
+        values.put(DbStructureSection.Columns.COURSE, section.course)
+        values.put(DbStructureSection.Columns.UNITS, DbParseHelper.parseLongListToString(section.units))
+        values.put(DbStructureSection.Columns.POSITION, section.position)
+        values.put(DbStructureSection.Columns.PROGRESS, section.progress)
+        values.put(DbStructureSection.Columns.TITLE, section.title)
+        values.put(DbStructureSection.Columns.SLUG, section.slug)
+        values.put(DbStructureSection.Columns.BEGIN_DATE, section.beginDate?.time ?: -1)
+        values.put(DbStructureSection.Columns.END_DATE, section.endDate?.time ?: -1)
+        values.put(DbStructureSection.Columns.SOFT_DEADLINE, section.softDeadline?.time ?: -1)
+        values.put(DbStructureSection.Columns.HARD_DEADLINE, section.hardDeadline?.time ?: -1)
+        values.put(DbStructureSection.Columns.CREATE_DATE, section.createDate?.time ?: -1)
+        values.put(DbStructureSection.Columns.UPDATE_DATE, section.updateDate?.time ?: -1)
+        values.put(DbStructureSection.Columns.GRADING_POLICY, section.gradingPolicy)
+        values.put(DbStructureSection.Columns.IS_ACTIVE, section.isActive)
+        values.put(DbStructureSection.Columns.ACTIONS_TEST_SECTION, section.actions?.testSection)
+        values.put(DbStructureSection.Columns.IS_EXAM, section.isExam)
+        values.put(DbStructureSection.Columns.DISCOUNTING_POLICY, section.discountingPolicy?.ordinal ?: -1)
+        values.put(DbStructureSection.Columns.IS_REQUIREMENT_SATISFIED, section.isRequirementSatisfied)
+        values.put(DbStructureSection.Columns.REQUIRED_SECTION, section.requiredSection)
+        values.put(DbStructureSection.Columns.REQUIRED_PERCENT, section.requiredPercent)
 
         return values
     }
-
-
-    public override fun getDefaultPrimaryColumn(): String = DbStructureSections.Column.SECTION_ID
-
-    public override fun getDefaultPrimaryValue(persistentObject: Section): String =
-            persistentObject.id.toString()
 }
