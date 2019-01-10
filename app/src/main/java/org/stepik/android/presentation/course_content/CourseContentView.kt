@@ -11,6 +11,7 @@ interface CourseContentView {
     sealed class State {
         object Idle : State()
         object Loading : State()
+        object EmptyContent : State()
 
         data class CourseContentLoaded(
             val course: Course,

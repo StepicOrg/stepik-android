@@ -19,6 +19,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables.zip
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.subjects.BehaviorSubject
+import kotlinx.android.synthetic.main.empty_default.*
 import kotlinx.android.synthetic.main.error_no_connection.*
 import kotlinx.android.synthetic.main.fragment_course_content.*
 import org.stepic.droid.R
@@ -111,7 +112,7 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-            inflater.inflate(R.layout.fragment_course_content, container, false)
+        inflater.inflate(R.layout.fragment_course_content, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         with(courseContentRecycler) {
@@ -159,6 +160,7 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
         viewStateDelegate.addState<CourseContentView.State.Loading>(courseContentPlaceholder)
         viewStateDelegate.addState<CourseContentView.State.CourseContentLoaded>(courseContentRecycler)
         viewStateDelegate.addState<CourseContentView.State.NetworkError>(reportProblem)
+        viewStateDelegate.addState<CourseContentView.State.EmptyContent>(report_empty)
     }
 
     override fun onStart() {
