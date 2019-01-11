@@ -10,6 +10,7 @@ import org.stepik.android.view.course_content.model.CourseContentSectionDate
 import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.util.DateTimeHelper
+import org.stepic.droid.util.safeDiv
 import java.util.*
 
 class CourseContentTimelineAdapter : RecyclerView.Adapter<DelegateViewHolder<CourseContentSectionDate>>() {
@@ -44,7 +45,7 @@ class CourseContentTimelineAdapter : RecyclerView.Adapter<DelegateViewHolder<Cou
             dateProgress.changeVisibility(isNotLastItem)
             if (isNotLastItem) {
                 val total = (dates[adapterPosition + 1].date.time - data.date.time)
-                val progress = (now.time - data.date.time) * 100 / total
+                val progress = (now.time - data.date.time) * 100 safeDiv total
                 dateProgress.max = 100
                 dateProgress.progress = progress.toInt()
             }
