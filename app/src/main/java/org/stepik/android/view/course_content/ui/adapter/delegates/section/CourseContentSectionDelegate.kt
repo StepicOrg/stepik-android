@@ -16,6 +16,7 @@ import org.stepic.droid.ui.custom.adapter_delegates.DelegateAdapter
 import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
 import org.stepic.droid.ui.util.StartSnapHelper
 import org.stepic.droid.ui.util.changeVisibility
+import org.stepic.droid.util.safeDiv
 
 class CourseContentSectionDelegate(
     adapter: DelegateAdapter<CourseContentItem, DelegateViewHolder<CourseContentItem>>,
@@ -83,7 +84,7 @@ class CourseContentSectionDelegate(
                 sectionPosition.text = section.position.toString()
 
                 if (progress != null) {
-                    sectionProgress.progress = progress.nStepsPassed.toFloat() / progress.nSteps.toFloat()
+                    sectionProgress.progress = progress.nStepsPassed.toFloat() safeDiv progress.nSteps
                     sectionTextProgress.text = context.resources.getString(R.string.course_content_text_progress,
                         progress.nStepsPassed, progress.nSteps)
                     sectionTextProgress.visibility = View.VISIBLE

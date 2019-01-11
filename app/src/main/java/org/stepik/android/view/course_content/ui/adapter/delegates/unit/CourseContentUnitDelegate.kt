@@ -16,6 +16,7 @@ import org.stepic.droid.ui.custom.adapter_delegates.DelegateAdapter
 import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.ui.util.changeVisibility
+import org.stepic.droid.util.safeDiv
 
 class CourseContentUnitDelegate(
     adapter: DelegateAdapter<CourseContentItem, DelegateViewHolder<CourseContentItem>>,
@@ -79,7 +80,7 @@ class CourseContentUnitDelegate(
                     unitTextProgress.text = context.resources.getString(R.string.course_content_text_progress,
                         progress.nStepsPassed, progress.nSteps)
 
-                    unitProgress.progress = progress.nStepsPassed.toFloat() / progress.nSteps
+                    unitProgress.progress = progress.nStepsPassed.toFloat() safeDiv progress.nSteps
                     unitTextProgress.visibility = View.VISIBLE
                 } else {
                     unitProgress.progress = 0f
@@ -98,11 +99,12 @@ class CourseContentUnitDelegate(
                 unitViewCount.text = lesson.passedBy.toString()
 
                 @DrawableRes
-                val unitRatingDrawableRes = if (lesson.voteDelta < 0) {
-                    R.drawable.ic_course_content_dislike
-                } else {
-                    R.drawable.ic_course_content_like
-                }
+                val unitRatingDrawableRes =
+                    if (lesson.voteDelta < 0) {
+                        R.drawable.ic_course_content_dislike
+                    } else {
+                        R.drawable.ic_course_content_like
+                    }
 
                 unitRatingIcon.setImageResource(unitRatingDrawableRes)
                 unitRating.text = Math.abs(lesson.voteDelta).toString()

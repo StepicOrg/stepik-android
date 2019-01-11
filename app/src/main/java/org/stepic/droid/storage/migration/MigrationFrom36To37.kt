@@ -33,14 +33,15 @@ object MigrationFrom36To37 : Migration {
     private fun migrateCourses(db: SQLiteDatabase) {
         DbStructureCourse.createTable(db)
         DbStructureCourseList.createTable(db)
-        VideoDbScheme.createTable(db)
-        VideoUrlDbScheme.createTable(db)
     }
 
     private fun migrateBlockVideos(db: SQLiteDatabase) {
+        VideoDbScheme.createTable(db)
+        VideoUrlDbScheme.createTable(db)
+
         // Migrate urls
         db.execSQL("""
-            INSERT INTO ${VideoUrlDbScheme.TABLE_NAME}
+            REPLACE INTO ${VideoUrlDbScheme.TABLE_NAME}
             SELECT
                 ${DbStructureVideoUrl.Column.videoId},
                 ${DbStructureVideoUrl.Column.url},
@@ -50,7 +51,7 @@ object MigrationFrom36To37 : Migration {
 
         // Migrate videos
         db.execSQL("""
-            INSERT INTO ${VideoDbScheme.TABLE_NAME}
+            REPLACE INTO ${VideoDbScheme.TABLE_NAME}
             SELECT
                 ${DbStructureBlock.Column.EXTERNAL_VIDEO_ID},
                 ${DbStructureBlock.Column.EXTERNAL_THUMBNAIL},
@@ -64,7 +65,7 @@ object MigrationFrom36To37 : Migration {
         DbStructureLesson.createTable(db)
 
         db.execSQL("""
-            INSERT INTO ${DbStructureLesson.TABLE_NAME}
+            REPLACE INTO ${DbStructureLesson.TABLE_NAME}
             SELECT
                 ${org.stepic.droid.storage.structure.DbStructureLesson.Column.LESSON_ID},
                 ${org.stepic.droid.storage.structure.DbStructureLesson.Column.TITLE},
@@ -93,7 +94,7 @@ object MigrationFrom36To37 : Migration {
         DbStructureUnit.createTable(db)
 
         db.execSQL("""
-            INSERT INTO ${DbStructureUnit.TABLE_NAME}
+            REPLACE INTO ${DbStructureUnit.TABLE_NAME}
             SELECT
                 ${org.stepic.droid.storage.structure.DbStructureUnit.Column.UNIT_ID},
                 ${org.stepic.droid.storage.structure.DbStructureUnit.Column.SECTION},
@@ -122,7 +123,7 @@ object MigrationFrom36To37 : Migration {
         DbStructureSection.createTable(db)
 
         db.execSQL("""
-            INSERT INTO ${DbStructureSection.TABLE_NAME}
+            REPLACE INTO ${DbStructureSection.TABLE_NAME}
             SELECT
                 ${DbStructureSections.Column.SECTION_ID},
                 ${DbStructureSections.Column.COURSE},
