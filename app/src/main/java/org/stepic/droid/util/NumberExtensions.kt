@@ -6,3 +6,10 @@ infix fun Long.safeDiv(d: Long): Long =
     } else {
         this / d
     }
+
+infix fun Float.safeDiv(d: Long): Float =
+    if (d == 0L) {
+        0f
+    } else {
+        this / d
+    }
