@@ -97,7 +97,7 @@ class CourseActivity : FragmentActivityBase(), CourseView {
 
         setSupportActionBar(courseToolbar)
         val actionBar = this.supportActionBar
-                ?: throw IllegalStateException("support action bar should be set")
+            ?: throw IllegalStateException("support action bar should be set")
 
         with(actionBar) {
             setDisplayShowTitleEnabled(false)
@@ -237,12 +237,12 @@ class CourseActivity : FragmentActivityBase(), CourseView {
     }
 
     override fun onOptionsItemSelected(item: MenuItem) =
-            if (item.itemId == android.R.id.home) {
-                onBackPressed()
-                true
-            } else {
-                courseHeaderDelegate.onOptionsItemSelected(item) || super.onOptionsItemSelected(item)
-            }
+        if (item.itemId == android.R.id.home) {
+            onBackPressed()
+            true
+        } else {
+            courseHeaderDelegate.onOptionsItemSelected(item) || super.onOptionsItemSelected(item)
+        }
 
     override fun applyTransitionPrev() {
         //no-op
