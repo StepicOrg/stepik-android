@@ -45,15 +45,14 @@ constructor(
                         }
                     }
 
-    override fun getViewedStoriesIds(): Single<Set<Long>> = Single.create { emitter ->
-        emitter.onSuccess(
-                viewedStoryTemplateDao
-                        .getAll()
-                        .asSequence()
-                        .map { it.storyTemplateId }
-                        .toSet()
-        )
-    }
+    override fun getViewedStoriesIds(): Single<Set<Long>> =
+        Single.fromCallable {
+            viewedStoryTemplateDao
+                .getAll()
+                .asSequence()
+                .map { it.storyTemplateId }
+                .toSet()
+        }
 
     override fun markStoryAsViewed(storyTemplateId: Long): Completable = Completable.fromAction {
         viewedStoryTemplateDao.insertOrReplace(ViewedStoryTemplate(storyTemplateId))
