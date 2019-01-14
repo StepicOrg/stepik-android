@@ -5,6 +5,8 @@ import org.stepic.droid.web.model.adaptive.RecommendationReactionsRequest;
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
 import org.stepic.droid.web.model.story_templates.StoryTemplatesResponse;
 import org.stepik.android.model.EnrollmentWrapper;
+import org.stepik.android.remote.course_payments.model.CoursePaymentRequest;
+import org.stepik.android.remote.course_payments.model.CoursePaymentsResponse;
 
 import java.util.List;
 
@@ -265,4 +267,15 @@ public interface StepicRestLoggedService {
             @Query("is_published") final boolean isPublished,
             @Query("language") final String language
     );
+
+    @POST("api/course-payments")
+    Completable createCoursePayment(
+            @Body final CoursePaymentRequest coursePaymentRequest
+    );
+
+    @GET("api/course-payments")
+    Single<CoursePaymentsResponse> getCoursePaymentsByCourseIds(
+            @Query("course[]") long[] courseIds
+    );
+
 }
