@@ -3,7 +3,6 @@ package org.stepic.droid.features.stories.repository
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.rxkotlin.toObservable
 import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.features.stories.model.ViewedStoryTemplate
 import org.stepic.droid.storage.dao.IDao
@@ -24,26 +23,26 @@ constructor(
     }
 
     override fun getStoryTemplates(): Single<List<StoryTemplate>> =
-            getStoryTemplatesByPage(1)
-                    .concatMap { it.storyTemplates.toObservable() }
+        getStoryTemplatesByPage(1)
+            .toList()
+            .map { responses ->
+                responses.asSequence()
+                    .flatMap { it.storyTemplates.asSequence() }
+                    .filter { template -> template.version <= STORY_TEMPLATES_VERSION }
+                    .sortedBy(StoryTemplate::position)
                     .toList()
-                    .map {
-                        it.asSequence()
-                                .filter { template -> template.version <= STORY_TEMPLATES_VERSION }
-                                .sortedBy(StoryTemplate::position)
-                                .toList()
-                    }
+            }
 
     private fun getStoryTemplatesByPage(page: Int): Observable<StoryTemplatesResponse> =
-            api.getStoryTemplates(page)
-                    .concatMap {
-                        val templatesObservable = Observable.just(it)
-                        if (it.meta.hasNext) {
-                            templatesObservable.concatWith(getStoryTemplatesByPage(it.meta.page + 1))
-                        } else {
-                            templatesObservable
-                        }
-                    }
+        api.getStoryTemplates(page)
+            .concatMap {
+                val templatesObservable = Observable.just(it)
+                if (it.meta.hasNext) {
+                    templatesObservable.concatWith(getStoryTemplatesByPage(it.meta.page + 1))
+                } else {
+                    templatesObservable
+                }
+            }
 
     override fun getViewedStoriesIds(): Single<Set<Long>> =
         Single.fromCallable {
@@ -54,7 +53,8 @@ constructor(
                 .toSet()
         }
 
-    override fun markStoryAsViewed(storyTemplateId: Long): Completable = Completable.fromAction {
-        viewedStoryTemplateDao.insertOrReplace(ViewedStoryTemplate(storyTemplateId))
-    }
+    override fun markStoryAsViewed(storyTemplateId: Long): Completable =
+        Completable.fromAction {
+            viewedStoryTemplateDao.insertOrReplace(ViewedStoryTemplate(storyTemplateId))
+        }
 }
