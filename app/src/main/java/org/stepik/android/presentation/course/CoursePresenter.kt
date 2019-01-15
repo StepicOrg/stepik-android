@@ -4,17 +4,13 @@ import android.os.Bundle
 import io.reactivex.*
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
-import org.solovyev.android.checkout.Sku
 import org.solovyev.android.checkout.UiCheckout
 import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.CourseId
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.util.emptyOnErrorStub
-import org.stepik.android.domain.course.interactor.ContinueLearningInteractor
-import org.stepik.android.domain.course.interactor.CourseEnrollmentInteractor
-import org.stepik.android.domain.course.interactor.CourseIndexingInteractor
-import org.stepik.android.domain.course.interactor.CourseInteractor
+import org.stepik.android.domain.course.interactor.*
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.domain.notification.interactor.CourseNotificationInteractor
@@ -32,6 +28,7 @@ constructor(
     private val courseId: Long,
 
     private val courseInteractor: CourseInteractor,
+    private val courseBillingInteractor: CourseBillingInteractor,
     private val courseEnrollmentInteractor: CourseEnrollmentInteractor,
     private val continueLearningInteractor: ContinueLearningInteractor,
     private val courseIndexingInteractor: CourseIndexingInteractor,
@@ -181,12 +178,40 @@ constructor(
     /**
      * Purchases
      */
-    fun restoreCoursePurchase(sku: Sku) {
+    fun restoreCoursePurchase() {
         TODO()
     }
 
     fun purchaseCourse() {
-        TODO()
+        val headerData = (state as? CourseView.State.CourseLoaded)
+            ?.courseHeaderData
+            ?.takeIf { it.enrollmentState is EnrollmentState.NotEnrolledInApp }
+            ?: return
+
+        val sku = (headerData.enrollmentState as? EnrollmentState.NotEnrolledInApp)
+            ?.sku
+            ?: return
+
+        val checkout = this.uiCheckout
+            ?: return
+
+        state = CourseView.State.BlockingLoading(headerData.copy(enrollmentState = EnrollmentState.Pending))
+        compositeDisposable += courseBillingInteractor
+            .purchaseCourse(checkout, headerData.courseId, sku)
+            .observeOn(mainScheduler)
+            .subscribeOn(backgroundScheduler)
+            .subscribeBy(
+                onError = {
+                    val errorType = it.toEnrollmentError()
+                    if (errorType == EnrollmentError.UNAUTHORIZED) {
+                        view?.showEmptyAuthDialog(headerData.course)
+                    } else {
+                        view?.showEnrollmentError(errorType)
+                    }
+                    state = CourseView.State.CourseLoaded(headerData) // roll back data
+                }
+            )
+
     }
 
     fun openCoursePurchaseInWeb() {

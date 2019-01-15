@@ -241,9 +241,7 @@ class CourseHeaderDelegate(
                 true
             }
             R.id.restore_purchase -> {
-                (courseHeaderData?.enrollmentState as? EnrollmentState.NotEnrolledInApp)
-                    ?.sku
-                    ?.let(coursePresenter::restoreCoursePurchase)
+                coursePresenter.restoreCoursePurchase()
                 true
             }
             else ->
