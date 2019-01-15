@@ -20,6 +20,9 @@ import kotlinx.android.synthetic.main.error_course_not_found.*
 import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import kotlinx.android.synthetic.main.header_course.*
 import kotlinx.android.synthetic.main.header_course_placeholder.*
+import org.solovyev.android.checkout.Billing
+import org.solovyev.android.checkout.Checkout
+import org.solovyev.android.checkout.UiCheckout
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
@@ -89,7 +92,10 @@ class CourseActivity : FragmentActivityBase(), CourseView {
     private var isInSwipeableViewState = false
 
     @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
+    internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    internal lateinit var billing: Billing
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -331,6 +337,12 @@ class CourseActivity : FragmentActivityBase(), CourseView {
     override fun showCourseShareTooltip() {
         courseHeaderDelegate.showCourseShareTooltip()
     }
+
+    /**
+     * BillingView
+     */
+    override fun createUiCheckout(): UiCheckout =
+        Checkout.forActivity(this, billing)
 
     override fun onSaveInstanceState(outState: Bundle) {
         coursePresenter.onSaveInstanceState(outState)

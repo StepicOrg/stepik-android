@@ -4,6 +4,7 @@ import android.os.Bundle
 import io.reactivex.*
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
+import org.solovyev.android.checkout.UiCheckout
 import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.CourseId
@@ -57,6 +58,8 @@ constructor(
             startIndexing()
         }
 
+    private var uiCheckout: UiCheckout? = null
+
     init {
         subscriberForEnrollmentUpdates()
     }
@@ -65,11 +68,18 @@ constructor(
         super.attachView(view)
         view.setState(state)
         startIndexing()
+
+        uiCheckout = view
+            .createUiCheckout()
+            .also(UiCheckout::start)
     }
 
     override fun detachView(view: CourseView) {
         super.detachView(view)
         endIndexing()
+
+        uiCheckout?.let(UiCheckout::stop)
+        uiCheckout = null
     }
 
     /**

@@ -25,5 +25,7 @@ class BillingModule {
     @AppSingleton
     @SystemCheckout
     internal fun provideSystemCheckout(billing: Billing): Checkout =
-        Checkout.forApplication(billing)
+        Checkout
+            .forApplication(billing)
+            .also(Checkout::start)
 }
