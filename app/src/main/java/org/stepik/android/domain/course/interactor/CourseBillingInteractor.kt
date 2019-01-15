@@ -8,7 +8,6 @@ import io.reactivex.rxkotlin.Maybes.zip
 import io.reactivex.subjects.PublishSubject
 import okhttp3.ResponseBody
 import org.solovyev.android.checkout.ProductTypes
-import org.solovyev.android.checkout.Purchase
 import org.solovyev.android.checkout.Sku
 import org.solovyev.android.checkout.UiCheckout
 import org.stepic.droid.core.joining.contract.JoiningPoster
@@ -16,7 +15,6 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.model.CourseListType
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import org.stepic.droid.util.doCompletableOnSuccess
 import org.stepic.droid.util.maybeFirst
 import org.stepic.droid.util.startPurchaseFlowRx
 import org.stepic.droid.util.toObject
@@ -69,12 +67,13 @@ constructor(
                 checkout.startPurchaseFlowRx(sku, payload)
             }
             .observeOn(backgroundScheduler)
-            .flatMap { purchase ->
+            .flatMapCompletable { purchase ->
                 coursePaymentsRepository
                     .createCoursePayment(courseId, sku, purchase)
+                    .ignoreElement()
+                    .andThen(updateCourseAfterEnrollment(courseId))
+                    .andThen(billingRepository.consumePurchase(purchase))
             }
-            .ignoreElement()
-            .andThen(updateCourseAfterEnrollment(courseId))
 
     fun restorePurchase(sku: Sku): Completable =
         zip(
@@ -94,12 +93,9 @@ constructor(
             .flatMapCompletable { (_, purchase, payload) ->
                 coursePaymentsRepository
                     .createCoursePayment(payload.courseId, sku, purchase)
-                    .doCompletableOnSuccess {
-                        updateCourseAfterEnrollment(payload.courseId)
-                    }
-                    .flatMapCompletable {
-                        consumePurchase(purchase)
-                    }
+                    .ignoreElement()
+                    .andThen(updateCourseAfterEnrollment(payload.courseId))
+                    .andThen(billingRepository.consumePurchase(purchase))
             }
 
     private fun updateCourseAfterEnrollment(courseId: Long): Completable =
@@ -109,9 +105,6 @@ constructor(
             .doOnSuccess(joiningPoster::joinCourse) // interop with old code
             .doOnSuccess(enrollmentSubject::onNext) // notify everyone about changes
             .ignoreElement()
-
-    private fun consumePurchase(purchase: Purchase): Completable =
-        Completable.complete()
 
     private fun getCurrentProfileId(): Single<Long> =
         Single.fromCallable {

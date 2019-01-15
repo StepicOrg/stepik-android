@@ -1,5 +1,6 @@
 package org.stepik.android.domain.billing.repository
 
+import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Single
 import org.solovyev.android.checkout.Purchase
@@ -32,4 +33,9 @@ interface BillingRepository {
             .map { purchases ->
                 purchases.filter { it.sku in skus }
             }
+
+    /**
+     * Consumes given purchase
+     */
+    fun consumePurchase(purchase: Purchase): Completable
 }

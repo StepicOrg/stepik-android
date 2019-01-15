@@ -1,5 +1,6 @@
 package org.stepik.android.data.billing.repository
 
+import io.reactivex.Completable
 import io.reactivex.Single
 import org.solovyev.android.checkout.Purchase
 import org.solovyev.android.checkout.Sku
@@ -17,4 +18,7 @@ constructor(
 
     override fun getAllPurchases(productType: String): Single<List<Purchase>> =
         billingRemoteDataSource.getAllPurchases(productType)
+
+    override fun consumePurchase(purchase: Purchase): Completable =
+        billingRemoteDataSource.consumePurchase(purchase)
 }

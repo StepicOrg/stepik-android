@@ -1,9 +1,12 @@
 package org.stepik.android.remote.billing
 
+import io.reactivex.Completable
 import io.reactivex.Scheduler
 import io.reactivex.Single
 import org.solovyev.android.checkout.*
 import org.stepic.droid.di.qualifiers.MainScheduler
+import org.stepic.droid.util.consumeRx
+import org.stepic.droid.util.onReady
 import org.stepik.android.data.billing.source.BillingRemoteDataSource
 import org.stepik.android.domain.billing.exception.BillingNotSupportedException
 import org.stepik.android.view.injection.billing.SystemCheckout
@@ -59,4 +62,12 @@ constructor(
                     }
                 })
         }
+
+    override fun consumePurchase(purchase: Purchase): Completable =
+        checkout
+            .onReady()
+            .flatMapCompletable { requests ->
+                requests.consumeRx(purchase.token)
+            }
+            .subscribeOn(mainScheduler)
 }
