@@ -179,13 +179,35 @@ constructor(
      * Purchases
      */
     fun restoreCoursePurchase() {
-        TODO()
+        val headerData = (state as? CourseView.State.CourseLoaded)
+            ?.courseHeaderData
+            ?: return
+
+        val sku = (headerData.enrollmentState as? EnrollmentState.NotEnrolledInApp)
+            ?.sku
+            ?: return
+
+        state = CourseView.State.BlockingLoading(headerData.copy(enrollmentState = EnrollmentState.Pending))
+        compositeDisposable += courseBillingInteractor
+            .restorePurchase(sku)
+            .observeOn(mainScheduler)
+            .subscribeOn(backgroundScheduler)
+            .subscribeBy(
+                onError = {
+                    val errorType = it.toEnrollmentError()
+                    if (errorType == EnrollmentError.UNAUTHORIZED) {
+                        view?.showEmptyAuthDialog(headerData.course)
+                    } else {
+                        view?.showEnrollmentError(errorType)
+                    }
+                    state = CourseView.State.CourseLoaded(headerData) // roll back data
+                }
+            )
     }
 
     fun purchaseCourse() {
         val headerData = (state as? CourseView.State.CourseLoaded)
             ?.courseHeaderData
-            ?.takeIf { it.enrollmentState is EnrollmentState.NotEnrolledInApp }
             ?: return
 
         val sku = (headerData.enrollmentState as? EnrollmentState.NotEnrolledInApp)
@@ -211,7 +233,6 @@ constructor(
                     state = CourseView.State.CourseLoaded(headerData) // roll back data
                 }
             )
-
     }
 
     fun openCoursePurchaseInWeb() {
