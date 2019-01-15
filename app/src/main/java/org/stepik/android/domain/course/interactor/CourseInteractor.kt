@@ -102,8 +102,8 @@ constructor(
                                 .getInventory(ProductTypes.IN_APP, COURSE_TIER_PREFIX + course.priceTier)
                                 .map(EnrollmentState::NotEnrolledInApp)
                                 .cast(EnrollmentState::class.java)
-                                .toSingle(EnrollmentState.NotEnrolledWeb)
-                                .onErrorReturnItem(EnrollmentState.NotEnrolledWeb)
+                                .toSingle(EnrollmentState.NotEnrolledWeb) // if price_tier == null
+                                .onErrorReturnItem(EnrollmentState.NotEnrolledWeb) // if billing not supported on current device
                         } else {
                             Single.just(EnrollmentState.NotEnrolledFree)
                         }
