@@ -8,6 +8,7 @@ import io.reactivex.rxkotlin.Maybes.zip
 import io.reactivex.subjects.PublishSubject
 import okhttp3.ResponseBody
 import org.solovyev.android.checkout.ProductTypes
+import org.solovyev.android.checkout.Purchase
 import org.solovyev.android.checkout.Sku
 import org.solovyev.android.checkout.UiCheckout
 import org.stepic.droid.core.joining.contract.JoiningPoster
@@ -68,11 +69,7 @@ constructor(
             }
             .observeOn(backgroundScheduler)
             .flatMapCompletable { purchase ->
-                coursePaymentsRepository
-                    .createCoursePayment(courseId, sku, purchase)
-                    .ignoreElement()
-                    .andThen(updateCourseAfterEnrollment(courseId))
-                    .andThen(billingRepository.consumePurchase(purchase))
+                completePurchase(courseId, sku, purchase)
             }
 
     fun restorePurchase(sku: Sku): Completable =
@@ -91,12 +88,15 @@ constructor(
                 profileId == payload.profileId
             }
             .flatMapCompletable { (_, purchase, payload) ->
-                coursePaymentsRepository
-                    .createCoursePayment(payload.courseId, sku, purchase)
-                    .ignoreElement()
-                    .andThen(updateCourseAfterEnrollment(payload.courseId))
-                    .andThen(billingRepository.consumePurchase(purchase))
+                completePurchase(payload.courseId, sku, purchase)
             }
+
+    private fun completePurchase(courseId: Long, sku: Sku, purchase: Purchase): Completable =
+        coursePaymentsRepository
+            .createCoursePayment(courseId, sku, purchase)
+            .ignoreElement()
+            .andThen(updateCourseAfterEnrollment(courseId))
+            .andThen(billingRepository.consumePurchase(purchase))
 
     private fun updateCourseAfterEnrollment(courseId: Long): Completable =
         courseListRepository
