@@ -636,4 +636,6 @@
     <string name="course_control_schedule">Расписание</string>
     <string name="course_control_filter">Фильтр</string>
     <string name="course_control_download_all">Скачать все</string>
+
+    <string name="course_restore_purchase">Восстановить покупку</string>
 </resources>

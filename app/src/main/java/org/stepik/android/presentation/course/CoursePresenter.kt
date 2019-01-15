@@ -4,6 +4,7 @@ import android.os.Bundle
 import io.reactivex.*
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
+import org.solovyev.android.checkout.Sku
 import org.solovyev.android.checkout.UiCheckout
 import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
@@ -138,10 +139,10 @@ constructor(
     private inline fun toggleEnrollment(enrollmentAction: CourseEnrollmentInteractor.(Long) -> Single<Course>) {
         val headerData = (state as? CourseView.State.CourseLoaded)
             ?.courseHeaderData
-            ?.takeIf { it.enrollmentState != EnrollmentState.PENDING }
+            ?.takeIf { it.enrollmentState != EnrollmentState.Pending }
             ?: return
 
-        state = CourseView.State.BlockingLoading(headerData.copy(enrollmentState = EnrollmentState.PENDING))
+        state = CourseView.State.BlockingLoading(headerData.copy(enrollmentState = EnrollmentState.Pending))
         compositeDisposable += courseEnrollmentInteractor
             .enrollmentAction(headerData.courseId)
             .observeOn(mainScheduler)
@@ -172,9 +173,16 @@ constructor(
     }
 
     private fun resolveCourseShareTooltip(courseHeaderData: CourseHeaderData) {
-        if (courseHeaderData.enrollmentState == EnrollmentState.ENROLLED) {
+        if (courseHeaderData.enrollmentState == EnrollmentState.Enrolled) {
             view?.showCourseShareTooltip()
         }
+    }
+
+    /**
+     * Purchases
+     */
+    fun restorePurchase(sku: Sku) {
+        TODO()
     }
 
     /**
@@ -183,7 +191,7 @@ constructor(
     fun continueLearning() {
         val headerData = (state as? CourseView.State.CourseLoaded)
             ?.courseHeaderData
-            ?.takeIf { it.enrollmentState == EnrollmentState.ENROLLED }
+            ?.takeIf { it.enrollmentState == EnrollmentState.Enrolled }
             ?: return
 
         val course = headerData.course
@@ -191,7 +199,7 @@ constructor(
         if (adaptiveCoursesResolver.isAdaptive(course.id)) {
             view?.continueAdaptiveCourse(course)
         } else {
-            state = CourseView.State.BlockingLoading(headerData.copy(enrollmentState = EnrollmentState.PENDING))
+            state = CourseView.State.BlockingLoading(headerData.copy(enrollmentState = EnrollmentState.Pending))
             compositeDisposable += continueLearningInteractor
                 .getLastStepForCourse(course)
                 .subscribeOn(backgroundScheduler)

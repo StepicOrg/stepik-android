@@ -660,4 +660,6 @@
     <string name="course_control_schedule">Schedule</string>
     <string name="course_control_filter">Filter by</string>
     <string name="course_control_download_all">Download all</string>
+
+    <string name="course_restore_purchase">Restore purchase</string>
 </resources>

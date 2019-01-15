@@ -58,6 +58,7 @@ class CourseHeaderDelegate(
 
     private var dropCourseMenuItem: MenuItem? = null
     private var shareCourseMenuItem: MenuItem? = null
+    private var restorePurchaseCourseMenuItem: MenuItem? = null
 
     init {
         initCollapsingAnimation()
@@ -147,11 +148,12 @@ class CourseHeaderDelegate(
         courseFeatured.changeVisibility(courseHeaderData.readiness > MIN_FEATURED_READINESS)
 
         with(courseHeaderData.enrollmentState) {
-            courseEnrollAction.changeVisibility(this == EnrollmentState.NOT_ENROLLED)
-            courseEnrollmentProgress.changeVisibility(this == EnrollmentState.PENDING)
-            courseContinueAction.changeVisibility(this == EnrollmentState.ENROLLED)
+            courseEnrollAction.changeVisibility(this == EnrollmentState.NotEnrolledFree)
+            courseEnrollmentProgress.changeVisibility(this == EnrollmentState.Pending)
+            courseContinueAction.changeVisibility(this == EnrollmentState.Enrolled)
 
-            dropCourseMenuItem?.isVisible = this == EnrollmentState.ENROLLED
+            dropCourseMenuItem?.isVisible = this == EnrollmentState.Enrolled
+            restorePurchaseCourseMenuItem?.isVisible = this is EnrollmentState.NotEnrolledInApp
         }
 
         shareCourseMenuItem?.isVisible = true
@@ -190,7 +192,7 @@ class CourseHeaderDelegate(
 
     fun onOptionsMenuCreated(menu: Menu) {
         dropCourseMenuItem = menu.findItem(R.id.drop_course)
-        dropCourseMenuItem?.isVisible = courseHeaderData?.enrollmentState == EnrollmentState.ENROLLED
+        dropCourseMenuItem?.isVisible = courseHeaderData?.enrollmentState == EnrollmentState.Enrolled
 
         shareCourseMenuItem = menu.findItem(R.id.share_course)
         shareCourseMenuItem?.let { menuItem ->
@@ -200,6 +202,9 @@ class CourseHeaderDelegate(
 
             menuItem.isVisible = courseHeaderData != null
         }
+
+        restorePurchaseCourseMenuItem = menu.findItem(R.id.restore_purchase)
+        restorePurchaseCourseMenuItem?.isVisible = courseHeaderData?.enrollmentState is EnrollmentState.NotEnrolledInApp
     }
 
     fun onOptionsItemSelected(item: MenuItem): Boolean =
