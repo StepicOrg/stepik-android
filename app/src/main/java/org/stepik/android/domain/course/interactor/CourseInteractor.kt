@@ -103,6 +103,7 @@ constructor(
                                 .map(EnrollmentState::NotEnrolledInApp)
                                 .cast(EnrollmentState::class.java)
                                 .toSingle(EnrollmentState.NotEnrolledWeb)
+                                .onErrorReturnItem(EnrollmentState.NotEnrolledWeb)
                         } else {
                             Single.just(EnrollmentState.NotEnrolledFree)
                         }

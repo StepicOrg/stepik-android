@@ -662,4 +662,6 @@
     <string name="course_control_download_all">Download all</string>
 
     <string name="course_restore_purchase">Restore purchase</string>
+    <string name="course_payments_purchase_in_app">Buy for %s</string>
+    <string name="course_payments_purchase_in_web">Buy in web version</string>
 </resources>

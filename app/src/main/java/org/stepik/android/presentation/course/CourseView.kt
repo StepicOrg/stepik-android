@@ -28,4 +28,6 @@ interface CourseView : BillingView {
 
     fun shareCourse(course: Course)
     fun showCourseShareTooltip()
+
+    fun openCoursePurchaseInWeb(courseId: Long)
 }

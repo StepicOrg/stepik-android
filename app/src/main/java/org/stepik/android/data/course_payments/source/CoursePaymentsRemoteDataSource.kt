@@ -9,4 +9,6 @@ interface CoursePaymentsRemoteDataSource {
 
     fun createCoursePayment(courseId: Long, sku: Sku, purchase: Purchase): Single<CoursePayment>
 
+    fun getCoursePaymentsByCourseIds(vararg courseIds: Long): Single<List<CoursePayment>>
+
 }

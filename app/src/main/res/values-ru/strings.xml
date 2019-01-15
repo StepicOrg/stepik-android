@@ -638,4 +638,6 @@
     <string name="course_control_download_all">Скачать все</string>
 
     <string name="course_restore_purchase">Восстановить покупку</string>
+    <string name="course_payments_purchase_in_app">Купить за %s</string>
+    <string name="course_payments_purchase_in_web">Купить в веб версии</string>
 </resources>

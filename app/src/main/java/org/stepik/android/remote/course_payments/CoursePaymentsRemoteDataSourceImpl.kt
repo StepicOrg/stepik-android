@@ -7,6 +7,7 @@ import org.stepic.droid.web.StepicRestLoggedService
 import org.stepik.android.data.course_payments.source.CoursePaymentsRemoteDataSource
 import org.stepik.android.domain.course_payments.model.CoursePayment
 import org.stepik.android.remote.course_payments.model.CoursePaymentRequest
+import org.stepik.android.remote.course_payments.model.CoursePaymentsResponse
 import javax.inject.Inject
 
 class CoursePaymentsRemoteDataSourceImpl
@@ -31,4 +32,9 @@ constructor(
                 )
             )
             .map { it.coursePayments.first() }
+
+    override fun getCoursePaymentsByCourseIds(vararg courseIds: Long): Single<List<CoursePayment>> =
+        loggedService
+            .getCoursePaymentsByCourseIds(courseIds)
+            .map(CoursePaymentsResponse::coursePayments)
 }

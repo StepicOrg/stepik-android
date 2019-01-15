@@ -21,7 +21,9 @@ constructor(
             .createCoursePayment(courseId, sku, purchase)
             .doCompletableOnSuccess(coursePaymentsCacheDataSource::saveCoursePayment)
 
-    override fun getCoursePaymentsByCourseIds(vararg courseIds: Long): Single<List<CoursePayment>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun getCoursePaymentsByCourseIds(vararg courseIds: Long): Single<List<CoursePayment>> =
+        coursePaymentsRemoteDataSource
+            .getCoursePaymentsByCourseIds(*courseIds) // todo resolve caching
+            .doCompletableOnSuccess(coursePaymentsCacheDataSource::saveCoursePayments)
+
 }

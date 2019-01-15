@@ -181,8 +181,16 @@ constructor(
     /**
      * Purchases
      */
-    fun restorePurchase(sku: Sku) {
+    fun restoreCoursePurchase(sku: Sku) {
         TODO()
+    }
+
+    fun purchaseCourse() {
+        TODO()
+    }
+
+    fun openCoursePurchaseInWeb() {
+        view?.openCoursePurchaseInWeb(courseId)
     }
 
     /**

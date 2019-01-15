@@ -102,6 +102,7 @@ class CourseHeaderDelegate(
                 ))
             }
         }
+
         courseContinueAction.setOnClickListener {
             coursePresenter.continueLearning()
 
@@ -111,6 +112,14 @@ class CourseHeaderDelegate(
                     AmplitudeAnalytic.Course.Params.SOURCE to AmplitudeAnalytic.Course.Values.COURSE_SCREEN
                 ))
             }
+        }
+
+        courseBuyInWebAction.setOnClickListener {
+            coursePresenter.openCoursePurchaseInWeb()
+        }
+
+        courseBuyInAppAction.setOnClickListener {
+            coursePresenter.purchaseCourse()
         }
     }
 
@@ -151,6 +160,12 @@ class CourseHeaderDelegate(
             courseEnrollAction.changeVisibility(this == EnrollmentState.NotEnrolledFree)
             courseEnrollmentProgress.changeVisibility(this == EnrollmentState.Pending)
             courseContinueAction.changeVisibility(this == EnrollmentState.Enrolled)
+            courseBuyInWebAction.changeVisibility(this == EnrollmentState.NotEnrolledWeb)
+            courseBuyInAppAction.changeVisibility(this is EnrollmentState.NotEnrolledInApp)
+
+            if (this is EnrollmentState.NotEnrolledInApp) {
+                courseBuyInAppAction.text = getString(R.string.course_payments_purchase_in_app, this.sku.price)
+            }
 
             dropCourseMenuItem?.isVisible = this == EnrollmentState.Enrolled
             restorePurchaseCourseMenuItem?.isVisible = this is EnrollmentState.NotEnrolledInApp
@@ -228,7 +243,7 @@ class CourseHeaderDelegate(
             R.id.restore_purchase -> {
                 (courseHeaderData?.enrollmentState as? EnrollmentState.NotEnrolledInApp)
                     ?.sku
-                    ?.let(coursePresenter::restorePurchase)
+                    ?.let(coursePresenter::restoreCoursePurchase)
                 true
             }
             else ->
