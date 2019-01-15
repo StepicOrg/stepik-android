@@ -16,9 +16,9 @@ ext.versions = [
         dagger               : '2.10',
         butterKnife          : '8.8.1',
 
-        rxJava2              : '2.1.5',
-        rxAndroid            : '2.0.1',
-        rxKotlin             : '2.2.0',
+        rxJava2              : '2.2.5',
+        rxAndroid            : '2.1.0',
+        rxKotlin             : '2.3.0',
 
         supportLibs          : '28.0.0',
         archComponents       : '1.1.0',
