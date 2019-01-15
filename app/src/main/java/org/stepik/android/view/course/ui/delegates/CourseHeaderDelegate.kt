@@ -225,6 +225,12 @@ class CourseHeaderDelegate(
                 coursePresenter.shareCourse()
                 true
             }
+            R.id.restore_purchase -> {
+                (courseHeaderData?.enrollmentState as? EnrollmentState.NotEnrolledInApp)
+                    ?.sku
+                    ?.let(coursePresenter::restorePurchase)
+                true
+            }
             else ->
                 false
         }
