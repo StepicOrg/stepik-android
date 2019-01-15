@@ -269,7 +269,7 @@ public interface StepicRestLoggedService {
     );
 
     @POST("api/course-payments")
-    Completable createCoursePayment(
+    Single<CoursePaymentsResponse> createCoursePayment(
             @Body final CoursePaymentRequest coursePaymentRequest
     );
 

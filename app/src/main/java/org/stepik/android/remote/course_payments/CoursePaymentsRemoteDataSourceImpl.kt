@@ -1,11 +1,11 @@
 package org.stepik.android.remote.course_payments
 
-import android.os.Build
-import io.reactivex.Completable
+import io.reactivex.Single
 import org.solovyev.android.checkout.Purchase
 import org.solovyev.android.checkout.Sku
 import org.stepic.droid.web.StepicRestLoggedService
 import org.stepik.android.data.course_payments.source.CoursePaymentsRemoteDataSource
+import org.stepik.android.domain.course_payments.model.CoursePayment
 import org.stepik.android.remote.course_payments.model.CoursePaymentRequest
 import javax.inject.Inject
 
@@ -15,7 +15,7 @@ constructor(
     private val loggedService: StepicRestLoggedService
 ) : CoursePaymentsRemoteDataSource {
 
-    override fun createCoursePayment(courseId: Long, sku: Sku, purchase: Purchase): Completable =
+    override fun createCoursePayment(courseId: Long, sku: Sku, purchase: Purchase): Single<CoursePayment> =
         loggedService
             .createCoursePayment(
                 CoursePaymentRequest(
@@ -30,4 +30,5 @@ constructor(
                     )
                 )
             )
+            .map { it.coursePayments.first() }
 }
