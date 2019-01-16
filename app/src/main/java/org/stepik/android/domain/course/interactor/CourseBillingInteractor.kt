@@ -23,6 +23,8 @@ import org.stepik.android.domain.billing.repository.BillingRepository
 import org.stepik.android.domain.course.model.CoursePurchasePayload
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.course_list.repository.CourseListRepository
+import org.stepik.android.domain.course_payments.exception.CoursePurchaseVerificationException
+import org.stepik.android.domain.course_payments.model.CoursePayment
 import org.stepik.android.domain.course_payments.repository.CoursePaymentsRepository
 import org.stepik.android.model.Course
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
@@ -94,7 +96,13 @@ constructor(
     private fun completePurchase(courseId: Long, sku: Sku, purchase: Purchase): Completable =
         coursePaymentsRepository
             .createCoursePayment(courseId, sku, purchase)
-            .ignoreElement()
+            .flatMapCompletable { payment ->
+                if (payment.status == CoursePayment.Status.SUCCESS) {
+                    Completable.complete()
+                } else {
+                    Completable.error(CoursePurchaseVerificationException())
+                }
+            }
             .andThen(updateCourseAfterEnrollment(courseId))
             .andThen(billingRepository.consumePurchase(purchase))
 
