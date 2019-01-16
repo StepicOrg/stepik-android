@@ -231,7 +231,7 @@ constructor(
             .subscribeBy(
                 onError = {
                     state = CourseView.State.CourseLoaded(headerData) // roll back data
-                    
+
                     val errorType = it.toEnrollmentError()
                     if (errorType == EnrollmentError.UNAUTHORIZED) {
                         view?.showEmptyAuthDialog(headerData.course)

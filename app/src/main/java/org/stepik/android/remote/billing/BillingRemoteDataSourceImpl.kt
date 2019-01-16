@@ -29,7 +29,7 @@ constructor(
             .create<List<Sku>> { emitter ->
                 val request = Inventory.Request.create()
                 request.loadAllPurchases()
-                request.loadSkus(productType, skuIds)
+                request.loadSkus(productType, skuIds.distinct())
                 checkout.loadInventory(request) { products ->
                     if (!emitter.isDisposed) {
                         val product = products[productType]
