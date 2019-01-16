@@ -23,6 +23,7 @@ import org.stepik.android.domain.billing.repository.BillingRepository
 import org.stepik.android.domain.course.model.CoursePurchasePayload
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.course_list.repository.CourseListRepository
+import org.stepik.android.domain.course_payments.exception.CourseAlreadyOwned
 import org.stepik.android.domain.course_payments.exception.CoursePurchaseVerificationException
 import org.stepik.android.domain.course_payments.model.CoursePayment
 import org.stepik.android.domain.course_payments.repository.CoursePaymentsRepository
@@ -61,6 +62,17 @@ constructor(
     }
 
     fun purchaseCourse(checkout: UiCheckout, courseId: Long, sku: Sku): Completable =
+        coursePaymentsRepository
+            .getCoursePaymentsByCourseId(courseId, CoursePayment.Status.SUCCESS)
+            .flatMapCompletable { payments ->
+                if (payments.isEmpty()) {
+                    purchaseCourseAfterCheck(checkout, courseId, sku)
+                } else {
+                    Completable.error(CourseAlreadyOwned(courseId))
+                }
+            }
+
+    private fun purchaseCourseAfterCheck(checkout: UiCheckout, courseId: Long, sku: Sku): Completable =
         getCurrentProfileId()
             .map { profileId ->
                 gson.toJson(CoursePurchasePayload(profileId, courseId))

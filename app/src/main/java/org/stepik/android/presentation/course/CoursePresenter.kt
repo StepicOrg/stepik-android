@@ -194,13 +194,17 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
                 onError = {
-                    val errorType = it.toEnrollmentError()
-                    if (errorType == EnrollmentError.UNAUTHORIZED) {
-                        view?.showEmptyAuthDialog(headerData.course)
-                    } else {
-                        view?.showEnrollmentError(errorType)
-                    }
                     state = CourseView.State.CourseLoaded(headerData) // roll back data
+                    when(val errorType = it.toEnrollmentError()) {
+                        EnrollmentError.UNAUTHORIZED ->
+                            view?.showEmptyAuthDialog(headerData.course)
+
+                        EnrollmentError.COURSE_ALREADY_OWNED ->
+                            enrollCourse() // try to enroll course normally
+
+                        else ->
+                            view?.showEnrollmentError(errorType)
+                    }
                 }
             )
     }

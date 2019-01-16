@@ -325,6 +325,9 @@ class CourseActivity : FragmentActivityBase(), CourseView {
 
                 EnrollmentError.BILLING_NOT_AVAILABLE ->
                     R.string.course_purchase_billing_not_available
+
+                EnrollmentError.COURSE_ALREADY_OWNED ->
+                    R.string.course_purchase_already_owned
             }
 
         Snackbar

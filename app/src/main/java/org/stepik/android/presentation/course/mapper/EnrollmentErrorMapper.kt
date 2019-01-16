@@ -2,6 +2,7 @@ package org.stepik.android.presentation.course.mapper
 
 import org.solovyev.android.checkout.BillingException
 import org.solovyev.android.checkout.ResponseCodes
+import org.stepik.android.domain.course_payments.exception.CourseAlreadyOwned
 import org.stepik.android.domain.course_payments.exception.CoursePurchaseVerificationException
 import org.stepik.android.presentation.course.model.EnrollmentError
 import retrofit2.HttpException
@@ -38,6 +39,9 @@ fun Throwable.toEnrollmentError(): EnrollmentError =
 
         is CoursePurchaseVerificationException ->
             EnrollmentError.SERVER_ERROR
+
+        is CourseAlreadyOwned ->
+            EnrollmentError.COURSE_ALREADY_OWNED
 
         else ->
             EnrollmentError.NO_CONNECTION
