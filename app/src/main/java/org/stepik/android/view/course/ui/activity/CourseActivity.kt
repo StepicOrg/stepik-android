@@ -97,6 +97,8 @@ class CourseActivity : FragmentActivityBase(), CourseView {
     @Inject
     internal lateinit var billing: Billing
 
+    private lateinit var uiCheckout: UiCheckout
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_course)
@@ -127,6 +129,8 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         injectComponent(courseId)
         coursePresenter = ViewModelProviders.of(this, viewModelFactory).get(CoursePresenter::class.java)
         courseHeaderDelegate = CourseHeaderDelegate(this, analytic, config, coursePresenter)
+
+        uiCheckout = Checkout.forActivity(this, billing)
 
         initViewPager(courseId)
         initViewStateDelegate()
@@ -303,14 +307,28 @@ class CourseActivity : FragmentActivityBase(), CourseView {
             when(errorType) {
                 EnrollmentError.NO_CONNECTION ->
                     R.string.course_error_enroll
+
                 EnrollmentError.FORBIDDEN ->
                     R.string.join_course_web_exception
+
                 EnrollmentError.UNAUTHORIZED ->
                     R.string.unauthorization_detail
+
+                EnrollmentError.SERVER_ERROR ->
+                    R.string.course_purchase_server_error
+
+                EnrollmentError.BILLING_ERROR ->
+                    R.string.course_purchase_billing_error
+
+                EnrollmentError.BILLING_CANCELLED ->
+                    R.string.course_purchase_billing_cancelled
+
+                EnrollmentError.BILLING_NOT_AVAILABLE ->
+                    R.string.course_purchase_billing_not_available
             }
 
         Snackbar
-            .make(coursePager, errorMessage, Snackbar.LENGTH_SHORT)
+            .make(coursePager, errorMessage, Snackbar.LENGTH_LONG)
             .setTextColor(ContextCompat.getColor(this, R.color.white))
             .show()
     }
@@ -342,7 +360,7 @@ class CourseActivity : FragmentActivityBase(), CourseView {
      * BillingView
      */
     override fun createUiCheckout(): UiCheckout =
-        Checkout.forActivity(this, billing)
+        uiCheckout
 
     override fun openCoursePurchaseInWeb(courseId: Long) {
         screenManager.openCoursePurchaseInWeb(this, courseId)
@@ -351,6 +369,12 @@ class CourseActivity : FragmentActivityBase(), CourseView {
     override fun onSaveInstanceState(outState: Bundle) {
         coursePresenter.onSaveInstanceState(outState)
         super.onSaveInstanceState(outState)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (!uiCheckout.onActivityResult(requestCode, resultCode, data)) {
+            super.onActivityResult(requestCode, resultCode, data)
+        }
     }
 
     override fun onDestroy() {
