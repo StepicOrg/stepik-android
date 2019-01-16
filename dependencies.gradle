@@ -7,11 +7,11 @@ ext.versions = [
         compileSdk           : 28,
         buildTools           : '28.0.3',
 
-        androidGradlePlugin  : '3.2.1',
+        androidGradlePlugin  : '3.3.0',
         kotlin               : '1.3.11',
         googleServicesVersion: '4.2.0',
-        fabric               : '1.25.4',
-        dexcount             : '0.8.2',
+        fabric               : '1.27.0',
+        dexcount             : '0.8.5',
 
         dagger               : '2.10',
         butterKnife          : '8.8.1',
@@ -60,6 +60,7 @@ ext.versions = [
         numberPicker         : '1.2.1',
         datePicker           : '3.1.0',
         photoView            : '1.3.1',
+        advancedRecycler     : '0.11.0@aar',
         advancedRecycler     : '0.11.0@aar',
         recyclerAnimators    : '2.1.0',
         materialProgress     : '1.4.2',
