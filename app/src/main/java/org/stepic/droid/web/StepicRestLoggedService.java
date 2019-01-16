@@ -273,9 +273,9 @@ public interface StepicRestLoggedService {
             @Body final CoursePaymentRequest coursePaymentRequest
     );
 
-    @GET("api/course-payments")
-    Single<CoursePaymentsResponse> getCoursePaymentsByCourseIds(
-            @Query("course[]") long[] courseIds
+    @GET("api/course-payments?order=-id")
+    Single<CoursePaymentsResponse> getCoursePaymentsByCourseId(
+            @Query("course") long course
     );
 
 }

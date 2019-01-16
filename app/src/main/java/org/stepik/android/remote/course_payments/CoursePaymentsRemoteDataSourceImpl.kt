@@ -33,8 +33,8 @@ constructor(
             )
             .map { it.coursePayments.first() }
 
-    override fun getCoursePaymentsByCourseIds(vararg courseIds: Long): Single<List<CoursePayment>> =
+    override fun getCoursePaymentsByCourseId(courseId: Long): Single<List<CoursePayment>> =
         loggedService
-            .getCoursePaymentsByCourseIds(courseIds)
+            .getCoursePaymentsByCourseId(courseId)
             .map(CoursePaymentsResponse::coursePayments)
 }

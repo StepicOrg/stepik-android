@@ -12,6 +12,7 @@ import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.course.repository.CourseReviewRepository
+import org.stepik.android.domain.course_payments.model.CoursePayment
 import org.stepik.android.domain.course_payments.repository.CoursePaymentsRepository
 import org.stepik.android.domain.progress.repository.ProgressRepository
 import org.stepik.android.model.Course
@@ -94,20 +95,19 @@ constructor(
 
             else ->
                 coursePaymentsRepository
-                    .getCoursePaymentByCourseId(course.id)
-                    .isEmpty
-                    .flatMap { isEmpty ->
-                        if (isEmpty) {
+                    .getCoursePaymentsByCourseId(course.id, coursePaymentStatus = CoursePayment.Status.SUCCESS)
+                    .flatMap { payments ->
+                        if (payments.isEmpty()) {
                             billingRepository
                                 .getInventory(ProductTypes.IN_APP, COURSE_TIER_PREFIX + course.priceTier)
                                 .map(EnrollmentState::NotEnrolledInApp)
                                 .cast(EnrollmentState::class.java)
                                 .toSingle(EnrollmentState.NotEnrolledWeb) // if price_tier == null
-                                .onErrorReturnItem(EnrollmentState.NotEnrolledWeb) // if billing not supported on current device
                         } else {
                             Single.just(EnrollmentState.NotEnrolledFree)
                         }
                     }
+                    .onErrorReturnItem(EnrollmentState.NotEnrolledWeb) // if billing not supported on current device or to access paid course offline
         }
 
     fun restoreCourse(course: Course) =
