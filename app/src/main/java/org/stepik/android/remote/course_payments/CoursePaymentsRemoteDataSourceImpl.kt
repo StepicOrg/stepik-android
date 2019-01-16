@@ -33,8 +33,15 @@ constructor(
             )
             .map { it.coursePayments.first() }
 
-    override fun getCoursePaymentsByCourseId(courseId: Long): Single<List<CoursePayment>> =
+    override fun getCoursePaymentsByCourseId(courseId: Long, coursePaymentStatus: CoursePayment.Status?): Single<List<CoursePayment>> =
         loggedService
             .getCoursePaymentsByCourseId(courseId)
             .map(CoursePaymentsResponse::coursePayments)
+            .map { payments ->
+                if (coursePaymentStatus != null) {
+                    payments.filter { it.status == coursePaymentStatus }
+                } else {
+                    payments
+                }
+            }
 }

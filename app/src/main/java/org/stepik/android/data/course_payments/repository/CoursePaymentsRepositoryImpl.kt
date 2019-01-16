@@ -19,13 +19,6 @@ constructor(
 
     override fun getCoursePaymentsByCourseId(courseId: Long, coursePaymentStatus: CoursePayment.Status?): Single<List<CoursePayment>> =
         coursePaymentsRemoteDataSource
-            .getCoursePaymentsByCourseId(courseId)
-            .map { payments ->
-                if (coursePaymentStatus != null) {
-                    payments.filter { it.status == coursePaymentStatus }
-                } else {
-                    payments
-                }
-            }
+            .getCoursePaymentsByCourseId(courseId, coursePaymentStatus)
 
 }
