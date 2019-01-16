@@ -7,6 +7,7 @@ import android.support.multidex.MultiDexApplication
 import android.webkit.WebView
 import com.facebook.FacebookSdk
 import com.facebook.appevents.AppEventsLogger
+import com.google.android.gms.security.ProviderInstaller
 import com.squareup.leakcanary.LeakCanary
 import com.squareup.leakcanary.RefWatcher
 import com.vk.sdk.VKSdk
@@ -30,6 +31,7 @@ import org.stepic.droid.util.isMainProcess
 import timber.log.Timber
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig
 import javax.inject.Inject
+import javax.net.ssl.SSLContext
 
 class App : MultiDexApplication() {
 
@@ -111,6 +113,10 @@ class App : MultiDexApplication() {
             }
         }
 
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            initSSL()
+        }
+
         FacebookSdk.sdkInitialize(applicationContext)
         AppEventsLogger.activateApp(this)
         VKSdk.initialize(this)
@@ -140,6 +146,17 @@ class App : MultiDexApplication() {
 
         Branch.getAutoInstance(this)
         initChannels()
+    }
+
+    private fun initSSL() {
+        try {
+            ProviderInstaller.installIfNeeded(applicationContext)
+            val sslContext = SSLContext.getInstance("TLSv1.2")
+            sslContext.init(null, null, null)
+            sslContext.createSSLEngine()
+        } catch (_: Exception) {
+
+        }
     }
 
     private fun initChannels() {
