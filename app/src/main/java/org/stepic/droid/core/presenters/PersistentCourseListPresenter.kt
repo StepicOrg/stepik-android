@@ -1,8 +1,6 @@
 package org.stepic.droid.core.presenters
 
 import android.support.annotation.WorkerThread
-import io.reactivex.Single
-import org.solovyev.android.checkout.ProductTypes
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.concurrency.SingleThreadExecutor
@@ -11,6 +9,7 @@ import org.stepic.droid.core.FirstCoursePoster
 import org.stepic.droid.core.earlystreak.contract.EarlyStreakPoster
 import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.di.course_list.CourseListScope
+import org.stepic.droid.features.course_purchases.domain.CoursePurchasesInteractor
 import org.stepic.droid.model.CourseListType
 import org.stepic.droid.model.CourseReviewSummary
 import org.stepic.droid.preferences.SharedPreferenceHelper
@@ -20,9 +19,6 @@ import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.RWLocks
 import org.stepic.droid.util.getProgresses
 import org.stepic.droid.web.Api
-import org.stepik.android.domain.billing.repository.BillingRepository
-import org.stepik.android.domain.course_payments.model.CoursePayment
-import org.stepik.android.domain.course_payments.repository.CoursePaymentsRepository
 import org.stepik.android.domain.personal_deadlines.interactor.DeadlinesSynchronizationInteractor
 import org.stepik.android.domain.progress.repository.ProgressRepository
 import org.stepik.android.model.Course
@@ -37,8 +33,7 @@ import javax.inject.Inject
 class PersistentCourseListPresenter
 @Inject
 constructor(
-    private val billingRepository: BillingRepository,
-    private val coursePaymentsRepository: CoursePaymentsRepository,
+    private val coursePurchasesInteractor: CoursePurchasesInteractor,
 
     private val databaseFacade: DatabaseFacade,
     private val singleThreadExecutor: SingleThreadExecutor,
@@ -61,8 +56,6 @@ constructor(
         private const val MAX_CURRENT_NUMBER_OF_TASKS = 2
         private const val SEVEN_DAYS_MILLIS = 7 * 24 * 60 * 60 * 1000L
         private const val MILLIS_IN_SECOND = 1000L
-
-        private const val COURSE_TIER_PREFIX = "course_tier_"
     }
 
     private val currentPage = AtomicInteger(1)
@@ -195,25 +188,13 @@ constructor(
             if (coursesForShow.size < MIN_COURSES_ON_SCREEN && hasNextPage.get()) {
                 //try to load next in loop
             } else {
-                val skuIds = coursesForShow
-                    .mapNotNull { course ->
-                        course.priceTier?.let { COURSE_TIER_PREFIX + it }
-                    }
-
-                val skus = billingRepository
-                    .getInventory(ProductTypes.IN_APP, skuIds)
-                    .onErrorReturnItem(emptyList())
+                val skus = coursePurchasesInteractor
+                    .getCoursesSkuMap(coursesForShow)
                     .blockingGet()
-                    .associateBy { it.id.code }
-                    .mapKeys { it.key.removePrefix(COURSE_TIER_PREFIX) }
 
-                val coursePayments = Single
-                    .concat(coursesForShow.map { coursePaymentsRepository.getCoursePaymentsByCourseId(it.id, CoursePayment.Status.SUCCESS) })
-                    .toList()
-                    .onErrorReturnItem(emptyList())
+                val coursePayments = coursePurchasesInteractor
+                    .getCoursesPaymentsMap(coursesForShow)
                     .blockingGet()
-                    .flatten()
-                    .associateBy { it.course }
 
                 mainHandler.post {
                     postFirstCourse(courseType, coursesForShow)
