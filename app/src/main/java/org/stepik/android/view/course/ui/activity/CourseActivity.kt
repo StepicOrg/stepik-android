@@ -275,7 +275,7 @@ class CourseActivity : FragmentActivityBase(), CourseView {
 
                 if (intent.getBooleanExtra(EXTRA_AUTO_ENROLL, false)) {
                     intent.removeExtra(EXTRA_AUTO_ENROLL)
-                    coursePresenter.enrollCourse()
+                    coursePresenter.autoEnroll()
 
                     analytic.reportAmplitudeEvent(AmplitudeAnalytic.Course.JOINED, mapOf(
                         AmplitudeAnalytic.Course.Params.COURSE to state.courseHeaderData.courseId,

@@ -125,6 +125,24 @@ constructor(
     /**
      * Enrollment
      */
+    fun autoEnroll() {
+        val enrollmentState = (state as? CourseView.State.CourseLoaded)
+            ?.courseHeaderData
+            ?.enrollmentState
+            ?: return
+
+        when(enrollmentState) {
+            EnrollmentState.NotEnrolledFree ->
+                enrollCourse()
+
+            EnrollmentState.NotEnrolledWeb ->
+                openCoursePurchaseInWeb()
+
+            is EnrollmentState.NotEnrolledInApp ->
+                purchaseCourse()
+        }
+    }
+
     fun enrollCourse() {
         toggleEnrollment(CourseEnrollmentInteractor::enrollCourse)
     }
