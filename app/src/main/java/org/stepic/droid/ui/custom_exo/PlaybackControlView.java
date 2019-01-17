@@ -894,23 +894,23 @@ public class PlaybackControlView extends FrameLayout {
             //remove this custom view and use library player
         }
 
-        @Override
-        public void onPositionDiscontinuity() {
-            updateNavigation();
-            updateProgress();
-        }
+//        @Override
+//        public void onPositionDiscontinuity() {
+//            updateNavigation();
+//            updateProgress();
+//        }
 
         @Override
         public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
             // Do nothing.
         }
 
-        @Override
-        public void onTimelineChanged(Timeline timeline, Object manifest) {
-            updateNavigation();
-            updateTimeBarMode();
-            updateProgress();
-        }
+//        @Override
+//        public void onTimelineChanged(Timeline timeline, Object manifest) {
+//            updateNavigation();
+//            updateTimeBarMode();
+//            updateProgress();
+//        }
 
         @Override
         public void onLoadingChanged(boolean isLoading) {

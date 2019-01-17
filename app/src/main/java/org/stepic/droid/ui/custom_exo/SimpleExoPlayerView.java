@@ -809,20 +809,20 @@ public final class SimpleExoPlayerView extends FrameLayout {
             // Do nothing.
         }
 
-        @Override
-        public void onPositionDiscontinuity() {
-            // Do nothing.
-        }
+//        @Override
+//        public void onPositionDiscontinuity() {
+//             Do nothing.
+//        }
 
         @Override
         public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
             // Do nothing.
         }
 
-        @Override
-        public void onTimelineChanged(Timeline timeline, Object manifest) {
-            // Do nothing.
-        }
+//        @Override
+//        public void onTimelineChanged(Timeline timeline, Object manifest) {
+//             Do nothing.
+//        }
 
     }
 

@@ -75,11 +75,11 @@ class VideoExoFragment : FragmentBase(),
     override fun onLoadingChanged(isLoading: Boolean) {
     }
 
-    override fun onPositionDiscontinuity() {
-    }
-
-    override fun onTimelineChanged(timeline: Timeline?, manifest: Any?) {
-    }
+//    override fun onPositionDiscontinuity() {
+//    }
+//
+//    override fun onTimelineChanged(timeline: Timeline?, manifest: Any?) {
+//    }
 
     override fun dispatchKeyEventInFragment(keyEvent: KeyEvent?): Boolean {
         videoPlayerView?.showController()
