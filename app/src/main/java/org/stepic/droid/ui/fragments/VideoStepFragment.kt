@@ -79,7 +79,7 @@ class VideoStepFragment : StepBaseFragment(),
                 .with(context)
                 .load(uri)
                 .listener(object : RequestListener<Uri, GlideDrawable> {
-                    override fun onException(e: Exception, model: Uri, target: Target<GlideDrawable>, isFirstResource: Boolean): Boolean {
+                    override fun onException(e: Exception?, model: Uri, target: Target<GlideDrawable>, isFirstResource: Boolean): Boolean {
                         //at this callback view can be dead!
                         showTime(timeString)
                         return false
