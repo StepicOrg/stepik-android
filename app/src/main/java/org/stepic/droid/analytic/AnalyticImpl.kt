@@ -83,7 +83,7 @@ constructor(
     override fun reportEvent(eventName: String, bundle: Bundle?) {
         val map: HashMap<String, String> = HashMap()
         bundle?.keySet()?.forEach {
-            map[it] = bundle[it].toString()
+            map[it] = java.lang.String.valueOf(bundle[it]) // handle null as bundle[it].toString() calls object.toString() and cause NPE instead of Any?.toString()
         }
         if (map.isEmpty()) {
             YandexMetrica.reportEvent(eventName)
