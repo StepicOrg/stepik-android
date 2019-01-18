@@ -11,24 +11,16 @@ import io.reactivex.Scheduler
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
-import org.stepik.android.cache.course.source.CourseCacheDataSourceImpl
-import org.stepik.android.cache.course.source.EnrollmentCacheDataSourceImpl
-import org.stepik.android.data.course.repository.CourseRepositoryImpl
 import org.stepik.android.data.course.repository.CourseReviewRepositoryImpl
-import org.stepik.android.data.course.repository.EnrollmentRepositoryImpl
 import org.stepik.android.data.course.source.*
-import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.course.repository.CourseReviewRepository
-import org.stepik.android.domain.course.repository.EnrollmentRepository
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.base.injection.DaggerViewModelFactory
 import org.stepik.android.presentation.base.injection.ViewModelKey
 import org.stepik.android.presentation.course.CoursePresenter
 import org.stepik.android.presentation.course_content.CourseContentPresenter
 import org.stepik.android.presentation.course_info.CourseInfoPresenter
-import org.stepik.android.remote.course.source.CourseRemoteDataSourceImpl
 import org.stepik.android.remote.course.source.CourseReviewRemoteDataSourceImpl
-import org.stepik.android.remote.course.source.EnrollmentRemoteDataSourceImpl
 
 @Module
 abstract class CourseModule {
