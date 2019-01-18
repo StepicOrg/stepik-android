@@ -259,8 +259,8 @@ class LaunchActivity : SmartLockActivityBase(), LoginView {
                 loginPresenter.loginWithNativeProviderCode(result.accessToken, SocialManager.SocialType.vk, result.email)
             }
 
-            override fun onError(error: VKError) {
-                if (error.errorCode == VKError.VK_REQUEST_HTTP_FAILED) {
+            override fun onError(error: VKError?) {
+                if (error?.errorCode == VKError.VK_REQUEST_HTTP_FAILED) {
                     onInternetProblems()
                 }
             }
