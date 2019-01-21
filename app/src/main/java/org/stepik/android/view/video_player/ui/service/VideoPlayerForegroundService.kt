@@ -3,15 +3,13 @@ package org.stepik.android.view.video_player.ui.service
 import android.app.Notification
 import android.app.PendingIntent
 import android.app.Service
-import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Binder
 import android.os.IBinder
 import android.util.Log
-import com.google.android.exoplayer2.C
-import com.google.android.exoplayer2.ExoPlayerFactory
-import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.audio.AudioAttributes
 import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
@@ -19,7 +17,6 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
 import org.stepic.droid.R
 import org.stepik.android.model.Video
-import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import org.stepik.android.view.video_player.ui.activity.VideoPlayerActivity
 
@@ -37,21 +34,18 @@ class VideoPlayerForegroundService : Service() {
 //    private val mediaSession: MediaSessionCompat? = null
 //    private val mediaSessionConnector: MediaSessionConnector? = null
 
-    private val sharedPrefs by lazy { getSharedPreferences("test", Context.MODE_PRIVATE) }
-
     override fun onBind(intent: Intent?): IBinder? =
-        null
+        VideoPlayerBinder()
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+        if (player != null) return START_STICKY
 
         Log.d("VideoPlayerForegroundService", "onStartCommand")
-
-        val pos = sharedPrefs.getLong("pos", 0)
 
         val externalVideo: Video? = intent.getParcelableExtra(EXTRA_EXTERNAL_VIDEO)
         val cachedVideo: Video? = intent.getParcelableExtra(EXTRA_CACHED_VIDEO)
 
-        val video = cachedVideo ?: externalVideo ?: return super.onStartCommand(intent, flags, startId)
+        val video = cachedVideo ?: externalVideo ?: return START_STICKY
 
         val bandwidthMeter = DefaultBandwidthMeter()
         val dataSourceFactory = DefaultDataSourceFactory(this, Util.getUserAgent(this, getString(R.string.app_name)), bandwidthMeter)
@@ -70,7 +64,6 @@ class VideoPlayerForegroundService : Service() {
                 playWhenReady = true
                 setAudioAttributes(audioAttributes, true)
                 prepare(videoSource)
-                seekTo(pos)
             }
 
         val activityIntent = Intent(this, VideoPlayerActivity::class.java)
@@ -109,13 +102,10 @@ class VideoPlayerForegroundService : Service() {
 
         playerNotificationManager?.setPlayer(player)
 
-
-        return super.onStartCommand(intent, flags, startId)
+        return START_STICKY
     }
 
     override fun onDestroy() {
-        sharedPrefs.edit().putLong("pos", player?.currentPosition ?: 0).apply()
-
         playerNotificationManager?.setPlayer(null)
         player?.release()
         player = null
@@ -123,5 +113,10 @@ class VideoPlayerForegroundService : Service() {
         Log.d("VideoPlayerForegroundService", "onDestroy")
 
         super.onDestroy()
+    }
+
+    inner class VideoPlayerBinder : Binder() {
+        fun getPlayer(): ExoPlayer? =
+            player
     }
 }
