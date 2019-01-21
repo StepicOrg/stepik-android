@@ -71,6 +71,7 @@ import org.stepic.droid.web.ViewAssignment;
 import org.stepik.android.model.Tag;
 import org.stepik.android.view.routing.deeplink.BranchDeepLinkRouter;
 import org.stepik.android.view.routing.deeplink.BranchRoute;
+import org.stepik.android.view.video_player.ui.activity.VideoPlayerActivity;
 
 import java.io.File;
 import java.net.URLEncoder;
@@ -334,12 +335,12 @@ public class ScreenManagerImpl implements ScreenManager {
         }
 
         if (isCompatible && !isOpenExternal) {
-            Intent intent = new Intent(App.Companion.getAppContext(), VideoActivity.class);
-            Bundle extras = new Bundle();
-            extras.putParcelable(VideoActivity.Companion.getCachedVideoKey(), cachedVideo);
-            extras.putParcelable(VideoActivity.Companion.getExternalVideoKey(), externalVideo);
-            intent.putExtras(extras);
-            sourceActivity.startActivity(intent);
+//            Intent intent = new Intent(App.Companion.getAppContext(), VideoActivity.class);
+//            Bundle extras = new Bundle();
+//            extras.putParcelable(VideoActivity.Companion.getCachedVideoKey(), cachedVideo);
+//            extras.putParcelable(VideoActivity.Companion.getExternalVideoKey(), externalVideo);
+//            intent.putExtras(extras);
+            sourceActivity.startActivity(VideoPlayerActivity.Companion.createIntent(sourceActivity, externalVideo, cachedVideo));
         } else {
             String videoPath = null;
             if (cachedVideo != null && cachedVideo.getUrls() != null && !cachedVideo.getUrls().isEmpty()) {

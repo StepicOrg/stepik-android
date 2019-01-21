@@ -10,7 +10,7 @@ data class Video(
     @SerializedName("thumbnail")
     val thumbnail: String? = null,
     @SerializedName("urls")
-    val urls: List<VideoUrl>? = null,
+    val urls: List<VideoUrl> = emptyList(),
     @SerializedName("duration")
     val duration: Long = 0
 ) : Parcelable {

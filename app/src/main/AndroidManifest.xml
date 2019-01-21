@@ -216,6 +216,14 @@
             android:theme="@style/AppTheme.VideoPlayer" />
 
         <activity
+            android:name="org.stepik.android.view.video_player.ui.activity.VideoPlayerActivity"
+            android:hardwareAccelerated="true"
+            android:theme="@style/AppTheme.VideoPlayer" />
+
+        <service
+            android:name="org.stepik.android.view.video_player.ui.service.VideoPlayerForegroundService" />
+
+        <activity
             android:name=".ui.activities.CommentsActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".ui.activities.StepsActivity">
