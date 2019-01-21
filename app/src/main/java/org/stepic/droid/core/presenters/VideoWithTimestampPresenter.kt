@@ -13,10 +13,12 @@ import javax.inject.Named
 @VideoScope
 class VideoWithTimestampPresenter
 @Inject constructor(
-        private val databaseFacade: DatabaseFacade,
-        private val mainHandler: MainHandler,
-        private val threadPoolExecutor: ThreadPoolExecutor,
-        @Named(VideoModule.rewindOnOpenName) private val rewindOnOpenMillis: Long) : PresenterBase<VideoWithTimestampView>() {
+    private val databaseFacade: DatabaseFacade,
+    private val mainHandler: MainHandler,
+    private val threadPoolExecutor: ThreadPoolExecutor,
+    @Named(VideoModule.rewindOnOpenName)
+    private val rewindOnOpenMillis: Long
+) : PresenterBase<VideoWithTimestampView>() {
 
     private var cachedTimestamp: Long? = null
 

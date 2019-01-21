@@ -7,8 +7,8 @@ import javax.inject.Inject
 
 class InternetEnabledPosterImpl
 @Inject constructor(
-        private val listenerContainer: ListenerContainer<InternetEnabledListener>)
-    : InternetEnabledPoster {
+        private val listenerContainer: ListenerContainer<InternetEnabledListener>
+) : InternetEnabledPoster {
 
     override fun internetEnabled() {
         listenerContainer.asIterable().forEach(InternetEnabledListener::onInternetEnabled)
