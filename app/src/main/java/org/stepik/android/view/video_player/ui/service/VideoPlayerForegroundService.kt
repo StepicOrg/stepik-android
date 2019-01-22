@@ -100,6 +100,8 @@ class VideoPlayerForegroundService : Service() {
             }
         })
 
+        playerNotificationManager?.setStopAction(null)
+
         playerNotificationManager?.setPlayer(player)
 
         return START_STICKY
