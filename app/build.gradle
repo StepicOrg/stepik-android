@@ -128,7 +128,9 @@ dependencies {
     implementation libraries.supportCardView
     implementation libraries.multidex
     implementation libraries.constraintLayout
-    implementation libraries.exoPlayer
+    implementation libraries.exoPlayerCore
+    implementation libraries.exoPlayerUI
+    implementation libraries.exoPlayerMediaSession
 
     implementation libraries.archExtensions
     implementation libraries.archViewModel

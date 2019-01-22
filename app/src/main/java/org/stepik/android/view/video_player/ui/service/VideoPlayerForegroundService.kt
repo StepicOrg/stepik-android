@@ -8,9 +8,13 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Binder
 import android.os.IBinder
+import android.support.v4.media.MediaDescriptionCompat
+import android.support.v4.media.session.MediaSessionCompat
 import android.util.Log
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.audio.AudioAttributes
+import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
+import com.google.android.exoplayer2.ext.mediasession.TimelineQueueNavigator
 import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
@@ -27,12 +31,15 @@ class VideoPlayerForegroundService : Service() {
 
         private const val PLAYER_CHANNEL_ID = "playback"
         private const val PLAYER_NOTIFICATION_ID = 21313
+
+        private const val MEDIA_SESSION_TAG = "stepik_video"
     }
 
     private var player: SimpleExoPlayer? = null
     private var playerNotificationManager: PlayerNotificationManager? = null
-//    private val mediaSession: MediaSessionCompat? = null
-//    private val mediaSessionConnector: MediaSessionConnector? = null
+
+    private var mediaSession: MediaSessionCompat? = null
+    private var mediaSessionConnector: MediaSessionConnector? = null
 
     override fun onBind(intent: Intent?): IBinder? =
         VideoPlayerBinder()
@@ -101,13 +108,24 @@ class VideoPlayerForegroundService : Service() {
         })
 
         playerNotificationManager?.setStopAction(null)
-
         playerNotificationManager?.setPlayer(player)
+
+        mediaSession = MediaSessionCompat(this, MEDIA_SESSION_TAG)
+            .apply {
+                isActive = true
+
+                playerNotificationManager?.setMediaSessionToken(sessionToken)
+            }
+        mediaSessionConnector = MediaSessionConnector(mediaSession)
+        mediaSessionConnector?.setPlayer(player, null)
 
         return START_STICKY
     }
 
     override fun onDestroy() {
+        mediaSession?.release()
+        mediaSessionConnector?.setPlayer(null,  null)
+
         playerNotificationManager?.setPlayer(null)
         player?.release()
         player = null

@@ -113,7 +113,9 @@ ext.libraries = [
         supportCardView      : "com.android.support:cardview-v7:$versions.supportLibs",
         multidex             : "com.android.support:multidex:$versions.multidex",
         constraintLayout     : "com.android.support.constraint:constraint-layout:$versions.constraintLayout",
-        exoPlayer            : "com.google.android.exoplayer:exoplayer:$versions.exoPlayer",
+        exoPlayerCore        : "com.google.android.exoplayer:exoplayer-core:$versions.exoPlayer",
+        exoPlayerUI          : "com.google.android.exoplayer:exoplayer-ui:$versions.exoPlayer",
+        exoPlayerMediaSession: "com.google.android.exoplayer:extension-mediasession:$versions.exoPlayer",
         ktxCore              : "androidx.core:core-ktx:$versions.ktx",
 
         archExtensions       : "android.arch.lifecycle:extensions:$versions.archComponents",
