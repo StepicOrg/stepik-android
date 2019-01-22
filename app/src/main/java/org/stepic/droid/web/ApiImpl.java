@@ -893,7 +893,7 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Call<LastStepResponse> getLastStepResponse(@NonNull String lastStepId) {
+    public Single<LastStepResponse> getLastStepResponse(@NonNull String lastStepId) {
         return loggedService.getLastStepResponse(lastStepId);
     }
 

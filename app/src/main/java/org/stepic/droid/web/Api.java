@@ -171,7 +171,7 @@ public interface Api {
 
     Single<UserActivityResponse> getUserActivitiesReactive(long userId);
 
-    Call<LastStepResponse> getLastStepResponse(@NotNull String lastStepId);
+    Single<LastStepResponse> getLastStepResponse(@NotNull String lastStepId);
 
     Single<CourseCollectionsResponse> getCourseCollections(String language);
 

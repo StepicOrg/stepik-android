@@ -5,7 +5,7 @@ import org.stepic.droid.model.RemoteLastStep
 import org.stepik.android.model.Meta
 
 class LastStepResponse(
-        val meta: Meta?,
-        @SerializedName("last-steps")
-        val lastSteps: List<RemoteLastStep>
+    val meta: Meta?,
+    @SerializedName("last-steps")
+    val lastSteps: List<RemoteLastStep>
 )
