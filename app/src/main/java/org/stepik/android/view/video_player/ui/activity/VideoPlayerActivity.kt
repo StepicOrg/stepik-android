@@ -55,6 +55,17 @@ class VideoPlayerActivity : AppCompatActivity() {
 
     private fun attachPlayer() {
         playerView.player = exoPlayer
+        exoPlayer?.addListener(object : Player.EventListener {
+            override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
+                if (playbackState == Player.STATE_IDLE) {
+                    finish()
+                }
+            }
+
+            override fun onPlayerError(error: ExoPlaybackException?) {
+                error?.printStackTrace()
+            }
+        })
     }
 
     override fun onStop() {
