@@ -4,17 +4,16 @@ import android.app.Notification
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.Bitmap
+import android.media.AudioManager
 import android.net.Uri
 import android.os.Binder
 import android.os.IBinder
-import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.session.MediaSessionCompat
-import android.util.Log
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.audio.AudioAttributes
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
-import com.google.android.exoplayer2.ext.mediasession.TimelineQueueNavigator
 import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
@@ -23,6 +22,7 @@ import org.stepic.droid.R
 import org.stepik.android.model.Video
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import org.stepik.android.view.video_player.ui.activity.VideoPlayerActivity
+import org.stepik.android.view.video_player.ui.receiver.HeadphonesReceiver
 
 class VideoPlayerForegroundService : Service() {
     companion object {
@@ -41,13 +41,13 @@ class VideoPlayerForegroundService : Service() {
     private var mediaSession: MediaSessionCompat? = null
     private var mediaSessionConnector: MediaSessionConnector? = null
 
+    private val headphonesReceiver = HeadphonesReceiver { player?.playWhenReady = false }
+
     override fun onBind(intent: Intent?): IBinder? =
         VideoPlayerBinder()
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         if (player != null) return START_STICKY
-
-        Log.d("VideoPlayerForegroundService", "onStartCommand")
 
         val externalVideo: Video? = intent.getParcelableExtra(EXTRA_EXTERNAL_VIDEO)
         val cachedVideo: Video? = intent.getParcelableExtra(EXTRA_CACHED_VIDEO)
@@ -119,18 +119,20 @@ class VideoPlayerForegroundService : Service() {
         mediaSessionConnector = MediaSessionConnector(mediaSession)
         mediaSessionConnector?.setPlayer(player, null)
 
+        registerReceiver(headphonesReceiver, IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY))
+
         return START_STICKY
     }
 
     override fun onDestroy() {
+        unregisterReceiver(headphonesReceiver)
+
         mediaSession?.release()
         mediaSessionConnector?.setPlayer(null,  null)
 
         playerNotificationManager?.setPlayer(null)
         player?.release()
         player = null
-
-        Log.d("VideoPlayerForegroundService", "onDestroy")
 
         super.onDestroy()
     }
