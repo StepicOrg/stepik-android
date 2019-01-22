@@ -12,7 +12,7 @@ constructor(
    private val api: Api
 ) : LastStepRemoteDataSource {
     override fun getLastStep(id: String): Maybe<LastStep> =
-        Maybe.create { emitter ->
+        Maybe.fromCallable {
             api.getLastStepResponse(id)
                 .execute()
                 .body()
@@ -24,7 +24,5 @@ constructor(
                     it.step ?: return@let null
                     LastStep(id = it.id, unit = it.unit, lesson = it.lesson, step = it.step)
                 }
-                ?.let(emitter::onSuccess)
-                ?: emitter.onComplete()
         }
 }
