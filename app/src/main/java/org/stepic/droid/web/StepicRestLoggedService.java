@@ -102,7 +102,7 @@ public interface StepicRestLoggedService {
     Single<ProgressesResponse> getProgressesReactive(@Query("ids[]") String[] progresses);
 
     @GET("api/assignments")
-    Call<AssignmentResponse> getAssignments(@Query("ids[]") long[] assignmentsIds);
+    Single<AssignmentResponse> getAssignments(@Query("ids[]") long[] assignmentsIds);
 
 
     @Headers("Content-Type:application/json")
@@ -234,7 +234,7 @@ public interface StepicRestLoggedService {
     Single<UserActivityResponse> getUserActivitiesReactive(@Path("userId") long userId);
 
     @GET("api/last-steps/{lastStepId}")
-    Call<LastStepResponse> getLastStepResponse(@Path("lastStepId") String lastStepId);
+    Single<LastStepResponse> getLastStepResponse(@Path("lastStepId") String lastStepId);
 
     @GET("api/course-lists?platform=mobile")
     Single<CourseCollectionsResponse> getCourseLists(@Query("language") String language);

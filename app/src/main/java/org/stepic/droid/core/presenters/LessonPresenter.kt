@@ -273,7 +273,7 @@ constructor(
         try {
             val progressIds: Array<out String?>
             if (unit != null) {
-                val assignments = api.getAssignments(unit.assignments).execute().body()?.assignments
+                val assignments = api.getAssignments(unit.assignments).blockingGet().assignments
                 assignments?.filterNotNull()?.forEach {
                     databaseFacade.addAssignment(assignment = it)
                 }
