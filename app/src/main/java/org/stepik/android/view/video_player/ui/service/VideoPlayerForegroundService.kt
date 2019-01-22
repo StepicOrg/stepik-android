@@ -80,7 +80,7 @@ class VideoPlayerForegroundService : Service() {
             .createWithNotificationChannel(
                 this,
                 PLAYER_CHANNEL_ID,
-                R.string.video_player_quality,
+                R.string.video_player_control_notification_channel_name,
                 PLAYER_NOTIFICATION_ID,
                 object : PlayerNotificationManager.MediaDescriptionAdapter {
                     override fun createCurrentContentIntent(player: Player?): PendingIntent? =

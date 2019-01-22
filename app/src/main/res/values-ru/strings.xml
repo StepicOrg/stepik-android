@@ -647,4 +647,7 @@
     <string name="course_purchase_billing_not_available">Встроенные покупки не поддерживаются на этой устройстве</string>
     <string name="course_purchase_billing_no_purchases_to_restore">У вас нет неактивированных покупок этого курса</string>
     <string name="course_purchase_already_owned">Вы уже владеете этим курсом</string>
+
+
+    <string name="video_player_control_notification_channel_name">Управление видео плеером</string>
 </resources>
