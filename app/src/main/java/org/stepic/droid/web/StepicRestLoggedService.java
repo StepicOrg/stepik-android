@@ -5,6 +5,8 @@ import org.stepic.droid.web.model.adaptive.RecommendationReactionsRequest;
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
 import org.stepic.droid.web.model.story_templates.StoryTemplatesResponse;
 import org.stepik.android.model.EnrollmentWrapper;
+import org.stepik.android.remote.course_payments.model.CoursePaymentRequest;
+import org.stepik.android.remote.course_payments.model.CoursePaymentsResponse;
 
 import java.util.List;
 
@@ -102,7 +104,7 @@ public interface StepicRestLoggedService {
     Single<ProgressesResponse> getProgressesReactive(@Query("ids[]") String[] progresses);
 
     @GET("api/assignments")
-    Call<AssignmentResponse> getAssignments(@Query("ids[]") long[] assignmentsIds);
+    Single<AssignmentResponse> getAssignments(@Query("ids[]") long[] assignmentsIds);
 
 
     @Headers("Content-Type:application/json")
@@ -234,7 +236,7 @@ public interface StepicRestLoggedService {
     Single<UserActivityResponse> getUserActivitiesReactive(@Path("userId") long userId);
 
     @GET("api/last-steps/{lastStepId}")
-    Call<LastStepResponse> getLastStepResponse(@Path("lastStepId") String lastStepId);
+    Single<LastStepResponse> getLastStepResponse(@Path("lastStepId") String lastStepId);
 
     @GET("api/course-lists?platform=mobile")
     Single<CourseCollectionsResponse> getCourseLists(@Query("language") String language);
@@ -265,4 +267,15 @@ public interface StepicRestLoggedService {
             @Query("is_published") final boolean isPublished,
             @Query("language") final String language
     );
+
+    @POST("api/course-payments")
+    Single<CoursePaymentsResponse> createCoursePayment(
+            @Body final CoursePaymentRequest coursePaymentRequest
+    );
+
+    @GET("api/course-payments?order=-id")
+    Single<CoursePaymentsResponse> getCoursePaymentsByCourseId(
+            @Query("course") long course
+    );
+
 }

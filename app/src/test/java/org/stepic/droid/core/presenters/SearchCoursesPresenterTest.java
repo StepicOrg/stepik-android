@@ -5,9 +5,12 @@ import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.solovyev.android.checkout.Sku;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.core.presenters.contracts.CoursesView;
+import org.stepic.droid.features.course_purchases.domain.CoursePurchasesInteractor;
+import org.stepik.android.domain.course_payments.model.CoursePayment;
 import org.stepik.android.model.Course;
 import org.stepik.android.model.SearchResult;
 import org.stepic.droid.storage.operations.DatabaseFacade;
@@ -25,8 +28,11 @@ import org.stepik.android.model.Meta;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadPoolExecutor;
+
+import io.reactivex.Single;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.inOrder;
@@ -40,6 +46,8 @@ public class SearchCoursesPresenterTest {
 
     private SearchCoursesPresenter searchCoursesPresenter;
 
+    @Mock
+    CoursePurchasesInteractor coursePurchasesInteractor;
 
     @Mock
     Api api;
@@ -71,7 +79,7 @@ public class SearchCoursesPresenterTest {
 
         searchResolver = spy(new SearchResolverImpl());
 
-        searchCoursesPresenter = new SearchCoursesPresenter(api, threadPoolExecutor, mainHandler, searchResolver, databaseFacade, analytic);
+        searchCoursesPresenter = new SearchCoursesPresenter(api, threadPoolExecutor, mainHandler, searchResolver, databaseFacade, analytic, coursePurchasesInteractor);
     }
 
     @Test
@@ -104,6 +112,8 @@ public class SearchCoursesPresenterTest {
         when(coursesStepicResponse.getCourses()).thenReturn(expectedCourses);
         ResponseGeneratorKt.useMockInsteadCall(when(api.getCourses(1, courseIds)), coursesStepicResponse);
 
+        when(coursePurchasesInteractor.getCoursesPaymentsMap(any(List.class))).thenReturn(Single.just(Collections.<Long, CoursePayment>emptyMap()));
+        when(coursePurchasesInteractor.getCoursesSkuMap(any(List.class))).thenReturn(Single.just(Collections.<String, Sku>emptyMap()));
 
         //call method of tested object
         searchCoursesPresenter.downloadData(searchQuery);
@@ -118,7 +128,7 @@ public class SearchCoursesPresenterTest {
         //verify calls of view methods
         InOrder inOrder = inOrder(coursesView);
         inOrder.verify(coursesView).showLoading();
-        inOrder.verify(coursesView).showCourses(expectedCourses);
+        inOrder.verify(coursesView).showCourses(expectedCourses, Collections.<String, Sku>emptyMap(), Collections.<Long, CoursePayment>emptyMap());
 
         //verify never called view's methods
         verify(coursesView, never()).showConnectionProblem();

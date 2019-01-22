@@ -617,6 +617,13 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
+    public void openCoursePurchaseInWeb(Context context, long courseId) {
+        String url = config.getBaseUrl() + "/course/" + courseId + "/pay/?from_mobile_app=true";
+        final Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(url));
+        context.startActivity(intent);
+    }
+
+    @Override
     public void openRemindPassword(AppCompatActivity context) {
         analytic.reportEvent(Analytic.Screens.REMIND_PASSWORD);
         android.support.v4.app.DialogFragment dialogFragment = RemindPasswordDialogFragment.newInstance();

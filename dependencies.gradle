@@ -7,18 +7,18 @@ ext.versions = [
         compileSdk           : 28,
         buildTools           : '28.0.3',
 
-        androidGradlePlugin  : '3.2.1',
+        androidGradlePlugin  : '3.3.0',
         kotlin               : '1.3.11',
         googleServicesVersion: '4.2.0',
-        fabric               : '1.25.4',
-        dexcount             : '0.8.2',
+        fabric               : '1.27.0',
+        dexcount             : '0.8.5',
 
         dagger               : '2.10',
         butterKnife          : '8.8.1',
 
-        rxJava2              : '2.1.5',
-        rxAndroid            : '2.0.1',
-        rxKotlin             : '2.2.0',
+        rxJava2              : '2.2.5',
+        rxAndroid            : '2.1.0',
+        rxKotlin             : '2.3.0',
 
         supportLibs          : '28.0.0',
         archComponents       : '1.1.0',
@@ -48,6 +48,8 @@ ext.versions = [
         firebaseConfig       : '16.1.2',
         firebaseMessaging    : '17.3.4',
 
+        checkout             : '1.2.1',
+
         facebook             : '4.17.0',
         vk                   : '1.6.5',
 
@@ -58,6 +60,7 @@ ext.versions = [
         numberPicker         : '1.2.1',
         datePicker           : '3.1.0',
         photoView            : '1.3.1',
+        advancedRecycler     : '0.11.0@aar',
         advancedRecycler     : '0.11.0@aar',
         recyclerAnimators    : '2.1.0',
         materialProgress     : '1.4.2',
@@ -140,6 +143,8 @@ ext.libraries = [
         firebaseCore         : "com.google.firebase:firebase-core:$versions.firebaseCore",
         firebaseConfig       : "com.google.firebase:firebase-config:$versions.firebaseConfig",
         firebaseMessaging    : "com.google.firebase:firebase-messaging:$versions.firebaseMessaging",
+
+        checkout             : "org.solovyev.android:checkout:$versions.checkout",
 
         facebookSdk          : "com.facebook.android:facebook-android-sdk:$versions.facebook",
         vkSdk                : "com.vk:androidsdk:$versions.vk",

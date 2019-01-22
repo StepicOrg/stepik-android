@@ -51,6 +51,7 @@ import org.stepic.droid.ui.custom.*
 import org.stepic.droid.ui.custom_exo.PlaybackControlView
 import org.stepic.droid.ui.dialogs.*
 import org.stepic.droid.ui.fragments.StoreManagementFragment
+import org.stepik.android.view.injection.billing.BillingModule
 import org.stepik.android.view.injection.course.CourseComponent
 import org.stepik.android.view.injection.course.CourseRoutingModule
 import org.stepik.android.view.injection.personal_deadlines.PersonalDeadlinesDataModule
@@ -74,6 +75,8 @@ import org.stepik.android.view.injection.progress.ProgressBusModule
         NotificationsBadgesModule::class,
         NetworkModule::class,
         RemoteMessageHandlersModule::class,
+
+        BillingModule::class,
 
         CourseEnrollmentBusModule::class, // todo unite it in BusModule::class
         ProgressBusModule::class,

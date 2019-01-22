@@ -20,6 +20,9 @@ import kotlinx.android.synthetic.main.error_course_not_found.*
 import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import kotlinx.android.synthetic.main.header_course.*
 import kotlinx.android.synthetic.main.header_course_placeholder.*
+import org.solovyev.android.checkout.Billing
+import org.solovyev.android.checkout.Checkout
+import org.solovyev.android.checkout.UiCheckout
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
@@ -89,7 +92,12 @@ class CourseActivity : FragmentActivityBase(), CourseView {
     private var isInSwipeableViewState = false
 
     @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
+    internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    internal lateinit var billing: Billing
+
+    private lateinit var uiCheckout: UiCheckout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -97,7 +105,7 @@ class CourseActivity : FragmentActivityBase(), CourseView {
 
         setSupportActionBar(courseToolbar)
         val actionBar = this.supportActionBar
-                ?: throw IllegalStateException("support action bar should be set")
+            ?: throw IllegalStateException("support action bar should be set")
 
         with(actionBar) {
             setDisplayShowTitleEnabled(false)
@@ -121,6 +129,8 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         injectComponent(courseId)
         coursePresenter = ViewModelProviders.of(this, viewModelFactory).get(CoursePresenter::class.java)
         courseHeaderDelegate = CourseHeaderDelegate(this, analytic, config, coursePresenter)
+
+        uiCheckout = Checkout.forActivity(this, billing)
 
         initViewPager(courseId)
         initViewStateDelegate()
@@ -237,12 +247,12 @@ class CourseActivity : FragmentActivityBase(), CourseView {
     }
 
     override fun onOptionsItemSelected(item: MenuItem) =
-            if (item.itemId == android.R.id.home) {
-                onBackPressed()
-                true
-            } else {
-                courseHeaderDelegate.onOptionsItemSelected(item) || super.onOptionsItemSelected(item)
-            }
+        if (item.itemId == android.R.id.home) {
+            onBackPressed()
+            true
+        } else {
+            courseHeaderDelegate.onOptionsItemSelected(item) || super.onOptionsItemSelected(item)
+        }
 
     override fun applyTransitionPrev() {
         //no-op
@@ -265,7 +275,7 @@ class CourseActivity : FragmentActivityBase(), CourseView {
 
                 if (intent.getBooleanExtra(EXTRA_AUTO_ENROLL, false)) {
                     intent.removeExtra(EXTRA_AUTO_ENROLL)
-                    coursePresenter.enrollCourse()
+                    coursePresenter.autoEnroll()
 
                     analytic.reportAmplitudeEvent(AmplitudeAnalytic.Course.JOINED, mapOf(
                         AmplitudeAnalytic.Course.Params.COURSE to state.courseHeaderData.courseId,
@@ -297,14 +307,34 @@ class CourseActivity : FragmentActivityBase(), CourseView {
             when(errorType) {
                 EnrollmentError.NO_CONNECTION ->
                     R.string.course_error_enroll
+
                 EnrollmentError.FORBIDDEN ->
                     R.string.join_course_web_exception
+
                 EnrollmentError.UNAUTHORIZED ->
                     R.string.unauthorization_detail
+
+                EnrollmentError.SERVER_ERROR ->
+                    R.string.course_purchase_server_error
+
+                EnrollmentError.BILLING_ERROR ->
+                    R.string.course_purchase_billing_error
+
+                EnrollmentError.BILLING_CANCELLED ->
+                    R.string.course_purchase_billing_cancelled
+
+                EnrollmentError.BILLING_NOT_AVAILABLE ->
+                    R.string.course_purchase_billing_not_available
+
+                EnrollmentError.COURSE_ALREADY_OWNED ->
+                    R.string.course_purchase_already_owned
+
+                EnrollmentError.BILLING_NO_PURCHASES_TO_RESTORE ->
+                    R.string.course_purchase_billing_no_purchases_to_restore
             }
 
         Snackbar
-            .make(coursePager, errorMessage, Snackbar.LENGTH_SHORT)
+            .make(coursePager, errorMessage, Snackbar.LENGTH_LONG)
             .setTextColor(ContextCompat.getColor(this, R.color.white))
             .show()
     }
@@ -332,9 +362,25 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         courseHeaderDelegate.showCourseShareTooltip()
     }
 
+    /**
+     * BillingView
+     */
+    override fun createUiCheckout(): UiCheckout =
+        uiCheckout
+
+    override fun openCoursePurchaseInWeb(courseId: Long) {
+        screenManager.openCoursePurchaseInWeb(this, courseId)
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         coursePresenter.onSaveInstanceState(outState)
         super.onSaveInstanceState(outState)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (!uiCheckout.onActivityResult(requestCode, resultCode, data)) {
+            super.onActivityResult(requestCode, resultCode, data)
+        }
     }
 
     override fun onDestroy() {

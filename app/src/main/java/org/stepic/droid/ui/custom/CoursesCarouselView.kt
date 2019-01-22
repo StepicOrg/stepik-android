@@ -13,6 +13,7 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.Toast
 import kotlinx.android.synthetic.main.view_courses_carousel.view.*
+import org.solovyev.android.checkout.Sku
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
@@ -40,6 +41,7 @@ import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.StepikUtil
 import org.stepic.droid.util.SuppressFBWarnings
+import org.stepik.android.domain.course_payments.model.CoursePayment
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
 import java.util.*
@@ -293,7 +295,7 @@ constructor(
         }
     }
 
-    override fun showCourses(courses: List<Course>) {
+    override fun showCourses(courses: List<Course>, skus: Map<String, Sku>, coursePayments: Map<Long, CoursePayment>) {
         coursesLoadingView.visibility = View.GONE
         coursesPlaceholder.visibility = View.GONE
         if (lastSavedScrollPosition != DEFAULT_SCROLL_POSITION) {
@@ -305,7 +307,11 @@ constructor(
         coursesViewAll.visibility = View.VISIBLE
         this.courses.clear()
         this.courses.addAll(courses)
-        coursesRecycler.adapter?.notifyDataSetChanged()
+        (coursesRecycler.adapter as? CoursesAdapter)?.let { adapter ->
+            adapter.setSkus(skus)
+            adapter.setCoursePayments(coursePayments)
+            adapter.notifyDataSetChanged()
+        }
         updateOnCourseCountChanged()
     }
 
@@ -396,7 +402,7 @@ constructor(
         } else if (info.courseListType == CourseListType.ENROLLED) {
             //insert at 0 index is more complex than just add, but order will be right
             if (courses.isEmpty()) {
-                showCourses(mutableListOf(joinedCourse))
+                showCourses(mutableListOf(joinedCourse), emptyMap(), emptyMap())
             } else {
                 courses.add(0, joinedCourse)
                 coursesRecycler.adapter?.notifyDataSetChanged()
