@@ -28,49 +28,57 @@ import kotlin.concurrent.withLock
 class DownloadsSyncronizer
 @Inject
 constructor(
-        private val context: Context,
-        private val persistentStateManager: PersistentStateManager,
-        private val persistentItemDao: PersistentItemDao,
-        private val systemDownloadsDao: SystemDownloadsDao,
+    private val context: Context,
+    private val persistentStateManager: PersistentStateManager,
+    private val persistentItemDao: PersistentItemDao,
+    private val systemDownloadsDao: SystemDownloadsDao,
 
-        private val intervalUpdatesObservable: Observable<Unit>,
-        private val updatesObservable: Observable<Structure>,
+    private val intervalUpdatesObservable: Observable<Unit>,
+    private val updatesObservable: Observable<Structure>,
 
-        private val persistentItemObserver: PersistentItemObserver,
+    private val persistentItemObserver: PersistentItemObserver,
 
-        private val downloadErrorPoster: DownloadErrorPoster,
-        private val externalStorageManager: ExternalStorageManager,
+    private val downloadErrorPoster: DownloadErrorPoster,
+    private val externalStorageManager: ExternalStorageManager,
 
-        @BackgroundScheduler
-        private val scheduler: Scheduler,
+    @BackgroundScheduler
+    private val scheduler: Scheduler,
 
-        @FSLock
-        private val fsLock: ReentrantLock
+    @FSLock
+    private val fsLock: ReentrantLock
 ) {
     init {
         initWatcher()
     }
 
     private fun initWatcher() {
-        (fixInconsistency() then updatesObservable).map { kotlin.Unit }.startWith(kotlin.Unit)
-                .switchMap { _ ->
-                    intervalUpdatesObservable.startWith(kotlin.Unit).concatMap {
+        (fixInconsistency() then updatesObservable.observeOn(scheduler))
+            .map { kotlin.Unit }
+            .startWith(kotlin.Unit)
+            .switchMap { _ ->
+                intervalUpdatesObservable
+                    .startWith(kotlin.Unit)
+                    .concatMap {
                         persistentItemDao.getItemsByStatus(PersistentItem.Status.IN_PROGRESS)
-                    }.takeWhile(List<PersistentItem>::isNotEmpty).concatMap {
+                    }
+                    .takeWhile(List<PersistentItem>::isNotEmpty)
+                    .concatMap {
                         Observable.just(it) zip systemDownloadsDao.get(*it.map(PersistentItem::downloadId).toLongArray())
-                    }.map { (items, records) ->
+                    }
+                    .map { (items, records) ->
                         syncPersistentItems(items, records)
                     }
-                }
-                .observeOn(scheduler)
-                .subscribeOn(scheduler)
-                .subscribeBy(onError = { initWatcher() }) // on error restart
+            }
+            .observeOn(scheduler)
+            .subscribeOn(scheduler)
+            .subscribeBy(onError = { initWatcher() }) // on error restart
     }
 
-    private fun fixInconsistency() = Completable.fromAction {
-        fixInTransferItems()
-        fixInProgressItems()
-    }
+    private fun fixInconsistency(): Completable =
+        Completable.fromAction {
+            fixInTransferItems()
+            fixInProgressItems()
+        }
 
     private fun fixInTransferItems() = fsLock.withLock {
         val itemsInTransfer = persistentItemDao.getItemsByStatus(PersistentItem.Status.FILE_TRANSFER).blockingFirst()
