@@ -78,16 +78,11 @@ inline fun <T> Maybe<T>.doCompletableOnSuccess(crossinline completableSource: (T
 inline fun <T> Single<T>.doCompletableOnSuccess(crossinline completableSource: (T) -> Completable): Single<T> =
     flatMap { completableSource(it).andThen(Single.just(it)) }
 
-fun <T> Single<List<T>>.requireNonEmpty(): Single<List<T>> =
-    map { list ->
-        list.takeIf(List<T>::isNotEmpty)
-            ?: throw IllegalStateException("List shouldn't be empty")
-    }
-
 fun <T> Single<List<T>>.requireSize(size: Int): Single<List<T>> =
-    map { list ->
+    flatMap { list ->
         list.takeIf { it.size == size }
-            ?: throw IllegalStateException("Expected list size = $size, actual = ${list.size}")
+            ?.let { Single.just(it) }
+            ?: Single.error(IllegalStateException("Expected list size = $size, actual = ${list.size}"))
     }
 
 val emptyOnErrorStub: (Throwable) -> Unit = {}

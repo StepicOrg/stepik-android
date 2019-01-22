@@ -95,6 +95,8 @@ public interface ScreenManager {
 
     void openSyllabusInWeb(Context context, long courseId);
 
+    void openCoursePurchaseInWeb(Context context, long courseId);
+
     Intent getCertificateIntent();
 
     Intent getOpenInWebIntent(String path);

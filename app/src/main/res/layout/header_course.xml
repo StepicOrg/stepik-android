@@ -38,6 +38,34 @@
         android:textColor="@color/white"
         android:layout_marginTop="?actionBarSize" />
 
+    <TextView
+        android:id="@+id/courseBuyInAppAction"
+        style="@style/CourseWidgetView"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/header_action_height"
+        android:minWidth="200dp"
+        android:background="@drawable/header_action_background_green"
+        android:paddingEnd="@dimen/guideline_standard_padding"
+        android:paddingStart="@dimen/guideline_standard_padding"
+        android:text="@string/course_payments_purchase_in_app"
+        android:textSize="@dimen/header_action_text_size"
+        android:textColor="@color/white"
+        android:layout_marginTop="?actionBarSize" />
+
+    <TextView
+        android:id="@+id/courseBuyInWebAction"
+        style="@style/CourseWidgetView"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/header_action_height"
+        android:minWidth="200dp"
+        android:background="@drawable/header_action_background_green"
+        android:paddingEnd="@dimen/guideline_standard_padding"
+        android:paddingStart="@dimen/guideline_standard_padding"
+        android:text="@string/course_payments_purchase_in_web"
+        android:textSize="@dimen/header_action_text_size"
+        android:textColor="@color/white"
+        android:layout_marginTop="?actionBarSize" />
+
     <org.stepic.droid.ui.custom.LoadingView
         android:id="@+id/courseEnrollmentProgress"
         android:alpha="@dimen/loading_view_dark_alpha"

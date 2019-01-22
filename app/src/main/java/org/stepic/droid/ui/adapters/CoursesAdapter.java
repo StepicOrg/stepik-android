@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
@@ -13,11 +14,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.jetbrains.annotations.NotNull;
+import org.solovyev.android.checkout.Sku;
 import org.stepic.droid.R;
 import org.stepic.droid.base.App;
 import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.core.presenters.ContinueCoursePresenter;
 import org.stepic.droid.core.presenters.DroppingPresenter;
+import org.stepik.android.domain.course_payments.model.CoursePayment;
 import org.stepik.android.model.Course;
 import org.stepic.droid.model.CoursesCarouselColorType;
 import org.stepic.droid.model.CoursesDescriptionContainer;
@@ -25,7 +28,9 @@ import org.stepic.droid.ui.adapters.viewhoders.CourseItemViewHolder;
 import org.stepic.droid.ui.adapters.viewhoders.FooterItemViewHolder;
 import org.stepic.droid.ui.adapters.viewhoders.HeaderItemViewHolder;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -60,6 +65,9 @@ public class CoursesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private final String joinTitle;
     private final boolean showMore;
     private final CoursesCarouselColorType colorType;
+
+    private @NonNull Map<String, Sku> skus = new HashMap<>();
+    private @NonNull Map<Long, CoursePayment> coursePayments = new HashMap<>();
 
     public CoursesAdapter(FragmentActivity activity,
                           List<Course> courses,
@@ -135,7 +143,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             }
             case ITEM_VIEW_TYPE: {
                 CourseItemViewHolder courseItemViewHolder = (CourseItemViewHolder) holder;
-                courseItemViewHolder.setDataOnView(courses.get(position - NUMBER_OF_PRE_ITEMS));
+                courseItemViewHolder.setDataOnView(courses.get(position - NUMBER_OF_PRE_ITEMS), skus, coursePayments);
                 break;
             }
             case FOOTER_VIEW_TYPE: {
@@ -190,5 +198,13 @@ public class CoursesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 return Unit.INSTANCE;
             }
         });
+    }
+
+    public void setSkus(@NonNull Map<String, Sku> skus) {
+        this.skus = skus;
+    }
+
+    public void setCoursePayments(@NonNull Map<Long, CoursePayment> coursePayments) {
+        this.coursePayments = coursePayments;
     }
 }

@@ -12,6 +12,7 @@ import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.BitmapImageViewTarget
 import kotlinx.android.synthetic.main.new_course_item.view.*
+import org.solovyev.android.checkout.Sku
 import org.stepic.droid.R
 import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
 import org.stepic.droid.analytic.AmplitudeAnalytic
@@ -26,6 +27,7 @@ import org.stepic.droid.model.CoursesCarouselColorType
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.util.*
+import org.stepik.android.domain.course_payments.model.CoursePayment
 import java.util.*
 import javax.inject.Inject
 
@@ -177,7 +179,10 @@ class CourseItemViewHolder(
         }
     }
 
-    fun setDataOnView(course: Course) {
+    fun setDataOnView(course: Course, skus: Map<String, Sku>, coursePayments: Map<Long, CoursePayment>) {
+        val sku = skus[course.priceTier]
+        val coursePayment = coursePayments[course.id]
+
         courseItemName.text = course.title
         Glide
                 .with(itemView.context)
@@ -198,8 +203,18 @@ class CourseItemViewHolder(
             courseWidgetInfo.setText(R.string.course_item_syllabus)
             showContinueButton()
         } else {
+            val joinTitle =
+                if (course.isPaid && coursePayment == null) {
+                    if (sku == null) {
+                        contextActivity.getString(R.string.course_payments_purchase_in_web)
+                    } else {
+                        contextActivity.getString(R.string.course_payments_purchase_in_app, sku.price)
+                    }
+                } else {
+                    this.joinTitle
+                }
             courseWidgetInfo.setText(R.string.course_item_info)
-            showJoinButton()
+            showJoinButton(joinTitle)
         }
 
         val needShowProgress = bindProgressView(course)
@@ -249,7 +264,7 @@ class CourseItemViewHolder(
     private fun isEnrolled(course: Course?): Boolean =
             course != null && course.enrollment != 0L
 
-    private fun showJoinButton() {
+    private fun showJoinButton(joinTitle: String) {
         courseWidgetButton.applyToButton(joinTitle, joinColor, colorType.joinResource)
     }
 

@@ -160,6 +160,8 @@ dependencies {
     implementation libraries.firebaseCore
     implementation libraries.firebaseConfig
 
+    implementation libraries.checkout
+
     implementation libraries.facebookSdk
     implementation libraries.vkSdk
 

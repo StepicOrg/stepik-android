@@ -8,6 +8,7 @@ import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.di.course_list.CourseListScope
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
+import org.stepic.droid.features.course_purchases.domain.CoursePurchasesInteractor
 import org.stepik.android.model.Course
 import org.stepic.droid.model.CourseReviewSummary
 import org.stepik.android.model.Progress
@@ -22,11 +23,13 @@ import javax.inject.Inject
 class CourseCollectionPresenter
 @Inject
 constructor(
-        @BackgroundScheduler
-        private val backgroundScheduler: Scheduler,
-        @MainScheduler
-        private val mainScheduler: Scheduler,
-        private val api: Api
+    private val coursePurchasesInteractor: CoursePurchasesInteractor,
+
+    @BackgroundScheduler
+    private val backgroundScheduler: Scheduler,
+    @MainScheduler
+    private val mainScheduler: Scheduler,
+    private val api: Api
 ) : PresenterBase<CoursesView>() {
 
     companion object {
@@ -39,31 +42,37 @@ constructor(
     fun onShowCollections(courseIds: LongArray) {
         view?.showLoading()
         val disposable = api
-                .getCoursesReactive(DEFAULT_PAGE, courseIds)
-                .map(CoursesMetaResponse::getCourses)
-                .flatMap {
-                    val progressIds = it.map(Course::progress).toTypedArray()
-                    val reviewIds = it.map(Course::reviewSummary).toLongArray()
+            .getCoursesReactive(DEFAULT_PAGE, courseIds)
+            .map(CoursesMetaResponse::getCourses)
+            .flatMap {
+                val progressIds = it.map(Course::progress).toTypedArray()
+                val reviewIds = it.map(Course::reviewSummary).toLongArray()
 
-                    zip(Single.just(it), getProgressesSingle(progressIds), getReviewsSingle(reviewIds)) { courses, progressMap, reviews ->
-                        CourseUtil.applyProgressesToCourses(progressMap, courses)
-                        CourseUtil.applyReviewsToCourses(reviews, courses)
-                        courses
-                    }
+                zip(Single.just(it), getProgressesSingle(progressIds), getReviewsSingle(reviewIds)) { courses, progressMap, reviews ->
+                    CourseUtil.applyProgressesToCourses(progressMap, courses)
+                    CourseUtil.applyReviewsToCourses(reviews, courses)
+                    courses
                 }
-                .map {
-                    val coursesMap = it.associateBy(Course::id)
-                    courseIds
-                            .asIterable()
-                            .mapNotNull(coursesMap::get)
-                }
-                .subscribeOn(backgroundScheduler)
-                .observeOn(mainScheduler)
-                .subscribe({
-                    view?.showCourses(it)
-                }, {
-                    view?.showConnectionProblem()
-                })
+            }
+            .flatMap { courseList ->
+                val coursesMap = courseList.associateBy(Course::id)
+                val courses = courseIds
+                    .asIterable()
+                    .mapNotNull(coursesMap::get)
+
+                zip(
+                    Single.just(courses),
+                    coursePurchasesInteractor.getCoursesSkuMap(courses),
+                    coursePurchasesInteractor.getCoursesPaymentsMap(courses)
+                )
+            }
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribe({ (courses, skus, coursePayments) ->
+                view?.showCourses(courses, skus, coursePayments)
+            }, {
+                view?.showConnectionProblem()
+            })
 
         compositeDisposable.add(disposable)
     }

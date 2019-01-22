@@ -25,7 +25,7 @@ data class CourseHeaderData(
         parcel.writeDouble(review)
         parcel.writeValue(progress)
         parcel.writeDouble(readiness)
-        parcel.writeInt(enrollmentState.ordinal)
+        parcel.writeSerializable(enrollmentState)
     }
 
     override fun describeContents(): Int = 0
@@ -41,7 +41,7 @@ data class CourseHeaderData(
                 parcel.readDouble(),
                 parcel.readValue(Long::class.java.classLoader) as Long?,
                 parcel.readDouble(),
-                EnrollmentState.values()[parcel.readInt()]
+                parcel.readSerializable() as EnrollmentState
             )
 
         override fun newArray(size: Int): Array<CourseHeaderData?> =
