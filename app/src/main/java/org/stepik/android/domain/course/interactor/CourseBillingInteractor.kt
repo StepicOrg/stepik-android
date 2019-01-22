@@ -19,11 +19,12 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.maybeFirst
 import org.stepic.droid.util.startPurchaseFlowRx
 import org.stepic.droid.util.toObject
+import org.stepik.android.domain.billing.exception.NoPurchasesToRestoreException
 import org.stepik.android.domain.billing.repository.BillingRepository
 import org.stepik.android.domain.course.model.CoursePurchasePayload
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.course_list.repository.CourseListRepository
-import org.stepik.android.domain.course_payments.exception.CourseAlreadyOwned
+import org.stepik.android.domain.course_payments.exception.CourseAlreadyOwnedException
 import org.stepik.android.domain.course_payments.exception.CoursePurchaseVerificationException
 import org.stepik.android.domain.course_payments.model.CoursePayment
 import org.stepik.android.domain.course_payments.repository.CoursePaymentsRepository
@@ -68,7 +69,7 @@ constructor(
                 if (payments.isEmpty()) {
                     purchaseCourseAfterCheck(checkout, courseId, sku)
                 } else {
-                    Completable.error(CourseAlreadyOwned(courseId))
+                    Completable.error(CourseAlreadyOwnedException(courseId))
                 }
             }
 
@@ -101,6 +102,7 @@ constructor(
             .filter { (profileId, _, payload) ->
                 profileId == payload.profileId
             }
+            .switchIfEmpty(Single.error(NoPurchasesToRestoreException()))
             .flatMapCompletable { (_, purchase, payload) ->
                 completePurchase(payload.courseId, sku, purchase)
             }

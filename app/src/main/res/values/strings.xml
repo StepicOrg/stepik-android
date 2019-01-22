@@ -669,5 +669,6 @@
     <string name="course_purchase_billing_error">An error was occurred during processing your purchase</string>
     <string name="course_purchase_billing_cancelled">Purchase was cancelled</string>
     <string name="course_purchase_billing_not_available">In-app purchases are not supported on this device</string>
+    <string name="course_purchase_billing_no_purchases_to_restore">You don\'t have purchases of this course that can be restored</string>
     <string name="course_purchase_already_owned">You\'ve already purchased this course</string>
 </resources>
