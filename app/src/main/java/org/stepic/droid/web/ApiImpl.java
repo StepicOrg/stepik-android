@@ -576,7 +576,7 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Call<AssignmentResponse> getAssignments(long[] assignmentsIds) {
+    public Single<AssignmentResponse> getAssignments(long[] assignmentsIds) {
         return loggedService.getAssignments(assignmentsIds);
     }
 

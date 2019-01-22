@@ -102,7 +102,7 @@ public interface StepicRestLoggedService {
     Single<ProgressesResponse> getProgressesReactive(@Query("ids[]") String[] progresses);
 
     @GET("api/assignments")
-    Call<AssignmentResponse> getAssignments(@Query("ids[]") long[] assignmentsIds);
+    Single<AssignmentResponse> getAssignments(@Query("ids[]") long[] assignmentsIds);
 
 
     @Headers("Content-Type:application/json")
