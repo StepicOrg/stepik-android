@@ -7,11 +7,14 @@ import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
 import android.support.v7.app.AppCompatActivity
+import com.google.android.exoplayer2.ExoPlaybackException
 import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.util.Util
 import kotlinx.android.synthetic.main.activity_video_player.*
 import org.stepic.droid.R
 import org.stepik.android.model.Video
+import org.stepik.android.view.video_player.ui.receiver.InternetConnectionReceiverCompat
 import org.stepik.android.view.video_player.ui.service.VideoPlayerForegroundService
 
 class VideoPlayerActivity : AppCompatActivity() {
@@ -25,22 +28,43 @@ class VideoPlayerActivity : AppCompatActivity() {
                 .putExtra(EXTRA_CACHED_VIDEO, cachedVideo)
     }
 
-    private var exoPlayer: ExoPlayer? = null
+    private val videoServiceConnection =
+        object : ServiceConnection {
+            override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+                if (service is VideoPlayerForegroundService.VideoPlayerBinder) {
+                    exoPlayer = service.getPlayer()
+                }
+            }
 
-    private val videoServiceConnection = object : ServiceConnection {
-        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            if (service is VideoPlayerForegroundService.VideoPlayerBinder) {
-                exoPlayer = service.getPlayer()
-                attachPlayer()
+            override fun onServiceDisconnected(name: ComponentName?) {
+                exoPlayer = null
             }
         }
 
-        override fun onServiceDisconnected(name: ComponentName?) {
-            exoPlayer = null
+    private val exoPlayerListener =
+        object : Player.EventListener {
+            override fun onPlayerError(error: ExoPlaybackException?) {
+                error?.printStackTrace()
+            }
         }
-    }
+
+    private var exoPlayer: ExoPlayer? = null
+        set(value) {
+            field?.removeListener(exoPlayerListener)
+            field = value
+            field?.addListener(exoPlayerListener)
+
+            playerView?.player = value
+        }
 
     private val serviceIntent by lazy { Intent(this, VideoPlayerForegroundService::class.java).putExtras(intent) }
+
+    private val internetConnectionReceiverCompat =
+        InternetConnectionReceiverCompat {
+            detachPlayer()
+            Util.startForegroundService(this, serviceIntent)
+            bindService(serviceIntent, videoServiceConnection, Context.BIND_AUTO_CREATE)
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,26 +75,17 @@ class VideoPlayerActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         bindService(serviceIntent, videoServiceConnection, Context.BIND_AUTO_CREATE)
+        internetConnectionReceiverCompat.registerReceiver(this)
     }
 
-    private fun attachPlayer() {
-        playerView.player = exoPlayer
-        exoPlayer?.addListener(object : Player.EventListener {
-            override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
-                if (playbackState == Player.STATE_IDLE) {
-                    finish()
-                }
-            }
-
-            override fun onPlayerError(error: ExoPlaybackException?) {
-                error?.printStackTrace()
-            }
-        })
+    private fun detachPlayer() {
+        unbindService(videoServiceConnection)
+        exoPlayer = null
     }
 
     override fun onStop() {
-        unbindService(videoServiceConnection)
-        playerView.player = null
+        internetConnectionReceiverCompat.unregisterReceiver(this)
+        detachPlayer()
 
         if (isFinishing) {
             stopService(serviceIntent)

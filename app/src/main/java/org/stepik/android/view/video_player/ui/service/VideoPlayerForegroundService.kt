@@ -46,13 +46,23 @@ class VideoPlayerForegroundService : Service() {
     override fun onBind(intent: Intent?): IBinder? =
         VideoPlayerBinder()
 
-    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        if (player != null) return START_STICKY
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        if (player?.playbackState == Player.STATE_IDLE) {
+            releasePlayer()
+        }
+        if (player == null && intent != null) {
+            createPlayer(intent)
+        }
+        return START_STICKY
+    }
 
+    private fun createPlayer(intent: Intent) {
         val externalVideo: Video? = intent.getParcelableExtra(EXTRA_EXTERNAL_VIDEO)
         val cachedVideo: Video? = intent.getParcelableExtra(EXTRA_CACHED_VIDEO)
 
-        val video = cachedVideo ?: externalVideo ?: return START_STICKY
+        val video = cachedVideo
+            ?: externalVideo
+            ?: return
 
         val bandwidthMeter = DefaultBandwidthMeter()
         val dataSourceFactory = DefaultDataSourceFactory(this, Util.getUserAgent(this, getString(R.string.app_name)), bandwidthMeter)
@@ -120,11 +130,9 @@ class VideoPlayerForegroundService : Service() {
         mediaSessionConnector?.setPlayer(player, null)
 
         registerReceiver(headphonesReceiver, IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY))
-
-        return START_STICKY
     }
 
-    override fun onDestroy() {
+    private fun releasePlayer() {
         unregisterReceiver(headphonesReceiver)
 
         mediaSession?.release()
@@ -133,7 +141,10 @@ class VideoPlayerForegroundService : Service() {
         playerNotificationManager?.setPlayer(null)
         player?.release()
         player = null
+    }
 
+    override fun onDestroy() {
+        releasePlayer()
         super.onDestroy()
     }
 
