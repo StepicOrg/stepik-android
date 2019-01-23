@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
@@ -36,16 +37,14 @@ class CodePlaygroundFragment : FragmentBase(),
     companion object {
         private const val ANALYTIC_SCREEN_TYPE: String = "fullscreen"
 
-        fun newInstance(code: String, lang: String, codeOptions: CodeOptions) =
-                CodePlaygroundFragment().also {
-                    it.code = code
-                    it.lang = lang
-                    it.codeOptions = codeOptions
-                }
-
+        fun newInstance(code: String, lang: String, codeOptions: CodeOptions): Fragment =
+            CodePlaygroundFragment().also {
+                it.code = code
+                it.lang = lang
+                it.codeOptions = codeOptions
+            }
     }
 
-    private var currentLanguage: String? = null
     private var codeToolbarAdapter: CodeToolbarAdapter? = null
     private var onGlobalLayoutListener: ViewTreeObserver.OnGlobalLayoutListener? = null
     private var wasReset: Boolean = false
@@ -85,9 +84,7 @@ class CodePlaygroundFragment : FragmentBase(),
         if (savedInstanceState == null) {
             codeEditor.setText(code)
         }
-        currentLanguage?.let {
-            codeEditor.lang = extensionForLanguage(it)
-        }
+        codeEditor.lang = extensionForLanguage(lang)
         setHasOptionsMenu(true)
     }
 
@@ -152,15 +149,13 @@ class CodePlaygroundFragment : FragmentBase(),
     }
 
     override fun onReset() {
-        currentLanguage?.let { lang ->
-            wasReset = true
-            codeEditor.setText(codeOptions.codeTemplates[lang])
-        }
+        wasReset = true
+        codeEditor.setText(codeOptions.codeTemplates[lang])
     }
 
     override fun onLanguageChosen(programmingLanguage: String) {
         wasReset = true
-        currentLanguage = programmingLanguage
+        lang = programmingLanguage
         codeToolbarAdapter?.setLanguage(programmingLanguage)
         codeEditor.setText(codeOptions.codeTemplates[programmingLanguage])
         codeEditor.lang = extensionForLanguage(programmingLanguage)
@@ -169,17 +164,16 @@ class CodePlaygroundFragment : FragmentBase(),
     override fun onBackClick(): Boolean {
         val resultIntent = Intent()
         resultIntent.putExtra(CodePlaygroundActivity.WAS_RESET, wasReset)
-        resultIntent.putExtra(CodePlaygroundActivity.LANG_KEY, currentLanguage)
+        resultIntent.putExtra(CodePlaygroundActivity.LANG_KEY, lang)
         resultIntent.putExtra(CodePlaygroundActivity.CODE_KEY, codeEditor.text.toString())
         activity?.setResult(Activity.RESULT_OK, resultIntent)
         return false
     }
 
     override fun onSymbolClick(symbol: String, offset: Int) {
-        CodeToolbarUtil.reportSelectedSymbol(analytic, currentLanguage, symbol)
+        CodeToolbarUtil.reportSelectedSymbol(analytic, lang, symbol)
         codeEditor.insertText(CodeToolbarUtil.mapToolbarSymbolToPrintable(symbol, codeEditor.indentSize), offset)
     }
-
 
     override fun onChangeLanguage() {
         showLanguageChoosingDialog()
@@ -193,5 +187,4 @@ class CodePlaygroundFragment : FragmentBase(),
             dialog.show(childFragmentManager, null)
         }
     }
-
 }
