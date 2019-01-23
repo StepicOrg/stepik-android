@@ -15,6 +15,7 @@ import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.audio.AudioAttributes
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import com.google.android.exoplayer2.source.ExtractorMediaSource
+import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
@@ -23,6 +24,7 @@ import org.stepik.android.model.Video
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import org.stepik.android.view.video_player.ui.activity.VideoPlayerActivity
 import org.stepik.android.view.video_player.ui.receiver.HeadphonesReceiver
+import org.stepik.android.view.video_player.ui.receiver.InternetConnectionReceiverCompat
 
 class VideoPlayerForegroundService : Service() {
     companion object {
@@ -41,15 +43,31 @@ class VideoPlayerForegroundService : Service() {
     private var mediaSession: MediaSessionCompat? = null
     private var mediaSessionConnector: MediaSessionConnector? = null
 
-    private val headphonesReceiver = HeadphonesReceiver { player?.playWhenReady = false }
+    private var intent: Intent? = null
+
+    private val headphonesReceiver =
+        HeadphonesReceiver { player?.playWhenReady = false }
+
+    private val internetConnectionReceiverCompat =
+        InternetConnectionReceiverCompat {
+            val player = this.player ?: return@InternetConnectionReceiverCompat
+            val intent = this.intent ?: return@InternetConnectionReceiverCompat
+
+            if (player.playbackState == Player.STATE_IDLE) {
+                player.prepare(getMediaSource(intent))
+                player.playWhenReady = true
+            }
+        }
+
+    override fun onCreate() {
+        internetConnectionReceiverCompat.registerReceiver(this)
+    }
 
     override fun onBind(intent: Intent?): IBinder? =
-        VideoPlayerBinder()
+        VideoPlayerBinder(player)
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        if (player?.playbackState == Player.STATE_IDLE) {
-            releasePlayer()
-        }
+        this.intent = intent
         if (player == null && intent != null) {
             createPlayer(intent)
         }
@@ -57,18 +75,7 @@ class VideoPlayerForegroundService : Service() {
     }
 
     private fun createPlayer(intent: Intent) {
-        val externalVideo: Video? = intent.getParcelableExtra(EXTRA_EXTERNAL_VIDEO)
-        val cachedVideo: Video? = intent.getParcelableExtra(EXTRA_CACHED_VIDEO)
-
-        val video = cachedVideo
-            ?: externalVideo
-            ?: return
-
-        val bandwidthMeter = DefaultBandwidthMeter()
-        val dataSourceFactory = DefaultDataSourceFactory(this, Util.getUserAgent(this, getString(R.string.app_name)), bandwidthMeter)
-
-        val videoSource = ExtractorMediaSource.Factory(dataSourceFactory)
-            .createMediaSource(Uri.parse(video.urls.minBy { it.quality?.toInt() ?: Integer.MAX_VALUE }!!.url))
+        val videoSource = getMediaSource(intent)
 
         val audioAttributes = AudioAttributes.Builder()
             .setUsage(C.USAGE_MEDIA)
@@ -117,6 +124,7 @@ class VideoPlayerForegroundService : Service() {
             }
         })
 
+        playerNotificationManager?.setSmallIcon(R.drawable.ic_player_play)
         playerNotificationManager?.setStopAction(null)
         playerNotificationManager?.setPlayer(player)
 
@@ -132,6 +140,21 @@ class VideoPlayerForegroundService : Service() {
         registerReceiver(headphonesReceiver, IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY))
     }
 
+    private fun getMediaSource(intent: Intent): MediaSource {
+        val externalVideo: Video? = intent.getParcelableExtra(EXTRA_EXTERNAL_VIDEO)
+        val cachedVideo: Video? = intent.getParcelableExtra(EXTRA_CACHED_VIDEO)
+
+        val video = cachedVideo
+            ?: externalVideo
+            ?: throw IllegalArgumentException("No video specified")
+
+        val bandwidthMeter = DefaultBandwidthMeter()
+        val dataSourceFactory = DefaultDataSourceFactory(this, Util.getUserAgent(this, getString(R.string.app_name)), bandwidthMeter)
+
+        return ExtractorMediaSource.Factory(dataSourceFactory)
+            .createMediaSource(Uri.parse(video.urls.minBy { it.quality?.toInt() ?: Integer.MAX_VALUE }!!.url))
+    }
+
     private fun releasePlayer() {
         unregisterReceiver(headphonesReceiver)
 
@@ -145,10 +168,11 @@ class VideoPlayerForegroundService : Service() {
 
     override fun onDestroy() {
         releasePlayer()
+        internetConnectionReceiverCompat.unregisterReceiver(this)
         super.onDestroy()
     }
 
-    inner class VideoPlayerBinder : Binder() {
+    class VideoPlayerBinder(private val player: ExoPlayer?) : Binder() {
         fun getPlayer(): ExoPlayer? =
             player
     }

@@ -14,7 +14,6 @@ import com.google.android.exoplayer2.util.Util
 import kotlinx.android.synthetic.main.activity_video_player.*
 import org.stepic.droid.R
 import org.stepik.android.model.Video
-import org.stepik.android.view.video_player.ui.receiver.InternetConnectionReceiverCompat
 import org.stepik.android.view.video_player.ui.service.VideoPlayerForegroundService
 
 class VideoPlayerActivity : AppCompatActivity() {
@@ -59,13 +58,6 @@ class VideoPlayerActivity : AppCompatActivity() {
 
     private val serviceIntent by lazy { Intent(this, VideoPlayerForegroundService::class.java).putExtras(intent) }
 
-    private val internetConnectionReceiverCompat =
-        InternetConnectionReceiverCompat {
-            detachPlayer()
-            Util.startForegroundService(this, serviceIntent)
-            bindService(serviceIntent, videoServiceConnection, Context.BIND_AUTO_CREATE)
-        }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_video_player)
@@ -75,17 +67,11 @@ class VideoPlayerActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         bindService(serviceIntent, videoServiceConnection, Context.BIND_AUTO_CREATE)
-        internetConnectionReceiverCompat.registerReceiver(this)
-    }
-
-    private fun detachPlayer() {
-        unbindService(videoServiceConnection)
-        exoPlayer = null
     }
 
     override fun onStop() {
-        internetConnectionReceiverCompat.unregisterReceiver(this)
-        detachPlayer()
+        unbindService(videoServiceConnection)
+        exoPlayer = null
 
         if (isFinishing) {
             stopService(serviceIntent)
