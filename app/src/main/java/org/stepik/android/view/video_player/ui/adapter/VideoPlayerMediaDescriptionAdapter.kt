@@ -10,33 +10,33 @@ import com.bumptech.glide.request.target.SimpleTarget
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import org.stepic.droid.R
-import org.stepik.android.view.video_player.model.VideoPlayerData
+import org.stepik.android.view.video_player.model.VideoPlayerMediaData
 import org.stepik.android.view.video_player.ui.activity.VideoPlayerActivity
 
 class VideoPlayerMediaDescriptionAdapter(
     private val context: Context
 ) : PlayerNotificationManager.MediaDescriptionAdapter {
-    var videoPlayerData: VideoPlayerData? = null
+    var videoPlayerMediaData: VideoPlayerMediaData? = null
 
-    private fun createIntent(videoPlayerData: VideoPlayerData): Intent =
-        VideoPlayerActivity.createIntent(context, videoPlayerData)
+    private fun createIntent(videoPlayerMediaData: VideoPlayerMediaData): Intent =
+        VideoPlayerActivity.createIntent(context, videoPlayerMediaData)
 
     override fun createCurrentContentIntent(player: Player?): PendingIntent? =
-        videoPlayerData
+        videoPlayerMediaData
             ?.let(::createIntent)
             ?.let { intent ->
                 PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
             }
 
     override fun getCurrentContentText(player: Player?): String? =
-        videoPlayerData?.description
+        videoPlayerMediaData?.description
 
     override fun getCurrentContentTitle(player: Player?): String =
-        videoPlayerData?.title ?: ""
+        videoPlayerMediaData?.title ?: ""
 
     override fun getCurrentLargeIcon(player: Player?, callback: PlayerNotificationManager.BitmapCallback?): Bitmap? {
         Glide.with(context)
-            .load(videoPlayerData?.thumbnail)
+            .load(videoPlayerMediaData?.thumbnail)
             .asBitmap()
             .placeholder(R.drawable.general_placeholder)
             .into(object : SimpleTarget<Bitmap>() {
