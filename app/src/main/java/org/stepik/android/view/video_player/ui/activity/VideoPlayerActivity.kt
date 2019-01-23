@@ -14,6 +14,7 @@ import com.google.android.exoplayer2.util.Util
 import kotlinx.android.synthetic.main.activity_video_player.*
 import org.stepic.droid.R
 import org.stepik.android.model.Video
+import org.stepik.android.view.video_player.model.VideoPlayerData
 import org.stepik.android.view.video_player.ui.service.VideoPlayerForegroundService
 
 class VideoPlayerActivity : AppCompatActivity() {
@@ -21,10 +22,16 @@ class VideoPlayerActivity : AppCompatActivity() {
         private const val EXTRA_EXTERNAL_VIDEO = "external_video"
         private const val EXTRA_CACHED_VIDEO = "cached_video"
 
+        private const val EXTRA_VIDEO_PLAYER_DATA = "video_player_data"
+
         fun createIntent(context: Context, externalVideo: Video?, cachedVideo: Video?): Intent =
             Intent(context, VideoPlayerActivity::class.java)
                 .putExtra(EXTRA_EXTERNAL_VIDEO, externalVideo)
                 .putExtra(EXTRA_CACHED_VIDEO, cachedVideo)
+
+        fun createIntent(context: Context, videoPlayerData: VideoPlayerData): Intent =
+            Intent(context, VideoPlayerActivity::class.java)
+                .putExtra(EXTRA_VIDEO_PLAYER_DATA, videoPlayerData)
     }
 
     private val videoServiceConnection =
