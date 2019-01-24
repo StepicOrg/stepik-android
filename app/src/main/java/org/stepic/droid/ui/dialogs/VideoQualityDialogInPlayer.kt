@@ -59,28 +59,30 @@ class VideoQualityDialogInPlayer : VideoQualityDialogBase() {
         val cachedVideo: Video? = arguments.getParcelable(cachedVideoKey)
         val nowPlayingUrl = arguments.getString(nowPlayingKey)
 
+        val externalVideoUrls = externalVideo
+            ?.urls
+            ?.sorted()
+
         val listOfVideoUrl: MutableList<VideoUrl> =
-                externalVideo
-                        ?.urls
-                        ?.asSequence()
-                        ?.filter {
-                            !it.greaterThanMaxQuality()
-                        }
-                        ?.toMutableList()
-                        ?: ArrayList()
+            externalVideoUrls
+                ?.asSequence()
+                ?.filter {
+                    !it.greaterThanMaxQuality()
+                }
+                ?.toMutableList()
+                ?: ArrayList()
 
 
         // if it is not external, than position will be after all external qualities
         val listOfPresentedQuality: MutableList<String> =
-                externalVideo
-                        ?.urls
-                        ?.asSequence()
-                        ?.filter {
-                            !it.greaterThanMaxQuality()
-                        }
-                        ?.mapNotNull { it.quality }
-                        ?.toMutableList()
-                        ?: ArrayList()
+            externalVideoUrls
+                ?.asSequence()
+                ?.filter {
+                    !it.greaterThanMaxQuality()
+                }
+                ?.mapNotNull { it.quality }
+                ?.toMutableList()
+                ?: ArrayList()
 
         cachedVideo?.urls?.firstOrNull()?.let {
             listOfPresentedQuality.add(getString(R.string.video_player_downloaded_quality, it.quality))
