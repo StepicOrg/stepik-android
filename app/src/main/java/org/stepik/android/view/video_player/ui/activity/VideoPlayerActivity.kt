@@ -12,13 +12,16 @@ import android.os.IBinder
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.PopupMenu
 import android.view.View
+import android.widget.Toast
 import com.google.android.exoplayer2.ExoPlaybackException
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.Player
+import com.google.android.exoplayer2.upstream.HttpDataSource
 import com.google.android.exoplayer2.util.Util
 import kotlinx.android.synthetic.main.activity_video_player.*
 import kotlinx.android.synthetic.main.exo_playback_control_view.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.preferences.VideoPlaybackRate
 import org.stepic.droid.ui.custom_exo.NavigationBarUtil
@@ -61,7 +64,17 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
     private val exoPlayerListener =
         object : Player.EventListener {
             override fun onPlayerError(error: ExoPlaybackException?) {
-                error?.printStackTrace()
+                error ?: return
+
+                if (error.type == ExoPlaybackException.TYPE_SOURCE && error.cause is HttpDataSource.HttpDataSourceException) {
+                    Toast
+                        .makeText(this@VideoPlayerActivity, R.string.no_connection, Toast.LENGTH_LONG)
+                        .show()
+
+                    analytic.reportError(Analytic.Video.CONNECTION_ERROR, error)
+                } else {
+                    analytic.reportError(Analytic.Video.ERROR, error)
+                }
             }
         }
 
@@ -77,6 +90,9 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
     private var isRotateVideo = false
 
     private lateinit var videoPlayerPresenter: VideoPlayerPresenter
+
+    @Inject
+    internal lateinit var analytic: Analytic
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
