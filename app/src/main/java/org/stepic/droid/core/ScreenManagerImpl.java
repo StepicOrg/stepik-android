@@ -335,11 +335,6 @@ public class ScreenManagerImpl implements ScreenManager {
         }
 
         if (isCompatible && !isOpenExternal) {
-//            Intent intent = new Intent(App.Companion.getAppContext(), VideoActivity.class);
-//            Bundle extras = new Bundle();
-//            extras.putParcelable(VideoActivity.Companion.getCachedVideoKey(), cachedVideo);
-//            extras.putParcelable(VideoActivity.Companion.getExternalVideoKey(), externalVideo);
-//            intent.putExtras(extras);
             sourceActivity.startActivity(VideoPlayerActivity.Companion.createIntent(sourceActivity, videoPlayerMediaData));
         } else {
             @Nullable
