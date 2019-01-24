@@ -1,5 +1,6 @@
 package org.stepik.android.domain.video_player.interactor
 
+import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
 import org.stepic.droid.preferences.UserPreferences
@@ -34,6 +35,11 @@ constructor(
     fun isRotateVideo(): Single<Boolean> =
         Single.fromCallable(userPreferences::isRotateVideo)
 
+    fun setRotateVideo(isRotateVideo: Boolean): Completable =
+        Completable.fromAction {
+            userPreferences.isRotateVideo = isRotateVideo
+        }
+
     private fun getVideoUrl(videoUrls: List<VideoUrl>): Single<String> =
         Single
             .fromCallable(userPreferences::getQualityVideoForPlaying)
@@ -51,6 +57,14 @@ constructor(
     private fun getPlaybackRate(): Single<VideoPlaybackRate> =
         Single.fromCallable(userPreferences::getVideoPlaybackRate)
 
+    fun setPlaybackRate(rate: VideoPlaybackRate): Completable =
+        Completable.fromAction {
+            userPreferences.videoPlaybackRate = rate
+        }
+
     private fun getVideoTimestamp(videoId: Long): Single<Long> =
         videoTimestampRepository.getVideoTimestamp(videoId)
+
+    fun saveVideoTimestamp(videoId: Long, timestamp: Long): Completable =
+        videoTimestampRepository.addVideoTimestamp(videoId, timestamp)
 }

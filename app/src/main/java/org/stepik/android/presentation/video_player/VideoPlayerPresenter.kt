@@ -27,6 +27,8 @@ constructor(
 ) : PresenterBase<VideoPlayerView>() {
     companion object {
         private const val VIDEO_PLAYER_DATA = "video_player_data"
+
+        private const val TIMESTAMP_EPS = 1000L
     }
 
     private var videoPlayerData: VideoPlayerData? = null
@@ -89,8 +91,11 @@ constructor(
             )
     }
 
+    /**
+     * Video properties
+     */
     fun changeQuality(videoUrl: VideoUrl?) {
-        val playerData = this.videoPlayerData
+        val playerData = videoPlayerData
             ?: return
 
         val url = videoUrl
@@ -98,8 +103,6 @@ constructor(
             ?: return
 
         videoPlayerData = playerData.copy(videoUrl = url)
-
-        // todo save value
     }
 
     fun changePlaybackRate(videoPlaybackRate: VideoPlaybackRate) {
@@ -108,13 +111,36 @@ constructor(
 
         videoPlayerData = playerData.copy(videoPlaybackRate = videoPlaybackRate)
 
-        // todo save value
+        compositeDisposable += videoPlayerSettingsInteractor
+            .setPlaybackRate(videoPlaybackRate)
+            .subscribeOn(backgroundScheduler)
+            .subscribe()
     }
 
     fun changeVideoRotation(isRotateVideo: Boolean) {
         this.isRotateVideo = isRotateVideo
 
-        // todo save value
+        compositeDisposable += videoPlayerSettingsInteractor
+            .setRotateVideo(isRotateVideo)
+            .subscribeOn(backgroundScheduler)
+            .subscribe()
+    }
+
+    fun syncVideoTimestamp(currentPosition: Long, duration: Long) {
+        val playerData = videoPlayerData
+            ?: return
+
+        val timestamp =
+            if (duration > 0 && currentPosition + TIMESTAMP_EPS >= duration) {
+                0L
+            } else {
+                currentPosition
+            }
+
+        compositeDisposable += videoPlayerSettingsInteractor
+            .saveVideoTimestamp(playerData.videoId, timestamp)
+            .subscribeOn(backgroundScheduler)
+            .subscribeBy(onError = emptyOnErrorStub)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

@@ -136,6 +136,10 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
     }
 
     override fun onStop() {
+        exoPlayer?.let { player ->
+            videoPlayerPresenter.syncVideoTimestamp(player.currentPosition, player.duration)
+        }
+
         videoPlayerPresenter.detachView(this)
 
         unbindService(videoServiceConnection)
