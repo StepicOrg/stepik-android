@@ -67,6 +67,7 @@ class VideoPlayerActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setTitle(R.string.video_title)
         setContentView(R.layout.activity_video_player)
         Util.startForegroundService(this, serviceIntent)
     }

@@ -48,7 +48,6 @@ import org.stepic.droid.services.*
 import org.stepic.droid.ui.adapters.*
 import org.stepic.droid.ui.adapters.viewhoders.CourseItemViewHolder
 import org.stepic.droid.ui.custom.*
-import org.stepic.droid.ui.custom_exo.PlaybackControlView
 import org.stepic.droid.ui.dialogs.*
 import org.stepic.droid.ui.fragments.StoreManagementFragment
 import org.stepik.android.view.injection.billing.BillingModule
@@ -210,8 +209,6 @@ interface AppCoreComponent {
     fun inject(timeIntervalPickerDialogFragment: TimeIntervalPickerDialogFragment)
 
     fun inject(streakAlarmService: StreakAlarmService)
-
-    fun inject(playbackControlView: PlaybackControlView)
 
     fun inject(videoQualityDialogInPlayer: VideoQualityDialogInPlayer)
 

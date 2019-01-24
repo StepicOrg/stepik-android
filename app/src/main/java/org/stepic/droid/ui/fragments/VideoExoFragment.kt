@@ -25,7 +25,7 @@ import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.upstream.HttpDataSource
 import com.google.android.exoplayer2.util.Util
-import kotlinx.android.synthetic.main.__exo_playback_control_view.*
+import kotlinx.android.synthetic.main.exo_playback_control_view.*
 import kotlinx.android.synthetic.main.fragment_exo_video.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
@@ -353,7 +353,7 @@ class VideoExoFragment : FragmentBase(),
             videoPlayerView.hideController()
         }
         popupMenu.show()
-        videoPlayerView.showController(true)
+        videoPlayerView.showController()
     }
 
     private fun showMoreItemsPopup(view: View) {
@@ -410,7 +410,7 @@ class VideoExoFragment : FragmentBase(),
             videoPlayerView.hideController()
         }
         morePopupMenu.show()
-        videoPlayerView.showController(true)
+        videoPlayerView.showController()
     }
 
     override fun onInternetEnabled() {
