@@ -4,4 +4,5 @@ import org.stepik.android.view.video_player.model.VideoPlayerData
 
 interface VideoPlayerView {
     fun setVideoPlayerData(videoPlayerData: VideoPlayerData)
+    fun setIsRotateVideo(isRotateVideo: Boolean)
 }

@@ -31,6 +31,9 @@ constructor(
             )
         }
 
+    fun isRotateVideo(): Single<Boolean> =
+        Single.fromCallable(userPreferences::isRotateVideo)
+
     private fun getVideoUrl(videoUrls: List<VideoUrl>): Single<String> =
         Single
             .fromCallable(userPreferences::getQualityVideoForPlaying)

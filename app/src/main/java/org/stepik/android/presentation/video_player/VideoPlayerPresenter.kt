@@ -6,6 +6,7 @@ import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
+import org.stepic.droid.preferences.VideoPlaybackRate
 import org.stepic.droid.util.emptyOnErrorStub
 import org.stepik.android.domain.video_player.interactor.VideoPlayerSettingsInteractor
 import org.stepik.android.model.VideoUrl
@@ -36,11 +37,28 @@ constructor(
             }
         }
 
+    private var isRotateVideo: Boolean? = null
+        set(value) {
+            field = value
+            view?.setIsRotateVideo(value ?: false)
+        }
+
     private var isLoading = false
+
+    init {
+        compositeDisposable += videoPlayerSettingsInteractor
+            .isRotateVideo()
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribe { isRotate ->
+                isRotateVideo = isRotate
+            }
+    }
 
     override fun attachView(view: VideoPlayerView) {
         super.attachView(view)
         videoPlayerData?.let(view::setVideoPlayerData)
+        view.setIsRotateVideo(isRotateVideo ?: false)
     }
 
     /**
@@ -80,6 +98,23 @@ constructor(
             ?: return
 
         videoPlayerData = playerData.copy(videoUrl = url)
+
+        // todo save value
+    }
+
+    fun changePlaybackRate(videoPlaybackRate: VideoPlaybackRate) {
+        val playerData = this.videoPlayerData
+            ?: return
+
+        videoPlayerData = playerData.copy(videoPlaybackRate = videoPlaybackRate)
+
+        // todo save value
+    }
+
+    fun changeVideoRotation(isRotateVideo: Boolean) {
+        this.isRotateVideo = isRotateVideo
+
+        // todo save value
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
