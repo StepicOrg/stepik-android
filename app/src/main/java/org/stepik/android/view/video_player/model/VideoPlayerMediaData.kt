@@ -15,6 +15,8 @@ class VideoPlayerMediaData(
         parcel.writeString(thumbnail)
         parcel.writeString(title)
         parcel.writeString(description)
+        parcel.writeParcelable(cachedVideo, flags)
+        parcel.writeParcelable(externalVideo, flags)
     }
 
     override fun describeContents(): Int = 0
@@ -24,7 +26,9 @@ class VideoPlayerMediaData(
             VideoPlayerMediaData(
                 parcel.readString(),
                 parcel.readString()!!,
-                parcel.readString()
+                parcel.readString(),
+                parcel.readParcelable(Video::class.java.classLoader),
+                parcel.readParcelable(Video::class.java.classLoader)
             )
 
         override fun newArray(size: Int): Array<VideoPlayerMediaData?> =

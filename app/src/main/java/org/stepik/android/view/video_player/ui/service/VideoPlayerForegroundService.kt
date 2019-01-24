@@ -81,6 +81,8 @@ class VideoPlayerForegroundService : Service() {
             .setContentType(C.CONTENT_TYPE_MOVIE)
             .build()
 
+        videoPlayerMediaDescriptionAdapter = VideoPlayerMediaDescriptionAdapter(this)
+
         player = ExoPlayerFactory
             .newSimpleInstance(this)
             .apply {

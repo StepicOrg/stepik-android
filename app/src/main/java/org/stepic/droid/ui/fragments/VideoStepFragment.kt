@@ -107,7 +107,7 @@ class VideoStepFragment : StepBaseFragment(),
     override fun onNeedOpenVideo(videoId: Long, cachedVideo: Video?, externalVideo: Video?) {
         playerLayout.isClickable = true
         screenManager.showVideo(activity, VideoPlayerMediaData(
-            thumbnail     = config.baseUrl + lesson?.coverUrl,
+            thumbnail     = cachedVideo?.thumbnail ?: externalVideo?.thumbnail,
             title         = lesson?.title ?: videoId.toString(),
             cachedVideo   = cachedVideo,
             externalVideo = externalVideo

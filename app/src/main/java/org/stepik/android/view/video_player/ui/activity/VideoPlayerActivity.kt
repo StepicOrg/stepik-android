@@ -13,7 +13,7 @@ import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.util.Util
 import kotlinx.android.synthetic.main.activity_video_player.*
 import org.stepic.droid.R
-import org.stepik.android.model.Video
+import org.stepik.android.view.video_player.model.VideoPlayerData
 import org.stepik.android.view.video_player.model.VideoPlayerMediaData
 import org.stepik.android.view.video_player.ui.service.VideoPlayerForegroundService
 
@@ -55,7 +55,15 @@ class VideoPlayerActivity : AppCompatActivity() {
             playerView?.player = value
         }
 
-    private val serviceIntent by lazy { Intent(this, VideoPlayerForegroundService::class.java).putExtras(intent) }
+    private val serviceIntent by lazy {
+        val videoPlayerMediaData = intent.getParcelableExtra<VideoPlayerMediaData>(EXTRA_VIDEO_PLAYER_DATA)
+        val videoId = videoPlayerMediaData.cachedVideo?.id ?: videoPlayerMediaData.externalVideo?.id ?: -1L
+        val videoUrl = videoPlayerMediaData.cachedVideo?.urls?.firstOrNull()?.url
+            ?: videoPlayerMediaData.externalVideo?.urls?.firstOrNull()?.url
+            ?: ""
+        val videoPlayerData = VideoPlayerData(videoId, videoUrl, 0, videoPlayerMediaData)
+        VideoPlayerForegroundService.createIntent(this, videoPlayerData)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
