@@ -55,6 +55,7 @@ import org.stepik.android.view.injection.course.CourseComponent
 import org.stepik.android.view.injection.course.CourseRoutingModule
 import org.stepik.android.view.injection.personal_deadlines.PersonalDeadlinesDataModule
 import org.stepik.android.view.injection.progress.ProgressBusModule
+import org.stepik.android.view.injection.video_player.VideoPlayerComponent
 
 @AppSingleton
 @Component(
@@ -127,6 +128,8 @@ interface AppCoreComponent {
     fun adaptiveCourseComponentBuilder(): AdaptiveCourseComponent.Builder
 
     fun courseComponentBuilder(): CourseComponent.Builder
+
+    fun videoPlayerComponentBuilder(): VideoPlayerComponent.Builder
 
     fun inject(someActivity: FragmentActivityBase)
 

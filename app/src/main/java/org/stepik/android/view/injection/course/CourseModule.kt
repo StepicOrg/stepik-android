@@ -53,10 +53,6 @@ abstract class CourseModule {
     @ViewModelKey(CourseContentPresenter::class)
     internal abstract fun bindCourseContentPrsenter(courseContentPresenter: CourseContentPresenter): ViewModel
 
-    @Binds
-    @CourseScope
-    internal abstract fun bindViewModelFactory(daggerViewModelFactory: DaggerViewModelFactory): ViewModelProvider.Factory
-
     @Module
     companion object {
         @Provides

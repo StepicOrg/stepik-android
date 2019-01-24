@@ -138,11 +138,12 @@ class VideoPlayerForegroundService : Service() {
                 player.currentPosition
             }
 
-        if (videoPlayerData != null
-            && (this.videoPlayerData?.videoUrl != videoPlayerData.videoUrl || player.playbackState == Player.STATE_IDLE)
-        ) {
-            val mediaSource = getMediaSource(videoPlayerData)
-            player.prepare(mediaSource)
+        if (videoPlayerData != null) {
+            if (this.videoPlayerData?.videoUrl != videoPlayerData.videoUrl || player.playbackState == Player.STATE_IDLE) {
+                val mediaSource = getMediaSource(videoPlayerData)
+                player.prepare(mediaSource)
+            }
+
             player.seekTo(position)
             player.playWhenReady = true
         }

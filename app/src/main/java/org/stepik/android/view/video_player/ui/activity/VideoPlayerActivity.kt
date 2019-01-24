@@ -1,5 +1,7 @@
 package org.stepik.android.view.video_player.ui.activity
 
+import android.arch.lifecycle.ViewModelProvider
+import android.arch.lifecycle.ViewModelProviders
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -13,9 +15,12 @@ import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.util.Util
 import kotlinx.android.synthetic.main.activity_video_player.*
 import org.stepic.droid.R
+import org.stepic.droid.base.App
+import org.stepik.android.presentation.video_player.VideoPlayerPresenter
 import org.stepik.android.view.video_player.model.VideoPlayerData
 import org.stepik.android.view.video_player.model.VideoPlayerMediaData
 import org.stepik.android.view.video_player.ui.service.VideoPlayerForegroundService
+import javax.inject.Inject
 
 class VideoPlayerActivity : AppCompatActivity() {
     companion object {
@@ -55,6 +60,11 @@ class VideoPlayerActivity : AppCompatActivity() {
             playerView?.player = value
         }
 
+    private lateinit var videoPlayerPresenter: VideoPlayerPresenter
+
+    @Inject
+    internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
     private val serviceIntent by lazy {
         val videoPlayerMediaData = intent.getParcelableExtra<VideoPlayerMediaData>(EXTRA_VIDEO_PLAYER_DATA)
         val videoId = videoPlayerMediaData.cachedVideo?.id ?: videoPlayerMediaData.externalVideo?.id ?: -1L
@@ -67,9 +77,22 @@ class VideoPlayerActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        injectComponent()
+
+        videoPlayerPresenter = ViewModelProviders
+            .of(this, viewModelFactory)
+            .get(VideoPlayerPresenter::class.java)
+
         setTitle(R.string.video_title)
         setContentView(R.layout.activity_video_player)
         Util.startForegroundService(this, serviceIntent)
+    }
+
+    private fun injectComponent() {
+        App.component()
+            .videoPlayerComponentBuilder()
+            .build()
+            .inject(this)
     }
 
     override fun onStart() {

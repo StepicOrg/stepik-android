@@ -25,7 +25,6 @@ class VideoQualityDialogInPlayer : VideoQualityDialogBase() {
         private const val cachedVideoKey = "cachedVideoKey"
         private const val nowPlayingKey = "nowPlaying"
 
-
         fun newInstance(externalVideo: Video?, cachedVideo: Video?, nowPlayingUrl: String): VideoQualityDialogInPlayer {
             val fragment = VideoQualityDialogInPlayer()
             val bundle = Bundle()
@@ -102,7 +101,7 @@ class VideoQualityDialogInPlayer : VideoQualityDialogBase() {
                 }
                 .setSingleChoiceItems(listOfPresentedQuality.toTypedArray(), position) { dialog, which ->
                     val urlQuality = listOfVideoUrl[which]
-                    (targetFragment as Callback).onQualityChanged(newUrlQuality = urlQuality)
+                    (activity as? Callback)?.onQualityChanged(newUrlQuality = urlQuality)
                     dialog.dismiss()
 
                     val qualityForPlaying = listOfPresentedQuality[which]
