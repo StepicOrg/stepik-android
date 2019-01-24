@@ -19,15 +19,7 @@ import org.stepik.android.view.video_player.ui.service.VideoPlayerForegroundServ
 
 class VideoPlayerActivity : AppCompatActivity() {
     companion object {
-        private const val EXTRA_EXTERNAL_VIDEO = "external_video"
-        private const val EXTRA_CACHED_VIDEO = "cached_video"
-
         private const val EXTRA_VIDEO_PLAYER_DATA = "video_player_media_data"
-
-        fun createIntent(context: Context, externalVideo: Video?, cachedVideo: Video?): Intent =
-            Intent(context, VideoPlayerActivity::class.java)
-                .putExtra(EXTRA_EXTERNAL_VIDEO, externalVideo)
-                .putExtra(EXTRA_CACHED_VIDEO, cachedVideo)
 
         fun createIntent(context: Context, videoPlayerMediaData: VideoPlayerMediaData): Intent =
             Intent(context, VideoPlayerActivity::class.java)

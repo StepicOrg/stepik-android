@@ -12,13 +12,13 @@ import org.stepik.android.view.course_info.ui.adapter.delegates.CourseInfoVideoB
 import org.stepik.android.view.course_info.model.CourseInfoItem
 import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
 import org.stepic.droid.ui.custom.adapter_delegates.DelegateAdapter
-import org.stepik.android.model.Video
 import org.stepik.android.model.user.User
+import org.stepik.android.view.video_player.model.VideoPlayerMediaData
 
 class CourseInfoAdapter(
     fontsProvider: FontsProvider,
 
-    onVideoClicked: ((Video) -> Unit)? = null,
+    onVideoClicked: ((VideoPlayerMediaData) -> Unit)? = null,
     onUserClicked: ((User) -> Unit)? = null
 ) : DelegateAdapter<CourseInfoItem, CourseInfoAdapter.ViewHolder>() {
     private var blocks : List<CourseInfoItem> = emptyList()

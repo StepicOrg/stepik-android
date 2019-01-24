@@ -61,7 +61,6 @@ import org.stepic.droid.ui.activities.StepsActivity;
 import org.stepic.droid.ui.activities.StoreManagementActivity;
 import org.stepic.droid.ui.activities.TagActivity;
 import org.stepic.droid.ui.activities.TextFeedbackActivity;
-import org.stepic.droid.ui.activities.VideoActivity;
 import org.stepic.droid.ui.dialogs.RemindPasswordDialogFragment;
 import org.stepic.droid.ui.fragments.CommentsFragment;
 import org.stepic.droid.util.AndroidVersionKt;
@@ -71,6 +70,7 @@ import org.stepic.droid.web.ViewAssignment;
 import org.stepik.android.model.Tag;
 import org.stepik.android.view.routing.deeplink.BranchDeepLinkRouter;
 import org.stepik.android.view.routing.deeplink.BranchRoute;
+import org.stepik.android.view.video_player.model.VideoPlayerMediaData;
 import org.stepik.android.view.video_player.ui.activity.VideoPlayerActivity;
 
 import java.io.File;
@@ -320,7 +320,7 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void showVideo(Activity sourceActivity, @Nullable Video cachedVideo, @Nullable Video externalVideo) {
+    public void showVideo(Activity sourceActivity, @NotNull VideoPlayerMediaData videoPlayerMediaData) {
         analytic.reportEvent(Analytic.Screens.TRY_OPEN_VIDEO);
         boolean isOpenExternal = userPreferences.isOpenInExternal();
         if (isOpenExternal) {
@@ -340,8 +340,14 @@ public class ScreenManagerImpl implements ScreenManager {
 //            extras.putParcelable(VideoActivity.Companion.getCachedVideoKey(), cachedVideo);
 //            extras.putParcelable(VideoActivity.Companion.getExternalVideoKey(), externalVideo);
 //            intent.putExtras(extras);
-            sourceActivity.startActivity(VideoPlayerActivity.Companion.createIntent(sourceActivity, externalVideo, cachedVideo));
+            sourceActivity.startActivity(VideoPlayerActivity.Companion.createIntent(sourceActivity, videoPlayerMediaData));
         } else {
+            @Nullable
+            final Video cachedVideo = videoPlayerMediaData.getCachedVideo();
+
+            @Nullable
+            final Video externalVideo = videoPlayerMediaData.getExternalVideo();
+
             String videoPath = null;
             if (cachedVideo != null && cachedVideo.getUrls() != null && !cachedVideo.getUrls().isEmpty()) {
                 videoPath = cachedVideo.getUrls().get(0).getUrl();
