@@ -14,15 +14,19 @@ import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.util.Util
 import kotlinx.android.synthetic.main.activity_video_player.*
+import kotlinx.android.synthetic.main.exo_playback_control_view.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
+import org.stepic.droid.ui.dialogs.VideoQualityDialogInPlayer
+import org.stepik.android.model.VideoUrl
 import org.stepik.android.presentation.video_player.VideoPlayerPresenter
+import org.stepik.android.presentation.video_player.VideoPlayerView
 import org.stepik.android.view.video_player.model.VideoPlayerData
 import org.stepik.android.view.video_player.model.VideoPlayerMediaData
 import org.stepik.android.view.video_player.ui.service.VideoPlayerForegroundService
 import javax.inject.Inject
 
-class VideoPlayerActivity : AppCompatActivity() {
+class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDialogInPlayer.Callback {
     companion object {
         private const val EXTRA_VIDEO_PLAYER_DATA = "video_player_media_data"
 
@@ -65,16 +69,6 @@ class VideoPlayerActivity : AppCompatActivity() {
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private val serviceIntent by lazy {
-        val videoPlayerMediaData = intent.getParcelableExtra<VideoPlayerMediaData>(EXTRA_VIDEO_PLAYER_DATA)
-        val videoId = videoPlayerMediaData.cachedVideo?.id ?: videoPlayerMediaData.externalVideo?.id ?: -1L
-        val videoUrl = videoPlayerMediaData.cachedVideo?.urls?.firstOrNull()?.url
-            ?: videoPlayerMediaData.externalVideo?.urls?.firstOrNull()?.url
-            ?: ""
-        val videoPlayerData = VideoPlayerData(videoId, videoUrl, 0, videoPlayerMediaData)
-        VideoPlayerForegroundService.createIntent(this, videoPlayerData)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         injectComponent()
@@ -83,9 +77,19 @@ class VideoPlayerActivity : AppCompatActivity() {
             .of(this, viewModelFactory)
             .get(VideoPlayerPresenter::class.java)
 
+        savedInstanceState
+            ?.let(videoPlayerPresenter::onRestoreInstanceState)
+        
+        intent
+            ?.getParcelableExtra<VideoPlayerMediaData>(EXTRA_VIDEO_PLAYER_DATA)
+            ?.let(videoPlayerPresenter::onMediaData)
+
         setTitle(R.string.video_title)
         setContentView(R.layout.activity_video_player)
-        Util.startForegroundService(this, serviceIntent)
+
+        closeButton.setOnClickListener {
+            finish()
+        }
     }
 
     private fun injectComponent() {
@@ -97,17 +101,33 @@ class VideoPlayerActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        bindService(serviceIntent, videoServiceConnection, Context.BIND_AUTO_CREATE)
+        videoPlayerPresenter.attachView(this)
+        bindService(VideoPlayerForegroundService.createBindingIntent(this), videoServiceConnection, Context.BIND_AUTO_CREATE)
     }
 
     override fun onStop() {
+        videoPlayerPresenter.detachView(this)
+
         unbindService(videoServiceConnection)
         exoPlayer = null
 
         if (isFinishing) {
-            stopService(serviceIntent)
+            stopService(VideoPlayerForegroundService.createBindingIntent(this))
         }
 
         super.onStop()
+    }
+
+    override fun setVideoPlayerData(videoPlayerData: VideoPlayerData) {
+        Util.startForegroundService(this, VideoPlayerForegroundService.createIntent(this, videoPlayerData))
+    }
+
+    override fun onQualityChanged(newUrlQuality: VideoUrl?) {
+        videoPlayerPresenter.changeQuality(newUrlQuality)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        videoPlayerPresenter.onSaveInstanceState(outState)
+        super.onSaveInstanceState(outState)
     }
 }

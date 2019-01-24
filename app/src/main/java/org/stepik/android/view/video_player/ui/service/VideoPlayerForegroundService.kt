@@ -39,6 +39,9 @@ class VideoPlayerForegroundService : Service() {
         fun createIntent(context: Context, videoPlayerData: VideoPlayerData): Intent =
             Intent(context, VideoPlayerForegroundService::class.java)
                 .putExtra(EXTRA_VIDEO_PLAYER_DATA, videoPlayerData)
+
+        fun createBindingIntent(context: Context): Intent =
+            Intent(context, VideoPlayerForegroundService::class.java)
     }
 
     private var player: SimpleExoPlayer? = null

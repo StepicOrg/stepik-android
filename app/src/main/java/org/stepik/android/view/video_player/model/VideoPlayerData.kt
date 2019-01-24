@@ -3,7 +3,7 @@ package org.stepik.android.view.video_player.model
 import android.os.Parcel
 import android.os.Parcelable
 
-class VideoPlayerData(
+data class VideoPlayerData(
     val videoId: Long,
     val videoUrl: String,
     val startPosition: Long = 0,
