@@ -13,6 +13,7 @@ import android.widget.ImageView
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.view_story_item.view.*
 import org.stepic.droid.R
+import org.stepic.droid.configuration.Config
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.ui.util.toBitmap
@@ -20,8 +21,9 @@ import ru.nobird.android.stories.model.Story
 import kotlin.properties.Delegates
 
 class StoriesAdapter(
-        private val context: Context,
-        private val onStoryClicked: (Story, Int) -> Unit
+    private val context: Context,
+    private val config: Config,
+    private val onStoryClicked: (Story, Int) -> Unit
 ) : RecyclerView.Adapter<StoriesAdapter.StoryViewHolder>() {
     private val coursePlaceholderDrawable by lazy {
         val resources = context.resources
@@ -104,7 +106,7 @@ class StoriesAdapter(
             title.text = story.title
 
             Glide.with(itemView.context)
-                    .load(story.cover)
+                    .load(config.baseUrl + story.cover)
                     .asBitmap()
                     .placeholder(coursePlaceholderDrawable)
                     .centerCrop()

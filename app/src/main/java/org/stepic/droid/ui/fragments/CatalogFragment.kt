@@ -114,14 +114,16 @@ class CatalogFragment : FragmentBase(),
         }
         catalogRecyclerView.itemAnimator = null
         catalogRecyclerView.layoutManager = LinearLayoutManager(context)
-        catalogRecyclerView.adapter = CatalogAdapter(courseCarouselInfoList,
-                { filtersPresenter.onFilterChanged(it) },
-                {
-                    filtersPresenter.onNeedFilters()
-                    tagsPresenter.onNeedShowTags()
-                },
-                { tag -> onTagClicked(tag) },
-                { _, position -> showStories(position) }
+        catalogRecyclerView.adapter = CatalogAdapter(
+            config = config,
+            courseListItems = courseCarouselInfoList,
+            onFiltersChanged = { filtersPresenter.onFilterChanged(it) },
+            onRetry = {
+                filtersPresenter.onNeedFilters()
+                tagsPresenter.onNeedShowTags()
+            },
+            onTagClicked = { tag -> onTagClicked(tag) },
+            onStoryClicked = { _, position -> showStories(position) }
         )
     }
 
