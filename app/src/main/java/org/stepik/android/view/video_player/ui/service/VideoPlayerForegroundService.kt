@@ -2,6 +2,7 @@ package org.stepik.android.view.video_player.ui.service
 
 import android.app.Notification
 import android.app.Service
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -9,6 +10,7 @@ import android.media.AudioManager
 import android.net.Uri
 import android.os.Binder
 import android.os.IBinder
+import android.support.v4.media.session.MediaButtonReceiver
 import android.support.v4.media.session.MediaSessionCompat
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.audio.AudioAttributes
@@ -72,6 +74,7 @@ class VideoPlayerForegroundService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         setPlayerData(intent?.getParcelableExtra(EXTRA_VIDEO_PLAYER_DATA))
+        MediaButtonReceiver.handleIntent(mediaSession, intent)
         return START_STICKY
     }
 
@@ -109,11 +112,11 @@ class VideoPlayerForegroundService : Service() {
             }
         })
 
-        playerNotificationManager.setSmallIcon(R.drawable.ic_player_play)
+        playerNotificationManager.setSmallIcon(R.drawable.ic_player_notification)
         playerNotificationManager.setStopAction(null)
         playerNotificationManager.setPlayer(player)
 
-        mediaSession = MediaSessionCompat(this, MEDIA_SESSION_TAG)
+        mediaSession = MediaSessionCompat(this, MEDIA_SESSION_TAG, ComponentName(this, MediaButtonReceiver::class.java), null)
         mediaSession.isActive = true
 
         playerNotificationManager.setMediaSessionToken(mediaSession.sessionToken)
