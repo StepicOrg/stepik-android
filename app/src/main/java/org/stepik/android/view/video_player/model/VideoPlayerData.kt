@@ -2,17 +2,20 @@ package org.stepik.android.view.video_player.model
 
 import android.os.Parcel
 import android.os.Parcelable
+import org.stepic.droid.preferences.VideoPlaybackRate
 
 data class VideoPlayerData(
     val videoId: Long,
     val videoUrl: String,
-    val startPosition: Long = 0,
+    val videoPlaybackRate: VideoPlaybackRate,
+    val videoTimestamp: Long = 0,
     val mediaData: VideoPlayerMediaData
 ) : Parcelable {
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeLong(videoId)
         parcel.writeString(videoUrl)
-        parcel.writeLong(startPosition)
+        parcel.writeInt(videoPlaybackRate.ordinal)
+        parcel.writeLong(videoTimestamp)
         parcel.writeParcelable(mediaData, flags)
     }
 
@@ -23,6 +26,7 @@ data class VideoPlayerData(
             VideoPlayerData(
                 parcel.readLong(),
                 parcel.readString()!!,
+                VideoPlaybackRate.values()[parcel.readInt()],
                 parcel.readLong(),
                 parcel.readParcelable(VideoPlayerMediaData::class.java.classLoader)!!
             )

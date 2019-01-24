@@ -4,7 +4,8 @@ import dagger.Subcomponent
 import org.stepik.android.view.video_player.ui.activity.VideoPlayerActivity
 
 @Subcomponent(modules = [
-    VideoPlayerModule::class
+    VideoPlayerModule::class,
+    VideoTimestampDataModule::class
 ])
 interface VideoPlayerComponent {
     @Subcomponent.Builder

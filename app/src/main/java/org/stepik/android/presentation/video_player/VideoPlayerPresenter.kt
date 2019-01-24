@@ -2,8 +2,12 @@ package org.stepik.android.presentation.video_player
 
 import android.os.Bundle
 import io.reactivex.Scheduler
+import io.reactivex.rxkotlin.plusAssign
+import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
+import org.stepic.droid.util.emptyOnErrorStub
+import org.stepik.android.domain.video_player.interactor.VideoPlayerSettingsInteractor
 import org.stepik.android.model.VideoUrl
 import org.stepik.android.presentation.base.PresenterBase
 import org.stepik.android.view.video_player.model.VideoPlayerData
@@ -13,6 +17,8 @@ import javax.inject.Inject
 class VideoPlayerPresenter
 @Inject
 constructor(
+    private val videoPlayerSettingsInteractor: VideoPlayerSettingsInteractor,
+
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
     @MainScheduler
@@ -37,7 +43,6 @@ constructor(
         videoPlayerData?.let(view::setVideoPlayerData)
     }
 
-
     /**
      * Data initialization variants
      */
@@ -50,8 +55,20 @@ constructor(
     fun onMediaData(mediaData: VideoPlayerMediaData) {
         if (videoPlayerData != null || isLoading) return
 
-        isLoading = true
-
+        compositeDisposable += videoPlayerSettingsInteractor
+            .getVideoPlayerData(mediaData)
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .doOnSubscribe {
+                isLoading = true
+            }
+            .doFinally {
+                isLoading = false
+            }
+            .subscribeBy(
+                onSuccess = { videoPlayerData = it },
+                onError = emptyOnErrorStub
+            )
     }
 
     fun changeQuality(videoUrl: VideoUrl?) {

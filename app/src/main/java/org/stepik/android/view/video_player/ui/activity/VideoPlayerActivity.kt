@@ -9,6 +9,7 @@ import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
 import android.support.v7.app.AppCompatActivity
+import android.view.View
 import com.google.android.exoplayer2.ExoPlaybackException
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.Player
@@ -17,6 +18,7 @@ import kotlinx.android.synthetic.main.activity_video_player.*
 import kotlinx.android.synthetic.main.exo_playback_control_view.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
+import org.stepic.droid.ui.custom_exo.NavigationBarUtil
 import org.stepic.droid.ui.dialogs.VideoQualityDialogInPlayer
 import org.stepik.android.model.VideoUrl
 import org.stepik.android.presentation.video_player.VideoPlayerPresenter
@@ -28,6 +30,9 @@ import javax.inject.Inject
 
 class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDialogInPlayer.Callback {
     companion object {
+        private const val TIMEOUT_BEFORE_HIDE = 4000
+        private const val JUMP_TIME_MILLIS = 10000
+
         private const val EXTRA_VIDEO_PLAYER_DATA = "video_player_media_data"
 
         fun createIntent(context: Context, videoPlayerMediaData: VideoPlayerMediaData): Intent =
@@ -79,7 +84,7 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
 
         savedInstanceState
             ?.let(videoPlayerPresenter::onRestoreInstanceState)
-        
+
         intent
             ?.getParcelableExtra<VideoPlayerMediaData>(EXTRA_VIDEO_PLAYER_DATA)
             ?.let(videoPlayerPresenter::onMediaData)
@@ -89,6 +94,18 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
 
         closeButton.setOnClickListener {
             finish()
+        }
+
+        playerView.controllerShowTimeoutMs = TIMEOUT_BEFORE_HIDE
+        playerView.setFastForwardIncrementMs(JUMP_TIME_MILLIS)
+        playerView.setRewindIncrementMs(JUMP_TIME_MILLIS)
+
+        playerView.setControllerVisibilityListener { visibility ->
+            if (visibility == View.VISIBLE) {
+                NavigationBarUtil.hideNavigationBar(false, this)
+            } else if (visibility == View.GONE) {
+                NavigationBarUtil.hideNavigationBar(true, this)
+            }
         }
     }
 

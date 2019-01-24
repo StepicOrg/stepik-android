@@ -20,6 +20,7 @@ import org.stepic.droid.web.ViewAssignment
 import org.stepik.android.cache.section.structure.DbStructureSection
 import org.stepik.android.cache.unit.structure.DbStructureUnit
 import org.stepik.android.cache.lesson.structure.DbStructureLesson
+import org.stepik.android.cache.video_player.model.VideoTimestamp
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.*
 import org.stepik.android.model.Unit

@@ -4,7 +4,7 @@ import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.VideoWithTimestampView
 import org.stepic.droid.di.video.VideoModule
 import org.stepic.droid.di.video.VideoScope
-import org.stepic.droid.model.VideoTimestamp
+import org.stepik.android.cache.video_player.model.VideoTimestamp
 import org.stepic.droid.storage.operations.DatabaseFacade
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
@@ -55,7 +55,12 @@ class VideoWithTimestampPresenter
             return
         }
         threadPoolExecutor.execute {
-            databaseFacade.addTimestamp(VideoTimestamp(videoId, currentTimeInMillis))
+            databaseFacade.addTimestamp(
+                VideoTimestamp(
+                    videoId,
+                    currentTimeInMillis
+                )
+            )
         }
     }
 

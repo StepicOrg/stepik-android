@@ -136,7 +136,7 @@ class VideoPlayerForegroundService : Service() {
 
         val position =
             if (this.videoPlayerData?.videoId != videoPlayerData?.videoId) {
-                videoPlayerData?.startPosition ?: 0
+                videoPlayerData?.videoTimestamp ?: 0
             } else {
                 player.currentPosition
             }
@@ -147,6 +147,7 @@ class VideoPlayerForegroundService : Service() {
                 player.prepare(mediaSource)
             }
 
+            player.playbackParameters = PlaybackParameters(videoPlayerData.videoPlaybackRate.rateFloat, 1f)
             player.seekTo(position)
             player.playWhenReady = true
         }
