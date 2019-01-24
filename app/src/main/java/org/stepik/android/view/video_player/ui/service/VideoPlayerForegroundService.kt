@@ -138,7 +138,9 @@ class VideoPlayerForegroundService : Service() {
                 player.currentPosition
             }
 
-        if (videoPlayerData != null) {
+        if (videoPlayerData != null
+            && (this.videoPlayerData?.videoUrl != videoPlayerData.videoUrl || player.playbackState == Player.STATE_IDLE)
+        ) {
             val mediaSource = getMediaSource(videoPlayerData)
             player.prepare(mediaSource)
             player.seekTo(position)
