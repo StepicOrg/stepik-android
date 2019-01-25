@@ -12,7 +12,6 @@ import org.jsoup.select.Elements;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.notifications.model.Notification;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -193,11 +192,11 @@ public class HtmlHelper {
     }
 
     public static String buildPageWithAdjustingTextAndImage(CharSequence body, @ColorInt int textColorHighlight, int widthPx, String baseUrl) {
-        return buildPage(body, CollectionsKt.<String>emptyList(), DefaultFontSize, null, textColorHighlight, widthPx, baseUrl);
+        return buildPage(body, CollectionsKt.mutableListOf(), DefaultFontSize, null, textColorHighlight, widthPx, baseUrl);
     }
 
     public static String buildPageWithCustomFont(CharSequence body, float fontSize, String fontPath, @ColorInt int textColorHighlight, int widthPx, String baseUrl) {
-        return buildPage(body, CollectionsKt.<String>emptyList(), fontSize, fontPath, textColorHighlight, widthPx, baseUrl);
+        return buildPage(body, CollectionsKt.mutableListOf(), fontSize, fontPath, textColorHighlight, widthPx, baseUrl);
     }
 
     public static final String HORIZONTAL_SCROLL_LISTENER = "scrollListener";

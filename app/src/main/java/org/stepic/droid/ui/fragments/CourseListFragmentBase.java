@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
+import org.solovyev.android.checkout.Sku;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
@@ -29,6 +30,7 @@ import org.stepic.droid.core.presenters.contracts.ContinueCourseView;
 import org.stepic.droid.core.presenters.contracts.CoursesView;
 import org.stepic.droid.core.presenters.contracts.DroppingView;
 import org.stepic.droid.model.CourseListType;
+import org.stepik.android.domain.course_payments.model.CoursePayment;
 import org.stepik.android.domain.last_step.model.LastStep;
 import org.stepik.android.model.Course;
 import org.stepic.droid.model.CoursesCarouselColorType;
@@ -45,6 +47,7 @@ import org.stepic.droid.util.StepikUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -279,7 +282,7 @@ public abstract class CourseListFragmentBase extends FragmentBase
     }
 
     @Override
-    public final void showCourses(@NonNull List<Course> courses) {
+    public final void showCourses(@NonNull List<Course> courses, @NonNull Map<String, Sku> skus, @NonNull Map<Long, CoursePayment> coursePayments) {
         ProgressHelper.dismiss(progressBarOnEmptyScreen);
         ProgressHelper.dismiss(swipeRefreshLayout);
         coursesAdapter.showLoadingFooter(false);
@@ -295,6 +298,9 @@ public abstract class CourseListFragmentBase extends FragmentBase
         }
         this.courses.clear();
         this.courses.addAll(finalCourses);
+
+        coursesAdapter.setSkus(skus);
+        coursesAdapter.setCoursePayments(coursePayments);
         coursesAdapter.notifyDataSetChanged();
 
         if (oldSize >= updatedSize) {

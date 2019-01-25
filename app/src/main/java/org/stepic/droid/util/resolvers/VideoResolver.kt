@@ -6,5 +6,5 @@ import org.stepik.android.model.Video
 interface VideoResolver {
 
     @AnyThread
-    fun resolveVideoUrl(video: Video?, isForPlaying : Boolean= true): String?
+    fun resolveVideoUrl(video: Video?, isForPlaying : Boolean = true): String?
 }

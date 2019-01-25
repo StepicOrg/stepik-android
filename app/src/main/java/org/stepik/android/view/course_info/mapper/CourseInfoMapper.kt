@@ -16,8 +16,8 @@ fun CourseInfoData.toSortedItems(context: Context): List<CourseInfoItem> {
         items.add(CourseInfoItem.OrganizationBlock(organization))
     }
 
-    if (video != null) {
-        items.add(CourseInfoItem.VideoBlock(video))
+    if (videoMediaData != null) {
+        items.add(CourseInfoItem.VideoBlock(videoMediaData))
     }
 
     items.addTextItem(CourseInfoType.ABOUT, about)

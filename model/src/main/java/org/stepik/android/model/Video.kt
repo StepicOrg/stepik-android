@@ -10,7 +10,7 @@ data class Video(
     @SerializedName("thumbnail")
     val thumbnail: String? = null,
     @SerializedName("urls")
-    val urls: List<VideoUrl>? = null,
+    val urls: List<VideoUrl> = emptyList(),
     @SerializedName("duration")
     val duration: Long = 0
 ) : Parcelable {
@@ -28,7 +28,7 @@ data class Video(
             Video(
                 parcel.readLong(),
                 parcel.readString(),
-                parcel.createTypedArrayList(VideoUrl),
+                parcel.createTypedArrayList(VideoUrl)!!,
                 parcel.readLong()
             )
 
@@ -43,7 +43,25 @@ data class VideoUrl(
     val url: String?,
     @SerializedName("quality")
     val quality: String?
-) : Parcelable {
+) : Parcelable, Comparable<VideoUrl> {
+    override fun compareTo(other: VideoUrl): Int =
+        when {
+            quality == null && other.quality == null ->
+                0
+            quality == null ->
+                -1
+            other.quality == null ->
+                1
+            else -> {
+                val lengthComparison = quality.length.compareTo(other.quality.length)
+                if (lengthComparison == 0) {
+                    quality.compareTo(other.quality)
+                } else {
+                    lengthComparison
+                }
+            }
+        }
+
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(url)
         parcel.writeString(quality)

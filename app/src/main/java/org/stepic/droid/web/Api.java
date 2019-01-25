@@ -87,7 +87,7 @@ public interface Api {
 
     Single<ProgressesResponse> getProgressesReactive(String[] progresses);
 
-    Call<AssignmentResponse> getAssignments(long[] assignmentsIds);
+    Single<AssignmentResponse> getAssignments(long[] assignmentsIds);
 
     Call<Void> postViewed(ViewAssignment stepAssignment);
 
@@ -171,7 +171,7 @@ public interface Api {
 
     Single<UserActivityResponse> getUserActivitiesReactive(long userId);
 
-    Call<LastStepResponse> getLastStepResponse(@NotNull String lastStepId);
+    Single<LastStepResponse> getLastStepResponse(@NotNull String lastStepId);
 
     Single<CourseCollectionsResponse> getCourseCollections(String language);
 

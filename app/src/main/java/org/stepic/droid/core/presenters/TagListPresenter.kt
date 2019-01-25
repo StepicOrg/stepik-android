@@ -2,13 +2,17 @@ package org.stepic.droid.core.presenters
 
 import io.reactivex.Observable
 import io.reactivex.Scheduler
+import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.BiFunction
+import io.reactivex.rxkotlin.Singles.zip
+import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.di.tags.TagScope
+import org.stepic.droid.features.course_purchases.domain.CoursePurchasesInteractor
 import org.stepik.android.model.Course
 import org.stepic.droid.util.resolvers.SearchResolver
 import org.stepic.droid.web.Api
@@ -22,18 +26,19 @@ import javax.inject.Inject
 class TagListPresenter
 @Inject
 constructor(
-        private val tag: Tag,
-        private val api: Api,
-        private val searchResolver: SearchResolver,
-        @MainScheduler
-        private val mainScheduler: Scheduler,
-        @BackgroundScheduler
-        private val backgroundScheduler: Scheduler
+    private val tag: Tag,
+    private val api: Api,
+    private val searchResolver: SearchResolver,
+    @MainScheduler
+    private val mainScheduler: Scheduler,
+    @BackgroundScheduler
+    private val backgroundScheduler: Scheduler,
+
+    private val coursePurchasesInteractor: CoursePurchasesInteractor
 ) : PresenterBase<CoursesView>() {
     companion object {
         private const val FIRST_PAGE = 1
     }
-
 
     private val currentPage = AtomicInteger(1)
     private val hasNextPage = AtomicBoolean(true)
@@ -41,40 +46,44 @@ constructor(
     private val publisher = PublishSubject.create<Int>()
 
     fun onInitTag() {
-        val disposable = publisher
-                .observeOn(mainScheduler)
-                .doOnNext {
-                    view?.showLoading()
-                }
-                .observeOn(backgroundScheduler)
-                .flatMap {
-                    api.getSearchResultsOfTag(it, tag)
-                            .toObservable()
-                }
-                .doOnNext { handleMeta(it.meta) }
-                .map { it.searchResultList }
-                .map { searchResolver.getCourseIdsFromSearchResults(it) }
-                .flatMap {
-                    zipIdsAndCourses(it)
-                }
-                .map {
-                    sortByIdsInSearch(it.first, it.second)
-                }
-                .observeOn(mainScheduler)
-                .subscribe(
-                        {
-                            if (it.isEmpty()) {
-                                view?.showEmptyCourses()
-                            } else {
-                                view?.showCourses(it)
-                            }
-                        },
-                        { _ ->
-                            onInitTag()
-                            view?.showConnectionProblem()
-                        }
+        compositeDisposable += publisher
+            .observeOn(mainScheduler)
+            .doOnNext {
+                view?.showLoading()
+            }
+            .observeOn(backgroundScheduler)
+            .flatMap {
+                api.getSearchResultsOfTag(it, tag)
+                    .toObservable()
+            }
+            .doOnNext { handleMeta(it.meta) }
+            .map { it.searchResultList }
+            .map { searchResolver.getCourseIdsFromSearchResults(it) }
+            .flatMap {
+                zipIdsAndCourses(it)
+            }
+            .map {
+                sortByIdsInSearch(it.first, it.second)
+            }
+            .flatMapSingle { courses ->
+                zip(
+                    Single.just(courses),
+                    coursePurchasesInteractor.getCoursesSkuMap(courses),
+                    coursePurchasesInteractor.getCoursesPaymentsMap(courses)
                 )
-        compositeDisposable.add(disposable)
+            }
+            .observeOn(mainScheduler)
+            .subscribe({ (courses, skus, coursePayments) ->
+                if (courses.isEmpty()) {
+                    view?.showEmptyCourses()
+                } else {
+                    view?.showCourses(courses, skus, coursePayments)
+                }
+            },
+            {
+                onInitTag()
+                view?.showConnectionProblem()
+            })
     }
 
 

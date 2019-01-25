@@ -23,6 +23,7 @@ import org.stepic.droid.web.ViewAssignment;
 import org.stepik.android.model.Tag;
 import org.stepik.android.view.course.routing.CourseScreenTab;
 import org.stepik.android.view.routing.deeplink.BranchRoute;
+import org.stepik.android.view.video_player.model.VideoPlayerMediaData;
 
 public interface ScreenManager {
 
@@ -79,7 +80,7 @@ public interface ScreenManager {
 
     Intent getCatalogIntent(Context context);
 
-    void showVideo(Activity sourceActivity, @Nullable Video cachedVideo, @Nullable Video externalVideo);
+    void showVideo(Activity sourceActivity, @NotNull VideoPlayerMediaData videoPlayerMediaData);
 
     void showSettings(Activity sourceActivity);
 
@@ -94,6 +95,8 @@ public interface ScreenManager {
     void showCertificates(Context context);
 
     void openSyllabusInWeb(Context context, long courseId);
+
+    void openCoursePurchaseInWeb(Context context, long courseId);
 
     Intent getCertificateIntent();
 

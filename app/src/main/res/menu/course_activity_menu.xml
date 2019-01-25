@@ -9,4 +9,7 @@
         android:title="@string/share_title"
         android:icon="@drawable/ic_share_dark"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/restore_purchase"
+        android:title="@string/course_restore_purchase" />
 </menu>

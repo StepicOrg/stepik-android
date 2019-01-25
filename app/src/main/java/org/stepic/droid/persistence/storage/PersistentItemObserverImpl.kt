@@ -12,8 +12,8 @@ import javax.inject.Inject
 class PersistentItemObserverImpl
 @Inject
 constructor(
-        private val persistentItemDao: PersistentItemDao,
-        private val updatesObserver: Observer<Structure>
+    private val persistentItemDao: PersistentItemDao,
+    private val updatesObserver: Observer<Structure>
 ): PersistentItemObserver {
     override fun update(item: PersistentItem) {
         persistentItemDao.insertOrReplace(item)
@@ -22,8 +22,8 @@ constructor(
 
     override fun remove(item: PersistentItem) {
         persistentItemDao.remove(mapOf(
-                DBStructurePersistentItem.Columns.STEP to item.task.structure.step.toString(),
-                DBStructurePersistentItem.Columns.ORIGINAL_PATH to item.task.originalPath
+            DBStructurePersistentItem.Columns.STEP to item.task.structure.step.toString(),
+            DBStructurePersistentItem.Columns.ORIGINAL_PATH to item.task.originalPath
         ))
         updatesObserver.onNext(item.task.structure)
     }

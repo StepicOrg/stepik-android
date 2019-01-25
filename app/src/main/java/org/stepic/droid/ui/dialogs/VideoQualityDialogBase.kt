@@ -20,9 +20,11 @@ abstract class VideoQualityDialogBase : DialogFragment() {
         qualityToPositionMap.put("270", 0)
         qualityToPositionMap.put("360", 1)
         qualityToPositionMap.put("720", 2)
+        qualityToPositionMap.put("1080", 3)
 
         positionToQualityMap.put(0, "270")
         positionToQualityMap.put(1, "360")
         positionToQualityMap.put(2, "720")
+        positionToQualityMap.put(3, "1080")
     }
 }

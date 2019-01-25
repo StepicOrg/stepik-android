@@ -660,4 +660,19 @@
     <string name="course_control_schedule">Schedule</string>
     <string name="course_control_filter">Filter by</string>
     <string name="course_control_download_all">Download all</string>
+
+    <string name="course_restore_purchase">Restore purchase</string>
+    <string name="course_payments_purchase_in_app">Buy for %s</string>
+    <string name="course_payments_purchase_in_web">Buy in web version</string>
+
+    <string name="course_purchase_server_error">An error was occurred during processing your purchase, try to restore purchase and contact support if an error persists</string>
+    <string name="course_purchase_billing_error">An error was occurred during processing your purchase</string>
+    <string name="course_purchase_billing_cancelled">Purchase was cancelled</string>
+    <string name="course_purchase_billing_not_available">In-app purchases are not supported on this device</string>
+    <string name="course_purchase_billing_no_purchases_to_restore">You don\'t have purchases of this course that can be restored</string>
+    <string name="course_purchase_already_owned">You\'ve already purchased this course</string>
+
+
+    <string name="video_player_control_notification_channel_name">Video player controls</string>
+    <string name="video_player_in_background_popup">You can play video in background</string>
 </resources>

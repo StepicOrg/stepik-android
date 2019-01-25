@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.view_catalog_tags.view.*
 import kotlinx.android.synthetic.main.view_course_languages.view.*
 import kotlinx.android.synthetic.main.view_stories_container.view.*
 import org.stepic.droid.R
+import org.stepic.droid.configuration.Config
 import org.stepic.droid.features.stories.presentation.StoriesView
 import org.stepic.droid.features.stories.ui.adapter.StoriesAdapter
 import org.stepic.droid.model.*
@@ -22,11 +23,12 @@ import ru.nobird.android.stories.model.Story
 import java.util.*
 
 class CatalogAdapter(
-        private val courseListItems: List<CoursesCarouselInfo>,
-        private val onFiltersChanged: (EnumSet<StepikFilter>) -> Unit,
-        private val onRetry: () -> Unit,
-        private val onTagClicked: (Tag) -> Unit,
-        private val onStoryClicked: (Story, Int) -> Unit
+    private val config: Config,
+    private val courseListItems: List<CoursesCarouselInfo>,
+    private val onFiltersChanged: (EnumSet<StepikFilter>) -> Unit,
+    private val onRetry: () -> Unit,
+    private val onTagClicked: (Tag) -> Unit,
+    private val onStoryClicked: (Story, Int) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
@@ -79,7 +81,7 @@ class CatalogAdapter(
             }
             STORIES_TYPE -> {
                 val view = layoutInflater.inflate(R.layout.view_stories_container, parent, false)
-                StoriesViewHolder(view, onStoryClicked)
+                StoriesViewHolder(view, config, onStoryClicked)
             }
             else -> throw IllegalStateException("CatalogAdapter viewType = $viewType is unsupported")
         }
@@ -302,11 +304,12 @@ class CatalogAdapter(
     }
 
     class StoriesViewHolder(
-            root: View,
-            onStoryClicked: (Story, Int) -> Unit
+        root: View,
+        config: Config,
+        onStoryClicked: (Story, Int) -> Unit
     ) : RecyclerView.ViewHolder(root) {
         private val loadingPlaceholder = root.storiesContainerLoadingPlaceholder
-        val storiesAdapter = StoriesAdapter(root.context, onStoryClicked)
+        val storiesAdapter = StoriesAdapter(root.context, config, onStoryClicked)
         val recycler = root.storiesRecycler
 
         init {

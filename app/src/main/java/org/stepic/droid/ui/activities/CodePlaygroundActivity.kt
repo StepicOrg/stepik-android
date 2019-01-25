@@ -30,10 +30,12 @@ class CodePlaygroundActivity : SingleFragmentActivity(), BackButtonHandler {
 
     private var onBackClickListener: WeakReference<OnBackClickListener>? = null
 
-    override fun createFragment(): Fragment = CodePlaygroundFragment.newInstance(
+    override fun createFragment(): Fragment =
+        CodePlaygroundFragment.newInstance(
             intent.getStringExtra(CODE_KEY),
             intent.getStringExtra(LANG_KEY),
-            intent.getParcelableExtra<CodeOptions>(QUIZ_INFO_KEY))
+            intent.getParcelableExtra(QUIZ_INFO_KEY)
+        )
 
     override fun applyTransitionPrev() {
         //no-op
