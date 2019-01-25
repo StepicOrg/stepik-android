@@ -2,8 +2,8 @@ package org.stepik.android.domain.course_info.model
 
 import android.os.Parcel
 import android.os.Parcelable
-import org.stepik.android.model.Video
 import org.stepik.android.model.user.User
+import org.stepik.android.view.video_player.model.VideoPlayerMediaData
 
 /**
  * Data class to represent course info state
@@ -12,7 +12,7 @@ import org.stepik.android.model.user.User
  */
 data class CourseInfoData(
     val organization: User? = null,
-    val video: Video? = null,
+    val videoMediaData: VideoPlayerMediaData? = null,
     val about: String? = null,
     val requirements: String? = null,
     val targetAudience: String? = null,
@@ -49,7 +49,7 @@ data class CourseInfoData(
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeParcelable(organization, flags)
-        parcel.writeParcelable(video, flags)
+        parcel.writeParcelable(videoMediaData, flags)
         parcel.writeString(about)
         parcel.writeString(requirements)
         parcel.writeString(targetAudience)
@@ -65,7 +65,7 @@ data class CourseInfoData(
         override fun createFromParcel(parcel: Parcel) =
             CourseInfoData(
                 parcel.readParcelable(User::class.java.classLoader),
-                parcel.readParcelable(Video::class.java.classLoader),
+                parcel.readParcelable(VideoPlayerMediaData::class.java.classLoader),
                 parcel.readString(),
                 parcel.readString(),
                 parcel.readString(),

@@ -19,8 +19,8 @@ public class AppConstants {
     public static final String KEY_LESSON_BUNDLE = "lesson";
     public static final String KEY_STEP_BUNDLE = "step";
     public static final String DEFAULT_QUALITY = "360";
-    public static final String MAX_QUALITY = "720";
-    public static final int MAX_QUALITY_INT = 720;
+    public static final String MAX_QUALITY = "1080";
+    public static final int MAX_QUALITY_INT = 1080;
     public static final String COMMENT_DATE_TIME_PATTERN = "dd.MM.yyyy HH:mm";
     public static final String NOTIFICATIONS_GROUP_DATE = "dd MMMM";
     public static final String NOTIFICATIONS_GROUP_DAY = "EEEE";

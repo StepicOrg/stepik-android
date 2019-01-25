@@ -25,7 +25,6 @@ class VideoQualityDialogInPlayer : VideoQualityDialogBase() {
         private const val cachedVideoKey = "cachedVideoKey"
         private const val nowPlayingKey = "nowPlaying"
 
-
         fun newInstance(externalVideo: Video?, cachedVideo: Video?, nowPlayingUrl: String): VideoQualityDialogInPlayer {
             val fragment = VideoQualityDialogInPlayer()
             val bundle = Bundle()
@@ -60,28 +59,30 @@ class VideoQualityDialogInPlayer : VideoQualityDialogBase() {
         val cachedVideo: Video? = arguments.getParcelable(cachedVideoKey)
         val nowPlayingUrl = arguments.getString(nowPlayingKey)
 
+        val externalVideoUrls = externalVideo
+            ?.urls
+            ?.sorted()
+
         val listOfVideoUrl: MutableList<VideoUrl> =
-                externalVideo
-                        ?.urls
-                        ?.asSequence()
-                        ?.filter {
-                            !it.greaterThanMaxQuality()
-                        }
-                        ?.toMutableList()
-                        ?: ArrayList()
+            externalVideoUrls
+                ?.asSequence()
+                ?.filter {
+                    !it.greaterThanMaxQuality()
+                }
+                ?.toMutableList()
+                ?: ArrayList()
 
 
         // if it is not external, than position will be after all external qualities
         val listOfPresentedQuality: MutableList<String> =
-                externalVideo
-                        ?.urls
-                        ?.asSequence()
-                        ?.filter {
-                            !it.greaterThanMaxQuality()
-                        }
-                        ?.mapNotNull { it.quality }
-                        ?.toMutableList()
-                        ?: ArrayList()
+            externalVideoUrls
+                ?.asSequence()
+                ?.filter {
+                    !it.greaterThanMaxQuality()
+                }
+                ?.mapNotNull { it.quality }
+                ?.toMutableList()
+                ?: ArrayList()
 
         cachedVideo?.urls?.firstOrNull()?.let {
             listOfPresentedQuality.add(getString(R.string.video_player_downloaded_quality, it.quality))
@@ -102,7 +103,7 @@ class VideoQualityDialogInPlayer : VideoQualityDialogBase() {
                 }
                 .setSingleChoiceItems(listOfPresentedQuality.toTypedArray(), position) { dialog, which ->
                     val urlQuality = listOfVideoUrl[which]
-                    (targetFragment as Callback).onQualityChanged(newUrlQuality = urlQuality)
+                    (activity as? Callback)?.onQualityChanged(newUrlQuality = urlQuality)
                     dialog.dismiss()
 
                     val qualityForPlaying = listOfPresentedQuality[which]

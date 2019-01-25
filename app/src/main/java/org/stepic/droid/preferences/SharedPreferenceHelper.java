@@ -78,6 +78,7 @@ public class SharedPreferenceHelper {
     private final String SCHEDULED_LINK_CACHED = "scheduled_cached";
     private final String DISCUSSION_ORDER = "discussion_order";
     private final String CALENDAR_WIDGET = "calenda_widget";
+    private final String FIRST_TIME_VIDEO = "first_time_video";
     private final String VIDEO_QUALITY_EXPLANATION = "video_quality_explanation";
     private final String NEED_DROP_114 = "need_drop_114";
     private final String REMIND_CLICK = "remind_click";
@@ -600,6 +601,14 @@ public class SharedPreferenceHelper {
 
     public void setOpenInExternal(boolean isOpenInExternal) {
         put(PreferenceType.VIDEO_SETTINGS, VIDEO_EXTERNAL_PREF_KEY, isOpenInExternal);
+    }
+
+    public boolean isFirstTimeVideo() {
+        return getBoolean(PreferenceType.VIDEO_SETTINGS, FIRST_TIME_VIDEO, true);
+    }
+
+    public void afterFirstTimeVideo() {
+        put(PreferenceType.VIDEO_SETTINGS, FIRST_TIME_VIDEO, false);
     }
 
     public void storeProfile(Profile profile) {

@@ -3,12 +3,12 @@ package org.stepic.droid.persistence.model
 import org.stepik.android.model.Video
 
 data class DownloadItem(
-        val structure: Structure,
-        val title: String,
-        val video: Video,
-        val bytesDownloaded: Long,
-        val bytesTotal: Long,
-        val status: DownloadProgress.Status
+    val structure: Structure,
+    val title: String,
+    val video: Video,
+    val bytesDownloaded: Long,
+    val bytesTotal: Long,
+    val status: DownloadProgress.Status
 ): Comparable<DownloadItem> {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

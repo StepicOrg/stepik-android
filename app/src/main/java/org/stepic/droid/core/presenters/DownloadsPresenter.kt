@@ -14,6 +14,7 @@ import org.stepic.droid.persistence.repository.DownloadsRepository
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.addDisposable
 import org.stepik.android.model.Video
+import org.stepik.android.view.video_player.model.VideoPlayerMediaData
 import javax.inject.Inject
 
 class DownloadsPresenter
@@ -53,8 +54,12 @@ constructor(
                 }
     }
 
-    fun showVideo(video: Video) {
-        view?.showVideo(video)
+    fun showVideo(downloadItem: DownloadItem) {
+        view?.showVideo(VideoPlayerMediaData(
+            thumbnail   = downloadItem.video.thumbnail,
+            title       = downloadItem.title,
+            cachedVideo = downloadItem.video
+        ))
     }
 
     fun onCancelAllDownloadsClicked() {

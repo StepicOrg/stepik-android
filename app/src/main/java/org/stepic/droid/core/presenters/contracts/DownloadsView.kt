@@ -1,7 +1,7 @@
 package org.stepic.droid.core.presenters.contracts
 
 import org.stepic.droid.persistence.model.DownloadItem
-import org.stepik.android.model.Video
+import org.stepik.android.view.video_player.model.VideoPlayerMediaData
 
 interface DownloadsView {
     fun addActiveDownload(downloadItem: DownloadItem)
@@ -11,7 +11,7 @@ interface DownloadsView {
     fun showEmptyAuth()
     fun invalidateEmptyDownloads()
 
-    fun showVideo(video: Video)
+    fun showVideo(videoPlayerMediaData: VideoPlayerMediaData)
 
     fun askToCancelAllVideos()
     fun askToRemoveAllCachedVideos()

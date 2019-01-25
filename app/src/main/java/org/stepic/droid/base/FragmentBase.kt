@@ -81,9 +81,6 @@ open class FragmentBase : Fragment() {
     @Inject
     lateinit var systemDownloadManager: DownloadManager
 
-    @Inject
-    lateinit var exoPhoneListener: MyExoPhoneStateListener
-
     protected open fun injectComponent() {
         App.component().inject(this)
     }

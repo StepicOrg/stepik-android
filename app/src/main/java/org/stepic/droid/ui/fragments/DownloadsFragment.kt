@@ -27,6 +27,7 @@ import org.stepic.droid.ui.util.hideAllChildren
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.ProgressHelper
 import org.stepik.android.model.Video
+import org.stepik.android.view.video_player.model.VideoPlayerMediaData
 import javax.inject.Inject
 
 class DownloadsFragment: FragmentBase(), DownloadsView {
@@ -107,8 +108,8 @@ class DownloadsFragment: FragmentBase(), DownloadsView {
                 super.onOptionsItemSelected(item)
             }
 
-    override fun showVideo(video: Video) {
-        screenManager.showVideo(activity, video, null)
+    override fun showVideo(videoPlayerMediaData: VideoPlayerMediaData) {
+        screenManager.showVideo(activity, videoPlayerMediaData)
     }
 
     override fun onStart() {

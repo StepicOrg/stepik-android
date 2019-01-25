@@ -23,6 +23,7 @@ import org.stepic.droid.core.presenters.contracts.VideoLengthView
 import org.stepic.droid.core.presenters.contracts.VideoStepView
 import org.stepik.android.model.Video
 import org.stepic.droid.util.ThumbnailParser
+import org.stepik.android.view.video_player.model.VideoPlayerMediaData
 import javax.inject.Inject
 
 class VideoStepFragment : StepBaseFragment(),
@@ -79,7 +80,7 @@ class VideoStepFragment : StepBaseFragment(),
                 .with(context)
                 .load(uri)
                 .listener(object : RequestListener<Uri, GlideDrawable> {
-                    override fun onException(e: Exception, model: Uri, target: Target<GlideDrawable>, isFirstResource: Boolean): Boolean {
+                    override fun onException(e: Exception?, model: Uri, target: Target<GlideDrawable>, isFirstResource: Boolean): Boolean {
                         //at this callback view can be dead!
                         showTime(timeString)
                         return false
@@ -105,7 +106,12 @@ class VideoStepFragment : StepBaseFragment(),
 
     override fun onNeedOpenVideo(videoId: Long, cachedVideo: Video?, externalVideo: Video?) {
         playerLayout.isClickable = true
-        screenManager.showVideo(activity, cachedVideo, externalVideo)
+        screenManager.showVideo(activity, VideoPlayerMediaData(
+            thumbnail     = cachedVideo?.thumbnail ?: externalVideo?.thumbnail,
+            title         = lesson?.title ?: videoId.toString(),
+            cachedVideo   = cachedVideo,
+            externalVideo = externalVideo
+        ))
     }
 
     override fun onVideoLoaded(thumbnailPath: String?, cachedVideo: Video?, externalVideo: Video?) {

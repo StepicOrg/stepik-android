@@ -2,6 +2,7 @@ package org.stepic.droid.di
 
 import android.app.AlarmManager
 import android.app.NotificationManager
+import android.arch.lifecycle.ViewModelProvider
 import android.content.Context
 import android.net.ConnectivityManager
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
@@ -47,6 +48,8 @@ import org.stepic.droid.web.Api
 import org.stepic.droid.web.ApiImpl
 import org.stepic.droid.web.UserAgentProvider
 import org.stepic.droid.web.UserAgentProviderImpl
+import org.stepik.android.presentation.base.injection.DaggerViewModelFactory
+import org.stepik.android.view.injection.course.CourseScope
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.Executors
@@ -132,6 +135,9 @@ abstract class AppCoreModule {
     @Binds
     @AppSingleton
     abstract fun bindStepTypeResolver(stepTypeResolver: StepTypeResolverImpl): StepTypeResolver
+
+    @Binds
+    internal abstract fun bindViewModelFactory(daggerViewModelFactory: DaggerViewModelFactory): ViewModelProvider.Factory
 
     @Module
     companion object {
