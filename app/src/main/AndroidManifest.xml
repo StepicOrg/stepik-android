@@ -359,6 +359,7 @@
                 <data android:host="@string/host_name" />
                 <data android:host="@string/secondary_host_name" />
 
+                <data android:pathPattern="/course/.*" />
                 <data android:pathPattern="/course/.*/" />
                 <data android:pathPattern="/course/.*/course_app" />
                 <data android:pathPattern="/course/.*/syllabus" />
