@@ -43,6 +43,8 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         private const val TIMEOUT_BEFORE_HIDE = 4000
         private const val JUMP_TIME_MILLIS = 10000
 
+        private const val IN_BACKGROUND_POPUP_TIMEOUT_MS = 3000L
+
         private const val EXTRA_VIDEO_PLAYER_DATA = "video_player_media_data"
 
         fun createIntent(context: Context, videoPlayerMediaData: VideoPlayerMediaData): Intent =
@@ -249,15 +251,17 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
     }
 
     override fun showPlayInBackgroundPopup() {
-        PopupHelper.showPopupAnchoredToView(
-            context    = this,
-            anchorView = playerView,
-            popupText  = getString(R.string.video_player_in_background_popup),
-            theme      = PopupHelper.PopupTheme.LIGHT,
-            cancelableOnTouchOutside = true,
-            gravity    = Gravity.BOTTOM,
-            withArrow  = false
-        )
+        val popup = PopupHelper
+            .showPopupAnchoredToView(
+                context    = this,
+                anchorView = playerView,
+                popupText  = getString(R.string.video_player_in_background_popup),
+                theme      = PopupHelper.PopupTheme.LIGHT,
+                cancelableOnTouchOutside = true,
+                gravity    = Gravity.CENTER,
+                withArrow  = false
+            )
+        playerView.postDelayed({ popup?.dismiss() }, IN_BACKGROUND_POPUP_TIMEOUT_MS)
     }
 
     override fun onQualityChanged(newUrlQuality: VideoUrl?) {
