@@ -2,16 +2,19 @@ package org.stepik.android.domain.course_info.interactor
 
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Singles.zip
+import org.stepic.droid.configuration.Config
 import org.stepic.droid.util.concat
 import org.stepik.android.domain.course_info.model.CourseInfoData
 import org.stepik.android.domain.user.repository.UserRepository
 import org.stepik.android.model.Course
 import org.stepik.android.model.user.User
+import org.stepik.android.view.video_player.model.VideoPlayerMediaData
 import javax.inject.Inject
 
 class CourseInfoInteractor
 @Inject
 constructor(
+    private val config: Config,
     private val courseObservableSource: Observable<Course>,
     private val userRepository: UserRepository
 ) {
@@ -40,7 +43,15 @@ constructor(
     private fun mapToCourseInfoData(course: Course, instructors: List<User>? = null, organization: User? = null) =
         CourseInfoData(
             organization   = organization?.takeIf(User::isOrganization),
-            video          = course.introVideo?.takeUnless { it.urls.isNullOrEmpty() },
+            videoMediaData = course.introVideo
+                ?.takeUnless { it.urls.isNullOrEmpty() }
+                ?.let { video ->
+                    VideoPlayerMediaData(
+                        thumbnail = config.baseUrl + course.cover,
+                        title = course.title ?: "",
+                        externalVideo = video
+                    )
+                },
             about          = course.description?.takeIf(String::isNotBlank),
             requirements   = course.requirements?.takeIf(String::isNotBlank),
             targetAudience = course.targetAudience?.takeIf(String::isNotBlank),

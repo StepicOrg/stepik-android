@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 class VideoResolverImpl
 @Inject constructor(
-        private val userPreferences: UserPreferences
+    private val userPreferences: UserPreferences
 ) : VideoResolver {
 
     @AnyThread

@@ -138,7 +138,7 @@ class DownloadsAdapter(
     }
 
     private fun onItemClicked(download: DownloadItem) {
-        downloadsPresenter.showVideo(download.video)
+        downloadsPresenter.showVideo(download)
     }
 
     abstract class DownloadsViewHolder(view: View): RecyclerView.ViewHolder(view) {

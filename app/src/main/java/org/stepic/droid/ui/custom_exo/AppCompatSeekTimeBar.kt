@@ -6,28 +6,27 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.widget.SeekBar
+import com.google.android.exoplayer2.ui.TimeBar
 import timber.log.Timber
 
-class AppCompatSeekTimeBar : AppCompatSeekBar, TimeBar, SeekBar.OnSeekBarChangeListener {
-    private var listener: TimeBar.OnScrubListener? = null
+class AppCompatSeekTimeBar
+@JvmOverloads
+constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0): AppCompatSeekBar(context, attrs, defStyleAttr), TimeBar, SeekBar.OnSeekBarChangeListener {
+    private val listeners: MutableList<TimeBar.OnScrubListener> = mutableListOf()
     private val notTouchableOnTouchListener: (View?, MotionEvent?) -> Boolean by lazy {
         { _: View?, _: MotionEvent? -> true }
     }
 
-    constructor(context: Context) : this(context, null) {}
-
-    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0) {}
-
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
-        init()
-    }
-
-    private fun init() {
+    init {
         setOnSeekBarChangeListener(this)
     }
 
-    override fun setListener(listener: TimeBar.OnScrubListener?) {
-        this.listener = listener
+    override fun addListener(listener: TimeBar.OnScrubListener?) {
+        listener?.let(listeners::add)
+    }
+
+    override fun removeListener(listener: TimeBar.OnScrubListener?) {
+        listener?.let(listeners::remove)
     }
 
     override fun setKeyTimeIncrement(time: Long) {
@@ -50,23 +49,28 @@ class AppCompatSeekTimeBar : AppCompatSeekBar, TimeBar, SeekBar.OnSeekBarChangeL
         max = duration.toInt()
     }
 
-    override fun setAdBreakTimesMs(adBreakTimesMs: LongArray?, adBreakCount: Int) {
-        //// TODO: 10.05.17 implement it, when needed
+    override fun setAdGroupTimesMs(adGroupTimesMs: LongArray?, playedAdGroups: BooleanArray?, adGroupCount: Int) {
+        // TODO: 10.05.17 implement it, when needed
     }
-
 
     override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
         if (fromUser) {
-            listener?.onScrubMove(this, progress.toLong())
+            listeners.forEach {
+                it.onScrubMove(this, progress.toLong())
+            }
         }
     }
 
     override fun onStartTrackingTouch(seekBar: SeekBar?) {
-        listener?.onScrubStart(this)
+        listeners.forEach {
+            it.onScrubStart(this, progress.toLong())
+        }
     }
 
     override fun onStopTrackingTouch(seekBar: SeekBar?) {
-        listener?.onScrubStop(this, this.progress.toLong(), false)
+        listeners.forEach {
+            it.onScrubStop(this, progress.toLong(), false)
+        }
     }
 
     override fun setEnabled(enabled: Boolean) {

@@ -1,7 +1,7 @@
 package org.stepik.android.view.course_info.model
 
-import org.stepik.android.model.Video
 import org.stepik.android.model.user.User
+import org.stepik.android.view.video_player.model.VideoPlayerMediaData
 
 sealed class CourseInfoItem(
         val type: CourseInfoType
@@ -24,21 +24,21 @@ sealed class CourseInfoItem(
 
 
     class OrganizationBlock(
-            val organization: User
+        val organization: User
     ) : CourseInfoItem(CourseInfoType.ORGANIZATION)
 
     class VideoBlock(
-            val video: Video
+        val videoMediaData: VideoPlayerMediaData
     ) : CourseInfoItem(CourseInfoType.VIDEO)
 
     sealed class WithTitle(type: CourseInfoType) : CourseInfoItem(type) {
         class TextBlock(
-                type: CourseInfoType,
-                val text: String
+            type: CourseInfoType,
+            val text: String
         ) : WithTitle(type)
 
         class InstructorsBlock(
-                val instructors: List<User?>
+            val instructors: List<User?>
         ) : WithTitle(CourseInfoType.INSTRUCTORS)
     }
 }

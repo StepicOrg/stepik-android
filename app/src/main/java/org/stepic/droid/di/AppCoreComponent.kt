@@ -27,7 +27,6 @@ import org.stepic.droid.di.profile.ProfileComponent
 import org.stepic.droid.di.routing.RoutingComponent
 import org.stepic.droid.di.splash.SplashComponent
 import org.stepic.droid.di.storage.StorageComponent
-import org.stepic.droid.di.video.VideoComponent
 import org.stepic.droid.features.achievements.service.AchievementsNotificationService
 import org.stepic.droid.features.achievements.ui.adapters.AchievementsAdapter
 import org.stepic.droid.features.achievements.ui.adapters.AchievementsTileAdapter
@@ -48,7 +47,6 @@ import org.stepic.droid.services.*
 import org.stepic.droid.ui.adapters.*
 import org.stepic.droid.ui.adapters.viewhoders.CourseItemViewHolder
 import org.stepic.droid.ui.custom.*
-import org.stepic.droid.ui.custom_exo.PlaybackControlView
 import org.stepic.droid.ui.dialogs.*
 import org.stepic.droid.ui.fragments.StoreManagementFragment
 import org.stepik.android.view.injection.billing.BillingModule
@@ -56,6 +54,7 @@ import org.stepik.android.view.injection.course.CourseComponent
 import org.stepik.android.view.injection.course.CourseRoutingModule
 import org.stepik.android.view.injection.personal_deadlines.PersonalDeadlinesDataModule
 import org.stepik.android.view.injection.progress.ProgressBusModule
+import org.stepik.android.view.injection.video_player.VideoPlayerComponent
 
 @AppSingleton
 @Component(
@@ -115,8 +114,6 @@ interface AppCoreComponent {
 
     fun lessonComponentBuilder(): LessonComponent.Builder
 
-    fun videoComponentBuilder(): VideoComponent.Builder
-
     fun mainScreenComponentBuilder(): MainScreenComponent.Builder
 
     fun notificationsComponentBuilder(): NotificationsComponent.Builder
@@ -128,6 +125,8 @@ interface AppCoreComponent {
     fun adaptiveCourseComponentBuilder(): AdaptiveCourseComponent.Builder
 
     fun courseComponentBuilder(): CourseComponent.Builder
+
+    fun videoPlayerComponentBuilder(): VideoPlayerComponent.Builder
 
     fun inject(someActivity: FragmentActivityBase)
 
@@ -210,8 +209,6 @@ interface AppCoreComponent {
     fun inject(timeIntervalPickerDialogFragment: TimeIntervalPickerDialogFragment)
 
     fun inject(streakAlarmService: StreakAlarmService)
-
-    fun inject(playbackControlView: PlaybackControlView)
 
     fun inject(videoQualityDialogInPlayer: VideoQualityDialogInPlayer)
 
