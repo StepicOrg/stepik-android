@@ -16,9 +16,6 @@
 
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission
-        android:name="android.permission.READ_PHONE_STATE"
-        android:maxSdkVersion="22" />
     <uses-permission android:name="com.android.vending.BILLING" />
 
     <application
@@ -208,12 +205,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.MainFeedActivity" />
         </activity>
-
-        <activity
-            android:name=".ui.activities.VideoActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:hardwareAccelerated="true"
-            android:theme="@style/AppTheme.VideoPlayer" />
 
         <activity
             android:name="org.stepik.android.view.video_player.ui.activity.VideoPlayerActivity"

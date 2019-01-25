@@ -28,7 +28,7 @@ data class Video(
             Video(
                 parcel.readLong(),
                 parcel.readString(),
-                parcel.createTypedArrayList(VideoUrl),
+                parcel.createTypedArrayList(VideoUrl)!!,
                 parcel.readLong()
             )
 

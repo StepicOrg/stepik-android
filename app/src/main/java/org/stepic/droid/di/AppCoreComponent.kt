@@ -27,7 +27,6 @@ import org.stepic.droid.di.profile.ProfileComponent
 import org.stepic.droid.di.routing.RoutingComponent
 import org.stepic.droid.di.splash.SplashComponent
 import org.stepic.droid.di.storage.StorageComponent
-import org.stepic.droid.di.video.VideoComponent
 import org.stepic.droid.features.achievements.service.AchievementsNotificationService
 import org.stepic.droid.features.achievements.ui.adapters.AchievementsAdapter
 import org.stepic.droid.features.achievements.ui.adapters.AchievementsTileAdapter
@@ -114,8 +113,6 @@ interface AppCoreComponent {
     fun courseGeneralComponentBuilder(): CourseGeneralComponent.Builder
 
     fun lessonComponentBuilder(): LessonComponent.Builder
-
-    fun videoComponentBuilder(): VideoComponent.Builder
 
     fun mainScreenComponentBuilder(): MainScreenComponent.Builder
 
