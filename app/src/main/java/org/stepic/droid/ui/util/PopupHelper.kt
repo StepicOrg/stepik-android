@@ -35,7 +35,13 @@ object PopupHelper {
     }
 
 
-    fun showPopupAnchoredToView(context: Context, anchorView: View?, popupText: String, theme: PopupTheme = PopupTheme.DARK, cancelableOnTouchOutside: Boolean = false): PopupWindow? {
+    fun showPopupAnchoredToView(
+        context: Context, anchorView: View?,
+        popupText: String, theme: PopupTheme = PopupTheme.DARK,
+        cancelableOnTouchOutside: Boolean = false,
+        gravity: Int = Gravity.CENTER,
+        withArrow: Boolean = false
+    ): PopupWindow? {
         anchorView ?: return null
 
         val inflater = context.getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -48,9 +54,12 @@ object PopupHelper {
         popupTextView.setBackgroundResource(theme.backgroundRes)
 
         popupArrowView.setBackgroundResource(theme.arrowRes)
+        popupArrowView.changeVisibility(withArrow)
 
-        popupView.viewTreeObserver.addOnGlobalLayoutListener {
-            popupArrowView.x = calcArrowHorizontalOffset(anchorView, popupView, popupView.arrowView)
+        if (withArrow) {
+            popupView.viewTreeObserver.addOnGlobalLayoutListener {
+                popupArrowView.x = calcArrowHorizontalOffset(anchorView, popupView, popupView.arrowView)
+            }
         }
 
         val popupWindow = PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
@@ -63,7 +72,11 @@ object PopupHelper {
 
         anchorView.post {
             if (anchorView.windowToken != null) {
-                PopupWindowCompat.showAsDropDown(popupWindow, anchorView, 0, 0, Gravity.CENTER)
+                if (withArrow) {
+                    PopupWindowCompat.showAsDropDown(popupWindow, anchorView, 0, 0, gravity)
+                } else {
+                    popupWindow.showAtLocation(anchorView, gravity, 0, 0)
+                }
             }
         }
 

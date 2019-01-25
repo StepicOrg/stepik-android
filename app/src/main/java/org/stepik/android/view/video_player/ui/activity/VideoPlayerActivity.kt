@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.os.IBinder
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.PopupMenu
+import android.view.Gravity
 import android.view.View
 import android.widget.Toast
 import com.google.android.exoplayer2.ExoPlaybackException
@@ -26,6 +27,7 @@ import org.stepic.droid.base.App
 import org.stepic.droid.preferences.VideoPlaybackRate
 import org.stepic.droid.ui.custom_exo.NavigationBarUtil
 import org.stepic.droid.ui.dialogs.VideoQualityDialogInPlayer
+import org.stepic.droid.ui.util.PopupHelper
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepik.android.model.Video
 import org.stepik.android.model.VideoUrl
@@ -244,6 +246,18 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
             } else {
                 ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
             }
+    }
+
+    override fun showPlayInBackgroundPopup() {
+        PopupHelper.showPopupAnchoredToView(
+            context    = this,
+            anchorView = playerView,
+            popupText  = getString(R.string.video_player_in_background_popup),
+            theme      = PopupHelper.PopupTheme.LIGHT,
+            cancelableOnTouchOutside = true,
+            gravity    = Gravity.BOTTOM,
+            withArrow  = false
+        )
     }
 
     override fun onQualityChanged(newUrlQuality: VideoUrl?) {

@@ -3,6 +3,7 @@ package org.stepik.android.domain.video_player.interactor
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
+import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.preferences.VideoPlaybackRate
 import org.stepik.android.domain.video_player.repository.VideoTimestampRepository
@@ -14,6 +15,7 @@ import javax.inject.Inject
 class VideoPlayerSettingsInteractor
 @Inject
 constructor(
+    private val sharedPreferenceHelper: SharedPreferenceHelper,
     private val userPreferences: UserPreferences,
     private val videoTimestampRepository: VideoTimestampRepository
 ) {
@@ -67,4 +69,12 @@ constructor(
 
     fun saveVideoTimestamp(videoId: Long, timestamp: Long): Completable =
         videoTimestampRepository.addVideoTimestamp(videoId, timestamp)
+
+    fun isFisrtVideoPlayback(): Single<Boolean> =
+        Single.fromCallable {
+            val isFirstTime = sharedPreferenceHelper.isFirstTimeVideo
+            sharedPreferenceHelper.afterFirstTimeVideo()
+
+            isFirstTime
+        }
 }

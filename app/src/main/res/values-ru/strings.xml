@@ -650,4 +650,5 @@
 
 
     <string name="video_player_control_notification_channel_name">Управление видео плеером</string>
+    <string name="video_player_in_background_popup">Вы можете продолжить воспроизведение видео в фоне</string>
 </resources>

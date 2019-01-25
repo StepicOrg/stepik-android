@@ -86,7 +86,22 @@ constructor(
                 isLoading = false
             }
             .subscribeBy(
-                onSuccess = { videoPlayerData = it },
+                onSuccess = { videoPlayerData = it; resolveVideoInBackgroundPopup() },
+                onError = emptyOnErrorStub
+            )
+    }
+
+    private fun resolveVideoInBackgroundPopup() {
+        compositeDisposable += videoPlayerSettingsInteractor
+            .isFisrtVideoPlayback()
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onSuccess = { isFirstTime ->
+                    if (isFirstTime) {
+                        view?.showPlayInBackgroundPopup()
+                    }
+                },
                 onError = emptyOnErrorStub
             )
     }
