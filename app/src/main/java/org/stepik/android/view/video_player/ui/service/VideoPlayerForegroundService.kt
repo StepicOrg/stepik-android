@@ -118,14 +118,14 @@ class VideoPlayerForegroundService : Service() {
             }
         })
 
-        registerReceiver(mediaButtonReceiver, IntentFilter(Intent.ACTION_MEDIA_BUTTON))
-
         playerNotificationManager.setSmallIcon(R.drawable.ic_player_notification)
         playerNotificationManager.setStopAction(null)
         playerNotificationManager.setPlayer(player)
 
         mediaSession = MediaSessionCompat(this, MEDIA_SESSION_TAG, ComponentName(this, MediaButtonReceiver::class.java), null)
         mediaSession.isActive = true
+
+        registerReceiver(mediaButtonReceiver, IntentFilter(Intent.ACTION_MEDIA_BUTTON))
 
         playerNotificationManager.setMediaSessionToken(mediaSession.sessionToken)
 
