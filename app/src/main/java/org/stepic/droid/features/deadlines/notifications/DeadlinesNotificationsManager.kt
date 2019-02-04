@@ -3,14 +3,10 @@ package org.stepic.droid.features.deadlines.notifications
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
-import io.reactivex.Scheduler
-import io.reactivex.rxkotlin.subscribeBy
-import org.stepic.droid.di.qualifiers.BackgroundScheduler
-import org.stepic.droid.di.qualifiers.MainScheduler
+import android.support.annotation.WorkerThread
 import org.stepik.android.data.personal_deadlines.source.DeadlinesCacheDataSource
 import org.stepic.droid.notifications.StepikNotificationManager
-import org.stepic.droid.services.NewUserAlarmService
+import org.stepic.droid.receivers.AlarmReceiver
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.scheduleCompat
@@ -23,12 +19,7 @@ constructor(
     private val context: Context,
     private val alarmManager: AlarmManager,
     private val deadlinesCacheDataSource: DeadlinesCacheDataSource,
-    private val stepikNotificationManager: StepikNotificationManager,
-
-    @BackgroundScheduler
-    private val backgroundScheduler: Scheduler,
-    @MainScheduler
-    private val mainScheduler: Scheduler
+    private val stepikNotificationManager: StepikNotificationManager
 ) {
     companion object {
         const val SHOW_DEADLINES_NOTIFICATION = "show_deadlines_notification"
@@ -37,15 +28,17 @@ constructor(
         private const val OFFSET_36HOURS = 36 * AppConstants.MILLIS_IN_1HOUR
     }
 
+    @WorkerThread
     fun scheduleDeadlinesNotifications() {
         val now = DateTimeHelper.nowUtc()
-        deadlinesCacheDataSource.getClosestDeadlineTimestamp()
-            .subscribeOn(backgroundScheduler)
-            .observeOn(mainScheduler)
-            .subscribeBy(
-                onError   = { scheduleDeadlinesNotificationAt(now,0) },
-                onSuccess = { scheduleDeadlinesNotificationAt(now, it) }
-            )
+        try {
+            val timestamp = deadlinesCacheDataSource
+                .getClosestDeadlineTimestamp()
+                .blockingGet()
+            scheduleDeadlinesNotificationAt(now, timestamp)
+        } catch (_: Exception) {
+            scheduleDeadlinesNotificationAt(now,0)
+        }
     }
 
     private fun scheduleDeadlinesNotificationAt(now: Long, closestDeadline: Long) {
@@ -57,10 +50,11 @@ constructor(
             else -> 0L
         }
 
-        val intent = Intent(context, NewUserAlarmService::class.java)
-        intent.action = SHOW_DEADLINES_NOTIFICATION
-        intent.putExtra(NewUserAlarmService.NOTIFICATION_TIMESTAMP_SENT_KEY, timestamp)
-        val pendingIntent = PendingIntent.getService(context, NewUserAlarmService.REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val intent = AlarmReceiver
+            .createIntent(context, action = SHOW_DEADLINES_NOTIFICATION, timestamp = timestamp)
+
+        val pendingIntent = PendingIntent
+            .getBroadcast(context, AlarmReceiver.REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         alarmManager.cancel(pendingIntent)
 
         if (timestamp > 0) {
@@ -68,12 +62,12 @@ constructor(
         }
     }
 
+    @WorkerThread
     fun showDeadlinesNotifications() {
         val now = DateTimeHelper.nowUtc()
-        deadlinesCacheDataSource.getDeadlineRecordsForTimestamp(longArrayOf(now + OFFSET_12HOURS, now + OFFSET_36HOURS))
+        deadlinesCacheDataSource
+            .getDeadlineRecordsForTimestamp(longArrayOf(now + OFFSET_12HOURS, now + OFFSET_36HOURS))
             .map { it.sortedBy(DeadlineEntity::deadline).distinctBy(DeadlineEntity::courseId) }
-            .subscribeOn(backgroundScheduler)
-            .observeOn(backgroundScheduler)
             .doOnSuccess { deadlines ->
                 deadlines.forEach { stepikNotificationManager.showPersonalDeadlineNotification(it) }
             }
@@ -81,6 +75,7 @@ constructor(
                 scheduleDeadlinesNotifications()
             }
             .onErrorReturn { emptyList() }
-            .subscribeBy()
+            .ignoreElement()
+            .blockingAwait()
     }
 }
