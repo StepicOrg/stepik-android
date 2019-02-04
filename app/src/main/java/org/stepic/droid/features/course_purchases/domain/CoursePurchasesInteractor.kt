@@ -24,7 +24,7 @@ constructor(
 
     fun getCoursesPaymentsMap(courses: List<Course>): Single<Map<Long, CoursePayment>> =
         Single
-            .concat(courses.map { coursePaymentsRepository.getCoursePaymentsByCourseId(it.id, CoursePayment.Status.SUCCESS) })
+            .concat(courses.filter(Course::isPaid).map { coursePaymentsRepository.getCoursePaymentsByCourseId(it.id, CoursePayment.Status.SUCCESS) })
             .toList()
             .map { coursePayments ->
                 coursePayments
