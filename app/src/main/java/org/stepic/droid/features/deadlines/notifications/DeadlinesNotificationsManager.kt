@@ -31,14 +31,11 @@ constructor(
     @WorkerThread
     fun scheduleDeadlinesNotifications() {
         val now = DateTimeHelper.nowUtc()
-        try {
-            val timestamp = deadlinesCacheDataSource
-                .getClosestDeadlineTimestamp()
-                .blockingGet()
-            scheduleDeadlinesNotificationAt(now, timestamp)
-        } catch (_: Exception) {
-            scheduleDeadlinesNotificationAt(now,0)
-        }
+        val timestamp = deadlinesCacheDataSource
+            .getClosestDeadlineTimestamp()
+            .onErrorReturnItem(0)
+            .blockingGet()
+        scheduleDeadlinesNotificationAt(now, timestamp)
     }
 
     private fun scheduleDeadlinesNotificationAt(now: Long, closestDeadline: Long) {
