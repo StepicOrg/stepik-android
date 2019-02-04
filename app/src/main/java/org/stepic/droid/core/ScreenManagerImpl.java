@@ -499,13 +499,23 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void continueCourse(Activity activity, long unitId, long lessonId, long stepId) {
+    public void continueCourse(Activity activity, long courseId, long unitId, long lessonId, long stepId) {
         String testStepPath = StringUtil.getUriForStepByIds(config.getBaseUrl(), lessonId, unitId, stepId);
-        Intent intent = new Intent(activity, StepsActivity.class)
+
+        Intent stepsIntent = new Intent(activity, StepsActivity.class)
                 .setAction(AppConstants.INTERNAL_STEPIK_ACTION)
                 .putExtra(StepsActivity.EXTRA_IS_STEP_ID_WAS_PASSED, true)
                 .setData(Uri.parse(testStepPath));
-        activity.startActivity(intent);
+
+        Intent courseIntent = CourseActivity.Companion.createIntent(activity,
+                courseId, CourseScreenTab.SYLLABUS);
+
+        TaskStackBuilder.create(activity)
+                .addNextIntent(new Intent(activity, MainFeedActivity.class)
+                        .setAction(AppConstants.INTERNAL_STEPIK_ACTION))
+                .addNextIntent(courseIntent)
+                .addNextIntent(stepsIntent)
+                .startActivities();
     }
 
     @Override
