@@ -51,7 +51,7 @@ constructor(
         }
 
         val intent = AlarmReceiver
-            .createIntent(context, action = SHOW_DEADLINES_NOTIFICATION, timestamp = timestamp)
+            .createIntent(context, SHOW_DEADLINES_NOTIFICATION)
 
         val pendingIntent = PendingIntent
             .getBroadcast(context, AlarmReceiver.REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT)

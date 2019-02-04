@@ -208,8 +208,6 @@ interface AppCoreComponent {
 
     fun inject(timeIntervalPickerDialogFragment: TimeIntervalPickerDialogFragment)
 
-    fun inject(streakAlarmService: StreakAlarmService)
-
     fun inject(videoQualityDialogInPlayer: VideoQualityDialogInPlayer)
 
     fun inject(rateAppDialogFragment: RateAppDialogFragment)

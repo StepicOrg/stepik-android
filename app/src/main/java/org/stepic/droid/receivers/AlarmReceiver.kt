@@ -9,10 +9,9 @@ class AlarmReceiver : BroadcastReceiver() {
     companion object {
         const val REQUEST_CODE = 177
 
-        fun createIntent(context: Context, action: String, timestamp: Long): Intent =
+        fun createIntent(context: Context, action: String): Intent =
             Intent(context, AlarmReceiver::class.java)
                 .setAction(action)
-                .putExtra(NewUserAlarmService.NOTIFICATION_TIMESTAMP_SENT_KEY, timestamp)
     }
 
     override fun onReceive(context: Context?, intent: Intent?) {

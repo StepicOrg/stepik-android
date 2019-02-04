@@ -15,6 +15,8 @@ class NewUserAlarmService : JobIntentService() {
         const val SHOW_REGISTRATION_NOTIFICATION = "show_registration_notification"
         const val SHOW_NEW_USER_NOTIFICATION = "show_new_user_notification"
 
+        const val SHOW_STREAK_NOTIFICATION = "show_streak_notification"
+
         private const val JOB_ID = 2400
 
         fun enqueueWork(context: Context, intent: Intent) {
@@ -40,6 +42,8 @@ class NewUserAlarmService : JobIntentService() {
                 stepikNotificationManager.showRegistrationRemind()
             DeadlinesNotificationsManager.SHOW_DEADLINES_NOTIFICATION ->
                 deadlinesNotificationsManager.showDeadlinesNotifications()
+            SHOW_STREAK_NOTIFICATION ->
+                stepikNotificationManager.showStreakRemind()
             else ->
                 stepikNotificationManager.showLocalNotificationRemind()
         }
