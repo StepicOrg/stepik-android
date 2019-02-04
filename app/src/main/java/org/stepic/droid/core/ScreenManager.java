@@ -124,7 +124,7 @@ public interface ScreenManager {
 
     void continueAdaptiveCourse(Activity activity, Course course);
 
-    void continueCourse(Activity activity, long unitId, long lessonId, long stepId);
+    void continueCourse(Activity activity, long courseId, long unitId, long lessonId, long stepId);
 
     void showLaunchScreen(FragmentActivity activity, @NotNull Course course);
 
