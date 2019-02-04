@@ -74,8 +74,8 @@ constructor(
             .doFinally {
                 scheduleDeadlinesNotifications()
             }
-            .onErrorReturn { emptyList() }
             .ignoreElement()
+            .onErrorComplete()
             .blockingAwait()
     }
 }
