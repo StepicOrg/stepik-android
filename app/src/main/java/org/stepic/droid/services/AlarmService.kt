@@ -24,9 +24,9 @@ class AlarmService : JobIntentService() {
     @Inject
     lateinit var deadlinesNotificationsManager: DeadlinesNotificationsManager
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+    override fun onCreate() {
+        super.onCreate()
         App.component().inject(this)
-        return super.onStartCommand(intent, flags, startId)
     }
 
     override fun onHandleWork(intent: Intent) {

@@ -14,9 +14,7 @@ class AlarmReceiver : BroadcastReceiver() {
                 .setAction(action)
     }
 
-    override fun onReceive(context: Context?, intent: Intent?) {
-        if (context != null && intent != null) {
-            AlarmService.enqueueWork(context, intent)
-        }
+    override fun onReceive(context: Context, intent: Intent) {
+        AlarmService.enqueueWork(context, intent)
     }
 }

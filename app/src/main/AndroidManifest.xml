@@ -393,6 +393,7 @@
             </intent-filter>
         </receiver>
 
+        <receiver android:name=".receivers.AlarmReceiver" />
 
         <service
             android:name="org.stepic.droid.services.AlarmService"
