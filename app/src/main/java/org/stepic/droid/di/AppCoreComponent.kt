@@ -202,7 +202,7 @@ interface AppCoreComponent {
 
     fun inject(searchQueriesAdapter: SearchQueriesAdapter)
 
-    fun inject(newUserAlarmService: NewUserAlarmService)
+    fun inject(alarmService: AlarmService)
 
     fun inject(bootCompletedReceiver: BootCompletedReceiver)
 

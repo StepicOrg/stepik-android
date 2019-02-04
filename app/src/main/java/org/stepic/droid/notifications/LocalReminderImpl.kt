@@ -8,7 +8,6 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.model.CourseListType
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.receivers.AlarmReceiver
-import org.stepic.droid.services.NewUserAlarmService
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
@@ -79,7 +78,7 @@ class LocalReminderImpl
                     sharedPreferenceHelper.saveNewUserRemindTimestamp(scheduleMillis)
                     // Sets an alarm - note this alarm will be lost if the phone is turned off and on again
                     val intent = AlarmReceiver
-                        .createIntent(context, NewUserAlarmService.SHOW_NEW_USER_NOTIFICATION)
+                        .createIntent(context, StepikNotificationManager.SHOW_NEW_USER_NOTIFICATION)
 
                     val pendingIntent = PendingIntent
                         .getBroadcast(context, AlarmReceiver.REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT)
@@ -127,7 +126,7 @@ class LocalReminderImpl
                             nextNotificationMillis += AppConstants.MILLIS_IN_24HOURS
                         }
 
-                        val intent = AlarmReceiver.createIntent(context, NewUserAlarmService.SHOW_STREAK_NOTIFICATION)
+                        val intent = AlarmReceiver.createIntent(context, StepikNotificationManager.SHOW_STREAK_NOTIFICATION)
                         val pendingIntent = PendingIntent.getService(context, AlarmReceiver.REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
 
@@ -141,7 +140,7 @@ class LocalReminderImpl
     }
 
     private fun cancelPreviousStreakNotification() {
-        val intent = AlarmReceiver.createIntent(context, NewUserAlarmService.SHOW_STREAK_NOTIFICATION)
+        val intent = AlarmReceiver.createIntent(context, StepikNotificationManager.SHOW_STREAK_NOTIFICATION)
         val pendingIntent: PendingIntent? = PendingIntent.getService(context, AlarmReceiver.REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         pendingIntent?.let {
             pendingIntent.cancel()
@@ -181,7 +180,7 @@ class LocalReminderImpl
                 }
 
                 val intent = AlarmReceiver
-                    .createIntent(context, NewUserAlarmService.SHOW_REGISTRATION_NOTIFICATION)
+                    .createIntent(context, StepikNotificationManager.SHOW_REGISTRATION_NOTIFICATION)
 
                 val pendingIntent = PendingIntent
                     .getBroadcast(context, AlarmReceiver.REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT)

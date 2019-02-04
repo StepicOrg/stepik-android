@@ -8,19 +8,12 @@ import org.stepic.droid.features.deadlines.notifications.DeadlinesNotificationsM
 import org.stepic.droid.notifications.StepikNotificationManager
 import javax.inject.Inject
 
-class NewUserAlarmService : JobIntentService() {
+class AlarmService : JobIntentService() {
     companion object {
-        const val NOTIFICATION_TIMESTAMP_SENT_KEY = "notificationTimestampKey"
-
-        const val SHOW_REGISTRATION_NOTIFICATION = "show_registration_notification"
-        const val SHOW_NEW_USER_NOTIFICATION = "show_new_user_notification"
-
-        const val SHOW_STREAK_NOTIFICATION = "show_streak_notification"
-
         private const val JOB_ID = 2400
 
         fun enqueueWork(context: Context, intent: Intent) {
-            enqueueWork(context, NewUserAlarmService::class.java, JOB_ID,
+            enqueueWork(context, AlarmService::class.java, JOB_ID,
                 Intent(intent.action).putExtras(intent))
         }
     }
@@ -38,14 +31,17 @@ class NewUserAlarmService : JobIntentService() {
 
     override fun onHandleWork(intent: Intent) {
         when (intent.action) {
-            SHOW_REGISTRATION_NOTIFICATION ->
+            StepikNotificationManager.SHOW_REGISTRATION_NOTIFICATION ->
                 stepikNotificationManager.showRegistrationRemind()
+
+            StepikNotificationManager.SHOW_STREAK_NOTIFICATION ->
+                stepikNotificationManager.showStreakRemind()
+
+            StepikNotificationManager.SHOW_NEW_USER_NOTIFICATION ->
+                stepikNotificationManager.showLocalNotificationRemind()
+
             DeadlinesNotificationsManager.SHOW_DEADLINES_NOTIFICATION ->
                 deadlinesNotificationsManager.showDeadlinesNotifications()
-            SHOW_STREAK_NOTIFICATION ->
-                stepikNotificationManager.showStreakRemind()
-            else ->
-                stepikNotificationManager.showLocalNotificationRemind()
         }
     }
 }
