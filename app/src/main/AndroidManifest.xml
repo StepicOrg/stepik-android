@@ -212,12 +212,6 @@
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.VideoPlayer" />
 
-        <receiver android:name="android.support.v4.media.session.MediaButtonReceiver" >
-            <intent-filter>
-                <action android:name="android.intent.action.MEDIA_BUTTON" />
-            </intent-filter>
-        </receiver>
-
         <service
             android:name="org.stepik.android.view.video_player.ui.service.VideoPlayerForegroundService"
             android:stopWithTask="true" />
