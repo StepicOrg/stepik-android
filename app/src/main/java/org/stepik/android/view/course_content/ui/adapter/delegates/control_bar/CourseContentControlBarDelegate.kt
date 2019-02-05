@@ -11,6 +11,7 @@ import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
 import org.stepic.droid.ui.custom.adapter_delegates.DelegateAdapter
 import org.stepic.droid.ui.util.setHeight
 import org.stepik.android.presentation.personal_deadlines.model.PersonalDeadlinesState
+import timber.log.Timber
 
 class CourseContentControlBarDelegate(
     adapter: DelegateAdapter<CourseContentItem, DelegateViewHolder<CourseContentItem>>,
@@ -87,6 +88,9 @@ class CourseContentControlBarDelegate(
 
                             R.id.menu_item_deadlines_remove ->
                                 controlBarClickListener.onRemoveScheduleClicked(record)
+
+                            R.id.menu_item_deadlines_sync ->
+                                Timber.d("Stub")
                         }
                         true
                     }

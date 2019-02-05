@@ -574,6 +574,7 @@
     <string name="deadlines_menu_create">Создать расписание</string>
     <string name="deadlines_menu_edit">Редактировать расписание</string>
     <string name="deadlines_menu_remove">Удалить расписание</string>
+    <string name="deadlines_menu_sync">Экспортировать в календарь</string>
     <string name="deadlines_section">Дедлайн: %s</string>
     <string name="deadlines_notification">Дедлайн по модулю %s в курсе %s наступает через %s</string>
     <string name="deadlines_edit_title">Редактирование расписания</string>
