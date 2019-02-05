@@ -286,7 +286,7 @@ constructor(
                 .subscribeBy(
                     onSuccess = {
                         state = CourseView.State.CourseLoaded(headerData)
-                        view?.continueCourse(it)
+                        view?.continueCourse(course.id, it)
                     },
                     onError = {
                         state = CourseView.State.CourseLoaded(headerData)
