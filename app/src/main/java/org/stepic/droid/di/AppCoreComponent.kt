@@ -202,13 +202,11 @@ interface AppCoreComponent {
 
     fun inject(searchQueriesAdapter: SearchQueriesAdapter)
 
-    fun inject(newUserAlarmService: NewUserAlarmService)
+    fun inject(alarmService: AlarmService)
 
     fun inject(bootCompletedReceiver: BootCompletedReceiver)
 
     fun inject(timeIntervalPickerDialogFragment: TimeIntervalPickerDialogFragment)
-
-    fun inject(streakAlarmService: StreakAlarmService)
 
     fun inject(videoQualityDialogInPlayer: VideoQualityDialogInPlayer)
 

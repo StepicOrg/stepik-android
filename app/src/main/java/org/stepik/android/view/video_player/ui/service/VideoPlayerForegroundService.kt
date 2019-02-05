@@ -67,6 +67,9 @@ class VideoPlayerForegroundService : Service() {
             }
         }
 
+    private val mediaButtonReceiver =
+        MediaButtonReceiver()
+
     override fun onCreate() {
         internetConnectionReceiverCompat.registerReceiver(this)
         createPlayer()
@@ -122,6 +125,8 @@ class VideoPlayerForegroundService : Service() {
         mediaSession = MediaSessionCompat(this, MEDIA_SESSION_TAG, ComponentName(this, MediaButtonReceiver::class.java), null)
         mediaSession.isActive = true
 
+        registerReceiver(mediaButtonReceiver, IntentFilter(Intent.ACTION_MEDIA_BUTTON))
+
         playerNotificationManager.setMediaSessionToken(mediaSession.sessionToken)
 
         mediaSessionConnector = MediaSessionConnector(mediaSession)
@@ -168,6 +173,7 @@ class VideoPlayerForegroundService : Service() {
 
     private fun releasePlayer() {
         unregisterReceiver(headphonesReceiver)
+        unregisterReceiver(mediaButtonReceiver)
 
         mediaSession.release()
         mediaSessionConnector.setPlayer(null,  null)

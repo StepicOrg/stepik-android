@@ -76,9 +76,6 @@ open class FragmentBase : Fragment() {
     lateinit var mainHandler: MainHandler
 
     @Inject
-    lateinit var audioFocusHelper: AudioFocusHelper
-
-    @Inject
     lateinit var systemDownloadManager: DownloadManager
 
     protected open fun injectComponent() {

@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.PopupMenu
 import android.view.Gravity
 import android.view.View
+import android.widget.PopupWindow
 import android.widget.Toast
 import com.google.android.exoplayer2.ExoPlaybackException
 import com.google.android.exoplayer2.ExoPlayer
@@ -51,6 +52,12 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
             Intent(context, VideoPlayerActivity::class.java)
                 .putExtra(EXTRA_VIDEO_PLAYER_DATA, videoPlayerMediaData)
     }
+
+    @Inject
+    internal lateinit var analytic: Analytic
+
+    @Inject
+    internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private val videoServiceConnection =
         object : ServiceConnection {
@@ -95,11 +102,7 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
 
     private lateinit var videoPlayerPresenter: VideoPlayerPresenter
 
-    @Inject
-    internal lateinit var analytic: Analytic
-
-    @Inject
-    internal lateinit var viewModelFactory: ViewModelProvider.Factory
+    private var playerInBackroundPopup: PopupWindow? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -156,6 +159,8 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
     }
 
     override fun onStop() {
+        playerInBackroundPopup?.dismiss()
+
         exoPlayer?.let { player ->
             videoPlayerPresenter.syncVideoTimestamp(player.currentPosition, player.duration)
         }
@@ -251,7 +256,7 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
     }
 
     override fun showPlayInBackgroundPopup() {
-        val popup = PopupHelper
+        playerInBackroundPopup = PopupHelper
             .showPopupAnchoredToView(
                 context    = this,
                 anchorView = playerView,
@@ -261,7 +266,7 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
                 gravity    = Gravity.CENTER,
                 withArrow  = false
             )
-        playerView.postDelayed({ popup?.dismiss() }, IN_BACKGROUND_POPUP_TIMEOUT_MS)
+        playerView.postDelayed({ playerInBackroundPopup?.dismiss() }, IN_BACKGROUND_POPUP_TIMEOUT_MS)
     }
 
     override fun onQualityChanged(newUrlQuality: VideoUrl?) {
