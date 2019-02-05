@@ -1,4 +1,4 @@
-package org.stepic.droid.ui.dialogs
+package org.stepik.android.view.course_calendar.ui
 
 import android.app.Dialog
 import android.os.Bundle
