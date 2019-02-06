@@ -90,7 +90,7 @@ class CourseContentControlBarDelegate(
                                 controlBarClickListener.onRemoveScheduleClicked(record)
 
                             R.id.menu_item_deadlines_sync ->
-                                Timber.d("Stub")
+                                controlBarClickListener.onSynchronizeScheduleClicked()
                         }
                         true
                     }
