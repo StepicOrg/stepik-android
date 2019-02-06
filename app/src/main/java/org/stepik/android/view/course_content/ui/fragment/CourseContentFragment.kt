@@ -1,9 +1,11 @@
 package org.stepik.android.view.course_content.ui.fragment
 
+import android.Manifest
 import android.app.Activity
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.DialogFragment
@@ -26,6 +28,7 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.model.CalendarItem
 import org.stepik.android.domain.personal_deadlines.model.Deadline
 import org.stepik.android.domain.personal_deadlines.model.DeadlinesWrapper
 import org.stepic.droid.persistence.model.DownloadProgress
@@ -44,6 +47,8 @@ import org.stepik.android.model.Section
 import org.stepik.android.model.Unit
 import org.stepik.android.presentation.course_content.CourseContentPresenter
 import org.stepik.android.presentation.course_content.CourseContentView
+import org.stepik.android.view.course_calendar.ui.ChooseCalendarDialog
+import org.stepik.android.view.course_calendar.ui.ExplainCalendarPermissionDialog
 import org.stepik.android.view.course_content.ui.adapter.delegates.control_bar.CourseContentControlBarClickListener
 import org.stepik.android.view.course_content.ui.fragment.listener.CourseContentSectionClickListenerImpl
 import org.stepik.android.view.course_content.ui.fragment.listener.CourseContentUnitClickListenerImpl
@@ -53,7 +58,7 @@ import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import org.stepik.android.view.ui.listener.FragmentViewPagerScrollStateListener
 import javax.inject.Inject
 
-class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerScrollStateListener {
+class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerScrollStateListener, ExplainCalendarPermissionDialog.Callback{
     companion object {
         fun newInstance(courseId: Long) =
             CourseContentFragment().apply {
@@ -129,6 +134,10 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
 
                         override fun onRemoveScheduleClicked(record: StorageRecord<DeadlinesWrapper>) =
                             courseContentPresenter.removeDeadlines()
+
+                        override fun onSynchronizeScheduleClicked() {
+                            checkPermissions()
+                        }
 
                         override fun onDownloadAllClicked(course: Course) =
                             courseContentPresenter.addCourseDownloadTask(course)
@@ -292,6 +301,76 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
         dialog.show(supportFragmentManager, EditDeadlinesDialog.TAG)
     }
 
+    private fun showCalendarChoiceDialog() {
+        val supportFragmentManager = activity
+                ?.supportFragmentManager
+                ?.takeIf { it.findFragmentByTag(ChooseCalendarDialog.TAG) == null }
+                ?: return
+
+        val dialog = ChooseCalendarDialog.newInstance(listOf(CalendarItem(1, "Test", true)))
+        dialog.setTargetFragment(this, ChooseCalendarDialog.CHOOSE_CALENDAR_REQUEST_CODE)
+        dialog.show(supportFragmentManager, ChooseCalendarDialog.TAG)
+    }
+
+    /**
+     * Calendar permission related
+     */
+
+    private fun showExplainPermissionsDialog() {
+        val supportFragmentManager = activity
+                ?.supportFragmentManager
+                ?.takeIf { it.findFragmentByTag(ExplainCalendarPermissionDialog.TAG) == null }
+                ?: return
+
+        val dialog = ExplainCalendarPermissionDialog.newInstance()
+        dialog.setTargetFragment(this@CourseContentFragment, 0)
+        dialog.show(supportFragmentManager, ExplainCalendarPermissionDialog.TAG)
+    }
+
+    private fun checkPermissions() {
+        if (!arePermissionsGranted(listOf(Manifest.permission.WRITE_CALENDAR,  Manifest.permission.READ_CALENDAR))) {
+            showExplainPermissionsDialog()
+        } else {
+            showCalendarChoiceDialog()
+        }
+    }
+
+    override fun onCalendarPermissionChosen(isAgreed: Boolean) {
+        if (!isAgreed) return
+        requestMultiplePermissions(listOf(
+                Manifest.permission.WRITE_CALENDAR,  Manifest.permission.READ_CALENDAR
+        ))
+    }
+
+    private fun arePermissionsGranted(permissions: List<String>): Boolean {
+        for (permission in permissions) {
+            if (ContextCompat.checkSelfPermission(context!!, permission) != PackageManager.PERMISSION_GRANTED)
+                return false
+        }
+        return true
+    }
+
+    private fun requestMultiplePermissions(permissions: List<String>) {
+        val remainingPermissions = arrayListOf<String>()
+        for (permission in permissions)
+            if (ContextCompat.checkSelfPermission(context!!, permission) != PackageManager.PERMISSION_GRANTED)
+                remainingPermissions.add(permission)
+        requestPermissions(permissions.toTypedArray(), ExplainCalendarPermissionDialog.REQUEST_CALENDAR_PERMISSION)
+    }
+
+    // TODO Probably should handle shouldShowRequestPermissionRationale()?
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        when (requestCode) {
+            ExplainCalendarPermissionDialog.REQUEST_CALENDAR_PERMISSION -> {
+                for (i in grantResults.indices) {
+                    if (grantResults[i] != PackageManager.PERMISSION_GRANTED)
+                        return
+                }
+                showCalendarChoiceDialog()
+            }
+        }
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when(requestCode) {
             LearningRateDialog.LEARNING_RATE_REQUEST_CODE ->
@@ -328,6 +407,11 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
                         return courseContentPresenter.addUnitDownloadTask(unit, videoQuality)
                     }
                 }
+
+            ChooseCalendarDialog.CHOOSE_CALENDAR_REQUEST_CODE ->
+                data?.takeIf { resultCode == Activity.RESULT_OK }
+                        ?.getParcelableExtra<CalendarItem>(ChooseCalendarDialog.KEY_CALENDAR_ITEM)
+                        // ?.let(courseContentPresenter::) - this call should put deadlines into the calendar
 
             else ->
                 super.onActivityResult(requestCode, resultCode, data)
