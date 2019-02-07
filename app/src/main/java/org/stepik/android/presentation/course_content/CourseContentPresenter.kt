@@ -15,6 +15,7 @@ import org.stepic.droid.persistence.downloads.progress.DownloadProgressProvider
 import org.stepic.droid.persistence.model.DownloadConfiguration
 import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepic.droid.util.emptyOnErrorStub
+import org.stepik.android.domain.course_calendar.interactor.CourseCalendarInteractor
 import org.stepik.android.domain.course_content.interactor.CourseContentInteractor
 import org.stepik.android.domain.network.exception.NetworkRequirementsNotSatisfiedException
 import org.stepik.android.domain.personal_deadlines.interactor.DeadlinesInteractor
@@ -50,6 +51,8 @@ constructor(
     private val stateMapper: CourseContentStateMapper,
 
     private val progressObservable: Observable<Progress>,
+
+    private val courseCalendarInteractor: CourseCalendarInteractor,
 
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,

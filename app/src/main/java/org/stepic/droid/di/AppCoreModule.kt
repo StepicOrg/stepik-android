@@ -3,6 +3,7 @@ package org.stepic.droid.di
 import android.app.AlarmManager
 import android.app.NotificationManager
 import android.arch.lifecycle.ViewModelProvider
+import android.content.ContentResolver
 import android.content.Context
 import android.net.ConnectivityManager
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
@@ -254,6 +255,12 @@ abstract class AppCoreModule {
         internal fun provideConfig(configFactory: ConfigImpl.ConfigFactory): Config {
             return configFactory.create()
         }
+
+        @Provides
+        @AppSingleton
+        @JvmStatic
+        internal fun provideContentResolver(context: Context): ContentResolver
+                = context.contentResolver
     }
 
 }
