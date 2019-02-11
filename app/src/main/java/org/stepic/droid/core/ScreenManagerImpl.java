@@ -634,7 +634,7 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void openCoursePurchaseInWeb(Context context, long courseId, @Nullable Map<String, List<String>> queryParams) {
-        String url = config.getBaseUrl() + "/course/" + courseId + "/pay/";
+        final String url = config.getBaseUrl() + "/course/" + courseId + "/pay/";
         final Uri.Builder uriBuilder = Uri
                 .parse(url)
                 .buildUpon()
@@ -654,14 +654,14 @@ public class ScreenManagerImpl implements ScreenManager {
         for (final ResolveInfo resolveInfo : resolveInfoList) {
             final String packageName = resolveInfo.activityInfo.packageName;
             if (!packageName.startsWith("org.stepic.droid") && !packageName.startsWith("org.stepik.android")) {
-                final Intent intent1 = new Intent(Intent.ACTION_VIEW, uri);
-                intent1.setPackage(packageName);
-                activityIntents.add(intent1);
+                final Intent newIntent = new Intent(Intent.ACTION_VIEW, uri);
+                newIntent.setPackage(packageName);
+                activityIntents.add(newIntent);
             }
         }
 
         if (!activityIntents.isEmpty()) {
-            Intent chooserIntent = Intent.createChooser(activityIntents.remove(0), "Open link with");
+            final Intent chooserIntent = Intent.createChooser(activityIntents.remove(0), context.getString(R.string.course_purchase_link_chooser_title));
             chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, activityIntents.toArray(new Parcelable[] {}));
 
             context.startActivity(chooserIntent);
