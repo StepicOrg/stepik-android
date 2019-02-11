@@ -260,8 +260,8 @@ constructor(
             )
     }
 
-    fun openCoursePurchaseInWeb() {
-        view?.openCoursePurchaseInWeb(courseId)
+    fun openCoursePurchaseInWeb(queryParams: Map<String, List<String>>? = null) {
+        view?.openCoursePurchaseInWeb(courseId, queryParams)
     }
 
     /**

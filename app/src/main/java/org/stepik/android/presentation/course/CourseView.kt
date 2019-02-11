@@ -29,5 +29,5 @@ interface CourseView : BillingView {
     fun shareCourse(course: Course)
     fun showCourseShareTooltip()
 
-    fun openCoursePurchaseInWeb(courseId: Long)
+    fun openCoursePurchaseInWeb(courseId: Long, queryParams: Map<String, List<String>>? = null)
 }

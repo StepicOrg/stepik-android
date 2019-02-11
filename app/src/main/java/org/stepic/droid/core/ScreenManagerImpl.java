@@ -79,6 +79,7 @@ import java.io.File;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -632,13 +633,19 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void openCoursePurchaseInWeb(Context context, long courseId) {
+    public void openCoursePurchaseInWeb(Context context, long courseId, @Nullable Map<String, List<String>> queryParams) {
         String url = config.getBaseUrl() + "/course/" + courseId + "/pay/";
-        final Uri uri = Uri
+        final Uri.Builder uriBuilder = Uri
                 .parse(url)
                 .buildUpon()
-                .appendQueryParameter("from_mobile_app", "true")
-                .build();
+                .appendQueryParameter("from_mobile_app", "true");
+
+        if (queryParams != null) {
+            UriExtensionsKt.Uri_Builder_appendAllQueryParameters(uriBuilder, queryParams);
+        }
+
+        final Uri uri = uriBuilder.build();
+
         final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 
         final List<ResolveInfo> resolveInfoList = context.getPackageManager().queryIntentActivities(intent, 0);

@@ -23,9 +23,12 @@ import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.ui.util.*
+import org.stepic.droid.util.getAllQueryParameters
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.presentation.course.CoursePresenter
+import org.stepik.android.view.course.routing.CourseScreenTab
+import org.stepik.android.view.course.routing.getCourseTabFromDeepLink
 import kotlin.math.roundToInt
 
 class CourseHeaderDelegate(
@@ -115,7 +118,13 @@ class CourseHeaderDelegate(
         }
 
         courseBuyInWebAction.setOnClickListener {
-            coursePresenter.openCoursePurchaseInWeb()
+            val queryParams = courseActivity
+                .intent
+                ?.takeIf { it.getCourseTabFromDeepLink() == CourseScreenTab.PAY }
+                ?.data
+                ?.getAllQueryParameters()
+
+            coursePresenter.openCoursePurchaseInWeb(queryParams)
         }
 
         courseBuyInAppAction.setOnClickListener {
@@ -157,17 +166,17 @@ class CourseHeaderDelegate(
         courseFeatured.changeVisibility(courseHeaderData.readiness > MIN_FEATURED_READINESS)
 
         with(courseHeaderData.enrollmentState) {
-            courseEnrollAction.changeVisibility(this == EnrollmentState.NotEnrolledFree)
-            courseEnrollmentProgress.changeVisibility(this == EnrollmentState.Pending)
-            courseContinueAction.changeVisibility(this == EnrollmentState.Enrolled)
-            courseBuyInWebAction.changeVisibility(this == EnrollmentState.NotEnrolledWeb)
+            courseEnrollAction.changeVisibility(this is EnrollmentState.NotEnrolledFree)
+            courseEnrollmentProgress.changeVisibility(this is EnrollmentState.Pending)
+            courseContinueAction.changeVisibility(this is EnrollmentState.Enrolled)
+            courseBuyInWebAction.changeVisibility(this is EnrollmentState.NotEnrolledWeb)
             courseBuyInAppAction.changeVisibility(this is EnrollmentState.NotEnrolledInApp)
 
             if (this is EnrollmentState.NotEnrolledInApp) {
                 courseBuyInAppAction.text = getString(R.string.course_payments_purchase_in_app, this.sku.price)
             }
 
-            dropCourseMenuItem?.isVisible = this == EnrollmentState.Enrolled
+            dropCourseMenuItem?.isVisible = this is EnrollmentState.Enrolled
             restorePurchaseCourseMenuItem?.isVisible = this is EnrollmentState.NotEnrolledInApp
         }
 
