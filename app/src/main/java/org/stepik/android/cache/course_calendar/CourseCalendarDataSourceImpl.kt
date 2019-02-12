@@ -4,6 +4,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepik.android.data.course_calendar.source.CourseCalendarCacheDataSource
+import org.stepik.android.domain.course_calendar.model.SectionDateEvent
 import javax.inject.Inject
 
 class CourseCalendarDataSourceImpl
@@ -11,11 +12,13 @@ class CourseCalendarDataSourceImpl
 constructor(
         private val databaseFacade: DatabaseFacade
 ) : CourseCalendarCacheDataSource {
-    override fun getCalendarItems(): Single<Any> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun getSectionDateEvents(): Single<List<SectionDateEvent>> =
+        Single.fromCallable {
+            databaseFacade.getSectionDateEvents()
+        }
 
-    override fun saveCalendarItems(): Completable {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun saveSectionDateEvents(events: List<SectionDateEvent>): Completable =
+        Completable.fromAction {
+            databaseFacade.addSectionDateEvents(events)
+        }
 }
