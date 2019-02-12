@@ -21,6 +21,7 @@ import org.stepik.android.cache.section.structure.DbStructureSection
 import org.stepik.android.cache.unit.structure.DbStructureUnit
 import org.stepik.android.cache.lesson.structure.DbStructureLesson
 import org.stepik.android.cache.video_player.model.VideoTimestamp
+import org.stepik.android.domain.course_calendar.model.SectionDateEvent
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.*
 import org.stepik.android.model.Unit
@@ -51,7 +52,8 @@ constructor(
     private val blockDao: IDao<BlockPersistentWrapper>,
     private val personalDeadlinesDao: PersonalDeadlinesDao,
     private val deadlinesBannerDao: DeadlinesBannerDao,
-    private val viewedStoryTemplatesDao: IDao<ViewedStoryTemplate>
+    private val viewedStoryTemplatesDao: IDao<ViewedStoryTemplate>,
+    private val sectionDateEventDao: IDao<SectionDateEvent>
 ) {
 
     fun dropDatabase() {
@@ -76,6 +78,7 @@ constructor(
         personalDeadlinesDao.removeAll()
         deadlinesBannerDao.removeAll()
         viewedStoryTemplatesDao.removeAll()
+        sectionDateEventDao.removeAll()
     }
 
     fun addAssignment(assignment: Assignment?) = assignment?.let { assignmentDao.insertOrUpdate(assignment) }
