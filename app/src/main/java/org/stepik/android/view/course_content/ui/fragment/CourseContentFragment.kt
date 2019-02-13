@@ -301,13 +301,13 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
         dialog.show(supportFragmentManager, EditDeadlinesDialog.TAG)
     }
 
-    private fun showCalendarChoiceDialog() {
+    override fun showCalendarChoiceDialog(calendarItems: List<CalendarItem>) {
         val supportFragmentManager = activity
                 ?.supportFragmentManager
                 ?.takeIf { it.findFragmentByTag(ChooseCalendarDialog.TAG) == null }
                 ?: return
 
-        val dialog = ChooseCalendarDialog.newInstance(listOf(CalendarItem(1, "Test", true)))
+        val dialog = ChooseCalendarDialog.newInstance(calendarItems)
         dialog.setTargetFragment(this, ChooseCalendarDialog.CHOOSE_CALENDAR_REQUEST_CODE)
         dialog.show(supportFragmentManager, ChooseCalendarDialog.TAG)
     }
@@ -331,7 +331,7 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
         if (!arePermissionsGranted(listOf(Manifest.permission.WRITE_CALENDAR,  Manifest.permission.READ_CALENDAR))) {
             showExplainPermissionsDialog()
         } else {
-            showCalendarChoiceDialog()
+            courseContentPresenter.getCalendarPrimaryItems()
         }
     }
 
@@ -366,7 +366,7 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
                     if (grantResults[i] != PackageManager.PERMISSION_GRANTED)
                         return
                 }
-                showCalendarChoiceDialog()
+                courseContentPresenter.getCalendarPrimaryItems()
             }
         }
     }
@@ -411,7 +411,7 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
             ChooseCalendarDialog.CHOOSE_CALENDAR_REQUEST_CODE ->
                 data?.takeIf { resultCode == Activity.RESULT_OK }
                         ?.getParcelableExtra<CalendarItem>(ChooseCalendarDialog.KEY_CALENDAR_ITEM)
-                        // ?.let(courseContentPresenter::) - this call should put deadlines into the calendar
+                        ?.let(courseContentPresenter::applyDates)
 
             else ->
                 super.onActivityResult(requestCode, resultCode, data)
