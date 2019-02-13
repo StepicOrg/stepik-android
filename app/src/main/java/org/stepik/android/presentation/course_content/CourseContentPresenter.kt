@@ -8,6 +8,7 @@ import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.CourseId
 import org.stepic.droid.di.qualifiers.MainScheduler
+import org.stepic.droid.model.CalendarItem
 import org.stepik.android.domain.personal_deadlines.model.Deadline
 import org.stepik.android.domain.personal_deadlines.model.DeadlinesWrapper
 import org.stepic.droid.persistence.downloads.interactor.DownloadInteractor
@@ -29,6 +30,7 @@ import org.stepik.android.presentation.base.PresenterBase
 import org.stepik.android.presentation.course_content.mapper.CourseContentStateMapper
 import org.stepik.android.presentation.personal_deadlines.model.PersonalDeadlinesState
 import org.stepik.android.view.course_content.model.CourseContentItem
+import timber.log.Timber
 import javax.inject.Inject
 
 class CourseContentPresenter
@@ -409,6 +411,32 @@ constructor(
                 },
                 onError = emptyOnErrorStub
             )
+    }
+
+    fun getCalendarPrimaryItems() {
+        compositeDisposable += courseCalendarInteractor
+                .getCalendarItems()
+                .subscribeOn(backgroundScheduler)
+                .observeOn(mainScheduler)
+                .subscribeBy(
+                    onSuccess = { view?.showCalendarChoiceDialog(it) },
+                    onError = { Timber.d("Calendar items error, $it")}
+                )
+    }
+
+    fun applyDates(calendarItem: CalendarItem) {
+        val items =
+                (state as? CourseContentView.State.CourseContentLoaded)
+                        ?.courseContent
+
+        compositeDisposable += courseCalendarInteractor
+                .applyDatesToCalendar(items!!, calendarItem)
+                .subscribeOn(backgroundScheduler)
+                .observeOn(mainScheduler)
+                .subscribeBy(
+                        onComplete = {Timber.d("Complete")},
+                        onError = {Timber.d("Fail")}
+                )
     }
 
     override fun detachView(view: CourseContentView) {
