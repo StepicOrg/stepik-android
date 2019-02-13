@@ -1,6 +1,7 @@
 package org.stepik.android.data.course_reviews.repository
 
 import io.reactivex.Single
+import org.stepic.droid.util.PagedList
 import org.stepic.droid.util.doCompletableOnSuccess
 import org.stepik.android.data.course_reviews.source.CourseReviewsCacheDataSource
 import org.stepik.android.data.course_reviews.source.CourseReviewsRemoteDataSource
@@ -14,7 +15,7 @@ constructor(
     private val courseReviewsCacheDataSource: CourseReviewsCacheDataSource,
     private val courseReviewsRemoteDataSource: CourseReviewsRemoteDataSource
 ) : CourseReviewsRepository {
-    override fun getCourseReviewsByCourseId(courseId: Long): Single<List<CourseReview>> =
+    override fun getCourseReviewsByCourseId(courseId: Long): Single<PagedList<CourseReview>> =
         courseReviewsRemoteDataSource
             .getCourseReviewsByCourseId(courseId)
             .doCompletableOnSuccess(courseReviewsCacheDataSource::saveCourseReviews)
