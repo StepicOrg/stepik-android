@@ -13,20 +13,11 @@ import org.stepik.android.domain.course_calendar.repository.CourseCalendarReposi
 
 @Module
 abstract class CourseCalendarDataModule {
-    @Binds
-    internal abstract fun bindCalendarRepository(
-        calendarRepositoryImpl: CalendarRepositoryImpl
-    ): CalendarRepository
 
     @Binds
     internal abstract fun bindCourseCalendarRepository(
         courseCalendarRepositoryImpl: CourseCalendarRepositoryImpl
     ): CourseCalendarRepository
-
-    @Binds
-    internal abstract fun bindCalendarCacheDataSource(
-        calendarCacheDataSourceImpl: CalendarCacheDataSourceImpl
-    ): CalendarCacheDataSource
 
     @Binds
     internal abstract fun bindCourseCalendarCacheDataSource(
