@@ -369,8 +369,8 @@ class CourseActivity : FragmentActivityBase(), CourseView {
     override fun createUiCheckout(): UiCheckout =
         uiCheckout
 
-    override fun openCoursePurchaseInWeb(courseId: Long) {
-        screenManager.openCoursePurchaseInWeb(this, courseId)
+    override fun openCoursePurchaseInWeb(courseId: Long, queryParams: Map<String, List<String>>?) {
+        screenManager.openCoursePurchaseInWeb(this, courseId, queryParams)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
