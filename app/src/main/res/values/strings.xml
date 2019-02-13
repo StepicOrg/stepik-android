@@ -672,6 +672,8 @@
     <string name="course_purchase_billing_no_purchases_to_restore">You don\'t have purchases of this course that can be restored</string>
     <string name="course_purchase_already_owned">You\'ve already purchased this course</string>
 
+    <string name="course_purchase_link_chooser_title">Open with</string>
+
 
     <string name="video_player_control_notification_channel_name">Video player controls</string>
     <string name="video_player_in_background_popup">You can play video in background</string>

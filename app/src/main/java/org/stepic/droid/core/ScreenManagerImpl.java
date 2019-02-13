@@ -4,6 +4,7 @@ package org.stepic.droid.core;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -26,6 +27,7 @@ import org.stepic.droid.base.App;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.di.AppSingleton;
 import org.stepic.droid.features.achievements.ui.activity.AchievementsListActivity;
+import org.stepic.droid.util.UriExtensionsKt;
 import org.stepik.android.view.course.routing.CourseScreenTab;
 import org.stepik.android.view.course.ui.activity.CourseActivity;
 import org.stepic.droid.model.CertificateViewItem;
@@ -75,6 +77,9 @@ import org.stepik.android.view.video_player.ui.activity.VideoPlayerActivity;
 
 import java.io.File;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -628,10 +633,39 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void openCoursePurchaseInWeb(Context context, long courseId) {
-        String url = config.getBaseUrl() + "/course/" + courseId + "/pay/?from_mobile_app=true";
-        final Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(url));
-        context.startActivity(intent);
+    public void openCoursePurchaseInWeb(Context context, long courseId, @Nullable Map<String, List<String>> queryParams) {
+        final String url = config.getBaseUrl() + "/course/" + courseId + "/pay/";
+        final Uri.Builder uriBuilder = Uri
+                .parse(url)
+                .buildUpon()
+                .appendQueryParameter("from_mobile_app", "true");
+
+        if (queryParams != null) {
+            UriExtensionsKt.Uri_Builder_appendAllQueryParameters(uriBuilder, queryParams);
+        }
+
+        final Uri uri = uriBuilder.build();
+
+        final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+
+        final List<ResolveInfo> resolveInfoList = context.getPackageManager().queryIntentActivities(intent, 0);
+        final ArrayList<Intent> activityIntents = new ArrayList<>();
+
+        for (final ResolveInfo resolveInfo : resolveInfoList) {
+            final String packageName = resolveInfo.activityInfo.packageName;
+            if (!packageName.startsWith("org.stepic.droid") && !packageName.startsWith("org.stepik.android")) {
+                final Intent newIntent = new Intent(Intent.ACTION_VIEW, uri);
+                newIntent.setPackage(packageName);
+                activityIntents.add(newIntent);
+            }
+        }
+
+        if (!activityIntents.isEmpty()) {
+            final Intent chooserIntent = Intent.createChooser(activityIntents.remove(0), context.getString(R.string.course_purchase_link_chooser_title));
+            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, activityIntents.toArray(new Parcelable[] {}));
+
+            context.startActivity(chooserIntent);
+        }
     }
 
     @Override
