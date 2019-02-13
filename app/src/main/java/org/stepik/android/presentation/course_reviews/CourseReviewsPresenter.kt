@@ -40,13 +40,27 @@ constructor(
     }
 
     private fun fetchCourseReviews() {
+        if (state != CourseReviewsView.State.Idle) return
+
+        state = CourseReviewsView.State.Loading
+        subscribeForCourseReviews()
+    }
+
+    private fun subscribeForCourseReviews(shouldSkipStoredValue: Boolean = false) {
         compositeDisposable += courseReviewsInteractor
             .getCourseReviewItems(courseId)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onSuccess = { state = CourseReviewsView.State.CourseReviewsLoaded(it) },
-                onError   = { state = CourseReviewsView.State.NetworkError }
+                onSuccess = { reviews ->
+                    state =
+                        if (reviews.isNotEmpty()) {
+                            CourseReviewsView.State.CourseReviewsCache(reviews)
+                        } else {
+                            CourseReviewsView.State.EmptyContent
+                        }
+                },
+                onError = { state = CourseReviewsView.State.NetworkError }
             )
     }
 }

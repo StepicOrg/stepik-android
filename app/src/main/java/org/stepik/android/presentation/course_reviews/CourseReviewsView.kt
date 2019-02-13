@@ -9,7 +9,8 @@ interface CourseReviewsView {
         object EmptyContent : State()
         object NetworkError : State()
 
-        class CourseReviewsLoaded(val courseReviewItems: List<CourseReviewItem>) : State()
+        class CourseReviewsCache(val courseReviewItems: List<CourseReviewItem>) : State()
+        class CourseReviewsRemote(val courseReviewItems: List<CourseReviewItem>, page: Int, hasNext: Boolean) : State()
     }
 
     fun setState(state: State)

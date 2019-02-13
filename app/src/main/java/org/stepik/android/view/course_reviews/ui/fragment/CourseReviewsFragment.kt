@@ -75,7 +75,8 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
         viewStateDelegate = ViewStateDelegate()
         viewStateDelegate.addState<CourseReviewsView.State.Idle>(courseReviewsPlaceholder)
         viewStateDelegate.addState<CourseReviewsView.State.Loading>(courseReviewsPlaceholder)
-        viewStateDelegate.addState<CourseReviewsView.State.CourseReviewsLoaded>(courseReviewsRecycler)
+        viewStateDelegate.addState<CourseReviewsView.State.CourseReviewsCache>(courseReviewsRecycler)
+        viewStateDelegate.addState<CourseReviewsView.State.CourseReviewsRemote>(courseReviewsRecycler)
         viewStateDelegate.addState<CourseReviewsView.State.NetworkError>(reportProblem)
         viewStateDelegate.addState<CourseReviewsView.State.EmptyContent>(report_empty)
     }
@@ -92,8 +93,12 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
 
     override fun setState(state: CourseReviewsView.State) {
         viewStateDelegate.switchState(state)
-        if (state is CourseReviewsView.State.CourseReviewsLoaded) {
-            courseReviewsAdapter.items = state.courseReviewItems
+        when (state) {
+            is CourseReviewsView.State.CourseReviewsCache ->
+                courseReviewsAdapter.items = state.courseReviewItems
+
+            is CourseReviewsView.State.CourseReviewsRemote ->
+                courseReviewsAdapter.items = state.courseReviewItems
         }
     }
 
