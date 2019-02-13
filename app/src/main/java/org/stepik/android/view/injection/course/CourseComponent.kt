@@ -6,6 +6,7 @@ import org.stepic.droid.di.qualifiers.CourseId
 import org.stepik.android.view.course.ui.activity.CourseActivity
 import org.stepik.android.view.course_content.ui.fragment.CourseContentFragment
 import org.stepik.android.view.course_info.ui.fragment.CourseInfoFragment
+import org.stepik.android.view.course_reviews.ui.fragment.CourseReviewsFragment
 import org.stepik.android.view.injection.billing.BillingDataModule
 import org.stepik.android.view.injection.course_list.CourseListDataModule
 import org.stepik.android.view.injection.course_payments.CoursePaymentsDataModule
@@ -42,5 +43,6 @@ interface CourseComponent {
 
     fun inject(courseActivity: CourseActivity)
     fun inject(courseInfoFragment: CourseInfoFragment)
+    fun inject(courseReviewsFragment: CourseReviewsFragment)
     fun inject(courseContentFragment: CourseContentFragment)
 }
