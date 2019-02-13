@@ -143,7 +143,8 @@ class CourseActivity : FragmentActivityBase(), CourseView {
 
             coursePager.currentItem =
                 when(tab) {
-                    CourseScreenTab.SYLLABUS -> 1
+                    CourseScreenTab.REVIEWS -> 1
+                    CourseScreenTab.SYLLABUS -> 2
                     else -> 0
                 }
         } else {
