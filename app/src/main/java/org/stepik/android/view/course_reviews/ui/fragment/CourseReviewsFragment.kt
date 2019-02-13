@@ -13,6 +13,7 @@ import kotlinx.android.synthetic.main.fragment_course_reviews.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.util.argument
+import org.stepik.android.view.course_reviews.ui.adapter.CourseReviewsAdapter
 import javax.inject.Inject
 
 class CourseReviewsFragment : Fragment() {
@@ -27,6 +28,8 @@ class CourseReviewsFragment : Fragment() {
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private var courseId: Long by argument()
+
+    private lateinit var courseReviewsAdapter: CourseReviewsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,8 +51,11 @@ class CourseReviewsFragment : Fragment() {
         inflater.inflate(R.layout.fragment_course_reviews, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        courseReviewsAdapter = CourseReviewsAdapter()
+
         with(courseReviewsRecycler) {
             layoutManager = LinearLayoutManager(context)
+            adapter = courseReviewsAdapter
 
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL).apply {
                 ContextCompat.getDrawable(context, R.drawable.list_divider_h)?.let(::setDrawable)
