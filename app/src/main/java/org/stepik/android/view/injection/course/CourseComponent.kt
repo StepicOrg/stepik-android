@@ -10,6 +10,7 @@ import org.stepik.android.view.course_reviews.ui.fragment.CourseReviewsFragment
 import org.stepik.android.view.injection.billing.BillingDataModule
 import org.stepik.android.view.injection.course_list.CourseListDataModule
 import org.stepik.android.view.injection.course_payments.CoursePaymentsDataModule
+import org.stepik.android.view.injection.course_reviews.CourseReviewsDataModule
 import org.stepik.android.view.injection.last_step.LastStepDataModule
 import org.stepik.android.view.injection.notification.NotificationDataModule
 import org.stepik.android.view.injection.personal_deadlines.PersonalDeadlinesDataModule
@@ -27,6 +28,7 @@ import org.stepik.android.view.injection.user.UserDataModule
 
     CourseListDataModule::class,
     CoursePaymentsDataModule::class,
+    CourseReviewsDataModule::class,
     PersonalDeadlinesDataModule::class,
     NotificationDataModule::class,
 
