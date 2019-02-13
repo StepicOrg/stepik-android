@@ -15,7 +15,7 @@ object DbStructureSectionDateEvent {
         db.execSQL("""
             CREATE TABLE IF NOT EXISTS ${DbStructureLesson.TABLE_NAME} (
                 ${DbStructureSectionDateEvent.Columns.EVENT_ID} LONG PRIMARY KEY,
-                ${DbStructureSectionDateEvent.Columns.SECTION_ID} LONG,
+                ${DbStructureSectionDateEvent.Columns.SECTION_ID} LONG
             )
         """.trimIndent())
     }
