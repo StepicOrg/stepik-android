@@ -17,6 +17,7 @@ import kotlinx.android.synthetic.main.error_no_connection.*
 import kotlinx.android.synthetic.main.fragment_course_reviews.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
+import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.util.argument
 import org.stepic.droid.util.setTextColor
 import org.stepik.android.domain.course_reviews.model.CourseReviewItem
@@ -36,6 +37,9 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    internal lateinit var screenManager: ScreenManager
 
     private var courseId: Long by argument()
 
@@ -65,7 +69,7 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
         inflater.inflate(R.layout.fragment_course_reviews, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        courseReviewsAdapter = CourseReviewsAdapter()
+        courseReviewsAdapter = CourseReviewsAdapter { screenManager.openProfile(activity, it.id) }
 
         with(courseReviewsRecycler) {
             layoutManager = LinearLayoutManager(context)

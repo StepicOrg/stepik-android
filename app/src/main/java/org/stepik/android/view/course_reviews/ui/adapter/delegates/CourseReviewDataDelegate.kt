@@ -13,10 +13,12 @@ import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.domain.course_reviews.model.CourseReviewItem
+import org.stepik.android.model.user.User
 import java.util.*
 
 class CourseReviewDataDelegate(
-    adapter: DelegateAdapter<CourseReviewItem, DelegateViewHolder<CourseReviewItem>>
+    adapter: DelegateAdapter<CourseReviewItem, DelegateViewHolder<CourseReviewItem>>,
+    private val onUserClicked: (User) -> Unit
 ) : AdapterDelegate<CourseReviewItem, DelegateViewHolder<CourseReviewItem>>(adapter) {
     override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CourseReviewItem> =
         ViewHolder(createView(parent, R.layout.view_course_reviews_item))
@@ -24,7 +26,7 @@ class CourseReviewDataDelegate(
     override fun isForViewType(position: Int): Boolean =
         getItemAtPosition(position) is CourseReviewItem.Data
 
-    class ViewHolder(root: View) : DelegateViewHolder<CourseReviewItem>(root) {
+    inner class ViewHolder(root: View) : DelegateViewHolder<CourseReviewItem>(root) {
         private val reviewIcon = root.reviewIcon
         private val reviewDate = root.reviewDate
         private val reviewName = root.reviewName
@@ -39,6 +41,13 @@ class CourseReviewDataDelegate(
             val circularBitmapDrawable = RoundedBitmapDrawableFactory.create(this, coursePlaceholderBitmap)
             circularBitmapDrawable.cornerRadius = getDimension(R.dimen.course_image_radius)
             circularBitmapDrawable
+        }
+
+        init {
+            val userClickListener = View.OnClickListener { (itemData as? CourseReviewItem.Data)?.user?.let(onUserClicked) }
+            reviewIcon.setOnClickListener(userClickListener)
+            reviewName.setOnClickListener(userClickListener)
+            reviewDate.setOnClickListener(userClickListener)
         }
 
         override fun onBind(data: CourseReviewItem) {
