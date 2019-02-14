@@ -16,7 +16,6 @@ import android.support.v4.app.TaskStackBuilder
 import com.bumptech.glide.Glide
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.analytic.experiments.RegistrationPushSplitTest
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.core.ScreenManager
 import org.stepik.android.cache.personal_deadlines.model.DeadlineEntity
@@ -54,9 +53,7 @@ constructor(
     private val context: Context,
     private val localReminder: LocalReminder,
     private val notificationManager: NotificationManager,
-    private val notificationTimeChecker: NotificationTimeChecker,
-
-    private val registrationPushSplitTest: RegistrationPushSplitTest
+    private val notificationTimeChecker: NotificationTimeChecker
 ) : StepikNotificationManager {
     companion object {
         private const val NEW_USER_REMIND_NOTIFICATION_ID = 4L
@@ -163,21 +160,19 @@ constructor(
     override fun showRegistrationRemind() {
         if (sharedPreferenceHelper.isEverLogged) return
 
-        if (registrationPushSplitTest.currentGroup.isPushEnabled) {
-            val intent = Intent(context, SplashActivity::class.java)
-            val taskBuilder = TaskStackBuilder
-                .create(context)
-                .addNextIntent(intent)
+        val intent = Intent(context, SplashActivity::class.java)
+        val taskBuilder = TaskStackBuilder
+            .create(context)
+            .addNextIntent(intent)
 
-            val title = context.getString(R.string.stepik_free_courses_title)
-            val remindMessage = context.getString(R.string.registration_remind_message)
-            showSimpleNotification(
-                stepikNotification = null,
-                justText = remindMessage,
-                taskBuilder = taskBuilder,
-                title = title,
-                id = REGISTRATION_REMIND_NOTIFICATION_ID)
-        }
+        val title = context.getString(R.string.stepik_free_courses_title)
+        val remindMessage = context.getString(R.string.registration_remind_message)
+        showSimpleNotification(
+            stepikNotification = null,
+            justText = remindMessage,
+            taskBuilder = taskBuilder,
+            title = title,
+            id = REGISTRATION_REMIND_NOTIFICATION_ID)
 
         localReminder.remindAboutRegistration()
     }
