@@ -26,6 +26,7 @@ constructor(
                         """
                             SELECT * FROM ${DbStructureCourseReview.TABLE_NAME}
                             WHERE ${DbStructureCourseReview.Columns.COURSE} = ?
+                            ORDER BY ${DbStructureCourseReview.Columns.ID} DESC
                             LIMIT ?
                         """.trimIndent(),
                         arrayOf(courseId.toString(), PAGE_SIZE.toString())
