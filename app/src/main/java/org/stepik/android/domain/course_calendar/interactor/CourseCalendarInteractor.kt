@@ -20,7 +20,7 @@ constructor(
     fun getCalendarItems(): Single<List<CalendarItem>> =
             calendarRepository.getCalendarItems()
 
-    fun syncDeadlinesWithCalendar(event: CalendarEventData, calendarItem: CalendarItem): Observable<Long> {
+    fun syncDeadlinesWithCalendar(event: CalendarEventData, calendarItem: CalendarItem): Single<Long> {
         return calendarRepository.syncCalendarEventData(event, calendarItem)
     }
 

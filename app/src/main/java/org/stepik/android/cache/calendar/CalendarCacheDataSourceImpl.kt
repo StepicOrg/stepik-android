@@ -21,12 +21,13 @@ constructor(
     private val contentResolver: ContentResolver
 ) : CalendarCacheDataSource {
 
-    override fun syncCalendarEventData(calendarEventData: CalendarEventData, calendarItem: CalendarItem): Observable<Long> =
-        when(isEventInAnyCalendar(calendarEventData.eventId)) {
-            true -> updateCalendarEventData(calendarEventData, calendarItem)
-            false -> insertCalendarEventData(calendarEventData, calendarItem)
+    override fun syncCalendarEventData(calendarEventData: CalendarEventData, calendarItem: CalendarItem): Single<Long> =
+        isEventInAnyCalendar(calendarEventData.eventId).flatMap {
+            when(it) {
+                true -> updateCalendarEventData(calendarEventData, calendarItem)
+                false -> insertCalendarEventData(calendarEventData, calendarItem)
+            }
         }
-
 
     override fun getCalendarPrimaryItems(): Single<List<CalendarItem>> {
         return Single.create<List<CalendarItem>> { emitter ->
@@ -92,30 +93,39 @@ constructor(
         return contentValues
     }
 
-    private fun insertCalendarEventData(calendarEventData: CalendarEventData, calendarItem: CalendarItem): Observable<Long> {
-        return Observable.fromCallable {
+    private fun insertCalendarEventData(calendarEventData: CalendarEventData, calendarItem: CalendarItem): Single<Long> {
+        return Single.fromCallable {
             val contentValues = mapContentValues(calendarEventData, calendarItem)
             val uri = contentResolver.insert(CalendarContract.Events.CONTENT_URI, contentValues)
             return@fromCallable uri.lastPathSegment.toLong()
         }
     }
 
-    private fun updateCalendarEventData(calendarEventData: CalendarEventData, calendarItem: CalendarItem): Observable<Long> =
-        Observable.fromCallable {
+    private fun updateCalendarEventData(calendarEventData: CalendarEventData, calendarItem: CalendarItem): Single<Long> =
+        Single.fromCallable {
             val uri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, calendarEventData.eventId)
             contentResolver.update(uri, mapContentValues(calendarEventData, calendarItem), null, null)
             return@fromCallable uri.lastPathSegment.toLong()
         }
 
-    private fun isEventInAnyCalendar(eventId: Long): Boolean {
-        contentResolver
-                .query(CalendarContract.Events.CONTENT_URI, arrayOf(CalendarContract.Events._ID, CalendarContract.Events.CALENDAR_ID), CalendarContract.Events._ID + " = ? ", arrayOf(eventId.toString()), null)
-                .use {
-                    it.moveToFirst()
-                    if (!it.isAfterLast) {
-                        return true
+    private fun isEventInAnyCalendar(eventId: Long): Single<Boolean> {
+        return Single.create<Boolean> { emitter ->
+            val cursor: Cursor? = contentResolver
+                    .query(CalendarContract.Events.CONTENT_URI, arrayOf(CalendarContract.Events._ID, CalendarContract.Events.CALENDAR_ID), CalendarContract.Events._ID + " = ? ", arrayOf(eventId.toString()), null)
+            try {
+                if (cursor != null) {
+                    cursor.moveToFirst()
+                    if (!emitter.isDisposed) {
+                        emitter.onSuccess(!cursor.isAfterLast)
                     }
-                    return false
                 }
+            } catch (e: Exception) {
+                if (!emitter.isDisposed) {
+                    emitter.onError(e)
+                }
+            } finally {
+                cursor?.close()
+            }
+        }
     }
 }

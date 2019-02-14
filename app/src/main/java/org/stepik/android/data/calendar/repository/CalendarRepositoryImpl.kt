@@ -1,6 +1,5 @@
 package org.stepik.android.data.calendar.repository
 
-import io.reactivex.Observable
 import io.reactivex.Single
 import org.stepic.droid.model.CalendarItem
 import org.stepik.android.data.calendar.source.CalendarCacheDataSource
@@ -14,7 +13,7 @@ constructor(
     private val calendarCacheDataSource: CalendarCacheDataSource
 ) : CalendarRepository {
 
-    override fun syncCalendarEventData(calendarEventData: CalendarEventData, calendarItem: CalendarItem): Observable<Long> {
+    override fun syncCalendarEventData(calendarEventData: CalendarEventData, calendarItem: CalendarItem): Single<Long> {
         return calendarCacheDataSource.syncCalendarEventData(calendarEventData, calendarItem)
     }
 
