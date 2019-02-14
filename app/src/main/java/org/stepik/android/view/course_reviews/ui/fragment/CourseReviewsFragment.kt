@@ -3,10 +3,12 @@ package org.stepik.android.view.course_reviews.ui.fragment
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +18,7 @@ import kotlinx.android.synthetic.main.fragment_course_reviews.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.util.argument
+import org.stepic.droid.util.setTextColor
 import org.stepik.android.presentation.course_reviews.CourseReviewsPresenter
 import org.stepik.android.presentation.course_reviews.CourseReviewsView
 import org.stepik.android.view.course_reviews.ui.adapter.CourseReviewsAdapter
@@ -69,6 +72,23 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
 
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL).apply {
                 ContextCompat.getDrawable(context, R.drawable.list_divider_h)?.let(::setDrawable)
+            })
+
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    val layoutManager = (recyclerView.layoutManager as? LinearLayoutManager)
+                        ?: return
+
+                    if (dy > 0) {
+                        val visibleItemCount = layoutManager.childCount
+                        val totalItemCount = layoutManager.itemCount
+                        val pastVisibleItems = layoutManager.findFirstVisibleItemPosition()
+
+                        if (visibleItemCount + pastVisibleItems >= totalItemCount) {
+                            courseReviewsPresenter.fetchNextPageFromRemote()
+                        }
+                    }
+                }
             })
         }
 
