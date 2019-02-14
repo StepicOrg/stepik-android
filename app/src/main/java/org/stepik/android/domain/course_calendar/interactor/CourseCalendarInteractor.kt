@@ -1,9 +1,12 @@
 package org.stepik.android.domain.course_calendar.interactor
 
+import android.content.Context
 import io.reactivex.Completable
-import io.reactivex.Observable
 import io.reactivex.Single
+import io.reactivex.rxkotlin.toObservable
+import org.stepic.droid.R
 import org.stepic.droid.model.CalendarItem
+import org.stepic.droid.util.doCompletableOnSuccess
 import org.stepik.android.domain.calendar.model.CalendarEventData
 import org.stepik.android.domain.calendar.repository.CalendarRepository
 import org.stepik.android.domain.course_calendar.model.SectionDateEvent
@@ -14,34 +17,47 @@ import javax.inject.Inject
 class CourseCalendarInteractor
 @Inject
 constructor(
+    private val context: Context,
     private val calendarRepository: CalendarRepository,
     private val courseCalendarRepository: CourseCalendarRepository
 ) {
     fun getCalendarItems(): Single<List<CalendarItem>> =
             calendarRepository.getCalendarItems()
 
-    fun syncDeadlinesWithCalendar(event: CalendarEventData, calendarItem: CalendarItem): Single<Long> {
-        return calendarRepository.syncCalendarEventData(event, calendarItem)
+    fun applyDatesToCalendar(dates: List<CourseContentItem>, calendarItem: CalendarItem): Completable {
+        return getSectionsEvents()
+            .flatMap { sectionEvents ->
+                dates
+                    .filterIsInstance<CourseContentItem.SectionItem>()
+                    .flatMap { sectionItem ->
+                        sectionItem.dates.map { date ->
+                            sectionItem.section.id to CalendarEventData(
+                                eventId = sectionEvents
+                                        .find { sectionDateEvent ->
+                                            sectionDateEvent.sectionId == sectionItem.section.id }?.eventId ?: -1,
+                                title = context.getString(
+                                        R.string.course_content_calendar_title,
+                                        sectionItem.section.title,
+                                        context.getString(date.titleRes)
+                                ),
+                                deadLine = date.date)
+                            }
+                        }
+                    .toObservable()
+                        .flatMap{ (sectionId, eventData) ->
+                            calendarRepository
+                                    .syncCalendarEventData(eventData, calendarItem)
+                                    .map { eventId ->
+                                        SectionDateEvent(eventId, sectionId)
+                                    }.toObservable()
+                        }
+                    .toList()
+                    .doCompletableOnSuccess { courseCalendarRepository.saveSectionDateEvents(it) }
+            }.ignoreElement()
+
     }
 
-    fun applyDatesToCalendar(dates: List<CourseContentItem>, calendarItem: CalendarItem): Completable =
-        Completable.complete()
-
-    fun mapCalendarData(dates: List<CourseContentItem>, events: List<SectionDateEvent>): List<CalendarEventData> {
-        val result = arrayListOf<CalendarEventData>()
-        dates.forEach { item ->
-            if (item is CourseContentItem.SectionItem) {
-                events
-                    .find { it.sectionId == item.section.id }
-                    .let {
-                        result.add(CalendarEventData(
-                                eventId = it?.eventId ?: -1,
-                                title = item.section.title!!,
-                                deadLine = item.dates.first().date)
-                        )
-                    }
-            }
-        }
-        return result
+    private fun getSectionsEvents(): Single<List<SectionDateEvent>> {
+        return courseCalendarRepository.getSectionDateEvents()
     }
 }
