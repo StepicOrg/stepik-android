@@ -4,11 +4,12 @@ import android.content.ContentResolver
 import android.content.ContentUris
 import android.content.ContentValues
 import android.database.Cursor
+import android.net.Uri
 import android.os.Build
 import android.provider.CalendarContract
-import io.reactivex.Observable
 import io.reactivex.Single
 import org.stepic.droid.model.CalendarItem
+import org.stepic.droid.util.AppConstants
 import org.stepik.android.data.calendar.source.CalendarCacheDataSource
 import org.stepik.android.domain.calendar.model.CalendarEventData
 import timber.log.Timber
@@ -22,12 +23,7 @@ constructor(
 ) : CalendarCacheDataSource {
 
     override fun syncCalendarEventData(calendarEventData: CalendarEventData, calendarItem: CalendarItem): Single<Long> =
-        isEventInAnyCalendar(calendarEventData.eventId).flatMap {
-            when(it) {
-                true -> updateCalendarEventData(calendarEventData, calendarItem)
-                false -> insertCalendarEventData(calendarEventData, calendarItem)
-            }
-        }
+        insertCalendarEventData(calendarEventData, calendarItem)
 
     override fun getCalendarPrimaryItems(): Single<List<CalendarItem>> {
         return Single.create<List<CalendarItem>> { emitter ->
@@ -79,8 +75,8 @@ constructor(
     }
 
     private fun mapContentValues(calendarEventData: CalendarEventData, calendarItem: CalendarItem): ContentValues {
-        val dateEndInMillis = calendarEventData.deadLine.time //UTC
-        val dateStartInMillis = dateEndInMillis - 3600000L
+        val dateEndInMillis = calendarEventData.deadLine.time
+        val dateStartInMillis = dateEndInMillis - AppConstants.MILLIS_IN_1HOUR
 
         val contentValues = ContentValues()
         contentValues.put(CalendarContract.Events.DTSTART, dateStartInMillis)
@@ -95,37 +91,14 @@ constructor(
 
     private fun insertCalendarEventData(calendarEventData: CalendarEventData, calendarItem: CalendarItem): Single<Long> {
         return Single.fromCallable {
-            val contentValues = mapContentValues(calendarEventData, calendarItem)
-            val uri = contentResolver.insert(CalendarContract.Events.CONTENT_URI, contentValues)
-            return@fromCallable uri.lastPathSegment.toLong()
+            if (calendarEventData.eventId != -1L) deleteEventById(calendarEventData.eventId)
+            return@fromCallable contentResolver
+                    .insert(CalendarContract.Events.CONTENT_URI, mapContentValues(calendarEventData, calendarItem))
+                    .lastPathSegment.toLong()
         }
     }
 
-    private fun updateCalendarEventData(calendarEventData: CalendarEventData, calendarItem: CalendarItem): Single<Long> =
-        Single.fromCallable {
-            val uri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, calendarEventData.eventId)
-            contentResolver.update(uri, mapContentValues(calendarEventData, calendarItem), null, null)
-            return@fromCallable uri.lastPathSegment.toLong()
-        }
+    private fun deleteEventById(id: Long) =
+        contentResolver.delete(ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, id), null, null)
 
-    private fun isEventInAnyCalendar(eventId: Long): Single<Boolean> {
-        return Single.create<Boolean> { emitter ->
-            val cursor: Cursor? = contentResolver
-                    .query(CalendarContract.Events.CONTENT_URI, arrayOf(CalendarContract.Events._ID, CalendarContract.Events.CALENDAR_ID), CalendarContract.Events._ID + " = ? ", arrayOf(eventId.toString()), null)
-            try {
-                if (cursor != null) {
-                    cursor.moveToFirst()
-                    if (!emitter.isDisposed) {
-                        emitter.onSuccess(!cursor.isAfterLast)
-                    }
-                }
-            } catch (e: Exception) {
-                if (!emitter.isDisposed) {
-                    emitter.onError(e)
-                }
-            } finally {
-                cursor?.close()
-            }
-        }
-    }
 }
