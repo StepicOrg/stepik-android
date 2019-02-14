@@ -64,8 +64,8 @@
 
     <org.stepic.droid.features.achievements.ui.custom.VectorRatingBar
         android:id="@+id/reviewRating"
-        app:backgroundIcon="@drawable/ic_progress_star_white"
-        app:secondaryIcon="@drawable/ic_progress_star_white"
+        app:backgroundIcon="@drawable/ic_progress_star_white_filled"
+        app:secondaryIcon="@drawable/ic_progress_star_white_filled"
         app:progressIcon="@drawable/ic_progress_star_green_filled"
         app:itemsGap="2dp"
         android:layout_width="wrap_content"
