@@ -102,11 +102,11 @@ constructor(
     fun fetchNextPageFromRemote() {
         val oldState = state
 
-        val currentItems = (oldState as? CourseReviewsView.State.CourseReviewsRemote)?.courseReviewItems
+        val oldItems = (oldState as? CourseReviewsView.State.CourseReviewsRemote)?.courseReviewItems
             ?: (oldState as? CourseReviewsView.State.CourseReviewsCache)?.courseReviewItems
             ?: return
 
-        val oldItems =
+        val currentItems =
             when {
                 oldState is CourseReviewsView.State.CourseReviewsRemote
                         && oldState.courseReviewItems.hasNext ->
@@ -118,18 +118,18 @@ constructor(
                 else -> return
             }
 
-        val nextPage = (oldItems as? PagedList<CourseReviewItem.Data>)
+        val nextPage = (currentItems as? PagedList<CourseReviewItem.Data>)
             ?.page
             ?.plus(1)
             ?: 1
 
-        state = CourseReviewsView.State.CourseReviewsRemoteLoading(currentItems)
+        state = CourseReviewsView.State.CourseReviewsRemoteLoading(oldItems)
         paginationDisposable += courseReviewsInteractor
             .getCourseReviewItems(courseId, page = nextPage, sourceType = DataSourceType.REMOTE)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onSuccess = { state = CourseReviewsView.State.CourseReviewsRemote(oldItems.concatWithPagedList(it)) },
+                onSuccess = { state = CourseReviewsView.State.CourseReviewsRemote(currentItems.concatWithPagedList(it)) },
                 onError   = { state = oldState; view?.showNetworkError() }
             )
     }
