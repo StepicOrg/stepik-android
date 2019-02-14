@@ -17,6 +17,7 @@ import org.stepic.droid.storage.structure.*
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DbParseHelper
 import org.stepic.droid.web.ViewAssignment
+import org.stepik.android.cache.course_calendar.structure.DbStructureSectionDateEvent
 import org.stepik.android.cache.section.structure.DbStructureSection
 import org.stepik.android.cache.unit.structure.DbStructureUnit
 import org.stepik.android.cache.lesson.structure.DbStructureLesson
@@ -375,6 +376,13 @@ constructor(
 
     fun getSectionDateEvents() = sectionDateEventDao.getAll()
 
-    fun addSectionDateEvents(events: List<SectionDateEvent>) =
-            sectionDateEventDao.insertOrReplaceAll(events)
+    fun addSectionDateEvents(events: List<SectionDateEvent>) {
+        events.forEach { addSectionsDateEvent(it) }
+    }
+
+    fun addSectionsDateEvent(sectionDateEvent: SectionDateEvent) {
+        sectionDateEventDao.remove(mapOf(DbStructureSectionDateEvent.Columns.SECTION_ID to
+                sectionDateEvent.sectionId.toString()))
+        sectionDateEventDao.insertOrReplace(sectionDateEvent)
+    }
 }
