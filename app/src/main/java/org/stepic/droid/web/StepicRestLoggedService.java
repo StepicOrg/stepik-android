@@ -281,6 +281,7 @@ public interface StepicRestLoggedService {
 
     @GET("api/course-reviews")
     Single<CourseReviewsResponse> getCourseReviewsByCourseId(
-            @Query("course") final long course
+            @Query("course") final long course,
+            @Query("page") final int page
     );
 }

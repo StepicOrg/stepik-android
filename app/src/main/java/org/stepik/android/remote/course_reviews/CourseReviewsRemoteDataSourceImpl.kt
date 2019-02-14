@@ -14,8 +14,8 @@ class CourseReviewsRemoteDataSourceImpl
 constructor(
     private val stepicRestLoggedService: StepicRestLoggedService
 ) : CourseReviewsRemoteDataSource {
-    override fun getCourseReviewsByCourseId(courseId: Long): Single<PagedList<CourseReview>> =
+    override fun getCourseReviewsByCourseId(courseId: Long, page: Int): Single<PagedList<CourseReview>> =
         stepicRestLoggedService
-            .getCourseReviewsByCourseId(courseId)
+            .getCourseReviewsByCourseId(courseId, page)
             .map { it.toPagedList(CourseReviewsResponse::courseReviews) }
 }
