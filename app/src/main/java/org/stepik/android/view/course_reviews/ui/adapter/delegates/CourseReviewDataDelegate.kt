@@ -15,14 +15,14 @@ import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.domain.course_reviews.model.CourseReviewItem
 import java.util.*
 
-class CourseReviewDelegate(
+class CourseReviewDataDelegate(
     adapter: DelegateAdapter<CourseReviewItem, DelegateViewHolder<CourseReviewItem>>
 ) : AdapterDelegate<CourseReviewItem, DelegateViewHolder<CourseReviewItem>>(adapter) {
     override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CourseReviewItem> =
         ViewHolder(createView(parent, R.layout.view_course_reviews_item))
 
     override fun isForViewType(position: Int): Boolean =
-        true
+        getItemAtPosition(position) is CourseReviewItem.Data
 
     class ViewHolder(root: View) : DelegateViewHolder<CourseReviewItem>(root) {
         private val reviewIcon = root.reviewIcon
@@ -42,6 +42,8 @@ class CourseReviewDelegate(
         }
 
         override fun onBind(data: CourseReviewItem) {
+            data as CourseReviewItem.Data
+
             Glide.with(context)
                 .load(data.user.avatar ?: "")
                 .asBitmap()

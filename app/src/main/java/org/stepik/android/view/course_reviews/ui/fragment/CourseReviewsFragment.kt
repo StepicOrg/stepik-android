@@ -19,6 +19,7 @@ import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.util.argument
 import org.stepic.droid.util.setTextColor
+import org.stepik.android.domain.course_reviews.model.CourseReviewItem
 import org.stepik.android.presentation.course_reviews.CourseReviewsPresenter
 import org.stepik.android.presentation.course_reviews.CourseReviewsView
 import org.stepik.android.view.course_reviews.ui.adapter.CourseReviewsAdapter
@@ -85,7 +86,9 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
                         val pastVisibleItems = layoutManager.findFirstVisibleItemPosition()
 
                         if (visibleItemCount + pastVisibleItems >= totalItemCount) {
-                            courseReviewsPresenter.fetchNextPageFromRemote()
+                            post {
+                                courseReviewsPresenter.fetchNextPageFromRemote()
+                            }
                         }
                     }
                 }
@@ -97,6 +100,7 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
         viewStateDelegate.addState<CourseReviewsView.State.Loading>(courseReviewsPlaceholder)
         viewStateDelegate.addState<CourseReviewsView.State.CourseReviewsCache>(courseReviewsRecycler)
         viewStateDelegate.addState<CourseReviewsView.State.CourseReviewsRemote>(courseReviewsRecycler)
+        viewStateDelegate.addState<CourseReviewsView.State.CourseReviewsRemoteLoading>(courseReviewsRecycler)
         viewStateDelegate.addState<CourseReviewsView.State.NetworkError>(reportProblem)
         viewStateDelegate.addState<CourseReviewsView.State.EmptyContent>(report_empty)
     }
@@ -119,6 +123,9 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
 
             is CourseReviewsView.State.CourseReviewsRemote ->
                 courseReviewsAdapter.items = state.courseReviewItems
+
+            is CourseReviewsView.State.CourseReviewsRemoteLoading ->
+                courseReviewsAdapter.items = state.courseReviewItems + CourseReviewItem.Placeholder
         }
     }
 

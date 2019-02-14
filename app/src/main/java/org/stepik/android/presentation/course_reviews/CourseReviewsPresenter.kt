@@ -102,6 +102,10 @@ constructor(
     fun fetchNextPageFromRemote() {
         val oldState = state
 
+        val currentItems = (oldState as? CourseReviewsView.State.CourseReviewsRemote)?.courseReviewItems
+            ?: (oldState as? CourseReviewsView.State.CourseReviewsCache)?.courseReviewItems
+            ?: return
+
         val oldItems =
             when {
                 oldState is CourseReviewsView.State.CourseReviewsRemote
@@ -109,17 +113,17 @@ constructor(
                     oldState.courseReviewItems
 
                 oldState is CourseReviewsView.State.CourseReviewsCache ->
-                    emptyList<CourseReviewItem>()
+                    emptyList<CourseReviewItem.Data>()
 
                 else -> return
             }
 
-        val nextPage = (oldItems as? PagedList<CourseReviewItem>)
+        val nextPage = (oldItems as? PagedList<CourseReviewItem.Data>)
             ?.page
             ?.plus(1)
             ?: 1
 
-        state = CourseReviewsView.State.Loading // blocking loading
+        state = CourseReviewsView.State.CourseReviewsRemoteLoading(currentItems)
         paginationDisposable += courseReviewsInteractor
             .getCourseReviewItems(courseId, page = nextPage, sourceType = DataSourceType.REMOTE)
             .subscribeOn(backgroundScheduler)
@@ -146,11 +150,18 @@ constructor(
             .subscribeBy(
                 onSuccess = { state = CourseReviewsView.State.CourseReviewsRemote(it) },
                 onError = {
-                    if (oldState is CourseReviewsView.State.CourseReviewsCache || oldState is CourseReviewsView.State.CourseReviewsRemote) {
-                        state = oldState
-                        view?.showNetworkError()
-                    } else {
-                        state = CourseReviewsView.State.NetworkError
+                    when (oldState) {
+                        is CourseReviewsView.State.CourseReviewsCache,
+                        is CourseReviewsView.State.CourseReviewsRemote -> {
+                            state = oldState
+                            view?.showNetworkError()
+                        }
+
+                        is CourseReviewsView.State.CourseReviewsRemoteLoading ->
+                            state = CourseReviewsView.State.CourseReviewsRemote(oldState.courseReviewItems)
+
+                        else ->
+                            state = CourseReviewsView.State.NetworkError
                     }
                 }
             )

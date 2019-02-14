@@ -25,7 +25,7 @@ constructor(
         courseObservableSource
             .skip(1)
 
-    fun getCourseReviewItems(courseId: Long, page: Int = 1, sourceType: DataSourceType = DataSourceType.CACHE): Single<PagedList<CourseReviewItem>> =
+    fun getCourseReviewItems(courseId: Long, page: Int = 1, sourceType: DataSourceType = DataSourceType.CACHE): Single<PagedList<CourseReviewItem.Data>> =
         courseReviewsRepository
             .getCourseReviewsByCourseId(courseId, page, sourceType)
             .flatMap { courseReviews ->
@@ -45,7 +45,7 @@ constructor(
                         val user = usersMap[review.user]
                             ?: return@mapNotNull null
 
-                        CourseReviewItem(review, user)
+                        CourseReviewItem.Data(review, user)
                     }
 
                 PagedList(courseReviewsItems, page = courseReviews.page, hasNext = courseReviews.hasNext, hasPrev = courseReviews.hasPrev)

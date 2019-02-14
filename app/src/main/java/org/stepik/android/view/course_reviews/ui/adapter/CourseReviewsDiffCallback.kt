@@ -19,7 +19,19 @@ class CourseReviewsDiffCallback(
 
         if (oldItem == newItem) return true
 
-        return oldItem.courseReview.id == newItem.courseReview.id
+        return when {
+            oldItem is CourseReviewItem.Data
+                    && newItem is CourseReviewItem.Data
+                    && oldItem.courseReview.id == newItem.courseReview.id
+                -> true
+
+            oldItem is CourseReviewItem.Placeholder
+                    && newItem is CourseReviewItem.Placeholder
+                -> true
+
+            else
+                -> false
+        }
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
@@ -28,8 +40,20 @@ class CourseReviewsDiffCallback(
 
         if (oldItem == newItem) return true
 
-        return oldItem.user == newItem.user &&
-                oldItem.courseReview.text == newItem.courseReview.text &&
-                oldItem.courseReview.score == newItem.courseReview.score
+        return when {
+            oldItem is CourseReviewItem.Data
+                    && newItem is CourseReviewItem.Data
+                    && oldItem.user == newItem.user
+                    && oldItem.courseReview.text == newItem.courseReview.text
+                    && oldItem.courseReview.score == newItem.courseReview.score
+                -> true
+
+            oldItem is CourseReviewItem.Placeholder
+                    && newItem is CourseReviewItem.Placeholder
+                -> true
+
+            else
+                -> false
+        }
     }
 }
