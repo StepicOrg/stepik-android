@@ -7,3 +7,6 @@ class PagedList<E>(
     val hasNext: Boolean = false,
     val hasPrev: Boolean = false
 ) : List<E> by list
+
+fun <E> List<E>.concatWithPagedList(pagedList: PagedList<E>): PagedList<E> =
+    PagedList(this + pagedList, page = pagedList.page, hasNext = pagedList.hasNext, hasPrev = pagedList.hasPrev)
