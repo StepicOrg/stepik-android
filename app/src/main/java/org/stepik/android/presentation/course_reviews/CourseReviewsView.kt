@@ -15,4 +15,5 @@ interface CourseReviewsView {
     }
 
     fun setState(state: State)
+    fun showNetworkError()
 }

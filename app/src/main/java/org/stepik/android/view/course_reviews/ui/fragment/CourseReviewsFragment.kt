@@ -102,6 +102,16 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
         }
     }
 
+    override fun showNetworkError() {
+        val view = view
+            ?: return
+
+        Snackbar
+            .make(view, R.string.connectionProblems, Snackbar.LENGTH_SHORT)
+            .setTextColor(ContextCompat.getColor(view.context, R.color.white))
+            .show()
+    }
+
     override fun onDestroy() {
         releaseComponent(courseId)
         super.onDestroy()
