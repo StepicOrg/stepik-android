@@ -13,7 +13,7 @@ object DbStructureSectionDateEvent {
 
     fun createTable(db: SQLiteDatabase) {
         db.execSQL("""
-            CREATE TABLE IF NOT EXISTS ${DbStructureLesson.TABLE_NAME} (
+            CREATE TABLE IF NOT EXISTS ${DbStructureSectionDateEvent.TABLE_NAME} (
                 ${DbStructureSectionDateEvent.Columns.EVENT_ID} LONG PRIMARY KEY,
                 ${DbStructureSectionDateEvent.Columns.SECTION_ID} LONG
             )
