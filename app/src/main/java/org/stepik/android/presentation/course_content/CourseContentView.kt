@@ -1,5 +1,6 @@
 package org.stepik.android.presentation.course_content
 
+import android.support.annotation.StringRes
 import org.stepic.droid.model.CalendarItem
 import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepik.android.model.Course
@@ -34,4 +35,6 @@ interface CourseContentView {
     fun showPersonalDeadlinesError()
 
     fun showCalendarChoiceDialog(calendarItems: List<CalendarItem>)
+    fun showCalendarSyncSuccess()
+    fun showCalendarError(@StringRes error: Int)
 }

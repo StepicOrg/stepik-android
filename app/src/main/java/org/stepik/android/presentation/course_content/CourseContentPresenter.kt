@@ -5,6 +5,7 @@ import io.reactivex.Scheduler
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
+import org.stepic.droid.R
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.CourseId
 import org.stepic.droid.di.qualifiers.MainScheduler
@@ -414,28 +415,30 @@ constructor(
     }
 
     fun getCalendarPrimaryItems() {
+        isBlockingLoading = true
         compositeDisposable += courseCalendarInteractor
                 .getCalendarItems()
                 .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)
+                .doFinally {isBlockingLoading = false}
                 .subscribeBy(
                     onSuccess = { view?.showCalendarChoiceDialog(it) },
-                    onError = { Timber.d("Calendar items error, $it")}
+                    onError = { view?.showCalendarError(R.string.request_error)}
                 )
     }
 
     fun applyDates(calendarItem: CalendarItem) {
-        val items =
-                (state as? CourseContentView.State.CourseContentLoaded)
-                        ?.courseContent
+        val items = (state as? CourseContentView.State.CourseContentLoaded)
+                ?.courseContent
+                ?: return
 
         compositeDisposable += courseCalendarInteractor
-                .applyDatesToCalendar(items!!, calendarItem)
+                .applyDatesToCalendar(items, calendarItem)
                 .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)
                 .subscribeBy(
-                        onComplete = {Timber.d("Complete")},
-                        onError = {Timber.d("Fail")}
+                        onComplete = {view?.showCalendarSyncSuccess()},
+                        onError = {view?.showCalendarError(R.string.request_error)}
                 )
     }
 

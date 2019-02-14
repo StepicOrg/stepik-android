@@ -8,6 +8,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.design.widget.Snackbar
+import android.support.v4.app.ActivityCompat
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
@@ -136,7 +137,7 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
                             courseContentPresenter.removeDeadlines()
 
                         override fun onSynchronizeScheduleClicked() {
-                            checkPermissions()
+                            syncCalendarDates()
                         }
 
                         override fun onDownloadAllClicked(course: Course) =
@@ -307,6 +308,11 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
                 ?.takeIf { it.findFragmentByTag(ChooseCalendarDialog.TAG) == null }
                 ?: return
 
+        if (calendarItems.isEmpty()) {
+            showCalendarError(R.string.course_content_calendar_no_calendars_error)
+            return
+        }
+
         val dialog = ChooseCalendarDialog.newInstance(calendarItems)
         dialog.setTargetFragment(this, ChooseCalendarDialog.CHOOSE_CALENDAR_REQUEST_CODE)
         dialog.show(supportFragmentManager, ChooseCalendarDialog.TAG)
@@ -327,7 +333,7 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
         dialog.show(supportFragmentManager, ExplainCalendarPermissionDialog.TAG)
     }
 
-    private fun checkPermissions() {
+    private fun syncCalendarDates() {
         if (!arePermissionsGranted(listOf(Manifest.permission.WRITE_CALENDAR,  Manifest.permission.READ_CALENDAR))) {
             showExplainPermissionsDialog()
         } else {
@@ -342,9 +348,29 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
         ))
     }
 
+    override fun showCalendarSyncSuccess() {
+        val view = view
+            ?: return
+
+        Snackbar
+            .make(view, R.string.course_content_calendar_sync_success, Snackbar.LENGTH_SHORT)
+            .setTextColor(ContextCompat.getColor(view.context, R.color.white))
+            .show()
+    }
+
+    override fun showCalendarError(error: Int) {
+        val view = view
+            ?: return
+
+        Snackbar
+            .make(view, error, Snackbar.LENGTH_SHORT)
+            .setTextColor(ContextCompat.getColor(view.context, R.color.white))
+            .show()
+    }
+
     private fun arePermissionsGranted(permissions: List<String>): Boolean {
         for (permission in permissions) {
-            if (ContextCompat.checkSelfPermission(context!!, permission) != PackageManager.PERMISSION_GRANTED)
+            if (ContextCompat.checkSelfPermission(requireContext(), permission) != PackageManager.PERMISSION_GRANTED)
                 return false
         }
         return true
@@ -353,18 +379,23 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
     private fun requestMultiplePermissions(permissions: List<String>) {
         val remainingPermissions = arrayListOf<String>()
         for (permission in permissions)
-            if (ContextCompat.checkSelfPermission(context!!, permission) != PackageManager.PERMISSION_GRANTED)
+            if (ContextCompat.checkSelfPermission(requireContext(), permission) != PackageManager.PERMISSION_GRANTED)
                 remainingPermissions.add(permission)
         requestPermissions(permissions.toTypedArray(), ExplainCalendarPermissionDialog.REQUEST_CALENDAR_PERMISSION)
     }
 
-    // TODO Probably should handle shouldShowRequestPermissionRationale()?
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         when (requestCode) {
             ExplainCalendarPermissionDialog.REQUEST_CALENDAR_PERMISSION -> {
                 for (i in grantResults.indices) {
-                    if (grantResults[i] != PackageManager.PERMISSION_GRANTED)
-                        return
+                    if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                        if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), permissions[i])) {
+                            return
+                        } else {
+                            showCalendarError(R.string.course_content_calendar_permission_error)
+                            return
+                        }
+                    }
                 }
                 courseContentPresenter.getCalendarPrimaryItems()
             }
