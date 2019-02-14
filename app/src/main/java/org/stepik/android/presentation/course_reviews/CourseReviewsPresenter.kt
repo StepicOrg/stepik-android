@@ -129,8 +129,13 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onSuccess = { state = CourseReviewsView.State.CourseReviewsRemote(currentItems.concatWithPagedList(it)) },
-                onError   = { state = oldState; view?.showNetworkError() }
+                onSuccess = {
+                    state = CourseReviewsView.State.CourseReviewsRemote(currentItems.concatWithPagedList(it))
+                    if (oldState is CourseReviewsView.State.CourseReviewsCache) {
+                        fetchNextPageFromRemote() // load 2 page from remote after going online
+                    }
+                },
+                onError = { state = oldState; view?.showNetworkError() }
             )
     }
 
