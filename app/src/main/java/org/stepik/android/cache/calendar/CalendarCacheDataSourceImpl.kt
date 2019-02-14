@@ -3,6 +3,7 @@ package org.stepik.android.cache.calendar
 import android.content.ContentResolver
 import android.content.ContentUris
 import android.content.ContentValues
+import android.database.Cursor
 import android.os.Build
 import android.provider.CalendarContract
 import io.reactivex.Observable
@@ -28,40 +29,51 @@ constructor(
 
 
     override fun getCalendarPrimaryItems(): Single<List<CalendarItem>> {
-        return Single.fromCallable {
-            val listOfCalendarItems = ArrayList<CalendarItem>()
-            contentResolver.query(CalendarContract.Calendars.CONTENT_URI, null, null, null, null).use {
-                it.moveToFirst()
-                while (!it.isAfterLast) {
-                    val indexId = it.getColumnIndex(CalendarContract.Calendars._ID)
-                    var indexIsPrimary = -1
-                    try {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                            indexIsPrimary = it.getColumnIndex(CalendarContract.Calendars.IS_PRIMARY)
+        return Single.create<List<CalendarItem>> { emitter ->
+            val listOfCalendarItems = mutableListOf<CalendarItem>()
+            val cursor: Cursor? = contentResolver.query(CalendarContract.Calendars.CONTENT_URI, null, null, null, null)
+            try {
+                if (cursor != null) {
+                    cursor.moveToFirst()
+                    while (!cursor.isAfterLast && !emitter.isDisposed) {
+                        val indexId = cursor.getColumnIndex(CalendarContract.Calendars._ID)
+                        var indexIsPrimary = -1
+                        try {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                                indexIsPrimary = cursor.getColumnIndex(CalendarContract.Calendars.IS_PRIMARY)
+                            }
+                            if (indexIsPrimary < 0) {
+                                indexIsPrimary = cursor.getColumnIndex("COALESCE(isPrimary, ownerAccount = account_name)")//look at http://stackoverflow.com/questions/25870556/check-if-calendar-is-primary
+                            }
+                        } catch (ex: NoSuchFieldError) {
+                            //if no such field we will show all calendars, see below
                         }
-                        if (indexIsPrimary < 0) {
-                            indexIsPrimary = it.getColumnIndex("COALESCE(isPrimary, ownerAccount = account_name)")//look at http://stackoverflow.com/questions/25870556/check-if-calendar-is-primary
+                        val indexOwner = cursor.getColumnIndex(CalendarContract.Calendars.OWNER_ACCOUNT)
+
+                        var isPrimary = false
+                        if (indexIsPrimary >= 0) {
+                            isPrimary = cursor.getInt(indexIsPrimary) > 0
                         }
-                    } catch (ex: NoSuchFieldError) {
-                        //if no such field we will show all calendars, see below
-                    }
-                    val indexOwner = it.getColumnIndex(CalendarContract.Calendars.OWNER_ACCOUNT)
+                        val calendarId = cursor.getLong(indexId)
+                        val owner = cursor.getString(indexOwner)
 
-                    var isPrimary = false
-                    if (indexIsPrimary >= 0) {
-                        isPrimary = it.getInt(indexIsPrimary) > 0
-                    }
-                    val calendarId = it.getLong(indexId)
-                    val owner = it.getString(indexOwner)
+                        if (isPrimary) {
+                            listOfCalendarItems.add(CalendarItem(calendarId, owner, isPrimary))
+                        }
 
-                    if (isPrimary) {
-                        listOfCalendarItems.add(CalendarItem(calendarId, owner, isPrimary))
+                        cursor.moveToNext()
                     }
-
-                    it.moveToNext()
                 }
+                if (!emitter.isDisposed) {
+                    emitter.onSuccess(listOfCalendarItems)
+                }
+            } catch (e: Exception) {
+                if (!emitter.isDisposed) {
+                    emitter.onError(e)
+                }
+            } finally {
+                cursor?.close()
             }
-            listOfCalendarItems
         }
     }
 
