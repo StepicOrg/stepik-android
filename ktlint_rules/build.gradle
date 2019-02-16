@@ -3,3 +3,9 @@ apply plugin: 'kotlin'
 dependencies {
     implementation libraries.ktlint
 }
+
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
