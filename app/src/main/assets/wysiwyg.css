@@ -306,4 +306,23 @@
   .tex .hljs-formula {
       background: #eee8d5
   }
+
+  body table {
+      border-collapse: collapse;
+      border-spacing: 0;
+      margin: 0;
+      padding: 0;
+      background-color: #fff;
+      border: 1px solid #ddd
+  }
+
+  body table tr:nth-of-type(even) {
+      background-color: #f9f9f9
+  }
+
+  body table tr td {
+      padding: .5625em .625em;
+      line-height: inherit;
+      color: inherit;
+      font-size: inherit
   }
