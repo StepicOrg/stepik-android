@@ -71,6 +71,10 @@ public class HtmlHelper {
         return text.contains("kotlin-runnable");
     }
 
+    private static boolean hasHighlightableCode(String text) {
+        return text.contains("<code");
+    }
+
     /**
      * get meta value
      *
@@ -181,6 +185,11 @@ public class HtmlHelper {
         if (hasKotlinRunnableSample(body.toString())) {
             additionalScripts.add(KotlinRunnableSamplesScript);
         }
+
+        if (hasHighlightableCode(body.toString())) {
+            additionalScripts.add(HighlightScript);
+        }
+
         String scripts = CollectionsKt.joinToString(additionalScripts, "", "", "", -1, "", null);
         String preBody = String.format(Locale.getDefault(), PRE_BODY, scripts, getStyle(fontSize, fontPath, textColorHighlight), widthPx, baseUrl);
 
@@ -334,6 +343,12 @@ public class HtmlHelper {
                     "<script type=\"text/javascript\"\n" +
                     " src=\"file:///android_asset/MathJax/MathJax.js?config=TeX-AMS_HTML\">\n" +
                     "</script>\n";
+
+    private static final String HighlightScript =
+            "<script type=\"text/javascript\"\n" +
+                    " src=\"file:///android_asset/scripts/highlight.pack.js\">\n" +
+                    "</script>\n" +
+                    "<script>hljs.initHighlightingOnLoad();</script>\n";
 
     public static String getUserPath(Config config, int userId) {
         return new StringBuilder()
