@@ -18,6 +18,6 @@ interface LocalReminder {
     fun remindAboutRegistration()
 
     @AnyThread
-    fun scheduleRetentionNotification()
+    fun scheduleRetentionNotification(shouldResetCounter: Boolean = true)
 
 }
