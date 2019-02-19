@@ -5,7 +5,6 @@ import io.reactivex.Scheduler
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
-import org.stepic.droid.R
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.CourseId
 import org.stepic.droid.di.qualifiers.MainScheduler
@@ -28,6 +27,7 @@ import org.stepik.android.model.Progress
 import org.stepik.android.model.Section
 import org.stepik.android.model.Unit
 import org.stepik.android.presentation.base.PresenterBase
+import org.stepik.android.presentation.course_calendar.model.CalendarError
 import org.stepik.android.presentation.course_content.mapper.CourseContentStateMapper
 import org.stepik.android.presentation.personal_deadlines.model.PersonalDeadlinesState
 import org.stepik.android.view.course_content.model.CourseContentItem
@@ -422,7 +422,7 @@ constructor(
                 .doFinally { isBlockingLoading = false }
                 .subscribeBy(
                     onSuccess = { view?.showCalendarChoiceDialog(it) },
-                    onError = { view?.showCalendarError(R.string.request_error)}
+                    onError = { view?.showCalendarError(CalendarError.GENERIC_ERROR)}
                 )
     }
 
@@ -437,7 +437,7 @@ constructor(
                 .observeOn(mainScheduler)
                 .subscribeBy(
                     onComplete = { view?.showCalendarSyncSuccess() },
-                    onError = { view?.showCalendarError(R.string.request_error) }
+                    onError = { view?.showCalendarError(CalendarError.GENERIC_ERROR) }
                 )
     }
 

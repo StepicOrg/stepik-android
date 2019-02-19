@@ -7,6 +7,7 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.support.annotation.StringRes
 import android.support.design.widget.Snackbar
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.DialogFragment
@@ -46,6 +47,7 @@ import org.stepik.android.domain.personal_deadlines.model.LearningRate
 import org.stepik.android.model.Course
 import org.stepik.android.model.Section
 import org.stepik.android.model.Unit
+import org.stepik.android.presentation.course_calendar.model.CalendarError
 import org.stepik.android.presentation.course_content.CourseContentPresenter
 import org.stepik.android.presentation.course_content.CourseContentView
 import org.stepik.android.view.course_calendar.ui.ChooseCalendarDialog
@@ -309,7 +311,7 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
                 ?: return
 
         if (calendarItems.isEmpty()) {
-            showCalendarError(R.string.course_content_calendar_no_calendars_error)
+            showCalendarError(CalendarError.NO_CALENDARS_ERROR)
             return
         }
 
@@ -358,12 +360,25 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
             .show()
     }
 
-    override fun showCalendarError(error: Int) {
+    override fun showCalendarError(errorType: CalendarError) {
         val view = view
             ?: return
 
+        @StringRes
+        val errorMessage =
+            when (errorType) {
+                CalendarError.GENERIC_ERROR ->
+                    R.string.request_error
+
+                CalendarError.NO_CALENDARS_ERROR ->
+                    R.string.course_content_calendar_no_calendars_error
+
+                CalendarError.PERMISSION_ERROR ->
+                    R.string.course_content_calendar_permission_error
+            }
+
         Snackbar
-            .make(view, error, Snackbar.LENGTH_SHORT)
+            .make(view, errorMessage, Snackbar.LENGTH_SHORT)
             .setTextColor(ContextCompat.getColor(view.context, R.color.white))
             .show()
     }
@@ -392,7 +407,7 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
                         if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), permissions[i])) {
                             return
                         } else {
-                            showCalendarError(R.string.course_content_calendar_permission_error)
+                            showCalendarError(CalendarError.PERMISSION_ERROR)
                             return
                         }
                     }

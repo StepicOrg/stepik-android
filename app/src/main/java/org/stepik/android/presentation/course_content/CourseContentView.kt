@@ -6,6 +6,7 @@ import org.stepik.android.domain.calendar.model.CalendarItem
 import org.stepik.android.model.Course
 import org.stepik.android.model.Section
 import org.stepik.android.model.Unit
+import org.stepik.android.presentation.course_calendar.model.CalendarError
 import org.stepik.android.presentation.personal_deadlines.model.PersonalDeadlinesState
 import org.stepik.android.view.course_content.model.CourseContentItem
 
@@ -36,5 +37,5 @@ interface CourseContentView {
 
     fun showCalendarChoiceDialog(calendarItems: List<CalendarItem>)
     fun showCalendarSyncSuccess()
-    fun showCalendarError(@StringRes error: Int)
+    fun showCalendarError(error: CalendarError)
 }
