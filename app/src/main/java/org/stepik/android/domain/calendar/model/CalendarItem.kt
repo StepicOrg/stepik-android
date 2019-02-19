@@ -2,33 +2,33 @@ package org.stepik.android.domain.calendar.model
 
 import android.os.Parcel
 import android.os.Parcelable
+import org.stepik.android.model.util.readBoolean
+import org.stepik.android.model.util.writeBoolean
 
 data class CalendarItem(
-    var calendarId: Long = 0,
-    var owner: String = "",
-    var isPrimary: Boolean = false
+    val calendarId: Long = 0,
+    val owner: String = "",
+    val isPrimary: Boolean = false
 ) : Parcelable {
 
 
     override fun describeContents() = 0
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
-        dest.writeLong(calendarId)
-        dest.writeString(owner)
-        dest.writeInt(if (isPrimary) 1 else 0)
+        dest.writeLong(this.calendarId)
+        dest.writeString(this.owner)
+        dest.writeBoolean(this.isPrimary)
     }
 
     companion object CREATOR : Parcelable.Creator<CalendarItem> {
-        override fun createFromParcel(parcel: Parcel): CalendarItem {
-            return CalendarItem(
-                    parcel.readLong(),
-                    parcel.readString(),
-                    parcel.readInt() == 1
+        override fun createFromParcel(parcel: Parcel): CalendarItem =
+            CalendarItem(
+                parcel.readLong(),
+                parcel.readString(),
+                parcel.readBoolean()
             )
-        }
 
-        override fun newArray(size: Int): Array<CalendarItem?> {
-            return arrayOfNulls(size)
-        }
+        override fun newArray(size: Int): Array<CalendarItem?> = arrayOfNulls(size)
+
     }
 }
