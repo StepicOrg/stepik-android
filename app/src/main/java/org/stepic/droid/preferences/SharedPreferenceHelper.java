@@ -95,6 +95,10 @@ public class SharedPreferenceHelper {
     private final String RATE_LAST_TIMESTAMP = "rate_last_timestamp";
     private final String RATE_TIMES_SHOWN = "rate_times_shown";
     private final String RATE_WAS_HANDLED = "rate_was_handled";
+
+    private final static String LAST_SESSION_TIMESTAMP = "last_session_timestamp";
+    private final static String RETENTION_NOTITICATION_TIMESTAMP = "retention_notification_timestamp";
+
     private AuthenticationStepikResponse cachedAuthStepikResponse = null;
 
 
@@ -205,6 +209,22 @@ public class SharedPreferenceHelper {
         return getLong(PreferenceType.DEVICE_SPECIFIC, REGISTRATION_ALARM_TIMESTAMP);
     }
 
+    public void saveLastSessionTimestamp(long scheduleMillis) {
+        put(PreferenceType.DEVICE_SPECIFIC, LAST_SESSION_TIMESTAMP, scheduleMillis);
+    }
+
+    public long getLastSessionTimestamp() {
+        return getLong(PreferenceType.DEVICE_SPECIFIC, LAST_SESSION_TIMESTAMP);
+    }
+
+    public void saveRetentionNotificationTimestamp(long scheduleMillis) {
+        put(PreferenceType.DEVICE_SPECIFIC, RETENTION_NOTITICATION_TIMESTAMP, scheduleMillis);
+    }
+
+    public long getRetentionNotificationTimestamp() {
+        return getLong(PreferenceType.DEVICE_SPECIFIC, RETENTION_NOTITICATION_TIMESTAMP);
+    }
+
     /**
      * Lang widget should be kept the whole session after first time catalog was opened after new login
      */
@@ -224,6 +244,7 @@ public class SharedPreferenceHelper {
 
     public void onNewSession() {
         put(PreferenceType.LOGIN, NEED_SHOW_LANG_WIDGET, false);
+        saveLastSessionTimestamp(DateTimeHelper.INSTANCE.nowLocal());
     }
 
     public void clickEnrollNotification(long timestamp) {
