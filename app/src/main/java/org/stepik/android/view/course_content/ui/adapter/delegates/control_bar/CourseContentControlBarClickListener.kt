@@ -9,7 +9,7 @@ interface CourseContentControlBarClickListener {
     fun onCreateScheduleClicked()
     fun onChangeScheduleClicked(record: StorageRecord<DeadlinesWrapper>)
     fun onRemoveScheduleClicked(record: StorageRecord<DeadlinesWrapper>)
-    fun onSynchronizeScheduleClicked()
+    fun onExportScheduleClicked()
 
     fun onDownloadAllClicked(course: Course)
 

@@ -22,12 +22,12 @@ constructor(
     private val courseCalendarRepository: CourseCalendarRepository
 ) {
     fun getCalendarItems(): Single<List<CalendarItem>> =
-            calendarRepository.getCalendarItems()
+        calendarRepository.getCalendarItems()
 
-    fun applyDatesToCalendar(dates: List<CourseContentItem>, calendarItem: CalendarItem): Completable {
+    fun exportScheduleToCalendar(scheduleDates: List<CourseContentItem>, calendarItem: CalendarItem): Completable {
         return getSectionsEvents()
             .flatMap { sectionEvents ->
-                dates
+                scheduleDates
                     .filterIsInstance<CourseContentItem.SectionItem>()
                     .flatMap { sectionItem ->
                         sectionItem.dates.map { date ->
@@ -46,7 +46,7 @@ constructor(
                     .toObservable()
                         .flatMap{ (sectionId, eventData) ->
                             calendarRepository
-                                    .syncCalendarEventData(eventData, calendarItem)
+                                    .saveCalendarEventData(eventData, calendarItem)
                                     .map { eventId ->
                                         SectionDateEvent(eventId, sectionId)
                                     }.toObservable()
@@ -57,7 +57,6 @@ constructor(
 
     }
 
-    private fun getSectionsEvents(): Single<List<SectionDateEvent>> {
-        return courseCalendarRepository.getSectionDateEvents()
-    }
+    private fun getSectionsEvents(): Single<List<SectionDateEvent>> =
+        courseCalendarRepository.getSectionDateEvents()
 }

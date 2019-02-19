@@ -4,9 +4,9 @@ import android.os.Parcel
 import android.os.Parcelable
 
 data class CalendarItem(
-        var calendarId: Long = 0,
-        var owner: String = "",
-        var isPrimary: Boolean = false
+    var calendarId: Long = 0,
+    var owner: String = "",
+    var isPrimary: Boolean = false
 ) : Parcelable {
 
 

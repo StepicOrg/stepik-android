@@ -374,7 +374,8 @@ constructor(
 
     fun getExpForWeeks(courseId: Long) = adaptiveExpDao.getExpForWeeks(courseId)
 
-    fun getSectionDateEvents() = sectionDateEventDao.getAll()
+    fun getSectionDateEvents(): List<SectionDateEvent> =
+        sectionDateEventDao.getAll()
 
     fun addSectionDateEvents(events: List<SectionDateEvent>) {
         events.forEach { addSectionsDateEvent(it) }

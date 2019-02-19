@@ -13,10 +13,9 @@ constructor(
     private val calendarCacheDataSource: CalendarCacheDataSource
 ) : CalendarRepository {
 
-    override fun syncCalendarEventData(calendarEventData: CalendarEventData, calendarItem: CalendarItem): Single<Long> {
-        return calendarCacheDataSource.syncCalendarEventData(calendarEventData, calendarItem)
-    }
+    override fun saveCalendarEventData(calendarEventData: CalendarEventData, calendarItem: CalendarItem): Single<Long> =
+        calendarCacheDataSource.syncCalendarEventData(calendarEventData, calendarItem)
 
     override fun getCalendarItems(): Single<List<CalendarItem>> =
-            calendarCacheDataSource.getCalendarPrimaryItems()
+        calendarCacheDataSource.getCalendarPrimaryItems()
 }

@@ -25,8 +25,8 @@ constructor(
     override fun syncCalendarEventData(calendarEventData: CalendarEventData, calendarItem: CalendarItem): Single<Long> =
         insertCalendarEventData(calendarEventData, calendarItem)
 
-    override fun getCalendarPrimaryItems(): Single<List<CalendarItem>> {
-        return Single.create<List<CalendarItem>> { emitter ->
+    override fun getCalendarPrimaryItems(): Single<List<CalendarItem>> =
+        Single.create<List<CalendarItem>> { emitter ->
             val listOfCalendarItems = mutableListOf<CalendarItem>()
             val cursor: Cursor? = contentResolver.query(CalendarContract.Calendars.CONTENT_URI, null, null, null, null)
             try {
@@ -72,7 +72,6 @@ constructor(
                 cursor?.close()
             }
         }
-    }
 
     private fun mapContentValues(calendarEventData: CalendarEventData, calendarItem: CalendarItem): ContentValues {
         val dateEndInMillis = calendarEventData.deadLine.time
@@ -89,14 +88,13 @@ constructor(
         return contentValues
     }
 
-    private fun insertCalendarEventData(calendarEventData: CalendarEventData, calendarItem: CalendarItem): Single<Long> {
-        return Single.fromCallable {
+    private fun insertCalendarEventData(calendarEventData: CalendarEventData, calendarItem: CalendarItem): Single<Long> =
+        Single.fromCallable {
             if (calendarEventData.eventId != -1L) deleteEventById(calendarEventData.eventId)
             return@fromCallable contentResolver
                     .insert(CalendarContract.Events.CONTENT_URI, mapContentValues(calendarEventData, calendarItem))
                     .lastPathSegment.toLong()
         }
-    }
 
     private fun deleteEventById(id: Long) =
         contentResolver.delete(ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, id), null, null)

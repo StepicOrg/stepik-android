@@ -259,8 +259,8 @@ abstract class AppCoreModule {
         @Provides
         @AppSingleton
         @JvmStatic
-        internal fun provideContentResolver(context: Context): ContentResolver
-                = context.contentResolver
+        internal fun provideContentResolver(context: Context): ContentResolver =
+            context.contentResolver
     }
 
 }

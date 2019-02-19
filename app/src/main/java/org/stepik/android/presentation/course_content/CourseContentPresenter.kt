@@ -31,7 +31,6 @@ import org.stepik.android.presentation.base.PresenterBase
 import org.stepik.android.presentation.course_content.mapper.CourseContentStateMapper
 import org.stepik.android.presentation.personal_deadlines.model.PersonalDeadlinesState
 import org.stepik.android.view.course_content.model.CourseContentItem
-import timber.log.Timber
 import javax.inject.Inject
 
 class CourseContentPresenter
@@ -427,18 +426,18 @@ constructor(
                 )
     }
 
-    fun applyDates(calendarItem: CalendarItem) {
+    fun exportScheduleToCalendar(calendarItem: CalendarItem) {
         val items = (state as? CourseContentView.State.CourseContentLoaded)
                 ?.courseContent
                 ?: return
 
         compositeDisposable += courseCalendarInteractor
-                .applyDatesToCalendar(items, calendarItem)
+                .exportScheduleToCalendar(items, calendarItem)
                 .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)
                 .subscribeBy(
-                        onComplete = {view?.showCalendarSyncSuccess()},
-                        onError = {view?.showCalendarError(R.string.request_error)}
+                    onComplete = { view?.showCalendarSyncSuccess() },
+                    onError = { view?.showCalendarError(R.string.request_error) }
                 )
     }
 

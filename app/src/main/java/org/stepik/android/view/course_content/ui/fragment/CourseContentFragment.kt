@@ -136,7 +136,7 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
                         override fun onRemoveScheduleClicked(record: StorageRecord<DeadlinesWrapper>) =
                             courseContentPresenter.removeDeadlines()
 
-                        override fun onSynchronizeScheduleClicked() {
+                        override fun onExportScheduleClicked() {
                             syncCalendarDates()
                         }
 
@@ -442,7 +442,7 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
             ChooseCalendarDialog.CHOOSE_CALENDAR_REQUEST_CODE ->
                 data?.takeIf { resultCode == Activity.RESULT_OK }
                         ?.getParcelableExtra<CalendarItem>(ChooseCalendarDialog.KEY_CALENDAR_ITEM)
-                        ?.let(courseContentPresenter::applyDates)
+                        ?.let(courseContentPresenter::exportScheduleToCalendar)
 
             else ->
                 super.onActivityResult(requestCode, resultCode, data)
