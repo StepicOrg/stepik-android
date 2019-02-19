@@ -17,4 +17,7 @@ interface LocalReminder {
     @AnyThread
     fun remindAboutRegistration()
 
+    @AnyThread
+    fun scheduleRetentionNotification()
+
 }

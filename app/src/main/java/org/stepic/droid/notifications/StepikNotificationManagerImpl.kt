@@ -25,6 +25,7 @@ import org.stepik.android.model.Course
 import org.stepik.android.model.Section
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.notifications.model.NotificationType
+import org.stepic.droid.notifications.model.RetentionNotificationType
 import org.stepic.droid.notifications.model.StepikNotificationChannel
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.preferences.UserPreferences
@@ -61,6 +62,7 @@ constructor(
     companion object {
         private const val NEW_USER_REMIND_NOTIFICATION_ID = 4L
         private const val REGISTRATION_REMIND_NOTIFICATION_ID = 5L
+        private const val RETENTION_NOTIFICATION_ID = 4432L
         private const val STREAK_NOTIFICATION_ID = 3214L
     }
 
@@ -180,6 +182,44 @@ constructor(
         }
 
         localReminder.remindAboutRegistration()
+    }
+
+    @WorkerThread
+    override fun showRetentionNotification() {
+        val lastSessionTimestamp = sharedPreferenceHelper.lastSessionTimestamp
+        val now = DateTimeHelper.nowLocal()
+
+        if (sharedPreferenceHelper.authResponseFromStore == null ||
+            sharedPreferenceHelper.isStreakNotificationEnabled ||
+            databaseFacade.getAllCourses(CourseListType.ENROLLED).isEmpty() ||
+            now - lastSessionTimestamp < AppConstants.MILLIS_IN_24HOURS / 2
+        ) {
+            return
+        }
+
+        val notificationType =
+            if (now - lastSessionTimestamp > AppConstants.MILLIS_IN_24HOURS * 2) {
+                RetentionNotificationType.DAY3
+            } else {
+                RetentionNotificationType.DAY1
+            }
+
+        val title = context.getString(notificationType.titleRes)
+        val message = context.getString(notificationType.messageRes)
+
+        val intent = Intent(context, SplashActivity::class.java)
+        val taskBuilder = TaskStackBuilder
+            .create(context)
+            .addNextIntent(intent)
+
+        showSimpleNotification(
+            stepikNotification = null,
+            justText = message,
+            taskBuilder = taskBuilder,
+            title = title,
+            id = RETENTION_NOTIFICATION_ID)
+
+        localReminder.scheduleRetentionNotification()
     }
 
     override fun showNotification(notification: Notification) {
