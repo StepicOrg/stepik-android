@@ -1,6 +1,5 @@
 package org.stepik.android.presentation.course_content
 
-import android.support.annotation.StringRes
 import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepik.android.domain.calendar.model.CalendarItem
 import org.stepik.android.model.Course
@@ -19,7 +18,8 @@ interface CourseContentView {
         data class CourseContentLoaded(
             val course: Course,
             val personalDeadlinesState: PersonalDeadlinesState,
-            val courseContent: List<CourseContentItem>
+            val courseContent: List<CourseContentItem>,
+            val hasDates: Boolean
         ) : State()
         object NetworkError : State()
     }

@@ -63,7 +63,7 @@ class CourseContentControlBarDelegate(
                 with(data.personalDeadlinesState) {
                     this is PersonalDeadlinesState.EmptyDeadlines
                             || this is PersonalDeadlinesState.Deadlines
-                }
+                } || data.hasDates
 
             controlBar.changeItemVisibility(R.id.course_control_schedule, isScheduleVisible)
             controlBar.changeItemVisibility(R.id.course_control_download_all, data.course != null)
@@ -88,6 +88,20 @@ class CourseContentControlBarDelegate(
                             R.id.menu_item_deadlines_remove ->
                                 controlBarClickListener.onRemoveScheduleClicked(record)
 
+                            R.id.menu_item_deadlines_sync ->
+                                controlBarClickListener.onExportScheduleClicked()
+                        }
+                        true
+                    }
+                    popupMenu.show()
+                }
+
+                is PersonalDeadlinesState.NoDeadlinesNeeded -> {
+                    val anchorView = controlBar.findViewById<View>(R.id.course_control_schedule)
+                    val popupMenu = PopupMenu(context, anchorView)
+                    popupMenu.inflate(R.menu.course_content_control_bar_schedule_menu_no_personal)
+                    popupMenu.setOnMenuItemClickListener { item ->
+                        when (item.itemId) {
                             R.id.menu_item_deadlines_sync ->
                                 controlBarClickListener.onExportScheduleClicked()
                         }

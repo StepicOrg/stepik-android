@@ -136,9 +136,8 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
                         override fun onRemoveScheduleClicked(record: StorageRecord<DeadlinesWrapper>) =
                             courseContentPresenter.removeDeadlines()
 
-                        override fun onExportScheduleClicked() {
+                        override fun onExportScheduleClicked() =
                             syncCalendarDates()
-                        }
 
                         override fun onDownloadAllClicked(course: Course) =
                             courseContentPresenter.addCourseDownloadTask(course)
@@ -194,7 +193,7 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
         viewStateDelegate.switchState(state)
         if (state is CourseContentView.State.CourseContentLoaded) {
             contentAdapter.items = state.courseContent
-            contentAdapter.setControlBar(CourseContentItem.ControlBar(state.course.enrollment > 0, state.personalDeadlinesState, state.course))
+            contentAdapter.setControlBar(CourseContentItem.ControlBar(state.course.enrollment > 0, state.personalDeadlinesState, state.course, state.hasDates))
         }
     }
 
