@@ -378,12 +378,7 @@ constructor(
         sectionDateEventDao.getAll()
 
     fun addSectionDateEvents(events: List<SectionDateEvent>) {
-        events.forEach { addSectionsDateEvent(it) }
-    }
-
-    fun addSectionsDateEvent(sectionDateEvent: SectionDateEvent) {
-        sectionDateEventDao.remove(mapOf(DbStructureSectionDateEvent.Columns.SECTION_ID to
-                sectionDateEvent.sectionId.toString()))
-        sectionDateEventDao.insertOrReplace(sectionDateEvent)
+        sectionDateEventDao.removeAll()
+        sectionDateEventDao.insertOrReplaceAll(events)
     }
 }
