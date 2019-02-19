@@ -244,7 +244,7 @@ public class SharedPreferenceHelper {
 
     public void onNewSession() {
         put(PreferenceType.LOGIN, NEED_SHOW_LANG_WIDGET, false);
-        saveLastSessionTimestamp(DateTimeHelper.INSTANCE.nowLocal());
+        saveLastSessionTimestamp(DateTimeHelper.INSTANCE.nowUtc());
     }
 
     public void clickEnrollNotification(long timestamp) {

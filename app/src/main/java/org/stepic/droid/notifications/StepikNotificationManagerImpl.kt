@@ -187,7 +187,7 @@ constructor(
     @WorkerThread
     override fun showRetentionNotification() {
         val lastSessionTimestamp = sharedPreferenceHelper.lastSessionTimestamp
-        val now = DateTimeHelper.nowLocal()
+        val now = DateTimeHelper.nowUtc()
 
         if (sharedPreferenceHelper.authResponseFromStore == null ||
             sharedPreferenceHelper.isStreakNotificationEnabled ||
