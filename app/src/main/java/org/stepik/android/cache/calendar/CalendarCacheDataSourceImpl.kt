@@ -4,15 +4,13 @@ import android.content.ContentResolver
 import android.content.ContentUris
 import android.content.ContentValues
 import android.database.Cursor
-import android.net.Uri
 import android.os.Build
 import android.provider.CalendarContract
 import io.reactivex.Single
-import org.stepic.droid.model.CalendarItem
 import org.stepic.droid.util.AppConstants
 import org.stepik.android.data.calendar.source.CalendarCacheDataSource
 import org.stepik.android.domain.calendar.model.CalendarEventData
-import timber.log.Timber
+import org.stepik.android.domain.calendar.model.CalendarItem
 import java.util.*
 import javax.inject.Inject
 
@@ -74,7 +72,7 @@ constructor(
         }
 
     private fun mapContentValues(calendarEventData: CalendarEventData, calendarItem: CalendarItem): ContentValues {
-        val dateEndInMillis = calendarEventData.deadLine.time
+        val dateEndInMillis = calendarEventData.date.time
         val dateStartInMillis = dateEndInMillis - AppConstants.MILLIS_IN_1HOUR
 
         val contentValues = ContentValues()

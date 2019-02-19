@@ -1,8 +1,8 @@
 package org.stepik.android.presentation.course_content
 
 import android.support.annotation.StringRes
-import org.stepic.droid.model.CalendarItem
 import org.stepic.droid.persistence.model.DownloadProgress
+import org.stepik.android.domain.calendar.model.CalendarItem
 import org.stepik.android.model.Course
 import org.stepik.android.model.Section
 import org.stepik.android.model.Unit

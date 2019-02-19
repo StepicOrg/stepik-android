@@ -9,7 +9,6 @@ import org.stepic.droid.R
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.CourseId
 import org.stepic.droid.di.qualifiers.MainScheduler
-import org.stepic.droid.model.CalendarItem
 import org.stepik.android.domain.personal_deadlines.model.Deadline
 import org.stepik.android.domain.personal_deadlines.model.DeadlinesWrapper
 import org.stepic.droid.persistence.downloads.interactor.DownloadInteractor
@@ -17,6 +16,7 @@ import org.stepic.droid.persistence.downloads.progress.DownloadProgressProvider
 import org.stepic.droid.persistence.model.DownloadConfiguration
 import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepic.droid.util.emptyOnErrorStub
+import org.stepik.android.domain.calendar.model.CalendarItem
 import org.stepik.android.domain.course_calendar.interactor.CourseCalendarInteractor
 import org.stepik.android.domain.course_content.interactor.CourseContentInteractor
 import org.stepik.android.domain.network.exception.NetworkRequirementsNotSatisfiedException
@@ -419,7 +419,7 @@ constructor(
                 .getCalendarItems()
                 .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)
-                .doFinally {isBlockingLoading = false}
+                .doFinally { isBlockingLoading = false }
                 .subscribeBy(
                     onSuccess = { view?.showCalendarChoiceDialog(it) },
                     onError = { view?.showCalendarError(R.string.request_error)}

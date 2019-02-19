@@ -8,7 +8,7 @@ import android.os.Parcelable
 import android.support.v4.app.DialogFragment
 import android.support.v7.app.AlertDialog
 import org.stepic.droid.R
-import org.stepic.droid.model.CalendarItem
+import org.stepik.android.domain.calendar.model.CalendarItem
 import java.util.*
 
 class ChooseCalendarDialog : DialogFragment() {
