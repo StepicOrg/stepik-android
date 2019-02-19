@@ -36,11 +36,9 @@ import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.dialogs.VideoQualityDetailedDialog
 import org.stepic.droid.ui.util.PopupHelper
-import org.stepic.droid.util.ProgressHelper
+import org.stepic.droid.util.*
 import org.stepik.android.view.course_content.ui.adapter.CourseContentAdapter
 import org.stepik.android.view.course_content.model.CourseContentItem
-import org.stepic.droid.util.argument
-import org.stepic.droid.util.setTextColor
 import org.stepic.droid.web.storage.model.StorageRecord
 import org.stepik.android.domain.calendar.model.CalendarItem
 import org.stepik.android.domain.personal_deadlines.model.LearningRate
@@ -336,7 +334,8 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
     }
 
     private fun syncCalendarDates() {
-        if (!arePermissionsGranted(listOf(Manifest.permission.WRITE_CALENDAR,  Manifest.permission.READ_CALENDAR))) {
+        val permissions = listOf(Manifest.permission.WRITE_CALENDAR,  Manifest.permission.READ_CALENDAR)
+        if (!permissions.arePermissionsGranted(requireContext())) {
             showExplainPermissionsDialog()
         } else {
             courseContentPresenter.getCalendarPrimaryItems()
@@ -345,9 +344,8 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
 
     override fun onCalendarPermissionChosen(isAgreed: Boolean) {
         if (!isAgreed) return
-        requestMultiplePermissions(listOf(
-                Manifest.permission.WRITE_CALENDAR,  Manifest.permission.READ_CALENDAR
-        ))
+        val permissions = listOf(Manifest.permission.WRITE_CALENDAR,  Manifest.permission.READ_CALENDAR)
+        permissions.requestMultiplePermissions(this, ExplainCalendarPermissionDialog.REQUEST_CALENDAR_PERMISSION)
     }
 
     override fun showCalendarSyncSuccess() {
@@ -381,22 +379,6 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
             .make(view, errorMessage, Snackbar.LENGTH_SHORT)
             .setTextColor(ContextCompat.getColor(view.context, R.color.white))
             .show()
-    }
-
-    private fun arePermissionsGranted(permissions: List<String>): Boolean {
-        for (permission in permissions) {
-            if (ContextCompat.checkSelfPermission(requireContext(), permission) != PackageManager.PERMISSION_GRANTED)
-                return false
-        }
-        return true
-    }
-
-    private fun requestMultiplePermissions(permissions: List<String>) {
-        val remainingPermissions = arrayListOf<String>()
-        for (permission in permissions)
-            if (ContextCompat.checkSelfPermission(requireContext(), permission) != PackageManager.PERMISSION_GRANTED)
-                remainingPermissions.add(permission)
-        requestPermissions(permissions.toTypedArray(), ExplainCalendarPermissionDialog.REQUEST_CALENDAR_PERMISSION)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
