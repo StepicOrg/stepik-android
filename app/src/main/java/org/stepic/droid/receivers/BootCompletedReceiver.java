@@ -34,5 +34,6 @@ public class BootCompletedReceiver extends BroadcastReceiver {
         }
         localReminder.remindAboutRegistration();
         localReminder.userChangeStateOfNotification();
+        localReminder.scheduleRetentionNotification(false);
     }
 }

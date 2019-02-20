@@ -40,6 +40,9 @@ class AlarmService : JobIntentService() {
             StepikNotificationManager.SHOW_NEW_USER_NOTIFICATION ->
                 stepikNotificationManager.showLocalNotificationRemind()
 
+            StepikNotificationManager.SHOW_RETENTION_NOTIFICATION ->
+                stepikNotificationManager.showRetentionNotification()
+
             DeadlinesNotificationsManager.SHOW_DEADLINES_NOTIFICATION ->
                 deadlinesNotificationsManager.showDeadlinesNotifications()
         }

@@ -195,4 +195,57 @@ class LocalReminderImpl
             }
         }
     }
+
+    override fun scheduleRetentionNotification(shouldResetCounter: Boolean) {
+        threadPoolExecutor.execute {
+            val isNotLoading = registrationRemindHandling.compareAndSet(false, true)
+            if (!isNotLoading) return@execute
+
+            try {
+                val now = DateTimeHelper.nowUtc()
+                val oldTimestamp = sharedPreferenceHelper.retentionNotificationTimestamp
+
+                val scheduleMillis: Long
+                if (!shouldResetCounter && oldTimestamp > 0L && oldTimestamp > now) {
+                    scheduleMillis = oldTimestamp // after reboot we already scheduled.
+                } else {
+                    val lastSessionTimestamp = sharedPreferenceHelper.lastSessionTimestamp
+                    val diff = now - lastSessionTimestamp
+
+                    val dayDiff: Int =
+                        if (shouldResetCounter ||
+                            lastSessionTimestamp == 0L ||
+                            diff <= AppConstants.MILLIS_IN_24HOURS) {
+                            1
+                        } else {
+                            3
+                        }
+
+                    val calendar = Calendar.getInstance()
+                    val nowHour = calendar.get(Calendar.HOUR_OF_DAY)
+                    calendar.set(Calendar.HOUR_OF_DAY, 12)
+                    val nowAt12 = calendar.timeInMillis
+                    scheduleMillis = when {
+                        nowHour < 12 -> nowAt12 + AppConstants.MILLIS_IN_24HOURS * dayDiff
+                        nowHour >= 19 -> nowAt12 + AppConstants.MILLIS_IN_24HOURS * (dayDiff + 1)
+                        else -> now + AppConstants.MILLIS_IN_24HOURS * dayDiff
+                    }
+                }
+
+                val intent = AlarmReceiver
+                    .createIntent(context, StepikNotificationManager.SHOW_RETENTION_NOTIFICATION)
+
+                val pendingIntent = PendingIntent
+                    .getBroadcast(context, AlarmReceiver.REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+                alarmManager.cancel(pendingIntent)
+
+                alarmManager.scheduleCompat(scheduleMillis, AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent)
+
+                sharedPreferenceHelper.saveRetentionNotificationTimestamp(scheduleMillis)
+            } finally {
+                registrationRemindHandling.set(false)
+            }
+        }
+    }
 }
