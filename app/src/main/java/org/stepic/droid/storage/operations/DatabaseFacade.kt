@@ -382,6 +382,11 @@ constructor(
             sectionDateEventDao.getAllInRange(DbStructureSectionDateEvent.Columns.SECTION_ID, it)
         } ?: emptyList()
 
+    fun removeSectionDateEventsById(keys: List<Long>) =
+        keys.forEach { key -> sectionDateEventDao.remove(
+            mapOf(DbStructureSectionDateEvent.Columns.SECTION_ID to key.toString())
+        )}
+
     fun addSectionDateEvents(events: List<SectionDateEvent>) {
         sectionDateEventDao.removeAll()
         sectionDateEventDao.insertOrReplaceAll(events)

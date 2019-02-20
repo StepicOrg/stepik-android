@@ -6,6 +6,7 @@ import android.content.ContentValues
 import android.database.Cursor
 import android.os.Build
 import android.provider.CalendarContract
+import io.reactivex.Completable
 import io.reactivex.Single
 import org.stepic.droid.util.AppConstants
 import org.stepik.android.data.calendar.source.CalendarCacheDataSource
@@ -85,6 +86,11 @@ constructor(
 
         return contentValues
     }
+
+    override fun deleteEventsById(ids: List<Long>): Completable =
+        Completable.fromAction {
+            ids.forEach{ deleteEventById(it) }
+        }
 
     private fun insertCalendarEventData(calendarEventData: CalendarEventData, calendarItem: CalendarItem): Single<Long> =
         Single.fromCallable {
