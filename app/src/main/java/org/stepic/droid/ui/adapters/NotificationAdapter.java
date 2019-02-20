@@ -13,10 +13,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.GenericRequestBuilder;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.caverock.androidsvg.SVG;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
@@ -31,7 +30,6 @@ import org.stepic.droid.util.DateTimeHelper;
 import org.stepic.droid.util.resolvers.text.NotificationTextResolver;
 import org.stepic.droid.util.svg.GlideSvgRequestFactory;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
@@ -256,7 +254,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         @BindView(R.id.check_view_unread)
         View checkViewUnread;
 
-        private final GenericRequestBuilder<Uri, InputStream, SVG, PictureDrawable> svgRequestBuilder =
+        private final RequestBuilder<PictureDrawable> svgRequestBuilder =
                 GlideSvgRequestFactory.create(context, placeholderUserIcon);
 
         NotificationViewHolder(View itemView) {
@@ -331,13 +329,13 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 if (userAvatarUrl.endsWith(AppConstants.SVG_EXTENSION)) {
                     final Uri avatarUri =  Uri.parse(userAvatarUrl);
                     svgRequestBuilder
-                            .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                            .diskCacheStrategy(DiskCacheStrategy.DATA)
                             .load(avatarUri)
                             .into(notificationIcon);
                 } else {
                     Glide.with(context.getApplicationContext())
-                            .load(userAvatarUrl)
                             .asBitmap()
+                            .load(userAvatarUrl)
                             .placeholder(placeholderUserIcon)
                             .into(notificationIcon);
                 }

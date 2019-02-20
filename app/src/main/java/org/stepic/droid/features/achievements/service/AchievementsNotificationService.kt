@@ -87,12 +87,11 @@ class AchievementsNotificationService : JobIntentService() {
 
     private fun getAchievementImageBitmap(achievement: AchievementFlatItem): Bitmap {
         val iconSize = resources.getDimension(R.dimen.notification_large_icon_size).toInt()
-        return GlideSvgRequestFactory
-                .create(this, null)
-                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+        return GlideSvgRequestFactory.create(this, null)
+                .diskCacheStrategy(DiskCacheStrategy.DATA)
                 .load(Uri.parse(achievementResourceResolver.resolveAchievementIcon(achievement)))
                 .placeholder(R.drawable.general_placeholder)
-                .into(iconSize, iconSize)
+                .submit(iconSize, iconSize)
                 .get()
                 .toBitmap(iconSize, iconSize)
     }

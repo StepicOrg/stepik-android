@@ -54,8 +54,8 @@ class CourseReviewDataDelegate(
             data as CourseReviewItem.Data
 
             Glide.with(context)
-                .load(data.user.avatar ?: "")
                 .asBitmap()
+                .load(data.user.avatar ?: "")
                 .placeholder(reviewIconPlaceholder)
                 .centerCrop()
                 .into(reviewIconTarget)

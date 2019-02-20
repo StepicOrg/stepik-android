@@ -12,10 +12,10 @@ import android.view.*
 import android.widget.LinearLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import kotlinx.android.synthetic.main.fragment_profile_new.*
-import kotlinx.android.synthetic.main.latex_supportabe_enhanced_view.view.*
 import kotlinx.android.synthetic.main.empty_login.*
 import kotlinx.android.synthetic.main.error_no_connection_with_button_small.view.*
+import kotlinx.android.synthetic.main.fragment_profile_new.*
+import kotlinx.android.synthetic.main.latex_supportabe_enhanced_view.view.*
 import kotlinx.android.synthetic.main.view_notification_interval_chooser.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
@@ -31,8 +31,8 @@ import org.stepic.droid.features.achievements.ui.adapters.AchievementsTileAdapte
 import org.stepic.droid.features.achievements.ui.adapters.BaseAchievementsAdapter
 import org.stepic.droid.features.achievements.ui.dialogs.AchievementDetailsDialog
 import org.stepic.droid.fonts.FontType
-import org.stepic.droid.model.UserViewModel
 import org.stepic.droid.model.AchievementFlatItem
+import org.stepic.droid.model.UserViewModel
 import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.ui.activities.contracts.CloseButtonInToolbar
 import org.stepic.droid.ui.adapters.ProfileSettingsAdapter
@@ -45,6 +45,7 @@ import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.ProfileSettingsHelper
 import org.stepic.droid.util.argument
+import org.stepic.droid.util.svg.GlideApp
 import org.stepic.droid.util.svg.GlideSvgRequestFactory
 import org.stepic.droid.viewmodel.ProfileSettingsViewModel
 import timber.log.Timber
@@ -329,14 +330,14 @@ class ProfileFragment : FragmentBase(),
             val svgRequestBuilder = GlideSvgRequestFactory.create(context, userPlaceholder)
             val uri = Uri.parse(userViewModel.imageLink)
             svgRequestBuilder
-                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .diskCacheStrategy(DiskCacheStrategy.DATA)
                     .load(uri)
                     .into(profileImage)
 
         } else {
-            Glide.with(context)
-                    .load(userViewModel.imageLink)
+            Glide.with(requireContext())
                     .asBitmap()
+                    .load(userViewModel.imageLink)
                     .placeholder(userPlaceholder)
                     .into(profileImage)
         }

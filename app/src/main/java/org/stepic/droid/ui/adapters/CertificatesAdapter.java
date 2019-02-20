@@ -11,13 +11,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.base.App;
-import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.core.presenters.CertificatePresenter;
+import org.stepic.droid.model.CertificateViewItem;
 import org.stepik.android.model.Certificate;
 
 import java.util.List;
@@ -85,12 +84,9 @@ public class CertificatesAdapter extends RecyclerView.Adapter<CertificatesAdapte
         @BindString(R.string.certificate_regular_with_substitution)
         String certificateRegularString;
 
-        GlideDrawableImageViewTarget imageViewTarget;
-
         CertificateViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-            imageViewTarget = new GlideDrawableImageViewTarget(certificateIcon);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -135,7 +131,7 @@ public class CertificatesAdapter extends RecyclerView.Adapter<CertificatesAdapte
             Glide.with(App.Companion.getAppContext())
                     .load(coverFullPath)
                     .placeholder(certificatePlaceholder)
-                    .into(imageViewTarget);
+                    .into(certificateIcon);
         }
 
 
