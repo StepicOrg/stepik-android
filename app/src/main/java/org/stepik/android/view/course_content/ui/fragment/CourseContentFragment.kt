@@ -307,11 +307,6 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
                 ?.takeIf { it.findFragmentByTag(ChooseCalendarDialog.TAG) == null }
                 ?: return
 
-        if (calendarItems.isEmpty()) {
-            showCalendarError(CalendarError.NO_CALENDARS_ERROR)
-            return
-        }
-
         val dialog = ChooseCalendarDialog.newInstance(calendarItems)
         dialog.setTargetFragment(this, ChooseCalendarDialog.CHOOSE_CALENDAR_REQUEST_CODE)
         dialog.show(supportFragmentManager, ChooseCalendarDialog.TAG)

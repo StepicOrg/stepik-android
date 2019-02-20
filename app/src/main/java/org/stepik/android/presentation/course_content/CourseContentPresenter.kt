@@ -421,7 +421,12 @@ constructor(
                 .observeOn(mainScheduler)
                 .doFinally { isBlockingLoading = false }
                 .subscribeBy(
-                    onSuccess = { view?.showCalendarChoiceDialog(it) },
+                    onSuccess = {
+                        if (it.isEmpty())
+                            view?.showCalendarError(CalendarError.NO_CALENDARS_ERROR)
+                        else
+                            view?.showCalendarChoiceDialog(it)
+                    },
                     onError = { view?.showCalendarError(CalendarError.GENERIC_ERROR)}
                 )
     }
