@@ -377,6 +377,13 @@ constructor(
     fun getSectionDateEvents(): List<SectionDateEvent> =
         sectionDateEventDao.getAll()
 
+    fun getSectionDateEventsById(keys: List<Long>): List<SectionDateEvent> {
+        DbParseHelper.parseLongListToString(keys, AppConstants.COMMA)?.let {
+            return sectionDateEventDao.getAllInRange(DbStructureSectionDateEvent.Columns.SECTION_ID, it)
+        }
+        return emptyList()
+    }
+
     fun addSectionDateEvents(events: List<SectionDateEvent>) {
         sectionDateEventDao.removeAll()
         sectionDateEventDao.insertOrReplaceAll(events)

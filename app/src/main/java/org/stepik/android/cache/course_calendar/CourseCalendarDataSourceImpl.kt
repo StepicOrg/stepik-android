@@ -17,6 +17,11 @@ constructor(
             databaseFacade.getSectionDateEvents()
         }
 
+    override fun getSectionDateEventsByIds(ids: List<Long>): Single<List<SectionDateEvent>> =
+        Single.fromCallable {
+            databaseFacade.getSectionDateEventsById(ids)
+        }
+
     override fun saveSectionDateEvents(events: List<SectionDateEvent>): Completable =
         Completable.fromAction {
             databaseFacade.addSectionDateEvents(events)
