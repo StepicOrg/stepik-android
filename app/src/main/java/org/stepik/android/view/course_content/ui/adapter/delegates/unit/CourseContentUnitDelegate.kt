@@ -90,8 +90,8 @@ class CourseContentUnitDelegate(
                 unitDownloadStatus.status = unitDownloadStatuses[data.unit.id] ?: DownloadProgress.Status.Pending
 
                 Glide.with(unitIcon.context)
-                        .load(lesson.coverUrl)
                         .asBitmap()
+                        .load(lesson.coverUrl)
                         .placeholder(unitIconPlaceholder)
                         .centerCrop()
                         .into(unitIconTarget)

@@ -1,6 +1,7 @@
 package org.stepik.android.view.course.ui.delegates
 
 import android.app.Activity
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.PorterDuff
 import android.support.design.widget.AppBarLayout
@@ -13,7 +14,9 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.LinearLayout
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.MultiTransformation
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.request.RequestOptions
 import jp.wasabeef.glide.transformations.BlurTransformation
 import kotlinx.android.synthetic.main.activity_course.*
 import kotlinx.android.synthetic.main.header_course.*
@@ -133,15 +136,19 @@ class CourseHeaderDelegate(
     }
 
     private fun setCourseData(courseHeaderData: CourseHeaderData) = with(courseActivity) {
+        val multi = MultiTransformation<Bitmap>(
+            BlurTransformation(),
+            CenterCrop()
+        )
         Glide.with(this)
                 .load(config.baseUrl + courseHeaderData.cover)
                 .placeholder(R.drawable.general_placeholder)
-                .bitmapTransform(CenterCrop(this), BlurTransformation(this))
+                .apply(RequestOptions.bitmapTransform(multi))
                 .into(courseCover)
 
         Glide.with(this)
-                .load(config.baseUrl + courseHeaderData.cover)
                 .asBitmap()
+                .load(config.baseUrl + courseHeaderData.cover)
                 .placeholder(courseCoverSmallPlaceHolder)
                 .centerCrop()
                 .into(courseCoverSmallTarget)

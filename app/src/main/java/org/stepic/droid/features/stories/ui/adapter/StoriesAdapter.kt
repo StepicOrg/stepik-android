@@ -1,8 +1,6 @@
 package org.stepic.droid.features.stories.ui.adapter
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.Canvas
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
 import android.support.v7.content.res.AppCompatResources
 import android.support.v7.widget.RecyclerView
@@ -106,8 +104,8 @@ class StoriesAdapter(
             title.text = story.title
 
             Glide.with(itemView.context)
-                    .load(config.baseUrl + story.cover)
                     .asBitmap()
+                    .load(config.baseUrl + story.cover)
                     .placeholder(coursePlaceholderDrawable)
                     .centerCrop()
                     .into(coverTarget)
