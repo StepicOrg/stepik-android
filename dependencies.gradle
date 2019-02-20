@@ -61,7 +61,6 @@ ext.versions = [
         datePicker           : '3.1.0',
         photoView            : '1.3.1',
         advancedRecycler     : '0.11.0@aar',
-        advancedRecycler     : '0.11.0@aar',
         recyclerAnimators    : '2.1.0',
         materialProgress     : '1.4.2',
         circleImageView      : '2.1.0',
@@ -71,7 +70,7 @@ ext.versions = [
         MPAndroidChart       : 'v3.0.3',
 
         shortcutBadger       : '1.1.19@aar',
-        StoriesKit           : '1.0.0@aar',
+        StoriesKit           : '1.0.1@aar',
 
         stetho               : '1.4.2',
         leakCanary           : '1.5.1',
@@ -169,7 +168,7 @@ ext.libraries = [
         MPAndroidChart       : "com.github.PhilJay:MPAndroidChart:$versions.MPAndroidChart",
 
         shortcutBadger       : "me.leolin:ShortcutBadger:$versions.shortcutBadger",
-        StoriesKit           : "ru.nobird.android:storieskitsupport:$versions.StoriesKit",
+        StoriesKit           : "ru.nobird.android:StoriesKitSupport:$versions.StoriesKit",
 
         // Developer Tools
         leakCanary           : "com.squareup.leakcanary:leakcanary-android:$versions.leakCanary",
