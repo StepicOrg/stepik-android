@@ -64,11 +64,15 @@ public class HtmlHelper {
 
 
     public static boolean hasLaTeX(String textString) {
-        return textString.contains("$") || textString.contains("\\[");
+        return textString.contains("$") || textString.contains("\\[") || textString.contains("math-tex");
     }
 
     private static boolean hasKotlinRunnableSample(String text) {
         return text.contains("kotlin-runnable");
+    }
+
+    private static boolean hasHighlightableCode(String text) {
+        return text.contains("<code");
     }
 
     /**
@@ -165,38 +169,43 @@ public class HtmlHelper {
     }
 
 
-    private static String getStyle(float fontSize, @Nullable String fontPath, @ColorInt int textColorHighlight) {
+    private static String getStyle(@Nullable String fontPath, @ColorInt int textColorHighlight) {
         final String fontStyle;
         if (fontPath  == null) {
-            fontStyle = String.format(Locale.US, DefaultFontStyle, fontSize); // US locale to format floats with '.' instead of ','
+            fontStyle = DefaultFontStyle; // US locale to format floats with '.' instead of ','
         } else {
-            fontStyle = String.format(Locale.US, CustomFontStyle, fontPath, fontSize);
+            fontStyle = String.format(Locale.US, CustomFontStyle, fontPath);
         }
 
         final String selectionColorStyle = String.format(Locale.getDefault(), SelectionColorStyle, 0xFFFFFF & textColorHighlight);
         return fontStyle + selectionColorStyle;
     }
 
-    private static String buildPage(CharSequence body, List<String> additionalScripts, float fontSize, String fontPath, @ColorInt int textColorHighlight, int widthPx, String baseUrl) {
+    private static String buildPage(CharSequence body, List<String> additionalScripts, String fontPath, @ColorInt int textColorHighlight, int widthPx, String baseUrl) {
         if (hasKotlinRunnableSample(body.toString())) {
             additionalScripts.add(KotlinRunnableSamplesScript);
         }
+
+        if (hasHighlightableCode(body.toString())) {
+            additionalScripts.add(HighlightScript);
+        }
+
         String scripts = CollectionsKt.joinToString(additionalScripts, "", "", "", -1, "", null);
-        String preBody = String.format(Locale.getDefault(), PRE_BODY, scripts, getStyle(fontSize, fontPath, textColorHighlight), widthPx, baseUrl);
+        String preBody = String.format(Locale.getDefault(), PRE_BODY, scripts, getStyle(fontPath, textColorHighlight), widthPx, baseUrl);
 
         return preBody + body + POST_BODY;
     }
 
     public static String buildMathPage(CharSequence body, @ColorInt int textColorHighlight, int widthPx, String baseUrl) {
-        return buildPage(body, CollectionsKt.arrayListOf(MathJaxScript), DefaultFontSize, null, textColorHighlight, widthPx, baseUrl);
+        return buildPage(body, CollectionsKt.arrayListOf(MathJaxScript), null, textColorHighlight, widthPx, baseUrl);
     }
 
     public static String buildPageWithAdjustingTextAndImage(CharSequence body, @ColorInt int textColorHighlight, int widthPx, String baseUrl) {
-        return buildPage(body, CollectionsKt.mutableListOf(), DefaultFontSize, null, textColorHighlight, widthPx, baseUrl);
+        return buildPage(body, CollectionsKt.mutableListOf(), null, textColorHighlight, widthPx, baseUrl);
     }
 
-    public static String buildPageWithCustomFont(CharSequence body, float fontSize, String fontPath, @ColorInt int textColorHighlight, int widthPx, String baseUrl) {
-        return buildPage(body, CollectionsKt.mutableListOf(), fontSize, fontPath, textColorHighlight, widthPx, baseUrl);
+    public static String buildPageWithCustomFont(CharSequence body, String fontPath, @ColorInt int textColorHighlight, int widthPx, String baseUrl) {
+        return buildPage(body, CollectionsKt.mutableListOf(), fontPath, textColorHighlight, widthPx, baseUrl);
     }
 
     public static final String HORIZONTAL_SCROLL_LISTENER = "scrollListener";
@@ -293,15 +302,13 @@ public class HtmlHelper {
             + "::selection { background: #%06X; }\n"
             + "</style>";
 
-    private static final float DefaultFontSize = 14f;
-
     private static final String DefaultFontStyle =
             "<style>\n"
             + "\nhtml{-webkit-text-size-adjust: 100%%;}"
-            + "\nbody{font-size: %.1fpt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;}"
-            + "\nh1{font-size: 20pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;text-align: center;}"
-            + "\nh2{font-size: 17pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;text-align: center;}"
-            + "\nh3{font-size: 14pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;text-align: center;}"
+            + "\nbody{font-family:Arial, Helvetica, sans-serif; line-height:1.6em;}"
+            + "\nh1{font-size: 22px; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;text-align: center;}"
+            + "\nh2{font-size: 19px; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;text-align: center;}"
+            + "\nh3{font-size: 16px; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;text-align: center;}"
             + "\nimg { max-width: 100%%; }"
 
             + "</style>\n";
@@ -313,7 +320,7 @@ public class HtmlHelper {
             "    src: url(\"%s\")\n" +
             "}"
             + "\nhtml{-webkit-text-size-adjust: 100%%;}"
-            + "\nbody{font-size: %.1fpx; font-family:'Roboto', Helvetica, sans-serif; line-height:1.6em;}"
+            + "\nbody{font-family:'Roboto', Helvetica, sans-serif; line-height:1.6em;}"
             + "\nh1{font-size: 22px; font-family:'Roboto', Helvetica, sans-serif; line-height:1.6em;text-align: center;}"
             + "\nh2{font-size: 19px; font-family:'Roboto', Helvetica, sans-serif; line-height:1.6em;text-align: center;}"
             + "\nh3{font-size: 16px; font-family:'Roboto', Helvetica, sans-serif; line-height:1.6em;text-align: center;}"
@@ -334,6 +341,12 @@ public class HtmlHelper {
                     "<script type=\"text/javascript\"\n" +
                     " src=\"file:///android_asset/MathJax/MathJax.js?config=TeX-AMS_HTML\">\n" +
                     "</script>\n";
+
+    private static final String HighlightScript =
+            "<script type=\"text/javascript\"\n" +
+                    " src=\"file:///android_asset/scripts/highlight.pack.js\">\n" +
+                    "</script>\n" +
+                    "<script>hljs.initHighlightingOnLoad();</script>\n";
 
     public static String getUserPath(Config config, int userId) {
         return new StringBuilder()
