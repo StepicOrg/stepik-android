@@ -334,7 +334,7 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
 
     private fun syncCalendarDates() {
         val permissions = listOf(Manifest.permission.WRITE_CALENDAR,  Manifest.permission.READ_CALENDAR)
-        if (!permissions.arePermissionsGranted(requireContext())) {
+        if (checkSelfPermissions(permissions)) {
             showExplainPermissionsDialog()
         } else {
             courseContentPresenter.getCalendarPrimaryItems()
@@ -344,7 +344,7 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
     override fun onCalendarPermissionChosen(isAgreed: Boolean) {
         if (!isAgreed) return
         val permissions = listOf(Manifest.permission.WRITE_CALENDAR,  Manifest.permission.READ_CALENDAR)
-        permissions.requestMultiplePermissions(this, ExplainCalendarPermissionDialog.REQUEST_CALENDAR_PERMISSION)
+        requestMultiplePermissions(permissions, ExplainCalendarPermissionDialog.REQUEST_CALENDAR_PERMISSION)
     }
 
     override fun showCalendarSyncSuccess() {
