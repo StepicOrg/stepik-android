@@ -33,6 +33,7 @@ import org.stepik.android.cache.video.dao.VideoUrlEntityDaoImpl
 import org.stepik.android.cache.video.model.VideoEntity
 import org.stepik.android.cache.video.model.VideoUrlEntity
 import org.stepik.android.cache.video_player.model.VideoTimestamp
+import org.stepik.android.domain.course_reviews.model.CourseReview
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.*
 import org.stepik.android.model.Unit
@@ -158,6 +159,10 @@ abstract class StorageModule {
     @StorageSingleton
     @Binds
     internal abstract fun bindUserDao(userDaoImpl: UserDaoImpl): IDao<User>
+
+    @StorageSingleton
+    @Binds
+    internal abstract fun bindCourseReviewsDao(courseReviewsDaoImpl: CourseReviewsDaoImpl): IDao<CourseReview>
 
     @Module
     companion object {

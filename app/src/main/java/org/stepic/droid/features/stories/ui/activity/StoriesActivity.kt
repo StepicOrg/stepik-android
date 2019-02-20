@@ -29,6 +29,11 @@ class StoriesActivity : FragmentActivityBase() {
         })
     }
 
+    override fun onResume() {
+        super.onResume()
+        storiesDelegate.onResume()
+    }
+
     override fun onPause() {
         storiesDelegate.onPause()
         super.onPause()

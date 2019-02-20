@@ -13,7 +13,7 @@ inline fun <R> LongArray.chunkedSingleMap(chuckSize: Int = CHUNK_SIZE, mapper: (
 
 inline fun <reified T, R> Array<out T>.chunkedSingleMap(chuckSize: Int = CHUNK_SIZE, mapper: (Array<T>) -> Single<List<R>>): Single<List<R>> =
     asIterable()
-        .chunked(CHUNK_SIZE)
+        .chunked(chuckSize)
         .map { mapper(it.toTypedArray()) }
         .let { Single.concat(it) }
         .reduce(emptyList()) { a, b -> a + b }
