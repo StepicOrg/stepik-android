@@ -7,6 +7,7 @@ import org.stepic.droid.web.model.story_templates.StoryTemplatesResponse;
 import org.stepik.android.model.EnrollmentWrapper;
 import org.stepik.android.remote.course_payments.model.CoursePaymentRequest;
 import org.stepik.android.remote.course_payments.model.CoursePaymentsResponse;
+import org.stepik.android.remote.course_reviews.model.CourseReviewsResponse;
 
 import java.util.List;
 
@@ -275,7 +276,12 @@ public interface StepicRestLoggedService {
 
     @GET("api/course-payments?order=-id")
     Single<CoursePaymentsResponse> getCoursePaymentsByCourseId(
-            @Query("course") long course
+            @Query("course") final long course
     );
 
+    @GET("api/course-reviews")
+    Single<CourseReviewsResponse> getCourseReviewsByCourseId(
+            @Query("course") final long course,
+            @Query("page") final int page
+    );
 }

@@ -28,6 +28,7 @@ class CourseInfoInstructorsDelegate(
             root.blockInstructors.let {
                 it.adapter = adapter
                 it.layoutManager = LinearLayoutManager(root.context)
+                it.isNestedScrollingEnabled = false
             }
         }
 
