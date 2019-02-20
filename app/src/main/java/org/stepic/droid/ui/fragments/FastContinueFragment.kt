@@ -24,7 +24,6 @@ import org.stepic.droid.core.presenters.PersistentCourseListPresenter
 import org.stepic.droid.core.presenters.contracts.ContinueCourseView
 import org.stepic.droid.core.presenters.contracts.FastContinueView
 import org.stepic.droid.model.CourseListType
-import org.stepik.android.model.Course
 import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
@@ -33,6 +32,7 @@ import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.ProgressUtil
 import org.stepic.droid.util.StepikLogicHelper
 import org.stepik.android.domain.last_step.model.LastStep
+import org.stepik.android.model.Course
 import javax.inject.Inject
 
 class FastContinueFragment : FragmentBase(),
@@ -157,9 +157,9 @@ class FastContinueFragment : FragmentBase(),
 
     private fun setCourse(course: Course) {
         Glide
-                .with(context)
-                .load(StepikLogicHelper.getPathForCourseOrEmpty(course, config))
+                .with(requireContext())
                 .asBitmap()
+                .load(StepikLogicHelper.getPathForCourseOrEmpty(course, config))
                 .placeholder(coursePlaceholderDrawable)
                 .fitCenter()
                 .into(courseCoverImageViewTarget)

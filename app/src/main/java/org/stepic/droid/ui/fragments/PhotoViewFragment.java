@@ -3,6 +3,7 @@ package org.stepic.droid.ui.fragments;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -11,8 +12,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.transition.Transition;
 
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
@@ -47,16 +49,21 @@ public class PhotoViewFragment extends FragmentBase {
 
     PhotoViewAttacher photoViewAttacher;
 
-    private SimpleTarget<Bitmap> target = new SimpleTarget<Bitmap>() {
+    private Target<Bitmap> target = new CustomTarget<Bitmap>() {
         @Override
-        public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
+        public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
             internetProblemRootView.setVisibility(View.GONE);
             zoomableImageView.setImageBitmap(resource);
             photoViewAttacher.update();
         }
 
         @Override
-        public void onLoadFailed(Exception e, Drawable errorDrawable) {
+        public void onLoadCleared(@Nullable Drawable placeholder) {
+
+        }
+
+        @Override
+        public void onLoadFailed(@Nullable Drawable errorDrawable) {
             internetProblemRootView.setVisibility(View.VISIBLE);
         }
     };
@@ -94,9 +101,9 @@ public class PhotoViewFragment extends FragmentBase {
     }
 
     private void loadImage() {
-        Glide.with(getContext())
-                .load(url)
+        Glide.with(requireContext())
                 .asBitmap()
+                .load(url)
                 .fitCenter()
                 .into(target);
     }

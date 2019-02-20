@@ -14,7 +14,7 @@ class GlideImageViewWrapper(
     private val svgRequestBuilder by lazy {
         GlideSvgRequestFactory
                 .create(imageView.context, null)
-                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .diskCacheStrategy(DiskCacheStrategy.DATA)
     }
 
     fun setImagePath(path: String, placeholder: Drawable? = null) {
@@ -25,8 +25,8 @@ class GlideImageViewWrapper(
                 .into(imageView)
         } else {
             Glide.with(imageView.context)
-                .load(path)
                 .asBitmap()
+                .load(path)
                 .placeholder(placeholder)
                 .into(imageView)
         }

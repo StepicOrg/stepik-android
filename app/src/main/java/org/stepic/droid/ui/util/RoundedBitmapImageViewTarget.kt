@@ -9,7 +9,7 @@ class RoundedBitmapImageViewTarget(
     private val borderRadius: Float,
     private val imageView: ImageView
 ): BitmapImageViewTarget(imageView) {
-    override fun setResource(resource: Bitmap) {
+    override fun setResource(resource: Bitmap?) {
         val circularBitmapDrawable = RoundedBitmapDrawableFactory.create(imageView.resources, resource)
         circularBitmapDrawable.cornerRadius = borderRadius
         imageView.setImageDrawable(circularBitmapDrawable)

@@ -616,10 +616,10 @@ constructor(
         } else {
             try { // in order to suppress gai exception
                 Glide.with(context)
-                        .load(configs.baseUrl + cover)
                         .asBitmap()
+                        .load(configs.baseUrl + cover)
                         .placeholder(notificationPlaceholder)
-                        .into(200, 200)//pixels
+                        .submit(200, 200)//pixels
                         .get()
             } catch (e: Exception) {
                 getBitmap(notificationPlaceholder)
