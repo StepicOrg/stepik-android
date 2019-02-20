@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import org.stepic.droid.R
 import org.stepik.android.view.course_content.ui.fragment.CourseContentFragment
 import org.stepik.android.view.course_info.ui.fragment.CourseInfoFragment
+import org.stepik.android.view.course_reviews.ui.fragment.CourseReviewsFragment
 
 class CoursePagerAdapter(
         courseId: Long,
@@ -16,9 +17,8 @@ class CoursePagerAdapter(
 ) : FragmentPagerAdapter(fragmentManager) {
     private val fragments = listOf(
             { CourseInfoFragment.newInstance(courseId) }    to context.getString(R.string.course_tab_info),
+            { CourseReviewsFragment.newInstance(courseId) } to context.getString(R.string.course_tab_reviews),
             { CourseContentFragment.newInstance(courseId) } to context.getString(R.string.course_tab_modules)
-
-//            ::Fragment to context.getString(R.string.course_tab_reviews),
     )
 
     private val _activeFragments = mutableMapOf<Int, Fragment>()

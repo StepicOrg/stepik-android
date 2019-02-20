@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/reviewIcon"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="@dimen/course_review_item_margin"
+        android:layout_marginLeft="@dimen/course_review_item_margin"
+        android:layout_marginTop="@dimen/course_review_item_margin"
+        android:scaleType="centerCrop"
+        android:contentDescription="@null"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/reviewDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginStart="@dimen/course_review_item_inner_margin"
+        android:layout_marginLeft="@dimen/course_review_item_inner_margin"
+        android:layout_marginTop="@dimen/course_review_item_margin"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+
+        android:textColor="@color/new_accent_color"
+        android:textSize="8sp"
+
+        fontPath="fonts/Roboto-Light.ttf"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/reviewIcon"
+
+        tools:text="18.09.2017 17:36"
+        tools:ignore="SmallSp,missingPrefix" />
+
+    <TextView
+        android:id="@+id/reviewName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        android:layout_marginStart="@dimen/course_review_item_inner_margin"
+        android:layout_marginLeft="@dimen/course_review_item_inner_margin"
+        android:layout_marginEnd="@dimen/course_review_item_margin"
+        android:layout_marginRight="@dimen/course_review_item_margin"
+        android:layout_marginTop="4dp"
+
+        android:textColor="@color/new_accent_color"
+        android:textSize="14sp"
+
+        fontPath="fonts/Roboto-Medium.ttf"
+
+        app:layout_constraintTop_toBottomOf="@id/reviewDate"
+        app:layout_constraintStart_toEndOf="@id/reviewIcon"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        tools:text="Evgeny Kubrakov" />
+
+    <org.stepic.droid.features.achievements.ui.custom.VectorRatingBar
+        android:id="@+id/reviewRating"
+        app:backgroundIcon="@drawable/ic_progress_star_white_filled"
+        app:secondaryIcon="@drawable/ic_progress_star_white_filled"
+        app:progressIcon="@drawable/ic_progress_star_green_filled"
+        app:itemsGap="2dp"
+        android:layout_width="wrap_content"
+        android:layout_height="11dp"
+
+        android:layout_marginTop="@dimen/course_review_item_margin"
+        android:layout_marginEnd="@dimen/course_review_item_margin"
+        android:layout_marginRight="@dimen/course_review_item_margin"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/reviewText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        android:textColor="@color/new_accent_color"
+        android:textSize="14sp"
+        android:lineSpacingExtra="4sp"
+
+        fontPath="fonts/Roboto-Light.ttf"
+        tools:ignore="missingPrefix"
+
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="@dimen/course_review_item_inner_margin"
+        android:layout_marginLeft="@dimen/course_review_item_inner_margin"
+        android:layout_marginEnd="@dimen/course_review_item_margin"
+        android:layout_marginRight="@dimen/course_review_item_margin"
+        android:layout_marginBottom="@dimen/course_review_item_margin"
+
+        app:layout_constraintStart_toEndOf="@id/reviewIcon"
+        app:layout_constraintTop_toBottomOf="@id/reviewName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</android.support.constraint.ConstraintLayout>
