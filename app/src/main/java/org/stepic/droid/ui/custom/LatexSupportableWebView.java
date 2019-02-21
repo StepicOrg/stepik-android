@@ -88,6 +88,7 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
         WebSettings webSettings = getSettings();
         webSettings.setDomStorageEnabled(true);
         webSettings.setJavaScriptEnabled(true);
+        webSettings.setDefaultFontSize((int) textSize);
         addJavascriptInterface(new OnScrollWebListener(), HtmlHelper.HORIZONTAL_SCROLL_LISTENER);
     }
 
@@ -112,6 +113,7 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
      */
     public void setTextSize(float textSize) {
         this.textSize = textSize;
+        getSettings().setDefaultFontSize((int) textSize);
     }
 
     public void setText(CharSequence text) {
@@ -129,7 +131,7 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
 
         final String html;
         if (fontPath != null) {
-            html = HtmlHelper.buildPageWithCustomFont(text, textSize, fontPath, textColorHighlight, width, config.getBaseUrl());
+            html = HtmlHelper.buildPageWithCustomFont(text, fontPath, textColorHighlight, width, config.getBaseUrl());
         } else if (wantLaTeX || HtmlHelper.hasLaTeX(textString)) {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
                 setWebViewClient(new AssetSupportWebViewClient());

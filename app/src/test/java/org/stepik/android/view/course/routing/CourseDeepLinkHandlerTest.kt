@@ -6,6 +6,7 @@ import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import org.stepic.droid.util.getAllQueryParameters
 
 @RunWith(RobolectricTestRunner::class)
 class CourseDeepLinkHandlerTest {
@@ -48,6 +49,25 @@ class CourseDeepLinkHandlerTest {
         intent.data = Uri.parse("https://stepik.org/course/51237/syllabus")
 
         Assert.assertEquals(CourseScreenTab.SYLLABUS, intent.getCourseTabFromDeepLink())
+    }
+
+    @Test
+    fun payTabShortDeepLinkTest() {
+        val intent = Intent()
+        intent.data = Uri.parse("https://stepik.org/course/51237/pay")
+
+        Assert.assertEquals(CourseScreenTab.PAY, intent.getCourseTabFromDeepLink())
+    }
+
+    @Test
+    fun payTabShortWithParamsDeepLinkTest() {
+        val intent = Intent()
+        val promoKey = "promo"
+        val promoValue = "10003"
+        intent.data = Uri.parse("https://stepik.org/course/51237/pay/?$promoKey=$promoValue")
+
+        Assert.assertEquals(CourseScreenTab.PAY, intent.getCourseTabFromDeepLink())
+        Assert.assertEquals(listOf(promoValue), intent.data?.getAllQueryParameters()?.get(promoKey))
     }
 
 }

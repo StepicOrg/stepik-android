@@ -1,6 +1,7 @@
 package org.stepik.android.view.course.ui.delegates
 
 import android.app.Activity
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.PorterDuff
 import android.support.design.widget.AppBarLayout
@@ -13,7 +14,9 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.LinearLayout
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.MultiTransformation
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.request.RequestOptions
 import jp.wasabeef.glide.transformations.BlurTransformation
 import kotlinx.android.synthetic.main.activity_course.*
 import kotlinx.android.synthetic.main.header_course.*
@@ -23,9 +26,12 @@ import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.ui.util.*
+import org.stepic.droid.util.getAllQueryParameters
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.presentation.course.CoursePresenter
+import org.stepik.android.view.course.routing.CourseScreenTab
+import org.stepik.android.view.course.routing.getCourseTabFromDeepLink
 import kotlin.math.roundToInt
 
 class CourseHeaderDelegate(
@@ -115,7 +121,13 @@ class CourseHeaderDelegate(
         }
 
         courseBuyInWebAction.setOnClickListener {
-            coursePresenter.openCoursePurchaseInWeb()
+            val queryParams = courseActivity
+                .intent
+                ?.takeIf { it.getCourseTabFromDeepLink() == CourseScreenTab.PAY }
+                ?.data
+                ?.getAllQueryParameters()
+
+            coursePresenter.openCoursePurchaseInWeb(queryParams)
         }
 
         courseBuyInAppAction.setOnClickListener {
@@ -124,15 +136,19 @@ class CourseHeaderDelegate(
     }
 
     private fun setCourseData(courseHeaderData: CourseHeaderData) = with(courseActivity) {
+        val multi = MultiTransformation<Bitmap>(
+            BlurTransformation(),
+            CenterCrop()
+        )
         Glide.with(this)
                 .load(config.baseUrl + courseHeaderData.cover)
                 .placeholder(R.drawable.general_placeholder)
-                .bitmapTransform(CenterCrop(this), BlurTransformation(this))
+                .apply(RequestOptions.bitmapTransform(multi))
                 .into(courseCover)
 
         Glide.with(this)
-                .load(config.baseUrl + courseHeaderData.cover)
                 .asBitmap()
+                .load(config.baseUrl + courseHeaderData.cover)
                 .placeholder(courseCoverSmallPlaceHolder)
                 .centerCrop()
                 .into(courseCoverSmallTarget)
@@ -157,17 +173,17 @@ class CourseHeaderDelegate(
         courseFeatured.changeVisibility(courseHeaderData.readiness > MIN_FEATURED_READINESS)
 
         with(courseHeaderData.enrollmentState) {
-            courseEnrollAction.changeVisibility(this == EnrollmentState.NotEnrolledFree)
-            courseEnrollmentProgress.changeVisibility(this == EnrollmentState.Pending)
-            courseContinueAction.changeVisibility(this == EnrollmentState.Enrolled)
-            courseBuyInWebAction.changeVisibility(this == EnrollmentState.NotEnrolledWeb)
+            courseEnrollAction.changeVisibility(this is EnrollmentState.NotEnrolledFree)
+            courseEnrollmentProgress.changeVisibility(this is EnrollmentState.Pending)
+            courseContinueAction.changeVisibility(this is EnrollmentState.Enrolled)
+            courseBuyInWebAction.changeVisibility(this is EnrollmentState.NotEnrolledWeb)
             courseBuyInAppAction.changeVisibility(this is EnrollmentState.NotEnrolledInApp)
 
             if (this is EnrollmentState.NotEnrolledInApp) {
                 courseBuyInAppAction.text = getString(R.string.course_payments_purchase_in_app, this.sku.price)
             }
 
-            dropCourseMenuItem?.isVisible = this == EnrollmentState.Enrolled
+            dropCourseMenuItem?.isVisible = this is EnrollmentState.Enrolled
             restorePurchaseCourseMenuItem?.isVisible = this is EnrollmentState.NotEnrolledInApp
         }
 

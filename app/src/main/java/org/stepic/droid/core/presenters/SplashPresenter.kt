@@ -23,7 +23,6 @@ import org.stepic.droid.util.emptyOnErrorStub
 import org.stepik.android.view.routing.deeplink.BranchDeepLinkParser
 import org.stepik.android.view.routing.deeplink.BranchRoute
 import java.lang.IllegalArgumentException
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @SplashScope
@@ -61,6 +60,7 @@ constructor(
                 registerDeviceToPushes()
                 executeLegacyOperations()
                 localReminder.remindAboutRegistration()
+                localReminder.scheduleRetentionNotification(shouldResetCounter = true)
                 sharedPreferenceHelper.onNewSession()
             }
             .andThen(resolveSplashRoute(referringParams))

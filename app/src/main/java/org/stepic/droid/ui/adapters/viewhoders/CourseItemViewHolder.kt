@@ -186,8 +186,8 @@ class CourseItemViewHolder(
         courseItemName.text = course.title
         Glide
                 .with(itemView.context)
-                .load(StepikLogicHelper.getPathForCourseOrEmpty(course, config))
                 .asBitmap()
+                .load(StepikLogicHelper.getPathForCourseOrEmpty(course, config))
                 .placeholder(coursePlaceholder)
                 .fitCenter()
                 .into(imageViewTarget)

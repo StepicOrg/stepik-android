@@ -20,6 +20,7 @@ import org.stepik.android.presentation.base.injection.ViewModelKey
 import org.stepik.android.presentation.course.CoursePresenter
 import org.stepik.android.presentation.course_content.CourseContentPresenter
 import org.stepik.android.presentation.course_info.CourseInfoPresenter
+import org.stepik.android.presentation.course_reviews.CourseReviewsPresenter
 import org.stepik.android.remote.course.source.CourseReviewRemoteDataSourceImpl
 
 @Module
@@ -47,6 +48,11 @@ abstract class CourseModule {
     @IntoMap
     @ViewModelKey(CourseInfoPresenter::class)
     internal abstract fun bindCourseInfoPresenter(courseInfoPresenter: CourseInfoPresenter): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(CourseReviewsPresenter::class)
+    internal abstract fun bindCourseReviewsPrsenter(courseReviewsPresenter: CourseReviewsPresenter): ViewModel
 
     @Binds
     @IntoMap
