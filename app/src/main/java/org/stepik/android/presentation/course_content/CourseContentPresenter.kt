@@ -422,10 +422,12 @@ constructor(
                 .doFinally { isBlockingLoading = false }
                 .subscribeBy(
                     onSuccess = {
-                        if (it.isEmpty())
+                        if (it.isEmpty()) {
                             view?.showCalendarError(CalendarError.NO_CALENDARS_ERROR)
-                        else
+                        }
+                        else {
                             view?.showCalendarChoiceDialog(it)
+                        }
                     },
                     onError = { view?.showCalendarError(CalendarError.GENERIC_ERROR) }
                 )
