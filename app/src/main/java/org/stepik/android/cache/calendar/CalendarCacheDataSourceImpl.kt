@@ -94,7 +94,6 @@ constructor(
 
     private fun insertCalendarEventData(calendarEventData: CalendarEventData, calendarItem: CalendarItem): Single<Long> =
         Single.fromCallable {
-            if (calendarEventData.eventId != -1L) deleteEventById(calendarEventData.eventId)
             return@fromCallable contentResolver
                     .insert(CalendarContract.Events.CONTENT_URI, mapContentValues(calendarEventData, calendarItem))
                     .lastPathSegment.toLong()
