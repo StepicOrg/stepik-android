@@ -89,7 +89,7 @@ constructor(
 
     override fun deleteEventsById(ids: List<Long>): Completable =
         Completable.fromAction {
-            ids.forEach{ deleteEventById(it) }
+            ids.forEach { deleteEventById(it) }
         }
 
     private fun insertCalendarEventData(calendarEventData: CalendarEventData, calendarItem: CalendarItem): Single<Long> =
@@ -101,5 +101,4 @@ constructor(
 
     private fun deleteEventById(id: Long) =
         contentResolver.delete(ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, id), null, null)
-
 }

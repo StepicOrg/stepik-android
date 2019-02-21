@@ -11,8 +11,7 @@ data class CalendarItem(
     val isPrimary: Boolean = false
 ) : Parcelable {
 
-
-    override fun describeContents() = 0
+    override fun describeContents(): Int = 0
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
         dest.writeLong(this.calendarId)
@@ -28,7 +27,7 @@ data class CalendarItem(
                 parcel.readBoolean()
             )
 
-        override fun newArray(size: Int): Array<CalendarItem?> = arrayOfNulls(size)
-
+        override fun newArray(size: Int): Array<CalendarItem?> =
+            arrayOfNulls(size)
     }
 }

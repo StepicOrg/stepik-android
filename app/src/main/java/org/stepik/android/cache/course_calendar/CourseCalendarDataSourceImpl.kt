@@ -10,7 +10,7 @@ import javax.inject.Inject
 class CourseCalendarDataSourceImpl
 @Inject
 constructor(
-        private val databaseFacade: DatabaseFacade
+    private val databaseFacade: DatabaseFacade
 ) : CourseCalendarCacheDataSource {
 
     override fun getSectionDateEventsByIds(ids: List<Long>): Single<List<SectionDateEvent>> =

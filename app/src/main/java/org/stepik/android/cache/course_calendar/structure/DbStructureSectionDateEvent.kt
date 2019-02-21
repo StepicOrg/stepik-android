@@ -1,7 +1,6 @@
 package org.stepik.android.cache.course_calendar.structure
 
 import android.database.sqlite.SQLiteDatabase
-import org.stepik.android.cache.lesson.structure.DbStructureLesson
 
 object DbStructureSectionDateEvent {
     const val TABLE_NAME = "course_calendar"

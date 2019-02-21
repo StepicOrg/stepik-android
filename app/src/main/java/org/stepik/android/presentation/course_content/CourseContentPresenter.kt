@@ -427,7 +427,7 @@ constructor(
                         else
                             view?.showCalendarChoiceDialog(it)
                     },
-                    onError = { view?.showCalendarError(CalendarError.GENERIC_ERROR)}
+                    onError = { view?.showCalendarError(CalendarError.GENERIC_ERROR) }
                 )
     }
 
