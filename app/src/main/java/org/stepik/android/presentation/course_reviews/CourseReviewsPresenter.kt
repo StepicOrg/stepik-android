@@ -153,7 +153,14 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onSuccess = { state = CourseReviewsView.State.CourseReviewsRemote(it) },
+                onSuccess = { reviews ->
+                    state =
+                        if (reviews.isEmpty()) {
+                            CourseReviewsView.State.EmptyContent
+                        } else {
+                            CourseReviewsView.State.CourseReviewsRemote(reviews)
+                        }
+                },
                 onError = {
                     when (oldState) {
                         is CourseReviewsView.State.CourseReviewsCache,
