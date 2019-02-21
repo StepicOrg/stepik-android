@@ -329,10 +329,10 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
 
     private fun syncCalendarDates() {
         val permissions = listOf(Manifest.permission.WRITE_CALENDAR,  Manifest.permission.READ_CALENDAR)
-        if (!requireContext().checkSelfPermissions(permissions)) {
-            showExplainPermissionsDialog()
-        } else {
+        if (requireContext().checkSelfPermissions(permissions)) {
             courseContentPresenter.getCalendarPrimaryItems()
+        } else {
+            showExplainPermissionsDialog()
         }
     }
 
