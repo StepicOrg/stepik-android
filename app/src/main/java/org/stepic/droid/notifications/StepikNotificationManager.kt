@@ -10,6 +10,8 @@ interface StepikNotificationManager {
         const val SHOW_NEW_USER_NOTIFICATION = "show_new_user_notification"
 
         const val SHOW_STREAK_NOTIFICATION = "show_streak_notification"
+
+        const val SHOW_RETENTION_NOTIFICATION = "show_retention_notification"
     }
 
     @WorkerThread
@@ -27,6 +29,9 @@ interface StepikNotificationManager {
 
     @WorkerThread
     fun showRegistrationRemind()
+
+    @WorkerThread
+    fun showRetentionNotification()
 
     fun showPersonalDeadlineNotification(deadline: DeadlineEntity)
 }

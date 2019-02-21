@@ -653,7 +653,15 @@
     <string name="course_purchase_billing_no_purchases_to_restore">У вас нет неактивированных покупок этого курса</string>
     <string name="course_purchase_already_owned">Вы уже владеете этим курсом</string>
 
+    <string name="course_purchase_link_chooser_title">Открыть в</string>
+
 
     <string name="video_player_control_notification_channel_name">Управление видео плеером</string>
     <string name="video_player_in_background_popup">Вы можете продолжить воспроизведение видео в фоне</string>
+
+
+    <string name="retention_notification_day1_title">Не сбавляем темп</string>
+    <string name="retention_notification_day1_message">Вы проделали отличную работу вчера - это хороший повод зайти сегодня и продолжить учиться! 🚀</string>
+    <string name="retention_notification_day3_title">Время учиться ‍🎓</string>
+    <string name="retention_notification_day3_message">Вас давно не было. Заходите и учитесь новому! 💡</string>
 </resources>

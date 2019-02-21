@@ -25,7 +25,8 @@ enum class CourseScreenTab(val path: String) {
     REVIEWS("reviews"),
     SYLLABUS("syllabus"),
     COMMENTS("comments"),
-    NEWS("news")
+    NEWS("news"),
+    PAY("pay")
 }
 
 fun Intent.getCourseTabFromDeepLink(): CourseScreenTab {

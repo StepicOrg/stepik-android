@@ -143,7 +143,8 @@ class CourseActivity : FragmentActivityBase(), CourseView {
 
             coursePager.currentItem =
                 when(tab) {
-                    CourseScreenTab.SYLLABUS -> 1
+                    CourseScreenTab.REVIEWS -> 1
+                    CourseScreenTab.SYLLABUS -> 2
                     else -> 0
                 }
         } else {
@@ -368,8 +369,8 @@ class CourseActivity : FragmentActivityBase(), CourseView {
     override fun createUiCheckout(): UiCheckout =
         uiCheckout
 
-    override fun openCoursePurchaseInWeb(courseId: Long) {
-        screenManager.openCoursePurchaseInWeb(this, courseId)
+    override fun openCoursePurchaseInWeb(courseId: Long, queryParams: Map<String, List<String>>?) {
+        screenManager.openCoursePurchaseInWeb(this, courseId, queryParams)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

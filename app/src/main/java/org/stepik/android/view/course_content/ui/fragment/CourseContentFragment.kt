@@ -61,7 +61,7 @@ import javax.inject.Inject
 
 class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerScrollStateListener, ExplainCalendarPermissionDialog.Callback{
     companion object {
-        fun newInstance(courseId: Long) =
+        fun newInstance(courseId: Long): Fragment  =
             CourseContentFragment().apply {
                 this.courseId = courseId
             }
