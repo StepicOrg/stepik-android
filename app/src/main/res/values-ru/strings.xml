@@ -625,6 +625,8 @@
     <string name="course_error_continue_learning">Невозможно продолжить обучение</string>
     <string name="course_error_enroll">@string/course_error_generic</string>
 
+    <string name="course_reviews_empty">Для этого курса пока нет отзывов</string>
+
     <string name="course_content_timeline_begin_date">Дата начала</string>
     <string name="course_content_timeline_end_date">Дата закрытия</string>
     <string name="course_content_timeline_soft_deadline">Мягкий дедлайн</string>
