@@ -374,9 +374,6 @@ constructor(
 
     fun getExpForWeeks(courseId: Long) = adaptiveExpDao.getExpForWeeks(courseId)
 
-    fun getSectionDateEvents(): List<SectionDateEvent> =
-        sectionDateEventDao.getAll()
-
     fun getSectionDateEventsById(keys: List<Long>): List<SectionDateEvent> =
         DbParseHelper.parseLongListToString(keys, AppConstants.COMMA)?.let {
             sectionDateEventDao.getAllInRange(DbStructureSectionDateEvent.Columns.SECTION_ID, it)
@@ -388,7 +385,6 @@ constructor(
         )}
 
     fun addSectionDateEvents(events: List<SectionDateEvent>) {
-        sectionDateEventDao.removeAll()
         sectionDateEventDao.insertOrReplaceAll(events)
     }
 }
