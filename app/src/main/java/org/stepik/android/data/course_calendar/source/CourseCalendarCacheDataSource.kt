@@ -5,7 +5,7 @@ import io.reactivex.Single
 import org.stepik.android.domain.course_calendar.model.SectionDateEvent
 
 interface CourseCalendarCacheDataSource {
-    fun getSectionDateEvents(): Single<List<SectionDateEvent>>
     fun getSectionDateEventsByIds(ids: List<Long>): Single<List<SectionDateEvent>>
     fun saveSectionDateEvents(events: List<SectionDateEvent>): Completable
+    fun removeSectionDatesEventsByIds(ids: List<Long>): Completable
 }
