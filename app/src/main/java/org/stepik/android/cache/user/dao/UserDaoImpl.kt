@@ -10,7 +10,6 @@ import org.stepic.droid.util.getLong
 import org.stepic.droid.util.getString
 import org.stepik.android.cache.user.structure.DbStructureUser
 import org.stepik.android.model.user.User
-import java.util.*
 import javax.inject.Inject
 
 class UserDaoImpl
@@ -59,6 +58,4 @@ constructor(
             isOrganization = cursor.getBoolean(DbStructureUser.Columns.IS_ORGANIZATION),
             joinDate    = cursor.getDate(DbStructureUser.Columns.JOIN_DATE)
         )
-
-
 }

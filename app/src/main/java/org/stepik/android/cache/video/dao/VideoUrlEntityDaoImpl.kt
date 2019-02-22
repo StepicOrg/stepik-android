@@ -37,5 +37,4 @@ constructor(
             url     = cursor.getString(VideoUrlDbScheme.Columns.URL)!!,
             quality = cursor.getString(VideoUrlDbScheme.Columns.QUALITY)!!
         )
-
 }
