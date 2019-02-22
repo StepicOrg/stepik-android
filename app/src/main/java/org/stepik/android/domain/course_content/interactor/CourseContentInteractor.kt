@@ -87,5 +87,4 @@ constructor(
             .map { (progresses, lessons) ->
                 courseContentItemMapper.mapUnits(sectionItems, units, lessons, progresses)
             }
-
 }

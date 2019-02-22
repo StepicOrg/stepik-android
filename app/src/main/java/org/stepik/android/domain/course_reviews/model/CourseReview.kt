@@ -1,7 +1,7 @@
 package org.stepik.android.domain.course_reviews.model
 
 import com.google.gson.annotations.SerializedName
-import java.util.*
+import java.util.Date
 
 class CourseReview(
     @SerializedName("id")

@@ -110,6 +110,7 @@ constructor(
                     .onErrorReturnItem(EnrollmentState.NotEnrolledWeb) // if billing not supported on current device or to access paid course offline
         }
 
-    fun restoreCourse(course: Course) =
+    fun restoreCourse(course: Course) {
         coursePublishSubject.onNext(course)
+    }
 }

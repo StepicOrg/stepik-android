@@ -28,8 +28,6 @@ import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
-import org.stepik.android.view.course.ui.adapter.CoursePagerAdapter
-import org.stepik.android.view.course.ui.delegates.CourseHeaderDelegate
 import org.stepic.droid.fonts.FontType
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.dialogs.UnauthorizedDialogFragment
@@ -44,6 +42,8 @@ import org.stepik.android.view.course.listener.CourseFragmentPageChangeListener
 import org.stepik.android.view.course.routing.CourseScreenTab
 import org.stepik.android.view.course.routing.getCourseIdFromDeepLink
 import org.stepik.android.view.course.routing.getCourseTabFromDeepLink
+import org.stepik.android.view.course.ui.adapter.CoursePagerAdapter
+import org.stepik.android.view.course.ui.delegates.CourseHeaderDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import uk.co.chrisjenx.calligraphy.TypefaceUtils
 import javax.inject.Inject
@@ -142,7 +142,7 @@ class CourseActivity : FragmentActivityBase(), CourseView {
                 ?: intent.getCourseTabFromDeepLink()
 
             coursePager.currentItem =
-                when(tab) {
+                when (tab) {
                     CourseScreenTab.REVIEWS -> 1
                     CourseScreenTab.SYLLABUS -> 2
                     else -> 0
@@ -247,7 +247,7 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem) =
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
         if (item.itemId == android.R.id.home) {
             onBackPressed()
             true
@@ -256,13 +256,13 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         }
 
     override fun applyTransitionPrev() {
-        //no-op
+        // no-op
     }
 
     private fun resolveSwipeRefreshState() {
         courseSwipeRefresh.isEnabled =
-                viewPagerScrollState == ViewPager.SCROLL_STATE_IDLE
-                && isInSwipeableViewState
+                viewPagerScrollState == ViewPager.SCROLL_STATE_IDLE &&
+                    isInSwipeableViewState
     }
 
     override fun setState(state: CourseView.State) {
@@ -270,7 +270,7 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         isInSwipeableViewState = (state is CourseView.State.CourseLoaded || state is CourseView.State.NetworkError)
         resolveSwipeRefreshState()
 
-        when(state) {
+        when (state) {
             is CourseView.State.CourseLoaded -> {
                 courseHeaderDelegate.courseHeaderData = state.courseHeaderData
 
@@ -305,7 +305,7 @@ class CourseActivity : FragmentActivityBase(), CourseView {
     override fun showEnrollmentError(errorType: EnrollmentError) {
         @StringRes
         val errorMessage =
-            when(errorType) {
+            when (errorType) {
                 EnrollmentError.NO_CONNECTION ->
                     R.string.course_error_enroll
 

@@ -1,6 +1,9 @@
 package org.stepik.android.view.course_content.model
 
-import org.stepik.android.model.*
+import org.stepik.android.model.Course
+import org.stepik.android.model.Lesson
+import org.stepik.android.model.Progress
+import org.stepik.android.model.Section
 import org.stepik.android.model.Unit
 import org.stepik.android.presentation.personal_deadlines.model.PersonalDeadlinesState
 

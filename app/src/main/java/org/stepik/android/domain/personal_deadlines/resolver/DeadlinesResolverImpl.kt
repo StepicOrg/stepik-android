@@ -1,19 +1,20 @@
 package org.stepik.android.domain.personal_deadlines.resolver
 
 import io.reactivex.Single
-import org.stepik.android.model.Section
-import org.stepik.android.domain.personal_deadlines.model.Deadline
-import org.stepik.android.domain.personal_deadlines.model.DeadlinesWrapper
-import org.stepik.android.domain.personal_deadlines.model.LearningRate
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.mapToLongArray
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.lesson.repository.LessonRepository
+import org.stepik.android.domain.personal_deadlines.model.Deadline
+import org.stepik.android.domain.personal_deadlines.model.DeadlinesWrapper
+import org.stepik.android.domain.personal_deadlines.model.LearningRate
 import org.stepik.android.domain.section.repository.SectionRepository
 import org.stepik.android.domain.unit.repository.UnitRepository
 import org.stepik.android.model.Lesson
+import org.stepik.android.model.Section
 import org.stepik.android.model.Unit
-import java.util.*
+import java.util.Calendar
+import java.util.Date
 import javax.inject.Inject
 
 class DeadlinesResolverImpl

@@ -25,7 +25,11 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.configuration.Config
-import org.stepic.droid.ui.util.*
+import org.stepic.droid.ui.util.PopupHelper
+import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
+import org.stepic.droid.ui.util.changeVisibility
+import org.stepic.droid.ui.util.doOnPreDraw
+import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepic.droid.util.getAllQueryParameters
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.model.EnrollmentState
@@ -72,138 +76,141 @@ class CourseHeaderDelegate(
         initActions()
     }
 
-    private fun initCollapsingAnimation() = with(courseActivity) {
-        val courseInfoHeightExpanded = resources.getDimension(R.dimen.course_info_height_expanded)
-        val courseInfoMarginExpanded = resources.getDimension(R.dimen.course_info_margin_expanded)
+    private fun initCollapsingAnimation() =
+        with(courseActivity) {
+            val courseInfoHeightExpanded = resources.getDimension(R.dimen.course_info_height_expanded)
+            val courseInfoMarginExpanded = resources.getDimension(R.dimen.course_info_margin_expanded)
 
-        courseAppBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
-            val ratio = Math.abs(verticalOffset).toFloat() / (courseCollapsingToolbar.height - courseToolbar.height)
-            val targetTranslation = courseInfoMarginExpanded - (courseToolbar.height - courseInfoHeightExpanded) / 2
+            courseAppBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
+                val ratio = Math.abs(verticalOffset).toFloat() / (courseCollapsingToolbar.height - courseToolbar.height)
+                val targetTranslation = courseInfoMarginExpanded - (courseToolbar.height - courseInfoHeightExpanded) / 2
 
-            courseCover.alpha = 1f - ratio
-            courseInfo.translationY = ratio * targetTranslation
-            courseInfoPlaceholder.translationY = ratio * targetTranslation
-        })
-    }
+                courseCover.alpha = 1f - ratio
+                courseInfo.translationY = ratio * targetTranslation
+                courseInfoPlaceholder.translationY = ratio * targetTranslation
+            })
+        }
 
-    private fun initCompoundDrawables() = with(courseActivity) {
-        courseFeatured.setCompoundDrawables(start = R.drawable.ic_verified)
+    private fun initCompoundDrawables() =
+        with(courseActivity) {
+            courseFeatured.setCompoundDrawables(start = R.drawable.ic_verified)
 
-        val learnersCountDrawable = AppCompatResources
-            .getDrawable(this, R.drawable.ic_learners)
-            ?.let(DrawableCompat::wrap)
-            ?: return@with
-        DrawableCompat.setTint(learnersCountDrawable, ContextCompat.getColor(this,  android.R.color.white))
-        courseLearnersCount.setCompoundDrawablesWithIntrinsicBounds(learnersCountDrawable, null, null, null)
-    }
+            val learnersCountDrawable = AppCompatResources
+                .getDrawable(this, R.drawable.ic_learners)
+                ?.let(DrawableCompat::wrap)
+                ?: return@with
+            DrawableCompat.setTint(learnersCountDrawable, ContextCompat.getColor(this,  android.R.color.white))
+            courseLearnersCount.setCompoundDrawablesWithIntrinsicBounds(learnersCountDrawable, null, null, null)
+        }
 
-    private fun initActions() = with(courseActivity) {
-        courseEnrollAction.setOnClickListener {
-            coursePresenter.enrollCourse()
+    private fun initActions() =
+        with(courseActivity) {
+            courseEnrollAction.setOnClickListener {
+                coursePresenter.enrollCourse()
 
-            courseHeaderData?.let { headerData ->
-                analytic.reportAmplitudeEvent(AmplitudeAnalytic.Course.JOINED, mapOf(
-                    AmplitudeAnalytic.Course.Params.COURSE to headerData.courseId,
-                    AmplitudeAnalytic.Course.Params.SOURCE to AmplitudeAnalytic.Course.Values.PREVIEW
-                ))
+                courseHeaderData?.let { headerData ->
+                    analytic.reportAmplitudeEvent(AmplitudeAnalytic.Course.JOINED, mapOf(
+                        AmplitudeAnalytic.Course.Params.COURSE to headerData.courseId,
+                        AmplitudeAnalytic.Course.Params.SOURCE to AmplitudeAnalytic.Course.Values.PREVIEW
+                    ))
+                }
+            }
+
+            courseContinueAction.setOnClickListener {
+                coursePresenter.continueLearning()
+
+                courseHeaderData?.let { headerData ->
+                    analytic.reportAmplitudeEvent(AmplitudeAnalytic.Course.CONTINUE_PRESSED, mapOf(
+                        AmplitudeAnalytic.Course.Params.COURSE to headerData.courseId,
+                        AmplitudeAnalytic.Course.Params.SOURCE to AmplitudeAnalytic.Course.Values.COURSE_SCREEN
+                    ))
+                }
+            }
+
+            courseBuyInWebAction.setOnClickListener {
+                val queryParams = courseActivity
+                    .intent
+                    ?.takeIf { it.getCourseTabFromDeepLink() == CourseScreenTab.PAY }
+                    ?.data
+                    ?.getAllQueryParameters()
+
+                coursePresenter.openCoursePurchaseInWeb(queryParams)
+            }
+
+            courseBuyInAppAction.setOnClickListener {
+                coursePresenter.purchaseCourse()
             }
         }
 
-        courseContinueAction.setOnClickListener {
-            coursePresenter.continueLearning()
+    private fun setCourseData(courseHeaderData: CourseHeaderData) =
+        with(courseActivity) {
+            val multi = MultiTransformation<Bitmap>(
+                BlurTransformation(),
+                CenterCrop()
+            )
+            Glide.with(this)
+                    .load(config.baseUrl + courseHeaderData.cover)
+                    .placeholder(R.drawable.general_placeholder)
+                    .apply(RequestOptions.bitmapTransform(multi))
+                    .into(courseCover)
 
-            courseHeaderData?.let { headerData ->
-                analytic.reportAmplitudeEvent(AmplitudeAnalytic.Course.CONTINUE_PRESSED, mapOf(
-                    AmplitudeAnalytic.Course.Params.COURSE to headerData.courseId,
-                    AmplitudeAnalytic.Course.Params.SOURCE to AmplitudeAnalytic.Course.Values.COURSE_SCREEN
-                ))
-            }
-        }
+            Glide.with(this)
+                    .asBitmap()
+                    .load(config.baseUrl + courseHeaderData.cover)
+                    .placeholder(courseCoverSmallPlaceHolder)
+                    .centerCrop()
+                    .into(courseCoverSmallTarget)
 
-        courseBuyInWebAction.setOnClickListener {
-            val queryParams = courseActivity
-                .intent
-                ?.takeIf { it.getCourseTabFromDeepLink() == CourseScreenTab.PAY }
-                ?.data
-                ?.getAllQueryParameters()
+            courseTitle.text = courseHeaderData.title
 
-            coursePresenter.openCoursePurchaseInWeb(queryParams)
-        }
+            courseRating.total = 5
+            courseRating.progress = courseHeaderData.review.roundToInt()
+            courseRating.changeVisibility(courseHeaderData.review > 0)
 
-        courseBuyInAppAction.setOnClickListener {
-            coursePresenter.purchaseCourse()
-        }
-    }
+            val isNeedShowProgress = courseHeaderData.progress != null
+            courseProgress.changeVisibility(isNeedShowProgress)
+            courseProgressText.changeVisibility(isNeedShowProgress)
 
-    private fun setCourseData(courseHeaderData: CourseHeaderData) = with(courseActivity) {
-        val multi = MultiTransformation<Bitmap>(
-            BlurTransformation(),
-            CenterCrop()
-        )
-        Glide.with(this)
-                .load(config.baseUrl + courseHeaderData.cover)
-                .placeholder(R.drawable.general_placeholder)
-                .apply(RequestOptions.bitmapTransform(multi))
-                .into(courseCover)
-
-        Glide.with(this)
-                .asBitmap()
-                .load(config.baseUrl + courseHeaderData.cover)
-                .placeholder(courseCoverSmallPlaceHolder)
-                .centerCrop()
-                .into(courseCoverSmallTarget)
-
-        courseTitle.text = courseHeaderData.title
-
-        courseRating.total = 5
-        courseRating.progress = courseHeaderData.review.roundToInt()
-        courseRating.changeVisibility(courseHeaderData.review > 0)
-
-
-        val isNeedShowProgress = courseHeaderData.progress != null
-        courseProgress.changeVisibility(isNeedShowProgress)
-        courseProgressText.changeVisibility(isNeedShowProgress)
-
-        if (courseHeaderData.progress != null) { // kotlin can't smart cast with isNeedShowProgress
-            courseProgress.progress = courseHeaderData.progress / 100f
-            courseProgressText.text = getString(R.string.percent_symbol, courseHeaderData.progress)
-        }
-
-        courseLearnersCount.text = courseHeaderData.learnersCount.toString()
-        courseFeatured.changeVisibility(courseHeaderData.readiness > MIN_FEATURED_READINESS)
-
-        with(courseHeaderData.enrollmentState) {
-            courseEnrollAction.changeVisibility(this is EnrollmentState.NotEnrolledFree)
-            courseEnrollmentProgress.changeVisibility(this is EnrollmentState.Pending)
-            courseContinueAction.changeVisibility(this is EnrollmentState.Enrolled)
-            courseBuyInWebAction.changeVisibility(this is EnrollmentState.NotEnrolledWeb)
-            courseBuyInAppAction.changeVisibility(this is EnrollmentState.NotEnrolledInApp)
-
-            if (this is EnrollmentState.NotEnrolledInApp) {
-                courseBuyInAppAction.text = getString(R.string.course_payments_purchase_in_app, this.sku.price)
+            if (courseHeaderData.progress != null) { // kotlin can't smart cast with isNeedShowProgress
+                courseProgress.progress = courseHeaderData.progress / 100f
+                courseProgressText.text = getString(R.string.percent_symbol, courseHeaderData.progress)
             }
 
-            dropCourseMenuItem?.isVisible = this is EnrollmentState.Enrolled
-            restorePurchaseCourseMenuItem?.isVisible = this is EnrollmentState.NotEnrolledInApp
-        }
+            courseLearnersCount.text = courseHeaderData.learnersCount.toString()
+            courseFeatured.changeVisibility(courseHeaderData.readiness > MIN_FEATURED_READINESS)
 
-        shareCourseMenuItem?.isVisible = true
+            with(courseHeaderData.enrollmentState) {
+                courseEnrollAction.changeVisibility(this is EnrollmentState.NotEnrolledFree)
+                courseEnrollmentProgress.changeVisibility(this is EnrollmentState.Pending)
+                courseContinueAction.changeVisibility(this is EnrollmentState.Enrolled)
+                courseBuyInWebAction.changeVisibility(this is EnrollmentState.NotEnrolledWeb)
+                courseBuyInAppAction.changeVisibility(this is EnrollmentState.NotEnrolledInApp)
 
-        courseToolbarConstraint.doOnPreDraw {
-            val offset = maxOf(courseToolbar.height, courseToolbar.width - courseToolbarConstraint.right)
-            courseInfo.layoutParams = (courseInfo.layoutParams as LinearLayout.LayoutParams)
-                .apply {
-                    leftMargin = offset
-                    rightMargin = offset
+                if (this is EnrollmentState.NotEnrolledInApp) {
+                    courseBuyInAppAction.text = getString(R.string.course_payments_purchase_in_app, this.sku.price)
                 }
 
-            courseInfoPlaceholder.layoutParams = (courseInfoPlaceholder.layoutParams as LinearLayout.LayoutParams)
-                .apply {
-                    leftMargin = offset
-                    rightMargin = offset
-                }
+                dropCourseMenuItem?.isVisible = this is EnrollmentState.Enrolled
+                restorePurchaseCourseMenuItem?.isVisible = this is EnrollmentState.NotEnrolledInApp
+            }
+
+            shareCourseMenuItem?.isVisible = true
+
+            courseToolbarConstraint.doOnPreDraw {
+                val offset = maxOf(courseToolbar.height, courseToolbar.width - courseToolbarConstraint.right)
+                courseInfo.layoutParams = (courseInfo.layoutParams as LinearLayout.LayoutParams)
+                    .apply {
+                        leftMargin = offset
+                        rightMargin = offset
+                    }
+
+                courseInfoPlaceholder.layoutParams = (courseInfoPlaceholder.layoutParams as LinearLayout.LayoutParams)
+                    .apply {
+                        leftMargin = offset
+                        rightMargin = offset
+                    }
+            }
         }
-    }
 
     fun showCourseShareTooltip() {
         val menuItemView = courseActivity
@@ -239,7 +246,7 @@ class CourseHeaderDelegate(
     }
 
     fun onOptionsItemSelected(item: MenuItem): Boolean =
-        when(item.itemId) {
+        when (item.itemId) {
             R.id.drop_course -> {
                 coursePresenter.dropCourse()
 
