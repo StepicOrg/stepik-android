@@ -234,7 +234,6 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
                     true
                 }
                 else -> false
-
             }
         }
 

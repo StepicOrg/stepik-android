@@ -1,28 +1,30 @@
 package org.stepik.android.view.personal_deadlines.ui.adapters
 
 import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import kotlinx.android.synthetic.main.view_edit_deadlines_item.view.*
 import org.stepic.droid.R
+import org.stepic.droid.ui.util.changeVisibility
+import org.stepic.droid.ui.util.inflate
+import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.domain.personal_deadlines.model.Deadline
 import org.stepik.android.model.Section
-import org.stepic.droid.ui.util.changeVisibility
-import org.stepic.droid.util.DateTimeHelper
-import java.util.*
+import java.util.ArrayList
+import java.util.Date
+import java.util.TimeZone
 
 class EditDeadlinesAdapter(
     private val sections: List<Section>,
     private val deadlines: ArrayList<Deadline>,
     private val onDeadlineClicked: (Deadline) -> Unit
-): RecyclerView.Adapter<EditDeadlinesAdapter.EditDeadlinesViewHolder>() {
-    override fun getItemCount() = sections.size
+) : RecyclerView.Adapter<EditDeadlinesAdapter.EditDeadlinesViewHolder>() {
+    override fun getItemCount(): Int =
+        sections.size
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = EditDeadlinesViewHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.view_edit_deadlines_item, parent, false)
-    )
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EditDeadlinesAdapter.EditDeadlinesViewHolder =
+        EditDeadlinesViewHolder(parent.inflate(R.layout.view_edit_deadlines_item))
 
     override fun onBindViewHolder(holder: EditDeadlinesViewHolder, position: Int) {
         holder.sectionTitle.text = holder.itemView.context.getString(R.string.section_title_with_number,
@@ -57,13 +59,13 @@ class EditDeadlinesAdapter(
     }
 
     private fun getDeadlineForPosition(position: Int) =
-            getDeadlineForPositionOrNull(position) ?: Deadline(sections[position].id, Date(DateTimeHelper.nowUtc()))
+        getDeadlineForPositionOrNull(position) ?: Deadline(sections[position].id, Date(DateTimeHelper.nowUtc()))
 
     private fun onItemClicked(position: Int) {
         onDeadlineClicked(getDeadlineForPosition(position))
     }
 
-    inner class EditDeadlinesViewHolder(view: View): RecyclerView.ViewHolder(view) {
+    inner class EditDeadlinesViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         internal val sectionTitle: TextView = view.sectionTitle
         internal val deadline: TextView = view.deadline
 
