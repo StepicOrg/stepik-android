@@ -15,11 +15,11 @@ constructor(
 ) : CalendarRepository {
 
     override fun saveCalendarEventData(calendarEventData: CalendarEventData, calendarItem: CalendarItem): Single<Long> =
-        calendarCacheDataSource.syncCalendarEventData(calendarEventData, calendarItem)
+        calendarCacheDataSource.saveCalendarEventData(calendarEventData, calendarItem)
 
     override fun getCalendarItems(): Single<List<CalendarItem>> =
         calendarCacheDataSource.getCalendarPrimaryItems()
 
-    override fun deleteCalendarEventDataByIds(ids: List<Long>): Completable =
-        calendarCacheDataSource.deleteEventsById(ids)
+    override fun removeCalendarEventDataByIds(ids: List<Long>): Completable =
+        calendarCacheDataSource.removeEventsById(ids)
 }

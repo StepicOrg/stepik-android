@@ -21,9 +21,6 @@ constructor(
     private val contentResolver: ContentResolver
 ) : CalendarCacheDataSource {
 
-    override fun syncCalendarEventData(calendarEventData: CalendarEventData, calendarItem: CalendarItem): Single<Long> =
-        insertCalendarEventData(calendarEventData, calendarItem)
-
     override fun getCalendarPrimaryItems(): Single<List<CalendarItem>> =
         Single.create<List<CalendarItem>> { emitter ->
             val listOfCalendarItems = mutableListOf<CalendarItem>()
@@ -87,18 +84,18 @@ constructor(
         return contentValues
     }
 
-    override fun deleteEventsById(ids: List<Long>): Completable =
+    override fun removeEventsById(ids: List<Long>): Completable =
         Completable.fromAction {
-            ids.forEach { deleteEventById(it) }
+            ids.forEach { removeEventById(it) }
         }
 
-    private fun insertCalendarEventData(calendarEventData: CalendarEventData, calendarItem: CalendarItem): Single<Long> =
+    override fun saveCalendarEventData(calendarEventData: CalendarEventData, calendarItem: CalendarItem): Single<Long> =
         Single.fromCallable {
-            return@fromCallable contentResolver
+            contentResolver
                     .insert(CalendarContract.Events.CONTENT_URI, mapContentValues(calendarEventData, calendarItem))
                     .lastPathSegment.toLong()
         }
 
-    private fun deleteEventById(id: Long) =
+    private fun removeEventById(id: Long) =
         contentResolver.delete(ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, id), null, null)
 }

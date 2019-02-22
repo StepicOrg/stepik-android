@@ -8,5 +8,5 @@ import org.stepik.android.domain.calendar.model.CalendarItem
 interface CalendarRepository {
     fun saveCalendarEventData(calendarEventData: CalendarEventData, calendarItem: CalendarItem): Single<Long>
     fun getCalendarItems(): Single<List<CalendarItem>>
-    fun deleteCalendarEventDataByIds(ids: List<Long>): Completable
+    fun removeCalendarEventDataByIds(ids: List<Long>): Completable
 }
