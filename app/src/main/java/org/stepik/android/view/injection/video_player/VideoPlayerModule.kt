@@ -9,10 +9,8 @@ import org.stepik.android.presentation.video_player.VideoPlayerPresenter
 
 @Module
 abstract class VideoPlayerModule {
-
     @Binds
     @IntoMap
     @ViewModelKey(VideoPlayerPresenter::class)
     internal abstract fun bindVideoPlayerPresenter(videoPlayerPresenter: VideoPlayerPresenter): ViewModel
-
 }

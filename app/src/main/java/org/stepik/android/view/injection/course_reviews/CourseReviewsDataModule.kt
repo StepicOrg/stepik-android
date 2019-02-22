@@ -11,7 +11,6 @@ import org.stepik.android.remote.course_reviews.CourseReviewsRemoteDataSourceImp
 
 @Module
 abstract class CourseReviewsDataModule {
-
     @Binds
     internal abstract fun bindCourseReviewsRepository(
         courseReviewsRepositoryImpl: CourseReviewsRepositoryImpl
@@ -26,5 +25,4 @@ abstract class CourseReviewsDataModule {
     internal abstract fun bindCourseReviewsCacheDataStore(
         courseReviewsCacheDataSourceImpl: CourseReviewsCacheDataSourceImpl
     ): CourseReviewsCacheDataSource
-
 }

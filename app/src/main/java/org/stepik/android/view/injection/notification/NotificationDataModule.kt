@@ -11,7 +11,6 @@ import org.stepik.android.remote.notification.NotificationRemoteDataSourceImpl
 
 @Module
 abstract class NotificationDataModule {
-
     @Binds
     internal abstract fun bindLessonRepository(
         notificationRepositoryImpl: NotificationRepositoryImpl
@@ -26,5 +25,4 @@ abstract class NotificationDataModule {
     internal abstract fun bindNotificationRemoteDataSource(
         notificationRemoteDataSourceImpl: NotificationRemoteDataSourceImpl
     ): NotificationRemoteDataSource
-
 }

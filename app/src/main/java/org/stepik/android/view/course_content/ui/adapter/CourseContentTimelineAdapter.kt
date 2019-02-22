@@ -6,12 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.view_course_content_section_date.view.*
 import org.stepic.droid.R
-import org.stepik.android.view.course_content.model.CourseContentSectionDate
 import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.safeDiv
-import java.util.*
+import org.stepik.android.view.course_content.model.CourseContentSectionDate
+import java.util.Date
+import java.util.TimeZone
 
 class CourseContentTimelineAdapter : RecyclerView.Adapter<DelegateViewHolder<CourseContentSectionDate>>() {
     var dates: List<CourseContentSectionDate> = emptyList()
@@ -22,14 +23,15 @@ class CourseContentTimelineAdapter : RecyclerView.Adapter<DelegateViewHolder<Cou
 
     val now: Date = Date()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-            ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.view_course_content_section_date, parent, false))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
+        ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.view_course_content_section_date, parent, false))
 
     override fun getItemCount(): Int =
-            dates.size
+        dates.size
 
-    override fun onBindViewHolder(holder: DelegateViewHolder<CourseContentSectionDate>, position: Int) =
-            holder.bind(dates[position])
+    override fun onBindViewHolder(holder: DelegateViewHolder<CourseContentSectionDate>, position: Int) {
+        holder.bind(dates[position])
+    }
 
     inner class ViewHolder(root: View) : DelegateViewHolder<CourseContentSectionDate>(root) {
         private val dateDot = root.dateDot

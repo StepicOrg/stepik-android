@@ -10,13 +10,15 @@ import org.stepik.android.view.routing.deeplink.BranchDeepLinkRouter
 
 @Module
 abstract class CourseRoutingModule {
+    @Binds
+    @IntoSet
+    internal abstract fun bindCourseBranchDeepLinkParser(
+        courseBranchDeepLinkParser: CourseBranchDeepLinkParser
+    ): BranchDeepLinkParser
 
     @Binds
     @IntoSet
-    internal abstract fun bindCourseBranchDeepLinkParser(courseBranchDeepLinkParser: CourseBranchDeepLinkParser): BranchDeepLinkParser
-
-    @Binds
-    @IntoSet
-    internal abstract fun bindCourseBranchDeepLinkRouter(courseBranchDeepLinkRouter: CourseBranchDeepLinkRouter): BranchDeepLinkRouter
-
+    internal abstract fun bindCourseBranchDeepLinkRouter(
+        courseBranchDeepLinkRouter: CourseBranchDeepLinkRouter
+    ): BranchDeepLinkRouter
 }

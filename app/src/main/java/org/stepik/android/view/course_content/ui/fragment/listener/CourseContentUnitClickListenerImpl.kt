@@ -11,12 +11,15 @@ class CourseContentUnitClickListenerImpl(
     private val courseContentPresenter: CourseContentPresenter,
     private val screenManager: ScreenManager
 ) : CourseContentUnitClickListener {
-    override fun onItemClicked(item: CourseContentItem.UnitItem) =
+    override fun onItemClicked(item: CourseContentItem.UnitItem) {
         screenManager.showSteps(activity, item.unit, item.lesson, item.section)
+    }
 
-    override fun onItemDownloadClicked(item: CourseContentItem.UnitItem) =
+    override fun onItemDownloadClicked(item: CourseContentItem.UnitItem) {
         courseContentPresenter.addUnitDownloadTask(item.unit)
+    }
 
-    override fun onItemRemoveClicked(item: CourseContentItem.UnitItem) =
+    override fun onItemRemoveClicked(item: CourseContentItem.UnitItem) {
         courseContentPresenter.removeUnitDownloadTask(item.unit)
+    }
 }

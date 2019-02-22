@@ -5,19 +5,19 @@ import android.view.ViewGroup
 import android.widget.PopupMenu
 import kotlinx.android.synthetic.main.view_course_content_control_bar.view.*
 import org.stepic.droid.R
-import org.stepik.android.view.course_content.model.CourseContentItem
 import org.stepic.droid.ui.custom.adapter_delegates.AdapterDelegate
-import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
 import org.stepic.droid.ui.custom.adapter_delegates.DelegateAdapter
+import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
 import org.stepic.droid.ui.util.setHeight
 import org.stepik.android.presentation.personal_deadlines.model.PersonalDeadlinesState
+import org.stepik.android.view.course_content.model.CourseContentItem
 
 class CourseContentControlBarDelegate(
     adapter: DelegateAdapter<CourseContentItem, DelegateViewHolder<CourseContentItem>>,
     private val controlBarClickListener: CourseContentControlBarClickListener
 ) : AdapterDelegate<CourseContentItem, DelegateViewHolder<CourseContentItem>>(adapter) {
 
-    override fun onCreateViewHolder(parent: ViewGroup) =
+    override fun onCreateViewHolder(parent: ViewGroup): ViewHolder =
         ViewHolder(createView(parent, R.layout.view_course_content_control_bar))
 
     override fun isForViewType(position: Int): Boolean =
@@ -34,7 +34,7 @@ class CourseContentControlBarDelegate(
                 if (data == null) {
                     false
                 } else {
-                    when(id) {
+                    when (id) {
                         R.id.course_control_schedule ->
                             handleScheduleClick(data)
 
@@ -61,8 +61,8 @@ class CourseContentControlBarDelegate(
 
             val isScheduleVisible =
                 with(data.personalDeadlinesState) {
-                    this is PersonalDeadlinesState.EmptyDeadlines
-                            || this is PersonalDeadlinesState.Deadlines
+                    this is PersonalDeadlinesState.EmptyDeadlines ||
+                            this is PersonalDeadlinesState.Deadlines
                 }
 
             controlBar.changeItemVisibility(R.id.course_control_schedule, isScheduleVisible)
@@ -71,7 +71,7 @@ class CourseContentControlBarDelegate(
         }
 
         private fun handleScheduleClick(data: CourseContentItem.ControlBar) {
-            when(data.personalDeadlinesState) {
+            when (data.personalDeadlinesState) {
                 PersonalDeadlinesState.EmptyDeadlines ->
                     controlBarClickListener.onCreateScheduleClicked()
 
@@ -81,7 +81,7 @@ class CourseContentControlBarDelegate(
                     val popupMenu = PopupMenu(context, anchorView)
                     popupMenu.inflate(R.menu.course_content_control_bar_schedule_menu)
                     popupMenu.setOnMenuItemClickListener { item ->
-                        when(item.itemId) {
+                        when (item.itemId) {
                             R.id.menu_item_deadlines_edit ->
                                 controlBarClickListener.onChangeScheduleClicked(record)
 

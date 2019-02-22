@@ -26,24 +26,24 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
-import org.stepik.android.domain.personal_deadlines.model.Deadline
-import org.stepik.android.domain.personal_deadlines.model.DeadlinesWrapper
 import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.dialogs.VideoQualityDetailedDialog
 import org.stepic.droid.ui.util.PopupHelper
 import org.stepic.droid.util.ProgressHelper
-import org.stepik.android.view.course_content.ui.adapter.CourseContentAdapter
-import org.stepik.android.view.course_content.model.CourseContentItem
 import org.stepic.droid.util.argument
 import org.stepic.droid.util.setTextColor
 import org.stepic.droid.web.storage.model.StorageRecord
+import org.stepik.android.domain.personal_deadlines.model.Deadline
+import org.stepik.android.domain.personal_deadlines.model.DeadlinesWrapper
 import org.stepik.android.domain.personal_deadlines.model.LearningRate
 import org.stepik.android.model.Course
 import org.stepik.android.model.Section
 import org.stepik.android.model.Unit
 import org.stepik.android.presentation.course_content.CourseContentPresenter
 import org.stepik.android.presentation.course_content.CourseContentView
+import org.stepik.android.view.course_content.model.CourseContentItem
+import org.stepik.android.view.course_content.ui.adapter.CourseContentAdapter
 import org.stepik.android.view.course_content.ui.adapter.delegates.control_bar.CourseContentControlBarClickListener
 import org.stepik.android.view.course_content.ui.fragment.listener.CourseContentSectionClickListenerImpl
 import org.stepik.android.view.course_content.ui.fragment.listener.CourseContentUnitClickListenerImpl
@@ -110,7 +110,6 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
             .releaseCourseComponent(courseId)
     }
 
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.fragment_course_content, container, false)
 
@@ -121,17 +120,21 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
                     sectionClickListener    = CourseContentSectionClickListenerImpl(context, courseContentPresenter, screenManager),
                     unitClickListener       = CourseContentUnitClickListenerImpl(activity, courseContentPresenter, screenManager),
                     controlBarClickListener = object : CourseContentControlBarClickListener {
-                        override fun onCreateScheduleClicked() =
+                        override fun onCreateScheduleClicked() {
                             showPersonalDeadlinesLearningRateDialog()
+                        }
 
-                        override fun onChangeScheduleClicked(record: StorageRecord<DeadlinesWrapper>) =
+                        override fun onChangeScheduleClicked(record: StorageRecord<DeadlinesWrapper>) {
                             showPersonalDeadlinesEditDialog(record)
+                        }
 
-                        override fun onRemoveScheduleClicked(record: StorageRecord<DeadlinesWrapper>) =
+                        override fun onRemoveScheduleClicked(record: StorageRecord<DeadlinesWrapper>) {
                             courseContentPresenter.removeDeadlines()
+                        }
 
-                        override fun onDownloadAllClicked(course: Course) =
+                        override fun onDownloadAllClicked(course: Course) {
                             courseContentPresenter.addCourseDownloadTask(course)
+                        }
                     }
                 )
 
@@ -293,7 +296,7 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        when(requestCode) {
+        when (requestCode) {
             LearningRateDialog.LEARNING_RATE_REQUEST_CODE ->
                 data?.takeIf { resultCode == Activity.RESULT_OK }
                     ?.getParcelableExtra<LearningRate>(LearningRateDialog.KEY_LEARNING_RATE)
