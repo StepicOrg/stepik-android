@@ -380,10 +380,10 @@ constructor(
         } ?: emptyList()
 
     fun removeSectionDateEvents(sectionIds: List<Long>) =
-        sectionIds.forEach { sectionId -> sectionDateEventDao.remove(
-            mapOf(DbStructureSectionDateEvent.Columns.SECTION_ID to sectionId.toString())
-        )}
-
+        DbParseHelper.parseLongListToString(sectionIds, AppConstants.COMMA)?.let {
+            sectionDateEventDao.removeAllInRange(DbStructureSectionDateEvent.Columns.SECTION_ID, it)
+        }
+    
     fun addSectionDateEvents(events: List<SectionDateEvent>) {
         sectionDateEventDao.insertOrReplaceAll(events)
     }
