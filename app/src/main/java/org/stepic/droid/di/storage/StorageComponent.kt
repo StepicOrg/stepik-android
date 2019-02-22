@@ -10,6 +10,7 @@ import org.stepic.droid.persistence.storage.dao.PersistentStateDao
 import org.stepic.droid.storage.dao.IDao
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepik.android.cache.personal_deadlines.dao.PersonalDeadlinesDao
+import org.stepik.android.domain.course_reviews.model.CourseReview
 import org.stepik.android.model.user.User
 
 @Component(modules = [StorageModule::class])
@@ -31,6 +32,7 @@ interface StorageComponent {
     val persistentItemDao: PersistentItemDao
     val persistentStateDao: PersistentStateDao
 
+    val courseReviewsDao: IDao<CourseReview>
     val userDao: IDao<User>
 
     val viewedStoryTemplatesDao: IDao<ViewedStoryTemplate>

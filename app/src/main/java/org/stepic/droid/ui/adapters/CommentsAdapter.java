@@ -15,10 +15,9 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.bumptech.glide.GenericRequestBuilder;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.caverock.androidsvg.SVG;
 
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
@@ -36,7 +35,6 @@ import org.stepic.droid.util.DateTimeHelper;
 import org.stepic.droid.util.RWLocks;
 import org.stepic.droid.util.svg.GlideSvgRequestFactory;
 
-import java.io.InputStream;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -225,8 +223,7 @@ public final class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.
 
         Drawable likeActiveDrawable;
         Drawable likeEmptyDrawable;
-
-        final GenericRequestBuilder<Uri, InputStream, SVG, PictureDrawable> svgRequestBuilder;
+        final RequestBuilder<PictureDrawable> svgRequestBuilder;
 
         public GenericViewHolder(final View itemView) {
             super(itemView);
@@ -266,7 +263,6 @@ public final class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.
 
             likeEmptyDrawable.setColorFilter(ColorUtil.INSTANCE.getColorArgb(R.color.material_grey, context), PorterDuff.Mode.MULTIPLY);
             likeActiveDrawable.setColorFilter(ColorUtil.INSTANCE.getColorArgb(R.color.stepic_blue_ribbon, context), PorterDuff.Mode.MULTIPLY);
-
             svgRequestBuilder = GlideSvgRequestFactory.create(itemView.getContext(), placeholderUserIcon);
         }
 
@@ -345,13 +341,13 @@ public final class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.
             if (userAvatar.endsWith(AppConstants.SVG_EXTENSION)) {
                 Uri uri = Uri.parse(userAvatar);
                 svgRequestBuilder
-                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                        .diskCacheStrategy(DiskCacheStrategy.DATA)
                         .load(uri)
                         .into(userIcon);
             } else {
                 Glide.with(App.Companion.getAppContext())
-                        .load(userAvatar)
                         .asBitmap()
+                        .load(userAvatar)
                         .placeholder(placeholderUserIcon)
                         .into(userIcon);
             }

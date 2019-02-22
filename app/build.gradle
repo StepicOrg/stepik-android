@@ -148,6 +148,7 @@ dependencies {
 
     implementation libraries.glide
     implementation libraries.glideTransformations
+    kapt libraries.glideAnnotations
 
     implementation libraries.amplitude
     implementation libraries.appMetrica

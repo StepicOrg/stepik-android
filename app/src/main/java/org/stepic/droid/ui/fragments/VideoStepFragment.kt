@@ -1,13 +1,14 @@
 package org.stepic.droid.ui.fragments
 
-import android.net.Uri
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.drawable.GlideDrawable
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import kotlinx.android.synthetic.main.fragment_video_step.*
@@ -21,8 +22,8 @@ import org.stepic.droid.core.presenters.VideoLengthPresenter
 import org.stepic.droid.core.presenters.VideoStepPresenter
 import org.stepic.droid.core.presenters.contracts.VideoLengthView
 import org.stepic.droid.core.presenters.contracts.VideoStepView
-import org.stepik.android.model.Video
 import org.stepic.droid.util.ThumbnailParser
+import org.stepik.android.model.Video
 import org.stepik.android.view.video_player.model.VideoPlayerMediaData
 import javax.inject.Inject
 
@@ -74,26 +75,26 @@ class VideoStepFragment : StepBaseFragment(),
         if (thumbnail == null) {
             return
         }
-
         val uri = ThumbnailParser.getUriForThumbnail(thumbnail)
         Glide
-                .with(context)
-                .load(uri)
-                .listener(object : RequestListener<Uri, GlideDrawable> {
-                    override fun onException(e: Exception?, model: Uri, target: Target<GlideDrawable>, isFirstResource: Boolean): Boolean {
-                        //at this callback view can be dead!
-                        showTime(timeString)
-                        return false
-                    }
+            .with(requireContext())
+            .load(uri)
+            .placeholder(R.drawable.video_placeholder_drawable)
+            .addListener(object : RequestListener<Drawable>{
+                override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
+                    //at this callback view can be dead!
+                    showTime(timeString)
+                    return false
+                }
 
-                    override fun onResourceReady(resource: GlideDrawable, model: Uri, target: Target<GlideDrawable>, isFromMemoryCache: Boolean, isFirstResource: Boolean): Boolean {
-                        //at this callback view can be dead!
-                        showTime(timeString)
-                        return false
-                    }
-                })
-                .placeholder(R.drawable.video_placeholder_drawable)
-                .into(this.playerThumbnail)
+                override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+                    //at this callback view can be dead!
+                    showTime(timeString)
+                    return false
+                }
+
+            })
+            .into(this.playerThumbnail)
     }
 
     private fun showTime(timeString: String?) {

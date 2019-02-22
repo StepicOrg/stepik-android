@@ -646,6 +646,8 @@
     <string name="course_error_continue_learning">Cannot continue learning</string>
     <string name="course_error_enroll">@string/course_error_generic</string>
 
+    <string name="course_reviews_empty">There are no reviews for this course</string>
+
     <string name="course_content_unit_title" translatable="false">%d.%d %s</string>
     <string name="course_content_text_progress" translatable="false">%d/%d</string>
 
@@ -677,4 +679,10 @@
 
     <string name="video_player_control_notification_channel_name">Video player controls</string>
     <string name="video_player_in_background_popup">You can play video in background</string>
+
+
+    <string name="retention_notification_day1_title">Don\'t slow down</string>
+    <string name="retention_notification_day1_message">You\'ve done a great job learning yesterday, come back today and become smarter! 🚀</string>
+    <string name="retention_notification_day3_title">Time to study ‍🎓</string>
+    <string name="retention_notification_day3_message">You haven\'t been here for a while. Come back and continue study! 💡</string>
 </resources>
