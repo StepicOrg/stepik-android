@@ -12,6 +12,7 @@ import org.stepik.android.domain.calendar.repository.CalendarRepository
 import org.stepik.android.domain.course_calendar.model.SectionDateEvent
 import org.stepik.android.domain.course_calendar.repository.CourseCalendarRepository
 import org.stepik.android.view.course_content.model.CourseContentItem
+import org.stepik.android.view.course_content.model.CourseContentSectionDate
 import javax.inject.Inject
 
 class CourseCalendarInteractor
@@ -25,35 +26,52 @@ constructor(
         calendarRepository.getCalendarItems()
 
     fun exportScheduleToCalendar(courseContentItems: List<CourseContentItem>, calendarItem: CalendarItem): Completable =
-        Single.fromCallable {
-            courseContentItems.filterIsInstance<CourseContentItem.SectionItem>()
-        }
-            .flatMap { items -> courseCalendarRepository.getSectionDateEventsByIds(items.map { it.section.id }) }
-            .doCompletableOnSuccess {
-                calendarRepository.deleteCalendarEventDataByIds(it.map { it.eventId })
-                        .andThen(courseCalendarRepository.removeSectionDateEventsByIds(it.map { it.sectionId }))
+        Single
+            .fromCallable {
+                courseContentItems
+                    .filterIsInstance<CourseContentItem.SectionItem>()
             }
-            .flatMapObservable {
-                courseContentItems.filterIsInstance<CourseContentItem.SectionItem>()
-                   .flatMap { sectionItem ->
-                    sectionItem.dates.map { date ->
-                        sectionItem.section.id to CalendarEventData(
-                            title = context.getString(
-                                R.string.course_content_calendar_title,
-                                sectionItem.section.title,
-                                context.getString(date.titleRes)
-                            ),
-                            date = date.date)
+            .doCompletableOnSuccess(::removeOldSchedule)
+            .flatMapObservable { sectionItems ->
+                sectionItems
+                    .flatMap { sectionItem ->
+                        sectionItem.dates.map { date -> mapDateToCalendarEventData(sectionItem, date)}
                     }
-                }.toObservable()
+                    .toObservable()
             }
             .flatMapSingle { (sectionId, eventData) ->
                 calendarRepository
-                        .saveCalendarEventData(eventData, calendarItem)
-                        .map { eventId ->
-                            SectionDateEvent(eventId, sectionId)
-                        }
+                    .saveCalendarEventData(eventData, calendarItem)
+                    .map { eventId ->
+                        SectionDateEvent(eventId, sectionId)
+                    }
             }
             .toList()
             .flatMapCompletable(courseCalendarRepository::saveSectionDateEvents)
+
+    private fun removeOldSchedule(sectionItems: List<CourseContentItem.SectionItem>): Completable =
+        courseCalendarRepository
+            .getSectionDateEventsByIds(sectionItems.map { it.section.id })
+            .flatMapCompletable { dateEvents ->
+                calendarRepository
+                    .removeCalendarEventDataByIds(dateEvents.map(SectionDateEvent::eventId)) // mapToLongArray for varargs
+                    .andThen(courseCalendarRepository
+                        .removeSectionDateEventsByIds(dateEvents.map(SectionDateEvent::sectionId)))
+            }
+
+    private fun mapDateToCalendarEventData(
+        sectionItem: CourseContentItem.SectionItem,
+        date: CourseContentSectionDate
+    ): Pair<Long, CalendarEventData> =
+        sectionItem.section.id to
+                CalendarEventData(
+                    title = context
+                        .getString(
+                            R.string.course_content_calendar_title,
+                            sectionItem.section.title,
+                            context.getString(date.titleRes)
+                        ),
+                    date = date.date
+                )
+
 }
