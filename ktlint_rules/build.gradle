@@ -2,6 +2,8 @@ apply plugin: 'kotlin'
 
 dependencies {
     implementation libraries.ktlint
+
+    testImplementation libraries.junit
 }
 
 compileKotlin {
