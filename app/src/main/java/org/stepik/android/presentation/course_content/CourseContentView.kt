@@ -31,4 +31,5 @@ interface CourseContentView {
 
     fun showPersonalDeadlinesBanner()
     fun showPersonalDeadlinesError()
+    fun showPersonalDeadlinesBannerAB()
 }

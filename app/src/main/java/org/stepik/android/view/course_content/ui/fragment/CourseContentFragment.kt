@@ -256,6 +256,23 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
             }
     }
 
+    override fun showPersonalDeadlinesBannerAB() {
+        val visibilityObservable = fragmentVisibilitySubject
+            .filter { it == FragmentViewPagerScrollStateListener.ScrollState.ACTIVE }
+
+        val scrollObservable = contentRecyclerScrollStateSubject
+            .filter { (state, firstVisiblePosition) -> state == RecyclerView.SCROLL_STATE_IDLE && firstVisiblePosition == 0 }
+
+        uiCompositeDisposable += zip(visibilityObservable, scrollObservable)
+            .firstElement()
+            .ignoreElement()
+            .subscribe {
+                val anchorView = courseContentRecycler.findViewById<View>(R.id.course_control_schedule)
+                val deadlinesDescription = getString(R.string.deadlines_ab_banner_description)
+                PopupHelper.showPopupAnchoredToView(requireContext(), anchorView, deadlinesDescription, cancelableOnTouchOutside = true)
+            }
+    }
+
     override fun showPersonalDeadlinesError() {
         val view = view
             ?: return
