@@ -37,7 +37,6 @@ abstract class PersonalDeadlinesDataModule {
         deadlinesResolverImpl: DeadlinesResolverImpl
     ): DeadlinesResolver
 
-
     @Binds
     internal abstract fun bindDeadlinesBannerRepository(
         deadlinesBannerRepositoryImpl: DeadlinesBannerRepositoryImpl

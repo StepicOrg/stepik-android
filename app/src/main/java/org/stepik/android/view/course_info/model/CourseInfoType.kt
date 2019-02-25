@@ -8,8 +8,10 @@ import org.stepic.droid.R
  * ordering represents order of items in CourseInfoFragment
  */
 enum class CourseInfoType(
-        @DrawableRes val icon: Int,
-        @StringRes val title: Int
+    @DrawableRes
+    val icon: Int,
+    @StringRes
+    val title: Int
 ) {
     ORGANIZATION(R.drawable.ic_course_info_instructors, -1),
     VIDEO(-1, -1),

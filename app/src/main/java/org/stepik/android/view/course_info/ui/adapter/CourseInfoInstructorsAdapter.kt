@@ -46,7 +46,7 @@ class CourseInfoInstructorsAdapter(
     }
 
     override fun getItemCount(): Int =
-            instructors.size
+        instructors.size
 
     override fun onBindViewHolder(holder: DelegateViewHolder<User?>, position: Int) {
         holder.bind(instructors[position])

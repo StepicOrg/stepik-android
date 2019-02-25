@@ -41,7 +41,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
         hideAllChildren()
         isEnabled = true
         val status = this.status
-        when(status) {
+        when (status) {
             DownloadProgress.Status.NotCached ->
                 statusNotCached
 

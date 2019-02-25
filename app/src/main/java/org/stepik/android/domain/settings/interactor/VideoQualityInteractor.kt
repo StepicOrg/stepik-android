@@ -10,10 +10,8 @@ constructor(
     private val sharedPreferenceHelper: SharedPreferenceHelper,
     private val userPreferences: UserPreferences
 ) {
-
     fun getVideoQuality(): String? =
         userPreferences
             .qualityVideo
             .takeUnless { sharedPreferenceHelper.isNeedToShowVideoQualityExplanation }
-
 }

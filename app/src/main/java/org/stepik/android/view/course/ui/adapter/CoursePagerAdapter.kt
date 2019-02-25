@@ -11,14 +11,14 @@ import org.stepik.android.view.course_info.ui.fragment.CourseInfoFragment
 import org.stepik.android.view.course_reviews.ui.fragment.CourseReviewsFragment
 
 class CoursePagerAdapter(
-        courseId: Long,
-        context: Context,
-        fragmentManager: FragmentManager
+    courseId: Long,
+    context: Context,
+    fragmentManager: FragmentManager
 ) : FragmentPagerAdapter(fragmentManager) {
     private val fragments = listOf(
-            { CourseInfoFragment.newInstance(courseId) }    to context.getString(R.string.course_tab_info),
-            { CourseReviewsFragment.newInstance(courseId) } to context.getString(R.string.course_tab_reviews),
-            { CourseContentFragment.newInstance(courseId) } to context.getString(R.string.course_tab_modules)
+        { CourseInfoFragment.newInstance(courseId) }    to context.getString(R.string.course_tab_info),
+        { CourseReviewsFragment.newInstance(courseId) } to context.getString(R.string.course_tab_reviews),
+        { CourseContentFragment.newInstance(courseId) } to context.getString(R.string.course_tab_modules)
     )
 
     private val _activeFragments = mutableMapOf<Int, Fragment>()
@@ -26,13 +26,13 @@ class CoursePagerAdapter(
         get() = _activeFragments
 
     override fun getItem(position: Int): Fragment =
-            fragments[position].first.invoke()
+        fragments[position].first.invoke()
 
     override fun getCount(): Int =
-            fragments.size
+        fragments.size
 
     override fun getPageTitle(position: Int): CharSequence =
-            fragments[position].second
+        fragments[position].second
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any =
         super

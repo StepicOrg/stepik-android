@@ -12,7 +12,7 @@ constructor(
     private val courseReviewRemoteDataSource: CourseReviewRemoteDataSource
 ) : CourseReviewRepository {
     override fun getCourseReview(courseReviewId: Long): Single<CourseReviewSummary> =
-            courseReviewRemoteDataSource
-                .getCourseReviews(courseReviewId)
-                .map { it.first() }
+        courseReviewRemoteDataSource
+            .getCourseReviews(courseReviewId)
+            .map { it.first() }
 }

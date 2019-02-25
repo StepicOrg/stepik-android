@@ -8,7 +8,7 @@ import io.reactivex.Single
 import org.stepic.droid.persistence.model.DownloadConfiguration
 import org.stepic.droid.preferences.UserPreferences
 import org.stepik.android.domain.network.repository.NetworkTypeRepository
-import java.util.*
+import java.util.EnumSet
 import javax.inject.Inject
 
 class NetworkTypeRepositoryImpl
@@ -28,7 +28,7 @@ constructor(
                 ?.takeIf(NetworkInfo::isConnected)
 
             @Suppress("DEPRECATION")
-            return when(networkInfo?.type) {
+            return when (networkInfo?.type) {
                 ConnectivityManager.TYPE_WIFI ->
                     EnumSet.of(DownloadConfiguration.NetworkType.WIFI)
 
@@ -47,8 +47,8 @@ constructor(
             return EnumSet.copyOf(listOfNotNull(
                 DownloadConfiguration.NetworkType.WIFI
                     ?.takeIf {
-                        networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
-                                || networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN)
+                        networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+                                networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN)
                     },
 
                 DownloadConfiguration.NetworkType.MOBILE

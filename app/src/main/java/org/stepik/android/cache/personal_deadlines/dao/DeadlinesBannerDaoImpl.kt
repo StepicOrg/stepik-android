@@ -12,13 +12,13 @@ class DeadlinesBannerDaoImpl
 constructor(
     databaseOperations: DatabaseOperations
 ) : DaoBase<Long>(databaseOperations), DeadlinesBannerDao {
-    override fun getDbName() =
+    override fun getDbName(): String =
         DbStructureDeadlinesBanner.DEADLINES_BANNER
 
-    override fun getDefaultPrimaryColumn() =
+    override fun getDefaultPrimaryColumn(): String =
         DbStructureDeadlinesBanner.Columns.COURSE_ID
 
-    override fun getDefaultPrimaryValue(persistentObject: Long) =
+    override fun getDefaultPrimaryValue(persistentObject: Long): String =
         persistentObject.toString()
 
     override fun getContentValues(persistentObject: Long): ContentValues =
@@ -26,6 +26,6 @@ constructor(
             put(DbStructureDeadlinesBanner.Columns.COURSE_ID, persistentObject)
         }
 
-    override fun parsePersistentObject(cursor: Cursor) =
+    override fun parsePersistentObject(cursor: Cursor): Long =
         cursor.getLong(cursor.getColumnIndex(DbStructureDeadlinesBanner.Columns.COURSE_ID))
 }

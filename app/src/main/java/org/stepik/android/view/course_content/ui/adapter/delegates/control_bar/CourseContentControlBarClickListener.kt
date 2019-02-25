@@ -5,11 +5,9 @@ import org.stepic.droid.web.storage.model.StorageRecord
 import org.stepik.android.model.Course
 
 interface CourseContentControlBarClickListener {
-
     fun onCreateScheduleClicked()
     fun onChangeScheduleClicked(record: StorageRecord<DeadlinesWrapper>)
     fun onRemoveScheduleClicked(record: StorageRecord<DeadlinesWrapper>)
 
     fun onDownloadAllClicked(course: Course)
-
 }

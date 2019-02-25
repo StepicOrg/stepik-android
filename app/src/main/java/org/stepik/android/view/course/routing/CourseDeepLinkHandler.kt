@@ -1,7 +1,6 @@
 package org.stepik.android.view.course.routing
 
 import android.content.Intent
-import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.HtmlHelper
 
 private const val COURSE_PATH_SEGMENT = "course"
@@ -18,7 +17,6 @@ fun Intent.getCourseIdFromDeepLink(): Long? {
 
     return HtmlHelper.parseIdFromSlug(path)
 }
-
 
 enum class CourseScreenTab(val path: String) {
     INFO(""),

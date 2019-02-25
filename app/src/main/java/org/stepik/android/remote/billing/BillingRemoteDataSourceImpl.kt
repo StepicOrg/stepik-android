@@ -3,14 +3,19 @@ package org.stepik.android.remote.billing
 import io.reactivex.Completable
 import io.reactivex.Scheduler
 import io.reactivex.Single
-import org.solovyev.android.checkout.*
+import org.solovyev.android.checkout.Billing
+import org.solovyev.android.checkout.Checkout
+import org.solovyev.android.checkout.Inventory
+import org.solovyev.android.checkout.Purchase
+import org.solovyev.android.checkout.Purchases
+import org.solovyev.android.checkout.RequestListener
+import org.solovyev.android.checkout.Sku
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.util.consumeRx
 import org.stepic.droid.util.onReady
 import org.stepik.android.data.billing.source.BillingRemoteDataSource
 import org.stepik.android.domain.billing.exception.BillingNotSupportedException
 import org.stepik.android.view.injection.billing.SystemCheckout
-import java.lang.Exception
 import javax.inject.Inject
 
 class BillingRemoteDataSourceImpl

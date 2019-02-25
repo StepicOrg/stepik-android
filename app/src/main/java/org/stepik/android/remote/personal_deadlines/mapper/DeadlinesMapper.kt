@@ -1,14 +1,14 @@
 package org.stepik.android.remote.personal_deadlines.mapper
 
 import com.google.gson.GsonBuilder
-import org.stepik.android.domain.personal_deadlines.model.DeadlinesWrapper
-import org.stepik.android.data.personal_deadlines.getKindOfRecord
 import org.stepic.droid.jsonHelpers.adapters.UTCDateAdapter
 import org.stepic.droid.web.storage.model.StorageRecord
 import org.stepic.droid.web.storage.model.StorageRecordWrapped
 import org.stepic.droid.web.storage.model.StorageRequest
 import org.stepic.droid.web.storage.model.StorageResponse
-import java.util.*
+import org.stepik.android.data.personal_deadlines.getKindOfRecord
+import org.stepik.android.domain.personal_deadlines.model.DeadlinesWrapper
+import java.util.Date
 import javax.inject.Inject
 
 class DeadlinesMapper

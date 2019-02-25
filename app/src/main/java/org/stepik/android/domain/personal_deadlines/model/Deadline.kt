@@ -10,7 +10,7 @@ class Deadline(
     val section: Long,
     @SerializedName("deadline")
     val deadline: Date
-): Parcelable {
+) : Parcelable {
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeLong(section)
         parcel.writeLong(deadline.time)
@@ -24,6 +24,7 @@ class Deadline(
                 parcel.readLong(),
                 Date(parcel.readLong())
             )
-        override fun newArray(size: Int): Array<Deadline?> = arrayOfNulls(size)
+        override fun newArray(size: Int): Array<Deadline?> =
+            arrayOfNulls(size)
     }
 }

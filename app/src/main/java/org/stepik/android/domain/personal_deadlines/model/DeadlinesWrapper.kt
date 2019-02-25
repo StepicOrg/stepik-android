@@ -9,7 +9,7 @@ class DeadlinesWrapper(
     val course: Long,
     @SerializedName("deadlines")
     val deadlines: List<Deadline>
-): Parcelable {
+) : Parcelable {
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeLong(course)
         parcel.writeTypedList(deadlines)
@@ -17,12 +17,13 @@ class DeadlinesWrapper(
 
     override fun describeContents(): Int = 0
     companion object CREATOR : Parcelable.Creator<DeadlinesWrapper> {
-        override fun createFromParcel(parcel: Parcel) =
+        override fun createFromParcel(parcel: Parcel): DeadlinesWrapper =
             DeadlinesWrapper(
                 parcel.readLong(),
                 parcel.createTypedArrayList(Deadline)!!
             )
 
-        override fun newArray(size: Int): Array<DeadlinesWrapper?> = arrayOfNulls(size)
+        override fun newArray(size: Int): Array<DeadlinesWrapper?> =
+            arrayOfNulls(size)
     }
 }
