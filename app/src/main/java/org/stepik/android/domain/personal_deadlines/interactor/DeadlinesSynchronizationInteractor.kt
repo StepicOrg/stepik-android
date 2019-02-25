@@ -26,5 +26,4 @@ constructor(
                     .ignoreElements()
             }
             .doOnComplete { deadlinesNotificationsManager.scheduleDeadlinesNotifications() }
-
 }

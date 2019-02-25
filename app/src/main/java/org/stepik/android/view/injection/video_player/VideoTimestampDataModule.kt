@@ -11,9 +11,11 @@ import org.stepik.android.domain.video_player.repository.VideoTimestampRepositor
 abstract class VideoTimestampDataModule {
     @Binds
     internal abstract fun bindVideoTimestampRepository(
-        videoTimestampRepositoryImpl: VideoTimestampRepositoryImpl): VideoTimestampRepository
+        videoTimestampRepositoryImpl: VideoTimestampRepositoryImpl
+    ): VideoTimestampRepository
 
     @Binds
     internal abstract fun bindVideoTimestampCacheDataSource(
-        videoTimestampCacheDataSourceImpl: VideoTimestampCacheDataSourceImpl): VideoTimestampCacheDataSource
+        videoTimestampCacheDataSourceImpl: VideoTimestampCacheDataSourceImpl
+    ): VideoTimestampCacheDataSource
 }

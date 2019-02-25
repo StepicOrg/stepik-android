@@ -10,9 +10,9 @@ import retrofit2.HttpException
 import java.net.HttpURLConnection
 
 fun Throwable.toEnrollmentError(): EnrollmentError =
-    when(this) {
+    when (this) {
         is HttpException ->
-            when(code()) {
+            when (code()) {
                 HttpURLConnection.HTTP_FORBIDDEN ->
                     EnrollmentError.FORBIDDEN
 
@@ -27,7 +27,7 @@ fun Throwable.toEnrollmentError(): EnrollmentError =
             }
 
         is BillingException ->
-            when(response) {
+            when (response) {
                 ResponseCodes.USER_CANCELED ->
                     EnrollmentError.BILLING_CANCELLED
 

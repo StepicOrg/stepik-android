@@ -23,7 +23,7 @@ constructor(
         val cacheSource = userCacheDataSource
             .getUsers(*userIds)
 
-        return when(primarySourceType) {
+        return when (primarySourceType) {
             DataSourceType.REMOTE ->
                 remoteSource.onErrorResumeNext(cacheSource)
 

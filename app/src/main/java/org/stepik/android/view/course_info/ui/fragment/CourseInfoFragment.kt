@@ -13,23 +13,23 @@ import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.fonts.FontsProvider
-import org.stepik.android.view.course_info.ui.adapter.CourseInfoAdapter
-import org.stepik.android.view.course_info.ui.adapter.decorators.CourseInfoBlockOffsetDecorator
-import org.stepik.android.view.course_info.ui.adapter.delegates.CourseInfoInstructorsDelegate
-import org.stepik.android.view.course_info.ui.adapter.delegates.CourseInfoTextBlockDelegate
 import org.stepic.droid.util.argument
 import org.stepik.android.presentation.course_info.CourseInfoPresenter
 import org.stepik.android.presentation.course_info.CourseInfoView
 import org.stepik.android.view.course_info.mapper.toSortedItems
+import org.stepik.android.view.course_info.ui.adapter.CourseInfoAdapter
+import org.stepik.android.view.course_info.ui.adapter.decorators.CourseInfoBlockOffsetDecorator
+import org.stepik.android.view.course_info.ui.adapter.delegates.CourseInfoInstructorsDelegate
+import org.stepik.android.view.course_info.ui.adapter.delegates.CourseInfoTextBlockDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import javax.inject.Inject
 
 class CourseInfoFragment : Fragment(), CourseInfoView {
     companion object {
         fun newInstance(courseId: Long): Fragment =
-                CourseInfoFragment().apply {
-                    this.courseId = courseId
-                }
+            CourseInfoFragment().apply {
+                this.courseId = courseId
+            }
     }
 
     @Inject
@@ -79,7 +79,7 @@ class CourseInfoFragment : Fragment(), CourseInfoView {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
-            inflater.inflate(R.layout.fragment_course_info, container, false)
+        inflater.inflate(R.layout.fragment_course_info, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         courseInfoRecycler.layoutManager = LinearLayoutManager(context)

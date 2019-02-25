@@ -9,7 +9,6 @@ import org.stepik.android.remote.course_payments.CoursePaymentsRemoteDataSourceI
 
 @Module
 abstract class CoursePaymentsDataModule {
-
     @Binds
     internal abstract fun bindCoursePaymentsRepository(
         coursePaymentsRepositoryImpl: CoursePaymentsRepositoryImpl
@@ -19,5 +18,4 @@ abstract class CoursePaymentsDataModule {
     internal abstract fun bindCoursePaymentsRemoteDataSource(
         coursePaymentsRemoteDataSource: CoursePaymentsRemoteDataSourceImpl
     ): CoursePaymentsRemoteDataSource
-
 }

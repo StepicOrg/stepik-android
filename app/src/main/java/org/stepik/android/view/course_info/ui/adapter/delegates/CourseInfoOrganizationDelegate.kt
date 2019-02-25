@@ -7,20 +7,20 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.view_course_info_organization.view.*
 import org.stepic.droid.R
-import org.stepik.android.view.course_info.ui.adapter.CourseInfoAdapter
-import org.stepik.android.view.course_info.model.CourseInfoItem
 import org.stepic.droid.ui.custom.adapter_delegates.AdapterDelegate
 import org.stepik.android.model.user.User
+import org.stepik.android.view.course_info.model.CourseInfoItem
+import org.stepik.android.view.course_info.ui.adapter.CourseInfoAdapter
 
 class CourseInfoOrganizationDelegate(
-        adapter: CourseInfoAdapter,
-        private val onUserClicked: ((User) -> Unit)? = null
+    adapter: CourseInfoAdapter,
+    private val onUserClicked: ((User) -> Unit)? = null
 ) : AdapterDelegate<CourseInfoItem, CourseInfoAdapter.ViewHolder>(adapter) {
-    override fun onCreateViewHolder(parent: ViewGroup) =
-            ViewHolder(createView(parent, R.layout.view_course_info_organization))
+    override fun onCreateViewHolder(parent: ViewGroup): ViewHolder =
+        ViewHolder(createView(parent, R.layout.view_course_info_organization))
 
     override fun isForViewType(position: Int): Boolean =
-            getItemAtPosition(position) is CourseInfoItem.OrganizationBlock
+        getItemAtPosition(position) is CourseInfoItem.OrganizationBlock
 
     inner class ViewHolder(root: View) : CourseInfoAdapter.ViewHolder(root) {
         private val titleColorSpan = ForegroundColorSpan(ContextCompat.getColor(root.context, R.color.course_info_organization_span))

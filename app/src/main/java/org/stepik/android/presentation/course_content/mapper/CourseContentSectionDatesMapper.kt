@@ -8,7 +8,6 @@ import javax.inject.Inject
 class CourseContentSectionDatesMapper
 @Inject
 constructor() {
-
     fun mapSectionDates(section: Section): List<CourseContentSectionDate> =
         listOfNotNull(
             section.beginDate?.let    { CourseContentSectionDate(R.string.course_content_timeline_begin_date, it) },
@@ -16,5 +15,4 @@ constructor() {
             section.hardDeadline?.let { CourseContentSectionDate(R.string.course_content_timeline_hard_deadline, it) },
             section.endDate?.let      { CourseContentSectionDate(R.string.course_content_timeline_end_date, it) }
         )
-
 }

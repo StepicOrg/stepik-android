@@ -17,5 +17,4 @@ constructor(
 
     override fun getVideoTimestamp(videoId: Long): Single<Long> =
         videoTimestampCacheDataSource.getVideoTimestamp(videoId)
-
 }

@@ -1,7 +1,10 @@
 package org.stepik.android.presentation.course_content.mapper
 
 import org.stepic.droid.util.hasUserAccess
-import org.stepik.android.model.*
+import org.stepik.android.model.Course
+import org.stepik.android.model.Lesson
+import org.stepik.android.model.Progress
+import org.stepik.android.model.Section
 import org.stepik.android.model.Unit
 import org.stepik.android.view.course_content.model.CourseContentItem
 import javax.inject.Inject

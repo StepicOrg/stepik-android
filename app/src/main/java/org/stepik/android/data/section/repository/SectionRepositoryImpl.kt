@@ -24,7 +24,7 @@ constructor(
         val cacheSource = sectionCacheDataSource
             .getSections(*sectionIds)
 
-        return when(primarySourceType) {
+        return when (primarySourceType) {
             DataSourceType.REMOTE ->
                 remoteSource.onErrorResumeNext(cacheSource.requireSize(sectionIds.size))
 

@@ -8,15 +8,15 @@ import android.view.ViewTreeObserver
 import kotlinx.android.synthetic.main.view_course_content_section.view.*
 import org.stepic.droid.R
 import org.stepic.droid.persistence.model.DownloadProgress
-import org.stepik.android.view.course_content.ui.adapter.CourseContentTimelineAdapter
-import org.stepik.android.view.course_content.ui.adapter.decorators.CourseContentTimelineDecorator
-import org.stepik.android.view.course_content.model.CourseContentItem
 import org.stepic.droid.ui.custom.adapter_delegates.AdapterDelegate
 import org.stepic.droid.ui.custom.adapter_delegates.DelegateAdapter
 import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
 import org.stepic.droid.ui.util.StartSnapHelper
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.util.safeDiv
+import org.stepik.android.view.course_content.model.CourseContentItem
+import org.stepik.android.view.course_content.ui.adapter.CourseContentTimelineAdapter
+import org.stepik.android.view.course_content.ui.adapter.decorators.CourseContentTimelineDecorator
 
 class CourseContentSectionDelegate(
     adapter: DelegateAdapter<CourseContentItem, DelegateViewHolder<CourseContentItem>>,
@@ -24,11 +24,11 @@ class CourseContentSectionDelegate(
     private val sectionDownloadStatuses: LongSparseArray<DownloadProgress.Status>
 ) : AdapterDelegate<CourseContentItem, DelegateViewHolder<CourseContentItem>>(adapter) {
 
-    override fun onCreateViewHolder(parent: ViewGroup) =
-            ViewHolder(createView(parent, R.layout.view_course_content_section))
+    override fun onCreateViewHolder(parent: ViewGroup): ViewHolder =
+        ViewHolder(createView(parent, R.layout.view_course_content_section))
 
     override fun isForViewType(position: Int): Boolean =
-            getItemAtPosition(position) is CourseContentItem.SectionItem
+        getItemAtPosition(position) is CourseContentItem.SectionItem
 
     inner class ViewHolder(root: View) : DelegateViewHolder<CourseContentItem>(root) {
         private val sectionTitle    = root.sectionTitle
@@ -62,7 +62,7 @@ class CourseContentSectionDelegate(
 
             sectionDownloadStatus.setOnClickListener {
                 val item = (itemData as? CourseContentItem.SectionItem) ?: return@setOnClickListener
-                when(sectionDownloadStatus.status) {
+                when (sectionDownloadStatus.status) {
                     DownloadProgress.Status.NotCached ->
                         sectionClickListener.onItemDownloadClicked(item)
 

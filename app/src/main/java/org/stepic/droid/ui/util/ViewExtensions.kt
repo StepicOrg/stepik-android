@@ -36,6 +36,19 @@ fun View.setHeight(height: Int) {
     layoutParams = layoutParams
 }
 
+fun ViewGroup.children(): Iterable<View> =
+    Iterable {
+        object : Iterator<View> {
+            private var position = 0
+
+            override fun hasNext(): Boolean =
+                position + 1 < this@children.childCount
+
+            override fun next(): View =
+                this@children.getChildAt(position++)
+        }
+    }
+
 fun ViewGroup.hideAllChildren() {
     for (i in 0 until childCount) {
         getChildAt(i).changeVisibility(false)

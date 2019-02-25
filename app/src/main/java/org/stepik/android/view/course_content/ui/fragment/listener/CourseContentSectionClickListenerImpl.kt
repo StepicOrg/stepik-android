@@ -17,9 +17,11 @@ class CourseContentSectionClickListenerImpl(
         }
     }
 
-    override fun onItemDownloadClicked(item: CourseContentItem.SectionItem) =
+    override fun onItemDownloadClicked(item: CourseContentItem.SectionItem) {
         courseContentPresenter.addSectionDownloadTask(item.section)
+    }
 
-    override fun onItemRemoveClicked(item: CourseContentItem.SectionItem) =
+    override fun onItemRemoveClicked(item: CourseContentItem.SectionItem) {
         courseContentPresenter.removeSectionDownloadTask(item.section)
+    }
 }

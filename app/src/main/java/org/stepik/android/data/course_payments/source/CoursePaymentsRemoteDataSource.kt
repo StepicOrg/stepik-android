@@ -15,5 +15,4 @@ interface CoursePaymentsRemoteDataSource {
      * @param coursePaymentStatus - course payments status filter, if null no filter will be applied
      */
     fun getCoursePaymentsByCourseId(courseId: Long, coursePaymentStatus: CoursePayment.Status? = null): Single<List<CoursePayment>>
-
 }

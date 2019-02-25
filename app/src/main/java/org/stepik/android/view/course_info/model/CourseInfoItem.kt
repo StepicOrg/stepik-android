@@ -4,7 +4,7 @@ import org.stepik.android.model.user.User
 import org.stepik.android.view.video_player.model.VideoPlayerMediaData
 
 sealed class CourseInfoItem(
-        val type: CourseInfoType
+    val type: CourseInfoType
 ) : Comparable<CourseInfoItem> {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -17,11 +17,11 @@ sealed class CourseInfoItem(
         return true
     }
 
-    override fun hashCode(): Int = type.hashCode()
+    override fun hashCode(): Int =
+        type.hashCode()
 
     override fun compareTo(other: CourseInfoItem): Int =
-            type.ordinal.compareTo(other.type.ordinal)
-
+        type.ordinal.compareTo(other.type.ordinal)
 
     class OrganizationBlock(
         val organization: User
