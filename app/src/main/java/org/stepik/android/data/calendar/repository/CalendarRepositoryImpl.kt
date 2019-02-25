@@ -20,6 +20,6 @@ constructor(
     override fun getCalendarItems(): Single<List<CalendarItem>> =
         calendarCacheDataSource.getCalendarPrimaryItems()
 
-    override fun removeCalendarEventDataByIds(ids: List<Long>): Completable =
-        calendarCacheDataSource.removeEventsById(ids)
+    override fun removeCalendarEventDataByIds(vararg ids: Long): Completable =
+        calendarCacheDataSource.removeEventsById(*ids)
 }

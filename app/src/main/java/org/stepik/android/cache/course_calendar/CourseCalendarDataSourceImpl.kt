@@ -13,9 +13,9 @@ constructor(
     private val databaseFacade: DatabaseFacade
 ) : CourseCalendarCacheDataSource {
 
-    override fun getSectionDateEventsByIds(ids: List<Long>): Single<List<SectionDateEvent>> =
+    override fun getSectionDateEventsByIds(vararg ids: Long): Single<List<SectionDateEvent>> =
         Single.fromCallable {
-            databaseFacade.getSectionDateEvents(ids)
+            databaseFacade.getSectionDateEvents(*ids)
         }
 
     override fun saveSectionDateEvents(events: List<SectionDateEvent>): Completable =
@@ -23,8 +23,8 @@ constructor(
             databaseFacade.addSectionDateEvents(events)
         }
 
-    override fun removeSectionDatesEventsByIds(ids: List<Long>): Completable =
+    override fun removeSectionDatesEventsByIds(vararg ids: Long): Completable =
         Completable.fromAction {
-            databaseFacade.removeSectionDateEvents(ids)
+            databaseFacade.removeSectionDateEvents(*ids)
         }
 }

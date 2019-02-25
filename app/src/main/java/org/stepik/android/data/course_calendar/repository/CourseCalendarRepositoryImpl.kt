@@ -13,12 +13,12 @@ constructor(
     private val courseCalendarCacheDataSource: CourseCalendarCacheDataSource
 ) : CourseCalendarRepository {
 
-    override fun getSectionDateEventsByIds(ids: List<Long>): Single<List<SectionDateEvent>> =
-        courseCalendarCacheDataSource.getSectionDateEventsByIds(ids)
+    override fun getSectionDateEventsByIds(vararg ids: Long): Single<List<SectionDateEvent>> =
+        courseCalendarCacheDataSource.getSectionDateEventsByIds(*ids)
 
     override fun saveSectionDateEvents(events: List<SectionDateEvent>): Completable =
         courseCalendarCacheDataSource.saveSectionDateEvents(events)
 
-    override fun removeSectionDateEventsByIds(ids: List<Long>): Completable =
-        courseCalendarCacheDataSource.removeSectionDatesEventsByIds(ids)
+    override fun removeSectionDateEventsByIds(vararg ids: Long): Completable =
+        courseCalendarCacheDataSource.removeSectionDatesEventsByIds(*ids)
 }

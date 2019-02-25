@@ -84,7 +84,7 @@ constructor(
         return contentValues
     }
 
-    override fun removeEventsById(ids: List<Long>): Completable =
+    override fun removeEventsById(vararg ids: Long): Completable =
         Completable.fromAction {
             ids.forEach { removeEventById(it) }
         }

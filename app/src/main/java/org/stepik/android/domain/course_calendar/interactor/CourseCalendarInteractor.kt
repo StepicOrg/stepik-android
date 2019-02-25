@@ -6,6 +6,7 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.toObservable
 import org.stepic.droid.R
 import org.stepic.droid.util.doCompletableOnSuccess
+import org.stepic.droid.util.mapToLongArray
 import org.stepik.android.domain.calendar.model.CalendarEventData
 import org.stepik.android.domain.calendar.model.CalendarItem
 import org.stepik.android.domain.calendar.repository.CalendarRepository
@@ -51,12 +52,12 @@ constructor(
 
     private fun removeOldSchedule(sectionItems: List<CourseContentItem.SectionItem>): Completable =
         courseCalendarRepository
-            .getSectionDateEventsByIds(sectionItems.map { it.section.id })
+            .getSectionDateEventsByIds(*sectionItems.mapToLongArray { it.section.id })
             .flatMapCompletable { dateEvents ->
                 calendarRepository
-                    .removeCalendarEventDataByIds(dateEvents.map(SectionDateEvent::eventId)) // mapToLongArray for varargs
+                    .removeCalendarEventDataByIds(*dateEvents.mapToLongArray(SectionDateEvent::eventId)) // mapToLongArray for varargs
                     .andThen(courseCalendarRepository
-                        .removeSectionDateEventsByIds(dateEvents.map(SectionDateEvent::sectionId)))
+                        .removeSectionDateEventsByIds(*dateEvents.mapToLongArray(SectionDateEvent::sectionId)))
             }
 
     private fun mapDateToCalendarEventData(
