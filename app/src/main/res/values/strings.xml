@@ -647,6 +647,8 @@
     <string name="course_error_continue_learning">Cannot continue learning</string>
     <string name="course_error_enroll">@string/course_error_generic</string>
 
+    <string name="course_reviews_empty">There are no reviews for this course</string>
+
     <string name="course_content_unit_title" translatable="false">%d.%d %s</string>
     <string name="course_content_text_progress" translatable="false">%d/%d</string>
 

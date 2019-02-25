@@ -12,7 +12,8 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.empty_default.*
+import kotlinx.android.synthetic.main.empty_default.report_empty
+import kotlinx.android.synthetic.main.empty_default.view.placeholderMessage
 import kotlinx.android.synthetic.main.error_no_connection.*
 import kotlinx.android.synthetic.main.fragment_course_reviews.*
 import org.stepic.droid.R
@@ -98,6 +99,10 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
                 }
             })
         }
+
+        report_empty
+            .placeholderMessage
+            .setText(R.string.course_reviews_empty)
 
         viewStateDelegate = ViewStateDelegate()
         viewStateDelegate.addState<CourseReviewsView.State.Idle>(courseReviewsPlaceholder)
