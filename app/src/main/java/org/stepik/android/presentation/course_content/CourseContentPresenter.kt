@@ -424,8 +424,7 @@ constructor(
                     onSuccess = {
                         if (it.isEmpty()) {
                             view?.showCalendarError(CalendarError.NO_CALENDARS_ERROR)
-                        }
-                        else {
+                        } else {
                             view?.showCalendarChoiceDialog(it)
                         }
                     },

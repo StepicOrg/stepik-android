@@ -34,12 +34,13 @@ import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.dialogs.VideoQualityDetailedDialog
 import org.stepic.droid.ui.util.PopupHelper
-import org.stepic.droid.util.*
+import org.stepic.droid.util.requestMultiplePermissions
+import org.stepic.droid.util.checkSelfPermissions
+import org.stepic.droid.util.argument
+import org.stepic.droid.util.ProgressHelper
+import org.stepic.droid.util.setTextColor
 import org.stepik.android.view.course_content.ui.adapter.CourseContentAdapter
 import org.stepik.android.view.course_content.model.CourseContentItem
-import org.stepic.droid.util.ProgressHelper
-import org.stepic.droid.util.argument
-import org.stepic.droid.util.setTextColor
 import org.stepic.droid.web.storage.model.StorageRecord
 import org.stepik.android.domain.calendar.model.CalendarItem
 import org.stepik.android.domain.personal_deadlines.model.Deadline
@@ -62,7 +63,7 @@ import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import org.stepik.android.view.ui.listener.FragmentViewPagerScrollStateListener
 import javax.inject.Inject
 
-class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerScrollStateListener, ExplainCalendarPermissionDialog.Callback{
+class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerScrollStateListener, ExplainCalendarPermissionDialog.Callback {
     companion object {
         fun newInstance(courseId: Long): Fragment  =
             CourseContentFragment().apply {

@@ -36,7 +36,7 @@ constructor(
             .flatMapObservable { sectionItems ->
                 sectionItems
                     .flatMap { sectionItem ->
-                        sectionItem.dates.map { date -> mapDateToCalendarEventData(sectionItem, date)}
+                        sectionItem.dates.map { date -> mapDateToCalendarEventData(sectionItem, date) }
                     }
                     .toObservable()
             }
@@ -74,5 +74,4 @@ constructor(
                         ),
                     date = date.date
                 )
-
 }

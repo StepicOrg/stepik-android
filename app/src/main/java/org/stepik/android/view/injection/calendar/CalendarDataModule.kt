@@ -12,11 +12,11 @@ abstract class CalendarDataModule {
 
     @Binds
     internal abstract fun bindCalendarRepository(
-            calendarRepositoryImpl: CalendarRepositoryImpl
+        calendarRepositoryImpl: CalendarRepositoryImpl
     ): CalendarRepository
 
     @Binds
     internal abstract fun bindCalendarCacheDataSource(
-            calendarCacheDataSourceImpl: CalendarCacheDataSourceImpl
+        calendarCacheDataSourceImpl: CalendarCacheDataSourceImpl
     ): CalendarCacheDataSource
 }

@@ -12,7 +12,7 @@ import org.stepic.droid.util.AppConstants
 import org.stepik.android.data.calendar.source.CalendarCacheDataSource
 import org.stepik.android.domain.calendar.model.CalendarEventData
 import org.stepik.android.domain.calendar.model.CalendarItem
-import java.util.*
+import java.util.TimeZone
 import javax.inject.Inject
 
 class CalendarCacheDataSourceImpl
@@ -36,10 +36,10 @@ constructor(
                                 indexIsPrimary = cursor.getColumnIndex(CalendarContract.Calendars.IS_PRIMARY)
                             }
                             if (indexIsPrimary < 0) {
-                                indexIsPrimary = cursor.getColumnIndex("COALESCE(isPrimary, ownerAccount = account_name)")//look at http://stackoverflow.com/questions/25870556/check-if-calendar-is-primary
+                                indexIsPrimary = cursor.getColumnIndex("COALESCE(isPrimary, ownerAccount = account_name)") // look at http://stackoverflow.com/questions/25870556/check-if-calendar-is-primary
                             }
                         } catch (ex: NoSuchFieldError) {
-                            //if no such field we will show all calendars, see below
+                            // if no such field we will show all calendars, see below
                         }
                         val indexOwner = cursor.getColumnIndex(CalendarContract.Calendars.OWNER_ACCOUNT)
 

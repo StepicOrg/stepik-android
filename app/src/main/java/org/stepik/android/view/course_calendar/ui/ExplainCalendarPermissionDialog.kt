@@ -12,9 +12,8 @@ class ExplainCalendarPermissionDialog : DialogFragment() {
         const val TAG = "explain_permission_calendar_dialog"
         const val REQUEST_CALENDAR_PERMISSION = 1122
 
-        fun newInstance(): DialogFragment {
-            return ExplainCalendarPermissionDialog()
-        }
+        fun newInstance(): DialogFragment =
+            ExplainCalendarPermissionDialog()
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
