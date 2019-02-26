@@ -388,7 +388,7 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
             ExplainCalendarPermissionDialog.REQUEST_CALENDAR_PERMISSION -> {
                 val deniedPermissionIndex = grantResults
                     .indexOf(PackageManager.PERMISSION_DENIED)
-                
+
                 if (deniedPermissionIndex != -1) {
                     if (!ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), permissions[deniedPermissionIndex])) {
                         showCalendarError(CalendarError.PERMISSION_ERROR)

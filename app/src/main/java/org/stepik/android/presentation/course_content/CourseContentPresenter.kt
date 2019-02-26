@@ -416,35 +416,35 @@ constructor(
     fun fetchCalendarPrimaryItems() {
         isBlockingLoading = true
         compositeDisposable += courseCalendarInteractor
-                .getCalendarItems()
-                .subscribeOn(backgroundScheduler)
-                .observeOn(mainScheduler)
-                .doFinally { isBlockingLoading = false }
-                .subscribeBy(
-                    onSuccess = {
-                        if (it.isEmpty()) {
-                            view?.showCalendarError(CalendarError.NO_CALENDARS_ERROR)
-                        } else {
-                            view?.showCalendarChoiceDialog(it)
-                        }
-                    },
-                    onError = { view?.showCalendarError(CalendarError.GENERIC_ERROR) }
-                )
+            .getCalendarItems()
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .doFinally { isBlockingLoading = false }
+            .subscribeBy(
+                onSuccess = {
+                    if (it.isEmpty()) {
+                        view?.showCalendarError(CalendarError.NO_CALENDARS_ERROR)
+                    } else {
+                        view?.showCalendarChoiceDialog(it)
+                    }
+                },
+                onError = { view?.showCalendarError(CalendarError.GENERIC_ERROR) }
+            )
     }
 
     fun exportScheduleToCalendar(calendarItem: CalendarItem) {
         val items = (state as? CourseContentView.State.CourseContentLoaded)
-                ?.courseContent
-                ?: return
+            ?.courseContent
+            ?: return
 
         compositeDisposable += courseCalendarInteractor
-                .exportScheduleToCalendar(items, calendarItem)
-                .subscribeOn(backgroundScheduler)
-                .observeOn(mainScheduler)
-                .subscribeBy(
-                    onComplete = { view?.showCalendarSyncSuccess() },
-                    onError = { view?.showCalendarError(CalendarError.GENERIC_ERROR) }
-                )
+            .exportScheduleToCalendar(items, calendarItem)
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onComplete = { view?.showCalendarSyncSuccess() },
+                onError = { view?.showCalendarError(CalendarError.GENERIC_ERROR) }
+            )
     }
 
     override fun detachView(view: CourseContentView) {
