@@ -41,13 +41,12 @@ constructor(
                 getEmptySections(course) concat getContent(course)
             }
 
-    fun mustShowDeadlinesToolTip(): Single<Boolean> {
-        return Single.fromCallable {
+    fun mustShowDeadlinesToolTip(): Single<Boolean> =
+        Single.fromCallable {
             val isTooltipShown = sharedPreferenceHelper.isPersonalDeadlinesTooltipShown
             sharedPreferenceHelper.afterPersonalDeadlinesTooltipShown()
             !isTooltipShown && personalDeadlinesSplitTest.currentGroup.isPersonalDeadlinesEnabled
         }
-    }
 
     private fun getEmptySections(course: Course): Observable<Pair<Course, List<CourseContentItem>>> =
         Observable.just(course to emptyList())

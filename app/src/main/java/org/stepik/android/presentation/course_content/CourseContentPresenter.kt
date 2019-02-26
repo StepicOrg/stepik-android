@@ -374,7 +374,7 @@ constructor(
 
     private fun fetchShouldShowDeadlinesAB() {
         (state as? CourseContentView.State.CourseContentLoaded)
-            ?.takeIf { it.courseContent.any {item -> item is CourseContentItem.UnitItem}}
+            ?.takeIf { it.courseContent.any { item -> item is CourseContentItem.UnitItem } }
             ?: return
 
         compositeDisposable += courseContentInteractor
@@ -383,7 +383,7 @@ constructor(
             .observeOn(mainScheduler)
             .subscribeBy(
                 onSuccess = { if (it) view?.showPersonalDeadlinesBannerAB() },
-                onError   = { view?.showPersonalDeadlinesBannerAB()}
+                onError   = { view?.showPersonalDeadlinesBannerAB() }
             )
     }
 
