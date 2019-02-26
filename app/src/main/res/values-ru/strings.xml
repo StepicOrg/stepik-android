@@ -574,6 +574,7 @@
     <string name="deadlines_menu_create">Создать расписание</string>
     <string name="deadlines_menu_edit">Редактировать расписание</string>
     <string name="deadlines_menu_remove">Удалить расписание</string>
+    <string name="deadlines_menu_sync">Экспортировать в календарь</string>
     <string name="deadlines_section">Дедлайн: %s</string>
     <string name="deadlines_notification">Дедлайн по модулю %s в курсе %s наступает через %s</string>
     <string name="deadlines_edit_title">Редактирование расписания</string>
@@ -638,6 +639,10 @@
     <string name="course_control_schedule">Расписание</string>
     <string name="course_control_filter">Фильтр</string>
     <string name="course_control_download_all">Скачать все</string>
+
+    <string name="course_content_calendar_sync_success">Даты успешно экспортированы в календарь</string>
+    <string name="course_content_calendar_no_calendars_error">Календари не найдены</string>
+    <string name="course_content_calendar_permission_error">Включите разрешение для использования календаря в настройках</string>
 
     <string name="course_restore_purchase">Восстановить покупку</string>
     <string name="course_payments_purchase_in_app">Купить за %s</string>

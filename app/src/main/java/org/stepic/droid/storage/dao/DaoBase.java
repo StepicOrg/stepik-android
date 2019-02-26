@@ -119,6 +119,12 @@ public abstract class DaoBase<T> implements IDao<T> {
         databaseOperations.executeDelete(getDbName(), where, whereArgs.values().toArray(new String[]{}));
     }
 
+    @Override
+    public void removeAllInRange(@NotNull String whereColumn, @NotNull String commaSeparatedIds) {
+        String query = whereColumn + " IN (" + commaSeparatedIds + ")";
+        databaseOperations.executeDelete(getDbName(), query, null);
+    }
+
     @NotNull
     @Override
     public final List<T> getAllInRange(@NonNull String whereColumn, @NonNull String commaSeparatedIds) {

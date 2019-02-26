@@ -11,7 +11,8 @@ sealed class CourseContentItem {
     data class ControlBar(
         val isEnabled: Boolean,
         val personalDeadlinesState: PersonalDeadlinesState,
-        val course: Course?
+        val course: Course?,
+        val hasDates: Boolean
     ) : CourseContentItem()
 
     data class SectionItem(

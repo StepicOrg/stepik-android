@@ -8,6 +8,8 @@ import org.stepik.android.view.course_content.ui.fragment.CourseContentFragment
 import org.stepik.android.view.course_info.ui.fragment.CourseInfoFragment
 import org.stepik.android.view.course_reviews.ui.fragment.CourseReviewsFragment
 import org.stepik.android.view.injection.billing.BillingDataModule
+import org.stepik.android.view.injection.calendar.CalendarDataModule
+import org.stepik.android.view.injection.course_calendar.CourseCalendarDataModule
 import org.stepik.android.view.injection.course_list.CourseListDataModule
 import org.stepik.android.view.injection.course_payments.CoursePaymentsDataModule
 import org.stepik.android.view.injection.course_reviews.CourseReviewsDataModule
@@ -32,7 +34,10 @@ import org.stepik.android.view.injection.user.UserDataModule
     PersonalDeadlinesDataModule::class,
     NotificationDataModule::class,
 
-    BillingDataModule::class
+    BillingDataModule::class,
+
+    CourseCalendarDataModule::class,
+    CalendarDataModule::class
 ])
 interface CourseComponent {
     @Subcomponent.Builder
