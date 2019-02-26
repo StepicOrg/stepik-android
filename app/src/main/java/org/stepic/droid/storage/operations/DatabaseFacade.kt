@@ -17,10 +17,12 @@ import org.stepic.droid.storage.structure.*
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DbParseHelper
 import org.stepic.droid.web.ViewAssignment
+import org.stepik.android.cache.course_calendar.structure.DbStructureSectionDateEvent
 import org.stepik.android.cache.section.structure.DbStructureSection
 import org.stepik.android.cache.unit.structure.DbStructureUnit
 import org.stepik.android.cache.lesson.structure.DbStructureLesson
 import org.stepik.android.cache.video_player.model.VideoTimestamp
+import org.stepik.android.domain.course_calendar.model.SectionDateEvent
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.*
 import org.stepik.android.model.Unit
@@ -51,7 +53,8 @@ constructor(
     private val blockDao: IDao<BlockPersistentWrapper>,
     private val personalDeadlinesDao: PersonalDeadlinesDao,
     private val deadlinesBannerDao: DeadlinesBannerDao,
-    private val viewedStoryTemplatesDao: IDao<ViewedStoryTemplate>
+    private val viewedStoryTemplatesDao: IDao<ViewedStoryTemplate>,
+    private val sectionDateEventDao: IDao<SectionDateEvent>
 ) {
 
     fun dropDatabase() {
@@ -76,6 +79,7 @@ constructor(
         personalDeadlinesDao.removeAll()
         deadlinesBannerDao.removeAll()
         viewedStoryTemplatesDao.removeAll()
+        sectionDateEventDao.removeAll()
     }
 
     fun addAssignment(assignment: Assignment?) = assignment?.let { assignmentDao.insertOrUpdate(assignment) }
@@ -369,4 +373,18 @@ constructor(
     fun getExpForLast7Days(courseId: Long) = adaptiveExpDao.getExpForLast7Days(courseId)
 
     fun getExpForWeeks(courseId: Long) = adaptiveExpDao.getExpForWeeks(courseId)
+
+    fun getSectionDateEvents(vararg sectionIds: Long): List<SectionDateEvent> =
+        DbParseHelper.parseLongArrayToString(sectionIds, AppConstants.COMMA)?.let {
+            sectionDateEventDao.getAllInRange(DbStructureSectionDateEvent.Columns.SECTION_ID, it)
+        } ?: emptyList()
+
+    fun removeSectionDateEvents(vararg sectionIds: Long) =
+        DbParseHelper.parseLongArrayToString(sectionIds, AppConstants.COMMA)?.let {
+            sectionDateEventDao.removeAllInRange(DbStructureSectionDateEvent.Columns.SECTION_ID, it)
+        }
+    
+    fun addSectionDateEvents(events: List<SectionDateEvent>) {
+        sectionDateEventDao.insertOrReplaceAll(events)
+    }
 }
