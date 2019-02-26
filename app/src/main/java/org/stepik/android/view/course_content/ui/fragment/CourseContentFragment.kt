@@ -386,7 +386,16 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         when (requestCode) {
             ExplainCalendarPermissionDialog.REQUEST_CALENDAR_PERMISSION -> {
-                for (i in grantResults.indices) {
+                val deniedPermissionIndex = grantResults
+                    .indexOf(PackageManager.PERMISSION_DENIED)
+                
+                if (deniedPermissionIndex != -1) {
+                    if (!ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), permissions[deniedPermissionIndex])) {
+                        showCalendarError(CalendarError.PERMISSION_ERROR)
+                    }
+                } else {
+                    courseContentPresenter.getCalendarPrimaryItems()
+                }
                     if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
                         if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), permissions[i])) {
                             return
