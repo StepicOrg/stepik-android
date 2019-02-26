@@ -1,6 +1,7 @@
 package org.stepik.android.presentation.course_content.mapper
 
 import org.stepic.droid.R
+import org.stepic.droid.analytic.experiments.PersonalDeadlinesSplitTest
 import org.stepic.droid.util.isNullOrEmpty
 import org.stepic.droid.web.storage.model.StorageRecord
 import org.stepik.android.domain.personal_deadlines.model.DeadlinesWrapper
@@ -15,6 +16,7 @@ import javax.inject.Inject
 class CourseContentStateMapper
 @Inject
 constructor(
+    private val personalDeadlinesSplitTest: PersonalDeadlinesSplitTest,
     private val sectionDatesMapper: CourseContentSectionDatesMapper
 ) {
     fun mergeStateWithCourseContent(state: CourseContentView.State, course: Course, courseContent: List<CourseContentItem>): CourseContentView.State {
@@ -42,7 +44,10 @@ constructor(
                 ?.let { applyDeadlinesToCourseContent(courseContent, it) }
                 ?: courseContent
 
-        return CourseContentView.State.CourseContentLoaded(course, personalDeadlinesState, content)
+        return when (personalDeadlinesSplitTest.currentGroup.isPersonalDeadlinesEnabled) {
+            true -> CourseContentView.State.CourseContentLoaded(course, personalDeadlinesState, content)
+            false -> CourseContentView.State.CourseContentLoaded(course, PersonalDeadlinesState.NoDeadlinesNeeded, content)
+        }
     }
 
     fun mergeStateWithPersonalDeadlines(state: CourseContentView.State, deadlinesRecord: StorageRecord<DeadlinesWrapper>?): CourseContentView.State {
