@@ -28,15 +28,19 @@ constructor(
             }
         }
 
-        val personalDeadlinesState =
-            if (course.enrollment == 0L) {
-                PersonalDeadlinesState.NoDeadlinesNeeded
-            } else {
-                (state as? CourseContentView.State.CourseContentLoaded)
-                    ?.personalDeadlinesState
-                    ?.takeUnless { it is PersonalDeadlinesState.NoDeadlinesNeeded }
-                    ?: PersonalDeadlinesState.Idle
+        val personalDeadlinesState = when (personalDeadlinesSplitTest.currentGroup.isPersonalDeadlinesEnabled) {
+            true -> {
+                if (course.enrollment == 0L) {
+                    PersonalDeadlinesState.NoDeadlinesNeeded
+                } else {
+                    (state as? CourseContentView.State.CourseContentLoaded)
+                        ?.personalDeadlinesState
+                        ?.takeUnless { it is PersonalDeadlinesState.NoDeadlinesNeeded }
+                        ?: PersonalDeadlinesState.Idle
+                }
             }
+            false -> PersonalDeadlinesState.NoDeadlinesNeeded
+        }
 
         val content =
             (personalDeadlinesState as? PersonalDeadlinesState.Deadlines)
@@ -48,10 +52,7 @@ constructor(
                 .filterIsInstance<CourseContentItem.SectionItem>()
                 .any { sectionItem -> sectionItem.dates.isNotEmpty() }
 
-        return when (personalDeadlinesSplitTest.currentGroup.isPersonalDeadlinesEnabled) {
-            true -> CourseContentView.State.CourseContentLoaded(course, personalDeadlinesState, content, hasDates)
-            false -> CourseContentView.State.CourseContentLoaded(course, PersonalDeadlinesState.NoDeadlinesNeeded, content, hasDates)
-        }
+        return CourseContentView.State.CourseContentLoaded(course, personalDeadlinesState, content, hasDates)
     }
 
     fun mergeStateWithPersonalDeadlines(state: CourseContentView.State, deadlinesRecord: StorageRecord<DeadlinesWrapper>?): CourseContentView.State {
