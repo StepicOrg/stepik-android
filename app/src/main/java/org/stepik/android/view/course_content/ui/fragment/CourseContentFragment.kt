@@ -338,7 +338,7 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
     private fun syncCalendarDates() {
         val permissions = listOf(Manifest.permission.WRITE_CALENDAR,  Manifest.permission.READ_CALENDAR)
         if (requireContext().checkSelfPermissions(permissions)) {
-            courseContentPresenter.getCalendarPrimaryItems()
+            courseContentPresenter.fetchCalendarPrimaryItems()
         } else {
             showExplainPermissionsDialog()
         }
@@ -396,7 +396,7 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
                         }
                     }
                 }
-                courseContentPresenter.getCalendarPrimaryItems()
+                courseContentPresenter.fetchCalendarPrimaryItems()
             }
         }
     }

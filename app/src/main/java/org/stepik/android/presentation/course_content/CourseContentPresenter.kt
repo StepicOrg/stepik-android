@@ -413,7 +413,7 @@ constructor(
             )
     }
 
-    fun getCalendarPrimaryItems() {
+    fun fetchCalendarPrimaryItems() {
         isBlockingLoading = true
         compositeDisposable += courseCalendarInteractor
                 .getCalendarItems()
