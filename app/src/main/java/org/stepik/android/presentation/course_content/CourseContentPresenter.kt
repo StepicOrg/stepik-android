@@ -15,6 +15,8 @@ import org.stepic.droid.persistence.downloads.progress.DownloadProgressProvider
 import org.stepic.droid.persistence.model.DownloadConfiguration
 import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepic.droid.util.emptyOnErrorStub
+import org.stepik.android.domain.calendar.model.CalendarItem
+import org.stepik.android.domain.course_calendar.interactor.CourseCalendarInteractor
 import org.stepik.android.domain.course_content.interactor.CourseContentInteractor
 import org.stepik.android.domain.network.exception.NetworkRequirementsNotSatisfiedException
 import org.stepik.android.domain.personal_deadlines.interactor.DeadlinesInteractor
@@ -25,6 +27,7 @@ import org.stepik.android.model.Progress
 import org.stepik.android.model.Section
 import org.stepik.android.model.Unit
 import org.stepik.android.presentation.base.PresenterBase
+import org.stepik.android.presentation.course_calendar.model.CalendarError
 import org.stepik.android.presentation.course_content.mapper.CourseContentStateMapper
 import org.stepik.android.presentation.personal_deadlines.model.PersonalDeadlinesState
 import org.stepik.android.view.course_content.model.CourseContentItem
@@ -50,6 +53,8 @@ constructor(
     private val stateMapper: CourseContentStateMapper,
 
     private val progressObservable: Observable<Progress>,
+
+    private val courseCalendarInteractor: CourseCalendarInteractor,
 
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
@@ -421,6 +426,40 @@ constructor(
                     }
                 },
                 onError = emptyOnErrorStub
+            )
+    }
+
+    fun fetchCalendarPrimaryItems() {
+        isBlockingLoading = true
+        compositeDisposable += courseCalendarInteractor
+            .getCalendarItems()
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .doFinally { isBlockingLoading = false }
+            .subscribeBy(
+                onSuccess = {
+                    if (it.isEmpty()) {
+                        view?.showCalendarError(CalendarError.NO_CALENDARS_ERROR)
+                    } else {
+                        view?.showCalendarChoiceDialog(it)
+                    }
+                },
+                onError = { view?.showCalendarError(CalendarError.GENERIC_ERROR) }
+            )
+    }
+
+    fun exportScheduleToCalendar(calendarItem: CalendarItem) {
+        val items = (state as? CourseContentView.State.CourseContentLoaded)
+            ?.courseContent
+            ?: return
+
+        compositeDisposable += courseCalendarInteractor
+            .exportScheduleToCalendar(items, calendarItem)
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onComplete = { view?.showCalendarSyncSuccess() },
+                onError = { view?.showCalendarError(CalendarError.GENERIC_ERROR) }
             )
     }
 

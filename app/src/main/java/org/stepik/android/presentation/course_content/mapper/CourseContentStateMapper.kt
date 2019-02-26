@@ -44,9 +44,13 @@ constructor(
                 ?.let { applyDeadlinesToCourseContent(courseContent, it) }
                 ?: courseContent
 
+        val hasDates = content
+                .filterIsInstance<CourseContentItem.SectionItem>()
+                .any { sectionItem -> sectionItem.dates.isNotEmpty() }
+
         return when (personalDeadlinesSplitTest.currentGroup.isPersonalDeadlinesEnabled) {
-            true -> CourseContentView.State.CourseContentLoaded(course, personalDeadlinesState, content)
-            false -> CourseContentView.State.CourseContentLoaded(course, PersonalDeadlinesState.NoDeadlinesNeeded, content)
+            true -> CourseContentView.State.CourseContentLoaded(course, personalDeadlinesState, content, hasDates)
+            false -> CourseContentView.State.CourseContentLoaded(course, PersonalDeadlinesState.NoDeadlinesNeeded, content, hasDates)
         }
     }
 
