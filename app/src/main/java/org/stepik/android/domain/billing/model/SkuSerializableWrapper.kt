@@ -62,5 +62,4 @@ class SkuSerializableWrapper(
             stream.readInt() // introductoryPriceCycles
         )
     }
-
 }
