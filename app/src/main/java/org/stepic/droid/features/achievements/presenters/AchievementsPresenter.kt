@@ -3,27 +3,37 @@ package org.stepic.droid.features.achievements.presenters
 import io.reactivex.Scheduler
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
+import org.stepic.droid.analytic.experiments.AchievementsSplitTest
 import org.stepic.droid.core.presenters.PresenterBase
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.features.achievements.repository.AchievementsRepository
 import org.stepic.droid.util.addDisposable
 import javax.inject.Inject
-import kotlin.properties.Delegates
 
 class AchievementsPresenter
 @Inject
 constructor(
-        private val achievementsRepository: AchievementsRepository,
+    achievementsSplitTest: AchievementsSplitTest,
+    private val achievementsRepository: AchievementsRepository,
 
-        @BackgroundScheduler
-        private val backgroundScheduler: Scheduler,
-        @MainScheduler
-        private val mainScheduler: Scheduler
+    @BackgroundScheduler
+    private val backgroundScheduler: Scheduler,
+    @MainScheduler
+    private val mainScheduler: Scheduler
 ): PresenterBase<AchievementsView>() {
     private val compositeDisposable = CompositeDisposable()
 
-    private var state by Delegates.observable(AchievementsView.State.Idle as AchievementsView.State) { _, _, newState -> setViewState(newState) }
+    private var state: AchievementsView.State =
+        if (achievementsSplitTest.currentGroup.isAchievementsEnabled) {
+            AchievementsView.State.Idle
+        } else {
+            AchievementsView.State.NoAchievementsBlock
+        }
+        set(value) {
+            field = value
+            setViewState(value)
+        }
 
     fun showAchievementsForUser(userId: Long, count: Int = -1, forceUpdate: Boolean = false) {
         if (state == AchievementsView.State.Idle || (forceUpdate && state == AchievementsView.State.Error)) {
@@ -51,6 +61,9 @@ constructor(
 
             is AchievementsView.State.Error ->
                 view?.onAchievementsLoadingError()
+
+            is AchievementsView.State.NoAchievementsBlock ->
+                view?.onHideAchievements()
         }
     }
 }
