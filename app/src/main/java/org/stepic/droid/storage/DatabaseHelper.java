@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import org.stepic.droid.storage.migration.MigrationFrom37To38;
+import org.stepic.droid.storage.migration.MigrationFrom38To39;
 import org.stepik.android.cache.personal_deadlines.structure.DbStructureDeadlines;
 import org.stepik.android.cache.personal_deadlines.structure.DbStructureDeadlinesBanner;
 import org.stepic.droid.storage.migration.MigrationFrom33To34;
@@ -107,6 +108,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         upgradeFrom35To36(db);
         upgradeFrom36To37(db);
         upgradeFrom37To38(db);
+        upgradeFrom38To39(db);
     }
 
 
@@ -301,6 +303,14 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         if (oldVersion < 38) {
             upgradeFrom37To38(db);
         }
+
+        if (oldVersion < 39) {
+            upgradeFrom38To39(db);
+        }
+    }
+
+    private void upgradeFrom38To39(SQLiteDatabase db) {
+        MigrationFrom38To39.INSTANCE.migrate(db);
     }
 
     private void upgradeFrom37To38(SQLiteDatabase db) {

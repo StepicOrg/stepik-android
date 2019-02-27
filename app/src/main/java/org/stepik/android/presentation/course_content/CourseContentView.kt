@@ -1,9 +1,11 @@
 package org.stepik.android.presentation.course_content
 
 import org.stepic.droid.persistence.model.DownloadProgress
+import org.stepik.android.domain.calendar.model.CalendarItem
 import org.stepik.android.model.Course
 import org.stepik.android.model.Section
 import org.stepik.android.model.Unit
+import org.stepik.android.presentation.course_calendar.model.CalendarError
 import org.stepik.android.presentation.personal_deadlines.model.PersonalDeadlinesState
 import org.stepik.android.view.course_content.model.CourseContentItem
 
@@ -16,7 +18,8 @@ interface CourseContentView {
         data class CourseContentLoaded(
             val course: Course,
             val personalDeadlinesState: PersonalDeadlinesState,
-            val courseContent: List<CourseContentItem>
+            val courseContent: List<CourseContentItem>,
+            val hasDates: Boolean
         ) : State()
         object NetworkError : State()
     }
@@ -31,4 +34,8 @@ interface CourseContentView {
 
     fun showPersonalDeadlinesBanner()
     fun showPersonalDeadlinesError()
+
+    fun showCalendarChoiceDialog(calendarItems: List<CalendarItem>)
+    fun showCalendarSyncSuccess()
+    fun showCalendarError(error: CalendarError)
 }
