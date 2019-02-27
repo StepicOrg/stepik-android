@@ -8,7 +8,12 @@ import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import android.widget.LinearLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -45,11 +50,12 @@ import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.ProfileSettingsHelper
 import org.stepic.droid.util.argument
-import org.stepic.droid.util.svg.GlideApp
 import org.stepic.droid.util.svg.GlideSvgRequestFactory
 import org.stepic.droid.viewmodel.ProfileSettingsViewModel
 import timber.log.Timber
-import java.util.*
+import java.util.ArrayList
+import java.util.Date
+import java.util.TimeZone
 import javax.inject.Inject
 
 class ProfileFragment : FragmentBase(),
@@ -252,6 +258,10 @@ class ProfileFragment : FragmentBase(),
         achievementsLoadingPlaceholder.changeVisibility(true)
         achievementsLoadingError.changeVisibility(false)
         achievementsTilesContainer.changeVisibility(false)
+    }
+
+    override fun onHideAchievements() {
+        achievementsContainer.changeVisibility(false)
     }
 
     /**
