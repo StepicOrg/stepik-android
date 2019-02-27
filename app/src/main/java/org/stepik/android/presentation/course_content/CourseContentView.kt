@@ -34,7 +34,6 @@ interface CourseContentView {
 
     fun showPersonalDeadlinesBanner()
     fun showPersonalDeadlinesError()
-    fun showPersonalDeadlinesBannerAB()
 
     fun showCalendarChoiceDialog(calendarItems: List<CalendarItem>)
     fun showCalendarSyncSuccess()

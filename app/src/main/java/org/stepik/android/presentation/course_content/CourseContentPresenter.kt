@@ -112,7 +112,6 @@ constructor(
                 onNext = { (course, courseContent) ->
                     state = stateMapper.mergeStateWithCourseContent(state, course, courseContent)
                     resolveDownloadProgressSubscription()
-                    fetchShouldShowDeadlinesAB()
                     fetchPersonalDeadlines()
                 },
                 onError = {
@@ -374,21 +373,6 @@ constructor(
             .subscribeBy(
                 onComplete = { state = stateMapper.mergeStateWithPersonalDeadlines(state, null) },
                 onError    = { view?.showPersonalDeadlinesError() }
-            )
-    }
-
-    private fun fetchShouldShowDeadlinesAB() {
-        (state as? CourseContentView.State.CourseContentLoaded)
-            ?.takeIf { it.courseContent.any { item -> item is CourseContentItem.UnitItem } }
-            ?: return
-
-        compositeDisposable += courseContentInteractor
-            .mustShowDeadlinesToolTip()
-            .subscribeOn(backgroundScheduler)
-            .observeOn(mainScheduler)
-            .subscribeBy(
-                onSuccess = { if (it) view?.showPersonalDeadlinesBannerAB() },
-                onError   = { view?.showPersonalDeadlinesBannerAB() }
             )
     }
 
