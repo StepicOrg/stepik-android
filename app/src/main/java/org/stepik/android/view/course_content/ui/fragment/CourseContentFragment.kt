@@ -265,7 +265,7 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
             .ignoreElement()
             .subscribe {
                 val anchorView = courseContentRecycler.findViewById<View>(R.id.course_control_schedule)
-                val deadlinesDescription = getString(R.string.deadlines_banner_description)
+                val deadlinesDescription = getString(R.string.deadlines_ab_banner_description)
                 PopupHelper.showPopupAnchoredToView(requireContext(), anchorView, deadlinesDescription, cancelableOnTouchOutside = true)
             }
     }
