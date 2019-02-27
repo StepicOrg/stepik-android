@@ -3,8 +3,6 @@ package org.stepik.android.domain.course_content.interactor
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
-import org.stepic.droid.analytic.experiments.PersonalDeadlinesSplitTest
-import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.concat
 import org.stepic.droid.util.getProgresses
 import org.stepic.droid.util.mapToLongArray
@@ -29,9 +27,6 @@ constructor(
     private val lessonRepository: LessonRepository,
     private val progressRepository: ProgressRepository,
 
-    private val sharedPreferenceHelper: SharedPreferenceHelper,
-    private val personalDeadlinesSplitTest: PersonalDeadlinesSplitTest,
-
     private val courseContentItemMapper: CourseContentItemMapper
 ) {
     fun getCourseContent(shouldSkipStoredValue: Boolean = false): Observable<Pair<Course, List<CourseContentItem>>> =
@@ -40,13 +35,6 @@ constructor(
             .switchMap { course ->
                 getEmptySections(course) concat getContent(course)
             }
-
-    fun mustShowDeadlinesToolTip(): Single<Boolean> =
-        Single.fromCallable {
-            val isTooltipShown = sharedPreferenceHelper.isPersonalDeadlinesTooltipShown
-            sharedPreferenceHelper.afterPersonalDeadlinesTooltipShown()
-            !isTooltipShown && personalDeadlinesSplitTest.currentGroup.isPersonalDeadlinesEnabled
-        }
 
     private fun getEmptySections(course: Course): Observable<Pair<Course, List<CourseContentItem>>> =
         Observable.just(course to emptyList())

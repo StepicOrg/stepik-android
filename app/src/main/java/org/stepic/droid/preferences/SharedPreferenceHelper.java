@@ -78,7 +78,6 @@ public class SharedPreferenceHelper {
     private final String SCHEDULED_LINK_CACHED = "scheduled_cached";
     private final String DISCUSSION_ORDER = "discussion_order";
     private final String CALENDAR_WIDGET = "calenda_widget";
-    private final String AB_DEADLINES_TOOLTIP_SHOWN = "ab_deadlines_tooltip_shown";
     private final String FIRST_TIME_VIDEO = "first_time_video";
     private final String VIDEO_QUALITY_EXPLANATION = "video_quality_explanation";
     private final String NEED_DROP_114 = "need_drop_114";
@@ -631,14 +630,6 @@ public class SharedPreferenceHelper {
 
     public void afterFirstTimeVideo() {
         put(PreferenceType.VIDEO_SETTINGS, FIRST_TIME_VIDEO, false);
-    }
-
-    public boolean isPersonalDeadlinesTooltipShown() {
-        return getBoolean(PreferenceType.DEVICE_SPECIFIC, AB_DEADLINES_TOOLTIP_SHOWN, false);
-    }
-
-    public void afterPersonalDeadlinesTooltipShown() {
-        put(PreferenceType.DEVICE_SPECIFIC, AB_DEADLINES_TOOLTIP_SHOWN, true);
     }
 
     public void storeProfile(Profile profile) {
