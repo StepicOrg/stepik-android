@@ -10,6 +10,7 @@ import android.support.v4.app.JobIntentService
 import android.support.v4.app.NotificationCompat
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import org.stepic.droid.R
+import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.AchievementsSplitTest
 import org.stepic.droid.base.App

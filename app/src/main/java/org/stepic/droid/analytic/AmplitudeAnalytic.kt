@@ -108,4 +108,12 @@ interface AmplitudeAnalytic {
             }
         }
     }
+
+    object Deadlines {
+        const val PERSONAL_DEADLINE_CREATED = "personal_deadline_created"
+
+        object Values {
+            const val HOURS = "hours"
+        }
+    }
 }
