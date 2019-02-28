@@ -116,4 +116,13 @@ interface AmplitudeAnalytic {
             const val HOURS = "hours"
         }
     }
+
+    object Achievements {
+        const val NOTIFICATION_RECEIVED = "Achievement notification received"
+
+        object Values {
+            const val KIND = "achievement_kind"
+            const val LEVEL = "achievement_level"
+        }
+    }
 }
