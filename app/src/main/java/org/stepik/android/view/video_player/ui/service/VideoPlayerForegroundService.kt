@@ -155,7 +155,6 @@ class VideoPlayerForegroundService : Service() {
             this.videoPlayerData?.videoId != videoPlayerData?.videoId ||
             player.playWhenReady
 
-
         if (videoPlayerData != null) {
             if (this.videoPlayerData?.videoUrl != videoPlayerData.videoUrl || player.playbackState == Player.STATE_IDLE) {
                 val mediaSource = getMediaSource(videoPlayerData)
