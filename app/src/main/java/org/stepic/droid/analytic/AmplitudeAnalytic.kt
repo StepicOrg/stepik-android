@@ -112,7 +112,7 @@ interface AmplitudeAnalytic {
     object Deadlines {
         const val PERSONAL_DEADLINE_CREATED = "Personal deadline created"
 
-        object Values {
+        object Params {
             const val HOURS = "hours"
         }
     }
@@ -120,7 +120,7 @@ interface AmplitudeAnalytic {
     object Achievements {
         const val NOTIFICATION_RECEIVED = "Achievement notification received"
 
-        object Values {
+        object Params {
             const val KIND = "achievement_kind"
             const val LEVEL = "achievement_level"
         }

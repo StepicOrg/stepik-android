@@ -69,8 +69,8 @@ class AchievementsNotificationService : JobIntentService() {
             analytic.reportAmplitudeEvent(
                 AmplitudeAnalytic.Achievements.NOTIFICATION_RECEIVED,
                 mapOf(
-                    AmplitudeAnalytic.Achievements.Values.KIND to achievement.kind,
-                    AmplitudeAnalytic.Achievements.Values.LEVEL to achievement.currentLevel
+                    AmplitudeAnalytic.Achievements.Params.KIND to achievement.kind,
+                    AmplitudeAnalytic.Achievements.Params.LEVEL to achievement.currentLevel
                 )
             )
 
