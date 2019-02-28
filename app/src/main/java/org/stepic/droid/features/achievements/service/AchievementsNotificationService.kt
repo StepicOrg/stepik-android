@@ -68,14 +68,6 @@ class AchievementsNotificationService : JobIntentService() {
                     .getAchievement(achievementNotification.user, achievementNotification.kind)
                     .blockingGet()
 
-            analytic.reportAmplitudeEvent(
-                AmplitudeAnalytic.Achievements.ACHIEVEMENT_NOTIFICATION_RECEIVED,
-                mapOf(
-                    AmplitudeAnalytic.Achievements.Values.ACHIEVEMENT_KIND to achievement.kind,
-                    AmplitudeAnalytic.Achievements.Values.ACHIEVEMENT_LEVEL to achievement.currentLevel
-                )
-            )
-
             val notificationIntent = AchievementsListActivity
                     .createIntent(this, achievementNotification.user, isMyProfile = true)
 
