@@ -298,24 +298,22 @@ constructor(
      * Personal deadlines
      */
     private fun fetchPersonalDeadlines() {
-        val transitionState = (state as? CourseContentView.State.CourseContentLoaded)
+        val oldState = (state as? CourseContentView.State.CourseContentLoaded)
             ?.takeIf { it.personalDeadlinesState == PersonalDeadlinesState.Idle }
             ?: return
 
         deadlinesDisposable.clear()
 
         if (personalDeadlinesSplitTest.currentGroup.isPersonalDeadlinesEnabled) {
-            state = transitionState.copy(personalDeadlinesState = PersonalDeadlinesState.NoDeadlinesNeeded)
+            state = oldState.copy(personalDeadlinesState = PersonalDeadlinesState.NoDeadlinesNeeded)
         } else {
             deadlinesDisposable += deadlinesInteractor
                 .getPersonalDeadlineByCourseId(courseId)
                 .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)
                 .subscribeBy(
-                    onComplete = { state = stateMapper.mergeStateWithPersonalDeadlines(
-                            state,
-                            null
-                        )
+                    onComplete = {
+                        state = stateMapper.mergeStateWithPersonalDeadlines(state, null)
                         fetchPersonalDeadlinesBanner()
                     },
                     onSuccess = { state = stateMapper.mergeStateWithPersonalDeadlines(state, it) },
