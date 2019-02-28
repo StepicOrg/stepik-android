@@ -108,4 +108,8 @@ interface AmplitudeAnalytic {
             }
         }
     }
+
+    object Video {
+        const val PLAY_IN_BACKGROUND = "Video played in background"
+    }
 }
