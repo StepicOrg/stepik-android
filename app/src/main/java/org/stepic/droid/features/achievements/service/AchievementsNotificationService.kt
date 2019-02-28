@@ -10,6 +10,7 @@ import android.support.v4.app.JobIntentService
 import android.support.v4.app.NotificationCompat
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import org.stepic.droid.R
+import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.AchievementsSplitTest
 import org.stepic.droid.base.App
@@ -66,6 +67,14 @@ class AchievementsNotificationService : JobIntentService() {
             val achievement = achievementsRepository
                     .getAchievement(achievementNotification.user, achievementNotification.kind)
                     .blockingGet()
+
+            analytic.reportAmplitudeEvent(
+                AmplitudeAnalytic.Achievements.ACHIEVEMENT_NOTIFICATION_RECEIVED,
+                mapOf(
+                    AmplitudeAnalytic.Achievements.Values.ACHIEVEMENT_KIND to achievement.kind,
+                    AmplitudeAnalytic.Achievements.Values.ACHIEVEMENT_LEVEL to achievement.currentLevel
+                )
+            )
 
             val notificationIntent = AchievementsListActivity
                     .createIntent(this, achievementNotification.user, isMyProfile = true)
