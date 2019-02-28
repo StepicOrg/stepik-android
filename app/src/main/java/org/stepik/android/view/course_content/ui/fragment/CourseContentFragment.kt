@@ -27,6 +27,7 @@ import kotlinx.android.synthetic.main.empty_default.*
 import kotlinx.android.synthetic.main.error_no_connection.*
 import kotlinx.android.synthetic.main.fragment_course_content.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
@@ -148,6 +149,12 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
 
                         override fun onDownloadAllClicked(course: Course) {
                             courseContentPresenter.addCourseDownloadTask(course)
+                            analytic.reportAmplitudeEvent(
+                                AmplitudeAnalytic.Downloads.STARTED,
+                                mapOf(
+                                    AmplitudeAnalytic.Downloads.PARAM_CONTENT to AmplitudeAnalytic.Downloads.Values.COURSE
+                                )
+                            )
                         }
                     }
                 )

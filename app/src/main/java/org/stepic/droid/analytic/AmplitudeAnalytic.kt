@@ -79,6 +79,7 @@ interface AmplitudeAnalytic {
         const val PARAM_CONTENT = "content"
 
         object Values {
+            const val COURSE = "course"
             const val SECTION = "section"
             const val LESSON = "lesson"
         }

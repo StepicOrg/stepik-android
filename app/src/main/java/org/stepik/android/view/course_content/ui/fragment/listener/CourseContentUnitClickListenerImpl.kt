@@ -20,14 +20,31 @@ class CourseContentUnitClickListenerImpl(
 
     override fun onItemDownloadClicked(item: CourseContentItem.UnitItem) {
         courseContentPresenter.addUnitDownloadTask(item.unit)
-        analytic.reportAmplitudeEvent(AmplitudeAnalytic.Downloads.STARTED)
+        analytic.reportAmplitudeEvent(
+            AmplitudeAnalytic.Downloads.STARTED,
+            mapOf(
+                AmplitudeAnalytic.Downloads.PARAM_CONTENT to AmplitudeAnalytic.Downloads.Values.LESSON
+            )
+        )
     }
 
     override fun onItemCancelClicked(item: CourseContentItem.UnitItem) {
         courseContentPresenter.removeUnitDownloadTask(item.unit)
+        analytic.reportAmplitudeEvent(
+            AmplitudeAnalytic.Downloads.CANCELLED,
+            mapOf(
+                AmplitudeAnalytic.Downloads.PARAM_CONTENT to AmplitudeAnalytic.Downloads.Values.LESSON
+            )
+        )
     }
 
     override fun onItemRemoveClicked(item: CourseContentItem.UnitItem) {
         courseContentPresenter.removeUnitDownloadTask(item.unit)
+        analytic.reportAmplitudeEvent(
+            AmplitudeAnalytic.Downloads.DELETED,
+            mapOf(
+                AmplitudeAnalytic.Downloads.PARAM_CONTENT to AmplitudeAnalytic.Downloads.Values.LESSON
+            )
+        )
     }
 }
