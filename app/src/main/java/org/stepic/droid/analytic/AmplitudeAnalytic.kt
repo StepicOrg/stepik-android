@@ -110,7 +110,7 @@ interface AmplitudeAnalytic {
     }
 
     object Deadlines {
-        const val PERSONAL_DEADLINE_CREATED = "personal_deadline_created"
+        const val PERSONAL_DEADLINE_CREATED = "Personal deadline created"
 
         object Values {
             const val HOURS = "hours"
