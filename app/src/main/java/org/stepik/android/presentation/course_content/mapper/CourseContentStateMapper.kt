@@ -1,7 +1,6 @@
 package org.stepik.android.presentation.course_content.mapper
 
 import org.stepic.droid.R
-import org.stepic.droid.analytic.experiments.PersonalDeadlinesSplitTest
 import org.stepic.droid.util.isNullOrEmpty
 import org.stepic.droid.web.storage.model.StorageRecord
 import org.stepik.android.domain.personal_deadlines.model.DeadlinesWrapper
@@ -16,7 +15,6 @@ import javax.inject.Inject
 class CourseContentStateMapper
 @Inject
 constructor(
-    private val personalDeadlinesSplitTest: PersonalDeadlinesSplitTest,
     private val sectionDatesMapper: CourseContentSectionDatesMapper
 ) {
     fun mergeStateWithCourseContent(state: CourseContentView.State, course: Course, courseContent: List<CourseContentItem>): CourseContentView.State {
@@ -28,19 +26,15 @@ constructor(
             }
         }
 
-        val personalDeadlinesState = when (personalDeadlinesSplitTest.currentGroup.isPersonalDeadlinesEnabled) {
-            true -> {
-                if (course.enrollment == 0L) {
-                    PersonalDeadlinesState.NoDeadlinesNeeded
-                } else {
-                    (state as? CourseContentView.State.CourseContentLoaded)
-                        ?.personalDeadlinesState
-                        ?.takeUnless { it is PersonalDeadlinesState.NoDeadlinesNeeded }
-                        ?: PersonalDeadlinesState.Idle
-                }
+        val personalDeadlinesState =
+            if (course.enrollment == 0L) {
+                PersonalDeadlinesState.NoDeadlinesNeeded
+            } else {
+                (state as? CourseContentView.State.CourseContentLoaded)
+                    ?.personalDeadlinesState
+                    ?.takeUnless { it is PersonalDeadlinesState.NoDeadlinesNeeded }
+                    ?: PersonalDeadlinesState.Idle
             }
-            false -> PersonalDeadlinesState.NoDeadlinesNeeded
-        }
 
         val content =
             (personalDeadlinesState as? PersonalDeadlinesState.Deadlines)
