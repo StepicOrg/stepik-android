@@ -64,8 +64,10 @@ class CourseContentUnitDelegate(
                     DownloadProgress.Status.NotCached ->
                         unitClickListener.onItemDownloadClicked(item)
 
-                    DownloadProgress.Status.Cached,
                     is DownloadProgress.Status.InProgress ->
+                        unitClickListener.onItemCancelClicked(item)
+
+                    DownloadProgress.Status.Cached ->
                         unitClickListener.onItemRemoveClicked(item)
                 }
             }

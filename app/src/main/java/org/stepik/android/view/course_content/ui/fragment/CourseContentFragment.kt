@@ -127,8 +127,8 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
         with(courseContentRecycler) {
             contentAdapter =
                 CourseContentAdapter(
-                    sectionClickListener    = CourseContentSectionClickListenerImpl(context, courseContentPresenter, screenManager),
-                    unitClickListener       = CourseContentUnitClickListenerImpl(activity, courseContentPresenter, screenManager),
+                    sectionClickListener    = CourseContentSectionClickListenerImpl(context, courseContentPresenter, screenManager, analytic),
+                    unitClickListener       = CourseContentUnitClickListenerImpl(activity, courseContentPresenter, screenManager, analytic),
                     controlBarClickListener = object : CourseContentControlBarClickListener {
                         override fun onCreateScheduleClicked() {
                             showPersonalDeadlinesLearningRateDialog()
