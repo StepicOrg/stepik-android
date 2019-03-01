@@ -2,7 +2,6 @@ package org.stepik.android.domain.course_info.interactor
 
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Singles.zip
-import org.stepic.droid.configuration.Config
 import org.stepic.droid.util.concat
 import org.stepik.android.domain.course_info.model.CourseInfoData
 import org.stepik.android.domain.user.repository.UserRepository
@@ -14,7 +13,6 @@ import javax.inject.Inject
 class CourseInfoInteractor
 @Inject
 constructor(
-    private val config: Config,
     private val courseObservableSource: Observable<Course>,
     private val userRepository: UserRepository
 ) {
@@ -47,7 +45,7 @@ constructor(
                 ?.takeUnless { it.urls.isNullOrEmpty() }
                 ?.let { video ->
                     VideoPlayerMediaData(
-                        thumbnail = config.baseUrl + course.cover,
+                        thumbnail = course.cover,
                         title = course.title ?: "",
                         externalVideo = video
                     )

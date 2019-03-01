@@ -24,7 +24,6 @@ import kotlinx.android.synthetic.main.header_course_placeholder.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.configuration.Config
 import org.stepic.droid.ui.util.PopupHelper
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.ui.util.changeVisibility
@@ -41,7 +40,6 @@ import kotlin.math.roundToInt
 class CourseHeaderDelegate(
     private val courseActivity: Activity,
     private val analytic: Analytic,
-    private val config: Config,
     private val coursePresenter: CoursePresenter
 ) {
     companion object {
@@ -149,14 +147,14 @@ class CourseHeaderDelegate(
                 CenterCrop()
             )
             Glide.with(this)
-                    .load(config.baseUrl + courseHeaderData.cover)
+                    .load(courseHeaderData.cover)
                     .placeholder(R.drawable.general_placeholder)
                     .apply(RequestOptions.bitmapTransform(multi))
                     .into(courseCover)
 
             Glide.with(this)
                     .asBitmap()
-                    .load(config.baseUrl + courseHeaderData.cover)
+                    .load(courseHeaderData.cover)
                     .placeholder(courseCoverSmallPlaceHolder)
                     .centerCrop()
                     .into(courseCoverSmallTarget)

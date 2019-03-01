@@ -20,7 +20,6 @@ import kotlin.properties.Delegates
 
 class StoriesAdapter(
     private val context: Context,
-    private val config: Config,
     private val onStoryClicked: (Story, Int) -> Unit
 ) : RecyclerView.Adapter<StoriesAdapter.StoryViewHolder>() {
     private val coursePlaceholderDrawable by lazy {
@@ -105,7 +104,7 @@ class StoriesAdapter(
 
             Glide.with(itemView.context)
                     .asBitmap()
-                    .load(config.baseUrl + story.cover)
+                    .load(story.cover)
                     .placeholder(coursePlaceholderDrawable)
                     .centerCrop()
                     .into(coverTarget)

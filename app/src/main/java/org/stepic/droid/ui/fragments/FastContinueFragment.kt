@@ -159,7 +159,7 @@ class FastContinueFragment : FragmentBase(),
         Glide
                 .with(requireContext())
                 .asBitmap()
-                .load(StepikLogicHelper.getPathForCourseOrEmpty(course, config))
+                .load(StepikLogicHelper.getPathForCourseOrEmpty(course))
                 .placeholder(coursePlaceholderDrawable)
                 .fitCenter()
                 .into(courseCoverImageViewTarget)

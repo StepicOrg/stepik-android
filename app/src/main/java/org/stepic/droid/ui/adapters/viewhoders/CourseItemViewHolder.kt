@@ -53,9 +53,6 @@ class CourseItemViewHolder(
     lateinit var analytic: Analytic
 
     @Inject
-    lateinit var config: Config
-
-    @Inject
     lateinit var adaptiveCoursesResolver: AdaptiveCoursesResolver
 
     private val continueColor: Int by lazy {
@@ -187,7 +184,7 @@ class CourseItemViewHolder(
         Glide
                 .with(itemView.context)
                 .asBitmap()
-                .load(StepikLogicHelper.getPathForCourseOrEmpty(course, config))
+                .load(StepikLogicHelper.getPathForCourseOrEmpty(course))
                 .placeholder(coursePlaceholder)
                 .fitCenter()
                 .into(imageViewTarget)
