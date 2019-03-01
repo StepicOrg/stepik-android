@@ -16,15 +16,18 @@ object ProgressUtil {
             return null
         }
 
-        val score: Double? = progress.score?.let { StringUtil.safetyParseString(it) }
-        val cost = progress.cost
-        return if (score != null) {
-            val progressPart: Double = score / cost
-            val progressShow: Int = (progressPart * 100).toInt()
-            progressShow
-        } else {
-            null
-        }
+//        val score: Double? = progress.score?.let { StringUtil.safetyParseString(it) }
+//        val cost = progress.cost
+//        return if (score != null) {
+//            val progressPart: Double = score / cost
+//            val progressShow: Int = (progressPart * 100).toInt()
+//            progressShow
+//        } else {
+//            null
+//        }
+
+        return (progress.nStepsPassed * 100 safeDiv progress.nSteps)
+            .toInt()
     }
 }
 
