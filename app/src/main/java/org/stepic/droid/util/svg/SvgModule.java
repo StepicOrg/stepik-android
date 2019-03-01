@@ -17,6 +17,7 @@ public class SvgModule extends AppGlideModule {
     @Override
     public void registerComponents(@NonNull Context context, @NonNull Glide glide,
                                    @NonNull Registry registry) {
+        registry.prepend(String.class, InputStream.class, new RelativeUrlLoader.Factory());
         registry.register(SVG.class, PictureDrawable.class, new SvgDrawableTranscoder())
             .append(InputStream.class, SVG.class, new SvgDecoder());
     }
