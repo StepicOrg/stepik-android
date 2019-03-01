@@ -79,6 +79,7 @@ interface AmplitudeAnalytic {
         const val PARAM_CONTENT = "content"
 
         object Values {
+            const val COURSE = "course"
             const val SECTION = "section"
             const val LESSON = "lesson"
         }
@@ -110,10 +111,19 @@ interface AmplitudeAnalytic {
     }
 
     object Deadlines {
-        const val PERSONAL_DEADLINE_CREATED = "personal_deadline_created"
+        const val PERSONAL_DEADLINE_CREATED = "Personal deadline created"
 
-        object Values {
+        object Params {
             const val HOURS = "hours"
+        }
+    }
+
+    object Achievements {
+        const val NOTIFICATION_RECEIVED = "Achievement notification received"
+
+        object Params {
+            const val KIND = "achievement_kind"
+            const val LEVEL = "achievement_level"
         }
     }
 }

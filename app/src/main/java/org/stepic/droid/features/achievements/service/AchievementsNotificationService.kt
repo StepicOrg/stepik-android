@@ -58,8 +58,6 @@ class AchievementsNotificationService : JobIntentService() {
     }
 
     override fun onHandleWork(intent: Intent) {
-        if (!achievementsSplitTest.currentGroup.isAchievementsEnabled) return
-        
         try {
             val rawMessage = intent.getStringExtra(EXTRA_RAW_MESSAGE) ?: return
             val achievementNotification = rawMessage.toObject<AchievementNotification>()
@@ -67,6 +65,16 @@ class AchievementsNotificationService : JobIntentService() {
             val achievement = achievementsRepository
                     .getAchievement(achievementNotification.user, achievementNotification.kind)
                     .blockingGet()
+
+            analytic.reportAmplitudeEvent(
+                AmplitudeAnalytic.Achievements.NOTIFICATION_RECEIVED,
+                mapOf(
+                    AmplitudeAnalytic.Achievements.Params.KIND to achievement.kind,
+                    AmplitudeAnalytic.Achievements.Params.LEVEL to achievement.currentLevel
+                )
+            )
+
+            if (!achievementsSplitTest.currentGroup.isAchievementsEnabled) return
 
             val notificationIntent = AchievementsListActivity
                     .createIntent(this, achievementNotification.user, isMyProfile = true)

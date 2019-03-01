@@ -67,7 +67,7 @@ class LearningRateDialog : DialogFragment() {
             putLong(Analytic.Deadlines.Params.HOURS, hoursValue)
         })
         analytic.reportAmplitudeEvent(AmplitudeAnalytic.Deadlines.PERSONAL_DEADLINE_CREATED,
-            mapOf(AmplitudeAnalytic.Deadlines.Values.HOURS to hoursValue))
+            mapOf(AmplitudeAnalytic.Deadlines.Params.HOURS to hoursValue))
         dismiss()
     }
 

@@ -66,8 +66,10 @@ class CourseContentSectionDelegate(
                     DownloadProgress.Status.NotCached ->
                         sectionClickListener.onItemDownloadClicked(item)
 
-                    DownloadProgress.Status.Cached,
                     is DownloadProgress.Status.InProgress ->
+                        sectionClickListener.onItemCancelClicked(item)
+
+                    DownloadProgress.Status.Cached ->
                         sectionClickListener.onItemRemoveClicked(item)
                 }
             }
