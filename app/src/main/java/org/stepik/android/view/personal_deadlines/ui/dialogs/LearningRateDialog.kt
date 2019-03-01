@@ -13,6 +13,7 @@ import android.support.v7.widget.LinearLayoutManager
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.Theme
 import org.stepic.droid.R
+import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.util.AppConstants
@@ -61,9 +62,12 @@ class LearningRateDialog : DialogFragment() {
                 Activity.RESULT_OK,
                 Intent().putExtra(KEY_LEARNING_RATE, learningRate as Parcelable)
         )
+        val hoursValue = learningRate.millisPerWeek / AppConstants.MILLIS_IN_1HOUR
         analytic.reportEvent(Analytic.Deadlines.PERSONAL_DEADLINE_MODE_CHOSEN, Bundle().apply {
-            putLong(Analytic.Deadlines.Params.HOURS, learningRate.millisPerWeek / AppConstants.MILLIS_IN_1HOUR)
+            putLong(Analytic.Deadlines.Params.HOURS, hoursValue)
         })
+        analytic.reportAmplitudeEvent(AmplitudeAnalytic.Deadlines.PERSONAL_DEADLINE_CREATED,
+            mapOf(AmplitudeAnalytic.Deadlines.Params.HOURS to hoursValue))
         dismiss()
     }
 
