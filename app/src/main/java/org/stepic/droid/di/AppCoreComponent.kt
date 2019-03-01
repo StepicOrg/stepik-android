@@ -49,6 +49,7 @@ import org.stepic.droid.ui.adapters.viewhoders.CourseItemViewHolder
 import org.stepic.droid.ui.custom.*
 import org.stepic.droid.ui.dialogs.*
 import org.stepic.droid.ui.fragments.StoreManagementFragment
+import org.stepic.droid.util.svg.RelativeUrlLoader
 import org.stepik.android.view.injection.billing.BillingModule
 import org.stepik.android.view.injection.course.CourseComponent
 import org.stepik.android.view.injection.course.CourseRoutingModule
@@ -230,4 +231,6 @@ interface AppCoreComponent {
     fun inject(fileTransferService: FileTransferService)
 
     fun inject(achievementsNotificationService: AchievementsNotificationService)
+
+    fun inject(relativeUrlLoader: RelativeUrlLoader)
 }
