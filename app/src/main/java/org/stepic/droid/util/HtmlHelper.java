@@ -51,15 +51,14 @@ public class HtmlHelper {
     public static boolean isForWebView(@NotNull String text) {
         //FIXME  REMOVE <img>??? and make ImageGetter with simple textview
         //TODO: REGEXP IS SLOWER
-        return text.contains("$")
-                || text.contains("wysiwyg-")
-                || text.contains("<h")
-                || text.contains("\\[")
-                || text.contains("<pre><code")
-                || text.contains("kotlin-runnable")
-                || text.contains("<img")
-                || text.contains("<iframe")
-                || text.contains("<audio");
+        return text.contains("wysiwyg-") ||
+                text.contains("<h") ||
+                text.contains("<img") ||
+                text.contains("<iframe") ||
+                text.contains("<audio") ||
+                hasLaTeX(text) ||
+                hasKotlinRunnableSample(text) ||
+                hasHighlightableCode(text);
     }
 
 
