@@ -22,7 +22,7 @@ import org.stepic.droid.model.AchievementNotification
 import org.stepic.droid.notifications.model.StepikNotificationChannel
 import org.stepic.droid.ui.util.toBitmap
 import org.stepic.droid.util.ColorUtil
-import org.stepic.droid.util.svg.GlideSvgRequestFactory
+import org.stepic.droid.util.glide.GlideSvgRequestFactory
 import org.stepic.droid.util.toObject
 import javax.inject.Inject
 

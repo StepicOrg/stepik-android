@@ -1,4 +1,4 @@
-package org.stepic.droid.util.svg;
+package org.stepic.droid.util.glide;
 
 import android.graphics.Picture;
 import android.graphics.drawable.PictureDrawable;

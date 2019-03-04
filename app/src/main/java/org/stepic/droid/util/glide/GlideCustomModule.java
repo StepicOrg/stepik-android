@@ -1,4 +1,4 @@
-package org.stepic.droid.util.svg;
+package org.stepic.droid.util.glide;
 
 import android.content.Context;
 import android.graphics.drawable.PictureDrawable;
@@ -13,7 +13,7 @@ import com.caverock.androidsvg.SVG;
 import java.io.InputStream;
 
 @GlideModule
-public class SvgModule extends AppGlideModule {
+public class GlideCustomModule extends AppGlideModule {
     @Override
     public void registerComponents(@NonNull Context context, @NonNull Glide glide,
                                    @NonNull Registry registry) {

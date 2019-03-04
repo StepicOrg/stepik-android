@@ -1,4 +1,4 @@
-package org.stepic.droid.util.svg;
+package org.stepic.droid.util.glide;
 
 import android.support.annotation.NonNull;
 
@@ -15,8 +15,6 @@ import org.stepic.droid.configuration.Config;
 import java.io.InputStream;
 
 import javax.inject.Inject;
-
-import timber.log.Timber;
 
 public class RelativeUrlLoader extends BaseGlideUrlLoader<String> {
 

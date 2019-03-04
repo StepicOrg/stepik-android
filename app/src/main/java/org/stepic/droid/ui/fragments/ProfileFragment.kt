@@ -50,7 +50,7 @@ import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.ProfileSettingsHelper
 import org.stepic.droid.util.argument
-import org.stepic.droid.util.svg.GlideSvgRequestFactory
+import org.stepic.droid.util.glide.GlideSvgRequestFactory
 import org.stepic.droid.viewmodel.ProfileSettingsViewModel
 import timber.log.Timber
 import java.util.ArrayList

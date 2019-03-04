@@ -1,9 +1,8 @@
-package org.stepic.droid.util.svg;
+package org.stepic.droid.util.glide;
 
 
 import android.annotation.TargetApi;
 import android.graphics.drawable.PictureDrawable;
-import android.net.Uri;
 import android.os.Build;
 import android.widget.ImageView;
 

@@ -6,7 +6,7 @@ import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import org.stepic.droid.util.AppConstants
-import org.stepic.droid.util.svg.GlideSvgRequestFactory
+import org.stepic.droid.util.glide.GlideSvgRequestFactory
 
 class GlideImageViewWrapper(
         val imageView: ImageView
