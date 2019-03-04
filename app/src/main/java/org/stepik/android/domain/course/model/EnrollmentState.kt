@@ -1,12 +1,12 @@
 package org.stepik.android.domain.course.model
 
-import org.solovyev.android.checkout.Sku
+import org.stepik.android.domain.billing.model.SkuSerializableWrapper
 import java.io.Serializable
 
 sealed class EnrollmentState : Serializable {
     object Enrolled : EnrollmentState()
     object NotEnrolledFree : EnrollmentState()
-    class NotEnrolledInApp(val sku: Sku) : EnrollmentState()
+    data class NotEnrolledInApp(val skuWrapper: SkuSerializableWrapper) : EnrollmentState()
     object NotEnrolledWeb : EnrollmentState()
     object Pending : EnrollmentState()
 }

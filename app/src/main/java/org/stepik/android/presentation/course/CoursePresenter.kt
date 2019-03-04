@@ -213,6 +213,7 @@ constructor(
             ?: return
 
         val sku = (headerData.enrollmentState as? EnrollmentState.NotEnrolledInApp)
+            ?.skuWrapper
             ?.sku
             ?: return
 
@@ -245,6 +246,7 @@ constructor(
             ?: return
 
         val sku = (headerData.enrollmentState as? EnrollmentState.NotEnrolledInApp)
+            ?.skuWrapper
             ?.sku
             ?: return
 
