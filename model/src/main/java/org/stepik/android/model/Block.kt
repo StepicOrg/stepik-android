@@ -2,16 +2,21 @@ package org.stepik.android.model
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.google.gson.annotations.SerializedName
 
 import org.stepik.android.model.code.CodeOptions
 
 //more fields look at stepik.org/api/steps/14671
-class Block(
-        val name: String? = null,
-        val text: String? = null,
-        var video: Video? = null, //always external video
+data class Block(
+    @SerializedName("name")
+    val name: String? = null,
+    @SerializedName("text")
+    val text: String? = null,
+    @SerializedName("video")
+    var video: Video? = null, //always external video
 
-        val options: CodeOptions? = null
+    @SerializedName("options")
+    val options: CodeOptions? = null
 ) : Parcelable {
     override fun describeContents(): Int = 0
 
@@ -23,13 +28,16 @@ class Block(
     }
 
     companion object CREATOR: Parcelable.Creator<Block> {
-        override fun createFromParcel(parcel: Parcel): Block = Block(
+        override fun createFromParcel(parcel: Parcel): Block =
+            Block(
                 parcel.readString(),
                 parcel.readString(),
                 parcel.readParcelable(Video::class.java.classLoader),
                 parcel.readParcelable(CodeOptions::class.java.classLoader)
-        )
-        override fun newArray(size: Int): Array<Block?> = arrayOfNulls(size)
+            )
+
+        override fun newArray(size: Int): Array<Block?> =
+            arrayOfNulls(size)
     }
 }
 
