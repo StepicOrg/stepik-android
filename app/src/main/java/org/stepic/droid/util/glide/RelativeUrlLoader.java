@@ -18,26 +18,11 @@ import javax.inject.Inject;
 
 public class RelativeUrlLoader extends BaseGlideUrlLoader<String> {
 
-    @Inject
-    Config config;
+    private Config config;
 
-    private RelativeUrlLoader(ModelLoader<GlideUrl, InputStream> concreteLoader) {
+    public RelativeUrlLoader(ModelLoader<GlideUrl, InputStream> concreteLoader, Config config) {
         super(concreteLoader);
-        App.Companion.component().inject(this);
-    }
-
-    public static class Factory implements ModelLoaderFactory<String, InputStream> {
-
-        @NonNull
-        @Override
-        public ModelLoader<String, InputStream> build(@NonNull MultiModelLoaderFactory multiFactory) {
-            return new RelativeUrlLoader(multiFactory.build(GlideUrl.class, InputStream.class));
-        }
-
-        @Override
-        public void teardown() {
-
-        }
+        this.config = config;
     }
 
     @Override
@@ -47,6 +32,26 @@ public class RelativeUrlLoader extends BaseGlideUrlLoader<String> {
 
     @Override
     public boolean handles(@NonNull String s) {
-        return !s.contains("http") && !s.isEmpty();
+        return s.startsWith("/");
+    }
+
+    public static class Factory implements ModelLoaderFactory<String, InputStream> {
+
+        Config config;
+
+        protected Factory(Config config) {
+            this.config = config;
+        }
+
+        @NonNull
+        @Override
+        public ModelLoader<String, InputStream> build(@NonNull MultiModelLoaderFactory multiFactory) {
+            return new RelativeUrlLoader(multiFactory.build(GlideUrl.class, InputStream.class), config);
+        }
+
+        @Override
+        public void teardown() {
+
+        }
     }
 }
