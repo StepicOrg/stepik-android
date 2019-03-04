@@ -49,6 +49,7 @@ import org.stepic.droid.ui.adapters.viewhoders.CourseItemViewHolder
 import org.stepic.droid.ui.custom.*
 import org.stepic.droid.ui.dialogs.*
 import org.stepic.droid.ui.fragments.StoreManagementFragment
+import org.stepic.droid.util.glide.GlideCustomModule
 import org.stepic.droid.util.glide.RelativeUrlLoader
 import org.stepik.android.view.injection.billing.BillingModule
 import org.stepik.android.view.injection.course.CourseComponent
@@ -232,5 +233,5 @@ interface AppCoreComponent {
 
     fun inject(achievementsNotificationService: AchievementsNotificationService)
 
-    fun inject(relativeUrlLoader: RelativeUrlLoader)
+    fun inject(glideCustomModule: GlideCustomModule)
 }
