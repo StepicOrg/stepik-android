@@ -309,7 +309,7 @@ class CatalogAdapter(
         onStoryClicked: (Story, Int) -> Unit
     ) : RecyclerView.ViewHolder(root) {
         private val loadingPlaceholder = root.storiesContainerLoadingPlaceholder
-        val storiesAdapter = StoriesAdapter(root.context, config, onStoryClicked)
+        val storiesAdapter = StoriesAdapter(root.context, onStoryClicked)
         val recycler = root.storiesRecycler
 
         init {

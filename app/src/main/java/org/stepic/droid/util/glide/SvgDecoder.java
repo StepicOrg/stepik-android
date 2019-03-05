@@ -1,4 +1,4 @@
-package org.stepic.droid.util.svg;
+package org.stepic.droid.util.glide;
 
 import android.support.annotation.NonNull;
 

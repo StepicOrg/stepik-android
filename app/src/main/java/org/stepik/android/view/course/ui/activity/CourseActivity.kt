@@ -128,7 +128,7 @@ class CourseActivity : FragmentActivityBase(), CourseView {
 
         injectComponent(courseId)
         coursePresenter = ViewModelProviders.of(this, viewModelFactory).get(CoursePresenter::class.java)
-        courseHeaderDelegate = CourseHeaderDelegate(this, analytic, config, coursePresenter)
+        courseHeaderDelegate = CourseHeaderDelegate(this, analytic, coursePresenter)
 
         uiCheckout = Checkout.forActivity(this, billing)
 

@@ -652,7 +652,7 @@ constructor(
             try { // in order to suppress gai exception
                 Glide.with(context)
                         .asBitmap()
-                        .load(configs.baseUrl + cover)
+                        .load(cover)
                         .placeholder(notificationPlaceholder)
                         .submit(200, 200)//pixels
                         .get()
