@@ -183,7 +183,7 @@ class CourseItemViewHolder(
         Glide
                 .with(itemView.context)
                 .asBitmap()
-                .load(course.cover ?: "")
+                .load(course.cover)
                 .placeholder(coursePlaceholder)
                 .fitCenter()
                 .into(imageViewTarget)

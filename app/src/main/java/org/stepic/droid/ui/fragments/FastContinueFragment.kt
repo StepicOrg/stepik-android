@@ -158,7 +158,7 @@ class FastContinueFragment : FragmentBase(),
         Glide
                 .with(requireContext())
                 .asBitmap()
-                .load(course.cover ?: "")
+                .load(course.cover)
                 .placeholder(coursePlaceholderDrawable)
                 .fitCenter()
                 .into(courseCoverImageViewTarget)
