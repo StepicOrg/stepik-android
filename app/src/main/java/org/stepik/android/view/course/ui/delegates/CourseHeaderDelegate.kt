@@ -185,7 +185,7 @@ class CourseHeaderDelegate(
                 courseBuyInAppAction.changeVisibility(this is EnrollmentState.NotEnrolledInApp)
 
                 if (this is EnrollmentState.NotEnrolledInApp) {
-                    courseBuyInAppAction.text = getString(R.string.course_payments_purchase_in_app, this.sku.price)
+                    courseBuyInAppAction.text = getString(R.string.course_payments_purchase_in_app, this.skuWrapper.sku.price)
                 }
 
                 dropCourseMenuItem?.isVisible = this is EnrollmentState.Enrolled
