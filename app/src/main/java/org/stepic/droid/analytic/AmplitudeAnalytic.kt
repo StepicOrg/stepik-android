@@ -122,6 +122,7 @@ interface AmplitudeAnalytic {
 
     object Deadlines {
         const val PERSONAL_DEADLINE_CREATED = "Personal deadline created"
+        const val SCHEDULE_PRESSED = "Personal deadline schedule button pressed"
 
         object Params {
             const val HOURS = "hours"

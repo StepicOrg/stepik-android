@@ -296,6 +296,8 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
         val dialog = LearningRateDialog.newInstance()
         dialog.setTargetFragment(this, LearningRateDialog.LEARNING_RATE_REQUEST_CODE)
         dialog.show(supportFragmentManager, LearningRateDialog.TAG)
+
+        analytic.reportAmplitudeEvent(AmplitudeAnalytic.Deadlines.SCHEDULE_PRESSED)
     }
 
     private fun showPersonalDeadlinesEditDialog(record: StorageRecord<DeadlinesWrapper>) {
