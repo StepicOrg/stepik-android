@@ -112,6 +112,12 @@ interface AmplitudeAnalytic {
 
     object Video {
         const val PLAY_IN_BACKGROUND = "Video played in background"
+        const val PLAYBACK_SPEED_CHANGED = "Video rate changed"
+
+        object Params {
+            const val SOURCE = "source"
+            const val TARGET = "target"
+        }
     }
 
     object Deadlines {
