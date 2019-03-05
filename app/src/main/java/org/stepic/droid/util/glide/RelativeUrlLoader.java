@@ -37,9 +37,10 @@ public class RelativeUrlLoader extends BaseGlideUrlLoader<String> {
 
     public static class Factory implements ModelLoaderFactory<String, InputStream> {
 
-        Config config;
+        private Config config;
 
-        protected Factory(Config config) {
+        @Inject
+        public Factory(Config config) {
             this.config = config;
         }
 

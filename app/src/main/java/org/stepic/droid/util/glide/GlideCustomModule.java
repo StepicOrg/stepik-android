@@ -11,7 +11,6 @@ import com.bumptech.glide.module.AppGlideModule;
 import com.caverock.androidsvg.SVG;
 
 import org.stepic.droid.base.App;
-import org.stepic.droid.configuration.Config;
 
 import java.io.InputStream;
 
@@ -21,7 +20,7 @@ import javax.inject.Inject;
 public class GlideCustomModule extends AppGlideModule {
 
     @Inject
-    Config config;
+    RelativeUrlLoader.Factory relativeUrlLoaderFactory;
 
     public GlideCustomModule() {
         App.Companion.component().inject(this);
@@ -30,7 +29,7 @@ public class GlideCustomModule extends AppGlideModule {
     @Override
     public void registerComponents(@NonNull Context context, @NonNull Glide glide,
                                    @NonNull Registry registry) {
-        registry.prepend(String.class, InputStream.class, new RelativeUrlLoader.Factory(config));
+        registry.prepend(String.class, InputStream.class, relativeUrlLoaderFactory);
         registry.register(SVG.class, PictureDrawable.class, new SvgDrawableTranscoder())
             .append(InputStream.class, SVG.class, new SvgDecoder());
     }
