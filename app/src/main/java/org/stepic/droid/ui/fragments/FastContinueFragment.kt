@@ -30,7 +30,6 @@ import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.ProgressUtil
-import org.stepic.droid.util.StepikLogicHelper
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
 import javax.inject.Inject
@@ -159,7 +158,7 @@ class FastContinueFragment : FragmentBase(),
         Glide
                 .with(requireContext())
                 .asBitmap()
-                .load(StepikLogicHelper.getPathForCourseOrEmpty(course))
+                .load(course.cover ?: "")
                 .placeholder(coursePlaceholderDrawable)
                 .fitCenter()
                 .into(courseCoverImageViewTarget)
