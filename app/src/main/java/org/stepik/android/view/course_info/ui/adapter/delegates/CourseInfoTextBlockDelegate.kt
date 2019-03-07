@@ -7,21 +7,21 @@ import kotlinx.android.synthetic.main.view_course_info_text_block.view.*
 import org.stepic.droid.R
 import org.stepic.droid.fonts.FontType
 import org.stepic.droid.fonts.FontsProvider
-import org.stepik.android.view.course_info.ui.adapter.CourseInfoAdapter
-import org.stepik.android.view.course_info.model.CourseInfoItem
 import org.stepic.droid.ui.custom.adapter_delegates.AdapterDelegate
+import org.stepik.android.view.course_info.model.CourseInfoItem
+import org.stepik.android.view.course_info.ui.adapter.CourseInfoAdapter
 
 class CourseInfoTextBlockDelegate(
-        adapter: CourseInfoAdapter,
-        fontsProvider: FontsProvider
+    adapter: CourseInfoAdapter,
+    fontsProvider: FontsProvider
 ) : AdapterDelegate<CourseInfoItem, CourseInfoAdapter.ViewHolder>(adapter) {
     private val lightFontPath = fontsProvider.provideFontPath(FontType.light)
 
-    override fun onCreateViewHolder(parent: ViewGroup) =
-            ViewHolder(createView(parent, R.layout.view_course_info_text_block))
+    override fun onCreateViewHolder(parent: ViewGroup): ViewHolder =
+        ViewHolder(createView(parent, R.layout.view_course_info_text_block))
 
     override fun isForViewType(position: Int): Boolean =
-            getItemAtPosition(position) is CourseInfoItem.WithTitle.TextBlock
+        getItemAtPosition(position) is CourseInfoItem.WithTitle.TextBlock
 
     inner class ViewHolder(root: View) : CourseInfoAdapter.ViewHolderWithTitle(root) {
         private val blockMessage = root.blockMessage

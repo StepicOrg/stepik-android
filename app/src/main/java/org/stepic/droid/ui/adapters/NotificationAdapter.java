@@ -28,7 +28,7 @@ import org.stepic.droid.ui.custom.StickyHeaderDecoration;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DateTimeHelper;
 import org.stepic.droid.util.resolvers.text.NotificationTextResolver;
-import org.stepic.droid.util.svg.GlideSvgRequestFactory;
+import org.stepic.droid.util.glide.GlideSvgRequestFactory;
 
 import java.util.ArrayList;
 import java.util.List;

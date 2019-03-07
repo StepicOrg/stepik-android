@@ -10,7 +10,7 @@ import org.stepik.android.view.course_reviews.ui.adapter.delegates.CourseReviewP
 
 class CourseReviewsAdapter(
     onUserClicked: (User) -> Unit
-): DelegateAdapter<CourseReviewItem, DelegateViewHolder<CourseReviewItem>>() {
+) : DelegateAdapter<CourseReviewItem, DelegateViewHolder<CourseReviewItem>>() {
     var items: List<CourseReviewItem> = emptyList()
         set(value) {
             DiffUtil

@@ -8,10 +8,10 @@ import org.stepic.droid.R
 import org.stepic.droid.util.AppConstants
 
 enum class LearningRate(
-        @StringRes val title: Int,
-        @DrawableRes val icon: Int,
-        val millisPerWeek: Long
-): Parcelable {
+    @StringRes val title: Int,
+    @DrawableRes val icon: Int,
+    val millisPerWeek: Long
+) : Parcelable {
     HOBBY(
             R.string.deadlines_learning_rate_hobby,
             R.drawable.ic_deadlines_learning_rate_hobby,
@@ -32,7 +32,7 @@ enum class LearningRate(
         parcel.writeInt(ordinal)
     }
 
-    override fun describeContents() = 0
+    override fun describeContents(): Int = 0
 
     companion object CREATOR : Parcelable.Creator<LearningRate> {
         override fun createFromParcel(parcel: Parcel): LearningRate =

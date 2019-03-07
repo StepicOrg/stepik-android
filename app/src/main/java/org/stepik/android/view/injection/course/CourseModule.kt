@@ -1,7 +1,6 @@
 package org.stepik.android.view.injection.course
 
 import android.arch.lifecycle.ViewModel
-import android.arch.lifecycle.ViewModelProvider
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -12,10 +11,9 @@ import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepik.android.data.course.repository.CourseReviewRepositoryImpl
-import org.stepik.android.data.course.source.*
+import org.stepik.android.data.course.source.CourseReviewRemoteDataSource
 import org.stepik.android.domain.course.repository.CourseReviewRepository
 import org.stepik.android.model.Course
-import org.stepik.android.presentation.base.injection.DaggerViewModelFactory
 import org.stepik.android.presentation.base.injection.ViewModelKey
 import org.stepik.android.presentation.course.CoursePresenter
 import org.stepik.android.presentation.course_content.CourseContentPresenter
@@ -30,11 +28,13 @@ abstract class CourseModule {
      */
     @Binds
     internal abstract fun bindCourseReviewRepository(
-        courseReviewRepositoryImpl: CourseReviewRepositoryImpl): CourseReviewRepository
+        courseReviewRepositoryImpl: CourseReviewRepositoryImpl
+    ): CourseReviewRepository
 
     @Binds
     internal abstract fun bindCourseReviewRemoteDataSource(
-        courseReviewRemoteDataSourceImpl: CourseReviewRemoteDataSourceImpl): CourseReviewRemoteDataSource
+        courseReviewRemoteDataSourceImpl: CourseReviewRemoteDataSourceImpl
+    ): CourseReviewRemoteDataSource
 
     /**
      * PRESENTATION LAYER

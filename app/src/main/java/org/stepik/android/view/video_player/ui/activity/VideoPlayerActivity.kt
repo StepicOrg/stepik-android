@@ -23,6 +23,7 @@ import com.google.android.exoplayer2.util.Util
 import kotlinx.android.synthetic.main.activity_video_player.*
 import kotlinx.android.synthetic.main.exo_playback_control_view.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.preferences.VideoPlaybackRate
@@ -234,7 +235,6 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
                     true
                 }
                 else -> false
-
             }
         }
 
@@ -276,5 +276,13 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
     override fun onSaveInstanceState(outState: Bundle) {
         videoPlayerPresenter.onSaveInstanceState(outState)
         super.onSaveInstanceState(outState)
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        if (!hasFocus &&
+            !isFinishing &&
+            exoPlayer?.playWhenReady == true) {
+            analytic.reportAmplitudeEvent(AmplitudeAnalytic.Video.PLAY_IN_BACKGROUND)
+        }
     }
 }

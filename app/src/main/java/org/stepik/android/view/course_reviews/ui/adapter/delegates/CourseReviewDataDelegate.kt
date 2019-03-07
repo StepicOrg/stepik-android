@@ -14,7 +14,8 @@ import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.domain.course_reviews.model.CourseReviewItem
 import org.stepik.android.model.user.User
-import java.util.*
+import java.util.Date
+import java.util.TimeZone
 
 class CourseReviewDataDelegate(
     adapter: DelegateAdapter<CourseReviewItem, DelegateViewHolder<CourseReviewItem>>,

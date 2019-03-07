@@ -20,5 +20,4 @@ constructor(
     override fun getCoursePaymentsByCourseId(courseId: Long, coursePaymentStatus: CoursePayment.Status?): Single<List<CoursePayment>> =
         coursePaymentsRemoteDataSource
             .getCoursePaymentsByCourseId(courseId, coursePaymentStatus)
-
 }

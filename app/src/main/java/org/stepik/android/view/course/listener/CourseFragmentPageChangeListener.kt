@@ -7,8 +7,7 @@ import org.stepik.android.view.ui.listener.FragmentViewPagerScrollStateListener
 class CourseFragmentPageChangeListener(
     private val viewPager: ViewPager,
     private val coursePagerAdapter: CoursePagerAdapter
-) : ViewPager.OnPageChangeListener {
-
+) : ViewPager.SimpleOnPageChangeListener() {
     override fun onPageScrollStateChanged(state: Int) {
         coursePagerAdapter
             .activeFragments
@@ -30,8 +29,4 @@ class CourseFragmentPageChangeListener(
                 }
             }
     }
-
-    override fun onPageScrolled(p0: Int, p1: Float, p2: Int) {}
-    override fun onPageSelected(p0: Int) {}
-
 }

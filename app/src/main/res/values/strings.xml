@@ -588,6 +588,7 @@
     <string name="deadlines_menu_create">Create schedule</string>
     <string name="deadlines_menu_edit">Edit schedule</string>
     <string name="deadlines_menu_remove">Remove schedule</string>
+    <string name="deadlines_menu_sync">Export schedule to calendar</string>
     <string name="deadlines_section">Deadline: %s</string>
     <string name="deadlines_notification">Deadline for section %s in course %s comes in %s</string>
     <string name="deadlines_edit_title">Edit schedule</string>
@@ -602,6 +603,7 @@
     <string name="deadlines_banner_description">Constant learning is a key to success. Create personal schedule, so you\'ll never forget to study.</string>
     <string name="deadlines_banner_action">Create</string>
     <string name="deadlines_fetching_error">An error was occurred while retrieving the schedule</string>
+    <string name="deadlines_ab_banner_description">Create a personal schedule, in order to raise the probability of passing the course</string>
 
 
     <string name="achievements_title">Achievements</string>
@@ -662,6 +664,11 @@
     <string name="course_control_schedule">Schedule</string>
     <string name="course_control_filter">Filter by</string>
     <string name="course_control_download_all">Download all</string>
+
+    <string name="course_content_calendar_title" translatable="false">%s – %s</string>
+    <string name="course_content_calendar_sync_success">Dates successfully exported to calendar</string>
+    <string name="course_content_calendar_no_calendars_error">Calendars not found</string>
+    <string name="course_content_calendar_permission_error">Grant permission to use calendar manually in settings</string>
 
     <string name="course_restore_purchase">Restore purchase</string>
     <string name="course_payments_purchase_in_app">Buy for %s</string>

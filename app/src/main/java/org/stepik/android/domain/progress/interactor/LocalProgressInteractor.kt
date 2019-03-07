@@ -35,7 +35,6 @@ constructor(
             .flatMap { progressIds ->
                 progressRepository
                     .getProgresses(*progressIds, step.progress ?: "")
-
             }
             .doOnSuccess { progresses ->
                 progresses.forEach(progressesPublisher::onNext)

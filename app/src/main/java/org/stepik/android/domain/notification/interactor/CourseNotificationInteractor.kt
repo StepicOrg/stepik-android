@@ -10,7 +10,6 @@ class CourseNotificationInteractor
 constructor(
     private val notificationRepository: NotificationRepository
 ) {
-
     fun markCourseNotificationsAsRead(courseId: Long): Completable =
         notificationRepository
             .getNotificationsByCourseId(courseId)
@@ -18,5 +17,4 @@ constructor(
                 notificationRepository
                     .putNotifications(*notifications.mapToLongArray { it.id ?: 0 }, isRead = true)
             }
-
 }

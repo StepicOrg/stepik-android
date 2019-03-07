@@ -24,7 +24,7 @@ constructor(
         val cacheSource = lessonCacheDataSource
             .getLessons(*lessonIds)
 
-        return when(primarySourceType) {
+        return when (primarySourceType) {
             DataSourceType.REMOTE ->
                 remoteSource.onErrorResumeNext(cacheSource.requireSize(lessonIds.size))
 

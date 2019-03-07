@@ -18,7 +18,6 @@ import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
-import org.stepic.droid.configuration.Config
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.presenters.ContinueCoursePresenter
 import org.stepic.droid.core.presenters.DroppingPresenter
@@ -51,9 +50,6 @@ class CourseItemViewHolder(
 
     @Inject
     lateinit var analytic: Analytic
-
-    @Inject
-    lateinit var config: Config
 
     @Inject
     lateinit var adaptiveCoursesResolver: AdaptiveCoursesResolver
@@ -187,7 +183,7 @@ class CourseItemViewHolder(
         Glide
                 .with(itemView.context)
                 .asBitmap()
-                .load(StepikLogicHelper.getPathForCourseOrEmpty(course, config))
+                .load(course.cover)
                 .placeholder(coursePlaceholder)
                 .fitCenter()
                 .into(imageViewTarget)

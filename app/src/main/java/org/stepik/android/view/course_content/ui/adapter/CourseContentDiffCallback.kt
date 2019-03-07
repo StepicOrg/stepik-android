@@ -8,10 +8,10 @@ class CourseContentDiffCallback(
     private val newList: List<CourseContentItem>
 ) : DiffUtil.Callback() {
     override fun getOldListSize(): Int =
-            oldList.size
+        oldList.size
 
     override fun getNewListSize(): Int =
-            newList.size
+        newList.size
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         val oldItem = oldList[oldItemPosition]

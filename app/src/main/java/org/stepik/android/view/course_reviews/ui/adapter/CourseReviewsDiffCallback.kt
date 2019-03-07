@@ -20,13 +20,13 @@ class CourseReviewsDiffCallback(
         if (oldItem == newItem) return true
 
         return when {
-            oldItem is CourseReviewItem.Data
-                    && newItem is CourseReviewItem.Data
-                    && oldItem.courseReview.id == newItem.courseReview.id
+            oldItem is CourseReviewItem.Data &&
+                    newItem is CourseReviewItem.Data &&
+                    oldItem.courseReview.id == newItem.courseReview.id
                 -> true
 
-            oldItem is CourseReviewItem.Placeholder
-                    && newItem is CourseReviewItem.Placeholder
+            oldItem is CourseReviewItem.Placeholder &&
+                    newItem is CourseReviewItem.Placeholder
                 -> true
 
             else
@@ -41,15 +41,15 @@ class CourseReviewsDiffCallback(
         if (oldItem == newItem) return true
 
         return when {
-            oldItem is CourseReviewItem.Data
-                    && newItem is CourseReviewItem.Data
-                    && oldItem.user == newItem.user
-                    && oldItem.courseReview.text == newItem.courseReview.text
-                    && oldItem.courseReview.score == newItem.courseReview.score
+            oldItem is CourseReviewItem.Data &&
+                    newItem is CourseReviewItem.Data &&
+                    oldItem.user == newItem.user &&
+                    oldItem.courseReview.text == newItem.courseReview.text &&
+                    oldItem.courseReview.score == newItem.courseReview.score
                 -> true
 
-            oldItem is CourseReviewItem.Placeholder
-                    && newItem is CourseReviewItem.Placeholder
+            oldItem is CourseReviewItem.Placeholder &&
+                    newItem is CourseReviewItem.Placeholder
                 -> true
 
             else

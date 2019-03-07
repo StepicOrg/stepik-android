@@ -15,8 +15,8 @@ constructor(
     private val lastStepCacheDataSource: LastStepCacheDataSource
 ) : LastStepRepository {
     override fun getLastStep(id: String): Maybe<LastStep> =
-            lastStepRemoteDataSource
-                .getLastStep(id)
-                .doCompletableOnSuccess(lastStepCacheDataSource::saveLastStep)
-                .switchIfEmpty(lastStepCacheDataSource.getLastStep(id))
+        lastStepRemoteDataSource
+            .getLastStep(id)
+            .doCompletableOnSuccess(lastStepCacheDataSource::saveLastStep)
+            .switchIfEmpty(lastStepCacheDataSource.getLastStep(id))
 }

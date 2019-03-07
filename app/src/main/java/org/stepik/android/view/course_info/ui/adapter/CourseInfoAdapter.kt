@@ -5,14 +5,14 @@ import android.widget.ImageView
 import android.widget.TextView
 import kotlinx.android.synthetic.main.view_course_info_block.view.*
 import org.stepic.droid.fonts.FontsProvider
+import org.stepic.droid.ui.custom.adapter_delegates.DelegateAdapter
+import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
+import org.stepik.android.model.user.User
+import org.stepik.android.view.course_info.model.CourseInfoItem
 import org.stepik.android.view.course_info.ui.adapter.delegates.CourseInfoInstructorsDelegate
 import org.stepik.android.view.course_info.ui.adapter.delegates.CourseInfoOrganizationDelegate
 import org.stepik.android.view.course_info.ui.adapter.delegates.CourseInfoTextBlockDelegate
 import org.stepik.android.view.course_info.ui.adapter.delegates.CourseInfoVideoBlockDelegate
-import org.stepik.android.view.course_info.model.CourseInfoItem
-import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
-import org.stepic.droid.ui.custom.adapter_delegates.DelegateAdapter
-import org.stepik.android.model.user.User
 import org.stepik.android.view.video_player.model.VideoPlayerMediaData
 
 class CourseInfoAdapter(
@@ -21,7 +21,7 @@ class CourseInfoAdapter(
     onVideoClicked: ((VideoPlayerMediaData) -> Unit)? = null,
     onUserClicked: ((User) -> Unit)? = null
 ) : DelegateAdapter<CourseInfoItem, CourseInfoAdapter.ViewHolder>() {
-    private var blocks : List<CourseInfoItem> = emptyList()
+    private var blocks: List<CourseInfoItem> = emptyList()
         set(value) {
             field = value
             notifyDataSetChanged()
@@ -39,10 +39,10 @@ class CourseInfoAdapter(
     }
 
     override fun getItemCount(): Int =
-            blocks.size
+        blocks.size
 
     override fun getItemAtPosition(position: Int): CourseInfoItem =
-            blocks[position]
+        blocks[position]
 
     abstract class ViewHolder(root: View) : DelegateViewHolder<CourseInfoItem>(root)
 

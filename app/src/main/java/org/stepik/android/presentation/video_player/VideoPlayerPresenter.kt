@@ -4,6 +4,8 @@ import android.os.Bundle
 import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
+import org.stepic.droid.analytic.AmplitudeAnalytic
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.preferences.VideoPlaybackRate
@@ -18,6 +20,7 @@ import javax.inject.Inject
 class VideoPlayerPresenter
 @Inject
 constructor(
+    private val analytic: Analytic,
     private val videoPlayerSettingsInteractor: VideoPlayerSettingsInteractor,
 
     @BackgroundScheduler
@@ -123,6 +126,14 @@ constructor(
     fun changePlaybackRate(videoPlaybackRate: VideoPlaybackRate) {
         val playerData = this.videoPlayerData
             ?: return
+
+        analytic.reportAmplitudeEvent(
+            AmplitudeAnalytic.Video.PLAYBACK_SPEED_CHANGED,
+            mapOf(
+                AmplitudeAnalytic.Video.Params.SOURCE to playerData.videoPlaybackRate.rateFloat,
+                AmplitudeAnalytic.Video.Params.TARGET to videoPlaybackRate.rateFloat
+            )
+        )
 
         videoPlayerData = playerData.copy(videoPlaybackRate = videoPlaybackRate)
 

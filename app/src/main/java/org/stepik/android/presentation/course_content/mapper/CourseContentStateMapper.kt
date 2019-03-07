@@ -2,8 +2,8 @@ package org.stepik.android.presentation.course_content.mapper
 
 import org.stepic.droid.R
 import org.stepic.droid.util.isNullOrEmpty
-import org.stepik.android.domain.personal_deadlines.model.DeadlinesWrapper
 import org.stepic.droid.web.storage.model.StorageRecord
+import org.stepik.android.domain.personal_deadlines.model.DeadlinesWrapper
 import org.stepik.android.model.Course
 import org.stepik.android.model.Progress
 import org.stepik.android.presentation.course_content.CourseContentView
@@ -42,7 +42,11 @@ constructor(
                 ?.let { applyDeadlinesToCourseContent(courseContent, it) }
                 ?: courseContent
 
-        return CourseContentView.State.CourseContentLoaded(course, personalDeadlinesState, content)
+        val hasDates = content
+                .filterIsInstance<CourseContentItem.SectionItem>()
+                .any { sectionItem -> sectionItem.dates.isNotEmpty() }
+
+        return CourseContentView.State.CourseContentLoaded(course, personalDeadlinesState, content, hasDates)
     }
 
     fun mergeStateWithPersonalDeadlines(state: CourseContentView.State, deadlinesRecord: StorageRecord<DeadlinesWrapper>?): CourseContentView.State {
@@ -87,15 +91,16 @@ constructor(
                 }
             }
 
-    fun mergeStateWithProgress(state: CourseContentView.State, progress: Progress): CourseContentView.State {
-        if (state !is CourseContentView.State.CourseContentLoaded
-            || state.courseContent.all { !isItemContainsProgress(it, progress) }) return state
-
-        return state.copy(courseContent = state.courseContent.map { updateItemProgress(it, progress) })
-    }
+    fun mergeStateWithProgress(state: CourseContentView.State, progress: Progress): CourseContentView.State =
+        if (state !is CourseContentView.State.CourseContentLoaded ||
+            state.courseContent.all { !isItemContainsProgress(it, progress) }) {
+            state
+        } else {
+            state.copy(courseContent = state.courseContent.map { updateItemProgress(it, progress) })
+        }
 
     private fun isItemContainsProgress(item: CourseContentItem, progress: Progress): Boolean =
-        when(item) {
+        when (item) {
             is CourseContentItem.SectionItem ->
                 item.progress?.id == progress.id
 
@@ -107,7 +112,7 @@ constructor(
         }
 
     private fun updateItemProgress(item: CourseContentItem, progress: Progress): CourseContentItem =
-        when(item) {
+        when (item) {
             is CourseContentItem.SectionItem ->
                 item.takeIf { it.progress?.id == progress.id }
                     ?.copy(progress = progress)

@@ -35,7 +35,7 @@ data class CourseInfoData(
         override fun describeContents(): Int = 0
 
         companion object CREATOR : Parcelable.Creator<Certificate> {
-            override fun createFromParcel(parcel: Parcel) =
+            override fun createFromParcel(parcel: Parcel): Certificate =
                 Certificate(
                     parcel.readString()!!,
                     parcel.readInt(),
@@ -62,7 +62,7 @@ data class CourseInfoData(
     override fun describeContents(): Int = 0
 
     companion object CREATOR : Parcelable.Creator<CourseInfoData> {
-        override fun createFromParcel(parcel: Parcel) =
+        override fun createFromParcel(parcel: Parcel): CourseInfoData =
             CourseInfoData(
                 parcel.readParcelable(User::class.java.classLoader),
                 parcel.readParcelable(VideoPlayerMediaData::class.java.classLoader),

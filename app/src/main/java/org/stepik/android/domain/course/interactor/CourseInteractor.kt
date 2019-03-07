@@ -7,6 +7,7 @@ import io.reactivex.subjects.BehaviorSubject
 import org.solovyev.android.checkout.ProductTypes
 import org.stepic.droid.model.CourseReviewSummary
 import org.stepic.droid.util.safeDiv
+import org.stepik.android.domain.billing.model.SkuSerializableWrapper
 import org.stepik.android.domain.billing.repository.BillingRepository
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.model.EnrollmentState
@@ -100,6 +101,7 @@ constructor(
                         if (payments.isEmpty()) {
                             billingRepository
                                 .getInventory(ProductTypes.IN_APP, COURSE_TIER_PREFIX + course.priceTier)
+                                .map(::SkuSerializableWrapper)
                                 .map(EnrollmentState::NotEnrolledInApp)
                                 .cast(EnrollmentState::class.java)
                                 .toSingle(EnrollmentState.NotEnrolledWeb) // if price_tier == null
@@ -110,6 +112,7 @@ constructor(
                     .onErrorReturnItem(EnrollmentState.NotEnrolledWeb) // if billing not supported on current device or to access paid course offline
         }
 
-    fun restoreCourse(course: Course) =
+    fun restoreCourse(course: Course) {
         coursePublishSubject.onNext(course)
+    }
 }

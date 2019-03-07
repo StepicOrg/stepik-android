@@ -7,6 +7,7 @@ apply from: '../code_quality_tools/jacoco.gradle'
 apply from: '../code_quality_tools/findbugs.gradle'
 apply from: '../code_quality_tools/checkstyle.gradle'
 apply from: '../code_quality_tools/pmd.gradle'
+apply from: '../code_quality_tools/ktlint.gradle'
 
 android {
     compileSdkVersion versions.compileSdk

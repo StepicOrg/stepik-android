@@ -38,5 +38,4 @@ constructor(
         Completable.fromAction {
             courseReviewsDao.insertOrReplaceAll(courseReviews)
         }
-
 }

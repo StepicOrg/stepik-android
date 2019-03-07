@@ -12,16 +12,21 @@ import android.os.Binder
 import android.os.IBinder
 import android.support.v4.media.session.MediaButtonReceiver
 import android.support.v4.media.session.MediaSessionCompat
-import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.C
+import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.ExoPlayerFactory
+import com.google.android.exoplayer2.PlaybackParameters
+import com.google.android.exoplayer2.Player
+import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.audio.AudioAttributes
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.source.MediaSource
+import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
 import org.stepic.droid.R
-import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import org.stepik.android.view.video_player.model.VideoPlayerData
 import org.stepik.android.view.video_player.ui.adapter.VideoPlayerMediaDescriptionAdapter
 import org.stepik.android.view.video_player.ui.receiver.HeadphonesReceiver
@@ -146,6 +151,10 @@ class VideoPlayerForegroundService : Service() {
                 player.currentPosition
             }
 
+        val playWhenReady =
+            this.videoPlayerData?.videoId != videoPlayerData?.videoId ||
+            player.playWhenReady
+
         if (videoPlayerData != null) {
             if (this.videoPlayerData?.videoUrl != videoPlayerData.videoUrl || player.playbackState == Player.STATE_IDLE) {
                 val mediaSource = getMediaSource(videoPlayerData)
@@ -154,7 +163,7 @@ class VideoPlayerForegroundService : Service() {
 
             player.playbackParameters = PlaybackParameters(videoPlayerData.videoPlaybackRate.rateFloat, 1f)
             player.seekTo(position)
-            player.playWhenReady = true
+            player.playWhenReady = playWhenReady
         }
 
         videoPlayerMediaDescriptionAdapter.videoPlayerMediaData = videoPlayerData?.mediaData

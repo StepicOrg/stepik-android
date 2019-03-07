@@ -15,17 +15,16 @@ import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialo
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
-import org.stepik.android.domain.personal_deadlines.model.Deadline
-import org.stepik.android.domain.personal_deadlines.model.DeadlinesWrapper
-import org.stepik.android.view.personal_deadlines.ui.adapters.EditDeadlinesAdapter
-import org.stepik.android.model.Section
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.web.storage.model.StorageRecord
-import java.util.*
+import org.stepik.android.domain.personal_deadlines.model.Deadline
+import org.stepik.android.domain.personal_deadlines.model.DeadlinesWrapper
+import org.stepik.android.model.Section
+import org.stepik.android.view.personal_deadlines.ui.adapters.EditDeadlinesAdapter
+import java.util.Calendar
 import javax.inject.Inject
-import kotlin.collections.ArrayList
 
-class EditDeadlinesDialog: DialogFragment() {
+class EditDeadlinesDialog : DialogFragment() {
     companion object {
         const val TAG = "edit_deadlines_dialog"
 

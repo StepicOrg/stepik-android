@@ -33,7 +33,7 @@ import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ColorUtil;
 import org.stepic.droid.util.DateTimeHelper;
 import org.stepic.droid.util.RWLocks;
-import org.stepic.droid.util.svg.GlideSvgRequestFactory;
+import org.stepic.droid.util.glide.GlideSvgRequestFactory;
 
 import java.util.Locale;
 import java.util.TimeZone;

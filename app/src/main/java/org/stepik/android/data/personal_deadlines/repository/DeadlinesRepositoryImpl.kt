@@ -17,7 +17,7 @@ class DeadlinesRepositoryImpl
 constructor(
     private val deadlinesRemoteDataSource: DeadlinesRemoteDataSource,
     private val deadlinesCacheDataSource: DeadlinesCacheDataSource
-): DeadlinesRepository {
+) : DeadlinesRepository {
     override fun createDeadlineRecord(deadlines: DeadlinesWrapper): Single<StorageRecord<DeadlinesWrapper>> =
         deadlinesRemoteDataSource
             .createDeadlineRecord(deadlines)
@@ -44,5 +44,4 @@ constructor(
         deadlinesRemoteDataSource
             .getDeadlineRecordByCourseId(courseId)
             .doCompletableOnSuccess(deadlinesCacheDataSource::saveDeadlineRecord)
-
 }

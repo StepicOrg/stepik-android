@@ -1,7 +1,10 @@
 package org.stepik.android.presentation.course
 
 import android.os.Bundle
-import io.reactivex.*
+import io.reactivex.Maybe
+import io.reactivex.Observable
+import io.reactivex.Scheduler
+import io.reactivex.Single
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.solovyev.android.checkout.UiCheckout
@@ -10,7 +13,11 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.CourseId
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.util.emptyOnErrorStub
-import org.stepik.android.domain.course.interactor.*
+import org.stepik.android.domain.course.interactor.ContinueLearningInteractor
+import org.stepik.android.domain.course.interactor.CourseBillingInteractor
+import org.stepik.android.domain.course.interactor.CourseEnrollmentInteractor
+import org.stepik.android.domain.course.interactor.CourseIndexingInteractor
+import org.stepik.android.domain.course.interactor.CourseInteractor
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.domain.notification.interactor.CourseNotificationInteractor
@@ -100,8 +107,11 @@ constructor(
     }
 
     private fun observeCourseData(courseDataSource: Maybe<CourseHeaderData>, forceUpdate: Boolean) {
-        if (state != CourseView.State.Idle
-            && !((state == CourseView.State.NetworkError || state is CourseView.State.CourseLoaded) && forceUpdate)) return
+        if (state != CourseView.State.Idle &&
+            !((state == CourseView.State.NetworkError || state is CourseView.State.CourseLoaded) && forceUpdate)
+        ) {
+            return
+        }
 
         state = CourseView.State.Loading
         compositeDisposable += courseDataSource
@@ -131,7 +141,7 @@ constructor(
             ?.enrollmentState
             ?: return
 
-        when(enrollmentState) {
+        when (enrollmentState) {
             EnrollmentState.NotEnrolledFree ->
                 enrollCourse()
 
@@ -203,6 +213,7 @@ constructor(
             ?: return
 
         val sku = (headerData.enrollmentState as? EnrollmentState.NotEnrolledInApp)
+            ?.skuWrapper
             ?.sku
             ?: return
 
@@ -215,7 +226,7 @@ constructor(
                 onError = {
                     state = CourseView.State.CourseLoaded(headerData) // roll back data
 
-                    when(val errorType = it.toEnrollmentError()) {
+                    when (val errorType = it.toEnrollmentError()) {
                         EnrollmentError.UNAUTHORIZED ->
                             view?.showEmptyAuthDialog(headerData.course)
 
@@ -235,6 +246,7 @@ constructor(
             ?: return
 
         val sku = (headerData.enrollmentState as? EnrollmentState.NotEnrolledInApp)
+            ?.skuWrapper
             ?.sku
             ?: return
 

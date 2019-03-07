@@ -8,35 +8,43 @@ import org.stepik.android.model.util.*
 import java.util.Date
 
 data class Step(
-        val id: Long = 0,
-        val lesson: Long = 0,
-        val position: Long = 0,
-        val status: Status? = null,
-        var block: Block? = null,
-        override val progress: String? = null,
-        val subscriptions: List<String>? = null,
+    @SerializedName("id")
+    val id: Long = 0,
+    @SerializedName("lesson")
+    val lesson: Long = 0,
+    @SerializedName("position")
+    val position: Long = 0,
+    @SerializedName("status")
+    val status: Status? = null,
+    @SerializedName("block")
+    var block: Block? = null,
+    @SerializedName("progress")
+    override val progress: String? = null,
+    @SerializedName("subscriptions")
+    val subscriptions: List<String>? = null,
 
-        @SerializedName("viewed_by")
-        val viewedBy: Long = 0,
-        @SerializedName("passed_by")
-        val passedBy: Long = 0,
+    @SerializedName("viewed_by")
+    val viewedBy: Long = 0,
+    @SerializedName("passed_by")
+    val passedBy: Long = 0,
 
-        @SerializedName("create_date")
-        val createDate: Date? = null,
-        @SerializedName("update_date")
-        val updateDate: Date? = null,
+    @SerializedName("create_date")
+    val createDate: Date? = null,
+    @SerializedName("update_date")
+    val updateDate: Date? = null,
 
-        var isCustomPassed: Boolean = false,
-        val actions: Actions? = null,
+    var isCustomPassed: Boolean = false,
+    @SerializedName("actions")
+    val actions: Actions? = null,
 
-        @SerializedName("discussions_count")
-        var discussionsCount: Int = 0,
-        @SerializedName("discussion_proxy")
-        var discussionProxy: String? = null,
-        @SerializedName("has_submissions_restrictions")
-        val hasSubmissionRestriction: Boolean = false,
-        @SerializedName("max_submissions_count")
-        val maxSubmissionCount: Int = 0
+    @SerializedName("discussions_count")
+    var discussionsCount: Int = 0,
+    @SerializedName("discussion_proxy")
+    var discussionProxy: String? = null,
+    @SerializedName("has_submissions_restrictions")
+    val hasSubmissionRestriction: Boolean = false,
+    @SerializedName("max_submissions_count")
+    val maxSubmissionCount: Int = 0
 ) : Parcelable, Progressable {
     override fun describeContents() = 0
 
@@ -63,7 +71,8 @@ data class Step(
     }
 
     companion object CREATOR : Parcelable.Creator<Step> {
-        override fun createFromParcel(parcel: Parcel): Step = Step(
+        override fun createFromParcel(parcel: Parcel): Step =
+            Step(
                 parcel.readLong(),
                 parcel.readLong(),
                 parcel.readLong(),
@@ -83,9 +92,10 @@ data class Step(
 
                 parcel.readInt(),
                 parcel.readString()
-        )
+            )
 
-        override fun newArray(size: Int): Array<out Step?> = arrayOfNulls(size)
+        override fun newArray(size: Int): Array<out Step?> =
+            arrayOfNulls(size)
     }
 
     enum class Status {

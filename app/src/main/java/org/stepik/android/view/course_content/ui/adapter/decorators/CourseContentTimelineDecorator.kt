@@ -32,5 +32,4 @@ class CourseContentTimelineDecorator : RecyclerView.ItemDecoration() {
         // if we fill whole width we don't need scroll decoration
         return if (position < 0) 0 else parent.width - offset - parent.paddingLeft - parent.paddingRight
     }
-
 }

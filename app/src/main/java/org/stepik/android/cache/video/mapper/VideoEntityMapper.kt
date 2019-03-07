@@ -10,7 +10,7 @@ class VideoEntityMapper
 @Inject
 constructor() {
 
-    fun entityToVideo(videoEntity: VideoEntity, videoUrlEntities: List<VideoUrlEntity>) : Video =
+    fun entityToVideo(videoEntity: VideoEntity, videoUrlEntities: List<VideoUrlEntity>): Video =
         Video(
             id = videoEntity.id,
             thumbnail = videoEntity.thumbnail,
@@ -32,5 +32,4 @@ constructor() {
                 VideoUrlEntity(video.id, url, quality)
             }
             ?: emptyList())
-
 }

@@ -66,7 +66,7 @@ private fun MutableList<CourseInfoItem>.addTextItem(type: CourseInfoType, text: 
 
 @StringRes
 private fun mapCourseLanguage(language: String?): Int? =
-    when(language) {
+    when (language) {
         "ru" -> R.string.course_info_language_ru
         "en" -> R.string.course_info_language_en
         "de" -> R.string.course_info_language_de

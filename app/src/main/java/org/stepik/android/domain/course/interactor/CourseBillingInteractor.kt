@@ -135,5 +135,4 @@ constructor(
                 ?.id
                 ?: throw UNAUTHORIZED_EXCEPTION_STUB
         }
-
 }

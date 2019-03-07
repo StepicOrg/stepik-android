@@ -10,13 +10,13 @@ import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.view_course_content_unit.view.*
 import org.stepic.droid.R
 import org.stepic.droid.persistence.model.DownloadProgress
-import org.stepik.android.view.course_content.model.CourseContentItem
 import org.stepic.droid.ui.custom.adapter_delegates.AdapterDelegate
 import org.stepic.droid.ui.custom.adapter_delegates.DelegateAdapter
 import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.util.safeDiv
+import org.stepik.android.view.course_content.model.CourseContentItem
 
 class CourseContentUnitDelegate(
     adapter: DelegateAdapter<CourseContentItem, DelegateViewHolder<CourseContentItem>>,
@@ -24,11 +24,11 @@ class CourseContentUnitDelegate(
     private val unitDownloadStatuses: LongSparseArray<DownloadProgress.Status>
 ) : AdapterDelegate<CourseContentItem, DelegateViewHolder<CourseContentItem>>(adapter) {
 
-    override fun onCreateViewHolder(parent: ViewGroup) =
-            ViewHolder(createView(parent, R.layout.view_course_content_unit))
+    override fun onCreateViewHolder(parent: ViewGroup): ViewHolder =
+        ViewHolder(createView(parent, R.layout.view_course_content_unit))
 
     override fun isForViewType(position: Int): Boolean =
-            getItemAtPosition(position) is CourseContentItem.UnitItem
+        getItemAtPosition(position) is CourseContentItem.UnitItem
 
     inner class ViewHolder(root: View) : DelegateViewHolder<CourseContentItem>(root) {
         private val unitIcon = root.unitIcon
@@ -60,12 +60,14 @@ class CourseContentUnitDelegate(
 
             unitDownloadStatus.setOnClickListener {
                 val item = (itemData as? CourseContentItem.UnitItem) ?: return@setOnClickListener
-                when(unitDownloadStatus.status) {
+                when (unitDownloadStatus.status) {
                     DownloadProgress.Status.NotCached ->
                         unitClickListener.onItemDownloadClicked(item)
 
-                    DownloadProgress.Status.Cached,
                     is DownloadProgress.Status.InProgress ->
+                        unitClickListener.onItemCancelClicked(item)
+
+                    DownloadProgress.Status.Cached ->
                         unitClickListener.onItemRemoveClicked(item)
                 }
             }

@@ -9,7 +9,6 @@ import org.stepik.android.domain.course_list.repository.CourseListRepository
 
 @Module
 abstract class CourseListDataModule {
-
     @Binds
     internal abstract fun bindCourseListRepository(
         courseListRepositoryImpl: CourseListRepositoryImpl
@@ -19,5 +18,4 @@ abstract class CourseListDataModule {
     internal abstract fun bindCourseListCacheDataSource(
         courseListCacheDataSourceImpl: CourseListCacheDataSourceImpl
     ): CourseListCacheDataSource
-
 }

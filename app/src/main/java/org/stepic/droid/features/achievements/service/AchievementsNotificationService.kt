@@ -10,7 +10,9 @@ import android.support.v4.app.JobIntentService
 import android.support.v4.app.NotificationCompat
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import org.stepic.droid.R
+import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.analytic.experiments.AchievementsSplitTest
 import org.stepic.droid.base.App
 import org.stepic.droid.features.achievements.repository.AchievementsRepository
 import org.stepic.droid.features.achievements.ui.activity.AchievementsListActivity
@@ -20,7 +22,7 @@ import org.stepic.droid.model.AchievementNotification
 import org.stepic.droid.notifications.model.StepikNotificationChannel
 import org.stepic.droid.ui.util.toBitmap
 import org.stepic.droid.util.ColorUtil
-import org.stepic.droid.util.svg.GlideSvgRequestFactory
+import org.stepic.droid.util.glide.GlideSvgRequestFactory
 import org.stepic.droid.util.toObject
 import javax.inject.Inject
 
@@ -48,6 +50,9 @@ class AchievementsNotificationService : JobIntentService() {
     @Inject
     internal lateinit var achievementResourceResolver: AchievementResourceResolver
 
+    @Inject
+    internal lateinit var achievementsSplitTest: AchievementsSplitTest
+
     init {
         App.component().inject(this)
     }
@@ -60,6 +65,16 @@ class AchievementsNotificationService : JobIntentService() {
             val achievement = achievementsRepository
                     .getAchievement(achievementNotification.user, achievementNotification.kind)
                     .blockingGet()
+
+            analytic.reportAmplitudeEvent(
+                AmplitudeAnalytic.Achievements.NOTIFICATION_RECEIVED,
+                mapOf(
+                    AmplitudeAnalytic.Achievements.Params.KIND to achievement.kind,
+                    AmplitudeAnalytic.Achievements.Params.LEVEL to achievement.currentLevel
+                )
+            )
+
+            if (!achievementsSplitTest.currentGroup.isAchievementsEnabled) return
 
             val notificationIntent = AchievementsListActivity
                     .createIntent(this, achievementNotification.user, isMyProfile = true)
