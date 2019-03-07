@@ -305,8 +305,6 @@ constructor(
         deadlinesDisposable.clear()
 
         if (personalDeadlinesSplitTest.currentGroup.isPersonalDeadlinesEnabled) {
-            state = oldState.copy(personalDeadlinesState = PersonalDeadlinesState.NoDeadlinesNeeded)
-        } else {
             deadlinesDisposable += deadlinesInteractor
                 .getPersonalDeadlineByCourseId(courseId)
                 .subscribeOn(backgroundScheduler)
@@ -319,6 +317,8 @@ constructor(
                     onSuccess = { state = stateMapper.mergeStateWithPersonalDeadlines(state, it) },
                     onError = { it.printStackTrace(); view?.showPersonalDeadlinesError() }
                 )
+        } else {
+            state = oldState.copy(personalDeadlinesState = PersonalDeadlinesState.NoDeadlinesNeeded)
         }
     }
 
