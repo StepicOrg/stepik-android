@@ -17,9 +17,10 @@ constructor(
     groups = Group.values()
 ) {
     enum class Group(
-        val isVideoEnabled: Boolean
+        val isVideoEnabled: Boolean,
+        override val distribution: Int
     ) : SplitTest.Group {
-        Control(isVideoEnabled = true),
-        NoVideo(isVideoEnabled = false)
+        Control(isVideoEnabled = true, distribution = 3),
+        NoVideo(isVideoEnabled = false, distribution = 1)
     }
 }
