@@ -7,7 +7,7 @@ import org.stepik.android.cache.comments.structure.DbStructureCommentsBanner
 import org.stepik.android.data.comments.source.CommentsBannerCacheDataSource
 import javax.inject.Inject
 
-class CommentsBannerDataSourceImpl
+class CommentsBannerDataCacheSourceImpl
 @Inject
 constructor(
     private val commentsBannerDao: CommentsBannerDao
