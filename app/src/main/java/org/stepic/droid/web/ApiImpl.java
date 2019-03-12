@@ -748,7 +748,9 @@ public class ApiImpl implements Api {
 
     @Override
     public Call<Void> sendFeedback(String email, String rawDescription) {
-        OkHttpClient okHttpClient = new OkHttpClient();
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .addNetworkInterceptor(stethoInterceptor)
+                .build();
         Retrofit notLogged = new Retrofit.Builder()
                 .baseUrl(config.getZendeskHost())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
@@ -764,11 +766,13 @@ public class ApiImpl implements Api {
 
         Profile profile = sharedPreference.getProfile();
         String name = "";
+        String link = "";
         if (profile != null) {
-            name = profile.getFullName();
+            name = "" + profile.getFullName();
+            link = config.getBaseUrl() + "/users/" + profile.getId();
         }
 
-        return tempService.sendFeedback(new DeskRequestWrapper(name, email, subject, rawDescription));
+        return tempService.sendFeedback(new DeskRequestWrapper(name, email, subject, rawDescription, link, aboutSystem));
     }
 
     @Override
