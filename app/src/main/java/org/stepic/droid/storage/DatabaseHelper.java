@@ -110,6 +110,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         upgradeFrom36To37(db);
         upgradeFrom37To38(db);
         upgradeFrom38To39(db);
+        upgradeFrom39To40(db);
     }
 
 
