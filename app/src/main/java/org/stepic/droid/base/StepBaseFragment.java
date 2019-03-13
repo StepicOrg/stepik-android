@@ -17,6 +17,7 @@ import org.stepic.droid.core.presenters.AnonymousPresenter;
 import org.stepic.droid.core.presenters.CommentsBannerPresenter;
 import org.stepic.droid.core.presenters.RouteStepPresenter;
 import org.stepic.droid.core.presenters.contracts.AnonymousView;
+import org.stepic.droid.core.presenters.contracts.CommentsView;
 import org.stepic.droid.core.presenters.contracts.RouteStepView;
 import org.stepic.droid.persistence.model.StepPersistentWrapper;
 import org.stepic.droid.ui.custom.StepTextWrapper;
@@ -44,6 +45,7 @@ import retrofit2.Response;
 public abstract class StepBaseFragment extends FragmentBase
         implements RouteStepView,
         AnonymousView,
+        CommentsView,
         CommentCountListener {
 
     @BindView(R.id.open_comments_text)
@@ -137,6 +139,7 @@ public abstract class StepBaseFragment extends FragmentBase
         commentCountListenerClient.subscribe(this);
         routeStepPresenter.attachView(this);
         anonymousPresenter.attachView(this);
+        commentsBannerPresenter.attachView(this);
         anonymousPresenter.checkForAnonymous();
         if (unit != null) {
             nextLessonView.setOnClickListener(new View.OnClickListener() {
@@ -161,6 +164,8 @@ public abstract class StepBaseFragment extends FragmentBase
 
     protected abstract void attachStepTextWrapper();
     protected abstract void detachStepTextWrapper();
+    @Override
+    public void showCommentsBanner() {} // TODO Stub
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -198,8 +203,10 @@ public abstract class StepBaseFragment extends FragmentBase
             }
         });
 
+
         int discussionCount = step.getDiscussionsCount();
         if (discussionCount > 0) {
+            commentsBannerPresenter.fetchCommentsBanner(section.getCourse());
             textForComment.setText(App.Companion.getAppContext().getResources().getQuantityString(R.plurals.open_comments, discussionCount, discussionCount));
         } else {
             textForComment.setText(App.Companion.getAppContext().getResources().getString(R.string.open_comments_zero));
@@ -235,6 +242,7 @@ public abstract class StepBaseFragment extends FragmentBase
         routeStepPresenter.detachView(this);
         commentCountListenerClient.unsubscribe(this);
         anonymousPresenter.detachView(this);
+        commentsBannerPresenter.detachView(this);
         nextLessonView.setOnClickListener(null);
         previousLessonView.setOnClickListener(null);
         super.onDestroyView();
