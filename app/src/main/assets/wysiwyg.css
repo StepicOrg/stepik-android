@@ -223,6 +223,7 @@
     color: inherit;
     font-weight: inherit;
     min-height: 2em;
+    display: inline-block;
   }
 
   &.block pre code {
@@ -255,8 +256,6 @@
   }
 
   .hljs {
-      display: block;
-      overflow-x: auto;
       padding: .5em;
       background: #fdf6e3;
       color: #657b83;
