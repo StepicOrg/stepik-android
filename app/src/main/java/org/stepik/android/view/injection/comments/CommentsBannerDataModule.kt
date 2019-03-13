@@ -8,7 +8,7 @@ import org.stepik.android.data.comments.source.CommentsBannerCacheDataSource
 import org.stepik.android.domain.comments.repository.CommentsBannerRepository
 
 @Module
-abstract class CommentsDataModule {
+abstract class CommentsBannerDataModule {
     @Binds
     internal abstract fun bindCommentsBannerRepository(
         commentsBannerRepositoryImpl: CommentsBannerRepositoryImpl
