@@ -14,6 +14,7 @@ import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.core.commentcount.contract.CommentCountListener;
 import org.stepic.droid.core.presenters.AnonymousPresenter;
+import org.stepic.droid.core.presenters.CommentsBannerPresenter;
 import org.stepic.droid.core.presenters.RouteStepPresenter;
 import org.stepic.droid.core.presenters.contracts.AnonymousView;
 import org.stepic.droid.core.presenters.contracts.RouteStepView;
@@ -91,6 +92,9 @@ public abstract class StepBaseFragment extends FragmentBase
 
     @Inject
     AnonymousPresenter anonymousPresenter;
+
+    @Inject
+    CommentsBannerPresenter commentsBannerPresenter;
 
     @Inject
     Client<CommentCountListener> commentCountListenerClient;
