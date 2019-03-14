@@ -69,6 +69,7 @@ import org.stepik.android.model.ReplyWrapper;
 import org.stepik.android.model.user.Profile;
 import org.stepik.android.model.user.User;
 import org.stepik.android.model.attempts.DatasetWrapper;
+import org.stepik.android.remote.email_address.model.EmailAddressResponse;
 
 import java.io.IOException;
 import java.net.HttpCookie;

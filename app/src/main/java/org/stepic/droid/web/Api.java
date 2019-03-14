@@ -18,6 +18,7 @@ import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
 import org.stepik.android.model.Tag;
 import org.stepik.android.model.Reply;
 import org.stepik.android.model.user.User;
+import org.stepik.android.remote.email_address.model.EmailAddressResponse;
 
 import java.util.List;
 
