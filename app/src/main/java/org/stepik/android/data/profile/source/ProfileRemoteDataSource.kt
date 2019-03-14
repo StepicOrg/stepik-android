@@ -18,5 +18,5 @@ interface ProfileRemoteDataSource {
     /**
      * Updates profile password
      */
-    fun saveProfilePassword(currentPassword: String, newPassword: String): Completable
+    fun saveProfilePassword(profileId: Long, currentPassword: String, newPassword: String): Completable
 }

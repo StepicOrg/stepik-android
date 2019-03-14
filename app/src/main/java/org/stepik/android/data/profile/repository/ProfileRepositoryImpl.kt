@@ -42,7 +42,7 @@ constructor(
             .saveProfile(profile)
             .doCompletableOnSuccess(profileCacheDataSource::saveProfile)
 
-    override fun saveProfilePassword(currentPassword: String, newPassword: String): Completable =
+    override fun saveProfilePassword(profileId: Long, currentPassword: String, newPassword: String): Completable =
         profileRemoteDataSource
-            .saveProfilePassword(currentPassword, newPassword)
+            .saveProfilePassword(profileId, currentPassword, newPassword)
 }
