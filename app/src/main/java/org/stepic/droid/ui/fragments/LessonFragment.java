@@ -34,6 +34,7 @@ import org.stepic.droid.core.presenters.StepsTrackingPresenter;
 import org.stepic.droid.core.presenters.contracts.LessonTrackingView;
 import org.stepic.droid.core.presenters.contracts.LessonView;
 import org.stepic.droid.core.updatingstep.contract.UpdatingStepListener;
+import org.stepic.droid.ui.listeners.StepFragmentPageChangeListener;
 import org.stepik.android.domain.last_step.model.LastStep;
 import org.stepik.android.model.Course;
 import org.stepik.android.model.Lesson;
@@ -206,6 +207,7 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
         initIndependentUI();
         stepAdapter = new StepFragmentAdapter(getChildFragmentManager(), stepsPresenter.getStepList(), stepTypeResolver);
         viewPager.setAdapter(stepAdapter);
+        viewPager.addOnPageChangeListener(new StepFragmentPageChangeListener(viewPager, stepAdapter));
         stepsPresenter.attachView(this);
         stepTrackingPresenter.attachView(this);
         if (lesson == null) {
