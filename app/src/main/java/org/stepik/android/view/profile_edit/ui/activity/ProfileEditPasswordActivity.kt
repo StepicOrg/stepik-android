@@ -27,7 +27,7 @@ class ProfileEditPasswordActivity : AppCompatActivity(), ProfileEditPasswordView
             .of(this, viewModelFactory)
             .get(ProfileEditPasswordPresenter::class.java)
 
-        initCenteredToolbar(R.string.profile_edit_password_title, showHomeButton = true)
+        initCenteredToolbar(R.string.profile_edit_password_title, showHomeButton = true, homeIndicator = R.drawable.ic_close_dark)
     }
 
     private fun injectComponent() {
@@ -54,4 +54,9 @@ class ProfileEditPasswordActivity : AppCompatActivity(), ProfileEditPasswordView
         } else {
             false
         }
+
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(org.stepic.droid.R.anim.no_transition, org.stepic.droid.R.anim.push_down)
+    }
 }

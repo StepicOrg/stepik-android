@@ -52,6 +52,7 @@ import org.stepic.droid.util.ProfileSettingsHelper
 import org.stepic.droid.util.argument
 import org.stepic.droid.util.glide.GlideSvgRequestFactory
 import org.stepic.droid.viewmodel.ProfileSettingsViewModel
+import org.stepik.android.model.user.Profile
 import timber.log.Timber
 import java.util.ArrayList
 import java.util.Date
@@ -471,7 +472,7 @@ class ProfileFragment : FragmentBase(),
                 return true
             }
             R.id.menu_item_edit -> {
-                screenManager.showProfileEdit(context, null)
+                screenManager.showProfileEdit(context, Profile()) // todo replace with real profile
                 return true
             }
         }

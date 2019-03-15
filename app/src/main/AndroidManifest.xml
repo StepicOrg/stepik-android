@@ -362,6 +362,9 @@
         </activity>
 
         <activity
+            android:name="org.stepik.android.view.profile_edit.ui.activity.ProfileEditActivity" />
+
+        <activity
             android:name="org.stepik.android.view.profile_edit.ui.activity.ProfileEditPasswordActivity" />
 
         <activity

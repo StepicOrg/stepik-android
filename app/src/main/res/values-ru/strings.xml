@@ -676,6 +676,7 @@
     <string name="profile_edit_password_new_repeat_hint">Новый пароль (ещё раз)</string>
 
     <string name="profile_edit_info_title">Персональные данные</string>
+    <string name="profile_edit_info_subtitle">Ваше имя и другая информация</string>
 
     <string name="profile_edit_save">Сохранить</string>
 </resources>

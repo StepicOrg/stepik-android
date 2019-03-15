@@ -27,7 +27,7 @@ class ProfileEditInfoActivity : AppCompatActivity(), ProfileEditInfoView {
             .of(this, viewModelFactory)
             .get(ProfileEditInfoPresenter::class.java)
 
-        initCenteredToolbar(R.string.profile_edit_info_title, showHomeButton = true)
+        initCenteredToolbar(R.string.profile_edit_info_title, showHomeButton = true, homeIndicator = R.drawable.ic_close_dark)
     }
 
     private fun injectComponent() {
@@ -54,4 +54,9 @@ class ProfileEditInfoActivity : AppCompatActivity(), ProfileEditInfoView {
         } else {
             false
         }
+
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(org.stepic.droid.R.anim.no_transition, org.stepic.droid.R.anim.push_down)
+    }
 }

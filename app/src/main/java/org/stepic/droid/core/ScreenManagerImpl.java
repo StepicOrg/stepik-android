@@ -72,6 +72,7 @@ import org.stepic.droid.util.StringUtil;
 import org.stepic.droid.web.ViewAssignment;
 import org.stepik.android.model.Tag;
 import org.stepik.android.view.profile_edit.ui.activity.ProfileEditInfoActivity;
+import org.stepik.android.view.profile_edit.ui.activity.ProfileEditActivity;
 import org.stepik.android.view.profile_edit.ui.activity.ProfileEditPasswordActivity;
 import org.stepik.android.view.routing.deeplink.BranchDeepLinkRouter;
 import org.stepik.android.view.routing.deeplink.BranchRoute;
@@ -705,16 +706,25 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void showProfileEdit(Context context, Profile profile) {
-        context.startActivity(new Intent(context, ProfileEditPasswordActivity.class));
+        if (context instanceof Activity){
+            ((Activity) context).overridePendingTransition(org.stepic.droid.R.anim.push_up, org.stepic.droid.R.anim.no_transition);
+        }
+        context.startActivity(ProfileEditActivity.Companion.createIntent(context, profile));
     }
 
     @Override
     public void showProfileEditInfo(Context context, Profile profile) {
+        if (context instanceof Activity){
+            ((Activity) context).overridePendingTransition(org.stepic.droid.R.anim.push_up, org.stepic.droid.R.anim.no_transition);
+        }
         context.startActivity(new Intent(context, ProfileEditInfoActivity.class));
     }
 
     @Override
     public void showProfileEditPassword(Context context) {
+        if (context instanceof Activity){
+            ((Activity) context).overridePendingTransition(org.stepic.droid.R.anim.push_up, org.stepic.droid.R.anim.no_transition);
+        }
         context.startActivity(new Intent(context, ProfileEditPasswordActivity.class));
     }
 }
