@@ -120,14 +120,15 @@ public class ApiImpl implements Api {
     private final StepikLogoutManager stepikLogoutManager;
     private final ScreenManager screenManager;
     private final UserAgentProvider userAgentProvider;
-    private final FirebaseRemoteConfig firebaseRemoteConfig;
 
-    private StepicRestLoggedService loggedService;
+    private final StepicRestLoggedService loggedService;
     private StepicRestOAuthService oAuthService;
-    private StepicEmptyAuthService stepikEmptyAuthService;
-    private RemoteStorageService remoteStorageService;
-    private RatingService ratingService;
-    private AchievementsService achievementsService;
+    private final StepicEmptyAuthService stepikEmptyAuthService;
+    private final RemoteStorageService remoteStorageService;
+    private final RatingService ratingService;
+    private final AchievementsService achievementsService;
+
+    private final Retrofit authorizedRetrofit;
 
     @Inject
     public ApiImpl(
@@ -147,11 +148,16 @@ public class ApiImpl implements Api {
         this.stepikLogoutManager = stepikLogoutManager;
         this.screenManager = screenManager;
         this.userAgentProvider = userAgentProvider;
-        this.firebaseRemoteConfig = firebaseRemoteConfig;
         this.stethoInterceptor = stethoInterceptor;
 
         makeOauthServiceWithNewAuthHeader(this.sharedPreference.isLastTokenSocial() ? TokenType.social : TokenType.loginPassword);
-        makeLoggedServices();
+
+        authorizedRetrofit = createAuthorizedRetrofit(config.getBaseUrl());
+
+        achievementsService = authorizedRetrofit.create(AchievementsService.class);
+        loggedService = authorizedRetrofit.create(StepicRestLoggedService.class);
+        remoteStorageService = authorizedRetrofit.create(RemoteStorageService.class);
+        ratingService = createAuthorizedRetrofit(firebaseRemoteConfig.getString(RemoteConfig.ADAPTIVE_BACKEND_URL)).create(RatingService.class);
 
         OkHttpClient.Builder okHttpClient = new OkHttpClient.Builder();
         setTimeout(okHttpClient, TIMEOUT_IN_SECONDS);
@@ -171,13 +177,6 @@ public class ApiImpl implements Api {
         }
     }
 
-    private void makeLoggedServices() {
-        loggedService = createLoggedService(StepicRestLoggedService.class, config.getBaseUrl());
-        remoteStorageService = createLoggedService(RemoteStorageService.class, config.getBaseUrl());
-        ratingService = createLoggedService(RatingService.class, firebaseRemoteConfig.getString(RemoteConfig.ADAPTIVE_BACKEND_URL));
-        achievementsService = createLoggedService(AchievementsService.class, config.getBaseUrl());
-    }
-
     public StepicRestLoggedService getLoggedService() {
         return loggedService;
     }
@@ -190,7 +189,11 @@ public class ApiImpl implements Api {
         return achievementsService;
     }
 
-    private <T> T createLoggedService(final Class<T> service, final String host) {
+    public Retrofit getAuthorizedRetrofit() {
+        return authorizedRetrofit;
+    }
+
+    private Retrofit createAuthorizedRetrofit(final String host) {
         OkHttpClient.Builder okHttpBuilder = new OkHttpClient.Builder();
         Interceptor interceptor = new Interceptor() {
             @Override
@@ -321,13 +324,12 @@ public class ApiImpl implements Api {
         okHttpBuilder.addNetworkInterceptor(this.stethoInterceptor);
         setTimeout(okHttpBuilder, TIMEOUT_IN_SECONDS);
         OkHttpClient okHttpClient = okHttpBuilder.build();
-        Retrofit retrofit = new Retrofit.Builder()
+        return new Retrofit.Builder()
                 .baseUrl(host)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(generateGsonFactory())
                 .client(okHttpClient)
                 .build();
-        return retrofit.create(service);
     }
 
     private void makeOauthServiceWithNewAuthHeader(final TokenType type) {
