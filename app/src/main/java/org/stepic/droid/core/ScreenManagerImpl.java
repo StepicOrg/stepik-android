@@ -28,6 +28,7 @@ import org.stepic.droid.configuration.Config;
 import org.stepic.droid.di.AppSingleton;
 import org.stepic.droid.features.achievements.ui.activity.AchievementsListActivity;
 import org.stepic.droid.util.UriExtensionsKt;
+import org.stepik.android.model.user.Profile;
 import org.stepik.android.view.course.routing.CourseScreenTab;
 import org.stepik.android.view.course.ui.activity.CourseActivity;
 import org.stepic.droid.model.CertificateViewItem;
@@ -70,6 +71,8 @@ import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.StringUtil;
 import org.stepic.droid.web.ViewAssignment;
 import org.stepik.android.model.Tag;
+import org.stepik.android.view.profile_edit.ui.activity.ProfileEditInfoActivity;
+import org.stepik.android.view.profile_edit.ui.activity.ProfileEditPasswordActivity;
 import org.stepik.android.view.routing.deeplink.BranchDeepLinkRouter;
 import org.stepik.android.view.routing.deeplink.BranchRoute;
 import org.stepik.android.view.video_player.model.VideoPlayerMediaData;
@@ -698,5 +701,20 @@ public class ScreenManagerImpl implements ScreenManager {
                 return;
             }
         }
+    }
+
+    @Override
+    public void showProfileEdit(Context context, Profile profile) {
+        context.startActivity(new Intent(context, ProfileEditPasswordActivity.class));
+    }
+
+    @Override
+    public void showProfileEditInfo(Context context, Profile profile) {
+        context.startActivity(new Intent(context, ProfileEditInfoActivity.class));
+    }
+
+    @Override
+    public void showProfileEditPassword(Context context) {
+        context.startActivity(new Intent(context, ProfileEditPasswordActivity.class));
     }
 }

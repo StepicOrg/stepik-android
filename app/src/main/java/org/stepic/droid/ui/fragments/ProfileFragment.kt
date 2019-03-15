@@ -457,7 +457,10 @@ class ProfileFragment : FragmentBase(),
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater) {
         if (localUserViewModel != null) {
-            inflater.inflate(R.menu.share_menu, menu)
+            inflater.inflate(R.menu.profile_menu, menu)
+
+            menu?.findItem(R.id.menu_item_edit)?.isVisible =
+                localUserViewModel?.isMyProfile == true
         }
     }
 
@@ -465,6 +468,10 @@ class ProfileFragment : FragmentBase(),
         when (item?.itemId) {
             R.id.menu_item_share -> {
                 shareProfile()
+                return true
+            }
+            R.id.menu_item_edit -> {
+                screenManager.showProfileEdit(context, null)
                 return true
             }
         }
