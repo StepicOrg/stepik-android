@@ -378,7 +378,7 @@
     <style name="StepikToolbarTheme" parent="@style/ThemeOverlay.AppCompat.Light"></style>
 
     <style name="StepikToolbarTextAppearance" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">18sp</item>
         <item name="fontPath">fonts/Roboto-Regular.ttf</item>
         <item name="android:textColor">@color/new_accent_color</item>
     </style>

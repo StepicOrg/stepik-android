@@ -361,6 +361,12 @@
 
         </activity>
 
+        <activity
+            android:name="org.stepik.android.view.profile_edit.ui.activity.ProfileEditPasswordActivity" />
+
+        <activity
+            android:name="org.stepik.android.view.profile_edit.ui.activity.ProfileEditInfoActivity" />
+
         <receiver
             android:name="org.stepic.droid.receivers.DownloadClickReceiver"
             android:exported="true">

@@ -667,4 +667,15 @@
     <string name="retention_notification_day1_message">Вы проделали отличную работу вчера - это хороший повод зайти сегодня и продолжить учиться! 🚀</string>
     <string name="retention_notification_day3_title">Время учиться ‍🎓</string>
     <string name="retention_notification_day3_message">Вас давно не было. Заходите и учитесь новому! 💡</string>
+
+
+    <string name="profile_edit_menu_item">Редактировать профиль</string>
+    <string name="profile_edit_password_title">Пароль</string>
+    <string name="profile_edit_password_current_hint">Текущий пароль</string>
+    <string name="profile_edit_password_new_hint">Новый пароль</string>
+    <string name="profile_edit_password_new_repeat_hint">Новый пароль (ещё раз)</string>
+
+    <string name="profile_edit_info_title">Персональные данные</string>
+
+    <string name="profile_edit_save">Сохранить</string>
 </resources>

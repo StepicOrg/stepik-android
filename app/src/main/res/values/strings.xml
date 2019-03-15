@@ -692,4 +692,16 @@
     <string name="retention_notification_day1_message">You\'ve done a great job learning yesterday, come back today and become smarter! 🚀</string>
     <string name="retention_notification_day3_title">Time to study ‍🎓</string>
     <string name="retention_notification_day3_message">You haven\'t been here for a while. Come back and continue study! 💡</string>
+
+
+    <string name="profile_edit_menu_item">Edit profile</string>
+    <string name="profile_edit_password_title">Password</string>
+    <string name="profile_edit_password_placeholder" translatable="false">************</string>
+    <string name="profile_edit_password_current_hint">Current password</string>
+    <string name="profile_edit_password_new_hint">New password</string>
+    <string name="profile_edit_password_new_repeat_hint">New password (repeat)</string>
+
+    <string name="profile_edit_info_title">Personal info</string>
+
+    <string name="profile_edit_save">Save</string>
 </resources>
