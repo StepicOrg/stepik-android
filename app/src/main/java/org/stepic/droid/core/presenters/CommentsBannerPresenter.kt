@@ -4,6 +4,7 @@ import io.reactivex.Scheduler
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
+import org.stepic.droid.analytic.experiments.CommentsSplitTest
 import org.stepic.droid.core.presenters.contracts.CommentsView
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
@@ -15,6 +16,7 @@ class CommentsBannerPresenter
 @Inject
 constructor(
     private val commentsBannerInteractor: CommentsInteractor,
+    private val commentsSplitTest: CommentsSplitTest,
 
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
@@ -32,7 +34,7 @@ constructor(
             .observeOn(mainScheduler)
             .subscribeBy(
                 onSuccess = { wasCommentsBannerShown ->
-                    if (!wasCommentsBannerShown) {
+                    if (!wasCommentsBannerShown && commentsSplitTest.currentGroup.isCommentsToolTipEnabled) {
                         view?.showCommentsBanner()
                     }
                 },
