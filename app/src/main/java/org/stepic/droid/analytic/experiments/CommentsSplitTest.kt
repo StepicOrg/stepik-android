@@ -19,7 +19,7 @@ constructor(
     enum class Group(
         val isCommentsToolTipEnabled: Boolean
     ) : SplitTest.Group {
-        Control(isCommentsToolTipEnabled = true),
-        NoTooltip(isCommentsToolTipEnabled = false)
+        Control(isCommentsToolTipEnabled = false),
+        TooltipEnabled(isCommentsToolTipEnabled = true)
     }
 }
