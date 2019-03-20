@@ -195,21 +195,21 @@ public abstract class StepBaseFragment extends FragmentBase
             commentsVisibilitySubject.filter(isVisible -> isVisible);
 
         uiCompositeDisposable.add(zip(visibilityObservable, commentsObservable)
-        .firstElement()
-        .ignoreElement()
-        .subscribe(() -> {
-            View view = nestedScrollView.findViewById(R.id.open_comments_text);
-            PopupHelper.INSTANCE.showPopupAnchoredToView(
-                getContext(),
-                view,
-                getString(R.string.step_comment_tooltip),
-                PopupHelper.PopupTheme.DARK_ABOVE,
-                true,
-                Gravity.CENTER,
-                true,
-                true
-            );
-        }));
+            .firstElement()
+            .ignoreElement()
+            .subscribe(() -> {
+                View view = nestedScrollView.findViewById(R.id.open_comments_text);
+                PopupHelper.INSTANCE.showPopupAnchoredToView(
+                    getContext(),
+                    view,
+                    getString(R.string.step_comment_tooltip),
+                    PopupHelper.PopupTheme.DARK_ABOVE,
+                    true,
+                    Gravity.TOP,
+                    true,
+                    true
+                );
+            }));
     }
 
     @Override

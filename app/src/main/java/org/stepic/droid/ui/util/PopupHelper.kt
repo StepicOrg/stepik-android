@@ -64,20 +64,27 @@ object PopupHelper {
         popupWindow.animationStyle = R.style.PopupAnimations
         popupWindow.isOutsideTouchable = cancelableOnTouchOutside
 
+        var offsetY = 0
+
         if (withArrow) {
             popupView.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
                 override fun onGlobalLayout() {
                     popupArrowView.x = calcArrowHorizontalOffset(anchorView, popupView, popupView.arrowView)
                     if (isAboveAnchor) {
+                        if (offsetY == -(anchorView.measuredHeight + popupView.measuredHeight)) {
+                            popupView.viewTreeObserver.removeGlobalOnLayoutListener(this)
+                            return
+                        } else {
+                            offsetY = -(anchorView.measuredHeight + popupView.measuredHeight)
+                        }
                         popupWindow.update(
                             anchorView,
                             0,
-                            -(anchorView.measuredHeight + popupView.measuredHeight),
+                            offsetY,
                             popupWindow.width,
                             popupWindow.height
                         )
                     }
-                    popupView.viewTreeObserver.removeGlobalOnLayoutListener(this)
                 }
             })
         }
