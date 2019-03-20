@@ -28,13 +28,16 @@ constructor(
     private val commentsDisposable = CompositeDisposable()
 
     fun fetchCommentsBanner(courseId: Long) {
+        if (!commentsSplitTest.currentGroup.isCommentsToolTipEnabled) {
+            return
+        }
         commentsDisposable += commentsBannerInteractor
             .shouldShowCommentsBannerForCourse(courseId)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
                 onSuccess = { wasCommentsBannerShown ->
-                    if (!wasCommentsBannerShown && commentsSplitTest.currentGroup.isCommentsToolTipEnabled) {
+                    if (!wasCommentsBannerShown) {
                         view?.showCommentsBanner()
                     }
                 },
