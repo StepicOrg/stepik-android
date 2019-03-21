@@ -67,22 +67,21 @@ object PopupHelper {
         if (withArrow) {
             popupView.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
                 var offsetY = 0
+                var measuredHeight = -(anchorView.measuredHeight + popupView.measuredHeight)
                 override fun onGlobalLayout() {
                     popupArrowView.x = calcArrowHorizontalOffset(anchorView, popupView, popupView.arrowView)
+                    measuredHeight = -(anchorView.measuredHeight + popupView.measuredHeight)
                     if (isAboveAnchor) {
-                        if (offsetY == -(anchorView.measuredHeight + popupView.measuredHeight)) {
-                            popupView.viewTreeObserver.removeGlobalLayoutListener(this)
-                            return
-                        } else {
-                            offsetY = -(anchorView.measuredHeight + popupView.measuredHeight)
+                        if (offsetY != measuredHeight) {
+                            offsetY = measuredHeight
+                            popupWindow.update(
+                                anchorView,
+                                0,
+                                offsetY,
+                                popupWindow.width,
+                                popupWindow.height
+                            )
                         }
-                        popupWindow.update(
-                            anchorView,
-                            0,
-                            offsetY,
-                            popupWindow.width,
-                            popupWindow.height
-                        )
                     }
                 }
             })
