@@ -59,6 +59,7 @@ class VideoStepFragment : StepBaseFragment(),
             playerLayout?.isClickable = false
             videoStepPresenter.playVideo(stepWrapper)
         }
+        setFirstViewPagerElementActive()
     }
 
     override fun attachStepTextWrapper() {} // no need in step text wrapper

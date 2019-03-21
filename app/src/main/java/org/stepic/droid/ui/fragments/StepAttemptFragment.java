@@ -509,6 +509,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
 
             stepAttemptPresenter.handleStepRestriction(step, numberOfSubmissions);
         }
+        setFirstViewPagerElementActive();
     }
 
     protected abstract void showAttempt(Attempt attempt);

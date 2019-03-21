@@ -39,11 +39,14 @@ import org.stepik.android.view.ui.listener.FragmentViewPagerScrollStateListener;
 
 import java.lang.ref.WeakReference;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
+import io.reactivex.Completable;
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.subjects.BehaviorSubject;
 import retrofit2.Call;
@@ -230,6 +233,13 @@ public abstract class StepBaseFragment extends FragmentBase
                 }
             }
         });
+    }
+
+    protected void setFirstViewPagerElementActive() {
+        if (step.getPosition() == 1) {
+            uiCompositeDisposable.add(Completable.timer(1, TimeUnit.SECONDS, AndroidSchedulers.mainThread())
+                .subscribe(() -> changeVisibilitySubjects(ScrollState.ACTIVE)));
+        }
     }
 
     private void updateCommentState() {
@@ -426,6 +436,10 @@ public abstract class StepBaseFragment extends FragmentBase
 
     @Override
     public void onViewPagerScrollStateChanged(ScrollState scrollState) {
+        changeVisibilitySubjects(scrollState);
+    }
+
+    private void changeVisibilitySubjects(ScrollState scrollState) {
         fragmentVisibilitySubject.onNext(scrollState);
         if (scrollState == ScrollState.ACTIVE) {
             commentsVisibilitySubject.onNext(DisplayUtils.isVisible(textForComment));
