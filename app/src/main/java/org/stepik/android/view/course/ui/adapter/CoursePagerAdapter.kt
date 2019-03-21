@@ -9,12 +9,13 @@ import org.stepic.droid.R
 import org.stepik.android.view.course_content.ui.fragment.CourseContentFragment
 import org.stepik.android.view.course_info.ui.fragment.CourseInfoFragment
 import org.stepik.android.view.course_reviews.ui.fragment.CourseReviewsFragment
+import org.stepik.android.view.base.ActivePagerFragmentInterface
 
 class CoursePagerAdapter(
     courseId: Long,
     context: Context,
     fragmentManager: FragmentManager
-) : FragmentPagerAdapter(fragmentManager) {
+) : FragmentPagerAdapter(fragmentManager), ActivePagerFragmentInterface {
     private val fragments = listOf(
         { CourseInfoFragment.newInstance(courseId) }    to context.getString(R.string.course_tab_info),
         { CourseReviewsFragment.newInstance(courseId) } to context.getString(R.string.course_tab_reviews),
@@ -22,7 +23,7 @@ class CoursePagerAdapter(
     )
 
     private val _activeFragments = mutableMapOf<Int, Fragment>()
-    val activeFragments: Map<Int, Fragment>
+    override val activeFragments: Map<Int, Fragment>
         get() = _activeFragments
 
     override fun getItem(position: Int): Fragment =

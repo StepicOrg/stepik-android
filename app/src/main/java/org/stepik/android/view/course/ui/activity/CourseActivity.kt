@@ -38,13 +38,13 @@ import org.stepik.android.model.Course
 import org.stepik.android.presentation.course.CoursePresenter
 import org.stepik.android.presentation.course.CourseView
 import org.stepik.android.presentation.course.model.EnrollmentError
-import org.stepik.android.view.course.listener.CourseFragmentPageChangeListener
 import org.stepik.android.view.course.routing.CourseScreenTab
 import org.stepik.android.view.course.routing.getCourseIdFromDeepLink
 import org.stepik.android.view.course.routing.getCourseTabFromDeepLink
 import org.stepik.android.view.course.ui.adapter.CoursePagerAdapter
 import org.stepik.android.view.course.ui.delegates.CourseHeaderDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
+import org.stepik.android.view.base.SimpleOnScrollStateChangeListener
 import uk.co.chrisjenx.calligraphy.TypefaceUtils
 import javax.inject.Inject
 
@@ -196,7 +196,11 @@ class CourseActivity : FragmentActivityBase(), CourseView {
 
         val coursePagerAdapter = CoursePagerAdapter(courseId, this, supportFragmentManager)
         coursePager.adapter = coursePagerAdapter
-        coursePager.addOnPageChangeListener(CourseFragmentPageChangeListener(coursePager, coursePagerAdapter))
+        coursePager.addOnPageChangeListener(SimpleOnScrollStateChangeListener(
+                coursePager,
+                coursePagerAdapter
+            )
+        )
         coursePager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(scrollState: Int) {
                 viewPagerScrollState = scrollState
