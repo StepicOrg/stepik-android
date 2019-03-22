@@ -44,4 +44,9 @@ constructor(
                 onError = { Timber.d(it) }
             )
     }
+
+    override fun detachView(view: CommentsView) {
+        commentsDisposable.clear()
+        super.detachView(view)
+    }
 }
