@@ -44,7 +44,7 @@ import org.stepik.android.view.course.routing.getCourseTabFromDeepLink
 import org.stepik.android.view.course.ui.adapter.CoursePagerAdapter
 import org.stepik.android.view.course.ui.delegates.CourseHeaderDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
-import org.stepik.android.view.base.SimpleOnScrollStateChangeListener
+import org.stepik.android.view.base.FragmentDelegateScrollStateChangeListener
 import uk.co.chrisjenx.calligraphy.TypefaceUtils
 import javax.inject.Inject
 
@@ -196,7 +196,7 @@ class CourseActivity : FragmentActivityBase(), CourseView {
 
         val coursePagerAdapter = CoursePagerAdapter(courseId, this, supportFragmentManager)
         coursePager.adapter = coursePagerAdapter
-        coursePager.addOnPageChangeListener(SimpleOnScrollStateChangeListener(
+        coursePager.addOnPageChangeListener(FragmentDelegateScrollStateChangeListener(
                 coursePager,
                 coursePagerAdapter
             )

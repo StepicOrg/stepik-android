@@ -3,9 +3,9 @@ package org.stepik.android.view.base
 import android.support.v4.view.ViewPager
 import org.stepik.android.view.ui.listener.FragmentViewPagerScrollStateListener
 
-class SimpleOnScrollStateChangeListener(
+class FragmentDelegateScrollStateChangeListener(
     private val viewPager: ViewPager,
-    private val fragmentAdapter: ActivePagerFragmentInterface
+    private val fragmentAdapter: ActiveFragmentPagerAdapter
 ) : ViewPager.SimpleOnPageChangeListener() {
     override fun onPageScrollStateChanged(state: Int) {
         fragmentAdapter
