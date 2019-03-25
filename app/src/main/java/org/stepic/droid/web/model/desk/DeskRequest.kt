@@ -1,3 +1,14 @@
 package org.stepic.droid.web.model.desk
 
-class DeskRequest(val requester: DeskRequester, val subject: String, val comment: DeskComment)
+import com.google.gson.annotations.SerializedName
+
+class DeskRequest(
+    @SerializedName("requester")
+    val requester: DeskRequester,
+    @SerializedName("subject")
+    val subject: String,
+    @SerializedName("comment")
+    val comment: DeskComment,
+    @SerializedName("custom_fields")
+    val customFields: DeskCustomFields
+)
