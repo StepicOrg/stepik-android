@@ -223,6 +223,7 @@
     color: inherit;
     font-weight: inherit;
     min-height: 2em;
+    display: inline-block;
   }
 
   &.block pre code {
@@ -255,57 +256,62 @@
   }
 
   .hljs {
-      display: block;
-      overflow-x: auto;
       padding: .5em;
-      background: #fdf6e3;
-      color: #657b83;
-      -webkit-text-size-adjust: none
+      background: #f3f4f6;
+      color: #000;
+      -webkit-text-size-adjust: none;
+      -webkit-font-smoothing: antialiased;
   }
 
-  .diff .hljs-header, .hljs-comment, .hljs-doctype, .hljs-pi, .lisp .hljs-string {
-      color: #93a1a1
-  }
+.hljs-comment, .hljs-quote {
+    color: #800
+}
 
-  .css .hljs-tag, .hljs-addition, .hljs-keyword, .hljs-request, .hljs-status,
-  .hljs-winutils, .method, .nginx .hljs-title {
-      color: #859900
-  }
+.hljs-keyword, .hljs-name, .hljs-section, .hljs-selector-tag, .hljs-title {
+    color: #008
+}
 
-  .hljs-command, .hljs-doctag, .hljs-hexcolor, .hljs-link_url, .hljs-number,
-  .hljs-regexp, .hljs-rule .hljs-value, .hljs-string, .hljs-tag .hljs-value,
-  .tex .hljs-formula {
-      color: #2aa198
-  }
+.hljs-template-variable, .hljs-variable {
+    color: #660
+}
 
-  .css .hljs-function, .hljs-built_in, .hljs-chunk, .hljs-decorator,
-  .hljs-id, .hljs-identifier, .hljs-localvars, .hljs-name, .hljs-title,
-  .vhdl .hljs-literal {
-      color: #268bd2
-  }
+.hljs-regexp, .hljs-selector-attr, .hljs-selector-pseudo, .hljs-string {
+    color: #080
+}
 
-  .hljs-attribute, .hljs-class .hljs-title, .hljs-constant, .hljs-link_reference,
-  .hljs-parent, .hljs-type, .hljs-variable, .lisp .hljs-body, .smalltalk .hljs-number {
-      color: #b58900
-  }
+.hljs-bullet, .hljs-link, .hljs-literal, .hljs-meta, .hljs-number,
+.hljs-symbol {
+    color: #066
+}
 
-  .css .hljs-pseudo, .diff .hljs-change, .hljs-attr_selector, .hljs-cdata,
-  .hljs-header, .hljs-pragma, .hljs-preprocessor, .hljs-preprocessor .hljs-keyword,
-  .hljs-shebang, .hljs-special, .hljs-subst, .hljs-symbol, .hljs-symbol .hljs-string {
-      color: #cb4b16
-  }
+.hljs-attr, .hljs-built_in, .hljs-builtin-name, .hljs-doctag, .hljs-params,
+.hljs-title, .hljs-type {
+    color: #606
+}
 
-  .hljs-deletion, .hljs-important {
-      color: #dc322f
-  }
+.hljs-attribute, .hljs-subst {
+    color: #000
+}
 
-  .hljs-link_label {
-      color: #6c71c4
-  }
+.hljs-formula {
+    background-color: #eee
+}
 
-  .tex .hljs-formula {
-      background: #eee8d5
-  }
+.hljs-selector-class, .hljs-selector-id {
+    color: #9B703F
+}
+
+.hljs-addition {
+    background-color: #baeeba
+}
+
+.hljs-deletion {
+    background-color: #ffc8bd
+}
+
+.hljs-doctag, .hljs-strong {
+    font-weight: 700
+}
 
   body table {
       border-collapse: collapse;
