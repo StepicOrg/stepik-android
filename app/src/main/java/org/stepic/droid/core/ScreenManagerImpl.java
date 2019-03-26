@@ -721,10 +721,10 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void showProfileEditPassword(Context context) {
+    public void showProfileEditPassword(Context context, long profileId) {
         if (context instanceof Activity){
             ((Activity) context).overridePendingTransition(org.stepic.droid.R.anim.push_up, org.stepic.droid.R.anim.no_transition);
         }
-        context.startActivity(new Intent(context, ProfileEditPasswordActivity.class));
+        context.startActivity(ProfileEditPasswordActivity.Companion.createIntent(context, profileId));
     }
 }

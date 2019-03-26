@@ -149,5 +149,5 @@ public interface ScreenManager {
 
     void showProfileEdit(Context context, Profile profile);
     void showProfileEditInfo(Context context, Profile profile);
-    void showProfileEditPassword(Context context);
+    void showProfileEditPassword(Context context, long profileId);
 }

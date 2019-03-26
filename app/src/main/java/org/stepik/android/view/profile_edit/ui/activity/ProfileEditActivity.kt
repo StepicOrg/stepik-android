@@ -50,7 +50,7 @@ class ProfileEditActivity : AppCompatActivity() {
                 ProfileEditItem.Type.PERSONAL_INFO ->
                     screenManager.showProfileEditInfo(this, profile)
                 ProfileEditItem.Type.PASSWORD ->
-                    screenManager.showProfileEditPassword(this)
+                    screenManager.showProfileEditPassword(this, profile.id)
             }
         }
 

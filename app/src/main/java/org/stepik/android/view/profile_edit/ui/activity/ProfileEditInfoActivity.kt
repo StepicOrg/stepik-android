@@ -4,6 +4,7 @@ import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.Menu
 import android.view.MenuItem
 import org.stepic.droid.R
 import org.stepic.droid.base.App
@@ -47,12 +48,18 @@ class ProfileEditInfoActivity : AppCompatActivity(), ProfileEditInfoView {
         super.onStop()
     }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.profile_edit_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
-        if (item.itemId == android.R.id.home) {
-            onBackPressed()
-            true
-        } else {
-            false
+        when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                true
+            }
+            else -> false
         }
 
     override fun finish() {
