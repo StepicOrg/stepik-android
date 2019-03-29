@@ -46,6 +46,8 @@ class FragmentArgumentDelegate<T : Any> : ReadWriteProperty<Fragment, T> {
             is java.io.Serializable -> args.putSerializable(key, value)
             else -> throw IllegalStateException("Type ${value.javaClass.canonicalName} of property ${property.name} is not supported")
         }
+
+        this.value = value
     }
 }
 

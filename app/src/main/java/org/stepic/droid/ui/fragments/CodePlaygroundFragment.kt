@@ -45,7 +45,6 @@ class CodePlaygroundFragment : FragmentBase(),
             }
     }
 
-    private var currentLanguage: String? = null
     private var codeToolbarAdapter: CodeToolbarAdapter? = null
     private var onGlobalLayoutListener: ViewTreeObserver.OnGlobalLayoutListener? = null
     private var wasReset: Boolean = false
@@ -85,7 +84,6 @@ class CodePlaygroundFragment : FragmentBase(),
         if (savedInstanceState == null) {
             codeEditor.setText(code)
         }
-        currentLanguage = lang
         codeEditor.lang = extensionForLanguage(lang)
         setHasOptionsMenu(true)
     }
@@ -152,12 +150,12 @@ class CodePlaygroundFragment : FragmentBase(),
 
     override fun onReset() {
         wasReset = true
-        codeEditor.setText(codeOptions.codeTemplates[currentLanguage])
+        codeEditor.setText(codeOptions.codeTemplates[lang])
     }
 
     override fun onLanguageChosen(programmingLanguage: String) {
         wasReset = true
-        currentLanguage = programmingLanguage
+        lang = programmingLanguage
         codeToolbarAdapter?.setLanguage(programmingLanguage)
         codeEditor.setText(codeOptions.codeTemplates[programmingLanguage])
         codeEditor.lang = extensionForLanguage(programmingLanguage)
@@ -166,14 +164,14 @@ class CodePlaygroundFragment : FragmentBase(),
     override fun onBackClick(): Boolean {
         val resultIntent = Intent()
         resultIntent.putExtra(CodePlaygroundActivity.WAS_RESET, wasReset)
-        resultIntent.putExtra(CodePlaygroundActivity.LANG_KEY, currentLanguage)
+        resultIntent.putExtra(CodePlaygroundActivity.LANG_KEY, lang)
         resultIntent.putExtra(CodePlaygroundActivity.CODE_KEY, codeEditor.text.toString())
         activity?.setResult(Activity.RESULT_OK, resultIntent)
         return false
     }
 
     override fun onSymbolClick(symbol: String, offset: Int) {
-        CodeToolbarUtil.reportSelectedSymbol(analytic, currentLanguage, symbol)
+        CodeToolbarUtil.reportSelectedSymbol(analytic, lang, symbol)
         codeEditor.insertText(CodeToolbarUtil.mapToolbarSymbolToPrintable(symbol, codeEditor.indentSize), offset)
     }
 
