@@ -148,6 +148,6 @@ public interface ScreenManager {
     void openDeepLink(Context context, BranchRoute route);
 
     void showProfileEdit(Context context, Profile profile);
-    void showProfileEditInfo(Context context, Profile profile);
-    void showProfileEditPassword(Context context, long profileId);
+    void showProfileEditInfo(Activity activity, Profile profile);
+    void showProfileEditPassword(Activity activity, long profileId);
 }

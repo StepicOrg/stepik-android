@@ -706,25 +706,21 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void showProfileEdit(Context context, Profile profile) {
-        if (context instanceof Activity){
+        if (context instanceof Activity) {
             ((Activity) context).overridePendingTransition(org.stepic.droid.R.anim.push_up, org.stepic.droid.R.anim.no_transition);
         }
         context.startActivity(ProfileEditActivity.Companion.createIntent(context, profile));
     }
 
     @Override
-    public void showProfileEditInfo(Context context, Profile profile) {
-        if (context instanceof Activity){
-            ((Activity) context).overridePendingTransition(org.stepic.droid.R.anim.push_up, org.stepic.droid.R.anim.no_transition);
-        }
-        context.startActivity(new Intent(context, ProfileEditInfoActivity.class));
+    public void showProfileEditInfo(Activity activity, Profile profile) {
+        activity.overridePendingTransition(org.stepic.droid.R.anim.push_up, org.stepic.droid.R.anim.no_transition);
+        activity.startActivityForResult(ProfileEditInfoActivity.Companion.createIntent(activity, profile), ProfileEditInfoActivity.REQUEST_CODE);
     }
 
     @Override
-    public void showProfileEditPassword(Context context, long profileId) {
-        if (context instanceof Activity){
-            ((Activity) context).overridePendingTransition(org.stepic.droid.R.anim.push_up, org.stepic.droid.R.anim.no_transition);
-        }
-        context.startActivity(ProfileEditPasswordActivity.Companion.createIntent(context, profileId));
+    public void showProfileEditPassword(Activity activity, long profileId) {
+        activity.overridePendingTransition(org.stepic.droid.R.anim.push_up, org.stepic.droid.R.anim.no_transition);
+        activity.startActivityForResult(ProfileEditPasswordActivity.Companion.createIntent(activity, profileId), ProfileEditPasswordActivity.REQUEST_CODE);
     }
 }

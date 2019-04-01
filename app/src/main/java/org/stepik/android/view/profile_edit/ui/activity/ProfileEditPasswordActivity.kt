@@ -1,5 +1,6 @@
 package org.stepik.android.view.profile_edit.ui.activity
 
+import android.app.Activity
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
@@ -27,6 +28,8 @@ import javax.inject.Inject
 
 class ProfileEditPasswordActivity : AppCompatActivity(), ProfileEditPasswordView {
     companion object {
+        const val REQUEST_CODE = 12992
+
         private const val EXTRA_PROFILE_ID = "profile_id"
 
         fun createIntent(context: Context, profileId: Long): Intent =
@@ -135,6 +138,7 @@ class ProfileEditPasswordActivity : AppCompatActivity(), ProfileEditPasswordView
 
             ProfileEditPasswordView.State.COMPLETE -> {
                 ProgressHelper.dismiss(supportFragmentManager, LoadingProgressDialogFragment.TAG)
+                setResult(Activity.RESULT_OK)
                 finish()
             }
         }

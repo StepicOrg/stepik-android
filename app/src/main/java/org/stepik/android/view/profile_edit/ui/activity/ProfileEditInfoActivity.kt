@@ -2,6 +2,8 @@ package org.stepik.android.view.profile_edit.ui.activity
 
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
@@ -9,15 +11,28 @@ import android.view.MenuItem
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.ui.util.initCenteredToolbar
+import org.stepik.android.model.user.Profile
 import org.stepik.android.presentation.profile_edit.ProfileEditInfoPresenter
 import org.stepik.android.presentation.profile_edit.ProfileEditInfoView
 import javax.inject.Inject
 
 class ProfileEditInfoActivity : AppCompatActivity(), ProfileEditInfoView {
+    companion object {
+        const val REQUEST_CODE = 120909
+
+        private const val EXTRA_PROFILE = "profile"
+
+        fun createIntent(context: Context, profile: Profile): Intent =
+            Intent(context, ProfileEditInfoActivity::class.java)
+                .putExtra(EXTRA_PROFILE, profile)
+    }
+
     private lateinit var profileEditInfoPresenter: ProfileEditInfoPresenter
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private val profile by lazy { intent.getParcelableExtra<Profile>(EXTRA_PROFILE) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -708,4 +708,7 @@
 
     <string name="profile_edit_error_required_field">Required field</string>
     <string name="profile_edit_error_password">Cannot change password</string>
+
+    <string name="profile_edit_change_success_info">Profile info changed</string>
+    <string name="profile_edit_change_success_password">Password changed</string>
 </resources>
