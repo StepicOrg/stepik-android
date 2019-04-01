@@ -468,4 +468,15 @@
         <item name="colorControlNormal">@color/white</item>
         <item name="android:textColorSecondary">@color/white</item>
     </style>
+
+    <style name="TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="android:textColorPrimary">@color/new_accent_color</item>
+        <item name="colorControlNormal">@color/new_accent_color</item>
+        <item name="colorControlActivated">@color/new_accent_color</item>
+    </style>
+    
+    <style name="TextInputLayout.HelperTextAppearance" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/new_accent_color_opacity_50</item>
+        <item name="android:textSize">12sp</item>
+    </style>
 </resources>

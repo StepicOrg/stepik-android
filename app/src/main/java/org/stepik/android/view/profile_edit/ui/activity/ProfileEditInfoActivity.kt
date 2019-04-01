@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 class ProfileEditInfoActivity : AppCompatActivity(), ProfileEditInfoView {
     companion object {
-        const val REQUEST_CODE = 120909
+        const val REQUEST_CODE = 12090
 
         private const val EXTRA_PROFILE = "profile"
 
