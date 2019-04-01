@@ -678,6 +678,13 @@
     <string name="profile_edit_info_title">Персональные данные</string>
     <string name="profile_edit_info_subtitle">Ваше имя и другая информация</string>
 
+    <string name="profile_edit_info_first_name_hint">Имя</string>
+    <string name="profile_edit_info_last_name_hint">Фамилия</string>
+    <string name="profile_edit_info_name_helper_text">Это имя будет использовано в сертификатах</string>
+    <string name="profile_edit_info_short_bio_hint">Краткая информация</string>
+    <string name="profile_edit_info_short_bio_helper_text">Город, университет, работа…</string>
+    <string name="profile_edit_info_about_hint">О вас</string>
+
     <string name="profile_edit_save">Сохранить</string>
 
     <string name="profile_edit_error_required_field">Обязательное поле</string>

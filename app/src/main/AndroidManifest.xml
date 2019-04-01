@@ -368,7 +368,8 @@
             android:name="org.stepik.android.view.profile_edit.ui.activity.ProfileEditPasswordActivity" />
 
         <activity
-            android:name="org.stepik.android.view.profile_edit.ui.activity.ProfileEditInfoActivity" />
+            android:name="org.stepik.android.view.profile_edit.ui.activity.ProfileEditInfoActivity"
+            android:windowSoftInputMode="adjustResize" />
 
         <receiver
             android:name="org.stepic.droid.receivers.DownloadClickReceiver"

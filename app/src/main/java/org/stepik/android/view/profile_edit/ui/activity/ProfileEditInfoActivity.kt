@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import kotlinx.android.synthetic.main.activity_profile_edit_info.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.ui.util.initCenteredToolbar
@@ -36,7 +37,7 @@ class ProfileEditInfoActivity : AppCompatActivity(), ProfileEditInfoView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_profile_edit_password)
+        setContentView(R.layout.activity_profile_edit_info)
 
         injectComponent()
         profileEditInfoPresenter = ViewModelProviders
@@ -44,6 +45,14 @@ class ProfileEditInfoActivity : AppCompatActivity(), ProfileEditInfoView {
             .get(ProfileEditInfoPresenter::class.java)
 
         initCenteredToolbar(R.string.profile_edit_info_title, showHomeButton = true, homeIndicator = R.drawable.ic_close_dark)
+
+        if (savedInstanceState == null) {
+            firstNameEditText.setText(profile.firstName)
+            lastNameEditText.setText(profile.lastName)
+
+            shortBioEditText.setText(profile.shortBio)
+            aboutEditText.setText(profile.details)
+        }
     }
 
     private fun injectComponent() {
