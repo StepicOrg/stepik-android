@@ -668,7 +668,7 @@
     <string name="retention_notification_day3_title">Время учиться ‍🎓</string>
     <string name="retention_notification_day3_message">Вас давно не было. Заходите и учитесь новому! 💡</string>
 
-
+    <!-- Profile edit -->
     <string name="profile_edit_menu_item">Редактировать профиль</string>
     <string name="profile_edit_password_title">Пароль</string>
     <string name="profile_edit_password_current_hint">Текущий пароль</string>
@@ -679,4 +679,7 @@
     <string name="profile_edit_info_subtitle">Ваше имя и другая информация</string>
 
     <string name="profile_edit_save">Сохранить</string>
+
+    <string name="profile_edit_error_required_field">Обязательное поле</string>
+    <string name="profile_edit_error_password">Ошибка при попытке смены пароля</string>
 </resources>

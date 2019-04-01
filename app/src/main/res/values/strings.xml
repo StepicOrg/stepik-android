@@ -693,7 +693,7 @@
     <string name="retention_notification_day3_title">Time to study ‍🎓</string>
     <string name="retention_notification_day3_message">You haven\'t been here for a while. Come back and continue study! 💡</string>
 
-
+    <!-- Profile edit -->
     <string name="profile_edit_menu_item">Edit profile</string>
     <string name="profile_edit_password_title">Password</string>
     <string name="profile_edit_password_subtitle" translatable="false">************</string>
@@ -705,4 +705,7 @@
     <string name="profile_edit_info_subtitle">Your name and bio</string>
 
     <string name="profile_edit_save">Save</string>
+
+    <string name="profile_edit_error_required_field">Required field</string>
+    <string name="profile_edit_error_password">Cannot change password</string>
 </resources>

@@ -5,15 +5,24 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.Snackbar
+import android.support.v4.app.DialogFragment
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_profile_edit_password.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
+import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.initCenteredToolbar
+import org.stepic.droid.util.ProgressHelper
+import org.stepic.droid.util.setTextColor
 import org.stepik.android.presentation.profile_edit.ProfileEditPasswordPresenter
 import org.stepik.android.presentation.profile_edit.ProfileEditPasswordView
+import org.stepik.android.view.profile_edit.ui.util.ValidateUtil
 import javax.inject.Inject
 
 class ProfileEditPasswordActivity : AppCompatActivity(), ProfileEditPasswordView {
@@ -24,6 +33,9 @@ class ProfileEditPasswordActivity : AppCompatActivity(), ProfileEditPasswordView
             Intent(context, ProfileEditPasswordActivity::class.java)
                 .putExtra(EXTRA_PROFILE_ID, profileId)
     }
+
+    private val progressDialogFragment: DialogFragment =
+        LoadingProgressDialogFragment.newInstance()
 
     private lateinit var profileEditPasswordPresenter: ProfileEditPasswordPresenter
 
@@ -42,6 +54,24 @@ class ProfileEditPasswordActivity : AppCompatActivity(), ProfileEditPasswordView
             .get(ProfileEditPasswordPresenter::class.java)
 
         initCenteredToolbar(R.string.profile_edit_password_title, showHomeButton = true, homeIndicator = R.drawable.ic_close_dark)
+
+        currentPasswordEditText.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                currentPasswordInputLayout.isErrorEnabled = false
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+
+        newPasswordEditText.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                newPasswordInputLayout.isErrorEnabled = false
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
     }
 
     private fun injectComponent() {
@@ -80,12 +110,48 @@ class ProfileEditPasswordActivity : AppCompatActivity(), ProfileEditPasswordView
         }
 
     private fun submit() {
+        val isCurrentPasswordFilled = ValidateUtil.validateRequiredField(currentPasswordInputLayout, currentPasswordEditText)
+        val isNewPasswordFilled = ValidateUtil.validateRequiredField(newPasswordInputLayout, newPasswordEditText)
+
+        if (!isCurrentPasswordFilled ||
+            !isNewPasswordFilled) {
+            return
+        }
+
         val currentPassword = currentPasswordEditText.text.toString()
         val newPassword = newPasswordEditText.text.toString()
-        val newPasswordAgain = newPasswordAgainEditText.text.toString()
 
         profileEditPasswordPresenter
             .updateProfilePassword(profileId, currentPassword, newPassword)
+    }
+
+    override fun setState(state: ProfileEditPasswordView.State) {
+        when (state) {
+            ProfileEditPasswordView.State.IDLE ->
+                ProgressHelper.dismiss(supportFragmentManager, LoadingProgressDialogFragment.TAG)
+
+            ProfileEditPasswordView.State.LOADING ->
+                ProgressHelper.activate(progressDialogFragment, supportFragmentManager, LoadingProgressDialogFragment.TAG)
+
+            ProfileEditPasswordView.State.COMPLETE -> {
+                ProgressHelper.dismiss(supportFragmentManager, LoadingProgressDialogFragment.TAG)
+                finish()
+            }
+        }
+    }
+
+    override fun showNetworkError() {
+        Snackbar
+            .make(root, R.string.no_connection, Snackbar.LENGTH_SHORT)
+            .setTextColor(ContextCompat.getColor(this, R.color.white))
+            .show()
+    }
+
+    override fun showPasswordError() {
+        Snackbar
+            .make(root, R.string.profile_edit_error_password, Snackbar.LENGTH_SHORT)
+            .setTextColor(ContextCompat.getColor(this, R.color.white))
+            .show()
     }
 
     override fun finish() {
