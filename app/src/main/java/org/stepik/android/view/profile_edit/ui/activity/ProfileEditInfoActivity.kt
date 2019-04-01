@@ -1,17 +1,24 @@
 package org.stepik.android.view.profile_edit.ui.activity
 
+import android.app.Activity
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.Snackbar
+import android.support.v4.app.DialogFragment
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_profile_edit_info.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
+import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.initCenteredToolbar
+import org.stepic.droid.util.ProgressHelper
+import org.stepic.droid.util.setTextColor
 import org.stepik.android.model.user.Profile
 import org.stepik.android.presentation.profile_edit.ProfileEditInfoPresenter
 import org.stepik.android.presentation.profile_edit.ProfileEditInfoView
@@ -27,6 +34,9 @@ class ProfileEditInfoActivity : AppCompatActivity(), ProfileEditInfoView {
             Intent(context, ProfileEditInfoActivity::class.java)
                 .putExtra(EXTRA_PROFILE, profile)
     }
+
+    private val progressDialogFragment: DialogFragment =
+        LoadingProgressDialogFragment.newInstance()
 
     private lateinit var profileEditInfoPresenter: ProfileEditInfoPresenter
 
@@ -47,11 +57,11 @@ class ProfileEditInfoActivity : AppCompatActivity(), ProfileEditInfoView {
         initCenteredToolbar(R.string.profile_edit_info_title, showHomeButton = true, homeIndicator = R.drawable.ic_close_dark)
 
         if (savedInstanceState == null) {
-            firstNameEditText.setText(profile.firstName)
-            lastNameEditText.setText(profile.lastName)
+            firstNameEditText.setText(profile.firstName ?: "")
+            lastNameEditText.setText(profile.lastName ?: "")
 
-            shortBioEditText.setText(profile.shortBio)
-            aboutEditText.setText(profile.details)
+            shortBioEditText.setText(profile.shortBio ?: "")
+            detailsEditText.setText(profile.details ?: "")
         }
     }
 
@@ -83,11 +93,71 @@ class ProfileEditInfoActivity : AppCompatActivity(), ProfileEditInfoView {
                 onBackPressed()
                 true
             }
+            R.id.profile_edit_save -> {
+                submit()
+                true
+            }
             else -> false
         }
+
+    private fun submit() {
+        val firstName = firstNameEditText.text.toString()
+        val lastName = lastNameEditText.text.toString()
+        val shortBio = shortBioEditText.text.toString()
+        val details = detailsEditText.text.toString()
+
+        profileEditInfoPresenter.updateProfileInfo(profile, firstName, lastName, shortBio, details)
+    }
+
+    override fun setState(state: ProfileEditInfoView.State) {
+        when (state) {
+            ProfileEditInfoView.State.IDLE ->
+                ProgressHelper.dismiss(supportFragmentManager, LoadingProgressDialogFragment.TAG)
+
+            ProfileEditInfoView.State.LOADING ->
+                ProgressHelper.activate(progressDialogFragment, supportFragmentManager, LoadingProgressDialogFragment.TAG)
+
+            ProfileEditInfoView.State.COMPLETE -> {
+                ProgressHelper.dismiss(supportFragmentManager, LoadingProgressDialogFragment.TAG)
+                setResult(Activity.RESULT_OK)
+                finish()
+            }
+        }
+    }
+
+    override fun showNetworkError() {
+        Snackbar
+            .make(root, R.string.no_connection, Snackbar.LENGTH_SHORT)
+            .setTextColor(ContextCompat.getColor(this, R.color.white))
+            .show()
+    }
+
+    override fun showInfoError() {
+        Snackbar
+            .make(root, R.string.profile_edit_error_info, Snackbar.LENGTH_SHORT)
+            .setTextColor(ContextCompat.getColor(this, R.color.white))
+            .show()
+    }
 
     override fun finish() {
         super.finish()
         overridePendingTransition(org.stepic.droid.R.anim.no_transition, org.stepic.droid.R.anim.push_down)
+    }
+
+    override fun onBackPressed() {
+        val firstName = firstNameEditText.text.toString()
+        val lastName = lastNameEditText.text.toString()
+        val shortBio = shortBioEditText.text.toString()
+        val details = detailsEditText.text.toString()
+
+        if (profile.firstName == firstName &&
+            profile.lastName == lastName &&
+            profile.shortBio == shortBio &&
+            profile.details == details
+        ) {
+            super.onBackPressed()
+        } else {
+            // show dialog
+        }
     }
 }

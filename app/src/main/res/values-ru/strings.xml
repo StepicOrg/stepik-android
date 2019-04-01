@@ -689,6 +689,7 @@
 
     <string name="profile_edit_error_required_field">Обязательное поле</string>
     <string name="profile_edit_error_password">Ошибка при попытке смены пароля</string>
+    <string name="profile_edit_error_info">Ошибка при попытке изменения информации</string>
 
     <string name="profile_edit_change_success_info">Информация обновлена</string>
     <string name="profile_edit_change_success_password">Пароль изменен</string>
