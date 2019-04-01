@@ -461,7 +461,7 @@ class ProfileFragment : FragmentBase(),
             inflater.inflate(R.menu.profile_menu, menu)
 
             menu?.findItem(R.id.menu_item_edit)?.isVisible =
-                localUserViewModel?.isMyProfile == true
+                localUserViewModel?.isMyProfile == true && localUserViewModel?.profile != null
         }
     }
 
@@ -472,7 +472,9 @@ class ProfileFragment : FragmentBase(),
                 return true
             }
             R.id.menu_item_edit -> {
-                screenManager.showProfileEdit(context, Profile()) // todo replace with real profile
+                localUserViewModel?.profile?.let { profile ->
+                    screenManager.showProfileEdit(context, profile)
+                }
                 return true
             }
         }

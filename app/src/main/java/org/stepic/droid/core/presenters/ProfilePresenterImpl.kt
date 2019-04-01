@@ -111,7 +111,8 @@ class ProfilePresenterImpl
                     information = stringOrEmpty((user.details)),
                     isMyProfile = false,
                     isPrivate = user.isPrivate,
-                    id = userId)
+                    id = userId,
+                    profile = null)
             this.userViewModel = userViewModelLocal
 
             mainHandler.post {
@@ -166,7 +167,8 @@ class ProfilePresenterImpl
                 information = stringOrEmpty(profile.details),
                 isMyProfile = isMyProfile,
                 isPrivate = profile.isPrivate,
-                id = profile.id)
+                id = profile.id,
+                profile = profile)
         this.userViewModel = userViewModelLocal
 
 
