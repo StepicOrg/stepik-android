@@ -37,8 +37,10 @@ constructor(
 
     fun updateProfileInfo(
         profile: Profile,
-        firstName: String, lastName: String,
-        shortBio: String, details: String
+        firstName: String,
+        lastName: String,
+        shortBio: String,
+        details: String
     ) {
         if (state != ProfileEditInfoView.State.IDLE) return
 
@@ -78,5 +80,4 @@ constructor(
                 }
             )
     }
-
 }
