@@ -23,6 +23,7 @@ import kotlinx.android.synthetic.main.fragment_profile_new.*
 import kotlinx.android.synthetic.main.latex_supportabe_enhanced_view.view.*
 import kotlinx.android.synthetic.main.view_notification_interval_chooser.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentBase
@@ -472,6 +473,7 @@ class ProfileFragment : FragmentBase(),
             }
             R.id.menu_item_edit -> {
                 localUserViewModel?.profile?.let { profile ->
+                    analytic.reportAmplitudeEvent(AmplitudeAnalytic.ProfileEdit.SCREEN_OPENED)
                     screenManager.showProfileEdit(context, profile)
                 }
                 return true

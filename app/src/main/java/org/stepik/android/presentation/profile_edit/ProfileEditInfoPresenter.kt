@@ -3,6 +3,8 @@ package org.stepik.android.presentation.profile_edit
 import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
+import org.stepic.droid.analytic.AmplitudeAnalytic
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.profile_edit.ProfileEditInteractor
@@ -14,6 +16,7 @@ import javax.inject.Inject
 class ProfileEditInfoPresenter
 @Inject
 constructor(
+    private val analytic: Analytic,
     private val profileEditInteractor: ProfileEditInteractor,
 
     @BackgroundScheduler
@@ -61,7 +64,10 @@ constructor(
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
-                onComplete = { state = ProfileEditInfoView.State.COMPLETE },
+                onComplete = {
+                    state = ProfileEditInfoView.State.COMPLETE
+                    analytic.reportAmplitudeEvent(AmplitudeAnalytic.ProfileEdit.SAVED)
+                },
                 onError = {
                     state = ProfileEditInfoView.State.IDLE
                     if (it is HttpException) {
