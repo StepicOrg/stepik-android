@@ -27,6 +27,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.inOrder;
@@ -82,7 +83,7 @@ public class ProfilePresenterTest {
                 api,
                 sharedPreferenceHelper,
                 Observable.empty(),
-                AndroidSchedulers.mainThread()
+                Schedulers.io()
         );
     }
 
@@ -115,7 +116,7 @@ public class ProfilePresenterTest {
         String details = " details";
 
         preferencesProfileModel = FakeProfileGenerator.INSTANCE.generate(profileId, name, lastName, imageLink, shortBio, details);
-        fromPreferencesUserViewModel = new UserViewModel(name + " " + lastName, shortBio, details, imageLink, isMyProfile, isPrivate, profileId, null);
+        fromPreferencesUserViewModel = new UserViewModel(name + " " + lastName, shortBio, details, imageLink, isMyProfile, isPrivate, profileId, preferencesProfileModel);
     }
 
     @Test
