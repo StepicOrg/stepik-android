@@ -25,6 +25,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ThreadPoolExecutor;
 
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
@@ -32,7 +35,6 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
 
 public class ProfilePresenterTest {
 
@@ -78,7 +80,9 @@ public class ProfilePresenterTest {
                 analytic,
                 mainHandler,
                 api,
-                sharedPreferenceHelper
+                sharedPreferenceHelper,
+                Observable.empty(),
+                AndroidSchedulers.mainThread()
         );
     }
 
@@ -97,7 +101,7 @@ public class ProfilePresenterTest {
         String details = " DetailedInfo";
 
         fakeUserFromApi = FakeUserGenerator.INSTANCE.generate(profileId, name, lastName, imageLink, shortBio, details);
-        fromApiUserViewModel = new UserViewModel(name + " " + lastName, shortBio, details, imageLink, isMyProfile, isPrivate, profileId);
+        fromApiUserViewModel = new UserViewModel(name + " " + lastName, shortBio, details, imageLink, isMyProfile, isPrivate, profileId, null);
     }
 
     private void generateLocalModels() {
@@ -111,7 +115,7 @@ public class ProfilePresenterTest {
         String details = " details";
 
         preferencesProfileModel = FakeProfileGenerator.INSTANCE.generate(profileId, name, lastName, imageLink, shortBio, details);
-        fromPreferencesUserViewModel = new UserViewModel(name + " " + lastName, shortBio, details, imageLink, isMyProfile, isPrivate, profileId);
+        fromPreferencesUserViewModel = new UserViewModel(name + " " + lastName, shortBio, details, imageLink, isMyProfile, isPrivate, profileId, null);
     }
 
     @Test
