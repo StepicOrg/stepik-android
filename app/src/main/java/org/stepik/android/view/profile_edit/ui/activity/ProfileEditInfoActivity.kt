@@ -143,21 +143,4 @@ class ProfileEditInfoActivity : AppCompatActivity(), ProfileEditInfoView {
         super.finish()
         overridePendingTransition(org.stepic.droid.R.anim.no_transition, org.stepic.droid.R.anim.push_down)
     }
-
-    override fun onBackPressed() {
-        val firstName = firstNameEditText.text.toString()
-        val lastName = lastNameEditText.text.toString()
-        val shortBio = shortBioEditText.text.toString()
-        val details = detailsEditText.text.toString()
-
-        if (profile.firstName == firstName &&
-            profile.lastName == lastName &&
-            profile.shortBio == shortBio &&
-            profile.details == details
-        ) {
-            super.onBackPressed()
-        } else {
-            // show dialog
-        }
-    }
 }
