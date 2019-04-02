@@ -354,10 +354,9 @@ class ProfileFragment : FragmentBase(),
         }
 
         with(userViewModel) {
+            shortBioInfoContainer.changeVisibility(shortBio.isNotBlank() || information.isNotBlank())
+            shortBioSecondHeader.changeVisibility(shortBio.isNotBlank() && information.isNotBlank())
             when {
-                shortBio.isBlank() && information.isBlank() ->
-                    shortBioInfoContainer.visibility = View.GONE //do not show any header
-
                 shortBio.isBlank() && information.isNotBlank() ->
                     shortBioFirstHeader.setText(R.string.user_info) //show header with 'information'
 
@@ -366,7 +365,6 @@ class ProfileFragment : FragmentBase(),
 
                 shortBio.isNotBlank() && information.isNotBlank() -> { //show general header and all info
                     shortBioFirstHeader.setText(R.string.short_bio_and_info)
-                    shortBioSecondHeader.visibility = View.VISIBLE
                     shortBioSecondHeader.setText(R.string.user_info)
                 }
             }
@@ -375,6 +373,7 @@ class ProfileFragment : FragmentBase(),
                 shortBioFirstText.visibility = View.GONE
             } else {
                 shortBioFirstText.text = shortBio.trim()
+                shortBioFirstText.visibility = View.VISIBLE
             }
 
             if (information.isBlank()) {
@@ -382,6 +381,7 @@ class ProfileFragment : FragmentBase(),
             } else {
                 shortBioSecondText.setPlainOrLaTeXTextWithCustomFontColored(
                         information, fontsProvider.provideFontPath(FontType.light), R.color.new_accent_color, false)
+                shortBioSecondText.visibility = View.VISIBLE
             }
         }
     }
