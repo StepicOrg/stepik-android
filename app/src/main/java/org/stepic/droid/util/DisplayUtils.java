@@ -3,6 +3,7 @@ package org.stepic.droid.util;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Rect;
+import android.support.v4.widget.NestedScrollView;
 import android.view.View;
 
 public class DisplayUtils {
@@ -24,16 +25,13 @@ public class DisplayUtils {
         return Resources.getSystem().getDisplayMetrics().widthPixels;
     }
 
-    public static boolean isVisible(final View view) {
-        if (view == null) {
-            return false;
-        }
-        if (!view.isShown()) {
-            return false;
-        }
-        final Rect actualPosition = new Rect();
-        view.getGlobalVisibleRect(actualPosition);
-        final Rect screen = new Rect(0, 0, getScreenWidth(), getScreenHeight());
-        return actualPosition.intersect(screen);
+    public static boolean isVisible(NestedScrollView scrollView, View view) {
+        Rect scrollBounds = new Rect();
+        scrollView.getDrawingRect(scrollBounds);
+
+        float top = view.getY();
+        float bottom = top + view.getHeight();
+
+        return scrollBounds.top <= top && scrollBounds.bottom >= bottom;
     }
 }
