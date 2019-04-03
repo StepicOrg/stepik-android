@@ -1,6 +1,6 @@
 ext.versions = [
-        code                 : 2018,
-        name                 : '1.79',
+        code                 : 2019,
+        name                 : '1.80',
 
         minSdk               : 15,
         targetSdk            : 26,
@@ -71,7 +71,7 @@ ext.versions = [
         MPAndroidChart       : 'v3.0.3',
 
         shortcutBadger       : '1.1.19@aar',
-        StoriesKit           : '1.0.1@aar',
+        StoriesKit           : '1.1.1',
 
         stetho               : '1.4.2',
         leakCanary           : '1.5.1',

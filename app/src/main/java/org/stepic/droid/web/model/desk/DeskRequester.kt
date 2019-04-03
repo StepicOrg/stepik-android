@@ -1,3 +1,10 @@
 package org.stepic.droid.web.model.desk
 
-class DeskRequester(val name: String, val email: String)
+import com.google.gson.annotations.SerializedName
+
+class DeskRequester(
+    @SerializedName("name")
+    val name: String,
+    @SerializedName("email")
+    val email: String
+)
