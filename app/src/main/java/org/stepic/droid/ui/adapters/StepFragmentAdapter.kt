@@ -12,10 +12,10 @@ import org.stepik.android.model.Section
 import org.stepik.android.model.Unit
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.resolvers.StepTypeResolver
-import org.stepik.android.view.base.ActiveFragmentPagerAdapter
+import org.stepik.android.view.fragment_pager.ActiveFragmentPagerAdapter
 
 class StepFragmentAdapter(fm: FragmentManager, val stepList: List<StepPersistentWrapper?>, val stepTypeResolver: StepTypeResolver) : FragmentStatePagerAdapter(fm),
-    ActiveFragmentPagerAdapter {
+        ActiveFragmentPagerAdapter {
 
     private var lesson: Lesson? = null
     private var unit: Unit? = null
