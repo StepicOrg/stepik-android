@@ -8,6 +8,7 @@ import org.stepic.droid.analytic.experiments.CommentsTooltipSplitTest
 import org.stepic.droid.core.presenters.contracts.CommentsView
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
+import org.stepic.droid.util.emptyOnErrorStub
 import org.stepik.android.domain.comments.interactor.CommentsInteractor
 import timber.log.Timber
 import javax.inject.Inject
@@ -41,18 +42,18 @@ constructor(
                         view?.showCommentsBanner()
                     }
                 },
-                onError = { Timber.d(it) }
+                onError = emptyOnErrorStub
             )
     }
 
-    fun addCourseId(courseId: Long) {
+    fun onBannerShown(courseId: Long) {
         commentsDisposable += commentsBannerInteractor
-            .addCourseId(courseId)
+            .onBannerShown(courseId)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
                 onComplete = { Timber.d("Complete") },
-                onError = { Timber.d(it) }
+                onError = emptyOnErrorStub
             )
     }
 

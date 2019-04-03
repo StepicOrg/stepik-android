@@ -211,7 +211,7 @@ public abstract class StepBaseFragment extends FragmentBase
                     true,
                     true
                 );
-                commentsBannerPresenter.addCourseId(section.getCourse());
+                commentsBannerPresenter.onBannerShown(section.getCourse());
             }));
     }
 
