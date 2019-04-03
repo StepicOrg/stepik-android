@@ -52,7 +52,6 @@ import io.reactivex.subjects.BehaviorSubject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
 import static org.stepic.droid.util.RxUtilKt.zip;
 
 public abstract class StepBaseFragment extends FragmentBase
@@ -267,7 +266,7 @@ public abstract class StepBaseFragment extends FragmentBase
         });
         int discussionCount = step.getDiscussionsCount();
         if (discussionCount > 0) {
-            commentsBannerPresenter.fetchCommentsBanner(section.getCourse());
+            if (section != null) commentsBannerPresenter.fetchCommentsBanner(section.getCourse());
             textForComment.setText(App.Companion.getAppContext().getResources().getQuantityString(R.plurals.open_comments, discussionCount, discussionCount));
         } else {
             textForComment.setText(App.Companion.getAppContext().getResources().getString(R.string.open_comments_zero));
