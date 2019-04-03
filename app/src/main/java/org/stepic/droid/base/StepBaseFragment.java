@@ -236,7 +236,7 @@ public abstract class StepBaseFragment extends FragmentBase
 
     protected void setFirstViewPagerElementActive() {
         if (step.getPosition() == 1) {
-            uiCompositeDisposable.add(Completable.timer(1, TimeUnit.SECONDS, AndroidSchedulers.mainThread())
+            uiCompositeDisposable.add(Completable.timer(3, TimeUnit.SECONDS, AndroidSchedulers.mainThread())
                 .subscribe(() -> changeVisibilitySubjects(ScrollState.ACTIVE)));
         }
     }
