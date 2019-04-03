@@ -196,11 +196,7 @@ class CourseActivity : FragmentActivityBase(), CourseView {
 
         val coursePagerAdapter = CoursePagerAdapter(courseId, this, supportFragmentManager)
         coursePager.adapter = coursePagerAdapter
-        coursePager.addOnPageChangeListener(FragmentDelegateScrollStateChangeListener(
-                coursePager,
-                coursePagerAdapter
-        )
-        )
+        coursePager.addOnPageChangeListener(FragmentDelegateScrollStateChangeListener(coursePager, coursePagerAdapter))
         coursePager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(scrollState: Int) {
                 viewPagerScrollState = scrollState
