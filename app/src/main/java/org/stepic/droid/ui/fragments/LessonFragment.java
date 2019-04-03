@@ -49,7 +49,7 @@ import org.stepic.droid.util.StringUtil;
 import org.stepic.droid.util.resolvers.StepHelper;
 import org.stepic.droid.util.resolvers.StepTypeResolver;
 import org.stepic.droid.web.ViewAssignment;
-import org.stepik.android.view.base.FragmentDelegateScrollStateChangeListener;
+import org.stepik.android.view.fragment_pager.FragmentDelegateScrollStateChangeListener;
 
 import java.util.HashMap;
 import java.util.Map;

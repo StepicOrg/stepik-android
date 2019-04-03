@@ -9,7 +9,7 @@ import org.stepic.droid.R
 import org.stepik.android.view.course_content.ui.fragment.CourseContentFragment
 import org.stepik.android.view.course_info.ui.fragment.CourseInfoFragment
 import org.stepik.android.view.course_reviews.ui.fragment.CourseReviewsFragment
-import org.stepik.android.view.base.ActiveFragmentPagerAdapter
+import org.stepik.android.view.fragment_pager.ActiveFragmentPagerAdapter
 
 class CoursePagerAdapter(
     courseId: Long,

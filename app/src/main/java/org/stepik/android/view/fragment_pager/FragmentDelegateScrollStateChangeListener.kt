@@ -1,4 +1,4 @@
-package org.stepik.android.view.base
+package org.stepik.android.view.fragment_pager
 
 import android.support.v4.view.ViewPager
 import org.stepik.android.view.ui.listener.FragmentViewPagerScrollStateListener
