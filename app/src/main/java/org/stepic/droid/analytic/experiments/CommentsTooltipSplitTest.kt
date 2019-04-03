@@ -4,12 +4,12 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import javax.inject.Inject
 
-class CommentsSplitTest
+class CommentsTooltipSplitTest
 @Inject
 constructor(
     analytics: Analytic,
     sharedPreferenceHelper: SharedPreferenceHelper
-) : SplitTest<CommentsSplitTest.Group>(
+) : SplitTest<CommentsTooltipSplitTest.Group>(
     analytics,
     sharedPreferenceHelper,
 

@@ -4,7 +4,7 @@ import io.reactivex.Scheduler
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
-import org.stepic.droid.analytic.experiments.CommentsSplitTest
+import org.stepic.droid.analytic.experiments.CommentsTooltipSplitTest
 import org.stepic.droid.core.presenters.contracts.CommentsView
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
@@ -16,7 +16,7 @@ class CommentsBannerPresenter
 @Inject
 constructor(
     private val commentsBannerInteractor: CommentsInteractor,
-    private val commentsSplitTest: CommentsSplitTest,
+    private val commentsTooltipSplitTest: CommentsTooltipSplitTest,
 
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
@@ -28,7 +28,7 @@ constructor(
     private val commentsDisposable = CompositeDisposable()
 
     fun fetchCommentsBanner(courseId: Long) {
-        if (!commentsSplitTest.currentGroup.isCommentsToolTipEnabled) {
+        if (!commentsTooltipSplitTest.currentGroup.isCommentsToolTipEnabled) {
             return
         }
         commentsDisposable += commentsBannerInteractor
