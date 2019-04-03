@@ -9,6 +9,7 @@ import org.stepic.droid.analytic.experiments.AchievementsSplitTest
 import org.stepic.droid.analytic.experiments.CommentsSplitTest
 import org.stepic.droid.analytic.experiments.SplitTest
 import org.stepic.droid.analytic.experiments.PersonalDeadlinesSplitTest
+import org.stepic.droid.analytic.experiments.VideoSplitTest
 import org.stepic.droid.di.AppSingleton
 
 @Module
@@ -32,4 +33,8 @@ abstract class AnalyticModule {
     @IntoSet
     internal abstract fun bindCommentsSplitTest(commentsSplitTest: CommentsSplitTest): SplitTest<*>
 
+    @AppSingleton
+    @Binds
+    @IntoSet
+    internal abstract fun bindVideoSplitTest(videoSplitTest: VideoSplitTest): SplitTest<*>
 }
