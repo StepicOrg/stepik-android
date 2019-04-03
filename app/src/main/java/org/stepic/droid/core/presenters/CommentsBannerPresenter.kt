@@ -45,6 +45,17 @@ constructor(
             )
     }
 
+    fun addCourseId(courseId: Long) {
+        commentsDisposable += commentsBannerInteractor
+            .addCourseId(courseId)
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onComplete = { Timber.d("Complete") },
+                onError = { Timber.d(it) }
+            )
+    }
+
     override fun detachView(view: CommentsView) {
         commentsDisposable.clear()
         super.detachView(view)
