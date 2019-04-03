@@ -25,6 +25,8 @@ import org.stepic.droid.storage.DatabaseHelper
 import org.stepic.droid.storage.dao.*
 import org.stepic.droid.storage.operations.*
 import org.stepic.droid.web.ViewAssignment
+import org.stepik.android.cache.comments.dao.CommentsBannerDao
+import org.stepik.android.cache.comments.dao.CommentsBannerDaoImpl
 import org.stepik.android.cache.user.dao.UserDaoImpl
 import org.stepik.android.cache.video.dao.VideoEntityDaoImpl
 import org.stepik.android.cache.video.dao.VideoDao
@@ -168,6 +170,10 @@ abstract class StorageModule {
     @StorageSingleton
     @Binds
     internal abstract fun bindCourseReviewsDao(courseReviewsDaoImpl: CourseReviewsDaoImpl): IDao<CourseReview>
+
+    @StorageSingleton
+    @Binds
+    internal abstract fun provideCommentsBannerDao(commentsBannerDaoImpl: CommentsBannerDaoImpl): CommentsBannerDao
 
     @Module
     companion object {

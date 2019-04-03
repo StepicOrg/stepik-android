@@ -1,15 +1,14 @@
-package org.stepik.android.view.course.listener
+package org.stepik.android.view.fragment_pager
 
 import android.support.v4.view.ViewPager
-import org.stepik.android.view.course.ui.adapter.CoursePagerAdapter
 import org.stepik.android.view.ui.listener.FragmentViewPagerScrollStateListener
 
-class CourseFragmentPageChangeListener(
+class FragmentDelegateScrollStateChangeListener(
     private val viewPager: ViewPager,
-    private val coursePagerAdapter: CoursePagerAdapter
+    private val fragmentAdapter: ActiveFragmentPagerAdapter
 ) : ViewPager.SimpleOnPageChangeListener() {
     override fun onPageScrollStateChanged(state: Int) {
-        coursePagerAdapter
+        fragmentAdapter
             .activeFragments
             .entries
             .forEach { (position, fragment) ->
