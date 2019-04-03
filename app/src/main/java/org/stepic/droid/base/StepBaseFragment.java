@@ -211,6 +211,7 @@ public abstract class StepBaseFragment extends FragmentBase
                     true,
                     true
                 );
+                commentsBannerPresenter.addCourseId(section.getCourse());
             }));
     }
 
@@ -228,16 +229,17 @@ public abstract class StepBaseFragment extends FragmentBase
             @Override
             public void onScrollChange(NestedScrollView nestedScrollView, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
                 if (scrollY == (nestedScrollView.getChildAt(0).getMeasuredHeight() - nestedScrollView.getMeasuredHeight())) {
-                    commentsVisibilitySubject.onNext(DisplayUtils.isVisible(textForComment));
+                    commentsVisibilitySubject.onNext(DisplayUtils.isVisible(nestedScrollView, textForComment));
                 }
             }
         });
     }
 
-    protected void setFirstViewPagerElementActive() {
-        if (step.getPosition() == 1) {
-            uiCompositeDisposable.add(Completable.timer(1, TimeUnit.SECONDS, AndroidSchedulers.mainThread())
-                .subscribe(() -> changeVisibilitySubjects(ScrollState.ACTIVE)));
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            checkCommentsBanner();
         }
     }
 
@@ -266,7 +268,6 @@ public abstract class StepBaseFragment extends FragmentBase
         });
         int discussionCount = step.getDiscussionsCount();
         if (discussionCount > 0) {
-            if (section != null) commentsBannerPresenter.fetchCommentsBanner(section.getCourse());
             textForComment.setText(App.Companion.getAppContext().getResources().getQuantityString(R.plurals.open_comments, discussionCount, discussionCount));
         } else {
             textForComment.setText(App.Companion.getAppContext().getResources().getString(R.string.open_comments_zero));
@@ -440,8 +441,18 @@ public abstract class StepBaseFragment extends FragmentBase
 
     private void changeVisibilitySubjects(ScrollState scrollState) {
         fragmentVisibilitySubject.onNext(scrollState);
-        if (scrollState == ScrollState.ACTIVE) {
-            commentsVisibilitySubject.onNext(DisplayUtils.isVisible(textForComment));
+        if (scrollState == ScrollState.ACTIVE && nestedScrollView != null) {
+            commentsVisibilitySubject.onNext(DisplayUtils.isVisible(nestedScrollView, textForComment));
         }
+    }
+
+    private void checkCommentsBanner() {
+        uiCompositeDisposable.add(Completable.timer(3, TimeUnit.SECONDS, AndroidSchedulers.mainThread())
+                .subscribe(() -> {
+                    if (section != null && step.getDiscussionsCount() > 0) {
+                        changeVisibilitySubjects(ScrollState.ACTIVE);
+                        commentsBannerPresenter.fetchCommentsBanner(section.getCourse());
+                    }
+                }));
     }
 }

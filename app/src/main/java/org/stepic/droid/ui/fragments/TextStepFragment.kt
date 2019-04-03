@@ -15,7 +15,6 @@ class TextStepFragment : StepBaseFragment() {
 
     override fun attachStepTextWrapper() {
         stepTextWrapper.attach(stepContainer)
-        setFirstViewPagerElementActive()
     }
 
     override fun detachStepTextWrapper() {
