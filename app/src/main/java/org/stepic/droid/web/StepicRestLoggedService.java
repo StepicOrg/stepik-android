@@ -8,6 +8,7 @@ import org.stepik.android.model.EnrollmentWrapper;
 import org.stepik.android.remote.course_payments.model.CoursePaymentRequest;
 import org.stepik.android.remote.course_payments.model.CoursePaymentsResponse;
 import org.stepik.android.remote.course_reviews.model.CourseReviewsResponse;
+import org.stepik.android.remote.email_address.model.EmailAddressResponse;
 
 import java.util.List;
 

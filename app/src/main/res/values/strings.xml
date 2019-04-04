@@ -693,5 +693,33 @@
     <string name="retention_notification_day3_title">Time to study ‍🎓</string>
     <string name="retention_notification_day3_message">You haven\'t been here for a while. Come back and continue study! 💡</string>
 
+
     <string name="step_comment_tooltip">Open discussions for better understanding or asking a question</string>
+
+    <!-- Profile edit -->
+    <string name="profile_edit_menu_item">Edit profile</string>
+    <string name="profile_edit_password_title">Password</string>
+    <string name="profile_edit_password_subtitle" translatable="false">************</string>
+    <string name="profile_edit_password_current_hint">Current password</string>
+    <string name="profile_edit_password_new_hint">New password</string>
+    <string name="profile_edit_password_new_repeat_hint">New password (repeat)</string>
+
+    <string name="profile_edit_info_title">Personal info</string>
+    <string name="profile_edit_info_subtitle">Your name and bio</string>
+
+    <string name="profile_edit_info_first_name_hint">First name</string>
+    <string name="profile_edit_info_last_name_hint">Last name</string>
+    <string name="profile_edit_info_name_helper_text">This name will be used in certificates</string>
+    <string name="profile_edit_info_short_bio_hint">Short bio</string>
+    <string name="profile_edit_info_short_bio_helper_text">City, university, job and etc.</string>
+    <string name="profile_edit_info_about_hint">About</string>
+
+    <string name="profile_edit_save">Save</string>
+
+    <string name="profile_edit_error_required_field">Required field</string>
+    <string name="profile_edit_error_password">Cannot change password</string>
+    <string name="profile_edit_error_info">Cannot change info</string>
+
+    <string name="profile_edit_change_success_info">Profile info changed</string>
+    <string name="profile_edit_change_success_password">Password changed</string>
 </resources>

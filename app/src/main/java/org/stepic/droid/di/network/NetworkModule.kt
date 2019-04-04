@@ -12,6 +12,8 @@ import org.stepic.droid.web.ApiImpl
 import org.stepic.droid.web.StepicRestLoggedService
 import org.stepic.droid.web.achievements.AchievementsService
 import org.stepic.droid.web.storage.RemoteStorageService
+import org.stepik.android.view.injection.base.Authorized
+import retrofit2.Retrofit
 
 @Module(includes = [NetworkUtilModule::class])
 abstract class NetworkModule {
@@ -27,16 +29,26 @@ abstract class NetworkModule {
         @Provides
         @AppSingleton
         @JvmStatic
-        fun provideLoggedService(apiImpl: ApiImpl): StepicRestLoggedService = apiImpl.loggedService
+        fun provideLoggedService(apiImpl: ApiImpl): StepicRestLoggedService =
+            apiImpl.loggedService
 
         @Provides
         @AppSingleton
         @JvmStatic
-        fun provideRemoteStorageService(apiImpl: ApiImpl): RemoteStorageService = apiImpl.remoteStorageService
+        fun provideRemoteStorageService(apiImpl: ApiImpl): RemoteStorageService =
+            apiImpl.remoteStorageService
 
         @Provides
         @AppSingleton
         @JvmStatic
-        fun provideAchievementsService(apiImpl: ApiImpl): AchievementsService = apiImpl.achievementsService
+        fun provideAchievementsService(apiImpl: ApiImpl): AchievementsService =
+            apiImpl.achievementsService
+
+        @Provides
+        @AppSingleton
+        @JvmStatic
+        @Authorized
+        fun provideAuhtorizedRetrofit(apiImpl: ApiImpl): Retrofit =
+            apiImpl.authorizedRetrofit
     }
 }

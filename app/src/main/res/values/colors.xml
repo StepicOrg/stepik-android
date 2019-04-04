@@ -178,4 +178,8 @@
     <color name="course_info_organization_span">#4a90e2</color>
     <color name="course_content_section_background">#F6F6F6</color>
     <color name="course_content_section_date_disabled">#B4B4B4</color>
+
+    <!-- Text styles colors -->
+    <color name="color_body1">#222222</color>
+    <color name="color_body2_note">#999999</color>
 </resources>
