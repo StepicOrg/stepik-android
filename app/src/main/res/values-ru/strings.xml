@@ -668,6 +668,8 @@
     <string name="retention_notification_day3_title">Время учиться ‍🎓</string>
     <string name="retention_notification_day3_message">Вас давно не было. Заходите и учитесь новому! 💡</string>
 
+    <string name="step_comment_tooltip">Откройте комментарии, чтобы лучше понять материал или задать вопрос</string>
+
     <!-- Profile edit -->
     <string name="profile_edit_menu_item">Редактировать профиль</string>
     <string name="profile_edit_password_title">Пароль</string>

@@ -693,6 +693,9 @@
     <string name="retention_notification_day3_title">Time to study ‍🎓</string>
     <string name="retention_notification_day3_message">You haven\'t been here for a while. Come back and continue study! 💡</string>
 
+
+    <string name="step_comment_tooltip">Open discussions for better understanding or asking a question</string>
+
     <!-- Profile edit -->
     <string name="profile_edit_menu_item">Edit profile</string>
     <string name="profile_edit_password_title">Password</string>
