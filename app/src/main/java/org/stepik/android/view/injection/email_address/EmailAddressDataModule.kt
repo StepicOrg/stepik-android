@@ -23,11 +23,6 @@ abstract class EmailAddressDataModule {
         emailAddressRemoteDataSourceImpl: EmailAddressRemoteDataSourceImpl
     ): EmailAddressRemoteDataSource
 
-//    @Binds
-//    internal abstract fun bindEmailAddressCacheDataSource(
-//        emailAddressCacheDataSourceImpl: EmailAddressCacheDataSource
-//    )
-
     @Module
     companion object {
         @Provides
