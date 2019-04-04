@@ -56,4 +56,5 @@ constructor(
     override fun removeEmailAddress(emailId: Long): Completable =
         remoteDataSource
             .removeEmailAddress(emailId)
+            .andThen(cacheDataSource.removeEmailAddress(emailId))
 }
