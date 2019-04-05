@@ -90,4 +90,18 @@
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
     </style>
+    
+    <style name="body1">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/color_body1</item>
+        <item name="android:letterSpacing">0.03</item>
+        <item name="android:lineSpacingExtra">7sp</item>
+    </style>
+    
+    <style name="body2_note">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/color_body2_note</item>
+        <item name="android:letterSpacing">0.02</item>
+        <item name="android:lineSpacingExtra">6sp</item>
+    </style>
 </resources>

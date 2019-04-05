@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        <android.support.v7.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:orientation="vertical">
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/firstNameInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:boxStrokeWidth="3dp"
+                app:boxStrokeColor="@color/new_accent_color"
+                android:hint="@string/profile_edit_info_first_name_hint"
+                android:theme="@style/TextInputLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/firstNameEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPersonName" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/lastNameInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:boxStrokeWidth="3dp"
+                app:boxStrokeColor="@color/new_accent_color"
+                app:helperText="@string/profile_edit_info_name_helper_text"
+                app:helperTextTextAppearance="@style/TextInputLayout.HelperTextAppearance"
+                android:hint="@string/profile_edit_info_last_name_hint"
+                android:theme="@style/TextInputLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/lastNameEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPersonName" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/shortBioInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:boxStrokeWidth="3dp"
+                app:boxStrokeColor="@color/new_accent_color"
+                app:counterEnabled="true"
+                app:counterTextAppearance="@style/TextInputLayout.HelperTextAppearance"
+                app:counterMaxLength="255"
+                app:helperText="@string/profile_edit_info_short_bio_helper_text"
+                app:helperTextTextAppearance="@style/TextInputLayout.HelperTextAppearance"
+                android:hint="@string/profile_edit_info_short_bio_hint"
+                android:theme="@style/TextInputLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/shortBioEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLength="255"
+                    app:backgroundTint="@color/new_accent_color"
+                    android:inputType="text" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/detailsInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:boxStrokeWidth="3dp"
+                app:boxStrokeColor="@color/new_accent_color"
+                android:hint="@string/profile_edit_info_about_hint"
+                android:theme="@style/TextInputLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/detailsEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textMultiLine" />
+            </android.support.design.widget.TextInputLayout>
+
+        </android.support.v7.widget.LinearLayoutCompat>
+    </android.support.v4.widget.NestedScrollView>
+
+    <include
+        layout="@layout/view_centered_appbar" />
+
+</android.support.design.widget.CoordinatorLayout>

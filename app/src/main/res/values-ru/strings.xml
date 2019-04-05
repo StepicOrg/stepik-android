@@ -667,4 +667,32 @@
     <string name="retention_notification_day1_message">Вы проделали отличную работу вчера - это хороший повод зайти сегодня и продолжить учиться! 🚀</string>
     <string name="retention_notification_day3_title">Время учиться ‍🎓</string>
     <string name="retention_notification_day3_message">Вас давно не было. Заходите и учитесь новому! 💡</string>
+
+    <string name="step_comment_tooltip">Откройте комментарии, чтобы лучше понять материал или задать вопрос</string>
+
+    <!-- Profile edit -->
+    <string name="profile_edit_menu_item">Редактировать профиль</string>
+    <string name="profile_edit_password_title">Пароль</string>
+    <string name="profile_edit_password_current_hint">Текущий пароль</string>
+    <string name="profile_edit_password_new_hint">Новый пароль</string>
+    <string name="profile_edit_password_new_repeat_hint">Новый пароль (ещё раз)</string>
+
+    <string name="profile_edit_info_title">Персональные данные</string>
+    <string name="profile_edit_info_subtitle">Ваше имя и другая информация</string>
+
+    <string name="profile_edit_info_first_name_hint">Имя</string>
+    <string name="profile_edit_info_last_name_hint">Фамилия</string>
+    <string name="profile_edit_info_name_helper_text">Это имя будет использовано в сертификатах</string>
+    <string name="profile_edit_info_short_bio_hint">Краткая информация</string>
+    <string name="profile_edit_info_short_bio_helper_text">Город, университет, работа…</string>
+    <string name="profile_edit_info_about_hint">О вас</string>
+
+    <string name="profile_edit_save">Сохранить</string>
+
+    <string name="profile_edit_error_required_field">Обязательное поле</string>
+    <string name="profile_edit_error_password">Ошибка при попытке смены пароля</string>
+    <string name="profile_edit_error_info">Ошибка при попытке изменения информации</string>
+
+    <string name="profile_edit_change_success_info">Информация обновлена</string>
+    <string name="profile_edit_change_success_password">Пароль изменен</string>
 </resources>

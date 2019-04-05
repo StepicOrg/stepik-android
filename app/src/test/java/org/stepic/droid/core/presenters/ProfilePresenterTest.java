@@ -25,6 +25,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ThreadPoolExecutor;
 
+import io.reactivex.Observable;
+import io.reactivex.schedulers.Schedulers;
+
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
@@ -32,7 +35,6 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
 
 public class ProfilePresenterTest {
 
@@ -78,7 +80,9 @@ public class ProfilePresenterTest {
                 analytic,
                 mainHandler,
                 api,
-                sharedPreferenceHelper
+                sharedPreferenceHelper,
+                Observable.empty(),
+                Schedulers.io()
         );
     }
 
