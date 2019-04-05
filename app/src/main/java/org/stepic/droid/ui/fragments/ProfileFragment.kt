@@ -461,7 +461,7 @@ class ProfileFragment : FragmentBase(),
             inflater.inflate(R.menu.profile_menu, menu)
 
             menu?.findItem(R.id.menu_item_edit)?.isVisible =
-                localUserViewModel?.isMyProfile == true && localUserViewModel?.profile != null
+                localUserViewModel?.isMyProfile == true
         }
     }
 
@@ -472,10 +472,8 @@ class ProfileFragment : FragmentBase(),
                 return true
             }
             R.id.menu_item_edit -> {
-                localUserViewModel?.profile?.let { profile ->
-                    analytic.reportAmplitudeEvent(AmplitudeAnalytic.ProfileEdit.SCREEN_OPENED)
-                    screenManager.showProfileEdit(context, profile)
-                }
+                analytic.reportAmplitudeEvent(AmplitudeAnalytic.ProfileEdit.SCREEN_OPENED)
+                screenManager.showProfileEdit(context)
                 return true
             }
         }
