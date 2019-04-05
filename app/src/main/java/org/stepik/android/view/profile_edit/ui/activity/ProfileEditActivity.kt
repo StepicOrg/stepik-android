@@ -1,6 +1,8 @@
 package org.stepik.android.view.profile_edit.ui.activity
 
 import android.app.Activity
+import android.arch.lifecycle.ViewModelProvider
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -17,11 +19,14 @@ import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.setTextColor
 import org.stepik.android.model.user.Profile
+import org.stepik.android.presentation.profile_edit.ProfileEditPresenter
+import org.stepik.android.presentation.profile_edit.ProfileEditView
 import org.stepik.android.view.profile_edit.model.ProfileEditItem
 import org.stepik.android.view.profile_edit.ui.adapter.ProfileEditAdapter
+import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import javax.inject.Inject
 
-class ProfileEditActivity : AppCompatActivity() {
+class ProfileEditActivity : AppCompatActivity(), ProfileEditView {
     companion object {
         private const val EXTRA_PROFILE = "profile"
 
@@ -30,16 +35,25 @@ class ProfileEditActivity : AppCompatActivity() {
                 .putExtra(EXTRA_PROFILE, profile)
     }
 
+    private lateinit var profileEditPresenter: ProfileEditPresenter
+
     @Inject
     internal lateinit var screenManager: ScreenManager
 
-    private val profile by lazy { intent.getParcelableExtra<Profile>(EXTRA_PROFILE) }
+    @Inject
+    internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private var profile: Profile? = null
+    private val viewStateDelegate =
+        ViewStateDelegate<ProfileEditView.State>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile_edit)
         injectComponent()
-
+        profileEditPresenter = ViewModelProviders
+            .of(this, viewModelFactory)
+            .get(ProfileEditPresenter::class.java)
         initCenteredToolbar(R.string.profile_title, showHomeButton = true, homeIndicator = R.drawable.ic_close_dark)
 
         val navigationItems = listOf(
@@ -49,6 +63,7 @@ class ProfileEditActivity : AppCompatActivity() {
 
         navigationRecycler.layoutManager = LinearLayoutManager(this)
         navigationRecycler.adapter = ProfileEditAdapter(navigationItems) { item ->
+            val profile = profile ?: return@ProfileEditAdapter
             when (item.type) {
                 ProfileEditItem.Type.PERSONAL_INFO ->
                     screenManager.showProfileEditInfo(this, profile)
@@ -60,6 +75,11 @@ class ProfileEditActivity : AppCompatActivity() {
         navigationRecycler.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL).apply {
             ContextCompat.getDrawable(this@ProfileEditActivity, R.drawable.list_divider_h)?.let(::setDrawable)
         })
+
+        viewStateDelegate.addState<ProfileEditView.State.Idle>()
+        viewStateDelegate.addState<ProfileEditView.State.Loading>()
+        viewStateDelegate.addState<ProfileEditView.State.Error>(profileEditEmptyLogin)
+        viewStateDelegate.addState<ProfileEditView.State.ProfileLoaded>(navigationRecycler)
     }
 
     private fun injectComponent() {
@@ -67,6 +87,16 @@ class ProfileEditActivity : AppCompatActivity() {
             .profileEditComponentBuilder()
             .build()
             .inject(this)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        profileEditPresenter.attachView(this)
+    }
+
+    override fun onStop() {
+        profileEditPresenter.detachView(this)
+        super.onStop()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
@@ -97,6 +127,13 @@ class ProfileEditActivity : AppCompatActivity() {
 
             else ->
                 super.onActivityResult(requestCode, resultCode, data)
+        }
+    }
+
+    override fun setState(state: ProfileEditView.State) {
+        viewStateDelegate.switchState(state)
+        if (state is ProfileEditView.State.ProfileLoaded) {
+            profile = state.profile
         }
     }
 

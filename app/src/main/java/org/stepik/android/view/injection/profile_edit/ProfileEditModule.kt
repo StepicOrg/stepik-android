@@ -7,6 +7,7 @@ import dagger.multibindings.IntoMap
 import org.stepik.android.presentation.base.injection.ViewModelKey
 import org.stepik.android.presentation.profile_edit.ProfileEditInfoPresenter
 import org.stepik.android.presentation.profile_edit.ProfileEditPasswordPresenter
+import org.stepik.android.presentation.profile_edit.ProfileEditPresenter
 
 @Module
 abstract class ProfileEditModule {
@@ -23,4 +24,9 @@ abstract class ProfileEditModule {
     @IntoMap
     @ViewModelKey(ProfileEditPasswordPresenter::class)
     internal abstract fun bindProfileEditPasswordPresenter(profileEditPasswordPresenter: ProfileEditPasswordPresenter): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ProfileEditPresenter::class)
+    internal abstract fun bindProfileEditPresenter(profileEditPresenter: ProfileEditPresenter): ViewModel
 }
