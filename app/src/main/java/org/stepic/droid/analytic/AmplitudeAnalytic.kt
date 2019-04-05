@@ -142,4 +142,12 @@ interface AmplitudeAnalytic {
         const val SCREEN_OPENED = "Profile edit screen opened"
         const val SAVED = "Profile edit saved"
     }
+
+    object Adaptive {
+        const val RATING_OPENED = "Adaptive rating opened"
+
+        object Params {
+            const val COURSE = "course"
+        }
+    }
 }
