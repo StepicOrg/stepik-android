@@ -705,11 +705,11 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void showProfileEdit(Context context, Profile profile) {
+    public void showProfileEdit(Context context) {
         if (context instanceof Activity) {
             ((Activity) context).overridePendingTransition(org.stepic.droid.R.anim.push_up, org.stepic.droid.R.anim.no_transition);
         }
-        context.startActivity(ProfileEditActivity.Companion.createIntent(context, profile));
+        context.startActivity(ProfileEditActivity.Companion.createIntent(context));
     }
 
     @Override

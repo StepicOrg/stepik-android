@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.concurrent.ThreadPoolExecutor;
 
 import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 import static org.mockito.Matchers.any;
@@ -102,7 +101,7 @@ public class ProfilePresenterTest {
         String details = " DetailedInfo";
 
         fakeUserFromApi = FakeUserGenerator.INSTANCE.generate(profileId, name, lastName, imageLink, shortBio, details);
-        fromApiUserViewModel = new UserViewModel(name + " " + lastName, shortBio, details, imageLink, isMyProfile, isPrivate, profileId, null);
+        fromApiUserViewModel = new UserViewModel(name + " " + lastName, shortBio, details, imageLink, isMyProfile, isPrivate, profileId);
     }
 
     private void generateLocalModels() {
@@ -116,7 +115,7 @@ public class ProfilePresenterTest {
         String details = " details";
 
         preferencesProfileModel = FakeProfileGenerator.INSTANCE.generate(profileId, name, lastName, imageLink, shortBio, details);
-        fromPreferencesUserViewModel = new UserViewModel(name + " " + lastName, shortBio, details, imageLink, isMyProfile, isPrivate, profileId, preferencesProfileModel);
+        fromPreferencesUserViewModel = new UserViewModel(name + " " + lastName, shortBio, details, imageLink, isMyProfile, isPrivate, profileId);
     }
 
     @Test

@@ -132,8 +132,7 @@ constructor(
                     information = stringOrEmpty((user.details)),
                     isMyProfile = false,
                     isPrivate = user.isPrivate,
-                    id = userId,
-                    profile = null)
+                    id = userId)
             this.userViewModel = userViewModelLocal
 
             mainHandler.post {
@@ -188,8 +187,7 @@ constructor(
                 information = stringOrEmpty(profile.details),
                 isMyProfile = isMyProfile,
                 isPrivate = profile.isPrivate,
-                id = profile.id,
-                profile = profile)
+                id = profile.id)
         this.userViewModel = userViewModelLocal
 
 

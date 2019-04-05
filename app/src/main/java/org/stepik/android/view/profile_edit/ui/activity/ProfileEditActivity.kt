@@ -28,11 +28,8 @@ import javax.inject.Inject
 
 class ProfileEditActivity : AppCompatActivity(), ProfileEditView {
     companion object {
-        private const val EXTRA_PROFILE = "profile"
-
-        fun createIntent(context: Context, profile: Profile): Intent =
+        fun createIntent(context: Context): Intent =
             Intent(context, ProfileEditActivity::class.java)
-                .putExtra(EXTRA_PROFILE, profile)
     }
 
     private lateinit var profileEditPresenter: ProfileEditPresenter
