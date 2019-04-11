@@ -28,7 +28,7 @@
             android:contentDescription="@string/app_name"
             android:focusable="false"
             android:focusableInTouchMode="false"
-            android:src="@drawable/ic_stepik_logotype_square_green" />
+            android:src="@drawable/ic_stepik_logotype_square_black" />
 
         <FrameLayout
             android:id="@+id/bottomButtons"
