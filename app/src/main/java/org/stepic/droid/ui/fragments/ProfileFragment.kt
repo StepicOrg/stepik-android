@@ -261,10 +261,6 @@ class ProfileFragment : FragmentBase(),
         achievementsTilesContainer.changeVisibility(false)
     }
 
-    override fun onHideAchievements() {
-        achievementsContainer.changeVisibility(false)
-    }
-
     /**
      * This method is invoked only for My Profile
      */
