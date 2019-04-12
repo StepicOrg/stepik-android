@@ -589,7 +589,6 @@
     <string name="deadlines_banner_description">Постоянное обучение это ключ к успеху. Создайте персональное расписание, чтобы никогда не забывать о занятиях.</string>
     <string name="deadlines_banner_action">Создать</string>
     <string name="deadlines_fetching_error">При загрузке расписания произошла ошибка</string>
-    <string name="deadlines_ab_banner_description">Составьте персональное расписание, чтобы повысить вероятность прохождения курса.</string>
 
 
     <string name="achievements_title">Достижения</string>
