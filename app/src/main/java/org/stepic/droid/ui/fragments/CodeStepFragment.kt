@@ -48,6 +48,8 @@ class CodeStepFragment : StepAttemptFragment(),
         fun newInstance(): CodeStepFragment = CodeStepFragment()
     }
 
+    private var activityResultActivated = false
+
     @Inject
     lateinit var codePresenter: CodePresenter
 
@@ -299,6 +301,7 @@ class CodeStepFragment : StepAttemptFragment(),
                 }
                 submission = null
             } else {
+                if (activityResultActivated) return
                 codeEditor.setText(submission.reply?.code)
                 chosenProgrammingLanguageName = submission.reply?.language
                 showLanguageChoosingView(false)
@@ -330,6 +333,7 @@ class CodeStepFragment : StepAttemptFragment(),
     }
 
     override fun onShowStored(language: String, code: String) {
+        if (activityResultActivated) return
         chosenProgrammingLanguageName = language
         codeEditor.setText(code)
         showLanguageChoosingView(false)
@@ -427,6 +431,7 @@ class CodeStepFragment : StepAttemptFragment(),
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == CODE_PLAYGROUND_REQUEST && resultCode == Activity.RESULT_OK) {
+            activityResultActivated = true
             chosenProgrammingLanguageName = data?.getStringExtra(CodePlaygroundActivity.LANG_KEY)
             val newCode = data?.getStringExtra(CodePlaygroundActivity.CODE_KEY)
             codeEditor.setText(newCode)
