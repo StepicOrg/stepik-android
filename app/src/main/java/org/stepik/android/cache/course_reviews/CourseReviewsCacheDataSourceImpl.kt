@@ -38,4 +38,9 @@ constructor(
         Completable.fromAction {
             courseReviewsDao.insertOrReplaceAll(courseReviews)
         }
+
+    override fun removeCourseReview(courseReviewId: Long): Completable =
+        Completable.fromAction {
+            courseReviewsDao.remove(DbStructureCourseReview.Columns.ID, courseReviewId.toString())
+        }
 }

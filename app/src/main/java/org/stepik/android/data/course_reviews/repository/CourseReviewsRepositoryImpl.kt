@@ -1,8 +1,10 @@
 package org.stepik.android.data.course_reviews.repository
 
+import io.reactivex.Completable
 import io.reactivex.Single
 import org.stepic.droid.util.PagedList
 import org.stepic.droid.util.doCompletableOnSuccess
+import org.stepic.droid.util.then
 import org.stepik.android.data.course_reviews.source.CourseReviewsCacheDataSource
 import org.stepik.android.data.course_reviews.source.CourseReviewsRemoteDataSource
 import org.stepik.android.domain.base.DataSourceType
@@ -29,4 +31,21 @@ constructor(
 
             else -> throw IllegalArgumentException("Unsupported source type = $sourceType")
         }
+
+    override fun createCourseReview(courseReview: CourseReview): Completable =
+        courseReviewsRemoteDataSource
+            .createCourseReview(courseReview)
+            .doCompletableOnSuccess(courseReviewsCacheDataSource::saveCourseReview)
+            .ignoreElement()
+
+    override fun saveCourseReview(courseReview: CourseReview): Completable =
+        courseReviewsRemoteDataSource
+            .saveCourseReview(courseReview)
+            .doCompletableOnSuccess(courseReviewsCacheDataSource::saveCourseReview)
+            .ignoreElement()
+
+    override fun removeCourseReview(courseReviewId: Long): Completable =
+        courseReviewsRemoteDataSource
+            .removeCourseReview(courseReviewId)
+            .andThen(courseReviewsCacheDataSource.removeCourseReview(courseReviewId))
 }
