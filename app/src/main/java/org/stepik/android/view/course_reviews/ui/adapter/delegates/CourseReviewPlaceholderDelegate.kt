@@ -7,8 +7,7 @@ import org.stepic.droid.ui.custom.adapter_delegates.AdapterDelegate
 import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
 import org.stepik.android.domain.course_reviews.model.CourseReviewItem
 
-class CourseReviewPlaceholderDelegate(
-) : AdapterDelegate<CourseReviewItem, DelegateViewHolder<CourseReviewItem>>() {
+class CourseReviewPlaceholderDelegate : AdapterDelegate<CourseReviewItem, DelegateViewHolder<CourseReviewItem>>() {
     override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CourseReviewItem> =
         ViewHolder(createView(parent, R.layout.view_course_content_unit_placeholder))
 
