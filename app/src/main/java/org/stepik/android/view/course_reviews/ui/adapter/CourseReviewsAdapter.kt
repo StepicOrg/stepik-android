@@ -20,8 +20,8 @@ class CourseReviewsAdapter(
         }
 
     init {
-        addDelegate(CourseReviewDataDelegate(this, onUserClicked))
-        addDelegate(CourseReviewPlaceholderDelegate(this))
+        addDelegate(CourseReviewDataDelegate(onUserClicked))
+        addDelegate(CourseReviewPlaceholderDelegate())
     }
 
     override fun getItemAtPosition(position: Int): CourseReviewItem =

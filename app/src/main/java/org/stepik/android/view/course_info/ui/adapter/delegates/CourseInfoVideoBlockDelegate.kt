@@ -11,14 +11,13 @@ import org.stepik.android.view.course_info.ui.adapter.CourseInfoAdapter
 import org.stepik.android.view.video_player.model.VideoPlayerMediaData
 
 class CourseInfoVideoBlockDelegate(
-    adapter: CourseInfoAdapter,
     private val onVideoClicked: ((VideoPlayerMediaData) -> Unit)?
-) : AdapterDelegate<CourseInfoItem, CourseInfoAdapter.ViewHolder>(adapter) {
+) : AdapterDelegate<CourseInfoItem, CourseInfoAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder =
         ViewHolder(createView(parent, R.layout.view_course_info_video))
 
-    override fun isForViewType(position: Int): Boolean =
-        getItemAtPosition(position) is CourseInfoItem.VideoBlock
+    override fun isForViewType(position: Int, data: CourseInfoItem): Boolean =
+        data is CourseInfoItem.VideoBlock
 
     inner class ViewHolder(root: View) : CourseInfoAdapter.ViewHolder(root) {
         private val videoThumbnail = root.videoThumbnail

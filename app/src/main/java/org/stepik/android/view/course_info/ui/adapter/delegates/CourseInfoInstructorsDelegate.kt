@@ -12,14 +12,13 @@ import org.stepik.android.view.course_info.ui.adapter.CourseInfoAdapter
 import org.stepik.android.view.course_info.ui.adapter.CourseInfoInstructorsAdapter
 
 class CourseInfoInstructorsDelegate(
-    adapter: CourseInfoAdapter,
     private val onInstructorClicked: ((User) -> Unit)? = null
-) : AdapterDelegate<CourseInfoItem, CourseInfoAdapter.ViewHolder>(adapter) {
+) : AdapterDelegate<CourseInfoItem, CourseInfoAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder =
         ViewHolder(createView(parent, R.layout.view_course_info_instructors_block))
 
-    override fun isForViewType(position: Int): Boolean =
-        getItemAtPosition(position) is CourseInfoItem.WithTitle.InstructorsBlock
+    override fun isForViewType(position: Int, data: CourseInfoItem): Boolean =
+        data is CourseInfoItem.WithTitle.InstructorsBlock
 
     inner class ViewHolder(root: View) : CourseInfoAdapter.ViewHolderWithTitle(root) {
         private val adapter = CourseInfoInstructorsAdapter(onInstructorClicked)

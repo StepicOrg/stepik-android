@@ -8,7 +8,6 @@ import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.view_course_reviews_item.view.*
 import org.stepic.droid.R
 import org.stepic.droid.ui.custom.adapter_delegates.AdapterDelegate
-import org.stepic.droid.ui.custom.adapter_delegates.DelegateAdapter
 import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.util.DateTimeHelper
@@ -18,14 +17,13 @@ import java.util.Date
 import java.util.TimeZone
 
 class CourseReviewDataDelegate(
-    adapter: DelegateAdapter<CourseReviewItem, DelegateViewHolder<CourseReviewItem>>,
     private val onUserClicked: (User) -> Unit
-) : AdapterDelegate<CourseReviewItem, DelegateViewHolder<CourseReviewItem>>(adapter) {
+) : AdapterDelegate<CourseReviewItem, DelegateViewHolder<CourseReviewItem>>() {
     override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CourseReviewItem> =
         ViewHolder(createView(parent, R.layout.view_course_reviews_item))
 
-    override fun isForViewType(position: Int): Boolean =
-        getItemAtPosition(position) is CourseReviewItem.Data
+    override fun isForViewType(position: Int, data: CourseReviewItem): Boolean =
+        data is CourseReviewItem.Data
 
     inner class ViewHolder(root: View) : DelegateViewHolder<CourseReviewItem>(root) {
         private val reviewIcon = root.reviewIcon
