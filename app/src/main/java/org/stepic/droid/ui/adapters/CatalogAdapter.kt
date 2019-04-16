@@ -105,7 +105,7 @@ class CatalogAdapter(
             }
             POPULAR_TYPE -> {
                 holder as CarouselViewHolder
-                holder.bindData(CoursesCarouselInfoConstants.popular, null, null)
+                holder.bindData(CoursesCarouselInfoConstants.popular, null, coursesCarouselViewStates[position])
             }
             OFFLINE_TYPE -> {
                 holder as OfflineViewHolder
@@ -302,6 +302,7 @@ class CatalogAdapter(
 
     fun enableOfflineMode() {
         isOfflineMode = true
+        coursesCarouselViewStates.clear()
         notifyDataSetChanged()
     }
 

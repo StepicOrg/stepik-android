@@ -103,12 +103,6 @@ constructor(
     private var descriptionColors: CollectionDescriptionColors? = null
 
     private var _info: CoursesCarouselInfo? = null
-//        private set(value) {
-//            field = value
-//            if (value != null) {
-//                onInfoInitialized(value)
-//            }
-//        }
     private val info: CoursesCarouselInfo
         get() = _info ?: throw IllegalStateException("Info is not set")
     private var needExecuteOnInfoInitialized = false
@@ -457,6 +451,7 @@ constructor(
 
         super.onRestoreInstanceState(state.superState)
         this._info = state.info
+        state.info?.let(::setCourseCarouselInfo)
         this.lastSavedScrollPosition = state.scrollPosition
     }
 
