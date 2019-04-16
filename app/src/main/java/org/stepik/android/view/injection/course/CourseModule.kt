@@ -24,19 +24,6 @@ import org.stepik.android.remote.course.source.CourseReviewRemoteDataSourceImpl
 @Module
 abstract class CourseModule {
     /**
-     * DATA LAYER
-     */
-    @Binds
-    internal abstract fun bindCourseReviewRepository(
-        courseReviewRepositoryImpl: CourseReviewRepositoryImpl
-    ): CourseReviewRepository
-
-    @Binds
-    internal abstract fun bindCourseReviewRemoteDataSource(
-        courseReviewRemoteDataSourceImpl: CourseReviewRemoteDataSourceImpl
-    ): CourseReviewRemoteDataSource
-
-    /**
      * PRESENTATION LAYER
      */
     @Binds
