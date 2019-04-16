@@ -21,8 +21,13 @@ abstract class DelegateAdapter<D, VH : DelegateViewHolder<D>> : RecyclerView.Ada
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH =
         delegates[viewType].onCreateViewHolder(parent)
 
-    override fun onBindViewHolder(holder: VH, position: Int) =
+    override fun onBindViewHolder(holder: VH, position: Int) {
         holder.bind(getItemAtPosition(position))
+    }
+
+    override fun onViewRecycled(holder: VH) {
+        holder.unbind()
+    }
 
     abstract fun getItemAtPosition(position: Int): D
 }
