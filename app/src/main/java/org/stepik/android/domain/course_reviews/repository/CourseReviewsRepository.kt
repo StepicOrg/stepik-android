@@ -12,9 +12,9 @@ interface CourseReviewsRepository {
      */
     fun getCourseReviewsByCourseId(courseId: Long, page: Int = 1, sourceType: DataSourceType = DataSourceType.CACHE): Single<PagedList<CourseReview>>
 
-    fun createCourseReview(courseReview: CourseReview): Completable
+    fun createCourseReview(courseReview: CourseReview): Single<CourseReview>
 
-    fun saveCourseReview(courseReview: CourseReview): Completable
+    fun saveCourseReview(courseReview: CourseReview): Single<CourseReview>
 
     fun removeCourseReview(courseReviewId: Long): Completable
 }
