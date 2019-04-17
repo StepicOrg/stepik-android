@@ -16,7 +16,7 @@ constructor(
         courseReviewsRepository
             .createCourseReview(courseReview)
 
-    fun saveCourseReview(courseReview: CourseReview): Single<CourseReview> =
+    fun updateCourseReview(courseReview: CourseReview): Single<CourseReview> =
         courseReviewsRepository
             .saveCourseReview(courseReview)
 
