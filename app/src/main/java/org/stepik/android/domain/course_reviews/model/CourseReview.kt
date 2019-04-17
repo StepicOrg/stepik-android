@@ -7,7 +7,7 @@ import org.stepik.android.model.util.readDate
 import org.stepik.android.model.util.writeDate
 import java.util.Date
 
-class CourseReview(
+data class CourseReview(
     @SerializedName("id")
     val id: Long = 0,
 
