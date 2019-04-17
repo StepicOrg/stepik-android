@@ -1,6 +1,7 @@
 package org.stepik.android.view.course_reviews.ui.dialog
 
 import android.app.Activity
+import android.app.Dialog
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
@@ -8,7 +9,11 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.DialogFragment
 import android.support.v4.content.ContextCompat
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.view.Window
+import kotlinx.android.synthetic.main.dialog_compose_course_review.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.util.setTextColor
@@ -42,6 +47,16 @@ class ComposeCourseReviewDialogFragment : DialogFragment(), ComposeCourseReviewV
 
     private val courseReview: CourseReview? by lazy { arguments?.getParcelable<CourseReview>(ARG_COURSE_REVIEW) }
 
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val dialog = super.onCreateDialog(savedInstanceState)
+
+        dialog.setCanceledOnTouchOutside(false)
+        dialog.setCancelable(false)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+
+        return dialog
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         injectComponent()
@@ -51,15 +66,38 @@ class ComposeCourseReviewDialogFragment : DialogFragment(), ComposeCourseReviewV
             .get(ComposeCourseReviewPresenter::class.java)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        viewStateDelegate = ViewStateDelegate()
-    }
-
     private fun injectComponent() {
         App.component()
             .composeCourseReviewComponent()
             .build()
             .inject(this)
+    }
+
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+        inflater.inflate(R.layout.dialog_compose_course_review, container, false)
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        viewStateDelegate = ViewStateDelegate()
+        viewStateDelegate.addState<ComposeCourseReviewView.State.Idle>(courseReviewIdle)
+        viewStateDelegate.addState<ComposeCourseReviewView.State.Loading>(courseReviewLoading)
+        viewStateDelegate.addState<ComposeCourseReviewView.State.Complete>(courseReviewIdle)
+
+        if (savedInstanceState == null) {
+            courseReview?.let {
+                courseReviewEditText.setText(it.text)
+                courseReviewRating.rating = it.score.toFloat()
+            }
+        }
+    }
+    override fun onStart() {
+        super.onStart()
+        composeCourseReviewPresenter.attachView(this)
+    }
+
+    override fun onStop() {
+        composeCourseReviewPresenter.detachView(this)
+        super.onStop()
     }
 
     override fun setState(state: ComposeCourseReviewView.State) {
@@ -72,6 +110,7 @@ class ComposeCourseReviewDialogFragment : DialogFragment(), ComposeCourseReviewV
                     Activity.RESULT_OK,
                     Intent().putExtra(ARG_COURSE_REVIEW, state.courseReview)
                 )
+            dismiss()
         }
     }
 

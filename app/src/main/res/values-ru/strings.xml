@@ -627,6 +627,7 @@
     <string name="course_error_enroll">@string/course_error_generic</string>
 
     <string name="course_reviews_empty">Для этого курса пока нет отзывов</string>
+    <string name="course_reviews_compose_hint">Ваш отзыв</string>
 
     <string name="course_content_timeline_begin_date">Дата начала</string>
     <string name="course_content_timeline_end_date">Дата закрытия</string>
