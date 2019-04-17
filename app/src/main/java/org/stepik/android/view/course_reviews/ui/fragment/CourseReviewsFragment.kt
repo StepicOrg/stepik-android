@@ -17,6 +17,8 @@ import kotlinx.android.synthetic.main.empty_default.view.placeholderMessage
 import kotlinx.android.synthetic.main.error_no_connection.*
 import kotlinx.android.synthetic.main.fragment_course_reviews.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.AmplitudeAnalytic
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.util.argument
@@ -41,6 +43,9 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
 
     @Inject
     internal lateinit var screenManager: ScreenManager
+
+    @Inject
+    internal lateinit var analytic: Analytic
 
     private var courseId: Long by argument()
 
@@ -112,6 +117,17 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
         viewStateDelegate.addState<CourseReviewsView.State.CourseReviewsRemoteLoading>(courseReviewsRecycler)
         viewStateDelegate.addState<CourseReviewsView.State.NetworkError>(reportProblem)
         viewStateDelegate.addState<CourseReviewsView.State.EmptyContent>(report_empty)
+    }
+
+    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+        super.setUserVisibleHint(isVisibleToUser)
+        if (isVisibleToUser) {
+            analytic
+                .reportAmplitudeEvent(
+                    AmplitudeAnalytic.CourseReview.SCREEN_OPENED,
+                    mapOf(AmplitudeAnalytic.CourseReview.Params.COURSE to courseId.toString())
+                )
+        }
     }
 
     override fun onStart() {
