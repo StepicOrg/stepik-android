@@ -31,17 +31,15 @@ constructor(
             else -> throw IllegalArgumentException("Unsupported source type = $sourceType")
         }
 
-    override fun createCourseReview(courseReview: CourseReview): Completable =
+    override fun createCourseReview(courseReview: CourseReview): Single<CourseReview> =
         courseReviewsRemoteDataSource
             .createCourseReview(courseReview)
             .doCompletableOnSuccess(courseReviewsCacheDataSource::saveCourseReview)
-            .ignoreElement()
 
-    override fun saveCourseReview(courseReview: CourseReview): Completable =
+    override fun saveCourseReview(courseReview: CourseReview): Single<CourseReview> =
         courseReviewsRemoteDataSource
             .saveCourseReview(courseReview)
             .doCompletableOnSuccess(courseReviewsCacheDataSource::saveCourseReview)
-            .ignoreElement()
 
     override fun removeCourseReview(courseReviewId: Long): Completable =
         courseReviewsRemoteDataSource
