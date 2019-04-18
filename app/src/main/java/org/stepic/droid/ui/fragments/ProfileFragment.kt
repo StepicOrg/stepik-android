@@ -59,7 +59,7 @@ import java.util.Date
 import java.util.TimeZone
 import javax.inject.Inject
 
-class ProfileFragment : FragmentBase(),
+class   ProfileFragment : FragmentBase(),
         ProfileView,
         NotificationTimeView,
         AchievementsView {
@@ -259,6 +259,10 @@ class ProfileFragment : FragmentBase(),
         achievementsLoadingPlaceholder.changeVisibility(true)
         achievementsLoadingError.changeVisibility(false)
         achievementsTilesContainer.changeVisibility(false)
+    }
+
+    override fun onHideAchievements() {
+        achievementsContainer.changeVisibility(false)
     }
 
     /**
