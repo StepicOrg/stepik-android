@@ -298,13 +298,13 @@ public interface StepicRestLoggedService {
             @Body final CourseReviewRequest request
     );
 
-    @PUT("api/course-reviews/${courseReviewId}")
+    @PUT("api/course-reviews/{courseReviewId}")
     Single<CourseReviewsResponse> updateCourseReview(
             @Path("courseReviewId") final long courseReviewId,
             @Body final CourseReviewRequest request
     );
 
-    @DELETE("api/course-reviews/${courseReviewId}")
+    @DELETE("api/course-reviews/{courseReviewId}")
     Completable removeCourseReview(
             @Path("courseReviewId") final long courseReviewId
     );
