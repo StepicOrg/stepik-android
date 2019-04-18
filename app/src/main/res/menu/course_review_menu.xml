@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/course_review_menu_edit"
+        android:title="@string/course_reviews_action_edit" />
+
+    <item
+        android:id="@+id/course_review_menu_remove"
+        android:title="@string/course_reviews_action_remove" />
+</menu>

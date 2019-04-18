@@ -23,10 +23,12 @@ import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.util.argument
 import org.stepic.droid.util.setTextColor
+import org.stepik.android.domain.course_reviews.model.CourseReview
 import org.stepik.android.domain.course_reviews.model.CourseReviewItem
 import org.stepik.android.presentation.course_reviews.CourseReviewsPresenter
 import org.stepik.android.presentation.course_reviews.CourseReviewsView
 import org.stepik.android.view.course_reviews.ui.adapter.CourseReviewsAdapter
+import org.stepik.android.view.course_reviews.ui.dialog.ComposeCourseReviewDialogFragment
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import javax.inject.Inject
 
@@ -75,7 +77,11 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
         inflater.inflate(R.layout.fragment_course_reviews, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        courseReviewsAdapter = CourseReviewsAdapter { screenManager.openProfile(activity, it.id) }
+        courseReviewsAdapter = CourseReviewsAdapter(
+            onUserClicked = { screenManager.openProfile(activity, it.id) },
+            onEditReviewClicked = ::showCourseReviewEditDialog,
+            onRemoveReviewClicked = { }
+        )
 
         with(courseReviewsRecycler) {
             layoutManager = LinearLayoutManager(context)
@@ -162,6 +168,17 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
             .make(view, R.string.connectionProblems, Snackbar.LENGTH_SHORT)
             .setTextColor(ContextCompat.getColor(view.context, R.color.white))
             .show()
+    }
+
+    private fun showCourseReviewEditDialog(courseReview: CourseReview) {
+        val supportFragmentManager = activity
+            ?.supportFragmentManager
+            ?.takeIf { it.findFragmentByTag(ComposeCourseReviewDialogFragment.TAG) == null }
+            ?: return
+
+        val dialog = ComposeCourseReviewDialogFragment.newInstance(courseId, courseReview)
+        dialog.setTargetFragment(this, ComposeCourseReviewDialogFragment.REQUEST_CODE)
+        dialog.show(supportFragmentManager, ComposeCourseReviewDialogFragment.TAG)
     }
 
     override fun onDestroy() {

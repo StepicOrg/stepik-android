@@ -3,13 +3,16 @@ package org.stepik.android.view.course_reviews.ui.adapter
 import android.support.v7.util.DiffUtil
 import org.stepic.droid.ui.custom.adapter_delegates.DelegateAdapter
 import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
+import org.stepik.android.domain.course_reviews.model.CourseReview
 import org.stepik.android.domain.course_reviews.model.CourseReviewItem
 import org.stepik.android.model.user.User
 import org.stepik.android.view.course_reviews.ui.adapter.delegates.CourseReviewDataDelegate
 import org.stepik.android.view.course_reviews.ui.adapter.delegates.CourseReviewPlaceholderDelegate
 
 class CourseReviewsAdapter(
-    onUserClicked: (User) -> Unit
+    onUserClicked: (User) -> Unit,
+    onEditReviewClicked: (CourseReview) -> Unit,
+    onRemoveReviewClicked: (CourseReview) -> Unit
 ) : DelegateAdapter<CourseReviewItem, DelegateViewHolder<CourseReviewItem>>() {
     var items: List<CourseReviewItem> = emptyList()
         set(value) {
@@ -20,7 +23,7 @@ class CourseReviewsAdapter(
         }
 
     init {
-        addDelegate(CourseReviewDataDelegate(onUserClicked))
+        addDelegate(CourseReviewDataDelegate(onUserClicked, onEditReviewClicked, onRemoveReviewClicked))
         addDelegate(CourseReviewPlaceholderDelegate())
     }
 
