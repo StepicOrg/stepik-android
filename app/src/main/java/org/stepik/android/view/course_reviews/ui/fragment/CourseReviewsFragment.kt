@@ -81,8 +81,9 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         courseReviewsAdapter = CourseReviewsAdapter(
             onUserClicked = { screenManager.openProfile(activity, it.id) },
+            onCreateReviewClicked = { showCourseReviewEditDialog(null) },
             onEditReviewClicked = ::showCourseReviewEditDialog,
-            onRemoveReviewClicked = { }
+            onRemoveReviewClicked = courseReviewsPresenter::removeCourseReview
         )
 
         with(courseReviewsRecycler) {
@@ -172,7 +173,7 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
             .show()
     }
 
-    private fun showCourseReviewEditDialog(courseReview: CourseReview) {
+    private fun showCourseReviewEditDialog(courseReview: CourseReview?) {
         val supportFragmentManager = activity
             ?.supportFragmentManager
             ?.takeIf { it.findFragmentByTag(ComposeCourseReviewDialogFragment.TAG) == null }

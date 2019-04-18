@@ -8,9 +8,11 @@ import org.stepik.android.domain.course_reviews.model.CourseReviewItem
 import org.stepik.android.model.user.User
 import org.stepik.android.view.course_reviews.ui.adapter.delegates.CourseReviewDataDelegate
 import org.stepik.android.view.course_reviews.ui.adapter.delegates.CourseReviewPlaceholderDelegate
+import org.stepik.android.view.course_reviews.ui.adapter.delegates.CourseReviewsComposeBannerDelegate
 
 class CourseReviewsAdapter(
     onUserClicked: (User) -> Unit,
+    onCreateReviewClicked: () -> Unit,
     onEditReviewClicked: (CourseReview) -> Unit,
     onRemoveReviewClicked: (CourseReview) -> Unit
 ) : DelegateAdapter<CourseReviewItem, DelegateViewHolder<CourseReviewItem>>() {
@@ -25,6 +27,7 @@ class CourseReviewsAdapter(
     init {
         addDelegate(CourseReviewDataDelegate(onUserClicked, onEditReviewClicked, onRemoveReviewClicked))
         addDelegate(CourseReviewPlaceholderDelegate())
+        addDelegate(CourseReviewsComposeBannerDelegate(onCreateReviewClicked))
     }
 
     override fun getItemAtPosition(position: Int): CourseReviewItem =

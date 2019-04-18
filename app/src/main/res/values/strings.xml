@@ -649,8 +649,10 @@
 
     <string name="course_reviews_empty">There are no reviews for this course</string>
     <string name="course_reviews_compose_hint">Your feedback</string>
+    <string name="course_reviews_action_create">Write review</string>
     <string name="course_reviews_action_edit">Edit</string>
     <string name="course_reviews_action_remove">Remove</string>
+    <string name="course_reviews_compose_banner_review_description">To send a review, complete more than 80% steps</string>
 
     <string name="course_content_unit_title" translatable="false">%d.%d %s</string>
     <string name="course_content_text_progress" translatable="false">%d/%d</string>
