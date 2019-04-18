@@ -378,7 +378,7 @@
     <style name="StepikToolbarTheme" parent="@style/ThemeOverlay.AppCompat.Light"></style>
 
     <style name="StepikToolbarTextAppearance" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">18sp</item>
         <item name="fontPath">fonts/Roboto-Regular.ttf</item>
         <item name="android:textColor">@color/new_accent_color</item>
     </style>
@@ -467,5 +467,16 @@
     <style name="StepikTheme.DarkActionBar">
         <item name="colorControlNormal">@color/white</item>
         <item name="android:textColorSecondary">@color/white</item>
+    </style>
+
+    <style name="TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="android:textColorPrimary">@color/new_accent_color</item>
+        <item name="colorControlNormal">@color/new_accent_color</item>
+        <item name="colorControlActivated">@color/new_accent_color</item>
+    </style>
+    
+    <style name="TextInputLayout.HelperTextAppearance" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/new_accent_color_opacity_50</item>
+        <item name="android:textSize">12sp</item>
     </style>
 </resources>

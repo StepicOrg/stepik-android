@@ -49,6 +49,7 @@ import org.stepic.droid.util.StringUtil;
 import org.stepic.droid.util.resolvers.StepHelper;
 import org.stepic.droid.util.resolvers.StepTypeResolver;
 import org.stepic.droid.web.ViewAssignment;
+import org.stepik.android.view.fragment_pager.FragmentDelegateScrollStateChangeListener;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -206,6 +207,7 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
         initIndependentUI();
         stepAdapter = new StepFragmentAdapter(getChildFragmentManager(), stepsPresenter.getStepList(), stepTypeResolver);
         viewPager.setAdapter(stepAdapter);
+        viewPager.addOnPageChangeListener(new FragmentDelegateScrollStateChangeListener(viewPager, stepAdapter));
         stepsPresenter.attachView(this);
         stepTrackingPresenter.attachView(this);
         if (lesson == null) {

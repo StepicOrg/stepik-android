@@ -144,7 +144,7 @@
 
     <color name="onboarding_action_pressed">@color/white_opacity_30</color>
     <color name="onboarding_action">@color/white_opacity_20</color>
-    <color name="launcher_background">#66CC66</color>
+    <color name="launcher_background">@color/black</color>
 
     <color name="light_rounded_button_color">#0D535366</color>
     <color name="light_rounded_pressed_color">#E8E8E8</color>
@@ -178,4 +178,8 @@
     <color name="course_info_organization_span">#4a90e2</color>
     <color name="course_content_section_background">#F6F6F6</color>
     <color name="course_content_section_date_disabled">#B4B4B4</color>
+
+    <!-- Text styles colors -->
+    <color name="color_body1">#222222</color>
+    <color name="color_body2_note">#999999</color>
 </resources>

@@ -5,7 +5,6 @@ import io.reactivex.Scheduler
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
-import org.stepic.droid.analytic.experiments.PersonalDeadlinesSplitTest
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.CourseId
 import org.stepic.droid.di.qualifiers.MainScheduler
@@ -56,8 +55,6 @@ constructor(
     private val progressObservable: Observable<Progress>,
 
     private val courseCalendarInteractor: CourseCalendarInteractor,
-
-    private val personalDeadlinesSplitTest: PersonalDeadlinesSplitTest,
 
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
@@ -298,28 +295,24 @@ constructor(
      * Personal deadlines
      */
     private fun fetchPersonalDeadlines() {
-        val oldState = (state as? CourseContentView.State.CourseContentLoaded)
+        (state as? CourseContentView.State.CourseContentLoaded)
             ?.takeIf { it.personalDeadlinesState == PersonalDeadlinesState.Idle }
             ?: return
 
         deadlinesDisposable.clear()
 
-        if (personalDeadlinesSplitTest.currentGroup.isPersonalDeadlinesEnabled) {
-            deadlinesDisposable += deadlinesInteractor
-                .getPersonalDeadlineByCourseId(courseId)
-                .subscribeOn(backgroundScheduler)
-                .observeOn(mainScheduler)
-                .subscribeBy(
-                    onComplete = {
-                        state = stateMapper.mergeStateWithPersonalDeadlines(state, null)
-                        fetchPersonalDeadlinesBanner()
-                    },
-                    onSuccess = { state = stateMapper.mergeStateWithPersonalDeadlines(state, it) },
-                    onError = { it.printStackTrace(); view?.showPersonalDeadlinesError() }
-                )
-        } else {
-            state = oldState.copy(personalDeadlinesState = PersonalDeadlinesState.NoDeadlinesNeeded)
-        }
+        deadlinesDisposable += deadlinesInteractor
+            .getPersonalDeadlineByCourseId(courseId)
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onComplete = {
+                    state = stateMapper.mergeStateWithPersonalDeadlines(state, null)
+                    fetchPersonalDeadlinesBanner()
+                },
+                onSuccess = { state = stateMapper.mergeStateWithPersonalDeadlines(state, it) },
+                onError = { it.printStackTrace(); view?.showPersonalDeadlinesError() }
+            )
     }
 
     fun createPersonalDeadlines(learningRate: LearningRate) {
