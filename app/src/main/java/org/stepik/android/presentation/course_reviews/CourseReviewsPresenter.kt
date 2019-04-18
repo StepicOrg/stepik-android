@@ -113,12 +113,12 @@ constructor(
                     oldState.courseReviewItems
 
                 oldState is CourseReviewsView.State.CourseReviewsCache ->
-                    emptyList<CourseReviewItem.Data>()
+                    emptyList<CourseReviewItem>()
 
                 else -> return
             }
 
-        val nextPage = (currentItems as? PagedList<CourseReviewItem.Data>)
+        val nextPage = (currentItems as? PagedList<CourseReviewItem>)
             ?.page
             ?.plus(1)
             ?: 1

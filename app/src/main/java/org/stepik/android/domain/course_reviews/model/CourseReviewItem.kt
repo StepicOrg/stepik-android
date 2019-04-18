@@ -7,6 +7,11 @@ sealed class CourseReviewItem {
 
     class Data(
         val courseReview: CourseReview,
-        val user: User
+        val user: User,
+        val isCurrentUserReview: Boolean
+    ) : CourseReviewItem()
+
+    class ComposeBanner(
+        val canWriteReview: Boolean
     ) : CourseReviewItem()
 }

@@ -31,6 +31,7 @@ class CourseReviewDataDelegate(
         private val reviewName = root.reviewName
         private val reviewRating = root.reviewRating
         private val reviewText = root.reviewText
+        private val reviewMenu = root.reviewMenu
 
         private val reviewIconTarget = RoundedBitmapImageViewTarget(
             context.resources.getDimension(R.dimen.course_image_radius), reviewIcon)
@@ -47,6 +48,8 @@ class CourseReviewDataDelegate(
             reviewIcon.setOnClickListener(userClickListener)
             reviewName.setOnClickListener(userClickListener)
             reviewDate.setOnClickListener(userClickListener)
+
+            reviewMenu.setOnClickListener {  }
         }
 
         override fun onBind(data: CourseReviewItem) {

@@ -1,6 +1,7 @@
 package org.stepik.android.data.course_reviews.repository
 
 import io.reactivex.Completable
+import io.reactivex.Maybe
 import io.reactivex.Single
 import org.stepic.droid.util.PagedList
 import org.stepic.droid.util.doCompletableOnSuccess
@@ -30,6 +31,26 @@ constructor(
 
             else -> throw IllegalArgumentException("Unsupported source type = $sourceType")
         }
+
+    override fun getCourseReviewByCourseIdAndUserId(courseId: Long, userId: Long, primarySourceType: DataSourceType): Maybe<CourseReview> {
+        val remoteSource = courseReviewsRemoteDataSource
+            .getCourseReviewByCourseIdAndUserId(courseId, userId)
+            .doCompletableOnSuccess(courseReviewsCacheDataSource::saveCourseReview)
+
+        val cacheSource = courseReviewsCacheDataSource
+            .getCourseReviewByCourseIdAndUserId(courseId, userId)
+
+
+        return when (primarySourceType) {
+            DataSourceType.CACHE ->
+                cacheSource.switchIfEmpty(remoteSource)
+
+            DataSourceType.REMOTE ->
+                remoteSource
+
+            else -> throw IllegalArgumentException("Unsupported source type = $primarySourceType")
+        }
+    }
 
     override fun createCourseReview(courseReview: CourseReview): Single<CourseReview> =
         courseReviewsRemoteDataSource

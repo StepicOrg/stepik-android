@@ -29,6 +29,9 @@ class CourseReviewsDiffCallback(
                     newItem is CourseReviewItem.Placeholder
                 -> true
 
+            oldItem is CourseReviewItem.ComposeBanner &&
+                    newItem is CourseReviewItem.ComposeBanner
+                -> true
             else
                 -> false
         }
@@ -51,6 +54,10 @@ class CourseReviewsDiffCallback(
             oldItem is CourseReviewItem.Placeholder &&
                     newItem is CourseReviewItem.Placeholder
                 -> true
+
+            oldItem is CourseReviewItem.ComposeBanner &&
+                    newItem is CourseReviewItem.ComposeBanner
+                -> oldItem.canWriteReview == newItem.canWriteReview
 
             else
                 -> false
