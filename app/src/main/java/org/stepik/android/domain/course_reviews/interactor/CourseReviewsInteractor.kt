@@ -56,6 +56,7 @@ constructor(
                 val currentUserReviewSource =
                     if (page == 1) {
                         resolveCurrentUserCourseReview(profileId, courseId, sourceType)
+                            .onErrorReturnItem(emptyList())
                     } else {
                         Single.just(emptyList())
                     }
