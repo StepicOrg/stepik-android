@@ -121,6 +121,7 @@
 
         android:textSize="12sp"
         android:text="@string/course_reviews_compose_hint"
+        android:textColor="@color/color_violet_1"
         fontPath="fonts/Roboto-Medium.ttf"
         tools:ignore="missingPrefix"
         />
