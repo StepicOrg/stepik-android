@@ -32,17 +32,37 @@ constructor(
             .skip(1)
 
     fun getCourseReviewItems(courseId: Long, page: Int = 1, sourceType: DataSourceType = DataSourceType.CACHE): Single<PagedList<CourseReviewItem>> =
+        profileRepository
+            .getProfile(sourceType)
+            .flatMap { profile ->
+                getCourseReviewItems(profile.id, courseId, page, sourceType)
+            }
+
+    private fun getCourseReviewItems(
+        profileId: Long,
+        courseId: Long,
+        page: Int,
+        sourceType: DataSourceType
+    ): Single<PagedList<CourseReviewItem>> =
         courseReviewsRepository
             .getCourseReviewsByCourseId(courseId, page, sourceType)
             .flatMap { courseReviews ->
                 val userIds = courseReviews
                     .map(CourseReview::user)
+                    .filter { it != profileId }
                     .distinct()
                     .toLongArray()
 
-                zip(Single.just(courseReviews), userRepository.getUsers(userIds = *userIds))
+                val currentUserReviewSource =
+                    if (page == 1) {
+                        resolveCurrentUserCourseReview(profileId, courseId, sourceType)
+                    } else {
+                        Single.just(emptyList())
+                    }
+
+                zip(currentUserReviewSource, Single.just(courseReviews), userRepository.getUsers(userIds = *userIds))
             }
-            .map { (courseReviews, users) ->
+            .map { (currentUserReview, courseReviews, users) ->
                 val usersMap = users
                     .associateBy(User::id)
 
@@ -54,36 +74,36 @@ constructor(
                         CourseReviewItem.Data(review, user, isCurrentUserReview = false) as CourseReviewItem
                     }
 
-                PagedList(courseReviewsItems, page = courseReviews.page, hasNext = courseReviews.hasNext, hasPrev = courseReviews.hasPrev)
+                PagedList(currentUserReview + courseReviewsItems, page = courseReviews.page, hasNext = courseReviews.hasNext, hasPrev = courseReviews.hasPrev)
             }
 
-    private fun resolveCurrentUserCourseReview(courseId: Long, sourceType: DataSourceType): Single<CourseReviewItem> =
-        profileRepository
-            .getProfile(sourceType)
-            .flatMapMaybe { profile ->
-                Maybes.zip(
-                    courseReviewsRepository.getCourseReviewByCourseIdAndUserId(courseId, profile.id, sourceType),
-                    userRepository.getUsers(profile.id, primarySourceType = sourceType).maybeFirst()
-                )
-            }
+    /**
+     * Returns current user course review wrapped in list monad
+     */
+    fun resolveCurrentUserCourseReview(profileId: Long, courseId: Long, sourceType: DataSourceType = DataSourceType.CACHE): Single<List<CourseReviewItem>> =
+        Maybes
+            .zip(
+                courseReviewsRepository.getCourseReviewByCourseIdAndUserId(courseId, profileId, sourceType),
+                userRepository.getUsers(profileId, primarySourceType = sourceType).maybeFirst()
+            )
             .map { (review, user) ->
-                CourseReviewItem.Data(review, user, isCurrentUserReview = true) as CourseReviewItem
+                listOf<CourseReviewItem>(CourseReviewItem.Data(review, user, isCurrentUserReview = true))
             }
             .switchIfEmpty(resolveCourseReviewBanner())
 
-    private fun resolveCourseReviewBanner(): Single<CourseReviewItem> =
+    private fun resolveCourseReviewBanner(): Single<List<CourseReviewItem>> =
         courseObservableSource
             .firstOrError()
             .flatMap { course ->
                 val progressId = course.progress
                 if (progressId == null) {
-                    Single.just(CourseReviewItem.ComposeBanner(canWriteReview = false))
+                    Single.just(emptyList())
                 } else {
                     progressRepository
                         .getProgress(progressId)
                         .map { progress ->
                             val canWriteReview = progress.nStepsPassed * 100 / progress.nSteps > 80
-                            CourseReviewItem.ComposeBanner(canWriteReview)
+                            listOf(CourseReviewItem.ComposeBanner(canWriteReview))
                         }
                 }
             }

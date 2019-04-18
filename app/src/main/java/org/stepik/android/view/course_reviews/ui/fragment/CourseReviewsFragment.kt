@@ -1,7 +1,9 @@
 package org.stepik.android.view.course_reviews.ui.fragment
 
+import android.app.Activity
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
@@ -179,6 +181,18 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
         val dialog = ComposeCourseReviewDialogFragment.newInstance(courseId, courseReview)
         dialog.setTargetFragment(this, ComposeCourseReviewDialogFragment.REQUEST_CODE)
         dialog.show(supportFragmentManager, ComposeCourseReviewDialogFragment.TAG)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when (requestCode) {
+            ComposeCourseReviewDialogFragment.REQUEST_CODE ->
+                data?.takeIf { resultCode == Activity.RESULT_OK }
+                    ?.getParcelableExtra<CourseReview>(ComposeCourseReviewDialogFragment.ARG_COURSE_REVIEW)
+                    ?.let(courseReviewsPresenter::onCourseReviewChanged)
+
+            else ->
+                super.onActivityResult(requestCode, resultCode, data)
+        }
     }
 
     override fun onDestroy() {
