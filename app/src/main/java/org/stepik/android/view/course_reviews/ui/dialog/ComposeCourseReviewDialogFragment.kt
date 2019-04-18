@@ -16,6 +16,7 @@ import android.view.Window
 import kotlinx.android.synthetic.main.dialog_compose_course_review.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
+import org.stepic.droid.util.argument
 import org.stepic.droid.util.setTextColor
 import org.stepik.android.domain.course_reviews.model.CourseReview
 import org.stepik.android.presentation.course_reviews.ComposeCourseReviewPresenter
@@ -30,9 +31,10 @@ class ComposeCourseReviewDialogFragment : DialogFragment(), ComposeCourseReviewV
 
         const val ARG_COURSE_REVIEW = "course_review"
 
-        fun newInstance(courseReview: CourseReview?): DialogFragment =
+        fun newInstance(courseId: Long, courseReview: CourseReview?): DialogFragment =
             ComposeCourseReviewDialogFragment().apply {
-                arguments = Bundle(1)
+                this.courseId = courseId
+                this.arguments = Bundle(1)
                     .also {
                         it.putParcelable(ARG_COURSE_REVIEW, courseReview)
                     }
@@ -45,6 +47,7 @@ class ComposeCourseReviewDialogFragment : DialogFragment(), ComposeCourseReviewV
     private lateinit var composeCourseReviewPresenter: ComposeCourseReviewPresenter
     private lateinit var viewStateDelegate: ViewStateDelegate<ComposeCourseReviewView.State>
 
+    private var courseId: Long by argument()
     private val courseReview: CourseReview? by lazy { arguments?.getParcelable<CourseReview>(ARG_COURSE_REVIEW) }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -73,7 +76,6 @@ class ComposeCourseReviewDialogFragment : DialogFragment(), ComposeCourseReviewV
             .inject(this)
     }
 
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.dialog_compose_course_review, container, false)
 
@@ -98,6 +100,29 @@ class ComposeCourseReviewDialogFragment : DialogFragment(), ComposeCourseReviewV
     override fun onStop() {
         composeCourseReviewPresenter.detachView(this)
         super.onStop()
+    }
+    
+    private fun submitCourseReview() {
+        val oldCourseReview = courseReview
+
+        val text = courseReviewEditText.text?.toString()
+        val score = courseReviewRating.rating.toInt()
+
+        if (oldCourseReview == null) {
+            val courseReview = CourseReview(
+                course = courseId,
+                text = text,
+                score = score
+            )
+            composeCourseReviewPresenter.createCourseReview(courseReview)
+        } else {
+            val courseReview = oldCourseReview
+                .copy(
+                    text = text,
+                    score = score
+                )
+            composeCourseReviewPresenter.updateCourseReview(oldCourseReview, courseReview)
+        }
     }
 
     override fun setState(state: ComposeCourseReviewView.State) {
