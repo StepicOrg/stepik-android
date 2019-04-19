@@ -17,6 +17,7 @@ import kotlinx.android.synthetic.main.dialog_compose_course_review.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
+import org.stepic.droid.ui.util.hideKeyboard
 import org.stepic.droid.util.argument
 import org.stepic.droid.util.setTextColor
 import org.stepik.android.domain.course_reviews.model.CourseReview
@@ -28,7 +29,8 @@ import javax.inject.Inject
 class ComposeCourseReviewDialogFragment : DialogFragment(), ComposeCourseReviewView {
     companion object {
         const val TAG = "ComposeCourseReviewDialogFragment"
-        const val REQUEST_CODE = 3412
+        const val CREATE_REVIEW_REQUEST_CODE = 3412
+        const val EDIT_REVIEW_REQUEST_CODE = CREATE_REVIEW_REQUEST_CODE + 1
 
         const val ARG_COURSE_REVIEW = "course_review"
 
@@ -125,6 +127,7 @@ class ComposeCourseReviewDialogFragment : DialogFragment(), ComposeCourseReviewV
     }
     
     private fun submitCourseReview() {
+        courseReviewEditText.hideKeyboard()
         val oldCourseReview = courseReview
 
         val text = courseReviewEditText.text?.toString()
@@ -153,7 +156,7 @@ class ComposeCourseReviewDialogFragment : DialogFragment(), ComposeCourseReviewV
         if (state is ComposeCourseReviewView.State.Complete) {
             targetFragment
                 ?.onActivityResult(
-                    REQUEST_CODE,
+                    targetRequestCode,
                     Activity.RESULT_OK,
                     Intent().putExtra(ARG_COURSE_REVIEW, state.courseReview)
                 )
