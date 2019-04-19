@@ -14,8 +14,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import kotlinx.android.synthetic.main.dialog_compose_course_review.*
+import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
+import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.argument
 import org.stepic.droid.util.setTextColor
 import org.stepik.android.domain.course_reviews.model.CourseReview
@@ -62,8 +64,9 @@ class ComposeCourseReviewDialogFragment : DialogFragment(), ComposeCourseReviewV
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        injectComponent()
+        setStyle(STYLE_NO_TITLE, R.style.AppTheme_FullScreenDialog)
 
+        injectComponent()
         composeCourseReviewPresenter = ViewModelProviders
             .of(this, viewModelFactory)
             .get(ComposeCourseReviewPresenter::class.java)
@@ -85,6 +88,10 @@ class ComposeCourseReviewDialogFragment : DialogFragment(), ComposeCourseReviewV
         viewStateDelegate.addState<ComposeCourseReviewView.State.Loading>(courseReviewLoading)
         viewStateDelegate.addState<ComposeCourseReviewView.State.Complete>(courseReviewIdle)
 
+        centeredToolbarTitle.setText(R.string.course_reviews_compose_title)
+        centeredToolbar.setNavigationOnClickListener { dismiss() }
+        centeredToolbar.setNavigationIcon(R.drawable.ic_close_dark)
+
         if (savedInstanceState == null) {
             courseReview?.let {
                 courseReviewEditText.setText(it.text)
@@ -94,6 +101,13 @@ class ComposeCourseReviewDialogFragment : DialogFragment(), ComposeCourseReviewV
     }
     override fun onStart() {
         super.onStart()
+        dialog
+            ?.window
+            ?.let { window ->
+                window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,  ViewGroup.LayoutParams.MATCH_PARENT)
+                window.setWindowAnimations(R.style.AppTheme_FullScreenDialog)
+            }
+
         composeCourseReviewPresenter.attachView(this)
     }
 

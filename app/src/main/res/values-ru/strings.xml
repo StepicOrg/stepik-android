@@ -627,11 +627,13 @@
     <string name="course_error_enroll">@string/course_error_generic</string>
 
     <string name="course_reviews_empty">Для этого курса пока нет отзывов</string>
+    <string name="course_reviews_compose_title">Отзыв о курсе</string>
     <string name="course_reviews_compose_hint">Ваш отзыв</string>
     <string name="course_reviews_action_create">Написать отзыв</string>
     <string name="course_reviews_action_edit">Изменить</string>
     <string name="course_reviews_action_remove">Удалить</string>
     <string name="course_reviews_compose_banner_review_description">Чтобы оставить отзыв, пройдите больше 80% материалов</string>
+    <string name="course_reviews_compose_banner_review_motivation">Поделитесь своим мнением</string>
 
     <string name="course_content_timeline_begin_date">Дата начала</string>
     <string name="course_content_timeline_end_date">Дата закрытия</string>
