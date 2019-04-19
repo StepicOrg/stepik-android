@@ -69,6 +69,7 @@ constructor(
     }
 
     private fun replaceCourseReview(courseReviewSource: Single<CourseReview>) {
+        state = ComposeCourseReviewView.State.Loading
         compositeDisposable += courseReviewSource
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)

@@ -17,7 +17,9 @@ import kotlinx.android.synthetic.main.dialog_compose_course_review.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
+import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.hideKeyboard
+import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.argument
 import org.stepic.droid.util.setTextColor
 import org.stepik.android.domain.course_reviews.model.CourseReview
@@ -48,10 +50,12 @@ class ComposeCourseReviewDialogFragment : DialogFragment(), ComposeCourseReviewV
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var composeCourseReviewPresenter: ComposeCourseReviewPresenter
-    private lateinit var viewStateDelegate: ViewStateDelegate<ComposeCourseReviewView.State>
 
     private var courseId: Long by argument()
     private val courseReview: CourseReview? by lazy { arguments?.getParcelable<CourseReview>(ARG_COURSE_REVIEW) }
+
+    private val progressDialogFragment: DialogFragment =
+        LoadingProgressDialogFragment.newInstance()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
@@ -84,11 +88,6 @@ class ComposeCourseReviewDialogFragment : DialogFragment(), ComposeCourseReviewV
         inflater.inflate(R.layout.dialog_compose_course_review, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        viewStateDelegate = ViewStateDelegate()
-        viewStateDelegate.addState<ComposeCourseReviewView.State.Idle>(courseReviewIdle)
-        viewStateDelegate.addState<ComposeCourseReviewView.State.Loading>(courseReviewLoading)
-        viewStateDelegate.addState<ComposeCourseReviewView.State.Complete>(courseReviewIdle)
-
         centeredToolbarTitle.setText(R.string.course_reviews_compose_title)
         centeredToolbar.setNavigationOnClickListener { dismiss() }
         centeredToolbar.setNavigationIcon(R.drawable.ic_close_dark)
@@ -151,16 +150,23 @@ class ComposeCourseReviewDialogFragment : DialogFragment(), ComposeCourseReviewV
     }
 
     override fun setState(state: ComposeCourseReviewView.State) {
-        viewStateDelegate.switchState(state)
+        when (state) {
+            ComposeCourseReviewView.State.Idle ->
+                ProgressHelper.dismiss(childFragmentManager, LoadingProgressDialogFragment.TAG)
 
-        if (state is ComposeCourseReviewView.State.Complete) {
-            targetFragment
-                ?.onActivityResult(
-                    targetRequestCode,
-                    Activity.RESULT_OK,
-                    Intent().putExtra(ARG_COURSE_REVIEW, state.courseReview)
-                )
-            dismiss()
+            ComposeCourseReviewView.State.Loading ->
+                ProgressHelper.activate(progressDialogFragment, childFragmentManager, LoadingProgressDialogFragment.TAG)
+
+            is ComposeCourseReviewView.State.Complete -> {
+                ProgressHelper.dismiss(childFragmentManager, LoadingProgressDialogFragment.TAG)
+                targetFragment
+                    ?.onActivityResult(
+                        targetRequestCode,
+                        Activity.RESULT_OK,
+                        Intent().putExtra(ARG_COURSE_REVIEW, state.courseReview)
+                    )
+                dismiss()
+            }
         }
     }
 
