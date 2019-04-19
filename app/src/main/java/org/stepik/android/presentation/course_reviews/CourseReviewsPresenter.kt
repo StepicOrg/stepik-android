@@ -204,20 +204,9 @@ constructor(
     }
 
     fun onCourseReviewUpdated(courseReview: CourseReview) {
-        val items =
-            when (val state = state) {
-                is CourseReviewsView.State.CourseReviewsCache ->
-                    state.courseReviewItems
-
-                is CourseReviewsView.State.CourseReviewsRemote ->
-                    state.courseReviewItems
-
-                is CourseReviewsView.State.CourseReviewsRemoteLoading ->
-                    state.courseReviewItems
-
-                else ->
-                    return
-            }
+        val items = courseReviewsStateMapper
+            .getCourseReviewItemsOfState(state)
+            ?: return
 
         val item = items
             .find { courseReviewItem ->
