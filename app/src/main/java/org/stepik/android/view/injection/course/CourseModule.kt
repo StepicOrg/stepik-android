@@ -10,16 +10,12 @@ import io.reactivex.Scheduler
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
-import org.stepik.android.data.course.repository.CourseReviewRepositoryImpl
-import org.stepik.android.data.course.source.CourseReviewRemoteDataSource
-import org.stepik.android.domain.course.repository.CourseReviewRepository
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.base.injection.ViewModelKey
 import org.stepik.android.presentation.course.CoursePresenter
 import org.stepik.android.presentation.course_content.CourseContentPresenter
 import org.stepik.android.presentation.course_info.CourseInfoPresenter
 import org.stepik.android.presentation.course_reviews.CourseReviewsPresenter
-import org.stepik.android.remote.course.source.CourseReviewRemoteDataSourceImpl
 
 @Module
 abstract class CourseModule {

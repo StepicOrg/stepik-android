@@ -1,7 +1,6 @@
 package org.stepic.droid.features.course_purchases.domain
 
 import io.reactivex.Single
-import org.solovyev.android.checkout.ProductTypes
 import org.solovyev.android.checkout.Sku
 import org.stepik.android.domain.billing.repository.BillingRepository
 import org.stepik.android.domain.course_payments.model.CoursePayment
@@ -34,18 +33,18 @@ constructor(
             .onErrorReturnItem(emptyMap())
 
     fun getCoursesSkuMap(courses: List<Course>): Single<Map<String, Sku>> =
-        courses
-            .mapNotNull { course ->
-                course.priceTier?.let { COURSE_TIER_PREFIX + it }
-            }
-            .let { skuIds ->
-                billingRepository
-                    .getInventory(ProductTypes.IN_APP, skuIds)
-            }
-            .map { skus ->
-                skus.associateBy { it.id.code }
-                    .mapKeys { it.key.removePrefix(COURSE_TIER_PREFIX) }
-            }
-            .onErrorReturnItem(emptyMap())
-
+        Single.just(emptyMap())
+//        courses
+//            .mapNotNull { course ->
+//                course.priceTier?.let { COURSE_TIER_PREFIX + it }
+//            }
+//            .let { skuIds ->
+//                billingRepository
+//                    .getInventory(ProductTypes.IN_APP, skuIds)
+//            }
+//            .map { skus ->
+//                skus.associateBy { it.id.code }
+//                    .mapKeys { it.key.removePrefix(COURSE_TIER_PREFIX) }
+//            }
+//            .onErrorReturnItem(emptyMap())
 }
