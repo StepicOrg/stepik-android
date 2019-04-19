@@ -48,8 +48,6 @@ class CodeStepFragment : StepAttemptFragment(),
         fun newInstance(): CodeStepFragment = CodeStepFragment()
     }
 
-    private var activityResultActivated = false
-
     @Inject
     lateinit var codePresenter: CodePresenter
 
@@ -58,6 +56,8 @@ class CodeStepFragment : StepAttemptFragment(),
 
     private var codeToolbarAdapter: CodeToolbarAdapter? = null
     private var onGlobalLayoutListener: ViewTreeObserver.OnGlobalLayoutListener? = null
+
+    private var activityResultActivated = false
 
     override fun injectComponent() {
         App
@@ -173,6 +173,7 @@ class CodeStepFragment : StepAttemptFragment(),
             showCodeQuizEditor(true)
             showLanguageChoosingView(false)
         }
+        activityResultActivated = false
     }
 
     override fun onStepNotPrepared() {
