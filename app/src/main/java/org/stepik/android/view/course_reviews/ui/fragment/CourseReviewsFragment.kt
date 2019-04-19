@@ -1,7 +1,9 @@
 package org.stepik.android.view.course_reviews.ui.fragment
 
+import android.app.Activity
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
@@ -17,14 +19,18 @@ import kotlinx.android.synthetic.main.empty_default.view.placeholderMessage
 import kotlinx.android.synthetic.main.error_no_connection.*
 import kotlinx.android.synthetic.main.fragment_course_reviews.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.AmplitudeAnalytic
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.util.argument
 import org.stepic.droid.util.setTextColor
+import org.stepik.android.domain.course_reviews.model.CourseReview
 import org.stepik.android.domain.course_reviews.model.CourseReviewItem
 import org.stepik.android.presentation.course_reviews.CourseReviewsPresenter
 import org.stepik.android.presentation.course_reviews.CourseReviewsView
 import org.stepik.android.view.course_reviews.ui.adapter.CourseReviewsAdapter
+import org.stepik.android.view.course_reviews.ui.dialog.ComposeCourseReviewDialogFragment
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import javax.inject.Inject
 
@@ -41,6 +47,9 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
 
     @Inject
     internal lateinit var screenManager: ScreenManager
+
+    @Inject
+    internal lateinit var analytic: Analytic
 
     private var courseId: Long by argument()
 
@@ -70,7 +79,12 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
         inflater.inflate(R.layout.fragment_course_reviews, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        courseReviewsAdapter = CourseReviewsAdapter { screenManager.openProfile(activity, it.id) }
+        courseReviewsAdapter = CourseReviewsAdapter(
+            onUserClicked = { screenManager.openProfile(activity, it.id) },
+            onCreateReviewClicked = { showCourseReviewEditDialog(null) },
+            onEditReviewClicked = ::showCourseReviewEditDialog,
+            onRemoveReviewClicked = courseReviewsPresenter::removeCourseReview
+        )
 
         with(courseReviewsRecycler) {
             layoutManager = LinearLayoutManager(context)
@@ -114,6 +128,17 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
         viewStateDelegate.addState<CourseReviewsView.State.EmptyContent>(report_empty)
     }
 
+    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+        super.setUserVisibleHint(isVisibleToUser)
+        if (isVisibleToUser) {
+            analytic
+                .reportAmplitudeEvent(
+                    AmplitudeAnalytic.CourseReview.SCREEN_OPENED,
+                    mapOf(AmplitudeAnalytic.CourseReview.Params.COURSE to courseId.toString())
+                )
+        }
+    }
+
     override fun onStart() {
         super.onStart()
         courseReviewsPresenter.attachView(this)
@@ -134,7 +159,7 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
                 courseReviewsAdapter.items = state.courseReviewItems
 
             is CourseReviewsView.State.CourseReviewsRemoteLoading ->
-                courseReviewsAdapter.items = state.courseReviewItems + CourseReviewItem.Placeholder
+                courseReviewsAdapter.items = state.courseReviewItems + CourseReviewItem.Placeholder()
         }
     }
 
@@ -146,6 +171,41 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
             .make(view, R.string.connectionProblems, Snackbar.LENGTH_SHORT)
             .setTextColor(ContextCompat.getColor(view.context, R.color.white))
             .show()
+    }
+
+    private fun showCourseReviewEditDialog(courseReview: CourseReview?) {
+        val supportFragmentManager = activity
+            ?.supportFragmentManager
+            ?.takeIf { it.findFragmentByTag(ComposeCourseReviewDialogFragment.TAG) == null }
+            ?: return
+
+        val requestCode =
+            if (courseReview == null) {
+                ComposeCourseReviewDialogFragment.CREATE_REVIEW_REQUEST_CODE
+            } else {
+                ComposeCourseReviewDialogFragment.EDIT_REVIEW_REQUEST_CODE
+            }
+
+        val dialog = ComposeCourseReviewDialogFragment.newInstance(courseId, courseReview)
+        dialog.setTargetFragment(this, requestCode)
+        dialog.show(supportFragmentManager, ComposeCourseReviewDialogFragment.TAG)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when (requestCode) {
+            ComposeCourseReviewDialogFragment.CREATE_REVIEW_REQUEST_CODE ->
+                data?.takeIf { resultCode == Activity.RESULT_OK }
+                    ?.getParcelableExtra<CourseReview>(ComposeCourseReviewDialogFragment.ARG_COURSE_REVIEW)
+                    ?.let(courseReviewsPresenter::onCourseReviewCreated)
+
+            ComposeCourseReviewDialogFragment.EDIT_REVIEW_REQUEST_CODE ->
+                data?.takeIf { resultCode == Activity.RESULT_OK }
+                    ?.getParcelableExtra<CourseReview>(ComposeCourseReviewDialogFragment.ARG_COURSE_REVIEW)
+                    ?.let(courseReviewsPresenter::onCourseReviewUpdated)
+
+            else ->
+                super.onActivityResult(requestCode, resultCode, data)
+        }
     }
 
     override fun onDestroy() {

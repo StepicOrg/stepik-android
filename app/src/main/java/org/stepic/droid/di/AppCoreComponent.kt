@@ -53,6 +53,7 @@ import org.stepic.droid.util.glide.GlideCustomModule
 import org.stepik.android.view.injection.billing.BillingModule
 import org.stepik.android.view.injection.course.CourseComponent
 import org.stepik.android.view.injection.course.CourseRoutingModule
+import org.stepik.android.view.injection.course_reviews.ComposeCourseReviewComponent
 import org.stepik.android.view.injection.personal_deadlines.PersonalDeadlinesDataModule
 import org.stepik.android.view.injection.profile.ProfileBusModule
 import org.stepik.android.view.injection.profile_edit.ProfileEditComponent
@@ -133,6 +134,8 @@ interface AppCoreComponent {
     fun videoPlayerComponentBuilder(): VideoPlayerComponent.Builder
 
     fun profileEditComponentBuilder(): ProfileEditComponent.Builder
+
+    fun composeCourseReviewComponent(): ComposeCourseReviewComponent.Builder
 
     fun inject(someActivity: FragmentActivityBase)
 

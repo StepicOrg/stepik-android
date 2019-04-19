@@ -3,10 +3,18 @@ package org.stepik.android.domain.course_reviews.model
 import org.stepik.android.model.user.User
 
 sealed class CourseReviewItem {
-    object Placeholder : CourseReviewItem()
+    class Placeholder(
+        val isPlaceholderForCurrentUser: Boolean = false
+    ) : CourseReviewItem()
 
-    class Data(
+    data class Data(
         val courseReview: CourseReview,
-        val user: User
+        val user: User,
+        val isCurrentUserReview: Boolean
+    ) : CourseReviewItem()
+
+    data class ComposeBanner(
+        val canWriteReview: Boolean,
+        val isReviewsEmpty: Boolean = false
     ) : CourseReviewItem()
 }
