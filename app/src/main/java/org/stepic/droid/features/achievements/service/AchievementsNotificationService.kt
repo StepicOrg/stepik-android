@@ -12,6 +12,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.analytic.experiments.AchievementsSplitTest
 import org.stepic.droid.base.App
 import org.stepic.droid.features.achievements.repository.AchievementsRepository
 import org.stepic.droid.features.achievements.ui.activity.AchievementsListActivity
@@ -49,6 +50,9 @@ class AchievementsNotificationService : JobIntentService() {
     @Inject
     internal lateinit var achievementResourceResolver: AchievementResourceResolver
 
+    @Inject
+    internal lateinit var achievementsSplitTest: AchievementsSplitTest
+
     init {
         App.component().inject(this)
     }
@@ -69,6 +73,8 @@ class AchievementsNotificationService : JobIntentService() {
                     AmplitudeAnalytic.Achievements.Params.LEVEL to achievement.currentLevel
                 )
             )
+
+            if (!achievementsSplitTest.currentGroup.isAchievementsEnabled) return
 
             val notificationIntent = AchievementsListActivity
                     .createIntent(this, achievementNotification.user, isMyProfile = true)
