@@ -182,4 +182,7 @@
     <!-- Text styles colors -->
     <color name="color_body1">#222222</color>
     <color name="color_body2_note">#999999</color>
+
+    <color name="color_violet_1">#6C7BDF</color>
+    <color name="color_violet_1_12">#206C7BDF</color>
 </resources>

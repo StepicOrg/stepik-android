@@ -6,22 +6,20 @@ import android.widget.PopupMenu
 import kotlinx.android.synthetic.main.view_course_content_control_bar.view.*
 import org.stepic.droid.R
 import org.stepic.droid.ui.custom.adapter_delegates.AdapterDelegate
-import org.stepic.droid.ui.custom.adapter_delegates.DelegateAdapter
 import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
 import org.stepic.droid.ui.util.setHeight
 import org.stepik.android.presentation.personal_deadlines.model.PersonalDeadlinesState
 import org.stepik.android.view.course_content.model.CourseContentItem
 
 class CourseContentControlBarDelegate(
-    adapter: DelegateAdapter<CourseContentItem, DelegateViewHolder<CourseContentItem>>,
     private val controlBarClickListener: CourseContentControlBarClickListener
-) : AdapterDelegate<CourseContentItem, DelegateViewHolder<CourseContentItem>>(adapter) {
+) : AdapterDelegate<CourseContentItem, DelegateViewHolder<CourseContentItem>>() {
 
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder =
         ViewHolder(createView(parent, R.layout.view_course_content_control_bar))
 
-    override fun isForViewType(position: Int): Boolean =
-        getItemAtPosition(position) is CourseContentItem.ControlBar
+    override fun isForViewType(position: Int, data: CourseContentItem): Boolean =
+        data is CourseContentItem.ControlBar
 
     inner class ViewHolder(root: View) : DelegateViewHolder<CourseContentItem>(root) {
         private val controlBar = root.controlBar

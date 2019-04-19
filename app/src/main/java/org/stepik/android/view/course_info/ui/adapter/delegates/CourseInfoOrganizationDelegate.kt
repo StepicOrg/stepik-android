@@ -13,14 +13,13 @@ import org.stepik.android.view.course_info.model.CourseInfoItem
 import org.stepik.android.view.course_info.ui.adapter.CourseInfoAdapter
 
 class CourseInfoOrganizationDelegate(
-    adapter: CourseInfoAdapter,
     private val onUserClicked: ((User) -> Unit)? = null
-) : AdapterDelegate<CourseInfoItem, CourseInfoAdapter.ViewHolder>(adapter) {
+) : AdapterDelegate<CourseInfoItem, CourseInfoAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder =
         ViewHolder(createView(parent, R.layout.view_course_info_organization))
 
-    override fun isForViewType(position: Int): Boolean =
-        getItemAtPosition(position) is CourseInfoItem.OrganizationBlock
+    override fun isForViewType(position: Int, data: CourseInfoItem): Boolean =
+        data is CourseInfoItem.OrganizationBlock
 
     inner class ViewHolder(root: View) : CourseInfoAdapter.ViewHolder(root) {
         private val titleColorSpan = ForegroundColorSpan(ContextCompat.getColor(root.context, R.color.course_info_organization_span))

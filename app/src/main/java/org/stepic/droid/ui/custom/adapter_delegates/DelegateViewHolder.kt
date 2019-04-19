@@ -16,5 +16,11 @@ abstract class DelegateViewHolder<D>(root: View) : RecyclerView.ViewHolder(root)
         onBind(data)
     }
 
+    internal fun unbind() {
+        itemData = null
+        onUnbind()
+    }
+
     protected open fun onBind(data: D) {}
+    protected open fun onUnbind() {}
 }

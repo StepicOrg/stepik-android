@@ -9,7 +9,6 @@ import kotlinx.android.synthetic.main.view_course_content_section.view.*
 import org.stepic.droid.R
 import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepic.droid.ui.custom.adapter_delegates.AdapterDelegate
-import org.stepic.droid.ui.custom.adapter_delegates.DelegateAdapter
 import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
 import org.stepic.droid.ui.util.StartSnapHelper
 import org.stepic.droid.ui.util.changeVisibility
@@ -19,16 +18,15 @@ import org.stepik.android.view.course_content.ui.adapter.CourseContentTimelineAd
 import org.stepik.android.view.course_content.ui.adapter.decorators.CourseContentTimelineDecorator
 
 class CourseContentSectionDelegate(
-    adapter: DelegateAdapter<CourseContentItem, DelegateViewHolder<CourseContentItem>>,
     private val sectionClickListener: CourseContentSectionClickListener,
     private val sectionDownloadStatuses: LongSparseArray<DownloadProgress.Status>
-) : AdapterDelegate<CourseContentItem, DelegateViewHolder<CourseContentItem>>(adapter) {
+) : AdapterDelegate<CourseContentItem, DelegateViewHolder<CourseContentItem>>() {
 
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder =
         ViewHolder(createView(parent, R.layout.view_course_content_section))
 
-    override fun isForViewType(position: Int): Boolean =
-        getItemAtPosition(position) is CourseContentItem.SectionItem
+    override fun isForViewType(position: Int, data: CourseContentItem): Boolean =
+        data is CourseContentItem.SectionItem
 
     inner class ViewHolder(root: View) : DelegateViewHolder<CourseContentItem>(root) {
         private val sectionTitle    = root.sectionTitle
