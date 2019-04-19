@@ -17,7 +17,6 @@ import kotlinx.android.synthetic.main.dialog_compose_course_review.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
-import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.argument
 import org.stepic.droid.util.setTextColor
 import org.stepik.android.domain.course_reviews.model.CourseReview
@@ -35,11 +34,11 @@ class ComposeCourseReviewDialogFragment : DialogFragment(), ComposeCourseReviewV
 
         fun newInstance(courseId: Long, courseReview: CourseReview?): DialogFragment =
             ComposeCourseReviewDialogFragment().apply {
-                this.courseId = courseId
-                this.arguments = Bundle(1)
+                this.arguments = Bundle(2)
                     .also {
                         it.putParcelable(ARG_COURSE_REVIEW, courseReview)
                     }
+                this.courseId = courseId
             }
     }
 
@@ -91,6 +90,15 @@ class ComposeCourseReviewDialogFragment : DialogFragment(), ComposeCourseReviewV
         centeredToolbarTitle.setText(R.string.course_reviews_compose_title)
         centeredToolbar.setNavigationOnClickListener { dismiss() }
         centeredToolbar.setNavigationIcon(R.drawable.ic_close_dark)
+        centeredToolbar.inflateMenu(R.menu.compose_course_review_menu)
+        centeredToolbar.setOnMenuItemClickListener { menuItem ->
+            if (menuItem.itemId == R.id.course_review_submit) {
+                submitCourseReview()
+                true
+            } else {
+                false
+            }
+        }
 
         if (savedInstanceState == null) {
             courseReview?.let {
