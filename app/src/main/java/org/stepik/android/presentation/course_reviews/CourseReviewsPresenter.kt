@@ -194,7 +194,7 @@ constructor(
     fun onCourseReviewCreated(courseReview: CourseReview) {
         state = courseReviewsStateMapper.mergeStateWithCurrentUserReviewLoading(state)
         paginationDisposable += courseReviewsInteractor
-            .resolveCurrentUserCourseReview(courseReview.user, courseReview.course)
+            .resolveCurrentUserCourseReview(courseReview.user, courseReview.course, courseReviewsStateMapper.isStateHasReviews(state))
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
@@ -235,7 +235,7 @@ constructor(
         state = courseReviewsStateMapper.mergeStateWithCurrentUserReviewLoading(state)
         paginationDisposable += composeCourseReviewInteractor
             .removeCourseReview(courseReview.id)
-            .andThen(courseReviewsInteractor.resolveCurrentUserCourseReview(courseReview.user, courseReview.course))
+            .andThen(courseReviewsInteractor.resolveCurrentUserCourseReview(courseReview.user, courseReview.course, courseReviewsStateMapper.isStateHasReviews(state)))
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .doOnSuccess {

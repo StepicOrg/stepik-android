@@ -13,7 +13,8 @@ sealed class CourseReviewItem {
         val isCurrentUserReview: Boolean
     ) : CourseReviewItem()
 
-    class ComposeBanner(
-        val canWriteReview: Boolean
+    data class ComposeBanner(
+        val canWriteReview: Boolean,
+        val isReviewsEmpty: Boolean = false
     ) : CourseReviewItem()
 }

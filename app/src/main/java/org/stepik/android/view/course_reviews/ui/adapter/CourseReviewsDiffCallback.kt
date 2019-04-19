@@ -56,8 +56,10 @@ class CourseReviewsDiffCallback(
                 -> true
 
             oldItem is CourseReviewItem.ComposeBanner &&
-                    newItem is CourseReviewItem.ComposeBanner
-                -> oldItem.canWriteReview == newItem.canWriteReview
+                    newItem is CourseReviewItem.ComposeBanner &&
+                    oldItem.canWriteReview == newItem.canWriteReview &&
+                    oldItem.isReviewsEmpty == newItem.isReviewsEmpty
+                -> true
 
             else
                 -> false

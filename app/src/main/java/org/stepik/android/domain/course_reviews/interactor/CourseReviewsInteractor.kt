@@ -55,7 +55,7 @@ constructor(
 
                 val currentUserReviewSource =
                     if (page == 1) {
-                        resolveCurrentUserCourseReview(profileId, courseId, sourceType)
+                        resolveCurrentUserCourseReview(profileId, courseId, courseReviews.isNotEmpty(), sourceType)
                             .onErrorReturnItem(emptyList())
                     } else {
                         Single.just(emptyList())
@@ -81,7 +81,7 @@ constructor(
     /**
      * Returns current user course review wrapped in list monad
      */
-    fun resolveCurrentUserCourseReview(profileId: Long, courseId: Long, sourceType: DataSourceType = DataSourceType.CACHE): Single<List<CourseReviewItem>> =
+    fun resolveCurrentUserCourseReview(profileId: Long, courseId: Long, hasReviews: Boolean, sourceType: DataSourceType = DataSourceType.CACHE): Single<List<CourseReviewItem>> =
         Maybes
             .zip(
                 courseReviewsRepository.getCourseReviewByCourseIdAndUserId(courseId, profileId, sourceType),
@@ -90,9 +90,9 @@ constructor(
             .map { (review, user) ->
                 listOf<CourseReviewItem>(CourseReviewItem.Data(review, user, isCurrentUserReview = true))
             }
-            .switchIfEmpty(resolveCourseReviewBanner())
+            .switchIfEmpty(resolveCourseReviewBanner(hasReviews))
 
-    private fun resolveCourseReviewBanner(): Single<List<CourseReviewItem>> =
+    private fun resolveCourseReviewBanner(hasReviews: Boolean): Single<List<CourseReviewItem>> =
         courseObservableSource
             .firstOrError()
             .flatMap { course ->
@@ -104,7 +104,7 @@ constructor(
                         .getProgress(progressId)
                         .map { progress ->
                             val canWriteReview = progress.nStepsPassed * 100 / progress.nSteps > 80
-                            listOf(CourseReviewItem.ComposeBanner(canWriteReview))
+                            listOf(CourseReviewItem.ComposeBanner(canWriteReview, isReviewsEmpty = !hasReviews))
                         }
                 }
             }

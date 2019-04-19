@@ -8,6 +8,25 @@ import javax.inject.Inject
 class CourseReviewsStateMapper
 @Inject
 constructor() {
+    fun isStateHasReviews(state: CourseReviewsView.State): Boolean {
+        val reviewItems =
+            when (state) {
+                is CourseReviewsView.State.CourseReviewsCache ->
+                    state.courseReviewItems
+
+                is CourseReviewsView.State.CourseReviewsRemote ->
+                    state.courseReviewItems
+
+                is CourseReviewsView.State.CourseReviewsRemoteLoading ->
+                    state.courseReviewItems
+
+                else ->
+                    return false
+            }
+
+        return reviewItems.any { it is CourseReviewItem.Data }
+    }
+
     fun mergeStateWithCurrentUserReviewLoading(state: CourseReviewsView.State): CourseReviewsView.State =
         mergeStateWithCurrentUserReview(listOf(CourseReviewItem.Placeholder(isPlaceholderForCurrentUser = true)), state)
 
