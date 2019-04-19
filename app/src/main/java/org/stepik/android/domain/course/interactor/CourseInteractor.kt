@@ -4,10 +4,8 @@ import io.reactivex.Maybe
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.subjects.BehaviorSubject
-import org.solovyev.android.checkout.ProductTypes
 import org.stepic.droid.model.CourseReviewSummary
 import org.stepic.droid.util.safeDiv
-import org.stepik.android.domain.billing.model.SkuSerializableWrapper
 import org.stepik.android.domain.billing.repository.BillingRepository
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.model.EnrollmentState
@@ -99,12 +97,13 @@ constructor(
                     .getCoursePaymentsByCourseId(course.id, coursePaymentStatus = CoursePayment.Status.SUCCESS)
                     .flatMap { payments ->
                         if (payments.isEmpty()) {
-                            billingRepository
-                                .getInventory(ProductTypes.IN_APP, COURSE_TIER_PREFIX + course.priceTier)
-                                .map(::SkuSerializableWrapper)
-                                .map(EnrollmentState::NotEnrolledInApp)
-                                .cast(EnrollmentState::class.java)
-                                .toSingle(EnrollmentState.NotEnrolledWeb) // if price_tier == null
+                            Single.just(EnrollmentState.NotEnrolledWeb)
+//                            billingRepository
+//                                .getInventory(ProductTypes.IN_APP, COURSE_TIER_PREFIX + course.priceTier)
+//                                .map(::SkuSerializableWrapper)
+//                                .map(EnrollmentState::NotEnrolledInApp)
+//                                .cast(EnrollmentState::class.java)
+//                                .toSingle(EnrollmentState.NotEnrolledWeb) // if price_tier == null
                         } else {
                             Single.just(EnrollmentState.NotEnrolledFree)
                         }
