@@ -2,6 +2,7 @@ package org.stepic.droid.ui.adapters
 
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.SparseArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +17,7 @@ import org.stepic.droid.configuration.Config
 import org.stepic.droid.features.stories.presentation.StoriesView
 import org.stepic.droid.features.stories.ui.adapter.StoriesAdapter
 import org.stepic.droid.model.*
+import org.stepic.droid.ui.custom.CoursesCarouselViewState
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.ui.util.setHeight
 import org.stepik.android.model.Tag
@@ -49,6 +51,8 @@ class CatalogAdapter(
 
     private var filters: EnumSet<StepikFilter>? = null
     private var needShowFilters = false
+
+    private val coursesCarouselViewStates = SparseArray<CoursesCarouselViewState>()
 
     private var tags = mutableListOf<Tag>()
     var isOfflineMode: Boolean = false
@@ -93,7 +97,7 @@ class CatalogAdapter(
                 holder as CarouselViewHolder
                 val coursesCarouselInfo = courseListItemBy(adapterPosition = position)
                 val descriptionColors = getDescriptionColors(position)
-                holder.bindData(coursesCarouselInfo, descriptionColors)
+                holder.bindData(coursesCarouselInfo, descriptionColors, coursesCarouselViewStates[position])
             }
             LANGUAGES_TYPE -> {
                 holder as LanguagesViewHolder
@@ -101,7 +105,7 @@ class CatalogAdapter(
             }
             POPULAR_TYPE -> {
                 holder as CarouselViewHolder
-                holder.bindData(CoursesCarouselInfoConstants.popular, null)
+                holder.bindData(CoursesCarouselInfoConstants.popular, null, coursesCarouselViewStates[position])
             }
             OFFLINE_TYPE -> {
                 holder as OfflineViewHolder
@@ -116,6 +120,13 @@ class CatalogAdapter(
                 holder.bindState(storiesState)
             }
         }
+    }
+
+    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
+        if (holder is CarouselViewHolder) {
+            coursesCarouselViewStates.append(holder.adapterPosition, holder.coursesCarousel.onSaveState())
+        }
+        super.onViewRecycled(holder)
     }
 
     fun setFilters(filtersFromPreferences: EnumSet<StepikFilter>, needShow: Boolean) {
@@ -180,12 +191,20 @@ class CatalogAdapter(
 
 
     private class CarouselViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        internal val coursesCarousel = itemView.coursesCarouselItem
 
-        private val coursesCarousel = itemView.coursesCarouselItem
-
-        fun bindData(coursesCarouselInfo: CoursesCarouselInfo, descriptionColors: CollectionDescriptionColors?) {
+        fun bindData(
+            coursesCarouselInfo: CoursesCarouselInfo,
+            descriptionColors: CollectionDescriptionColors?,
+            coursesCarouselViewState: CoursesCarouselViewState?
+        ) {
             coursesCarousel.setDescriptionColors(descriptionColors)
-            coursesCarousel.setCourseCarouselInfo(coursesCarouselInfo)
+
+            if (coursesCarouselViewState != null) {
+                coursesCarousel.onRestoreState(coursesCarouselInfo, coursesCarouselViewState)
+            } else {
+                coursesCarousel.setCourseCarouselInfo(coursesCarouselInfo)
+            }
         }
     }
 
@@ -283,11 +302,13 @@ class CatalogAdapter(
 
     fun enableOfflineMode() {
         isOfflineMode = true
+        coursesCarouselViewStates.clear()
         notifyDataSetChanged()
     }
 
     fun showCollections() {
         isOfflineMode = false
+        coursesCarouselViewStates.clear()
         notifyDataSetChanged()
     }
 
