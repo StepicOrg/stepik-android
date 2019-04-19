@@ -159,7 +159,7 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
                 courseReviewsAdapter.items = state.courseReviewItems
 
             is CourseReviewsView.State.CourseReviewsRemoteLoading ->
-                courseReviewsAdapter.items = state.courseReviewItems + CourseReviewItem.Placeholder
+                courseReviewsAdapter.items = state.courseReviewItems + CourseReviewItem.Placeholder()
         }
     }
 
@@ -179,17 +179,29 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
             ?.takeIf { it.findFragmentByTag(ComposeCourseReviewDialogFragment.TAG) == null }
             ?: return
 
+        val requestCode =
+            if (courseReview == null) {
+                ComposeCourseReviewDialogFragment.CREATE_REVIEW_REQUEST_CODE
+            } else {
+                ComposeCourseReviewDialogFragment.EDIT_REVIEW_REQUEST_CODE
+            }
+
         val dialog = ComposeCourseReviewDialogFragment.newInstance(courseId, courseReview)
-        dialog.setTargetFragment(this, ComposeCourseReviewDialogFragment.REQUEST_CODE)
+        dialog.setTargetFragment(this, requestCode)
         dialog.show(supportFragmentManager, ComposeCourseReviewDialogFragment.TAG)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
-            ComposeCourseReviewDialogFragment.REQUEST_CODE ->
+            ComposeCourseReviewDialogFragment.CREATE_REVIEW_REQUEST_CODE ->
                 data?.takeIf { resultCode == Activity.RESULT_OK }
                     ?.getParcelableExtra<CourseReview>(ComposeCourseReviewDialogFragment.ARG_COURSE_REVIEW)
-                    ?.let(courseReviewsPresenter::onCourseReviewChanged)
+                    ?.let(courseReviewsPresenter::onCourseReviewCreated)
+
+            ComposeCourseReviewDialogFragment.EDIT_REVIEW_REQUEST_CODE ->
+                data?.takeIf { resultCode == Activity.RESULT_OK }
+                    ?.getParcelableExtra<CourseReview>(ComposeCourseReviewDialogFragment.ARG_COURSE_REVIEW)
+                    ?.let(courseReviewsPresenter::onCourseReviewUpdated)
 
             else ->
                 super.onActivityResult(requestCode, resultCode, data)

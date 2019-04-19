@@ -8,6 +8,8 @@ import javax.inject.Inject
 class CourseReviewsStateMapper
 @Inject
 constructor() {
+    fun mergeStateWithCurrentUserReviewLoading(state: CourseReviewsView.State): CourseReviewsView.State =
+        mergeStateWithCurrentUserReview(listOf(CourseReviewItem.Placeholder(isPlaceholderForCurrentUser = true)), state)
 
     fun mergeStateWithCurrentUserReview(currentUserReview: List<CourseReviewItem>, state: CourseReviewsView.State): CourseReviewsView.State =
         when (state) {
@@ -35,7 +37,8 @@ constructor() {
         val filteredReviews = reviews
             .dropWhile { courseReviewItem ->
                 courseReviewItem is CourseReviewItem.ComposeBanner ||
-                courseReviewItem is CourseReviewItem.Data && courseReviewItem.isCurrentUserReview
+                courseReviewItem is CourseReviewItem.Data && courseReviewItem.isCurrentUserReview ||
+                courseReviewItem is CourseReviewItem.Placeholder && courseReviewItem.isPlaceholderForCurrentUser
             }
 
         return PagedList(currentUserReview + filteredReviews, page = reviews.page, hasPrev = reviews.hasPrev, hasNext = reviews.hasNext)

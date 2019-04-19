@@ -189,31 +189,21 @@ constructor(
     }
 
     /**
-     * Composing course review
+     * Course review actions
      */
-    fun removeCourseReview(courseReview: CourseReview) {
-        paginationDisposable += composeCourseReviewInteractor
-            .removeCourseReview(courseReview.id)
-            .andThen(courseReviewsInteractor.resolveCurrentUserCourseReview(courseReview.user, courseReview.course))
+    fun onCourseReviewCreated(courseReview: CourseReview) {
+        state = courseReviewsStateMapper.mergeStateWithCurrentUserReviewLoading(state)
+        paginationDisposable += courseReviewsInteractor
+            .resolveCurrentUserCourseReview(courseReview.user, courseReview.course)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
-            .doOnSuccess {
-                analytic
-                    .reportAmplitudeEvent(
-                        AmplitudeAnalytic.CourseReview.REVIEW_REMOVED,
-                        mapOf(
-                            AmplitudeAnalytic.CourseReview.Params.COURSE to courseReview.course,
-                            AmplitudeAnalytic.CourseReview.Params.RATING to courseReview.score
-                        )
-                    )
-            }
             .subscribeBy(
                 onSuccess = { state = courseReviewsStateMapper.mergeStateWithCurrentUserReview(it, state) },
                 onError = { view?.showNetworkError() }
             )
     }
 
-    fun onCourseReviewChanged(courseReview: CourseReview) {
+    fun onCourseReviewUpdated(courseReview: CourseReview) {
         val items =
             when (val state = state) {
                 is CourseReviewsView.State.CourseReviewsCache ->
@@ -240,5 +230,28 @@ constructor(
 
         state = courseReviewsStateMapper
             .mergeStateWithCurrentUserReview(listOf(item.copy(courseReview = courseReview)), state)
+    }
+
+    fun removeCourseReview(courseReview: CourseReview) {
+        state = courseReviewsStateMapper.mergeStateWithCurrentUserReviewLoading(state)
+        paginationDisposable += composeCourseReviewInteractor
+            .removeCourseReview(courseReview.id)
+            .andThen(courseReviewsInteractor.resolveCurrentUserCourseReview(courseReview.user, courseReview.course))
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .doOnSuccess {
+                analytic
+                    .reportAmplitudeEvent(
+                        AmplitudeAnalytic.CourseReview.REVIEW_REMOVED,
+                        mapOf(
+                            AmplitudeAnalytic.CourseReview.Params.COURSE to courseReview.course,
+                            AmplitudeAnalytic.CourseReview.Params.RATING to courseReview.score
+                        )
+                    )
+            }
+            .subscribeBy(
+                onSuccess = { state = courseReviewsStateMapper.mergeStateWithCurrentUserReview(it, state) },
+                onError = { view?.showNetworkError() }
+            )
     }
 }
