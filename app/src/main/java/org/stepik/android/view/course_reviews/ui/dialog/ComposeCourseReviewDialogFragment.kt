@@ -25,7 +25,6 @@ import org.stepic.droid.util.setTextColor
 import org.stepik.android.domain.course_reviews.model.CourseReview
 import org.stepik.android.presentation.course_reviews.ComposeCourseReviewPresenter
 import org.stepik.android.presentation.course_reviews.ComposeCourseReviewView
-import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import javax.inject.Inject
 
 class ComposeCourseReviewDialogFragment : DialogFragment(), ComposeCourseReviewView {
@@ -124,7 +123,7 @@ class ComposeCourseReviewDialogFragment : DialogFragment(), ComposeCourseReviewV
         composeCourseReviewPresenter.detachView(this)
         super.onStop()
     }
-    
+
     private fun submitCourseReview() {
         courseReviewEditText.hideKeyboard()
         val oldCourseReview = courseReview

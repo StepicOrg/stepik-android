@@ -227,7 +227,6 @@ constructor(
             as? CourseReviewItem.Data
             ?: return
 
-
         state = courseReviewsStateMapper
             .mergeStateWithCurrentUserReview(listOf(item.copy(courseReview = courseReview)), state)
     }

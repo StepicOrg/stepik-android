@@ -40,7 +40,6 @@ constructor(
         val cacheSource = courseReviewsCacheDataSource
             .getCourseReviewByCourseIdAndUserId(courseId, userId)
 
-
         return when (primarySourceType) {
             DataSourceType.CACHE ->
                 cacheSource.switchIfEmpty(remoteSource)
