@@ -479,4 +479,12 @@
         <item name="android:textColor">@color/new_accent_color_opacity_50</item>
         <item name="android:textSize">12sp</item>
     </style>
+
+    <style name="AppTheme.FullScreenDialog" parent="AppTheme.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:windowEnterAnimation">@anim/slide_in_from_bottom</item>
+        <item name="android:windowExitAnimation">@anim/slide_out_to_bottom</item>
+    </style>
 </resources>

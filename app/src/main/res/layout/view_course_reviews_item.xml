@@ -95,10 +95,54 @@
         android:layout_marginLeft="@dimen/course_review_item_inner_margin"
         android:layout_marginEnd="@dimen/course_review_item_margin"
         android:layout_marginRight="@dimen/course_review_item_margin"
-        android:layout_marginBottom="@dimen/course_review_item_margin"
+        app:layout_goneMarginBottom="@dimen/course_review_item_margin"
 
         app:layout_constraintStart_toEndOf="@id/reviewIcon"
         app:layout_constraintTop_toBottomOf="@id/reviewName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/reviewMark"
+
+        tools:text="Давно выяснено, что при оценке дизайна и композиции читаемый текст мешает сосредоточиться. Lorem Ipsum используют потому, что тот обеспечивает более или менее стандартное заполнение шаблона, а также реальное распределение букв и пробелов в абзацах, которое не получается при простой дубликации Здесь ваш текст.. Здесь ваш текст.. Здесь ваш текст.. Многие программы электронной вёрстки и редакторы HTML используют Lorem Ipsum в качестве текста по умолчанию, так что поиск по ключевым словам lorem ipsum сразу показывает, как много веб-страниц всё ещё дожидаются своего настоящего рождения. За прошедшие годы текст Lorem Ipsum получил много версий. Некоторые версии появились по ошибке, некоторые - намеренно (например, юмористические варианты)."/>
+
+    <TextView
+        android:id="@+id/reviewMark"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        android:layout_marginStart="@dimen/course_review_item_inner_margin"
+        android:layout_marginLeft="@dimen/course_review_item_inner_margin"
+        android:layout_marginTop="@dimen/course_review_item_inner_margin"
+        android:layout_marginBottom="@dimen/course_review_item_inner_margin"
+
+
+        app:layout_constraintStart_toEndOf="@id/reviewIcon"
+        app:layout_constraintTop_toBottomOf="@id/reviewText"
+        app:layout_constraintBottom_toBottomOf="parent"
+
+        android:textSize="12sp"
+        android:text="@string/course_reviews_compose_hint"
+        android:textColor="@color/color_violet_1"
+        fontPath="fonts/Roboto-Medium.ttf"
+        tools:ignore="missingPrefix"
+        />
+
+    <ImageView
+        android:id="@+id/reviewMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="12dp"
+        android:background="?selectableItemBackgroundBorderless"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_more_without_padding"
+
+        android:layout_marginTop="@dimen/course_review_item_inner_margin"
+        android:layout_marginEnd="@dimen/course_review_item_inner_margin"
+        android:layout_marginRight="@dimen/course_review_item_inner_margin"
+        android:layout_marginBottom="@dimen/course_review_item_inner_margin"
+
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+
+        app:layout_constraintTop_toBottomOf="@id/reviewText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
 

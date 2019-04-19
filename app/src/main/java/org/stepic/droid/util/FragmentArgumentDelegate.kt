@@ -49,4 +49,4 @@ class FragmentArgumentDelegate<T : Any> : ReadWriteProperty<Fragment, T> {
     }
 }
 
-fun <T: Any>Fragment.argument() = FragmentArgumentDelegate<T>()
+fun <T : Any>Fragment.argument() = FragmentArgumentDelegate<T>()
