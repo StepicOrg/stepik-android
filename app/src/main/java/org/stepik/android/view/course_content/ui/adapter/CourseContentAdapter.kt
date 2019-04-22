@@ -34,10 +34,10 @@ class CourseContentAdapter(
         }
 
     init {
-        addDelegate(CourseContentControlBarDelegate(this, controlBarClickListener))
-        addDelegate(CourseContentSectionDelegate(this, sectionClickListener, sectionDownloadStatuses))
-        addDelegate(CourseContentUnitDelegate(this, unitClickListener, unitDownloadStatuses))
-        addDelegate(CourseContentUnitPlaceholderDelegate(this))
+        addDelegate(CourseContentControlBarDelegate(controlBarClickListener))
+        addDelegate(CourseContentSectionDelegate(sectionClickListener, sectionDownloadStatuses))
+        addDelegate(CourseContentUnitDelegate(unitClickListener, unitDownloadStatuses))
+        addDelegate(CourseContentUnitPlaceholderDelegate())
     }
 
     fun updateSectionDownloadProgress(downloadProgress: DownloadProgress) {

@@ -10,7 +10,7 @@ class ProfileEditAdapter(
     onItemClicked: (ProfileEditItem) -> Unit
 ) : DelegateAdapter<ProfileEditItem, DelegateViewHolder<ProfileEditItem>>() {
     init {
-        addDelegate(ProfileEditTextDelegate(this, onItemClicked))
+        addDelegate(ProfileEditTextDelegate(onItemClicked))
     }
 
     override fun getItemAtPosition(position: Int): ProfileEditItem =

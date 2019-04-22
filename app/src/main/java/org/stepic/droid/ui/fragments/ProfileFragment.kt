@@ -59,7 +59,7 @@ import java.util.Date
 import java.util.TimeZone
 import javax.inject.Inject
 
-class ProfileFragment : FragmentBase(),
+class   ProfileFragment : FragmentBase(),
         ProfileView,
         NotificationTimeView,
         AchievementsView {

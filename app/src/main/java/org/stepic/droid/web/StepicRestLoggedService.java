@@ -7,6 +7,7 @@ import org.stepic.droid.web.model.story_templates.StoryTemplatesResponse;
 import org.stepik.android.model.EnrollmentWrapper;
 import org.stepik.android.remote.course_payments.model.CoursePaymentRequest;
 import org.stepik.android.remote.course_payments.model.CoursePaymentsResponse;
+import org.stepik.android.remote.course_reviews.model.CourseReviewRequest;
 import org.stepik.android.remote.course_reviews.model.CourseReviewsResponse;
 import org.stepik.android.remote.email_address.model.EmailAddressResponse;
 
@@ -284,5 +285,27 @@ public interface StepicRestLoggedService {
     Single<CourseReviewsResponse> getCourseReviewsByCourseId(
             @Query("course") final long course,
             @Query("page") final int page
+    );
+
+    @GET("api/course-reviews")
+    Single<CourseReviewsResponse> getCourseReviewByCourseIdAndUserId(
+            @Query("course") final long course,
+            @Query("user") final long user
+    );
+
+    @POST("api/course-reviews")
+    Single<CourseReviewsResponse> createCourseReview(
+            @Body final CourseReviewRequest request
+    );
+
+    @PUT("api/course-reviews/{courseReviewId}")
+    Single<CourseReviewsResponse> updateCourseReview(
+            @Path("courseReviewId") final long courseReviewId,
+            @Body final CourseReviewRequest request
+    );
+
+    @DELETE("api/course-reviews/{courseReviewId}")
+    Completable removeCourseReview(
+            @Path("courseReviewId") final long courseReviewId
     );
 }

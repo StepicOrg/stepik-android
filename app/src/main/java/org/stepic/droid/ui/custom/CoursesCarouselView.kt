@@ -103,12 +103,6 @@ constructor(
     private var descriptionColors: CollectionDescriptionColors? = null
 
     private var _info: CoursesCarouselInfo? = null
-        private set(value) {
-            field = value
-            if (value != null) {
-                onInfoInitialized(value)
-            }
-        }
     private val info: CoursesCarouselInfo
         get() = _info ?: throw IllegalStateException("Info is not set")
     private var needExecuteOnInfoInitialized = false
@@ -118,17 +112,20 @@ constructor(
     private val activity = context as FragmentActivity
     private val fragmentManager = activity.supportFragmentManager
 
+    private var state: CoursesCarouselViewState? = null
+
     fun setCourseCarouselInfo(outerInfo: CoursesCarouselInfo) {
         _info = outerInfo
+        onInfoInitialized(outerInfo)
     }
 
     init {
         App
-                .componentManager()
-                .courseGeneralComponent()
-                .courseListComponentBuilder()
-                .build()
-                .inject(this)
+            .componentManager()
+            .courseGeneralComponent()
+            .courseListComponentBuilder()
+            .build()
+            .inject(this)
 
         val layoutInflater = LayoutInflater.from(context)
         layoutInflater.inflate(R.layout.view_courses_carousel, this, true)
@@ -296,6 +293,7 @@ constructor(
     }
 
     override fun showCourses(courses: List<Course>, skus: Map<String, Sku>, coursePayments: Map<Long, CoursePayment>) {
+        state = CoursesCarouselViewState(courses, skus, coursePayments, DEFAULT_SCROLL_POSITION)
         coursesLoadingView.visibility = View.GONE
         coursesPlaceholder.visibility = View.GONE
         if (lastSavedScrollPosition != DEFAULT_SCROLL_POSITION) {
@@ -378,6 +376,7 @@ constructor(
     }
 
     private fun downloadData() {
+        state = null
         info.courseListType?.let {
             courseListPresenter.refreshData(it)
         }
@@ -452,6 +451,7 @@ constructor(
 
         super.onRestoreInstanceState(state.superState)
         this._info = state.info
+        state.info?.let(::setCourseCarouselInfo)
         this.lastSavedScrollPosition = state.scrollPosition
     }
 
@@ -497,4 +497,13 @@ constructor(
         }
     }
 
+    fun onSaveState(): CoursesCarouselViewState? =
+        state?.copy(scrollPosition = (coursesRecycler.layoutManager as GridLayoutManager).findFirstCompletelyVisibleItemPosition())
+
+    fun onRestoreState(outerInfo: CoursesCarouselInfo, state: CoursesCarouselViewState) {
+        _info = outerInfo
+        lastSavedScrollPosition = state.scrollPosition
+        initCourseCarouselWithInfo(outerInfo)
+        showCourses(state.courses, state.skus, state.coursePayments)
+    }
 }

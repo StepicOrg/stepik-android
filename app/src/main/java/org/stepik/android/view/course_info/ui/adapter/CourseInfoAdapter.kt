@@ -28,10 +28,10 @@ class CourseInfoAdapter(
         }
 
     init {
-        addDelegate(CourseInfoTextBlockDelegate(this, fontsProvider))
-        addDelegate(CourseInfoInstructorsDelegate(this, onUserClicked))
-        addDelegate(CourseInfoVideoBlockDelegate(this, onVideoClicked))
-        addDelegate(CourseInfoOrganizationDelegate(this, onUserClicked))
+        addDelegate(CourseInfoTextBlockDelegate(fontsProvider))
+        addDelegate(CourseInfoInstructorsDelegate(onUserClicked))
+        addDelegate(CourseInfoVideoBlockDelegate(onVideoClicked))
+        addDelegate(CourseInfoOrganizationDelegate(onUserClicked))
     }
 
     fun setSortedData(sortedBlocks: List<CourseInfoItem>) {
