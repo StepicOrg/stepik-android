@@ -6,6 +6,8 @@ import org.junit.Test
 import org.stepik.android.domain.personal_deadlines.model.DeadlinesWrapper
 import org.stepic.droid.util.toObject
 import java.util.*
+import java.util.concurrent.Callable
+import java.util.concurrent.Executors
 
 class UTCDateAdapterTest {
     @Test
@@ -24,5 +26,26 @@ class UTCDateAdapterTest {
 
         val date = dateAdapter.stringToDate(dateString)
         assertEquals(1522832889000, date?.time)
+    }
+
+    @Test
+    fun dateDeserializationThreadSafetyTest() {
+        val dateString = "2014-06-19T08:22:37Z"
+
+        val dateAdapter = UTCDateAdapter()
+        val executor = Executors.newFixedThreadPool(100)
+
+        val task = Callable {
+            dateAdapter.stringToDate(dateString)
+        }
+
+        val tasks = (0..100)
+            .map { executor.submit(task) }
+
+        executor.shutdown()
+
+        tasks.forEach {
+            it.get()
+        }
     }
 }
