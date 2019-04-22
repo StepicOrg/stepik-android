@@ -14,27 +14,35 @@ class UTCDateAdapter: JsonSerializer<Date>, JsonDeserializer<Date> {
         private const val UTC_ISO_FORMAT_SIMPLE = "yyyy-MM-dd'T'HH:mm:ss"
         private const val UTC_ISO_FORMAT_SIMPLE_LENGTH = UTC_ISO_FORMAT_SIMPLE.length - 2 // exclude 2 single quotes around T
 
-        private fun createDateFormat(pattern: String) = SimpleDateFormat(pattern, Locale.getDefault()).apply {
-            timeZone = TimeZone.getTimeZone("UTC")
-        }
+        private fun createDateFormat(pattern: String): SimpleDateFormat =
+            SimpleDateFormat(pattern, Locale.getDefault())
+                .apply {
+                    timeZone = TimeZone.getTimeZone("UTC")
+                }
     }
 
     private val serializeDateFormat = createDateFormat(UTC_ISO_FORMAT)
     private val deserializeDateFormat = createDateFormat(UTC_ISO_FORMAT_SIMPLE)
 
     override fun serialize(date: Date, typeOfSrc: Type?, context: JsonSerializationContext?): JsonElement =
+        synchronized(serializeDateFormat) {
             JsonPrimitive(serializeDateFormat.format(date))
+        }
 
-
-    override fun deserialize(jsonElement: JsonElement, typeOfT: Type?, context: JsonDeserializationContext?): Date = try {
-        deserializeDateFormat.parse(jsonElement.asString.take(UTC_ISO_FORMAT_SIMPLE_LENGTH))
-    } catch (e: ParseException) {
-        throw JsonParseException(e)
-    }
+    override fun deserialize(jsonElement: JsonElement, typeOfT: Type?, context: JsonDeserializationContext?): Date =
+        try {
+            synchronized(deserializeDateFormat) {
+                deserializeDateFormat.parse(jsonElement.asString.take(UTC_ISO_FORMAT_SIMPLE_LENGTH))
+            }
+        } catch (e: ParseException) {
+            throw JsonParseException(e)
+        }
 
     @Contract("null -> null; !null -> !null", pure = true)
-    fun dateToString(date: Date?): String? = date?.let { serialize(date, null, null).asString }
+    fun dateToString(date: Date?): String? =
+        date?.let { serialize(date, null, null).asString }
 
     @Contract("null -> null; !null -> !null", pure = true)
-    fun stringToDate(date: String?): Date? = date?.let { deserialize(JsonPrimitive(date), null, null) }
+    fun stringToDate(date: String?): Date? =
+        date?.let { deserialize(JsonPrimitive(date), null, null) }
 }
