@@ -13,46 +13,32 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.ShareHelper;
 import org.stepic.droid.fonts.FontsProvider;
 import org.stepik.android.model.Course;
-import org.stepic.droid.notifications.StepikNotificationManager;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
-import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.services.NotificationsViewPusher;
-import org.stepic.droid.storage.operations.DatabaseFacade;
 import org.stepic.droid.ui.util.CloseIconHolder;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.resolvers.text.TextResolver;
-import org.stepic.droid.web.Api;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
-import java.util.concurrent.ThreadPoolExecutor;
 
 import javax.inject.Inject;
 
-import butterknife.Unbinder;
-import retrofit2.Retrofit;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public abstract class FragmentActivityBase extends AppCompatActivity {
 
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private static final String screenshotServiceName = "com.android.systemui:screenshot";
-
-
-    protected Unbinder unbinder;
-    @Inject
-    protected Retrofit retrofit;
 
     @Inject
     protected TextResolver textResolver;
@@ -67,31 +53,10 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
     protected Analytic analytic;
 
     @Inject
-    protected StepikNotificationManager stepikNotificationManager;
-
-    @Inject
     protected SharedPreferenceHelper sharedPreferenceHelper;
 
     @Inject
-    protected DatabaseFacade databaseFacade;
-
-    @Inject
-    protected MainHandler mainHandler;
-
-    @Inject
-    protected Api api;
-
-    @Inject
     protected ScreenManager screenManager;
-
-    @Inject
-    protected UserPreferences userPreferences;
-
-    @Inject
-    protected ThreadPoolExecutor threadPoolExecutor;
-
-    @Inject
-    protected FirebaseRemoteConfig firebaseRemoteConfig;
 
     @Inject
     protected FontsProvider fontsProvider;
@@ -133,15 +98,6 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
     public void applyTransitionPrev() {
         // apply slide transition animation
         overridePendingTransition(R.anim.slide_in_from_start, R.anim.slide_out_to_end);
-    }
-
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (unbinder != null) {
-            unbinder.unbind();
-        }
     }
 
     /**
