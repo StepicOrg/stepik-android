@@ -47,6 +47,10 @@
             android:layout_height="match_parent" />
 
         <include
+            android:id="@+id/lessonPlaceholder"
+            layout="@layout/view_step_placeholder" />
+
+        <include
             android:id="@+id/errorNoConnection"
             layout="@layout/error_no_connection_with_button"/>
         <include

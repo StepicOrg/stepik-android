@@ -10,7 +10,7 @@ interface LessonView {
 
         object LessonNotFound : State()
         object EmptyLogin : State()
-        object NewtorkError : State()
+        object NetworkError : State()
 
         data class EmptyLesson(
             val lesson: Lesson
