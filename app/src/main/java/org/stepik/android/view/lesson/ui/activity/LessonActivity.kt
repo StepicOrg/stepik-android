@@ -3,6 +3,7 @@ package org.stepik.android.view.lesson.ui.activity
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
+import android.view.MenuItem
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
@@ -46,6 +47,16 @@ class LessonActivity : FragmentActivityBase(), LessonView {
         lessonPresenter.detachView(this)
         super.onStop()
     }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                true
+            }
+             else ->
+                super.onOptionsItemSelected(item)
+        }
 
     override fun setState(state: LessonView.State) {
 

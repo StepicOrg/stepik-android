@@ -701,4 +701,10 @@
 
     <string name="profile_edit_change_success_info">Информация обновлена</string>
     <string name="profile_edit_change_success_password">Пароль изменен</string>
+
+    <!-- Lesson -->
+    <string name="lesson_title">Урок</string>
+
+    <!-- Step -->
+    <string name="step_menu_info">Инфо</string>
 </resources>

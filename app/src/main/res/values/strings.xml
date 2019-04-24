@@ -728,4 +728,9 @@
 
     <string name="profile_edit_change_success_info">Profile info changed</string>
     <string name="profile_edit_change_success_password">Password changed</string>
+
+    <!-- Lesson -->
+    <string name="lesson_title">Lesson</string>
+    <string name="step_menu_info">Info</string>
+
 </resources>
