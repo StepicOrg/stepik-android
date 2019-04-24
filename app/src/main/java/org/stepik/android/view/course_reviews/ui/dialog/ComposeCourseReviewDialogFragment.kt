@@ -78,7 +78,7 @@ class ComposeCourseReviewDialogFragment : DialogFragment(), ComposeCourseReviewV
 
     private fun injectComponent() {
         App.component()
-            .composeCourseReviewComponent()
+            .composeCourseReviewComponentBuilder()
             .build()
             .inject(this)
     }

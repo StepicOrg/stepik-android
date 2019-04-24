@@ -18,7 +18,6 @@ import org.stepic.droid.di.course_general.CourseGeneralComponent
 import org.stepic.droid.di.downloads.DownloadsComponent
 import org.stepic.droid.di.feedback.FeedbackComponent
 import org.stepic.droid.di.home.HomeComponent
-import org.stepic.droid.di.lesson.LessonComponent
 import org.stepic.droid.di.login.LoginComponent
 import org.stepic.droid.di.mainscreen.MainScreenComponent
 import org.stepic.droid.di.network.NetworkModule
@@ -50,10 +49,12 @@ import org.stepic.droid.ui.custom.*
 import org.stepic.droid.ui.dialogs.*
 import org.stepic.droid.ui.fragments.StoreManagementFragment
 import org.stepic.droid.util.glide.GlideCustomModule
+import org.stepik.android.model.Lesson
 import org.stepik.android.view.injection.billing.BillingModule
 import org.stepik.android.view.injection.course.CourseComponent
 import org.stepik.android.view.injection.course.CourseRoutingModule
 import org.stepik.android.view.injection.course_reviews.ComposeCourseReviewComponent
+import org.stepik.android.view.injection.lesson.LessonComponent
 import org.stepik.android.view.injection.personal_deadlines.PersonalDeadlinesDataModule
 import org.stepik.android.view.injection.profile.ProfileBusModule
 import org.stepik.android.view.injection.profile_edit.ProfileEditComponent
@@ -117,7 +118,7 @@ interface AppCoreComponent {
 
     fun courseGeneralComponentBuilder(): CourseGeneralComponent.Builder
 
-    fun lessonComponentBuilder(): LessonComponent.Builder
+    fun oldLessonComponentBuilder(): org.stepic.droid.di.lesson.LessonComponent.Builder
 
     fun mainScreenComponentBuilder(): MainScreenComponent.Builder
 
@@ -135,7 +136,9 @@ interface AppCoreComponent {
 
     fun profileEditComponentBuilder(): ProfileEditComponent.Builder
 
-    fun composeCourseReviewComponent(): ComposeCourseReviewComponent.Builder
+    fun composeCourseReviewComponentBuilder(): ComposeCourseReviewComponent.Builder
+
+    fun lessonComponentBuilder(): LessonComponent.Builder
 
     fun inject(someActivity: FragmentActivityBase)
 
