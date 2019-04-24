@@ -47,7 +47,7 @@
 
         <include layout="@layout/empty_login"/>
 
-        <include layout="@layout/empty_steps"/>
+        <include layout="@layout/empty_lesson"/>
 
     </FrameLayout>
 
