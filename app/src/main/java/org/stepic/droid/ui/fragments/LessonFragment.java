@@ -134,7 +134,7 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
     @BindView(R.id.tryAgain)
     View tryAgain;
 
-//    @BindView(R.id.corrupted_lesson)
+    @BindView(R.id.corrupted_lesson)
     View corruptedLesson;
 
     @BindView(R.id.goToCatalog)
@@ -149,7 +149,7 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
     @BindString(R.string.connectionProblems)
     String connectionProblemString;
 
-//    @BindView(R.id.empty_steps)
+    @BindView(R.id.empty_steps)
     View emptySteps;
 
     StepFragmentAdapter stepAdapter;

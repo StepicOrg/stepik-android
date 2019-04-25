@@ -43,11 +43,11 @@
 
         <include layout="@layout/error_no_connection_with_button"/>
 
-        <include layout="@layout/error_lesson_not_found"/>
+        <include android:id="@+id/corrupted_lesson" layout="@layout/error_lesson_not_found"/>
 
         <include layout="@layout/empty_login"/>
 
-        <include layout="@layout/empty_lesson"/>
+        <include android:id="@+id/empty_steps" layout="@layout/empty_lesson"/>
 
     </FrameLayout>
 

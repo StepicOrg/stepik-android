@@ -24,4 +24,18 @@ constructor(
         super.attachView(view)
         view.setState(state)
     }
+
+    fun onShowLessonInfoClicked(position: Int) {
+        val state = (state as? LessonView.State.LessonLoaded)
+            ?: return
+
+        val stepWorth = (state.stepsState as? LessonView.StepsState.Loaded)
+            ?.steps
+            ?.getOrNull(position)
+            ?.step
+            ?.worth
+            ?: return
+
+        view?.showLessonInfoTooltip(stepWorth, state.lesson.timeToComplete, 99)
+    }
 }

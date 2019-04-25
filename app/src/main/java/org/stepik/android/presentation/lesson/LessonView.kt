@@ -32,4 +32,6 @@ interface LessonView {
     }
 
     fun setState(state: State)
+
+    fun showLessonInfoTooltip(stepWorth: Long, lessonTimeToComplete: Long, certificateThreshold: Long)
 }

@@ -704,7 +704,5 @@
 
     <!-- Lesson -->
     <string name="lesson_title">Урок</string>
-
-    <!-- Step -->
-    <string name="step_menu_info">Инфо</string>
+    <string name="lesson_menu_info">Инфо</string>
 </resources>

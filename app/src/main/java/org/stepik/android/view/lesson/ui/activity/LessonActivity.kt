@@ -3,6 +3,7 @@ package org.stepik.android.view.lesson.ui.activity
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_lesson.*
 import org.stepic.droid.R
@@ -18,8 +19,11 @@ class LessonActivity : FragmentActivityBase(), LessonView {
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var lessonPresenter: LessonPresenter
+
     private lateinit var viewStateDelegate: ViewStateDelegate<LessonView.State>
     private lateinit var viewStepStateDelegate: ViewStateDelegate<LessonView.StepsState>
+
+    private lateinit var infoMenuItem: MenuItem
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,10 +67,21 @@ class LessonActivity : FragmentActivityBase(), LessonView {
         super.onStop()
     }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.lesson_menu, menu)
+        infoMenuItem = menu.findItem(R.id.lesson_menu_item_info)
+        infoMenuItem.isVisible = false
+        return super.onCreateOptionsMenu(menu)
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
         when (item.itemId) {
             android.R.id.home -> {
                 onBackPressed()
+                true
+            }
+            R.id.lesson_menu_item_info -> {
+                lessonPresenter.onShowLessonInfoClicked(lessonPager.currentItem)
                 true
             }
              else ->
@@ -79,5 +94,13 @@ class LessonActivity : FragmentActivityBase(), LessonView {
             is LessonView.State.LessonLoaded ->
                 viewStepStateDelegate.switchState(state.stepsState)
         }
+
+        infoMenuItem.isVisible =
+            state is LessonView.State.LessonLoaded &&
+            state.stepsState is LessonView.StepsState.Loaded
+    }
+
+    override fun showLessonInfoTooltip(stepWorth: Long, lessonTimeToComplete: Long, certificateThreshold: Long) {
+
     }
 }

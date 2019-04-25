@@ -731,6 +731,6 @@
 
     <!-- Lesson -->
     <string name="lesson_title">Lesson</string>
-    <string name="step_menu_info">Info</string>
+    <string name="lesson_menu_info">Info</string>
 
 </resources>
