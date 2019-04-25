@@ -446,6 +446,26 @@
             android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="true" />
 
+        <service
+            android:name="org.stepik.android.view.notification.service.NotificationAlarmService"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <service
+            android:name="org.stepik.android.view.notification.service.BootCompleteService"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <receiver
+            android:name="org.stepik.android.view.notification.receiver.StepikBootCompleteReceiver"
+            android:enabled="true"
+            android:exported="false"
+            android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
         <!-- Branch install referrer tracking -->
         <receiver android:name="io.branch.referral.InstallListener" android:exported="true">
             <intent-filter>
@@ -489,6 +509,5 @@
 
         <!-- Branch testing (TestMode "true" to simulate fresh installs on dev environment) -->
         <meta-data android:name="io.branch.sdk.TestMode" android:value="false" />
-
     </application>
 </manifest>

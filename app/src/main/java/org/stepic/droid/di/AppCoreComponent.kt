@@ -57,6 +57,8 @@ import org.stepik.android.view.injection.course.CourseRoutingModule
 import org.stepik.android.view.injection.personal_deadlines.PersonalDeadlinesDataModule
 import org.stepik.android.view.injection.progress.ProgressBusModule
 import org.stepik.android.view.injection.video_player.VideoPlayerComponent
+import org.stepik.android.view.notification.receiver.StepikBootCompleteReceiver
+import org.stepik.android.view.notification.service.NotificationAlarmService
 
 @AppSingleton
 @Component(
@@ -234,4 +236,8 @@ interface AppCoreComponent {
     fun inject(achievementsNotificationService: AchievementsNotificationService)
 
     fun inject(glideCustomModule: GlideCustomModule)
+
+    fun inject(notificationAlarmService: NotificationAlarmService)
+
+    fun inject(stepikBootCompleteReceiver: StepikBootCompleteReceiver)
 }

@@ -11,6 +11,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import dagger.multibindings.IntoSet
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -51,6 +52,8 @@ import org.stepic.droid.web.UserAgentProvider
 import org.stepic.droid.web.UserAgentProviderImpl
 import org.stepik.android.presentation.base.injection.DaggerViewModelFactory
 import org.stepik.android.view.injection.course.CourseScope
+import org.stepik.android.view.notification.*
+import org.stepik.android.view.notification.delegate.TestDelegate
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.Executors
@@ -139,6 +142,16 @@ abstract class AppCoreModule {
 
     @Binds
     internal abstract fun bindViewModelFactory(daggerViewModelFactory: DaggerViewModelFactory): ViewModelProvider.Factory
+
+    @Binds
+    internal abstract fun bindNotificationPublisher(notificationPublisherImpl: NotificationPublisherImpl): NotificationPublisher
+
+    @Binds
+    internal abstract fun bindStepikNotifManager(stepikNotifManagerImpl: StepikNotifManagerImpl): StepikNotifManager
+
+    @IntoSet
+    @Binds
+    internal abstract fun provideTestDelegate(testDelegate: TestDelegate): NotificationDelegate
 
     @Module
     companion object {
