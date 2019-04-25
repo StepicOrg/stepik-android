@@ -30,11 +30,11 @@ import org.stepic.droid.ui.util.PopupHelper;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DisplayUtils;
 import org.stepic.droid.util.ProgressHelper;
-import org.stepic.droid.web.StepResponse;
 import org.stepik.android.model.Lesson;
 import org.stepik.android.model.Section;
 import org.stepik.android.model.Step;
 import org.stepik.android.model.Unit;
+import org.stepik.android.remote.step.model.StepResponse;
 import org.stepik.android.view.ui.listener.FragmentViewPagerScrollStateListener;
 
 import java.lang.ref.WeakReference;
@@ -46,12 +46,12 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
+import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.BehaviorSubject;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import static org.stepic.droid.util.RxUtilKt.zip;
 
 public abstract class StepBaseFragment extends FragmentBase
@@ -386,12 +386,15 @@ public abstract class StepBaseFragment extends FragmentBase
     @Override
     public void onCommentCountUpdated() {
         long[] arr = new long[]{step.getId()};
-        getApi().getSteps(arr).enqueue(new StepResponseCallback(getThreadPoolExecutor(), getDatabaseFacade(), this));
+        getApi().getSteps(arr)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new StepResponseCallback(getThreadPoolExecutor(), getDatabaseFacade(), this));
     }
 
 
     //// TODO: 13.06.17 rework it in MVP style
-    static class StepResponseCallback implements Callback<StepResponse> {
+    static class StepResponseCallback implements SingleObserver<StepResponse> {
 
         private final ThreadPoolExecutor threadPoolExecutor;
         private final DatabaseFacade databaseFacade;
@@ -405,31 +408,31 @@ public abstract class StepBaseFragment extends FragmentBase
         }
 
         @Override
-        public void onResponse(Call<StepResponse> call, Response<StepResponse> response) {
-            if (response.isSuccessful()) {
-                StepResponse stepResponse = response.body();
-                if (stepResponse != null && stepResponse.getSteps() != null && !stepResponse.getSteps().isEmpty()) {
-                    final Step stepFromInternet = stepResponse.getSteps().get(0);
-                    if (stepFromInternet != null) {
-                        threadPoolExecutor.execute(new Runnable() {
-                            @Override
-                            public void run() {
-                                databaseFacade.addStep(stepFromInternet); //fixme: fragment in closure -> leak
-                            }
-                        });
+        public void onSubscribe(Disposable d) {}
 
-
-                        StepBaseFragment stepBaseFragment = stepBaseFragmentWeakReference.get();
-                        if (stepBaseFragment != null) {
-                            stepBaseFragment.onDiscussionWasUpdatedFromInternet(stepFromInternet);
+        @Override
+        public void onSuccess(StepResponse stepResponse) {
+            if (stepResponse != null && stepResponse.getSteps() != null && !stepResponse.getSteps().isEmpty()) {
+                final Step stepFromInternet = stepResponse.getSteps().get(0);
+                if (stepFromInternet != null) {
+                    threadPoolExecutor.execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            databaseFacade.addStep(stepFromInternet); //fixme: fragment in closure -> leak
                         }
+                    });
+
+
+                    StepBaseFragment stepBaseFragment = stepBaseFragmentWeakReference.get();
+                    if (stepBaseFragment != null) {
+                        stepBaseFragment.onDiscussionWasUpdatedFromInternet(stepFromInternet);
                     }
                 }
             }
         }
 
         @Override
-        public void onFailure(Call<StepResponse> call, Throwable t) {
+        public void onError(Throwable e) {
 
         }
     }

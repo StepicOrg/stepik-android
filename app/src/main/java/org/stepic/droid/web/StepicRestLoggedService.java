@@ -10,6 +10,7 @@ import org.stepik.android.remote.course_payments.model.CoursePaymentsResponse;
 import org.stepik.android.remote.course_reviews.model.CourseReviewRequest;
 import org.stepik.android.remote.course_reviews.model.CourseReviewsResponse;
 import org.stepik.android.remote.email_address.model.EmailAddressResponse;
+import org.stepik.android.remote.step.model.StepResponse;
 
 import java.util.List;
 
@@ -83,7 +84,7 @@ public interface StepicRestLoggedService {
     Single<LessonStepicResponse> getLessonsRx(@Query("ids[]") long[] lessons);
 
     @GET("api/steps")
-    Call<StepResponse> getSteps(
+    Single<StepResponse> getSteps(
             @Query("ids[]") long[] steps
     );
 

@@ -15,8 +15,8 @@ import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.ProgressUtil
 import org.stepic.droid.web.Api
 import org.stepic.droid.web.LessonStepicResponse
-import org.stepic.droid.web.StepResponse
 import org.stepik.android.domain.unit.repository.UnitRepository
+import org.stepik.android.remote.step.model.StepResponse
 import retrofit2.Response
 import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
@@ -179,9 +179,9 @@ constructor(
             }
 
             // and try to update from internet
-            var response: Response<StepResponse>? = null
+            var response: StepResponse? = null
             try {
-                response = api.getSteps(it.steps).execute()
+                response = api.getSteps(it.steps).blockingGet()
             } catch (ex: Exception) {
                 if (!isStepsShown) {
                     mainHandler.post {
@@ -198,7 +198,7 @@ constructor(
                 }
                 return
             } else {
-                val stepListFromInternet = response.body()?.steps?.map { step -> stepContentResolver.resolvePersistentContent(step).blockingFirst() }
+                val stepListFromInternet = response?.steps?.map { step -> stepContentResolver.resolvePersistentContent(step).blockingFirst() }
                 if (stepListFromInternet == null || stepListFromInternet.isEmpty()) {
                     if (!isStepsShown) {
                         if (it.steps?.isEmpty() ?: true) {
@@ -208,9 +208,9 @@ constructor(
                             }
                         } else {
                             //access is denied
-                            val code = response.code().toString()
-                            analytic.reportEventWithIdName(Analytic.Error.LESSON_ACCESS_DENIED, code, response.errorBody()?.string() ?: "error body was null")
-                            analytic.reportEventWithIdName(Analytic.Error.LESSON_ACCESS_DENIED, code, response.message()?.toString() ?: "message  was null")
+//                            val code = response.code().toString()
+//                            analytic.reportEventWithIdName(Analytic.Error.LESSON_ACCESS_DENIED, code, response.errorBody()?.string() ?: "error body was null")
+//                            analytic.reportEventWithIdName(Analytic.Error.LESSON_ACCESS_DENIED, code, response.message()?.toString() ?: "message  was null")
                             mainHandler.post {
                                 view?.onLessonCorrupted()
                             }

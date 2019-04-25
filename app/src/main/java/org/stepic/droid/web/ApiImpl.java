@@ -70,6 +70,7 @@ import org.stepik.android.model.user.Profile;
 import org.stepik.android.model.user.User;
 import org.stepik.android.model.attempts.DatasetWrapper;
 import org.stepik.android.remote.email_address.model.EmailAddressResponse;
+import org.stepik.android.remote.step.model.StepResponse;
 
 import java.io.IOException;
 import java.net.HttpCookie;
@@ -543,7 +544,7 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Call<StepResponse> getSteps(long[] steps) {
+    public Single<StepResponse> getSteps(long[] steps) {
         return loggedService.getSteps(steps);
     }
 

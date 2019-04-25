@@ -19,6 +19,7 @@ import org.stepik.android.model.Tag;
 import org.stepik.android.model.Reply;
 import org.stepik.android.model.user.User;
 import org.stepik.android.remote.email_address.model.EmailAddressResponse;
+import org.stepik.android.remote.step.model.StepResponse;
 
 import java.util.List;
 
@@ -78,7 +79,7 @@ public interface Api {
 
     Single<LessonStepicResponse> getLessons(long lessonId);
 
-    Call<StepResponse> getSteps(long[] steps);
+    Single<StepResponse> getSteps(long[] steps);
 
     Single<StepResponse> getStepsReactive(long[] steps);
 
