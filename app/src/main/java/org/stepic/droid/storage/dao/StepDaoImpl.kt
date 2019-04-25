@@ -2,7 +2,6 @@ package org.stepic.droid.storage.dao
 
 import android.content.ContentValues
 import android.database.Cursor
-import org.stepic.droid.jsonHelpers.adapters.UTCDateAdapter
 import org.stepik.android.model.Assignment
 import org.stepic.droid.model.BlockPersistentWrapper
 import org.stepik.android.model.Progress
@@ -11,8 +10,13 @@ import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepic.droid.storage.structure.DbStructureAssignment
 import org.stepic.droid.storage.structure.DbStructureBlock
 import org.stepic.droid.storage.structure.DbStructureProgress
-import org.stepic.droid.storage.structure.DbStructureStep
 import org.stepic.droid.util.DbParseHelper
+import org.stepic.droid.util.getBoolean
+import org.stepic.droid.util.getDate
+import org.stepic.droid.util.getInt
+import org.stepic.droid.util.getLong
+import org.stepic.droid.util.getString
+import org.stepik.android.cache.step.structure.DbStructureStep
 import org.stepik.android.model.Actions
 
 import javax.inject.Inject
@@ -20,67 +24,57 @@ import javax.inject.Inject
 class StepDaoImpl
 @Inject
 constructor(
-        databaseOperations: DatabaseOperations,
-        private val blockWrapperDao: IDao<BlockPersistentWrapper>,
-        private val assignmentDao: IDao<Assignment>,
-        private val progressDao: IDao<Progress>,
-        private val dateAdapter: UTCDateAdapter
+    databaseOperations: DatabaseOperations,
+    private val blockWrapperDao: IDao<BlockPersistentWrapper>,
+    private val assignmentDao: IDao<Assignment>,
+    private val progressDao: IDao<Progress>
 ) : DaoBase<Step>(databaseOperations) {
 
     public override fun parsePersistentObject(cursor: Cursor): Step {
-        val columnIndexCreateDate = cursor.getColumnIndex(DbStructureStep.Column.CREATE_DATE)
-        val columnIndexStepId = cursor.getColumnIndex(DbStructureStep.Column.STEP_ID)
-        val columnIndexLessonId = cursor.getColumnIndex(DbStructureStep.Column.LESSON_ID)
-        val columnIndexStatus = cursor.getColumnIndex(DbStructureStep.Column.STATUS)
-        val columnIndexProgress = cursor.getColumnIndex(DbStructureStep.Column.PROGRESS)
-        val columnIndexViewedBy = cursor.getColumnIndex(DbStructureStep.Column.VIEWED_BY)
-        val columnIndexPassedBy = cursor.getColumnIndex(DbStructureStep.Column.PASSED_BY)
-        val columnIndexUpdateDate = cursor.getColumnIndex(DbStructureStep.Column.UPDATE_DATE)
-        val columnIndexSubscriptions = cursor.getColumnIndex(DbStructureStep.Column.SUBSCRIPTIONS)
-        val columnIndexPosition = cursor.getColumnIndex(DbStructureStep.Column.POSITION)
-        val columnIndexDiscussionCount = cursor.getColumnIndex(DbStructureStep.Column.DISCUSSION_COUNT)
-        val columnIndexDiscussionId = cursor.getColumnIndex(DbStructureStep.Column.DISCUSSION_ID)
-        val columnIndexPeerReview = cursor.getColumnIndex(DbStructureStep.Column.PEER_REVIEW)
-        val indexHasSubmissionRestriction = cursor.getColumnIndex(DbStructureStep.Column.HAS_SUBMISSION_RESTRICTION)
-        val indexMaxSubmission = cursor.getColumnIndex(DbStructureStep.Column.MAX_SUBMISSION_COUNT)
-
-        val review = cursor.getString(columnIndexPeerReview)
+        val review = cursor.getString(DbStructureStep.Column.PEER_REVIEW)
 
         //        step.setIs_custom_passed(isAssignmentByStepViewed(step.getId()));
         return Step(
-                discussionsCount = cursor.getInt(columnIndexDiscussionCount),
-                discussionProxy = cursor.getString(columnIndexDiscussionId),
-                id = cursor.getLong(columnIndexStepId),
-                lesson = cursor.getLong(columnIndexLessonId),
-                createDate = dateAdapter.stringToDate(cursor.getString(columnIndexCreateDate)),
-                status = Step.Status.byName(cursor.getString(columnIndexStatus)),
-                progress = cursor.getString(columnIndexProgress),
-                viewedBy = cursor.getLong(columnIndexViewedBy),
-                passedBy = cursor.getLong(columnIndexPassedBy),
-                updateDate = dateAdapter.stringToDate(cursor.getString(columnIndexUpdateDate)),
-                subscriptions = DbParseHelper.parseStringToStringList(cursor.getString(columnIndexSubscriptions)),
-                position = cursor.getLong(columnIndexPosition),
-                hasSubmissionRestriction = cursor.getInt(indexHasSubmissionRestriction) > 0,
-                maxSubmissionCount = cursor.getInt(indexMaxSubmission),
-                actions = Actions(false, false, null, review, null)
+            id = cursor.getLong(DbStructureStep.Column.ID),
+            lesson = cursor.getLong(DbStructureStep.Column.LESSON_ID),
+            status = Step.Status.byName(cursor.getString(DbStructureStep.Column.STATUS)),
+            progress = cursor.getString(DbStructureStep.Column.PROGRESS),
+
+            viewedBy = cursor.getLong(DbStructureStep.Column.VIEWED_BY),
+            passedBy = cursor.getLong(DbStructureStep.Column.PASSED_BY),
+            worth = cursor.getLong(DbStructureStep.Column.WORTH),
+
+            createDate = cursor.getDate(DbStructureStep.Column.CREATE_DATE),
+            updateDate = cursor.getDate(DbStructureStep.Column.UPDATE_DATE),
+
+            subscriptions = DbParseHelper.parseStringToStringList(cursor.getString(DbStructureStep.Column.SUBSCRIPTION)),
+            position = cursor.getLong(DbStructureStep.Column.POSITION),
+            hasSubmissionRestriction = cursor.getBoolean(DbStructureStep.Column.HAS_SUBMISSION_RESTRICTION),
+            maxSubmissionCount = cursor.getInt(DbStructureStep.Column.MAX_SUBMISSION_COUNT),
+
+            discussionsCount = cursor.getInt(DbStructureStep.Column.DISCUSSION_COUNT),
+            discussionProxy = cursor.getString(DbStructureStep.Column.DISCUSSION_PROXY),
+
+            actions = Actions(false, false, null, review, null)
         )
     }
 
     public override fun getContentValues(step: Step): ContentValues {
         val values = ContentValues()
 
-        values.put(DbStructureStep.Column.STEP_ID, step.id)
+        values.put(DbStructureStep.Column.ID, step.id)
         values.put(DbStructureStep.Column.LESSON_ID, step.lesson)
         values.put(DbStructureStep.Column.STATUS, step.status?.name)
         values.put(DbStructureStep.Column.PROGRESS, step.progress)
-        values.put(DbStructureStep.Column.SUBSCRIPTIONS, DbParseHelper.parseStringArrayToString(step.subscriptions?.toTypedArray()))
+        values.put(DbStructureStep.Column.SUBSCRIPTION, DbParseHelper.parseStringArrayToString(step.subscriptions?.toTypedArray()))
         values.put(DbStructureStep.Column.VIEWED_BY, step.viewedBy)
         values.put(DbStructureStep.Column.PASSED_BY, step.passedBy)
-        values.put(DbStructureStep.Column.CREATE_DATE, dateAdapter.dateToString(step.createDate))
-        values.put(DbStructureStep.Column.UPDATE_DATE, dateAdapter.dateToString(step.updateDate))
+        values.put(DbStructureStep.Column.WORTH, step.worth)
+        values.put(DbStructureStep.Column.CREATE_DATE, step.createDate?.time ?: -1)
+        values.put(DbStructureStep.Column.UPDATE_DATE, step.updateDate?.time ?: -1)
         values.put(DbStructureStep.Column.POSITION, step.position)
         values.put(DbStructureStep.Column.DISCUSSION_COUNT, step.discussionsCount)
-        values.put(DbStructureStep.Column.DISCUSSION_ID, step.discussionProxy)
+        values.put(DbStructureStep.Column.DISCUSSION_PROXY, step.discussionProxy)
         values.put(DbStructureStep.Column.HAS_SUBMISSION_RESTRICTION, step.hasSubmissionRestriction)
         values.put(DbStructureStep.Column.MAX_SUBMISSION_COUNT, step.maxSubmissionCount)
         values.put(DbStructureStep.Column.PEER_REVIEW, step.actions?.doReview)
@@ -88,18 +82,20 @@ constructor(
         return values
     }
 
-    public override fun getDbName(): String = DbStructureStep.STEPS
+    public override fun getDbName(): String =
+        DbStructureStep.TABLE_NAME
 
-    public override fun getDefaultPrimaryColumn(): String = DbStructureStep.Column.STEP_ID
+    public override fun getDefaultPrimaryColumn(): String =
+        DbStructureStep.Column.ID
 
     public override fun getDefaultPrimaryValue(persistentObject: Step): String =
-            persistentObject.id.toString()
+        persistentObject.id.toString()
 
     override fun get(whereColumnName: String, whereValue: String): Step? =
-            super.get(whereColumnName, whereValue)?.let(this::addInnerObjects)
+        super.get(whereColumnName, whereValue)?.let(this::addInnerObjects)
 
     override fun getAllWithQuery(query: String, whereArgs: Array<String>?): List<Step> =
-            super.getAllWithQuery(query, whereArgs).map(this::addInnerObjects)
+        super.getAllWithQuery(query, whereArgs).map(this::addInnerObjects)
 
     private fun addInnerObjects(step: Step): Step {
         val blockPersistentWrapper = blockWrapperDao.get(DbStructureBlock.Column.STEP_ID, step.id.toString())
