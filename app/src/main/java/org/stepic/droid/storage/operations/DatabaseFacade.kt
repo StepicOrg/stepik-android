@@ -174,7 +174,13 @@ constructor(
     fun addSections(sections: List<Section>) =
         sectionDao.insertOrReplaceAll(sections)
 
-    fun addStep(step: Step) = stepDao.insertOrReplace(step)
+    fun addStep(step: Step) {
+        stepDao.insertOrReplace(step)
+    }
+
+    fun addSteps(steps: List<Step>) {
+        stepDao.insertOrReplaceAll(steps)
+    }
 
     fun getStepsOfLesson(lessonId: Long) = stepDao.getAll(DbStructureStep.Column.LESSON_ID, lessonId.toString())
 
