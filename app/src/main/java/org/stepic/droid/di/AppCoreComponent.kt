@@ -59,6 +59,7 @@ import org.stepik.android.view.injection.personal_deadlines.PersonalDeadlinesDat
 import org.stepik.android.view.injection.profile.ProfileBusModule
 import org.stepik.android.view.injection.profile_edit.ProfileEditComponent
 import org.stepik.android.view.injection.progress.ProgressBusModule
+import org.stepik.android.view.injection.step.StepDataModule
 import org.stepik.android.view.injection.video_player.VideoPlayerComponent
 
 @AppSingleton
@@ -87,7 +88,7 @@ import org.stepik.android.view.injection.video_player.VideoPlayerComponent
         ProgressBusModule::class,
         PersonalDeadlinesDataModule::class,
 
-        CourseRoutingModule::class // todo unite it in RoutingModule::class
+        CourseRoutingModule::class // todo unite it in RoutingModule::class,
     ]
 )
 interface AppCoreComponent {
