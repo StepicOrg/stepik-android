@@ -3,6 +3,10 @@
     <plurals name="adaptive_streak_success">
         <item quantity="other">%d in a row</item>
     </plurals>
+    <plurals name="minutes">
+        <item quantity="one">%d minute</item>
+        <item quantity="other">%d minutes</item>
+    </plurals>
     <plurals name="hours">
         <item quantity="one">%d hour</item>
         <item quantity="other">%d hours</item>
