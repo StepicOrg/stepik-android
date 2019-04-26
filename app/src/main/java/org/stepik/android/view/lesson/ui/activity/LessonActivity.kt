@@ -6,11 +6,14 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_lesson.*
+import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
+import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepik.android.presentation.lesson.LessonPresenter
 import org.stepik.android.presentation.lesson.LessonView
+import org.stepik.android.view.lesson.ui.delegate.LessonInfoTooltipDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import javax.inject.Inject
 
@@ -25,6 +28,8 @@ class LessonActivity : FragmentActivityBase(), LessonView {
 
     private lateinit var infoMenuItem: MenuItem
 
+    private lateinit var lessonInfoTooltipDelegate: LessonInfoTooltipDelegate
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_lesson)
@@ -33,6 +38,8 @@ class LessonActivity : FragmentActivityBase(), LessonView {
         lessonPresenter = ViewModelProviders
             .of(this, viewModelFactory)
             .get(LessonPresenter::class.java)
+
+        initCenteredToolbar(R.string.lesson_title, showHomeButton = true)
 
         viewStateDelegate = ViewStateDelegate()
         viewStateDelegate.addState<LessonView.State.Idle>(lessonPlaceholder)
@@ -48,6 +55,8 @@ class LessonActivity : FragmentActivityBase(), LessonView {
         viewStepStateDelegate.addState<LessonView.StepsState.Loading>(lessonPlaceholder)
         viewStepStateDelegate.addState<LessonView.StepsState.NetworkError>(errorNoConnection)
         viewStepStateDelegate.addState<LessonView.StepsState.Loaded>(lessonPager)
+
+        lessonInfoTooltipDelegate = LessonInfoTooltipDelegate(centeredToolbar)
     }
 
     private fun injectComponent() {
@@ -101,6 +110,7 @@ class LessonActivity : FragmentActivityBase(), LessonView {
     }
 
     override fun showLessonInfoTooltip(stepWorth: Long, lessonTimeToComplete: Long, certificateThreshold: Long) {
-
+        lessonInfoTooltipDelegate
+            .showLessonInfoTooltip(stepWorth, lessonTimeToComplete, certificateThreshold)
     }
 }
