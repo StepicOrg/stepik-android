@@ -26,7 +26,12 @@ class LessonActivity : FragmentActivityBase(), LessonView {
     private lateinit var viewStateDelegate: ViewStateDelegate<LessonView.State>
     private lateinit var viewStepStateDelegate: ViewStateDelegate<LessonView.StepsState>
 
-    private lateinit var infoMenuItem: MenuItem
+    private var infoMenuItem: MenuItem? = null
+    private var isInfoMenuItemVisible: Boolean = false
+        set(value) {
+            field = value
+            infoMenuItem?.isVisible = value
+        }
 
     private lateinit var lessonInfoTooltipDelegate: LessonInfoTooltipDelegate
 
@@ -79,7 +84,7 @@ class LessonActivity : FragmentActivityBase(), LessonView {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.lesson_menu, menu)
         infoMenuItem = menu.findItem(R.id.lesson_menu_item_info)
-        infoMenuItem.isVisible = false
+        infoMenuItem?.isVisible = isInfoMenuItemVisible
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -104,7 +109,7 @@ class LessonActivity : FragmentActivityBase(), LessonView {
                 viewStepStateDelegate.switchState(state.stepsState)
         }
 
-        infoMenuItem.isVisible =
+        isInfoMenuItemVisible =
             state is LessonView.State.LessonLoaded &&
             state.stepsState is LessonView.StepsState.Loaded
     }
