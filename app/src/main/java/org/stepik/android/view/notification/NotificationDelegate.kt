@@ -1,5 +1,7 @@
 package org.stepik.android.view.notification
 
+import android.app.Notification
+
 abstract class NotificationDelegate(
     val id: String,
     val notificationManager: StepikNotifManager
@@ -7,7 +9,11 @@ abstract class NotificationDelegate(
 
     abstract fun onNeedShowNotification()
 
-    protected fun scheduleNotificationAt(timestamp: Long) {
+    fun scheduleNotificationAt(timestamp: Long) {
         notificationManager.scheduleNotification(id, timestamp)
+    }
+
+    fun showNotification(id: Long, notification: Notification) {
+        notificationManager.showNotification(id, notification)
     }
 }
