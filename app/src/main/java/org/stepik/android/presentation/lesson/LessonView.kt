@@ -2,7 +2,6 @@ package org.stepik.android.presentation.lesson
 
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepik.android.domain.lesson.model.LessonData
-import org.stepik.android.model.Lesson
 
 interface LessonView {
     sealed class State {
@@ -12,10 +11,6 @@ interface LessonView {
         object LessonNotFound : State()
         object EmptyLogin : State()
         object NetworkError : State()
-
-        data class EmptyLesson(
-            val lessonData: LessonData
-        ) : State()
 
         data class LessonLoaded(
             val lessonData: LessonData,
@@ -27,6 +22,7 @@ interface LessonView {
         object Idle : StepsState()
         object Loading : StepsState()
         object NetworkError : StepsState()
+        object EmptySteps : StepsState()
         class Loaded(
             val steps: List<StepPersistentWrapper>
         ) : StepsState()

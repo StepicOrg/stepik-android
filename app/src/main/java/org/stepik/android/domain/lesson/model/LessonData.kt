@@ -6,7 +6,7 @@ import org.stepik.android.model.Unit
 
 data class LessonData(
     val lesson: Lesson,
-    val unit: Unit,
-    val section: Section,
+    val unit: Unit?,
+    val section: Section?,
     val stepPosition: Long = 1
 )

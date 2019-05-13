@@ -45,22 +45,19 @@ constructor(
             }
 
     fun getLessonData(lessonDeepLinkData: LessonDeepLinkData): Maybe<LessonData> =
-        zip(
-            lessonRepository.getLesson(lessonDeepLinkData.lessonId),
-            if (lessonDeepLinkData.unitId == null) {
+        lessonRepository
+            .getLesson(lessonDeepLinkData.lessonId)
+            .flatMapSingleElement { lesson ->
                 unitRepository
-                    .getUnitsByLessonId(lessonDeepLinkData.lessonId)
+                    .getUnitsByLessonId(lesson.id)
                     .maybeFirst()
-            } else {
-                unitRepository
-                    .getUnit(lessonDeepLinkData.unitId)
-            }
-        )
-            .flatMap { (lesson, unit) ->
-                sectionRepository
-                    .getSection(unit.section)
-                    .map { section ->
-                        LessonData(lesson, unit, section, lessonDeepLinkData.stepPosition)
+                    .flatMap { unit ->
+                        sectionRepository
+                            .getSection(unit.section)
+                            .map { section ->
+                                LessonData(lesson, unit, section, lessonDeepLinkData.stepPosition)
+                            }
                     }
+                    .toSingle(LessonData(lesson, null, null, lessonDeepLinkData.stepPosition))
             }
 }

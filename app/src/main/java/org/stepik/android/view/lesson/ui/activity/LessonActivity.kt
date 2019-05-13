@@ -78,13 +78,13 @@ class LessonActivity : FragmentActivityBase(), LessonView {
         viewStateDelegate.addState<LessonView.State.LessonNotFound>(lessonNotFound)
         viewStateDelegate.addState<LessonView.State.EmptyLogin>(emptyLogin)
         viewStateDelegate.addState<LessonView.State.NetworkError>(errorNoConnection)
-        viewStateDelegate.addState<LessonView.State.EmptyLesson>(emptyLesson)
         viewStateDelegate.addState<LessonView.State.LessonLoaded>(lessonPager)
 
         viewStepStateDelegate = ViewStateDelegate()
         viewStepStateDelegate.addState<LessonView.StepsState.Idle>(lessonPlaceholder)
         viewStepStateDelegate.addState<LessonView.StepsState.Loading>(lessonPlaceholder)
         viewStepStateDelegate.addState<LessonView.StepsState.NetworkError>(errorNoConnection)
+        viewStepStateDelegate.addState<LessonView.StepsState.EmptySteps>(emptyLesson)
         viewStepStateDelegate.addState<LessonView.StepsState.Loaded>(lessonPager)
 
         lessonInfoTooltipDelegate = LessonInfoTooltipDelegate(centeredToolbar)
@@ -159,8 +159,10 @@ class LessonActivity : FragmentActivityBase(), LessonView {
     override fun setState(state: LessonView.State) {
         viewStateDelegate.switchState(state)
         when (state) {
-            is LessonView.State.LessonLoaded ->
+            is LessonView.State.LessonLoaded -> {
                 viewStepStateDelegate.switchState(state.stepsState)
+                centeredToolbarTitle.text = state.lessonData.lesson.title
+            }
         }
 
         isInfoMenuItemVisible =
