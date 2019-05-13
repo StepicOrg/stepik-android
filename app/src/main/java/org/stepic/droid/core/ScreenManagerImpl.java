@@ -71,6 +71,7 @@ import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.StringUtil;
 import org.stepic.droid.web.ViewAssignment;
 import org.stepik.android.model.Tag;
+import org.stepik.android.view.lesson.ui.activity.LessonActivity;
 import org.stepik.android.view.profile_edit.ui.activity.ProfileEditInfoActivity;
 import org.stepik.android.view.profile_edit.ui.activity.ProfileEditActivity;
 import org.stepik.android.view.profile_edit.ui.activity.ProfileEditPasswordActivity;
@@ -511,7 +512,8 @@ public class ScreenManagerImpl implements ScreenManager {
     public void continueCourse(Activity activity, long courseId, long unitId, long lessonId, long stepId) {
         String testStepPath = StringUtil.getUriForStepByIds(config.getBaseUrl(), lessonId, unitId, stepId);
 
-        Intent stepsIntent = new Intent(activity, StepsActivity.class)
+        Intent stepsIntent = new Intent(activity, LessonActivity.class)
+//        Intent stepsIntent = new Intent(activity, StepsActivity.class)
                 .setAction(AppConstants.INTERNAL_STEPIK_ACTION)
                 .putExtra(StepsActivity.EXTRA_IS_STEP_ID_WAS_PASSED, true)
                 .setData(Uri.parse(testStepPath));
@@ -601,14 +603,15 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void showSteps(Activity sourceActivity, Unit unit, Lesson lesson, @Nullable Section section) {
+    public void showSteps(Activity sourceActivity, @NotNull Unit unit, @NotNull Lesson lesson, @NotNull Section section) {
         showSteps(sourceActivity, unit, lesson, false, section);
     }
 
     @Override
-    public void showSteps(Activity sourceActivity, Unit unit, Lesson lesson, boolean backAnimation, @Nullable Section section) {
+    public void showSteps(Activity sourceActivity, @NotNull Unit unit, @NotNull Lesson lesson, boolean backAnimation, @NotNull Section section) {
         analytic.reportEventWithIdName(Analytic.Screens.SHOW_STEP, lesson.getId() + "", lesson.getTitle());
-        Intent intent = new Intent(sourceActivity, StepsActivity.class);
+        Intent intent = new Intent(sourceActivity, LessonActivity.class);
+//        Intent intent = new Intent(sourceActivity, StepsActivity.class);
         Bundle bundle = new Bundle();
         bundle.putParcelable(AppConstants.KEY_UNIT_BUNDLE, unit);
         bundle.putParcelable(AppConstants.KEY_LESSON_BUNDLE, lesson);

@@ -58,9 +58,9 @@ public interface ScreenManager {
     void openNewCommentForm(CommentsFragment commentsFragment, Long target, @Nullable Long parent);
 
 
-    void showSteps(Activity sourceActivity, Unit unit, Lesson lesson, @Nullable Section section);
+    void showSteps(Activity sourceActivity, @NotNull Unit unit, @NotNull Lesson lesson, @NotNull Section section);
 
-    void showSteps(Activity sourceActivity, Unit unit, Lesson lesson, boolean backAnimation, @Nullable Section section);
+    void showSteps(Activity sourceActivity, @NotNull Unit unit, @NotNull Lesson lesson, boolean backAnimation, @NotNull Section section);
 
     void openStepInWeb(Context context, Step step);
 

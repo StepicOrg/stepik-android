@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.core.commentcount.contract.CommentCountListener;
@@ -325,7 +326,7 @@ public abstract class StepBaseFragment extends FragmentBase
     }
 
     @Override
-    public final void openNextLesson(Unit nextUnit, Lesson nextLesson, Section nextSection) {
+    public final void openNextLesson(@NotNull Unit nextUnit, @NotNull Lesson nextLesson, @NotNull Section nextSection) {
         ProgressHelper.dismiss(getFragmentManager(), LOAD_DIALOG_TAG);
         getScreenManager().showSteps(getActivity(), nextUnit, nextLesson, nextSection);
         getActivity().finish();
@@ -352,7 +353,7 @@ public abstract class StepBaseFragment extends FragmentBase
     }
 
     @Override
-    public void openPreviousLesson(Unit previousUnit, Lesson previousLesson, Section previousSection) {
+    public void openPreviousLesson(@NotNull Unit previousUnit, @NotNull Lesson previousLesson, @NotNull Section previousSection) {
         ProgressHelper.dismiss(getFragmentManager(), LOAD_DIALOG_TAG);
         getScreenManager().showSteps(getActivity(), previousUnit, previousLesson, true, previousSection);
         getActivity().finish();
