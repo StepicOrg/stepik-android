@@ -15,7 +15,9 @@ import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
+import org.stepic.droid.ui.adapters.StepFragmentAdapter
 import org.stepic.droid.ui.util.initCenteredToolbar
+import org.stepic.droid.util.resolvers.StepTypeResolver
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Lesson
 import org.stepik.android.model.Section
@@ -45,6 +47,9 @@ class LessonActivity : FragmentActivityBase(), LessonView {
             Intent(context, LessonActivity::class.java)
                 .putExtra(EXTRA_LAST_STEP, lastStep)
     }
+
+    @Inject
+    internal lateinit var stepTypeResolver: StepTypeResolver
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -166,6 +171,17 @@ class LessonActivity : FragmentActivityBase(), LessonView {
             is LessonView.State.LessonLoaded -> {
                 viewStepStateDelegate.switchState(state.stepsState)
                 centeredToolbarTitle.text = state.lessonData.lesson.title
+
+                lessonPager.adapter =
+                    if (state.stepsState is LessonView.StepsState.Loaded) {
+                        StepFragmentAdapter(supportFragmentManager, state.stepsState.steps, stepTypeResolver)
+                            .apply {
+                                setDataIfNotNull(state.lessonData.lesson, state.lessonData.unit, state.lessonData.section)
+                            }
+
+                    } else {
+                        null
+                    }
             }
         }
 

@@ -7,6 +7,7 @@ import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.last_step.model.LastStep
+import org.stepik.android.domain.lesson.interactor.LessonContentInteractor
 import org.stepik.android.domain.lesson.interactor.LessonInteractor
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.model.Lesson
@@ -20,6 +21,7 @@ class LessonPresenter
 @Inject
 constructor(
     private val lessonInteractor: LessonInteractor,
+    private val lessonContentInteractor: LessonContentInteractor,
 
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
@@ -71,9 +73,34 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
                 onComplete = { state = LessonView.State.LessonNotFound },
-                onSuccess  = { state = LessonView.State.LessonLoaded(it, LessonView.StepsState.Idle) /* resolve steps state */ },
+                onSuccess  = { state = LessonView.State.LessonLoaded(it, LessonView.StepsState.Idle); resolveStepsState() },
                 onError    = { state = LessonView.State.NetworkError }
             )
+    }
+
+    /**
+     * Steps loading
+     */
+    private fun resolveStepsState() {
+        val oldState = (state as? LessonView.State.LessonLoaded)
+            ?: return
+
+        val stepIds = oldState.lessonData.lesson.steps
+
+        if (stepIds.isEmpty()) {
+            state = oldState.copy(stepsState = LessonView.StepsState.EmptySteps)
+        } else {
+            state = oldState.copy(stepsState = LessonView.StepsState.Loading)
+
+            compositeDisposable += lessonContentInteractor
+                .getSteps(*stepIds)
+                .observeOn(mainScheduler)
+                .subscribeOn(backgroundScheduler)
+                .subscribeBy(
+                    onSuccess  = { state = oldState.copy(stepsState = LessonView.StepsState.Loaded(it)) },
+                    onError    = { state = oldState.copy(stepsState = LessonView.StepsState.NetworkError) }
+                )
+        }
     }
 
     fun onShowLessonInfoClicked(position: Int) {
