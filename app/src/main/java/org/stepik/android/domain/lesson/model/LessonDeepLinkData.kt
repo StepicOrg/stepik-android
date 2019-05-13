@@ -1,4 +1,4 @@
-package org.stepik.android.view.lesson.routing
+package org.stepik.android.domain.lesson.model
 
 data class LessonDeepLinkData(
     val lessonId: Long,

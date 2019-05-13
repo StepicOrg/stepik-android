@@ -3,6 +3,7 @@ package org.stepik.android.view.lesson.routing
 import android.content.Intent
 import org.stepic.droid.util.HtmlHelper
 import org.stepic.droid.util.getPathSegmentParameter
+import org.stepik.android.domain.lesson.model.LessonDeepLinkData
 
 private const val PATH_SEGMENT_LESSON = "lesson"
 private const val PATH_SEGMENT_STEP = "step"

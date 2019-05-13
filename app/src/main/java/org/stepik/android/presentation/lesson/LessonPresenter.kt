@@ -7,17 +7,20 @@ import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.last_step.model.LastStep
+import org.stepik.android.domain.lesson.interactor.LessonInteractor
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.model.Lesson
 import org.stepik.android.model.Section
 import org.stepik.android.model.Unit
 import org.stepik.android.presentation.base.PresenterBase
-import org.stepik.android.view.lesson.routing.LessonDeepLinkData
+import org.stepik.android.domain.lesson.model.LessonDeepLinkData
 import javax.inject.Inject
 
 class LessonPresenter
 @Inject
 constructor(
+    private val lessonInteractor: LessonInteractor,
+
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
     @MainScheduler
@@ -38,15 +41,15 @@ constructor(
      * Data initialization variants
      */
     fun onLesson(lesson: Lesson, unit: Unit, section: Section, forceUpdate: Boolean = false) {
-
+        obtainLessonData(lessonInteractor.getLessonData(lesson, unit, section), forceUpdate)
     }
 
     fun onLastStep(lastStep: LastStep, forceUpdate: Boolean = false) {
-
+        obtainLessonData(lessonInteractor.getLessonData(lastStep), forceUpdate)
     }
 
     fun onDeepLink(deepLinkData: LessonDeepLinkData, forceUpdate: Boolean = false) {
-
+        obtainLessonData(lessonInteractor.getLessonData(deepLinkData), forceUpdate)
     }
 
     fun onEmptyData() {

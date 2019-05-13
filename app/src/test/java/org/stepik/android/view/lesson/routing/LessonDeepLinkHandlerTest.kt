@@ -6,6 +6,7 @@ import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import org.stepik.android.domain.lesson.model.LessonDeepLinkData
 
 @RunWith(RobolectricTestRunner::class)
 class LessonDeepLinkHandlerTest {
