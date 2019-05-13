@@ -8,6 +8,8 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_lesson.*
+import kotlinx.android.synthetic.main.empty_login.*
+import kotlinx.android.synthetic.main.error_lesson_not_found.*
 import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
@@ -90,6 +92,8 @@ class LessonActivity : FragmentActivityBase(), LessonView {
         lessonInfoTooltipDelegate = LessonInfoTooltipDelegate(centeredToolbar)
 
         tryAgain.setOnClickListener { setDataToPresenter(forceUpdate = true) }
+        goToCatalog.setOnClickListener { screenManager.showCatalog(this) }
+        authAction.setOnClickListener { screenManager.showLaunchScreen(this) }
 
         setDataToPresenter()
     }
