@@ -2,6 +2,8 @@ package org.stepik.android.view.lesson.ui.activity
 
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -11,6 +13,10 @@ import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.ui.util.initCenteredToolbar
+import org.stepik.android.domain.last_step.model.LastStep
+import org.stepik.android.model.Lesson
+import org.stepik.android.model.Section
+import org.stepik.android.model.Unit
 import org.stepik.android.presentation.lesson.LessonPresenter
 import org.stepik.android.presentation.lesson.LessonView
 import org.stepik.android.view.lesson.ui.delegate.LessonInfoTooltipDelegate
@@ -18,6 +24,24 @@ import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import javax.inject.Inject
 
 class LessonActivity : FragmentActivityBase(), LessonView {
+    companion object {
+        private const val EXTRA_SECTION = "section"
+        private const val EXTRA_UNIT = "unit"
+        private const val EXTRA_LESSON = "lesson"
+
+        private const val EXTRA_LAST_STEP = "last_step"
+
+        fun createIntent(context: Context, section: Section, unit: Unit, lesson: Lesson): Intent =
+            Intent(context, LessonActivity::class.java)
+                .putExtra(EXTRA_SECTION, section)
+                .putExtra(EXTRA_UNIT, unit)
+                .putExtra(EXTRA_LESSON, lesson)
+
+        fun createIntent(context: Context, lastStep: LastStep): Intent =
+            Intent(context, LessonActivity::class.java)
+                .putExtra(EXTRA_LAST_STEP, lastStep)
+    }
+
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -98,7 +122,7 @@ class LessonActivity : FragmentActivityBase(), LessonView {
                 lessonPresenter.onShowLessonInfoClicked(lessonPager.currentItem)
                 true
             }
-             else ->
+            else ->
                 super.onOptionsItemSelected(item)
         }
 

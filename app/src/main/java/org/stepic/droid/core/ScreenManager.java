@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.model.CollectionDescriptionColors;
+import org.stepik.android.domain.last_step.model.LastStep;
 import org.stepik.android.model.Course;
 import org.stepic.droid.model.CoursesCarouselInfo;
 import org.stepik.android.model.Lesson;
@@ -128,7 +129,7 @@ public interface ScreenManager {
 
     void continueAdaptiveCourse(Activity activity, Course course);
 
-    void continueCourse(Activity activity, long courseId, long unitId, long lessonId, long stepId);
+    void continueCourse(Activity activity, long courseId, @NotNull LastStep lastStep);
 
     void showLaunchScreen(FragmentActivity activity, @NotNull Course course);
 

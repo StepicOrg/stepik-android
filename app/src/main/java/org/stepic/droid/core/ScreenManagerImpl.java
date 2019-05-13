@@ -28,6 +28,7 @@ import org.stepic.droid.configuration.Config;
 import org.stepic.droid.di.AppSingleton;
 import org.stepic.droid.features.achievements.ui.activity.AchievementsListActivity;
 import org.stepic.droid.util.UriExtensionsKt;
+import org.stepik.android.domain.last_step.model.LastStep;
 import org.stepik.android.model.user.Profile;
 import org.stepik.android.view.course.routing.CourseScreenTab;
 import org.stepik.android.view.course.ui.activity.CourseActivity;
@@ -68,7 +69,6 @@ import org.stepic.droid.ui.dialogs.RemindPasswordDialogFragment;
 import org.stepic.droid.ui.fragments.CommentsFragment;
 import org.stepic.droid.util.AndroidVersionKt;
 import org.stepic.droid.util.AppConstants;
-import org.stepic.droid.util.StringUtil;
 import org.stepic.droid.web.ViewAssignment;
 import org.stepik.android.model.Tag;
 import org.stepik.android.view.lesson.ui.activity.LessonActivity;
@@ -509,14 +509,8 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void continueCourse(Activity activity, long courseId, long unitId, long lessonId, long stepId) {
-        String testStepPath = StringUtil.getUriForStepByIds(config.getBaseUrl(), lessonId, unitId, stepId);
-
-        Intent stepsIntent = new Intent(activity, LessonActivity.class)
-//        Intent stepsIntent = new Intent(activity, StepsActivity.class)
-                .setAction(AppConstants.INTERNAL_STEPIK_ACTION)
-                .putExtra(StepsActivity.EXTRA_IS_STEP_ID_WAS_PASSED, true)
-                .setData(Uri.parse(testStepPath));
+    public void continueCourse(Activity activity, long courseId, @NotNull LastStep lastStep) {
+        Intent stepsIntent = LessonActivity.Companion.createIntent(activity, lastStep);
 
         Intent courseIntent = CourseActivity.Companion.createIntent(activity,
                 courseId, CourseScreenTab.SYLLABUS);
@@ -610,16 +604,10 @@ public class ScreenManagerImpl implements ScreenManager {
     @Override
     public void showSteps(Activity sourceActivity, @NotNull Unit unit, @NotNull Lesson lesson, boolean backAnimation, @NotNull Section section) {
         analytic.reportEventWithIdName(Analytic.Screens.SHOW_STEP, lesson.getId() + "", lesson.getTitle());
-        Intent intent = new Intent(sourceActivity, LessonActivity.class);
-//        Intent intent = new Intent(sourceActivity, StepsActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(AppConstants.KEY_UNIT_BUNDLE, unit);
-        bundle.putParcelable(AppConstants.KEY_LESSON_BUNDLE, lesson);
-        bundle.putParcelable(AppConstants.KEY_SECTION_BUNDLE, section);
+        Intent intent = LessonActivity.Companion.createIntent(sourceActivity, section, unit, lesson);
         if (backAnimation) {
-            bundle.putBoolean(StepsActivity.needReverseAnimationKey, true);
+            intent.putExtra(StepsActivity.needReverseAnimationKey, true);
         }
-        intent.putExtras(bundle);
         sourceActivity.startActivity(intent);
     }
 

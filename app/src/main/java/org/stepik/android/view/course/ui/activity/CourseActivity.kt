@@ -348,7 +348,7 @@ class CourseActivity : FragmentActivityBase(), CourseView {
     }
 
     override fun continueCourse(courseId: Long, lastStep: LastStep) {
-        screenManager.continueCourse(this, courseId, lastStep.unit, lastStep.lesson, lastStep.step)
+        screenManager.continueCourse(this, courseId, lastStep)
     }
 
     override fun continueAdaptiveCourse(course: Course) {

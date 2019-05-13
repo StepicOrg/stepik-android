@@ -37,7 +37,6 @@ class LessonInfoTooltipDelegate(
             .stepWorth
             .setItem(stepWorth, R.string.lesson_info_points, R.plurals.points, R.drawable.ic_check_rounded)
 
-
         val (timeValue, @PluralsRes timeUnitPlural) =
             if (lessonTimeToCompleteInSeconds in 0 until 3600) {
                 lessonTimeToCompleteInSeconds / 60 to R.plurals.minutes
