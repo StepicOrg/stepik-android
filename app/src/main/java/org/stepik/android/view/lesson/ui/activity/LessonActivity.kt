@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_lesson.*
+import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
@@ -19,6 +20,7 @@ import org.stepik.android.model.Section
 import org.stepik.android.model.Unit
 import org.stepik.android.presentation.lesson.LessonPresenter
 import org.stepik.android.presentation.lesson.LessonView
+import org.stepik.android.view.lesson.routing.getLessonDeepLinkData
 import org.stepik.android.view.lesson.ui.delegate.LessonInfoTooltipDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import javax.inject.Inject
@@ -86,6 +88,10 @@ class LessonActivity : FragmentActivityBase(), LessonView {
         viewStepStateDelegate.addState<LessonView.StepsState.Loaded>(lessonPager)
 
         lessonInfoTooltipDelegate = LessonInfoTooltipDelegate(centeredToolbar)
+
+        tryAgain.setOnClickListener { setDataToPresenter(forceUpdate = true) }
+
+        setDataToPresenter()
     }
 
     private fun injectComponent() {
@@ -93,6 +99,30 @@ class LessonActivity : FragmentActivityBase(), LessonView {
             .lessonComponentBuilder()
             .build()
             .inject(this)
+    }
+
+    private fun setDataToPresenter(forceUpdate: Boolean = false) {
+        val lastStep = intent.getParcelableExtra<LastStep>(EXTRA_LAST_STEP)
+
+        val lesson = intent.getParcelableExtra<Lesson>(EXTRA_LESSON)
+        val unit = intent.getParcelableExtra<Unit>(EXTRA_UNIT)
+        val section = intent.getParcelableExtra<Section>(EXTRA_SECTION)
+
+        val deepLinkData = intent.getLessonDeepLinkData()
+
+        when {
+            lastStep != null ->
+                lessonPresenter.onLastStep(lastStep, forceUpdate)
+
+            deepLinkData != null ->
+                lessonPresenter.onDeepLink(deepLinkData, forceUpdate)
+
+            lesson != null && unit != null && section != null ->
+                lessonPresenter.onLesson(lesson, unit, section, forceUpdate)
+
+            else ->
+                lessonPresenter.onEmptyData()
+        }
     }
 
     override fun onStart() {
