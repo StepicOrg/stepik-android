@@ -13,6 +13,8 @@ import android.os.IBinder
 import android.support.v4.media.session.MediaButtonReceiver
 import android.support.v4.media.session.MediaSessionCompat
 import com.google.android.exoplayer2.C
+import com.google.android.exoplayer2.DefaultLoadControl
+import com.google.android.exoplayer2.DefaultRenderersFactory
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.ExoPlayerFactory
 import com.google.android.exoplayer2.PlaybackParameters
@@ -22,6 +24,7 @@ import com.google.android.exoplayer2.audio.AudioAttributes
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.source.MediaSource
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
@@ -40,6 +43,8 @@ class VideoPlayerForegroundService : Service() {
         private const val PLAYER_NOTIFICATION_ID = 21313
 
         private const val MEDIA_SESSION_TAG = "stepik_video"
+
+        private const val BACK_BUFFER_DURATION_MS = 60 * 1000
 
         fun createIntent(context: Context, videoPlayerData: VideoPlayerData): Intent =
             Intent(context, VideoPlayerForegroundService::class.java)
@@ -97,8 +102,12 @@ class VideoPlayerForegroundService : Service() {
 
         videoPlayerMediaDescriptionAdapter = VideoPlayerMediaDescriptionAdapter(this)
 
+        val loadControl = DefaultLoadControl.Builder()
+            .setBackBuffer(BACK_BUFFER_DURATION_MS, true)
+            .createDefaultLoadControl()
+
         player = ExoPlayerFactory
-            .newSimpleInstance(this)
+            .newSimpleInstance(this, DefaultRenderersFactory(this), DefaultTrackSelector(), loadControl)
             .apply {
                 playWhenReady = true
                 setAudioAttributes(audioAttributes, true)
