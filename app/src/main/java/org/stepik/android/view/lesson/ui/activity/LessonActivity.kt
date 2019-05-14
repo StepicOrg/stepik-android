@@ -92,13 +92,15 @@ class LessonActivity : FragmentActivityBase(), LessonView {
         viewStepStateDelegate.addState<LessonView.StepsState.Loading>(lessonPlaceholder)
         viewStepStateDelegate.addState<LessonView.StepsState.NetworkError>(errorNoConnection)
         viewStepStateDelegate.addState<LessonView.StepsState.EmptySteps>(emptyLesson)
-        viewStepStateDelegate.addState<LessonView.StepsState.Loaded>(lessonPager)
+        viewStepStateDelegate.addState<LessonView.StepsState.Loaded>(lessonPager, lessonTab)
 
         lessonInfoTooltipDelegate = LessonInfoTooltipDelegate(centeredToolbar)
 
         tryAgain.setOnClickListener { setDataToPresenter(forceUpdate = true) }
         goToCatalog.setOnClickListener { screenManager.showCatalog(this) }
         authAction.setOnClickListener { screenManager.showLaunchScreen(this) }
+
+        lessonTab.setupWithViewPager(lessonPager, true)
 
         setDataToPresenter()
     }
@@ -182,12 +184,23 @@ class LessonActivity : FragmentActivityBase(), LessonView {
                     } else {
                         null
                     }
+
+                invalidateTabLayout()
             }
         }
 
         isInfoMenuItemVisible =
             state is LessonView.State.LessonLoaded &&
             state.stepsState is LessonView.StepsState.Loaded
+    }
+
+    private fun invalidateTabLayout() {
+        val stepsAdapter = (lessonPager.adapter as? StepFragmentAdapter)
+            ?: return
+
+        for (i in 0 until lessonTab.tabCount) {
+            lessonTab.getTabAt(i)?.icon = stepsAdapter.getTabDrawable(i)
+        }
     }
 
     override fun showLessonInfoTooltip(stepWorth: Long, lessonTimeToComplete: Long, certificateThreshold: Long) {

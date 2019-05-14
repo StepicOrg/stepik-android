@@ -125,4 +125,12 @@ constructor(
         super.insertOrUpdate(persistentObject)
         persistentObject.block?.let { blockWrapperDao.insertOrUpdate(BlockPersistentWrapper(it, persistentObject.id)) }
     }
+
+    override fun insertOrReplaceAll(persistentObjects: List<Step>) {
+        super.insertOrReplaceAll(persistentObjects)
+        blockWrapperDao.insertOrReplaceAll(
+            persistentObjects
+                .mapNotNull { step -> step.block?.let { BlockPersistentWrapper(it, step.id) }}
+        )
+    }
 }
