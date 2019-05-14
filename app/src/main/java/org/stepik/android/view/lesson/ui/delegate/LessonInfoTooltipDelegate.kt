@@ -1,5 +1,6 @@
 package org.stepik.android.view.lesson.ui.delegate
 
+import android.graphics.drawable.Drawable
 import android.support.annotation.DrawableRes
 import android.support.annotation.PluralsRes
 import android.support.annotation.StringRes
@@ -81,6 +82,7 @@ class LessonInfoTooltipDelegate(
             val iconDrawable = AppCompatResources
                 .getDrawable(context, drawableRes)
                 ?.let(DrawableCompat::wrap)
+                ?.let(Drawable::mutate)
                 ?: return
             DrawableCompat.setTint(iconDrawable, ContextCompat.getColor(context,  android.R.color.white))
             setCompoundDrawablesWithIntrinsicBounds(iconDrawable, null, null, null)
