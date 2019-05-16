@@ -641,9 +641,9 @@ public class ScreenManagerImpl implements ScreenManager {
 
         final Uri uri = uriBuilder.build();
 
-        final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        final Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(config.getBaseUrl()));
 
-        final List<ResolveInfo> resolveInfoList = context.getPackageManager().queryIntentActivities(intent, 0);
+        final List<ResolveInfo> resolveInfoList = context.getPackageManager().queryIntentActivities(browserIntent, 0);
         final ArrayList<Intent> activityIntents = new ArrayList<>();
 
         for (final ResolveInfo resolveInfo : resolveInfoList) {
