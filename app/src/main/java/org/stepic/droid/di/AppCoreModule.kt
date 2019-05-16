@@ -157,6 +157,9 @@ abstract class AppCoreModule {
     @Binds
     internal abstract fun bindNotificationHelper(notificationHelperImpl: NotificationHelperImpl): NotificationHelper
 
+    @Binds
+    internal abstract fun bindNotificationResolver(notificationResolverImpl: NotificationResolverImpl): NotificationResolver
+
     @Module
     companion object {
         const val SINGLE_THREAD_CODE_SAVER = "SINGLE_THREAD_CODE_SAVER"
