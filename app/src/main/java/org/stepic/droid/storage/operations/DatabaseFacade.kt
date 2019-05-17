@@ -102,7 +102,18 @@ constructor(
         sectionDateEventDao.removeAll()
     }
 
-    fun addAssignment(assignment: Assignment?) = assignment?.let { assignmentDao.insertOrUpdate(assignment) }
+    fun addAssignments(assignments: List<Assignment>) {
+        assignmentDao.insertOrReplaceAll(assignments)
+    }
+
+    fun getAssignments(assignmentsIds: LongArray): List<Assignment> {
+        val stringIds = DbParseHelper.parseLongArrayToString(assignmentsIds, AppConstants.COMMA)
+        return if (stringIds != null) {
+            assignmentDao.getAllInRange(DbStructureAssignment.Column.ASSIGNMENT_ID, stringIds)
+        } else {
+            emptyList()
+        }
+    }
 
     @Deprecated("because of step has 0..* assignments.")
     fun getAssignmentIdByStepId(stepId: Long): Long {
