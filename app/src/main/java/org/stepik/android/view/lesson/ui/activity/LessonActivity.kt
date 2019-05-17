@@ -60,6 +60,8 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable {
     private lateinit var viewStateDelegate: ViewStateDelegate<LessonView.State>
     private lateinit var viewStepStateDelegate: ViewStateDelegate<LessonView.StepsState>
 
+    private lateinit var stepsAdapter: StepFragmentAdapter
+
     private var infoMenuItem: MenuItem? = null
     private var isInfoMenuItemVisible: Boolean = false
         set(value) {
@@ -101,6 +103,8 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable {
         goToCatalog.setOnClickListener { screenManager.showCatalog(this) }
         authAction.setOnClickListener { screenManager.showLaunchScreen(this) }
 
+        stepsAdapter = StepFragmentAdapter(supportFragmentManager, stepTypeResolver)
+        lessonPager.adapter = stepsAdapter
         lessonTab.setupWithViewPager(lessonPager, true)
 
         setDataToPresenter()
@@ -175,15 +179,12 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable {
                 viewStepStateDelegate.switchState(state.stepsState)
                 centeredToolbarTitle.text = state.lessonData.lesson.title
 
-                lessonPager.adapter =
+                stepsAdapter.setDataIfNotNull(state.lessonData.lesson, state.lessonData.unit, state.lessonData.section)
+                stepsAdapter.items =
                     if (state.stepsState is LessonView.StepsState.Loaded) {
-                        StepFragmentAdapter(supportFragmentManager, state.stepsState.stepItems, stepTypeResolver)
-                            .apply {
-                                setDataIfNotNull(state.lessonData.lesson, state.lessonData.unit, state.lessonData.section)
-                            }
-
+                        state.stepsState.stepItems
                     } else {
-                        null
+                        emptyList()
                     }
 
                 invalidateTabLayout()
