@@ -40,7 +40,7 @@ constructor(
                 sectionRepository
                     .getSection(unit.section)
                     .map { section ->
-                        LessonData(lesson, unit, section, lesson.steps.indexOf(lastStep.step).toLong() + 1)
+                        LessonData(lesson, unit, section, (lesson.steps.indexOf(lastStep.step)).coerceAtLeast(0))
                     }
             }
 
@@ -55,9 +55,9 @@ constructor(
                         sectionRepository
                             .getSection(unit.section)
                             .map { section ->
-                                LessonData(lesson, unit, section, lessonDeepLinkData.stepPosition)
+                                LessonData(lesson, unit, section, lessonDeepLinkData.stepPosition + 1)
                             }
                     }
-                    .toSingle(LessonData(lesson, null, null, lessonDeepLinkData.stepPosition))
+                    .toSingle(LessonData(lesson, null, null, lessonDeepLinkData.stepPosition + 1))
             }
 }

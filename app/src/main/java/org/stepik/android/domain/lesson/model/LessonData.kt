@@ -8,5 +8,5 @@ data class LessonData(
     val lesson: Lesson,
     val unit: Unit?,
     val section: Section?,
-    val stepPosition: Long = 1
+    val stepPosition: Int = 0
 )

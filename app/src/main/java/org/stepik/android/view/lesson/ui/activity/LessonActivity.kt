@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.view.ViewPager
 import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_lesson.*
@@ -105,6 +106,11 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable {
 
         stepsAdapter = StepFragmentAdapter(supportFragmentManager, stepTypeResolver)
         lessonPager.adapter = stepsAdapter
+        lessonPager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
+            override fun onPageSelected(position: Int) {
+                lessonPresenter.onStepOpened(position)
+            }
+        })
         lessonTab.setupWithViewPager(lessonPager, true)
 
         setDataToPresenter()
@@ -203,6 +209,11 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable {
         for (i in 0 until lessonTab.tabCount) {
             lessonTab.getTabAt(i)?.icon = stepsAdapter.getTabDrawable(i)
         }
+    }
+
+    override fun showStepAtPosition(position: Int) {
+        lessonPager.currentItem = position
+        lessonPresenter.onStepOpened(position)
     }
 
     override fun showLessonInfoTooltip(stepWorth: Long, lessonTimeToComplete: Long, certificateThreshold: Long) {

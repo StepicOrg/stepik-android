@@ -21,14 +21,14 @@ fun Intent.getLessonIdFromDeepLink(): Long? {
     return HtmlHelper.parseIdFromSlug(path)
 }
 
-fun Intent.getStepPositionFromDeepLink(): Long? {
+fun Intent.getStepPositionFromDeepLink(): Int? {
     val data = this.data ?: return null
 
     val path = data
         .getPathSegmentParameter(PATH_SEGMENT_STEP)
         ?: return null
 
-    return HtmlHelper.parseIdFromSlug(path)
+    return HtmlHelper.parseIdFromSlug(path)?.toInt()
 }
 
 fun Intent.getUnitIdFromDeepLink(): Long? {

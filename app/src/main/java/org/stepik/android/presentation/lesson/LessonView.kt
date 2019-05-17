@@ -30,5 +30,10 @@ interface LessonView {
 
     fun setState(state: State)
 
+    /**
+     * Show step at [position]. [position] starts with 0.
+     */
+    fun showStepAtPosition(position: Int)
+
     fun showLessonInfoTooltip(stepWorth: Long, lessonTimeToComplete: Long, certificateThreshold: Long)
 }

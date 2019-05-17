@@ -19,6 +19,7 @@ import org.stepik.android.presentation.base.PresenterBase
 import org.stepik.android.domain.lesson.model.LessonDeepLinkData
 import org.stepik.android.model.Progress
 import org.stepik.android.presentation.lesson.mapper.LessonStateMapper
+import timber.log.Timber
 import javax.inject.Inject
 
 class LessonPresenter
@@ -110,7 +111,7 @@ constructor(
                 .observeOn(mainScheduler)
                 .subscribeOn(backgroundScheduler)
                 .subscribeBy(
-                    onSuccess  = { state = oldState.copy(stepsState = LessonView.StepsState.Loaded(it)) },
+                    onSuccess  = { state = oldState.copy(stepsState = LessonView.StepsState.Loaded(it)); view?.showStepAtPosition(oldState.lessonData.stepPosition) },
                     onError    = { state = oldState.copy(stepsState = LessonView.StepsState.NetworkError) }
                 )
         }
@@ -150,5 +151,23 @@ constructor(
                 },
                 onError = emptyOnErrorStub
             )
+    }
+
+    /**
+     * Step view
+     */
+    fun onStepOpened(position: Int) {
+        val state = (state as? LessonView.State.LessonLoaded)
+            ?: return
+
+        val stepsState = (state.stepsState as? LessonView.StepsState.Loaded)
+            ?: return
+
+        val stepItem = stepsState
+            .stepItems
+            .getOrNull(position)
+            ?: return
+
+
     }
 }
