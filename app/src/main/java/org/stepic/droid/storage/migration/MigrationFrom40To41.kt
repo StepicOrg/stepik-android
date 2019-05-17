@@ -1,12 +1,16 @@
 package org.stepic.droid.storage.migration
 
 import android.database.sqlite.SQLiteDatabase
+import org.stepik.android.cache.assignment.structure.DbStructureAssignment
 import org.stepik.android.cache.step.structure.DbStructureStep
 
 object MigrationFrom40To41 : Migration {
     override fun migrate(db: SQLiteDatabase) {
         createStepsTable(db)
         migrateSteps(db)
+
+        createAssignmentsTable(db)
+        migrateAssignments(db)
     }
 
     private fun createStepsTable(db: SQLiteDatabase) {
@@ -59,6 +63,35 @@ object MigrationFrom40To41 : Migration {
                 ${org.stepic.droid.storage.structure.DbStructureStep.Column.PEER_REVIEW},
                 ${org.stepic.droid.storage.structure.DbStructureStep.Column.HAS_SUBMISSION_RESTRICTION},
                 ${org.stepic.droid.storage.structure.DbStructureStep.Column.MAX_SUBMISSION_COUNT}
+            FROM ${org.stepic.droid.storage.structure.DbStructureStep.STEPS}
+        """.trimIndent())
+    }
+
+    private fun createAssignmentsTable(db: SQLiteDatabase) {
+        db.execSQL("""
+             CREATE TABLE IF NOT EXISTS ${DbStructureAssignment.TABLE_NAME} (
+                ${DbStructureAssignment.Columns.ID} LONG PRIMARY KEY,
+                ${DbStructureAssignment.Columns.STEP} LONG,
+                ${DbStructureAssignment.Columns.UNIT} LONG,
+
+                ${DbStructureAssignment.Columns.PROGRESS} TEXT,
+
+                ${DbStructureStep.Column.CREATE_DATE} LONG,
+                ${DbStructureStep.Column.UPDATE_DATE} LONG
+            )
+        """.trimIndent())
+    }
+
+    private fun migrateAssignments(db: SQLiteDatabase) {
+        db.execSQL("""
+            REPLACE INTO ${DbStructureAssignment.TABLE_NAME}
+            SELECT
+                ${org.stepic.droid.storage.structure.DbStructureAssignment.Column.ASSIGNMENT_ID},
+                ${org.stepic.droid.storage.structure.DbStructureAssignment.Column.STEP_ID},
+                ${org.stepic.droid.storage.structure.DbStructureAssignment.Column.UNIT_ID},
+                ${org.stepic.droid.storage.structure.DbStructureAssignment.Column.PROGRESS},
+                -1,
+                -1
             FROM ${org.stepic.droid.storage.structure.DbStructureStep.STEPS}
         """.trimIndent())
     }

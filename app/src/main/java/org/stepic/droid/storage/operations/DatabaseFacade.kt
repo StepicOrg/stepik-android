@@ -16,7 +16,6 @@ import org.stepic.droid.storage.dao.AdaptiveExpDao
 import org.stepic.droid.storage.dao.CourseListDao
 import org.stepic.droid.storage.dao.IDao
 import org.stepic.droid.storage.dao.SearchQueryDao
-import org.stepic.droid.storage.structure.DbStructureAssignment
 import org.stepic.droid.storage.structure.DbStructureCalendarSection
 import org.stepic.droid.storage.structure.DbStructureCodeSubmission
 import org.stepic.droid.storage.structure.DbStructureCourse
@@ -29,6 +28,7 @@ import org.stepic.droid.storage.structure.DbStructureViewedNotificationsQueue
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DbParseHelper
 import org.stepic.droid.web.ViewAssignment
+import org.stepik.android.cache.assignment.structure.DbStructureAssignment
 import org.stepik.android.cache.course_calendar.structure.DbStructureSectionDateEvent
 import org.stepik.android.cache.lesson.structure.DbStructureLesson
 import org.stepik.android.cache.personal_deadlines.dao.DeadlinesBannerDao
@@ -109,7 +109,7 @@ constructor(
     fun getAssignments(assignmentsIds: LongArray): List<Assignment> {
         val stringIds = DbParseHelper.parseLongArrayToString(assignmentsIds, AppConstants.COMMA)
         return if (stringIds != null) {
-            assignmentDao.getAllInRange(DbStructureAssignment.Column.ASSIGNMENT_ID, stringIds)
+            assignmentDao.getAllInRange(DbStructureAssignment.Columns.ID, stringIds)
         } else {
             emptyList()
         }
@@ -117,7 +117,7 @@ constructor(
 
     @Deprecated("because of step has 0..* assignments.")
     fun getAssignmentIdByStepId(stepId: Long): Long {
-        val assignment = assignmentDao.get(DbStructureAssignment.Column.STEP_ID, stepId.toString())
+        val assignment = assignmentDao.get(DbStructureAssignment.Columns.STEP, stepId.toString())
         return assignment?.id ?: -1
     }
 
@@ -225,7 +225,7 @@ constructor(
     }
 
     fun markProgressAsPassed(assignmentId: Long) {
-        val assignment = assignmentDao.get(DbStructureAssignment.Column.ASSIGNMENT_ID, assignmentId.toString())
+        val assignment = assignmentDao.get(DbStructureAssignment.Columns.ID, assignmentId.toString())
         val progressId = assignment?.progress ?: return
         markProgressAsPassedIfInDb(progressId)
     }
@@ -252,7 +252,7 @@ constructor(
     }
 
     fun isStepPassed(step: Step): Boolean {
-        val assignment = assignmentDao.get(DbStructureAssignment.Column.STEP_ID, step.id.toString())
+        val assignment = assignmentDao.get(DbStructureAssignment.Columns.STEP, step.id.toString())
         val progressId: String?
         if (assignment != null) {
             progressId = assignment.progress

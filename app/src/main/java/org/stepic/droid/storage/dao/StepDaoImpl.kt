@@ -7,7 +7,6 @@ import org.stepic.droid.model.BlockPersistentWrapper
 import org.stepik.android.model.Progress
 import org.stepik.android.model.Step
 import org.stepic.droid.storage.operations.DatabaseOperations
-import org.stepic.droid.storage.structure.DbStructureAssignment
 import org.stepic.droid.storage.structure.DbStructureBlock
 import org.stepic.droid.storage.structure.DbStructureProgress
 import org.stepic.droid.util.DbParseHelper
@@ -16,6 +15,7 @@ import org.stepic.droid.util.getDate
 import org.stepic.droid.util.getInt
 import org.stepic.droid.util.getLong
 import org.stepic.droid.util.getString
+import org.stepik.android.cache.assignment.structure.DbStructureAssignment
 import org.stepik.android.cache.step.structure.DbStructureStep
 import org.stepik.android.model.Actions
 
@@ -103,7 +103,7 @@ constructor(
             step.block = blockPersistentWrapper.block
         }
 
-        val assignment = assignmentDao.get(DbStructureAssignment.Column.STEP_ID, step.id.toString())
+        val assignment = assignmentDao.get(DbStructureAssignment.Columns.STEP, step.id.toString())
         if (assignment?.progress != null) {
             val progress = progressDao.get(DbStructureProgress.Columns.ID, assignment.progress!!)
             if (progress != null) {
