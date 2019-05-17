@@ -69,7 +69,9 @@ import org.stepik.android.model.ReplyWrapper;
 import org.stepik.android.model.user.Profile;
 import org.stepik.android.model.user.User;
 import org.stepik.android.model.attempts.DatasetWrapper;
+import org.stepik.android.remote.assignment.model.AssignmentResponse;
 import org.stepik.android.remote.email_address.model.EmailAddressResponse;
+import org.stepik.android.remote.lesson.model.LessonResponse;
 import org.stepik.android.remote.step.model.StepResponse;
 
 import java.io.IOException;
@@ -529,17 +531,17 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Call<LessonStepicResponse> getLessons(long[] lessons) {
+    public Call<LessonResponse> getLessons(long[] lessons) {
         return loggedService.getLessons(lessons);
     }
 
     @Override
-    public Single<LessonStepicResponse> getLessonsRx(long[] lessons) {
+    public Single<LessonResponse> getLessonsRx(long[] lessons) {
         return loggedService.getLessonsRx(lessons);
     }
 
     @Override
-    public Single<LessonStepicResponse> getLessons(long lessonId) {
+    public Single<LessonResponse> getLessons(long lessonId) {
         return getLessonsRx(new long[]{lessonId});
     }
 

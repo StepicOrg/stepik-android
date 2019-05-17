@@ -49,7 +49,6 @@ import org.stepic.droid.ui.custom.*
 import org.stepic.droid.ui.dialogs.*
 import org.stepic.droid.ui.fragments.StoreManagementFragment
 import org.stepic.droid.util.glide.GlideCustomModule
-import org.stepik.android.model.Lesson
 import org.stepik.android.view.injection.billing.BillingModule
 import org.stepik.android.view.injection.course.CourseComponent
 import org.stepik.android.view.injection.course.CourseRoutingModule
@@ -59,7 +58,6 @@ import org.stepik.android.view.injection.personal_deadlines.PersonalDeadlinesDat
 import org.stepik.android.view.injection.profile.ProfileBusModule
 import org.stepik.android.view.injection.profile_edit.ProfileEditComponent
 import org.stepik.android.view.injection.progress.ProgressBusModule
-import org.stepik.android.view.injection.step.StepDataModule
 import org.stepik.android.view.injection.video_player.VideoPlayerComponent
 
 @AppSingleton

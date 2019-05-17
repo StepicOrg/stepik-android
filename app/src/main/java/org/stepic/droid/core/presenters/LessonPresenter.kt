@@ -14,7 +14,7 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.ProgressUtil
 import org.stepic.droid.web.Api
-import org.stepic.droid.web.LessonStepicResponse
+import org.stepik.android.remote.lesson.model.LessonResponse
 import org.stepik.android.domain.unit.repository.UnitRepository
 import org.stepik.android.remote.step.model.StepResponse
 import retrofit2.Response
@@ -313,7 +313,7 @@ constructor(
         lesson = databaseFacade.getLessonById(simpleLessonId)
         if (lesson == null) {
             //not in database yet
-            val response: Response<LessonStepicResponse?>?
+            val response: Response<LessonResponse?>?
             try {
                 response = api.getLessons(longArrayOf(simpleLessonId)).execute()
             } catch (ex: Exception) {

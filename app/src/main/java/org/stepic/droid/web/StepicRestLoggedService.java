@@ -5,11 +5,13 @@ import org.stepic.droid.web.model.adaptive.RecommendationReactionsRequest;
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
 import org.stepic.droid.web.model.story_templates.StoryTemplatesResponse;
 import org.stepik.android.model.EnrollmentWrapper;
+import org.stepik.android.remote.assignment.model.AssignmentResponse;
 import org.stepik.android.remote.course_payments.model.CoursePaymentRequest;
 import org.stepik.android.remote.course_payments.model.CoursePaymentsResponse;
 import org.stepik.android.remote.course_reviews.model.CourseReviewRequest;
 import org.stepik.android.remote.course_reviews.model.CourseReviewsResponse;
 import org.stepik.android.remote.email_address.model.EmailAddressResponse;
+import org.stepik.android.remote.lesson.model.LessonResponse;
 import org.stepik.android.remote.step.model.StepResponse;
 
 import java.util.List;
@@ -78,10 +80,10 @@ public interface StepicRestLoggedService {
     );
 
     @GET("api/lessons")
-    Call<LessonStepicResponse> getLessons(@Query("ids[]") long[] lessons);
+    Call<LessonResponse> getLessons(@Query("ids[]") long[] lessons);
 
     @GET("api/lessons")
-    Single<LessonStepicResponse> getLessonsRx(@Query("ids[]") long[] lessons);
+    Single<LessonResponse> getLessonsRx(@Query("ids[]") long[] lessons);
 
     @GET("api/steps")
     Single<StepResponse> getSteps(

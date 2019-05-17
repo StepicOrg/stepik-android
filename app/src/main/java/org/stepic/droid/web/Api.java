@@ -18,7 +18,9 @@ import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
 import org.stepik.android.model.Tag;
 import org.stepik.android.model.Reply;
 import org.stepik.android.model.user.User;
+import org.stepik.android.remote.assignment.model.AssignmentResponse;
 import org.stepik.android.remote.email_address.model.EmailAddressResponse;
+import org.stepik.android.remote.lesson.model.LessonResponse;
 import org.stepik.android.remote.step.model.StepResponse;
 
 import java.util.List;
@@ -73,11 +75,11 @@ public interface Api {
 
     Single<UnitMetaResponse> getUnits(long courseId, long lessonId);
 
-    Call<LessonStepicResponse> getLessons(long[] lessons);
+    Call<LessonResponse> getLessons(long[] lessons);
 
-    Single<LessonStepicResponse> getLessonsRx(long[] lessons);
+    Single<LessonResponse> getLessonsRx(long[] lessons);
 
-    Single<LessonStepicResponse> getLessons(long lessonId);
+    Single<LessonResponse> getLessons(long lessonId);
 
     Single<StepResponse> getSteps(long[] steps);
 
