@@ -6,17 +6,17 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
 import android.view.ViewGroup
-import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepik.android.model.Lesson
 import org.stepik.android.model.Section
 import org.stepik.android.model.Unit
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.resolvers.StepTypeResolver
+import org.stepik.android.domain.lesson.model.StepItem
 import org.stepik.android.view.fragment_pager.ActiveFragmentPagerAdapter
 
 class StepFragmentAdapter(
     fm: FragmentManager,
-    private val stepList: List<StepPersistentWrapper?>,
+    private val stepItems: List<StepItem>,
     private val stepTypeResolver: StepTypeResolver
 ) : FragmentStatePagerAdapter(fm),
     ActiveFragmentPagerAdapter {
@@ -46,8 +46,8 @@ class StepFragmentAdapter(
     }
 
     override fun getItem(position: Int): Fragment {
-        val stepWrapper = stepList[position]
-        val fragment = stepTypeResolver.getFragment(stepWrapper?.step)
+        val stepWrapper = stepItems[position].step
+        val fragment = stepTypeResolver.getFragment(stepWrapper.step)
         val args = Bundle()
         args.putParcelable(AppConstants.KEY_STEP_BUNDLE, stepWrapper)
         args.putParcelable(AppConstants.KEY_LESSON_BUNDLE, lesson)
@@ -58,7 +58,7 @@ class StepFragmentAdapter(
     }
 
     override fun getCount(): Int {
-        return stepList.size
+        return stepItems.size
     }
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any =
@@ -74,8 +74,13 @@ class StepFragmentAdapter(
     }
 
     fun getTabDrawable(position: Int): Drawable? {
-        if (position >= stepList.size) return null
-        val step = stepList[position]?.step
-        return stepTypeResolver.getDrawableForType(step?.block?.name, step?.isCustomPassed ?: false, step?.actions?.doReview != null)
+        if (position >= stepItems.size) return null
+        val stepItem = stepItems[position]
+        val step = stepItem.step.step
+        val isStepPassed = stepItem.assignmentProgress?.isPassed
+            ?: stepItem.stepProgress?.isPassed
+            ?: false
+
+        return stepTypeResolver.getDrawableForType(step.block?.name, isStepPassed, step.actions?.doReview != null)
     }
 }

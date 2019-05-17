@@ -271,20 +271,17 @@ constructor(
 
     private fun updateAssignmentsAndProgresses(stepListFromInternet: List<StepPersistentWrapper>, unit: Unit?) {
         try {
-            val progressIds: Array<out String?>
-            if (unit != null) {
-                val assignments = api.getAssignments(unit.assignments).blockingGet().assignments
-                databaseFacade.addAssignments(assignments)
-                progressIds = ProgressUtil.getProgresses(assignments)
-            } else {
-                progressIds = ProgressUtil.getProgresses(stepListFromInternet)
-            }
+            val progressIds =
+                if (unit != null) {
+                    val assignments = api.getAssignments(unit.assignments).blockingGet().assignments
+                    databaseFacade.addAssignments(assignments)
+                    ProgressUtil.getProgresses(assignments)
+                } else {
+                    ProgressUtil.getProgresses(stepListFromInternet)
+                }
 
-
-            val progresses = api.getProgresses(progressIds).execute().body()?.progresses
-            progresses?.filterNotNull()?.forEach {
-                databaseFacade.addProgress(progress = it)
-            }
+            val progresses = api.getProgresses(progressIds).execute().body()?.progresses!!
+            databaseFacade.addProgresses(progresses)
 
             //FIXME: Warning, it is mutable objects, which we show on LessonFragment and change here or not show, if we shown from database
             stepListFromInternet.forEach {

@@ -177,7 +177,7 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable {
 
                 lessonPager.adapter =
                     if (state.stepsState is LessonView.StepsState.Loaded) {
-                        StepFragmentAdapter(supportFragmentManager, state.stepsState.steps, stepTypeResolver)
+                        StepFragmentAdapter(supportFragmentManager, state.stepsState.stepItems, stepTypeResolver)
                             .apply {
                                 setDataIfNotNull(state.lessonData.lesson, state.lessonData.unit, state.lessonData.section)
                             }

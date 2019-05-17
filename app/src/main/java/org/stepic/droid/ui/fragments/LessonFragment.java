@@ -205,7 +205,7 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
         setHasOptionsMenu(true);
 
         initIndependentUI();
-        stepAdapter = new StepFragmentAdapter(getChildFragmentManager(), stepsPresenter.getStepList(), stepTypeResolver);
+//        stepAdapter = new StepFragmentAdapter(getChildFragmentManager(), stepsPresenter.getStepList(), stepTypeResolver);
         viewPager.setAdapter(stepAdapter);
         viewPager.addOnPageChangeListener(new FragmentDelegateScrollStateChangeListener(viewPager, stepAdapter));
         stepsPresenter.attachView(this);

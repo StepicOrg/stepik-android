@@ -96,6 +96,7 @@ constructor(
             ?: return
 
         val stepIds = oldState.lessonData.lesson.steps
+        val unit = oldState.lessonData.unit
 
         if (stepIds.isEmpty()) {
             state = oldState.copy(stepsState = LessonView.StepsState.EmptySteps)
@@ -103,7 +104,7 @@ constructor(
             state = oldState.copy(stepsState = LessonView.StepsState.Loading)
 
             compositeDisposable += lessonContentInteractor
-                .getSteps(*stepIds)
+                .getStepItems(unit, *stepIds)
                 .observeOn(mainScheduler)
                 .subscribeOn(backgroundScheduler)
                 .subscribeBy(
@@ -121,13 +122,14 @@ constructor(
             ?: return
 
         val stepWorth = (state.stepsState as? LessonView.StepsState.Loaded)
-            ?.steps
+            ?.stepItems
             ?.getOrNull(position)
+            ?.step
             ?.step
             ?.worth
             ?: return
 
-        view?.showLessonInfoTooltip(stepWorth, state.lessonData.lesson.timeToComplete, 99)
+        view?.showLessonInfoTooltip(stepWorth, state.lessonData.lesson.timeToComplete, -1)
     }
 
     /**
