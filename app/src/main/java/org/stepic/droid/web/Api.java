@@ -17,11 +17,16 @@ import org.stepic.droid.web.model.adaptive.RatingRestoreResponse;
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
 import org.stepik.android.model.Tag;
 import org.stepik.android.model.Reply;
-import org.stepik.android.model.user.User;
 import org.stepik.android.remote.assignment.model.AssignmentResponse;
+import org.stepik.android.remote.course.model.CourseResponse;
 import org.stepik.android.remote.email_address.model.EmailAddressResponse;
+import org.stepik.android.remote.last_step.model.LastStepResponse;
 import org.stepik.android.remote.lesson.model.LessonResponse;
+import org.stepik.android.remote.progress.model.ProgressResponse;
+import org.stepik.android.remote.section.model.SectionResponse;
 import org.stepik.android.remote.step.model.StepResponse;
+import org.stepik.android.remote.unit.model.UnitResponse;
+import org.stepik.android.remote.user.model.UserResponse;
 
 import java.util.List;
 
@@ -47,13 +52,13 @@ public interface Api {
 
     Single<UserCoursesResponse> getUserCourses(int page);
 
-    Single<CoursesMetaResponse> getPopularCourses(int page);
+    Single<CourseResponse> getPopularCourses(int page);
 
     Call<StepicProfileResponse> getUserProfile();
 
-    Call<UsersResponse> getUsers(long[] userIds);
+    Call<UserResponse> getUsers(long[] userIds);
 
-    Single<List<User>> getUsersRx(long[] userIds);
+    Single<UserResponse> getUsersRx(long[] userIds);
 
     Completable joinCourse(long courseId);
 
@@ -62,18 +67,18 @@ public interface Api {
     @Nullable
     Call<Void> dropCourse(@NotNull Course course);
 
-    Call<SectionsMetaResponse> getSections(long[] sectionsIds);
+    Call<SectionResponse> getSections(long[] sectionsIds);
 
-    Single<SectionsMetaResponse> getSectionsRx(long[] sectionsIds);
+    Single<SectionResponse> getSectionsRx(long[] sectionsIds);
 
     /**
      * Max number of  units defined in AppConstants
      */
-    Call<UnitMetaResponse> getUnits(List<Long> units);
+    Call<UnitResponse> getUnits(List<Long> units);
 
-    Single<UnitMetaResponse> getUnitsRx(long[] units);
+    Single<UnitResponse> getUnitsRx(long[] units);
 
-    Single<UnitMetaResponse> getUnits(long courseId, long lessonId);
+    Single<UnitResponse> getUnits(long courseId, long lessonId);
 
     Call<LessonResponse> getLessons(long[] lessons);
 
@@ -87,9 +92,9 @@ public interface Api {
 
     Single<StepResponse> getStepsByLessonId(long lessonId);
 
-    Call<ProgressesResponse> getProgresses(String[] progresses);
+    Call<ProgressResponse> getProgresses(String[] progresses);
 
-    Single<ProgressesResponse> getProgressesReactive(String[] progresses);
+    Single<ProgressResponse> getProgressesReactive(String[] progresses);
 
     Single<AssignmentResponse> getAssignments(long[] assignmentsIds);
 
@@ -103,11 +108,11 @@ public interface Api {
 
     Single<QueriesResponse> getSearchQueries(String query);
 
-    Call<CoursesMetaResponse> getCourses(int page, long[] ids);
+    Call<CourseResponse> getCourses(int page, long[] ids);
 
-    Single<CoursesMetaResponse> getCoursesReactive(int page, @NotNull long[] ids);
+    Single<CourseResponse> getCoursesReactive(int page, @NotNull long[] ids);
 
-    Single<CoursesMetaResponse> getCoursesReactive(@NotNull long[] ids);
+    Single<CourseResponse> getCoursesReactive(@NotNull long[] ids);
 
     Call<AttemptResponse> createNewAttempt(long stepId);
 
@@ -141,7 +146,7 @@ public interface Api {
 
     Call<DeviceResponse> registerDevice(String token);
 
-    Call<CoursesMetaResponse> getCourse(long id);
+    Call<CourseResponse> getCourse(long id);
 
     Call<Void> setReadStatusForNotification(long notificationId, boolean isRead);
 
@@ -163,7 +168,7 @@ public interface Api {
 
     Call<CertificateResponse> getCertificates();
 
-    Single<UnitMetaResponse> getUnitsByLessonId(long lessonId);
+    Single<UnitResponse> getUnitsByLessonId(long lessonId);
 
     Call<NotificationResponse> getNotifications(NotificationCategory notificationCategory, int page);
 

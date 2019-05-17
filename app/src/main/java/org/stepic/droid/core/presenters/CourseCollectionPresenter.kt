@@ -15,8 +15,8 @@ import org.stepik.android.model.Progress
 import org.stepic.droid.util.CourseUtil
 import org.stepic.droid.web.Api
 import org.stepic.droid.web.CourseReviewResponse
-import org.stepic.droid.web.CoursesMetaResponse
-import org.stepic.droid.web.ProgressesResponse
+import org.stepik.android.remote.course.model.CourseResponse
+import org.stepik.android.remote.progress.model.ProgressResponse
 import javax.inject.Inject
 
 @CourseListScope
@@ -43,7 +43,7 @@ constructor(
         view?.showLoading()
         val disposable = api
             .getCoursesReactive(DEFAULT_PAGE, courseIds)
-            .map(CoursesMetaResponse::getCourses)
+            .map(CourseResponse::courses)
             .flatMap {
                 val progressIds = it.map(Course::progress).toTypedArray()
                 val reviewIds = it.map(Course::reviewSummary).toLongArray()
@@ -86,7 +86,7 @@ constructor(
 
     private fun getProgressesSingle(progressIds: Array<String?>): Single<Map<String?, Progress>> {
         return api.getProgressesReactive(progressIds)
-                .map(ProgressesResponse::getProgresses)
+                .map(ProgressResponse::progresses)
                 .map { it.associateBy(Progress::id) }
                 .subscribeOn(backgroundScheduler)
     }

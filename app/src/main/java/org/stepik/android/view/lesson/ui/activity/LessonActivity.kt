@@ -16,6 +16,7 @@ import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.ui.adapters.StepFragmentAdapter
+import org.stepic.droid.ui.listeners.NextMoveable
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.resolvers.StepTypeResolver
 import org.stepik.android.domain.last_step.model.LastStep
@@ -29,7 +30,7 @@ import org.stepik.android.view.lesson.ui.delegate.LessonInfoTooltipDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import javax.inject.Inject
 
-class LessonActivity : FragmentActivityBase(), LessonView {
+class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable {
     companion object {
         private const val EXTRA_SECTION = "section"
         private const val EXTRA_UNIT = "unit"
@@ -206,5 +207,20 @@ class LessonActivity : FragmentActivityBase(), LessonView {
     override fun showLessonInfoTooltip(stepWorth: Long, lessonTimeToComplete: Long, certificateThreshold: Long) {
         lessonInfoTooltipDelegate
             .showLessonInfoTooltip(stepWorth, lessonTimeToComplete, certificateThreshold)
+    }
+
+    override fun moveNext(): Boolean {
+        val itemCount = lessonPager
+            .adapter
+            ?.count
+            ?: return false
+
+        val isNotLastItem = lessonPager.currentItem < itemCount - 1
+
+        if (isNotLastItem) {
+            lessonPager.currentItem++
+        }
+
+        return isNotLastItem
     }
 }

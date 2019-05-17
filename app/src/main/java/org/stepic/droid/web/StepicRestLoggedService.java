@@ -6,13 +6,19 @@ import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
 import org.stepic.droid.web.model.story_templates.StoryTemplatesResponse;
 import org.stepik.android.model.EnrollmentWrapper;
 import org.stepik.android.remote.assignment.model.AssignmentResponse;
+import org.stepik.android.remote.course.model.CourseResponse;
 import org.stepik.android.remote.course_payments.model.CoursePaymentRequest;
 import org.stepik.android.remote.course_payments.model.CoursePaymentsResponse;
 import org.stepik.android.remote.course_reviews.model.CourseReviewRequest;
 import org.stepik.android.remote.course_reviews.model.CourseReviewsResponse;
 import org.stepik.android.remote.email_address.model.EmailAddressResponse;
+import org.stepik.android.remote.last_step.model.LastStepResponse;
 import org.stepik.android.remote.lesson.model.LessonResponse;
+import org.stepik.android.remote.progress.model.ProgressResponse;
+import org.stepik.android.remote.section.model.SectionResponse;
 import org.stepik.android.remote.step.model.StepResponse;
+import org.stepik.android.remote.unit.model.UnitResponse;
+import org.stepik.android.remote.user.model.UserResponse;
 
 import java.util.List;
 
@@ -33,10 +39,10 @@ import retrofit2.http.Query;
 
 public interface StepicRestLoggedService {
     @GET("api/sections")
-    Call<SectionsMetaResponse> getSections(@Query("ids[]") long[] sectionIds);
+    Call<SectionResponse> getSections(@Query("ids[]") long[] sectionIds);
 
     @GET("api/sections")
-    Single<SectionsMetaResponse> getSectionsRx(@Query("ids[]") long[] sectionIds);
+    Single<SectionResponse> getSectionsRx(@Query("ids[]") long[] sectionIds);
 
     @Headers("Content-Type:application/json")
     @POST("api/enrollments")
@@ -46,35 +52,35 @@ public interface StepicRestLoggedService {
     Completable dropCourse(@Path("id") long courseId);
 
     @GET("api/users")
-    Call<UsersResponse> getUsers(@Query("ids[]") long[] userIds);
+    Call<UserResponse> getUsers(@Query("ids[]") long[] userIds);
 
     @GET("api/users")
-    Single<UsersResponse> getUsersRx(@Query("ids[]") long[] userIds);
+    Single<UserResponse> getUsersRx(@Query("ids[]") long[] userIds);
 
     @GET("api/stepics/1")
     Call<StepicProfileResponse> getUserProfile();
 
     @GET("api/courses?enrolled=true")
-    Single<CoursesMetaResponse> getEnrolledCourses(@Query("page") int page);
+    Single<CourseResponse> getEnrolledCourses(@Query("page") int page);
 
     @GET("api/user-courses")
     Single<UserCoursesResponse> getUserCourses(@Query("page") int page);
 
     @GET("api/courses?exclude_ended=true&is_public=true&order=-activity")
-    Single<CoursesMetaResponse> getPopularCourses(@Query("page") int page, @Query("language") String language);
+    Single<CourseResponse> getPopularCourses(@Query("page") int page, @Query("language") String language);
 
     @GET("api/units")
-    Call<UnitMetaResponse> getUnits(
+    Call<UnitResponse> getUnits(
             @Query("ids[]") List<Long> units
     );
 
     @GET("api/units")
-    Single<UnitMetaResponse> getUnitsRx(
+    Single<UnitResponse> getUnitsRx(
             @Query("ids[]") long[] units
     );
 
     @GET("api/units")
-    Single<UnitMetaResponse> getUnits(
+    Single<UnitResponse> getUnits(
             @Query("course") final long courseId,
             @Query("lesson") final long lessonId
     );
@@ -104,10 +110,10 @@ public interface StepicRestLoggedService {
     Call<Void> dropCourseLegacy(@Path("id") long courseId);
 
     @GET("api/progresses")
-    Call<ProgressesResponse> getProgresses(@Query("ids[]") String[] progresses);
+    Call<ProgressResponse> getProgresses(@Query("ids[]") String[] progresses);
 
     @GET("api/progresses")
-    Single<ProgressesResponse> getProgressesReactive(@Query("ids[]") String[] progresses);
+    Single<ProgressResponse> getProgressesReactive(@Query("ids[]") String[] progresses);
 
     @GET("api/assignments")
     Single<AssignmentResponse> getAssignments(@Query("ids[]") long[] assignmentsIds);
@@ -132,13 +138,13 @@ public interface StepicRestLoggedService {
     Single<QueriesResponse> getSearchQueries(@Query("query") String query);
 
     @GET("api/courses")
-    Call<CoursesMetaResponse> getCourses(@Query("page") int page, @Query("ids[]") long[] courseIds);
+    Call<CourseResponse> getCourses(@Query("page") int page, @Query("ids[]") long[] courseIds);
 
     @GET("api/courses")
-    Single<CoursesMetaResponse> getCoursesReactive(@Query("page") int page, @Query("ids[]") long[] courseIds);
+    Single<CourseResponse> getCoursesReactive(@Query("page") int page, @Query("ids[]") long[] courseIds);
 
     @GET("api/courses")
-    Single<CoursesMetaResponse> getCoursesReactive(@Query("ids[]") long[] courseIds);
+    Single<CourseResponse> getCoursesReactive(@Query("ids[]") long[] courseIds);
 
     @POST("api/attempts")
     Call<AttemptResponse> createNewAttempt(@Body AttemptRequest attemptRequest);
@@ -190,7 +196,7 @@ public interface StepicRestLoggedService {
     Call<DeviceResponse> renewDeviceRegistration(@Path("id") long deviceId, @Body DeviceRequest deviceRequest);
 
     @GET("api/courses")
-    Call<CoursesMetaResponse> getCourses(@Query("ids[]") long[] courseIds);
+    Call<CourseResponse> getCourses(@Query("ids[]") long[] courseIds);
 
     @PUT("api/notifications/{id}")
     Call<Void> putNotification(@Path("id") long notificationId, @Body NotificationRequest notificationRequest);
@@ -220,7 +226,7 @@ public interface StepicRestLoggedService {
     Call<CertificateResponse> getCertificates(@Query("user") long userId);
 
     @GET("api/units")
-    Single<UnitMetaResponse> getUnitsByLessonId(@Query("lesson") long lessonId);
+    Single<UnitResponse> getUnitsByLessonId(@Query("lesson") long lessonId);
 
     @GET("api/submissions?order=desc")
     Call<SubmissionResponse> getExistingSubmissionsForStep(@Query("step") long stepId);

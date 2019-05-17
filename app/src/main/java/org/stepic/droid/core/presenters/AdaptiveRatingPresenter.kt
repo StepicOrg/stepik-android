@@ -19,6 +19,7 @@ import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.addDisposable
 import org.stepic.droid.web.Api
+import org.stepik.android.remote.user.model.UserResponse
 import retrofit2.HttpException
 import javax.inject.Inject
 
@@ -82,7 +83,7 @@ constructor(
                 if (userIds.isEmpty()) {
                     Single.just(emptyList())
                 } else {
-                    api.getUsersRx(userIds)
+                    api.getUsersRx(userIds).map(UserResponse::users)
                 }.zipWith(Single.just(it))
             }.map { (users, items) ->
                 items.mapIndexed { index, item ->

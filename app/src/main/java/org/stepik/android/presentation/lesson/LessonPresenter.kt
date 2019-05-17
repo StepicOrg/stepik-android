@@ -1,11 +1,13 @@
 package org.stepik.android.presentation.lesson
 
 import io.reactivex.Maybe
+import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
+import org.stepic.droid.util.emptyOnErrorStub
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.domain.lesson.interactor.LessonContentInteractor
 import org.stepik.android.domain.lesson.interactor.LessonInteractor
@@ -15,6 +17,8 @@ import org.stepik.android.model.Section
 import org.stepik.android.model.Unit
 import org.stepik.android.presentation.base.PresenterBase
 import org.stepik.android.domain.lesson.model.LessonDeepLinkData
+import org.stepik.android.model.Progress
+import timber.log.Timber
 import javax.inject.Inject
 
 class LessonPresenter
@@ -22,6 +26,8 @@ class LessonPresenter
 constructor(
     private val lessonInteractor: LessonInteractor,
     private val lessonContentInteractor: LessonContentInteractor,
+
+    private val progressObservable: Observable<Progress>,
 
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
@@ -33,6 +39,10 @@ constructor(
             field = value
             view?.setState(value)
         }
+
+    init {
+        subscribeForProgressesUpdates()
+    }
 
     override fun attachView(view: LessonView) {
         super.attachView(view)
@@ -103,6 +113,9 @@ constructor(
         }
     }
 
+    /**
+     * Lesson info tooltip
+     */
     fun onShowLessonInfoClicked(position: Int) {
         val state = (state as? LessonView.State.LessonLoaded)
             ?: return
@@ -115,5 +128,20 @@ constructor(
             ?: return
 
         view?.showLessonInfoTooltip(stepWorth, state.lessonData.lesson.timeToComplete, 99)
+    }
+
+    /**
+     * Progresses
+     */
+    private fun subscribeForProgressesUpdates() {
+        compositeDisposable += progressObservable
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onNext = { progress ->
+                    Timber.d("Progress $progress")
+                },
+                onError = emptyOnErrorStub
+            )
     }
 }

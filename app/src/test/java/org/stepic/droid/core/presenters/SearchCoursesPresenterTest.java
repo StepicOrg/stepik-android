@@ -22,7 +22,7 @@ import org.stepic.droid.testUtils.generators.FakeSearchResultGenerator;
 import org.stepic.droid.util.resolvers.SearchResolver;
 import org.stepic.droid.util.resolvers.SearchResolverImpl;
 import org.stepic.droid.web.Api;
-import org.stepic.droid.web.CoursesMetaResponse;
+import org.stepik.android.remote.course.model.CourseResponse;
 import org.stepic.droid.web.SearchResultResponse;
 import org.stepik.android.model.Meta;
 
@@ -104,7 +104,7 @@ public class SearchCoursesPresenterTest {
         //mock calling api for getting course
         long[] courseIds = new long[1];
         courseIds[0] = expectedSingleSearchResult.getCourse();
-        CoursesMetaResponse coursesStepicResponse = mock(CoursesMetaResponse.class);
+        CourseResponse coursesStepicResponse = mock(CourseResponse.class);
         when(coursesStepicResponse.getMeta()).thenReturn(onePageMeta);
         List<Course> expectedCourses = new ArrayList<>();
         Course expectedCourse = FakeCourseGenerator.INSTANCE.generate(expectedCourseId);

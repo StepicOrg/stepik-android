@@ -274,9 +274,7 @@ constructor(
             val progressIds: Array<out String?>
             if (unit != null) {
                 val assignments = api.getAssignments(unit.assignments).blockingGet().assignments
-                assignments?.filterNotNull()?.forEach {
-                    databaseFacade.addAssignment(assignment = it)
-                }
+                databaseFacade.addAssignments(assignments)
                 progressIds = ProgressUtil.getProgresses(assignments)
             } else {
                 progressIds = ProgressUtil.getProgresses(stepListFromInternet)

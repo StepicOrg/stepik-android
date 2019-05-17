@@ -19,7 +19,7 @@ import org.stepic.droid.testUtils.ResponseGeneratorKt;
 import org.stepic.droid.testUtils.generators.FakeProfileGenerator;
 import org.stepic.droid.testUtils.generators.FakeUserGenerator;
 import org.stepic.droid.web.Api;
-import org.stepic.droid.web.UsersResponse;
+import org.stepik.android.remote.user.model.UserResponse;
 
 import java.io.IOException;
 import java.util.List;
@@ -190,7 +190,7 @@ public class ProfilePresenterTest {
     public void initProfile_notMy_success() throws IOException {
         profilePresenter.attachView(profileView);
 
-        UsersResponse responseMock = mock(UsersResponse.class);
+        UserResponse responseMock = mock(UserResponse.class);
         List<User> userListMock = (List<User>) mock(List.class);
 
         ResponseGeneratorKt.useMockInsteadCall(when(api.getUsers(any(long[].class))), responseMock);
