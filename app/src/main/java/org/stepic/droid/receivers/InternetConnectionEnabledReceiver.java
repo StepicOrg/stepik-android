@@ -18,7 +18,7 @@ import org.stepic.droid.model.ViewedNotification;
 import org.stepic.droid.storage.operations.DatabaseFacade;
 import org.stepic.droid.util.resolvers.StepHelper;
 import org.stepic.droid.web.Api;
-import org.stepic.droid.web.ViewAssignment;
+import org.stepik.android.model.ViewAssignment;
 
 import java.io.IOException;
 import java.util.List;

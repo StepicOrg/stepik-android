@@ -4,10 +4,10 @@ import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.web.model.adaptive.RecommendationReactionsRequest;
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
 import org.stepic.droid.web.model.story_templates.StoryTemplatesResponse;
-import org.stepik.android.model.EnrollmentWrapper;
 import org.stepik.android.remote.assignment.model.AssignmentResponse;
 import org.stepik.android.remote.course.model.CourseResponse;
 import org.stepik.android.remote.course.model.CourseReviewSummaryResponse;
+import org.stepik.android.remote.course.model.EnrollmentRequest;
 import org.stepik.android.remote.course_payments.model.CoursePaymentRequest;
 import org.stepik.android.remote.course_payments.model.CoursePaymentsResponse;
 import org.stepik.android.remote.course_reviews.model.CourseReviewRequest;
@@ -20,6 +20,7 @@ import org.stepik.android.remote.section.model.SectionResponse;
 import org.stepik.android.remote.step.model.StepResponse;
 import org.stepik.android.remote.unit.model.UnitResponse;
 import org.stepik.android.remote.user.model.UserResponse;
+import org.stepik.android.remote.view_assignment.model.ViewAssignmentRequest;
 
 import java.util.List;
 
@@ -45,9 +46,8 @@ public interface StepicRestLoggedService {
     @GET("api/sections")
     Single<SectionResponse> getSectionsRx(@Query("ids[]") long[] sectionIds);
 
-    @Headers("Content-Type:application/json")
     @POST("api/enrollments")
-    Completable joinCourse(@Body EnrollmentWrapper enrollmentCourse);
+    Completable joinCourse(@Body EnrollmentRequest enrollmentCourse);
 
     @DELETE("api/enrollments/{id}")
     Completable dropCourse(@Path("id") long courseId);
@@ -122,11 +122,11 @@ public interface StepicRestLoggedService {
 
     @Headers("Content-Type:application/json")
     @POST("api/views")
-    Call<Void> postViewed(@Body ViewAssignmentWrapper stepAssignment);
+    Call<Void> postViewed(@Body ViewAssignmentRequest stepAssignment);
 
     @Headers("Content-Type:application/json")
     @POST("api/views")
-    Completable postViewedReactive(@Body ViewAssignmentWrapper stepAssignment);
+    Completable postViewedReactive(@Body ViewAssignmentRequest stepAssignment);
 
     @GET("api/search-results?is_popular=true&is_public=true&type=course")
     Call<SearchResultResponse> getSearchResults(

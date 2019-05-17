@@ -69,7 +69,7 @@ import org.stepic.droid.ui.dialogs.RemindPasswordDialogFragment;
 import org.stepic.droid.ui.fragments.CommentsFragment;
 import org.stepic.droid.util.AndroidVersionKt;
 import org.stepic.droid.util.AppConstants;
-import org.stepic.droid.web.ViewAssignment;
+import org.stepik.android.model.ViewAssignment;
 import org.stepik.android.model.Tag;
 import org.stepik.android.view.lesson.ui.activity.LessonActivity;
 import org.stepik.android.view.profile_edit.ui.activity.ProfileEditInfoActivity;

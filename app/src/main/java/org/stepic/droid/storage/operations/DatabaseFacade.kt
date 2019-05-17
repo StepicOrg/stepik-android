@@ -27,7 +27,7 @@ import org.stepic.droid.storage.structure.DbStructureViewQueue
 import org.stepic.droid.storage.structure.DbStructureViewedNotificationsQueue
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DbParseHelper
-import org.stepic.droid.web.ViewAssignment
+import org.stepik.android.model.ViewAssignment
 import org.stepik.android.cache.assignment.structure.DbStructureAssignment
 import org.stepik.android.cache.course_calendar.structure.DbStructureSectionDateEvent
 import org.stepik.android.cache.lesson.structure.DbStructureLesson

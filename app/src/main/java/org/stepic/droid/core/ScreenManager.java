@@ -3,7 +3,6 @@ package org.stepic.droid.core;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 
@@ -18,9 +17,8 @@ import org.stepik.android.model.Lesson;
 import org.stepik.android.model.Section;
 import org.stepik.android.model.Step;
 import org.stepik.android.model.Unit;
-import org.stepik.android.model.Video;
 import org.stepic.droid.ui.fragments.CommentsFragment;
-import org.stepic.droid.web.ViewAssignment;
+import org.stepik.android.model.ViewAssignment;
 import org.stepik.android.model.Tag;
 import org.stepik.android.model.user.Profile;
 import org.stepik.android.view.course.routing.CourseScreenTab;

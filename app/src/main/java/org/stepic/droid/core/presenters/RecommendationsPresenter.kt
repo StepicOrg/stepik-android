@@ -28,7 +28,7 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.getStepType
 import org.stepic.droid.web.Api
-import org.stepic.droid.web.ViewAssignment
+import org.stepik.android.model.ViewAssignment
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse
 import org.stepik.android.domain.last_step.model.LastStep
 import retrofit2.HttpException
@@ -243,7 +243,12 @@ constructor(
                     val unit = response.units?.firstOrNull()
                     val stepId = card.step?.id ?: 0
                     unit?.assignments?.firstOrNull()?.let { assignmentId ->
-                        screenManager.pushToViewedQueue(ViewAssignment(assignmentId, stepId))
+                        screenManager.pushToViewedQueue(
+                            ViewAssignment(
+                                assignmentId,
+                                stepId
+                            )
+                        )
                         databaseFacade.getCourseById(courseId)?.lastStepId?.let {
                             databaseFacade.updateLastStep(LastStep(it, unit.id, unit.lesson, stepId))
                         }

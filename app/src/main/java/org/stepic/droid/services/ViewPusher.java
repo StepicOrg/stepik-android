@@ -15,7 +15,7 @@ import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.resolvers.StepHelper;
 import org.stepic.droid.util.resolvers.VideoResolver;
 import org.stepic.droid.web.Api;
-import org.stepic.droid.web.ViewAssignment;
+import org.stepik.android.model.ViewAssignment;
 
 import java.io.IOException;
 

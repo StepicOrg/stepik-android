@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentActivity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.web.model.story_templates.StoryTemplatesResponse;
+import org.stepik.android.model.ViewAssignment;
 import org.stepik.android.model.adaptive.RatingItem;
 import org.stepik.android.model.Course;
 import org.stepic.droid.model.NotificationCategory;
@@ -20,6 +21,7 @@ import org.stepik.android.model.Reply;
 import org.stepik.android.remote.assignment.model.AssignmentResponse;
 import org.stepik.android.remote.course.model.CourseResponse;
 import org.stepik.android.remote.course.model.CourseReviewSummaryResponse;
+import org.stepik.android.remote.course.model.EnrollmentRequest;
 import org.stepik.android.remote.email_address.model.EmailAddressResponse;
 import org.stepik.android.remote.last_step.model.LastStepResponse;
 import org.stepik.android.remote.lesson.model.LessonResponse;
@@ -61,7 +63,7 @@ public interface Api {
 
     Single<UserResponse> getUsersRx(long[] userIds);
 
-    Completable joinCourse(long courseId);
+    Completable joinCourse(EnrollmentRequest enrollmentRequest);
 
     Completable dropCourse(long courseId);
 

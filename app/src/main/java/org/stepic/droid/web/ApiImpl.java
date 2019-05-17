@@ -24,6 +24,7 @@ import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
 import org.stepic.droid.util.CompatibilityExtensionsKt;
 import org.stepic.droid.web.model.story_templates.StoryTemplatesResponse;
+import org.stepik.android.model.ViewAssignment;
 import org.stepik.android.model.adaptive.RatingItem;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.configuration.Config;
@@ -62,7 +63,6 @@ import org.stepic.droid.web.model.adaptive.RecommendationReactionsRequest;
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
 import org.stepic.droid.web.model.desk.DeskRequestWrapper;
 import org.stepic.droid.web.storage.RemoteStorageService;
-import org.stepik.android.model.EnrollmentWrapper;
 import org.stepik.android.model.Tag;
 import org.stepik.android.model.Reply;
 import org.stepik.android.model.ReplyWrapper;
@@ -71,6 +71,7 @@ import org.stepik.android.model.attempts.DatasetWrapper;
 import org.stepik.android.remote.assignment.model.AssignmentResponse;
 import org.stepik.android.remote.course.model.CourseResponse;
 import org.stepik.android.remote.course.model.CourseReviewSummaryResponse;
+import org.stepik.android.remote.course.model.EnrollmentRequest;
 import org.stepik.android.remote.email_address.model.EmailAddressResponse;
 import org.stepik.android.remote.last_step.model.LastStepResponse;
 import org.stepik.android.remote.lesson.model.LessonResponse;
@@ -79,6 +80,7 @@ import org.stepik.android.remote.section.model.SectionResponse;
 import org.stepik.android.remote.step.model.StepResponse;
 import org.stepik.android.remote.unit.model.UnitResponse;
 import org.stepik.android.remote.user.model.UserResponse;
+import org.stepik.android.remote.view_assignment.model.ViewAssignmentRequest;
 
 import java.io.IOException;
 import java.net.HttpCookie;
@@ -502,8 +504,8 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Completable joinCourse(long courseId) {
-        return loggedService.joinCourse(new EnrollmentWrapper(courseId));
+    public Completable joinCourse(EnrollmentRequest enrollmentRequest) {
+        return loggedService.joinCourse(enrollmentRequest);
     }
 
     @Override
@@ -589,12 +591,12 @@ public class ApiImpl implements Api {
 
     @Override
     public Call<Void> postViewed(ViewAssignment stepAssignment) {
-        return loggedService.postViewed(new ViewAssignmentWrapper(stepAssignment.getAssignment(), stepAssignment.getStep()));
+        return loggedService.postViewed(new ViewAssignmentRequest(new ViewAssignment(stepAssignment.getAssignment(), stepAssignment.getStep())));
     }
 
     @Override
     public Completable postViewedReactive(ViewAssignment stepAssignment) {
-        return loggedService.postViewedReactive(new ViewAssignmentWrapper(stepAssignment.getAssignment(), stepAssignment.getStep()));
+        return loggedService.postViewedReactive(new ViewAssignmentRequest(new ViewAssignment(stepAssignment.getAssignment(), stepAssignment.getStep())));
     }
 
     @Override
