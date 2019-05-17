@@ -19,4 +19,5 @@ constructor(
             .getLastStep(id)
             .doCompletableOnSuccess(lastStepCacheDataSource::saveLastStep)
             .switchIfEmpty(lastStepCacheDataSource.getLastStep(id))
+            .onErrorResumeNext(lastStepCacheDataSource.getLastStep(id))
 }
