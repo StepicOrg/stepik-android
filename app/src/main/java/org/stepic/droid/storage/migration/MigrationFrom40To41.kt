@@ -92,7 +92,7 @@ object MigrationFrom40To41 : Migration {
                 ${org.stepic.droid.storage.structure.DbStructureAssignment.Column.PROGRESS},
                 -1,
                 -1
-            FROM ${org.stepic.droid.storage.structure.DbStructureStep.STEPS}
+            FROM ${org.stepic.droid.storage.structure.DbStructureAssignment.ASSIGNMENTS}
         """.trimIndent())
     }
 }
