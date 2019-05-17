@@ -18,7 +18,7 @@ import org.stepik.android.model.Unit
 import org.stepik.android.presentation.base.PresenterBase
 import org.stepik.android.domain.lesson.model.LessonDeepLinkData
 import org.stepik.android.model.Progress
-import timber.log.Timber
+import org.stepik.android.presentation.lesson.mapper.LessonStateMapper
 import javax.inject.Inject
 
 class LessonPresenter
@@ -26,6 +26,8 @@ class LessonPresenter
 constructor(
     private val lessonInteractor: LessonInteractor,
     private val lessonContentInteractor: LessonContentInteractor,
+
+    private val stateMapper: LessonStateMapper,
 
     private val progressObservable: Observable<Progress>,
 
@@ -141,7 +143,10 @@ constructor(
             .observeOn(mainScheduler)
             .subscribeBy(
                 onNext = { progress ->
-                    Timber.d("Progress $progress")
+                    val newState = stateMapper.mergeStateWithProgress(state, progress)
+                    if (state !== newState) { // compare by reference
+                        state = newState
+                    }
                 },
                 onError = emptyOnErrorStub
             )
