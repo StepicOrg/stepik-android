@@ -70,6 +70,7 @@ import org.stepik.android.model.user.Profile;
 import org.stepik.android.model.attempts.DatasetWrapper;
 import org.stepik.android.remote.assignment.model.AssignmentResponse;
 import org.stepik.android.remote.course.model.CourseResponse;
+import org.stepik.android.remote.course.model.CourseReviewSummaryResponse;
 import org.stepik.android.remote.email_address.model.EmailAddressResponse;
 import org.stepik.android.remote.last_step.model.LastStepResponse;
 import org.stepik.android.remote.lesson.model.LessonResponse;
@@ -913,7 +914,7 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Single<CourseReviewResponse> getCourseReviews(long[] courseIds) {
+    public Single<CourseReviewSummaryResponse> getCourseReviewSummaries(long[] courseIds) {
         return loggedService.getCourseReviews(courseIds);
     }
 

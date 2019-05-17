@@ -7,6 +7,7 @@ import org.stepic.droid.web.model.story_templates.StoryTemplatesResponse;
 import org.stepik.android.model.EnrollmentWrapper;
 import org.stepik.android.remote.assignment.model.AssignmentResponse;
 import org.stepik.android.remote.course.model.CourseResponse;
+import org.stepik.android.remote.course.model.CourseReviewSummaryResponse;
 import org.stepik.android.remote.course_payments.model.CoursePaymentRequest;
 import org.stepik.android.remote.course_payments.model.CoursePaymentsResponse;
 import org.stepik.android.remote.course_reviews.model.CourseReviewRequest;
@@ -254,7 +255,7 @@ public interface StepicRestLoggedService {
     Single<CourseCollectionsResponse> getCourseLists(@Query("language") String language);
 
     @GET("api/course-review-summaries")
-    Single<CourseReviewResponse> getCourseReviews(@Query("ids[]") long[] reviewSummaryIds);
+    Single<CourseReviewSummaryResponse> getCourseReviews(@Query("ids[]") long[] reviewSummaryIds);
 
     @GET("api/tags?is_featured=true")
     Single<TagResponse> getFeaturedTags();

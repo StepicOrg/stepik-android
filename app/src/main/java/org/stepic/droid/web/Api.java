@@ -19,6 +19,7 @@ import org.stepik.android.model.Tag;
 import org.stepik.android.model.Reply;
 import org.stepik.android.remote.assignment.model.AssignmentResponse;
 import org.stepik.android.remote.course.model.CourseResponse;
+import org.stepik.android.remote.course.model.CourseReviewSummaryResponse;
 import org.stepik.android.remote.email_address.model.EmailAddressResponse;
 import org.stepik.android.remote.last_step.model.LastStepResponse;
 import org.stepik.android.remote.lesson.model.LessonResponse;
@@ -184,7 +185,7 @@ public interface Api {
 
     Single<CourseCollectionsResponse> getCourseCollections(String language);
 
-    Single<CourseReviewResponse> getCourseReviews(long[] reviewSummaryIds);
+    Single<CourseReviewSummaryResponse> getCourseReviewSummaries(long[] reviewSummaryIds);
 
     Single<TagResponse> getFeaturedTags();
 
