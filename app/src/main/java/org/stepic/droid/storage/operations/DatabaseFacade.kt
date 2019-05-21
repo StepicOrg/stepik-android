@@ -167,6 +167,10 @@ constructor(
     fun addCourse(course: Course) =
         courseDao.insertOrReplace(course)
 
+    fun addCourses(courses: List<Course>) {
+        courseDao.insertOrReplaceAll(courses)
+    }
+
     fun deleteCourse(courseId: Long) =
         courseDao.remove(DbStructureCourse.Columns.ID, courseId.toString())
 
