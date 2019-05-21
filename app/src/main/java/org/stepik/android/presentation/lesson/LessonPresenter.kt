@@ -17,9 +17,9 @@ import org.stepik.android.model.Section
 import org.stepik.android.model.Unit
 import org.stepik.android.presentation.base.PresenterBase
 import org.stepik.android.domain.lesson.model.LessonDeepLinkData
+import org.stepik.android.domain.step.interactor.StepIndexingInteractor
 import org.stepik.android.model.Progress
 import org.stepik.android.presentation.lesson.mapper.LessonStateMapper
-import timber.log.Timber
 import javax.inject.Inject
 
 class LessonPresenter
@@ -32,6 +32,8 @@ constructor(
 
     private val progressObservable: Observable<Progress>,
 
+    private val stepIndexingInteractor: StepIndexingInteractor,
+
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
     @MainScheduler
@@ -43,6 +45,13 @@ constructor(
             view?.setState(value)
         }
 
+    private var currentStepPosition = -1
+        set(value) {
+            field = value
+            endIndexing()
+            startIndexing(value)
+        }
+
     init {
         subscribeForProgressesUpdates()
     }
@@ -50,6 +59,13 @@ constructor(
     override fun attachView(view: LessonView) {
         super.attachView(view)
         view.setState(state)
+
+        startIndexing(currentStepPosition)
+    }
+
+    override fun detachView(view: LessonView) {
+        endIndexing()
+        super.detachView(view)
     }
 
     /**
@@ -168,6 +184,27 @@ constructor(
             .getOrNull(position)
             ?: return
 
+        currentStepPosition = position
+    }
 
+    /**
+     * Indexing
+     */
+    private fun startIndexing(position: Int) {
+        val state = (state as? LessonView.State.LessonLoaded)
+            ?: return
+
+        val step = (state.stepsState as? LessonView.StepsState.Loaded)
+            ?.stepItems
+            ?.getOrNull(position)
+            ?.step
+            ?.step
+            ?: return
+
+        stepIndexingInteractor.startIndexing(state.lessonData.unit, state.lessonData.lesson, step)
+    }
+
+    private fun endIndexing() {
+        stepIndexingInteractor.endIndexing()
     }
 }
