@@ -13,9 +13,11 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.util.AppConstants
+import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.view.notification.NotificationDelegate
 import org.stepik.android.view.notification.StepikNotifManager
 import org.stepik.android.view.notification.helpers.NotificationHelper
+import java.util.*
 import javax.inject.Inject
 
 class RemindAppDelegate
@@ -77,8 +79,50 @@ class RemindAppDelegate
         } else if (!sharedPreferenceHelper.isNotificationWasShown(SharedPreferenceHelper.NotificationDay.DAY_SEVEN)) {
             afterLocalNotificationShown(SharedPreferenceHelper.NotificationDay.DAY_SEVEN)
         }
+        scheduleNotification()
+    }
 
-        // TODO Schedule remind about app
+    private fun scheduleNotification() {
+        val isFirstDayNotificationShown = sharedPreferenceHelper.isNotificationWasShown(SharedPreferenceHelper.NotificationDay.DAY_ONE)
+        val isSevenDayNotificationShown = sharedPreferenceHelper.isNotificationWasShown(SharedPreferenceHelper.NotificationDay.DAY_SEVEN)
+        if (isFirstDayNotificationShown
+            && isSevenDayNotificationShown) {
+            //already shown.
+            //do not show again
+            return
+        }
+        if (sharedPreferenceHelper.authResponseFromStore == null
+            || sharedPreferenceHelper.isStreakNotificationEnabled
+            || databaseFacade.getAllCourses(CourseListType.ENROLLED).isNotEmpty()
+            || sharedPreferenceHelper.anyStepIsSolved()) {
+            return
+        }
+
+
+        //now we can plan alarm
+
+        val now = DateTimeHelper.nowUtc()
+        val scheduleMillis: Long
+        val dayDiff: Int =
+            when {
+                !isFirstDayNotificationShown -> 1
+                !isSevenDayNotificationShown -> 7
+                else -> return
+            }
+
+
+        val calendar = Calendar.getInstance()
+        val nowHour = calendar.get(Calendar.HOUR_OF_DAY)
+        calendar.set(Calendar.HOUR_OF_DAY, 12)
+        val nowAt12 = calendar.timeInMillis
+        scheduleMillis = when {
+            nowHour < 12 -> nowAt12 + AppConstants.MILLIS_IN_24HOURS * dayDiff
+            nowHour >= 19 -> nowAt12 + AppConstants.MILLIS_IN_24HOURS * (dayDiff + 1)
+            else -> now + AppConstants.MILLIS_IN_24HOURS * dayDiff
+        }
+
+        sharedPreferenceHelper.saveNewUserRemindTimestamp(scheduleMillis)
+        scheduleNotificationAt(scheduleMillis)
     }
 
     private fun afterLocalNotificationShown(day: SharedPreferenceHelper.NotificationDay) {
