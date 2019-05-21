@@ -69,7 +69,6 @@ import org.stepik.android.view.injection.video_player.VideoPlayerComponent
         AppCoreModule::class,
         RepositoryModule::class,
         AnalyticModule::class,
-        AppStepModule::class,
         AppFiltersModule::class,
         GoogleModule::class,
         FirebaseModule::class,

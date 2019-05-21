@@ -11,7 +11,6 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.core.internetstate.contract.InternetEnabledPoster;
-import org.stepic.droid.core.updatingstep.contract.UpdatingStepPoster;
 import org.stepik.android.domain.progress.interactor.LocalProgressInteractor;
 import org.stepik.android.model.Step;
 import org.stepic.droid.model.ViewedNotification;
@@ -21,6 +20,7 @@ import org.stepic.droid.web.Api;
 import org.stepik.android.model.ViewAssignment;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -53,9 +53,6 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
 
     @Inject
     InternetEnabledPoster internetEnabledPoster;
-
-    @Inject
-    UpdatingStepPoster updatingStepPoster;
 
     private AtomicBoolean inWork = new AtomicBoolean(false);
 
@@ -109,6 +106,7 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
     @WorkerThread
     private void processViewAssignments() {
         List<ViewAssignment> list = databaseFacade.getAllInQueue();
+        List<Step> updatedSteps = new ArrayList<>();
         for (ViewAssignment item : list) {
             try {
                 retrofit2.Response<Void> response = api.postViewed(item).execute();
@@ -125,23 +123,23 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
                                     databaseFacade.markProgressAsPassedIfInDb(step.getProgress());
                                 }
                             }
-                            localProgressInteractor.updateStepProgress(step).blockingAwait();
                         }
                         // Get a handler that can be used to post to the main thread
 
-                        mainHandler.post(new Function0<Unit>() {
-                                             @Override
-                                             public Unit invoke() {
-                                                 updatingStepPoster.updateStep(stepId, false);
-                                                 return Unit.INSTANCE;
-                                             }
-                                         }
-                        );
                     }
+                    updatedSteps.add(step);
                 }
             } catch (IOException e) {
                 //no internet, just ignore and send next time
             }
+        }
+
+        try {
+            localProgressInteractor
+                    .updateStepsProgress(updatedSteps)
+                    .blockingAwait();
+        } catch (Exception e) {
+            //no internet, just ignore and send next time
         }
     }
 

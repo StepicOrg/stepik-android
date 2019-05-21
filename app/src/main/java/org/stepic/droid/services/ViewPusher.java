@@ -6,7 +6,6 @@ import android.content.Intent;
 
 import org.stepic.droid.base.App;
 import org.stepic.droid.concurrency.MainHandler;
-import org.stepic.droid.core.updatingstep.contract.UpdatingStepPoster;
 import org.stepik.android.domain.progress.interactor.LocalProgressInteractor;
 import org.stepik.android.model.Step;
 import org.stepic.droid.preferences.UserPreferences;
@@ -21,8 +20,7 @@ import java.io.IOException;
 
 import javax.inject.Inject;
 
-import kotlin.Unit;
-import kotlin.jvm.functions.Function0;
+import kotlin.collections.CollectionsKt;
 import retrofit2.Response;
 
 public class ViewPusher extends IntentService {
@@ -43,9 +41,6 @@ public class ViewPusher extends IntentService {
 
     @Inject
     MainHandler mainHandler;
-
-    @Inject
-    UpdatingStepPoster updatingStepPoster;
 
 
     /**
@@ -87,7 +82,7 @@ public class ViewPusher extends IntentService {
         Step step = database.getStepById(stepId);
         if (step != null) {
             try {
-                localProgressInteractor.updateStepProgress(step).blockingAwait();
+                localProgressInteractor.updateStepsProgress(CollectionsKt.listOf(step)).blockingAwait();
             } catch (Exception e) {
                 // no op
             }
@@ -100,14 +95,6 @@ public class ViewPusher extends IntentService {
             }
         }
         // Get a handler that can be used to post to the main thread
-
-        mainHandler.post(new Function0<Unit>() {
-            @Override
-            public Unit invoke() {
-                updatingStepPoster.updateStep(stepId, false);
-                return Unit.INSTANCE;
-            }
-        });
     }
 }
 
