@@ -6,6 +6,8 @@ import android.support.v4.app.TaskStackBuilder
 import org.stepic.droid.R
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.ui.activities.SplashActivity
+import org.stepic.droid.util.AppConstants
+import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.view.notification.NotificationDelegate
 import org.stepik.android.view.notification.StepikNotifManager
 import org.stepik.android.view.notification.helpers.NotificationHelper
@@ -41,5 +43,29 @@ class RemindRegistrationDelegate
                 id = REGISTRATION_REMIND_NOTIFICATION_ID)
 
         showNotification(REGISTRATION_REMIND_NOTIFICATION_ID, notification.build())
+        scheduleNotification()
+    }
+
+    private fun scheduleNotification() {
+        if (sharedPreferenceHelper.authResponseFromStore != null) {
+            sharedPreferenceHelper.setHasEverLogged()
+        }
+
+        if (sharedPreferenceHelper.isEverLogged) return
+
+        val now = DateTimeHelper.nowUtc()
+        val oldTimestamp = sharedPreferenceHelper.registrationRemindTimestamp
+
+        val scheduleMillis = if (now < oldTimestamp) {
+            oldTimestamp
+        } else {
+            if (oldTimestamp == 0L) { // means that notification wasn't shown before
+                now + AppConstants.MILLIS_IN_1HOUR
+            } else {
+                now + 2 * AppConstants.MILLIS_IN_1HOUR
+            }
+        }
+        scheduleNotificationAt(scheduleMillis)
+        sharedPreferenceHelper.saveRegistrationRemindTimestamp(scheduleMillis)
     }
 }
