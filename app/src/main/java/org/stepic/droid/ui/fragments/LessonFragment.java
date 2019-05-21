@@ -27,13 +27,11 @@ import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
-import org.stepic.droid.base.Client;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.core.presenters.LessonPresenter;
 import org.stepic.droid.core.presenters.StepsTrackingPresenter;
 import org.stepic.droid.core.presenters.contracts.LessonTrackingView;
 import org.stepic.droid.core.presenters.contracts.LessonView;
-import org.stepic.droid.core.updatingstep.contract.UpdatingStepListener;
 import org.stepik.android.domain.last_step.model.LastStep;
 import org.stepik.android.model.Course;
 import org.stepik.android.model.Lesson;
@@ -60,7 +58,7 @@ import butterknife.BindString;
 import butterknife.BindView;
 
 // FIXME: 15.08.17 show title R.string.steps_title, when lesson is not loaded
-public class LessonFragment extends FragmentBase implements LessonView, LessonTrackingView, NextMoveable, UpdatingStepListener {
+public class LessonFragment extends FragmentBase implements LessonView, LessonTrackingView, NextMoveable {
     private static final String FROM_PREVIOUS_KEY = "fromPrevKey";
     private static final String SIMPLE_UNIT_ID_KEY = "simpleUnitId";
     private static final String SIMPLE_LESSON_ID_KEY = "simpleLessonId";
@@ -163,9 +161,6 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
     @Inject
     StepsTrackingPresenter stepTrackingPresenter;
 
-    @Inject
-    Client<UpdatingStepListener> updatingStepListenerClient;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -229,7 +224,6 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
                 showSteps(fromPreviousLesson, -1);
             }
         }
-        updatingStepListenerClient.subscribe(this);
     }
 
 
@@ -277,7 +271,6 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
 
     @Override
     public void onDestroyView() {
-        updatingStepListenerClient.unsubscribe(this);
         stepsPresenter.detachView(this);
         stepTrackingPresenter.detachView(this);
         if (pageChangeListener != null) {
@@ -631,35 +624,4 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
         stepToTitleMap.clear();
         stepToUrlMap.clear();
     }
-
-    /*
-     * App indexing stuff end
-     */
-
-
-    @Override
-    public void onNeedUpdate(long stepId, boolean isSuccessAttempt) {
-        Step step = null;
-        int position = -1;
-        for (int i = 0; i < stepsPresenter.getStepList().size(); i++) {
-            Step stepInList = stepsPresenter.getStepList().get(i).getStep();
-            if (stepInList.getId() == stepId) {
-                position = i;
-                step = stepInList;
-                break;
-            }
-        }
-
-        if (step != null && !step.isCustomPassed() && (StepHelper.isViewedStatePost(step) || isSuccessAttempt)) {
-            // if not passed yet
-            step.setCustomPassed(true);
-            if (position >= 0 && position < tabLayout.getTabCount()) {
-                TabLayout.Tab tab = tabLayout.getTabAt(position);
-                if (tab != null) {
-                    tab.setIcon(stepAdapter.getTabDrawable(position));
-                }
-            }
-        }
-    }
-
 }
