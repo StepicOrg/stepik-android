@@ -3,10 +3,11 @@ package org.stepic.droid.persistence.downloads.resolvers.structure
 import io.reactivex.Observable
 import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.persistence.model.Structure
-import org.stepic.droid.storage.repositories.assignment.AssignmentRepository
 import org.stepic.droid.util.getProgresses
 import org.stepic.droid.util.mapToLongArray
 import org.stepic.droid.util.then
+import org.stepik.android.domain.assignment.repository.AssignmentRepository
+import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.lesson.repository.LessonRepository
 import org.stepik.android.domain.progress.repository.ProgressRepository
 import org.stepik.android.domain.section.repository.SectionRepository
@@ -66,7 +67,7 @@ constructor(
                             .find { it.id == unit.lesson }
                             ?.let { stepStructureResolver.resolveStructure(courseId, sectionId, unit.id, it.id, *it.steps) }
                     }
-                assignmentRepository.syncAssignments(*assignmentIds) then
+                assignmentRepository.getAssignments(*assignmentIds, primarySourceType = DataSourceType.REMOTE).ignoreElement() then
                         progressRepository.getProgresses(*progresses).toCompletable() then
                         Observable.concat(observables)
             }
