@@ -38,6 +38,7 @@ import org.stepic.droid.core.presenters.StepAttemptPresenter;
 import org.stepic.droid.core.presenters.StreakPresenter;
 import org.stepic.droid.core.presenters.contracts.StepAttemptView;
 import org.stepic.droid.fonts.FontType;
+import org.stepik.android.domain.progress.interactor.LocalProgressInteractor;
 import org.stepik.android.model.Step;
 import org.stepik.android.model.attempts.Attempt;
 import org.stepik.android.model.DiscountingPolicyType;
@@ -149,6 +150,9 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
 
     @Inject
     StreakPresenter streakPresenter;
+
+    @Inject
+    LocalProgressInteractor localProgressInteractor;
 
     private View.OnClickListener actionButtonGeneralListener;
 

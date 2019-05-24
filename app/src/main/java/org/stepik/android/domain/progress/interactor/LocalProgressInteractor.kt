@@ -1,15 +1,22 @@
 package org.stepik.android.domain.progress.interactor
 
 import io.reactivex.Completable
+import io.reactivex.Single
+import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.rxkotlin.toObservable
 import io.reactivex.subjects.PublishSubject
+import org.stepic.droid.util.distinct
 import org.stepic.droid.util.getProgresses
 import org.stepic.droid.util.mapToLongArray
+import org.stepic.droid.util.flatten
+import org.stepik.android.domain.assignment.repository.AssignmentRepository
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.progress.repository.ProgressRepository
 import org.stepik.android.domain.section.repository.SectionRepository
 import org.stepik.android.domain.step.repository.StepRepository
 import org.stepik.android.domain.unit.repository.UnitRepository
+import org.stepik.android.model.Assignment
+import org.stepik.android.model.Course
 import org.stepik.android.model.Progress
 import org.stepik.android.model.Section
 import org.stepik.android.model.Step
@@ -20,6 +27,7 @@ class LocalProgressInteractor
 @Inject
 constructor(
     private val progressRepository: ProgressRepository,
+    private val assignmentRepository: AssignmentRepository,
     private val stepRepository: StepRepository,
     private val unitRepository: UnitRepository,
     private val sectionRepository: SectionRepository,
@@ -33,25 +41,13 @@ constructor(
             .flatMapCompletable(::updateStepsProgress)
 
     fun updateStepsProgress(steps: List<Step>): Completable =
-        steps
-            .map(Step::lesson)
-            .distinct()
-            .toObservable()
-            .flatMapSingle { lessonId ->
-                unitRepository
-                    .getUnitsByLessonId(lessonId)
-            }
-            .reduce(emptyList<Unit>()) { a, b -> a + b }
+        getUnits(steps)
             .flatMap { units ->
-                val sectionIds = units.mapToLongArray(Unit::section)
-                sectionRepository
-                    .getSections(*sectionIds)
-                    .flatMap { sections ->
-                        val coursesIds = sections.mapToLongArray(Section::course)
-                        courseRepository
-                            .getCourses(*coursesIds)
+                zip(getSections(units), getAssignments(steps, units))
+                    .flatMap { (sections, assignments) ->
+                        getCourses(sections)
                             .map { courses ->
-                                steps.getProgresses() + units.getProgresses() + sections.getProgresses() + courses.getProgresses()
+                                assignments.getProgresses() + steps.getProgresses() + units.getProgresses() + sections.getProgresses() + courses.getProgresses()
                             }
                     }
             }
@@ -63,4 +59,33 @@ constructor(
                 progresses.forEach(progressesPublisher::onNext)
             }
             .toCompletable()
+
+    private fun getAssignments(steps: List<Step>, units: List<Unit>): Single<List<Assignment>> =
+        assignmentRepository
+            .getAssignments(*units.mapNotNull(Unit::assignments).flatten().distinct())
+            .map { assignments ->
+                assignments
+                    .filter { assignment ->
+                        steps.any { it.id == assignment.step }
+                    }
+            }
+
+    private fun getUnits(steps: List<Step>): Single<List<Unit>> =
+        steps
+            .map(Step::lesson)
+            .distinct()
+            .toObservable()
+            .flatMapSingle { lessonId ->
+                unitRepository
+                    .getUnitsByLessonId(lessonId)
+            }
+            .reduce(emptyList()) { a, b -> a + b }
+
+    private fun getSections(units: List<Unit>): Single<List<Section>> =
+        sectionRepository
+            .getSections(*units.mapToLongArray(Unit::section).distinct())
+
+    private fun getCourses(sections: List<Section>): Single<List<Course>> =
+        courseRepository
+            .getCourses(*sections.mapToLongArray(Section::course).distinct())
 }
