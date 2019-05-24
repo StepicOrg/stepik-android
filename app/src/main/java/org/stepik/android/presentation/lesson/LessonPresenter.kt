@@ -18,6 +18,7 @@ import org.stepik.android.model.Unit
 import org.stepik.android.presentation.base.PresenterBase
 import org.stepik.android.domain.lesson.model.LessonDeepLinkData
 import org.stepik.android.domain.step.interactor.StepIndexingInteractor
+import org.stepik.android.domain.step.interactor.StepViewReportInteractor
 import org.stepik.android.model.Progress
 import org.stepik.android.presentation.lesson.mapper.LessonStateMapper
 import javax.inject.Inject
@@ -32,6 +33,7 @@ constructor(
 
     private val progressObservable: Observable<Progress>,
 
+    private val stepViewReportInteractor: StepViewReportInteractor,
     private val stepIndexingInteractor: StepIndexingInteractor,
 
     @BackgroundScheduler
@@ -185,6 +187,12 @@ constructor(
             ?: return
 
         currentStepPosition = position
+
+        compositeDisposable += stepViewReportInteractor
+            .reportStepView(stepItem.step.step, stepItem.assignment, state.lessonData.unit, state.lessonData.course)
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(onError = emptyOnErrorStub)
     }
 
     /**

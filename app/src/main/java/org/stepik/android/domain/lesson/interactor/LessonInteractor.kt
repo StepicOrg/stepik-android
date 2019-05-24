@@ -3,6 +3,7 @@ package org.stepik.android.domain.lesson.interactor
 import io.reactivex.Maybe
 import io.reactivex.rxkotlin.Maybes.zip
 import org.stepic.droid.util.maybeFirst
+import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.lesson.repository.LessonRepository
@@ -19,7 +20,8 @@ class LessonInteractor
 constructor(
     private val lessonRepository: LessonRepository,
     private val unitRepository: UnitRepository,
-    private val sectionRepository: SectionRepository
+    private val sectionRepository: SectionRepository,
+    private val courseRepository: CourseRepository
 ) {
     fun getLessonData(lesson: Lesson, unit: Unit, section: Section): Maybe<LessonData> =
         zip(
@@ -27,8 +29,12 @@ constructor(
             unitRepository.getUnit(unit.id).onErrorReturnItem(unit),
             sectionRepository.getSection(section.id).onErrorReturnItem(section)
         )
-            .map { (lesson, unit, section) ->
-                LessonData(lesson, unit, section)
+            .flatMap { (lesson, unit, section) ->
+                courseRepository
+                    .getCourse(section.course)
+                    .map { course ->
+                        LessonData(lesson, unit, section, course)
+                    }
             }
 
     fun getLessonData(lastStep: LastStep): Maybe<LessonData> =
@@ -40,7 +46,14 @@ constructor(
                 sectionRepository
                     .getSection(unit.section)
                     .map { section ->
-                        LessonData(lesson, unit, section, (lesson.steps.indexOf(lastStep.step)).coerceAtLeast(0))
+                        Triple(lesson, unit, section)
+                    }
+            }
+            .flatMap { (lesson, unit, section) ->
+                courseRepository
+                    .getCourse(section.course)
+                    .map { course ->
+                        LessonData(lesson, unit, section, course, (lesson.steps.indexOf(lastStep.step)).coerceAtLeast(0))
                     }
             }
 
@@ -55,9 +68,16 @@ constructor(
                         sectionRepository
                             .getSection(unit.section)
                             .map { section ->
-                                LessonData(lesson, unit, section, lessonDeepLinkData.stepPosition + 1)
+                                unit to section
                             }
                     }
-                    .toSingle(LessonData(lesson, null, null, lessonDeepLinkData.stepPosition + 1))
+                    .flatMap { (unit, section) ->
+                        courseRepository
+                            .getCourse(section.course)
+                            .map { course ->
+                                LessonData(lesson, unit, section, course, lessonDeepLinkData.stepPosition + 1)
+                            }
+                    }
+                    .toSingle(LessonData(lesson, null, null, null, lessonDeepLinkData.stepPosition + 1))
             }
 }
