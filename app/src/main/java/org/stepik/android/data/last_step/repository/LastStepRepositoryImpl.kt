@@ -1,5 +1,6 @@
 package org.stepik.android.data.last_step.repository
 
+import io.reactivex.Completable
 import io.reactivex.Maybe
 import org.stepic.droid.util.doCompletableOnSuccess
 import org.stepik.android.data.last_step.source.LastStepCacheDataSource
@@ -20,4 +21,8 @@ constructor(
             .doCompletableOnSuccess(lastStepCacheDataSource::saveLastStep)
             .switchIfEmpty(lastStepCacheDataSource.getLastStep(id))
             .onErrorResumeNext(lastStepCacheDataSource.getLastStep(id))
+
+    override fun saveLastStep(lastStep: LastStep): Completable =
+        lastStepCacheDataSource
+            .saveLastStep(lastStep)
 }
