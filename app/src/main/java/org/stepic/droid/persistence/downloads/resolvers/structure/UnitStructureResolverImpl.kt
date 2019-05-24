@@ -68,7 +68,7 @@ constructor(
                             ?.let { stepStructureResolver.resolveStructure(courseId, sectionId, unit.id, it.id, *it.steps) }
                     }
                 assignmentRepository.getAssignments(*assignmentIds, primarySourceType = DataSourceType.REMOTE).ignoreElement() then
-                        progressRepository.getProgresses(*progresses).toCompletable() then
+                        progressRepository.getProgresses(*progresses).ignoreElement() then
                         Observable.concat(observables)
             }
 }
