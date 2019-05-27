@@ -34,17 +34,17 @@ import javax.inject.Inject
 
 class NotificationResolverImpl
 @Inject constructor(
-    val context: Context,
-    val screenManager: ScreenManager,
-    val analytic: Analytic,
-    val userPreferences: UserPreferences,
-    val sharedPreferenceHelper: SharedPreferenceHelper,
-    val textResolver: TextResolver,
-    val notificationHelper: org.stepik.android.view.notification.helpers.NotificationHelper,
-    val databaseFacade: DatabaseFacade,
-    val api: Api,
-    val notificationTimeChecker: NotificationTimeChecker,
-    val stepikNotifManager: StepikNotifManager
+    private val context: Context,
+    private val screenManager: ScreenManager,
+    private val analytic: Analytic,
+    private val userPreferences: UserPreferences,
+    private val sharedPreferenceHelper: SharedPreferenceHelper,
+    private val textResolver: TextResolver,
+    private val notificationHelper: org.stepik.android.view.notification.helpers.NotificationHelper,
+    private val databaseFacade: DatabaseFacade,
+    private val api: Api,
+    private val notificationTimeChecker: NotificationTimeChecker,
+    private val stepikNotifManager: StepikNotifManager
 ) : NotificationResolver {
     override fun showNotification(notification: Notification) {
         if (Looper.myLooper() == Looper.getMainLooper()) {
@@ -57,6 +57,21 @@ class NotificationResolverImpl
             analytic.reportEvent(Analytic.Notification.GCM_TOKEN_NOT_OK)
         } else {
             resolveAndSendNotification(notification)
+        }
+    }
+
+    override fun tryOpenNotificationInstantly(notification: Notification) {
+        val isShown = when (notification.type) {
+            NotificationType.learn -> openLearnNotification(notification)
+            NotificationType.comments -> openCommentNotification(notification)
+            NotificationType.review -> openReviewNotification(notification)
+            NotificationType.teach -> openTeach(notification)
+            NotificationType.other -> openDefault(notification)
+            null -> false
+        }
+
+        if (!isShown) {
+            analytic.reportEvent(Analytic.Notification.NOTIFICATION_NOT_OPENABLE, notification.action ?: "")
         }
     }
 
@@ -284,6 +299,62 @@ class NotificationResolverImpl
 
             analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, stepikNotification.id?.toString() ?: "", stepikNotification.type.name)
             stepikNotifManager.showNotification(courseId, notification.build())
+        }
+    }
+
+    private fun openLearnNotification(notification: Notification): Boolean {
+        if (notification.action != null && notification.action == NotificationHelper.ISSUED_CERTIFICATE) {
+            analytic.reportEvent(Analytic.Certificate.OPEN_CERTIFICATE_FROM_NOTIFICATION_CENTER)
+            screenManager.showCertificates(context)
+            return true
+        } else if (notification.action == NotificationHelper.ISSUED_LICENSE) {
+            val intent: Intent = notificationHelper.getLicenseIntent(notification) ?: return false
+            context.startActivity(intent)
+            return true
+        } else {
+            val courseId = HtmlHelper.parseCourseIdFromNotification(notification)
+            val modulePosition = HtmlHelper.parseModulePositionFromNotification(notification.htmlText)
+
+            if (courseId != null && courseId >= 0 && modulePosition != null && modulePosition >= 0) {
+                val intent = CourseActivity.createIntent(context, courseId, tab = CourseScreenTab.SYLLABUS) // Intent(context, SectionActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                context.startActivity(intent)
+                return true
+            } else {
+                return false
+            }
+        }
+    }
+
+    private fun openCommentNotification(notification: Notification): Boolean {
+        val intent: Intent = notificationHelper.getCommentIntent(notification) ?: return false
+        analytic.reportEvent(Analytic.Notification.OPEN_COMMENT_NOTIFICATION_LINK)
+        context.startActivity(intent)
+        return true
+    }
+
+    private fun openReviewNotification(notification: Notification): Boolean {
+        val intent = notificationHelper.getReviewIntent(notification) ?: return false
+        context.startActivity(intent)
+        analytic.reportEvent(Analytic.Notification.OPEN_LESSON_NOTIFICATION_LINK)
+        return true
+    }
+
+    private fun openTeach(notification: Notification): Boolean {
+        val intent: Intent? = notificationHelper.getTeachIntent(notification) ?: return false
+        analytic.reportEvent(Analytic.Notification.OPEN_TEACH_CENTER)
+        context.startActivity(intent)
+        return true
+    }
+
+    private fun openDefault(notification: Notification): Boolean {
+        if (notification.action != null && notification.action == NotificationHelper.ADDED_TO_GROUP) {
+            val intent = notificationHelper.getDefaultIntent(notification) ?: return false
+            analytic.reportEvent(Analytic.Notification.OPEN_COMMENT_NOTIFICATION_LINK)
+            context.startActivity(intent)
+            return true
+        } else {
+            return false
         }
     }
 
