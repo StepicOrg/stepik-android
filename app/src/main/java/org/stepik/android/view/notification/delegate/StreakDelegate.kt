@@ -41,9 +41,7 @@ class StreakDelegate
 
     override fun onNeedShowNotification() {
         if (sharedPreferenceHelper.isStreakNotificationEnabled) {
-            // localReminder.userChangeStateOfNotification() //plan new alarm at next day
-            // TODO Use scheduleNotificationAt(timestamp: Long) to schedule an alarm - must calculate the timestamp
-
+            scheduleNotification()
             val numberOfStreakNotifications = sharedPreferenceHelper.numberOfStreakNotifications
             if (numberOfStreakNotifications < AppConstants.MAX_NUMBER_OF_NOTIFICATION_STREAK) {
                 try {
@@ -88,7 +86,23 @@ class StreakDelegate
     }
 
     override fun scheduleNotification() {
+        if (sharedPreferenceHelper.isStreakNotificationEnabled) {
+            //plan new alarm
+            val hour = sharedPreferenceHelper.timeNotificationCode
+            val now = DateTimeHelper.nowUtc()
+            val calendar = Calendar.getInstance()
+            calendar.set(Calendar.HOUR_OF_DAY, hour)
+            calendar.set(Calendar.MINUTE, 0)
+            calendar.set(Calendar.SECOND, 0)
+            calendar.set(Calendar.MILLISECOND, 0)
 
+            var nextNotificationMillis = calendar.timeInMillis
+
+            if (nextNotificationMillis < now) {
+                nextNotificationMillis += AppConstants.MILLIS_IN_24HOURS
+            }
+            scheduleNotificationAt(nextNotificationMillis)
+        }
     }
 
     private fun showNotificationStreakImprovement(currentStreak: Int) {
