@@ -21,6 +21,7 @@ import org.stepik.android.view.course.ui.activity.CourseActivity
 import org.stepik.android.view.notification.NotificationDelegate
 import org.stepik.android.view.notification.StepikNotifManager
 import org.stepik.android.view.notification.helpers.NotificationHelper
+import timber.log.Timber
 import javax.inject.Inject
 
 class DeadlinesDelegate
@@ -47,14 +48,14 @@ class DeadlinesDelegate
                 deadlines.forEach { showPersonalDeadlineNotification(it) }
             }
             .doFinally {
-                scheduleNotification()
+                scheduleDeadlinesNotifications()
             }
             .ignoreElement()
             .onErrorComplete()
             .blockingAwait()
     }
 
-    override fun scheduleNotification() {
+    fun scheduleDeadlinesNotifications() {
         val now = DateTimeHelper.nowUtc()
         val timestamp = deadlinesCacheDataSource
                 .getClosestDeadlineTimestamp()

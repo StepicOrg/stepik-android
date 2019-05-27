@@ -11,6 +11,7 @@ import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.view.notification.NotificationDelegate
 import org.stepik.android.view.notification.StepikNotifManager
 import org.stepik.android.view.notification.helpers.NotificationHelper
+import timber.log.Timber
 import javax.inject.Inject
 
 class RemindRegistrationDelegate
@@ -43,10 +44,10 @@ class RemindRegistrationDelegate
                 id = REGISTRATION_REMIND_NOTIFICATION_ID)
 
         showNotification(REGISTRATION_REMIND_NOTIFICATION_ID, notification.build())
-        scheduleNotification()
+        scheduleRemindRegistrationNotification()
     }
 
-    override fun scheduleNotification() {
+    fun scheduleRemindRegistrationNotification() {
         if (sharedPreferenceHelper.authResponseFromStore != null) {
             sharedPreferenceHelper.setHasEverLogged()
         }
@@ -65,6 +66,7 @@ class RemindRegistrationDelegate
                 now + 2 * AppConstants.MILLIS_IN_1HOUR
             }
         }
+        Timber.d("Scheduling at RemindDelegate")
         scheduleNotificationAt(scheduleMillis)
         sharedPreferenceHelper.saveRegistrationRemindTimestamp(scheduleMillis)
     }

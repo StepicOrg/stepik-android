@@ -41,7 +41,7 @@ class StreakDelegate
 
     override fun onNeedShowNotification() {
         if (sharedPreferenceHelper.isStreakNotificationEnabled) {
-            scheduleNotification()
+            scheduleStreakNotification()
             val numberOfStreakNotifications = sharedPreferenceHelper.numberOfStreakNotifications
             if (numberOfStreakNotifications < AppConstants.MAX_NUMBER_OF_NOTIFICATION_STREAK) {
                 try {
@@ -85,7 +85,7 @@ class StreakDelegate
         }
     }
 
-    override fun scheduleNotification() {
+    fun scheduleStreakNotification() {
         if (sharedPreferenceHelper.isStreakNotificationEnabled) {
             //plan new alarm
             val hour = sharedPreferenceHelper.timeNotificationCode

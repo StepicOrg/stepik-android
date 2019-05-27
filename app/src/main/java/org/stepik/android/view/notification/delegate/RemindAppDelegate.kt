@@ -79,10 +79,10 @@ class RemindAppDelegate
         } else if (!sharedPreferenceHelper.isNotificationWasShown(SharedPreferenceHelper.NotificationDay.DAY_SEVEN)) {
             afterLocalNotificationShown(SharedPreferenceHelper.NotificationDay.DAY_SEVEN)
         }
-        scheduleNotification()
+        scheduleRemindAppNotification()
     }
 
-    override fun scheduleNotification() {
+    fun scheduleRemindAppNotification() {
         val isFirstDayNotificationShown = sharedPreferenceHelper.isNotificationWasShown(SharedPreferenceHelper.NotificationDay.DAY_ONE)
         val isSevenDayNotificationShown = sharedPreferenceHelper.isNotificationWasShown(SharedPreferenceHelper.NotificationDay.DAY_SEVEN)
         if (isFirstDayNotificationShown

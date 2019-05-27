@@ -1,15 +1,20 @@
 package org.stepik.android.view.notification.delegate
 
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.support.v4.app.TaskStackBuilder
 import org.stepic.droid.model.CourseListType
+import org.stepic.droid.notifications.StepikNotificationManager
 import org.stepic.droid.notifications.model.RetentionNotificationType
 import org.stepic.droid.preferences.SharedPreferenceHelper
+import org.stepic.droid.receivers.AlarmReceiver
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.ui.activities.SplashActivity
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
+import org.stepic.droid.util.scheduleCompat
 import org.stepik.android.view.notification.NotificationDelegate
 import org.stepik.android.view.notification.StepikNotifManager
 import org.stepik.android.view.notification.helpers.NotificationHelper
@@ -64,32 +69,38 @@ class RetentionDelegate
         )
 
         showNotification(RETENTION_NOTIFICATION_ID, notification.build())
-        scheduleNotification()
+        scheduleRetentionNotification()
     }
 
-    override fun scheduleNotification() {
+    fun scheduleRetentionNotification(shouldResetCounter: Boolean = true) {
         val now = DateTimeHelper.nowUtc()
+        val oldTimestamp = sharedPreferenceHelper.retentionNotificationTimestamp
+
         val scheduleMillis: Long
+        if (!shouldResetCounter && oldTimestamp > 0L && oldTimestamp > now) {
+            scheduleMillis = oldTimestamp // after reboot we already scheduled.
+        } else {
+            val lastSessionTimestamp = sharedPreferenceHelper.lastSessionTimestamp
+            val diff = now - lastSessionTimestamp
 
-        val lastSessionTimestamp = sharedPreferenceHelper.lastSessionTimestamp
-        val diff = now - lastSessionTimestamp
+            val dayDiff: Int =
+                if (shouldResetCounter ||
+                    lastSessionTimestamp == 0L ||
+                    diff <= AppConstants.MILLIS_IN_24HOURS) {
+                    1
+                } else {
+                    3
+                }
 
-        val dayDiff: Int =
-            if (lastSessionTimestamp == 0L ||
-                diff <= AppConstants.MILLIS_IN_24HOURS) {
-                1
-            } else {
-                3
+            val calendar = Calendar.getInstance()
+            val nowHour = calendar.get(Calendar.HOUR_OF_DAY)
+            calendar.set(Calendar.HOUR_OF_DAY, 12)
+            val nowAt12 = calendar.timeInMillis
+            scheduleMillis = when {
+                nowHour < 12 -> nowAt12 + AppConstants.MILLIS_IN_24HOURS * dayDiff
+                nowHour >= 19 -> nowAt12 + AppConstants.MILLIS_IN_24HOURS * (dayDiff + 1)
+                else -> now + AppConstants.MILLIS_IN_24HOURS * dayDiff
             }
-
-        val calendar = Calendar.getInstance()
-        val nowHour = calendar.get(Calendar.HOUR_OF_DAY)
-        calendar.set(Calendar.HOUR_OF_DAY, 12)
-        val nowAt12 = calendar.timeInMillis
-        scheduleMillis = when {
-            nowHour < 12 -> nowAt12 + AppConstants.MILLIS_IN_24HOURS * dayDiff
-            nowHour >= 19 -> nowAt12 + AppConstants.MILLIS_IN_24HOURS * (dayDiff + 1)
-            else -> now + AppConstants.MILLIS_IN_24HOURS * dayDiff
         }
         scheduleNotificationAt(scheduleMillis)
         sharedPreferenceHelper.saveRetentionNotificationTimestamp(scheduleMillis)

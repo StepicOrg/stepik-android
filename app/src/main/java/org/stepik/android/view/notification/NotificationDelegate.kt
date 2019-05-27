@@ -9,8 +9,6 @@ abstract class NotificationDelegate(
 
     abstract fun onNeedShowNotification()
 
-    abstract fun scheduleNotification()
-
     fun rescheduleNotification() {
         notificationManager.rescheduleActiveNotification(id)
     }
