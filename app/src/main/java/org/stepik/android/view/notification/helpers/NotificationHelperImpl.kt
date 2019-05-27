@@ -3,10 +3,14 @@ package org.stepik.android.view.notification.helpers
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
+import android.support.annotation.DrawableRes
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.TaskStackBuilder
+import com.bumptech.glide.Glide
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.configuration.Config
@@ -21,6 +25,7 @@ import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.HtmlHelper
+import org.stepik.android.model.Course
 import org.stepik.android.view.course.ui.activity.CourseActivity
 import javax.inject.Inject
 
@@ -153,5 +158,28 @@ class NotificationHelperImpl
         intent.data = Uri.parse(link)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         return intent
+    }
+
+    override fun getPictureByCourse(course: Course?): Bitmap {
+        val cover = course?.cover
+        val notificationPlaceholder = R.drawable.general_placeholder
+
+        return if (cover == null) {
+            getBitmap(notificationPlaceholder)
+        } else {
+            try { // in order to suppress gai exception
+                Glide.with(context)
+                        .asBitmap()
+                        .load(cover)
+                        .placeholder(notificationPlaceholder)
+                        .submit(200, 200)//pixels
+                        .get()
+            } catch (e: Exception) {
+                getBitmap(notificationPlaceholder)
+            }
+        }
+    }
+    private fun getBitmap(@DrawableRes drawable: Int): Bitmap {
+        return BitmapFactory.decodeResource(context.resources, drawable)
     }
 }
