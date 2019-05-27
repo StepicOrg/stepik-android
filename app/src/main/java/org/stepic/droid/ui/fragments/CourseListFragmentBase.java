@@ -44,6 +44,7 @@ import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment;
 import org.stepic.droid.util.KotlinUtil;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.StepikUtil;
+import org.stepik.android.view.notification.delegate.RemindAppDelegate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -109,6 +110,9 @@ public abstract class CourseListFragmentBase extends FragmentBase
 
     @Inject
     protected DroppingPresenter droppingPresenter;
+
+    @Inject
+    protected RemindAppDelegate remindAppDelegate;
 
     @Override
     protected void injectComponent() {
@@ -264,7 +268,7 @@ public abstract class CourseListFragmentBase extends FragmentBase
         reportConnectionProblem.setVisibility(View.GONE);
         if (courses.isEmpty()) {
             showEmptyScreen(true);
-            getLocalReminder().remindAboutApp();
+            remindAppDelegate.scheduleRemindAppNotification();
         }
     }
 

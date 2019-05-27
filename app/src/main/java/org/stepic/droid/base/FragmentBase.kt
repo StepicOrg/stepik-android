@@ -34,9 +34,6 @@ open class FragmentBase : Fragment() {
     private var unbinder: Unbinder? = null
 
     @Inject
-    lateinit var localReminder: LocalReminder
-
-    @Inject
     lateinit var textResolver: TextResolver
 
     @Inject
