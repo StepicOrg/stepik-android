@@ -15,11 +15,12 @@ import org.stepic.droid.core.presenters.contracts.SplashView
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.di.splash.SplashScope
-import org.stepic.droid.notifications.LocalReminder
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.emptyOnErrorStub
+import org.stepik.android.view.notification.delegate.RemindRegistrationDelegate
+import org.stepik.android.view.notification.delegate.RetentionDelegate
 import org.stepik.android.view.routing.deeplink.BranchDeepLinkParser
 import org.stepik.android.view.routing.deeplink.BranchRoute
 import java.lang.IllegalArgumentException
@@ -39,7 +40,8 @@ constructor(
         private val analytic: Analytic,
         private val stepikDevicePoster: StepikDevicePoster,
         private val databaseFacade: DatabaseFacade,
-        private val localReminder: LocalReminder,
+        private val remindRegistrationDelegate: RemindRegistrationDelegate,
+        private val retentionDelegate: RetentionDelegate,
 
         private val branchDeepLinkParsers: Set<@JvmSuppressWildcards BranchDeepLinkParser>
 ) : PresenterBase<SplashView>() {
@@ -59,8 +61,8 @@ constructor(
                 checkRemoteConfigs()
                 registerDeviceToPushes()
                 executeLegacyOperations()
-                localReminder.remindAboutRegistration()
-                localReminder.scheduleRetentionNotification(shouldResetCounter = true)
+                remindRegistrationDelegate.scheduleRemindRegistrationNotification()
+                retentionDelegate.scheduleRetentionNotification(shouldResetCounter = true)
                 sharedPreferenceHelper.onNewSession()
             }
             .andThen(resolveSplashRoute(referringParams))
