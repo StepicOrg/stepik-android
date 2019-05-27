@@ -3,13 +3,13 @@ package org.stepik.android.view.notification.service
 import android.content.Context
 import android.content.Intent
 import android.support.v4.app.JobIntentService
-import org.stepik.android.view.notification.StepikNotifManager
+import org.stepik.android.view.notification.NotificationDelegate
 import javax.inject.Inject
 
 class BootCompleteService : JobIntentService() {
 
     @Inject
-    internal lateinit var notificationManager: StepikNotifManager
+    internal lateinit var notificationDelegates: Set<@JvmSuppressWildcards NotificationDelegate>
 
     companion object {
         private const val JOB_ID = 1000
@@ -20,6 +20,6 @@ class BootCompleteService : JobIntentService() {
     }
 
     override fun onHandleWork(intent: Intent) {
-        notificationManager.rescheduleActiveNotifications()
+        notificationDelegates.forEach { it.rescheduleNotification() }
     }
 }
