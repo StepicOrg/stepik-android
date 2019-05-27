@@ -22,6 +22,7 @@ import org.stepic.droid.util.not
 import org.stepic.droid.util.putIfAbsent
 import org.stepic.droid.util.substringOrNull
 import org.stepic.droid.web.Api
+import org.stepik.android.view.notification.NotificationResolver
 import timber.log.Timber
 import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
@@ -37,7 +38,7 @@ class NotificationListPresenter
         private val api: Api,
         private val config: Config,
         private val analytic: Analytic,
-        private val stepikNotificationManager: StepikNotificationManager,
+        private val stepikNotificationResolver: NotificationResolver,
         private val internetEnabledListenerClient: Client<InternetEnabledListener>,
         private val notificationsBadgesManager: NotificationsBadgesManager
 ) : PresenterBase<NotificationListView>(), InternetEnabledListener {
@@ -361,7 +362,7 @@ class NotificationListPresenter
 
     fun tryToOpenNotification(notification: Notification) {
         analytic.reportEvent(Analytic.Notification.NOTIFICATION_CENTER_OPENED)
-        stepikNotificationManager.tryOpenNotificationInstantly(notification)
+        stepikNotificationResolver.tryOpenNotificationInstantly(notification)
     }
 
     fun trackClickOnNotification(notification: Notification) {
