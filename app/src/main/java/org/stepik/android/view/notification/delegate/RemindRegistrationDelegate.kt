@@ -16,9 +16,9 @@ import javax.inject.Inject
 
 class RemindRegistrationDelegate
 @Inject constructor(
-    val context: Context,
-    val sharedPreferenceHelper: SharedPreferenceHelper,
-    val notificationHelper: NotificationHelper,
+    private val context: Context,
+    private val sharedPreferenceHelper: SharedPreferenceHelper,
+    private val notificationHelper: NotificationHelper,
     stepikNotifManager: StepikNotifManager
 ) : NotificationDelegate("show_registration_notification", stepikNotifManager) {
 

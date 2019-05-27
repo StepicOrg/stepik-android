@@ -4,7 +4,7 @@ import android.app.Notification
 
 abstract class NotificationDelegate(
     val id: String,
-    val notificationManager: StepikNotifManager
+    private val notificationManager: StepikNotifManager
 ){
 
     abstract fun onNeedShowNotification()

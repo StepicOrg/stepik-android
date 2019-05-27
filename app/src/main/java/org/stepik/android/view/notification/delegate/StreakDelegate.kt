@@ -1,6 +1,5 @@
 package org.stepik.android.view.notification.delegate
 
-import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
@@ -10,14 +9,11 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.notifications.NotificationBroadcastReceiver
-import org.stepic.droid.notifications.StepikNotificationManager
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import org.stepic.droid.receivers.AlarmReceiver
 import org.stepic.droid.ui.activities.ProfileActivity
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.StepikUtil
-import org.stepic.droid.util.scheduleCompat
 import org.stepic.droid.web.Api
 import org.stepik.android.view.notification.NotificationDelegate
 import org.stepik.android.view.notification.StepikNotifManager
@@ -27,12 +23,12 @@ import javax.inject.Inject
 
 class StreakDelegate
 @Inject constructor(
-    val context: Context,
-    val analytic: Analytic,
-    val api: Api,
-    val screenManager: ScreenManager,
-    val sharedPreferenceHelper: SharedPreferenceHelper,
-    val notificationHelper: NotificationHelper,
+    private val context: Context,
+    private val analytic: Analytic,
+    private val api: Api,
+    private val screenManager: ScreenManager,
+    private val sharedPreferenceHelper: SharedPreferenceHelper,
+    private val notificationHelper: NotificationHelper,
     stepikNotifManager: StepikNotifManager
 ) : NotificationDelegate("show_streak_notification", stepikNotifManager) {
     companion object {

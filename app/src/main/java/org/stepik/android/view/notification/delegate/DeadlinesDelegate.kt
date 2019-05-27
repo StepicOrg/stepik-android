@@ -21,16 +21,15 @@ import org.stepik.android.view.course.ui.activity.CourseActivity
 import org.stepik.android.view.notification.NotificationDelegate
 import org.stepik.android.view.notification.StepikNotifManager
 import org.stepik.android.view.notification.helpers.NotificationHelper
-import timber.log.Timber
 import javax.inject.Inject
 
 class DeadlinesDelegate
 @Inject constructor(
-    val context: Context,
-    val deadlinesCacheDataSource: DeadlinesCacheDataSource,
-    val api: Api,
-    val databaseFacade: DatabaseFacade,
-    val notificationHelper: NotificationHelper,
+    private val context: Context,
+    private val deadlinesCacheDataSource: DeadlinesCacheDataSource,
+    private val api: Api,
+    private val databaseFacade: DatabaseFacade,
+    private val notificationHelper: NotificationHelper,
     stepikNotifManager: StepikNotifManager
 ) : NotificationDelegate("show_deadlines_notification", stepikNotifManager) {
 

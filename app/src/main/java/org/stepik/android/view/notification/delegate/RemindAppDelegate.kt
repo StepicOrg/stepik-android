@@ -22,12 +22,12 @@ import javax.inject.Inject
 
 class RemindAppDelegate
 @Inject constructor(
-    val context: Context,
-    val sharedPreferenceHelper: SharedPreferenceHelper,
-    val databaseFacade: DatabaseFacade,
-    val analytic: Analytic,
-    val screenManager: ScreenManager,
-    val notificationHelper: NotificationHelper,
+    private val context: Context,
+    private val sharedPreferenceHelper: SharedPreferenceHelper,
+    private val databaseFacade: DatabaseFacade,
+    private val analytic: Analytic,
+    private val screenManager: ScreenManager,
+    private val notificationHelper: NotificationHelper,
     stepikNotifManager: StepikNotifManager
 ) : NotificationDelegate("show_new_user_notification", stepikNotifManager) {
     companion object {
