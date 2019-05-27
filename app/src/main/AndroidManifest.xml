@@ -405,6 +405,8 @@
 
         <receiver android:name=".receivers.AlarmReceiver" />
 
+        <receiver android:name="org.stepik.android.view.notification.receiver.StepikAlarmReceiver" />
+
         <service
             android:name="org.stepic.droid.services.AlarmService"
             android:permission="android.permission.BIND_JOB_SERVICE"
