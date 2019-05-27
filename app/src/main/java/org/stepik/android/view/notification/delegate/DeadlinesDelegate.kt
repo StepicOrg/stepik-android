@@ -47,14 +47,14 @@ class DeadlinesDelegate
                 deadlines.forEach { showPersonalDeadlineNotification(it) }
             }
             .doFinally {
-                scheduleDeadlinesNotifications()
+                scheduleNotification()
             }
             .ignoreElement()
             .onErrorComplete()
             .blockingAwait()
     }
 
-    private fun scheduleDeadlinesNotifications() {
+    override fun scheduleNotification() {
         val now = DateTimeHelper.nowUtc()
         val timestamp = deadlinesCacheDataSource
                 .getClosestDeadlineTimestamp()

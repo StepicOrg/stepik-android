@@ -9,12 +9,14 @@ abstract class NotificationDelegate(
 
     abstract fun onNeedShowNotification()
 
-    fun scheduleNotificationAt(timestamp: Long) {
-        notificationManager.scheduleNotification(id, timestamp)
-    }
+    abstract fun scheduleNotification()
 
     fun rescheduleNotification() {
         notificationManager.rescheduleActiveNotification(id)
+    }
+
+    protected fun scheduleNotificationAt(timestamp: Long) {
+        notificationManager.scheduleNotification(id, timestamp)
     }
 
     protected fun showNotification(id: Long, notification: Notification) {

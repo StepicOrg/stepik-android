@@ -46,7 +46,7 @@ class RemindRegistrationDelegate
         scheduleNotification()
     }
 
-    private fun scheduleNotification() {
+    override fun scheduleNotification() {
         if (sharedPreferenceHelper.authResponseFromStore != null) {
             sharedPreferenceHelper.setHasEverLogged()
         }

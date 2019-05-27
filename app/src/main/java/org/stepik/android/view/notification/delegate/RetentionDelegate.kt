@@ -67,7 +67,7 @@ class RetentionDelegate
         scheduleNotification()
     }
 
-    private fun scheduleNotification() {
+    override fun scheduleNotification() {
         val now = DateTimeHelper.nowUtc()
         val scheduleMillis: Long
 
