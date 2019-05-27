@@ -52,7 +52,7 @@ import org.stepic.droid.web.UserAgentProvider
 import org.stepic.droid.web.UserAgentProviderImpl
 import org.stepik.android.presentation.base.injection.DaggerViewModelFactory
 import org.stepik.android.view.notification.*
-import org.stepik.android.view.notification.delegate.DeadlinesDelegate
+import org.stepik.android.view.notification.delegate.*
 import org.stepik.android.view.notification.helpers.NotificationHelper
 import org.stepik.android.view.notification.helpers.NotificationHelperImpl
 import retrofit2.Retrofit
@@ -159,6 +159,22 @@ abstract class AppCoreModule {
     @Binds
     @IntoSet
     internal abstract fun provideDeadlinesNotificationDelegate(deadlinesDelegate: DeadlinesDelegate): NotificationDelegate
+
+    @Binds
+    @IntoSet
+    internal abstract fun provideRemindRegistrationNotificationDelegate(remindRegistrationDelegate: RemindRegistrationDelegate): NotificationDelegate
+
+    @Binds
+    @IntoSet
+    internal abstract fun provideRemindAppNotificationDelegate(remindAppDelegate: RemindAppDelegate): NotificationDelegate
+
+    @Binds
+    @IntoSet
+    internal abstract fun provideRetentionNotificationDelegate(retentionDelegate: RetentionDelegate): NotificationDelegate
+
+    @Binds
+    @IntoSet
+    internal abstract fun provideStreakNotificationDelegate(streakDelegate: StreakDelegate): NotificationDelegate
 
     @Module
     companion object {
