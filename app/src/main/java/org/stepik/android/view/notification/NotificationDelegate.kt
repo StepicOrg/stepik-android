@@ -13,6 +13,10 @@ abstract class NotificationDelegate(
         notificationManager.scheduleNotification(id, timestamp)
     }
 
+    fun rescheduleNotification() {
+        notificationManager.rescheduleActiveNotification(id)
+    }
+
     protected fun showNotification(id: Long, notification: Notification) {
         notificationManager.showNotification(id, notification)
     }
