@@ -1,10 +1,15 @@
 package org.stepic.droid.core.presenters
 
 import android.support.annotation.WorkerThread
-
+import io.reactivex.Observable
+import io.reactivex.Scheduler
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.ProfilePresenter
+import org.stepic.droid.core.presenters.contracts.ProfileView
+import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.model.UserViewModel
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.StepikUtil
@@ -14,12 +19,18 @@ import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
 
 class ProfilePresenterImpl
-@Inject constructor(
-        private val threadPoolExecutor: ThreadPoolExecutor,
-        analytic: Analytic,
-        private val mainHandler: MainHandler,
-        private val api: Api,
-        private val sharedPreferences: SharedPreferenceHelper
+@Inject
+constructor(
+    private val threadPoolExecutor: ThreadPoolExecutor,
+    analytic: Analytic,
+    private val mainHandler: MainHandler,
+    private val api: Api,
+    private val sharedPreferences: SharedPreferenceHelper,
+
+    private val profileObservable: Observable<Profile>,
+
+    @BackgroundScheduler
+    private val backgroundScheduler: Scheduler
 ) : ProfilePresenter(analytic) {
 
     private var isLoading: Boolean = false //main thread only
@@ -28,6 +39,8 @@ class ProfilePresenterImpl
     private var maxStreak: Int? = null
     private var haveSolvedToday: Boolean? = null
 
+    private val compositeDisposable = CompositeDisposable()
+
     override fun initProfile() {
         // default params are not allowed for override.
         // moreover, abstract function with default param is used in Java code
@@ -35,6 +48,7 @@ class ProfilePresenterImpl
     }
 
     override fun initProfile(profileId: Long) {
+        subscribeForProfileUpdates(profileId)
         if (isLoading) return
         isLoading = true
         userViewModel?.let {
@@ -85,6 +99,13 @@ class ProfilePresenterImpl
                 showInternetProfile(profileId)
             }
         }
+    }
+
+    private fun subscribeForProfileUpdates(profileId: Long) {
+        compositeDisposable += profileObservable
+            .filter { profileId == 0L || it.id == profileId }
+            .observeOn(backgroundScheduler)
+            .subscribe(::showLocalProfile)
     }
 
     @WorkerThread
@@ -185,4 +206,8 @@ class ProfilePresenterImpl
         return if (source.isBlank()) "" else source
     }
 
+    override fun detachView(view: ProfileView) {
+        super.detachView(view)
+        compositeDisposable.clear()
+    }
 }

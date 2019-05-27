@@ -28,6 +28,7 @@ import org.stepic.droid.configuration.Config;
 import org.stepic.droid.di.AppSingleton;
 import org.stepic.droid.features.achievements.ui.activity.AchievementsListActivity;
 import org.stepic.droid.util.UriExtensionsKt;
+import org.stepik.android.model.user.Profile;
 import org.stepik.android.view.course.routing.CourseScreenTab;
 import org.stepik.android.view.course.ui.activity.CourseActivity;
 import org.stepic.droid.model.CertificateViewItem;
@@ -70,6 +71,9 @@ import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.StringUtil;
 import org.stepic.droid.web.ViewAssignment;
 import org.stepik.android.model.Tag;
+import org.stepik.android.view.profile_edit.ui.activity.ProfileEditInfoActivity;
+import org.stepik.android.view.profile_edit.ui.activity.ProfileEditActivity;
+import org.stepik.android.view.profile_edit.ui.activity.ProfileEditPasswordActivity;
 import org.stepik.android.view.routing.deeplink.BranchDeepLinkRouter;
 import org.stepik.android.view.routing.deeplink.BranchRoute;
 import org.stepik.android.view.video_player.model.VideoPlayerMediaData;
@@ -646,9 +650,9 @@ public class ScreenManagerImpl implements ScreenManager {
 
         final Uri uri = uriBuilder.build();
 
-        final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        final Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(config.getBaseUrl()));
 
-        final List<ResolveInfo> resolveInfoList = context.getPackageManager().queryIntentActivities(intent, 0);
+        final List<ResolveInfo> resolveInfoList = context.getPackageManager().queryIntentActivities(browserIntent, 0);
         final ArrayList<Intent> activityIntents = new ArrayList<>();
 
         for (final ResolveInfo resolveInfo : resolveInfoList) {
@@ -698,5 +702,25 @@ public class ScreenManagerImpl implements ScreenManager {
                 return;
             }
         }
+    }
+
+    @Override
+    public void showProfileEdit(Context context) {
+        if (context instanceof Activity) {
+            ((Activity) context).overridePendingTransition(org.stepic.droid.R.anim.push_up, org.stepic.droid.R.anim.no_transition);
+        }
+        context.startActivity(ProfileEditActivity.Companion.createIntent(context));
+    }
+
+    @Override
+    public void showProfileEditInfo(Activity activity, Profile profile) {
+        activity.overridePendingTransition(org.stepic.droid.R.anim.push_up, org.stepic.droid.R.anim.no_transition);
+        activity.startActivityForResult(ProfileEditInfoActivity.Companion.createIntent(activity, profile), ProfileEditInfoActivity.REQUEST_CODE);
+    }
+
+    @Override
+    public void showProfileEditPassword(Activity activity, long profileId) {
+        activity.overridePendingTransition(org.stepic.droid.R.anim.push_up, org.stepic.droid.R.anim.no_transition);
+        activity.startActivityForResult(ProfileEditPasswordActivity.Companion.createIntent(activity, profileId), ProfileEditPasswordActivity.REQUEST_CODE);
     }
 }

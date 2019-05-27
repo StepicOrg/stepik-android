@@ -23,6 +23,7 @@ import kotlinx.android.synthetic.main.fragment_profile_new.*
 import kotlinx.android.synthetic.main.latex_supportabe_enhanced_view.view.*
 import kotlinx.android.synthetic.main.view_notification_interval_chooser.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentBase
@@ -58,7 +59,7 @@ import java.util.Date
 import java.util.TimeZone
 import javax.inject.Inject
 
-class ProfileFragment : FragmentBase(),
+class   ProfileFragment : FragmentBase(),
         ProfileView,
         NotificationTimeView,
         AchievementsView {
@@ -353,10 +354,9 @@ class ProfileFragment : FragmentBase(),
         }
 
         with(userViewModel) {
+            shortBioInfoContainer.changeVisibility(shortBio.isNotBlank() || information.isNotBlank())
+            shortBioSecondHeader.changeVisibility(shortBio.isNotBlank() && information.isNotBlank())
             when {
-                shortBio.isBlank() && information.isBlank() ->
-                    shortBioInfoContainer.visibility = View.GONE //do not show any header
-
                 shortBio.isBlank() && information.isNotBlank() ->
                     shortBioFirstHeader.setText(R.string.user_info) //show header with 'information'
 
@@ -365,7 +365,6 @@ class ProfileFragment : FragmentBase(),
 
                 shortBio.isNotBlank() && information.isNotBlank() -> { //show general header and all info
                     shortBioFirstHeader.setText(R.string.short_bio_and_info)
-                    shortBioSecondHeader.visibility = View.VISIBLE
                     shortBioSecondHeader.setText(R.string.user_info)
                 }
             }
@@ -374,6 +373,7 @@ class ProfileFragment : FragmentBase(),
                 shortBioFirstText.visibility = View.GONE
             } else {
                 shortBioFirstText.text = shortBio.trim()
+                shortBioFirstText.visibility = View.VISIBLE
             }
 
             if (information.isBlank()) {
@@ -381,6 +381,7 @@ class ProfileFragment : FragmentBase(),
             } else {
                 shortBioSecondText.setPlainOrLaTeXTextWithCustomFontColored(
                         information, fontsProvider.provideFontPath(FontType.light), R.color.new_accent_color, false)
+                shortBioSecondText.visibility = View.VISIBLE
             }
         }
     }
@@ -457,7 +458,10 @@ class ProfileFragment : FragmentBase(),
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater) {
         if (localUserViewModel != null) {
-            inflater.inflate(R.menu.share_menu, menu)
+            inflater.inflate(R.menu.profile_menu, menu)
+
+            menu?.findItem(R.id.menu_item_edit)?.isVisible =
+                localUserViewModel?.isMyProfile == true
         }
     }
 
@@ -465,6 +469,11 @@ class ProfileFragment : FragmentBase(),
         when (item?.itemId) {
             R.id.menu_item_share -> {
                 shareProfile()
+                return true
+            }
+            R.id.menu_item_edit -> {
+                analytic.reportAmplitudeEvent(AmplitudeAnalytic.ProfileEdit.SCREEN_OPENED)
+                screenManager.showProfileEdit(context)
                 return true
             }
         }

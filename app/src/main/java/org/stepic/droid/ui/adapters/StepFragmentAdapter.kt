@@ -5,19 +5,25 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
+import android.view.ViewGroup
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepik.android.model.Lesson
 import org.stepik.android.model.Section
 import org.stepik.android.model.Unit
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.resolvers.StepTypeResolver
+import org.stepik.android.view.fragment_pager.ActiveFragmentPagerAdapter
 
-class StepFragmentAdapter(fm: FragmentManager, val stepList: List<StepPersistentWrapper?>, val stepTypeResolver: StepTypeResolver) : FragmentStatePagerAdapter(fm) {
+class StepFragmentAdapter(fm: FragmentManager, val stepList: List<StepPersistentWrapper?>, val stepTypeResolver: StepTypeResolver) : FragmentStatePagerAdapter(fm),
+        ActiveFragmentPagerAdapter {
 
     private var lesson: Lesson? = null
     private var unit: Unit? = null
     private var section: Section? = null
 
+    private val _activeFragments = mutableMapOf<Int, Fragment>()
+    override val activeFragments: Map<Int, Fragment>
+        get() = _activeFragments
 
     @JvmOverloads
     fun setDataIfNotNull(outLesson: Lesson? = null, outUnit: Unit? = null, outSection: Section? = null) {
@@ -49,6 +55,18 @@ class StepFragmentAdapter(fm: FragmentManager, val stepList: List<StepPersistent
 
     override fun getCount(): Int {
         return stepList.size
+    }
+
+    override fun instantiateItem(container: ViewGroup, position: Int): Any =
+        super
+            .instantiateItem(container, position)
+            .also {
+                (it as? Fragment)?.let { fragment ->  _activeFragments[position] = fragment }
+            }
+
+    override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
+        _activeFragments.remove(position)
+        super.destroyItem(container, position, `object`)
     }
 
     fun getTabDrawable(position: Int): Drawable? {

@@ -21,6 +21,7 @@ import org.stepik.android.model.Video;
 import org.stepic.droid.ui.fragments.CommentsFragment;
 import org.stepic.droid.web.ViewAssignment;
 import org.stepik.android.model.Tag;
+import org.stepik.android.model.user.Profile;
 import org.stepik.android.view.course.routing.CourseScreenTab;
 import org.stepik.android.view.routing.deeplink.BranchRoute;
 import org.stepik.android.view.video_player.model.VideoPlayerMediaData;
@@ -145,4 +146,8 @@ public interface ScreenManager {
     void showAchievementsList(Context context, long userId, boolean isMyProfile);
 
     void openDeepLink(Context context, BranchRoute route);
+
+    void showProfileEdit(Context context);
+    void showProfileEditInfo(Activity activity, Profile profile);
+    void showProfileEditPassword(Activity activity, long profileId);
 }

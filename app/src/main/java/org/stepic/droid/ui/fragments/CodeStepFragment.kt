@@ -57,6 +57,8 @@ class CodeStepFragment : StepAttemptFragment(),
     private var codeToolbarAdapter: CodeToolbarAdapter? = null
     private var onGlobalLayoutListener: ViewTreeObserver.OnGlobalLayoutListener? = null
 
+    private var activityResultActivated = false
+
     override fun injectComponent() {
         App
                 .componentManager()
@@ -171,6 +173,7 @@ class CodeStepFragment : StepAttemptFragment(),
             showCodeQuizEditor(true)
             showLanguageChoosingView(false)
         }
+        activityResultActivated = false
     }
 
     override fun onStepNotPrepared() {
@@ -299,6 +302,7 @@ class CodeStepFragment : StepAttemptFragment(),
                 }
                 submission = null
             } else {
+                if (activityResultActivated) return
                 codeEditor.setText(submission.reply?.code)
                 chosenProgrammingLanguageName = submission.reply?.language
                 showLanguageChoosingView(false)
@@ -330,6 +334,7 @@ class CodeStepFragment : StepAttemptFragment(),
     }
 
     override fun onShowStored(language: String, code: String) {
+        if (activityResultActivated) return
         chosenProgrammingLanguageName = language
         codeEditor.setText(code)
         showLanguageChoosingView(false)
@@ -427,6 +432,7 @@ class CodeStepFragment : StepAttemptFragment(),
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == CODE_PLAYGROUND_REQUEST && resultCode == Activity.RESULT_OK) {
+            activityResultActivated = true
             chosenProgrammingLanguageName = data?.getStringExtra(CodePlaygroundActivity.LANG_KEY)
             val newCode = data?.getStringExtra(CodePlaygroundActivity.CODE_KEY)
             codeEditor.setText(newCode)

@@ -603,7 +603,6 @@
     <string name="deadlines_banner_description">Constant learning is a key to success. Create personal schedule, so you\'ll never forget to study.</string>
     <string name="deadlines_banner_action">Create</string>
     <string name="deadlines_fetching_error">An error was occurred while retrieving the schedule</string>
-    <string name="deadlines_ab_banner_description">Create a personal schedule, in order to raise the probability of passing the course</string>
 
 
     <string name="achievements_title">Achievements</string>
@@ -649,6 +648,13 @@
     <string name="course_error_enroll">@string/course_error_generic</string>
 
     <string name="course_reviews_empty">There are no reviews for this course</string>
+    <string name="course_reviews_compose_title">Course review</string>
+    <string name="course_reviews_compose_hint">Your feedback</string>
+    <string name="course_reviews_action_create">Write review</string>
+    <string name="course_reviews_action_edit">Edit</string>
+    <string name="course_reviews_action_remove">Remove</string>
+    <string name="course_reviews_compose_banner_review_description">To send a review, complete more than 80% steps</string>
+    <string name="course_reviews_compose_banner_review_motivation">Share your opinion</string>
 
     <string name="course_content_unit_title" translatable="false">%d.%d %s</string>
     <string name="course_content_text_progress" translatable="false">%d/%d</string>
@@ -692,4 +698,34 @@
     <string name="retention_notification_day1_message">You\'ve done a great job learning yesterday, come back today and become smarter! 🚀</string>
     <string name="retention_notification_day3_title">Time to study ‍🎓</string>
     <string name="retention_notification_day3_message">You haven\'t been here for a while. Come back and continue study! 💡</string>
+
+
+    <string name="step_comment_tooltip">Open discussions for better understanding or asking a question</string>
+
+    <!-- Profile edit -->
+    <string name="profile_edit_menu_item">Edit profile</string>
+    <string name="profile_edit_password_title">Password</string>
+    <string name="profile_edit_password_subtitle" translatable="false">************</string>
+    <string name="profile_edit_password_current_hint">Current password</string>
+    <string name="profile_edit_password_new_hint">New password</string>
+    <string name="profile_edit_password_new_repeat_hint">New password (repeat)</string>
+
+    <string name="profile_edit_info_title">Personal info</string>
+    <string name="profile_edit_info_subtitle">Your name and bio</string>
+
+    <string name="profile_edit_info_first_name_hint">First name</string>
+    <string name="profile_edit_info_last_name_hint">Last name</string>
+    <string name="profile_edit_info_name_helper_text">This name will be used in certificates</string>
+    <string name="profile_edit_info_short_bio_hint">Short bio</string>
+    <string name="profile_edit_info_short_bio_helper_text">City, university, job and etc.</string>
+    <string name="profile_edit_info_about_hint">About</string>
+
+    <string name="profile_edit_save">Save</string>
+
+    <string name="profile_edit_error_required_field">Required field</string>
+    <string name="profile_edit_error_password">Cannot change password</string>
+    <string name="profile_edit_error_info">Cannot change info</string>
+
+    <string name="profile_edit_change_success_info">Profile info changed</string>
+    <string name="profile_edit_change_success_password">Password changed</string>
 </resources>

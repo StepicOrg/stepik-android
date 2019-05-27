@@ -2,13 +2,13 @@ package org.stepic.droid.analytic
 
 interface AmplitudeAnalytic {
     object Properties {
-            const val STEPIK_ID = "stepik_id"
-            const val SUBMISSIONS_COUNT = "submissions_count"
-            const val COURSES_COUNT = "courses_count"
-            const val SCREEN_ORIENTATION = "screen_orientation"
-            const val APPLICATION_ID = "application_id"
-            const val PUSH_PERMISSION = "push_permission"
-            const val STREAKS_NOTIFICATIONS_ENABLED = "streaks_notifications_enabled"
+        const val STEPIK_ID = "stepik_id"
+        const val SUBMISSIONS_COUNT = "submissions_count"
+        const val COURSES_COUNT = "courses_count"
+        const val SCREEN_ORIENTATION = "screen_orientation"
+        const val APPLICATION_ID = "application_id"
+        const val PUSH_PERMISSION = "push_permission"
+        const val STREAKS_NOTIFICATIONS_ENABLED = "streaks_notifications_enabled"
     }
 
     object Launch {
@@ -135,6 +135,35 @@ interface AmplitudeAnalytic {
         object Params {
             const val KIND = "achievement_kind"
             const val LEVEL = "achievement_level"
+        }
+    }
+
+    object ProfileEdit {
+        const val SCREEN_OPENED = "Profile edit screen opened"
+        const val SAVED = "Profile edit saved"
+    }
+
+    object Adaptive {
+        const val RATING_OPENED = "Adaptive rating opened"
+
+        object Params {
+            const val COURSE = "course"
+        }
+    }
+
+    object CourseReview {
+        const val SCREEN_OPENED = "Course reviews screen opened"
+
+        const val CREATE_REVIEW = "Create course review pressed"
+        const val REVIEW_CREATED = "Course review created"
+        const val REVIEW_UPDATED = "Course review updated"
+        const val REVIEW_REMOVED = "Course review deleted"
+
+        object Params {
+            const val COURSE = "course"
+            const val RATING = "rating"
+            const val FROM_RATING = "from_rating"
+            const val TO_RATING = "to_rating"
         }
     }
 }

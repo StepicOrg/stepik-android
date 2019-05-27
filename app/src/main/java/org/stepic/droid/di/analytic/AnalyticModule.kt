@@ -6,8 +6,8 @@ import dagger.multibindings.IntoSet
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.AnalyticImpl
 import org.stepic.droid.analytic.experiments.AchievementsSplitTest
+import org.stepic.droid.analytic.experiments.CommentsTooltipSplitTest
 import org.stepic.droid.analytic.experiments.SplitTest
-import org.stepic.droid.analytic.experiments.PersonalDeadlinesSplitTest
 import org.stepic.droid.analytic.experiments.VideoSplitTest
 import org.stepic.droid.di.AppSingleton
 
@@ -18,14 +18,15 @@ abstract class AnalyticModule {
     @Binds
     internal abstract fun bindAnalytic(analyticImpl: AnalyticImpl): Analytic
 
-    @Binds
-    @IntoSet
-    internal abstract fun bindPersonalDeadlinesSplitTest(personalDeadlinesSplitTest: PersonalDeadlinesSplitTest) : SplitTest<*>
-
     @AppSingleton
     @Binds
     @IntoSet
     internal abstract fun bindAchievementsSplitTest(achievementsSplitTest: AchievementsSplitTest): SplitTest<*>
+
+    @AppSingleton
+    @Binds
+    @IntoSet
+    internal abstract fun bindCommentsSplitTest(commentsTooltipSplitTest: CommentsTooltipSplitTest): SplitTest<*>
 
     @AppSingleton
     @Binds

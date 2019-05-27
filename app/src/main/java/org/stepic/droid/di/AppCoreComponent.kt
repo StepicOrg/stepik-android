@@ -50,11 +50,13 @@ import org.stepic.droid.ui.custom.*
 import org.stepic.droid.ui.dialogs.*
 import org.stepic.droid.ui.fragments.StoreManagementFragment
 import org.stepic.droid.util.glide.GlideCustomModule
-import org.stepic.droid.util.glide.RelativeUrlLoader
 import org.stepik.android.view.injection.billing.BillingModule
 import org.stepik.android.view.injection.course.CourseComponent
 import org.stepik.android.view.injection.course.CourseRoutingModule
+import org.stepik.android.view.injection.course_reviews.ComposeCourseReviewComponent
 import org.stepik.android.view.injection.personal_deadlines.PersonalDeadlinesDataModule
+import org.stepik.android.view.injection.profile.ProfileBusModule
+import org.stepik.android.view.injection.profile_edit.ProfileEditComponent
 import org.stepik.android.view.injection.progress.ProgressBusModule
 import org.stepik.android.view.injection.video_player.VideoPlayerComponent
 import org.stepik.android.view.notification.receiver.StepikBootCompleteReceiver
@@ -82,6 +84,7 @@ import org.stepik.android.view.notification.service.NotificationAlarmService
         BillingModule::class,
 
         CourseEnrollmentBusModule::class, // todo unite it in BusModule::class
+        ProfileBusModule::class,
         ProgressBusModule::class,
         PersonalDeadlinesDataModule::class,
 
@@ -131,6 +134,10 @@ interface AppCoreComponent {
     fun courseComponentBuilder(): CourseComponent.Builder
 
     fun videoPlayerComponentBuilder(): VideoPlayerComponent.Builder
+
+    fun profileEditComponentBuilder(): ProfileEditComponent.Builder
+
+    fun composeCourseReviewComponent(): ComposeCourseReviewComponent.Builder
 
     fun inject(someActivity: FragmentActivityBase)
 

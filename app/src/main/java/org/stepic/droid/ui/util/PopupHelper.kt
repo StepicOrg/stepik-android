@@ -7,6 +7,7 @@ import android.support.v4.widget.PopupWindowCompat
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewTreeObserver
 import android.widget.LinearLayout
 import android.widget.PopupWindow
 import org.stepic.droid.R
@@ -22,7 +23,9 @@ object PopupHelper {
         val backgroundRes: Int
     ) {
         DARK(R.drawable.popup_arrow_up, R.drawable.background_popup),
-        LIGHT(R.drawable.popup_arrow_up_light, R.drawable.background_popup_light)
+        LIGHT(R.drawable.popup_arrow_up_light, R.drawable.background_popup_light),
+        DARK_ABOVE(R.drawable.popup_arrow_down, R.drawable.background_popup),
+        LIGHT_ABOVE(R.drawable.popup_arrow_down_light, R.drawable.background_popup_light)
     }
 
     private fun calcArrowHorizontalOffset(anchorView: View, popupView: View, arrowView: View): Float {
@@ -40,12 +43,13 @@ object PopupHelper {
         popupText: String, theme: PopupTheme = PopupTheme.DARK,
         cancelableOnTouchOutside: Boolean = false,
         gravity: Int = Gravity.CENTER,
-        withArrow: Boolean = false
+        withArrow: Boolean = false,
+        isAboveAnchor: Boolean = false
     ): PopupWindow? {
         anchorView ?: return null
 
         val inflater = context.getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val popupView = inflater.inflate(R.layout.popup_window, null)
+        val popupView = inflatePopupWindow(inflater, withArrow, isAboveAnchor)
 
         val popupTextView = popupView.popupText
         val popupArrowView = popupView.arrowView
@@ -56,15 +60,32 @@ object PopupHelper {
         popupArrowView.setBackgroundResource(theme.arrowRes)
         popupArrowView.changeVisibility(withArrow)
 
-        if (withArrow) {
-            popupView.viewTreeObserver.addOnGlobalLayoutListener {
-                popupArrowView.x = calcArrowHorizontalOffset(anchorView, popupView, popupView.arrowView)
-            }
-        }
-
         val popupWindow = PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
         popupWindow.animationStyle = R.style.PopupAnimations
         popupWindow.isOutsideTouchable = cancelableOnTouchOutside
+
+        if (withArrow) {
+            popupView.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+                var offsetY = 0
+                var measuredHeight = -(anchorView.measuredHeight + popupView.measuredHeight)
+                override fun onGlobalLayout() {
+                    popupArrowView.x = calcArrowHorizontalOffset(anchorView, popupView, popupView.arrowView)
+                    measuredHeight = -(anchorView.measuredHeight + popupView.measuredHeight)
+                    if (isAboveAnchor) {
+                        if (offsetY != measuredHeight) {
+                            offsetY = measuredHeight
+                            popupWindow.update(
+                                anchorView,
+                                0,
+                                offsetY,
+                                popupWindow.width,
+                                popupWindow.height
+                            )
+                        }
+                    }
+                }
+            })
+        }
 
         popupView.setOnClickListener {
             popupWindow.dismiss()
@@ -82,4 +103,11 @@ object PopupHelper {
 
         return popupWindow
     }
+
+    private fun inflatePopupWindow(inflater: LayoutInflater, withArrow: Boolean, isAboveAnchor: Boolean): View =
+        if (withArrow && isAboveAnchor) {
+            inflater.inflate(R.layout.popup_window_down, null)
+        } else {
+            inflater.inflate(R.layout.popup_window, null)
+        }
 }

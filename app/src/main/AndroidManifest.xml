@@ -16,7 +16,7 @@
 
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="com.android.vending.BILLING" />
+    <!--<uses-permission android:name="com.android.vending.BILLING" />-->
 
     <application
         android:name=".base.App"
@@ -360,6 +360,16 @@
             </intent-filter>
 
         </activity>
+
+        <activity
+            android:name="org.stepik.android.view.profile_edit.ui.activity.ProfileEditActivity" />
+
+        <activity
+            android:name="org.stepik.android.view.profile_edit.ui.activity.ProfileEditPasswordActivity" />
+
+        <activity
+            android:name="org.stepik.android.view.profile_edit.ui.activity.ProfileEditInfoActivity"
+            android:windowSoftInputMode="adjustResize" />
 
         <receiver
             android:name="org.stepic.droid.receivers.DownloadClickReceiver"
