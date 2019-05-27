@@ -60,6 +60,7 @@ import org.stepik.android.view.injection.profile_edit.ProfileEditComponent
 import org.stepik.android.view.injection.progress.ProgressBusModule
 import org.stepik.android.view.injection.video_player.VideoPlayerComponent
 import org.stepik.android.view.notification.receiver.StepikBootCompleteReceiver
+import org.stepik.android.view.notification.service.BootCompleteService
 import org.stepik.android.view.notification.service.NotificationAlarmService
 
 @AppSingleton
@@ -247,4 +248,6 @@ interface AppCoreComponent {
     fun inject(notificationAlarmService: NotificationAlarmService)
 
     fun inject(stepikBootCompleteReceiver: StepikBootCompleteReceiver)
+
+    fun inject(bootCompleteService: BootCompleteService)
 }
