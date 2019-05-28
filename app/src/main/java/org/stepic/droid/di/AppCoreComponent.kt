@@ -40,7 +40,6 @@ import org.stepic.droid.notifications.NotificationBroadcastReceiver
 import org.stepic.droid.persistence.di.PersistenceModule
 import org.stepic.droid.persistence.service.DownloadCompleteService
 import org.stepic.droid.persistence.service.FileTransferService
-import org.stepic.droid.receivers.BootCompletedReceiver
 import org.stepic.droid.receivers.DownloadClickReceiver
 import org.stepic.droid.receivers.InternetConnectionEnabledReceiver
 import org.stepic.droid.services.*
@@ -213,10 +212,6 @@ interface AppCoreComponent {
     fun inject(app: App)
 
     fun inject(searchQueriesAdapter: SearchQueriesAdapter)
-
-    fun inject(alarmService: AlarmService)
-
-    fun inject(bootCompletedReceiver: BootCompletedReceiver)
 
     fun inject(timeIntervalPickerDialogFragment: TimeIntervalPickerDialogFragment)
 

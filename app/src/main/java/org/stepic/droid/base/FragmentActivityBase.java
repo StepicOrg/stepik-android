@@ -24,7 +24,6 @@ import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.ShareHelper;
 import org.stepic.droid.fonts.FontsProvider;
 import org.stepik.android.model.Course;
-import org.stepic.droid.notifications.StepikNotificationManager;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.services.NotificationsViewPusher;
@@ -65,9 +64,6 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
 
     @Inject
     protected Analytic analytic;
-
-    @Inject
-    protected StepikNotificationManager stepikNotificationManager;
 
     @Inject
     protected SharedPreferenceHelper sharedPreferenceHelper;

@@ -101,14 +101,6 @@ abstract class AppCoreModule {
     @Binds
     internal abstract fun provideHandlerForUIThread(mainHandler: MainHandlerImpl): MainHandler
 
-    @AppSingleton
-    @Binds
-    internal abstract fun provideLocalReminder(localReminder: LocalReminderImpl): LocalReminder
-
-    @AppSingleton
-    @Binds
-    internal abstract fun provideNotificationManager(notificationManager: StepikNotificationManagerImpl): StepikNotificationManager
-
     @Binds
     @AppSingleton
     internal abstract fun provideShareHelper(shareHelper: ShareHelperImpl): ShareHelper

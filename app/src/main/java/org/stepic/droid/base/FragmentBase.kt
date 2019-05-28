@@ -17,7 +17,6 @@ import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.core.*
 import org.stepic.droid.fonts.FontsProvider
-import org.stepic.droid.notifications.LocalReminder
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.storage.operations.DatabaseFacade

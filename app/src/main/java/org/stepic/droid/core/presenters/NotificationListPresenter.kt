@@ -13,7 +13,6 @@ import org.stepic.droid.core.internetstate.contract.InternetEnabledListener
 import org.stepic.droid.core.presenters.contracts.NotificationListView
 import org.stepic.droid.di.notifications.NotificationsScope
 import org.stepic.droid.model.NotificationCategory
-import org.stepic.droid.notifications.StepikNotificationManager
 import org.stepic.droid.notifications.badges.NotificationsBadgesManager
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.notifications.model.NotificationType
