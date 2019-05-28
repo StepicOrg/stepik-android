@@ -13,7 +13,7 @@ import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.view.notification.NotificationDelegate
 import org.stepik.android.view.notification.StepikNotifManager
 import org.stepik.android.view.notification.helpers.NotificationHelper
-import java.util.*
+import java.util.Calendar
 import javax.inject.Inject
 
 class RetentionDelegate

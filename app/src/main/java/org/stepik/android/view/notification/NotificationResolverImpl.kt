@@ -3,13 +3,9 @@ package org.stepik.android.view.notification
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.Looper
-import android.support.annotation.DrawableRes
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.TaskStackBuilder
-import com.bumptech.glide.Glide
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.core.ScreenManager
@@ -88,7 +84,7 @@ class NotificationResolverImpl
             analytic.reportEvent(Analytic.Notification.WAS_MUTED, notification.id.toString())
             return
         } else {
-            //resolve which notification we should show
+            // resolve which notification we should show
             when (notification.type) {
                 NotificationType.learn -> sendLearnNotification(notification, htmlText, notification.id ?: 0)
                 NotificationType.comments -> sendCommentNotification(notification, htmlText, notification.id ?: 0)
@@ -201,12 +197,9 @@ class NotificationResolverImpl
             val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
             taskBuilder.addParentStack(StepsActivity::class.java)
             taskBuilder.addNextIntent(prepareNotificationIntent(screenManager.certificateIntent, id))
-
-
             analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, id.toString(), stepikNotification.type?.name)
             val notification = notificationHelper.makeSimpleNotificationBuilder(stepikNotification, justText, taskBuilder, title, id = id)
             stepikNotifManager.showNotification(id, notification.build())
-
         } else if (action == NotificationHelper.ISSUED_LICENSE) {
             val title = context.getString(R.string.get_license_message)
             val justText: String = textResolver.fromHtml(rawMessageHtml).toString()
@@ -235,7 +228,7 @@ class NotificationResolverImpl
                 databaseFacade.addNotification(stepikNotification)
             }
 
-            val largeIcon = getPictureByCourse(relatedCourse)
+            val largeIcon = notificationHelper.getPictureByCourse(relatedCourse)
             val colorArgb = ColorUtil.getColorArgb(R.color.stepic_brand_primary)
 
             val modulePosition = HtmlHelper.parseModulePositionFromNotification(stepikNotification.htmlText)
@@ -269,7 +262,6 @@ class NotificationResolverImpl
                     .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                     .setDeleteIntent(notificationHelper.getDeleteIntent(courseId))
 
-
             val numberOfNotification = notificationOfCourseList.size
             val summaryText = context.resources.getQuantityString(R.plurals.notification_plural, numberOfNotification, numberOfNotification)
             if (notificationOfCourseList.size == 1) {
@@ -288,7 +280,6 @@ class NotificationResolverImpl
                 notification.setStyle(inboxStyle)
                         .setNumber(numberOfNotification)
             }
-
 
             if (notificationTimeChecker.isNight(DateTimeHelper.nowLocal())) {
                 analytic.reportEvent(Analytic.Notification.NIGHT_WITHOUT_SOUND_AND_VIBRATE)
@@ -371,29 +362,5 @@ class NotificationResolverImpl
             course = api.getCourse(courseId).execute()?.body()?.courses?.firstOrNull()
         }
         return course
-    }
-
-    private fun getPictureByCourse(course: Course?): Bitmap {
-        val cover = course?.cover
-        val notificationPlaceholder = R.drawable.general_placeholder
-
-        return if (cover == null) {
-            getBitmap(notificationPlaceholder)
-        } else {
-            try { // in order to suppress gai exception
-                Glide.with(context)
-                        .asBitmap()
-                        .load(cover)
-                        .placeholder(notificationPlaceholder)
-                        .submit(200, 200)//pixels
-                        .get()
-            } catch (e: Exception) {
-                getBitmap(notificationPlaceholder)
-            }
-        }
-    }
-
-    private fun getBitmap(@DrawableRes drawable: Int): Bitmap {
-        return BitmapFactory.decodeResource(context.resources, drawable)
     }
 }

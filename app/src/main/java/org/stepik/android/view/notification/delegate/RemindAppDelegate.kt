@@ -17,7 +17,7 @@ import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.view.notification.NotificationDelegate
 import org.stepik.android.view.notification.StepikNotifManager
 import org.stepik.android.view.notification.helpers.NotificationHelper
-import java.util.*
+import java.util.Calendar
 import javax.inject.Inject
 
 class RemindAppDelegate
@@ -53,7 +53,7 @@ class RemindAppDelegate
         deleteIntent.action = AppConstants.NOTIFICATION_CANCELED_REMINDER
         val deletePendingIntent = PendingIntent.getBroadcast(context, 0, deleteIntent, PendingIntent.FLAG_CANCEL_CURRENT)
 
-        //now we can show notification
+        // now we can show notification
         val intent = screenManager.getCatalogIntent(context)
         intent.action = AppConstants.OPEN_NOTIFICATION_FOR_ENROLL_REMINDER
         val analyticDayTypeName = dayType?.name ?: ""
@@ -85,21 +85,18 @@ class RemindAppDelegate
     fun scheduleRemindAppNotification() {
         val isFirstDayNotificationShown = sharedPreferenceHelper.isNotificationWasShown(SharedPreferenceHelper.NotificationDay.DAY_ONE)
         val isSevenDayNotificationShown = sharedPreferenceHelper.isNotificationWasShown(SharedPreferenceHelper.NotificationDay.DAY_SEVEN)
-        if (isFirstDayNotificationShown
-            && isSevenDayNotificationShown) {
-            //already shown.
-            //do not show again
+        if (isFirstDayNotificationShown && isSevenDayNotificationShown) {
+            // already shown.
+            // do not show again
             return
         }
-        if (sharedPreferenceHelper.authResponseFromStore == null
-            || sharedPreferenceHelper.isStreakNotificationEnabled
-            || databaseFacade.getAllCourses(CourseListType.ENROLLED).isNotEmpty()
-            || sharedPreferenceHelper.anyStepIsSolved()) {
+        if (sharedPreferenceHelper.authResponseFromStore == null ||
+            sharedPreferenceHelper.isStreakNotificationEnabled ||
+            databaseFacade.getAllCourses(CourseListType.ENROLLED).isNotEmpty() ||
+            sharedPreferenceHelper.anyStepIsSolved()) {
             return
         }
-
-
-        //now we can plan alarm
+        // now we can plan alarm
 
         val now = DateTimeHelper.nowUtc()
         val scheduleMillis: Long
@@ -109,7 +106,6 @@ class RemindAppDelegate
                 !isSevenDayNotificationShown -> 7
                 else -> return
             }
-
 
         val calendar = Calendar.getInstance()
         val nowHour = calendar.get(Calendar.HOUR_OF_DAY)

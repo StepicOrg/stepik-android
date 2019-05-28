@@ -18,7 +18,7 @@ import org.stepic.droid.web.Api
 import org.stepik.android.view.notification.NotificationDelegate
 import org.stepik.android.view.notification.StepikNotifManager
 import org.stepik.android.view.notification.helpers.NotificationHelper
-import java.util.*
+import java.util.Calendar
 import javax.inject.Inject
 
 class StreakDelegate
@@ -52,8 +52,8 @@ class StreakDelegate
                         analytic.reportEvent(Analytic.Streak.GET_ZERO_STREAK_NOTIFICATION)
                         showNotificationWithoutStreakInfo(Analytic.Streak.NotificationType.zero)
                     } else {
-                        //if current streak is > 0 -> streaks works! -> continue send it
-                        //it will reset before sending, after sending it will be incremented
+                        // if current streak is > 0 -> streaks works! -> continue send it
+                        // it will reset before sending, after sending it will be incremented
                         sharedPreferenceHelper.resetNumberOfStreakNotifications()
 
                         val bundle = Bundle()
@@ -75,7 +75,7 @@ class StreakDelegate
                     sharedPreferenceHelper.incrementNumberOfNotifications()
                 }
             } else {
-                //too many ignored notifications about streaks
+                // too many ignored notifications about streaks
                 streakNotificationNumberIsOverflow()
             }
         }
@@ -83,7 +83,7 @@ class StreakDelegate
 
     fun scheduleStreakNotification() {
         if (sharedPreferenceHelper.isStreakNotificationEnabled) {
-            //plan new alarm
+            // plan new alarm
             val hour = sharedPreferenceHelper.timeNotificationCode
             val now = DateTimeHelper.nowUtc()
             val calendar = Calendar.getInstance()

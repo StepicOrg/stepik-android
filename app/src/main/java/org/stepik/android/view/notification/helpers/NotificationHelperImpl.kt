@@ -38,9 +38,15 @@ class NotificationHelperImpl
     val analytic: Analytic,
     val userPreferences: UserPreferences
 ) : NotificationHelper {
-    override fun makeSimpleNotificationBuilder(stepikNotification: Notification?, justText: String, taskBuilder: TaskStackBuilder, title: String?, deleteIntent: PendingIntent, id: Long
-    ): NotificationCompat.Builder {
-        val pendingIntent = taskBuilder.getPendingIntent(id.toInt(), PendingIntent.FLAG_ONE_SHOT) //fixme if it will overlay courses id -> bug
+    override fun makeSimpleNotificationBuilder(
+        stepikNotification: Notification?,
+        justText: String,
+        taskBuilder: TaskStackBuilder,
+        title: String?,
+        deleteIntent: PendingIntent,
+        id: Long
+    ):  NotificationCompat.Builder {
+        val pendingIntent = taskBuilder.getPendingIntent(id.toInt(), PendingIntent.FLAG_ONE_SHOT) // fixme if it will overlay courses id -> bug
 
         val colorArgb = ColorUtil.getColorArgb(R.color.stepic_brand_primary)
         val notification = NotificationCompat.Builder(context, stepikNotification?.type?.channel?.channelId ?: StepikNotificationChannel.user.channelId)
@@ -53,13 +59,11 @@ class NotificationHelperImpl
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setDeleteIntent(deleteIntent)
 
-
         notification.setStyle(NotificationCompat.BigTextStyle()
                 .bigText(justText))
                 .setContentText(justText)
 
-
-        //if notification is null (for example for streaks) -> show it always with sound and vibrate
+        // if notification is null (for example for streaks) -> show it always with sound and vibrate
 
         val isNight = notificationTimeChecker.isNight(DateTimeHelper.nowLocal())
         if (isNight) {
@@ -82,7 +86,7 @@ class NotificationHelperImpl
             bundle.putSerializable(AppConstants.COURSE_ID_KEY, courseId)
         }
         intent.putExtras(bundle)
-        //add course id for bundle
+        // add course id for bundle
         return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT)
     }
 
@@ -94,8 +98,8 @@ class NotificationHelperImpl
 
     override fun addSoundIfNeed(builder: NotificationCompat.Builder) {
         if (userPreferences.isSoundNotificationEnabled) {
-            val stepicSound = Uri.parse("android.resource://"
-                    + context.packageName + "/" + R.raw.default_sound)
+            val stepicSound = Uri.parse("android.resource://" +
+                    context.packageName + "/" + R.raw.default_sound)
             builder.setSound(stepicSound)
         }
     }
@@ -106,7 +110,7 @@ class NotificationHelperImpl
             val url = Uri.parse(link)
             val identifier = url.pathSegments[0]
             val intent: Intent =
-                when(identifier){
+                when (identifier) {
                     "course" ->
                         Intent(context, CourseActivity::class.java)
                     "lesson" ->
@@ -172,14 +176,13 @@ class NotificationHelperImpl
                         .asBitmap()
                         .load(cover)
                         .placeholder(notificationPlaceholder)
-                        .submit(200, 200)//pixels
+                        .submit(200, 200) // pixels
                         .get()
             } catch (e: Exception) {
                 getBitmap(notificationPlaceholder)
             }
         }
     }
-    private fun getBitmap(@DrawableRes drawable: Int): Bitmap {
-        return BitmapFactory.decodeResource(context.resources, drawable)
-    }
+    private fun getBitmap(@DrawableRes drawable: Int): Bitmap =
+        BitmapFactory.decodeResource(context.resources, drawable)
 }
