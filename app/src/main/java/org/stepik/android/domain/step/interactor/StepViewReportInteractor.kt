@@ -3,6 +3,7 @@ package org.stepik.android.domain.step.interactor
 import io.reactivex.Completable
 import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.util.AppConstants
+import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.domain.last_step.repository.LastStepRepository
 import org.stepik.android.domain.progress.interactor.LocalProgressInteractor
@@ -30,8 +31,7 @@ constructor(
     fun reportStepView(step: Step, assignment: Assignment?, unit: Unit?, course: Course?): Completable =
         updateLocalLastStep(step, unit, course)
             .andThen(updateLocalStepProgress(step, assignment))
-            .andThen(viewAssignmentRepository.createViewAssignment(ViewAssignment(assignment?.id, step.id)))
-            .andThen(localProgressInteractor.updateStepsProgress(listOf(step)))
+            .andThen(postViewAssignmentAndUpdateStepProgress(step, ViewAssignment(assignment?.id, step.id)))
 
     private fun updateLocalLastStep(step: Step, unit: Unit?, course: Course?): Completable {
         val lastStepId = course?.lastStepId
@@ -74,4 +74,13 @@ constructor(
             else ->
                 false
         }
+
+    private fun postViewAssignmentAndUpdateStepProgress(step: Step, viewAssignment: ViewAssignment): Completable =
+        viewAssignmentRepository
+            .createViewAssignment(viewAssignment, dataSourceType = DataSourceType.REMOTE)
+            .andThen(localProgressInteractor.updateStepsProgress(listOf(step))) // propagate progress updates only if successfully posted view assignments
+            .onErrorResumeNext {
+                viewAssignmentRepository
+                    .createViewAssignment(viewAssignment, dataSourceType = DataSourceType.CACHE) // add view assignment to local queue
+            }
 }
