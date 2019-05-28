@@ -55,6 +55,7 @@ import org.stepik.android.view.notification.*
 import org.stepik.android.view.notification.delegate.*
 import org.stepik.android.view.notification.helpers.NotificationHelper
 import org.stepik.android.view.notification.helpers.NotificationHelperImpl
+import org.stepik.android.view.personal_deadlines.notification.DeadlinesDelegate
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.Executors

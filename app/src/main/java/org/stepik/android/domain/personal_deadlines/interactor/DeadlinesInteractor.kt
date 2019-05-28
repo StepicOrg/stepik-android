@@ -10,7 +10,7 @@ import org.stepic.droid.web.storage.model.StorageRecord
 import org.stepik.android.domain.personal_deadlines.repository.DeadlinesBannerRepository
 import org.stepik.android.domain.personal_deadlines.repository.DeadlinesRepository
 import org.stepik.android.domain.personal_deadlines.resolver.DeadlinesResolver
-import org.stepik.android.view.notification.delegate.DeadlinesDelegate
+import org.stepik.android.view.personal_deadlines.notification.DeadlinesDelegate
 import javax.inject.Inject
 
 class DeadlinesInteractor

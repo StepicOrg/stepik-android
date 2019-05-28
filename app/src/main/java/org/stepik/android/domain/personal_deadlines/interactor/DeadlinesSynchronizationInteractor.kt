@@ -5,7 +5,7 @@ import io.reactivex.Maybe
 import org.stepic.droid.model.CourseListType
 import org.stepik.android.domain.course_list.repository.CourseListRepository
 import org.stepik.android.domain.personal_deadlines.repository.DeadlinesRepository
-import org.stepik.android.view.notification.delegate.DeadlinesDelegate
+import org.stepik.android.view.personal_deadlines.notification.DeadlinesDelegate
 import javax.inject.Inject
 
 class DeadlinesSynchronizationInteractor
