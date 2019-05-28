@@ -9,7 +9,7 @@ import org.stepic.droid.ui.activities.SplashActivity
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.view.notification.NotificationDelegate
-import org.stepik.android.view.notification.StepikNotifManager
+import org.stepik.android.view.notification.StepikNotificationManager
 import org.stepik.android.view.notification.helpers.NotificationHelper
 import timber.log.Timber
 import javax.inject.Inject
@@ -19,8 +19,8 @@ class RemindRegistrationDelegate
     private val context: Context,
     private val sharedPreferenceHelper: SharedPreferenceHelper,
     private val notificationHelper: NotificationHelper,
-    stepikNotifManager: StepikNotifManager
-) : NotificationDelegate("show_registration_notification", stepikNotifManager) {
+    stepikNotificationManager: StepikNotificationManager
+) : NotificationDelegate("show_registration_notification", stepikNotificationManager) {
 
     companion object {
         private const val REGISTRATION_REMIND_NOTIFICATION_ID = 5L

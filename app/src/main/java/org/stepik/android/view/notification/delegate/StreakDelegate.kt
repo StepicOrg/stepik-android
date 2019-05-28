@@ -16,7 +16,7 @@ import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.StepikUtil
 import org.stepic.droid.web.Api
 import org.stepik.android.view.notification.NotificationDelegate
-import org.stepik.android.view.notification.StepikNotifManager
+import org.stepik.android.view.notification.StepikNotificationManager
 import org.stepik.android.view.notification.helpers.NotificationHelper
 import java.util.Calendar
 import javax.inject.Inject
@@ -29,8 +29,8 @@ class StreakDelegate
     private val screenManager: ScreenManager,
     private val sharedPreferenceHelper: SharedPreferenceHelper,
     private val notificationHelper: NotificationHelper,
-    stepikNotifManager: StepikNotifManager
-) : NotificationDelegate("show_streak_notification", stepikNotifManager) {
+    stepikNotificationManager: StepikNotificationManager
+) : NotificationDelegate("show_streak_notification", stepikNotificationManager) {
     companion object {
         private const val STREAK_NOTIFICATION_ID = 3214L
     }

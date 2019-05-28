@@ -19,7 +19,7 @@ import org.stepik.android.model.Course
 import org.stepik.android.model.Section
 import org.stepik.android.view.course.ui.activity.CourseActivity
 import org.stepik.android.view.notification.NotificationDelegate
-import org.stepik.android.view.notification.StepikNotifManager
+import org.stepik.android.view.notification.StepikNotificationManager
 import org.stepik.android.view.notification.helpers.NotificationHelper
 import javax.inject.Inject
 
@@ -30,8 +30,8 @@ class DeadlinesDelegate
     private val api: Api,
     private val databaseFacade: DatabaseFacade,
     private val notificationHelper: NotificationHelper,
-    stepikNotifManager: StepikNotifManager
-) : NotificationDelegate("show_deadlines_notification", stepikNotifManager) {
+    stepikNotificationManager: StepikNotificationManager
+) : NotificationDelegate("show_deadlines_notification", stepikNotificationManager) {
 
     companion object {
         private const val OFFSET_12HOURS = 12 * AppConstants.MILLIS_IN_1HOUR

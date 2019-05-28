@@ -40,7 +40,7 @@ class NotificationResolverImpl
     private val databaseFacade: DatabaseFacade,
     private val api: Api,
     private val notificationTimeChecker: NotificationTimeChecker,
-    private val stepikNotifManager: StepikNotifManager
+    private val stepikNotificationManager: StepikNotificationManager
 ) : NotificationResolver {
     override fun showNotification(notification: Notification) {
         if (Looper.myLooper() == Looper.getMainLooper()) {
@@ -112,7 +112,7 @@ class NotificationResolverImpl
 
         analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, id.toString(), stepikNotification.type?.name)
         val notification = notificationHelper.makeSimpleNotificationBuilder(stepikNotification, justText, taskBuilder, title, id = id)
-        stepikNotifManager.showNotification(id, notification.build())
+        stepikNotificationManager.showNotification(id, notification.build())
     }
 
     private fun sendDefaultNotification(stepikNotification: Notification, htmlText: String, id: Long) {
@@ -132,7 +132,7 @@ class NotificationResolverImpl
             taskBuilder.addNextIntent(prepareNotificationIntent(intent, id))
 
             val notification = notificationHelper.makeSimpleNotificationBuilder(stepikNotification, justText, taskBuilder, title, id = id)
-            stepikNotifManager.showNotification(id, notification.build())
+            stepikNotificationManager.showNotification(id, notification.build())
             analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, id.toString(), stepikNotification.type?.name)
         } else {
             analytic.reportEvent(Analytic.Notification.CANT_PARSE_NOTIFICATION, id.toString())
@@ -158,7 +158,7 @@ class NotificationResolverImpl
 
             analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, id.toString(), stepikNotification.type?.name)
             val notification = notificationHelper.makeSimpleNotificationBuilder(stepikNotification, justText, taskBuilder, title, id = id)
-            stepikNotifManager.showNotification(id, notification.build())
+            stepikNotificationManager.showNotification(id, notification.build())
         } else {
             analytic.reportEvent(Analytic.Notification.CANT_PARSE_NOTIFICATION, id.toString())
         }
@@ -182,7 +182,7 @@ class NotificationResolverImpl
 
             analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, id.toString(), stepikNotification.type?.name)
             val notification = notificationHelper.makeSimpleNotificationBuilder(stepikNotification, justText, taskBuilder, title, id = id)
-            stepikNotifManager.showNotification(id, notification.build())
+            stepikNotificationManager.showNotification(id, notification.build())
         } else {
             analytic.reportEvent(Analytic.Notification.CANT_PARSE_NOTIFICATION, id.toString())
         }
@@ -199,7 +199,7 @@ class NotificationResolverImpl
             taskBuilder.addNextIntent(prepareNotificationIntent(screenManager.certificateIntent, id))
             analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, id.toString(), stepikNotification.type?.name)
             val notification = notificationHelper.makeSimpleNotificationBuilder(stepikNotification, justText, taskBuilder, title, id = id)
-            stepikNotifManager.showNotification(id, notification.build())
+            stepikNotificationManager.showNotification(id, notification.build())
         } else if (action == NotificationHelper.ISSUED_LICENSE) {
             val title = context.getString(R.string.get_license_message)
             val justText: String = textResolver.fromHtml(rawMessageHtml).toString()
@@ -211,7 +211,7 @@ class NotificationResolverImpl
 
             analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, id.toString(), stepikNotification.type.name)
             val notification = notificationHelper.makeSimpleNotificationBuilder(stepikNotification, justText, taskBuilder, title, id = id)
-            stepikNotifManager.showNotification(id, notification.build())
+            stepikNotificationManager.showNotification(id, notification.build())
         } else {
             val courseId: Long = HtmlHelper.parseCourseIdFromNotification(stepikNotification) ?: 0L
             if (courseId == 0L) {
@@ -289,7 +289,7 @@ class NotificationResolverImpl
             }
 
             analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, stepikNotification.id?.toString() ?: "", stepikNotification.type.name)
-            stepikNotifManager.showNotification(courseId, notification.build())
+            stepikNotificationManager.showNotification(courseId, notification.build())
         }
     }
 

@@ -11,7 +11,7 @@ import org.stepic.droid.ui.activities.SplashActivity
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.view.notification.NotificationDelegate
-import org.stepik.android.view.notification.StepikNotifManager
+import org.stepik.android.view.notification.StepikNotificationManager
 import org.stepik.android.view.notification.helpers.NotificationHelper
 import java.util.Calendar
 import javax.inject.Inject
@@ -22,8 +22,8 @@ class RetentionDelegate
     private val sharedPreferenceHelper: SharedPreferenceHelper,
     private val databaseFacade: DatabaseFacade,
     private val notificationHelper: NotificationHelper,
-    stepikNotifManager: StepikNotifManager
-) : NotificationDelegate("show_retention_notification", stepikNotifManager) {
+    stepikNotificationManager: StepikNotificationManager
+) : NotificationDelegate("show_retention_notification", stepikNotificationManager) {
     companion object {
         private const val RETENTION_NOTIFICATION_ID = 4432L
     }

@@ -15,7 +15,7 @@ import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.view.notification.NotificationDelegate
-import org.stepik.android.view.notification.StepikNotifManager
+import org.stepik.android.view.notification.StepikNotificationManager
 import org.stepik.android.view.notification.helpers.NotificationHelper
 import java.util.Calendar
 import javax.inject.Inject
@@ -28,8 +28,8 @@ class RemindAppDelegate
     private val analytic: Analytic,
     private val screenManager: ScreenManager,
     private val notificationHelper: NotificationHelper,
-    stepikNotifManager: StepikNotifManager
-) : NotificationDelegate("show_new_user_notification", stepikNotifManager) {
+    stepikNotificationManager: StepikNotificationManager
+) : NotificationDelegate("show_new_user_notification", stepikNotificationManager) {
     companion object {
         private const val NEW_USER_REMIND_NOTIFICATION_ID = 4L
     }

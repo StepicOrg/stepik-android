@@ -12,12 +12,12 @@ import org.stepik.android.view.notification.receiver.StepikAlarmReceiver
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
 
-class StepikNotifManagerImpl
+class StepikNotificationManagerImpl
 @Inject constructor(
     private val context: Context,
     private val sharedPreferenceHelper: SharedPreferenceHelper,
     private val threadPoolExecutor: ThreadPoolExecutor
-) : StepikNotifManager {
+) : StepikNotificationManager {
 
     private val alarmManager: AlarmManager by lazy { context.getSystemService(Context.ALARM_SERVICE) as AlarmManager }
     private val notificationManager: NotificationManager by lazy { context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager }

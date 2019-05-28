@@ -141,7 +141,7 @@ abstract class AppCoreModule {
     internal abstract fun bindNotificationPublisher(notificationPublisherImpl: NotificationPublisherImpl): NotificationPublisher
 
     @Binds
-    internal abstract fun bindStepikNotifManager(stepikNotifManagerImpl: StepikNotifManagerImpl): StepikNotifManager
+    internal abstract fun bindStepikNotifManager(stepikNotifManagerImpl: StepikNotificationManagerImpl): StepikNotificationManager
 
     @Binds
     internal abstract fun bindNotificationHelper(notificationHelperImpl: NotificationHelperImpl): NotificationHelper
