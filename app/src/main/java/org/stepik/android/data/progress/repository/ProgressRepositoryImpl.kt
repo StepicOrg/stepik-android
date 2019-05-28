@@ -1,5 +1,6 @@
 package org.stepik.android.data.progress.repository
 
+import io.reactivex.Completable
 import io.reactivex.Single
 import org.stepic.droid.util.doCompletableOnSuccess
 import org.stepik.android.data.progress.source.ProgressCacheDataSource
@@ -25,4 +26,8 @@ constructor(
             .getProgresses(*progressIds)
             .doCompletableOnSuccess(progressCacheDataSource::saveProgresses)
             .onErrorResumeNext(progressCacheDataSource.getProgresses(*progressIds))
+
+    override fun saveProgresses(progresses: List<Progress>): Completable =
+        progressCacheDataSource
+            .saveProgresses(progresses)
 }
