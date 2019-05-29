@@ -16,21 +16,11 @@ import android.view.ViewTreeObserver;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.google.firebase.appindexing.Action;
-import com.google.firebase.appindexing.FirebaseAppIndex;
-import com.google.firebase.appindexing.FirebaseUserActions;
-import com.google.firebase.appindexing.Indexable;
-import com.google.firebase.appindexing.builders.Actions;
-import com.google.firebase.appindexing.builders.Indexables;
-
-import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.core.presenters.LessonPresenter;
-import org.stepic.droid.core.presenters.StepsTrackingPresenter;
-import org.stepic.droid.core.presenters.contracts.LessonTrackingView;
 import org.stepic.droid.core.presenters.contracts.LessonView;
 import org.stepik.android.domain.last_step.model.LastStep;
 import org.stepik.android.model.Course;
@@ -43,14 +33,10 @@ import org.stepic.droid.ui.listeners.NextMoveable;
 import org.stepic.droid.ui.util.ToolbarHelperKt;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
-import org.stepic.droid.util.StringUtil;
 import org.stepic.droid.util.resolvers.StepHelper;
 import org.stepic.droid.util.resolvers.StepTypeResolver;
 import org.stepik.android.model.ViewAssignment;
 import org.stepik.android.view.fragment_pager.FragmentDelegateScrollStateChangeListener;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -58,7 +44,7 @@ import butterknife.BindString;
 import butterknife.BindView;
 
 // FIXME: 15.08.17 show title R.string.steps_title, when lesson is not loaded
-public class LessonFragment extends FragmentBase implements LessonView, LessonTrackingView, NextMoveable {
+public class LessonFragment extends FragmentBase implements LessonView, NextMoveable {
     private static final String FROM_PREVIOUS_KEY = "fromPrevKey";
     private static final String SIMPLE_UNIT_ID_KEY = "simpleUnitId";
     private static final String SIMPLE_LESSON_ID_KEY = "simpleLessonId";
@@ -70,26 +56,6 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
     private Lesson lesson;
     private Unit unit;
     private Section section;
-    private Map<Long, String> stepToTitleMap = new HashMap<>(32);
-    private Map<Long, String> stepToUrlMap = new HashMap<>(32);
-
-    private final ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
-        @Override
-        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-        }
-
-        @Override
-        public void onPageSelected(int position) {
-            hideSoftKeypad();
-            pushState(position);
-        }
-
-        @Override
-        public void onPageScrollStateChanged(int state) {
-
-        }
-    };
 
     public static LessonFragment newInstance(@org.jetbrains.annotations.Nullable Unit unit, Lesson lesson, boolean fromPreviousLesson, Section section) {
         Bundle args = new Bundle();
@@ -158,9 +124,6 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
     @Inject
     StepTypeResolver stepTypeResolver;
 
-    @Inject
-    StepsTrackingPresenter stepTrackingPresenter;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -204,7 +167,6 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
         viewPager.setAdapter(stepAdapter);
         viewPager.addOnPageChangeListener(new FragmentDelegateScrollStateChangeListener(viewPager, stepAdapter));
         stepsPresenter.attachView(this);
-        stepTrackingPresenter.attachView(this);
         if (lesson == null) {
             Section section = getArguments().getParcelable(AppConstants.KEY_SECTION_BUNDLE);
             Lesson lesson = getArguments().getParcelable(AppConstants.KEY_LESSON_BUNDLE);
@@ -228,7 +190,6 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
 
 
     private void initIndependentUI() {
-        viewPager.addOnPageChangeListener(pageChangeListener);
         tryAgain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -272,10 +233,6 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
     @Override
     public void onDestroyView() {
         stepsPresenter.detachView(this);
-        stepTrackingPresenter.detachView(this);
-        if (pageChangeListener != null) {
-            viewPager.removeOnPageChangeListener(pageChangeListener);
-        }
         tryAgain.setOnClickListener(null);
         super.onDestroyView();
     }
@@ -286,7 +243,6 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
             return;
         }
 
-        reportSelectedPageToGoogle(position);
         boolean isTryToPushFirstStep = position == 0;
         if (isTryToPushFirstStep && fromPreviousLesson && stepsPresenter.getStepList().size() != 1) {
             //if from previous lesson --> not mark as viewed
@@ -534,94 +490,5 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
         }
 
         return false;
-    }
-
-
-    /*
-     * App indexing stuff begin
-     */
-
-
-    private int previousGoogleIndexedPosition = -1;
-
-    private void reportSelectedPageToGoogle(int position) {
-        if (position == previousGoogleIndexedPosition) {
-            // do not index twice
-            return;
-        }
-
-        int stepListSize = stepsPresenter.getStepList().size();
-        if (previousGoogleIndexedPosition >= 0 && previousGoogleIndexedPosition < stepListSize) {
-            stopIndexStep(stepsPresenter.getStepList().get(previousGoogleIndexedPosition).getStep());
-        }
-        if (position >= 0 && position < stepListSize) {
-            indexStep(stepsPresenter.getStepList().get(position).getStep());
-        }
-        previousGoogleIndexedPosition = position;
-    }
-
-    private void indexStep(@NotNull Step step) {
-        FirebaseAppIndex.getInstance().update(getIndexable(step));
-        FirebaseUserActions.getInstance().start(getAction(step));
-    }
-
-    private void stopIndexStep(@NotNull Step step) {
-        FirebaseUserActions.getInstance().end(getAction(step));
-    }
-
-    private Indexable getIndexable(Step step) {
-        String urlInWeb = getUrlInWeb(step);
-        String title = getTitle(step);
-        getAnalytic().reportEventWithIdName(Analytic.AppIndexing.STEP, urlInWeb, title);
-        return Indexables.newSimple(title, urlInWeb);
-    }
-
-    public Action getAction(@NotNull Step step) {
-        return Actions.newView(getTitle(step), getUrlInWeb(step));
-    }
-
-    @NotNull
-    private String getTitle(Step step) {
-        String stepTitle = stepToTitleMap.get(step.getId());
-        if (stepTitle == null) {
-            stepTitle = StringUtil.getTitleForStep(getContext(), lesson, step.getPosition());
-            stepToTitleMap.put(step.getId(), stepTitle);
-        }
-        return stepTitle;
-    }
-
-    @NotNull
-    private String getUrlInWeb(Step step) {
-        String stepUrl = stepToUrlMap.get(step.getId());
-        if (stepUrl == null) {
-            stepUrl = StringUtil.getUriForStep(getConfig().getBaseUrl(), lesson, unit, step);
-            stepToUrlMap.put(step.getId(), stepUrl);
-        }
-        return stepUrl;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (viewPager != null) {
-            //when user press back from comments
-            int selectedPosition = viewPager.getCurrentItem();
-            if (selectedPosition >= 0 && selectedPosition < stepsPresenter.getStepList().size()) {
-                indexStep(stepsPresenter.getStepList().get(selectedPosition).getStep());
-            }
-        }
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (viewPager != null) {
-            int selectedPosition = viewPager.getCurrentItem();
-            if (selectedPosition >= 0 && selectedPosition < stepsPresenter.getStepList().size()) {
-                stopIndexStep(stepsPresenter.getStepList().get(selectedPosition).getStep());
-            }
-        }
-        stepToTitleMap.clear();
-        stepToUrlMap.clear();
     }
 }

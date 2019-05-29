@@ -26,6 +26,7 @@ import org.stepik.android.model.Section
 import org.stepik.android.model.Unit
 import org.stepik.android.presentation.lesson.LessonPresenter
 import org.stepik.android.presentation.lesson.LessonView
+import org.stepik.android.view.fragment_pager.FragmentDelegateScrollStateChangeListener
 import org.stepik.android.view.lesson.routing.getLessonDeepLinkData
 import org.stepik.android.view.lesson.ui.delegate.LessonInfoTooltipDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
@@ -76,6 +77,7 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_lesson)
 
         if (savedInstanceState == null) {
             if (intent.getBooleanExtra(EXTRA_BACK_ANIMATION, false)) {
@@ -84,8 +86,6 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable {
                 overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start)
             }
         }
-
-        setContentView(R.layout.activity_lesson)
 
         injectComponent()
         lessonPresenter = ViewModelProviders
@@ -117,8 +117,10 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable {
 
         stepsAdapter = StepFragmentAdapter(supportFragmentManager, stepTypeResolver)
         lessonPager.adapter = stepsAdapter
+        lessonPager.addOnPageChangeListener(FragmentDelegateScrollStateChangeListener(lessonPager, stepsAdapter))
         lessonPager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
             override fun onPageSelected(position: Int) {
+                hideSoftKeypad()
                 lessonPresenter.onStepOpened(position)
             }
         })

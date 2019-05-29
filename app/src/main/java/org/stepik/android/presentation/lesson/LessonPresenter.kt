@@ -5,9 +5,12 @@ import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
+import org.stepic.droid.analytic.AmplitudeAnalytic
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.util.emptyOnErrorStub
+import org.stepic.droid.util.getStepType
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.domain.lesson.interactor.LessonContentInteractor
 import org.stepik.android.domain.lesson.interactor.LessonInteractor
@@ -26,6 +29,8 @@ import javax.inject.Inject
 class LessonPresenter
 @Inject
 constructor(
+    private val analytic: Analytic,
+
     private val lessonInteractor: LessonInteractor,
     private val lessonContentInteractor: LessonContentInteractor,
 
@@ -193,6 +198,18 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(onError = emptyOnErrorStub)
+
+        /**
+         * Analytic
+         */
+        val step = stepItem.step.step
+        analytic.reportEventWithName(Analytic.Steps.STEP_OPENED, step.getStepType())
+        analytic.reportAmplitudeEvent(
+            AmplitudeAnalytic.Steps.STEP_OPENED, mapOf(
+                AmplitudeAnalytic.Steps.Params.TYPE to step.getStepType(),
+                AmplitudeAnalytic.Steps.Params.NUMBER to step.position,
+                AmplitudeAnalytic.Steps.Params.STEP to step.id
+            ))
     }
 
     /**
