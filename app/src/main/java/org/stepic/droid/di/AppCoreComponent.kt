@@ -54,6 +54,7 @@ import org.stepik.android.view.injection.course.CourseComponent
 import org.stepik.android.view.injection.course.CourseRoutingModule
 import org.stepik.android.view.injection.course_reviews.ComposeCourseReviewComponent
 import org.stepik.android.view.injection.lesson.LessonComponent
+import org.stepik.android.view.injection.network.NetworkDataModule
 import org.stepik.android.view.injection.personal_deadlines.PersonalDeadlinesDataModule
 import org.stepik.android.view.injection.profile.ProfileBusModule
 import org.stepik.android.view.injection.profile_edit.ProfileEditComponent
@@ -76,6 +77,7 @@ import org.stepik.android.view.injection.video_player.VideoPlayerComponent
         RecentActiveCourseModule::class,
         NotificationsBadgesModule::class,
         NetworkModule::class,
+        NetworkDataModule::class,
         RemoteMessageHandlersModule::class,
 
         BillingModule::class,

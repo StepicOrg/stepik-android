@@ -51,9 +51,7 @@ import java.util.concurrent.locks.ReentrantLock
     UnitDataModule::class,
     SectionDataModule::class,
     ProgressDataModule::class,
-    StepDataModule::class,
-
-    NetworkDataModule::class
+    StepDataModule::class
 ])
 abstract class PersistenceModule {
 

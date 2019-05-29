@@ -75,6 +75,9 @@ constructor(
                 false
         }
 
+    /**
+     * Tries to post view assignment to remote server and update remote progress or add view assignment to local queue
+     */
     private fun postViewAssignmentAndUpdateStepProgress(step: Step, viewAssignment: ViewAssignment): Completable =
         viewAssignmentRepository
             .createViewAssignment(viewAssignment, dataSourceType = DataSourceType.REMOTE)
