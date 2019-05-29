@@ -10,6 +10,7 @@ import android.net.NetworkCapabilities
 import android.net.NetworkInfo
 import android.os.Build
 import android.support.annotation.RequiresApi
+import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.persistence.model.DownloadConfiguration
 import java.lang.Exception
 import java.util.EnumSet
@@ -17,6 +18,7 @@ import java.util.concurrent.locks.ReentrantLock
 import javax.inject.Inject
 import kotlin.concurrent.withLock
 
+@AppSingleton
 class NetworkStateTracker
 @Inject
 constructor(
