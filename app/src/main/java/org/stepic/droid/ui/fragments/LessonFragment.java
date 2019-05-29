@@ -1,6 +1,5 @@
 package org.stepic.droid.ui.fragments;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,24 +17,16 @@ import android.widget.Toast;
 
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.base.App;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.core.presenters.LessonPresenter;
 import org.stepic.droid.core.presenters.contracts.LessonView;
-import org.stepik.android.domain.last_step.model.LastStep;
-import org.stepik.android.model.Course;
 import org.stepik.android.model.Lesson;
 import org.stepik.android.model.Section;
 import org.stepik.android.model.Step;
 import org.stepik.android.model.Unit;
 import org.stepic.droid.ui.adapters.StepFragmentAdapter;
-import org.stepic.droid.ui.listeners.NextMoveable;
 import org.stepic.droid.ui.util.ToolbarHelperKt;
-import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
-import org.stepic.droid.util.resolvers.StepHelper;
-import org.stepic.droid.util.resolvers.StepTypeResolver;
-import org.stepik.android.model.ViewAssignment;
 import org.stepik.android.view.fragment_pager.FragmentDelegateScrollStateChangeListener;
 
 import javax.inject.Inject;
@@ -43,46 +34,7 @@ import javax.inject.Inject;
 import butterknife.BindString;
 import butterknife.BindView;
 
-// FIXME: 15.08.17 show title R.string.steps_title, when lesson is not loaded
-public class LessonFragment extends FragmentBase implements LessonView, NextMoveable {
-    private static final String FROM_PREVIOUS_KEY = "fromPrevKey";
-    private static final String SIMPLE_UNIT_ID_KEY = "simpleUnitId";
-    private static final String SIMPLE_LESSON_ID_KEY = "simpleLessonId";
-    private static final String SIMPLE_STEP_POSITION_KEY = "simpleStepPosition";
-    private static final String SIMPLE_DISCUSSION_ID_KEY = "simpleDiscussionPos";
-    private static final String IS_STEP_ID_WAS_PASSED_KEY = "isStepIdWasPassed";
-    private boolean fromPreviousLesson;
-    private long discussionId = -1;
-    private Lesson lesson;
-    private Unit unit;
-    private Section section;
-
-    public static LessonFragment newInstance(@org.jetbrains.annotations.Nullable Unit unit, Lesson lesson, boolean fromPreviousLesson, Section section) {
-        Bundle args = new Bundle();
-        args.putParcelable(AppConstants.KEY_UNIT_BUNDLE, unit);
-        args.putParcelable(AppConstants.KEY_LESSON_BUNDLE, lesson);
-        args.putParcelable(AppConstants.KEY_SECTION_BUNDLE, section);
-        args.putBoolean(FROM_PREVIOUS_KEY, fromPreviousLesson);
-        LessonFragment fragment = new LessonFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    public static LessonFragment newInstance(long simpleUnitId, long simpleLessonId, long simpleStepPosition, long discussionSampleId, boolean isStepIdWasPassed) {
-        Bundle args = new Bundle();
-        args.putLong(SIMPLE_UNIT_ID_KEY, simpleUnitId);
-        args.putLong(SIMPLE_LESSON_ID_KEY, simpleLessonId);
-        args.putLong(SIMPLE_STEP_POSITION_KEY, simpleStepPosition);
-        args.putLong(SIMPLE_DISCUSSION_ID_KEY, discussionSampleId);
-        args.putBoolean(IS_STEP_ID_WAS_PASSED_KEY, isStepIdWasPassed);
-        LessonFragment fragment = new LessonFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-
-    private boolean isRestarted = false;
-
+public class LessonFragment extends FragmentBase implements LessonView {
     @BindView(R.id.viewpager)
     ViewPager viewPager;
 
@@ -121,21 +73,10 @@ public class LessonFragment extends FragmentBase implements LessonView, NextMove
     @Inject
     LessonPresenter stepsPresenter;
 
-    @Inject
-    StepTypeResolver stepTypeResolver;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        fromPreviousLesson = getArguments().getBoolean(FROM_PREVIOUS_KEY);
-        discussionId = getArguments().getLong(SIMPLE_DISCUSSION_ID_KEY);
-
-        App.Companion
-                .component()
-                .oldLessonComponentBuilder()
-                .build()
-                .inject(this);
     }
 
     @Nullable
@@ -149,10 +90,6 @@ public class LessonFragment extends FragmentBase implements LessonView, NextMove
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if (savedInstanceState != null) {
-            isRestarted = true;
-        }
-
         boolean keepScreenOnSteps = getUserPreferences().isKeepScreenOnSteps();
         if (keepScreenOnSteps) {
             getAnalytic().reportEvent(Analytic.Steps.SHOW_KEEP_ON_SCREEN);
@@ -162,64 +99,9 @@ public class LessonFragment extends FragmentBase implements LessonView, NextMove
         view.setKeepScreenOn(keepScreenOnSteps);
         setHasOptionsMenu(true);
 
-        initIndependentUI();
-//        stepAdapter = new StepFragmentAdapter(getChildFragmentManager(), stepsPresenter.getStepList(), stepTypeResolver);
         viewPager.setAdapter(stepAdapter);
         viewPager.addOnPageChangeListener(new FragmentDelegateScrollStateChangeListener(viewPager, stepAdapter));
         stepsPresenter.attachView(this);
-        if (lesson == null) {
-            Section section = getArguments().getParcelable(AppConstants.KEY_SECTION_BUNDLE);
-            Lesson lesson = getArguments().getParcelable(AppConstants.KEY_LESSON_BUNDLE);
-            Unit unit = getArguments().getParcelable(AppConstants.KEY_UNIT_BUNDLE);
-            long unitId = getArguments().getLong(SIMPLE_UNIT_ID_KEY);
-            long defaultStepPos = getArguments().getLong(SIMPLE_STEP_POSITION_KEY);
-            long lessonId = getArguments().getLong(SIMPLE_LESSON_ID_KEY);
-            boolean isStepIdWasPassed = getArguments().getBoolean(IS_STEP_ID_WAS_PASSED_KEY, false);
-
-            stepsPresenter.init(lesson, unit, lessonId, unitId, defaultStepPos, isStepIdWasPassed, fromPreviousLesson, section);
-            fromPreviousLesson = false;
-        } else {
-            if (stepsPresenter.getStepList().isEmpty()) {
-                stepsPresenter.init();
-            } else {
-                onLessonUnitPrepared(lesson, unit, section);
-                showSteps(fromPreviousLesson, -1);
-            }
-        }
-    }
-
-
-    private void initIndependentUI() {
-        tryAgain.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Section section = getArguments().getParcelable(AppConstants.KEY_SECTION_BUNDLE);
-                Lesson lesson = getArguments().getParcelable(AppConstants.KEY_LESSON_BUNDLE);
-                Unit unit = getArguments().getParcelable(AppConstants.KEY_UNIT_BUNDLE);
-                long unitId = getArguments().getLong(SIMPLE_UNIT_ID_KEY);
-                long defaultStepPos = getArguments().getLong(SIMPLE_STEP_POSITION_KEY);
-                long lessonId = getArguments().getLong(SIMPLE_LESSON_ID_KEY);
-
-                boolean isStepIdWasPassed = getArguments().getBoolean(IS_STEP_ID_WAS_PASSED_KEY, false);
-                fromPreviousLesson = getArguments().getBoolean(FROM_PREVIOUS_KEY);
-                stepsPresenter.refreshWhenOnConnectionProblem(lesson, unit, lessonId, unitId, defaultStepPos, isStepIdWasPassed, fromPreviousLesson, section);
-                fromPreviousLesson = false;
-            }
-        });
-        authActionView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getAnalytic().reportEvent(Analytic.Interaction.CLICK_AUTH_FROM_STEPS);
-                getScreenManager().showLaunchScreen(getActivity());
-                getActivity().finish();
-            }
-        });
-        goToCatalog.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getScreenManager().showCatalog(getActivity());
-            }
-        });
     }
 
     private void init(Lesson lesson) {
@@ -235,63 +117,6 @@ public class LessonFragment extends FragmentBase implements LessonView, NextMove
         stepsPresenter.detachView(this);
         tryAgain.setOnClickListener(null);
         super.onDestroyView();
-    }
-
-    private void pushState(int position) {
-        if (isRestarted) {
-            isRestarted = false;
-            return;
-        }
-
-        boolean isTryToPushFirstStep = position == 0;
-        if (isTryToPushFirstStep && fromPreviousLesson && stepsPresenter.getStepList().size() != 1) {
-            //if from previous lesson --> not mark as viewed
-            return;
-        }
-        if (stepsPresenter.getStepList().size() <= position) return;
-        final Step step = stepsPresenter.getStepList().get(position).getStep();
-
-        if (StepHelper.isViewedStatePost(step) && !step.isCustomPassed()) {
-            step.setCustomPassed(true);
-            if (position <= tabLayout.getTabCount()) {
-                TabLayout.Tab tab = tabLayout.getTabAt(position);
-                if (tab != null) {
-                    tab.setIcon(stepAdapter.getTabDrawable(position));
-                }
-            }
-        }
-
-        //try to push viewed state to the server
-        if (step != null) {
-            //track analytic for step opening
-            trackStepOpening(step);
-
-            //always push view to server
-            AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
-                long stepId = step.getId();
-
-                protected Void doInBackground(Void... params) {
-                    try {
-                        long assignmentID = getDatabaseFacade().getAssignmentIdByStepId(stepId);
-                        getScreenManager().pushToViewedQueue(new ViewAssignment(assignmentID, stepId));
-                        if (unit != null && unit.getSection() > 0) {
-                            Section section = getDatabaseFacade().getSectionById(unit.getSection());
-                            if (section != null && section.getCourse() > 0) {
-                                Course course = getDatabaseFacade().getCourseById(section.getCourse());
-                                if (course != null && course.getLastStepId() != null) {
-                                    LastStep lastStep = new LastStep(course.getLastStepId(), unit.getId(), unit.getLesson(), stepId);
-                                    getDatabaseFacade().updateLastStep(lastStep);
-                                }
-                            }
-                        }
-                    } catch (Exception exception) {
-                        getAnalytic().reportError(Analytic.Error.FAIL_PUSH_STEP_VIEW, exception);
-                    }
-                    return null;
-                }
-            };
-            task.executeOnExecutor(getThreadPoolExecutor());
-        }
     }
 
     private void scrollTabLayoutToPosition(ViewTreeObserver.OnPreDrawListener listener, int finalPosition) {
@@ -365,9 +190,6 @@ public class LessonFragment extends FragmentBase implements LessonView, NextMove
 
     @Override
     public void onLessonUnitPrepared(Lesson lesson, @NonNull Unit unit, Section section) {
-        this.lesson = lesson;
-        this.section = section;
-        this.unit = unit;
         init(lesson);
     }
 
@@ -393,7 +215,6 @@ public class LessonFragment extends FragmentBase implements LessonView, NextMove
         authView.setVisibility(View.GONE);
         emptySteps.setVisibility(View.GONE);
         showViewPager(true);
-        stepAdapter.setDataIfNotNull(lesson, unit, section);
         stepAdapter.notifyDataSetChanged();
         updateTabState();
 
@@ -415,16 +236,8 @@ public class LessonFragment extends FragmentBase implements LessonView, NextMove
                     return true;
                 }
             });
-        } else {
-            pushState(viewPager.getCurrentItem());
         }
         tabLayout.setVisibility(View.VISIBLE);
-
-        if (discussionId > 0 && position >= 0 && position < stepsPresenter.getStepList().size()) {
-            Step step = stepsPresenter.getStepList().get(position).getStep();
-            getScreenManager().openComments(getActivity(), step.getDiscussionProxy(), step.getId());
-            discussionId = -1;
-        }
     }
 
     @Override
@@ -467,28 +280,5 @@ public class LessonFragment extends FragmentBase implements LessonView, NextMove
 //            getActivity().getWindow().setBackgroundDrawableResource(R.color.windowBackground); //it may produce some bugs
             viewPager.setVisibility(View.INVISIBLE);
         }
-    }
-
-
-    private void trackStepOpening(@NonNull Step step) {
-        stepTrackingPresenter.trackStepType(step);
-    }
-
-    @Override
-    public boolean moveNext() {
-        if (viewPager == null || viewPager.getAdapter() == null) {
-            return false;
-        }
-
-        int currentItem = viewPager.getCurrentItem();
-        int lastIndex = viewPager.getAdapter().getCount() - 1;
-        if (currentItem < lastIndex) {
-            viewPager.setCurrentItem(currentItem + 1, true);
-            return true;
-        } else if (currentItem == lastIndex) {
-            return false;
-        }
-
-        return false;
     }
 }

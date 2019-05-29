@@ -121,8 +121,6 @@ interface AppCoreComponent {
 
     fun courseGeneralComponentBuilder(): CourseGeneralComponent.Builder
 
-    fun oldLessonComponentBuilder(): org.stepic.droid.di.lesson.LessonComponent.Builder
-
     fun mainScreenComponentBuilder(): MainScreenComponent.Builder
 
     fun notificationsComponentBuilder(): NotificationsComponent.Builder

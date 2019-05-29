@@ -3,7 +3,6 @@ package org.stepic.droid.core.presenters
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.LessonView
-import org.stepic.droid.di.lesson.LessonScope
 import org.stepic.droid.persistence.content.StepContentResolver
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepik.android.model.Lesson
@@ -23,7 +22,6 @@ import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
-@LessonScope
 class LessonPresenter
 @Inject
 constructor(
@@ -32,7 +30,6 @@ constructor(
         private val databaseFacade: DatabaseFacade,
         private val api: Api,
         private val sharedPreferenceHelper: SharedPreferenceHelper,
-        private val analytic: Analytic,
         private val unitRepository: UnitRepository,
 
         private val stepContentResolver: StepContentResolver

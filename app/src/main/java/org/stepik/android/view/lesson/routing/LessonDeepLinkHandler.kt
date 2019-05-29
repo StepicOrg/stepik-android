@@ -58,6 +58,6 @@ fun Intent.getLessonDeepLinkData(): LessonDeepLinkData? =
                 lessonId = lessonId,
                 stepPosition = getStepPositionFromDeepLink() ?: 1,
                 unitId = getUnitIdFromDeepLink(),
-                discussionId = getDiscussionIdFromDeepLink()
+                discussionId = getDiscussionIdFromDeepLink() // todo: handle discussion id
             )
         }
