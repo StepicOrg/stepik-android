@@ -595,11 +595,6 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Completable postViewedReactive(ViewAssignment stepAssignment) {
-        return loggedService.postViewedReactive(new ViewAssignmentRequest(new ViewAssignment(stepAssignment.getAssignment(), stepAssignment.getStep())));
-    }
-
-    @Override
     public void loginWithSocial(final FragmentActivity activity, ISocialType type) {
         String socialIdentifier = type.getIdentifier();
         String url = config.getBaseUrl() + "/accounts/" + socialIdentifier + "/login?next=/oauth2/authorize/?" + Uri.encode("client_id=" + config.getOAuthClientId(TokenType.social) + "&response_type=code");

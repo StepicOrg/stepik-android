@@ -103,8 +103,6 @@ public interface Api {
 
     Call<Void> postViewed(ViewAssignment stepAssignment);
 
-    Completable postViewedReactive(ViewAssignment stepAssignment);
-
     void loginWithSocial(FragmentActivity activity, ISocialType type);
 
     Call<SearchResultResponse> getSearchResultsCourses(int page, String rawQuery);

@@ -138,8 +138,6 @@ constructor(
 
     fun getCourseById(courseId: Long) = courseDao.get(DbStructureCourse.Columns.ID, courseId.toString())
 
-    fun getProgressById(progressId: String) = progressDao.get(DbStructureProgress.Columns.ID, progressId)
-
     fun getProgresses(progressIds: List<String>): List<Progress> {
         //todo change implementation of getAllInRange and escape internally
         val escapedIds = progressIds
@@ -163,9 +161,6 @@ constructor(
 
     fun getAllCourses(courseListType: CourseListType) =
         courseListDao.getCourseList(courseListType)
-
-    fun addCourse(course: Course) =
-        courseDao.insertOrReplace(course)
 
     fun addCourses(courses: List<Course>) {
         courseDao.insertOrReplaceAll(courses)
@@ -196,8 +191,6 @@ constructor(
     fun addSteps(steps: List<Step>) {
         stepDao.insertOrReplaceAll(steps)
     }
-
-    fun getStepsOfLesson(lessonId: Long) = stepDao.getAll(DbStructureStep.Column.LESSON_ID, lessonId.toString())
 
     fun addUnit(unit: Unit) =
         unitDao.insertOrUpdate(unit)
@@ -243,28 +236,8 @@ constructor(
         }
     }
 
-    fun addProgress(progress: Progress) =
-        progressDao.insertOrUpdate(progress)
-
     fun addProgresses(progresses: List<Progress>) =
         progressDao.insertOrReplaceAll(progresses)
-
-    fun isProgressViewed(progressId: String?): Boolean {
-        if (progressId == null) return false
-        val progress = progressDao.get(DbStructureProgress.Columns.ID, progressId)
-        return progress?.isPassed ?: false
-    }
-
-    fun isStepPassed(step: Step): Boolean {
-        val assignment = assignmentDao.get(DbStructureAssignment.Columns.STEP, step.id.toString())
-        val progressId: String?
-        if (assignment != null) {
-            progressId = assignment.progress
-        } else {
-            progressId = step.progress
-        }
-        return isProgressViewed(progressId)
-    }
 
     fun getAllNotificationsOfCourse(courseId: Long): List<Notification> =
         notificationDao
