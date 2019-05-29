@@ -242,7 +242,5 @@ interface AppCoreComponent {
 
     fun inject(notificationAlarmService: NotificationAlarmService)
 
-    fun inject(stepikBootCompleteReceiver: StepikBootCompleteReceiver)
-
     fun inject(bootCompleteService: BootCompleteService)
 }
