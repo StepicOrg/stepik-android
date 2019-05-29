@@ -10,14 +10,13 @@ import org.stepik.android.domain.view_assignment.repository.ViewAssignmentReposi
 import org.stepik.android.model.ViewAssignment
 import javax.inject.Inject
 
-class StepDeferableViewReportInteractor
+class StepDeferrableViewReportInteractor
 @Inject
 constructor(
     private val networkTypeRepository: NetworkTypeRepository,
     private val viewAssignmentRepository: ViewAssignmentRepository,
     private val localProgressInteractor: LocalProgressInteractor
 ) {
-
     fun reportStepsViewsOnActiveNetwork(): Completable =
         waitUntilActiveNetwork()
             .andThen(viewAssignmentRepository.getViewAssignments())
