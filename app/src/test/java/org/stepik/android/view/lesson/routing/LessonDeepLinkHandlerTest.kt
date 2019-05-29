@@ -23,7 +23,7 @@ class LessonDeepLinkHandlerTest {
     @Test
     fun stepPositionParameterTest() {
         val intent = Intent()
-        val actualParameter = 67L
+        val actualParameter = 67
         intent.data = Uri.parse("https://stepik.org/lesson/123/step/$actualParameter")
 
         Assert.assertEquals(actualParameter, intent.getStepPositionFromDeepLink())
@@ -75,7 +75,7 @@ class LessonDeepLinkHandlerTest {
     fun completeUrlTest() {
         val intent = Intent()
         val actualLessonId = 1L
-        val actualStepPosition = 2L
+        val actualStepPosition = 2
         val actualUnitId = 3L
         val actualDiscussionId = 4L
         intent.data = Uri.parse("https://stepik.org/lesson/$actualLessonId/step/$actualStepPosition/?unit=$actualUnitId&discussion=$actualDiscussionId")
