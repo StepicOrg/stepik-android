@@ -7,6 +7,8 @@ import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.BiFunction
+import io.reactivex.rxkotlin.plusAssign
+import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.adaptive.listeners.AdaptiveReactionListener
 import org.stepic.droid.adaptive.listeners.AnswerListener
@@ -18,7 +20,6 @@ import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
 import org.stepic.droid.adaptive.util.ExpHelper
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.presenters.contracts.RecommendationsView
 import org.stepic.droid.di.adaptive.AdaptiveCourseScope
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
@@ -26,11 +27,11 @@ import org.stepic.droid.di.qualifiers.CourseId
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
+import org.stepic.droid.util.emptyOnErrorStub
 import org.stepic.droid.util.getStepType
 import org.stepic.droid.web.Api
-import org.stepik.android.model.ViewAssignment
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse
-import org.stepik.android.domain.last_step.model.LastStep
+import org.stepik.android.domain.view_assignment.interactor.ViewAssignmentReportInteractor
 import retrofit2.HttpException
 import java.util.*
 import javax.inject.Inject
@@ -39,18 +40,18 @@ import javax.inject.Inject
 class RecommendationsPresenter
 @Inject
 constructor(
-        @CourseId
-        private val courseId: Long,
-        private val api: Api,
-        @BackgroundScheduler
-        private val backgroundScheduler: Scheduler,
-        @MainScheduler
-        private val mainScheduler: Scheduler,
-        private val sharedPreferenceHelper: SharedPreferenceHelper,
-        private val databaseFacade: DatabaseFacade,
-        private val screenManager: ScreenManager,
-        private val adaptiveCoursesResolver: AdaptiveCoursesResolver,
-        private val analytic: Analytic
+    @CourseId
+    private val courseId: Long,
+    private val api: Api,
+    @BackgroundScheduler
+    private val backgroundScheduler: Scheduler,
+    @MainScheduler
+    private val mainScheduler: Scheduler,
+    private val sharedPreferenceHelper: SharedPreferenceHelper,
+    private val databaseFacade: DatabaseFacade,
+    private val adaptiveCoursesResolver: AdaptiveCoursesResolver,
+    private val analytic: Analytic,
+    private val viewAssignmentReportInteractor: ViewAssignmentReportInteractor
 ) : PresenterBase<RecommendationsView>(), AdaptiveReactionListener, AnswerListener {
 
     companion object {
@@ -228,32 +229,31 @@ constructor(
     }
 
     private fun reportView(card: Card) {
-        card.step?.let {
-            analytic.reportAmplitudeEvent(AmplitudeAnalytic.Steps.STEP_OPENED, mapOf(
-                    AmplitudeAnalytic.Steps.Params.TYPE to it.getStepType(),
-                    AmplitudeAnalytic.Steps.Params.NUMBER to it.position,
-                    AmplitudeAnalytic.Steps.Params.STEP to it.id
-            ))
-        }
+        val step = card.step ?: return
 
-        compositeDisposable.add(api.getUnits(courseId, card.lessonId)
-                .subscribeOn(backgroundScheduler)
-                .observeOn(backgroundScheduler)
-                .subscribe({ response ->
-                    val unit = response.units?.firstOrNull()
-                    val stepId = card.step?.id ?: 0
-                    unit?.assignments?.firstOrNull()?.let { assignmentId ->
-                        screenManager.pushToViewedQueue(
-                            ViewAssignment(
-                                assignmentId,
-                                stepId
-                            )
-                        )
-                        databaseFacade.getCourseById(courseId)?.lastStepId?.let {
-                            databaseFacade.updateLastStep(LastStep(it, unit.id, unit.lesson, stepId))
-                        }
-                    }
-                }, {}))
+        analytic.reportAmplitudeEvent(AmplitudeAnalytic.Steps.STEP_OPENED, mapOf(
+                AmplitudeAnalytic.Steps.Params.TYPE to step.getStepType(),
+                AmplitudeAnalytic.Steps.Params.NUMBER to step.position,
+                AmplitudeAnalytic.Steps.Params.STEP to step.id
+        ))
+
+        compositeDisposable += api
+            .getUnits(courseId, card.lessonId)
+            .flatMapCompletable { response ->
+                val unit = response.units?.firstOrNull()
+
+                val assignments = databaseFacade
+                    .getAssignments(unit?.assignments ?: longArrayOf())
+                    .firstOrNull()
+
+                val course = databaseFacade
+                    .getCourseById(courseId)
+
+                viewAssignmentReportInteractor.reportViewAssignment(step, assignments, unit, course)
+            }
+            .subscribeOn(backgroundScheduler)
+            .observeOn(backgroundScheduler)
+            .subscribeBy(emptyOnErrorStub)
     }
 
     private fun fetchLocalExp() {
@@ -266,7 +266,7 @@ constructor(
                     streak = it.second
                     updateExp()
                     fetchExpFromAPI()
-                }, {})
+                }, emptyOnErrorStub)
         )
     }
 
@@ -281,7 +281,7 @@ constructor(
                     .subscribe({
                         exp = it
                         updateExp()
-                    }, {})
+                    }, emptyOnErrorStub)
         )
     }
 
@@ -301,7 +301,7 @@ constructor(
             Completable.fromCallable { databaseFacade.addLocalExpItem(streak, submissionId, courseId) }
                 .andThen(syncRating())
                 .subscribeOn(backgroundScheduler)
-                .subscribe({}, {})
+                .subscribeBy(emptyOnErrorStub)
         )
     }
 
