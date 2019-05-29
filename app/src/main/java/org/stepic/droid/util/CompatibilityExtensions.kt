@@ -22,7 +22,7 @@ fun AlarmManager.scheduleCompat(scheduleMillis: Long, interval: Long, pendingInt
             set(AlarmManager.RTC_WAKEUP, scheduleMillis + interval / 2, pendingIntent)
         }
     } else {
-//        setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, scheduleMillis + interval / 2, pendingIntent)
-        setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, DateTimeHelper.nowUtc() + 15000, pendingIntent) //DEBUG PURPOSE ONLY
+        setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, scheduleMillis + interval / 2, pendingIntent)
+//            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, DateTime.now().millis + 15000, pendingIntent) //DEBUG PURPOSE ONLY
     }
 }
