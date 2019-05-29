@@ -60,6 +60,8 @@ import org.stepik.android.view.injection.profile.ProfileBusModule
 import org.stepik.android.view.injection.profile_edit.ProfileEditComponent
 import org.stepik.android.view.injection.progress.ProgressBusModule
 import org.stepik.android.view.injection.video_player.VideoPlayerComponent
+import org.stepik.android.view.injection.view_assignment.ViewAssignmentBusModule
+import org.stepik.android.view.injection.view_assignment.ViewAssignmentComponent
 
 @AppSingleton
 @Component(
@@ -85,6 +87,7 @@ import org.stepik.android.view.injection.video_player.VideoPlayerComponent
         CourseEnrollmentBusModule::class, // todo unite it in BusModule::class
         ProfileBusModule::class,
         ProgressBusModule::class,
+        ViewAssignmentBusModule::class,
         PersonalDeadlinesDataModule::class,
 
         CourseRoutingModule::class // todo unite it in RoutingModule::class,
@@ -137,6 +140,8 @@ interface AppCoreComponent {
     fun profileEditComponentBuilder(): ProfileEditComponent.Builder
 
     fun composeCourseReviewComponentBuilder(): ComposeCourseReviewComponent.Builder
+
+    fun viewAssignmentComponentBuilder(): ViewAssignmentComponent.Builder
 
     fun lessonComponentBuilder(): LessonComponent.Builder
 

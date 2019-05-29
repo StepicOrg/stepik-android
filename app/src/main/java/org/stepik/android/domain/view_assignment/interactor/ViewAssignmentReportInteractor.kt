@@ -1,6 +1,7 @@
-package org.stepik.android.domain.step.interactor
+package org.stepik.android.domain.view_assignment.interactor
 
 import io.reactivex.Completable
+import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.util.AppConstants
 import org.stepik.android.domain.base.DataSourceType
@@ -15,9 +16,10 @@ import org.stepik.android.model.Progress
 import org.stepik.android.model.Step
 import org.stepik.android.model.Unit
 import org.stepik.android.model.ViewAssignment
+import org.stepik.android.view.injection.view_assignment.ViewAssignmentBus
 import javax.inject.Inject
 
-class StepViewReportInteractor
+class ViewAssignmentReportInteractor
 @Inject
 constructor(
     private val viewAssignmentRepository: ViewAssignmentRepository,
@@ -26,9 +28,12 @@ constructor(
     private val lastStepRepository: LastStepRepository,
     private val progressRepository: ProgressRepository,
 
-    private val progressesPublisher: PublishSubject<Progress>
+    private val progressesPublisher: PublishSubject<Progress>,
+
+    @ViewAssignmentBus
+    private val viewAssignmentObserver: BehaviorSubject<kotlin.Unit>
 ) {
-    fun reportStepView(step: Step, assignment: Assignment?, unit: Unit?, course: Course?): Completable =
+    fun reportViewAssignment(step: Step, assignment: Assignment?, unit: Unit?, course: Course?): Completable =
         updateLocalLastStep(step, unit, course)
             .andThen(updateLocalStepProgress(step, assignment))
             .andThen(postViewAssignmentAndUpdateStepProgress(step, ViewAssignment(assignment?.id, step.id)))
@@ -85,5 +90,8 @@ constructor(
             .onErrorResumeNext {
                 viewAssignmentRepository
                     .createViewAssignment(viewAssignment, dataSourceType = DataSourceType.CACHE) // add view assignment to local queue
+                    .doOnComplete {
+                        viewAssignmentObserver.onNext(kotlin.Unit)
+                    }
             }
 }
