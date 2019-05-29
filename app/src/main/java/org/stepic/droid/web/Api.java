@@ -5,7 +5,6 @@ import android.support.v4.app.FragmentActivity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.web.model.story_templates.StoryTemplatesResponse;
-import org.stepik.android.model.ViewAssignment;
 import org.stepik.android.model.adaptive.RatingItem;
 import org.stepik.android.model.Course;
 import org.stepic.droid.model.NotificationCategory;
@@ -100,8 +99,6 @@ public interface Api {
     Single<ProgressResponse> getProgressesReactive(String[] progresses);
 
     Single<AssignmentResponse> getAssignments(long[] assignmentsIds);
-
-    Call<Void> postViewed(ViewAssignment stepAssignment);
 
     void loginWithSocial(FragmentActivity activity, ISocialType type);
 

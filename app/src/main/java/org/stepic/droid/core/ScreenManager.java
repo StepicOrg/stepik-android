@@ -18,7 +18,6 @@ import org.stepik.android.model.Section;
 import org.stepik.android.model.Step;
 import org.stepik.android.model.Unit;
 import org.stepic.droid.ui.fragments.CommentsFragment;
-import org.stepik.android.model.ViewAssignment;
 import org.stepik.android.model.Tag;
 import org.stepik.android.model.user.Profile;
 import org.stepik.android.view.course.routing.CourseScreenTab;
@@ -64,8 +63,6 @@ public interface ScreenManager {
     void openStepInWeb(Context context, Step step);
 
     void openRemindPassword(AppCompatActivity context);
-
-    void pushToViewedQueue(ViewAssignment viewAssignmentWrapper);
 
     void showCourseDescription(Context context, long courseId);
     void showCourseDescription(Context context, @NotNull Course course);

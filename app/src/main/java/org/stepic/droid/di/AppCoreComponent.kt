@@ -161,8 +161,6 @@ interface AppCoreComponent {
 
     fun inject(fragment: StoreManagementFragment)
 
-    fun inject(viewPusher: ViewPusher)
-
     fun inject(internetConnectionEnabledReceiver: InternetConnectionEnabledReceiver)
 
     fun inject(socialAuthAdapter: SocialAuthAdapter)

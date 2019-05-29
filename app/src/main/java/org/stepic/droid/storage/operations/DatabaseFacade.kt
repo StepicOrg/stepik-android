@@ -121,8 +121,6 @@ constructor(
         return assignment?.id ?: -1
     }
 
-    fun getStepById(stepId: Long) = stepDao.get(DbStructureStep.Column.ID, stepId.toString())
-
     fun getStepsById(stepIds: LongArray): List<Step> {
         val stringIds = DbParseHelper.parseLongArrayToString(stepIds, AppConstants.COMMA)
         return if (stringIds != null) {

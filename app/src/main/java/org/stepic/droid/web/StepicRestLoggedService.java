@@ -122,10 +122,6 @@ public interface StepicRestLoggedService {
 
     @Headers("Content-Type:application/json")
     @POST("api/views")
-    Call<Void> postViewed(@Body ViewAssignmentRequest stepAssignment);
-
-    @Headers("Content-Type:application/json")
-    @POST("api/views")
     Completable postViewedReactive(@Body ViewAssignmentRequest stepAssignment);
 
     @GET("api/search-results?is_popular=true&is_public=true&type=course")

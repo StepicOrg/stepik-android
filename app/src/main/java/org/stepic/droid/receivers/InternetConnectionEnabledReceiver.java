@@ -12,15 +12,11 @@ import org.stepic.droid.base.App;
 import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.core.internetstate.contract.InternetEnabledPoster;
 import org.stepik.android.domain.progress.interactor.LocalProgressInteractor;
-import org.stepik.android.model.Step;
 import org.stepic.droid.model.ViewedNotification;
 import org.stepic.droid.storage.operations.DatabaseFacade;
-import org.stepic.droid.util.resolvers.StepHelper;
 import org.stepic.droid.web.Api;
-import org.stepik.android.model.ViewAssignment;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -79,7 +75,6 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
         threadPoolExecutor.execute(new Runnable() {
             @Override
             public void run() {
-                processViewAssignments();
                 processViewedNotifications();
                 inWork.set(false);
             }
@@ -100,46 +95,6 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
             } catch (IOException e) {
                 //no internet, just ignore and send next time
             }
-        }
-    }
-
-    @WorkerThread
-    private void processViewAssignments() {
-        List<ViewAssignment> list = databaseFacade.getAllInQueue();
-        List<Step> updatedSteps = new ArrayList<>();
-        for (ViewAssignment item : list) {
-            try {
-                retrofit2.Response<Void> response = api.postViewed(item).execute();
-                if (response.isSuccessful()) {
-                    databaseFacade.removeFromQueue(item);
-                    Step step = databaseFacade.getStepById(item.getStep());
-                    if (step != null) {
-                        final long stepId = step.getId();
-                        if (StepHelper.isViewedStatePost(step)) {
-                            if (item.getAssignment() != null) {
-                                databaseFacade.markProgressAsPassed(item.getAssignment());
-                            } else {
-                                if (step.getProgress() != null) {
-                                    databaseFacade.markProgressAsPassedIfInDb(step.getProgress());
-                                }
-                            }
-                        }
-                        // Get a handler that can be used to post to the main thread
-
-                    }
-                    updatedSteps.add(step);
-                }
-            } catch (IOException e) {
-                //no internet, just ignore and send next time
-            }
-        }
-
-        try {
-            localProgressInteractor
-                    .updateStepsProgress(updatedSteps)
-                    .blockingAwait();
-        } catch (Exception e) {
-            //no internet, just ignore and send next time
         }
     }
 

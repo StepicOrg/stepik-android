@@ -24,7 +24,6 @@ import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
 import org.stepic.droid.util.CompatibilityExtensionsKt;
 import org.stepic.droid.web.model.story_templates.StoryTemplatesResponse;
-import org.stepik.android.model.ViewAssignment;
 import org.stepik.android.model.adaptive.RatingItem;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.configuration.Config;
@@ -587,11 +586,6 @@ public class ApiImpl implements Api {
     @Override
     public Single<AssignmentResponse> getAssignments(long[] assignmentsIds) {
         return loggedService.getAssignments(assignmentsIds);
-    }
-
-    @Override
-    public Call<Void> postViewed(ViewAssignment stepAssignment) {
-        return loggedService.postViewed(new ViewAssignmentRequest(new ViewAssignment(stepAssignment.getAssignment(), stepAssignment.getStep())));
     }
 
     @Override

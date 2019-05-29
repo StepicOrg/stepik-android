@@ -43,7 +43,6 @@ import org.stepik.android.model.Unit;
 import org.stepik.android.model.Video;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
-import org.stepic.droid.services.ViewPusher;
 import org.stepic.droid.ui.activities.AboutAppActivity;
 import org.stepic.droid.ui.activities.AnimatedOnboardingActivity;
 import org.stepic.droid.ui.activities.CertificatesActivity;
@@ -68,7 +67,6 @@ import org.stepic.droid.ui.dialogs.RemindPasswordDialogFragment;
 import org.stepic.droid.ui.fragments.CommentsFragment;
 import org.stepic.droid.util.AndroidVersionKt;
 import org.stepic.droid.util.AppConstants;
-import org.stepik.android.model.ViewAssignment;
 import org.stepik.android.model.Tag;
 import org.stepik.android.view.lesson.ui.activity.LessonActivity;
 import org.stepik.android.view.profile_edit.ui.activity.ProfileEditInfoActivity;
@@ -664,16 +662,6 @@ public class ScreenManagerImpl implements ScreenManager {
         analytic.reportEvent(Analytic.Screens.REMIND_PASSWORD);
         android.support.v4.app.DialogFragment dialogFragment = RemindPasswordDialogFragment.newInstance();
         dialogFragment.show(context.getSupportFragmentManager(), null);
-    }
-
-    @Override
-    public void pushToViewedQueue(ViewAssignment viewAssignmentWrapper) {
-
-        Intent loadIntent = new Intent(App.Companion.getAppContext(), ViewPusher.class);
-
-        loadIntent.putExtra(AppConstants.KEY_STEP_BUNDLE, viewAssignmentWrapper.getStep());
-        loadIntent.putExtra(AppConstants.KEY_ASSIGNMENT_BUNDLE, viewAssignmentWrapper.getAssignment());
-        App.Companion.getAppContext().startService(loadIntent);
     }
 
     @Override
