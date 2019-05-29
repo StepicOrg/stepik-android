@@ -5,7 +5,7 @@ import io.reactivex.Maybe
 import org.stepic.droid.model.CourseListType
 import org.stepik.android.domain.course_list.repository.CourseListRepository
 import org.stepik.android.domain.personal_deadlines.repository.DeadlinesRepository
-import org.stepik.android.view.personal_deadlines.notification.DeadlinesDelegate
+import org.stepik.android.view.personal_deadlines.notification.DeadlinesNotificationDelegate
 import javax.inject.Inject
 
 class DeadlinesSynchronizationInteractor
@@ -13,7 +13,7 @@ class DeadlinesSynchronizationInteractor
 constructor(
     private val courseListRepository: CourseListRepository,
     private val deadlinesRepository: DeadlinesRepository,
-    private val deadlinesDelegate: DeadlinesDelegate
+    private val deadlinesNotificationDelegate: DeadlinesNotificationDelegate
 ) {
 
     fun syncPersonalDeadlines(): Completable =
@@ -25,5 +25,5 @@ constructor(
                     .concat(enrolledCourses.map { deadlinesRepository.getDeadlineRecordByCourseId(it.id) })
                     .ignoreElements()
             }
-            .doOnComplete { deadlinesDelegate.scheduleDeadlinesNotifications() }
+            .doOnComplete { deadlinesNotificationDelegate.scheduleDeadlinesNotifications() }
 }

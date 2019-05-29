@@ -10,7 +10,7 @@ import org.stepic.droid.web.storage.model.StorageRecord
 import org.stepik.android.domain.personal_deadlines.repository.DeadlinesBannerRepository
 import org.stepik.android.domain.personal_deadlines.repository.DeadlinesRepository
 import org.stepik.android.domain.personal_deadlines.resolver.DeadlinesResolver
-import org.stepik.android.view.personal_deadlines.notification.DeadlinesDelegate
+import org.stepik.android.view.personal_deadlines.notification.DeadlinesNotificationDelegate
 import javax.inject.Inject
 
 class DeadlinesInteractor
@@ -19,23 +19,23 @@ constructor(
     private val deadlinesRepository: DeadlinesRepository,
     private val deadlinesBannerRepository: DeadlinesBannerRepository,
     private val deadlinesResolver: DeadlinesResolver,
-    private val deadlinesDelegate: DeadlinesDelegate
+    private val deadlinesNotificationDelegate: DeadlinesNotificationDelegate
 ) {
     fun createPersonalDeadlines(courseId: Long, learningRate: LearningRate): Single<StorageRecord<DeadlinesWrapper>> =
         deadlinesResolver
             .calculateDeadlinesForCourse(courseId, learningRate)
             .flatMap(deadlinesRepository::createDeadlineRecord)
-            .doOnSuccess { deadlinesDelegate.scheduleDeadlinesNotifications() }
+            .doOnSuccess { deadlinesNotificationDelegate.scheduleDeadlinesNotifications() }
 
     fun updatePersonalDeadlines(record: StorageRecord<DeadlinesWrapper>): Single<StorageRecord<DeadlinesWrapper>> =
         deadlinesRepository
             .updateDeadlineRecord(record)
-            .doOnSuccess { deadlinesDelegate.scheduleDeadlinesNotifications() }
+            .doOnSuccess { deadlinesNotificationDelegate.scheduleDeadlinesNotifications() }
 
     fun removePersonalDeadline(recordId: Long): Completable =
         deadlinesRepository
             .removeDeadlineRecord(recordId)
-            .doOnComplete { deadlinesDelegate.scheduleDeadlinesNotifications() }
+            .doOnComplete { deadlinesNotificationDelegate.scheduleDeadlinesNotifications() }
 
     fun getPersonalDeadlineByCourseId(courseId: Long): Maybe<StorageRecord<DeadlinesWrapper>> =
         deadlinesRepository

@@ -23,7 +23,7 @@ import org.stepik.android.view.notification.StepikNotificationManager
 import org.stepik.android.view.notification.helpers.NotificationHelper
 import javax.inject.Inject
 
-class DeadlinesDelegate
+class DeadlinesNotificationDelegate
 @Inject constructor(
     private val context: Context,
     private val deadlinesCacheDataSource: DeadlinesCacheDataSource,

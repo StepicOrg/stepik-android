@@ -21,7 +21,7 @@ import org.stepik.android.view.notification.helpers.NotificationHelper
 import java.util.Calendar
 import javax.inject.Inject
 
-class StreakDelegate
+class StreakNotificationDelegate
 @Inject constructor(
     private val context: Context,
     private val analytic: Analytic,

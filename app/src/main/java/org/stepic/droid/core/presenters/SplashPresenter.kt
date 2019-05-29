@@ -19,8 +19,8 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.emptyOnErrorStub
-import org.stepik.android.view.notification.delegate.RemindRegistrationDelegate
-import org.stepik.android.view.notification.delegate.RetentionDelegate
+import org.stepik.android.view.notification.delegate.RemindRegistrationNotificationDelegate
+import org.stepik.android.view.notification.delegate.RetentionNotificationDelegate
 import org.stepik.android.view.routing.deeplink.BranchDeepLinkParser
 import org.stepik.android.view.routing.deeplink.BranchRoute
 import java.lang.IllegalArgumentException
@@ -30,20 +30,20 @@ import javax.inject.Inject
 class SplashPresenter
 @Inject
 constructor(
-        @MainScheduler
+    @MainScheduler
         private val mainScheduler: Scheduler,
-        @BackgroundScheduler
+    @BackgroundScheduler
         private val backgroundScheduler: Scheduler,
-        private val sharedPreferenceHelper: SharedPreferenceHelper,
-        private val firebaseRemoteConfig: FirebaseRemoteConfig,
-        private val googleApiChecker: GoogleApiChecker,
-        private val analytic: Analytic,
-        private val stepikDevicePoster: StepikDevicePoster,
-        private val databaseFacade: DatabaseFacade,
-        private val remindRegistrationDelegate: RemindRegistrationDelegate,
-        private val retentionDelegate: RetentionDelegate,
+    private val sharedPreferenceHelper: SharedPreferenceHelper,
+    private val firebaseRemoteConfig: FirebaseRemoteConfig,
+    private val googleApiChecker: GoogleApiChecker,
+    private val analytic: Analytic,
+    private val stepikDevicePoster: StepikDevicePoster,
+    private val databaseFacade: DatabaseFacade,
+    private val remindRegistrationNotificationDelegate: RemindRegistrationNotificationDelegate,
+    private val retentionNotificationDelegate: RetentionNotificationDelegate,
 
-        private val branchDeepLinkParsers: Set<@JvmSuppressWildcards BranchDeepLinkParser>
+    private val branchDeepLinkParsers: Set<@JvmSuppressWildcards BranchDeepLinkParser>
 ) : PresenterBase<SplashView>() {
     sealed class SplashRoute {
         object Onboarding : SplashRoute()
@@ -61,8 +61,8 @@ constructor(
                 checkRemoteConfigs()
                 registerDeviceToPushes()
                 executeLegacyOperations()
-                remindRegistrationDelegate.scheduleRemindRegistrationNotification()
-                retentionDelegate.scheduleRetentionNotification(shouldResetCounter = true)
+                remindRegistrationNotificationDelegate.scheduleRemindRegistrationNotification()
+                retentionNotificationDelegate.scheduleRetentionNotification(shouldResetCounter = true)
                 sharedPreferenceHelper.onNewSession()
             }
             .andThen(resolveSplashRoute(referringParams))

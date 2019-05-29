@@ -55,7 +55,7 @@ import org.stepik.android.view.notification.*
 import org.stepik.android.view.notification.delegate.*
 import org.stepik.android.view.notification.helpers.NotificationHelper
 import org.stepik.android.view.notification.helpers.NotificationHelperImpl
-import org.stepik.android.view.personal_deadlines.notification.DeadlinesDelegate
+import org.stepik.android.view.personal_deadlines.notification.DeadlinesNotificationDelegate
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.Executors
@@ -151,23 +151,23 @@ abstract class AppCoreModule {
 
     @Binds
     @IntoSet
-    internal abstract fun provideDeadlinesNotificationDelegate(deadlinesDelegate: DeadlinesDelegate): NotificationDelegate
+    internal abstract fun provideDeadlinesNotificationDelegate(deadlinesNotificationDelegate: DeadlinesNotificationDelegate): NotificationDelegate
 
     @Binds
     @IntoSet
-    internal abstract fun provideRemindRegistrationNotificationDelegate(remindRegistrationDelegate: RemindRegistrationDelegate): NotificationDelegate
+    internal abstract fun provideRemindRegistrationNotificationDelegate(remindRegistrationNotificationDelegate: RemindRegistrationNotificationDelegate): NotificationDelegate
 
     @Binds
     @IntoSet
-    internal abstract fun provideRemindAppNotificationDelegate(remindAppDelegate: RemindAppDelegate): NotificationDelegate
+    internal abstract fun provideRemindAppNotificationDelegate(remindAppNotificationDelegate: RemindAppNotificationDelegate): NotificationDelegate
 
     @Binds
     @IntoSet
-    internal abstract fun provideRetentionNotificationDelegate(retentionDelegate: RetentionDelegate): NotificationDelegate
+    internal abstract fun provideRetentionNotificationDelegate(retentionNotificationDelegate: RetentionNotificationDelegate): NotificationDelegate
 
     @Binds
     @IntoSet
-    internal abstract fun provideStreakNotificationDelegate(streakDelegate: StreakDelegate): NotificationDelegate
+    internal abstract fun provideStreakNotificationDelegate(streakNotificationDelegate: StreakNotificationDelegate): NotificationDelegate
 
     @Module
     companion object {

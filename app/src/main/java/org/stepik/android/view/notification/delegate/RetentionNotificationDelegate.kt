@@ -16,7 +16,7 @@ import org.stepik.android.view.notification.helpers.NotificationHelper
 import java.util.Calendar
 import javax.inject.Inject
 
-class RetentionDelegate
+class RetentionNotificationDelegate
 @Inject constructor(
     private val context: Context,
     private val sharedPreferenceHelper: SharedPreferenceHelper,

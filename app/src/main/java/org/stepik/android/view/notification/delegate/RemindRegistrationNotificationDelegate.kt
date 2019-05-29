@@ -14,7 +14,7 @@ import org.stepik.android.view.notification.helpers.NotificationHelper
 import timber.log.Timber
 import javax.inject.Inject
 
-class RemindRegistrationDelegate
+class RemindRegistrationNotificationDelegate
 @Inject constructor(
     private val context: Context,
     private val sharedPreferenceHelper: SharedPreferenceHelper,

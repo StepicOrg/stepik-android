@@ -20,7 +20,7 @@ import org.stepik.android.view.notification.helpers.NotificationHelper
 import java.util.Calendar
 import javax.inject.Inject
 
-class RemindAppDelegate
+class RemindAppNotificationDelegate
 @Inject constructor(
     private val context: Context,
     private val sharedPreferenceHelper: SharedPreferenceHelper,
