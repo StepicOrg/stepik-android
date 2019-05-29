@@ -7,7 +7,7 @@ import org.stepik.android.view.notification.service.BootCompleteService
 
 class StepikBootCompleteReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        if (Intent.ACTION_BOOT_COMPLETED == intent.action) {
+        if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
             BootCompleteService.enqueueWork(context, intent)
         }
     }
