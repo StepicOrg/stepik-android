@@ -61,7 +61,6 @@ import org.stepic.droid.ui.activities.ProfileActivity;
 import org.stepic.droid.ui.activities.RegisterActivity;
 import org.stepic.droid.ui.activities.SettingsActivity;
 import org.stepic.droid.ui.activities.SplashActivity;
-import org.stepic.droid.ui.activities.StepsActivity;
 import org.stepic.droid.ui.activities.StoreManagementActivity;
 import org.stepic.droid.ui.activities.TagActivity;
 import org.stepic.droid.ui.activities.TextFeedbackActivity;
@@ -604,10 +603,7 @@ public class ScreenManagerImpl implements ScreenManager {
     @Override
     public void showSteps(Activity sourceActivity, @NotNull Unit unit, @NotNull Lesson lesson, boolean backAnimation, @NotNull Section section) {
         analytic.reportEventWithIdName(Analytic.Screens.SHOW_STEP, lesson.getId() + "", lesson.getTitle());
-        Intent intent = LessonActivity.Companion.createIntent(sourceActivity, section, unit, lesson);
-        if (backAnimation) {
-            intent.putExtra(StepsActivity.needReverseAnimationKey, true);
-        }
+        Intent intent = LessonActivity.Companion.createIntent(sourceActivity, section, unit, lesson, backAnimation);
         sourceActivity.startActivity(intent);
     }
 

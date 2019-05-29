@@ -36,14 +36,16 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable {
         private const val EXTRA_SECTION = "section"
         private const val EXTRA_UNIT = "unit"
         private const val EXTRA_LESSON = "lesson"
+        private const val EXTRA_BACK_ANIMATION = "back_animation"
 
         private const val EXTRA_LAST_STEP = "last_step"
 
-        fun createIntent(context: Context, section: Section, unit: Unit, lesson: Lesson): Intent =
+        fun createIntent(context: Context, section: Section, unit: Unit, lesson: Lesson, isNeedBackAnimation: Boolean = false): Intent =
             Intent(context, LessonActivity::class.java)
                 .putExtra(EXTRA_SECTION, section)
                 .putExtra(EXTRA_UNIT, unit)
                 .putExtra(EXTRA_LESSON, lesson)
+                .putExtra(EXTRA_BACK_ANIMATION, isNeedBackAnimation)
 
         fun createIntent(context: Context, lastStep: LastStep): Intent =
             Intent(context, LessonActivity::class.java)
@@ -74,6 +76,15 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if (savedInstanceState == null) {
+            if (intent.getBooleanExtra(EXTRA_BACK_ANIMATION, false)) {
+                overridePendingTransition(R.anim.slide_in_from_start, R.anim.slide_out_to_end)
+            } else {
+                overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start)
+            }
+        }
+
         setContentView(R.layout.activity_lesson)
 
         injectComponent()
