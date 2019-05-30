@@ -1,5 +1,6 @@
 package org.stepik.android.view.lesson.ui.delegate
 
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.support.annotation.DrawableRes
 import android.support.annotation.PluralsRes
@@ -56,6 +57,7 @@ class LessonInfoTooltipDelegate(
         val popupWindow = PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
         popupWindow.animationStyle = R.style.PopupAnimations
         popupWindow.isOutsideTouchable = true
+        popupWindow.setBackgroundDrawable(ColorDrawable()) // workaround to make isOutsideTouchable work on Android 4
 
         popupView.setOnClickListener {
             popupWindow.dismiss()
