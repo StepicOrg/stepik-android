@@ -147,7 +147,7 @@ abstract class AppCoreModule {
     internal abstract fun bindNotificationHelper(notificationHelperImpl: NotificationHelperImpl): NotificationHelper
 
     @Binds
-    internal abstract fun bindNotificationResolver(notificationResolverImpl: NotificationResolverImpl): NotificationResolver
+    internal abstract fun bindNotificationResolver(fcmNotificationHandlerImpl: FcmNotificationHandlerImpl): FcmNotificationHandler
 
     @Binds
     @IntoSet

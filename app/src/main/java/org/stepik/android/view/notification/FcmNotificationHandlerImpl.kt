@@ -28,7 +28,7 @@ import org.stepik.android.view.course.routing.CourseScreenTab
 import org.stepik.android.view.course.ui.activity.CourseActivity
 import javax.inject.Inject
 
-class NotificationResolverImpl
+class FcmNotificationHandlerImpl
 @Inject constructor(
     private val context: Context,
     private val screenManager: ScreenManager,
@@ -41,7 +41,7 @@ class NotificationResolverImpl
     private val api: Api,
     private val notificationTimeChecker: NotificationTimeChecker,
     private val stepikNotificationManager: StepikNotificationManager
-) : NotificationResolver {
+) : FcmNotificationHandler {
     override fun showNotification(notification: Notification) {
         if (Looper.myLooper() == Looper.getMainLooper()) {
             throw RuntimeException("Can't create notification on main thread")

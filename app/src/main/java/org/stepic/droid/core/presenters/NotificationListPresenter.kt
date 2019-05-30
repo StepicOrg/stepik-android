@@ -21,7 +21,7 @@ import org.stepic.droid.util.not
 import org.stepic.droid.util.putIfAbsent
 import org.stepic.droid.util.substringOrNull
 import org.stepic.droid.web.Api
-import org.stepik.android.view.notification.NotificationResolver
+import org.stepik.android.view.notification.FcmNotificationHandler
 import timber.log.Timber
 import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
@@ -32,14 +32,14 @@ import javax.inject.Inject
 @NotificationsScope
 class NotificationListPresenter
 @Inject constructor(
-        private val threadPoolExecutor: ThreadPoolExecutor,
-        private val mainHandler: MainHandler,
-        private val api: Api,
-        private val config: Config,
-        private val analytic: Analytic,
-        private val stepikNotificationResolver: NotificationResolver,
-        private val internetEnabledListenerClient: Client<InternetEnabledListener>,
-        private val notificationsBadgesManager: NotificationsBadgesManager
+    private val threadPoolExecutor: ThreadPoolExecutor,
+    private val mainHandler: MainHandler,
+    private val api: Api,
+    private val config: Config,
+    private val analytic: Analytic,
+    private val fcmNotificationHandler: FcmNotificationHandler,
+    private val internetEnabledListenerClient: Client<InternetEnabledListener>,
+    private val notificationsBadgesManager: NotificationsBadgesManager
 ) : PresenterBase<NotificationListView>(), InternetEnabledListener {
     private var notificationCategory: NotificationCategory? = null
     val isLoading = AtomicBoolean(false)
@@ -361,7 +361,7 @@ class NotificationListPresenter
 
     fun tryToOpenNotification(notification: Notification) {
         analytic.reportEvent(Analytic.Notification.NOTIFICATION_CENTER_OPENED)
-        stepikNotificationResolver.tryOpenNotificationInstantly(notification)
+        fcmNotificationHandler.tryOpenNotificationInstantly(notification)
     }
 
     fun trackClickOnNotification(notification: Notification) {

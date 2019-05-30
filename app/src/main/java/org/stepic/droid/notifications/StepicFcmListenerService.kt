@@ -10,7 +10,7 @@ import org.stepic.droid.notifications.handlers.RemoteMessageHandler
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.notifications.model.NotificationStatuses
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import org.stepik.android.view.notification.NotificationResolver
+import org.stepik.android.view.notification.FcmNotificationHandler
 import java.io.IOException
 import javax.inject.Inject
 
@@ -50,7 +50,7 @@ class StepicFcmListenerService : FirebaseMessagingService() {
     private fun processNotification(rawMessageObject: String?) {
         val stepikNotification = Gson().fromJson(rawMessageObject, Notification::class.java)
         stepikNotification?.let {
-            hacker.notificationResolver.showNotification(it)
+            hacker.fcmNotificationHandler.showNotification(it)
         }
     }
 
@@ -78,7 +78,7 @@ class HackFcmListener {
     internal lateinit var handlers: Map<String, @JvmSuppressWildcards RemoteMessageHandler>
 
     @Inject
-    internal lateinit var notificationResolver: NotificationResolver
+    internal lateinit var fcmNotificationHandler: FcmNotificationHandler
 
     init {
         App.component().inject(this)
