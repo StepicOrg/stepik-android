@@ -4,8 +4,11 @@ import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
+import android.graphics.PorterDuff
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
+import android.support.v7.content.res.AppCompatResources
 import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_lesson.*
@@ -220,7 +223,15 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable {
             ?: return
 
         for (i in 0 until lessonTab.tabCount) {
-            lessonTab.getTabAt(i)?.icon = stepsAdapter.getTabDrawable(i)
+            val tabIcon = AppCompatResources
+                .getDrawable(this, stepsAdapter.getTabDrawable(i))
+                ?.mutate()
+
+            val tintColor = ContextCompat
+                .getColor(this, stepsAdapter.getTabTint(i))
+
+            lessonTab.getTabAt(i)?.icon = tabIcon
+            tabIcon?.setColorFilter(tintColor, PorterDuff.Mode.SRC_IN)
         }
     }
 

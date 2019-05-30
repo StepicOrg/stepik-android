@@ -1,7 +1,8 @@
 package org.stepic.droid.ui.adapters
 
-import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.support.annotation.ColorRes
+import android.support.annotation.DrawableRes
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
@@ -82,14 +83,19 @@ class StepFragmentAdapter(
         super.destroyItem(container, position, `object`)
     }
 
-    fun getTabDrawable(position: Int): Drawable? {
-        if (position >= items.size) return null
-        val stepItem = items[position]
-        val step = stepItem.step.step
-        val isStepPassed = stepItem.assignmentProgress?.isPassed
-            ?: stepItem.stepProgress?.isPassed
+    @DrawableRes
+    fun getTabDrawable(position: Int): Int {
+        val step = items.getOrNull(position)?.step?.step
+        return stepTypeResolver.getDrawableForType(step?.block?.name, step?.actions?.doReview != null)
+    }
+
+    @ColorRes
+    fun getTabTint(position: Int): Int {
+        val stepItem = items.getOrNull(position)
+        val isStepPassed = stepItem?.assignmentProgress?.isPassed
+            ?: stepItem?.stepProgress?.isPassed
             ?: false
 
-        return stepTypeResolver.getDrawableForType(step.block?.name, isStepPassed, step.actions?.doReview != null)
+        return stepTypeResolver.getDrawableTintForStep(isStepPassed)
     }
 }
