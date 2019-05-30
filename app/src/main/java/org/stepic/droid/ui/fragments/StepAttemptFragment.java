@@ -210,7 +210,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
             @Override
             public void onClick(View v) {
                 v.setEnabled(false);
-                boolean handled = ((NextMoveable) getParentFragment()).moveNext();
+                boolean handled = ((NextMoveable) getActivity()).moveNext();
                 if (!handled) {
                     if (unit != null) {
                         routeStepPresenter.clickNextLesson(unit);
