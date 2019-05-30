@@ -1,4 +1,4 @@
-package org.stepik.android.view.notification.delegate
+package org.stepik.android.view.splash.notification
 
 import android.content.Context
 import android.content.Intent

@@ -4,14 +4,15 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.core.presenters.contracts.NotificationTimeView
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.ui.util.TimeIntervalUtil
-import org.stepik.android.view.notification.delegate.StreakNotificationDelegate
+import org.stepik.android.view.streak.notification.StreakNotificationDelegate
 import javax.inject.Inject
 
 class StreakPresenter
 @Inject constructor(
         private val analytic: Analytic,
         private val sharedPreferenceHelper: SharedPreferenceHelper,
-        private val streakNotificationDelegate: StreakNotificationDelegate) : PresenterBase<NotificationTimeView>() {
+        private val streakNotificationDelegate: StreakNotificationDelegate
+) : PresenterBase<NotificationTimeView>() {
 
     fun tryShowNotificationSetting() {
         val isEnabled = sharedPreferenceHelper.isStreakNotificationEnabled

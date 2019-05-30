@@ -19,8 +19,8 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.emptyOnErrorStub
-import org.stepik.android.view.notification.delegate.RemindRegistrationNotificationDelegate
-import org.stepik.android.view.notification.delegate.RetentionNotificationDelegate
+import org.stepik.android.view.splash.notification.RemindRegistrationNotificationDelegate
+import org.stepik.android.view.splash.notification.RetentionNotificationDelegate
 import org.stepik.android.view.routing.deeplink.BranchDeepLinkParser
 import org.stepik.android.view.routing.deeplink.BranchRoute
 import java.lang.IllegalArgumentException

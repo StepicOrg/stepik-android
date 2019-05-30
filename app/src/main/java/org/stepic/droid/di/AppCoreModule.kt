@@ -51,11 +51,14 @@ import org.stepic.droid.web.ApiImpl
 import org.stepic.droid.web.UserAgentProvider
 import org.stepic.droid.web.UserAgentProviderImpl
 import org.stepik.android.presentation.base.injection.DaggerViewModelFactory
+import org.stepik.android.view.course_list.notification.RemindAppNotificationDelegate
 import org.stepik.android.view.notification.*
-import org.stepik.android.view.notification.delegate.*
 import org.stepik.android.view.notification.helpers.NotificationHelper
 import org.stepik.android.view.notification.helpers.NotificationHelperImpl
 import org.stepik.android.view.personal_deadlines.notification.DeadlinesNotificationDelegate
+import org.stepik.android.view.splash.notification.RemindRegistrationNotificationDelegate
+import org.stepik.android.view.splash.notification.RetentionNotificationDelegate
+import org.stepik.android.view.streak.notification.StreakNotificationDelegate
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.Executors

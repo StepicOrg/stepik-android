@@ -1,4 +1,4 @@
-package org.stepik.android.view.notification.delegate
+package org.stepik.android.view.streak.notification
 
 import android.app.PendingIntent
 import android.content.Context
@@ -122,7 +122,8 @@ class StreakNotificationDelegate
                 justText = message,
                 taskBuilder = taskBuilder,
                 title = context.getString(R.string.time_to_learn_notification_title),
-                deleteIntent = getDeleteIntentForStreaks(), id = STREAK_NOTIFICATION_ID)
+                deleteIntent = getDeleteIntentForStreaks(), id = STREAK_NOTIFICATION_ID
+        )
         showNotification(STREAK_NOTIFICATION_ID, notification.build())
     }
 
@@ -145,7 +146,8 @@ class StreakNotificationDelegate
         val notification = notificationHelper.makeSimpleNotificationBuilder(stepikNotification = null,
                 justText = message,
                 taskBuilder = taskBuilder,
-                title = context.getString(R.string.time_to_learn_notification_title), id = STREAK_NOTIFICATION_ID)
+                title = context.getString(R.string.time_to_learn_notification_title), id = STREAK_NOTIFICATION_ID
+        )
         showNotification(STREAK_NOTIFICATION_ID, notification.build())
     }
 

@@ -1,4 +1,4 @@
-package org.stepik.android.view.notification.delegate
+package org.stepik.android.view.course_list.notification
 
 import android.app.PendingIntent
 import android.content.Context

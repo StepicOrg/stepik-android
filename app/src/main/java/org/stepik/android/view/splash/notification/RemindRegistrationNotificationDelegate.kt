@@ -1,4 +1,4 @@
-package org.stepik.android.view.notification.delegate
+package org.stepik.android.view.splash.notification
 
 import android.content.Context
 import android.content.Intent
@@ -41,7 +41,8 @@ class RemindRegistrationNotificationDelegate
                 justText = remindMessage,
                 taskBuilder = taskBuilder,
                 title = title,
-                id = REGISTRATION_REMIND_NOTIFICATION_ID)
+                id = REGISTRATION_REMIND_NOTIFICATION_ID
+        )
 
         showNotification(REGISTRATION_REMIND_NOTIFICATION_ID, notification.build())
         scheduleRemindRegistrationNotification()

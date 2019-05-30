@@ -44,7 +44,7 @@ import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment;
 import org.stepic.droid.util.KotlinUtil;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.StepikUtil;
-import org.stepik.android.view.notification.delegate.RemindAppNotificationDelegate;
+import org.stepik.android.view.course_list.notification.RemindAppNotificationDelegate;
 
 import java.util.ArrayList;
 import java.util.List;

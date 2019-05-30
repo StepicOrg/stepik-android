@@ -5,14 +5,15 @@ import dagger.Provides
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.core.presenters.StreakPresenter
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import org.stepik.android.view.notification.delegate.StreakNotificationDelegate
+import org.stepik.android.view.streak.notification.StreakNotificationDelegate
 
 @Module
 class StreakModule {
     @Provides
     internal fun provideStreakPresenter(analytic: Analytic,
                                         sharedPreferenceHelper: SharedPreferenceHelper,
-                                        streakNotificationDelegate: StreakNotificationDelegate): StreakPresenter {
+                                        streakNotificationDelegate: StreakNotificationDelegate
+    ): StreakPresenter {
         return StreakPresenter(analytic, sharedPreferenceHelper, streakNotificationDelegate)
     }
 }
