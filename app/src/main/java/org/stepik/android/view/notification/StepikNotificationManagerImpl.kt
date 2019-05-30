@@ -9,32 +9,28 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.scheduleCompat
 import org.stepik.android.view.notification.receiver.StepikAlarmReceiver
-import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
 
 class StepikNotificationManagerImpl
 @Inject constructor(
     private val context: Context,
-    private val sharedPreferenceHelper: SharedPreferenceHelper,
-    private val threadPoolExecutor: ThreadPoolExecutor
+    private val sharedPreferenceHelper: SharedPreferenceHelper
 ) : StepikNotificationManager {
 
     private val alarmManager: AlarmManager by lazy { context.getSystemService(Context.ALARM_SERVICE) as AlarmManager }
     private val notificationManager: NotificationManager by lazy { context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager }
 
     override fun scheduleNotification(id: String, millis: Long) {
-        threadPoolExecutor.execute {
-            val intent = StepikAlarmReceiver
-                    .createIntent(context, id)
+        val intent = StepikAlarmReceiver
+                .createIntent(context, id)
 
-            val pendingIntent = PendingIntent
-                    .getBroadcast(context, StepikAlarmReceiver.REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntent = PendingIntent
+                .getBroadcast(context, StepikAlarmReceiver.REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
-            alarmManager.cancel(pendingIntent)
-            alarmManager.scheduleCompat(millis, AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent)
+        alarmManager.cancel(pendingIntent)
+        alarmManager.scheduleCompat(millis, AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent)
 
-            sharedPreferenceHelper.putAlarmTimestamp(id, millis)
-        }
+        sharedPreferenceHelper.putAlarmTimestamp(id, millis)
     }
 
     override fun rescheduleActiveNotification(id: String) {
