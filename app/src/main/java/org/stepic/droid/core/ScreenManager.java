@@ -3,7 +3,6 @@ package org.stepic.droid.core;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 
@@ -11,15 +10,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.model.CollectionDescriptionColors;
+import org.stepik.android.domain.last_step.model.LastStep;
 import org.stepik.android.model.Course;
 import org.stepic.droid.model.CoursesCarouselInfo;
 import org.stepik.android.model.Lesson;
 import org.stepik.android.model.Section;
 import org.stepik.android.model.Step;
 import org.stepik.android.model.Unit;
-import org.stepik.android.model.Video;
 import org.stepic.droid.ui.fragments.CommentsFragment;
-import org.stepic.droid.web.ViewAssignment;
 import org.stepik.android.model.Tag;
 import org.stepik.android.model.user.Profile;
 import org.stepik.android.view.course.routing.CourseScreenTab;
@@ -58,15 +56,13 @@ public interface ScreenManager {
     void openNewCommentForm(CommentsFragment commentsFragment, Long target, @Nullable Long parent);
 
 
-    void showSteps(Activity sourceActivity, Unit unit, Lesson lesson, @Nullable Section section);
+    void showSteps(Activity sourceActivity, @NotNull Unit unit, @NotNull Lesson lesson, @NotNull Section section);
 
-    void showSteps(Activity sourceActivity, Unit unit, Lesson lesson, boolean backAnimation, @Nullable Section section);
+    void showSteps(Activity sourceActivity, @NotNull Unit unit, @NotNull Lesson lesson, boolean backAnimation, @NotNull Section section);
 
     void openStepInWeb(Context context, Step step);
 
     void openRemindPassword(AppCompatActivity context);
-
-    void pushToViewedQueue(ViewAssignment viewAssignmentWrapper);
 
     void showCourseDescription(Context context, long courseId);
     void showCourseDescription(Context context, @NotNull Course course);
@@ -128,7 +124,7 @@ public interface ScreenManager {
 
     void continueAdaptiveCourse(Activity activity, Course course);
 
-    void continueCourse(Activity activity, long courseId, long unitId, long lessonId, long stepId);
+    void continueCourse(Activity activity, long courseId, @NotNull LastStep lastStep);
 
     void showLaunchScreen(FragmentActivity activity, @NotNull Course course);
 

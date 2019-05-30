@@ -12,7 +12,6 @@
     <dimen name="guideline_list_item_height">72dp</dimen>
     <dimen name="guideline_left_right_padding_list_item">6dp</dimen>
     <dimen name="guideline_tab_indicator_height">2dp</dimen>
-    <dimen name="padding_tab_bar">12dp</dimen>
     <dimen name="height_of_social">@dimen/min_ux_touchable_size</dimen>
     <dimen name="min_max_width_for_tablets">316dp</dimen>
     <dimen name="auth_elements_width">-1px</dimen>

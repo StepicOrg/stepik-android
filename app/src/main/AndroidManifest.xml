@@ -125,67 +125,6 @@
                 android:value=".ui.activities.CourseSearchResultActivity" />
         </activity>
 
-        <activity
-            android:name=".ui.activities.StepsActivity"
-            android:windowSoftInputMode="adjustResize">
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <intent-filter
-                android:autoVerify="true"
-                tools:ignore="UnusedAttribute">
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="https" />
-                <data android:scheme="http" />
-                <data android:host="@string/secondary_host_name" />
-                <data android:host="@string/host_name" />
-                <data android:pathPattern="/lesson/.*/" />
-                <data android:pathPattern="/lesson/.*/step/1" />
-                <data android:pathPattern="/lesson/.*/step/2" />
-                <data android:pathPattern="/lesson/.*/step/3" />
-                <data android:pathPattern="/lesson/.*/step/4" />
-                <data android:pathPattern="/lesson/.*/step/5" />
-                <data android:pathPattern="/lesson/.*/step/6" />
-                <data android:pathPattern="/lesson/.*/step/7" />
-                <data android:pathPattern="/lesson/.*/step/8" />
-                <data android:pathPattern="/lesson/.*/step/9" />
-                <data android:pathPattern="/lesson/.*/step/10" />
-                <data android:pathPattern="/lesson/.*/step/11" />
-                <data android:pathPattern="/lesson/.*/step/12" />
-                <data android:pathPattern="/lesson/.*/step/13" />
-                <data android:pathPattern="/lesson/.*/step/14" />
-                <data android:pathPattern="/lesson/.*/step/15" />
-                <data android:pathPattern="/lesson/.*/step/16" />
-                <data android:pathPattern="/lesson/.*/step/17" />
-                <data android:pathPattern="/lesson/.*/step/18" />
-                <data android:pathPattern="/lesson/.*/step/19" />
-                <data android:pathPattern="/lesson/.*/step/20" />
-                <data android:pathPattern="/lesson/.*/step/21" />
-                <data android:pathPattern="/lesson/.*/step/22" />
-                <data android:pathPattern="/lesson/.*/step/23" />
-                <data android:pathPattern="/lesson/.*/step/24" />
-                <data android:pathPattern="/lesson/.*/step/25" />
-                <data android:pathPattern="/lesson/.*/step/26" />
-                <data android:pathPattern="/lesson/.*/step/27" />
-                <data android:pathPattern="/lesson/.*/step/28" />
-                <data android:pathPattern="/lesson/.*/step/29" />
-                <data android:pathPattern="/lesson/.*/step/30" />
-                <data android:pathPattern="/lesson/.*/step/31" />
-                <data android:pathPattern="/lesson/.*/step/32" />
-                <data android:pathPattern="/lesson/.*/step/33" />
-                <data android:pathPattern="/lesson/.*/step/34" />
-                <data android:pathPattern="/lesson/.*/step/35" />
-                <data android:pathPattern="/lesson/.*/step/36" />
-                <data android:pathPattern="/lesson/.*/step/37" />
-                <data android:pathPattern="/lesson/.*/step/38" />
-                <data android:pathPattern="/lesson/.*/step/39" />
-                <data android:pathPattern="/lesson/.*/step/40" />
-            </intent-filter>
-
-        </activity>
-
          <activity
             android:name=".ui.activities.CourseSearchResultActivity"
             android:launchMode="singleTop">
@@ -219,11 +158,11 @@
         <activity
             android:name=".ui.activities.CommentsActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".ui.activities.StepsActivity">
+            android:parentActivityName="org.stepik.android.view.lesson.ui.activity.LessonActivity">
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activities.StepsActivity" />
+                android:value="org.stepik.android.view.lesson.ui.activity.LessonActivity" />
         </activity>
 
         <activity
@@ -371,6 +310,64 @@
             android:name="org.stepik.android.view.profile_edit.ui.activity.ProfileEditInfoActivity"
             android:windowSoftInputMode="adjustResize" />
 
+        <activity
+            android:name="org.stepik.android.view.lesson.ui.activity.LessonActivity">
+            <intent-filter
+                android:autoVerify="true"
+                tools:ignore="UnusedAttribute">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="https" />
+                <data android:scheme="http" />
+                <data android:host="@string/secondary_host_name" />
+                <data android:host="@string/host_name" />
+                <data android:pathPattern="/lesson/.*/" />
+                <data android:pathPattern="/lesson/.*/step/1" />
+                <data android:pathPattern="/lesson/.*/step/2" />
+                <data android:pathPattern="/lesson/.*/step/3" />
+                <data android:pathPattern="/lesson/.*/step/4" />
+                <data android:pathPattern="/lesson/.*/step/5" />
+                <data android:pathPattern="/lesson/.*/step/6" />
+                <data android:pathPattern="/lesson/.*/step/7" />
+                <data android:pathPattern="/lesson/.*/step/8" />
+                <data android:pathPattern="/lesson/.*/step/9" />
+                <data android:pathPattern="/lesson/.*/step/10" />
+                <data android:pathPattern="/lesson/.*/step/11" />
+                <data android:pathPattern="/lesson/.*/step/12" />
+                <data android:pathPattern="/lesson/.*/step/13" />
+                <data android:pathPattern="/lesson/.*/step/14" />
+                <data android:pathPattern="/lesson/.*/step/15" />
+                <data android:pathPattern="/lesson/.*/step/16" />
+                <data android:pathPattern="/lesson/.*/step/17" />
+                <data android:pathPattern="/lesson/.*/step/18" />
+                <data android:pathPattern="/lesson/.*/step/19" />
+                <data android:pathPattern="/lesson/.*/step/20" />
+                <data android:pathPattern="/lesson/.*/step/21" />
+                <data android:pathPattern="/lesson/.*/step/22" />
+                <data android:pathPattern="/lesson/.*/step/23" />
+                <data android:pathPattern="/lesson/.*/step/24" />
+                <data android:pathPattern="/lesson/.*/step/25" />
+                <data android:pathPattern="/lesson/.*/step/26" />
+                <data android:pathPattern="/lesson/.*/step/27" />
+                <data android:pathPattern="/lesson/.*/step/28" />
+                <data android:pathPattern="/lesson/.*/step/29" />
+                <data android:pathPattern="/lesson/.*/step/30" />
+                <data android:pathPattern="/lesson/.*/step/31" />
+                <data android:pathPattern="/lesson/.*/step/32" />
+                <data android:pathPattern="/lesson/.*/step/33" />
+                <data android:pathPattern="/lesson/.*/step/34" />
+                <data android:pathPattern="/lesson/.*/step/35" />
+                <data android:pathPattern="/lesson/.*/step/36" />
+                <data android:pathPattern="/lesson/.*/step/37" />
+                <data android:pathPattern="/lesson/.*/step/38" />
+                <data android:pathPattern="/lesson/.*/step/39" />
+                <data android:pathPattern="/lesson/.*/step/40" />
+            </intent-filter>
+        </activity>
+
         <receiver
             android:name="org.stepic.droid.receivers.DownloadClickReceiver"
             android:exported="true">
@@ -409,8 +406,6 @@
             android:name="org.stepic.droid.services.AlarmService"
             android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="true" />
-
-        <service android:name="org.stepic.droid.services.ViewPusher" />
 
         <service android:name=".notifications.StepicFcmListenerService">
             <intent-filter>

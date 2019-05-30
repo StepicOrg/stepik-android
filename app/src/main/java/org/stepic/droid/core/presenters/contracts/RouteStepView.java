@@ -1,5 +1,6 @@
 package org.stepic.droid.core.presenters.contracts;
 
+import org.jetbrains.annotations.NotNull;
 import org.stepik.android.model.Lesson;
 import org.stepik.android.model.Section;
 import org.stepik.android.model.Unit;
@@ -7,7 +8,7 @@ import org.stepik.android.model.Unit;
 public interface RouteStepView {
     void showNextLessonView();
 
-    void openNextLesson(Unit nextUnit, Lesson nextLesson, Section nextSection);
+    void openNextLesson(@NotNull Unit nextUnit, @NotNull Lesson nextLesson, @NotNull Section nextSection);
 
     void showLoading();
 
@@ -15,7 +16,7 @@ public interface RouteStepView {
 
     void showPreviousLessonView();
 
-    void openPreviousLesson(Unit previousUnit, Lesson previousLesson, Section previousSection);
+    void openPreviousLesson(@NotNull Unit previousUnit, @NotNull Lesson previousLesson, @NotNull Section previousSection);
 
     void showCantGoPrevious();
 

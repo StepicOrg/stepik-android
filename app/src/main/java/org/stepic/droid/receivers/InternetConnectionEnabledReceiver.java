@@ -11,14 +11,10 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.core.internetstate.contract.InternetEnabledPoster;
-import org.stepic.droid.core.updatingstep.contract.UpdatingStepPoster;
 import org.stepik.android.domain.progress.interactor.LocalProgressInteractor;
-import org.stepik.android.model.Step;
 import org.stepic.droid.model.ViewedNotification;
 import org.stepic.droid.storage.operations.DatabaseFacade;
-import org.stepic.droid.util.resolvers.StepHelper;
 import org.stepic.droid.web.Api;
-import org.stepic.droid.web.ViewAssignment;
 
 import java.io.IOException;
 import java.util.List;
@@ -54,9 +50,6 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
     @Inject
     InternetEnabledPoster internetEnabledPoster;
 
-    @Inject
-    UpdatingStepPoster updatingStepPoster;
-
     private AtomicBoolean inWork = new AtomicBoolean(false);
 
     private static Boolean isLastStateWasOffline = null;
@@ -82,7 +75,6 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
         threadPoolExecutor.execute(new Runnable() {
             @Override
             public void run() {
-                processViewAssignments();
                 processViewedNotifications();
                 inWork.set(false);
             }
@@ -99,45 +91,6 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
 
                 if (response.isSuccessful()) {
                     databaseFacade.removeViewedNotification(viewedNotification);
-                }
-            } catch (IOException e) {
-                //no internet, just ignore and send next time
-            }
-        }
-    }
-
-    @WorkerThread
-    private void processViewAssignments() {
-        List<ViewAssignment> list = databaseFacade.getAllInQueue();
-        for (ViewAssignment item : list) {
-            try {
-                retrofit2.Response<Void> response = api.postViewed(item).execute();
-                if (response.isSuccessful()) {
-                    databaseFacade.removeFromQueue(item);
-                    Step step = databaseFacade.getStepById(item.getStep());
-                    if (step != null) {
-                        final long stepId = step.getId();
-                        if (StepHelper.isViewedStatePost(step)) {
-                            if (item.getAssignment() != null) {
-                                databaseFacade.markProgressAsPassed(item.getAssignment());
-                            } else {
-                                if (step.getProgress() != null) {
-                                    databaseFacade.markProgressAsPassedIfInDb(step.getProgress());
-                                }
-                            }
-                            localProgressInteractor.updateStepProgress(step).blockingAwait();
-                        }
-                        // Get a handler that can be used to post to the main thread
-
-                        mainHandler.post(new Function0<Unit>() {
-                                             @Override
-                                             public Unit invoke() {
-                                                 updatingStepPoster.updateStep(stepId, false);
-                                                 return Unit.INSTANCE;
-                                             }
-                                         }
-                        );
-                    }
                 }
             } catch (IOException e) {
                 //no internet, just ignore and send next time

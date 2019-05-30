@@ -70,9 +70,9 @@ class Course(
     val isPublic: Boolean = false,
 
     @SerializedName("certificate_distinction_threshold")
-    val certificateDistinctionThreshold: Int = 0,
+    val certificateDistinctionThreshold: Long = 0,
     @SerializedName("certificate_regular_threshold")
-    val certificateRegularThreshold: Int = 0,
+    val certificateRegularThreshold: Long = 0,
     @SerializedName("certificate_link")
     val certificateLink: String? = null,
     @SerializedName("is_certificate_auto_issued")
@@ -173,8 +173,8 @@ class Course(
         parcel.writeBoolean(isActive)
         parcel.writeBoolean(isPublic)
 
-        parcel.writeInt(certificateDistinctionThreshold)
-        parcel.writeInt(certificateRegularThreshold)
+        parcel.writeLong(certificateDistinctionThreshold)
+        parcel.writeLong(certificateRegularThreshold)
         parcel.writeString(certificateLink)
         parcel.writeBoolean(isCertificateAutoIssued)
 
@@ -239,8 +239,8 @@ class Course(
                 parcel.readBoolean(),
                 parcel.readBoolean(),
                 parcel.readBoolean(),
-                parcel.readInt(),
-                parcel.readInt(),
+                parcel.readLong(),
+                parcel.readLong(),
                 parcel.readString(),
                 parcel.readBoolean(),
                 parcel.readString(),

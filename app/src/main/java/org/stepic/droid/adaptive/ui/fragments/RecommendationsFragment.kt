@@ -175,7 +175,7 @@ class RecommendationsFragment : FragmentBase(), RecommendationsView {
     }
 
     override fun showExpTooltip() {
-        expPopupWindow = PopupHelper.showPopupAnchoredToView(requireContext(), expBubble, getString(R.string.adaptive_exp_tooltip_text))
+        expPopupWindow = PopupHelper.showPopupAnchoredToView(requireContext(), expBubble, getString(R.string.adaptive_exp_tooltip_text), withArrow = true)
     }
 
     override fun onStreakLost() =

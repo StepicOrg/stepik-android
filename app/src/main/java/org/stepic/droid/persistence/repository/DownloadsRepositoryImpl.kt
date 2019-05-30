@@ -10,8 +10,9 @@ import org.stepic.droid.persistence.model.*
 import org.stepic.droid.persistence.storage.PersistentStateManager
 import org.stepic.droid.persistence.storage.dao.SystemDownloadsDao
 import org.stepic.droid.persistence.storage.dao.PersistentItemDao
-import org.stepic.droid.storage.repositories.Repository
 import org.stepic.droid.util.plus
+import org.stepik.android.domain.base.DataSourceType
+import org.stepik.android.domain.step.repository.StepRepository
 import org.stepik.android.model.Step
 import org.stepik.android.model.Video
 import java.io.File
@@ -22,16 +23,16 @@ import kotlin.math.max
 class DownloadsRepositoryImpl
 @Inject
 constructor(
-        private val updatesObservable: Observable<Structure>,
-        private val intervalUpdatesObservable: Observable<kotlin.Unit>,
+    private val updatesObservable: Observable<Structure>,
+    private val intervalUpdatesObservable: Observable<kotlin.Unit>,
 
-        private val systemDownloadsDao: SystemDownloadsDao,
-        private val persistentItemDao: PersistentItemDao,
-        private val persistentStateManager: PersistentStateManager,
-        private val stepRepository: Repository<Step>,
+    private val systemDownloadsDao: SystemDownloadsDao,
+    private val persistentItemDao: PersistentItemDao,
+    private val persistentStateManager: PersistentStateManager,
+    private val stepRepository: StepRepository,
 
-        private val downloadTitleResolver: DownloadTitleResolver,
-        private val externalStorageManager: ExternalStorageManager
+    private val downloadTitleResolver: DownloadTitleResolver,
+    private val externalStorageManager: ExternalStorageManager
 ): DownloadsRepository {
     override fun getDownloads(): Observable<DownloadItem> = (
                 persistentItemDao.getAllCorrectItems()
@@ -56,15 +57,17 @@ constructor(
             )
             .takeUntil { it.status !is DownloadProgress.Status.InProgress }
 
-    private fun resolveStep(structure: Structure, items: List<PersistentItem>): Observable<DownloadItem> = Observable
-            .fromCallable { stepRepository.getObject(structure.step) }
-            .flatMap { step ->
+    private fun resolveStep(structure: Structure, items: List<PersistentItem>): Observable<DownloadItem> =
+        stepRepository
+            .getStep(structure.step, primarySourceType = DataSourceType.CACHE)
+            .flatMapObservable { step ->
                 zip(
                         downloadTitleResolver.resolveTitle(step.lesson, step.id).toObservable(),
                         getStepVideo(step),
                         getStorageRecords(items)
                 )
-            }.map { (title, video, records) ->
+            }
+            .map { (title, video, records) ->
                 resolveDownloadItem(structure, title, video, items, records)
             }
 

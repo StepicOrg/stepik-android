@@ -1,7 +1,8 @@
 package org.stepik.android.model
 
-class Enrollment(val course: Long = 0)
+import com.google.gson.annotations.SerializedName
 
-class EnrollmentWrapper(val enrollment: Enrollment) {
-    constructor(courseId: Long): this(Enrollment(courseId))
-}
+class Enrollment(
+    @SerializedName("course")
+    val course: Long
+)

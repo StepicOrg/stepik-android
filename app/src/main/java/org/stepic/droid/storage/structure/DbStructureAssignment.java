@@ -1,5 +1,8 @@
 package org.stepic.droid.storage.structure;
 
+import kotlin.Deprecated;
+
+@Deprecated(message = "Use one from org.stepik.android.cache.assignment.structure")
 public final class DbStructureAssignment {
     public static final String ASSIGNMENTS = "assignments";
 

@@ -35,6 +35,7 @@ import org.stepic.droid.util.resolvers.text.TextResolver
 import org.stepic.droid.web.Api
 import org.stepik.android.view.course.routing.CourseScreenTab
 import org.stepik.android.view.course.ui.activity.CourseActivity
+import org.stepik.android.view.lesson.ui.activity.LessonActivity
 import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
@@ -389,7 +390,7 @@ constructor(
             }
 
             val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
-            taskBuilder.addParentStack(StepsActivity::class.java)
+            taskBuilder.addParentStack(LessonActivity::class.java)
             taskBuilder.addNextIntent(prepareNotificationIntent(intent, id))
 
             analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, id.toString(), stepikNotification.type?.name)
@@ -412,7 +413,7 @@ constructor(
             }
 
             val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
-            taskBuilder.addParentStack(StepsActivity::class.java)
+            taskBuilder.addParentStack(LessonActivity::class.java)
             taskBuilder.addNextIntent(prepareNotificationIntent(intent, id))
 
             analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, id.toString(), stepikNotification.type?.name)
@@ -429,7 +430,7 @@ constructor(
             val justText: String = textResolver.fromHtml(rawMessageHtml).toString()
 
             val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
-            taskBuilder.addParentStack(StepsActivity::class.java)
+            taskBuilder.addParentStack(LessonActivity::class.java)
             taskBuilder.addNextIntent(prepareNotificationIntent(screenManager.certificateIntent, id))
 
 
@@ -715,7 +716,7 @@ constructor(
 
     private fun getReviewIntent(notification: Notification): Intent? {
         val data = HtmlHelper.parseNLinkInText(notification.htmlText ?: "", configs.baseUrl, 0) ?: return null
-        val intent = Intent(context, StepsActivity::class.java)
+        val intent = Intent(context, LessonActivity::class.java)
         intent.data = Uri.parse(data)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         return intent
@@ -737,7 +738,7 @@ constructor(
         } else {
             link = HtmlHelper.parseNLinkInText(htmlText, configs.baseUrl, 3) ?: return null
         }
-        val intent = Intent(context, StepsActivity::class.java)
+        val intent = Intent(context, LessonActivity::class.java)
         intent.data = Uri.parse(link)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         return intent
@@ -784,7 +785,7 @@ constructor(
                     "course" ->
                         Intent(context, CourseActivity::class.java)
                     "lesson" ->
-                        Intent(context, StepsActivity::class.java)
+                        Intent(context, LessonActivity::class.java)
                     else ->
                         return null
                 }

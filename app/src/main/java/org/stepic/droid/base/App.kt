@@ -28,6 +28,8 @@ import org.stepic.droid.persistence.downloads.DownloadsSyncronizer
 import org.stepic.droid.util.NotificationChannelInitializer
 import org.stepic.droid.util.StethoHelper
 import org.stepic.droid.util.isMainProcess
+import org.stepik.android.domain.view_assignment.service.DeferrableViewAssignmentReportService
+import org.stepik.android.domain.view_assignment.service.DeferrableViewAssignmentReportServiceContainer
 import timber.log.Timber
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig
 import javax.inject.Inject
@@ -66,6 +68,11 @@ class App : MultiDexApplication() {
     @Inject
     internal lateinit var splitTestsHolder: SplitTestsHolder
 
+    /**
+     * Init step view publisher service on startup
+     */
+    @Inject
+    internal lateinit var stepDeferrableViewReportService: DeferrableViewAssignmentReportServiceContainer
 
     //don't use this field, it is just for init ASAP in background thread
     @Inject
