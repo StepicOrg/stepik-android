@@ -140,38 +140,6 @@ abstract class AppCoreModule {
     @Binds
     internal abstract fun bindViewModelFactory(daggerViewModelFactory: DaggerViewModelFactory): ViewModelProvider.Factory
 
-    @Binds
-    internal abstract fun bindNotificationPublisher(notificationPublisherImpl: NotificationPublisherImpl): NotificationPublisher
-
-    @Binds
-    internal abstract fun bindStepikNotifManager(stepikNotifManagerImpl: StepikNotificationManagerImpl): StepikNotificationManager
-
-    @Binds
-    internal abstract fun bindNotificationHelper(notificationHelperImpl: NotificationHelperImpl): NotificationHelper
-
-    @Binds
-    internal abstract fun bindNotificationResolver(fcmNotificationHandlerImpl: FcmNotificationHandlerImpl): FcmNotificationHandler
-
-    @Binds
-    @IntoSet
-    internal abstract fun provideDeadlinesNotificationDelegate(deadlinesNotificationDelegate: DeadlinesNotificationDelegate): NotificationDelegate
-
-    @Binds
-    @IntoSet
-    internal abstract fun provideRemindRegistrationNotificationDelegate(remindRegistrationNotificationDelegate: RemindRegistrationNotificationDelegate): NotificationDelegate
-
-    @Binds
-    @IntoSet
-    internal abstract fun provideRemindAppNotificationDelegate(remindAppNotificationDelegate: RemindAppNotificationDelegate): NotificationDelegate
-
-    @Binds
-    @IntoSet
-    internal abstract fun provideRetentionNotificationDelegate(retentionNotificationDelegate: RetentionNotificationDelegate): NotificationDelegate
-
-    @Binds
-    @IntoSet
-    internal abstract fun provideStreakNotificationDelegate(streakNotificationDelegate: StreakNotificationDelegate): NotificationDelegate
-
     @Module
     companion object {
         const val SINGLE_THREAD_CODE_SAVER = "SINGLE_THREAD_CODE_SAVER"

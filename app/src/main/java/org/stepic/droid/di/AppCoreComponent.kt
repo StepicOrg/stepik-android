@@ -88,7 +88,8 @@ import org.stepik.android.view.notification.service.NotificationAlarmService
         ProgressBusModule::class,
         PersonalDeadlinesDataModule::class,
 
-        CourseRoutingModule::class // todo unite it in RoutingModule::class
+        CourseRoutingModule::class, // todo unite it in RoutingModule::class
+        NotificationModule::class
     ]
 )
 interface AppCoreComponent {
