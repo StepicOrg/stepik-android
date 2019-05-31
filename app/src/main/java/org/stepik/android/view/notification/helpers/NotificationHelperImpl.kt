@@ -13,20 +13,15 @@ import android.support.v4.app.TaskStackBuilder
 import com.bumptech.glide.Glide
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.configuration.Config
-import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.notifications.NotificationBroadcastReceiver
 import org.stepic.droid.notifications.NotificationTimeChecker
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.notifications.model.StepikNotificationChannel
 import org.stepic.droid.preferences.UserPreferences
-import org.stepic.droid.ui.activities.StepsActivity
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.DateTimeHelper
-import org.stepic.droid.util.HtmlHelper
 import org.stepik.android.model.Course
-import org.stepik.android.view.course.ui.activity.CourseActivity
 import javax.inject.Inject
 
 class NotificationHelperImpl

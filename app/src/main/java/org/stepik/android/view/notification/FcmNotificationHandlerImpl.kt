@@ -18,7 +18,6 @@ import org.stepic.droid.notifications.model.NotificationType
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.storage.operations.DatabaseFacade
-import org.stepic.droid.ui.activities.StepsActivity
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.DateTimeHelper
@@ -28,6 +27,7 @@ import org.stepic.droid.web.Api
 import org.stepik.android.model.Course
 import org.stepik.android.view.course.routing.CourseScreenTab
 import org.stepik.android.view.course.ui.activity.CourseActivity
+import org.stepik.android.view.lesson.ui.activity.LessonActivity
 import org.stepik.android.view.notification.helpers.NotificationHelper
 import javax.inject.Inject
 
@@ -157,7 +157,7 @@ class FcmNotificationHandlerImpl
             }
 
             val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
-            taskBuilder.addParentStack(StepsActivity::class.java)
+            taskBuilder.addParentStack(LessonActivity::class.java)
             taskBuilder.addNextIntent(prepareNotificationIntent(intent, id))
 
             analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, id.toString(), stepikNotification.type?.name)
@@ -181,7 +181,7 @@ class FcmNotificationHandlerImpl
             }
 
             val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
-            taskBuilder.addParentStack(StepsActivity::class.java)
+            taskBuilder.addParentStack(LessonActivity::class.java)
             taskBuilder.addNextIntent(prepareNotificationIntent(intent, id))
 
             analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, id.toString(), stepikNotification.type?.name)
@@ -199,7 +199,7 @@ class FcmNotificationHandlerImpl
             val justText: String = textResolver.fromHtml(rawMessageHtml).toString()
 
             val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
-            taskBuilder.addParentStack(StepsActivity::class.java)
+            taskBuilder.addParentStack(LessonActivity::class.java)
             taskBuilder.addNextIntent(prepareNotificationIntent(screenManager.certificateIntent, id))
             analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, id.toString(), stepikNotification.type?.name)
             val notification = notificationHelper.makeSimpleNotificationBuilder(stepikNotification, justText, taskBuilder, title, id = id)
@@ -359,7 +359,6 @@ class FcmNotificationHandlerImpl
             putExtra(AppConstants.KEY_NOTIFICATION_ID, notificationId)
         }
 
-
     private fun getTeachIntent(notification: Notification): Intent? {
         val link = HtmlHelper.parseNLinkInText(notification.htmlText ?: "", configs.baseUrl, 0) ?: return null
         try {
@@ -370,7 +369,7 @@ class FcmNotificationHandlerImpl
                     "course" ->
                         Intent(context, CourseActivity::class.java)
                     "lesson" ->
-                        Intent(context, StepsActivity::class.java)
+                        Intent(context, LessonActivity::class.java)
                     else ->
                         return null
                 }
@@ -399,7 +398,7 @@ class FcmNotificationHandlerImpl
 
     private fun getReviewIntent(notification: Notification): Intent? {
         val data = HtmlHelper.parseNLinkInText(notification.htmlText ?: "", configs.baseUrl, 0) ?: return null
-        val intent = Intent(context, StepsActivity::class.java)
+        val intent = Intent(context, LessonActivity::class.java)
         intent.data = Uri.parse(data)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         return intent
@@ -414,7 +413,7 @@ class FcmNotificationHandlerImpl
         } else {
             link = HtmlHelper.parseNLinkInText(htmlText, configs.baseUrl, 3) ?: return null
         }
-        val intent = Intent(context, StepsActivity::class.java)
+        val intent = Intent(context, LessonActivity::class.java)
         intent.data = Uri.parse(link)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         return intent
