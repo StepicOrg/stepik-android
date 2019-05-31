@@ -31,11 +31,10 @@ import javax.inject.Inject
 
 class NotificationHelperImpl
 @Inject constructor(
-    val context: Context,
-    val screenManager: ScreenManager,
-    val notificationTimeChecker: NotificationTimeChecker,
-    val analytic: Analytic,
-    val userPreferences: UserPreferences
+    private val context: Context,
+    private val notificationTimeChecker: NotificationTimeChecker,
+    private val analytic: Analytic,
+    private val userPreferences: UserPreferences
 ) : NotificationHelper {
     override fun makeSimpleNotificationBuilder(
         stepikNotification: Notification?,
