@@ -11,24 +11,24 @@ import org.stepic.droid.persistence.model.*
 import org.stepic.droid.persistence.storage.PersistentStateManager
 import org.stepic.droid.persistence.storage.dao.PersistentItemDao
 import org.stepic.droid.persistence.storage.structure.DBStructurePersistentItem
-import org.stepic.droid.storage.repositories.Repository
-import org.stepik.android.model.Step
+import org.stepik.android.domain.step.repository.StepRepository
 import javax.inject.Inject
 
 @PersistenceScope
 class AddDownloadTaskHelperImpl
 @Inject
 constructor(
-        private val downloadTaskManager: DownloadTaskManager,
-        private val persistentStateManager: PersistentStateManager,
+    private val downloadTaskManager: DownloadTaskManager,
+    private val persistentStateManager: PersistentStateManager,
 
-        private val stepRepository: Repository<Step>,
-        private val stepContentResolver: StepContentResolver,
-        private val downloadTitleResolver: DownloadTitleResolver,
+    private val stepRepository: StepRepository,
+    private val stepContentResolver: StepContentResolver,
+    private val downloadTitleResolver: DownloadTitleResolver,
 
-        private val persistentItemDao: PersistentItemDao
+    private val persistentItemDao: PersistentItemDao
 ) : AddDownloadTaskHelper {
-    override fun addTasks(structureObservable: Observable<Structure>, configuration: DownloadConfiguration): Completable = structureObservable
+    override fun addTasks(structureObservable: Observable<Structure>, configuration: DownloadConfiguration): Completable =
+        structureObservable
             .doOnNext { persistentStateManager.invalidateStructure(it, PersistentState.State.IN_PROGRESS) }
             .flatMapCompletable { structure ->
                 resolveStructureContent(structure, configuration)
@@ -43,16 +43,17 @@ constructor(
             }
 
     private fun resolveStructureContent(structure: Structure, configuration: DownloadConfiguration): Observable<DownloadRequest> =
-            Observable.fromCallable {
-                val step = stepRepository.getObject(structure.step)!! // without maps to reduce overhead
+        stepRepository
+            .getStep(structure.step)
+            .map { step ->
                 val paths = stepContentResolver.getDownloadableContentFromStep(step, configuration)
                 val pathsFiltered = cleanUpPreviousTasks(structure.step, paths)
-                return@fromCallable pathsFiltered.map { DownloadTask(it, structure) }
+                pathsFiltered.map { DownloadTask(it, structure) }
             }
-                    .flatMap(List<DownloadTask>::toObservable)
-                    .flatMap({
-                        downloadTitleResolver.resolveTitle(it.structure).toObservable()
-                    }, {a, b -> DownloadRequest(a, b, configuration) })
+            .flatMapObservable(List<DownloadTask>::toObservable)
+            .flatMap({
+                downloadTitleResolver.resolveTitle(it.structure).toObservable()
+            }, {a, b -> DownloadRequest(a, b, configuration) })
 
     private fun cleanUpPreviousTasks(stepId: Long, paths: Iterable<String>): Iterable<String> {
         val alreadyDownloadedPaths = mutableSetOf<String>()

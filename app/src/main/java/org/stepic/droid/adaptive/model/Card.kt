@@ -60,7 +60,7 @@ class Card(
             stepSubscription = api.getStepsByLessonId(lessonId)
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
-                    .subscribe({ setStep(it.steps?.firstOrNull()) }, { onError(it) })
+                    .subscribe({ setStep(it.steps.firstOrNull()) }, { onError(it) })
         } else {
             setStep(step)
         }
@@ -69,7 +69,7 @@ class Card(
             lessonDisposable = api.getLessons(lessonId)
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
-                    .subscribe({ setLesson(it.lessons?.firstOrNull()) }, { onError(it) })
+                    .subscribe({ setLesson(it.lessons.firstOrNull()) }, { onError(it) })
         }
     }
 

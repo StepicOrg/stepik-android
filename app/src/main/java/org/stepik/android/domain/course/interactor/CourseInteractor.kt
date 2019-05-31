@@ -4,13 +4,13 @@ import io.reactivex.Maybe
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.subjects.BehaviorSubject
-import org.stepic.droid.model.CourseReviewSummary
+import org.stepik.android.model.CourseReviewSummary
 import org.stepic.droid.util.safeDiv
 import org.stepik.android.domain.billing.repository.BillingRepository
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.domain.course.repository.CourseRepository
-import org.stepik.android.domain.course.repository.CourseReviewRepository
+import org.stepik.android.domain.course.repository.CourseReviewSummaryRepository
 import org.stepik.android.domain.course_payments.model.CoursePayment
 import org.stepik.android.domain.course_payments.repository.CoursePaymentsRepository
 import org.stepik.android.domain.progress.repository.ProgressRepository
@@ -25,7 +25,7 @@ class CourseInteractor
 constructor(
     private val billingRepository: BillingRepository,
     private val courseRepository: CourseRepository,
-    private val courseReviewRepository: CourseReviewRepository,
+    private val courseReviewRepository: CourseReviewSummaryRepository,
     private val coursePaymentsRepository: CoursePaymentsRepository,
     private val progressRepository: ProgressRepository,
     private val coursePublishSubject: BehaviorSubject<Course>
@@ -74,7 +74,7 @@ constructor(
 
     private fun resolveCourseReview(course: Course): Single<Double> =
         courseReviewRepository
-            .getCourseReview(course.reviewSummary)
+            .getCourseReviewSummary(course.reviewSummary)
             .map(CourseReviewSummary::average)
             .onErrorReturnItem(0.0)
 

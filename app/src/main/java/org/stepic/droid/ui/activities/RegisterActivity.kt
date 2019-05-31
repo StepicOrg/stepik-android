@@ -25,14 +25,15 @@ import org.stepic.droid.model.Credentials
 import org.stepic.droid.ui.dialogs.LoadingProgressDialog
 import org.stepic.droid.ui.util.setOnKeyboardOpenListener
 import org.stepic.droid.util.*
+import org.stepic.droid.web.Api
 import org.stepic.droid.web.RegistrationResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import retrofit2.Retrofit
 import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan
 import uk.co.chrisjenx.calligraphy.TypefaceUtils
 import javax.inject.Inject
-
 
 class RegisterActivity : SmartLockActivityBase(), LoginView {
     companion object {
@@ -56,9 +57,15 @@ class RegisterActivity : SmartLockActivityBase(), LoginView {
     @Inject
     lateinit var loginPresenter: LoginPresenter
 
+    @Inject
+    internal lateinit var retrofit: Retrofit
+
+    @Inject
+    internal lateinit var api: Api
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(org.stepic.droid.R.layout.activity_register)
+        setContentView(R.layout.activity_register)
         App.componentManager().loginComponent(TAG).inject(this)
 
         initTitle()
@@ -197,7 +204,7 @@ class RegisterActivity : SmartLockActivityBase(), LoginView {
                         val errorConverter = retrofit.responseBodyConverter<RegistrationResponse>(RegistrationResponse::class.java, arrayOfNulls<Annotation>(0))
                         var error: RegistrationResponse? = null
                         try {
-                            error = errorConverter.convert(response.errorBody())
+                            error = errorConverter.convert(response.errorBody()!!)
                         } catch (e: Exception) {
                             analytic.reportError(Analytic.Error.REGISTRATION_IMPORTANT_ERROR, e) //it is unknown response Expected BEGIN_OBJECT but was STRING at line 1 column 1 path
                         }

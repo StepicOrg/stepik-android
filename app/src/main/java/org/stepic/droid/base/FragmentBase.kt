@@ -60,9 +60,6 @@ open class FragmentBase : Fragment() {
     lateinit var screenManager: ScreenManager
 
     @Inject
-    lateinit var localProgressInteractor: LocalProgressInteractor
-
-    @Inject
     lateinit var sharedPreferenceHelper: SharedPreferenceHelper
 
     @Inject

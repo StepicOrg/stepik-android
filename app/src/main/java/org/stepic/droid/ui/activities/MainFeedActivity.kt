@@ -44,6 +44,7 @@ import org.stepik.android.model.user.Profile
 import timber.log.Timber
 import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan
 import uk.co.chrisjenx.calligraphy.TypefaceUtils
+import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
 
 
@@ -104,6 +105,9 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
 
     @Inject
     lateinit var notificationsBadgesManager: NotificationsBadgesManager
+
+    @Inject
+    internal lateinit var threadPoolExecutor: ThreadPoolExecutor
 
     private lateinit var navigationAdapter: AHBottomNavigationAdapter
 

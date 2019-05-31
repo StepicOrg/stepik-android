@@ -325,9 +325,9 @@ public abstract class CourseListFragmentBase extends FragmentBase
     }
 
     @Override
-    public void onOpenStep(long courseId, LastStep lastStep) {
+    public void onOpenStep(long courseId, @NotNull LastStep lastStep) {
         ProgressHelper.dismiss(getFragmentManager(), continueLoadingTag);
-        getScreenManager().continueCourse(getActivity(), courseId, lastStep.getUnit(), lastStep.getLesson(), lastStep.getStep());
+        getScreenManager().continueCourse(getActivity(), courseId, lastStep);
     }
 
     @Override

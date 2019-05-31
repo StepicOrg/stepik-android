@@ -1,14 +1,6 @@
 package org.stepic.droid.util.resolvers;
 
-import android.content.Context;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
-import android.support.annotation.ColorInt;
-import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
-import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
@@ -47,127 +39,65 @@ import timber.log.Timber;
 @AppSingleton
 public class StepTypeResolverImpl implements StepTypeResolver {
 
-    private Map<String, Drawable> mapFromTypeToDrawable;
-    private Map<String, Drawable> mapFromTypeToDrawableNotViewed;
-    private Context context;
-    private Drawable peerReviewDrawable;
-    private Drawable peerReviewDrawableNotViewed;
+    private final Map<String, Integer> mapFromTypeToDrawableRes;
+    private final int peerReviewDrawableRes;
 
     @Inject
-    StepTypeResolverImpl(Context context) {
-
+    StepTypeResolverImpl() {
         Timber.d("create step type resolver: %s", toString());
+        mapFromTypeToDrawableRes = new HashMap<>();
 
-        this.context = context;
-        mapFromTypeToDrawable = new HashMap<>();
-        mapFromTypeToDrawableNotViewed = new HashMap<>();
+        peerReviewDrawableRes = R.drawable.ic_peer_review;
+        int simpleQuestionDrawable = R.drawable.ic_easy_quiz;
+        int videoDrawable = R.drawable.ic_video_pin;
+        int animationDrawable = R.drawable.ic_animation;
+        int hardQuizDrawable = R.drawable.ic_hard_quiz;
+        int theoryQuizDrawable = R.drawable.ic_theory;
 
-        peerReviewDrawableNotViewed = getNotViewedDrawable(getDrawable(context, R.drawable.ic_peer_review));
-        peerReviewDrawable = getViewedDrawable(getDrawable(context, R.drawable.ic_peer_review).mutate());
-
-        Drawable simpleQuestionDrawableNotViewed = getNotViewedDrawable(getDrawable(context, R.drawable.ic_easy_quiz));
-        Drawable simpleQuestionDrawable = getViewedDrawable(getDrawable(context, R.drawable.ic_easy_quiz).mutate());
-
-        Drawable videoDrawableNotViewed = getNotViewedDrawable(getDrawable(context, R.drawable.ic_video_pin));
-        Drawable videoDrawable = getViewedDrawable(getDrawable(context, R.drawable.ic_video_pin).mutate());
-
-        Drawable animationDrawableNotViewed = getNotViewedDrawable(getDrawable(context, R.drawable.ic_animation));
-        Drawable animationDrawable = getViewedDrawable(getDrawable(context, R.drawable.ic_animation).mutate());
-
-        Drawable hardQuizDrawableNotViewed = getNotViewedDrawable(getDrawable(context, R.drawable.ic_hard_quiz));
-        Drawable hardQuizDrawable = getViewedDrawable(getDrawable(context, R.drawable.ic_hard_quiz).mutate());
-
-        Drawable theoryDrawableNotViewed = getNotViewedDrawable(getDrawable(context, R.drawable.ic_theory));
-        Drawable theoryQuizDrawable = getViewedDrawable(getDrawable(context, R.drawable.ic_theory).mutate());
-
-        mapFromTypeToDrawable.put(AppConstants.TYPE_TEXT, theoryQuizDrawable);
-        mapFromTypeToDrawable.put(AppConstants.TYPE_VIDEO, videoDrawable);
-        mapFromTypeToDrawable.put(AppConstants.TYPE_MATCHING, simpleQuestionDrawable);
-        mapFromTypeToDrawable.put(AppConstants.TYPE_SORTING, simpleQuestionDrawable);
-        mapFromTypeToDrawable.put(AppConstants.TYPE_MATH, simpleQuestionDrawable);
-        mapFromTypeToDrawable.put(AppConstants.TYPE_FREE_ANSWER, simpleQuestionDrawable);
-        mapFromTypeToDrawable.put(AppConstants.TYPE_TABLE, simpleQuestionDrawable);
-        mapFromTypeToDrawable.put(AppConstants.TYPE_STRING, simpleQuestionDrawable);
-        mapFromTypeToDrawable.put(AppConstants.TYPE_CHOICE, simpleQuestionDrawable);
-        mapFromTypeToDrawable.put(AppConstants.TYPE_NUMBER, simpleQuestionDrawable);
-        mapFromTypeToDrawable.put(AppConstants.TYPE_DATASET, hardQuizDrawable);
-        mapFromTypeToDrawable.put(AppConstants.TYPE_ANIMATION, animationDrawable);
-        mapFromTypeToDrawable.put(AppConstants.TYPE_CHEMICAL, simpleQuestionDrawable);
-        mapFromTypeToDrawable.put(AppConstants.TYPE_FILL_BLANKS, simpleQuestionDrawable);
-        mapFromTypeToDrawable.put(AppConstants.TYPE_PUZZLE, simpleQuestionDrawable);
-        mapFromTypeToDrawable.put(AppConstants.TYPE_PYCHARM, simpleQuestionDrawable);
-        mapFromTypeToDrawable.put(AppConstants.TYPE_CODE, hardQuizDrawable);
-        mapFromTypeToDrawable.put(AppConstants.TYPE_ADMIN, hardQuizDrawable);
-        mapFromTypeToDrawable.put(AppConstants.TYPE_SQL, simpleQuestionDrawable);
-        mapFromTypeToDrawable.put(AppConstants.TYPE_LINUX_CODE, simpleQuestionDrawable);
-
-
-        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_TEXT, theoryDrawableNotViewed);
-        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_VIDEO, videoDrawableNotViewed);
-        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_MATCHING, simpleQuestionDrawableNotViewed);
-        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_SORTING, simpleQuestionDrawableNotViewed);
-        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_MATH, simpleQuestionDrawableNotViewed);
-        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_FREE_ANSWER, simpleQuestionDrawableNotViewed);
-        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_TABLE, simpleQuestionDrawableNotViewed);
-        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_STRING, simpleQuestionDrawableNotViewed);
-        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_CHOICE, simpleQuestionDrawableNotViewed);
-        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_NUMBER, simpleQuestionDrawableNotViewed);
-        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_DATASET, simpleQuestionDrawableNotViewed);
-        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_ANIMATION, animationDrawableNotViewed);
-        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_CHEMICAL, simpleQuestionDrawableNotViewed);
-        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_FILL_BLANKS, simpleQuestionDrawableNotViewed);
-        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_PUZZLE, simpleQuestionDrawableNotViewed);
-        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_PYCHARM, simpleQuestionDrawableNotViewed);
-        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_CODE, hardQuizDrawableNotViewed);
-        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_ADMIN, hardQuizDrawableNotViewed);
-        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_SQL, simpleQuestionDrawableNotViewed);
-        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_LINUX_CODE, simpleQuestionDrawableNotViewed);
-
+        mapFromTypeToDrawableRes.put(AppConstants.TYPE_TEXT, theoryQuizDrawable);
+        mapFromTypeToDrawableRes.put(AppConstants.TYPE_VIDEO, videoDrawable);
+        mapFromTypeToDrawableRes.put(AppConstants.TYPE_MATCHING, simpleQuestionDrawable);
+        mapFromTypeToDrawableRes.put(AppConstants.TYPE_SORTING, simpleQuestionDrawable);
+        mapFromTypeToDrawableRes.put(AppConstants.TYPE_MATH, simpleQuestionDrawable);
+        mapFromTypeToDrawableRes.put(AppConstants.TYPE_FREE_ANSWER, simpleQuestionDrawable);
+        mapFromTypeToDrawableRes.put(AppConstants.TYPE_TABLE, simpleQuestionDrawable);
+        mapFromTypeToDrawableRes.put(AppConstants.TYPE_STRING, simpleQuestionDrawable);
+        mapFromTypeToDrawableRes.put(AppConstants.TYPE_CHOICE, simpleQuestionDrawable);
+        mapFromTypeToDrawableRes.put(AppConstants.TYPE_NUMBER, simpleQuestionDrawable);
+        mapFromTypeToDrawableRes.put(AppConstants.TYPE_DATASET, hardQuizDrawable);
+        mapFromTypeToDrawableRes.put(AppConstants.TYPE_ANIMATION, animationDrawable);
+        mapFromTypeToDrawableRes.put(AppConstants.TYPE_CHEMICAL, simpleQuestionDrawable);
+        mapFromTypeToDrawableRes.put(AppConstants.TYPE_FILL_BLANKS, simpleQuestionDrawable);
+        mapFromTypeToDrawableRes.put(AppConstants.TYPE_PUZZLE, simpleQuestionDrawable);
+        mapFromTypeToDrawableRes.put(AppConstants.TYPE_PYCHARM, simpleQuestionDrawable);
+        mapFromTypeToDrawableRes.put(AppConstants.TYPE_CODE, hardQuizDrawable);
+        mapFromTypeToDrawableRes.put(AppConstants.TYPE_ADMIN, hardQuizDrawable);
+        mapFromTypeToDrawableRes.put(AppConstants.TYPE_SQL, simpleQuestionDrawable);
+        mapFromTypeToDrawableRes.put(AppConstants.TYPE_LINUX_CODE, simpleQuestionDrawable);
     }
 
-    public Drawable getDrawableForType(String type, boolean viewed, boolean isPeerReview) {
-        //todo:two maps for viewed and not, if viewed 1st map, not viewed the second?
+    @Override
+    @DrawableRes
+    public int getDrawableForType(String type, boolean isPeerReview) {
         if (isPeerReview) {
-            if (viewed) {
-                return peerReviewDrawable;
-            } else {
-                return peerReviewDrawableNotViewed;
-            }
+            return peerReviewDrawableRes;
         }
 
-        if (viewed) {
-            Drawable drawable = mapFromTypeToDrawable.get(type);
-            if (drawable == null) {
-                drawable = mapFromTypeToDrawable.get(AppConstants.TYPE_TEXT);
-            }
-
-            return drawable;
-        } else {
-            Drawable drawable = mapFromTypeToDrawableNotViewed.get(type);
-            if (drawable == null) {
-                drawable = mapFromTypeToDrawableNotViewed.get(AppConstants.TYPE_TEXT);
-            }
-            return drawable;
+        Integer drawable = mapFromTypeToDrawableRes.get(type);
+        if (drawable == null) {
+            drawable = mapFromTypeToDrawableRes.get(AppConstants.TYPE_TEXT);
         }
-    }
 
-    private Drawable getNotViewedDrawable(Drawable drawable) {
-//        return drawable;//it is default implementation
-        return getDrawableWithColor(drawable, R.color.unviewed_step);
-
-    }
-
-    @NonNull
-    private Drawable getViewedDrawable(Drawable drawable) {
-        return getDrawableWithColor(drawable, R.color.viewed_step);
-    }
-
-    private Drawable getDrawableWithColor(Drawable drawable, @ColorRes int colorRes) {
-        @ColorInt
-        int colorToSet = ContextCompat.getColor(context, colorRes);
-        PorterDuff.Mode mMode = PorterDuff.Mode.SRC_ATOP;
-        drawable.setColorFilter(colorToSet, mMode);
         return drawable;
+    }
+
+    @Override
+    public int getDrawableTintForStep(boolean isViewed) {
+        if (isViewed) {
+            return R.color.viewed_step;
+        } else {
+            return R.color.unviewed_step;
+        }
     }
 
     @Override
@@ -237,13 +167,4 @@ public class StepTypeResolverImpl implements StepTypeResolver {
                 return errorDelegate;
         }
     }
-
-    private Drawable getDrawable(Context context, @DrawableRes int drawableRes) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            return context.getDrawable(drawableRes);
-        } else {
-            return context.getResources().getDrawable(drawableRes);
-        }
-    }
-
 }

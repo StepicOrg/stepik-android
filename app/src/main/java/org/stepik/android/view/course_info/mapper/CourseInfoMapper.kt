@@ -41,13 +41,13 @@ fun CourseInfoData.toSortedItems(context: Context): List<CourseInfoItem> {
         val certificateConditions = mutableListOf<String>()
 
         if (certificate.regularThreshold > 0) {
-            val regularPoints = context.resources.getQuantityString(R.plurals.points, certificate.regularThreshold, certificate.regularThreshold)
+            val regularPoints = context.resources.getQuantityString(R.plurals.points, certificate.regularThreshold.toInt(), certificate.regularThreshold)
             val regularCondition = context.getString(R.string.course_info_certificate_regular, regularPoints)
             certificateConditions.add(regularCondition)
         }
 
         if (certificate.distinctionThreshold > 0) {
-            val distinctionPoints = context.resources.getQuantityString(R.plurals.points, certificate.distinctionThreshold, certificate.distinctionThreshold)
+            val distinctionPoints = context.resources.getQuantityString(R.plurals.points, certificate.distinctionThreshold.toInt(), certificate.distinctionThreshold)
             val distinctionCondition = context.getString(R.string.course_info_certificate_distinction, distinctionPoints)
             certificateConditions.add(distinctionCondition)
         }

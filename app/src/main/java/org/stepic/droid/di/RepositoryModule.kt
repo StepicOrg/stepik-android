@@ -3,12 +3,9 @@ package org.stepic.droid.di
 import dagger.Binds
 import dagger.Module
 import org.stepic.droid.storage.repositories.Repository
-import org.stepic.droid.storage.repositories.assignment.AssignmentRepository
-import org.stepic.droid.storage.repositories.assignment.AssignmentRepositoryImpl
 import org.stepic.droid.storage.repositories.course.CourseRepositoryImpl
 import org.stepic.droid.storage.repositories.lesson.LessonRepositoryImpl
 import org.stepic.droid.storage.repositories.section.SectionRepositoryImpl
-import org.stepic.droid.storage.repositories.step.StepRepositoryImpl
 import org.stepic.droid.storage.repositories.unit.UnitRepositoryImpl
 import org.stepik.android.model.*
 import org.stepik.android.model.Unit
@@ -27,11 +24,5 @@ interface RepositoryModule {
 
     @Binds
     fun bindLessonRepository(lessonRepositoryImpl: LessonRepositoryImpl): Repository<Lesson>
-
-    @Binds
-    fun bindStepRepository(stepRepositoryImpl: StepRepositoryImpl): Repository<Step>
-
-    @Binds
-    fun bindAssignmentRepository(assignmentRepositoryImpl: AssignmentRepositoryImpl): AssignmentRepository
 
 }

@@ -34,3 +34,14 @@ fun Uri.Builder.appendQueryParameters(queryParamMap: Map<String, List<String>>):
                 uriBuilder.appendQueryParameter(key, value)
             }
         }
+
+/**
+ * Returns path segment parameter after [segment]
+ *
+ * e.g. for /lesson/100 it will return 100
+ */
+fun Uri.getPathSegmentParameter(segment: String): String? =
+    pathSegments
+        .indexOf(segment)
+        .takeIf { it >= 0 }
+        ?.let { pathSegments.getOrNull(it + 1) }

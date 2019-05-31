@@ -18,6 +18,7 @@ import org.stepik.android.view.injection.notification.NotificationDataModule
 import org.stepik.android.view.injection.personal_deadlines.PersonalDeadlinesDataModule
 import org.stepik.android.view.injection.profile.ProfileDataModule
 import org.stepik.android.view.injection.progress.ProgressDataModule
+import org.stepik.android.view.injection.step.StepDataModule
 import org.stepik.android.view.injection.user.UserDataModule
 
 @CourseScope
@@ -28,6 +29,7 @@ import org.stepik.android.view.injection.user.UserDataModule
     LastStepDataModule::class,
     ProgressDataModule::class,
     UserDataModule::class,
+    StepDataModule::class,
 
     CourseListDataModule::class,
     CoursePaymentsDataModule::class,

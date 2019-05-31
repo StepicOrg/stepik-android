@@ -1,21 +1,36 @@
 package org.stepic.droid.ui.adapters
 
-import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.support.annotation.ColorRes
+import android.support.annotation.DrawableRes
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
 import android.view.ViewGroup
-import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepik.android.model.Lesson
 import org.stepik.android.model.Section
 import org.stepik.android.model.Unit
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.resolvers.StepTypeResolver
+import org.stepik.android.domain.lesson.model.StepItem
 import org.stepik.android.view.fragment_pager.ActiveFragmentPagerAdapter
 
-class StepFragmentAdapter(fm: FragmentManager, val stepList: List<StepPersistentWrapper?>, val stepTypeResolver: StepTypeResolver) : FragmentStatePagerAdapter(fm),
-        ActiveFragmentPagerAdapter {
+class StepFragmentAdapter(
+    fm: FragmentManager,
+    private val stepTypeResolver: StepTypeResolver
+) : FragmentStatePagerAdapter(fm),
+    ActiveFragmentPagerAdapter {
+    
+    var items: List<StepItem> = emptyList()
+        set(value) {
+            val oldIds = field.map { it.step.step.id }
+            val newIds = value.map { it.step.step.id }
+            
+            field = value
+            if (oldIds != newIds) {
+                notifyDataSetChanged()
+            }
+        }
 
     private var lesson: Lesson? = null
     private var unit: Unit? = null
@@ -42,8 +57,8 @@ class StepFragmentAdapter(fm: FragmentManager, val stepList: List<StepPersistent
     }
 
     override fun getItem(position: Int): Fragment {
-        val stepWrapper = stepList[position]
-        val fragment = stepTypeResolver.getFragment(stepWrapper?.step)
+        val stepWrapper = items[position].step
+        val fragment = stepTypeResolver.getFragment(stepWrapper.step)
         val args = Bundle()
         args.putParcelable(AppConstants.KEY_STEP_BUNDLE, stepWrapper)
         args.putParcelable(AppConstants.KEY_LESSON_BUNDLE, lesson)
@@ -53,9 +68,8 @@ class StepFragmentAdapter(fm: FragmentManager, val stepList: List<StepPersistent
         return fragment
     }
 
-    override fun getCount(): Int {
-        return stepList.size
-    }
+    override fun getCount(): Int =
+        items.size
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any =
         super
@@ -69,9 +83,19 @@ class StepFragmentAdapter(fm: FragmentManager, val stepList: List<StepPersistent
         super.destroyItem(container, position, `object`)
     }
 
-    fun getTabDrawable(position: Int): Drawable? {
-        if (position >= stepList.size) return null
-        val step = stepList[position]?.step
-        return stepTypeResolver.getDrawableForType(step?.block?.name, step?.isCustomPassed ?: false, step?.actions?.doReview != null)
+    @DrawableRes
+    fun getTabDrawable(position: Int): Int {
+        val step = items.getOrNull(position)?.step?.step
+        return stepTypeResolver.getDrawableForType(step?.block?.name, step?.actions?.doReview != null)
+    }
+
+    @ColorRes
+    fun getTabTint(position: Int): Int {
+        val stepItem = items.getOrNull(position)
+        val isStepPassed = stepItem?.assignmentProgress?.isPassed
+            ?: stepItem?.stepProgress?.isPassed
+            ?: false
+
+        return stepTypeResolver.getDrawableTintForStep(isStepPassed)
     }
 }

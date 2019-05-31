@@ -39,3 +39,21 @@ inline fun <T> Array<T>.mapToLongArray(transform: (T) -> Long): LongArray {
 
 fun LongArray?.isNullOrEmpty(): Boolean =
     this == null || this.isEmpty()
+
+
+@JvmName("Iterable_LongArray__flatten")
+fun Iterable<LongArray>.flatten(): LongArray {
+    val size = sumBy { it.size }
+    val array = LongArray(size)
+    var offset = 0
+    forEach { subArray ->
+        subArray.copyInto(array, destinationOffset = offset)
+        offset += subArray.size
+    }
+
+    return array
+}
+
+@JvmName("LongArray_distinct")
+fun LongArray.distinct(): LongArray =
+    toMutableSet().toLongArray()

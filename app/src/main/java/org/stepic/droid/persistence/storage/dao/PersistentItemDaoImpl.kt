@@ -64,7 +64,7 @@ constructor(
     )
 
     override fun getItems(selector: Map<String, String>): Observable<List<PersistentItem>> =
-            Observable.fromCallable { if (selector.isEmpty()) getAll() else getAll(selector) }
+        Observable.fromCallable { if (selector.isEmpty()) getAll() else getAll(selector) }
 
     override fun getItem(selector: Map<String, String>): Maybe<PersistentItem> = Maybe.create { emitter ->
         get(selector)?.let(emitter::onSuccess) ?: emitter.onComplete()

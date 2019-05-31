@@ -687,14 +687,6 @@ public class SharedPreferenceHelper {
         put(PreferenceType.VIDEO_QUALITY, VIDEO_QUALITY_KEY, videoQuality);
     }
 
-    public void storeTempPosition(int position) {
-        put(PreferenceType.TEMP, TEMP_POSITION_KEY, position);
-    }
-
-    public int getTempPosition() {
-        return getInt(PreferenceType.TEMP, TEMP_POSITION_KEY);
-    }
-
     @NotNull
     public String getVideoQuality() {
         String str = getString(PreferenceType.VIDEO_QUALITY, VIDEO_QUALITY_KEY);

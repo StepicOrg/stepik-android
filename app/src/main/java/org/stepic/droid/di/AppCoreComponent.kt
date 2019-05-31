@@ -18,7 +18,6 @@ import org.stepic.droid.di.course_general.CourseGeneralComponent
 import org.stepic.droid.di.downloads.DownloadsComponent
 import org.stepic.droid.di.feedback.FeedbackComponent
 import org.stepic.droid.di.home.HomeComponent
-import org.stepic.droid.di.lesson.LessonComponent
 import org.stepic.droid.di.login.LoginComponent
 import org.stepic.droid.di.mainscreen.MainScreenComponent
 import org.stepic.droid.di.network.NetworkModule
@@ -53,6 +52,8 @@ import org.stepik.android.view.injection.billing.BillingModule
 import org.stepik.android.view.injection.course.CourseComponent
 import org.stepik.android.view.injection.course.CourseRoutingModule
 import org.stepik.android.view.injection.course_reviews.ComposeCourseReviewComponent
+import org.stepik.android.view.injection.lesson.LessonComponent
+import org.stepik.android.view.injection.network.NetworkDataModule
 import org.stepik.android.view.injection.personal_deadlines.PersonalDeadlinesDataModule
 import org.stepik.android.view.injection.profile.ProfileBusModule
 import org.stepik.android.view.injection.profile_edit.ProfileEditComponent
@@ -61,6 +62,8 @@ import org.stepik.android.view.injection.video_player.VideoPlayerComponent
 import org.stepik.android.view.notification.receiver.StepikBootCompleteReceiver
 import org.stepik.android.view.notification.service.BootCompleteService
 import org.stepik.android.view.notification.service.NotificationAlarmService
+import org.stepik.android.view.injection.view_assignment.ViewAssignmentBusModule
+import org.stepik.android.view.injection.view_assignment.ViewAssignmentComponent
 
 @AppSingleton
 @Component(
@@ -71,7 +74,6 @@ import org.stepik.android.view.notification.service.NotificationAlarmService
         AppCoreModule::class,
         RepositoryModule::class,
         AnalyticModule::class,
-        AppStepModule::class,
         AppFiltersModule::class,
         GoogleModule::class,
         FirebaseModule::class,
@@ -79,6 +81,7 @@ import org.stepik.android.view.notification.service.NotificationAlarmService
         RecentActiveCourseModule::class,
         NotificationsBadgesModule::class,
         NetworkModule::class,
+        NetworkDataModule::class,
         RemoteMessageHandlersModule::class,
 
         BillingModule::class,
@@ -86,6 +89,7 @@ import org.stepik.android.view.notification.service.NotificationAlarmService
         CourseEnrollmentBusModule::class, // todo unite it in BusModule::class
         ProfileBusModule::class,
         ProgressBusModule::class,
+        ViewAssignmentBusModule::class,
         PersonalDeadlinesDataModule::class,
 
         CourseRoutingModule::class, // todo unite it in RoutingModule::class
@@ -120,8 +124,6 @@ interface AppCoreComponent {
 
     fun courseGeneralComponentBuilder(): CourseGeneralComponent.Builder
 
-    fun lessonComponentBuilder(): LessonComponent.Builder
-
     fun mainScreenComponentBuilder(): MainScreenComponent.Builder
 
     fun notificationsComponentBuilder(): NotificationsComponent.Builder
@@ -138,7 +140,11 @@ interface AppCoreComponent {
 
     fun profileEditComponentBuilder(): ProfileEditComponent.Builder
 
-    fun composeCourseReviewComponent(): ComposeCourseReviewComponent.Builder
+    fun composeCourseReviewComponentBuilder(): ComposeCourseReviewComponent.Builder
+
+    fun viewAssignmentComponentBuilder(): ViewAssignmentComponent.Builder
+
+    fun lessonComponentBuilder(): LessonComponent.Builder
 
     fun inject(someActivity: FragmentActivityBase)
 
@@ -157,8 +163,6 @@ interface AppCoreComponent {
     fun inject(dialogFragment: VideoQualityDialog)
 
     fun inject(fragment: StoreManagementFragment)
-
-    fun inject(viewPusher: ViewPusher)
 
     fun inject(internetConnectionEnabledReceiver: InternetConnectionEnabledReceiver)
 

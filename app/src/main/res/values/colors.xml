@@ -149,6 +149,9 @@
     <color name="light_rounded_button_color">#0D535366</color>
     <color name="light_rounded_pressed_color">#E8E8E8</color>
 
+    <!-- Design system -->
+    <color name="grey04">#EAECF0</color>
+
     <!--adaptive-->
     <color name="adaptive_color_easy">#227300</color>
     <color name="adaptive_color_hard">@color/new_red_color</color>
@@ -185,4 +188,8 @@
 
     <color name="color_violet_1">#6C7BDF</color>
     <color name="color_violet_1_12">#206C7BDF</color>
+
+    <!-- Lesson -->
+    <color name="lesson_tabbar_separator">@color/grey04</color>
+    <color name="lesson_toolbar_separator">#DCDCDC</color>
 </resources>

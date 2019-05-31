@@ -5,7 +5,7 @@ import android.database.Cursor;
 
 import org.stepic.droid.storage.operations.DatabaseOperations;
 import org.stepic.droid.storage.structure.DbStructureViewQueue;
-import org.stepic.droid.web.ViewAssignment;
+import org.stepik.android.model.ViewAssignment;
 
 import javax.inject.Inject;
 

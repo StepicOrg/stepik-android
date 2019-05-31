@@ -11,7 +11,7 @@ import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.di.course_list.CourseListScope
 import org.stepic.droid.features.course_purchases.domain.CoursePurchasesInteractor
 import org.stepic.droid.model.CourseListType
-import org.stepic.droid.model.CourseReviewSummary
+import org.stepik.android.model.CourseReviewSummary
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.CourseUtil
@@ -157,7 +157,7 @@ constructor(
 
             val reviewSummaryIds = coursesFromInternet.map { it.reviewSummary }.toLongArray()
             val reviews: List<CourseReviewSummary>? = try {
-                api.getCourseReviews(reviewSummaryIds).blockingGet().courseReviewSummaries
+                api.getCourseReviewSummaries(reviewSummaryIds).blockingGet().courseReviewSummaries
             } catch (exception: Exception) {
                 //ok show without new ratings
                 null
