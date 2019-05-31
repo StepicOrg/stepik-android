@@ -3,11 +3,13 @@ package org.stepik.android.view.notification
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Looper
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.TaskStackBuilder
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.configuration.Config
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.notifications.NotificationHelper
 import org.stepic.droid.notifications.NotificationTimeChecker
@@ -31,6 +33,7 @@ import javax.inject.Inject
 class FcmNotificationHandlerImpl
 @Inject constructor(
     private val context: Context,
+    private val configs: Config,
     private val screenManager: ScreenManager,
     private val analytic: Analytic,
     private val userPreferences: UserPreferences,
@@ -100,7 +103,7 @@ class FcmNotificationHandlerImpl
         val title = context.getString(R.string.teaching_title)
         val justText: String = textResolver.fromHtml(htmlText).toString()
 
-        val intent = notificationHelper.getTeachIntent(notification = stepikNotification)
+        val intent = getTeachIntent(notification = stepikNotification)
         if (intent == null) {
             analytic.reportEvent(Analytic.Notification.CANT_PARSE_NOTIFICATION, id.toString())
             return
@@ -121,7 +124,7 @@ class FcmNotificationHandlerImpl
             val title = context.getString(R.string.added_to_group_title)
             val justText: String = textResolver.fromHtml(htmlText).toString()
 
-            val intent = notificationHelper.getDefaultIntent(notification = stepikNotification)
+            val intent = getDefaultIntent(notification = stepikNotification)
             if (intent == null) {
                 analytic.reportEvent(Analytic.Notification.CANT_PARSE_NOTIFICATION, id.toString())
                 return
@@ -146,7 +149,7 @@ class FcmNotificationHandlerImpl
             val title = context.getString(R.string.received_review_title)
             val justText: String = textResolver.fromHtml(htmlText).toString()
 
-            val intent = notificationHelper.getReviewIntent(notification = stepikNotification)
+            val intent = getReviewIntent(notification = stepikNotification)
             if (intent == null) {
                 analytic.reportEvent(Analytic.Notification.CANT_PARSE_NOTIFICATION, stepikNotification.id.toString())
                 return
@@ -170,7 +173,7 @@ class FcmNotificationHandlerImpl
             val title = context.getString(R.string.new_message_title)
             val justText: String = textResolver.fromHtml(htmlText).toString()
 
-            val intent = notificationHelper.getCommentIntent(stepikNotification)
+            val intent = getCommentIntent(stepikNotification)
             if (intent == null) {
                 analytic.reportEvent(Analytic.Notification.CANT_PARSE_NOTIFICATION, id.toString())
                 return
@@ -204,7 +207,7 @@ class FcmNotificationHandlerImpl
             val title = context.getString(R.string.get_license_message)
             val justText: String = textResolver.fromHtml(rawMessageHtml).toString()
 
-            val intent = notificationHelper.getLicenseIntent(notification = stepikNotification) ?: return
+            val intent = getLicenseIntent(notification = stepikNotification) ?: return
 
             val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
             taskBuilder.addNextIntent(intent)
@@ -299,7 +302,7 @@ class FcmNotificationHandlerImpl
             screenManager.showCertificates(context)
             return true
         } else if (notification.action == NotificationHelper.ISSUED_LICENSE) {
-            val intent: Intent = notificationHelper.getLicenseIntent(notification) ?: return false
+            val intent: Intent = getLicenseIntent(notification) ?: return false
             context.startActivity(intent)
             return true
         } else {
@@ -318,21 +321,21 @@ class FcmNotificationHandlerImpl
     }
 
     private fun openCommentNotification(notification: Notification): Boolean {
-        val intent: Intent = notificationHelper.getCommentIntent(notification) ?: return false
+        val intent: Intent = getCommentIntent(notification) ?: return false
         analytic.reportEvent(Analytic.Notification.OPEN_COMMENT_NOTIFICATION_LINK)
         context.startActivity(intent)
         return true
     }
 
     private fun openReviewNotification(notification: Notification): Boolean {
-        val intent = notificationHelper.getReviewIntent(notification) ?: return false
+        val intent = getReviewIntent(notification) ?: return false
         context.startActivity(intent)
         analytic.reportEvent(Analytic.Notification.OPEN_LESSON_NOTIFICATION_LINK)
         return true
     }
 
     private fun openTeach(notification: Notification): Boolean {
-        val intent: Intent? = notificationHelper.getTeachIntent(notification) ?: return false
+        val intent: Intent? = getTeachIntent(notification) ?: return false
         analytic.reportEvent(Analytic.Notification.OPEN_TEACH_CENTER)
         context.startActivity(intent)
         return true
@@ -340,7 +343,7 @@ class FcmNotificationHandlerImpl
 
     private fun openDefault(notification: Notification): Boolean {
         if (notification.action != null && notification.action == NotificationHelper.ADDED_TO_GROUP) {
-            val intent = notificationHelper.getDefaultIntent(notification) ?: return false
+            val intent = getDefaultIntent(notification) ?: return false
             analytic.reportEvent(Analytic.Notification.OPEN_COMMENT_NOTIFICATION_LINK)
             context.startActivity(intent)
             return true
@@ -354,6 +357,67 @@ class FcmNotificationHandlerImpl
             action = AppConstants.OPEN_NOTIFICATION
             putExtra(AppConstants.KEY_NOTIFICATION_ID, notificationId)
         }
+
+
+    private fun getTeachIntent(notification: Notification): Intent? {
+        val link = HtmlHelper.parseNLinkInText(notification.htmlText ?: "", configs.baseUrl, 0) ?: return null
+        try {
+            val url = Uri.parse(link)
+            val identifier = url.pathSegments[0]
+            val intent: Intent =
+                when (identifier) {
+                    "course" ->
+                        Intent(context, CourseActivity::class.java)
+                    "lesson" ->
+                        Intent(context, StepsActivity::class.java)
+                    else ->
+                        return null
+                }
+            intent.data = url
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            return intent
+        } catch (exception: Exception) {
+            return null
+        }
+    }
+
+    private fun getLicenseIntent(notification: Notification): Intent? {
+        val link = HtmlHelper.parseNLinkInText(notification.htmlText ?: "", configs.baseUrl, 0) ?: return null
+        val intent = screenManager.getOpenInWebIntent(link)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        return intent
+    }
+
+    private fun getDefaultIntent(notification: Notification): Intent? {
+        val data = HtmlHelper.parseNLinkInText(notification.htmlText ?: "", configs.baseUrl, 1) ?: return null
+        val intent = Intent(context, CourseActivity::class.java)
+        intent.data = Uri.parse(data)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        return intent
+    }
+
+    private fun getReviewIntent(notification: Notification): Intent? {
+        val data = HtmlHelper.parseNLinkInText(notification.htmlText ?: "", configs.baseUrl, 0) ?: return null
+        val intent = Intent(context, StepsActivity::class.java)
+        intent.data = Uri.parse(data)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        return intent
+    }
+
+    private fun getCommentIntent(notification: Notification): Intent? {
+        val link: String
+        val action = notification.action
+        val htmlText = notification.htmlText ?: ""
+        if (action == org.stepic.droid.notifications.NotificationHelper.REPLIED) {
+            link = HtmlHelper.parseNLinkInText(htmlText, configs.baseUrl, 1) ?: return null
+        } else {
+            link = HtmlHelper.parseNLinkInText(htmlText, configs.baseUrl, 3) ?: return null
+        }
+        val intent = Intent(context, StepsActivity::class.java)
+        intent.data = Uri.parse(link)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        return intent
+    }
 
     private fun getCourse(courseId: Long?): Course? {
         if (courseId == null) return null
