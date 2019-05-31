@@ -11,7 +11,7 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.core.ScreenManager
-import org.stepic.droid.notifications.NotificationHelper
+import org.stepic.droid.notifications.NotificationActionsHelper
 import org.stepic.droid.notifications.NotificationTimeChecker
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.notifications.model.NotificationType
@@ -28,6 +28,7 @@ import org.stepic.droid.web.Api
 import org.stepik.android.model.Course
 import org.stepik.android.view.course.routing.CourseScreenTab
 import org.stepik.android.view.course.ui.activity.CourseActivity
+import org.stepik.android.view.notification.helpers.NotificationHelper
 import javax.inject.Inject
 
 class FcmNotificationHandlerImpl
@@ -39,7 +40,7 @@ class FcmNotificationHandlerImpl
     private val userPreferences: UserPreferences,
     private val sharedPreferenceHelper: SharedPreferenceHelper,
     private val textResolver: TextResolver,
-    private val notificationHelper: org.stepik.android.view.notification.helpers.NotificationHelper,
+    private val notificationHelper: NotificationHelper,
     private val databaseFacade: DatabaseFacade,
     private val api: Api,
     private val notificationTimeChecker: NotificationTimeChecker,
@@ -77,7 +78,7 @@ class FcmNotificationHandlerImpl
     private fun resolveAndSendNotification(notification: Notification) {
         val htmlText = notification.htmlText
 
-        if (!NotificationHelper.isNotificationValidByAction(notification)) {
+        if (!NotificationActionsHelper.isNotificationValidByAction(notification)) {
             analytic.reportEventWithIdName(Analytic.Notification.ACTION_NOT_SUPPORT, notification.id.toString(), notification.action ?: "")
             return
         } else if (htmlText == null || htmlText.isEmpty()) {
@@ -120,7 +121,7 @@ class FcmNotificationHandlerImpl
 
     private fun sendDefaultNotification(stepikNotification: Notification, htmlText: String, id: Long) {
         val action = stepikNotification.action
-        if (action != null && action == NotificationHelper.ADDED_TO_GROUP) {
+        if (action != null && action == NotificationActionsHelper.ADDED_TO_GROUP) {
             val title = context.getString(R.string.added_to_group_title)
             val justText: String = textResolver.fromHtml(htmlText).toString()
 
@@ -145,7 +146,7 @@ class FcmNotificationHandlerImpl
     private fun sendReviewType(stepikNotification: Notification, htmlText: String, id: Long) {
         // here is supportable action, but we need identify it
         val action = stepikNotification.action
-        if (action != null && action == NotificationHelper.REVIEW_TAKEN) {
+        if (action != null && action == NotificationActionsHelper.REVIEW_TAKEN) {
             val title = context.getString(R.string.received_review_title)
             val justText: String = textResolver.fromHtml(htmlText).toString()
 
@@ -169,7 +170,7 @@ class FcmNotificationHandlerImpl
 
     private fun sendCommentNotification(stepikNotification: Notification, htmlText: String, id: Long) {
         val action = stepikNotification.action
-        if (action != null && (action == NotificationHelper.REPLIED || action == NotificationHelper.COMMENTED)) {
+        if (action != null && (action == NotificationActionsHelper.REPLIED || action == NotificationActionsHelper.COMMENTED)) {
             val title = context.getString(R.string.new_message_title)
             val justText: String = textResolver.fromHtml(htmlText).toString()
 
@@ -193,7 +194,7 @@ class FcmNotificationHandlerImpl
 
     private fun sendLearnNotification(stepikNotification: Notification, rawMessageHtml: String, id: Long) {
         val action = stepikNotification.action
-        if (action != null && action == NotificationHelper.ISSUED_CERTIFICATE) {
+        if (action != null && action == NotificationActionsHelper.ISSUED_CERTIFICATE) {
             val title = context.getString(R.string.get_certifcate_title)
             val justText: String = textResolver.fromHtml(rawMessageHtml).toString()
 
@@ -203,7 +204,7 @@ class FcmNotificationHandlerImpl
             analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, id.toString(), stepikNotification.type?.name)
             val notification = notificationHelper.makeSimpleNotificationBuilder(stepikNotification, justText, taskBuilder, title, id = id)
             stepikNotificationManager.showNotification(id, notification.build())
-        } else if (action == NotificationHelper.ISSUED_LICENSE) {
+        } else if (action == NotificationActionsHelper.ISSUED_LICENSE) {
             val title = context.getString(R.string.get_license_message)
             val justText: String = textResolver.fromHtml(rawMessageHtml).toString()
 
@@ -297,11 +298,11 @@ class FcmNotificationHandlerImpl
     }
 
     private fun openLearnNotification(notification: Notification): Boolean {
-        if (notification.action != null && notification.action == NotificationHelper.ISSUED_CERTIFICATE) {
+        if (notification.action != null && notification.action == NotificationActionsHelper.ISSUED_CERTIFICATE) {
             analytic.reportEvent(Analytic.Certificate.OPEN_CERTIFICATE_FROM_NOTIFICATION_CENTER)
             screenManager.showCertificates(context)
             return true
-        } else if (notification.action == NotificationHelper.ISSUED_LICENSE) {
+        } else if (notification.action == NotificationActionsHelper.ISSUED_LICENSE) {
             val intent: Intent = getLicenseIntent(notification) ?: return false
             context.startActivity(intent)
             return true
@@ -342,7 +343,7 @@ class FcmNotificationHandlerImpl
     }
 
     private fun openDefault(notification: Notification): Boolean {
-        if (notification.action != null && notification.action == NotificationHelper.ADDED_TO_GROUP) {
+        if (notification.action != null && notification.action == NotificationActionsHelper.ADDED_TO_GROUP) {
             val intent = getDefaultIntent(notification) ?: return false
             analytic.reportEvent(Analytic.Notification.OPEN_COMMENT_NOTIFICATION_LINK)
             context.startActivity(intent)
@@ -408,7 +409,7 @@ class FcmNotificationHandlerImpl
         val link: String
         val action = notification.action
         val htmlText = notification.htmlText ?: ""
-        if (action == org.stepic.droid.notifications.NotificationHelper.REPLIED) {
+        if (action == org.stepic.droid.notifications.NotificationActionsHelper.REPLIED) {
             link = HtmlHelper.parseNLinkInText(htmlText, configs.baseUrl, 1) ?: return null
         } else {
             link = HtmlHelper.parseNLinkInText(htmlText, configs.baseUrl, 3) ?: return null
