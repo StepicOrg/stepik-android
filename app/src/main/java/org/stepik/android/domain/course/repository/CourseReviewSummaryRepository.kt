@@ -1,9 +1,10 @@
 package org.stepik.android.domain.course.repository
 
 import io.reactivex.Single
+import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.model.CourseReviewSummary
 
 interface CourseReviewSummaryRepository {
     fun getCourseReviewSummary(courseReviewSummaryId: Long): Single<CourseReviewSummary>
-    fun getCourseReviewSummaries(courseReviewSummaryIds: LongArray): Single<List<CourseReviewSummary>>
+    fun getCourseReviewSummaries(courseReviewSummaryIds: LongArray, sourceType: DataSourceType): Single<List<CourseReviewSummary>>
 }
