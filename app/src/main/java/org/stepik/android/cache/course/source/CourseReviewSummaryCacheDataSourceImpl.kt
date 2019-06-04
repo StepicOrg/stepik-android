@@ -11,7 +11,7 @@ class CourseReviewSummaryCacheDataSourceImpl
 @Inject
 constructor(
     private val courseReviewSummaryDao: IDao<CourseReviewSummary>
-) : CourseReviewSummaryCacheDataSource{
+) : CourseReviewSummaryCacheDataSource {
     override fun getCourseReviewSummaries(vararg courseReviewSummaryIds: Long): Single<List<CourseReviewSummary>> =
         Single.fromCallable {
             courseReviewSummaryDao.getAll()
@@ -19,6 +19,6 @@ constructor(
 
     override fun saveCourseReviewSummaries(courseReviewSummaries: List<CourseReviewSummary>): Completable =
         Completable.fromAction {
-           courseReviewSummaryDao.insertOrReplaceAll(courseReviewSummaries)
+            courseReviewSummaryDao.insertOrReplaceAll(courseReviewSummaries)
         }
 }
