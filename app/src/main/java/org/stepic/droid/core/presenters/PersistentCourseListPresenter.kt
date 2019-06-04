@@ -11,7 +11,6 @@ import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.di.course_list.CourseListScope
 import org.stepic.droid.features.course_purchases.domain.CoursePurchasesInteractor
 import org.stepic.droid.model.CourseListType
-import org.stepik.android.model.CourseReviewSummary
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.CourseUtil
@@ -19,12 +18,11 @@ import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.RWLocks
 import org.stepic.droid.util.getProgresses
 import org.stepic.droid.web.Api
+import org.stepik.android.domain.base.DataSourceType
+import org.stepik.android.domain.course.repository.CourseReviewSummaryRepository
 import org.stepik.android.domain.personal_deadlines.interactor.DeadlinesSynchronizationInteractor
 import org.stepik.android.domain.progress.repository.ProgressRepository
-import org.stepik.android.model.Course
-import org.stepik.android.model.Meta
-import org.stepik.android.model.Progress
-import org.stepik.android.model.UserCourse
+import org.stepik.android.model.*
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
@@ -47,7 +45,8 @@ constructor(
     private val firstCoursePoster: FirstCoursePoster,
 
     private val deadlinesSynchronizationInteractor: DeadlinesSynchronizationInteractor,
-    private val analytic: Analytic
+    private val analytic: Analytic,
+    private val courseReviewSummaryRepository: CourseReviewSummaryRepository
 ) : PresenterBase<CoursesView>() {
 
     companion object {
@@ -155,15 +154,6 @@ constructor(
                     .blockingAwait()
             }
 
-            val reviewSummaryIds = coursesFromInternet.map { it.reviewSummary }.toLongArray()
-            val reviews: List<CourseReviewSummary>? = try {
-                api.getCourseReviewSummaries(reviewSummaryIds).blockingGet().courseReviewSummaries
-            } catch (exception: Exception) {
-                //ok show without new ratings
-                null
-            }
-            CourseUtil.applyReviewsToCourses(reviews, coursesFromInternet)
-
             try {
                 //this lock need for not saving enrolled courses to database after user click logout
                 RWLocks.ClearEnrollmentsLock.writeLock().lock()
@@ -175,7 +165,6 @@ constructor(
                             databaseFacade.dropEnrolledCourses()
                         }
                     }
-
                     databaseFacade.addCourseList(courseType, coursesFromInternet)
                 }
             } finally {
@@ -183,8 +172,8 @@ constructor(
             }
 
             val allCourses = databaseFacade.getAllCourses(courseType).toMutableList()
-
             val coursesForShow: List<Course> = handleCoursesWithType(allCourses, courseType)
+            bindsRatings(coursesForShow, DataSourceType.REMOTE)
             if (coursesForShow.size < MIN_COURSES_ON_SCREEN && hasNextPage.get()) {
                 //try to load next in loop
             } else {
@@ -221,7 +210,7 @@ constructor(
     private fun showFromDatabase(courseType: CourseListType) {
         val coursesBeforeLoading = databaseFacade.getAllCourses(courseType)
         val coursesForShow = handleCoursesWithType(coursesBeforeLoading, courseType)
-
+        bindsRatings(coursesForShow, DataSourceType.CACHE)
         if (coursesForShow.isNotEmpty()) {
             mainHandler.post {
                 view?.showCourses(coursesForShow, emptyMap(), emptyMap())
@@ -283,6 +272,17 @@ constructor(
             it.progress
         }
         return databaseFacade.getProgresses(progressIds).associateBy { it.id }
+    }
+
+    private fun bindsRatings(courses: List<Course>, dataSourceType: DataSourceType) {
+        val reviewSummaryIds = courses.map { it.reviewSummary }.toLongArray()
+        val reviews: List<CourseReviewSummary>? = try {
+            courseReviewSummaryRepository.getCourseReviewSummaries(reviewSummaryIds, dataSourceType).blockingGet()
+        } catch (exception: Exception) {
+            //ok show without new ratings
+            null
+        }
+        CourseUtil.applyReviewsToCourses(reviews, courses)
     }
 
 
