@@ -15,4 +15,8 @@ constructor(
         courseReviewSummaryRemoteDataSource
             .getCourseReviewSummaries(courseReviewSummaryId)
             .map { it.first() }
+
+    override fun getCourseReviewSummaries(courseReviewSummaryIds: LongArray): Single<List<CourseReviewSummary>> =
+        courseReviewSummaryRemoteDataSource
+            .getCourseReviewSummaries(*courseReviewSummaryIds)
 }

@@ -5,4 +5,5 @@ import org.stepik.android.model.CourseReviewSummary
 
 interface CourseReviewSummaryRepository {
     fun getCourseReviewSummary(courseReviewSummaryId: Long): Single<CourseReviewSummary>
+    fun getCourseReviewSummaries(courseReviewSummaryIds: LongArray): Single<List<CourseReviewSummary>>
 }
