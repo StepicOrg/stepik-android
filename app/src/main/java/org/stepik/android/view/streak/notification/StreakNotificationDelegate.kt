@@ -155,7 +155,6 @@ constructor(
     private fun getDeleteIntentForStreaks(): PendingIntent {
         val deleteIntent = Intent(context, NotificationBroadcastReceiver::class.java)
         deleteIntent.action = AppConstants.NOTIFICATION_CANCELED_STREAK
-        val deletePendingIntent = PendingIntent.getBroadcast(context, 0, deleteIntent, PendingIntent.FLAG_CANCEL_CURRENT)
-        return deletePendingIntent
+        return PendingIntent.getBroadcast(context, 0, deleteIntent, PendingIntent.FLAG_CANCEL_CURRENT)
     }
 }

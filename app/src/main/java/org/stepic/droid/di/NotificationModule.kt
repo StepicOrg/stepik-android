@@ -18,7 +18,7 @@ interface NotificationModule {
     fun bindNotificationPublisher(notificationPublisherImpl: NotificationPublisherImpl): NotificationPublisher
 
     @Binds
-    fun bindStepikNotifManager(stepikNotifManagerImpl: StepikNotificationManagerImpl): StepikNotificationManager
+    fun bindStepikNotificationManager(stepikNotificationManagerImpl: StepikNotificationManagerImpl): StepikNotificationManager
 
     @Binds
     fun bindNotificationHelper(notificationHelperImpl: NotificationHelperImpl): NotificationHelper

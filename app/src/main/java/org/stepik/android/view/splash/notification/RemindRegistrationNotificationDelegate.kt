@@ -11,7 +11,6 @@ import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.view.notification.NotificationDelegate
 import org.stepik.android.view.notification.StepikNotificationManager
 import org.stepik.android.view.notification.helpers.NotificationHelper
-import timber.log.Timber
 import javax.inject.Inject
 
 class RemindRegistrationNotificationDelegate
@@ -68,7 +67,6 @@ constructor(
                 now + 2 * AppConstants.MILLIS_IN_1HOUR
             }
         }
-        Timber.d("Scheduling at RemindDelegate")
         scheduleNotificationAt(scheduleMillis)
         sharedPreferenceHelper.saveRegistrationRemindTimestamp(scheduleMillis)
     }

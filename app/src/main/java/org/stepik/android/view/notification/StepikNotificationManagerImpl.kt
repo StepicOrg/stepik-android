@@ -12,7 +12,8 @@ import org.stepik.android.view.notification.receiver.AlarmReceiver
 import javax.inject.Inject
 
 class StepikNotificationManagerImpl
-@Inject constructor(
+@Inject
+constructor(
     private val context: Context,
     private val sharedPreferenceHelper: SharedPreferenceHelper
 ) : StepikNotificationManager {

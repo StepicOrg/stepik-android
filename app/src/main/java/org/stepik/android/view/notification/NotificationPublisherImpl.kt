@@ -3,7 +3,8 @@ package org.stepik.android.view.notification
 import javax.inject.Inject
 
 class NotificationPublisherImpl
-@Inject constructor(
+@Inject
+constructor(
     private val notificationDelegates: Set<@JvmSuppressWildcards NotificationDelegate>
 ) : NotificationPublisher {
     override fun onNeedShowNotificationWithId(id: String) {

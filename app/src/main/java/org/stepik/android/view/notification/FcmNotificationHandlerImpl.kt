@@ -32,7 +32,8 @@ import org.stepik.android.view.notification.helpers.NotificationHelper
 import javax.inject.Inject
 
 class FcmNotificationHandlerImpl
-@Inject constructor(
+@Inject
+constructor(
     private val context: Context,
     private val configs: Config,
     private val screenManager: ScreenManager,
@@ -84,7 +85,7 @@ class FcmNotificationHandlerImpl
         } else if (htmlText == null || htmlText.isEmpty()) {
             analytic.reportEvent(Analytic.Notification.HTML_WAS_NULL, notification.id.toString())
             return
-        } else if (notification.isMuted ?: false) {
+        } else if (notification.isMuted == true) {
             analytic.reportEvent(Analytic.Notification.WAS_MUTED, notification.id.toString())
             return
         } else {
@@ -363,9 +364,8 @@ class FcmNotificationHandlerImpl
         val link = HtmlHelper.parseNLinkInText(notification.htmlText ?: "", configs.baseUrl, 0) ?: return null
         try {
             val url = Uri.parse(link)
-            val identifier = url.pathSegments[0]
             val intent: Intent =
-                when (identifier) {
+                when (url.pathSegments[0]) {
                     "course" ->
                         Intent(context, CourseActivity::class.java)
                     "lesson" ->
@@ -405,14 +405,14 @@ class FcmNotificationHandlerImpl
     }
 
     private fun getCommentIntent(notification: Notification): Intent? {
-        val link: String
         val action = notification.action
         val htmlText = notification.htmlText ?: ""
-        if (action == org.stepic.droid.notifications.NotificationActionsHelper.REPLIED) {
-            link = HtmlHelper.parseNLinkInText(htmlText, configs.baseUrl, 1) ?: return null
-        } else {
-            link = HtmlHelper.parseNLinkInText(htmlText, configs.baseUrl, 3) ?: return null
-        }
+        val link =
+            if (action == NotificationActionsHelper.REPLIED) {
+                HtmlHelper.parseNLinkInText(htmlText, configs.baseUrl, 1) ?: return null
+            } else {
+                HtmlHelper.parseNLinkInText(htmlText, configs.baseUrl, 3) ?: return null
+            }
         val intent = Intent(context, LessonActivity::class.java)
         intent.data = Uri.parse(link)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

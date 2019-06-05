@@ -25,7 +25,8 @@ import org.stepik.android.model.Course
 import javax.inject.Inject
 
 class NotificationHelperImpl
-@Inject constructor(
+@Inject
+constructor(
     private val context: Context,
     private val notificationTimeChecker: NotificationTimeChecker,
     private val analytic: Analytic,
