@@ -39,10 +39,8 @@ import org.stepic.droid.notifications.NotificationBroadcastReceiver
 import org.stepic.droid.persistence.di.PersistenceModule
 import org.stepic.droid.persistence.service.DownloadCompleteService
 import org.stepic.droid.persistence.service.FileTransferService
-import org.stepic.droid.receivers.BootCompletedReceiver
 import org.stepic.droid.receivers.DownloadClickReceiver
 import org.stepic.droid.receivers.InternetConnectionEnabledReceiver
-import org.stepic.droid.services.*
 import org.stepic.droid.ui.adapters.*
 import org.stepic.droid.ui.adapters.viewhoders.CourseItemViewHolder
 import org.stepic.droid.ui.custom.*
@@ -60,6 +58,8 @@ import org.stepik.android.view.injection.profile.ProfileBusModule
 import org.stepik.android.view.injection.profile_edit.ProfileEditComponent
 import org.stepik.android.view.injection.progress.ProgressBusModule
 import org.stepik.android.view.injection.video_player.VideoPlayerComponent
+import org.stepik.android.view.notification.service.BootCompleteService
+import org.stepik.android.view.notification.service.NotificationAlarmService
 import org.stepik.android.view.injection.view_assignment.ViewAssignmentBusModule
 import org.stepik.android.view.injection.view_assignment.ViewAssignmentComponent
 
@@ -90,7 +90,8 @@ import org.stepik.android.view.injection.view_assignment.ViewAssignmentComponent
         ViewAssignmentBusModule::class,
         PersonalDeadlinesDataModule::class,
 
-        CourseRoutingModule::class // todo unite it in RoutingModule::class,
+        CourseRoutingModule::class, // todo unite it in RoutingModule::class
+        NotificationModule::class
     ]
 )
 interface AppCoreComponent {
@@ -215,10 +216,6 @@ interface AppCoreComponent {
 
     fun inject(searchQueriesAdapter: SearchQueriesAdapter)
 
-    fun inject(alarmService: AlarmService)
-
-    fun inject(bootCompletedReceiver: BootCompletedReceiver)
-
     fun inject(timeIntervalPickerDialogFragment: TimeIntervalPickerDialogFragment)
 
     fun inject(videoQualityDialogInPlayer: VideoQualityDialogInPlayer)
@@ -245,4 +242,8 @@ interface AppCoreComponent {
     fun inject(achievementsNotificationService: AchievementsNotificationService)
 
     fun inject(glideCustomModule: GlideCustomModule)
+
+    fun inject(notificationAlarmService: NotificationAlarmService)
+
+    fun inject(bootCompleteService: BootCompleteService)
 }
