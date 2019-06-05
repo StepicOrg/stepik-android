@@ -8,7 +8,7 @@ import android.content.Context
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.scheduleCompat
-import org.stepik.android.view.notification.receiver.StepikAlarmReceiver
+import org.stepik.android.view.notification.receiver.AlarmReceiver
 import javax.inject.Inject
 
 class StepikNotificationManagerImpl
@@ -21,11 +21,11 @@ class StepikNotificationManagerImpl
     private val notificationManager: NotificationManager by lazy { context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager }
 
     override fun scheduleNotification(id: String, millis: Long) {
-        val intent = StepikAlarmReceiver
+        val intent = AlarmReceiver
                 .createIntent(context, id)
 
         val pendingIntent = PendingIntent
-                .getBroadcast(context, StepikAlarmReceiver.REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+                .getBroadcast(context, AlarmReceiver.REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         alarmManager.cancel(pendingIntent)
         alarmManager.scheduleCompat(millis, AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent)

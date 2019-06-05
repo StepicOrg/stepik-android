@@ -5,12 +5,12 @@ import android.content.Context
 import android.content.Intent
 import org.stepik.android.view.notification.service.NotificationAlarmService
 
-class StepikAlarmReceiver : BroadcastReceiver() {
+class AlarmReceiver : BroadcastReceiver() {
     companion object {
         const val REQUEST_CODE = 151
 
         fun createIntent(context: Context, action: String): Intent =
-            Intent(context, StepikAlarmReceiver::class.java)
+            Intent(context, AlarmReceiver::class.java)
                     .setAction(action)
     }
 

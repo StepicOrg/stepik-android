@@ -15,7 +15,8 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class RemindRegistrationNotificationDelegate
-@Inject constructor(
+@Inject
+constructor(
     private val context: Context,
     private val sharedPreferenceHelper: SharedPreferenceHelper,
     private val notificationHelper: NotificationHelper,

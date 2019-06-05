@@ -25,6 +25,7 @@ class NotificationAlarmService : JobIntentService() {
     }
 
     override fun onHandleWork(intent: Intent) {
-        notificationPublisher.onNeedShowNotificationWithId(intent.action)
+        val action = intent.action ?: return
+        notificationPublisher.onNeedShowNotificationWithId(action)
     }
 }

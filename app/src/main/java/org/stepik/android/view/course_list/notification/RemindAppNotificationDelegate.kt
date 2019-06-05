@@ -21,7 +21,8 @@ import java.util.Calendar
 import javax.inject.Inject
 
 class RemindAppNotificationDelegate
-@Inject constructor(
+@Inject
+constructor(
     private val context: Context,
     private val sharedPreferenceHelper: SharedPreferenceHelper,
     private val databaseFacade: DatabaseFacade,

@@ -11,7 +11,6 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
-import dagger.multibindings.IntoSet
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -51,14 +50,6 @@ import org.stepic.droid.web.ApiImpl
 import org.stepic.droid.web.UserAgentProvider
 import org.stepic.droid.web.UserAgentProviderImpl
 import org.stepik.android.presentation.base.injection.DaggerViewModelFactory
-import org.stepik.android.view.course_list.notification.RemindAppNotificationDelegate
-import org.stepik.android.view.notification.*
-import org.stepik.android.view.notification.helpers.NotificationHelper
-import org.stepik.android.view.notification.helpers.NotificationHelperImpl
-import org.stepik.android.view.personal_deadlines.notification.DeadlinesNotificationDelegate
-import org.stepik.android.view.splash.notification.RemindRegistrationNotificationDelegate
-import org.stepik.android.view.splash.notification.RetentionNotificationDelegate
-import org.stepik.android.view.streak.notification.StreakNotificationDelegate
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.Executors

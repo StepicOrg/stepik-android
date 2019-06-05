@@ -16,7 +16,7 @@ class BootCompleteService : JobIntentService() {
         private const val JOB_ID = 1000
 
         fun enqueueWork(context: Context, intent: Intent) {
-            JobIntentService.enqueueWork(context, BootCompleteService::class.java, JOB_ID, intent)
+            enqueueWork(context, BootCompleteService::class.java, JOB_ID, intent)
         }
     }
 

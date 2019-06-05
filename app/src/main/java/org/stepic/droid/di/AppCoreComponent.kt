@@ -41,7 +41,6 @@ import org.stepic.droid.persistence.service.DownloadCompleteService
 import org.stepic.droid.persistence.service.FileTransferService
 import org.stepic.droid.receivers.DownloadClickReceiver
 import org.stepic.droid.receivers.InternetConnectionEnabledReceiver
-import org.stepic.droid.services.*
 import org.stepic.droid.ui.adapters.*
 import org.stepic.droid.ui.adapters.viewhoders.CourseItemViewHolder
 import org.stepic.droid.ui.custom.*
@@ -59,7 +58,6 @@ import org.stepik.android.view.injection.profile.ProfileBusModule
 import org.stepik.android.view.injection.profile_edit.ProfileEditComponent
 import org.stepik.android.view.injection.progress.ProgressBusModule
 import org.stepik.android.view.injection.video_player.VideoPlayerComponent
-import org.stepik.android.view.notification.receiver.StepikBootCompleteReceiver
 import org.stepik.android.view.notification.service.BootCompleteService
 import org.stepik.android.view.notification.service.NotificationAlarmService
 import org.stepik.android.view.injection.view_assignment.ViewAssignmentBusModule

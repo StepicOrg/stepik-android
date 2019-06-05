@@ -390,7 +390,7 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name="org.stepik.android.view.notification.receiver.StepikAlarmReceiver" />
+        <receiver android:name="org.stepik.android.view.notification.receiver.AlarmReceiver" />
 
         <service android:name=".notifications.StepicFcmListenerService">
             <intent-filter>
@@ -447,7 +447,7 @@
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <receiver
-            android:name="org.stepik.android.view.notification.receiver.StepikBootCompleteReceiver"
+            android:name="org.stepik.android.view.notification.receiver.BootCompleteReceiver"
             android:enabled="true"
             android:exported="false"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED">

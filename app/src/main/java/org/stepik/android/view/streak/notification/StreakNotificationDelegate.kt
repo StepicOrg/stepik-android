@@ -22,7 +22,8 @@ import java.util.Calendar
 import javax.inject.Inject
 
 class StreakNotificationDelegate
-@Inject constructor(
+@Inject
+constructor(
     private val context: Context,
     private val analytic: Analytic,
     private val api: Api,
