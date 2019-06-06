@@ -1,5 +1,6 @@
 package org.stepic.droid.storage.structure;
 
+@Deprecated
 public final class DbStructureStep {
     public static final String STEPS = "steps";
 
@@ -21,6 +22,5 @@ public final class DbStructureStep {
         public static final String PEER_REVIEW = "has_peer_review";
         public static final String HAS_SUBMISSION_RESTRICTION = "has_submission_restriction";
         public static final String MAX_SUBMISSION_COUNT = "max_submission_count";
-
     }
 }

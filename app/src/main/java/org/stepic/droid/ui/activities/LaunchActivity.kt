@@ -40,6 +40,7 @@ import org.stepic.droid.ui.dialogs.LoadingProgressDialog
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.getMessageFor
+import org.stepic.droid.web.Api
 import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan
 import uk.co.chrisjenx.calligraphy.TypefaceUtils
 import javax.inject.Inject
@@ -59,6 +60,9 @@ class LaunchActivity : SmartLockActivityBase(), LoginView {
 
     @Inject
     lateinit var loginPresenter: LoginPresenter
+
+    @Inject
+    internal lateinit var api: Api
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

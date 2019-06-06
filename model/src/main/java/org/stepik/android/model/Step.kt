@@ -28,6 +28,9 @@ data class Step(
     @SerializedName("passed_by")
     val passedBy: Long = 0,
 
+    @SerializedName("worth")
+    val worth: Long = 0,
+
     @SerializedName("create_date")
     val createDate: Date? = null,
     @SerializedName("update_date")
@@ -59,6 +62,7 @@ data class Step(
 
         dest.writeLong(this.viewedBy)
         dest.writeLong(this.passedBy)
+        dest.writeLong(this.worth)
 
         dest.writeDate(this.createDate)
         dest.writeDate(this.updateDate)
@@ -82,6 +86,8 @@ data class Step(
                 parcel.createStringArrayList(),
 
                 parcel.readLong(),
+                parcel.readLong(),
+
                 parcel.readLong(),
 
                 parcel.readDate(),

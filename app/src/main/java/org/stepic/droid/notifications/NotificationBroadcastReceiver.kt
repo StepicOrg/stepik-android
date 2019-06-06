@@ -6,6 +6,7 @@ import android.content.Intent
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.preferences.SharedPreferenceHelper
+import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants
 import timber.log.Timber
 import java.util.concurrent.ThreadPoolExecutor
@@ -13,7 +14,7 @@ import javax.inject.Inject
 
 class NotificationBroadcastReceiver : BroadcastReceiver() {
     @Inject
-    lateinit var stepikNotificationManager: StepikNotificationManager
+    lateinit var databaseFacade: DatabaseFacade
 
     @Inject
     lateinit var threadPool: ThreadPoolExecutor
@@ -35,7 +36,7 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
             val courseId = intent.extras?.getLong(AppConstants.COURSE_ID_KEY)
             courseId?.let {
                 threadPool.execute {
-                    stepikNotificationManager.discardAllShownNotificationsRelatedToCourse(it)
+                    databaseFacade.removeAllNotificationsWithCourseId(courseId)
                 }
             }
         } else if (action == AppConstants.NOTIFICATION_CANCELED_REMINDER) {

@@ -220,7 +220,7 @@ constructor(
 
     override fun onOpenStep(courseId: Long, lastStep: LastStep) {
         ProgressHelper.dismiss(fragmentManager, continueLoadingTag)
-        screenManager.continueCourse(activity, courseId, lastStep.unit, lastStep.lesson, lastStep.step)
+        screenManager.continueCourse(activity, courseId, lastStep)
     }
 
     override fun onOpenAdaptiveCourse(course: Course) {

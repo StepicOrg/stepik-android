@@ -62,14 +62,24 @@ import org.stepic.droid.web.model.adaptive.RecommendationReactionsRequest;
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
 import org.stepic.droid.web.model.desk.DeskRequestWrapper;
 import org.stepic.droid.web.storage.RemoteStorageService;
-import org.stepik.android.model.EnrollmentWrapper;
 import org.stepik.android.model.Tag;
 import org.stepik.android.model.Reply;
 import org.stepik.android.model.ReplyWrapper;
 import org.stepik.android.model.user.Profile;
-import org.stepik.android.model.user.User;
 import org.stepik.android.model.attempts.DatasetWrapper;
+import org.stepik.android.remote.assignment.model.AssignmentResponse;
+import org.stepik.android.remote.course.model.CourseResponse;
+import org.stepik.android.remote.course.model.CourseReviewSummaryResponse;
+import org.stepik.android.remote.course.model.EnrollmentRequest;
 import org.stepik.android.remote.email_address.model.EmailAddressResponse;
+import org.stepik.android.remote.last_step.model.LastStepResponse;
+import org.stepik.android.remote.lesson.model.LessonResponse;
+import org.stepik.android.remote.progress.model.ProgressResponse;
+import org.stepik.android.remote.section.model.SectionResponse;
+import org.stepik.android.remote.step.model.StepResponse;
+import org.stepik.android.remote.unit.model.UnitResponse;
+import org.stepik.android.remote.user.model.UserResponse;
+import org.stepik.android.remote.view_assignment.model.ViewAssignmentRequest;
 
 import java.io.IOException;
 import java.net.HttpCookie;
@@ -471,7 +481,7 @@ public class ApiImpl implements Api {
         return loggedService.getUserCourses(page);
     }
 
-    public Single<CoursesMetaResponse> getPopularCourses(int page) {
+    public Single<CourseResponse> getPopularCourses(int page) {
         EnumSet<StepikFilter> enumSet = sharedPreference.getFilterForFeatured();
         String lang = enumSet.iterator().next().getLanguage();
         return loggedService.getPopularCourses(page, lang);
@@ -483,67 +493,62 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Call<UsersResponse> getUsers(long[] userIds) {
+    public Call<UserResponse> getUsers(long[] userIds) {
         return loggedService.getUsers(userIds);
     }
 
     @Override
-    public Single<List<User>> getUsersRx(long[] userIds) {
-        return loggedService.getUsersRx(userIds).map(new Function<UsersResponse, List<User>>() {
-            @Override
-            public List<User> apply(UsersResponse usersResponse) {
-                return usersResponse.getUsers();
-            }
-        });
+    public Single<UserResponse> getUsersRx(long[] userIds) {
+        return loggedService.getUsersRx(userIds);
     }
 
     @Override
-    public Completable joinCourse(long courseId) {
-        return loggedService.joinCourse(new EnrollmentWrapper(courseId));
+    public Completable joinCourse(EnrollmentRequest enrollmentRequest) {
+        return loggedService.joinCourse(enrollmentRequest);
     }
 
     @Override
-    public Call<SectionsMetaResponse> getSections(long[] sectionsIds) {
+    public Call<SectionResponse> getSections(long[] sectionsIds) {
         return loggedService.getSections(sectionsIds);
     }
 
     @Override
-    public Single<SectionsMetaResponse> getSectionsRx(long[] sectionsIds) {
+    public Single<SectionResponse> getSectionsRx(long[] sectionsIds) {
         return loggedService.getSectionsRx(sectionsIds);
     }
 
     @Override
-    public Call<UnitMetaResponse> getUnits(List<Long> units) {
+    public Call<UnitResponse> getUnits(List<Long> units) {
         return loggedService.getUnits(units);
     }
 
     @Override
-    public Single<UnitMetaResponse> getUnitsRx(long[] units) {
+    public Single<UnitResponse> getUnitsRx(long[] units) {
         return loggedService.getUnitsRx(units);
     }
 
     @Override
-    public Single<UnitMetaResponse> getUnits(long courseId, long lessonId) {
+    public Single<UnitResponse> getUnits(long courseId, long lessonId) {
         return loggedService.getUnits(courseId, lessonId);
     }
 
     @Override
-    public Call<LessonStepicResponse> getLessons(long[] lessons) {
+    public Call<LessonResponse> getLessons(long[] lessons) {
         return loggedService.getLessons(lessons);
     }
 
     @Override
-    public Single<LessonStepicResponse> getLessonsRx(long[] lessons) {
+    public Single<LessonResponse> getLessonsRx(long[] lessons) {
         return loggedService.getLessonsRx(lessons);
     }
 
     @Override
-    public Single<LessonStepicResponse> getLessons(long lessonId) {
+    public Single<LessonResponse> getLessons(long lessonId) {
         return getLessonsRx(new long[]{lessonId});
     }
 
     @Override
-    public Call<StepResponse> getSteps(long[] steps) {
+    public Single<StepResponse> getSteps(long[] steps) {
         return loggedService.getSteps(steps);
     }
 
@@ -569,28 +574,18 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Call<ProgressesResponse> getProgresses(String[] progresses) {
+    public Call<ProgressResponse> getProgresses(String[] progresses) {
         return loggedService.getProgresses(progresses);
     }
 
     @Override
-    public Single<ProgressesResponse> getProgressesReactive(String[] progresses) {
+    public Single<ProgressResponse> getProgressesReactive(String[] progresses) {
         return loggedService.getProgressesReactive(progresses);
     }
 
     @Override
     public Single<AssignmentResponse> getAssignments(long[] assignmentsIds) {
         return loggedService.getAssignments(assignmentsIds);
-    }
-
-    @Override
-    public Call<Void> postViewed(ViewAssignment stepAssignment) {
-        return loggedService.postViewed(new ViewAssignmentWrapper(stepAssignment.getAssignment(), stepAssignment.getStep()));
-    }
-
-    @Override
-    public Completable postViewedReactive(ViewAssignment stepAssignment) {
-        return loggedService.postViewedReactive(new ViewAssignmentWrapper(stepAssignment.getAssignment(), stepAssignment.getStep()));
     }
 
     @Override
@@ -621,7 +616,7 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Call<CoursesMetaResponse> getCourses(int page, @Nullable long[] ids) {
+    public Call<CourseResponse> getCourses(int page, @Nullable long[] ids) {
         if (ids == null || ids.length == 0) {
             ids = new long[]{0};
         }
@@ -629,7 +624,7 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Single<CoursesMetaResponse> getCoursesReactive(int page, @NotNull long[] ids) {
+    public Single<CourseResponse> getCoursesReactive(int page, @NotNull long[] ids) {
         if (ids.length == 0) {
             ids = new long[]{0};
         }
@@ -637,7 +632,7 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Single<CoursesMetaResponse> getCoursesReactive(@NotNull long[] ids) {
+    public Single<CourseResponse> getCoursesReactive(@NotNull long[] ids) {
         return loggedService.getCoursesReactive(ids);
     }
 
@@ -803,7 +798,7 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Call<CoursesMetaResponse> getCourse(long id) {
+    public Call<CourseResponse> getCourse(long id) {
         long[] ids = new long[]{id};
         return loggedService.getCourses(ids);
     }
@@ -868,7 +863,7 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Single<UnitMetaResponse> getUnitsByLessonId(long lessonId) {
+    public Single<UnitResponse> getUnitsByLessonId(long lessonId) {
         return loggedService.getUnitsByLessonId(lessonId);
     }
 
@@ -910,7 +905,7 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Single<CourseReviewResponse> getCourseReviews(long[] courseIds) {
+    public Single<CourseReviewSummaryResponse> getCourseReviewSummaries(long[] courseIds) {
         return loggedService.getCourseReviews(courseIds);
     }
 

@@ -560,7 +560,8 @@ public class SharedPreferenceHelper {
         TEMP("temporary"),
         VIDEO_SETTINGS("video_settings"),
         DEVICE_SPECIFIC("device_specific"),
-        FEATURED_FILTER("featured_filter_prefs");
+        FEATURED_FILTER("featured_filter_prefs"),
+        NOTIFICATION("notification");
 
         private String description;
 
@@ -686,14 +687,6 @@ public class SharedPreferenceHelper {
         put(PreferenceType.VIDEO_QUALITY, VIDEO_QUALITY_KEY, videoQuality);
     }
 
-    public void storeTempPosition(int position) {
-        put(PreferenceType.TEMP, TEMP_POSITION_KEY, position);
-    }
-
-    public int getTempPosition() {
-        return getInt(PreferenceType.TEMP, TEMP_POSITION_KEY);
-    }
-
     @NotNull
     public String getVideoQuality() {
         String str = getString(PreferenceType.VIDEO_QUALITY, VIDEO_QUALITY_KEY);
@@ -789,6 +782,14 @@ public class SharedPreferenceHelper {
 
     public void saveSplitTestGroup(@NotNull String testName, @NotNull String groupName) {
         put(PreferenceType.DEVICE_SPECIFIC, testName, groupName);
+    }
+
+    public void putAlarmTimestamp(String id, long timestamp) {
+        put(PreferenceType.NOTIFICATION, id, timestamp);
+    }
+
+    public Long getAlarmTimestamp(String id) {
+        return getLong(PreferenceType.NOTIFICATION, id);
     }
 
     private void put(PreferenceType type, String key, String value) {

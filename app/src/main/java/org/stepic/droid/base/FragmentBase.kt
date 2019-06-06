@@ -17,7 +17,6 @@ import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.core.*
 import org.stepic.droid.fonts.FontsProvider
-import org.stepic.droid.notifications.LocalReminder
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.storage.operations.DatabaseFacade
@@ -32,9 +31,6 @@ open class FragmentBase : Fragment() {
 
     private var viewHasBeenDestroyed = false
     private var unbinder: Unbinder? = null
-
-    @Inject
-    lateinit var localReminder: LocalReminder
 
     @Inject
     lateinit var textResolver: TextResolver
@@ -62,9 +58,6 @@ open class FragmentBase : Fragment() {
 
     @Inject
     lateinit var screenManager: ScreenManager
-
-    @Inject
-    lateinit var localProgressInteractor: LocalProgressInteractor
 
     @Inject
     lateinit var sharedPreferenceHelper: SharedPreferenceHelper

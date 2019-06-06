@@ -37,8 +37,8 @@ import org.stepic.droid.core.internetstate.contract.InternetEnabledListener;
 import org.stepic.droid.core.presenters.StepAttemptPresenter;
 import org.stepic.droid.core.presenters.StreakPresenter;
 import org.stepic.droid.core.presenters.contracts.StepAttemptView;
-import org.stepic.droid.core.updatingstep.contract.UpdatingStepPoster;
 import org.stepic.droid.fonts.FontType;
+import org.stepik.android.domain.progress.interactor.LocalProgressInteractor;
 import org.stepik.android.model.Step;
 import org.stepik.android.model.attempts.Attempt;
 import org.stepik.android.model.DiscountingPolicyType;
@@ -64,6 +64,7 @@ import javax.inject.Inject;
 import butterknife.BindDrawable;
 import butterknife.BindString;
 import butterknife.BindView;
+import kotlin.collections.CollectionsKt;
 import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan;
 import uk.co.chrisjenx.calligraphy.TypefaceUtils;
 
@@ -151,7 +152,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
     StreakPresenter streakPresenter;
 
     @Inject
-    UpdatingStepPoster updatingStepPoster;
+    LocalProgressInteractor localProgressInteractor;
 
     private View.OnClickListener actionButtonGeneralListener;
 
@@ -209,7 +210,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
             @Override
             public void onClick(View v) {
                 v.setEnabled(false);
-                boolean handled = ((NextMoveable) getParentFragment()).moveNext();
+                boolean handled = ((NextMoveable) getActivity()).moveNext();
                 if (!handled) {
                     if (unit != null) {
                         routeStepPresenter.clickNextLesson(unit);
@@ -450,7 +451,6 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
 
     protected final void markLocalProgressAsViewed() {
         if (!step.isCustomPassed()) {
-            updatingStepPoster.updateStep(step.getId(), true);
             AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
                 private final Step step = StepAttemptFragment.this.step;
 
@@ -458,7 +458,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
                     long assignmentId = getDatabaseFacade().getAssignmentIdByStepId(this.step.getId());
                     getDatabaseFacade().markProgressAsPassed(assignmentId);
                     try {
-                        localProgressInteractor.updateStepProgress(this.step).blockingAwait();
+                        localProgressInteractor.updateStepsProgress(CollectionsKt.listOf(this.step)).blockingAwait();
                     } catch (Exception e) {
                         // no op
                     }

@@ -7,8 +7,8 @@ import org.stepik.android.model.Step
 import org.stepik.android.model.Video
 
 data class StepPersistentWrapper(
-        val step: Step,
-        val cachedVideo: Video? = null // maybe more abstract
+    val step: Step,
+    val cachedVideo: Video? = null // maybe more abstract
 ): Progressable, Parcelable {
     override val progress: String?
         get() = step.progress
@@ -21,11 +21,13 @@ data class StepPersistentWrapper(
     override fun describeContents() = 0
 
     companion object CREATOR : Parcelable.Creator<StepPersistentWrapper> {
-        override fun createFromParcel(parcel: Parcel): StepPersistentWrapper = StepPersistentWrapper(
-                parcel.readParcelable(Step::class.java.classLoader),
+        override fun createFromParcel(parcel: Parcel): StepPersistentWrapper =
+            StepPersistentWrapper(
+                parcel.readParcelable(Step::class.java.classLoader)!!,
                 parcel.readParcelable(Video::class.java.classLoader)
-        )
+            )
 
-        override fun newArray(size: Int): Array<StepPersistentWrapper?> = arrayOfNulls(size)
+        override fun newArray(size: Int): Array<StepPersistentWrapper?> =
+            arrayOfNulls(size)
     }
 }

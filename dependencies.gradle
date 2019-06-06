@@ -1,6 +1,6 @@
 ext.versions = [
-        code                 : 2023,
-        name                 : '1.83',
+        code                 : 2025,
+        name                 : '1.84',
 
         minSdk               : 15,
         targetSdk            : 26,
@@ -29,7 +29,7 @@ ext.versions = [
 
         retrofit             : '2.3.0',
         gson                 : '2.7',
-        jsoup                : '1.8.3',
+        jsoup                : '1.12.1',
 
         glide                : '4.9.0',
         glideTransformations : '4.0.1',

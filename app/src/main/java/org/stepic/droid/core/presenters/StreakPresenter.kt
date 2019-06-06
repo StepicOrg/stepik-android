@@ -2,16 +2,17 @@ package org.stepic.droid.core.presenters
 
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.core.presenters.contracts.NotificationTimeView
-import org.stepic.droid.notifications.LocalReminder
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.ui.util.TimeIntervalUtil
+import org.stepik.android.view.streak.notification.StreakNotificationDelegate
 import javax.inject.Inject
 
 class StreakPresenter
 @Inject constructor(
         private val analytic: Analytic,
         private val sharedPreferenceHelper: SharedPreferenceHelper,
-        private val localReminder: LocalReminder) : PresenterBase<NotificationTimeView>() {
+        private val streakNotificationDelegate: StreakNotificationDelegate
+) : PresenterBase<NotificationTimeView>() {
 
     fun tryShowNotificationSetting() {
         val isEnabled = sharedPreferenceHelper.isStreakNotificationEnabled
@@ -23,7 +24,7 @@ class StreakPresenter
     fun switchNotificationStreak(isChecked: Boolean) {
         sharedPreferenceHelper.isStreakNotificationEnabled = isChecked
         analytic.reportEvent(Analytic.Streak.SWITCH_NOTIFICATION_IN_MENU, isChecked.toString() + "")
-        localReminder.userChangeStateOfNotification()
+        streakNotificationDelegate.scheduleStreakNotification()
         view?.hideNotificationTime(!isChecked)
     }
 
@@ -31,7 +32,7 @@ class StreakPresenter
         sharedPreferenceHelper.isStreakNotificationEnabled = true
         sharedPreferenceHelper.timeNotificationCode = timeIntervalCode
         val timePresentationString = TimeIntervalUtil.values[timeIntervalCode]
-        localReminder.userChangeStateOfNotification()
+        streakNotificationDelegate.scheduleStreakNotification()
         view?.setNewTimeInterval(timePresentationString)
     }
 }

@@ -13,7 +13,6 @@ import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepic.droid.persistence.repository.DownloadsRepository
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.addDisposable
-import org.stepik.android.model.Video
 import org.stepik.android.view.video_player.model.VideoPlayerMediaData
 import javax.inject.Inject
 

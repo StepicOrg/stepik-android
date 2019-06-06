@@ -22,7 +22,6 @@ public class CourseSearchResultActivity extends FragmentActivityBase {
         super.onCreate(savedInstanceState);
         setTitle(R.string.search_title);
         setContentView(R.layout.activity_search_courses);
-        unbinder = ButterKnife.bind(this);
         query = getIntent().getStringExtra(SearchManager.QUERY);
         initOrTryRestoreFragment();
     }

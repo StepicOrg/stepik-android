@@ -18,9 +18,9 @@ constructor(
                 .filterNotNull()
         }
 
-    override fun saveCourse(course: Course): Completable =
+    override fun saveCourses(courses: List<Course>): Completable =
         Completable.fromAction {
-            databaseFacade.addCourse(course)
+            databaseFacade.addCourses(courses)
         }
 
     override fun removeCourse(courseId: Long): Completable =

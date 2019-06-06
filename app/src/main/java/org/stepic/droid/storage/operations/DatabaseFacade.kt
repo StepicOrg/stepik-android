@@ -3,28 +3,48 @@ package org.stepic.droid.storage.operations
 import android.content.ContentValues
 import org.stepic.droid.adaptive.model.LocalExpItem
 import org.stepic.droid.di.storage.StorageSingleton
-import org.stepik.android.cache.personal_deadlines.dao.DeadlinesBannerDao
-import org.stepic.droid.model.*
+import org.stepic.droid.features.stories.model.ViewedStoryTemplate
+import org.stepic.droid.model.BlockPersistentWrapper
+import org.stepic.droid.model.CalendarSection
+import org.stepic.droid.model.CertificateViewItem
+import org.stepic.droid.model.CourseListType
+import org.stepic.droid.model.SearchQuery
+import org.stepic.droid.model.ViewedNotification
 import org.stepic.droid.model.code.CodeSubmission
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.storage.dao.AdaptiveExpDao
-import org.stepic.droid.storage.dao.IDao
-import org.stepik.android.cache.personal_deadlines.dao.PersonalDeadlinesDao
-import org.stepic.droid.features.stories.model.ViewedStoryTemplate
 import org.stepic.droid.storage.dao.CourseListDao
+import org.stepic.droid.storage.dao.IDao
 import org.stepic.droid.storage.dao.SearchQueryDao
-import org.stepic.droid.storage.structure.*
+import org.stepic.droid.storage.structure.DbStructureCalendarSection
+import org.stepic.droid.storage.structure.DbStructureCodeSubmission
+import org.stepic.droid.storage.structure.DbStructureCourse
+import org.stepic.droid.storage.structure.DbStructureLastStep
+import org.stepic.droid.storage.structure.DbStructureNotification
+import org.stepic.droid.storage.structure.DbStructureProgress
+import org.stepic.droid.storage.structure.DbStructureVideoTimestamp
+import org.stepic.droid.storage.structure.DbStructureViewQueue
+import org.stepic.droid.storage.structure.DbStructureViewedNotificationsQueue
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DbParseHelper
-import org.stepic.droid.web.ViewAssignment
+import org.stepik.android.model.ViewAssignment
+import org.stepik.android.cache.assignment.structure.DbStructureAssignment
 import org.stepik.android.cache.course_calendar.structure.DbStructureSectionDateEvent
-import org.stepik.android.cache.section.structure.DbStructureSection
-import org.stepik.android.cache.unit.structure.DbStructureUnit
 import org.stepik.android.cache.lesson.structure.DbStructureLesson
+import org.stepik.android.cache.personal_deadlines.dao.DeadlinesBannerDao
+import org.stepik.android.cache.personal_deadlines.dao.PersonalDeadlinesDao
+import org.stepik.android.cache.section.structure.DbStructureSection
+import org.stepik.android.cache.step.structure.DbStructureStep
+import org.stepik.android.cache.unit.structure.DbStructureUnit
 import org.stepik.android.cache.video_player.model.VideoTimestamp
 import org.stepik.android.domain.course_calendar.model.SectionDateEvent
 import org.stepik.android.domain.last_step.model.LastStep
-import org.stepik.android.model.*
+import org.stepik.android.model.Assignment
+import org.stepik.android.model.Course
+import org.stepik.android.model.Lesson
+import org.stepik.android.model.Progress
+import org.stepik.android.model.Section
+import org.stepik.android.model.Step
 import org.stepik.android.model.Unit
 import javax.inject.Inject
 
@@ -82,22 +102,29 @@ constructor(
         sectionDateEventDao.removeAll()
     }
 
-    fun addAssignment(assignment: Assignment?) = assignment?.let { assignmentDao.insertOrUpdate(assignment) }
+    fun addAssignments(assignments: List<Assignment>) {
+        assignmentDao.insertOrReplaceAll(assignments)
+    }
+
+    fun getAssignments(assignmentsIds: LongArray): List<Assignment> {
+        val stringIds = DbParseHelper.parseLongArrayToString(assignmentsIds, AppConstants.COMMA)
+        return if (stringIds != null) {
+            assignmentDao.getAllInRange(DbStructureAssignment.Columns.ID, stringIds)
+        } else {
+            emptyList()
+        }
+    }
 
     @Deprecated("because of step has 0..* assignments.")
     fun getAssignmentIdByStepId(stepId: Long): Long {
-        val assignment = assignmentDao.get(DbStructureAssignment.Column.STEP_ID, stepId.toString())
+        val assignment = assignmentDao.get(DbStructureAssignment.Columns.STEP, stepId.toString())
         return assignment?.id ?: -1
     }
-
-    fun getStepById(stepId: Long) = stepDao.get(DbStructureStep.Column.STEP_ID, stepId.toString())
-
-    fun getStepsById(stepIds: List<Long>): List<Step> = getStepsById(stepIds.toLongArray())
 
     fun getStepsById(stepIds: LongArray): List<Step> {
         val stringIds = DbParseHelper.parseLongArrayToString(stepIds, AppConstants.COMMA)
         return if (stringIds != null) {
-            stepDao.getAllInRange(DbStructureStep.Column.STEP_ID, stringIds)
+            stepDao.getAllInRange(DbStructureStep.Column.ID, stringIds)
         } else {
             emptyList()
         }
@@ -108,8 +135,6 @@ constructor(
     fun getSectionById(sectionId: Long) = sectionDao.get(DbStructureSection.Columns.ID, sectionId.toString())
 
     fun getCourseById(courseId: Long) = courseDao.get(DbStructureCourse.Columns.ID, courseId.toString())
-
-    fun getProgressById(progressId: String) = progressDao.get(DbStructureProgress.Columns.ID, progressId)
 
     fun getProgresses(progressIds: List<String>): List<Progress> {
         //todo change implementation of getAllInRange and escape internally
@@ -135,8 +160,9 @@ constructor(
     fun getAllCourses(courseListType: CourseListType) =
         courseListDao.getCourseList(courseListType)
 
-    fun addCourse(course: Course) =
-        courseDao.insertOrReplace(course)
+    fun addCourses(courses: List<Course>) {
+        courseDao.insertOrReplaceAll(courses)
+    }
 
     fun deleteCourse(courseId: Long) =
         courseDao.remove(DbStructureCourse.Columns.ID, courseId.toString())
@@ -156,9 +182,13 @@ constructor(
     fun addSections(sections: List<Section>) =
         sectionDao.insertOrReplaceAll(sections)
 
-    fun addStep(step: Step) = stepDao.insertOrUpdate(step)
+    fun addStep(step: Step) {
+        stepDao.insertOrReplace(step)
+    }
 
-    fun getStepsOfLesson(lessonId: Long) = stepDao.getAll(DbStructureStep.Column.LESSON_ID, lessonId.toString())
+    fun addSteps(steps: List<Step>) {
+        stepDao.insertOrReplaceAll(steps)
+    }
 
     fun addUnit(unit: Unit) =
         unitDao.insertOrUpdate(unit)
@@ -190,7 +220,7 @@ constructor(
     }
 
     fun markProgressAsPassed(assignmentId: Long) {
-        val assignment = assignmentDao.get(DbStructureAssignment.Column.ASSIGNMENT_ID, assignmentId.toString())
+        val assignment = assignmentDao.get(DbStructureAssignment.Columns.ID, assignmentId.toString())
         val progressId = assignment?.progress ?: return
         markProgressAsPassedIfInDb(progressId)
     }
@@ -204,28 +234,8 @@ constructor(
         }
     }
 
-    fun addProgress(progress: Progress) =
-        progressDao.insertOrUpdate(progress)
-
     fun addProgresses(progresses: List<Progress>) =
         progressDao.insertOrReplaceAll(progresses)
-
-    fun isProgressViewed(progressId: String?): Boolean {
-        if (progressId == null) return false
-        val progress = progressDao.get(DbStructureProgress.Columns.ID, progressId)
-        return progress?.isPassed ?: false
-    }
-
-    fun isStepPassed(step: Step): Boolean {
-        val assignment = assignmentDao.get(DbStructureAssignment.Column.STEP_ID, step.id.toString())
-        val progressId: String?
-        if (assignment != null) {
-            progressId = assignment.progress
-        } else {
-            progressId = step.progress
-        }
-        return isProgressViewed(progressId)
-    }
 
     fun getAllNotificationsOfCourse(courseId: Long): List<Notification> =
         notificationDao

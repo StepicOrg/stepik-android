@@ -10,13 +10,13 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.features.course_purchases.domain.CoursePurchasesInteractor
 import org.stepik.android.model.Course
-import org.stepic.droid.model.CourseReviewSummary
+import org.stepik.android.model.CourseReviewSummary
 import org.stepik.android.model.Progress
 import org.stepic.droid.util.CourseUtil
 import org.stepic.droid.web.Api
-import org.stepic.droid.web.CourseReviewResponse
-import org.stepic.droid.web.CoursesMetaResponse
-import org.stepic.droid.web.ProgressesResponse
+import org.stepik.android.remote.course.model.CourseReviewSummaryResponse
+import org.stepik.android.remote.course.model.CourseResponse
+import org.stepik.android.remote.progress.model.ProgressResponse
 import javax.inject.Inject
 
 @CourseListScope
@@ -43,7 +43,7 @@ constructor(
         view?.showLoading()
         val disposable = api
             .getCoursesReactive(DEFAULT_PAGE, courseIds)
-            .map(CoursesMetaResponse::getCourses)
+            .map(CourseResponse::courses)
             .flatMap {
                 val progressIds = it.map(Course::progress).toTypedArray()
                 val reviewIds = it.map(Course::reviewSummary).toLongArray()
@@ -78,15 +78,15 @@ constructor(
     }
 
     private fun getReviewsSingle(reviewIds: LongArray): Single<List<CourseReviewSummary>> {
-        return api.getCourseReviews(reviewIds)
-                .map(CourseReviewResponse::courseReviewSummaries)
+        return api.getCourseReviewSummaries(reviewIds)
+                .map(CourseReviewSummaryResponse::courseReviewSummaries)
                 .subscribeOn(backgroundScheduler)
     }
 
 
     private fun getProgressesSingle(progressIds: Array<String?>): Single<Map<String?, Progress>> {
         return api.getProgressesReactive(progressIds)
-                .map(ProgressesResponse::getProgresses)
+                .map(ProgressResponse::progresses)
                 .map { it.associateBy(Progress::id) }
                 .subscribeOn(backgroundScheduler)
     }

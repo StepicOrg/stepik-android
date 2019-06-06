@@ -62,4 +62,21 @@ class UriExtensionsTest {
         Assert.assertEquals(params, actualParams)
     }
 
+    @Test
+    fun getPathSegmentParameter_withParameterTest() {
+        val pathSegment = "course"
+        val actualParameter = "40005"
+        val uri = Uri.parse("https://stepik.org/$pathSegment/$actualParameter/pay")
+
+        Assert.assertEquals(actualParameter, uri.getPathSegmentParameter(pathSegment))
+    }
+
+    @Test
+    fun getPathSegmentParameter_noParameterTest() {
+        val pathSegment = "course"
+        val uri = Uri.parse("https://stepik.org/$pathSegment/")
+
+        Assert.assertEquals(null, uri.getPathSegmentParameter(pathSegment))
+    }
+
 }
