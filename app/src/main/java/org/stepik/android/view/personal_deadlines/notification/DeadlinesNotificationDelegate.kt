@@ -72,7 +72,9 @@ constructor(
                 closestDeadline - OFFSET_12HOURS
             else -> 0L
         }
-        scheduleNotificationAt(timestamp)
+        if (timestamp > 0) {
+            scheduleNotificationAt(timestamp)
+        }
     }
 
     private fun showPersonalDeadlineNotification(deadline: DeadlineEntity) {
