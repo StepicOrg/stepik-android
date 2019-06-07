@@ -201,7 +201,7 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable {
                 viewStepStateDelegate.switchState(state.stepsState)
                 centeredToolbarTitle.text = state.lessonData.lesson.title
 
-                stepsAdapter.setDataIfNotNull(state.lessonData.lesson, state.lessonData.unit, state.lessonData.section)
+                stepsAdapter.lessonData = state.lessonData
                 stepsAdapter.items =
                     if (state.stepsState is LessonView.StepsState.Loaded) {
                         state.stepsState.stepItems
@@ -219,9 +219,6 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable {
     }
 
     private fun invalidateTabLayout() {
-        val stepsAdapter = (lessonPager.adapter as? StepFragmentAdapter)
-            ?: return
-
         for (i in 0 until lessonTab.tabCount) {
             val tabIcon = AppCompatResources
                 .getDrawable(this, stepsAdapter.getTabDrawable(i))
