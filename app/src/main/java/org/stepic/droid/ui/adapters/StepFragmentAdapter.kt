@@ -21,8 +21,8 @@ class StepFragmentAdapter(
     
     var items: List<StepItem> = emptyList()
         set(value) {
-            val oldIds = field.map { it.step.step.id }
-            val newIds = value.map { it.step.step.id }
+            val oldIds = field.map { it.stepWrapper.step.id }
+            val newIds = value.map { it.stepWrapper.step.id }
             
             field = value
             if (oldIds != newIds) {
@@ -37,7 +37,7 @@ class StepFragmentAdapter(
         get() = _activeFragments
 
     override fun getItem(position: Int): Fragment {
-        val stepWrapper = items[position].step
+        val stepWrapper = items[position].stepWrapper
         val fragment = stepTypeResolver.getFragment(stepWrapper.step)
         val args = Bundle()
         args.putParcelable(AppConstants.KEY_STEP_BUNDLE, stepWrapper)
@@ -65,7 +65,7 @@ class StepFragmentAdapter(
 
     @DrawableRes
     fun getTabDrawable(position: Int): Int {
-        val step = items.getOrNull(position)?.step?.step
+        val step = items.getOrNull(position)?.stepWrapper?.step
         return stepTypeResolver.getDrawableForType(step?.block?.name, step?.actions?.doReview != null)
     }
 

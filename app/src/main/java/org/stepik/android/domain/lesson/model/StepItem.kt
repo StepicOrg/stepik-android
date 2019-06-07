@@ -5,7 +5,7 @@ import org.stepik.android.model.Assignment
 import org.stepik.android.model.Progress
 
 data class StepItem(
-    val step: StepPersistentWrapper,
+    val stepWrapper: StepPersistentWrapper,
     val stepProgress: Progress?,
 
     val assignment: Assignment?,

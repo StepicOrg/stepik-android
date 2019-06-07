@@ -150,7 +150,7 @@ constructor(
         val stepWorth = (state.stepsState as? LessonView.StepsState.Loaded)
             ?.stepItems
             ?.getOrNull(position)
-            ?.step
+            ?.stepWrapper
             ?.step
             ?.worth
             ?: return
@@ -194,7 +194,7 @@ constructor(
         currentStepPosition = position
 
         compositeDisposable += stepViewReportInteractor
-            .reportViewAssignment(stepItem.step.step, stepItem.assignment, state.lessonData.unit, state.lessonData.course)
+            .reportViewAssignment(stepItem.stepWrapper.step, stepItem.assignment, state.lessonData.unit, state.lessonData.course)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(onError = emptyOnErrorStub)
@@ -202,7 +202,7 @@ constructor(
         /**
          * Analytic
          */
-        val step = stepItem.step.step
+        val step = stepItem.stepWrapper.step
         analytic.reportEventWithName(Analytic.Steps.STEP_OPENED, step.getStepType())
         analytic.reportAmplitudeEvent(
             AmplitudeAnalytic.Steps.STEP_OPENED, mapOf(
@@ -222,7 +222,7 @@ constructor(
         val step = (state.stepsState as? LessonView.StepsState.Loaded)
             ?.stepItems
             ?.getOrNull(position)
-            ?.step
+            ?.stepWrapper
             ?.step
             ?: return
 
