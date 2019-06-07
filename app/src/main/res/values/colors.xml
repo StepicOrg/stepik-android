@@ -192,4 +192,8 @@
     <!-- Lesson -->
     <color name="lesson_tabbar_separator">@color/grey04</color>
     <color name="lesson_toolbar_separator">#DCDCDC</color>
+
+    <!-- Step -->
+    <color name="step_navigation_button">@color/stepic_brand_primary</color>
+    <color name="step_navigation_button_ripple">#2066CC66</color>
 </resources>

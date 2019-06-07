@@ -4,4 +4,5 @@
     android:shape="rectangle">
     <corners android:radius="@dimen/course_widget_radius"/>
     <stroke android:color="@color/placeholder_button_stroke_color" android:width="0.3dp" />
+    <solid android:color="@android:color/transparent" />
 </shape>
