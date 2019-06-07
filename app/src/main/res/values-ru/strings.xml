@@ -711,4 +711,7 @@
     <string name="lesson_info_certificate_threshold">%s до сертификата</string>
     <string name="lesson_info_distinction_certificate_threshold">%s до сертификата с отличием</string>
 
+    <!-- Step -->
+    <string name="step_navigation_next">Следующий урок</string>
+    <string name="step_navigation_prev">Предыдущий урок</string>
 </resources>

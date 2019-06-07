@@ -35,7 +35,7 @@ class StepNavigationDelegate(
             }
 
             isPrevAvailable && !isNextAvailable -> {
-                prevButton.setText(R.string.previous_lesson)
+                prevButton.setText(R.string.step_navigation_prev)
                 prevButton.layoutParams = prevButton.layoutParams.apply { width = 0 }
                 prevButton.compoundDrawablePadding = nextButton.compoundDrawablePadding
             }

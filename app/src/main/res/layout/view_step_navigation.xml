@@ -40,7 +40,7 @@
         android:textSize="16sp"
         android:textColor="@color/step_navigation_button"
         android:background="@drawable/bg_step_navigation_button"
-        android:text="@string/go_to_the_next_lesson"
+        android:text="@string/step_navigation_next"
 
         android:paddingStart="16dp"
         android:paddingLeft="16dp"

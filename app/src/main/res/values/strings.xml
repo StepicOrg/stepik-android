@@ -738,4 +738,7 @@
     <string name="lesson_info_certificate_threshold">%s until certificate</string>
     <string name="lesson_info_distinction_certificate_threshold">%s until certificate with distinction</string>
 
+    <!-- Step -->
+    <string name="step_navigation_next">Next lesson</string>
+    <string name="step_navigation_prev">Previous lesson</string>
 </resources>
