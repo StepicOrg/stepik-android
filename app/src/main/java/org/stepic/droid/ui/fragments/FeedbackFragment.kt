@@ -15,7 +15,6 @@ import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.util.DeviceInfoUtil
 import org.stepik.android.presentation.feedback.FeedbackPresenter
 import org.stepik.android.presentation.feedback.FeedbackView
-import timber.log.Timber
 import javax.inject.Inject
 
 class FeedbackFragment : FragmentBase(), FeedbackView {
@@ -62,7 +61,6 @@ class FeedbackFragment : FragmentBase(), FeedbackView {
 
     override fun sendTextFeedback(mailTo: String, subject: String, body: String) {
         val emailIntent = Intent(Intent.ACTION_SENDTO)
-        Timber.d("Body: $body")
         val mailData = getString(R.string.email_intent_template).format(
             Uri.encode(mailTo),
             Uri.encode(subject),
