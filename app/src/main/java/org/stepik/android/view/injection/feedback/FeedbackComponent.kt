@@ -3,6 +3,7 @@ package org.stepik.android.view.injection.feedback
 import dagger.Subcomponent
 import org.stepic.droid.ui.fragments.FeedbackFragment
 
+@Subcomponent(modules = [FeedbackModule::class])
 interface FeedbackComponent {
     @Subcomponent.Builder
     interface Builder {
