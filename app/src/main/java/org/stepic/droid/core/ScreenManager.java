@@ -70,8 +70,6 @@ public interface ScreenManager {
     void showCourseModules(Context context, @NotNull Course course);
     void showCourseScreen(Context context, @NotNull Course course, boolean autoEnroll, CourseScreenTab tab);
 
-    void showTextFeedback(Activity sourceActivity);
-
     void showStoreWithApp(Activity sourceActivity);
 
     void showDownloads(Context context);

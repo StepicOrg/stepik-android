@@ -62,7 +62,6 @@ import org.stepic.droid.ui.activities.SettingsActivity;
 import org.stepic.droid.ui.activities.SplashActivity;
 import org.stepic.droid.ui.activities.StoreManagementActivity;
 import org.stepic.droid.ui.activities.TagActivity;
-import org.stepic.droid.ui.activities.TextFeedbackActivity;
 import org.stepic.droid.ui.dialogs.RemindPasswordDialogFragment;
 import org.stepic.droid.ui.fragments.CommentsFragment;
 import org.stepic.droid.util.AndroidVersionKt;
@@ -262,14 +261,6 @@ public class ScreenManagerImpl implements ScreenManager {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         }
         return intent;
-    }
-
-    @Override
-    public void showTextFeedback(Activity sourceActivity) {
-        analytic.reportEvent(Analytic.Screens.SHOW_TEXT_FEEDBACK);
-        Intent launchIntent = new Intent(sourceActivity, TextFeedbackActivity.class);
-        sourceActivity.startActivityForResult(launchIntent, TextFeedbackActivity.Companion.getRequestCode());
-        sourceActivity.overridePendingTransition(org.stepic.droid.R.anim.no_transition, org.stepic.droid.R.anim.push_down);
     }
 
     @Override

@@ -711,7 +711,8 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
         if (getConfig().isAppInStore()) {
             getScreenManager().showStoreWithApp(getActivity());
         } else {
-            getScreenManager().showTextFeedback(getActivity());
+            // TODO Replace with a call to feedback interactor
+            // getScreenManager().showTextFeedback(getActivity());
         }
     }
 
@@ -719,7 +720,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
     public void onClickSupport(int starNumber) {
         getSharedPreferenceHelper().afterRateWasHandled();
         RatingUtilKt.reportRateEvent(getAnalytic(), starNumber, Analytic.Rating.NEGATIVE_EMAIL);
-        getScreenManager().showTextFeedback(getActivity());
+        // getScreenManager().showTextFeedback(getActivity());
     }
 
     protected final void hideWrongStatus() {

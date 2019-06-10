@@ -43,11 +43,4 @@ class FeedbackActivity : SingleFragmentActivity() {
         super.finish()
         overridePendingTransition(org.stepic.droid.R.anim.no_transition, org.stepic.droid.R.anim.push_down)
     }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == TextFeedbackActivity.requestCode && resultCode == Activity.RESULT_OK) {
-            finish()
-        }
-    }
 }
