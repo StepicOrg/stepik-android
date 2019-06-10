@@ -76,7 +76,7 @@ class FeedbackFragment : FragmentBase(), FeedbackView {
 
     override fun getEmailSubjectString(): String = getString(R.string.feedback_subject)
 
-    override fun getAboutSystemInfo(): String = DeviceInfoUtil.getInfosAboutDevice(context, "<br>")
+    override fun getAboutSystemInfo(): String = DeviceInfoUtil.getInfosAboutDevice(context, "\n")
 
     private fun initButtons() {
         feedbackGoodButton.setOnClickListener {
