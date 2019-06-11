@@ -2,6 +2,7 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -23,8 +24,8 @@
 
         android:gravity="center"
 
-        android:drawableStart="@drawable/ic_step_navigation_prev"
-        android:drawableLeft="@drawable/ic_step_navigation_prev"
+        tools:drawableStart="@drawable/ic_step_navigation_prev"
+        tools:drawableLeft="@drawable/ic_step_navigation_prev"
 
         app:layout_constraintEnd_toStartOf="@id/stepNavigationNext"
         app:layout_constraintStart_toStartOf="parent"
@@ -49,8 +50,8 @@
 
         android:gravity="center_vertical|start"
 
-        android:drawableEnd="@drawable/ic_step_navigation_next"
-        android:drawableRight="@drawable/ic_step_navigation_next"
+        tools:drawableEnd="@drawable/ic_step_navigation_next"
+        tools:drawableRight="@drawable/ic_step_navigation_next"
 
         app:layout_constraintStart_toEndOf="@id/stepNavigationPrev"
         app:layout_constraintEnd_toEndOf="parent"
