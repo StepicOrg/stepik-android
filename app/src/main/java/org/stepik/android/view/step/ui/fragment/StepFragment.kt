@@ -15,6 +15,7 @@ import org.stepic.droid.util.argument
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.presentation.step.StepPresenter
 import org.stepik.android.presentation.step.StepView
+import org.stepik.android.view.step.ui.delegate.StepDiscussionsDelegate
 import org.stepik.android.view.step.ui.delegate.StepNavigationDelegate
 import javax.inject.Inject
 
@@ -37,6 +38,7 @@ class StepFragment : Fragment(), StepView {
     private var lessonData: LessonData by argument()
 
     private lateinit var stepNavigationDelegate: StepNavigationDelegate
+    private lateinit var stepDiscussionsDelegate: StepDiscussionsDelegate
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +60,9 @@ class StepFragment : Fragment(), StepView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         stepNavigationDelegate = StepNavigationDelegate(stepNavigation)
         stepNavigationDelegate.setState(true, true)
+
+        stepDiscussionsDelegate = StepDiscussionsDelegate(stepDiscussions)
+        stepDiscussionsDelegate.setDiscussionsCount(100)
     }
 
     override fun onStart() {

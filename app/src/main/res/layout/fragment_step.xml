@@ -25,6 +25,10 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp" />
 
+            <include
+                android:id="@+id/stepDiscussions"
+                layout="@layout/view_step_discussion" />
+
         </android.support.v7.widget.LinearLayoutCompat>
     </android.support.v4.widget.NestedScrollView>
 </FrameLayout>

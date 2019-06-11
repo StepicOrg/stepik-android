@@ -196,4 +196,6 @@
     <!-- Step -->
     <color name="step_navigation_button">@color/stepic_brand_primary</color>
     <color name="step_navigation_button_ripple">#2066CC66</color>
+
+    <color name="step_discussion_button">@color/new_primary_color</color>
 </resources>
