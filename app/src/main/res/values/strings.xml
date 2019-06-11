@@ -737,7 +737,8 @@
     <string name="lesson_info_time_to_complete">&#8776;%s for lesson</string>
     <string name="lesson_info_certificate_threshold">%s until certificate</string>
     <string name="lesson_info_distinction_certificate_threshold">%s until certificate with distinction</string>
+
     <string name="support_email" translatable="false">support@stepik.org</string>
-    <string name="email_intent_template" translatable="false">mailto:%s?subject=%s&amp;body=%s</string>
+    <string name="email_chooser_title">Choose email app</string>
 
 </resources>
