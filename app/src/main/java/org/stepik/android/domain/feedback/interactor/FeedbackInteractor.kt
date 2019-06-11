@@ -11,14 +11,12 @@ constructor(
     private val config: Config,
     private val sharedPreferenceHelper: SharedPreferenceHelper
 ) {
-    fun initUriData(mailTo: String, subject: String, aboutSystem: String): EmailUriData {
-
-        return EmailUriData(
+    fun initUriData(mailTo: String, subject: String, aboutSystem: String): EmailUriData =
+        EmailUriData(
             mailTo = mailTo,
             subject = subject,
             body = formBodyField(aboutSystem)
         )
-    }
 
     private fun formBodyField(aboutSystem: String): String {
         val profileData = sharedPreferenceHelper.profile.let { profile ->
