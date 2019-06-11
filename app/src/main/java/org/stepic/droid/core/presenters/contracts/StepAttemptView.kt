@@ -27,4 +27,6 @@ interface StepAttemptView {
 
     fun onNeedShowRateDialog()
 
+    fun sendTextFeedback(mailTo: String, subject: String, body: String)
+
 }

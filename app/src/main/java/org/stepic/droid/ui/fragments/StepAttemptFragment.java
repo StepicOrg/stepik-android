@@ -27,6 +27,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
+import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
@@ -38,6 +39,9 @@ import org.stepic.droid.core.presenters.StepAttemptPresenter;
 import org.stepic.droid.core.presenters.StreakPresenter;
 import org.stepic.droid.core.presenters.contracts.StepAttemptView;
 import org.stepic.droid.fonts.FontType;
+import org.stepic.droid.util.CacheUtil;
+import org.stepic.droid.util.DeviceInfoUtil;
+import org.stepic.droid.util.IntentExtensionsKt;
 import org.stepik.android.domain.progress.interactor.LocalProgressInteractor;
 import org.stepik.android.model.Step;
 import org.stepik.android.model.attempts.Attempt;
@@ -712,7 +716,11 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
             getScreenManager().showStoreWithApp(getActivity());
         } else {
             // TODO Replace with a call to feedback interactor
-            // getScreenManager().showTextFeedback(getActivity());
+            stepAttemptPresenter.sendTextFeedback(
+                getString(R.string.support_email),
+                getString(R.string.feedback_subject),
+                DeviceInfoUtil.getInfosAboutDevice(getContext(), "\n")
+            );
         }
     }
 
@@ -720,7 +728,21 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
     public void onClickSupport(int starNumber) {
         getSharedPreferenceHelper().afterRateWasHandled();
         RatingUtilKt.reportRateEvent(getAnalytic(), starNumber, Analytic.Rating.NEGATIVE_EMAIL);
-        // getScreenManager().showTextFeedback(getActivity());
+        stepAttemptPresenter.sendTextFeedback(
+                getString(R.string.support_email),
+                getString(R.string.feedback_subject),
+                DeviceInfoUtil.getInfosAboutDevice(getContext(), "\n")
+        );
+    }
+
+    @Override
+    public void sendTextFeedback(@NotNull String mailTo, @NotNull String subject, @NotNull String body) {
+        Intent emailIntent = new Intent(Intent.ACTION_SEND);
+        emailIntent.setType("*/*");
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {mailTo});
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        emailIntent.putExtra(Intent.EXTRA_STREAM, CacheUtil.writeReturnInternalStorageFile(requireContext(), "aboutsystem.txt", body));
+        startActivity(IntentExtensionsKt.createEmailOnlyChooserIntent(emailIntent, getContext(), getString(R.string.email_chooser_title)));
     }
 
     protected final void hideWrongStatus() {
