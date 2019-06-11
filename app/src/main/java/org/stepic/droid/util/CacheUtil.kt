@@ -6,6 +6,7 @@ import android.support.v4.content.FileProvider
 import java.io.File
 
 object CacheUtil {
+    @JvmStatic
     fun writeReturnInternalStorageFile(context: Context, fileName: String, fileContents: String): Uri {
         context.openFileOutput(fileName, Context.MODE_PRIVATE).use {
             it.write(fileContents.toByteArray())
