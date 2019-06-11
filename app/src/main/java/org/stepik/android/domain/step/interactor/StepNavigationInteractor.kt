@@ -33,7 +33,7 @@ class StepNavigationInteractor(
                 .map { it as Set<StepNavigationDirection> }
         }
 
-    fun getLessonData(direction: StepNavigationDirection, step: Step, lessonData: LessonData): Maybe<LessonData> =
+    fun getLessonDataForDirection(direction: StepNavigationDirection, step: Step, lessonData: LessonData): Maybe<LessonData> =
         when {
             lessonData.unit == null ||
             lessonData.section == null ||
@@ -48,7 +48,7 @@ class StepNavigationInteractor(
                                 lessonData.unit.position
 
                             StepNavigationDirection.PREV ->
-                                lessonData.unit.position - 1
+                                lessonData.unit.position - 2
                         }
                     ])
                     .flatMap { unit ->
