@@ -711,6 +711,6 @@
     <string name="lesson_info_certificate_threshold">%s до сертификата</string>
     <string name="lesson_info_distinction_certificate_threshold">%s до сертификата с отличием</string>
 
-    <string name="email_chooser_title">Выберите почтовый клиент</string>
+    <string name="feedback_email_chooser_title">Выберите почтовый клиент</string>
 
 </resources>
