@@ -70,21 +70,25 @@ class FeedbackFragment : FragmentBase(), FeedbackView {
         startActivity(emailIntent.createEmailOnlyChooserIntent(requireContext(), getString(R.string.email_chooser_title)))
     }
 
-    override fun getMailToString(): String = getString(R.string.support_email)
-
-    override fun getEmailSubjectString(): String = getString(R.string.feedback_subject)
-
-    override fun getAboutSystemInfo(): String = DeviceInfoUtil.getInfosAboutDevice(context, "\n")
-
     private fun initButtons() {
         feedbackGoodButton.setOnClickListener {
             if (config.isAppInStore) {
                 screenManager.showStoreWithApp(activity)
             } else {
-                feedbackPresenter.sendTextFeedback(getMailToString(), getEmailSubjectString(), getAboutSystemInfo())
+                feedbackPresenter.sendTextFeedback(
+                    getString(R.string.support_email),
+                    getString(R.string.feedback_subject),
+                    DeviceInfoUtil.getInfosAboutDevice(context, "\n")
+                )
             }
         }
-        feedbackBadButton.setOnClickListener { feedbackPresenter.sendTextFeedback(getMailToString(), getEmailSubjectString(), getAboutSystemInfo()) }
+        feedbackBadButton.setOnClickListener {
+            feedbackPresenter.sendTextFeedback(
+                getString(R.string.support_email),
+                getString(R.string.feedback_subject),
+                DeviceInfoUtil.getInfosAboutDevice(context, "\n")
+            )
+        }
     }
     private fun injectComponentNewArch() {
         App.component()
