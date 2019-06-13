@@ -27,7 +27,10 @@ import org.stepic.droid.base.App;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.di.AppSingleton;
 import org.stepic.droid.features.achievements.ui.activity.AchievementsListActivity;
+import org.stepic.droid.util.CacheUtil;
+import org.stepic.droid.util.IntentExtensionsKt;
 import org.stepic.droid.util.UriExtensionsKt;
+import org.stepik.android.domain.feedback.model.EmailUriData;
 import org.stepik.android.domain.last_step.model.LastStep;
 import org.stepik.android.model.user.Profile;
 import org.stepik.android.view.course.routing.CourseScreenTab;
@@ -690,5 +693,15 @@ public class ScreenManagerImpl implements ScreenManager {
     public void showProfileEditPassword(Activity activity, long profileId) {
         activity.overridePendingTransition(org.stepic.droid.R.anim.push_up, org.stepic.droid.R.anim.no_transition);
         activity.startActivityForResult(ProfileEditPasswordActivity.Companion.createIntent(activity, profileId), ProfileEditPasswordActivity.REQUEST_CODE);
+    }
+
+    @Override
+    public void openTextFeedBack(Context context, EmailUriData emailUriData) {
+        Intent emailIntent = new Intent(Intent.ACTION_SEND);
+        emailIntent.setType("*/*");
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {emailUriData.getMailTo()});
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, emailUriData.getSubject());
+        emailIntent.putExtra(Intent.EXTRA_STREAM, CacheUtil.writeReturnInternalStorageFile(context, "aboutsystem.txt", emailUriData.getBody()));
+        context.startActivity(IntentExtensionsKt.createEmailOnlyChooserIntent(emailIntent, context, context.getString(R.string.email_chooser_title)));
     }
 }
