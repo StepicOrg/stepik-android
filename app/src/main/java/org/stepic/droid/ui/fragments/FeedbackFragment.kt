@@ -76,7 +76,6 @@ class FeedbackFragment : FragmentBase(), FeedbackView {
                 screenManager.showStoreWithApp(activity)
             } else {
                 feedbackPresenter.sendTextFeedback(
-                    getString(R.string.support_email),
                     getString(R.string.feedback_subject),
                     DeviceInfoUtil.getInfosAboutDevice(context, "\n")
                 )
@@ -84,7 +83,6 @@ class FeedbackFragment : FragmentBase(), FeedbackView {
         }
         feedbackBadButton.setOnClickListener {
             feedbackPresenter.sendTextFeedback(
-                getString(R.string.support_email),
                 getString(R.string.feedback_subject),
                 DeviceInfoUtil.getInfosAboutDevice(context, "\n")
             )

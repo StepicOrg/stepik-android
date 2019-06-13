@@ -715,9 +715,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
         if (getConfig().isAppInStore()) {
             getScreenManager().showStoreWithApp(getActivity());
         } else {
-            // TODO Replace with a call to feedback interactor
             stepAttemptPresenter.sendTextFeedback(
-                getString(R.string.support_email),
                 getString(R.string.feedback_subject),
                 DeviceInfoUtil.getInfosAboutDevice(getContext(), "\n")
             );
@@ -729,7 +727,6 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
         getSharedPreferenceHelper().afterRateWasHandled();
         RatingUtilKt.reportRateEvent(getAnalytic(), starNumber, Analytic.Rating.NEGATIVE_EMAIL);
         stepAttemptPresenter.sendTextFeedback(
-                getString(R.string.support_email),
                 getString(R.string.feedback_subject),
                 DeviceInfoUtil.getInfosAboutDevice(getContext(), "\n")
         );

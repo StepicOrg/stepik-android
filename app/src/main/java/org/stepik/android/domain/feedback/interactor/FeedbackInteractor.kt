@@ -11,9 +11,9 @@ constructor(
     private val config: Config,
     private val sharedPreferenceHelper: SharedPreferenceHelper
 ) {
-    fun initUriData(mailTo: String, subject: String, aboutSystem: String): EmailUriData =
+    fun initUriData(subject: String, aboutSystem: String): EmailUriData =
         EmailUriData(
-            mailTo = mailTo,
+            mailTo = config.supportEmail,
             subject = subject,
             body = formBodyField(aboutSystem)
         )

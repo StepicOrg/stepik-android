@@ -9,8 +9,8 @@ class FeedbackPresenter
 constructor(
     private val feedbackInteractor: FeedbackInteractor
 ) : PresenterBase<FeedbackView>() {
-    fun sendTextFeedback(mailTo: String, subject: String, aboutSystemInfo: String) {
-        val emailUriData = feedbackInteractor.initUriData(mailTo, subject, aboutSystemInfo)
+    fun sendTextFeedback(subject: String, aboutSystemInfo: String) {
+        val emailUriData = feedbackInteractor.initUriData(subject, aboutSystemInfo)
         view?.sendTextFeedback(emailUriData.mailTo, emailUriData.subject, emailUriData.body)
     }
 }
