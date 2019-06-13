@@ -702,6 +702,6 @@ public class ScreenManagerImpl implements ScreenManager {
         emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {emailUriData.getMailTo()});
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, emailUriData.getSubject());
         emailIntent.putExtra(Intent.EXTRA_STREAM, CacheUtil.writeReturnInternalStorageFile(context, "aboutsystem.txt", emailUriData.getBody()));
-        context.startActivity(IntentExtensionsKt.createEmailOnlyChooserIntent(emailIntent, context, context.getString(R.string.email_chooser_title)));
+        context.startActivity(IntentExtensionsKt.createEmailOnlyChooserIntent(emailIntent, context, context.getString(R.string.feedback_email_chooser_title)));
     }
 }
