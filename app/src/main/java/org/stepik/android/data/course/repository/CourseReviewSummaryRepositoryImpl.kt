@@ -20,7 +20,7 @@ constructor(
             .getCourseReviewSummaries(courseReviewSummaryId)
             .map { it.first() }
 
-    override fun getCourseReviewSummaries(courseReviewSummaryIds: LongArray, sourceType: DataSourceType): Single<List<CourseReviewSummary>> =
+    override fun getCourseReviewSummaries(vararg courseReviewSummaryIds: Long, sourceType: DataSourceType): Single<List<CourseReviewSummary>> =
         when (sourceType) {
             DataSourceType.CACHE ->
                 courseReviewSummaryCacheDataSource

@@ -277,7 +277,7 @@ constructor(
     private fun bindsRatings(courses: List<Course>, dataSourceType: DataSourceType) {
         val reviewSummaryIds = courses.map { it.reviewSummary }.toLongArray()
         val reviews: List<CourseReviewSummary>? = try {
-            courseReviewSummaryRepository.getCourseReviewSummaries(reviewSummaryIds, dataSourceType).blockingGet()
+            courseReviewSummaryRepository.getCourseReviewSummaries(*reviewSummaryIds, sourceType = dataSourceType).blockingGet()
         } catch (exception: Exception) {
             //ok show without new ratings
             null

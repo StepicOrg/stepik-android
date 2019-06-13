@@ -6,5 +6,5 @@ import org.stepik.android.model.CourseReviewSummary
 
 interface CourseReviewSummaryRepository {
     fun getCourseReviewSummary(courseReviewSummaryId: Long): Single<CourseReviewSummary>
-    fun getCourseReviewSummaries(courseReviewSummaryIds: LongArray, sourceType: DataSourceType): Single<List<CourseReviewSummary>>
+    fun getCourseReviewSummaries(vararg courseReviewSummaryIds: Long, sourceType: DataSourceType = DataSourceType.CACHE): Single<List<CourseReviewSummary>>
 }
