@@ -39,15 +39,7 @@ import org.stepic.droid.core.presenters.StepAttemptPresenter;
 import org.stepic.droid.core.presenters.StreakPresenter;
 import org.stepic.droid.core.presenters.contracts.StepAttemptView;
 import org.stepic.droid.fonts.FontType;
-import org.stepic.droid.util.CacheUtil;
-import org.stepic.droid.util.DeviceInfoUtil;
-import org.stepic.droid.util.IntentExtensionsKt;
-import org.stepik.android.domain.progress.interactor.LocalProgressInteractor;
-import org.stepik.android.model.Step;
-import org.stepik.android.model.attempts.Attempt;
-import org.stepik.android.model.DiscountingPolicyType;
 import org.stepic.droid.model.LessonSession;
-import org.stepik.android.model.Submission;
 import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout;
 import org.stepic.droid.ui.dialogs.DiscountingPolicyDialogFragment;
 import org.stepic.droid.ui.dialogs.RateAppDialogFragment;
@@ -55,13 +47,20 @@ import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment;
 import org.stepic.droid.ui.listeners.NextMoveable;
 import org.stepic.droid.ui.util.TimeIntervalUtil;
 import org.stepic.droid.util.ColorUtil;
+import org.stepic.droid.util.DeviceInfoUtil;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.RatingUtil;
 import org.stepic.droid.util.RatingUtilKt;
 import org.stepic.droid.util.SnackbarExtensionKt;
 import org.stepic.droid.util.StepExtensionsKt;
 import org.stepic.droid.util.SubmissionExtensionsKt;
+import org.stepik.android.domain.feedback.model.EmailUriData;
+import org.stepik.android.domain.progress.interactor.LocalProgressInteractor;
+import org.stepik.android.model.DiscountingPolicyType;
 import org.stepik.android.model.Reply;
+import org.stepik.android.model.Step;
+import org.stepik.android.model.Submission;
+import org.stepik.android.model.attempts.Attempt;
 
 import javax.inject.Inject;
 
@@ -733,13 +732,8 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
     }
 
     @Override
-    public void sendTextFeedback(@NotNull String mailTo, @NotNull String subject, @NotNull String body) {
-        Intent emailIntent = new Intent(Intent.ACTION_SEND);
-        emailIntent.setType("*/*");
-        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {mailTo});
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
-        emailIntent.putExtra(Intent.EXTRA_STREAM, CacheUtil.writeReturnInternalStorageFile(requireContext(), "aboutsystem.txt", body));
-        startActivity(IntentExtensionsKt.createEmailOnlyChooserIntent(emailIntent, getContext(), getString(R.string.email_chooser_title)));
+    public void sendTextFeedback(@NotNull EmailUriData emailUriData) {
+        screenManager.openTextFeedBack(requireContext(), emailUriData);
     }
 
     protected final void hideWrongStatus() {

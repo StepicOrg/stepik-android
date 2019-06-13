@@ -11,6 +11,6 @@ constructor(
 ) : PresenterBase<FeedbackView>() {
     fun sendTextFeedback(subject: String, aboutSystemInfo: String) {
         val emailUriData = feedbackInteractor.initUriData(subject, aboutSystemInfo)
-        view?.sendTextFeedback(emailUriData.mailTo, emailUriData.subject, emailUriData.body)
+        view?.sendTextFeedback(emailUriData)
     }
 }

@@ -2,7 +2,6 @@ package org.stepic.droid.ui.fragments
 
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,9 +10,8 @@ import kotlinx.android.synthetic.main.fragment_feedback.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentBase
-import org.stepic.droid.util.CacheUtil
 import org.stepic.droid.util.DeviceInfoUtil
-import org.stepic.droid.util.createEmailOnlyChooserIntent
+import org.stepik.android.domain.feedback.model.EmailUriData
 import org.stepik.android.presentation.feedback.FeedbackPresenter
 import org.stepik.android.presentation.feedback.FeedbackView
 import javax.inject.Inject
@@ -60,14 +58,8 @@ class FeedbackFragment : FragmentBase(), FeedbackView {
         initButtons()
     }
 
-    override fun sendTextFeedback(mailTo: String, subject: String, body: String) {
-        val emailIntent = Intent(Intent.ACTION_SEND).apply {
-            type = "*/*"
-            putExtra(Intent.EXTRA_EMAIL, arrayOf(mailTo))
-            putExtra(Intent.EXTRA_SUBJECT, subject)
-            putExtra(Intent.EXTRA_STREAM, CacheUtil.writeReturnInternalStorageFile(requireContext(), "aboutsystem.txt", body))
-        }
-        startActivity(emailIntent.createEmailOnlyChooserIntent(requireContext(), getString(R.string.email_chooser_title)))
+    override fun sendTextFeedback(emailUriData: EmailUriData) {
+        screenManager.openTextFeedBack(requireContext(), emailUriData)
     }
 
     private fun initButtons() {

@@ -1,5 +1,7 @@
 package org.stepik.android.presentation.feedback
 
+import org.stepik.android.domain.feedback.model.EmailUriData
+
 interface FeedbackView {
-    fun sendTextFeedback(mailTo: String, subject: String, body: String)
+    fun sendTextFeedback(emailUriData: EmailUriData)
 }

@@ -1,5 +1,6 @@
 package org.stepic.droid.core.presenters.contracts
 
+import org.stepik.android.domain.feedback.model.EmailUriData
 import org.stepik.android.model.attempts.Attempt
 import org.stepik.android.model.DiscountingPolicyType
 import org.stepik.android.model.Submission
@@ -27,6 +28,6 @@ interface StepAttemptView {
 
     fun onNeedShowRateDialog()
 
-    fun sendTextFeedback(mailTo: String, subject: String, body: String)
+    fun sendTextFeedback(emailUriData: EmailUriData)
 
 }
