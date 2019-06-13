@@ -616,14 +616,16 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void openSyllabusInWeb(Context context, long courseId) {
-        String url = config.getBaseUrl() + "/course/" + courseId + "/syllabus/?from_mobile_app=true";
-        final Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(url));
-        context.startActivity(intent);
+        openCourseTabInWeb(context, courseId, CourseScreenTab.SYLLABUS.getPath(), null);
     }
 
     @Override
     public void openCoursePurchaseInWeb(Context context, long courseId, @Nullable Map<String, List<String>> queryParams) {
-        final String url = config.getBaseUrl() + "/course/" + courseId + "/pay/";
+        openCourseTabInWeb(context, courseId, CourseScreenTab.PAY.getPath(), queryParams);
+    }
+
+    private void openCourseTabInWeb(Context context, long courseId, String tab, @Nullable Map<String, List<String>> queryParams) {
+        final String url = config.getBaseUrl() + "/course/" + courseId + "/" + tab + "/";
         final Uri.Builder uriBuilder = Uri
                 .parse(url)
                 .buildUpon()

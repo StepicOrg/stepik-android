@@ -75,9 +75,9 @@ constructor(
                         courseRepository
                             .getCourse(section.course)
                             .map { course ->
-                                LessonData(lesson, unit, section, course, lessonDeepLinkData.stepPosition + 1)
+                                LessonData(lesson, unit, section, course, lessonDeepLinkData.stepPosition - 1)
                             }
                     }
-                    .toSingle(LessonData(lesson, null, null, null, lessonDeepLinkData.stepPosition + 1))
+                    .toSingle(LessonData(lesson, null, null, null, lessonDeepLinkData.stepPosition - 1))
             }
 }
