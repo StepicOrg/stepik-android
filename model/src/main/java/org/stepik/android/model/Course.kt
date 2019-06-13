@@ -207,12 +207,6 @@ class Course(
 
     override fun describeContents(): Int = 0
 
-    override fun toString(): String {
-        return "Course(id=$id, title=$title, description=$description, cover=$cover, certificate=$certificate, requirements=$requirements, summary=$summary, workload=$workload, intro=$intro, introVideo=$introVideo, language=$language, authors=${Arrays.toString(
-            authors
-        )}, instructors=${Arrays.toString(instructors)}, sections=${Arrays.toString(sections)}, courseFormat=$courseFormat, targetAudience=$targetAudience, certificateFooter=$certificateFooter, certificateCoverOrg=$certificateCoverOrg, totalUnits=$totalUnits, enrollment=$enrollment, progress=$progress, owner=$owner, readiness=$readiness, isContest=$isContest, isFeatured=$isFeatured, isActive=$isActive, isPublic=$isPublic, certificateDistinctionThreshold=$certificateDistinctionThreshold, certificateRegularThreshold=$certificateRegularThreshold, certificateLink=$certificateLink, isCertificateAutoIssued=$isCertificateAutoIssued, lastDeadline=$lastDeadline, beginDate=$beginDate, endDate=$endDate, slug=$slug, scheduleLink=$scheduleLink, scheduleLongLink=$scheduleLongLink, scheduleType=$scheduleType, lastStepId=$lastStepId, learnersCount=$learnersCount, reviewSummary=$reviewSummary, timeToComplete=$timeToComplete, isPaid=$isPaid, price=$price, currencyCode=$currencyCode, displayPrice=$displayPrice, priceTier=$priceTier, progressObject=$progressObject, rating=$rating)"
-    }
-
 
     companion object CREATOR : Parcelable.Creator<Course> {
         const val SCHEDULE_TYPE_ENDED = "ended"
