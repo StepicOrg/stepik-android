@@ -15,11 +15,6 @@ constructor(
     private val courseReviewSummaryRemoteDataSource: CourseReviewSummaryRemoteDataSource,
     private val courseReviewSummaryCacheDataSource: CourseReviewSummaryCacheDataSource
 ) : CourseReviewSummaryRepository {
-    override fun getCourseReviewSummary(courseReviewSummaryId: Long): Single<CourseReviewSummary> =
-        courseReviewSummaryRemoteDataSource
-            .getCourseReviewSummaries(courseReviewSummaryId)
-            .map { it.first() }
-
     override fun getCourseReviewSummaries(vararg courseReviewSummaryIds: Long, sourceType: DataSourceType): Single<List<CourseReviewSummary>> =
         when (sourceType) {
             DataSourceType.CACHE ->
