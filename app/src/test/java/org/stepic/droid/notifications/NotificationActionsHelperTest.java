@@ -4,10 +4,10 @@ package org.stepic.droid.notifications;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertFalse;
-public class NotificationHelperTest {
+public class NotificationActionsHelperTest {
 
     @Test
     public void testIsValidByAction_Null_False(){
-        assertFalse(NotificationHelper.INSTANCE.isNotificationValidByAction(null));
+        assertFalse(NotificationActionsHelper.INSTANCE.isNotificationValidByAction(null));
     }
 }

@@ -50,7 +50,6 @@ import org.stepic.droid.web.ApiImpl
 import org.stepic.droid.web.UserAgentProvider
 import org.stepic.droid.web.UserAgentProviderImpl
 import org.stepik.android.presentation.base.injection.DaggerViewModelFactory
-import org.stepik.android.view.injection.course.CourseScope
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.Executors
@@ -96,14 +95,6 @@ abstract class AppCoreModule {
     @AppSingleton
     @Binds
     internal abstract fun provideHandlerForUIThread(mainHandler: MainHandlerImpl): MainHandler
-
-    @AppSingleton
-    @Binds
-    internal abstract fun provideLocalReminder(localReminder: LocalReminderImpl): LocalReminder
-
-    @AppSingleton
-    @Binds
-    internal abstract fun provideNotificationManager(notificationManager: StepikNotificationManagerImpl): StepikNotificationManager
 
     @Binds
     @AppSingleton

@@ -65,7 +65,7 @@ public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.So
 
     @Override
     public int getItemCount() {
-        return socialList.size() / state.multiplier;
+        return socialList.size() / state.multiplier + (socialList.size() % state.multiplier == 0 ? 0 : 1);
     }
 
     @Override
