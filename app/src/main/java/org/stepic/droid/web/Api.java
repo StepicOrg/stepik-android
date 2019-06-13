@@ -134,8 +134,6 @@ public interface Api {
 
     Call<EmailAddressResponse> getEmailAddresses(long[] ids);
 
-    Call<Void> sendFeedback(String email, String rawDescription);
-
     Call<DeviceResponse> getDevices();
 
     Call<DeviceResponse> getDevicesByRegistrationId(String token);
