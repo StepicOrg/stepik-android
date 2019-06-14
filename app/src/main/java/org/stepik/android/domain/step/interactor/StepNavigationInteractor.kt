@@ -12,6 +12,7 @@ import org.stepik.android.model.Step
 import org.stepic.droid.util.filterSingle
 import org.stepic.droid.util.hasUserAccessAndNotEmpty
 import org.stepik.android.model.Course
+import org.stepik.android.model.Lesson
 import org.stepik.android.model.Section
 import java.util.EnumSet
 
@@ -37,7 +38,8 @@ class StepNavigationInteractor(
         when {
             lessonData.unit == null ||
             lessonData.section == null ||
-            lessonData.course == null ->
+            lessonData.course == null ||
+            !isDirectionCompliesStepPosition(direction, step, lessonData.lesson) ->
                 Maybe.empty()
 
             lessonData.unit.position in 2 until lessonData.section.units.size ->
@@ -93,15 +95,8 @@ class StepNavigationInteractor(
         when {
             lessonData.unit == null ||
             lessonData.section == null ||
-            lessonData.course == null ->
-                Single.just(false)
-
-            direction == StepNavigationDirection.PREV &&
-            step.position > 1 ->
-                Single.just(false)
-
-            direction == StepNavigationDirection.NEXT &&
-            step.position < lessonData.lesson.steps.size ->
+            lessonData.course == null ||
+            !isDirectionCompliesStepPosition(direction, step, lessonData.lesson) ->
                 Single.just(false)
 
             lessonData.unit.position in 2 until lessonData.section.units.size ->
@@ -113,6 +108,10 @@ class StepNavigationInteractor(
                         sections.any { it.hasUserAccessAndNotEmpty(lessonData.course) }
                     }
         }
+
+    private fun isDirectionCompliesStepPosition(direction: StepNavigationDirection, step: Step, lesson: Lesson): Boolean =
+        direction == StepNavigationDirection.PREV && step.position == 1L ||
+        direction == StepNavigationDirection.NEXT && step.position == lesson.steps.size.toLong()
 
     private fun getSlicedSections(direction: StepNavigationDirection, section: Section, course: Course): Single<List<Section>> {
         val sectionIds = course.sections ?: return Single.just(emptyList())
