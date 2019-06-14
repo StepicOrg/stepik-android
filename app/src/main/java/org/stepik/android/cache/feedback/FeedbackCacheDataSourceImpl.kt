@@ -2,7 +2,7 @@ package org.stepik.android.cache.feedback
 
 import android.content.Context
 import io.reactivex.Single
-import org.stepik.android.data.feedback.FeedbackCacheDataSource
+import org.stepik.android.data.feedback.source.FeedbackCacheDataSource
 import java.io.File
 import javax.inject.Inject
 
