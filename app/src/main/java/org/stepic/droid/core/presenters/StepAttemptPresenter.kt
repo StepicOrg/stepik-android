@@ -247,8 +247,10 @@ class StepAttemptPresenter
     }
 
     fun sendTextFeedback(subject: String, aboutSystemInfo: String) {
-        val emailUriData = feedbackInteractor.createUriData(subject, aboutSystemInfo)
-        view?.sendTextFeedback(emailUriData)
+        threadPoolExecutor.execute {
+            val supportMailData = feedbackInteractor.createUriData(subject, aboutSystemInfo).blockingGet()
+            mainHandler.post { view?.sendTextFeedback(supportMailData) }
+        }
     }
 
     @WorkerThread

@@ -701,7 +701,7 @@ public class ScreenManagerImpl implements ScreenManager {
         emailIntent.setType("*/*");
         emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {supportEmailData.getMailTo()});
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, supportEmailData.getSubject());
-        emailIntent.putExtra(Intent.EXTRA_STREAM, CacheUtil.writeReturnInternalStorageFile(context, "aboutsystem.txt", supportEmailData.getBody()));
+        emailIntent.putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(context, "org.stepic.droid.provider", supportEmailData.getBody()));
         context.startActivity(IntentExtensionsKt.createEmailOnlyChooserIntent(emailIntent, context, context.getString(R.string.feedback_email_chooser_title)));
     }
 }
