@@ -4,5 +4,5 @@ import io.reactivex.Single
 import java.io.File
 
 interface FeedbackRepository {
-    fun createSupportEmailData(fileName: String, fileContents: String): Single<File>
+    fun createSystemInfoData(fileName: String, fileContents: String): Single<File>
 }

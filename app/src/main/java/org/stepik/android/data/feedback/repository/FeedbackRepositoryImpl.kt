@@ -11,6 +11,6 @@ class FeedbackRepositoryImpl
 constructor(
     private val feedbackCacheDataSource: FeedbackCacheDataSource
 ) : FeedbackRepository {
-    override fun createSupportEmailData(fileName: String, fileContents: String): Single<File> =
-        feedbackCacheDataSource.createSupportEmailData(fileName, fileContents)
+    override fun createSystemInfoData(fileName: String, fileContents: String): Single<File> =
+        feedbackCacheDataSource.createSystemInfoData(fileName, fileContents)
 }

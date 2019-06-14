@@ -15,18 +15,18 @@ constructor(
     private val sharedPreferenceHelper: SharedPreferenceHelper,
     private val feedbackRepository: FeedbackRepository
 ) {
-    fun createUriData(subject: String, aboutSystem: String): Single<SupportEmailData> =
-        createSupportEmailData(fileContents = formSystemInfo(aboutSystem))
+    fun createSupportEmailData(subject: String, aboutSystem: String): Single<SupportEmailData> =
+        createSystemInfoData(fileContents = formSystemInfoData(aboutSystem))
                 .map { file -> SupportEmailData(
                     mailTo = config.supportEmail,
                     subject = subject,
                     body = file
                 ) }
 
-    private fun createSupportEmailData(fileName: String = "aboutsystem.txt", fileContents: String): Single<File> =
-        feedbackRepository.createSupportEmailData(fileName, fileContents)
+    private fun createSystemInfoData(fileName: String = "aboutsystem.txt", fileContents: String): Single<File> =
+        feedbackRepository.createSystemInfoData(fileName, fileContents)
 
-    private fun formSystemInfo(aboutSystem: String): String {
+    private fun formSystemInfoData(aboutSystem: String): String {
         val profileData = sharedPreferenceHelper.profile.let { profile ->
             "${profile?.fullName}\n${config.baseUrl}/users/${profile?.id}"
         }

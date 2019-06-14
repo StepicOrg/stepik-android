@@ -11,7 +11,7 @@ class FeedbackCacheDataSourceImpl
 constructor(
     private val context: Context
 ) : FeedbackCacheDataSource {
-    override fun createSupportEmailData(fileName: String, fileContents: String): Single<File> =
+    override fun createSystemInfoData(fileName: String, fileContents: String): Single<File> =
         Single.fromCallable {
             context.openFileOutput(fileName, Context.MODE_PRIVATE).use {
                 it.write(fileContents.toByteArray())

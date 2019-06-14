@@ -20,7 +20,7 @@ constructor(
 ) : PresenterBase<FeedbackView>() {
     fun sendTextFeedback(subject: String, aboutSystemInfo: String) {
         compositeDisposable += feedbackInteractor
-            .createUriData(subject, aboutSystemInfo)
+            .createSupportEmailData(subject, aboutSystemInfo)
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
