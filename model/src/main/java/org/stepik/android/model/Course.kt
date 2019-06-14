@@ -5,6 +5,7 @@ import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import org.stepik.android.model.util.readBoolean
 import org.stepik.android.model.util.writeBoolean
+import java.util.*
 
 class Course(
     @SerializedName("id")
@@ -205,6 +206,7 @@ class Course(
     }
 
     override fun describeContents(): Int = 0
+
 
     companion object CREATOR : Parcelable.Creator<Course> {
         const val SCHEDULE_TYPE_ENDED = "ended"
