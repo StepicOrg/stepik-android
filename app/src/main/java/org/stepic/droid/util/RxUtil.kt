@@ -94,5 +94,6 @@ fun <T> Observable<T>.filterSingle(predicateSource: (T) -> Single<Boolean>): Obs
     flatMap { item ->
         predicateSource(item)
             .toObservable()
+            .filter { it }
             .map { item }
     }

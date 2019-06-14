@@ -28,7 +28,7 @@ class StepNavigationInteractor(
             StepNavigationDirection
                 .values()
                 .toObservable()
-                .filterSingle { isCanMoveInDirection(it, lessonData) }
+                .filterSingle { isCanMoveInDirection(it, step, lessonData) }
                 .reduce(EnumSet.noneOf(StepNavigationDirection::class.java)) { set, direction -> set.add(direction); set }
                 .map { it as Set<StepNavigationDirection> }
         }
@@ -89,11 +89,19 @@ class StepNavigationInteractor(
                     }
         }
 
-    private fun isCanMoveInDirection(direction: StepNavigationDirection, lessonData: LessonData): Single<Boolean> =
+    private fun isCanMoveInDirection(direction: StepNavigationDirection, step: Step, lessonData: LessonData): Single<Boolean> =
         when {
             lessonData.unit == null ||
             lessonData.section == null ||
             lessonData.course == null ->
+                Single.just(false)
+
+            direction == StepNavigationDirection.PREV &&
+            step.position > 1 ->
+                Single.just(false)
+
+            direction == StepNavigationDirection.NEXT &&
+            step.position < lessonData.lesson.steps.size ->
                 Single.just(false)
 
             lessonData.unit.position in 2 until lessonData.section.units.size ->
@@ -115,7 +123,7 @@ class StepNavigationInteractor(
                     (section.position until sectionIds.size)
 
                 StepNavigationDirection.PREV ->
-                    (0 until section.position)
+                    (0 until section.position - 1)
             }
 
         return sectionRepository
