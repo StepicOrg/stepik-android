@@ -34,7 +34,7 @@ class FeedbackFragment : FragmentBase(), FeedbackView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        injectComponentNewArch()
+        injectComponent()
         feedbackPresenter = ViewModelProviders
             .of(this, viewModelFactory)
             .get(FeedbackPresenter::class.java)
@@ -80,7 +80,8 @@ class FeedbackFragment : FragmentBase(), FeedbackView {
             )
         }
     }
-    private fun injectComponentNewArch() {
+
+    override fun injectComponent() {
         App.component()
             .feedbackComponentBuilder()
             .build()
