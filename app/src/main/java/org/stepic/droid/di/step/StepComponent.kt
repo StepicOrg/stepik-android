@@ -8,9 +8,10 @@ import org.stepic.droid.di.streak.StreakModule
 import org.stepic.droid.ui.fragments.StepAttemptFragment
 import org.stepic.droid.ui.fragments.VideoStepFragment
 import org.stepik.android.view.injection.comments.CommentsBannerDataModule
+import org.stepik.android.view.injection.feedback.FeedbackDataModule
 
 @StepScope
-@Subcomponent(modules = arrayOf(StreakModule::class, CommentCountModule::class, CommentsBannerDataModule::class))
+@Subcomponent(modules = arrayOf(StreakModule::class, CommentCountModule::class, CommentsBannerDataModule::class, FeedbackDataModule::class))
 interface StepComponent {
     @Subcomponent.Builder
     interface Builder {
