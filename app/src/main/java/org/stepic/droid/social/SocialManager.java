@@ -19,7 +19,6 @@ public class SocialManager {
 
     private static final String GOOGLE_SOCIAL_IDENTIFIER = "google";
     private static final String FACEBOOK_SOCIAL_IDENTIFIER = "facebook";
-    private static final String MAILRU_SOCIAL_IDENTIFIER = "itmailru";
     private static final String TWITTER_SOCIAL_IDENTIFIER = "twitter";
     private static final String GITHUB_SOCIAL_IDENTIFIER = "github";
     private static final String VK_SOCIAL_IDENTIFIER = "vk";
@@ -29,7 +28,6 @@ public class SocialManager {
         vk(VK_SOCIAL_IDENTIFIER, R.drawable.ic_login_social_vk),
         facebook(FACEBOOK_SOCIAL_IDENTIFIER, R.drawable.ic_login_social_fb),
         twitter(TWITTER_SOCIAL_IDENTIFIER, R.drawable.ic_login_social_twitter),
-        mailru(MAILRU_SOCIAL_IDENTIFIER, R.drawable.ic_login_social_mail),
         github(GITHUB_SOCIAL_IDENTIFIER, R.drawable.ic_login_social_github);
 
         private static Drawable getSocialDrawable(@DrawableRes int drawableRes) {

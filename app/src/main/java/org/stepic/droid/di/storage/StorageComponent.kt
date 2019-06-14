@@ -12,6 +12,7 @@ import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepik.android.cache.comments.dao.CommentsBannerDao
 import org.stepik.android.cache.personal_deadlines.dao.PersonalDeadlinesDao
 import org.stepik.android.domain.course_reviews.model.CourseReview
+import org.stepik.android.model.CourseReviewSummary
 import org.stepik.android.model.user.User
 
 @Component(modules = [StorageModule::class])
@@ -38,4 +39,5 @@ interface StorageComponent {
     val userDao: IDao<User>
 
     val viewedStoryTemplatesDao: IDao<ViewedStoryTemplate>
+    val courseReviewSummaryDao: IDao<CourseReviewSummary>
 }
