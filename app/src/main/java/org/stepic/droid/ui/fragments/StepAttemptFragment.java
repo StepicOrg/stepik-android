@@ -54,7 +54,7 @@ import org.stepic.droid.util.RatingUtilKt;
 import org.stepic.droid.util.SnackbarExtensionKt;
 import org.stepic.droid.util.StepExtensionsKt;
 import org.stepic.droid.util.SubmissionExtensionsKt;
-import org.stepik.android.domain.feedback.model.EmailUriData;
+import org.stepik.android.domain.feedback.model.SupportEmailData;
 import org.stepik.android.domain.progress.interactor.LocalProgressInteractor;
 import org.stepik.android.model.DiscountingPolicyType;
 import org.stepik.android.model.Reply;
@@ -732,8 +732,8 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
     }
 
     @Override
-    public void sendTextFeedback(@NotNull EmailUriData emailUriData) {
-        screenManager.openTextFeedBack(requireContext(), emailUriData);
+    public void sendTextFeedback(@NotNull SupportEmailData supportEmailData) {
+        screenManager.openTextFeedBack(requireContext(), supportEmailData);
     }
 
     protected final void hideWrongStatus() {

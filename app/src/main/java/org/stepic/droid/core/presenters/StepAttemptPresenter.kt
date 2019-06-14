@@ -247,7 +247,7 @@ class StepAttemptPresenter
     }
 
     fun sendTextFeedback(subject: String, aboutSystemInfo: String) {
-        val emailUriData = feedbackInteractor.initUriData(subject, aboutSystemInfo)
+        val emailUriData = feedbackInteractor.createUriData(subject, aboutSystemInfo)
         view?.sendTextFeedback(emailUriData)
     }
 

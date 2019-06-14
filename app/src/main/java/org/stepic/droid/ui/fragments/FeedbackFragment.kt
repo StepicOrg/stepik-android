@@ -11,7 +11,7 @@ import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.util.DeviceInfoUtil
-import org.stepik.android.domain.feedback.model.EmailUriData
+import org.stepik.android.domain.feedback.model.SupportEmailData
 import org.stepik.android.presentation.feedback.FeedbackPresenter
 import org.stepik.android.presentation.feedback.FeedbackView
 import javax.inject.Inject
@@ -58,8 +58,8 @@ class FeedbackFragment : FragmentBase(), FeedbackView {
         initButtons()
     }
 
-    override fun sendTextFeedback(emailUriData: EmailUriData) {
-        screenManager.openTextFeedBack(requireContext(), emailUriData)
+    override fun sendTextFeedback(supportEmailData: SupportEmailData) {
+        screenManager.openTextFeedBack(requireContext(), supportEmailData)
     }
 
     private fun initButtons() {

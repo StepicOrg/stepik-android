@@ -12,7 +12,7 @@ import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.model.CollectionDescriptionColors;
 import org.stepic.droid.model.CoursesCarouselInfo;
 import org.stepic.droid.ui.fragments.CommentsFragment;
-import org.stepik.android.domain.feedback.model.EmailUriData;
+import org.stepik.android.domain.feedback.model.SupportEmailData;
 import org.stepik.android.domain.last_step.model.LastStep;
 import org.stepik.android.model.Course;
 import org.stepik.android.model.Lesson;
@@ -146,5 +146,5 @@ public interface ScreenManager {
     void showProfileEditInfo(Activity activity, Profile profile);
     void showProfileEditPassword(Activity activity, long profileId);
 
-    void openTextFeedBack(Context context, EmailUriData emailUriData);
+    void openTextFeedBack(Context context, SupportEmailData supportEmailData);
 }
