@@ -67,18 +67,10 @@ class FeedbackFragment : FragmentBase(), FeedbackView {
             if (config.isAppInStore) {
                 screenManager.showStoreWithApp(activity)
             } else {
-                feedbackPresenter.sendTextFeedback(
-                    getString(R.string.feedback_subject),
-                    DeviceInfoUtil.getInfosAboutDevice(context, "\n")
-                )
+                setupTextFeedback()
             }
         }
-        feedbackBadButton.setOnClickListener {
-            feedbackPresenter.sendTextFeedback(
-                getString(R.string.feedback_subject),
-                DeviceInfoUtil.getInfosAboutDevice(context, "\n")
-            )
-        }
+        feedbackBadButton.setOnClickListener { setupTextFeedback() }
     }
 
     override fun injectComponent() {
@@ -86,6 +78,13 @@ class FeedbackFragment : FragmentBase(), FeedbackView {
             .feedbackComponentBuilder()
             .build()
             .inject(this)
+    }
+
+    private fun setupTextFeedback() {
+        feedbackPresenter.sendTextFeedback(
+            getString(R.string.feedback_subject),
+            DeviceInfoUtil.getInfosAboutDevice(context, "\n")
+        )
     }
 
     private fun destroyButtons() {

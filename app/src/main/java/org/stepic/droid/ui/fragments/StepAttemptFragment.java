@@ -714,10 +714,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
         if (getConfig().isAppInStore()) {
             getScreenManager().showStoreWithApp(getActivity());
         } else {
-            stepAttemptPresenter.sendTextFeedback(
-                getString(R.string.feedback_subject),
-                DeviceInfoUtil.getInfosAboutDevice(getContext(), "\n")
-            );
+            setupTextFeedback();
         }
     }
 
@@ -725,10 +722,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
     public void onClickSupport(int starNumber) {
         getSharedPreferenceHelper().afterRateWasHandled();
         RatingUtilKt.reportRateEvent(getAnalytic(), starNumber, Analytic.Rating.NEGATIVE_EMAIL);
-        stepAttemptPresenter.sendTextFeedback(
-                getString(R.string.feedback_subject),
-                DeviceInfoUtil.getInfosAboutDevice(getContext(), "\n")
-        );
+        setupTextFeedback();
     }
 
     @Override
@@ -742,5 +736,12 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
 
     protected final void hideHint() {
         hintTextView.setVisibility(View.GONE);
+    }
+
+    private void setupTextFeedback() {
+        stepAttemptPresenter.sendTextFeedback(
+            getString(R.string.feedback_subject),
+            DeviceInfoUtil.getInfosAboutDevice(getContext(), "\n")
+        );
     }
 }
