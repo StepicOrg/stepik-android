@@ -32,20 +32,19 @@ class TextStepContentFragment : Fragment() {
         latexLayout ?: inflater.inflate(R.layout.step_text_header, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val isTextNotBinded = latexLayout == null
-        latexLayout = view as LatexSupportableEnhancedFrameLayout
+        if (latexLayout == null) {
+            latexLayout = view as LatexSupportableEnhancedFrameLayout
 
-        val text = stepWrapper
-            .step
-            .block
-            ?.text
-            ?.takeIf(String::isNotEmpty)
+            val text = stepWrapper
+                .step
+                .block
+                ?.text
+                ?.takeIf(String::isNotEmpty)
 
-        latexLayout?.let { layout ->
-            layout.changeVisibility(needShow = text != null)
-            if (text != null && isTextNotBinded) {
-                layout.setText(text)
-                layout.setTextIsSelectable(true)
+            view.changeVisibility(needShow = text != null)
+            if (text != null) {
+                view.setText(text)
+                view.setTextIsSelectable(true)
             }
         }
     }

@@ -97,7 +97,7 @@ class StepFragment : Fragment(), StepView {
         if (childFragmentManager.findFragmentByTag(STEP_CONTENT_FRAGMENT_TAG) == null) {
             childFragmentManager
                 .beginTransaction()
-                .add(R.id.stepContentContainer, stepContentFragmentFactory.createStepContentFragment(stepWrapper))
+                .add(R.id.stepContentContainer, stepContentFragmentFactory.createStepContentFragment(stepWrapper), STEP_CONTENT_FRAGMENT_TAG)
                 .commitNow()
         }
     }
