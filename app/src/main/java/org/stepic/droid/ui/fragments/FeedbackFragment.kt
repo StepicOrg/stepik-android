@@ -34,10 +34,17 @@ class FeedbackFragment : FragmentBase(), FeedbackView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        injectComponent()
         feedbackPresenter = ViewModelProviders
             .of(this, viewModelFactory)
             .get(FeedbackPresenter::class.java)
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
+        inflater.inflate(R.layout.fragment_feedback, container, false)
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initButtons()
     }
 
     override fun onStart() {
@@ -50,16 +57,15 @@ class FeedbackFragment : FragmentBase(), FeedbackView {
         super.onStop()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
-        inflater.inflate(R.layout.fragment_feedback, container, false)
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        initButtons()
-    }
-
     override fun sendTextFeedback(supportEmailData: SupportEmailData) {
         screenManager.openTextFeedBack(requireContext(), supportEmailData)
+    }
+
+    override fun injectComponent() {
+        App.component()
+            .feedbackComponentBuilder()
+            .build()
+            .inject(this)
     }
 
     private fun initButtons() {
@@ -71,13 +77,6 @@ class FeedbackFragment : FragmentBase(), FeedbackView {
             }
         }
         feedbackBadButton.setOnClickListener { setupTextFeedback() }
-    }
-
-    override fun injectComponent() {
-        App.component()
-            .feedbackComponentBuilder()
-            .build()
-            .inject(this)
     }
 
     private fun setupTextFeedback() {
