@@ -10,9 +10,11 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_step.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
+import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.util.argument
 import org.stepik.android.domain.lesson.model.LessonData
+import org.stepik.android.domain.step.model.StepNavigationDirection
 import org.stepik.android.presentation.step.StepPresenter
 import org.stepik.android.presentation.step.StepView
 import org.stepik.android.view.step.ui.delegate.StepDiscussionsDelegate
@@ -30,6 +32,9 @@ class StepFragment : Fragment(), StepView {
     }
 
     @Inject
+    internal lateinit var screenManager: ScreenManager
+
+    @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var stepPresenter: StepPresenter
@@ -45,6 +50,7 @@ class StepFragment : Fragment(), StepView {
         injectComponent()
 
         stepPresenter = ViewModelProviders.of(this, viewModelFactory).get(StepPresenter::class.java)
+        stepPresenter.onLessonData(stepWrapper, lessonData)
     }
 
     private fun injectComponent() {
@@ -58,8 +64,7 @@ class StepFragment : Fragment(), StepView {
         inflater.inflate(R.layout.fragment_step, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        stepNavigationDelegate = StepNavigationDelegate(stepNavigation)
-        stepNavigationDelegate.setState(true, true)
+        stepNavigationDelegate = StepNavigationDelegate(stepNavigation, stepPresenter::onStepDirectionClicked)
 
         stepDiscussionsDelegate = StepDiscussionsDelegate(stepDiscussions)
         stepDiscussionsDelegate.setDiscussionsCount(100)
@@ -73,5 +78,16 @@ class StepFragment : Fragment(), StepView {
     override fun onStop() {
         stepPresenter.detachView(this)
         super.onStop()
+    }
+
+    override fun setNavigation(directions: Set<StepNavigationDirection>) {
+        stepNavigationDelegate.setState(directions)
+    }
+
+    override fun showLesson(direction: StepNavigationDirection, lessonData: LessonData) {
+        val unit = lessonData.unit ?: return
+        val section = lessonData.section ?: return
+
+        screenManager.showSteps(activity, unit, lessonData.lesson, direction == StepNavigationDirection.PREV, section)
     }
 }

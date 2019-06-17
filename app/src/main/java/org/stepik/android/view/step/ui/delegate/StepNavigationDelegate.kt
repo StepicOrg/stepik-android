@@ -7,9 +7,11 @@ import kotlinx.android.synthetic.main.view_step_navigation.view.*
 import org.stepic.droid.R
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.ui.util.setCompoundDrawables
+import org.stepik.android.domain.step.model.StepNavigationDirection
 
 class StepNavigationDelegate(
-    private val containerView: View
+    private val containerView: View,
+    private val onDirectionClicked: (StepNavigationDirection) -> Unit
 ) {
     private val nextButton = containerView.stepNavigationNext
     private val prevButton = containerView.stepNavigationPrev
@@ -20,14 +22,18 @@ class StepNavigationDelegate(
         nextButton.setCompoundDrawables(end = R.drawable.ic_step_navigation_next)
         prevButton.setCompoundDrawables(start = R.drawable.ic_step_navigation_prev)
 
-        prevButton.setOnClickListener { setState(true, nextButton.visibility != View.VISIBLE) }
-        nextButton.setOnClickListener { setState(prevButton.visibility != View.VISIBLE, true) }
+        prevButton.setOnClickListener { onDirectionClicked(StepNavigationDirection.PREV) }
+        nextButton.setOnClickListener { onDirectionClicked(StepNavigationDirection.NEXT) }
     }
 
-    fun setState(isPrevAvailable: Boolean, isNextAvailable: Boolean) {
-        containerView.changeVisibility(isPrevAvailable || isNextAvailable)
-        prevButton.changeVisibility(isPrevAvailable)
-        nextButton.changeVisibility(isNextAvailable)
+    fun setState(directions: Set<StepNavigationDirection>) {
+        containerView.changeVisibility(needShow = directions.isNotEmpty())
+
+        val isPrevAvailable = StepNavigationDirection.PREV in directions
+        val isNextAvailable = StepNavigationDirection.NEXT in directions
+
+        prevButton.changeVisibility(needShow = isPrevAvailable)
+        nextButton.changeVisibility(needShow = isNextAvailable)
 
         when {
             !isPrevAvailable && isNextAvailable -> {

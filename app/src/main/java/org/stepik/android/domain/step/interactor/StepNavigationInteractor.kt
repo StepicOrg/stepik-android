@@ -15,8 +15,11 @@ import org.stepik.android.model.Course
 import org.stepik.android.model.Lesson
 import org.stepik.android.model.Section
 import java.util.EnumSet
+import javax.inject.Inject
 
-class StepNavigationInteractor(
+class StepNavigationInteractor
+@Inject
+constructor(
     private val sectionRepository: SectionRepository,
     private val unitRepository: UnitRepository,
     private val lessonRepository: LessonRepository
