@@ -57,11 +57,15 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
     private lateinit var courseReviewsPresenter: CourseReviewsPresenter
     private lateinit var viewStateDelegate: ViewStateDelegate<CourseReviewsView.State>
 
+    private var isVisibleToUser = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         injectComponent(courseId)
 
         courseReviewsPresenter = ViewModelProviders.of(this, viewModelFactory).get(CourseReviewsPresenter::class.java)
+
+        reportIsVisibleToUser()
     }
 
     private fun injectComponent(courseId: Long) {
@@ -130,7 +134,12 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
-        if (isVisibleToUser) {
+        this.isVisibleToUser = isVisibleToUser
+        reportIsVisibleToUser()
+    }
+
+    private fun reportIsVisibleToUser() {
+        if (isVisibleToUser && this::analytic.isInitialized) {
             analytic
                 .reportAmplitudeEvent(
                     AmplitudeAnalytic.CourseReview.SCREEN_OPENED,
