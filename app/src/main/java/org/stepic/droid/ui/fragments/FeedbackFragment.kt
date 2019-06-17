@@ -32,6 +32,14 @@ class FeedbackFragment : FragmentBase(), FeedbackView {
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
+    override fun injectComponent() {
+        App.component()
+            .feedbackComponentBuilder()
+            .build()
+            .inject(this)
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         feedbackPresenter = ViewModelProviders
@@ -64,13 +72,6 @@ class FeedbackFragment : FragmentBase(), FeedbackView {
 
     override fun sendTextFeedback(supportEmailData: SupportEmailData) {
         screenManager.openTextFeedBack(requireContext(), supportEmailData)
-    }
-
-    override fun injectComponent() {
-        App.component()
-            .feedbackComponentBuilder()
-            .build()
-            .inject(this)
     }
 
     private fun initButtons() {
