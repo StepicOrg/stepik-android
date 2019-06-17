@@ -49,6 +49,7 @@ private constructor() : Config {
     private val amplitudeApiKey: String? = null
     private val publicLicenseKey: String? = null
     private val isAppInStore: Boolean = false
+    private val supportEmail: String? = null
 
     override fun getOAuthClientId(type: Api.TokenType) = when (type) {
         Api.TokenType.social -> oauthClientIdSocial
@@ -96,4 +97,6 @@ private constructor() : Config {
     override fun getAmplitudeApiKey() = amplitudeApiKey
 
     override fun getAppPublicLicenseKey() = publicLicenseKey
+
+    override fun getSupportEmail() = supportEmail
 }

@@ -10,15 +10,16 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.model.CollectionDescriptionColors;
+import org.stepic.droid.model.CoursesCarouselInfo;
+import org.stepic.droid.ui.fragments.CommentsFragment;
+import org.stepik.android.domain.feedback.model.SupportEmailData;
 import org.stepik.android.domain.last_step.model.LastStep;
 import org.stepik.android.model.Course;
-import org.stepic.droid.model.CoursesCarouselInfo;
 import org.stepik.android.model.Lesson;
 import org.stepik.android.model.Section;
 import org.stepik.android.model.Step;
-import org.stepik.android.model.Unit;
-import org.stepic.droid.ui.fragments.CommentsFragment;
 import org.stepik.android.model.Tag;
+import org.stepik.android.model.Unit;
 import org.stepik.android.model.user.Profile;
 import org.stepik.android.view.course.routing.CourseScreenTab;
 import org.stepik.android.view.routing.deeplink.BranchRoute;
@@ -69,8 +70,6 @@ public interface ScreenManager {
     void showCourseDescription(Context context, @NotNull Course course, boolean autoEnroll);
     void showCourseModules(Context context, @NotNull Course course);
     void showCourseScreen(Context context, @NotNull Course course, boolean autoEnroll, CourseScreenTab tab);
-
-    void showTextFeedback(Activity sourceActivity);
 
     void showStoreWithApp(Activity sourceActivity);
 
@@ -146,4 +145,6 @@ public interface ScreenManager {
     void showProfileEdit(Context context);
     void showProfileEditInfo(Activity activity, Profile profile);
     void showProfileEditPassword(Activity activity, long profileId);
+
+    void openTextFeedBack(Context context, SupportEmailData supportEmailData);
 }

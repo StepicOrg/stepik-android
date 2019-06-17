@@ -17,6 +17,7 @@ import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.StepikUtil
 import org.stepic.droid.util.getStepType
 import org.stepic.droid.web.Api
+import org.stepik.android.domain.feedback.interactor.FeedbackInteractor
 import org.stepik.android.model.Submission
 import org.stepik.android.model.DiscountingPolicyType
 import org.stepik.android.model.Section
@@ -36,7 +37,8 @@ class StepAttemptPresenter
         private val api: Api,
         private var firebaseRemoteConfig: FirebaseRemoteConfig,
         private val analytic: Analytic,
-        private val sharedPreferenceHelper: SharedPreferenceHelper
+        private val sharedPreferenceHelper: SharedPreferenceHelper,
+        private val feedbackInteractor: FeedbackInteractor
 ) : PresenterBase<StepAttemptView>() {
     companion object {
         private const val FIRST_DELAY = 1000L
@@ -242,6 +244,13 @@ class StepAttemptPresenter
         }
 
         getStatusOfSubmission(0)
+    }
+
+    fun sendTextFeedback(subject: String, aboutSystemInfo: String) {
+        threadPoolExecutor.execute {
+            val supportMailData = feedbackInteractor.createSupportEmailData(subject, aboutSystemInfo).blockingGet()
+            mainHandler.post { view?.sendTextFeedback(supportMailData) }
+        }
     }
 
     @WorkerThread
