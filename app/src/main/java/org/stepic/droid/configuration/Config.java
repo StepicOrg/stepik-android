@@ -42,4 +42,6 @@ public interface Config {
     String getAppPublicLicenseKey();
 
     boolean isAppInStore();
+
+    String getSupportEmail();
 }
