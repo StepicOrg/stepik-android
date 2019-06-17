@@ -121,5 +121,6 @@ class StepFragment : Fragment(), StepView {
         val section = lessonData.section ?: return
 
         screenManager.showSteps(activity, unit, lessonData.lesson, direction == StepNavigationDirection.PREV, section)
+        activity?.finish()
     }
 }
