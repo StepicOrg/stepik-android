@@ -27,7 +27,6 @@ import org.stepic.droid.base.App;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.di.AppSingleton;
 import org.stepic.droid.features.achievements.ui.activity.AchievementsListActivity;
-import org.stepic.droid.util.CacheUtil;
 import org.stepic.droid.util.IntentExtensionsKt;
 import org.stepic.droid.util.UriExtensionsKt;
 import org.stepik.android.domain.feedback.model.SupportEmailData;
