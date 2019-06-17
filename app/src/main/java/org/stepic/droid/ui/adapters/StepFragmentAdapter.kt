@@ -12,6 +12,7 @@ import org.stepic.droid.util.resolvers.StepTypeResolver
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.lesson.model.StepItem
 import org.stepik.android.view.fragment_pager.ActiveFragmentPagerAdapter
+import org.stepik.android.view.step.ui.fragment.StepFragment
 
 class StepFragmentAdapter(
     fm: FragmentManager,
@@ -45,7 +46,7 @@ class StepFragmentAdapter(
         args.putParcelable(AppConstants.KEY_UNIT_BUNDLE, lessonData.unit)
         args.putParcelable(AppConstants.KEY_SECTION_BUNDLE, lessonData.section)
         fragment.arguments = args
-        return fragment
+        return StepFragment.newInstance(stepWrapper, lessonData)
     }
 
     override fun getCount(): Int =
