@@ -57,6 +57,11 @@ class FeedbackFragment : FragmentBase(), FeedbackView {
         super.onStop()
     }
 
+    override fun onDestroyView() {
+        destroyButtons()
+        super.onDestroyView()
+    }
+
     override fun sendTextFeedback(supportEmailData: SupportEmailData) {
         screenManager.openTextFeedBack(requireContext(), supportEmailData)
     }
@@ -91,8 +96,4 @@ class FeedbackFragment : FragmentBase(), FeedbackView {
         feedbackBadButton.setOnClickListener(null)
     }
 
-    override fun onDestroyView() {
-        destroyButtons()
-        super.onDestroyView()
-    }
 }
