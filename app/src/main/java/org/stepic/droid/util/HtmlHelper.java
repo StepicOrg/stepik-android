@@ -348,8 +348,6 @@ public class HtmlHelper {
                     "</script>\n" +
                     "<script>hljs.initHighlightingOnLoad();</script>\n";
 
-    private static final String imageFixedHeightAttribute = "(height=\"\\d+\")";
-
     public static String getUserPath(Config config, int userId) {
         return new StringBuilder()
                 .append(config.getBaseUrl())

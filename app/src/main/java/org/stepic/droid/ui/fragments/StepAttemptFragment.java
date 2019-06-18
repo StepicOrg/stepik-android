@@ -27,6 +27,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
+import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
@@ -38,12 +39,7 @@ import org.stepic.droid.core.presenters.StepAttemptPresenter;
 import org.stepic.droid.core.presenters.StreakPresenter;
 import org.stepic.droid.core.presenters.contracts.StepAttemptView;
 import org.stepic.droid.fonts.FontType;
-import org.stepik.android.domain.progress.interactor.LocalProgressInteractor;
-import org.stepik.android.model.Step;
-import org.stepik.android.model.attempts.Attempt;
-import org.stepik.android.model.DiscountingPolicyType;
 import org.stepic.droid.model.LessonSession;
-import org.stepik.android.model.Submission;
 import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout;
 import org.stepic.droid.ui.dialogs.DiscountingPolicyDialogFragment;
 import org.stepic.droid.ui.dialogs.RateAppDialogFragment;
@@ -51,13 +47,20 @@ import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment;
 import org.stepic.droid.ui.listeners.NextMoveable;
 import org.stepic.droid.ui.util.TimeIntervalUtil;
 import org.stepic.droid.util.ColorUtil;
+import org.stepic.droid.util.DeviceInfoUtil;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.RatingUtil;
 import org.stepic.droid.util.RatingUtilKt;
 import org.stepic.droid.util.SnackbarExtensionKt;
 import org.stepic.droid.util.StepExtensionsKt;
 import org.stepic.droid.util.SubmissionExtensionsKt;
+import org.stepik.android.domain.feedback.model.SupportEmailData;
+import org.stepik.android.domain.progress.interactor.LocalProgressInteractor;
+import org.stepik.android.model.DiscountingPolicyType;
 import org.stepik.android.model.Reply;
+import org.stepik.android.model.Step;
+import org.stepik.android.model.Submission;
+import org.stepik.android.model.attempts.Attempt;
 
 import javax.inject.Inject;
 
@@ -711,7 +714,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
         if (getConfig().isAppInStore()) {
             getScreenManager().showStoreWithApp(getActivity());
         } else {
-            getScreenManager().showTextFeedback(getActivity());
+            setupTextFeedback();
         }
     }
 
@@ -719,7 +722,12 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
     public void onClickSupport(int starNumber) {
         getSharedPreferenceHelper().afterRateWasHandled();
         RatingUtilKt.reportRateEvent(getAnalytic(), starNumber, Analytic.Rating.NEGATIVE_EMAIL);
-        getScreenManager().showTextFeedback(getActivity());
+        setupTextFeedback();
+    }
+
+    @Override
+    public void sendTextFeedback(@NotNull SupportEmailData supportEmailData) {
+        screenManager.openTextFeedBack(requireContext(), supportEmailData);
     }
 
     protected final void hideWrongStatus() {
@@ -728,5 +736,12 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
 
     protected final void hideHint() {
         hintTextView.setVisibility(View.GONE);
+    }
+
+    private void setupTextFeedback() {
+        stepAttemptPresenter.sendTextFeedback(
+            getString(R.string.feedback_subject),
+            DeviceInfoUtil.getInfosAboutDevice(getContext(), "\n")
+        );
     }
 }
