@@ -6,6 +6,9 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutCompat
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
@@ -14,6 +17,7 @@ import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.persistence.model.StepPersistentWrapper
+import org.stepic.droid.ui.dialogs.StepShareDialogFragment
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.util.argument
 import org.stepik.android.domain.lesson.model.LessonData
@@ -61,6 +65,8 @@ class StepFragment : Fragment(), StepView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+
         injectComponent()
 
         stepPresenter = ViewModelProviders.of(this, viewModelFactory).get(StepPresenter::class.java)
@@ -126,6 +132,30 @@ class StepFragment : Fragment(), StepView {
     override fun onStop() {
         stepPresenter.detachView(this)
         super.onStop()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.share_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        if (item.itemId == R.id.menu_item_share) {
+            showShareDialog()
+            true
+        } else {
+            super.onOptionsItemSelected(item)
+        }
+
+    private fun showShareDialog() {
+        val supportFragmentManager = activity
+            ?.supportFragmentManager
+            ?.takeIf { it.findFragmentByTag(StepShareDialogFragment.TAG) == null }
+            ?: return
+
+        StepShareDialogFragment
+            .newInstance(stepWrapper.step, lessonData.lesson, lessonData.unit)
+            .show(supportFragmentManager, StepShareDialogFragment.TAG)
     }
 
     override fun setNavigation(directions: Set<StepNavigationDirection>) {

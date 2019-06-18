@@ -11,6 +11,7 @@ import org.stepik.android.model.Step;
 import org.stepik.android.model.Unit;
 
 public class StepShareDialogFragment extends DialogFragment {
+    public static final String TAG = "StepShareDialogFragment";
 
     private static final String STEP_KEY = "stepKey";
     private static final String LESSON_KEY = "lessonKey";
