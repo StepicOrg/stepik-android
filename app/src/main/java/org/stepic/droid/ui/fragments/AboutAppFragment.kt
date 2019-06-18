@@ -1,6 +1,7 @@
 package org.stepic.droid.ui.fragments
 
 import android.os.Bundle
+import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +9,8 @@ import kotlinx.android.synthetic.main.fragment_about_app.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.FragmentBase
+import org.stepic.droid.social.SocialMedia
+import org.stepic.droid.ui.adapters.SocialLinksAdapter
 import org.stepic.droid.util.ColorUtil
 
 class AboutAppFragment : FragmentBase() {
@@ -34,11 +37,22 @@ class AboutAppFragment : FragmentBase() {
             analytic.reportEvent(Analytic.Interaction.CLICK_TERMS_OF_SERVICE)
             screenManager.openTermsOfServiceWeb(activity)
         }
+        initSocialRecycler()
     }
 
     override fun onDestroyView() {
         privacyPolicyView.setOnClickListener(null)
         termsOfServiceView.setOnClickListener(null)
         super.onDestroyView()
+    }
+
+    private fun initSocialRecycler() {
+        socialListRecyclerView.layoutManager = GridLayoutManager(requireContext(), 3)
+        socialListRecyclerView.adapter = SocialLinksAdapter(onClick = { handleSocialClick(it) })
+    }
+
+    private fun handleSocialClick(social: SocialMedia) {
+        analytic.reportEventWithName(Analytic.Interaction.CLICK_SOCIAL_NETWORK, social.name)
+        screenManager.openSocialMediaLink(requireContext(), social)
     }
 }
