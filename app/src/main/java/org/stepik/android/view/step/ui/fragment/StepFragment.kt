@@ -23,11 +23,13 @@ import org.stepik.android.presentation.step.StepView
 import org.stepik.android.view.step.ui.delegate.StepDiscussionsDelegate
 import org.stepik.android.view.step.ui.delegate.StepNavigationDelegate
 import org.stepik.android.view.step_content.ui.factory.StepContentFragmentFactory
+import org.stepik.android.view.step_quiz.ui.factory.StepQuizFragmentFactory
 import javax.inject.Inject
 
 class StepFragment : Fragment(), StepView {
     companion object {
         private const val STEP_CONTENT_FRAGMENT_TAG = "step_content"
+        private const val STEP_QUIZ_FRAGMENT_TAG = "step_quiz"
 
         fun newInstance(stepWrapper: StepPersistentWrapper, lessonData: LessonData): Fragment =
             StepFragment()
@@ -42,6 +44,9 @@ class StepFragment : Fragment(), StepView {
 
     @Inject
     internal lateinit var stepContentFragmentFactory: StepContentFragmentFactory
+
+    @Inject
+    internal lateinit var stepQuizFragmentFactory: StepQuizFragmentFactory
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -79,12 +84,13 @@ class StepFragment : Fragment(), StepView {
         stepDiscussionsDelegate.setDiscussionsCount(100)
 
         initStepContentFragment()
+        initStepQuizFragment()
     }
 
     private fun initStepContentFragment() {
         stepContentContainer.layoutParams = (stepContentContainer.layoutParams as LinearLayoutCompat.LayoutParams)
             .apply {
-                if (stepContentFragmentFactory.isStepCanHaveQuiz(stepWrapper)) {
+                if (stepQuizFragmentFactory.isStepCanHaveQuiz(stepWrapper)) {
                     height = LinearLayout.LayoutParams.WRAP_CONTENT
                     weight = 0f
                 } else {
@@ -92,12 +98,22 @@ class StepFragment : Fragment(), StepView {
                     weight = 1f
                 }
             }
-        stepQuizContainer.changeVisibility(stepContentFragmentFactory.isStepCanHaveQuiz(stepWrapper))
 
         if (childFragmentManager.findFragmentByTag(STEP_CONTENT_FRAGMENT_TAG) == null) {
             childFragmentManager
                 .beginTransaction()
                 .add(R.id.stepContentContainer, stepContentFragmentFactory.createStepContentFragment(stepWrapper), STEP_CONTENT_FRAGMENT_TAG)
+                .commitNow()
+        }
+    }
+
+    private fun initStepQuizFragment() {
+        val isStepHasQuiz = stepQuizFragmentFactory.isStepCanHaveQuiz(stepWrapper)
+        stepQuizContainer.changeVisibility(isStepHasQuiz)
+        if (isStepHasQuiz && childFragmentManager.findFragmentByTag(STEP_QUIZ_FRAGMENT_TAG) == null) {
+            childFragmentManager
+                .beginTransaction()
+                .add(R.id.stepQuizContainer, stepQuizFragmentFactory.createStepQuizFragment(stepWrapper), STEP_QUIZ_FRAGMENT_TAG)
                 .commitNow()
         }
     }

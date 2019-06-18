@@ -18,7 +18,4 @@ constructor() : StepContentFragmentFactory {
             else ->
                 TextStepContentFragment.newInstance(stepPersistentWrapper)
         }
-
-    override fun isStepCanHaveQuiz(stepPersistentWrapper: StepPersistentWrapper): Boolean =
-        stepPersistentWrapper.step.block?.name != AppConstants.TYPE_VIDEO
 }
