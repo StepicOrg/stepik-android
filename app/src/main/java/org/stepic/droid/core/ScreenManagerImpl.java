@@ -28,7 +28,9 @@ import org.stepic.droid.configuration.Config;
 import org.stepic.droid.di.AppSingleton;
 import org.stepic.droid.features.achievements.ui.activity.AchievementsListActivity;
 import org.stepic.droid.social.SocialMedia;
+import org.stepic.droid.util.IntentExtensionsKt;
 import org.stepic.droid.util.UriExtensionsKt;
+import org.stepik.android.domain.feedback.model.SupportEmailData;
 import org.stepik.android.domain.last_step.model.LastStep;
 import org.stepik.android.model.user.Profile;
 import org.stepik.android.view.course.routing.CourseScreenTab;
@@ -63,7 +65,6 @@ import org.stepic.droid.ui.activities.SettingsActivity;
 import org.stepic.droid.ui.activities.SplashActivity;
 import org.stepic.droid.ui.activities.StoreManagementActivity;
 import org.stepic.droid.ui.activities.TagActivity;
-import org.stepic.droid.ui.activities.TextFeedbackActivity;
 import org.stepic.droid.ui.dialogs.RemindPasswordDialogFragment;
 import org.stepic.droid.ui.fragments.CommentsFragment;
 import org.stepic.droid.util.AndroidVersionKt;
@@ -263,14 +264,6 @@ public class ScreenManagerImpl implements ScreenManager {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         }
         return intent;
-    }
-
-    @Override
-    public void showTextFeedback(Activity sourceActivity) {
-        analytic.reportEvent(Analytic.Screens.SHOW_TEXT_FEEDBACK);
-        Intent launchIntent = new Intent(sourceActivity, TextFeedbackActivity.class);
-        sourceActivity.startActivityForResult(launchIntent, TextFeedbackActivity.Companion.getRequestCode());
-        sourceActivity.overridePendingTransition(org.stepic.droid.R.anim.no_transition, org.stepic.droid.R.anim.push_down);
     }
 
     @Override
@@ -700,6 +693,16 @@ public class ScreenManagerImpl implements ScreenManager {
     public void showProfileEditPassword(Activity activity, long profileId) {
         activity.overridePendingTransition(org.stepic.droid.R.anim.push_up, org.stepic.droid.R.anim.no_transition);
         activity.startActivityForResult(ProfileEditPasswordActivity.Companion.createIntent(activity, profileId), ProfileEditPasswordActivity.REQUEST_CODE);
+    }
+
+    @Override
+    public void openTextFeedBack(Context context, SupportEmailData supportEmailData) {
+        Intent emailIntent = new Intent(Intent.ACTION_SEND);
+        emailIntent.setType("*/*");
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {supportEmailData.getMailTo()});
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, supportEmailData.getSubject());
+        emailIntent.putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(context, "org.stepic.droid.provider", supportEmailData.getBody()));
+        context.startActivity(IntentExtensionsKt.createEmailOnlyChooserIntent(emailIntent, context, context.getString(R.string.feedback_email_chooser_title)));
     }
 
     @Override

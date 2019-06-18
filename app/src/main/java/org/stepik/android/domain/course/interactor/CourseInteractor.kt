@@ -6,6 +6,7 @@ import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.subjects.BehaviorSubject
 import org.stepik.android.model.CourseReviewSummary
 import org.stepic.droid.util.safeDiv
+import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.billing.repository.BillingRepository
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.model.EnrollmentState
@@ -74,8 +75,9 @@ constructor(
 
     private fun resolveCourseReview(course: Course): Single<Double> =
         courseReviewRepository
-            .getCourseReviewSummary(course.reviewSummary)
+            .getCourseReviewSummary(course.reviewSummary, sourceType = DataSourceType.REMOTE)
             .map(CourseReviewSummary::average)
+            .toSingle()
             .onErrorReturnItem(0.0)
 
     private fun resolveCourseProgress(course: Course): Single<*> =

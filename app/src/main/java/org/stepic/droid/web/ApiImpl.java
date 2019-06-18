@@ -22,9 +22,6 @@ import com.vk.sdk.VKSdk;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
-import org.stepic.droid.util.CompatibilityExtensionsKt;
-import org.stepic.droid.web.model.story_templates.StoryTemplatesResponse;
-import org.stepik.android.model.adaptive.RatingItem;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.configuration.RemoteConfig;
@@ -37,20 +34,15 @@ import org.stepic.droid.jsonHelpers.adapters.UTCDateAdapter;
 import org.stepic.droid.jsonHelpers.deserializers.DatasetDeserializer;
 import org.stepic.droid.jsonHelpers.deserializers.ReplyDeserializer;
 import org.stepic.droid.jsonHelpers.serializers.ReplySerializer;
-import org.stepik.android.model.Course;
 import org.stepic.droid.model.NotificationCategory;
-import org.stepik.android.model.user.RegistrationCredentials;
 import org.stepic.droid.model.StepikFilter;
-import org.stepik.android.model.Submission;
-import org.stepik.android.model.adaptive.RecommendationReaction;
-import org.stepik.android.model.comments.Comment;
-import org.stepik.android.model.comments.Vote;
 import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.util.AppConstants;
+import org.stepic.droid.util.CompatibilityExtensionsKt;
 import org.stepic.droid.util.DateTimeHelper;
 import org.stepic.droid.util.DeviceInfoUtil;
 import org.stepic.droid.util.RWLocks;
@@ -60,13 +52,20 @@ import org.stepic.droid.web.model.adaptive.RatingResponse;
 import org.stepic.droid.web.model.adaptive.RatingRestoreResponse;
 import org.stepic.droid.web.model.adaptive.RecommendationReactionsRequest;
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
-import org.stepic.droid.web.model.desk.DeskRequestWrapper;
+import org.stepic.droid.web.model.story_templates.StoryTemplatesResponse;
 import org.stepic.droid.web.storage.RemoteStorageService;
-import org.stepik.android.model.Tag;
+import org.stepik.android.model.Course;
 import org.stepik.android.model.Reply;
 import org.stepik.android.model.ReplyWrapper;
-import org.stepik.android.model.user.Profile;
+import org.stepik.android.model.Submission;
+import org.stepik.android.model.Tag;
+import org.stepik.android.model.adaptive.RatingItem;
+import org.stepik.android.model.adaptive.RecommendationReaction;
 import org.stepik.android.model.attempts.DatasetWrapper;
+import org.stepik.android.model.comments.Comment;
+import org.stepik.android.model.comments.Vote;
+import org.stepik.android.model.user.Profile;
+import org.stepik.android.model.user.RegistrationCredentials;
 import org.stepik.android.remote.assignment.model.AssignmentResponse;
 import org.stepik.android.remote.course.model.CourseResponse;
 import org.stepik.android.remote.course.model.CourseReviewSummaryResponse;
@@ -79,7 +78,6 @@ import org.stepik.android.remote.section.model.SectionResponse;
 import org.stepik.android.remote.step.model.StepResponse;
 import org.stepik.android.remote.unit.model.UnitResponse;
 import org.stepik.android.remote.user.model.UserResponse;
-import org.stepik.android.remote.view_assignment.model.ViewAssignmentRequest;
 
 import java.io.IOException;
 import java.net.HttpCookie;
@@ -742,35 +740,6 @@ public class ApiImpl implements Api {
     @Override
     public Call<EmailAddressResponse> getEmailAddresses(@NotNull long[] ids) {
         return loggedService.getEmailAddresses(ids);
-    }
-
-    @Override
-    public Call<Void> sendFeedback(String email, String rawDescription) {
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .addNetworkInterceptor(stethoInterceptor)
-                .build();
-        Retrofit notLogged = new Retrofit.Builder()
-                .baseUrl(config.getZendeskHost())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(generateGsonFactory())
-                .client(okHttpClient)
-                .build();
-        StepikDeskEmptyAuthService tempService = notLogged.create(StepikDeskEmptyAuthService.class);
-
-        rawDescription = rawDescription.replace("\n", "<br>");
-        String subject = context.getString(R.string.feedback_subject);
-        String aboutSystem = DeviceInfoUtil.getInfosAboutDevice(context, "<br>");
-        rawDescription = rawDescription + "<br><br>" + aboutSystem;
-
-        Profile profile = sharedPreference.getProfile();
-        String name = "";
-        String link = "";
-        if (profile != null) {
-            name = "" + profile.getFullName();
-            link = config.getBaseUrl() + "/users/" + profile.getId();
-        }
-
-        return tempService.sendFeedback(new DeskRequestWrapper(name, email, subject, rawDescription, link, aboutSystem));
     }
 
     @Override

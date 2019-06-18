@@ -175,6 +175,10 @@ abstract class StorageModule {
     @Binds
     internal abstract fun provideCommentsBannerDao(commentsBannerDaoImpl: CommentsBannerDaoImpl): CommentsBannerDao
 
+    @StorageSingleton
+    @Binds
+    internal abstract fun bindCourseReviewSummaryDao(courseReviewSummaryDaoImpl: CourseReviewSummaryDaoImpl): IDao<CourseReviewSummary>
+
     @Module
     companion object {
 
