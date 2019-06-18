@@ -7,11 +7,13 @@ import org.stepik.android.domain.step.model.StepNavigationDirection
 interface StepView {
     sealed class State {
         object Idle : State()
-        class Loaded(
+        data class Loaded(
             val stepWrapper: StepPersistentWrapper,
             val lessonData: LessonData
         ) : State()
     }
+
+    fun setState(state: State)
 
     fun setBlockingLoading(isLoading: Boolean)
 

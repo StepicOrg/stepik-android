@@ -24,6 +24,10 @@ constructor(
     private val mainScheduler: Scheduler
 ) : PresenterBase<StepView>() {
     private var state: StepView.State = StepView.State.Idle
+        set(value) {
+            field = value
+            view?.setState(value)
+        }
 
     private var stepNavigationDirections: Set<StepNavigationDirection> = emptySet()
         set(value) {
@@ -41,6 +45,7 @@ constructor(
         super.attachView(view)
         view.setBlockingLoading(isBlockingLoading)
         view.setNavigation(stepNavigationDirections)
+        view.setState(state)
     }
 
     fun onLessonData(stepWrapper: StepPersistentWrapper, lessonData: LessonData) {

@@ -7,13 +7,14 @@ import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.ui.util.setCompoundDrawables
 
 class StepDiscussionsDelegate(
-    private val containerView: View
+    private val containerView: View,
+    onDiscussionClicked: () -> Unit
 ) {
     private val stepDiscussions = containerView.stepDiscussionsCount
 
     init {
         containerView.changeVisibility(needShow = false)
-        containerView.setOnClickListener {  }
+        containerView.setOnClickListener { onDiscussionClicked() }
 
         stepDiscussions.setCompoundDrawables(start = R.drawable.ic_step_discussion)
     }

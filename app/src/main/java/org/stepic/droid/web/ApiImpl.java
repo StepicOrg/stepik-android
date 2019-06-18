@@ -79,7 +79,6 @@ import org.stepik.android.remote.section.model.SectionResponse;
 import org.stepik.android.remote.step.model.StepResponse;
 import org.stepik.android.remote.unit.model.UnitResponse;
 import org.stepik.android.remote.user.model.UserResponse;
-import org.stepik.android.remote.view_assignment.model.ViewAssignmentRequest;
 
 import java.io.IOException;
 import java.net.HttpCookie;

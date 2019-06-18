@@ -92,8 +92,11 @@ class StepFragment : Fragment(), StepView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         stepNavigationDelegate = StepNavigationDelegate(stepNavigation, stepPresenter::onStepDirectionClicked)
 
-        stepDiscussionsDelegate = StepDiscussionsDelegate(stepDiscussions)
-        stepDiscussionsDelegate.setDiscussionsCount(100)
+        stepDiscussionsDelegate = StepDiscussionsDelegate(stepDiscussions) {
+            screenManager
+                .openComments(activity, stepWrapper.step.discussionProxy, stepWrapper.step.id, stepWrapper.step.discussionsCount == 0)
+        }
+        stepDiscussionsDelegate.setDiscussionsCount(stepWrapper.step.discussionsCount)
 
         initStepContentFragment()
         initStepQuizFragment()
@@ -162,6 +165,13 @@ class StepFragment : Fragment(), StepView {
         StepShareDialogFragment
             .newInstance(stepWrapper.step, lessonData.lesson, lessonData.unit)
             .show(supportFragmentManager, StepShareDialogFragment.TAG)
+    }
+
+    override fun setState(state: StepView.State) {
+        if (state is StepView.State.Loaded) {
+            stepWrapper = state.stepWrapper
+            stepDiscussionsDelegate.setDiscussionsCount(state.stepWrapper.step.discussionsCount)
+        }
     }
 
     override fun setBlockingLoading(isLoading: Boolean) {
